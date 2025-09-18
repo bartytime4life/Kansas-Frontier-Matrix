@@ -1,0 +1,7 @@
+image: data/raw/ut_pcl/LAWRENCE_1885.jpg
+target_crs: EPSG:4326
+gcps:
+  - {px: 1234, py: 5678, lon: -95.235, lat: 38.971}
+  - {px: 2234, py: 5678, lon: -95.210, lat: 38.960}
+  - {px: 1834, py: 6678, lon: -95.220, lat: 38.940}
+  - {px: 1534, py: 4678, lon: -95.250, lat: 38.955}
