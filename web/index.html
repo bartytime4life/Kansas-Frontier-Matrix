@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Kansas Geo Timeline — Viewer</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.7.0/dist/maplibre-gl.css"/>
+  <style>html,body,#map{{height:100%;margin:0}}.panel{{position:absolute;top:10px;left:10px;background:#fff;padding:8px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.2);}}</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel">
+  <strong>Kansas Geo Timeline</strong><br/>
+  <label><input type="checkbox" id="toggle" checked> Hillshade</label>
+</div>
+<script src="https://unpkg.com/maplibre-gl@3.7.0/dist/maplibre-gl.js"></script>
+<script>
+(async function() {
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://demotiles.maplibre.org/style.json',
+    center: [-98.0, 38.5],
+    zoom: 5.5
+  });
+  // Load layers.json
+  const cfg = await fetch('layers.json').then(r => r.json());
+  map.on('load', () => {
+    for (const L of cfg.layers) {
+      if (L.type === 'raster') {
+        map.addSource(L.id, {
+          type: 'raster',
+          tiles: [L.path],    // replace with tiling endpoint if available
+          tileSize: 256
+        });
+        map.addLayer({ id: L.id, type: 'raster', source: L.id, layout: { visibility: 'visible' } });
+      }
+    }
+  });
+  document.getElementById('toggle').addEventListener('change', (e) => {
+    const vis = e.target.checked ? 'visible' : 'none';
+    map.setLayoutProperty('hillshade', 'visibility', vis);
+  });
+})();
+</script>
+</body>
+</html>

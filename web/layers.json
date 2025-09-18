@@ -1,0 +1,10 @@
+{
+  "layers": [
+    {
+      "id": "hillshade",
+      "title": "Hillshade (prototype)",
+      "type": "raster",
+      "path": "../data/derivatives/hillshade.tif"
+    }
+  ]
+}

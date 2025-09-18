@@ -1,0 +1,9 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project]
+name = "kansas-geo-timeline"
+version = "0.1.0"
+description = "Time · Terrain · History mapping system for Kansas (Earth + Web)"
+authors = [{name = "Your Name"}]
+license = {text = "MIT"}
