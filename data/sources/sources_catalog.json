@@ -1,0 +1,45 @@
+{
+  "usgs_topoview": {
+    "viewer_url": "https://ngmdb.usgs.gov/topoview/",
+    "series": [
+      "HTMC",
+      "UST"
+    ],
+    "formats": [
+      "GeoTIFF",
+      "KMZ",
+      "GeoPDF",
+      "JPEG"
+    ],
+    "notes": "Use TopoView UI to find sheets; add direct URLs to data/topoview_items.csv"
+  },
+  "ut_pcl": {
+    "index_url": "https://maps.lib.utexas.edu/maps/topo/kansas/",
+    "public_domain": true
+  },
+  "kansas_drgs": {
+    "items": [
+      {
+        "title": "DRG Overview (ArcGIS item)",
+        "item_id": "3910e86e3ed54ebebfc291d6f011fe78"
+      },
+      {
+        "title": "DRG WFL1 (ArcGIS item)",
+        "item_id": "3f4eb45f4996442b81f756d0876d547d"
+      },
+      {
+        "title": "DRG Quad Boundaries",
+        "hub_url": "https://hub.kansasgis.org/maps/ba85eecbd67540a895cec417e71ecc00"
+      }
+    ]
+  },
+  "kars_lidar": {
+    "mapserver": "https://services.kars.geoplatform.ku.edu/arcgis/rest/services/KansasLiDAR/Kansas_Lidar_Hillshade_Overlay/MapServer"
+  },
+  "kgs_lake_maps": {
+    "listing_url": "https://www.kgs.ku.edu/Hydro/lake_maps.html"
+  },
+  "khri": {
+    "url": "https://khri.kansasgis.org/"
+  }
+}

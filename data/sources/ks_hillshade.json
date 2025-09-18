@@ -1,8 +1,8 @@
 {
-  "id": "ks_hillshade",
+  "id": "ks_hillshade_example",
   "title": "Kansas Elevation Hillshade (example)",
   "type": "arcgis-imagery",
-  "url": "https://<arcgis-server>/ArcGIS/rest/services/YourHillshade/ImageServer",
+  "url": "https://services.kars.geoplatform.ku.edu/arcgis/rest/services/KansasLiDAR/Kansas_Lidar_Hillshade_Overlay/MapServer",
   "format": "geotiff",
   "bbox": [
     -102.05,
