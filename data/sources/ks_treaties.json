@@ -1,0 +1,20 @@
+{
+  "id": "ks_treaties",
+  "title": "Treaty & Tribal Land Boundaries (time-aware vectors)",
+  "type": "vector",
+  "endpoint": {
+    "type": "http",
+    "url": "https://example.org/kansas_treaties.geojson"   // or local path after curation
+  },
+  "spatial": { "bbox": [-102.1, 36.99, -94.6, 40.0], "crs": "EPSG:4326" },
+  "temporal": { "start": "1800-01-01", "end": "1900-12-31" },
+  "license": "CC-BY-4.0",
+  "provenance": { "attribution": "Compiled from archival sources", "retrieved": "2025-09-18T02:00:00Z" },
+  "fields": {
+    "name": "string",
+    "year": "integer",
+    "source": "string",
+    "confidence": "number"
+  },
+  "outputs": { "geojson": "data/processed/vectors/treaties.geojson" }
+}
