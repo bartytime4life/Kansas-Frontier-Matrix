@@ -1,5 +1,3 @@
----
-
 # Kansas Geo Timeline — **Time · Terrain · History**
 
 A minimal **Google Earth + Web (GitHub Pages)** mapping system for Kansas elevation and historical layers.
