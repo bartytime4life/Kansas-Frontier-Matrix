@@ -1,0 +1,21 @@
+{
+  "id": "ks_dem_1m",
+  "title": "Kansas DEM (1 m)",
+  "type": "raster-dem",
+  "endpoint": {
+    "type": "arcgis",
+    "url": "https://tiles.kansasgis.org/arcgis/rest/services/Elevation/KS_1m_DEM/ImageServer"
+  },
+  "spatial": { "bbox": [-102.1, 36.99, -94.6, 40.00], "crs": "EPSG:4326" },
+  "temporal": { "start": "2018-01-01", "end": "2020-12-31" },
+  "license": "CC-BY-4.0",
+  "provenance": {
+    "attribution": "KARS / State of Kansas",
+    "retrieved": "2025-09-18T01:50:00Z"
+  },
+  "confidence": 0.95,
+  "outputs": {
+    "cog": "data/processed/dem/ks_1m_dem.tif",
+    "hillshade": "data/processed/dem/ks_1m_hillshade.tif"
+  }
+}
