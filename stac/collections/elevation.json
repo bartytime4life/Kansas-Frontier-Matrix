@@ -1,0 +1,11 @@
+{
+  "type": "Collection",
+  "id": "elevation",
+  "stac_version": "1.0.0",
+  "description": "DEM & terrain derivatives for Kansas",
+  "license": "various",
+  "extent": {
+    "spatial": { "bbox": [[-102.1,36.99,-94.6,40.0]] },
+    "temporal": { "interval": [["2018-01-01T00:00:00Z","2020-12-31T23:59:59Z"]] }
+  }
+}
