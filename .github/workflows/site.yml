@@ -1,1 +1,107 @@
+# .github/workflows/site.yml
+name: Build & Deploy Site
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "web/**"
+      - "data/stac/**"
+      - "data/sources/**"
+      - ".github/workflows/site.yml"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build static site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Optional Node build if web/package.json exists
+      - name: Set up Node (optional)
+        if: ${{ hashFiles('web/package.json') != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install & build (if package.json present)
+        if: ${{ hashFiles('web/package.json') != '' }}
+        working-directory: web
+        run: |
+          set -e
+          npm ci
+          npm run build
+          cd ..
+          mkdir -p _site
+          if [ -d "web/dist" ]; then
+            rsync -av --delete web/dist/ _site/
+          elif [ -d "web/build" ]; then
+            rsync -av --delete web/build/ _site/
+          else
+            echo "No dist/ or build/ found after npm run build"; exit 1
+          fi
+
+      - name: Copy static web/ (when no Node build)
+        if: ${{ hashFiles('web/package.json') == '' }}
+        run: |
+          set -e
+          mkdir -p _site
+          rsync -av --delete web/ _site/
+
+      - name: Validate JSON catalogs (STAC & sources)
+        run: |
+          set -e
+          sudo apt-get update -y && sudo apt-get install -y jq > /dev/null
+          ok=1
+          if compgen -G "data/stac/*.json" > /dev/null; then
+            for f in data/stac/*.json; do
+              echo "Validating $f"
+              jq empty "$f" || ok=0
+            done
+          fi
+          if compgen -G "data/sources/*.json" > /dev/null; then
+            for f in data/sources/*.json; do
+              echo "Validating $f"
+              jq empty "$f" || ok=0
+            done
+          fi
+          [ $ok -eq 1 ] || { echo "JSON validation failed"; exit 1; }
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
 
