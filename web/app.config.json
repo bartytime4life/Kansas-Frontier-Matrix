@@ -1,50 +1,52 @@
-/* app.js — tiny MapLibre time slider */
-(async function () {
-  const cfg = await fetch('./app.config.json').then(r => r.json());
-
-  const map = new maplibregl.Map({
-    container: 'map',
-    style: { version: 8, sources: {}, layers: [] },
-    center: [-98.0, 39.0],
-    zoom: 6
-  });
-
-  const layers = cfg.layers || [];
-  const yearEl = document.getElementById('year');
-  const labelEl = document.getElementById('year-label');
-
-  function addLayer(l) {
-    const id = l.id;
-    if (map.getSource(id)) return;
-
-    if (l.type === 'raster') {
-      map.addSource(id, { type: 'raster', tiles: [l.url], tileSize: 256 });
-      map.addLayer({ id, type: 'raster', source: id, paint: { 'raster-opacity': l.opacity ?? 1 } });
-    } else if (l.type === 'image') {
-      // static image overlay (if you precomputed bounds)
-      // map.addSource(id, { type: 'image', url: l.url, coordinates: l.coordinates });
-      // map.addLayer({ id, type: 'raster', source: id, paint: { 'raster-opacity': l.opacity ?? 0.8 } });
+{
+  "title": "Kansas Geo Timeline",
+  "map": {
+    "style": "https://demotiles.maplibre.org/style.json",
+    "center": [-98.0, 39.0],
+    "zoom": 6
+  },
+  "time": {
+    "min": 1850,
+    "max": 2025,
+    "value": 1930
+  },
+  "layers": [
+    {
+      "id": "hillshade",
+      "title": "Hillshade (2018–2020)",
+      "type": "raster",
+      "url": "./tiles/ks_hillshade/{z}/{x}/{y}.png",
+      "opacity": 0.9,
+      "attribution": "DEM © KARS / State of Kansas",
+      "start": 2018,
+      "end": 2020
+    },
+    {
+      "id": "usgs_1894_larned",
+      "title": "USGS Historic Topo — Larned (1894)",
+      "type": "raster",
+      "url": "./tiles/usgs_1894_larned/{z}/{x}/{y}.png",
+      "opacity": 0.7,
+      "attribution": "USGS Historical Topographic Maps (Public Domain)",
+      "start": 1894,
+      "end": 1894
     }
-  }
-
-  function updateVisibility(y) {
-    labelEl.textContent = y;
-    layers.forEach(l => {
-      addLayer(l);
-      const id = l.id;
-      const visible = (l.start ?? -9999) <= y && y <= (l.end ?? 9999);
-      if (map.getLayer(id)) {
-        map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
-      }
-    });
-  }
-
-  map.on('load', () => {
-    layers.forEach(addLayer);
-    updateVisibility(parseInt(yearEl.value, 10));
-  });
-
-  yearEl.addEventListener('input', () => {
-    updateVisibility(parseInt(yearEl.value, 10));
-  });
-})();
+    /* Example of a static image overlay (uncomment if you have coordinates):
+    ,{
+      "id": "overlay_example",
+      "title": "Scanned Map Image",
+      "type": "image",
+      "url": "./overlays/scanned_map.png",
+      "coordinates": [
+        [-99.0, 39.5],  // top-left  (west, north)
+        [-98.0, 39.5],  // top-right (east, north)
+        [-98.0, 38.8],  // bottom-right (east, south)
+        [-99.0, 38.8]   // bottom-left (west, south)
+      ],
+      "opacity": 0.8,
+      "start": 1900,
+      "end": 1900
+    }
+    */
+  ]
+}
