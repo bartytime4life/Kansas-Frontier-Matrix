@@ -1,0 +1,19 @@
+# processed artifacts
+processed/
+!processed/**/_meta.json
+
+# temporary & cache
+*.aux.xml
+*.ovr
+*.idx
+*.aux
+*.xml
+*.tfw
+*.worldfile
+*.lock
+
+# large downloads if any are staged here
+*.zip
+*.7z
+*.tar
+*.tar.gz
