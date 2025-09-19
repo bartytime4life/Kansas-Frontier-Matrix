@@ -1,1 +1,176 @@
+{
+  "app": {
+    "id": "kansas-geo-timeline",
+    "title": "{{ title | default('Kansas Geo Timeline', true) }}",
+    "subtitle": "{{ subtitle | default('Historical + geological layers over time', true) }}",
+    "description": "{{ description | default('Interactive timeline viewer for Kansas-Frontier-Matrix layers', true) }}",
+    "attribution_html": "{{ attribution_html | default('Data &copy; respective providers • Built with MapLibre GL', true) }}"
+  },
+
+  "timeline": {
+    "start": {{ start_year | default(1850) }},
+    "end": {{ end_year | default(2025) }},
+    "step": {{ year_step | default(1) }},
+    "initial": {{ default_year | default(start_year | default(1850)) }},
+    "format": "{{ year_format | default('YYYY') }}"
+  },
+
+  "map": {
+    "center": [{{ center_lon | default(-98.0) }}, {{ center_lat | default(39.0) }}],
+    "zoom": {{ zoom | default(6) }},
+    "minZoom": {{ min_zoom | default(3) }},
+    "maxZoom": {{ max_zoom | default(18) }},
+    "pitch": {{ pitch | default(0) }},
+    "bearing": {{ bearing | default(0) }}
+  },
+
+  "basemaps": [
+    {# -- Provided basemaps (vector/raster). Each entry example:
+       {
+         "id": "light",
+         "type": "raster" | "vector",
+         "source": "bm_light",
+         "style" : "https://tiles.basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+         "tiles" : ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+         "tileSize": 256,
+         "attribution": "© OpenStreetMap contributors",
+         "visible": true
+       }
+    #}
+    {% if basemaps is defined and basemaps %}
+      {% for bm in basemaps %}
+      {
+        "id": "{{ bm.id }}",
+        "type": "{{ bm.type | default('raster') }}",
+        {% if bm.style %}"style": "{{ bm.style }}",{% endif %}
+        {% if bm.tiles %}"tiles": {{ bm.tiles | tojson }},{% endif %}
+        {% if bm.tileSize %}"tileSize": {{ bm.tileSize }},{% endif %}
+        "source": "{{ bm.source | default('bm_' ~ bm.id) }}",
+        "attribution": "{{ bm.attribution | default('') }}",
+        "visible": {{ (bm.visible is not defined) or (bm.visible | bool) | tojson }}
+      }{{ "," if not loop.last }}
+      {% endfor %}
+    {% else %}
+      {
+        "id": "osm",
+        "type": "raster",
+        "source": "bm_osm",
+        "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+        "tileSize": 256,
+        "attribution": "© OpenStreetMap contributors",
+        "visible": true
+      }
+    {% endif %}
+  ],
+
+  "sources": {
+    {# -- Basemap sources -- #}
+    {% if basemaps is defined and basemaps %}
+      {% for bm in basemaps %}
+      "{{ bm.source | default('bm_' ~ bm.id) }}": {
+        "type": "{{ bm.type | default('raster') }}",
+        {% if bm.style %}"url": "{{ bm.style }}"{% endif %}
+        {% if bm.tiles %}"tiles": {{ bm.tiles | tojson }}, "tileSize": {{ bm.tileSize | default(256) }}{% endif %}
+      }{{ "," if not loop.last or (stac_items is defined and stac_items) or (layers is defined and layers) }}
+      {% endfor %}
+    {% else %}
+      "bm_osm": { "type": "raster", "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], "tileSize": 256 }{% if (stac_items is defined and stac_items) or (layers is defined and layers) %},{% endif %}
+    {% endif %}
+
+    {# -- STAC-derived sources (raster COGs) -- #}
+    {% if stac_items is defined and stac_items %}
+      {% for item in stac_items %}
+      {% set asset = item.assets.source if item.assets and item.assets.source is defined else (item.assets|first)[1] %}
+      "stac_{{ item.id | replace('-', '_') }}": {
+        "type": "raster",
+        "tiles": ["{{ asset.href }}"],
+        "tileSize": {{ (asset.tileSize | default(256)) }},
+        "bounds": {{ item.bbox | default([]) | tojson }}
+      }{{ "," if not loop.last or (layers is defined and layers) }}
+      {% endfor %}
+    {% endif %}
+
+    {# -- Explicit custom sources (e.g., vector layers / WMS / tiles) -- #}
+    {% if layers is defined and layers %}
+      {% for ly in layers if ly.source is defined and ly.source.id %}
+      "{{ ly.source.id }}": {{ ly.source | tojson }}{{ "," if not loop.last }}
+      {% endfor %}
+    {% endif %}
+  },
+
+  "layers": [
+    {# -- STAC items to MapLibre raster layers, one per year asset #}
+    {% if stac_items is defined and stac_items %}
+      {% for item in stac_items %}
+      {% set year = (
+        item.properties.end_datetime[:4] if (item.properties and item.properties.end_datetime) else
+        item.properties.start_datetime[:4] if (item.properties and item.properties.start_datetime) else
+        item.properties.datetime[:4] if (item.properties and item.properties.datetime) else
+        None
+      ) %}
+      {
+        "id": "stac_{{ item.id | replace('-', '_') }}",
+        "type": "raster",
+        "source": "stac_{{ item.id | replace('-', '_') }}",
+        "minzoom": {{ stac_minzoom | default(0) }},
+        "maxzoom": {{ stac_maxzoom | default(22) }},
+        "paint": {
+          "raster-opacity": {{ stac_opacity | default(0.85) }}
+        },
+        "metadata": {
+          "group": "{{ item.collection | default('STAC') }}",
+          "year": {{ year | default("null") }},
+          "title": "{{ item.assets.source.title | default(item.id) if item.assets and item.assets.source is defined else item.id }}",
+          "attribution": "{{ item.providers[0].name if item.providers else '' }}"
+        },
+        "layout": {
+          "visibility": "none"
+        }
+      }{{ "," if not loop.last or (layers is defined and layers) }}
+      {% endfor %}
+    {% endif %}
+
+    {# -- Custom hand-authored layers (vector/raster). Example structure:
+       {
+         "id": "rr_lines_1887",
+         "type": "line",
+         "source": "rr_lines",
+         "source-layer": "railroads",
+         "minzoom": 5,
+         "maxzoom": 22,
+         "paint": { "line-color": "#b00", "line-width": 1.2 },
+         "layout": { "visibility": "none" },
+         "metadata": { "group": "Railroads", "year": 1887, "legend": "Rail lines (1887)" }
+       }
+    #}
+    {% if layers is defined and layers %}
+      {% for ly in layers %}
+      {{ ly | tojson }}{{ "," if not loop.last }}
+      {% endfor %}
+    {% endif %}
+  ],
+
+  "ui": {
+    "default_groups_open": {{ default_groups_open | default(true) | tojson }},
+    "layer_panels": [
+      {# Auto-build panels by group if not provided explicitly #}
+      {% if layer_panels is defined and layer_panels %}
+        {% for p in layer_panels %}
+        {{ p | tojson }}{{ "," if not loop.last }}
+        {% endfor %}
+      {% else %}
+        { "group": "STAC", "title": "Scanned maps & rasters", "collapsed": false }
+      {% endif %}
+    ],
+    "legend": [
+      {% if legend is defined and legend %}
+        {% for entry in legend %}
+        {{ entry | tojson }}{{ "," if not loop.last }}
+        {% endfor %}
+      {% else %}
+        { "id": "raster", "label": "Historic raster", "type": "swatch", "color": "#777" }
+      {% endif %}
+    ]
+  }
+}
 
