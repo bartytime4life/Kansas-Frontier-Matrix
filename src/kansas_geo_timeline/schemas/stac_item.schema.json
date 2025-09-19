@@ -1,1 +1,259 @@
+{
+  "$id": "https://kansas-geo-timeline.org/schemas/stac_item.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "STAC Item (Kansas Geo Timeline)",
+  "description": "Schema for STAC Item objects used by Kansas-Frontier-Matrix / Kansas Geo Timeline. Compatible with STAC 1.0.x and allows project-specific optional fields.",
+  "type": "object",
+  "additionalProperties": true,
+
+  "required": [
+    "stac_version",
+    "id",
+    "type",
+    "geometry",
+    "bbox",
+    "properties",
+    "links",
+    "assets"
+  ],
+
+  "properties": {
+    "stac_version": {
+      "type": "string",
+      "description": "STAC version that the Item implements (e.g., 1.0.0)."
+    },
+    "stac_extensions": {
+      "type": "array",
+      "description": "Optional array of extension identifiers or URLs.",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+
+    "type": {
+      "const": "Feature",
+      "description": "All Items are GeoJSON Features."
+    },
+
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Provider identifier for the Item."
+    },
+
+    "collection": {
+      "type": "string",
+      "description": "Optional ID of the parent Collection."
+    },
+
+    "geometry": {
+      "description": "GeoJSON geometry or null for items without a geometry.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "Point",
+                "MultiPoint",
+                "LineString",
+                "MultiLineString",
+                "Polygon",
+                "MultiPolygon",
+                "GeometryCollection"
+              ]
+            },
+            "coordinates": {},
+            "geometries": {
+              "type": "array",
+              "items": { "$ref": "#" }
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+
+    "bbox": {
+      "description": "Bounding box array: [west, south, east, north] or 3D/temporal variants.",
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 4
+    },
+
+    "properties": {
+      "type": "object",
+      "description": "Item properties, including temporal fields.",
+      "required": [],
+      "additionalProperties": true,
+      "properties": {
+        "datetime": {
+          "description": "Single datetime describing the Item temporal extent.",
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "start_datetime": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "end_datetime": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      },
+
+      "allOf": [
+        {
+          "description": "Temporal validity: either properties.datetime is set (non-null) OR both start_datetime and end_datetime are set (non-null).",
+          "oneOf": [
+            {
+              "properties": { "datetime": { "type": "string", "format": "date-time" } }
+            },
+            {
+              "required": ["start_datetime", "end_datetime"],
+              "properties": {
+                "datetime": { "type": "null" },
+                "start_datetime": { "type": "string", "format": "date-time" },
+                "end_datetime": { "type": "string", "format": "date-time" }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "assets": {
+      "type": "object",
+      "description": "Dictionary of asset objects, keyed by asset name.",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.+$": {
+          "type": "object",
+          "required": ["href"],
+          "additionalProperties": true,
+          "properties": {
+            "href": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Asset location (URL or path)."
+            },
+            "title": { "type": ["string", "null"] },
+            "description": { "type": ["string", "null"] },
+            "type": { "type": ["string", "null"] },
+            "roles": {
+              "type": "array",
+              "items": { "type": "string" },
+              "uniqueItems": true
+            }
+          }
+        }
+      }
+    },
+
+    "links": {
+      "type": "array",
+      "description": "Array of link objects.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["rel", "href"],
+        "additionalProperties": true,
+        "properties": {
+          "rel": { "type": "string", "minLength": 1 },
+          "href": { "type": "string", "minLength": 1 },
+          "type": { "type": ["string", "null"] },
+          "title": { "type": ["string", "null"] }
+        }
+      }
+    },
+
+    "license": {
+      "type": "string",
+      "description": "Optional SPDX license ID or custom string for the Item."
+    },
+
+    "providers": {
+      "type": "array",
+      "description": "Optional list of data providers.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["producer", "processor", "host", "licensor"]
+            }
+          },
+          "url": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "allOf": [
+    {
+      "description": "If geometry is null, bbox still required (already enforced by top-level required)."
+    }
+  ],
+
+  "examples": [
+    {
+      "stac_version": "1.0.0",
+      "stac_extensions": [],
+      "type": "Feature",
+      "id": "ks-topo-1878-24k",
+      "collection": "usgs-topo-historic",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-101.0, 39.0],
+            [-101.0, 39.5],
+            [-100.5, 39.5],
+            [-100.5, 39.0],
+            [-101.0, 39.0]
+          ]
+        ]
+      },
+      "bbox": [-101.0, 39.0, -100.5, 39.5],
+      "properties": {
+        "datetime": "1878-07-01T00:00:00Z"
+      },
+      "assets": {
+        "source": {
+          "href": "https://example.org/tiles/ks_topo_1878_24k.tif",
+          "type": "image/tiff; application=geotiff",
+          "roles": ["data", "source"],
+          "title": "USGS Historic Topo (24k)"
+        },
+        "thumbnail": {
+          "href": "https://example.org/thumbs/ks_topo_1878_24k.png",
+          "type": "image/png",
+          "roles": ["thumbnail"]
+        }
+      },
+      "links": [
+        { "rel": "self", "href": "https://example.org/stac/items/ks-topo-1878-24k.json" },
+        { "rel": "collection", "href": "https://example.org/stac/collections/usgs-topo-historic.json" }
+      ],
+      "license": "CC-BY-4.0",
+      "providers": [
+        { "name": "USGS", "roles": ["producer", "licensor"], "url": "https://www.usgs.gov/" }
+      ]
+    }
+  ]
+}
 
