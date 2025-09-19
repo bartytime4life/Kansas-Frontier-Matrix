@@ -1,0 +1,14 @@
+{
+  "id": "ks_railroads_1900",
+  "title": "Kansas Railroads (circa 1900)",
+  "type": "vector",
+  "endpoint": {
+    "type": "http",
+    "url": "https://example.org/ks_railroads_1900.geojson"
+  },
+  "spatial": { "bbox": [-102.1, 36.99, -94.6, 40.0], "crs": "EPSG:4326" },
+  "temporal": { "start": "1900-01-01", "end": "1900-12-31" },
+  "license": "CC-BY-4.0",
+  "provenance": { "attribution": "Historical GIS compilation", "retrieved": "2025-09-18T02:05:00Z" },
+  "outputs": { "geojson": "data/processed/vectors/railroads_1900.geojson" }
+}
