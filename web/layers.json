@@ -2,9 +2,23 @@
   "layers": [
     {
       "id": "hillshade",
-      "title": "Hillshade (prototype)",
+      "title": "Hillshade (COG → tiles)",
       "type": "raster",
-      "path": "../data/derivatives/hillshade.tif"
+      "tiles": ["./tiles/ks_hillshade/{z}/{x}/{y}.png"],
+      "opacity": 0.9,
+      "attribution": "DEM © KARS/State of Kansas",
+      "start": 2018,
+      "end": 2020
+    },
+    {
+      "id": "usgs_1894_larned",
+      "title": "USGS Historic Topo — Larned (1894)",
+      "type": "raster",
+      "tiles": ["./tiles/usgs_1894_larned/{z}/{x}/{y}.png"],
+      "opacity": 0.7,
+      "attribution": "USGS Historical Topographic Maps (Public Domain)",
+      "start": 1894,
+      "end": 1894
     }
   ]
 }
