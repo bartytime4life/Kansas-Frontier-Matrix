@@ -1,1 +1,66 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "railroads_1900",
+  "bbox": [-102.051, 36.993, -94.588, 40.003],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.051, 36.993],
+      [-94.588, 36.993],
+      [-94.588, 40.003],
+      [-102.051, 40.003],
+      [-102.051, 36.993]
+    ]]
+  },
+  "properties": {
+    "title": "Kansas Railroads (circa 1900)",
+    "description": "Vector layer of railroad alignments in Kansas circa 1900, suitable for time-slider visualization and change analysis against earlier/later rail networks.",
+    "datetime": "1900-01-01T00:00:00Z",
+    "start_datetime": "1900-01-01T00:00:00Z",
+    "end_datetime": "1900-12-31T23:59:59Z",
+    "created": "2025-09-20T00:00:00Z",
+    "updated": "2025-09-20T00:00:00Z",
+    "proj:epsg": 4326,
+    "providers": [
+      {
+        "name": "Kansas Frontier Matrix Project",
+        "roles": ["processor", "host"],
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+      }
+    ],
+    "license": "public-domain"
+  },
+  "assets": {
+    "vector": {
+      "href": "../../vectors/infrastructure/railroads_1900.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Railroad alignments (c.1900) — GeoJSON"
+    },
+    "tiles": {
+      "href": "../../tiles/railroads_1900.mbtiles",
+      "type": "application/vnd.mapbox-vector-tile",
+      "roles": ["tiles"],
+      "title": "Vector tiles (MBTiles) for 1900 railroads"
+    },
+    "metadata": {
+      "href": "../../vectors/infrastructure/railroads_1900.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Lineage & schema for railroads_1900"
+    },
+    "thumbnail": {
+      "href": "../../thumbnails/railroads_1900.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail — Kansas rail network c.1900"
+    }
+  },
+  "links": [
+    { "rel": "self",   "href": "./railroads_1900.json", "type": "application/geo+json" },
+    { "rel": "root",   "href": "../catalog.json",       "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",       "type": "application/json" }
+  ]
+}
 
