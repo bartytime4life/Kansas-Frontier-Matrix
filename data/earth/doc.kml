@@ -1,1 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Kansas-Frontier-Matrix — Earth Hub</name>
+    <open>1</open>
+    <Snippet maxLines="2">Top-level KML that aggregates Kansas elevation overlays and historic maps via NetworkLinks.</Snippet>
+
+    <!-- Optional shared Style (subtle outline for vector overlays if you add any) -->
+    <Style id="outline-grey">
+      <LineStyle>
+        <color>aa808080</color>
+        <width>2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>33ffffff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+
+    <!-- Default view over Kansas -->
+    <LookAt>
+      <longitude>-98.3</longitude>
+      <latitude>38.5</latitude>
+      <altitude>0</altitude>
+      <heading>0</heading>
+      <tilt>0</tilt>
+      <range>900000</range>
+      <altitudeMode>clampToGround</altitudeMode>
+    </LookAt>
+
+    <!-- ─────────── Basemaps / Terrain ─────────── -->
+    <Folder>
+      <name>Basemaps & Terrain</name>
+      <open>1</open>
+
+      <!-- Kansas 1 m Hillshade (regionated KMZ via NetworkLink) -->
+      <NetworkLink>
+        <name>Kansas 1 m Hillshade (2018–2020)</name>
+        <visibility>1</visibility>
+        <Region>
+          <LatLonAltBox>
+            <north>40.003</north>
+            <south>36.993</south>
+            <east>-94.588</east>
+            <west>-102.051</west>
+            <minAltitude>0</minAltitude>
+            <maxAltitude>0</maxAltitude>
+          </LatLonAltBox>
+          <Lod>
+            <minLodPixels>64</minLodPixels>
+            <maxLodPixels>-1</maxLodPixels>
+          </Lod>
+        </Region>
+        <Link>
+          <!-- relative to this doc.kml -->
+          <href>./networklinks/ks_1m_hillshade.kml</href>
+          <viewRefreshMode>onStop</viewRefreshMode>
+          <viewRefreshTime>1</viewRefreshTime>
+        </Link>
+      </NetworkLink>
+    </Folder>
+
+    <!-- ─────────── Historic Maps ─────────── -->
+    <Folder>
+      <name>Historic Topographic Maps</name>
+      <open>1</open>
+
+      <!-- USGS Larned (1894) quad -->
+      <NetworkLink>
+        <name>USGS Topographic Map — Larned (1894)</name>
+        <visibility>1</visibility>
+        <Region>
+          <LatLonAltBox>
+            <north>38.3000</north>
+            <south>37.8000</south>
+            <east>-98.8000</east>
+            <west>-99.5000</west>
+            <minAltitude>0</minAltitude>
+            <maxAltitude>0</maxAltitude>
+          </LatLonAltBox>
+          <Lod>
+            <minLodPixels>64</minLodPixels>
+            <maxLodPixels>-1</maxLodPixels>
+          </Lod>
+        </Region>
+        <Link>
+          <href>./networklinks/usgs_topo_1894.kml</href>
+          <viewRefreshMode>onStop</viewRefreshMode>
+          <viewRefreshTime>1</viewRefreshTime>
+        </Link>
+      </NetworkLink>
+
+      <!-- Template for adding more historic sheets later -->
+      <!--
+      <NetworkLink>
+        <name>USGS Topographic Map — {SHEET_NAME} ({YEAR})</name>
+        <visibility>0</visibility>
+        <Link>
+          <href>./networklinks/{your_sheet}.kml</href>
+          <viewRefreshMode>onStop</viewRefreshMode>
+          <viewRefreshTime>1</viewRefreshTime>
+        </Link>
+      </NetworkLink>
+      -->
+    </Folder>
+
+    <!-- ─────────── Vectors / Thematic Layers (optional placeholders) ─────────── -->
+    <!-- You can add NetworkLinks or GroundOverlays for treaty boundaries, railroads, etc. -->
+    <!--
+    <Folder>
+      <name>Vectors (Treaties, Railroads, Trails)</name>
+      <open>0</open>
+      <NetworkLink>
+        <name>Railroads (c.1900)</name>
+        <visibility>0</visibility>
+        <Link>
+          <href>./networklinks/railroads_1900.kml</href>
+          <viewRefreshMode>onStop</viewRefreshMode>
+          <viewRefreshTime>1</viewRefreshTime>
+        </Link>
+      </NetworkLink>
+    </Folder>
+    -->
+
+  </Document>
+</kml>
 
