@@ -1,1 +1,85 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "usgs_1894_larned",
+  "bbox": [
+    -99.5,
+    37.8,
+    -98.8,
+    38.3
+  ],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-99.5, 37.8],
+      [-98.8, 37.8],
+      [-98.8, 38.3],
+      [-99.5, 38.3],
+      [-99.5, 37.8]
+    ]]
+  },
+  "properties": {
+    "title": "USGS Topographic Map - Larned, Kansas (1894)",
+    "description": "Historic USGS 30-minute topographic quadrangle of Larned, Kansas, surveyed 1894. Georeferenced scan converted to COG for Kansas-Frontier-Matrix historical GIS.",
+    "datetime": "1894-01-01T00:00:00Z",
+    "start_datetime": "1894-01-01T00:00:00Z",
+    "end_datetime": "1894-12-31T23:59:59Z",
+    "gsd": null,
+    "proj:epsg": 4269,
+    "proj:shape": [null, null],
+    "proj:transform": null,
+    "created": "2025-09-20T00:00:00Z",
+    "updated": "2025-09-20T00:00:00Z",
+    "providers": [
+      {
+        "name": "U.S. Geological Survey (USGS)",
+        "roles": ["producer", "licensor"],
+        "url": "https://www.usgs.gov/"
+      },
+      {
+        "name": "Kansas Frontier Matrix Project",
+        "roles": ["processor", "host"],
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+      }
+    ],
+    "license": "public-domain"
+  },
+  "assets": {
+    "map": {
+      "href": "../../cogs/overlays/usgs_topo_larned_1894.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "title": "USGS Larned 1894 Topographic Map (COG)"
+    },
+    "metadata": {
+      "href": "../../cogs/overlays/usgs_topo_larned_1894.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Metadata for USGS Larned 1894 Map"
+    },
+    "thumbnail": {
+      "href": "../../thumbnails/usgs_topo_larned_1894.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail of USGS Larned 1894 Map"
+    }
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "./usgs_1894_larned.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json"
+    }
+  ]
+}
 
