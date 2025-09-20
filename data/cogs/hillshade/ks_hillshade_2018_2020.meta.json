@@ -1,16 +1,32 @@
 {
   "id": "ks_hillshade_2018_2020",
+  "version": "1.0.0",
   "type": "raster-derivative",
+  "product": "hillshade",
+
   "title": "Kansas Hillshade (2018–2020, 1m DEM Derived)",
   "description": "Statewide hillshade visualization of Kansas, derived from the 1-meter resolution DEM collected between 2018 and 2020 under the USGS 3DEP program. Provides shaded relief imagery useful for terrain visualization, geomorphological interpretation, and historical landscape context.",
+
   "collection": "ks_hillshade",
-  "bbox": [-102.05, 36.99, -94.60, 40.00],
-  "spatial_resolution": 1.0,
-  "coordinate_system": "EPSG:4269",
+
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.60, 40.00],
+    "resolution_m": 1.0,
+    "proj": {
+      "epsg": 4269,
+      "note": "If your DEM/Hillshade are stored in a projected CRS (common in KS: EPSG:26914 or EPSG:6344), update this value."
+    },
+    "grid": {
+      "pixel_encoding": "center",
+      "alignment": "DEM-aligned"
+    }
+  },
+
   "temporal": {
     "start": "2018-01-01",
     "end": "2020-12-31"
   },
+
   "providers": [
     {
       "name": "USGS 3D Elevation Program (3DEP)",
@@ -23,7 +39,41 @@
       "url": "https://kansasgis.org"
     }
   ],
-  "derived_from": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
+
+  "derived_from": {
+    "id": "ks_1m_dem_2018_2020",
+    "path": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
+    "meta": "data/cogs/dem/ks_1m_dem_2018_2020.meta.json",
+    "sha256": "data/cogs/dem/ks_1m_dem_2018_2020.sha256",
+    "stac": "data/stac/ks_1m_dem_2018_2020.json"
+  },
+
+  "data": {
+    "datatype": "uint8",
+    "bands": 1,
+    "nodata": null,
+    "color_interpretation": "gray",
+    "colormap": null,
+    "scaling": null
+  },
+
+  "files": {
+    "cog": {
+      "path": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "s3": "s3://kansas-frontier-matrix/data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "media_type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "size_bytes": null,
+      "sha256": "data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+    },
+    "thumbnail": {
+      "path": "data/cogs/hillshade/ks_hillshade_2018_2020_preview.png",
+      "s3": "s3://kansas-frontier-matrix/data/cogs/hillshade/ks_hillshade_2018_2020_preview.png",
+      "media_type": "image/png",
+      "size_bytes": null
+    },
+    "aux": []
+  },
+
   "assets": {
     "cog": {
       "href": "s3://kansas-frontier-matrix/data/cogs/hillshade/ks_hillshade_2018_2020.tif",
@@ -36,28 +86,69 @@
       "title": "PNG Preview"
     }
   },
+
+  "processing": {
+    "software": {
+      "gdal": "3.6.x",
+      "gdaldem": "hillshade"
+    },
+    "parameters": {
+      "gdaldem_hillshade": {
+        "alt": 45,
+        "az": 315,
+        "combined": false,
+        "z_factor": 1.0,
+        "scale": 1.0
+      }
+    },
+    "commands": [
+      "gdaldem hillshade -alt 45 -az 315 -of GTiff data/cogs/dem/ks_1m_dem_2018_2020.tif /tmp/ks_hillshade_2018_2020.tif",
+      "gdal_translate -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING -co BIGTIFF=YES /tmp/ks_hillshade_2018_2020.tif data/cogs/hillshade/ks_hillshade_2018_2020.tif"
+    ],
+    "cog_profile": {
+      "compress": "DEFLATE",
+      "predictor": 2,
+      "tiling": true,
+      "tile_width": 512,
+      "tile_height": 512,
+      "overviews": {
+        "build": true,
+        "resampling": "NEAREST",
+        "levels": "auto"
+      }
+    }
+  },
+
+  "validation": {
+    "gdalinfo_summary": {
+      "driver": "COG",
+      "channels": 1,
+      "dtype": "UInt8",
+      "overviews": "present",
+      "checksum": null
+    },
+    "checks": [
+      "jq -e 'type==\"object\"' data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+      "sha256sum -c data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+    ]
+  },
+
   "license": "Public Domain (USGS)",
-  "keywords": [
-    "Kansas",
-    "hillshade",
-    "DEM",
-    "LiDAR",
-    "elevation",
-    "terrain",
-    "3DEP",
-    "2018",
-    "2019",
-    "2020"
-  ],
+  "keywords": ["Kansas", "hillshade", "DEM", "LiDAR", "elevation", "terrain", "3DEP", "2018", "2019", "2020"],
+
+  "links": {
+    "stac_item": "data/stac/ks_hillshade_2018_2020.json",
+    "source_stac": "data/stac/ks_1m_dem_2018_2020.json"
+  },
+
   "mcp": {
     "experiment_id": "EXP-HILLSHADE-KS-2018-2020",
     "documentation": "mcp/experiments/hillshade_ks_2018_2020.md",
     "sop_reference": "mcp/sops/derive_hillshade.md",
     "traceability": {
-      "source_data": "ks_1m_dem_2018_2020.tif",
+      "source_data": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
       "processing": "Generated with gdaldem hillshade -alt 45 -az 315, then converted to COG",
       "git_commit": "<commit-hash>"
     }
   }
 }
-
