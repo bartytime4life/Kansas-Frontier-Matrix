@@ -1,0 +1,70 @@
+{
+  "id": "ks_1m_dem_2018_2020",
+  "title": "Kansas DEM (1 m, 2018–2020)",
+  "type": "raster-dem",
+
+  "endpoints": [
+    {
+      "type": "arcgis",
+      "role": ["source", "preview"],
+      "url": "https://tiles.kansasgis.org/arcgis/rest/services/Elevation/KS_1m_DEM/ImageServer"
+    }
+  ],
+
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00],
+    "crs": "EPSG:4326"
+  },
+
+  "temporal": {
+    "start": "2018-01-01",
+    "end": "2020-12-31"
+  },
+
+  "license": "CC-BY-4.0",
+
+  "providers": [
+    { "name": "KARS / State of Kansas", "roles": ["producer", "licensor", "host"] },
+    { "name": "Kansas-Frontier-Matrix", "roles": ["processor", "curator"] }
+  ],
+
+  "provenance": {
+    "retrieved": "2025-09-18T01:50:00Z",
+    "processing": [
+      "Fetch from ArcGIS ImageServer",
+      "Reproject/warp to EPSG:4326 if needed",
+      "Convert to COG with internal tiling + overviews",
+      "Derive hillshade via gdaldem hillshade"
+    ],
+    "notes": "Statewide 1 m LiDAR-derived DEM mosaic; tiled/optimized for web mapping and analysis."
+  },
+
+  "confidence": 0.95,
+
+  "assets": {
+    "cog_dem": {
+      "href": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "dem"],
+      "checksum:sha256": "<<<fill-after-build>>>",
+      "meta": "data/cogs/dem/ks_1m_dem_2018_2020.meta.json"
+    },
+    "cog_hillshade": {
+      "href": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["derived", "visual"],
+      "checksum:sha256": "<<<fill-after-build>>>",
+      "meta": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json"
+    }
+  },
+
+  "outputs": {
+    "checksums": [
+      "data/cogs/dem/ks_1m_dem_2018_2020.sha256",
+      "data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+    ]
+  },
+
+  "version": "1.1.0",
+  "last_updated": "2025-09-19"
+}
