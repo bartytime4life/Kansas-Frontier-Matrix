@@ -1,61 +1,106 @@
 {
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.1.0/schema.json"
+  ],
+  "type": "Feature",
   "id": "ks_1m_dem_2018_2020",
-  "type": "raster-dem",
-  "title": "Kansas 1-Meter DEM (2018–2020)",
-  "description": "Statewide 1-meter resolution Digital Elevation Model for Kansas, derived from LiDAR collections conducted between 2018 and 2020. Provides high-resolution topographic data suitable for terrain analysis, hydrological modeling, and historical landscape reconstruction.",
   "collection": "ks_dem",
   "bbox": [-102.05, 36.99, -94.60, 40.00],
-  "spatial_resolution": 1.0,
-  "coordinate_system": "EPSG:4269",
-  "temporal": {
-    "start": "2018-01-01",
-    "end": "2020-12-31"
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99],
+      [-94.60, 36.99],
+      [-94.60, 40.00],
+      [-102.05, 40.00],
+      [-102.05, 36.99]
+    ]]
   },
-  "providers": [
-    {
-      "name": "USGS 3D Elevation Program (3DEP)",
-      "roles": ["producer", "licensor"],
-      "url": "https://www.usgs.gov/3d-elevation-program"
+  "properties": {
+    "title": "Kansas 1-Meter DEM (2018–2020)",
+    "description": "Statewide 1-meter Digital Elevation Model for Kansas from USGS 3DEP (2018–2020). Suitable for terrain analysis, hydrologic modeling, and historical landscape reconstruction.",
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2020-12-31T23:59:59Z",
+    "datetime": null,
+    "proj:epsg": 4269,
+    "gsd": 1.0,
+    "processing:software": {
+      "gdal": "3.6.x",
+      "gdaldem": "hillshade"
     },
-    {
-      "name": "Kansas Data Access and Support Center (DASC)",
-      "roles": ["host", "distributor"],
-      "url": "https://kansasgis.org"
+    "providers": [
+      {
+        "name": "USGS 3D Elevation Program (3DEP)",
+        "roles": ["producer", "licensor"],
+        "url": "https://www.usgs.gov/3d-elevation-program"
+      },
+      {
+        "name": "Kansas Data Access and Support Center (DASC)",
+        "roles": ["host", "distributor"],
+        "url": "https://kansasgis.org"
+      }
+    ],
+    "license": "public-domain",
+    "keywords": [
+      "Kansas",
+      "DEM",
+      "LiDAR",
+      "elevation",
+      "topography",
+      "3DEP",
+      "2018",
+      "2019",
+      "2020"
+    ],
+    "mcp:experiment_id": "EXP-DEM-KS-2018-2020",
+    "mcp:documentation": "mcp/experiments/dem_ks_1m_2018_2020.md",
+    "mcp:sop_reference": "mcp/sops/ingest_dem.md",
+    "mcp:traceability": {
+      "source_data": "USGS 3DEP LiDAR-derived DEMs, 2018–2020",
+      "processing": "Converted to COG via GDAL 3.6; hillshade derived with gdaldem hillshade",
+      "git_commit": "<commit-hash>"
     }
-  ],
+  },
   "assets": {
     "cog": {
       "href": "s3://kansas-frontier-matrix/data/cogs/dem/ks_1m_dem_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Cloud-Optimized GeoTIFF"
+      "title": "DEM (Cloud-Optimized GeoTIFF)",
+      "roles": ["data"],
+      "raster:bands": [
+        {
+          "data_type": "float32",
+          "unit": "metre",
+          "nodata": null,
+          "statistics": null
+        }
+      ],
+      "file:checksum": "sha256:<REPLACE_WITH_ACTUAL_HASH>",
+      "file:size": null
     },
     "hillshade": {
       "href": "s3://kansas-frontier-matrix/data/cogs/dem/ks_1m_dem_2018_2020_hillshade.tif",
       "type": "image/tiff; application=geotiff",
-      "title": "Derived Hillshade Raster"
+      "title": "Derived Hillshade",
+      "roles": ["derived"],
+      "raster:bands": [
+        {
+          "data_type": "uint8",
+          "unit": "1",
+          "nodata": null
+        }
+      ],
+      "file:checksum": "sha256:<REPLACE_WITH_ACTUAL_HASH>",
+      "file:size": null
     }
   },
-  "license": "Public Domain (USGS)",
-  "keywords": [
-    "Kansas",
-    "DEM",
-    "LiDAR",
-    "elevation",
-    "topography",
-    "3DEP",
-    "2018",
-    "2019",
-    "2020"
-  ],
-  "mcp": {
-    "experiment_id": "EXP-DEM-KS-2018-2020",
-    "documentation": "mcp/experiments/dem_ks_1m_2018_2020.md",
-    "sop_reference": "mcp/sops/ingest_dem.md",
-    "traceability": {
-      "source_data": "USGS 3DEP LiDAR-derived DEMs, 2018–2020",
-      "processing": "Converted to COG using GDAL 3.6, hillshade derived with gdaldem hillshade",
-      "git_commit": "<commit-hash>"
-    }
-  }
+  "links": [
+    { "rel": "self",   "href": "./ks_1m_dem_2018_2020.json" },
+    { "rel": "parent", "href": "../collection.json" },
+    { "rel": "collection", "href": "../collection.json" }
+  ]
 }
-
