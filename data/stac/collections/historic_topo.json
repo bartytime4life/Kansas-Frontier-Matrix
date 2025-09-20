@@ -1,1 +1,69 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "historic_topo",
+  "title": "Historic USGS Topographic Maps (Kansas)",
+  "description": "Georeferenced historic USGS topographic map sheets covering Kansas. Suitable for time-aware visualization, change analysis, and cross-referencing with archival narratives. Approximate temporal coverage: 1884–2006.",
+  "license": "public-domain",
+  "keywords": [
+    "USGS",
+    "historic",
+    "topographic",
+    "maps",
+    "Kansas",
+    "raster",
+    "COG"
+  ],
+  "providers": [
+    {
+      "name": "U.S. Geological Survey (USGS)",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.usgs.gov/"
+    },
+    {
+      "name": "Kansas Frontier Matrix Project",
+      "roles": ["processor", "host"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
+    },
+    "temporal": {
+      "interval": [["1884-01-01T00:00:00Z", "2006-12-31T23:59:59Z"]]
+    }
+  },
+  "summaries": {
+    "proj:epsg": [4326],
+    "platform": ["survey", "scanned-map"],
+    "instruments": ["plane-table", "photogrammetry"],
+    "item_assets": ["map", "metadata", "thumbnail"]
+  },
+  "item_assets": {
+    "map": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "title": "Historic topographic map (COG)",
+      "description": "Cloud-Optimized GeoTIFF of a georeferenced historic USGS topo sheet.",
+      "proj:epsg": 4326
+    },
+    "metadata": {
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Map metadata (sheet info, scale, provenance)"
+    },
+    "thumbnail": {
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail preview"
+    }
+  },
+  "links": [
+    { "rel": "self",   "href": "./historic_topo.json",          "type": "application/json" },
+    { "rel": "root",   "href": "../catalog.json",               "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",               "type": "application/json" },
+    { "rel": "item",   "href": "../items/usgs_1894_larned.json","type": "application/geo+json" }
+  ]
+}
 
