@@ -1,1 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <NetworkLink>
+    <name>USGS Topographic Map — Larned (1894)</name>
+    <open>1</open>
+
+    <!-- Optional: only load when the view intersects this region (approx. Larned quad) -->
+    <Region>
+      <LatLonAltBox>
+        <north>38.3000</north>
+        <south>37.8000</south>
+        <east>-98.8000</east>
+        <west>-99.5000</west>
+        <minAltitude>0</minAltitude>
+        <maxAltitude>0</maxAltitude>
+      </LatLonAltBox>
+      <Lod>
+        <minLodPixels>64</minLodPixels>
+        <maxLodPixels>-1</maxLodPixels>
+      </Lod>
+    </Region>
+
+    <Link>
+      <!-- Point this at your regionated KMZ (or top-level KML) for the 1894 Larned sheet -->
+      <href>../overlays/usgs_topo_larned_1894.kmz</href>
+      <viewRefreshMode>onStop</viewRefreshMode>
+      <viewRefreshTime>1</viewRefreshTime>
+    </Link>
+  </NetworkLink>
+</kml>
 
