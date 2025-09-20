@@ -1,1 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <NetworkLink>
+    <name>Kansas 1 m Hillshade (2018–2020)</name>
+    <open>1</open>
+
+    <!-- Only fetch when the camera intersects Kansas (approx. statewide bbox) -->
+    <Region>
+      <LatLonAltBox>
+        <north>40.003</north>
+        <south>36.993</south>
+        <east>-94.588</east>
+        <west>-102.051</west>
+        <minAltitude>0</minAltitude>
+        <maxAltitude>0</maxAltitude>
+      </LatLonAltBox>
+      <Lod>
+        <minLodPixels>64</minLodPixels>
+        <maxLodPixels>-1</maxLodPixels>
+      </Lod>
+    </Region>
+
+    <!-- Optional: default view when opening the link -->
+    <LookAt>
+      <longitude>-98.3</longitude>
+      <latitude>38.5</latitude>
+      <altitude>0</altitude>
+      <heading>0</heading>
+      <tilt>0</tilt>
+      <range>900000</range>
+      <altitudeMode>clampToGround</altitudeMode>
+    </LookAt>
+
+    <Link>
+      <!-- Point to your regionated KMZ of the hillshade tiles -->
+      <href>../overlays/ks_1m_hillshade.kmz</href>
+      <viewRefreshMode>onStop</viewRefreshMode>
+      <viewRefreshTime>1</viewRefreshTime>
+    </Link>
+  </NetworkLink>
+</kml>
 
