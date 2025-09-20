@@ -12,19 +12,24 @@ on:
       - "README.md"
   workflow_dispatch:
 
+# Least-privilege for Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Only one Pages deployment at a time
 concurrency:
-  group: "pages"
+  group: "pages-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
   build:
     name: Build static site
     runs-on: ubuntu-latest
+    env:
+      # Where we assemble the final site for upload
+      SITE_DIR: _site
 
     steps:
       - name: Checkout
@@ -32,65 +37,159 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Optional Node build if web/package.json exists
-      - name: Set up Node (optional)
-        if: ${{ hashFiles('web/package.json') != '' }}
+      # ------------------------------------------------------------------------------
+      # Detect package manager if web/package.json exists (npm | yarn | pnpm)
+      # ------------------------------------------------------------------------------
+      - name: Detect web build tooling
+        id: detect_tool
+        run: |
+          if [ -f web/package.json ]; then
+            echo "has_pkgjson=true" >> "$GITHUB_OUTPUT"
+            if [ -f web/pnpm-lock.yaml ]; then
+              echo "pm=pnpm" >> "$GITHUB_OUTPUT"
+            elif [ -f web/yarn.lock ]; then
+              echo "pm=yarn" >> "$GITHUB_OUTPUT"
+            else
+              echo "pm=npm" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "has_pkgjson=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node (only if building a JS app)
+        if: steps.detect_tool.outputs.has_pkgjson == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          cache-dependency-path: web/package-lock.json
+          cache: ${{ steps.detect_tool.outputs.pm }}
+          cache-dependency-path: |
+            web/package-lock.json
+            web/pnpm-lock.yaml
+            web/yarn.lock
 
-      - name: Install & build (if package.json present)
-        if: ${{ hashFiles('web/package.json') != '' }}
+      - name: Install pnpm (if selected)
+        if: steps.detect_tool.outputs.pm == 'pnpm'
+        run: npm i -g pnpm@9
+
+      # ------------------------------------------------------------------------------
+      # Build web app OR copy static site
+      # ------------------------------------------------------------------------------
+      - name: Build web (npm)
+        if: steps.detect_tool.outputs.pm == 'npm'
         working-directory: web
         run: |
-          set -e
+          set -euo pipefail
           npm ci
           npm run build
-          cd ..
-          mkdir -p _site
+
+      - name: Build web (yarn)
+        if: steps.detect_tool.outputs.pm == 'yarn'
+        working-directory: web
+        run: |
+          set -euo pipefail
+          corepack enable
+          yarn install --frozen-lockfile
+          yarn build
+
+      - name: Build web (pnpm)
+        if: steps.detect_tool.outputs.pm == 'pnpm'
+        working-directory: web
+        run: |
+          set -euo pipefail
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Prepare site dir from web build
+        if: steps.detect_tool.outputs.has_pkgjson == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p "$SITE_DIR"
           if [ -d "web/dist" ]; then
-            rsync -av --delete web/dist/ _site/
+            rsync -a --delete web/dist/ "$SITE_DIR"/
           elif [ -d "web/build" ]; then
-            rsync -av --delete web/build/ _site/
+            rsync -a --delete web/build/ "$SITE_DIR"/
           else
-            echo "No dist/ or build/ found after npm run build"; exit 1
+            echo "No dist/ or build/ found after web build"; exit 1
           fi
 
       - name: Copy static web/ (when no Node build)
-        if: ${{ hashFiles('web/package.json') == '' }}
+        if: steps.detect_tool.outputs.has_pkgjson != 'true'
         run: |
-          set -e
-          mkdir -p _site
-          rsync -av --delete web/ _site/
+          set -euo pipefail
+          if [ -d "web" ]; then
+            mkdir -p "$SITE_DIR"
+            rsync -a --delete web/ "$SITE_DIR"/
+          else
+            echo "::error::No web/ directory and no package.json; nothing to deploy."
+            exit 1
+          fi
 
+      # ------------------------------------------------------------------------------
+      # Validate JSON catalogs (STAC & sources)
+      # ------------------------------------------------------------------------------
       - name: Validate JSON catalogs (STAC & sources)
         run: |
-          set -e
-          sudo apt-get update -y && sudo apt-get install -y jq > /dev/null
+          set -euo pipefail
+          sudo apt-get update -y >/dev/null
+          sudo apt-get install -y jq >/dev/null
           ok=1
-          if compgen -G "data/stac/*.json" > /dev/null; then
-            for f in data/stac/*.json; do
-              echo "Validating $f"
-              jq empty "$f" || ok=0
-            done
-          fi
-          if compgen -G "data/sources/*.json" > /dev/null; then
-            for f in data/sources/*.json; do
-              echo "Validating $f"
-              jq empty "$f" || ok=0
-            done
-          fi
-          [ $ok -eq 1 ] || { echo "JSON validation failed"; exit 1; }
+          for dir in data/stac data/sources; do
+            if compgen -G "$dir/*.json" > /dev/null; then
+              for f in "$dir"/*.json; do
+                echo "Validating $f"
+                jq -e 'type=="object"' "$f" || ok=0
+              done
+            fi
+          done
+          [ $ok -eq 1 ] || { echo "::error::JSON validation failed"; exit 1; }
 
+      # ------------------------------------------------------------------------------
+      # Ensure Pages-friendly outputs
+      # ------------------------------------------------------------------------------
+      - name: Prepare Pages artifacts (.nojekyll, 404, CNAME if present)
+        run: |
+          set -euo pipefail
+          touch "$SITE_DIR/.nojekyll"
+          # Preserve user-provided CNAME if present in repo root or web/
+          for c in CNAME web/CNAME; do
+            if [ -f "$c" ]; then
+              cp "$c" "$SITE_DIR/CNAME"
+            fi
+          done
+          # Provide a minimal 404 if not supplied by the site build
+          if [ ! -f "$SITE_DIR/404.html" ]; then
+            cat > "$SITE_DIR/404.html" <<'HTML'
+            <!doctype html><meta charset="utf-8">
+            <meta name=viewport content="width=device-width,initial-scale=1">
+            <title>404 — Not Found</title>
+            <h1>404 — Not Found</h1>
+            <p>This page does not exist on this site.</p>
+            HTML
+          fi
+
+      # ------------------------------------------------------------------------------
+      # Optional: link check the built site (can be toggled via env or removed)
+      # ------------------------------------------------------------------------------
+      - name: Link check (lychee)
+        if: ${{ !cancelled() }}
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --verbose --base ./${{ env.SITE_DIR }} ./${{ env.SITE_DIR }}/**/*.html
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ------------------------------------------------------------------------------
+      # Configure & upload for Pages
+      # ------------------------------------------------------------------------------
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: ${{ env.SITE_DIR }}
+          retention-days: 7
 
   deploy:
     name: Deploy to GitHub Pages
@@ -103,5 +202,3 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
-
