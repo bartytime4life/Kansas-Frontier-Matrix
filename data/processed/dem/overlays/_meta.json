@@ -1,1 +1,39 @@
+{
+  "id": "ks_dem_overlays",
+  "title": "Kansas DEM Overlays Collection",
+  "description": "A catalog of processed overlays derived from Kansas 1m DEMs and historical base layers. Includes hillshade, slope/aspect derivatives, and georeferenced historical topographic map overlays. All overlays are aligned to WGS84/UTM and documented with provenance metadata.",
+  "spatial_extent": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00],
+    "crs": "EPSG:4326"
+  },
+  "temporal_extent": {
+    "start": "1894-01-01",
+    "end": "2020-12-31"
+  },
+  "overlays": [
+    {
+      "id": "ks_hillshade_2018_2020",
+      "type": "raster",
+      "source": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "metadata": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+      "description": "Hillshade overlay generated from 2018–2020 Kansas 1m DEM.",
+      "provenance": "USGS 3DEP LiDAR, processed via GDAL hillshade pipeline"
+    },
+    {
+      "id": "usgs_topo_larned_1894",
+      "type": "raster",
+      "source": "data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "metadata": "data/cogs/overlays/usgs_topo_larned_1894.meta.json",
+      "description": "Georeferenced 1894 USGS topographic map of Larned, Kansas, used as historical overlay.",
+      "provenance": "USGS Historical Topographic Map Collection, georeferenced to WGS84"
+    }
+  ],
+  "data_quality": {
+    "processing": "All overlays converted to Cloud Optimized GeoTIFF (COG) with internal tiling and compression. Georeferencing RMS error < 10m for historical maps.",
+    "uncertainty": "Historical maps subject to cartographic distortions; modern DEM derivatives accurate within source LiDAR specifications."
+  },
+  "license": "CC-BY-4.0",
+  "version": "1.0.0",
+  "last_updated": "2025-09-19"
+}
 
