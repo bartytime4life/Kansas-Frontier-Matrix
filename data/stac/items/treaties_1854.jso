@@ -1,1 +1,87 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "treaties_1854",
+  "bbox": [
+    -102.05,
+    36.99,
+    -94.60,
+    40.00
+  ],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99],
+      [-94.60, 36.99],
+      [-94.60, 40.00],
+      [-102.05, 40.00],
+      [-102.05, 36.99]
+    ]]
+  },
+  "properties": {
+    "title": "Treaties of 1854 affecting Kansas Territory",
+    "description": "Collection of treaties ratified in 1854 between the United States and Native Nations, impacting lands within present-day Kansas and Nebraska. Includes the Kansas–Nebraska Act and land cession treaties involving the Kanza, Pawnee, and other tribes. Provides legal and historical context for shifts in land ownership and settlement.",
+    "datetime": "1854-01-01T00:00:00Z",
+    "start_datetime": "1854-01-01T00:00:00Z",
+    "end_datetime": "1854-12-31T23:59:59Z",
+    "created": "2025-09-20T00:00:00Z",
+    "updated": "2025-09-20T00:00:00Z",
+    "providers": [
+      {
+        "name": "U.S. National Archives",
+        "roles": ["producer", "licensor"],
+        "url": "https://www.archives.gov/"
+      },
+      {
+        "name": "Kansas Frontier Matrix Project",
+        "roles": ["processor", "host"],
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+      }
+    ],
+    "license": "public-domain"
+  },
+  "assets": {
+    "treaty_texts": {
+      "href": "../../documents/treaties/treaties_1854.pdf",
+      "type": "application/pdf",
+      "roles": ["data"],
+      "title": "Full texts of the 1854 treaties (PDF)"
+    },
+    "metadata": {
+      "href": "../../documents/treaties/treaties_1854.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Metadata for the 1854 treaties"
+    },
+    "map_overlay": {
+      "href": "../../cogs/overlays/treaties_1854_boundaries.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Treaty boundaries (1854) as GeoJSON"
+    },
+    "thumbnail": {
+      "href": "../../thumbnails/treaties_1854.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail map of 1854 treaty boundaries"
+    }
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "./treaties_1854.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json"
+    }
+  ]
+}
 
