@@ -1,1 +1,36 @@
+# from repo root
+set -euo pipefail
+
+# Ensure the expected inputs exist
+test -f data/earth/doc.kml
+test -f data/earth/networklinks/ks_1m_hillshade.kml
+test -f data/earth/networklinks/usgs_topo_1894.kml
+
+# (Optional) ensure the regionated overlays are present if you want a self-contained package.
+# If you have them, uncomment these checks:
+# test -f data/earth/overlays/ks_1m_hillshade.kmz
+# test -f data/earth/overlays/usgs_topo_larned_1894.kmz
+
+# Stage a minimal KMZ payload in a temp dir
+rm -rf /tmp/Kansas_Terrain_kmz && mkdir -p /tmp/Kansas_Terrain_kmz/networklinks
+cp data/earth/doc.kml                                  /tmp/Kansas_Terrain_kmz/doc.kml
+cp data/earth/networklinks/ks_1m_hillshade.kml         /tmp/Kansas_Terrain_kmz/networklinks/
+cp data/earth/networklinks/usgs_topo_1894.kml          /tmp/Kansas_Terrain_kmz/networklinks/
+
+# If you want the KMZ to be fully offline/self-contained, also add your regionated overlays:
+# mkdir -p /tmp/Kansas_Terrain_kmz/overlays
+# cp data/earth/overlays/ks_1m_hillshade.kmz            /tmp/Kansas_Terrain_kmz/overlays/
+# cp data/earth/overlays/usgs_topo_larned_1894.kmz      /tmp/Kansas_Terrain_kmz/overlays/
+
+# Pack it (KMZ is just a zip with doc.kml at the root)
+cd /tmp/Kansas_Terrain_kmz
+zip -r Kansas_Terrain.kmz doc.kml networklinks > /dev/null
+
+# If you staged overlays, include the overlays/ folder as well:
+# zip -r Kansas_Terrain.kmz doc.kml networklinks overlays > /dev/null
+
+# Move to repo path
+mkdir -p "$(pwd -P)/../../data/earth"
+mv Kansas_Terrain.kmz "$(pwd -P)/../../data/earth/Kansas_Terrain.kmz"
+echo "Created data/earth/Kansas_Terrain.kmz"
 
