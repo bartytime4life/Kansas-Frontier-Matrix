@@ -1,52 +1,57 @@
 {
-  "title": "Kansas Geo Timeline",
-  "map": {
-    "style": "https://demotiles.maplibre.org/style.json",
-    "center": [-98.0, 39.0],
-    "zoom": 6
-  },
-  "time": {
-    "min": 1850,
-    "max": 2025,
-    "value": 1930
-  },
+  "title": "Kansas-Frontier-Matrix",
+  "subtitle": "Time-aware historical GIS for Kansas",
+  "style": "https://demotiles.maplibre.org/style.json",
+  "center": [-98.3, 38.5],
+  "zoom": 6,
+
+  "time": { "min": 1850, "max": 2025 },
+  "defaultYear": 1930,
+
   "layers": [
     {
-      "id": "hillshade",
+      "id": "ks_1m_hillshade",
       "title": "Hillshade (2018–2020)",
+      "group": "Basemaps & Terrain",
       "type": "raster",
       "url": "./tiles/ks_hillshade/{z}/{x}/{y}.png",
       "opacity": 0.9,
-      "attribution": "DEM © KARS / State of Kansas",
+      "minzoom": 0,
+      "maxzoom": 14,
       "start": 2018,
       "end": 2020
     },
     {
       "id": "usgs_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
+      "group": "Historic Topographic Maps",
       "type": "raster",
       "url": "./tiles/usgs_1894_larned/{z}/{x}/{y}.png",
       "opacity": 0.7,
-      "attribution": "USGS Historical Topographic Maps (Public Domain)",
+      "minzoom": 0,
+      "maxzoom": 16,
       "start": 1894,
       "end": 1894
-    }
-    /* Example of a static image overlay (uncomment if you have coordinates):
-    ,{
-      "id": "overlay_example",
-      "title": "Scanned Map Image",
-      "type": "image",
-      "url": "./overlays/scanned_map.png",
-      "coordinates": [
-        [-99.0, 39.5],  // top-left  (west, north)
-        [-98.0, 39.5],  // top-right (east, north)
-        [-98.0, 38.8],  // bottom-right (east, south)
-        [-99.0, 38.8]   // bottom-left (west, south)
-      ],
-      "opacity": 0.8,
+    },
+    {
+      "id": "railroads_1900",
+      "title": "Railroads (c. 1900)",
+      "group": "Vectors",
+      "type": "vector",
+      "url": "./vectors/infrastructure/railroads_1900.geojson",
+      "opacity": 1.0,
       "start": 1900,
       "end": 1900
+    },
+    {
+      "id": "treaties_1854",
+      "title": "Treaty Boundaries (1854)",
+      "group": "Vectors",
+      "type": "vector",
+      "url": "./vectors/political/treaties_1854.geojson",
+      "opacity": 0.85,
+      "start": 1854,
+      "end": 1854
     }
-    */
   ]
 }
