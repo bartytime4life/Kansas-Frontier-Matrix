@@ -1,1 +1,60 @@
+{
+  "id": "usgs_topo_larned_1894",
+  "type": "raster-map",
+  "title": "USGS Topographic Map – Larned, Kansas (1894)",
+  "description": "Georeferenced historical topographic map of Larned, Kansas, published by the USGS in 1894. Part of the Historical Topographic Map Collection, providing late 19th-century detail on settlements, transportation, and terrain features in central Kansas.",
+  "collection": "usgs_historical_topos",
+  "bbox": [-99.25, 38.00, -98.75, 38.50],
+  "spatial_resolution": "1:125,000 (approximate scale)",
+  "coordinate_system": "EPSG:4326",
+  "temporal": {
+    "start": "1894-01-01",
+    "end": "1894-12-31"
+  },
+  "providers": [
+    {
+      "name": "United States Geological Survey (USGS)",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.usgs.gov"
+    },
+    {
+      "name": "Kansas Data Access and Support Center (DASC)",
+      "roles": ["host", "distributor"],
+      "url": "https://kansasgis.org"
+    }
+  ],
+  "assets": {
+    "cog": {
+      "href": "s3://kansas-frontier-matrix/data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Cloud-Optimized GeoTIFF of 1894 Larned Topo"
+    },
+    "thumbnail": {
+      "href": "s3://kansas-frontier-matrix/data/cogs/overlays/usgs_topo_larned_1894_preview.png",
+      "type": "image/png",
+      "title": "PNG Preview"
+    }
+  },
+  "license": "Public Domain (USGS)",
+  "keywords": [
+    "Kansas",
+    "Larned",
+    "topographic map",
+    "USGS",
+    "historical map",
+    "overlay",
+    "1894",
+    "frontier"
+  ],
+  "mcp": {
+    "experiment_id": "EXP-USGS-LARNED-1894",
+    "documentation": "mcp/experiments/usgs_topo_larned_1894.md",
+    "sop_reference": "mcp/sops/ingest_historical_topo.md",
+    "traceability": {
+      "source_data": "USGS Historical Topographic Map Collection (Larned, KS 1894 sheet)",
+      "processing": "Scanned TIFF georeferenced to WGS84, converted to COG with gdal_translate",
+      "git_commit": "<commit-hash>"
+    }
+  }
+}
 
