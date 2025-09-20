@@ -1,1 +1,58 @@
+{
+  "id": "ks_processed_dem",
+  "type": "collection",
+  "title": "Processed DEM Products – Kansas Frontier Matrix",
+  "description": "Collection of processed digital elevation model (DEM) datasets for Kansas. Includes statewide 1-meter resolution DEMs (2018–2020) and derivative products (hillshade, slope, aspect) prepared as Cloud-Optimized GeoTIFFs (COGs) for analysis and visualization. These layers support terrain analysis, hydrological modeling, and historical landscape reconstruction within the Kansas-Frontier-Matrix hub.",
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.05, 36.99, -94.60, 40.00]]
+    },
+    "temporal": {
+      "interval": [["2018-01-01", "2020-12-31"]]
+    }
+  },
+  "providers": [
+    {
+      "name": "USGS 3D Elevation Program (3DEP)",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.usgs.gov/3d-elevation-program"
+    },
+    {
+      "name": "Kansas Data Access and Support Center (DASC)",
+      "roles": ["host", "distributor"],
+      "url": "https://kansasgis.org"
+    }
+  ],
+  "assets": {
+    "ks_1m_dem_2018_2020": {
+      "href": "../../cogs/dem/ks_1m_dem_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Kansas 1m DEM (2018–2020)"
+    },
+    "ks_hillshade_2018_2020": {
+      "href": "../../cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Hillshade (derived from Kansas 1m DEM 2018–2020)"
+    }
+  },
+  "keywords": [
+    "Kansas",
+    "DEM",
+    "LiDAR",
+    "elevation",
+    "terrain",
+    "hillshade",
+    "processed data",
+    "3DEP"
+  ],
+  "license": "Public Domain (USGS)",
+  "mcp": {
+    "sop_reference": "mcp/sops/process_dem.md",
+    "documentation": "mcp/experiments/process_dem_collection.md",
+    "traceability": {
+      "processing": "DEM tiles mosaicked, reprojected to EPSG:4269, converted to Cloud-Optimized GeoTIFFs with GDAL 3.6. Derivatives (hillshade, slope, aspect) created using gdaldem.",
+      "git_commit": "<commit-hash>"
+    }
+  }
+}
 
