@@ -1,1 +1,73 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": ["item-assets"],
+  "type": "Collection",
+  "id": "vectors",
+  "title": "Kansas Historical & Infrastructure Vectors",
+  "description": "Vector layers for the Kansas-Frontier-Matrix, including railroads (circa 1900), treaty boundaries (1854), trails, settlements, cadastral/PLSS lines, hydrology, and other time-aware features for analysis and visualization.",
+  "license": "public-domain",
+  "keywords": [
+    "vectors",
+    "railroads",
+    "treaties",
+    "boundaries",
+    "PLSS",
+    "hydrology",
+    "Kansas",
+    "historical-GIS"
+  ],
+  "providers": [
+    {
+      "name": "Kansas Frontier Matrix Project",
+      "roles": ["processor", "host"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
+    },
+    "temporal": {
+      "interval": [["1800-01-01T00:00:00Z", null]]
+    }
+  },
+  "summaries": {
+    "proj:epsg": [4326],
+    "geometry": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    "item_assets": ["vector", "tiles", "metadata", "thumbnail"]
+  },
+  "item_assets": {
+    "vector": {
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Primary vector data (GeoJSON)",
+      "description": "Canonical vector layer for this item, provided as GeoJSON in EPSG:4326."
+    },
+    "tiles": {
+      "type": "application/vnd.mapbox-vector-tile",
+      "roles": ["tiles"],
+      "title": "Vector tiles (MBTiles/PMTiles)",
+      "description": "Tile set for performant web rendering of the vector layer."
+    },
+    "metadata": {
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Item-level metadata / lineage",
+      "description": "Provenance, schema, and lineage for the vector layer."
+    },
+    "thumbnail": {
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail preview"
+    }
+  },
+  "links": [
+    { "rel": "self",   "href": "./vectors.json",               "type": "application/json" },
+    { "rel": "root",   "href": "../catalog.json",              "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",              "type": "application/json" },
+
+    { "rel": "item",   "href": "../items/railroads_1900.json", "type": "application/geo+json" },
+    { "rel": "item",   "href": "../items/treaties_1854.json",  "type": "application/geo+json" }
+  ]
+}
 
