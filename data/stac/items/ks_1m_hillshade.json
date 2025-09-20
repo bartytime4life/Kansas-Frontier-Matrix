@@ -1,1 +1,66 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_1m_hillshade_2018_2020",
+  "bbox": [-102.051, 36.993, -94.588, 40.003],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.051, 36.993],
+      [-94.588, 36.993],
+      [-94.588, 40.003],
+      [-102.051, 40.003],
+      [-102.051, 36.993]
+    ]]
+  },
+  "properties": {
+    "title": "Kansas 1 m Hillshade (2018–2020 LiDAR-derived)",
+    "description": "Statewide 1 m hillshade raster for Kansas generated from 2018–2020 LiDAR-derived DEM. Optimized as a COG for web visualization and analysis.",
+    "datetime": "2019-01-01T00:00:00Z",
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2020-12-31T23:59:59Z",
+    "created": "2025-09-20T00:00:00Z",
+    "updated": "2025-09-20T00:00:00Z",
+    "proj:epsg": 4326,
+    "providers": [
+      {
+        "name": "Kansas Frontier Matrix Project",
+        "roles": ["processor", "host"],
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+      }
+    ],
+    "license": "public-domain"
+  },
+  "assets": {
+    "hillshade": {
+      "href": "../../cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "title": "Kansas 1 m Hillshade (COG)"
+    },
+    "metadata": {
+      "href": "../../cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Metadata for Kansas 1 m Hillshade"
+    },
+    "thumbnail": {
+      "href": "../../thumbnails/ks_1m_hillshade.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail — Kansas 1 m Hillshade"
+    }
+  },
+  "links": [
+    {
+      "rel": "derived_from",
+      "href": "../../cogs/dem/ks_1m_dem_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Source DEM (1 m, 2018–2020)"
+    },
+    { "rel": "self",   "href": "./ks_1m_hillshade.json", "type": "application/geo+json" },
+    { "rel": "root",   "href": "../catalog.json",        "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",        "type": "application/json" }
+  ]
+}
 
