@@ -1,16 +1,43 @@
 {
   "id": "usgs_topo_larned_1894",
+  "version": "1.0.0",
   "type": "raster-map",
+  "product": "historical_topographic_map",
+
   "title": "USGS Topographic Map – Larned, Kansas (1894)",
-  "description": "Georeferenced historical topographic map of Larned, Kansas, published by the USGS in 1894. Part of the Historical Topographic Map Collection, providing late 19th-century detail on settlements, transportation, and terrain features in central Kansas.",
+  "description": "Georeferenced historical topographic map of Larned, Kansas, published by the USGS in 1894 (Historical Topographic Map Collection). Useful as an overlay for late 19th-century settlements, transportation, hydrology, and terrain context.",
+
   "collection": "usgs_historical_topos",
-  "bbox": [-99.25, 38.00, -98.75, 38.50],
-  "spatial_resolution": "1:125,000 (approximate scale)",
-  "coordinate_system": "EPSG:4326",
+
+  "spatial": {
+    "bbox": [-99.25, 38.00, -98.75, 38.50],
+    "resolution_note": "Historical scan; pixel size varies with source DPI. Scale ~1:125,000.",
+    "proj": {
+      "epsg": 4326,
+      "note": "Stored in WGS84 for web overlay. If an alternate native georef exists (e.g., polyconic), preserve in source metadata and document warp parameters below."
+    },
+    "grid": {
+      "pixel_encoding": "center",
+      "alignment": "web-map overlay"
+    }
+  },
+
   "temporal": {
     "start": "1894-01-01",
-    "end": "1894-12-31"
+    "end": "1894-12-31",
+    "published": "1894-01-01"
   },
+
+  "map_metadata": {
+    "scale_denominator": 125000,
+    "sheet_name": "Larned, Kansas",
+    "series": "USGS Topographic",
+    "publisher": "USGS",
+    "scan_dpi": null,
+    "color_profile": "RGB",
+    "source_note": "Scanned sheet from the USGS Historical Topographic Map Collection."
+  },
+
   "providers": [
     {
       "name": "United States Geological Survey (USGS)",
@@ -23,6 +50,24 @@
       "url": "https://kansasgis.org"
     }
   ],
+
+  "files": {
+    "cog": {
+      "path": "data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "s3": "s3://kansas-frontier-matrix/data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "media_type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "size_bytes": null,
+      "sha256": "data/cogs/overlays/usgs_topo_larned_1894.sha256"
+    },
+    "thumbnail": {
+      "path": "data/cogs/overlays/usgs_topo_larned_1894_preview.png",
+      "s3": "s3://kansas-frontier-matrix/data/cogs/overlays/usgs_topo_larned_1894_preview.png",
+      "media_type": "image/png",
+      "size_bytes": null
+    },
+    "aux": []
+  },
+
   "assets": {
     "cog": {
       "href": "s3://kansas-frontier-matrix/data/cogs/overlays/usgs_topo_larned_1894.tif",
@@ -35,6 +80,64 @@
       "title": "PNG Preview"
     }
   },
+
+  "data": {
+    "datatype": "uint8",
+    "bands": 3,
+    "nodata": null,
+    "color_interpretation": "RGB",
+    "colormap": null,
+    "scaling": null
+  },
+
+  "georeferencing": {
+    "method": "GCPs + polynomial/TPST warp or fit to neatline graticule",
+    "rmse_pixels": null,
+    "control_points_count": null,
+    "warp_resampling": "cubic",
+    "neatline_mask_applied": true,
+    "notes": "Record tie points and RMSE when available; trimming to neatline recommended to remove collar."
+  },
+
+  "processing": {
+    "software": {
+      "gdal": "3.6.x"
+    },
+    "commands": [
+      "# Example: warp from scanned sheet (native) to WGS84 for web overlay",
+      "gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -overwrite /path/to/source_scan.tif /tmp/usgs_topo_larned_1894_wgs84.tif",
+      "# Convert to COG (RGB scans → JPEG-in-COG for size/speed)",
+      "gdal_translate -of COG -co COMPRESS=JPEG -co QUALITY=85 -co LEVEL=9 -co NUM_THREADS=ALL_CPUS -co BIGTIFF=IF_SAFER -co OVERVIEW_RESAMPLING=AVERAGE -co RESAMPLING=AVERAGE -co BLOCKSIZE=512 /tmp/usgs_topo_larned_1894_wgs84.tif data/cogs/overlays/usgs_topo_larned_1894.tif"
+    ],
+    "cog_profile": {
+      "compress": "JPEG",
+      "quality": 85,
+      "tiling": true,
+      "tile_width": 512,
+      "tile_height": 512,
+      "photometric": "YCBCR",
+      "overviews": {
+        "build": true,
+        "resampling": "AVERAGE",
+        "levels": "auto"
+      }
+    }
+  },
+
+  "validation": {
+    "gdalinfo_summary": {
+      "driver": "COG",
+      "channels": 3,
+      "dtype": "Byte",
+      "overviews": "present",
+      "checksum": null
+    },
+    "checks": [
+      "jq -e 'type==\"object\"' data/cogs/overlays/usgs_topo_larned_1894.meta.json",
+      "sha256sum -c data/cogs/overlays/usgs_topo_larned_1894.sha256"
+    ]
+  },
+
   "license": "Public Domain (USGS)",
   "keywords": [
     "Kansas",
@@ -46,15 +149,19 @@
     "1894",
     "frontier"
   ],
+
+  "links": {
+    "stac_item": "data/stac/usgs_topo_larned_1894.json"
+  },
+
   "mcp": {
     "experiment_id": "EXP-USGS-LARNED-1894",
     "documentation": "mcp/experiments/usgs_topo_larned_1894.md",
     "sop_reference": "mcp/sops/ingest_historical_topo.md",
     "traceability": {
       "source_data": "USGS Historical Topographic Map Collection (Larned, KS 1894 sheet)",
-      "processing": "Scanned TIFF georeferenced to WGS84, converted to COG with gdal_translate",
+      "processing": "Scanned TIFF georeferenced to WGS84; converted to COG with JPEG compression and overviews",
       "git_commit": "<commit-hash>"
     }
   }
 }
-
