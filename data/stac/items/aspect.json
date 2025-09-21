@@ -1,0 +1,54 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": ["proj"],
+  "type": "Feature",
+  "id": "ks_aspect_deg",
+  "collection": "ks_aspect",
+  "geometry": null,
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "properties": {
+    "datetime": "2020-12-31T23:59:59Z",
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2020-12-31T23:59:59Z",
+    "proj:epsg": 4326,
+
+    "kfm:dem_src": "../cogs/dem/ks_1m_dem_2018_2020.tif",
+    "kfm:method": "gdaldem aspect",
+    "kfm:units": "degrees (0/360=N, 90=E, 180=S, 270=W)",
+    "kfm:nodata": "inherited from DEM",
+    "kfm:sectors_deg_breaks": [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5],
+    "kfm:sectors_labels": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+  },
+  "assets": {
+    "data": {
+      "href": "../../cogs/terrain/ks_aspect_deg.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "title": "Aspect (0–360°, degrees, COG)"
+    },
+    "sectors": {
+      "href": "../../processed/vectors/aspect_sectors.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Aspect sectors (N, NE, E, SE, S, SW, W, NW)"
+    },
+    "dem": {
+      "href": "../../cogs/dem/ks_1m_dem_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["source"],
+      "title": "DEM (1 m COG)"
+    },
+    "metadata": {
+      "href": "../../sources/ks_aspect.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Processing & lineage metadata"
+    }
+  },
+  "links": [
+    { "rel": "self", "href": "./aspect.json", "type": "application/json" },
+    { "rel": "collection", "href": "../../sources/ks_aspect.json", "type": "application/json" },
+    { "rel": "parent", "href": ".", "type": "application/json" },
+    { "rel": "root", "href": "../..", "type": "application/json" }
+  ]
+}
