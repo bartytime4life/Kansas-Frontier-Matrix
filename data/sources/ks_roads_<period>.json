@@ -1,0 +1,98 @@
+{
+  "id": "ks_roads_<period>",
+  "title": "Kansas Roads and Trails — <period>",
+  "description": "Roads, trails, and road centerlines for Kansas compiled for <period>. Combines modern (KDOT, TIGER/Line) and historical (USGS topos) sources for overlay in the Kansas-Frontier-Matrix time slider.",
+  "license": "Public Domain / Open Data (KDOT, US Census TIGER/Line, USGS, DASC); check per-asset terms",
+  "providers": [
+    {
+      "name": "Kansas Department of Transportation (KDOT)",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.ksdot.gov/"
+    },
+    {
+      "name": "Kansas Data Access & Support Center (DASC)",
+      "roles": ["host"],
+      "url": "https://data.kansasgis.org/"
+    },
+    {
+      "name": "US Census Bureau — TIGER/Line",
+      "roles": ["producer", "host"],
+      "url": "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+    },
+    {
+      "name": "USGS Historical Topographic Maps",
+      "roles": ["producer", "host"],
+      "url": "https://ngmdb.usgs.gov/topoview/"
+    }
+  ],
+  "period": {
+    "label": "<period>",
+    "start_year": null,
+    "end_year": null,
+    "notes": "Fill in start_year/end_year for precise temporal slicing (e.g., 1850–1900, 1930–1939, 2010–2020)."
+  },
+  "assets": {
+    "kdot_centerlines": {
+      "href": "https://data.kansasgis.org/arcgis/rest/services/Transportation/KDOT_Road_Centerlines/MapServer",
+      "type": "application/vnd.esri.map-service",
+      "title": "KDOT Road Centerlines (current/modern)",
+      "roles": ["source", "reference"],
+      "kfm:filter": "use for modern periods; subset by county/functional_class if needed"
+    },
+    "tiger_roads": {
+      "href": "https://www2.census.gov/geo/tiger/TIGER<YYYY>/*_ROADS.zip",
+      "type": "application/zip",
+      "title": "US Census TIGER/Line Roads (<YYYY>)",
+      "roles": ["source"],
+      "kfm:filter": "download Kansas counties only; pick year within <period>"
+    },
+    "usgs_historic_roads": {
+      "href": "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer",
+      "type": "application/vnd.esri.map-service",
+      "title": "USGS Historic Topo (roads/trails as interpreted from map symbols)",
+      "roles": ["source", "historical"],
+      "kfm:notes": "Digitize road/trail features from georeferenced historic sheets matching <period>."
+    },
+    "metadata": {
+      "href": "./ks_roads_<period>.meta.json",
+      "type": "application/json",
+      "title": "Processing metadata for period roads",
+      "roles": ["metadata"]
+    }
+  },
+  "processing": {
+    "schema": {
+      "id": "string",
+      "name": "string",
+      "road_type": "string",
+      "surface": "string|null",
+      "functional_class": "string|null",
+      "period_start": "integer|null",
+      "period_end": "integer|null",
+      "source": "string",
+      "source_layer": "string|null",
+      "accuracy_m": "number|null",
+      "notes": "string|null"
+    },
+    "notes": "Normalize attributes from KDOT/TIGER/USGS extractions into this schema; preserve provenance per feature."
+  },
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+    },
+    "temporal": {
+      "interval": [[null, null]]
+    }
+  },
+  "keywords": [
+    "Kansas",
+    "roads",
+    "highways",
+    "trails",
+    "transportation",
+    "TIGER/Line",
+    "KDOT",
+    "USGS historic topo",
+    "time-series"
+  ]
+}
