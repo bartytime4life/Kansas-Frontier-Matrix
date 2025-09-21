@@ -1,1 +1,410 @@
+/* =============================================================================
+   Kansas-Frontier-Matrix — web/style.css
+   Purpose: Minimal, modern, responsive styles for the time-aware map UI.
+   Notes:
+     - Uses CSS variables for easy theming.
+     - Works with MapLibre container #map and year slider #year + #year-label.
+     - Includes print styles and dark-mode support.
+   ========================================================================== */
+
+/* ---- CSS Variables (Design Tokens) -------------------------------------- */
+:root {
+  --bg: #0f1115;
+  --panel: #131720;
+  --panel-2: #161b26;
+  --text: #eef2ff;
+  --muted: #9aa4b2;
+  --accent: #73c1ff;
+  --accent-2: #4fb2ff;
+  --ok: #30d158;
+  --warn: #f5a524;
+  --danger: #ff5d5d;
+
+  --border: #263041;
+  --shadow: 0 8px 24px rgba(0,0,0,0.25);
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+
+  --gap-1: 6px;
+  --gap-2: 12px;
+  --gap-3: 18px;
+  --gap-4: 24px;
+
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, "Courier New", monospace;
+
+  --map-z: 1;
+  --controls-z: 10;
+  --tooltip-z: 20;
+
+  --focus-ring: 0 0 0 3px rgba(79,178,255,0.35);
+}
+
+/* Light theme (auto if system prefers) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f8fb;
+    --panel: #ffffff;
+    --panel-2: #f4f6fb;
+    --text: #0b1220;
+    --muted: #5b6678;
+    --accent: #0066ff;
+    --accent-2: #2a7aff;
+
+    --border: #e5e9f2;
+    --shadow: 0 8px 24px rgba(10,20,40,0.08);
+    --focus-ring: 0 0 0 3px rgba(0,102,255,0.25);
+  }
+}
+
+/* ---- Base Reset-ish ------------------------------------------------------ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, canvas, svg, video { display: block; max-width: 100%; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button { font: inherit; }
+
+/* ---- Layout -------------------------------------------------------------- */
+.app {
+  position: relative;
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--controls-z);
+  backdrop-filter: saturate(140%) blur(6px);
+  background: color-mix(in oklab, var(--panel) 85%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+
+.header__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--gap-2) var(--gap-3);
+  display: flex;
+  align-items: center;
+  gap: var(--gap-3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-2);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.brand img { width: 28px; height: 28px; }
+
+.header__spacer { flex: 1; }
+
+.header__actions {
+  display: flex;
+  gap: var(--gap-2);
+  align-items: center;
+}
+
+/* Map container (MapLibre expects a fixed-height container) */
+.map-wrapper {
+  position: relative;
+  z-index: var(--map-z);
+}
+
+#map {
+  width: 100%;
+  height: calc(100vh - 64px); /* header ~64px */
+  background: #0a0d12;
+  outline: none;
+}
+
+/* ---- Floating Controls Panel -------------------------------------------- */
+.controls {
+  position: absolute;
+  right: 16px;
+  top: 88px; /* sits below header */
+  z-index: var(--controls-z);
+  width: min(360px, 90vw);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2);
+  padding: var(--gap-3);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.controls__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--gap-2);
+  align-items: center;
+}
+
+.controls__section + .controls__section {
+  margin-top: var(--gap-2);
+  padding-top: var(--gap-2);
+  border-top: 1px dashed var(--border);
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- Year Slider --------------------------------------------------------- */
+.year-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--gap-2);
+  align-items: center;
+}
+
+#year {
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+}
+
+#year::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent-2);
+  box-shadow: var(--focus-ring);
+  cursor: pointer;
+}
+
+#year::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent-2);
+  box-shadow: var(--focus-ring);
+  cursor: pointer;
+}
+
+#year-label {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  padding: 4px 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  min-width: 72px;
+  text-align: center;
+}
+
+/* ---- Legend & Layer Toggles --------------------------------------------- */
+.legend {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gap-2);
+  padding: var(--gap-2);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.legend__swatch {
+  width: 14px; height: 14px; border-radius: 3px; border: 1px solid #0004;
+}
+
+.legend__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--gap-2);
+}
+
+.legend__name { font-size: 13px; color: var(--text); }
+.legend__meta { font-size: 12px; color: var(--muted); }
+
+.layers {
+  display: grid;
+  gap: 8px;
+}
+
+.layer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--gap-2);
+  padding: 8px 10px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.layer__name { font-weight: 600; }
+.layer__controls { display: flex; align-items: center; gap: 8px; }
+
+/* Toggle switch */
+.switch {
+  --h: 22px;
+  position: relative;
+  width: 44px;
+  height: var(--h);
+  border-radius: var(--h);
+  background: #444b57;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+.switch[aria-checked="true"] { background: var(--accent-2); }
+.switch__dot {
+  position: absolute; top: 50%; left: 2px;
+  width: calc(var(--h) - 6px); height: calc(var(--h) - 6px);
+  border-radius: 50%;
+  background: #fff; transform: translate(0, -50%);
+  transition: transform 160ms ease;
+}
+.switch[aria-checked="true"] .switch__dot { transform: translate(22px, -50%); }
+
+/* Range for per-layer opacity */
+.input--opacity {
+  appearance: none;
+  width: 100px;
+  height: 6px;
+  border-radius: 999px;
+  background: #2b3241;
+}
+.input--opacity::-webkit-slider-thumb,
+.input--opacity::-moz-range-thumb {
+  appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent);
+}
+
+/* ---- Utility UI Bits ----------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn--primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
+.btn--danger { background: #3a1010; border-color: #632222; color: #ffdada; }
+
+.badge {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.card {
+  padding: var(--gap-3);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Monospace token labels / hashes */
+.code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 2px 6px;
+  background: #0b0f18;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+/* ---- Tooltips ------------------------------------------------------------ */
+.tooltip {
+  position: absolute;
+  z-index: var(--tooltip-z);
+  pointer-events: none;
+  transform: translate(-50%, -120%);
+  padding: 6px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+}
+
+/* ---- Responsive ---------------------------------------------------------- */
+@media (max-width: 960px) {
+  #map { height: calc(100vh - 56px); }
+  .controls { right: 12px; top: 80px; width: min(420px, 92vw); }
+  .header__inner { padding: var(--gap-2) var(--gap-2); }
+}
+
+@media (max-width: 640px) {
+  .controls {
+    left: 12px; right: 12px; width: auto;
+  }
+  .legend { grid-template-columns: auto 1fr; }
+}
+
+/* ---- Print (export static map) ------------------------------------------ */
+@media print {
+  .header, .controls { display: none !important; }
+  #map { height: 9in; }
+  body { background: #fff; color: #000; }
+}
+
+/* ---- Accessibility tweaks ------------------------------------------------ */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* ---- Optional Animations ------------------------------------------------- */
+.fade-in { animation: fade-in 220ms ease-out both; }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 /* reserved for custom theming */
