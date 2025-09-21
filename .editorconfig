@@ -17,7 +17,7 @@ indent_size = 2
 # --- Python ---
 [*.py]
 indent_size = 4
-# Keep this in sync with pyproject.toml (Black/Ruff line-length)
+# Keep in sync with pyproject.toml (Black/Ruff line-length)
 max_line_length = 100
 trim_trailing_whitespace = true
 
@@ -67,8 +67,10 @@ indent_size = 2
 indent_size = 2
 [*.mdx]
 indent_size = 2
+[*.j2]    # Jinja templates
+indent_size = 2
 
-# --- Markdown / Docs ---
+# --- Markdown / Docs / Diagrams ---
 [*.md]
 trim_trailing_whitespace = false
 max_line_length = off
@@ -76,6 +78,9 @@ max_line_length = off
 [*.rst]
 trim_trailing_whitespace = false
 max_line_length = off
+
+[*.mmd]   # Mermaid diagrams
+indent_size = 2
 
 # --- Data files (preserve whitespace/width) ---
 [*.csv]
@@ -117,7 +122,7 @@ trim_trailing_whitespace = false
 max_line_length = off
 trim_trailing_whitespace = false
 
-# Allow long lines in STAC/items & collections JSON
-[data/stac/**]
+# Allow long lines in STAC Items & Collections JSON
+[stac/**]
 max_line_length = off
 trim_trailing_whitespace = false
