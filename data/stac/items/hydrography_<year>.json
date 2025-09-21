@@ -1,21 +1,38 @@
 {
   "stac_version": "1.0.0",
-  "stac_extensions": ["proj"],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
   "type": "Feature",
   "id": "hydrography_<year>",
   "collection": "ks_hydrography",
-  "geometry": null,
-  "bbox": [-102.05, 36.99, -94.59, 40.00],
+
+  "bbox": [-102.05, 36.99, -94.59, 40.0],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99],
+      [-94.59, 36.99],
+      [-94.59, 40.0],
+      [-102.05, 40.0],
+      [-102.05, 36.99]
+    ]]
+  },
+
   "properties": {
-    "datetime": "<year>-07-01T00:00:00Z",
+    "title": "Kansas Hydrography — <year>",
+    "description": "Hydrography features compiled for <year> (streams, rivers, lakes, wetlands, reservoirs). Normalized for time-slider overlays and change analysis.",
+    "datetime": null,
     "start_datetime": "<year>-01-01T00:00:00Z",
     "end_datetime": "<year>-12-31T23:59:59Z",
+
     "proj:epsg": 4326,
+
     "kfm:year": "<year>",
-    "kfm:notes": "Hydrography features digitized/compiled for <year> (streams, rivers, lakes, wetlands, reservoirs).",
+    "kfm:notes": "Source harmonized to WGS84; attributes standardized for visualization and analysis.",
     "kfm:feature_schema": {
       "id": "string",
-      "name": "string",
+      "name": "string|null",
       "feature_type": "string",
       "perennial": "boolean|null",
       "year_start": "integer|null",
@@ -26,35 +43,38 @@
       "notes": "string|null"
     }
   },
+
   "assets": {
     "data": {
       "href": "../../processed/vectors/hydrography_<year>.geojson",
       "type": "application/geo+json",
       "roles": ["data"],
-      "title": "Hydrography vectors (<year>, GeoJSON)"
+      "title": "Hydrography (<year>, GeoJSON)"
+    },
+    "metadata": {
+      "href": "../../processed/vectors/hydrography_<year>.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Processing & lineage metadata"
+    },
+    "thumbnail": {
+      "href": "../../thumbnails/hydrography_<year>.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail — Hydrography <year>"
+    },
+    "tiles_pmtiles": {
+      "href": "../../derivatives/tiles/hydrography_<year>.pmtiles",
+      "type": "application/vnd.pmtiles",
+      "roles": ["tiles"],
+      "title": "Vector tiles (PMTiles) — Hydrography <year>"
     }
   },
+
   "links": [
-    {
-      "rel": "self",
-      "href": "./hydrography_<year>.json",
-      "type": "application/json"
-    },
-    {
-      "rel": "collection",
-      "href": "../../sources/ks_hydrography.json",
-      "type": "application/json",
-      "title": "Kansas Hydrography and Water Features (source catalog)"
-    },
-    {
-      "rel": "parent",
-      "href": ".",
-      "type": "application/json"
-    },
-    {
-      "rel": "root",
-      "href": "../..",
-      "type": "application/json"
-    }
+    { "rel": "self",       "href": "./hydrography_<year>.json",     "type": "application/geo+json" },
+    { "rel": "collection", "href": "../collections/ks_hydrography.json", "type": "application/json" },
+    { "rel": "parent",     "href": "../collections/ks_hydrography.json", "type": "application/json" },
+    { "rel": "root",       "href": "../catalog.json",               "type": "application/json" }
   ]
 }
