@@ -26,12 +26,14 @@
     "start_datetime": "2018-01-01T00:00:00Z",
     "end_datetime": "2020-12-31T23:59:59Z",
     "datetime": null,
-    "proj:epsg": 4269,
+
+    "proj:epsg": 26914,
     "gsd": 1.0,
+
     "processing:software": {
-      "gdal": "3.6.x",
-      "gdaldem": "hillshade"
+      "gdal": ">=3.6"
     },
+
     "providers": [
       {
         "name": "USGS 3D Elevation Program (3DEP)",
@@ -45,62 +47,48 @@
       }
     ],
     "license": "public-domain",
-    "keywords": [
-      "Kansas",
-      "DEM",
-      "LiDAR",
-      "elevation",
-      "topography",
-      "3DEP",
-      "2018",
-      "2019",
-      "2020"
-    ],
+    "keywords": ["Kansas", "DEM", "LiDAR", "elevation", "topography", "3DEP", "2018", "2019", "2020"],
+
     "mcp:experiment_id": "EXP-DEM-KS-2018-2020",
     "mcp:documentation": "mcp/experiments/dem_ks_1m_2018_2020.md",
     "mcp:sop_reference": "mcp/sops/ingest_dem.md",
     "mcp:traceability": {
       "source_data": "USGS 3DEP LiDAR-derived DEMs, 2018–2020",
-      "processing": "Converted to COG via GDAL 3.6; hillshade derived with gdaldem hillshade",
+      "processing": "Mirrored and converted to COG using GDAL",
       "git_commit": "<commit-hash>"
     }
   },
+
   "assets": {
     "cog": {
-      "href": "s3://kansas-frontier-matrix/data/cogs/dem/ks_1m_dem_2018_2020.tif",
+      "href": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "DEM (Cloud-Optimized GeoTIFF)",
       "roles": ["data"],
       "raster:bands": [
-        {
-          "data_type": "float32",
-          "unit": "metre",
-          "nodata": null,
-          "statistics": null
-        }
+        { "data_type": "float32", "unit": "metre", "nodata": null, "statistics": null }
       ],
-      "file:checksum": "sha256:<REPLACE_WITH_ACTUAL_HASH>",
+      "file:checksum": null,
       "file:size": null
     },
+
     "hillshade": {
-      "href": "s3://kansas-frontier-matrix/data/cogs/dem/ks_1m_dem_2018_2020_hillshade.tif",
-      "type": "image/tiff; application=geotiff",
-      "title": "Derived Hillshade",
-      "roles": ["derived"],
+      "href": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Hillshade derived from ks_1m_dem_2018_2020",
+      "roles": ["derived", "visual"],
       "raster:bands": [
-        {
-          "data_type": "uint8",
-          "unit": "1",
-          "nodata": null
-        }
+        { "data_type": "uint8", "unit": "1", "nodata": null }
       ],
-      "file:checksum": "sha256:<REPLACE_WITH_ACTUAL_HASH>",
+      "file:checksum": null,
       "file:size": null
     }
   },
+
   "links": [
-    { "rel": "self",   "href": "./ks_1m_dem_2018_2020.json" },
-    { "rel": "parent", "href": "../collection.json" },
-    { "rel": "collection", "href": "../collection.json" }
+    { "rel": "self", "href": "./ks_1m_dem_2018_2020.json" },
+    { "rel": "parent", "href": "../../collections/dem.json" },
+    { "rel": "collection", "href": "../../collections/dem.json" },
+    { "rel": "alternate", "href": "s3://kansas-frontier-matrix/data/cogs/dem/ks_1m_dem_2018_2020.tif", "type": "image/tiff" }
   ]
 }
