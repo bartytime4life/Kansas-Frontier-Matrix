@@ -5,9 +5,9 @@ on:
     branches: [ main ]
     paths:
       - "web/**"
-      - "data/stac/**"
+      - "stac/**"
       - "data/sources/**"
-      - ".github/workflows/sites.yml"   # <-- this file name
+      - ".github/workflows/site.yml"    # <-- this file
       - "README.md"
       - "Makefile"
   workflow_dispatch:
@@ -44,7 +44,7 @@ jobs:
           if [ -f Makefile ]; then
             echo "has_make=true" >> "$GITHUB_OUTPUT"
             make stac-validate || { echo "::error::STAC validation failed"; exit 1; }
-            # make site should generate web/layers.json for non-JS sites
+            # make site should generate/refresh web assets if you wire it
             make site || true
           else
             echo "has_make=false" >> "$GITHUB_OUTPUT"
@@ -148,9 +148,9 @@ jobs:
           sudo apt-get update -y >/dev/null
           sudo apt-get install -y jq >/dev/null
           ok=1
-          for dir in data/stac data/sources; do
-            if compgen -G "$dir/*.json" > /dev/null; then
-              for f in "$dir"/*.json; do
+          for dir in stac data/sources; do
+            if [ -d "$dir" ]; then
+              find "$dir" -type f -name '*.json' -print0 | while IFS= read -r -d '' f; do
                 echo "Validating $f"
                 jq -e 'type=="object"' "$f" || ok=0
               done
