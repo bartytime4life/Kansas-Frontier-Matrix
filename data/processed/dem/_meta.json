@@ -1,20 +1,27 @@
 {
-  "id": "LAWRENCE_1885",
-  "version": "1.0.0",
+  "id": "USGS_TOPO_LAWRENCE_1885",
+  "kind": "overlay_topo_scan",
+  "version": "1.0.1",
+
   "image": {
     "path": "data/raw/ut_pcl/LAWRENCE_1885.jpg",
     "dpi": null,
     "bands": 3,
     "color_profile": "sRGB"
   },
-  "target_crs": "EPSG:4326",
-  "source_crs": null,
+
+  "crs": {
+    "source": null,
+    "target": "EPSG:4326"
+  },
+
   "gcps": [
     { "px": 1234, "py": 5678, "lon": -95.235, "lat": 38.971 },
-    { "px": 2234, "py": 5678, "lon": -95.21, "lat": 38.96 },
-    { "px": 1834, "py": 6678, "lon": -95.22, "lat": 38.94 },
-    { "px": 1534, "py": 4678, "lon": -95.25, "lat": 38.955 }
+    { "px": 2234, "py": 5678, "lon": -95.210, "lat": 38.960 },
+    { "px": 1834, "py": 6678, "lon": -95.220, "lat": 38.940 },
+    { "px": 1534, "py": 4678, "lon": -95.250, "lat": 38.955 }
   ],
+
   "warp": {
     "method": "tps",
     "order": 2,
@@ -30,7 +37,9 @@
     "target_resolution": null,
     "target_extent": null
   },
+
   "output": {
+    "intermediate_gcps_tif": "data/work/georef/LAWRENCE_1885_gcps.tif",
     "warped_tif": "data/work/georef/LAWRENCE_1885_wgs84.tif",
     "cog_tif": "data/cogs/overlays/usgs_topo_lawrence_1885.tif",
     "preview_png": "data/cogs/overlays/usgs_topo_lawrence_1885_preview.png",
@@ -45,13 +54,15 @@
       "overview_resampling": "AVERAGE"
     }
   },
+
   "qa": {
     "rmse_pixels": null,
     "gcps_used": "auto",
-    "notes": "Add ≥4 more GCPs near corners/edges for best results."
+    "notes": "Increase control points (≥8) with good corner/edge spread to stabilize TPS."
   },
+
   "provenance": {
-    "provider": "USGS / UT PCL (University of Texas Perry-Castañeda Library)",
+    "provider": "USGS / UT Perry-Castañeda Library",
     "collection": "Historical Topographic Map",
     "sheet": "LAWRENCE (1885)",
     "license": "Public Domain (USGS)",
@@ -59,10 +70,38 @@
       "source": null
     }
   },
+
+  "stac": {
+    "collection_id": "overlays",
+    "item_path": "data/stac/items/usgs_topo_lawrence_1885.json",
+    "asset_role": ["overlay", "visual"],
+    "asset_type": "image/tiff; application=geotiff; profile=cloud-optimized",
+    "datetime": "1885-01-01T00:00:00Z",
+    "proj:epsg": 4326,
+    "description": "USGS Historical Topographic Map, LAWRENCE (1885), georeferenced to WGS84."
+  },
+
+  "web": {
+    "tiles_hint": "After tiling COG → XYZ, publish to web/tiles/usgs_lawrence_1885/{z}/{x}/{y}.png",
+    "layer_suggestion": {
+      "id": "usgs_1885_lawrence",
+      "title": "USGS Historic Topo — Lawrence (1885)",
+      "group": "Historic Topographic Maps",
+      "type": "raster",
+      "url": "./tiles/usgs_lawrence_1885/{z}/{x}/{y}.png",
+      "opacity": 0.70,
+      "minzoom": 0,
+      "maxzoom": 16,
+      "start": 1885,
+      "end": 1885,
+      "attribution": "USGS Historical Topographic Maps (Public Domain)"
+    }
+  },
+
   "gdal": {
-    "add_gcps": "gdal_translate -of GTiff -a_srs EPSG:4326 $(printf \" %s\" $(awk -F'[,:{} ]+' '/px/{printf \"-gcp %s %s %s %s\", $3,$5,$9,$11}' data/gcp/LAWRENCE_1885.yml)) data/raw/ut_pcl/LAWRENCE_1885.jpg /tmp/LAWRENCE_1885_gcps.tif",
-    "warp": "gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -order 2 -et 0.0 /tmp/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif",
-    "warp_tps": "gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -et 0.0 -tps /tmp/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif",
+    "gcp_yaml": "data/gcp/LAWRENCE_1885.yml",
+    "add_gcps": "gdal_translate -of GTiff -a_srs EPSG:4326 $(printf ' %s' $(awk -F'[,:{} ]+' '/px/{printf \"-gcp %s %s %s %s\", $3,$5,$9,$11}' data/gcp/LAWRENCE_1885.yml)) data/raw/ut_pcl/LAWRENCE_1885.jpg data/work/georef/LAWRENCE_1885_gcps.tif",
+    "warp": "gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -et 0.0 -tps data/work/georef/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif",
     "to_cog": "gdal_translate -of COG -co COMPRESS=JPEG -co QUALITY=85 -co PHOTOMETRIC=YCBCR -co BLOCKSIZE=512 -co NUM_THREADS=ALL_CPUS -co BIGTIFF=IF_SAFER -co OVERVIEW_RESAMPLING=AVERAGE data/work/georef/LAWRENCE_1885_wgs84.tif data/cogs/overlays/usgs_topo_lawrence_1885.tif"
   }
 }
