@@ -1,1 +1,98 @@
-data/processed/** filter=lfs diff=lfs merge=lfs -text
+# -------------------------------
+# Canonical text normalization
+# -------------------------------
+* text=auto eol=lf
+
+# Source & config (always text)
+*.md      text
+*.txt     text
+*.json    text
+*.geojson text
+*.topojson text
+*.yml     text
+*.yaml    text
+*.xml     text
+*.kml     text
+*.csv     text
+*.tsv     text
+
+*.py      text
+*.js      text
+*.ts      text
+*.css     text
+*.html    text
+*.sh      text
+*.sql     text
+
+# -------------------------------
+# Geospatial binaries → Git LFS
+# (prevent line ending mangling)
+# -------------------------------
+
+# Core rasters / COGs
+*.tif      filter=lfs diff=lfs merge=lfs -text
+*.tiff     filter=lfs diff=lfs merge=lfs -text
+*.geotiff  filter=lfs diff=lfs merge=lfs -text
+*.img      filter=lfs diff=lfs merge=lfs -text
+*.jp2      filter=lfs diff=lfs merge=lfs -text
+
+# Raster tiles / bundles
+*.mbtiles  filter=lfs diff=lfs merge=lfs -text
+*.pmtiles  filter=lfs diff=lfs merge=lfs -text
+*.kmz      filter=lfs diff=lfs merge=lfs -text
+
+# Vector bundles / containers
+*.gpkg     filter=lfs diff=lfs merge=lfs -text
+*.fgb      filter=lfs diff=lfs merge=lfs -text   # FlatGeobuf
+
+# Shapefile sets (store as one zipped blob ideally)
+*.shp      filter=lfs diff=lfs merge=lfs -text
+*.shx      filter=lfs diff=lfs merge=lfs -text
+*.dbf      filter=lfs diff=lfs merge=lfs -text
+*.prj      text                                   # tiny sidecar (keep as text)
+*.cpg      text
+*.qpj      text
+*.sbn      filter=lfs diff=lfs merge=lfs -text
+*.sbx      filter=lfs diff=lfs merge=lfs -text
+
+# Archives (raw acquisitions, packaged tiles, etc.)
+*.zip      filter=lfs diff=lfs merge=lfs -text
+*.7z       filter=lfs diff=lfs merge=lfs -text
+*.tar      filter=lfs diff=lfs merge=lfs -text
+*.tar.gz   filter=lfs diff=lfs merge=lfs -text
+
+# Large imagery previews (optional LFS to avoid repo bloat)
+*.png      filter=lfs diff=lfs merge=lfs -text
+*.jpg      filter=lfs diff=lfs merge=lfs -text
+*.jpeg     filter=lfs diff=lfs merge=lfs -text
+*.webp     filter=lfs diff=lfs merge=lfs -text
+
+# GDAL sidecars (keep as text, useful to diff)
+*.aux.xml  text
+*.ovr      filter=lfs diff=lfs merge=lfs -text    # overviews can be large/binary
+
+# -------------------------------
+# Path-focused safety rails
+# (ensures all heavy data dirs use LFS)
+# -------------------------------
+data/raw/**             filter=lfs diff=lfs merge=lfs -text
+data/cogs/**            filter=lfs diff=lfs merge=lfs -text
+data/derivatives/**     filter=lfs diff=lfs merge=lfs -text
+data/earth/**/overlays/** filter=lfs diff=lfs merge=lfs -text
+
+# But keep small text metadata as text even inside data/
+data/**/**/*.meta.json  text
+data/**/**/*.sha256     text
+data/**/**/_meta.json   text
+data/**/**/*.stac.json  text
+data/**/**/*.md         text
+data/**/**/*.csv        text
+data/**/**/*.kml        text
+data/**/**/*.geojson    text
+data/**/**/*.json       text
+
+# -------------------------------
+# Optional: GitHub Linguist hints
+# -------------------------------
+docs/** linguist-documentation
+web/**  linguist-documentation
