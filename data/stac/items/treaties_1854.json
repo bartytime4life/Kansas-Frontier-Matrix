@@ -1,0 +1,86 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
+  "type": "Feature",
+  "id": "treaties_1854",
+
+  "bbox": [-102.05, 36.99, -94.6, 40.0],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99],
+      [-94.6, 36.99],
+      [-94.6, 40.0],
+      [-102.05, 40.0],
+      [-102.05, 36.99]
+    ]]
+  },
+
+  "properties": {
+    "title": "Treaties of 1854 affecting Kansas Territory",
+    "description": "Treaties ratified in 1854 between the United States and Native Nations impacting lands within present-day Kansas and Nebraska. Includes context for land cessions and settlement shifts.",
+    "datetime": null,
+    "start_datetime": "1854-01-01T00:00:00Z",
+    "end_datetime": "1854-12-31T23:59:59Z",
+
+    "proj:epsg": 4326,
+
+    "created": "2025-09-20T00:00:00Z",
+    "updated": "2025-09-20T00:00:00Z",
+    "license": "public-domain",
+
+    "kfm:theme": "legal-history",
+    "kfm:confidence": 0.95
+  },
+
+  "collection": "kansas_treaties_19c",
+
+  "assets": {
+    "boundaries_geojson": {
+      "href": "../../processed/vectors/treaties_1854_boundaries.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Treaty boundaries (1854) — GeoJSON"
+    },
+    "treaty_texts_pdf": {
+      "href": "../../documents/treaties/treaties_1854.pdf",
+      "type": "application/pdf",
+      "roles": ["documentation"],
+      "title": "Treaty texts and excerpts (PDF)"
+    },
+    "metadata": {
+      "href": "../../documents/treaties/treaties_1854.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"],
+      "title": "Processing metadata for 1854 treaties"
+    },
+    "thumbnail": {
+      "href": "../../thumbnails/treaties_1854.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail — 1854 treaty boundaries"
+    }
+  },
+
+  "links": [
+    { "rel": "self", "href": "./treaties_1854.json", "type": "application/geo+json" },
+    { "rel": "parent", "href": "../collections/kansas_treaties_19c.json", "type": "application/json" },
+    { "rel": "collection", "href": "../collections/kansas_treaties_19c.json", "type": "application/json" },
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" }
+  ],
+
+  "providers": [
+    {
+      "name": "U.S. National Archives",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.archives.gov/"
+    },
+    {
+      "name": "Kansas Frontier Matrix Project",
+      "roles": ["processor", "host"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    }
+  ]
+}
