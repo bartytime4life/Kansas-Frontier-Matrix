@@ -1,0 +1,51 @@
+{
+  "id": "ks_slope",
+  "title": "Kansas Slope (derived from DEM)",
+  "description": "Statewide slope raster derived from the 1 m DEM (2018–2020), delivered as a Cloud-Optimized GeoTIFF and optional classified vector/generalized layers.",
+  "license": "Public domain / open data (derived from state/USGS DEM).",
+  "providers": [
+    { "name": "Kansas Data Access & Support Center (DASC)", "roles": ["host"], "url": "https://data.kansasgis.org/" },
+    { "name": "USGS 3DEP / state LiDAR", "roles": ["producer"], "url": "https://www.usgs.gov/core-science-systems/ngp/3dep" }
+  ],
+  "assets": {
+    "dem": {
+      "href": "../cogs/dem/ks_1m_dem_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "DEM (1 m COG)",
+      "roles": ["source"]
+    },
+    "slope_cog": {
+      "href": "../cogs/terrain/ks_slope_deg.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Slope (degrees, COG)",
+      "roles": ["data"]
+    },
+    "slope_classes": {
+      "href": "../processed/vectors/slope_classes.geojson",
+      "type": "application/geo+json",
+      "title": "Slope classes (vector, optional)",
+      "roles": ["data"]
+    },
+    "metadata": {
+      "href": "./ks_slope.meta.json",
+      "type": "application/json",
+      "title": "Processing & lineage metadata",
+      "roles": ["metadata"]
+    }
+  },
+  "processing": {
+    "method": "Horn (gdaldem slope)",
+    "units": "degrees",
+    "nodata": "match DEM",
+    "hillshade_ref": "../cogs/hillshade/ks_hillshade_2018_2020.tif",
+    "classification": {
+      "bins_deg": [0, 2, 5, 10, 20, 30, 45, 90],
+      "labels": ["0–2", "2–5", "5–10", "10–20", "20–30", "30–45", "45+"]
+    }
+  },
+  "extent": {
+    "spatial": { "bbox": [[-102.05, 36.99, -94.59, 40.00]] },
+    "temporal": { "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]] }
+  },
+  "keywords": ["Kansas", "slope", "DEM", "terrain", "LiDAR", "3DEP", "erosion", "access"]
+}
