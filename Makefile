@@ -7,6 +7,7 @@
 # - GDAL fallbacks for hillshade/slope/aspect
 # - Optional vectorization + meta checksum updates
 # - Hardened shell, overridable DEM, parallel-safe mkdir
+# - Repo-aware STAC path: stac/ (not data/stac/)
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
@@ -27,7 +28,7 @@ TERRAIN := $(COGS)/terrain
 DERIV   := $(DATA)/derivatives
 VEC     := $(DATA)/processed/vectors
 WEB     := web
-STAC    := $(DATA)/stac
+STAC    := stac                   # <-- fixed from data/stac
 
 # Core DEM (can be overridden: `make terrain DEM=.../dem.tif`)
 DEM ?= $(DEMS)/ks_1m_dem_2018_2020.tif
@@ -53,6 +54,7 @@ HAVE_GDALDEM    := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || ech
 HAVE_GDAL_POLY  := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo yes || echo no)
 HAVE_GDAL_CALC  := $(shell command -v gdal_calc.py >/dev/null 2>&1 && echo yes || echo no)
 HAVE_RSYNC      := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
+HAVE_KGT        := $(shell command -v kgt >/dev/null 2>&1 && echo yes || echo no)
 
 # Detect helper scripts that exist in this repo
 HAVE_FETCH            := $(wildcard $(S)/fetch.py)
@@ -99,11 +101,12 @@ help:
 	@echo "  slope_classes    Optional: vectorize slope classes (0–2,2–5,5–10,10–20,20–30,30–45,45+)"
 	@echo "  aspect_sectors   Optional: vectorize 8-way aspect sectors (N,NE,E,SE,S,SW,W,NW)"
 	@echo "  meta             Optional: update terrain meta JSON checksums (slope/aspect)"
-	@echo "  stac             Build STAC items/collections (if make_stac.py present)"
-	@echo "  stac-validate    Validate STAC + source schemas"
-	@echo "  kml              Build KMZ overlays (legacy; provide your regionate script)"
-	@echo "  site             Write web/layers.json to preview hillshade/slope/aspect"
-	@echo "  clean            Remove generated outputs"
+	@echo "  stac             Build STAC items/collections into ./stac/"
+	@echo "  stac-validate    Validate STAC + source schemas (uses scripts/ or kgt)"
+	@echo "  site             Write web/layers.json (simple preview)"
+	@echo "  site-config      Render web/app.config.json from STAC via kgt (if available)"
+	@echo "  kml              Build KMZ overlays (placeholder)"
+	@echo "  clean            Remove generated raster outputs (keeps stac/)"
 	@echo ""
 	@echo "Overrides:"
 	@echo "  make terrain DEM=/path/to/dem.tif"
@@ -112,6 +115,8 @@ help:
 env:
 	@echo "PY=$(PY)"
 	@echo "DEM=$(DEM)"
+	@echo "STAC_DIR=$(STAC)"
+	@echo "HAVE_KGT=$(HAVE_KGT)"
 	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_CALC=$(HAVE_GDAL_CALC) HAVE_GDAL_POLY=$(HAVE_GDAL_POLY)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
@@ -276,8 +281,24 @@ stac-validate:
 	fi
 	@if [ -f "$(S)/validate_stac.py" ]; then \
 	  $(PY) $(S)/validate_stac.py --stac "$(STAC)"; \
+	elif [ "$(HAVE_KGT)" = "yes" ]; then \
+	  echo "[stac-validate] scripts missing; using kgt validate-stac as fallback"; \
+	  kgt validate-stac "$(STAC)/items" --no-strict; \
 	else \
-	  echo "[stac-validate] $(S)/validate_stac.py missing (STAC validation skipped)."; \
+	  echo "[stac-validate] No validators found (install kgt or add scripts/validate_stac.py)."; \
+	fi
+
+# -------- Web viewer config (optional, via kgt) --------
+.PHONY: site-config
+site-config:
+	@if [ "$(HAVE_KGT)" = "yes" ]; then \
+	  if [ -f "src/kansas_geo_timeline/templates/app.config.json.j2" ]; then \
+	    kgt render-config --stac "$(STAC)/items" --output "$(WEB)/app.config.json" --pretty; \
+	  else \
+	    echo "[site-config] Template missing (src/.../templates/app.config.json.j2)."; \
+	  fi; \
+	else \
+	  echo "[site-config] kgt not installed (pip install -e . && pip install jinja2)."; \
 	fi
 
 # -------- KML / KMZ (legacy demo) --------
@@ -285,6 +306,7 @@ stac-validate:
 kml: terrain
 	@echo "[kml] Legacy prototype. Provide your regionate script if needed."
 
+# -------- Simple site manifest (always available) --------
 .PHONY: site
 site:
 	$(call ensure_dir,$(WEB))
@@ -307,4 +329,4 @@ PYCODE
 .PHONY: clean
 clean:
 	rm -rf "$(RAW)" "$(COGS)" "$(DERIV)" "$(DATA)/kml" "$(DATA)"/*.kmz
-	@echo "✓ cleaned generated outputs."
+	@echo "✓ cleaned generated raster outputs (kept ./stac)."
