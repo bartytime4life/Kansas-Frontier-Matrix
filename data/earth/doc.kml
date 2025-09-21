@@ -11,9 +11,10 @@
     <!-- Optional provenance -->
     <atom:author><atom:name>Kansas Frontier Matrix</atom:name></atom:author>
 
-    <!-- Shared, subtle outline style for (future) vector overlays -->
+    <!-- Subtle outline style for future vector overlays -->
     <Style id="outline-grey">
       <LineStyle>
+        <!-- aabbggrr (little endian) — aa=alpha -->
         <color>aa808080</color>
         <width>2</width>
       </LineStyle>
@@ -40,13 +41,12 @@
       <name>Basemaps &amp; Terrain</name>
       <open>1</open>
 
-      <!-- Kansas 1 m Hillshade (regionated KMZ via NetworkLink -> networklinks/ks_1m_hillshade.kml) -->
-      <NetworkLink id="nl_ks_hillshade">
+      <!-- Kansas 1 m Hillshade (2018–2020) -->
+      <!-- NOTE: doc.kml lives in data/earth/, KMZ in data/kml/ → use ../kml/... -->
+      <NetworkLink id="nl_ks_hillshade_2018_2020">
         <name>Kansas 1 m Hillshade (2018–2020)</name>
         <visibility>1</visibility>
         <open>1</open>
-        <gx:flyToView>0</gx:flyToView>
-        <!-- Keep region guard at the top level to avoid remote fetches when outside Kansas -->
         <Region>
           <LatLonAltBox>
             <north>40.003</north>
@@ -62,12 +62,8 @@
           </Lod>
         </Region>
         <Link>
-          <!-- relative to this doc.kml -->
-          <href>./networklinks/ks_1m_hillshade.kml</href>
-          <!-- Let the downstream SuperOverlay control loading via its internal Regions -->
+          <href>../kml/ks_hillshade_2018_2020.kmz</href>
           <viewRefreshMode>onRegion</viewRefreshMode>
-          <viewRefreshTime>1</viewRefreshTime>
-          <!-- Prefetch a bit beyond bounds to reduce edge pop-in -->
           <viewBoundScale>1.2</viewBoundScale>
         </Link>
       </NetworkLink>
@@ -83,9 +79,9 @@
         <name>USGS Topographic Map — Larned (1894)</name>
         <visibility>1</visibility>
         <open>0</open>
-        <gx:flyToView>0</gx:flyToView>
         <Region>
           <LatLonAltBox>
+            <!-- Keep a conservative bounding box; SuperOverlay handles fine tiling -->
             <north>38.3000</north>
             <south>37.8000</south>
             <east>-98.8000</east>
@@ -99,41 +95,56 @@
           </Lod>
         </Region>
         <Link>
-          <href>./networklinks/usgs_topo_1894.kml</href>
+          <href>../kml/usgs_topo_larned_1894.kmz</href>
           <viewRefreshMode>onRegion</viewRefreshMode>
-          <viewRefreshTime>1</viewRefreshTime>
           <viewBoundScale>1.2</viewBoundScale>
         </Link>
       </NetworkLink>
 
       <!-- Template for adding more historic sheets -->
       <!--
-      <NetworkLink id="nl_{sheet_id}">
+      <NetworkLink id="nl_{sheet_slug}_{year}">
         <name>USGS Topographic Map — {SHEET_NAME} ({YEAR})</name>
         <visibility>0</visibility>
         <open>0</open>
+        <Region>
+          <LatLonAltBox>
+            <north>{N}</north><south>{S}</south><east>{E}</east><west>{W}</west>
+            <minAltitude>0</minAltitude><maxAltitude>0</maxAltitude>
+          </LatLonAltBox>
+          <Lod><minLodPixels>64</minLodPixels><maxLodPixels>-1</maxLodPixels></Lod>
+        </Region>
         <Link>
-          <href>./networklinks/{your_sheet}.kml</href>
+          <href>../kml/usgs_topo_{sheet_slug}_{year}.kmz</href>
           <viewRefreshMode>onRegion</viewRefreshMode>
-          <viewRefreshTime>1</viewRefreshTime>
           <viewBoundScale>1.2</viewBoundScale>
         </Link>
       </NetworkLink>
       -->
     </Folder>
 
-    <!-- ─────────── Vectors / Thematic Layers (placeholders) ─────────── -->
+    <!-- ─────────── Vectors / Thematic Layers (optional) ─────────── -->
     <!--
     <Folder>
       <name>Vectors (Treaties, Railroads, Trails)</name>
       <open>0</open>
+
       <NetworkLink id="nl_railroads_1900">
-        <name>Railroads (c.1900)</name>
+        <name>Railroads (c. 1900)</name>
         <visibility>0</visibility>
         <Link>
-          <href>./networklinks/railroads_1900.kml</href>
+          <href>../kml/railroads_1900.kml</href>
           <viewRefreshMode>onRegion</viewRefreshMode>
-          <viewRefreshTime>1</viewRefreshTime>
+          <viewBoundScale>1.2</viewBoundScale>
+        </Link>
+      </NetworkLink>
+
+      <NetworkLink id="nl_treaties">
+        <name>Treaties &amp; Reservations</name>
+        <visibility>0</visibility>
+        <Link>
+          <href>../kml/treaties.kml</href>
+          <viewRefreshMode>onRegion</viewRefreshMode>
           <viewBoundScale>1.2</viewBoundScale>
         </Link>
       </NetworkLink>
