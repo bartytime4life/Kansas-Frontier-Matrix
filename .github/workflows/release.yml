@@ -3,42 +3,152 @@ name: Build & Attach Release Artifacts
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
 
+concurrency:
+  group: "release-${{ github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: Build (sdist+wheel) & validate
     runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: "3.11"
+      DIST_DIR: dist
+      EXTRAS_DIR: build/extras
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # setuptools_scm needs tags
-      - uses: actions/setup-python@v5
+          fetch-depth: 0  # keep tags for version resolvers
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - name: Build
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            pyproject.toml
+
+      - name: Install build & light validation deps
         run: |
-          python -m pip install --upgrade pip build wheel
+          python -m pip install --upgrade pip
+          pip install build twine
+          # Optional but nice: enable CLI + validation if present
+          pip install -e . || true
+          pip install jsonschema jinja2 pystac || true
+
+      - name: Quick smoke: CLI & STAC (non-fatal if tools missing)
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          command -v kgt >/dev/null 2>&1 && kgt --version || echo "kgt not installed; skipping CLI version"
+          if [ -d stac/items ]; then
+            if command -v kgt >/dev/null 2>&1; then
+              kgt validate-stac stac/items --no-strict
+            else
+              echo "kgt not available; minimal JSON sanity on STAC items"
+              python - <<'PY'
+              import json, pathlib, sys
+              req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
+              bad=0
+              for p in sorted(pathlib.Path("stac/items").glob("*.json")):
+                  try:
+                      d=json.loads(p.read_text(encoding="utf-8"))
+                  except Exception as e:
+                      print(f"::error file={p}::JSON parse error: {e}")
+                      bad += 1; continue
+                  miss=[k for k in req if k not in d]
+                  if miss or d.get("type")!="Feature":
+                      print(f"::error file={p}::missing {miss} or wrong type")
+                      bad += 1
+              sys.exit(bad>0)
+              PY
+            fi
+          fi
+
+      - name: Build sdist & wheel
+        run: |
           python -m build
-      - name: Upload artifacts
+          ls -lh dist/
+
+      - name: Twine check
+        run: python -m twine check dist/*
+
+      - name: Bundle extras (optional)
+        run: |
+          set -euo pipefail
+          mkdir -p "${EXTRAS_DIR}"
+          # Zip STAC and web folders if they exist (useful for non-Python consumers)
+          if [ -d stac ]; then
+            (cd stac && zip -r ../${EXTRAS_DIR}/stac_snapshot.zip .)
+          fi
+          if [ -d web ]; then
+            (cd web && zip -r ../${EXTRAS_DIR}/web_snapshot.zip .)
+          fi
+          # Only keep non-empty extras dir
+          if [ -z "$(ls -A ${EXTRAS_DIR} 2>/dev/null || true)" ]; then
+            rmdir "${EXTRAS_DIR}" || true
+          fi
+
+      - name: Checksums (SHA-256)
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          for f in dist/* ${EXTRAS_DIR}/*.zip 2>/dev/null; do
+            [ -e "$f" ] || continue
+            sha256sum "$f" > "$f.sha256"
+          done
+          echo "Artifacts:"
+          ls -lh dist/
+          [ -d "${EXTRAS_DIR}" ] && ls -lh ${EXTRAS_DIR} || true
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist/*
+          path: |
+            dist/*
+            build/extras/*
+            build/extras/*.sha256
+          if-no-files-found: warn
+          retention-days: 7
 
   github-release:
+    name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
+
+      - name: Detect prerelease from tag
+        id: prerelease
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          # mark prerelease if tag contains rc/beta/alpha (case-insensitive)
+          shopt -s nocasematch
+          if [[ "$tag" =~ rc|beta|alpha ]]; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*
+          files: |
+            dist/*
+          draft: false
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
