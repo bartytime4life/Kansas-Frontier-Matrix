@@ -5,17 +5,7 @@
 # - Robust terrain derivation: hillshade, slope, aspect -> COGs + optional vector generalizations
 # - Optional meta checksum update (Linux/macOS)
 # - Safe fallbacks if Python helper scripts are missing
-#
-# Layout conventions (analysis rasters kept near source DEMs):
-#   data/cogs/dem/ks_1m_dem_2018_2020.tif   # input COG DEM (statewide)
-#   data/cogs/hillshade/ks_hillshade_2018_2020.tif
-#   data/cogs/terrain/ks_slope_deg.tif
-#   data/cogs/terrain/ks_aspect_deg.tif
-#   data/processed/vectors/slope_classes.geojson
-#   data/processed/vectors/aspect_sectors.geojson
-#
-# Legacy compatibility:
-#   - we mirror hillshade/slope/aspect into data/derivatives/* for old site/kml targets
+# - Extra: tool/DEM checks + rsync mirroring when available
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
@@ -55,6 +45,10 @@ META_ASPECT := $(SRC)/ks_aspect.meta.json
 COG_OPTS := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
 SHA256   := $(shell (command -v sha256sum || command -v shasum) 2>/dev/null)
 SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
+HAVE_GDALDEM    := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDAL_POLY  := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDAL_CALC  := $(shell command -v gdal_calc.py >/dev/null 2>&1 && echo yes || echo no)
+HAVE_RSYNC      := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
 
 # Detect if helper scripts exist
 HAVE_FETCH      := $(wildcard $(S)/fetch_arcgis.py)
@@ -63,6 +57,34 @@ HAVE_DERIVETERR := $(wildcard $(S)/derive_terrain.py)
 HAVE_REGIONATE  := $(wildcard $(S)/regionate_kml.py)
 HAVE_PACKKMZ    := $(wildcard $(S)/pack_kmz.py)
 HAVE_UPDCHECK   := $(wildcard $(S)/update_checksums.py)
+
+# -------- Internal helpers --------
+define check_dem
+	@if [ ! -f "$(DEM)" ]; then \
+	  echo "ERROR: DEM not found at '$(DEM)'"; \
+	  echo "       Make sure your DEM COG exists (see README) or adjust DEM path in Makefile."; \
+	  exit 1; \
+	fi
+endef
+
+define check_gdal
+	@if [ "$(HAVE_GDALDEM)" != "yes" ]; then \
+	  echo "ERROR: 'gdaldem' not found in PATH."; \
+	  echo "       On Ubuntu/Debian: sudo apt-get update && sudo apt-get install -y gdal-bin"; \
+	  exit 1; \
+	fi
+endef
+
+define mirror_derivatives
+	@mkdir -p "$(DERIV)"
+	@if [ -f "$(1)" ]; then \
+	  if [ "$(HAVE_RSYNC)" = "yes" ]; then \
+	    rsync -a --checksum "$(1)" "$(2)"; \
+	  else \
+	    cp -f "$(1)" "$(2)"; \
+	  fi \
+	fi
+endef
 
 # -------- Help --------
 .PHONY: help
@@ -101,17 +123,16 @@ endif
 # -------- Terrain (COGs) --------
 .PHONY: terrain
 terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
-	@mkdir -p $(DERIV)
-	# Mirror into legacy derivatives for existing site/kml recipes
-	@if [ -f "$(HILLSHADE)" ]; then cp -f "$(HILLSHADE)" "$(DERIV)/hillshade.tif"; fi
-	@if [ -f "$(SLOPE)" ]; then cp -f "$(SLOPE)" "$(DERIV)/slope.tif"; fi
-	@if [ -f "$(ASPECT)" ]; then cp -f "$(ASPECT)" "$(DERIV)/aspect.tif"; fi
+	$(call mirror_derivatives,$(HILLSHADE),$(DERIV)/hillshade.tif)
+	$(call mirror_derivatives,$(SLOPE),$(DERIV)/slope.tif)
+	$(call mirror_derivatives,$(ASPECT),$(DERIV)/aspect.tif)
 	@echo "✓ terrain built (COGs) and mirrored into $(DERIV)"
 
 # Hillshade COG
 $(HILLSHADE): $(DEM)
+	$(check_dem)
 	@mkdir -p $(HILLS)
-	@if command -v gdaldem >/dev/null 2>&1; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
 	  echo "[hillshade] gdaldem hillshade"; \
 	  gdaldem hillshade $(DEM) $(HILLSHADE) -compute_edges -z 1.0 -az 315 -alt 45; \
 	  gdaladdo -r average $(HILLSHADE) 2 4 8 16; \
@@ -127,8 +148,9 @@ $(HILLSHADE): $(DEM)
 
 # Slope COG
 $(SLOPE): $(DEM)
+	$(check_dem)
 	@mkdir -p $(TERRAIN)
-	@if command -v gdaldem >/dev/null 2>&1; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
 	  echo "[slope] gdaldem slope (degrees)"; \
 	  gdaldem slope $(DEM) $(SLOPE) -compute_edges -s 1.0; \
 	  gdaladdo -r average $(SLOPE) 2 4 8 16; \
@@ -144,8 +166,9 @@ $(SLOPE): $(DEM)
 
 # Aspect COG
 $(ASPECT): $(DEM)
+	$(check_dem)
 	@mkdir -p $(TERRAIN)
-	@if command -v gdaldem >/dev/null 2>&1; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
 	  gdaldem aspect $(DEM) $(ASPECT) -compute_edges; \
 	  gdaladdo -r average $(ASPECT) 2 4 8 16; \
@@ -163,7 +186,7 @@ $(ASPECT): $(DEM)
 .PHONY: slope_classes
 slope_classes: $(SLOPE)
 	@mkdir -p $(VEC)
-	@if command -v gdal_calc.py >/dev/null 2>&1; then \
+	@if [ "$(HAVE_GDAL_CALC)" = "yes" ] && [ "$(HAVE_GDAL_POLY)" = "yes" ]; then \
 	  echo "[slope_classes] binning slope → polygons"; \
 	  gdal_calc.py -A $(SLOPE) --NoDataValue=0 \
 	    --calc="(A>=0)*(A<2)*1 + (A>=2)*(A<5)*2 + (A>=5)*(A<10)*3 + (A>=10)*(A<20)*4 + (A>=20)*(A<30)*5 + (A>=30)*(A<45)*6 + (A>=45)*7" \
@@ -177,7 +200,7 @@ slope_classes: $(SLOPE)
 .PHONY: aspect_sectors
 aspect_sectors: $(ASPECT)
 	@mkdir -p $(VEC)
-	@if command -v gdal_calc.py >/dev/null 2>&1; then \
+	@if [ "$(HAVE_GDAL_CALC)" = "yes" ] && [ "$(HAVE_GDAL_POLY)" = "yes" ]; then \
 	  echo "[aspect_sectors] binning 8-way aspect → polygons"; \
 	  gdal_calc.py -A $(ASPECT) --NoDataValue=0 \
 	    --calc="(A<22.5)*(A>=0)*1 + (A>=22.5)*(A<67.5)*2 + (A>=67.5)*(A<112.5)*3 + (A>=112.5)*(A<157.5)*4 + (A>=157.5)*(A<202.5)*5 + (A>=202.5)*(A<247.5)*6 + (A>=247.5)*(A<292.5)*7 + (A>=292.5)*(A<337.5)*8 + (A>=337.5)*1" \
