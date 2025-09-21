@@ -16,11 +16,18 @@ exclude: |
     data/processed/|
     data/cogs/|
     data/outputs/|
+    data/raw/|
     assets/tiles/|
-    .*?/node_modules/|
-    .*?/dist/|
+    web/dist/|
+    web/build/|
+    node_modules/|
+    .*/node_modules/|
+    .*/dist/|
     build/|
-    dist/
+    dist/|
+    _site/|
+    earth/|
+    docs/_build/
   )
 
 repos:
@@ -76,7 +83,7 @@ repos:
     rev: v3.3.3
     hooks:
       - id: prettier
-        files: "\\.(json|ya?ml|md|html?|css|js|ts)$"
+        files: "\\.(json|jsonc|ya?ml|md|html?|css|js|ts|tsx)$"
 
   # --- pyproject.toml canonical formatting ----------------------------------
   - repo: https://github.com/tox-dev/pyproject-fmt
@@ -88,7 +95,6 @@ repos:
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
     hooks:
-      # If you keep ruff-format as the single formatter, you can drop nbqa-black/isort.
       - id: nbqa-ruff
         additional_dependencies: ["ruff==0.6.9"]
         args: ["--fix"]
@@ -136,6 +142,23 @@ repos:
     hooks:
       - id: git-lfs-check
         args:
-          - "--pattern=*.tif,*.tiff,*.vrt,*.mbtiles,*.shp,*.dbf,*.shx,*.cpg,*.prj,*.gpkg,*.geoparquet,*.zip,*.7z,*.tar,*.tar.gz,*.tgz,*.bz2,*.xz,*.zst"
-        # You can add '*.pdf' if you keep large scanned map PDFs in the repo:
-        # - "--pattern=*.pdf"
+          - "--pattern=*.tif,*.tiff,*.vrt,*.ovr,*.aux.xml,*.mbtiles,*.shp,*.dbf,*.shx,*.cpg,*.prj,*.gpkg,*.geoparquet,*.parquet,*.las,*.laz,*.zip,*.7z,*.tar,*.tar.gz,*.tgz,*.bz2,*.xz,*.zst"
+
+  # --- Local project hooks (fast, optional) ---------------------------------
+  - repo: local
+    hooks:
+      # Validate STAC Items with kgt if available; otherwise skip gracefully.
+      - id: stac-validate
+        name: STAC validate (kgt if present)
+        language: system
+        files: "^stac/items/.*\\.json$"
+        pass_filenames: false
+        entry: bash -c 'command -v kgt >/dev/null 2>&1 && kgt validate-stac stac/items --no-strict || echo "[skip] kgt not installed"'
+
+      # Quick JSON sanity for data/sources using jq if available.
+      - id: sources-sanity
+        name: data/sources JSON sanity (jq if present)
+        language: system
+        files: "^data/sources/.*\\.json$"
+        pass_filenames: true
+        entry: bash -c 'command -v jq >/dev/null 2>&1 || { echo "[skip] jq not installed"; exit 0; }; for f in "$@"; do jq -e "type==\"object\"" "$f" >/dev/null || { echo "::error::$f is not valid JSON object"; exit 1; }; done'
