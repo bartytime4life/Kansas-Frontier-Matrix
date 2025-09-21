@@ -1,6 +1,25 @@
 {
-  "id": "kansas-geo-timeline",
+  "stac_version": "1.0.0",
   "type": "Catalog",
-  "description": "Static catalog for Kansas elevation/historical layers",
-  "links": []
+  "id": "kansas-geo-timeline",
+  "title": "Kansas Geo Timeline — Root Catalog",
+  "description": "Root STAC Catalog for the Kansas-Frontier-Matrix stack. Organizes historical GIS, elevation, and infrastructure layers for time-aware visualization.",
+  "links": [
+    {
+      "rel": "self",
+      "href": "./catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "child",
+      "href": "./collections/vectors.json",
+      "type": "application/json",
+      "title": "Kansas Historical & Infrastructure Vectors"
+    }
+  ]
 }
