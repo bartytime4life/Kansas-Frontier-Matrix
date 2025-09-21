@@ -3,38 +3,68 @@
 # .pre-commit-config.yaml
 # ================================
 
+ci:
+  autofix_prs: true
+  autoupdate_schedule: monthly
+
+default_language_version:
+  python: python3
+
+# Speed up by skipping obvious binary & heavy dirs when hooks support "exclude"
+# (Prettier/linters already target text globs; this is just belt & suspenders.)
+exclude: |
+  (?x)^(
+    data/processed/|
+    data/cogs/|
+    data/outputs/|
+    assets/tiles/|
+    .*/node_modules/|
+    .*/dist/
+  )
+
 repos:
-  # --- Core hygiene (whitespace, EOLs, merge conflicts) ---
+  # --- Core hygiene (whitespace, EOLs, merge conflicts, etc.) ---------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-      - id: check-added-large-files   # prevent >5MB accidental commits (use DVC/LFS instead)
+      - id: check-added-large-files             # prevent >5MB accidental commits (use DVC/LFS instead)
         args: ["--maxkb=5000"]
       - id: check-merge-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: mixed-line-ending
         args: [--fix=lf]
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: debug-statements
+      - id: detect-private-key
+      - id: check-executables-have-shebang
+      - id: name-tests-test                     # encourages test_* naming
 
-  # --- Python (Black + Flake8 + isort) ---
+  # --- Python formatting & linting ------------------------------------------
   - repo: https://github.com/psf/black
     rev: 24.4.2
     hooks:
       - id: black
         language_version: python3
+        additional_dependencies: []
+        exclude: ^(notebooks/|docs/)
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
+        exclude: ^(notebooks/|docs/)
 
   - repo: https://github.com/pycqa/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
         additional_dependencies: [flake8-bugbear]
+        exclude: ^(notebooks/|docs/)
 
-  # --- YAML / JSON / Markdown linting ---
+  # --- YAML / JSON / Markdown / Web assets ----------------------------------
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.35.1
     hooks:
@@ -45,34 +75,55 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        files: "\\.(json|yaml|yml|md|html|css|js|ts)$"
+        files: "\\.(json|ya?ml|md|html?|css|js|ts)$"
 
-  # --- Jupyter notebooks ---
+  # --- Jupyter notebooks (lint via nbQA + strip outputs on commit) ----------
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
     hooks:
       - id: nbqa-black
+        additional_dependencies: [black==24.4.2]
+        args: ["--nbqa-mutate"]
+        files: "\\.ipynb$"
       - id: nbqa-isort
+        additional_dependencies: [isort==5.13.2]
+        args: ["--nbqa-mutate"]
+        files: "\\.ipynb$"
       - id: nbqa-flake8
+        additional_dependencies: [flake8==6.1.0, flake8-bugbear==24.2.6]
+        files: "\\.ipynb$"
 
-  # --- Security / safety ---
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.6.1
+    hooks:
+      - id: nbstripout
+        files: "\\.ipynb$"
+
+  # --- Security / safety ----------------------------------------------------
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.9
     hooks:
       - id: bandit
         args: ["-r", "src"]
+        files: "^src/.*\\.py$"
 
   - repo: https://github.com/pypa/pip-audit
     rev: v2.7.2
     hooks:
       - id: pip-audit
+        # Tip: pin this to requirements*.txt for reproducibility if needed:
+        # args: ["-r", "requirements.txt"]
 
-  # --- Git LFS check (ensure GIS data tracked properly) ---
+  # --- GitHub Actions workflow linter ---------------------------------------
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.1
+    hooks:
+      - id: actionlint
+        files: "^\\.github/workflows/.*\\.ya?ml$"
+
+  # --- Git LFS check (ensure GIS/RS data tracked properly) ------------------
   - repo: https://github.com/boidolr/git-lfs-pre-commit
     rev: v0.3.3
     hooks:
       - id: git-lfs-check
-        args: ["--pattern=*.tif,*.tiff,*.vrt,*.mbtiles,*.shp,*.gpkg"]
-
-default_language_version:
-  python: python3
+        args: ["--pattern=*.tif,*.tiff,*.vrt,*.mbtiles,*.shp,*.gpkg,*.zip,*.7z,*.tar,*.tar.gz"]
