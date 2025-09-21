@@ -42,14 +42,25 @@ max_line_length = off
 # --- JavaScript / TypeScript / Web ---
 [*.js]
 indent_size = 2
+[*.mjs]
+indent_size = 2
+[*.cjs]
+indent_size = 2
 [*.ts]
+indent_size = 2
+[*.tsx]
+indent_size = 2
+[*.jsx]
 indent_size = 2
 [*.json]
 indent_size = 2
+max_line_length = off
 [*.jsonc]
 indent_size = 2
+max_line_length = off
 [*.geojson]
 indent_size = 2
+max_line_length = off
 [*.css]
 indent_size = 2
 [*.html]
@@ -66,15 +77,19 @@ max_line_length = off
 trim_trailing_whitespace = false
 max_line_length = off
 
-# --- Data files (preserve whitespace) ---
+# --- Data files (preserve whitespace/width) ---
 [*.csv]
 trim_trailing_whitespace = false
+max_line_length = off
 [*.tsv]
 trim_trailing_whitespace = false
+max_line_length = off
 [*.sql]
 trim_trailing_whitespace = false
+max_line_length = off
 [*.lock]
 trim_trailing_whitespace = false
+max_line_length = off
 
 # --- Notebooks (JSON; avoid aggressive whitespace munging) ---
 [*.ipynb]
@@ -93,3 +108,16 @@ indent_size = 2
 indent_size = 2
 [.env]
 indent_size = 2
+[LICENSE]
+trim_trailing_whitespace = false
+
+# --- Directory-scoped overrides for generated artifacts ---
+# Built static site output (may have minified lines)
+[web/dist/**]
+max_line_length = off
+trim_trailing_whitespace = false
+
+# Allow long lines in STAC/items & collections JSON
+[data/stac/**]
+max_line_length = off
+trim_trailing_whitespace = false
