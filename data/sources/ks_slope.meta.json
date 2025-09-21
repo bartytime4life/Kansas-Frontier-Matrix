@@ -1,0 +1,37 @@
+{
+  "id": "ks_slope_meta",
+  "title": "Kansas Slope — processing & lineage",
+  "version": "1.0.0",
+  "inputs": {
+    "dem_cog": {
+      "path": "../cogs/dem/ks_1m_dem_2018_2020.tif",
+      "checksum": "<sha256-dem>",
+      "epsg": 4326,
+      "pixel_size_m": 1.0,
+      "nodata": "<dem-nodata>"
+    }
+  },
+  "commands": [
+    "gdaldem slope ../cogs/dem/ks_1m_dem_2018_2020.tif ../cogs/terrain/ks_slope_deg.tif -compute_edges -s 1.0",
+    "gdaladdo -r average ../cogs/terrain/ks_slope_deg.tif 2 4 8 16",
+    "gdal_translate ../cogs/terrain/ks_slope_deg.tif ../cogs/terrain/ks_slope_deg.tif -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER"
+  ],
+  "outputs": {
+    "slope_cog": {
+      "path": "../cogs/terrain/ks_slope_deg.tif",
+      "checksum": "<sha256-slope>",
+      "units": "degrees",
+      "algorithm": "Horn",
+      "overviews": [2, 4, 8, 16],
+      "compression": "DEFLATE"
+    },
+    "slope_classes": {
+      "path": "../processed/vectors/slope_classes.geojson",
+      "checksum": "<sha256-slope-classes>",
+      "bins_deg": [0, 2, 5, 10, 20, 30, 45, 90],
+      "labels": ["0–2", "2–5", "5–10", "10–20", "20–30", "30–45", "45+"],
+      "notes": "Optional; built via raster binning + polygonize."
+    }
+  },
+  "notes": "Maintain DEM nodata; avoid nearest-neighbor resampling; record checksums after build."
+}
