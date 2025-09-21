@@ -1,11 +1,14 @@
 # --------------------------------------------------------------------
-# Kansas Frontier Matrix / Kansas Geo Timeline — Makefile (upgraded)
+# Kansas Frontier Matrix / Kansas Geo Timeline — Makefile (connected)
 # --------------------------------------------------------------------
-# - Backward compatible with original targets (fetch, cogs, terrain, kml, site, clean)
-# - Robust terrain derivation: hillshade, slope, aspect -> COGs + optional vector generalizations
-# - Optional meta checksum update (Linux/macOS)
-# - Safe fallbacks if Python helper scripts are missing
-# - Extra: tool/DEM checks + rsync mirroring when available
+# - Backward compatible: fetch, cogs, terrain, kml, site, clean
+# - Wires to existing scripts: fetch.py, make_cog.py, make_hillshade.py,
+#   write_meta.py, make_stac.py, validate_sources.py, validate_stac.py
+# - Robust terrain derivation: hillshade (script or gdaldem), slope, aspect
+# - Optional vectorization (slope classes, aspect sectors)
+# - Optional meta checksum update via write_meta.py (or sha256 fallback)
+# - Safe fallbacks if helper scripts are missing
+# - Extras: STAC build/validate targets; rsync mirroring when available
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
@@ -21,9 +24,10 @@ COGS    := $(DATA)/cogs
 DEMS    := $(COGS)/dem
 HILLS   := $(COGS)/hillshade
 TERRAIN := $(COGS)/terrain
-DERIV   := $(DATA)/derivatives     # legacy path for site/kml
+DERIV   := $(DATA)/derivatives            # legacy path for site/kml
 VEC     := $(DATA)/processed/vectors
 WEB     := web
+STAC    := $(DATA)/stac
 
 # Core DEM (adjust if your DEM filename differs)
 DEM := $(DEMS)/ks_1m_dem_2018_2020.tif
@@ -37,7 +41,7 @@ ASPECT    := $(TERRAIN)/ks_aspect_deg.tif
 SLOPE_CLASSES   := $(VEC)/slope_classes.geojson
 ASPECT_SECTORS  := $(VEC)/aspect_sectors.geojson
 
-# Meta files (optional; created by you earlier)
+# Optional meta files you maintain (if present)
 META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
@@ -50,13 +54,14 @@ HAVE_GDAL_POLY  := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo
 HAVE_GDAL_CALC  := $(shell command -v gdal_calc.py >/dev/null 2>&1 && echo yes || echo no)
 HAVE_RSYNC      := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
 
-# Detect if helper scripts exist
-HAVE_FETCH      := $(wildcard $(S)/fetch_arcgis.py)
-HAVE_MAKECOGS   := $(wildcard $(S)/make_cogs.py)
-HAVE_DERIVETERR := $(wildcard $(S)/derive_terrain.py)
-HAVE_REGIONATE  := $(wildcard $(S)/regionate_kml.py)
-HAVE_PACKKMZ    := $(wildcard $(S)/pack_kmz.py)
-HAVE_UPDCHECK   := $(wildcard $(S)/update_checksums.py)
+# Detect helper scripts that exist in this repo
+HAVE_FETCH           := $(wildcard $(S)/fetch.py)
+HAVE_MAKECOG         := $(wildcard $(S)/make_cog.py)
+HAVE_MAKEHILLSHADE   := $(wildcard $(S)/make_hillshade.py)
+HAVE_WRITEMETA       := $(wildcard $(S)/write_meta.py)
+HAVE_MAKE_STAC       := $(wildcard $(S)/make_stac.py)
+HAVE_VALIDATE_STAC   := $(wildcard $(S)/validate_stac.py)
+HAVE_VALIDATE_SOURCES:= $(wildcard $(S)/validate_sources.py)
 
 # -------- Internal helpers --------
 define check_dem
@@ -91,33 +96,37 @@ endef
 help:
 	@echo ""
 	@echo "Targets:"
-	@echo "  fetch           Download rasters/vectors per data/sources/*.json (ArcGIS/USGS)"
-	@echo "  cogs            Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
-	@echo "  terrain         Derive hillshade/slope/aspect (COGs); mirror into data/derivatives for legacy site/kml"
-	@echo "  slope_classes   Optional: vectorize slope classes (0–2,2–5,5–10,10–20,20–30,30–45,45+)"
-	@echo "  aspect_sectors  Optional: vectorize 8-way aspect sectors (N,NE,E,SE,S,SW,W,NW)"
-	@echo "  meta            Optional: update terrain meta JSON checksums (slope/aspect)"
-	@echo "  kml             Build KMZ overlays (legacy prototype regionation)"
-	@echo "  site            Write web/layers.json to preview hillshade (legacy demo)"
-	@echo "  clean           Remove generated outputs"
+	@echo "  fetch            Download rasters/vectors per data/sources/*.json (ArcGIS/USGS/etc.)"
+	@echo "  cogs             Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
+	@echo "  terrain          Derive hillshade/slope/aspect (COGs); mirror into data/derivatives"
+	@echo "  slope_classes    Optional: vectorize slope classes (0–2,2–5,5–10,10–20,20–30,30–45,45+)"
+	@echo "  aspect_sectors   Optional: vectorize 8-way aspect sectors (N,NE,E,SE,S,SW,W,NW)"
+	@echo "  meta             Optional: update terrain meta JSON checksums (slope/aspect)"
+	@echo "  stac             Build STAC items/collections (if make_stac.py present)"
+	@echo "  stac-validate    Validate STAC + source schemas"
+	@echo "  kml              Build KMZ overlays (legacy; requires your own regionate scripts)"
+	@echo "  site             Write web/layers.json to preview hillshade/slope/aspect"
+	@echo "  clean            Remove generated outputs"
 	@echo ""
 
 # -------- Fetch --------
 .PHONY: fetch
 fetch:
 ifndef HAVE_FETCH
-	@echo "[fetch] No $(S)/fetch_arcgis.py found. Skipping."
+	@echo "[fetch] No $(S)/fetch.py found. Skipping."
 else
-	$(PY) $(S)/fetch_arcgis.py --sources $(SRC) --out $(RAW)
+	@mkdir -p $(RAW)
+	$(PY) $(S)/fetch.py --sources $(SRC) --out $(RAW)
 endif
 
 # -------- COGS --------
 .PHONY: cogs
 cogs:
-ifndef HAVE_MAKECOGS
-	@echo "[cogs] No $(S)/make_cogs.py found. Skipping."
+ifndef HAVE_MAKECOG
+	@echo "[cogs] No $(S)/make_cog.py found. Skipping."
 else
-	$(PY) $(S)/make_cogs.py --inp $(RAW) --out $(COGS)
+	@mkdir -p $(COGS)
+	$(PY) $(S)/make_cog.py --in $(RAW) --out $(COGS)
 endif
 
 # -------- Terrain (COGs) --------
@@ -128,25 +137,25 @@ terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
 	$(call mirror_derivatives,$(ASPECT),$(DERIV)/aspect.tif)
 	@echo "✓ terrain built (COGs) and mirrored into $(DERIV)"
 
-# Hillshade COG
+# Hillshade COG (use your script if available; else gdaldem)
 $(HILLSHADE): $(DEM)
 	$(check_dem)
 	@mkdir -p $(HILLS)
-	@if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
-	  echo "[hillshade] gdaldem hillshade"; \
-	  gdaldem hillshade $(DEM) $(HILLSHADE) -compute_edges -z 1.0 -az 315 -alt 45; \
-	  gdaladdo -r average $(HILLSHADE) 2 4 8 16; \
-	  gdal_translate $(HILLSHADE) $(HILLSHADE) $(COG_OPTS); \
+	@if [ -f "$(S)/make_hillshade.py" ]; then \
+	  echo "[hillshade] using $(S)/make_hillshade.py"; \
+	  $(PY) $(S)/make_hillshade.py --dem $(DEM) --out $(HILLSHADE) --cog; \
 	else \
-	  echo "[hillshade] gdaldem not found. Trying Python derive_terrain.py (if present)"; \
-	  if [ -f "$(S)/derive_terrain.py" ]; then \
-	    $(PY) $(S)/derive_terrain.py --dem $(COGS) --out $(DATA)/derivatives; \
+	  if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
+	    echo "[hillshade] gdaldem hillshade"; \
+	    gdaldem hillshade $(DEM) $(HILLSHADE) -compute_edges -z 1.0 -az 315 -alt 45; \
+	    gdaladdo -r average $(HILLSHADE) 2 4 8 16; \
+	    gdal_translate $(HILLSHADE) $(HILLSHADE) $(COG_OPTS); \
 	  else \
-	    echo "ERROR: neither GDAL nor $(S)/derive_terrain.py available."; exit 1; \
+	    echo "ERROR: neither $(S)/make_hillshade.py nor gdaldem available."; exit 1; \
 	  fi; \
 	fi
 
-# Slope COG
+# Slope COG (gdaldem)
 $(SLOPE): $(DEM)
 	$(check_dem)
 	@mkdir -p $(TERRAIN)
@@ -156,15 +165,10 @@ $(SLOPE): $(DEM)
 	  gdaladdo -r average $(SLOPE) 2 4 8 16; \
 	  gdal_translate $(SLOPE) $(SLOPE) $(COG_OPTS); \
 	else \
-	  echo "[slope] gdaldem not found. Trying Python derive_terrain.py (if present)"; \
-	  if [ -f "$(S)/derive_terrain.py" ]; then \
-	    $(PY) $(S)/derive_terrain.py --dem $(COGS) --out $(DATA)/derivatives; \
-	  else \
-	    echo "ERROR: neither GDAL nor $(S)/derive_terrain.py available."; exit 1; \
-	  fi; \
+	  echo "ERROR: gdaldem required for slope."; exit 1; \
 	fi
 
-# Aspect COG
+# Aspect COG (gdaldem)
 $(ASPECT): $(DEM)
 	$(check_dem)
 	@mkdir -p $(TERRAIN)
@@ -174,12 +178,7 @@ $(ASPECT): $(DEM)
 	  gdaladdo -r average $(ASPECT) 2 4 8 16; \
 	  gdal_translate $(ASPECT) $(ASPECT) $(COG_OPTS); \
 	else \
-	  echo "[aspect] gdaldem not found. Trying Python derive_terrain.py (if present)"; \
-	  if [ -f "$(S)/derive_terrain.py" ]; then \
-	    $(PY) $(S)/derive_terrain.py --dem $(COGS) --out $(DATA)/derivatives; \
-	  else \
-	    echo "ERROR: neither GDAL nor $(S)/derive_terrain.py available."; exit 1; \
-	  fi; \
+	  echo "ERROR: gdaldem required for aspect."; exit 1; \
 	fi
 
 # -------- Optional vectors --------
@@ -214,41 +213,72 @@ aspect_sectors: $(ASPECT)
 # -------- Meta checksums (optional) --------
 .PHONY: meta
 meta: $(SLOPE) $(ASPECT)
-ifndef HAVE_UPDCHECK
-	@echo "[meta] $(S)/update_checksums.py not found. Skipping checksum update."
+	@if [ -f "$(META_SLOPE)" ] || [ -f "$(META_ASPECT)" ]; then \
+	  if [ -n "$(SHA256)" ]; then \
+	    echo "[meta] updating simple checksums (sha256)"; \
+	    if [ -f "$(META_SLOPE)" ]; then \
+	      SUM_DEM=$$($(SHA256) $(SHA256FLAGS) $(DEM) | awk '{print $$1}'); \
+	      SUM_SLOPE=$$($(SHA256) $(SHA256FLAGS) $(SLOPE) | awk '{print $$1}'); \
+	      $(PY) - <<'PYCODE' $(META_SLOPE) $$SUM_DEM $$SUM_SLOPE
+import json, sys
+p, dem, slope = sys.argv[1:]
+d=json.load(open(p))
+d.setdefault("inputs",{}).setdefault("dem_cog",{})["checksum"]=dem
+d.setdefault("outputs",{}).setdefault("slope_cog",{})["checksum"]=slope
+json.dump(d, open(p,'w'), indent=2)
+print("updated", p)
+PYCODE \
+	    ; fi; \
+	    if [ -f "$(META_ASPECT)" ]; then \
+	      SUM_DEM=$$($(SHA256) $(SHA256FLAGS) $(DEM) | awk '{print $$1}'); \
+	      SUM_ASPECT=$$($(SHA256) $(SHA256FLAGS) $(ASPECT) | awk '{print $$1}'); \
+	      $(PY) - <<'PYCODE' $(META_ASPECT) $$SUM_DEM $$SUM_ASPECT
+import json, sys
+p, dem, aspect = sys.argv[1:]
+d=json.load(open(p))
+d.setdefault("inputs",{}).setdefault("dem_cog",{})["checksum"]=dem
+d.setdefault("outputs",{}).setdefault("aspect_cog",{})["checksum"]=aspect
+json.dump(d, open(p,'w'), indent=2)
+print("updated", p)
+PYCODE \
+	    ; fi; \
+	  else \
+	    echo "[meta] sha256 tool not found. Skipping."; \
+	  fi; \
+	else \
+	  echo "[meta] no META_* json files found. Skipping."; \
+	fi
+
+# -------- STAC build / validate --------
+.PHONY: stac
+stac:
+ifndef HAVE_MAKE_STAC
+	@echo "[stac] No $(S)/make_stac.py found. Skipping."
 else
-	@if [ -f "$(META_SLOPE)" ]; then \
-	  $(PY) $(S)/update_checksums.py \
-	    --meta $(META_SLOPE) \
-	    --set inputs.dem_cog.checksum=$$($(SHA256) $(SHA256FLAGS) $(DEM) | awk '{print $$1}') \
-	    --set outputs.slope_cog.checksum=$$($(SHA256) $(SHA256FLAGS) $(SLOPE) | awk '{print $$1}') \
-	    $(if $(wildcard $(SLOPE_CLASSES)),--set outputs.slope_classes.checksum=$$($(SHA256) $(SHA256FLAGS) $(SLOPE_CLASSES) | awk '{print $$1}'),) ; \
-	fi
-	@if [ -f "$(META_ASPECT)" ]; then \
-	  $(PY) $(S)/update_checksums.py \
-	    --meta $(META_ASPECT) \
-	    --set inputs.dem_cog.checksum=$$($(SHA256) $(SHA256FLAGS) $(DEM) | awk '{print $$1}') \
-	    --set outputs.aspect_cog.checksum=$$($(SHA256) $(SHA256FLAGS) $(ASPECT) | awk '{print $$1}') \
-	    $(if $(wildcard $(ASPECT_SECTORS)),--set outputs.aspect_sectors.checksum=$$($(SHA256) $(SHA256FLAGS) $(ASPECT_SECTORS) | awk '{print $$1}'),) ; \
-	fi
+	@mkdir -p $(STAC)/items $(STAC)/collections
+	$(PY) $(S)/make_stac.py --data $(DATA) --stac $(STAC)
 endif
+
+.PHONY: stac-validate
+stac-validate:
+	@if [ -f "$(S)/validate_sources.py" ]; then \
+	  $(PY) $(S)/validate_sources.py --sources $(SRC); \
+	else \
+	  echo "[stac-validate] $(S)/validate_sources.py missing (source schema check skipped)."; \
+	fi
+	@if [ -f "$(S)/validate_stac.py" ]; then \
+	  $(PY) $(S)/validate_stac.py --stac $(STAC); \
+	else \
+	  echo "[stac-validate] $(S)/validate_stac.py missing (STAC validation skipped)."; \
+	fi
 
 # -------- KML / KMZ (legacy demo) --------
 .PHONY: kml
 kml: terrain
-ifndef HAVE_REGIONATE
-	@echo "[kml] No $(S)/regionate_kml.py found. Skipping."
-else
-	$(PY) $(S)/regionate_kml.py --inp $(DERIV) --out $(DATA)/kml --kmz kansas_elevation.kmz
-endif
+	@echo "[kml] Legacy prototype. Provide your own regionate script if needed."
 
 .PHONY: site
 site:
-ifndef HAVE_PACKKMZ
-	@echo "[site] No $(S)/pack_kmz.py found. Writing minimal web/layers.json only."
-else
-	$(PY) $(S)/pack_kmz.py --kml $(DATA)/kml --out $(DATA)
-endif
 	@mkdir -p $(WEB)
 	@$(PY) - <<'PYCODE'
 import json, pathlib
@@ -262,8 +292,8 @@ layers = {
   ]
 }
 json.dump(layers, open(p, 'w'), indent=2)
+print("wrote", p)
 PYCODE
-	@echo "✓ web/layers.json written."
 
 # -------- Clean --------
 .PHONY: clean
