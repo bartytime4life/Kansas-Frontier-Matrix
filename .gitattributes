@@ -1,121 +1,138 @@
 # ================================
 # Kansas-Frontier-Matrix / MCP Repo
+# .gitattributes — CRLF/LF safety, smart diffs, LFS for big geo
 # ================================
 
 # --- Default text handling (cross-platform safety) ---
-* text=auto eol=lf
+*               text=auto eol=lf
 
 # --- Normalize line endings for code & docs (diff-friendly) ---
-*.py     text diff=python
-*.sh     text eol=lf
-*.js     text diff=javascript
-*.ts     text
-*.json   text
-*.jsonc  text
-*.yml    text
-*.yaml   text
-*.toml   text
-*.ini    text
-*.md     text
-*.rst    text
-*.mmd    text
-*.plantuml text
-*.svg    text
-*.css    text
-*.html   text
+*.py            text diff=python
+*.sh            text eol=lf
+*.js            text diff=javascript
+*.mjs           text
+*.cjs           text
+*.ts            text
+*.tsx           text
+*.jsx           text
+*.css           text
+*.html          text
+*.md            text
+*.rst           text
+*.mmd           text
+*.plantuml      text
+*.svg           text
+*.toml          text
+*.ini           text
+*.yml           text
+*.yaml          text
+*.json          text
+*.jsonc         text
+*.geojson       text
+*.csv           text
+*.tsv           text
 
 # --- Lock binary formats (no auto-merge) ---
-*.pdf    binary
-*.png    binary
-*.jpg    binary
-*.jpeg   binary
-*.gif    binary
-*.ico    binary
-*.woff   binary
-*.woff2  binary
-*.ttf    binary
-*.otf    binary
+*.pdf           binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.woff          binary
+*.woff2         binary
+*.ttf           binary
+*.otf           binary
 
 # --- Geospatial rasters / vectors / containers -> LFS ---
 # Core rasters
-*.tif     filter=lfs diff=lfs merge=lfs -text
-*.tiff    filter=lfs diff=lfs merge=lfs -text
-*.vrt     filter=lfs diff=lfs merge=lfs -text
-*.img     filter=lfs diff=lfs merge=lfs -text    # ERDAS Imagine
-*.bil     filter=lfs diff=lfs merge=lfs -text
-*.jp2     filter=lfs diff=lfs merge=lfs -text
-*.nc      filter=lfs diff=lfs merge=lfs -text    # NetCDF
-*.h5      filter=lfs diff=lfs merge=lfs -text    # HDF5
+*.tif           filter=lfs diff=lfs merge=lfs -text
+*.tiff          filter=lfs diff=lfs merge=lfs -text
+*.vrt           filter=lfs diff=lfs merge=lfs -text
+*.ovr           filter=lfs diff=lfs merge=lfs -text
+*.aux.xml       filter=lfs diff=lfs merge=lfs -text
+*.tfw           filter=lfs diff=lfs merge=lfs -text
+*.img           filter=lfs diff=lfs merge=lfs -text      # ERDAS Imagine
+*.bil           filter=lfs diff=lfs merge=lfs -text
+*.jp2           filter=lfs diff=lfs merge=lfs -text
+*.nc            filter=lfs diff=lfs merge=lfs -text      # NetCDF
+*.grd           filter=lfs diff=lfs merge=lfs -text
+*.h5            filter=lfs diff=lfs merge=lfs -text      # HDF5
 
 # Point clouds / LiDAR
-*.las     filter=lfs diff=lfs merge=lfs -text
-*.laz     filter=lfs diff=lfs merge=lfs -text
+*.las           filter=lfs diff=lfs merge=lfs -text
+*.laz           filter=lfs diff=lfs merge=lfs -text
 
-# Rasters/tiles & db containers
-*.mbtiles filter=lfs diff=lfs merge=lfs -text
-*.sqlite  filter=lfs diff=lfs merge=lfs -text
-*.gpkg    filter=lfs diff=lfs merge=lfs -text
-*.geoparquet filter=lfs diff=lfs merge=lfs -text
-*.parquet filter=lfs diff=lfs merge=lfs -text
+# Tiles / DB / vector containers
+*.mbtiles       filter=lfs diff=lfs merge=lfs -text
+*.sqlite        filter=lfs diff=lfs merge=lfs -text
+*.gpkg          filter=lfs diff=lfs merge=lfs -text
+*.geoparquet    filter=lfs diff=lfs merge=lfs -text
+*.parquet       filter=lfs diff=lfs merge=lfs -text
+*.feather       filter=lfs diff=lfs merge=lfs -text
+*.fgb           filter=lfs diff=lfs merge=lfs -text      # FlatGeobuf
 
 # Shapefile family (all sidecars)
-*.shp     filter=lfs diff=lfs merge=lfs -text
-*.shx     filter=lfs diff=lfs merge=lfs -text
-*.dbf     filter=lfs diff=lfs merge=lfs -text
-*.prj     filter=lfs diff=lfs merge=lfs -text
-*.cpg     filter=lfs diff=lfs merge=lfs -text
-*.sbn     filter=lfs diff=lfs merge=lfs -text
-*.sbx     filter=lfs diff=lfs merge=lfs -text
-*.aih     filter=lfs diff=lfs merge=lfs -text
-*.ain     filter=lfs diff=lfs merge=lfs -text
-*.ixs     filter=lfs diff=lfs merge=lfs -text
-*.mxs     filter=lfs diff=lfs merge=lfs -text
-*.atx     filter=lfs diff=lfs merge=lfs -text
-*.shp.xml filter=lfs diff=lfs merge=lfs -text
-*.qpj     filter=lfs diff=lfs merge=lfs -text
+*.shp           filter=lfs diff=lfs merge=lfs -text
+*.shx           filter=lfs diff=lfs merge=lfs -text
+*.dbf           filter=lfs diff=lfs merge=lfs -text
+*.prj           filter=lfs diff=lfs merge=lfs -text
+*.cpg           filter=lfs diff=lfs merge=lfs -text
+*.sbn           filter=lfs diff=lfs merge=lfs -text
+*.sbx           filter=lfs diff=lfs merge=lfs -text
+*.aih           filter=lfs diff=lfs merge=lfs -text
+*.ain           filter=lfs diff=lfs merge=lfs -text
+*.ixs           filter=lfs diff=lfs merge=lfs -text
+*.mxs           filter=lfs diff=lfs merge=lfs -text
+*.atx           filter=lfs diff=lfs merge=lfs -text
+*.shp.xml       filter=lfs diff=lfs merge=lfs -text
+*.qpj           filter=lfs diff=lfs merge=lfs -text
 
 # KML/KMZ (often large)
-*.kmz    filter=lfs diff=lfs merge=lfs -text
-*.kml    filter=lfs diff=lfs merge=lfs -text
+*.kmz           filter=lfs diff=lfs merge=lfs -text
+*.kml           filter=lfs diff=lfs merge=lfs -text
 
 # QGIS projects (zip/container)
-*.qgz    filter=lfs diff=lfs merge=lfs -text
-*.qgs    filter=lfs diff=lfs merge=lfs -text
+*.qgz           filter=lfs diff=lfs merge=lfs -text
+*.qgs           filter=lfs diff=lfs merge=lfs -text
 
-# Big archives / bundles (keep out of Git history)
-*.zip    filter=lfs diff=lfs merge=lfs -text
-*.7z     filter=lfs diff=lfs merge=lfs -text
-*.tar    filter=lfs diff=lfs merge=lfs -text
-*.tar.gz filter=lfs diff=lfs merge=lfs -text
-*.tgz    filter=lfs diff=lfs merge=lfs -text
-*.bz2    filter=lfs diff=lfs merge=lfs -text
-*.xz     filter=lfs diff=lfs merge=lfs -text
-*.zst    filter=lfs diff=lfs merge=lfs -text
+# Archives / bundles (keep out of Git history as text)
+*.zip           filter=lfs diff=lfs merge=lfs -text
+*.7z            filter=lfs diff=lfs merge=lfs -text
+*.tar           filter=lfs diff=lfs merge=lfs -text
+*.tar.gz        filter=lfs diff=lfs merge=lfs -text
+*.tgz           filter=lfs diff=lfs merge=lfs -text
+*.bz2           filter=lfs diff=lfs merge=lfs -text
+*.xz            filter=lfs diff=lfs merge=lfs -text
+*.zst           filter=lfs diff=lfs merge=lfs -text
 
-# --- Jupyter notebooks as text (enable nbstripout/pre-commit) ---
-*.ipynb text linguist-language=Jupyter
+# --- Notebooks as text (enable nbstripout/pre-commit) ---
+*.ipynb         text linguist-language=Jupyter
 
-# --- Docs / diagrams ---
-*.dot   text
-*.mmd   text
-*.plantuml text
-
-# --- CI/CD configs ---
-.github/**  text
-.gitattributes text
-.gitignore    text
+# --- CI/CD configs (text) ---
+.gitattributes   text
+.gitignore       text
+.github/**       text
 
 # --- Experiment logs / metadata (diff as text) ---
-mcp/experiments/**/metadata.json text
-mcp/experiments/**/config.yaml   text
-mcp/experiments/**/README.md     text
+mcp/experiments/**/metadata.json    text
+mcp/experiments/**/config.yaml      text
+mcp/experiments/**/README.md        text
 
-# --- DVC metadata (always text, never LFS) ---
-*.dvc   text
-.dvc/** text
+# --- DVC metadata (text, never LFS) ---
+*.dvc           text
+.dvc/**         text
 
-# --- Linguist tuning for repo stats (optional niceties) ---
-# Treat generated/minified vendor assets as vendored/generated
-web/vendor/** linguist-vendored
-web/**/dist/** linguist-vendored
-web/**/build/** linguist-vendored
+# --- Linguist tuning for repo stats ---
+web/vendor/**        linguist-vendored
+web/**/dist/**       linguist-vendored
+web/**/build/**      linguist-vendored
+
+# --- Samples override (keep small demo rasters as text if needed) ---
+# Uncomment and adjust if you maintain *small* reference rasters in Git history
+# data/samples/**     -filter -diff -merge text
+
+# --- Packaging niceties (exclude from `git archive`) ---
+.github/        export-ignore
+tests/          export-ignore
+docs/           export-ignore
