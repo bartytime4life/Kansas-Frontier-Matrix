@@ -1,19 +1,15 @@
 {
   "stac_version": "1.0.0",
-  "stac_extensions": ["proj"],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
+  ],
   "type": "Collection",
-  "id": "elevation",
+  "id": "ks_terrain",
   "title": "Kansas Elevation (DEM & Hillshade)",
   "description": "Statewide elevation products for Kansas, including the 1 m LiDAR-derived DEM (2018–2020) and derived hillshade for visualization and analysis.",
   "license": "public-domain",
-  "keywords": [
-    "elevation",
-    "DEM",
-    "hillshade",
-    "LiDAR",
-    "Kansas",
-    "topography"
-  ],
+  "keywords": ["elevation", "DEM", "hillshade", "LiDAR", "Kansas", "topography"],
   "providers": [
     {
       "name": "Kansas Frontier Matrix Project",
@@ -21,21 +17,19 @@
       "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
     }
   ],
+
   "extent": {
-    "spatial": {
-      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
-    },
-    "temporal": {
-      "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]]
-    }
+    "spatial": { "bbox": [[-102.051, 36.993, -94.588, 40.003]] },
+    "temporal": { "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]] }
   },
+
   "summaries": {
     "proj:epsg": [4326],
-    "platform": ["airborne-lidar"],
-    "instruments": ["lidar"],
     "gsd": [1.0],
-    "item_assets": ["dem", "hillshade", "metadata", "checksum", "thumbnail"]
+    "platform": ["airborne-lidar"],
+    "instruments": ["lidar"]
   },
+
   "item_assets": {
     "dem": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
@@ -46,7 +40,7 @@
     },
     "hillshade": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"],
+      "roles": ["data", "visual"],
       "title": "Hillshade (COG)",
       "description": "Hillshade derived from 1 m DEM for cartographic visualization.",
       "proj:epsg": 4326
@@ -54,7 +48,7 @@
     "metadata": {
       "type": "application/json",
       "roles": ["metadata"],
-      "title": "Product Metadata"
+      "title": "Product metadata"
     },
     "checksum": {
       "type": "text/plain",
@@ -67,12 +61,12 @@
       "title": "Thumbnail preview"
     }
   },
+
   "links": [
-    { "rel": "self",  "href": "./elevation.json",             "type": "application/json" },
-    { "rel": "root",  "href": "../catalog.json",              "type": "application/json" },
-    { "rel": "parent","href": "../catalog.json",              "type": "application/json" },
-    { "rel": "item",  "href": "../items/ks_1m_dem.json",      "type": "application/geo+json" },
-    { "rel": "item",  "href": "../items/ks_1m_hillshade.json","type": "application/geo+json" }
+    { "rel": "self",   "href": "./elevation.json",                 "type": "application/json" },
+    { "rel": "root",   "href": "../catalog.json",                  "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",                  "type": "application/json" },
+    { "rel": "item",   "href": "../items/ks_1m_dem_2018_2020.json","type": "application/geo+json" },
+    { "rel": "item",   "href": "../items/ks_1m_hillshade_2018_2020.json", "type": "application/geo+json" }
   ]
 }
-
