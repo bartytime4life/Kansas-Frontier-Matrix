@@ -62,7 +62,7 @@ repos:
     rev: 24.8.0
     hooks:
       - id: black
-        language_version: python3
+        language_version: python3.10   # keep consistent with project floor
         exclude: ^(notebooks/|docs/)
 
   # --- YAML / JSON / Markdown / Web assets ----------------------------------
@@ -120,10 +120,8 @@ repos:
     rev: v2.7.3
     hooks:
       - id: pip-audit
-        # For fully reproducible SCA, pin to a lock/constraints file:
-        # args: ["-r", "requirements.txt"]
-        # or:  ["--constraints", "constraints.txt"]
-        additional_dependencies: []  # fall back to current env; resolves manylinux wheels on CI
+        args: ["-r", "requirements.txt"]  # scan direct runtime deps (fast & stable)
+        additional_dependencies: []
 
   # --- GitHub Actions workflow linter ---------------------------------------
   - repo: https://github.com/rhysd/actionlint
