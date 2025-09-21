@@ -7,8 +7,9 @@
     <name>USGS Topographic Map — Larned (1894)</name>
     <open>1</open>
 
-    <!-- Optional: provenance -->
+    <!-- Provenance (optional) -->
     <atom:author><atom:name>Kansas Frontier Matrix</atom:name></atom:author>
+    <!-- Replace with your Pages/site if desired -->
     <atom:link rel="related" href="https://YOUR-PAGES-DOMAIN/"/>
 
     <NetworkLink id="usgs_topo_larned_1894_link">
@@ -16,7 +17,7 @@
       <open>1</open>
       <gx:flyToView>1</gx:flyToView>
 
-      <!-- Limit requests to the Larned quad vicinity -->
+      <!-- Quad vicinity guard (prevents out-of-bounds fetches) -->
       <Region>
         <LatLonAltBox>
           <north>38.3000</north>
@@ -27,13 +28,12 @@
           <maxAltitude>0</maxAltitude>
         </LatLonAltBox>
         <Lod>
-          <!-- Start loading when ~64 screen pixels cover the region; no upper cap -->
           <minLodPixels>64</minLodPixels>
           <maxLodPixels>-1</maxLodPixels>
         </Lod>
       </Region>
 
-      <!-- Default view on open (center near Larned, KS) -->
+      <!-- Default view (center near Larned, KS) -->
       <LookAt>
         <longitude>-99.1000</longitude>
         <latitude>38.1800</latitude>
@@ -45,20 +45,18 @@
       </LookAt>
 
       <Link>
-        <!-- Relative path keeps it portable alongside this KML (GitHub Pages/CDN, etc.) -->
-        <href>../overlays/usgs_topo_larned_1894.kmz</href>
+        <!-- Portable (when bundled inside Kansas_Terrain.kmz) -->
+        <href>overlays/usgs_topo_larned_1894.kmz</href>
 
-        <!-- Or use an absolute URL; uncomment and replace:
-        <href>https://YOUR-PAGES-DOMAIN/data/earth/overlays/usgs_topo_larned_1894.kmz</href>
+        <!-- If hosted externally instead, uncomment and set your absolute URL:
+        <href>https://YOUR-PAGES-DOMAIN/data/kml/usgs_topo_larned_1894.kmz</href>
         -->
 
-        <!-- Let the SuperOverlay’s internal Regions control fetching -->
+        <!-- Let SuperOverlay Regions control tile loading -->
         <viewRefreshMode>onRegion</viewRefreshMode>
-
-        <!-- Small hysteresis so tiny camera moves don’t thrash requests -->
+        <!-- Small hysteresis to avoid thrashing -->
         <viewRefreshTime>1</viewRefreshTime>
-
-        <!-- Prefetch slightly beyond the current bounds to avoid edge pop-in -->
+        <!-- Prefetch a bit beyond bounds to reduce edge pop-in -->
         <viewBoundScale>1.2</viewBoundScale>
       </Link>
     </NetworkLink>
