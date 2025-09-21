@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  kfm:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        GDAL_IMAGE: ghcr.io/osgeo/gdal:ubuntu-small-latest
+    image: kfm:latest
+    container_name: kfm
+    working_dir: /app
+    # Mount repo so edits are live; mount data for outputs
+    volumes:
+      - ./:/app
+      - ./data:/app/data
+    environment:
+      # tune as needed; defaults are set in Dockerfile too
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - GDAL_DISABLE_READDIR_ON_OPEN=YES
+      - VSI_CACHE=TRUE
+      - VSI_CACHE_SIZE=1000000
+      - PROJ_NETWORK=ON
+    tty: true
+    stdin_open: true
