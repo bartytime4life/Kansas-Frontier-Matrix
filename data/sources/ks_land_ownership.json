@@ -1,0 +1,122 @@
+{
+  "id": "ks_land_ownership",
+  "title": "Kansas Land, Ownership, Tenure & Sovereignty",
+  "description": "Statewide land/ownership stack for Kansas, including current parcels and public lands; sovereign/tribal boundaries; conservation & protected areas (PAD-US); PLSS grid; and historical homestead/patent records (GLO/BLM). Intended for time-aware overlays with roads/rail/hydrology.",
+  "license": "Open/Public as provided by each source (see per-asset). Some parcel layers carry county-level usage terms.",
+  "providers": [
+    {
+      "name": "Kansas Data Access & Support Center (DASC)",
+      "roles": ["host"],
+      "url": "https://data.kansasgis.org/"
+    },
+    {
+      "name": "BLM Cadastral / General Land Office (GLO)",
+      "roles": ["producer", "host"],
+      "url": "https://glorecords.blm.gov/"
+    },
+    {
+      "name": "USGS / U.S. Geological Survey",
+      "roles": ["producer", "host"],
+      "url": "https://www.usgs.gov/"
+    },
+    {
+      "name": "U.S. Census Bureau (TIGER/Line)",
+      "roles": ["producer", "host"],
+      "url": "https://www.census.gov/"
+    },
+    {
+      "name": "U.S. Fish & Wildlife Service / USGS PAD-US",
+      "roles": ["producer", "host"],
+      "url": "https://www.usgs.gov/programs/gap-analysis-project/pad-us"
+    }
+  ],
+  "assets": {
+    "parcels_current": {
+      "href": "https://data.kansasgis.org/arcgis/rest/services/Boundaries/Kansas_Parcels/MapServer",
+      "type": "application/vnd.esri.map-service",
+      "title": "Kansas Parcels / Ownership (current, statewide aggregation)",
+      "roles": ["source", "current"],
+      "kfm:notes": "Statewide parcel aggregation. Attribute harmonization required; county-level usage/licensing may apply."
+    },
+    "plss_cadnsdi": {
+      "href": "https://gis.blm.gov/arcgis/rest/services/BLM_National_PLSS_CadNSDI/MapServer",
+      "type": "application/vnd.esri.map-service",
+      "title": "BLM CadNSDI PLSS (Township/Range/Section, aliquots)",
+      "roles": ["reference", "historical", "index"],
+      "kfm:notes": "Use for geocoding historical legal descriptions and reconciling homestead patents."
+    },
+    "glo_patents": {
+      "href": "https://glorecords.blm.gov/",
+      "type": "text/html",
+      "title": "BLM GLO Records (Patents, Survey Plats/Field Notes)",
+      "roles": ["historical", "source"],
+      "kfm:notes": "Use GLO search/download to retrieve homestead/patent tracts by county/T-R-S; associate to PLSS aliquots."
+    },
+    "padus": {
+      "href": "https://services1.arcgis.com/8df8p0NlLFEShl0r/ArcGIS/rest/services/PADUS2_2_Combined/FeatureServer",
+      "type": "application/vnd.esri.feature-service",
+      "title": "Protected Areas Database of the US (PAD-US, combined)",
+      "roles": ["source", "current", "public_lands"],
+      "kfm:filter": "Subset to Kansas (GAP status, ManagerType, OwnerType)."
+    },
+    "tribal_areas": {
+      "href": "https://www2.census.gov/geo/tiger/TIGER2020/AIANNH/",
+      "type": "text/html",
+      "title": "TIGER/Line American Indian/Alaska Native/Native Hawaiian Areas (AIANNH)",
+      "roles": ["source", "sovereignty"],
+      "kfm:notes": "Download KS-relevant AIANNH/Tribal Subdivisions to represent historic/current federal Indian lands."
+    },
+    "federal_lands": {
+      "href": "https://services.nationalmap.gov/arcgis/rest/services/USGSPLSS/MapServer",
+      "type": "application/vnd.esri.map-service",
+      "title": "Federal/Public Lands (reference layers as available)",
+      "roles": ["reference", "public_lands"],
+      "kfm:notes": "Use with PAD-US; include USACE, USFWS, NPS units within Kansas where applicable."
+    },
+    "metadata": {
+      "href": "./ks_land_ownership.meta.json",
+      "type": "application/json",
+      "title": "Processing & lineage metadata for land/ownership stack",
+      "roles": ["metadata"]
+    }
+  },
+  "processing": {
+    "schema": {
+      "id": "string",
+      "owner_type": "string",           "owner_name": "string|null",
+      "right_type": "string|null",      "right_status": "string|null",
+      "parcel_id": "string|null",       "apn": "string|null",
+      "jurisdiction": "string|null",    "sovereignty": "string|null",
+      "t_r_s": "string|null",           "aliquot": "string|null",
+      "acres": "number|null",           "valid_from": "string|null",
+      "valid_to": "string|null",        "source": "string",
+      "source_layer": "string|null",    "accuracy_m": "number|null",
+      "notes": "string|null"
+    },
+    "enums": {
+      "owner_type": ["private", "state", "federal", "tribal", "county", "municipal", "ngo", "unknown"],
+      "right_type": ["fee_simple", "easement", "withdrawal", "lease", "mineral", "timber", "other", "unknown"]
+    },
+    "notes": "Normalize parcels/PAD-US/tribal/federal layers into this schema; maintain PLSS references for historical tracts (GLO patents). Treat county parcel APN/owner names per local terms; consider hashing/anonymizing names for public display when required."
+  },
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+    },
+    "temporal": {
+      "interval": [["1854-01-01T00:00:00Z", "2025-12-31T23:59:59Z"]]
+    }
+  },
+  "keywords": [
+    "Kansas",
+    "parcels",
+    "ownership",
+    "PLSS",
+    "GLO patents",
+    "tribal lands",
+    "public lands",
+    "PAD-US",
+    "homestead",
+    "sovereignty"
+  ]
+}
