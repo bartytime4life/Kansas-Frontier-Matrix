@@ -1,12 +1,13 @@
 {
   "id": "ks_dem_overlays",
+  "version": "1.0.1",
   "title": "Kansas DEM Overlays Collection",
-  "description": "A catalog of processed overlays derived from Kansas 1m DEMs and historical base layers. Includes hillshade, slope/aspect derivatives, and georeferenced historical topographic map overlays. All overlays are aligned to WGS84/UTM and documented with provenance metadata.",
-  "spatial_extent": {
+  "description": "Catalog of processed overlays derived from Kansas 1 m DEMs and georeferenced historical base layers. Includes hillshade, slope/aspect derivatives, and historical USGS topographic map overlays. All overlays are documented with provenance and aligned to a web-delivery CRS (EPSG:4326) unless otherwise noted in each item.",
+  "spatial": {
     "bbox": [-102.05, 36.99, -94.61, 40.00],
     "crs": "EPSG:4326"
   },
-  "temporal_extent": {
+  "temporal": {
     "start": "1894-01-01",
     "end": "2020-12-31"
   },
@@ -14,26 +15,74 @@
     {
       "id": "ks_hillshade_2018_2020",
       "type": "raster",
-      "source": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
-      "metadata": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
-      "description": "Hillshade overlay generated from 2018–2020 Kansas 1m DEM.",
-      "provenance": "USGS 3DEP LiDAR, processed via GDAL hillshade pipeline"
+      "paths": {
+        "primary": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+        "meta": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+        "sha256": "data/cogs/hillshade/ks_hillshade_2018_2020.sha256",
+        "preview": "data/cogs/hillshade/ks_hillshade_2018_2020_preview.png",
+        "stac": "data/stac/ks_hillshade_2018_2020.json"
+      },
+      "description": "Hillshade overlay generated from the 2018–2020 Kansas 1 m DEM.",
+      "providers": [
+        { "name": "USGS 3D Elevation Program (3DEP)", "roles": ["producer", "licensor"], "url": "https://www.usgs.gov/3d-elevation-program" },
+        { "name": "Kansas DASC", "roles": ["host", "distributor"], "url": "https://kansasgis.org" }
+      ],
+      "license": "Public Domain (USGS)",
+      "provenance": "USGS 3DEP LiDAR-derived DEM, processed via GDAL hillshade and converted to COG"
     },
     {
       "id": "usgs_topo_larned_1894",
       "type": "raster",
-      "source": "data/cogs/overlays/usgs_topo_larned_1894.tif",
-      "metadata": "data/cogs/overlays/usgs_topo_larned_1894.meta.json",
-      "description": "Georeferenced 1894 USGS topographic map of Larned, Kansas, used as historical overlay.",
-      "provenance": "USGS Historical Topographic Map Collection, georeferenced to WGS84"
+      "paths": {
+        "primary": "data/cogs/overlays/usgs_topo_larned_1894.tif",
+        "meta": "data/cogs/overlays/usgs_topo_larned_1894.meta.json",
+        "sha256": "data/cogs/overlays/usgs_topo_larned_1894.sha256",
+        "preview": "data/cogs/overlays/usgs_topo_larned_1894_preview.png",
+        "stac": "data/stac/usgs_topo_larned_1894.json"
+      },
+      "description": "Georeferenced 1894 USGS topographic map of Larned, Kansas, for historical context.",
+      "providers": [
+        { "name": "United States Geological Survey (USGS)", "roles": ["producer", "licensor"], "url": "https://www.usgs.gov" },
+        { "name": "Kansas DASC", "roles": ["host", "distributor"], "url": "https://kansasgis.org" }
+      ],
+      "license": "Public Domain (USGS)",
+      "provenance": "USGS Historical Topographic Map Collection scan georeferenced to EPSG:4326 and converted to COG (JPEG-in-COG)"
     }
   ],
   "data_quality": {
-    "processing": "All overlays converted to Cloud Optimized GeoTIFF (COG) with internal tiling and compression. Georeferencing RMS error < 10m for historical maps.",
-    "uncertainty": "Historical maps subject to cartographic distortions; modern DEM derivatives accurate within source LiDAR specifications."
+    "processing": "All overlays are Cloud Optimized GeoTIFF (COG) with internal tiling and overviews.",
+    "uncertainty": "Historical scans may include cartographic distortions; DEM-derived products adhere to source LiDAR specifications.",
+    "historical_map_rmse_pixels": null,
+    "notes": "Per-item CRS, resampling, and parameters are recorded in each overlay's .meta.json."
   },
-  "license": "CC-BY-4.0",
-  "version": "1.0.0",
-  "last_updated": "2025-09-19"
+  "validation": {
+    "checks": [
+      "jq -e 'type==\"object\"' data/processed/dem/overlays/_meta.json",
+      "sha256sum -c data/cogs/hillshade/ks_hillshade_2018_2020.sha256",
+      "sha256sum -c data/cogs/overlays/usgs_topo_larned_1894.sha256"
+    ]
+  },
+  "keywords": [
+    "Kansas",
+    "DEM",
+    "hillshade",
+    "historical map",
+    "USGS",
+    "LiDAR",
+    "overlay",
+    "COG"
+  ],
+  "license": "mixed",
+  "links": {
+    "homepage": null,
+    "repository": null
+  },
+  "mcp": {
+    "documentation": "mcp/collections/ks_dem_overlays.md",
+    "sop_reference": "mcp/sops/collection_curation.md",
+    "traceability": {
+      "git_commit": "<commit-hash>"
+    }
+  },
+  "last_updated": "2025-09-20"
 }
-
