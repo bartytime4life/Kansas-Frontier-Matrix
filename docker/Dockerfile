@@ -1,17 +1,19 @@
 # ============================================
 # Kansas-Frontier-Matrix / MCP — Dockerfile
-# Debugged & Upgraded: GDAL + Python wheels
+# GDAL base (Ubuntu) + Python tooling (wheels-first)
+# --------------------------------------------
+# Build args you can override from CI:
+#   GDAL_IMAGE=ghcr.io/osgeo/gdal:ubuntu-small-latest
+#   USER_ID / GROUP_ID to match host UID/GID (optional)
 # ============================================
 
-# ---- Base: GDAL with glibc (Ubuntu) -------------------------
-# Alpine (musl) often breaks manylinux wheels for rasterio/pyproj.
-# Use the Ubuntu-based image for reliable binary wheels.
 ARG GDAL_IMAGE=ghcr.io/osgeo/gdal:ubuntu-small-latest
 FROM ${GDAL_IMAGE} AS runtime
 
-# Minimal OS deps (most wheels will "just work")
-# - curl/ca-certificates: HTTPS fetch; make: for Makefile targets
-# - python3-pip: pip; python-is-python3 for a 'python' shim
+# ---- OS deps (lean) ----------------------------------------------------------
+# - python3-pip + python-is-python3: pip + 'python' shim
+# - curl/ca-certificates: HTTPS fetch
+# - make/git/bash: make targets & repo ops
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       python3-pip python-is-python3 \
@@ -19,14 +21,14 @@ RUN apt-get update && \
       make git bash && \
     rm -rf /var/lib/apt/lists/*
 
-# Python/pip sanity (fast & clean installs)
+# ---- Python/pip hygiene ------------------------------------------------------
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_ROOT_USER_ACTION=ignore
 
-# GDAL/proj env hints (many libs look at these)
+# ---- GDAL/PROJ runtime hints (safe defaults) --------------------------------
 ENV GDAL_DISABLE_READDIR_ON_OPEN=YES \
     VSI_CACHE=TRUE \
     VSI_CACHE_SIZE=1000000 \
@@ -35,39 +37,37 @@ ENV GDAL_DISABLE_READDIR_ON_OPEN=YES \
 
 WORKDIR /app
 
-# ---- Dependency install (cached) ----------------------------
-# Copy dependency manifests first to leverage Docker layer caching
+# ---- Dependency layer (cache-friendly) --------------------------------------
+# Copy manifests first to leverage Docker layer caching
 COPY requirements.txt /tmp/requirements.txt
-# If you maintain constraints for CI/reproducibility, copy them too
-# (it’s okay if this file doesn’t exist—command below handles both)
+# Optional constraints; if missing/empty we ignore gracefully
 COPY constraints.txt /tmp/constraints.txt
 
-# Upgrade pip & install deps
-# Prefer binary wheels to avoid source builds (especially on CI)
 RUN python -m pip install --upgrade pip wheel && \
     if [ -s /tmp/constraints.txt ]; then \
-      python -m pip install --no-cache-dir --prefer-binary \
-        -r /tmp/requirements.txt --constraint /tmp/constraints.txt ; \
+      python -m pip install --prefer-binary -r /tmp/requirements.txt --constraint /tmp/constraints.txt ; \
     else \
-      python -m pip install --no-cache-dir --prefer-binary \
-        -r /tmp/requirements.txt ; \
+      python -m pip install --prefer-binary -r /tmp/requirements.txt ; \
     fi
 
-# ---- App code (late copy = faster rebuilds) -----------------
-# Copy the rest of the repo after deps to keep docker layer cache hot
-# If you use a src/ layout, this keeps editable code separate from deps
+# ---- App layer ---------------------------------------------------------------
+# Copy the repo after deps to keep the cache hot for frequent code changes
 COPY . /app
 
-# Optional: non-root user for safer runtime
-RUN useradd -m -u 10001 appuser && chown -R appuser:appuser /app
+# If this is a Python package, make CLI (kgt) available without reinstalling deps.
+# Fails safely if pyproject.toml/setup.cfg isn't present.
+RUN python -m pip install -e . || true
+
+# ---- Non-root user (optional UID/GID mapping) --------------------------------
+ARG USER_ID=10001
+ARG GROUP_ID=10001
+RUN groupadd -g "${GROUP_ID}" appgroup && \
+    useradd -m -u "${USER_ID}" -g appgroup appuser && \
+    chown -R appuser:appgroup /app
 USER appuser
 
-# Expose a default working directory
-WORKDIR /app
-
-# Health check (optional): verify GDAL works
-# (will just log a message in most local runs; useful in k8s/compose)
+# ---- Healthcheck (verifies GDAL is wired) -----------------------------------
 HEALTHCHECK --interval=60s --timeout=3s --retries=3 CMD gdalinfo --version || exit 1
 
-# Default command: bash (override in docker-compose or CI)
+# ---- Default shell -----------------------------------------------------------
 CMD ["/bin/bash"]
