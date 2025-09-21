@@ -1,12 +1,14 @@
 {
   "name": "kfm-roadmap-sync",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "license": "MIT",
+  "description": "Sync .github/roadmap/roadmap.yaml to GitHub labels, milestones, and issues",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
+  "packageManager": "npm@10",
   "repository": {
     "type": "git",
     "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix.git"
@@ -15,13 +17,31 @@
     "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues"
   },
   "homepage": "https://github.com/bartytime4life/Kansas-Frontier-Matrix#readme",
+  "keywords": [
+    "github-actions",
+    "roadmap",
+    "issues",
+    "milestones",
+    "labels",
+    "kansas-frontier-matrix"
+  ],
   "scripts": {
     "sync": "node scripts/sync-roadmap.js",
-    "check": "node -e \"console.log(process.version)\" && node -e \"require('fs').accessSync('.github/roadmap/roadmap.yaml')\""
+    "sync:dry": "DRY_RUN=1 node scripts/sync-roadmap.js",
+    "check": "node -e \"console.log(process.version)\" && node -e \"require('fs').accessSync('.github/roadmap/roadmap.yaml')\"",
+    "validate": "node -e \"const fs=require('fs'); const yaml=require('js-yaml'); yaml.load(fs.readFileSync('.github/roadmap/roadmap.yaml','utf8')); console.log('roadmap.yaml: OK');\"",
+    "fmt": "prettier --log-level warn -w .github/roadmap/roadmap.yaml scripts/sync-roadmap.js"
   },
   "dependencies": {
     "@actions/core": "1.10.1",
     "@actions/github": "6.0.0",
     "js-yaml": "4.1.0"
-  }
+  },
+  "devDependencies": {
+    "prettier": "3.3.3"
+  },
+  "files": [
+    "scripts/sync-roadmap.js",
+    ".github/roadmap/roadmap.yaml"
+  ]
 }
