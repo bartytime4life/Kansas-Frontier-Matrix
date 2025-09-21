@@ -1,13 +1,11 @@
 {
   "type": "FeatureCollection",
   "name": "ks_railroads_1900",
-  "crs": {
-    "type": "name",
-    "properties": { "name": "EPSG:4326" }
-  },
+  "bbox": [-101.9, 37.67, -95.2, 39.3],
   "features": [
     {
       "type": "Feature",
+      "id": "rr_atsf_main_w_to_e_1900",
       "properties": {
         "id": "rr_atsf_main_w_to_e_1900",
         "name": "Atchison, Topeka & Santa Fe (Main Line)",
@@ -20,7 +18,9 @@
         "notes": "West–east trunk across southern Kansas; generalized alignment for 1900.",
         "source": "Historical railroad atlases & USGS topos (1890s–1900s)",
         "provenance": "Digitized schematic for repo demo; replace with precise GIS when ingested.",
-        "license": "CC-BY-4.0"
+        "license": "CC-BY-4.0",
+        "start": 1900,
+        "end": 1900
       },
       "geometry": {
         "type": "LineString",
@@ -39,6 +39,7 @@
     },
     {
       "type": "Feature",
+      "id": "rr_kansas_pacific_up_main_1900",
       "properties": {
         "id": "rr_kansas_pacific_up_main_1900",
         "name": "Kansas Pacific / Union Pacific (East–West)",
@@ -51,7 +52,9 @@
         "notes": "Generalized UP/KP alignment across north Kansas ca. 1900.",
         "source": "Historical RR timetables & USGS topos (1890s–1900s)",
         "provenance": "Schematic linework pending precise right-of-way vectors.",
-        "license": "CC-BY-4.0"
+        "license": "CC-BY-4.0",
+        "start": 1900,
+        "end": 1900
       },
       "geometry": {
         "type": "LineString",
@@ -71,6 +74,7 @@
     },
     {
       "type": "Feature",
+      "id": "rr_missouri_pacific_south_central_1900",
       "properties": {
         "id": "rr_missouri_pacific_south_central_1900",
         "name": "Missouri Pacific (South-Central Corridor)",
@@ -83,7 +87,9 @@
         "notes": "South-central K.S. route linking local branches to MoPac network.",
         "source": "State railroad commission maps ca. 1900; USGS sheets",
         "provenance": "Schematic alignment for placeholder; refine with scanned plats.",
-        "license": "CC-BY-4.0"
+        "license": "CC-BY-4.0",
+        "start": 1900,
+        "end": 1900
       },
       "geometry": {
         "type": "LineString",
@@ -99,20 +105,5 @@
         ]
       }
     }
-  ],
-  "_collection": {
-    "id": "ks_railroads_1900",
-    "title": "Kansas Railroads circa 1900 (Generalized)",
-    "description": "Generalized alignments of key railroad corridors in Kansas around 1900. Replace with precise, georeferenced rights-of-way as they are digitized.",
-    "temporal_extent": { "start": "1890-01-01", "end": "1905-12-31" },
-    "spatial_extent": { "bbox": [-102.05, 36.99, -94.61, 40.00], "crs": "EPSG:4326" },
-    "data_quality": {
-      "geometry": "Schematic—cartographic generalization for scaffolding; not survey-accurate.",
-      "intended_use": "UI prototyping, time slider demos, and pipeline validation."
-    },
-    "provenance": "Created to match KFM STAC-like catalog and MCP traceability conventions.",
-    "last_updated": "2025-09-19",
-    "version": "0.1.0",
-    "license": "CC-BY-4.0"
-  }
+  ]
 }
