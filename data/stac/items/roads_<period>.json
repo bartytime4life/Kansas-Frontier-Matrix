@@ -1,0 +1,65 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": ["proj"],
+  "type": "Feature",
+  "id": "roads_<period>",
+  "collection": "ks_roads_<period>",
+  "geometry": null,
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "properties": {
+    "datetime": "<period>-07-01T00:00:00Z",
+    "start_datetime": "<period_start>-01-01T00:00:00Z",
+    "end_datetime": "<period_end>-12-31T23:59:59Z",
+    "proj:epsg": 4326,
+
+    "kfm:period_label": "<period>",
+    "kfm:period_start": "<period_start>",
+    "kfm:period_end": "<period_end>",
+    "kfm:notes": "Roads/trails centerlines for <period> (highways, primaries, locals, historic trails/wagon roads), normalized for time-slider overlays.",
+
+    "kfm:feature_schema": {
+      "id": "string",
+      "name": "string",
+      "road_type": "string",
+      "surface": "string|null",
+      "functional_class": "string|null",
+      "period_start": "integer|null",
+      "period_end": "integer|null",
+      "source": "string",
+      "source_layer": "string|null",
+      "accuracy_m": "number|null",
+      "notes": "string|null"
+    }
+  },
+  "assets": {
+    "data": {
+      "href": "../../processed/vectors/roads_<period>.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Roads and Trails vectors (<period>, GeoJSON)"
+    }
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "./roads_<period>.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "collection",
+      "href": "../../sources/ks_roads_<period>.json",
+      "type": "application/json",
+      "title": "Kansas Roads and Trails — <period> (source descriptor)"
+    },
+    {
+      "rel": "parent",
+      "href": ".",
+      "type": "application/json"
+    },
+    {
+      "rel": "root",
+      "href": "../..",
+      "type": "application/json"
+    }
+  ]
+}
