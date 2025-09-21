@@ -1,6 +1,9 @@
 {
   "stac_version": "1.0.0",
-  "stac_extensions": ["item-assets"],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
   "type": "Collection",
   "id": "vectors",
   "title": "Kansas Historical & Infrastructure Vectors",
@@ -24,35 +27,36 @@
     }
   ],
   "extent": {
-    "spatial": {
-      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
-    },
-    "temporal": {
-      "interval": [["1800-01-01T00:00:00Z", null]]
-    }
+    "spatial": { "bbox": [[-102.051, 36.993, -94.588, 40.003]] },
+    "temporal": { "interval": [["1800-01-01T00:00:00Z", null]] }
   },
   "summaries": {
     "proj:epsg": [4326],
-    "geometry": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
-    "item_assets": ["vector", "tiles", "metadata", "thumbnail"]
+    "geometry": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"]
   },
   "item_assets": {
-    "vector": {
+    "data": {
       "type": "application/geo+json",
       "roles": ["data"],
       "title": "Primary vector data (GeoJSON)",
-      "description": "Canonical vector layer for this item, provided as GeoJSON in EPSG:4326."
+      "description": "Canonical vector layer, EPSG:4326 GeoJSON."
     },
-    "tiles": {
-      "type": "application/vnd.mapbox-vector-tile",
+    "tiles_pmtiles": {
+      "type": "application/vnd.pmtiles",
       "roles": ["tiles"],
-      "title": "Vector tiles (MBTiles/PMTiles)",
-      "description": "Tile set for performant web rendering of the vector layer."
+      "title": "Vector tiles (PMTiles)",
+      "description": "Single-file PMTiles for fast web rendering."
+    },
+    "tiles_mbtiles": {
+      "type": "application/octet-stream",
+      "roles": ["tiles", "alternate"],
+      "title": "Vector tiles (MBTiles)",
+      "description": "SQLite MBTiles (alternate tiles format)."
     },
     "metadata": {
       "type": "application/json",
       "roles": ["metadata"],
-      "title": "Item-level metadata / lineage",
+      "title": "Item metadata / lineage",
       "description": "Provenance, schema, and lineage for the vector layer."
     },
     "thumbnail": {
@@ -62,12 +66,13 @@
     }
   },
   "links": [
-    { "rel": "self",   "href": "./vectors.json",               "type": "application/json" },
-    { "rel": "root",   "href": "../catalog.json",              "type": "application/json" },
-    { "rel": "parent", "href": "../catalog.json",              "type": "application/json" },
+    { "rel": "self",   "href": "./vectors.json",     "type": "application/json" },
+    { "rel": "root",   "href": "../catalog.json",    "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",    "type": "application/json" },
 
-    { "rel": "item",   "href": "../items/railroads_1900.json", "type": "application/geo+json" },
-    { "rel": "item",   "href": "../items/treaties_1854.json",  "type": "application/geo+json" }
+    { "rel": "child",  "href": "../collections/ks_railroads.json",       "type": "application/json", "title": "Kansas Railroads (collection)" },
+    { "rel": "child",  "href": "../collections/kansas_treaties_19c.json","type": "application/json", "title": "Treaties (19th c.) (collection)" },
+    { "rel": "child",  "href": "../collections/ks_hydrography.json",     "type": "application/json", "title": "Hydrography (collection)" },
+    { "rel": "child",  "href": "../collections/ks_roads.json",           "type": "application/json", "title": "Roads & Trails (collection)" }
   ]
 }
-
