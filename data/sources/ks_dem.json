@@ -1,21 +1,101 @@
 {
-  "id": "ks_dem_1m",
-  "title": "Kansas DEM (1 m)",
+  "id": "ks_bare_earth_dem",
+  "title": "Kansas Bare Earth DEM",
   "type": "raster-dem",
-  "endpoint": {
-    "type": "arcgis",
-    "url": "https://tiles.kansasgis.org/arcgis/rest/services/Elevation/KS_1m_DEM/ImageServer"
+  "version": "1.0.1",
+  "description": "Bare-earth (ground) digital elevation model for Kansas. Example wiring for an ArcGIS ImageServer source with downstream COG/derivatives.",
+  "endpoints": [
+    {
+      "type": "arcgis-imageserver",
+      "role": ["source", "preview"],
+      "url": "https://<arcgis-server>/ArcGIS/rest/services/YourDEM/ImageServer",
+      "capabilities": {
+        "supportsExportImage": true,
+        "supportsQuery": true
+      },
+      "templates": {
+        "exportImage": "https://<arcgis-server>/ArcGIS/rest/services/YourDEM/ImageServer/exportImage"
+      },
+      "notes": "Service CRS may be EPSG:3857; reproject on export if needed."
+    }
+  ],
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.59, 40.0],
+    "crs": "EPSG:4326",
+    "gsd": 10.0
   },
-  "spatial": { "bbox": [-102.1, 36.99, -94.6, 40.00], "crs": "EPSG:4326" },
-  "temporal": { "start": "2018-01-01", "end": "2020-12-31" },
+  "temporal": {
+    "start": null,
+    "end": null
+  },
+  "providers": [
+    {
+      "name": "State of Kansas (example)",
+      "roles": ["producer", "licensor", "host"],
+      "url": null
+    },
+    {
+      "name": "Kansas-Frontier-Matrix",
+      "roles": ["processor", "curator"]
+    }
+  ],
   "license": "CC-BY-4.0",
   "provenance": {
-    "attribution": "KARS / State of Kansas",
-    "retrieved": "2025-09-18T01:50:00Z"
+    "retrieved": null,
+    "processing": [
+      "Export from ArcGIS ImageServer",
+      "Reproject to EPSG:4326 if needed",
+      "Convert to COG with internal tiling and overviews"
+    ],
+    "notes": "Bare-earth (ground) DEM; buildings/vegetation removed during LiDAR processing."
   },
-  "confidence": 0.95,
+  "assets": {
+    "cog_dem": {
+      "href": "data/cogs/dem/ks_bare_earth_dem.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "dem"],
+      "meta": "data/cogs/dem/ks_bare_earth_dem.meta.json",
+      "sha256": "data/cogs/dem/ks_bare_earth_dem.sha256",
+      "stac": "data/stac/ks_bare_earth_dem.json"
+    },
+    "derived_hillshade": {
+      "href": "data/cogs/hillshade/ks_bare_earth_hillshade.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["derived", "visual"],
+      "meta": "data/cogs/hillshade/ks_bare_earth_hillshade.meta.json",
+      "sha256": "data/cogs/hillshade/ks_bare_earth_hillshade.sha256",
+      "stac": "data/stac/ks_bare_earth_hillshade.json"
+    }
+  },
   "outputs": {
-    "cog": "data/processed/dem/ks_1m_dem.tif",
-    "hillshade": "data/processed/dem/ks_1m_hillshade.tif"
-  }
+    "catalog_items": [
+      "data/cogs/dem/ks_bare_earth_dem.sha256",
+      "data/cogs/hillshade/ks_bare_earth_hillshade.sha256"
+    ]
+  },
+  "validation": {
+    "checks": [
+      "jq -e 'type==\"object\"' data/sources/ks_bare_earth_dem.json",
+      "jq -e 'type==\"object\"' data/cogs/dem/ks_bare_earth_dem.meta.json",
+      "sha256sum -c data/cogs/dem/ks_bare_earth_dem.sha256"
+    ]
+  },
+  "consumers": {
+    "qgis": {
+      "arcgis_imageserver": "https://<arcgis-server>/ArcGIS/rest/services/YourDEM/ImageServer"
+    },
+    "maplibre": {
+      "terrain_stub": {
+        "id": "ks_bare_earth_dem",
+        "type": "raster-dem",
+        "encoding": "terrarium",
+        "tiles": ["https://<your-tiler>/terrain/ks_bare_earth_dem/{z}/{x}/{y}.png"],
+        "tileSize": 256,
+        "maxzoom": 14,
+        "attribution": "State of Kansas (CC-BY-4.0)"
+      }
+    }
+  },
+  "keywords": ["Kansas", "Bare Earth", "DEM", "LiDAR", "elevation", "COG"],
+  "last_updated": "2025-09-20"
 }
