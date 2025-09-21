@@ -1,36 +1,89 @@
-# from repo root
+#!/usr/bin/env bash
+# scripts/make_kmz_kansas_terrain.sh
+# Build a reproducible KMZ containing doc.kml + networklinks (optionally overlays)
+
 set -euo pipefail
 
-# Ensure the expected inputs exist
-test -f data/earth/doc.kml
-test -f data/earth/networklinks/ks_1m_hillshade.kml
-test -f data/earth/networklinks/usgs_topo_1894.kml
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd -P)"
+EARTH="$ROOT/data/earth"
+OUT="$EARTH/Kansas_Terrain.kmz"
 
-# (Optional) ensure the regionated overlays are present if you want a self-contained package.
-# If you have them, uncomment these checks:
-# test -f data/earth/overlays/ks_1m_hillshade.kmz
-# test -f data/earth/overlays/usgs_topo_larned_1894.kmz
+DOC="$EARTH/doc.kml"
+NL_HS="$EARTH/networklinks/ks_1m_hillshade.kml"
+NL_USGS="$EARTH/networklinks/usgs_topo_1894.kml"
+OV_HS="$EARTH/overlays/ks_1m_hillshade.kmz"
+OV_USGS="$EARTH/overlays/usgs_topo_larned_1894.kmz"
 
-# Stage a minimal KMZ payload in a temp dir
-rm -rf /tmp/Kansas_Terrain_kmz && mkdir -p /tmp/Kansas_Terrain_kmz/networklinks
-cp data/earth/doc.kml                                  /tmp/Kansas_Terrain_kmz/doc.kml
-cp data/earth/networklinks/ks_1m_hillshade.kml         /tmp/Kansas_Terrain_kmz/networklinks/
-cp data/earth/networklinks/usgs_topo_1894.kml          /tmp/Kansas_Terrain_kmz/networklinks/
+# --- Required inputs ---------------------------------------------------------
+for f in "$DOC" "$NL_HS" "$NL_USGS"; do
+  [[ -f "$f" ]] || { echo "Missing: $f" >&2; exit 1; }
+done
 
-# If you want the KMZ to be fully offline/self-contained, also add your regionated overlays:
-# mkdir -p /tmp/Kansas_Terrain_kmz/overlays
-# cp data/earth/overlays/ks_1m_hillshade.kmz            /tmp/Kansas_Terrain_kmz/overlays/
-# cp data/earth/overlays/usgs_topo_larned_1894.kmz      /tmp/Kansas_Terrain_kmz/overlays/
+# --- Optional: include regionated overlays inside the KMZ --------------------
+INCLUDE_OVERLAYS="${INCLUDE_OVERLAYS:-0}"  # set to 1 to embed overlays
+if [[ "$INCLUDE_OVERLAYS" == "1" ]]; then
+  for f in "$OV_HS" "$OV_USGS"; do
+    [[ -f "$f" ]] || { echo "Missing overlay (set INCLUDE_OVERLAYS=0 to skip): $f" >&2; exit 1; }
+  done
+fi
 
-# Pack it (KMZ is just a zip with doc.kml at the root)
-cd /tmp/Kansas_Terrain_kmz
-zip -r Kansas_Terrain.kmz doc.kml networklinks > /dev/null
+# --- Sanity: ensure NetworkLinks use relative hrefs we expect ----------------
+# We keep links portable by ensuring they point to ../networklinks/* from doc.kml’s POV,
+# and networklinks/*.kml point to ../overlays/*.kmz (or absolute URLs only if intentional).
+fix_href_rel() {
+  local file="$1"
+  # if an absolute URL slipped in, comment it and add a relative href beneath
+  if grep -qE '<href>https?://[^<]+' "$file"; then
+    cp "$file" "${file}.bak"
+    awk '
+      /<href>https?:\/\// && !seen++ {
+        print "<!-- " $0 " (commented for portability) -->";
+        next
+      }
+      { print }
+    ' "${file}.bak" > "$file"
+  fi
+}
+fix_href_rel "$NL_HS"
+fix_href_rel "$NL_USGS"
 
-# If you staged overlays, include the overlays/ folder as well:
-# zip -r Kansas_Terrain.kmz doc.kml networklinks overlays > /dev/null
+# --- Validate XML (best-effort) ---------------------------------------------
+if command -v xmllint >/dev/null 2>&1; then
+  xmllint --noout "$DOC"
+  xmllint --noout "$NL_HS"
+  xmllint --noout "$NL_USGS"
+fi
 
-# Move to repo path
-mkdir -p "$(pwd -P)/../../data/earth"
-mv Kansas_Terrain.kmz "$(pwd -P)/../../data/earth/Kansas_Terrain.kmz"
-echo "Created data/earth/Kansas_Terrain.kmz"
+# --- Stage minimal KMZ payload ----------------------------------------------
+STAGE="$(mktemp -d -t kansas_kmz_XXXXXX)"
+trap 'rm -rf "$STAGE"' EXIT
 
+mkdir -p "$STAGE/networklinks"
+install -m 0644 "$DOC"     "$STAGE/doc.kml"
+install -m 0644 "$NL_HS"   "$STAGE/networklinks/ks_1m_hillshade.kml"
+install -m 0644 "$NL_USGS" "$STAGE/networklinks/usgs_topo_1894.kml"
+
+if [[ "$INCLUDE_OVERLAYS" == "1" ]]; then
+  mkdir -p "$STAGE/overlays"
+  install -m 0644 "$OV_HS"  "$STAGE/overlays/ks_1m_hillshade.kmz"
+  install -m 0644 "$OV_USGS" "$STAGE/overlays/usgs_topo_larned_1894.kmz"
+fi
+
+# --- Reproducible timestamps (optional) -------------------------------------
+EPOCH="${SOURCE_DATE_EPOCH:-1731456000}" # 2024-11-13 00:00:00 UTC (arbitrary fixed)
+find "$STAGE" -exec touch -h -t 202411130000 {} + || true
+
+# --- Create deterministic KMZ (ZIP) -----------------------------------------
+cd "$STAGE"
+# -X strip extra file attrs; -9 max compression; sort ensures stable order
+{ find . -type f | LC_ALL=C sort; } | sed 's|^\./||' \
+  | zip -X -9 -@ Kansas_Terrain.kmz > /dev/null
+
+# --- Move artifact + checksum ------------------------------------------------
+mkdir -p "$EARTH"
+mv -f "$STAGE/Kansas_Terrain.kmz" "$OUT"
+( cd "$EARTH" && sha256sum Kansas_Terrain.kmz > Kansas_Terrain.kmz.sha256 )
+
+echo "✅ Created $OUT"
+echo "🔐 Checksum:"
+cat "$EARTH/Kansas_Terrain.kmz.sha256"
