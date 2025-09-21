@@ -1,0 +1,27 @@
+{
+  "name": "kfm-roadmap-sync",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues"
+  },
+  "homepage": "https://github.com/bartytime4life/Kansas-Frontier-Matrix#readme",
+  "scripts": {
+    "sync": "node scripts/sync-roadmap.js",
+    "check": "node -e \"console.log(process.version)\" && node -e \"require('fs').accessSync('.github/roadmap/roadmap.yaml')\""
+  },
+  "dependencies": {
+    "@actions/core": "1.10.1",
+    "@actions/github": "6.0.0",
+    "js-yaml": "4.1.0"
+  }
+}
