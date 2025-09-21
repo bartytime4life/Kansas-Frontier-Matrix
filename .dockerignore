@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.buildozer/
+
+# Git / VCS
+.git
+.gitignore
+.gitattributes
+
+# Editors
+.vscode/
+.idea/
+
+# Envs / caches
+.venv/
+.env
+*.log
+
+# Build outputs
+build/
+dist/
+*.whl
+
+# Node / web
+node_modules/
+web/.cache/
+web/dist/
+web/build/
+
+# Data (mount instead at runtime)
+data/cogs/
+data/processed/
+data/outputs/
+data/raw/
+assets/tiles/
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS cruft
+.DS_Store
+Thumbs.db
