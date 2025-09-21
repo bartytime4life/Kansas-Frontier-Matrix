@@ -65,10 +65,11 @@ web/.DS_Store
 data/**
 
 # allow small JSON catalogs (unignore)
-!data/stac/**
+!stac/**
 !data/sources/**
+
 # but still exclude any large rasters under those trees if present
-data/stac/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
+stac/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
 data/sources/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
 
 # legacy/derived outputs (always ignore)
