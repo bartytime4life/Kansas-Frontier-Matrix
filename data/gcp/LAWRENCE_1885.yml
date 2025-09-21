@@ -2,52 +2,57 @@
 # Compatible with GDAL GCP-based warps and your ingest scripts.
 
 id: LAWRENCE_1885
-version: 1.0.0
+version: 1.1.0   # bumped: adds stac, checksums, safer GDAL flags
 
 image:
   path: data/raw/ut_pcl/LAWRENCE_1885.jpg
-  dpi: null                 # optional (e.g., 600); used only for scale notes
-  bands: 3                  # RGB scan (adjust if different)
-  color_profile: sRGB       # or unknown
+  width: null            # optional; if known, set for QA only
+  height: null           # optional; if known, set for QA only
+  dpi: null              # optional (e.g., 600); used only for scale notes
+  bands: 3               # RGB scan (adjust if different)
+  color_profile: sRGB    # or unknown
 
-target_crs: EPSG:4326       # web overlay CRS; consider using native/projected for accuracy
-source_crs: null            # if known (e.g., polyconic), add here for documentation
+# Target CRS is your working/web overlay. For highest local accuracy during warp,
+# consider using a projected working CRS (e.g., UTM 14N: EPSG:26914 or 32614) and
+# generating a web copy later.
+target_crs: EPSG:4326
+source_crs: null         # if known (e.g., US Polyconic), add here for documentation
 
-# Ground control points (pixel coordinates are in the scanned image's native pixel grid)
-# px = column (x), py = row (y); lon/lat in target_crs
+# Ground control points (pixel coords in source image pixel grid; lon/lat in target_crs)
 gcps:
   - { px: 1234, py: 5678, lon: -95.235000, lat: 38.971000 }
   - { px: 2234, py: 5678, lon: -95.210000, lat: 38.960000 }
   - { px: 1834, py: 6678, lon: -95.220000, lat: 38.940000 }
   - { px: 1534, py: 4678, lon: -95.250000, lat: 38.955000 }
+  # Tip: add ≥4 more well-distributed GCPs (corners/edges/crossings) for TPS or 6–10 for poly2.
 
-# Optional: add more GCPs along edges/corners to reduce rubber-sheeting artifacts.
-# Aim for ≥8 well-distributed points for TPS or 6–10 for 2nd-order polynomial.
+# Optional collar/neatline mask (in target_crs)
+cutline:
+  use_neatline: false
+  neatline_geojson: data/gcp/LAWRENCE_1885_neatline.geojson  # supply if use_neatline: true
+  neatline_wkt: null
 
 warp:
-  method: tps               # options: tps | poly1 | poly2 | poly3
-  order: 2                  # polynomial order if method=polyN (ignored for tps)
-  resampling: cubic         # nearest|bilinear|cubic|lanczos (scans usually: cubic)
-  dstalpha: true            # create alpha for collar/no-data
-  error_threshold: 0.0      # 0 = exact transformer; increase for speed (not recommended here)
-  nodata: null              # e.g., 0 if you pre-masked the collar
+  method: tps                # tps | poly1 | poly2 | poly3
+  order: null                # ignored for tps; set 1/2/3 for poly
+  resampling: cubic          # nearest|bilinear|cubic|lanczos (scans: cubic or lanczos)
+  dstalpha: true             # create alpha for collar/no-data
+  error_threshold: 0.0       # 0 = exact transformer
+  nodata: null               # e.g., 0 if pre-masked
+  multithread: true          # allow multi-threaded gdalwarp
   overview_resampling: AVERAGE
-  cutline:
-    use_neatline: false     # set true if you provide a neatline polygon below
-    # When true, supply a WKT or GeoJSON polygon (in target_crs) that traces the sheet neatline
-    neatline_wkt: null
+
   # Pixel alignment / resolution (optional). If omitted, GDAL chooses automatically.
-  target_resolution: null   # e.g., 1.0 for 1m; for scanned maps keep null to preserve detail
-  target_extent: null       # [minx, miny, maxx, maxy] in target_crs (optional)
+  target_resolution: null    # e.g., 1.0 (degrees or meters depends on CRS); keep null for scans
+  target_extent: null        # [minx, miny, maxx, maxy] in target_crs (optional)
 
 output:
-  # Suggested canonical outputs (your pipeline can override)
-  warped_tif: data/work/georef/LAWRENCE_1885_wgs84.tif
-  cog_tif:    data/cogs/overlays/usgs_topo_lawrence_1885.tif
-  preview_png: data/cogs/overlays/usgs_topo_lawrence_1885_preview.png
-  build_cog: true
+  warped_tif:   data/work/georef/LAWRENCE_1885_wgs84.tif
+  cog_tif:      data/cogs/overlays/usgs_topo_lawrence_1885.tif
+  preview_png:  data/cogs/overlays/usgs_topo_lawrence_1885_preview.png
+  build_cog:    true
   cog_profile:
-    compress: JPEG          # JPEG for RGB scans
+    compress: JPEG           # JPEG for RGB scans
     quality: 85
     photometric: YCBCR
     blocksize: 512
@@ -55,9 +60,24 @@ output:
     bigtiff: IF_SAFER
     overview_resampling: AVERAGE
 
+# Optional STAC hooks (your pipeline can mint/update these)
+stac:
+  collection_id: overlays
+  item_id: lawrence_1885
+  item_path: data/stac/items/overlays/lawrence_1885.json
+  asset_key: cog
+  asset_href: data/cogs/overlays/usgs_topo_lawrence_1885.tif
+
+# Checksums your pipeline can fill after build (for provenance & CI)
+checksums:
+  source_sha256: null     # of data/raw/ut_pcl/LAWRENCE_1885.jpg
+  warped_sha256: null
+  cog_sha256: null
+
 qa:
-  rmse_pixels: null         # fill after warp if you compute residuals
-  gcps_used: auto           # auto | integer count
+  rmse_pixels: null          # fill after warp if you compute residuals
+  rmse_geounits: null        # e.g., meters or degrees depending on target_crs
+  gcps_used: auto            # auto | integer count
   notes: "Add ≥4 more GCPs near corners/edges for best results."
 
 provenance:
@@ -66,25 +86,51 @@ provenance:
   sheet: "LAWRENCE (1885)"
   license: "Public Domain (USGS)"
   links:
-    source: null            # optional URL to the source record
+    source: null
 
 # ---------------------------------------------------------------------------
-# (Optional) Helper commands (documentation only; your scripts can generate these)
+# Helper commands (documentation only; your scripts can generate these)
+# Notes:
+#  - Use -s_srs on gdal_translate to FIX the source image SRS before GCPs are attached.
+#    If unknown, you can omit it; the GCPs anchor the warp.
+#  - Prefer -tap -tr only if you need explicit alignment/resolution.
+#  - Add -cutline/-crop_to_cutline if cutline.use_neatline is true.
 # ---------------------------------------------------------------------------
 gdal:
+  # Safer GCP injection: avoids brittle YAML-parsing with awk. If you have yq, you
+  # can extract values reliably; otherwise your ingest script should read this YAML.
   add_gcps: >
     gdal_translate -of GTiff -a_srs EPSG:4326
-    $(printf " %s" $(awk -F'[,:{} ]+' '/px/{printf "-gcp %s %s %s %s", $3,$5,$9,$11}' data/gcp/LAWRENCE_1885.yml))
-    data/raw/ut_pcl/LAWRENCE_1885.jpg /tmp/LAWRENCE_1885_gcps.tif
-  warp: >
-    gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha
-    -order 2 -et 0.0
-    /tmp/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif
+    $(python - <<'PY'
+    import sys, yaml
+    d = yaml.safe_load(open('data/gcp/LAWRENCE_1885.yml'))
+    for p in d['gcps']:
+        sys.stdout.write(f" -gcp {p['px']} {p['py']} {p['lon']} {p['lat']}")
+    PY
+    )
+    "data/raw/ut_pcl/LAWRENCE_1885.jpg" "/tmp/LAWRENCE_1885_gcps.tif"
+
   warp_tps: >
     gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -et 0.0 -tps
-    /tmp/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif
+    -multi -wo NUM_THREADS=ALL_CPUS
+    $( [[ "$(yq -r '.cutline.use_neatline' data/gcp/LAWRENCE_1885.yml 2>/dev/null)" == "true" ]] &&
+       echo "-cutline data/gcp/LAWRENCE_1885_neatline.geojson -crop_to_cutline" )
+    "/tmp/LAWRENCE_1885_gcps.tif" "data/work/georef/LAWRENCE_1885_wgs84.tif"
+
+  warp_poly2: >
+    gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -et 0.0 -order 2
+    -multi -wo NUM_THREADS=ALL_CPUS
+    $( [[ "$(yq -r '.cutline.use_neatline' data/gcp/LAWRENCE_1885.yml 2>/dev/null)" == "true" ]] &&
+       echo "-cutline data/gcp/LAWRENCE_1885_neatline.geojson -crop_to_cutline" )
+    "/tmp/LAWRENCE_1885_gcps.tif" "data/work/georef/LAWRENCE_1885_wgs84.tif"
+
   to_cog: >
-    gdal_translate -of COG -co COMPRESS=JPEG -co QUALITY=85 -co PHOTOMETRIC=YCBCR
+    gdal_translate -of COG
+    -co COMPRESS=JPEG -co QUALITY=85 -co PHOTOMETRIC=YCBCR
     -co BLOCKSIZE=512 -co NUM_THREADS=ALL_CPUS -co BIGTIFF=IF_SAFER
     -co OVERVIEW_RESAMPLING=AVERAGE
-    data/work/georef/LAWRENCE_1885_wgs84.tif data/cogs/overlays/usgs_topo_lawrence_1885.tif
+    "data/work/georef/LAWRENCE_1885_wgs84.tif" "data/cogs/overlays/usgs_topo_lawrence_1885.tif"
+
+  preview_png: >
+    gdal_translate -of PNG -outsize 25% 25%
+    "data/work/georef/LAWRENCE_1885_wgs84.tif" "data/cogs/overlays/usgs_topo_lawrence_1885_preview.png"
