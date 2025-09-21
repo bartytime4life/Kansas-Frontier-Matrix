@@ -1,0 +1,116 @@
+{
+  "id": "ks_landcover_1936",
+  "title": "Kansas Land Cover — 1936 (Dust Bowl Era Baseline)",
+  "description": "Historical land cover for Kansas circa 1936 derived from 1930s USDA/NRCS aerial photography and contemporaneous USGS historic topos. Intended for time-aware overlays against modern land cover to visualize Dust Bowl-era vegetation, cropland extent, wetlands, and prairie remnants.",
+  "license": "Open/Public as provided by each source (see per-asset). County or archive usage notes may apply to aerial scans.",
+  "providers": [
+    {
+      "name": "USDA Aerial Photography Field Office (APFO) / NRCS",
+      "roles": ["producer", "host"],
+      "url": "https://www.fsa.usda.gov/programs-and-services/aerial-photography/imagery-programs/index"
+    },
+    {
+      "name": "USGS EarthExplorer / Historical Aerials & Topographic Maps",
+      "roles": ["host"],
+      "url": "https://earthexplorer.usgs.gov/"
+    },
+    {
+      "name": "Kansas Data Access & Support Center (DASC)",
+      "roles": ["host"],
+      "url": "https://data.kansasgis.org/"
+    },
+    {
+      "name": "Kansas Geological Survey (KGS)",
+      "roles": ["contributor"],
+      "url": "https://www.kgs.ku.edu/"
+    }
+  ],
+  "assets": {
+    "aerial_orthos_1936": {
+      "href": "https://earthexplorer.usgs.gov/", 
+      "type": "text/html",
+      "title": "USDA/NRCS historical aerial photos (1930s, APFO) via USGS EarthExplorer",
+      "roles": ["imagery", "source"],
+      "kfm:notes": "Download county blocks (circa 1935–1938). Georeference & mosaic for classification."
+    },
+    "usgs_historic_topo": {
+      "href": "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer",
+      "type": "application/vnd.esri.map-service",
+      "title": "USGS Historic Topographic (reference symbology)",
+      "roles": ["reference", "historical"],
+      "kfm:notes": "Use to corroborate wetlands, timber, orchards, and surface water features."
+    },
+    "training_samples": {
+      "href": "./ks_landcover_1936_training.geojson",
+      "type": "application/geo+json",
+      "title": "Interpreter training samples (1936 land cover)",
+      "roles": ["metadata", "training"]
+    },
+    "classified_raster": {
+      "href": "../processed/rasters/landcover_1936.tif",
+      "type": "image/tiff; application=geotiff",
+      "title": "1936 land cover (classified raster, GeoTIFF)",
+      "roles": ["data"]
+    },
+    "vector_cells": {
+      "href": "../processed/vectors/landcover_1936.geojson",
+      "type": "application/geo+json",
+      "title": "1936 land cover (vectorized/generalized polygons)",
+      "roles": ["data"]
+    },
+    "metadata": {
+      "href": "./ks_landcover_1936.meta.json",
+      "type": "application/json",
+      "title": "Processing & lineage metadata (1936 land cover)",
+      "roles": ["metadata"]
+    }
+  },
+  "processing": {
+    "classification_scheme": {
+      "code": "KFM-LC-1936-v1",
+      "classes": [
+        "cropland",
+        "pasture/rangeland",
+        "tallgrass_prairie",
+        "shrub/woodland",
+        "wetland/marsh",
+        "open_water",
+        "barren/sand",
+        "built/transport",
+        "other/uncertain"
+      ]
+    },
+    "vector_schema": {
+      "id": "string",
+      "class": "string",
+      "subclass": "string|null",
+      "confidence": "number|null",
+      "year": "integer",
+      "source": "string",
+      "source_layer": "string|null",
+      "method": "string", 
+      "accuracy_m": "number|null",
+      "notes": "string|null"
+    },
+    "notes": "Georeference & mosaic 1930s USDA aerials; assist with historic USGS topo symbology; classify (manual/ML-assisted) to KFM-LC-1936-v1; export raster & vector generalized polygons. Store interpreter confidence and provenance per feature."
+  },
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+    },
+    "temporal": {
+      "interval": [["1935-01-01T00:00:00Z", "1938-12-31T23:59:59Z"]]
+    }
+  },
+  "keywords": [
+    "Kansas",
+    "land cover",
+    "Dust Bowl",
+    "USDA aerial photography",
+    "historic topo",
+    "prairie",
+    "cropland",
+    "wetlands",
+    "1930s"
+  ]
+}
