@@ -1,6 +1,3 @@
-Here’s a hardened, copy-paste-ready replacement for `data/kml/README.md`. I fixed path typos (vectors live under `data/processed/vectors/**`), added production-safe GDAL/OGR flags, optional metadata sidecars, Makefile rules that won’t surprise CI, and a short QA/troubleshooting playbook.
-
-```markdown
 # KML / KMZ Exports
 
 This folder holds **Google Earth–ready** exports of our rasters and vectors:
