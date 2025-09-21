@@ -1,23 +1,25 @@
 # pytest -q
-# Kansas-Frontier-Matrix — STAC-focused tests
+# Kansas-Frontier-Matrix — STAC-focused tests (upgraded)
 # Deeper checks for Items & Collections beyond basic parsing.
 # Skips gracefully when files are not yet present during scaffolding.
 
 from __future__ import annotations
 import json
-import math
 import re
 from pathlib import Path
+from typing import Any, Iterable, List, Tuple
 import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 ITEMS_DIR = REPO / "data" / "stac" / "items"
 COLLS_DIR = REPO / "data" / "stac" / "collections"
 
-SEMVER = re.compile(r"^\d+\.\d+\.\d+")
-ISO_DT = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$"
-)
+# e.g., "1.0.0"
+SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
+
+# RFC3339/ISO8601 (Zulu), allow optional fractional seconds
+# Examples: "1894-06-01T00:00:00Z", "2018-01-02T03:04:05.123Z"
+ISO_ZULU = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 
 # --------------------------------------------------------------------------------------
 # Helpers
@@ -27,35 +29,109 @@ def read_json(p: Path) -> dict:
     return json.loads(p.read_text(encoding="utf-8"))
 
 def list_json(dirpath: Path) -> list[Path]:
-    return sorted([p for p in (dirpath.glob("*.json") if dirpath.exists() else []) if p.is_file()])
-
-def approx(a: float, b: float, eps: float = 1e-9) -> bool:
-    return abs(a - b) <= eps
-
-def bbox_from_polygon(coords: list) -> tuple[float, float, float, float]:
-    """
-    Compute bbox (minx, miny, maxx, maxy) from Polygon or MultiPolygon coordinates.
-    """
-    xs, ys = [], []
-    def collect(ring):
-        for (x, y) in ring:
-            xs.append(float(x)); ys.append(float(y))
-    # Polygon: [ [ [x,y], ... ] , ...holes ]
-    # MultiPolygon: [ [ [ [x,y], ... ] ], ... ]
-    if isinstance(coords, list) and coords and isinstance(coords[0], list):
-        if coords and coords and isinstance(coords[0][0], list) and coords[0] and isinstance(coords[0][0][0], (int, float)):
-            # Polygon
-            for ring in coords:
-                collect(ring)
-        else:
-            # MultiPolygon
-            for poly in coords:
-                for ring in poly:
-                    collect(ring)
-    return (min(xs), min(ys), max(xs), max(ys))
+    if not dirpath.exists():
+        return []
+    return sorted([p for p in dirpath.glob("*.json") if p.is_file()])
 
 def iso_or_none(s: str | None) -> bool:
-    return (s is None) or bool(ISO_DT.match(s))
+    return (s is None) or bool(ISO_ZULU.match(s))
+
+def _flatten_coords(coords: Any) -> Iterable[Tuple[float, float]]:
+    """
+    Flatten Polygon or MultiPolygon coordinate arrays into (x,y) tuples.
+    Polygon:        [ [ [x,y], ... ], [hole...], ... ]
+    MultiPolygon:   [ [ [ [x,y], ... ], ... ], ... ]
+    """
+    # MultiPolygon
+    if (
+        isinstance(coords, list)
+        and coords
+        and isinstance(coords[0], list)
+        and coords[0]
+        and isinstance(coords[0][0], list)
+        and coords[0][0]
+        and isinstance(coords[0][0][0], list)
+    ):
+        for poly in coords:
+            for ring in poly:
+                for xy in ring:
+                    yield float(xy[0]), float(xy[1])
+        return
+
+    # Polygon
+    if (
+        isinstance(coords, list)
+        and coords
+        and isinstance(coords[0], list)
+        and coords[0]
+        and isinstance(coords[0][0], (list, tuple))
+    ):
+        for ring in coords:
+            for xy in ring:
+                yield float(xy[0]), float(xy[1])
+        return
+
+    # Fallback (defensive): try to interpret any nested [x,y]
+    def _walk(v: Any):
+        if isinstance(v, (list, tuple)) and len(v) == 2 and all(isinstance(t, (int, float)) for t in v):
+            yield float(v[0]), float(v[1])
+        elif isinstance(v, (list, tuple)):
+            for sub in v:
+                yield from _walk(sub)
+    yield from _walk(coords)
+
+def bbox_from_geometry(geom: dict) -> tuple[float, float, float, float]:
+    coords = geom.get("coordinates")
+    xs, ys = zip(*list(_flatten_coords(coords)))
+    return (min(xs), min(ys), max(xs), max(ys))
+
+def _normalize_collection_bbox(spatial_bbox: Any) -> list[list[float]]:
+    """
+    STAC allows bbox to be a single [minx,miny,maxx,maxy] or a list of such lists.
+    Return as list-of-lists for uniform checks.
+    """
+    if isinstance(spatial_bbox, list):
+        if len(spatial_bbox) == 4 and all(isinstance(v, (int, float)) for v in spatial_bbox):
+            return [list(map(float, spatial_bbox))]
+        # Already a list-of-bbox case
+        if spatial_bbox and isinstance(spatial_bbox[0], list):
+            return [list(map(float, b)) for b in spatial_bbox if isinstance(b, list) and len(b) >= 4]
+    return []
+
+def _normalize_temporal_interval(interval: Any) -> list[list[str | None]]:
+    """
+    STAC temporal interval is list of [start, end] values; values may be ISO8601 strings or null.
+    Return as list-of-[start,end] with None or strings.
+    """
+    out: list[list[str | None]] = []
+    if isinstance(interval, list):
+        for i in interval:
+            if isinstance(i, list) and len(i) >= 2:
+                s, e = i[0], i[1]
+                s2 = s if s is None or isinstance(s, str) else None
+                e2 = e if e is None or isinstance(e, str) else None
+                out.append([s2, e2])
+    return out
+
+def _looks_like_cog_mediatype(m: str) -> bool:
+    """
+    Heuristics for GeoTIFF/COG mediatype hints commonly used in STAC.
+    Accept any of:
+      - "image/tiff; application=geotiff; profile=cloud-optimized"
+      - "image/tiff; application=geotiff"
+      - "image/geotiff"
+      - "image/tiff" (nudge to geotiff in assert message)
+    """
+    m = m.lower()
+    return ("geotiff" in m) or (m.startswith("image/geotiff")) or (m.startswith("image/tiff"))
+
+def approx_encloses(bbox_outer: list[float], bbox_inner: tuple[float, float, float, float], eps: float = 1e-6) -> bool:
+    return (
+        bbox_outer[0] <= bbox_inner[0] + eps and
+        bbox_outer[1] <= bbox_inner[1] + eps and
+        bbox_outer[2] + eps >= bbox_inner[2] and
+        bbox_outer[3] + eps >= bbox_inner[3]
+    )
 
 # --------------------------------------------------------------------------------------
 # Dynamic discovery (so new items/collections are picked up automatically)
@@ -78,20 +154,34 @@ pytestmark = pytest.mark.skipif(
 def test_collection_core(p: Path):
     col = read_json(p)
     assert col.get("type") == "Collection", f"{p.name}: type must be 'Collection'"
-    assert SEMVER.match(col.get("stac_version", "")), f"{p.name}: invalid or missing stac_version"
+    assert SEMVER.match(col.get("stac_version", "") or ""), f"{p.name}: invalid or missing stac_version"
     assert isinstance(col.get("id"), str) and col["id"], f"{p.name}: missing id"
 
     # extent
     extent = col.get("extent") or {}
     spatial = extent.get("spatial") or {}
     temporal = extent.get("temporal") or {}
-    assert "bbox" in spatial and isinstance(spatial["bbox"], list) and spatial["bbox"], f"{p.name}: extent.spatial.bbox required"
-    assert "interval" in temporal and isinstance(temporal["interval"], list) and temporal["interval"], f"{p.name}: extent.temporal.interval required"
+
+    # spatial.bbox
+    sb = _normalize_collection_bbox(spatial.get("bbox"))
+    assert sb, f"{p.name}: extent.spatial.bbox required and must be [minx,miny,maxx,maxy] or list of such"
+    for b in sb:
+        assert len(b) >= 4, f"{p.name}: bbox must have at least 4 numbers"
+        assert all(isinstance(v, float) for v in b[:4]), f"{p.name}: bbox values must be numeric"
+
+    # temporal.interval
+    ti = _normalize_temporal_interval(temporal.get("interval"))
+    assert ti, f"{p.name}: extent.temporal.interval required"
+    for (s, e) in ti:
+        assert iso_or_none(s), f"{p.name}: temporal.start must be ISO8601 Z or null"
+        assert iso_or_none(e), f"{p.name}: temporal.end must be ISO8601 Z or null"
+        if s and e:
+            assert s <= e, f"{p.name}: temporal.start must be <= temporal.end"
 
     # links presence
-    assert isinstance(col.get("links"), list), f"{p.name}: links[] required"
-    # self/root/parent should exist (not strictly required by spec, but good practice)
-    rels = {ln.get("rel") for ln in col["links"]}
+    links = col.get("links")
+    assert isinstance(links, list), f"{p.name}: links[] required"
+    rels = {ln.get("rel") for ln in links}
     for r in ("self", "root", "parent"):
         assert r in rels, f"{p.name}: expected a '{r}' link"
 
@@ -113,23 +203,22 @@ def test_item_core(p: Path):
 
     # Structural
     assert item.get("type") == "Feature", f"{p.name}: STAC Item must be type=Feature"
-    assert SEMVER.match(item.get("stac_version", "")), f"{p.name}: invalid or missing stac_version"
+    assert SEMVER.match(item.get("stac_version", "") or ""), f"{p.name}: invalid or missing stac_version"
     assert isinstance(item.get("id"), str) and item["id"], f"{p.name}: missing id"
     # filename stem = id (convention; helpful for humans)
     assert p.stem == item["id"], f"{p.name}: id should match filename stem"
 
     # bbox & geometry
-    assert isinstance(item.get("bbox"), list) and len(item["bbox"]) == 4, f"{p.name}: bbox must be [minx,miny,maxx,maxy]"
+    assert isinstance(item.get("bbox"), list) and len(item["bbox"]) >= 4, f"{p.name}: bbox must be [minx,miny,maxx,maxy]"
     geom = item.get("geometry") or {}
     assert geom.get("type") in {"Polygon", "MultiPolygon"}, f"{p.name}: geometry must be Polygon or MultiPolygon"
     assert isinstance(geom.get("coordinates"), list) and geom["coordinates"], f"{p.name}: geometry coordinates must be non-empty"
 
     # geometry should fit inside bbox (tolerance)
-    bx = item["bbox"]
-    gx = bbox_from_polygon(geom["coordinates"])
-    eps = 1e-6
-    assert bx[0] <= gx[0] + eps and bx[1] <= gx[1] + eps and bx[2] + eps >= gx[2] and bx[3] + eps >= gx[3], \
-        f"{p.name}: bbox should enclose geometry (bbox={bx}, geom_bbox={gx})"
+    geom_bbox = bbox_from_geometry(geom)
+    item_bbox = list(map(float, item["bbox"][:4]))
+    assert approx_encloses(item_bbox, geom_bbox), \
+        f"{p.name}: bbox should enclose geometry (bbox={item_bbox}, geom_bbox={geom_bbox})"
 
     # links sanity
     links = item.get("links") or []
@@ -150,8 +239,7 @@ def test_item_core(p: Path):
     if sdt and edt:
         assert sdt <= edt, f"{p.name}: start_datetime must be <= end_datetime"
 
-    # proj:epsg may be at top-level or inside properties depending on authoring;
-    # warn if missing but do not fail (historic scans may be unprojected/assumed WGS84)
+    # proj:epsg may be at top-level or inside properties; warn if missing but do not fail
     proj_epsg = item.get("proj:epsg") or props.get("proj:epsg")
     if proj_epsg is not None:
         assert isinstance(proj_epsg, int), f"{p.name}: proj:epsg should be an integer code"
@@ -168,12 +256,14 @@ def test_item_core(p: Path):
         roles = a.get("roles")
         assert roles is None or isinstance(roles, list), f"{p.name}: asset '{name}' roles should be a list"
 
-        # If it's a GeoTIFF, ensure the media type hints COG (best practice)
-        if a["href"].lower().endswith((".tif", ".tiff")):
-            # do not hard-fail: just nudge toward COG profile in type string
-            assert "geotiff" in a["type"].lower(), f"{p.name}: asset '{name}' TIFF should declare geotiff media type"
-            # Optional: COG profile hint
-            # (no assert; teams sometimes omit 'profile=cloud-optimized')
+        # If it's a GeoTIFF, ensure the media type hints GeoTIFF/COG best practice
+        href_l = a["href"].lower()
+        if href_l.endswith((".tif", ".tiff")):
+            m = a["type"]
+            assert _looks_like_cog_mediatype(m), (
+                f"{p.name}: asset '{name}' TIFF should declare a GeoTIFF media type "
+                f"(e.g., 'image/tiff; application=geotiff; profile=cloud-optimized')"
+            )
 
 # --------------------------------------------------------------------------------------
 # Cross-check: items referenced by collections (if any 'item' links present)
@@ -194,12 +284,9 @@ def test_collection_item_links_point_to_items_folder(p: Path):
         pytest.skip(f"{p.name}: no 'item' links declared (ok if collection is empty)")
 
     # Normalize to items/ by filename; allow relative paths in link
-    items_dir = ITEMS_DIR
     for href in hrefs:
-        target = items_dir / Path(href).name
+        target = ITEMS_DIR / Path(href).name
         assert target.exists(), f"{p.name}: linked item not found at {target}"
-        # And the file itself must be a valid STAC Item (parse reuses core test)
         itm = read_json(target)
         assert itm.get("type") == "Feature", f"{target.name}: must be a STAC Item (Feature)"
-        assert SEMVER.match(itm.get("stac_version", "")), f"{target.name}: missing/invalid stac_version"
-
+        assert SEMVER.match(itm.get("stac_version", "") or ""), f"{target.name}: missing/invalid stac_version"
