@@ -1,6 +1,8 @@
-```text
 .
 ├── README.md
+├── LICENSE
+├── package.json
+├── package-lock.json
 ├── pyproject.toml
 ├── Makefile
 ├── requirements.txt
@@ -10,12 +12,25 @@
 ├── .pre-commit-config.yaml
 ├── .github/
 │   ├── workflows/
-│   │   └── site.yml
+│   │   ├── site.yml
+│   │   ├── roadmap.yml                  # ⟵ Roadmap → Issues/Milestones sync (Actions)
+│   │   └── stac-validate.yml            # ⟵ STAC validation job (reproducibility)
+│   ├── roadmap/
+│   │   └── roadmap.yaml                 # ⟵ Declarative roadmap (Milestones/Issues)
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md
 │   │   ├── data_addition.md
 │   │   └── experiment_report.md
 │   └── PULL_REQUEST_TEMPLATE.md
+├── scripts/
+│   ├── sync-roadmap.js                  # ⟵ GitHub sync script (uses js-yaml, actions/*)
+│   ├── fetch.py
+│   ├── make_cog.py
+│   ├── make_hillshade.py
+│   ├── write_meta.py
+│   ├── make_stac.py
+│   ├── validate_sources.py
+│   └── validate_stac.py
 ├── src/
 │   └── kansas_geo_timeline/
 │       ├── __init__.py
@@ -25,14 +40,6 @@
 │       │   └── app.config.json.j2
 │       └── schemas/
 │           └── stac_item.schema.json
-├── scripts/
-│   ├── fetch.py
-│   ├── make_cog.py
-│   ├── make_hillshade.py
-│   ├── write_meta.py
-│   ├── make_stac.py
-│   ├── validate_sources.py
-│   └── validate_stac.py
 ├── data/
 │   ├── README.md
 │   ├── .gitignore
@@ -111,4 +118,3 @@
     ├── test_stac.py
     ├── test_sources.py
     └── test_cli.py
-```
