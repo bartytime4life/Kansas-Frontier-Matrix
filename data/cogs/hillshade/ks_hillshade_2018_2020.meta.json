@@ -1,11 +1,11 @@
 {
   "id": "ks_hillshade_2018_2020",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "raster-derivative",
   "product": "hillshade",
 
-  "title": "Kansas Hillshade (2018–2020, 1m DEM Derived)",
-  "description": "Statewide hillshade visualization of Kansas, derived from the 1-meter resolution DEM collected between 2018 and 2020 under the USGS 3DEP program. Provides shaded relief imagery useful for terrain visualization, geomorphological interpretation, and historical landscape context.",
+  "title": "Kansas Hillshade (2018–2020, 1 m DEM Derived)",
+  "description": "Statewide hillshade visualization of Kansas, derived from the 1-meter DEM collected between 2018 and 2020 under USGS 3DEP. Useful for terrain visualization, geomorphological interpretation, and historical landscape context.",
 
   "collection": "ks_hillshade",
 
@@ -13,8 +13,8 @@
     "bbox": [-102.05, 36.99, -94.60, 40.00],
     "resolution_m": 1.0,
     "proj": {
-      "epsg": 4269,
-      "note": "If your DEM/Hillshade are stored in a projected CRS (common in KS: EPSG:26914 or EPSG:6344), update this value."
+      "epsg": 26914,
+      "note": "Stored in the DEM’s working CRS (KS commonly UTM 14N: EPSG:26914). If your hillshade is in a different CRS (e.g., EPSG:6344 or EPSG:4326), update this value."
     },
     "grid": {
       "pixel_encoding": "center",
@@ -44,8 +44,8 @@
     "id": "ks_1m_dem_2018_2020",
     "path": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
     "meta": "data/cogs/dem/ks_1m_dem_2018_2020.meta.json",
-    "sha256": "data/cogs/dem/ks_1m_dem_2018_2020.sha256",
-    "stac": "data/stac/ks_1m_dem_2018_2020.json"
+    "sha256": "data/cogs/dem/ks_1m_dem_2018_2020.tif.sha256",
+    "stac": "data/stac/items/dem/ks_1m_dem_2018_2020.json"
   },
 
   "data": {
@@ -63,7 +63,7 @@
       "s3": "s3://kansas-frontier-matrix/data/cogs/hillshade/ks_hillshade_2018_2020.tif",
       "media_type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "size_bytes": null,
-      "sha256": "data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+      "sha256": "data/cogs/hillshade/ks_hillshade_2018_2020.tif.sha256"
     },
     "thumbnail": {
       "path": "data/cogs/hillshade/ks_hillshade_2018_2020_preview.png",
@@ -76,34 +76,37 @@
 
   "assets": {
     "cog": {
-      "href": "s3://kansas-frontier-matrix/data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "href": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Cloud-Optimized GeoTIFF Hillshade"
+      "title": "Cloud-Optimized GeoTIFF Hillshade",
+      "roles": ["data", "visual"]
     },
     "thumbnail": {
-      "href": "s3://kansas-frontier-matrix/data/cogs/hillshade/ks_hillshade_2018_2020_preview.png",
+      "href": "data/cogs/hillshade/ks_hillshade_2018_2020_preview.png",
       "type": "image/png",
-      "title": "PNG Preview"
+      "title": "PNG Preview",
+      "roles": ["thumbnail", "overview"]
     }
   },
 
   "processing": {
     "software": {
-      "gdal": "3.6.x",
+      "gdal": ">=3.6",
       "gdaldem": "hillshade"
     },
     "parameters": {
       "gdaldem_hillshade": {
         "alt": 45,
         "az": 315,
-        "combined": false,
+        "multidirectional": false,
         "z_factor": 1.0,
-        "scale": 1.0
+        "scale": 1.0,
+        "compute_edges": true
       }
     },
     "commands": [
-      "gdaldem hillshade -alt 45 -az 315 -of GTiff data/cogs/dem/ks_1m_dem_2018_2020.tif /tmp/ks_hillshade_2018_2020.tif",
-      "gdal_translate -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING -co BIGTIFF=YES /tmp/ks_hillshade_2018_2020.tif data/cogs/hillshade/ks_hillshade_2018_2020.tif"
+      "gdaldem hillshade -alt 45 -az 315 -compute_edges -of GTiff data/cogs/dem/ks_1m_dem_2018_2020.tif /tmp/ks_hillshade_2018_2020.tif",
+      "gdal_translate -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BLOCKSIZE=512 -co NUM_THREADS=ALL_CPUS -co BIGTIFF=IF_SAFER -co OVERVIEW_RESAMPLING=AVERAGE /tmp/ks_hillshade_2018_2020.tif data/cogs/hillshade/ks_hillshade_2018_2020.tif"
     ],
     "cog_profile": {
       "compress": "DEFLATE",
@@ -113,7 +116,7 @@
       "tile_height": 512,
       "overviews": {
         "build": true,
-        "resampling": "NEAREST",
+        "resampling": "AVERAGE",
         "levels": "auto"
       }
     }
@@ -123,13 +126,13 @@
     "gdalinfo_summary": {
       "driver": "COG",
       "channels": 1,
-      "dtype": "UInt8",
+      "dtype": "Byte",
       "overviews": "present",
       "checksum": null
     },
     "checks": [
       "jq -e 'type==\"object\"' data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
-      "sha256sum -c data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+      "sha256sum -c data/cogs/hillshade/ks_hillshade_2018_2020.tif.sha256"
     ]
   },
 
@@ -137,8 +140,10 @@
   "keywords": ["Kansas", "hillshade", "DEM", "LiDAR", "elevation", "terrain", "3DEP", "2018", "2019", "2020"],
 
   "links": {
-    "stac_item": "data/stac/ks_hillshade_2018_2020.json",
-    "source_stac": "data/stac/ks_1m_dem_2018_2020.json"
+    "stac_item": "data/stac/items/hillshade/ks_hillshade_2018_2020.json",
+    "source_stac": "data/stac/items/dem/ks_1m_dem_2018_2020.json",
+    "kml_networklink": "data/earth/networklinks/ks_1m_hillshade.kml",
+    "kmz_overlay": "data/kml/ks_hillshade_2018_2020.kmz"
   },
 
   "mcp": {
@@ -147,7 +152,7 @@
     "sop_reference": "mcp/sops/derive_hillshade.md",
     "traceability": {
       "source_data": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
-      "processing": "Generated with gdaldem hillshade -alt 45 -az 315, then converted to COG",
+      "processing": "Generated with gdaldem hillshade (alt 45, az 315, compute_edges), then converted to COG (DEFLATE/PREDICTOR=2, 512 tiles, averaged overviews).",
       "git_commit": "<commit-hash>"
     }
   }
