@@ -2,23 +2,100 @@ name: STAC Validation
 
 on:
   pull_request:
-  push:
     paths:
       - "data/stac/**"
+      - "data/sources/**"
       - "src/**"
       - "scripts/validate_stac.py"
+      - "scripts/validate_sources.py"
+      - "Makefile"
+      - "requirements.txt"
+      - "pyproject.toml"
+  push:
+    branches: [ main ]
+    paths:
+      - "data/stac/**"
+      - "data/sources/**"
+      - "src/**"
+      - "scripts/validate_stac.py"
+      - "scripts/validate_sources.py"
+      - "Makefile"
+      - "requirements.txt"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "stac-validate-${{ github.ref }}"
+  cancel-in-progress: true
 
 jobs:
   validate:
+    name: STAC validate (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11"]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - name: Install
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install deps (fast)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Validate STAC
-        run: make stac-validate
+          # If your requirements.txt is heavy, you can split a light "validation" requirements file later.
+          pip install -r requirements.txt || {
+            echo "::warning::Falling back to minimal deps for validation (jsonschema, pystac)";
+            pip install jsonschema pystac
+          }
+
+      - name: Run validation via Makefile (preferred)
+        id: run_make
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [ -f Makefile ]; then
+            make stac-validate
+          else
+            echo "no_makefile=true" >> "$GITHUB_OUTPUT"
+            exit 2
+          fi
+
+      - name: Fallback: run scripts directly
+        if: steps.run_make.outcome == 'failure'
+        run: |
+          set -euo pipefail
+          echo "Makefile path failed or missing; trying direct scripts..."
+          if [ -f scripts/validate_sources.py ]; then
+            python scripts/validate_sources.py --sources data/sources
+          else
+            echo "::notice::scripts/validate_sources.py not present; skipping sources schema check."
+          fi
+          if [ -f scripts/validate_stac.py ]; then
+            python scripts/validate_stac.py --stac data/stac
+          else
+            echo "::error::scripts/validate_stac.py not present and Makefile stac-validate failed; cannot validate STAC."
+            exit 1
+          fi
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stac-validate-logs-py${{ matrix.python-version }}
+          path: |
+            ./*.log
+            ./stac-validate*.txt
+            ./validate*.txt
+          if-no-files-found: ignore
+          retention-days: 7
