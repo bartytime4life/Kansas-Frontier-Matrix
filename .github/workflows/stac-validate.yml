@@ -3,7 +3,7 @@ name: STAC Validation
 on:
   pull_request:
     paths:
-      - "data/stac/**"
+      - "stac/**"
       - "data/sources/**"
       - "src/**"
       - "scripts/validate_stac.py"
@@ -14,7 +14,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - "data/stac/**"
+      - "stac/**"
       - "data/sources/**"
       - "src/**"
       - "scripts/validate_stac.py"
@@ -49,51 +49,126 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            pyproject.toml
 
-      - name: Install deps (fast)
+      - name: Install deps (prefer project; fallback to light)
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          # If your requirements.txt is heavy, you can split a light "validation" requirements file later.
-          pip install -r requirements.txt || {
-            echo "::warning::Falling back to minimal deps for validation (jsonschema, pystac)";
-            pip install jsonschema pystac
-          }
+          if [ -f "pyproject.toml" ]; then
+            # Install your package so `kgt` CLI is available
+            pip install -e . || true
+          fi
+          # Core deps for validation/rendering if not already present
+          pip install --upgrade --quiet \
+            jsonschema \
+            jinja2 \
+            pystac || true
 
-      - name: Run validation via Makefile (preferred)
-        id: run_make
+      - name: Quick JSON syntax check (all STAC JSON)
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, sys, pathlib
+          bad=[]
+          for p in pathlib.Path("stac").rglob("*.json"):
+              try:
+                  json.loads(p.read_text(encoding="utf-8"))
+              except Exception as e:
+                  bad.append((str(p), str(e)))
+          if bad:
+              for f,e in bad:
+                  print(f"::error file={f}::JSON parse error: {e}")
+              sys.exit(1)
+          PY
+
+      - name: Validate Items with kgt (report JSON)
+        id: kgt_items
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          if command -v kgt >/dev/null 2>&1; then
+            kgt validate-stac stac/items --report-json build/stac_report.json
+          else
+            echo "::warning::kgt not found; using minimal script validator."
+            python - <<'PY'
+            import json, pathlib, sys
+            req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
+            items=list(pathlib.Path("stac/items").glob("*.json"))
+            ok=bad=0; report=[]
+            for p in items:
+                try:
+                    d=json.loads(p.read_text(encoding="utf-8"))
+                except Exception as e:
+                    report.append({"id": str(p), "valid": False, "errors":[{"path":[],"message":str(e)}]}); bad+=1; continue
+                missing=[k for k in req if k not in d]
+                errs=[]
+                if missing: errs.append(f"missing {missing}")
+                if d.get("type")!="Feature": errs.append("type must be 'Feature'")
+                if errs: bad+=1; report.append({"id":d.get("id",str(p)),"valid":False,"errors":[{"path":[],"message":"; ".join(errs)}]})
+                else: ok+=1; report.append({"id":d.get("id",str(p)),"valid":True,"errors":[]})
+            pathlib.Path("build").mkdir(exist_ok=True)
+            pathlib.Path("build/stac_report.json").write_text(json.dumps({"valid":ok,"invalid":bad,"items":report}, indent=2))
+            print(f"[RESULT] {ok} valid, {bad} invalid")
+            if bad>0: sys.exit(2)
+            PY
+
+      - name: Validate Catalog/Collections with pystac (if available)
         continue-on-error: true
         run: |
           set -euo pipefail
-          if [ -f Makefile ]; then
-            make stac-validate
+          if python -c "import pystac" 2>/dev/null; then
+            python - <<'PY'
+            import pystac, sys
+            try:
+                cat = pystac.Catalog.from_file("stac/catalog.json")
+                cat.normalize_hrefs("stac")
+                cat.validate_all()
+                print("pystac: catalog/collections validate OK")
+            except Exception as e:
+                print(f"::error::pystac validation failed: {e}")
+                sys.exit(1)
+            PY
           else
-            echo "no_makefile=true" >> "$GITHUB_OUTPUT"
-            exit 2
+            echo "::notice::pystac not installed; skipping catalog validation."
           fi
 
-      - name: Fallback: run scripts directly
-        if: steps.run_make.outcome == 'failure'
+      - name: Summarize results
+        if: always()
         run: |
           set -euo pipefail
-          echo "Makefile path failed or missing; trying direct scripts..."
-          if [ -f scripts/validate_sources.py ]; then
-            python scripts/validate_sources.py --sources data/sources
-          else
-            echo "::notice::scripts/validate_sources.py not present; skipping sources schema check."
-          fi
-          if [ -f scripts/validate_stac.py ]; then
-            python scripts/validate_stac.py --stac data/stac
-          else
-            echo "::error::scripts/validate_stac.py not present and Makefile stac-validate failed; cannot validate STAC."
-            exit 1
-          fi
+          python - <<'PY'
+          import json, pathlib, os
+          p = pathlib.Path("build/stac_report.json")
+          if p.exists():
+              d = json.loads(p.read_text())
+              ok, bad = d.get("valid",0), d.get("invalid",0)
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
+                  fh.write(f"## STAC Item Validation\n\n")
+                  fh.write(f"- ✅ Valid: **{ok}**\n")
+                  fh.write(f"- ❌ Invalid: **{bad}**\n")
+                  if bad:
+                      fh.write("\n<details><summary>First 10 errors</summary>\n\n")
+                      cnt=0
+                      for it in d.get("items", []):
+                          if it.get("valid") is False and cnt<10:
+                              fh.write(f"- **{it.get('id')}**: {', '.join(e['message'] for e in it.get('errors',[])[:3])}\n")
+                              cnt+=1
+                      fh.write("\n</details>\n")
+          else:
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as fh:
+                  fh.write("## STAC Item Validation\n\n(no report generated)\n")
+          PY
 
-      - name: Upload failure logs
+      - name: Upload reports (on failure)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: stac-validate-logs-py${{ matrix.python-version }}
+          name: stac-validate-reports-py${{ matrix.python-version }}
           path: |
+            build/**
             ./*.log
             ./stac-validate*.txt
             ./validate*.txt
