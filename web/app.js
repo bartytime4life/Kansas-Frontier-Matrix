@@ -1,8 +1,8 @@
-/* Kansas-Frontier-Matrix — Minimal MapLibre App
-   - Reads ./app.config.json (layers + UI options)
+/* Kansas-Frontier-Matrix — Minimal MapLibre App (upgraded)
+   - Prefers ./app.config.json; falls back to ./layers.json
+   - Supports raster (tile URL), image overlays, vector tiles, and GeoJSON
    - Time slider filters layers by year (start/end in layer)
-   - Supports raster (tile URL) and vector (GeoJSON/tiles)
-   - Tiny UI: year slider, layer list with toggles + opacity
+   - Sidebar UI with toggles + opacity sliders
 */
 
 (() => {
@@ -10,28 +10,85 @@
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const el = (tag, attrs = {}, children = []) => {
     const n = document.createElement(tag);
-    Object.entries(attrs).forEach(([k, v]) => {
+    for (const [k, v] of Object.entries(attrs)) {
       if (k === "class") n.className = v;
       else if (k === "style") Object.assign(n.style, v);
       else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
-      else n.setAttribute(k, v);
-    });
-    children.forEach(c => n.appendChild(typeof c === "string" ? document.createTextNode(c) : c));
+      else if (v !== undefined && v !== null) n.setAttribute(k, String(v));
+    }
+    for (const c of children) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
     return n;
   };
 
-  // --- App State --------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // App State
+  // -----------------------------------------------------------------------------
   const state = {
     cfg: null,
+    defaults: {},
     year: null,
-    layersById: new Map(), // {id -> layerDef}
+    layersById: new Map(), // id -> normalized layer
+    map: null,
   };
 
-  // --- Map Init ---------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // Bootstrap
+  // -----------------------------------------------------------------------------
   async function init() {
-    const cfg = state.cfg = await fetch("./app.config.json").then(r => r.json());
+    const cfg = state.cfg = await loadConfig();
+    state.defaults = cfg.defaults || {};
 
-    // Create minimal HTML if not present
+    ensureDOMSkeleton(cfg);
+
+    // MapLibre
+    const map = state.map = new maplibregl.Map({
+      container: "map",
+      style: cfg.style || { version: 8, sources: {}, layers: [] },
+      center: cfg.center || [-98.3, 38.5],
+      zoom: cfg.zoom ?? 6,
+      attributionControl: cfg.attributionControl !== false
+    });
+    if (cfg.navControl !== false) map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-left");
+    map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
+
+    map.on("load", () => {
+      // Register & normalize layers
+      (cfg.layers || []).forEach(registerLayer);
+
+      // Build UI
+      buildTimeUI(cfg);
+      buildLayerUI(cfg, map);
+
+      // Initial year
+      const y0 = clampYear(cfg.defaultYear ?? (cfg.time?.min ?? 1900), cfg);
+      updateYear(y0, map);
+    });
+
+    // Debug surface
+    window.KFM = {
+      map,
+      cfg,
+      setYear: (y) => updateYear(clampYear(y, cfg), map),
+      setVisible: (id, v) => setLayerVisibility(map, id, !!v),
+      setOpacity: (id, a) => setLayerOpacity(map, id, +a),
+      getLayer: (id) => state.layersById.get(id),
+    };
+  }
+
+  async function loadConfig() {
+    // Prefer app.config.json; fallback to layers.json
+    try {
+      const r = await fetch("./app.config.json");
+      if (r.ok) return r.json();
+      throw new Error("app.config.json not ok");
+    } catch {
+      const r2 = await fetch("./layers.json");
+      if (!r2.ok) throw new Error("Failed to load layers.json");
+      return r2.json();
+    }
+  }
+
+  function ensureDOMSkeleton(cfg) {
     if (!$("#map")) {
       document.body.appendChild(
         el("div", { id: "map", style: { position: "absolute", inset: "0 320px 0 0" } })
@@ -56,58 +113,47 @@
         ])
       );
     }
-
-    // MapLibre
-    const map = new maplibregl.Map({
-      container: "map",
-      style: cfg.style || { version: 8, sources: {}, layers: [] },
-      center: cfg.center || [-98.3, 38.5],
-      zoom: cfg.zoom ?? 6
-    });
-    if (cfg.attributionControl !== false) map.addControl(new maplibregl.AttributionControl({ compact: true }));
-    if (cfg.navControl !== false) map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-left");
-
-    map.on("load", () => {
-      // Register layers
-      (cfg.layers || []).forEach(registerLayer);
-      // UI
-      buildTimeUI(cfg);
-      buildLayerUI(cfg, map);
-      // Initial year
-      const y0 = clampYear(cfg.defaultYear ?? (cfg.time?.min ?? 1900), cfg);
-      updateYear(y0, map);
-    });
-
-    // Expose for debugging
-    window.KFM = { map, cfg, updateYear: y => updateYear(y, map) };
   }
 
-  // --- Helpers ---------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // Normalization & Map layer add
+  // -----------------------------------------------------------------------------
   function clampYear(y, cfg) {
     const min = cfg.time?.min ?? 1700;
     const max = cfg.time?.max ?? 2100;
     return Math.max(min, Math.min(max, y));
   }
 
-  function registerLayer(l) {
-    // Normalize
-    const layer = {
+  function normalizeLayer(l) {
+    const d = state.defaults;
+    const url = l.url || (Array.isArray(l.tiles) && l.tiles[0]) || l.path || null;
+    return {
       id: l.id,
       title: l.title || l.id,
-      type: l.type,            // "raster" | "vector" | "image"
-      url: l.url,              // raster tile template OR vector tiles URL OR GeoJSON url
-      source: l.source,        // optional: named source
+      type: l.type,                  // "raster" | "vector" | "image"
+      url,
+      tiles: Array.isArray(l.tiles) ? l.tiles : (url ? [url] : null),
+      source: l.source,              // optional source id
+      sourceLayer: l["source-layer"] || l.sourceLayer || l.id, // for vector tiles
       paint: l.paint || {},
       layout: l.layout || {},
-      start: l.start ?? l.year ?? l.time?.start ?? null,
-      end: l.end ?? l.year ?? l.time?.end ?? null,
-      opacity: l.opacity ?? 1,
-      minzoom: l.minzoom ?? 0,
-      maxzoom: l.maxzoom ?? 24,
-      visibility: l.visibility ?? true,
-      // optional for image overlays:
-      coordinates: l.coordinates // [[lng,lat],...4]
+      start: coalesce(l.start, l.year, l.time?.start, null),
+      end: coalesce(l.end, l.year, l.time?.end, null),
+      opacity: nnum(l.opacity, d.opacity, 1),
+      minzoom: nnum(l.minzoom, d.minzoom, 0),
+      maxzoom: nnum(l.maxzoom, d.maxzoom, 24),
+      visible: bool(l.visible, d.visible, true),
+      tileSize: nnum(l.tileSize, d.tileSize, 256),
+      bounds: l.bounds || d.bounds || null,
+      coordinates: l.coordinates || null, // for image overlays
+      category: l.category || l.group || "Layers",
+      attribution: l.attribution || ""
     };
+  }
+
+  function registerLayer(l) {
+    if (!l || !l.id || !l.type) return;
+    const layer = normalizeLayer(l);
     state.layersById.set(layer.id, layer);
   }
 
@@ -116,7 +162,9 @@
     if (map.getSource(srcId)) return; // already added
 
     if (layer.type === "raster") {
-      map.addSource(srcId, { type: "raster", tiles: [layer.url], tileSize: 256 });
+      const tiles = layer.tiles || (layer.url ? [layer.url] : null);
+      if (!tiles) { console.warn("Raster layer missing url/tiles:", layer); return; }
+      map.addSource(srcId, { type: "raster", tiles, tileSize: layer.tileSize });
       map.addLayer({
         id: layer.id,
         type: "raster",
@@ -124,43 +172,43 @@
         minzoom: layer.minzoom,
         maxzoom: layer.maxzoom,
         paint: { "raster-opacity": layer.opacity, ...(layer.paint || {}) },
-        layout: { visibility: layer.visibility ? "visible" : "none", ...(layer.layout || {}) }
+        layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) }
       });
     } else if (layer.type === "vector") {
-      // Support either vector tiles or GeoJSON
-      if (/\.(json|geojson)(\?|$)/i.test(layer.url)) {
+      if (/\.(json|geojson)(\?|$)/i.test(layer.url || "")) {
+        // GeoJSON
         map.addSource(srcId, { type: "geojson", data: layer.url });
         const lineId = layer.id + "_line";
         map.addLayer({
           id: lineId, type: "line", source: srcId,
-          paint: { "line-color": "#c33", "line-width": 1.3, ...(layer.paint?.line || {}) },
-          layout: { visibility: layer.visibility ? "visible" : "none", ...(layer.layout || {}) }
+          paint: { "line-color": "#c33", "line-width": 1.3, "line-opacity": layer.opacity, ...(layer.paint?.line || {}) },
+          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) }
         });
-        // Optional fill (if polygons present)
         map.addLayer({
           id: layer.id, type: "fill", source: srcId,
-          paint: { "fill-color": "#c33", "fill-opacity": 0.15, ...(layer.paint?.fill || {}) },
-          layout: { visibility: layer.visibility ? "visible" : "none", ...(layer.layout || {}) },
+          paint: { "fill-color": "#c33", "fill-opacity": Math.min(layer.opacity, 0.35), ...(layer.paint?.fill || {}) },
+          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
           filter: ["==", ["geometry-type"], "Polygon"]
         });
       } else {
         // Vector tiles
+        if (!layer.url) { console.warn("Vector tiles layer missing url:", layer); return; }
         map.addSource(srcId, { type: "vector", url: layer.url });
         map.addLayer({
           id: layer.id,
           type: "line",
           source: srcId,
-          "source-layer": layer.sourceLayer || layer.id, // allow config to define the source-layer
-          paint: { "line-color": "#c33", "line-width": 1.3, ...(layer.paint || {}) },
-          layout: { visibility: layer.visibility ? "visible" : "none", ...(layer.layout || {}) }
+          "source-layer": layer.sourceLayer,
+          paint: { "line-color": "#c33", "line-width": 1.3, "line-opacity": layer.opacity, ...(layer.paint || {}) },
+          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) }
         });
       }
-    } else if (layer.type === "image" && Array.isArray(layer.coordinates)) {
+    } else if (layer.type === "image" && Array.isArray(layer.coordinates) && layer.url) {
       map.addSource(srcId, { type: "image", url: layer.url, coordinates: layer.coordinates });
       map.addLayer({
         id: layer.id, type: "raster", source: srcId,
         paint: { "raster-opacity": layer.opacity, ...(layer.paint || {}) },
-        layout: { visibility: layer.visibility ? "visible" : "none", ...(layer.layout || {}) }
+        layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) }
       });
     }
   }
@@ -168,12 +216,14 @@
   function setLayerVisibility(map, layerId, visible) {
     const l = state.layersById.get(layerId);
     if (!l) return;
-    l.visibility = visible;
-    // Add if not yet added
+    l.visible = visible;
+
+    // Ensure added
     if (!map.getLayer(layerId) && !map.getLayer(layerId + "_line")) {
       addLayerToMap(map, l);
     }
-    // Apply to all sublayers (for vector w/line+fill)
+
+    // Apply to all sublayers (vector geojson uses _line + fill)
     [layerId, layerId + "_line"].forEach(id => {
       if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
     });
@@ -183,39 +233,46 @@
     const l = state.layersById.get(layerId);
     if (!l) return;
     l.opacity = opacity;
-    if (map.getLayer(layerId)) {
-      const type = map.getLayer(layerId).type;
-      if (type === "raster") map.setPaintProperty(layerId, "raster-opacity", opacity);
-      if (type === "fill") map.setPaintProperty(layerId, "fill-opacity", opacity);
-      if (type === "line") map.setPaintProperty(layerId, "line-opacity", opacity);
-    }
-    // also for vector helper line layer
+
+    const apply = (id, prop, val) => map.getLayer(id) && map.setPaintProperty(id, prop, val);
+
+    const type = map.getLayer(layerId)?.type;
+    if (type === "raster") apply(layerId, "raster-opacity", opacity);
+    if (type === "fill")   apply(layerId, "fill-opacity", opacity);
+    if (type === "line")   apply(layerId, "line-opacity", opacity);
+
+    // companion line layer for geojson
     const lineId = layerId + "_line";
-    if (map.getLayer(lineId)) map.setPaintProperty(lineId, "line-opacity", opacity);
+    if (map.getLayer(lineId)) apply(lineId, "line-opacity", opacity);
   }
 
-  // --- Time UI ---------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // Time UI
+  // -----------------------------------------------------------------------------
   function buildTimeUI(cfg) {
     const timebox = $("#timebox");
     timebox.innerHTML = "";
-    const min = cfg.time?.min ?? 1700;
-    const max = cfg.time?.max ?? 2100;
-    const cur = clampYear(cfg.defaultYear ?? min, cfg);
 
-    const label = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } }, [
+    const min = nnum(cfg.time?.min, 1700);
+    const max = nnum(cfg.time?.max, 2100);
+    const cur = clampYear(nnum(cfg.defaultYear, min), cfg);
+
+    const labelRow = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } }, [
       el("strong", { style: { fontSize: "13px" } }, ["Year:"]),
       el("span", { id: "yearLabel", style: { fontVariantNumeric: "tabular-nums" } }, [String(cur)])
     ]);
+
     const slider = el("input", {
       id: "yearSlider", type: "range", min: String(min), max: String(max), value: String(cur),
       style: { width: "100%" },
       oninput: (e) => {
         const y = clampYear(parseInt(e.target.value, 10), cfg);
         $("#yearLabel").textContent = String(y);
-        updateYear(y, window.KFM?.map);
+        updateYear(y, state.map);
       }
     });
-    timebox.append(label, slider);
+
+    timebox.append(labelRow, slider);
   }
 
   function isActiveForYear(layer, year) {
@@ -230,54 +287,86 @@
     state.year = year;
     state.layersById.forEach((l) => {
       const active = isActiveForYear(l, year);
-      setLayerVisibility(map, l.id, active && l.visibility);
+      setLayerVisibility(map, l.id, active && l.visible);
     });
   }
 
-  // --- Layer UI --------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // Layer UI
+  // -----------------------------------------------------------------------------
   function buildLayerUI(cfg, map) {
     const layerbox = $("#layerbox");
     layerbox.innerHTML = "";
-    const groups = groupBy((cfg.layers || []), (l) => l.group || "Layers");
-    Object.entries(groups).forEach(([groupName, ls]) => {
+
+    const groups = groupBy((cfg.layers || []), (l) => l.group || l.category || "Layers");
+    for (const [groupName, ls] of Object.entries(groups)) {
       const groupEl = el("details", { open: true, style: { marginBottom: "10px" } }, [
         el("summary", { style: { cursor: "pointer", fontWeight: "600", marginBottom: "6px" } }, [groupName])
       ]);
+
       ls.forEach((l) => {
-        const row = el("div", { style: { display: "grid", gridTemplateColumns: "24px 1fr 60px", gap: "6px", alignItems: "center", marginBottom: "6px" } }, [
+        const L = state.layersById.get(l.id) || normalizeLayer(l);
+        state.layersById.set(L.id, L);
+
+        // Pre-add to map so controls work instantly
+        addLayerToMap(map, L);
+
+        const chkId = `chk_${L.id}`;
+        const row = el("div", { style: {
+          display: "grid",
+          gridTemplateColumns: "24px 1fr 60px",
+          gap: "6px",
+          alignItems: "center",
+          marginBottom: "6px"
+        }}, [
           el("input", {
+            id: chkId,
             type: "checkbox",
-            checked: l.visibility !== false,
-            onchange: (e) => setLayerVisibility(map, l.id, e.target.checked)
+            checked: L.visible !== false,
+            onchange: (e) => setLayerVisibility(map, L.id, e.target.checked)
           }),
-          el("label", { style: { fontSize: "13px", cursor: "pointer" }, for: `chk_${l.id}` }, [
-            l.title || l.id,
-            el("span", { style: { color: "#999", marginLeft: "6px", fontSize: "11px" } },
-              timeBadge(l))
+          el("label", { for: chkId, style: { fontSize: "13px", cursor: "pointer" } }, [
+            L.title,
+            el("span", { style: { color: "#999", marginLeft: "6px", fontSize: "11px" } }, [timeBadge(L)])
           ]),
           el("input", {
-            type: "range", min: "0", max: "1", step: "0.05", value: String(l.opacity ?? 1),
-            oninput: (e) => setLayerOpacity(map, l.id, parseFloat(e.target.value))
+            type: "range", min: "0", max: "1", step: "0.05", value: String(L.opacity ?? 1),
+            oninput: (e) => setLayerOpacity(map, L.id, parseFloat(e.target.value))
           })
         ]);
+
         groupEl.appendChild(row);
-        // Add to map now so we can immediately control it
-        addLayerToMap(map, state.layersById.get(l.id));
       });
+
       layerbox.appendChild(groupEl);
-    });
+    }
   }
 
   function timeBadge(l) {
-    const s = l.start ?? l.year ?? l.time?.start;
-    const e = l.end ?? l.year ?? l.time?.end;
-    if (s == null && e == null) return [""];
-    if (s != null && e != null && s === e) return [`[${s}]`];
-    if (s != null && e != null) return [`[${s}–${e}]`];
-    if (s != null) return [`[≥${s}]`];
-    return [`[≤${e}]`];
+    const s = coalesce(l.start, l.year, l.time?.start, null);
+    const e = coalesce(l.end, l.year, l.time?.end, null);
+    if (s == null && e == null) return "";
+    if (s != null && e != null && s === e) return `[${s}]`;
+    if (s != null && e != null) return `[${s}–${e}]`;
+    if (s != null) return `[≥${s}]`;
+    return `[≤${e}]`;
   }
 
+  // -----------------------------------------------------------------------------
+  // Small utils
+  // -----------------------------------------------------------------------------
+  function coalesce(...vals) {
+    for (const v of vals) if (v !== undefined && v !== null) return v;
+    return null;
+  }
+  function nnum(...vals) {
+    for (const v of vals) if (Number.isFinite(+v)) return +v;
+    return undefined;
+  }
+  function bool(...vals) {
+    for (const v of vals) if (typeof v === "boolean") return v;
+    return undefined;
+  }
   function groupBy(arr, keyFn) {
     return arr.reduce((acc, v) => {
       const k = keyFn(v);
@@ -286,7 +375,8 @@
     }, {});
   }
 
-  // --- Kickoff ---------------------------------------------------------------
+  // -----------------------------------------------------------------------------
+  // Kickoff
+  // -----------------------------------------------------------------------------
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 })();
-
