@@ -1,24 +1,61 @@
 {
+  "version": "1.0.0",
+  "defaults": {
+    "minzoom": 0,
+    "maxzoom": 14,
+    "tileSize": 256,
+    "visible": true,
+    "opacity": 1.0,
+    "bounds": [-102.05, 36.99, -94.59, 40.00]
+  },
   "layers": [
+    {
+      "id": "basemap_osm",
+      "title": "Basemap — OpenStreetMap",
+      "type": "raster",
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "opacity": 1.0,
+      "attribution": "© OpenStreetMap contributors",
+      "category": "reference",
+      "start": null,
+      "end": null,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "tileSize": 256,
+      "visible": true,
+      "bounds": [-180, -85.0511, 180, 85.0511]
+    },
     {
       "id": "hillshade",
       "title": "Hillshade (COG → tiles)",
       "type": "raster",
-      "tiles": ["./tiles/ks_hillshade/{z}/{x}/{y}.png"],
+      "url": "./tiles/ks_hillshade/{z}/{x}/{y}.png",
       "opacity": 0.9,
-      "attribution": "DEM © KARS/State of Kansas",
+      "attribution": "DEM © KARS / State of Kansas",
+      "category": "terrain",
       "start": 2018,
-      "end": 2020
+      "end": 2020,
+      "minzoom": 0,
+      "maxzoom": 14,
+      "tileSize": 256,
+      "visible": true,
+      "bounds": [-102.05, 36.99, -94.59, 40.00]
     },
     {
       "id": "usgs_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
       "type": "raster",
-      "tiles": ["./tiles/usgs_1894_larned/{z}/{x}/{y}.png"],
+      "url": "./tiles/usgs_1894_larned/{z}/{x}/{y}.png",
       "opacity": 0.7,
       "attribution": "USGS Historical Topographic Maps (Public Domain)",
+      "category": "historical",
       "start": 1894,
-      "end": 1894
+      "end": 1894,
+      "minzoom": 0,
+      "maxzoom": 16,
+      "tileSize": 256,
+      "visible": true,
+      "bounds": [-102.05, 36.99, -94.59, 40.00]
     }
   ]
 }
