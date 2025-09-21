@@ -1,0 +1,35 @@
+name: Sync Roadmap → Issues & Milestones
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/roadmap/roadmap.yaml"
+      - "scripts/sync-roadmap.js"
+      - "package.json"
+      - "package-lock.json"
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Sync roadmap
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node scripts/sync-roadmap.js
