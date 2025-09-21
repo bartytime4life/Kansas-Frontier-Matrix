@@ -1,0 +1,37 @@
+{
+  "id": "ks_aspect_meta",
+  "title": "Kansas Aspect — processing & lineage",
+  "version": "1.0.0",
+  "inputs": {
+    "dem_cog": {
+      "path": "../cogs/dem/ks_1m_dem_2018_2020.tif",
+      "checksum": "<sha256-dem>",
+      "epsg": 4326,
+      "pixel_size_m": 1.0,
+      "nodata": "<dem-nodata>"
+    }
+  },
+  "commands": [
+    "gdaldem aspect ../cogs/dem/ks_1m_dem_2018_2020.tif ../cogs/terrain/ks_aspect_deg.tif -compute_edges",
+    "gdaladdo -r average ../cogs/terrain/ks_aspect_deg.tif 2 4 8 16",
+    "gdal_translate ../cogs/terrain/ks_aspect_deg.tif ../cogs/terrain/ks_aspect_deg.tif -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER"
+  ],
+  "outputs": {
+    "aspect_cog": {
+      "path": "../cogs/terrain/ks_aspect_deg.tif",
+      "checksum": "<sha256-aspect>",
+      "units": "degrees (0/360=N, 90=E, 180=S, 270=W)",
+      "algorithm": "gdaldem aspect",
+      "overviews": [2, 4, 8, 16],
+      "compression": "DEFLATE"
+    },
+    "aspect_sectors": {
+      "path": "../processed/vectors/aspect_sectors.geojson",
+      "checksum": "<sha256-aspect-sectors>",
+      "breaks_deg": [22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5],
+      "labels": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+      "notes": "Optional; binned raster → polygonize → topo-preserving simplify for lightweight overlays."
+    }
+  },
+  "notes": "Aspect is circular; prefer categorical sectors for display/aggregation, keep continuous raster for analysis."
+}
