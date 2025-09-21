@@ -8,7 +8,28 @@
   "time": { "min": 1850, "max": 2025 },
   "defaultYear": 1930,
 
+  "defaults": {
+    "minzoom": 0,
+    "maxzoom": 15,
+    "tileSize": 256,
+    "visible": true,
+    "opacity": 1.0,
+    "bounds": [-102.05, 36.99, -94.59, 40.00]
+  },
+
   "layers": [
+    {
+      "id": "basemap_osm",
+      "title": "Basemap — OpenStreetMap",
+      "group": "Basemaps & Terrain",
+      "type": "raster",
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "opacity": 1.0,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "visible": true,
+      "attribution": "© OpenStreetMap contributors"
+    },
     {
       "id": "ks_1m_hillshade",
       "title": "Hillshade (2018–2020)",
@@ -18,8 +39,10 @@
       "opacity": 0.9,
       "minzoom": 0,
       "maxzoom": 14,
+      "visible": true,
       "start": 2018,
-      "end": 2020
+      "end": 2020,
+      "attribution": "DEM/Hillshade © KARS / State of Kansas"
     },
     {
       "id": "usgs_1894_larned",
@@ -30,8 +53,10 @@
       "opacity": 0.7,
       "minzoom": 0,
       "maxzoom": 16,
+      "visible": true,
       "start": 1894,
-      "end": 1894
+      "end": 1894,
+      "attribution": "USGS Historical Topographic Maps (Public Domain)"
     },
     {
       "id": "railroads_1900",
@@ -40,8 +65,13 @@
       "type": "vector",
       "url": "./vectors/infrastructure/railroads_1900.geojson",
       "opacity": 1.0,
+      "visible": true,
       "start": 1900,
-      "end": 1900
+      "end": 1900,
+      "paint": {
+        "line": { "line-color": "#d97706", "line-width": 1.6, "line-opacity": 0.95 }
+      },
+      "attribution": "Compiled rail lines circa 1900"
     },
     {
       "id": "treaties_1854",
@@ -50,8 +80,14 @@
       "type": "vector",
       "url": "./vectors/political/treaties_1854.geojson",
       "opacity": 0.85,
+      "visible": true,
       "start": 1854,
-      "end": 1854
+      "end": 1854,
+      "paint": {
+        "fill":   { "fill-color": "#2563eb", "fill-opacity": 0.25 },
+        "line":   { "line-color": "#1d4ed8", "line-width": 1.4, "line-opacity": 0.9 }
+      },
+      "attribution": "Digitized treaty boundaries, 1854"
     }
   ]
 }
