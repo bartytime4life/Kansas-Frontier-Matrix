@@ -1,3 +1,4 @@
+---
 name: "🐞 Bug report"
 about: Report a reproducible problem in the site, data pipeline, AI reasoning, or docs
 title: "[BUG] <short summary>"
