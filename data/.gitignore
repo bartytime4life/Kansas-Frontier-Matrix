@@ -1,19 +1,75 @@
-# processed artifacts
-processed/
-!processed/**/_meta.json
+# ============================================================
+# data/.gitignore — Kansas-Frontier-Matrix (data subtree only)
+# ============================================================
 
-# temporary & cache
-*.aux.xml
+# -----------------------------
+# 1) Generated / ephemeral dirs
+# -----------------------------
+work/**
+tmp/**
+cache/**
+_cache/**
+tiles/**
+
+# Keep readmes/keepers if present
+!work/**/README.md
+!tmp/**/README.md
+!cache/**/README.md
+!_cache/**/README.md
+!tiles/**/README.md
+!**/.gitkeep
+
+# ------------------------------------
+# 2) Processed artifacts (default off)
+#    Keep catalogs + metadata in git
+# ------------------------------------
+processed/**
+!processed/**/
+!processed/**/_meta.json
+!processed/**/README.md
+!processed/**/*.meta.json
+!processed/**/*.sha256
+!processed/**/*.json
+
+# ------------------------------------
+# 3) Tool detritus / scratch files
+# ------------------------------------
+# GDAL/OGR aux files that appear during experiments
+# (Note: COGs embed overviews; standalone *.ovr should not be committed)
 *.ovr
 *.idx
 *.aux
-*.xml
 *.tfw
 *.worldfile
 *.lock
 
-# large downloads if any are staged here
-*.zip
-*.7z
-*.tar
-*.tar.gz
+# Common desktop noise
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# 4) Archives staged for import
+#    Prefer committing via LFS,
+#    so don’t ignore by default.
+# -----------------------------
+# (If you need a throwaway staging area, use data/tmp/ or data/work/)
+# Uncomment below to ignore bulk archives placed directly under data/
+# *.zip
+# *.7z
+# *.tar
+# *.tar.gz
+
+# ------------------------------------
+# 5) NEVER ignore curated descriptors
+#    (these stay tracked for CI & docs)
+# ------------------------------------
+!**/*.kml
+!**/*.kmz
+!**/*.geojson
+!**/*.topojson
+!**/*.json
+!**/*.yml
+!**/*.yaml
+!**/*.md
+!**/*.csv
+!**/*.tsv
