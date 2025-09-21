@@ -34,8 +34,10 @@ indent_style = tab
 
 [*.yml]
 indent_size = 2
+max_line_length = off
 [*.yaml]
 indent_size = 2
+max_line_length = off
 
 # --- JavaScript / TypeScript / Web ---
 [*.js]
@@ -69,6 +71,10 @@ max_line_length = off
 trim_trailing_whitespace = false
 [*.tsv]
 trim_trailing_whitespace = false
+[*.sql]
+trim_trailing_whitespace = false
+[*.lock]
+trim_trailing_whitespace = false
 
 # --- Notebooks (JSON; avoid aggressive whitespace munging) ---
 [*.ipynb]
@@ -82,6 +88,8 @@ indent_size = 2
 [*.ini]
 indent_size = 2
 [Dockerfile]
+indent_size = 2
+[Dockerfile.*]
 indent_size = 2
 [.env]
 indent_size = 2
