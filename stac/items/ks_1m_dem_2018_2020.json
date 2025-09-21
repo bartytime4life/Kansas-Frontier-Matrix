@@ -1,70 +1,84 @@
 {
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/checksum/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/version/v1.0.0/schema.json"
+  ],
+  "type": "Feature",
   "id": "ks_1m_dem_2018_2020",
-  "title": "Kansas DEM (1 m, 2018–2020)",
-  "type": "raster-dem",
-
-  "endpoints": [
-    {
-      "type": "arcgis",
-      "role": ["source", "preview"],
-      "url": "https://tiles.kansasgis.org/arcgis/rest/services/Elevation/KS_1m_DEM/ImageServer"
-    }
-  ],
-
-  "spatial": {
-    "bbox": [-102.05, 36.99, -94.61, 40.00],
-    "crs": "EPSG:4326"
+  "collection": "elevation",
+  "bbox": [-102.05, 36.99, -94.61, 40.00],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99],
+      [-94.61, 36.99],
+      [-94.61, 40.00],
+      [-102.05, 40.00],
+      [-102.05, 36.99]
+    ]]
   },
+  "properties": {
+    "title": "Kansas DEM (1 m, 2018–2020)",
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2020-12-31T23:59:59Z",
+    "datetime": null,
 
-  "temporal": {
-    "start": "2018-01-01",
-    "end": "2020-12-31"
-  },
+    "proj:epsg": 4326,
 
-  "license": "CC-BY-4.0",
-
-  "providers": [
-    { "name": "KARS / State of Kansas", "roles": ["producer", "licensor", "host"] },
-    { "name": "Kansas-Frontier-Matrix", "roles": ["processor", "curator"] }
-  ],
-
-  "provenance": {
-    "retrieved": "2025-09-18T01:50:00Z",
-    "processing": [
+    "kfm:retrieved": "2025-09-18T01:50:00Z",
+    "kfm:processing": [
       "Fetch from ArcGIS ImageServer",
       "Reproject/warp to EPSG:4326 if needed",
       "Convert to COG with internal tiling + overviews",
       "Derive hillshade via gdaldem hillshade"
     ],
-    "notes": "Statewide 1 m LiDAR-derived DEM mosaic; tiled/optimized for web mapping and analysis."
+    "kfm:notes": "Statewide 1 m LiDAR-derived DEM mosaic; tiled/optimized for web mapping and analysis.",
+    "kfm:confidence": 0.95,
+    "kfm:last_updated": "2025-09-19",
+    "kfm:outputs": {
+      "checksums": [
+        "data/cogs/dem/ks_1m_dem_2018_2020.sha256",
+        "data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+      ]
+    }
   },
-
-  "confidence": 0.95,
-
   "assets": {
-    "cog_dem": {
+    "dem": {
       "href": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data", "dem"],
-      "checksum:sha256": "<<<fill-after-build>>>",
-      "meta": "data/cogs/dem/ks_1m_dem_2018_2020.meta.json"
+      "roles": ["data", "elevation"],
+      "checksum:sha256": "<<<fill-after-build>>>"
     },
-    "cog_hillshade": {
+    "hillshade": {
       "href": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["derived", "visual"],
-      "checksum:sha256": "<<<fill-after-build>>>",
-      "meta": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json"
+      "checksum:sha256": "<<<fill-after-build>>>"
+    },
+    "dem_meta": {
+      "href": "data/cogs/dem/ks_1m_dem_2018_2020.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"]
+    },
+    "hillshade_meta": {
+      "href": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+      "type": "application/json",
+      "roles": ["metadata"]
     }
   },
-
-  "outputs": {
-    "checksums": [
-      "data/cogs/dem/ks_1m_dem_2018_2020.sha256",
-      "data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
-    ]
-  },
-
-  "version": "1.1.0",
-  "last_updated": "2025-09-19"
+  "links": [
+    { "rel": "self",      "href": "./ks_1m_dem_2018_2020.json",          "type": "application/json" },
+    { "rel": "parent",    "href": "../collections/elevation.json",       "type": "application/json" },
+    { "rel": "collection","href": "../collections/elevation.json",       "type": "application/json" },
+    { "rel": "root",      "href": "../catalog.json",                     "type": "application/json" },
+    {
+      "rel": "via",
+      "type": "application/json",
+      "href": "https://tiles.kansasgis.org/arcgis/rest/services/Elevation/KS_1m_DEM/ImageServer",
+      "title": "ArcGIS ImageServer — KS 1m DEM"
+    }
+  ]
 }
