@@ -1,14 +1,83 @@
 {
-  "id": "ks_railroads_1900",
-  "title": "Kansas Railroads (circa 1900)",
-  "type": "vector",
-  "endpoint": {
-    "type": "http",
-    "url": "https://example.org/ks_railroads_1900.geojson"
+  "id": "ks_hillshade",
+  "title": "Kansas Elevation Hillshade",
+  "type": "raster-visual",
+  "version": "1.0.1",
+  "description": "Statewide hillshade visualization for Kansas derived from LiDAR-based DEM. Suitable for terrain context and shaded relief backdrops.",
+  "endpoints": [
+    {
+      "type": "arcgis-mapserver",
+      "role": ["preview", "source"],
+      "url": "https://services.kars.geoplatform.ku.edu/arcgis/rest/services/KansasLiDAR/Kansas_Lidar_Hillshade_Overlay/MapServer",
+      "notes": "ArcGIS MapServer overlay (rendered hillshade). Export as image tiles or use directly as a basemap."
+    }
+  ],
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.59, 40.0],
+    "crs": "EPSG:4326",
+    "gsd": 30.0
   },
-  "spatial": { "bbox": [-102.1, 36.99, -94.6, 40.0], "crs": "EPSG:4326" },
-  "temporal": { "start": "1900-01-01", "end": "1900-12-31" },
+  "temporal": {
+    "start": null,
+    "end": null
+  },
+  "providers": [
+    {
+      "name": "Kansas Applied Remote Sensing (KARS) / KU",
+      "roles": ["producer", "host"],
+      "url": "https://kansasgis.org"
+    },
+    {
+      "name": "Kansas-Frontier-Matrix",
+      "roles": ["processor", "curator"]
+    }
+  ],
   "license": "CC-BY-4.0",
-  "provenance": { "attribution": "Historical GIS compilation", "retrieved": "2025-09-18T02:05:00Z" },
-  "outputs": { "geojson": "data/processed/vectors/railroads_1900.geojson" }
+  "provenance": {
+    "retrieved": null,
+    "processing": [
+      "Source hillshade from KARS MapServer for preview/browse",
+      "Optional: derive hillshade locally from 1 m DEM for analysis-grade COG"
+    ],
+    "notes": "Rendered service is ideal for quick visualization; analysis products should be generated from the underlying DEM."
+  },
+  "assets": {
+    "cog_hillshade": {
+      "href": "data/cogs/hillshade/ks_hillshade_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["derived", "visual"],
+      "meta": "data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+      "sha256": "data/cogs/hillshade/ks_hillshade_2018_2020.sha256",
+      "stac": "data/stac/ks_hillshade_2018_2020.json"
+    }
+  },
+  "outputs": {
+    "catalog_items": [
+      "data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+    ]
+  },
+  "validation": {
+    "checks": [
+      "jq -e 'type==\"object\"' data/sources/ks_hillshade.json",
+      "jq -e 'type==\"object\"' data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
+      "sha256sum -c data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+    ]
+  },
+  "consumers": {
+    "qgis": {
+      "arcgis_mapserver": "https://services.kars.geoplatform.ku.edu/arcgis/rest/services/KansasLiDAR/Kansas_Lidar_Hillshade_Overlay/MapServer"
+    },
+    "maplibre": {
+      "raster_stub": {
+        "id": "ks_hillshade",
+        "type": "raster",
+        "tiles": ["https://<your-tiler>/raster/ks_hillshade_2018_2020/{z}/{x}/{y}.png"],
+        "tileSize": 256,
+        "maxzoom": 14,
+        "attribution": "KARS/KU (CC-BY-4.0)"
+      }
+    }
+  },
+  "keywords": ["Kansas", "hillshade", "DEM", "LiDAR", "terrain", "COG"],
+  "last_updated": "2025-09-20"
 }
