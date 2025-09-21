@@ -1,4 +1,3 @@
-# .github/workflows/site.yml
 name: Build & Deploy Site
 
 on:
@@ -8,17 +7,16 @@ on:
       - "web/**"
       - "data/stac/**"
       - "data/sources/**"
-      - ".github/workflows/site.yml"
+      - ".github/workflows/sites.yml"   # <-- this file name
       - "README.md"
+      - "Makefile"
   workflow_dispatch:
 
-# Least-privilege for Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Only one Pages deployment at a time
 concurrency:
   group: "pages-${{ github.ref }}"
   cancel-in-progress: true
@@ -28,7 +26,6 @@ jobs:
     name: Build static site
     runs-on: ubuntu-latest
     env:
-      # Where we assemble the final site for upload
       SITE_DIR: _site
 
     steps:
@@ -37,9 +34,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ------------------------------------------------------------------------------
-      # Detect package manager if web/package.json exists (npm | yarn | pnpm)
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
+      # Optional: use Makefile if present for STAC validate + site prep
+      # --------------------------------------------------------------
+      - name: Pre-build via Makefile (stac-validate + site)
+        id: prebuild
+        run: |
+          set -euo pipefail
+          if [ -f Makefile ]; then
+            echo "has_make=true" >> "$GITHUB_OUTPUT"
+            make stac-validate || { echo "::error::STAC validation failed"; exit 1; }
+            # make site should generate web/layers.json for non-JS sites
+            make site || true
+          else
+            echo "has_make=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # --------------------------------------------------------------
+      # Detect JS tooling if web/package.json exists
+      # --------------------------------------------------------------
       - name: Detect web build tooling
         id: detect_tool
         run: |
@@ -71,9 +84,9 @@ jobs:
         if: steps.detect_tool.outputs.pm == 'pnpm'
         run: npm i -g pnpm@9
 
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
       # Build web app OR copy static site
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
       - name: Build web (npm)
         if: steps.detect_tool.outputs.pm == 'npm'
         working-directory: web
@@ -109,7 +122,8 @@ jobs:
           elif [ -d "web/build" ]; then
             rsync -a --delete web/build/ "$SITE_DIR"/
           else
-            echo "No dist/ or build/ found after web build"; exit 1
+            echo "::error::No dist/ or build/ found after web build"
+            exit 1
           fi
 
       - name: Copy static web/ (when no Node build)
@@ -124,10 +138,11 @@ jobs:
             exit 1
           fi
 
-      # ------------------------------------------------------------------------------
-      # Validate JSON catalogs (STAC & sources)
-      # ------------------------------------------------------------------------------
-      - name: Validate JSON catalogs (STAC & sources)
+      # --------------------------------------------------------------
+      # Fast JSON sanity (STAC & sources) when Makefile isn't used
+      # --------------------------------------------------------------
+      - name: Validate JSON catalogs (jq quick check)
+        if: steps.prebuild.outputs.has_make == 'false'
         run: |
           set -euo pipefail
           sudo apt-get update -y >/dev/null
@@ -143,20 +158,18 @@ jobs:
           done
           [ $ok -eq 1 ] || { echo "::error::JSON validation failed"; exit 1; }
 
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
       # Ensure Pages-friendly outputs
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
       - name: Prepare Pages artifacts (.nojekyll, 404, CNAME if present)
         run: |
           set -euo pipefail
           touch "$SITE_DIR/.nojekyll"
-          # Preserve user-provided CNAME if present in repo root or web/
           for c in CNAME web/CNAME; do
             if [ -f "$c" ]; then
               cp "$c" "$SITE_DIR/CNAME"
             fi
           done
-          # Provide a minimal 404 if not supplied by the site build
           if [ ! -f "$SITE_DIR/404.html" ]; then
             cat > "$SITE_DIR/404.html" <<'HTML'
             <!doctype html><meta charset="utf-8">
@@ -167,9 +180,9 @@ jobs:
             HTML
           fi
 
-      # ------------------------------------------------------------------------------
-      # Optional: link check the built site (can be toggled via env or removed)
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
+      # Optional link check (can disable if too chatty/rate-limited)
+      # --------------------------------------------------------------
       - name: Link check (lychee)
         if: ${{ !cancelled() }}
         uses: lycheeverse/lychee-action@v2
@@ -179,9 +192,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
       # Configure & upload for Pages
-      # ------------------------------------------------------------------------------
+      # --------------------------------------------------------------
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
