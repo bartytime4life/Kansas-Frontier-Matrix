@@ -13,7 +13,7 @@ description = "Time · Terrain · History mapping system for Kansas (Earth + Web
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Your Name" }]
+authors = [{ name = "Andy Barta" }]
 keywords = [
   "GIS", "Kansas", "Google Earth", "MapLibre", "COG", "STAC", "KML", "KMZ",
   "hillshade", "terrain", "historical-maps", "time-slider"
@@ -27,6 +27,7 @@ classifiers = [
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: GIS",
   "Topic :: Internet :: WWW/HTTP :: Site Management"
 ]
@@ -55,6 +56,7 @@ dev = [
   "pytest>=8.3.2",
   "pytest-cov>=5.0.0",
   "pre-commit>=3.8.0",
+  "types-PyYAML>=6.0.12.20240808"
 ]
 # building docs / handbook
 docs = [
@@ -113,8 +115,7 @@ include = ["kansas_geo_timeline*"]
 # ship small schemas/templates/configs with the package (not big rasters)
 kansas_geo_timeline = [
   "schemas/*.json",
-  "templates/*",
-  "web_static/*"
+  "templates/*"
 ]
 
 [tool.setuptools_scm]
@@ -164,6 +165,7 @@ source = ["src/kansas_geo_timeline"]
 [tool.coverage.report]
 skip_empty = true
 show_missing = true
+# fail_under = 60
 
 # ---- project-specific defaults (consumed by scripts/ or CLI) -----------------
 
