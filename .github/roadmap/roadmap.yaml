@@ -1,7 +1,26 @@
-# Declarative Roadmap → Issues/Milestones
-# - Each milestone creates/updates a GitHub Milestone
-# - Each issue under it creates/updates a GitHub Issue by title
-# - Labels auto-created if missing
+# ==============================================================================
+# Kansas-Frontier-Matrix — Declarative Roadmap (→ Issues & Milestones)
+# This file is consumed by .github/workflows/roadmap.yml to sync labels,
+# milestones, and issues. Colors are 6-hex (no '#'), as GitHub's API expects.
+# ==============================================================================
+
+version: 1
+project: "Kansas Geo Timeline"
+owner: "bartytime4life"             # GitHub org/user that hosts the repo
+defaults:
+  create_missing_labels: true
+  create_missing_milestones: true
+  close_missing_issues: false       # set true to auto-close issues not in this file
+  dry_run: false                    # set true in PRs to preview changes
+  issue:
+    state: open                     # open|closed
+    assignees: []                   # default assignees
+    labels: []                      # extra labels appended to per-issue labels
+
+# ------------------------------------------------------------------------------
+# Labels (idempotent): will be created/updated by color/description.
+# Color = 6-hex (no '#'). Name is case-sensitive in GitHub UI but normalized here.
+# ------------------------------------------------------------------------------
 
 labels:
   - name: data
@@ -50,14 +69,25 @@ labels:
     color: "c49c94"
     description: "UI literacy, public comms"
 
+# ------------------------------------------------------------------------------
+# Milestones → each creates/updates a GitHub Milestone.
+# Optional: state (open|closed), due_on (ISO-8601 YYYY-MM-DD).
+# Issues under a milestone create/update GitHub Issues by title.
+# ------------------------------------------------------------------------------
+
 milestones:
-  - title: Milestone 1 — Enrich Data Sources
+  - title: "Milestone 1 — Enrich Data Sources"
+    state: open
+    due_on: "2025-10-31"
     description: >
       Expand coverage: oral histories, paleoclimate proxies, hydrology & water management.
-      Document sources and provenance in STAC-like catalog.
+      Document sources and provenance in STAC catalog.
     issues:
-      - title: Oral Histories & Indigenous Narratives
+      - title: "Oral Histories & Indigenous Narratives"
         labels: [data, storytelling, MCP]
+        assignees: []
+        priority: P2
+        estimate: S
         body: |
           ### Goal
           Integrate oral history archives with geocoded map links and contextual popups.
@@ -67,8 +97,14 @@ milestones:
           - [ ] Digitize + geocode transcripts (MCP `experiment.md`)
           - [ ] Link narratives to features with glossary tooltips
           - [ ] Document sources in `data/sources/oral_histories.json`
-      - title: Paleoclimate & Fire Regimes
+        files:
+          - data/sources/oral_histories.json
+
+      - title: "Paleoclimate & Fire Regimes"
         labels: [data, paleoclimate]
+        assignees: []
+        priority: P2
+        estimate: M
         body: |
           ### Goal
           Bring in drought indices, pollen cores, and charcoal/fire records for environmental context.
@@ -78,8 +114,14 @@ milestones:
           - [ ] Add charcoal/fire frequency datasets
           - [ ] Cross-link KGS/Neotoma paleo records
           - [ ] `data/sources/paleoclimate.json` with provenance
-      - title: Hydrology & Water Management Expansion
+        files:
+          - data/sources/paleoclimate.json
+
+      - title: "Hydrology & Water Management Expansion"
         labels: [data, hydrology]
+        assignees: []
+        priority: P2
+        estimate: M
         body: |
           ### Goal
           Enrich water datasets and prototype flood scenarios.
@@ -88,13 +130,19 @@ milestones:
           - [ ] Add flood event datasets & irrigation project layers
           - [ ] Prototype HEC-RAS historical flood scenarios (MCP modeling SOP)
           - [ ] `data/sources/hydrology.json` endpoints + licenses
+        files:
+          - data/sources/hydrology.json
 
-  - title: Milestone 2 — Analytical Enhancements
+  - title: "Milestone 2 — Analytical Enhancements"
+    state: open
+    due_on: "2025-11-30"
     description: >
       Predictive modeling, uncertainty, symbolic reasoning, fractal/pattern analytics.
     issues:
-      - title: Predictive Modeling
+      - title: "Predictive Modeling"
         labels: [ai]
+        priority: P2
+        estimate: L
         body: |
           ### Goal
           Predict likely settlement sites using environmental drivers.
@@ -103,8 +151,13 @@ milestones:
           - [ ] Train model on DEM, hydrology, soils, land cover + known sites
           - [ ] Log in `mcp/experiments/EXP-SETTLE-PRED.md`
           - [ ] Explore Bayesian + hybrid ABM/GIS variants
-      - title: Uncertainty Quantification
+        files:
+          - mcp/experiments/EXP-SETTLE-PRED.md
+
+      - title: "Uncertainty Quantification"
         labels: [uncertainty]
+        priority: P1
+        estimate: M
         body: |
           ### Goal
           Make uncertainty first-class in georeferencing, NLP, and map rectification.
@@ -113,8 +166,11 @@ milestones:
           - [ ] Confidence scores for NLP toponyms
           - [ ] Georeferencing RMS/error reporting, rectification logs
           - [ ] UI display: opacity/error bars/CI shading
-      - title: Symbolic & Knowledge-Based Reasoning
+
+      - title: "Symbolic & Knowledge-Based Reasoning"
         labels: [ontology, ai]
+        priority: P2
+        estimate: M
         body: |
           ### Goal
           Add CIDOC-CRM + GeoSciML ontologies and legal/treaty inference rules.
@@ -123,8 +179,11 @@ milestones:
           - [ ] Define core ontology schema and identity strategy (Wikidata)
           - [ ] Implement rules for treaty/legal land transfers
           - [ ] Export RDF/OWL snapshots
-      - title: Fractal & Pattern Analysis
+
+      - title: "Fractal & Pattern Analysis"
         labels: [fractals, ai]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Quantify scaling and self-similarity in rivers, fires, and settlement clusters.
@@ -134,12 +193,16 @@ milestones:
           - [ ] Power-law analysis on event/migration frequencies
           - [ ] Cluster scaling vs hydro-geomorphology
 
-  - title: Milestone 3 — Storytelling & Education
+  - title: "Milestone 3 — Storytelling & Education"
+    state: open
+    due_on: "2025-12-31"
     description: >
       Public-facing narrative modules, educational overlays, glossary tooltips, and submission portal.
     issues:
-      - title: Interactive Story Maps — Santa Fe Trail
+      - title: "Interactive Story Maps — Santa Fe Trail"
         labels: [storytelling, education]
+        priority: P2
+        estimate: M
         body: |
           ### Goal
           Build narrative module for Santa Fe Trail with timeline & sources.
@@ -148,8 +211,11 @@ milestones:
           - [ ] Assemble trail route layers + primary sources
           - [ ] Timeline UI + step-through views
           - [ ] Educator notes + glossary links
-      - title: Dust Bowl Timeline Prototype
+
+      - title: "Dust Bowl Timeline Prototype"
         labels: [storytelling, education]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Blend 1930s climate, newspaper archives, soils, and land use.
@@ -158,8 +224,11 @@ milestones:
           - [ ] Collect climate + newspaper datasets
           - [ ] Compose time-series map overlays
           - [ ] Add uncertainty annotations
-      - title: Glossary & Educational Annotations
+
+      - title: "Glossary & Educational Annotations"
         labels: [education, MCP]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Link MCP glossary into tooltips and overlays.
@@ -167,8 +236,11 @@ milestones:
           ### Tasks
           - [ ] Embed glossary lookups in popups
           - [ ] Author overlays for railroads, treaties, forts, migration
-      - title: Crowdsourcing Submission Portal
+
+      - title: "Crowdsourcing Submission Portal"
         labels: [crowdsourcing]
+        priority: P3
+        estimate: M
         body: |
           ### Goal
           Lower barrier for community contributions (web form → GitHub PR).
@@ -178,12 +250,15 @@ milestones:
           - [ ] PR bot to format submissions
           - [ ] `docs/CONTRIBUTING.md` contributor guide
 
-  - title: Milestone 4 — Technical Enhancements
+  - title: "Milestone 4 — Technical Enhancements"
+    state: open
     description: >
       3D/temporal, semantic web, modular plugins, APIs, and download endpoints.
     issues:
-      - title: 3D Time Animation
+      - title: "3D Time Animation"
         labels: [3d]
+        priority: P3
+        estimate: M
         body: |
           ### Goal
           CesiumJS prototype and regionated KML/KMZ export for Google Earth.
@@ -191,8 +266,11 @@ milestones:
           ### Tasks
           - [ ] CesiumJS time-dynamic scene (1850–present)
           - [ ] Regionated KML/KMZ exports
-      - title: Semantic Web Integration
+
+      - title: "Semantic Web Integration"
         labels: [ontology, api]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Publish internal knowledge graph with entity linking.
@@ -200,8 +278,11 @@ milestones:
           ### Tasks
           - [ ] Map entities to Wikidata; export RDF
           - [ ] SPARQL/GraphQL access (if feasible)
-      - title: Modularity & Extensibility
+
+      - title: "Modularity & Extensibility"
         labels: [architecture]
+        priority: P2
+        estimate: M
         body: |
           ### Goal
           Refactor ingestion/AI/UI into plugins, document extension points.
@@ -209,8 +290,11 @@ milestones:
           ### Tasks
           - [ ] Define plugin API boundaries
           - [ ] `docs/architecture.md` extension sections
-      - title: APIs & External Tools
+
+      - title: "APIs & External Tools"
         labels: [api]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Provide REST/GraphQL endpoints, enable GeoJSON/CSV download.
@@ -219,12 +303,15 @@ milestones:
           - [ ] Dataset catalog endpoints
           - [ ] Download endpoints (GeoJSON/CSV)
 
-  - title: Milestone 5 — MCP Integration
+  - title: "Milestone 5 — MCP Integration"
+    state: open
     description: >
       Experiments, SOPs, model cards, and CI/STAC validation for mission-grade reproducibility.
     issues:
-      - title: Experiment Reports (First Three)
+      - title: "Experiment Reports (First Three)"
         labels: [MCP, reproducibility]
+        priority: P2
+        estimate: S
         body: |
           ### Goal
           Adopt MCP experiment template and log three initial experiments.
@@ -234,8 +321,11 @@ milestones:
           - [ ] Georeferencing experiment
           - [ ] NLP place extraction experiment
           - [ ] Predictive settlement modeling experiment
-      - title: SOP Documentation
+
+      - title: "SOP Documentation"
         labels: [MCP]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Create MCP SOPs for repeatability.
@@ -243,8 +333,11 @@ milestones:
           ### Tasks
           - [ ] `mcp/sops/georeference_map.md`
           - [ ] `mcp/sops/add_dataset.md`
-      - title: Model Cards
+
+      - title: "Model Cards"
         labels: [MCP, ai]
+        priority: P3
+        estimate: S
         body: |
           ### Goal
           Transparent model documentation.
@@ -252,12 +345,15 @@ milestones:
           ### Tasks
           - [ ] `mcp/model_cards/nlp_placename.md`
           - [ ] `mcp/model_cards/change_detection.md`
-      - title: CI/CD Reproducibility
+
+      - title: "CI/CD Reproducibility"
         labels: [reproducibility]
+        priority: P2
+        estimate: S
         body: |
           ### Goal
           Automated STAC validation and reproducibility check target.
 
           ### Tasks
           - [ ] GitHub Actions job to validate STAC JSON
-          - [ ] `make reproducibility-check` target
+          - [ ] `make reproducibility` target
