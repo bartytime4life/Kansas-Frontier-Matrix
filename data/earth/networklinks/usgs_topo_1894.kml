@@ -1,31 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-  <NetworkLink>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+     xmlns:gx="http://www.google.com/kml/ext/2.2"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+
+  <Document>
     <name>USGS Topographic Map — Larned (1894)</name>
     <open>1</open>
 
-    <!-- Optional: only load when the view intersects this region (approx. Larned quad) -->
-    <Region>
-      <LatLonAltBox>
-        <north>38.3000</north>
-        <south>37.8000</south>
-        <east>-98.8000</east>
-        <west>-99.5000</west>
-        <minAltitude>0</minAltitude>
-        <maxAltitude>0</maxAltitude>
-      </LatLonAltBox>
-      <Lod>
-        <minLodPixels>64</minLodPixels>
-        <maxLodPixels>-1</maxLodPixels>
-      </Lod>
-    </Region>
+    <!-- Optional: provenance -->
+    <atom:author><atom:name>Kansas Frontier Matrix</atom:name></atom:author>
+    <atom:link rel="related" href="https://YOUR-PAGES-DOMAIN/"/>
 
-    <Link>
-      <!-- Point this at your regionated KMZ (or top-level KML) for the 1894 Larned sheet -->
-      <href>../overlays/usgs_topo_larned_1894.kmz</href>
-      <viewRefreshMode>onStop</viewRefreshMode>
-      <viewRefreshTime>1</viewRefreshTime>
-    </Link>
-  </NetworkLink>
+    <NetworkLink id="usgs_topo_larned_1894_link">
+      <name>Larned 1894 — SuperOverlay</name>
+      <open>1</open>
+      <gx:flyToView>1</gx:flyToView>
+
+      <!-- Limit requests to the Larned quad vicinity -->
+      <Region>
+        <LatLonAltBox>
+          <north>38.3000</north>
+          <south>37.8000</south>
+          <east>-98.8000</east>
+          <west>-99.5000</west>
+          <minAltitude>0</minAltitude>
+          <maxAltitude>0</maxAltitude>
+        </LatLonAltBox>
+        <Lod>
+          <!-- Start loading when ~64 screen pixels cover the region; no upper cap -->
+          <minLodPixels>64</minLodPixels>
+          <maxLodPixels>-1</maxLodPixels>
+        </Lod>
+      </Region>
+
+      <!-- Default view on open (center near Larned, KS) -->
+      <LookAt>
+        <longitude>-99.1000</longitude>
+        <latitude>38.1800</latitude>
+        <altitude>0</altitude>
+        <heading>0</heading>
+        <tilt>0</tilt>
+        <range>200000</range>
+        <altitudeMode>clampToGround</altitudeMode>
+      </LookAt>
+
+      <Link>
+        <!-- Relative path keeps it portable alongside this KML (GitHub Pages/CDN, etc.) -->
+        <href>../overlays/usgs_topo_larned_1894.kmz</href>
+
+        <!-- Or use an absolute URL; uncomment and replace:
+        <href>https://YOUR-PAGES-DOMAIN/data/earth/overlays/usgs_topo_larned_1894.kmz</href>
+        -->
+
+        <!-- Let the SuperOverlay’s internal Regions control fetching -->
+        <viewRefreshMode>onRegion</viewRefreshMode>
+
+        <!-- Small hysteresis so tiny camera moves don’t thrash requests -->
+        <viewRefreshTime>1</viewRefreshTime>
+
+        <!-- Prefetch slightly beyond the current bounds to avoid edge pop-in -->
+        <viewBoundScale>1.2</viewBoundScale>
+      </Link>
+    </NetworkLink>
+  </Document>
 </kml>
-
