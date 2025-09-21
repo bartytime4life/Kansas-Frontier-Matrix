@@ -34,24 +34,38 @@ processed/**
 # ------------------------------------
 # 3) Tool detritus / scratch files
 # ------------------------------------
-# GDAL/OGR aux files that appear during experiments
-# (Note: COGs embed overviews; standalone *.ovr should not be committed)
+# GDAL/OGR & raster/vector sidecars (recreatable)
 *.ovr
-*.idx
 *.aux
+*.aux.xml
+*.idx
 *.tfw
+*.wld
 *.worldfile
 *.lock
+*.vrt
+
+# Spatial/DB temp & journals
+*.sqlite-journal
+*-journal
+*-wal
+*-shm
+*.gpkg-shm
+*.gpkg-wal
+
+# Notebook & Python cache
+.ipynb_checkpoints/
+__pycache__/
 
 # Common desktop noise
 .DS_Store
 Thumbs.db
 
-# -----------------------------
+# ------------------------------------
 # 4) Archives staged for import
 #    Prefer committing via LFS,
 #    so don’t ignore by default.
-# -----------------------------
+# ------------------------------------
 # (If you need a throwaway staging area, use data/tmp/ or data/work/)
 # Uncomment below to ignore bulk archives placed directly under data/
 # *.zip
