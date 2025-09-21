@@ -2,6 +2,11 @@ name: Sync Roadmap → Issues & Milestones
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Parse roadmap and simulate changes (no writes)"
+        type: boolean
+        default: false
   push:
     branches: [ main ]
     paths:
@@ -9,22 +14,23 @@ on:
       - "scripts/sync-roadmap.js"
       - "package.json"
       - "package-lock.json"
-      # add this file so edits to the workflow can retrigger if needed
       - ".github/workflows/roadmap.yml"
 
 permissions:
-  issues: write      # create/update issues & milestones
+  issues: write          # create/update issues & milestones
   contents: read
+  metadata: read
 
 concurrency:
   group: "roadmap-sync-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
-  # If you ever move the Node project under a subfolder (e.g. tools/roadmap-sync),
+  # If you move the Node project under a subfolder (e.g. tools/roadmap-sync),
   # set ROADMAP_WORKDIR to that folder and this workflow will still work.
   ROADMAP_WORKDIR: .
   NODE_VERSION: "20"
+  ROADMAP_FILE: ".github/roadmap/roadmap.yaml"
 
 jobs:
   sync:
@@ -39,8 +45,8 @@ jobs:
       - name: Verify roadmap files exist
         run: |
           set -euo pipefail
-          test -f .github/roadmap/roadmap.yaml || { echo "::error::.github/roadmap/roadmap.yaml not found"; exit 1; }
-          test -f scripts/sync-roadmap.js || { echo "::error::scripts/sync-roadmap.js not found"; exit 1; }
+          test -f "$ROADMAP_FILE" || { echo "::error::$ROADMAP_FILE not found"; exit 1; }
+          test -f "scripts/sync-roadmap.js" || { echo "::error::scripts/sync-roadmap.js not found"; exit 1; }
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -61,14 +67,38 @@ jobs:
           npm ci || { echo "npm ci failed; attempting to (re)create lockfile..."; npm i --package-lock-only && npm ci; }
 
       - name: Sync roadmap (labels, milestones, issues)
+        id: sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          ROADMAP_FILE: ${{ env.ROADMAP_FILE }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           set -euo pipefail
-          node scripts/sync-roadmap.js
+          mkdir -p build
+          # Capture a full log for debugging on failure
+          node scripts/sync-roadmap.js 2>&1 | tee build/roadmap-sync.log
 
       - name: Summary
-        if: ${{ success() }}
+        if: always()
         run: |
-          echo "✅ Roadmap sync completed for ${{ github.repository }}"
+          {
+            echo "## Roadmap sync"
+            echo ""
+            echo "- Repository: **${{ github.repository }}**"
+            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+              echo "- Mode: **DRY RUN** (no writes)"
+            else
+              echo "- Mode: **APPLY**"
+            fi
+            echo "- Roadmap file: \`${{ env.ROADMAP_FILE }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: roadmap-sync-logs
+          path: build/roadmap-sync.log
+          if-no-files-found: warn
+          retention-days: 7
