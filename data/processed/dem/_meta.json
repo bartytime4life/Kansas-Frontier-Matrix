@@ -1,58 +1,90 @@
-{
-  "id": "ks_processed_dem",
-  "type": "collection",
-  "title": "Processed DEM Products – Kansas Frontier Matrix",
-  "description": "Collection of processed digital elevation model (DEM) datasets for Kansas. Includes statewide 1-meter resolution DEMs (2018–2020) and derivative products (hillshade, slope, aspect) prepared as Cloud-Optimized GeoTIFFs (COGs) for analysis and visualization. These layers support terrain analysis, hydrological modeling, and historical landscape reconstruction within the Kansas-Frontier-Matrix hub.",
-  "extent": {
-    "spatial": {
-      "bbox": [[-102.05, 36.99, -94.60, 40.00]]
-    },
-    "temporal": {
-      "interval": [["2018-01-01", "2020-12-31"]]
-    }
-  },
-  "providers": [
-    {
-      "name": "USGS 3D Elevation Program (3DEP)",
-      "roles": ["producer", "licensor"],
-      "url": "https://www.usgs.gov/3d-elevation-program"
-    },
-    {
-      "name": "Kansas Data Access and Support Center (DASC)",
-      "roles": ["host", "distributor"],
-      "url": "https://kansasgis.org"
-    }
-  ],
-  "assets": {
-    "ks_1m_dem_2018_2020": {
-      "href": "../../cogs/dem/ks_1m_dem_2018_2020.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Kansas 1m DEM (2018–2020)"
-    },
-    "ks_hillshade_2018_2020": {
-      "href": "../../cogs/hillshade/ks_hillshade_2018_2020.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Hillshade (derived from Kansas 1m DEM 2018–2020)"
-    }
-  },
-  "keywords": [
-    "Kansas",
-    "DEM",
-    "LiDAR",
-    "elevation",
-    "terrain",
-    "hillshade",
-    "processed data",
-    "3DEP"
-  ],
-  "license": "Public Domain (USGS)",
-  "mcp": {
-    "sop_reference": "mcp/sops/process_dem.md",
-    "documentation": "mcp/experiments/process_dem_collection.md",
-    "traceability": {
-      "processing": "DEM tiles mosaicked, reprojected to EPSG:4269, converted to Cloud-Optimized GeoTIFFs with GDAL 3.6. Derivatives (hillshade, slope, aspect) created using gdaldem.",
-      "git_commit": "<commit-hash>"
-    }
-  }
-}
+# Historical map georeferencing config — LAWRENCE (1885)
+# Compatible with GDAL GCP-based warps and your ingest scripts.
 
+id: LAWRENCE_1885
+version: 1.0.0
+
+image:
+  path: data/raw/ut_pcl/LAWRENCE_1885.jpg
+  dpi: null                 # optional (e.g., 600); used only for scale notes
+  bands: 3                  # RGB scan (adjust if different)
+  color_profile: sRGB       # or unknown
+
+target_crs: EPSG:4326       # web overlay CRS; consider using native/projected for accuracy
+source_crs: null            # if known (e.g., polyconic), add here for documentation
+
+# Ground control points (pixel coordinates are in the scanned image's native pixel grid)
+# px = column (x), py = row (y); lon/lat in target_crs
+gcps:
+  - { px: 1234, py: 5678, lon: -95.235000, lat: 38.971000 }
+  - { px: 2234, py: 5678, lon: -95.210000, lat: 38.960000 }
+  - { px: 1834, py: 6678, lon: -95.220000, lat: 38.940000 }
+  - { px: 1534, py: 4678, lon: -95.250000, lat: 38.955000 }
+
+# Optional: add more GCPs along edges/corners to reduce rubber-sheeting artifacts.
+# Aim for ≥8 well-distributed points for TPS or 6–10 for 2nd-order polynomial.
+
+warp:
+  method: tps               # options: tps | poly1 | poly2 | poly3
+  order: 2                  # polynomial order if method=polyN (ignored for tps)
+  resampling: cubic         # nearest|bilinear|cubic|lanczos (scans usually: cubic)
+  dstalpha: true            # create alpha for collar/no-data
+  error_threshold: 0.0      # 0 = exact transformer; increase for speed (not recommended here)
+  nodata: null              # e.g., 0 if you pre-masked the collar
+  overview_resampling: AVERAGE
+  cutline:
+    use_neatline: false     # set true if you provide a neatline polygon below
+    # When true, supply a WKT or GeoJSON polygon (in target_crs) that traces the sheet neatline
+    neatline_wkt: null
+  # Pixel alignment / resolution (optional). If omitted, GDAL chooses automatically.
+  target_resolution: null   # e.g., 1.0 for 1m; for scanned maps keep null to preserve detail
+  target_extent: null       # [minx, miny, maxx, maxy] in target_crs (optional)
+
+output:
+  # Suggested canonical outputs (your pipeline can override)
+  warped_tif: data/work/georef/LAWRENCE_1885_wgs84.tif
+  cog_tif:    data/cogs/overlays/usgs_topo_lawrence_1885.tif
+  preview_png: data/cogs/overlays/usgs_topo_lawrence_1885_preview.png
+  build_cog: true
+  cog_profile:
+    compress: JPEG          # JPEG for RGB scans
+    quality: 85
+    photometric: YCBCR
+    blocksize: 512
+    threads: ALL_CPUS
+    bigtiff: IF_SAFER
+    overview_resampling: AVERAGE
+
+qa:
+  rmse_pixels: null         # fill after warp if you compute residuals
+  gcps_used: auto           # auto | integer count
+  notes: "Add ≥4 more GCPs near corners/edges for best results."
+
+provenance:
+  provider: "USGS / UT PCL (University of Texas Perry-Castañeda Library)"
+  collection: "Historical Topographic Map"
+  sheet: "LAWRENCE (1885)"
+  license: "Public Domain (USGS)"
+  links:
+    source: null            # optional URL to the source record
+
+# ---------------------------------------------------------------------------
+# (Optional) Helper commands (documentation only; your scripts can generate these)
+# ---------------------------------------------------------------------------
+gdal:
+  add_gcps: >
+    gdal_translate -of GTiff -a_srs EPSG:4326
+    $(printf " %s" $(awk -F'[,:{} ]+' '/px/{printf "-gcp %s %s %s %s", $3,$5,$9,$11}' data/gcp/LAWRENCE_1885.yml))
+    data/raw/ut_pcl/LAWRENCE_1885.jpg /tmp/LAWRENCE_1885_gcps.tif
+  warp: >
+    gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha
+    -order 2 -et 0.0
+    /tmp/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif
+  warp_tps: >
+    gdalwarp -t_srs EPSG:4326 -r cubic -dstalpha -et 0.0 -tps
+    /tmp/LAWRENCE_1885_gcps.tif data/work/georef/LAWRENCE_1885_wgs84.tif
+  to_cog: >
+    gdal_translate -of COG -co COMPRESS=JPEG -co QUALITY=85 -co PHOTOMETRIC=YCBCR
+    -co BLOCKSIZE=512 -co NUM_THREADS=ALL_CPUS -co BIGTIFF=IF_SAFER
+    -co OVERVIEW_RESAMPLING=AVERAGE
+    data/work/georef/LAWRENCE_1885_wgs84.tif data/cogs/overlays/usgs_topo_lawrence_1885.tif
