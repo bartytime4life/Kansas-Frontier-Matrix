@@ -80,7 +80,7 @@ notebooks = [
 ]
 # Optional heavy GIS/vector stack (opt-in to avoid unexpected GDAL/Fiona builds)
 vector = [
-  "pyogrio>=0.9.0",         # fast vector IO (GDAL-backed wheels on many platforms)
+  "pyogrio>=0.9.0",
   "geopandas>=1.0.0"
 ]
 analysis = [
@@ -93,13 +93,13 @@ tiles = [
 ]
 
 [project.scripts]
-kgt = "kansas_geo_timeline.cli:main"   # tiny CLI: fetch→cog→terrain→kml→site
+kgt = "kansas_geo_timeline.cli:main"   # tiny CLI
 
 [project.urls]
-Homepage = "https://github.com/bartytime4life/kansas-geo-timeline"
-Repository = "https://github.com/bartytime4life/kansas-geo-timeline"
-Issues = "https://github.com/bartytime4life/kansas-geo-timeline/issues"
-Documentation = "https://bartytime4life.github.io/kansas-geo-timeline/"
+Homepage = "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+Repository = "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+Issues = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues"
+Documentation = "https://bartytime4life.github.io/Kansas-Frontier-Matrix/"
 
 # ---- setuptools layout -------------------------------------------------------
 
@@ -114,8 +114,8 @@ include = ["kansas_geo_timeline*"]
 [tool.setuptools.package-data]
 # ship small schemas/templates/configs with the package (not big rasters)
 kansas_geo_timeline = [
-  "schemas/*.json",
-  "templates/*"
+  "schemas/**/*",
+  "templates/**/*"
 ]
 
 [tool.setuptools_scm]
@@ -173,7 +173,7 @@ show_missing = true
 [tool.kansas_geo_timeline]
 data_dir = "data"
 processed_dir = "data/processed"
-stac_dir = "data/stac"
+stac_dir = "stac"          # <-- fixed path
 web_dir = "web"
 earth_dir = "earth"
 default_crs = "EPSG:4326"
