@@ -1,42 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-  <NetworkLink>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+     xmlns:gx="http://www.google.com/kml/ext/2.2"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+
+  <Document>
     <name>Kansas 1 m Hillshade (2018–2020)</name>
     <open>1</open>
 
-    <!-- Only fetch when the camera intersects Kansas (approx. statewide bbox) -->
-    <Region>
-      <LatLonAltBox>
-        <north>40.003</north>
-        <south>36.993</south>
-        <east>-94.588</east>
-        <west>-102.051</west>
-        <minAltitude>0</minAltitude>
-        <maxAltitude>0</maxAltitude>
-      </LatLonAltBox>
-      <Lod>
-        <minLodPixels>64</minLodPixels>
-        <maxLodPixels>-1</maxLodPixels>
-      </Lod>
-    </Region>
+    <!-- Optional: discoverability / provenance -->
+    <atom:author><atom:name>Kansas Frontier Matrix</atom:name></atom:author>
+    <atom:link rel="related" href="https://YOUR-PAGES-DOMAIN/"/>
 
-    <!-- Optional: default view when opening the link -->
-    <LookAt>
-      <longitude>-98.3</longitude>
-      <latitude>38.5</latitude>
-      <altitude>0</altitude>
-      <heading>0</heading>
-      <tilt>0</tilt>
-      <range>900000</range>
-      <altitudeMode>clampToGround</altitudeMode>
-    </LookAt>
+    <NetworkLink id="ks_1m_hillshade_link">
+      <name>Hillshade SuperOverlay</name>
+      <open>1</open>
+      <!-- When true, Google Earth will fly to the view defined below on load -->
+      <gx:flyToView>1</gx:flyToView>
 
-    <Link>
-      <!-- Point to your regionated KMZ of the hillshade tiles -->
-      <href>../overlays/ks_1m_hillshade.kmz</href>
-      <viewRefreshMode>onStop</viewRefreshMode>
-      <viewRefreshTime>1</viewRefreshTime>
-    </Link>
-  </NetworkLink>
+      <!-- Limit requests to the Kansas extent -->
+      <Region>
+        <LatLonAltBox>
+          <north>40.003</north>
+          <south>36.993</south>
+          <east>-94.588</east>
+          <west>-102.051</west>
+          <minAltitude>0</minAltitude>
+          <maxAltitude>0</maxAltitude>
+        </LatLonAltBox>
+        <!-- Fetch tiles when at least ~64 screen pixels cover the region; no max -->
+        <Lod>
+          <minLodPixels>64</minLodPixels>
+          <maxLodPixels>-1</maxLodPixels>
+        </Lod>
+      </Region>
+
+      <!-- Default view when opening the link -->
+      <LookAt>
+        <longitude>-98.3</longitude>
+        <latitude>38.5</latitude>
+        <altitude>0</altitude>
+        <heading>0</heading>
+        <tilt>0</tilt>
+        <range>900000</range>
+        <altitudeMode>clampToGround</altitudeMode>
+      </LookAt>
+
+      <Link>
+        <!-- If your SuperOverlay KMZ is deployed alongside this file on Pages,
+             the relative path keeps things portable. -->
+        <href>../overlays/ks_1m_hillshade.kmz</href>
+
+        <!-- Or use an absolute URL (uncomment and replace domain):
+        <href>https://YOUR-PAGES-DOMAIN/data/earth/overlays/ks_1m_hillshade.kmz</href>
+        -->
+
+        <!-- Let the SuperOverlay’s internal Regions control fetching -->
+        <viewRefreshMode>onRegion</viewRefreshMode>
+
+        <!-- Small hysteresis so slight movements don’t thrash requests -->
+        <viewRefreshTime>1</viewRefreshTime>
+
+        <!-- Expand the requested bounds a bit so edge tiles are prefetched -->
+        <viewBoundScale>1.2</viewBoundScale>
+
+        <!-- If you publish time-varying KMZ, switch to onInterval + refreshInterval -->
+        <!--<refreshMode>onInterval</refreshMode>
+        <refreshInterval>3600</refreshInterval>-->
+      </Link>
+    </NetworkLink>
+  </Document>
 </kml>
-
