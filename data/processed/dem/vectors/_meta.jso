@@ -1,101 +1,73 @@
-### Folder structure
-
-```
-data/
-└── processed/
-    └── dem/
-        └── vectors/
-            ├── .gitkeep
-            ├── README.md
-            ├── _meta.json
-            └── template_feature_collection.geojson
-```
-
-### `data/processed/dem/vectors/.gitkeep`
-
-*(empty file to keep the dir in git)*
-
-### `data/processed/dem/vectors/README.md`
-
-```md
-# DEM-Adjacent Vectors (Kansas Frontier Matrix)
-
-This folder stores *vector* layers that pair with DEM-derived products (hillshade, slope/aspect, etc.) and historical overlays.
-
-## Conventions
-- CRS: `EPSG:4326` (lat/lon) for exchange and web display.
-- Format: GeoJSON FeatureCollections (`type: "FeatureCollection"`).
-- Per-layer metadata:
-  - `properties.id` (stable id), `title|name`, `description`, `provenance`, `license`, `temporal` (optional).
-- Traceability:
-  - Record source maps/docs in `properties.provenance`.
-  - Add a short `source` string and, when applicable, a URL in the layer’s companion metadata.
-
-## Files
-- `_meta.json` — tiny catalog that indexes available vector layers in this folder.
-- `template_feature_collection.geojson` — starter schema for new layers.
-
-## Typical layers
-- `treaties.geojson` — treaty/reservation polygons
-- `railroads_1900.geojson` — rail alignments ca. 1900
-- Other: trails, survey lines (PLSS), canals, historic hydrology edits, etc.
-```
-
-### `data/processed/dem/vectors/_meta.json`
-
-```json
 {
   "id": "kfm_dem_vectors",
+  "version": "1.0.1",
   "title": "Kansas DEM-adjacent Vector Layers",
   "description": "Index of vector overlays related to DEM derivatives and historical terrain context (treaties, railroads, trails, hydrology edits).",
-  "crs": "EPSG:4326",
-  "spatial_extent": { "bbox": [-102.05, 36.99, -94.61, 40.00] },
-  "temporal_extent": { "start": "1800-01-01", "end": "2025-12-31" },
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00],
+    "crs": "EPSG:4326"
+  },
+  "temporal": {
+    "start": "1800-01-01",
+    "end": "2025-12-31"
+  },
   "items": [
     {
       "id": "treaties",
-      "path": "treaties.geojson",
       "geometry_type": "Polygon",
+      "paths": {
+        "primary": "data/processed/dem/vectors/treaties.geojson",
+        "meta": null,
+        "sha256": "data/processed/dem/vectors/treaties.sha256",
+        "preview": null
+      },
       "title": "Treaty & Reservation Boundaries",
       "status": "optional",
-      "description": "Polygons of historic treaties/reservations; dates and tribal affiliations in properties."
+      "description": "Polygons of historic treaties/reservations; dates and tribal affiliations live in feature properties.",
+      "providers": [
+        { "name": "Primary historical sources", "roles": ["producer"] },
+        { "name": "Kansas Frontier Matrix", "roles": ["editor", "distributor"] }
+      ],
+      "license": "CC-BY-4.0",
+      "provenance": "Digitized from historical cartography and documents; see feature properties for per-feature citations."
     },
     {
       "id": "railroads_1900",
-      "path": "railroads_1900.geojson",
       "geometry_type": "LineString",
+      "paths": {
+        "primary": "data/processed/dem/vectors/railroads_1900.geojson",
+        "meta": null,
+        "sha256": "data/processed/dem/vectors/railroads_1900.sha256",
+        "preview": null
+      },
       "title": "Railroads circa 1900 (Generalized)",
       "status": "optional",
-      "description": "Generalized railroad alignments around 1900 for time-slider demos; replace with precise right-of-way vectors as available."
+      "description": "Generalized alignments around 1900 for time-slider demos; replace with precise right-of-way vectors as available.",
+      "providers": [
+        { "name": "USGS / historical atlases", "roles": ["producer"] },
+        { "name": "Kansas Frontier Matrix", "roles": ["editor", "distributor"] }
+      ],
+      "license": "CC-BY-4.0",
+      "provenance": "Heads-up digitization against georeferenced historical topo sheets; generalized for small-scale display."
     }
   ],
+  "validation": {
+    "checks": [
+      "jq -e 'type==\"object\"' data/processed/dem/vectors/_meta.json",
+      "jq -e '.type==\"FeatureCollection\"' data/processed/dem/vectors/treaties.geojson",
+      "jq -e '.type==\"FeatureCollection\"' data/processed/dem/vectors/railroads_1900.geojson"
+    ]
+  },
+  "keywords": ["Kansas", "vectors", "treaties", "railroads", "DEM", "overlays"],
   "license": "CC-BY-4.0",
-  "version": "1.0.0",
-  "last_updated": "2025-09-19"
+  "links": {
+    "readme": "data/processed/dem/vectors/README.md",
+    "template": "data/processed/dem/vectors/template_feature_collection.geojson"
+  },
+  "mcp": {
+    "documentation": "mcp/collections/kfm_dem_vectors.md",
+    "sop_reference": "mcp/sops/vector_layer_curation.md",
+    "traceability": { "git_commit": "<commit-hash>" }
+  },
+  "last_updated": "2025-09-20"
 }
-```
-
-### `data/processed/dem/vectors/template_feature_collection.geojson`
-
-```json
-{
-  "type": "FeatureCollection",
-  "name": "layer_name_here",
-  "crs": { "type": "name", "properties": { "name": "EPSG:4326" } },
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "stable_id_here",
-        "title": "Human-readable title",
-        "source": "Short source label",
-        "provenance": "What, where, how digitized (map edition, sheet, OCR/NLP, georef method, RMS, tools)",
-        "license": "CC-BY-4.0",
-        "temporal": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" },
-        "notes": "Any caveats or data-quality flags"
-      },
-      "geometry": { "type": "Polygon", "coordinates": [[[ -99.0, 38.0 ], [ -98.5, 38.0 ], [ -98.5, 37.7 ], [ -99.0, 37.7 ], [ -99.0, 38.0 ]]] }
-    }
-  ]
-}
-```
