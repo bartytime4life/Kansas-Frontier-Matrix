@@ -96,10 +96,10 @@ tiles = [
 kgt = "kansas_geo_timeline.cli:main"   # tiny CLI: fetch→cog→terrain→kml→site
 
 [project.urls]
-Homepage = "https://github.com/your-org/kansas-geo-timeline"
-Repository = "https://github.com/your-org/kansas-geo-timeline"
-Issues = "https://github.com/your-org/kansas-geo-timeline/issues"
-Documentation = "https://your-org.github.io/kansas-geo-timeline/"
+Homepage = "https://github.com/bartytime4life/kansas-geo-timeline"
+Repository = "https://github.com/bartytime4life/kansas-geo-timeline"
+Issues = "https://github.com/bartytime4life/kansas-geo-timeline/issues"
+Documentation = "https://bartytime4life.github.io/kansas-geo-timeline/"
 
 # ---- setuptools layout -------------------------------------------------------
 
@@ -123,6 +123,7 @@ kansas_geo_timeline = [
 write_to = "src/kansas_geo_timeline/_version.py"
 fallback_version = "0.1.0"
 local_scheme = "node-and-date"
+# tag_regex can remain default (vX.Y.Z)
 
 # ---- linters / formatters / typing ------------------------------------------
 
