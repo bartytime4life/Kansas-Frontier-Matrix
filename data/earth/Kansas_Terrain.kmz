@@ -1,89 +1,213 @@
 #!/usr/bin/env bash
+# ==============================================================================
+# Kansas-Frontier-Matrix
 # scripts/make_kmz_kansas_terrain.sh
-# Build a reproducible KMZ containing doc.kml + networklinks (optionally overlays)
+#
+# Builds a reproducible KMZ containing:
+#   - doc.kml (top-level hub)
+#   - networklinks/*.kml (small link wrappers)
+#   - overlays/*.kmz    (optional: embed super-overlays to be 100% portable)
+#
+# Two modes:
+#   INCLUDE_OVERLAYS=1  → Self-contained KMZ (recommended for desktop sharing)
+#   INCLUDE_OVERLAYS=0  → NetworkLinks target ABSOLUTE URLs (set BASE_URL)
+#
+# Repro flags:
+#   - Strips extra zip attrs, sorted file list, fixed timestamps, fixed epoch.
+#   - Emits SHA-256 sidecar.
+#
+# Usage:
+#   chmod +x scripts/make_kmz_kansas_terrain.sh
+#   ./scripts/make_kmz_kansas_terrain.sh
+#
+#   INCLUDE_OVERLAYS=0 BASE_URL="https://raw.githubusercontent.com/<user>/<repo>/main/data/kml" \
+#     ./scripts/make_kmz_kansas_terrain.sh
+# ==============================================================================
 
 set -euo pipefail
 
+# --- Repo paths ---------------------------------------------------------------
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd -P)"
 EARTH="$ROOT/data/earth"
+KML_DIR="$ROOT/data/kml"
+
 OUT="$EARTH/Kansas_Terrain.kmz"
+SHA="$EARTH/Kansas_Terrain.kmz.sha256"
 
-DOC="$EARTH/doc.kml"
-NL_HS="$EARTH/networklinks/ks_1m_hillshade.kml"
-NL_USGS="$EARTH/networklinks/usgs_topo_1894.kml"
-OV_HS="$EARTH/overlays/ks_1m_hillshade.kmz"
-OV_USGS="$EARTH/overlays/usgs_topo_larned_1894.kmz"
+# Inputs (COGs already exported to KMZ/KML in data/kml)
+HILL_KMZ="$KML_DIR/ks_hillshade_2018_2020.kmz"
+LARNED_KMZ="$KML_DIR/usgs_topo_larned_1894.kmz"
+RAIL_KML="$KML_DIR/railroads_1900.kml"         # optional vector example
+TREAT_KML="$KML_DIR/treaties.kml"              # optional vector example
 
-# --- Required inputs ---------------------------------------------------------
-for f in "$DOC" "$NL_HS" "$NL_USGS"; do
-  [[ -f "$f" ]] || { echo "Missing: $f" >&2; exit 1; }
-done
+# Controls
+INCLUDE_OVERLAYS="${INCLUDE_OVERLAYS:-1}"      # 1=self-contained, 0=external links
+BASE_URL="${BASE_URL:-}"                       # required if INCLUDE_OVERLAYS=0
 
-# --- Optional: include regionated overlays inside the KMZ --------------------
-INCLUDE_OVERLAYS="${INCLUDE_OVERLAYS:-0}"  # set to 1 to embed overlays
-if [[ "$INCLUDE_OVERLAYS" == "1" ]]; then
-  for f in "$OV_HS" "$OV_USGS"; do
-    [[ -f "$f" ]] || { echo "Missing overlay (set INCLUDE_OVERLAYS=0 to skip): $f" >&2; exit 1; }
+# --- Sanity checks ------------------------------------------------------------
+mkdir -p "$EARTH"
+[[ -f "$ROOT/data/earth/doc.kml" ]] || { echo "Missing: data/earth/doc.kml" >&2; exit 1; }
+
+if [[ "${INCLUDE_OVERLAYS}" == "1" ]]; then
+  for f in "$HILL_KMZ" "$LARNED_KMZ"; do
+    [[ -f "$f" ]] || { echo "Missing overlay: $f" >&2; exit 1; }
   done
+else
+  [[ -n "$BASE_URL" ]] || { echo "Set BASE_URL when INCLUDE_OVERLAYS=0" >&2; exit 1; }
 fi
 
-# --- Sanity: ensure NetworkLinks use relative hrefs we expect ----------------
-# We keep links portable by ensuring they point to ../networklinks/* from doc.kml’s POV,
-# and networklinks/*.kml point to ../overlays/*.kmz (or absolute URLs only if intentional).
-fix_href_rel() {
-  local file="$1"
-  # if an absolute URL slipped in, comment it and add a relative href beneath
-  if grep -qE '<href>https?://[^<]+' "$file"; then
-    cp "$file" "${file}.bak"
-    awk '
-      /<href>https?:\/\// && !seen++ {
-        print "<!-- " $0 " (commented for portability) -->";
-        next
-      }
-      { print }
-    ' "${file}.bak" > "$file"
-  fi
-}
-fix_href_rel "$NL_HS"
-fix_href_rel "$NL_USGS"
-
-# --- Validate XML (best-effort) ---------------------------------------------
+# --- Validate KML if available -----------------------------------------------
 if command -v xmllint >/dev/null 2>&1; then
-  xmllint --noout "$DOC"
-  xmllint --noout "$NL_HS"
-  xmllint --noout "$NL_USGS"
+  xmllint --noout "$ROOT/data/earth/doc.kml" || true
 fi
 
-# --- Stage minimal KMZ payload ----------------------------------------------
+# --- Stage build tree (KMZ is a ZIP with doc.kml at root) --------------------
 STAGE="$(mktemp -d -t kansas_kmz_XXXXXX)"
 trap 'rm -rf "$STAGE"' EXIT
 
-mkdir -p "$STAGE/networklinks"
-install -m 0644 "$DOC"     "$STAGE/doc.kml"
-install -m 0644 "$NL_HS"   "$STAGE/networklinks/ks_1m_hillshade.kml"
-install -m 0644 "$NL_USGS" "$STAGE/networklinks/usgs_topo_1894.kml"
+# 1) doc.kml (we'll rewrite hrefs inside to be internal or external)
+cp "$ROOT/data/earth/doc.kml" "$STAGE/doc.kml"
 
-if [[ "$INCLUDE_OVERLAYS" == "1" ]]; then
+# 2) networklinks (small .kml files we generate here)
+mkdir -p "$STAGE/networklinks"
+
+# Helper: write a small NetworkLink KML that points to an internal overlay or to BASE_URL
+write_nl() {
+  local outfile="$1"
+  local name="$2"
+  local href="$3"     # may be relative (internal) or absolute (external)
+  local north="$4" south="$5" east="$6" west="$7"
+  cat > "$outfile" <<KML
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <name>${name}</name>
+    <NetworkLink>
+      <name>${name}</name>
+      <Region>
+        <LatLonAltBox>
+          <north>${north}</north><south>${south}</south><east>${east}</east><west>${west}</west>
+          <minAltitude>0</minAltitude><maxAltitude>0</maxAltitude>
+        </LatLonAltBox>
+        <Lod><minLodPixels>64</minLodPixels><maxLodPixels>-1</maxLodPixels></Lod>
+      </Region>
+      <Link>
+        <href>${href}</href>
+        <viewRefreshMode>onRegion</viewRefreshMode>
+        <viewBoundScale>1.2</viewBoundScale>
+      </Link>
+    </NetworkLink>
+  </Document>
+</kml>
+KML
+}
+
+# Bounding boxes (conservative)
+KS_N=40.003; KS_S=36.993; KS_E=-94.588; KS_W=-102.051
+LARNED_N=38.3000; LARNED_S=37.8000; LARNED_E=-98.8000; LARNED_W=-99.5000
+
+if [[ "${INCLUDE_OVERLAYS}" == "1" ]]; then
+  # Embed overlays into KMZ under overlays/
   mkdir -p "$STAGE/overlays"
-  install -m 0644 "$OV_HS"  "$STAGE/overlays/ks_1m_hillshade.kmz"
-  install -m 0644 "$OV_USGS" "$STAGE/overlays/usgs_topo_larned_1894.kmz"
+  install -m 0644 "$HILL_KMZ"   "$STAGE/overlays/ks_hillshade_2018_2020.kmz"
+  install -m 0644 "$LARNED_KMZ" "$STAGE/overlays/usgs_topo_larned_1894.kmz"
+
+  # NetworkLinks point to internal overlays/* (portable)
+  write_nl "$STAGE/networklinks/ks_1m_hillshade.kml" \
+           "Kansas 1 m Hillshade (2018–2020)" \
+           "overlays/ks_hillshade_2018_2020.kmz" \
+           "$KS_N" "$KS_S" "$KS_E" "$KS_W"
+
+  write_nl "$STAGE/networklinks/usgs_topo_1894.kml" \
+           "USGS Topographic Map — Larned (1894)" \
+           "overlays/usgs_topo_larned_1894.kmz" \
+           "$LARNED_N" "$LARNED_S" "$LARNED_E" "$LARNED_W"
+
+  # Rewrite doc.kml hrefs → internal networklinks/*
+  # Expect patterns like ../kml/<file>.kmz from the standalone doc.kml
+  sed -i.bak \
+    -e 's|\.\./kml/ks_hillshade_2018_2020\.kmz|networklinks/ks_1m_hillshade.kml|g' \
+    -e 's|\.\./kml/usgs_topo_larned_1894\.kmz|networklinks/usgs_topo_1894.kml|g' \
+    "$STAGE/doc.kml" || true
+  rm -f "$STAGE/doc.kml.bak"
+
+else
+  # Links-only: NetworkLinks point to externally hosted KMZs/KMLs
+  write_nl "$STAGE/networklinks/ks_1m_hillshade.kml" \
+           "Kansas 1 m Hillshade (2018–2020)" \
+           "${BASE_URL%/}/ks_hillshade_2018_2020.kmz" \
+           "$KS_N" "$KS_S" "$KS_E" "$KS_W"
+
+  write_nl "$STAGE/networklinks/usgs_topo_1894.kml" \
+           "USGS Topographic Map — Larned (1894)" \
+           "${BASE_URL%/}/usgs_topo_larned_1894.kmz" \
+           "$LARNED_N" "$LARNED_S" "$LARNED_E" "$LARNED_W"
+
+  # Rewrite doc.kml hrefs → internal networklinks/* (doc.kml loads NL, NL loads external)
+  sed -i.bak \
+    -e 's|\.\./kml/ks_hillshade_2018_2020\.kmz|networklinks/ks_1m_hillshade.kml|g' \
+    -e 's|\.\./kml/usgs_topo_larned_1894\.kmz|networklinks/usgs_topo_1894.kml|g' \
+    "$STAGE/doc.kml" || true
+  rm -f "$STAGE/doc.kml.bak"
 fi
 
-# --- Reproducible timestamps (optional) -------------------------------------
-EPOCH="${SOURCE_DATE_EPOCH:-1731456000}" # 2024-11-13 00:00:00 UTC (arbitrary fixed)
-find "$STAGE" -exec touch -h -t 202411130000 {} + || true
+# Optional: include sample vectors if present (kept as external NetworkLinks by default)
+if [[ -f "$RAIL_KML" ]]; then
+  ln -sf "../kml/railroads_1900.kml" "$STAGE/networklinks/railroads_1900.kml" || true
+fi
+if [[ -f "$TREAT_KML" ]]; then
+  ln -sf "../kml/treaties.kml" "$STAGE/networklinks/treaties.kml" || true
+fi
 
-# --- Create deterministic KMZ (ZIP) -----------------------------------------
-cd "$STAGE"
-# -X strip extra file attrs; -9 max compression; sort ensures stable order
-{ find . -type f | LC_ALL=C sort; } | sed 's|^\./||' \
-  | zip -X -9 -@ Kansas_Terrain.kmz > /dev/null
+# --- Reproducible timestamps --------------------------------------------------
+# Fixed epoch (UTC): 2024-11-13 00:00:00
+EPOCH="${SOURCE_DATE_EPOCH:-1731456000}"
+# POSIX touch on files inside STAGE
+find "$STAGE" -type f -print0 | xargs -0r -I{} sh -c "TZ=UTC touch -t 202411130000 '{}'" || true
 
-# --- Move artifact + checksum ------------------------------------------------
-mkdir -p "$EARTH"
+# --- Create deterministic KMZ -------------------------------------------------
+(
+  cd "$STAGE"
+  # zip fallback if macOS: prefer /usr/bin/zip, still supports -X -9
+  FILES=$(find . -type f | LC_ALL=C sort | sed 's|^\./||')
+  if command -v zip >/dev/null 2>&1; then
+    printf "%s\n" $FILES | zip -X -9 -@ Kansas_Terrain.kmz > /dev/null
+  else
+    # Portable Python fallback
+    python3 - "$STAGE/Kansas_Terrain.kmz" $FILES <<'PY'
+import sys, zipfile, os, time
+out = sys.argv[1]
+files = sys.argv[2:]
+with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+    for f in files:
+        zi = zipfile.ZipInfo(f)
+        # fixed timestamp 2024-11-13 00:00:00
+        zi.date_time = (2024, 11, 13, 0, 0, 0)
+        perms = 0o100644
+        zi.external_attr = (perms & 0xFFFF) << 16
+        with open(f, "rb") as r:
+            z.writestr(zi, r.read())
+PY
+  fi
+)
+
+# --- Move artifact + checksum -------------------------------------------------
 mv -f "$STAGE/Kansas_Terrain.kmz" "$OUT"
-( cd "$EARTH" && sha256sum Kansas_Terrain.kmz > Kansas_Terrain.kmz.sha256 )
+
+# sha256 on Linux/macOS
+if command -v sha256sum >/dev/null 2>&1; then
+  ( cd "$EARTH" && sha256sum Kansas_Terrain.kmz > "$SHA" )
+elif command -v shasum >/dev/null 2>&1; then
+  ( cd "$EARTH" && shasum -a 256 Kansas_Terrain.kmz > "$SHA" )
+else
+  python3 - "$OUT" "$SHA" <<'PY'
+import sys, hashlib, pathlib
+p, out = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+h=hashlib.sha256(p.read_bytes()).hexdigest()
+out.write_text(f"{h}  {p.name}\n")
+PY
+fi
 
 echo "✅ Created $OUT"
 echo "🔐 Checksum:"
-cat "$EARTH/Kansas_Terrain.kmz.sha256"
+cat "$SHA"
