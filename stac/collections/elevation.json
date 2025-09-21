@@ -1,11 +1,45 @@
 {
+  "stac_version": "1.0.0",
   "type": "Collection",
   "id": "elevation",
-  "stac_version": "1.0.0",
-  "description": "DEM & terrain derivatives for Kansas",
+  "title": "Kansas Elevation — DEM & Terrain Derivatives",
+  "description": "Digital Elevation Models (DEM) and derived terrain layers (e.g., hillshade, slope, aspect) for Kansas, suitable for time-aware visualization in the Kansas-Frontier-Matrix.",
   "license": "various",
+  "keywords": ["DEM", "elevation", "terrain", "hillshade", "slope", "aspect", "COG", "Kansas"],
+  "providers": [
+    {
+      "name": "Kansas Frontier Matrix Project",
+      "roles": ["producer", "processor", "host"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    }
+  ],
   "extent": {
-    "spatial": { "bbox": [[-102.1,36.99,-94.6,40.0]] },
-    "temporal": { "interval": [["2018-01-01T00:00:00Z","2020-12-31T23:59:59Z"]] }
-  }
+    "spatial": { "bbox": [[-102.10, 36.99, -94.60, 40.00]] },
+    "temporal": { "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]] }
+  },
+  "item_assets": {
+    "dem": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "elevation"],
+      "title": "DEM (COG)",
+      "description": "Cloud-Optimized GeoTIFF of the digital elevation model (meters)."
+    },
+    "hillshade": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["visual"],
+      "title": "Hillshade (COG)",
+      "description": "Hillshade rendered from the DEM."
+    },
+    "thumbnail": {
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail",
+      "description": "Quicklook image for previews."
+    }
+  },
+  "links": [
+    { "rel": "self",  "href": "./elevation.json",      "type": "application/json" },
+    { "rel": "root",  "href": "../catalog.json",       "type": "application/json" },
+    { "rel": "parent","href": "../catalog.json",       "type": "application/json" }
+  ]
 }
