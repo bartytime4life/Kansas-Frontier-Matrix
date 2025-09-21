@@ -1,5 +1,3 @@
-sheet,quad,state,year,scale,product,url,out_name
-"Larned","Larned","KS",1894,"1:125000","GeoTIFF","https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS_15x15_1894_Larned_Geo.tif","usgs_topo_larned_1894.tif"
-"Larned","Larned","KS",1894,"1:125000","KMZ","https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/KMZ/KS/USGS_15x15_1894_Larned.kmz","usgs_topo_larned_1894.kmz"
-# TEMPLATE — duplicate and fill for more sheets (no leading # in real rows)
-# "SheetName","QuadName","KS",YYYY,"1:xxxxx","GeoTIFF","https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS_XXxXX_YYYY_<Quad>_Geo.tif","usgs_topo_<quad>_<year>.tif"
+sheet,quad,state,year,scale,product,url,out\_name
+Larned,Larned,KS,1894,1:125000,GeoTIFF,[https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS\_15x15\_1894\_Larned\_Geo.tif,usgs\_topo\_larned\_1894.tif](https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS_15x15_1894_Larned_Geo.tif,usgs_topo_larned_1894.tif)
+Larned,Larned,KS,1894,1:125000,KMZ,[https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/KMZ/KS/USGS\_15x15\_1894\_Larned.kmz,usgs\_topo\_larned\_1894.kmz](https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/KMZ/KS/USGS_15x15_1894_Larned.kmz,usgs_topo_larned_1894.kmz)
