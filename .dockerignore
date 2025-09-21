@@ -1,4 +1,6 @@
+# ---------------------------------------
 # Python
+# ---------------------------------------
 __pycache__/
 *.py[cod]
 *.pyo
@@ -6,42 +8,116 @@ __pycache__/
 *.so
 *.egg-info/
 .buildozer/
+__pypackages__/
 
-# Git / VCS
+# Tooling caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---------------------------------------
+# Git / CI / Editors
+# ---------------------------------------
 .git
 .gitignore
 .gitattributes
-
-# Editors
+.github/
+.devcontainer/
 .vscode/
 .idea/
+.editorconfig
+.pre-commit-config.yaml
 
-# Envs / caches
+# ---------------------------------------
+# Envs / logs
+# ---------------------------------------
 .venv/
 .env
+.env.*
 *.log
 
+# ---------------------------------------
 # Build outputs
+# ---------------------------------------
 build/
 dist/
 *.whl
+*.egg
+*.tar.gz
 
+# ---------------------------------------
 # Node / web
+# (container should not bundle dev deps or local builds)
+# ---------------------------------------
 node_modules/
+web/node_modules/
 web/.cache/
 web/dist/
 web/build/
+web/.DS_Store
 
-# Data (mount instead at runtime)
+# ---------------------------------------
+# Data (mount at runtime)
+# Keep catalogs if you validate them in-container
+# ---------------------------------------
+data/**
+
+# allow small JSON catalogs (unignore)
+!data/stac/**
+!data/sources/**
+# but still exclude any large rasters under those trees if present
+data/stac/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
+data/sources/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
+
+# legacy/derived outputs (always ignore)
 data/cogs/
 data/processed/
 data/outputs/
 data/raw/
 assets/tiles/
 
-# Notebooks checkpoints
+# ---------------------------------------
+# Rasters and big geodata anywhere
+# ---------------------------------------
+*.tif
+*.tiff
+*.vrt
+*.ovr
+*.aux.xml
+*.tfw
+*.idx
+*.lock
+
+# ---------------------------------------
+# Archives
+# ---------------------------------------
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tar.xz
+*.gz
+
+# ---------------------------------------
+# Earth / KML big artifacts
+# (generated; mount or publish separately)
+# ---------------------------------------
+earth/**/*.kmz
+earth/**/*.kml
+earth/networklinks/
+earth/*.kmz
+earth/*.kml
+
+# ---------------------------------------
+# Notebooks + checkpoints
+# ---------------------------------------
+*.ipynb
 .ipynb_checkpoints/
 
+# ---------------------------------------
 # OS cruft
+# ---------------------------------------
 .DS_Store
 Thumbs.db
