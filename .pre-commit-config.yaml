@@ -3,6 +3,8 @@
 # .pre-commit-config.yaml
 # ================================
 
+minimum_pre_commit_version: "3.6.0"
+
 ci:
   autofix_prs: true
   autoupdate_schedule: monthly
@@ -13,18 +15,12 @@ default_language_version:
 # Skip heavy/binary trees when hooks support "exclude"
 exclude: |
   (?x)^(
-    data/processed/|
-    data/cogs/|
-    data/outputs/|
-    data/raw/|
+    data/(processed|cogs|outputs|raw)/|
     assets/tiles/|
-    web/dist/|
-    web/build/|
-    node_modules/|
-    .*/node_modules/|
-    .*/dist/|
+    web/(dist|build)/|
+    (?:^|.*/)?node_modules/|
+    (?:^|.*/)?dist/|
     build/|
-    dist/|
     _site/|
     earth/|
     docs/_build/
@@ -38,10 +34,11 @@ repos:
       - id: check-added-large-files
         args: ["--maxkb=5000"]   # prevent >5MB accidental commits (use DVC/LFS instead)
       - id: check-merge-conflict
+      - id: check-case-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: mixed-line-ending
-        args: [--fix=lf]
+        args: ["--fix=lf"]
       - id: check-yaml
       - id: check-json
       - id: check-toml
@@ -64,12 +61,12 @@ repos:
         types_or: [python]
         exclude: ^(notebooks/|docs/)
 
-  # --- Black (optional: keep if you prefer Black over ruff-format) ----------
+  # --- Black (optional alongside ruff-format) -------------------------------
   - repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:
       - id: black
-        language_version: python3.10   # keep consistent with project floor
+        language_version: python3.10
         exclude: ^(notebooks/|docs/)
 
   # --- YAML / JSON / Markdown / Web assets ----------------------------------
@@ -127,7 +124,6 @@ repos:
     hooks:
       - id: pip-audit
         args: ["-r", "requirements.txt"]  # scan direct runtime deps (fast & stable)
-        additional_dependencies: []
 
   # --- GitHub Actions workflow linter ---------------------------------------
   - repo: https://github.com/rhysd/actionlint
@@ -153,7 +149,7 @@ repos:
         language: system
         files: "^stac/items/.*\\.json$"
         pass_filenames: false
-        entry: bash -c 'command -v kgt >/dev/null 2>&1 && kgt validate-stac stac/items --no-strict || echo "[skip] kgt not installed"'
+        entry: bash -c 'if command -v kgt >/dev/null 2>&1; then kgt validate-stac stac/items --no-strict; else echo "[skip] kgt not installed"; fi'
 
       # Quick JSON sanity for data/sources using jq if available.
       - id: sources-sanity
@@ -161,4 +157,13 @@ repos:
         language: system
         files: "^data/sources/.*\\.json$"
         pass_filenames: true
-        entry: bash -c 'command -v jq >/dev/null 2>&1 || { echo "[skip] jq not installed"; exit 0; }; for f in "$@"; do jq -e "type==\"object\"" "$f" >/dev/null || { echo "::error::$f is not valid JSON object"; exit 1; }; done'
+        entry: >
+          bash -c '
+            if ! command -v jq >/dev/null 2>&1; then
+              echo "[skip] jq not installed"; exit 0; fi;
+            ec=0;
+            for f in "$@"; do
+              jq -e "type==\"object\"" "$f" >/dev/null || { echo "::error::$f is not a valid top-level JSON object"; ec=1; };
+            done;
+            exit $ec
+          '
