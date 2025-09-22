@@ -36,7 +36,7 @@ classifiers = [
 # NOTE: rasterio 1.3.x is not NumPy 2-ready; cap NumPy <2 to avoid ABI breakage.
 dependencies = [
   "numpy>=1.26.4,<2.0",
-  "rasterio>=1.3.9",
+  "rasterio>=1.3.10",
   "rio-cogeo>=5.1.0",
   "pyproj>=3.6.1",
   "shapely>=2.0.4",
@@ -45,7 +45,8 @@ dependencies = [
   "jsonschema>=4.23.0",
   "Pillow>=10.4.0",
   "click>=8.1.7",
-  "rich>=13.7.1"
+  "rich>=13.8.1",
+  "typing-extensions>=4.12.2",  # for typing across 3.10/3.11
 ]
 
 [project.optional-dependencies]
@@ -94,7 +95,7 @@ tiles = [
 ]
 
 [project.scripts]
-kgt = "kansas_geo_timeline.cli:main"   # tiny CLI
+kgt = "kansas_geo_timeline.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
@@ -111,6 +112,7 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["kansas_geo_timeline*"]
+exclude = ["tests*","docs*"]
 
 [tool.setuptools.package-data]
 # ship small schemas/templates/configs with the package (not big rasters)
@@ -123,6 +125,8 @@ kansas_geo_timeline = [
 # automatic version from git tags; write version into the package at build time
 write_to = "src/kansas_geo_timeline/_version.py"
 fallback_version = "0.1.0"
+# coherent dev versions from tags (e.g., v0.2.0 → 0.2.1.devN)
+version_scheme = "guess-next-dev"
 local_scheme = "node-and-date"
 # tag_regex can remain default (vX.Y.Z)
 
@@ -185,7 +189,7 @@ source = [
 [tool.kansas_geo_timeline]
 data_dir = "data"
 processed_dir = "data/processed"
-stac_dir = "stac"          # <-- fixed path
+stac_dir = "stac"
 web_dir = "web"
 earth_dir = "earth"
 default_crs = "EPSG:4326"
