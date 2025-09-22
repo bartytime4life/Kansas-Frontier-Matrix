@@ -5,10 +5,10 @@ A minimal **Google Earth + Web (GitHub Pages)** mapping system for Kansas elevat
 - **Earth deliverables**: regionated **KML/KMZ** (progressive loading via NetworkLinks)
 - **Web app**: lightweight **MapLibre** viewer with a **time slider**
 - **Catalog**: **STAC 1.0.0** (Catalog → Collections → Items) for clean provenance
-- **Pipelines**: `Makefile` targets to **fetch → COG → derivatives (slope/aspect/hillshade) → KML → site**
-- **CLI**: `kgt` (Kansas Geo Timeline) for STAC validation, listing, and web-config rendering
+- **Pipelines**: `Makefile` targets to **fetch → COG → derivatives (slope/aspect/hillshade) → site**
+- **CLI**: `kgt` for STAC validation/listing and web-config rendering
 
-> Created 2025-09-18. Keep sources/STAC small at first (one county), then scale out.
+> Start small (one county), then scale out. Keep STAC tight and versioned.
 
 ---
 
@@ -41,23 +41,23 @@ make fetch
 make cogs
 make terrain
 make stac
-make kml
-make site
 
-# 3) Serve the viewer locally
-python -m http.server -d web 8080
-
-# 4) Validate STAC + render viewer config
-kgt validate-stac stac/items/*.json
+# 3) Validate STAC + render viewer config
+kgt validate-stac stac/items --no-strict
 kgt render-config --stac stac/items --output web/app.config.json --pretty
+
+# 4) Serve the viewer locally
+python -m http.server -d web 8080
 ````
+
+> Prefer `make stac-validate` if you’re using the repo’s validator scripts.
 
 ---
 
 ## Repository layout
 
 ```
-data/                        # inputs/outputs (COGs, KMZ, JSON metadata)
+data/                        # inputs/outputs (COGs, JSON metadata)
   sources/                   # source descriptors (endpoints, CRS, bounds, license)
   processed/                 # generated COGs/tiles and artifacts
 stac/                        # STAC 1.0.0: catalog + collections + items
@@ -68,8 +68,8 @@ stac/                        # STAC 1.0.0: catalog + collections + items
     ks_1m_dem_2018_2020.json
 scripts/                     # small, dependency-light tools (Python/bash)
 web/                         # static site (MapLibre) for GitHub Pages
-docker/                      # optional container environment (reproducible build)
-mcp/                         # optional SOPs/experiments/model cards (reproducibility)
+docker/                      # container env (reproducible build)
+mcp/                         # SOPs/experiments/model cards (reproducibility)
 ```
 
 ---
@@ -82,7 +82,7 @@ pip install -r requirements.txt
 pip install "jsonschema>=4.0" "jinja2>=3.1"
 ```
 
-Expose the CLI (already wired in `pyproject.toml` if present):
+Expose the CLI (already wired via `pyproject.toml`):
 
 ```toml
 [project.scripts]
@@ -98,21 +98,20 @@ make help               # show all tasks
 make fetch              # download/input prep via data/sources/*.json
 make cogs               # convert rasters to Cloud Optimized GeoTIFFs (COGs)
 make terrain            # derive hillshade/slope/aspect from DEMs
-make stac               # (re)generate/refresh stac/*.json (items/links/checks)
-make kml                # regionate overlays; emit KML/KMZ with NetworkLinks
-make site               # build static web viewer (web/) + manifest
-make check              # jsonlint + STAC validate + CRS/bbox/time sanity
-make reproducibility    # smoke-test a tiny pipeline slice end-to-end
-make clean              # remove intermediates
+make stac               # (re)generate stac/{items,collections}
+make stac-validate      # validate sources + STAC (uses scripts/ or kgt fallback)
+make site               # write a simple web/layers.json (always available)
+make site-config        # render web/app.config.json via kgt + Jinja2 (if template present)
+make clean              # remove intermediates (keeps ./stac)
 ```
 
-> Tip: run `make check` before committing. It catches most wiring mistakes.
+> Tip: run `make stac-validate` before committing. It catches most wiring mistakes.
 
 ---
 
 ## Data sources (examples)
 
-Create a source descriptor in `data/sources/ks_dem.json`:
+Create `data/sources/ks_dem.json`:
 
 ```json
 {
@@ -137,7 +136,7 @@ Create a source descriptor in `data/sources/ks_dem.json`:
 }
 ```
 
-Historic topo (USGS) in `data/sources/usgs_historic_topo.json`:
+Historic topo in `data/sources/usgs_historic_topo.json`:
 
 ```json
 {
@@ -161,20 +160,20 @@ Historic topo (USGS) in `data/sources/usgs_historic_topo.json`:
 
 ## STAC structure
 
-**Root catalog:** `stac/catalog.json` (links to collections)
+**Root catalog:** `stac/catalog.json`
+**Elevation collection:** `stac/collections/elevation.json`
+**DEM item:** `stac/items/ks_1m_dem_2018_2020.json`
 
-**Elevation collection:** `stac/collections/elevation.json` (DEM derivatives; includes `item_assets` and `links`)
+* Uses extensions: `projection`, `checksum` (optionally `raster`, `version`)
+* Item links:
 
-**DEM item:** `stac/items/ks_1m_dem_2018_2020.json` (time range, geometry, assets, checksums)
-
-* Uses STAC extensions: `projection`, `checksum`, (optionally) `raster`, `version`
-* `links.rel=collection` → `../collections/elevation.json`
-* `links.rel=parent`/`root` set accordingly
+  * `collection` → `../collections/elevation.json`
+  * `parent`/`root` set accordingly
 
 Validate:
 
 ```bash
-kgt validate-stac stac/items/*.json
+kgt validate-stac stac/items --no-strict
 ```
 
 List:
@@ -191,7 +190,7 @@ kgt list-stac stac/items --format table
 # STAC validation (strict if jsonschema installed)
 kgt validate-stac stac/items --report-json build/stac_report.json
 
-# Render the viewer manifest (web/app.config.json) from Items (+optional context JSON)
+# Render viewer manifest (web/app.config.json) from Items (+ optional context JSON)
 kgt render-config \
   --stac stac/items \
   --context configs/render_context.json \
@@ -213,9 +212,7 @@ export KGT_TEMPLATES_DIR=src/kansas_geo_timeline/templates
 
 ## Web viewer (MapLibre + time)
 
-Static `web/` serves tiles/overlays and filters by year range.
-
-`web/app.config.json` (generated via `kgt render-config`):
+`web/app.config.json` (generated via `kgt render-config`) looks like:
 
 ```json
 {
@@ -224,11 +221,6 @@ Static `web/` serves tiles/overlays and filters by year range.
   "stac_items": [ /* auto-populated */ ]
 }
 ```
-
-The template (`templates/app.config.json.j2`) receives:
-
-* `stac_items` with `properties._year` injected for convenience
-* any extra context merged from `--context` / `--ctx`
 
 Serve locally:
 
@@ -240,7 +232,7 @@ python -m http.server -d web 8080
 
 ## Google Earth (KML/KMZ)
 
-`make kml` emits:
+If you maintain regionation scripts, `make kml` can export:
 
 ```
 earth/
@@ -251,20 +243,17 @@ earth/
   doc.kml
 ```
 
-Tips:
-
-* Use **Region**/**Lod** for large rasters (progressive loading).
-* Group decades into folders for quick toggling.
+Tips: **Region/Lod** for large rasters; group decades for quick toggling.
 
 ---
 
 ## Checks & reproducibility
 
-* **Validation**: `make check` runs JSON lint, STAC checks, CRS/bbox/time sanity.
-* **Provenance**: each artifact gets `_meta.json` (origin, command, timestamp, hash).
-* **Hashes**: fill `checksum:sha256` for assets (COGs) via a small script or Make rule.
+* **Validation**: `make stac-validate` (sources + STAC)
+* **Provenance**: pipelines stamp `_meta.json` (origin, command, timestamp, hash)
+* **Hashes**: fill `checksum:sha256` on assets (e.g., COGs)
 
-Example checksum filler (concept):
+Checksum filler (concept):
 
 ```bash
 python - <<'PY'
@@ -303,7 +292,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
       - run: pip install -r requirements.txt "jsonschema>=4.0" "jinja2>=3.1"
-      - run: make check site
+      - run: make stac-validate site
       - uses: actions/upload-pages-artifact@v3
         with: { path: web }
       - uses: actions/deploy-pages@v4
@@ -315,8 +304,8 @@ jobs:
 
 * **`kgt render-config` says Jinja2 missing** → `pip install jinja2`.
 * **Validation warns `jsonschema` missing** → `pip install jsonschema` or run with `--no-strict`.
-* **Blank map** → check `web/app.config.json` exists and layers’ URLs are reachable (HTTP Range for COGs).
-* **ArcGIS source reprojects oddly** → ensure `spatial.crs` and COG target CRS (`EPSG:4326`) match your pipeline.
+* **Blank map** → ensure `web/app.config.json` exists and layer URLs are reachable (HTTP Range for COGs).
+* **ArcGIS source reprojection oddities** → confirm `spatial.crs` and COG target CRS (`EPSG:4326`) match pipeline.
 
 ---
 
@@ -341,8 +330,9 @@ Pillow
 2. **Time slider v1**: year filter; opacity & blend controls.
 3. **Earth polish**: per-decade folders; per-county regionation.
 4. **Provenance**: auto `_meta.json` + STAC refresh in `make stac`.
-5. **CI**: publish `web/` on `main` and run `make check` in PRs.
+5. **CI**: publish `web/` on `main`; run validation on PRs.
 6. **Story stub**: “Santa Fe Trail” page toggling prewired layers.
 7. **Stretch**: optional **CesiumJS** 3D if terrain tiles available.
 
----
+```
+```
