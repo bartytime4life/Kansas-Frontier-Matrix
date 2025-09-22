@@ -1,19 +1,17 @@
 # --------------------------------------------------------------------
 # Kansas Frontier Matrix / Kansas Geo Timeline — Makefile (connected+safe)
 # --------------------------------------------------------------------
-# - Same interface: fetch, cogs, terrain, kml, site, clean (+ stac, stac-validate)
-# - Wires to scripts: fetch.py, make_cog.py, make_hillshade.py,
-#   write_meta.py, make_stac.py, validate_sources.py, validate_stac.py
-# - GDAL fallbacks for hillshade/slope/aspect
-# - Optional vectorization + meta checksum updates
-# - Hardened shell, overridable DEM, parallel-safe mkdir
-# - Repo-aware STAC path: stac/ (not data/stac/)
+# - Targets: fetch, cogs, terrain, slope_classes, aspect_sectors, meta,
+#            stac, stac-validate, site, site-config, kml, clean, prebuild
+# - Repo-aware STAC path: ./stac
+# - Script fallbacks + GDAL tools when available
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
 .SHELLFLAGS := -euo pipefail -c
 .ONESHELL:
 .DEFAULT_GOAL := help
+.DELETE_ON_ERROR:
 
 # -------- Paths --------
 PY      := python
@@ -28,9 +26,9 @@ TERRAIN := $(COGS)/terrain
 DERIV   := $(DATA)/derivatives
 VEC     := $(DATA)/processed/vectors
 WEB     := web
-STAC    := stac                   # <-- fixed from data/stac
+STAC    := stac
 
-# Core DEM (can be overridden: `make terrain DEM=.../dem.tif`)
+# Core DEM (override via: make terrain DEM=/path/to/dem.tif)
 DEM ?= $(DEMS)/ks_1m_dem_2018_2020.tif
 
 # Outputs (COGs)
@@ -48,15 +46,23 @@ META_ASPECT := $(SRC)/ks_aspect.meta.json
 
 # -------- Tools & flags --------
 COG_OPTS := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
-SHA256   := $(shell (command -v sha256sum || command -v shasum) 2>/dev/null)
-SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
-HAVE_GDALDEM    := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDAL_POLY  := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDAL_CALC  := $(shell command -v gdal_calc.py >/dev/null 2>&1 && echo yes || echo no)
-HAVE_RSYNC      := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
-HAVE_KGT        := $(shell command -v kgt >/dev/null 2>&1 && echo yes || echo no)
 
-# Detect helper scripts that exist in this repo
+# sha utility (sha256sum on Linux, shasum -a 256 on macOS)
+SHA256      := $(shell (command -v sha256sum || command -v shasum) 2>/dev/null)
+SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
+
+# GDAL tools (support both "xxx.py" and "xxx" entry points)
+HAVE_GDALDEM      := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDAL_TRANSL  := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDAL_ADDO    := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
+
+GDAL_POLY_BIN     := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
+GDAL_CALC_BIN     := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
+
+HAVE_RSYNC        := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
+HAVE_KGT          := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
+
+# Detect helper scripts present in this repo
 HAVE_FETCH            := $(wildcard $(S)/fetch.py)
 HAVE_MAKECOG          := $(wildcard $(S)/make_cog.py)
 HAVE_MAKEHILLSHADE    := $(wildcard $(S)/make_hillshade.py)
@@ -85,12 +91,12 @@ define mirror_derivatives
 	    rsync -a --checksum "$(1)" "$(2)"; \
 	  else \
 	    cp -f "$(1)" "$(2)"; \
-	  fi \
+	  fi; \
 	fi
 endef
 
 # -------- Help --------
-.PHONY: help env prebuild
+.PHONY: help env prebuild print-%
 help:
 	@echo ""
 	@echo "Targets:"
@@ -98,18 +104,18 @@ help:
 	@echo "  fetch            Download rasters/vectors per data/sources/*.json"
 	@echo "  cogs             Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
 	@echo "  terrain          Derive hillshade/slope/aspect (COGs); mirror into data/derivatives"
-	@echo "  slope_classes    Optional: vectorize slope classes (0–2,2–5,5–10,10–20,20–30,30–45,45+)"
-	@echo "  aspect_sectors   Optional: vectorize 8-way aspect sectors (N,NE,E,SE,S,SW,W,NW)"
+	@echo "  slope_classes    Optional: vectorize slope classes"
+	@echo "  aspect_sectors   Optional: vectorize 8-way aspect sectors"
 	@echo "  meta             Optional: update terrain meta JSON checksums (slope/aspect)"
 	@echo "  stac             Build STAC items/collections into ./stac/"
-	@echo "  stac-validate    Validate STAC + source schemas (uses scripts/ or kgt)"
+	@echo "  stac-validate    Validate STAC + source schemas (scripts/ or kgt)"
 	@echo "  site             Write web/layers.json (simple preview)"
 	@echo "  site-config      Render web/app.config.json from STAC via kgt (if available)"
 	@echo "  kml              Build KMZ overlays (placeholder)"
 	@echo "  clean            Remove generated raster outputs (keeps stac/)"
+	@echo "  prebuild         stac-validate + site (used by CI)"
 	@echo ""
-	@echo "Overrides:"
-	@echo "  make terrain DEM=/path/to/dem.tif"
+	@echo "Overrides:  make terrain DEM=/path/to/dem.tif"
 	@echo ""
 
 env:
@@ -117,9 +123,14 @@ env:
 	@echo "DEM=$(DEM)"
 	@echo "STAC_DIR=$(STAC)"
 	@echo "HAVE_KGT=$(HAVE_KGT)"
-	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_CALC=$(HAVE_GDAL_CALC) HAVE_GDAL_POLY=$(HAVE_GDAL_POLY)"
+	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_TRANSL=$(HAVE_GDAL_TRANSL) HAVE_GDAL_ADDO=$(HAVE_GDAL_ADDO)"
+	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
+
+# Print a variable: make print-% VAR=NAME  or: make print-DEM
+print-%:
+	@echo '$*=$($*)'
 
 # CI convenience: validate + build minimal site
 prebuild: stac-validate site
@@ -159,15 +170,15 @@ $(HILLSHADE): $(DEM)
 	$(call ensure_dir,$(HILLS))
 	@if [ -f "$(S)/make_hillshade.py" ]; then \
 	  echo "[hillshade] $(S)/make_hillshade.py"; \
-	  $(PY) $(S)/make_hillshade.py --dem $(DEM) --out $(HILLSHADE) --cog; \
+	  $(PY) $(S)/make_hillshade.py --dem "$(DEM)" --out "$(HILLSHADE)" --cog; \
 	else \
-	  if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
+	  if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	    echo "[hillshade] gdaldem hillshade"; \
 	    gdaldem hillshade "$(DEM)" "$(HILLSHADE)" -compute_edges -z 1.0 -az 315 -alt 45; \
 	    gdaladdo -r average "$(HILLSHADE)" 2 4 8 16; \
 	    gdal_translate "$(HILLSHADE)" "$(HILLSHADE)" $(COG_OPTS); \
 	  else \
-	    echo "ERROR: neither $(S)/make_hillshade.py nor gdaldem available."; exit 1; \
+	    echo "ERROR: neither $(S)/make_hillshade.py nor sufficient GDAL tools available."; exit 1; \
 	  fi; \
 	fi
 
@@ -175,38 +186,38 @@ $(HILLSHADE): $(DEM)
 $(SLOPE): $(DEM)
 	$(check_dem)
 	$(call ensure_dir,$(TERRAIN))
-	@if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[slope] gdaldem slope (degrees)"; \
 	  gdaldem slope "$(DEM)" "$(SLOPE)" -compute_edges -s 1.0; \
 	  gdaladdo -r average "$(SLOPE)" 2 4 8 16; \
 	  gdal_translate "$(SLOPE)" "$(SLOPE)" $(COG_OPTS); \
 	else \
-	  echo "ERROR: gdaldem required for slope."; exit 1; \
+	  echo "ERROR: gdaldem/gdaladdo/gdal_translate required for slope."; exit 1; \
 	fi
 
 # Aspect COG (gdaldem)
 $(ASPECT): $(DEM)
 	$(check_dem)
 	$(call ensure_dir,$(TERRAIN))
-	@if [ "$(HAVE_GDALDEM)" = "yes" ]; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
 	  gdaldem aspect "$(DEM)" "$(ASPECT)" -compute_edges; \
 	  gdaladdo -r average "$(ASPECT)" 2 4 8 16; \
 	  gdal_translate "$(ASPECT)" "$(ASPECT)" $(COG_OPTS); \
 	else \
-	  echo "ERROR: gdaldem required for aspect."; exit 1; \
+	  echo "ERROR: gdaldem/gdaladdo/gdal_translate required for aspect."; exit 1; \
 	fi
 
 # -------- Optional vectors --------
 .PHONY: slope_classes
 slope_classes: $(SLOPE)
 	$(call ensure_dir,$(VEC))
-	@if [ "$(HAVE_GDAL_CALC)" = "yes" ] && [ "$(HAVE_GDAL_POLY)" = "yes" ]; then \
+	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
 	  echo "[slope_classes] binning slope → polygons"; \
-	  gdal_calc.py -A "$(SLOPE)" --NoDataValue=0 \
+	  $(GDAL_CALC_BIN) -A "$(SLOPE)" --NoDataValue=0 \
 	    --calc="(A>=0)*(A<2)*1 + (A>=2)*(A<5)*2 + (A>=5)*(A<10)*3 + (A>=10)*(A<20)*4 + (A>=20)*(A<30)*5 + (A>=30)*(A<45)*6 + (A>=45)*7" \
 	    --outfile=/tmp/_slope_classes.tif --type=Byte $(COG_OPTS); \
-	  gdal_polygonize.py /tmp/_slope_classes.tif -f GeoJSON "$(SLOPE_CLASSES)"; \
+	  $(GDAL_POLY_BIN) /tmp/_slope_classes.tif -f GeoJSON "$(SLOPE_CLASSES)"; \
 	  rm -f /tmp/_slope_classes.tif; \
 	else \
 	  echo "[slope_classes] GDAL calc/polygonize not available. Skipping."; \
@@ -215,12 +226,12 @@ slope_classes: $(SLOPE)
 .PHONY: aspect_sectors
 aspect_sectors: $(ASPECT)
 	$(call ensure_dir,$(VEC))
-	@if [ "$(HAVE_GDAL_CALC)" = "yes" ] && [ "$(HAVE_GDAL_POLY)" = "yes" ]; then \
+	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
 	  echo "[aspect_sectors] binning 8-way aspect → polygons"; \
-	  gdal_calc.py -A "$(ASPECT)" --NoDataValue=0 \
+	  $(GDAL_CALC_BIN) -A "$(ASPECT)" --NoDataValue=0 \
 	    --calc="(A<22.5)*(A>=0)*1 + (A>=22.5)*(A<67.5)*2 + (A>=67.5)*(A<112.5)*3 + (A>=112.5)*(A<157.5)*4 + (A>=157.5)*(A<202.5)*5 + (A>=202.5)*(A<247.5)*6 + (A>=247.5)*(A<292.5)*7 + (A>=292.5)*(A<337.5)*8 + (A>=337.5)*1" \
 	    --outfile=/tmp/_aspect_sectors.tif --type=Byte $(COG_OPTS); \
-	  gdal_polygonize.py /tmp/_aspect_sectors.tif -f GeoJSON "$(ASPECT_SECTORS)"; \
+	  $(GDAL_POLY_BIN) /tmp/_aspect_sectors.tif -f GeoJSON "$(ASPECT_SECTORS)"; \
 	  rm -f /tmp/_aspect_sectors.tif; \
 	else \
 	  echo "[aspect_sectors] GDAL calc/polygonize not available. Skipping."; \
