@@ -152,12 +152,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
+
+      - name: Verify artifacts exist
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          cnt=$(ls -1 dist/* 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$cnt" = "0" ]; then
+            echo "::error::No release artifacts found in dist/"
+            exit 1
+          fi
+          echo "Found $cnt artifact(s) in dist/"
 
       - name: Detect prerelease from tag
         id: prerelease
@@ -174,7 +186,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/*
+            dist/**
           draft: false
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true
