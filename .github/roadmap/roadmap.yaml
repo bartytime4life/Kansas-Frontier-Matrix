@@ -1,25 +1,25 @@
 # ==============================================================================
 # Kansas-Frontier-Matrix — Declarative Roadmap (→ Issues & Milestones)
-# This file is consumed by .github/workflows/roadmap.yml to sync labels,
-# milestones, and issues. Colors are 6-hex (no '#'), as GitHub's API expects.
+# Consumed by .github/workflows/roadmap.yml to sync labels, milestones, issues.
+# Colors are 6-hex (no '#'), as GitHub's API expects.
 # ==============================================================================
 
 version: 1
 project: "Kansas Geo Timeline"
-owner: "bartytime4life"             # GitHub org/user that hosts the repo
+owner: "bartytime4life"
+
 defaults:
   create_missing_labels: true
   create_missing_milestones: true
-  close_missing_issues: false       # set true to auto-close issues not in this file
-  dry_run: false                    # set true in PRs to preview changes
+  close_missing_issues: false
+  dry_run: false
   issue:
-    state: open                     # open|closed
-    assignees: []                   # default assignees
-    labels: []                      # extra labels appended to per-issue labels
+    state: open
+    assignees: []
+    labels: []
 
 # ------------------------------------------------------------------------------
-# Labels (idempotent): will be created/updated by color/description.
-# Color = 6-hex (no '#'). Name is case-sensitive in GitHub UI but normalized here.
+# Labels (idempotent): updated/created by color/description.
 # ------------------------------------------------------------------------------
 
 labels:
@@ -70,9 +70,7 @@ labels:
     description: "UI literacy, public comms"
 
 # ------------------------------------------------------------------------------
-# Milestones → each creates/updates a GitHub Milestone.
-# Optional: state (open|closed), due_on (ISO-8601 YYYY-MM-DD).
-# Issues under a milestone create/update GitHub Issues by title.
+# Milestones → GitHub Milestones (with issues that create/update GH Issues).
 # ------------------------------------------------------------------------------
 
 milestones:
@@ -85,7 +83,6 @@ milestones:
     issues:
       - title: "Oral Histories & Indigenous Narratives"
         labels: [data, storytelling, MCP]
-        assignees: []
         priority: P2
         estimate: S
         body: |
@@ -97,12 +94,15 @@ milestones:
           - [ ] Digitize + geocode transcripts (MCP `experiment.md`)
           - [ ] Link narratives to features with glossary tooltips
           - [ ] Document sources in `data/sources/oral_histories.json`
+
+          ### Deliverables
+          - `data/sources/oral_histories.json` with license, contact, update cadence
+          - Initial story map tie-ins (timeline + glossary)
         files:
           - data/sources/oral_histories.json
 
       - title: "Paleoclimate & Fire Regimes"
         labels: [data, paleoclimate]
-        assignees: []
         priority: P2
         estimate: M
         body: |
@@ -110,16 +110,18 @@ milestones:
           Bring in drought indices, pollen cores, and charcoal/fire records for environmental context.
 
           ### Tasks
-          - [ ] Integrate NOAA tree-ring drought indices, pollen cores
-          - [ ] Add charcoal/fire frequency datasets
+          - [ ] Integrate NOAA/USDM drought indices and station normals
+          - [ ] Add pollen/charcoal/fire records (Neotoma, state archives)
           - [ ] Cross-link KGS/Neotoma paleo records
           - [ ] `data/sources/paleoclimate.json` with provenance
+
+          ### Deliverables
+          - `data/sources/paleoclimate.json` sources + STAC registration
         files:
           - data/sources/paleoclimate.json
 
       - title: "Hydrology & Water Management Expansion"
         labels: [data, hydrology]
-        assignees: []
         priority: P2
         estimate: M
         body: |
@@ -127,11 +129,50 @@ milestones:
           Enrich water datasets and prototype flood scenarios.
 
           ### Tasks
-          - [ ] Add flood event datasets & irrigation project layers
+          - [ ] Add flood event datasets (NOAA Storm Events, FEMA declarations)
+          - [ ] Add irrigation/management layers (canals, diversions where public)
           - [ ] Prototype HEC-RAS historical flood scenarios (MCP modeling SOP)
-          - [ ] `data/sources/hydrology.json` endpoints + licenses
+          - [ ] STAC registration for hydrology items/collections
+          - [ ] Wire Makefile + viewer to load layers
+
+          ### Deliverables
+          - `data/sources/hydrology.json` endpoints + licenses
+          - FEMA + SPC + USDM entries in `data/sources/` as needed
+          - Hydrology STAC Items/Collections and web layers
         files:
           - data/sources/hydrology.json
+
+      - title: "Kansas River (KGS) Integration — Source → STAC → Viewer"
+        labels: [data, hydrology, reproducibility]
+        priority: P1
+        estimate: S
+        body: |
+          ### Goal
+          Incorporate KGS Kansas River map as a first-class hydrology layer: source descriptor, STAC
+          collection/items, fetch/export, and viewer overlays.
+
+          ### Tasks
+          - [ ] Source: `data/sources/ks_kansas_river.json` (ArcGIS REST + metadata)
+          - [ ] STAC: `stac/collections/ks_kansas_river.json` (+ child link in `stac/collections/vectors.json`)
+          - [ ] STAC Items: `stac/items/ks_kansas_river_channels.json`, `..._floodplains.json`, `..._gauges.json`
+          - [ ] Makefile: `hydrology-fetch`, `hydrology-stac`, `hydrology` (meta), `site-hydrology`
+          - [ ] Web: `web/layers.json` + `web/app.config.json` entries (`ksriv-*`)
+          - [ ] CI: add job to run `make hydrology` with test endpoints (dry-run if needed)
+
+          ### Deliverables
+          - End-to-end: source → export (GeoJSON) → STAC-wired → visible in preview
+        files:
+          - data/sources/ks_kansas_river.json
+          - stac/collections/ks_kansas_river.json
+          - stac/items/ks_kansas_river_channels.json
+          - stac/items/ks_kansas_river_floodplains.json
+          - stac/items/ks_kansas_river_gauges.json
+          - data/processed/hydrology/kansas_river/channels.geojson
+          - data/processed/hydrology/kansas_river/floodplains.geojson
+          - data/processed/hydrology/kansas_river/gauges.geojson
+          - web/layers.json
+          - web/app.config.json
+          - Makefile
 
   - title: "Milestone 2 — Analytical Enhancements"
     state: open
@@ -151,6 +192,9 @@ milestones:
           - [ ] Train model on DEM, hydrology, soils, land cover + known sites
           - [ ] Log in `mcp/experiments/EXP-SETTLE-PRED.md`
           - [ ] Explore Bayesian + hybrid ABM/GIS variants
+
+          ### Deliverables
+          - Reproducible notebook + MCP experiment log
         files:
           - mcp/experiments/EXP-SETTLE-PRED.md
 
