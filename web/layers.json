@@ -25,11 +25,12 @@
       "visible": true,
       "bounds": [-180, -85.0511, 180, 85.0511]
     },
+
     {
       "id": "hillshade",
-      "title": "Hillshade (COG → tiles)",
+      "title": "Hillshade (DEM 2018–2020)",
       "type": "raster",
-      "url": "./tiles/ks_hillshade/{z}/{x}/{y}.png",
+      "path": "../data/derivatives/hillshade.tif",
       "opacity": 0.9,
       "attribution": "DEM © KARS / State of Kansas",
       "category": "terrain",
@@ -41,6 +42,39 @@
       "visible": true,
       "bounds": [-102.05, 36.99, -94.59, 40.00]
     },
+    {
+      "id": "slope",
+      "title": "Slope (degrees)",
+      "type": "raster",
+      "path": "../data/derivatives/slope.tif",
+      "opacity": 0.85,
+      "attribution": "Derived from DEM © KARS / State of Kansas",
+      "category": "terrain",
+      "start": 2018,
+      "end": 2020,
+      "minzoom": 0,
+      "maxzoom": 14,
+      "tileSize": 256,
+      "visible": false,
+      "bounds": [-102.05, 36.99, -94.59, 40.00]
+    },
+    {
+      "id": "aspect",
+      "title": "Aspect (degrees)",
+      "type": "raster",
+      "path": "../data/derivatives/aspect.tif",
+      "opacity": 0.85,
+      "attribution": "Derived from DEM © KARS / State of Kansas",
+      "category": "terrain",
+      "start": 2018,
+      "end": 2020,
+      "minzoom": 0,
+      "maxzoom": 14,
+      "tileSize": 256,
+      "visible": false,
+      "bounds": [-102.05, 36.99, -94.59, 40.00]
+    },
+
     {
       "id": "usgs_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
@@ -56,6 +90,66 @@
       "tileSize": 256,
       "visible": true,
       "bounds": [-102.05, 36.99, -94.59, 40.00]
+    },
+
+    {
+      "id": "ksriv-channels",
+      "title": "Kansas River — Channels",
+      "type": "geojson",
+      "path": "../data/processed/hydrology/kansas_river/channels.geojson",
+      "opacity": 1.0,
+      "attribution": "Kansas Geological Survey (KGS)",
+      "category": "hydrology",
+      "start": 2000,
+      "end": null,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "visible": true,
+      "bounds": [-97.7, 38.5, -95.0, 39.3],
+      "paint": {
+        "line-color": "#1e88e5",
+        "line-width": 1.6
+      }
+    },
+    {
+      "id": "ksriv-floodplains",
+      "title": "Kansas River — Floodplains",
+      "type": "geojson",
+      "path": "../data/processed/hydrology/kansas_river/floodplains.geojson",
+      "opacity": 0.6,
+      "attribution": "Kansas Geological Survey (KGS)",
+      "category": "hydrology",
+      "start": 2000,
+      "end": null,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "visible": false,
+      "bounds": [-97.7, 38.5, -95.0, 39.3],
+      "paint": {
+        "fill-color": "#42a5f5",
+        "fill-opacity": 0.25,
+        "stroke-color": "#1976d2",
+        "stroke-width": 0.5
+      }
+    },
+    {
+      "id": "ksriv-gauges",
+      "title": "Kansas River — Gauges",
+      "type": "geojson",
+      "path": "../data/processed/hydrology/kansas_river/gauges.geojson",
+      "opacity": 1.0,
+      "attribution": "Kansas Geological Survey (KGS)",
+      "category": "hydrology",
+      "start": 2000,
+      "end": null,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "visible": false,
+      "bounds": [-97.7, 38.5, -95.0, 39.3],
+      "paint": {
+        "circle-color": "#0d47a1",
+        "circle-radius": 4
+      }
     }
   ]
 }
