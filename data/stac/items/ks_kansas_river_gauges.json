@@ -1,0 +1,47 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_kansas_river_gauges",
+  "collection": "ks_kansas_river",
+  "description": "Kansas River hydrology layer: monitoring gauges and station points.",
+  "geometry": null,
+  "bbox": [-97.7, 38.5, -95.0, 39.3],
+  "properties": {
+    "datetime": null,
+    "start_datetime": null,
+    "end_datetime": null,
+    "proj:epsg": 4326,
+    "kfm:source_id": "ks_kansas_river",
+    "kfm:layer": "gauges",
+    "kfm:category": "hydrology"
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "../collections/ks_kansas_river.json",
+      "type": "application/json",
+      "title": "Kansas River Hydrology Map Service"
+    },
+    {
+      "rel": "source",
+      "href": "https://www.kgs.ku.edu/Hydro/KansasRiver/map.html",
+      "type": "text/html",
+      "title": "Kansas River Hydrology Interactive Map"
+    }
+  ],
+  "assets": {
+    "arcgis-rest": {
+      "href": "REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES",
+      "type": "application/json",
+      "roles": ["data", "service"],
+      "title": "ArcGIS REST - Kansas River Gauges",
+      "description": "ArcGIS REST endpoint for gauges / stations (points)."
+    },
+    "geojson": {
+      "href": "REPLACE_WITH_EXPORT_URL_GAUGES_GEOJSON",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Gauges (GeoJSON export)"
+    }
+  }
+}
