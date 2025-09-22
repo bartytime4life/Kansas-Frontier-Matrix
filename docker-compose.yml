@@ -1,14 +1,36 @@
 version: "3.9"
 
-# Reusable environment knobs
+# ──────────────────────────────────────────────────────────────────────────────
+# Reusable anchors
+# ──────────────────────────────────────────────────────────────────────────────
 x-env-defaults: &env_defaults
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONUNBUFFERED: "1"
+  # GDAL/PROJ sensible defaults for networked datasets & VSI performance
   GDAL_DISABLE_READDIR_ON_OPEN: "YES"
   VSI_CACHE: "TRUE"
   VSI_CACHE_SIZE: "1000000"
   PROJ_NETWORK: "ON"
+  # Makefile / STAC paths honored inside container
+  KFM_DATA_DIR: "/app/data"
+  KFM_STAC_DIR: "/app/stac"
 
+x-volume-mounts: &vol_mounts
+  - ./:/app:rw                        # live-edit repo
+  # Optional: speed up pip installs for ad-hoc tooling in the container
+  - pip-cache:/home/dev/.cache/pip:rw
+  # Optional: pass-through credentials for fetchers (read-only)
+  - ${HOME:-/root}/.aws:/home/dev/.aws:ro
+  - ${HOME:-/root}/.netrc:/home/dev/.netrc:ro
+  - ${HOME:-/root}/.config/gcloud:/home/dev/.config/gcloud:ro
+
+x-tmpfs: &tmpfs_mounts
+  - /tmp:size=512m,mode=1777
+  - /var/tmp:size=256m,mode=1777
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Services
+# ──────────────────────────────────────────────────────────────────────────────
 services:
   # Main toolbox container (GDAL + Python + your repo bind-mounted)
   kfm:
@@ -17,47 +39,80 @@ services:
       dockerfile: docker/Dockerfile
       args:
         # Keep overridable; avoids stale base images pin
-        GDAL_IMAGE: ghcr.io/osgeo/gdal:ubuntu-small-latest
+        GDAL_IMAGE: ${GDAL_IMAGE:-ghcr.io/osgeo/gdal:ubuntu-small-latest}
         USER_ID: ${UID:-1000}
         GROUP_ID: ${GID:-1000}
     image: kfm:latest
     container_name: kfm
-    platform: linux/amd64          # stable across Apple Silicon/CI
+    platform: linux/amd64               # stable across Apple Silicon/CI
     working_dir: /app
-    volumes:
-      - ./:/app                    # live-edit the repo
+    volumes: *vol_mounts
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       <<: *env_defaults
-    tmpfs:
-      - /tmp:size=512m,mode=1777   # fast temp IO
-      - /var/tmp:size=256m,mode=1777
+      # Allow optional tokens without baking into image
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      AWS_PROFILE: ${AWS_PROFILE:-default}
+    tmpfs: *tmpfs_mounts
     tty: true
     stdin_open: true
-    init: true                     # better signal handling than PID 1 bash
+    init: true                          # better signal handling than PID 1 bash
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "bash", "-lc", "gdalinfo --version >/dev/null 2>&1"]
       interval: 60s
       timeout: 5s
       retries: 3
-      start_period: 20s            # give GDAL/proj time to settle
+      start_period: 20s
 
   # Tiny HTTP server to preview ./web (dev-only)
   site:
-    profiles: ["dev"]              # start with: docker compose --profile dev up site
-    image: kfm:latest              # reuse the same tool image
+    profiles: ["dev"]                   # start with: docker compose --profile dev up site
+    image: kfm:latest                   # reuse the toolbox image (has Python)
     platform: linux/amd64
     working_dir: /app/web
     depends_on:
       kfm:
         condition: service_healthy
-    command: ["bash", "-lc", "python -m http.server 8080"]
+    # add CORS for local vector/COG loads
+    command: >
+      bash -lc 'python - <<PY
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+class H(SimpleHTTPRequestHandler):
+  def end_headers(self):
+    self.send_header("Access-Control-Allow-Origin","*")
+    self.send_header("Cache-Control","no-cache, no-store, must-revalidate")
+    super().end_headers()
+ThreadingHTTPServer(("0.0.0.0",8080),H).serve_forever()
+PY'
     ports:
       - "8080:8080"
-    volumes:
-      - ./:/app
+    volumes: *vol_mounts
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       <<: *env_defaults
     restart: unless-stopped
+
+  # CI-style one-shot runner: validates STAC & writes preview manifest then exits
+  prebuild:
+    profiles: ["ci"]                    # run with: docker compose --profile ci up --abort-on-container-exit
+    image: kfm:latest
+    platform: linux/amd64
+    working_dir: /app
+    depends_on:
+      kfm:
+        condition: service_healthy
+    entrypoint: [ "bash", "-lc" ]
+    command: |
+      set -euo pipefail
+      make prebuild
+    volumes: *vol_mounts
+    user: "${UID:-1000}:${GID:-1000}"
+    environment:
+      <<: *env_defaults
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Volumes (local caches)
+# ──────────────────────────────────────────────────────────────────────────────
+volumes:
+  pip-cache:
