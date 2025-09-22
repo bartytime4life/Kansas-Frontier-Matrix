@@ -7,7 +7,7 @@ on:
       - "web/**"
       - "stac/**"
       - "data/sources/**"
-      - ".github/workflows/site.yml"    # <-- this file
+      - ".github/workflows/site.yml"
       - "README.md"
       - "Makefile"
   workflow_dispatch:
@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
 
       # --------------------------------------------------------------
-      # Optional: use Makefile if present for STAC validate + site prep
+      # Optional: Makefile path (uses your validated targets)
       # --------------------------------------------------------------
       - name: Pre-build via Makefile (stac-validate + site)
         id: prebuild
@@ -43,9 +43,13 @@ jobs:
           set -euo pipefail
           if [ -f Makefile ]; then
             echo "has_make=true" >> "$GITHUB_OUTPUT"
-            make stac-validate || { echo "::error::STAC validation failed"; exit 1; }
-            # make site should generate/refresh web assets if you wire it
-            make site || true
+            # prefer the combined target if present; fall back to explicit
+            if make -qn prebuild >/dev/null 2>&1; then
+              make -e prebuild
+            else
+              make stac-validate || { echo "::error::STAC validation failed"; exit 1; }
+              make site || true
+            fi
           else
             echo "has_make=false" >> "$GITHUB_OUTPUT"
           fi
@@ -150,16 +154,16 @@ jobs:
           ok=1
           for dir in stac data/sources; do
             if [ -d "$dir" ]; then
-              find "$dir" -type f -name '*.json' -print0 | while IFS= read -r -d '' f; do
+              while IFS= read -r -d '' f; do
                 echo "Validating $f"
                 jq -e 'type=="object"' "$f" || ok=0
-              done
+              done < <(find "$dir" -type f -name '*.json' -print0)
             fi
           done
           [ $ok -eq 1 ] || { echo "::error::JSON validation failed"; exit 1; }
 
       # --------------------------------------------------------------
-      # Ensure Pages-friendly outputs
+      # Pages-friendly outputs
       # --------------------------------------------------------------
       - name: Prepare Pages artifacts (.nojekyll, 404, CNAME if present)
         run: |
@@ -181,14 +185,15 @@ jobs:
           fi
 
       # --------------------------------------------------------------
-      # Optional link check (can disable if too chatty/rate-limited)
+      # Link check (prefers .lychee.toml if present; otherwise minimal args)
       # --------------------------------------------------------------
-      - name: Link check (lychee)
+      - name: Link check (lychee with config if available)
         if: ${{ !cancelled() }}
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --verbose --base ./${{ env.SITE_DIR }} ./${{ env.SITE_DIR }}/**/*.html
-          fail: true
+          args: >
+            $( [ -f .lychee.toml ] && echo '--config .lychee.toml' || echo '--no-progress --verbose' )
+            ./${{ env.SITE_DIR }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
