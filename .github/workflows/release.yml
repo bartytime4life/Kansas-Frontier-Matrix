@@ -12,19 +12,23 @@ concurrency:
   group: "release-${{ github.ref }}"
   cancel-in-progress: true
 
+env:
+  PYTHON_VERSION: "3.11"
+  DIST_DIR: dist
+  EXTRAS_DIR: build/extras
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_PYTHON_VERSION_WARNING: "1"
+
 jobs:
   build:
     name: Build (sdist+wheel) & validate
     runs-on: ubuntu-latest
-    env:
-      PYTHON_VERSION: "3.11"
-      DIST_DIR: dist
-      EXTRAS_DIR: build/extras
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # keep tags for version resolvers
+          fetch-depth: 0  # keep tags for setuptools_scm / version resolvers
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,96 +37,121 @@ jobs:
           cache: pip
           cache-dependency-path: |
             requirements.txt
+            constraints.txt
             pyproject.toml
 
-      - name: Install build & light validation deps
+      - name: Install build toolchain
         run: |
           python -m pip install --upgrade pip
           pip install build twine
-          # Optional but nice: enable CLI + validation if present
-          pip install -e . || true
-          pip install jsonschema jinja2 pystac || true
 
-      - name: Quick smoke: CLI & STAC (non-fatal if tools missing)
-        continue-on-error: true
+      # Optional, "light" checks that avoid pulling heavy GIS deps:
+      # - use --no-deps so we don't compile wheels for rasterio/pyproj
+      # - import-only checks guarded to skip if imports fail
+      - name: Quick smoke (no-deps import guards)
         run: |
           set -euo pipefail
-          command -v kgt >/dev/null 2>&1 && kgt --version || echo "kgt not installed; skipping CLI version"
+          # Try installing just the package metadata/entrypoints without deps
+          pip install -e . --no-deps || true
+          python - <<'PY'
+          import importlib, sys
+          mods = ["kansas_geo_timeline"]
+          bad = 0
+          for m in mods:
+              try:
+                  importlib.import_module(m)
+                  print(f"[ok] import {m}")
+              except Exception as e:
+                  print(f"[warn] cannot import {m} without deps: {e}", file=sys.stderr)
+          PY
+          # STAC sanity (no kgt required)
           if [ -d stac/items ]; then
-            if command -v kgt >/dev/null 2>&1; then
-              kgt validate-stac stac/items --no-strict
-            else
-              echo "kgt not available; minimal JSON sanity on STAC items"
-              python - <<'PY'
-              import json, pathlib, sys
-              req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
-              bad=0
-              for p in sorted(pathlib.Path("stac/items").glob("*.json")):
-                  try:
-                      d=json.loads(p.read_text(encoding="utf-8"))
-                  except Exception as e:
-                      print(f"::error file={p}::JSON parse error: {e}")
-                      bad += 1; continue
-                  miss=[k for k in req if k not in d]
-                  if miss or d.get("type")!="Feature":
-                      print(f"::error file={p}::missing {miss} or wrong type")
-                      bad += 1
-              sys.exit(bad>0)
-              PY
-            fi
+            python - <<'PY'
+            import json, pathlib, sys
+            req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
+            bad=0
+            for p in sorted(pathlib.Path("stac/items").glob("*.json")):
+                try:
+                    d=json.loads(p.read_text(encoding="utf-8"))
+                except Exception as e:
+                    print(f"::error file={p}::JSON parse error: {e}")
+                    bad += 1; continue
+                miss=[k for k in req if k not in d]
+                if miss or d.get("type")!="Feature":
+                    print(f"::error file={p}::missing {miss} or wrong type")
+                    bad += 1
+            sys.exit(1 if bad else 0)
+            PY
           fi
 
       - name: Build sdist & wheel
         run: |
           python -m build
-          ls -lh dist/
+          ls -lh ${{ env.DIST_DIR }}/
 
       - name: Twine check
-        run: python -m twine check dist/*
+        run: python -m twine check ${{ env.DIST_DIR }}/*
 
       - name: Bundle extras (optional)
         run: |
           set -euo pipefail
           mkdir -p "${EXTRAS_DIR}"
-          # Zip STAC and web folders if they exist (useful for non-Python consumers)
           if [ -d stac ]; then
-            (cd stac && zip -r ../${EXTRAS_DIR}/stac_snapshot.zip .)
+            (cd stac && zip -qr "../${EXTRAS_DIR}/stac_snapshot.zip" .)
           fi
           if [ -d web ]; then
-            (cd web && zip -r ../${EXTRAS_DIR}/web_snapshot.zip .)
+            (cd web && zip -qr "../${EXTRAS_DIR}/web_snapshot.zip" .)
           fi
-          # Only keep non-empty extras dir
-          if [ -z "$(ls -A ${EXTRAS_DIR} 2>/dev/null || true)" ]; then
-            rmdir "${EXTRAS_DIR}" || true
-          fi
+          # prune empty extras dir
+          [ -z "$(ls -A "${EXTRAS_DIR}" 2>/dev/null || true)" ] && rmdir "${EXTRAS_DIR}" || true
 
       - name: Checksums (SHA-256)
         run: |
           set -euo pipefail
           shopt -s nullglob
-          for f in dist/* ${EXTRAS_DIR}/*.zip 2>/dev/null; do
+          # Dist files
+          for f in "${DIST_DIR}"/*; do
             [ -e "$f" ] || continue
-            sha256sum "$f" > "$f.sha256"
+            sha256sum "$f" | tee "$f.sha256"
           done
-          echo "Artifacts:"
-          ls -lh dist/
-          [ -d "${EXTRAS_DIR}" ] && ls -lh ${EXTRAS_DIR} || true
+          # Optional extras
+          if [ -d "${EXTRAS_DIR}" ]; then
+            for f in "${EXTRAS_DIR}"/*.zip; do
+              [ -e "$f" ] || continue
+              sha256sum "$f" | tee "$f.sha256"
+            done
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: |
-            dist/*
-            build/extras/*
-            build/extras/*.sha256
+            ${{ env.DIST_DIR }}/*
+            ${{ env.DIST_DIR }}/*.sha256
+            ${{ env.EXTRAS_DIR }}/*.zip
+            ${{ env.EXTRAS_DIR }}/*.sha256
           if-no-files-found: warn
           retention-days: 7
+
+      - name: Job summary (hashes)
+        run: |
+          echo "## Release artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### dist/" >> $GITHUB_STEP_SUMMARY
+          ls -lh ${{ env.DIST_DIR }} >> $GITHUB_STEP_SUMMARY
+          if [ -d "${EXTRAS_DIR}" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ${EXTRAS_DIR}/" >> $GITHUB_STEP_SUMMARY
+            ls -lh ${EXTRAS_DIR} >> $GITHUB_STEP_SUMMARY
+          fi
 
   github-release:
     name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -134,7 +163,6 @@ jobs:
         id: prerelease
         run: |
           tag="${GITHUB_REF_NAME}"
-          # mark prerelease if tag contains rc/beta/alpha (case-insensitive)
           shopt -s nocasematch
           if [[ "$tag" =~ rc|beta|alpha ]]; then
             echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
