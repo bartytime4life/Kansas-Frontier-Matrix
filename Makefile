@@ -1,10 +1,11 @@
 # --------------------------------------------------------------------
 # Kansas Frontier Matrix / Kansas Geo Timeline — Makefile (connected+safe)
 # --------------------------------------------------------------------
-# - Targets: fetch, cogs, terrain, slope_classes, aspect_sectors, meta,
-#            stac, stac-validate, site, site-config, kml, clean, prebuild
+# - Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
+#            meta, stac, stac-validate, site, site-config, kml, clean, prebuild
 # - Repo-aware STAC path: ./stac
 # - Script fallbacks + GDAL tools when available
+# - Optional: KGS Kansas River hydrology fetch/export → STAC wiring
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
@@ -51,16 +52,18 @@ COG_OPTS := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SA
 SHA256      := $(shell (command -v sha256sum || command -v shasum) 2>/dev/null)
 SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
 
+# External tools
+HAVE_JQ          := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no)
+HAVE_RSYNC       := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
+HAVE_KGT         := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
+
 # GDAL tools (support both "xxx.py" and "xxx" entry points)
-HAVE_GDALDEM      := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDAL_TRANSL  := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDAL_ADDO    := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDALDEM     := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDAL_TRANSL := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDAL_ADDO   := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
 
-GDAL_POLY_BIN     := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
-GDAL_CALC_BIN     := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
-
-HAVE_RSYNC        := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
-HAVE_KGT          := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
+GDAL_POLY_BIN    := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
+GDAL_CALC_BIN    := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
 
 # Detect helper scripts present in this repo
 HAVE_FETCH            := $(wildcard $(S)/fetch.py)
@@ -70,6 +73,23 @@ HAVE_WRITEMETA        := $(wildcard $(S)/write_meta.py)
 HAVE_MAKE_STAC        := $(wildcard $(S)/make_stac.py)
 HAVE_VALIDATE_STAC    := $(wildcard $(S)/validate_stac.py)
 HAVE_VALIDATE_SOURCES := $(wildcard $(S)/validate_sources.py)
+
+# -------- Kansas River Hydrology (optional integration) --------
+# Fill these with actual ArcGIS REST layer URLs or set env on the command line
+#   make hydrology-fetch KSRIV_CHANNELS=... KSRIV_FLOODPLAIN=... KSRIV_GAUGES=...
+KSRIV_OUTDIR     := $(DATA)/processed/hydrology/kansas_river
+KSRIV_CHANNELS   ?= REPLACE_WITH_ARCGIS_REST_LAYER_URL_CHANNELS
+KSRIV_FLOODPLAIN ?= REPLACE_WITH_ARCGIS_REST_LAYER_URL_FLOODPLAINS
+KSRIV_GAUGES     ?= REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES
+
+KSRIV_CHANNELS_GJ   := $(KSRIV_OUTDIR)/channels.geojson
+KSRIV_FLOODPLAIN_GJ := $(KSRIV_OUTDIR)/floodplains.geojson
+KSRIV_GAUGES_GJ     := $(KSRIV_OUTDIR)/gauges.geojson
+
+KSRIV_ITEM_DIR      := $(STAC)/items
+KSRIV_ITEM_CHANNELS := $(KSRIV_ITEM_DIR)/ks_kansas_river_channels.json
+KSRIV_ITEM_FP       := $(KSRIV_ITEM_DIR)/ks_kansas_river_floodplains.json
+KSRIV_ITEM_GAUGES   := $(KSRIV_ITEM_DIR)/ks_kansas_river_gauges.json
 
 # -------- Internal helpers --------
 define check_dem
@@ -100,20 +120,24 @@ endef
 help:
 	@echo ""
 	@echo "Targets:"
-	@echo "  env              Show detected tools/paths"
-	@echo "  fetch            Download rasters/vectors per data/sources/*.json"
-	@echo "  cogs             Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
-	@echo "  terrain          Derive hillshade/slope/aspect (COGs); mirror into data/derivatives"
-	@echo "  slope_classes    Optional: vectorize slope classes"
-	@echo "  aspect_sectors   Optional: vectorize 8-way aspect sectors"
-	@echo "  meta             Optional: update terrain meta JSON checksums (slope/aspect)"
-	@echo "  stac             Build STAC items/collections into ./stac/"
-	@echo "  stac-validate    Validate STAC + source schemas (scripts/ or kgt)"
-	@echo "  site             Write web/layers.json (simple preview)"
-	@echo "  site-config      Render web/app.config.json from STAC via kgt (if available)"
-	@echo "  kml              Build KMZ overlays (placeholder)"
-	@echo "  clean            Remove generated raster outputs (keeps stac/)"
-	@echo "  prebuild         stac-validate + site (used by CI)"
+	@echo "  env               Show detected tools/paths"
+	@echo "  fetch             Download rasters/vectors per data/sources/*.json"
+	@echo "  cogs              Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
+	@echo "  terrain           Derive hillshade/slope/aspect (COGs); mirror into data/derivatives"
+	@echo "  slope_classes     Optional: vectorize slope classes"
+	@echo "  aspect_sectors    Optional: vectorize 8-way aspect sectors"
+	@echo "  meta              Optional: update terrain meta JSON checksums (slope/aspect)"
+	@echo "  stac              Build STAC items/collections into ./stac/"
+	@echo "  stac-validate     Validate STAC + source schemas (scripts/ or kgt)"
+	@echo "  site              Write web/layers.json (simple preview)"
+	@echo "  site-config       Render web/app.config.json from STAC via kgt (if available)"
+	@echo "  kml               Build KMZ overlays (placeholder)"
+	@echo "  clean             Remove generated raster outputs (keeps stac/)"
+	@echo "  prebuild          stac-validate + site (used by CI)"
+	@echo ""
+	@echo "Hydrology (optional):"
+	@echo "  hydrology-fetch   Export KGS Kansas River channels/floodplains/gauges (GeoJSON)"
+	@echo "  hydrology-stac    Wire local GeoJSON hrefs into the three hydrology STAC Items"
 	@echo ""
 	@echo "Overrides:  make terrain DEM=/path/to/dem.tif"
 	@echo ""
@@ -122,13 +146,13 @@ env:
 	@echo "PY=$(PY)"
 	@echo "DEM=$(DEM)"
 	@echo "STAC_DIR=$(STAC)"
-	@echo "HAVE_KGT=$(HAVE_KGT)"
+	@echo "HAVE_KGT=$(HAVE_KGT)  HAVE_JQ=$(HAVE_JQ)"
 	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_TRANSL=$(HAVE_GDAL_TRANSL) HAVE_GDAL_ADDO=$(HAVE_GDAL_ADDO)"
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
 
-# Print a variable: make print-% VAR=NAME  or: make print-DEM
+# Print a variable: make print-DEM  or  make print-% VAR=NAME
 print-%:
 	@echo '$*=$($*)'
 
@@ -143,7 +167,7 @@ ifeq ($(strip $(HAVE_FETCH)),)
 	@echo "[fetch] No $(S)/fetch.py found. Skipping."
 else
 	$(call ensure_dir,$(RAW))
-	$(PY) $(S)/fetch.py --sources $(SRC) --out $(RAW)
+	$(PY) "$(S)/fetch.py" --sources "$(SRC)" --out "$(RAW)"
 endif
 
 # -------- COGS --------
@@ -153,7 +177,7 @@ ifeq ($(strip $(HAVE_MAKECOG)),)
 	@echo "[cogs] No $(S)/make_cog.py found. Skipping."
 else
 	$(call ensure_dir,$(COGS))
-	$(PY) $(S)/make_cog.py --in $(RAW) --out $(COGS)
+	$(PY) "$(S)/make_cog.py" --in "$(RAW)" --out "$(COGS)"
 endif
 
 # -------- Terrain (COGs) --------
@@ -170,13 +194,15 @@ $(HILLSHADE): $(DEM)
 	$(call ensure_dir,$(HILLS))
 	@if [ -f "$(S)/make_hillshade.py" ]; then \
 	  echo "[hillshade] $(S)/make_hillshade.py"; \
-	  $(PY) $(S)/make_hillshade.py --dem "$(DEM)" --out "$(HILLSHADE)" --cog; \
+	  $(PY) "$(S)/make_hillshade.py" --dem "$(DEM)" --out "$(HILLSHADE)" --cog; \
 	else \
 	  if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	    echo "[hillshade] gdaldem hillshade"; \
-	    gdaldem hillshade "$(DEM)" "$(HILLSHADE)" -compute_edges -z 1.0 -az 315 -alt 45; \
-	    gdaladdo -r average "$(HILLSHADE)" 2 4 8 16; \
-	    gdal_translate "$(HILLSHADE)" "$(HILLSHADE)" $(COG_OPTS); \
+	    tmp="$@.tmp.tif"; \
+	    gdaldem hillshade "$(DEM)" "$$tmp" -compute_edges -z 1.0 -az 315 -alt 45; \
+	    gdaladdo -r average "$$tmp" 2 4 8 16; \
+	    gdal_translate "$$tmp" "$@" $(COG_OPTS); \
+	    rm -f "$$tmp"; \
 	  else \
 	    echo "ERROR: neither $(S)/make_hillshade.py nor sufficient GDAL tools available."; exit 1; \
 	  fi; \
@@ -188,9 +214,11 @@ $(SLOPE): $(DEM)
 	$(call ensure_dir,$(TERRAIN))
 	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[slope] gdaldem slope (degrees)"; \
-	  gdaldem slope "$(DEM)" "$(SLOPE)" -compute_edges -s 1.0; \
-	  gdaladdo -r average "$(SLOPE)" 2 4 8 16; \
-	  gdal_translate "$(SLOPE)" "$(SLOPE)" $(COG_OPTS); \
+	  tmp="$@.tmp.tif"; \
+	  gdaldem slope "$(DEM)" "$$tmp" -compute_edges -s 1.0; \
+	  gdaladdo -r average "$$tmp" 2 4 8 16; \
+	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
+	  rm -f "$$tmp"; \
 	else \
 	  echo "ERROR: gdaldem/gdaladdo/gdal_translate required for slope."; exit 1; \
 	fi
@@ -201,9 +229,11 @@ $(ASPECT): $(DEM)
 	$(call ensure_dir,$(TERRAIN))
 	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
-	  gdaldem aspect "$(DEM)" "$(ASPECT)" -compute_edges; \
-	  gdaladdo -r average "$(ASPECT)" 2 4 8 16; \
-	  gdal_translate "$(ASPECT)" "$(ASPECT)" $(COG_OPTS); \
+	  tmp="$@.tmp.tif"; \
+	  gdaldem aspect "$(DEM)" "$$tmp" -compute_edges; \
+	  gdaladdo -r average "$$tmp" 2 4 8 16; \
+	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
+	  rm -f "$$tmp"; \
 	else \
 	  echo "ERROR: gdaldem/gdaladdo/gdal_translate required for aspect."; exit 1; \
 	fi
@@ -284,18 +314,18 @@ ifeq ($(strip $(HAVE_MAKE_STAC)),)
 else
 	$(call ensure_dir,$(STAC)/items)
 	$(call ensure_dir,$(STAC)/collections)
-	$(PY) $(S)/make_stac.py --data "$(DATA)" --stac "$(STAC)"
+	$(PY) "$(S)/make_stac.py" --data "$(DATA)" --stac "$(STAC)"
 endif
 
 .PHONY: stac-validate
 stac-validate:
 	@if [ -f "$(S)/validate_sources.py" ]; then \
-	  $(PY) $(S)/validate_sources.py --sources "$(SRC)"; \
+	  $(PY) "$(S)/validate_sources.py" --sources "$(SRC)"; \
 	else \
 	  echo "[stac-validate] $(S)/validate_sources.py missing (source schema check skipped)."; \
 	fi
 	@if [ -f "$(S)/validate_stac.py" ]; then \
-	  $(PY) $(S)/validate_stac.py --stac "$(STAC)"; \
+	  $(PY) "$(S)/validate_stac.py" --stac "$(STAC)"; \
 	elif [ "$(HAVE_KGT)" = "yes" ]; then \
 	  echo "[stac-validate] scripts missing; using kgt validate-stac as fallback"; \
 	  kgt validate-stac "$(STAC)/items" --no-strict; \
@@ -345,3 +375,28 @@ PYCODE
 clean:
 	rm -rf "$(RAW)" "$(COGS)" "$(DERIV)" "$(DATA)/kml" "$(DATA)"/*.kmz
 	@echo "✓ cleaned generated raster outputs (kept ./stac)."
+
+# ====================================================================
+# Kansas River Hydrology — fetch/export + STAC wiring (optional)
+# ====================================================================
+
+.PHONY: hydrology-fetch hydrology-stac
+hydrology-fetch:
+	$(call ensure_dir,$(KSRIV_OUTDIR))
+	@if [ "$(KSRIV_CHANNELS)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_CHANNELS" ]; then echo "Set KSRIV_CHANNELS=..."; exit 1; fi
+	@if [ "$(KSRIV_FLOODPLAIN)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_FLOODPLAINS" ]; then echo "Set KSRIV_FLOODPLAIN=..."; exit 1; fi
+	@if [ "$(KSRIV_GAUGES)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES" ]; then echo "Set KSRIV_GAUGES=..."; exit 1; fi
+	@if ! command -v ogr2ogr >/dev/null 2>&1; then echo "ERROR: ogr2ogr (GDAL) is required."; exit 1; fi
+	ogr2ogr -f GeoJSON "$(KSRIV_CHANNELS_GJ)"  "$(KSRIV_CHANNELS)?where=1=1&f=json&outSR=4326"     -t_srs EPSG:4326
+	ogr2ogr -f GeoJSON "$(KSRIV_FLOODPLAIN_GJ)" "$(KSRIV_FLOODPLAIN)?where=1=1&f=json&outSR=4326"  -t_srs EPSG:4326
+	ogr2ogr -f GeoJSON "$(KSRIV_GAUGES_GJ)"     "$(KSRIV_GAUGES)?where=1=1&f=json&outSR=4326"      -t_srs EPSG:4326
+	@echo "✓ Kansas River hydrology exported → $(KSRIV_OUTDIR)"
+
+hydrology-stac:
+	@if [ "$(HAVE_JQ)" != "yes" ]; then echo "ERROR: jq is required for hydrology-stac"; exit 1; fi
+	@if [ ! -f "$(KSRIV_ITEM_CHANNELS)" ] || [ ! -f "$(KSRIV_ITEM_FP)" ] || [ ! -f "$(KSRIV_ITEM_GAUGES)" ]; then \
+	  echo "ERROR: hydrology STAC items missing under $(STAC)/items"; exit 1; fi
+	jq --arg H "$(KSRIV_CHANNELS_GJ)"   '.assets.geojson.href = $$H' "$(KSRIV_ITEM_CHANNELS)" > "$(KSRIV_ITEM_CHANNELS).tmp" && mv "$(KSRIV_ITEM_CHANNELS).tmp" "$(KSRIV_ITEM_CHANNELS)"
+	jq --arg H "$(KSRIV_FLOODPLAIN_GJ)" '.assets.geojson.href = $$H' "$(KSRIV_ITEM_FP)"       > "$(KSRIV_ITEM_FP).tmp"       && mv "$(KSRIV_ITEM_FP).tmp"       "$(KSRIV_ITEM_FP)"
+	jq --arg H "$(KSRIV_GAUGES_GJ)"     '.assets.geojson.href = $$H' "$(KSRIV_ITEM_GAUGES)"   > "$(KSRIV_ITEM_GAUGES).tmp"   && mv "$(KSRIV_ITEM_GAUGES).tmp"   "$(KSRIV_ITEM_GAUGES)"
+	@echo "✓ STAC Items updated with local GeoJSON hrefs"
