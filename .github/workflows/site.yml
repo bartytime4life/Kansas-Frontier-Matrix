@@ -60,6 +60,7 @@ jobs:
       - name: Detect web build tooling
         id: detect_tool
         run: |
+          set -euo pipefail
           if [ -f web/package.json ]; then
             echo "has_pkgjson=true" >> "$GITHUB_OUTPUT"
             if [ -f web/pnpm-lock.yaml ]; then
@@ -168,6 +169,7 @@ jobs:
       - name: Prepare Pages artifacts (.nojekyll, 404, CNAME if present)
         run: |
           set -euo pipefail
+          mkdir -p "$SITE_DIR"
           touch "$SITE_DIR/.nojekyll"
           for c in CNAME web/CNAME; do
             if [ -f "$c" ]; then
@@ -175,27 +177,48 @@ jobs:
             fi
           done
           if [ ! -f "$SITE_DIR/404.html" ]; then
-            cat > "$SITE_DIR/404.html" <<'HTML'
-            <!doctype html><meta charset="utf-8">
-            <meta name=viewport content="width=device-width,initial-scale=1">
-            <title>404 — Not Found</title>
-            <h1>404 — Not Found</h1>
-            <p>This page does not exist on this site.</p>
-            HTML
+cat > "$SITE_DIR/404.html" <<'HTML'
+<!doctype html><meta charset="utf-8">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>404 — Not Found</title>
+<h1>404 — Not Found</h1>
+<p>This page does not exist on this site.</p>
+HTML
           fi
 
       # --------------------------------------------------------------
-      # Link check (prefers .lychee.toml if present; otherwise minimal args)
+      # Link check (use config if present; otherwise minimal args)
+      # NOTE: we compute args in a shell step, then feed them to lychee-action.
       # --------------------------------------------------------------
-      - name: Link check (lychee with config if available)
+      - name: Compute lychee args
+        id: lychee_args
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f .lychee.toml ]; then
+            echo "args=--config .lychee.toml $SITE_DIR" >> "$GITHUB_OUTPUT"
+          else
+            echo "args=--no-progress --verbose $SITE_DIR" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Link check (lychee)
         if: ${{ !cancelled() }}
         uses: lycheeverse/lychee-action@v2
         with:
-          args: >
-            $( [ -f .lychee.toml ] && echo '--config .lychee.toml' || echo '--no-progress --verbose' )
-            ./${{ env.SITE_DIR }}
+          args: ${{ steps.lychee_args.outputs.args }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # --------------------------------------------------------------
+      # Guard: fail early if site dir is empty
+      # --------------------------------------------------------------
+      - name: Ensure site has files
+        run: |
+          set -euo pipefail
+          if [ -z "$(ls -A "$SITE_DIR" 2>/dev/null)" ]; then
+            echo "::error::$SITE_DIR is empty; nothing to deploy."
+            exit 1
+          fi
 
       # --------------------------------------------------------------
       # Configure & upload for Pages
