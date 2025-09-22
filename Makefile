@@ -90,7 +90,7 @@ define mirror_derivatives
 endef
 
 # -------- Help --------
-.PHONY: help env
+.PHONY: help env prebuild
 help:
 	@echo ""
 	@echo "Targets:"
@@ -121,10 +121,14 @@ env:
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
 
+# CI convenience: validate + build minimal site
+prebuild: stac-validate site
+	@echo ">> Prebuild complete."
+
 # -------- Fetch --------
 .PHONY: fetch
 fetch:
-ifndef HAVE_FETCH
+ifeq ($(strip $(HAVE_FETCH)),)
 	@echo "[fetch] No $(S)/fetch.py found. Skipping."
 else
 	$(call ensure_dir,$(RAW))
@@ -134,7 +138,7 @@ endif
 # -------- COGS --------
 .PHONY: cogs
 cogs:
-ifndef HAVE_MAKECOG
+ifeq ($(strip $(HAVE_MAKECOG)),)
 	@echo "[cogs] No $(S)/make_cog.py found. Skipping."
 else
 	$(call ensure_dir,$(COGS))
@@ -264,7 +268,7 @@ PYCODE \
 # -------- STAC build / validate --------
 .PHONY: stac
 stac:
-ifndef HAVE_MAKE_STAC
+ifeq ($(strip $(HAVE_MAKE_STAC)),)
 	@echo "[stac] No $(S)/make_stac.py found. Skipping."
 else
 	$(call ensure_dir,$(STAC)/items)
