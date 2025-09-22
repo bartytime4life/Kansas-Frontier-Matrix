@@ -1,13 +1,18 @@
 {
+  "stac_version": "1.0.0",
+  "type": "Collection",
   "id": "ks_kansas_river",
   "title": "Kansas River Hydrology Map Service",
-  "type": "arcgis-rest",
-  "url": "https://www.kgs.ku.edu/Hydro/KansasRiver/map.html",
-  "layers": [
-    "channels",
-    "floodplains",
-    "gauges"
+  "description": "Hydrology layers from the Kansas Geological Survey (KGS) interactive Kansas River map. Includes channels, floodplains, and monitoring gauges. Supports research into hydrology, settlement history, and disaster events in the Kansas-Frontier-Matrix.",
+  "keywords": [
+    "hydrology",
+    "Kansas River",
+    "floodplain",
+    "KGS",
+    "water resources",
+    "ArcGIS REST"
   ],
+  "license": "public-domain",
   "extent": {
     "spatial": {
       "bbox": [[-97.7, 38.5, -95.0, 39.3]]
@@ -16,20 +21,28 @@
       "interval": [["2000-01-01T00:00:00Z", null]]
     }
   },
-  "description": "Kansas Geological Survey interactive map of Kansas River hydrology and floodplain layers, including channels, floodplains, and monitoring gauges. Useful for hydrology, settlement history, and disaster research in the Kansas-Frontier-Matrix.",
-  "license": "public-domain",
   "providers": [
     {
       "name": "Kansas Geological Survey (KGS)",
-      "roles": ["producer", "host"],
+      "roles": ["producer", "licensor", "host"],
       "url": "https://www.kgs.ku.edu/"
     }
   ],
-  "keywords": [
-    "hydrology",
-    "Kansas River",
-    "floodplain",
-    "KGS",
-    "water resources"
-  ]
+  "links": [
+    {
+      "rel": "source",
+      "href": "https://www.kgs.ku.edu/Hydro/KansasRiver/map.html",
+      "type": "text/html",
+      "title": "Kansas River Hydrology Interactive Map"
+    }
+  ],
+  "assets": {
+    "arcgis-service": {
+      "href": "https://www.kgs.ku.edu/Hydro/KansasRiver/map.html",
+      "type": "application/json",
+      "roles": ["data", "service"],
+      "title": "ArcGIS REST Hydrology Layers",
+      "description": "ArcGIS service providing channels, floodplains, and gauges."
+    }
+  }
 }
