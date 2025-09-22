@@ -62,6 +62,7 @@ repos:
         exclude: ^(notebooks/|docs/)
 
   # --- Black (optional alongside ruff-format) -------------------------------
+  # You can delete this block if you go 100% with ruff-format.
   - repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:
@@ -119,11 +120,12 @@ repos:
         args: ["-r", "src"]
         files: "^src/.*\\.py$"
 
+  # NOTE: Use project metadata (-P) so audits work when there's no requirements.txt
   - repo: https://github.com/pypa/pip-audit
     rev: v2.7.3
     hooks:
       - id: pip-audit
-        args: ["-r", "requirements.txt"]  # scan direct runtime deps (fast & stable)
+        args: ["-P"]
 
   # --- GitHub Actions workflow linter ---------------------------------------
   - repo: https://github.com/rhysd/actionlint
