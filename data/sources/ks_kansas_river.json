@@ -1,0 +1,8 @@
+{
+  "id": "ks_kansas_river",
+  "title": "Kansas River Hydrology Map Service",
+  "url": "https://www.kgs.ku.edu/Hydro/KansasRiver/map.html",
+  "type": "arcgis-rest",
+  "layers": ["channels", "floodplains", "gauges"],
+  "description": "Kansas Geological Survey interactive map of Kansas River hydrology and floodplain layers."
+}
