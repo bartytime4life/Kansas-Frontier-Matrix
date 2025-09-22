@@ -1,0 +1,24 @@
+# Kansas Geo Timeline — pinned constraints for reproducible CI
+# Apply with:
+#   pip install -r requirements.txt --constraint constraints.txt
+
+# Core numerical/GIS stack
+numpy==1.26.4
+rasterio==1.3.10
+rio-cogeo==5.3.3
+shapely==2.0.4
+pyproj==3.6.1
+Pillow==10.4.0
+
+# STAC / schema
+pystac==1.10.1
+pystac-client==0.7.6
+jsonschema==4.23.0
+
+# CLI / utility
+click==8.1.7
+rich==13.7.1
+requests==2.32.3
+tqdm==4.66.5
+
+# (Keep optional stacks unpinned here unless you need them in CI)
