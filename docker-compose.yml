@@ -1,5 +1,6 @@
 version: "3.9"
 
+# Reusable environment knobs
 x-env-defaults: &env_defaults
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONUNBUFFERED: "1"
@@ -9,46 +10,48 @@ x-env-defaults: &env_defaults
   PROJ_NETWORK: "ON"
 
 services:
+  # Main toolbox container (GDAL + Python + your repo bind-mounted)
   kfm:
     build:
       context: .
       dockerfile: docker/Dockerfile
       args:
-        # matches Dockerfile default; override here if you need a pinned tag
+        # Keep overridable; avoids stale base images pin
         GDAL_IMAGE: ghcr.io/osgeo/gdal:ubuntu-small-latest
-        # optional: pass host UID/GID to match file ownership (see "user" below)
         USER_ID: ${UID:-1000}
         GROUP_ID: ${GID:-1000}
     image: kfm:latest
     container_name: kfm
+    platform: linux/amd64          # stable across Apple Silicon/CI
     working_dir: /app
-    # Mount the repo so edits are live inside the container
     volumes:
-      - ./:/app
-    # Map container user to your host UID/GID to avoid root-owned files
+      - ./:/app                    # live-edit the repo
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       <<: *env_defaults
-    # keep temp IO fast; avoids polluting the bind mount with temp files
     tmpfs:
-      - /tmp:size=512m,mode=1777
+      - /tmp:size=512m,mode=1777   # fast temp IO
+      - /var/tmp:size=256m,mode=1777
     tty: true
     stdin_open: true
+    init: true                     # better signal handling than PID 1 bash
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "bash", "-lc", "gdalinfo --version >/dev/null 2>&1"]
       interval: 60s
       timeout: 5s
       retries: 3
+      start_period: 20s            # give GDAL/proj time to settle
 
-  # Simple HTTP server for local preview of web/
+  # Tiny HTTP server to preview ./web (dev-only)
   site:
-    profiles: ["dev"]            # start with: docker compose --profile dev up site
-    image: kfm:latest            # reuse the same image (has Python)
+    profiles: ["dev"]              # start with: docker compose --profile dev up site
+    image: kfm:latest              # reuse the same tool image
+    platform: linux/amd64
     working_dir: /app/web
     depends_on:
       kfm:
-        condition: service_started
+        condition: service_healthy
     command: ["bash", "-lc", "python -m http.server 8080"]
     ports:
       - "8080:8080"
