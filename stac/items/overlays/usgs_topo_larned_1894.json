@@ -1,0 +1,40 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "usgs_topo_larned_1894",
+  "collection": "historic_topo",
+  "bbox": [-99.401, 38.000, -99.000, 38.217],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-99.401, 38.217],
+      [-99.000, 38.217],
+      [-99.000, 38.000],
+      [-99.401, 38.000],
+      [-99.401, 38.217]
+    ]]
+  },
+  "properties": {
+    "datetime": "1894-01-01T00:00:00Z",
+    "proj:epsg": 4326
+  },
+  "assets": {
+    "data": {
+      "href": "data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "overlay"],
+      "title": "USGS Historic Topo — Larned (1894)"
+    },
+    "thumbnail": {
+      "href": "data/cogs/overlays/usgs_topo_larned_1894_preview.png",
+      "type": "image/png",
+      "roles": ["thumbnail"]
+    }
+  },
+  "links": [
+    { "rel": "self",       "href": "./usgs_topo_larned_1894.json",       "type": "application/json" },
+    { "rel": "collection", "href": "../../collections/historic_topo.json","type": "application/json" },
+    { "rel": "root",       "href": "../../catalog.json",                  "type": "application/json" },
+    { "rel": "parent",     "href": "../../collections/historic_topo.json","type": "application/json" }
+  ]
+}
