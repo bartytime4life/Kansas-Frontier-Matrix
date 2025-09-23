@@ -1,11 +1,13 @@
 # --------------------------------------------------------------------
 # Kansas Frontier Matrix / Kansas Geo Timeline — Makefile (connected+safe)
 # --------------------------------------------------------------------
-# - Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
-#            meta, stac, stac-validate, site, site-config, kml, clean, prebuild
-# - Repo-aware STAC path: ./stac
-# - Script fallbacks + GDAL tools when available
-# - Optional: KGS Kansas River hydrology fetch/export → STAC wiring
+# Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
+#          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
+# Extras:  dem-checksum, hillshade-checksum, stac-patch-dem
+# Notes:
+#   - Repo-aware STAC path: ./stac
+#   - Script fallbacks + GDAL tools when available
+#   - Optional: KGS Kansas River hydrology fetch/export → STAC wiring
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
@@ -46,11 +48,12 @@ META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
 # -------- Tools & flags --------
+# Cloud-Optimized GTiff creation options
 COG_OPTS := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
 
-# sha utility (sha256sum on Linux, shasum -a 256 on macOS)
-SHA256      := $(shell (command -v sha256sum || command -v shasum) 2>/dev/null)
-SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
+# sha utility (sha256sum/gsha256sum on Linux/Homebrew, shasum -a 256 on macOS)
+SHA256      := $(shell { command -v sha256sum || command -v gsha256sum || command -v shasum; } 2>/dev/null)
+SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
 
 # External tools
 HAVE_JQ          := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no)
@@ -73,6 +76,7 @@ HAVE_WRITEMETA        := $(wildcard $(S)/write_meta.py)
 HAVE_MAKE_STAC        := $(wildcard $(S)/make_stac.py)
 HAVE_VALIDATE_STAC    := $(wildcard $(S)/validate_stac.py)
 HAVE_VALIDATE_SOURCES := $(wildcard $(S)/validate_sources.py)
+HAVE_GEN_SHA          := $(wildcard $(S)/gen_sha256.sh)
 
 # -------- Kansas River Hydrology (optional integration) --------
 # Fill these with actual ArcGIS REST layer URLs or set env on the command line
@@ -116,7 +120,9 @@ define mirror_derivatives
 endef
 
 # -------- Help --------
-.PHONY: help env prebuild print-%
+.PHONY: help env prebuild print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
+        dem-checksum hillshade-checksum stac-patch-dem hydrology-fetch hydrology-stac
+
 help:
 	@echo ""
 	@echo "Targets:"
@@ -135,6 +141,11 @@ help:
 	@echo "  clean             Remove generated raster outputs (keeps stac/)"
 	@echo "  prebuild          stac-validate + site (used by CI)"
 	@echo ""
+	@echo "Checksums & STAC patches:"
+	@echo "  dem-checksum         Write+verify data/cogs/dem/ks_1m_dem_2018_2020.sha256 and print STAC fields"
+	@echo "  hillshade-checksum   Write+verify data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+	@echo "  stac-patch-dem       Insert DEM checksum/size into stac/items/dem/ks_1m_dem_2018_2020.json"
+	@echo ""
 	@echo "Hydrology (optional):"
 	@echo "  hydrology-fetch   Export KGS Kansas River channels/floodplains/gauges (GeoJSON)"
 	@echo "  hydrology-stac    Wire local GeoJSON hrefs into the three hydrology STAC Items"
@@ -151,6 +162,7 @@ env:
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
+	@echo "SHA256=$(SHA256)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
 
 # Print a variable: make print-DEM  or  make print-% VAR=NAME
 print-%:
@@ -161,7 +173,6 @@ prebuild: stac-validate site
 	@echo ">> Prebuild complete."
 
 # -------- Fetch --------
-.PHONY: fetch
 fetch:
 ifeq ($(strip $(HAVE_FETCH)),)
 	@echo "[fetch] No $(S)/fetch.py found. Skipping."
@@ -171,7 +182,6 @@ else
 endif
 
 # -------- COGS --------
-.PHONY: cogs
 cogs:
 ifeq ($(strip $(HAVE_MAKECOG)),)
 	@echo "[cogs] No $(S)/make_cog.py found. Skipping."
@@ -181,7 +191,6 @@ else
 endif
 
 # -------- Terrain (COGs) --------
-.PHONY: terrain
 terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
 	$(call mirror_derivatives,$(HILLSHADE),$(DERIV)/hillshade.tif)
 	$(call mirror_derivatives,$(SLOPE),$(DERIV)/slope.tif)
@@ -239,7 +248,6 @@ $(ASPECT): $(DEM)
 	fi
 
 # -------- Optional vectors --------
-.PHONY: slope_classes
 slope_classes: $(SLOPE)
 	$(call ensure_dir,$(VEC))
 	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
@@ -253,7 +261,6 @@ slope_classes: $(SLOPE)
 	  echo "[slope_classes] GDAL calc/polygonize not available. Skipping."; \
 	fi
 
-.PHONY: aspect_sectors
 aspect_sectors: $(ASPECT)
 	$(call ensure_dir,$(VEC))
 	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
@@ -268,7 +275,6 @@ aspect_sectors: $(ASPECT)
 	fi
 
 # -------- Meta checksums (optional) --------
-.PHONY: meta
 meta: $(SLOPE) $(ASPECT)
 	@if [ -f "$(META_SLOPE)" ] || [ -f "$(META_ASPECT)" ]; then \
 	  if [ -n "$(SHA256)" ]; then \
@@ -277,26 +283,26 @@ meta: $(SLOPE) $(ASPECT)
 	      SUM_DEM=$$($(SHA256) $(SHA256FLAGS) "$(DEM)" | awk '{print $$1}'); \
 	      SUM_SLOPE=$$($(SHA256) $(SHA256FLAGS) "$(SLOPE)" | awk '{print $$1}'); \
 	      $(PY) - <<'PYCODE' "$(META_SLOPE)" "$$SUM_DEM" "$$SUM_SLOPE"
-import json, sys
+import json, sys, os
 p, dem, slope = sys.argv[1:]
 d=json.load(open(p))
 d.setdefault("inputs",{}).setdefault("dem_cog",{})["checksum"]=dem
 d.setdefault("outputs",{}).setdefault("slope_cog",{})["checksum"]=slope
 json.dump(d, open(p,'w'), indent=2)
-print("updated", p)
+print("updated", os.path.basename(p))
 PYCODE \
 	    ; fi; \
 	    if [ -f "$(META_ASPECT)" ]; then \
 	      SUM_DEM=$$($(SHA256) $(SHA256FLAGS) "$(DEM)" | awk '{print $$1}'); \
 	      SUM_ASPECT=$$($(SHA256) $(SHA256FLAGS) "$(ASPECT)" | awk '{print $$1}'); \
 	      $(PY) - <<'PYCODE' "$(META_ASPECT)" "$$SUM_DEM" "$$SUM_ASPECT"
-import json, sys
+import json, sys, os
 p, dem, aspect = sys.argv[1:]
 d=json.load(open(p))
 d.setdefault("inputs",{}).setdefault("dem_cog",{})["checksum"]=dem
 d.setdefault("outputs",{}).setdefault("aspect_cog",{})["checksum"]=aspect
 json.dump(d, open(p,'w'), indent=2)
-print("updated", p)
+print("updated", os.path.basename(p))
 PYCODE \
 	    ; fi; \
 	  else \
@@ -307,7 +313,6 @@ PYCODE \
 	fi
 
 # -------- STAC build / validate --------
-.PHONY: stac
 stac:
 ifeq ($(strip $(HAVE_MAKE_STAC)),)
 	@echo "[stac] No $(S)/make_stac.py found. Skipping."
@@ -317,7 +322,6 @@ else
 	$(PY) "$(S)/make_stac.py" --data "$(DATA)" --stac "$(STAC)"
 endif
 
-.PHONY: stac-validate
 stac-validate:
 	@if [ -f "$(S)/validate_sources.py" ]; then \
 	  $(PY) "$(S)/validate_sources.py" --sources "$(SRC)"; \
@@ -334,7 +338,6 @@ stac-validate:
 	fi
 
 # -------- Web viewer config (optional, via kgt) --------
-.PHONY: site-config
 site-config:
 	@if [ "$(HAVE_KGT)" = "yes" ]; then \
 	  if [ -f "src/kansas_geo_timeline/templates/app.config.json.j2" ]; then \
@@ -347,12 +350,10 @@ site-config:
 	fi
 
 # -------- KML / KMZ (legacy demo) --------
-.PHONY: kml
 kml: terrain
 	@echo "[kml] Legacy prototype. Provide your regionate script if needed."
 
 # -------- Simple site manifest (always available) --------
-.PHONY: site
 site:
 	$(call ensure_dir,$(WEB))
 	@$(PY) - <<'PYCODE'
@@ -370,17 +371,73 @@ json.dump(layers, open(p, 'w'), indent=2)
 print("wrote", p)
 PYCODE
 
+# -------- Checksums (COGs) --------
+dem-checksum:
+	@if [ -n "$(HAVE_GEN_SHA)" ]; then \
+	  bash "$(S)/gen_sha256.sh" "$(DEM)"; \
+	elif [ -n "$(SHA256)" ]; then \
+	  echo "• hashing $(DEM) → $(DEM:.tif=.sha256)"; \
+	  ( cd "$$(dirname "$(DEM)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(DEM)")" > "$$(basename "$(DEM:.tif=.sha256)")" ); \
+	  echo "• verifying"; \
+	  ( cd "$$(dirname "$(DEM)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null ); \
+	  SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
+import os, sys; print(os.path.getsize(sys.argv[1]))
+PYCODE \
+	  ); HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
+	  echo "STAC patch fields:"; \
+	  echo "  \"file:size\": $$SIZE,"; \
+	  echo "  \"file:checksum\": \"sha256:$$HEX\""; \
+	else \
+	  echo "ERROR: No SHA tool found; install coreutils (sha256sum/gsha256sum) or use scripts/gen_sha256.sh"; exit 1; \
+	fi
+
+hillshade-checksum:
+	@if [ -n "$(HAVE_GEN_SHA)" ]; then \
+	  bash "$(S)/gen_sha256.sh" "$(HILLSHADE)"; \
+	elif [ -n "$(SHA256)" ]; then \
+	  echo "• hashing $(HILLSHADE) → $(HILLSHADE:.tif=.sha256)"; \
+	  ( cd "$$(dirname "$(HILLSHADE)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(HILLSHADE)")" > "$$(basename "$(HILLSHADE:.tif=.sha256)")" ); \
+	  echo "• verifying"; \
+	  ( cd "$$(dirname "$(HILLSHADE)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null ); \
+	else \
+	  echo "ERROR: No SHA tool found; install coreutils (sha256sum/gsha256sum) or use scripts/gen_sha256.sh"; exit 1; \
+	fi
+
+# -------- Patch DEM STAC with checksum/size --------
+stac-patch-dem: dem-checksum
+	@ITEM="$(STAC)/items/dem/ks_1m_dem_2018_2020.json"; \
+	if [ ! -f "$$ITEM" ]; then \
+	  echo "ERROR: STAC item not found: $$ITEM"; exit 1; \
+	fi; \
+	if [ ! -f "$(DEM:.tif=.sha256)" ]; then \
+	  echo "ERROR: missing checksum file: $(DEM:.tif=.sha256)"; exit 1; \
+	fi; \
+	SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
+import os, sys; print(os.path.getsize(sys.argv[1]))
+PYCODE \
+	); \
+	HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
+	$(PY) - <<'PYCODE' "$$ITEM" "$$SIZE" "$$HEX"
+import json, sys, pathlib
+item_path, size, hexsum = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+p = pathlib.Path(item_path)
+d = json.loads(p.read_text())
+d.setdefault("assets",{}).setdefault("cog",{})
+d["assets"]["cog"]["file:size"] = size
+d["assets"]["cog"]["file:checksum"] = f"sha256:{hexsum}"
+p.write_text(json.dumps(d, indent=2))
+print("patched", p)
+PYCODE
+
 # -------- Clean --------
-.PHONY: clean
 clean:
-	rm -rf "$(RAW)" "$(COGS)" "$(DERIV)" "$(DATA)/kml" "$(DATA)"/*.kmz
+	rm -rf "$(RAW)" "$(COGS)" "$(DERIV)" "$(DATA)"/kml "$(DATA)"/*.kmz || true
 	@echo "✓ cleaned generated raster outputs (kept ./stac)."
 
 # ====================================================================
 # Kansas River Hydrology — fetch/export + STAC wiring (optional)
 # ====================================================================
 
-.PHONY: hydrology-fetch hydrology-stac
 hydrology-fetch:
 	$(call ensure_dir,$(KSRIV_OUTDIR))
 	@if [ "$(KSRIV_CHANNELS)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_CHANNELS" ]; then echo "Set KSRIV_CHANNELS=..."; exit 1; fi
