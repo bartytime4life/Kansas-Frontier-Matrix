@@ -1,35 +1,52 @@
 {
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/checksum/v1.0.0/schema.json"
+  ],
   "type": "Feature",
-  "id": "REPLACE_ID_doc_YYYY",
+  "id": "documents_PLACE_TITLE_YYYY",
   "collection": "documents",
-  "bbox": [REPLACE_WEST, REPLACE_SOUTH, REPLACE_EAST, REPLACE_NORTH],
+
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
   "geometry": {
     "type": "Point",
-    "coordinates": [REPLACE_LONG, REPLACE_LAT]
+    "coordinates": [-98.00, 38.50]
   },
+
   "properties": {
-    "datetime": "YYYY-MM-DDT00:00:00Z",
-    "title": "Archival Document — TITLE",
+    "datetime": "YYYY-01-01T00:00:00Z",
+    "title": "Archival Document — TITLE (YYYY)",
     "description": "Scanned or transcribed archival record (treaty, diary, newspaper, etc.).",
-    "document:type": "treaty"
+    "document:type": "treaty",
+    "proj:epsg": 4326,
+    "created": "2025-09-23T00:00:00Z"
   },
+
   "assets": {
     "pdf": {
       "href": "../../data/docs/REPLACE_FILE.pdf",
       "type": "application/pdf",
-      "roles": ["data"]
+      "roles": ["data"],
+      "title": "Document (PDF)",
+      "file:size": null,
+      "checksum:sha256": null
     },
     "txt": {
       "href": "../../data/docs/REPLACE_FILE.txt",
       "type": "text/plain",
-      "roles": ["metadata"]
+      "roles": ["metadata"],
+      "title": "Transcript / OCR (TXT)",
+      "file:size": null,
+      "checksum:sha256": null
     }
   },
+
   "links": [
-    { "rel": "collection", "href": "../collections/documents.json", "type": "application/json" },
-    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
-    { "rel": "parent", "href": "../catalog.json", "type": "application/json" },
-    { "rel": "self", "href": "document_item.json", "type": "application/json" }
+    { "rel": "collection", "href": "../collections/documents.json", "type": "application/json", "title": "Documents Collection" },
+    { "rel": "parent",     "href": "../collections/documents.json", "type": "application/json", "title": "Documents Collection" },
+    { "rel": "root",       "href": "../catalog.json",               "type": "application/json", "title": "Kansas Geo Timeline STAC Catalog" },
+    { "rel": "self",       "href": "document_item.json",            "type": "application/json" }
   ]
 }
