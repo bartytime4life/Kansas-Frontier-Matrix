@@ -31,16 +31,16 @@ def _resolve_version() -> str:
     Return the installed package version if available; fallback to '0.0.0.dev'.
     """
     try:
-        from importlib.metadata import version, PackageNotFoundError  # type: ignore
+        from importlib.metadata import version  # type: ignore
     except Exception:  # pragma: no cover
         try:
-            from importlib_metadata import version, PackageNotFoundError  # type: ignore
+            from importlib_metadata import version  # type: ignore
         except Exception:  # pragma: no cover
             return "0.0.0.dev"
 
     try:
         return version("kansas_geo_timeline")
-    except Exception:  # PackageNotFoundError or other env issues
+    except Exception:
         return "0.0.0.dev"
 
 
@@ -55,7 +55,7 @@ try:
     from importlib.resources import files as _res_files  # type: ignore[attr-defined]
 except Exception:  # pragma: no cover
     # Python 3.8 compat via backport
-    from importlib_resources import files as _res_files  # type: ignore # noqa: F401
+    from importlib_resources import files as _res_files  # type: ignore  # noqa: F401
 
 # ---------------------------------------------------------------------------
 # Paths and resource resolution
@@ -85,14 +85,19 @@ def _resource_pkg_dir(subdir: str) -> Optional[Path]:
     """
     Return a resolved path to a subdir (e.g., 'schemas', 'templates') when the
     package is installed as a wheel. Uses importlib.resources to find data.
-    Returns None if not present (e.g., during early scaffolding).
+    Returns None if not present (e.g., during early scaffolding) or not
+    materialized on the filesystem (zip resources).
     """
     try:
-        root = _res_files(__package__) / subdir  # type: ignore[arg-type]
-        p = Path(str(root))
-        return p if p.exists() else None
-    except Exception:  # pragma: no cover
-        return None
+        # _res_files returns a Traversable; it MAY or MAY NOT be a real FS path.
+        traversable = _res_files(__package__).joinpath(subdir)  # type: ignore[arg-type]
+        # Best-effort: only return if it's an existing real filesystem directory.
+        p = Path(str(traversable))
+        if p.exists() and p.is_dir():
+            return p
+    except Exception:
+        pass
+    return None
 
 def _first_existing(paths: Iterable[Optional[Path]]) -> Optional[Path]:
     for p in paths:
@@ -114,9 +119,7 @@ def _ensure_available(kind: str, p: Optional[Path]) -> Path:
     return p
 
 def package_dir() -> Path:
-    """
-    Return the kansas_geo_timeline package directory path.
-    """
+    """Return the kansas_geo_timeline package directory path."""
     return _PKG_DIR
 
 def schemas_dir() -> Path:
@@ -143,8 +146,12 @@ def _safe_join(root: Path, name: str) -> Path:
     """
     if name.startswith(("/", "..")):
         raise ValueError(f"Illegal resource name (path traversal): {name}")
+    # Normalize separators; prevent sneaky traversal (e.g., "a/../../b")
     p = (root / name).resolve()
-    if root not in p.parents and p != root:
+    if p == root:
+        # joining an empty name would land on root; block it to avoid confusion
+        raise ValueError("Empty or root-only resource name is not allowed")
+    if root not in p.parents:
         raise ValueError(f"Resource escapes root: {p} (root={root})")
     return p
 
@@ -189,7 +196,7 @@ def template_path(name: str) -> Path:
     return p
 
 # ---------------------------------------------------------------------------
-# Convenience: list & load helpers
+# Convenience: list, load, tiny readers
 # ---------------------------------------------------------------------------
 
 def list_schemas(suffix: str | None = ".json") -> List[str]:
@@ -197,7 +204,7 @@ def list_schemas(suffix: str | None = ".json") -> List[str]:
     List schema filenames (optionally filtered by suffix).
     """
     root = schemas_dir()
-    items = []
+    items: List[str] = []
     for p in sorted(root.glob("**/*")):
         if p.is_file() and (suffix is None or p.name.endswith(suffix)):
             items.append(str(p.relative_to(root)))
@@ -208,7 +215,7 @@ def list_templates(suffix: str | None = None) -> List[str]:
     List template filenames (optionally filtered by suffix, e.g., '.j2').
     """
     root = templates_dir()
-    items = []
+    items: List[str] = []
     for p in sorted(root.glob("**/*")):
         if p.is_file() and (suffix is None or p.name.endswith(suffix)):
             items.append(str(p.relative_to(root)))
@@ -231,6 +238,18 @@ def load_json_schema(name: str) -> Dict[str, Any]:
     with schema_path(name).open("r", encoding="utf-8") as f:
         return json.load(f)
 
+def read_text(path: Path, encoding: str = "utf-8") -> str:
+    """
+    Tiny helper: read UTF-8 text from a file (explicit encoding).
+    """
+    return Path(path).read_text(encoding=encoding)
+
+def read_bytes(path: Path) -> bytes:
+    """
+    Tiny helper: read raw bytes from a file.
+    """
+    return Path(path).read_bytes()
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -245,4 +264,6 @@ __all__ = [
     "list_schemas",
     "list_templates",
     "load_json_schema",
+    "read_text",
+    "read_bytes",
 ]
