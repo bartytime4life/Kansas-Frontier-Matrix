@@ -11,8 +11,8 @@ from typing import Any, Iterable, List, Tuple
 import pytest
 
 REPO = Path(__file__).resolve().parents[1]
-ITEMS_DIR = REPO / "data" / "stac" / "items"
-COLLS_DIR = REPO / "data" / "stac" / "collections"
+ITEMS_DIR = REPO / "stac" / "items"
+COLLS_DIR = REPO / "stac" / "collections"
 
 # e.g., "1.0.0"
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
@@ -26,12 +26,16 @@ ISO_ZULU = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 # --------------------------------------------------------------------------------------
 
 def read_json(p: Path) -> dict:
-    return json.loads(p.read_text(encoding="utf-8"))
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise AssertionError(f"Invalid JSON in {p}:\n{e}") from e
 
-def list_json(dirpath: Path) -> list[Path]:
+def list_json(dirpath: Path, recursive: bool = False) -> List[Path]:
     if not dirpath.exists():
         return []
-    return sorted([p for p in dirpath.glob("*.json") if p.is_file()])
+    pat = "**/*.json" if recursive else "*.json"
+    return sorted([p for p in dirpath.glob(pat) if p.is_file()])
 
 def iso_or_none(s: str | None) -> bool:
     return (s is None) or bool(ISO_ZULU.match(s))
@@ -123,7 +127,7 @@ def _looks_like_cog_mediatype(m: str) -> bool:
       - "image/tiff" (nudge to geotiff in assert message)
     """
     m = m.lower()
-    return ("geotiff" in m) or (m.startswith("image/geotiff")) or (m.startswith("image/tiff"))
+    return ("geotiff" in m) or m.startswith("image/geotiff") or m.startswith("image/tiff")
 
 def approx_encloses(bbox_outer: list[float], bbox_inner: tuple[float, float, float, float], eps: float = 1e-6) -> bool:
     return (
@@ -137,8 +141,8 @@ def approx_encloses(bbox_outer: list[float], bbox_inner: tuple[float, float, flo
 # Dynamic discovery (so new items/collections are picked up automatically)
 # --------------------------------------------------------------------------------------
 
-ALL_ITEMS = list_json(ITEMS_DIR)
-ALL_COLLS = list_json(COLLS_DIR)
+ALL_ITEMS = list_json(ITEMS_DIR, recursive=True)
+ALL_COLLS = list_json(COLLS_DIR, recursive=False)
 
 # If none exist yet, mark the whole module as skipped to avoid noise
 pytestmark = pytest.mark.skipif(
@@ -167,6 +171,7 @@ def test_collection_core(p: Path):
     assert sb, f"{p.name}: extent.spatial.bbox required and must be [minx,miny,maxx,maxy] or list of such"
     for b in sb:
         assert len(b) >= 4, f"{p.name}: bbox must have at least 4 numbers"
+        # b already cast to float in normalizer
         assert all(isinstance(v, float) for v in b[:4]), f"{p.name}: bbox values must be numeric"
 
     # temporal.interval
