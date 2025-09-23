@@ -7,6 +7,8 @@ on:
       - "web/**"
       - "stac/**"
       - "data/sources/**"
+      - "docs/**"
+      - "mkdocs.yml"
       - ".github/workflows/site.yml"
       - "README.md"
       - "Makefile"
@@ -164,6 +166,25 @@ jobs:
           [ $ok -eq 1 ] || { echo "::error::JSON validation failed"; exit 1; }
 
       # --------------------------------------------------------------
+      # Build MkDocs if present, publish under /docs/
+      # --------------------------------------------------------------
+      - name: Set up Python (for MkDocs)
+        if: ${{ hashFiles('mkdocs.yml') != '' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build MkDocs site
+        if: ${{ hashFiles('mkdocs.yml') != '' }}
+        run: |
+          set -euo pipefail
+          pip install --upgrade pip
+          pip install mkdocs-material
+          mkdocs build --clean
+          mkdir -p "$SITE_DIR/docs"
+          rsync -a --delete site/ "$SITE_DIR/docs/"
+
+      # --------------------------------------------------------------
       # Pages-friendly outputs
       # --------------------------------------------------------------
       - name: Prepare Pages artifacts (.nojekyll, 404, CNAME if present)
@@ -188,7 +209,6 @@ HTML
 
       # --------------------------------------------------------------
       # Link check (use config if present; otherwise minimal args)
-      # NOTE: we compute args in a shell step, then feed them to lychee-action.
       # --------------------------------------------------------------
       - name: Compute lychee args
         id: lychee_args
