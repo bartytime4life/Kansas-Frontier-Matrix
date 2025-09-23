@@ -1,57 +1,81 @@
 {
   "stac_version": "1.0.0",
-  "stac_extensions": [
-    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
-  ],
   "type": "Collection",
-  "id": "elevation",
-  "title": "Kansas Elevation — DEM & Terrain Derivatives",
-  "description": "Digital Elevation Models (DEM) and derived terrain layers (e.g., hillshade, slope, aspect) for Kansas, suitable for time-aware visualization in the Kansas-Frontier-Matrix.",
-  "keywords": ["DEM", "elevation", "terrain", "hillshade", "slope", "aspect", "COG", "Kansas"],
-  "license": "proprietary",
+  "id": "historic_topo",
+  "title": "Historic Topographic Maps (USGS & related)",
+  "description": "Georeferenced historic topographic and survey maps covering Kansas. Items typically provide a Cloud-Optimized GeoTIFF (COG) overlay plus a thumbnail, with optional links to original scans and styling files.",
+  "license": "public-domain",
+  "keywords": ["historic", "topographic", "USGS", "Kansas", "overlay", "map", "raster"],
+
   "providers": [
     {
       "name": "Kansas Frontier Matrix Project",
-      "roles": ["producer", "processor", "host"],
+      "roles": ["processor", "host"],
       "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    },
+    {
+      "name": "U.S. Geological Survey (USGS)",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.usgs.gov/"
     }
   ],
+
   "extent": {
     "spatial": {
-      "bbox": [[-102.05, 36.99, -94.61, 40.00]]
+      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
     },
     "temporal": {
-      "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]]
+      "interval": [["1800-01-01T00:00:00Z", null]]
     }
   },
+
   "summaries": {
     "proj:epsg": [4326],
-    "gsd": [1.0]
+    "item_type": ["Feature"],
+    "platform": ["historic-scan"],
+    "gsd": [0.5, 1.0, 2.0, 2.4, 7.5, 15.0],
+    "keywords": ["USGS", "historic topo", "overlay", "georeferenced scan"]
   },
+
   "item_assets": {
-    "dem": {
+    "cog": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"],
-      "title": "DEM (COG, meters)",
-      "description": "Cloud-Optimized GeoTIFF of the digital elevation model (meters)."
-    },
-    "hillshade": {
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["derived", "visual"],
-      "title": "Hillshade (COG)",
-      "description": "Hillshade rendered from the DEM."
+      "roles": ["data", "overlay"],
+      "title": "Georeferenced Overlay (COG)"
     },
     "thumbnail": {
       "type": "image/png",
       "roles": ["thumbnail"],
-      "title": "Thumbnail",
-      "description": "Quicklook image for previews."
+      "title": "Thumbnail"
+    },
+    "pdf": {
+      "type": "application/pdf",
+      "roles": ["source", "metadata"],
+      "title": "Original Scan (PDF)"
+    },
+    "kml": {
+      "type": "application/vnd.google-earth.kml+xml",
+      "roles": ["visual"],
+      "title": "KML Overlay (optional)"
+    },
+    "style": {
+      "type": "application/xml",
+      "roles": ["style"],
+      "title": "Style (SLD/QML) (optional)"
     }
   },
+
+  "assets": {
+    "overview": {
+      "href": "../assets/historic_topo_overview.png",
+      "type": "image/png",
+      "title": "Collection overview (optional)"
+    }
+  },
+
   "links": [
-    { "rel": "self",   "href": "./elevation.json", "type": "application/json" },
-    { "rel": "root",   "href": "../catalog.json",  "type": "application/json" },
-    { "rel": "parent", "href": "../catalog.json",  "type": "application/json" }
+    { "rel": "self",   "href": "historic_topo.json", "type": "application/json" },
+    { "rel": "root",   "href": "../catalog.json",    "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",    "type": "application/json" }
   ]
 }
