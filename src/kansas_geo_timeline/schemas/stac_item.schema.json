@@ -29,7 +29,7 @@
 
     "id": { "type": "string", "minLength": 1 },
 
-    "collection": { "type": "string" },
+    "collection": { "type": ["string", "null"] },
 
     "proj:epsg": {
       "type": ["integer", "null"],
@@ -42,10 +42,7 @@
       "required": ["type", "coordinates"],
       "additionalProperties": true,
       "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["Polygon", "MultiPolygon"]
-        },
+        "type": { "type": "string", "enum": ["Polygon", "MultiPolygon"] },
         "coordinates": {}
       }
     },
@@ -61,27 +58,19 @@
       "type": "object",
       "additionalProperties": true,
       "description": "Item properties (temporal fields + optional proj:epsg).",
-
       "properties": {
-        "datetime": { "type": ["string", "null"], "format": "date-time" },
-        "start_datetime": { "type": ["string", "null"], "format": "date-time" },
-        "end_datetime": { "type": ["string", "null"], "format": "date-time" },
-        "proj:epsg": { "type": ["integer", "null"] }
+        "datetime":        { "type": ["string", "null"], "format": "date-time" },
+        "start_datetime":  { "type": ["string", "null"], "format": "date-time" },
+        "end_datetime":    { "type": ["string", "null"], "format": "date-time" },
+        "proj:epsg":       { "type": ["integer", "null"] }
       },
-
       "allOf": [
         {
-          "description": "Either datetime OR (start_datetime AND end_datetime) must be present and non-null.",
-          "oneOf": [
-            { "properties": { "datetime": { "type": "string", "format": "date-time" } } },
-            {
-              "required": ["start_datetime", "end_datetime"],
-              "properties": {
-                "datetime": { "type": "null" },
-                "start_datetime": { "type": "string", "format": "date-time" },
-                "end_datetime": { "type": "string", "format": "date-time" }
-              }
-            }
+          "description": "At least one of datetime, start_datetime, end_datetime must be present (and if present, must be date-time or null).",
+          "anyOf": [
+            { "required": ["datetime"] },
+            { "required": ["start_datetime"] },
+            { "required": ["end_datetime"] }
           ]
         }
       ]
@@ -106,7 +95,9 @@
               "type": "array",
               "items": { "type": "string" },
               "uniqueItems": true
-            }
+            },
+            "checksum:sha256": { "type": ["string", "null"], "pattern": "^[A-Fa-f0-9]{64}$" },
+            "file:size": { "type": ["integer", "null"], "minimum": 0 }
           }
         }
       }
@@ -163,7 +154,7 @@
       "stac_extensions": [],
       "type": "Feature",
       "id": "usgs_topo_larned_1894",
-      "collection": "overlays",
+      "collection": "historic_topo",
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
@@ -193,10 +184,10 @@
         }
       },
       "links": [
-        { "rel": "self", "href": "data/stac/items/usgs_topo_larned_1894.json" },
-        { "rel": "collection", "href": "data/stac/collections/overlays.json" },
-        { "rel": "root", "href": "data/stac/catalog.json" },
-        { "rel": "parent", "href": "data/stac/collections/overlays.json" }
+        { "rel": "self",       "href": "./usgs_topo_larned_1894.json" },
+        { "rel": "collection", "href": "../collections/historic_topo.json" },
+        { "rel": "root",       "href": "../catalog.json" },
+        { "rel": "parent",     "href": "../collections/historic_topo.json" }
       ],
       "license": "Public Domain (USGS)",
       "providers": [
