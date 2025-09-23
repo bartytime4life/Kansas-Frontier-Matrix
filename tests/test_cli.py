@@ -43,7 +43,7 @@ def glob_paths(*globs: str) -> List[Path]:
         out.extend(REPO.glob(g))
     # Deduplicate while preserving order
     seen = set()
-    uniq = []
+    uniq: List[Path] = []
     for p in out:
         if p not in seen:
             seen.add(p)
@@ -196,6 +196,27 @@ def test_collection_links_item_files_exist(collection_path: Path):
         if not found:
             pytest.skip(f"Linked item missing (ok during early scaffolding): {href}")
 
+
+# ---------------------------------------------------------------------------
+# Root STAC catalog — minimal wiring check
+# ---------------------------------------------------------------------------
+
+CATALOG = REPO / "stac" / "catalog.json"
+
+def test_root_catalog_minimum():
+    if not CATALOG.exists():
+        pytest.skip("Root catalog not present yet: stac/catalog.json")
+    cat = read_json(CATALOG)
+    assert cat.get("type") == "Catalog", "Root must be type=Catalog"
+    assert cat.get("stac_version"), "Missing stac_version"
+    assert isinstance(cat.get("id"), str) and cat["id"], "Missing id"
+    links = cat.get("links", [])
+    assert isinstance(links, list) and links, "Root catalog must have links[]"
+    rels = {ln.get("rel") for ln in links}
+    assert "self" in rels and "root" in rels, "Root catalog must include 'self' and 'root' links"
+    # At least one child collection is nice to have; skip rather than fail if not yet wired
+    if not any(ln.get("rel") == "child" for ln in links):
+        pytest.skip("Root catalog has no child collections yet (ok during scaffolding)")
 
 # ---------------------------------------------------------------------------
 # KML well-formedness
