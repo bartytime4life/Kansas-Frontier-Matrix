@@ -1,0 +1,42 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "REPLACE_ID_map_YYYY",
+  "collection": "base_maps",
+  "bbox": [REPLACE_WEST, REPLACE_SOUTH, REPLACE_EAST, REPLACE_NORTH],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [REPLACE_WEST, REPLACE_SOUTH],
+      [REPLACE_WEST, REPLACE_NORTH],
+      [REPLACE_EAST, REPLACE_NORTH],
+      [REPLACE_EAST, REPLACE_SOUTH],
+      [REPLACE_WEST, REPLACE_SOUTH]
+    ]]
+  },
+  "properties": {
+    "datetime": "YYYY-MM-DDT00:00:00Z",
+    "title": "Historical Topo Map — PLACE, YEAR",
+    "description": "Georeferenced historical topo sheet (scale REPLACE_SCALE).",
+    "proj:epsg": 4326
+  },
+  "assets": {
+    "cog": {
+      "href": "../../data/cogs/overlays/REPLACE_FILE.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "title": "COG raster"
+    },
+    "thumbnail": {
+      "href": "../../data/cogs/overlays/REPLACE_FILE.png",
+      "type": "image/png",
+      "roles": ["thumbnail"]
+    }
+  },
+  "links": [
+    { "rel": "collection", "href": "../collections/base_maps.json", "type": "application/json" },
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "self", "href": "map_item.json", "type": "application/json" }
+  ]
+}
