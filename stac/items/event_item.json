@@ -1,38 +1,55 @@
 {
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/checksum/v1.0.0/schema.json"
+  ],
   "type": "Feature",
-  "id": "REPLACE_ID_event_YYYY",
+  "id": "events_PLACE_EVENT_YYYY",
   "collection": "events",
-  "bbox": [REPLACE_WEST, REPLACE_SOUTH, REPLACE_EAST, REPLACE_NORTH],
+
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
   "geometry": {
     "type": "LineString",
     "coordinates": [
-      [REPLACE_LONG1, REPLACE_LAT1],
-      [REPLACE_LONG2, REPLACE_LAT2]
+      [-100.00, 38.00],
+      [-98.00, 39.00]
     ]
   },
+
   "properties": {
-    "datetime": "YYYY-MM-DDTHH:MM:SSZ",
-    "title": "Event — NAME",
+    "datetime": "YYYY-01-01T00:00:00Z",
+    "title": "Event — NAME (YYYY)",
     "description": "Description of the historical event (battle, treaty, tornado, flood, etc.).",
-    "event:type": "tornado"
+    "event:type": "tornado",
+    "proj:epsg": 4326,
+    "created": "2025-09-23T00:00:00Z"
   },
+
   "assets": {
     "geojson": {
       "href": "../../data/events/REPLACE_FILE.geojson",
       "type": "application/geo+json",
-      "roles": ["data"]
+      "roles": ["data"],
+      "title": "Event geometry (GeoJSON)",
+      "file:size": null,
+      "checksum:sha256": null
     },
     "report": {
       "href": "../../data/events/REPLACE_FILE.pdf",
       "type": "application/pdf",
-      "roles": ["metadata"]
+      "roles": ["metadata"],
+      "title": "Event report / source document (PDF)",
+      "file:size": null,
+      "checksum:sha256": null
     }
   },
+
   "links": [
     { "rel": "collection", "href": "../collections/events.json", "type": "application/json" },
-    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
-    { "rel": "parent", "href": "../catalog.json", "type": "application/json" },
-    { "rel": "self", "href": "event_item.json", "type": "application/json" }
+    { "rel": "parent",     "href": "../collections/events.json", "type": "application/json" },
+    { "rel": "root",       "href": "../catalog.json",            "type": "application/json" },
+    { "rel": "self",       "href": "event_item.json",            "type": "application/json" }
   ]
 }
