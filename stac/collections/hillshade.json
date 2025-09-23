@@ -1,0 +1,70 @@
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/checksum/v1.0.0/schema.json"
+  ],
+  "type": "Collection",
+  "id": "hillshade",
+  "title": "Kansas Hillshade (1 m DEM Derived, 2018–2020)",
+  "description": "Statewide hillshade rasters for Kansas, derived from the 2018–2020 1 m bare-earth DEM and distributed as Cloud-Optimized GeoTIFFs (COGs). Intended for shaded-relief visualization alongside historical map overlays and vector layers.",
+  "license": "public-domain",
+  "keywords": [
+    "Kansas",
+    "DEM",
+    "hillshade",
+    "COG",
+    "terrain",
+    "shaded relief",
+    "STAC"
+  ],
+  "providers": [
+    {
+      "name": "Kansas Frontier Matrix Project",
+      "roles": ["processor", "host"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+    },
+    "temporal": {
+      "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]]
+    }
+  },
+  "summaries": {
+    "proj:epsg": [4326],
+    "raster:bands": [
+      {
+        "name": "hillshade",
+        "data_type": "uint8",
+        "statistics": {
+          "minimum": 0,
+          "maximum": 255
+        }
+      }
+    ]
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Kansas Geo Timeline STAC Catalog"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json",
+      "title": "Kansas Geo Timeline STAC Catalog"
+    },
+    {
+      "rel": "self",
+      "href": "hillshade.json",
+      "type": "application/json",
+      "title": "Hillshade Collection"
+    }
+  ]
+}
