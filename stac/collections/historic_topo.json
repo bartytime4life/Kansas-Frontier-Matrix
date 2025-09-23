@@ -3,24 +3,79 @@
   "type": "Collection",
   "id": "historic_topo",
   "title": "Historic Topographic Maps (USGS & related)",
-  "description": "Georeferenced historic topographic maps covering Kansas.",
+  "description": "Georeferenced historic topographic and survey maps covering Kansas. Items typically provide a Cloud-Optimized GeoTIFF (COG) overlay plus a thumbnail, with optional links to original scans and styling files.",
   "license": "public-domain",
-  "keywords": ["historic", "topographic", "USGS", "Kansas", "overlay"],
+  "keywords": ["historic", "topographic", "USGS", "Kansas", "overlay", "map", "raster"],
+
   "providers": [
     {
       "name": "Kansas Frontier Matrix Project",
       "roles": ["processor", "host"],
       "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
     },
-    { "name": "USGS", "roles": ["producer", "licensor"], "url": "https://www.usgs.gov/" }
+    {
+      "name": "U.S. Geological Survey (USGS)",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.usgs.gov/"
+    }
   ],
+
   "extent": {
-    "spatial": { "bbox": [[-102.05, 36.99, -94.61, 40.00]] },
-    "temporal": { "interval": [["1800-01-01T00:00:00Z", null]] }
+    "spatial": {
+      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+    },
+    "temporal": {
+      "interval": [["1800-01-01T00:00:00Z", null]]
+    }
   },
+
+  "summaries": {
+    "proj:epsg": [4326],
+    "item_type": ["Feature"],
+    "platform": ["historic-scan"],
+    "gsd": [0.5, 1.0, 2.0, 2.4, 7.5, 15.0],
+    "keywords": ["USGS", "historic topo", "overlay", "georeferenced scan"]
+  },
+
+  "item_assets": {
+    "cog": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "overlay"],
+      "title": "Georeferenced Overlay (COG)"
+    },
+    "thumbnail": {
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail"
+    },
+    "pdf": {
+      "type": "application/pdf",
+      "roles": ["source", "metadata"],
+      "title": "Original Scan (PDF)"
+    },
+    "kml": {
+      "type": "application/vnd.google-earth.kml+xml",
+      "roles": ["visual"],
+      "title": "KML Overlay (optional)"
+    },
+    "style": {
+      "type": "application/xml",
+      "roles": ["style"],
+      "title": "Style (SLD/QML) (optional)"
+    }
+  },
+
+  "assets": {
+    "overview": {
+      "href": "../assets/historic_topo_overview.png",
+      "type": "image/png",
+      "title": "Collection overview (optional)"
+    }
+  },
+
   "links": [
-    { "rel": "self",   "href": "./historic_topo.json", "type": "application/json" },
-    { "rel": "root",   "href": "../catalog.json",      "type": "application/json" },
-    { "rel": "parent", "href": "../catalog.json",      "type": "application/json" }
+    { "rel": "self",   "href": "historic_topo.json", "type": "application/json" },
+    { "rel": "root",   "href": "../catalog.json",    "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json",    "type": "application/json" }
   ]
 }
