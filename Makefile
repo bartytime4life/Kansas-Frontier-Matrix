@@ -51,11 +51,13 @@ META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
 # -------- Tools & flags --------
-COG_OPTS := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
+COG_OPTS   := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
+OVERVIEWS  := 2 4 8 16
 
 # sha utility (sha256sum/gsha256sum on Linux/Homebrew, shasum -a 256 on macOS)
-SHA256      := $(shell { command -v sha256sum || command -v gsha256sum || command -v shasum; } 2>/dev/null)
-SHA256FLAGS := $(shell if command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; then echo ""; else echo "-a 256"; fi)
+SHA256_BIN   := $(shell { command -v sha256sum || command -v gsha256sum || command -v shasum; } 2>/dev/null)
+SHA256_IS_GNU:= $(shell { command -v sha256sum || command -v gsha256sum; } >/dev/null 2>&1 && echo yes || echo no)
+SHA256FLAGS  := $(if $(filter yes,$(SHA256_IS_GNU)),,-a 256)
 
 # External tools
 HAVE_JQ          := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no)
@@ -70,7 +72,7 @@ HAVE_GDAL_ADDO   := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || e
 GDAL_POLY_BIN    := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
 GDAL_CALC_BIN    := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
 
-# Detect helper scripts present in this repo
+# Detect helper scripts present in this repo (value = path or empty)
 HAVE_FETCH            := $(wildcard $(S)/fetch.py)
 HAVE_MAKECOG          := $(wildcard $(S)/make_cog.py)
 HAVE_MAKEHILLSHADE    := $(wildcard $(S)/make_hillshade.py)
@@ -126,11 +128,12 @@ define mirror_derivatives
 	fi
 endef
 
-# -------- Help --------
+# -------- PHONY --------
 .PHONY: help env prebuild preview prebuild-lite print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
         dem-checksum hillshade-checksum hydrology-fetch hydrology-stac \
         install-dev test test-cli test-sources
 
+# -------- Help --------
 help:
 	@echo ""
 	@echo "Targets:"
@@ -157,7 +160,7 @@ help:
 	@echo ""
 	@echo "Hydrology (optional):"
 	@echo "  hydrology-fetch   Export Kansas River channels/floodplains/gauges (GeoJSON)"
-	@echo "  hydrology-stac    Wire local GeoJSON hrefs into the three hydrology STAC Items"
+	@echo "  hydrology-stac    Wire local GeoJSON hrefs into the hydrology STAC Items"
 	@echo ""
 	@echo "Dev:"
 	@echo "  install-dev, test, test-cli, test-sources"
@@ -175,7 +178,7 @@ env:
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
 	@echo "HAVE_PATCH_ASSET=$(if $(HAVE_PATCH_ASSET),yes,no)"
-	@echo "SHA256=$(SHA256)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
+	@echo "SHA256=$(SHA256_BIN)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
 
 print-%:
 	@echo '$*=$($*)'
@@ -190,20 +193,18 @@ prebuild-lite: site
 	@echo ">> Prebuild-lite complete (no validation/checksums)."
 
 # -------- Fetch --------
-fetch:
+fetch: | $(RAW)
 ifeq ($(strip $(HAVE_FETCH)),)
 	@echo "[fetch] No $(S)/fetch.py found. Skipping."
 else
-	$(call ensure_dir,$(RAW))
 	$(PY) "$(S)/fetch.py" --sources "$(SRC)" --out "$(RAW)"
 endif
 
 # -------- COGS --------
-cogs:
+cogs: | $(COGS)
 ifeq ($(strip $(HAVE_MAKECOG)),)
 	@echo "[cogs] No $(S)/make_cog.py found. Skipping."
 else
-	$(call ensure_dir,$(COGS))
 	$(PY) "$(S)/make_cog.py" --in "$(RAW)" --out "$(COGS)"
 endif
 
@@ -214,45 +215,42 @@ terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
 	$(call mirror_derivatives,$(ASPECT),$(DERIV)/aspect.tif)
 	@echo "✓ terrain built (COGs) and mirrored into $(DERIV)"
 
-$(HILLSHADE): $(DEM)
+$(HILLSHADE): $(DEM) | $(HILLS)
 	$(check_dem)
-	$(call ensure_dir,$(HILLS))
-	@if [ -f "$(S)/make_hillshade.py" ]; then \
+	@if [ -n "$(HAVE_MAKEHILLSHADE)" ]; then \
 	  echo "[hillshade] $(S)/make_hillshade.py"; \
-	  $(PY) "$(S)/make_hillshade.py" --dem "$(DEM)" --out "$(HILLSHADE)" --cog; \
+	  $(PY) "$(S)/make_hillshade.py" --dem "$(DEM)" --out "$@" --cog; \
 	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[hillshade] gdaldem hillshade"; \
 	  tmp="$@.tmp.tif"; \
 	  gdaldem hillshade "$(DEM)" "$$tmp" -compute_edges -z 1.0 -az 315 -alt 45; \
-	  gdaladdo -r average "$$tmp" 2 4 8 16; \
+	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
 	  rm -f "$$tmp"; \
 	else \
 	  echo "ERROR: neither $(S)/make_hillshade.py nor sufficient GDAL tools available."; exit 1; \
 	fi
 
-$(SLOPE): $(DEM)
+$(SLOPE): $(DEM) | $(TERRAIN)
 	$(check_dem)
-	$(call ensure_dir,$(TERRAIN))
 	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[slope] gdaldem slope (degrees)"; \
 	  tmp="$@.tmp.tif"; \
 	  gdaldem slope "$(DEM)" "$$tmp" -compute_edges -s 1.0; \
-	  gdaladdo -r average "$$tmp" 2 4 8 16; \
+	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
 	  rm -f "$$tmp"; \
 	else \
 	  echo "ERROR: gdaldem/gdaladdo/gdal_translate required for slope."; exit 1; \
 	fi
 
-$(ASPECT): $(DEM)
+$(ASPECT): $(DEM) | $(TERRAIN)
 	$(check_dem)
-	$(call ensure_dir,$(TERRAIN))
 	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
 	  tmp="$@.tmp.tif"; \
 	  gdaldem aspect "$(DEM)" "$$tmp" -compute_edges; \
-	  gdaladdo -r average "$$tmp" 2 4 8 16; \
+	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
 	  rm -f "$$tmp"; \
 	else \
@@ -260,40 +258,40 @@ $(ASPECT): $(DEM)
 	fi
 
 # -------- Optional vectors --------
-slope_classes: $(SLOPE)
-	$(call ensure_dir,$(VEC))
+slope_classes: $(SLOPE) | $(VEC)
 	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
 	  echo "[slope_classes] binning slope → polygons"; \
+	  tmp=$$(mktemp /tmp/_slope_classes.XXXXXX.tif); \
 	  $(GDAL_CALC_BIN) -A "$(SLOPE)" --NoDataValue=0 \
 	    --calc="(A>=0)*(A<2)*1 + (A>=2)*(A<5)*2 + (A>=5)*(A<10)*3 + (A>=10)*(A<20)*4 + (A>=20)*(A<30)*5 + (A>=30)*(A<45)*6 + (A>=45)*7" \
-	    --outfile=/tmp/_slope_classes.tif --type=Byte $(COG_OPTS); \
-	  $(GDAL_POLY_BIN) /tmp/_slope_classes.tif -f GeoJSON "$(SLOPE_CLASSES)"; \
-	  rm -f /tmp/_slope_classes.tif; \
+	    --outfile="$$tmp" --type=Byte $(COG_OPTS); \
+	  $(GDAL_POLY_BIN) "$$tmp" -f GeoJSON "$(SLOPE_CLASSES)"; \
+	  rm -f "$$tmp"; \
 	else \
 	  echo "[slope_classes] GDAL calc/polygonize not available. Skipping."; \
 	fi
 
-aspect_sectors: $(ASPECT)
-	$(call ensure_dir,$(VEC))
+aspect_sectors: $(ASPECT) | $(VEC)
 	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
 	  echo "[aspect_sectors] binning 8-way aspect → polygons"; \
+	  tmp=$$(mktemp /tmp/_aspect_sectors.XXXXXX.tif); \
 	  $(GDAL_CALC_BIN) -A "$(ASPECT)" --NoDataValue=0 \
 	    --calc="(A<22.5)*(A>=0)*1 + (A>=22.5)*(A<67.5)*2 + (A>=67.5)*(A<112.5)*3 + (A>=112.5)*(A<157.5)*4 + (A>=157.5)*(A<202.5)*5 + (A>=202.5)*(A<247.5)*6 + (A>=247.5)*(A<292.5)*7 + (A>=292.5)*(A<337.5)*8 + (A>=337.5)*1" \
-	    --outfile=/tmp/_aspect_sectors.tif --type=Byte $(COG_OPTS); \
-	  $(GDAL_POLY_BIN) /tmp/_aspect_sectors.tif -f GeoJSON "$(ASPECT_SECTORS)"; \
-	  rm -f /tmp/_aspect_sectors.tif; \
+	    --outfile="$$tmp" --type=Byte $(COG_OPTS); \
+	  $(GDAL_POLY_BIN) "$$tmp" -f GeoJSON "$(ASPECT_SECTORS)"; \
+	  rm -f "$$tmp"; \
 	else \
 	  echo "[aspect_sectors] GDAL calc/polygonize not available. Skipping."; \
-	fi
+	endif
 
 # -------- Meta checksums (optional) --------
 meta: $(SLOPE) $(ASPECT)
 	@if [ -f "$(META_SLOPE)" ] || [ -f "$(META_ASPECT)" ]; then \
-	  if [ -n "$(SHA256)" ]; then \
+	  if [ -n "$(SHA256_BIN)" ]; then \
 	    echo "[meta] updating simple checksums (sha256)"; \
 	    if [ -f "$(META_SLOPE)" ]; then \
-	      SUM_DEM=$$($(SHA256) $(SHA256FLAGS) "$(DEM)" | awk '{print $$1}'); \
-	      SUM_SLOPE=$$($(SHA256) $(SHA256FLAGS) "$(SLOPE)" | awk '{print $$1}'); \
+	      SUM_DEM=$$($(SHA256_BIN) $(SHA256FLAGS) "$(DEM)" | awk '{print $$1}'); \
+	      SUM_SLOPE=$$($(SHA256_BIN) $(SHA256FLAGS) "$(SLOPE)" | awk '{print $$1}'); \
 	      $(PY) - <<'PYCODE' "$(META_SLOPE)" "$$SUM_DEM" "$$SUM_SLOPE"
 import json, sys, os
 p, dem, slope = sys.argv[1:]
@@ -305,8 +303,8 @@ print("updated", os.path.basename(p))
 PYCODE \
 	    ; fi; \
 	    if [ -f "$(META_ASPECT)" ]; then \
-	      SUM_DEM=$$($(SHA256) $(SHA256FLAGS) "$(DEM)" | awk '{print $$1}'); \
-	      SUM_ASPECT=$$($(SHA256) $(SHA256FLAGS) "$(ASPECT)" | awk '{print $$1}'); \
+	      SUM_DEM=$$($(SHA256_BIN) $(SHA256FLAGS) "$(DEM)" | awk '{print $$1}'); \
+	      SUM_ASPECT=$$($(SHA256_BIN) $(SHA256FLAGS) "$(ASPECT)" | awk '{print $$1}'); \
 	      $(PY) - <<'PYCODE' "$(META_ASPECT)" "$$SUM_DEM" "$$SUM_ASPECT"
 import json, sys, os
 p, dem, aspect = sys.argv[1:]
@@ -325,18 +323,16 @@ PYCODE \
 	fi
 
 # -------- STAC build / validate (auto-patch DEM if checksum exists) --------
-stac:
+stac: | $(STAC)/items $(STAC)/collections
 ifeq ($(strip $(HAVE_MAKE_STAC)),)
 	@echo "[stac] No $(S)/make_stac.py found. Skipping."
 else
-	$(call ensure_dir,$(STAC)/items)
-	$(call ensure_dir,$(STAC)/collections)
 	$(PY) "$(S)/make_stac.py" --data "$(DATA)" --stac "$(STAC)"
 endif
 	@ITEM="$(STAC)/items/dem/ks_1m_dem_2018_2020.json"; \
 	if [ -f "$(DEM:.tif=.sha256)" ] && [ -f "$$ITEM" ]; then \
 	  echo "[stac] checksum detected → auto-patching DEM asset"; \
-	  if [ -f "$(HAVE_PATCH_ASSET)" ]; then \
+	  if [ -n "$(HAVE_PATCH_ASSET)" ]; then \
 	    $(PY) "$(S)/patch_stac_asset.py" "$$ITEM" --asset dem --from-file-size --from-sha256-file --pretty; \
 	  else \
 	    SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
@@ -359,12 +355,12 @@ PYCODE \
 	fi
 
 stac-validate:
-	@if [ -f "$(S)/validate_sources.py" ]; then \
+	@if [ -n "$(HAVE_VALIDATE_SOURCES)" ]; then \
 	  $(PY) "$(S)/validate_sources.py" --sources "$(SRC)"; \
 	else \
 	  echo "[stac-validate] $(S)/validate_sources.py missing (source schema check skipped)."; \
 	fi
-	@if [ -f "$(S)/validate_stac.py" ]; then \
+	@if [ -n "$(HAVE_VALIDATE_STAC)" ]; then \
 	  $(PY) "$(S)/validate_stac.py" --stac "$(STAC)"; \
 	elif [ "$(HAVE_KGT)" = "yes" ]; then \
 	  echo "[stac-validate] scripts missing; using kgt validate-stac as fallback"; \
@@ -374,7 +370,7 @@ stac-validate:
 	fi
 
 # -------- Web viewer config (optional, via kgt) --------
-site-config:
+site-config: | $(WEB)
 	@if [ "$(HAVE_KGT)" = "yes" ]; then \
 	  if [ -f "src/kansas_geo_timeline/templates/app.config.json.j2" ]; then \
 	    kgt render-config --stac "$(STAC)/items" --output "$(WEB)/app.config.json" --pretty; \
@@ -390,8 +386,7 @@ kml: terrain
 	@echo "[kml] Legacy prototype. Provide your regionate script if needed."
 
 # -------- Simple site manifest (always available) --------
-site:
-	$(call ensure_dir,$(WEB))
+site: | $(WEB)
 	@$(PY) - <<'PYCODE'
 import json, pathlib
 p = pathlib.Path('web/layers.json')
@@ -412,9 +407,9 @@ PYCODE
 dem-checksum:
 	@if [ -n "$(HAVE_GEN_SHA)" ]; then \
 	  bash "$(S)/gen_sha256.sh" "$(DEM)"; \
-	elif [ -n "$(SHA256)" ]; then \
+	elif [ -n "$(SHA256_BIN)" ]; then \
 	  echo "• hashing $(DEM) → $(DEM:.tif=.sha256)"; \
-	  ( cd "$$(dirname "$(DEM)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(DEM)")" > "$$(basename "$(DEM:.tif=.sha256)")" ); \
+	  ( cd "$$(dirname "$(DEM)")" && $(SHA256_BIN) $(SHA256FLAGS) "$$(basename "$(DEM)")" > "$$(basename "$(DEM:.tif=.sha256)")" ); \
 	  if [ "$(ALSO_TIF_SHA)" = "1" ]; then cp -f "$(DEM:.tif=.sha256)" "$(DEM).sha256"; fi; \
 	  echo "• verifying"; \
 	  ( cd "$$(dirname "$(DEM)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null ); \
@@ -432,9 +427,9 @@ PYCODE \
 hillshade-checksum:
 	@if [ -n "$(HAVE_GEN_SHA)" ]; then \
 	  bash "$(S)/gen_sha256.sh" "$(HILLSHADE)"; \
-	elif [ -n "$(SHA256)" ]; then \
+	elif [ -n "$(SHA256_BIN)" ]; then \
 	  echo "• hashing $(HILLSHADE) → $(HILLSHADE:.tif=.sha256)"; \
-	  ( cd "$$(dirname "$(HILLSHADE)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(HILLSHADE)")" > "$$(basename "$(HILLSHADE:.tif=.sha256)")" ); \
+	  ( cd "$$(dirname "$(HILLSHADE)")" && $(SHA256_BIN) $(SHA256FLAGS) "$$(basename "$(HILLSHADE)")" > "$$(basename "$(HILLSHADE:.tif=.sha256)")" ); \
 	  if [ "$(ALSO_TIF_SHA)" = "1" ]; then cp -f "$(HILLSHADE:.tif=.sha256)" "$(HILLSHADE).sha256"; fi; \
 	  echo "• verifying"; \
 	  ( cd "$$(dirname "$(HILLSHADE)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null ); \
@@ -451,8 +446,7 @@ clean:
 # Kansas River Hydrology — fetch/export + STAC wiring (optional)
 # ====================================================================
 
-hydrology-fetch:
-	$(call ensure_dir,$(KSRIV_OUTDIR))
+hydrology-fetch: | $(KSRIV_OUTDIR)
 	@if [ "$(KSRIV_CHANNELS)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_CHANNELS" ]; then echo "Set KSRIV_CHANNELS=..."; exit 1; fi
 	@if [ "$(KSRIV_FLOODPLAIN)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_FLOODPLAINS" ]; then echo "Set KSRIV_FLOODPLAIN=..."; exit 1; fi
 	@if [ "$(KSRIV_GAUGES)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES" ]; then echo "Set KSRIV_GAUGES=..."; exit 1; fi
@@ -487,3 +481,7 @@ test-cli: install-dev
 
 test-sources: install-dev
 	@pytest -q $(TESTS)/test_sources.py $(ALLOW_FAIL)
+
+# -------- Order-only dir prereqs --------
+$(RAW) $(COGS) $(HILLS) $(TERRAIN) $(VEC) $(WEB) $(STAC)/items $(STAC)/collections $(KSRIV_OUTDIR):
+	$(call ensure_dir,$@)
