@@ -1,8 +1,16 @@
 # Kansas Geo Timeline — pinned constraints for reproducible CI
 # Apply with:
 #   pip install -r requirements.txt --constraint constraints.txt
+#
+# Notes:
+# - Raster/geo pins align with manylinux/macos wheels; no system GDAL needed.
+# - numpy is kept at 1.26.x to satisfy rasterio 1.3.x ABI (<2.0).
+# - jsonschema ecosystem pinned to stable versions compatible with 4.23.0.
+# - Requests + Rich stacks pinned to avoid sporadic resolver churn in CI.
 
-# Core numerical/GIS stack
+############################
+# Core numerical / GIS stack
+############################
 numpy==1.26.4
 rasterio==1.3.10
 rio-cogeo==5.3.3
@@ -10,15 +18,46 @@ shapely==2.0.4
 pyproj==3.6.1
 Pillow==10.4.0
 
+# Rasterio transitive (geo)
+affine==2.4.0
+attrs==24.2.0
+cligj==0.7.2
+
+############################
 # STAC / schema
+############################
 pystac==1.10.1
 pystac-client==0.7.6
 jsonschema==4.23.0
+jsonschema-specifications==2023.12.1
+referencing==0.35.1
+rpds-py==0.20.0
+python-dateutil==2.9.0.post0
+six==1.16.0
 
+############################
 # CLI / utility
+############################
 click==8.1.7
 rich==13.7.1
 requests==2.32.3
 tqdm==4.66.5
 
-# (Keep optional stacks unpinned here unless you need them in CI)
+# Requests transitive
+certifi==2024.8.30
+charset-normalizer==3.3.2
+idna==3.8
+urllib3==2.2.3
+
+# Rich transitive
+Pygments==2.18.0
+markdown-it-py==3.0.0
+mdurl==0.1.2
+
+# TQDM (Windows-only console colors)
+colorama==0.4.6; platform_system == "Windows"
+
+############################
+# Optional stacks
+############################
+# (Keep optional/experimental dependencies unpinned here unless needed in CI)
