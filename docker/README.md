@@ -41,7 +41,7 @@ make clean
 Why containers for this project?
 	•	GDAL stability: Pin a known-good GDAL across Linux/macOS/WSL.
 	•	Reproducible builds: Same Makefile + Python toolchain for CI and local.
-	•	Zero host deps: Avoid installing GDAL, Proj, or Python libs on your workstation.
+	•	Zero host deps: Avoid installing GDAL, PROJ, or Python libs on your workstation.
 
 ⸻
 
@@ -63,7 +63,7 @@ docker run --rm -it \
   -w /workspace \
   kfm:dev bash
 
-Tip: Add -u $(id -u):$(id -g) on Linux to avoid root-owned files (see “UID/GID & permissions”).
+Tip: add -u $(id -u):$(id -g) on Linux to avoid root-owned files (see “UID/GID & permissions”).
 
 ⸻
 
@@ -126,7 +126,7 @@ Your Make targets are designed to auto-detect:
 	•	Validators:
 	•	scripts/validate_stac.py if present
 	•	fallback to kgt validate-stac if kgt is installed
-	•	Checksums: sha256sum/gsha256sum/shasum auto-detected
+	•	Checksums: sha256sum / gsha256sum / shasum auto-detected
 
 Helpful targets:
 	•	make env — prints detected tools + paths
@@ -184,16 +184,18 @@ To bake this into the image, you can pass USER_ID/GROUP_ID as build args and add
 ⸻
 
 Caching tips
-	•	Build cache: Keep the base image up-to-date with docker pull ghcr.io/osgeo/gdal:ubuntu-small-latest.
+	•	Build cache: Keep the base image up-to-date with
+docker pull ghcr.io/osgeo/gdal:ubuntu-small-latest.
 	•	Data cache: The data/ directory is mounted from host; repeated runs reuse downloads & COGs.
 
 ⸻
 
 Troubleshooting
-	•	“gdaldem not found”: Ensure your image built from the GDAL base and you’re using this image: docker run kfm:dev gdaldem --version.
-	•	“No validators found”: Add scripts/validate_stac.py or pip install kgt inside the container.
-	•	“Permission denied” writing to data/: Use -u $(id -u):$(id -g) on Linux.
-	•	“KSRIV_ not set”*: Provide the three environment variables or edit Makefile defaults.
+	•	“gdaldem not found” — Ensure your image built from the GDAL base and you’re using this image:
+docker run kfm:dev gdaldem --version.
+	•	“No validators found” — Add scripts/validate_stac.py or pip install kgt inside the container.
+	•	“Permission denied” writing to data/ — Use -u $(id -u):$(id -g) on Linux.
+	•	“KSRIV_ not set”* — Provide the three environment variables or edit Makefile defaults.
 
 ⸻
 
