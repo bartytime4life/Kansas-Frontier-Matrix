@@ -1,6 +1,6 @@
 {
   "name": "kfm-roadmap-sync",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "license": "MIT",
   "description": "Sync .github/roadmap/roadmap.yaml to GitHub labels, milestones, and issues",
@@ -25,12 +25,16 @@
     "labels",
     "kansas-frontier-matrix"
   ],
+  "bin": {
+    "kfm-roadmap-sync": "scripts/sync-roadmap.js"
+  },
   "scripts": {
     "sync": "node scripts/sync-roadmap.js",
-    "sync:dry": "DRY_RUN=1 node scripts/sync-roadmap.js",
-    "check": "node -e \"console.log(process.version)\" && node -e \"require('fs').accessSync('.github/roadmap/roadmap.yaml')\"",
-    "validate": "node -e \"const fs=require('fs'); const yaml=require('js-yaml'); yaml.load(fs.readFileSync('.github/roadmap/roadmap.yaml','utf8')); console.log('roadmap.yaml: OK');\"",
-    "fmt": "prettier --log-level warn -w .github/roadmap/roadmap.yaml scripts/sync-roadmap.js"
+    "sync:dry": "cross-env DRY_RUN=1 node scripts/sync-roadmap.js",
+    "check": "node --input-type=module -e \"import fs from 'fs'; fs.accessSync('.github/roadmap/roadmap.yaml'); console.log(process.version)\"",
+    "validate": "node --input-type=module -e \"import fs from 'fs'; import yaml from 'js-yaml'; yaml.load(fs.readFileSync('.github/roadmap/roadmap.yaml','utf8')); console.log('roadmap.yaml: OK')\"",
+    "fmt": "prettier --log-level warn -w .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
+    "fmt:check": "prettier --log-level warn -c .github/roadmap/roadmap.yaml scripts/sync-roadmap.js"
   },
   "dependencies": {
     "@actions/core": "1.10.1",
@@ -38,7 +42,8 @@
     "js-yaml": "4.1.0"
   },
   "devDependencies": {
-    "prettier": "3.3.3"
+    "prettier": "3.3.3",
+    "cross-env": "7.0.3"
   },
   "files": [
     "scripts/sync-roadmap.js",
