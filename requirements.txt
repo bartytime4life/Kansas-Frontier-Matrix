@@ -1,14 +1,17 @@
 # =========================
 # Kansas Geo Timeline — deps
 # =========================
+# Install (reproducible):
+#   pip install -r requirements.txt --constraint constraints.txt
+#
 # Notes:
 # - Rasterio wheels vendor GDAL; do NOT pin GDAL separately here.
 # - Keep NumPy <2 until the stack is verified on 2.x.
 # - If building from source on macOS/Linux, install system gdal/proj first:
 #     macOS (brew):   brew install gdal proj
 #     Debian/Ubuntu:  sudo apt-get install -y gdal-bin libgdal-dev proj-bin
-# - For fully reproducible installs in CI, use constraints.txt:
-#     pip install -r requirements.txt --constraint constraints.txt
+#
+# Python: 3.10+ recommended (works great with Node-backed CI and manylinux wheels).
 
 ################
 # Core runtime #
@@ -20,7 +23,9 @@ rasterio>=1.3.10,<1.4           # GDAL-backed raster IO; manylinux/macos wheels
 rio-cogeo>=5.3.3                # COG creation/validation
 shapely>=2.0.4                  # geometry ops
 pyproj>=3.6.1                   # CRS / reprojection
-Pillow>=10.4.0                  # image utils (thumbnails, tiles)
+Pillow>=10.4.0                  # thumbnails/tiles for web UI
+typing-extensions>=4.12; python_version < "3.11"  # future-typing backports for older Pythons
+colorama>=0.4.6; platform_system == "Windows"     # pretty TQDM on Windows consoles
 
 # STAC + schema (provenance / catalog)
 pystac>=1.10.1
