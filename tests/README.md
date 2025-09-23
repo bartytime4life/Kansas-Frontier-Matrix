@@ -57,6 +57,10 @@ flowchart TD
   T2 --> R2
   T3 --> R1
   T3 --> R2
+  T1 --> R3
+  T2 --> R3
+  T3 --> R3
+
   R3 --> Site[Static Site / Map UI]
 
 
