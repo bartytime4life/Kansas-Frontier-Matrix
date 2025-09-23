@@ -28,7 +28,7 @@ def exists_or_skip(p: Path, reason: str = "Optional during scaffolding"):
         pytest.skip(f"{p} — {reason}")
 
 def is_remote(href: str) -> bool:
-    return bool(re.match(r"^[a-z][a-z0-9+.-]*://", href, re.I))
+    return bool(re.match(r"^[a-z][a-z0-9+.-]*://", href or "", re.I))
 
 def glob_paths(*globs: str) -> List[Path]:
     out: List[Path] = []
@@ -36,7 +36,7 @@ def glob_paths(*globs: str) -> List[Path]:
         out.extend(REPO.glob(g))
     # Deduplicate while preserving order
     seen = set()
-    uniq = []
+    uniq: List[Path] = []
     for p in out:
         if p not in seen:
             seen.add(p)
@@ -67,19 +67,43 @@ CFG = REPO / "web" / "app.config.json"
 
 def _resolve_web_url(u: str) -> Optional[Path]:
     """
-    Handle local relative URLs like "./tiles/..." or "./vectors/..." from web/.
-    Remote URLs return None (skip).
+    Handle local URLs from the perspective of /web:
+      - "./tiles/..." or "./vectors/..."  → REPO/web/tiles/...
+      - "../data/..."                     → REPO/data/...
+      - "/something" (web-root absolute)  → REPO/web/something
+    Remote (http/https/...) returns None.
     """
-    if not isinstance(u, str) or is_remote(u):
+    if not isinstance(u, str) or not u or is_remote(u):
         return None
-    clean = u.split("?")[0]
+    clean = u.split("?", 1)[0]
+
+    # Template z/x/y: check parent dir before {z}
+    def _zxy_parent(path: str) -> str:
+        return path.split("/{z}", 1)[0]
+
+    web_root = REPO / "web"
+
     if clean.startswith("./"):
+        base = clean.lstrip("./")
         if "{z}" in clean and "{x}" in clean and "{y}" in clean:
-            # e.g., ./tiles/ks_dem/{z}/{x}/{y}.png → check 'tiles/ks_dem'
-            base = clean.split("/{z}")[0].lstrip("./")
-            return (REPO / "web" / base)
-        return (REPO / "web" / clean.lstrip("./"))
-    return None
+            base = _zxy_parent(base)
+        return (web_root / base)
+
+    if clean.startswith("../"):
+        target = (web_root / clean).resolve()
+        return target
+
+    if clean.startswith("/"):
+        # treat as web-root absolute
+        base = clean.lstrip("/")
+        if "{z}" in clean and "{x}" in clean and "{y}" in clean:
+            base = _zxy_parent(base)
+        return (web_root / base)
+
+    # Otherwise it's a bare relative file under web/
+    if "{z}" in clean and "{x}" in clean and "{y}" in clean:
+        return web_root / _zxy_parent(clean)
+    return web_root / clean
 
 @pytest.mark.skipif(not CFG.exists(), reason="No app.config.json yet")
 def test_app_config_layer_urls_resolve():
@@ -117,15 +141,20 @@ ITEM_GLOBS = [
 def _resolve_stac_href(item_path: Path, href: str) -> Optional[Path]:
     """
     Resolve common STAC asset href patterns:
-    - repo-relative like "data/..." → REPO / href
-    - item-relative like "../.." or "./..." → item_path.parent / href
-    Remote URLs return None (ignored for existence checks).
+    - "data/..." or "/data/..."             → REPO / data / ...
+    - item-relative "./..." or "../..."     → item_path.parent / href
+    - other relative (no scheme, no leading slash) → item_path.parent / href
+    Remote URLs (http/https, etc.) are ignored (return None).
     """
-    if not isinstance(href, str) or is_remote(href):
+    if not isinstance(href, str) or not href or is_remote(href):
         return None
     hp = Path(href)
-    if str(hp).startswith("data/"):
-        return (REPO / hp).resolve()
+
+    # Repo-root data references
+    if str(hp).startswith("data/") or str(hp).startswith("/data/"):
+        return (REPO / str(hp).lstrip("/")).resolve()
+
+    # Item-relative (./ or ../ or bare)
     return (item_path.parent / hp).resolve()
 
 @pytest.mark.parametrize("item_path", glob_paths(*ITEM_GLOBS))
