@@ -35,7 +35,7 @@ flowchart TD
   subgraph Pytest
     T1[test_stac.py]
     T2[test_sources.py]
-    T3[test_web.py (planned)]
+    T3[test_web.py - planned]
   end
 
   A1 --> T1
@@ -48,7 +48,7 @@ flowchart TD
   subgraph Results
     R1[Clear Failures]
     R2[Graceful Skips]
-    R3[Green → Site Build Ready]
+    R3[Green -> Site Build Ready]
   end
 
   T1 --> R1
