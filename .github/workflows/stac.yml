@@ -1,0 +1,71 @@
+name: STAC & Config
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "stac/**"
+      - "src/kansas_geo_timeline/**"
+      - "web/**"
+      - ".github/workflows/stac.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "stac/**"
+      - "src/kansas_geo_timeline/**"
+      - "web/**"
+      - ".github/workflows/stac.yml"
+
+jobs:
+  validate-and-render:
+    name: Validate STAC & Render app.config.json
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install minimal deps
+        run: |
+          python -m pip install --upgrade pip
+          # Optional but recommended: enable strict validation & templating
+          pip install jsonschema jinja2
+
+      - name: Validate STAC Items (strict if jsonschema present)
+        run: |
+          python -m src.kansas_geo_timeline.cli validate-stac stac/items --report-json _stac_report.json
+
+      - name: Render web/app.config.json
+        run: |
+          python -m src.kansas_geo_timeline.cli render-config \
+            --stac stac/items \
+            --output web/app.config.json \
+            --pretty
+
+      - name: Upload STAC report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stac-report
+          path: _stac_report.json
+
+      - name: Upload rendered app.config.json
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-config
+          path: web/app.config.json
