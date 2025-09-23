@@ -1,0 +1,18 @@
+services:
+  kfm:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        # override if needed, or delete
+        GDAL_IMAGE: ghcr.io/osgeo/gdal:ubuntu-small-latest
+    image: kfm:dev
+    working_dir: /workspace
+    volumes:
+      - ../:/workspace
+    tty: true
+    environment:
+      # optional hydrology vars; set here or pass at runtime
+      KSRIV_CHANNELS: ""
+      KSRIV_FLOODPLAIN: ""
+      KSRIV_GAUGES: ""
