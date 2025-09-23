@@ -1,0 +1,35 @@
+site_name: Kansas Geo Timeline
+repo_url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
+repo_name: Kansas-Frontier-Matrix
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.expand
+    - content.code.annotate
+    - content.code.copy
+    - toc.integrate
+    - search.highlight
+    - search.suggest
+    - search.share
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Data Sources: data_sources.md
+  - STAC: stac.md
+  - CLI (kgt): cli.md
+  - Web Viewer: viewer.md
+  - Google Earth: earth.md
+  - Reproducibility: reproducibility.md
+  - Troubleshooting: troubleshooting.md
+  - Roadmap: roadmap.md
+  - Requirements: requirements.md
+  - Status Snapshots: snapshots.md
