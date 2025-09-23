@@ -3,12 +3,13 @@
 # --------------------------------------------------------------------
 # Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
 #          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
-# Extras:  dem-checksum, hillshade-checksum, stac-patch-dem
-# Dev:     install-dev, test, test-cli, test-sources
+# Extras:  dem-checksum, hillshade-checksum
+# Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
 #   - Optional: KGS Kansas River hydrology fetch/export → STAC wiring
+#   - Auto-patch STAC (DEM checksum/size) inside `make stac` if checksum exists
 # --------------------------------------------------------------------
 
 SHELL := /bin/bash
@@ -78,6 +79,17 @@ HAVE_MAKE_STAC        := $(wildcard $(S)/make_stac.py)
 HAVE_VALIDATE_STAC    := $(wildcard $(S)/validate_stac.py)
 HAVE_VALIDATE_SOURCES := $(wildcard $(S)/validate_sources.py)
 HAVE_GEN_SHA          := $(wildcard $(S)/gen_sha256.sh)
+HAVE_PATCH_ASSET      := $(wildcard $(S)/patch_stac_asset.py)
+
+# CI-aware test leniency (fail in CI, be lenient locally)
+ifeq ($(CI),true)
+ALLOW_FAIL :=
+else
+ALLOW_FAIL := || true
+endif
+
+# Dual checksum file style (also write <name>.tif.sha256 when set)
+ALSO_TIF_SHA ?= 0
 
 # -------- Kansas River Hydrology (optional integration) --------
 KSRIV_OUTDIR     := $(DATA)/processed/hydrology/kansas_river
@@ -115,8 +127,8 @@ define mirror_derivatives
 endef
 
 # -------- Help --------
-.PHONY: help env prebuild print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
-        dem-checksum hillshade-checksum stac-patch-dem hydrology-fetch hydrology-stac \
+.PHONY: help env prebuild preview prebuild-lite print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
+        dem-checksum hillshade-checksum hydrology-fetch hydrology-stac \
         install-dev test test-cli test-sources
 
 help:
@@ -129,18 +141,19 @@ help:
 	@echo "  slope_classes     Optional: vectorize slope classes"
 	@echo "  aspect_sectors    Optional: vectorize 8-way aspect sectors"
 	@echo "  meta              Optional: update terrain meta JSON checksums (slope/aspect)"
-	@echo "  stac              Build STAC items/collections into ./stac/"
+	@echo "  stac              Build STAC items/collections into ./stac/ (auto-patches DEM if checksum exists)"
 	@echo "  stac-validate     Validate STAC + source schemas (scripts/ or kgt)"
 	@echo "  site              Write web/layers.json (simple preview)"
 	@echo "  site-config       Render web/app.config.json from STAC via kgt (if available)"
 	@echo "  kml               Build KMZ overlays (placeholder)"
 	@echo "  clean             Remove generated raster outputs (keeps stac/)"
 	@echo "  prebuild          stac-validate + site (used by CI)"
+	@echo "  preview           Minimal local preview (site only)"
+	@echo "  prebuild-lite     Site only (no validation/checksums)"
 	@echo ""
-	@echo "Checksums & STAC patches:"
+	@echo "Checksums:"
 	@echo "  dem-checksum         Write+verify checksum(s) for DEM and print STAC fields"
 	@echo "  hillshade-checksum   Write+verify checksum(s) for hillshade"
-	@echo "  stac-patch-dem       Insert DEM checksum/size into stac/items/dem/ks_1m_dem_2018_2020.json"
 	@echo ""
 	@echo "Hydrology (optional):"
 	@echo "  hydrology-fetch   Export Kansas River channels/floodplains/gauges (GeoJSON)"
@@ -161,6 +174,7 @@ env:
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
+	@echo "HAVE_PATCH_ASSET=$(if $(HAVE_PATCH_ASSET),yes,no)"
 	@echo "SHA256=$(SHA256)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
 
 print-%:
@@ -168,6 +182,12 @@ print-%:
 
 prebuild: stac-validate site
 	@echo ">> Prebuild complete."
+
+preview: site
+	@echo "✓ preview assets written (skipped STAC validation/patching)"
+
+prebuild-lite: site
+	@echo ">> Prebuild-lite complete (no validation/checksums)."
 
 # -------- Fetch --------
 fetch:
@@ -304,7 +324,7 @@ PYCODE \
 	  echo "[meta] no META_* json files found. Skipping."; \
 	fi
 
-# -------- STAC build / validate --------
+# -------- STAC build / validate (auto-patch DEM if checksum exists) --------
 stac:
 ifeq ($(strip $(HAVE_MAKE_STAC)),)
 	@echo "[stac] No $(S)/make_stac.py found. Skipping."
@@ -313,6 +333,30 @@ else
 	$(call ensure_dir,$(STAC)/collections)
 	$(PY) "$(S)/make_stac.py" --data "$(DATA)" --stac "$(STAC)"
 endif
+	@ITEM="$(STAC)/items/dem/ks_1m_dem_2018_2020.json"; \
+	if [ -f "$(DEM:.tif=.sha256)" ] && [ -f "$$ITEM" ]; then \
+	  echo "[stac] checksum detected → auto-patching DEM asset"; \
+	  if [ -f "$(HAVE_PATCH_ASSET)" ]; then \
+	    $(PY) "$(S)/patch_stac_asset.py" "$$ITEM" --asset dem --from-file-size --from-sha256-file --pretty; \
+	  else \
+	    SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
+import os, sys; print(os.path.getsize(sys.argv[1]))
+PYCODE \
+	    ); HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
+	    $(PY) - <<'PYCODE' "$$ITEM" "$$SIZE" "$$HEX"
+import json, sys, pathlib
+p, size, hexsum = pathlib.Path(sys.argv[1]), int(sys.argv[2]), sys.argv[3]
+d = json.loads(p.read_text())
+asset = d.setdefault("assets",{}).setdefault("dem",{})
+asset["checksum:sha256"] = hexsum
+asset["file:size"] = size
+p.write_text(json.dumps(d, indent=2))
+print("[stac] auto-patched DEM checksum/size")
+PYCODE \
+	  ; fi; \
+	else \
+	  echo "[stac] checksum not found; skipping auto-patch"; \
+	fi
 
 stac-validate:
 	@if [ -f "$(S)/validate_sources.py" ]; then \
@@ -371,9 +415,7 @@ dem-checksum:
 	elif [ -n "$(SHA256)" ]; then \
 	  echo "• hashing $(DEM) → $(DEM:.tif=.sha256)"; \
 	  ( cd "$$(dirname "$(DEM)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(DEM)")" > "$$(basename "$(DEM:.tif=.sha256)")" ); \
-	  if [ "$${ALSO_TIF_SHA:-0}" = "1" ]; then \
-	    cp -f "$(DEM:.tif=.sha256)" "$(DEM).sha256"; \
-	  fi; \
+	  if [ "$(ALSO_TIF_SHA)" = "1" ]; then cp -f "$(DEM:.tif=.sha256)" "$(DEM).sha256"; fi; \
 	  echo "• verifying"; \
 	  ( cd "$$(dirname "$(DEM)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null ); \
 	  SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
@@ -393,36 +435,12 @@ hillshade-checksum:
 	elif [ -n "$(SHA256)" ]; then \
 	  echo "• hashing $(HILLSHADE) → $(HILLSHADE:.tif=.sha256)"; \
 	  ( cd "$$(dirname "$(HILLSHADE)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(HILLSHADE)")" > "$$(basename "$(HILLSHADE:.tif=.sha256)")" ); \
-	  if [ "$${ALSO_TIF_SHA:-0}" = "1" ]; then \
-	    cp -f "$(HILLSHADE:.tif=.sha256)" "$(HILLSHADE).sha256"; \
-	  fi; \
+	  if [ "$(ALSO_TIF_SHA)" = "1" ]; then cp -f "$(HILLSHADE:.tif=.sha256)" "$(HILLSHADE).sha256"; fi; \
 	  echo "• verifying"; \
 	  ( cd "$$(dirname "$(HILLSHADE)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null ); \
 	else \
 	  echo "ERROR: No SHA tool found; install coreutils (sha256sum/gsha256sum) or use scripts/gen_sha256.sh"; exit 1; \
 	fi
-
-# -------- Patch DEM STAC with checksum/size --------
-stac-patch-dem: dem-checksum
-	@ITEM="$(STAC)/items/dem/ks_1m_dem_2018_2020.json"; \
-	if [ ! -f "$$ITEM" ]; then echo "ERROR: STAC item not found: $$ITEM"; exit 1; fi; \
-	if [ ! -f "$(DEM:.tif=.sha256)" ]; then echo "ERROR: missing checksum file: $(DEM:.tif=.sha256)"; exit 1; fi; \
-	SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
-import os, sys; print(os.path.getsize(sys.argv[1]))
-PYCODE \
-	); HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
-	$(PY) - <<'PYCODE' "$$ITEM" "$$SIZE" "$$HEX"
-import json, sys, pathlib
-item_path, size, hexsum = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-p = pathlib.Path(item_path)
-d = json.loads(p.read_text())
-# Ensure asset exists; set checksum + size on the DEM asset
-asset = d.setdefault("assets", {}).setdefault("dem", {})
-asset["checksum:sha256"] = hexsum
-asset["file:size"] = size
-p.write_text(json.dumps(d, indent=2))
-print("patched", p)
-PYCODE
 
 # -------- Clean --------
 clean:
@@ -459,13 +477,13 @@ hydrology-stac:
 
 install-dev:
 	@python -m pip install --upgrade pip
-	@python -m pip install -r requirements-dev.txt || true
+	@python -m pip install -r requirements-dev.txt $(ALLOW_FAIL)
 
 test: install-dev
-	@pytest -q || true
+	@pytest -q $(ALLOW_FAIL)
 
 test-cli: install-dev
-	@pytest -q $(TESTS)/test_cli.py || true
+	@pytest -q $(TESTS)/test_cli.py $(ALLOW_FAIL)
 
 test-sources: install-dev
-	@pytest -q $(TESTS)/test_sources.py || true
+	@pytest -q $(TESTS)/test_sources.py $(ALLOW_FAIL)
