@@ -7,7 +7,7 @@ import json
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Iterable, List
 import hashlib
 import pytest
 
@@ -18,7 +18,10 @@ REPO = Path(__file__).resolve().parents[1]
 # ---------------------------------------------------------------------
 
 def read_json(p: Path):
-    return json.loads(p.read_text(encoding="utf-8"))
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise AssertionError(f"Invalid JSON in {p}:\n{e}") from e
 
 def exists_or_skip(p: Path, reason: str = "Optional during scaffolding"):
     if not p.exists():
@@ -27,8 +30,24 @@ def exists_or_skip(p: Path, reason: str = "Optional during scaffolding"):
 def is_remote(href: str) -> bool:
     return bool(re.match(r"^[a-z][a-z0-9+.-]*://", href, re.I))
 
+def glob_paths(*globs: str) -> List[Path]:
+    out: List[Path] = []
+    for g in globs:
+        out.extend(REPO.glob(g))
+    # Deduplicate while preserving order
+    seen = set()
+    uniq = []
+    for p in out:
+        if p not in seen:
+            seen.add(p)
+            uniq.append(p)
+    return uniq
+
+def existing_only(paths: Iterable[Path]) -> List[Path]:
+    return [p for p in paths if p.exists()]
+
 # ---------------------------------------------------------------------
-# Web: key assets should exist (we treat as must-have for UI smoke)
+# Web: key assets should exist (treat as must-have for UI smoke)
 # ---------------------------------------------------------------------
 
 @pytest.mark.parametrize("p", [
@@ -51,12 +70,12 @@ def _resolve_web_url(u: str) -> Optional[Path]:
     Handle local relative URLs like "./tiles/..." or "./vectors/..." from web/.
     Remote URLs return None (skip).
     """
-    if is_remote(u):
+    if not isinstance(u, str) or is_remote(u):
         return None
-    if u.startswith("./"):
-        clean = u.split("?")[0]
-        # If tiled template, check the directory before {z}
+    clean = u.split("?")[0]
+    if clean.startswith("./"):
         if "{z}" in clean and "{x}" in clean and "{y}" in clean:
+            # e.g., ./tiles/ks_dem/{z}/{x}/{y}.png → check 'tiles/ks_dem'
             base = clean.split("/{z}")[0].lstrip("./")
             return (REPO / "web" / base)
         return (REPO / "web" / clean.lstrip("./"))
@@ -75,7 +94,7 @@ def test_app_config_layer_urls_resolve():
 
         p = _resolve_web_url(url)
         if p is None:
-            continue  # remote or non-local scheme → skip file existence
+            continue  # remote; skip file existence
 
         if p.is_dir():
             assert p.exists(), f"Tiles directory not found for {lid}: {p}"
@@ -86,33 +105,31 @@ def test_app_config_layer_urls_resolve():
 # STAC Items: asset hrefs that are relative should resolve on disk
 # ---------------------------------------------------------------------
 
-STAC_ITEMS = [
-    REPO / "data" / "stac" / "items" / "dem" / "ks_1m_dem_2018_2020.json",
-    REPO / "data" / "stac" / "items" / "hillshade" / "ks_hillshade_2018_2020.json",
-    REPO / "data" / "stac" / "items" / "overlays" / "usgs_topo_larned_1894.json",
-    REPO / "data" / "stac" / "items" / "vectors" / "treaties_1854.json",
-    REPO / "data" / "stac" / "items" / "vectors" / "railroads_1900.json",
+# Discover items in both flat and themed layouts
+ITEM_GLOBS = [
+    "stac/items/*.json",
+    "stac/items/dem/*.json",
+    "stac/items/hillshade/*.json",
+    "stac/items/overlays/*.json",
+    "stac/items/vectors/*.json",
 ]
 
 def _resolve_stac_href(item_path: Path, href: str) -> Optional[Path]:
     """
     Resolve common STAC asset href patterns:
-    - absolute repo-relative like "data/..." → REPO / href
-    - relative like "../../cogs/..." → item_path.parent / href
-    Remote URLs are ignored (return None).
+    - repo-relative like "data/..." → REPO / href
+    - item-relative like "../.." or "./..." → item_path.parent / href
+    Remote URLs return None (ignored for existence checks).
     """
-    if is_remote(href):
+    if not isinstance(href, str) or is_remote(href):
         return None
     hp = Path(href)
     if str(hp).startswith("data/"):
         return (REPO / hp).resolve()
     return (item_path.parent / hp).resolve()
 
-@pytest.mark.parametrize("item_path", STAC_ITEMS)
+@pytest.mark.parametrize("item_path", glob_paths(*ITEM_GLOBS))
 def test_stac_assets_resolve(item_path: Path):
-    if not item_path.exists():
-        pytest.skip(f"STAC item not present yet: {item_path}")
-
     item = read_json(item_path)
     assets = item.get("assets", {})
     assert assets, f"No assets in {item_path.name}"
@@ -129,10 +146,11 @@ def test_stac_assets_resolve(item_path: Path):
 # KML NetworkLinks: href targets exist (relative), with repo fallbacks
 # ---------------------------------------------------------------------
 
-KMLS = [
-    REPO / "data" / "earth" / "doc.kml",
-    REPO / "data" / "earth" / "networklinks" / "ks_1m_hillshade.kml",
-    REPO / "data" / "earth" / "networklinks" / "usgs_topo_1894.kml",
+KML_GLOBS = [
+    "data/earth/*.kml",
+    "data/earth/networklinks/*.kml",
+    "web/earth/*.kml",
+    "web/earth/networklinks/*.kml",
 ]
 
 def _iter_kml_hrefs(p: Path):
@@ -143,26 +161,32 @@ def _iter_kml_hrefs(p: Path):
             yield href_el.text.strip()
 
 def _resolve_kml_href(kml_path: Path, href: str) -> Optional[Path]:
-    if is_remote(href):
+    if not isinstance(href, str) or is_remote(href):
         return None
     hp = Path(href)
-    # First: resolve relative to the KML file
+
+    # Primary: resolve relative to the KML file
     candidate = (kml_path.parent / hp).resolve()
     if candidate.exists():
         return candidate
-    # Fallback for portable KMZ wiring: "overlays/<name>.kmz" lives in repo "data/kml/<name>.kmz"
-    if hp.parts and hp.parts[0] == "overlays" and hp.suffix.lower() == ".kmz":
+
+    # Fallback patterns commonly used in portable repos
+    # overlays/<name>.kmz → data/kml/<name>.kmz
+    if hp.parts and hp.parts[0].lower() == "overlays" and hp.suffix.lower() == ".kmz":
         alt = (REPO / "data" / "kml" / hp.name).resolve()
         if alt.exists():
             return alt
-    # Fallback for "../kml/<name>.kmz" already absolute-ish from doc.kml
+
+    # "../kml/<name>.kmz" → data/kml/<name>.kmz
     if ".." in hp.parts and hp.suffix.lower() == ".kmz":
         alt2 = (REPO / "data" / "kml" / hp.name).resolve()
         if alt2.exists():
             return alt2
-    return candidate  # return best-effort path (exists_or_skip will skip if missing)
 
-@pytest.mark.parametrize("kml_path", KMLS)
+    # Return best-effort path; caller will skip if missing
+    return candidate
+
+@pytest.mark.parametrize("kml_path", glob_paths(*KML_GLOBS))
 def test_kml_link_targets_exist(kml_path: Path):
     if not kml_path.exists():
         pytest.skip(f"KML not present yet: {kml_path}")
@@ -174,35 +198,54 @@ def test_kml_link_targets_exist(kml_path: Path):
 
 # ---------------------------------------------------------------------
 # Checksum verification: if both files present, contents must match hash
+# Supports:
+#   - <name>.tif.sha256
+#   - <name>.sha256
 # ---------------------------------------------------------------------
 
-CHECKSUM_PAIRS = [
-    (
-        REPO / "data" / "cogs" / "dem" / "ks_1m_dem_2018_2020.tif",
-        REPO / "data" / "cogs" / "dem" / "ks_1m_dem_2018_2020.tif.sha256",
-    ),
-    (
-        REPO / "data" / "cogs" / "hillshade" / "ks_hillshade_2018_2020.tif",
-        REPO / "data" / "cogs" / "hillshade" / "ks_hillshade_2018_2020.tif.sha256",
-    ),
-    (
-        REPO / "data" / "cogs" / "overlays" / "usgs_topo_larned_1894.tif",
-        REPO / "data" / "cogs" / "overlays" / "usgs_topo_larned_1894.tif.sha256",
-    ),
+COG_TIFS = [
+    REPO / "data" / "cogs" / "dem" / "ks_1m_dem_2018_2020.tif",
+    REPO / "data" / "cogs" / "hillshade" / "ks_hillshade_2018_2020.tif",
+    REPO / "data" / "cogs" / "overlays" / "usgs_topo_larned_1894.tif",
 ]
 
-@pytest.mark.parametrize("tif,sha", CHECKSUM_PAIRS)
-def test_checksum_matches(tif: Path, sha: Path):
-    if not tif.exists() or not sha.exists():
-        pytest.skip("COG or checksum not present yet")
-    line = sha.read_text(encoding="utf-8").strip()
-    m = re.match(r"^([A-Fa-f0-9]{64})\s+(.+)$", line)
-    assert m, f"Invalid checksum file format in {sha}"
-    listed_digest, listed_name = m.groups()
-    assert Path(listed_name).name == tif.name, "Checksum line does not reference the expected .tif"
+def _candidate_sha_files(tif: Path) -> List[Path]:
+    return [
+        tif.with_suffix(tif.suffix + ".sha256"),     # <name>.tif.sha256
+        tif.with_suffix("").with_suffix(".sha256"),  # <name>.sha256
+    ]
 
+def _pick_sha_file(tif: Path) -> Optional[Path]:
+    cands = existing_only(_candidate_sha_files(tif))
+    if not cands:
+        return None
+    # Prefer the .tif.sha256 if present
+    for c in cands:
+        if c.name.endswith(".tif.sha256"):
+            return c
+    return cands[0]
+
+@pytest.mark.parametrize("tif_path", COG_TIFS)
+def test_checksum_matches(tif_path: Path):
+    if not tif_path.exists():
+        pytest.skip(f"COG not present yet: {tif_path}")
+    sha_path = _pick_sha_file(tif_path)
+    if not sha_path:
+        pytest.skip(f"Checksum not present yet for {tif_path}")
+
+    line = sha_path.read_text(encoding="utf-8").strip()
+    m = re.match(r"^([A-Fa-f0-9]{64})\s+(.+)$", line)
+    assert m, f"Invalid checksum file format in {sha_path}: '{line}'"
+    listed_digest, listed_name = m.groups()
+
+    # The filename referenced in the checksum must match the .tif name
+    assert Path(listed_name).name == tif_path.name, (
+        f"Checksum should reference {tif_path.name}, got {listed_name}"
+    )
+
+    # Compute actual digest
     h = hashlib.sha256()
-    with tif.open("rb") as f:
+    with tif_path.open("rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
             h.update(chunk)
     assert h.hexdigest() == listed_digest.lower(), "Checksum does not match file contents"
