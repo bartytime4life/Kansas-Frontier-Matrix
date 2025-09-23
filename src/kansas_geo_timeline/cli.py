@@ -20,16 +20,16 @@ Design
 Examples
 --------
 # Validate all STAC items
-kgt validate-stac data/stac/*.json
+kgt validate-stac stac/items
 
 # Render app config to web/app.config.json using default template
-kgt render-config --stac data/stac/*.json --output web/app.config.json
+kgt render-config --stac stac/items --output web/app.config.json --pretty
 
 # Provide custom context JSON for basemaps/layers
-kgt render-config --stac data/stac/*.json --context configs/render_context.json
+kgt render-config --stac stac/items --context configs/render_context.json --output web/app.config.json
 
 # List items as JSON Lines to stdout
-kgt list-stac data/stac --format jsonl --output -
+kgt list-stac stac/items --format jsonl --output -
 """
 
 from __future__ import annotations
@@ -74,7 +74,12 @@ def _read_json(p: Path) -> Dict[str, Any]:
 
 
 def _iter_paths(patterns: Iterable[str]) -> Iterable[Path]:
-    """Yield JSON file paths from a mix of files/dirs/globs in stable sorted order."""
+    """
+    Yield JSON file paths from a mix of files/dirs/globs in stable sorted order.
+    - Directories are searched recursively for *.json
+    - Globs are honored
+    - Duplicates are removed
+    """
     seen: set[Path] = set()
     for pat in patterns:
         p = Path(pat)
@@ -84,11 +89,22 @@ def _iter_paths(patterns: Iterable[str]) -> Iterable[Path]:
                     seen.add(m)
                     yield m
         else:
-            for m in sorted(glob.glob(pat)):
+            for m in sorted(glob.glob(pat, recursive=True)):
                 mp = Path(m)
                 if mp.is_file() and mp.suffix.lower() == ".json" and mp not in seen:
                     seen.add(mp)
                     yield mp
+
+
+def _is_item(obj: Dict[str, Any]) -> bool:
+    """Heuristic: STAC Item = GeoJSON Feature with required keys present."""
+    try:
+        return (obj.get("type") == "Feature" and
+                isinstance(obj.get("id"), str) and
+                isinstance(obj.get("properties"), dict) and
+                isinstance(obj.get("assets"), dict))
+    except Exception:
+        return False
 
 
 def _extract_year(props: Dict[str, Any]) -> Optional[int]:
@@ -113,11 +129,19 @@ def _compact_bbox(bbox: Any) -> str:
 
 
 def load_stac_items(paths: Iterable[str], quiet: bool = False) -> List[Dict[str, Any]]:
+    """
+    Read JSON from the given paths/globs/dirs and return only STAC Items (Feature).
+    Non-Item JSON files are ignored (with a WARN unless --quiet).
+    """
     items: List[Dict[str, Any]] = []
     for p in _iter_paths(paths):
         try:
             data = _read_json(p)
-            items.append(data)
+            if _is_item(data):
+                items.append(data)
+            else:
+                if not quiet:
+                    print(f"[WARN] Skipping non-Item JSON: {p}", file=sys.stderr)
         except Exception as e:
             if not quiet:
                 print(f"[WARN] Failed to read {p}: {e}", file=sys.stderr)
@@ -181,19 +205,19 @@ def validate_stac_items(
     for it in items:
         id_ = it.get("id", "<no id>")
         missing = [k for k in required_top if k not in it]
-        if missing or it.get("type") != "Feature":
+        extra_msgs: List[str] = []
+        if it.get("type") != "Feature":
+            extra_msgs.append("type must be 'Feature'")
+        if missing:
+            extra_msgs.append(f"missing {missing}")
+        if extra_msgs:
             n_bad += 1
             if not quiet:
-                msg = []
-                if missing:
-                    msg.append(f"missing {missing}")
-                if it.get("type") != "Feature":
-                    msg.append("type must be 'Feature'")
-                print(f"[FAIL] {id_}: " + "; ".join(msg), file=sys.stderr)
+                print(f"[FAIL] {id_}: " + "; ".join(extra_msgs), file=sys.stderr)
             report.append({
                 "id": id_,
                 "valid": False,
-                "errors": [{"path": [], "message": " ; ".join(msg) or "invalid"}],
+                "errors": [{"path": [], "message": " ; ".join(extra_msgs)}],
             })
             if fail_fast:
                 return n_ok, n_bad, report
@@ -265,7 +289,7 @@ def render_app_config(
     tmpl = env.get_template(t_path.name)
     rendered = tmpl.render(**ctx)
 
-    # Validate it is valid JSON; pretty-print if requested
+    # Validate it is valid JSON; pretty-print if requested (ensures canonical formatting)
     parsed = json.loads(rendered)
     if pretty:
         rendered = json.dumps(parsed, ensure_ascii=False, indent=2, sort_keys=False)
