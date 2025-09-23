@@ -4,6 +4,7 @@
 # Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
 #          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
 # Extras:  dem-checksum, hillshade-checksum, stac-patch-dem
+# Dev:     install-dev, test, test-cli, test-sources
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -30,6 +31,7 @@ DERIV   := $(DATA)/derivatives
 VEC     := $(DATA)/processed/vectors
 WEB     := web
 STAC    := stac
+TESTS   := tests
 
 # Core DEM (override via: make terrain DEM=/path/to/dem.tif)
 DEM ?= $(DEMS)/ks_1m_dem_2018_2020.tif
@@ -48,7 +50,6 @@ META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
 # -------- Tools & flags --------
-# Cloud-Optimized GTiff creation options
 COG_OPTS := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
 
 # sha utility (sha256sum/gsha256sum on Linux/Homebrew, shasum -a 256 on macOS)
@@ -60,7 +61,7 @@ HAVE_JQ          := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no
 HAVE_RSYNC       := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
 HAVE_KGT         := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
 
-# GDAL tools (support both "xxx.py" and "xxx" entry points)
+# GDAL tools
 HAVE_GDALDEM     := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
 HAVE_GDAL_TRANSL := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
 HAVE_GDAL_ADDO   := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
@@ -79,8 +80,6 @@ HAVE_VALIDATE_SOURCES := $(wildcard $(S)/validate_sources.py)
 HAVE_GEN_SHA          := $(wildcard $(S)/gen_sha256.sh)
 
 # -------- Kansas River Hydrology (optional integration) --------
-# Fill these with actual ArcGIS REST layer URLs or set env on the command line
-#   make hydrology-fetch KSRIV_CHANNELS=... KSRIV_FLOODPLAIN=... KSRIV_GAUGES=...
 KSRIV_OUTDIR     := $(DATA)/processed/hydrology/kansas_river
 KSRIV_CHANNELS   ?= REPLACE_WITH_ARCGIS_REST_LAYER_URL_CHANNELS
 KSRIV_FLOODPLAIN ?= REPLACE_WITH_ARCGIS_REST_LAYER_URL_FLOODPLAINS
@@ -111,17 +110,14 @@ endef
 define mirror_derivatives
 	$(call ensure_dir,$(dir $(2)))
 	@if [ -f "$(1)" ]; then \
-	  if [ "$(HAVE_RSYNC)" = "yes" ]; then \
-	    rsync -a --checksum "$(1)" "$(2)"; \
-	  else \
-	    cp -f "$(1)" "$(2)"; \
-	  fi; \
+	  if [ "$(HAVE_RSYNC)" = "yes" ]; then rsync -a --checksum "$(1)" "$(2)"; else cp -f "$(1)" "$(2)"; fi; \
 	fi
 endef
 
 # -------- Help --------
 .PHONY: help env prebuild print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
-        dem-checksum hillshade-checksum stac-patch-dem hydrology-fetch hydrology-stac
+        dem-checksum hillshade-checksum stac-patch-dem hydrology-fetch hydrology-stac \
+        install-dev test test-cli test-sources
 
 help:
 	@echo ""
@@ -142,13 +138,16 @@ help:
 	@echo "  prebuild          stac-validate + site (used by CI)"
 	@echo ""
 	@echo "Checksums & STAC patches:"
-	@echo "  dem-checksum         Write+verify data/cogs/dem/ks_1m_dem_2018_2020.sha256 and print STAC fields"
-	@echo "  hillshade-checksum   Write+verify data/cogs/hillshade/ks_hillshade_2018_2020.sha256"
+	@echo "  dem-checksum         Write+verify checksum(s) for DEM and print STAC fields"
+	@echo "  hillshade-checksum   Write+verify checksum(s) for hillshade"
 	@echo "  stac-patch-dem       Insert DEM checksum/size into stac/items/dem/ks_1m_dem_2018_2020.json"
 	@echo ""
 	@echo "Hydrology (optional):"
-	@echo "  hydrology-fetch   Export KGS Kansas River channels/floodplains/gauges (GeoJSON)"
+	@echo "  hydrology-fetch   Export Kansas River channels/floodplains/gauges (GeoJSON)"
 	@echo "  hydrology-stac    Wire local GeoJSON hrefs into the three hydrology STAC Items"
+	@echo ""
+	@echo "Dev:"
+	@echo "  install-dev, test, test-cli, test-sources"
 	@echo ""
 	@echo "Overrides:  make terrain DEM=/path/to/dem.tif"
 	@echo ""
@@ -164,11 +163,9 @@ env:
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
 	@echo "SHA256=$(SHA256)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
 
-# Print a variable: make print-DEM  or  make print-% VAR=NAME
 print-%:
 	@echo '$*=$($*)'
 
-# CI convenience: validate + build minimal site
 prebuild: stac-validate site
 	@echo ">> Prebuild complete."
 
@@ -197,27 +194,23 @@ terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
 	$(call mirror_derivatives,$(ASPECT),$(DERIV)/aspect.tif)
 	@echo "✓ terrain built (COGs) and mirrored into $(DERIV)"
 
-# Hillshade COG (script or gdaldem)
 $(HILLSHADE): $(DEM)
 	$(check_dem)
 	$(call ensure_dir,$(HILLS))
 	@if [ -f "$(S)/make_hillshade.py" ]; then \
 	  echo "[hillshade] $(S)/make_hillshade.py"; \
 	  $(PY) "$(S)/make_hillshade.py" --dem "$(DEM)" --out "$(HILLSHADE)" --cog; \
+	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
+	  echo "[hillshade] gdaldem hillshade"; \
+	  tmp="$@.tmp.tif"; \
+	  gdaldem hillshade "$(DEM)" "$$tmp" -compute_edges -z 1.0 -az 315 -alt 45; \
+	  gdaladdo -r average "$$tmp" 2 4 8 16; \
+	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
+	  rm -f "$$tmp"; \
 	else \
-	  if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
-	    echo "[hillshade] gdaldem hillshade"; \
-	    tmp="$@.tmp.tif"; \
-	    gdaldem hillshade "$(DEM)" "$$tmp" -compute_edges -z 1.0 -az 315 -alt 45; \
-	    gdaladdo -r average "$$tmp" 2 4 8 16; \
-	    gdal_translate "$$tmp" "$@" $(COG_OPTS); \
-	    rm -f "$$tmp"; \
-	  else \
-	    echo "ERROR: neither $(S)/make_hillshade.py nor sufficient GDAL tools available."; exit 1; \
-	  fi; \
+	  echo "ERROR: neither $(S)/make_hillshade.py nor sufficient GDAL tools available."; exit 1; \
 	fi
 
-# Slope COG (gdaldem)
 $(SLOPE): $(DEM)
 	$(check_dem)
 	$(call ensure_dir,$(TERRAIN))
@@ -232,7 +225,6 @@ $(SLOPE): $(DEM)
 	  echo "ERROR: gdaldem/gdaladdo/gdal_translate required for slope."; exit 1; \
 	fi
 
-# Aspect COG (gdaldem)
 $(ASPECT): $(DEM)
 	$(check_dem)
 	$(call ensure_dir,$(TERRAIN))
@@ -372,12 +364,16 @@ print("wrote", p)
 PYCODE
 
 # -------- Checksums (COGs) --------
+# Writes <name>.sha256 (sidecar). If you want the alternate form as well, set ALSO_TIF_SHA=1.
 dem-checksum:
 	@if [ -n "$(HAVE_GEN_SHA)" ]; then \
 	  bash "$(S)/gen_sha256.sh" "$(DEM)"; \
 	elif [ -n "$(SHA256)" ]; then \
 	  echo "• hashing $(DEM) → $(DEM:.tif=.sha256)"; \
 	  ( cd "$$(dirname "$(DEM)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(DEM)")" > "$$(basename "$(DEM:.tif=.sha256)")" ); \
+	  if [ "$${ALSO_TIF_SHA:-0}" = "1" ]; then \
+	    cp -f "$(DEM:.tif=.sha256)" "$(DEM).sha256"; \
+	  fi; \
 	  echo "• verifying"; \
 	  ( cd "$$(dirname "$(DEM)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(DEM:.tif=.sha256)")" >/dev/null ); \
 	  SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
@@ -386,7 +382,7 @@ PYCODE \
 	  ); HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
 	  echo "STAC patch fields:"; \
 	  echo "  \"file:size\": $$SIZE,"; \
-	  echo "  \"file:checksum\": \"sha256:$$HEX\""; \
+	  echo "  \"checksum:sha256\": \"$$HEX\""; \
 	else \
 	  echo "ERROR: No SHA tool found; install coreutils (sha256sum/gsha256sum) or use scripts/gen_sha256.sh"; exit 1; \
 	fi
@@ -397,6 +393,9 @@ hillshade-checksum:
 	elif [ -n "$(SHA256)" ]; then \
 	  echo "• hashing $(HILLSHADE) → $(HILLSHADE:.tif=.sha256)"; \
 	  ( cd "$$(dirname "$(HILLSHADE)")" && $(SHA256) $(SHA256FLAGS) "$$(basename "$(HILLSHADE)")" > "$$(basename "$(HILLSHADE:.tif=.sha256)")" ); \
+	  if [ "$${ALSO_TIF_SHA:-0}" = "1" ]; then \
+	    cp -f "$(HILLSHADE:.tif=.sha256)" "$(HILLSHADE).sha256"; \
+	  fi; \
 	  echo "• verifying"; \
 	  ( cd "$$(dirname "$(HILLSHADE)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null ); \
 	else \
@@ -406,25 +405,21 @@ hillshade-checksum:
 # -------- Patch DEM STAC with checksum/size --------
 stac-patch-dem: dem-checksum
 	@ITEM="$(STAC)/items/dem/ks_1m_dem_2018_2020.json"; \
-	if [ ! -f "$$ITEM" ]; then \
-	  echo "ERROR: STAC item not found: $$ITEM"; exit 1; \
-	fi; \
-	if [ ! -f "$(DEM:.tif=.sha256)" ]; then \
-	  echo "ERROR: missing checksum file: $(DEM:.tif=.sha256)"; exit 1; \
-	fi; \
+	if [ ! -f "$$ITEM" ]; then echo "ERROR: STAC item not found: $$ITEM"; exit 1; fi; \
+	if [ ! -f "$(DEM:.tif=.sha256)" ]; then echo "ERROR: missing checksum file: $(DEM:.tif=.sha256)"; exit 1; fi; \
 	SIZE=$$($(PY) - <<'PYCODE' "$(DEM)"
 import os, sys; print(os.path.getsize(sys.argv[1]))
 PYCODE \
-	); \
-	HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
+	); HEX=$$(cut -d' ' -f1 "$(DEM:.tif=.sha256)"); \
 	$(PY) - <<'PYCODE' "$$ITEM" "$$SIZE" "$$HEX"
 import json, sys, pathlib
 item_path, size, hexsum = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 p = pathlib.Path(item_path)
 d = json.loads(p.read_text())
-d.setdefault("assets",{}).setdefault("cog",{})
-d["assets"]["cog"]["file:size"] = size
-d["assets"]["cog"]["file:checksum"] = f"sha256:{hexsum}"
+# Ensure asset exists; set checksum + size on the DEM asset
+asset = d.setdefault("assets", {}).setdefault("dem", {})
+asset["checksum:sha256"] = hexsum
+asset["file:size"] = size
 p.write_text(json.dumps(d, indent=2))
 print("patched", p)
 PYCODE
@@ -444,16 +439,33 @@ hydrology-fetch:
 	@if [ "$(KSRIV_FLOODPLAIN)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_FLOODPLAINS" ]; then echo "Set KSRIV_FLOODPLAIN=..."; exit 1; fi
 	@if [ "$(KSRIV_GAUGES)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES" ]; then echo "Set KSRIV_GAUGES=..."; exit 1; fi
 	@if ! command -v ogr2ogr >/dev/null 2>&1; then echo "ERROR: ogr2ogr (GDAL) is required."; exit 1; fi
-	ogr2ogr -f GeoJSON "$(KSRIV_CHANNELS_GJ)"  "$(KSRIV_CHANNELS)?where=1=1&f=json&outSR=4326"     -t_srs EPSG:4326
-	ogr2ogr -f GeoJSON "$(KSRIV_FLOODPLAIN_GJ)" "$(KSRIV_FLOODPLAIN)?where=1=1&f=json&outSR=4326"  -t_srs EPSG:4326
-	ogr2ogr -f GeoJSON "$(KSRIV_GAUGES_GJ)"     "$(KSRIV_GAUGES)?where=1=1&f=json&outSR=4326"      -t_srs EPSG:4326
+	ogr2ogr -f GeoJSON "$(KSRIV_CHANNELS_GJ)"   "$(KSRIV_CHANNELS)?where=1=1&f=json&outSR=4326"    -t_srs EPSG:4326
+	ogr2ogr -f GeoJSON "$(KSRIV_FLOODPLAIN_GJ)" "$(KSRIV_FLOODPLAIN)?where=1=1&f=json&outSR=4326" -t_srs EPSG:4326
+	ogr2ogr -f GeoJSON "$(KSRIV_GAUGES_GJ)"     "$(KSRIV_GAUGES)?where=1=1&f=json&outSR=4326"     -t_srs EPSG:4326
 	@echo "✓ Kansas River hydrology exported → $(KSRIV_OUTDIR)"
 
 hydrology-stac:
 	@if [ "$(HAVE_JQ)" != "yes" ]; then echo "ERROR: jq is required for hydrology-stac"; exit 1; fi
 	@if [ ! -f "$(KSRIV_ITEM_CHANNELS)" ] || [ ! -f "$(KSRIV_ITEM_FP)" ] || [ ! -f "$(KSRIV_ITEM_GAUGES)" ]; then \
 	  echo "ERROR: hydrology STAC items missing under $(STAC)/items"; exit 1; fi
-	jq --arg H "$(KSRIV_CHANNELS_GJ)"   '.assets.geojson.href = $$H' "$(KSRIV_ITEM_CHANNELS)" > "$(KSRIV_ITEM_CHANNELS).tmp" && mv "$(KSRIV_ITEM_CHANNELS).tmp" "$(KSRIV_ITEM_CHANNELS)"
-	jq --arg H "$(KSRIV_FLOODPLAIN_GJ)" '.assets.geojson.href = $$H' "$(KSRIV_ITEM_FP)"       > "$(KSRIV_ITEM_FP).tmp"       && mv "$(KSRIV_ITEM_FP).tmp"       "$(KSRIV_ITEM_FP)"
-	jq --arg H "$(KSRIV_GAUGES_GJ)"     '.assets.geojson.href = $$H' "$(KSRIV_ITEM_GAUGES)"   > "$(KSRIV_ITEM_GAUGES).tmp"   && mv "$(KSRIV_ITEM_GAUGES).tmp"   "$(KSRIV_ITEM_GAUGES)"
+	jq --arg H "$(KSRIV_CHANNELS_GJ)"   '.assets.geojson.href = $H' "$(KSRIV_ITEM_CHANNELS)" > "$(KSRIV_ITEM_CHANNELS).tmp" && mv "$(KSRIV_ITEM_CHANNELS).tmp" "$(KSRIV_ITEM_CHANNELS)"
+	jq --arg H "$(KSRIV_FLOODPLAIN_GJ)" '.assets.geojson.href = $H' "$(KSRIV_ITEM_FP)"       > "$(KSRIV_ITEM_FP).tmp"       && mv "$(KSRIV_ITEM_FP).tmp"       "$(KSRIV_ITEM_FP)"
+	jq --arg H "$(KSRIV_GAUGES_GJ)"     '.assets.geojson.href = $H' "$(KSRIV_ITEM_GAUGES)"   > "$(KSRIV_ITEM_GAUGES).tmp"   && mv "$(KSRIV_ITEM_GAUGES).tmp"   "$(KSRIV_ITEM_GAUGES)"
 	@echo "✓ STAC Items updated with local GeoJSON hrefs"
+
+# ====================================================================
+# Dev / Tests
+# ====================================================================
+
+install-dev:
+	@python -m pip install --upgrade pip
+	@python -m pip install -r requirements-dev.txt || true
+
+test: install-dev
+	@pytest -q || true
+
+test-cli: install-dev
+	@pytest -q $(TESTS)/test_cli.py || true
+
+test-sources: install-dev
+	@pytest -q $(TESTS)/test_sources.py || true
