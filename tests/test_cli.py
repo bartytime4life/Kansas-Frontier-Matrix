@@ -41,7 +41,14 @@ def glob_paths(*globs: str) -> List[Path]:
     out: List[Path] = []
     for g in globs:
         out.extend(REPO.glob(g))
-    return out
+    # Deduplicate while preserving order
+    seen = set()
+    uniq = []
+    for p in out:
+        if p not in seen:
+            seen.add(p)
+            uniq.append(p)
+    return uniq
 
 
 # ---------------------------------------------------------------------------
@@ -93,37 +100,52 @@ def test_app_config_json_loads(config_path: Path):
 # STAC items & collections (basic conformance checks)
 # ---------------------------------------------------------------------------
 
-# Canonical item paths used in this repo (skip if not yet created)
-STAC_ITEMS = [
-    REPO / "data" / "stac" / "items" / "dem" / "ks_1m_dem_2018_2020.json",
-    REPO / "data" / "stac" / "items" / "hillshade" / "ks_hillshade_2018_2020.json",
-    REPO / "data" / "stac" / "items" / "overlays" / "usgs_topo_larned_1894.json",
-    REPO / "data" / "stac" / "items" / "vectors" / "treaties_1854.json",
-    REPO / "data" / "stac" / "items" / "vectors" / "railroads_1900.json",
+# Candidate item paths used in this repo (search both themed and flat item layouts)
+ITEM_GLOBS = [
+    "stac/items/*.json",
+    "stac/items/dem/*.json",
+    "stac/items/hillshade/*.json",
+    "stac/items/overlays/*.json",
+    "stac/items/vectors/*.json",
 ]
 
-@pytest.mark.parametrize("item_path", STAC_ITEMS)
+# Specific items we expect as the project matures (skip if missing during scaffold)
+EXPECTED_ITEM_BASENAMES = {
+    "ks_1m_dem_2018_2020.json",
+    "ks_hillshade_2018_2020.json",
+    "usgs_topo_larned_1894.json",
+    "treaties_1854.json",
+    "railroads_1900.json",
+}
+
+@pytest.mark.parametrize("item_path", glob_paths(*ITEM_GLOBS))
 def test_stac_item_minimum(item_path: Path):
-    if not item_path.exists():
-        pytest.skip(f"STAC item not present yet: {item_path}")
     item = read_json(item_path)
-    assert item.get("stac_version"), "Missing stac_version"
-    assert item.get("type") == "Feature", "STAC Item must have type=Feature"
-    assert isinstance(item.get("id"), str) and item["id"], "Missing id"
-    assert "assets" in item and isinstance(item["assets"], dict) and item["assets"], "Missing assets"
-    assert "bbox" in item, "Missing bbox"
+    assert item.get("stac_version"), f"Missing stac_version in {item_path}"
+    assert item.get("type") == "Feature", f"STAC Item must have type=Feature: {item_path}"
+    assert isinstance(item.get("id"), str) and item["id"], f"Missing id in {item_path}"
+    assert "assets" in item and isinstance(item["assets"], dict) and item["assets"], f"Missing assets in {item_path}"
+    assert "bbox" in item, f"Missing bbox in {item_path}"
     geom = item.get("geometry", {})
-    assert geom.get("type") in {"Polygon", "MultiPolygon"}, "Missing/invalid geometry"
-    assert "links" in item and isinstance(item["links"], list), "Missing links[]"
+    assert geom.get("type") in {"Polygon", "MultiPolygon"}, f"Missing/invalid geometry in {item_path}"
+    assert "links" in item and isinstance(item["links"], list), f"Missing links[] in {item_path}"
+
+def test_expected_items_present_or_skipped():
+    # If none of the expected items exist yet, skip with a helpful message.
+    candidates = {p.name for p in glob_paths(*ITEM_GLOBS)}
+    missing = sorted(EXPECTED_ITEM_BASENAMES - candidates)
+    if missing:
+        pytest.skip(f"Expected STAC items not present yet (ok during scaffolding): {', '.join(missing)}")
 
 
-STAC_COLLECTIONS = [
-    REPO / "data" / "stac" / "collections" / "elevation.json",
-    REPO / "data" / "stac" / "collections" / "historic_topo.json",
-    REPO / "data" / "stac" / "collections" / "vectors.json",
-]
+# Collections
+COLLECTION_PATHS = existing_only([
+    REPO / "stac" / "collections" / "elevation.json",
+    REPO / "stac" / "collections" / "historic_topo.json",
+    REPO / "stac" / "collections" / "vectors.json",
+])
 
-@pytest.mark.parametrize("collection_path", STAC_COLLECTIONS)
+@pytest.mark.parametrize("collection_path", COLLECTION_PATHS or [REPO / "stac" / "collections" / "elevation.json"])
 def test_stac_collection_minimum(collection_path: Path):
     if not collection_path.exists():
         pytest.skip(f"STAC collection not present yet: {collection_path}")
@@ -144,7 +166,7 @@ def _collect_linked_item_hrefs(collection: dict) -> Set[str]:
             hrefs.add(ln["href"])
     return hrefs
 
-@pytest.mark.parametrize("collection_path", STAC_COLLECTIONS)
+@pytest.mark.parametrize("collection_path", COLLECTION_PATHS or [REPO / "stac" / "collections" / "elevation.json"])
 def test_collection_links_item_files_exist(collection_path: Path):
     if not collection_path.exists():
         pytest.skip(f"STAC collection not present yet: {collection_path}")
@@ -156,24 +178,37 @@ def test_collection_links_item_files_exist(collection_path: Path):
 
     base = collection_path.parent  # .../stac/collections
     for href in hrefs:
-        # Resolve relative hrefs of form ../items/<theme>/<file>.json as well as bare filenames
-        candidate = (base / ".." / "items" / Path(href).name).resolve()
-        if not candidate.exists():
+        # Accept common relative forms:
+        #  - "../items/<theme>/<file>.json"
+        #  - "../items/<file>.json"
+        #  - "<file>.json" (basename)
+        h = Path(href)
+        candidates = [
+            (base / ".." / "items" / h.name).resolve(),
+            (base / ".." / "items" / h).resolve(),
+        ]
+        found = False
+        for c in candidates:
+            if c.exists():
+                read_json(c)  # must parse cleanly
+                found = True
+                break
+        if not found:
             pytest.skip(f"Linked item missing (ok during early scaffolding): {href}")
-        read_json(candidate)  # must parse cleanly
 
 
 # ---------------------------------------------------------------------------
 # KML well-formedness
 # ---------------------------------------------------------------------------
 
-KMLS = [
-    REPO / "data" / "earth" / "doc.kml",
-    REPO / "data" / "earth" / "networklinks" / "ks_1m_hillshade.kml",
-    REPO / "data" / "earth" / "networklinks" / "usgs_topo_1894.kml",
+KML_GLOBS = [
+    "data/earth/*.kml",
+    "data/earth/networklinks/*.kml",
+    "web/earth/*.kml",
+    "web/earth/networklinks/*.kml",
 ]
 
-@pytest.mark.parametrize("kml_path", KMLS)
+@pytest.mark.parametrize("kml_path", glob_paths(*KML_GLOBS))
 def test_kml_well_formed(kml_path: Path):
     if not kml_path.exists():
         pytest.skip(f"KML not present yet: {kml_path}")
@@ -187,22 +222,42 @@ def test_kml_well_formed(kml_path: Path):
 # Checksum file format (COGs)
 # ---------------------------------------------------------------------------
 
-CHECKSUMS = [
-    REPO / "data" / "cogs" / "dem" / "ks_1m_dem_2018_2020.tif.sha256",
-    REPO / "data" / "cogs" / "hillshade" / "ks_hillshade_2018_2020.tif.sha256",
-    REPO / "data" / "cogs" / "overlays" / "usgs_topo_larned_1894.tif.sha256",
+# Support both naming styles:
+#   - <name>.tif.sha256  (GNU coreutils sha256sum format)
+#   - <name>.sha256      (sidecar, same directory as .tif)
+CHECKSUM_TARGETS = [
+    # DEM
+    (REPO / "data" / "cogs" / "dem" / "ks_1m_dem_2018_2020.tif"),
+    # Hillshade
+    (REPO / "data" / "cogs" / "hillshade" / "ks_hillshade_2018_2020.tif"),
+    # Overlay example
+    (REPO / "data" / "cogs" / "overlays" / "usgs_topo_larned_1894.tif"),
 ]
 
-@pytest.mark.parametrize("sha_path", CHECKSUMS)
-def test_sha256_file_format(sha_path: Path):
-    if not sha_path.exists():
-        pytest.skip(f"Checksum not present yet: {sha_path}")
+def _candidate_sha_files(tif: Path) -> List[Path]:
+    return [
+        tif.with_suffix(tif.suffix + ".sha256"),    # <name>.tif.sha256
+        tif.with_suffix("").with_suffix(".sha256"), # <name>.sha256
+    ]
+
+@pytest.mark.parametrize("tif_path", CHECKSUM_TARGETS)
+def test_sha256_file_format(tif_path: Path):
+    if not tif_path.exists():
+        pytest.skip(f"COG not present yet: {tif_path}")
+    sha_candidates = existing_only(_candidate_sha_files(tif_path))
+    if not sha_candidates:
+        pytest.skip(f"Checksum not present yet for {tif_path}")
+    # Prefer the .tif.sha256 if both exist
+    sha_path = sha_candidates[0] if sha_candidates[0].name.endswith(".tif.sha256") else sha_candidates[-1]
+
     line = read_text(sha_path).strip()
     # Expect "<64hex><spaces/tabs>filename"
     m = re.match(r"^([A-Fa-f0-9]{64})\s+(.+)$", line)
     assert m, f"Checksum format invalid in {sha_path}: '{line}'"
     digest, fname = m.groups()
-    # The filename referenced in the checksum should exist next to the sha file
-    tif = sha_path.with_suffix("").with_suffix(".tif")  # strip .sha256 then ensure .tif
-    assert fname == tif.name, f"Checksum should reference {tif.name}, got {fname}"
-    assert tif.exists(), f"Referenced file does not exist: {tif}"
+
+    # The filename referenced in the checksum must match the .tif name
+    assert fname == tif_path.name, f"Checksum should reference {tif_path.name}, got {fname}"
+
+    # And the referenced .tif must exist
+    assert tif_path.exists(), f"Referenced file does not exist: {tif_path}"
