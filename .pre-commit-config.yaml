@@ -8,6 +8,8 @@ minimum_pre_commit_version: "3.6.0"
 ci:
   autofix_prs: true
   autoupdate_schedule: monthly
+  # run all hooks except those marked manual
+  skip: []
 
 default_language_version:
   python: python3
@@ -16,29 +18,33 @@ default_language_version:
 exclude: |
   (?x)^(
     data/(processed|cogs|outputs|raw)/|
-    assets/tiles/|
-    web/(dist|build|tiles)/|
+    data/sources/.*/vectors/|
+    assets/(tiles|images|fonts)/|
+    web/(dist|build|tiles|assets)/|
     (?:^|.*/)?node_modules/|
     (?:^|.*/)?dist/|
     build/|
     _site/|
     earth/|
-    docs/_build/
+    docs/_build/|
+    \.venv/|
+    \.mypy_cache/|
+    \.ruff_cache/|
+    \.pytest_cache/
   )
 
 repos:
-  # --- Core hygiene (whitespace, EOLs, merge conflicts, etc.) ---------------
+  # --- Core hygiene ----------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
       - id: check-added-large-files
-        args: ["--maxkb=5000"]   # prevent >5MB accidental commits (use DVC/LFS instead)
+        args: ["--maxkb=5000"]  # prevent >5MB accidental commits (use DVC/LFS instead)
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
-        # Preserve Markdown hard line-breaks (two spaces at EOL)
-        args: ["--markdown-linebreak-ext=md,mdx,rst"]
+        args: ["--markdown-linebreak-ext=md,mdx,rst"]  # preserve hard breaks
       - id: mixed-line-ending
         args: ["--fix=lf"]
       - id: check-yaml
@@ -48,6 +54,26 @@ repos:
       - id: detect-private-key
       - id: check-executables-have-shebang
       - id: name-tests-test
+
+  # --- Shell / Dockerfile linters -------------------------------------------
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        files: '(^|/)(scripts/|docker/|\.github/).*\.sh$'
+
+  - repo: https://github.com/mvdan/sh
+    rev: v3.9.0
+    hooks:
+      - id: shfmt
+        args: ["-i", "2", "-ci", "-bn"]
+        files: '(^|/)(scripts/|docker/|\.github/).*\.sh$'
+
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint
+        files: '^docker/(Dockerfile|.*Dockerfile.*)$'
 
   # --- Ruff (fast lint + import sort) ---------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -63,8 +89,7 @@ repos:
         types_or: [python]
         exclude: ^(notebooks/|docs/)
 
-  # --- Black (optional alongside ruff-format) -------------------------------
-  # You can delete this block if you go 100% with ruff-format.
+  # --- Black (optional; keep while migrating solely to ruff-format) ----------
   - repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:
@@ -84,6 +109,15 @@ repos:
     hooks:
       - id: prettier
         files: "\\.(json|jsonc|ya?ml|md|html?|css|js|ts|tsx)$"
+
+  # --- Markdown link checks (docs safety) ------------------------------------
+  - repo: https://github.com/lycheeverse/lychee
+    rev: v0.15.1
+    hooks:
+      - id: lychee
+        name: markdown link check (docs/)
+        files: "^docs/.*\\.(md|markdown)$"
+        args: ["--no-progress", "--max-concurrency", "8", "--offline", "--accept", "200..399"]
 
   # --- pyproject.toml canonical formatting ----------------------------------
   - repo: https://github.com/tox-dev/pyproject-fmt
@@ -114,7 +148,7 @@ repos:
       - id: nbstripout
         files: "\\.ipynb$"
 
-  # --- Security / safety ----------------------------------------------------
+  # --- Security / safety -----------------------------------------------------
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.9
     hooks:
@@ -128,6 +162,8 @@ repos:
     hooks:
       - id: pip-audit
         args: ["-P"]
+        # speed up: skip in CI for non-Python-only repos if needed
+        # stages: [manual]
 
   # --- GitHub Actions workflow linter ---------------------------------------
   - repo: https://github.com/rhysd/actionlint
