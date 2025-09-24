@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "name": "treaty_1854_kansas_nebraska_placeholder",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "treaty_kansas_nebraska_1854_placeholder",
+      "properties": {
+        "id": "treaty_kansas_nebraska_1854",
+        "treaty_name": "Kansas–Nebraska Act Treaty Boundaries (1854)",
+        "treaty_date": "1854-05-30",
+        "valid_start": "1854-05-30",
+        "valid_end": "1867-10-21",
+        "type": "treaty_boundary",
+        "source": "NARA scanned treaty text/map",
+        "source_url": "https://www.archives.gov/research/american-indians/treaties/region/1854-kansas-nebraska.pdf",
+        "license": "public-domain",
+        "confidence": "medium",
+        "lineage": [
+          "Scanned from NARA microfilm",
+          "Georeferenced using USGS topo basemaps",
+          "Digitized in QGIS",
+          "Saved as GeoJSON"
+        ],
+        "notes": "Placeholder polygon for development. Replace with authoritative digitization after GCP alignment and QA."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-101.5, 39.5],
+            [-100.0, 39.5],
+            [-100.0, 38.5],
+            [-101.5, 38.5],
+            [-101.5, 39.5]
+          ]
+        ]
+      }
+    }
+  ]
+}
