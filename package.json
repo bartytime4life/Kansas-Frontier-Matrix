@@ -1,12 +1,13 @@
 {
   "name": "kfm-roadmap-sync",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "license": "MIT",
   "description": "Sync .github/roadmap/roadmap.yaml to GitHub labels, milestones, and issues",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
   },
   "packageManager": "npm@10",
   "repository": {
@@ -35,13 +36,14 @@
     "validate": "node --input-type=module -e \"import fs from 'node:fs'; import yaml from 'js-yaml'; const p=process.env.ROADMAP_FILE||'.github/roadmap/roadmap.yaml'; yaml.load(fs.readFileSync(p,'utf8')); console.log('roadmap.yaml: OK →', p);\"",
     "fmt": "prettier --log-level warn -w .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
     "fmt:check": "prettier --log-level warn -c .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
-    "ci": "npm run validate && npm run fmt:check"
+    "audit": "npm audit --omit=dev || true",
+    "ci": "npm run validate && npm run fmt:check && npm run audit"
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/github": "^6.0.0",
     "js-yaml": "^4.1.0",
-    "semver": "^7.6.0"
+    "semver": "^7.6.3"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
