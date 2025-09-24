@@ -1,0 +1,46 @@
+{
+  "id": "ks_dem_1m",
+  "title": "Kansas Statewide DEM (1-m resolution)",
+  "type": "raster",
+  "version": "1.0.0",
+  "description": "1-meter resolution digital elevation model mosaic for Kansas, compiled from USGS 3DEP and Kansas DASC LiDAR collections. Provides the baseline terrain surface for hillshade, slope, and aspect derivatives in the Kansas-Frontier-Matrix project.",
+  "temporal": {
+    "start": "2012-01-01",
+    "end": "2020-12-31"
+  },
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00]
+  },
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/USGS_LPC_KS_2020_D19/USGS_LPC_KS_2020_D19.tif"
+      ],
+      "notes": "USGS 3DEP Kansas 1m DEM tile (example project). Replace or extend with statewide mosaic index as needed."
+    }
+  ],
+  "lineage": [
+    "Fetched from USGS TNM S3 (3DEP Kansas project)",
+    "Mosaicked into statewide DEM",
+    "Converted to Cloud-Optimized GeoTIFF (COG)",
+    "Prepared for hillshade/slope/aspect derivatives"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": "2025-09-21",
+    "checksum_sha256": "placeholder123abc456def789ghi000111222333444555666777888999aaa",
+    "filesize_bytes": null
+  },
+  "keywords": [
+    "DEM",
+    "elevation",
+    "Kansas",
+    "LiDAR",
+    "terrain",
+    "3DEP"
+  ],
+  "confidence": "high",
+  "notes": "This record uses a single USGS 3DEP project tile as a placeholder. Replace with a full statewide index or multiple tile URLs to cover all Kansas counties."
+}
