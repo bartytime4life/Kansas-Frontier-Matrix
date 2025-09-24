@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "web/config/app.config.schema.json",
+  "title": "Kansas-Frontier-Matrix — Web App Config",
+  "type": "object",
+  "required": ["version", "title", "style", "center", "zoom", "time", "defaults", "layers"],
+  "properties": {
+    "version": { "type": "string" },
+    "generated": { "type": ["string", "null"], "format": "date-time" },
+    "title": { "type": "string" },
+    "subtitle": { "type": ["string", "null"] },
+    "style": { "type": "string" },
+    "center": {
+      "type": "array",
+      "items": [{ "type": "number" }, { "type": "number" }],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "zoom": { "type": "number", "minimum": 0, "maximum": 24 },
+    "time": {
+      "type": "object",
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "type": ["string", "null"], "format": "date" },
+        "max": { "type": ["string", "null"], "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "defaultYear": { "type": "integer" },
+    "defaults": {
+      "type": "object",
+      "required": ["minzoom", "maxzoom", "tileSize", "visible", "opacity", "bounds", "time"],
+      "properties": {
+        "minzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
+        "maxzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
+        "tileSize": { "type": "integer", "enum": [256, 512] },
+        "visible": { "type": "boolean" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "bounds": {
+          "type": "array",
+          "items": [{ "type": "number" }, { "type": "number" }, { "type": "number" }, { "type": "number" }],
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "time": {
+          "type": "object",
+          "properties": {
+            "start": { "type": ["string", "null"], "format": "date" },
+            "end":   { "type": ["string", "null"], "format": "date" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "layers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/layer" },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "timeRange": {
+      "type": "object",
+      "properties": {
+        "start": { "type": ["string", "null"], "format": "date" },
+        "end":   { "type": ["string", "null"], "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "rasterLayer": {
+      "type": "object",
+      "required": ["id", "title", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "group": { "type": ["string", "null"] },
+        "type": { "const": "raster" },
+        "url":  { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minzoom": { "type": "integer" },
+        "maxzoom": { "type": "integer" },
+        "visible": { "type": "boolean" },
+        "tileSize": { "type": ["integer", "null"] },
+        "bounds": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "time": { "$ref": "#/$defs/timeRange" },
+        "attribution": { "type": ["string", "null"] }
+      },
+      "oneOf": [
+        { "required": ["url"] }
+      ],
+      "additionalProperties": false
+    },
+    "geojsonPaint": {
+      "type": "object",
+      "properties": {
+        "line": {
+          "type": "object",
+          "properties": {
+            "line-color": { "type": "string" },
+            "line-width": { "type": "number" },
+            "line-opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        },
+        "fill": {
+          "type": "object",
+          "properties": {
+            "fill-color": { "type": "string" },
+            "fill-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "fill-outline-color": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "circle": {
+          "type": "object",
+          "properties": {
+            "circle-color": { "type": "string" },
+            "circle-radius": { "type": "number" },
+            "circle-opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "geojsonLayer": {
+      "type": "object",
+      "required": ["id", "title", "type", "path"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "group": { "type": ["string", "null"] },
+        "type": { "const": "geojson" },
+        "path": { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minzoom": { "type": ["integer", "null"] },
+        "maxzoom": { "type": ["integer", "null"] },
+        "visible": { "type": "boolean" },
+        "bounds": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "time": { "$ref": "#/$defs/timeRange" },
+        "paint": { "$ref": "#/$defs/geojsonPaint" },
+        "attribution": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "layer": {
+      "oneOf": [
+        { "$ref": "#/$defs/rasterLayer" },
+        { "$ref": "#/$defs/geojsonLayer" }
+      ]
+    }
+  }
+}
