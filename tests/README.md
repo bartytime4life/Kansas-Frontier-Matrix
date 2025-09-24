@@ -8,13 +8,13 @@ The tests provide **mission-grade validation** of data, metadata, and code wirin
 
 ## Objectives
 
-- Validate **STAC 1.0.0** metadata (`catalog.json`, `collections/*.json`, `items/*.json`) for conformance.  
-- Cross-check **data provenance**: filenames vs. IDs, bbox vs. geometry, temporal intervals [oai_citation:0‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-CrPP4mcnyNq5sGJotXDwSv).  
-- Confirm **geospatial source configs** (YAML/JSON in `data/`) parse correctly and contain required keys [oai_citation:1‡Data resource analysis.pdf](file-service://file-GdS9Kcw7Xbfqpy4xwwdqWS).  
-- Ensure **core web assets** (`web/app.js`, `web/app.css`, logos, favicon) exist for the public site.  
-- Provide **reproducible, transparent checks** consistent with the MCP Scientific Method templates [oai_citation:2‡Kansas Historical Knowledge Hub – System Design.pdf](file-service://file-P6gGz263QNwmmVYw8LBSvB).  
-- Quantify potential **gaps or uncertainty** in datasets (audit-aligned) [oai_citation:3‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-BgUSuffTiRq4qidye2sPwN).  
-- Build hooks for **multi-modal ingestion tests** — historical texts, maps, hydrology, oral histories [oai_citation:4‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).
+- Validate **STAC 1.0.0** metadata (`stac/catalog.json`, `stac/collections/*.json`, `stac/items/*.json`) for conformance.  
+- Cross-check **data provenance**: filenames ↔ IDs, bbox ↔ geometry, temporal intervals.  
+- Confirm **geospatial source configs** (YAML/JSON in `data/`) parse correctly and contain required keys.  
+- Ensure **core web assets** (`web/app.js`, CSS, logos, favicon) exist for the public site.  
+- Validate **web configs** (`web/app.config.json`, `web/layers.json`) against JSON Schemas.  
+- Quantify potential **gaps or uncertainty** in datasets as they’re added (audit-aligned).  
+- Provide hooks for **multi-modal ingestion tests** — historical texts, maps, hydrology, oral histories.
 
 ---
 
@@ -24,18 +24,20 @@ The tests provide **mission-grade validation** of data, metadata, and code wirin
 flowchart TD
   %% --- Inputs ---
   subgraph Repo
-    A1[stac/catalog.json]
-    A2[stac/collections/*.json]
-    A3[stac/items/*.json]
-    B1[data/sources/*.yml]
-    C1[web/app.js, CSS, assets]
+    A1["stac/catalog.json"]
+    A2["stac/collections/*.json"]
+    A3["stac/items/*.json"]
+    B1["data/sources/*.yml"]
+    C1["web/app.js, CSS, assets"]
+    C2["web/app.config.json, web/layers.json"]
   end
 
   %% --- Test runners ---
   subgraph Pytest
-    T1[test_stac.py]
-    T2[test_sources.py]
-    T3[test_web.py - planned]
+    T1["test_stac.py"]
+    T2["test_sources.py"]
+    T3["test_web.py\n(planned)"]
+    T4["test_web_configs.py"]
   end
 
   A1 --> T1
@@ -43,117 +45,127 @@ flowchart TD
   A3 --> T1
   B1 --> T2
   C1 --> T3
+  C2 --> T4
 
   %% --- Outputs ---
   subgraph Results
-    R1[Clear Failures]
-    R2[Graceful Skips]
-    R3[Green -> Site Build Ready]
+    R1["Clear Failures"]
+    R2["Graceful Skips"]
+    R3["Green → Site Build Ready"]
   end
 
-  T1 --> R1
-  T1 --> R2
-  T2 --> R1
-  T2 --> R2
-  T3 --> R1
-  T3 --> R2
-  T1 --> R3
-  T2 --> R3
-  T3 --> R3
+  T1 --> R1 & R2 & R3
+  T2 --> R1 & R2 & R3
+  T3 --> R1 & R2 & R3
+  T4 --> R1 & R2 & R3
 
-  R3 --> Site[Static Site / Map UI]
+  R3 --> Site["Static Site / Map UI"]
+````
 
+---
 
-⸻
+## Current Test Modules
 
-Current Test Modules
-	•	test_stac.py — Validates STAC Collections and Items:
-	•	type, stac_version, id fields
-	•	bbox vs. geometry enclosure
-	•	datetime / start_datetime / end_datetime
-	•	asset media types (GeoTIFF/COG best practices)
-	•	collection ↔ item link integrity
-	•	test_sources.py — Sanity checks for data source files under data/:
-	•	JSON/YAML validity
-	•	required fields present
-	•	paths/URLs plausibility
-	•	(planned) test_web.py — Checks existence of critical frontend assets before site build/deploy.
+* **`test_stac.py` — Validates STAC Collections and Items**
 
-⸻
+  * `type`, `stac_version`, `id`
+  * bbox containment vs. geometry
+  * `datetime` / `start_datetime` / `end_datetime`
+  * asset media types (prefer COG/GeoTIFF where applicable)
+  * collection ↔ item link integrity
 
-Test ↔ Architecture Map (Knowledge Hub)
+* **`test_sources.py` — Sanity checks for `data/sources/**`**
 
-This shows exactly where each test lands in the Kansas Historical Knowledge Hub architecture ￼.
+  * JSON/YAML validity
+  * required fields present
+  * paths/URLs plausibility
 
-Test file / planned test	Knowledge Hub layer(s)	Primary intent
-test_stac.py	Data Repositories (Geo-spatial Data Catalog, STAC-like JSON) ￼	Schema conformance; spatial/temporal extent sanity; collection↔item linkage; asset media types
-test_sources.py	Ingestion & Processing Pipeline (source config inputs) ￼ ￼	Source config validity; required keys; URL/path plausibility for fetch/ETL
-(planned) test_web.py	Frontend Application (static site assets) ￼	Presence of required assets before build/deploy
-(future) test_ingest_texts.py	Ingestion & Processing Pipeline → NLP extraction ￼ ￼	Minimal smoke tests for OCR/NLP passes on sample texts; provenance stubs
-(future) test_graph_entities_relations.py	Knowledge Graph Database (entity/edge shape) ￼	Node/edge label policy, required properties (date/place normalization)
-(future) test_graph_query_api.py	Query API Layer (REST/GraphQL) ￼	Basic graph queries: by time, place, entity type, confidence
-(future) test_uncertainty_qc.py	Pipeline ↔ Graph ↔ UI (confidence tagging) ￼	Confidence scores present for NLP/georef; rendering rules (opacity/error bars)
-(future) test_layers_catalog_integrity.py	Data Repositories (STAC-like catalog of layers) ￼	Each layer has source URL, license, CRS, temporal coverage, processing notes
-(future) test_storymap_hooks.py	Frontend Application (story-map mode) ￼	Ensure narrative/chapters schema and content hooks exist (when feature lands)
-(future) test_hydrology_models_io.py	Ingestion + Data Repos (hydrology endpoints/models) ￼	Check documented endpoints exist; model I/O manifests present
+* **`test_web_configs.py` — Schema validation for web configs**
 
-Use this table when adding tests to pin your PR to the right architectural layer(s) and reviewers.
+  * Validates `web/app.config.json` against `web/config/app.config.schema.json`
+  * Validates `web/layers.json` against `web/config/layers.schema.json`
+  * Ensures **unique** layer IDs
 
-⸻
+* **`test_web.py` (planned)** — Frontend smoke checks
 
-Running Tests
+  * Existence of critical assets before site build/deploy (`web/app.js`, CSS, icons)
+
+---
+
+## Test ↔ Architecture Map (Knowledge Hub)
+
+| Test file (status)                            | Knowledge-hub layer(s)                     | Primary intent                                                               |
+| --------------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
+| `test_stac.py`                                | Data Repositories (STAC-like catalog)      | Schema conformance; spatial/temporal sanity; collection↔item linkage         |
+| `test_sources.py`                             | Ingestion & Processing (source configs)    | Source config validity; required keys; URL/path plausibility                 |
+| `test_web_configs.py`                         | Frontend Config Layer (viewer + layers)    | JSON Schema conformance; property names; unique IDs                          |
+| `test_web.py` *(planned)*                     | Frontend Application (static site assets)  | Presence of required assets before build/deploy                              |
+| *(future)* `test_ingest_texts.py`             | Ingestion → NLP extraction                 | OCR/NLP smoke on sample texts; provenance stubs                              |
+| *(future)* `test_graph_entities_relations.py` | Knowledge Graph DB                         | Node/edge label policy; required properties (date/place normalization)       |
+| *(future)* `test_graph_query_api.py`          | Query API (REST/GraphQL)                   | Basic graph queries: by time, place, entity type, confidence                 |
+| *(future)* `test_uncertainty_qc.py`           | Pipeline ↔ Graph ↔ UI (confidence tagging) | Confidence fields present; rendering rules (opacity/error bars)              |
+| *(future)* `test_layers_catalog_integrity.py` | Data Repositories (layer catalog)          | Each layer has source URL, license, CRS, temporal coverage, processing notes |
+| *(future)* `test_storymap_hooks.py`           | Frontend Application (story-map mode)      | Narrative/chapters schema and hooks                                          |
+| *(future)* `test_hydrology_models_io.py`      | Ingestion + Data Repos (hydrology)         | Endpoints present; model I/O manifests                                       |
+
+Use this table to align new tests with the correct architectural layer(s) and reviewers.
+
+---
+
+## Running Tests
 
 From the repo root:
 
+```bash
 pytest -q
+```
 
-Options:
-	•	-k "stac" → run only STAC validation tests
-	•	-s → show stdout/logs
-	•	--maxfail=1 → stop after first failure
-	•	-vv → verbose mode (useful for parametric cases)
+Common options:
 
-⸻
+* `-k "stac"` → run only STAC validation tests
+* `-s` → show stdout/logs
+* `--maxfail=1` → stop after first failure
+* `-vv` → verbose mode (helpful for parametric cases)
 
-Debugging & Skips
-	•	If no STAC items/collections exist yet, pytest will skip module-wide to avoid noise.
-	•	JSON parse errors raise AssertionErrors with file + error details.
-	•	Skips are expected during scaffolding; failures indicate required corrections.
+---
 
-⸻
+## Debugging & Skips
 
-Adding New Tests
-	1.	Place tests in this directory, naming files test_*.py.
-	2.	Reuse shared helpers from test_stac.py / test_sources.py.
-	3.	Use @pytest.mark.parametrize to scale across many files consistently.
-	4.	Keep dependencies minimal (stdlib + pytest).
+* If no STAC items/collections exist yet, tests **skip** to avoid noise (scaffolding-friendly).
+* JSON/YAML parse errors raise **assertions** with file path + parser message.
+* Skips are expected during early scaffolding; **failures** indicate required corrections.
 
-Future extensions may add:
-	•	ETL/ingest validation (checking derivative COGs, KMLs, etc.) ￼
-	•	Uncertainty checks (bounding confidence on georeferencing or NLP extraction) ￼
-	•	Simulation/model integration tests (aligned with NASA-grade reproducibility protocols) ￼
-	•	Cross-disciplinary hooks (archaeology, oral histories, climate proxies, hydrology datasets) ￼ ￼
+---
 
-⸻
+## Adding New Tests
 
-CI Integration
+1. Place new tests in this directory, naming files `test_*.py`.
+2. Reuse helpers from existing tests (path loaders, JSON readers).
+3. Prefer `@pytest.mark.parametrize` to scale checks over many files.
+4. Keep dependencies minimal (**stdlib + pytest**; add `jsonschema` only where needed).
+5. If a dataset is optional, mark tests to **skip gracefully** when inputs are missing.
 
-Add a GitHub Actions step:
+---
 
+## CI Integration
+
+Minimal GitHub Actions step:
+
+```yaml
 - name: Run tests
   run: |
     pytest -q --junitxml=pytest-report.xml
+```
 
-Upload pytest-report.xml for CI dashboards or Shields.io badges.
+Upload `pytest-report.xml` to CI dashboards or badges as desired.
 
-⸻
+---
 
-Philosophy
+## Philosophy
 
-These tests are not just guardrails. They implement a Master Coder Protocol (MCP) approach — ensuring
-reproducibility, transparency, and cross-disciplinary rigor across Kansas-Frontier-Matrix datasets ￼.
+These tests implement a **Master Coder Protocol** approach — they’re not just guardrails.
+They enforce **reproducibility, transparency, and cross-disciplinary rigor**, helping us connect
+maps, texts, hydrology, geology, and archives into a cohesive Kansas knowledge base — with
+clear provenance and automated validation at every layer.
 
-The suite evolves from simple file existence checks → to integrated reasoning that links maps, texts,
-oral histories, geology, and archives into a cohesive Kansas knowledge base ￼ ￼.
-
-If you want, I can also stub the *future* tests listed in the mapping table as no-op `pytest.skip` modules so they’re visible in CI now and easy to flesh out later.
+---
