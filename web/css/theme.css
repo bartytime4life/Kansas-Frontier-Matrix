@@ -1,1 +1,163 @@
+/* ------------------------------------------------------------------
+   Kansas-Frontier-Matrix — Theme Styles
+   File: web/css/theme.css
+   Purpose: Color palettes, typography, elevation, and theming utilities.
+   ------------------------------------------------------------------ */
+
+/* ===== Root Theme Tokens ===== */
+:root {
+  /* Color System */
+  --kfm-bg: #0e1117;
+  --kfm-surface: #171a21;
+  --kfm-surface-alt: #1d222d;
+  --kfm-border: #2c3240;
+
+  --kfm-ink: #e8eefc;
+  --kfm-ink-dim: #b4bfd6;
+  --kfm-muted: #7b84a5;
+
+  --kfm-accent: #7cc4ff;
+  --kfm-accent-2: #63ffa0;
+  --kfm-accent-3: #ffb45e;
+  --kfm-danger: #ff6b6b;
+  --kfm-warning: #ffd166;
+  --kfm-success: #06d6a0;
+
+  /* Typography */
+  --kfm-font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans";
+  --kfm-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Shadows */
+  --kfm-shadow-1: 0 2px 8px rgba(0,0,0,0.25);
+  --kfm-shadow-2: 0 6px 20px rgba(0,0,0,0.35);
+  --kfm-shadow-3: 0 12px 32px rgba(0,0,0,0.4);
+
+  /* Radii */
+  --kfm-radius-sm: 6px;
+  --kfm-radius: 12px;
+  --kfm-radius-lg: 18px;
+
+  /* Spacing */
+  --kfm-space-1: 6px;
+  --kfm-space-2: 10px;
+  --kfm-space-3: 16px;
+  --kfm-space-4: 24px;
+  --kfm-space-5: 32px;
+
+  /* Transitions */
+  --kfm-transition-fast: 120ms ease;
+  --kfm-transition: 200ms ease;
+  --kfm-transition-slow: 400ms ease;
+}
+
+/* ===== Typography ===== */
+.kfm-h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 var(--kfm-space-2);
+  color: var(--kfm-ink);
+}
+.kfm-h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: var(--kfm-space-3) 0 var(--kfm-space-1);
+  color: var(--kfm-ink);
+}
+.kfm-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--kfm-ink-dim);
+}
+.kfm-small {
+  font-size: 12px;
+  color: var(--kfm-muted);
+}
+.kfm-code {
+  font-family: var(--kfm-mono);
+  font-size: 13px;
+  background: var(--kfm-surface-alt);
+  border-radius: var(--kfm-radius-sm);
+  padding: 2px 6px;
+  color: var(--kfm-accent);
+}
+
+/* ===== Utility Classes ===== */
+.kfm-surface {
+  background: var(--kfm-surface);
+  border: 1px solid var(--kfm-border);
+  border-radius: var(--kfm-radius);
+  box-shadow: var(--kfm-shadow-1);
+  padding: var(--kfm-space-3);
+}
+.kfm-surface-alt {
+  background: var(--kfm-surface-alt);
+  border-radius: var(--kfm-radius);
+  padding: var(--kfm-space-3);
+}
+
+.kfm-border { border: 1px solid var(--kfm-border); }
+.kfm-rounded { border-radius: var(--kfm-radius); }
+.kfm-shadow { box-shadow: var(--kfm-shadow-1); }
+.kfm-shadow-lg { box-shadow: var(--kfm-shadow-3); }
+
+/* Accent text & badges */
+.kfm-accent { color: var(--kfm-accent); }
+.kfm-accent-2 { color: var(--kfm-accent-2); }
+.kfm-accent-3 { color: var(--kfm-accent-3); }
+.kfm-danger { color: var(--kfm-danger); }
+.kfm-warning { color: var(--kfm-warning); }
+.kfm-success { color: var(--kfm-success); }
+
+.kfm-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  line-height: 1.2;
+  background: var(--kfm-surface-alt);
+  border: 1px solid var(--kfm-border);
+  color: var(--kfm-ink);
+}
+
+/* ===== Interactive States ===== */
+.kfm-hover:hover {
+  background: color-mix(in srgb, var(--kfm-accent) 20%, transparent);
+  cursor: pointer;
+  transition: background var(--kfm-transition-fast);
+}
+.kfm-focus:focus-visible {
+  outline: 2px solid var(--kfm-accent);
+  outline-offset: 2px;
+}
+
+/* ===== Light Theme Override ===== */
+@media (prefers-color-scheme: light) {
+  :root {
+    --kfm-bg: #fdfdfd;
+    --kfm-surface: #ffffff;
+    --kfm-surface-alt: #f6f7f9;
+    --kfm-border: #d6d8e0;
+
+    --kfm-ink: #101218;
+    --kfm-ink-dim: #444a5c;
+    --kfm-muted: #6e7387;
+
+    --kfm-accent: #006dce;
+    --kfm-accent-2: #149958;
+    --kfm-accent-3: #d47a00;
+  }
+}
+
+/* ===== Print Theme ===== */
+@media print {
+  .kfm-surface,
+  .kfm-surface-alt,
+  .kfm-badge {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+    box-shadow: none;
+  }
+}
 
