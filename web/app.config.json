@@ -1,11 +1,14 @@
 {
+  "version": "1.1.0",
+  "generated": "2025-09-23T21:22:00Z",
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time-aware historical GIS for Kansas",
+
   "style": "https://demotiles.maplibre.org/style.json",
   "center": [-98.3, 38.5],
   "zoom": 6,
 
-  "time": { "min": 1850, "max": 2025 },
+  "time": { "min": "1850-01-01", "max": "2025-12-31" },
   "defaultYear": 1930,
 
   "defaults": {
@@ -14,7 +17,8 @@
     "tileSize": 256,
     "visible": true,
     "opacity": 1.0,
-    "bounds": [-102.05, 36.99, -94.59, 40.00]
+    "bounds": [-102.051, 36.993, -94.588, 40.003],
+    "time": { "start": null, "end": null }
   },
 
   "layers": [
@@ -28,49 +32,47 @@
       "minzoom": 0,
       "maxzoom": 19,
       "visible": true,
+      "time": { "start": null, "end": null },
       "attribution": "© OpenStreetMap contributors"
     },
 
     {
-      "id": "hillshade",
+      "id": "terrain_hillshade",
       "title": "Hillshade (2018–2020)",
       "group": "Basemaps & Terrain",
       "type": "raster",
-      "path": "../data/derivatives/hillshade.tif",
+      "url": "./tiles/terrain/hillshade/{z}/{x}/{y}.png",
       "opacity": 0.9,
       "minzoom": 0,
       "maxzoom": 14,
       "visible": true,
-      "start": 2018,
-      "end": 2020,
+      "time": { "start": "2018-01-01", "end": "2020-12-31" },
       "attribution": "DEM/Hillshade © KARS / State of Kansas"
     },
     {
-      "id": "slope",
+      "id": "terrain_slope",
       "title": "Slope (degrees)",
       "group": "Basemaps & Terrain",
       "type": "raster",
-      "path": "../data/derivatives/slope.tif",
+      "url": "./tiles/terrain/slope/{z}/{x}/{y}.png",
       "opacity": 0.85,
       "minzoom": 0,
       "maxzoom": 14,
       "visible": false,
-      "start": 2018,
-      "end": 2020,
+      "time": { "start": "2018-01-01", "end": "2020-12-31" },
       "attribution": "Derived from DEM © KARS / State of Kansas"
     },
     {
-      "id": "aspect",
+      "id": "terrain_aspect",
       "title": "Aspect (degrees)",
       "group": "Basemaps & Terrain",
       "type": "raster",
-      "path": "../data/derivatives/aspect.tif",
+      "url": "./tiles/terrain/aspect/{z}/{x}/{y}.png",
       "opacity": 0.85,
       "minzoom": 0,
       "maxzoom": 14,
       "visible": false,
-      "start": 2018,
-      "end": 2020,
+      "time": { "start": "2018-01-01", "end": "2020-12-31" },
       "attribution": "Derived from DEM © KARS / State of Kansas"
     },
 
@@ -79,13 +81,12 @@
       "title": "USGS Historic Topo — Larned (1894)",
       "group": "Historic Topographic Maps",
       "type": "raster",
-      "url": "./tiles/usgs_1894_larned/{z}/{x}/{y}.png",
+      "url": "./tiles/historic/usgs_1894_larned/{z}/{x}/{y}.png",
       "opacity": 0.7,
       "minzoom": 0,
       "maxzoom": 16,
       "visible": true,
-      "start": 1894,
-      "end": 1894,
+      "time": { "start": "1894-01-01", "end": "1894-12-31" },
       "attribution": "USGS Historical Topographic Maps (Public Domain)"
     },
 
@@ -97,8 +98,7 @@
       "path": "../vectors/infrastructure/railroads_1900.geojson",
       "opacity": 1.0,
       "visible": true,
-      "start": 1900,
-      "end": 1900,
+      "time": { "start": "1900-01-01", "end": "1900-12-31" },
       "paint": {
         "line": { "line-color": "#d97706", "line-width": 1.6, "line-opacity": 0.95 }
       },
@@ -112,56 +112,52 @@
       "path": "../vectors/political/treaties_1854.geojson",
       "opacity": 0.85,
       "visible": true,
-      "start": 1854,
-      "end": 1854,
+      "time": { "start": "1854-01-01", "end": "1854-12-31" },
       "paint": {
-        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.25 },
+        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.25, "fill-outline-color": "#1d4ed8" },
         "line": { "line-color": "#1d4ed8", "line-width": 1.4, "line-opacity": 0.9 }
       },
       "attribution": "Digitized treaty boundaries, 1854"
     },
 
     {
-      "id": "ksriv-channels",
+      "id": "ksriv_channels",
       "title": "Kansas River — Channels",
       "group": "Hydrology",
       "type": "geojson",
       "path": "../data/processed/hydrology/kansas_river/channels.geojson",
       "opacity": 1.0,
       "visible": true,
-      "start": 2000,
-      "end": null,
+      "time": { "start": "2000-01-01", "end": null },
       "paint": {
         "line": { "line-color": "#1e88e5", "line-width": 1.6, "line-opacity": 1.0 }
       },
       "attribution": "Kansas Geological Survey (KGS)"
     },
     {
-      "id": "ksriv-floodplains",
+      "id": "ksriv_floodplains",
       "title": "Kansas River — Floodplains",
       "group": "Hydrology",
       "type": "geojson",
       "path": "../data/processed/hydrology/kansas_river/floodplains.geojson",
       "opacity": 0.6,
       "visible": false,
-      "start": 2000,
-      "end": null,
+      "time": { "start": "2000-01-01", "end": null },
       "paint": {
-        "fill": { "fill-color": "#42a5f5", "fill-opacity": 0.25 },
+        "fill": { "fill-color": "#42a5f5", "fill-opacity": 0.25, "fill-outline-color": "#1976d2" },
         "line": { "line-color": "#1976d2", "line-width": 0.5, "line-opacity": 0.9 }
       },
       "attribution": "Kansas Geological Survey (KGS)"
     },
     {
-      "id": "ksriv-gauges",
+      "id": "ksriv_gauges",
       "title": "Kansas River — Gauges",
       "group": "Hydrology",
       "type": "geojson",
       "path": "../data/processed/hydrology/kansas_river/gauges.geojson",
       "opacity": 1.0,
       "visible": false,
-      "start": 2000,
-      "end": null,
+      "time": { "start": "2000-01-01", "end": null },
       "paint": {
         "circle": { "circle-color": "#0d47a1", "circle-radius": 4, "circle-opacity": 1.0 }
       },
