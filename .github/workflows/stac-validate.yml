@@ -2,6 +2,7 @@ name: STAC Validation
 
 on:
   pull_request:
+    branches: [ main ]
     paths:
       - "stac/**"
       - "data/sources/**"
@@ -9,8 +10,9 @@ on:
       - "scripts/validate_stac.py"
       - "scripts/validate_sources.py"
       - "Makefile"
-      - "requirements.txt"
+      - "requirements*.txt"
       - "pyproject.toml"
+      - ".github/workflows/stac-validate.yml"
   push:
     branches: [ main ]
     paths:
@@ -20,8 +22,10 @@ on:
       - "scripts/validate_stac.py"
       - "scripts/validate_sources.py"
       - "Makefile"
-      - "requirements.txt"
+      - "requirements*.txt"
       - "pyproject.toml"
+      - ".github/workflows/stac-validate.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -52,7 +56,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: |
-            requirements.txt
+            requirements*.txt
             pyproject.toml
 
       - name: Install deps (project if available; otherwise minimal)
@@ -62,7 +66,7 @@ jobs:
           if [ -f "pyproject.toml" ]; then
             # Try to install the project (editable ok for CLI exposure)
             pip install -e . || true
-            # If you have optional extras for validation, try them too
+            # Optional extras if defined
             pip install ".[dev,validate]" || true
           fi
           # Core validators regardless of project install
@@ -70,52 +74,75 @@ jobs:
             jsonschema \
             jinja2 \
             pystac \
-            pystac-client || true
+            pystac-client \
+            pyyaml || true
+          python - <<'PY'
+import sys
+print("Python", sys.version)
+import jsonschema, pystac, yaml  # noqa
+print("jsonschema OK; pystac OK; pyyaml OK")
+PY
 
       # ------------------------------------------------------------
-      # JSON syntax sanity checks (STAC + data/sources)
+      # JSON/YAML syntax sanity checks (STAC + data/sources)
       # ------------------------------------------------------------
       - name: Quick JSON syntax check (stac/**/*.json)
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, sys, pathlib
-          base = pathlib.Path("stac")
-          if not base.exists():
-              print("::notice::stac/ not present; skipping.")
-              sys.exit(0)
-          bad=[]
-          for p in base.rglob("*.json"):
-              try:
-                  json.loads(p.read_text(encoding="utf-8"))
-              except Exception as e:
-                  bad.append((str(p), str(e)))
-          if bad:
-              for f,e in bad:
-                  print(f"::error file={f}::JSON parse error: {e}")
-              sys.exit(1)
-          PY
+import json, sys, pathlib
+base = pathlib.Path("stac")
+if not base.exists():
+    print("::notice::stac/ not present; skipping.")
+    sys.exit(0)
+bad=[]
+for p in base.rglob("*.json"):
+    try:
+        json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        bad.append((str(p), str(e)))
+if bad:
+    for f,e in bad:
+        print(f"::error file={f}::JSON parse error: {e}")
+    sys.exit(1)
+else:
+    print("stac/**/*.json ✔ valid JSON")
+PY
 
-      - name: Quick JSON syntax check (data/sources/**/*.json)
+      - name: Quick JSON/YAML syntax check (data/sources/**)
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, sys, pathlib
-          base = pathlib.Path("data/sources")
-          if not base.exists():
-              print("::notice::data/sources/ not present; skipping.")
-              sys.exit(0)
-          bad=[]
-          for p in base.rglob("*.json"):
-              try:
-                  json.loads(p.read_text(encoding="utf-8"))
-              except Exception as e:
-                  bad.append((str(p), str(e)))
-          if bad:
-              for f,e in bad:
-                  print(f"::error file={f}::JSON parse error: {e}")
-              sys.exit(1)
-          PY
+import json, sys, pathlib
+try:
+    import yaml
+except Exception:
+    yaml = None
+base = pathlib.Path("data/sources")
+if not base.exists():
+    print("::notice::data/sources/ not present; skipping.")
+    sys.exit(0)
+bad=[]
+# JSON
+for p in base.rglob("*.json"):
+    try:
+        json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        bad.append((str(p), "JSON", str(e)))
+# YAML (best-effort)
+if yaml:
+    for p in list(base.rglob("*.yml")) + list(base.rglob("*.yaml")):
+        try:
+            yaml.safe_load(p.read_text(encoding="utf-8"))
+        except Exception as e:
+            bad.append((str(p), "YAML", str(e)))
+if bad:
+    for f,kind,e in bad:
+        print(f"::error file={f}::{kind} parse error: {e}")
+    sys.exit(1)
+else:
+    print("data/sources/** ✔ valid JSON/YAML")
+PY
 
       # ------------------------------------------------------------
       # Run your custom validators if present
@@ -141,42 +168,47 @@ jobs:
           fi
 
       # ------------------------------------------------------------
-      # Fallback STAC item validator (when your script/CLI absent)
+      # Fallback STAC item validator
       # Produces build/stac_report.json and fails on invalid items.
+      # Runs only if earlier step didn't create the report.
       # ------------------------------------------------------------
       - name: Fallback STAC item validator
-        if: |
-          !cancelled() && steps.script_stac.outcome == 'success' && !hashFiles('build/stac_report.json')
+        if: >
+          !cancelled() &&
+          steps.script_stac.outcome == 'success' &&
+          hashFiles('build/stac_report.json') == ''
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, pathlib, sys
-          items_dir = pathlib.Path("stac/items")
-          if not items_dir.exists():
-              print("::notice::stac/items not present; skipping item validation.")
-              sys.exit(0)
-          req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
-          ok=bad=0; report=[]
-          for p in items_dir.glob("*.json"):
-              try:
-                  d=json.loads(p.read_text(encoding="utf-8"))
-              except Exception as e:
-                  report.append({"id": str(p), "valid": False, "errors":[{"path":[],"message":str(e)}]}); bad+=1; continue
-              errs=[]
-              missing=[k for k in req if k not in d]
-              if missing: errs.append(f"missing {missing}")
-              if d.get("type")!="Feature": errs.append("type must be 'Feature'")
-              if errs:
-                  bad+=1
-                  report.append({"id":d.get("id",str(p)),"valid":False,"errors":[{"path":[],"message":"; ".join(errs)}]})
-              else:
-                  ok+=1
-                  report.append({"id":d.get("id",str(p)),"valid":True,"errors":[]})
-          pathlib.Path("build").mkdir(exist_ok=True)
-          pathlib.Path("build/stac_report.json").write_text(json.dumps({"valid":ok,"invalid":bad,"items":report}, indent=2))
-          print(f"[RESULT] {ok} valid, {bad} invalid")
-          if bad>0: sys.exit(2)
-          PY
+import json, pathlib, sys
+items_dir = pathlib.Path("stac/items")
+if not items_dir.exists():
+    print("::notice::stac/items not present; skipping item validation.")
+    pathlib.Path("build").mkdir(exist_ok=True)
+    pathlib.Path("build/stac_report.json").write_text(json.dumps({"valid":0,"invalid":0,"items":[]}, indent=2))
+    sys.exit(0)
+req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
+ok=bad=0; report=[]
+for p in items_dir.rglob("*.json"):
+    try:
+        d=json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        report.append({"id": str(p), "valid": False, "errors":[{"path":[],"message":str(e)}]}); bad+=1; continue
+    errs=[]
+    missing=[k for k in req if k not in d]
+    if missing: errs.append(f"missing {missing}")
+    if d.get("type")!="Feature": errs.append("type must be 'Feature'")
+    if errs:
+        bad+=1
+        report.append({"id":d.get("id",str(p)),"valid":False,"errors":[{"path":[],"message":"; ".join(errs)}]})
+    else:
+        ok+=1
+        report.append({"id":d.get("id",str(p)),"valid":True,"errors":[]})
+pathlib.Path("build").mkdir(exist_ok=True)
+pathlib.Path("build/stac_report.json").write_text(json.dumps({"valid":ok,"invalid":bad,"items":report}, indent=2))
+print(f"[RESULT] {ok} valid, {bad} invalid")
+if bad>0: sys.exit(2)
+PY
 
       # ------------------------------------------------------------
       # Catalog/Collections validation via pystac (best-effort)
@@ -187,16 +219,16 @@ jobs:
           set -euo pipefail
           if [ -f stac/catalog.json ]; then
             python - <<'PY'
-            import pystac, sys
-            try:
-                cat = pystac.Catalog.from_file("stac/catalog.json")
-                cat.normalize_hrefs("stac")
-                cat.validate_all()
-                print("pystac: catalog/collections validate OK")
-            except Exception as e:
-                print(f"::error::pystac validation failed: {e}")
-                sys.exit(1)
-            PY
+import pystac, sys
+try:
+    cat = pystac.Catalog.from_file("stac/catalog.json")
+    cat.normalize_hrefs("stac")
+    cat.validate_all()
+    print("pystac: catalog/collections validate OK")
+except Exception as e:
+    print(f"::error::pystac validation failed: {e}")
+    sys.exit(1)
+PY
           else
             echo "::notice::No stac/catalog.json; skipping catalog validation."
           fi
@@ -213,22 +245,22 @@ jobs:
             echo "## STAC Validation"
             if [ -f build/stac_report.json ]; then
               python - <<'PY'
-              import json, pathlib, os
-              p = pathlib.Path("build/stac_report.json")
-              d = json.loads(p.read_text()) if p.exists() else {}
-              ok, bad = d.get("valid",0), d.get("invalid",0)
-              print(f"- ✅ Valid items: **{ok}**")
-              print(f"- ❌ Invalid items: **{bad}**")
-              if bad:
-                  print("\n<details><summary>First 10 errors</summary>\n")
-                  cnt=0
-                  for it in d.get("items", []):
-                      if it.get("valid") is False and cnt<10:
-                          msgs = ', '.join(e.get('message','') for e in it.get('errors',[])[:3])
-                          print(f"- **{it.get('id')}** — {msgs}")
-                          cnt+=1
-                  print("\n</details>")
-              PY
+import json, pathlib
+p = pathlib.Path("build/stac_report.json")
+d = json.loads(p.read_text()) if p.exists() else {}
+ok, bad = d.get("valid",0), d.get("invalid",0)
+print(f"- ✅ Valid items: **{ok}**")
+print(f"- ❌ Invalid items: **{bad}**")
+if bad:
+    print("\n<details><summary>First 10 errors</summary>\n")
+    cnt=0
+    for it in d.get("items", []):
+        if it.get("valid") is False and cnt<10:
+            msgs = ', '.join(e.get('message','') for e in it.get('errors',[])[:3])
+            print(f"- **{it.get('id')}** — {msgs}")
+            cnt+=1
+    print("\n</details>")
+PY
             else
               echo "- No STAC item report generated."
             fi
