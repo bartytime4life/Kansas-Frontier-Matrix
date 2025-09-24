@@ -1,9 +1,8 @@
----
 name: "🐞 Bug report"
 about: Report a reproducible problem in the site, data pipeline, AI reasoning, or docs
 title: "[BUG] <short summary>"
-labels: ["bug", "triage"]
-assignees: ""
+labels: ["bug"]
+assignees: []
 ---
 
 ## Summary
@@ -53,10 +52,8 @@ _What actually happened (include messages, screenshots)._
   - File: `stac/items/<file>.json` or `stac/collections/<file>.json` or `data/sources/<file>.json`
   - Item/Collection ID: `<id>`
 - DVC-tracked artifacts (if used):
-  - `.dvc` file path(s):  
-    - `data/raw/.../foo.tif.dvc`
-  - DVC checksum(s):  
-    - `md5: <hash>`
+  - `.dvc` file path(s): `data/raw/.../foo.tif.dvc`
+  - DVC checksum(s): `md5: <hash>`
 - Git LFS (if used): list path(s) to large files managed via LFS.
 - Minimal repro dataset or link (public source / DOI): …
 
