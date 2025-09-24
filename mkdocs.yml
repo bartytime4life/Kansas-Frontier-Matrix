@@ -1,25 +1,95 @@
+# ===============================
+# Kansas Geo Timeline — MkDocs
+# ===============================
 site_name: Kansas Geo Timeline
+site_url: https://bartytime4life.github.io/Kansas-Frontier-Matrix/
 repo_url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
 repo_name: Kansas-Frontier-Matrix
+edit_uri: edit/main/docs/           # enables "Edit on GitHub" for pages under docs/
+docs_dir: docs
+site_dir: _site_docs
+
+use_directory_urls: true
+strict: true                        # fail the build on broken links (good for CI)
+
 theme:
   name: material
+  language: en
   features:
+    # Navigation
     - navigation.instant
     - navigation.sections
     - navigation.expand
-    - content.code.annotate
-    - content.code.copy
+    - navigation.tracking
     - toc.integrate
+    # Content UX
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    # Search
     - search.highlight
     - search.suggest
     - search.share
+  palette:
+    - scheme: default
+      primary: blue
+      accent: indigo
+  icon:
+    repo: fontawesome/brands/github
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      fallback_to_build_date: true
+      type: date
+  - minify:
+      minify_html: true
+
 markdown_extensions:
+  # Core
   - admonition
-  - codehilite
   - footnotes
   - tables
   - toc:
       permalink: true
+  # Material + pymdownx (preferred over codehilite)
+  - pymdownx.highlight:
+      anchor_linenums: true
+      linenums: true
+      auto_title: true
+      line_spans: __span
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.snippets
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/bartytime4life/Kansas-Frontier-Matrix
+      name: GitHub
+  analytics: {}
+  generator: false
+
+extra_css:
+  - assets/css/extra.css   # optional: create if needed
+extra_javascript:
+  - assets/js/extra.js     # optional: create if needed
+
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
