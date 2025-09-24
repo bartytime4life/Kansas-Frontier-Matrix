@@ -8,16 +8,31 @@ on:
       - "stac/**"
       - "web/**"
       - "data/**"
-      - "Makefile"
+      - "scripts/**"
+      - "pyproject.toml"
+      - "requirements.txt"
       - "requirements-dev.txt"
       - ".github/workflows/tests.yml"
   pull_request:
     branches: [ main ]
+    paths:
+      - "tests/**"
+      - "stac/**"
+      - "web/**"
+      - "data/**"
+      - "scripts/**"
+      - "pyproject.toml"
+      - "requirements.txt"
+      - "requirements-dev.txt"
+      - ".github/workflows/tests.yml"
+  workflow_dispatch:
 
 jobs:
   pytest:
+    name: Pytest (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11"]
     steps:
@@ -35,14 +50,36 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+          key: >-
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ hashFiles('**/requirements*.txt', 'pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
 
-      - name: Install dev deps
+      - name: Install dependencies
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          else
+            # Minimal deps for our tests
+            pip install -q pytest jsonschema
+            # Optional extras if present
+            if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          fi
+          python -c "import sys,pytest, jsonschema; print('pytest', pytest.__version__)"
 
-      - name: Run smoke tests (all)
+      - name: Run tests
         run: |
-          pytest -q
+          set -euo pipefail
+          mkdir -p .artifacts
+          pytest -q --junitxml=.artifacts/pytest-report.xml
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report-py${{ matrix.python-version }}
+          path: .artifacts/pytest-report.xml
