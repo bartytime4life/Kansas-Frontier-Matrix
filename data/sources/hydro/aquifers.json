@@ -1,0 +1,51 @@
+{
+  "id": "aquifers",
+  "title": "Kansas Principal Aquifers (USGS/KGS)",
+  "type": "vector",
+  "version": "1.0.0",
+  "description": "Principal aquifer extents for Kansas, including the High Plains/Ogallala, Equus Beds, Great Bend Prairie, and other local/alluvial aquifers. Suitable for overlay with groundwater levels and water-use histories.",
+  "temporal": {
+    "start": null,
+    "end": "2025-01-01"
+  },
+  "spatial": { "bbox": [-102.05, 36.99, -94.61, 40.00] },
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://gis.usgs.gov/arcgis/rest/services/nhgihydrogeologic/MapServer/0?f=pjson",
+        "https://www.kgs.ku.edu/General/Geology/Aquifers/index.html"
+      ],
+      "notes": "USGS principal aquifers service + KGS aquifer pages for Kansas regional/local extents."
+    }
+  ],
+  "processing": {
+    "steps": [
+      "Fetch USGS principal aquifers polygons (national), filter to Kansas bbox",
+      "Merge/augment with KGS regional/local aquifer boundaries (Equus Beds, Great Bend Prairie)",
+      "Standardize attributes: aquifer_name, system, type (confined/unconfined), source"
+    ],
+    "commands_example": [
+      "# Example workflow (pseudo):",
+      "ogr2ogr -f GeoJSON aquifers_usgs.json USGS_Principal_Aquifers.gdb -clipsrc -102.05 36.99 -94.61 40.00",
+      "ogr2ogr -f GeoJSON aquifers_kgs.json kgs_aquifers.gdb",
+      "ogr2ogr -f GeoJSON aquifers_ks_merged.json aquifers_usgs.json",
+      "ogr2ogr -update -append aquifers_ks_merged.json aquifers_kgs.json -nln aquifers_ks_merged"
+    ]
+  },
+  "lineage": [
+    "Fetched USGS Principal Aquifers",
+    "Augmented with KGS regional/local aquifer extents",
+    "Clipped to Kansas and attribute-harmonized"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": "2025-09-21",
+    "checksum_sha256": "placeholder_sha256_to_fill_after_export",
+    "filesize_bytes": null
+  },
+  "keywords": ["aquifer", "groundwater", "Ogallala", "Equus Beds", "Kansas", "USGS", "KGS"],
+  "confidence": "high",
+  "notes": "Prefer KGS for local precision around Equus Beds and Great Bend Prairie. Add monitoring wells layer to enable time-series cross-filtering."
+}
