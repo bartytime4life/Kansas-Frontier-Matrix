@@ -1,1 +1,48 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "event_1854",
+        "title": "Kansas-Nebraska Act",
+        "date": "1854-05-30",
+        "desc": "The Kansas-Nebraska Act created the territories of Kansas and Nebraska, opening new lands for settlement.",
+        "place": "Territory of Kansas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-95.689, 39.055]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "event_1861",
+        "title": "Kansas Statehood",
+        "date": "1861-01-29",
+        "desc": "Kansas admitted as the 34th state of the United States.",
+        "place": "Topeka"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-95.6775, 39.0483]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "event_1874",
+        "title": "Grasshopper Plague",
+        "year": 1874,
+        "desc": "Rocky Mountain locust swarms devastated Kansas crops.",
+        "place": "Central Kansas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-98.0, 38.5]
+      }
+    }
+  ]
+}
 
