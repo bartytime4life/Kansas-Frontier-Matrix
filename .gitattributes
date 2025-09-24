@@ -16,10 +16,11 @@
 *.tsx             text
 *.jsx             text
 *.css             text
+*.scss            text
 *.html            text
 *.md              text
 *.rst             text
-*.mmd             text
+*.mmd             text              # Mermaid
 *.plantuml        text
 *.svg             text
 *.toml            text
@@ -28,7 +29,10 @@
 *.yaml            text
 *.json            text
 *.jsonc           text
+*.jsonl           text
+*.ndjson          text
 *.geojson         text
+*.topojson        text
 *.csv             text
 *.tsv             text
 
@@ -52,6 +56,7 @@
 *.ovr             filter=lfs diff=lfs merge=lfs -text
 *.aux.xml         filter=lfs diff=lfs merge=lfs -text
 *.tfw             filter=lfs diff=lfs merge=lfs -text
+*.wld             filter=lfs diff=lfs merge=lfs -text
 *.img             filter=lfs diff=lfs merge=lfs -text      # ERDAS Imagine
 *.bil             filter=lfs diff=lfs merge=lfs -text
 *.jp2             filter=lfs diff=lfs merge=lfs -text
@@ -64,6 +69,7 @@
 *.laz             filter=lfs diff=lfs merge=lfs -text
 
 # Tiles / DB / vector containers
+*.pmtiles         filter=lfs diff=lfs merge=lfs -text
 *.mbtiles         filter=lfs diff=lfs merge=lfs -text
 *.sqlite          filter=lfs diff=lfs merge=lfs -text
 *.gpkg            filter=lfs diff=lfs merge=lfs -text
@@ -72,7 +78,7 @@
 *.feather         filter=lfs diff=lfs merge=lfs -text
 *.fgb             filter=lfs diff=lfs merge=lfs -text      # FlatGeobuf
 
-# Shapefile family (all sidecars)
+# ESRI Shapefile family (all sidecars)
 *.shp             filter=lfs diff=lfs merge=lfs -text
 *.shx             filter=lfs diff=lfs merge=lfs -text
 *.dbf             filter=lfs diff=lfs merge=lfs -text
@@ -87,6 +93,9 @@
 *.atx             filter=lfs diff=lfs merge=lfs -text
 *.shp.xml         filter=lfs diff=lfs merge=lfs -text
 *.qpj             filter=lfs diff=lfs merge=lfs -text
+
+# ESRI FileGDB directories (track their contents via LFS)
+*.gdb/**          filter=lfs diff=lfs merge=lfs -text
 
 # KML/KMZ (often large)
 *.kmz             filter=lfs diff=lfs merge=lfs -text
@@ -106,10 +115,10 @@
 *.xz              filter=lfs diff=lfs merge=lfs -text
 *.zst             filter=lfs diff=lfs merge=lfs -text
 
-# --- Notebooks as text (enable nbstripout/pre-commit) ---
+# --- Notebooks as text (enable nbstripout/pre-commit if desired) ---
 *.ipynb           text linguist-language=Jupyter
 
-# --- CI/CD configs (text) ---
+# --- CI/CD & repo configs (text) ---
 .gitattributes     text
 .gitignore         text
 .github/**         text
@@ -123,10 +132,11 @@ mcp/experiments/**/README.md        text
 *.dvc             text
 .dvc/**           text
 
-# --- Linguist tuning for repo stats ---
+# --- Linguist tuning for repo stats (hide generated/vendor) ---
 web/vendor/**           linguist-vendored
-web/**/dist/**          linguist-vendored
-web/**/build/**         linguist-vendored
+web/**/dist/**          linguist-vendored linguist-generated
+web/**/build/**         linguist-vendored linguist-generated
+web/tiles/**            linguist-vendored linguist-generated
 
 # --- Samples override (keep small demo rasters as text if needed) ---
 # Uncomment and adjust if you maintain *small* reference rasters in Git history
