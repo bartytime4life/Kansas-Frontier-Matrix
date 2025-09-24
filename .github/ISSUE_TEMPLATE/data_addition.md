@@ -2,7 +2,7 @@ name: "🧩 Data addition request"
 about: Propose a new dataset (map, layer, catalog, or document set) for Kansas-Frontier-Matrix
 title: "[DATA] <concise dataset name>"
 labels: ["data", "enhancement"]
-assignees: ""
+assignees: []
 ---
 
 ## 1) Overview
@@ -52,13 +52,14 @@ assignees: ""
 
 ## 5) Proposed Catalog Entry (STAC-style)
 
-Provide either a **STAC Item/Collection** (preferred: `stac/items/**` / `stac/collections/**`) or a **source descriptor** (`data/sources/*.json`) with:
+Provide either a **STAC Collection/Item** (preferred: `stac/collections/**` / `stac/items/**`) or a **source descriptor** (`data/sources/*.json`) with:
 
 - `id`, `title`, `description`  
 - `bbox`, `datetime` or `start_datetime`/`end_datetime`  
 - `assets` (href, type, roles), `license`, `providers`  
-- Processing notes (COG/tiling), and link(s) back to the original source
+- Processing notes (COG/tiling) + link(s) back to the original source
 
+**Example Collection:**
 ```json
 {
   "stac_version": "1.0.0",
@@ -72,16 +73,17 @@ Provide either a **STAC Item/Collection** (preferred: `stac/items/**` / `stac/co
     "temporal": { "interval": [["YYYY-MM-DDT00:00:00Z", "YYYY-MM-DDT23:59:59Z"]] }
   },
   "providers": [
-    { "name": "Org", "roles": ["producer", "licensor"], "url": "https://…" }
+    { "name": "Org", "roles": ["producer", "licensor"], "url": "https://example.org" }
   ],
   "links": [
     { "rel": "self", "href": "./<file>.json", "type": "application/json" },
-    { "rel": "root", "href": "../catalog.json", "type": "application/json" }
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json", "type": "application/json" }
   ]
 }
 ````
 
-*Or a minimal **Item** (for a single layer/COG):*
+**Example Item (single layer/COG):**
 
 ```json
 {
@@ -90,7 +92,10 @@ Provide either a **STAC Item/Collection** (preferred: `stac/items/**` / `stac/co
   "id": "<item-id>",
   "collection": "<collection-id>",
   "bbox": [minx, miny, maxx, maxy],
-  "geometry": { "type": "Polygon", "coordinates": [[ [minx,miny], [maxx,miny], [maxx,maxy], [minx,maxy], [minx,miny] ]] },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[[minx, miny], [maxx, miny], [maxx, maxy], [minx, maxy], [minx, miny]]]
+  },
   "properties": {
     "start_datetime": "YYYY-01-01T00:00:00Z",
     "end_datetime":   "YYYY-12-31T23:59:59Z",
@@ -137,8 +142,11 @@ make site          # update static viewer
 **Checks to run:**
 
 ```bash
-# STAC validation (requires kgt/jsonschema if installed)
+# STAC validation (jsonschema/kgt if available)
 kgt validate-stac stac/items --no-strict || true
+
+# JSON sanity (quick)
+jq -e 'type=="object"' stac/items/*.json
 ```
 
 ---
