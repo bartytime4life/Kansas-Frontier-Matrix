@@ -2,17 +2,19 @@
 # Kansas-Frontier-Matrix / MCP Repo
 # ================================
 
-# --- OS/Editor junk ---
+# --- OS / Editor junk ---
 .DS_Store
+._*
 Thumbs.db
+Desktop.ini
 *.swp
 *.swo
 *.bak
 *.tmp
 ~$*
+*.orig
 .vscode/
 .idea/
-*.orig
 
 # --- Python artifacts / envs / logs ---
 __pycache__/
@@ -27,6 +29,7 @@ env/
 pip-wheel-metadata/
 .python-version
 *.log
+logs/
 
 # Tooling caches
 .ruff_cache/
@@ -48,27 +51,30 @@ __pypackages__/
 coverage/
 htmlcov/
 
-# --- Node/JS front-end (web/) ---
+# --- Node/JS frontend (web/) & generic build dirs ---
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-web/.cache/
-web/dist/
-web/build/
 dist/
 build/
+web/.cache/
+web/.vite/
+web/.next/
+web/dist/
+web/build/
+web/tiles/
+web/assets/tiles/
 
 # --- Docker / Compose ---
 docker/*.log
 docker/*.tmp
+docker-compose.override.yml
 
 # --- Catalogs / sources (keep small text descriptors) ---
-# STAC lives at top-level `stac/` and SHOULD be tracked
-# (no ignore rule for stac/** so it stays in Git)
-
-# Keep source descriptors under VCS but not random files in that dir
+# STAC lives at top-level `stac/` and SHOULD be tracked (no ignore for stac/**)
+# Keep source descriptors under VCS, but ignore other random files in that dir
 data/sources/*
 !data/sources/**/*.json
 !data/sources/**/*.jsonc
@@ -92,6 +98,7 @@ assets/tiles/
 *.aux.xml
 *.ovr
 *.tfw
+*.wld
 
 # Databases / locks / journal files
 *.sqlite
@@ -102,16 +109,17 @@ assets/tiles/
 *.gpkg-shm
 *.lock
 
-# Rasters / vectors / containers (usually large/generated)
+# --- Rasters / vectors / containers (usually large/generated) ---
 *.tif
 *.tiff
 *.vrt
 *.img
 *.bil
 *.jp2
-*.nc      # NetCDF
-*.h5      # HDF5
+*.nc
+*.h5
 *.mbtiles
+*.pmtiles
 *.parquet
 *.geoparquet
 *.las
@@ -152,6 +160,7 @@ docs/_autosummary/
 *.doctree
 *.pickle
 _site/
+.lychee_cache/
 
 # --- Secrets / local overrides ---
 .env
@@ -170,8 +179,28 @@ web/*.local.js
 web/*.config.local.json
 mcp/experiments/*/outputs/
 mcp/experiments/*/logs/
+mcp/experiments/*/figures/
 
 # --- DVC (track metadata, ignore cache/tmp) ---
 # DO NOT ignore *.dvc files; they must be tracked
 .dvc/cache/
 .dvc/tmp/
+
+# --- CI artifacts / reports ---
+build/stac_report.json
+pytest-report.xml
+CHECKSUMS.txt
+
+# --- Optional: allow curated tiny sample datasets under version control ----
+# Place any small demo data in data/samples/** (overrides global ignores below).
+!data/samples/**
+!data/samples/**/*.json
+!data/samples/**/*.geojson
+!data/samples/**/*.csv
+!data/samples/**/*.tsv
+!data/samples/**/*.kml
+!data/samples/**/*.kmz
+!data/samples/**/*.tif
+!data/samples/**/*.tiff
+!data/samples/**/*.gpkg
+!data/samples/**/*.fgb
