@@ -1,0 +1,39 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "county_douglas",
+        "name": "Douglas County"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.5, 39.2],
+          [-95.1, 39.2],
+          [-95.1, 38.8],
+          [-95.5, 38.8],
+          [-95.5, 39.2]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "county_ellsworth",
+        "name": "Ellsworth County"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-98.5, 38.9],
+          [-98.0, 38.9],
+          [-98.0, 38.4],
+          [-98.5, 38.4],
+          [-98.5, 38.9]
+        ]]
+      }
+    }
+  ]
+}
