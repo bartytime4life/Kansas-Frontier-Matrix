@@ -33,9 +33,9 @@ A minimal **Google Earth + Web (GitHub Pages)** mapping system for Kansas elevat
 ```mermaid
 flowchart TD
     A[Data Sources] -->|fetch| B[COGs (DEM, overlays)]
-    B -->|terrain| C[Derivatives<br/>(slope, aspect, hillshade)]
+    B -->|terrain| C["Derivatives (slope, aspect, hillshade)"]
     C -->|stac| D[STAC Catalog & Items]
-    D -->|render-config| E[Web Viewer Config<br/>(web/app.config.json)]
+    D -->|render-config| E["Web Viewer Config (web/app.config.json)"]
     D -->|kml| F[KML/KMZ for Google Earth]
     E -->|serve| G[MapLibre Web Viewer]
     F --> H[Google Earth 3D]
