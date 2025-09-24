@@ -49,14 +49,14 @@ web/
 
 ```mermaid
 flowchart TD
-    A[Config: viewer.json] --> B[App JS: init()]
-    B --> C[MapLibre Map]
-    B --> D[Sidebar UI]
-    B --> E[Timeline Control]
-    C --> F[Raster/Vector Layers]
-    C --> G[GeoJSON Entities]
-    D -->|user toggles| B
-    E -->|time filter| G
+    A["Config:\nviewer.json"] --> B["App JS:\ninit()"]
+    B --> C["MapLibre Map"]
+    B --> D["Sidebar UI"]
+    B --> E["Timeline Control"]
+    C --> F["Raster / Vector Layers"]
+    C --> G["GeoJSON Entities"]
+    D -- "user toggles" --> B
+    E -- "time filter" --> G
 ````
 
 * **Config-driven:**
