@@ -59,6 +59,8 @@ yarn-error.log*
 pnpm-debug.log*
 dist/
 build/
+
+# Framework/preview caches
 web/.cache/
 web/.vite/
 web/.next/
@@ -74,7 +76,8 @@ docker-compose.override.yml
 
 # --- Catalogs / sources (keep small text descriptors) ---
 # STAC lives at top-level `stac/` and SHOULD be tracked (no ignore for stac/**)
-# Keep source descriptors under VCS, but ignore other random files in that dir
+
+# Keep config descriptors under VCS, but ignore other random payloads in that dir
 data/sources/*
 !data/sources/**/*.json
 !data/sources/**/*.jsonc
@@ -160,6 +163,7 @@ docs/_autosummary/
 *.doctree
 *.pickle
 _site/
+_site_docs/
 .lychee_cache/
 
 # --- Secrets / local overrides ---
@@ -167,6 +171,7 @@ _site/
 .env.local
 .env.*.local
 .envrc
+!*.env.example
 config/local.yaml
 config/secrets.yaml
 
