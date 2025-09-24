@@ -5,6 +5,7 @@
 #          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
 # Extras:  dem-checksum, hillshade-checksum
 # Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite
+# Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)  <-- NEW
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -50,6 +51,21 @@ ASPECT_SECTORS  := $(VEC)/aspect_sectors.geojson
 META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
+# -------- NLCD (1992–2021) — Kansas COGs (NEW) --------
+NLCD_YEARS := 1992 2001 2006 2011 2016 2019 2021
+NLCD_SRC_DIR := $(DATA)/sources/land
+NLCD_DST_DIR := $(NLCD_SRC_DIR)/vectors
+NLCD_BBOX := -102.05 36.99 -94.61 40.00   # minx miny maxx maxy
+# Expected raw paths (adjust per your downloads)
+# data/sources/land/raw/NLCD_2016_CONUS.tif etc.
+# You can override with: make nlcd NLCD_SRC_DIR=/path ...
+define NLCD_SRC_PATH
+$(NLCD_SRC_DIR)/raw/NLCD_$(1)_CONUS.tif
+endef
+define NLCD_COG_PATH
+$(NLCD_DST_DIR)/nlcd_$(1)_ks_cog.tif
+endef
+
 # -------- Tools & flags --------
 COG_OPTS   := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
 OVERVIEWS  := 2 4 8 16
@@ -68,6 +84,7 @@ HAVE_KGT         := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo
 HAVE_GDALDEM     := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
 HAVE_GDAL_TRANSL := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
 HAVE_GDAL_ADDO   := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDALWARP    := $(shell command -v gdalwarp >/dev/null 2>&1 && echo yes || echo no)
 
 GDAL_POLY_BIN    := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
 GDAL_CALC_BIN    := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
@@ -130,7 +147,7 @@ endef
 
 # -------- PHONY --------
 .PHONY: help env prebuild preview prebuild-lite print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
-        dem-checksum hillshade-checksum hydrology-fetch hydrology-stac \
+        dem-checksum hillshade-checksum hydrology-fetch hydrology-stac nlcd \
         install-dev test test-cli test-sources
 
 # -------- Help --------
@@ -154,6 +171,9 @@ help:
 	@echo "  preview           Minimal local preview (site only)"
 	@echo "  prebuild-lite     Site only (no validation/checksums)"
 	@echo ""
+	@echo "Data:"
+	@echo "  nlcd              Build NLCD (1992–2021) COGs for Kansas (expects raw files under data/sources/land/raw)"
+	@echo ""
 	@echo "Checksums:"
 	@echo "  dem-checksum         Write+verify checksum(s) for DEM and print STAC fields"
 	@echo "  hillshade-checksum   Write+verify checksum(s) for hillshade"
@@ -173,7 +193,7 @@ env:
 	@echo "DEM=$(DEM)"
 	@echo "STAC_DIR=$(STAC)"
 	@echo "HAVE_KGT=$(HAVE_KGT)  HAVE_JQ=$(HAVE_JQ)"
-	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_TRANSL=$(HAVE_GDAL_TRANSL) HAVE_GDAL_ADDO=$(HAVE_GDAL_ADDO)"
+	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_TRANSL=$(HAVE_GDAL_TRANSL) HAVE_GDAL_ADDO=$(HAVE_GDAL_ADDO) HAVE_GDALWARP=$(HAVE_GDALWARP)"
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
@@ -282,7 +302,29 @@ aspect_sectors: $(ASPECT) | $(VEC)
 	  rm -f "$$tmp"; \
 	else \
 	  echo "[aspect_sectors] GDAL calc/polygonize not available. Skipping."; \
-	endif
+	fi
+
+# -------- NLCD (1992–2021) — Kansas COGs (NEW) --------
+nlcd: $(foreach Y,$(NLCD_YEARS),$(call NLCD_COG_PATH,$(Y)))
+	@echo "✓ NLCD COGs built under $(NLCD_DST_DIR)"
+
+# Build one year: clip (nearest), COG, provenance update (if script present)
+$(NLCD_DST_DIR)/nlcd_%_ks_cog.tif: $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif
+	@mkdir -p $(NLCD_DST_DIR)
+	@if [ "$(HAVE_GDALWARP)" != "yes" ] || [ "$(HAVE_GDAL_TRANSL)" != "yes" ]; then echo "ERROR: gdalwarp/gdal_translate required for NLCD"; exit 1; fi
+	@echo "[nlcd] $* → clip to Kansas bbox (nearest)"
+	@gdalwarp -te $(NLCD_BBOX) -r near -multi -overwrite $< /tmp/nlcd_$*_ks.tif
+	@echo "[nlcd] $* → translate to COG"
+	@gdal_translate /tmp/nlcd_$*_ks.tif $@ -of COG -co COMPRESS=LZW -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING
+	@rm -f /tmp/nlcd_$*_ks.tif
+	@echo "[nlcd] $* → provenance update"
+	@{ test -f "$(S)/update_registry.py" && $(PY) "$(S)/update_registry.py" "$@" "landcover_nlcd_$*"; } || true
+
+# Optional helper to nudge users to put raw files in place
+$(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif:
+	@mkdir -p $(NLCD_SRC_DIR)/raw
+	@echo "!! Please download NLCD $* GeoTIFF from MRLC and place at $@"
+	@exit 1
 
 # -------- Meta checksums (optional) --------
 meta: $(SLOPE) $(ASPECT)
@@ -393,9 +435,9 @@ p = pathlib.Path('web/layers.json')
 p.parent.mkdir(parents=True, exist_ok=True)
 layers = {
   "layers": [
-    {"id": "hillshade", "title": "Hillshade", "type": "raster", "path": "../data/derivatives/hillshade.tif"},
-    {"id": "slope",     "title": "Slope (deg)", "type": "raster", "path": "../data/derivatives/slope.tif"},
-    {"id": "aspect",    "title": "Aspect (deg)", "type": "raster", "path": "../data/derivatives/aspect.tif"}
+    {"id": "hillshade", "title": "Hillshade",     "type": "raster", "path": "../data/derivatives/hillshade.tif"},
+    {"id": "slope",     "title": "Slope (deg)",   "type": "raster", "path": "../data/derivatives/slope.tif"},
+    {"id": "aspect",    "title": "Aspect (deg)",  "type": "raster", "path": "../data/derivatives/aspect.tif"}
   ]
 }
 json.dump(layers, open(p, 'w'), indent=2)
@@ -403,7 +445,6 @@ print("wrote", p)
 PYCODE
 
 # -------- Checksums (COGs) --------
-# Writes <name>.sha256 (sidecar). If you want the alternate form as well, set ALSO_TIF_SHA=1.
 dem-checksum:
 	@if [ -n "$(HAVE_GEN_SHA)" ]; then \
 	  bash "$(S)/gen_sha256.sh" "$(DEM)"; \
@@ -439,8 +480,8 @@ hillshade-checksum:
 
 # -------- Clean --------
 clean:
-	rm -rf "$(RAW)" "$(COGS)" "$(DERIV)" "$(DATA)"/kml "$(DATA)"/*.kmz || true
-	@echo "✓ cleaned generated raster outputs (kept ./stac)."
+	rm -rf "$(COGS)" "$(DERIV)" "$(DATA)"/kml "$(DATA)"/*.kmz || true
+	@echo "✓ cleaned generated raster outputs (kept ./stac and $(DATA)/raw)."
 
 # ====================================================================
 # Kansas River Hydrology — fetch/export + STAC wiring (optional)
