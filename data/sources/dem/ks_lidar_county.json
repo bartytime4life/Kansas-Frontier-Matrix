@@ -1,0 +1,99 @@
+{
+  "id": "ks_lidar_county",
+  "title": "Kansas LiDAR Tiles by County (USGS 3DEP / DASC)",
+  "type": "raster",
+  "version": "1.0.0",
+  "description": "Per-county LiDAR-derived elevation tiles (1 m or better) for Kansas. Use this config to fetch county subsets, build county VRTs, and generate county COG DEMs for derivative hillshade/slope/aspect.",
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00]
+  },
+  "temporal": {
+    "start": "2012-01-01",
+    "end": "2024-12-31"
+  },
+  "schema_notes": "Each county entry lists tile endpoints or a templated URL. Tools will expand the list, download into data/raw/lidar/{county}/, build VRTs, then COGs.",
+  "counties": [
+    {
+      "name": "Pawnee",
+      "fips": "20145",
+      "resolution_m": 1.0,
+      "endpoints": [
+        {
+          "type": "http",
+          "role": ["source", "tiles"],
+          "urls": [
+            "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/USGS_LPC_KS_2020_D19/TIFF/USGS_1M_2019_Pawnee_####.tif"
+          ],
+          "pattern_notes": "Replace #### with tile indices or use a tile list file. If a tile index shapefile/CSV exists, prefer that."
+        }
+      ],
+      "tile_index": {
+        "type": "file",
+        "format": "csv",
+        "path": "data/sources/dem/tile_indexes/pawnee_1m_tiles.csv",
+        "columns": ["url"]
+      },
+      "output": {
+        "vrt": "data/sources/dem/processed/lidar/pawnee/pawnee_1m.vrt",
+        "cog": "data/sources/dem/processed/lidar/pawnee/pawnee_1m_dem_cog.tif"
+      }
+    },
+    {
+      "name": "Ellsworth",
+      "fips": "20053",
+      "resolution_m": 1.0,
+      "endpoints": [
+        {
+          "type": "http",
+          "role": ["source", "tiles"],
+          "urls": [
+            "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/USGS_LPC_KS_2020_D19/TIFF/USGS_1M_2019_Ellsworth_####.tif"
+          ]
+        }
+      ],
+      "tile_index": {
+        "type": "file",
+        "format": "csv",
+        "path": "data/sources/dem/tile_indexes/ellsworth_1m_tiles.csv",
+        "columns": ["url"]
+      },
+      "output": {
+        "vrt": "data/sources/dem/processed/lidar/ellsworth/ellsworth_1m.vrt",
+        "cog": "data/sources/dem/processed/lidar/ellsworth/ellsworth_1m_dem_cog.tif"
+      }
+    }
+  ],
+  "processing": {
+    "steps": [
+      "download tiles to data/raw/lidar/{county}/",
+      "build VRT per county",
+      "translate to COG with internal overviews"
+    ],
+    "gdal": {
+      "vrt_example": "gdalbuildvrt -r bilinear -input_file_list {tile_list_csv} {out_vrt}",
+      "cog_example": "gdal_translate {in_vrt} {out_cog} -of COG -co COMPRESS=DEFLATE -co BIGTIFF=YES -co NUM_THREADS=ALL_CPUS -co RESAMPLING=AVERAGE -co OVERVIEWS=IGNORE_EXISTING"
+    }
+  },
+  "lineage": [
+    "Fetched LiDAR tiles from USGS TNM 3DEP or Kansas DASC endpoints",
+    "Mosaicked per county using gdalbuildvrt",
+    "Converted to Cloud-Optimized GeoTIFF (COG) with internal overviews"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": null,
+    "checksum_sha256": null,
+    "filesize_bytes": null
+  },
+  "keywords": [
+    "LiDAR",
+    "DEM",
+    "elevation",
+    "Kansas",
+    "3DEP",
+    "DASC",
+    "terrain"
+  ],
+  "confidence": "high",
+  "notes": "This template expects a CSV list of tile URLs per county under data/sources/dem/tile_indexes/. Populate the CSVs, then run the Make targets or python helper to fetch and mosaic."
+}
