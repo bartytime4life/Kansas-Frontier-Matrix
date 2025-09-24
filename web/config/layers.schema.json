@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "web/config/layers.schema.json",
+  "title": "Kansas-Frontier-Matrix — Layers Config",
+  "type": "object",
+  "required": ["version", "defaults", "layers"],
+  "properties": {
+    "version": { "type": "string" },
+    "generated": { "type": ["string", "null"], "format": "date-time" },
+    "defaults": {
+      "type": "object",
+      "required": ["minzoom", "maxzoom", "tileSize", "visible", "opacity", "bounds", "time"],
+      "properties": {
+        "minzoom": { "type": "integer" },
+        "maxzoom": { "type": "integer" },
+        "tileSize": { "type": "integer", "enum": [256, 512] },
+        "visible": { "type": "boolean" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "bounds": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "time": {
+          "type": "object",
+          "properties": {
+            "start": { "type": ["string", "null"], "format": "date" },
+            "end":   { "type": ["string", "null"], "format": "date" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "layers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/layer" },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "timeRange": {
+      "type": "object",
+      "properties": {
+        "start": { "type": ["string", "null"], "format": "date" },
+        "end":   { "type": ["string", "null"], "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "rasterLayer": {
+      "type": "object",
+      "required": ["id", "title", "type", "url"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "const": "raster" },
+        "url":  { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minzoom": { "type": "integer" },
+        "maxzoom": { "type": "integer" },
+        "tileSize": { "type": ["integer", "null"] },
+        "visible": { "type": "boolean" },
+        "bounds": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "time": { "$ref": "#/$defs/timeRange" },
+        "attribution": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "geojsonLayer": {
+      "type": "object",
+      "required": ["id", "title", "type", "path"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "const": "geojson" },
+        "path": { "type": "string" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "minzoom": { "type": ["integer", "null"] },
+        "maxzoom": { "type": ["integer", "null"] },
+        "visible": { "type": "boolean" },
+        "bounds": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+        "render": { "type": ["string", "null"], "enum": ["line", "fill", "circle", null] },
+        "paint": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "time": { "$ref": "#/$defs/timeRange" },
+        "attribution": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "layer": {
+      "oneOf": [
+        { "$ref": "#/$defs/rasterLayer" },
+        { "$ref": "#/$defs/geojsonLayer" }
+      ]
+    }
+  }
+}
