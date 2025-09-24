@@ -1,0 +1,35 @@
+name: Web Config Validate
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "web/app.config.json"
+      - "web/layers.json"
+      - "web/config/*.json"
+      - "tests/test_web_configs.py"
+      - ".github/workflows/web-config-validate.yml"
+  pull_request:
+    paths:
+      - "web/app.config.json"
+      - "web/layers.json"
+      - "web/config/*.json"
+      - "tests/test_web_configs.py"
+      - ".github/workflows/web-config-validate.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: |
+          python -m pip install --upgrade pip
+          pip install pytest jsonschema
+          pytest -q -k web_configs --junitxml=pytest-web-configs.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pytest-web-configs
+          path: pytest-web-configs.xml
