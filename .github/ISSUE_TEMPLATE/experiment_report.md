@@ -1,9 +1,8 @@
----
 name: "🧪 Experiment Report"
 about: "Plan, run, and log a reproducible experiment (MCP-grade)"
 title: "[EXP] <concise title>"
 labels: ["MCP", "reproducibility"]
-assignees: ""
+assignees: []
 ---
 
 > Fill this out when proposing **and** after completing an experiment. Keep it copy-paste runnable and deterministic.
@@ -20,9 +19,9 @@ assignees: ""
 
 ## 1) Objective / Hypothesis
 
-**Question**: _What are we trying to learn/compare?_  
-**Hypothesis**: _What outcome do you expect and why?_  
-**Success criteria**: _Decide up-front what “good” looks like (metrics, visuals, thresholds)._
+**Question** — What are we trying to learn/compare?  
+**Hypothesis** — What outcome do you expect and why?  
+**Success criteria** — Decide up-front what “good” looks like (metrics, visuals, thresholds).
 
 ---
 
@@ -31,12 +30,12 @@ assignees: ""
 - **Inputs** (IDs / paths):  
   - STAC items/collections: `stac/items/<file>.json`, `stac/collections/<file>.json`  
   - Source descriptors: `data/sources/<file>.json`
-- **Spatial/temporal bounds**: bbox, date range
+- **Spatial/temporal bounds**: bbox, date range  
 - **Licenses / provenance**: cite sources; note any restrictions
 
 **Sanity checks**
 ```bash
-# JSON & STAC validation
+# JSON & STAC validation (best-effort)
 kgt validate-stac stac/items --report-json build/stac_report.json || true
 ````
 
@@ -44,10 +43,10 @@ kgt validate-stac stac/items --report-json build/stac_report.json || true
 
 ## 3) Methods / Protocol (SOP)
 
-* **Design**: *Control(s), treatment(s), parameters to sweep*
-* **SOP links**: `mcp/sops/<doc>.md` (add/update if new)
-* **Randomness**: *Seeds, sampling rules*
-* **Assumptions / constraints**: *Keep explicit*
+* **Design** — controls, treatments, parameters to sweep
+* **SOP links** — `mcp/sops/<doc>.md` (add/update if new)
+* **Randomness** — seeds, sampling rules
+* **Assumptions / constraints** — keep explicit
 
 **Commands to reproduce (canonical)**
 
@@ -76,8 +75,8 @@ pip freeze | sed -n '1,120p'   # capture top of env (attach full file below)
 
 ## 5) Variables & Configuration
 
-* **Parameters**: *List knobs and values (e.g., hillshade azimuth, Z-factor, resampling)*
-* **Config files edited**: paths + diffs if relevant
+* **Parameters** — list knobs/values (e.g., hillshade azimuth, Z-factor, resampling)
+* **Config files edited** — paths + diffs if relevant
 * **Hash snapshot(s)** (optional):
 
 ```bash
@@ -89,25 +88,19 @@ sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
 
 ## 6) Results
 
-**Metrics / counts**
+**Metrics / counts** — summarize key numbers, tables, or JSON snippets.
 
-* *Summarize key numbers, tables, or JSON snippets.*
+**Visuals** — screenshots or link to Pages preview for layers/timeline.
 
-**Visuals**
-
-* *Paste screenshots or link to Pages preview for layers/timeline.*
-
-**Qualitative observations**
-
-* *Artifacts, anomalies, map alignment notes, uncertainty.*
+**Qualitative observations** — artifacts, anomalies, alignment notes, uncertainty.
 
 ---
 
 ## 7) Analysis & Interpretation
 
-* **Did results meet success criteria? Why / why not?**
-* **Threats to validity**: sampling bias, georeferencing error, CRS mismatch, etc.
-* **Error bars / uncertainty**: *How confident are we? How shown in UI?*
+* Did results meet success criteria? Why / why not?
+* Threats to validity — sampling bias, georeferencing error, CRS mismatch, etc.
+* Error bars / uncertainty — confidence & how shown in UI.
 
 ---
 
@@ -140,7 +133,7 @@ sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
 
 ## 10) Roll-forward Plan
 
-* **Adopt / discard / iterate?**
+* Adopt / discard / iterate?
 * **Follow-ups** (open issues to track):
 
   * [ ] …
@@ -174,4 +167,3 @@ sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
 
 ```
 ```
-
