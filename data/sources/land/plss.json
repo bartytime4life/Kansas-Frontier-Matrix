@@ -1,0 +1,71 @@
+```json
+{
+  "id": "plss",
+  "title": "Public Land Survey System (Kansas PLSS Grid)",
+  "type": "vector",
+  "version": "1.0.0",
+  "description": "Township, range, and section boundaries from the Bureau of Land Management (BLM) PLSS dataset, clipped to Kansas. Provides cadastral framework for linking land deeds, surveys, and historical plats.",
+  "temporal": {
+    "start": "1854-01-01",
+    "end": "2025-01-01"
+  },
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00]
+  },
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://gis.blm.gov/arcgis/rest/services/lands/PLSS/MapServer",
+        "https://hub.kansasgis.org/ (search: PLSS Kansas)"
+      ],
+      "notes": "BLM authoritative PLSS service (national coverage, filter to Kansas). Kansas GIS Hub provides county-level PLSS datasets as well."
+    }
+  ],
+  "processing": {
+    "steps": [
+      "Query BLM PLSS REST service for Kansas extent",
+      "Download township, range, section polygons",
+      "Clip to Kansas state boundary",
+      "Convert to GeoPackage/GeoJSON",
+      "Attribute harmonization: township, range, section, meridian"
+    ],
+    "commands_example": [
+      "# Example workflow (pseudo):",
+      "ogr2ogr -f GeoJSON plss_ks.json " ,
+      "  'https://gis.blm.gov/arcgis/rest/services/lands/PLSS/MapServer/0' \\",
+      "  -where \"STATE='KS'\"",
+      "ogr2ogr -f GPKG plss_ks.gpkg plss_ks.json"
+    ]
+  },
+  "lineage": [
+    "BLM PLSS service (township, range, section boundaries)",
+    "Filtered to Kansas extent",
+    "Harmonized attributes for Kansas-Frontier-Matrix schema"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": "2025-09-21",
+    "checksum_sha256": "placeholder_sha256_fill_after_build",
+    "filesize_bytes": null
+  },
+  "keywords": [
+    "PLSS",
+    "cadastral",
+    "township",
+    "range",
+    "section",
+    "Kansas",
+    "BLM"
+  ],
+  "confidence": "high",
+  "notes": "PLSS is essential for georeferencing historical plats and land deeds. Cross-link with treaties and parcels for timeline visualizations."
+}
+```
+
+---
+
+✅ This gives you cadastral coverage (PLSS grid), complementary to your **soils (SSURGO)** config.
+✅ It documents both **BLM authoritative API** and Kansas GIS Hub options.
+✅ Includes **processing pipeline + lineage** so results are reproducible.
