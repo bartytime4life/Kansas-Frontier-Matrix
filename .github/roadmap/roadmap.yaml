@@ -71,17 +71,20 @@ labels:
 
 # ------------------------------------------------------------------------------
 # Milestones → GitHub Milestones (with issues that create/update GH Issues).
+# Each milestone and issue includes a stable 'key' for idempotent sync.
 # ------------------------------------------------------------------------------
 
 milestones:
-  - title: "Milestone 1 — Enrich Data Sources"
+  - key: m1-data
+    title: "Milestone 1 — Enrich Data Sources"
     state: open
     due_on: "2025-10-31"
     description: >
       Expand coverage: oral histories, paleoclimate proxies, hydrology & water management.
       Document sources and provenance in STAC catalog.
     issues:
-      - title: "Oral Histories & Indigenous Narratives"
+      - key: oral-histories
+        title: "Oral Histories & Indigenous Narratives"
         labels: [data, storytelling, MCP]
         priority: P2
         estimate: S
@@ -101,7 +104,8 @@ milestones:
         files:
           - data/sources/oral_histories.json
 
-      - title: "Paleoclimate & Fire Regimes"
+      - key: paleo-fire
+        title: "Paleoclimate & Fire Regimes"
         labels: [data, paleoclimate]
         priority: P2
         estimate: M
@@ -120,7 +124,8 @@ milestones:
         files:
           - data/sources/paleoclimate.json
 
-      - title: "Hydrology & Water Management Expansion"
+      - key: hydro-expansion
+        title: "Hydrology & Water Management Expansion"
         labels: [data, hydrology]
         priority: P2
         estimate: M
@@ -142,7 +147,8 @@ milestones:
         files:
           - data/sources/hydrology.json
 
-      - title: "Kansas River (KGS) Integration — Source → STAC → Viewer"
+      - key: kgs-kansas-river
+        title: "Kansas River (KGS) Integration — Source → STAC → Viewer"
         labels: [data, hydrology, reproducibility]
         priority: P1
         estimate: S
@@ -174,13 +180,15 @@ milestones:
           - web/app.config.json
           - Makefile
 
-  - title: "Milestone 2 — Analytical Enhancements"
+  - key: m2-analytics
+    title: "Milestone 2 — Analytical Enhancements"
     state: open
     due_on: "2025-11-30"
     description: >
       Predictive modeling, uncertainty, symbolic reasoning, fractal/pattern analytics.
     issues:
-      - title: "Predictive Modeling"
+      - key: predictive-modeling
+        title: "Predictive Modeling"
         labels: [ai]
         priority: P2
         estimate: L
@@ -198,7 +206,8 @@ milestones:
         files:
           - mcp/experiments/EXP-SETTLE-PRED.md
 
-      - title: "Uncertainty Quantification"
+      - key: uncertainty-quant
+        title: "Uncertainty Quantification"
         labels: [uncertainty]
         priority: P1
         estimate: M
@@ -211,7 +220,8 @@ milestones:
           - [ ] Georeferencing RMS/error reporting, rectification logs
           - [ ] UI display: opacity/error bars/CI shading
 
-      - title: "Symbolic & Knowledge-Based Reasoning"
+      - key: symbolic-reasoning
+        title: "Symbolic & Knowledge-Based Reasoning"
         labels: [ontology, ai]
         priority: P2
         estimate: M
@@ -224,7 +234,8 @@ milestones:
           - [ ] Implement rules for treaty/legal land transfers
           - [ ] Export RDF/OWL snapshots
 
-      - title: "Fractal & Pattern Analysis"
+      - key: fractal-patterns
+        title: "Fractal & Pattern Analysis"
         labels: [fractals, ai]
         priority: P3
         estimate: S
@@ -237,13 +248,15 @@ milestones:
           - [ ] Power-law analysis on event/migration frequencies
           - [ ] Cluster scaling vs hydro-geomorphology
 
-  - title: "Milestone 3 — Storytelling & Education"
+  - key: m3-story
+    title: "Milestone 3 — Storytelling & Education"
     state: open
     due_on: "2025-12-31"
     description: >
       Public-facing narrative modules, educational overlays, glossary tooltips, and submission portal.
     issues:
-      - title: "Interactive Story Maps — Santa Fe Trail"
+      - key: sft-storymap
+        title: "Interactive Story Maps — Santa Fe Trail"
         labels: [storytelling, education]
         priority: P2
         estimate: M
@@ -256,7 +269,8 @@ milestones:
           - [ ] Timeline UI + step-through views
           - [ ] Educator notes + glossary links
 
-      - title: "Dust Bowl Timeline Prototype"
+      - key: dustbowl-timeline
+        title: "Dust Bowl Timeline Prototype"
         labels: [storytelling, education]
         priority: P3
         estimate: S
@@ -269,7 +283,8 @@ milestones:
           - [ ] Compose time-series map overlays
           - [ ] Add uncertainty annotations
 
-      - title: "Glossary & Educational Annotations"
+      - key: glossary-annotations
+        title: "Glossary & Educational Annotations"
         labels: [education, MCP]
         priority: P3
         estimate: S
@@ -281,7 +296,8 @@ milestones:
           - [ ] Embed glossary lookups in popups
           - [ ] Author overlays for railroads, treaties, forts, migration
 
-      - title: "Crowdsourcing Submission Portal"
+      - key: crowdsourcing-portal
+        title: "Crowdsourcing Submission Portal"
         labels: [crowdsourcing]
         priority: P3
         estimate: M
@@ -294,12 +310,14 @@ milestones:
           - [ ] PR bot to format submissions
           - [ ] `docs/CONTRIBUTING.md` contributor guide
 
-  - title: "Milestone 4 — Technical Enhancements"
+  - key: m4-tech
+    title: "Milestone 4 — Technical Enhancements"
     state: open
     description: >
       3D/temporal, semantic web, modular plugins, APIs, and download endpoints.
     issues:
-      - title: "3D Time Animation"
+      - key: time-3d
+        title: "3D Time Animation"
         labels: [3d]
         priority: P3
         estimate: M
@@ -311,7 +329,8 @@ milestones:
           - [ ] CesiumJS time-dynamic scene (1850–present)
           - [ ] Regionated KML/KMZ exports
 
-      - title: "Semantic Web Integration"
+      - key: semantic-web
+        title: "Semantic Web Integration"
         labels: [ontology, api]
         priority: P3
         estimate: S
@@ -323,7 +342,8 @@ milestones:
           - [ ] Map entities to Wikidata; export RDF
           - [ ] SPARQL/GraphQL access (if feasible)
 
-      - title: "Modularity & Extensibility"
+      - key: modularity
+        title: "Modularity & Extensibility"
         labels: [architecture]
         priority: P2
         estimate: M
@@ -335,7 +355,8 @@ milestones:
           - [ ] Define plugin API boundaries
           - [ ] `docs/architecture.md` extension sections
 
-      - title: "APIs & External Tools"
+      - key: apis-downloads
+        title: "APIs & External Tools"
         labels: [api]
         priority: P3
         estimate: S
@@ -347,12 +368,14 @@ milestones:
           - [ ] Dataset catalog endpoints
           - [ ] Download endpoints (GeoJSON/CSV)
 
-  - title: "Milestone 5 — MCP Integration"
+  - key: m5-mcp
+    title: "Milestone 5 — MCP Integration"
     state: open
     description: >
       Experiments, SOPs, model cards, and CI/STAC validation for mission-grade reproducibility.
     issues:
-      - title: "Experiment Reports (First Three)"
+      - key: experiments-first-3
+        title: "Experiment Reports (First Three)"
         labels: [MCP, reproducibility]
         priority: P2
         estimate: S
@@ -366,7 +389,8 @@ milestones:
           - [ ] NLP place extraction experiment
           - [ ] Predictive settlement modeling experiment
 
-      - title: "SOP Documentation"
+      - key: sop-docs
+        title: "SOP Documentation"
         labels: [MCP]
         priority: P3
         estimate: S
@@ -378,7 +402,8 @@ milestones:
           - [ ] `mcp/sops/georeference_map.md`
           - [ ] `mcp/sops/add_dataset.md`
 
-      - title: "Model Cards"
+      - key: model-cards
+        title: "Model Cards"
         labels: [MCP, ai]
         priority: P3
         estimate: S
@@ -390,7 +415,8 @@ milestones:
           - [ ] `mcp/model_cards/nlp_placename.md`
           - [ ] `mcp/model_cards/change_detection.md`
 
-      - title: "CI/CD Reproducibility"
+      - key: ci-repro
+        title: "CI/CD Reproducibility"
         labels: [reproducibility]
         priority: P2
         estimate: S
