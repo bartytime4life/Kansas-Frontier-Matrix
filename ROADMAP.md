@@ -1,113 +1,190 @@
 # Kansas-Frontier-Matrix — Roadmap
 
----
+This roadmap mirrors **.github/roadmap/roadmap.yaml** and is synced to GitHub
+**labels, milestones, and issues** by the workflow in `.github/workflows/roadmap.yml`.
 
-## Milestone 1 — Enrich Data Sources
-
-* **[Issue] Oral Histories & Indigenous Narratives**
-  * [ ] Identify oral history archives (tribal, local historical societies, KHRI collections).
-  * [ ] Digitize + geocode transcripts (standard MCP `experiment.md` template).
-  * [ ] Link narratives to map features with contextual popups & glossary integration:contentReference[oaicite:0]{index=0}.
-
-* **[Issue] Paleoclimate & Fire Regimes**
-  * [ ] Integrate NOAA tree-ring drought indices, pollen core datasets, and charcoal/fire frequency records:contentReference[oaicite:1]{index=1}.
-  * [ ] Cross-link to KGS + Neotoma paleo datasets:contentReference[oaicite:2]{index=2}.
-  * [ ] Document dataset sources in `data/sources/paleoclimate.json`.
-
-* **[Issue] Hydrology & Water Management Expansion**
-  * [ ] Add flood event datasets, irrigation projects, aquifer/well registers:contentReference[oaicite:3]{index=3}.
-  * [ ] Prototype HEC-RAS flood simulation (historical scenarios, MCP modeling protocol):contentReference[oaicite:4]{index=4}.
-  * [ ] Document in `data/sources/hydrology.json`.
+> 🔁 On PRs the sync runs in **DRY RUN** (no writes).  
+> ✅ On pushes to `main` (or a manual run with `dry_run=false`) it **applies** changes.
 
 ---
 
-## Milestone 2 — Analytical Enhancements
+## Milestones (targets)
 
-* **[Issue] Predictive Modeling**
-  * [ ] Train models on known settlement sites + environmental drivers (DEM, hydrology, soils).
-  * [ ] Add experiment log in `mcp/experiments/EXP-SETTLE-PRED.md`.
-  * [ ] Explore Bayesian + hybrid (ABM + GIS) predictive frameworks:contentReference[oaicite:5]{index=5}.
+| Key         | Title                              | Target date   |
+|-------------|------------------------------------|---------------|
+| `m1-data`   | Enrich Data Sources                | 2025-10-31    |
+| `m2-analytics` | Analytical Enhancements        | 2025-11-30    |
+| `m3-story`  | Storytelling & Education           | 2025-12-31    |
+| `m4-tech`   | Technical Enhancements             | —             |
+| `m5-mcp`    | MCP Integration                    | —             |
 
-* **[Issue] Uncertainty Quantification**
-  * [ ] Attach confidence scores to georeferencing, NLP place extraction, and historical map rectification:contentReference[oaicite:6]{index=6}.
-  * [ ] Display uncertainty in UI (layer opacity, error bars, probabilistic map shading).
-
-* **[Issue] Symbolic & Knowledge-Based Reasoning**
-  * [ ] Define ontology schema (CIDOC-CRM + GeoSciML + treaty/legal vocabularies):contentReference[oaicite:7]{index=7}.
-  * [ ] Implement inference rules for treaty/legal land transfers.
-
-* **[Issue] Fractal & Pattern Analysis**
-  * [ ] Compute fractal dimension of river meanders, fire scars, and settlement clustering:contentReference[oaicite:8]{index=8}.
-  * [ ] Run scaling-law / power-law analysis on migration/event data:contentReference[oaicite:9]{index=9}.
-
----
-
-## Milestone 3 — Storytelling & Education
-
-* **[Issue] Interactive Story Maps**
-  * [ ] Build “Santa Fe Trail” narrative module:contentReference[oaicite:10]{index=10}.
-  * [ ] Prototype Dust Bowl timeline (1930s climate + newspapers + soil data).
-
-* **[Issue] Educational Annotations & Glossary Integration**
-  * [ ] Link MCP glossary terms into map tooltips:contentReference[oaicite:11]{index=11}.
-  * [ ] Add explanatory overlays (railroads, treaties, forts, migration routes).
-
-* **[Issue] Crowdsourcing Contributions**
-  * [ ] Design submission portal (web form → GitHub PR):contentReference[oaicite:12]{index=12}.
-  * [ ] Add contributor guide in `docs/CONTRIBUTING.md`.
-
-* **[Issue] Thematic Story Layers**
-  * [ ] Build “Law & Order” layer (crime events, forts, legal boundaries).
-  * [ ] Build “Migration” layer (settler + tribal relocations).
+```mermaid
+flowchart TD
+  M1["Milestone 1\nEnrich Data Sources (Oct 31, 2025)"] --> M2["Milestone 2\nAnalytical Enhancements (Nov 30, 2025)"]
+  M2 --> M3["Milestone 3\nStorytelling & Education (Dec 31, 2025)"]
+  M3 --> M4["Milestone 4\nTechnical Enhancements"]
+  M4 --> M5["Milestone 5\nMCP Integration"]
+````
 
 ---
 
-## Milestone 4 — Technical Enhancements
+## Milestone 1 — Enrich Data Sources (`m1-data`)
 
-* **[Issue] 3D Time Animation**
-  * [ ] CesiumJS prototype for 1850–present terrain/land use evolution:contentReference[oaicite:13]{index=13}.
-  * [ ] Export regionated KML sequences for Google Earth:contentReference[oaicite:14]{index=14}.
+### Issue: Oral Histories & Indigenous Narratives (`oral-histories`)
 
-* **[Issue] Semantic Web Integration**
-  * [ ] Map entities to Wikidata IDs, align with Linked Open Data vocabularies:contentReference[oaicite:15]{index=15}.
-  * [ ] Publish internal knowledge graph as RDF/OWL.
+* [ ] Identify oral-history archives (tribal, local historical societies, KHRI).
+* [ ] Digitize + geocode transcripts (use MCP experiment template).
+* [ ] Link narratives to features with glossary tooltips/popups.
+* **Deliverables**: `data/sources/oral_histories.json` (license, contact, update cadence).
 
-* **[Issue] Modularity & Extensibility**
-  * [ ] Refactor ingestion, AI, and UI into plugin modules:contentReference[oaicite:16]{index=16}.
-  * [ ] Document extension points in `docs/architecture.md`:contentReference[oaicite:17]{index=17}.
+### Issue: Paleoclimate & Fire Regimes (`paleo-fire`)
 
-* **[Issue] APIs & External Tools**
-  * [ ] Provide REST/GraphQL API endpoints for datasets and knowledge graph:contentReference[oaicite:18]{index=18}.
-  * [ ] Enable GeoJSON/CSV downloads for reproducibility.
+* [ ] Integrate drought indices, pollen cores, charcoal/fire records.
+* [ ] Cross-link to KGS + Neotoma paleo datasets.
+* **Deliverables**: `data/sources/paleoclimate.json` + STAC registration.
 
----
+### Issue: Hydrology & Water Management Expansion (`hydro-expansion`)
 
-## Milestone 5 — MCP Integration
+* [ ] Add flood-event datasets (NOAA/FEMA), irrigation/management layers (where public).
+* [ ] Prototype HEC-RAS historical flood scenarios (MCP modeling SOP).
+* **Deliverables**: `data/sources/hydrology.json` + hydrology collections/items in `stac/`.
 
-* **[Issue] Experiment Reports**
-  * [ ] Use template from `mcp/experiments/experiment_template.md`:contentReference[oaicite:19]{index=19}.
-  * [ ] Populate first 3 experiments (georeferencing, NLP placename extraction, predictive settlement modeling).
+### Issue: Kansas River (KGS) — Source → STAC → Viewer (`kgs-kansas-river`)
 
-* **[Issue] SOP Documentation**
-  * [ ] Add `mcp/sops/georeference_map.md`.
-  * [ ] Add `mcp/sops/add_dataset.md`.
-
-* **[Issue] Model Cards**
-  * [ ] Create `mcp/model_cards/nlp_placename.md`.
-  * [ ] Create `mcp/model_cards/change_detection.md`.
-
-* **[Issue] CI/CD Reproducibility**
-  * [ ] Add GitHub Actions test to validate STAC JSON:contentReference[oaicite:20]{index=20}.
-  * [ ] Add `make reproducibility-check` target.
+* [ ] Source: `data/sources/ks_kansas_river.json` (ArcGIS REST + metadata).
+* [ ] STAC: `stac/collections/ks_kansas_river.json` (+ child links).
+* [ ] Items: channels/floodplains/gauges under `stac/items/ks_kansas_river_*.json`.
+* [ ] Makefile targets: `hydrology-fetch`, `hydrology-stac`, `hydrology`.
+* [ ] Web config: add `ksriv_*` layers to `web/app.config.json` and `web/layers.json`.
+* **Acceptance**: layers render in the viewer; provenance cited in STAC.
 
 ---
 
-📌 **How to Use This Roadmap**
-* Each Milestone → GitHub Milestone.
-* Each Issue → GitHub Issue linked to milestone.
-* Each Task → GitHub checklist item inside the issue.
-* All experiments → `mcp/experiments/`.
-* All models → `mcp/model_cards/`.
-* All workflows → `mcp/sops/`.
+## Milestone 2 — Analytical Enhancements (`m2-analytics`)
+
+### Issue: Predictive Modeling (`predictive-modeling`)
+
+* [ ] Train models on known settlement sites + drivers (DEM, hydrology, soils).
+* [ ] Log experiments in `mcp/experiments/EXP-SETTLE-PRED.md`.
+* [ ] Explore Bayesian + ABM/GIS hybrids.
+* **Acceptance**: reproducible notebook + experiment report with metrics.
+
+### Issue: Uncertainty Quantification (`uncertainty-quant`)
+
+* [ ] Confidence scores for NLP toponyms & georeferencing/rectification output.
+* [ ] UI: opacity/error bars/probabilistic shading rules.
+* **Acceptance**: uncertainty visible in UI; documented in STAC/README.
+
+### Issue: Symbolic & Knowledge-Based Reasoning (`symbolic-reasoning`)
+
+* [ ] Define ontology schema (CIDOC-CRM + GeoSciML + treaty/legal vocabs).
+* [ ] Implement treaty/legal land-transfer inference rules.
+* **Acceptance**: example queries + rule snippets; export RDF/OWL snapshot.
+
+### Issue: Fractal & Pattern Analysis (`fractal-patterns`)
+
+* [ ] Meander fractal dimension, sinuosity metrics; clustering/power-law analysis.
+* **Acceptance**: metrics JSON + short analysis note; hooks for UI overlays.
 
 ---
+
+## Milestone 3 — Storytelling & Education (`m3-story`)
+
+### Issue: Interactive Story Maps — Santa Fe Trail (`sft-storymap`)
+
+* [ ] Assemble route layers + primary sources; timeline step-through views.
+* **Acceptance**: hosted story page with linked sources.
+
+### Issue: Dust Bowl Timeline Prototype (`dustbowl-timeline`)
+
+* [ ] Compose time-series overlays (1930s climate + newspapers + soils).
+* **Acceptance**: time slider demo; brief uncertainty notes.
+
+### Issue: Glossary & Educational Annotations (`glossary-annotations`)
+
+* [ ] Link MCP glossary terms into map tooltips.
+* [ ] Overlays: railroads, treaties, forts, migration routes.
+* **Acceptance**: glossary tooltips render; examples documented.
+
+### Issue: Crowdsourcing Submission Portal (`crowdsourcing-portal`)
+
+* [ ] Web form → GitHub PR bot; contributor guide `docs/CONTRIBUTING.md`.
+* **Acceptance**: end-to-end submission merged via PR.
+
+---
+
+## Milestone 4 — Technical Enhancements (`m4-tech`)
+
+### Issue: 3D Time Animation (`time-3d`)
+
+* [ ] CesiumJS prototype (1850–present); regionated KML/KMZ exports.
+* **Acceptance**: 3D demo + KML sample.
+
+### Issue: Semantic Web Integration (`semantic-web`)
+
+* [ ] Map entities to Wikidata; publish RDF/OWL.
+* **Acceptance**: dump + minimal SPARQL/GraphQL access plan.
+
+### Issue: Modularity & Extensibility (`modularity`)
+
+* [ ] Plugin boundaries for ingestion/AI/UI; extension sections in docs.
+* **Acceptance**: `docs/architecture.md` sections + example plugin.
+
+### Issue: APIs & External Tools (`apis-downloads`)
+
+* [ ] REST/GraphQL endpoints; GeoJSON/CSV downloads.
+* **Acceptance**: minimal API spec + sample responses.
+
+---
+
+## Milestone 5 — MCP Integration (`m5-mcp`)
+
+### Issue: Experiment Reports (First Three) (`experiments-first-3`)
+
+* [ ] Use `mcp/experiments/experiment_template.md`.
+* [ ] Georeferencing, NLP placename extraction, predictive settlement modeling.
+* **Acceptance**: three completed reports with artifacts.
+
+### Issue: SOP Documentation (`sop-docs`)
+
+* [ ] `mcp/sops/georeference_map.md`, `mcp/sops/add_dataset.md`.
+* **Acceptance**: SOPs followed by CI checks.
+
+### Issue: Model Cards (`model-cards`)
+
+* [ ] `mcp/model_cards/nlp_placename.md`, `mcp/model_cards/change_detection.md`.
+* **Acceptance**: cards complete; linked in README/docs.
+
+### Issue: CI/CD Reproducibility (`ci-repro`)
+
+* [ ] Add STAC validation job; `make reproducibility` target.
+* **Acceptance**: CI green; target documented.
+
+---
+
+## Working Agreements
+
+* **Each Milestone → GitHub Milestone.**
+* **Each Issue → GitHub Issue** linked to a milestone (auto-synced).
+* **Tasks** are the issue checklist items.
+* **Experiments** live in `mcp/experiments/`; **model cards** in `mcp/model_cards/`;
+  **SOPs** in `mcp/sops/`.
+
+### Propose new work
+
+Open an issue using one of the templates in `.github/ISSUE_TEMPLATE/`:
+
+* Bug: `bug_report.md`
+* Data: `data_addition.md`
+* Experiment: `experiment_report.md`
+
+### Run the sync locally (optional)
+
+```bash
+npm ci
+npm run validate
+# Dry run
+npm run sync:dry
+# Apply (writes to GitHub; requires GITHUB_TOKEN with repo scope)
+GITHUB_TOKEN=ghp_xxx npm run sync
+```
