@@ -2,9 +2,13 @@
    Kansas-Frontier-Matrix — Minimal MapLibre App (upgraded & connected)
    --------------------------------------------------------------------
    ✅ Looks for config under ./config/ (app.config.json → viewer.json → layers.json), then legacy ./layers.json
+   ✅ Also merges ./config/time_config.json when present (overrides time + defaultYear, step, loop, fps)
    ✅ Supports raster tiles, image overlays, vector tiles, and GeoJSON (fill/line/circle)
    ✅ Time slider filters layers by [start,end] (layer.start/layer.end or layer.time.{start,end})
    ✅ Sidebar UI (class-based) with toggles + opacity sliders (uses .kfm-sidebar CSS if present)
+   ✅ Optional wiring to components if present globally:
+      - window.LegendControl → legend control
+      - window.attachPopup   → popup click handler
    ✅ Safer defaults, better error handling, small bug fixes
 */
 
@@ -19,7 +23,8 @@
       else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
       else if (v !== undefined && v !== null) n.setAttribute(k, String(v));
     }
-    for (const c of children) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    const arr = Array.isArray(children) ? children : [children];
+    for (const c of arr) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
     return n;
   };
 
@@ -79,12 +84,34 @@
         // Register & normalize layers (but only add to map when needed)
         (cfg.layers || []).forEach(registerLayer);
 
+        // Optional: attach popups if helper is loaded
+        if (typeof window.attachPopup === "function") {
+          try {
+            const clickable = (cfg.layers || [])
+              .filter(l => (l.interactive !== false) && (l.type === "geojson" || l.type === "vector"))
+              .map(l => l.id);
+            if (clickable.length) {
+              window.attachPopup(map, { layers: clickable, maxFeatures: 12 });
+            }
+          } catch (e) { console.warn("Popup attach failed:", e); }
+        }
+
+        // Optional: legend control if available
+        if (typeof window.LegendControl === "function") {
+          try {
+            map.addControl(new window.LegendControl({ layersConfig: cfg.layers, title: cfg.legendTitle || "Legend" }), "bottom-right");
+          } catch (e) { console.warn("Legend addControl failed:", e); }
+        }
+
         // Build UI
         buildTimeUI(cfg);
         buildLayerUI(cfg, map);
 
         // Initial year
-        const y0 = clampYear(cfg.defaultYear ?? (cfg.time?.min ?? 1900), cfg);
+        const y0 = clampYear(
+          nnum(cfg.defaultYear, cfg.time?.defaultYear, cfg.time?.min, 1900),
+          cfg
+        );
         updateYear(y0, map);
       });
 
@@ -108,6 +135,12 @@
     }
   }
 
+  async function loadJSON(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${url} not found`);
+    return r.json();
+  }
+
   async function loadConfig() {
     // Prefer config under ./config/, then legacy ./layers.json
     const candidates = [
@@ -116,17 +149,37 @@
       "./config/layers.json",
       "./layers.json"
     ];
+
+    let base = null;
     for (const url of candidates) {
       try {
-        const r = await fetch(url, { cache: "no-store" });
-        if (r.ok) {
-          const json = await r.json();
-          console.info("Loaded config:", url);
-          return json;
-        }
+        base = await loadJSON(url);
+        console.info("Loaded config:", url);
+        break;
       } catch {}
     }
-    throw new Error("No config found (tried ./config/app.config.json, viewer.json, layers.json, ./layers.json)");
+    if (!base) {
+      throw new Error("No config found (tried ./config/app.config.json, viewer.json, layers.json, ./layers.json)");
+    }
+
+    // Optional: merge time_config.json overrides
+    try {
+      const tcfg = await loadJSON("./config/time_config.json");
+      if (tcfg?.time) {
+        base.time = { ...(base.time || {}), ...tcfg.time };
+        if (Number.isFinite(tcfg.time.defaultYear)) {
+          base.defaultYear = tcfg.time.defaultYear;
+        }
+      }
+      if (Array.isArray(tcfg?.presets)) {
+        base.timePresets = tcfg.presets;
+      }
+      console.info("Merged time_config.json");
+    } catch {
+      // no time_config present; ignore
+    }
+
+    return base;
   }
 
   function ensureDOMSkeleton(cfg) {
@@ -157,8 +210,8 @@
   // Normalization & Map layer add
   // -----------------------------------------------------------------------------
   function clampYear(y, cfg) {
-    const min = cfg.time?.min ?? 1700;
-    const max = cfg.time?.max ?? 2100;
+    const min = nnum(cfg.time?.min, 1700);
+    const max = nnum(cfg.time?.max, 2100);
     return Math.max(min, Math.min(max, +y));
   }
 
@@ -182,7 +235,7 @@
       opacity: nnum(l.opacity, d.opacity, 1),
       minzoom: nnum(l.minzoom, d.minzoom, 0),
       maxzoom: nnum(l.maxzoom, d.maxzoom, 24),
-      visible: bool(l.visible, d.visible, true),
+      visible: (typeof l.visible === "boolean") ? l.visible : (typeof d.visible === "boolean" ? d.visible : true),
       tileSize: nnum(l.tileSize, d.tileSize, 256),
       bounds: l.bounds || d.bounds || null,
       coordinates: l.coordinates || null, // for image overlays
@@ -356,7 +409,8 @@
 
     const min = nnum(cfg.time?.min, 1700);
     const max = nnum(cfg.time?.max, 2100);
-    const cur = clampYear(nnum(cfg.defaultYear, min), cfg);
+    const cur = clampYear(nnum(cfg.defaultYear, cfg.time?.defaultYear, min), cfg);
+    const step = nnum(cfg.time?.step, 1);
 
     const labelRow = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } }, [
       el("strong", { style: { fontSize: "13px" } }, ["Year:"]),
@@ -364,7 +418,7 @@
     ]);
 
     const slider = el("input", {
-      id: "yearSlider", type: "range", min: String(min), max: String(max), step: "1", value: String(cur),
+      id: "yearSlider", type: "range", min: String(min), max: String(max), step: String(step), value: String(cur),
       style: { width: "100%" },
       oninput: (e) => {
         const y = clampYear(parseInt(e.target.value, 10), cfg);
@@ -383,6 +437,45 @@
     });
 
     timebox.append(labelRow, slider);
+
+    // Optional: autoplay controls if provided by cfg.time
+    if (cfg.time && (cfg.time.loop || cfg.time.fps)) {
+      const dock = el("div", { style: { marginTop: "8px", display: "flex", gap: "6px" } });
+      const btnPrev = el("button", { onclick: () => slider.stepDown(), title: "Step backward" }, ["⟨"]);
+      const btnNext = el("button", { onclick: () => slider.stepUp(),     title: "Step forward"  }, ["⟩"]);
+      let playing = false, raf = null, last = 0;
+      const fps = nnum(cfg.time.fps, 8);
+      const loop = !!cfg.time.loop;
+
+      const btnPlay = el("button", {
+        onclick: () => {
+          playing ? stop() : play();
+        }
+      }, ["▶"]);
+
+      function play() {
+        playing = true; btnPlay.textContent = "⏸"; last = performance.now();
+        const tick = (now) => {
+          if (!playing) return;
+          const interval = 1000 / Math.max(1, fps);
+          if (now - last >= interval) {
+            last = now;
+            const before = +slider.value;
+            slider.stepUp();
+            if (+slider.value === before && loop) {
+              slider.value = String(min);
+            }
+            slider.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      }
+      function stop() { playing = false; btnPlay.textContent = "▶"; if (raf) cancelAnimationFrame(raf); }
+
+      dock.append(btnPrev, btnPlay, btnNext);
+      timebox.appendChild(dock);
+    }
   }
 
   function isActiveForYear(layer, year) {
