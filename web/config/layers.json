@@ -1,1 +1,83 @@
+{
+  "defaults": {
+    "opacity": 1,
+    "visible": true,
+    "minzoom": 0,
+    "maxzoom": 24,
+    "tileSize": 256
+  },
+  "time": {
+    "min": 1700,
+    "max": 2100
+  },
+  "layers": [
+    {
+      "id": "osm_basemap",
+      "title": "OSM Basemap",
+      "type": "raster",
+      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      "attribution": "© OpenStreetMap contributors",
+      "category": "Base"
+    },
+    {
+      "id": "usgs_topo_1894",
+      "title": "USGS Topographic (Larned, 1894)",
+      "type": "image",
+      "url": "./data/overlays/usgs_topo_larned_1894.tif",
+      "coordinates": [
+        [-100.1, 38.6],
+        [-98.8, 38.6],
+        [-98.8, 37.9],
+        [-100.1, 37.9]
+      ],
+      "start": 1894,
+      "end": 1894,
+      "opacity": 0.7,
+      "category": "Historic Maps",
+      "attribution": "USGS Historical Topo Map Collection"
+    },
+    {
+      "id": "ks_dem_2018",
+      "title": "Kansas DEM (2018–2020)",
+      "type": "raster",
+      "tiles": ["./data/cogs/dem/ks_1m_dem_2018_2020/{z}/{x}/{y}.tif"],
+      "start": 2018,
+      "end": 2020,
+      "opacity": 0.8,
+      "category": "Elevation",
+      "attribution": "Kansas GIS / USGS 3DEP"
+    },
+    {
+      "id": "ks_hillshade_2018",
+      "title": "Hillshade (2018–2020)",
+      "type": "raster",
+      "tiles": ["./data/cogs/hillshade/ks_hillshade_2018_2020/{z}/{x}/{y}.tif"],
+      "start": 2018,
+      "end": 2020,
+      "opacity": 0.6,
+      "category": "Elevation",
+      "attribution": "Derived from Kansas DEM"
+    },
+    {
+      "id": "kansas_counties",
+      "title": "Kansas Counties",
+      "type": "geojson",
+      "url": "./data/vectors/kansas_counties.geojson",
+      "opacity": 0.5,
+      "category": "Boundaries",
+      "attribution": "Kansas Data Access & Support Center"
+    },
+    {
+      "id": "events_sample",
+      "title": "Sample Events",
+      "type": "geojson",
+      "url": "./data/demo_events.json",
+      "start": 1800,
+      "end": 1950,
+      "opacity": 1,
+      "category": "Events",
+      "attribution": "Demo dataset"
+    }
+  ]
+}
 
