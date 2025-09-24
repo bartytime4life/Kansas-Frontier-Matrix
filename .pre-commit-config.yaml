@@ -17,7 +17,7 @@ exclude: |
   (?x)^(
     data/(processed|cogs|outputs|raw)/|
     assets/tiles/|
-    web/(dist|build)/|
+    web/(dist|build|tiles)/|
     (?:^|.*/)?node_modules/|
     (?:^|.*/)?dist/|
     build/|
@@ -37,6 +37,8 @@ repos:
       - id: check-case-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        # Preserve Markdown hard line-breaks (two spaces at EOL)
+        args: ["--markdown-linebreak-ext=md,mdx,rst"]
       - id: mixed-line-ending
         args: ["--fix=lf"]
       - id: check-yaml
@@ -120,7 +122,7 @@ repos:
         args: ["-r", "src"]
         files: "^src/.*\\.py$"
 
-  # NOTE: Use project metadata (-P) so audits work when there's no requirements.txt
+  # Use project metadata (-P) so audits work when there's no requirements.txt
   - repo: https://github.com/pypa/pip-audit
     rev: v2.7.3
     hooks:
@@ -140,7 +142,7 @@ repos:
     hooks:
       - id: git-lfs-check
         args:
-          - "--pattern=*.tif,*.tiff,*.vrt,*.ovr,*.aux.xml,*.mbtiles,*.shp,*.dbf,*.shx,*.cpg,*.prj,*.gpkg,*.geoparquet,*.parquet,*.las,*.laz,*.zip,*.7z,*.tar,*.tar.gz,*.tgz,*.bz2,*.xz,*.zst"
+          - "--pattern=*.tif,*.tiff,*.vrt,*.ovr,*.aux.xml,*.mbtiles,*.pmtiles,*.shp,*.dbf,*.shx,*.cpg,*.prj,*.gpkg,*.geoparquet,*.parquet,*.las,*.laz,*.zip,*.7z,*.tar,*.tar.gz,*.tgz,*.bz2,*.xz,*.zst"
 
   # --- Local project hooks (fast, optional) ---------------------------------
   - repo: local
@@ -151,7 +153,12 @@ repos:
         language: system
         files: "^stac/items/.*\\.json$"
         pass_filenames: false
-        entry: bash -c 'if command -v kgt >/dev/null 2>&1; then kgt validate-stac stac/items --no-strict; else echo "[skip] kgt not installed"; fi'
+        entry: >
+          bash -c 'if command -v kgt >/dev/null 2>&1; then
+            kgt validate-stac stac/items --no-strict;
+          else
+            echo "[skip] kgt not installed";
+          fi'
 
       # Quick JSON sanity for data/sources using jq if available.
       - id: sources-sanity
@@ -169,3 +176,36 @@ repos:
             done;
             exit $ec
           '
+
+      # Validate web configs against JSON Schemas (runs only when those files change).
+      - id: web-config-schema-app
+        name: web/app.config.json schema validation
+        language: python
+        additional_dependencies: ["jsonschema>=4.23.0"]
+        files: "^web/app\\.config\\.json$"
+        pass_filenames: false
+        entry: >
+          python -c "import json,sys; from jsonschema import Draft202012Validator as V;
+          import pathlib;
+          cfgp=pathlib.Path('web/app.config.json'); schp=pathlib.Path('web/config/app.config.schema.json');
+          (sys.exit(0) if not (cfgp.exists() and schp.exists()) else None);
+          cfg=json.load(open(cfgp)); sch=json.load(open(schp));
+          errs=sorted(V(sch).iter_errors(cfg), key=lambda e:e.path);
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
+          sys.exit(1 if errs else 0)"
+
+      - id: web-config-schema-layers
+        name: web/layers.json schema validation
+        language: python
+        additional_dependencies: ["jsonschema>=4.23.0"]
+        files: "^web/layers\\.json$"
+        pass_filenames: false
+        entry: >
+          python -c "import json,sys; from jsonschema import Draft202012Validator as V;
+          import pathlib;
+          cfgp=pathlib.Path('web/layers.json'); schp=pathlib.Path('web/config/layers.schema.json');
+          (sys.exit(0) if not (cfgp.exists() and schp.exists()) else None);
+          cfg=json.load(open(cfgp)); sch=json.load(open(schp));
+          errs=sorted(V(sch).iter_errors(cfg), key=lambda e:e.path);
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
+          sys.exit(1 if errs else 0)"
