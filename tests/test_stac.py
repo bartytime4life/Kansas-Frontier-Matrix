@@ -21,6 +21,7 @@ SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 # Examples: "1894-06-01T00:00:00Z", "2018-01-02T03:04:05.123Z"
 ISO_ZULU = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$")
 
+
 # --------------------------------------------------------------------------------------
 # Helpers
 # --------------------------------------------------------------------------------------
@@ -33,14 +34,17 @@ def read_json(p: Path) -> dict:
     except json.JSONDecodeError as e:
         raise AssertionError(f"Invalid JSON in {p}:\n{e}") from e
 
+
 def list_json(dirpath: Path, recursive: bool = False) -> List[Path]:
     if not dirpath.exists():
         return []
     pat = "**/*.json" if recursive else "*.json"
     return sorted([p for p in dirpath.glob(pat) if p.is_file()])
 
+
 def iso_or_none(s: Optional[str]) -> bool:
     return (s is None) or (isinstance(s, str) and bool(ISO_ZULU.match(s)))
+
 
 def _flatten_coords(coords: Any) -> Iterable[Tuple[float, float]]:
     """
@@ -88,12 +92,14 @@ def _flatten_coords(coords: Any) -> Iterable[Tuple[float, float]]:
                 yield from _walk(sub)
     yield from _walk(coords)
 
+
 def bbox_from_geometry(geom: dict) -> tuple[float, float, float, float]:
     coords = geom.get("coordinates")
     pts = list(_flatten_coords(coords))
     assert pts, "Geometry contains no numeric coordinates"
     xs, ys = zip(*pts)
     return (min(xs), min(ys), max(xs), max(ys))
+
 
 def _normalize_collection_bbox(spatial_bbox: Any) -> list[list[float]]:
     """
@@ -114,6 +120,7 @@ def _normalize_collection_bbox(spatial_bbox: Any) -> list[list[float]]:
             return out
     return []
 
+
 def _normalize_temporal_interval(interval: Any) -> list[list[Optional[str]]]:
     """
     STAC temporal interval is list of [start, end] values; values may be ISO8601 strings or null.
@@ -129,6 +136,7 @@ def _normalize_temporal_interval(interval: Any) -> list[list[Optional[str]]]:
                 out.append([s2, e2])
     return out
 
+
 def _looks_like_cog_mediatype(m: str) -> bool:
     """
     Heuristics for GeoTIFF/COG mediatype hints commonly used in STAC.
@@ -136,10 +144,11 @@ def _looks_like_cog_mediatype(m: str) -> bool:
       - "image/tiff; application=geotiff; profile=cloud-optimized"
       - "image/tiff; application=geotiff"
       - "image/geotiff"
-      - "image/tiff" (nudge to geotiff in assert message)
+      - "image/tiff"
     """
     m = (m or "").lower()
     return ("geotiff" in m) or m.startswith("image/geotiff") or m.startswith("image/tiff")
+
 
 def approx_encloses(bbox_outer: list[float], bbox_inner: tuple[float, float, float, float], eps: float = 1e-9) -> bool:
     return (
@@ -149,6 +158,7 @@ def approx_encloses(bbox_outer: list[float], bbox_inner: tuple[float, float, flo
         bbox_outer[3] + eps >= bbox_inner[3]
     )
 
+
 def _load_collections_by_id() -> dict[str, dict]:
     out: dict[str, dict] = {}
     for p in list_json(COLLS_DIR, recursive=False):
@@ -157,6 +167,7 @@ def _load_collections_by_id() -> dict[str, dict]:
         if isinstance(cid, str) and cid:
             out[cid] = col
     return out
+
 
 # --------------------------------------------------------------------------------------
 # Dynamic discovery (so new items/collections are picked up automatically)
@@ -170,6 +181,7 @@ pytestmark = pytest.mark.skipif(
     not (ALL_ITEMS or ALL_COLLS),
     reason="No STAC files present yet (scaffolding stage)"
 )
+
 
 # --------------------------------------------------------------------------------------
 # Repo-wide invariants
@@ -186,6 +198,7 @@ def test_item_ids_unique():
         ids.append(iid)
         assert p.stem == iid, f"{p.name}: id should match filename stem"
     assert len(ids) == len(set(ids)), "Duplicate STAC Item ids detected"
+
 
 # --------------------------------------------------------------------------------------
 # Collections — conformance-ish checks
@@ -208,7 +221,6 @@ def test_collection_core(p: Path):
     assert sb, f"{p.name}: extent.spatial.bbox required and must be [minx,miny,maxx,maxy] or list of such"
     for b in sb:
         assert len(b) >= 4, f"{p.name}: bbox must have at least 4 numbers"
-        # b already cast to float in normalizer
         assert all(isinstance(v, float) for v in b[:4]), f"{p.name}: bbox values must be numeric"
         assert b[0] <= b[2] and b[1] <= b[3], f"{p.name}: bbox min must be <= max"
 
@@ -257,6 +269,7 @@ def test_collection_core(p: Path):
             assert "type" in v and "roles" in v, f"{p.name}: item_assets['{k}'] should declare type and roles"
             assert isinstance(v["type"], str) and v["type"], f"{p.name}: item_assets['{k}'].type must be string"
             assert isinstance(v["roles"], list) and all(isinstance(r, str) for r in v["roles"]), f"{p.name}: item_assets['{k}'].roles must be list[str]"
+
 
 # --------------------------------------------------------------------------------------
 # Items — conformance-ish checks
@@ -339,14 +352,23 @@ def test_item_core(p: Path):
                 f"(e.g., 'image/tiff; application=geotiff; profile=cloud-optimized')"
             )
 
+        # Optional: checksum / file:size (if present, assert shape)
+        if "checksum:multihash" in a:
+            mh = a["checksum:multihash"]
+            assert isinstance(mh, str) and len(mh) > 8, f"{p.name}: asset '{name}' checksum:multihash must be a non-empty string"
+        if "file:size" in a:
+            fsz = a["file:size"]
+            assert isinstance(fsz, int) and fsz > 0, f"{p.name}: asset '{name}' file:size must be positive integer"
+
     # If "collection" is declared, it should match an existing collection id
     if "collection" in item:
         assert isinstance(item["collection"], str) and item["collection"], f"{p.name}: collection must be a non-empty string when present"
         all_colls = _load_collections_by_id()
         assert item["collection"] in all_colls, f"{p.name}: collection='{item['collection']}' does not match any collections in {COLLS_DIR}"
 
+
 # --------------------------------------------------------------------------------------
-# Cross-check: items referenced by collections (if any 'item' links present)
+# Cross-checks involving Collections
 # --------------------------------------------------------------------------------------
 
 def _collect_linked_items_from_collection(col: dict) -> list[str]:
@@ -355,6 +377,7 @@ def _collect_linked_items_from_collection(col: dict) -> list[str]:
         if ln.get("rel") == "item" and isinstance(ln.get("href"), str):
             hrefs.append(ln["href"])
     return hrefs
+
 
 @pytest.mark.parametrize("p", ALL_COLLS)
 def test_collection_item_links_point_to_items_folder(p: Path):
@@ -370,3 +393,24 @@ def test_collection_item_links_point_to_items_folder(p: Path):
         itm = read_json(target)
         assert itm.get("type") == "Feature", f"{target.name}: must be a STAC Item (Feature)"
         assert SEMVER.match(itm.get("stac_version", "") or ""), f"{target.name}: missing/invalid stac_version"
+
+
+@pytest.mark.parametrize("p", ALL_ITEMS)
+def test_item_bbox_within_collection_extent_when_applicable(p: Path):
+    """If an Item references a Collection, ensure its bbox is enclosed by the Collection extent.spatial.bbox."""
+    item = read_json(p)
+    coll_id = item.get("collection")
+    if not coll_id:
+        pytest.skip(f"{p.name}: no collection reference (skip)")
+    colls = _load_collections_by_id()
+    if coll_id not in colls:
+        pytest.skip(f"{p.name}: collection '{coll_id}' not found (checked elsewhere)")
+    col = colls[coll_id]
+
+    item_bbox = list(map(float, (item.get("bbox") or [])[:4]))
+    assert len(item_bbox) == 4, f"{p.name}: bbox must have 4 numbers"
+    sb = _normalize_collection_bbox((col.get("extent") or {}).get("spatial", {}).get("bbox"))
+    assert sb, f"Collection '{coll_id}': missing extent.spatial.bbox"
+    # If multiple collection bboxes exist, it's sufficient that the item fits in one of them
+    enclosed = any(approx_encloses(b, tuple(item_bbox)) for b in sb)
+    assert enclosed, f"{p.name}: item bbox {item_bbox} not enclosed by any bbox of its collection '{coll_id}'"
