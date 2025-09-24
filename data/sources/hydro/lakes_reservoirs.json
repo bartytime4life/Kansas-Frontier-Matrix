@@ -1,0 +1,54 @@
+{
+  "id": "lakes_reservoirs",
+  "title": "Kansas Lakes & Reservoirs (USACE/KDHE/USGS)",
+  "type": "vector",
+  "version": "1.0.0",
+  "description": "Polygons for major Kansas lakes and reservoirs (USACE-operated and state-managed), including attributes for construction year, capacity, and controlling agency. Useful for pre/post-dam river-course comparisons and flood history.",
+  "temporal": {
+    "start": "1900-01-01",
+    "end": "2025-01-01"
+  },
+  "spatial": { "bbox": [-102.05, 36.99, -94.61, 40.00] },
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://www.usace.army.mil/Missions/Civil-Works/Recreation/ (site index)",
+        "https://hub.kansasgis.org/ (search: lakes, reservoirs)",
+        "https://prd-tnm.s3.amazonaws.com/index.html?prefix=StagedProducts/Hydrography/NHD/"
+      ],
+      "notes": "USACE lake boundaries & metadata; KDHE/KS GIS hub polygons; optional cross-check with NHD waterbodies."
+    }
+  ],
+  "processing": {
+    "steps": [
+      "Collect USACE reservoir boundaries and attributes (construction year, agency, capacity)",
+      "Merge with KDHE/Kansas GIS hub lake/reservoir polygons",
+      "Cross-check/normalize with NHD Waterbody polygons (resolve duplicates/mismatches)",
+      "Add derived fields: pre_dam_river (if known), water_supply (Y/N), hydropower (Y/N)"
+    ],
+    "commands_example": [
+      "# Example (pseudo):",
+      "ogr2ogr -f GeoJSON lakes_usace.json usace_lakes.gdb",
+      "ogr2ogr -f GeoJSON lakes_kansas.json ks_gis_lakes.gdb",
+      "ogr2ogr -f GeoJSON lakes_nhd.json NHD_H_0108_GDB.gdb NHDWaterbody -clipsrc -102.05 36.99 -94.61 40.00",
+      "python scripts/hydro_merge_lakes.py lakes_usace.json lakes_kansas.json lakes_nhd.json -o lakes_reservoirs_ks.json"
+    ]
+  },
+  "lineage": [
+    "USACE reservoir boundaries (authoritative for federal projects)",
+    "KDHE/Kansas GIS: state-managed lakes",
+    "USGS NHD Waterbody for geometry QC",
+    "Harmonized schema and deduplicated features"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": "2025-09-21",
+    "checksum_sha256": "placeholder_sha256_to_fill_after_export",
+    "filesize_bytes": null
+  },
+  "keywords": ["lakes", "reservoirs", "USACE", "KDHE", "NHD", "Kansas", "hydrology"],
+  "confidence": "high",
+  "notes": "Populate construction_year & agency where available to enable timeline toggling (pre/post impoundment analyses)."
+}
