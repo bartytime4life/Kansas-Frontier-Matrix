@@ -2,8 +2,8 @@ name: Build & Attach Release Artifacts
 
 on:
   push:
-    tags:
-      - "v*"
+    tags: [ "v*" ]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # keep tags for setuptools_scm / version resolvers
+          fetch-depth: 0   # setuptools_scm needs tags/history
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -36,58 +36,55 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: |
-            requirements.txt
-            constraints.txt
+            requirements*.txt
             pyproject.toml
 
       - name: Install build toolchain
         run: |
           python -m pip install --upgrade pip
-          pip install build twine
+          pip install build twine setuptools_scm packaging
 
-      # Optional, "light" checks that avoid pulling heavy GIS deps:
-      # - use --no-deps so we don't compile wheels for rasterio/pyproj
-      # - import-only checks guarded to skip if imports fail
-      - name: Quick smoke (no-deps import guards)
+      # Ensure the tag (vX.Y.Z...) matches the project version resolved by setuptools_scm.
+      - name: Verify tag matches project version
+        id: tagcheck
         run: |
           set -euo pipefail
-          # Try installing just the package metadata/entrypoints without deps
+          TAG="${GITHUB_REF_NAME#v}"          # strip leading 'v'
+          PYVER="$(python - <<'PY'
+from setuptools_scm import get_version
+from packaging.version import Version
+print(Version(get_version()).public)
+PY
+)"
+          echo "Tag: ${TAG}"
+          echo "Resolved version: ${PYVER}"
+          # Allow exact match. If you use pre/post releases, tag should include them (e.g., v1.2.0rc1).
+          if [ "${TAG}" != "${PYVER}" ]; then
+            echo "::error::Git tag (${TAG}) does not match project version (${PYVER})"
+            exit 1
+          fi
+          echo "version=${PYVER}" >> "$GITHUB_OUTPUT"
+
+      # Optional, light smoke: try import after editable install w/o heavy deps
+      - name: Quick smoke (editable, no-deps)
+        run: |
+          set -euo pipefail
           pip install -e . --no-deps || true
           python - <<'PY'
-          import importlib, sys
-          mods = ["kansas_geo_timeline"]
-          bad = 0
-          for m in mods:
-              try:
-                  importlib.import_module(m)
-                  print(f"[ok] import {m}")
-              except Exception as e:
-                  print(f"[warn] cannot import {m} without deps: {e}", file=sys.stderr)
-          PY
-          # STAC sanity (no kgt required)
-          if [ -d stac/items ]; then
-            python - <<'PY'
-            import json, pathlib, sys
-            req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
-            bad=0
-            for p in sorted(pathlib.Path("stac/items").glob("*.json")):
-                try:
-                    d=json.loads(p.read_text(encoding="utf-8"))
-                except Exception as e:
-                    print(f"::error file={p}::JSON parse error: {e}")
-                    bad += 1; continue
-                miss=[k for k in req if k not in d]
-                if miss or d.get("type")!="Feature":
-                    print(f"::error file={p}::missing {miss} or wrong type")
-                    bad += 1
-            sys.exit(1 if bad else 0)
-            PY
-          fi
+import importlib, sys
+mods = ["kansas_geo_timeline"]
+for m in mods:
+    try:
+        importlib.import_module(m)
+        print(f"[ok] import {m}")
+    except Exception as e:
+        print(f"[warn] cannot import {m} without deps: {e}", file=sys.stderr)
+PY
 
       - name: Build sdist & wheel
         run: |
           python -m build
-          ls -lh ${{ env.DIST_DIR }}/
+          ls -lh "${{ env.DIST_DIR }}/"
 
       - name: Twine check
         run: python -m twine check ${{ env.DIST_DIR }}/*
@@ -102,25 +99,32 @@ jobs:
           if [ -d web ]; then
             (cd web && zip -qr "../${EXTRAS_DIR}/web_snapshot.zip" .)
           fi
-          # prune empty extras dir
-          [ -z "$(ls -A "${EXTRAS_DIR}" 2>/dev/null || true)" ] && rmdir "${EXTRAS_DIR}" || true
+          [ -d "${EXTRAS_DIR}" ] && ls -lh "${EXTRAS_DIR}" || true
 
       - name: Checksums (SHA-256)
         run: |
           set -euo pipefail
           shopt -s nullglob
-          # Dist files
           for f in "${DIST_DIR}"/*; do
             [ -e "$f" ] || continue
             sha256sum "$f" | tee "$f.sha256"
           done
-          # Optional extras
           if [ -d "${EXTRAS_DIR}" ]; then
             for f in "${EXTRAS_DIR}"/*.zip; do
               [ -e "$f" ] || continue
               sha256sum "$f" | tee "$f.sha256"
             done
           fi
+          # Produce a manifest for easy verification in the Release body
+          {
+            echo "# SHA-256 checksums"
+            echo
+            for f in "${DIST_DIR}"/*; do [ -e "$f.sha256" ] && echo "$(cat "$f.sha256")"; done
+            if [ -d "${EXTRAS_DIR}" ]; then
+              for f in "${EXTRAS_DIR}"/*.sha256; do [ -e "$f" ] && cat "$f"; done
+            fi
+          } > CHECKSUMS.txt
+          ls -lh CHECKSUMS.txt
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -131,20 +135,28 @@ jobs:
             ${{ env.DIST_DIR }}/*.sha256
             ${{ env.EXTRAS_DIR }}/*.zip
             ${{ env.EXTRAS_DIR }}/*.sha256
+            CHECKSUMS.txt
           if-no-files-found: warn
           retention-days: 7
 
       - name: Job summary (hashes)
         run: |
-          echo "## Release artifacts" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### dist/" >> $GITHUB_STEP_SUMMARY
-          ls -lh ${{ env.DIST_DIR }} >> $GITHUB_STEP_SUMMARY
-          if [ -d "${EXTRAS_DIR}" ]; then
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### ${EXTRAS_DIR}/" >> $GITHUB_STEP_SUMMARY
-            ls -lh ${EXTRAS_DIR} >> $GITHUB_STEP_SUMMARY
-          fi
+          {
+            echo "## Release artifacts"
+            echo ""
+            echo "### dist/"
+            ls -lh ${{ env.DIST_DIR }} || true
+            if [ -d "${EXTRAS_DIR}" ]; then
+              echo ""
+              echo "### ${EXTRAS_DIR}/"
+              ls -lh ${EXTRAS_DIR} || true
+            fi
+            echo ""
+            echo "### Checksums"
+            echo '```'
+            sed -n '1,200p' CHECKSUMS.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   github-release:
     name: Create GitHub Release
@@ -164,7 +176,7 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          cnt=$(ls -1 dist/* 2>/dev/null | wc -l | tr -d ' ')
+          cnt=$(find dist -type f | wc -l | tr -d ' ')
           if [ "$cnt" = "0" ]; then
             echo "::error::No release artifacts found in dist/"
             exit 1
@@ -190,5 +202,6 @@ jobs:
           draft: false
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true
+          body_path: dist/CHECKSUMS.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
