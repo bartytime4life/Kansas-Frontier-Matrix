@@ -16,6 +16,7 @@ __pypackages__/
 .ruff_cache/
 .coverage
 htmlcov/
+.cache/
 
 # ---------------------------------------
 # Git / CI / Editors
@@ -34,6 +35,7 @@ htmlcov/
 # Envs / logs
 # ---------------------------------------
 .venv/
+venv/
 .env
 .env.*
 *.log
@@ -43,9 +45,14 @@ htmlcov/
 # ---------------------------------------
 build/
 dist/
+site/                 # MkDocs output
 *.whl
 *.egg
 *.tar.gz
+
+# CI/test leftovers
+pytest-report.xml
+coverage.xml
 
 # ---------------------------------------
 # Node / web
@@ -54,9 +61,18 @@ dist/
 node_modules/
 web/node_modules/
 web/.cache/
+web/.vite/
+web/.next/
 web/dist/
 web/build/
+web/tiles/            # tile pyramids (heavy)
+web/assets/tiles/
 web/.DS_Store
+
+# ---------------------------------------
+# DVC (keep .dvc files outside this dir)
+# ---------------------------------------
+.dvc/
 
 # ---------------------------------------
 # Data (mount at runtime)
@@ -64,13 +80,53 @@ web/.DS_Store
 # ---------------------------------------
 data/**
 
-# allow small JSON catalogs (unignore)
-!stac/**
+# allow small JSON catalogs / descriptors / DVC metafiles
 !data/sources/**
+!data/**/*.dvc
 
-# but still exclude any large rasters under those trees if present
-stac/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
-data/sources/**/*.{tif,tiff,vrt,ovr,aux.xml,zip,7z,tar,tar.gz}
+# ---------------------------------------
+# STAC catalogs are small: keep them
+# ---------------------------------------
+!stac/**
+
+# but still exclude any large rasters/archives under those trees
+stac/*.tif
+stac/*.tiff
+stac/*.vrt
+stac/*.ovr
+stac/*.aux.xml
+stac/*.zip
+stac/*.7z
+stac/*.tar
+stac/*.tar.gz
+stac/**/*.tif
+stac/**/*.tiff
+stac/**/*.vrt
+stac/**/*.ovr
+stac/**/*.aux.xml
+stac/**/*.zip
+stac/**/*.7z
+stac/**/*.tar
+stac/**/*.tar.gz
+
+data/sources/*.tif
+data/sources/*.tiff
+data/sources/*.vrt
+data/sources/*.ovr
+data/sources/*.aux.xml
+data/sources/*.zip
+data/sources/*.7z
+data/sources/*.tar
+data/sources/*.tar.gz
+data/sources/**/*.tif
+data/sources/**/*.tiff
+data/sources/**/*.vrt
+data/sources/**/*.ovr
+data/sources/**/*.aux.xml
+data/sources/**/*.zip
+data/sources/**/*.7z
+data/sources/**/*.tar
+data/sources/**/*.tar.gz
 
 # legacy/derived outputs (always ignore)
 data/cogs/
@@ -105,11 +161,11 @@ assets/tiles/
 # Earth / KML big artifacts
 # (generated; mount or publish separately)
 # ---------------------------------------
+earth/*.kmz
+earth/*.kml
 earth/**/*.kmz
 earth/**/*.kml
 earth/networklinks/
-earth/*.kmz
-earth/*.kml
 
 # ---------------------------------------
 # Notebooks + checkpoints
