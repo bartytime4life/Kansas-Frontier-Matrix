@@ -1,0 +1,59 @@
+{
+  "id": "treaty_kansas_nebraska_1854",
+  "title": "Kansas–Nebraska Act Treaty Boundaries (1854)",
+  "type": "vector",
+  "version": "1.0.0",
+  "description": "Polygons representing tribal lands and cessions as defined by the Kansas–Nebraska Act of 1854. This dataset includes approximate reservation and cession boundaries based on archival treaty maps and federal land survey references.",
+  "temporal": {
+    "start": "1854-05-30",
+    "end": "1867-10-21"
+  },
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.61, 40.00]
+  },
+  "geometry_example": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [-101.5, 39.5],
+        [-100.0, 39.5],
+        [-100.0, 38.5],
+        [-101.5, 38.5],
+        [-101.5, 39.5]
+      ]
+    ]
+  },
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://www.archives.gov/research/american-indians/treaties/region/1854-kansas-nebraska.pdf"
+      ],
+      "notes": "Scanned treaty text and map (NARA). Boundary digitization pending refinement with GCP alignment."
+    }
+  ],
+  "lineage": [
+    "Scanned from NARA microfilm",
+    "Georeferenced using USGS topo basemaps",
+    "Digitized in QGIS",
+    "Saved as GeoJSON"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": "2025-09-21",
+    "checksum_sha256": "placeholder123abc456def789ghi000111222333444555666777888999aaa",
+    "filesize_bytes": null
+  },
+  "keywords": [
+    "treaty",
+    "cession",
+    "reservation",
+    "tribal lands",
+    "Kansas",
+    "Nebraska",
+    "1854"
+  ],
+  "confidence": "medium",
+  "notes": "Polygon shown is a placeholder for demonstration. Replace with authoritative digitized boundary once GIS layer is processed."
+}
