@@ -1,26 +1,32 @@
 /* =============================================================================
-   Kansas-Frontier-Matrix — web/style.css
+   Kansas-Frontier-Matrix — web/style.css  (connected & upgraded)
    Purpose: Minimal, modern, responsive styles for the time-aware map UI.
    Notes:
-     - Uses CSS variables for easy theming.
+     - Harmonized with web/css/layout.css + theme.css tokens where possible.
      - Works with MapLibre container #map and year slider #year + #year-label.
-     - Includes print styles and dark-mode support.
+     - Includes print styles, reduced-motion, and high-contrast support.
    ========================================================================== */
 
 /* ---- CSS Variables (Design Tokens) -------------------------------------- */
 :root {
+  /* Base surfaces & ink (kept compatible with layout.css/theme.css) */
   --bg: #0f1115;
   --panel: #131720;
   --panel-2: #161b26;
-  --text: #eef2ff;
+  --ink: #eef2ff;           /* alias of --text */
+  --text: var(--ink);
   --muted: #9aa4b2;
+
+  /* Accents */
   --accent: #73c1ff;
   --accent-2: #4fb2ff;
   --ok: #30d158;
   --warn: #f5a524;
   --danger: #ff5d5d;
 
+  /* Lines, elevation, radii, spacing */
   --border: #263041;
+  --shadow-1: 0 2px 10px rgba(0,0,0,.25);
   --shadow: 0 8px 24px rgba(0,0,0,0.25);
 
   --radius-sm: 8px;
@@ -33,7 +39,7 @@
   --gap-4: 24px;
 
   --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, "Courier New", monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   --map-z: 1;
   --controls-z: 10;
@@ -48,7 +54,8 @@
     --bg: #f7f8fb;
     --panel: #ffffff;
     --panel-2: #f4f6fb;
-    --text: #0b1220;
+    --ink: #0b1220;
+    --text: var(--ink);
     --muted: #5b6678;
     --accent: #0066ff;
     --accent-2: #2a7aff;
@@ -76,10 +83,8 @@ html, body {
 }
 
 img, canvas, svg, video { display: block; max-width: 100%; }
-
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-
 button { font: inherit; }
 
 /* ---- Layout -------------------------------------------------------------- */
@@ -97,6 +102,8 @@ button { font: inherit; }
   backdrop-filter: saturate(140%) blur(6px);
   background: color-mix(in oklab, var(--panel) 85%, transparent);
   border-bottom: 1px solid var(--border);
+  padding-left: max(env(safe-area-inset-left), 0px);
+  padding-right: max(env(safe-area-inset-right), 0px);
 }
 
 .header__inner {
@@ -115,9 +122,7 @@ button { font: inherit; }
   font-weight: 700;
   letter-spacing: 0.2px;
 }
-
 .brand img { width: 28px; height: 28px; }
-
 .header__spacer { flex: 1; }
 
 .header__actions {
@@ -142,8 +147,8 @@ button { font: inherit; }
 /* ---- Floating Controls Panel -------------------------------------------- */
 .controls {
   position: absolute;
-  right: 16px;
-  top: 88px; /* sits below header */
+  right: max(16px, env(safe-area-inset-right));
+  top: calc(72px + env(safe-area-inset-top)); /* sits below header */
   z-index: var(--controls-z);
   width: min(360px, 90vw);
   display: flex;
@@ -154,6 +159,7 @@ button { font: inherit; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  backdrop-filter: blur(4px);
 }
 
 .controls__row {
@@ -176,7 +182,7 @@ button { font: inherit; }
   color: var(--muted);
 }
 
-/* ---- Year Slider --------------------------------------------------------- */
+/* ---- Year Slider (with Firefox track fix) -------------------------------- */
 .year-row {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -184,16 +190,27 @@ button { font: inherit; }
   align-items: center;
 }
 
+/* Base */
 #year {
+  -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 6px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  background: var(--border);
   outline: none;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
 }
 
+/* Filled track via gradient variable */
+#year.kfm-range--fill {
+  --value: 0%;
+  background:
+    linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) left/var(--value) 100% no-repeat,
+    var(--border);
+}
+
+/* WebKit thumb */
 #year::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -204,8 +221,19 @@ button { font: inherit; }
   border: 2px solid var(--accent-2);
   box-shadow: var(--focus-ring);
   cursor: pointer;
+  margin-top: -6px; /* center on 6px track */
 }
-
+/* Firefox track + thumb */
+#year::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border);
+}
+#year.kfm-range--fill::-moz-range-track {
+  background:
+    linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) left/var(--value) 100% no-repeat,
+    var(--border);
+}
 #year::-moz-range-thumb {
   width: 18px; height: 18px; border-radius: 50%;
   background: #fff; border: 2px solid var(--accent-2);
@@ -220,7 +248,7 @@ button { font: inherit; }
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-1);
   min-width: 72px;
   text-align: center;
 }
@@ -251,10 +279,7 @@ button { font: inherit; }
 .legend__name { font-size: 13px; color: var(--text); }
 .legend__meta { font-size: 12px; color: var(--muted); }
 
-.layers {
-  display: grid;
-  gap: 8px;
-}
+.layers { display: grid; gap: 8px; }
 
 .layer {
   display: grid;
@@ -266,11 +291,10 @@ button { font: inherit; }
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
-
 .layer__name { font-weight: 600; }
 .layer__controls { display: flex; align-items: center; gap: 8px; }
 
-/* Toggle switch */
+/* Toggle switch (ARIA-friendly) */
 .switch {
   --h: 22px;
   position: relative;
@@ -292,17 +316,26 @@ button { font: inherit; }
 }
 .switch[aria-checked="true"] .switch__dot { transform: translate(22px, -50%); }
 
-/* Range for per-layer opacity */
+/* Per-layer opacity */
 .input--opacity {
+  -webkit-appearance: none;
   appearance: none;
-  width: 100px;
+  width: 110px;
   height: 6px;
   border-radius: 999px;
   background: #2b3241;
+  outline: none;
 }
-.input--opacity::-webkit-slider-thumb,
-.input--opacity::-moz-range-thumb {
+.input--opacity::-webkit-slider-thumb {
+  -webkit-appearance: none;
   appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent);
+}
+.input--opacity::-moz-range-track {
+  height: 6px; border-radius: 999px; background: #2b3241;
+}
+.input--opacity::-moz-range-thumb {
   width: 14px; height: 14px; border-radius: 50%;
   background: #fff; border: 2px solid var(--accent);
 }
@@ -323,7 +356,10 @@ button { font: inherit; }
 }
 .btn:hover { transform: translateY(-1px); }
 .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
-.btn--primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
+.btn--primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-color: transparent; color: #fff;
+}
 .btn--danger { background: #3a1010; border-color: #632222; color: #ffdada; }
 
 .badge {
@@ -340,7 +376,7 @@ button { font: inherit; }
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-1);
 }
 
 /* Monospace token labels / hashes */
@@ -363,27 +399,45 @@ button { font: inherit; }
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 8px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-1);
   font-size: 12px;
 }
+
+/* ---- MapLibre tweaks (theme integration) -------------------------------- */
+.maplibregl-ctrl-group {
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-1) !important;
+}
+.maplibregl-ctrl,
+.maplibregl-ctrl button {
+  background-color: var(--panel-2) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.maplibregl-popup-content {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+.maplibregl-popup-tip { border-top-color: var(--panel) !important; }
 
 /* ---- Responsive ---------------------------------------------------------- */
 @media (max-width: 960px) {
   #map { height: calc(100vh - 56px); }
-  .controls { right: 12px; top: 80px; width: min(420px, 92vw); }
+  .controls { right: 12px; top: calc(64px + env(safe-area-inset-top)); width: min(420px, 92vw); }
   .header__inner { padding: var(--gap-2) var(--gap-2); }
 }
 
 @media (max-width: 640px) {
-  .controls {
-    left: 12px; right: 12px; width: auto;
-  }
+  .controls { left: 12px; right: 12px; width: auto; }
   .legend { grid-template-columns: auto 1fr; }
 }
 
 /* ---- Print (export static map) ------------------------------------------ */
 @media print {
-  .header, .controls { display: none !important; }
+  .header, .controls, .maplibregl-ctrl { display: none !important; }
   #map { height: 9in; }
   body { background: #fff; color: #000; }
 }
@@ -393,12 +447,26 @@ button { font: inherit; }
   outline: none;
   box-shadow: var(--focus-ring);
 }
-
-.visually-hidden {
+.visually-hidden,
+.sr-only {
   position: absolute !important;
   height: 1px; width: 1px;
   overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* High contrast (forced colors) */
+@media (forced-colors: active) {
+  :root {
+    --panel: Canvas; --panel-2: Canvas; --text: CanvasText; --border: GrayText;
+  }
+  .btn, .card, .legend, .layer, .controls, .maplibregl-ctrl { border: 1px solid var(--border); }
+  #year, .input--opacity { background: GrayText; }
 }
 
 /* ---- Optional Animations ------------------------------------------------- */
@@ -407,4 +475,5 @@ button { font: inherit; }
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
 /* reserved for custom theming */
