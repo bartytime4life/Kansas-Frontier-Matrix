@@ -1,12 +1,12 @@
 {
   "name": "kfm-roadmap-sync",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "license": "MIT",
   "description": "Sync .github/roadmap/roadmap.yaml to GitHub labels, milestones, and issues",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.0.0"
   },
   "packageManager": "npm@10",
   "repository": {
@@ -31,22 +31,25 @@
   "scripts": {
     "sync": "node scripts/sync-roadmap.js",
     "sync:dry": "cross-env DRY_RUN=1 node scripts/sync-roadmap.js",
-    "check": "node --input-type=module -e \"import fs from 'fs'; fs.accessSync('.github/roadmap/roadmap.yaml'); console.log(process.version)\"",
-    "validate": "node --input-type=module -e \"import fs from 'fs'; import yaml from 'js-yaml'; yaml.load(fs.readFileSync('.github/roadmap/roadmap.yaml','utf8')); console.log('roadmap.yaml: OK')\"",
+    "check": "node --input-type=module -e \"import fs from 'node:fs'; const p=process.env.ROADMAP_FILE||'.github/roadmap/roadmap.yaml'; fs.accessSync(p); console.log('roadmap file OK:', p); console.log('node', process.version);\"",
+    "validate": "node --input-type=module -e \"import fs from 'node:fs'; import yaml from 'js-yaml'; const p=process.env.ROADMAP_FILE||'.github/roadmap/roadmap.yaml'; yaml.load(fs.readFileSync(p,'utf8')); console.log('roadmap.yaml: OK →', p);\"",
     "fmt": "prettier --log-level warn -w .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
-    "fmt:check": "prettier --log-level warn -c .github/roadmap/roadmap.yaml scripts/sync-roadmap.js"
+    "fmt:check": "prettier --log-level warn -c .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
+    "ci": "npm run validate && npm run fmt:check"
   },
   "dependencies": {
-    "@actions/core": "1.10.1",
-    "@actions/github": "6.0.0",
-    "js-yaml": "4.1.0"
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
+    "js-yaml": "^4.1.0",
+    "semver": "^7.6.0"
   },
   "devDependencies": {
-    "prettier": "3.3.3",
-    "cross-env": "7.0.3"
+    "cross-env": "^7.0.3",
+    "prettier": "^3.3.3"
   },
   "files": [
     "scripts/sync-roadmap.js",
     ".github/roadmap/roadmap.yaml"
-  ]
+  ],
+  "sideEffects": false
 }
