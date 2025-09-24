@@ -1,6 +1,3 @@
-Here’s a structured `data/sources/hydro/README.md` tailored for your Kansas-Frontier-Matrix repo. It captures both **surface water and groundwater** sources, aligns with your STAC/MCP design, and notes key Kansas-specific datasets.
-
-```markdown
 # Kansas-Frontier-Matrix — Hydrology & Water Resources Sources
 
 This directory catalogs **hydrological datasets** for Kansas.  
@@ -123,11 +120,3 @@ Each dataset config follows the **STAC-like JSON template**:
 * [FEMA Flood Insurance Maps](https://msc.fema.gov/portal/home)
 
 ---
-
-```
-
----
-
-Would you like me to also **pre-build JSON configs** for `aquifers.json` and `lakes_reservoirs.json` (with example endpoints and lineage), so you have working hydrology layers ready to plug into the STAC catalog?
-```
-
