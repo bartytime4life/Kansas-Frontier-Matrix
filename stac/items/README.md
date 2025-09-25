@@ -1,9 +1,3 @@
-Here’s the **full cleaned `/stac/items/README.md`** with the diagrams included.
-You can copy-paste this directly into your repo.
-
----
-
-````markdown
 # STAC Items — Kansas-Frontier-Matrix
 
 This folder contains **STAC 1.0.0 Item JSONs**.  
@@ -23,8 +17,8 @@ Each Item must include:
 - **geometry** — footprint (Polygon), point location, or line
 - **bbox** — bounding box `[west, south, east, north]`
 - **properties**:
-  - `datetime` (ISO 8601) or `start_datetime` / `end_datetime`
-  - Required: `proj:epsg` (usually 4326)
+  - `datetime` (ISO 8601) **or** `start_datetime` / `end_datetime` (set `"datetime": null` for intervals)
+  - Required: `proj:epsg` (usually `4326`)
   - Optional: `raster:*` (bands), `gsd`, `file:size`, `checksum:sha256`
   - Thematic keys: `document:type`, `event:type`, `uncertainty:*`
 - **assets** — dictionary of downloadable/visualizable files:
@@ -99,10 +93,10 @@ Item: `greensburg_tornado_2007.json`
 ## Design Notes
 
 - Items capture **atomic data points**; Collections group thematically.  
-- Use **file:size** + **checksum:sha256** for reproducibility ([Design Audit — Gaps and Enhancement Opportunities][audit]).  
-- Include **uncertainty fields** (`uncertainty:*`) when georeferencing or NLP confidence < 1 ([Audit: Uncertainty Layer][audit]).  
-- **Document Items** can be enriched via the Knowledge Hub ingestion pipeline ([Knowledge Hub System Design][hub]).  
-- **Environmental Items** (DEM, climate, hazards) may link to external sources (NOAA, USGS, Daymet, FEMA, NIFC) ([Dataset Integration Guide][datasets]).
+- Use **`file:size`** + **`checksum:sha256`** for reproducibility (autofill in CI).  
+- Include **uncertainty fields** (`uncertainty:*`) when georeferencing or NLP confidence < 1.  
+- **Document Items** can be enriched via the Knowledge Hub ingestion pipeline.  
+- **Environmental Items** (DEM, climate, hazards) may link to external sources (NOAA, USGS, Daymet, FEMA, NIFC) via `links[].rel = "via"`.
 
 ---
 
@@ -111,10 +105,10 @@ Item: `greensburg_tornado_2007.json`
 1. Copy a template JSON from `templates/`.
 2. Fill in:
    - `id`
-   - `geometry` + `bbox`
-   - `properties`
-   - `assets`
-3. Set the correct `collection` and `links`.
+   - `geometry` **and** matching `bbox`
+   - `properties` (time, `proj:epsg`, title/description, uncertainty if applicable)
+   - `assets` (paths relative to `stac/items/`)
+3. Set the correct `collection` and required `links` (`self`, `collection`, `parent`, `root`).
 4. Run validation:
    ```bash
    stac-validate stac/items/<item>.json
@@ -224,26 +218,71 @@ flowchart LR
 
 ---
 
+## Validation & Publishing Flow
+
+```mermaid
+flowchart TD
+  A["Author edits Item JSON\nstac/items/<item>.json"]
+  B["Local lint\njq/jsonlint + pre-commit"]
+  C{"Valid JSON?"}
+  D["Run stac-validate\nstac-validate stac/items/<item>.json"]
+  E{"STAC valid?"}
+  F["Run tests\npytest -k test_stac"]
+  G{"Tests pass?"}
+  H["Open Pull Request\nDescribe source, provenance, uncertainty"]
+  I["GitHub Actions: STAC Validate\nstac-validate + jsonschema"]
+  J{"CI green?"}
+  K["Code review & approval"]
+  L["Merge to main"]
+  M["Pages build\nSite render (MapLibre)"]
+  N["Publish & verify\nViewer loads layer/asset"]
+  X["Fix JSON & retry"]
+  Y["Fix STAC issues & retry"]
+  Z["Fix tests & retry"]
+  Q["Investigate CI logs\nfix links/paths/assets"]
+
+  A --> B --> C
+  C -- "no" --> X --> B
+  C -- "yes" --> D --> E
+  E -- "no" --> Y --> D
+  E -- "yes" --> F --> G
+  G -- "no" --> Z --> F
+  G -- "yes" --> H --> I --> J
+  J -- "no" --> Q --> I
+  J -- "yes" --> K --> L --> M --> N
+```
+
+---
+
+## Checksum Autofill Micro-Flow (CI job)
+
+```mermaid
+flowchart LR
+  S["Push Item + assets"]
+  W["Workflow start\non: push (paths: stac/**, data/**)"]
+  R["Resolve asset hrefs\njq .assets[*].href"]
+  FS["Compute file size\nwc -c"]
+  H["Compute sha256\nsha256sum"]
+  U["Update Item JSON\njq set file:size + checksum:sha256"]
+  V["stac-validate\npost-update"]
+  P{"Valid?"}
+  M["Commit updated Item\n(or write artifact)"]
+  F["Fail job\nwith logs"]
+
+  S --> W --> R --> FS --> H --> U --> V --> P
+  P -- "yes" --> M
+  P -- "no"  --> F
+```
+
+---
+
 ## References
 
 * STAC Spec 1.0.0
-* [Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities][audit]
-* [Kansas Historical Knowledge Hub – System Design][hub]
-* [Historical Dataset Integration for Kansas Frontier Matrix][datasets]
+* Kansas-Frontier-Matrix design & audit docs (uncertainty, ingestion, dataset integration)
 
 ---
 
 **Tip:** Items are the **leaves** of the STAC tree. Collections are the **branches**, the Catalog is the **trunk**.
 
----
-
-[audit]: file-service://file-BgUSuffTiRq4qidye2sPwN
-[hub]: file-service://file-P6gGz263QNwmmVYw8LBSvB
-[datasets]: file-service://file-EG371w17RJTzXWjXvqgsB6
-
-```
-
----
-
-Do you want me to also prepare a **validation workflow diagram** (author → `stac-validate` → CI → PR) for this README? That would show how Items move from draft → validation → published.
 ```
