@@ -11,7 +11,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - ".github/roadmap/roadmap.yaml"
+      - ".github/roadmap/**"
       - "scripts/sync-roadmap.js"
       - "package.json"
       - "package-lock.json"
@@ -19,7 +19,7 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - ".github/roadmap/roadmap.yaml"
+      - ".github/roadmap/**"
       - "scripts/sync-roadmap.js"
       - "package.json"
       - "package-lock.json"
@@ -28,29 +28,30 @@ on:
 permissions:
   contents: read
   metadata: read
-  issues: write          # create/update issues, milestones, labels
-  pull-requests: write   # optional: enable PR comments (safe on same-repo PRs)
+  issues: write
+  pull-requests: write
 
 concurrency:
-  group: "roadmap-sync-${{ github.ref }}"
+  group: roadmap-sync-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  # If you move the Node project under a subfolder (e.g. tools/roadmap-sync),
-  # set ROADMAP_WORKDIR to that folder and this workflow will still work.
+  # If your Node project lives in a subfolder (e.g., tools/roadmap-sync), set this accordingly.
   ROADMAP_WORKDIR: .
   NODE_VERSION: "20"
   ROADMAP_FILE: ".github/roadmap/roadmap.yaml"
+  ROADMAP_SCHEMA: ".github/roadmap/schema.json" # optional, if present will be enforced
 
 jobs:
   sync:
     name: Parse & Sync Roadmap
     runs-on: ubuntu-latest
 
-    # Compute DRY_RUN once for all event types:
-    # - pull_request      → true
+    # Compute DRY_RUN with strong guardrails:
+    # - pull_request from forks → always true
+    # - pull_request (same-repo) → true
     # - workflow_dispatch → from input
-    # - push              → false
+    # - push on main → false
     env:
       DRY_RUN: ${{ github.event_name == 'pull_request'
                    && 'true'
@@ -65,6 +66,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Enforce DRY_RUN for forked PRs
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # If PR is from a fork, force DRY_RUN to true regardless of earlier logic
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo "Forked PR detected → forcing DRY_RUN=true"
+            echo "DRY_RUN=true" >> "$GITHUB_ENV"
+          fi
+
       - name: Verify roadmap files exist
         shell: bash
         run: |
@@ -78,8 +90,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: |
-            ${{ env.ROADMAP_WORKDIR }}/package-lock.json
+          cache-dependency-path: ${{ env.ROADMAP_WORKDIR }}/package-lock.json
 
       - name: Install deps (npm ci with fallback)
         working-directory: ${{ env.ROADMAP_WORKDIR }}
@@ -96,21 +107,34 @@ jobs:
           node --version
           npm --version
 
-      # Optional, best-effort YAML lint; the sync script should also validate strictly.
+      # Syntax lint for YAML (non-blocking if the tool isn't available locally)
       - name: Validate roadmap YAML syntax
         shell: bash
         run: |
           set -euo pipefail
-          npx --yes yaml-lint "$ROADMAP_FILE" || echo "::notice::yaml-lint not strict; sync script will perform semantic validation."
+          npx --yes yaml-lint "$ROADMAP_FILE" || echo "::notice::yaml-lint not strict; semantic validation will follow."
+
+      # Optional JSON Schema validation if schema is present
+      - name: Validate roadmap schema (AJV) if schema exists
+        if: hashFiles('${{ env.ROADMAP_SCHEMA }}') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          # ajv-cli with formats support
+          npx --yes ajv-cli@5 validate \
+            -s "$ROADMAP_SCHEMA" \
+            -d "$ROADMAP_FILE" \
+            --all-errors --spec=draft2020 \
+          || { echo "::error title=Schema validation failed::$ROADMAP_FILE does not conform to $ROADMAP_SCHEMA"; exit 1; }
 
       - name: Compute mode & context
         id: mode
         shell: bash
         run: |
-          echo "event=${{ github.event_name }}"           >> "$GITHUB_OUTPUT"
-          echo "dry=${{ env.DRY_RUN }}"                   >> "$GITHUB_OUTPUT"
-          echo "repo=${{ github.repository }}"            >> "$GITHUB_OUTPUT"
-          echo "actor=${{ github.actor }}"                >> "$GITHUB_OUTPUT"
+          echo "event=${{ github.event_name }}" >> "$GITHUB_OUTPUT"
+          echo "dry=${{ env.DRY_RUN }}"         >> "$GITHUB_OUTPUT"
+          echo "repo=${{ github.repository }}"  >> "$GITHUB_OUTPUT"
+          echo "actor=${{ github.actor }}"      >> "$GITHUB_OUTPUT"
 
       - name: Sync roadmap (labels, milestones, issues)
         id: sync
@@ -125,8 +149,8 @@ jobs:
           set -euo pipefail
           mkdir -p build
           echo "Event: ${{ steps.mode.outputs.event }} | DRY_RUN=${DRY_RUN}"
-          # The script must honor DRY_RUN=true (no writes), e.g., via env.
-          # Recommended: script prints a plan and writes JSON summaries under build/.
+          # The script must honor DRY_RUN=true (no writes).
+          # Recommended behavior: print a plan and write JSON summaries under build/.
           node scripts/sync-roadmap.js | tee build/roadmap-sync.log
 
       - name: Summary
@@ -135,7 +159,7 @@ jobs:
         run: |
           {
             echo "## Roadmap sync"
-            echo ""
+            echo
             echo "- Repository: **${{ github.repository }}**"
             if [ "${{ env.DRY_RUN }}" = "true" ]; then
               echo "- Mode: **DRY RUN** (no writes)"
@@ -144,18 +168,18 @@ jobs:
             fi
             echo "- Roadmap file: \`${{ env.ROADMAP_FILE }}\`"
             echo "- Event: \`${{ github.event_name }}\`"
-            echo ""
+            echo
             if [ -f "${{ env.ROADMAP_WORKDIR }}/build/plan.json" ]; then
               echo "### Plan"
-              echo ""
+              echo
               echo "\`\`\`json"
               cat "${{ env.ROADMAP_WORKDIR }}/build/plan.json"
               echo "\`\`\`"
-              echo ""
+              echo
             fi
             echo "<details><summary>Log tail</summary>"
             echo
-            tail -n 80 "${{ env.ROADMAP_WORKDIR }}/build/roadmap-sync.log" || echo "(no log)"
+            tail -n 120 "${{ env.ROADMAP_WORKDIR }}/build/roadmap-sync.log" || echo "(no log)"
             echo
             echo "</details>"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -171,15 +195,15 @@ jobs:
           if-no-files-found: warn
           retention-days: 10
 
-      # Optional: comment summary on PRs (same-repo PRs only; forks lack write)
+      # Optional: comment the summary on same-repo PRs (forks typically lack write perms)
       # - name: Comment on PR
-      #   if: github.event_name == 'pull_request'
+      #   if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
       #   uses: actions/github-script@v7
       #   with:
       #     script: |
       #       const fs = require('fs');
       #       const body = fs.readFileSync(process.env.GITHUB_STEP_SUMMARY, 'utf8');
-      #       github.rest.issues.createComment({
+      #       await github.rest.issues.createComment({
       #         owner: context.repo.owner,
       #         repo: context.repo.repo,
       #         issue_number: context.issue.number,
