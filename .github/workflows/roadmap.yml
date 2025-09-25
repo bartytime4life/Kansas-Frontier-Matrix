@@ -1,3 +1,4 @@
+# .github/workflows/roadmap.yml
 name: Sync Roadmap → Issues & Milestones
 
 on:
@@ -43,12 +44,13 @@ env:
 
 jobs:
   sync:
+    name: Parse & Sync Roadmap
     runs-on: ubuntu-latest
 
     # Compute DRY_RUN once for all event types:
-    # - pull_request  → true
+    # - pull_request      → true
     # - workflow_dispatch → from input
-    # - push          → false
+    # - push              → false
     env:
       DRY_RUN: ${{ github.event_name == 'pull_request'
                    && 'true'
@@ -76,21 +78,39 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-          cache-dependency-path: ${{ env.ROADMAP_WORKDIR }}/package-lock.json
+          cache-dependency-path: |
+            ${{ env.ROADMAP_WORKDIR }}/package-lock.json
 
       - name: Install deps (npm ci with fallback)
         working-directory: ${{ env.ROADMAP_WORKDIR }}
         shell: bash
         run: |
           set -euo pipefail
-          npm ci || { echo "npm ci failed; regenerating lockfile…"; npm i --package-lock-only && npm ci; }
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "::notice::No package-lock.json; creating lockfile then installing."
+            npm install --package-lock-only
+            npm ci
+          fi
           node --version
           npm --version
 
-      # Optional: validate roadmap YAML parses (best-effort; script should also validate)
-      # - name: Validate roadmap YAML
-      #   run: |
-      #     npm exec --yes -- yaml-lint ${{ env.ROADMAP_FILE }} || true
+      # Optional, best-effort YAML lint; the sync script should also validate strictly.
+      - name: Validate roadmap YAML syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes yaml-lint "$ROADMAP_FILE" || echo "::notice::yaml-lint not strict; sync script will perform semantic validation."
+
+      - name: Compute mode & context
+        id: mode
+        shell: bash
+        run: |
+          echo "event=${{ github.event_name }}"           >> "$GITHUB_OUTPUT"
+          echo "dry=${{ env.DRY_RUN }}"                   >> "$GITHUB_OUTPUT"
+          echo "repo=${{ github.repository }}"            >> "$GITHUB_OUTPUT"
+          echo "actor=${{ github.actor }}"                >> "$GITHUB_OUTPUT"
 
       - name: Sync roadmap (labels, milestones, issues)
         id: sync
@@ -104,9 +124,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
-          echo "Event: ${{ github.event_name }} | DRY_RUN=${DRY_RUN}"
+          echo "Event: ${{ steps.mode.outputs.event }} | DRY_RUN=${DRY_RUN}"
           # The script must honor DRY_RUN=true (no writes), e.g., via env.
-          node scripts/sync-roadmap.js 2>&1 | tee build/roadmap-sync.log
+          # Recommended: script prints a plan and writes JSON summaries under build/.
+          node scripts/sync-roadmap.js | tee build/roadmap-sync.log
 
       - name: Summary
         if: always()
@@ -124,21 +145,31 @@ jobs:
             echo "- Roadmap file: \`${{ env.ROADMAP_FILE }}\`"
             echo "- Event: \`${{ github.event_name }}\`"
             echo ""
+            if [ -f "${{ env.ROADMAP_WORKDIR }}/build/plan.json" ]; then
+              echo "### Plan"
+              echo ""
+              echo "\`\`\`json"
+              cat "${{ env.ROADMAP_WORKDIR }}/build/plan.json"
+              echo "\`\`\`"
+              echo ""
+            fi
             echo "<details><summary>Log tail</summary>"
             echo
-            tail -n 60 "${{ env.ROADMAP_WORKDIR }}/build/roadmap-sync.log" || echo "(no log)"
+            tail -n 80 "${{ env.ROADMAP_WORKDIR }}/build/roadmap-sync.log" || echo "(no log)"
             echo
             echo "</details>"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload logs (always)
+      - name: Upload logs & plan (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: roadmap-sync-logs
-          path: ${{ env.ROADMAP_WORKDIR }}/build/roadmap-sync.log
+          name: roadmap-sync-${{ github.run_id }}
+          path: |
+            ${{ env.ROADMAP_WORKDIR }}/build/roadmap-sync.log
+            ${{ env.ROADMAP_WORKDIR }}/build/plan.json
           if-no-files-found: warn
-          retention-days: 7
+          retention-days: 10
 
       # Optional: comment summary on PRs (same-repo PRs only; forks lack write)
       # - name: Comment on PR
