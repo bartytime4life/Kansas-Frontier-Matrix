@@ -9,19 +9,20 @@
   "id": "documents_PLACE_TITLE_YYYY",
   "collection": "documents",
 
-  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "bbox": [-98.00, 38.50, -98.00, 38.50],
   "geometry": {
     "type": "Point",
     "coordinates": [-98.00, 38.50]
   },
 
   "properties": {
-    "datetime": "YYYY-01-01T00:00:00Z",
     "title": "Archival Document — TITLE (YYYY)",
     "description": "Scanned or transcribed archival record (treaty, diary, newspaper, etc.).",
     "document:type": "treaty",
+    "datetime": "YYYY-01-01T00:00:00Z",
     "proj:epsg": 4326,
-    "created": "2025-09-23T00:00:00Z"
+    "created": "2025-09-23T00:00:00Z",
+    "updated": "2025-09-25T00:00:00Z"
   },
 
   "assets": {
@@ -30,23 +31,23 @@
       "type": "application/pdf",
       "roles": ["data"],
       "title": "Document (PDF)",
-      "file:size": null,
-      "checksum:sha256": null
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256"
     },
     "txt": {
       "href": "../../data/docs/REPLACE_FILE.txt",
       "type": "text/plain",
       "roles": ["metadata"],
       "title": "Transcript / OCR (TXT)",
-      "file:size": null,
-      "checksum:sha256": null
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256"
     }
   },
 
   "links": [
+    { "rel": "self",       "href": "./document_item.json",         "type": "application/json" },
     { "rel": "collection", "href": "../collections/documents.json", "type": "application/json", "title": "Documents Collection" },
     { "rel": "parent",     "href": "../collections/documents.json", "type": "application/json", "title": "Documents Collection" },
-    { "rel": "root",       "href": "../catalog.json",               "type": "application/json", "title": "Kansas Geo Timeline STAC Catalog" },
-    { "rel": "self",       "href": "document_item.json",            "type": "application/json" }
+    { "rel": "root",       "href": "../catalog.json",               "type": "application/json", "title": "Kansas Geo Timeline STAC Catalog" }
   ]
 }
