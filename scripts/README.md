@@ -1,96 +1,175 @@
 # Kansas-Frontier-Matrix — Scripts
 
-This directory contains helper scripts that automate data ingestion, validation, and
-site-building tasks for the **Kansas-Frontier-Matrix** stack.  
-Scripts are designed to be **CLI-first**, modular, and reproducible — consistent with
-the MCP Scientific Method templates [oai_citation:2‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6) and Knowledge Hub pipeline design [oai_citation:3‡Kansas Historical Knowledge Hub – System Design.pdf](file-service://file-P6gGz263QNwmmVYw8LBSvB).
+Helper scripts that automate data ingestion, validation, terrain derivatives, and site-building for the **Kansas-Frontier-Matrix** stack.
+They are **CLI-first**, modular, and reproducible, designed to slot into Makefile and CI.
 
 ---
 
-## Objectives
+## At-a-glance
 
-- Automate **data ingestion** from external sources (TopoView, NOAA, USGS, etc.).
-- Convert raw inputs (e.g., scanned maps, CSVs, shapefiles) into **structured STAC items**.
-- Provide **quality checks** (checksums, schema validation).
-- Support **reproducibility** in CI/CD (GitHub Actions, Makefile pipelines).
-- Enable **multi-modal integration**: maps, hydrology, texts, oral histories [oai_citation:4‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).
-
----
-
-## Layout
-
+```text
 scripts/
-├── topoview_fetch.py        # Fetches historic topo maps from USGS TopoView API
-├── sync-roadmap.py          # Sync roadmap.yaml → GitHub Issues/Milestones
-├── stac_validate.py         # STAC schema + MCP conformance checks
-├── generate_checksums.sh    # SHA256/MD5 file integrity checks
-├── ingest_texts.py          # (planned) OCR + NLP for historic texts
-├── ingest_vectors.py        # (planned) Process treaty boundaries, trails, railroads
-└── utils/                   # Shared helpers (logging, JSON, YAML parsers)
+├── fetch_arcgis.py          # ArcGIS ImageServer/FeatureServer export (+ETag, tiling, optional COG)
+├── mosaic_lidar_county.py   # County LiDAR mosaic → VRT → DEM COG (parallel/resumable fetch)
+├── make_hillshade.py        # Hillshade COGs (single or batch)
+├── make_slope_aspect.py     # Slope/Aspect COGs (single or batch)
+├── make_terrain_pack.py     # One-shot: hillshade + slope + aspect
+├── derive_terrain.py        # Parallel terrain derivation (GDAL API fallback to CLI)
+├── validate_cogs.py         # Parallel COG validation (rio-cogeo → gdalinfo fallback; JSON report)
+├── write_meta.py            # Sidecar .sha256 and rich .meta.json (git context, inputs roll-up)
+├── regionate_kml.py         # Quadtree KML Region/LOD network-links (optional KMZ)
+├── sync-roadmap.js          # Sync .github/roadmap/roadmap.yaml → GitHub labels/milestones/issues
+└── (optional helpers wired via Makefile targets)
+```
 
 ---
 
-## Key Scripts
-
-### `topoview_fetch.py`
-- Reads a JSON source file (e.g. `data/sources/usgs_topoview.json`).
-- Queries USGS TopoView API for historic topo maps within bbox/year range.
-- Downloads TIFFs into `data/raw/`.
-- Writes `README_topoview.txt` index + optional STAC items.
-
-### `stac_validate.py`
-- Runs schema validation for `catalog.json`, `collections/*.json`, `items/*.json`.
-- Ensures IDs, bbox, datetime, and assets meet **STAC 1.0.0** rules.
-- Integrates with **pytest** (`tests/test_stac.py`) for automated QA.
-
-### `sync-roadmap.py`
-- Pushes `.github/roadmap/roadmap.yaml` milestones/issues to GitHub.
-- Ensures repo roadmap ↔ GitHub Projects stay in sync.
-
-### `generate_checksums.sh`
-- Produces `.sha256` and `.md5` files for large assets.
-- Used in CI to verify downloads and processed outputs.
-
----
-
-## Planned Scripts
-
-- **`ingest_texts.py`** — OCR + NLP extraction from scanned diaries, letters, newspapers.
-- **`ingest_vectors.py`** — ETL for treaty boundaries, PLSS grids, railroads, hydrology [oai_citation:5‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).
-- **`ingest_hazards.py`** — Parse NOAA/FEMA datasets for floods, droughts, tornadoes [oai_citation:6‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).
-- **`graph_linker.py`** — Link extracted entities/events into the Knowledge Graph [oai_citation:7‡Kansas Historical Knowledge Hub – System Design.pdf](file-service://file-P6gGz263QNwmmVYw8LBSvB).
-
----
-
-## Usage
-
-All scripts are CLI-friendly. From repo root:
+## Quick start
 
 ```bash
-# Fetch TopoView data
-python scripts/topoview_fetch.py --source data/sources/usgs_topoview.json
+# 1) Fetch ArcGIS sources (writes data/raw + manifest)
+python scripts/fetch_arcgis.py --sources data/sources --out data/raw --etag-cache --post
 
-# Validate STAC
-python scripts/stac_validate.py stac/catalog.json
+# 2) Build a county LiDAR DEM COG (mosaics tiles listed in CSV)
+python scripts/mosaic_lidar_county.py --county pawnee --jobs 8 --src-nodata -9999 --dst-nodata -9999
 
-# Generate checksums
-bash scripts/generate_checksums.sh data/cogs/dem/*.tif
+# 3) Derive terrain (COGs) from any DEM(s)
+python scripts/make_terrain_pack.py data/sources/dem/processed/lidar/pawnee/pawnee_1m_dem_cog.tif \
+  --multidir --compute-edges --validate
 
+# 4) Validate COGs and emit a report
+python scripts/validate_cogs.py data/cogs --jobs 8 --timeout 120 --report data/validation/cog_validate.report.json
 
-⸻
+# 5) Regionate a large GeoJSON to a KML pyramid (network-linked)
+python scripts/regionate_kml.py --geojson data/processed/vectors/points.geojson \
+  --out data/kml/points --name "Kansas Points" --kmz data/kml/points.kmz
+```
 
-Integration
-	•	Makefile: Wraps common script tasks (e.g., make stac-validate, make fetch-topo).
-	•	GitHub Actions: CI jobs call scripts for validation and site-builds.
-	•	Knowledge Hub: Outputs (STAC, JSON, CSV) are ingested into the historical knowledge graph ￼.
-	•	Google Earth / Web UI: Validated STAC items feed into MapLibre/KML time sliders.
+> Prefer running through the **Makefile** whenever possible (`make terrain`, `make validate-cogs`, `make mosaic-county COUNTY=pawnee`, etc.). Targets are already wired to these scripts and include robust fallbacks.
 
-⸻
+---
 
-Notes
-	•	Keep dependencies minimal (stdlib + requests, pandas, pyyaml, shapely).
-	•	Prefer Python for ingestion/ETL, Bash for small utilities.
-	•	Follow MCP reproducibility: log outputs, checksums, metadata.
-	•	Scripts should fail fast with clear error messages, and skip gracefully when inputs are absent.
+## Script details (concise)
 
-⸻
+### `fetch_arcgis.py`
+
+* **What:** Robust ImageServer/FeatureServer export with retries, optional `--post`, `--etag-cache`, and optional single-tile GeoTIFF → **COG** (`--cog`).
+* **Outputs:** data files + `.sha256` sidecars and a manifest (`--manifest`).
+* **Example:**
+
+  ```bash
+  python scripts/fetch_arcgis.py --sources data/sources --out data/raw \
+    --only ks_hillshade --etag-cache --cog --gdal-threads ALL_CPUS
+  ```
+
+### `mosaic_lidar_county.py`
+
+* **What:** Parallel/resumable download of county LiDAR tiles, `gdalbuildvrt` VRT, COG translate with DEM-friendly profile.
+* **Paths:** infers from `--county` (`data/sources/dem/tile_indexes/<county>_1m_tiles.csv`).
+* **Example:** `python scripts/mosaic_lidar_county.py --county pawnee --jobs 8`
+
+### `make_hillshade.py`, `make_slope_aspect.py`, `make_terrain_pack.py`
+
+* **What:** GDAL-backed terrain derivatives producing **COGs** (single file or batches).
+  Options for azimuth/altitude, z-factor, scale, multi-directional, percent slope, etc.
+* **One-shot pack:** `python scripts/make_terrain_pack.py <DEM or DIR> --multidir --compute-edges --validate`
+
+### `derive_terrain.py`
+
+* **What:** Parallel derivation pipeline using the **GDAL Python API** when present, with CLI fallbacks (`gdaldem`/`gdal_translate`).
+* **Nice bits:** auto-detects **scale** (1 for meters; ~111120 for degrees), **NODATA** controls, per-product selection, SHA sidecars, and a machine-readable manifest.
+* **Example:**
+  `python scripts/derive_terrain.py data/cogs/dem/*.tif --cog --products hillshade,slope,aspect --multidir`
+
+### `validate_cogs.py`
+
+* **What:** Parallel validation via `rio cogeo validate` (if available) or `gdalinfo --json` fallback.
+  Include/exclude globs, directory pruning, per-file timeouts, and a **JSON report**.
+* **Example:**
+  `python scripts/validate_cogs.py data/cogs --jobs 8 --timeout 120 --report data/validation/cog_validate.report.json`
+
+### `write_meta.py`
+
+* **What:** Emits `<artifact>.<algo>` checksum sidecar and rich `<artifact>.meta.json` (command, CWD, git commit/branch/dirty, inputs digests, roll-up).
+* **Example:**
+  `python scripts/write_meta.py data/cogs/terrain/ks_slope_deg.tif --inputs data/cogs/dem/ks_1m_dem_2018_2020.tif --extra stage=slope`
+
+### `regionate_kml.py`
+
+* **What:** Quadtree **Region/LOD** KML with NetworkLinks for progressive loading in Google Earth; optional `.kmz`.
+* **Inputs:** GeoJSON (preferred) or simple KML with Placemarks.
+
+### `sync-roadmap.js`
+
+* **What:** Idempotent sync of `.github/roadmap/roadmap.yaml` → GitHub **labels, milestones, issues**.
+  Supports **DRY_RUN**, retries/backoff, optional pruning flags.
+
+---
+
+## How everything connects
+
+* **Makefile** calls these scripts for repeatable pipelines:
+
+  * `make terrain` → hillshade/slope/aspect COGs + mirror to `data/derivatives/`
+  * `make validate-cogs` → runs `scripts/validate_cogs.py` and stores a JSON report
+  * `make mosaic-county COUNTY=pawnee` → LiDAR → DEM COG
+  * `make regionate SRC=... OUT=...` → KML pyramid
+  * `make stac` / `make stac-validate` → STAC build/validate (auto-patches DEM checksum/size)
+* **CI (GitHub Actions)**: use these scripts in jobs to fetch, build, validate, and publish artifacts.
+* **Provenance**: `write_meta.py` is invoked by several scripts (best-effort) to attach machine-readable lineage.
+
+---
+
+## Conventions & guarantees
+
+* **Stdlib-first** (plus GDAL/requests where needed), atomic writes, clear exit codes:
+
+  * `0` success; `1–2` input/env problems; `>2` processing errors.
+* **Sidecars**: `.sha256` are written for major outputs; JSON **manifests** capture runs for CI.
+* **Idempotency**: most scripts skip existing outputs unless `--overwrite`; some support **ETag** (`fetch_arcgis.py --etag-cache`).
+* **Parallelism**: controlled via `--jobs` or `NUM_THREADS=ALL_CPUS` creation options for GDAL COGs.
+
+---
+
+## Minimal dependencies
+
+* **Required**: Python 3.10+, `requests` (for ArcGIS fetches)
+* **GIS tools** (preferred/optional): GDAL (`gdaldem`, `gdal_translate`, `gdalbuildvrt`, `gdalinfo`), `rio cogeo` (for validation fast-path)
+* **Dev**: `@actions/core`, `@actions/github`, `js-yaml` for `sync-roadmap.js`
+
+> The Makefile checks for tool availability and gracefully falls back when possible.
+
+---
+
+## Common usage snippets
+
+```bash
+# Derive only hillshade with multi-directional light, auto scale
+python scripts/derive_terrain.py data/cogs/dem/ks_1m_dem_2018_2020.tif \
+  --products hillshade --cog --multidir --threads ALL_CPUS
+
+# Validate just the hillshade file
+python scripts/validate_cogs.py data/cogs/hillshade --pattern "ks_hillshade_*.tif" --report data/validation/hill.json
+
+# Write meta + checksum for any artifact
+python scripts/write_meta.py data/derivatives/hillshade.tif --inputs data/cogs/dem/ks_1m_dem_2018_2020.tif --extra stage=hillshade
+```
+
+---
+
+## Roadmap (scripts in progress)
+
+* `ingest_texts.py` — OCR/NLP pipeline for scanned diaries/newspapers.
+* `ingest_vectors.py` — ETL for treaties, PLSS grids, railroads, hydrology.
+* `ingest_hazards.py` — NOAA/FEMA hazards integration.
+* `graph_linker.py` — Entity/event linker to the knowledge graph.
+
+---
+
+### Tips
+
+* Keep raw downloads in `data/raw/`; COGs in `data/cogs/`; mirrored viewer assets in `data/derivatives/`.
+* Ensure CRS units align with **scale** assumptions (meters vs degrees). The derivation tools auto-detect but allow overrides.
+* For heavy jobs, prefer `--threads ALL_CPUS` and set GDAL cache vars (e.g., `GDAL_CACHEMAX=2048`).
+
+---
