@@ -32,7 +32,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: "stac-validate-${{ github.ref }}"
+  group: stac-validate-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -44,7 +44,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    env:
+      PYTHONUNBUFFERED: "1"
 
     steps:
       - name: Checkout
@@ -60,55 +63,65 @@ jobs:
             requirements*.txt
             pyproject.toml
 
-      - name: Install minimal system tools
+      - name: Install system tools
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends jq
+          # yamllint is pip-installed below; jq handles JSON quickly
 
-      - name: Install deps (project if available; otherwise minimal)
+      - name: Install Python deps (project + validators)
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          # Try project install to expose any console_scripts (e.g., kgt)
-          if [ -f pyproject.toml ]; then
-            pip install -e . || true
-            pip install ".[dev,validate]" || true
+          # Try to expose console_scripts (e.g., kgt) if project is installable
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            pip install -e ".[dev,validate]" || pip install -e . || true
           fi
-          # Core validators regardless
+          # Core validators regardless (quiet where safe)
           pip install --upgrade --quiet \
-            jsonschema \
-            jinja2 \
-            pystac \
-            pystac-client \
-            pyyaml
+            jsonschema jinja2 pystac pystac-client pyyaml \
+            stac-validator yamllint
 
           python - <<'PY'
-import sys, jsonschema, pystac, yaml  # noqa: F401
+import sys, jsonschema, pystac  # noqa
 print("Python", sys.version.split()[0], "— deps OK")
 PY
 
-      # ------------------------------------------------------------
-      # Quick JSON/YAML syntax sanity checks
-      # ------------------------------------------------------------
-      - name: Quick JSON syntax check (stac/**/*.json)
+      # -------------------- Quick syntax checks --------------------
+      - name: JSON syntax check (stac/**/*.json)
         run: |
           set -euo pipefail
           if [ -d stac ]; then
-            echo "Linting STAC JSON…"
-            find stac -type f -name '*.json' -print0 | xargs -0 -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
-            echo "stac/**/*.json ✔ valid JSON"
+            shopt -s nullglob
+            files=($(git ls-files 'stac/**/*.json' || true))
+            if [ ${#files[@]} -gt 0 ]; then
+              echo "Linting STAC JSON…"
+              for f in "${files[@]}"; do
+                jq -e . "$f" >/dev/null || { echo "::error file=$f::JSON parse error"; exit 1; }
+              done
+              echo "stac/**/*.json ✔ valid JSON"
+            else
+              echo "No STAC JSON files found by git ls-files."
+            fi
           else
             echo "::notice::stac/ not present; skipping."
           fi
 
-      - name: Quick JSON/YAML syntax check (data/sources/**)
+      - name: JSON/YAML syntax check (data/sources/**)
         run: |
           set -euo pipefail
           if [ -d data/sources ]; then
-            echo "Linting data/sources…"
-            # JSON
-            find data/sources -type f -name '*.json' -print0 | xargs -0 -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
-            # YAML (best-effort)
+            echo "Linting data/sources (JSON)…"
+            find data/sources -type f -name '*.json' -print0 | xargs -0 -r -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
+
+            echo "Linting data/sources (YAML)…"
+            # yamllint: strict for syntax; relaxed for style
+            if command -v yamllint >/dev/null 2>&1; then
+              yamllint -s -f standard data/sources || {
+                echo "::warning title=YAML style issues::yamllint reported style problems (not failing the build)."
+              }
+            fi
+
             python - <<'PY'
 import sys, pathlib, yaml
 base = pathlib.Path("data/sources")
@@ -129,9 +142,7 @@ PY
             echo "::notice::data/sources/ not present; skipping."
           fi
 
-      # ------------------------------------------------------------
-      # Run custom repo validators if present
-      # ------------------------------------------------------------
+      # -------------------- Custom repo validators --------------------
       - name: Run scripts/validate_sources.py (if present)
         run: |
           set -euo pipefail
@@ -153,11 +164,71 @@ PY
             echo "::notice::scripts/validate_stac.py not found; using fallback."
           fi
 
-      # ------------------------------------------------------------
-      # Fallback STAC item validator (simple structural checks)
-      # Only runs if no report exists from previous step
-      # ------------------------------------------------------------
-      - name: Fallback STAC item validator
+      # -------------------- STAC validation (robust) --------------------
+      - name: Validate STAC with stac-validator (preferred)
+        id: stac_cli
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          if [ -d stac ]; then
+            if [ -f stac/catalog.json ]; then
+              echo "Validating stac/catalog.json (recursive)…"
+              stac-validator stac/catalog.json --recursive --links | tee build/stac_validator.txt
+            else
+              echo "Validating all STAC JSON files…"
+              set +e
+              ok=1
+              for f in $(find stac -type f -name '*.json' | sort); do
+                stac-validator "$f" >> build/stac_validator.txt 2>&1 || ok=0
+              done
+              set -e
+              [ $ok -eq 1 ] || exit 2
+            fi
+          else
+            echo "::notice::No stac/ directory; skipping stac-validator."
+          fi
+
+      - name: Validate STAC with pystac (fallback)
+        if: steps.stac_cli.outcome == 'failure' || steps.stac_cli.outcome == 'skipped'
+        run: |
+          set -euo pipefail
+          if [ -f stac/catalog.json ]; then
+            python - <<'PY'
+import pystac, sys
+try:
+    cat = pystac.Catalog.from_file("stac/catalog.json")
+    cat.normalize_hrefs("stac")
+    cat.validate_all()
+    print("pystac: catalog/collections validate OK")
+except Exception as e:
+    print(f"::error::pystac validation failed: {e}")
+    sys.exit(2)
+PY
+          else
+            echo "::notice::No stac/catalog.json; running file-by-file pystac checks."
+            python - <<'PY'
+import sys, pathlib, pystac
+root = pathlib.Path("stac")
+if not root.exists():
+    print("::notice::No stac directory; skip pystac.")
+    sys.exit(0)
+bad=[]
+for p in sorted(root.rglob("*.json")):
+    try:
+        pystac.read_file(str(p)).validate()
+    except Exception as e:
+        bad.append((str(p), str(e)))
+if bad:
+    for f,e in bad:
+        print(f"::error file={f}::{e}")
+    sys.exit(2)
+print("All STAC JSON passed pystac validation")
+PY
+          fi
+
+      # -------------------- Fallback item structure (only if no report) --------------------
+      - name: Fallback STAC item structure check
         if: |
           !cancelled() && hashFiles('build/stac_report.json') == ''
         run: |
@@ -193,37 +264,11 @@ print(f"[RESULT] {ok} valid, {bad} invalid")
 if bad>0: sys.exit(2)
 PY
 
-      # ------------------------------------------------------------
-      # Catalog/Collections validation via pystac (best-effort)
-      # ------------------------------------------------------------
-      - name: Validate Catalog/Collections with pystac (best-effort)
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          if [ -f stac/catalog.json ]; then
-            python - <<'PY'
-import pystac, sys
-try:
-    cat = pystac.Catalog.from_file("stac/catalog.json")
-    cat.normalize_hrefs("stac")
-    cat.validate_all()
-    print("pystac: catalog/collections validate OK")
-except Exception as e:
-    print(f"::error::pystac validation failed: {e}")
-    sys.exit(1)
-PY
-          else
-            echo "::notice::No stac/catalog.json; skipping catalog validation."
-          fi
-
-      # ------------------------------------------------------------
-      # Summaries → Job Summary tab
-      # ------------------------------------------------------------
+      # -------------------- Summaries & artifacts --------------------
       - name: Summarize results
         if: always()
         run: |
           set -euo pipefail
-          SUMMARY="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
           {
             echo "## STAC Validation"
             if [ -f build/stac_report.json ]; then
@@ -237,8 +282,8 @@ print(f"- ❌ Invalid items: **{bad}**")
 if bad:
     print("\n<details><summary>First 10 errors</summary>\n")
     cnt=0
-    for it in d.get("items", []):
-        if it.get("valid") is False and cnt<10:
+    for it in d.get('items', []):
+        if it.get('valid') is False and cnt<10:
             msgs = ', '.join(e.get('message','') for e in it.get('errors',[])[:3])
             print(f"- **{it.get('id')}** — {msgs}")
             cnt+=1
@@ -247,7 +292,7 @@ PY
             else
               echo "- No STAC item report generated."
             fi
-          } >> "$SUMMARY"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload reports
         if: always()
@@ -257,7 +302,6 @@ PY
           path: |
             build/**
             ./*.log
-            ./stac-validate*.txt
-            ./validate*.txt
+            ./stac_validator.txt
           if-no-files-found: ignore
           retention-days: 10
