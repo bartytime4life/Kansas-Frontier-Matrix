@@ -5,11 +5,12 @@
   "title": "Kansas Geo Timeline — Root Catalog",
   "description": "Root STAC Catalog for the Kansas-Frontier-Matrix stack. Organizes historical GIS, elevation, and infrastructure layers for time-aware visualization.",
   "links": [
-    { "rel": "self",  "href": "./catalog.json",                 "type": "application/json" },
-    { "rel": "root",  "href": "./catalog.json",                 "type": "application/json" },
+    { "rel": "self",   "href": "catalog.json",                     "type": "application/json", "title": "Kansas Geo Timeline — Root Catalog" },
+    { "rel": "root",   "href": "catalog.json",                     "type": "application/json", "title": "Kansas Geo Timeline — Root Catalog" },
 
-    { "rel": "child", "href": "./collections/elevation.json",   "type": "application/json", "title": "Kansas Elevation — DEM & Terrain Derivatives" },
-    { "rel": "child", "href": "./collections/historic_topo.json","type": "application/json", "title": "Historic Topographic Maps (USGS & related)" },
-    { "rel": "child", "href": "./collections/vectors.json",     "type": "application/json", "title": "Kansas Historical & Infrastructure Vectors" }
+    { "rel": "child",  "href": "collections/elevation.json",       "type": "application/json", "title": "Kansas Elevation — DEM & Terrain Derivatives" },
+    { "rel": "child",  "href": "collections/historic_topo.json",   "type": "application/json", "title": "Historic Topographic Maps (USGS & related)" },
+    { "rel": "child",  "href": "collections/vectors.json",         "type": "application/json", "title": "Kansas Historical & Infrastructure Vectors" },
+    { "rel": "child",  "href": "collections/ks_kansas_river.json", "type": "application/json", "title": "Kansas River — Hydro, Floods, and Historical Layers" }
   ]
 }
