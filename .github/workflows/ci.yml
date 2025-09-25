@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: CI
 
 on:
@@ -8,9 +9,10 @@ on:
       - "data/**"
       - "web/**"
       - "scripts/**"
+      - "src/**"
       - "tests/**"
       - "pyproject.toml"
-      - "requirements.txt"
+      - "requirements*.txt"
       - ".github/workflows/ci.yml"
   pull_request:
     paths:
@@ -18,46 +20,208 @@ on:
       - "data/**"
       - "web/**"
       - "scripts/**"
+      - "src/**"
       - "tests/**"
       - "pyproject.toml"
-      - "requirements.txt"
+      - "requirements*.txt"
       - ".github/workflows/ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Pytest (Linux, Python 3.11)
+  lint:
+    name: Lint (ruff autodetect)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Detect & run ruff
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -qE '^\[tool\.ruff\]' pyproject.toml 2>/dev/null || [ -f ruff.toml ] || [ -f .ruff.toml ]; then
+            pip install ruff
+            ruff --version
+            ruff check .
+          else
+            echo "No ruff config; skipping."
+          fi
+
+  test:
+    name: Pytest (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    env:
+      PYTHONUNBUFFERED: "1"
+      CPLUS_INCLUDE_PATH: /usr/include/gdal
+      C_INCLUDE_PATH: /usr/include/gdal
+      PROJ_LIB: /usr/share/proj
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with: { fetch-depth: 0 }
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-
-      - name: Cache pip
-        uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml', '**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
 
-      - name: Install deps
+      - name: (Conditional) Install geo system deps
+        id: need_geo
+        shell: bash
         run: |
+          set -euo pipefail
+          need=false
+          for f in requirements*.txt pyproject.toml; do
+            [ -f "$f" ] || continue
+            if grep -Ei 'gdal|rasterio|geopandas|fiona|pyproj|rtree|spatialite|shapely' "$f"; then
+              need=true; break
+            fi
+          done
+          echo "need=$need" >> "$GITHUB_OUTPUT"
+          if $need; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends \
+              gdal-bin libgdal-dev libspatialindex-dev libsqlite3-mod-spatialite jq
+            gdalinfo --version || true
+          else
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends jq
+          fi
+
+      - name: Install Python deps
+        shell: bash
+        run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # light extras used by tests
-          pip install pytest jsonschema
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          # Ensure test essentials always exist
+          pip install pytest jsonschema pytest-cov
+          # Install project (prefer dev extras)
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            pip install -e ".[dev]" || pip install -e .
+          fi
+          python - <<'PY'
+import sys, pytest
+print("Python:", sys.version.split()[0])
+print("pytest:", pytest.__version__)
+PY
 
-      - name: Pytest
+      - name: Run tests (with coverage if available)
+        shell: bash
         run: |
-          pytest -q --junitxml=pytest-report.xml
+          set -euo pipefail
+          mkdir -p .artifacts
+          if python -c "import pytest_cov" 2>/dev/null; then
+            pytest -q --maxfail=1 --disable-warnings \
+              --cov=. --cov-report=xml:.artifacts/coverage.xml \
+              --junitxml=.artifacts/pytest-report.xml
+          else
+            pytest -q --maxfail=1 --disable-warnings \
+              --junitxml=.artifacts/pytest-report.xml
+          fi
+          echo "### Pytest (py ${{ matrix.python-version }})" >> "$GITHUB_STEP_SUMMARY"
+          [ -f .artifacts/coverage.xml ] && echo "- Coverage: generated" >> "$GITHUB_STEP_SUMMARY" || echo "- Coverage: n/a" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload test report
+      - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-report
-          path: pytest-report.xml
+          name: pytest-py${{ matrix.python-version }}-${{ github.run_id }}
+          path: |
+            .artifacts/pytest-report.xml
+            .artifacts/coverage.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+  web:
+    name: Web tests/build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: hashFiles('web/package.json') != ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Detect package manager
+        id: pm
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f web/pnpm-lock.yaml ]; then
+            echo "pm=pnpm" >> "$GITHUB_OUTPUT"
+            echo "lock=web/pnpm-lock.yaml" >> "$GITHUB_OUTPUT"
+          elif [ -f web/yarn.lock ]; then
+            echo "pm=yarn" >> "$GITHUB_OUTPUT"
+            echo "lock=web/yarn.lock" >> "$GITHUB_OUTPUT"
+          else
+            echo "pm=npm" >> "$GITHUB_OUTPUT"
+            echo "lock=web/package-lock.json" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: ${{ steps.pm.outputs.pm }}
+          cache-dependency-path: ${{ steps.pm.outputs.lock }}
+
+      - name: Install deps
+        working-directory: web
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f pnpm-lock.yaml ]; then
+            npm i -g pnpm@9
+            pnpm install --frozen-lockfile
+          elif [ -f yarn.lock ]; then
+            corepack enable
+            yarn install --frozen-lockfile
+          else
+            npm ci || npm install
+          fi
+
+      - name: Run web tests (if defined)
+        working-directory: web
+        shell: bash
+        run: |
+          set -euo pipefail
+          if npm run | grep -qE ' test($|:)'; then
+            npm test --silent || npm test
+          else
+            echo "No test script; skipping."
+          fi
+
+      - name: Build web (if build script exists)
+        working-directory: web
+        shell: bash
+        run: |
+          set -euo pipefail
+          if npm run | grep -qE ' build($|:)'; then
+            npm run build
+          else
+            echo "No build script; skipping."
+          fi
