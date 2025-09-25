@@ -1,6 +1,3 @@
-Here’s a tightened, GitHub-safe `ROADMAP.md` you can paste in as a full replacement. I fixed Mermaid fencing (triple backticks), quoted node labels (GitHub parser quirk), normalized headings/anchors, and wired quick “how to edit” + local sync instructions that match your `kfm-roadmap-sync` tool.
-
-````markdown
 # Kansas-Frontier-Matrix — Roadmap
 
 This roadmap mirrors **.github/roadmap/roadmap.yaml** and is synced to GitHub
