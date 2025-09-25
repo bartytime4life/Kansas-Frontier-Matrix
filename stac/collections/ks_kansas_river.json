@@ -1,15 +1,27 @@
 {
-  "type": "Collection",
   "stac_version": "1.0.0",
+  "type": "Collection",
   "id": "ks_kansas_river",
   "title": "Kansas River — Hydro, Floods, and Historical Layers",
   "description": "A focused collection for the Kansas (Kaw) River corridor, including hydrography, historical flood extents, hazards, imagery overlays, and related time-aware layers for the Kansas Frontier Matrix.",
-  "keywords": ["Kansas", "Kansas River", "Kaw", "hydrology", "flood", "hazards", "historical-maps", "overlay", "GeoTIFF", "GeoJSON"],
   "license": "PDDL-1.0",
+  "keywords": [
+    "Kansas",
+    "Kansas River",
+    "Kaw",
+    "hydrology",
+    "flood",
+    "hazards",
+    "historical-maps",
+    "overlay",
+    "GeoTIFF",
+    "GeoJSON"
+  ],
   "providers": [
     {
       "name": "Kansas Frontier Matrix",
-      "roles": ["producer", "host", "processor"]
+      "roles": ["producer", "host", "processor"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
     }
   ],
   "extent": {
@@ -21,10 +33,10 @@
     }
   },
   "summaries": {
-    "platform": ["web"],
-    "instruments": ["maplibre"],
-    "gSD": [1, 10, 30],
-    "constellation": ["KFM"]
+    "kfm:platform": ["web"],
+    "kfm:instruments": ["maplibre"],
+    "kfm:gsd": [1, 10, 30],
+    "kfm:constellation": ["KFM"]
   },
   "links": [
     {
@@ -38,17 +50,13 @@
       "type": "application/json",
       "href": "../catalog.json",
       "title": "Kansas Frontier Matrix — STAC Catalog"
+    },
+    {
+      "rel": "self",
+      "type": "application/json",
+      "href": "ks_kansas_river.json",
+      "title": "Kansas River — Hydro, Floods, and Historical Layers"
     }
-
-    /* Optional: add one rel:item per item once you add items,
-       e.g.
-      ,{
-        "rel": "item",
-        "type": "application/geo+json",
-        "href": "../items/ks_kansas_river_centerline_2020.json",
-        "title": "Kansas River Centerline (NHD, 2020)"
-      }
-    */
   ],
   "stac_extensions": []
 }
