@@ -1,3 +1,6 @@
+Got it — here’s your **fully corrected README** with Mermaid diagrams that render on GitHub. I simplified subgraph syntax, kept labels quoted, and used `\n` for line breaks. Copy-paste as-is.
+
+````markdown
 # STAC Items — Kansas-Frontier-Matrix
 
 This folder contains **STAC 1.0.0 Item JSONs**.  
@@ -146,33 +149,28 @@ jq '.properties.updated=(now|toiso8601)' "$J" > "$J.tmp" && mv "$J.tmp" "$J"
 flowchart TD
   root["STAC Catalog\ncatalog.json"]
 
-  subgraph C1["Collection: elevation\n../collections/elevation.json"]
+  subgraph "Collection: elevation\n../collections/elevation.json"
     elev_dem["Item: ks_1m_dem_2018_2020\nstac/items/ks_1m_dem_2018_2020.json"]
     elev_hs["Item: hillshade_2018_2020\nstac/items/hillshade_2018_2020.json"]
   end
 
-  subgraph C2["Collection: base_maps\n../collections/base_maps.json"]
+  subgraph "Collection: base_maps\n../collections/base_maps.json"
     base_larned["Item: usgs_larned_1894\nstac/items/overlays/usgs_topo_larned_1894.json"]
   end
 
-  subgraph C3["Collection: documents\n../collections/documents.json"]
+  subgraph "Collection: documents\n../collections/documents.json"
     doc_treaty["Item: documents_PLACE_TITLE_YYYY\nstac/items/document_item.json"]
   end
 
-  subgraph C4["Collection: events\n../collections/events.json"]
+  subgraph "Collection: events\n../collections/events.json"
     evt_tpl["Item: events_PLACE_EVENT_YYYY\nstac/items/event_item.json"]
   end
 
-  root --> C1
-  root --> C2
-  root --> C3
-  root --> C4
-
-  elev_dem ---|"rel: parent\n(rel: collection)"| C1
-  elev_hs  ---|"rel: parent\n(rel: collection)"| C1
-  base_larned ---|"rel: parent\n(rel: collection)"| C2
-  doc_treaty ---|"rel: parent\n(rel: collection)"| C3
-  evt_tpl ---|"rel: parent\n(rel: collection)"| C4
+  root --> elev_dem
+  root --> elev_hs
+  root --> base_larned
+  root --> doc_treaty
+  root --> evt_tpl
 
   elev_hs -. "rel: derived_from" .-> elev_dem
 ```
@@ -185,35 +183,35 @@ flowchart TD
 flowchart LR
   I["Item JSON\n(type: \"Feature\")"]
 
-  subgraph P["properties"]
-    T["\"title\""]
-    D["\"description\""]
-    DT["\"datetime\" or\n\"start_datetime\"/\"end_datetime\""]
-    EPSG["\"proj:epsg\" = 4326"]
+  subgraph "properties"
+    T["title"]
+    D["description"]
+    DT["datetime or\nstart_datetime/end_datetime"]
+    EPSG["proj:epsg = 4326"]
   end
 
-  subgraph G["spatial"]
-    GEOM["\"geometry\""]
-    BBOX["\"bbox\""]
+  subgraph "spatial"
+    GEOM["geometry"]
+    BBOX["bbox"]
   end
 
-  subgraph A["assets"]
-    COG["\"cog\" → COG GeoTIFF\nroles: data, visual"]
-    THMB["\"thumbnail\" → PNG\nroles: thumbnail, overview"]
-    META["\"metadata\" → JSON\nroles: metadata"]
+  subgraph "assets"
+    COG["cog → COG GeoTIFF\nroles: data, visual"]
+    THMB["thumbnail → PNG\nroles: thumbnail, overview"]
+    META["metadata → JSON\nroles: metadata"]
   end
 
-  subgraph L["links"]
-    SELF["rel: self\n\"./<item>.json\""]
-    COLL["rel: collection\n\"../collections/<collection>.json\""]
+  subgraph "links"
+    SELF["rel: self\n./<item>.json"]
+    COLL["rel: collection\n../collections/<collection>.json"]
     PARENT["rel: parent\n(same as collection)"]
-    ROOT["rel: root\n\"../catalog.json\""]
+    ROOT["rel: root\n../catalog.json"]
   end
 
-  I --> P
-  I --> G
-  I --> A
-  I --> L
+  I --> "properties"
+  I --> "spatial"
+  I --> "assets"
+  I --> "links"
 ```
 
 ---
@@ -285,4 +283,5 @@ flowchart LR
 
 **Tip:** Items are the **leaves** of the STAC tree. Collections are the **branches**, the Catalog is the **trunk**.
 
+```
 ```
