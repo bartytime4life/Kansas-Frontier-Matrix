@@ -8,15 +8,15 @@ on:
       - "README.md"
       - "docs/**"
       - "web/**"
-      - ".github/workflows/link-check.yml"
       - ".lychee.toml"
+      - ".github/workflows/link-check.yml"
   pull_request:
     paths:
       - "README.md"
       - "docs/**"
       - "web/**"
-      - ".github/workflows/link-check.yml"
       - ".lychee.toml"
+      - ".github/workflows/link-check.yml"
   workflow_dispatch:
   schedule:
     # Weekly sweep (Sunday 04:05 UTC)
@@ -42,8 +42,8 @@ jobs:
           fetch-depth: 0  # needed for PR diff mode
 
       # Build args dynamically:
-      # - PRs: check only changed Markdown/HTML targets
-      # - Push/Schedule/Dispatch: scan full docs/web/README set
+      # - PRs: check only changed Markdown/HTML files
+      # - Push/Schedule/Dispatch: scan README + docs + web
       # - If .lychee.toml exists, defer to it
       - name: Compute lychee args
         id: args
@@ -51,19 +51,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Collect candidate files
           collect_targets() {
             local mode="$1"
             local -a files=()
             if [[ "$mode" == "pr" ]]; then
-              base="origin/${{ github.base_ref }}"
-              # Fallback if not fetched (forks): fetch base branch quietly
+              # Ensure base is available (esp. for fork PRs)
               git fetch -q origin "${{ github.base_ref }}" || true
               while IFS= read -r f; do
                 [[ -z "$f" ]] && continue
                 [[ "$f" =~ \.(md|html)$ ]] || continue
                 files+=("$f")
-              done < <(git --no-pager diff --name-only "${base}..." | tr -d '\r')
+              done < <(git --no-pager diff --name-only "origin/${{ github.base_ref }}..." | tr -d '\r')
             else
               [[ -f README.md ]] && files+=("README.md")
               [[ -d docs ]] && while IFS= read -r -d '' f; do files+=("$f"); done < <(find docs -type f \( -name '*.md' -o -name '*.html' \) -print0)
@@ -73,44 +71,39 @@ jobs:
           }
 
           MODE="full"
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            MODE="pr"
-          fi
+          [[ "${{ github.event_name }}" == "pull_request" ]] && MODE="pr"
 
           mapfile -t TARGETS < <(collect_targets "$MODE")
 
+          # If no targets, check README.md to avoid no-op
           if [[ ${#TARGETS[@]} -eq 0 ]]; then
-            echo "args=--no-progress --verbose README.md" >> "$GITHUB_OUTPUT"
-            echo "mode=$MODE" >> "$GITHUB_OUTPUT"
-            exit 0
+            [[ -f README.md ]] && TARGETS=("README.md")
           fi
 
+          # Prefer repo config if present
           if [[ -f .lychee.toml ]]; then
             echo "args=--config .lychee.toml ${TARGETS[*]}" >> "$GITHUB_OUTPUT"
             echo "mode=$MODE" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          # Default (no repo config): resilient args
+          mkdir -p lychee
+
           BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
-          # JSON + Markdown reports
+          # Emit both JSON and Markdown reports
           OUT_ARGS=(--format json --output lychee/results.json --format markdown --output lychee.md)
 
-          # Reasonable excludes for CI
+          # Reasonable excludes for CI (flaky/rate-limited endpoints)
           EXCLUDES=(
             'mailto:*' 'tel:*'
             'http://localhost*' 'http://127.0.0.1*' 'https://localhost*' 'https://127.0.0.1*'
-            # Map tiles / APIs often rate-limit or require tokens
             'https://*.tile.openstreetmap.org/*'
             'https://*.googleapis.com/*'
             'https://*.arcgis.com/*'
             'https://api.mapbox.com/*'
           )
 
-          mkdir -p lychee
-
-          # Compose final args string
-          ARGS=("${BASE_ARGS[@]}" "${OUT_ARGS[@]}")
+          ARGS=( "${BASE_ARGS[@]}" "${OUT_ARGS[@]}" )
           for e in "${EXCLUDES[@]}"; do ARGS+=( --exclude "$e" ); done
           ARGS+=( "${TARGETS[@]}" )
 
@@ -122,7 +115,7 @@ jobs:
         with:
           args: ${{ steps.args.outputs.args }}
         env:
-          # Token improves rate limits for github.com/RAW, releases, etc.
+          # Token improves rate limits for links to github.com (raw, releases, etc.)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload lychee report
