@@ -65,9 +65,8 @@ jobs:
 
       - name: Install system tools
         run: |
-          sudo apt-get update
+          sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends jq
-          # yamllint is pip-installed below; jq handles JSON quickly
 
       - name: Install Python deps (project + validators)
         run: |
@@ -81,10 +80,9 @@ jobs:
           pip install --upgrade --quiet \
             jsonschema jinja2 pystac pystac-client pyyaml \
             stac-validator yamllint
-
           python - <<'PY'
-import sys, jsonschema, pystac  # noqa
-print("Python", sys.version.split()[0], "— deps OK")
+import sys, pystac
+print("Python", sys.version.split()[0], "| pystac", getattr(pystac, "__version__", "n/a"))
 PY
 
       # -------------------- Quick syntax checks --------------------
@@ -92,8 +90,8 @@ PY
         run: |
           set -euo pipefail
           if [ -d stac ]; then
-            shopt -s nullglob
-            files=($(git ls-files 'stac/**/*.json' || true))
+            shopt -s globstar nullglob
+            files=(stac/**/*.json)
             if [ ${#files[@]} -gt 0 ]; then
               echo "Linting STAC JSON…"
               for f in "${files[@]}"; do
@@ -101,7 +99,7 @@ PY
               done
               echo "stac/**/*.json ✔ valid JSON"
             else
-              echo "No STAC JSON files found by git ls-files."
+              echo "No STAC JSON files found."
             fi
           else
             echo "::notice::stac/ not present; skipping."
@@ -113,15 +111,10 @@ PY
           if [ -d data/sources ]; then
             echo "Linting data/sources (JSON)…"
             find data/sources -type f -name '*.json' -print0 | xargs -0 -r -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
-
             echo "Linting data/sources (YAML)…"
-            # yamllint: strict for syntax; relaxed for style
             if command -v yamllint >/dev/null 2>&1; then
-              yamllint -s -f standard data/sources || {
-                echo "::warning title=YAML style issues::yamllint reported style problems (not failing the build)."
-              }
+              yamllint -s -f standard data/sources || echo "::warning title=YAML style issues::yamllint reported style problems (not failing the build)."
             fi
-
             python - <<'PY'
 import sys, pathlib, yaml
 base = pathlib.Path("data/sources")
@@ -179,9 +172,9 @@ PY
               echo "Validating all STAC JSON files…"
               set +e
               ok=1
-              for f in $(find stac -type f -name '*.json' | sort); do
+              while IFS= read -r -d '' f; do
                 stac-validator "$f" >> build/stac_validator.txt 2>&1 || ok=0
-              done
+              done < <(find stac -type f -name '*.json' -print0 | sort -z)
               set -e
               [ $ok -eq 1 ] || exit 2
             fi
@@ -208,7 +201,7 @@ PY
           else
             echo "::notice::No stac/catalog.json; running file-by-file pystac checks."
             python - <<'PY'
-import sys, pathlib, pystac
+import sys, pathlib, pystac, json
 root = pathlib.Path("stac")
 if not root.exists():
     print("::notice::No stac directory; skip pystac.")
@@ -220,7 +213,7 @@ for p in sorted(root.rglob("*.json")):
     except Exception as e:
         bad.append((str(p), str(e)))
 if bad:
-    for f,e in bad:
+    for f,e in bad[:25]:
         print(f"::error file={f}::{e}")
     sys.exit(2)
 print("All STAC JSON passed pystac validation")
@@ -229,8 +222,7 @@ PY
 
       # -------------------- Fallback item structure (only if no report) --------------------
       - name: Fallback STAC item structure check
-        if: |
-          !cancelled() && hashFiles('build/stac_report.json') == ''
+        if: !cancelled() && hashFiles('build/stac_report.json') == ''
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -271,6 +263,11 @@ PY
           set -euo pipefail
           {
             echo "## STAC Validation"
+            if [ -f build/stac_validator.txt ]; then
+              echo "- stac-validator: **ran**"
+            else
+              echo "- stac-validator: _skipped_"
+            fi
             if [ -f build/stac_report.json ]; then
               python - <<'PY'
 import json, pathlib
