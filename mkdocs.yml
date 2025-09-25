@@ -5,12 +5,12 @@ site_name: Kansas Geo Timeline
 site_url: https://bartytime4life.github.io/Kansas-Frontier-Matrix/
 repo_url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
 repo_name: Kansas-Frontier-Matrix
-edit_uri: edit/main/docs/           # enables "Edit on GitHub" for pages under docs/
+edit_uri: edit/main/docs/
 docs_dir: docs
 site_dir: _site_docs
 
 use_directory_urls: true
-strict: true                        # fail the build on broken links (good for CI)
+strict: true  # Fail on broken links (good in CI)
 
 theme:
   name: material
@@ -22,11 +22,13 @@ theme:
     - navigation.expand
     - navigation.tracking
     - toc.integrate
+    - navigation.top          # adds “back to top”
     # Content UX
     - content.code.copy
     - content.code.annotate
     - content.tabs.link
     - content.tooltips
+    - content.action.edit     # “Edit this page” button
     # Search
     - search.highlight
     - search.suggest
@@ -41,21 +43,34 @@ theme:
   favicon: assets/favicon.png
 
 plugins:
-  - search
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+'
+      prebuild_index: true
   - git-revision-date-localized:
       fallback_to_build_date: true
       type: date
   - minify:
       minify_html: true
+  - redirects:
+      redirect_maps:
+        # (optional) keep old links working if you rename/move pages
+        # "old_name.md": "new_name.md"
+  - include-markdown:
+      # allows including README/md fragments across docs
+      opening_tag: "{!"
+      closing_tag: "!}"
 
 markdown_extensions:
   # Core
   - admonition
   - footnotes
   - tables
+  - abbr
+  - def_list
+  - md_in_html
   - toc:
       permalink: true
-  # Material + pymdownx (preferred over codehilite)
+  # Material + pymdownx
   - pymdownx.highlight:
       anchor_linenums: true
       linenums: true
@@ -63,6 +78,7 @@ markdown_extensions:
       line_spans: __span
   - pymdownx.superfences:
       custom_fences:
+        # Mermaid diagrams — rendered by mermaid.min.js (see extra_javascript)
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
@@ -76,6 +92,8 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
+  - attr_list
+  - admonition
 
 extra:
   social:
@@ -84,11 +102,24 @@ extra:
       name: GitHub
   analytics: {}
   generator: false
+  consent:
+    title: Cookie consent
+    description: >
+      We use local storage for search and navigation enhancements. No tracking.
 
 extra_css:
-  - assets/css/extra.css   # optional: create if needed
+  - assets/css/extra.css        # safe if missing
 extra_javascript:
-  - assets/js/extra.js     # optional: create if needed
+  # Pin Mermaid & init (ensures GitHub-compatible Mermaid renders locally too)
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+  - assets/js/mermaid-init.js   # create with: mermaid.initialize({ startOnLoad: true });
+
+# Optional: speed up local `mkdocs serve` when editing outside docs/
+watch:
+  - web
+  - stac
+  - data
+  - scripts
 
 nav:
   - Home: index.md
