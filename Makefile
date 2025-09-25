@@ -6,6 +6,8 @@
 # Extras:  dem-checksum, hillshade-checksum, validate-cogs, mosaic-county, regionate
 # Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite
 # Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)
+# Collections:
+#          collections-list, collections-build, collections-validate, collections-render
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -34,6 +36,10 @@ VEC     := $(DATA)/processed/vectors
 WEB     := web
 STAC    := stac
 TESTS   := tests
+
+# Collections directory
+COLLECTIONS_DIR     := $(S)/collections
+COLLECTION_SCRIPTS  := $(wildcard $(COLLECTIONS_DIR)/*.sh)
 
 # Canonical Kansas bbox (keep consistent across the repo)
 KANSAS_MINX := -102.051
@@ -161,6 +167,7 @@ endef
 .PHONY: help env prebuild preview prebuild-lite print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
         dem-checksum hillshade-checksum hydrology-fetch hydrology-stac nlcd \
         validate-cogs mosaic-county regionate \
+        collections-list collections-build collections-validate collections-render \
         install-dev test test-cli test-sources
 
 # -------- Help --------
@@ -186,6 +193,12 @@ help:
 	@echo "  prebuild             stac-validate + site (used by CI)"
 	@echo "  preview              Minimal local preview (site only)"
 	@echo "  prebuild-lite        Site only (no validation/checksums)"
+	@echo ""
+	@echo "Collections:"
+	@echo "  collections-list     List available collection scripts"
+	@echo "  collections-build    Run 'build' on all or one collection (COLLECTION=name)"
+	@echo "  collections-validate Run 'validate' on all or one collection"
+	@echo "  collections-render   Run 'render' on all or one collection"
 	@echo ""
 	@echo "Data:"
 	@echo "  nlcd                 Build NLCD (1992–2021) COGs for Kansas (expects raw files under data/sources/land/raw)"
@@ -301,7 +314,7 @@ $(ASPECT): $(DEM) | $(TERRAIN)
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
 	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem aspect "$(DEM)" "$$tmp" -compute_edges; \
-	  gdaladdo -r average "$$tmp" $(OVERVIEWs); \
+	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
 	  rm -f "$$tmp"; \
 	else \
@@ -447,10 +460,10 @@ site-config: | $(WEB)
 	  if [ -f "src/kansas_geo_timeline/templates/app.config.json.j2" ]; then \
 	    kgt render-config --stac "$(STAC)/items" --output "$(WEB)/app.config.json" --pretty; \
 	  else \
-	    echo "[site-config] Template missing (src/.../templates/app.config.json.j2)."; \
+	    echo "[site-config] Template missing: src/kansas_geo_timeline/templates/app.config.json.j2"; \
 	  fi; \
 	else \
-	  echo "[site-config] kgt not installed (pip install -e . && pip install jinja2)."; \
+	  echo "[site-config] kgt not installed. Try: pip install -e . && pip install jinja2"; \
 	fi
 
 # -------- KML / KMZ (legacy demo) --------
@@ -536,6 +549,49 @@ hillshade-checksum:
 	  ( cd "$$(dirname "$(HILLSHADE)")" && { command -v sha256sum >/dev/null 2>&1 || command -v gsha256sum >/dev/null 2>&1; } && sha256sum -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null || shasum -a 256 -c "$$(basename "$(HILLSHADE:.tif=.sha256)")" >/dev/null ); \
 	else \
 	  echo "ERROR: No SHA tool found; install coreutils (sha256sum/gsha256sum) or use scripts/gen_sha256.sh"; exit 1; \
+	fi
+
+# -------- Collections Orchestrators --------
+collections-list:
+	@if [ -z "$(COLLECTION_SCRIPTS)" ]; then \
+	  echo "No collection scripts found in $(COLLECTIONS_DIR)"; \
+	else \
+	  echo "Collection scripts:"; \
+	  for f in $(COLLECTION_SCRIPTS); do echo "  - $${f}"; done; \
+	fi
+
+# Run a single collection with COLLECTION=name (file stem) or all if unset
+collections-build:
+	@if [ -n "$(COLLECTION)" ]; then \
+	  f="$(COLLECTIONS_DIR)/$(COLLECTION).sh"; \
+	  if [ ! -f "$$f" ]; then echo "Collection script not found: $$f"; exit 1; fi; \
+	  bash "$$f" build; \
+	else \
+	  if [ -z "$(COLLECTION_SCRIPTS)" ]; then echo "No collection scripts in $(COLLECTIONS_DIR)"; exit 0; fi; \
+	  set -e; \
+	  for f in $(COLLECTION_SCRIPTS); do echo "==> $$f build"; bash "$$f" build; done; \
+	fi
+
+collections-validate:
+	@if [ -n "$(COLLECTION)" ]; then \
+	  f="$(COLLECTIONS_DIR)/$(COLLECTION).sh"; \
+	  if [ ! -f "$$f" ]; then echo "Collection script not found: $$f"; exit 1; fi; \
+	  bash "$$f" validate; \
+	else \
+	  if [ -z "$(COLLECTION_SCRIPTS)" ]; then echo "No collection scripts in $(COLLECTIONS_DIR)"; exit 0; fi; \
+	  set -e; \
+	  for f in $(COLLECTION_SCRIPTS); do echo "==> $$f validate"; bash "$$f" validate; done; \
+	fi
+
+collections-render:
+	@if [ -n "$(COLLECTION)" ]; then \
+	  f="$(COLLECTIONS_DIR)/$(COLLECTION).sh"; \
+	  if [ ! -f "$$f" ]; then echo "Collection script not found: $$f"; exit 1; fi; \
+	  bash "$$f" render; \
+	else \
+	  if [ -z "$(COLLECTION_SCRIPTS)" ]; then echo "No collection scripts in $(COLLECTIONS_DIR)"; exit 0; fi; \
+	  set -e; \
+	  for f in $(COLLECTION_SCRIPTS); do echo "==> $$f render"; bash "$$f" render; done; \
 	fi
 
 # -------- Clean --------
