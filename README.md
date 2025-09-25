@@ -1,7 +1,7 @@
 # Kansas Geo Timeline — **Time · Terrain · History**
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)
+[![STAC Validate & Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](.pre-commit-config.yaml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-brightgreen.svg)](pyproject.toml)
 [![Node](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](package.json)
@@ -10,22 +10,25 @@
 [![MapLibre](https://img.shields.io/badge/MapLibre-Web%20Viewer-1f6feb.svg)](web/index.html)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+---
 
-### Project metadata
-| Component  | Minimum / Spec | Key Files (links) | Notes |
+## 📋 Project Metadata
+
+| Component  | Minimum / Spec | Key Files | Notes |
 |---|---|---|---|
 | Python | **3.10+** | [`pyproject.toml`](pyproject.toml) · [`requirements.txt`](requirements.txt) | CLI `kgt`, STAC tools, raster pipeline |
 | Node | **18+** | [`package.json`](package.json) | Optional: docs/dev tooling; web is static |
 | Docker | Multi-stage | [`docker/Dockerfile`](docker/Dockerfile) · [`docker/compose.yaml`](docker/compose.yaml) | Reproducible builds; mount data at runtime |
 | STAC | **1.0.0** | [`stac/catalog.json`](stac/catalog.json) · [`stac/collections/`](stac/collections) · [`stac/items/`](stac/items) | Catalog → Collections → Items |
 | Web | MapLibre viewer | [`web/index.html`](web/index.html) · [`web/app.config.json`](web/app.config.json) | Time slider; STAC-driven config |
-| CI | GitHub Actions | [`site.yml`](.github/workflows/site.yml) · [`stac-validate.yml`](.github/workflows/stac-validate.yml) | Build & Pages deploy; STAC checks |
+| CI | GitHub Actions | [`site.yml`](.github/workflows/site.yml) · [`stac-badges.yml`](.github/workflows/stac-badges.yml) | Build & deploy Pages; STAC checks; badge JSONs |
 | Quality | Hooks & lint | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | Ruff, yamllint, prettier, actionlint, etc. |
 | License | MIT | [`LICENSE`](LICENSE) | SPDX-compatible |
 
 ---
 
-### 🛠 Tech Stack
+## 🛠 Tech Stack
+
 [![Rasterio](https://img.shields.io/badge/Rasterio-1.3+-yellow.svg)](https://rasterio.readthedocs.io/)
 [![rio-cogeo](https://img.shields.io/badge/rio--cogeo-5+-orange.svg)](https://cogeotiff.github.io/rio-cogeo/)
 [![GDAL](https://img.shields.io/badge/GDAL-3.6+-informational.svg)](https://gdal.org/)
@@ -35,15 +38,19 @@
 
 ---
 
-### 📑 Data Sources (tracked in `data/sources/`)
-| ID | Title | File | Notes |
-|----|-------|------|-------|
-| `ks_dem_1m` | Kansas DEM (1 m) | [`ks_dem.json`](data/sources/ks_dem.json) | ArcGIS ImageServer |
-| `usgs_topo_1894_1950` | USGS Historical Topos (KS subset) | [`usgs_historic_topo.json`](data/sources/usgs_historic_topo.json) | HTMC GeoTIFFs |
-| `ks_treaties` | Kansas Treaties (vectors) | [`ks_treaties.json`](data/sources/ks_treaties.json) | Geoparsed treaties |
-| `ks_railroads` | Kansas Railroads | [`ks_railroads.json`](data/sources/ks_railroads.json) | Historical rail vectors |
-| `schema.source` | Schema for source descriptors | [`schema.source.json`](data/sources/schema.source.json) | JSON schema |
+## 📑 Data Sources (tracked in `data/sources/`)
 
+| Status | ID | Title | File | Notes |
+|:-----:|----|-------|------|------|
+| ![ks_dem_1m](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/ks_dem_1m.json) | `ks_dem_1m` | Kansas DEM (1 m) | [`ks_dem.json`](data/sources/ks_dem.json) | ArcGIS ImageServer |
+| ![usgs_topo_1894_1950](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/usgs_topo_1894_1950.json) | `usgs_topo_1894_1950` | USGS Historical Topos (KS subset) | [`usgs_historic_topo.json`](data/sources/usgs_historic_topo.json) | HTMC GeoTIFFs |
+| ![ks_treaties](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/ks_treaties.json) | `ks_treaties` | Kansas Treaties (vectors) | [`ks_treaties.json`](data/sources/ks_treaties.json) | Geoparsed treaties |
+| ![ks_railroads](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/ks_railroads.json) | `ks_railroads` | Kansas Railroads | [`ks_railroads.json`](data/sources/ks_railroads.json) | Historical rail vectors |
+| ![schema.source](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/schema.source.json) | `schema.source` | Schema for source descriptors | [`schema.source.json`](data/sources/schema.source.json) | JSON schema |
+
+✔ = clean STAC validation · ⚠ = warnings · ❌ = failed/missing
+
+---
 
 A minimal **Google Earth + Web (GitHub Pages)** mapping system for Kansas elevation and historical layers.
 
@@ -59,12 +66,12 @@ A minimal **Google Earth + Web (GitHub Pages)** mapping system for Kansas elevat
 
 ## 🌐 Live Demo
 
-* **Web Viewer (MapLibre + Time Slider)** → [Demo Site](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)  
-* **Google Earth KMZ (download)** → [Kansas_Terrain.kmz](https://bartytime4life.github.io/Kansas-Frontier-Matrix/earth/Kansas_Terrain.kmz)
+- **Web Viewer (MapLibre + Time Slider)** → [Demo Site](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)  
+- **Google Earth KMZ (download)** → [Kansas_Terrain.kmz](https://bartytime4life.github.io/Kansas-Frontier-Matrix/earth/Kansas_Terrain.kmz)
 
 ---
 
-## Pipeline Overview
+## 📊 Pipeline Overview
 
 ```mermaid
 flowchart TD
@@ -79,7 +86,7 @@ flowchart TD
 
 ---
 
-## Table of Contents
+## 📖 Table of Contents
 
 * [Quickstart](#quickstart)
 * [Repository layout](#repository-layout)
@@ -99,7 +106,7 @@ flowchart TD
 
 ---
 
-## Quickstart
+## ⚡ Quickstart
 
 ```bash
 # Python env (3.10+)
@@ -107,42 +114,31 @@ python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
 
-# 1) Configure sources
-#    - edit files under: data/sources/*.json
-
-# 2) Build a tiny slice end-to-end
+# 1) Configure sources under data/sources/*.json
 make fetch
+
+# 2) Build DEM → COG → terrain
 make cogs
 make terrain
+
+# 3) Generate and validate STAC
 make stac
+make stac-validate
 
-# 3) Validate STAC + render viewer config
-kgt validate-stac stac/items --no-strict
+# 4) Render viewer config + serve
 kgt render-config --stac stac/items --output web/app.config.json --pretty
-
-# 4) Serve the viewer locally
 python -m http.server -d web 8080
 ```
 
-> Tip: Prefer `make stac-validate` if you use the repo’s validator target.
-
 ---
 
-## Repository layout
+## 📂 Repository Layout
 
 ```
 data/                        # inputs/outputs (COGs, JSON metadata)
   sources/                   # source descriptors (endpoints, CRS, bounds, license)
   processed/                 # generated COGs/tiles and artifacts
 stac/                        # STAC 1.0.0: catalog + collections + items
-  catalog.json
-  collections/
-    elevation.json
-    historic_topo.json
-  items/
-    ks_1m_dem_2018_2020.json
-    overlays/
-      usgs_topo_larned_1894.json
 scripts/                     # small, dependency-light tools (Python/bash)
 web/                         # static site (MapLibre) for GitHub Pages
 earth/                       # KML/KMZ export and NetworkLinks
@@ -152,144 +148,31 @@ mcp/                         # SOPs/experiments/model cards (reproducibility)
 
 ---
 
-## Install
-
-```bash
-pip install -r requirements.txt
-
-# optional extras for CLI features
-pip install "jsonschema>=4.0" "jinja2>=3.1"
-```
-
-Expose the CLI via `pyproject.toml`:
-
-```toml
-[project.scripts]
-kgt = "kansas_geo_timeline.cli:main"
-```
-
----
-
-## Make targets
-
-```text
-make help           # show all tasks
-make fetch          # download/input prep via data/sources/*.json
-make cogs           # convert rasters to Cloud Optimized GeoTIFFs (COGs)
-make terrain        # derive hillshade/slope/aspect from DEMs
-make stac           # (re)generate stac/{items,collections}
-make stac-validate  # validate sources + STAC
-make site           # write a simple web/layers.json
-make site-config    # render web/app.config.json via kgt + Jinja2
-make kml            # export KML/KMZ + NetworkLinks for Google Earth
-make clean          # remove intermediates (keeps ./stac)
-```
-
----
-
-## Data sources (examples)
-
-**DEM** — `data/sources/ks_dem.json`
-
-```json
-{
-  "id": "ks_dem_1m",
-  "title": "Kansas DEM (1 m)",
-  "type": "raster-dem",
-  "endpoint": {
-    "type": "arcgis",
-    "url": "https://tiles.kansasgis.org/arcgis/rest/services/Elevation/KS_1m_DEM/ImageServer"
-  },
-  "spatial": { "bbox": [-102.10, 36.99, -94.60, 40.00], "crs": "EPSG:4326" },
-  "temporal": { "start": "2018-01-01", "end": "2020-12-31" },
-  "license": "CC-BY-4.0",
-  "outputs": {
-    "cog": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
-    "hillshade": "data/cogs/hillshade/ks_hillshade_2018_2020.tif"
-  }
-}
-```
-
-**Historic topo** — `data/sources/usgs_historic_topo.json`
-
-```json
-{
-  "id": "usgs_topo_1894_1950",
-  "title": "USGS Historical Topographic Maps (KS subset)",
-  "type": "raster",
-  "endpoint": {
-    "type": "http",
-    "urls": [
-      "https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS_15x15_1894_Larned_Geo.tif"
-    ]
-  },
-  "temporal": { "start": "1894-01-01", "end": "1950-12-31" },
-  "spatial": { "bbox": [-100.10, 37.90, -98.80, 38.60], "crs": "EPSG:4326" },
-  "license": "USGS-PD",
-  "style": { "opacity": 0.8 }
-}
-```
-
----
-
-## STAC structure
+## 📚 STAC Structure
 
 * **Root catalog** → `stac/catalog.json`
-* **Collections**:
-
-  * `stac/collections/elevation.json`
-  * `stac/collections/historic_topo.json`
-* **Items**:
-
-  * DEM → `stac/items/ks_1m_dem_2018_2020.json`
-  * Overlay → `stac/items/overlays/usgs_topo_larned_1894.json`
+* **Collections** → `stac/collections/*.json`
+* **Items** → `stac/items/**/*.json`
 
 Validate:
-
-```bash
-kgt validate-stac stac/items --no-strict
-```
-
----
-
-## CLI (kgt) usage
-
-**Validate STAC**
 
 ```bash
 kgt validate-stac stac/items --report-json build/stac_report.json
 ```
 
-**Render viewer config**
+---
 
-```bash
-kgt render-config --stac stac/items --output web/app.config.json --pretty
-```
+## 🖥 Web Viewer (MapLibre + Time)
 
-**Summarize items**
-
-```bash
-kgt list-stac stac/items --format csv --output build/items.csv
-```
+* Driven by `web/app.config.json`
+* Serve locally or via GitHub Pages
+* [Live Viewer](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)
 
 ---
 
-## Web viewer (MapLibre + time)
+## 🌍 Google Earth (KML/KMZ)
 
-* `web/app.config.json` (generated by `kgt render-config`) drives the viewer.
-* Serve locally:
-
-```bash
-python -m http.server -d web 8080
-```
-
-* Live demo: [Demo Viewer](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)
-
----
-
-## Google Earth (KML/KMZ)
-
-Regionated overlays export into `earth/`:
+Exports under `earth/`:
 
 ```
 earth/
@@ -299,46 +182,30 @@ earth/
     usgs_topo_1894.kml
 ```
 
-Download KMZ: [Kansas_Terrain.kmz](https://bartytime4life.github.io/Kansas-Frontier-Matrix/earth/Kansas_Terrain.kmz)
-
 ---
 
-## Checks & reproducibility
+## ✅ Checks & Reproducibility
 
 * Run `make stac-validate` before commits
-* Stamp `_meta.json` with provenance where relevant
-* Add `checksum:sha256` to COG assets where possible
+* CI writes `web/badges/*.json` → live ✔/⚠/❌ badges
+* Stamp `_meta.json` with provenance
+* Add `checksum:sha256` to COG assets when possible
 
 ---
 
-## CI: GitHub Pages publish
+## 🗺 Roadmap
 
-* `.github/workflows/site.yml` runs validation and deploys `web/` automatically when paths relevant to the site or STAC change.
-
----
-
-## Troubleshooting
-
-* **Jinja2 missing** → `pip install jinja2`
-* **JSON schema warnings** → `pip install jsonschema`
-* **Blank map** → check `web/app.config.json` + asset `href`s
-* **ArcGIS reprojection oddities** → confirm `crs` and `bbox` settings
-
----
-
-## Roadmap
-
-1. Historic topo statewide + hillshade + treaty/railroad vectors
-2. Time slider v1 (year filter, opacity controls)
+1. Expand topo statewide + treaty/rail vectors
+2. Time slider v1 (year filter + opacity controls)
 3. Google Earth polish (per-decade folders)
-4. Auto `_meta.json` + STAC refresh in `make stac`
-5. CI validation + GitHub Pages publish
-6. Story stub (e.g., Santa Fe Trail)
+4. Auto `_meta.json` + STAC refresh
+5. CI validation + Pages publish + badges
+6. Story stubs (e.g., Santa Fe Trail)
 7. Stretch goal: CesiumJS 3D terrain
 
 ---
 
-## Requirements
+## 📦 Requirements
 
 * `rasterio`
 * `rio-cogeo`
@@ -351,7 +218,7 @@ Download KMZ: [Kansas_Terrain.kmz](https://bartytime4life.github.io/Kansas-Front
 
 ---
 
-## Status snapshot
+## 📊 Status Snapshot
 
 | Layer                       | STAC Item                                        | Asset Path                                       |
 | --------------------------- | ------------------------------------------------ | ------------------------------------------------ |
@@ -364,6 +231,3 @@ Download KMZ: [Kansas_Terrain.kmz](https://bartytime4life.github.io/Kansas-Front
 **PRs welcome!** ✅ Stick to STAC 1.0.0, keep links relative, validate before commit.
 
 ```
-
----
-
