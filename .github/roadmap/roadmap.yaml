@@ -8,6 +8,11 @@ version: 1
 project: "Kansas Geo Timeline"
 owner: "bartytime4life"
 
+# Optional enums your sync script can use for validation / normalization
+enums:
+  priorities: [P1, P2, P3]
+  estimates:  [XS, S, M, L, XL]
+
 defaults:
   create_missing_labels: true
   create_missing_milestones: true
@@ -17,6 +22,8 @@ defaults:
     state: open
     assignees: []
     labels: []
+    priority: P2
+    estimate: M
 
 # ------------------------------------------------------------------------------
 # Labels (idempotent): updated/created by color/description.
