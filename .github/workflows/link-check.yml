@@ -1,22 +1,127 @@
+# .github/workflows/link-check.yml
 name: Link Check (docs)
+
 on:
   push:
     branches: [ main ]
-    paths: [ "README.md", "web/**", ".github/workflows/link-check.yml" ]
+    paths:
+      - "README.md"
+      - "docs/**"
+      - "web/**"
+      - ".github/workflows/link-check.yml"
   pull_request:
-    paths: [ "README.md", "web/**", ".github/workflows/link-check.yml" ]
+    paths:
+      - "README.md"
+      - "docs/**"
+      - "web/**"
+      - ".github/workflows/link-check.yml"
+  workflow_dispatch:
+  schedule:
+    # Weekly sweep (Sunday 04:05 UTC)
+    - cron: "5 4 * * 0"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: link-check-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lychee:
+    name: Lychee link check
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Link check
-        uses: lycheeverse/lychee-action@v1
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          args: >-
-            --verbose --no-progress
-            --exclude "mailto:*"
-            README.md web/**/*.html web/**/*.md
+          fetch-depth: 0
+
+      # Build the args dynamically so we honor a repo-provided .lychee.toml when present.
+      - name: Compute lychee args
+        id: args
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGETS=()
+          # Common docs/markdown/html entry points
+          [ -f README.md ] && TARGETS+=("README.md")
+          [ -d docs ] && TARGETS+=("docs")
+          [ -d web ] && TARGETS+=("web")
+
+          # Default arguments (sane retries + exclude noisy schemes/hosts)
+          BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
+          EXCLUDES=(
+            'mailto:*'
+            'tel:*'
+            'http://localhost*'
+            'http://127.0.0.1*'
+            'https://localhost*'
+            'https://127.0.0.1*'
+            # map/imagery/demo tiles & dynamic endpoints often rate-limit or block CI
+            'https://*.tile.openstreetmap.org/*'
+            'https://*.googleapis.com/*'
+            'https://*.arcgis.com/*'
+            'https://api.mapbox.com/*'
+          )
+
+          # Prefer repo config if present
+          if [ -f .lychee.toml ]; then
+            echo "args=--config .lychee.toml ${TARGETS[*]}" >> "$GITHUB_OUTPUT"
+          else
+            # Limit to markdown/html within docs and web (and README)
+            FIND_ARGS=()
+            for t in "${TARGETS[@]}"; do
+              if [ -d "$t" ]; then
+                while IFS= read -r -d '' f; do FIND_ARGS+=("$f"); done < <(find "$t" -type f \( -name '*.md' -o -name '*.html' \) -print0)
+              else
+                FIND_ARGS+=("$t")
+              fi
+            done
+            # Compose args
+            OUT=( "${BASE_ARGS[@]}" --format markdown --output lychee.md )
+            for e in "${EXCLUDES[@]}"; do OUT+=( --exclude "$e" ); done
+            OUT+=( "${FIND_ARGS[@]}" )
+            printf "args=%s\n" "${OUT[*]}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: ${{ steps.args.outputs.args }}
         env:
+          # Token improves GitHub API rate limits for checking links to github.com raw blobs, releases, etc.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload lychee report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lychee-report-${{ github.run_id }}
+          path: |
+            lychee.md
+            lychee-out.md
+            lychee/results.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Job Summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Link Check (Lychee)"
+            echo ""
+            if [ -f lychee.md ]; then
+              echo "### Report excerpt"
+              echo ""
+              # Show first 200 lines to keep summary compact
+              echo '```markdown'
+              sed -n '1,200p' lychee.md
+              echo '```'
+            else
+              echo "_No lychee.md report generated (used repo config or different output path)._"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
