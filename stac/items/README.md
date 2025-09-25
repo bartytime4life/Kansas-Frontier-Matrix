@@ -183,35 +183,35 @@ flowchart TD
 flowchart LR
   I["Item JSON\n(type: \"Feature\")"]
 
-  subgraph "properties"
+  subgraph P["properties"]
     T["title"]
     D["description"]
     DT["datetime or\nstart_datetime/end_datetime"]
     EPSG["proj:epsg = 4326"]
   end
 
-  subgraph "spatial"
+  subgraph S["spatial"]
     GEOM["geometry"]
     BBOX["bbox"]
   end
 
-  subgraph "assets"
+  subgraph A["assets"]
     COG["cog → COG GeoTIFF\nroles: data, visual"]
     THMB["thumbnail → PNG\nroles: thumbnail, overview"]
     META["metadata → JSON\nroles: metadata"]
   end
 
-  subgraph "links"
+  subgraph L["links"]
     SELF["rel: self\n./<item>.json"]
     COLL["rel: collection\n../collections/<collection>.json"]
     PARENT["rel: parent\n(same as collection)"]
     ROOT["rel: root\n../catalog.json"]
   end
 
-  I --> "properties"
-  I --> "spatial"
-  I --> "assets"
-  I --> "links"
+  I --> P
+  I --> S
+  I --> A
+  I --> L
 ```
 
 ---
