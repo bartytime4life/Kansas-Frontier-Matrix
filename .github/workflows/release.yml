@@ -8,9 +8,10 @@ on:
 
 permissions:
   contents: write
+  id-token: write   # for provenance attestation
 
 concurrency:
-  group: "release-${{ github.ref }}"
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -39,37 +40,38 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: |
-            requirements*.txt
+            **/requirements*.txt
             pyproject.toml
+            setup.cfg
+            setup.py
 
       - name: Install build toolchain
         run: |
           python -m pip install --upgrade pip
-          pip install build twine setuptools_scm packaging
+          pip install build twine setuptools_scm packaging wheel
 
-      # Ensure the tag (vX.Y.Z...) matches the project version resolved by setuptools_scm.
+      # Ensure the tag (vX[.Y].Z…) matches project version resolved by setuptools_scm.
       - name: Verify tag matches project version
         id: tagcheck
         shell: bash
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME#v}"          # strip leading 'v'
+          TAG_RAW="${GITHUB_REF_NAME}"
+          TAG="${TAG_RAW#v}"  # strip leading 'v'
           PYVER="$(python - <<'PY'
 from setuptools_scm import get_version
 from packaging.version import Version
 print(Version(get_version()).public)
 PY
 )"
-          echo "Tag: ${TAG}"
+          echo "Git tag: ${TAG_RAW}"
           echo "Resolved version: ${PYVER}"
-          # Allow exact match. If you use pre/post releases, tag should include them (e.g., v1.2.0rc1).
           if [ "${TAG}" != "${PYVER}" ]; then
-            echo "::error::Git tag (${TAG}) does not match project version (${PYVER})"
+            echo "::error::Git tag (${TAG_RAW}) does not match project version (${PYVER})"
             exit 1
           fi
           echo "version=${PYVER}" >> "$GITHUB_OUTPUT"
 
-      # Optional, light smoke: try import after editable install w/o heavy deps
       - name: Quick smoke (editable, no-deps)
         run: |
           set -euo pipefail
@@ -93,6 +95,22 @@ PY
       - name: Twine check
         run: python -m twine check ${{ env.DIST_DIR }}/*
 
+      # Install from the built wheel (not the repo) and smoke-import
+      - name: Install built wheel and smoke test
+        shell: bash
+        run: |
+          set -euo pipefail
+          WHL="$(ls -1 ${DIST_DIR}/*.whl | head -n1)"
+          echo "Installing wheel: ${WHL}"
+          python -m pip install --force-reinstall --no-deps "${WHL}"
+          python - <<'PY'
+import importlib, sys
+mods = ["kansas_geo_timeline"]
+for m in mods:
+    importlib.import_module(m)
+    print(f"[ok] import {m} from wheel")
+PY
+
       - name: Bundle extras (optional)
         run: |
           set -euo pipefail
@@ -105,7 +123,7 @@ PY
           fi
           [ -d "${EXTRAS_DIR}" ] && ls -lh "${EXTRAS_DIR}" || true
 
-      - name: Checksums (SHA-256)
+      - name: Checksums (SHA-256) + manifest
         shell: bash
         run: |
           set -euo pipefail
@@ -120,11 +138,10 @@ PY
               sha256sum "$f" | tee "$f.sha256"
             done
           fi
-          # Produce a manifest for easy verification in the Release body
           {
             echo "# SHA-256 checksums"
             echo
-            for f in "${DIST_DIR}"/*; do [ -e "$f.sha256" ] && echo "$(cat "$f.sha256")"; done
+            for f in "${DIST_DIR}"/*; do [ -e "$f.sha256" ] && cat "$f.sha256"; done
             if [ -d "${EXTRAS_DIR}" ]; then
               for f in "${EXTRAS_DIR}"/*.sha256; do [ -e "$f" ] && cat "$f"; done
             fi
@@ -156,24 +173,32 @@ PY
           if-no-files-found: warn
           retention-days: 7
 
-      - name: Job summary (hashes)
+      - name: Job summary
         run: |
           {
             echo "## Release artifacts"
-            echo ""
+            echo
             echo "### dist/"
             ls -lh ${{ env.DIST_DIR }} || true
             if [ -d "${EXTRAS_DIR}" ]; then
-              echo ""
+              echo
               echo "### ${EXTRAS_DIR}/"
               ls -lh ${EXTRAS_DIR} || true
             fi
-            echo ""
+            echo
             echo "### Checksums"
             echo '```'
             sed -n '1,200p' CHECKSUMS.txt
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Attest build provenance (artifacts)
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            ${{ env.DIST_DIR }}/*
+            ${{ env.EXTRAS_DIR }}/*.zip
+            CHECKSUMS.txt
 
   github-release:
     name: Create GitHub Release
@@ -206,7 +231,7 @@ PY
         run: |
           tag="${GITHUB_REF_NAME}"
           shopt -s nocasematch
-          if [[ "$tag" =~ rc|beta|alpha ]]; then
+          if [[ "$tag" =~ rc|beta|alpha|a|b|dev|post ]]; then
             echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
