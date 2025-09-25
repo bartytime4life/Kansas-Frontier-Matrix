@@ -5,7 +5,7 @@
 #          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
 # Extras:  dem-checksum, hillshade-checksum
 # Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite
-# Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)  <-- NEW
+# Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -51,14 +51,11 @@ ASPECT_SECTORS  := $(VEC)/aspect_sectors.geojson
 META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
-# -------- NLCD (1992–2021) — Kansas COGs (NEW) --------
-NLCD_YEARS := 1992 2001 2006 2011 2016 2019 2021
-NLCD_SRC_DIR := $(DATA)/sources/land
-NLCD_DST_DIR := $(NLCD_SRC_DIR)/vectors
-NLCD_BBOX := -102.05 36.99 -94.61 40.00   # minx miny maxx maxy
-# Expected raw paths (adjust per your downloads)
-# data/sources/land/raw/NLCD_2016_CONUS.tif etc.
-# You can override with: make nlcd NLCD_SRC_DIR=/path ...
+# -------- NLCD (1992–2021) — Kansas COGs --------
+NLCD_YEARS    ?= 1992 2001 2006 2011 2016 2019 2021
+NLCD_SRC_DIR  ?= $(DATA)/sources/land
+NLCD_DST_DIR  ?= $(NLCD_SRC_DIR)/vectors
+NLCD_BBOX     ?= -102.05 36.99 -94.61 40.00   # minx miny maxx maxy
 define NLCD_SRC_PATH
 $(NLCD_SRC_DIR)/raw/NLCD_$(1)_CONUS.tif
 endef
@@ -67,27 +64,27 @@ $(NLCD_DST_DIR)/nlcd_$(1)_ks_cog.tif
 endef
 
 # -------- Tools & flags --------
-COG_OPTS   := -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
-OVERVIEWS  := 2 4 8 16
+COG_OPTS   ?= -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
+OVERVIEWS  ?= 2 4 8 16
 
 # sha utility (sha256sum/gsha256sum on Linux/Homebrew, shasum -a 256 on macOS)
-SHA256_BIN   := $(shell { command -v sha256sum || command -v gsha256sum || command -v shasum; } 2>/dev/null)
-SHA256_IS_GNU:= $(shell { command -v sha256sum || command -v gsha256sum; } >/dev/null 2>&1 && echo yes || echo no)
-SHA256FLAGS  := $(if $(filter yes,$(SHA256_IS_GNU)),,-a 256)
+SHA256_BIN    := $(shell { command -v sha256sum || command -v gsha256sum || command -v shasum; } 2>/dev/null)
+SHA256_IS_GNU := $(shell { command -v sha256sum || command -v gsha256sum; } >/dev/null 2>&1 && echo yes || echo no)
+SHA256FLAGS   := $(if $(filter yes,$(SHA256_IS_GNU)),,-a 256)
 
 # External tools
-HAVE_JQ          := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no)
-HAVE_RSYNC       := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
-HAVE_KGT         := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
+HAVE_JQ     := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no)
+HAVE_RSYNC  := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
+HAVE_KGT    := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
 
 # GDAL tools
-HAVE_GDALDEM     := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDAL_TRANSL := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDAL_ADDO   := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
-HAVE_GDALWARP    := $(shell command -v gdalwarp >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDALDEM   := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDALTRANS := $(shell command -v gdal_translate >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDALADDO  := $(shell command -v gdaladdo >/dev/null 2>&1 && echo yes || echo no)
+HAVE_GDALWARP  := $(shell command -v gdalwarp >/dev/null 2>&1 && echo yes || echo no)
 
-GDAL_POLY_BIN    := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
-GDAL_CALC_BIN    := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
+GDAL_POLY_BIN  := $(shell command -v gdal_polygonize.py >/dev/null 2>&1 && echo gdal_polygonize.py || (command -v gdal_polygonize >/dev/null 2>&1 && echo gdal_polygonize || echo ""))
+GDAL_CALC_BIN  := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo gdal_calc.py      || (command -v gdal_calc      >/dev/null 2>&1 && echo gdal_calc      || echo ""))
 
 # Detect helper scripts present in this repo (value = path or empty)
 HAVE_FETCH            := $(wildcard $(S)/fetch.py)
@@ -193,7 +190,7 @@ env:
 	@echo "DEM=$(DEM)"
 	@echo "STAC_DIR=$(STAC)"
 	@echo "HAVE_KGT=$(HAVE_KGT)  HAVE_JQ=$(HAVE_JQ)"
-	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDAL_TRANSL=$(HAVE_GDAL_TRANSL) HAVE_GDAL_ADDO=$(HAVE_GDAL_ADDO) HAVE_GDALWARP=$(HAVE_GDALWARP)"
+	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDALTRANS=$(HAVE_GDALTRANS) HAVE_GDALADDO=$(HAVE_GDALADDO) HAVE_GDALWARP=$(HAVE_GDALWARP)"
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
@@ -240,9 +237,9 @@ $(HILLSHADE): $(DEM) | $(HILLS)
 	@if [ -n "$(HAVE_MAKEHILLSHADE)" ]; then \
 	  echo "[hillshade] $(S)/make_hillshade.py"; \
 	  $(PY) "$(S)/make_hillshade.py" --dem "$(DEM)" --out "$@" --cog; \
-	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
+	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
 	  echo "[hillshade] gdaldem hillshade"; \
-	  tmp="$@.tmp.tif"; \
+	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem hillshade "$(DEM)" "$$tmp" -compute_edges -z 1.0 -az 315 -alt 45; \
 	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
@@ -253,9 +250,9 @@ $(HILLSHADE): $(DEM) | $(HILLS)
 
 $(SLOPE): $(DEM) | $(TERRAIN)
 	$(check_dem)
-	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
 	  echo "[slope] gdaldem slope (degrees)"; \
-	  tmp="$@.tmp.tif"; \
+	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem slope "$(DEM)" "$$tmp" -compute_edges -s 1.0; \
 	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
@@ -266,9 +263,9 @@ $(SLOPE): $(DEM) | $(TERRAIN)
 
 $(ASPECT): $(DEM) | $(TERRAIN)
 	$(check_dem)
-	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDAL_ADDO)" = "yes" ] && [ "$(HAVE_GDAL_TRANSL)" = "yes" ]; then \
+	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
-	  tmp="$@.tmp.tif"; \
+	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem aspect "$(DEM)" "$$tmp" -compute_edges; \
 	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
@@ -281,7 +278,7 @@ $(ASPECT): $(DEM) | $(TERRAIN)
 slope_classes: $(SLOPE) | $(VEC)
 	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
 	  echo "[slope_classes] binning slope → polygons"; \
-	  tmp=$$(mktemp /tmp/_slope_classes.XXXXXX.tif); \
+	  tmp=$$(mktemp -t kfm_slope_classes.XXXXXX.tif); \
 	  $(GDAL_CALC_BIN) -A "$(SLOPE)" --NoDataValue=0 \
 	    --calc="(A>=0)*(A<2)*1 + (A>=2)*(A<5)*2 + (A>=5)*(A<10)*3 + (A>=10)*(A<20)*4 + (A>=20)*(A<30)*5 + (A>=30)*(A<45)*6 + (A>=45)*7" \
 	    --outfile="$$tmp" --type=Byte $(COG_OPTS); \
@@ -294,7 +291,7 @@ slope_classes: $(SLOPE) | $(VEC)
 aspect_sectors: $(ASPECT) | $(VEC)
 	@if [ -n "$(GDAL_CALC_BIN)" ] && [ -n "$(GDAL_POLY_BIN)" ]; then \
 	  echo "[aspect_sectors] binning 8-way aspect → polygons"; \
-	  tmp=$$(mktemp /tmp/_aspect_sectors.XXXXXX.tif); \
+	  tmp=$$(mktemp -t kfm_aspect_sectors.XXXXXX.tif); \
 	  $(GDAL_CALC_BIN) -A "$(ASPECT)" --NoDataValue=0 \
 	    --calc="(A<22.5)*(A>=0)*1 + (A>=22.5)*(A<67.5)*2 + (A>=67.5)*(A<112.5)*3 + (A>=112.5)*(A<157.5)*4 + (A>=157.5)*(A<202.5)*5 + (A>=202.5)*(A<247.5)*6 + (A>=247.5)*(A<292.5)*7 + (A>=292.5)*(A<337.5)*8 + (A>=337.5)*1" \
 	    --outfile="$$tmp" --type=Byte $(COG_OPTS); \
@@ -304,21 +301,22 @@ aspect_sectors: $(ASPECT) | $(VEC)
 	  echo "[aspect_sectors] GDAL calc/polygonize not available. Skipping."; \
 	fi
 
-# -------- NLCD (1992–2021) — Kansas COGs (NEW) --------
+# -------- NLCD (1992–2021) — Kansas COGs --------
 nlcd: $(foreach Y,$(NLCD_YEARS),$(call NLCD_COG_PATH,$(Y)))
 	@echo "✓ NLCD COGs built under $(NLCD_DST_DIR)"
 
 # Build one year: clip (nearest), COG, provenance update (if script present)
 $(NLCD_DST_DIR)/nlcd_%_ks_cog.tif: $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif
 	@mkdir -p $(NLCD_DST_DIR)
-	@if [ "$(HAVE_GDALWARP)" != "yes" ] || [ "$(HAVE_GDAL_TRANSL)" != "yes" ]; then echo "ERROR: gdalwarp/gdal_translate required for NLCD"; exit 1; fi
+	@if [ "$(HAVE_GDALWARP)" != "yes" ] || [ "$(HAVE_GDALTRANS)" != "yes" ]; then echo "ERROR: gdalwarp/gdal_translate required for NLCD"; exit 1; fi
 	@echo "[nlcd] $* → clip to Kansas bbox (nearest)"
-	@gdalwarp -te $(NLCD_BBOX) -r near -multi -overwrite $< /tmp/nlcd_$*_ks.tif
-	@echo "[nlcd] $* → translate to COG"
-	@gdal_translate /tmp/nlcd_$*_ks.tif $@ -of COG -co COMPRESS=LZW -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING
-	@rm -f /tmp/nlcd_$*_ks.tif
-	@echo "[nlcd] $* → provenance update"
-	@{ test -f "$(S)/update_registry.py" && $(PY) "$(S)/update_registry.py" "$@" "landcover_nlcd_$*"; } || true
+	@tmp=$$(mktemp -t nlcd_$*_ks.XXXXXX.tif); \
+	gdalwarp -te $(NLCD_BBOX) -r near -multi -overwrite "$<" "$$tmp"; \
+	echo "[nlcd] $* → translate to COG"; \
+	gdal_translate "$$tmp" "$@" -of COG -co COMPRESS=LZW -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING; \
+	rm -f "$$tmp"; \
+	echo "[nlcd] $* → provenance update"; \
+	{ test -f "$(S)/update_registry.py" && $(PY) "$(S)/update_registry.py" "$@" "landcover_nlcd_$*"; } || true
 
 # Optional helper to nudge users to put raw files in place
 $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif:
