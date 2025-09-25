@@ -1,22 +1,52 @@
 {
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
   "type": "Feature",
   "id": "ks_historic_overlay_lawrence_1885",
   "collection": "historic_topo",
-  "properties": {
-    "datetime": "1885-01-01T00:00:00Z"
+
+  "bbox": [-95.300, 38.900, -95.100, 39.000],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-95.300, 38.900],
+      [-95.100, 38.900],
+      [-95.100, 39.000],
+      [-95.300, 39.000],
+      [-95.300, 38.900]
+    ]]
   },
-  "bbox": [-95.3, 38.9, -95.1, 39.0],
-  "geometry": { "type": "Polygon", "coordinates": [[[...]]] },
-  "links": [
-    { "rel": "collection", "href": "../../collections/historic_topo.json", "type": "application/json" },
-    { "rel": "root", "href": "../../catalog.json", "type": "application/json" }
-  ],
+
+  "properties": {
+    "datetime": "1885-01-01T00:00:00Z",
+    "title": "Georeferenced Historic Map — Lawrence, Kansas (1885)",
+    "description": "Scanned historic map of Lawrence, Kansas (c. 1885), warped to EPSG:4326 for overlay use in web/Earth viewers.",
+    "proj:epsg": 4326,
+    "uncertainty:georef_m": null,
+    "uncertainty:notes": "Ground control points and RMS error not yet recorded. Update after QA."
+  },
+
   "assets": {
     "map": {
-      "href": "../../data/raw/ut_pcl/LAWRENCE_1885_georef.tif",
+      "href": "../../../data/cogs/overlays/LAWRENCE_1885_georef.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "Georeferenced Lawrence, Kansas (1885)"
+      "roles": ["data"],
+      "title": "COG — Lawrence 1885 (georeferenced)"
+    },
+    "thumbnail": {
+      "href": "../../../data/cogs/overlays/LAWRENCE_1885_preview.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail — Lawrence 1885"
     }
-  }
+  },
+
+  "links": [
+    { "rel": "self",       "href": "ks_historic_overlay_lawrence_1885.json",  "type": "application/json" },
+    { "rel": "collection", "href": "../../collections/historic_topo.json",     "type": "application/json" },
+    { "rel": "parent",     "href": "../../collections/historic_topo.json",     "type": "application/json" },
+    { "rel": "root",       "href": "../../catalog.json",                       "type": "application/json" }
+  ]
 }
