@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    # Don't waste CI on assets/docs-only changes
+    # Skip assets/docs-only changes
     paths-ignore:
       - "**/*.md"
       - "**/*.png"
@@ -28,12 +28,12 @@ on:
 
 permissions:
   contents: read
-  security-events: write   # required to upload SARIF
+  security-events: write   # upload SARIF
   actions: read
   packages: read
 
 concurrency:
-  group: "codeql-${{ github.ref }}"
+  group: codeql-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -52,6 +52,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: false
+
+      # ---------- Optional local CodeQL config ----------
+      - name: Detect local CodeQL config
+        id: cfg
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f .github/codeql/config.yml ]; then
+            echo "config=.github/codeql/config.yml" >> "$GITHUB_OUTPUT"
+          elif [ -f .github/codeql.yml ]; then
+            echo "config=.github/codeql.yml" >> "$GITHUB_OUTPUT"
+          else
+            echo "config=" >> "$GITHUB_OUTPUT"
+          fi
 
       # ---------------- JS/TS prep (web/) ----------------
       - name: Detect package manager (web/)
@@ -91,11 +106,7 @@ jobs:
             corepack enable
             yarn install --frozen-lockfile
           else
-            if [ -f package-lock.json ]; then
-              npm ci
-            else
-              npm install
-            fi
+            if [ -f package-lock.json ]; then npm ci; else npm install; fi
           fi
 
       # ---------------- Python prep ----------------
@@ -126,22 +137,14 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Curated packs; you can add a local config file later if needed.
           queries: +security-extended,security-and-quality
-          config: |
-            paths:
-              - src
-              - web
-              - scripts
-            paths-ignore:
-              - data
-              - stac
-              - docs
-              - "**/*.min.js"
+          # Prefer local config if present; else use inline paths filter
+          config-file: ${{ steps.cfg.outputs.config || '' }}
+          config: ${{ steps.cfg.outputs.config && '' || format('paths:\n  - src\n  - web\n  - scripts\npaths-ignore:\n  - data\n  - stac\n  - docs\n  - "**/*.min.js"\n') }}
           build-mode: autobuild
 
       # For JS/TS projects that need a build (e.g., TS → JS), autobuild usually works.
-      # If you have a custom build (vite/webpack/tsc), uncomment this step and add commands.
+      # If your app needs a custom build (vite/webpack/tsc), uncomment to force it:
       # - name: Manual build (optional)
       #   if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
       #   working-directory: web
@@ -165,4 +168,5 @@ jobs:
             echo "- Language: **${{ matrix.language }}**"
             echo "- Event: **${{ github.event_name }}**"
             echo "- Ref: **${{ github.ref }}**"
+            echo "- Config: **${{ steps.cfg.outputs.config || 'inline (paths filtered)' }}**"
           } >> "$GITHUB_STEP_SUMMARY"
