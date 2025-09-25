@@ -4,7 +4,8 @@
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
     "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
     "https://stac-extensions.github.io/checksum/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/version/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/version/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.0.0/schema.json"
   ],
   "type": "Feature",
   "id": "ks_1m_dem_2018_2020",
@@ -35,6 +36,8 @@
     "gsd": 1.0,
 
     "version": "1.0.0",
+    "created": "2025-09-25T00:00:00Z",
+    "updated": "2025-09-25T00:00:00Z",
 
     "kfm:retrieved": "2025-09-18T01:50:00Z",
     "kfm:processing": [
@@ -60,7 +63,8 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "DEM (1 m, statewide mosaic)",
       "roles": ["data"],
-      "checksum:sha256": "<<<fill-after-build>>>",
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256",
       "raster:bands": [
         {
           "sampling": "point",
@@ -75,7 +79,8 @@
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "title": "Hillshade (derived from 1 m DEM)",
       "roles": ["derived", "visual"],
-      "checksum:sha256": "<<<fill-after-build>>>",
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256",
       "raster:bands": [
         {
           "sampling": "area",
@@ -99,9 +104,9 @@
   },
 
   "links": [
-    { "rel": "self",       "href": "ks_1m_dem_2018_2020.json",        "type": "application/json" },
-    { "rel": "parent",     "href": "../collections/elevation.json",   "type": "application/json" },
+    { "rel": "self",       "href": "./ks_1m_dem_2018_2020.json",      "type": "application/json" },
     { "rel": "collection", "href": "../collections/elevation.json",   "type": "application/json" },
+    { "rel": "parent",     "href": "../collections/elevation.json",   "type": "application/json" },
     { "rel": "root",       "href": "../catalog.json",                 "type": "application/json" },
     {
       "rel": "via",
