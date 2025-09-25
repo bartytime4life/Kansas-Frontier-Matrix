@@ -17,24 +17,9 @@ Key features
 - Concurrent downloads with retries/backoff (stdlib only).
 - Emits a manifest JSON capturing provenance + checksums for MCP reproducibility.
 
-Usage
------
-# Fetch everything under data/sources and data/stac into data/raw
-python scripts/fetch.py data/sources/*.json data/stac/*.json
-
-# Fetch a specific URL into data/raw/usgs/
-python scripts/fetch.py "https://example.org/file.tif" --subdir usgs
-
-# Print plan only
-python scripts/fetch.py data/sources/*.json --dry-run
-
-# Increase concurrency and retries
-python scripts/fetch.py data/sources/*.json --jobs 6 --retries 4
-
 Notes
 -----
-- This script is dependency-light (stdlib). It does NOT convert rasters to COG,
-  nor does it `dvc add` files (you can do that in a follow-up Make target).
+- This script is dependency-light (stdlib). It does NOT convert rasters to COG.
 - STAC handling: we try assets['source'] first, otherwise all assets.
 """
 
@@ -56,7 +41,6 @@ from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Seque
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
-
 # ------------------------------
 # Small IO / JSON helpers
 # ------------------------------
@@ -65,18 +49,16 @@ def _read_json(p: Path) -> Dict[str, Any]:
     with p.open("r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def _write_json(p: Path, obj: Dict[str, Any]) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", encoding="utf-8") as f:
         json.dump(obj, f, indent=2, sort_keys=True, ensure_ascii=False)
         f.write("\n")
 
-
 def _iter_inputs(patterns: Iterable[str]) -> Iterator[str]:
     for pat in patterns:
         # If this is a URL, yield it directly
-        if pat.startswith("http://") or pat.startswith("https://"):
+        if pat.startswith(("http://", "https://")):
             yield pat
             continue
         # Otherwise expand filesystem patterns
@@ -88,7 +70,6 @@ def _iter_inputs(patterns: Iterable[str]) -> Iterator[str]:
             for m in sorted(glob.glob(pat)):
                 yield m
 
-
 def _sha256_file(path: Path, chunk: int = 1024 * 1024) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -98,7 +79,6 @@ def _sha256_file(path: Path, chunk: int = 1024 * 1024) -> str:
                 break
             h.update(b)
     return h.hexdigest()
-
 
 # ------------------------------
 # STAC / Catalog parsing
@@ -110,41 +90,73 @@ def _assets_from_stac_item(item: Mapping[str, Any]) -> List[Tuple[str, Mapping[s
     if not isinstance(assets, dict) or not assets:
         return []
     if "source" in assets and isinstance(assets["source"], Mapping):
-        # put source first
         rest = [(k, v) for k, v in assets.items() if k != "source" and isinstance(v, Mapping)]
         return [("source", assets["source"])] + rest
     return [(k, v) for k, v in assets.items() if isinstance(v, Mapping)]
 
+def _collect_from_endpoints(ep: Any, out: List[str]) -> None:
+    """
+    Accepts:
+      endpoint: {type?, url?, urls?, href?}
+      endpoints: [ endpoint, ... ]
+    """
+    eps = ep
+    if isinstance(ep, Mapping):
+        eps = [ep]
+    if not isinstance(eps, list):
+        return
+    for e in eps:
+        if not isinstance(e, Mapping):
+            continue
+        # array urls
+        urls = e.get("urls")
+        if isinstance(urls, list):
+            for u in urls:
+                if isinstance(u, str) and u.startswith(("http://", "https://")):
+                    out.append(u)
+        # single url|href
+        for k in ("url", "href"):
+            u = e.get(k)
+            if isinstance(u, str) and u.startswith(("http://", "https://")):
+                out.append(u)
 
-def _urls_from_json(doc: Mapping[str, Any]) -> List[str]:
+def _urls_from_json(doc: Any) -> List[str]:
     """
     Extract download URLs from:
       - STAC Item (assets)
-      - Simple catalogs: {"assets":[{"href":...}, ...]} OR {"urls":["...", "..."]} OR list of hrefs
+      - Simple catalogs: {"assets":[{"href":...}, ...]} OR {"urls":["...", "..."]}
+      - Sources: {"endpoint": {...}} or {"endpoints":[...]}
+      - Or a top-level list of URL strings
     """
     out: List[str] = []
 
     # STAC Item (type=Feature) with assets map
-    if doc.get("type") == "Feature" and "assets" in doc:
+    if isinstance(doc, Mapping) and doc.get("type") == "Feature" and "assets" in doc:
         for _name, a in _assets_from_stac_item(doc):
             href = a.get("href")
             if isinstance(href, str) and href.startswith(("http://", "https://")):
                 out.append(href)
 
-    # Generic catalog forms
-    assets = doc.get("assets")
-    if isinstance(assets, list):
-        for a in assets:
-            if isinstance(a, Mapping):
-                href = a.get("href")
-                if isinstance(href, str) and href.startswith(("http://", "https://")):
-                    out.append(href)
-
-    urls = doc.get("urls")
-    if isinstance(urls, list):
-        for u in urls:
-            if isinstance(u, str) and u.startswith(("http://", "https://")):
-                out.append(u)
+    if isinstance(doc, Mapping):
+        # Generic catalog: assets array
+        assets = doc.get("assets")
+        if isinstance(assets, list):
+            for a in assets:
+                if isinstance(a, Mapping):
+                    href = a.get("href")
+                    if isinstance(href, str) and href.startswith(("http://", "https://")):
+                        out.append(href)
+        # Generic catalog: urls array
+        urls = doc.get("urls")
+        if isinstance(urls, list):
+            for u in urls:
+                if isinstance(u, str) and u.startswith(("http://", "https://")):
+                    out.append(u)
+        # Sources: endpoint / endpoints
+        if "endpoint" in doc:
+            _collect_from_endpoints(doc["endpoint"], out)
+        if "endpoints" in doc:
+            _collect_from_endpoints(doc["endpoints"], out)
 
     # Allow top-level arrays of strings (lenient)
     if isinstance(doc, list):
@@ -161,17 +173,17 @@ def _urls_from_json(doc: Mapping[str, Any]) -> List[str]:
             seen.add(u)
     return deduped
 
-
-def collect_urls(inputs: Iterable[str]) -> List[str]:
+def collect_urls(inputs: Iterable[str]) -> List[Tuple[str, Optional[str]]]:
     """
     For each input:
-      - if URL: keep it
-      - if JSON file: parse and collect URLs
+      - if URL: keep it, (None) as logical group
+      - if JSON file: parse and collect URLs, grouped under that JSON stem
+    Returns list of (url, group_name) where group_name becomes subdir if not overridden.
     """
-    urls: List[str] = []
+    grouped: List[Tuple[str, Optional[str]]] = []
     for item in _iter_inputs(inputs):
         if item.startswith(("http://", "https://")):
-            urls.append(item)
+            grouped.append((item, None))
             continue
         p = Path(item)
         try:
@@ -180,19 +192,19 @@ def collect_urls(inputs: Iterable[str]) -> List[str]:
             print(f"[WARN] Cannot parse JSON {p}: {e}", file=sys.stderr)
             continue
         found = _urls_from_json(doc)
-        if not found and doc.get("type") == "Feature":
-            # Informative hint if a STAC item lacks absolute asset HREFs
+        if not found and isinstance(doc, Mapping) and doc.get("type") == "Feature":
             print(f"[WARN] STAC item {p} had no HTTP(S) asset hrefs; skipping.", file=sys.stderr)
-        urls.extend(found)
-    # unique, stable order
+        group = p.stem  # default subdir for this JSON
+        for u in found:
+            grouped.append((u, group))
+    # unique URLs preserving order (keep first group occurrence)
     seen = set()
-    out = []
-    for u in urls:
+    out: List[Tuple[str, Optional[str]]] = []
+    for u, g in grouped:
         if u not in seen:
-            out.append(u)
+            out.append((u, g))
             seen.add(u)
     return out
-
 
 # ------------------------------
 # Download machinery
@@ -208,7 +220,8 @@ class FetchResult:
     elapsed_s: float
     ok: bool
     error: Optional[str] = None
-
+    content_type: Optional[str] = None
+    content_disp: Optional[str] = None
 
 def _human(n: float) -> str:
     if n <= 0:
@@ -218,73 +231,134 @@ def _human(n: float) -> str:
     i = max(0, min(i, len(units) - 1))
     return f"{n / (1024 ** i):.2f}{units[i]}"
 
+def _choose_name_from_url(url: str) -> str:
+    parsed = urlparse(url)
+    name = Path(parsed.path).name or "download.bin"
+    return name
 
-def _download_one(url: str, dest: Path, retries: int, timeout: float, overwrite: bool) -> FetchResult:
-    dest.parent.mkdir(parents=True, exist_ok=True)
+def _filename_from_content_disposition(cd: str) -> Optional[str]:
+    # very simple parser: look for filename="..."; fallback filename=...
+    if not cd:
+        return None
+    cd = cd.strip()
+    lower = cd.lower()
+    if "filename*" in lower:
+        # RFC5987 form filename*=UTF-8''name.ext  — keep the last token after ''
+        try:
+            part = cd.split("filename*=", 1)[1].split(";")[0].strip()
+            if "''" in part:
+                part = part.split("''", 1)[1]
+            return Path(part.strip('"')).name
+        except Exception:
+            return None
+    if "filename=" in lower:
+        try:
+            part = cd.split("filename=", 1)[1].split(";")[0].strip().strip('"')
+            return Path(part).name
+        except Exception:
+            return None
+    return None
+
+def target_path_for(url: str, base: Path, *, subdir: Optional[str], by_domain: bool, headers: Optional[Mapping[str, str]] = None) -> Path:
+    """
+    Build a safe target path under base/[subdir|domain]/filename.
+    If Content-Disposition suggests a filename, prefer it.
+    """
+    suggested_name = _choose_name_from_url(url)
+    if headers:
+        cd = headers.get("Content-Disposition") or headers.get("content-disposition")
+        fn = _filename_from_content_disposition(cd) if cd else None
+        if fn:
+            suggested_name = fn
+    # fold subdir or domain as grouping
+    final_dir = base
+    if subdir:
+        final_dir = final_dir / subdir
+    elif by_domain:
+        dom = (urlparse(url).netloc or "download").split(":")[0]
+        final_dir = final_dir / dom
+    final_dir.mkdir(parents=True, exist_ok=True)
+    return final_dir / suggested_name
+
+def _download_one(
+    url: str,
+    dest_base: Path,
+    *,
+    retries: int,
+    timeout: float,
+    overwrite: bool,
+    subdir: Optional[str],
+    by_domain: bool,
+) -> FetchResult:
     t0 = time.time()
+    headers: Dict[str, str] = {}
+    existed = False
 
-    # If file exists and overwrite=False, try to verify quickly
+    backoff = 1.0
+    last_err: Optional[str] = None
+
+    # Attempt HEAD to glean headers/filename (ignore errors silently)
+    try:
+        req_h = Request(url, method="HEAD", headers={"User-Agent": "kfm-fetch/1.1"})
+        with contextlib.closing(urlopen(req_h, timeout=timeout)) as resp:
+            for k, v in (resp.headers.items() or []):
+                headers[k] = v
+    except Exception:
+        pass
+
+    # Build dest path (may include domain or json-stem subdir)
+    dest = target_path_for(url, dest_base, subdir=subdir, by_domain=by_domain, headers=headers)
+
+    # If file exists and overwrite=False, verify quickly
     if dest.exists() and not overwrite:
         try:
             sha = _sha256_file(dest)
             size = dest.stat().st_size
-            # Write (or refresh) sidecar
-            (dest.with_suffix(dest.suffix + ".sha256")).write_text(sha + "\n", encoding="utf-8")
-            return FetchResult(url, str(dest), size, sha, True, time.time() - t0, True, None)
+            dest.with_suffix(dest.suffix + ".sha256").write_text(sha + "\n", encoding="utf-8")
+            return FetchResult(url, str(dest), size, sha, True, time.time() - t0, True, None, headers.get("Content-Type"), headers.get("Content-Disposition"))
         except Exception as e:
-            # Fall through to re-download attempt
             print(f"[INFO] Re-downloading {dest.name}: existing hash failed: {e}", file=sys.stderr)
 
-    # Retry loop
-    backoff = 1.0
-    last_err: Optional[str] = None
     for attempt in range(1, retries + 2):
         try:
-            req = Request(url, headers={"User-Agent": "kfm-fetch/1.0"})
+            req = Request(url, headers={"User-Agent": "kfm-fetch/1.1"})
             with contextlib.closing(urlopen(req, timeout=timeout)) as resp:
-                # Try to infer filename from URL if needed
+                # Merge GET headers (may contain better Content-Disposition)
+                resp_headers = dict(headers)
+                for k, v in (resp.headers.items() or []):
+                    resp_headers[k] = v
+                # Re-evaluate filename if response differs
+                dest = target_path_for(url, dest_base, subdir=subdir, by_domain=by_domain, headers=resp_headers)
                 tmp = dest.with_suffix(dest.suffix + ".part")
+                # stream to disk
                 with tmp.open("wb") as f:
-                    # Stream to disk
-                    total = 0
                     while True:
                         chunk = resp.read(1024 * 1024)
                         if not chunk:
                             break
                         f.write(chunk)
-                        total += len(chunk)
-                # Move into place
-                tmp.rename(dest)
-            sha = _sha256_file(dest)
-            (dest.with_suffix(dest.suffix + ".sha256")).write_text(sha + "\n", encoding="utf-8")
-            return FetchResult(url, str(dest), dest.stat().st_size, sha, False, time.time() - t0, True, None)
+                # atomic move
+                tmp.replace(dest)
+                sha = _sha256_file(dest)
+                dest.with_suffix(dest.suffix + ".sha256").write_text(sha + "\n", encoding="utf-8")
+                return FetchResult(url, str(dest), dest.stat().st_size, sha, existed, time.time() - t0, True, None,
+                                   resp_headers.get("Content-Type"), resp_headers.get("Content-Disposition"))
         except Exception as e:
             last_err = f"{type(e).__name__}: {e}"
             if attempt <= retries:
                 time.sleep(backoff)
-                backoff *= 2
+                backoff = min(backoff * 2, 30.0)
             else:
                 break
 
-    return FetchResult(url, str(dest), 0, "", False, time.time() - t0, False, last_err)
-
-
-def target_path_for(url: str, base: Path, subdir: Optional[str] = None) -> Path:
-    """
-    Build a safe target path for a URL under base/subdir, preserving the filename.
-    """
-    parsed = urlparse(url)
-    name = Path(parsed.path).name or "download.bin"
-    if subdir:
-        return base / subdir / name
-    return base / name
-
+    return FetchResult(url, str(dest), 0, "", False, time.time() - t0, False, last_err, headers.get("Content-Type"), headers.get("Content-Disposition"))
 
 def fetch_urls(
-    urls: Sequence[str],
+    grouped: Sequence[Tuple[str, Optional[str]]],
     base_dir: Path,
     *,
     subdir: Optional[str],
+    by_domain: bool,
     jobs: int,
     retries: int,
     timeout: float,
@@ -292,19 +366,29 @@ def fetch_urls(
     dry_run: bool,
 ) -> List[FetchResult]:
     results: List[FetchResult] = []
-
     if dry_run:
-        for url in urls:
-            dest = target_path_for(url, base_dir, subdir=subdir)
+        for url, g in grouped:
+            eff_subdir = subdir or g
+            dest = target_path_for(url, base_dir, subdir=eff_subdir, by_domain=by_domain, headers=None)
             print(f"[PLAN] {url} -> {dest}")
         return results
 
-    # Concurrency
     with cf.ThreadPoolExecutor(max_workers=max(1, jobs)) as ex:
         futs = []
-        for url in urls:
-            dest = target_path_for(url, base_dir, subdir=subdir)
-            futs.append(ex.submit(_download_one, url, dest, retries, timeout, overwrite))
+        for url, g in grouped:
+            eff_subdir = subdir or g
+            futs.append(
+                ex.submit(
+                    _download_one,
+                    url,
+                    base_dir,
+                    retries=retries,
+                    timeout=timeout,
+                    overwrite=overwrite,
+                    subdir=eff_subdir,
+                    by_domain=by_domain,
+                )
+            )
         for fut in cf.as_completed(futs):
             res = fut.result()
             results.append(res)
@@ -315,7 +399,6 @@ def fetch_urls(
 
     return results
 
-
 def write_manifest(results: Sequence[FetchResult], manifest_path: Path, inputs: Sequence[str]) -> None:
     manifest = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -324,7 +407,6 @@ def write_manifest(results: Sequence[FetchResult], manifest_path: Path, inputs: 
     }
     _write_json(manifest_path, manifest)
     print(f"[OK] wrote manifest: {manifest_path}")
-
 
 # ------------------------------
 # CLI
@@ -337,7 +419,8 @@ def _build_argparser() -> argparse.ArgumentParser:
     )
     ap.add_argument("inputs", nargs="+", help="JSON files/dirs/globs or HTTP(S) URLs")
     ap.add_argument("--dest", type=Path, default=Path("data/raw"), help="Destination base directory (default: data/raw)")
-    ap.add_argument("--subdir", type=str, default=None, help="Optional subdirectory under dest/ to place files")
+    ap.add_argument("--subdir", type=str, default=None, help="Optional subdirectory under dest/ to place files (default: per-JSON-stem)")
+    ap.add_argument("--by-domain", action="store_true", help="Group downloads under dest/<domain>/ if subdir is not provided")
     ap.add_argument("--jobs", type=int, default=4, help="Concurrent downloads (default: 4)")
     ap.add_argument("--retries", type=int, default=2, help="Retries per URL on failure (default: 2)")
     ap.add_argument("--timeout", type=float, default=120.0, help="Socket timeout in seconds (default: 120)")
@@ -346,22 +429,22 @@ def _build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--manifest", type=Path, default=Path("data/raw/manifest.fetch.json"), help="Manifest output path")
     return ap
 
-
 def main(argv: Optional[List[str]] = None) -> int:
     ap = _build_argparser()
     args = ap.parse_args(argv)
 
-    # Collect URLs from inputs
-    urls = collect_urls(args.inputs)
-    if not urls:
+    # Collect URLs (with group name from JSON stem when applicable)
+    grouped = collect_urls(args.inputs)
+    if not grouped:
         print("[WARN] No HTTP(S) URLs found in inputs.", file=sys.stderr)
         return 1
 
     # Fetch
     results = fetch_urls(
-        urls,
+        grouped,
         args.dest,
         subdir=args.subdir,
+        by_domain=bool(args.by_domain),
         jobs=max(1, int(args.jobs)),
         retries=max(0, int(args.retries)),
         timeout=max(1.0, float(args.timeout)),
@@ -369,17 +452,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         dry_run=bool(args.dry_run),
     )
 
-    # Write manifest if any results (non-dry-run)
+    # Manifest (non-dry-run)
     if not args.dry_run:
         write_manifest(results, args.manifest, args.inputs)
-
-        # Non-zero if any failed
         if any(not r.ok for r in results):
             return 2
 
     return 0
 
-
 if __name__ == "__main__":
     raise SystemExit(main())
-
