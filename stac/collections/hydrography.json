@@ -1,0 +1,21 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "hydrography",
+  "title": "Hydrography (Rivers, Streams, Waterbodies)",
+  "description": "Vector hydrography (NHD-derived centerlines and polygons) for Kansas.",
+  "license": "CC-BY-4.0",
+  "keywords": ["hydrography", "rivers", "streams", "water", "NHD", "vectors"],
+  "providers": [
+    { "name": "Kansas Frontier Matrix Project", "roles": ["processor", "host"], "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix" }
+  ],
+  "extent": {
+    "spatial": { "bbox": [[-102.051, 36.993, -94.588, 40.003]] },
+    "temporal": { "interval": [[null, null]] }
+  },
+  "links": [
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "self", "href": "hydrography.json", "type": "application/json" }
+  ]
+}
