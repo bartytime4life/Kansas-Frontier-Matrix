@@ -5,7 +5,7 @@
   ],
   "type": "Feature",
   "id": "usgs_topo_larned_1894",
-  "collection": "base_maps",
+  "collection": "historic_topo",
 
   "bbox": [-99.401, 38.000, -99.000, 38.217],
   "geometry": {
@@ -43,8 +43,8 @@
 
   "links": [
     { "rel": "self",       "href": "usgs_topo_larned_1894.json",          "type": "application/json" },
-    { "rel": "collection", "href": "../../collections/base_maps.json",    "type": "application/json" },
-    { "rel": "parent",     "href": "../../collections/base_maps.json",    "type": "application/json" },
-    { "rel": "root",       "href": "../../catalog.json",                  "type": "application/json" }
+    { "rel": "collection", "href": "../../collections/historic_topo.json", "type": "application/json" },
+    { "rel": "parent",     "href": "../../collections/historic_topo.json", "type": "application/json" },
+    { "rel": "root",       "href": "../../catalog.json",                   "type": "application/json" }
   ]
 }
