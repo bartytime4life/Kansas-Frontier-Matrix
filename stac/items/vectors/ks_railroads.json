@@ -1,0 +1,27 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_railroads",
+  "collection": "infrastructure",
+  "properties": {
+    "title": "Kansas Railroads (historical vectors)",
+    "description": "Historical railroad alignments in Kansas, vectorized for map overlays.",
+    "start_datetime": null,
+    "end_datetime": null,
+    "license": "CC-BY-4.0"
+  },
+  "geometry": null,
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "links": [
+    { "rel": "collection", "href": "../../collections/infrastructure.json", "type": "application/json" },
+    { "rel": "root", "href": "../../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "data": {
+      "href": "../../data/vectors/ks_railroads.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Kansas Railroads Vector Data"
+    }
+  }
+}
