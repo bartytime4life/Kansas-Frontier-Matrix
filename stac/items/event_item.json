@@ -9,7 +9,7 @@
   "id": "events_PLACE_EVENT_YYYY",
   "collection": "events",
 
-  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "bbox": [-100.00, 38.00, -98.00, 39.00],
   "geometry": {
     "type": "LineString",
     "coordinates": [
@@ -19,12 +19,13 @@
   },
 
   "properties": {
-    "datetime": "YYYY-01-01T00:00:00Z",
     "title": "Event — NAME (YYYY)",
     "description": "Description of the historical event (battle, treaty, tornado, flood, etc.).",
     "event:type": "tornado",
+    "datetime": "YYYY-01-01T00:00:00Z",
     "proj:epsg": 4326,
-    "created": "2025-09-23T00:00:00Z"
+    "created": "2025-09-23T00:00:00Z",
+    "updated": "2025-09-25T00:00:00Z"
   },
 
   "assets": {
@@ -33,23 +34,23 @@
       "type": "application/geo+json",
       "roles": ["data"],
       "title": "Event geometry (GeoJSON)",
-      "file:size": null,
-      "checksum:sha256": null
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256"
     },
     "report": {
       "href": "../../data/events/REPLACE_FILE.pdf",
       "type": "application/pdf",
       "roles": ["metadata"],
       "title": "Event report / source document (PDF)",
-      "file:size": null,
-      "checksum:sha256": null
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256"
     }
   },
 
   "links": [
+    { "rel": "self",       "href": "./event_item.json",         "type": "application/json" },
     { "rel": "collection", "href": "../collections/events.json", "type": "application/json" },
     { "rel": "parent",     "href": "../collections/events.json", "type": "application/json" },
-    { "rel": "root",       "href": "../catalog.json",            "type": "application/json" },
-    { "rel": "self",       "href": "event_item.json",            "type": "application/json" }
+    { "rel": "root",       "href": "../catalog.json",            "type": "application/json" }
   ]
 }
