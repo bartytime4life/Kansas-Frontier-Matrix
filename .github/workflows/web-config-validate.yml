@@ -1,6 +1,8 @@
+# .github/workflows/web-config-validate.yml
 name: Web Config Validate
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
     paths:
@@ -17,19 +19,100 @@ on:
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
 
+# Keep runs from stepping on each other and set least-privilege defaults
+concurrency:
+  group: web-config-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   validate:
+    name: JSON & Schema Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
-      - run: |
-          python -m pip install --upgrade pip
-          pip install pytest jsonschema
-          pytest -q -k web_configs --junitxml=pytest-web-configs.xml
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          name: pytest-web-configs
+          fetch-depth: 0
+
+      - name: Show changed files (PR only)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Changed files:"
+          git --no-pager diff --name-only origin/${{ github.base_ref }}... | sed 's/^/ - /'
+
+      # Fast JSON syntax validation (catches commas/braces/quotes issues early)
+      - name: Validate JSON syntax with jq
+        shell: bash
+        run: |
+          set -euo pipefail
+          had_any=false
+
+          check_json() {
+            local f="$1"
+            if [ -f "$f" ]; then
+              had_any=true
+              echo "Checking JSON syntax: $f"
+              jq -e . "$f" >/dev/null
+            fi
+          }
+
+          check_glob() {
+            shopt -s nullglob
+            for f in "$@"; do
+              [ -e "$f" ] || continue
+              had_any=true
+              echo "Checking JSON syntax: $f"
+              jq -e . "$f" >/dev/null
+            done
+          }
+
+          check_json web/app.config.json || true
+          check_json web/layers.json     || true
+          check_glob web/config/*.json
+
+          if [ "$had_any" = false ]; then
+            echo "No web config JSON files present to validate."
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install repo extras if present; otherwise install minimal deps
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          # Ensure pytest & jsonschema available regardless
+          pip install pytest jsonschema
+
+      # Run only the web config tests; accept both name pattern and file path
+      - name: Run pytest (web config tests)
+        run: |
+          set -e
+          if [ -f tests/test_web_configs.py ]; then
+            pytest -q tests/test_web_configs.py --junitxml=pytest-web-configs.xml
+          else
+            # Fallback: keyword selection if test file path changes
+            pytest -q -k "web_configs" --junitxml=pytest-web-configs.xml
+          fi
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-web-configs-${{ github.run_id }}
           path: pytest-web-configs.xml
+          if-no-files-found: warn
+          retention-days: 14
