@@ -15,19 +15,18 @@ Use cases
 What it does
 ------------
 • Validates & parses doc.kml (or a given .kml file).
-• Locates <Icon><href> and <Link><href> elements (GroundOverlay, ScreenOverlay,
-  NetworkLink, Model/ResourceMap) in the KML namespace.
+• Locates hrefs in common places (Overlays, NetworkLinks, Models/ResourceMap,
+  PhotoOverlay, and IconStyles; including legacy <Url> and gx: elements).
 • For LOCAL paths: copies into KMZ under prefix/ and rewrites href to relative.
-• For REMOTE URLs: keeps them by default (Google Earth can stream them);
-  pass --strip-remote to REMOVE the owning feature (GroundOverlay, NetworkLink, etc.)
+• For REMOTE URLs: keeps by default (Google Earth can stream them);
+  pass --strip-remote to REMOVE the owning feature (Overlay/NetworkLink/Model/PhotoOverlay),
   or --blank-remote to blank the href but keep the node.
-• Writes .sha256 and a tiny .meta.json next to the KMZ.
+• Optionally bundle extra files via --extra 'glob'.
 
-Notes
------
-• Uses xml.etree (no lxml); parent-removal handled via a parent map.
-• Does not attempt to rewrite nested NetworkLink imports; it packages local refs only.
-• If input is already a KMZ, it can simply copy/rewrite name+sidecars.
+Outputs
+-------
+• KMZ (doc.kml at root + assets under <prefix>/).
+• <kmz>.sha256 and <kmz>.meta.json (size, timestamp, argv).
 
 Examples
 --------
@@ -39,6 +38,9 @@ Examples
 
   # Fully offline: strip remote hrefs and keep only local
   python scripts/pack_kmz.py --kml out/regionated --out dist --strip-remote
+
+  # Include additional files not referenced by hrefs
+  python scripts/pack_kmz.py --kml out/regionated --out dist --extra "out/regionated/**/*.dae"
 """
 
 from __future__ import annotations
@@ -52,28 +54,40 @@ import time
 import zipfile
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from urllib.parse import urlparse
 from xml.etree import ElementTree as ET
 
-# KML namespace(s)
-KML_NS = {"kml": "http://www.opengis.net/kml/2.2"}
+# Namespaces
+KML_NS_URI = "http://www.opengis.net/kml/2.2"
+GX_NS_URI = "http://www.google.com/kml/ext/2.2"
+KML_NS = {"kml": KML_NS_URI, "gx": GX_NS_URI}
+
 # Common href locations we care about
 HREF_XPATHS = (
+    # Overlays
     ".//kml:GroundOverlay/kml:Icon/kml:href",
     ".//kml:ScreenOverlay/kml:Icon/kml:href",
+    ".//kml:PhotoOverlay/kml:Icon/kml:href",
+    # NetworkLink (KML 2.2 and legacy)
     ".//kml:NetworkLink/kml:Link/kml:href",
+    ".//kml:NetworkLink/kml:Url/kml:href",
+    # Model/ResourceMap
     ".//kml:Model/kml:Link/kml:href",
     ".//kml:Model/kml:ResourceMap/kml:Alias/kml:targetHref",
+    # Styles that point to icons
+    ".//kml:Style/kml:IconStyle/kml:Icon/kml:href",
 )
 
 # Owning feature tags we may remove if strip-remote is set
 OWNER_TAGS = (
-    f"{{{KML_NS['kml']}}}GroundOverlay",
-    f"{{{KML_NS['kml']}}}ScreenOverlay",
-    f"{{{KML_NS['kml']}}}NetworkLink",
-    f"{{{KML_NS['kml']}}}Model",
+    f"{{{KML_NS_URI}}}GroundOverlay",
+    f"{{{KML_NS_URI}}}ScreenOverlay",
+    f"{{{KML_NS_URI}}}PhotoOverlay",
+    f"{{{KML_NS_URI}}}NetworkLink",
+    f"{{{KML_NS_URI}}}Model",
 )
 
-REMOTE_RX = re.compile(r"^(https?|s3|gs)://", re.IGNORECASE)
+REMOTE_SCHEMES = ("http", "https", "s3", "gs")
 
 
 # ---------------------------------------------------------------------------
@@ -89,7 +103,11 @@ def _sha256(p: Path, chunk: int = 1 << 20) -> str:
 
 
 def _is_remote(s: str) -> bool:
-    return bool(REMOTE_RX.match(s.strip()))
+    try:
+        pr = urlparse(s.strip())
+        return pr.scheme.lower() in REMOTE_SCHEMES
+    except Exception:
+        return False
 
 
 def _is_kmz(path: Path) -> bool:
@@ -105,13 +123,18 @@ def _collect_href_nodes(root: ET.Element) -> List[ET.Element]:
     out: List[ET.Element] = []
     for xp in HREF_XPATHS:
         out.extend(root.findall(xp, KML_NS))
+    # Try gx Icon hrefs if present
+    try:
+        out.extend(root.findall(".//kml:Style/gx:IconStyle/kml:Icon/kml:href", KML_NS))
+    except Exception:
+        pass
     return out
 
 
 def _find_owner(node: ET.Element, parents: Dict[ET.Element, ET.Element]) -> Optional[ET.Element]:
-    """Walk upward to the nearest known owner (GroundOverlay/ScreenOverlay/NetworkLink/Model)."""
+    """Walk upward to the nearest known owner feature (Overlay/NetworkLink/Model)."""
     cur = node
-    for _ in range(8):  # shallow trees usually
+    for _ in range(12):  # deep enough for most trees
         parent = parents.get(cur)
         if parent is None:
             return None
@@ -121,17 +144,39 @@ def _find_owner(node: ET.Element, parents: Dict[ET.Element, ET.Element]) -> Opti
     return None
 
 
-def _resolve_local_asset(base_dir: Path, href_text: str) -> Optional[Path]:
+def _project_root_from(kml_path: Path) -> Path:
+    # Heuristic: 2 levels up for stac/items/… style; else nearest dir with a repo marker if present
+    for parent in [kml_path.parent] + list(kml_path.parents):
+        for marker in (".git", "pyproject.toml", "README.md"):
+            if (parent / marker).exists():
+                return parent
+    return kml_path.parents[2] if len(kml_path.parents) >= 2 else kml_path.parent
+
+
+def _resolve_local_asset(base_dir: Path, href_text: str, item_path: Path) -> Optional[Path]:
     """
     Try to resolve a local file:
+      - file:// path → use
       - absolute path → use if exists
       - relative path → base_dir / href
-      - as last resort → base_dir / basename(href)
+      - "data/..." → repo-root / href
+      - last resort → base_dir / basename(href)
     """
-    p = Path(href_text)
+    s = (href_text or "").strip()
+    if not s:
+        return None
+    pr = urlparse(s)
+    if pr.scheme.lower() == "file":
+        p = Path(pr.path)
+        return p if p.exists() else None
+    p = Path(s)
     if p.is_absolute():
         return p if p.exists() else None
-    cand = (base_dir / href_text).resolve()
+    if s.startswith("data/"):
+        root = _project_root_from(item_path)
+        cand = (root / s).resolve()
+        return cand if cand.exists() else None
+    cand = (base_dir / s).resolve()
     if cand.exists():
         return cand
     alt = (base_dir / p.name).resolve()
@@ -142,7 +187,19 @@ def _resolve_local_asset(base_dir: Path, href_text: str) -> Optional[Path]:
 # KML processing
 # ---------------------------------------------------------------------------
 
+def _read_kml_name(root: ET.Element) -> Optional[str]:
+    # Prefer Document/name, fallback to root name
+    nm = root.find("./kml:Document/kml:name", KML_NS)
+    if nm is not None and (nm.text or "").strip():
+        return nm.text.strip()
+    nm = root.find("./kml:name", KML_NS)
+    if nm is not None and (nm.text or "").strip():
+        return nm.text.strip()
+    return None
+
+
 def rewrite_hrefs(
+    item_path: Path,
     doc_dir: Path,
     root: ET.Element,
     *,
@@ -158,14 +215,14 @@ def rewrite_hrefs(
     parents = _build_parent_map(root)
     href_nodes = _collect_href_nodes(root)
 
-    # Validate top-level
+    # Validate top-level document presence
     if root.tag.endswith("kml"):
         doc = root.find("./kml:Document", KML_NS)
         if doc is None:
             raise ValueError("No <Document> element found in KML")
 
-    # Remote removals (perform after scanning to avoid iterator invalidation)
     owners_to_remove: List[ET.Element] = []
+    owners_seen: set[ET.Element] = set()
 
     for href_node in href_nodes:
         text = (href_node.text or "").strip()
@@ -175,8 +232,9 @@ def rewrite_hrefs(
         if _is_remote(text):
             if strip_remote:
                 owner = _find_owner(href_node, parents)
-                if owner is not None:
+                if owner is not None and owner not in owners_seen:
                     owners_to_remove.append(owner)
+                    owners_seen.add(owner)
                 else:
                     # No known owner – safest fallback: blank
                     href_node.text = ""
@@ -186,9 +244,8 @@ def rewrite_hrefs(
             continue
 
         # Local asset
-        src = _resolve_local_asset(doc_dir, text)
+        src = _resolve_local_asset(doc_dir, text, item_path)
         if not src:
-            # show both original and basename lookup attempt
             sys.stderr.write(f"[WARN] missing local asset referenced in href: {text}\n")
             continue
 
@@ -197,9 +254,9 @@ def rewrite_hrefs(
             assets.append(src)
         href_node.text = f"{prefix}/{src.name}"
 
-    # Remove owners of stripped remotes
+    # Remove owners of stripped remotes (with the original parent map)
     for owner in owners_to_remove:
-        parent = _build_parent_map(root).get(owner)
+        parent = parents.get(owner)
         if parent is not None:
             parent.remove(owner)
 
@@ -251,14 +308,14 @@ def write_kmz(out_dir: Path, kmz_name: str, kml_text: str, assets: Sequence[Path
 
 
 def write_sidecars(kmz_path: Path) -> None:
-    (kmz_path.with_suffix(kmz_path.suffix + ".sha256")).write_text(_sha256(kmz_path) + "\n", encoding="utf-8")
+    kmz_path.with_suffix(kmz_path.suffix + ".sha256").write_text(_sha256(kmz_path) + "\n", encoding="utf-8")
     meta = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "kmz": kmz_path.name,
         "size": kmz_path.stat().st_size,
         "argv": sys.argv,
     }
-    (kmz_path.with_suffix(".meta.json")).write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    kmz_path.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -267,7 +324,7 @@ def write_sidecars(kmz_path: Path) -> None:
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Package KML + local assets into a KMZ.")
-    ap.add_argument("--kml", required=True, type=Path, help="KML file or directory containing doc.kml")
+    ap.add_argument("--kml", required=True, type=Path, help="KML file or directory containing doc.kml (or an existing .kmz)")
     ap.add_argument("--out", required=True, type=Path, help="Output directory for KMZ + sidecars")
     ap.add_argument("--kmz", default="overlay.kmz", help="Output KMZ filename (default: overlay.kmz)")
     ap.add_argument("--prefix", default="files", help="Subfolder name inside KMZ for assets (default: files)")
@@ -275,6 +332,10 @@ def parse_args() -> argparse.Namespace:
                     help="Remove features whose <href> points to http(s), making KMZ fully offline")
     ap.add_argument("--blank-remote", action="store_true",
                     help="Blank http(s) hrefs instead of removing owning feature")
+    ap.add_argument("--extra", action="append", default=[],
+                    help="Glob(s) of additional local files to include under prefix/ (repeatable)")
+    ap.add_argument("--name-from-kml", action="store_true",
+                    help="Derive KMZ name from <Document><name> (fallback to --kmz)")
     return ap.parse_args()
 
 
@@ -295,18 +356,39 @@ def main() -> int:
     tree = load_kml(kml_file)
     root = tree.getroot()
 
+    # KMZ name from KML if asked
+    kmz_name = args.kmz
+    if args.name_from_kml:
+        nm = _read_kml_name(root)
+        if nm:
+            # sanitize minimal: spaces to underscores; drop path-hostiles
+            safe = re.sub(r"\s+", "_", nm.strip())
+            safe = "".join(ch if ch.isalnum() or ch in ("-", "_", ".") else "_" for ch in safe)
+            if safe:
+                kmz_name = safe if safe.lower().endswith(".kmz") else f"{safe}.kmz"
+
     # Rewrite hrefs and collect assets
     assets = rewrite_hrefs(
-        doc_dir,
-        root,
+        item_path=kml_file,
+        doc_dir=doc_dir,
+        root=root,
         prefix=args.prefix,
         strip_remote=bool(args.strip_remote),
         blank_remote=bool(args.blank_remote),
     )
 
+    # Include extra globs if requested
+    extras: List[Path] = []
+    for pat in (args.extra or []):
+        for m in sorted(Path().glob(pat)):
+            if m.is_file() and m not in assets and m not in extras:
+                extras.append(m)
+    if extras:
+        assets.extend(extras)
+
     # Emit KMZ
     kml_text = ET.tostring(root, encoding="utf-8", xml_declaration=True).decode("utf-8")
-    kmz_path = write_kmz(args.out, args.kmz, kml_text, assets, prefix=args.prefix)
+    kmz_path = write_kmz(args.out, kmz_name, kml_text, assets, prefix=args.prefix)
     write_sidecars(kmz_path)
     print(f"[OK] KMZ → {kmz_path} (assets: {len(assets)})")
     if args.strip_remote:
