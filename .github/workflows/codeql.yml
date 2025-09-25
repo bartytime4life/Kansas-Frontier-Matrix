@@ -9,11 +9,19 @@ on:
       - "**/*.md"
       - "**/*.png"
       - "**/*.jpg"
+      - "**/*.jpeg"
       - "**/*.svg"
+      - "docs/**"
       - "data/**"
       - "stac/**"
+      - ".github/workflows/**"
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - "data/**"
+      - "stac/**"
   schedule:
     # Weekly run (Sunday 02:45 UTC)
     - cron: "45 2 * * 0"
@@ -23,10 +31,15 @@ permissions:
   security-events: write
   actions: read
 
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     strategy:
       fail-fast: false
@@ -39,39 +52,80 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Optional: set up Node for JS/TS dependency resolution (autobuild will still work without this)
+      # ---------- JS/TS prep (pm autodetect + cache) ----------
+      - name: Detect package manager (web/)
+        id: pm
+        if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f web/pnpm-lock.yaml ]; then
+            echo "pm=pnpm" >> "$GITHUB_OUTPUT"
+            echo "lock=web/pnpm-lock.yaml" >> "$GITHUB_OUTPUT"
+          elif [ -f web/yarn.lock ]; then
+            echo "pm=yarn" >> "$GITHUB_OUTPUT"
+            echo "lock=web/yarn.lock" >> "$GITHUB_OUTPUT"
+          else
+            echo "pm=npm" >> "$GITHUB_OUTPUT"
+            echo "lock=web/package-lock.json" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup Node
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: ${{ steps.pm.outputs.pm || 'npm' }}
+          cache-dependency-path: ${{ steps.pm.outputs.lock || 'web/package-lock.json' }}
 
-      # Optional: install JS deps if a web app is present
       - name: Install web dependencies
         if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
         working-directory: web
+        shell: bash
         run: |
-          npm ci || npm install
+          set -euo pipefail
+          if [ -f pnpm-lock.yaml ]; then
+            npm i -g pnpm@9
+            pnpm install --frozen-lockfile
+          elif [ -f yarn.lock ]; then
+            corepack enable
+            yarn install --frozen-lockfile
+          else
+            npm ci || npm install
+          fi
 
-      # Optional: set up Python for dependency resolution during analysis
+      # ---------- Python prep (cache) ----------
       - name: Setup Python
         if: matrix.language == 'python'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
 
       - name: Install Python dependencies (if present)
-        if: matrix.language == 'python' && hashFiles('requirements.txt') != ''
+        if: matrix.language == 'python'
+        shell: bash
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          # best-effort dev/test extras
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt || true
+          fi
 
+      # ---------- CodeQL ----------
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+          # Use GitHub's curated packs; add your own packs in 'packs:' if needed.
           queries: +security-extended,security-and-quality
-          # Narrow scope to typical source directories, ignore heavy data dirs
           config: |
             paths:
               - src
@@ -83,7 +137,7 @@ jobs:
               - docs
               - "**/*.min.js"
 
-      # Let CodeQL attempt to build (not strictly needed for Python/JS, but no-op if nothing to build)
+      # For JS/TS and Python this is often a no-op; safe to keep enabled
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
@@ -91,3 +145,14 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## CodeQL"
+            echo "- Language: **${{ matrix.language }}**"
+            echo "- Event: **${{ github.event_name }}**"
+            echo "- Branch/Tag: **${{ github.ref }}**"
+          } >> "$GITHUB_STEP_SUMMARY"
