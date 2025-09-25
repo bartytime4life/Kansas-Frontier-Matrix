@@ -68,6 +68,14 @@ max_line_length = off
 indent_size = 2
 max_line_length = off
 
+[*.jsonl]
+indent_size = 2
+max_line_length = off
+
+[*.ndjson]
+indent_size = 2
+max_line_length = off
+
 [*.geojson]
 indent_size = 2
 max_line_length = off
@@ -101,6 +109,9 @@ max_line_length = off
 
 # Mermaid diagrams
 [*.mmd]
+indent_size = 2
+
+[*.mermaid]
 indent_size = 2
 
 # --- Data files (preserve whitespace/width) ---
@@ -152,13 +163,28 @@ indent_size = 2
 trim_trailing_whitespace = false
 
 # --- Directory-scoped overrides for generated artifacts ---
-# Built static site output (may have minified lines)
+# Built static site outputs (may have minified lines)
+[site/**]
+max_line_length = off
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[_site/**]
+max_line_length = off
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[_site_docs/**]
+max_line_length = off
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# Alternative build folders
 [web/dist/**]
 max_line_length = off
 trim_trailing_whitespace = false
 insert_final_newline = false
 
-# Alternative build folder name
 [web/build/**]
 max_line_length = off
 trim_trailing_whitespace = false
@@ -174,6 +200,10 @@ insert_final_newline = false
 [stac/**]
 max_line_length = off
 trim_trailing_whitespace = false
+
+# JSON Schemas / configs may be long
+[web/config/**.json]
+max_line_length = off
 
 # Node / package manager caches & outputs
 [node_modules/**]
