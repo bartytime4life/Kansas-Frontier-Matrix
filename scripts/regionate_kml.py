@@ -1,349 +1,487 @@
 #!/usr/bin/env python3
-# scripts/regionate_kml.py
+# -*- coding: utf-8 -*-
 """
-Regionation-aware KMZ GroundOverlay packer
+regionate_kml.py — Build a quadtree of KML Folders with Regions + NetworkLinks.
 
-What it does
-------------
-• Wraps one or more *georeferenced* rasters as KML GroundOverlays inside a KMZ.
-• Computes LatLonBox by transforming dataset bounds to WGS84 (EPSG:4326).
-• Adds optional <Region><Lod> to each overlay for lightweight *regionation*
-  (Google Earth only requests tiles when their on-screen size exceeds minLodPixels).
-• Fails fast when CRS/bounds are missing (or accept --bounds fallback).
-• No tiling/resampling — one overlay per input file (ideal when inputs are already tiles/COGs).
-• No external deps beyond: rasterio, pyproj (as in your original design).
+Goal
+----
+Given many features (Points, Polylines, Polygons) this script produces a
+regionated KML tree (z/x/y.kml) so Google Earth loads details progressively.
 
-Typical uses
-------------
-- You have a directory of COG tiles for a large map and want a doc.kml (or KMZ) that
-  regionates visibility with Lod thresholds.
-- For very large areas / performance, generate tiles externally, then run this tool.
+Inputs
+------
+- GeoJSON FeatureCollection (preferred)  → --geojson input.geojson
+- Flat/simple KML with Placemarks (optional) → --kml input.kml
+  (Limited parser: extracts Placemark name + Point/LineString/Polygon coords.)
 
-Examples
---------
-# Pack all COGs in a folder (recursive), regionation with minLodPixels=128
-python scripts/regionate_kml.py --inp data/cogs/hillshade --recursive --pattern "*.tif" \
-       --out earth --kmz Kansas_Terrain.kmz --min-lod 128
+Output
+------
+- A folder with:
+  doc.kml                (root)
+  nodes/0.kml            (root node)
+  nodes/1.kml, 2.kml...  (children)
+  nodes/z/x_y.kml        (quadtree nodes)
+- Optional: a KMZ (zip) if --kmz out.kmz is given.
 
-# Explicit list (mixed tif/png/jpg accepted)
-python scripts/regionate_kml.py --files data/cogs/o_01.tif data/cogs/o_02.tif \
-       --out earth --kmz overlays.kmz
+Regionation
+-----------
+- Quadtree over the dataset bbox.
+- Nodes subdivide until (count <= --leaf-features) or depth == --max-depth.
+- Each node .kml has a <Region> (LatLonAltBox) + <Lod> (min/max LOD pixels).
+- Each node contains only the features intersecting its bbox.
+- Each child is referenced via <NetworkLink> from its parent.
 
-# Single image without CRS — use explicit bounds (N S E W)
-python scripts/regionate_kml.py --files img.tif --bounds 40.0 36.99 -94.59 -102.05 \
-       --out earth --kmz fallback.kmz
+Practical notes
+---------------
+- Works best if features have 2D bbox. We compute from geometry coordinates.
+- For very large polylines/polygons, consider simplifying beforehand.
+- For rasters/overlays, emit as GroundOverlay items into nodes similarly.
 
-Notes
+Usage
 -----
-- This does NOT change pixel data nor reproject imagery. It only reads metadata to
-  compute the GroundOverlay's LatLonBox and optional Region/Lod.
-- If you need quadtree tiling or dynamic network links, keep using your external tiler
-  and then call this on each output level/folder — the added Lod still helps culling.
-"""
+python scripts/regionate_kml.py --geojson data/features.geojson \
+  --out build/kml/my_layer --name "Kansas Geo Timeline — Layers" \
+  --leaf-features 250 --max-depth 8 --lod-min 128 --lod-max -1
 
+python scripts/regionate_kml.py --kml data/flat.kml \
+  --out build/kml/flat --kmz build/kml/flat.kmz
+
+"""
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-import logging
+import math
+import os
+import re
 import sys
 import time
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, List, Optional, Sequence, Tuple
-from xml.sax.saxutils import escape
+from typing import Dict, Iterable, List, Optional, Tuple
 
-import rasterio
-from pyproj import CRS, Transformer
+# ----------------------------
+# Geometry / bbox utilities
+# ----------------------------
 
-VALID_EXT = {".tif", ".tiff", ".png", ".jpg", ".jpeg"}
+def bbox_union(a: Tuple[float, float, float, float],
+               b: Tuple[float, float, float, float]) -> Tuple[float, float, float, float]:
+    return (min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3]))
 
-KML_DOC_TPL = """<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-<Document>
-  <name>{title}</name>
-  {overlays}
-</Document>
-</kml>
-""".strip()
+def bbox_intersects(a: Tuple[float, float, float, float],
+                    b: Tuple[float, float, float, float]) -> bool:
+    ax1, ay1, ax2, ay2 = a
+    bx1, by1, bx2, by2 = b
+    return (ax1 <= bx2) and (ax2 >= bx1) and (ay1 <= by2) and (ay2 >= by1)
 
-# Regionation-aware GroundOverlay (Region+Lod are optional)
-KML_OVL_TPL = """
-<GroundOverlay>
-  <name>{name}</name>
-  <Icon><href>{href}</href></Icon>
-  <LatLonBox>
-    <north>{north}</north>
-    <south>{south}</south>
-    <east>{east}</east>
-    <west>{west}</west>
-    {rotation}
-  </LatLonBox>
-  {region}
-</GroundOverlay>
-""".strip()
+def bbox_from_coords(coords: Iterable[Tuple[float, float]]) -> Tuple[float, float, float, float]:
+    xs, ys = zip(*coords)
+    return (min(xs), min(ys), max(xs), max(ys))
 
-KML_REGION_TPL = """
-<Region>
-  <LatLonAltBox>
-    <north>{north}</north>
-    <south>{south}</south>
-    <east>{east}</east>
-    <west>{west}</west>
-  </LatLonAltBox>
-  <Lod>
-    <minLodPixels>{min_lod}</minLodPixels>
-    <maxLodPixels>{max_lod}</maxLodPixels>
-  </Lod>
-</Region>
-""".strip()
+def geom_bbox(geom: Dict) -> Tuple[float, float, float, float]:
+    t = geom.get("type")
+    c = geom.get("coordinates")
+    if t == "Point":
+        x, y = c[:2]
+        return (x, y, x, y)
+    if t in ("LineString", "MultiPoint"):
+        return bbox_from_coords(c)
+    if t == "Polygon":
+        ring = c[0] if c else []
+        return bbox_from_coords(ring)
+    if t == "MultiLineString":
+        flat = [pt for line in c for pt in line]
+        return bbox_from_coords(flat)
+    if t == "MultiPolygon":
+        flat = [pt for poly in c for ring in (poly[0] if poly else []) for pt in ring]
+        return bbox_from_coords(flat)
+    if t == "GeometryCollection":
+        bb = None
+        for g in geom.get("geometries", []):
+            b = geom_bbox(g)
+            bb = b if bb is None else bbox_union(bb, b)
+        return bb or (0, 0, 0, 0)
+    raise ValueError(f"Unsupported geometry type: {t}")
 
+def kml_coords_for_geom(geom: Dict) -> str:
+    """Return KML <coordinates> string; supports Point/LineString/Polygon (+Multi*)."""
+    t = geom.get("type")
+    c = geom.get("coordinates")
+    if t == "Point":
+        x, y = c[:2]
+        return f"{x:.8f},{y:.8f},0"
+    if t == "LineString":
+        return " ".join(f"{x:.8f},{y:.8f},0" for x, y in c)
+    if t == "Polygon":
+        outer = c[0] if c else []
+        return " ".join(f"{x:.8f},{y:.8f},0" for x, y in outer)
+    if t == "MultiPoint":
+        return " ".join(f"{x:.8f},{y:.8f},0" for x, y in c)
+    if t == "MultiLineString":
+        # Concatenate parts; GE renders them as one line if in one placemark.
+        return " ".join(f"{x:.8f},{y:.8f},0" for line in c for x, y in line)
+    if t == "MultiPolygon":
+        outer_rings = [poly[0] for poly in c if poly]
+        return " ".join(f"{x:.8f},{y:.8f},0" for ring in outer_rings for x, y in ring)
+    if t == "GeometryCollection":
+        # Fallback: flatten to multi-line string of coordinates
+        parts = []
+        for g in geom.get("geometries", []):
+            parts.append(kml_coords_for_geom(g))
+        return " ".join(parts)
+    raise ValueError(f"Unsupported geometry type for KML coordinates: {t}")
 
-# -----------------------------------------------------------------------------
-# Data structures
-# -----------------------------------------------------------------------------
+# ----------------------------
+# Feature + parsing
+# ----------------------------
 
 @dataclass
-class Overlay:
-    src: Path
-    north: float
-    south: float
-    east: float
-    west: float
+class Feature:
+    id: str
+    name: str
+    geom: Dict
+    bbox: Tuple[float, float, float, float]
+    props: Dict
 
-
-# -----------------------------------------------------------------------------
-# Utils
-# -----------------------------------------------------------------------------
-
-def _sha256(p: Path, chunk: int = 1 << 20) -> str:
-    h = hashlib.sha256()
-    with p.open("rb") as f:
-        for b in iter(lambda: f.read(chunk), b""):
-            h.update(b)
-    return h.hexdigest()
-
-
-def _find_files(roots: Iterable[Path], pattern: str, recursive: bool) -> Iterable[Path]:
-    for root in roots:
-        if root.is_file():
-            if root.suffix.lower() in VALID_EXT:
-                yield root
+def parse_geojson(p: Path) -> Tuple[List[Feature], Tuple[float, float, float, float]]:
+    data = json.loads(p.read_text(encoding="utf-8"))
+    if data.get("type") != "FeatureCollection":
+        raise ValueError("GeoJSON must be a FeatureCollection")
+    feats: List[Feature] = []
+    bb = None
+    for i, f in enumerate(data.get("features", [])):
+        geom = f.get("geometry") or {}
+        if not geom:
             continue
-        if not root.exists():
+        b = tuple(f.get("bbox")) if f.get("bbox") else geom_bbox(geom)
+        props = f.get("properties") or {}
+        nm = props.get("name") or props.get("title") or f"feat_{i}"
+        fid = str(f.get("id") or i)
+        feats.append(Feature(id=fid, name=str(nm), geom=geom, bbox=b, props=props))
+        bb = b if bb is None else bbox_union(bb, b)
+    if bb is None:
+        raise ValueError("No features found in GeoJSON")
+    return feats, bb
+
+# Very small KML reader (Placemark only), good enough for flat/simple sources
+_PLACEMARK_RE = re.compile(r"<Placemark(?:\s[^>]*)?>(.*?)</Placemark>", re.DOTALL)
+_NAME_RE = re.compile(r"<name>(.*?)</name>", re.DOTALL)
+_POINT_RE = re.compile(r"<Point>.*?<coordinates>(.*?)</coordinates>.*?</Point>", re.DOTALL)
+_LINE_RE = re.compile(r"<LineString>.*?<coordinates>(.*?)</coordinates>.*?</LineString>", re.DOTALL)
+_POLY_RE = re.compile(r"<Polygon>.*?<outerBoundaryIs>.*?<coordinates>(.*?)</coordinates>.*?</outerBoundaryIs>.*?</Polygon>", re.DOTALL)
+
+def _parse_coord_text(txt: str) -> List[Tuple[float, float]]:
+    pts = []
+    for token in txt.strip().replace("\n", " ").split():
+        if not token:
             continue
-        it = root.rglob(pattern) if recursive else root.glob(pattern)
-        for p in it:
-            if p.suffix.lower() in VALID_EXT and p.is_file():
-                yield p
+        parts = token.split(",")
+        if len(parts) >= 2:
+            x, y = float(parts[0]), float(parts[1])
+            pts.append((x, y))
+    return pts
 
+def parse_flat_kml(p: Path) -> Tuple[List[Feature], Tuple[float, float, float, float]]:
+    text = p.read_text(encoding="utf-8")
+    feats: List[Feature] = []
+    bb = None
+    idx = 0
+    for block in _PLACEMARK_RE.findall(text):
+        name_m = _NAME_RE.search(block)
+        name = name_m.group(1).strip() if name_m else f"placemark_{idx}"
+        geom: Optional[Dict] = None
 
-def _ds_bounds_wgs84(ds: rasterio.io.DatasetReader) -> Tuple[float, float, float, float]:
-    """Return (north, south, east, west) in EPSG:4326 from dataset bounds."""
-    if ds.bounds is None:
-        raise ValueError("dataset has no bounds")
-    if ds.crs is None:
-        raise ValueError("dataset has no CRS; cannot compute WGS84 bounds")
+        if (m := _POINT_RE.search(block)):
+            pts = _parse_coord_text(m.group(1))
+            if pts:
+                x, y = pts[0]
+                geom = {"type": "Point", "coordinates": [x, y]}
+        elif (m := _LINE_RE.search(block)):
+            pts = _parse_coord_text(m.group(1))
+            if pts:
+                geom = {"type": "LineString", "coordinates": [[x, y] for x, y in pts]}
+        elif (m := _POLY_RE.search(block)):
+            pts = _parse_coord_text(m.group(1))
+            if pts:
+                geom = {"type": "Polygon", "coordinates": [[[x, y] for x, y in pts]]}
 
-    src_crs = CRS.from_wkt(ds.crs.to_wkt()) if not isinstance(ds.crs, CRS) else ds.crs
-    dst_crs = CRS.from_epsg(4326)
-    tr = Transformer.from_crs(src_crs, dst_crs, always_xy=True)
+        if geom:
+            b = geom_bbox(geom)
+            feats.append(Feature(id=str(idx), name=name, geom=geom, bbox=b, props={}))
+            bb = b if bb is None else bbox_union(bb, b)
+            idx += 1
+    if not feats:
+        raise ValueError("No Placemarks found in KML (Point/LineString/Polygon)")
+    return feats, bb
 
-    left, bottom, right, top = ds.bounds
-    xs = [left, right, right, left]
-    ys = [bottom, bottom, top, top]
-    lon, lat = tr.transform(xs, ys)
+# ----------------------------
+# Quadtree
+# ----------------------------
 
-    north = min(90.0, max(lat))
-    south = max(-90.0, min(lat))
-    east = min(180.0, max(lon))
-    west = max(-180.0, min(lon))
+@dataclass
+class Node:
+    id: int
+    depth: int
+    bbox: Tuple[float, float, float, float]
+    features: List[int]  # indices into features array
+    children: List['Node']
 
-    if not (south < north and west < east):
-        raise ValueError(f"invalid transformed bounds: N{north} S{south} E{east} W{west}")
-    return north, south, east, west
+def subdivide(b: Tuple[float, float, float, float]) -> List[Tuple[float, float, float, float]]:
+    x1, y1, x2, y2 = b
+    xm = (x1 + x2) / 2.0
+    ym = (y1 + y2) / 2.0
+    # NW, NE, SW, SE (lat grows north → y2 higher)
+    return [
+        (x1, ym, xm, y2),  # NW
+        (xm, ym, x2, y2),  # NE
+        (x1, y1, xm, ym),  # SW
+        (xm, y1, x2, ym),  # SE
+    ]
 
+def build_quadtree(all_features: List[Feature],
+                   root_bbox: Tuple[float, float, float, float],
+                   leaf_features: int,
+                   max_depth: int) -> Node:
+    node_id = 0
+    def mk_node(depth: int, bbox: Tuple[float, float, float, float], idxs: List[int]) -> Node:
+        nonlocal node_id
+        me = Node(id=node_id, depth=depth, bbox=bbox, features=idxs, children=[])
+        node_id += 1
+        if depth >= max_depth or len(idxs) <= leaf_features:
+            return me
+        # assign to children (feature goes to any child whose bbox intersects)
+        for child_bbox in subdivide(bbox):
+            child_idxs = [i for i in idxs if bbox_intersects(all_features[i].bbox, child_bbox)]
+            if child_idxs:
+                me.children.append(mk_node(depth + 1, child_bbox, child_idxs))
+        return me
 
-def overlay_from_raster(path: Path, forced_bounds: Optional[Tuple[float, float, float, float]]) -> Overlay:
-    if forced_bounds:
-        n, s, e, w = forced_bounds
-        return Overlay(src=path, north=n, south=s, east=e, west=w)
-    with rasterio.open(path) as ds:
-        n, s, e, w = _ds_bounds_wgs84(ds)
-        return Overlay(src=path, north=n, south=s, east=e, west=w)
+    # initial features (all)
+    idxs = list(range(len(all_features)))
+    return mk_node(0, root_bbox, idxs)
 
+# ----------------------------
+# KML writers
+# ----------------------------
 
-# -----------------------------------------------------------------------------
-# KML assembly
-# -----------------------------------------------------------------------------
-
-def _region_xml(n: float, s: float, e: float, w: float, min_lod: Optional[int], max_lod: Optional[int]) -> str:
-    if min_lod is None and max_lod is None:
-        return ""  # no Region/Lod
-    # Google Earth defaults: maxLodPixels=-1 means "no upper limit"
-    minp = 0 if min_lod is None else int(min_lod)
-    maxp = -1 if max_lod is None else int(max_lod)
-    return KML_REGION_TPL.format(north=f"{n:.10f}", south=f"{s:.10f}",
-                                 east=f"{e:.10f}", west=f"{w:.10f}",
-                                 min_lod=minp, max_lod=maxp)
-
-
-def _overlay_xml(ov: Overlay, href: str, *, rotation: Optional[float],
-                 min_lod: Optional[int], max_lod: Optional[int]) -> str:
-    rot_xml = f"<rotation>{rotation:.6f}</rotation>" if rotation not in (None, 0.0) else ""
-    region = _region_xml(ov.north, ov.south, ov.east, ov.west, min_lod, max_lod)
-    return KML_OVL_TPL.format(
-        name=escape(ov.src.stem),
-        href=escape(href),
-        north=f"{ov.north:.10f}",
-        south=f"{ov.south:.10f}",
-        east=f"{ov.east:.10f}",
-        west=f"{ov.west:.10f}",
-        rotation=rot_xml,
-        region=region,
+def kml_header(name: str) -> str:
+    return (
+f'<?xml version="1.0" encoding="UTF-8"?>\n'
+f'<kml xmlns="http://www.opengis.net/kml/2.2">\n'
+f'  <Document>\n'
+f'    <name>{escape_xml(name)}</name>\n'
     )
 
+def kml_footer() -> str:
+    return "  </Document>\n</kml>\n"
 
-def build_kmz(
-    overlays: Sequence[Overlay],
-    out_dir: Path,
-    kmz_name: str,
-    *,
-    title: Optional[str],
-    prefix: str,
-    min_lod: Optional[int],
-    max_lod: Optional[int],
-    rotation: Optional[float],
-) -> Path:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    kmz_name = kmz_name if kmz_name.lower().endswith(".kmz") else f"{kmz_name}.kmz"
-    kmz_path = out_dir / kmz_name
+def kml_region(b: Tuple[float, float, float, float], lod_min: int, lod_max: int) -> str:
+    x1, y1, x2, y2 = b
+    return (
+f'    <Region>\n'
+f'      <LatLonAltBox>\n'
+f'        <north>{y2:.8f}</north>\n'
+f'        <south>{y1:.8f}</south>\n'
+f'        <east>{x2:.8f}</east>\n'
+f'        <west>{x1:.8f}</west>\n'
+f'      </LatLonAltBox>\n'
+f'      <Lod>\n'
+f'        <minLodPixels>{lod_min}</minLodPixels>\n'
+f'        <maxLodPixels>{lod_max}</maxLodPixels>\n'
+f'      </Lod>\n'
+f'    </Region>\n'
+    )
 
-    parts: List[str] = []
-    assets: List[Path] = []
-    for ov in overlays:
-        href = f"{prefix}/{ov.src.name}"
-        parts.append(_overlay_xml(ov, href, rotation=rotation, min_lod=min_lod, max_lod=max_lod))
-        assets.append(ov.src)
+def kml_network_link(name: str, href: str, b: Tuple[float, float, float, float],
+                     lod_min: int, lod_max: int) -> str:
+    return (
+f'    <NetworkLink>\n'
+f'      <name>{escape_xml(name)}</name>\n'
+f'{kml_region(b, lod_min, lod_max)}'
+f'      <Link>\n'
+f'        <href>{escape_xml(href)}</href>\n'
+f'        <viewRefreshMode>onRegion</viewRefreshMode>\n'
+f'      </Link>\n'
+f'    </NetworkLink>\n'
+    )
 
-    kml = KML_DOC_TPL.format(title=escape(title or kmz_name), overlays="\n  ".join(parts))
+def kml_placemark(feat: Feature, style_url: Optional[str]=None) -> str:
+    nm = escape_xml(feat.name)
+    coords = kml_coords_for_geom(feat.geom)
+    t = feat.geom["type"]
+    style = f"      <styleUrl>{escape_xml(style_url)}</styleUrl>\n" if style_url else ""
+    if t == "Point":
+        return (
+f'    <Placemark>\n'
+f'      <name>{nm}</name>\n'
+f'{style}'
+f'      <Point><coordinates>{coords}</coordinates></Point>\n'
+f'    </Placemark>\n'
+        )
+    if t in ("LineString", "MultiLineString"):
+        return (
+f'    <Placemark>\n'
+f'      <name>{nm}</name>\n'
+f'{style}'
+f'      <LineString><tessellate>1</tessellate><coordinates>{coords}</coordinates></LineString>\n'
+f'    </Placemark>\n'
+        )
+    if t in ("Polygon", "MultiPolygon"):
+        return (
+f'    <Placemark>\n'
+f'      <name>{nm}</name>\n'
+f'{style}'
+f'      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing>'
+f'<coordinates>{coords}</coordinates></LinearRing></outerBoundaryIs></Polygon>\n'
+f'    </Placemark>\n'
+        )
+    # Fallback as point at bbox center
+    x1, y1, x2, y2 = feat.bbox
+    xc, yc = (x1+x2)/2.0, (y1+y2)/2.0
+    return (
+f'    <Placemark>\n'
+f'      <name>{nm}</name>\n'
+f'{style}'
+f'      <Point><coordinates>{xc:.8f},{yc:.8f},0</coordinates></Point>\n'
+f'    </Placemark>\n'
+    )
+
+def escape_xml(s: str) -> str:
+    return (s.replace("&", "&amp;")
+             .replace("<", "&lt;")
+             .replace(">", "&gt;")
+             .replace('"', "&quot;")
+             .replace("'", "&apos;"))
+
+def write_text_atomic(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+# ----------------------------
+# Regionation writer
+# ----------------------------
+
+def write_tree(root: Node, features: List[Feature], outdir: Path,
+               name: str, lod_min: int, lod_max: int, style_url: Optional[str]) -> None:
+    """
+    Write:
+    - doc.kml (links to node 0)
+    - nodes/<id>.kml for each node, linking to its children with Regions
+    """
+    nodes_dir = outdir / "nodes"
+    # doc.kml
+    doc = []
+    doc.append(kml_header(name))
+    doc.append("    <Folder>\n")
+    doc.append(f'      <name>{escape_xml(name)} — Regionated</name>\n')
+    # link to root node (id 0)
+    doc.append(kml_network_link("root", "nodes/0.kml", root.bbox, lod_min, lod_max))
+    doc.append("    </Folder>\n")
+    doc.append(kml_footer())
+    write_text_atomic(outdir / "doc.kml", "".join(doc))
+
+    # node files (DFS)
+    stack = [root]
+    while stack:
+        n = stack.pop()
+        k = []
+        k.append(kml_header(f"node {n.id} (depth {n.depth})"))
+        k.append(kml_region(n.bbox, lod_min, lod_max))
+        # child links
+        for ch in n.children:
+            href = f"{ch.id}.kml"
+            k.append(kml_network_link(f"node {ch.id}", href, ch.bbox, lod_min, lod_max))
+        # features in this node (only when leaf or shallow? — keep simple: always include)
+        k.append("    <Folder>\n")
+        k.append(f'      <name>features ({len(n.features)})</name>\n')
+        for idx in n.features:
+            k.append(kml_placemark(features[idx], style_url=style_url))
+        k.append("    </Folder>\n")
+        k.append(kml_footer())
+        write_text_atomic(nodes_dir / f"{n.id}.kml", "".join(k))
+        # traverse
+        for ch in n.children:
+            stack.append(ch)
+
+# ----------------------------
+# KMZ
+# ----------------------------
+
+def write_kmz_from_folder(src_dir: Path, kmz_path: Path) -> None:
+    # KMZ expects doc.kml at root and relative links within folders
     with zipfile.ZipFile(kmz_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
-        z.writestr("doc.kml", kml)
-        for a in assets:
-            z.write(a, arcname=f"{prefix}/{a.name}")
+        for p in [src_dir / "doc.kml", *sorted((src_dir / "nodes").rglob("*.kml"))]:
+            arc = p.relative_to(src_dir).as_posix()
+            z.write(p, arcname=arc)
 
-    # Sidecars
-    (kmz_path.with_suffix(kmz_path.suffix + ".sha256")).write_text(_sha256(kmz_path) + "\n", encoding="utf-8")
-    meta = {
-        "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "kmz": kmz_path.name,
-        "size": kmz_path.stat().st_size,
-        "assets": [a.name for a in assets],
-        "argv": sys.argv,
-    }
-    (kmz_path.with_suffix(".meta.json")).write_text(json.dumps(meta, indent=2), encoding="utf-8")
-    return kmz_path
-
-
-# -----------------------------------------------------------------------------
-# CLI
-# -----------------------------------------------------------------------------
-
-def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(
-        description="Wrap georeferenced rasters as regionation-aware GroundOverlays into a KMZ."
-    )
-    g_in = p.add_mutually_exclusive_group(required=True)
-    g_in.add_argument("--inp", type=Path, help="Directory to scan for rasters")
-    g_in.add_argument("--files", nargs="+", type=Path, help="Explicit list of raster files")
-
-    p.add_argument("--pattern", default="*.tif", help='Glob pattern for --inp (default: "*.tif")')
-    p.add_argument("--recursive", action="store_true", help="Recurse when scanning --inp")
-
-    p.add_argument(
-        "--bounds", nargs=4, type=float, metavar=("NORTH", "SOUTH", "EAST", "WEST"),
-        help="Explicit WGS84 bounds for ALL inputs (only when rasters lack CRS)"
-    )
-    p.add_argument("--out", type=Path, required=True, help="Output directory")
-    p.add_argument("--kmz", default="overlays.kmz", help="Output KMZ filename")
-    p.add_argument("--title", default=None, help="KML <Document><name> (defaults to KMZ name)")
-    p.add_argument("--prefix", default="files", help="Asset subfolder inside KMZ (default: files)")
-
-    # Regionation / Lod
-    p.add_argument("--min-lod", type=int, default=None,
-                   help="Region/Lod minLodPixels (e.g., 64, 128). If unset, no Region is written.")
-    p.add_argument("--max-lod", type=int, default=None,
-                   help="Region/Lod maxLodPixels (set -1 for unlimited). If unset and --min-lod set, defaults to -1.")
-    p.add_argument("--rotation", type=float, default=None, help="Optional LatLonBox rotation (degrees)")
-
-    p.add_argument("-v", "--verbose", action="count", default=0, help="Increase logging verbosity")
-    return p.parse_args()
-
+# ----------------------------
+# Main CLI
+# ----------------------------
 
 def main() -> int:
-    args = parse_args()
-    logging.basicConfig(
-        level=logging.WARNING - (10 * min(args.verbose, 2)),
-        format="%(levelname)s: %(message)s",
-    )
+    ap = argparse.ArgumentParser(description="Regionate features into a KML quadtree with Regions + NetworkLinks.")
+    src = ap.add_mutually_exclusive_group(required=True)
+    src.add_argument("--geojson", type=Path, help="Input GeoJSON FeatureCollection")
+    src.add_argument("--kml", type=Path, help="Input flat/simple KML with Placemarks")
+    ap.add_argument("--out", type=Path, required=True, help="Output folder for KML tree")
+    ap.add_argument("--name", type=str, default="Regionated Layer", help="Root document name")
+    ap.add_argument("--leaf-features", type=int, default=200, help="Max features per leaf node")
+    ap.add_argument("--max-depth", type=int, default=8, help="Max quadtree depth")
+    ap.add_argument("--lod-min", type=int, default=128, help="minLodPixels (e.g., 64–256)")
+    ap.add_argument("--lod-max", type=int, default=-1, help="maxLodPixels (-1 = no limit)")
+    ap.add_argument("--style-url", type=str, help="Optional shared <styleUrl> for placemarks")
+    ap.add_argument("--bbox", type=float, nargs=4, metavar=("MINX","MINY","MAXX","MAXY"),
+                    help="Force root bbox; otherwise use dataset bbox")
+    ap.add_argument("--kmz", type=Path, help="Also write a KMZ at this path")
+    args = ap.parse_args()
 
-    # Collect inputs
-    if args.files:
-        files = [Path(f) for f in args.files if Path(f).exists()]
+    # Load features
+    if args.geojson:
+        feats, bb = parse_geojson(args.geojson)
     else:
-        root = args.inp
-        if not root.exists():
-            logging.error("Input path does not exist: %s", root)
-            return 2
-        files = list(_find_files([root], pattern=args.pattern, recursive=bool(args.recursive)))
+        feats, bb = parse_flat_kml(args.kml)
 
-    if not files:
-        logging.error("No input rasters found.")
-        return 2
+    if args.bbox:
+        bb = tuple(args.bbox)  # type: ignore
 
-    # Bounds fallback (for ALL inputs)
-    forced_bounds: Optional[Tuple[float, float, float, float]] = None
-    if args.bounds:
-        n, s, e, w = args.bounds
-        if not (s < n and w < e):
-            logging.error("Invalid --bounds ordering: expected NORTH>SOUTH and EAST>WEST.")
-            return 2
-        forced_bounds = (n, s, e, w)
+    # Build quadtree
+    root = build_quadtree(feats, bb, leaf_features=max(1, args.leaf_features), max_depth=max(0, args.max_depth))
 
-    # Prepare overlays
-    overlays: List[Overlay] = []
-    skipped = 0
-    for f in files:
-        try:
-            ov = overlay_from_raster(f, forced_bounds)
-            overlays.append(ov)
-            logging.info("Prepared overlay: %s", f.name)
-        except Exception as ex:
-            logging.warning("Skipping %s: %s", f, ex)
-            skipped += 1
+    # Write tree
+    outdir = args.out
+    outdir.mkdir(parents=True, exist_ok=True)
+    write_tree(root, feats, outdir, name=args.name, lod_min=args.lod_min, lod_max=args.lod_max,
+               style_url=args.style_url)
 
-    if not overlays:
-        logging.error("No valid overlays prepared (all inputs failed).")
-        return 2
+    # Optional KMZ
+    if args.kmz:
+        write_kmz_from_folder(outdir, args.kmz)
 
-    # Build KMZ
-    kmz_path = build_kmz(
-        overlays,
-        args.out,
-        args.kmz,
-        title=args.title,
-        prefix=args.prefix,
-        min_lod=args.min_lod,
-        max_lod=args.max_lod if args.max_lod is not None else (-1 if args.min_lod is not None else None),
-        rotation=args.rotation,
-    )
-    print(f"[OK] KMZ → {kmz_path} (overlays: {len(overlays)})")
-    if skipped:
-        print(f"[WARN] {skipped} file(s) were skipped due to errors.", file=sys.stderr)
+    # Manifest for CI/debug
+    manifest = {
+        "generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "source": str(args.geojson or args.kml),
+        "outdir": str(outdir),
+        "kmz": str(args.kmz) if args.kmz else None,
+        "name": args.name,
+        "features": len(feats),
+        "quadtree": {
+            "leaf_features": args.leaf_features,
+            "max_depth": args.max_depth,
+            "bbox": list(bb),
+        },
+        "lod": {"min": args.lod_min, "max": args.lod_max},
+    }
+    Path(outdir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+    print(f"[OK] regionated KML → {outdir/'doc.kml'} "
+          f"({manifest['features']} features, depth≤{args.max_depth})")
+    if args.kmz:
+        print(f"[OK] KMZ → {args.kmz}")
     return 0
 
-
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())
