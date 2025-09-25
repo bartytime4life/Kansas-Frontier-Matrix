@@ -1,37 +1,49 @@
-# .github/workflows/link-check.yml
-name: Link Check (docs)
+# .github/workflows/docker.yml
+name: Docker Build & Publish
 
 on:
   push:
     branches: [ main ]
     paths:
-      - "README.md"
-      - "docs/**"
+      - "Dockerfile"
+      - "docker/Dockerfile"
+      - "docker/**"
+      - ".github/workflows/docker.yml"
+      - "pyproject.toml"
+      - "package.json"
+      - "requirements*.txt"
       - "web/**"
-      - ".github/workflows/link-check.yml"
+      - "stac/**"
   pull_request:
     paths:
-      - "README.md"
-      - "docs/**"
-      - "web/**"
-      - ".github/workflows/link-check.yml"
+      - "Dockerfile"
+      - "docker/Dockerfile"
+      - "docker/**"
+      - ".github/workflows/docker.yml"
   workflow_dispatch:
-  schedule:
-    # Weekly sweep (Sunday 04:05 UTC)
-    - cron: "5 4 * * 0"
 
+# Needed for GHCR push and provenance/SBOM
 permissions:
   contents: read
+  packages: write
+  id-token: write
+  security-events: write   # for SARIF (Trivy)
 
 concurrency:
-  group: link-check-${{ github.ref }}
+  group: docker-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}   # e.g. ghcr.io/owner/repo
+  # Default platforms; change if you only want amd64
+  PLATFORMS: linux/amd64,linux/arm64
+
 jobs:
-  lychee:
-    name: Lychee link check
+  build:
+    name: Build${{ github.event_name == 'pull_request' && ' (no push)' || '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -39,89 +51,123 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Build the args dynamically so we honor a repo-provided .lychee.toml when present.
-      - name: Compute lychee args
-        id: args
+      - name: Determine Dockerfile & context
+        id: path
         shell: bash
         run: |
           set -euo pipefail
-          TARGETS=()
-          # Common docs/markdown/html entry points
-          [ -f README.md ] && TARGETS+=("README.md")
-          [ -d docs ] && TARGETS+=("docs")
-          [ -d web ] && TARGETS+=("web")
-
-          # Default arguments (sane retries + exclude noisy schemes/hosts)
-          BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
-          EXCLUDES=(
-            'mailto:*'
-            'tel:*'
-            'http://localhost*'
-            'http://127.0.0.1*'
-            'https://localhost*'
-            'https://127.0.0.1*'
-            # map/imagery/demo tiles & dynamic endpoints often rate-limit or block CI
-            'https://*.tile.openstreetmap.org/*'
-            'https://*.googleapis.com/*'
-            'https://*.arcgis.com/*'
-            'https://api.mapbox.com/*'
-          )
-
-          # Prefer repo config if present
-          if [ -f .lychee.toml ]; then
-            echo "args=--config .lychee.toml ${TARGETS[*]}" >> "$GITHUB_OUTPUT"
+          if [ -f Dockerfile ]; then
+            echo "dockerfile=Dockerfile" >> "$GITHUB_OUTPUT"
+            echo "context=."           >> "$GITHUB_OUTPUT"
+          elif [ -f docker/Dockerfile ]; then
+            echo "dockerfile=docker/Dockerfile" >> "$GITHUB_OUTPUT"
+            echo "context=."                   >> "$GITHUB_OUTPUT"
           else
-            # Limit to markdown/html within docs and web (and README)
-            FIND_ARGS=()
-            for t in "${TARGETS[@]}"; do
-              if [ -d "$t" ]; then
-                while IFS= read -r -d '' f; do FIND_ARGS+=("$f"); done < <(find "$t" -type f \( -name '*.md' -o -name '*.html' \) -print0)
-              else
-                FIND_ARGS+=("$t")
-              fi
-            done
-            # Compose args
-            OUT=( "${BASE_ARGS[@]}" --format markdown --output lychee.md )
-            for e in "${EXCLUDES[@]}"; do OUT+=( --exclude "$e" ); done
-            OUT+=( "${FIND_ARGS[@]}" )
-            printf "args=%s\n" "${OUT[*]}" >> "$GITHUB_OUTPUT"
+            echo "::error::No Dockerfile found at ./Dockerfile or ./docker/Dockerfile"
+            exit 1
           fi
+          echo "Using Dockerfile=${{ steps.path.outputs.dockerfile }}"
 
-      - name: Run lychee
-        uses: lycheeverse/lychee-action@v2
+      - name: Set up QEMU (multi-arch)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
         with:
-          args: ${{ steps.args.outputs.args }}
-        env:
-          # Token improves GitHub API rate limits for checking links to github.com raw blobs, releases, etc.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          install: true
 
-      - name: Upload lychee report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
         with:
-          name: lychee-report-${{ github.run_id }}
-          path: |
-            lychee.md
-            lychee-out.md
-            lychee/results.json
-          if-no-files-found: warn
-          retention-days: 7
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Job Summary
-        if: always()
+      # Generate tags/labels from git context
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch,enable=${{ github.ref == 'refs/heads/main' }},suffix=-edge
+            type=sha,enable=${{ github.ref == 'refs/heads/main' }}
+            type=semver,pattern={{version}},enable=${{ startsWith(github.ref,'refs/tags/v') }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref,'refs/tags/v') }}
+            type=semver,pattern={{major}},enable=${{ startsWith(github.ref,'refs/tags/v') }}
+            # latest only on full semver tags (vX.Y.Z)
+            type=raw,value=latest,enable=${{ startsWith(github.ref,'refs/tags/v') }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repositoryUrl }}
+            org.opencontainers.image.description=Kansas-Frontier-Matrix container image
+            org.opencontainers.image.licenses=MIT
+
+      - name: Build (and push if not PR)
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ steps.path.outputs.context }}
+          file: ${{ steps.path.outputs.dockerfile }}
+          platforms: ${{ env.PLATFORMS }}
+          push: ${{ github.event_name != 'pull_request' }}
+          provenance: true          # SLSA provenance
+          sbom: true                # generate attested SBOM
+          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            # Add any build args your Dockerfile honors, e.g.:
+            # APP_ENV=production
+
+      - name: Summary
         shell: bash
         run: |
-          {
-            echo "## Link Check (Lychee)"
-            echo ""
-            if [ -f lychee.md ]; then
-              echo "### Report excerpt"
-              echo ""
-              # Show first 200 lines to keep summary compact
-              echo '```markdown'
-              sed -n '1,200p' lychee.md
-              echo '```'
-            else
-              echo "_No lychee.md report generated (used repo config or different output path)._"
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "## Docker build" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Registry: \`${{ env.REGISTRY }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Image: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Pushed: **$([[ '${{ github.event_name }}' == 'pull_request' ]] && echo 'no' || echo 'yes')**" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tags:" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "${{ steps.meta.outputs.tags }}" | sed 's/^/  - /' >> "$GITHUB_STEP_SUMMARY"
+
+  scan:
+    name: Trivy scan (image)
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'   # only scan pushed images
+    timeout-minutes: 20
+    steps:
+      - name: Prepare image ref
+        id: ref
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Prefer an immutable ref (sha tag) if available; fallback to edge/latest
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            # On tags, use the semver tag
+            echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            # On main, use the sha tag from metadata action's output (second tag typically is sha)
+            # If metadata not available here, derive sha tag:
+            echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Using image: ${{ steps.ref.outputs.image }}"
+
+      - name: Trivy scan (SARIF)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: ${{ steps.ref.outputs.image }}
+          format: sarif
+          output: trivy-image.sarif
+          severity: CRITICAL,HIGH
+          vuln-type: os,library
+          ignore-unfixed: true
+          timeout: 10m
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-image.sarif
+          category: trivy-docker
