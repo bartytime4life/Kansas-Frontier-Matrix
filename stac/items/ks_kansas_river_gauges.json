@@ -1,0 +1,28 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_kansas_river_gauges",
+  "properties": {
+    "title": "Kansas River — Gauges (sample)",
+    "description": "Point feature for a hydrologic gauge location on the Kansas River.",
+    "start_datetime": "1928-01-01T00:00:00Z",
+    "end_datetime": null,
+    "created": "2025-09-25T00:00:00Z"
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-95.675, 39.055]
+  },
+  "bbox": [-95.675, 39.055, -95.675, 39.055],
+  "links": [
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "data": {
+      "href": "../../data/processed/hydrology/kansas_river/gauges.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Gauges GeoJSON"
+    }
+  }
+}
