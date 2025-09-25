@@ -1,0 +1,32 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_kansas_river_channels",
+  "properties": {
+    "title": "Kansas River — Channels (sample)",
+    "description": "Linework representing the main Kansas River channel (sample reach).",
+    "start_datetime": "1850-01-01T00:00:00Z",
+    "end_datetime": null,
+    "created": "2025-09-25T00:00:00Z"
+  },
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [-95.708, 39.043], [-95.676, 39.060],
+      [-95.650, 39.065], [-95.620, 39.066],
+      [-95.590, 39.068], [-95.560, 39.070]
+    ]
+  },
+  "bbox": [-95.708, 39.043, -95.560, 39.070],
+  "links": [
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "data": {
+      "href": "../../data/processed/hydrology/kansas_river/channels.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Channels GeoJSON"
+    }
+  }
+}
