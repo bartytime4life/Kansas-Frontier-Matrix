@@ -1,0 +1,23 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_lidar_hillshade_2018",
+  "collection": "elevation",
+  "properties": {
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2018-12-31T23:59:59Z"
+  },
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "geometry": null,
+  "links": [
+    { "rel": "collection", "href": "../../collections/elevation.json", "type": "application/json" },
+    { "rel": "root", "href": "../../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "hillshade": {
+      "href": "../../data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Kansas LiDAR-derived Hillshade (2018)"
+    }
+  }
+}
