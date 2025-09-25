@@ -1,5 +1,3 @@
-Here’s a nicely formatted markdown version you can copy-paste into your repo docs (e.g. .github/workflows/README.md):
-
 # Kansas-Frontier-Matrix — GitHub Workflows
 
 This folder (`.github/workflows/`) contains all **CI/CD automation** for the project.  
