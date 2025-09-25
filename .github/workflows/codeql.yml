@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    # Don't waste CI on assets/docs-only changes
     paths-ignore:
       - "**/*.md"
       - "**/*.png"
@@ -14,7 +15,6 @@ on:
       - "docs/**"
       - "data/**"
       - "stac/**"
-      - ".github/workflows/**"
   pull_request:
     branches: [ main ]
     paths-ignore:
@@ -23,16 +23,17 @@ on:
       - "data/**"
       - "stac/**"
   schedule:
-    # Weekly run (Sunday 02:45 UTC)
+    # Weekly (Sunday 02:45 UTC)
     - cron: "45 2 * * 0"
 
 permissions:
   contents: read
-  security-events: write
+  security-events: write   # required to upload SARIF
   actions: read
+  packages: read
 
 concurrency:
-  group: codeql-${{ github.ref }}
+  group: "codeql-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -52,7 +53,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ---------- JS/TS prep (pm autodetect + cache) ----------
+      # ---------------- JS/TS prep (web/) ----------------
       - name: Detect package manager (web/)
         id: pm
         if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
@@ -68,10 +69,9 @@ jobs:
           else
             echo "pm=npm" >> "$GITHUB_OUTPUT"
             echo "lock=web/package-lock.json" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Setup Node
-        if: matrix.language == 'javascript-typescript'
+        if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -91,10 +91,14 @@ jobs:
             corepack enable
             yarn install --frozen-lockfile
           else
-            npm ci || npm install
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
           fi
 
-      # ---------- Python prep (cache) ----------
+      # ---------------- Python prep ----------------
       - name: Setup Python
         if: matrix.language == 'python'
         uses: actions/setup-python@v5
@@ -102,29 +106,27 @@ jobs:
           python-version: "3.11"
           cache: "pip"
           cache-dependency-path: |
-            requirements*.txt
             pyproject.toml
+            requirements*.txt
 
-      - name: Install Python dependencies (if present)
+      - name: Install Python dependencies (best-effort)
         if: matrix.language == 'python'
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
-          # best-effort dev/test extras
-          if [ -f requirements-dev.txt ]; then
-            pip install -r requirements-dev.txt || true
+          python -m pip install --upgrade pip wheel
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt || true; fi
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            pip install -e ".[dev]" || pip install -e . || true
           fi
 
-      # ---------- CodeQL ----------
+      # ---------------- CodeQL ----------------
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Use GitHub's curated packs; add your own packs in 'packs:' if needed.
+          # Curated packs; you can add a local config file later if needed.
           queries: +security-extended,security-and-quality
           config: |
             paths:
@@ -136,8 +138,16 @@ jobs:
               - stac
               - docs
               - "**/*.min.js"
+          build-mode: autobuild
 
-      # For JS/TS and Python this is often a no-op; safe to keep enabled
+      # For JS/TS projects that need a build (e.g., TS → JS), autobuild usually works.
+      # If you have a custom build (vite/webpack/tsc), uncomment this step and add commands.
+      # - name: Manual build (optional)
+      #   if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
+      #   working-directory: web
+      #   run: |
+      #     npm run build || yarn build || pnpm build
+
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
@@ -154,5 +164,5 @@ jobs:
             echo "## CodeQL"
             echo "- Language: **${{ matrix.language }}**"
             echo "- Event: **${{ github.event_name }}**"
-            echo "- Branch/Tag: **${{ github.ref }}**"
+            echo "- Ref: **${{ github.ref }}**"
           } >> "$GITHUB_STEP_SUMMARY"
