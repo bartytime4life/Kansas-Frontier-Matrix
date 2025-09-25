@@ -28,6 +28,7 @@ jobs:
   build:
     name: Build static site
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     env:
       SITE_DIR: _site
       PYTHONUNBUFFERED: "1"
@@ -87,22 +88,20 @@ jobs:
 import json, sys, pathlib
 from jsonschema import Draft202012Validator as V
 def validate(cfg_p, sch_p):
-    cfg = json.loads(pathlib.Path(cfg_p).read_text(encoding="utf-8"))
-    sch = json.loads(pathlib.Path(sch_p).read_text(encoding="utf-8"))
+    p_cfg, p_sch = pathlib.Path(cfg_p), pathlib.Path(sch_p)
+    if not p_cfg.exists() or not p_sch.exists():
+        print(f"::notice::{cfg_p} or {sch_p} missing; skipping.")
+        return
+    cfg = json.loads(p_cfg.read_text(encoding="utf-8"))
+    sch = json.loads(p_sch.read_text(encoding="utf-8"))
     errs = sorted(V(sch).iter_errors(cfg), key=lambda e: e.path)
     if errs:
         print(f"::error file={cfg_p}::{len(errs)} schema error(s):")
         for e in errs[:20]:
             print("-", "/".join(map(str,e.path)) or "(root)", ":", e.message)
         sys.exit(2)
-if pathlib.Path("web/app.config.json").exists() and pathlib.Path("web/config/app.config.schema.json").exists():
-    validate("web/app.config.json", "web/config/app.config.schema.json")
-else:
-    print("::notice::app.config.json or schema missing; skipping.")
-if pathlib.Path("web/layers.json").exists() and pathlib.Path("web/config/layers.schema.json").exists():
-    validate("web/layers.json", "web/config/layers.schema.json")
-else:
-    print("::notice::layers.json or schema missing; skipping.")
+validate("web/app.config.json", "web/config/app.config.schema.json")
+validate("web/layers.json",      "web/config/layers.schema.json")
 PY
 
       # --------------------------------------------------------------
@@ -148,8 +147,8 @@ PY
         working-directory: web
         run: |
           set -euo pipefail
-          npm ci
-          npm run build
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          if npm run | grep -qE '^ *build( |:|$)'; then npm run build; else echo "::error::No build script in web/package.json"; exit 1; fi
 
       - name: Build web (yarn)
         if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'yarn'
@@ -158,7 +157,7 @@ PY
           set -euo pipefail
           corepack enable
           yarn install --frozen-lockfile
-          yarn build
+          if yarn run | grep -qE '^ *build( |:|$)'; then yarn build; else echo "::error::No build script in web/package.json"; exit 1; fi
 
       - name: Build web (pnpm)
         if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'pnpm'
@@ -166,7 +165,7 @@ PY
         run: |
           set -euo pipefail
           pnpm install --frozen-lockfile
-          pnpm build
+          if pnpm run | grep -qE '^ *build( |:|$)'; then pnpm build; else echo "::error::No build script in web/package.json"; exit 1; fi
 
       - name: Prepare site dir from web build
         if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson == 'true'
@@ -241,7 +240,7 @@ PY
       # --------------------------------------------------------------
       # Pages-friendly outputs
       # --------------------------------------------------------------
-      - name: Prepare Pages artifacts (.nojekyll, 404, CNAME if present)
+      - name: Prepare Pages artifacts (.nojekyll, SPA 404, CNAME if present)
         shell: bash
         run: |
           set -euo pipefail
@@ -255,18 +254,16 @@ PY
           if [ ! -f "$SITE_DIR/robots.txt" ]; then
             printf "User-agent: *\nAllow: /\n" > "$SITE_DIR/robots.txt"
           fi
-          if [ ! -f "$SITE_DIR/404.html" ]; then
-            cat > "$SITE_DIR/404.html" <<'HTML'
-<!doctype html><meta charset="utf-8">
-<meta name=viewport content="width=device-width,initial-scale=1">
+          # SPA-friendly 404 that defers to index.html for client-side routers
+          cat > "$SITE_DIR/404.html" <<'HTML'
+<!doctype html><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1">
 <title>404 — Not Found</title>
-<h1>404 — Not Found</h1>
-<p>This page does not exist on this site.</p>
+<script>sessionStorage.redirect=location.href.replace(location.origin,'');location.replace('/');</script>
+<noscript><h1>404 — Not Found</h1><p>This page does not exist.</p></noscript>
 HTML
-          fi
 
       # --------------------------------------------------------------
-      # Link check (use config if present; otherwise minimal)
+      # Link check (use repo config if present; otherwise minimal)
       # --------------------------------------------------------------
       - name: Compute lychee args
         id: lychee_args
@@ -310,6 +307,17 @@ HTML
         with:
           path: ${{ env.SITE_DIR }}
           retention-days: 7
+
+      - name: Job Summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Site build"
+            echo "- Prebuild used Makefile: **${{ steps.prebuild.outputs.has_make || 'false' }}**"
+            echo "- Site dir: \`${{ env.SITE_DIR }}\`"
+            echo "- Contains files: **$( [ -n "$(ls -A "${{ env.SITE_DIR }}" 2>/dev/null)" ] && echo yes || echo no )**"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   deploy:
     name: Deploy to GitHub Pages
