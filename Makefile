@@ -3,13 +3,13 @@
 # --------------------------------------------------------------------
 # Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
 #          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
-# Extras:  dem-checksum, hillshade-checksum
+# Extras:  dem-checksum, hillshade-checksum, validate-cogs, mosaic-county, regionate
 # Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite
 # Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
-#   - Optional: KGS Kansas River hydrology fetch/export → STAC wiring
+#   - Optional: Kansas River hydrology fetch/export → STAC wiring
 #   - Auto-patch STAC (DEM checksum/size) inside `make stac` if checksum exists
 # --------------------------------------------------------------------
 
@@ -58,8 +58,10 @@ ASPECT_SECTORS  := $(VEC)/aspect_sectors.geojson
 META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
+# Where helper scripts will write per-DEM derivatives if we don’t pass --out-root
+DERIV_FROM_DEM = $(dir $(DEM))derivatives
+
 # -------- NLCD (1992–2021) — Kansas COGs --------
-# Raw inputs live under data/sources/land/raw; outputs go to data/cogs/landcover/
 NLCD_YEARS    ?= 1992 2001 2006 2011 2016 2019 2021
 NLCD_SRC_DIR  ?= $(DATA)/sources/land
 NLCD_DST_DIR  ?= $(COGS)/landcover
@@ -97,6 +99,11 @@ GDAL_CALC_BIN  := $(shell command -v gdal_calc.py      >/dev/null 2>&1 && echo g
 HAVE_FETCH            := $(wildcard $(S)/fetch.py)
 HAVE_MAKECOG          := $(wildcard $(S)/make_cog.py)
 HAVE_MAKEHILLSHADE    := $(wildcard $(S)/make_hillshade.py)
+HAVE_MAKE_SLOPEASP    := $(wildcard $(S)/make_slope_aspect.py)
+HAVE_MAKE_TERRAIN     := $(wildcard $(S)/make_terrain_pack.py)
+HAVE_VALIDATE_COGS    := $(wildcard $(S)/validate_cogs.py)
+HAVE_MOSAIC_LIDAR     := $(wildcard $(S)/mosaic_lidar_county.py)
+HAVE_REGIONATE_KML    := $(wildcard $(S)/regionate_kml.py)
 HAVE_WRITEMETA        := $(wildcard $(S)/write_meta.py)
 HAVE_MAKE_STAC        := $(wildcard $(S)/make_stac.py)
 HAVE_VALIDATE_STAC    := $(wildcard $(S)/validate_stac.py)
@@ -153,39 +160,43 @@ endef
 # -------- PHONY --------
 .PHONY: help env prebuild preview prebuild-lite print-% fetch cogs terrain slope_classes aspect_sectors meta stac stac-validate site-config kml site clean \
         dem-checksum hillshade-checksum hydrology-fetch hydrology-stac nlcd \
+        validate-cogs mosaic-county regionate \
         install-dev test test-cli test-sources
 
 # -------- Help --------
 help:
 	@echo ""
 	@echo "Targets:"
-	@echo "  env               Show detected tools/paths"
-	@echo "  fetch             Download rasters/vectors per data/sources/*.json"
-	@echo "  cogs              Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
-	@echo "  terrain           Derive hillshade/slope/aspect (COGs); mirror into data/derivatives"
-	@echo "  slope_classes     Optional: vectorize slope classes"
-	@echo "  aspect_sectors    Optional: vectorize 8-way aspect sectors"
-	@echo "  meta              Optional: update terrain meta JSON checksums (slope/aspect)"
-	@echo "  stac              Build STAC items/collections into ./stac/ (auto-patches DEM if checksum exists)"
-	@echo "  stac-validate     Validate STAC + source schemas (scripts/ or kgt)"
-	@echo "  site              Write web/layers.json (simple preview)"
-	@echo "  site-config       Render web/app.config.json from STAC via kgt (if available)"
-	@echo "  kml               Build KMZ overlays (placeholder)"
-	@echo "  clean             Remove generated raster outputs (keeps stac/)"
-	@echo "  prebuild          stac-validate + site (used by CI)"
-	@echo "  preview           Minimal local preview (site only)"
-	@echo "  prebuild-lite     Site only (no validation/checksums)"
+	@echo "  env                  Show detected tools/paths"
+	@echo "  fetch                Download rasters/vectors per data/sources/*.json"
+	@echo "  cogs                 Build Cloud-Optimized GeoTIFFs (COGs) with overviews"
+	@echo "  terrain              Derive hillshade/slope/aspect (COGs); mirror into data/derivatives"
+	@echo "  slope_classes        Optional: vectorize slope classes"
+	@echo "  aspect_sectors       Optional: vectorize 8-way aspect sectors"
+	@echo "  meta                 Optional: update terrain meta JSON checksums (slope/aspect)"
+	@echo "  stac                 Build STAC items/collections into ./stac/ (auto-patch DEM if checksum exists)"
+	@echo "  stac-validate        Validate STAC + source schemas (scripts/ or kgt)"
+	@echo "  site                 Write web/layers.json (simple preview)"
+	@echo "  site-config          Render web/app.config.json from STAC via kgt (if available)"
+	@echo "  kml                  Build KMZ overlays (placeholder)"
+	@echo "  validate-cogs        Validate COGs under data/cogs (JSON report)"
+	@echo "  mosaic-county        Fetch+mosaic LiDAR tiles for a county (DEM COG)"
+	@echo "  regionate            Regionate GeoJSON/KML to network-linked KML/ KMZ"
+	@echo "  clean                Remove generated raster outputs (keeps stac/)"
+	@echo "  prebuild             stac-validate + site (used by CI)"
+	@echo "  preview              Minimal local preview (site only)"
+	@echo "  prebuild-lite        Site only (no validation/checksums)"
 	@echo ""
 	@echo "Data:"
-	@echo "  nlcd              Build NLCD (1992–2021) COGs for Kansas (expects raw files under data/sources/land/raw)"
+	@echo "  nlcd                 Build NLCD (1992–2021) COGs for Kansas (expects raw files under data/sources/land/raw)"
 	@echo ""
 	@echo "Checksums:"
 	@echo "  dem-checksum         Write+verify checksum(s) for DEM and print STAC fields"
 	@echo "  hillshade-checksum   Write+verify checksum(s) for hillshade"
 	@echo ""
 	@echo "Hydrology (optional):"
-	@echo "  hydrology-fetch   Export Kansas River channels/floodplains/gauges (GeoJSON)"
-	@echo "  hydrology-stac    Wire local GeoJSON hrefs into the hydrology STAC Items"
+	@echo "  hydrology-fetch      Export Kansas River channels/floodplains/gauges (GeoJSON)"
+	@echo "  hydrology-stac       Wire local GeoJSON hrefs into the hydrology STAC Items"
 	@echo ""
 	@echo "Dev:"
 	@echo "  install-dev, test, test-cli, test-sources"
@@ -200,7 +211,8 @@ env:
 	@echo "HAVE_KGT=$(HAVE_KGT)  HAVE_JQ=$(HAVE_JQ)"
 	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDALTRANS=$(HAVE_GDALTRANS) HAVE_GDALADDO=$(HAVE_GDALADDO) HAVE_GDALWARP=$(HAVE_GDALWARP)"
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
-	@echo "HAVE_FETCH=$(if $(HAVE_FETCH),yes,no) HAVE_MAKECOG=$(if $(HAVE_MAKECOG),yes,no) HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no)"
+	@echo "HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no) HAVE_MAKE_SLOPEASP=$(if $(HAVE_MAKE_SLOPEASP),yes,no) HAVE_MAKE_TERRAIN=$(if $(HAVE_MAKE_TERRAIN),yes,no)"
+	@echo "HAVE_VALIDATE_COGS=$(if $(HAVE_VALIDATE_COGS),yes,no) HAVE_MOSAIC_LIDAR=$(if $(HAVE_MOSAIC_LIDAR),yes,no) HAVE_REGIONATE_KML=$(if $(HAVE_REGIONATE_KML),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
 	@echo "HAVE_PATCH_ASSET=$(if $(HAVE_PATCH_ASSET),yes,no)"
 	@echo "SHA256=$(SHA256_BIN)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
@@ -240,25 +252,34 @@ terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
 	$(call mirror_derivatives,$(ASPECT),$(DERIV)/aspect.tif)
 	@echo "✓ terrain built (COGs) and mirrored into $(DERIV)"
 
+# Prefer helper scripts; fallback to raw GDAL toolchain
 $(HILLSHADE): $(DEM) | $(HILLS)
 	$(check_dem)
 	@if [ -n "$(HAVE_MAKEHILLSHADE)" ]; then \
 	  echo "[hillshade] $(S)/make_hillshade.py"; \
-	  $(PY) "$(S)/make_hillshade.py" --dem "$(DEM)" --out "$@" --cog; \
+	  $(PY) "$(S)/make_hillshade.py" "$(DEM)" --out-root "$(HILLS)" --multidir --compute-edges; \
+	  # rename if helper's default name differs from target
+	  cand=$$(ls "$(HILLS)"/*_hillshade.tif 2>/dev/null | tail -n1); \
+	  if [ -n "$$cand" ] && [ "$$cand" != "$@" ]; then mv -f "$$cand" "$@"; fi; \
 	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
-	  echo "[hillshade] gdaldem hillshade"; \
+	  echo "[hillshade] gdaldem hillshade (fallback)"; \
 	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem hillshade "$(DEM)" "$$tmp" -compute_edges -z 1.0 -az 315 -alt 45; \
 	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
 	  rm -f "$$tmp"; \
 	else \
-	  echo "ERROR: neither $(S)/make_hillshade.py nor sufficient GDAL tools available."; exit 1; \
+	  echo "ERROR: neither helper script nor sufficient GDAL tools available."; exit 1; \
 	fi
 
 $(SLOPE): $(DEM) | $(TERRAIN)
 	$(check_dem)
-	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
+	@if [ -n "$(HAVE_MAKE_SLOPEASP)" ]; then \
+	  echo "[slope] $(S)/make_slope_aspect.py"; \
+	  $(PY) "$(S)/make_slope_aspect.py" "$(DEM)" --out-root "$(TERRAIN)" --slope --compute-edges; \
+	  cand=$$(ls "$(TERRAIN)"/*_slope.tif 2>/dev/null | tail -n1); \
+	  if [ -n "$$cand" ] && [ "$$cand" != "$@" ]; then mv -f "$$cand" "$@"; fi; \
+	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
 	  echo "[slope] gdaldem slope (degrees)"; \
 	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem slope "$(DEM)" "$$tmp" -compute_edges -s 1.0; \
@@ -271,11 +292,16 @@ $(SLOPE): $(DEM) | $(TERRAIN)
 
 $(ASPECT): $(DEM) | $(TERRAIN)
 	$(check_dem)
-	@if [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
+	@if [ -n "$(HAVE_MAKE_SLOPEASP)" ]; then \
+	  echo "[aspect] $(S)/make_slope_aspect.py"; \
+	  $(PY) "$(S)/make_slope_aspect.py" "$(DEM)" --out-root "$(TERRAIN)" --aspect --compute-edges; \
+	  cand=$$(ls "$(TERRAIN)"/*_aspect.tif 2>/dev/null | tail -n1); \
+	  if [ -n "$$cand" ] && [ "$$cand" != "$@" ]; then mv -f "$$cand" "$@"; fi; \
+	elif [ "$(HAVE_GDALDEM)" = "yes" ] && [ "$(HAVE_GDALADDO)" = "yes" ] && [ "$(HAVE_GDALTRANS)" = "yes" ]; then \
 	  echo "[aspect] gdaldem aspect (0–360°)"; \
 	  tmp="$@.$$$$.tmp.tif"; \
 	  gdaldem aspect "$(DEM)" "$$tmp" -compute_edges; \
-	  gdaladdo -r average "$$tmp" $(OVERVIEWS); \
+	  gdaladdo -r average "$$tmp" $(OVERVIEWs); \
 	  gdal_translate "$$tmp" "$@" $(COG_OPTS); \
 	  rm -f "$$tmp"; \
 	else \
@@ -313,7 +339,6 @@ aspect_sectors: $(ASPECT) | $(VEC)
 nlcd: $(foreach Y,$(NLCD_YEARS),$(call NLCD_COG_PATH,$(Y)))
 	@echo "✓ NLCD COGs built under $(NLCD_DST_DIR)"
 
-# Build one year: clip (nearest), COG, provenance update (if script present)
 $(NLCD_DST_DIR)/nlcd_%_ks_cog.tif: $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif
 	@mkdir -p $(NLCD_DST_DIR)
 	@if [ "$(HAVE_GDALWARP)" != "yes" ] || [ "$(HAVE_GDALTRANS)" != "yes" ]; then echo "ERROR: gdalwarp/gdal_translate required for NLCD"; exit 1; fi
@@ -326,7 +351,6 @@ $(NLCD_DST_DIR)/nlcd_%_ks_cog.tif: $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif
 	echo "[nlcd] $* → provenance update"; \
 	{ test -f "$(S)/update_registry.py" && $(PY) "$(S)/update_registry.py" "$@" "landcover_nlcd_$*"; } || true
 
-# Optional helper to nudge users to put raw files in place
 $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif:
 	@mkdir -p $(NLCD_SRC_DIR)/raw
 	@echo "!! Please download NLCD $* GeoTIFF from MRLC and place at $@"
@@ -433,6 +457,16 @@ site-config: | $(WEB)
 kml: terrain
 	@echo "[kml] Legacy prototype. Provide your regionate script if needed."
 
+# Convenience wrapper: regionate GeoJSON/KML → KML tree / KMZ
+regionate:
+	@if [ -n "$(HAVE_REGIONATE_KML)" ]; then \
+	  echo "Usage: make regionate SRC=path/to.geojson OUT=out/dir [KMZ=out.kmz NAME='Layer']"; \
+	  : "$${SRC:?Set SRC=...}"; : "$${OUT:?Set OUT=...}"; \
+	  $(PY) "$(S)/regionate_kml.py" --geojson "$${SRC}" --out "$${OUT}" $${KMZ:+--kmz "$${KMZ}"} $${NAME:+--name "$${NAME}"}; \
+	else \
+	  echo "[regionate] $(S)/regionate_kml.py missing."; \
+	fi
+
 # -------- Simple site manifest (always available) --------
 site: | $(WEB)
 	@$(PY) - <<'PYCODE'
@@ -449,6 +483,26 @@ layers = {
 json.dump(layers, open(p, 'w'), indent=2)
 print("wrote", p)
 PYCODE
+
+# -------- COG validation + helpers --------
+validate-cogs:
+	@if [ -n "$(HAVE_VALIDATE_COGS)" ]; then \
+	  mkdir -p data/validation; \
+	  $(PY) "$(S)/validate_cogs.py" "$(COGS)" --jobs $$(( $$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4) )) \
+	    --timeout 120 --report data/validation/cog_validate.report.json || true; \
+	  echo "Report: data/validation/cog_validate.report.json"; \
+	else \
+	  echo "[validate-cogs] $(S)/validate_cogs.py missing."; \
+	fi
+
+mosaic-county:
+	@if [ -n "$(HAVE_MOSAIC_LIDAR)" ]; then \
+	  echo "Usage: make mosaic-county COUNTY=pawnee"; \
+	  : "$${COUNTY:?Set COUNTY=...}"; \
+	  $(PY) "$(S)/mosaic_lidar_county.py" --county "$${COUNTY}" --jobs $$(( $$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4) )); \
+	else \
+	  echo "[mosaic-county] $(S)/mosaic_lidar_county.py missing."; \
+	fi
 
 # -------- Checksums (COGs) --------
 dem-checksum:
