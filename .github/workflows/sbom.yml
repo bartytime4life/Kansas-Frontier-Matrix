@@ -24,8 +24,8 @@ on:
 
 permissions:
   contents: read
-  security-events: write   # for SARIF upload (vuln reports)
-  id-token: write          # for artifact attestations
+  security-events: write   # SARIF upload (Grype)
+  id-token: write          # attestations
 
 concurrency:
   group: sbom-${{ github.ref }}
@@ -35,6 +35,7 @@ jobs:
   repo-sbom:
     name: Generate SBOM (repo)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       OUT_DIR: artifacts/sbom/repo
 
@@ -43,11 +44,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # Avoid pulling LFS blobs (faster, SBOM scans metadata too)
           lfs: false
 
       - name: Setup Syft
         uses: anchore/syft-action/setup-syft@v1
+        with:
+          syft-version: v1.18.1   # pin for determinism; bump via Dependabot
 
       - name: Ensure output dir
         run: mkdir -p "$OUT_DIR"
@@ -58,11 +60,15 @@ jobs:
       - name: Create SPDX (repo)
         run: syft dir:. -o spdx-json="${OUT_DIR}/sbom.spdx.json"
 
-      - name: Quick stats to Job Summary
+      - name: Quick stats → Summary
+        shell: bash
         run: |
-          echo "## Repo SBOM" >> "$GITHUB_STEP_SUMMARY"
-          wc -c "${OUT_DIR}/sbom.cdx.json" | awk '{print "- CycloneDX size:", $1, "bytes"}' >> "$GITHUB_STEP_SUMMARY"
-          wc -c "${OUT_DIR}/sbom.spdx.json" | awk '{print "- SPDX size:", $1, "bytes"}' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Repo SBOM"
+            echo "- Syft: $(syft version | head -n1)"
+            echo "- CycloneDX bytes: $(wc -c < "${OUT_DIR}/sbom.cdx.json")"
+            echo "- SPDX bytes: $(wc -c < "${OUT_DIR}/sbom.spdx.json")"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload SBOM artifacts (repo)
         uses: actions/upload-artifact@v4
@@ -77,25 +83,39 @@ jobs:
         with:
           subject-path: artifacts/sbom/repo/**
 
-      - name: (Optional) Vulnerability scan (repo – Grype)
+      # Vulnerability report on the repo (best-effort, non-blocking)
+      - name: Vulnerability scan (repo – Grype)
+        id: grype_repo
+        continue-on-error: true
         uses: anchore/scan-action@v4
         with:
           path: .
-          fail-build: false                  # report only; do not fail CI here
+          fail-build: false
           severity-cutoff: high
           output-format: sarif
           output-file: artifacts/sbom/repo/grype-repo.sarif
 
       - name: Upload SARIF (repo vulns)
-        if: always() && hashFiles('artifacts/sbom/repo/grype-repo.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/sbom/repo/grype-repo.sarif ]; then
+            echo "file=artifacts/sbom/repo/grype-repo.sarif" >> "$GITHUB_OUTPUT"
+          else
+            echo "No repo SARIF produced."
+            exit 0
+          fi
+        id: repo_sarif_path
+      - uses: github/codeql-action/upload-sarif@v3
+        if: steps.repo_sarif_path.outputs.file != ''
         with:
-          sarif_file: artifacts/sbom/repo/grype-repo.sarif
+          sarif_file: ${{ steps.repo_sarif_path.outputs.file }}
           category: repo-sbom-grype
 
   image-sbom:
     name: Generate SBOM (image)
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: repo-sbom
     if: |
       hashFiles('Dockerfile') != '' || hashFiles('docker/Dockerfile') != ''
@@ -111,14 +131,14 @@ jobs:
 
       - name: Determine Dockerfile path
         id: df
+        shell: bash
         run: |
           if [ -f Dockerfile ]; then
             echo "path=Dockerfile" >> "$GITHUB_OUTPUT"
           elif [ -f docker/Dockerfile ]; then
             echo "path=docker/Dockerfile" >> "$GITHUB_OUTPUT"
           else
-            echo "No Dockerfile found" >&2
-            exit 1
+            echo "::error::No Dockerfile found"; exit 1
           fi
 
       - name: Build image (local)
@@ -126,6 +146,8 @@ jobs:
 
       - name: Setup Syft
         uses: anchore/syft-action/setup-syft@v1
+        with:
+          syft-version: v1.18.1
 
       - name: Ensure output dir
         run: mkdir -p "$OUT_DIR"
@@ -136,11 +158,15 @@ jobs:
       - name: Create SPDX (image)
         run: syft "${IMAGE_NAME}" -o spdx-json="${OUT_DIR}/sbom.image.spdx.json"
 
-      - name: Quick stats to Job Summary
+      - name: Quick stats → Summary
+        shell: bash
         run: |
-          echo "## Image SBOM" >> "$GITHUB_STEP_SUMMARY"
-          wc -c "${OUT_DIR}/sbom.image.cdx.json" | awk '{print "- CycloneDX size:", $1, "bytes"}' >> "$GITHUB_STEP_SUMMARY"
-          wc -c "${OUT_DIR}/sbom.image.spdx.json" | awk '{print "- SPDX size:", $1, "bytes"}' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Image SBOM"
+            echo "- Image: ${IMAGE_NAME}"
+            echo "- CycloneDX bytes: $(wc -c < "${OUT_DIR}/sbom.image.cdx.json")"
+            echo "- SPDX bytes: $(wc -c < "${OUT_DIR}/sbom.image.spdx.json")"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload SBOM artifacts (image)
         uses: actions/upload-artifact@v4
@@ -155,7 +181,9 @@ jobs:
         with:
           subject-path: artifacts/sbom/image/**
 
-      - name: (Optional) Vulnerability scan (image – Grype)
+      - name: Vulnerability scan (image – Grype)
+        id: grype_img
+        continue-on-error: true
         uses: anchore/scan-action@v4
         with:
           image: ${{ env.IMAGE_NAME }}
@@ -165,10 +193,20 @@ jobs:
           output-file: artifacts/sbom/image/grype-image.sarif
 
       - name: Upload SARIF (image vulns)
-        if: always() && hashFiles('artifacts/sbom/image/grype-image.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/sbom/image/grype-image.sarif ]; then
+            echo "file=artifacts/sbom/image/grype-image.sarif" >> "$GITHUB_OUTPUT"
+          else
+            echo "No image SARIF produced."
+            exit 0
+          fi
+        id: img_sarif_path
+      - uses: github/codeql-action/upload-sarif@v3
+        if: steps.img_sarif_path.outputs.file != ''
         with:
-          sarif_file: artifacts/sbom/image/grype-image.sarif
+          sarif_file: ${{ steps.img_sarif_path.outputs.file }}
           category: image-sbom-grype
 
   release-attach:
@@ -176,6 +214,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [repo-sbom, image-sbom]
     if: startsWith(github.ref, 'refs/tags/')
+    timeout-minutes: 10
     steps:
       - name: Download SBOM artifacts
         uses: actions/download-artifact@v4
