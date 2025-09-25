@@ -1,1 +1,194 @@
+#!/usr/bin/env bash
+# scripts/scripts — Kansas-Frontier-Matrix task runner
+# ----------------------------------------------------
+# Small, dependency-light wrapper around project scripts with helpful UX.
+# Usage:
+#   scripts/scripts <command> [args...]
+#
+# Quick help:
+#   scripts/scripts help
+#   scripts/scripts list
+#
+# Common commands:
+#   validate:stac [--check-urls] [--check-files] [--schema <path>] [--report <path>]
+#   validate:sources [--check-urls] [--check-files] [--schema <path>] [--report <path>]
+#   stac:render [--stac stac/items --out web/app.config.json]
+#   stac:validate [--check-urls] [--check-files]
+#   fetch:topoview [--source data/sources/usgs_topoview.json] [--max N] [--stac-dir stac/topoview]
+#   doctor
+
+set -euo pipefail
+
+# --- paths ---------------------------------------------------------
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPTS="$ROOT/scripts"
+STAC_DIR="$ROOT/stac"
+ITEMS_DIR="$ROOT/stac/items"
+SRC_DIR="$ROOT/data/sources"
+WEB_CFG="$ROOT/web/app.config.json"
+VALID_DIR="$ROOT/data/validation"
+RAW_DIR="$ROOT/data/raw"
+
+# --- colors --------------------------------------------------------
+if test -t 1; then
+  RED=$'\033[31m'; GRN=$'\033[32m'; YLW=$'\033[33m'; BLU=$'\033[34m'; BLD=$'\033[1m'; RST=$'\033[0m'
+else
+  RED=""; GRN=""; YLW=""; BLU=""; BLD=""; RST=""
+fi
+
+# --- helpers -------------------------------------------------------
+say() { echo "${BLD}${BLU}»${RST} $*"; }
+ok()  { echo "${GRN}✓${RST} $*"; }
+warn(){ echo "${YLW}⚠${RST} $*" >&2; }
+die() { echo "${RED}✗${RST} $*" >&2; exit 2; }
+
+ensure_py() { command -v python >/dev/null 2>&1 || die "python not found"; }
+ensure_file() { test -f "$1" || die "missing file: $1"; }
+ensure_dir()  { test -d "$1" || die "missing directory: $1"; }
+
+usage() {
+  cat <<EOF
+${BLD}Kansas-Frontier-Matrix — scripts/scripts${RST}
+
+Usage:
+  scripts/scripts <command> [args...]
+
+Commands:
+  help                 Show this help
+  list                 List available commands
+
+  validate:stac        Validate STAC JSON (Items/Collections/Catalogs)
+  validate:sources     Validate data/sources/*.json and STAC JSON
+
+  stac:render          Render web/app.config.json from STAC items
+  stac:validate        Shortcut: validate STAC with URL/file checks
+
+  fetch:topoview       Fetch USGS TopoView maps per config
+
+  doctor               Print quick environment diagnostics
+
+Examples:
+  scripts/scripts validate:stac --check-urls --check-files
+  scripts/scripts validate:sources --report data/validation/validate_sources.report.json
+  scripts/scripts fetch:topoview --max 25 --stac-dir stac/topoview
+  scripts/scripts stac:render --stac stac/items --out web/app.config.json
+EOF
+}
+
+cmd_list() {
+  cat <<EOF
+validate:stac
+validate:sources
+stac:render
+stac:validate
+fetch:topoview
+doctor
+help
+list
+EOF
+}
+
+# --- subcommands ---------------------------------------------------
+
+cmd_validate_stac() {
+  ensure_py
+  ensure_file "$SCRIPTS/validate_stac.py"
+  mkdir -p "$VALID_DIR"
+  # default schema arg is optional; script loads via package if available
+  say "Validating STAC under ${ITEMS_DIR} (plus collections/catalog)…"
+  python "$SCRIPTS/validate_stac.py" \
+    "$STAC_DIR" \
+    "$ITEMS_DIR" \
+    --report "$VALID_DIR/validate_stac.report.json" \
+    "$@"
+}
+
+cmd_validate_sources() {
+  ensure_py
+  ensure_file "$SCRIPTS/validate_sources.py"
+  mkdir -p "$VALID_DIR"
+  say "Validating sources and STAC (lenient for sources)…"
+  python "$SCRIPTS/validate_sources.py" \
+    "$SRC_DIR" \
+    "$STAC_DIR" \
+    --report "$VALID_DIR/validate_sources.report.json" \
+    "$@"
+}
+
+cmd_stac_render() {
+  # Prefer the kgt CLI if present; else try a simple passthrough
+  if command -v kgt >/dev/null 2>&1; then
+    local stac_path="$ITEMS_DIR"
+    local out="$WEB_CFG"
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --stac) stac_path="$2"; shift 2;;
+        --out)  out="$2"; shift 2;;
+        *) break;;
+      esac
+    done
+    say "Rendering viewer config from ${stac_path} → ${out}"
+    kgt render-config --stac "$stac_path" --output "$out" --pretty
+    ok "Wrote $out"
+  else
+    warn "kgt not found; cannot render config. Install the project CLI or add a Make target."
+    exit 3
+  }
+}
+
+cmd_stac_validate() {
+  # convenience composition: validate STAC with both URL and file checks
+  cmd_validate_stac --check-urls --check-files "$@"
+}
+
+cmd_fetch_topoview() {
+  ensure_py
+  ensure_file "$SCRIPTS/topoview_fetch.py"
+  local args=()
+  # pass-through of common flags
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --source|--max|--stac-dir|--retries|--timeout|--user-agent|--manifest|--sleep)
+        args+=("$1" "$2"); shift 2;;
+      --overwrite|--no-progress)
+        args+=("$1"); shift;;
+      *) break;;
+    esac
+  done
+  # defaults if not provided
+  if [[ ! " ${args[*]} " =~ " --source " ]]; then
+    args+=(--source "$SRC_DIR/usgs_topoview.json")
+  fi
+  say "Fetching TopoView with args: ${args[*]}"
+  python "$SCRIPTS/topoview_fetch.py" "${args[@]}"
+}
+
+cmd_doctor() {
+  say "Repo          : $ROOT"
+  say "Python        : $(python --version 2>&1 || echo 'not found')"
+  say "Requests      : $(python -c 'import requests,sys;print(requests.__version__)' 2>/dev/null || echo 'n/a')"
+  say "tqdm          : $(python -c 'import tqdm,sys;print(tqdm.__version__)' 2>/dev/null || echo 'n/a')"
+  say "jsonschema    : $(python -c 'import jsonschema,sys;print(jsonschema.__version__)' 2>/dev/null || echo 'n/a')"
+  say "kgt CLI       : $(command -v kgt >/dev/null 2>&1 && kgt --version || echo 'not found')"
+  say "Paths         : stac=$STAC_DIR  sources=$SRC_DIR  scripts=$SCRIPTS"
+  ok  "Doctor completed."
+}
+
+# --- dispatch ------------------------------------------------------
+main() {
+  local cmd="${1:-help}"; shift || true
+  case "$cmd" in
+    help) usage;;
+    list) cmd_list;;
+    validate:stac) cmd_validate_stac "$@";;
+    validate:sources) cmd_validate_sources "$@";;
+    stac:render) cmd_stac_render "$@";;
+    stac:validate) cmd_stac_validate "$@";;
+    fetch:topoview) cmd_fetch_topoview "$@";;
+    doctor) cmd_doctor;;
+    *) die "unknown command: $cmd (see: scripts/scripts help)";;
+  esac
+}
+
+main "$@"
 
