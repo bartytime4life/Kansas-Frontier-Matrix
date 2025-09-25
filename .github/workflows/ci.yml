@@ -41,8 +41,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - uses: actions/setup-python@v5
         with:
@@ -59,9 +58,8 @@ jobs:
           if grep -qE '^\[tool\.ruff\]' pyproject.toml 2>/dev/null || [ -f ruff.toml ] || [ -f .ruff.toml ]; then
             python -m pip install --upgrade pip
             pip install ruff
-            echo "ruff $(ruff --version)"
-            # Add a basic problem matcher for GitHub annotations
             echo "::add-matcher::.github/matchers/ruff.json" || true
+            ruff --version
             ruff check .
           else
             echo "No ruff config detected; skipping."
@@ -75,18 +73,18 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
+
     env:
       PYTHONUNBUFFERED: "1"
       CPLUS_INCLUDE_PATH: /usr/include/gdal
       C_INCLUDE_PATH: /usr/include/gdal
       PROJ_LIB: /usr/share/proj
-      # GDAL/PROJ can sometimes try reaching out; keep tests hermetic
-      PROJ_NETWORK: "OFF"
+      PROJ_NETWORK: "OFF"   # keep pyproj/GDAL from reaching out
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -110,7 +108,7 @@ jobs:
             fi
           done
           echo "need=$need" >> "$GITHUB_OUTPUT"
-          sudo apt-get update
+          sudo apt-get update -y
           if $need; then
             sudo apt-get install -y --no-install-recommends \
               gdal-bin libgdal-dev libspatialindex-dev libsqlite3-mod-spatialite jq
@@ -130,9 +128,9 @@ jobs:
           elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
-          # Ensure test essentials always exist
-          pip install pytest jsonschema pytest-cov
-          # Install project (prefer dev extras)
+          # test essentials
+          pip install pytest pytest-cov jsonschema || pip install pytest jsonschema
+          # project (prefer dev extras)
           if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
             pip install -e ".[dev]" || pip install -e .
           fi
@@ -147,7 +145,6 @@ PY
         run: |
           set -euo pipefail
           mkdir -p .artifacts
-          # Add pytest problem matcher to annotate failures
           echo "::add-matcher::.github/matchers/pytest.json" || true
           if python -c "import pytest_cov" 2>/dev/null; then
             pytest -q --maxfail=1 --disable-warnings \
@@ -159,7 +156,15 @@ PY
           fi
           echo "### Pytest (py ${{ matrix.python-version }})" >> "$GITHUB_STEP_SUMMARY"
           if [ -f .artifacts/coverage.xml ]; then
-            echo "- Coverage: generated" >> "$GITHUB_STEP_SUMMARY"
+            py - <<'PY' 2>/dev/null || python - <<'PY'
+import xml.etree.ElementTree as ET, sys
+try:
+    root=ET.parse(".artifacts/coverage.xml").getroot()
+    rate=float(root.attrib.get("line-rate",0))*100
+    print(f"- Coverage: {rate:.1f}%")
+except Exception:
+    print("- Coverage: generated")
+PY >> "$GITHUB_STEP_SUMMARY"
           else
             echo "- Coverage: n/a" >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -179,13 +184,11 @@ PY
     name: Web tests/build
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    # Only run if a web project exists
     if: hashFiles('web/package.json') != ''
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - name: Detect package manager
         id: pm
@@ -221,7 +224,6 @@ PY
             corepack enable
             yarn install --frozen-lockfile
           else
-            # npm: prefer CI when lockfile exists; fallback to install
             if [ -f package-lock.json ]; then
               npm ci
             else
