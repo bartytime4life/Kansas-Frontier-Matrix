@@ -1,5 +1,10 @@
+# ================================
+# Kansas-Frontier-Matrix / MCP Repo
+# .dockerignore (upgraded)
+# ================================
+
 # ---------------------------------------
-# Python
+# Python artifacts
 # ---------------------------------------
 __pycache__/
 *.py[cod]
@@ -7,16 +12,18 @@ __pycache__/
 *.pyd
 *.so
 *.egg-info/
-.buildozer/
+.eggs/
 __pypackages__/
+.buildozer/
 
 # Tooling caches
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
 .coverage
-htmlcov/
+.coverage.*
 .cache/
+htmlcov/
 
 # ---------------------------------------
 # Git / CI / Editors
@@ -36,16 +43,18 @@ htmlcov/
 # ---------------------------------------
 .venv/
 venv/
+env/
 .env
 .env.*
 *.log
+logs/
 
 # ---------------------------------------
 # Build outputs
 # ---------------------------------------
 build/
 dist/
-site/                 # MkDocs output
+site/                  # MkDocs output
 *.whl
 *.egg
 *.tar.gz
@@ -53,10 +62,10 @@ site/                 # MkDocs output
 # CI/test leftovers
 pytest-report.xml
 coverage.xml
+CHECKSUMS.txt
 
 # ---------------------------------------
-# Node / web
-# (container should not bundle dev deps or local builds)
+# Node / web (ignore dev/build artifacts)
 # ---------------------------------------
 node_modules/
 web/node_modules/
@@ -65,40 +74,69 @@ web/.vite/
 web/.next/
 web/dist/
 web/build/
-web/tiles/            # tile pyramids (heavy)
+web/tiles/             # heavy tile pyramids
 web/assets/tiles/
+web/*.local.js
+web/*.config.local.json
 web/.DS_Store
 
 # ---------------------------------------
-# DVC (keep .dvc files outside this dir)
+# DVC (keep .dvc files, drop cache/tmp)
 # ---------------------------------------
-.dvc/
+.dvc/cache/
+.dvc/tmp/
 
 # ---------------------------------------
 # Data (mount at runtime)
-# Keep catalogs if you validate them in-container
+# Keep text descriptors, schemas, and catalogs
 # ---------------------------------------
 data/**
 
-# allow small JSON catalogs / descriptors / DVC metafiles
-!data/sources/**
+# allow curated configs & descriptors
+!data/sources/**/*.json
+!data/sources/**/*.jsonc
+!data/sources/**/*.yaml
+!data/sources/**/*.yml
+!data/sources/**/*.toml
 !data/**/*.dvc
+!data/samples/**
+
+# block heavy files in data/ or stac/ trees
+data/**/*.tif
+data/**/*.tiff
+data/**/*.vrt
+data/**/*.ovr
+data/**/*.aux.xml
+data/**/*.zip
+data/**/*.7z
+data/**/*.tar
+data/**/*.tar.gz
+data/**/*.tar.xz
+data/**/*.gz
+data/**/*.las
+data/**/*.laz
+data/**/*.gpkg
+data/**/*.parquet
+data/**/*.geoparquet
+data/**/*.mbtiles
+data/**/*.pmtiles
+
+# legacy/derived outputs (always ignore)
+data/cogs/
+data/processed/
+data/outputs/
+data/raw/
+data/tmp/
+data/cache/
+data/tiles/
+assets/tiles/
 
 # ---------------------------------------
 # STAC catalogs are small: keep them
 # ---------------------------------------
 !stac/**
 
-# but still exclude any large rasters/archives under those trees
-stac/*.tif
-stac/*.tiff
-stac/*.vrt
-stac/*.ovr
-stac/*.aux.xml
-stac/*.zip
-stac/*.7z
-stac/*.tar
-stac/*.tar.gz
+# but exclude any heavy rasters/archives that sneak in
 stac/**/*.tif
 stac/**/*.tiff
 stac/**/*.vrt
@@ -108,58 +146,11 @@ stac/**/*.zip
 stac/**/*.7z
 stac/**/*.tar
 stac/**/*.tar.gz
-
-data/sources/*.tif
-data/sources/*.tiff
-data/sources/*.vrt
-data/sources/*.ovr
-data/sources/*.aux.xml
-data/sources/*.zip
-data/sources/*.7z
-data/sources/*.tar
-data/sources/*.tar.gz
-data/sources/**/*.tif
-data/sources/**/*.tiff
-data/sources/**/*.vrt
-data/sources/**/*.ovr
-data/sources/**/*.aux.xml
-data/sources/**/*.zip
-data/sources/**/*.7z
-data/sources/**/*.tar
-data/sources/**/*.tar.gz
-
-# legacy/derived outputs (always ignore)
-data/cogs/
-data/processed/
-data/outputs/
-data/raw/
-assets/tiles/
-
-# ---------------------------------------
-# Rasters and big geodata anywhere
-# ---------------------------------------
-*.tif
-*.tiff
-*.vrt
-*.ovr
-*.aux.xml
-*.tfw
-*.idx
-*.lock
-
-# ---------------------------------------
-# Archives
-# ---------------------------------------
-*.zip
-*.7z
-*.tar
-*.tar.gz
-*.tar.xz
-*.gz
+stac/**/*.tar.xz
+stac/**/*.gz
 
 # ---------------------------------------
 # Earth / KML big artifacts
-# (generated; mount or publish separately)
 # ---------------------------------------
 earth/*.kmz
 earth/*.kml
@@ -172,9 +163,13 @@ earth/networklinks/
 # ---------------------------------------
 *.ipynb
 .ipynb_checkpoints/
+.notebooks_cache/
+outputs/
 
 # ---------------------------------------
 # OS cruft
 # ---------------------------------------
 .DS_Store
 Thumbs.db
+Desktop.ini
+~$*
