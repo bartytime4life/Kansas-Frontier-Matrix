@@ -1,3 +1,4 @@
+# .github/workflows/site.yml
 name: Build & Deploy Site
 
 on:
@@ -33,8 +34,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       # --------------------------------------------------------------
       # Optional: Makefile path (uses your validated targets)
@@ -80,6 +80,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Run schema validation (app.config.json & layers.json)
         if: ${{ steps.made_site.outputs.site_ready != 'true' }}
         shell: bash
@@ -100,7 +101,6 @@ def validate(cfg_p, sch_p):
             print("-", "/".join(map(str,e.path)) or "(root)", ":", e.message)
         sys.exit(2)
 
-ok = True
 if pathlib.Path("web/app.config.json").exists() and pathlib.Path("web/config/app.config.schema.json").exists():
     validate("web/app.config.json", "web/config/app.config.schema.json")
 else:
