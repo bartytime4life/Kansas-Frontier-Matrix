@@ -1,6 +1,6 @@
 # ================================
 # Kansas-Frontier-Matrix / MCP Repo
-# .pre-commit-config.yaml
+# .pre-commit-config.yaml  (upgraded)
 # ================================
 
 minimum_pre_commit_version: "3.6.0"
@@ -8,11 +8,12 @@ minimum_pre_commit_version: "3.6.0"
 ci:
   autofix_prs: true
   autoupdate_schedule: monthly
-  # run all hooks except those marked manual
-  skip: []
+  skip: []  # run all hooks unless marked "manual"
 
 default_language_version:
   python: python3
+
+default_stages: [commit]   # sensible default; some hooks override to [push] or [manual]
 
 # Skip heavy/binary trees when hooks support "exclude"
 exclude: |
@@ -30,7 +31,15 @@ exclude: |
     \.venv/|
     \.mypy_cache/|
     \.ruff_cache/|
-    \.pytest_cache/
+    \.pytest_cache/|
+    .*\.ipynb_checkpoints/|
+    .*\.pmtiles$|
+    .*\.mbtiles$|
+    .*\.tif(f)?$|
+    .*\.las$|.*\.laz$|
+    .*\.gpkg$|.*\.parquet$|.*\.geoparquet$|
+    .*\.zip$|.*\.7z$|.*\.tar(\.gz)?$|.*\.zst$|
+    .*\.pdf$
   )
 
 repos:
@@ -39,12 +48,12 @@ repos:
     rev: v4.6.0
     hooks:
       - id: check-added-large-files
-        args: ["--maxkb=5000"]  # prevent >5MB accidental commits (use DVC/LFS instead)
+        args: ["--maxkb=5000"]  # >5MB ⇒ use DVC/LFS
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
-        args: ["--markdown-linebreak-ext=md,mdx,rst"]  # preserve hard breaks
+        args: ["--markdown-linebreak-ext=md,mdx,rst"]
       - id: mixed-line-ending
         args: ["--fix=lf"]
       - id: check-yaml
@@ -54,20 +63,34 @@ repos:
       - id: detect-private-key
       - id: check-executables-have-shebang
       - id: name-tests-test
+      - id: check-symlinks
+      - id: check-vcs-permalinks
+
+  # --- Spelling (docs/README safety) ----------------------------------------
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        additional_dependencies: []
+        args:
+          - "--ignore-words-list=teh,ot,nd,unkown,adress,fo,hist"
+          - "--skip=*.csv,*.geojson,*.jsonl,*.parquet,*.geoparquet,*.gpkg"
+        exclude: "(?x)^(assets/|data/|earth/|web/(dist|build)/)"
+        stages: [commit]
 
   # --- Shell / Dockerfile linters -------------------------------------------
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
-        files: '(^|/)(scripts/|docker/|\.github/).*\.sh$'
+        files: '(^|/)(scripts|docker|\.github)/.*\.sh$'
 
   - repo: https://github.com/mvdan/sh
     rev: v3.9.0
     hooks:
       - id: shfmt
         args: ["-i", "2", "-ci", "-bn"]
-        files: '(^|/)(scripts/|docker/|\.github/).*\.sh$'
+        files: '(^|/)(scripts|docker|\.github)/.*\.sh$'
 
   - repo: https://github.com/hadolint/hadolint
     rev: v2.12.0
@@ -75,7 +98,7 @@ repos:
       - id: hadolint
         files: '^docker/(Dockerfile|.*Dockerfile.*)$'
 
-  # --- Ruff (fast lint + import sort) ---------------------------------------
+  # --- Ruff (fast lint + format) --------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9
     hooks:
@@ -89,7 +112,7 @@ repos:
         types_or: [python]
         exclude: ^(notebooks/|docs/)
 
-  # --- Black (optional; keep while migrating solely to ruff-format) ----------
+  # --- Black (kept while migrating fully to ruff-format) ---------------------
   - repo: https://github.com/psf/black
     rev: 24.8.0
     hooks:
@@ -109,8 +132,10 @@ repos:
     hooks:
       - id: prettier
         files: "\\.(json|jsonc|ya?ml|md|html?|css|js|ts|tsx)$"
+        args: ["--cache", "--ignore-unknown"]
+        additional_dependencies: []  # add plugins here if needed
 
-  # --- Markdown link checks (docs safety) ------------------------------------
+  # --- Markdown link checks (manual by default) ------------------------------
   - repo: https://github.com/lycheeverse/lychee
     rev: v0.15.1
     hooks:
@@ -118,6 +143,7 @@ repos:
         name: markdown link check (docs/)
         files: "^docs/.*\\.(md|markdown)$"
         args: ["--no-progress", "--max-concurrency", "8", "--offline", "--accept", "200..399"]
+        stages: [manual]
 
   # --- pyproject.toml canonical formatting ----------------------------------
   - repo: https://github.com/tox-dev/pyproject-fmt
@@ -149,6 +175,12 @@ repos:
         files: "\\.ipynb$"
 
   # --- Security / safety -----------------------------------------------------
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+        stages: [push]           # run on push to catch secrets before remote
+
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.9
     hooks:
@@ -162,8 +194,7 @@ repos:
     hooks:
       - id: pip-audit
         args: ["-P"]
-        # speed up: skip in CI for non-Python-only repos if needed
-        # stages: [manual]
+        stages: [manual]         # heavy; run manually or in CI
 
   # --- GitHub Actions workflow linter ---------------------------------------
   - repo: https://github.com/rhysd/actionlint
@@ -180,7 +211,7 @@ repos:
         args:
           - "--pattern=*.tif,*.tiff,*.vrt,*.ovr,*.aux.xml,*.mbtiles,*.pmtiles,*.shp,*.dbf,*.shx,*.cpg,*.prj,*.gpkg,*.geoparquet,*.parquet,*.las,*.laz,*.zip,*.7z,*.tar,*.tar.gz,*.tgz,*.bz2,*.xz,*.zst"
 
-  # --- Local project hooks (fast, optional) ---------------------------------
+  # --- Local project hooks (fast, targeted) ---------------------------------
   - repo: local
     hooks:
       # Validate STAC Items with kgt if available; otherwise skip gracefully.
