@@ -28,7 +28,6 @@ on:
       - ".github/workflows/tests.yml"
   workflow_dispatch:
 
-# Prevent overlapping runs on the same ref and follow least-privilege defaults
 concurrency:
   group: tests-${{ github.ref }}
   cancel-in-progress: true
@@ -37,6 +36,41 @@ permissions:
   contents: read
 
 jobs:
+  lint:
+    name: Lint (auto-detected)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install ruff if configured
+        id: maybe_ruff
+        run: |
+          set -euo pipefail
+          # Detect ruff config via common markers in pyproject or ruff.toml
+          if grep -qE '^\[tool\.ruff\]' pyproject.toml 2>/dev/null || [ -f ruff.toml ] || [ -f .ruff.toml ]; then
+            pip install ruff
+            echo "has_ruff=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_ruff=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run ruff
+        if: steps.maybe_ruff.outputs.has_ruff == 'true'
+        run: |
+          ruff --version
+          ruff check .
+
+      - name: Skip (no ruff config found)
+        if: steps.maybe_ruff.outputs.has_ruff != 'true'
+        run: echo "No ruff configuration detected; skipping lint."
+
   pytest:
     name: Pytest (${{ matrix.python-version }})
     runs-on: ubuntu-latest
@@ -44,13 +78,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    env:
+      PYTHONUNBUFFERED: "1"
+      # Help geo libs if they compile locally
+      CPLUS_INCLUDE_PATH: /usr/include/gdal
+      C_INCLUDE_PATH: /usr/include/gdal
+      PROJ_LIB: /usr/share/proj
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -58,32 +98,40 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
 
-      # Optional native deps that commonly show up in geo/ETL stacks; harmless if unused
-      - name: Install system dependencies
+      - name: (Conditional) Install geo system dependencies
+        id: need_geo
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            gdal-bin libgdal-dev \
-            libspatialindex-dev jq \
-            libsqlite3-mod-spatialite
-          gdalinfo --version || true
+          set -euo pipefail
+          need=false
+          for f in requirements*.txt pyproject.toml; do
+            [ -f "$f" ] || continue
+            if grep -Ei 'gdal|rasterio|geopandas|fiona|shapely|pyproj|rtree|spatialite' "$f"; then
+              need=true
+              break
+            fi
+          done
+          echo "need=$need" >> "$GITHUB_OUTPUT"
+          if $need; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends \
+              gdal-bin libgdal-dev libspatialindex-dev jq libsqlite3-mod-spatialite
+            gdalinfo --version || true
+          else
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends jq
+          fi
 
-      - name: Cache pip (fallback to explicit cache for robustness)
+      - name: Cache pip (explicit fallback)
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: >-
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-            ${{ hashFiles('**/requirements*.txt', 'pyproject.toml') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt', 'pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.python-version }}-
             ${{ runner.os }}-pip-
 
       - name: Install Python dependencies
-        env:
-          # Help wheels find GDAL headers if building (usually wheels are prebuilt)
-          CPLUS_INCLUDE_PATH: /usr/include/gdal
-          C_INCLUDE_PATH: /usr/include/gdal
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
@@ -91,44 +139,68 @@ jobs:
             pip install -r requirements-dev.txt
           elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
-          else
-            # Minimal deps for test discovery
-            pip install -q pytest jsonschema
           fi
+          # Always ensure core test deps exist
+          pip install pytest jsonschema
+          # If project is installable, install it (prefer dev extras)
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            pip install -e ".[dev]" || pip install -e .
+          fi
+          # Try to enable coverage if available in deps
           python - <<'PY'
-          import pytest, sys
+          import importlib, sys
+          for pkg in ("pytest_cov","coverage"):
+              try: importlib.import_module(pkg)
+              except Exception: pass
+              else: print(f"Detected: {pkg}", file=sys.stderr)
+          PY
+          python - <<'PY'
+          import sys, pytest
           print("Python:", sys.version.split()[0])
           print("pytest:", pytest.__version__)
           PY
 
-      - name: Run pytest
+      - name: Run pytest (with auto-coverage if available)
         run: |
           set -euo pipefail
           mkdir -p .artifacts
-          # Respect repo markers; produce JUnit report for CI visibility
-          pytest -q --maxfail=1 --disable-warnings \
-                 --junitxml=.artifacts/pytest-report.xml
+          if python -c "import pytest_cov" 2>/dev/null; then
+            echo "Running with coverage..."
+            pytest -q --maxfail=1 --disable-warnings \
+              --cov=. --cov-report=xml:.artifacts/coverage.xml \
+              --junitxml=.artifacts/pytest-report.xml
+          else
+            echo "Running without coverage..."
+            pytest -q --maxfail=1 --disable-warnings \
+              --junitxml=.artifacts/pytest-report.xml
+          fi
+          echo "### Pytest summary (py ${{ matrix.python-version }})" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f .artifacts/coverage.xml ]; then
+            echo "- Coverage XML generated." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Coverage not enabled." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
-      - name: Upload test report
+      - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-report-py${{ matrix.python-version }}-${{ github.run_id }}
-          path: .artifacts/pytest-report.xml
+          name: pytest-py${{ matrix.python-version }}-${{ github.run_id }}
+          path: |
+            .artifacts/pytest-report.xml
+            .artifacts/coverage.xml
           if-no-files-found: warn
           retention-days: 14
 
   web:
-    name: Web (Node tests)
+    name: Web (Node tests+build)
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Only run if a web package.json exists
     if: hashFiles('web/package.json') != ''
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -153,4 +225,13 @@ jobs:
             npm test --silent || npm test
           else
             echo "No web test script defined; skipping."
+          fi
+
+      - name: Try a production build (smoke check)
+        working-directory: web
+        run: |
+          if npm run | grep -qE ' build($|:)'; then
+            npm run build
+          else
+            echo "No build script; skipping."
           fi
