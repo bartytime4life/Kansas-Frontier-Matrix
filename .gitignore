@@ -1,5 +1,6 @@
 # ================================
 # Kansas-Frontier-Matrix / MCP Repo
+# .gitignore (upgraded)
 # ================================
 
 # --- OS / Editor junk ---
@@ -15,6 +16,7 @@ Desktop.ini
 *.orig
 .vscode/
 .idea/
+*.iml
 
 # --- Python artifacts / envs / logs ---
 __pycache__/
@@ -75,15 +77,17 @@ docker/*.tmp
 docker-compose.override.yml
 
 # --- Catalogs / sources (keep small text descriptors) ---
-# STAC lives at top-level `stac/` and SHOULD be tracked (no ignore for stac/**)
+# STAC at top-level `stac/` is tracked (no ignore for stac/**)
 
-# Keep config descriptors under VCS, but ignore other random payloads in that dir
-data/sources/*
+# Keep config descriptors; ignore other payloads in that subtree
+data/sources/**
 !data/sources/**/*.json
 !data/sources/**/*.jsonc
 !data/sources/**/*.yaml
 !data/sources/**/*.yml
 !data/sources/**/*.toml
+!data/sources/**/.gitkeep
+!data/sources/**/.keep
 
 # --- Generated / transient data (ignore) ---
 data/raw/
@@ -131,6 +135,8 @@ assets/tiles/
 *.kml
 *.qgz
 *.qgs
+*.gdb/
+*.gdb
 
 # Archives / bundles
 *.zip
@@ -144,10 +150,6 @@ assets/tiles/
 
 # Checksums & temp signatures
 *.sha256
-
-# --- Cloud Optimized GeoTIFF derivatives (often regenerated) ---
-data/processed/**/*.tif
-data/processed/**/*.tiff
 
 # --- Jupyter / notebooks ---
 .ipynb_checkpoints/
@@ -197,7 +199,7 @@ pytest-report.xml
 CHECKSUMS.txt
 
 # --- Optional: allow curated tiny sample datasets under version control ----
-# Place any small demo data in data/samples/** (overrides global ignores below).
+# (Parent re-include first, then specific types; this overrides global ignores above)
 !data/samples/**
 !data/samples/**/*.json
 !data/samples/**/*.geojson
