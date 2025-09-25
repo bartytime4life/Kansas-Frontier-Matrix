@@ -35,6 +35,13 @@ WEB     := web
 STAC    := stac
 TESTS   := tests
 
+# Canonical Kansas bbox (keep consistent across the repo)
+KANSAS_MINX := -102.051
+KANSAS_MINY := 36.993
+KANSAS_MAXX := -94.588
+KANSAS_MAXY := 40.003
+KANSAS_BBOX := $(KANSAS_MINX) $(KANSAS_MINY) $(KANSAS_MAXX) $(KANSAS_MAXY)
+
 # Core DEM (override via: make terrain DEM=/path/to/dem.tif)
 DEM ?= $(DEMS)/ks_1m_dem_2018_2020.tif
 
@@ -52,10 +59,10 @@ META_SLOPE  := $(SRC)/ks_slope.meta.json
 META_ASPECT := $(SRC)/ks_aspect.meta.json
 
 # -------- NLCD (1992–2021) — Kansas COGs --------
+# Raw inputs live under data/sources/land/raw; outputs go to data/cogs/landcover/
 NLCD_YEARS    ?= 1992 2001 2006 2011 2016 2019 2021
 NLCD_SRC_DIR  ?= $(DATA)/sources/land
-NLCD_DST_DIR  ?= $(NLCD_SRC_DIR)/vectors
-NLCD_BBOX     ?= -102.05 36.99 -94.61 40.00   # minx miny maxx maxy
+NLCD_DST_DIR  ?= $(COGS)/landcover
 define NLCD_SRC_PATH
 $(NLCD_SRC_DIR)/raw/NLCD_$(1)_CONUS.tif
 endef
@@ -117,10 +124,11 @@ KSRIV_CHANNELS_GJ   := $(KSRIV_OUTDIR)/channels.geojson
 KSRIV_FLOODPLAIN_GJ := $(KSRIV_OUTDIR)/floodplains.geojson
 KSRIV_GAUGES_GJ     := $(KSRIV_OUTDIR)/gauges.geojson
 
-KSRIV_ITEM_DIR      := $(STAC)/items
-KSRIV_ITEM_CHANNELS := $(KSRIV_ITEM_DIR)/ks_kansas_river_channels.json
-KSRIV_ITEM_FP       := $(KSRIV_ITEM_DIR)/ks_kansas_river_floodplains.json
-KSRIV_ITEM_GAUGES   := $(KSRIV_ITEM_DIR)/ks_kansas_river_gauges.json
+# Keep Items grouped under a subfolder; matches the ks_kansas_river Collection
+KSRIV_ITEM_DIR      := $(STAC)/items/ks_kansas_river
+KSRIV_ITEM_CHANNELS := $(KSRIV_ITEM_DIR)/channels.json
+KSRIV_ITEM_FP       := $(KSRIV_ITEM_DIR)/floodplains.json
+KSRIV_ITEM_GAUGES   := $(KSRIV_ITEM_DIR)/gauges.json
 
 # -------- Internal helpers --------
 define check_dem
@@ -311,7 +319,7 @@ $(NLCD_DST_DIR)/nlcd_%_ks_cog.tif: $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif
 	@if [ "$(HAVE_GDALWARP)" != "yes" ] || [ "$(HAVE_GDALTRANS)" != "yes" ]; then echo "ERROR: gdalwarp/gdal_translate required for NLCD"; exit 1; fi
 	@echo "[nlcd] $* → clip to Kansas bbox (nearest)"
 	@tmp=$$(mktemp -t nlcd_$*_ks.XXXXXX.tif); \
-	gdalwarp -te $(NLCD_BBOX) -r near -multi -overwrite "$<" "$$tmp"; \
+	gdalwarp -te $(KANSAS_BBOX) -r near -multi -overwrite "$<" "$$tmp"; \
 	echo "[nlcd] $* → translate to COG"; \
 	gdal_translate "$$tmp" "$@" -of COG -co COMPRESS=LZW -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING; \
 	rm -f "$$tmp"; \
@@ -369,7 +377,7 @@ ifeq ($(strip $(HAVE_MAKE_STAC)),)
 else
 	$(PY) "$(S)/make_stac.py" --data "$(DATA)" --stac "$(STAC)"
 endif
-	@ITEM="$(STAC)/items/dem/ks_1m_dem_2018_2020.json"; \
+	@ITEM="$(STAC)/items/elevation/ks_1m_dem_2018_2020.json"; \
 	if [ -f "$(DEM:.tif=.sha256)" ] && [ -f "$$ITEM" ]; then \
 	  echo "[stac] checksum detected → auto-patching DEM asset"; \
 	  if [ -n "$(HAVE_PATCH_ASSET)" ]; then \
@@ -498,7 +506,7 @@ hydrology-fetch: | $(KSRIV_OUTDIR)
 hydrology-stac:
 	@if [ "$(HAVE_JQ)" != "yes" ]; then echo "ERROR: jq is required for hydrology-stac"; exit 1; fi
 	@if [ ! -f "$(KSRIV_ITEM_CHANNELS)" ] || [ ! -f "$(KSRIV_ITEM_FP)" ] || [ ! -f "$(KSRIV_ITEM_GAUGES)" ]; then \
-	  echo "ERROR: hydrology STAC items missing under $(STAC)/items"; exit 1; fi
+	  echo "ERROR: hydrology STAC items missing under $(KSRIV_ITEM_DIR)"; exit 1; fi
 	jq --arg H "$(KSRIV_CHANNELS_GJ)"   '.assets.geojson.href = $H' "$(KSRIV_ITEM_CHANNELS)" > "$(KSRIV_ITEM_CHANNELS).tmp" && mv "$(KSRIV_ITEM_CHANNELS).tmp" "$(KSRIV_ITEM_CHANNELS)"
 	jq --arg H "$(KSRIV_FLOODPLAIN_GJ)" '.assets.geojson.href = $H' "$(KSRIV_ITEM_FP)"       > "$(KSRIV_ITEM_FP).tmp"       && mv "$(KSRIV_ITEM_FP).tmp"       "$(KSRIV_ITEM_FP)"
 	jq --arg H "$(KSRIV_GAUGES_GJ)"     '.assets.geojson.href = $H' "$(KSRIV_ITEM_GAUGES)"   > "$(KSRIV_ITEM_GAUGES).tmp"   && mv "$(KSRIV_ITEM_GAUGES).tmp"   "$(KSRIV_ITEM_GAUGES)"
