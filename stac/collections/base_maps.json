@@ -1,10 +1,13 @@
 {
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
   "type": "Collection",
   "id": "base_maps",
   "title": "Kansas Historical Topographic Base Maps (USGS & State Holdings, 1880s–2000s)",
   "description": "Georeferenced historical topographic sheets for Kansas (USGS Historical Topo Map Collection and state archives). Organized by year/scale for time-aware visualization and change detection. Items include COG rasters/KML with provenance and georeferencing notes.",
-  "license": "public-domain",
+  "license": "PDM-1.0",
   "keywords": [
     "Kansas",
     "USGS",
@@ -30,7 +33,7 @@
   ],
   "extent": {
     "spatial": {
-      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
     },
     "temporal": {
       "interval": [["1880-01-01T00:00:00Z", "2009-12-31T23:59:59Z"]]
@@ -38,10 +41,10 @@
   },
   "summaries": {
     "proj:epsg": [4326],
-    "gsd": [0.5, 1.0, 2.0, 6.0, 24.0],
-    "platform": ["historical-scans"],
-    "instruments": ["analog-cartography"],
-    "themes": ["cartography", "history"]
+    "kfm:gsd": [0.5, 1.0, 2.0, 6.0, 24.0],
+    "kfm:platform": ["historical-scans"],
+    "kfm:instruments": ["analog-cartography"],
+    "kfm:themes": ["cartography", "history"]
   },
   "links": [
     {
