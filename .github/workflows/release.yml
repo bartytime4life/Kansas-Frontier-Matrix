@@ -1,3 +1,4 @@
+# .github/workflows/release.yml
 name: Build & Attach Release Artifacts
 
 on:
@@ -23,12 +24,14 @@ jobs:
   build:
     name: Build (sdist+wheel) & validate
     runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # setuptools_scm needs tags/history
+          # setuptools_scm needs tags/history for version resolution
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -47,6 +50,7 @@ jobs:
       # Ensure the tag (vX.Y.Z...) matches the project version resolved by setuptools_scm.
       - name: Verify tag matches project version
         id: tagcheck
+        shell: bash
         run: |
           set -euo pipefail
           TAG="${GITHUB_REF_NAME#v}"          # strip leading 'v'
@@ -102,6 +106,7 @@ PY
           [ -d "${EXTRAS_DIR}" ] && ls -lh "${EXTRAS_DIR}" || true
 
       - name: Checksums (SHA-256)
+        shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
@@ -126,6 +131,17 @@ PY
           } > CHECKSUMS.txt
           ls -lh CHECKSUMS.txt
 
+      # Optional: generate SBOMs for built dists (lightweight, file-level)
+      - name: Generate SBOMs (CycloneDX) for dists (optional)
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade cyclonedx-bom || exit 0
+          for f in "${DIST_DIR}"/*.{whl,tar.gz}; do
+            [ -e "$f" ] || continue
+            cyclonedx-bom -o "${f}.cdx.json" -e "$f" || true
+          done
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -133,6 +149,7 @@ PY
           path: |
             ${{ env.DIST_DIR }}/*
             ${{ env.DIST_DIR }}/*.sha256
+            ${{ env.DIST_DIR }}/*.cdx.json
             ${{ env.EXTRAS_DIR }}/*.zip
             ${{ env.EXTRAS_DIR }}/*.sha256
             CHECKSUMS.txt
@@ -173,6 +190,7 @@ PY
           path: dist
 
       - name: Verify artifacts exist
+        shell: bash
         run: |
           set -euo pipefail
           shopt -s nullglob
