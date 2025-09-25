@@ -1,0 +1,47 @@
+{
+  "id": "hydrology",
+  "title": "Hydrology & Water Management",
+  "type": "vector",
+  "version": "1.0.0",
+  "description": "Hydrological datasets including flood events, irrigation/management features, and historical water infrastructure for Kansas. Sources include NOAA, FEMA, and USDM.",
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://www.ncdc.noaa.gov/stormevents/ftp.jsp",
+        "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2",
+        "https://droughtmonitor.unl.edu/"
+      ],
+      "notes": "NOAA Storm Events, FEMA disaster declarations, and US Drought Monitor provide flood/irrigation event data."
+    }
+  ],
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.6, 40.0]
+  },
+  "temporal": {
+    "start": "1900-01-01",
+    "end": null
+  },
+  "license": "various",
+  "provenance": "Datasets compiled from NOAA Storm Events, FEMA declarations, USDA/USDM, and state water management agencies.",
+  "contacts": [
+    {
+      "name": "NOAA National Centers for Environmental Information",
+      "role": "curator",
+      "url": "https://www.ncdc.noaa.gov/"
+    },
+    {
+      "name": "FEMA",
+      "role": "curator",
+      "url": "https://www.fema.gov/"
+    },
+    {
+      "name": "US Drought Monitor",
+      "role": "curator",
+      "url": "https://droughtmonitor.unl.edu/"
+    }
+  ],
+  "refresh": "quarterly",
+  "notes": "Planned integration into STAC Items and hydrology viewer layers; flood scenario modeling to use MCP SOPs (HEC-RAS)."
+}
