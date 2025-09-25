@@ -181,37 +181,45 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-  I["Item JSON\n(type: \"Feature\")"]
+  I["Item JSON\n(type: Feature)"]
 
-  subgraph P["properties"]
-    T["title"]
-    D["description"]
-    DT["datetime or\nstart_datetime/end_datetime"]
-    EPSG["proj:epsg = 4326"]
-  end
+  P["properties"]
+  P1["title"]
+  P2["description"]
+  P3["datetime or\nstart_datetime/end_datetime"]
+  P4["proj epsg = 4326"]
 
-  subgraph S["spatial"]
-    GEOM["geometry"]
-    BBOX["bbox"]
-  end
+  S["spatial"]
+  S1["geometry"]
+  S2["bbox"]
 
-  subgraph A["assets"]
-    COG["cog → COG GeoTIFF\nroles: data, visual"]
-    THMB["thumbnail → PNG\nroles: thumbnail, overview"]
-    META["metadata → JSON\nroles: metadata"]
-  end
+  A["assets"]
+  A1["cog → COG GeoTIFF\nroles: data, visual"]
+  A2["thumbnail → PNG\nroles: thumbnail, overview"]
+  A3["metadata → JSON\nroles: metadata"]
 
-  subgraph L["links"]
-    SELF["rel: self\n./<item>.json"]
-    COLL["rel: collection\n../collections/<collection>.json"]
-    PARENT["rel: parent\n(same as collection)"]
-    ROOT["rel: root\n../catalog.json"]
-  end
+  L["links"]
+  L1["rel: self\n./item.json"]
+  L2["rel: collection\n../collections/collection.json"]
+  L3["rel: parent\nsame as collection"]
+  L4["rel: root\n../catalog.json"]
 
-  I --> P
-  I --> S
-  I --> A
-  I --> L
+  I --> P --> P1
+  P --> P2
+  P --> P3
+  P --> P4
+
+  I --> S --> S1
+  S --> S2
+
+  I --> A --> A1
+  A --> A2
+  A --> A3
+
+  I --> L --> L1
+  L --> L2
+  L --> L3
+  L --> L4
 ```
 
 ---
