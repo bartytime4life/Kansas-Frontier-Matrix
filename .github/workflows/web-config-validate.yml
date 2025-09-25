@@ -8,18 +8,17 @@ on:
     paths:
       - "web/app.config.json"
       - "web/layers.json"
-      - "web/config/*.json"
+      - "web/config/**/*.json"
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
   pull_request:
     paths:
       - "web/app.config.json"
       - "web/layers.json"
-      - "web/config/*.json"
+      - "web/config/**/*.json"
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
 
-# Keep runs from stepping on each other and set least-privilege defaults
 concurrency:
   group: web-config-validate-${{ github.ref }}
   cancel-in-progress: true
@@ -32,6 +31,8 @@ jobs:
     name: JSON & Schema Validation
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      PYTHONUNBUFFERED: "1"
 
     steps:
       - name: Checkout
@@ -40,46 +41,60 @@ jobs:
           fetch-depth: 0
 
       - name: Show changed files (PR only)
-        if: github.event_name == 'pull_request'
+        if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "Changed files:"
-          git --no-pager diff --name-only origin/${{ github.base_ref }}... | sed 's/^/ - /'
+          echo "Changed files (vs ${{ github.base_ref }}):"
+          git --no-pager diff --name-only origin/${{ github.base_ref }}... | sed 's/^/ - /' || true
 
-      # Fast JSON syntax validation (catches commas/braces/quotes issues early)
+      # Ensure jq is present (usually available, but make explicit for stability)
+      - name: Install jq
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+
       - name: Validate JSON syntax with jq
         shell: bash
         run: |
           set -euo pipefail
           had_any=false
+          summary="### JSON syntax check\n"
 
-          check_json() {
+          check_file () {
             local f="$1"
-            if [ -f "$f" ]; then
+            if [[ -f "$f" ]]; then
               had_any=true
               echo "Checking JSON syntax: $f"
-              jq -e . "$f" >/dev/null
+              if jq -e . "$f" >/dev/null 2>&1; then
+                summary+="- ✅ $f\n"
+              else
+                summary+="- ❌ $f\n"
+                echo "::error file=$f::Invalid JSON"
+                exit 1
+              fi
             fi
           }
 
-          check_glob() {
-            shopt -s nullglob
-            for f in "$@"; do
-              [ -e "$f" ] || continue
-              had_any=true
-              echo "Checking JSON syntax: $f"
-              jq -e . "$f" >/dev/null
-            done
-          }
+          # Single-file checks
+          check_file web/app.config.json
+          check_file web/layers.json
 
-          check_json web/app.config.json || true
-          check_json web/layers.json     || true
-          check_glob web/config/*.json
+          # Nested configs
+          shopt -s nullglob globstar
+          found=false
+          for f in web/config/**/*.json; do
+            found=true
+            check_file "$f"
+          done
 
-          if [ "$had_any" = false ]; then
+          if [[ "$had_any" = false ]]; then
             echo "No web config JSON files present to validate."
+            summary+="(No web config JSON files present)\n"
           fi
 
-      - name: Set up Python
+          # Write summary for job UI
+          echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Python (3.11)
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -88,23 +103,27 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
-          # Install repo extras if present; otherwise install minimal deps
-          if [ -f requirements-dev.txt ]; then
+          if [[ -f requirements-dev.txt ]]; then
             pip install -r requirements-dev.txt
-          elif [ -f requirements.txt ]; then
+          elif [[ -f requirements.txt ]]; then
             pip install -r requirements.txt
           fi
-          # Ensure pytest & jsonschema available regardless
+          # Always ensure these exist for schema/tests
           pip install pytest jsonschema
 
-      # Run only the web config tests; accept both name pattern and file path
+          # If project is installable, add it (with extras) so tests can import local code
+          if [[ -f pyproject.toml || -f setup.cfg || -f setup.py ]]; then
+            # Try dev extras if declared, otherwise plain editable install
+            pip install -e ".[dev]" || pip install -e .
+          fi
+
       - name: Run pytest (web config tests)
         run: |
-          set -e
-          if [ -f tests/test_web_configs.py ]; then
+          set -euo pipefail
+          if [[ -f tests/test_web_configs.py ]]; then
             pytest -q tests/test_web_configs.py --junitxml=pytest-web-configs.xml
           else
-            # Fallback: keyword selection if test file path changes
+            # Fallback: keyword-based selection if the file was renamed/moved
             pytest -q -k "web_configs" --junitxml=pytest-web-configs.xml
           fi
 
