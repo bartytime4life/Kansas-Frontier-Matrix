@@ -9,12 +9,14 @@ on:
       - "docs/**"
       - "web/**"
       - ".github/workflows/link-check.yml"
+      - ".lychee.toml"
   pull_request:
     paths:
       - "README.md"
       - "docs/**"
       - "web/**"
       - ".github/workflows/link-check.yml"
+      - ".lychee.toml"
   workflow_dispatch:
   schedule:
     # Weekly sweep (Sunday 04:05 UTC)
@@ -37,62 +39,90 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # needed for PR diff mode
 
-      # Build the args dynamically so we honor a repo-provided .lychee.toml when present.
+      # Build args dynamically:
+      # - PRs: check only changed Markdown/HTML targets
+      # - Push/Schedule/Dispatch: scan full docs/web/README set
+      # - If .lychee.toml exists, defer to it
       - name: Compute lychee args
         id: args
         shell: bash
         run: |
           set -euo pipefail
-          TARGETS=()
-          # Common docs/markdown/html entry points
-          [ -f README.md ] && TARGETS+=("README.md")
-          [ -d docs ] && TARGETS+=("docs")
-          [ -d web ] && TARGETS+=("web")
 
-          # Default arguments (sane retries + exclude noisy schemes/hosts)
+          # Collect candidate files
+          collect_targets() {
+            local mode="$1"
+            local -a files=()
+            if [[ "$mode" == "pr" ]]; then
+              base="origin/${{ github.base_ref }}"
+              # Fallback if not fetched (forks): fetch base branch quietly
+              git fetch -q origin "${{ github.base_ref }}" || true
+              while IFS= read -r f; do
+                [[ -z "$f" ]] && continue
+                [[ "$f" =~ \.(md|html)$ ]] || continue
+                files+=("$f")
+              done < <(git --no-pager diff --name-only "${base}..." | tr -d '\r')
+            else
+              [[ -f README.md ]] && files+=("README.md")
+              [[ -d docs ]] && while IFS= read -r -d '' f; do files+=("$f"); done < <(find docs -type f \( -name '*.md' -o -name '*.html' \) -print0)
+              [[ -d web  ]] && while IFS= read -r -d '' f; do files+=("$f"); done < <(find web  -type f \( -name '*.md' -o -name '*.html' \) -print0)
+            fi
+            printf '%s\n' "${files[@]}" | sort -u
+          }
+
+          MODE="full"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            MODE="pr"
+          fi
+
+          mapfile -t TARGETS < <(collect_targets "$MODE")
+
+          if [[ ${#TARGETS[@]} -eq 0 ]]; then
+            echo "args=--no-progress --verbose README.md" >> "$GITHUB_OUTPUT"
+            echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ -f .lychee.toml ]]; then
+            echo "args=--config .lychee.toml ${TARGETS[*]}" >> "$GITHUB_OUTPUT"
+            echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Default (no repo config): resilient args
           BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
+          # JSON + Markdown reports
+          OUT_ARGS=(--format json --output lychee/results.json --format markdown --output lychee.md)
+
+          # Reasonable excludes for CI
           EXCLUDES=(
-            'mailto:*'
-            'tel:*'
-            'http://localhost*'
-            'http://127.0.0.1*'
-            'https://localhost*'
-            'https://127.0.0.1*'
-            # map/imagery/demo tiles & dynamic endpoints often rate-limit or block CI
+            'mailto:*' 'tel:*'
+            'http://localhost*' 'http://127.0.0.1*' 'https://localhost*' 'https://127.0.0.1*'
+            # Map tiles / APIs often rate-limit or require tokens
             'https://*.tile.openstreetmap.org/*'
             'https://*.googleapis.com/*'
             'https://*.arcgis.com/*'
             'https://api.mapbox.com/*'
           )
 
-          # Prefer repo config if present
-          if [ -f .lychee.toml ]; then
-            echo "args=--config .lychee.toml ${TARGETS[*]}" >> "$GITHUB_OUTPUT"
-          else
-            # Limit to markdown/html within docs and web (and README)
-            FIND_ARGS=()
-            for t in "${TARGETS[@]}"; do
-              if [ -d "$t" ]; then
-                while IFS= read -r -d '' f; do FIND_ARGS+=("$f"); done < <(find "$t" -type f \( -name '*.md' -o -name '*.html' \) -print0)
-              else
-                FIND_ARGS+=("$t")
-              fi
-            done
-            # Compose args
-            OUT=( "${BASE_ARGS[@]}" --format markdown --output lychee.md )
-            for e in "${EXCLUDES[@]}"; do OUT+=( --exclude "$e" ); done
-            OUT+=( "${FIND_ARGS[@]}" )
-            printf "args=%s\n" "${OUT[*]}" >> "$GITHUB_OUTPUT"
-          fi
+          mkdir -p lychee
+
+          # Compose final args string
+          ARGS=("${BASE_ARGS[@]}" "${OUT_ARGS[@]}")
+          for e in "${EXCLUDES[@]}"; do ARGS+=( --exclude "$e" ); done
+          ARGS+=( "${TARGETS[@]}" )
+
+          printf "args=%s\n" "${ARGS[*]}" >> "$GITHUB_OUTPUT"
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
 
       - name: Run lychee
         uses: lycheeverse/lychee-action@v2
         with:
           args: ${{ steps.args.outputs.args }}
         env:
-          # Token improves GitHub API rate limits for checking links to github.com raw blobs, releases, etc.
+          # Token improves rate limits for github.com/RAW, releases, etc.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload lychee report
@@ -102,7 +132,6 @@ jobs:
           name: lychee-report-${{ github.run_id }}
           path: |
             lychee.md
-            lychee-out.md
             lychee/results.json
           if-no-files-found: warn
           retention-days: 7
@@ -113,15 +142,16 @@ jobs:
         run: |
           {
             echo "## Link Check (Lychee)"
-            echo ""
+            echo
+            echo "- Mode: **${{ steps.args.outputs.mode || 'full' }}**"
             if [ -f lychee.md ]; then
+              echo
               echo "### Report excerpt"
-              echo ""
-              # Show first 200 lines to keep summary compact
+              echo
               echo '```markdown'
               sed -n '1,200p' lychee.md
               echo '```'
             else
-              echo "_No lychee.md report generated (used repo config or different output path)._"
+              echo "_No lychee.md report generated (likely used repo .lychee.toml with different outputs)._"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
