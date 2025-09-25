@@ -11,7 +11,7 @@
 #     macOS (brew):   brew install gdal proj
 #     Debian/Ubuntu:  sudo apt-get install -y gdal-bin libgdal-dev proj-bin
 #
-# Python: 3.10+ recommended (works great with Node-backed CI and manylinux wheels).
+# Python: 3.10+ recommended.
 
 ################
 # Core runtime #
@@ -24,15 +24,20 @@ rio-cogeo>=5.3.3                # COG creation/validation
 shapely>=2.0.4                  # geometry ops
 pyproj>=3.6.1                   # CRS / reprojection
 Pillow>=10.4.0                  # thumbnails/tiles for web UI
-typing-extensions>=4.12; python_version < "3.11"  # future-typing backports for older Pythons
-colorama>=0.4.6; platform_system == "Windows"     # pretty TQDM on Windows consoles
+typing-extensions>=4.12; python_version < "3.11"
+colorama>=0.4.6; platform_system == "Windows"
 
-# STAC + schema (provenance / catalog)
+###############################
+# STAC / schema / validation  #
+###############################
 pystac>=1.10.1
 pystac-client>=0.7.6
 jsonschema>=4.23.0
+stac-validator>=3.3.1           # provides `stac-validate` CLI
 
-# Tiny CLI / rich logs
+#########################
+# Tiny CLI / rich logs  #
+#########################
 click>=8.1.7
 rich>=13.7.1
 
@@ -52,7 +57,7 @@ rich>=13.7.1
 ########################################
 # mercantile>=1.2.1
 # morecantile>=5.3.0
-# mapbox-vector-tile>=1.2.1     # module: mapbox_vector_tile
+# mapbox-vector-tile>=1.2.1
 # rio-tiler>=6.6.1
 # titiler-core>=0.18.2
 
