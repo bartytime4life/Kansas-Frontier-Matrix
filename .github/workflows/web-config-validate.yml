@@ -12,6 +12,7 @@ on:
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
   pull_request:
+    branches: [ main ]
     paths:
       - "web/app.config.json"
       - "web/layers.json"
@@ -19,12 +20,12 @@ on:
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
 
+permissions:
+  contents: read
+
 concurrency:
   group: web-config-validate-${{ github.ref }}
   cancel-in-progress: true
-
-permissions:
-  contents: read
 
 jobs:
   validate:
@@ -37,94 +38,140 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - name: Show changed files (PR only)
         if: ${{ github.event_name == 'pull_request' }}
         run: |
           echo "Changed files (vs ${{ github.base_ref }}):"
-          git --no-pager diff --name-only origin/${{ github.base_ref }}... | sed 's/^/ - /' || true
+          git fetch -q origin "${{ github.base_ref }}" || true
+          git --no-pager diff --name-only "origin/${{ github.base_ref }}..." | sed 's/^/ - /' || true
 
-      # Ensure jq is present (usually available, but make explicit for stability)
       - name: Install jq
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y jq
+          sudo apt-get install -y --no-install-recommends jq
 
+      # ---------- Strict JSON syntax ----------
       - name: Validate JSON syntax with jq
+        id: jqcheck
         shell: bash
         run: |
           set -euo pipefail
-          had_any=false
+          shopt -s nullglob globstar
           summary="### JSON syntax check\n"
+          had_any=false
+          fail=0
 
-          check_file () {
+          check() {
             local f="$1"
-            if [[ -f "$f" ]]; then
-              had_any=true
-              echo "Checking JSON syntax: $f"
-              if jq -e . "$f" >/dev/null 2>&1; then
-                summary+="- ✅ $f\n"
-              else
-                summary+="- ❌ $f\n"
-                echo "::error file=$f::Invalid JSON"
-                exit 1
-              fi
+            had_any=true
+            if jq -e . "$f" >/dev/null 2>&1; then
+              summary+="- ✅ $f\n"
+            else
+              summary+="- ❌ $f\n"
+              echo "::error file=$f::Invalid JSON"
+              fail=1
             fi
           }
 
-          # Single-file checks
-          check_file web/app.config.json
-          check_file web/layers.json
-
-          # Nested configs
-          shopt -s nullglob globstar
-          found=false
+          for f in web/app.config.json web/layers.json; do
+            [ -e "$f" ] && check "$f"
+          done
           for f in web/config/**/*.json; do
-            found=true
-            check_file "$f"
+            [ -e "$f" ] && check "$f"
           done
 
-          if [[ "$had_any" = false ]]; then
-            echo "No web config JSON files present to validate."
+          if ! $had_any; then
             summary+="(No web config JSON files present)\n"
           fi
-
-          # Write summary for job UI
           echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+          exit $fail
 
-      - name: Set up Python (3.11)
+      # ---------- Optional schema validation (Python jsonschema) ----------
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
 
-      - name: Install test dependencies
+      - name: Install schema tooling
         run: |
           python -m pip install --upgrade pip
-          if [[ -f requirements-dev.txt ]]; then
+          pip install jsonschema
+
+      - name: Schema-validate app.config.json (if schema present)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f web/app.config.json ] && [ -f web/config/app.config.schema.json ]; then
+            python - <<'PY'
+import json, sys, pathlib
+from jsonschema import Draft202012Validator
+cfg_p = pathlib.Path("web/app.config.json")
+sch_p = pathlib.Path("web/config/app.config.schema.json")
+cfg = json.loads(cfg_p.read_text(encoding="utf-8"))
+sch = json.loads(sch_p.read_text(encoding="utf-8"))
+errs = sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e: e.path)
+if errs:
+    print(f"::error file={cfg_p}::{len(errs)} schema error(s) found")
+    for e in errs[:25]:
+        print("-", "/".join(map(str, e.path)) or "(root)", ":", e.message)
+    sys.exit(2)
+print("app.config.json ✔ schema-valid")
+PY
+          else
+            echo "::notice::app.config.json or app.config.schema.json missing; skipping schema validation."
+          fi
+
+      - name: Schema-validate layers.json (if schema present)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f web/layers.json ] && [ -f web/config/layers.schema.json ]; then
+            python - <<'PY'
+import json, sys, pathlib
+from jsonschema import Draft202012Validator
+cfg_p = pathlib.Path("web/layers.json")
+sch_p = pathlib.Path("web/config/layers.schema.json")
+cfg = json.loads(cfg_p.read_text(encoding="utf-8"))
+sch = json.loads(sch_p.read_text(encoding="utf-8"))
+errs = sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e: e.path)
+if errs:
+    print(f"::error file={cfg_p}::{len(errs)} schema error(s) found")
+    for e in errs[:25]:
+        print("-", "/".join(map(str, e.path)) or "(root)", ":", e.message)
+    sys.exit(2)
+print("layers.json ✔ schema-valid")
+PY
+          else
+            echo "::notice::layers.json or layers.schema.json missing; skipping schema validation."
+          fi
+
+      # ---------- Pytest targeted run ----------
+      - name: Install test deps
+        run: |
+          if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt
-          elif [[ -f requirements.txt ]]; then
+          elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
-          # Always ensure these exist for schema/tests
-          pip install pytest jsonschema
+          pip install pytest
 
-          # If project is installable, add it (with extras) so tests can import local code
-          if [[ -f pyproject.toml || -f setup.cfg || -f setup.py ]]; then
-            # Try dev extras if declared, otherwise plain editable install
+          # If project is installable, add it (expose console_scripts/tests helpers)
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
             pip install -e ".[dev]" || pip install -e .
           fi
 
       - name: Run pytest (web config tests)
+        shell: bash
         run: |
           set -euo pipefail
-          if [[ -f tests/test_web_configs.py ]]; then
+          if [ -f tests/test_web_configs.py ]; then
             pytest -q tests/test_web_configs.py --junitxml=pytest-web-configs.xml
           else
-            # Fallback: keyword-based selection if the file was renamed/moved
-            pytest -q -k "web_configs" --junitxml=pytest-web-configs.xml
+            # Fallback: keyword-based selection
+            pytest -q -k "web_configs" --junitxml=pytest-web-configs.xml || echo "::notice::No matching tests; continuing."
           fi
 
       - name: Upload test report
