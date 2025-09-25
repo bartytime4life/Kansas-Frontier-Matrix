@@ -1,162 +1,127 @@
-name: docker-build
+# .github/workflows/link-check.yml
+name: Link Check (docs)
 
 on:
   push:
     branches: [ main ]
-    tags: [ "v*" ]
     paths:
-      - "docker/**"
-      - "docker-compose.yml"
-      - "requirements.txt"
-      - "constraints.txt"
-      - "pyproject.toml"
-      - "src/**"
-      - "stac/**"
-      - "Makefile"
-      - ".github/workflows/docker.yml"
+      - "README.md"
+      - "docs/**"
+      - "web/**"
+      - ".github/workflows/link-check.yml"
   pull_request:
-    branches: [ main ]
     paths:
-      - "docker/**"
-      - "docker-compose.yml"
-      - "requirements.txt"
-      - "constraints.txt"
-      - "pyproject.toml"
-      - "src/**"
-      - "stac/**"
-      - "Makefile"
-      - ".github/workflows/docker.yml"
+      - "README.md"
+      - "docs/**"
+      - "web/**"
+      - ".github/workflows/link-check.yml"
   workflow_dispatch:
+  schedule:
+    # Weekly sweep (Sunday 04:05 UTC)
+    - cron: "5 4 * * 0"
 
-env:
-  # image name must be lowercase for GHCR
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
-  DOCKERFILE: docker/Dockerfile
-  CONTEXT: .
+permissions:
+  contents: read
 
 concurrency:
-  group: docker-build-${{ github.ref }}
+  group: link-check-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build (and push on main/tag)
+  lychee:
+    name: Lychee link check
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write          # required to push to GHCR
-      id-token: write          # for provenance attestations (BuildKit)
-
-    env:
-      # Only push on push to default branch or tag (never on PRs)
-      SHOULD_PUSH: ${{ github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/tags/')) }}
-      # Normalize cache scope for better reuse across ref names
-      REF_SCOPE: ${{ github.ref_name }}
-      # Default base for your Dockerfile ARG passthrough
-      DEFAULT_GDAL_IMAGE: ghcr.io/osgeo/gdal:ubuntu-small-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # metadata-action semver + tags needs full history
+          fetch-depth: 0
 
-      - name: Verify build inputs exist
+      # Build the args dynamically so we honor a repo-provided .lychee.toml when present.
+      - name: Compute lychee args
+        id: args
+        shell: bash
         run: |
           set -euo pipefail
-          test -f "${{ env.DOCKERFILE }}" || { echo "::error::Dockerfile not found at ${{ env.DOCKERFILE }}"; exit 1; }
-          test -d "${{ env.CONTEXT }}" || { echo "::error::Build context not found at ${{ env.CONTEXT }}"; exit 1; }
+          TARGETS=()
+          # Common docs/markdown/html entry points
+          [ -f README.md ] && TARGETS+=("README.md")
+          [ -d docs ] && TARGETS+=("docs")
+          [ -d web ] && TARGETS+=("web")
 
-      - name: Lowercase image name
-        id: img
+          # Default arguments (sane retries + exclude noisy schemes/hosts)
+          BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
+          EXCLUDES=(
+            'mailto:*'
+            'tel:*'
+            'http://localhost*'
+            'http://127.0.0.1*'
+            'https://localhost*'
+            'https://127.0.0.1*'
+            # map/imagery/demo tiles & dynamic endpoints often rate-limit or block CI
+            'https://*.tile.openstreetmap.org/*'
+            'https://*.googleapis.com/*'
+            'https://*.arcgis.com/*'
+            'https://api.mapbox.com/*'
+          )
+
+          # Prefer repo config if present
+          if [ -f .lychee.toml ]; then
+            echo "args=--config .lychee.toml ${TARGETS[*]}" >> "$GITHUB_OUTPUT"
+          else
+            # Limit to markdown/html within docs and web (and README)
+            FIND_ARGS=()
+            for t in "${TARGETS[@]}"; do
+              if [ -d "$t" ]; then
+                while IFS= read -r -d '' f; do FIND_ARGS+=("$f"); done < <(find "$t" -type f \( -name '*.md' -o -name '*.html' \) -print0)
+              else
+                FIND_ARGS+=("$t")
+              fi
+            done
+            # Compose args
+            OUT=( "${BASE_ARGS[@]}" --format markdown --output lychee.md )
+            for e in "${EXCLUDES[@]}"; do OUT+=( --exclude "$e" ); done
+            OUT+=( "${FIND_ARGS[@]}" )
+            printf "args=%s\n" "${OUT[*]}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: ${{ steps.args.outputs.args }}
+        env:
+          # Token improves GitHub API rate limits for checking links to github.com raw blobs, releases, etc.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload lychee report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lychee-report-${{ github.run_id }}
+          path: |
+            lychee.md
+            lychee-out.md
+            lychee/results.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Job Summary
+        if: always()
+        shell: bash
         run: |
-          set -euo pipefail
-          echo "name=${IMAGE_NAME,,}" >> "$GITHUB_OUTPUT"
-
-      - name: Set up QEMU (multi-arch)
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          buildkitd-flags: --debug
-
-      # Login only when we intend to push (never on PRs from forks or branch builds)
-      - name: Login to GHCR
-        if: ${{ env.SHOULD_PUSH == 'true' }}
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Produce tags/labels from branch, tag, and SHA
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ steps.img.outputs.name }}
-          # Add `latest` on default branch, semver tags on tag pushes, branch & sha always
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=branch
-            type=sha,format=short
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-          labels: |
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.url=${{ github.server_url }}/${{ github.repository }}?tab=readme-ov-file
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.created=${{ github.event.head_commit.timestamp || github.run_started_at }}
-            org.opencontainers.image.title=kansas-geo-timeline
-            org.opencontainers.image.description=Time · Terrain · History mapping system for Kansas (Earth + Web)
-            org.opencontainers.image.licenses=MIT
-
-      # Optional: build a wheel/sdist first and pass as context artifacts (speed up pip install in image)
-      # - name: Build Python dist (optional)
-      #   run: |
-      #     python -m pip install --upgrade build
-      #     python -m build
-      #     ls -l dist/
-
-      # Build for PRs; Build & Push for main/tags
-      - name: Build (PR) / Build & Push (main/tag)
-        id: build
-        uses: docker/build-push-action@v6
-        with:
-          context: ${{ env.CONTEXT }}
-          file: ${{ env.DOCKERFILE }}
-          platforms: linux/amd64,linux/arm64
-          push: ${{ env.SHOULD_PUSH == 'true' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          # BuildKit cache: scoped by repo+ref for better reuse and isolation
-          cache-from: type=gha,scope=${{ env.REF_SCOPE }}
-          cache-to: type=gha,mode=max,scope=${{ env.REF_SCOPE }}
-          # Build args your Dockerfile can consume
-          build-args: |
-            VERSION=${{ steps.meta.outputs.version }}
-            GDAL_IMAGE=${{ env.DEFAULT_GDAL_IMAGE }}
-          # Supply SBOM + provenance (BuildKit native)
-          provenance: mode=max
-          sbom: true
-
-      # Optional: attest after push (separate attestation subject)
-      - name: Attest (provenance+sbom)
-        if: ${{ steps.build.outputs.digest && env.SHOULD_PUSH == 'true' }}
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-name: ${{ steps.img.outputs.name }}@${{ steps.build.outputs.digest }}
-          subject-digest: ${{ steps.build.outputs.digest }}
-          push-to-registry: true
-
-  # Optional: docker-compose build for integration smoke (disabled by default)
-  compose:
-    if: ${{ false }}  # flip to true to enable
-    name: Compose build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - run: docker compose build --progress plain
+          {
+            echo "## Link Check (Lychee)"
+            echo ""
+            if [ -f lychee.md ]; then
+              echo "### Report excerpt"
+              echo ""
+              # Show first 200 lines to keep summary compact
+              echo '```markdown'
+              sed -n '1,200p' lychee.md
+              echo '```'
+            else
+              echo "_No lychee.md report generated (used repo config or different output path)._"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
