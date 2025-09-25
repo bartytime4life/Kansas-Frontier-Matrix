@@ -35,21 +35,24 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}   # e.g. ghcr.io/owner/repo
-  # Default platforms; change if you only want amd64
-  PLATFORMS: linux/amd64,linux/arm64
+  IMAGE_NAME: ${{ github.repository }}        # e.g., ghcr.io/owner/repo
+  PLATFORMS: linux/amd64,linux/arm64          # overridden to amd64 on PRs
 
 jobs:
   build:
-    name: Build${{ github.event_name == 'pull_request' && ' (no push)' || '' }}
+    name: Build${{ github.event_name == 'pull_request' && ' (PR, no push)' || '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
+
+    outputs:
+      image-ref: ${{ steps.meta.outputs.tags }}
+      digest: ${{ steps.build.outputs.digest }}
+      pushed: ${{ steps.build.outputs.pushed }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
       - name: Determine Dockerfile & context
         id: path
@@ -63,7 +66,7 @@ jobs:
             echo "dockerfile=docker/Dockerfile" >> "$GITHUB_OUTPUT"
             echo "context=."                   >> "$GITHUB_OUTPUT"
           else
-            echo "::error::No Dockerfile found at ./Dockerfile or ./docker/Dockerfile"
+            echo "::error::No Dockerfile at ./Dockerfile or ./docker/Dockerfile"
             exit 1
           fi
           echo "Using Dockerfile=${{ steps.path.outputs.dockerfile }}"
@@ -74,8 +77,7 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          install: true
+        with: { install: true }
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
@@ -92,17 +94,35 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            # main branch: rolling 'edge' tag + sha tag
             type=ref,event=branch,enable=${{ github.ref == 'refs/heads/main' }},suffix=-edge
             type=sha,enable=${{ github.ref == 'refs/heads/main' }}
+            # release tags (vX[.Y[.Z]]): semver series + latest
             type=semver,pattern={{version}},enable=${{ startsWith(github.ref,'refs/tags/v') }}
             type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref,'refs/tags/v') }}
             type=semver,pattern={{major}},enable=${{ startsWith(github.ref,'refs/tags/v') }}
-            # latest only on full semver tags (vX.Y.Z)
             type=raw,value=latest,enable=${{ startsWith(github.ref,'refs/tags/v') }}
           labels: |
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.description=Kansas-Frontier-Matrix container image
             org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Compute build settings
+        id: cfg
+        shell: bash
+        run: |
+          set -euo pipefail
+          # For PRs: single-arch + load for local scan/debug; no push
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "platforms=linux/amd64" >> "$GITHUB_OUTPUT"
+            echo "push=false" >> "$GITHUB_OUTPUT"
+            echo "load=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "platforms=${{ env.PLATFORMS }}" >> "$GITHUB_OUTPUT"
+            echo "push=true" >> "$GITHUB_OUTPUT"
+            echo "load=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build (and push if not PR)
         id: build
@@ -110,10 +130,11 @@ jobs:
         with:
           context: ${{ steps.path.outputs.context }}
           file: ${{ steps.path.outputs.dockerfile }}
-          platforms: ${{ env.PLATFORMS }}
-          push: ${{ github.event_name != 'pull_request' }}
-          provenance: true          # SLSA provenance
-          sbom: true                # generate attested SBOM
+          platforms: ${{ steps.cfg.outputs.platforms }}
+          push: ${{ steps.cfg.outputs.push }}
+          load: ${{ steps.cfg.outputs.load }}
+          provenance: true              # SLSA provenance
+          sbom: true                    # attested SBOM
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
@@ -125,35 +146,34 @@ jobs:
       - name: Summary
         shell: bash
         run: |
-          echo "## Docker build" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Registry: \`${{ env.REGISTRY }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Image: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Pushed: **$([[ '${{ github.event_name }}' == 'pull_request' ]] && echo 'no' || echo 'yes')**" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Tags:" >> "$GITHUB_STEP_SUMMARY"
-          printf '%s\n' "${{ steps.meta.outputs.tags }}" | sed 's/^/  - /' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "## Docker build"
+            echo "- Registry: \`${{ env.REGISTRY }}\`"
+            echo "- Image (tags):"
+            printf '%s\n' "${{ steps.meta.outputs.tags }}" | sed 's/^/  - /'
+            echo "- Digest: \`${{ steps.build.outputs.digest || 'n/a (PR load)' }}\`"
+            echo "- Pushed: **${{ steps.cfg.outputs.push }}**"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   scan:
-    name: Trivy scan (image)
+    name: Trivy scan (image, SHA-pinned)
     needs: build
+    if: needs.build.outputs.pushed == 'true'   # only scan pushed multi-arch images
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'   # only scan pushed images
     timeout-minutes: 20
     steps:
-      - name: Prepare image ref
+      - name: Compose image@digest ref
         id: ref
         shell: bash
         run: |
           set -euo pipefail
-          # Prefer an immutable ref (sha tag) if available; fallback to edge/latest
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            # On tags, use the semver tag
-            echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-          else
-            # On main, use the sha tag from metadata action's output (second tag typically is sha)
-            # If metadata not available here, derive sha tag:
-            echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          DIGEST="${{ needs.build.outputs.digest }}"
+          if [ -z "$DIGEST" ]; then
+            echo "::error::No image digest available from build job"
+            exit 1
           fi
-          echo "Using image: ${{ steps.ref.outputs.image }}"
+          echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${DIGEST}" >> "$GITHUB_OUTPUT"
+          echo "Using image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${DIGEST}"
 
       - name: Trivy scan (SARIF)
         uses: aquasecurity/trivy-action@0.24.0
@@ -171,3 +191,22 @@ jobs:
         with:
           sarif_file: trivy-image.sarif
           category: trivy-docker
+
+  # Optional signing (cosign keyless or key-based).
+  # Uncomment to enable supply-chain signing of pushed images.
+  # sign:
+  #   name: Cosign sign
+  #   needs: build
+  #   if: needs.build.outputs.pushed == 'true'
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     id-token: write       # for keyless Fulcio
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - uses: sigstore/cosign-installer@v3
+  #     - name: Sign image (keyless)
+  #       env:
+  #         COSIGN_EXPERIMENTAL: "true"
+  #       run: |
+  #         cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.digest }}
