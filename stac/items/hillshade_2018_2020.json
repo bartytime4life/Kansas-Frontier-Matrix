@@ -8,54 +8,52 @@
   ],
   "type": "Feature",
   "id": "hillshade_2018_2020",
-  "collection": "dem",
+  "collection": "elevation",
 
   "bbox": [-102.05, 36.99, -94.59, 40.00],
   "geometry": {
     "type": "Polygon",
     "coordinates": [[
       [-102.05, 36.99],
-      [-102.05, 40.00],
-      [-94.59, 40.00],
       [-94.59, 36.99],
+      [-94.59, 40.00],
+      [-102.05, 40.00],
       [-102.05, 36.99]
     ]]
   },
 
   "properties": {
-    "title": "Kansas Hillshade (1m DEM derived, 2018–2020)",
-    "description": "Statewide hillshade raster derived from the 2018–2020 Kansas 1-m DEM. Generated with GDAL gdaldem hillshade and converted to a Cloud-Optimized GeoTIFF (COG).",
+    "title": "Kansas Hillshade (1 m DEM derived, 2018–2020)",
+    "description": "Statewide hillshade raster derived from the 2018–2020 Kansas 1 m DEM. Generated with GDAL gdaldem hillshade and saved as a Cloud-Optimized GeoTIFF (COG).",
     "datetime": null,
     "start_datetime": "2018-01-01T00:00:00Z",
     "end_datetime": "2020-12-31T23:59:59Z",
     "created": "2025-09-23T00:00:00Z",
+    "updated": "2025-09-25T00:00:00Z",
 
     "proj:epsg": 4326,
+    "proj:centroid": { "lat": 38.495, "lon": -98.33 },
     "proj:shape": [34000, 42000],
-    "proj:transform": [0.000008333, 0.0, -102.05, 0.0, -0.000008333, 40.00],
-
-    "raster:bands": [
-      {
-        "name": "hillshade",
-        "description": "Shaded relief calculated from Kansas 1m DEM",
-        "data_type": "uint8",
-        "unit": "1",
-        "statistics": {
-          "minimum": 0,
-          "maximum": 255
-        }
-      }
-    ]
+    "proj:transform": [0.000008333, 0.0, -102.05, 0.0, -0.000008333, 40.00]
   },
 
   "assets": {
     "cog": {
       "href": "../../data/cogs/hillshade/ks_hillshade_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"],
+      "roles": ["data", "visual"],
       "title": "Hillshade COG",
-      "file:size": null,
-      "checksum:sha256": null
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256",
+      "raster:bands": [
+        {
+          "name": "hillshade",
+          "description": "Shaded relief calculated from Kansas 1 m DEM",
+          "data_type": "uint8",
+          "unit": "1",
+          "statistics": { "minimum": 0, "maximum": 255 }
+        }
+      ]
     },
     "metadata": {
       "href": "../../data/cogs/hillshade/ks_hillshade_2018_2020.meta.json",
@@ -66,34 +64,11 @@
   },
 
   "links": [
-    {
-      "rel": "collection",
-      "href": "../collections/dem.json",
-      "type": "application/json",
-      "title": "Kansas DEM Collection"
-    },
-    {
-      "rel": "parent",
-      "href": "../collections/dem.json",
-      "type": "application/json",
-      "title": "Kansas DEM Collection"
-    },
-    {
-      "rel": "derived_from",
-      "href": "dem_2018_2020.json",
-      "type": "application/json",
-      "title": "Kansas 1m DEM (2018–2020)"
-    },
-    {
-      "rel": "root",
-      "href": "../catalog.json",
-      "type": "application/json",
-      "title": "Kansas Geo Timeline STAC Catalog"
-    },
-    {
-      "rel": "self",
-      "href": "hillshade_2018_2020.json",
-      "type": "application/json"
-    }
+    { "rel": "self",        "href": "./hillshade_2018_2020.json",          "type": "application/json" },
+    { "rel": "collection",  "href": "../collections/elevation.json",       "type": "application/json" },
+    { "rel": "parent",      "href": "../collections/elevation.json",       "type": "application/json" },
+    { "rel": "root",        "href": "../catalog.json",                     "type": "application/json" },
+    { "rel": "derived_from","href": "./ks_1m_dem_2018_2020.json",          "type": "application/json",
+      "title": "Kansas 1 m DEM (2018–2020)" }
   ]
 }
