@@ -1,0 +1,21 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "infrastructure",
+  "title": "Infrastructure (Historical Vectors)",
+  "description": "Collection for historical infrastructure layers such as railroad alignments and related transportation vectors in Kansas.",
+  "license": "CC-BY-4.0",
+  "keywords": ["Kansas", "railroads", "transportation", "infrastructure", "history", "vectors"],
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
+    },
+    "temporal": {
+      "interval": [[null, null]]
+    }
+  },
+  "links": [
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "self", "href": "infrastructure.json", "type": "application/json" }
+  ]
+}
