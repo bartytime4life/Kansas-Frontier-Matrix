@@ -1,10 +1,134 @@
+# .github/dependabot.yml
 version: 2
+
 updates:
+  # ────────────────────────────────────────────────────────────────────────────
+  # 1) GitHub Actions (repo root)
+  # ────────────────────────────────────────────────────────────────────────────
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule: { interval: "weekly" }
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "04:05"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 5
+    labels: ["deps", "deps:actions"]
+    groups:
+      actions-all:
+        patterns: ["*"]          # group all actions into one PR
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 2) Python (pip) — repo root (requirements*.txt)
+  # ────────────────────────────────────────────────────────────────────────────
   - package-ecosystem: "pip"
     directory: "/"
-    schedule: { interval: "weekly" }
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "04:10"
+      timezone: "America/Chicago"
+    # Keep noise down; you asked to allow direct deps only.
     allow:
       - dependency-type: "direct"
+    # Prefer conservative bumps; major only if required by constraints.
+    versioning-strategy: "increase-if-necessary"
+    open-pull-requests-limit: 8
+    labels: ["deps", "deps:pip"]
+    # Group by purpose to reduce PR churn.
+    groups:
+      # Security advisories (if any) get their own PR
+      security:
+        applies-to: "security-updates"
+        patterns: ["*"]
+      # Tooling-only updates (lint/test/doc)
+      tooling:
+        patterns:
+          - "pytest*"
+          - "pytest-*"
+          - "ruff*"
+          - "black"
+          - "mypy*"
+          - "sphinx*"
+          - "mkdocs*"
+      # Minor+patch bumps for everything else
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+    # Ignore noisy majors for heavy geo stacks unless you opt in
+    ignore:
+      - dependency-name: "gdal"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "rasterio"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "geopandas"
+        update-types: ["version-update:semver-major"]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 3) Node (npm) — web app
+  # ────────────────────────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "04:20"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 8
+    # Keep lockfile fresh even when no manifest change
+    versioning-strategy: "increase"
+    labels: ["deps", "deps:npm", "area:web"]
+    # Group devDeps separately from runtime
+    groups:
+      dev-deps:
+        dependency-type: "development"
+        patterns: ["*"]
+      runtime:
+        dependency-type: "production"
+        patterns: ["*"]
+      # Optional: group map libs together (uncomment if desired)
+      # map-stack:
+      #   patterns:
+      #     - "maplibre*"
+      #     - "mapbox-gl*"
+      #     - "@mapbox/*"
+      #     - "ol"            # openlayers
+      #     - "ol-*"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 4) Dockerfiles — root or /docker
+  # ────────────────────────────────────────────────────────────────────────────
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "04:30"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 3
+    labels: ["deps", "deps:docker"]
+    groups:
+      base-image:
+        patterns: ["*"]
+
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "04:30"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 3
+    labels: ["deps", "deps:docker"]
+    groups:
+      base-image:
+        patterns: ["*"]
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Global notes:
+# - Grouping reduces PR noise while keeping security updates distinct.
+# - Time windows are staggered to avoid CI stampedes.
+# - For auto-merge workflows, key off labels like `automerge:minor` in a
+#   separate GitHub Action (optional).
+# - Adjust ignores if you’re ready to take major upgrades for geo stacks.
+# ──────────────────────────────────────────────────────────────────────────────
