@@ -1,0 +1,20 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "kfm-scripts",
+  "title": "Kansas Frontier Matrix — Helper Scripts",
+  "description": "Helper CLI scripts (fetch/convert/derive/validate/package) for the Kansas-Frontier-Matrix stack.",
+  "license": "MIT",
+  "extent": {
+    "spatial": { "bbox": [[-180.0, -90.0, 180.0, 90.0]] },
+    "temporal": { "interval": [["2020-01-01T00:00:00Z", null]] }
+  },
+  "links": [
+    { "rel": "self", "href": "scripts.json", "type": "application/json" },
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" }
+  ],
+  "providers": [
+    { "name": "Kansas-Frontier-Matrix", "roles": ["host", "processor"], "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix" }
+  ],
+  "keywords": ["scripts", "automation", "GDAL", "COG", "STAC", "KML/KMZ", "validation"]
+}
