@@ -1,6 +1,6 @@
 {
   "ks_dem_1m": [
-    "stac/items/ks_1m_dem_2018_2020.json"
+    "stac/items/elevation/ks_1m_dem_2018_2020.json"
   ],
   "usgs_topo_1894_1950": [
     "stac/items/overlays/usgs_topo_larned_1894.json"
