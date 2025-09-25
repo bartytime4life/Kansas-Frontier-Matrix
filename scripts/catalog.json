@@ -1,0 +1,12 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Catalog",
+  "id": "kfm-scripts-catalog",
+  "title": "Kansas Frontier Matrix — Scripts Catalog",
+  "description": "A minimal STAC Catalog exposing the helper scripts used in the KFM stack.",
+  "links": [
+    { "rel": "self", "href": "catalog.json", "type": "application/json" },
+    { "rel": "child", "href": "collections/scripts.json", "type": "application/json", "title": "Kansas Frontier Matrix — Helper Scripts" },
+    { "rel": "root", "href": "catalog.json", "type": "application/json" }
+  ]
+}
