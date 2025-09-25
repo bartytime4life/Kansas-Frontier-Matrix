@@ -1,0 +1,27 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_treaties",
+  "collection": "documents",
+  "properties": {
+    "title": "Kansas Treaties (vectors)",
+    "description": "Geoparsed Kansas treaties mapped as vector overlays.",
+    "start_datetime": null,
+    "end_datetime": null,
+    "license": "CC-BY-4.0"
+  },
+  "geometry": null,
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "links": [
+    { "rel": "collection", "href": "../../collections/documents.json", "type": "application/json" },
+    { "rel": "root", "href": "../../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "data": {
+      "href": "../../data/vectors/ks_treaties.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Kansas Treaties Vector Data"
+    }
+  }
+}
