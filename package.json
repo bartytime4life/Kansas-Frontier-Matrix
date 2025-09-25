@@ -1,15 +1,11 @@
 {
   "name": "kfm-roadmap-sync",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "license": "MIT",
   "description": "Sync .github/roadmap/roadmap.yaml to GitHub labels, milestones, and issues",
   "type": "module",
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
-  },
-  "packageManager": "npm@10",
+  "author": "Andy Barta",
   "repository": {
     "type": "git",
     "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix.git"
@@ -29,15 +25,22 @@
   "bin": {
     "kfm-roadmap-sync": "scripts/sync-roadmap.js"
   },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "packageManager": "npm@10",
   "scripts": {
     "sync": "node scripts/sync-roadmap.js",
     "sync:dry": "cross-env DRY_RUN=1 node scripts/sync-roadmap.js",
+    "dry-run": "npm run sync:dry",
     "check": "node --input-type=module -e \"import fs from 'node:fs'; const p=process.env.ROADMAP_FILE||'.github/roadmap/roadmap.yaml'; fs.accessSync(p); console.log('roadmap file OK:', p); console.log('node', process.version);\"",
     "validate": "node --input-type=module -e \"import fs from 'node:fs'; import yaml from 'js-yaml'; const p=process.env.ROADMAP_FILE||'.github/roadmap/roadmap.yaml'; yaml.load(fs.readFileSync(p,'utf8')); console.log('roadmap.yaml: OK →', p);\"",
     "fmt": "prettier --log-level warn -w .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
     "fmt:check": "prettier --log-level warn -c .github/roadmap/roadmap.yaml scripts/sync-roadmap.js",
     "audit": "npm audit --omit=dev || true",
-    "ci": "npm run validate && npm run fmt:check && npm run audit"
+    "ci": "npm run check && npm run validate && npm run fmt:check && npm run audit",
+    "test": "node -e \"console.log('kfm-roadmap-sync OK')\""
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
@@ -52,6 +55,5 @@
   "files": [
     "scripts/sync-roadmap.js",
     ".github/roadmap/roadmap.yaml"
-  ],
-  "sideEffects": false
+  ]
 }
