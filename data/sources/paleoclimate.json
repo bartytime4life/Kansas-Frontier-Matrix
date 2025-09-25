@@ -1,0 +1,42 @@
+{
+  "id": "paleoclimate",
+  "title": "Paleoclimate & Fire Regimes",
+  "type": "document",
+  "version": "1.0.0",
+  "description": "Tree rings, pollen cores, charcoal/fire records, and drought indices for Kansas and surrounding Great Plains context. Sources include NOAA, Neotoma Paleoecology Database, and state archives.",
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://www.ncdc.noaa.gov/paleo-search/",
+        "https://www.neotomadb.org/",
+        "https://droughtmonitor.unl.edu/"
+      ],
+      "notes": "Placeholder links for NOAA Paleoclimatology, Neotoma, and US Drought Monitor archives."
+    }
+  ],
+  "spatial": {
+    "bbox": [-102.05, 36.99, -94.6, 40.0]
+  },
+  "temporal": {
+    "start": "-10000-01-01",
+    "end": null
+  },
+  "license": "various",
+  "provenance": "Datasets compiled from NOAA Paleoclimatology, Neotoma Paleoecology DB, Kansas Geological Survey, and local/state records.",
+  "contacts": [
+    {
+      "name": "NOAA National Centers for Environmental Information",
+      "role": "curator",
+      "url": "https://www.ncei.noaa.gov/"
+    },
+    {
+      "name": "Neotoma Paleoecology Database",
+      "role": "curator",
+      "url": "https://www.neotomadb.org/"
+    }
+  ],
+  "refresh": "annual",
+  "notes": "Charcoal/fire datasets linked to MCP experiments for paleoclimate reconstruction and fire regime modeling."
+}
