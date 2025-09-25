@@ -1,3 +1,4 @@
+# .github/workflows/stac-validate.yml
 name: STAC Validation
 
 on:
@@ -38,6 +39,7 @@ jobs:
   validate:
     name: STAC validate (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     strategy:
       fail-fast: false
@@ -47,10 +49,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        with: { fetch-depth: 0 }
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -59,93 +60,77 @@ jobs:
             requirements*.txt
             pyproject.toml
 
+      - name: Install minimal system tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends jq
+
       - name: Install deps (project if available; otherwise minimal)
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          if [ -f "pyproject.toml" ]; then
-            # Try to install the project (editable ok for CLI exposure)
+          # Try project install to expose any console_scripts (e.g., kgt)
+          if [ -f pyproject.toml ]; then
             pip install -e . || true
-            # Optional extras if defined
             pip install ".[dev,validate]" || true
           fi
-          # Core validators regardless of project install
+          # Core validators regardless
           pip install --upgrade --quiet \
             jsonschema \
             jinja2 \
             pystac \
             pystac-client \
-            pyyaml || true
+            pyyaml
+
           python - <<'PY'
-import sys
-print("Python", sys.version)
-import jsonschema, pystac, yaml  # noqa
-print("jsonschema OK; pystac OK; pyyaml OK")
+import sys, jsonschema, pystac, yaml  # noqa: F401
+print("Python", sys.version.split()[0], "— deps OK")
 PY
 
       # ------------------------------------------------------------
-      # JSON/YAML syntax sanity checks (STAC + data/sources)
+      # Quick JSON/YAML syntax sanity checks
       # ------------------------------------------------------------
       - name: Quick JSON syntax check (stac/**/*.json)
         run: |
           set -euo pipefail
-          python - <<'PY'
-import json, sys, pathlib
-base = pathlib.Path("stac")
-if not base.exists():
-    print("::notice::stac/ not present; skipping.")
-    sys.exit(0)
-bad=[]
-for p in base.rglob("*.json"):
-    try:
-        json.loads(p.read_text(encoding="utf-8"))
-    except Exception as e:
-        bad.append((str(p), str(e)))
-if bad:
-    for f,e in bad:
-        print(f"::error file={f}::JSON parse error: {e}")
-    sys.exit(1)
-else:
-    print("stac/**/*.json ✔ valid JSON")
-PY
+          if [ -d stac ]; then
+            echo "Linting STAC JSON…"
+            find stac -type f -name '*.json' -print0 | xargs -0 -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
+            echo "stac/**/*.json ✔ valid JSON"
+          else
+            echo "::notice::stac/ not present; skipping."
+          fi
 
       - name: Quick JSON/YAML syntax check (data/sources/**)
         run: |
           set -euo pipefail
-          python - <<'PY'
-import json, sys, pathlib
-try:
-    import yaml
-except Exception:
-    yaml = None
+          if [ -d data/sources ]; then
+            echo "Linting data/sources…"
+            # JSON
+            find data/sources -type f -name '*.json' -print0 | xargs -0 -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
+            # YAML (best-effort)
+            python - <<'PY'
+import sys, pathlib, yaml
 base = pathlib.Path("data/sources")
-if not base.exists():
-    print("::notice::data/sources/ not present; skipping.")
-    sys.exit(0)
 bad=[]
-# JSON
-for p in base.rglob("*.json"):
+for p in list(base.rglob("*.yml")) + list(base.rglob("*.yaml")):
     try:
-        json.loads(p.read_text(encoding="utf-8"))
+        yaml.safe_load(p.read_text(encoding="utf-8"))
     except Exception as e:
-        bad.append((str(p), "JSON", str(e)))
-# YAML (best-effort)
-if yaml:
-    for p in list(base.rglob("*.yml")) + list(base.rglob("*.yaml")):
-        try:
-            yaml.safe_load(p.read_text(encoding="utf-8"))
-        except Exception as e:
-            bad.append((str(p), "YAML", str(e)))
+        bad.append((str(p), str(e)))
 if bad:
-    for f,kind,e in bad:
-        print(f"::error file={f}::{kind} parse error: {e}")
+    for f,e in bad:
+        print(f"::error file={f}::YAML parse error: {e}")
     sys.exit(1)
 else:
-    print("data/sources/** ✔ valid JSON/YAML")
+    print("data/sources/** ✔ valid YAML")
 PY
+          else
+            echo "::notice::data/sources/ not present; skipping."
+          fi
 
       # ------------------------------------------------------------
-      # Run your custom validators if present
+      # Run custom repo validators if present
       # ------------------------------------------------------------
       - name: Run scripts/validate_sources.py (if present)
         run: |
@@ -158,34 +143,33 @@ PY
 
       - name: Run scripts/validate_stac.py (if present)
         id: script_stac
+        continue-on-error: true
         run: |
           set -euo pipefail
           mkdir -p build
           if [ -f scripts/validate_stac.py ]; then
-            python scripts/validate_stac.py --report build/stac_report.json || true
+            python scripts/validate_stac.py --report build/stac_report.json
           else
             echo "::notice::scripts/validate_stac.py not found; using fallback."
           fi
 
       # ------------------------------------------------------------
-      # Fallback STAC item validator
-      # Produces build/stac_report.json and fails on invalid items.
-      # Runs only if earlier step didn't create the report.
+      # Fallback STAC item validator (simple structural checks)
+      # Only runs if no report exists from previous step
       # ------------------------------------------------------------
       - name: Fallback STAC item validator
-        if: >
-          !cancelled() &&
-          steps.script_stac.outcome == 'success' &&
-          hashFiles('build/stac_report.json') == ''
+        if: |
+          !cancelled() && hashFiles('build/stac_report.json') == ''
         run: |
           set -euo pipefail
           python - <<'PY'
 import json, pathlib, sys
 items_dir = pathlib.Path("stac/items")
+path_build = pathlib.Path("build"); path_build.mkdir(exist_ok=True)
+report_path = path_build/"stac_report.json"
 if not items_dir.exists():
     print("::notice::stac/items not present; skipping item validation.")
-    pathlib.Path("build").mkdir(exist_ok=True)
-    pathlib.Path("build/stac_report.json").write_text(json.dumps({"valid":0,"invalid":0,"items":[]}, indent=2))
+    report_path.write_text(json.dumps({"valid":0,"invalid":0,"items":[]}, indent=2))
     sys.exit(0)
 req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
 ok=bad=0; report=[]
@@ -204,8 +188,7 @@ for p in items_dir.rglob("*.json"):
     else:
         ok+=1
         report.append({"id":d.get("id",str(p)),"valid":True,"errors":[]})
-pathlib.Path("build").mkdir(exist_ok=True)
-pathlib.Path("build/stac_report.json").write_text(json.dumps({"valid":ok,"invalid":bad,"items":report}, indent=2))
+report_path.write_text(json.dumps({"valid":ok,"invalid":bad,"items":report}, indent=2))
 print(f"[RESULT] {ok} valid, {bad} invalid")
 if bad>0: sys.exit(2)
 PY
@@ -266,15 +249,15 @@ PY
             fi
           } >> "$SUMMARY"
 
-      - name: Upload reports (on failure)
-        if: failure()
+      - name: Upload reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stac-validate-reports-py${{ matrix.python-version }}
+          name: stac-validate-reports-py${{ matrix.python-version }}-${{ github.run_id }}
           path: |
             build/**
             ./*.log
             ./stac-validate*.txt
             ./validate*.txt
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 10
