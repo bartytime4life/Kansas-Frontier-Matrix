@@ -21,7 +21,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-${{ github.ref }}"
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SITE_DIR: _site
+      PYTHONUNBUFFERED: "1"
 
     steps:
       - name: Checkout
@@ -46,20 +47,14 @@ jobs:
           set -euo pipefail
           if [ -f Makefile ]; then
             echo "has_make=true" >> "$GITHUB_OUTPUT"
-            # prefer combined prebuild if present; else validate STAC then attempt site
             if make -qn prebuild >/dev/null 2>&1; then
               make -e prebuild
             else
-              if make -qn stac-validate >/dev/null 2>&1; then
-                make stac-validate
-              fi
-              if make -qn site >/dev/null 2>&1; then
-                make site
-              fi
+              if make -qn stac-validate >/dev/null 2>&1; then make stac-validate; fi
+              if make -qn site >/dev/null 2>&1; then make site; fi
             fi
           else
             echo "has_make=false" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Check if Make produced site
         id: made_site
@@ -75,11 +70,12 @@ jobs:
       # --------------------------------------------------------------
       # Validate web configs against JSON Schemas (fast, inline)
       # --------------------------------------------------------------
-      - name: Validate web configs (jsonschema)
+      - name: Set up Python (for schema checks)
         if: ${{ steps.made_site.outputs.site_ready != 'true' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
       - name: Run schema validation (app.config.json & layers.json)
         if: ${{ steps.made_site.outputs.site_ready != 'true' }}
@@ -90,7 +86,6 @@ jobs:
           python - <<'PY'
 import json, sys, pathlib
 from jsonschema import Draft202012Validator as V
-
 def validate(cfg_p, sch_p):
     cfg = json.loads(pathlib.Path(cfg_p).read_text(encoding="utf-8"))
     sch = json.loads(pathlib.Path(sch_p).read_text(encoding="utf-8"))
@@ -100,12 +95,10 @@ def validate(cfg_p, sch_p):
         for e in errs[:20]:
             print("-", "/".join(map(str,e.path)) or "(root)", ":", e.message)
         sys.exit(2)
-
 if pathlib.Path("web/app.config.json").exists() and pathlib.Path("web/config/app.config.schema.json").exists():
     validate("web/app.config.json", "web/config/app.config.schema.json")
 else:
     print("::notice::app.config.json or schema missing; skipping.")
-
 if pathlib.Path("web/layers.json").exists() and pathlib.Path("web/config/layers.schema.json").exists():
     validate("web/layers.json", "web/config/layers.schema.json")
 else:
@@ -131,7 +124,6 @@ PY
             fi
           else
             echo "has_pkgjson=false" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Set up Node (only if building a JS app)
         if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson == 'true'
@@ -226,13 +218,14 @@ PY
           [ $ok -eq 1 ] || { echo "::error::JSON validation failed"; exit 1; }
 
       # --------------------------------------------------------------
-      # Build MkDocs if present, publish under /docs/
+      # Build MkDocs if present → served under /docs/
       # --------------------------------------------------------------
       - name: Set up Python (for MkDocs)
         if: ${{ hashFiles('mkdocs.yml') != '' }}
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Build MkDocs site
         if: ${{ hashFiles('mkdocs.yml') != '' }}
@@ -259,8 +252,11 @@ PY
               cp "$c" "$SITE_DIR/CNAME"
             fi
           done
+          if [ ! -f "$SITE_DIR/robots.txt" ]; then
+            printf "User-agent: *\nAllow: /\n" > "$SITE_DIR/robots.txt"
+          fi
           if [ ! -f "$SITE_DIR/404.html" ]; then
-cat > "$SITE_DIR/404.html" <<'HTML'
+            cat > "$SITE_DIR/404.html" <<'HTML'
 <!doctype html><meta charset="utf-8">
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>404 — Not Found</title>
@@ -270,7 +266,7 @@ HTML
           fi
 
       # --------------------------------------------------------------
-      # Link check (use config if present; otherwise minimal args)
+      # Link check (use config if present; otherwise minimal)
       # --------------------------------------------------------------
       - name: Compute lychee args
         id: lychee_args
