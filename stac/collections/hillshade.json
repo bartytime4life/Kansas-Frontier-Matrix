@@ -2,14 +2,13 @@
   "stac_version": "1.0.0",
   "stac_extensions": [
     "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
-    "https://stac-extensions.github.io/checksum/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json"
   ],
   "type": "Collection",
   "id": "hillshade",
   "title": "Kansas Hillshade (1 m DEM Derived, 2018–2020)",
   "description": "Statewide hillshade rasters for Kansas, derived from the 2018–2020 1 m bare-earth DEM and distributed as Cloud-Optimized GeoTIFFs (COGs). Intended for shaded-relief visualization alongside historical map overlays and vector layers.",
-  "license": "public-domain",
+  "license": "PDM-1.0",
   "keywords": [
     "Kansas",
     "DEM",
@@ -28,7 +27,7 @@
   ],
   "extent": {
     "spatial": {
-      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
     },
     "temporal": {
       "interval": [["2018-01-01T00:00:00Z", "2020-12-31T23:59:59Z"]]
@@ -40,12 +39,17 @@
       {
         "name": "hillshade",
         "data_type": "uint8",
+        "sampling": "area",
+        "unit": "intensity",
         "statistics": {
           "minimum": 0,
           "maximum": 255
-        }
+        },
+        "description": "0–255 shaded relief derived from 1 m bare-earth DEM"
       }
-    ]
+    ],
+    "kfm:derived_from": ["ks_1m_dem_2018_2020"],
+    "kfm:method": ["gdaldem hillshade"]
   },
   "links": [
     {
