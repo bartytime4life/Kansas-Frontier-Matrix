@@ -1,0 +1,32 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_kansas_river_floodplains",
+  "properties": {
+    "title": "Kansas River — Floodplains (sample)",
+    "description": "Polygon representing a 100-year floodplain sample along the Kansas River.",
+    "start_datetime": "1900-01-01T00:00:00Z",
+    "end_datetime": null,
+    "created": "2025-09-25T00:00:00Z"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-95.700, 39.050], [-95.660, 39.050],
+      [-95.660, 39.075], [-95.700, 39.075],
+      [-95.700, 39.050]
+    ]]
+  },
+  "bbox": [-95.700, 39.050, -95.660, 39.075],
+  "links": [
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "data": {
+      "href": "../../data/processed/hydrology/kansas_river/floodplains.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Floodplains GeoJSON"
+    }
+  }
+}
