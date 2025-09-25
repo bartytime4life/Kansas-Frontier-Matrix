@@ -1,12 +1,23 @@
 {
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"
+  ],
   "type": "Collection",
   "id": "historic_topo",
   "title": "Historic Topographic Maps (USGS & related)",
   "description": "Georeferenced historic topographic and survey maps covering Kansas. Items typically provide a Cloud-Optimized GeoTIFF (COG) overlay plus a thumbnail, with optional links to original scans and styling files.",
-  "license": "public-domain",
-  "keywords": ["historic", "topographic", "USGS", "Kansas", "overlay", "map", "raster"],
-
+  "license": "PDM-1.0",
+  "keywords": [
+    "historic",
+    "topographic",
+    "USGS",
+    "Kansas",
+    "overlay",
+    "map",
+    "raster"
+  ],
   "providers": [
     {
       "name": "Kansas Frontier Matrix Project",
@@ -19,24 +30,21 @@
       "url": "https://www.usgs.gov/"
     }
   ],
-
   "extent": {
     "spatial": {
-      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
     },
     "temporal": {
       "interval": [["1800-01-01T00:00:00Z", null]]
     }
   },
-
   "summaries": {
     "proj:epsg": [4326],
-    "item_type": ["Feature"],
-    "platform": ["historic-scan"],
-    "gsd": [0.5, 1.0, 2.0, 2.4, 7.5, 15.0],
-    "keywords": ["USGS", "historic topo", "overlay", "georeferenced scan"]
+    "kfm:item_type": ["Feature"],
+    "kfm:platform": ["historic-scan"],
+    "kfm:gsd": [0.5, 1.0, 2.0, 2.4, 7.5, 15.0],
+    "kfm:keywords": ["USGS", "historic topo", "overlay", "georeferenced scan"]
   },
-
   "item_assets": {
     "cog": {
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
@@ -64,7 +72,6 @@
       "title": "Style (SLD/QML) (optional)"
     }
   },
-
   "assets": {
     "overview": {
       "href": "../assets/historic_topo_overview.png",
@@ -72,7 +79,6 @@
       "title": "Collection overview (optional)"
     }
   },
-
   "links": [
     { "rel": "self",   "href": "historic_topo.json", "type": "application/json" },
     { "rel": "root",   "href": "../catalog.json",    "type": "application/json" },
