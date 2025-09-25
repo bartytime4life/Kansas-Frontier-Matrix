@@ -1,47 +1,51 @@
-# .github/dependabot.yml
 version: 2
 
 updates:
   # ────────────────────────────────────────────────────────────────────────────
   # 1) GitHub Actions (repo root)
   # ────────────────────────────────────────────────────────────────────────────
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: main
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: weekly
+      day: sunday
       time: "04:05"
-      timezone: "America/Chicago"
+      timezone: America/Chicago
+    rebase-strategy: auto
     open-pull-requests-limit: 5
-    labels: ["deps", "deps:actions"]
+    labels: [deps, "deps:actions"]
+    commit-message:
+      prefix: "deps(actions)"
+      include: scope
     groups:
       actions-all:
-        patterns: ["*"]          # group all actions into one PR
+        patterns: ["*"] # group all GH Actions into a single PR
 
   # ────────────────────────────────────────────────────────────────────────────
   # 2) Python (pip) — repo root (requirements*.txt)
   # ────────────────────────────────────────────────────────────────────────────
-  - package-ecosystem: "pip"
-    directory: "/"
+  - package-ecosystem: pip
+    directory: /
+    target-branch: main
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: weekly
+      day: sunday
       time: "04:10"
-      timezone: "America/Chicago"
-    # Keep noise down; you asked to allow direct deps only.
+      timezone: America/Chicago
+    rebase-strategy: auto
     allow:
-      - dependency-type: "direct"
-    # Prefer conservative bumps; major only if required by constraints.
-    versioning-strategy: "increase-if-necessary"
+      - dependency-type: direct    # keep noise down; only direct deps
+    versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 8
-    labels: ["deps", "deps:pip"]
-    # Group by purpose to reduce PR churn.
+    labels: [deps, "deps:pip"]
+    commit-message:
+      prefix: "deps(pip)"
+      include: scope
     groups:
-      # Security advisories (if any) get their own PR
       security:
-        applies-to: "security-updates"
+        applies-to: security-updates
         patterns: ["*"]
-      # Tooling-only updates (lint/test/doc)
       tooling:
         patterns:
           - "pytest*"
@@ -51,40 +55,40 @@ updates:
           - "mypy*"
           - "sphinx*"
           - "mkdocs*"
-      # Minor+patch bumps for everything else
       minor-and-patch:
-        update-types: ["minor", "patch"]
-
-    # Ignore noisy majors for heavy geo stacks unless you opt in
+        update-types: [minor, patch]
     ignore:
-      - dependency-name: "gdal"
+      - dependency-name: gdal
         update-types: ["version-update:semver-major"]
-      - dependency-name: "rasterio"
+      - dependency-name: rasterio
         update-types: ["version-update:semver-major"]
-      - dependency-name: "geopandas"
+      - dependency-name: geopandas
         update-types: ["version-update:semver-major"]
 
   # ────────────────────────────────────────────────────────────────────────────
   # 3) Node (npm) — web app
   # ────────────────────────────────────────────────────────────────────────────
-  - package-ecosystem: "npm"
-    directory: "/web"
+  - package-ecosystem: npm
+    directory: /web
+    target-branch: main
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: weekly
+      day: sunday
       time: "04:20"
-      timezone: "America/Chicago"
+      timezone: America/Chicago
+    rebase-strategy: auto
     open-pull-requests-limit: 8
-    # Keep lockfile fresh even when no manifest change
-    versioning-strategy: "increase"
-    labels: ["deps", "deps:npm", "area:web"]
-    # Group devDeps separately from runtime
+    versioning-strategy: increase   # keep lockfile fresh even without manifest changes
+    labels: [deps, "deps:npm", "area:web"]
+    commit-message:
+      prefix: "deps(npm)"
+      include: scope
     groups:
       dev-deps:
-        dependency-type: "development"
+        dependency-type: development
         patterns: ["*"]
       runtime:
-        dependency-type: "production"
+        dependency-type: production
         patterns: ["*"]
       # Optional: group map libs together (uncomment if desired)
       # map-stack:
@@ -92,43 +96,54 @@ updates:
       #     - "maplibre*"
       #     - "mapbox-gl*"
       #     - "@mapbox/*"
-      #     - "ol"            # openlayers
+      #     - "ol"
       #     - "ol-*"
+    # Tame churny major bumps for build tooling; opt-in later if needed
+    ignore:
+      - dependency-name: vite
+        update-types: ["version-update:semver-major"]
+      - dependency-name: webpack
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
 
   # ────────────────────────────────────────────────────────────────────────────
   # 4) Dockerfiles — root or /docker
   # ────────────────────────────────────────────────────────────────────────────
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: docker
+    directory: /
+    target-branch: main
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: weekly
+      day: sunday
       time: "04:30"
-      timezone: "America/Chicago"
+      timezone: America/Chicago
+    rebase-strategy: auto
     open-pull-requests-limit: 3
-    labels: ["deps", "deps:docker"]
+    labels: [deps, "deps:docker"]
+    commit-message:
+      prefix: "deps(docker)"
+      include: scope
     groups:
       base-image:
         patterns: ["*"]
 
-  - package-ecosystem: "docker"
-    directory: "/docker"
+  - package-ecosystem: docker
+    directory: /docker
+    target-branch: main
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: weekly
+      day: sunday
       time: "04:30"
-      timezone: "America/Chicago"
+      timezone: America/Chicago
+    rebase-strategy: auto
     open-pull-requests-limit: 3
-    labels: ["deps", "deps:docker"]
+    labels: [deps, "deps:docker"]
+    commit-message:
+      prefix: "deps(docker)"
+      include: scope
     groups:
       base-image:
         patterns: ["*"]
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Global notes:
-# - Grouping reduces PR noise while keeping security updates distinct.
-# - Time windows are staggered to avoid CI stampedes.
-# - For auto-merge workflows, key off labels like `automerge:minor` in a
-#   separate GitHub Action (optional).
-# - Adjust ignores if you’re ready to take major upgrades for geo stacks.
-# ──────────────────────────────────────────────────────────────────────────────
