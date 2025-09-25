@@ -31,16 +31,16 @@
   ],
   "extent": {
     "spatial": {
-      "bbox": [[-102.05, 36.99, -94.59, 40.00]]
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
     },
     "temporal": {
-      "interval": [["1800-01-01T00:00:00Z", "2025-12-31T23:59:59Z"]]
+      "interval": [["1800-01-01T00:00:00Z", null]]
     }
   },
   "summaries": {
-    "themes": ["history", "documents", "events", "entities"],
-    "document:types": ["treaty", "diary", "newspaper", "survey", "letter", "report"],
-    "document:linking": ["people", "places", "events"]
+    "kfm:themes": ["history", "documents", "events", "entities"],
+    "kfm:document_types": ["treaty", "diary", "newspaper", "survey", "letter", "report"],
+    "kfm:linking": ["people", "places", "events"]
   },
   "links": [
     {
