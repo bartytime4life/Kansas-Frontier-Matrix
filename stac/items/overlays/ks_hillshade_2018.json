@@ -1,0 +1,25 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_hillshade_2018",
+  "collection": "terrain_derivatives",
+  "properties": {
+    "start_datetime": "2018-01-01T00:00:00Z",
+    "end_datetime": "2018-12-31T23:59:59Z",
+    "derivative:type": "hillshade"
+  },
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "geometry": null,
+  "links": [
+    { "rel": "collection", "href": "../../collections/terrain_derivatives.json", "type": "application/json" },
+    { "rel": "root", "href": "../../catalog.json", "type": "application/json" }
+  ],
+  "assets": {
+    "hillshade": {
+      "href": "../../data/cogs/derivatives/ks_hillshade_2018.tif",
+      "title": "Kansas Hillshade (from 2018 LiDAR DEM)",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"]
+    }
+  }
+}
