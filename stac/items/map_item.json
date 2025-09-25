@@ -14,41 +14,43 @@
     "type": "Polygon",
     "coordinates": [[
       [-180.0, -90.0],
-      [-180.0, 90.0],
-      [180.0, 90.0],
       [180.0, -90.0],
+      [180.0, 90.0],
+      [-180.0, 90.0],
       [-180.0, -90.0]
     ]]
   },
 
   "properties": {
     "datetime": "YYYY-01-01T00:00:00Z",
-    "title": "Historical Topo Map — PLACE, YEAR",
-    "description": "Georeferenced historical topo sheet (scale 1:REPLACE_SCALE).",
-    "proj:epsg": 4326
+    "title": "Historical Topo Map — PLACE, YYYY",
+    "description": "Georeferenced historical topo sheet for PLACE (scale 1:REPLACE_SCALE, edition REPLACE_EDITION). Warped to EPSG:4326 for overlay use.",
+    "proj:epsg": 4326,
+    "created": "2025-01-01T00:00:00Z",
+    "updated": "2025-01-01T00:00:00Z"
   },
 
   "assets": {
     "cog": {
       "href": "../../data/cogs/overlays/REPLACE_FILE.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"],
+      "roles": ["data", "visual"],
       "title": "COG raster",
-      "file:size": null,
-      "checksum:sha256": null
+      "file:size": 0,
+      "checksum:sha256": "REPLACE_SHA256"
     },
     "thumbnail": {
       "href": "../../data/cogs/overlays/REPLACE_FILE.png",
       "type": "image/png",
-      "roles": ["thumbnail"],
+      "roles": ["thumbnail", "overview"],
       "title": "Thumbnail preview"
     }
   },
 
   "links": [
+    { "rel": "self",       "href": "./map_item.json",            "type": "application/json" },
     { "rel": "collection", "href": "../collections/base_maps.json", "type": "application/json" },
     { "rel": "parent",     "href": "../collections/base_maps.json", "type": "application/json" },
-    { "rel": "root",       "href": "../catalog.json",               "type": "application/json" },
-    { "rel": "self",       "href": "map_item.json",                 "type": "application/json" }
+    { "rel": "root",       "href": "../catalog.json",               "type": "application/json" }
   ]
 }
