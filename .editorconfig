@@ -1,6 +1,6 @@
 # ================================
 # Kansas-Frontier-Matrix / MCP Repo
-# .editorconfig — enforce consistency
+# .editorconfig — enforce consistency (upgraded)
 # ================================
 
 root = true
@@ -17,7 +17,7 @@ indent_size = 2
 # --- Python ---
 [*.py]
 indent_size = 4
-# Keep in sync with pyproject.toml (Black/Ruff line-length)
+# Note: max_line_length is not a core EditorConfig key; some tools may ignore it.
 max_line_length = 100
 trim_trailing_whitespace = true
 
@@ -28,10 +28,12 @@ indent_size = 2
 # Any file literally named Makefile (any path)
 [Makefile]
 indent_style = tab
+tab_width = 4  # display width only; real tabs required by make
 
 # Makefile fragments
 [*.mk]
 indent_style = tab
+tab_width = 4
 
 [*.yml]
 indent_size = 2
@@ -60,6 +62,13 @@ indent_size = 2
 [*.jsx]
 indent_size = 2
 
+[*.css]
+indent_size = 2
+
+[*.html]
+indent_size = 2
+
+# JSON family
 [*.json]
 indent_size = 2
 max_line_length = off
@@ -80,22 +89,15 @@ max_line_length = off
 indent_size = 2
 max_line_length = off
 
-[*.css]
-indent_size = 2
-
-[*.html]
-indent_size = 2
-
 # Templates
 [*.j2]
 indent_size = 2
-
 [*.jinja2]
 indent_size = 2
 
 # --- Markdown / Docs / Diagrams ---
 [*.md]
-trim_trailing_whitespace = false
+trim_trailing_whitespace = false  # allow two-space line breaks
 max_line_length = off
 
 [*.mdx]
@@ -110,9 +112,15 @@ max_line_length = off
 # Mermaid diagrams
 [*.mmd]
 indent_size = 2
-
+max_line_length = off
 [*.mermaid]
 indent_size = 2
+max_line_length = off
+
+# SVGs often contain long single lines
+[*.svg]
+max_line_length = off
+trim_trailing_whitespace = false
 
 # --- Data files (preserve whitespace/width) ---
 [*.csv]
@@ -201,9 +209,10 @@ insert_final_newline = false
 max_line_length = off
 trim_trailing_whitespace = false
 
-# JSON Schemas / configs may be long
-[web/config/**.json]
+# JSON Schemas / configs may be long (use **/*.json rather than **.json)
+[web/config/**/*.json]
 max_line_length = off
+trim_trailing_whitespace = false
 
 # Node / package manager caches & outputs
 [node_modules/**]
@@ -212,5 +221,5 @@ trim_trailing_whitespace = false
 insert_final_newline = false
 
 # GitHub workflow snippets can be long
-[.github/workflows/**.yml]
+[.github/workflows/**/*.yml]
 max_line_length = off
