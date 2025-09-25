@@ -39,43 +39,67 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed for PR diff mode
+          # fetch-depth 0 so we can diff PRs properly (forks included)
+          fetch-depth: 0
 
       # Build args dynamically:
-      # - PRs: check only changed Markdown/HTML files
+      # - PRs: check only changed Markdown/HTML files (vs merge-base with base branch)
       # - Push/Schedule/Dispatch: scan README + docs + web
-      # - If .lychee.toml exists, defer to it
+      # - If .lychee.toml exists, prefer it (we still pass explicit targets)
       - name: Compute lychee args
         id: args
         shell: bash
         run: |
           set -euo pipefail
 
+          # Collect candidate files
           collect_targets() {
             local mode="$1"
             local -a files=()
+
             if [[ "$mode" == "pr" ]]; then
-              # Ensure base is available (esp. for fork PRs)
-              git fetch -q origin "${{ github.base_ref }}" || true
-              while IFS= read -r f; do
-                [[ -z "$f" ]] && continue
-                [[ "$f" =~ \.(md|html)$ ]] || continue
-                files+=("$f")
-              done < <(git --no-pager diff --name-only "origin/${{ github.base_ref }}..." | tr -d '\r')
-            else
-              [[ -f README.md ]] && files+=("README.md")
-              [[ -d docs ]] && while IFS= read -r -d '' f; do files+=("$f"); done < <(find docs -type f \( -name '*.md' -o -name '*.html' \) -print0)
-              [[ -d web  ]] && while IFS= read -r -d '' f; do files+=("$f"); done < <(find web  -type f \( -name '*.md' -o -name '*.html' \) -print0)
+              # Robust merge-base for PRs (works for forks, too)
+              BASE_SHA="${{ github.event.pull_request.base.sha || '' }}"
+              if [[ -z "$BASE_SHA" ]]; then
+                git fetch -q origin "${{ github.base_ref }}" || true
+                BASE_SHA="$(git rev-parse "origin/${{ github.base_ref }}" || echo "")"
+              fi
+              if [[ -z "$BASE_SHA" ]]; then
+                # Fallback: just scan full set
+                mode="full"
+              else
+                MERGE_BASE="$(git merge-base "$BASE_SHA" HEAD || echo "")"
+                if [[ -n "$MERGE_BASE" ]]; then
+                  while IFS= read -r f; do
+                    [[ -z "$f" ]] && continue
+                    [[ "$f" =~ \.(md|html)$ ]] || continue
+                    files+=("$f")
+                  done < <(git --no-pager diff --name-only "$MERGE_BASE"...HEAD | tr -d '\r')
+                else
+                  mode="full"
+                fi
+              fi
             fi
+
+            if [[ "$mode" != "pr" ]]; then
+              [[ -f README.md ]] && files+=("README.md")
+              if [[ -d docs ]]; then
+                while IFS= read -r -d '' f; do files+=("$f"); done \
+                  < <(find docs -type f \( -name '*.md' -o -name '*.html' \) -print0)
+              fi
+              if [[ -d web ]]; then
+                while IFS= read -r -d '' f; do files+=("$f"); done \
+                  < <(find web -type f \( -name '*.md' -o -name '*.html' \) -print0)
+              fi
+            fi
+
             printf '%s\n' "${files[@]}" | sort -u
           }
 
-          MODE="full"
-          [[ "${{ github.event_name }}" == "pull_request" ]] && MODE="pr"
-
+          MODE="${{ github.event_name == 'pull_request' && 'pr' || 'full' }}"
           mapfile -t TARGETS < <(collect_targets "$MODE")
 
-          # If no targets, check README.md to avoid no-op
+          # Avoid no-op: if nothing changed in PR, at least check README
           if [[ ${#TARGETS[@]} -eq 0 ]]; then
             [[ -f README.md ]] && TARGETS=("README.md")
           fi
@@ -90,10 +114,13 @@ jobs:
           mkdir -p lychee
 
           BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
+          # Accept 200 + 429 (rate limited) as non-failing to reduce flaky CI, still reported
+          BASE_ARGS+=(--accept 200,429)
+
           # Emit both JSON and Markdown reports
           OUT_ARGS=(--format json --output lychee/results.json --format markdown --output lychee.md)
 
-          # Reasonable excludes for CI (flaky/rate-limited endpoints)
+          # Reasonable excludes for GIS/tiles/rate-limited APIs
           EXCLUDES=(
             'mailto:*' 'tel:*'
             'http://localhost*' 'http://127.0.0.1*' 'https://localhost*' 'https://127.0.0.1*'
@@ -105,6 +132,7 @@ jobs:
 
           ARGS=( "${BASE_ARGS[@]}" "${OUT_ARGS[@]}" )
           for e in "${EXCLUDES[@]}"; do ARGS+=( --exclude "$e" ); done
+          # Append targets last (preserves quoting)
           ARGS+=( "${TARGETS[@]}" )
 
           printf "args=%s\n" "${ARGS[*]}" >> "$GITHUB_OUTPUT"
@@ -135,7 +163,6 @@ jobs:
         run: |
           {
             echo "## Link Check (Lychee)"
-            echo
             echo "- Mode: **${{ steps.args.outputs.mode || 'full' }}**"
             if [ -f lychee.md ]; then
               echo
@@ -145,6 +172,7 @@ jobs:
               sed -n '1,200p' lychee.md
               echo '```'
             else
-              echo "_No lychee.md report generated (likely used repo .lychee.toml with different outputs)._"
+              echo
+              echo "_No lychee.md report generated (likely using repository .lychee.toml outputs)._"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
