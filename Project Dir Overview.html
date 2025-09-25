@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kansas-Frontier-Matrix — Project Directory Overview</title>
+<meta name="color-scheme" content="dark light" />
 <style>
   :root {
     --bg: #0b1020;
@@ -17,8 +18,27 @@
     --code: #0f1530;
     --link: #9cd1ff;
     --border: #243057;
+    --focus: #b7e3ff;
   }
-  html, body { background: var(--bg); color: var(--ink); font: 14.5px/1.45 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; margin: 0; }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f7f9ff;
+      --card: #ffffff;
+      --ink: #0b1020;
+      --muted: #556085;
+      --accent: #0a66ff;
+      --code: #f5f7ff;
+      --link: #0a66ff;
+      --border: #dfe6ff;
+      --focus: #0a66ff;
+    }
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 14.5px/1.45 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    margin: 0;
+  }
   a { color: var(--link); text-decoration: none; }
   a:hover { text-decoration: underline; }
   .wrap { max-width: 1200px; margin: 36px auto; padding: 0 20px; }
@@ -30,12 +50,23 @@
   .card h2 { margin: 0 0 10px; font-size: 16px; }
   .hint { color: var(--muted); font-size: 12.5px; }
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-size: 12px; margin-left: 6px; }
-  input[type="search"] { width: 100%; background: var(--code); color: var(--ink); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; outline: none; }
+  input[type="search"] {
+    width: 100%; background: var(--code); color: var(--ink); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; outline: none;
+  }
+  input[type="search"]:focus { box-shadow: 0 0 0 3px color-mix(in oklab, var(--focus), transparent 70%); border-color: var(--focus); }
+  .toolbar { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; align-items:center; }
+  .toolbar button {
+    background: transparent; border: 1px solid var(--border); color: var(--ink);
+    border-radius: 10px; padding: 6px 10px; cursor: pointer; font-size: 12.5px;
+  }
+  .toolbar button:hover { border-color: var(--accent); }
+  .toolbar .count { color: var(--muted); font-size: 12.5px; }
   .tree { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13px; line-height: 1.35; }
   details { border-left: 2px solid transparent; margin-left: 6px; }
   details[open] { border-left-color: #2b3d7a; }
-  summary { cursor: pointer; }
-  .fi { opacity: .8; margin-right: 4px; }
+  summary { cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .fi { opacity: .85; }
+  .leaf { display: flex; align-items: center; gap:6px; margin-left: 22px; }
   .codeblock { background: var(--code); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; overflow: auto; }
   .kv { display: grid; grid-template-columns: 180px 1fr; gap: 4px 8px; }
   .kv b { color: var(--muted); font-weight: 600; }
@@ -46,6 +77,15 @@
   .list { margin: 0; padding-left: 18px; }
   .list li { margin: 4px 0; }
   .muted { color: var(--muted); }
+  [hidden] { display:none !important; }
+  /* Filter visibility handling */
+  .tree [data-item] { display: none; }           /* hide by default when filtering is active */
+  .tree[data-filter=""] [data-item] { display: block; } /* if no filter, show all */
+  .tree .hit { display: block !important; }      /* show direct hits */
+  .tree .hit-anc { display: block !important; }  /* show ancestors of hits */
+  .tree .hit-desc { display: block !important; } /* show descendants of hits */
+  /* Keyboard focus ring */
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 </style>
 </head>
 <body>
@@ -55,18 +95,25 @@
     <div class="sub">Time · Terrain · History — Google Earth + Web (MapLibre) + STAC. Collapsible map of the repo, quick links, and wiring notes.</div>
   </header>
 
-  <section class="grid">
+  <section class="grid" aria-labelledby="searchHdr">
     <div class="card">
-      <h2>Search & Filter</h2>
+      <h2 id="searchHdr">Search & Filter</h2>
+      <label class="sr-only" for="filter">Filter directory tree</label>
       <input type="search" id="filter" placeholder="Type to filter (e.g., stac, hillshade, roadmap, mkdocs, Dockerfile) …" aria-label="Filter directory tree" />
-      <div class="hint" style="margin-top:8px">Tip: click folders to expand/collapse; click file names to open relative paths.</div>
+      <div class="toolbar" role="toolbar" aria-label="Tree actions">
+        <button type="button" id="expandAll" title="Expand all (shortcut: *)">Expand all</button>
+        <button type="button" id="collapseAll" title="Collapse all (shortcut: -)">Collapse all</button>
+        <button type="button" id="copyRaw" title="Copy raw listing">Copy raw</button>
+        <span class="count" aria-live="polite" aria-atomic="true" id="resultsNote">Showing all items</span>
+      </div>
+      <div class="hint">Tips: press “/” to focus search · “*” to expand · “-” to collapse · Click folders to toggle.</div>
     </div>
 
     <div class="card">
       <h2>Repo Facts</h2>
       <div class="kv">
         <b>Top entrypoints</b> <div><a href="./Makefile">Makefile</a>, <a href="./web/index.html">web/index.html</a>, <a href="./src/kansas_geo_timeline/cli.py">CLI</a>, <a href="./tests/">tests/</a></div>
-        <b>Catalog</b> <div><span class="muted">STAC 1.0.0</span> under <code>./stac/</code> (target); connects to <code>web/app.config.json</code></div>
+        <b>Catalog</b> <div><span class="muted">STAC 1.0.0</span> under <code>./stac/</code>; connected to <code>web/app.config.json</code></div>
         <b>Actions</b> <div><a href="./.github/workflows/site.yml">site.yml</a>, <a href="./.github/workflows/roadmap.yml">roadmap.yml</a>, <a href="./.github/workflows/stac-validate.yml">stac-validate.yml</a></div>
         <b>Docs</b> <div><a href="./mkdocs.yml">mkdocs.yml</a> (if present), <a href="./docs/index.md">docs/</a></div>
       </div>
@@ -76,40 +123,29 @@
   <section class="grid" style="margin-top:18px">
     <div class="card">
       <h2>Project Tree (click to expand)</h2>
-      <!-- Collapsible directory tree constructed from the provided listing -->
-      <div id="tree" class="tree"></div>
+      <div id="tree" class="tree" role="tree" aria-label="Repository tree"></div>
     </div>
 
-   <div class="card">
+    <div class="card">
       <h2>How the pieces connect</h2>
       <ul class="list">
-        <li><b>Data → COGs → Derivatives</b>: <code>data/sources/*.json</code> (provenance) → <code>make fetch</code>/<code>make cogs</code> → <code>data/cogs/**</code> → <code>make terrain</code> creates <code>hillshade/slope/aspect</code> and mirrors into <code>data/derivatives/</code>.</li>
-        <li><b>STAC</b>: <code>make stac</code> writes Items/Collections under <code>./stac/</code>, then auto-patches <code>file:size</code> + <code>checksum:sha256</code> if <code>.sha256</code> exists.</li>
-        <li><b>Web viewer</b>: <code>make site</code> writes a simple <code>web/layers.json</code>; <code>site-config</code> (via <code>kgt</code>) can render <code>web/app.config.json</code> from STAC using <code>src/.../templates/app.config.json.j2</code>.</li>
-        <li><b>Google Earth</b>: regionated KML/KMZ under <code>earth/</code> (manual/proto) can mirror key overlays.</li>
-        <li><b>Roadmap sync</b>: <code>.github/roadmap/roadmap.yaml</code> → <code>scripts/sync-roadmap.js</code> → labels/milestones/issues (dry-run on PRs).</li>
-        <li><b>Tests</b>: <code>tests/test_stac.py</code>, <code>test_sources.py</code>, <code>test_cli.py</code> provide mission-grade validation.</li>
+        <li><b>Data → COGs → Derivatives</b>: <code>data/sources/*.json</code> → <code>make fetch</code>/<code>make cogs</code> → <code>data/cogs/**</code> → <code>make terrain</code> creates <code>hillshade/slope/aspect</code> → <code>data/derivatives/</code>.</li>
+        <li><b>STAC</b>: <code>make stac</code> writes Items/Collections under <code>./stac/</code>, then patches <code>file:size</code> + <code>checksum:sha256</code> if <code>.sha256</code> exists.</li>
+        <li><b>Web viewer</b>: <code>make site</code> writes <code>web/layers.json</code>; <code>kgt</code> can render <code>web/app.config.json</code> from STAC via <code>templates/app.config.json.j2</code>.</li>
+        <li><b>Google Earth</b>: regionated KML/KMZ under <code>earth/</code> can mirror key overlays.</li>
+        <li><b>Roadmap sync</b>: <code>.github/roadmap/roadmap.yaml</code> → <code>scripts/sync-roadmap.js</code> → labels/milestones/issues.</li>
+        <li><b>Tests</b>: <code>tests/test_stac.py</code>, <code>test_sources.py</code>, <code>test_cli.py</code> validate wiring.</li>
       </ul>
 
       <h2 style="margin-top:16px">Consistency checks</h2>
       <ul class="list">
-        <li>
-          <span class="status warn">Warning</span>
-          Your Makefile targets and CI assume <code>./stac/</code> at repo root, but this listing shows <code>data/stac/</code>.
-          Prefer <b>move to <code>./stac/</code></b> (update any paths in scripts/CI). This file links to <code>./stac/</code>.
-        </li>
-        <li>
-          <span class="status warn">Warning</span>
-          Docker compose: earlier config uses <code>docker-compose.yml</code> at the root; the tree lists <code>docker/compose.yaml</code>. Keep one canonical location and update docs/CI accordingly.
-        </li>
-        <li>
-          <span class="status ok">OK</span>
-          Roadmap wiring: <code>scripts/sync-roadmap.js</code> ↔ <code>.github/workflows/roadmap.yml</code> ↔ <code>.github/roadmap/roadmap.yaml</code>.
-        </li>
+        <li><span class="status warn">Warning</span> Ensure <code>./stac/</code> (repo root) is the canonical path used by Make/CI. Update scripts if any still point to <code>data/stac/</code>.</li>
+        <li><span class="status warn">Warning</span> Keep a single canonical compose file location (<code>./docker/compose.yaml</code> suggested) and reflect it in docs/CI.</li>
+        <li><span class="status ok">OK</span> Roadmap wiring: <code>scripts/sync-roadmap.js</code> ↔ <code>.github/workflows/roadmap.yml</code> ↔ <code>.github/roadmap/roadmap.yaml</code>.</li>
       </ul>
 
       <h2 style="margin-top:16px">Common commands</h2>
-      <div class="codeblock"><code>
+      <div class="codeblock" role="region" aria-label="Common commands"><code>
       make env<br/>
       make fetch cogs terrain<br/>
       make stac stac-validate<br/>
@@ -122,8 +158,7 @@
 
   <section class="card" style="margin-top:18px">
     <h2>Raw listing (for copy/paste)</h2>
-    <div class="codeblock"><pre id="raw">
-.
+    <div class="codeblock"><pre id="raw" aria-label="Raw repo listing" tabindex="0">.
 |-- README.md
 |-- LICENSE
 |-- package.json
@@ -243,7 +278,7 @@
     |-- test_stac.py
     |-- test_sources.py
     `-- test_cli.py
-    </pre></div>
+</pre></div>
   </section>
 
   <footer class="muted" style="margin:18px 0 40px">
@@ -251,80 +286,214 @@
   </footer>
 </div>
 
-<script>
-/* --- Tiny in-page tree renderer with filter --- */
-const raw = document.getElementById('raw').textContent.split('\n');
-const root = document.getElementById('tree');
-const linkFor = (path) => path.replace(/^\.\s*\/?/, './');
-const icon = (isDir, name) => isDir ? '📁' : (/\.m?js$|\.py$|\.json$|\.yml$|\.yaml$|\.md$|\.html?$/.test(name) ? '📄' : '📦');
+<script defer>
+(() => {
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const tree = $('#tree');
+  const rawLines = $('#raw').textContent.replace(/\r\n/g, '\n').split('\n');
 
-function buildTree(lines) {
-  // Parse the simple ASCII tree into a nested structure
-  const stack = [{ depth: -1, el: root, path: '.' }];
+  const ICON_DIR = '📁';
+  const ICON_FILE = '📄';
+
+  const linkFor = (path) => {
+    // Normalize "./" and double slashes, ensure relative link
+    const cleaned = path.replace(/^(\.\/?|\s+)/, '').replace(/\/\/+/g, '/');
+    return cleaned.startsWith('./') ? cleaned : './' + cleaned;
+  };
+
+  // Compute depth: count leading "│", "|", " " blocks before the branch marker
+  // We detect a line that looks like: optional pipes/spaces, then |-- or `--, then a name
   const entryRe = /^\s*([|` ]*?)(?:\|--|`--)\s(.+)$/;
-  for (const line of lines) {
+
+  // Build a simple tree model first to make hit/ancestor/descendant marking easy
+  let root = { name: '.', path: '.', isDir: true, children: [], parent: null, el: null };
+  const stack = [root]; // stack[depth] holds the node at that depth
+
+  for (const line of rawLines) {
     const m = entryRe.exec(line);
     if (!m) continue;
-    const indent = (m[1].match(/[|` ]/g) || []).length;
-    const name = m[2].trim();
-    const isDir = name.endsWith('/') || /\/$/.test(name);
-    const cleanName = name.replace(/\/$/, '');
-    // Compute depth from number of "   " blocks; heuristic
-    const depth = Math.floor(indent / 4);
-    while (stack.length && stack[stack.length - 1].depth >= depth) stack.pop();
+    const prefix = m[1] ?? '';
+    // The prefix often uses "   " for a level; count groups of 4 chars (~ Git tree style)
+    // Fallback: number of pipe/backtick groups divided by 4.
+    const depth = Math.max(0, Math.floor(prefix.length / 4));
+    let name = m[2].trim();
+
+    // strip trailing "/" from dir names in raw
+    const isDir = name.endsWith('/');
+    if (isDir) name = name.slice(0, -1);
+
+    // Some lines include inline comments like "file # note", drop from href but keep visible text
+    const display = name;
+    const hrefName = name.replace(/\s+#.*/, '');
+
+    // Ascend to correct parent based on depth
+    while (stack.length > depth + 1) stack.pop();
     const parent = stack[stack.length - 1];
-    const fullPath = (parent.path === '.' ? '' : parent.path + '/') + cleanName.replace(/ #.*/,'');
-    const item = document.createElement(isDir ? 'details' : 'div');
-    if (isDir) {
-      const sum = document.createElement('summary');
-      sum.innerHTML = `<span class="fi">${icon(true, cleanName)}</span><strong>${cleanName}</strong>`;
-      item.appendChild(sum);
-      const child = document.createElement('div');
-      child.className = 'children';
-      item.appendChild(child);
-      parent.el.appendChild(item);
-      stack.push({ depth, el: child, path: fullPath });
-    } else {
-      const a = document.createElement('a');
-      a.href = linkFor(fullPath);
-      a.textContent = cleanName.replace(/ #.*/,'');
-      const leaf = document.createElement('div');
-      leaf.innerHTML = `<span class="fi">${icon(false, cleanName)}</span>`;
-      leaf.appendChild(a);
-      parent.el.appendChild(leaf);
+
+    const fullPath = (parent.path === '.' ? hrefName : parent.path + '/' + hrefName);
+
+    const node = { name: display, href: hrefName, path: fullPath, isDir, children: [], parent, el: null };
+    parent.children.push(node);
+    if (isDir) stack.push(node);
+  }
+
+  // DOM rendering
+  const container = $('#tree');
+  container.setAttribute('data-filter', '');
+
+  const renderNode = (node, into) => {
+    if (node === root) {
+      node.el = into;
+      node.el.dataset.item = '1';
+      node.el.classList.add('hit-anc'); // show root always
+      return;
     }
-  }
-  // Expand top-level folders by default
-  [...root.querySelectorAll(':scope > details')].forEach(d => d.open = true);
-}
+    if (node.isDir) {
+      const details = document.createElement('details');
+      details.open = node.parent === root; // expand top-level dirs initially
+      details.setAttribute('role', 'treeitem');
+      details.setAttribute('aria-expanded', String(details.open));
+      details.dataset.item = '1';
 
-buildTree(raw);
+      const sum = document.createElement('summary');
+      sum.innerHTML = `<span class="fi" aria-hidden="true">${ICON_DIR}</span><strong>${node.name}</strong>`;
+      details.appendChild(sum);
 
-// Filter
-const filter = document.getElementById('filter');
-filter.addEventListener('input', () => {
-  const q = filter.value.trim().toLowerCase();
-  if (!q) {
-    root.querySelectorAll('[data-hit]').forEach(n => n.removeAttribute('data-hit'));
-    root.querySelectorAll('details').forEach(d => d.open = d.parentElement === root);
-    return;
-  }
-  // Simple text match; show branches with hits
-  root.querySelectorAll('details, div').forEach(n => n.removeAttribute('data-hit'));
-  const nodes = [...root.querySelectorAll('a')];
-  const hits = nodes.filter(a => a.textContent.toLowerCase().includes(q) || a.getAttribute('href').toLowerCase().includes(q));
-  hits.forEach(a => {
-    let n = a.parentElement;
-    while (n && n !== root) {
-      n.setAttribute('data-hit', '1');
-      if (n.tagName.toLowerCase() === 'details') n.open = true;
-      n = n.parentElement;
+      const childWrap = document.createElement('div');
+      childWrap.className = 'children';
+      details.appendChild(childWrap);
+
+      into.appendChild(details);
+      node.el = details;
+
+      details.addEventListener('toggle', () => {
+        details.setAttribute('aria-expanded', String(details.open));
+      });
+
+      for (const ch of node.children) renderNode(ch, childWrap);
+    } else {
+      const leaf = document.createElement('div');
+      leaf.className = 'leaf';
+      leaf.setAttribute('role', 'treeitem');
+      leaf.dataset.item = '1';
+
+      const icon = document.createElement('span');
+      icon.className = 'fi';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = ICON_FILE;
+
+      const a = document.createElement('a');
+      a.href = linkFor(node.path);
+      a.textContent = node.name;
+
+      leaf.append(icon, a);
+      into.appendChild(leaf);
+      node.el = leaf;
+    }
+  };
+
+  renderNode(root, container);
+
+  // Filter logic: mark hits, ancestors, descendants and hide others (via CSS)
+  const filterInput = $('#filter');
+  const resultsNote = $('#resultsNote');
+
+  const markAndCount = (q) => {
+    // Clear previous marks
+    const clearMarks = (n) => {
+      if (n.el) n.el.classList.remove('hit','hit-anc','hit-desc');
+      for (const ch of n.children) clearMarks(ch);
+    };
+    clearMarks(root);
+
+    if (!q) {
+      container.setAttribute('data-filter', '');
+      // expand top-level only
+      $$('#tree > details').forEach(d => d.open = true);
+      resultsNote.textContent = 'Showing all items';
+      return;
+    }
+    container.setAttribute('data-filter', q);
+
+    // Predicate: a hit if node name or href/path includes q
+    const match = (n) => {
+      const hay = (n.name + ' ' + (n.path || '')).toLowerCase();
+      return hay.includes(q);
+    };
+
+    let hits = 0;
+
+    const markHits = (n) => {
+      let selfHit = match(n);
+      let descHit = false;
+      for (const ch of n.children) {
+        descHit = markHits(ch) || descHit;
+      }
+      const isHit = selfHit || descHit;
+      if (n.el) {
+        if (selfHit) n.el.classList.add('hit');
+        if (descHit) n.el.classList.add('hit-anc');
+        // Mark descendants of a direct hit to keep nested context visible
+        if (selfHit) {
+          const markDesc = (x) => {
+            if (x.el) x.el.classList.add('hit-desc');
+            x.children.forEach(markDesc);
+          };
+          n.children.forEach(markDesc);
+        }
+      }
+      if (selfHit && !n.isDir) hits++;
+      // Auto-expand ancestors of matches
+      if ((selfHit || descHit) && n.parent && n.parent.el?.tagName === 'DETAILS') {
+        n.parent.el.open = true;
+      }
+      return isHit;
+    };
+    markHits(root);
+
+    resultsNote.textContent = hits ? `Found ${hits} file${hits!==1?'s':''}` : 'No matches';
+  };
+
+  const onFilter = () => {
+    const q = filterInput.value.trim().toLowerCase();
+    markAndCount(q);
+  };
+  filterInput.addEventListener('input', onFilter);
+
+  // Toolbar actions
+  $('#expandAll').addEventListener('click', () => {
+    $$('#tree details').forEach(d => d.open = true);
+  });
+  $('#collapseAll').addEventListener('click', () => {
+    // Keep top-level open, collapse deeper
+    $$('#tree > details').forEach(top => {
+      top.open = true;
+      $$(':scope details', top).forEach(d => d.open = false);
+    });
+  });
+  $('#copyRaw').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText($('#raw').textContent);
+      resultsNote.textContent = 'Raw listing copied';
+      setTimeout(() => resultsNote.textContent = 'Ready', 1500);
+    } catch {
+      alert('Copy failed: your browser may block clipboard access.');
     }
   });
-  // Hide non-hits
-  root.querySelectorAll(':scope > *').forEach(() => {}); // no-op; CSS-free approach
-  [...root.children].forEach(() => {}); // keeping it simple (always visible but expanded on hits)
-});
+
+  // Keyboard shortcuts: "/" focus search, "*" expand, "-" collapse
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== filterInput) {
+      e.preventDefault(); filterInput.focus(); return;
+    }
+    if (e.key === '*') { e.preventDefault(); $('#expandAll').click(); return; }
+    if (e.key === '-') { e.preventDefault(); $('#collapseAll').click(); return; }
+  });
+
+  // Initialize counts
+  markAndCount('');
+})();
 </script>
 </body>
 </html>
