@@ -1,0 +1,21 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "hazards_flood",
+  "title": "Flood Hazards (Historic Extents & Floodplains)",
+  "description": "Historic flood polygons, modeled floodplain extents (1%/0.2%), and related hazard layers.",
+  "license": "CC-BY-4.0",
+  "keywords": ["flood", "hazard", "floodplain", "inundation", "history"],
+  "providers": [
+    { "name": "Kansas Frontier Matrix Project", "roles": ["processor", "host"], "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix" }
+  ],
+  "extent": {
+    "spatial": { "bbox": [[-102.051, 36.993, -94.588, 40.003]] },
+    "temporal": { "interval": [[null, null]] }
+  },
+  "links": [
+    { "rel": "root", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "parent", "href": "../catalog.json", "type": "application/json" },
+    { "rel": "self", "href": "hazards_flood.json", "type": "application/json" }
+  ]
+}
