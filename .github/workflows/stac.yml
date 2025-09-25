@@ -22,7 +22,6 @@ on:
       - ".github/workflows/stac.yml"
   workflow_dispatch:
 
-# Keep runs from stepping on each other and follow least-privilege defaults
 concurrency:
   group: stac-${{ github.ref }}
   cancel-in-progress: true
@@ -35,6 +34,8 @@ jobs:
     name: Validate STAC & Render app.config.json
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      PYTHONUNBUFFERED: "1"
 
     steps:
       - name: Checkout
@@ -42,53 +43,82 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Quick JSON syntax guardrail for common config files
-      - name: Validate JSON syntax with jq
+      - name: Install jq
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends jq
+
+      - name: Validate JSON syntax (configs & STAC)
+        shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update && sudo apt-get install -y --no-install-recommends jq
-          check() { [ -f "$1" ] && echo "Checking: $1" && jq -e . "$1" >/dev/null; }
-          check web/app.config.json || true
-          check web/layers.json || true
-          for f in web/config/*.json; do [ -e "$f" ] && jq -e . "$f" >/dev/null; done
+          shopt -s nullglob globstar
+          summary="### JSON syntax check\n"
+          fail=0
 
-      - name: Set up Python
+          check() {
+            local f="$1"
+            echo "Checking: $f"
+            if jq -e . "$f" >/dev/null 2>&1; then
+              summary+="- ✅ $f\n"
+            else
+              summary+="- ❌ $f\n"
+              echo "::error file=$f::Invalid JSON"
+              fail=1
+            fi
+          }
+
+          # Web configs (support nested folders)
+          for f in web/app.config.json web/layers.json web/config/**/*.json; do
+            [ -e "$f" ] && check "$f"
+          done
+
+          # STAC JSON (catalog/collections/items)
+          for f in stac/**/*.json; do
+            [ -e "$f" ] && check "$f"
+          done
+
+          echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+          exit $fail
+
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: "pip"
 
-      - name: Cache pip (fallback)
+      - name: Cache pip (explicit)
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: >-
-            ${{ runner.os }}-pip-3.11-
-            ${{ hashFiles('**/requirements*.txt', 'pyproject.toml') }}
+          key: ${{ runner.os }}-pip-3.11-${{ hashFiles('**/requirements*.txt', 'pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-pip-3.11-
             ${{ runner.os }}-pip-
 
-      - name: Install dependencies (CLI, schema tools)
+      - name: Install dependencies (CLI + validators)
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          # Prefer dev requirements if present; else fall back to runtime
           if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt
           elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
-          # Ensure minimal toolchain even in scaffolding stages
-          pip install --upgrade jsonschema jinja2
-          # Install project (editable) if present so console_scripts like `kgt` are available
-          if [ -f pyproject.toml ]; then
-            pip install -e . || true
+
+          # Always ensure these are around for schema/render/validate
+          pip install --upgrade jsonschema jinja2 pystac stac-validator
+
+          # Install project (editable) so console_scripts like `kgt` resolve if provided
+          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
+            pip install -e ".[dev]" || pip install -e .
           fi
+
           python - <<'PY'
-import sys, jsonschema
+import sys, jsonschema, pystac
 print("Python:", sys.version.split()[0])
-print("jsonschema OK")
+print("jsonschema:", jsonschema.__version__)
+print("pystac:", pystac.__version__)
 PY
 
       - name: Detect renderer/CLI
@@ -98,47 +128,87 @@ PY
           set -euo pipefail
           if command -v kgt >/dev/null 2>&1; then
             echo "renderer=kgt" >> "$GITHUB_OUTPUT"
+          elif python -c "import importlib.util; import sys; sys.exit(0 if importlib.util.find_spec('src.kansas_geo_timeline.cli') else 3)"; then
+            echo "renderer=module" >> "$GITHUB_OUTPUT"
           else
-            python - <<'PY'
-import importlib.util, sys
-spec = importlib.util.find_spec("src.kansas_geo_timeline.cli")
-sys.exit(0 if spec is not None else 3)
-PY
-            if [ "$?" = "0" ]; then
-              echo "renderer=module" >> "$GITHUB_OUTPUT"
-            else
-              echo "renderer=none" >> "$GITHUB_OUTPUT"
-              echo "::warning title=Renderer not found::Neither 'kgt' nor module CLI available; will skip render."
-            fi
+            echo "renderer=none" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Renderer not found::Neither 'kgt' nor module CLI available; render will be skipped unless app.config.json already exists."
           fi
 
-      - name: Validate STAC items (prefer CLI)
+      - name: Validate STAC (catalog, collections, items)
         id: stac_validate
-        continue-on-error: false
+        shell: bash
         run: |
           set -euo pipefail
           mkdir -p .artifacts
-          case "${{ steps.detect_cli.outputs.renderer }}" in
-            kgt)
-              kgt validate-stac stac/items --report-json .artifacts/stac_report.json
-              ;;
-            module)
-              python -m src.kansas_geo_timeline.cli validate-stac stac/items --report-json .artifacts/stac_report.json
-              ;;
-            *)
-              # Soft fallback: basic presence check + JSON lint for items
-              echo "::notice title=CLI unavailable::Running lightweight checks."
-              if [ -d stac/items ]; then
-                find stac/items -type f -name "*.json" -print0 | xargs -0 -I{} jq -e . "{}" >/dev/null
+          summary="### STAC validation\n"
+          # Prefer the stac-validator CLI if present; otherwise fallback to pystac validation.
+          if command -v stac-validator >/dev/null 2>&1; then
+            echo "Using stac-validator CLI"
+            # Validate the root catalog if present; otherwise scan all json files.
+            if [ -f stac/catalog.json ]; then
+              if stac-validator stac/catalog.json --recursive --links > .artifacts/stac_validator.txt; then
+                summary+="- ✅ stac/catalog.json (recursive)\n"
               else
-                echo "::warning title=Missing STAC items::stac/items not found"
+                summary+="- ❌ stac/catalog.json (recursive)\n"
+                cat .artifacts/stac_validator.txt
+                echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+                exit 2
               fi
-              echo '{}' > .artifacts/stac_report.json
-              ;;
-          esac
+            else
+              # Fallback: validate each file we find
+              set +e
+              ok=1
+              for f in stac/**/*.json; do
+                [ -e "$f" ] || continue
+                stac-validator "$f" >> .artifacts/stac_validator.txt 2>&1 || ok=0
+              done
+              set -e
+              if [ $ok -eq 1 ]; then
+                summary+="- ✅ stac/**/*.json\n"
+              else
+                summary+="- ❌ stac/**/*.json (see artifact)\n"
+                echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+                cat .artifacts/stac_validator.txt
+                exit 2
+              fi
+            fi
+          else
+            echo "Using pystac validation"
+            python - <<'PY'
+import json, sys, pathlib
+import pystac
+root = pathlib.Path("stac")
+if not root.exists():
+    print("::warning ::No 'stac/' directory found; skipping STAC validation")
+    sys.exit(0)
+def validate(p: pathlib.Path):
+    try:
+        obj = pystac.read_file(str(p))
+        obj.validate()
+        return True, None
+    except Exception as e:
+        return False, str(e)
+bad = []
+for p in sorted(root.rglob("*.json")):
+    ok, err = validate(p)
+    if not ok:
+        bad.append((str(p), err))
+if bad:
+    for p, err in bad:
+        print(f"::error file={p}::{err}")
+    sys.exit(2)
+print("All STAC JSON passed pystac validation")
+PY
+            summary+="- ✅ pystac validation\n"
+          fi
+          echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+          # produce a tiny machine-readable summary
+          echo '{"status":"ok"}' > .artifacts/stac_report.json || echo '{}' > .artifacts/stac_report.json
 
       - name: Render web/app.config.json (from STAC)
         id: render_app_cfg
+        shell: bash
         run: |
           set -euo pipefail
           case "${{ steps.detect_cli.outputs.renderer }}" in
@@ -153,14 +223,16 @@ PY
               ;;
             *)
               if [ -f web/app.config.json ]; then
-                echo "::notice title=Using existing app.config.json::Renderer not available."
+                echo "::notice title=Renderer unavailable::Using existing web/app.config.json"
               else
-                echo "::warning title=No renderer and no app.config.json::Skipping render."
+                echo "::warning title=No renderer and no app.config.json::Skipping render step"
               fi
               ;;
           esac
           if [ -f web/app.config.json ]; then
-            jq -e . web/app.config.json >/dev/null || (echo "Invalid JSON in web/app.config.json" && exit 2)
+            jq -e . web/app.config.json >/dev/null
+            echo "### Render" >> "$GITHUB_STEP_SUMMARY"
+            echo "- ✅ web/app.config.json rendered/validated" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Schema-validate app.config.json (if schema present)
@@ -205,20 +277,14 @@ PY
             echo "::notice title=Schema or layers missing::Skipped layers.json schema validation"
           fi
 
-      - name: Upload STAC report
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stac-report-${{ github.run_id }}
-          path: .artifacts/stac_report.json
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Upload rendered app.config.json
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-config-${{ github.run_id }}
-          path: web/app.config.json
+          name: stac-${{ github.run_id }}
+          path: |
+            .artifacts/stac_report.json
+            .artifacts/stac_validator.txt
+            web/app.config.json
           if-no-files-found: warn
           retention-days: 14
