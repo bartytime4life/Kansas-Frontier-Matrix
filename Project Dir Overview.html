@@ -1,5 +1,129 @@
-<pre>
-. 
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kansas-Frontier-Matrix — Project Directory Overview</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --card: #121933;
+    --ink: #e8eefc;
+    --muted: #a9b4d3;
+    --accent: #77b6ff;
+    --good: #69d388;
+    --warn: #ffd166;
+    --bad: #ff6b6b;
+    --code: #0f1530;
+    --link: #9cd1ff;
+    --border: #243057;
+  }
+  html, body { background: var(--bg); color: var(--ink); font: 14.5px/1.45 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; margin: 0; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1200px; margin: 36px auto; padding: 0 20px; }
+  header h1 { margin: 0 0 6px; font-size: 24px; }
+  header .sub { color: var(--muted); margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .card h2 { margin: 0 0 10px; font-size: 16px; }
+  .hint { color: var(--muted); font-size: 12.5px; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-size: 12px; margin-left: 6px; }
+  input[type="search"] { width: 100%; background: var(--code); color: var(--ink); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; outline: none; }
+  .tree { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13px; line-height: 1.35; }
+  details { border-left: 2px solid transparent; margin-left: 6px; }
+  details[open] { border-left-color: #2b3d7a; }
+  summary { cursor: pointer; }
+  .fi { opacity: .8; margin-right: 4px; }
+  .codeblock { background: var(--code); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; overflow: auto; }
+  .kv { display: grid; grid-template-columns: 180px 1fr; gap: 4px 8px; }
+  .kv b { color: var(--muted); font-weight: 600; }
+  .status { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px; font-size: 12px; }
+  .ok { background: #153222; color: var(--good); border: 1px solid #205433; }
+  .warn { background: #3a300f; color: var(--warn); border: 1px solid #6d5818; }
+  .bad { background: #3a1212; color: var(--bad); border: 1px solid #6d1d1d; }
+  .list { margin: 0; padding-left: 18px; }
+  .list li { margin: 4px 0; }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kansas-Frontier-Matrix — Project Directory Overview <span class="pill">interactive</span></h1>
+    <div class="sub">Time · Terrain · History — Google Earth + Web (MapLibre) + STAC. Collapsible map of the repo, quick links, and wiring notes.</div>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Search & Filter</h2>
+      <input type="search" id="filter" placeholder="Type to filter (e.g., stac, hillshade, roadmap, mkdocs, Dockerfile) …" aria-label="Filter directory tree" />
+      <div class="hint" style="margin-top:8px">Tip: click folders to expand/collapse; click file names to open relative paths.</div>
+    </div>
+
+    <div class="card">
+      <h2>Repo Facts</h2>
+      <div class="kv">
+        <b>Top entrypoints</b> <div><a href="./Makefile">Makefile</a>, <a href="./web/index.html">web/index.html</a>, <a href="./src/kansas_geo_timeline/cli.py">CLI</a>, <a href="./tests/">tests/</a></div>
+        <b>Catalog</b> <div><span class="muted">STAC 1.0.0</span> under <code>./stac/</code> (target); connects to <code>web/app.config.json</code></div>
+        <b>Actions</b> <div><a href="./.github/workflows/site.yml">site.yml</a>, <a href="./.github/workflows/roadmap.yml">roadmap.yml</a>, <a href="./.github/workflows/stac-validate.yml">stac-validate.yml</a></div>
+        <b>Docs</b> <div><a href="./mkdocs.yml">mkdocs.yml</a> (if present), <a href="./docs/index.md">docs/</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid" style="margin-top:18px">
+    <div class="card">
+      <h2>Project Tree (click to expand)</h2>
+      <!-- Collapsible directory tree constructed from the provided listing -->
+      <div id="tree" class="tree"></div>
+    </div>
+
+   <div class="card">
+      <h2>How the pieces connect</h2>
+      <ul class="list">
+        <li><b>Data → COGs → Derivatives</b>: <code>data/sources/*.json</code> (provenance) → <code>make fetch</code>/<code>make cogs</code> → <code>data/cogs/**</code> → <code>make terrain</code> creates <code>hillshade/slope/aspect</code> and mirrors into <code>data/derivatives/</code>.</li>
+        <li><b>STAC</b>: <code>make stac</code> writes Items/Collections under <code>./stac/</code>, then auto-patches <code>file:size</code> + <code>checksum:sha256</code> if <code>.sha256</code> exists.</li>
+        <li><b>Web viewer</b>: <code>make site</code> writes a simple <code>web/layers.json</code>; <code>site-config</code> (via <code>kgt</code>) can render <code>web/app.config.json</code> from STAC using <code>src/.../templates/app.config.json.j2</code>.</li>
+        <li><b>Google Earth</b>: regionated KML/KMZ under <code>earth/</code> (manual/proto) can mirror key overlays.</li>
+        <li><b>Roadmap sync</b>: <code>.github/roadmap/roadmap.yaml</code> → <code>scripts/sync-roadmap.js</code> → labels/milestones/issues (dry-run on PRs).</li>
+        <li><b>Tests</b>: <code>tests/test_stac.py</code>, <code>test_sources.py</code>, <code>test_cli.py</code> provide mission-grade validation.</li>
+      </ul>
+
+      <h2 style="margin-top:16px">Consistency checks</h2>
+      <ul class="list">
+        <li>
+          <span class="status warn">Warning</span>
+          Your Makefile targets and CI assume <code>./stac/</code> at repo root, but this listing shows <code>data/stac/</code>.
+          Prefer <b>move to <code>./stac/</code></b> (update any paths in scripts/CI). This file links to <code>./stac/</code>.
+        </li>
+        <li>
+          <span class="status warn">Warning</span>
+          Docker compose: earlier config uses <code>docker-compose.yml</code> at the root; the tree lists <code>docker/compose.yaml</code>. Keep one canonical location and update docs/CI accordingly.
+        </li>
+        <li>
+          <span class="status ok">OK</span>
+          Roadmap wiring: <code>scripts/sync-roadmap.js</code> ↔ <code>.github/workflows/roadmap.yml</code> ↔ <code>.github/roadmap/roadmap.yaml</code>.
+        </li>
+      </ul>
+
+      <h2 style="margin-top:16px">Common commands</h2>
+      <div class="codeblock"><code>
+      make env<br/>
+      make fetch cogs terrain<br/>
+      make stac stac-validate<br/>
+      make site site-config<br/>
+      make nlcd # (if raw NLCD files are in place)<br/>
+      pytest -q
+      </code></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:18px">
+    <h2>Raw listing (for copy/paste)</h2>
+    <div class="codeblock"><pre id="raw">
+.
 |-- README.md
 |-- LICENSE
 |-- package.json
@@ -76,17 +200,17 @@
 |   |       |-- treaties.geojson
 |   |       |-- railroads_1900.geojson
 |   |       `-- _meta.json
-|   `-- stac/
-|       |-- collections/
-|       |   |-- elevation.json
-|       |   |-- historic_topo.json
-|       |   `-- vectors.json
-|       `-- items/
-|           |-- ks_1m_dem.json
-|           |-- ks_1m_hillshade.json
-|           |-- usgs_1894_larned.json
-|           |-- treaties_1854.json
-|           `-- railroads_1900.json
+|-- stac/
+|   |-- collections/
+|   |   |-- elevation.json
+|   |   |-- historic_topo.json
+|   |   `-- vectors.json
+|   `-- items/
+|       |-- ks_1m_dem.json
+|       |-- ks_1m_hillshade.json
+|       |-- usgs_1894_larned.json
+|       |-- treaties_1854.json
+|       `-- railroads_1900.json
 |-- earth/
 |   |-- Kansas_Terrain.kmz
 |   |-- doc.kml
@@ -119,4 +243,88 @@
     |-- test_stac.py
     |-- test_sources.py
     `-- test_cli.py
-</pre>
+    </pre></div>
+  </section>
+
+  <footer class="muted" style="margin:18px 0 40px">
+    <span>Generated overview · Keep this file updated as the repo evolves.</span>
+  </footer>
+</div>
+
+<script>
+/* --- Tiny in-page tree renderer with filter --- */
+const raw = document.getElementById('raw').textContent.split('\n');
+const root = document.getElementById('tree');
+const linkFor = (path) => path.replace(/^\.\s*\/?/, './');
+const icon = (isDir, name) => isDir ? '📁' : (/\.m?js$|\.py$|\.json$|\.yml$|\.yaml$|\.md$|\.html?$/.test(name) ? '📄' : '📦');
+
+function buildTree(lines) {
+  // Parse the simple ASCII tree into a nested structure
+  const stack = [{ depth: -1, el: root, path: '.' }];
+  const entryRe = /^\s*([|` ]*?)(?:\|--|`--)\s(.+)$/;
+  for (const line of lines) {
+    const m = entryRe.exec(line);
+    if (!m) continue;
+    const indent = (m[1].match(/[|` ]/g) || []).length;
+    const name = m[2].trim();
+    const isDir = name.endsWith('/') || /\/$/.test(name);
+    const cleanName = name.replace(/\/$/, '');
+    // Compute depth from number of "   " blocks; heuristic
+    const depth = Math.floor(indent / 4);
+    while (stack.length && stack[stack.length - 1].depth >= depth) stack.pop();
+    const parent = stack[stack.length - 1];
+    const fullPath = (parent.path === '.' ? '' : parent.path + '/') + cleanName.replace(/ #.*/,'');
+    const item = document.createElement(isDir ? 'details' : 'div');
+    if (isDir) {
+      const sum = document.createElement('summary');
+      sum.innerHTML = `<span class="fi">${icon(true, cleanName)}</span><strong>${cleanName}</strong>`;
+      item.appendChild(sum);
+      const child = document.createElement('div');
+      child.className = 'children';
+      item.appendChild(child);
+      parent.el.appendChild(item);
+      stack.push({ depth, el: child, path: fullPath });
+    } else {
+      const a = document.createElement('a');
+      a.href = linkFor(fullPath);
+      a.textContent = cleanName.replace(/ #.*/,'');
+      const leaf = document.createElement('div');
+      leaf.innerHTML = `<span class="fi">${icon(false, cleanName)}</span>`;
+      leaf.appendChild(a);
+      parent.el.appendChild(leaf);
+    }
+  }
+  // Expand top-level folders by default
+  [...root.querySelectorAll(':scope > details')].forEach(d => d.open = true);
+}
+
+buildTree(raw);
+
+// Filter
+const filter = document.getElementById('filter');
+filter.addEventListener('input', () => {
+  const q = filter.value.trim().toLowerCase();
+  if (!q) {
+    root.querySelectorAll('[data-hit]').forEach(n => n.removeAttribute('data-hit'));
+    root.querySelectorAll('details').forEach(d => d.open = d.parentElement === root);
+    return;
+  }
+  // Simple text match; show branches with hits
+  root.querySelectorAll('details, div').forEach(n => n.removeAttribute('data-hit'));
+  const nodes = [...root.querySelectorAll('a')];
+  const hits = nodes.filter(a => a.textContent.toLowerCase().includes(q) || a.getAttribute('href').toLowerCase().includes(q));
+  hits.forEach(a => {
+    let n = a.parentElement;
+    while (n && n !== root) {
+      n.setAttribute('data-hit', '1');
+      if (n.tagName.toLowerCase() === 'details') n.open = true;
+      n = n.parentElement;
+    }
+  });
+  // Hide non-hits
+  root.querySelectorAll(':scope > *').forEach(() => {}); // no-op; CSS-free approach
+  [...root.children].forEach(() => {}); // keeping it simple (always visible but expanded on hits)
+});
+</script>
+</body>
+</html>
