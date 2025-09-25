@@ -1,0 +1,41 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "ks_kansas_river_centerline_2020",
+  "collection": "ks_kansas_river",
+  "properties": {
+    "start_datetime": "2020-01-01T00:00:00Z",
+    "end_datetime": "2020-12-31T23:59:59Z"
+  },
+  "bbox": [-96.95, 38.80, -94.60, 39.20],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-96.95, 38.80], [-94.60, 38.80], [-94.60, 39.20], [-96.95, 39.20], [-96.95, 38.80]
+    ]]
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "../collections/ks_kansas_river.json"
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "../collections/ks_kansas_river.json"
+    },
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "../catalog.json"
+    }
+  ],
+  "assets": {
+    "data": {
+      "href": "data/processed/ks_kansas_river_centerline_2020.geojson",
+      "type": "application/geo+json",
+      "title": "Kansas River centerline (2020)"
+    }
+  }
+}
