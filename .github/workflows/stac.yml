@@ -1,3 +1,4 @@
+# .github/workflows/stac.yml
 name: STAC & Config
 
 on:
@@ -21,10 +22,19 @@ on:
       - ".github/workflows/stac.yml"
   workflow_dispatch:
 
+# Keep runs from stepping on each other and follow least-privilege defaults
+concurrency:
+  group: stac-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   validate-and-render:
     name: Validate STAC & Render app.config.json
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -32,99 +42,141 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Quick JSON syntax guardrail for common config files
+      - name: Validate JSON syntax with jq
+        run: |
+          set -euo pipefail
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends jq
+          check() { [ -f "$1" ] && echo "Checking: $1" && jq -e . "$1" >/dev/null; }
+          check web/app.config.json || true
+          check web/layers.json || true
+          for f in web/config/*.json; do [ -e "$f" ] && jq -e . "$f" >/dev/null; done
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
 
-      - name: Cache pip
+      - name: Cache pip (fallback)
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: >-
             ${{ runner.os }}-pip-3.11-
-            ${{ hashFiles('**/requirements*.txt', 'pyproject.toml', 'src/**', 'web/config/*.json') }}
+            ${{ hashFiles('**/requirements*.txt', 'pyproject.toml') }}
           restore-keys: |
             ${{ runner.os }}-pip-3.11-
             ${{ runner.os }}-pip-
 
-      - name: Install minimal deps (and package if present)
+      - name: Install dependencies (CLI, schema tools)
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
+          # Prefer dev requirements if present; else fall back to runtime
           if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt
           elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
-          else
-            # minimal toolchain for this job
-            pip install jsonschema jinja2
           fi
-          # install project (editable) if pyproject exists
+          # Ensure minimal toolchain even in scaffolding stages
+          pip install --upgrade jsonschema jinja2
+          # Install project (editable) if present so console_scripts like `kgt` are available
           if [ -f pyproject.toml ]; then
             pip install -e . || true
           fi
-          python -c "import sys,jsonschema; print('jsonschema OK')"
+          python - <<'PY'
+import sys, jsonschema
+print("Python:", sys.version.split()[0])
+print("jsonschema OK")
+PY
 
-      - name: Validate STAC Items (if CLI available)
-        id: stac_validate
+      - name: Detect renderer/CLI
+        id: detect_cli
+        shell: bash
         run: |
           set -euo pipefail
-          if python - <<'PY'
+          if command -v kgt >/dev/null 2>&1; then
+            echo "renderer=kgt" >> "$GITHUB_OUTPUT"
+          else
+            python - <<'PY'
 import importlib.util, sys
 spec = importlib.util.find_spec("src.kansas_geo_timeline.cli")
 sys.exit(0 if spec is not None else 3)
 PY
-          then
-            python -m src.kansas_geo_timeline.cli validate-stac stac/items --report-json _stac_report.json
-            echo "ran_cli=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning title=STAC CLI not found::Skipping CLI validation (scaffolding stage)."
-            # produce a placeholder report so artifact step succeeds
-            echo '{}' > _stac_report.json
-            echo "ran_cli=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Render web/app.config.json (from STAC via CLI if available)
-        id: render_app_cfg
-        run: |
-          set -euo pipefail
-          if [ "${{ steps.stac_validate.outputs.ran_cli }}" = "true" ]; then
-            python -m src.kansas_geo_timeline.cli render-config \
-              --stac stac/items \
-              --output web/app.config.json \
-              --pretty
-            echo "rendered=true" >> "$GITHUB_OUTPUT"
-          else
-            # If CLI missing but a config already exists, just format-check it
-            if [ -f web/app.config.json ]; then
-              python - <<'PY'
-import json,sys
-p="web/app.config.json"
-json.load(open(p,encoding="utf-8"))
-print("Existing app.config.json is valid JSON")
-PY
-              echo "rendered=false" >> "$GITHUB_OUTPUT"
+            if [ "$?" = "0" ]; then
+              echo "renderer=module" >> "$GITHUB_OUTPUT"
             else
-              echo "::warning title=No renderer and no existing app.config.json::Skipping render."
-              echo "rendered=false" >> "$GITHUB_OUTPUT"
+              echo "renderer=none" >> "$GITHUB_OUTPUT"
+              echo "::warning title=Renderer not found::Neither 'kgt' nor module CLI available; will skip render."
             fi
           fi
 
-      - name: Schema-validate rendered app.config.json (if present)
+      - name: Validate STAC items (prefer CLI)
+        id: stac_validate
+        continue-on-error: false
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts
+          case "${{ steps.detect_cli.outputs.renderer }}" in
+            kgt)
+              kgt validate-stac stac/items --report-json .artifacts/stac_report.json
+              ;;
+            module)
+              python -m src.kansas_geo_timeline.cli validate-stac stac/items --report-json .artifacts/stac_report.json
+              ;;
+            *)
+              # Soft fallback: basic presence check + JSON lint for items
+              echo "::notice title=CLI unavailable::Running lightweight checks."
+              if [ -d stac/items ]; then
+                find stac/items -type f -name "*.json" -print0 | xargs -0 -I{} jq -e . "{}" >/dev/null
+              else
+                echo "::warning title=Missing STAC items::stac/items not found"
+              fi
+              echo '{}' > .artifacts/stac_report.json
+              ;;
+          esac
+
+      - name: Render web/app.config.json (from STAC)
+        id: render_app_cfg
+        run: |
+          set -euo pipefail
+          case "${{ steps.detect_cli.outputs.renderer }}" in
+            kgt)
+              kgt render-config --stac stac/items --output web/app.config.json --pretty
+              ;;
+            module)
+              python -m src.kansas_geo_timeline.cli render-config \
+                --stac stac/items \
+                --output web/app.config.json \
+                --pretty
+              ;;
+            *)
+              if [ -f web/app.config.json ]; then
+                echo "::notice title=Using existing app.config.json::Renderer not available."
+              else
+                echo "::warning title=No renderer and no app.config.json::Skipping render."
+              fi
+              ;;
+          esac
+          if [ -f web/app.config.json ]; then
+            jq -e . web/app.config.json >/dev/null || (echo "Invalid JSON in web/app.config.json" && exit 2)
+          fi
+
+      - name: Schema-validate app.config.json (if schema present)
         if: always()
         run: |
           set -euo pipefail
           if [ -f web/app.config.json ] && [ -f web/config/app.config.schema.json ]; then
             python - <<'PY'
-import json,sys
+import json, sys
 from jsonschema import Draft202012Validator
-cfg=json.load(open("web/app.config.json",encoding="utf-8"))
-sch=json.load(open("web/config/app.config.schema.json",encoding="utf-8"))
-errs=sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e:e.path)
+cfg = json.load(open("web/app.config.json", encoding="utf-8"))
+sch = json.load(open("web/config/app.config.schema.json", encoding="utf-8"))
+errs = sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e: e.path)
 if errs:
     for e in errs:
-        print("-", "/".join(map(str,e.path)), ":", e.message)
+        print("-", "/".join(map(str, e.path)), ":", e.message)
     sys.exit(2)
 print("app.config.json ✔ schema-valid")
 PY
@@ -132,20 +184,20 @@ PY
             echo "::notice title=Schema or config missing::Skipped app.config.json schema validation"
           fi
 
-      - name: Validate layers.json against schema (if present)
+      - name: Schema-validate layers.json (if present)
         if: always()
         run: |
           set -euo pipefail
           if [ -f web/layers.json ] && [ -f web/config/layers.schema.json ]; then
             python - <<'PY'
-import json,sys
+import json, sys
 from jsonschema import Draft202012Validator
-cfg=json.load(open("web/layers.json",encoding="utf-8"))
-sch=json.load(open("web/config/layers.schema.json",encoding="utf-8"))
-errs=sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e:e.path)
+cfg = json.load(open("web/layers.json", encoding="utf-8"))
+sch = json.load(open("web/config/layers.schema.json", encoding="utf-8"))
+errs = sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e: e.path)
 if errs:
     for e in errs:
-        print("-", "/".join(map(str,e.path)), ":", e.message)
+        print("-", "/".join(map(str, e.path)), ":", e.message)
     sys.exit(2)
 print("layers.json ✔ schema-valid")
 PY
@@ -157,12 +209,16 @@ PY
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stac-report
-          path: _stac_report.json
+          name: stac-report-${{ github.run_id }}
+          path: .artifacts/stac_report.json
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload rendered app.config.json
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: app-config
+          name: app-config-${{ github.run_id }}
           path: web/app.config.json
+          if-no-files-found: warn
+          retention-days: 14
