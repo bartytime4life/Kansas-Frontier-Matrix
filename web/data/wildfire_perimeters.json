@@ -4,9 +4,23 @@
   "type": "vector",
   "data": "data/processed/wildfire_perimeters.json",
   "category": "hazards",
+
   "time": { "start": "2000-01-01", "end": null },
   "timeProperty": "year",
-  "style": { "lineColor": "#E63946", "fillColor": "#E76F51", "fillOpacity": 0.25 },
+
+  "popup": ["incident_name", "year", "year_end", "acres", "cause", "source"],
+
+  "style": {
+    "lineColor": "#E63946",
+    "lineWidth": 1.0,
+    "lineOpacity": 0.9,
+    "fillColor": "#E76F51",
+    "fillOpacity": 0.25
+  },
+
+  "minzoom": 5,
+  "maxzoom": 14,
+
   "visible": false,
   "attribution": "NIFC / Kansas Forest Service"
 }
