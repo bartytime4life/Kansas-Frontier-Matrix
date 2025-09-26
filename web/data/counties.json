@@ -1,1 +1,12 @@
-
+{
+  "id": "ks_counties",
+  "title": "Kansas Counties (historical)",
+  "type": "vector",
+  "data": "data/processed/counties_timeslices.json",
+  "category": "reference",
+  "time": { "start": "1855-01-01", "end": null },
+  "timeProperty": "valid",
+  "style": { "lineColor": "#222", "lineWidth": 0.8, "fillOpacity": 0.0 },
+  "visible": false,
+  "attribution": "Kansas DASC / Archive"
+}
