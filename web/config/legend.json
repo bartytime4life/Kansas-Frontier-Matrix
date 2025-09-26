@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-09-26T00:00:00Z",
+  "symbols": {
+    "treaties": {
+      "fillColor": "#FFCA3A",
+      "lineColor": "#B08900",
+      "lineWidth": 2,
+      "fillOpacity": 0.4
+    },
+    "trails": {
+      "lineColor": "#4361EE",
+      "lineWidth": 2,
+      "lineDasharray": [2, 2]
+    },
+    "railroads": {
+      "lineColor": "#8D99AE",
+      "lineWidth": 2
+    },
+    "settlements": {
+      "circleColor": "#FF595E",
+      "circleRadius": 4,
+      "circleStrokeColor": "#333",
+      "circleStrokeWidth": 0.5
+    },
+    "forts": {
+      "circleColor": "#6A4C93",
+      "circleRadius": 5,
+      "circleStrokeColor": "#fff",
+      "circleStrokeWidth": 1
+    },
+    "water": {
+      "lineColor": "#3A86FF",
+      "lineWidth": 1.2,
+      "fillColor": "#A0C4FF",
+      "fillOpacity": 0.5
+    },
+    "landcover": {
+      "fillColor": "#90BE6D",
+      "fillOpacity": 0.6,
+      "lineColor": "#2D6A4F",
+      "lineWidth": 0.5
+    },
+    "soils": {
+      "fillColor": "#FFD6A5",
+      "fillOpacity": 0.5,
+      "lineColor": "#9C6644",
+      "lineWidth": 0.5
+    },
+    "tornado": {
+      "lineColor": "#D00000",
+      "lineWidth": 2.5,
+      "lineDasharray": [1, 3]
+    },
+    "wildfire": {
+      "fillColor": "#E76F51",
+      "fillOpacity": 0.6,
+      "lineColor": "#B23A48",
+      "lineWidth": 1.2
+    },
+    "flood": {
+      "fillColor": "#4D96FF",
+      "fillOpacity": 0.4,
+      "lineColor": "#26547C",
+      "lineWidth": 1
+    },
+    "drought": {
+      "fillColor": "#E9C46A",
+      "fillOpacity": 0.3,
+      "lineColor": "#C19A00",
+      "lineWidth": 1
+    }
+  },
+  "categories": {
+    "culture": ["treaties", "trails", "railroads", "settlements", "forts"],
+    "environment": ["water", "landcover", "soils"],
+    "hazards": ["tornado", "wildfire", "flood", "drought"]
+  },
+  "attribution": "Kansas-Frontier-Matrix — compiled from USGS, NOAA, FEMA, KGS, KSRODS"
+}
