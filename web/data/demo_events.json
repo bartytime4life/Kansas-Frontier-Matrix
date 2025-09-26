@@ -1,14 +1,25 @@
 {
   "type": "FeatureCollection",
+  "name": "Kansas Demo Events",
+  "bbox": [-98.0, 38.5, -95.6775, 39.055],
+  "attribution": "Demo events for UI wiring. © Public Domain / compiled.",
   "features": [
     {
       "type": "Feature",
+      "id": "event_1854",
       "properties": {
         "id": "event_1854",
         "title": "Kansas-Nebraska Act",
         "date": "1854-05-30",
+        "time": { "start": "1854-05-30", "end": "1854-05-30" },
         "desc": "The Kansas-Nebraska Act created the territories of Kansas and Nebraska, opening new lands for settlement.",
-        "place": "Territory of Kansas"
+        "place": "Territory of Kansas",
+        "category": "legislation",
+        "tags": ["territory", "statehood", "bleeding-kansas"],
+        "license": "CC0-1.0",
+        "source": "Demo entry for timeline wiring",
+        "marker-color": "#2563eb",
+        "marker-size": "medium"
       },
       "geometry": {
         "type": "Point",
@@ -17,12 +28,20 @@
     },
     {
       "type": "Feature",
+      "id": "event_1861",
       "properties": {
         "id": "event_1861",
         "title": "Kansas Statehood",
         "date": "1861-01-29",
+        "time": { "start": "1861-01-29", "end": "1861-01-29" },
         "desc": "Kansas admitted as the 34th state of the United States.",
-        "place": "Topeka"
+        "place": "Topeka",
+        "category": "statehood",
+        "tags": ["statehood", "union"],
+        "license": "CC0-1.0",
+        "source": "Demo entry for timeline wiring",
+        "marker-color": "#22c55e",
+        "marker-size": "medium"
       },
       "geometry": {
         "type": "Point",
@@ -31,12 +50,20 @@
     },
     {
       "type": "Feature",
+      "id": "event_1874",
       "properties": {
         "id": "event_1874",
         "title": "Grasshopper Plague",
-        "year": 1874,
+        "date": "1874-01-01",
+        "time": { "start": "1874-01-01", "end": "1874-12-31" },
         "desc": "Rocky Mountain locust swarms devastated Kansas crops.",
-        "place": "Central Kansas"
+        "place": "Central Kansas",
+        "category": "disaster",
+        "tags": ["agriculture", "locusts"],
+        "license": "CC0-1.0",
+        "source": "Demo entry for timeline wiring (year-only normalized)",
+        "marker-color": "#d97706",
+        "marker-size": "medium"
       },
       "geometry": {
         "type": "Point",
@@ -45,4 +72,3 @@
     }
   ]
 }
-
