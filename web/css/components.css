@@ -1,1 +1,144 @@
+/* web/css/components.css
+   Kansas-Frontier-Matrix — UI Components
+   ---------------------------------------
+   Reusable component styles for buttons, cards,
+   sliders, toggles, popups, and tooltips.
+   These extend layout.css and theme.css.
+*/
 
+/* --- Buttons --- */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  background: var(--color-bg, #f9f9f9);
+  color: var(--color-text, #333);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+  background: var(--color-accent-light, #e6f0ff);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.btn-primary {
+  background: var(--color-accent, #0066cc);
+  color: #fff;
+  border: none;
+}
+.btn-primary:hover {
+  background: var(--color-accent-dark, #004a99);
+}
+
+/* --- Cards (for layer info, popups, panels) --- */
+.card {
+  background: var(--color-bg, #fff);
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.card h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.card small {
+  color: var(--color-muted, #666);
+}
+
+/* --- Sliders (timeline, opacity controls) --- */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-track, #ddd);
+  outline: none;
+  margin: 0.5rem 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent, #0066cc);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--color-accent-dark, #004a99);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent, #0066cc);
+  cursor: pointer;
+}
+
+/* --- Toggle switches (layer visibility) --- */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 20px;
+}
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px; width: 14px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+.toggle input:checked + .toggle-slider {
+  background-color: var(--color-accent, #0066cc);
+}
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(18px);
+}
+
+/* --- Popups & Tooltips --- */
+.popup {
+  background: var(--color-bg, #fff);
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.tooltip {
+  position: absolute;
+  background: #333;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 9999;
+}
+.tooltip.show {
+  opacity: 1;
+}
