@@ -1,69 +1,60 @@
 {
   "version": "1.0.0",
   "generated": "2025-09-26T00:00:00Z",
-
-  "defaults": {
-    "fillOpacity": 0.6,
-    "lineWidth": 1.0,
-    "lineJoin": "round",
-    "lineCap": "round",
-    "circleRadius": 4,
-    "circleStrokeColor": "#ffffff",
-    "circleStrokeWidth": 0.8,
-    "lineOpacity": 1.0,
-    "lineDasharray": [1, 0]
-  },
-
   "symbols": {
+    "basemap": {
+      "fillColor": "#E5E5E5",
+      "lineColor": "#CCCCCC"
+    },
     "treaties": {
-      "renderer": "fill",
       "fillColor": "#FFCA3A",
-      "fillOpacity": 0.45,
       "lineColor": "#B08900",
-      "lineWidth": 1.0
+      "lineWidth": 1.2
     },
-
     "trails": {
-      "renderer": "line",
       "lineColor": "#4361EE",
-      "lineWidth": 1.2,
-      "lineDasharray": [2, 2],
-      "lineOpacity": 0.9
+      "lineWidth": 2.0,
+      "lineDasharray": [2, 2]
     },
-
     "railroads": {
-      "renderer": "line",
       "lineColor": "#8D99AE",
-      "lineWidth": 1.2,
-      "lineOpacity": 0.95
+      "lineWidth": 1.5
     },
-
-    "tornado": {
-      "renderer": "circle",
-      "circleColor": "#D00000",
+    "hydrology": {
+      "lineColor": "#3A86FF",
+      "lineWidth": 1.0,
+      "fillColor": "#A0C4FF"
+    },
+    "settlements": {
+      "circleColor": "#6A4C93",
       "circleRadius": 4,
       "circleStrokeColor": "#ffffff",
-      "circleStrokeWidth": 0.9,
-      "lineColor": "#D00000"
+      "circleStrokeWidth": 1
     },
-
+    "tornado": {
+      "lineColor": "#D00000",
+      "lineWidth": 2.5,
+      "lineDasharray": [4, 2]
+    },
     "wildfire": {
-      "renderer": "fill",
       "fillColor": "#E76F51",
-      "fillOpacity": 0.5,
-      "lineColor": "#8C3C2A",
-      "lineWidth": 0.8
+      "lineColor": "#B23A2B",
+      "fillOpacity": 0.5
+    },
+    "landcover": {
+      "fillOpacity": 0.6
+    },
+    "elevation": {
+      "rasterOpacity": 0.8
     }
   },
-
-  "legend": {
-    "type": "mixed",
-    "items": [
-      { "id": "treaties",  "label": "Treaty Areas",         "fill": "#FFCA3A", "stroke": "#B08900" },
-      { "id": "trails",    "label": "Historic Trails",      "stroke": "#4361EE", "dash": [2, 2] },
-      { "id": "railroads", "label": "Railroads",            "stroke": "#8D99AE" },
-      { "id": "tornado",   "label": "Tornado Reports",      "fill": "#D00000", "shape": "circle" },
-      { "id": "wildfire",  "label": "Wildfire Perimeters",  "fill": "#E76F51", "stroke": "#8C3C2A" }
-    ]
+  "categories": {
+    "reference": ["basemap"],
+    "environment": ["hydrology", "landcover", "elevation", "wildfire", "tornado"],
+    "historical": ["treaties", "trails", "railroads", "settlements"]
+  },
+  "notes": {
+    "projection": "EPSG:4326",
+    "styleGuide": "Colors follow cartographic conventions: blue for water, green/brown for environment, yellow for treaties/lands, red/orange for hazards."
   }
 }
