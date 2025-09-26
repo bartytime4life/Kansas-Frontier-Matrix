@@ -14,11 +14,10 @@
     "defaults": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["minzoom", "maxzoom", "tileSize", "visible", "opacity", "bounds", "time"],
+      "required": ["minzoom", "maxzoom", "visible", "opacity", "time"],
       "properties": {
         "minzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
         "maxzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
-        "tileSize": { "type": "integer", "enum": [256, 512] },
         "visible":  { "type": "boolean" },
         "opacity":  { "type": "number", "minimum": 0, "maximum": 1 },
         "bounds": {
@@ -37,8 +36,12 @@
       "additionalProperties": false,
       "required": ["min", "max"],
       "properties": {
-        "min": { "type": "string", "format": "date" },
-        "max": { "type": "string", "format": "date" }
+        "min":         { "type": "string", "format": "date" },
+        "max":         { "type": "string", "format": "date" },
+        "defaultYear": { "type": ["integer", "null"] },
+        "step":        { "type": ["integer", "null"], "minimum": 1 },
+        "fps":         { "type": ["integer", "null"], "minimum": 1, "maximum": 60 },
+        "loop":        { "type": ["boolean", "null"] }
       }
     },
 
@@ -71,6 +74,7 @@
         "minzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
         "maxzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
         "tileSize":   { "type": ["integer", "null"], "enum": [256, 512, null] },
+        "crossOrigin":{ "type": ["string", "null"] },
         "visible":    { "type": "boolean" },
         "bounds": {
           "type": "array",
@@ -82,9 +86,32 @@
         "attribution": { "type": ["string", "null"] },
         "category": {
           "type": ["string", "null"],
-          "enum": ["reference", "terrain", "historical", "infrastructure", "documents", null]
+          "enum": [
+            "reference",
+            "terrain",
+            "historical",
+            "infrastructure",
+            "documents",
+            "environment",
+            "culture",
+            null
+          ]
         },
-        "paint": { "$ref": "#/$defs/paint" }
+
+        /* Presentation (either MapLibre-like paint or app-level style) */
+        "paint": { "$ref": "#/$defs/paint" },
+        "style": { "$ref": "#/$defs/style" },
+
+        /* Optional UI helpers for GeoJSON/vector */
+        "popup": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "timeProperty": { "type": ["string", "null"] },
+        "endTimeProperty": { "type": ["string", "null"] },
+
+        /* Optional legend mapping token */
+        "legendSymbol": { "type": ["string", "null"] }
       },
       "required": ["id", "title", "url"]
     },
@@ -94,17 +121,41 @@
       "description": "Loose MapLibre paint keys for simple styling.",
       "additionalProperties": false,
       "properties": {
-        "line-color":       { "type": "string" },
-        "line-width":       { "type": "number" },
-        "line-opacity":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "line-color":         { "type": "string" },
+        "line-width":         { "type": "number" },
+        "line-opacity":       { "type": "number", "minimum": 0, "maximum": 1 },
 
-        "fill-color":       { "type": "string" },
-        "fill-opacity":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "fill-color":         { "type": "string" },
+        "fill-opacity":       { "type": "number", "minimum": 0, "maximum": 1 },
         "fill-outline-color": { "type": "string" },
 
-        "circle-color":     { "type": "string" },
-        "circle-radius":    { "type": "number" },
-        "circle-opacity":   { "type": "number", "minimum": 0, "maximum": 1 }
+        "circle-color":       { "type": "string" },
+        "circle-radius":      { "type": "number" },
+        "circle-opacity":     { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+
+    "style": {
+      "type": "object",
+      "description": "App-level vector styling (camelCase).",
+      "additionalProperties": false,
+      "properties": {
+        "lineColor": { "type": "string" },
+        "lineWidth": { "type": "number" },
+        "lineOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+
+        "fillColor": { "type": "string" },
+        "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fillOutlineColor": { "type": "string" },
+
+        "circleColor": { "type": "string" },
+        "circleRadius": { "type": "number" },
+        "circleOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+
+        "lineDasharray": {
+          "type": "array",
+          "items": { "type": "number" }
+        }
       }
     },
 
@@ -114,7 +165,9 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "properties": { "type": { "const": "raster" } },
+          "properties": {
+            "type": { "const": "raster" }
+          },
           "required": ["type"]
         }
       ]
@@ -126,7 +179,11 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "properties": { "type": { "const": "raster-dem" } },
+          "properties": {
+            "type": { "const": "raster-dem" },
+            "terrain": { "type": ["boolean", "null"] },
+            "terrainExaggeration": { "type": ["number", "null"] }
+          },
           "required": ["type"]
         }
       ]
