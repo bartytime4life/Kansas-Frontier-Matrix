@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "generated": "2025-09-25T21:00:00Z",
+  "version": "1.2.0",
+  "generated": "2025-09-25T21:30:00Z",
   "defaults": {
     "minzoom": 0,
     "maxzoom": 14,
@@ -26,60 +26,56 @@
       "visible": true
     },
     {
-      "id": "ks_lidar_hillshade_2018",
-      "title": "Kansas LiDAR Hillshade (2018)",
-      "type": "raster-dem",
-      "url": "../data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
+      "id": "ks_hillshade_2018",
+      "title": "Kansas Hillshade (LiDAR-derived, 2018)",
+      "type": "raster",
+      "url": "./data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
       "opacity": 0.85,
       "attribution": "Kansas Data Access & Support Center",
       "category": "terrain",
-      "time": {
-        "start": "2018-01-01",
-        "end": "2018-12-31"
-      },
+      "time": { "start": "2018-01-01", "end": "2018-12-31" },
       "visible": false
     },
     {
       "id": "usgs_topo_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
       "type": "raster",
-      "url": "../data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "url": "./data/cogs/overlays/usgs_topo_larned_1894.tif",
       "opacity": 0.75,
       "attribution": "USGS Historical Topographic Map Collection",
       "category": "historical",
-      "time": {
-        "start": "1894-01-01",
-        "end": "1894-12-31"
-      },
+      "time": { "start": "1894-01-01", "end": "1894-12-31" },
       "visible": false
     },
     {
       "id": "ks_treaties",
       "title": "Kansas Treaties & Land Cessions",
-      "type": "vector",
-      "url": "../data/vectors/ks_treaties.json",
+      "type": "geojson",
+      "url": "./data/vectors/ks_treaties.json",
       "opacity": 0.9,
       "attribution": "Kansas Historical Society",
       "category": "documents",
-      "time": {
-        "start": "1800-01-01",
-        "end": "1900-12-31"
-      },
-      "visible": false
+      "time": { "start": "1800-01-01", "end": "1900-12-31" },
+      "visible": false,
+      "paint": {
+        "fill-color": "rgba(200, 60, 60, 0.35)",
+        "fill-outline-color": "#a33"
+      }
     },
     {
       "id": "ks_railroads",
       "title": "Kansas Railroads (19th c.)",
-      "type": "vector",
-      "url": "../data/vectors/ks_railroads.json",
+      "type": "geojson",
+      "url": "./data/vectors/ks_railroads.json",
       "opacity": 0.9,
       "attribution": "Kansas Historical GIS",
       "category": "infrastructure",
-      "time": {
-        "start": "1850-01-01",
-        "end": "1950-12-31"
-      },
-      "visible": false
+      "time": { "start": "1850-01-01", "end": "1950-12-31" },
+      "visible": false,
+      "paint": {
+        "line-color": "#6b4e16",
+        "line-width": 1.5
+      }
     }
   ]
 }
