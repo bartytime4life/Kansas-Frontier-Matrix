@@ -1,1 +1,14 @@
-
+{
+  "id": "basemap_osm",
+  "title": "Basemap — OpenStreetMap",
+  "type": "raster",
+  "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "attribution": "© OpenStreetMap contributors",
+  "category": "reference",
+  "time": { "start": null, "end": null },
+  "minzoom": 0,
+  "maxzoom": 19,
+  "tileSize": 256,
+  "visible": true,
+  "opacity": 1.0
+}
