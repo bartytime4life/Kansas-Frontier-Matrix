@@ -11,146 +11,188 @@
 
   <!-- App styles -->
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml"/>
-  <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="./app.css"/>
+  <style>
+    /* minimal extra polish specific to this page */
+    .brand { display:flex; align-items:center; gap:10px; font-weight:700; }
+    .brand img { width:24px; height:24px; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .layer-meta { font-size: 11px; color: var(--muted); }
+  </style>
 </head>
 <body>
-  <div class="app">
-    <!-- Header -->
-    <header class="header" role="banner">
-      <div class="header__inner">
-        <div class="brand">
-          <img src="./assets/logo.png" alt="" aria-hidden="true"/>
-          <span>Kansas-Frontier-Matrix</span>
-        </div>
-        <div class="header__spacer"></div>
-        <div class="header__actions">
-          <a class="btn" href="https://github.com/bartytime4life/Kansas-Frontier-Matrix" target="_blank" rel="noopener">GitHub</a>
-          <button id="btn-reset" class="btn" type="button" title="Reset view">Reset</button>
-        </div>
+  <!-- Map (left) and Sidebar (right) are laid out by app.css -->
+  <div id="map" aria-label="Time-aware map of Kansas"></div>
+
+  <aside id="sidebar" class="kfm-sidebar" role="complementary" aria-label="Controls and layer list">
+    <div class="header">
+      <h2 id="app-title">Kansas-Frontier-Matrix</h2>
+      <div class="sub" id="app-subtitle">Time-aware historical GIS for Kansas</div>
+      <div class="mt-8">
+        <button id="btn-reset" class="btn" type="button" title="Reset view">Reset view</button>
+        <a class="btn" href="https://github.com/bartytime4life/Kansas-Frontier-Matrix" target="_blank" rel="noopener">GitHub</a>
       </div>
-    </header>
+    </div>
 
-    <!-- Map -->
-    <main class="map-wrapper" role="main">
-      <div id="map" aria-label="Time-aware map of Kansas"></div>
+    <!-- Time controls -->
+    <section id="timebox" class="section" role="region" aria-label="Timeline filter">
+      <div class="label">
+        <strong>Timeline</strong>
+        <span class="dim mono" id="time-range"></span>
+      </div>
+      <div class="mt-8" aria-live="polite">
+        <input id="year" class="range--fill" type="range" min="1850" max="2025" step="1" value="1930" aria-label="Filter layers by year"/>
+        <span id="yearLabel" class="mono">1930</span>
+      </div>
+      <div id="status" class="dim mt-8" role="status" aria-live="polite"></div>
+    </section>
 
-      <!-- Controls -->
-      <section class="controls fade-in" role="region" aria-label="Map controls">
-        <div class="controls__section">
-          <div class="label">Timeline</div>
-          <div class="year-row">
-            <input id="year" type="range" min="1850" max="2025" step="1" value="1930" aria-label="Filter layers by year"/>
-            <output id="year-label" for="year">1930</output>
-          </div>
-          <div id="status" class="muted" aria-live="polite"></div>
-        </div>
+    <!-- Layer list -->
+    <section id="layerbox" class="section" role="region" aria-label="Layer list">
+      <details open>
+        <summary>Layers</summary>
+        <div id="layers"></div>
+      </details>
+    </section>
 
-        <div class="controls__section">
-          <div class="label">Layers</div>
-          <div class="layers" id="layer-list">
-            <!-- Hillshade toggle -->
-            <div class="layer" data-layer-id="hillshade">
-              <div class="layer__name">Hillshade</div>
-              <div class="layer__controls">
-                <div id="switch-hillshade" class="switch" role="switch" tabindex="0" aria-checked="true" aria-label="Toggle hillshade">
-                  <div class="switch__dot"></div>
-                </div>
-              </div>
-            </div>
-            <!-- Basemap toggle (if present in config) -->
-            <div class="layer" data-layer-id="basemap_osm">
-              <div class="layer__name">Basemap — OSM</div>
-              <div class="layer__controls">
-                <div id="switch-basemap" class="switch" role="switch" tabindex="0" aria-checked="true" aria-label="Toggle basemap">
-                  <div class="switch__dot"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="controls__section">
-          <div class="label">Legend</div>
-          <div class="legend">
-            <div class="legend__row">
-              <span class="legend__swatch" style="background:#7d7d7d"></span>
-              <span class="legend__name">Hillshade</span>
-              <span class="legend__meta">2018–2020</span>
-            </div>
-            <div class="legend__row">
-              <span class="legend__swatch" style="background:#3a6ea8"></span>
-              <span class="legend__name">USGS Historic Topo — Larned</span>
-              <span class="legend__meta">1894</span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+    <!-- Optional legend auto-built from layer.legend if present -->
+    <section id="legendbox" class="section" role="region" aria-label="Legend">
+      <details open>
+        <summary>Legend</summary>
+        <div id="legend"></div>
+      </details>
+    </section>
+  </aside>
 
   <script>
   // -----------------------------------------------------------------------------
-  // Kansas-Frontier-Matrix — Minimal viewer logic
-  // - Prefers ./app.config.json, falls back to ./layers.json
-  // - Layer objects should have: { id, type: "raster"|"image", url, opacity, start, end, coordinates? }
-  // - Our upgraded layers.json normalizes to `url` (not `tiles`)
+  // Kansas-Frontier-Matrix — Connected viewer
+  // - Reads ./app.config.json (preferred), falls back to ./config/app.config.json then ./layers.json
+  // - Supports layer.type: "raster" (url) and "geojson" (path)
+  // - Honors: visible, opacity, paint (line/fill/circle), time.start/time.end
+  // - Builds grouped layer list and simple legend from config
   // -----------------------------------------------------------------------------
   (async function () {
-    const $ = (sel) => document.querySelector(sel);
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const el = (tag, attrs={}, children=[]) => {
+      const n = document.createElement(tag);
+      for (const [k,v] of Object.entries(attrs)) {
+        if (k === 'class') n.className = v;
+        else if (k === 'style') n.setAttribute('style', v);
+        else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
+        else n.setAttribute(k, v);
+      }
+      for (const ch of [].concat(children)) n.append(ch?.nodeType ? ch : document.createTextNode(ch));
+      return n;
+    };
 
     const statusEl = $('#status');
     const yearEl = $('#year');
-    const yearLabelEl = $('#year-label');
-    const switchHillshade = $('#switch-hillshade');
-    const switchBasemap = $('#switch-basemap');
+    const yearLabelEl = $('#yearLabel');
+    const timeRangeEl = $('#time-range');
+    const layersWrap = $('#layers');
+    const legendWrap = $('#legend');
     const btnReset = $('#btn-reset');
+    const appTitle = $('#app-title');
+    const appSubtitle = $('#app-subtitle');
 
-    const setStatus = (msg) => statusEl.textContent = msg || '';
+    const setStatus = (msg) => { statusEl.textContent = msg || ''; };
 
-    // MapLibre base
-    const map = new maplibregl.Map({
-      container: 'map',
-      style: 'https://demotiles.maplibre.org/style.json',
-      center: [-98.0, 38.5],
-      zoom: 5.5,
-      attributionControl: true
-    });
-    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
-    map.addControl(new maplibregl.ScaleControl({ unit: 'imperial' }));
+    // Try config locations (prefer root)
+    async function loadConfig() {
+      const attempts = ['./app.config.json', './config/app.config.json', './layers.json'];
+      let lastErr;
+      for (const url of attempts) {
+        try {
+          const r = await fetch(url, { cache: 'no-store' });
+          if (!r.ok) throw new Error(`${url}: ${r.status}`);
+          const j = await r.json();
+          return { url, cfg: j };
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr;
+    }
 
-    // Load config (prefer app.config.json)
-    let cfg;
+    let cfg, cfgUrl;
     try {
-      cfg = await fetch('./app.config.json').then(r => r.ok ? r.json() : Promise.reject())
-            .catch(() => fetch('./layers.json').then(r => r.json()));
+      const { url, cfg: c } = await loadConfig();
+      cfg = c; cfgUrl = url;
     } catch (e) {
-      setStatus('Failed to load layer configuration (app.config.json / layers.json).');
       console.error(e);
+      setStatus('Failed to load configuration (app.config.json / config/app.config.json / layers.json).');
       return;
     }
+
+    // Apply title/subtitle if present
+    if (cfg.title) appTitle.textContent = cfg.title;
+    if (cfg.subtitle) appSubtitle.textContent = cfg.subtitle;
+
+    // Map init
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: cfg.style || 'https://demotiles.maplibre.org/style.json',
+      center: cfg.center || [-98.3, 38.5],
+      zoom: cfg.zoom ?? 6,
+      attributionControl: true
+    });
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+    map.addControl(new maplibregl.ScaleControl({ unit: 'imperial' }));
 
     const defaults = cfg.defaults || {};
     const layers = Array.isArray(cfg.layers) ? cfg.layers : [];
 
-    function tilesFrom(L) {
-      // We accept explicit tile templates in `url` (recommended) or `tiles` (array).
-      if (Array.isArray(L.tiles) && L.tiles.length) return L.tiles;
-      if (typeof L.url === 'string') return [L.url];
-      if (typeof L.path === 'string') return [L.path]; // legacy
-      return null;
+    // Time UI
+    const tMin = (cfg.time && cfg.time.min) ? new Date(cfg.time.min) : new Date('1850-01-01');
+    const tMax = (cfg.time && cfg.time.max) ? new Date(cfg.time.max) : new Date('2025-12-31');
+    const defaultYear = cfg.defaultYear ?? 1930;
+    const clampYear = (y) => Math.min(tMax.getUTCFullYear(), Math.max(tMin.getUTCFullYear(), y));
+
+    // Slider wiring + filled track CSS var
+    function setSliderValue(y) {
+      yearEl.value = String(y);
+      yearLabelEl.textContent = String(y);
+      const min = parseInt(yearEl.min, 10), max = parseInt(yearEl.max, 10);
+      const pct = ((y - min) / (max - min)) * 100;
+      yearEl.style.setProperty('--value', pct + '%');
     }
 
+    yearEl.min = String(tMin.getUTCFullYear());
+    yearEl.max = String(tMax.getUTCFullYear());
+    setSliderValue(clampYear(defaultYear));
+    timeRangeEl.textContent = `(${tMin.toISOString().slice(0,10)} → ${tMax.toISOString().slice(0,10)})`;
+
+    // Helpers
+    function tilesFrom(L) {
+      if (Array.isArray(L.tiles) && L.tiles.length) return L.tiles;
+      if (typeof L.url === 'string') return [L.url];
+      if (typeof L.path === 'string') return [L.path];
+      return null;
+    }
+    function getTimeWindow(L) {
+      // Supports { time: {start,end} } ISO or nulls
+      const t = L.time || {};
+      const s = t.start ? new Date(t.start).getUTCFullYear() : -Infinity;
+      const e = t.end ? new Date(t.end).getUTCFullYear() : Infinity;
+      return [s, e];
+    }
+    function visibleForYear(L, y) {
+      const [s,e] = getTimeWindow(L);
+      return s <= y && y <= e;
+    }
+
+    // Layer adders
     function addRaster(L) {
       const id = L.id;
       const tiles = tilesFrom(L);
-      if (!tiles) { console.warn('Raster layer missing url/tiles:', L); return; }
+      if (!tiles) { console.warn('Raster missing url/tiles:', L); return; }
 
       if (!map.getSource(id)) {
         map.addSource(id, {
           type: 'raster',
           tiles,
           tileSize: L.tileSize || defaults.tileSize || 256,
-          crossOrigin: 'anonymous'
+          crossOrigin: 'anonymous',
+          attribution: L.attribution || undefined
         });
       }
       if (!map.getLayer(id)) {
@@ -162,89 +204,176 @@
       }
     }
 
-    function addImage(L) {
-      // coordinates: [[minX, maxY], [maxX, maxY], [maxX, minY], [minX, minY]]
-      if (!Array.isArray(L.coordinates) || !L.url) {
-        console.warn('Image layer missing coordinates/url:', L);
-        return;
-      }
+    async function addGeoJSON(L) {
       const id = L.id;
+      if (!L.path) { console.warn('GeoJSON missing path:', L); return; }
+
       if (!map.getSource(id)) {
-        map.addSource(id, { type: 'image', url: L.url, coordinates: L.coordinates });
+        map.addSource(id, { type: 'geojson', data: L.path, attribution: L.attribution || undefined });
       }
-      if (!map.getLayer(id)) {
+      // Add style layers based on paint keys present
+      const paint = L.paint || {};
+      if (paint.line && !map.getLayer(id + '-line')) {
         map.addLayer({
-          id, type: 'raster', source: id,
-          paint: { 'raster-opacity': (typeof L.opacity === 'number') ? L.opacity : 0.8 },
-          layout: { visibility: (L.visible ?? defaults.visible ?? true) ? 'visible' : 'none' }
+          id: id + '-line',
+          type: 'line',
+          source: id,
+          paint: {
+            'line-color': paint.line['line-color'] ?? '#000',
+            'line-width': paint.line['line-width'] ?? 1,
+            'line-opacity': paint.line['line-opacity'] ?? 1
+          },
+          layout: { visibility: (L.visible ?? true) ? 'visible' : 'none' }
+        });
+      }
+      if (paint.fill && !map.getLayer(id + '-fill')) {
+        map.addLayer({
+          id: id + '-fill',
+          type: 'fill',
+          source: id,
+          paint: {
+            'fill-color': paint.fill['fill-color'] ?? '#000',
+            'fill-opacity': (paint.fill['fill-opacity'] ?? 0.4) * (L.opacity ?? 1),
+            'fill-outline-color': paint.fill['fill-outline-color'] ?? undefined
+          },
+          layout: { visibility: (L.visible ?? true) ? 'visible' : 'none' }
+        });
+      }
+      if (paint.circle && !map.getLayer(id + '-circle')) {
+        map.addLayer({
+          id: id + '-circle',
+          type: 'circle',
+          source: id,
+          paint: {
+            'circle-color': paint.circle['circle-color'] ?? '#000',
+            'circle-radius': paint.circle['circle-radius'] ?? 3,
+            'circle-opacity': paint.circle['circle-opacity'] ?? 1
+          },
+          layout: { visibility: (L.visible ?? true) ? 'visible' : 'none' }
         });
       }
     }
 
-    function ensure(L) {
+    async function ensureLayer(L) {
       if (!L || !L.id || !L.type) return;
-      if (L.type === 'raster') addRaster(L);
-      else if (L.type === 'image') addImage(L);
-      // vector/MVT can be added later
+      if (L.type === 'raster' || L.type === 'image') addRaster(L);
+      else if (L.type === 'geojson') await addGeoJSON(L);
     }
 
-    function visibleForYear(L, y) {
-      const start = (typeof L.start === 'number') ? L.start : -Infinity;
-      const end = (typeof L.end === 'number') ? L.end : Infinity;
-      return start <= y && y <= end;
-    }
+    // UI builders
+    function makeLayerRow(L) {
+      const row = el('div', { class: 'layer-row', 'data-layer-id': L.id });
 
-    function updateVisibility(y) {
-      yearLabelEl.textContent = String(y);
-      let shown = 0, total = 0;
+      // Checkbox
+      const cb = el('input', { type: 'checkbox', 'aria-label': `Toggle ${L.title || L.id}` });
+      cb.checked = !!(L.visible ?? true);
+      cb.addEventListener('change', () => {
+        const ids = (L.type === 'geojson')
+          ? [L.id + '-line', L.id + '-fill', L.id + '-circle']
+          : [L.id];
+        const vis = cb.checked ? 'visible' : 'none';
+        ids.forEach(x => map.getLayer(x) && map.setLayoutProperty(x, 'visibility', vis));
+      });
 
-      layers.forEach(L => {
-        total++;
-        ensure(L);
-        const id = L.id;
-        const show = visibleForYear(L, y);
-        if (map.getLayer(id)) {
-          map.setLayoutProperty(id, 'visibility', show ? 'visible' : 'none');
-          if (show) shown++;
+      // Label + meta
+      const label = el('label', {}, [
+        L.title || L.id,
+        el('span', { class: 'badge' }, L.group ? ` ${L.group}` : '')
+      ]);
+      label.htmlFor = ''; // purely visual
+
+      // Opacity slider
+      const op = el('input', { type: 'range', min: '0', max: '1', step: '0.01', value: String(L.opacity ?? 1), class: 'opacity-range', 'aria-label': `Opacity ${L.title || L.id}` });
+      op.addEventListener('input', () => {
+        const v = parseFloat(op.value);
+        if (L.type === 'geojson') {
+          if (map.getLayer(L.id + '-fill')) map.setPaintProperty(L.id + '-fill', 'fill-opacity', (L.paint?.fill?.['fill-opacity'] ?? 0.4) * v);
+          if (map.getLayer(L.id + '-line')) map.setPaintProperty(L.id + '-line', 'line-opacity', (L.paint?.line?.['line-opacity'] ?? 1) * v);
+          if (map.getLayer(L.id + '-circle')) map.setPaintProperty(L.id + '-circle', 'circle-opacity', (L.paint?.circle?.['circle-opacity'] ?? 1) * v);
+        } else {
+          if (map.getLayer(L.id)) map.setPaintProperty(L.id, 'raster-opacity', v);
         }
       });
 
+      row.append(cb, label, op);
+      return row;
+    }
+
+    function addLegendFor(L) {
+      if (!Array.isArray(L.legend) || !L.legend.length) return;
+      for (const item of L.legend) {
+        const sw = el('span', { class: 'legend__swatch', style: `display:inline-block;width:14px;height:14px;border:1px solid var(--border);margin-right:6px;background:${item.color || '#999'}` });
+        const name = el('span', { class: 'legend__name' }, item.label || L.title || L.id);
+        const row = el('div', { class: 'legend__row', style: 'display:flex;align-items:center;gap:6px;margin:4px 0' }, [sw, name]);
+        legendWrap.append(row);
+      }
+    }
+
+    function buildLayerList(grouped) {
+      layersWrap.textContent = '';
+      const groupOrder = Array.isArray(cfg.groups) ? cfg.groups : [];
+      const groups = new Map();
+
+      // Collect by group
+      for (const L of layers) {
+        const g = L.group || 'Ungrouped';
+        if (!groups.has(g)) groups.set(g, []);
+        groups.get(g).push(L);
+      }
+
+      // Render in configured order first, then leftovers
+      const keys = [...groupOrder.filter(g => groups.has(g)), ...[...groups.keys()].filter(g => !groupOrder.includes(g))];
+
+      for (const g of keys) {
+        const list = groups.get(g);
+        const det = el('details', { open: true });
+        det.append(el('summary', {}, g));
+        list.forEach(L => det.append(makeLayerRow(L)));
+        layersWrap.append(det);
+      }
+    }
+
+    async function addAllLayers() {
+      for (const L of layers) { // preserve order (basemap first)
+        await ensureLayer(L);
+        addLegendFor(L);
+      }
+    }
+
+    function updateVisibilityForYear(y) {
+      setSliderValue(y);
+      let shown = 0, total = 0;
+
+      for (const L of layers) {
+        total++;
+        const v = visibleForYear(L, y);
+        const ids = (L.type === 'geojson') ? [L.id + '-line', L.id + '-fill', L.id + '-circle'] : [L.id];
+        ids.forEach(x => map.getLayer(x) && map.setLayoutProperty(x, 'visibility', v && (L.visible ?? true) ? 'visible' : 'none'));
+        if (v && (L.visible ?? true)) shown++;
+      }
       setStatus(`${shown}/${total} layers visible for ${y}`);
     }
 
-    function bindSwitch(el, layerId) {
-      if (!el) return;
-      const setChecked = (checked) => el.setAttribute('aria-checked', checked ? 'true' : 'false');
-      const toggle = () => {
-        const vis = el.getAttribute('aria-checked') !== 'true';
-        setChecked(vis);
-        if (map.getLayer(layerId)) map.setLayoutProperty(layerId, 'visibility', vis ? 'visible' : 'none');
-      };
-      el.addEventListener('click', toggle);
-      el.addEventListener('keydown', (e) => {
-        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
-      });
-    }
-
-    map.on('load', () => {
-      // Pre-register all layers so toggles work immediately
-      layers.forEach(ensure);
-
-      // Wire toggles
-      bindSwitch(switchHillshade, 'hillshade');
-      bindSwitch(switchBasemap, 'basemap_osm');
-
-      // Year filter
-      updateVisibility(parseInt(yearEl.value, 10));
-    });
-
-    yearEl.addEventListener('input', () => {
-      updateVisibility(parseInt(yearEl.value, 10));
-    });
-
+    // Events
+    yearEl.addEventListener('input', () => updateVisibilityForYear(parseInt(yearEl.value, 10)));
     btnReset?.addEventListener('click', () => {
-      map.easeTo({ center: [-98.0, 38.5], zoom: 5.5, pitch: 0, bearing: 0, duration: 600 });
+      const ctr = cfg.center || [-98.3, 38.5];
+      const zm = cfg.zoom ?? 6;
+      map.easeTo({ center: ctr, zoom: zm, pitch: 0, bearing: 0, duration: 600 });
     });
+
+    // Bootstrap once map is ready
+    map.on('load', async () => {
+      try {
+        await addAllLayers();
+        buildLayerList();
+        updateVisibilityForYear(clampYear(defaultYear));
+      } catch (e) {
+        console.error(e);
+        setStatus('Error initializing layers — check console for details.');
+      }
+    });
+
   })();
   </script>
 </body>
