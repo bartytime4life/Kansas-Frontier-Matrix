@@ -8,8 +8,8 @@
   "required": ["defaults", "layers"],
 
   "properties": {
-    "version":    { "type": "string" },
-    "generated":  { "type": ["string", "null"], "format": "date-time" },
+    "version":   { "type": "string" },
+    "generated": { "type": ["string", "null"], "format": "date-time" },
 
     "defaults": {
       "type": "object",
@@ -18,8 +18,8 @@
       "properties": {
         "minzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
         "maxzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
-        "visible":  { "type": "boolean" },
-        "opacity":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "visible": { "type": "boolean" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
         "bounds": {
           "type": "array",
           "minItems": 4,
@@ -107,8 +107,8 @@
           "type": "array",
           "items": { "type": "string" }
         },
-        "timeProperty": { "type": ["string", "null"] },
-        "endTimeProperty": { "type": ["string", "null"] },
+        "timeProperty":     { "type": ["string", "null"] },
+        "endTimeProperty":  { "type": ["string", "null"] },
 
         /* Optional legend mapping token */
         "legendSymbol": { "type": ["string", "null"] }
@@ -140,17 +140,17 @@
       "description": "App-level vector styling (camelCase).",
       "additionalProperties": false,
       "properties": {
-        "lineColor": { "type": "string" },
-        "lineWidth": { "type": "number" },
-        "lineOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "lineColor":       { "type": "string" },
+        "lineWidth":       { "type": "number" },
+        "lineOpacity":     { "type": "number", "minimum": 0, "maximum": 1 },
 
-        "fillColor": { "type": "string" },
-        "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
-        "fillOutlineColor": { "type": "string" },
+        "fillColor":       { "type": "string" },
+        "fillOpacity":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "fillOutlineColor":{ "type": "string" },
 
-        "circleColor": { "type": "string" },
-        "circleRadius": { "type": "number" },
-        "circleOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "circleColor":     { "type": "string" },
+        "circleRadius":    { "type": "number" },
+        "circleOpacity":   { "type": "number", "minimum": 0, "maximum": 1 },
 
         "lineDasharray": {
           "type": "array",
@@ -181,7 +181,7 @@
           "additionalProperties": false,
           "properties": {
             "type": { "const": "raster-dem" },
-            "terrain": { "type": ["boolean", "null"] },
+            "terrain":             { "type": ["boolean", "null"] },
             "terrainExaggeration": { "type": ["number", "null"] }
           },
           "required": ["type"]
