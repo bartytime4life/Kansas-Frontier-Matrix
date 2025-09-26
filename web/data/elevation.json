@@ -1,1 +1,14 @@
-
+{
+  "id": "ks_dem_1m",
+  "title": "Kansas DEM (1 m) — Hillshade",
+  "type": "raster-dem",
+  "assets": [
+    { "role": "cog", "href": "data/cogs/terrain/ks_dem_1m.tif" },
+    { "role": "hillshade", "href": "data/cogs/derivatives/ks_dem_hillshade.tif" }
+  ],
+  "category": "terrain",
+  "time": { "start": "2018-01-01", "end": "2020-12-31" },
+  "visible": false,
+  "opacity": 0.85,
+  "attribution": "KGS / USGS 3DEP"
+}
