@@ -1,5 +1,60 @@
 {
   "type": "FeatureCollection",
   "name": "plss_sections",
-  "features": []
+  "features": [
+    {
+      "type": "Feature",
+      "id": "plss-29-13S-14W-sec01",
+      "properties": {
+        "state": "KS",
+        "county": "Pawnee",
+        "meridian": "6th Principal",
+        "township": "13S",
+        "range": "14W",
+        "section": "01",
+        "trs": "T13S R14W S01",
+        "source": "County GIS / DASC",
+        "updated": "2024-12-15"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-99.2500, 38.2500],
+            [-99.2375, 38.2500],
+            [-99.2375, 38.2375],
+            [-99.2500, 38.2375],
+            [-99.2500, 38.2500]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "plss-29-13S-14W-sec02",
+      "properties": {
+        "state": "KS",
+        "county": "Pawnee",
+        "meridian": "6th Principal",
+        "township": "13S",
+        "range": "14W",
+        "section": "02",
+        "trs": "T13S R14W S02",
+        "source": "County GIS / DASC",
+        "updated": "2024-12-15"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-99.2375, 38.2500],
+            [-99.2250, 38.2500],
+            [-99.2250, 38.2375],
+            [-99.2375, 38.2375],
+            [-99.2375, 38.2500]
+          ]
+        ]
+      }
+    }
+  ]
 }
