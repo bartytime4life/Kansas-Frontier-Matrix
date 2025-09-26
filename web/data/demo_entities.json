@@ -1,71 +1,98 @@
 {
-  "version": "1.0.0",
-  "title": "Kansas Frontier Demo Entities",
+  "type": "FeatureCollection",
+  "name": "Kansas Frontier Demo Entities",
   "description": "Sample entities (settlements, treaties, trails, railroads) for demo and testing in the Kansas-Frontier-Matrix web viewer.",
-  "generated": "2025-09-23T20:45:00Z",
-  "entities": [
+  "generated": "2025-09-26T00:00:00Z",
+  "bbox": [-100.8903, 37.7, -94.6, 39.0997],
+  "attribution": "Demo entities for UI wiring — compiled from public-domain sources.",
+  "features": [
     {
+      "type": "Feature",
       "id": "settlement_lawrence",
-      "type": "settlement",
-      "title": "Lawrence",
-      "description": "Founded in 1854 by Free-State settlers. Center of Bleeding Kansas conflict.",
-      "location": {
-        "lat": 38.9717,
-        "lon": -95.2353
+      "properties": {
+        "id": "settlement_lawrence",
+        "type": "settlement",
+        "title": "Lawrence",
+        "desc": "Founded in 1854 by Free-State settlers. Center of Bleeding Kansas conflict.",
+        "place": "Lawrence, Kansas",
+        "time": { "start": "1854-01-01", "end": null },
+        "tags": ["settlement", "bleeding-kansas"],
+        "sources": ["USGS", "Kansas Historical Society"],
+        "marker-color": "#22c55e",
+        "marker-size": "medium"
       },
-      "time": {
-        "start": "1854-01-01",
-        "end": null
-      },
-      "sources": ["USGS", "Kansas Historical Society"]
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-95.2353, 38.9717]
+      }
     },
     {
+      "type": "Feature",
       "id": "treaty_kansas_nebraska_1854",
-      "type": "treaty",
-      "title": "Kansas–Nebraska Act",
-      "description": "Established Kansas and Nebraska territories, allowing settlers to determine slavery status by popular sovereignty.",
-      "location": {
-        "lat": 39.0,
-        "lon": -96.0
+      "properties": {
+        "id": "treaty_kansas_nebraska_1854",
+        "type": "treaty",
+        "title": "Kansas–Nebraska Act",
+        "desc": "Established Kansas and Nebraska territories, allowing settlers to determine slavery status by popular sovereignty.",
+        "place": "Kansas–Nebraska Territories",
+        "time": { "start": "1854-05-30", "end": "1854-05-30" },
+        "tags": ["legislation", "territory"],
+        "sources": ["Library of Congress"],
+        "marker-color": "#2563eb",
+        "marker-size": "medium"
       },
-      "time": {
-        "start": "1854-05-30",
-        "end": "1854-05-30"
-      },
-      "sources": ["Library of Congress"]
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-96.0, 39.0]
+      }
     },
     {
+      "type": "Feature",
       "id": "trail_santafe",
-      "type": "trail",
-      "title": "Santa Fe Trail",
-      "description": "19th-century transportation route connecting Missouri to Santa Fe, New Mexico, passing through Kansas.",
-      "path": [
-        [-94.6103, 39.0997],
-        [-96.8005, 38.9717],
-        [-100.8903, 37.7591]
-      ],
-      "time": {
-        "start": "1821-01-01",
-        "end": "1880-01-01"
+      "properties": {
+        "id": "trail_santafe",
+        "type": "trail",
+        "title": "Santa Fe Trail",
+        "desc": "19th-century transportation route connecting Missouri to Santa Fe, New Mexico, passing through Kansas.",
+        "time": { "start": "1821-01-01", "end": "1880-01-01" },
+        "tags": ["trail", "commerce"],
+        "sources": ["National Park Service"],
+        "stroke": "#8b5cf6",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95
       },
-      "sources": ["National Park Service"]
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-94.6103, 39.0997],
+          [-96.8005, 38.9717],
+          [-100.8903, 37.7591]
+        ]
+      }
     },
     {
+      "type": "Feature",
       "id": "railroad_katy",
-      "type": "railroad",
-      "title": "MKT Railroad (Katy)",
-      "description": "The Missouri–Kansas–Texas Railroad, first to enter Texas from the north. Key in Kansas commerce by 1870s.",
-      "path": [
-        [-94.6, 39.1],
-        [-96.4, 38.4],
-        [-97.3, 37.7]
-      ],
-      "time": {
-        "start": "1865-01-01",
-        "end": null
+      "properties": {
+        "id": "railroad_katy",
+        "type": "railroad",
+        "title": "MKT Railroad (Katy)",
+        "desc": "The Missouri–Kansas–Texas Railroad, first to enter Texas from the north. Key in Kansas commerce by the 1870s.",
+        "time": { "start": "1865-01-01", "end": null },
+        "tags": ["railroad", "commerce"],
+        "sources": ["Kansas Historical Society"],
+        "stroke": "#d97706",
+        "stroke-width": 2,
+        "stroke-opacity": 0.95
       },
-      "sources": ["Kansas Historical Society"]
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-94.6, 39.1],
+          [-96.4, 38.4],
+          [-97.3, 37.7]
+        ]
+      }
     }
   ]
 }
-
