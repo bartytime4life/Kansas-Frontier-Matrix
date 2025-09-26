@@ -1,1 +1,13 @@
-
+{
+  "id": "tornado_tracks",
+  "title": "Tornado Tracks (SPC 1950–present)",
+  "type": "vector",
+  "data": "data/processed/tornado_tracks_ks.json",
+  "category": "hazards",
+  "time": { "start": "1950-01-01", "end": null },
+  "timeProperty": "date",
+  "popup": ["date", "ef_scale", "length_km", "fatalities"],
+  "style": { "lineColor": "#D00000", "lineWidth": 1.2 },
+  "visible": false,
+  "attribution": "NOAA SPC"
+}
