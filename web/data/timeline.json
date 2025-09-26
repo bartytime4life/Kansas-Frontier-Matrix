@@ -1,1 +1,7 @@
-
+{
+  "annotations": [
+    { "date": "1854-05-30", "title": "Kansas–Nebraska Act", "layerHints": ["treaties"] },
+    { "date": "1867-10-21", "title": "Medicine Lodge Treaty", "layerHints": ["treaties"] },
+    { "date": "1935-04-14", "title": "Black Sunday Dust Storm", "layerHints": ["drought_monitor", "storm_events"] }
+  ]
+}
