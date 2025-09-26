@@ -1,1 +1,9 @@
-
+{
+  "symbols": {
+    "treaties": { "fillColor": "#FFCA3A", "lineColor": "#B08900" },
+    "trails": { "lineColor": "#4361EE", "lineDasharray": [2, 2] },
+    "railroads": { "lineColor": "#8D99AE" },
+    "tornado": { "lineColor": "#D00000" },
+    "wildfire": { "fillColor": "#E76F51" }
+  }
+}
