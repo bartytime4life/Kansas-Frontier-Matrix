@@ -1,5 +1,80 @@
 {
   "type": "FeatureCollection",
   "name": "documents_points",
-  "features": []
+  "generated": "2025-09-26T00:00:00Z",
+  "attribution": "KFM Knowledge Hub",
+  "license": "CC-BY or as specified per source",
+  "provenance": {
+    "source": "KFM Knowledge Hub (graph export of geotagged items)",
+    "notes": "Sample features for wiring; replace/append with pipeline output"
+  },
+  "fields": {
+    "title":  { "type": "string", "description": "Document title" },
+    "source": { "type": "string", "description": "Archive/source label" },
+    "date":   { "type": "string", "format": "date", "description": "ISO 8601 date (YYYY-MM-DD)" },
+    "url":    { "type": "string", "format": "uri", "description": "Direct link to document/record" },
+    "doc_id": { "type": "string", "description": "Internal/graph ID (optional)" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "doc_0001",
+      "geometry": { "type": "Point", "coordinates": [-99.333, 38.873] },
+      "properties": {
+        "title": "Letter from Fort Hays to Adjutant",
+        "source": "KHS Archives",
+        "date": "1871-05-03",
+        "url": "https://example.org/docs/fort-hays-1871",
+        "doc_id": "KFM-GHX-1871-0001"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "doc_0002",
+      "geometry": { "type": "Point", "coordinates": [-95.670, 39.050] },
+      "properties": {
+        "title": "Topeka Daily Commonwealth: Territorial News",
+        "source": "Chronicling America",
+        "date": "1856-04-12",
+        "url": "https://example.org/news/topeka-1856",
+        "doc_id": "KFM-TOPEKA-1856-0012"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "doc_0003",
+      "geometry": { "type": "Point", "coordinates": [-99.180, 38.190] },
+      "properties": {
+        "title": "Surveyor’s Field Notes near Fort Larned",
+        "source": "USGS Historic Topo Notes",
+        "date": "1867-10-21",
+        "url": "https://example.org/surveys/larned-1867",
+        "doc_id": "KFM-SURV-1867-1021"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "doc_0004",
+      "geometry": { "type": "Point", "coordinates": [-100.015, 37.752] },
+      "properties": {
+        "title": "Dodge City Globe: Drought Report",
+        "source": "NewspaperArchive",
+        "date": "1934-07-15",
+        "url": "https://example.org/news/dodge-1934-drought",
+        "doc_id": "KFM-DC-1934-0715"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "doc_0005",
+      "geometry": { "type": "Point", "coordinates": [-94.912, 39.315] },
+      "properties": {
+        "title": "Leavenworth Deed Book Entry",
+        "source": "Register of Deeds",
+        "date": "1902-11-09",
+        "url": "https://example.org/deeds/leavenworth-1902",
+        "doc_id": "KFM-ROD-1902-1109"
+      }
+    }
+  ]
 }
