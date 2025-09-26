@@ -1,12 +1,77 @@
 {
+  "schema": "kfm-style-tokens/1.0",
+  "version": "1.1.0",
+  "generated": "2025-09-26T00:00:00Z",
+
   "colors": {
-    "primary": "#1B263B",
-    "accent": "#4361EE",
-    "hazard": "#D00000",
-    "treaty": "#FFCA3A"
+    "primary":   "#1B263B",
+    "secondary": "#415A77",
+    "background": "#F8F9FA",
+    "accent":    "#4361EE",
+    "muted":     "#6C757D",
+
+    "hazard":    "#D00000",
+    "flood":     "#577590",
+    "tornado":   "#D00000",
+    "wildfire":  "#E76F51",
+    "hail":      "#3A86FF",
+
+    "treaty":    "#FFCA3A",
+    "trail":     "#4361EE",
+    "railroad":  "#8D99AE",
+    "landcover_fallback": "#CCCCCC",
+
+    "water":     "#3A86FF",
+    "forest":    "#2E7D32",
+    "crops":     "#A57000",
+
+    "county":    "#555555",
+    "oral_histories": "#2EC4B6",
+    "events":    "#CC3300"
   },
+
   "opacity": {
     "overlay": 0.7,
-    "polygon": 0.35
+    "polygon": 0.35,
+    "raster": 0.8,
+    "hillshade": 0.6,
+    "hidden": 0.0
+  },
+
+  "sizes": {
+    "circleRadius": {
+      "small": 3,
+      "medium": 4,
+      "large": 6
+    },
+    "lineWidth": {
+      "hairline": 0.2,
+      "thin": 0.8,
+      "normal": 1.2,
+      "bold": 2.0,
+      "heavy": 2.5
+    }
+  },
+
+  "fonts": {
+    "base": "system-ui, sans-serif",
+    "mono": "ui-monospace, monospace",
+    "sizes": {
+      "small": "11px",
+      "normal": "13px",
+      "large": "16px"
+    }
+  },
+
+  "ui": {
+    "borderColor": "#E0E0E0",
+    "borderRadius": "4px",
+    "panelBg": "#FFFFFF",
+    "panelShadow": "0 1px 3px rgba(0,0,0,0.12)"
+  },
+
+  "notes": {
+    "usage": "Use tokens to keep MapLibre layers, legend, and UI consistent. Colors align with legend.json keys.",
+    "link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
   }
 }
