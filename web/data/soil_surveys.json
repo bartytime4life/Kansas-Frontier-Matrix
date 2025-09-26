@@ -3,22 +3,19 @@
   "title": "Archived Soil Surveys (USDA/NRCS)",
   "type": "raster",
 
+  "url": "data/cogs/overlays/soil_survey_1937_pawnee.tif",
+
   "assets": [
     { "year": 1937, "href": "data/cogs/overlays/soil_survey_1937_pawnee.tif", "county": "Pawnee" }
-    /* add more like:
-    ,{ "year": 1952, "href": "data/cogs/overlays/soil_survey_1952_ellsworth.tif", "county": "Ellsworth" }
-    ,{ "year": 1964, "href": "data/cogs/overlays/soil_survey_1964_barton.tif", "county": "Barton" }
-    */
   ],
-
-  "assetKey": "year",            // helper for the app to know which field to match
-  "assetStrategy": "nearest",     // pick the asset closest to the current slider year
+  "assetKey": "year",
+  "assetStrategy": "nearest",
 
   "category": "historical",
   "time": { "start": "1900-01-01", "end": "1970-12-31" },
   "visible": false,
   "opacity": 0.6,
-  "blend": "multiply",            // sits nicely over basemap/hillshade
+  "blend": "multiply",
   "minzoom": 6,
   "maxzoom": 19,
   "legendSymbol": "soil_surveys",
