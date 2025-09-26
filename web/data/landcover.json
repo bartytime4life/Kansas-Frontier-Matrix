@@ -2,11 +2,99 @@
   "id": "ks_landcover",
   "title": "Land Cover Snapshots",
   "type": "vector",
+  "format": "geojson",
   "data": "data/processed/landcover_timeslices.json",
   "category": "environment",
+
   "time": { "start": "1992-01-01", "end": "2021-12-31" },
-  "timeProperty": "year",
-  "style": { "fillOpacity": 0.6 },
+  "timeProperty": { "start": "year", "end": null, "format": "year" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
   "visible": false,
-  "attribution": "USGS NLCD"
+  "opacity": 1.0,
+
+  "popup": ["year", "class_name", "nlcd", "area_km2"],
+
+  "legend": {
+    "type": "fill",
+    "label": "NLCD Land Cover",
+    "classes": [
+      { "label": "11 Open Water",                     "fill": "#466B9F" },
+      { "label": "12 Perennial Ice/Snow",             "fill": "#D1DEF8" },
+      { "label": "21 Developed, Open Space",          "fill": "#DECACA" },
+      { "label": "22 Developed, Low Intensity",       "fill": "#E29E8C" },
+      { "label": "23 Developed, Medium Intensity",    "fill": "#FF0000" },
+      { "label": "24 Developed, High Intensity",      "fill": "#B50000" },
+      { "label": "31 Barren Land",                    "fill": "#B3AC9F" },
+      { "label": "41 Deciduous Forest",               "fill": "#68AB5F" },
+      { "label": "42 Evergreen Forest",               "fill": "#1C5F2C" },
+      { "label": "43 Mixed Forest",                   "fill": "#B5C98E" },
+      { "label": "52 Shrub/Scrub",                    "fill": "#CCB879" },
+      { "label": "71 Grassland/Herbaceous",           "fill": "#DFDF7F" },
+      { "label": "81 Pasture/Hay",                    "fill": "#D1D182" },
+      { "label": "82 Cultivated Crops",               "fill": "#A57000" },
+      { "label": "90 Woody Wetlands",                 "fill": "#00A8A8" },
+      { "label": "95 Emergent Herbaceous Wetlands",   "fill": "#00DCDC" }
+    ]
+  },
+
+  "style": {
+    "renderer": "fill",
+
+    /* Data-driven fill: supports typical NLCD code fields.
+       We resolve in order: 'nlcd' → 'lc_code' → 'class' (string), else transparent. */
+    "fillColor": {
+      "match": {
+        "property": ["coalesce", ["get", "nlcd"], ["get", "lc_code"], ["get", "class"]],
+        "stops": [
+          [11, "#466B9F"], ["11", "#466B9F"],
+          [12, "#D1DEF8"], ["12", "#D1DEF8"],
+          [21, "#DECACA"], ["21", "#DECACA"],
+          [22, "#E29E8C"], ["22", "#E29E8C"],
+          [23, "#FF0000"], ["23", "#FF0000"],
+          [24, "#B50000"], ["24", "#B50000"],
+          [31, "#B3AC9F"], ["31", "#B3AC9F"],
+          [41, "#68AB5F"], ["41", "#68AB5F"],
+          [42, "#1C5F2C"], ["42", "#1C5F2C"],
+          [43, "#B5C98E"], ["43", "#B5C98E"],
+          [52, "#CCB879"], ["52", "#CCB879"],
+          [71, "#DFDF7F"], ["71", "#DFDF7F"],
+          [81, "#D1D182"], ["81", "#D1D182"],
+          [82, "#A57000"], ["82", "#A57000"],
+          [90, "#00A8A8"], ["90", "#00A8A8"],
+          [95, "#00DCDC"], ["95", "#00DCDC"]
+        ],
+        "default": "#00000000"
+      }
+    },
+
+    "fillOpacity": 0.6,
+    "lineColor": "#000000",
+    "lineOpacity": 0.08,
+    "lineWidth": 0.2,
+    "lineJoin": "round",
+    "lineCap": "round"
+  },
+
+  "fields": {
+    "year":       { "type": "number", "description": "Land cover snapshot year (e.g., 1992, 2001, 2006, 2011, 2016, 2019, 2021)" },
+    "nlcd":       { "type": "number", "description": "NLCD class code (e.g., 11, 21, 42, 82)" },
+    "lc_code":    { "type": "string", "description": "Alternate code field, if used by ETL" },
+    "class":      { "type": "string", "description": "Alternate class field (string)" },
+    "class_name": { "type": "string", "description": "Human-readable class name" },
+    "area_km2":   { "type": "number", "units": "km²", "description": "Polygon area (optional; helps popups/analytics)" },
+    "source":     { "type": "string", "description": "Source/version (e.g., NLCD 2019 CONUS, v2.1)" }
+  },
+
+  "search": { "qFields": ["class_name", "year"] },
+
+  "attribution": "© <a href=\"https://www.mrlc.gov/\" target=\"_blank\">USGS NLCD (MRLC)</a>",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "USGS National Land Cover Database (NLCD) snapshots filtered to Kansas; normalized for KFM",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Color ramp aligned to standard NLCD classes; supports integer or string code fields; yearly time slider"
+  }
 }
