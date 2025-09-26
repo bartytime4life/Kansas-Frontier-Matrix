@@ -6,7 +6,6 @@
   "data": "data/processed/hydrology.json",
   "category": "environment",
 
-  /* Static by default (no time filtering) */
   "time": { "start": null, "end": null },
 
   "bounds": [-102.051, 36.993, -94.588, 40.003],
@@ -27,13 +26,9 @@
   },
 
   "style": {
-    /* Style applies to mixed geometry:
-       - Line geometry → lineColor/lineWidth
-       - Polygon geometry → fillColor/fillOpacity + line stroke */
     "renderer": "fill",
     "fillColor": "#A0C4FF",
     "fillOpacity": 0.6,
-
     "lineColor": "#3A86FF",
     "lineWidth": 1.0,
     "lineJoin": "round",
