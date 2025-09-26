@@ -1,1 +1,13 @@
-
+{
+  "id": "fema_disasters",
+  "title": "FEMA Declarations (KS)",
+  "type": "vector",
+  "data": "data/processed/fema_disasters_ks.json",
+  "category": "hazards",
+  "time": { "start": "1953-01-01", "end": null },
+  "timeProperty": "declaration_date",
+  "popup": ["disaster_number", "incident_type", "declaration_date"],
+  "style": { "circleColor": "#9B2226", "circleRadius": 3 },
+  "visible": false,
+  "attribution": "FEMA OpenFEMA"
+}
