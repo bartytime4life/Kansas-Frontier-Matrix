@@ -1,83 +1,103 @@
 {
   "defaults": {
-    "opacity": 1,
+    "opacity": 1.0,
     "visible": true,
     "minzoom": 0,
-    "maxzoom": 24,
-    "tileSize": 256
+    "maxzoom": 19,
+    "tileSize": 256,
+    "bounds": [-102.051, 36.993, -94.588, 40.003],
+    "time": { "start": "1700-01-01", "end": "2100-12-31" }
   },
+
   "time": {
-    "min": 1700,
-    "max": 2100
+    "min": "1700-01-01",
+    "max": "2100-12-31"
   },
+
   "layers": [
     {
-      "id": "osm_basemap",
-      "title": "OSM Basemap",
+      "id": "basemap_osm",
+      "title": "Basemap — OpenStreetMap",
       "type": "raster",
-      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "opacity": 1.0,
+      "visible": true,
       "attribution": "© OpenStreetMap contributors",
-      "category": "Base"
+      "category": "reference",
+      "time": { "start": null, "end": null },
+      "minzoom": 0,
+      "maxzoom": 19,
+      "tileSize": 256
     },
+
     {
-      "id": "usgs_topo_1894",
-      "title": "USGS Topographic (Larned, 1894)",
-      "type": "image",
-      "url": "./data/overlays/usgs_topo_larned_1894.tif",
-      "coordinates": [
-        [-100.1, 38.6],
-        [-98.8, 38.6],
-        [-98.8, 37.9],
-        [-100.1, 37.9]
-      ],
-      "start": 1894,
-      "end": 1894,
-      "opacity": 0.7,
-      "category": "Historic Maps",
-      "attribution": "USGS Historical Topo Map Collection"
-    },
-    {
-      "id": "ks_dem_2018",
-      "title": "Kansas DEM (2018–2020)",
+      "id": "usgs_topo_1894_larned",
+      "title": "USGS Historic Topo — Larned (1894)",
       "type": "raster",
-      "tiles": ["./data/cogs/dem/ks_1m_dem_2018_2020/{z}/{x}/{y}.tif"],
-      "start": 2018,
-      "end": 2020,
-      "opacity": 0.8,
-      "category": "Elevation",
-      "attribution": "Kansas GIS / USGS 3DEP"
+      "url": "./data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "opacity": 0.75,
+      "visible": false,
+      "attribution": "USGS Historical Topographic Map Collection",
+      "category": "historical",
+      "time": { "start": "1894-01-01", "end": "1894-12-31" }
     },
+
+    {
+      "id": "ks_dem_2018_2020",
+      "title": "Kansas DEM (2018–2020)",
+      "type": "raster-dem",
+      "url": "./data/cogs/dem/ks_1m_dem_2018_2020.tif",
+      "opacity": 0.8,
+      "visible": false,
+      "attribution": "Kansas GIS / USGS 3DEP",
+      "category": "terrain",
+      "time": { "start": "2018-01-01", "end": "2020-12-31" }
+    },
+
     {
       "id": "ks_hillshade_2018",
-      "title": "Hillshade (2018–2020)",
+      "title": "Kansas Hillshade (LiDAR-derived, 2018)",
       "type": "raster",
-      "tiles": ["./data/cogs/hillshade/ks_hillshade_2018_2020/{z}/{x}/{y}.tif"],
-      "start": 2018,
-      "end": 2020,
+      "url": "./data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
       "opacity": 0.6,
-      "category": "Elevation",
-      "attribution": "Derived from Kansas DEM"
+      "visible": false,
+      "attribution": "Derived from Kansas DEM",
+      "category": "terrain",
+      "time": { "start": "2018-01-01", "end": "2018-12-31" }
     },
+
     {
       "id": "kansas_counties",
       "title": "Kansas Counties",
       "type": "geojson",
       "url": "./data/vectors/kansas_counties.geojson",
       "opacity": 0.5,
-      "category": "Boundaries",
-      "attribution": "Kansas Data Access & Support Center"
+      "visible": false,
+      "attribution": "Kansas Data Access & Support Center",
+      "category": "infrastructure",
+      "time": { "start": null, "end": null },
+      "paint": {
+        "line-color": "#555",
+        "line-width": 1,
+        "line-opacity": 0.8
+      }
     },
+
     {
       "id": "events_sample",
       "title": "Sample Events",
       "type": "geojson",
       "url": "./data/demo_events.json",
-      "start": 1800,
-      "end": 1950,
-      "opacity": 1,
-      "category": "Events",
-      "attribution": "Demo dataset"
+      "opacity": 1.0,
+      "visible": false,
+      "attribution": "Demo dataset",
+      "category": "historical",
+      "time": { "start": "1800-01-01", "end": "1950-12-31" },
+      "paint": {
+        "circle-color": "#cc3300",
+        "circle-radius": 4,
+        "circle-opacity": 0.9
+      }
     }
   ]
 }
-
