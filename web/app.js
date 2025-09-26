@@ -1,15 +1,15 @@
 /* web/app.js
    Kansas-Frontier-Matrix — Minimal MapLibre App (upgraded & connected)
    --------------------------------------------------------------------
-   ✅ Looks for config under ./config/ (app.config.json → viewer.json → layers.json), then legacy ./layers.json
-   ✅ Also merges ./config/time_config.json when present (overrides time + defaultYear, step, loop, fps)
-   ✅ Supports raster tiles, image overlays, vector tiles, and GeoJSON (fill/line/circle)
-   ✅ Time slider filters layers by [start,end] (layer.start/layer.end or layer.time.{start,end})
-   ✅ Sidebar UI (class-based) with toggles + opacity sliders (uses .kfm-sidebar CSS if present)
-   ✅ Optional wiring to components if present globally:
+   ✅ Loads config in priority: ./config/app.config.json → viewer.json → layers.json → legacy ./layers.json
+   ✅ Merges ./config/time_config.json when present (overrides time + defaultYear, step, loop, fps)
+   ✅ Supports: raster tiles/COG, image overlays, GeoJSON (fill/line/circle), vector tiles (basic), raster-dem (with fallback)
+   ✅ Time slider filters layers by [start,end] (supports YYYY, ISO YYYY-MM-DD, time.start/end)
+   ✅ Sidebar UI with toggles + opacity sliders (uses .kfm-sidebar CSS if present)
+   ✅ Optional globals:
       - window.LegendControl → legend control
-      - window.attachPopup   → popup click handler
-   ✅ Safer defaults, better error handling, small bug fixes
+      - window.attachPopup   → popup click handler (map, { layers: ['id', ...], maxFeatures })
+   ✅ Safer defaults, robust date parsing, better error handling, idempotent layer add
 */
 
 (() => {
@@ -49,7 +49,7 @@
 
       ensureDOMSkeleton(cfg);
 
-      // Default style: OSM raster fallback if no style supplied
+      // Default style: OSM raster fallback if no style was supplied
       const defaultStyle = {
         version: 8,
         sources: {
@@ -81,14 +81,14 @@
       map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
 
       map.on("load", () => {
-        // Register & normalize layers (but only add to map when needed)
+        // Normalize & register layers (lazy add to the map when needed)
         (cfg.layers || []).forEach(registerLayer);
 
         // Optional: attach popups if helper is loaded
         if (typeof window.attachPopup === "function") {
           try {
             const clickable = (cfg.layers || [])
-              .filter(l => (l.interactive !== false) && (l.type === "geojson" || l.type === "vector"))
+              .filter(l => (l.interactive !== false) && (["geojson", "vector"].includes((l.type || "").toLowerCase())))
               .map(l => l.id);
             if (clickable.length) {
               window.attachPopup(map, { layers: clickable, maxFeatures: 12 });
@@ -107,11 +107,8 @@
         buildTimeUI(cfg);
         buildLayerUI(cfg, map);
 
-        // Initial year
-        const y0 = clampYear(
-          nnum(cfg.defaultYear, cfg.time?.defaultYear, cfg.time?.min, 1900),
-          cfg
-        );
+        // Initial year (resolve from cfg.time/defaultYear using robust date→year parsing)
+        const y0 = clampYear(toYear(nnum(cfg.defaultYear, cfg.time?.defaultYear, 1900)), cfg);
         updateYear(y0, map);
       });
 
@@ -119,7 +116,7 @@
       window.KFM = {
         map,
         cfg,
-        setYear: (y) => updateYear(clampYear(y, cfg), map),
+        setYear: (y) => updateYear(clampYear(toYear(y), cfg), map),
         setVisible: (id, v) => setLayerVisibility(map, id, !!v),
         setOpacity: (id, a) => setLayerOpacity(map, id, +a),
         getLayer: (id) => state.layersById.get(id),
@@ -188,18 +185,18 @@
       document.body.appendChild(el("div", { id: "map" }));
     }
 
-    // Sidebar container (class-based to leverage map.css)
+    // Sidebar container (class-based to leverage style.css/components)
     if (!$("#sidebar")) {
       const sidebar = el("div", { id: "sidebar", class: "kfm-sidebar" }, [
-        el("div", { style: { padding: "12px 12px 6px 12px", borderBottom: "1px solid var(--kfm-border, #eee)" } }, [
+        el("div", { style: { padding: "12px 12px 6px 12px", borderBottom: "1px solid var(--border, #eee)" } }, [
           el("h2", { style: { margin: "0 0 8px 0", fontSize: "16px", fontWeight: "700" } }, [
             cfg.title || "Kansas-Frontier-Matrix",
           ]),
-          el("div", { style: { fontSize: "12px", color: "var(--kfm-fg-muted, #666)" } }, [
+          el("div", { style: { fontSize: "12px", color: "var(--muted, #666)" } }, [
             cfg.subtitle || "Time-aware layers"
           ])
         ]),
-        el("div", { id: "timebox", style: { padding: "12px", borderBottom: "1px solid var(--kfm-border, #eee)" } }),
+        el("div", { id: "timebox", style: { padding: "12px", borderBottom: "1px solid var(--border, #eee)" } }),
         el("div", { id: "layerbox", style: { padding: "12px" } })
       ]);
       document.body.appendChild(sidebar);
@@ -207,12 +204,26 @@
   }
 
   // -----------------------------------------------------------------------------
-  // Normalization & Map layer add
+  // Dates & Normalization
   // -----------------------------------------------------------------------------
+  function toYear(v) {
+    // Accepts number, string year, or ISO date string; returns integer year or null
+    if (v == null) return null;
+    if (Number.isFinite(v)) return Math.trunc(v);
+    if (typeof v === "string") {
+      const m = v.match(/^(\d{4})/);
+      if (m) return parseInt(m[1], 10);
+      const n = parseInt(v, 10);
+      return Number.isFinite(n) ? n : null;
+    }
+    return null;
+  }
+
   function clampYear(y, cfg) {
-    const min = nnum(cfg.time?.min, 1700);
-    const max = nnum(cfg.time?.max, 2100);
-    return Math.max(min, Math.min(max, +y));
+    const min = toYear(cfg.time?.min) ?? 1700;
+    const max = toYear(cfg.time?.max) ?? 2100;
+    const yy = toYear(y);
+    return Math.max(min, Math.min(max, Number.isFinite(yy) ? yy : min));
   }
 
   function normalizeLayer(l) {
@@ -220,18 +231,21 @@
     const url = l.url || (Array.isArray(l.tiles) && l.tiles[0]) || l.path || null;
     const type = (l.type || "").toLowerCase();
 
+    const start = toYear(coalesce(l.start, l.year, l.time?.start, null));
+    const end   = toYear(coalesce(l.end,   l.year, l.time?.end,   null));
+
     return {
       id: l.id,
       title: l.title || l.id,
-      type,                    // "raster" | "vector" | "image" | "geojson"
+      type,                     // "raster" | "vector" | "image" | "geojson" | "raster-dem"
       url,
       tiles: Array.isArray(l.tiles) ? l.tiles : (url ? [url] : null),
-      source: l.source,        // optional source id
+      source: l.source,         // optional source id (for advanced setups)
       sourceLayer: l["source-layer"] || l.sourceLayer || l.id, // for vector tiles
       paint: l.paint || {},
       layout: l.layout || {},
-      start: coalesce(l.start, l.year, l.time?.start, null),
-      end: coalesce(l.end, l.year, l.time?.end, null),
+      start,
+      end,
       opacity: nnum(l.opacity, d.opacity, 1),
       minzoom: nnum(l.minzoom, d.minzoom, 0),
       maxzoom: nnum(l.maxzoom, d.maxzoom, 24),
@@ -250,19 +264,25 @@
     state.layersById.set(layer.id, layer);
   }
 
+  // -----------------------------------------------------------------------------
+  // Add to Map
+  // -----------------------------------------------------------------------------
   function addLayerToMap(map, layer) {
     const srcId = layer.source || layer.id;
 
-    // Already added? Don't re-add source/layers.
+    // Avoid double add
     if (map.getSource(srcId) && (map.getLayer(layer.id) || map.getLayer(layer.id + "_line") || map.getLayer(layer.id + "_circle"))) {
       return;
     }
 
-    // Raster tiles
+    // --- Raster tiles/COG/XYZ ---
     if (layer.type === "raster") {
       const tiles = layer.tiles || (layer.url ? [layer.url] : null);
       if (!tiles) { console.warn("Raster layer missing url/tiles:", layer); return; }
-      if (!map.getSource(srcId)) map.addSource(srcId, { type: "raster", tiles, tileSize: layer.tileSize, bounds: layer.bounds || undefined });
+      if (!map.getSource(srcId)) {
+        const isXYZ = /\{z\}\/\{x\}\/\{y\}/.test(tiles[0]);
+        map.addSource(srcId, { type: "raster", tiles, tileSize: layer.tileSize, bounds: layer.bounds || undefined });
+      }
       if (!map.getLayer(layer.id)) {
         map.addLayer({
           id: layer.id,
@@ -277,7 +297,33 @@
       return;
     }
 
-    // Image overlays
+    // --- Raster DEM (prefer TileJSON url; otherwise fallback to raster) ---
+    if (layer.type === "raster-dem") {
+      const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
+      if (looksTileJSON) {
+        try {
+          if (!map.getSource(srcId)) map.addSource(srcId, { type: "raster-dem", url: layer.url, tileSize: layer.tileSize || 512 });
+          if (!map.getLayer(layer.id)) {
+            map.addLayer({
+              id: layer.id,
+              type: "hillshade",
+              source: srcId,
+              layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
+              paint: { ...(layer.paint || {}) }
+            });
+          }
+          return;
+        } catch (e) {
+          console.warn("raster-dem add failed, falling back to raster:", e);
+        }
+      }
+      // Fallback: treat as raster (e.g., local COG tif)
+      const fallback = { ...layer, type: "raster" };
+      addLayerToMap(map, fallback);
+      return;
+    }
+
+    // --- Image overlays ---
     if (layer.type === "image" && Array.isArray(layer.coordinates) && layer.url) {
       if (!map.getSource(srcId)) map.addSource(srcId, { type: "image", url: layer.url, coordinates: layer.coordinates });
       if (!map.getLayer(layer.id)) {
@@ -290,7 +336,7 @@
       return;
     }
 
-    // GeoJSON (explicit type or URL with geojson/json)
+    // --- GeoJSON (explicit or .json/.geojson url) ---
     const isGeoJSON = layer.type === "geojson" || /\.(json|geojson)(\?|$)/i.test(layer.url || "");
     if (isGeoJSON) {
       if (!layer.url) { console.warn("GeoJSON layer missing url:", layer); return; }
@@ -344,12 +390,12 @@
       return;
     }
 
-    // Vector tiles
+    // --- Vector tiles ---
     if (layer.type === "vector") {
       if (!layer.url) { console.warn("Vector tiles layer missing url:", layer); return; }
       if (!map.getSource(srcId)) map.addSource(srcId, { type: "vector", url: layer.url });
 
-      // Default to a line layer; advanced styling can pass paint/layout with correct type via cfg.style instead.
+      // Default to a line layer (advanced: pass style object via cfg.style)
       if (!map.getLayer(layer.id)) {
         map.addLayer({
           id: layer.id,
@@ -365,6 +411,9 @@
     }
   }
 
+  // -----------------------------------------------------------------------------
+  // Visibility & Opacity
+  // -----------------------------------------------------------------------------
   function setLayerVisibility(map, layerId, visible) {
     const l = state.layersById.get(layerId);
     if (!l) return;
@@ -375,7 +424,7 @@
       addLayerToMap(map, l);
     }
 
-    // Apply to all sublayers (geojson uses _fill==id, _line, _circle)
+    // Apply to all sublayers (geojson uses _fill==id, _line, _circle; hillshade uses main id)
     [layerId, layerId + "_line", layerId + "_circle"].forEach(id => {
       if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
     });
@@ -392,6 +441,7 @@
     if (type === "raster") apply(layerId, "raster-opacity", opacity);
     if (type === "fill")   apply(layerId, "fill-opacity", opacity);
     if (type === "line")   apply(layerId, "line-opacity", opacity);
+    if (type === "hillshade") apply(layerId, "hillshade-exaggeration", Math.max(0.1, opacity)); // simple proxy
 
     // geojson companions
     const lineId = layerId + "_line";
@@ -407,9 +457,9 @@
     const timebox = $("#timebox");
     timebox.innerHTML = "";
 
-    const min = nnum(cfg.time?.min, 1700);
-    const max = nnum(cfg.time?.max, 2100);
-    const cur = clampYear(nnum(cfg.defaultYear, cfg.time?.defaultYear, min), cfg);
+    const min = toYear(cfg.time?.min) ?? 1700;
+    const max = toYear(cfg.time?.max) ?? 2100;
+    const cur = clampYear(toYear(nnum(cfg.defaultYear, cfg.time?.defaultYear, min)), cfg);
     const step = nnum(cfg.time?.step, 1);
 
     const labelRow = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } }, [
@@ -441,16 +491,15 @@
     // Optional: autoplay controls if provided by cfg.time
     if (cfg.time && (cfg.time.loop || cfg.time.fps)) {
       const dock = el("div", { style: { marginTop: "8px", display: "flex", gap: "6px" } });
-      const btnPrev = el("button", { onclick: () => slider.stepDown(), title: "Step backward" }, ["⟨"]);
-      const btnNext = el("button", { onclick: () => slider.stepUp(),     title: "Step forward"  }, ["⟩"]);
+      const btnPrev = el("button", { class: "btn", onclick: () => slider.stepDown(), title: "Step backward" }, ["⟨"]);
+      const btnNext = el("button", { class: "btn", onclick: () => slider.stepUp(),     title: "Step forward"  }, ["⟩"]);
       let playing = false, raf = null, last = 0;
       const fps = nnum(cfg.time.fps, 8);
       const loop = !!cfg.time.loop;
 
       const btnPlay = el("button", {
-        onclick: () => {
-          playing ? stop() : play();
-        }
+        class: "btn btn--primary",
+        onclick: () => { playing ? stop() : play(); }
       }, ["▶"]);
 
       function play() {
@@ -462,9 +511,7 @@
             last = now;
             const before = +slider.value;
             slider.stepUp();
-            if (+slider.value === before && loop) {
-              slider.value = String(min);
-            }
+            if (+slider.value === before && loop) slider.value = String(min);
             slider.dispatchEvent(new Event("input", { bubbles: true }));
           }
           raf = requestAnimationFrame(tick);
@@ -479,10 +526,12 @@
   }
 
   function isActiveForYear(layer, year) {
-    if (layer.start == null && layer.end == null) return true;
-    if (layer.start != null && layer.end == null) return year >= layer.start;
-    if (layer.start == null && layer.end != null) return year <= layer.end;
-    return year >= layer.start && year <= layer.end;
+    const s = toYear(layer.start);
+    const e = toYear(layer.end);
+    if (s == null && e == null) return true;
+    if (s != null && e == null) return year >= s;
+    if (s == null && e != null) return year <= e;
+    return year >= s && year <= e;
   }
 
   function updateYear(year, map) {
@@ -518,7 +567,7 @@
         const chkId = `chk_${L.id}`;
         const row = el("div", { style: {
           display: "grid",
-          gridTemplateColumns: "24px 1fr 60px",
+          gridTemplateColumns: "24px 1fr 80px",
           gap: "6px",
           alignItems: "center",
           marginBottom: "6px"
@@ -531,7 +580,7 @@
           }),
           el("label", { for: chkId, style: { fontSize: "13px", cursor: "pointer" } }, [
             L.title,
-            el("span", { style: { color: "var(--kfm-fg-muted, #999)", marginLeft: "6px", fontSize: "11px" } }, [timeBadge(L)])
+            el("span", { style: { color: "var(--muted, #999)", marginLeft: "6px", fontSize: "11px" } }, [timeBadge(L)])
           ]),
           el("input", {
             type: "range", min: "0", max: "1", step: "0.05", value: String(L.opacity ?? 1),
@@ -547,8 +596,8 @@
   }
 
   function timeBadge(l) {
-    const s = coalesce(l.start, l.year, l.time?.start, null);
-    const e = coalesce(l.end, l.year, l.time?.end, null);
+    const s = toYear(coalesce(l.start, l.year, l.time?.start, null));
+    const e = toYear(coalesce(l.end,   l.year, l.time?.end,   null));
     if (s == null && e == null) return "";
     if (s != null && e != null && s === e) return `[${s}]`;
     if (s != null && e != null) return `[${s}–${e}]`;
@@ -565,10 +614,6 @@
   }
   function nnum(...vals) {
     for (const v of vals) if (Number.isFinite(+v)) return +v;
-    return undefined;
-  }
-  function bool(...vals) {
-    for (const v of vals) if (typeof v === "boolean") return v;
     return undefined;
   }
   function groupBy(arr, keyFn) {
