@@ -1,0 +1,146 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-09-26T00:00:00Z",
+  "sources": {
+    "basemap_osm": {
+      "title": "Basemap — OpenStreetMap",
+      "type": "raster",
+      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      "attribution": "© OpenStreetMap contributors",
+      "category": "reference"
+    },
+    "county_boundaries": {
+      "title": "Kansas County Boundaries",
+      "type": "vector",
+      "data": "data/processed/county_boundaries.json",
+      "attribution": "KS GIS / DASC",
+      "category": "reference"
+    },
+    "settlements": {
+      "title": "Settlements, Forts, Trading Posts",
+      "type": "vector",
+      "data": "data/processed/towns_points.json",
+      "attribution": "Compiled / KFM",
+      "category": "culture",
+      "timeProperty": "year"
+    },
+    "forts": {
+      "title": "Historic Forts",
+      "type": "vector",
+      "data": "data/processed/forts.json",
+      "attribution": "National Park Service / KFM",
+      "category": "culture",
+      "timeProperty": "year"
+    },
+    "treaties": {
+      "title": "Treaty Boundaries",
+      "type": "vector",
+      "data": "data/processed/treaties.json",
+      "attribution": "Kansas Historical Society / KFM",
+      "category": "culture",
+      "timeProperty": "year"
+    },
+    "trails": {
+      "title": "Historic Trails",
+      "type": "vector",
+      "data": "data/processed/trails.json",
+      "attribution": "National Trails GIS / KFM",
+      "category": "culture",
+      "timeProperty": "year"
+    },
+    "railroads": {
+      "title": "Railroads",
+      "type": "vector",
+      "data": "data/processed/railroads.json",
+      "attribution": "Kansas DOT / KFM",
+      "category": "culture",
+      "timeProperty": "year_built"
+    },
+    "water": {
+      "title": "Rivers & Waterbodies",
+      "type": "vector",
+      "data": "data/processed/hydrology.json",
+      "attribution": "NHD / KGS",
+      "category": "environment"
+    },
+    "landcover": {
+      "title": "Land Cover Snapshots",
+      "type": "vector",
+      "data": "data/processed/landcover_timeslices.json",
+      "attribution": "USGS NLCD / KFM",
+      "category": "environment",
+      "timeProperty": "year"
+    },
+    "soils": {
+      "title": "Soil Survey Maps",
+      "type": "vector",
+      "data": "data/processed/soils.json",
+      "attribution": "NRCS / KS GIS Archive",
+      "category": "environment"
+    },
+    "terrain": {
+      "title": "Digital Elevation Model (DEM)",
+      "type": "raster-dem",
+      "tiles": ["data/cogs/dem/{z}/{x}/{y}.tif"],
+      "attribution": "USGS / KGS",
+      "category": "environment"
+    },
+    "tornado": {
+      "title": "Tornado Tracks",
+      "type": "vector",
+      "data": "data/processed/tornado_tracks_ks.json",
+      "attribution": "NOAA SPC / NCEI",
+      "category": "hazards",
+      "timeProperty": "year"
+    },
+    "wildfire": {
+      "title": "Wildfire Perimeters",
+      "type": "vector",
+      "data": "data/processed/wildfire.json",
+      "attribution": "NIFC / KS Forest Service",
+      "category": "hazards",
+      "timeProperty": "year"
+    },
+    "flood": {
+      "title": "Flood Events",
+      "type": "vector",
+      "data": "data/processed/floods.json",
+      "attribution": "FEMA / USACE",
+      "category": "hazards",
+      "timeProperty": "year"
+    },
+    "drought": {
+      "title": "Drought Monitor",
+      "type": "vector",
+      "data": "data/processed/drought.json",
+      "attribution": "US Drought Monitor",
+      "category": "hazards",
+      "timeProperty": "date"
+    },
+    "historic_topos": {
+      "title": "Historic Topographic Maps",
+      "type": "raster",
+      "tiles": ["data/cogs/overlays/historic_topos/{z}/{x}/{y}.tif"],
+      "attribution": "USGS Historical Topographic Map Collection",
+      "category": "overlays",
+      "timeProperty": "year"
+    },
+    "plats": {
+      "title": "Plat Maps & Surveys",
+      "type": "raster",
+      "tiles": ["data/cogs/overlays/plats/{z}/{x}/{y}.tif"],
+      "attribution": "Kansas Register of Deeds / KS GIS Archive",
+      "category": "overlays",
+      "timeProperty": "year"
+    },
+    "soil_surveys": {
+      "title": "Archived Soil Survey Maps",
+      "type": "raster",
+      "tiles": ["data/cogs/overlays/soil_surveys/{z}/{x}/{y}.tif"],
+      "attribution": "NRCS / KS GIS Archive",
+      "category": "overlays",
+      "timeProperty": "year"
+    }
+  },
+  "attribution": "Kansas-Frontier-Matrix — Sources compiled from USGS, NOAA, FEMA, NIFC, KS GIS Archive, KSRODS"
+}
