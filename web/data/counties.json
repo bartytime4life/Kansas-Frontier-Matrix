@@ -5,30 +5,19 @@
   "format": "geojson",
   "data": "data/processed/counties_timeslices.json",
   "category": "reference",
-
   "time": { "start": "1855-01-01", "end": null },
-
-  /* Feature-level time binding:
-     Option A (current): properties.valid = { "start": "...", "end": "..." }
-     Option B: use distinct fields (valid_start / valid_end) — see timeProperty below.
-  */
-  "timeProperty": { "path": "valid", "start": "start", "end": "end", "format": "date" },
-  // If your features instead have flat fields, swap for:
-  // "timeProperty": { "start": "valid_start", "end": "valid_end", "format": "date" },
-
+  "timeProperty": { "start": "valid_start", "end": "valid_end", "format": "date" },
   "bounds": [-102.051, 36.993, -94.588, 40.003],
   "minzoom": 5,
   "maxzoom": 19,
   "visible": false,
   "opacity": 1.0,
-
   "popup": ["name", "valid_start", "valid_end"],
   "legend": {
     "type": "line",
     "label": "Historical county boundaries",
     "stroke": "#222222"
   },
-
   "style": {
     "renderer": "fill",
     "fillColor": "#000000",
@@ -38,7 +27,6 @@
     "lineJoin": "round",
     "lineCap": "round"
   },
-
   "fields": {
     "name":        { "type": "string", "description": "County name (at that time)" },
     "fips":        { "type": "string", "description": "Modern FIPS (if applicable)" },
@@ -46,9 +34,7 @@
     "valid_end":   { "type": "string", "format": "date|null", "description": "Boundary end date (null = still valid)" },
     "source":      { "type": "string", "description": "Cartographic / archival source" }
   },
-
   "search": { "qFields": ["name"] },
-
   "attribution": "© <a href=\"https://data.kansasgis.org/\" target=\"_blank\">Kansas DASC</a> (Archive layers)",
   "license": "Public Domain / State of Kansas",
   "provenance": {
