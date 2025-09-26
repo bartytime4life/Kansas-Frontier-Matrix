@@ -1,9 +1,69 @@
 {
+  "version": "1.0.0",
+  "generated": "2025-09-26T00:00:00Z",
+
+  "defaults": {
+    "fillOpacity": 0.6,
+    "lineWidth": 1.0,
+    "lineJoin": "round",
+    "lineCap": "round",
+    "circleRadius": 4,
+    "circleStrokeColor": "#ffffff",
+    "circleStrokeWidth": 0.8,
+    "lineOpacity": 1.0,
+    "lineDasharray": [1, 0]
+  },
+
   "symbols": {
-    "treaties": { "fillColor": "#FFCA3A", "lineColor": "#B08900" },
-    "trails": { "lineColor": "#4361EE", "lineDasharray": [2, 2] },
-    "railroads": { "lineColor": "#8D99AE" },
-    "tornado": { "lineColor": "#D00000" },
-    "wildfire": { "fillColor": "#E76F51" }
+    "treaties": {
+      "renderer": "fill",
+      "fillColor": "#FFCA3A",
+      "fillOpacity": 0.45,
+      "lineColor": "#B08900",
+      "lineWidth": 1.0
+    },
+
+    "trails": {
+      "renderer": "line",
+      "lineColor": "#4361EE",
+      "lineWidth": 1.2,
+      "lineDasharray": [2, 2],
+      "lineOpacity": 0.9
+    },
+
+    "railroads": {
+      "renderer": "line",
+      "lineColor": "#8D99AE",
+      "lineWidth": 1.2,
+      "lineOpacity": 0.95
+    },
+
+    "tornado": {
+      "renderer": "circle",
+      "circleColor": "#D00000",
+      "circleRadius": 4,
+      "circleStrokeColor": "#ffffff",
+      "circleStrokeWidth": 0.9,
+      "lineColor": "#D00000"
+    },
+
+    "wildfire": {
+      "renderer": "fill",
+      "fillColor": "#E76F51",
+      "fillOpacity": 0.5,
+      "lineColor": "#8C3C2A",
+      "lineWidth": 0.8
+    }
+  },
+
+  "legend": {
+    "type": "mixed",
+    "items": [
+      { "id": "treaties",  "label": "Treaty Areas",         "fill": "#FFCA3A", "stroke": "#B08900" },
+      { "id": "trails",    "label": "Historic Trails",      "stroke": "#4361EE", "dash": [2, 2] },
+      { "id": "railroads", "label": "Railroads",            "stroke": "#8D99AE" },
+      { "id": "tornado",   "label": "Tornado Reports",      "fill": "#D00000", "shape": "circle" },
+      { "id": "wildfire",  "label": "Wildfire Perimeters",  "fill": "#E76F51", "stroke": "#8C3C2A" }
+    ]
   }
 }
