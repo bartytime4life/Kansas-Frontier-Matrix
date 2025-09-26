@@ -1,13 +1,15 @@
 {
-  "version": "1.0.0",
-  "generated": "2025-09-25T21:45:00Z",
+  "version": "1.1.0",
+  "generated": "2025-09-26T18:00:00Z",
 
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time · Terrain · History — Minimal Web Viewer",
-  "style": null,
+  "style": "https://demotiles.maplibre.org/style.json",
 
-  "center": [-98.3000, 38.5000],
+  "center": [-98.3, 38.5],
   "zoom": 6,
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+
   "attributionControl": true,
   "navControl": true,
 
@@ -16,18 +18,17 @@
     "visible": true,
     "minzoom": 0,
     "maxzoom": 19,
-    "tileSize": 256,
     "bounds": [-102.051, 36.993, -94.588, 40.003],
-    "time": { "start": "1700-01-01", "end": "2100-12-31" }
+    "time": { "start": "1800-01-01", "end": "2025-12-31" }
   },
 
   "time": {
-    "min": "1700-01-01",
-    "max": "2100-12-31",
+    "min": "1800-01-01",
+    "max": "2025-12-31",
     "step": 1,
-    "defaultYear": 1900,
-    "loop": true,
-    "fps": 8
+    "defaultYear": 1930,
+    "loop": false,
+    "fps": 12
   },
 
   "layers": [
@@ -42,80 +43,89 @@
       "category": "reference",
       "time": { "start": null, "end": null },
       "minzoom": 0,
-      "maxzoom": 19,
-      "tileSize": 256
+      "maxzoom": 19
     },
 
     {
       "id": "usgs_topo_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
       "type": "raster",
-      "url": "./data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "url": "data/cogs/overlays/usgs_topo_larned_1894.tif",
       "opacity": 0.75,
-      "visible": true,
+      "visible": false,
       "attribution": "USGS Historical Topographic Map Collection",
       "category": "historical",
-      "time": { "start": "1894-01-01", "end": "1894-12-31" }
+      "time": { "start": "1894-01-01", "end": "1894-12-31" },
+      "minzoom": 0,
+      "maxzoom": 19
     },
 
     {
       "id": "ks_dem_2018_2020",
       "title": "Kansas DEM (2018–2020)",
       "type": "raster-dem",
-      "url": "./data/cogs/dem/ks_1m_dem_2018_2020.tif",
+      "url": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
       "opacity": 0.8,
       "visible": false,
       "attribution": "Kansas GIS / USGS 3DEP",
       "category": "terrain",
-      "time": { "start": "2018-01-01", "end": "2020-12-31" }
+      "time": { "start": "2018-01-01", "end": "2020-12-31" },
+      "minzoom": 6,
+      "maxzoom": 19
     },
 
     {
       "id": "ks_hillshade_2018",
       "title": "Kansas Hillshade (LiDAR-derived, 2018)",
       "type": "raster",
-      "url": "./data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
-      "opacity": 0.6,
-      "visible": true,
-      "attribution": "Derived from Kansas DEM",
+      "url": "data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
+      "opacity": 0.85,
+      "visible": false,
+      "attribution": "Kansas Data Access & Support Center (KGS/Kansas DASC)",
       "category": "terrain",
-      "time": { "start": "2018-01-01", "end": "2018-12-31" }
+      "time": { "start": "2018-01-01", "end": "2018-12-31" },
+      "minzoom": 6,
+      "maxzoom": 19
     },
 
     {
       "id": "kansas_counties",
       "title": "Kansas Counties",
       "type": "geojson",
-      "url": "./data/vectors/kansas_counties.geojson",
-      "opacity": 0.5,
-      "visible": true,
+      "url": "data/vectors/kansas_counties.geojson",
+      "opacity": 0.8,
+      "visible": false,
       "attribution": "Kansas Data Access & Support Center",
-      "category": "infrastructure",
+      "category": "reference",
       "time": { "start": null, "end": null },
-      "paint": {
-        "fill-color": "#264653",
-        "fill-opacity": 0.15,
-        "line-color": "#264653",
-        "line-width": 1.0,
-        "line-opacity": 0.6
-      }
+      "minzoom": 4,
+      "maxzoom": 19,
+      "style": {
+        "lineColor": "#555555",
+        "lineWidth": 1,
+        "lineOpacity": 0.8,
+        "fillColor": "#000000",
+        "fillOpacity": 0.0
+      },
+      "popup": ["NAME", "FIPS"]
     },
 
     {
       "id": "events_sample",
       "title": "Sample Events",
       "type": "geojson",
-      "url": "./data/demo_events.json",
+      "url": "data/demo_events.json",
       "opacity": 1.0,
-      "visible": true,
+      "visible": false,
       "attribution": "Demo dataset",
       "category": "historical",
       "time": { "start": "1800-01-01", "end": "1950-12-31" },
-      "paint": {
-        "circle-color": "#E63946",
-        "circle-radius": 5,
-        "circle-opacity": 0.9
-      }
+      "style": {
+        "circleColor": "#E63946",
+        "circleRadius": 5,
+        "circleOpacity": 0.9
+      },
+      "popup": ["title", "date", "summary", "url"]
     }
   ]
 }
