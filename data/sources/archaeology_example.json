@@ -1,0 +1,41 @@
+{
+  "id": "archaeology_example_1975",
+  "title": "Archaeological Excavation Survey (Example, 1975)",
+  "type": "vector",
+  "version": "1.0.0",
+  "description": "Example archaeology dataset — site survey boundaries digitized from a 1975 excavation report. Demonstrates how to structure archaeology sources for ingestion, processing, and STAC export.",
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://example.org/data/archaeology/ks_excavation_sites_1975.shp.zip"
+      ],
+      "notes": "Example ZIP archive of Shapefile layers. Replace with actual data URL."
+    }
+  ],
+  "spatial": {
+    "bbox": [-100.5, 38.0, -98.5, 39.5],
+    "crs": "EPSG:4326"
+  },
+  "temporal": {
+    "start": "1975-01-01",
+    "end": "1975-12-31"
+  },
+  "provenance": {
+    "source": "Kansas State Historical Society (Example Dataset)",
+    "license": "Public Domain",
+    "doi": null,
+    "notes": "Digitized from printed excavation survey report (1975)."
+  },
+  "outputs": {
+    "geojson": "data/processed/archaeology/ks_excavation_sites_1975.geojson"
+  },
+  "style": {
+    "stroke": "#b7410e",
+    "stroke-width": 1.0,
+    "fill": "#f4a460",
+    "opacity": 0.7
+  },
+  "schema.source": "src/kansas_geo_timeline/schemas/source.schema.json"
+}
