@@ -4,10 +4,23 @@
   "type": "vector",
   "data": "data/processed/treaties_polygons.json",
   "category": "sovereignty",
+
   "time": { "start": "1800-01-01", "end": "1900-12-31" },
   "timeProperty": "year",
-  "popup": ["name", "tribe", "year", "source"],
-  "style": { "fillColor": "#FFCA3A", "fillOpacity": 0.35, "lineColor": "#B08900" },
+
+  "popup": ["name", "tribe", "year", "year_end", "source", "notes"],
+
+  "style": {
+    "fillColor": "#FFCA3A",
+    "fillOpacity": 0.35,
+    "lineColor": "#B08900",
+    "lineWidth": 1.0,
+    "lineOpacity": 0.9
+  },
+
+  "minzoom": 4,
+  "maxzoom": 14,
+
   "visible": true,
   "attribution": "Digitized from primary sources"
 }
