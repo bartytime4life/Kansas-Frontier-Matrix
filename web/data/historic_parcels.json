@@ -1,1 +1,12 @@
-
+{
+  "id": "plss_parcels",
+  "title": "PLSS / Historic Parcels",
+  "type": "vector",
+  "data": "data/processed/plss_sections.json",
+  "category": "cadastre",
+  "time": { "start": "1854-01-01", "end": null },
+  "timeProperty": "year",
+  "style": { "lineColor": "#6D6875", "lineWidth": 0.6, "fillOpacity": 0.0 },
+  "visible": false,
+  "attribution": "Kansas ROD / DASC"
+}
