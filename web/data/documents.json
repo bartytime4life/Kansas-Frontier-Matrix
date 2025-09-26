@@ -2,12 +2,70 @@
   "id": "documents_index",
   "title": "Geotagged Documents",
   "type": "vector",
+  "format": "geojson",
   "data": "data/processed/documents_points.json",
   "category": "documents",
+
   "time": { "start": "1800-01-01", "end": null },
-  "timeProperty": "date",
-  "popup": ["title", "source", "date", "url"],
-  "style": { "circleColor": "#6A4C93", "circleRadius": 3 },
+  "timeProperty": { "start": "date", "end": null, "format": "date" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
   "visible": false,
-  "attribution": "KFM Knowledge Hub"
+  "opacity": 1.0,
+
+  "popup": ["title", "source", "date", "url"],
+  "legend": {
+    "type": "circle",
+    "label": "Documents (point locations)",
+    "stroke": "#ffffff",
+    "fill": "#6A4C93"
+  },
+
+  "style": {
+    "renderer": "circle",
+    "circleColor": "#6A4C93",
+    "circleRadius": 3,
+    "circleStrokeColor": "#ffffff",
+    "circleStrokeWidth": 0.6
+  },
+
+  "cluster": {
+    "enabled": true,
+    "radius": 40,
+    "maxZoom": 12,
+    "style": {
+      "circleColor": "#6A4C93",
+      "circleRadius": {
+        "stops": [[5, 10], [50, 16], [200, 22]],
+        "property": "point_count",
+        "type": "exponential",
+        "base": 1.2
+      },
+      "circleStrokeColor": "#ffffff",
+      "circleStrokeWidth": 1.0,
+      "textField": "{point_count_abbreviated}",
+      "textSize": 11,
+      "textColor": "#ffffff"
+    }
+  },
+
+  "fields": {
+    "title":   { "type": "string", "description": "Document title" },
+    "source":  { "type": "string", "description": "Archive/source label" },
+    "date":    { "type": "string", "format": "date", "description": "Document date" },
+    "url":     { "type": "string", "format": "uri", "description": "Link to the document" },
+    "doc_id":  { "type": "string", "description": "Internal/graph ID (optional)" }
+  },
+
+  "search": { "qFields": ["title", "source"] },
+
+  "attribution": "© KFM Knowledge Hub",
+  "license": "CC-BY or as specified per source",
+  "provenance": {
+    "source": "KFM Knowledge Hub (graph export of geotagged items)",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Points represent geocoded document mentions; dates normalized to ISO 8601"
+  }
 }
