@@ -1,5 +1,120 @@
 {
   "type": "FeatureCollection",
   "name": "fema_disasters_ks",
-  "features": []
+  "generated": "2025-09-26T00:00:00Z",
+  "attribution": "FEMA OpenFEMA",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "OpenFEMA Disaster Declarations Summaries (sample points for wiring)",
+    "notes": "County centroids; replace/append with pipeline export"
+  },
+  "fields": {
+    "disaster_number":   { "type": "string", "description": "FEMA disaster number" },
+    "incident_type":     { "type": "string", "description": "Event type (Flood, Severe Storm(s), Tornado, Fire, Drought, etc.)" },
+    "declaration_date":  { "type": "string", "format": "date", "description": "ISO 8601 date" },
+    "declaration_title": { "type": "string", "description": "Short title (optional)" },
+    "declaration_type":  { "type": "string", "description": "Major Disaster / Emergency / Fire Mgmt Assistance" },
+    "county":            { "type": "string", "description": "County name" },
+    "state":             { "type": "string", "description": "State code (KS)" },
+    "fips":              { "type": "string", "description": "County FIPS" },
+    "url":               { "type": "string", "format": "uri", "description": "Link to OpenFEMA record" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "fema_1957_tornado_sedgwick",
+      "geometry": { "type": "Point", "coordinates": [-97.337, 37.690] },
+      "properties": {
+        "disaster_number": "DR-84",
+        "incident_type": "Tornado",
+        "declaration_date": "1957-05-26",
+        "declaration_title": "Tornado Outbreak — Wichita Area",
+        "declaration_type": "Major Disaster",
+        "county": "Sedgwick",
+        "state": "KS",
+        "fips": "20173",
+        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "fema_1977_flood_shawnee",
+      "geometry": { "type": "Point", "coordinates": [-95.692, 39.042] },
+      "properties": {
+        "disaster_number": "DR-1234",
+        "incident_type": "Flood",
+        "declaration_date": "1977-07-20",
+        "declaration_title": "Severe Flooding — Kansas River Basin",
+        "declaration_type": "Major Disaster",
+        "county": "Shawnee",
+        "state": "KS",
+        "fips": "20177",
+        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "fema_1993_flood_wyandotte",
+      "geometry": { "type": "Point", "coordinates": [-94.747, 39.116] },
+      "properties": {
+        "disaster_number": "DR-999",
+        "incident_type": "Flood",
+        "declaration_date": "1993-07-09",
+        "declaration_title": "Great Flood of 1993 — KS Portion",
+        "declaration_type": "Major Disaster",
+        "county": "Wyandotte",
+        "state": "KS",
+        "fips": "20209",
+        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "fema_2011_fire_barber",
+      "geometry": { "type": "Point", "coordinates": [-98.682, 37.233] },
+      "properties": {
+        "disaster_number": "FM-2941",
+        "incident_type": "Fire",
+        "declaration_date": "2011-08-10",
+        "declaration_title": "Wildfire — Barber County",
+        "declaration_type": "Fire Mgmt Assistance",
+        "county": "Barber",
+        "state": "KS",
+        "fips": "20007",
+        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "fema_2012_drought_finney",
+      "geometry": { "type": "Point", "coordinates": [-100.872, 37.964] },
+      "properties": {
+        "disaster_number": "DR-4063",
+        "incident_type": "Drought",
+        "declaration_date": "2012-07-25",
+        "declaration_title": "Extreme Drought — Southwest KS",
+        "declaration_type": "Emergency",
+        "county": "Finney",
+        "state": "KS",
+        "fips": "20055",
+        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "fema_2021_severe_storms_jo",
+      "geometry": { "type": "Point", "coordinates": [-94.831, 38.883] },
+      "properties": {
+        "disaster_number": "DR-4603",
+        "incident_type": "Severe Storm(s)",
+        "declaration_date": "2021-07-09",
+        "declaration_title": "Severe Storms, Straight-line Winds, and Tornadoes",
+        "declaration_type": "Major Disaster",
+        "county": "Johnson",
+        "state": "KS",
+        "fips": "20091",
+        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      }
+    }
+  ]
 }
