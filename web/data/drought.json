@@ -2,11 +2,75 @@
   "id": "drought_monitor",
   "title": "U.S. Drought Monitor (Weekly)",
   "type": "vector",
+  "format": "geojson",
   "data": "data/processed/drought_weekly.json",
   "category": "hazards",
+
   "time": { "start": "2000-01-06", "end": null },
-  "timeProperty": "week",
-  "style": { "fillOpacity": 0.35 },
+  "timeProperty": { "start": "week", "end": null, "format": "date" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
   "visible": false,
-  "attribution": "NOAA/USDA/NDMC"
+  "opacity": 1.0,
+
+  "popup": ["week", "category", "dm", "area_km2"],
+  "legend": {
+    "type": "fill",
+    "label": "Drought category",
+    "classes": [
+      { "label": "D0 (Abnormally Dry)",   "fill": "#FFFF00", "stroke": "#804000" },
+      { "label": "D1 (Moderate)",          "fill": "#FFCC00", "stroke": "#804000" },
+      { "label": "D2 (Severe)",            "fill": "#FF9900", "stroke": "#804000" },
+      { "label": "D3 (Extreme)",           "fill": "#FF0000", "stroke": "#804000" },
+      { "label": "D4 (Exceptional)",       "fill": "#730000", "stroke": "#804000" }
+    ]
+  },
+
+  "style": {
+    "renderer": "fill",
+    "lineColor": "#804000",
+    "lineWidth": 0.6,
+    "lineJoin": "round",
+    "lineCap": "round",
+
+    /* Data-driven fill. We support either:
+       - numeric class in properties.dm  (0..4), or
+       - string class in properties.category ("D0".."D4").
+       If neither exists, polygons render transparent. */
+    "fillColor": {
+      "match": {
+        "property": ["coalesce", ["get", "category"], ["concat", "D", ["get", "dm"]]],
+        "stops": [
+          ["D0", "#FFFF00"],
+          ["D1", "#FFCC00"],
+          ["D2", "#FF9900"],
+          ["D3", "#FF0000"],
+          ["D4", "#730000"]
+        ],
+        "default": "#00000000"
+      }
+    },
+
+    "fillOpacity": 0.35
+  },
+
+  "fields": {
+    "week":     { "type": "string", "format": "date", "description": "USDM week date (Thursday)" },
+    "category": { "type": "string", "enum": ["D0","D1","D2","D3","D4"], "description": "Drought class (string)" },
+    "dm":       { "type": "number", "enum": [0,1,2,3,4], "description": "Drought class (numeric)" },
+    "area_km2": { "type": "number", "units": "km²", "description": "Polygon area (optional, for popups/analytics)" },
+    "state":    { "type": "string", "description": "State code (should be 'KS' if prefiltered)" }
+  },
+
+  "search": { "qFields": ["category"] },
+
+  "attribution": "© <a href=\"https://droughtmonitor.unl.edu/\" target=\"_blank\">USDM &mdash; NOAA / USDA / NDMC</a>",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "US Drought Monitor weekly shapefiles (filtered to Kansas)",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Categories D0–D4 mapped to standard USDM color ramp; dates normalized to ISO 8601 (week)"
+  }
 }
