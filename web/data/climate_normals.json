@@ -1,1 +1,12 @@
-
+{
+  "id": "climate_normals",
+  "title": "Climate Normals (1991–2020)",
+  "type": "vector",
+  "data": "data/processed/climate_normals_ks.json",
+  "category": "climate",
+  "time": { "start": "1991-01-01", "end": "2020-12-31" },
+  "popup": ["station", "tmin_c", "tmax_c", "precip_mm"],
+  "style": { "circleColor": "#118AB2", "circleRadius": 2.5 },
+  "visible": false,
+  "attribution": "NOAA NCEI"
+}
