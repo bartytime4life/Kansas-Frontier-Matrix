@@ -1,7 +1,7 @@
 {
   "time": {
-    "min": 1700,
-    "max": 2100,
+    "min": "1700-01-01",
+    "max": "2100-12-31",
     "step": 1,
     "defaultYear": 1900,
     "loop": true,
@@ -10,19 +10,18 @@
   "presets": [
     {
       "label": "Territorial Kansas",
-      "start": 1854,
-      "end": 1861
+      "start": "1854-01-01",
+      "end": "1861-12-31"
     },
     {
       "label": "Civil War & Statehood",
-      "start": 1861,
-      "end": 1865
+      "start": "1861-01-01",
+      "end": "1865-12-31"
     },
     {
       "label": "Dust Bowl",
-      "start": 1930,
-      "end": 1940
+      "start": "1930-01-01",
+      "end": "1940-12-31"
     }
   ]
 }
-
