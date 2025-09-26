@@ -1,32 +1,44 @@
-web/config/ — Kansas-Frontier-Matrix Viewer Configuration
+Here’s a clean, copy-ready web/config/README.md for your repo:
 
-This folder holds JSON config files that drive the MapLibre web viewer (web/app.js) — including map sources/layers, sidebar defaults, and the timeline model. It supports both auto-generated configs from STAC and hand-edited fallbacks, so you can iterate quickly and still keep things reproducible.  ￼ ￼
+# `web/config/` — Kansas-Frontier-Matrix Viewer Configuration
 
-⸻
+This folder contains JSON config files that drive the **MapLibre web viewer** (`web/app.js`).  
+They define which layers are loaded, how the timeline behaves, and the defaults for the sidebar UI.
 
-Files at a glance
+---
 
-app.config.json (preferred, auto-generated)
+## 📂 Files
 
-Single, top-level config used by app.js. When present, it’s loaded first and should contain:
-	•	version, generated — provenance metadata
-	•	defaults — global map/timeline defaults (bounds, min/max zoom, tileSize, visibility, opacity, time)
-	•	layers[] — array of layer definitions (see Layer schema below)
+### `app.config.json` (preferred, auto-generated)
+Top-level config used by `app.js`.  
+Contains global defaults and a `layers[]` array.
 
-Generate this from STAC with the CLI (recommended):
-kgt render-config --stac stac/items --output web/config/app.config.json --pretty  ￼
+- Generated automatically from STAC items with:
+  ```sh
+  kgt render-config --stac stac/items --output web/config/app.config.json --pretty
 
-viewer.json (hand-edited, “full” config)
+	•	Includes:
+	•	version, generated (provenance)
+	•	defaults (bounds, min/max zoom, opacity, time)
+	•	layers[] (see schema below)
 
-Human-friendly config for local dev. Contains viewer UI defaults (title, center, zoom) and a layers[] list. If app.config.json is absent, app.js falls back to this. Keep it small; prefer STAC-generated app.config.json for the main site.  ￼
+viewer.json (hand-edited, full config)
+
+Human-friendly config for local dev.
+Defines viewer title, map center/zoom, and layer list.
+Loaded if app.config.json is missing.
 
 layers.json (layers-only fallback)
 
-A minimalist, layers-only file for quick testing. app.js merges it with sensible defaults if viewer.json and app.config.json aren’t found.
+Minimal layers-only file for quick testing.
+Merged with defaults when no other config is found.
 
 time_config.json (optional overrides)
 
-Overrides the timeline block of whichever base config is loaded. Useful for demos, presets, or autoplay tweaks:
+Optional timeline config.
+If present, overrides the time block in whichever base config is loaded.
+
+Example:
 
 {
   "time": {
@@ -46,60 +58,44 @@ Overrides the timeline block of whichever base config is loaded. Useful for demo
 
 ⸻
 
-Load order (in web/app.js)
+🔄 Load Priority
+
+When the app starts, configs are loaded in this order:
 	1.	./config/app.config.json
 	2.	./config/viewer.json
 	3.	./config/layers.json
-	4.	./layers.json (legacy root fallback)
+	4.	./layers.json (legacy root)
 
-If time_config.json exists in ./config/, its time block overrides the effective config after the above is loaded/merged. This makes time controls adjustable without touching layer definitions.  ￼
-
-⸻
-
-Layer schema (expected by app.js)
-
-Each entry in layers[] should follow this shape (MapLibre-compatible):
-
-Common fields (all types)
-	•	id (string, unique)
-	•	title (string, shown in sidebar)
-	•	type (one of: raster, raster-dem, vector, geojson, image)
-	•	url (string; COG/GeoTIFF, raster/XYZ, GeoJSON, vector tiles, or single image path)
-	•	opacity (0–1)
-	•	visible (boolean)
-	•	category (string; e.g., reference, terrain, historical, infrastructure, documents)
-	•	attribution (string)
-	•	time (object with ISO8601 start/end or null when timeless)
-
-Type-specific notes
-	•	raster: url may be an XYZ template or a local/served COG/GeoTIFF
-	•	raster-dem: DEM source or rendered hillshade; typically hidden by default
-	•	geojson: url should point to a .json/.geojson file; optional paint for styling
-	•	vector: vector tiles; include url to a TileJSON or style source
-	•	image: a single image with explicit coordinates (four corner lon/lat pairs in NW, NE, SE, SW order)
+If time_config.json exists, its values override the time block in whichever file is active.
 
 ⸻
 
-Example layers
+🧩 Layer Schema
 
-Basemap raster
+Each entry in layers[] should follow this pattern:
 
 {
-  "id": "basemap_osm",
-  "title": "Basemap — OpenStreetMap",
-  "type": "raster",
-  "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  "opacity": 1.0,
-  "attribution": "© OpenStreetMap contributors",
-  "category": "reference",
-  "time": { "start": null, "end": null },
-  "visible": true,
-  "minzoom": 0,
-  "maxzoom": 19,
-  "tileSize": 256
+  "id": "unique_id",
+  "title": "Display Title",
+  "type": "raster | raster-dem | vector | geojson | image",
+  "url": "path/to/source",
+  "opacity": 0.8,
+  "visible": false,
+  "category": "reference | terrain | historical | documents | infrastructure",
+  "attribution": "Data source name",
+  "time": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" }
 }
 
-Historic topo (COG overlay)
+Type notes
+	•	raster → tiled raster or local COG/GeoTIFF
+	•	raster-dem → elevation / hillshade
+	•	vector → vector tiles (TileJSON/MBTiles)
+	•	geojson → plain GeoJSON features
+	•	image → single image overlay, requires coordinates array (NW, NE, SE, SW corners)
+
+⸻
+
+✅ Example
 
 {
   "id": "usgs_topo_1894_larned",
@@ -107,85 +103,36 @@ Historic topo (COG overlay)
   "type": "raster",
   "url": "../data/cogs/overlays/usgs_topo_larned_1894.tif",
   "opacity": 0.75,
-  "attribution": "USGS Historical Topographic Map Collection",
-  "category": "historical",
-  "time": { "start": "1894-01-01", "end": "1894-12-31" },
-  "visible": false
-}
-
-Vector (GeoJSON)
-
-{
-  "id": "ks_railroads",
-  "title": "Kansas Railroads (19th c.)",
-  "type": "geojson",
-  "url": "../data/vectors/ks_railroads.json",
-  "opacity": 0.9,
-  "attribution": "Kansas Historical GIS",
-  "category": "infrastructure",
-  "time": { "start": "1850-01-01", "end": "1950-12-31" },
   "visible": false,
-  "paint": {
-    "line-color": "#6b4e16",
-    "line-width": 1.5
-  }
+  "category": "historical",
+  "attribution": "USGS Historical Topo Map Collection",
+  "time": { "start": "1894-01-01", "end": "1894-12-31" }
 }
 
-Tip: Prefer COG for rasters and GeoJSON for small/medium vectors. For large vectors, consider tiling. The repo’s ETL already standardizes formats and derives app.config.json from STAC items.  ￼
 
 ⸻
 
-Regeneration workflow (STAC → config)
-	1.	Fetch/process sources via Make/ETL (producing COGs/GeoJSON)
-	2.	Ensure STAC Collections/Items are created/updated under stac/
-	3.	Render viewer config:
-
-kgt render-config \
-  --stac stac/items \
-  --output web/config/app.config.json \
-  --pretty
-
-
-	4.	Validate configs before commit (see Validation & tests)
-
-This keeps the viewer declarative and reproducible, matching the platform’s data/catalog design.  ￼ ￼
-
-⸻
-
-Validation & tests
-	•	Keep a JSON Schema or structural checks in tests/test_web_configs.py to catch broken keys, missing id, or invalid type early in CI. For example, assert layers[] exists, item fields are present, and time.start/end are either null or ISO8601.  ￼
-	•	Use a lightweight linter (jq) locally:
+🛠️ Validation
+	•	Run a JSON linter locally:
 
 jq . web/config/app.config.json > /dev/null
 
 
-	•	In CI, run both schema validation and a dry-load in a headless harness if available.  ￼
+	•	CI runs tests/test_web_configs.py to check structure and schema.
 
 ⸻
 
-Styling & UI considerations
-	•	opacity and visible map directly to sidebar controls; avoid per-layer bespoke flags that aren’t reflected in UI.
-	•	For image overlays, supply four corner coordinates in map lon/lat order (NW, NE, SE, SW) so MapLibre can anchor correctly.
-	•	Provide concise title and attribution for clean display in the sidebar and popups. GUI guidance favors clear, reusable UI components and tidy layouts.  ￼ ￼
+🔗 Tips
+	•	Prefer COG for rasters and GeoJSON for small/medium vectors.
+	•	Reproject rasters to EPSG:4326 for web alignment.
+	•	Large vectors should be tiled or simplified.
+	•	Always provide attribution and concise title for clean UI.
+	•	Use time.start / time.end for slider filtering; use null if timeless.
 
 ⸻
 
-Troubleshooting
-	•	Layer not showing?
-	•	Check type matches the actual source.
-	•	Verify the url path (relative to web/ when served) and CORS if using remote tiles.
-	•	Confirm time window contains the current slider value (or set time.start/end to null while testing).
-	•	Raster looks misaligned?
-	•	Ensure the COG/GeoTIFF is EPSG:4326 or the viewer’s source includes the proper projection metadata. The ETL recommends reprojecting historic rasters to WGS84 for web display.  ￼
-	•	Big vectors perform poorly?
-	•	Simplify, split per-county/year, or move to vector tiles. Reference the ETL guide for conversion patterns.  ￼
+TL;DR:
+Keep app.config.json as the source of truth (auto-generated from STAC),
+use viewer.json/layers.json only for dev or fallback,
+and validate configs before committing.
 
-⸻
-
-Provenance
-	•	This config model aligns with the project’s STAC-driven map hub design and regeneration flow.  ￼ ￼
-	•	UI/GUI patterns follow the project’s cross-platform GUI guidance (clear event-driven components, retained UI, responsive layout).  ￼
-
-⸻
-
-TL;DR: Prefer app.config.json → keep viewer.json/layers.json slim → drive everything from STAC → validate in CI → enjoy a stable, declarative viewer.
