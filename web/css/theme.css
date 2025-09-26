@@ -1,10 +1,15 @@
 /* ------------------------------------------------------------------
-   Kansas-Frontier-Matrix — Theme Styles
+   Kansas-Frontier-Matrix — Theme Styles (connected to app.css)
    File: web/css/theme.css
    Purpose: Color palettes, typography, elevation, and theming utilities.
+   Notes:
+     - Provides `--kfm-*` tokens (this file's native set).
+     - Maps those tokens to app.css core vars (`--bg`, `--panel`, etc.)
+       so both systems stay in sync without duplication.
+     - Supports system light/dark AND class-forced themes.
    ------------------------------------------------------------------ */
 
-/* ===== Root Theme Tokens ===== */
+/* ===== Root Theme Tokens (Dark default) ===== */
 :root {
   /* Color System */
   --kfm-bg: #0e1117;
@@ -50,7 +55,109 @@
   --kfm-transition-slow: 400ms ease;
 }
 
-/* ===== Typography ===== */
+/* ===== Map KFM tokens to core app.css variables (compat bridge) ===== */
+:root {
+  /* Colors & surfaces */
+  --bg: var(--kfm-bg);
+  --bg-soft: color-mix(in oklab, var(--kfm-surface) 65%, var(--kfm-bg));
+  --panel: var(--kfm-surface);
+  --border: var(--kfm-border);
+  --text: var(--kfm-ink);
+  --muted: var(--kfm-ink-dim);
+
+  /* Accents */
+  --accent: var(--kfm-accent);
+  --accent-2: var(--kfm-accent-2);
+  --danger: var(--kfm-danger);
+
+  /* Shadows & radii */
+  --shadow-1: var(--kfm-shadow-1);
+  --shadow-2: var(--kfm-shadow-2);
+  --shadow: var(--kfm-shadow-1), var(--kfm-shadow-2);
+  --radius-xs: var(--kfm-radius-sm);
+  --radius-sm: var(--kfm-radius-sm);
+  --radius: var(--kfm-radius);
+
+  /* Typography */
+  --font: var(--kfm-font);
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--kfm-accent) 35%, transparent);
+}
+
+/* ===== Forced Theme Classes (override system) ===== */
+.kfm-theme-dark {
+  color-scheme: dark;
+  --kfm-bg: #0e1117;
+  --kfm-surface: #171a21;
+  --kfm-surface-alt: #1d222d;
+  --kfm-border: #2c3240;
+  --kfm-ink: #e8eefc;
+  --kfm-ink-dim: #b4bfd6;
+  --kfm-muted: #7b84a5;
+  --kfm-accent: #7cc4ff;
+  --kfm-accent-2: #63ffa0;
+  --kfm-accent-3: #ffb45e;
+  --kfm-danger: #ff6b6b;
+  --kfm-warning: #ffd166;
+  --kfm-success: #06d6a0;
+}
+.kfm-theme-light {
+  color-scheme: light;
+  --kfm-bg: #fdfdfd;
+  --kfm-surface: #ffffff;
+  --kfm-surface-alt: #f6f7f9;
+  --kfm-border: #d6d8e0;
+  --kfm-ink: #101218;
+  --kfm-ink-dim: #444a5c;
+  --kfm-muted: #6e7387;
+  --kfm-accent: #006dce;
+  --kfm-accent-2: #149958;
+  --kfm-accent-3: #d47a00;
+  --kfm-danger: #b91c1c;
+  --kfm-warning: #a16207;
+  --kfm-success: #0f766e;
+}
+
+/* When a forced theme class is present at <html> or <body>, re-alias tokens */
+.kfm-theme-dark,
+.kfm-theme-light {
+  --bg: var(--kfm-bg);
+  --bg-soft: color-mix(in oklab, var(--kfm-surface) 65%, var(--kfm-bg));
+  --panel: var(--kfm-surface);
+  --border: var(--kfm-border);
+  --text: var(--kfm-ink);
+  --muted: var(--kfm-ink-dim);
+  --accent: var(--kfm-accent);
+  --accent-2: var(--kfm-accent-2);
+  --danger: var(--kfm-danger);
+  --shadow-1: var(--kfm-shadow-1);
+  --shadow-2: var(--kfm-shadow-2);
+  --shadow: var(--kfm-shadow-1), var(--kfm-shadow-2);
+  --radius-xs: var(--kfm-radius-sm);
+  --radius-sm: var(--kfm-radius-sm);
+  --radius: var(--kfm-radius);
+  --font: var(--kfm-font);
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--kfm-accent) 35%, transparent);
+}
+
+/* ===== System Light Theme Override (fallback if no forced class) ===== */
+@media (prefers-color-scheme: light) {
+  :root:not(.kfm-theme-dark) {
+    --kfm-bg: #fdfdfd;
+    --kfm-surface: #ffffff;
+    --kfm-surface-alt: #f6f7f9;
+    --kfm-border: #d6d8e0;
+    --kfm-ink: #101218;
+    --kfm-ink-dim: #444a5c;
+    --kfm-muted: #6e7387;
+    --kfm-accent: #006dce;
+    --kfm-accent-2: #149958;
+    --kfm-accent-3: #d47a00;
+  }
+}
+
+/* ===== Typography Helpers ===== */
 .kfm-h1 {
   font-size: 22px;
   font-weight: 700;
@@ -81,7 +188,7 @@
   color: var(--kfm-accent);
 }
 
-/* ===== Utility Classes ===== */
+/* ===== Surface & Utility Classes ===== */
 .kfm-surface {
   background: var(--kfm-surface);
   border: 1px solid var(--kfm-border);
@@ -94,7 +201,6 @@
   border-radius: var(--kfm-radius);
   padding: var(--kfm-space-3);
 }
-
 .kfm-border { border: 1px solid var(--kfm-border); }
 .kfm-rounded { border-radius: var(--kfm-radius); }
 .kfm-shadow { box-shadow: var(--kfm-shadow-1); }
@@ -122,32 +228,46 @@
 
 /* ===== Interactive States ===== */
 .kfm-hover:hover {
-  background: color-mix(in srgb, var(--kfm-accent) 20%, transparent);
+  background: color-mix(in oklab, var(--kfm-accent) 18%, transparent);
   cursor: pointer;
   transition: background var(--kfm-transition-fast);
 }
 .kfm-focus:focus-visible {
   outline: 2px solid var(--kfm-accent);
   outline-offset: 2px;
+  border-radius: 6px;
 }
 
-/* ===== Light Theme Override ===== */
-@media (prefers-color-scheme: light) {
+/* ===== High Contrast / A11y ===== */
+@media (prefers-contrast: more) {
+  :root { --kfm-border: #7a7a7a; }
+  .kfm-focus:focus-visible { outline-width: 3px; }
+}
+@media (forced-colors: active) {
   :root {
-    --kfm-bg: #fdfdfd;
-    --kfm-surface: #ffffff;
-    --kfm-surface-alt: #f6f7f9;
-    --kfm-border: #d6d8e0;
-
-    --kfm-ink: #101218;
-    --kfm-ink-dim: #444a5c;
-    --kfm-muted: #6e7387;
-
-    --kfm-accent: #006dce;
-    --kfm-accent-2: #149958;
-    --kfm-accent-3: #d47a00;
+    --kfm-bg: Canvas;
+    --kfm-surface: Canvas;
+    --kfm-surface-alt: Canvas;
+    --kfm-border: GrayText;
+    --kfm-ink: CanvasText;
+    --kfm-ink-dim: GrayText;
+    --kfm-muted: GrayText;
+  }
+  .kfm-surface, .kfm-surface-alt, .kfm-badge {
+    border: 1px solid var(--kfm-border);
+    background: var(--kfm-surface);
+    color: var(--kfm-ink);
+    box-shadow: none;
   }
 }
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ===== RTL Safety ===== */
+[dir="rtl"] .kfm-badge { direction: rtl; }
 
 /* ===== Print Theme ===== */
 @media print {
@@ -160,4 +280,3 @@
     box-shadow: none;
   }
 }
-
