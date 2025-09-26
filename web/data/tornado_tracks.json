@@ -11,6 +11,7 @@
   "visible": false,
   "minzoom": 4,
   "maxzoom": 19,
+  "interactive": true,
 
   "popup": ["date", "ef_scale", "length_km", "fatalities"],
 
@@ -19,14 +20,25 @@
       "line-color": "#D00000",
       "line-width": [
         "match",
-        ["to-string", ["get", "ef_scale"]],
-        "EF0", 1.0,
-        "EF1", 1.4,
-        "EF2", 1.8,
-        "EF3", 2.2,
-        "EF4", 2.8,
-        "EF5", 3.4,
-        /* default */ 1.2
+        [
+          "upcase",
+          [
+            "coalesce",
+            ["to-string", ["get", "ef_scale"]],
+            ["to-string", ["get", "f_scale"]],
+            ["concat", "EF", ["to-string", ["get", "ef"]]],
+            ["concat", "F",  ["to-string", ["get", "f"]]],
+            ["concat", "EF", ["to-string", ["get", "ef_rating"]]],
+            ""  /* fallback */
+          ]
+        ],
+        "EF0", 1.0, "F0", 1.0,  "0", 1.0,
+        "EF1", 1.4, "F1", 1.4,  "1", 1.4,
+        "EF2", 1.8, "F2", 1.8,  "2", 1.8,
+        "EF3", 2.2, "F3", 2.2,  "3", 2.2,
+        "EF4", 2.8, "F4", 2.8,  "4", 2.8,
+        "EF5", 3.4, "F5", 3.4,  "5", 3.4,
+        1.2
       ],
       "line-opacity": 0.95,
       "line-join": "round",
@@ -38,16 +50,19 @@
 
   "fields": {
     "date":        { "type": "string", "format": "date-time", "description": "Event date/time (ISO8601)" },
-    "ef_scale":    { "type": "string", "description": "Enhanced Fujita scale (EF0–EF5)" },
+    "ef_scale":    { "type": "string", "description": "EF scale (EF0–EF5). Pre-2007 data may use F-scale." },
+    "f_scale":     { "type": "string", "description": "Legacy F-scale (F0–F5). Optional." },
+    "ef":          { "type": "number", "description": "EF numeric (0–5). Optional." },
+    "f":           { "type": "number", "description": "F numeric (0–5). Optional." },
     "length_km":   { "type": "number", "units": "km", "description": "Path length" },
-    "fatalities":  { "type": "number", "description": "Reported fatalities (count)" },
-    "injuries":    { "type": "number", "description": "Reported injuries (optional)" },
     "width_m":     { "type": "number", "units": "m", "description": "Max path width (optional)" },
+    "fatalities":  { "type": "number", "description": "Fatalities" },
+    "injuries":    { "type": "number", "description": "Injuries (optional)" },
     "fips":        { "type": "string", "description": "County/area FIPS (optional)" },
     "source":      { "type": "string", "description": "Data source (e.g., NOAA SPC)" }
   },
 
-  "search": { "qFields": ["ef_scale", "date", "fips"] },
+  "search": { "qFields": ["ef_scale", "f_scale", "date", "fips"] },
 
   "legendSymbol": "tornado",
   "attribution": "NOAA Storm Prediction Center (SPC)"
