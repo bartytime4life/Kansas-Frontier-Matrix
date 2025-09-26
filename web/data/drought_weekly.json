@@ -1,5 +1,125 @@
 {
   "type": "FeatureCollection",
   "name": "drought_weekly",
-  "features": []
+  "generated": "2025-09-26T00:00:00Z",
+  "attribution": "USDM — NOAA / USDA / NDMC",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "US Drought Monitor weekly polygons (sample for wiring; replace with official export)",
+    "notes": "Polygons simplified as rectangles within Kansas for QA; categories/colors follow standard USDM ramp"
+  },
+  "fields": {
+    "week":     { "type": "string", "format": "date", "description": "USDM week date (Thursday)" },
+    "category": { "type": "string", "enum": ["D0","D1","D2","D3","D4"] },
+    "dm":       { "type": "number", "enum": [0,1,2,3,4] },
+    "state":    { "type": "string", "description": "State code (prefiltered to KS in ETL)" },
+    "area_km2": { "type": "number", "units": "km²", "description": "Approx polygon area (optional)" }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "usdm_2000_01_06_d0_ne",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.50, 38.80],
+          [-95.00, 38.80],
+          [-95.00, 39.30],
+          [-95.50, 39.30],
+          [-95.50, 38.80]
+        ]]
+      },
+      "properties": {
+        "week": "2000-01-06",
+        "category": "D0",
+        "dm": 0,
+        "state": "KS",
+        "area_km2": 2400
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "usdm_2002_08_08_d3_sw",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-101.80, 37.10],
+          [-100.90, 37.10],
+          [-100.90, 37.70],
+          [-101.80, 37.70],
+          [-101.80, 37.10]
+        ]]
+      },
+      "properties": {
+        "week": "2002-08-08",
+        "category": "D3",
+        "dm": 3,
+        "state": "KS",
+        "area_km2": 5600
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "usdm_2011_08_11_d4_sc",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-98.80, 37.90],
+          [-98.30, 37.90],
+          [-98.30, 38.30],
+          [-98.80, 38.30],
+          [-98.80, 37.90]
+        ]]
+      },
+      "properties": {
+        "week": "2011-08-11",
+        "category": "D4",
+        "dm": 4,
+        "state": "KS",
+        "area_km2": 2200
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "usdm_2019_05_16_d1_ne",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-96.20, 39.10],
+          [-95.60, 39.10],
+          [-95.60, 39.60],
+          [-96.20, 39.60],
+          [-96.20, 39.10]
+        ]]
+      },
+      "properties": {
+        "week": "2019-05-16",
+        "category": "D1",
+        "dm": 1,
+        "state": "KS",
+        "area_km2": 1900
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "usdm_2023_10_12_d2_central",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-99.30, 38.30],
+          [-98.70, 38.30],
+          [-98.70, 38.85],
+          [-99.30, 38.85],
+          [-99.30, 38.30]
+        ]]
+      },
+      "properties": {
+        "week": "2023-10-12",
+        "category": "D2",
+        "dm": 2,
+        "state": "KS",
+        "area_km2": 2600
+      }
+    }
+  ]
 }
