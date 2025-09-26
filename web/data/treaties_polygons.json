@@ -1,5 +1,106 @@
 {
   "type": "FeatureCollection",
   "name": "treaties_polygons",
-  "features": []
+
+  "kfm_meta": {
+    "generated": "2025-09-26T00:00:00Z",
+    "schema_version": "1.0",
+    "description": "Treaty/Reservation polygons for Kansas (demo geometries for wiring & UI tests). Replace with authoritative boundaries.",
+    "properties_schema": {
+      "name": "Reservation or treaty area name",
+      "tribe": "Primary tribal nation(s) associated",
+      "year": "ISO date (YYYY-MM-DD) — start/effective date",
+      "year_end": "ISO date (YYYY-MM-DD) — end/cessation date",
+      "source": "Data provenance / citation",
+      "notes": "Free text notes",
+      "url": "Reference URL",
+      "accuracy": "authoritative | approximate | illustrative",
+      "treaty_id": "Stable identifier (optional)"
+    },
+    "defaults": {
+      "year": "1800-01-01",
+      "year_end": "1900-12-31"
+    },
+    "license": "CC BY 4.0 (adjust as needed)"
+  },
+
+  "features": [
+    {
+      "type": "Feature",
+      "id": "kansa_kaw_reservation_1846_demo",
+      "properties": {
+        "name": "Kansa (Kaw) Reservation — Demo",
+        "tribe": "Kansa (Kaw)",
+        "year": "1846-01-01",
+        "year_end": "1873-12-31",
+        "source": "Kansas Historical Society; NPS (placeholder)",
+        "notes": "Illustrative rectangle near the Kansas River corridor. Replace with surveyed boundary.",
+        "url": "https://www.kshs.org/",
+        "accuracy": "illustrative",
+        "treaty_id": "KAW_1846_DEMO"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-96.20, 39.55],
+          [-95.95, 39.55],
+          [-95.95, 39.25],
+          [-96.20, 39.25],
+          [-96.20, 39.55]
+        ]]
+      }
+    },
+
+    {
+      "type": "Feature",
+      "id": "shawnee_reserve_1854_demo",
+      "properties": {
+        "name": "Shawnee Reserve — Demo",
+        "tribe": "Shawnee",
+        "year": "1854-05-10",
+        "year_end": "1869-12-31",
+        "source": "Territorial records; KHS (placeholder)",
+        "notes": "Illustrative polygon south of Kansas River. Replace with authoritative tract lines.",
+        "url": "https://www.kshs.org/",
+        "accuracy": "illustrative",
+        "treaty_id": "SHA_1854_DEMO"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.60, 39.05],
+          [-94.95, 39.05],
+          [-94.95, 38.85],
+          [-95.60, 38.85],
+          [-95.60, 39.05]
+        ]]
+      }
+    },
+
+    {
+      "type": "Feature",
+      "id": "potawatomi_reservation_1846_demo",
+      "properties": {
+        "name": "Potawatomi Reservation — Demo",
+        "tribe": "Potawatomi Nation",
+        "year": "1846-01-01",
+        "year_end": "1871-12-31",
+        "source": "Treaty-era records; NPS/KHS (placeholder)",
+        "notes": "Illustrative polygon north of Topeka corridor. Replace with surveyed boundary.",
+        "url": "https://www.nps.gov/",
+        "accuracy": "illustrative",
+        "treaty_id": "POT_1846_DEMO"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-96.55, 39.60],
+          [-95.85, 39.60],
+          [-95.85, 39.20],
+          [-96.55, 39.20],
+          [-96.55, 39.60]
+        ]]
+      }
+    }
+  ]
 }
