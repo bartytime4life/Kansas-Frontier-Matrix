@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "generated": "2025-09-23T21:22:00Z",
+  "version": "1.2.0",
+  "generated": "2025-09-25T00:00:00Z",
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time-aware historical GIS for Kansas",
 
@@ -10,6 +10,7 @@
 
   "time": { "min": "1850-01-01", "max": "2025-12-31" },
   "defaultYear": 1930,
+  "timeUI": { "step": 1, "fps": 12, "loop": false }, 
 
   "defaults": {
     "minzoom": 0,
@@ -20,6 +21,13 @@
     "bounds": [-102.051, 36.993, -94.588, 40.003],
     "time": { "start": null, "end": null }
   },
+
+  "groups": [
+    "Basemaps & Terrain",
+    "Historic Topographic Maps",
+    "Hydrology",
+    "Vectors"
+  ],
 
   "layers": [
     {
@@ -91,47 +99,20 @@
     },
 
     {
-      "id": "railroads_1900",
-      "title": "Railroads (c. 1900)",
-      "group": "Vectors",
-      "type": "geojson",
-      "path": "../vectors/infrastructure/railroads_1900.geojson",
-      "opacity": 1.0,
-      "visible": true,
-      "time": { "start": "1900-01-01", "end": "1900-12-31" },
-      "paint": {
-        "line": { "line-color": "#d97706", "line-width": 1.6, "line-opacity": 0.95 }
-      },
-      "attribution": "Compiled rail lines circa 1900"
-    },
-    {
-      "id": "treaties_1854",
-      "title": "Treaty Boundaries (1854)",
-      "group": "Vectors",
-      "type": "geojson",
-      "path": "../vectors/political/treaties_1854.geojson",
-      "opacity": 0.85,
-      "visible": true,
-      "time": { "start": "1854-01-01", "end": "1854-12-31" },
-      "paint": {
-        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.25, "fill-outline-color": "#1d4ed8" },
-        "line": { "line-color": "#1d4ed8", "line-width": 1.4, "line-opacity": 0.9 }
-      },
-      "attribution": "Digitized treaty boundaries, 1854"
-    },
-
-    {
       "id": "ksriv_channels",
       "title": "Kansas River — Channels",
       "group": "Hydrology",
       "type": "geojson",
-      "path": "../data/processed/hydrology/kansas_river/channels.geojson",
+      "path": "./data/processed/hydrology/kansas_river/channels.geojson",
       "opacity": 1.0,
       "visible": true,
       "time": { "start": "2000-01-01", "end": null },
       "paint": {
         "line": { "line-color": "#1e88e5", "line-width": 1.6, "line-opacity": 1.0 }
       },
+      "legend": [
+        { "type": "line", "label": "Channel centerline", "color": "#1e88e5", "width": 1.6 }
+      ],
       "attribution": "Kansas Geological Survey (KGS)"
     },
     {
@@ -139,7 +120,7 @@
       "title": "Kansas River — Floodplains",
       "group": "Hydrology",
       "type": "geojson",
-      "path": "../data/processed/hydrology/kansas_river/floodplains.geojson",
+      "path": "./data/processed/hydrology/kansas_river/floodplains.geojson",
       "opacity": 0.6,
       "visible": false,
       "time": { "start": "2000-01-01", "end": null },
@@ -147,6 +128,9 @@
         "fill": { "fill-color": "#42a5f5", "fill-opacity": 0.25, "fill-outline-color": "#1976d2" },
         "line": { "line-color": "#1976d2", "line-width": 0.5, "line-opacity": 0.9 }
       },
+      "legend": [
+        { "type": "fill", "label": "Floodplain extent", "color": "#42a5f5", "outline": "#1976d2" }
+      ],
       "attribution": "Kansas Geological Survey (KGS)"
     },
     {
@@ -154,14 +138,53 @@
       "title": "Kansas River — Gauges",
       "group": "Hydrology",
       "type": "geojson",
-      "path": "../data/processed/hydrology/kansas_river/gauges.geojson",
+      "path": "./data/processed/hydrology/kansas_river/gauges.geojson",
       "opacity": 1.0,
       "visible": false,
       "time": { "start": "2000-01-01", "end": null },
       "paint": {
         "circle": { "circle-color": "#0d47a1", "circle-radius": 4, "circle-opacity": 1.0 }
       },
+      "legend": [
+        { "type": "circle", "label": "Gauge station", "color": "#0d47a1", "radius": 4 }
+      ],
       "attribution": "Kansas Geological Survey (KGS)"
+    },
+
+    {
+      "id": "railroads_1900",
+      "title": "Railroads (c. 1900)",
+      "group": "Vectors",
+      "type": "geojson",
+      "path": "./vectors/infrastructure/railroads_1900.geojson",
+      "opacity": 1.0,
+      "visible": true,
+      "time": { "start": "1900-01-01", "end": "1900-12-31" },
+      "paint": {
+        "line": { "line-color": "#d97706", "line-width": 1.6, "line-opacity": 0.95 }
+      },
+      "legend": [
+        { "type": "line", "label": "Rail line (c.1900)", "color": "#d97706", "width": 1.6 }
+      ],
+      "attribution": "Compiled rail lines circa 1900"
+    },
+    {
+      "id": "treaties_1854",
+      "title": "Treaty Boundaries (1854)",
+      "group": "Vectors",
+      "type": "geojson",
+      "path": "./vectors/political/treaties_1854.geojson",
+      "opacity": 0.85,
+      "visible": true,
+      "time": { "start": "1854-01-01", "end": "1854-12-31" },
+      "paint": {
+        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.25, "fill-outline-color": "#1d4ed8" },
+        "line": { "line-color": "#1d4ed8", "line-width": 1.4, "line-opacity": 0.9 }
+      },
+      "legend": [
+        { "type": "fill", "label": "Treaty area (1854)", "color": "#2563eb", "outline": "#1d4ed8" }
+      ],
+      "attribution": "Digitized treaty boundaries, 1854"
     }
   ]
 }
