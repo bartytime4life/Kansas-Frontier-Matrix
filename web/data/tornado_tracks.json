@@ -1,13 +1,54 @@
 {
   "id": "tornado_tracks",
   "title": "Tornado Tracks (SPC 1950–present)",
-  "type": "vector",
-  "data": "data/processed/tornado_tracks_ks.json",
+  "type": "geojson",
+  "url": "data/processed/tornado_tracks_ks.json",
   "category": "hazards",
+
   "time": { "start": "1950-01-01", "end": null },
   "timeProperty": "date",
-  "popup": ["date", "ef_scale", "length_km", "fatalities"],
-  "style": { "lineColor": "#D00000", "lineWidth": 1.2 },
+
   "visible": false,
-  "attribution": "NOAA SPC"
+  "minzoom": 4,
+  "maxzoom": 19,
+
+  "popup": ["date", "ef_scale", "length_km", "fatalities"],
+
+  "paint": {
+    "line": {
+      "line-color": "#D00000",
+      "line-width": [
+        "match",
+        ["to-string", ["get", "ef_scale"]],
+        "EF0", 1.0,
+        "EF1", 1.4,
+        "EF2", 1.8,
+        "EF3", 2.2,
+        "EF4", 2.8,
+        "EF5", 3.4,
+        /* default */ 1.2
+      ],
+      "line-opacity": 0.95,
+      "line-join": "round",
+      "line-cap": "round"
+    },
+    "circle": { "circle-opacity": 0 },
+    "fill":   { "fill-opacity": 0 }
+  },
+
+  "fields": {
+    "date":        { "type": "string", "format": "date-time", "description": "Event date/time (ISO8601)" },
+    "ef_scale":    { "type": "string", "description": "Enhanced Fujita scale (EF0–EF5)" },
+    "length_km":   { "type": "number", "units": "km", "description": "Path length" },
+    "fatalities":  { "type": "number", "description": "Reported fatalities (count)" },
+    "injuries":    { "type": "number", "description": "Reported injuries (optional)" },
+    "width_m":     { "type": "number", "units": "m", "description": "Max path width (optional)" },
+    "fips":        { "type": "string", "description": "County/area FIPS (optional)" },
+    "source":      { "type": "string", "description": "Data source (e.g., NOAA SPC)" }
+  },
+
+  "search": { "qFields": ["ef_scale", "date", "fips"] },
+
+  "legendSymbol": "tornado",
+  "attribution": "NOAA Storm Prediction Center (SPC)"
 }
