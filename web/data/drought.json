@@ -1,1 +1,12 @@
-
+{
+  "id": "drought_monitor",
+  "title": "U.S. Drought Monitor (Weekly)",
+  "type": "vector",
+  "data": "data/processed/drought_weekly.json",
+  "category": "hazards",
+  "time": { "start": "2000-01-06", "end": null },
+  "timeProperty": "week",
+  "style": { "fillOpacity": 0.35 },
+  "visible": false,
+  "attribution": "NOAA/USDA/NDMC"
+}
