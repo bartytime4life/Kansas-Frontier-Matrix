@@ -1,5 +1,79 @@
 {
   "type": "FeatureCollection",
   "name": "storm_events_ks",
-  "features": []
+  "bbox": [-101.95, 37.95, -94.62, 39.25],
+  "features": [
+    {
+      "type": "Feature",
+      "id": "se-2012-05-25-tornado-track",
+      "bbox": [-99.85, 38.65, -99.55, 38.90],
+      "properties": {
+        "event_id": "20120525-KS-0001",
+        "event_type": "Tornado",
+        "begin_date": "2012-05-25T22:14:00Z",
+        "end_date": "2012-05-25T22:42:00Z",
+        "ef_scale": "EF2",
+        "deaths": 0,
+        "injuries": 3,
+        "damage_usd": 1250000,
+        "source": "NWS",
+        "fips": "20083", 
+        "notes": "Track across Hodgeman Co; scattered structure damage."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-99.85, 38.65],
+          [-99.78, 38.70],
+          [-99.71, 38.76],
+          [-99.63, 38.82],
+          [-99.55, 38.90]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "se-1999-06-12-hail",
+      "bbox": [-97.33, 38.95, -97.33, 38.95],
+      "properties": {
+        "event_id": "19990612-KS-0007",
+        "event_type": "Hail",
+        "begin_date": "1999-06-12T01:30:00Z",
+        "end_date": "1999-06-12T02:05:00Z",
+        "hail_size_in": 1.75,
+        "deaths": 0,
+        "injuries": 0,
+        "damage_usd": 45000,
+        "source": "Spotter",
+        "fips": "20169",
+        "notes": "Golf-ball hail reported near Salina."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-97.33, 38.95]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "se-2007-07-04-flash-flood",
+      "bbox": [-95.62, 39.25, -95.62, 39.25],
+      "properties": {
+        "event_id": "20070704-KS-0012",
+        "event_type": "Flash Flood",
+        "begin_date": "2007-07-04T05:10:00Z",
+        "end_date": "2007-07-04T08:40:00Z",
+        "rain_total_in": 4.2,
+        "deaths": 0,
+        "injuries": 0,
+        "damage_usd": 90000,
+        "source": "Law Enforcement",
+        "fips": "20103",
+        "notes": "Low-water crossings flooded; several roads closed near Lawrence."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-95.62, 39.25]
+      }
+    }
+  ]
 }
