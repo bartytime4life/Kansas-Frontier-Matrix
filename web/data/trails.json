@@ -4,9 +4,22 @@
   "type": "vector",
   "data": "data/processed/trails_lines.json",
   "category": "movement",
+
   "time": { "start": "1820-01-01", "end": "1880-12-31" },
-  "timeProperty": "active",
-  "style": { "lineColor": "#4361EE", "lineDasharray": [2, 2], "lineWidth": 1.4 },
+  "timeProperty": "active",           
+
+  "popup": ["name", "trail", "active", "active_end", "notes"],
+
+  "style": {
+    "lineColor": "#4361EE",
+    "lineWidth": 1.6,
+    "lineDasharray": [2, 2],
+    "lineOpacity": 0.95
+  },
+
+  "minzoom": 5,
+  "maxzoom": 14,
+
   "visible": false,
-  "attribution": "NPS / State Historic Trails"
+  "attribution": "NPS National Trails | Kansas Historical Society"
 }
