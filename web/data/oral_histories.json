@@ -7,7 +7,17 @@
   "time": { "start": "1850-01-01", "end": null },
   "timeProperty": "date",
   "popup": ["title", "community", "summary", "url"],
-  "style": { "circleColor": "#2EC4B6", "circleRadius": 3.5 },
+  "style": {
+    "circleColor": "#2EC4B6",
+    "circleRadius": 4,
+    "circleOpacity": 0.9,
+    "circleStrokeColor": "#ffffff",
+    "circleStrokeWidth": 1
+  },
+  "filter": ["has", "date"],
+  "minzoom": 4,
+  "maxzoom": 15,
+  "legendSymbol": "oral_histories",
   "visible": false,
   "attribution": "Community archives / Tribal partners"
 }
