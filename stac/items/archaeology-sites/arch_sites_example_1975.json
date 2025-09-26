@@ -1,0 +1,66 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "arch_sites_example_1975",
+  "collection": "archaeology-sites",
+  "bbox": [-101.0, 38.5, -99.0, 39.5],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-101.0, 38.5],
+      [-99.0, 38.5],
+      [-99.0, 39.5],
+      [-101.0, 39.5],
+      [-101.0, 38.5]
+    ]]
+  },
+  "properties": {
+    "title": "Archaeology Sites (Example, 1975)",
+    "description": "Site register polygons/points from a 1975 field survey. Example item generated for the Archaeology Sites collection.",
+    "license": "public-domain",
+    "datetime": "1975-06-30T00:00:00Z",
+    "start_datetime": "1975-01-01T00:00:00Z",
+    "end_datetime": "1975-12-31T23:59:59Z",
+    "kfm:category": "archaeology-sites",
+    "kfm:keywords": ["archaeology", "sites", "survey", "heritage", "Kansas"],
+    "proj:epsg": 4326
+  },
+  "assets": {
+    "data": {
+      "href": "../../../data/processed/arch_sites/ks_sites_1975.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"],
+      "title": "Archaeology Sites (GeoJSON, EPSG:4326)"
+    },
+    "thumbnail": {
+      "href": "../../../web/assets/thumbnails/arch_sites_example_1975.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail (optional)"
+    }
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "./arch_sites_example_1975.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "collection",
+      "href": "../../collections/archaeology-sites.json",
+      "type": "application/json",
+      "title": "Archaeology Sites (Kansas Frontier Matrix)"
+    },
+    {
+      "rel": "parent",
+      "href": "../../collections/archaeology-sites.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json",
+      "title": "Kansas Frontier Matrix — Root Catalog"
+    }
+  ]
+}
