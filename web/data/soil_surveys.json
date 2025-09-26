@@ -1,1 +1,13 @@
-
+{
+  "id": "ks_soil_surveys",
+  "title": "Archived Soil Surveys (USDA/NRCS)",
+  "type": "raster",
+  "assets": [
+    { "year": 1937, "href": "data/cogs/overlays/soil_survey_1937_pawnee.tif" }
+  ],
+  "category": "overlays",
+  "time": { "start": "1900-01-01", "end": "1970-12-31" },
+  "visible": false,
+  "opacity": 0.6,
+  "attribution": "USDA NRCS / Archive"
+}
