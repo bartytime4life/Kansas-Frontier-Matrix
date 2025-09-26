@@ -1,1 +1,12 @@
-
+{
+  "id": "ks_railroads",
+  "title": "Railroads (year built)",
+  "type": "vector",
+  "data": "data/processed/railroads_lines.json",
+  "category": "infrastructure",
+  "time": { "start": "1860-01-01", "end": "1950-12-31" },
+  "timeProperty": "built",
+  "style": { "lineColor": "#8D99AE", "lineWidth": 1.2 },
+  "visible": false,
+  "attribution": "State GIS / Historical compilations"
+}
