@@ -3,12 +3,19 @@
   "title": "Basemap — OpenStreetMap",
   "type": "raster",
   "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  "attribution": "© OpenStreetMap contributors",
+  "attribution": "© <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap contributors</a>",
   "category": "reference",
   "time": { "start": null, "end": null },
   "minzoom": 0,
   "maxzoom": 19,
   "tileSize": 256,
   "visible": true,
-  "opacity": 1.0
+  "opacity": 1.0,
+  "bounds": [-180, -85.06, 180, 85.06],
+  "license": "ODbL-1.0",
+  "provenance": {
+    "source": "OpenStreetMap",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Default basemap; kept outside Kansas-only extent for global context"
+  }
 }
