@@ -3,33 +3,38 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
   <title>Kansas-Frontier-Matrix — Geo Timeline Viewer</title>
 
   <!-- MapLibre GL -->
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.7.0/dist/maplibre-gl.css"/>
   <script defer src="https://unpkg.com/maplibre-gl@3.7.0/dist/maplibre-gl.js"></script>
 
-  <!-- App styles -->
+  <!-- Theme (tokens) then App styles (structure/components) -->
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml"/>
+  <link rel="stylesheet" href="./css/theme.css"/>
   <link rel="stylesheet" href="./app.css"/>
+
   <style>
-    /* minimal extra polish specific to this page */
+    /* page-only polish */
     .brand { display:flex; align-items:center; gap:10px; font-weight:700; }
     .brand img { width:24px; height:24px; }
     .muted { color: var(--muted); font-size: 12px; }
     .layer-meta { font-size: 11px; color: var(--muted); }
+    .header .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
   </style>
 </head>
 <body>
-  <!-- Map (left) and Sidebar (right) are laid out by app.css -->
+  <!-- Map (left/top) and Sidebar (right/bottom) laid out by app.css -->
   <div id="map" aria-label="Time-aware map of Kansas"></div>
 
   <aside id="sidebar" class="kfm-sidebar" role="complementary" aria-label="Controls and layer list">
     <div class="header">
       <h2 id="app-title">Kansas-Frontier-Matrix</h2>
       <div class="sub" id="app-subtitle">Time-aware historical GIS for Kansas</div>
-      <div class="mt-8">
+      <div class="actions">
         <button id="btn-reset" class="btn" type="button" title="Reset view">Reset view</button>
+        <button id="btn-theme" class="btn" type="button" aria-pressed="false" aria-label="Toggle theme">Theme: Auto</button>
         <a class="btn" href="https://github.com/bartytime4life/Kansas-Frontier-Matrix" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
@@ -55,7 +60,7 @@
       </details>
     </section>
 
-    <!-- Optional legend auto-built from layer.legend if present -->
+    <!-- Legend (auto-built if layer.legend present) -->
     <section id="legendbox" class="section" role="region" aria-label="Legend">
       <details open>
         <summary>Legend</summary>
@@ -95,6 +100,7 @@
     const btnReset = $('#btn-reset');
     const appTitle = $('#app-title');
     const appSubtitle = $('#app-subtitle');
+    const btnTheme = $('#btn-theme');
 
     const setStatus = (msg) => { statusEl.textContent = msg || ''; };
 
@@ -113,10 +119,10 @@
       throw lastErr;
     }
 
-    let cfg, cfgUrl;
+    let cfg;
     try {
-      const { url, cfg: c } = await loadConfig();
-      cfg = c; cfgUrl = url;
+      const res = await loadConfig();
+      cfg = res.cfg;
     } catch (e) {
       console.error(e);
       setStatus('Failed to load configuration (app.config.json / config/app.config.json / layers.json).');
@@ -169,7 +175,6 @@
       return null;
     }
     function getTimeWindow(L) {
-      // Supports { time: {start,end} } ISO or nulls
       const t = L.time || {};
       const s = t.start ? new Date(t.start).getUTCFullYear() : -Infinity;
       const e = t.end ? new Date(t.end).getUTCFullYear() : Infinity;
@@ -211,7 +216,6 @@
       if (!map.getSource(id)) {
         map.addSource(id, { type: 'geojson', data: L.path, attribution: L.attribution || undefined });
       }
-      // Add style layers based on paint keys present
       const paint = L.paint || {};
       if (paint.line && !map.getLayer(id + '-line')) {
         map.addLayer({
@@ -264,8 +268,9 @@
     function makeLayerRow(L) {
       const row = el('div', { class: 'layer-row', 'data-layer-id': L.id });
 
-      // Checkbox
-      const cb = el('input', { type: 'checkbox', 'aria-label': `Toggle ${L.title || L.id}` });
+      // Checkbox + label (linked for a11y)
+      const inputId = `toggle-${L.id}`;
+      const cb = el('input', { id: inputId, type: 'checkbox', 'aria-label': `Toggle ${L.title || L.id}` });
       cb.checked = !!(L.visible ?? true);
       cb.addEventListener('change', () => {
         const ids = (L.type === 'geojson')
@@ -275,23 +280,25 @@
         ids.forEach(x => map.getLayer(x) && map.setLayoutProperty(x, 'visibility', vis));
       });
 
-      // Label + meta
-      const label = el('label', {}, [
+      const label = el('label', { for: inputId }, [
         L.title || L.id,
         el('span', { class: 'badge' }, L.group ? ` ${L.group}` : '')
       ]);
-      label.htmlFor = ''; // purely visual
 
       // Opacity slider
-      const op = el('input', { type: 'range', min: '0', max: '1', step: '0.01', value: String(L.opacity ?? 1), class: 'opacity-range', 'aria-label': `Opacity ${L.title || L.id}` });
+      const op = el('input', {
+        type: 'range', min: '0', max: '1', step: '0.01',
+        value: String(L.opacity ?? 1), class: 'opacity-range',
+        'aria-label': `Opacity ${L.title || L.id}`
+      });
       op.addEventListener('input', () => {
         const v = parseFloat(op.value);
         if (L.type === 'geojson') {
-          if (map.getLayer(L.id + '-fill')) map.setPaintProperty(L.id + '-fill', 'fill-opacity', (L.paint?.fill?.['fill-opacity'] ?? 0.4) * v);
-          if (map.getLayer(L.id + '-line')) map.setPaintProperty(L.id + '-line', 'line-opacity', (L.paint?.line?.['line-opacity'] ?? 1) * v);
+          if (map.getLayer(L.id + '-fill'))   map.setPaintProperty(L.id + '-fill',   'fill-opacity',   (L.paint?.fill?.['fill-opacity'] ?? 0.4) * v);
+          if (map.getLayer(L.id + '-line'))   map.setPaintProperty(L.id + '-line',   'line-opacity',   (L.paint?.line?.['line-opacity'] ?? 1)     * v);
           if (map.getLayer(L.id + '-circle')) map.setPaintProperty(L.id + '-circle', 'circle-opacity', (L.paint?.circle?.['circle-opacity'] ?? 1) * v);
-        } else {
-          if (map.getLayer(L.id)) map.setPaintProperty(L.id, 'raster-opacity', v);
+        } else if (map.getLayer(L.id)) {
+          map.setPaintProperty(L.id, 'raster-opacity', v);
         }
       });
 
@@ -309,19 +316,17 @@
       }
     }
 
-    function buildLayerList(grouped) {
+    function buildLayerList() {
       layersWrap.textContent = '';
       const groupOrder = Array.isArray(cfg.groups) ? cfg.groups : [];
       const groups = new Map();
 
-      // Collect by group
       for (const L of layers) {
         const g = L.group || 'Ungrouped';
         if (!groups.has(g)) groups.set(g, []);
         groups.get(g).push(L);
       }
 
-      // Render in configured order first, then leftovers
       const keys = [...groupOrder.filter(g => groups.has(g)), ...[...groups.keys()].filter(g => !groupOrder.includes(g))];
 
       for (const g of keys) {
@@ -334,7 +339,7 @@
     }
 
     async function addAllLayers() {
-      for (const L of layers) { // preserve order (basemap first)
+      for (const L of layers) {
         await ensureLayer(L);
         addLegendFor(L);
       }
@@ -373,6 +378,54 @@
         setStatus('Error initializing layers — check console for details.');
       }
     });
+
+    // ---------------- Theme toggle (Auto → Light → Dark) ----------------
+    (function themeToggle() {
+      const STORAGE_KEY = "kfm-theme";         // "auto" | "light" | "dark"
+      const CLASS_LIGHT = "kfm-theme-light";
+      const CLASS_DARK  = "kfm-theme-dark";
+      const root = document.documentElement;
+
+      function current() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return (saved === "light" || saved === "dark" || saved === "auto") ? saved : "auto";
+      }
+      function labelFor(mode) {
+        return `Theme: ${mode[0].toUpperCase()}${mode.slice(1)}`;
+      }
+      function apply(mode) {
+        root.classList.remove(CLASS_LIGHT, CLASS_DARK);
+        if (mode === "light") {
+          root.classList.add(CLASS_LIGHT);
+          btnTheme?.setAttribute("aria-pressed", "true");
+        } else if (mode === "dark") {
+          root.classList.add(CLASS_DARK);
+          btnTheme?.setAttribute("aria-pressed", "true");
+        } else {
+          btnTheme?.setAttribute("aria-pressed", "false");
+        }
+        if (btnTheme) btnTheme.textContent = labelFor(mode);
+      }
+      function next(mode) { return mode === "auto" ? "light" : mode === "light" ? "dark" : "auto"; }
+
+      // React to OS theme changes when in auto
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      media.addEventListener?.("change", () => { if (current() === "auto") apply("auto"); });
+
+      // Init
+      apply(current());
+
+      // Wire button
+      btnTheme?.addEventListener("click", () => {
+        const mode = next(current());
+        localStorage.setItem(STORAGE_KEY, mode);
+        apply(mode);
+      });
+      btnTheme?.addEventListener("keydown", (e) => {
+        if (e.key === " " || e.key === "Enter") { e.preventDefault(); btnTheme.click(); }
+      });
+      if (btnTheme) btnTheme.title = "Toggle theme (Auto → Light → Dark)";
+    })();
 
   })();
   </script>
