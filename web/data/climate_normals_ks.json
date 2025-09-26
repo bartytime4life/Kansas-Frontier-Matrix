@@ -1,5 +1,43 @@
 {
   "type": "FeatureCollection",
   "name": "climate_normals_ks",
-  "features": []
+  "generated": "2025-09-26T00:00:00Z",
+  "attribution": "NOAA NCEI U.S. Climate Normals (1991–2020)",
+  "license": "Public Domain / NOAA",
+  "provenance": {
+    "source": "NOAA NCEI Climate Normals 1991–2020",
+    "notes": "Values normalized to °C and mm; station centroids"
+  },
+  "fields": {
+    "station":      { "type": "string", "description": "Station name or ID (e.g., GHCN)" },
+    "ghcn_id":      { "type": "string", "description": "GHCN station identifier" },
+    "elev_m":       { "type": "number", "units": "m",  "description": "Station elevation" },
+    "tmin_c":       { "type": "number", "units": "°C", "description": "Avg daily min (1991–2020)" },
+    "tmax_c":       { "type": "number", "units": "°C", "description": "Avg daily max (1991–2020)" },
+    "precip_mm":    { "type": "number", "units": "mm","description": "Avg daily precip (1991–2020)" },
+    "period_start": { "type": "string", "format": "date" },
+    "period_end":   { "type": "string", "format": "date" },
+    "data_quality": { "type": "string", "enum": ["provisional","final"] }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "ks_normals_0001",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-98.329, 38.364]
+      },
+      "properties": {
+        "station": "Great Bend 3W KS",
+        "ghcn_id": "USW00003971",
+        "elev_m": 574,
+        "tmin_c": 6.9,
+        "tmax_c": 19.3,
+        "precip_mm": 1.89,
+        "period_start": "1991-01-01",
+        "period_end": "2020-12-31",
+        "data_quality": "final"
+      }
+    }
+  ]
 }
