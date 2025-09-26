@@ -98,11 +98,9 @@
           ]
         },
 
-        /* Presentation (either MapLibre-like paint or app-level style) */
         "paint": { "$ref": "#/$defs/paint" },
         "style": { "$ref": "#/$defs/style" },
 
-        /* Optional UI helpers for GeoJSON/vector */
         "popup": {
           "type": "array",
           "items": { "type": "string" }
@@ -110,7 +108,6 @@
         "timeProperty":     { "type": ["string", "null"] },
         "endTimeProperty":  { "type": ["string", "null"] },
 
-        /* Optional legend mapping token */
         "legendSymbol": { "type": ["string", "null"] }
       },
       "required": ["id", "title", "url"]
