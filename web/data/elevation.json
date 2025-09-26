@@ -1,14 +1,65 @@
 {
   "id": "ks_dem_1m",
   "title": "Kansas DEM (1 m) — Hillshade",
-  "type": "raster-dem",
+  "type": "raster",
+  "format": "geotiff-cog",
+  "data": "data/cogs/derivatives/ks_dem_hillshade.tif",
+
   "assets": [
-    { "role": "cog", "href": "data/cogs/terrain/ks_dem_1m.tif" },
-    { "role": "hillshade", "href": "data/cogs/derivatives/ks_dem_hillshade.tif" }
+    { "role": "dem",       "href": "data/cogs/terrain/ks_dem_1m.tif",          "format": "geotiff-cog" },
+    { "role": "hillshade", "href": "data/cogs/derivatives/ks_dem_hillshade.tif", "format": "geotiff-cog" }
   ],
+
   "category": "terrain",
   "time": { "start": "2018-01-01", "end": "2020-12-31" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 6,
+  "maxzoom": 17,
+  "tileSize": 256,
+  "resampling": "bilinear",
+
   "visible": false,
   "opacity": 0.85,
-  "attribution": "KGS / USGS 3DEP"
+
+  "legend": {
+    "type": "raster",
+    "label": "Hillshade (1 m)",
+    "notes": "Shaded relief derived from 1 m DEM"
+  },
+
+  "style": {
+    "renderer": "raster",
+    "brightness": 0,
+    "contrast": 0,
+    "saturation": 0
+  },
+
+  /* Optional 3D terrain wiring (use only if your app supports it) */
+  "terrain": {
+    "enabled": false,
+    "source": "ks_dem_1m_dem",
+    "exaggeration": 1.0,
+    "encoding": "elevation_m"  // raw meters; switch to "mapbox" or "terrarium" if you use RGB-encoded tiles
+  },
+
+  /* When terrain.enabled = true, create a companion source in your app:
+     {
+       "id": "ks_dem_1m_dem",
+       "type": "raster-dem",
+       "format": "geotiff-cog",
+       "data": "data/cogs/terrain/ks_dem_1m.tif",
+       "encoding": "elevation_m",
+       "bounds": [-102.051, 36.993, -94.588, 40.003],
+       "tileSize": 256
+     }
+  */
+
+  "attribution": "© Kansas Geological Survey / USGS 3DEP",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "KGS statewide 1 m DEM + USGS 3DEP; hillshade derived via GDAL",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "COG hillshade used for display; DEM retained for optional terrain/exaggeration"
+  }
 }
