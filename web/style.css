@@ -1,19 +1,20 @@
 /* =============================================================================
-   Kansas-Frontier-Matrix — web/style.css  (connected & upgraded)
-   Purpose: Minimal, modern, responsive styles for the time-aware map UI.
+   Kansas-Frontier-Matrix — web/style.css  (connected, upgraded, debugged)
+   Purpose: Minimal, modern, responsive styles for the time-aware MapLibre UI.
    Notes:
-     - Harmonized with web/css/layout.css + theme.css tokens where possible.
+     - Harmonized with web/css/layout.css, theme.css, and components.css.
      - Works with MapLibre container #map and year slider #year + #year-label.
-     - Includes print styles, reduced-motion, and high-contrast support.
+     - Includes fallbacks where color-mix/backdrop-filter are unsupported.
+     - Accessibility: focus rings, prefers-reduced-motion, forced-colors.
    ========================================================================== */
 
 /* ---- CSS Variables (Design Tokens) -------------------------------------- */
 :root {
-  /* Base surfaces & ink (kept compatible with layout.css/theme.css) */
+  /* Base surfaces & ink */
   --bg: #0f1115;
   --panel: #131720;
   --panel-2: #161b26;
-  --ink: #eef2ff;           /* alias of --text */
+  --ink: #eef2ff;
   --text: var(--ink);
   --muted: #9aa4b2;
 
@@ -41,6 +42,7 @@
   --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
+  /* Z-index */
   --map-z: 1;
   --controls-z: 10;
   --tooltip-z: 20;
@@ -95,15 +97,21 @@ button { font: inherit; }
   grid-template-rows: auto 1fr;
 }
 
+/* Header with fallback if color-mix unsupported */
 .header {
   position: sticky;
   top: 0;
   z-index: var(--controls-z);
-  backdrop-filter: saturate(140%) blur(6px);
-  background: color-mix(in oklab, var(--panel) 85%, transparent);
   border-bottom: 1px solid var(--border);
   padding-left: max(env(safe-area-inset-left), 0px);
   padding-right: max(env(safe-area-inset-right), 0px);
+  background: rgba(19, 23, 32, 0.92);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+@supports (background: color-mix(in oklab, white 10%, black)) {
+  .header {
+    background: color-mix(in oklab, var(--panel) 85%, transparent);
+  }
 }
 
 .header__inner {
@@ -114,7 +122,6 @@ button { font: inherit; }
   align-items: center;
   gap: var(--gap-3);
 }
-
 .brand {
   display: flex;
   align-items: center;
@@ -124,25 +131,38 @@ button { font: inherit; }
 }
 .brand img { width: 28px; height: 28px; }
 .header__spacer { flex: 1; }
-
-.header__actions {
-  display: flex;
-  gap: var(--gap-2);
-  align-items: center;
-}
+.header__actions { display: flex; gap: var(--gap-2); align-items: center; }
 
 /* Map container (MapLibre expects a fixed-height container) */
 .map-wrapper {
   position: relative;
   z-index: var(--map-z);
 }
-
 #map {
   width: 100%;
   height: calc(100vh - 64px); /* header ~64px */
   background: #0a0d12;
   outline: none;
 }
+
+/* ---- Sidebar (optional when using layout.css/components.css) ------------- */
+.kfm-sidebar {
+  position: absolute;
+  left: max(16px, env(safe-area-inset-left));
+  top: calc(72px + env(safe-area-inset-top));
+  z-index: var(--controls-z);
+  width: min(360px, 90vw);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2);
+  padding: var(--gap-3);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(4px);
+}
+.kfm-sidebar--hidden { display: none; }
 
 /* ---- Floating Controls Panel -------------------------------------------- */
 .controls {
@@ -161,6 +181,7 @@ button { font: inherit; }
   box-shadow: var(--shadow);
   backdrop-filter: blur(4px);
 }
+.controls--hidden { display: none; }
 
 .controls__row {
   display: grid;
@@ -168,13 +189,11 @@ button { font: inherit; }
   gap: var(--gap-2);
   align-items: center;
 }
-
 .controls__section + .controls__section {
   margin-top: var(--gap-2);
   padding-top: var(--gap-2);
   border-top: 1px dashed var(--border);
 }
-
 .label {
   font-size: 12px;
   letter-spacing: 0.3px;
@@ -182,7 +201,7 @@ button { font: inherit; }
   color: var(--muted);
 }
 
-/* ---- Year Slider (with Firefox track fix) -------------------------------- */
+/* ---- Year Slider --------------------------------------------------------- */
 .year-row {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -190,7 +209,7 @@ button { font: inherit; }
   align-items: center;
 }
 
-/* Base */
+/* Track */
 #year {
   -webkit-appearance: none;
   appearance: none;
@@ -202,7 +221,7 @@ button { font: inherit; }
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
 }
 
-/* Filled track via gradient variable */
+/* Filled track via gradient variable set by JS (background-size) */
 #year.kfm-range--fill {
   --value: 0%;
   background:
@@ -221,9 +240,9 @@ button { font: inherit; }
   border: 2px solid var(--accent-2);
   box-shadow: var(--focus-ring);
   cursor: pointer;
-  margin-top: -6px; /* center on 6px track */
+  margin-top: -6px; /* center on 6px track (Safari fix) */
 }
-/* Firefox track + thumb */
+/* Firefox */
 #year::-moz-range-track {
   height: 6px;
   border-radius: 999px;
@@ -264,23 +283,17 @@ button { font: inherit; }
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
-
-.legend__swatch {
-  width: 14px; height: 14px; border-radius: 3px; border: 1px solid #0004;
-}
-
+.legend__swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #0004; }
 .legend__row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--gap-2);
 }
-
 .legend__name { font-size: 13px; color: var(--text); }
 .legend__meta { font-size: 12px; color: var(--muted); }
 
 .layers { display: grid; gap: 8px; }
-
 .layer {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -315,6 +328,7 @@ button { font: inherit; }
   transition: transform 160ms ease;
 }
 .switch[aria-checked="true"] .switch__dot { transform: translate(22px, -50%); }
+.switch:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
 /* Per-layer opacity */
 .input--opacity {
@@ -332,9 +346,7 @@ button { font: inherit; }
   width: 14px; height: 14px; border-radius: 50%;
   background: #fff; border: 2px solid var(--accent);
 }
-.input--opacity::-moz-range-track {
-  height: 6px; border-radius: 999px; background: #2b3241;
-}
+.input--opacity::-moz-range-track { height: 6px; border-radius: 999px; background: #2b3241; }
 .input--opacity::-moz-range-thumb {
   width: 14px; height: 14px; border-radius: 50%;
   background: #fff; border: 2px solid var(--accent);
@@ -429,24 +441,21 @@ button { font: inherit; }
   .controls { right: 12px; top: calc(64px + env(safe-area-inset-top)); width: min(420px, 92vw); }
   .header__inner { padding: var(--gap-2) var(--gap-2); }
 }
-
 @media (max-width: 640px) {
   .controls { left: 12px; right: 12px; width: auto; }
   .legend { grid-template-columns: auto 1fr; }
+  .kfm-sidebar { left: 12px; right: 12px; width: auto; }
 }
 
 /* ---- Print (export static map) ------------------------------------------ */
 @media print {
-  .header, .controls, .maplibregl-ctrl { display: none !important; }
+  .header, .controls, .kfm-sidebar, .maplibregl-ctrl { display: none !important; }
   #map { height: 9in; }
   body { background: #fff; color: #000; }
 }
 
 /* ---- Accessibility tweaks ------------------------------------------------ */
-:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
+:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .visually-hidden,
 .sr-only {
   position: absolute !important;
@@ -454,12 +463,10 @@ button { font: inherit; }
   overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
-
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
-
 /* High contrast (forced colors) */
 @media (forced-colors: active) {
   :root {
