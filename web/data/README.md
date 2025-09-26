@@ -106,18 +106,17 @@ This directory is the **bridge** between archival data (STAC, raw GeoTIFFs, shap
 ## Data Flow Overview
 
 ```mermaid
-```mermaid
 flowchart TD
-  A["STAC Items\n(stac/items/*.json)"] --> B["Processed Data\n(data/processed/*.json, .geojson, .tif)"]
-  B --> C["Layer Configs\n(web/data/*.json)"]
-  C --> D["Web Viewer Logic\n(web/app.js)"]
-  D --> E["MapLibre UI\n(Time Slider, Sidebar, Popups)"]
+  A["STAC Items<br/>(stac/items/*.json)"] --> B["Processed Data<br/>(data/processed/*.json, .geojson, .tif)"]
+  B --> C["Layer Configs<br/>(web/data/*.json)"]
+  C --> D["Web Viewer Logic<br/>(web/app.js)"]
+  D --> E["MapLibre UI<br/>(Time Slider, Sidebar, Popups)"]
 
-  classDef stac fill=#FFD166,stroke=#333,stroke-width=1px;
-  classDef processed fill=#06D6A0,stroke=#333,stroke-width=1px;
-  classDef webdata fill=#118AB2,stroke=#fff,stroke-width=1px;
-  classDef viewer fill=#073B4C,stroke=#fff,stroke-width=1px;
-  classDef ui fill=#EF476F,stroke=#fff,stroke-width=1px;
+  classDef stac fill:#FFD166,stroke:#333,stroke-width:1px;
+  classDef processed fill:#06D6A0,stroke:#333,stroke-width:1px;
+  classDef webdata fill:#118AB2,stroke:#ffffff,stroke-width:1px;
+  classDef viewer fill:#073B4C,stroke:#ffffff,stroke-width:1px;
+  classDef ui fill:#EF476F,stroke:#ffffff,stroke-width:1px;
 
   class A stac;
   class B processed;
