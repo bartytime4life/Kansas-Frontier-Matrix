@@ -45,18 +45,17 @@ Avoid ../ — it will 404 on GitHub Pages.
 Component Architecture
 
 flowchart TD
-    A["Config:\napp.config.json"] --> B["Viewer Logic:\nindex.html/app.js"]
-    B --> C["MapLibre Map"]
-    B --> D["Sidebar UI (layer list,\nlegend, controls)"]
-    B --> E["Timeline Control"]
-    C --> F["Raster Layers\n(e.g., hillshade, slope)"]
-    C --> G["GeoJSON Layers\n(e.g., treaties, railroads,\nhydrology)"]
-    D -- "toggles, opacity" --> C
-    E -- "year filter" --> C
+  A["Config:\napp.config.json"] --> B["Viewer Logic:\nindex.html/app.js"]
+  B --> C["MapLibre Map"]
+  B --> D["Sidebar UI (layer list,\nlegend, controls)"]
+  B --> E["Timeline Control"]
+  C --> F["Raster Layers\n(e.g., hillshade, slope)"]
+  C --> G["GeoJSON Layers\n(e.g., treaties, railroads,\nhydrology)"]
+  D -- "toggles, opacity" --> C
+  E -- "year filter" --> C
 
 Notes
-	•	Config-driven: Viewer loads configs in order:
-./app.config.json → ./config/app.config.json → ./layers.json
+	•	Config-driven: Viewer loads configs in order: ./app.config.json → ./config/app.config.json → ./layers.json
 	•	MapLibre: Supports raster tiles, single images, and GeoJSON overlays.
 	•	Sidebar: Built dynamically from layers[] in config.
 	•	Timeline: Filters by time.start / time.end (year-based).
@@ -128,21 +127,21 @@ classDiagram
   }
 
   class LinePaint {
-    +string line-color
-    +number line-width
-    +number line-opacity
+    +string line_color
+    +number line_width
+    +number line_opacity
   }
 
   class FillPaint {
-    +string fill-color
-    +number fill-opacity
-    +string fill-outline-color
+    +string fill_color
+    +number fill_opacity
+    +string fill_outline_color
   }
 
   class CirclePaint {
-    +string circle-color
-    +number circle-radius
-    +number circle-opacity
+    +string circle_color
+    +number circle_radius
+    +number circle_opacity
   }
 
   class LegendItem {
