@@ -2,12 +2,97 @@
   "id": "fema_disasters",
   "title": "FEMA Declarations (KS)",
   "type": "vector",
+  "format": "geojson",
   "data": "data/processed/fema_disasters_ks.json",
   "category": "hazards",
+
   "time": { "start": "1953-01-01", "end": null },
-  "timeProperty": "declaration_date",
-  "popup": ["disaster_number", "incident_type", "declaration_date"],
-  "style": { "circleColor": "#9B2226", "circleRadius": 3 },
+  "timeProperty": { "start": "declaration_date", "end": null, "format": "date" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
   "visible": false,
-  "attribution": "FEMA OpenFEMA"
+  "opacity": 1.0,
+
+  "popup": ["disaster_number", "incident_type", "declaration_date", "declaration_title", "county"],
+  "legend": {
+    "type": "circle",
+    "label": "Incident type",
+    "classes": [
+      { "label": "Flood",           "fill": "#2A9D8F", "stroke": "#ffffff" },
+      { "label": "Severe Storm(s)", "fill": "#457B9D", "stroke": "#ffffff" },
+      { "label": "Tornado",         "fill": "#E76F51", "stroke": "#ffffff" },
+      { "label": "Fire",            "fill": "#9B2226", "stroke": "#ffffff" },
+      { "label": "Drought",         "fill": "#F4A261", "stroke": "#ffffff" },
+      { "label": "Other",           "fill": "#6D6875", "stroke": "#ffffff" }
+    ]
+  },
+
+  "style": {
+    "renderer": "circle",
+
+    /* Data-driven color by incident_type.
+       Falls back to 'Other' if the value isn't recognized. */
+    "circleColor": {
+      "match": {
+        "property": "incident_type",
+        "stops": [
+          ["Flood",           "#2A9D8F"],
+          ["Severe Storm(s)", "#457B9D"],
+          ["Tornado",         "#E76F51"],
+          ["Fire",            "#9B2226"],
+          ["Drought",         "#F4A261"]
+        ],
+        "default": "#6D6875"
+      }
+    },
+
+    "circleRadius": 3,
+    "circleStrokeColor": "#ffffff",
+    "circleStrokeWidth": 0.7
+  },
+
+  "cluster": {
+    "enabled": true,
+    "radius": 40,
+    "maxZoom": 12,
+    "style": {
+      "circleColor": "#444444",
+      "circleOpacity": 0.7,
+      "circleStrokeColor": "#ffffff",
+      "circleStrokeWidth": 1.0,
+      "circleRadius": {
+        "stops": [[5, 10], [50, 16], [200, 22]],
+        "property": "point_count",
+        "type": "exponential",
+        "base": 1.2
+      },
+      "textField": "{point_count_abbreviated}",
+      "textSize": 11,
+      "textColor": "#ffffff"
+    }
+  },
+
+  "fields": {
+    "disaster_number":   { "type": "string", "description": "FEMA disaster number" },
+    "incident_type":     { "type": "string", "description": "Event type (e.g., Flood, Severe Storm(s), Tornado, Fire, Drought)" },
+    "declaration_date":  { "type": "string", "format": "date", "description": "Date of declaration (ISO 8601)" },
+    "declaration_title": { "type": "string", "description": "Short title of declaration (optional but recommended)" },
+    "declaration_type":  { "type": "string", "description": "Type (e.g., 'Major Disaster', 'Emergency')" },
+    "county":            { "type": "string", "description": "County name (centroid point)" },
+    "state":             { "type": "string", "description": "State code (KS)" },
+    "fips":              { "type": "string", "description": "County FIPS (optional)" },
+    "url":               { "type": "string", "format": "uri", "description": "Link to FEMA OpenFEMA record (optional)" }
+  },
+
+  "search": { "qFields": ["incident_type", "county", "declaration_title", "disaster_number"] },
+
+  "attribution": "© FEMA OpenFEMA",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "FEMA OpenFEMA — Disaster Declarations Summaries (filtered to Kansas)",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "County-level centroids; dates normalized to ISO 8601; incident types mapped to categorical colors"
+  }
 }
