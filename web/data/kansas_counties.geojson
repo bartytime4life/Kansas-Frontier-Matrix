@@ -18,8 +18,6 @@
         "license": "CC0-1.0",
         "precision": "approximate",
         "time": { "start": "1854-05-30", "end": null },
-
-        /* Optional style hints (some renderers read these; MapLibre uses app.config.json paint) */
         "stroke": "#1d4ed8",
         "stroke-width": 1.2,
         "stroke-opacity": 0.9,
@@ -51,7 +49,6 @@
         "license": "CC0-1.0",
         "precision": "approximate",
         "time": { "start": "1867-02-26", "end": null },
-
         "stroke": "#1d4ed8",
         "stroke-width": 1.2,
         "stroke-opacity": 0.9,
