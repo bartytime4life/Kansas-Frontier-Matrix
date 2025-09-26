@@ -2,10 +2,60 @@
   "id": "ks_hydro",
   "title": "Rivers & Waterbodies",
   "type": "vector",
+  "format": "geojson",
   "data": "data/processed/hydrology.json",
   "category": "environment",
+
+  /* Static by default (no time filtering) */
   "time": { "start": null, "end": null },
-  "style": { "lineColor": "#3A86FF", "lineWidth": 1.0, "fillColor": "#A0C4FF" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
   "visible": false,
-  "attribution": "NHD / KGS"
+  "opacity": 1.0,
+
+  "popup": ["name", "ftype", "fcode", "length_km", "area_km2"],
+
+  "legend": {
+    "type": "fill",
+    "label": "Hydrology",
+    "classes": [
+      { "label": "Rivers/Streams", "stroke": "#3A86FF" },
+      { "label": "Lakes/Waterbodies", "fill": "#A0C4FF", "stroke": "#3A86FF" }
+    ]
+  },
+
+  "style": {
+    /* Style applies to mixed geometry:
+       - Line geometry → lineColor/lineWidth
+       - Polygon geometry → fillColor/fillOpacity + line stroke */
+    "renderer": "fill",
+    "fillColor": "#A0C4FF",
+    "fillOpacity": 0.6,
+
+    "lineColor": "#3A86FF",
+    "lineWidth": 1.0,
+    "lineJoin": "round",
+    "lineCap": "round"
+  },
+
+  "fields": {
+    "name":      { "type": "string", "description": "Feature name (GNIS/NHD)" },
+    "ftype":     { "type": "string", "description": "NHD feature type (e.g., Stream/River, Lake/Pond)" },
+    "fcode":     { "type": "string", "description": "NHD FCODE" },
+    "length_km": { "type": "number", "units": "km",  "description": "Feature length (lines, optional)" },
+    "area_km2":  { "type": "number", "units": "km²", "description": "Surface area (polygons, optional)" },
+    "source":    { "type": "string", "description": "Source dataset/version" }
+  },
+
+  "search": { "qFields": ["name", "ftype"] },
+
+  "attribution": "© <a href=\"https://www.usgs.gov/national-hydrography\" target=\"_blank\">USGS NHD</a> / Kansas Geological Survey",
+  "license": "Public Domain / US Government data",
+  "provenance": {
+    "source": "USGS National Hydrography Dataset (NHD) and KGS hydrology extracts (normalized for KFM)",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Mixed geometry (lines + polygons); names from GNIS/NHD where available"
+  }
 }
