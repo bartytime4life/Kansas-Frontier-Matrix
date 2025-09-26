@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/web/config/schema.json",
+  "title": "Kansas-Frontier-Matrix Web Config Schemas",
+  "type": "object",
+  "$defs": {
+    "isoDateTime": {
+      "type": "string",
+      "description": "ISO 8601 datetime",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "semver": {
+      "type": "string",
+      "description": "Semantic version string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[\\da-zA-Z-]+(?:\\.[\\da-zA-Z-]+)*)?(?:\\+[\\da-zA-Z-]+(?:\\.[\\da-zA-Z-]+)*)?$"
+    },
+    "colorHex": {
+      "type": "string",
+      "description": "CSS hex color (#RGB or #RRGGBB)",
+      "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+    },
+    "lineDasharray": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "description": "Dash pattern [dash, gap, ...]"
+    },
+    "LineStyle": {
+      "type": "object",
+      "properties": {
+        "lineColor": { "$ref": "#/$defs/colorHex" },
+        "lineWidth": { "type": "number", "minimum": 0 },
+        "lineDasharray": { "$ref": "#/$defs/lineDasharray" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "FillStyle": {
+      "type": "object",
+      "properties": {
+        "fillColor": { "$ref": "#/$defs/colorHex" },
+        "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "CircleStyle": {
+      "type": "object",
+      "properties": {
+        "circleColor": { "$ref": "#/$defs/colorHex" },
+        "circleRadius": { "type": "number", "minimum": 0 },
+        "circleStrokeColor": { "$ref": "#/$defs/colorHex" },
+        "circleStrokeWidth": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "SymbolStyle": {
+      "type": "object",
+      "description": "Style bucket for a symbol/layer; supports line/fill/circle keys",
+      "properties": {
+        "lineColor": { "$ref": "#/$defs/colorHex" },
+        "lineWidth": { "type": "number", "minimum": 0 },
+        "lineDasharray": { "$ref": "#/$defs/lineDasharray" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fillColor": { "$ref": "#/$defs/colorHex" },
+        "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "circleColor": { "$ref": "#/$defs/colorHex" },
+        "circleRadius": { "type": "number", "minimum": 0 },
+        "circleStrokeColor": { "$ref": "#/$defs/colorHex" },
+        "circleStrokeWidth": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "Category": {
+      "type": "object",
+      "required": ["title", "layers"],
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "layers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "Source": {
+      "type": "object",
+      "required": ["title", "type", "attribution", "category"],
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["raster", "vector", "raster-dem"] },
+        "data": { "type": "string", "description": "Path/URL to a single data asset (e.g., GeoJSON)" },
+        "tiles": {
+          "type": "array",
+          "description": "Tile URL templates or local tile paths for raster/mbtiles",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "attribution": { "type": "string" },
+        "category": {
+          "type": "string",
+          "description": "Logical category key (e.g., reference, culture, environment, hazards, overlays)"
+        },
+        "timeProperty": {
+          "type": "string",
+          "description": "Feature property name storing year/date for time filtering"
+        },
+        "minzoom": { "type": "number", "minimum": 0 },
+        "maxzoom": { "type": "number", "minimum": 0 },
+        "tileSize": { "type": "integer", "minimum": 1 },
+        "visible": { "type": "boolean" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "oneOf": [
+        { "required": ["data"] },
+        { "required": ["tiles"] }
+      ],
+      "additionalProperties": false
+    },
+
+    "legend": {
+      "type": "object",
+      "required": ["version", "symbols"],
+      "properties": {
+        "version": { "$ref": "#/$defs/semver" },
+        "generated": { "$ref": "#/$defs/isoDateTime" },
+        "symbols": {
+          "type": "object",
+          "description": "Symbol/style dictionary keyed by symbol id",
+          "additionalProperties": { "$ref": "#/$defs/SymbolStyle" },
+          "minProperties": 1
+        },
+        "categories": {
+          "type": "object",
+          "description": "Optional category–to–symbol-id mapping",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "attribution": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "categories": {
+      "type": "object",
+      "required": ["version", "categories"],
+      "properties": {
+        "version": { "$ref": "#/$defs/semver" },
+        "generated": { "$ref": "#/$defs/isoDateTime" },
+        "categories": {
+          "type": "object",
+          "description": "Category dictionary keyed by category id",
+          "additionalProperties": { "$ref": "#/$defs/Category" },
+          "minProperties": 1
+        },
+        "attribution": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "sources": {
+      "type": "object",
+      "required": ["version", "sources"],
+      "properties": {
+        "version": { "$ref": "#/$defs/semver" },
+        "generated": { "$ref": "#/$defs/isoDateTime" },
+        "sources": {
+          "type": "object",
+          "description": "Source dictionary keyed by source id",
+          "additionalProperties": { "$ref": "#/$defs/Source" },
+          "minProperties": 1
+        },
+        "attribution": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "properties": {
+    "legend": { "$ref": "#/$defs/legend" },
+    "categories": { "$ref": "#/$defs/categories" },
+    "sources": { "$ref": "#/$defs/sources" }
+  },
+  "additionalProperties": false,
+  "description": "Schema pack containing named schemas for legend.json, categories.json, and sources.json. Use $defs.legend, $defs.categories, or $defs.sources as needed in validators."
+}
