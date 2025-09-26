@@ -1,12 +1,26 @@
 {
   "id": "ks_railroads",
-  "title": "Railroads (year built)",
+  "title": "Railroads (Year Built)",
   "type": "vector",
   "data": "data/processed/railroads_lines.json",
-  "category": "infrastructure",
+  "category": "historical",
+  "visible": false,
+  "attribution": "State GIS / Historical compilations",
+
   "time": { "start": "1860-01-01", "end": "1950-12-31" },
   "timeProperty": "built",
-  "style": { "lineColor": "#8D99AE", "lineWidth": 1.2 },
-  "visible": false,
-  "attribution": "State GIS / Historical compilations"
+  "filter": ["has", "built"],
+
+  "minzoom": 5,
+  "maxzoom": 19,
+
+  "style": {
+    "lineColor": "#8D99AE",
+    "lineWidth": 1.2,
+    "lineOpacity": 0.95,
+    "lineDasharray": ["case", ["==", ["get", "status"], "abandoned"], [2, 2], [1, 0]]
+  },
+
+  "popup": ["name", "operator", "built", "status", "abandoned", "abandoned_year"],
+  "legendSymbol": "railroads"
 }
