@@ -1,14 +1,64 @@
 {
+  "schema": "kfm-story/1.0",
+  "version": "1.1.0",
+  "generated": "2025-09-26T00:00:00Z",
   "id": "story_layers",
   "title": "Curated Story Themes",
-  "type": "document",
   "themes": [
     {
       "id": "dust_bowl",
       "title": "Dust Bowl & Drought",
-      "layers": ["drought_monitor", "storm_events", "climate_normals"],
-      "time": { "start": "1930-01-01", "end": "1940-12-31" },
-      "description": "Drought progression, storms, and societal impacts."
+      "description": "Drought progression, storms, and societal impacts across the central Plains.",
+      "year": 1935,
+      "layersOn": ["drought_monitor", "storm_events", "climate_normals"],
+      "layersOff": [],
+      "opacity": {
+        "drought_monitor": 0.85,
+        "storm_events": 1.0,
+        "climate_normals": 0.65
+      },
+      "flyTo": { "center": [-99.3, 38.4], "zoom": 6.2 }
+    },
+    {
+      "id": "treaties_trails",
+      "title": "Treaties, Trails, and Displacement",
+      "description": "Shifting treaty areas, migration routes, and settlement pressure in Kansas.",
+      "year": 1863,
+      "layersOn": ["ks_treaties", "ks_trails", "ks_settlements", "ks_hydro"],
+      "layersOff": ["ks_landcover"],
+      "opacity": {
+        "ks_treaties": 0.35,
+        "ks_trails": 1.0,
+        "ks_settlements": 1.0,
+        "ks_hydro": 0.8
+      },
+      "flyTo": { "center": [-98.5, 38.6], "zoom": 6.5 }
+    },
+    {
+      "id": "railroads_growth",
+      "title": "Railroads & Town Growth",
+      "description": "Rail expansion and the grid of new towns on the prairie.",
+      "year": 1887,
+      "layersOn": ["ks_railroads", "ks_settlements", "ks_counties"],
+      "layersOff": [],
+      "opacity": {
+        "ks_railroads": 1.0,
+        "ks_settlements": 1.0,
+        "ks_counties": 0.9
+      },
+      "flyTo": { "center": [-97.5, 38.0], "zoom": 6.7 }
+    },
+    {
+      "id": "soil_surveys_archival",
+      "title": "Archival Soil Surveys",
+      "description": "Switch to the nearest historical USDA/NRCS soil sheet for the selected year.",
+      "year": 1937,
+      "layersOn": ["ks_soil_surveys"],
+      "layersOff": [],
+      "opacity": {
+        "ks_soil_surveys": 0.6
+      },
+      "flyTo": { "center": [-99.25, 38.3], "zoom": 7.2 }
     }
   ]
 }
