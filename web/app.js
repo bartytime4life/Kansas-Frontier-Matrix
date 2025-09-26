@@ -10,6 +10,7 @@
       - window.LegendControl? legend control
       - window.attachPopup?    popup wiring (map, { layers: ['id', ...], maxFeatures })
    ✅ Extras: robust date parsing; idempotent add; localStorage UI state; safer source/layer add ordering
+   ✅ Image assets: one logical "image" layer can auto-switch scanned sheets by year (nearest)
    ✅ Debug surface: window.KFM { map, cfg, setYear, setVisible, setOpacity, getLayer, addLayer, flyTo }
 */
 
@@ -36,16 +37,14 @@
     defaults: {},
     year: null,
     layersById: new Map(),       // id -> normalized layer
-    uiState: loadUIState(),       // persisted UI (visibility/opacity/year)
+    uiState: loadUIState(),      // persisted UI (visibility/opacity/year)
     map: null,
-    readySources: new Set(),      // sources that finished addSource
-    layerAddQueue: [],            // queued layer ids waiting for source
+    readySources: new Set(),     // sources that finished addSource
+    layerAddQueue: [],           // queued layer ids waiting for source
   };
 
   function loadUIState() {
-    try {
-      return JSON.parse(localStorage.getItem("kfm_ui")) || {};
-    } catch { return {}; }
+    try { return JSON.parse(localStorage.getItem("kfm_ui")) || {}; } catch { return {}; }
   }
   function saveUIState() {
     try { localStorage.setItem("kfm_ui", JSON.stringify(state.uiState)); } catch {}
@@ -264,12 +263,59 @@
       attribution: l.attribution || "",
       interactive: l.interactive !== false,
       timeProperty: l.timeProperty || l["time-property"] || null, // optional for per-feature filtering in GeoJSON
+
+      // image assetization
+      assets: Array.isArray(l.assets) ? l.assets : null,
+      assetKey: l.assetKey || "year",
+      assetStrategy: l.assetStrategy || "nearest",
+      _activeAsset: null
     };
   }
 
   function registerLayer(l) {
     if (!l || !l.id || !l.type) return;
     state.layersById.set(l.id, normalizeLayer(l));
+  }
+
+  // ------------------------------- image asset helpers -------------------------------
+  function pickAssetForYear(layer, year) {
+    if (!Array.isArray(layer.assets) || !layer.assets.length) return null;
+    const key = layer.assetKey || "year";
+    const numeric = layer.assets.filter(a => Number.isFinite(+a[key]));
+    if (!numeric.length) return layer.assets[0];
+
+    if ((layer.assetStrategy || "nearest") === "nearest") {
+      let best = null, bestDiff = Infinity;
+      for (const a of numeric) {
+        const diff = Math.abs(+a[key] - year);
+        if (diff < bestDiff) { best = a; bestDiff = diff; }
+      }
+      return best || numeric[0];
+    }
+    // exact
+    return numeric.find(a => +a[key] === +year) || numeric[0];
+  }
+
+  function updateImageAsset(map, layer, year) {
+    const srcId = layer.source || layer.id;
+    const src = map.getSource(srcId);
+    if (!src || src.type !== "image") return;
+
+    const chosen = pickAssetForYear(layer, year);
+    if (!chosen) return;
+
+    const active = layer._activeAsset || {};
+    if (active.href === chosen.href) return; // already showing
+
+    try {
+      if (typeof src.updateImage === "function") src.updateImage({ url: chosen.href });
+      if (typeof src.setCoordinates === "function" && Array.isArray(chosen.coordinates)) {
+        src.setCoordinates(chosen.coordinates);
+      }
+      layer._activeAsset = { href: chosen.href, year: chosen[layer.assetKey || "year"] };
+    } catch (e) {
+      console.warn("updateImageAsset failed:", layer.id, e);
+    }
   }
 
   // ------------------------------- adding layers -------------------------------
@@ -335,19 +381,27 @@
         const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
         if (looksTileJSON) map.addSource(srcId, { type: "raster-dem", url: layer.url, tileSize: layer.tileSize || 512 });
         else {
-          // fallback treat as raster; we'll hillshade on client only for true DEM sources
+          // fallback treat as raster
           map.addSource(srcId, { type: "raster", tiles: layer.tiles, tileSize: layer.tileSize || 256, bounds: layer.bounds || undefined });
         }
         return;
       }
 
-      if (layer.type === "image" && Array.isArray(layer.coordinates) && layer.url) {
-        map.addSource(srcId, { type: "image", url: layer.url, coordinates: layer.coordinates });
+      if (layer.type === "image") {
+        // support assetized images (choose initial)
+        let url = layer.url, coords = layer.coordinates;
+        if ((!url || !Array.isArray(coords)) && Array.isArray(layer.assets) && layer.assets.length) {
+          const initial = pickAssetForYear(layer, state.year ?? (layer.assets[0]?.[layer.assetKey || "year"] ?? 0)) || layer.assets[0];
+          url = initial?.href || url;
+          coords = initial?.coordinates || coords;
+          layer._activeAsset = initial ? { href: initial.href, year: initial[layer.assetKey || "year"] } : null;
+        }
+        if (!url || !Array.isArray(coords)) { console.warn("Image layer missing url/coordinates:", layer.id); return; }
+        map.addSource(srcId, { type: "image", url, coordinates: coords });
         return;
       }
 
       if (layer.type === "geojson") {
-        // allow inline data url or object
         const data = layer.data || layer.url;
         map.addSource(srcId, { type: "geojson", data });
         return;
@@ -394,6 +448,7 @@
   }
 
   function addImage(map, layer, srcId) {
+    // source already added in addSource; just add a raster layer
     if (!map.getLayer(layer.id)) {
       map.addLayer({
         id: layer.id,
@@ -414,7 +469,12 @@
         id: layer.id + "_circle",
         type: "circle",
         source: srcId,
-        paint: { "circle-radius": 4, "circle-color": "#c33", "circle-opacity": Math.min(layer.opacity, 0.9), ...(layer.paint?.circle || {}) },
+        paint: {
+          "circle-radius": 4,
+          "circle-color": "#c33",
+          "circle-opacity": Math.min(layer.opacity, 0.9),
+          ...(layer.paint?.circle || {})
+        },
         layout: { visibility: baseVisible, ...(layer.layout || {}) },
         filter: ["==", ["geometry-type"], "Point"],
       });
@@ -425,7 +485,12 @@
         id: layer.id + "_line",
         type: "line",
         source: srcId,
-        paint: { "line-color": "#c33", "line-width": 1.3, "line-opacity": layer.opacity, ...(layer.paint?.line || {}) },
+        paint: {
+          "line-color": "#c33",
+          "line-width": 1.3,
+          "line-opacity": layer.opacity,
+          ...(layer.paint?.line || {})
+        },
         layout: { visibility: baseVisible, ...(layer.layout || {}) },
         filter: ["any", ["==", ["geometry-type"], "LineString"], ["==", ["geometry-type"], "MultiLineString"]],
       });
@@ -436,7 +501,11 @@
         id: layer.id,
         type: "fill",
         source: srcId,
-        paint: { "fill-color": "#c33", "fill-opacity": Math.min(layer.opacity, 0.35), ...(layer.paint?.fill || {}) },
+        paint: {
+          "fill-color": "#c33",
+          "fill-opacity": Math.min(layer.opacity, 0.35),
+          ...(layer.paint?.fill || {})
+        },
         layout: { visibility: baseVisible, ...(layer.layout || {}) },
         filter: ["any", ["==", ["geometry-type"], "Polygon"], ["==", ["geometry-type"], "MultiPolygon"]],
       });
@@ -518,7 +587,6 @@
       el("strong", { style: { fontSize: "13px" } }, ["Year:"]),
       el("span", { id: "yearLabel", style: { fontVariantNumeric: "tabular-nums" } }, [String(cur)]),
       el("div", { style: { marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" } }, [
-        // presets dropdown (optional)
         (Array.isArray(cfg.timePresets) && cfg.timePresets.length)
           ? presetSelect(cfg.timePresets, cur) : el("span", {}, []),
       ]),
@@ -621,13 +689,20 @@
   function updateYear(year, map) {
     if (!map) return;
     state.year = year;
-    // toggle layers by time window
+
     state.layersById.forEach((l) => {
       const active = isActiveForYear(l, year);
       setLayerVisibility(map, l.id, active && l.visible !== false);
+
+      // assetized image layers: swap to nearest sheet for current year
+      if (l.type === "image" && Array.isArray(l.assets) && active) {
+        updateImageAsset(map, l, year);
+      }
+
       // per-feature filtering for GeoJSON if timeProperty provided
       if (l.type === "geojson" && l.timeProperty) applyPerFeatureTimeFilter(l);
     });
+
     $("#yearLabel") && ($("#yearLabel").textContent = String(year));
     const slider = $("#yearSlider"); if (slider) slider.value = String(year);
   }
@@ -640,15 +715,14 @@
     const toFilter = (id) => {
       const exists = state.map.getLayer(id);
       if (!exists) return;
-      // allow ISO date string; accept string year prefix
+      // accept ISO date strings or numeric years; equality on year
       const filter = [
         "all",
         ["any",
-          ["==", ["typeof", ["get", prop]], "number"], // numeric year
-          ["==", ["typeof", ["get", prop]], "string"]  // string date/year
+          ["==", ["typeof", ["get", prop]], "number"],
+          ["==", ["typeof", ["get", prop]], "string"]
         ],
-        ["<=", ["to-number", ["slice", ["concat", ["get", prop], ""], 0, 4]], y],
-        [">=", ["to-number", ["slice", ["concat", ["get", prop], ""], 0, 4]], y] // equality in both
+        ["==", ["to-number", ["slice", ["concat", ["get", prop], ""], 0, 4]], y]
       ];
       state.map.setFilter(id, filter);
     };
