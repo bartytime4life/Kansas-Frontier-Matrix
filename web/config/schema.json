@@ -26,8 +26,6 @@
       "minItems": 2,
       "description": "Dash pattern [dash, gap, ...]"
     },
-
-    /* ---------- Style buckets (camelCase for app-level 'style') ---------- */
     "Style": {
       "type": "object",
       "description": "App-level vector styling (camelCase). Use any subset.",
@@ -37,11 +35,9 @@
         "lineWidth": { "type": "number", "minimum": 0 },
         "lineOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
         "lineDasharray": { "$ref": "#/$defs/lineDasharray" },
-
         "fillColor": { "$ref": "#/$defs/colorHex" },
         "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
         "fillOutlineColor": { "$ref": "#/$defs/colorHex" },
-
         "circleColor": { "$ref": "#/$defs/colorHex" },
         "circleRadius": { "type": "number", "minimum": 0 },
         "circleOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
@@ -49,28 +45,21 @@
         "circleStrokeWidth": { "type": "number", "minimum": 0 }
       }
     },
-
-    /* ---------- LEGEND: legend.json ---------- */
     "SymbolStyle": {
       "type": "object",
       "description": "Style bucket for a symbol/layer; supports line/fill/circle keys and helper fields.",
       "additionalProperties": false,
       "properties": {
-        /* app-level style (camelCase) */
         "lineColor": { "$ref": "#/$defs/colorHex" },
         "lineWidth": { "type": "number", "minimum": 0 },
         "lineDasharray": { "$ref": "#/$defs/lineDasharray" },
         "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
-
         "fillColor": { "$ref": "#/$defs/colorHex" },
         "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
-
         "circleColor": { "$ref": "#/$defs/colorHex" },
         "circleRadius": { "type": "number", "minimum": 0 },
         "circleStrokeColor": { "$ref": "#/$defs/colorHex" },
         "circleStrokeWidth": { "type": "number", "minimum": 0 },
-
-        /* helpers for legend previews and raster hints */
         "raster": { "type": "boolean" },
         "rasterDem": { "type": "boolean" },
         "preview": { "type": "string", "description": "Preview color/marker hint for legend chips" },
@@ -78,7 +67,6 @@
       },
       "minProperties": 1
     },
-
     "legend": {
       "type": "object",
       "required": ["version", "symbols"],
@@ -110,8 +98,6 @@
         "attribution": { "type": "string" }
       }
     },
-
-    /* ---------- CATEGORIES: categories.json ---------- */
     "Category": {
       "type": "object",
       "required": ["label", "order"],
@@ -129,7 +115,6 @@
         }
       }
     },
-
     "categories": {
       "type": "object",
       "required": ["version", "categories"],
@@ -146,8 +131,6 @@
         "attribution": { "type": "string" }
       }
     },
-
-    /* ---------- SOURCES: sources.json (optional helper registry) ---------- */
     "Source": {
       "type": "object",
       "required": ["title", "type", "attribution", "category"],
@@ -188,7 +171,6 @@
         { "required": ["tiles"] }
       ]
     },
-
     "sources": {
       "type": "object",
       "required": ["version", "sources"],
@@ -206,7 +188,6 @@
       }
     }
   },
-
   "properties": {
     "legend": { "$ref": "#/$defs/legend" },
     "categories": { "$ref": "#/$defs/categories" },
