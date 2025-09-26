@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "generated": "2025-09-26T00:00:00Z",
+  "version": "1.3.1",
+  "generated": "2025-09-26T00:30:00Z",
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time-aware historical GIS for Kansas",
 
@@ -221,6 +221,25 @@
         { "type": "circle", "label": "Historical event", "color": "#0ea5e9", "radius": 5 }
       ],
       "attribution": "Demo events for UI wiring"
+    },
+    {
+      "id": "demo-entities",
+      "title": "Demo Entities",
+      "group": "Vectors",
+      "type": "geojson",
+      "path": "./data/demo_entities.json",
+      "opacity": 1.0,
+      "visible": false,
+      "time": { "start": "1821-01-01", "end": null },
+      "paint": {
+        "line":   { "line-color": "#8b5cf6", "line-width": 2, "line-opacity": 0.95 },
+        "circle": { "circle-color": "#22c55e", "circle-radius": 5, "circle-opacity": 0.95 }
+      },
+      "legend": [
+        { "type": "circle", "label": "Settlement / event", "color": "#22c55e", "radius": 5 },
+        { "type": "line",   "label": "Trail / railroad",   "color": "#8b5cf6", "width": 2 }
+      ],
+      "attribution": "Demo entities for UI wiring"
     }
   ]
 }
