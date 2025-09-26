@@ -8,6 +8,8 @@
 # Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)
 # Collections:
 #          collections-list, collections-build, collections-validate, collections-render
+# Utilities:
+#          registry (builds scripts/badges/source_map.json + injects into web/app.config.json)
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -22,7 +24,7 @@ SHELL := /bin/bash
 .DELETE_ON_ERROR:
 
 # -------- Paths --------
-PY      := python
+PY      := python3
 S       := scripts
 DATA    := data
 SRC     := $(DATA)/sources
@@ -82,6 +84,9 @@ endef
 COG_OPTS   ?= -co TILED=YES -co COMPRESS=DEFLATE -co PREDICTOR=2 -co BIGTIFF=IF_SAFER
 OVERVIEWS  ?= 2 4 8 16
 
+# CPU detection for parallel helpers (fallback to 4)
+NPROC := $(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+
 # sha utility (sha256sum/gsha256sum on Linux/Homebrew, shasum -a 256 on macOS)
 SHA256_BIN    := $(shell { command -v sha256sum || command -v gsha256sum || command -v shasum; } 2>/dev/null)
 SHA256_IS_GNU := $(shell { command -v sha256sum || command -v gsha256sum; } >/dev/null 2>&1 && echo yes || echo no)
@@ -116,6 +121,7 @@ HAVE_VALIDATE_STAC    := $(wildcard $(S)/validate_stac.py)
 HAVE_VALIDATE_SOURCES := $(wildcard $(S)/validate_sources.py)
 HAVE_GEN_SHA          := $(wildcard $(S)/gen_sha256.sh)
 HAVE_PATCH_ASSET      := $(wildcard $(S)/patch_stac_asset.py)
+HAVE_UPDATE_REGISTRY  := $(wildcard $(S)/update_registry.py)
 
 # CI-aware test leniency (fail in CI, be lenient locally)
 ifeq ($(CI),true)
@@ -168,8 +174,8 @@ endef
         dem-checksum hillshade-checksum hydrology-fetch hydrology-stac nlcd \
         validate-cogs mosaic-county regionate \
         collections-list collections-build collections-validate collections-render \
-        arch-sites arch-sites-validate arch-sites-render \
-        install-dev test test-cli test-sources
+        arch-sites arch-sites-validate arch-sites-render registry \
+        install-dev test test-cli test-sources fmt doctor
 
 # -------- Help --------
 help:
@@ -186,10 +192,11 @@ help:
 	@echo "  stac-validate        Validate STAC + source schemas (scripts/ or kgt)"
 	@echo "  site                 Write web/layers.json (simple preview)"
 	@echo "  site-config          Render web/app.config.json from STAC via kgt (if available)"
+	@echo "  registry             Build scripts/badges/source_map.json and inject into app.config.json (if present)"
 	@echo "  kml                  Build KMZ overlays (placeholder)"
 	@echo "  validate-cogs        Validate COGs under data/cogs (JSON report)"
 	@echo "  mosaic-county        Fetch+mosaic LiDAR tiles for a county (DEM COG)"
-	@echo "  regionate            Regionate GeoJSON/KML to network-linked KML/ KMZ"
+	@echo "  regionate            Regionate GeoJSON/KML to network-linked KML/KMZ"
 	@echo "  clean                Remove generated raster outputs (keeps stac/)"
 	@echo "  prebuild             stac-validate + site (used by CI)"
 	@echo "  preview              Minimal local preview (site only)"
@@ -216,7 +223,7 @@ help:
 	@echo "  hydrology-stac       Wire local GeoJSON hrefs into the hydrology STAC Items"
 	@echo ""
 	@echo "Dev:"
-	@echo "  install-dev, test, test-cli, test-sources"
+	@echo "  install-dev, test, test-cli, test-sources, fmt, doctor"
 	@echo ""
 	@echo "Overrides:  make terrain DEM=/path/to/dem.tif"
 	@echo ""
@@ -231,8 +238,8 @@ env:
 	@echo "HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no) HAVE_MAKE_SLOPEASP=$(if $(HAVE_MAKE_SLOPEASP),yes,no) HAVE_MAKE_TERRAIN=$(if $(HAVE_MAKE_TERRAIN),yes,no)"
 	@echo "HAVE_VALIDATE_COGS=$(if $(HAVE_VALIDATE_COGS),yes,no) HAVE_MOSAIC_LIDAR=$(if $(HAVE_MOSAIC_LIDAR),yes,no) HAVE_REGIONATE_KML=$(if $(HAVE_REGIONATE_KML),yes,no)"
 	@echo "HAVE_MAKE_STAC=$(if $(HAVE_MAKE_STAC),yes,no) HAVE_VALIDATE_STAC=$(if $(HAVE_VALIDATE_STAC),yes,no) HAVE_VALIDATE_SOURCES=$(if $(HAVE_VALIDATE_SOURCES),yes,no)"
-	@echo "HAVE_PATCH_ASSET=$(if $(HAVE_PATCH_ASSET),yes,no)"
-	@echo "SHA256=$(SHA256_BIN)  SHA256FLAGS=$(SHA256FLAGS)  HAVE_GEN_SHA=$(if $(HAVE_GEN_SHA),yes,no)"
+	@echo "HAVE_PATCH_ASSET=$(if $(HAVE_PATCH_ASSET),yes,no) HAVE_UPDATE_REGISTRY=$(if $(HAVE_UPDATE_REGISTRY),yes,no)"
+	@echo "SHA256=$(SHA256_BIN)  SHA256FLAGS=$(SHA256FLAGS)  NPROC=$(NPROC)"
 
 print-%:
 	@echo '$*=$($*)'
@@ -363,9 +370,7 @@ $(NLCD_DST_DIR)/nlcd_%_ks_cog.tif: $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif
 	gdalwarp -te $(KANSAS_BBOX) -r near -multi -overwrite "$<" "$$tmp"; \
 	echo "[nlcd] $* → translate to COG"; \
 	gdal_translate "$$tmp" "$@" -of COG -co COMPRESS=LZW -co NUM_THREADS=ALL_CPUS -co OVERVIEWS=IGNORE_EXISTING; \
-	rm -f "$$tmp"; \
-	echo "[nlcd] $* → provenance update"; \
-	{ test -f "$(S)/update_registry.py" && $(PY) "$(S)/update_registry.py" "$@" "landcover_nlcd_$*"; } || true
+	rm -f "$$tmp";
 
 $(NLCD_SRC_DIR)/raw/NLCD_%_CONUS.tif:
 	@mkdir -p $(NLCD_SRC_DIR)/raw
@@ -470,6 +475,22 @@ site-config: | $(WEB)
 	  echo "[site-config] kgt not installed. Try: pip install -e . && pip install jinja2"; \
 	fi
 
+# -------- Registry (from STAC → scripts/badges/source_map.json + inject to app.config.json) --------
+registry:
+	@if [ -n "$(HAVE_UPDATE_REGISTRY)" ]; then \
+	  out="scripts/badges/source_map.json"; \
+	  cfg="$(WEB)/app.config.json"; \
+	  mkdir -p scripts/badges; \
+	  if [ -f "$$cfg" ]; then \
+	    $(PY) "$(S)/update_registry.py" --stac-dir "$(STAC)/items" --out "$$out" --app-config "$$cfg" --pretty --validate; \
+	  else \
+	    $(PY) "$(S)/update_registry.py" --stac-dir "$(STAC)/items" --out "$$out" --pretty --validate; \
+	  fi; \
+	  echo "✓ registry built → $$out"; \
+	else \
+	  echo "[registry] $(S)/update_registry.py missing."; \
+	fi
+
 # -------- KML / KMZ (legacy demo) --------
 kml: terrain
 	@echo "[kml] Legacy prototype. Provide your regionate script if needed."
@@ -505,7 +526,7 @@ PYCODE
 validate-cogs:
 	@if [ -n "$(HAVE_VALIDATE_COGS)" ]; then \
 	  mkdir -p data/validation; \
-	  $(PY) "$(S)/validate_cogs.py" "$(COGS)" --jobs $$(( $$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4) )) \
+	  $(PY) "$(S)/validate_cogs.py" "$(COGS)" --jobs $(NPROC) \
 	    --timeout 120 --report data/validation/cog_validate.report.json || true; \
 	  echo "Report: data/validation/cog_validate.report.json"; \
 	else \
@@ -516,7 +537,7 @@ mosaic-county:
 	@if [ -n "$(HAVE_MOSAIC_LIDAR)" ]; then \
 	  echo "Usage: make mosaic-county COUNTY=pawnee"; \
 	  : "$${COUNTY:?Set COUNTY=...}"; \
-	  $(PY) "$(S)/mosaic_lidar_county.py" --county "$${COUNTY}" --jobs $$(( $$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4) )); \
+	  $(PY) "$(S)/mosaic_lidar_county.py" --county "$${COUNTY}" --jobs $(NPROC); \
 	else \
 	  echo "[mosaic-county] $(S)/mosaic_lidar_county.py missing."; \
 	fi
@@ -710,6 +731,20 @@ test-cli: install-dev
 
 test-sources: install-dev
 	@pytest -q $(TESTS)/test_sources.py $(ALLOW_FAIL)
+
+fmt:
+	@echo "Running formatters/linters where available..."
+	@command -v ruff >/dev/null 2>&1 && ruff check --fix || echo "ruff not installed"
+	@command -v black >/dev/null 2>&1 && black . || echo "black not installed"
+	@command -v jq >/dev/null 2>&1 || echo "jq not installed (JSON formatting skipped)"
+
+doctor:
+	@echo "Doctor: quick health check"; \
+	miss=0; \
+	for t in gdaldem gdal_translate gdaladdo gdalwarp ogr2ogr; do \
+	  if ! command -v $$t >/dev/null 2>&1; then echo " - MISSING: $$t"; miss=1; fi; \
+	done; \
+	test "$$miss" = "0" && echo "✓ GDAL toolchain present" || true
 
 # -------- Order-only dir prereqs --------
 $(RAW) $(COGS) $(HILLS) $(TERRAIN) $(VEC) $(WEB) $(STAC)/items $(STAC)/collections $(KSRIV_OUTDIR) $(DERIV):
