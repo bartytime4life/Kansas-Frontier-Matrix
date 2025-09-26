@@ -1,5 +1,85 @@
 {
   "type": "FeatureCollection",
   "name": "landcover_timeslices",
-  "features": []
+  "bbox": [-100.0, 38.0, -98.0, 39.0],
+  "features": [
+    {
+      "type": "Feature",
+      "id": "nlcd-1992-water-demo",
+      "bbox": [-99.6, 38.6, -99.59, 38.61],
+      "properties": {
+        "year": 1992,
+        "nlcd": 11,
+        "lc_code": "11",
+        "class": "11",
+        "class_name": "Open Water",
+        "area_km2": 0.8,
+        "source": "NLCD (demo record)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-99.6000, 38.6000],
+            [-99.5900, 38.6000],
+            [-99.5900, 38.6100],
+            [-99.6000, 38.6100],
+            [-99.6000, 38.6000]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "nlcd-2011-forest-demo",
+      "bbox": [-99.2, 38.8, -99.19, 38.81],
+      "properties": {
+        "year": 2011,
+        "nlcd": 42,
+        "lc_code": "42",
+        "class": "42",
+        "class_name": "Evergreen Forest",
+        "area_km2": 0.7,
+        "source": "NLCD (demo record)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-99.2000, 38.8000],
+            [-99.1900, 38.8000],
+            [-99.1900, 38.8100],
+            [-99.2000, 38.8100],
+            [-99.2000, 38.8000]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "nlcd-2021-crops-demo",
+      "bbox": [-98.6, 38.3, -98.59, 38.31],
+      "properties": {
+        "year": 2021,
+        "nlcd": 82,
+        "lc_code": "82",
+        "class": "82",
+        "class_name": "Cultivated Crops",
+        "area_km2": 0.9,
+        "source": "NLCD (demo record)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-98.6000, 38.3000],
+            [-98.5900, 38.3000],
+            [-98.5900, 38.3100],
+            [-98.6000, 38.3100],
+            [-98.6000, 38.3000]
+          ]
+        ]
+      }
+    }
+  ]
 }
