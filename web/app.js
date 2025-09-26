@@ -1,23 +1,25 @@
 /* web/app.js
-   Kansas-Frontier-Matrix — Minimal MapLibre App (upgraded & connected)
-   --------------------------------------------------------------------
-   ✅ Loads config in priority: ./config/app.config.json → viewer.json → layers.json → legacy ./layers.json
-   ✅ Merges ./config/time_config.json when present (overrides time + defaultYear, step, loop, fps)
-   ✅ Supports: raster tiles/COG, image overlays, GeoJSON (fill/line/circle), vector tiles (basic), raster-dem (with fallback)
-   ✅ Time slider filters layers by [start,end] (supports YYYY, ISO YYYY-MM-DD, time.start/end)
-   ✅ Sidebar UI with toggles + opacity sliders (uses .kfm-sidebar CSS if present)
-   ✅ Optional globals:
-      - window.LegendControl → legend control
-      - window.attachPopup   → popup click handler (map, { layers: ['id', ...], maxFeatures })
-   ✅ Safer defaults, robust date parsing, better error handling, idempotent layer add
+   Kansas-Frontier-Matrix — MapLibre App (upgraded, connected, resilient)
+   ----------------------------------------------------------------------
+   ✅ Config priority: ./config/app.config.json → viewer.json → layers.json → legacy ./layers.json
+   ✅ Optional merge: ./config/time_config.json (overrides time + defaultYear, fps, loop, step, presets)
+   ✅ Layer types: raster (XYZ/TileJSON/COG), raster-dem (hillshade fallback), image overlays, geojson, vector
+   ✅ Timeline: filters layers by [start,end] (YYYY|ISO|time.start|time.end); supports presets + autoplay
+   ✅ Sidebar UI: toggles + opacity sliders (class .kfm-sidebar if available)
+   ✅ Connections:
+      - window.LegendControl? legend control
+      - window.attachPopup?    popup wiring (map, { layers: ['id', ...], maxFeatures })
+   ✅ Extras: robust date parsing; idempotent add; localStorage UI state; safer source/layer add ordering
+   ✅ Debug surface: window.KFM { map, cfg, setYear, setVisible, setOpacity, getLayer, addLayer, flyTo }
 */
 
 (() => {
+  // ------------------------------- tiny DOM utils -------------------------------
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const el = (tag, attrs = {}, children = []) => {
     const n = document.createElement(tag);
-    for (const [k, v] of Object.entries(attrs)) {
+    for (const [k, v] of Object.entries(attrs || {})) {
       if (k === "class") n.className = v;
       else if (k === "style") Object.assign(n.style, v);
       else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
@@ -28,28 +30,37 @@
     return n;
   };
 
-  // -----------------------------------------------------------------------------
-  // App State
-  // -----------------------------------------------------------------------------
+  // ------------------------------- app state -------------------------------
   const state = {
     cfg: null,
     defaults: {},
     year: null,
-    layersById: new Map(), // id -> normalized layer
+    layersById: new Map(),       // id -> normalized layer
+    uiState: loadUIState(),       // persisted UI (visibility/opacity/year)
     map: null,
+    readySources: new Set(),      // sources that finished addSource
+    layerAddQueue: [],            // queued layer ids waiting for source
   };
 
-  // -----------------------------------------------------------------------------
-  // Bootstrap
-  // -----------------------------------------------------------------------------
+  function loadUIState() {
+    try {
+      return JSON.parse(localStorage.getItem("kfm_ui")) || {};
+    } catch { return {}; }
+  }
+  function saveUIState() {
+    try { localStorage.setItem("kfm_ui", JSON.stringify(state.uiState)); } catch {}
+  }
+
+  // ------------------------------- bootstrap -------------------------------
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
+
   async function init() {
     try {
       const cfg = (state.cfg = await loadConfig());
       state.defaults = cfg.defaults || {};
-
       ensureDOMSkeleton(cfg);
 
-      // Default style: OSM raster fallback if no style was supplied
+      // style (use object or URL; fallback to OSM)
       const defaultStyle = {
         version: 8,
         sources: {
@@ -57,62 +68,77 @@
             type: "raster",
             tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
             tileSize: 256,
-            attribution: "© OpenStreetMap contributors"
-          }
+            attribution: "© OpenStreetMap contributors",
+          },
         },
-        layers: [{ id: "osm-bg", type: "raster", source: "osm" }]
+        layers: [{ id: "osm-bg", type: "raster", source: "osm" }],
       };
-
-      // If cfg.style is a URL string, use it; if it's an object, pass as is
       const style = typeof cfg.style === "string" ? cfg.style : (cfg.style || defaultStyle);
 
-      // MapLibre
       const map = (state.map = new maplibregl.Map({
         container: "map",
         style,
         center: cfg.center || [-98.3, 38.5],
         zoom: cfg.zoom ?? 6,
-        attributionControl: cfg.attributionControl !== false
+        attributionControl: cfg.attributionControl !== false,
+        hash: cfg.hash ?? true,
+        preserveDrawingBuffer: false,
       }));
 
-      if (cfg.navControl !== false) {
-        map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-left");
-      }
+      // controls
+      if (cfg.navControl !== false) map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-left");
       map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
 
+      // load
       map.on("load", () => {
-        // Normalize & register layers (lazy add to the map when needed)
+        // normalize & register layers (defer add until used)
         (cfg.layers || []).forEach(registerLayer);
 
-        // Optional: attach popups if helper is loaded
+        // popups
         if (typeof window.attachPopup === "function") {
           try {
             const clickable = (cfg.layers || [])
-              .filter(l => (l.interactive !== false) && (["geojson", "vector"].includes((l.type || "").toLowerCase())))
+              .filter(l => l.interactive !== false && ["geojson", "vector"].includes((l.type || "").toLowerCase()))
               .map(l => l.id);
-            if (clickable.length) {
-              window.attachPopup(map, { layers: clickable, maxFeatures: 12 });
-            }
+            if (clickable.length) window.attachPopup(map, { layers: clickable, maxFeatures: 12 });
           } catch (e) { console.warn("Popup attach failed:", e); }
         }
 
-        // Optional: legend control if available
+        // legend
         if (typeof window.LegendControl === "function") {
           try {
             map.addControl(new window.LegendControl({ layersConfig: cfg.layers, title: cfg.legendTitle || "Legend" }), "bottom-right");
           } catch (e) { console.warn("Legend addControl failed:", e); }
         }
 
-        // Build UI
+        // UI
         buildTimeUI(cfg);
         buildLayerUI(cfg, map);
 
-        // Initial year (resolve from cfg.time/defaultYear using robust date→year parsing)
-        const y0 = clampYear(toYear(nnum(cfg.defaultYear, cfg.time?.defaultYear, 1900)), cfg);
+        // initial year (uiState > config > time.default)
+        const fallbackYear = toYear(cfg.defaultYear ?? cfg.time?.defaultYear ?? 1900);
+        const y0 = clampYear(toYear(state.uiState.year ?? fallbackYear), cfg);
         updateYear(y0, map);
+
+        // if some layers persisted as visible, ensure added now
+        (cfg.layers || []).forEach(l => {
+          const L = state.layersById.get(l.id);
+          if (!L) return;
+          const persistedVisible = state.uiState.visibility?.[L.id];
+          const shouldShow = typeof persistedVisible === "boolean" ? persistedVisible : (L.visible !== false);
+          if (shouldShow) addLayerToMap(map, L);
+        });
       });
 
-      // Debug surface
+      // source readiness
+      map.on("sourcedata", (e) => {
+        if (e.isSourceLoaded && e.sourceId) {
+          state.readySources.add(e.sourceId);
+          flushLayerQueue(e.sourceId);
+        }
+      });
+
+      // debug surface
       window.KFM = {
         map,
         cfg,
@@ -121,14 +147,13 @@
         setOpacity: (id, a) => setLayerOpacity(map, id, +a),
         getLayer: (id) => state.layersById.get(id),
         addLayer: (def) => { registerLayer(def); addLayerToMap(map, normalizeLayer(def)); },
+        flyTo: (center, zoom) => map.flyTo({ center, zoom: zoom ?? map.getZoom() }),
       };
     } catch (err) {
       console.error("KFM init failed:", err);
-      document.body.appendChild(
-        el("div", { style: { padding: "12px", color: "#b91c1c", fontFamily: "system-ui" } }, [
-          "Failed to initialize map. See console for details."
-        ])
-      );
+      document.body.appendChild(el("div", { style: { padding: "12px", color: "#b91c1c", fontFamily: "system-ui" } }, [
+        "Failed to initialize map. See console for details."
+      ]));
     }
   }
 
@@ -139,75 +164,54 @@
   }
 
   async function loadConfig() {
-    // Prefer config under ./config/, then legacy ./layers.json
     const candidates = [
       "./config/app.config.json",
       "./config/viewer.json",
       "./config/layers.json",
-      "./layers.json"
+      "./layers.json",
     ];
-
     let base = null;
     for (const url of candidates) {
-      try {
-        base = await loadJSON(url);
-        console.info("Loaded config:", url);
-        break;
-      } catch {}
+      try { base = await loadJSON(url); console.info("[KFM] Loaded config:", url); break; } catch {}
     }
-    if (!base) {
-      throw new Error("No config found (tried ./config/app.config.json, viewer.json, layers.json, ./layers.json)");
-    }
+    if (!base) throw new Error("No config found (tried ./config/app.config.json, viewer.json, layers.json, ./layers.json)");
 
-    // Optional: merge time_config.json overrides
+    // optional time overrides
     try {
       const tcfg = await loadJSON("./config/time_config.json");
       if (tcfg?.time) {
         base.time = { ...(base.time || {}), ...tcfg.time };
-        if (Number.isFinite(tcfg.time.defaultYear)) {
-          base.defaultYear = tcfg.time.defaultYear;
-        }
+        if (Number.isFinite(tcfg.time.defaultYear)) base.defaultYear = tcfg.time.defaultYear;
       }
-      if (Array.isArray(tcfg?.presets)) {
-        base.timePresets = tcfg.presets;
-      }
-      console.info("Merged time_config.json");
-    } catch {
-      // no time_config present; ignore
-    }
+      if (Array.isArray(tcfg?.presets)) base.timePresets = tcfg.presets;
+      console.info("[KFM] Merged time_config.json");
+    } catch {}
 
+    // sensible defaults
+    base.time = base.time || {};
+    base.defaults = base.defaults || {};
     return base;
   }
 
   function ensureDOMSkeleton(cfg) {
-    // Map container (use #map to align with CSS)
-    if (!$("#map")) {
-      document.body.appendChild(el("div", { id: "map" }));
-    }
-
-    // Sidebar container (class-based to leverage style.css/components)
+    // map
+    if (!$("#map")) document.body.appendChild(el("div", { id: "map" }));
+    // sidebar
     if (!$("#sidebar")) {
       const sidebar = el("div", { id: "sidebar", class: "kfm-sidebar" }, [
         el("div", { style: { padding: "12px 12px 6px 12px", borderBottom: "1px solid var(--border, #eee)" } }, [
-          el("h2", { style: { margin: "0 0 8px 0", fontSize: "16px", fontWeight: "700" } }, [
-            cfg.title || "Kansas-Frontier-Matrix",
-          ]),
-          el("div", { style: { fontSize: "12px", color: "var(--muted, #666)" } }, [
-            cfg.subtitle || "Time-aware layers"
-          ])
+          el("h2", { style: { margin: "0 0 8px 0", fontSize: "16px", fontWeight: "700" } }, [cfg.title || "Kansas-Frontier-Matrix"]),
+          el("div", { style: { fontSize: "12px", color: "var(--muted, #666)" } }, [cfg.subtitle || "Time-aware layers"]),
         ]),
         el("div", { id: "timebox", style: { padding: "12px", borderBottom: "1px solid var(--border, #eee)" } }),
-        el("div", { id: "layerbox", style: { padding: "12px" } })
+        el("div", { id: "layerbox", style: { padding: "12px" } }),
       ]);
       document.body.appendChild(sidebar);
     }
   }
 
-  // -----------------------------------------------------------------------------
-  // Dates & Normalization
-  // -----------------------------------------------------------------------------
+  // ------------------------------- normalization -------------------------------
   function toYear(v) {
-    // Accepts number, string year, or ISO date string; returns integer year or null
     if (v == null) return null;
     if (Number.isFinite(v)) return Math.trunc(v);
     if (typeof v === "string") {
@@ -218,253 +222,306 @@
     }
     return null;
   }
-
   function clampYear(y, cfg) {
     const min = toYear(cfg.time?.min) ?? 1700;
     const max = toYear(cfg.time?.max) ?? 2100;
     const yy = toYear(y);
     return Math.max(min, Math.min(max, Number.isFinite(yy) ? yy : min));
   }
+  function coalesce(...vals) { for (const v of vals) if (v !== undefined && v !== null) return v; return null; }
+  function nnum(...vals) { for (const v of vals) if (Number.isFinite(+v)) return +v; return undefined; }
 
   function normalizeLayer(l) {
     const d = state.defaults;
-    const url = l.url || (Array.isArray(l.tiles) && l.tiles[0]) || l.path || null;
     const type = (l.type || "").toLowerCase();
-
+    const url = l.url || (Array.isArray(l.tiles) && l.tiles[0]) || l.path || null;
     const start = toYear(coalesce(l.start, l.year, l.time?.start, null));
     const end   = toYear(coalesce(l.end,   l.year, l.time?.end,   null));
+    const persistedOpacity = state.uiState.opacity?.[l.id];
+    const persistedVisible = state.uiState.visibility?.[l.id];
 
     return {
       id: l.id,
       title: l.title || l.id,
-      type,                     // "raster" | "vector" | "image" | "geojson" | "raster-dem"
+      type, // raster | vector | image | geojson | raster-dem
       url,
       tiles: Array.isArray(l.tiles) ? l.tiles : (url ? [url] : null),
-      source: l.source,         // optional source id (for advanced setups)
-      sourceLayer: l["source-layer"] || l.sourceLayer || l.id, // for vector tiles
+      source: l.source || l.id,
+      sourceLayer: l["source-layer"] || l.sourceLayer || l.id,
       paint: l.paint || {},
       layout: l.layout || {},
       start,
       end,
-      opacity: nnum(l.opacity, d.opacity, 1),
+      opacity: (persistedOpacity ?? nnum(l.opacity, d.opacity, 1)),
       minzoom: nnum(l.minzoom, d.minzoom, 0),
       maxzoom: nnum(l.maxzoom, d.maxzoom, 24),
-      visible: (typeof l.visible === "boolean") ? l.visible : (typeof d.visible === "boolean" ? d.visible : true),
+      visible: typeof persistedVisible === "boolean" ? persistedVisible
+              : (typeof l.visible === "boolean" ? l.visible : (typeof d.visible === "boolean" ? d.visible : true)),
       tileSize: nnum(l.tileSize, d.tileSize, 256),
       bounds: l.bounds || d.bounds || null,
-      coordinates: l.coordinates || null, // for image overlays
+      coordinates: l.coordinates || null,
       category: l.category || l.group || "Layers",
-      attribution: l.attribution || ""
+      attribution: l.attribution || "",
+      interactive: l.interactive !== false,
+      timeProperty: l.timeProperty || l["time-property"] || null, // optional for per-feature filtering in GeoJSON
     };
   }
 
   function registerLayer(l) {
     if (!l || !l.id || !l.type) return;
-    const layer = normalizeLayer(l);
-    state.layersById.set(layer.id, layer);
+    state.layersById.set(l.id, normalizeLayer(l));
   }
 
-  // -----------------------------------------------------------------------------
-  // Add to Map
-  // -----------------------------------------------------------------------------
+  // ------------------------------- adding layers -------------------------------
   function addLayerToMap(map, layer) {
     const srcId = layer.source || layer.id;
 
-    // Avoid double add
-    if (map.getSource(srcId) && (map.getLayer(layer.id) || map.getLayer(layer.id + "_line") || map.getLayer(layer.id + "_circle"))) {
-      return;
-    }
+    // avoid double add (consider geojson companions)
+    const anyAlready = [layer.id, layer.id + "_line", layer.id + "_circle"].some(id => !!map.getLayer(id));
+    if (map.getSource(srcId) && anyAlready) return;
 
-    // --- Raster tiles/COG/XYZ ---
-    if (layer.type === "raster") {
-      const tiles = layer.tiles || (layer.url ? [layer.url] : null);
-      if (!tiles) { console.warn("Raster layer missing url/tiles:", layer); return; }
-      if (!map.getSource(srcId)) {
-        const isXYZ = /\{z\}\/\{x\}\/\{y\}/.test(tiles[0]);
-        map.addSource(srcId, { type: "raster", tiles, tileSize: layer.tileSize, bounds: layer.bounds || undefined });
+    // ensure source then add layer(s)
+    const ensure = () => {
+      switch (layer.type) {
+        case "raster":      return addRaster(map, layer, srcId);
+        case "raster-dem":  return addRasterDEM(map, layer, srcId);
+        case "image":       return addImage(map, layer, srcId);
+        case "geojson":     return addGeoJSON(map, layer, srcId);
+        case "vector":      return addVector(map, layer, srcId);
+        default:
+          console.warn("Unknown layer.type:", layer.type, layer);
       }
-      if (!map.getLayer(layer.id)) {
-        map.addLayer({
-          id: layer.id,
-          type: "raster",
-          source: srcId,
-          minzoom: layer.minzoom,
-          maxzoom: layer.maxzoom,
-          paint: { "raster-opacity": layer.opacity, ...(layer.paint || {}) },
-          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) }
-        });
-      }
-      return;
-    }
+    };
 
-    // --- Raster DEM (prefer TileJSON url; otherwise fallback to raster) ---
-    if (layer.type === "raster-dem") {
-      const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
-      if (looksTileJSON) {
-        try {
-          if (!map.getSource(srcId)) map.addSource(srcId, { type: "raster-dem", url: layer.url, tileSize: layer.tileSize || 512 });
-          if (!map.getLayer(layer.id)) {
-            map.addLayer({
-              id: layer.id,
-              type: "hillshade",
-              source: srcId,
-              layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
-              paint: { ...(layer.paint || {}) }
-            });
-          }
-          return;
-        } catch (e) {
-          console.warn("raster-dem add failed, falling back to raster:", e);
-        }
-      }
-      // Fallback: treat as raster (e.g., local COG tif)
-      const fallback = { ...layer, type: "raster" };
-      addLayerToMap(map, fallback);
-      return;
-    }
-
-    // --- Image overlays ---
-    if (layer.type === "image" && Array.isArray(layer.coordinates) && layer.url) {
-      if (!map.getSource(srcId)) map.addSource(srcId, { type: "image", url: layer.url, coordinates: layer.coordinates });
-      if (!map.getLayer(layer.id)) {
-        map.addLayer({
-          id: layer.id, type: "raster", source: srcId,
-          paint: { "raster-opacity": layer.opacity, ...(layer.paint || {}) },
-          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) }
-        });
-      }
-      return;
-    }
-
-    // --- GeoJSON (explicit or .json/.geojson url) ---
-    const isGeoJSON = layer.type === "geojson" || /\.(json|geojson)(\?|$)/i.test(layer.url || "");
-    if (isGeoJSON) {
-      if (!layer.url) { console.warn("GeoJSON layer missing url:", layer); return; }
-      if (!map.getSource(srcId)) map.addSource(srcId, { type: "geojson", data: layer.url });
-
-      // Circle for points
-      const circleId = layer.id + "_circle";
-      if (!map.getLayer(circleId)) {
-        map.addLayer({
-          id: circleId, type: "circle", source: srcId,
-          paint: {
-            "circle-radius": 4,
-            "circle-color": "#c33",
-            "circle-opacity": Math.min(layer.opacity, 0.9),
-            ...(layer.paint?.circle || {})
-          },
-          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
-          filter: ["==", ["geometry-type"], "Point"]
-        });
-      }
-
-      // Line for LineString
-      const lineId = layer.id + "_line";
-      if (!map.getLayer(lineId)) {
-        map.addLayer({
-          id: lineId, type: "line", source: srcId,
-          paint: {
-            "line-color": "#c33",
-            "line-width": 1.3,
-            "line-opacity": layer.opacity,
-            ...(layer.paint?.line || {})
-          },
-          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
-          filter: ["==", ["geometry-type"], "LineString"]
-        });
-      }
-
-      // Fill for polygons
-      if (!map.getLayer(layer.id)) {
-        map.addLayer({
-          id: layer.id, type: "fill", source: srcId,
-          paint: {
-            "fill-color": "#c33",
-            "fill-opacity": Math.min(layer.opacity, 0.35),
-            ...(layer.paint?.fill || {})
-          },
-          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
-          filter: ["==", ["geometry-type"], "Polygon"]
-        });
-      }
-      return;
-    }
-
-    // --- Vector tiles ---
-    if (layer.type === "vector") {
-      if (!layer.url) { console.warn("Vector tiles layer missing url:", layer); return; }
-      if (!map.getSource(srcId)) map.addSource(srcId, { type: "vector", url: layer.url });
-
-      // Default to a line layer (advanced: pass style object via cfg.style)
-      if (!map.getLayer(layer.id)) {
-        map.addLayer({
-          id: layer.id,
-          type: "line",
-          source: srcId,
-          "source-layer": layer.sourceLayer,
-          paint: { "line-color": "#c33", "line-width": 1.3, "line-opacity": layer.opacity, ...(layer.paint || {}) },
-          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
-          minzoom: layer.minzoom,
-          maxzoom: layer.maxzoom
-        });
-      }
+    // if source exists and loaded, add now; if exists but not loaded, queue; else add and rely on on('sourcedata')
+    if (map.getSource(srcId)) {
+      if (state.readySources.has(srcId)) ensure();
+      else enqueueLayer(srcId, layer.id, ensure);
+    } else {
+      addSource(map, layer, srcId);
+      enqueueLayer(srcId, layer.id, ensure);
     }
   }
 
-  // -----------------------------------------------------------------------------
-  // Visibility & Opacity
-  // -----------------------------------------------------------------------------
-  function setLayerVisibility(map, layerId, visible) {
-    const l = state.layersById.get(layerId);
-    if (!l) return;
-    l.visible = visible;
+  function enqueueLayer(srcId, layerId, fn) {
+    // prevent duplicates
+    if (!state.layerAddQueue.find(q => q.srcId === srcId && q.layerId === layerId)) {
+      state.layerAddQueue.push({ srcId, layerId, fn });
+    }
+  }
+  function flushLayerQueue(srcId) {
+    const remain = [];
+    for (const q of state.layerAddQueue) {
+      if (q.srcId === srcId) {
+        try { q.fn(); } catch (e) { console.warn("Deferred layer add failed:", q.layerId, e); }
+      } else remain.push(q);
+    }
+    state.layerAddQueue = remain;
+  }
 
-    // Ensure added
-    if (!map.getLayer(layerId) && !map.getLayer(layerId + "_line") && !map.getLayer(layerId + "_circle")) {
-      addLayerToMap(map, l);
+  function addSource(map, layer, srcId) {
+    try {
+      if (map.getSource(srcId)) return;
+
+      // Raster: accept tiles array or TileJSON url
+      if (layer.type === "raster") {
+        const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
+        if (looksTileJSON) map.addSource(srcId, { type: "raster", url: layer.url, tileSize: layer.tileSize || 256 });
+        else map.addSource(srcId, { type: "raster", tiles: layer.tiles, tileSize: layer.tileSize || 256, bounds: layer.bounds || undefined });
+        return;
+      }
+
+      if (layer.type === "raster-dem") {
+        const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
+        if (looksTileJSON) map.addSource(srcId, { type: "raster-dem", url: layer.url, tileSize: layer.tileSize || 512 });
+        else {
+          // fallback treat as raster; we'll hillshade on client only for true DEM sources
+          map.addSource(srcId, { type: "raster", tiles: layer.tiles, tileSize: layer.tileSize || 256, bounds: layer.bounds || undefined });
+        }
+        return;
+      }
+
+      if (layer.type === "image" && Array.isArray(layer.coordinates) && layer.url) {
+        map.addSource(srcId, { type: "image", url: layer.url, coordinates: layer.coordinates });
+        return;
+      }
+
+      if (layer.type === "geojson") {
+        // allow inline data url or object
+        const data = layer.data || layer.url;
+        map.addSource(srcId, { type: "geojson", data });
+        return;
+      }
+
+      if (layer.type === "vector") {
+        map.addSource(srcId, { type: "vector", url: layer.url });
+        return;
+      }
+    } catch (e) {
+      console.warn("addSource failed:", layer.id, e);
+    }
+  }
+
+  function addRaster(map, layer, srcId) {
+    if (!map.getLayer(layer.id)) {
+      map.addLayer({
+        id: layer.id,
+        type: "raster",
+        source: srcId,
+        minzoom: layer.minzoom,
+        maxzoom: layer.maxzoom,
+        paint: { "raster-opacity": layer.opacity, ...(layer.paint || {}) },
+        layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
+      });
+    }
+  }
+
+  function addRasterDEM(map, layer, srcId) {
+    if (map.getSource(srcId)?.type === "raster-dem") {
+      if (!map.getLayer(layer.id)) {
+        map.addLayer({
+          id: layer.id,
+          type: "hillshade",
+          source: srcId,
+          layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
+          paint: { ...(layer.paint || {}) },
+        });
+      }
+    } else {
+      // fallback already added a raster source; draw as raster
+      addRaster(map, layer, srcId);
+    }
+  }
+
+  function addImage(map, layer, srcId) {
+    if (!map.getLayer(layer.id)) {
+      map.addLayer({
+        id: layer.id,
+        type: "raster",
+        source: srcId,
+        paint: { "raster-opacity": layer.opacity, ...(layer.paint || {}) },
+        layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
+      });
+    }
+  }
+
+  function addGeoJSON(map, layer, srcId) {
+    // We add 3 companions: circle (points), line (LineString), fill (Polygon)
+    const baseVisible = layer.visible ? "visible" : "none";
+
+    if (!map.getLayer(layer.id + "_circle")) {
+      map.addLayer({
+        id: layer.id + "_circle",
+        type: "circle",
+        source: srcId,
+        paint: { "circle-radius": 4, "circle-color": "#c33", "circle-opacity": Math.min(layer.opacity, 0.9), ...(layer.paint?.circle || {}) },
+        layout: { visibility: baseVisible, ...(layer.layout || {}) },
+        filter: ["==", ["geometry-type"], "Point"],
+      });
     }
 
-    // Apply to all sublayers (geojson uses _fill==id, _line, _circle; hillshade uses main id)
+    if (!map.getLayer(layer.id + "_line")) {
+      map.addLayer({
+        id: layer.id + "_line",
+        type: "line",
+        source: srcId,
+        paint: { "line-color": "#c33", "line-width": 1.3, "line-opacity": layer.opacity, ...(layer.paint?.line || {}) },
+        layout: { visibility: baseVisible, ...(layer.layout || {}) },
+        filter: ["any", ["==", ["geometry-type"], "LineString"], ["==", ["geometry-type"], "MultiLineString"]],
+      });
+    }
+
+    if (!map.getLayer(layer.id)) {
+      map.addLayer({
+        id: layer.id,
+        type: "fill",
+        source: srcId,
+        paint: { "fill-color": "#c33", "fill-opacity": Math.min(layer.opacity, 0.35), ...(layer.paint?.fill || {}) },
+        layout: { visibility: baseVisible, ...(layer.layout || {}) },
+        filter: ["any", ["==", ["geometry-type"], "Polygon"], ["==", ["geometry-type"], "MultiPolygon"]],
+      });
+    }
+
+    // Optional per-feature year filter if layer.timeProperty present
+    if (layer.timeProperty) applyPerFeatureTimeFilter(layer);
+  }
+
+  function addVector(map, layer, srcId) {
+    const sourceLayer = layer.sourceLayer;
+    if (!sourceLayer) { console.warn("Vector layer missing source-layer:", layer.id); return; }
+
+    if (!map.getLayer(layer.id)) {
+      map.addLayer({
+        id: layer.id,
+        type: "line",
+        source: srcId,
+        "source-layer": sourceLayer,
+        paint: { "line-color": "#c33", "line-width": 1.3, "line-opacity": layer.opacity, ...(layer.paint || {}) },
+        layout: { visibility: layer.visible ? "visible" : "none", ...(layer.layout || {}) },
+        minzoom: layer.minzoom, maxzoom: layer.maxzoom,
+      });
+    }
+  }
+
+  // ------------------------------- visibility/opacity -------------------------------
+  function setLayerVisibility(map, layerId, visible) {
+    const L = state.layersById.get(layerId);
+    if (!L) return;
+    L.visible = visible;
+    state.uiState.visibility = state.uiState.visibility || {};
+    state.uiState.visibility[layerId] = visible;
+    saveUIState();
+
+    if (!map.getLayer(layerId) && !map.getLayer(layerId + "_line") && !map.getLayer(layerId + "_circle")) {
+      addLayerToMap(map, L);
+    }
+
     [layerId, layerId + "_line", layerId + "_circle"].forEach(id => {
       if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
     });
   }
 
   function setLayerOpacity(map, layerId, opacity) {
-    const l = state.layersById.get(layerId);
-    if (!l) return;
-    l.opacity = opacity;
+    const L = state.layersById.get(layerId);
+    if (!L) return;
+    L.opacity = opacity;
+
+    state.uiState.opacity = state.uiState.opacity || {};
+    state.uiState.opacity[layerId] = opacity;
+    saveUIState();
 
     const apply = (id, prop, val) => map.getLayer(id) && map.setPaintProperty(id, prop, val);
+    const baseType = map.getLayer(layerId)?.type;
 
-    const type = map.getLayer(layerId)?.type;
-    if (type === "raster") apply(layerId, "raster-opacity", opacity);
-    if (type === "fill")   apply(layerId, "fill-opacity", opacity);
-    if (type === "line")   apply(layerId, "line-opacity", opacity);
-    if (type === "hillshade") apply(layerId, "hillshade-exaggeration", Math.max(0.1, opacity)); // simple proxy
+    if (baseType === "raster") apply(layerId, "raster-opacity", opacity);
+    if (baseType === "fill")   apply(layerId, "fill-opacity", Math.min(opacity, 0.9));
+    if (baseType === "line")   apply(layerId, "line-opacity", opacity);
+    if (baseType === "hillshade") apply(layerId, "hillshade-exaggeration", Math.max(0.1, opacity)); // proxy
 
-    // geojson companions
-    const lineId = layerId + "_line";
-    const circleId = layerId + "_circle";
-    if (map.getLayer(lineId)) apply(lineId, "line-opacity", opacity);
-    if (map.getLayer(circleId)) apply(circleId, "circle-opacity", Math.min(opacity, 0.9));
+    // companions
+    apply(layerId + "_line", "line-opacity", opacity);
+    apply(layerId + "_circle", "circle-opacity", Math.min(opacity, 0.9));
   }
 
-  // -----------------------------------------------------------------------------
-  // Time UI
-  // -----------------------------------------------------------------------------
+  // ------------------------------- time UI + logic -------------------------------
   function buildTimeUI(cfg) {
     const timebox = $("#timebox");
     timebox.innerHTML = "";
 
     const min = toYear(cfg.time?.min) ?? 1700;
     const max = toYear(cfg.time?.max) ?? 2100;
-    const cur = clampYear(toYear(nnum(cfg.defaultYear, cfg.time?.defaultYear, min)), cfg);
     const step = nnum(cfg.time?.step, 1);
+    const persisted = toYear(state.uiState.year);
+    const cur = clampYear(toYear(coalesce(persisted, cfg.defaultYear, cfg.time?.defaultYear, min)), cfg);
 
-    const labelRow = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } }, [
+    const labelRow = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px", flexWrap: "wrap" } }, [
       el("strong", { style: { fontSize: "13px" } }, ["Year:"]),
-      el("span", { id: "yearLabel", style: { fontVariantNumeric: "tabular-nums" } }, [String(cur)])
+      el("span", { id: "yearLabel", style: { fontVariantNumeric: "tabular-nums" } }, [String(cur)]),
+      el("div", { style: { marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" } }, [
+        // presets dropdown (optional)
+        (Array.isArray(cfg.timePresets) && cfg.timePresets.length)
+          ? presetSelect(cfg.timePresets, cur) : el("span", {}, []),
+      ]),
     ]);
 
     const slider = el("input", {
@@ -473,37 +530,36 @@
       oninput: (e) => {
         const y = clampYear(parseInt(e.target.value, 10), cfg);
         $("#yearLabel").textContent = String(y);
-        requestAnimationFrame(() => updateYear(y, state.map)); // smooth updates
+        scheduleYearUpdate(y);
       }
     });
 
-    // Keyboard nudging with arrow keys while focused
+    // keyboard nudging
     slider.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowDown") slider.stepDown();
       if (e.key === "ArrowRight" || e.key === "ArrowUp") slider.stepUp();
       const y = clampYear(parseInt(slider.value, 10), cfg);
       $("#yearLabel").textContent = String(y);
-      requestAnimationFrame(() => updateYear(y, state.map));
+      scheduleYearUpdate(y);
     });
 
     timebox.append(labelRow, slider);
 
-    // Optional: autoplay controls if provided by cfg.time
+    // autoplay dock
     if (cfg.time && (cfg.time.loop || cfg.time.fps)) {
       const dock = el("div", { style: { marginTop: "8px", display: "flex", gap: "6px" } });
-      const btnPrev = el("button", { class: "btn", onclick: () => slider.stepDown(), title: "Step backward" }, ["⟨"]);
-      const btnNext = el("button", { class: "btn", onclick: () => slider.stepUp(),     title: "Step forward"  }, ["⟩"]);
+      const btnPrev = el("button", { class: "btn", title: "Step backward", onclick: () => { slider.stepDown(); slider.dispatchEvent(new Event("input")); } }, ["⟨"]);
+      const btnNext = el("button", { class: "btn", title: "Step forward",  onclick: () => { slider.stepUp();   slider.dispatchEvent(new Event("input")); } }, ["⟩"]);
       let playing = false, raf = null, last = 0;
       const fps = nnum(cfg.time.fps, 8);
       const loop = !!cfg.time.loop;
 
-      const btnPlay = el("button", {
-        class: "btn btn--primary",
-        onclick: () => { playing ? stop() : play(); }
-      }, ["▶"]);
+      const btnPlay = el("button", { class: "btn btn--primary" }, ["▶"]);
+      btnPlay.onclick = () => { playing ? stop() : play(); };
 
       function play() {
         playing = true; btnPlay.textContent = "⏸"; last = performance.now();
+        const minY = +slider.min, maxY = +slider.max;
         const tick = (now) => {
           if (!playing) return;
           const interval = 1000 / Math.max(1, fps);
@@ -511,8 +567,9 @@
             last = now;
             const before = +slider.value;
             slider.stepUp();
-            if (+slider.value === before && loop) slider.value = String(min);
+            if (+slider.value === before && loop) slider.value = String(minY);
             slider.dispatchEvent(new Event("input", { bubbles: true }));
+            if (+slider.value >= maxY && !loop) stop();
           }
           raf = requestAnimationFrame(tick);
         };
@@ -525,9 +582,36 @@
     }
   }
 
+  function presetSelect(presets, cur) {
+    const sel = el("select", { title: "Time presets", style: { fontSize: "12px" } },
+      [el("option", { value: "" }, ["Presets"])].concat(
+        presets.map(p => el("option", { value: String(p.year || p) }, [p.label || String(p)]))
+      )
+    );
+    sel.value = String(cur);
+    sel.addEventListener("change", () => {
+      const y = toYear(sel.value);
+      if (y != null) scheduleYearUpdate(y);
+    });
+    return sel;
+  }
+
+  let _yearRaf = null, _yearPending = null;
+  function scheduleYearUpdate(y) {
+    _yearPending = y;
+    if (_yearRaf) return;
+    _yearRaf = requestAnimationFrame(() => {
+      _yearRaf = null;
+      if (_yearPending != null) {
+        updateYear(_yearPending, state.map);
+        state.uiState.year = _yearPending; saveUIState();
+        _yearPending = null;
+      }
+    });
+  }
+
   function isActiveForYear(layer, year) {
-    const s = toYear(layer.start);
-    const e = toYear(layer.end);
+    const s = toYear(layer.start), e = toYear(layer.end);
     if (s == null && e == null) return true;
     if (s != null && e == null) return year >= s;
     if (s == null && e != null) return year <= e;
@@ -537,21 +621,55 @@
   function updateYear(year, map) {
     if (!map) return;
     state.year = year;
+    // toggle layers by time window
     state.layersById.forEach((l) => {
       const active = isActiveForYear(l, year);
-      // Only toggle visibility ON if layer's own visibility isn't false
       setLayerVisibility(map, l.id, active && l.visible !== false);
+      // per-feature filtering for GeoJSON if timeProperty provided
+      if (l.type === "geojson" && l.timeProperty) applyPerFeatureTimeFilter(l);
     });
+    $("#yearLabel") && ($("#yearLabel").textContent = String(year));
+    const slider = $("#yearSlider"); if (slider) slider.value = String(year);
   }
 
-  // -----------------------------------------------------------------------------
-  // Layer UI
-  // -----------------------------------------------------------------------------
+  function applyPerFeatureTimeFilter(layer) {
+    // For GeoJSON layers with a timeProperty, filter feature visibility on the three companions.
+    const prop = layer.timeProperty;
+    const y = state.year;
+
+    const toFilter = (id) => {
+      const exists = state.map.getLayer(id);
+      if (!exists) return;
+      // allow ISO date string; accept string year prefix
+      const filter = [
+        "all",
+        ["any",
+          ["==", ["typeof", ["get", prop]], "number"], // numeric year
+          ["==", ["typeof", ["get", prop]], "string"]  // string date/year
+        ],
+        ["<=", ["to-number", ["slice", ["concat", ["get", prop], ""], 0, 4]], y],
+        [">=", ["to-number", ["slice", ["concat", ["get", prop], ""], 0, 4]], y] // equality in both
+      ];
+      state.map.setFilter(id, filter);
+    };
+
+    toFilter(layer.id + "_circle");
+    toFilter(layer.id + "_line");
+    toFilter(layer.id);
+  }
+
+  // ------------------------------- layer UI -------------------------------
   function buildLayerUI(cfg, map) {
     const layerbox = $("#layerbox");
     layerbox.innerHTML = "";
 
-    const groups = groupBy((cfg.layers || []), (l) => l.group || l.category || "Layers");
+    // group by category
+    const groups = (cfg.layers || []).reduce((acc, l) => {
+      const key = l.group || l.category || "Layers";
+      (acc[key] = acc[key] || []).push(l);
+      return acc;
+    }, {});
+
     for (const [groupName, ls] of Object.entries(groups)) {
       const groupEl = el("details", { open: true, style: { marginBottom: "10px" } }, [
         el("summary", { style: { cursor: "pointer", fontWeight: "600", marginBottom: "6px" } }, [groupName])
@@ -560,30 +678,34 @@
       ls.forEach((l) => {
         const L = state.layersById.get(l.id) || normalizeLayer(l);
         state.layersById.set(L.id, L);
-
-        // Pre-add to map so controls work instantly
-        addLayerToMap(map, L);
+        // pre-add to ensure instant control effect (defer heavy vector/geojson until visible)
+        if (L.visible !== false) addLayerToMap(map, L);
 
         const chkId = `chk_${L.id}`;
-        const row = el("div", { style: {
-          display: "grid",
-          gridTemplateColumns: "24px 1fr 80px",
-          gap: "6px",
-          alignItems: "center",
-          marginBottom: "6px"
-        }}, [
+        const opId = `op_${L.id}`;
+
+        const row = el("div", {
+          style: {
+            display: "grid",
+            gridTemplateColumns: "24px 1fr 90px",
+            gap: "6px",
+            alignItems: "center",
+            marginBottom: "8px"
+          }
+        }, [
           el("input", {
-            id: chkId,
-            type: "checkbox",
+            id: chkId, type: "checkbox",
             checked: L.visible !== false,
             onchange: (e) => setLayerVisibility(map, L.id, e.target.checked)
           }),
-          el("label", { for: chkId, style: { fontSize: "13px", cursor: "pointer" } }, [
-            L.title,
-            el("span", { style: { color: "var(--muted, #999)", marginLeft: "6px", fontSize: "11px" } }, [timeBadge(L)])
+          el("label", { for: chkId, style: { fontSize: "13px", cursor: "pointer", display: "flex", flexDirection: "column" } }, [
+            el("span", {}, [L.title]),
+            el("span", { style: { color: "var(--muted, #999)", fontSize: "11px" } }, [timeBadge(L)])
           ]),
           el("input", {
+            id: opId,
             type: "range", min: "0", max: "1", step: "0.05", value: String(L.opacity ?? 1),
+            title: "Opacity",
             oninput: (e) => setLayerOpacity(map, L.id, parseFloat(e.target.value))
           })
         ]);
@@ -604,28 +726,4 @@
     if (s != null) return `[≥${s}]`;
     return `[≤${e}]`;
   }
-
-  // -----------------------------------------------------------------------------
-  // Small utils
-  // -----------------------------------------------------------------------------
-  function coalesce(...vals) {
-    for (const v of vals) if (v !== undefined && v !== null) return v;
-    return null;
-  }
-  function nnum(...vals) {
-    for (const v of vals) if (Number.isFinite(+v)) return +v;
-    return undefined;
-  }
-  function groupBy(arr, keyFn) {
-    return arr.reduce((acc, v) => {
-      const k = keyFn(v);
-      (acc[k] = acc[k] || []).push(v);
-      return acc;
-    }, {});
-  }
-
-  // -----------------------------------------------------------------------------
-  // Kickoff
-  // -----------------------------------------------------------------------------
-  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 })();
