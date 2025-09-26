@@ -1,1 +1,14 @@
-
+{
+  "id": "story_layers",
+  "title": "Curated Story Themes",
+  "type": "document",
+  "themes": [
+    {
+      "id": "dust_bowl",
+      "title": "Dust Bowl & Drought",
+      "layers": ["drought_monitor", "storm_events", "climate_normals"],
+      "time": { "start": "1930-01-01", "end": "1940-12-31" },
+      "description": "Drought progression, storms, and societal impacts."
+    }
+  ]
+}
