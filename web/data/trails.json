@@ -1,1 +1,12 @@
-
+{
+  "id": "ks_trails",
+  "title": "Historic Trails",
+  "type": "vector",
+  "data": "data/processed/trails_lines.json",
+  "category": "movement",
+  "time": { "start": "1820-01-01", "end": "1880-12-31" },
+  "timeProperty": "active",
+  "style": { "lineColor": "#4361EE", "lineDasharray": [2, 2], "lineWidth": 1.4 },
+  "visible": false,
+  "attribution": "NPS / State Historic Trails"
+}
