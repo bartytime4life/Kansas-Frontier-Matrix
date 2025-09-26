@@ -1,11 +1,30 @@
 {
   "type": "FeatureCollection",
+  "name": "Kansas Counties (demo subset)",
+  "bbox": [-98.5, 38.4, -95.1, 39.2],
+  "attribution": "Demo boundaries for UI wiring — not survey-accurate. © Public Domain / compiled.",
   "features": [
     {
       "type": "Feature",
+      "id": "county_douglas",
+      "bbox": [-95.5, 38.8, -95.1, 39.2],
       "properties": {
         "id": "county_douglas",
-        "name": "Douglas County"
+        "name": "Douglas County",
+        "state": "KS",
+        "fips": "20045",
+        "category": "administrative",
+        "source": "Demo rectangle approximation for viewer wiring",
+        "license": "CC0-1.0",
+        "precision": "approximate",
+        "time": { "start": "1854-05-30", "end": null },
+
+        /* Optional style hints (some renderers read these; MapLibre uses app.config.json paint) */
+        "stroke": "#1d4ed8",
+        "stroke-width": 1.2,
+        "stroke-opacity": 0.9,
+        "fill": "#2563eb",
+        "fill-opacity": 0.18
       },
       "geometry": {
         "type": "Polygon",
@@ -20,9 +39,24 @@
     },
     {
       "type": "Feature",
+      "id": "county_ellsworth",
+      "bbox": [-98.5, 38.4, -98.0, 38.9],
       "properties": {
         "id": "county_ellsworth",
-        "name": "Ellsworth County"
+        "name": "Ellsworth County",
+        "state": "KS",
+        "fips": "20053",
+        "category": "administrative",
+        "source": "Demo rectangle approximation for viewer wiring",
+        "license": "CC0-1.0",
+        "precision": "approximate",
+        "time": { "start": "1867-02-26", "end": null },
+
+        "stroke": "#1d4ed8",
+        "stroke-width": 1.2,
+        "stroke-opacity": 0.9,
+        "fill": "#2563eb",
+        "fill-opacity": 0.18
       },
       "geometry": {
         "type": "Polygon",
