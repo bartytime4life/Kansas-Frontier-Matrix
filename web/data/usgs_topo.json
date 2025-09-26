@@ -1,1 +1,13 @@
-
+{
+  "id": "usgs_topo_overlays",
+  "title": "USGS Historic Topo Maps",
+  "type": "raster",
+  "assets": [
+    { "year": 1894, "href": "data/cogs/overlays/usgs_topo_1894_larned.tif" }
+  ],
+  "category": "overlays",
+  "time": { "start": "1880-01-01", "end": "1959-12-31" },
+  "visible": false,
+  "opacity": 0.7,
+  "attribution": "USGS Historical Topographic Map Collection"
+}
