@@ -1,15 +1,32 @@
 {
-  "version": "1.2.0",
-  "generated": "2025-09-25T21:30:00Z",
+  "version": "1.3.0",
+  "generated": "2025-09-26T18:00:00Z",
+
+  "title": "Kansas-Frontier-Matrix",
+  "subtitle": "Time-aware historical GIS for Kansas",
+
+  "style": "https://demotiles.maplibre.org/style.json",
+  "center": [-98.3, 38.5],
+  "zoom": 6,
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+
+  "time": {
+    "min": "1800-01-01",
+    "max": "2025-12-31",
+    "defaultYear": 1930,
+    "step": 1,
+    "loop": false,
+    "fps": 12
+  },
+
   "defaults": {
     "minzoom": 0,
-    "maxzoom": 14,
-    "tileSize": 256,
-    "visible": true,
+    "maxzoom": 15,
     "opacity": 1.0,
-    "bounds": [-102.051, 36.993, -94.588, 40.003],
+    "visible": true,
     "time": { "start": null, "end": null }
   },
+
   "layers": [
     {
       "id": "basemap_osm",
@@ -17,65 +34,77 @@
       "type": "raster",
       "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       "opacity": 1.0,
-      "attribution": "© OpenStreetMap contributors",
+      "visible": true,
       "category": "reference",
+      "attribution": "© OpenStreetMap contributors",
       "time": { "start": null, "end": null },
       "minzoom": 0,
       "maxzoom": 19,
-      "tileSize": 256,
-      "visible": true
+      "tileSize": 256
     },
     {
       "id": "ks_hillshade_2018",
       "title": "Kansas Hillshade (LiDAR-derived, 2018)",
       "type": "raster",
-      "url": "./data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
+      "url": "data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
       "opacity": 0.85,
-      "attribution": "Kansas Data Access & Support Center",
+      "visible": false,
       "category": "terrain",
+      "attribution": "Kansas Data Access & Support Center (KGS/Kansas DASC)",
       "time": { "start": "2018-01-01", "end": "2018-12-31" },
-      "visible": false
+      "minzoom": 0,
+      "maxzoom": 19
     },
     {
       "id": "usgs_topo_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
       "type": "raster",
-      "url": "./data/cogs/overlays/usgs_topo_larned_1894.tif",
+      "url": "data/cogs/overlays/usgs_topo_larned_1894.tif",
       "opacity": 0.75,
-      "attribution": "USGS Historical Topographic Map Collection",
+      "visible": false,
       "category": "historical",
+      "attribution": "USGS Historical Topographic Map Collection",
       "time": { "start": "1894-01-01", "end": "1894-12-31" },
-      "visible": false
+      "minzoom": 0,
+      "maxzoom": 19
     },
     {
       "id": "ks_treaties",
       "title": "Kansas Treaties & Land Cessions",
       "type": "geojson",
-      "url": "./data/vectors/ks_treaties.json",
+      "url": "data/vectors/ks_treaties.json",
       "opacity": 0.9,
-      "attribution": "Kansas Historical Society",
-      "category": "documents",
-      "time": { "start": "1800-01-01", "end": "1900-12-31" },
       "visible": false,
-      "paint": {
-        "fill-color": "rgba(200, 60, 60, 0.35)",
-        "fill-outline-color": "#a33"
-      }
+      "category": "documents",
+      "attribution": "Kansas Historical Society; compiled KFM",
+      "time": { "start": "1800-01-01", "end": "1900-12-31" },
+      "minzoom": 0,
+      "maxzoom": 19,
+      "style": {
+        "fillColor": "rgba(200, 60, 60, 0.35)",
+        "fillOpacity": 0.35,
+        "lineColor": "#a33",
+        "lineWidth": 1.0
+      },
+      "popup": ["name", "treaty", "year", "source"]
     },
     {
       "id": "ks_railroads",
       "title": "Kansas Railroads (19th c.)",
       "type": "geojson",
-      "url": "./data/vectors/ks_railroads.json",
+      "url": "data/vectors/ks_railroads.json",
       "opacity": 0.9,
-      "attribution": "Kansas Historical GIS",
-      "category": "infrastructure",
-      "time": { "start": "1850-01-01", "end": "1950-12-31" },
       "visible": false,
-      "paint": {
-        "line-color": "#6b4e16",
-        "line-width": 1.5
-      }
+      "category": "infrastructure",
+      "attribution": "Kansas Historical GIS; compiled KFM",
+      "time": { "start": "1850-01-01", "end": "1950-12-31" },
+      "minzoom": 0,
+      "maxzoom": 19,
+      "style": {
+        "lineColor": "#6b4e16",
+        "lineWidth": 1.5
+      },
+      "popup": ["name", "company", "year_built", "status"]
     }
   ]
 }
