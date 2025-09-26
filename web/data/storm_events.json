@@ -1,13 +1,56 @@
 {
   "id": "storm_events",
   "title": "NOAA Storm Events (KS)",
-  "type": "vector",
-  "data": "data/processed/storm_events_ks.json",
+  "type": "geojson",
+  "url": "data/processed/storm_events_ks.json",
   "category": "hazards",
+
   "time": { "start": "1950-01-01", "end": null },
   "timeProperty": "begin_date",
-  "popup": ["event_type", "begin_date", "deaths", "damage_usd"],
-  "style": { "circleColor": "#EE9B00", "circleRadius": 3 },
+
   "visible": false,
-  "attribution": "NOAA NCEI"
+  "minzoom": 4,
+  "maxzoom": 19,
+
+  "popup": ["event_type", "begin_date", "deaths", "damage_usd"],
+
+  "paint": {
+    "circle": {
+      "circle-radius": 3,
+      "circle-color": [
+        "match",
+        ["downcase", ["get", "event_type"]],
+        "tornado", "#D00000",
+        "thunderstorm wind", "#EE9B00",
+        "hail", "#3A86FF",
+        "flash flood", "#577590",
+        "flood", "#577590",
+        "wildfire", "#E76F51",
+        "winter storm", "#6C757D",
+        "blizzard", "#6C757D",
+        "#EE9B00"
+      ],
+      "circle-stroke-color": "#FFFFFF",
+      "circle-stroke-width": 0.6,
+      "circle-opacity": 0.9
+    },
+    "line": { "line-opacity": 0 },
+    "fill": { "fill-opacity": 0 }
+  },
+
+  "fields": {
+    "event_type":  { "type": "string", "description": "NOAA event type (e.g., Tornado, Hail, Flood)" },
+    "begin_date":  { "type": "string", "format": "date-time", "description": "Event start (ISO8601)" },
+    "end_date":    { "type": "string", "format": "date-time", "description": "Event end (ISO8601, optional)" },
+    "deaths":      { "type": "number", "description": "Total fatalities (direct + indirect, if pre-summed)" },
+    "injuries":    { "type": "number", "description": "Total injuries (optional)" },
+    "damage_usd":  { "type": "number", "description": "Estimated damage (USD, inflation not adjusted unless noted)" },
+    "source":      { "type": "string", "description": "Reporting source (optional)" },
+    "fips":        { "type": "string", "description": "County/area code (optional)" }
+  },
+
+  "search": { "qFields": ["event_type", "begin_date", "fips"] },
+
+  "legendSymbol": "events",
+  "attribution": "NOAA NCEI Storm Events Database"
 }
