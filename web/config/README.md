@@ -1,5 +1,3 @@
-Here’s a clean, copy-ready web/config/README.md for your repo:
-
 # `web/config/` — Kansas-Frontier-Matrix Viewer Configuration
 
 This folder contains JSON config files that drive the **MapLibre web viewer** (`web/app.js`).  
