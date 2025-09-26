@@ -1,32 +1,37 @@
 {
-  "version": "1.0.0",
-  "generated": "2025-09-26T00:00:00Z",
+  "version": "1.1.0",
+  "generated": "2025-09-26T18:00:00Z",
   "categories": {
     "reference": {
-      "title": "Reference Layers",
+      "label": "Reference",
+      "order": 0,
       "description": "Basemaps, boundaries, and contextual layers for orientation.",
-      "layers": ["basemap_osm", "county_boundaries", "state_outline"]
+      "layers": ["basemap_osm"]
     },
-    "culture": {
-      "title": "Culture & History",
-      "description": "Settlements, forts, treaties, trails, and railroads representing human activity across time.",
-      "layers": ["settlements", "forts", "treaties", "trails", "railroads"]
+    "terrain": {
+      "label": "Terrain & Elevation",
+      "order": 1,
+      "description": "DEM-derived products, hillshade, and relief.",
+      "layers": ["ks_hillshade_2018"]
     },
-    "environment": {
-      "title": "Environment & Landscape",
-      "description": "Hydrology, soils, land cover, terrain, and ecological features of Kansas.",
-      "layers": ["water", "landcover", "soils", "terrain", "hillshade"]
+    "historical": {
+      "label": "Historical Maps",
+      "order": 2,
+      "description": "Scanned/rectified maps, plats, and archival overlays.",
+      "layers": ["usgs_topo_1894_larned"]
     },
-    "hazards": {
-      "title": "Hazards & Disasters",
-      "description": "Historic tornadoes, wildfires, floods, and droughts that impacted Kansas.",
-      "layers": ["tornado", "wildfire", "flood", "drought"]
+    "documents": {
+      "label": "Documents & Treaties",
+      "order": 3,
+      "description": "Treaties, land cessions, and document-derived polygons.",
+      "layers": ["ks_treaties"]
     },
-    "overlays": {
-      "title": "Historical Overlays",
-      "description": "Scanned maps, plats, survey sheets, and other archival layers.",
-      "layers": ["historic_topos", "plats", "soil_surveys"]
+    "infrastructure": {
+      "label": "Trails & Railroads",
+      "order": 4,
+      "description": "Transportation networks across time.",
+      "layers": ["ks_railroads"]
     }
   },
-  "attribution": "Kansas-Frontier-Matrix — Categories compiled from system design docs, GIS Archive, and hazard datasets"
+  "attribution": "Kansas-Frontier-Matrix — Categories aligned to current app.config.json layers"
 }
