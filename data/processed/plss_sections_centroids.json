@@ -1,0 +1,18 @@
+{
+  "type": "FeatureCollection",
+  "name": "plss_sections_centroids",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "plss-29-13S-14W-sec01-label",
+      "properties": { "section": "01", "trs": "T13S R14W S01" },
+      "geometry": { "type": "Point", "coordinates": [-99.24375, 38.24375] }
+    },
+    {
+      "type": "Feature",
+      "id": "plss-29-13S-14W-sec02-label",
+      "properties": { "section": "02", "trs": "T13S R14W S02" },
+      "geometry": { "type": "Point", "coordinates": [-99.23125, 38.24375] }
+    }
+  ]
+}
