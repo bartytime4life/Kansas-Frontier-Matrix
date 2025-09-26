@@ -1,1 +1,11 @@
-
+{
+  "id": "ks_hydro",
+  "title": "Rivers & Waterbodies",
+  "type": "vector",
+  "data": "data/processed/hydrology.json",
+  "category": "environment",
+  "time": { "start": null, "end": null },
+  "style": { "lineColor": "#3A86FF", "lineWidth": 1.0, "fillColor": "#A0C4FF" },
+  "visible": false,
+  "attribution": "NHD / KGS"
+}
