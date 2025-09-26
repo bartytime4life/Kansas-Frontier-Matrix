@@ -1,81 +1,214 @@
 # Kansas-Frontier-Matrix — Web Data
 
-This folder holds **JSON and GeoJSON data** used by the **web viewer** (`web/`).  
-It provides small demo entities for testing and can later be extended with full STAC-linked datasets.
+This folder contains **layer configs** and **map data references** used by the web viewer (`web/`).  
+Each `*.json` here is either:
+- a **layer spec** (id, title, type, style, time, attribution) the viewer reads, or
+- a **data file** (GeoJSON/JSON/COG references) used by that layer.
+
+This directory is the **bridge** between archival data (STAC, raw GeoTIFFs, shapefiles) and the **interactive map UI**.
 
 ---
 
-## Files
-
-- **`demo_entities.json`**  
-  A lightweight **demo dataset** of historical Kansas entities.  
-  Includes sample settlements, treaties, trails, and railroads with:
-  - `id`, `type`, `title`, `description`
-  - `location` (point) or `path` (polyline)
-  - `time.start` / `time.end` (for timeline filtering)
-  - `sources` (provenance)
-
-- *(planned)* `demo_entities.geojson`  
-  Direct **GeoJSON export** of the same features for MapLibre overlay.  
-  Useful for quick map rendering.
-
----
-
-## Structure
-
-Example entry from `demo_entities.json`:
+## How Layers Work (Schema)
 
 ```json
 {
-  "id": "settlement_lawrence",
-  "type": "settlement",
-  "title": "Lawrence",
-  "description": "Founded in 1854 by Free-State settlers. Center of Bleeding Kansas conflict.",
-  "location": { "lat": 38.9717, "lon": -95.2353 },
-  "time": { "start": "1854-01-01", "end": null },
-  "sources": ["USGS", "Kansas Historical Society"]
+  "id": "unique_layer_id",
+  "title": "Layer Title",
+  "type": "vector | raster | image | raster-dem",
+  "data": "data/processed/<file>.json | .geojson | .tif",
+  "category": "reference | environment | hazards | movement | sovereignty | culture",
+  "time": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD or null" },
+  "timeProperty": "feature field (e.g., 'year', 'active')",
+  "popup": ["field1", "field2", "..."],
+  "style": { "fillColor": "#hex", "lineColor": "#hex", "lineWidth": 1.0 },
+  "visible": true,
+  "attribution": "Provenance / source"
 }
 ````
 
-* **Point features** → `location`
-* **Line features** → `path` (array of `[lon, lat]` coordinates)
-* **Time** → ISO dates (`YYYY-MM-DD`) for filtering on the time slider
+* **Time** → global window or per-feature fields (`year` / `year_end`, `active` / `active_end`).
+* **Vector layers** → stored as GeoJSON with typed properties.
+* **Raster overlays** → referenced as Cloud-Optimized GeoTIFFs (COGs).
+* **UI** → `app.js` reads configs, applies time slider, attaches popups, and controls visibility.
 
 ---
 
-## Usage
+## Complete File Index
 
-* In the web viewer (`web/app.js`), load this JSON to:
+### Reference & Base
 
-  * Populate **sidebar lists** of entities
-  * Filter by **time** using the global slider
-  * Render popups or highlights when entities are clicked
+* `basemap.json` — Basemap configuration (OSM or style JSON).
+* `counties.json` — Kansas county boundaries (static).
+* `counties_timeslices.json` — Historical county slices (time-aware).
+* `kansas_counties.geojson` — Raw county geometries.
+* `elevation.json` — DEM/terrain layers and derivatives.
+* `plss_sections.json` — PLSS township/section index.
+* `historic_parcels.json` — Historic parcels / deeds.
 
-* For **map overlays**:
+### Environment & Climate
 
-  * Convert features into **GeoJSON layers** for MapLibre
-  * Style by `type` (e.g., settlements = circles, trails = lines, treaties = markers)
+* `climate_normals.json` — Climate normals (global/CONUS).
+* `climate_normals_ks.json` — Climate normals (Kansas subset).
+* `drought.json` — Drought indices.
+* `drought_weekly.json` — Weekly drought snapshots.
+* `soil_surveys.json` — Soil survey data.
+* `hydrology.json` — Rivers, streams, and waterbodies.
+* `landcover.json` — Land cover (static).
+* `landcover_timeslices.json` — NLCD time slices (1992–2021).
+
+### Hazards
+
+* `fema_disasters.json` — FEMA disaster declarations (national).
+* `fema_disasters_ks.json` — FEMA disaster declarations (Kansas).
+* `storm_events.json` — NOAA/NWS storm events (national).
+* `storm_events_ks.json` — NOAA/NWS storm events (Kansas).
+* `tornado_tracks.json` — Tornado tracks (national/global).
+* `tornado_tracks_ks.json` — Tornado tracks (Kansas).
+* `wildfire_perimeters.json` — Wildfire perimeters (2000–present).
+
+### Movement & Infrastructure
+
+* `railroads.json` — Railroad layer spec.
+* `railroads_lines.json` — Railroad linework.
+* `trails.json` — Historic trails (layer spec).
+* `trails_lines.json` — Trail segments (GeoJSON).
+* `usgs_topo.json` — USGS historic topo map COG overlays.
+
+### Sovereignty & Treaties
+
+* `treaties.json` — Treaty & reservation boundaries (layer spec).
+* `treaties_polygons.json` — Treaty/reservation polygons (GeoJSON).
+
+### Culture, Documents & Stories
+
+* `oral_histories.json` — Oral history layer spec.
+* `oral_histories_points.json` — Oral history points.
+* `documents.json` — Archival documents (layer spec).
+* `documents_points.json` — Document locations.
+* `stories.json` — Narrative/story entries.
+
+### Towns & Demo
+
+* `towns.json` — Settlements, forts, trading posts (layer spec).
+* `towns_points.json` — Towns/forts/trading posts (points).
+* `demo_entities.json` — Small mixed demo entities (testing).
+* `demo_events.json` — Demo timeline events (testing).
+* `timeline.json` — Timeline events (global feed).
+
+### Cartography tokens
+
+* `legend.json` — Central symbol/color definitions.
+* `style_tokens.json` — Shared UI/cartography tokens.
 
 ---
 
-## Contribution Guidelines
+## Data Flow Overview
 
-* Keep datasets **small** for web/demo use.
-* Larger, authoritative datasets should live under `data/` and be wired into STAC.
-* Always include **provenance (`sources`)** for transparency.
-* Prefer **lat/lon (WGS84 / EPSG:4326)** coordinates for compatibility.
+```mermaid
+flowchart TD
+  A["STAC Items\n(stac/items/*.json)"] --> B["Processed Data\n(data/processed/*.json, .geojson, .tif)"]
+  B --> C["Layer Configs\n(web/data/*.json)"]
+  C --> D["Web Viewer Logic\n(web/app.js)"]
+  D --> E["MapLibre UI\n(Time Slider, Sidebar, Popups)"]
+
+  %% Classes
+  classDef stac fill=#FFD166,stroke=#333,stroke-width=1px
+  classDef processed fill=#06D6A0,stroke=#333,stroke-width=1px
+  classDef webdata fill=#118AB2,stroke=#fff,stroke-width=1px,color=#fff
+  classDef viewer fill=#073B4C,stroke=#fff,stroke-width=1px,color=#fff
+  classDef ui fill=#EF476F,stroke=#fff,stroke-width=1px,color=#fff
+
+  class A stac
+  class B processed
+  class C webdata
+  class D viewer
+  class E ui
+```
 
 ---
 
-## Roadmap
+## Thematic Organization of Files
 
-* [ ] Add `demo_entities.geojson` (map-ready export)
-* [ ] Connect to STAC items under `stac/items/`
-* [ ] Provide filtered subsets (e.g., county-level)
-* [ ] Add support for image overlays (historic scans)
+```mermaid
+flowchart LR
+  subgraph Ref["Reference & Base"]
+    basemap["basemap.json"]
+    counties["counties.json"]
+    counties_ts["counties_timeslices.json"]
+    kc_geo["kansas_counties.geojson"]
+    elevation["elevation.json"]
+    plss["plss_sections.json"]
+    parcels["historic_parcels.json"]
+  end
+
+  subgraph Env["Environment & Climate"]
+    climate_normals["climate_normals.json"]
+    climate_normals_ks["climate_normals_ks.json"]
+    drought["drought.json"]
+    drought_weekly["drought_weekly.json"]
+    soils["soil_surveys.json"]
+    hydro["hydrology.json"]
+    landcover["landcover.json"]
+    landcover_ts["landcover_timeslices.json"]
+  end
+
+  subgraph Haz["Hazards"]
+    fema["fema_disasters.json"]
+    fema_ks["fema_disasters_ks.json"]
+    storm["storm_events.json"]
+    storm_ks["storm_events_ks.json"]
+    tornado["tornado_tracks.json"]
+    tornado_ks["tornado_tracks_ks.json"]
+    wildfire["wildfire_perimeters.json"]
+  end
+
+  subgraph Move["Movement & Infrastructure"]
+    railroads["railroads.json"]
+    railroads_lines["railroads_lines.json"]
+    trails["trails.json"]
+    trails_lines["trails_lines.json"]
+    usgs_topo["usgs_topo.json"]
+  end
+
+  subgraph Sov["Sovereignty & Treaties"]
+    treaties["treaties.json"]
+    treaties_poly["treaties_polygons.json"]
+  end
+
+  subgraph Cult["Culture, Docs & Stories"]
+    oral["oral_histories.json"]
+    oral_pts["oral_histories_points.json"]
+    docs["documents.json"]
+    docs_pts["documents_points.json"]
+    stories["stories.json"]
+  end
+
+  subgraph Demo["Towns & Demo"]
+    towns["towns.json"]
+    towns_pts["towns_points.json"]
+    demo_entities["demo_entities.json"]
+    demo_events["demo_events.json"]
+    timeline["timeline.json"]
+  end
+
+  subgraph Carto["Cartography Tokens"]
+    legend["legend.json"]
+    style_tokens["style_tokens.json"]
+  end
+```
 
 ---
 
-🚀 This folder is the **bridge** between structured data (STAC + `data/`) and the **interactive map UI**.
+## Contribution & QA
+
+* Keep configs **lean and validated**; large data belongs in `data/processed/` + STAC.
+* Align colors with `legend.json` and reuse `style_tokens.json`.
+* Include **attribution** in each layer; add provenance to feature `properties.source`.
+* Validate JSON/GeoJSON before commit (`jq . file.json`, `pytest -k web_configs`).
+
+---
+
+📌 **Key Concept:** `web/data/` is the **UI wiring layer** — it translates structured archives (STAC, processed GeoJSON/COGs) into an interactive timeline + map experience.
 
 ```
