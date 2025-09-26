@@ -1,1 +1,13 @@
-
+{
+  "id": "ks_settlements",
+  "title": "Settlements, Forts, Trading Posts",
+  "type": "vector",
+  "data": "data/processed/towns_points.json",
+  "category": "culture",
+  "time": { "start": "1800-01-01", "end": null },
+  "timeProperty": "year",
+  "popup": ["name", "type", "year", "year_end"],
+  "style": { "circleColor": "#FF595E", "circleRadius": 4 },
+  "visible": true,
+  "attribution": "Compiled / KFM"
+}
