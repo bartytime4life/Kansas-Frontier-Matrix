@@ -29,23 +29,28 @@
             ["concat", "EF", ["to-string", ["get", "ef"]]],
             ["concat", "F",  ["to-string", ["get", "f"]]],
             ["concat", "EF", ["to-string", ["get", "ef_rating"]]],
-            ""  /* fallback */
+            ""
           ]
         ],
-        "EF0", 1.0, "F0", 1.0,  "0", 1.0,
-        "EF1", 1.4, "F1", 1.4,  "1", 1.4,
-        "EF2", 1.8, "F2", 1.8,  "2", 1.8,
-        "EF3", 2.2, "F3", 2.2,  "3", 2.2,
-        "EF4", 2.8, "F4", 2.8,  "4", 2.8,
-        "EF5", 3.4, "F5", 3.4,  "5", 3.4,
+        "EF0", 1.0, "F0", 1.0, "0", 1.0,
+        "EF1", 1.4, "F1", 1.4, "1", 1.4,
+        "EF2", 1.8, "F2", 1.8, "2", 1.8,
+        "EF3", 2.2, "F3", 2.2, "3", 2.2,
+        "EF4", 2.8, "F4", 2.8, "4", 2.8,
+        "EF5", 3.4, "F5", 3.4, "5", 3.4,
         1.2
       ],
-      "line-opacity": 0.95,
-      "line-join": "round",
-      "line-cap": "round"
+      "line-opacity": 0.95
     },
     "circle": { "circle-opacity": 0 },
     "fill":   { "fill-opacity": 0 }
+  },
+
+  "layout": {
+    "line": {
+      "line-join": "round",
+      "line-cap": "round"
+    }
   },
 
   "fields": {
