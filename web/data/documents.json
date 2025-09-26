@@ -1,1 +1,13 @@
-
+{
+  "id": "documents_index",
+  "title": "Geotagged Documents",
+  "type": "vector",
+  "data": "data/processed/documents_points.json",
+  "category": "documents",
+  "time": { "start": "1800-01-01", "end": null },
+  "timeProperty": "date",
+  "popup": ["title", "source", "date", "url"],
+  "style": { "circleColor": "#6A4C93", "circleRadius": 3 },
+  "visible": false,
+  "attribution": "KFM Knowledge Hub"
+}
