@@ -2,12 +2,49 @@
   "id": "usgs_topo_overlays",
   "title": "USGS Historic Topo Maps",
   "type": "raster",
-  "assets": [
-    { "year": 1894, "href": "data/cogs/overlays/usgs_topo_1894_larned.tif" }
-  ],
   "category": "overlays",
+
+  "data": null,                          
+
+  "assets": [
+    {
+      "year": 1894,
+      "title": "Larned 1894 (15’)",
+      "scale": "1:125,000",
+      "href": "data/cogs/overlays/usgs_topo_1894_larned.tif",
+      "bounds": [-99.5, 37.8, -98.8, 38.4],
+      "nodata": 255
+    },
+    {
+      "year": 1905,
+      "title": "Fort Hays 1905 (15’)",
+      "scale": "1:125,000",
+      "href": "data/cogs/overlays/usgs_topo_1905_fort_hays.tif",
+      "bounds": [-99.5, 38.6, -99.0, 39.0],
+      "nodata": 255
+    },
+    {
+      "year": 1936,
+      "title": "Topeka 1936 (7.5’)",
+      "scale": "1:24,000",
+      "href": "data/cogs/overlays/usgs_topo_1936_topeka.tif",
+      "bounds": [-95.85, 39.00, -95.55, 39.25],
+      "nodata": 0
+    }
+  ],
+
   "time": { "start": "1880-01-01", "end": "1959-12-31" },
+  "timeProperty": "year",
+
+  "minzoom": 5,
+  "maxzoom": 17,
+
+  "style": {
+    "rasterOpacity": 0.7,
+    "rasterFadeDuration": 0,
+    "rasterResampling": "linear"
+  },
+
   "visible": false,
-  "opacity": 0.7,
   "attribution": "USGS Historical Topographic Map Collection"
 }
