@@ -1,1 +1,12 @@
-
+{
+  "colors": {
+    "primary": "#1B263B",
+    "accent": "#4361EE",
+    "hazard": "#D00000",
+    "treaty": "#FFCA3A"
+  },
+  "opacity": {
+    "overlay": 0.7,
+    "polygon": 0.35
+  }
+}
