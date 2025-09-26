@@ -1,59 +1,67 @@
 # Kansas-Frontier-Matrix — Web Documentation
 
 This folder (`web/docs/`) contains **developer and contributor documentation**  
-for the Kansas-Frontier-Matrix **web viewer**.  
+for the **Kansas-Frontier-Matrix web viewer**.
 
-The goal is to keep **architecture, design, and extension guides** close to the code.
+The goal is to keep **architecture, design, and extension guides** close to the codebase so the UI remains **consistent, reproducible, and contributor-friendly**.
 
 ---
 
 ## Files
 
 - **`ARCHITECTURE.md`**  
-  High-level overview of the web app architecture:  
-  - Component flow (config → app.js → MapLibre → UI)  
-  - Data pipelines (JSON / GeoJSON entities, STAC items)  
-  - Directory layout and extensibility notes  
+  High-level overview of the web app:
+  - Component flow (`app.config.json` → `index.html`/`app.js` → MapLibre → UI)
+  - Data pipelines (JSON / GeoJSON layers, STAC item references)
+  - Directory layout and extension patterns
+
+- **`STYLE_GUIDE.md`**  
+  Coding & design conventions:
+  - CSS tokens, responsive layout, accessibility
+  - JavaScript helpers & config-driven logic
+  - JSON config schema-lite (`layers[]` contract, paint/legend/time rules)
+  - Commit guidelines and CI validation tips
 
 - *(planned)* **`DEVELOPER_GUIDE.md`**  
-  Deeper dive for contributors:  
-  - How `app.js` loads configs and builds the sidebar  
-  - Timeline control and time filtering  
-  - How to add new layer types or UI panels  
-  - Debugging and testing tips  
+  Practical contributor reference:
+  - How `app.js` loads configs and builds the sidebar dynamically
+  - Timeline slider logic and year-based filtering
+  - Adding new layer types (e.g., GeoJSON with paint styles, raster tiles)
+  - Debugging and testing workflows
 
 - *(planned)* **`UI_DESIGN.md`**  
-  Reference for CSS layers (`layout.css`, `theme.css`) and design tokens:  
-  - Grid and sidebar structure  
-  - Timeline placement  
-  - Responsive/mobile drawer rules  
-  - Theming (light/dark, archival/sepia mode)
+  Visual/UI reference:
+  - Sidebar & timeline placement
+  - Responsive rules (desktop sidebar → mobile drawer)
+  - CSS design tokens & theming (light/dark, archival/sepia mode)
+  - Example wireframes and mockups
 
 ---
 
 ## Purpose
 
 The **web viewer** provides:
-- A **lightweight MapLibre map** with time slider
-- Historical + terrain overlays
-- Config-driven, reproducible setup
+- A **MapLibre-based map** with a **time slider** for filtering layers
+- Historical + terrain overlays (`./tiles/` and `./vectors/`)
+- Config-driven setup via [`app.config.json`](../app.config.json)
 - A bridge between **STAC metadata** and interactive visualization
 
 Documentation here ensures future developers can:
-- Extend layers and themes
-- Connect new datasets
-- Maintain reproducibility
+- Add or extend layers cleanly
+- Maintain reproducibility across configs and UI
+- Connect new datasets without hardcoding
+- Keep accessibility and design consistent
 
 ---
 
 ## Contribution Guidelines
 
-- Keep docs **short and focused** per file.  
-- Reference STAC, configs, and code by relative paths.  
-- Use **Mermaid diagrams** where helpful, but always validate syntax in GitHub preview.  
-- If adding new files, update this `README.md` with a short description.  
+- Keep docs **short and focused** per file.
+- Reference project files by **relative paths** (e.g., `../app.css`, `../index.html`).
+- Use **Mermaid diagrams** for flows, but validate syntax in GitHub preview:
 
----
-
-🚀 The `web/docs/` folder is the **knowledge base for the UI/UX layer** of the Kansas-Frontier-Matrix.
-
+  ```mermaid
+  flowchart TD
+    A["Config:\napp.config.json"] --> B["Viewer:\nindex.html + app.js"]
+    B --> C["MapLibre:\nsources/layers"]
+    C --> D["UI:\nsidebar + time slider"]
