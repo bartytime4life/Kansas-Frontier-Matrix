@@ -1,1 +1,13 @@
-
+{
+  "id": "oral_histories",
+  "title": "Oral Histories & Narratives",
+  "type": "vector",
+  "data": "data/processed/oral_histories_points.json",
+  "category": "documents",
+  "time": { "start": "1850-01-01", "end": null },
+  "timeProperty": "date",
+  "popup": ["title", "community", "summary", "url"],
+  "style": { "circleColor": "#2EC4B6", "circleRadius": 3.5 },
+  "visible": false,
+  "attribution": "Community archives / Tribal partners"
+}
