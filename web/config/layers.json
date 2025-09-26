@@ -11,7 +11,10 @@
 
   "time": {
     "min": "1700-01-01",
-    "max": "2100-12-31"
+    "max": "2100-12-31",
+    "step": 1,
+    "fps": 12,
+    "loop": false
   },
 
   "layers": [
@@ -27,7 +30,9 @@
       "time": { "start": null, "end": null },
       "minzoom": 0,
       "maxzoom": 19,
-      "tileSize": 256
+      "tileSize": 256,
+      "crossOrigin": "anonymous",
+      "legendSymbol": "basemap"
     },
 
     {
@@ -39,7 +44,10 @@
       "visible": false,
       "attribution": "USGS Historical Topographic Map Collection",
       "category": "historical",
-      "time": { "start": "1894-01-01", "end": "1894-12-31" }
+      "time": { "start": "1894-01-01", "end": "1894-12-31" },
+      "minzoom": 5,
+      "maxzoom": 19,
+      "legendSymbol": "historic_topo"
     },
 
     {
@@ -51,7 +59,12 @@
       "visible": false,
       "attribution": "Kansas GIS / USGS 3DEP",
       "category": "terrain",
-      "time": { "start": "2018-01-01", "end": "2020-12-31" }
+      "time": { "start": "2018-01-01", "end": "2020-12-31" },
+      "minzoom": 6,
+      "maxzoom": 19,
+      "terrain": true,
+      "terrainExaggeration": 1.25,
+      "legendSymbol": "dem"
     },
 
     {
@@ -63,7 +76,10 @@
       "visible": false,
       "attribution": "Derived from Kansas DEM",
       "category": "terrain",
-      "time": { "start": "2018-01-01", "end": "2018-12-31" }
+      "time": { "start": "2018-01-01", "end": "2018-12-31" },
+      "minzoom": 6,
+      "maxzoom": 19,
+      "legendSymbol": "hillshade"
     },
 
     {
@@ -74,13 +90,19 @@
       "opacity": 0.5,
       "visible": false,
       "attribution": "Kansas Data Access & Support Center",
-      "category": "infrastructure",
+      "category": "boundaries",
       "time": { "start": null, "end": null },
+      "minzoom": 4,
+      "maxzoom": 19,
       "paint": {
-        "line-color": "#555",
+        "line-color": "#555555",
         "line-width": 1,
-        "line-opacity": 0.8
-      }
+        "line-opacity": 0.8,
+        "fill-color": "#000000",
+        "fill-opacity": 0
+      },
+      "popup": ["NAME", "FIPS"], 
+      "legendSymbol": "counties"
     },
 
     {
@@ -93,11 +115,18 @@
       "attribution": "Demo dataset",
       "category": "historical",
       "time": { "start": "1800-01-01", "end": "1950-12-31" },
+      "timeProperty": "date",
+      "minzoom": 3,
+      "maxzoom": 19,
       "paint": {
-        "circle-color": "#cc3300",
+        "circle-color": "#CC3300",
         "circle-radius": 4,
-        "circle-opacity": 0.9
-      }
+        "circle-opacity": 0.9,
+        "circle-stroke-color": "#FFFFFF",
+        "circle-stroke-width": 1
+      },
+      "popup": ["title", "date", "summary", "url"],
+      "legendSymbol": "events"
     }
   ]
 }
