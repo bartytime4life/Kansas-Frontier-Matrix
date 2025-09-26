@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-09-26T00:00:00Z",
+  "categories": {
+    "reference": {
+      "title": "Reference Layers",
+      "description": "Basemaps, boundaries, and contextual layers for orientation.",
+      "layers": ["basemap_osm", "county_boundaries", "state_outline"]
+    },
+    "culture": {
+      "title": "Culture & History",
+      "description": "Settlements, forts, treaties, trails, and railroads representing human activity across time.",
+      "layers": ["settlements", "forts", "treaties", "trails", "railroads"]
+    },
+    "environment": {
+      "title": "Environment & Landscape",
+      "description": "Hydrology, soils, land cover, terrain, and ecological features of Kansas.",
+      "layers": ["water", "landcover", "soils", "terrain", "hillshade"]
+    },
+    "hazards": {
+      "title": "Hazards & Disasters",
+      "description": "Historic tornadoes, wildfires, floods, and droughts that impacted Kansas.",
+      "layers": ["tornado", "wildfire", "flood", "drought"]
+    },
+    "overlays": {
+      "title": "Historical Overlays",
+      "description": "Scanned maps, plats, survey sheets, and other archival layers.",
+      "layers": ["historic_topos", "plats", "soil_surveys"]
+    }
+  },
+  "attribution": "Kansas-Frontier-Matrix — Categories compiled from system design docs, GIS Archive, and hazard datasets"
+}
