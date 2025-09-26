@@ -7,12 +7,7 @@
   "category": "cadastre",
 
   "time": { "start": "1854-01-01", "end": null },
-
-  /* If your features have a single integer year (e.g., 1872) use this: */
   "timeProperty": { "start": "year", "end": null, "format": "year" },
-  /* If instead you store a span, swap to:
-     "timeProperty": { "start": "valid_start", "end": "valid_end", "format": "date" }
-  */
 
   "bounds": [-102.051, 36.993, -94.588, 40.003],
   "minzoom": 6,
@@ -20,14 +15,7 @@
   "visible": false,
   "opacity": 1.0,
 
-  "popup": [
-    "trs",
-    "aliquot",
-    "year",
-    "meridian",
-    "county",
-    "source"
-  ],
+  "popup": ["trs", "aliquot", "year", "meridian", "county", "source"],
 
   "legend": {
     "type": "line",
@@ -35,7 +23,7 @@
     "stroke": "#6D6875",
     "examples": [
       { "label": "Current/undated", "stroke": "#6D6875" },
-      { "label": "Historic (status=historic)", "stroke": "#6D6875", "dash": [3,2] }
+      { "label": "Historic (status=historic)", "stroke": "#6D6875", "dash": [3, 2] }
     ]
   },
 
@@ -43,14 +31,10 @@
     "renderer": "fill",
     "fillColor": "#000000",
     "fillOpacity": 0.0,
-
     "lineColor": "#6D6875",
     "lineWidth": 0.6,
     "lineJoin": "round",
     "lineCap": "round",
-
-    /* Optional dashed outlines for historic parcels when properties.status == "historic".
-       If your data doesn't have 'status', this safely renders solid lines. */
     "lineDasharray": {
       "match": {
         "property": "status",
@@ -61,19 +45,19 @@
   },
 
   "fields": {
-    "trs":        { "type": "string", "description": "Township-Range-Section (e.g., T14S R10E S12)" },
-    "township":  { "type": "string", "description": "Township (e.g., 14S)" },
-    "range":     { "type": "string", "description": "Range (e.g., 10E)" },
-    "section":   { "type": "string", "description": "Section (1–36)" },
-    "aliquot":   { "type": "string", "description": "Aliquot/lot (e.g., NE¼, Lot 2), if available" },
-    "meridian":  { "type": "string", "description": "Meridian (e.g., 6th PM)" },
-    "year":      { "type": "number", "description": "Year of record/plat (used for time slider when present)" },
-    "valid_start": { "type": "string", "format": "date", "description": "Start date (if using date spans)" },
-    "valid_end":   { "type": "string", "format": "date|null", "description": "End date (null = current)" },
-    "status":    { "type": "string", "enum": ["historic","current"], "description": "Parcel status, if present" },
-    "county":    { "type": "string", "description": "County name" },
-    "source":    { "type": "string", "description": "Cartographic/archival source (ROD/DASC/BLM/etc.)" },
-    "parcel_id": { "type": "string", "description": "Internal or legacy parcel identifier (optional)" }
+    "trs":          { "type": "string", "description": "Township-Range-Section (e.g., T14S R10E S12)" },
+    "township":     { "type": "string", "description": "Township (e.g., 14S)" },
+    "range":        { "type": "string", "description": "Range (e.g., 10E)" },
+    "section":      { "type": "string", "description": "Section (1–36)" },
+    "aliquot":      { "type": "string", "description": "Aliquot/lot (e.g., NE¼, Lot 2), if available" },
+    "meridian":     { "type": "string", "description": "Meridian (e.g., 6th PM)" },
+    "year":         { "type": "number", "description": "Year of record/plat (used for time slider when present)" },
+    "valid_start":  { "type": "string", "format": "date", "description": "Start date (if using date spans)" },
+    "valid_end":    { "type": "string", "format": "date|null", "description": "End date (null = current)" },
+    "status":       { "type": "string", "enum": ["historic", "current"], "description": "Parcel status, if present" },
+    "county":       { "type": "string", "description": "County name" },
+    "source":       { "type": "string", "description": "Cartographic/archival source (ROD/DASC/BLM/etc.)" },
+    "parcel_id":    { "type": "string", "description": "Internal or legacy parcel identifier (optional)" }
   },
 
   "search": { "qFields": ["trs", "aliquot", "county", "parcel_id"] },
