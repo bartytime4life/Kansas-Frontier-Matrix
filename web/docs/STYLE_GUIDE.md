@@ -1,3 +1,7 @@
+Here’s a clean, website-ready Markdown version. It uses proper headings, lists, fenced code blocks, a tidy schema table, and valid Mermaid. Copy-paste into web/docs/STYLE_GUIDE.md.
+
+⸻
+
 Kansas-Frontier-Matrix — Web Style Guide
 
 This guide defines conventions for CSS, JavaScript, JSON configs, and docs in web/.
@@ -25,35 +29,35 @@ Avoid ../ — it will 404 on GitHub Pages.
 1) CSS (in app.css)
 
 1.1 Tokens & theming
-	•	Define design tokens in :root (already present):
+	•	Define design tokens in :root:
 	•	Colors: --bg, --bg-soft, --panel, --border, --text, --muted, --accent, --accent-2, --danger
 	•	Radii/Shadows: --radius{,-sm,-xs}, --shadow{,-1,-2}
 	•	Layout: --sidebar-w, z-stack tokens (--z-sidebar, --z-map-controls, --z-popups)
 	•	Typography: --font, --fs-12/13/15/16
-	•	Effects/safe areas: --focus-ring, --safe-*
+	•	Effects/Safe areas: --focus-ring, --safe-*
 	•	Provide dark mode overrides under @media (prefers-color-scheme: dark).
 
 1.2 Naming & structure
 	•	Prefer component classes over IDs except for roots: #map, #sidebar, #timebox, #layerbox.
-	•	Use light BEM-like with kfm- when adding new components:
+	•	Use light BEM-like with kfm- when adding components:
 	•	.kfm-legend, .kfm-legend__row, modifiers like .is-active, .is-open.
 
 1.3 Responsiveness & layout
-	•	Breakpoint: @media (max-width: 900px) switches to bottom drawer sidebar; map becomes top panel (inset rules in app.css).
-	•	Use CSS Grid/Flex, never floats.
+	•	Breakpoint: @media (max-width: 900px) switches to a bottom drawer sidebar; map becomes top panel (see inset rules in app.css).
+	•	Use CSS Grid/Flex; never floats.
 
 1.4 Accessibility
-	•	Always style :focus-visible (already done).
+	•	Always style :focus-visible.
 	•	Support:
 	•	@media (prefers-reduced-motion: reduce)
 	•	@media (forced-colors: active)
-	•	High-contrast tweaks (--border override).
-	•	Include RTL safety where relevant ([dir="rtl"] adjustments exist).
+	•	High-contrast tweaks (e.g., --border override).
+	•	Include RTL safety where relevant ([dir="rtl"] adjustments).
 
 1.5 Controls
 	•	Range inputs:
-	•	Class .range--fill with JS setting --value (0%..100%) for filled track.
-	•	Touch targets grow under @media (pointer: coarse).
+	•	Use class .range--fill and set --value (0%..100%) via JS for the filled track.
+	•	Increase touch targets under @media (pointer: coarse).
 
 ⸻
 
@@ -64,12 +68,10 @@ Avoid ../ — it will 404 on GitHub Pages.
 
 (async () => { /* ... */ })();
 
-
 	•	Helpers:
 
-const $  = (sel, root=document) => root.querySelector(sel);
-const el = (tag, attrs={}, children=[]) => { /* minimal h() */ };
-
+const $  = (sel, root = document) => root.querySelector(sel);
+const el = (tag, attrs = {}, children = []) => { /* minimal h() */ };
 
 	•	Use const/let, never var.
 
@@ -81,7 +83,7 @@ const el = (tag, attrs={}, children=[]) => { /* minimal h() */ };
 	•	Do not hardcode layer IDs beyond root UI wiring.
 
 2.3 Map & layers
-	•	MapLibre source/layer creation is derived from each layer object:
+	•	MapLibre source/layer creation derives from each layer object:
 	•	Raster uses url (string template or tile endpoint).
 	•	GeoJSON uses path (URL to .geojson).
 	•	paint drives line/fill/circle styling (see §3.3).
@@ -101,10 +103,10 @@ const el = (tag, attrs={}, children=[]) => { /* minimal h() */ };
 3) JSON Configs
 
 3.1 Formatting & metadata
-	•	Indent: 2 spaces.
-	•	IDs: lowercase, hyphen-separated ("id": "usgs-1894-larned").
-(Keep existing IDs stable; new ones follow this unless breaking change planned.)
-	•	Top-level keys (minimum):
+	•	Indent with 2 spaces.
+	•	IDs: lowercase, hyphen-separated (e.g., "id": "usgs-1894-larned").
+(Keep existing IDs stable; new ones follow this unless a breaking change is planned.)
+	•	Minimal top-level keys:
 
 {
   "version": "1.2.0",
@@ -120,31 +122,27 @@ const el = (tag, attrs={}, children=[]) => { /* minimal h() */ };
   "layers": [ /* … */ ]
 }
 
-
-
 3.2 Layer contract (schema-lite)
-
-Each layers[] item MUST follow:
 
 Key	Type	Required	Notes
 id	string	✅	Unique. Lowercase with hyphens preferred.
 title	string	✅	Human label.
-group	string	✅	Must match or fit into groups (else “Ungrouped”).
-type	string	✅	"raster" or "geojson" ( "image" allowed, treated as raster ).
+group	string	✅	Must match/fit into groups (else “Ungrouped”).
+type	string	✅	"raster" or "geojson" ("image" allowed; treated as raster).
 url	string	⛔/✅	Required for raster/image (tile template or single image URL).
 path	string	⛔/✅	Required for geojson (URL to .geojson).
-opacity	number	optional	0..1 (default from defaults.opacity).
-visible	boolean	optional	Default from defaults.visible.
-time	object	optional	{ "start": "YYYY-MM-DD" | null, "end": "YYYY-MM-DD" | null }. Null = open range.
-paint	object	optional	See §3.3 (geojson styling only).
+opacity	number	optional	0..1 (default defaults.opacity).
+visible	boolean	optional	Default defaults.visible.
+time	object	optional	{ "start": "YYYY-MM-DD" | null, "end": "YYYY-MM-DD" | null }.
+paint	object	optional	See §3.3 (GeoJSON styling only).
 legend	array	optional	See §3.4.
-attribution	string	optional	Will be passed to MapLibre source if set.
+attribution	string	optional	Passed to MapLibre source if set.
 
 Paths/URLs: Always ./… relative to web/.
 
 3.3 GeoJSON paint keys
 
-Supported maps to MapLibre paint:
+Supported mapping to MapLibre paint:
 
 "paint": {
   "line":   { "line-color": "#d97706", "line-width": 1.6, "line-opacity": 0.95 },
@@ -152,7 +150,7 @@ Supported maps to MapLibre paint:
   "circle": { "circle-color": "#0d47a1", "circle-radius": 4, "circle-opacity": 1.0 }
 }
 
-	•	If multiple sub-styles are present, the app will create separate -line, -fill, -circle layers, all sourcing the same GeoJSON.
+	•	If multiple sub-styles are present, the app creates separate -line, -fill, -circle layers using the same GeoJSON source.
 
 3.4 Legend items
 
@@ -168,7 +166,7 @@ Optional legend array per layer:
 
 3.5 Time windows
 
-Use ISO8601 dates:
+Use ISO-8601 dates:
 
 "time": { "start": "1894-01-01", "end": "1894-12-31" }
 
@@ -178,9 +176,9 @@ Use ISO8601 dates:
 ⸻
 
 4) Documentation (Markdown)
-	•	Wrap lines around 80–100 chars where comfortable.
+	•	Wrap lines around 80–100 chars when comfortable.
 	•	Headings: #, ##, ###. Use --- for section dividers when helpful.
-	•	Mermaid diagrams: quote labels, use \n for line breaks.
+	•	Mermaid diagrams: quote labels and use \n for line breaks.
 
 Example:
 
@@ -193,16 +191,16 @@ flowchart TD
 ⸻
 
 5) Accessibility & UX checklist
-	•	Keyboard:
-	•	All interactive controls focusable (:focus-visible visible).
+	•	Keyboard
+	•	All interactive controls are focusable (:focus-visible visible).
 	•	Space/Enter toggles checkboxes and custom switches.
-	•	ARIA:
+	•	ARIA
 	•	Regions labeled: role="region" + aria-label.
 	•	Live regions for status updates (role="status" / aria-live="polite").
-	•	Visual:
+	•	Visual
 	•	Tabular numerals for year readouts (font-variant-numeric: tabular-nums).
 	•	Test light/dark, mobile/desktop, print.
-	•	Motion/contrast:
+	•	Motion/contrast
 	•	Respect prefers-reduced-motion and forced-colors.
 
 ⸻
@@ -229,15 +227,13 @@ flowchart TD
 ⸻
 
 7) Commit guidelines
-	•	Conventional, scoped prefixes:
-	•	css:, js:, config:, docs:, tiles:, vectors:, a11y:, build:
+	•	Conventional, scoped prefixes: css:, js:, config:, docs:, tiles:, vectors:, a11y:, build:
 	•	Examples:
 
 css: polish range slider fill + focus-visible ring
 js: add legend builder and grouped layer list
 config: switch hydrology paths to ./data/processed/
 docs: expand STYLE_GUIDE with schema-lite and CI checks
-
 
 
 ⸻
@@ -249,16 +245,15 @@ docs: expand STYLE_GUIDE with schema-lite and CI checks
 
 jq . web/app.config.json > /dev/null
 
-
 	•	Minimal contract check (keys present):
 
 jq -e '
   .version and .layers and (.layers | type=="array") and
-  ([.layers[] | has("id") and has("type") and ( ( .type=="raster" and has("url") )
-                                             or ( .type=="geojson" and has("path") ) ) ] | all)
+  ([.layers[] | has("id") and has("type") and (
+      (.type=="raster" and has("url")) or
+      (.type=="geojson" and has("path"))
+  )] | all)
 ' web/app.config.json > /dev/null
-
-
 
 8.2 Link/path checks (local dev)
 	•	Serve web/ with any static server (ensures ./ paths resolve):
@@ -266,17 +261,14 @@ jq -e '
 npx http-server web -p 8080
 # open http://localhost:8080/
 
-
-
 8.3 Cross-browser smoke
-	•	Test in latest Chrome/Firefox/Safari.
-	•	Verify:
+	•	Test in latest Chrome/Firefox/Safari. Verify:
 	•	Slider fill responds (JS sets --value).
 	•	Toggling visibility works for raster and geojson (line/fill/circle).
 	•	Dark mode renders legible controls.
 	•	Safe-area insets don’t clip MapLibre controls.
 
-(Optional) add a tests/test_web_configs.py to CI that loads and validates config shape + fetches GeoJSON with requests to ensure non-404.
+(Optional) add tests/test_web_configs.py to CI to load/validate config shape and fetch GeoJSON to ensure non-404.
 
 ⸻
 
