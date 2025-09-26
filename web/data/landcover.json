@@ -1,1 +1,12 @@
-
+{
+  "id": "ks_landcover",
+  "title": "Land Cover Snapshots",
+  "type": "vector",
+  "data": "data/processed/landcover_timeslices.json",
+  "category": "environment",
+  "time": { "start": "1992-01-01", "end": "2021-12-31" },
+  "timeProperty": "year",
+  "style": { "fillOpacity": 0.6 },
+  "visible": false,
+  "attribution": "USGS NLCD"
+}
