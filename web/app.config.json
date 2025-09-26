@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "generated": "2025-09-25T00:00:00Z",
+  "version": "1.3.0",
+  "generated": "2025-09-26T00:00:00Z",
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time-aware historical GIS for Kansas",
 
@@ -10,7 +10,7 @@
 
   "time": { "min": "1850-01-01", "max": "2025-12-31" },
   "defaultYear": 1930,
-  "timeUI": { "step": 1, "fps": 12, "loop": false }, 
+  "timeUI": { "step": 1, "fps": 12, "loop": false },
 
   "defaults": {
     "minzoom": 0,
@@ -185,6 +185,42 @@
         { "type": "fill", "label": "Treaty area (1854)", "color": "#2563eb", "outline": "#1d4ed8" }
       ],
       "attribution": "Digitized treaty boundaries, 1854"
+    },
+
+    {
+      "id": "ks-counties-demo",
+      "title": "Kansas Counties (demo)",
+      "group": "Vectors",
+      "type": "geojson",
+      "path": "./data/kansas_counties.geojson",
+      "opacity": 1.0,
+      "visible": false,
+      "time": { "start": "1854-01-01", "end": null },
+      "paint": {
+        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.18, "fill-outline-color": "#1d4ed8" },
+        "line": { "line-color": "#1d4ed8", "line-width": 1.2, "line-opacity": 0.9 }
+      },
+      "legend": [
+        { "type": "fill", "label": "County boundary", "color": "#2563eb", "outline": "#1d4ed8" }
+      ],
+      "attribution": "Demo boundaries for UI wiring"
+    },
+    {
+      "id": "demo-events",
+      "title": "Demo Events",
+      "group": "Vectors",
+      "type": "geojson",
+      "path": "./data/demo_events.json",
+      "opacity": 1.0,
+      "visible": true,
+      "time": { "start": "1854-01-01", "end": null },
+      "paint": {
+        "circle": { "circle-color": "#0ea5e9", "circle-radius": 5, "circle-opacity": 0.95 }
+      },
+      "legend": [
+        { "type": "circle", "label": "Historical event", "color": "#0ea5e9", "radius": 5 }
+      ],
+      "attribution": "Demo events for UI wiring"
     }
   ]
 }
