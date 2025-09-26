@@ -1,13 +1,42 @@
 {
   "id": "ks_settlements",
   "title": "Settlements, Forts, Trading Posts",
-  "type": "vector",
-  "data": "data/processed/towns_points.json",
+  "type": "geojson",
+  "url": "data/processed/towns_points.json",
   "category": "culture",
+
   "time": { "start": "1800-01-01", "end": null },
   "timeProperty": "year",
-  "popup": ["name", "type", "year", "year_end"],
-  "style": { "circleColor": "#FF595E", "circleRadius": 4 },
+
   "visible": true,
+  "minzoom": 4,
+  "maxzoom": 19,
+  "interactive": true,
+
+  "popup": ["name", "type", "year", "year_end"],
+
+  "paint": {
+    "circle": {
+      "circle-color": "#FF595E",
+      "circle-radius": 4,
+      "circle-opacity": 0.95,
+      "circle-stroke-color": "#FFFFFF",
+      "circle-stroke-width": 1
+    },
+    "line": { "line-opacity": 0 },
+    "fill": { "fill-opacity": 0 }
+  },
+
+  "fields": {
+    "name":     { "type": "string", "description": "Place name" },
+    "type":     { "type": "string", "description": "Settlement type (fort, trading post, town, mission, etc.)" },
+    "year":     { "type": "number", "description": "Establishment year (used by the time slider)" },
+    "year_end": { "type": "number", "description": "End/abandonment year (optional, informational)" },
+    "source":   { "type": "string", "description": "Provenance / dataset source (optional)" }
+  },
+
+  "search": { "qFields": ["name", "type", "year"] },
+
+  "legendSymbol": "settlements",
   "attribution": "Compiled / KFM"
 }
