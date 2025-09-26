@@ -1,1 +1,13 @@
-
+{
+  "id": "storm_events",
+  "title": "NOAA Storm Events (KS)",
+  "type": "vector",
+  "data": "data/processed/storm_events_ks.json",
+  "category": "hazards",
+  "time": { "start": "1950-01-01", "end": null },
+  "timeProperty": "begin_date",
+  "popup": ["event_type", "begin_date", "deaths", "damage_usd"],
+  "style": { "circleColor": "#EE9B00", "circleRadius": 3 },
+  "visible": false,
+  "attribution": "NOAA NCEI"
+}
