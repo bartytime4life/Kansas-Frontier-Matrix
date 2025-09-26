@@ -2,11 +2,52 @@
   "id": "climate_normals",
   "title": "Climate Normals (1991–2020)",
   "type": "vector",
+  "format": "geojson",
   "data": "data/processed/climate_normals_ks.json",
   "category": "climate",
   "time": { "start": "1991-01-01", "end": "2020-12-31" },
-  "popup": ["station", "tmin_c", "tmax_c", "precip_mm"],
-  "style": { "circleColor": "#118AB2", "circleRadius": 2.5 },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 4,
+  "maxzoom": 19,
   "visible": false,
-  "attribution": "NOAA NCEI"
+  "opacity": 1.0,
+
+  "popup": ["station", "tmin_c", "tmax_c", "precip_mm"],
+  "legend": {
+    "type": "circle",
+    "label": "Station normals (°C, mm)",
+    "fields": {
+      "tmin_c": "Avg Min (°C)",
+      "tmax_c": "Avg Max (°C)",
+      "precip_mm": "Avg Precip (mm)"
+    }
+  },
+
+  "style": {
+    "renderer": "circle",
+    "circleColor": "#118AB2",
+    "circleRadius": 2.5,
+    "circleStrokeColor": "#ffffff",
+    "circleStrokeWidth": 0.5
+  },
+
+  "fields": {
+    "station": { "type": "string", "description": "Station name or ID" },
+    "lat":     { "type": "number", "units": "deg" },
+    "lon":     { "type": "number", "units": "deg" },
+    "tmin_c":  { "type": "number", "units": "°C", "description": "1991–2020 avg daily minimum temperature" },
+    "tmax_c":  { "type": "number", "units": "°C", "description": "1991–2020 avg daily maximum temperature" },
+    "precip_mm": { "type": "number", "units": "mm", "description": "1991–2020 avg daily precipitation" }
+  },
+
+  "search": { "qFields": ["station"] },
+
+  "attribution": "© <a href=\"https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals\" target=\"_blank\">NOAA NCEI U.S. Climate Normals (1991–2020)</a>",
+  "license": "Public Domain / NOAA",
+  "provenance": {
+    "source": "NOAA NCEI Climate Normals (1991–2020)",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Station-level normals ingested for Kansas; units normalized to °C and mm"
+  }
 }
