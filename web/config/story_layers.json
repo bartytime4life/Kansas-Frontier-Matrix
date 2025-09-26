@@ -1,18 +1,48 @@
 {
-  "schema": "kfm-story/1.0",
-  "version": "1.0.0",
-  "generated": "2025-09-26T00:00:00Z",
+  "schema": "kfm-story/1.1",
+  "version": "1.1.0",
+  "generated": "2025-09-26T18:00:00Z",
   "title": "Curated Story Themes",
   "themes": [
     {
       "id": "dust_bowl",
-      "title": "Dust Bowl & Drought",
-      "description": "Drought progression, storms, and societal impacts.",
+      "title": "Dust Bowl & Drought (Demo)",
+      "description": "Illustrate 1930s impacts using available demo layers. Replace with drought/storm datasets when added.",
       "year": 1935,
-      "layersOn": ["drought_monitor", "storm_events", "climate_normals"],
+      "layersOn": ["kansas_counties", "events_sample"],
       "layersOff": [],
-      "opacity": { "drought_monitor": 0.85, "storm_events": 1.0, "climate_normals": 0.65 },
+      "opacity": { "kansas_counties": 0.6, "events_sample": 1.0 },
       "flyTo": { "center": [-99.3, 38.4], "zoom": 6.2 }
+    },
+    {
+      "id": "bleeding_kansas",
+      "title": "Bleeding Kansas & Treaties",
+      "description": "Treaty boundaries and early rail corridors highlight territorial change and movement.",
+      "year": 1856,
+      "layersOn": ["ks_treaties", "ks_railroads", "kansas_counties"],
+      "layersOff": [],
+      "opacity": { "ks_treaties": 0.9, "ks_railroads": 0.9, "kansas_counties": 0.5 },
+      "flyTo": { "center": [-96.9, 39.1], "zoom": 6.5 }
+    },
+    {
+      "id": "larned_1894",
+      "title": "Larned 1894 — Historic Topo",
+      "description": "Explore the 1894 USGS topographic sheet around Larned to compare historic features with today.",
+      "year": 1894,
+      "layersOn": ["usgs_topo_1894_larned", "kansas_counties"],
+      "layersOff": [],
+      "opacity": { "usgs_topo_1894_larned": 0.75, "kansas_counties": 0.4 },
+      "flyTo": { "center": [-99.09, 38.18], "zoom": 10 }
+    },
+    {
+      "id": "relief",
+      "title": "Kansas Relief — Hillshade & DEM",
+      "description": "Terrain context via hillshade; toggle DEM-based terrain if supported in the viewer.",
+      "year": 2019,
+      "layersOn": ["ks_hillshade_2018"],
+      "layersOff": [],
+      "opacity": { "ks_hillshade_2018": 0.85 },
+      "flyTo": { "center": [-98.3, 38.5], "zoom": 6 }
     }
   ]
 }
