@@ -1,5 +1,40 @@
 {
   "type": "FeatureCollection",
   "name": "oral_histories_points",
-  "features": []
+  "features": [
+    {
+      "type": "Feature",
+      "id": "oh-0001",
+      "properties": {
+        "title": "“Crossing the Smoky Hill” — Emma Redbird",
+        "community": "Kiowa",
+        "summary": "Emma Redbird recounts a family crossing near the Smoky Hill River and seasonal movements in the 1870s.",
+        "url": "https://example.org/oral-histories/emma-redbird",
+        "date": "1873-06-01",
+        "source": "Community archives",
+        "license": "CC BY-NC"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-98.7402, 38.8209]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "oh-0002",
+      "properties": {
+        "title": "Fort Larned memories — Thomas Grayhorse",
+        "community": "Cheyenne",
+        "summary": "Brief account of trade, conflict, and camp life around Fort Larned; mentions a severe winter.",
+        "url": "https://example.org/oral-histories/thomas-grayhorse",
+        "date": "1868",
+        "source": "Tribal partners",
+        "license": "CC BY-NC"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-99.2185, 38.1893]
+      }
+    }
+  ]
 }
