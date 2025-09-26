@@ -1,81 +1,171 @@
 # Kansas-Frontier-Matrix — Scripts
 
-Helper scripts that automate **fetch → convert → derive → validate → package → index** for the Kansas-Frontier-Matrix / Kansas Geo Timeline stack.  
-They are **CLI-first**, modular, reproducible, and designed to slot into the **Makefile** and **CI**.
+Helper scripts that automate **fetch → convert → derive → validate → package → index** for the Kansas-Frontier-Matrix / Kansas Geo Timeline stack.
+They are **CLI-first**, modular, reproducible, and wired into the **Makefile** and **CI**.
 
-- **Stdlib-first** (GDAL/`requests` where appropriate), atomic writes, clear exit codes.
-- **Idempotent** by default (skip unless forced).
-- Every major artifact gets a **`.sha256`** and many write a **JSON manifest**.
-
----
-
-## At-a-glance
-
-```text
-scripts/
-├── fetch.py                # Fetch STAC/cat URLs → data/raw (atomic, sidecars, manifest)
-├── topoview_fetch.py       # USGS TopoView API (v4) → downloads + optional STAC items
-├── make_cogs.py            # GeoTIFF → COG (gdal_translate → rio-cogeo; atomic; sidecars; manifest)
-├── derive_terrain.py       # Parallel hillshade/slope/aspect (GDAL Python API → CLI fallback)
-├── make_terrain_pack.py    # One-shot hillshade+slope+aspect wrapper
-├── validate_cogs.py        # Parallel COG validation (rio → gdalinfo fallback) → JSON report
-├── make_stac.py            # Build STAC (collections/items) from data/cogs & vectors → stac/
-├── validate_stac.py        # Validate STAC Items/Collections/Catalogs (schema + URL/file checks)
-├── validate_sources.py     # Validate data/sources + STAC (lenient for sources; URL/file checks)
-├── patch_stac_asset.py     # Patch STAC asset fields (checksum, size; batch/filters)
-├── pack_kmz.py             # Package KML + assets → KMZ (fix hrefs; strip/blank remotes; sidecars)
-└── scripts                 # Tiny task-runner (subcommands for common flows)
-````
+* **Stdlib/GDAL-first**, atomic writes, clear exit codes.
+* **Idempotent** by default (skip unless forced).
+* Every major artifact writes a **`.sha256`** and many emit a **JSON manifest/report**.
 
 > Prefer running through the **Makefile** or `scripts/scripts` when possible — targets are wired and include robust fallbacks.
 
 ---
 
+## Inventory (what connects to what)
+
+```text
+scripts/
+├── fetch.py                   # Pull mixed inputs (sources, STAC Items, direct URLs) → data/raw/
+├── topoview_fetch.py          # USGS TopoView API → downloads (+ optional per-map STAC Items)
+├── make_cog.py                # GeoTIFF → COG (gdal_translate → rio-cogeo fallback; sidecars; manifest)
+├── make_hillshade.py          # Hillshade (COG) from DEM (helper used by Makefile)
+├── make_slope_aspect.py       # Slope & aspect (COG) from DEM (helper used by Makefile)
+├── make_terrain_pack.py       # One-shot hillshade+slope+aspect wrapper
+├── validate_cogs.py           # Parallel COG validation → JSON report (rio → gdalinfo fallback)
+├── make_stac.py               # Build STAC (collections/items) from data/* → stac/
+├── validate_stac.py           # Validate STAC Items/Collections/Catalogs (schema + URL/file checks)
+├── validate_sources.py        # Validate data/sources/*.json (lenient), optional URL/file checks
+├── patch_stac_asset.py        # Patch STAC asset fields (checksum, size; batch/filters)
+├── pack_kmz.py                # Package KML + assets → KMZ (fix hrefs; strip/blank remotes; sidecars)
+├── update_registry.py         # (optional) Write small provenance registry entries after builds
+├── regionate_kml.py           # (optional) Regionate GeoJSON/KML → KML tree / KMZ
+├── gen_sha256.sh              # (optional) Cross-platform SHA256 helper
+├── scripts                    # Task runner: validate:stac, validate:sources, stac:render, fetch:topoview, doctor
+└── collections/
+    ├── archaeology.sh         # ETL+STAC for archaeology collection (generic)
+    └── archaeology_sites.sh   # ETL+STAC+thumbs for archaeology site registers (points/polys)
+```
+
+**Makefile ↔ scripts mapping (high-level):**
+
+| Makefile target      | Script(s) used                                       | Output(s)                                          |
+| -------------------- | ---------------------------------------------------- | -------------------------------------------------- |
+| `make fetch`         | `fetch.py`                                           | `data/raw/…`, `data/raw/manifest.fetch.json`       |
+| `make cogs`          | `make_cog.py`                                        | `data/cogs/**/*.tif` (COGs + `.sha256/.meta.json`) |
+| `make terrain`       | `make_hillshade.py`, `make_slope_aspect.py`          | `data/cogs/hillshade,slope,aspect/*.tif`           |
+| `make validate-cogs` | `validate_cogs.py`                                   | `data/validation/cog_validate.report.json`         |
+| `make stac`          | `make_stac.py`, `patch_stac_asset.py`                | `stac/**` (Items/Collections/Catalog)              |
+| `make stac-validate` | `validate_sources.py`, `validate_stac.py` (or `kgt`) | `data/validation/validate_stac.report.json`        |
+| `make site-config`   | `kgt render-config`                                  | `web/app.config.json`                              |
+| `make regionate`     | `regionate_kml.py`                                   | KML tree / KMZ                                     |
+| `make arch-sites*`   | `collections/archaeology_sites.sh`                   | processed GeoJSON, STAC items, thumbs, app config  |
+
+---
+
 ## Quick start
 
+### 0) Doctor
+
 ```bash
-# 0) Doctor — show environment/tooling
 scripts/scripts doctor
+make env
+```
 
-# 1) Fetch mixed sources → data/raw
+### 1) Fetch mixed sources → `data/raw/`
+
+```bash
+# all sources
+python scripts/fetch.py --sources data/sources --out data/raw
+
+# or target specific files
 python scripts/fetch.py data/sources/*.json stac/items/**/*.json --jobs 6 --by-domain
+```
 
-# 2) Convert to COG (ZSTD by default)
-python scripts/make_cogs.py --inp data/processed --recursive --pattern "*.tif" \
-  --out data/cogs --jobs 8 --validate
+### 2) Convert to COG (GeoTIFF → COG)
 
-# 3) Derive terrain (hillshade/slope/aspect)
-python scripts/derive_terrain.py data/cogs/dem/*.tif --products hillshade,slope,aspect \
-  --cog --multidir --threads ALL_CPUS
+```bash
+# via Makefile
+make cogs
 
-# 4) Validate COGs → JSON report
-python scripts/validate_cogs.py data/cogs --jobs 8 --timeout 120 \
-  --report data/validation/cog_validate.report.json
+# or direct
+python scripts/make_cog.py --in data/raw --out data/cogs --jobs 8 --validate
+```
 
-# 5) Build STAC → stac/
-python scripts/make_stac.py
+### 3) Derive terrain (hillshade/slope/aspect)
 
-# 6) Validate STAC (schema + URL/local-file checks)
-python scripts/validate_stac.py stac --check-urls --check-files \
-  --report data/validation/validate_stac.report.json
+```bash
+# via Makefile (preferred; handles mirroring to data/derivatives/)
+make terrain DEM=data/cogs/dem/ks_1m_dem_2018_2020.tif
+```
 
-# 7) Regionate & package KML → KMZ
+### 4) Validate COGs → JSON report
+
+```bash
+make validate-cogs
+# report: data/validation/cog_validate.report.json
+```
+
+### 5) Build STAC → `stac/`
+
+```bash
+make stac
+```
+
+### 6) Validate STAC (schema + URL/local-file checks)
+
+```bash
+make stac-validate
+# report: data/validation/validate_stac.report.json (if validate_stac.py is present)
+```
+
+### 7) Render viewer config (requires `kgt`)
+
+```bash
+make site-config
+# writes web/app.config.json
+```
+
+### 8) Optional: KML / KMZ
+
+```bash
 python scripts/pack_kmz.py --kml out/regionated --out dist --strip-remote --name-from-kml
 ```
 
-Or via the runner:
+---
+
+## Collections (pipelines for grouped layers)
+
+### Archaeology Sites (points/polygons, site registers)
+
+**Convenience via Makefile:**
 
 ```bash
-# validate STAC + sources into data/validation/
-scripts/scripts validate:stac --check-urls --check-files
-scripts/scripts validate:sources --check-urls --check-files
-
-# render viewer config (requires kgt)
-scripts/scripts stac:render --stac stac/items --out web/app.config.json
-
-# USGS TopoView fetch
-scripts/scripts fetch:topoview --max 25 --stac-dir stac/topoview
+make arch-sites            # fetch→unpack→process→stac→validate→render (thumbs included)
+make arch-sites-validate   # validate STAC + render (thumbs included)
+make arch-sites-render     # render viewer config only (thumbs included)
 ```
+
+**Direct (collection script):**
+
+```bash
+bash scripts/collections/archaeology_sites.sh deps       # check deps (GDAL, jq, kgt, python)
+bash scripts/collections/archaeology_sites.sh init       # create starter data/sources/arch_sites_example.json
+bash scripts/collections/archaeology_sites.sh fetch
+bash scripts/collections/archaeology_sites.sh unpack
+bash scripts/collections/archaeology_sites.sh process
+bash scripts/collections/archaeology_sites.sh stac
+bash scripts/collections/archaeology_sites.sh validate
+bash scripts/collections/archaeology_sites.sh render     # renders web/app.config.json + thumbnails
+bash scripts/collections/archaeology_sites.sh doctor
+```
+
+**Outputs:**
+
+* processed GeoJSON → `data/processed/arch_sites/*.geojson`
+* STAC Items → `stac/items/archaeology-sites/*.json` (parent: `stac/collections/archaeology-sites.json`)
+* thumbnails (auto) → `web/assets/thumbnails/*.png` and auto-attached to STAC assets
+
+### Archaeology (generic collection)
+
+```bash
+bash scripts/collections/archaeology.sh fetch
+bash scripts/collections/archaeology.sh process
+bash scripts/collections/archaeology.sh stac
+bash scripts/collections/archaeology.sh validate
+bash scripts/collections/archaeology.sh render
+```
+
+> `make collections-build` gracefully handles scripts that **don’t** implement `build`: it falls back to `fetch→unpack→process→stac→validate→render`.
 
 ---
 
@@ -84,94 +174,128 @@ scripts/scripts fetch:topoview --max 25 --stac-dir stac/topoview
 ### `fetch.py`
 
 Fetch mixed inputs → `data/raw/` with atomic writes and `.sha256` sidecars.
-Understands STAC Items, source catalogs (`endpoint[s]`, `urls`, `assets[].href`), or direct URLs.
-Groups by JSON stem (default) or `--subdir` or `--by-domain`.
+Understands **STAC Items**, `data/sources/*.json` (`endpoints`, `urls`, `assets[].href`), and direct URLs.
+Grouping: default by JSON stem; or `--subdir`/`--by-domain`.
 Manifest: `data/raw/manifest.fetch.json`.
 
 ### `topoview_fetch.py`
 
-USGS TopoView API (v4.x) with bbox/year filters, paging, format/series/scale filters.
-Outputs: downloads → `data/raw/topoview/`; README index + manifest; optional per-map STAC items.
+USGS TopoView API (v4.x) with bbox/year/scale/series filters and paging.
+Outputs → `data/raw/topoview/`; README index + manifest; optional per-map **STAC Items**.
 
-### `make_cogs.py`
+### `make_cog.py`
 
 GeoTIFF → **COG** (prefers `gdal_translate`; falls back to `rio cogeo`).
-Defaults: ZSTD, BLOCKSIZE=512, OVERVIEWS=AUTO, NUM_THREADS=ALL_CPUS.
-Atomic write, `.sha256` + `.meta.json`, skip/repack logic, optional validation.
+Defaults: DEFLATE/ZSTD (repo policy), blocksize, **auto overviews**, `NUM_THREADS=ALL_CPUS`.
+Atomic write, `.sha256` + `.meta.json`, skip/repack logic, optional `--validate`.
 
-### `derive_terrain.py` / `make_terrain_pack.py`
+### `make_hillshade.py`, `make_slope_aspect.py`, `make_terrain_pack.py`
 
-Parallel **hillshade / slope / aspect** from DEMs (COG or GeoTIFF).
-Auto scale (meters vs degrees), `--multidir`, NODATA handling, SHA sidecars, manifest.
+COG derivatives from DEMs: **hillshade**, **slope**, **aspect**.
+Auto unit scaling (meters vs degrees), `--multidir`, NODATA handling, sidecars + manifest.
+Used by `make terrain` (with GDAL fallbacks if helpers not present).
 
 ### `validate_cogs.py`
 
 Validate COG conformance (`rio cogeo validate` → `gdalinfo -json` fallback).
-Outputs: JSON report for CI.
+Outputs: `data/validation/cog_validate.report.json` (CI-ready).
 
 ### `make_stac.py`
 
-Create STAC `collections` and `items` from `data/cogs/` and `data/processed/vectors/` → **`stac/`**.
-Valid by default: always writes bbox; sets temporal rules; copies `file:size` and `checksum:sha256` if sidecars exist; links provenance.
+Create **STAC** Collections & Items from `data/cogs/` + `data/processed/` → `stac/`.
+Writes bbox/footprint, temporal properties, and (when sidecars exist) `file:size` + `checksum:sha256`.
+Links provenance; supports **collection parents** (e.g., `archaeology-sites`).
 
 ### `validate_stac.py` / `validate_sources.py`
 
 Validate **Items / Collections / Catalogs** (schema + minimal checks).
-Optionally check http(s) URLs and local/relative `file://` hrefs.
-Emit CI-ready report JSON.
+Optional `--check-urls` / `--check-files` for http(s) and local/relative `href`s.
+Emit CI-ready reports under `data/validation/`.
 
 ### `patch_stac_asset.py`
 
-Patch STAC asset fields (`checksum:sha256`, `file:size`), batch-mode, filters (`--role`, `--type`), dotted `--item-set` for item properties.
+Patch STAC assets (`checksum:sha256`, `file:size`) via batch filters (`--role`, `--type`, `--glob`), or one-off.
+Makefile’s `stac` target auto-patches DEM if a `.sha256` sidecar is present.
 
 ### `pack_kmz.py`
 
-Package KML + local assets into KMZ, fix `<href>` paths, include extras, strip or blank remote refs, name from `<Document><name>`.
+KML → KMZ (fix `<href>`, add local assets, strip/blank remotes, name from `<Document><name>`).
 Writes `.sha256` + `.meta.json`.
 
-### `scripts/scripts` (task runner)
+### `scripts` (task runner)
 
-Subcommands: `validate:stac`, `validate:sources`, `stac:render`, `stac:validate`, `fetch:topoview`, `doctor`.
+Subcommands:
+
+* `validate:stac` (→ `data/validation/`)
+* `validate:sources` (→ `data/validation/`)
+* `stac:render` (→ `web/app.config.json`)
+* `stac:validate` (schema + links)
+* `fetch:topoview`
+* `doctor`
 
 ---
 
-## How everything connects
+## STAC → Viewer (kgt)
 
-* **Makefile** targets wrap these tools:
+* **Build** STAC: `make stac`
+* **Validate**: `make stac-validate`
+* **Render** viewer config (MapLibre): `make site-config`
+* **Archaeology Sites**: thumbnails auto-rendered & attached on `render` step (`archaeology_sites.sh`), then included in the viewer.
 
-  * `make fetch`, `make cogs`, `make terrain`, `make validate-cogs`, `make stac`, `make stac-validate`, `make kmz`.
-* **CI (GitHub Actions)** calls the same scripts; JSON reports land under `data/validation/` and upload as artifacts.
-* **Provenance**: `.sha256` + `.meta.json` sidecars and run-level manifests capture lineage.
+> If you don’t ship a Jinja template, the Makefile falls back to rendering directly from Items.
+
+---
+
+## Provenance & reports
+
+* Sidecars: `*.sha256`, `*.meta.json` for major artifacts (COGs/derivatives/KMZ).
+* Run-level manifests & reports:
+
+  * `data/raw/manifest.fetch.json`
+  * `data/validation/cog_validate.report.json`
+  * `data/validation/validate_stac.report.json` (when enabled)
 
 ---
 
 ## Conventions & guarantees
 
-* **Exit codes:** `0` success; `1–2` input/env problems; `>2` processing errors.
-* **Atomic writes:** outputs written as `*.part`/`*.tmp` then renamed.
-* **Idempotent:** skip existing outputs unless `--force`/`--repack`/`--overwrite`.
-* **Parallelism:** `--jobs`, `NUM_THREADS=ALL_CPUS` for GDAL transforms.
-* **Paths:**
+* **Exit codes**: `0` success; `1–2` input/env problems; `>2` processing errors.
+* **Atomic writes**: write to `*.part`/`*.tmp`, rename on success.
+* **Idempotent**: skip existing outputs unless `--force`/`--repack`/`--overwrite`.
+* **Parallelism**: `--jobs`; GDAL `NUM_THREADS=ALL_CPUS` where available.
+* **Paths**:
 
   * Raw downloads → `data/raw/`
-  * COGs & derivatives → `data/cogs/…`
+  * COGs & derivatives → `data/cogs/…` and `data/derivatives/`
   * STAC index → `stac/`
   * Validation reports → `data/validation/`
+  * Thumbnails → `web/assets/thumbnails/`
 
 ---
 
-## Minimal deps
+## Troubleshooting
 
-* Python 3.10+
-* `requests` (for ArcGIS/TopoView fetchers)
-* GIS tools (optional): GDAL (`gdal_translate`, `gdaldem`, `gdalinfo`, `gdalbuildvrt`), `rio cogeo`
+* **Missing GDAL/`kgt`/`jq`**: use `scripts/collections/archaeology_sites.sh deps` or `make env` to verify.
+* **No Jinja template** for `site-config`: Makefile now renders directly from STAC Items as fallback.
+* **STAC Items without parent**: ensure `stac/collections/<collection>.json` exists (e.g., `archaeology-sites.json`).
+* **DEM patching skipped**: put a `.sha256` next to the DEM COG (or run `make dem-checksum`) so `make stac` can auto-patch.
 
 ---
 
-## Tips
+### Examples (copy-paste)
 
-* Keep raw downloads in `data/raw/`; convert to COGs in `data/cogs/`; viewer assets in `data/derivatives/`.
-* Ensure CRS units align with **scale** (meters vs degrees). Derivation tools auto-detect but allow overrides.
-* Heavy jobs: set `GDAL_CACHEMAX=2048` (or higher) and pass `--threads ALL_CPUS`.
+```bash
+# Full terrain → STAC → viewer cycle
+make terrain
+make stac
+make stac-validate
+make site-config
 
+# Archaeology sites (all-in)
+make arch-sites
+
+# Validate & render only
+make arch-sites-validate
 ```
+
+This README now mirrors your Makefile and collection scripts, with correct names (`make_cog.py`, `make_hillshade.py`, `make_slope_aspect.py`) and connected flows (thumbnails, collections, kgt).
