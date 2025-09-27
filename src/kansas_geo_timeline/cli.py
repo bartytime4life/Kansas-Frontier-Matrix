@@ -60,6 +60,7 @@ except Exception:  # pragma: no cover
 try:
     import jinja2  # type: ignore
     HAS_JINJA2 = True
+    select_autoescape = jinja2.select_autoescape
 except Exception:  # pragma: no cover
     HAS_JINJA2 = False
 
@@ -282,7 +283,7 @@ def render_app_config(
     t_path = template_path(template_name)
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(str(t_path.parent)),
-        autoescape=False,
+        autoescape=jinja2.select_autoescape(['html', 'xml']),
         trim_blocks=True,
         lstrip_blocks=True,
     )
