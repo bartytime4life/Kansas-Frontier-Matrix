@@ -24,7 +24,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: web-config-validate-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,14 +38,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
 
       - name: Show changed files (PR only)
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "Changed files (vs ${{ github.base_ref }}):"
+          echo "Changed files (vs ${{ github.base_ref }}):" | tee -a "$GITHUB_STEP_SUMMARY"
           git fetch -q origin "${{ github.base_ref }}" || true
-          git --no-pager diff --name-only "origin/${{ github.base_ref }}..." | sed 's/^/ - /' || true
+          git --no-pager diff --name-only "origin/${{ github.base_ref }}..." | sed 's/^/ - /' | tee -a "$GITHUB_STEP_SUMMARY" || true
 
       - name: Install jq
         run: |
@@ -78,6 +79,7 @@ jobs:
           for f in web/app.config.json web/layers.json; do
             [ -e "$f" ] && check "$f"
           done
+
           for f in web/config/**/*.json; do
             [ -e "$f" ] && check "$f"
           done
@@ -85,10 +87,11 @@ jobs:
           if ! $had_any; then
             summary+="(No web config JSON files present)\n"
           fi
+
           echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
-      # ---------- Optional schema validation (Python jsonschema) ----------
+      # ---------- Python setup & deps ----------
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -98,8 +101,112 @@ jobs:
       - name: Install schema tooling
         run: |
           python -m pip install --upgrade pip
-          pip install jsonschema
+          pip install jsonschema==4.* rfc3339-validator rfc3987
 
+      # ---------- Validate local JSON Schemas themselves ----------
+      # Ensures web/config/*.schema.json are valid Draft 2020-12 schemas
+      - name: Validate local JSON Schemas (metaschema)
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          SCHEMAS=(web/config/*.schema.json web/config/**/*.schema.json)
+          if [ "${#SCHEMAS[@]}" -eq 0 ]; then
+            echo "::notice::No local schemas found; skipping schema self-validation."
+            exit 0
+          fi
+          python - <<'PY'
+import sys, json, pathlib
+from jsonschema.validators import Draft202012Validator
+
+errors = 0
+schemas = [pathlib.Path(p) for p in sys.argv[1:]]
+for sp in schemas:
+    try:
+        sch = json.loads(sp.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(sch)
+        print(f"Schema OK: {sp}")
+    except Exception as e:
+        print(f"::error file={sp}::Schema invalid: {e}")
+        errors += 1
+sys.exit(errors)
+PY
+          "${SCHEMAS[@]}"
+
+      # ---------- Auto-discover & validate any JSON with $schema ----------
+      # Reads any JSON files (web/app.config.json, web/layers.json, web/config/**/*.json)
+      # that declare a $schema and validates them against local or remote schema.
+      - name: Validate files that declare $schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob globstar
+          python - <<'PY'
+import os, sys, json, pathlib, urllib.parse
+from jsonschema import Draft202012Validator, RefResolver, validate
+from jsonschema.exceptions import ValidationError
+
+ROOTS = ["web/app.config.json", "web/layers.json"]
+ROOTS += [str(p) for p in pathlib.Path("web/config").glob("**/*.json")]
+
+def load_json(p: pathlib.Path):
+    return json.loads(p.read_text(encoding="utf-8"))
+
+def resolve_schema_uri(uri: str, base: pathlib.Path):
+    # Handle local paths, file: URIs, and relative paths
+    parsed = urllib.parse.urlparse(uri)
+    if parsed.scheme in ("http", "https"):
+        # For CI, prefer local schemas; allow remote if needed
+        import urllib.request
+        with urllib.request.urlopen(uri) as r:
+            return json.loads(r.read().decode("utf-8"))
+    if parsed.scheme == "file":
+        return load_json(pathlib.Path(parsed.path))
+    # relative path (likely local)
+    candidate = (base.parent / uri).resolve()
+    if candidate.exists():
+        return load_json(candidate)
+    # Try treat as absolute repo path
+    candidate = pathlib.Path(uri)
+    if candidate.exists():
+        return load_json(candidate)
+    raise FileNotFoundError(f"Schema not found: {uri}")
+
+errors = 0
+checked = 0
+for s in ROOTS:
+    p = pathlib.Path(s)
+    if not p.exists():
+        continue
+    try:
+        data = load_json(p)
+    except Exception as e:
+        # jq step should have caught syntax; still guard
+        print(f"::error file={p}::Failed to parse JSON: {e}")
+        errors += 1
+        continue
+    schema_uri = data.get("$schema")
+    if not schema_uri:
+        continue
+    try:
+        schema = resolve_schema_uri(schema_uri, p)
+        Draft202012Validator.check_schema(schema)  # sanity-check
+        Draft202012Validator(schema).validate(data)
+        print(f"Validated with $schema: {p}")
+        checked += 1
+    except ValidationError as ve:
+        print(f"::error file={p}::Schema validation error: {ve.message}")
+        errors += 1
+    except Exception as e:
+        print(f"::error file={p}::Failed validating against {schema_uri}: {e}")
+        errors += 1
+
+if checked == 0:
+    print("::notice::No JSON files declared $schema; skipping dynamic validation.")
+sys.exit(errors)
+PY
+
+      # ---------- Legacy explicit validations kept for compatibility ----------
       - name: Schema-validate app.config.json (if schema present)
         shell: bash
         run: |
@@ -112,11 +219,13 @@ cfg_p = pathlib.Path("web/app.config.json")
 sch_p = pathlib.Path("web/config/app.config.schema.json")
 cfg = json.loads(cfg_p.read_text(encoding="utf-8"))
 sch = json.loads(sch_p.read_text(encoding="utf-8"))
+Draft202012Validator.check_schema(sch)
 errs = sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e: e.path)
 if errs:
     print(f"::error file={cfg_p}::{len(errs)} schema error(s) found")
     for e in errs[:25]:
-        print("-", "/".join(map(str, e.path)) or "(root)", ":", e.message)
+        path = "/".join(map(str, e.path)) or "(root)"
+        print(f"- {path}: {e.message}")
     sys.exit(2)
 print("app.config.json ✔ schema-valid")
 PY
@@ -136,11 +245,13 @@ cfg_p = pathlib.Path("web/layers.json")
 sch_p = pathlib.Path("web/config/layers.schema.json")
 cfg = json.loads(cfg_p.read_text(encoding="utf-8"))
 sch = json.loads(sch_p.read_text(encoding="utf-8"))
+Draft202012Validator.check_schema(sch)
 errs = sorted(Draft202012Validator(sch).iter_errors(cfg), key=lambda e: e.path)
 if errs:
     print(f"::error file={cfg_p}::{len(errs)} schema error(s) found")
     for e in errs[:25]:
-        print("-", "/".join(map(str, e.path)) or "(root)", ":", e.message)
+        path = "/".join(map(str, e.path)) or "(root)"
+        print(f"- {path}: {e.message}")
     sys.exit(2)
 print("layers.json ✔ schema-valid")
 PY
@@ -157,7 +268,6 @@ PY
             pip install -r requirements.txt
           fi
           pip install pytest
-
           # If project is installable, add it (expose console_scripts/tests helpers)
           if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
             pip install -e ".[dev]" || pip install -e .
@@ -170,7 +280,6 @@ PY
           if [ -f tests/test_web_configs.py ]; then
             pytest -q tests/test_web_configs.py --junitxml=pytest-web-configs.xml
           else
-            # Fallback: keyword-based selection
             pytest -q -k "web_configs" --junitxml=pytest-web-configs.xml || echo "::notice::No matching tests; continuing."
           fi
 
