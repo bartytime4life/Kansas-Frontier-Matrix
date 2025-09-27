@@ -13,7 +13,8 @@ ci:
 default_language_version:
   python: python3
 
-default_stages: [commit]   # most hooks run on commit; heavy ones set to [push]/[manual]
+# Most hooks run on commit; heavy ones set to [push]/[manual]
+default_stages: [commit]
 
 # Skip heavy/binary trees when hooks support "exclude"
 exclude: |
@@ -252,14 +253,16 @@ repos:
         files: "^web/app\\.config\\.json$"
         pass_filenames: false
         entry: >
-          python -c "import json,sys; from jsonschema import Draft202012Validator as V;
-          import pathlib;
-          cfgp=pathlib.Path('web/app.config.json'); schp=pathlib.Path('web/config/app.config.schema.json');
-          (sys.exit(0) if not (cfgp.exists() and schp.exists()) else None);
-          cfg=json.load(open(cfgp)); sch=json.load(open(schp));
-          errs=sorted(V(sch).iter_errors(cfg), key=lambda e:e.path);
-          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
-          sys.exit(1 if errs else 0)"
+          python - <<'PY'
+          import json, sys, pathlib
+          from jsonschema import Draft202012Validator as V
+          cfgp=pathlib.Path('web/app.config.json'); schp=pathlib.Path('web/config/app.config.schema.json')
+          if not (cfgp.exists() and schp.exists()): sys.exit(0)
+          cfg=json.load(open(cfgp)); sch=json.load(open(schp))
+          errs=sorted(V(sch).iter_errors(cfg), key=lambda e: e.path)
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:50]]
+          sys.exit(1 if errs else 0)
+          PY
 
       - id: web-config-schema-layers
         name: web/layers.json schema validation
@@ -268,15 +271,18 @@ repos:
         files: "^web/layers\\.json$"
         pass_filenames: false
         entry: >
-          python -c "import json,sys; from jsonschema import Draft202012Validator as V;
-          import pathlib;
-          cfgp=pathlib.Path('web/layers.json'); schp=pathlib.Path('web/config/layers.schema.json');
-          (sys.exit(0) if not (cfgp.exists() and schp.exists()) else None);
-          cfg=json.load(open(cfgp)); sch=json.load(open(schp));
-          errs=sorted(V(sch).iter_errors(cfg), key=lambda e:e.path);
-          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
-          sys.exit(1 if errs else 0)"
+          python - <<'PY'
+          import json, sys, pathlib
+          from jsonschema import Draft202012Validator as V
+          cfgp=pathlib.Path('web/layers.json'); schp=pathlib.Path('web/config/layers.schema.json')
+          if not (cfgp.exists() and schp.exists()): sys.exit(0)
+          cfg=json.load(open(cfgp)); sch=json.load(open(schp))
+          errs=sorted(V(sch).iter_errors(cfg), key=lambda e: e.path)
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:50]]
+          sys.exit(1 if errs else 0)
+          PY
 
+      # Validate pack sub-docs (legend/categories/sources) against bundled $defs if present.
       - id: web-config-schema-legend
         name: web/config/legend.json schema validation (pack defs)
         language: python
@@ -284,14 +290,17 @@ repos:
         files: "^web/config/legend\\.json$"
         pass_filenames: false
         entry: >
-          python -c "import json,sys,pathlib; from jsonschema import Draft202012Validator as V;
-          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/legend.json');
-          (sys.exit(0) if not (packp.exists() and docp.exists()) else None);
-          pack=json.load(open(packp)); doc=json.load(open(docp));
-          sch=pack.get('$defs',{}).get('legend',{}); 
-          errs=sorted(V(sch).iter_errors(doc), key=lambda e:e.path);
-          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
-          sys.exit(1 if errs else 0)"
+          python - <<'PY'
+          import json, sys, pathlib
+          from jsonschema import Draft202012Validator as V
+          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/legend.json')
+          if not (packp.exists() and docp.exists()): sys.exit(0)
+          pack=json.load(open(packp)); doc=json.load(open(docp))
+          sch=pack.get('$defs',{}).get('legend',{})
+          errs=sorted(V(sch).iter_errors(doc), key=lambda e: e.path)
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:50]]
+          sys.exit(1 if errs else 0)
+          PY
 
       - id: web-config-schema-categories
         name: web/config/categories.json schema validation (pack defs)
@@ -300,14 +309,17 @@ repos:
         files: "^web/config/categories\\.json$"
         pass_filenames: false
         entry: >
-          python -c "import json,sys,pathlib; from jsonschema import Draft202012Validator as V;
-          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/categories.json');
-          (sys.exit(0) if not (packp.exists() and docp.exists()) else None);
-          pack=json.load(open(packp)); doc=json.load(open(docp));
-          sch=pack.get('$defs',{}).get('categories',{}); 
-          errs=sorted(V(sch).iter_errors(doc), key=lambda e:e.path);
-          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
-          sys.exit(1 if errs else 0)"
+          python - <<'PY'
+          import json, sys, pathlib
+          from jsonschema import Draft202012Validator as V
+          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/categories.json')
+          if not (packp.exists() and docp.exists()): sys.exit(0)
+          pack=json.load(open(packp)); doc=json.load(open(docp))
+          sch=pack.get('$defs',{}).get('categories',{})
+          errs=sorted(V(sch).iter_errors(doc), key=lambda e: e.path)
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:50]]
+          sys.exit(1 if errs else 0)
+          PY
 
       - id: web-config-schema-sources
         name: web/config/sources.json schema validation (pack defs)
@@ -316,11 +328,54 @@ repos:
         files: "^web/config/sources\\.json$"
         pass_filenames: false
         entry: >
-          python -c "import json,sys,pathlib; from jsonschema import Draft202012Validator as V;
-          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/sources.json');
-          (sys.exit(0) if not (packp.exists() and docp.exists()) else None);
-          pack=json.load(open(packp)); doc=json.load(open(docp));
-          sch=pack.get('$defs',{}).get('sources',{}); 
-          errs=sorted(V(sch).iter_errors(doc), key=lambda e:e.path);
-          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
-          sys.exit(1 if errs else 0)"
+          python - <<'PY'
+          import json, sys, pathlib
+          from jsonschema import Draft202012Validator as V
+          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/sources.json')
+          if not (packp.exists() and docp.exists()): sys.exit(0)
+          pack=json.load(open(packp)); doc=json.load(open(docp))
+          sch=pack.get('$defs',{}).get('sources',{})
+          errs=sorted(V(sch).iter_errors(doc), key=lambda e: e.path)
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:50]]
+          sys.exit(1 if errs else 0)
+          PY
+
+      # --- Docs quality gates (fast)
+      # Block stray :contentReference[oaicite:...] artifacts from leaking into docs.
+      - id: docs-block-bad-citations
+        name: docs: block broken contentReference artifacts
+        language: system
+        files: "^docs/.*\\.(md|markdown)$"
+        entry: >
+          bash -c '
+            if grep -RIn "\:contentReference\\[oaicite" "$@"; then
+              echo "::error::Broken contentReference/oaicite artifact detected in docs. Please remove or replace."; exit 1;
+            fi; exit 0;
+          '
+
+      # Ensure experiments use glossary links at least once.
+      - id: docs-experiments-glossary-link
+        name: docs: experiments must reference Glossary
+        language: system
+        files: "^docs/(experiments/.*\\.md|templates/experiment\\.md)$"
+        entry: >
+          bash -c '
+            miss=0;
+            for f in "$@"; do
+              if ! grep -q "\\[\\[Glossary:" "$f"; then
+                echo "::error::$f: expected at least one [[Glossary:...]] link"; miss=1;
+              fi
+            done;
+            exit $miss
+          '
+
+      # Basic structure guard for the experiment template (all required headings present).
+      - id: docs-experiment-template-structure
+        name: docs: experiment template structural check
+        language: system
+        files: "^docs/templates/experiment\\.md$"
+        entry: >
+          bash -c '
+            req=("## Metadata" "## Problem Statement" "## Background / Motivation" "## Hypothesis" "## Methodology / Procedure" "## Parameters and Variables" "## Data Collection & References" "## Results / Observations" "## Analysis / Discussion" "## Conclusion" "## Future Work / Next Steps" "## References" "## Reproducibility Notes");
+            miss=0; for h in "${req[@]}"; do grep -qF "$h" "$@"; rc=$?; if [ $rc -ne 0 ]; then echo "::error::Missing heading: $h"; miss=1; fi; done; exit $miss
+          '
