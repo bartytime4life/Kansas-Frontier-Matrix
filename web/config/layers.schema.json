@@ -20,6 +20,7 @@
         "maxzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
         "visible": { "type": "boolean" },
         "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tileSize": { "type": ["integer", "null"], "enum": [256, 512, null] },
         "bounds": {
           "type": "array",
           "minItems": 4,
@@ -31,7 +32,7 @@
     },
 
     "time": {
-      "description": "Global timeline domain for the simple layers config (optional).",
+      "description": "Global timeline domain for this simple layers config (optional).",
       "type": "object",
       "additionalProperties": false,
       "required": ["min", "max"],
@@ -41,7 +42,8 @@
         "defaultYear": { "type": ["integer", "null"] },
         "step":        { "type": ["integer", "null"], "minimum": 1 },
         "fps":         { "type": ["integer", "null"], "minimum": 1, "maximum": 60 },
-        "loop":        { "type": ["boolean", "null"] }
+        "loop":        { "type": ["boolean", "null"] },
+        "autoplay":    { "type": ["boolean", "null"] }
       }
     },
 
@@ -62,6 +64,28 @@
       }
     },
 
+    "legendItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": ["string", "null"] },
+        "color": { "type": ["string", "null"] },
+        "lineColor": { "type": ["string", "null"] },
+        "lineWidth": { "type": ["number", "null"] },
+        "pointColor": { "type": ["string", "null"] },
+        "pointRadius": { "type": ["number", "null"] },
+        "gradient": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "legend": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/legendItem" }
+    },
+
     "commonLayerProps": {
       "type": "object",
       "additionalProperties": false,
@@ -69,13 +93,26 @@
         "id":         { "type": "string" },
         "title":      { "type": "string" },
         "group":      { "type": ["string", "null"] },
-        "url":        { "type": "string" },
+        "category": {
+          "type": ["string", "null"],
+          "enum": ["reference","terrain","historical","infrastructure","documents","environment","culture",null]
+        },
+
+        /* Data endpoints (one of these will be required per-type) */
+        "url":   { "type": ["string", "null"] },
+        "tiles": {
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "data":  { "type": ["string", "null"] },
+
         "opacity":    { "type": "number", "minimum": 0, "maximum": 1 },
         "minzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
         "maxzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
         "tileSize":   { "type": ["integer", "null"], "enum": [256, 512, null] },
         "crossOrigin":{ "type": ["string", "null"] },
         "visible":    { "type": "boolean" },
+
         "bounds": {
           "type": "array",
           "minItems": 4,
@@ -84,52 +121,67 @@
         },
         "time":        { "$ref": "#/$defs/timeRange" },
         "attribution": { "type": ["string", "null"] },
-        "category": {
-          "type": ["string", "null"],
-          "enum": [
-            "reference",
-            "terrain",
-            "historical",
-            "infrastructure",
-            "documents",
-            "environment",
-            "culture",
-            null
-          ]
-        },
 
+        /* Presentation: flat MapLibre paint or compound geometry blocks */
         "paint": { "$ref": "#/$defs/paint" },
         "style": { "$ref": "#/$defs/style" },
 
-        "popup": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "timeProperty":     { "type": ["string", "null"] },
-        "endTimeProperty":  { "type": ["string", "null"] },
+        /* Vector tiling keys (optional in simple config) */
+        "source":       { "type": ["string", "null"] },
+        "source-layer": { "type": ["string", "null"] },
+        "sourceLayer":  { "type": ["string", "null"] },
 
-        "legendSymbol": { "type": ["string", "null"] }
+        /* UI helpers */
+        "popup": { "type": "array", "items": { "type": "string" } },
+
+        /* Per-feature time (GeoJSON/vector) */
+        "timeProperty":       { "type": ["string", "null"] },
+        "timeStartProperty":  { "type": ["string", "null"] },
+        "timeEndProperty":    { "type": ["string", "null"] },
+
+        /* Legend entries (optional) */
+        "legend": { "$ref": "#/$defs/legend" }
       },
-      "required": ["id", "title", "url"]
+      "required": ["id", "title", "visible"]
+    },
+
+    "paintFlat": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "line-color": { "type": "string" },
+        "line-width": { "type": "number" },
+        "line-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+
+        "fill-color": { "type": "string" },
+        "fill-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fill-outline-color": { "type": "string" },
+
+        "circle-color": { "type": "string" },
+        "circle-radius": { "type": "number" },
+        "circle-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+
+        "raster-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "hillshade-exaggeration": { "type": "number", "minimum": 0 }
+      }
+    },
+
+    "paintCompound": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "line":  { "$ref": "#/$defs/paintFlat" },
+        "fill":  { "$ref": "#/$defs/paintFlat" },
+        "circle":{ "$ref": "#/$defs/paintFlat" }
+      }
     },
 
     "paint": {
-      "type": "object",
-      "description": "Loose MapLibre paint keys for simple styling.",
-      "additionalProperties": false,
-      "properties": {
-        "line-color":         { "type": "string" },
-        "line-width":         { "type": "number" },
-        "line-opacity":       { "type": "number", "minimum": 0, "maximum": 1 },
-
-        "fill-color":         { "type": "string" },
-        "fill-opacity":       { "type": "number", "minimum": 0, "maximum": 1 },
-        "fill-outline-color": { "type": "string" },
-
-        "circle-color":       { "type": "string" },
-        "circle-radius":      { "type": "number" },
-        "circle-opacity":     { "type": "number", "minimum": 0, "maximum": 1 }
-      }
+      "description": "Either flat MapLibre paint keys or compound per-geometry blocks.",
+      "oneOf": [
+        { "$ref": "#/$defs/paintFlat" },
+        { "$ref": "#/$defs/paintCompound" }
+      ]
     },
 
     "style": {
@@ -137,22 +189,19 @@
       "description": "App-level vector styling (camelCase).",
       "additionalProperties": false,
       "properties": {
-        "lineColor":       { "type": "string" },
-        "lineWidth":       { "type": "number" },
-        "lineOpacity":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "lineColor": { "type": "string" },
+        "lineWidth": { "type": "number" },
+        "lineOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
 
-        "fillColor":       { "type": "string" },
-        "fillOpacity":     { "type": "number", "minimum": 0, "maximum": 1 },
-        "fillOutlineColor":{ "type": "string" },
+        "fillColor": { "type": "string" },
+        "fillOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fillOutlineColor": { "type": "string" },
 
-        "circleColor":     { "type": "string" },
-        "circleRadius":    { "type": "number" },
-        "circleOpacity":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "circleColor": { "type": "string" },
+        "circleRadius": { "type": "number" },
+        "circleOpacity": { "type": "number", "minimum": 0, "maximum": 1 },
 
-        "lineDasharray": {
-          "type": "array",
-          "items": { "type": "number" }
-        }
+        "lineDasharray": { "type": "array", "items": { "type": "number" } }
       }
     },
 
@@ -162,10 +211,15 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "properties": {
-            "type": { "const": "raster" }
-          },
+          "properties": { "type": { "const": "raster" } },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["tiles"] },
+            { "required": ["url"] }
+          ]
         }
       ]
     },
@@ -182,6 +236,13 @@
             "terrainExaggeration": { "type": ["number", "null"] }
           },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["tiles"] },
+            { "required": ["url"] }
+          ]
         }
       ]
     },
@@ -194,6 +255,13 @@
           "additionalProperties": false,
           "properties": { "type": { "const": "geojson" } },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["url"] },
+            { "required": ["data"] }
+          ]
         }
       ]
     },
@@ -204,8 +272,19 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "properties": { "type": { "const": "vector" } },
+          "properties": {
+            "type": { "const": "vector" },
+            "source-layer": { "type": ["string", "null"] },
+            "sourceLayer":  { "type": ["string", "null"] }
+          },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["url"] },
+            { "required": ["tiles"] }
+          ]
         }
       ]
     },
@@ -231,7 +310,10 @@
               }
             }
           },
-          "required": ["type", "coordinates"]
+          "required": ["type"],
+          "oneOf": [
+            { "required": ["url", "coordinates"] }
+          ]
         }
       ]
     },
