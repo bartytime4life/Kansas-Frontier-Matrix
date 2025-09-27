@@ -1,0 +1,140 @@
+name: "Security — Trivy"
+
+on:
+  push:
+    branches: [ "main", "release/*" ]
+  pull_request:
+    branches: [ "main", "release/*" ]
+  schedule:
+    - cron: "0 6 * * 1"  # Mondays at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write   # needed to upload SARIF to code scanning
+  actions: read
+  pull-requests: read
+
+jobs:
+  trivy:
+    name: Trivy Security Scans
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Trivy DB
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/trivy
+          key: trivy-db-${{ runner.os }}-${{ hashFiles('**/lockfiles/**', '**/requirements*.txt', '**/poetry.lock', '**/package-lock.json', '**/yarn.lock') }}
+          restore-keys: |
+            trivy-db-${{ runner.os }}-
+
+      # -----------------------------
+      # Filesystem scan (code, deps, secrets, misconfig)
+      # -----------------------------
+      - name: Trivy FS (vuln+secrets+misconfig)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs.sarif'
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          exit-code: '1'         # fail on findings
+          vuln-type: 'os,library'
+          scanners: 'vuln,secret,misconfig'
+
+      # -----------------------------
+      # Dockerfile / IaC config scan
+      # -----------------------------
+      - name: Trivy Config (Dockerfile & IaC)
+        if: ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-config.sarif'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+
+      # -----------------------------
+      # Build local image (if Dockerfile present)
+      # -----------------------------
+      - name: Build image (local)
+        if: ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: local/kfm:${{ github.sha }}
+
+      # -----------------------------
+      # Container image scan
+      # -----------------------------
+      - name: Trivy Image (local/kfm:${{ github.sha }})
+        if: ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: 'local/kfm:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-image.sarif'
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          exit-code: '1'
+          vuln-type: 'os,library'
+          scanners: 'vuln'
+
+      # -----------------------------
+      # SBOM generation (CycloneDX + SPDX)
+      # -----------------------------
+      - name: SBOM (CycloneDX)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'cyclonedx'
+          output: 'sbom.cdx.json'
+          exit-code: '0'
+
+      - name: SBOM (SPDX JSON)
+        run: |
+          trivy sbom --format spdx-json --output sbom.spdx.json .
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-trivy-${{ github.sha }}
+          path: |
+            sbom.cdx.json
+            sbom.spdx.json
+          retention-days: 14
+
+      # -----------------------------
+      # Upload SARIF to code scanning
+      # -----------------------------
+      - name: Upload SARIF (FS)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-fs.sarif
+
+      - name: Upload SARIF (Config)
+        if: always() && ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-config.sarif
+
+      - name: Upload SARIF (Image)
+        if: always() && ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-image.sarif
