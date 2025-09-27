@@ -72,11 +72,9 @@ Re-run after adding/removing/changing any STAC items.
   "center": [-98.3, 38.5],
   "zoom": 6,
   "bounds": [-102.051, 36.993, -94.588, 40.003],
-
   "time": { "min": "1850-01-01", "max": "2025-12-31" },
   "defaultYear": 1930,
   "timeUI": { "step": 1, "loop": false, "fps": 12 },
-
   "defaults": {
     "minzoom": 0,
     "maxzoom": 15,
@@ -85,8 +83,7 @@ Re-run after adding/removing/changing any STAC items.
     "bounds": [-102.051, 36.993, -94.588, 40.003],
     "time": { "start": null, "end": null }
   },
-
-  "layers": [ /* see layer schema below */ ]
+  "layers": []
 }
 ```
 
@@ -96,18 +93,17 @@ Re-run after adding/removing/changing any STAC items.
 {
   "id": "unique_id",
   "title": "Display Title",
-  "type": "raster | raster-dem | vector | geojson | image",
+  "type": "raster",
   "url": "https://tiles/{z}/{x}/{y}.png",
   "data": "data/processed/small.geojson",
   "visible": false,
   "opacity": 0.8,
   "minzoom": 0,
   "maxzoom": 19,
-  "category": "reference | terrain | historical | documents | infrastructure | environment | culture | hazards",
+  "category": "reference",
   "legendKey": "symbol_id_in_legend",
   "attribution": "Source / license",
-  "time": { "start": "YYYY-MM-DD|null", "end": "YYYY-MM-DD|null" },
-
+  "time": { "start": null, "end": null },
   "style": {
     "fillColor": "#A0C4FF",
     "fillOpacity": 0.6,
@@ -121,19 +117,17 @@ Re-run after adding/removing/changing any STAC items.
     "circleStrokeColor": "#FFFFFF",
     "circleStrokeWidth": 1
   },
-
   "popup": ["name", "type", "year", "year_end"],
   "timeProperty": "year",
   "endTimeProperty": "year_end",
-
-  "coordinates": [[lonW,latN],[lonE,latN],[lonE,latS],[lonW,latS]]  // for image overlays
+  "coordinates": [[-102.0,40.0],[-94.6,40.0],[-94.6,37.0],[-102.0,37.0]]
 }
 ```
 
 **Type specifics**
 
 * `raster` → **tile servers only** (e.g., `/tiles/…/{z}/{x}/{y}.png`). *Do not point at raw `.tif`.*
-* `raster-dem` → terrain sources (use tiles or platform DEM style; same rule: not raw `.tif`).
+* `raster-dem` → terrain sources (tile-based as above).
 * `vector` → vector tiles (TileJSON).
 * `geojson` → inline/URL GeoJSON (tile or simplify when large).
 * `image` → single image overlay; must include `coordinates`.
@@ -150,15 +144,15 @@ Re-run after adding/removing/changing any STAC items.
   "defaultYear": 1930,
   "timeUI": { "step": 1, "loop": false, "fps": 12 },
   "presets": [
-    { "label": "Bleeding Kansas",   "start": "1854-01-01", "end": "1861-12-31" },
-    { "label": "Railroad Era",      "start": "1865-01-01", "end": "1900-12-31" },
-    { "label": "Dust Bowl",         "start": "1930-01-01", "end": "1940-12-31" },
-    { "label": "Modern Kansas",     "start": "1990-01-01", "end": "2025-12-31" }
+    { "label": "Bleeding Kansas", "start": "1854-01-01", "end": "1861-12-31" },
+    { "label": "Railroad Era",    "start": "1865-01-01", "end": "1900-12-31" },
+    { "label": "Dust Bowl",       "start": "1930-01-01", "end": "1940-12-31" },
+    { "label": "Modern Kansas",   "start": "1990-01-01", "end": "2025-12-31" }
   ]
 }
 ```
 
-> Filtering uses **layer `time`** (uniform spans) or **feature `timeProperty`** / `endTimeProperty` (heterogeneous features).
+> Filtering uses **layer `time`** (uniform spans) or **feature `timeProperty` / `endTimeProperty`** (heterogeneous features).
 
 ---
 
@@ -174,34 +168,10 @@ Re-run after adding/removing/changing any STAC items.
   "version": "1.2.0",
   "generated": "2025-09-27T00:00:00Z",
   "symbols": {
-    "basemap":       { "raster": true, "preview": "#BFC7CF" },
-    "counties":      { "lineColor": "#555555", "lineWidth": 1, "fillOpacity": 0.0 },
-    "dem":           { "rasterDem": true, "preview": "#9E9E9E" },
-    "hillshade":     { "raster": true, "preview": "#7F7F7F" },
-    "historic_topo": { "raster": true, "preview": "#C6B79E", "opacity": 0.85 },
-    "treaties":      { "fillColor": "rgba(200, 60, 60, 0.35)", "lineColor": "#AA3333", "lineWidth": 1 },
-    "trails":        { "lineColor": "#4361EE", "lineWidth": 1.25, "lineDasharray": [2, 2] },
-    "railroads":     { "lineColor": "#6B4E16", "lineWidth": 1.5 },
-    "hydrology":     { "lineColor": "#3A86FF", "fillColor": "#A0C4FF", "fillOpacity": 0.6 },
-    "towns":         { "circleColor": "#FF595E", "circleRadius": 4, "circleStrokeColor": "#FFFFFF", "circleStrokeWidth": 1 },
-    "landcover":     { "fillOpacity": 0.6 },
-    "tornado":       { "lineColor": "#D00000", "lineWidth": 1.4 },
-    "wildfire":      { "fillColor": "#E76F51", "fillOpacity": 0.35, "lineColor": "#B3543F", "lineWidth": 1 }
+    "basemap": { "raster": true, "preview": "#BFC7CF" }
   },
   "layerBindings": {
-    "basemap_osm": "basemap",
-    "kansas_counties": "counties",
-    "ks_dem_2018_2020": "dem",
-    "ks_hillshade_2018": "hillshade",
-    "usgs_topo_1894_larned": "historic_topo",
-    "ks_treaties": "treaties",
-    "ks_trails": "trails",
-    "ks_railroads": "railroads",
-    "ks_hydro": "hydrology",
-    "ks_settlements": "towns",
-    "ks_landcover": "landcover",
-    "tornado_tracks_ks": "tornado",
-    "ks_wildfire": "wildfire"
+    "basemap_osm": "basemap"
   }
 }
 ```
@@ -213,17 +183,12 @@ Re-run after adding/removing/changing any STAC items.
   "version": "1.1.0",
   "generated": "2025-09-27T00:00:00Z",
   "categories": {
-    "reference":      { "label": "Reference",               "order": 0 },
-    "terrain":        { "label": "Terrain & Elevation",     "order": 1 },
-    "environment":    { "label": "Land & Water",            "order": 2 },
-    "historical":     { "label": "Historical Maps",         "order": 3 },
-    "documents":      { "label": "Documents & Treaties",    "order": 4 },
-    "infrastructure": { "label": "Trails & Railroads",      "order": 5 },
-    "culture":        { "label": "Settlements & Sites",     "order": 6 },
-    "hazards":        { "label": "Hazards",                 "order": 7 }
+    "reference": { "label": "Reference", "order": 0 }
   }
 }
 ```
+
+> See the repo’s actual `legend.json` / `categories.json` for the full set (terrain, historical, environment, culture, documents, infrastructure, hazards).
 
 ---
 
@@ -358,6 +323,3 @@ flowchart TD
 
 **TL;DR**
 Generate **`app.config.json`** from STAC → tweak UX with **`time_config.json`**, **`legend.json`**, **`categories.json`**, and **`story_layers.json`** → validate → ship.
-
-```
-```
