@@ -1,118 +1,150 @@
 # Experiment Template — Kansas Frontier Matrix (MCP Standard)
 
 This template ensures **scientific rigor, transparency, and reproducibility** across all experiments  
-(historical, cartographic, geological, environmental, or computational).  
-Fill out each section as completely as possible. Keep raw data separate and reference paths/IDs.  
+(historical, cartographic, geological, environmental, or computational).
+
+- Use glossary links like `[[Glossary:Hypothesis]]` to keep terminology consistent. See: [Glossary](../glossary.md)  
+- Keep **raw data** separate and reference paths/IDs. Capture **provenance** and **checksums**.
 
 ---
 
 ## Metadata
 
-- **Experiment Title/ID**:  
-- **Date(s)**:  
-- **Researcher(s)**:  
-- **Version / Run ID**:  
-- **Related Repo Branch/Commit**:  
+- **Experiment Title/ID**:
+- **Date(s)**:
+- **Researcher(s)**:
+- **Version / Run ID**:
+- **Related Repo Branch/Commit**:
+- **Links**: PR/Issue, Notebook(s), Dashboard(s)
 
 ---
 
 ## Problem Statement
 
 > What question or knowledge gap is this experiment addressing?  
-> Clearly state the objective (historical, environmental, geospatial, or computational).:contentReference[oaicite:2]{index=2}
+> Clearly state the objective (historical, environmental, geospatial, or computational).
 
 ---
 
 ## Background / Motivation
 
 > Context or theory behind the problem.  
-> Why is this important? Include references to prior research, archival sources, or datasets.:contentReference[oaicite:3]{index=3}
+> Why is this important? Include references to prior research, archival sources, or datasets.
 
 ---
 
 ## Hypothesis
 
-> A testable prediction or explanation.  
-> Format: *If X is changed, then Y will result.*:contentReference[oaicite:4]{index=4}
+> A testable prediction [[Glossary:Hypothesis]] framed as:  
+> *If X (Independent Variable [[Glossary:Independent Variable]]) is changed, then Y (Dependent Variable [[Glossary:Dependent Variable]]) will result.*
 
 ---
 
 ## Methodology / Procedure
 
-- **Design & Approach**: Step-by-step description of how the experiment will be conducted.  
-- **Tools & Equipment**: GIS, Python ETL, R spatial analysis, lab methods, etc.  
-- **Cross-disciplinary Roles** (if applicable):  
-  - Historian: archival/document analysis:contentReference[oaicite:5]{index=5}  
-  - Cartographer: georeferencing, mapping, GIS integration:contentReference[oaicite:6]{index=6}  
-  - Geologist: stratigraphy, dating, environmental context:contentReference[oaicite:7]{index=7}  
+- **Design & Approach**: Step-by-step description of how the experiment will be conducted.
+- **Tools & Equipment**: GIS [[Glossary:Cartography]], Python ETL, R spatial analysis, lab methods, etc.
+- **Cross-disciplinary Roles** (if applicable):
+  - Historian: archival/document analysis [[Glossary:Primary Source]]
+  - Cartographer: georeferencing [[Glossary:Georeferencing]], GIS integration [[Glossary:STAC]], layer styling
+  - Geologist: stratigraphy [[Glossary:Stratigraphy]], dating, paleo/environmental context [[Glossary:Paleoclimate Proxy]]
 
 ---
 
 ## Parameters and Variables
 
-- **Independent Variables (IV)**: factors you manipulate  
-- **Dependent Variables (DV)**: factors you measure  
-- **Control Variables**: factors held constant (with justification)  
-- **Configurations**: parameter values, ranges, or algorithm settings:contentReference[oaicite:8]{index=8}
+- **Independent Variables (IV)**: [[Glossary:Independent Variable]]
+- **Dependent Variables (DV)**: [[Glossary:Dependent Variable]]
+- **Control Variables**: [[Glossary:Control Variable]]
+- **Configurations**: parameter values, ranges, algorithm/model settings
+- **Assumptions / Constraints**: list any domain or data limits
 
 ---
 
 ## Data Collection & References
 
-- **Sources**: raw datasets (archival docs, USGS maps, NOAA climate, KGS boreholes, etc.)  
-- **Access Paths**: (e.g., `data/raw/ks_topo/1894_map.tif`, STAC item ID)  
-- **Processing Scripts**: (e.g., `scripts/fetch.py`, `notebooks/analysis.ipynb`)  
-- **External References**: citations to published literature or archival records:contentReference[oaicite:9]{index=9}:contentReference[oaicite:10]{index=10}
+- **Sources**: raw datasets (e.g., archival docs [[Glossary:Archival Document]], USGS maps [[Glossary:Raster Data]], NOAA climate, KGS boreholes [[Glossary:Core Sample]])
+- **Access Paths / IDs**: (`data/raw/...`, STAC item ID [[Glossary:STAC]], API endpoint, DOI)
+- **Processing Scripts / Notebooks**: (`scripts/fetch.py`, `scripts/etl/*.py`, `notebooks/*.ipynb`)
+- **Licenses & Terms**: cite usage constraints for each source
+- **External References**: literature, archives, or documentation
+
+### Data Lineage (fill this table)
+
+| Artifact | Source/ID | Transform(s) | Output Path | SHA-256 |
+|---|---|---|---|---|
+| Raw map (GeoTIFF) | STAC: usgs_topo_1894 | — | `data/raw/...tif` |  |
+| COG | gdal/rio-cogeo | reproject → tile → overviews | `data/cogs/...tif` |  |
+| Vector overlay | ogr2ogr | reproject → simplify | `data/processed/...json` |  |
 
 ---
 
 ## Results / Observations
 
-> Objective report of outcomes.  
-> - Tables, charts, or maps (attach as artifacts).  
-> - Summaries of logs, outputs, or visualizations.  
-> - Notable intermediate results or anomalies.  
+> Objective reporting (no interpretation here).
+- Tables, charts, maps (attach artifacts or link to images).
+- Summaries of logs/outputs.
+- Notable intermediate results or anomalies.
 
 ---
 
 ## Analysis / Discussion
 
-- Interpret results relative to the hypothesis.  
-- Did outcomes support or contradict expectations?  
-- Identify trends, correlations, or sources of error/uncertainty.  
-- Cross-validate historical, cartographic, and geological perspectives.:contentReference[oaicite:11]{index=11}
+- Interpret results relative to the [[Glossary:Hypothesis]].
+- Did outcomes support or contradict expectations?
+- Identify trends, correlations, or sources of [[Glossary:Uncertainty]].
+- Cross-validate historical, cartographic, and geological perspectives.
+- Limitations & potential biases.
 
 ---
 
 ## Conclusion
 
-- Summarize findings clearly.  
-- State whether the hypothesis was supported.  
-- Connect back to the problem statement and research objectives.  
+- Succinct summary of findings.
+- State whether the [[Glossary:Hypothesis]] was supported.
+- Connect back to the Problem Statement and research objectives.
 
 ---
 
 ## Future Work / Next Steps
 
-> Suggest improvements, additional experiments, or unresolved questions.  
-> Example: integrate new paleoclimate cores, extend GIS overlays, run symbolic reasoning engine. :contentReference[oaicite:12]{index=12}
+> Improvements, follow-ups, open questions.  
+> Example: integrate new [[Glossary:Paleoclimate Proxy]] cores, extend GIS overlays, test symbolic reasoning, expand temporal coverage.
 
 ---
 
 ## References
 
-- Cite all external data, software, and literature used.  
-- Follow consistent citation style for archival and scientific materials.  
+- Cite all external data, software, and literature consistently.
+- Include version/DOI/URL and access date where applicable.
 
 ---
 
 ## Reproducibility Notes
 
-- **Environment Hash / Config File**: (e.g., `configs/exp_ks_treaty_boundary.yaml`)  
-- **Checksums**: SHA-256 for raw/processed data (`scripts/gen_sha256.sh`)  
-- **Logs**: Store under `logs/experiments/<ID>/` (JSONL + markdown run log).  
-- **STAC / Metadata Link**: (if published in repo catalog).  
+- **Environment Config**: (e.g., `configs/exp_ks_treaty_boundary.yaml`) with package pins & seeds
+- **Runtime**: OS, CPU/GPU, memory, container image/tag
+- **Checksums**: SHA-256 for raw/processed data (`scripts/gen_sha256.sh`) [[Glossary:Reproducibility]]
+- **Logs**: `logs/experiments/<ID>/` (JSONL + Markdown run log)
+- **STAC / Metadata**: link to catalog item(s) [[Glossary:STAC]]
+- **Randomness**: seeds, # of trials, confidence intervals
 
 ---
 
-✅ By following this template, each experiment becomes a **self-contained, reproducible research log**, consistent with MCP and Kansas-Frontier-Matrix standards:contentReference[oaicite:13]{index=13}:contentReference[oaicite:14]{index=14}.
+### Checklists
+
+**Pre-run**
+- [ ] Hypothesis and variables defined
+- [ ] Inputs located, licensed, checksummed
+- [ ] Config committed & tagged
+- [ ] Glossary terms referenced where relevant
+
+**Post-run**
+- [ ] Results artifacts saved (tables/charts/maps)
+- [ ] Data lineage table completed
+- [ ] Logs & hashes recorded
+- [ ] Conclusions & next steps documented
+
+---
+
+✅ By following this template, each experiment becomes a **self-contained, reproducible research log**, consistent with MCP and Kansas-Frontier-Matrix standards.
