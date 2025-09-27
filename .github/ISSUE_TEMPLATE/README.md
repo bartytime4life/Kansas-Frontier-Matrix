@@ -1,23 +1,22 @@
 # Issue Templates — Kansas-Frontier-Matrix
 
 This folder contains **guided templates** for filing issues with strong
-**reproducibility** and **data provenance** signals (MCP style).
-
+**reproducibility** and **data provenance** signals (MCP style).  
 Templates ship with sensible defaults and auto-labels to speed up triage.
 
 ---
 
-## Available templates
+## 📦 Available templates
 
-- **`bug_report.md`** — Something broke in the site, data pipeline, AI reasoning, or docs.  
-  Auto-labels: `bug`  
+- **[`bug_report.md`](./bug_report.md)** — Something broke in the site, data pipeline, AI reasoning, or docs.  
+  Auto-labels: `bug`, `triage`  
   Includes: env block, logs, STAC/DVC/LFS pointers, geospatial context.
 
-- **`data_addition.md`** — Propose a new dataset (map/layer/catalog/docs).  
-  Auto-labels: `data`, `enhancement`  
+- **[`data_addition.md`](./data_addition.md)** — Propose a new dataset (map/layer/catalog/docs).  
+  Auto-labels: `data`, `enhancement`, `stac`, `web`  
   Includes: license/provenance, CRS/extent/time, STAC/Source stub, storage plan (DVC/LFS).
 
-- **`experiment_report.md`** — Plan and log a deterministic experiment (MCP).  
+- **[`experiment_report.md`](./experiment_report.md)** — Plan and log a deterministic experiment (MCP).  
   Auto-labels: `MCP`, `reproducibility`  
   Includes: hypothesis, SOP/commands, env freeze, artifacts, success criteria.
 
@@ -25,82 +24,72 @@ Templates ship with sensible defaults and auto-labels to speed up triage.
 
 ---
 
-## Label taxonomy (quick reference)
+## 🏷️ Label taxonomy (quick reference)
 
-Roadmap-managed labels live in [`.github/roadmap/roadmap.yaml`](../roadmap/roadmap.yaml).  
+Roadmap-managed labels live in **[`.github/roadmap/roadmap.yaml`](../roadmap/roadmap.yaml)**.  
 Common areas:
 
 `data`, `hydrology`, `paleoclimate`, `ai`, `uncertainty`, `ontology`, `fractals`,  
 `storytelling`, `crowdsourcing`, `3d`, `api`, `architecture`, `reproducibility`, `MCP`, `education`
 
-GitHub defaults like `bug`, `enhancement` are used by templates; if your repo
-doesn’t have them, add via the roadmap file or create once in the UI.
+GitHub defaults like `bug`, `enhancement` are used by templates.  
+If your repo does not have a label referenced by a template, add it in the roadmap file or once in the UI.
 
 ---
 
-## Triage workflow
+## 🔎 Triage workflow
 
-1. **Intake**  
-   New issues get auto-labels from the template.
-
-2. **Classify**  
-   Add **area** labels (e.g., `data`, `ai`, `architecture`) and **priority** if used
-   (e.g., `priority:p1` via the roadmap).
-
-3. **Assign**  
-   Use [CODEOWNERS](../CODEOWNERS) to find a default owner, or @-mention specialists.
-
-4. **Link**  
-   - If the work maps to a milestone, set it (see the Roadmap sync).  
-   - Reference related PRs and issues: `Fixes #123`, `Relates #456`.
-
-5. **Verify**  
-   For bugs: confirm **Steps to Reproduce**, attach logs, and check site/CI links.  
-   For data additions: check **license/provenance**, **CRS/extent/time**, and STAC draft.
-
-6. **Close**  
-   Close only after reproduction & validation (**make** commands or CI run) are green.
+1. **Intake** — new issues get auto-labels from the template.  
+2. **Classify** — add **area** labels (e.g., `data`, `ai`, `architecture`) and **priority** (e.g., `priority:p1`).  
+3. **Assign** — use [`CODEOWNERS`](../CODEOWNERS) or @-mention specialists.  
+4. **Link** — set a milestone (Roadmap-managed) and reference PRs/issues (`Fixes #123`, `Relates #456`).  
+5. **Verify** —  
+   - Bugs: confirm **Steps to Reproduce**, attach logs, link site/CI runs.  
+   - Data: verify **license/provenance**, **CRS/extent/time**, and a STAC draft.  
+6. **Close** — only after reproduction & validation (**Make targets** or **CI**) are green.
 
 ---
 
-## Reproducibility expectations (all issues)
+## ♻️ Reproducibility expectations (all issues)
 
 Please include whenever applicable:
 
 - **Commands** you ran (prefer `make` targets), and a short **env** block:
-  ```bash
-  python -V
-  gdalinfo --version || true
-  node -v || true; npm -v || true
+
+```bash
+python -V
+gdalinfo --version || true
+node -v || true; npm -v || true
 ````
 
-* **Data provenance**: link **STAC items/collections** or **data/sources** descriptors.
+* **Data provenance:** link **STAC items/collections** or **data/sources** descriptors.
 * **Checks** (best-effort):
 
-  ```bash
-  # STAC sanity
-  kgt validate-stac stac/items --no-strict || true
+```bash
+# STAC sanity
+kgt validate-stac stac/items --no-strict || true
 
-  # JSON quick check
-  jq -e 'type=="object"' path/to/*.json
-  ```
+# JSON quick check
+jq -e 'type=="object"' path/to/*.json
+```
 
 ---
 
-## Adding a new template
+## ➕ Adding a new template
 
 1. Create a file in this folder, e.g. `feature_request.md`.
 2. Start with **YAML front-matter** (GitHub requires it):
 
-   ```markdown
-   ---
-   name: "✨ Feature request"
-   about: "Propose a new capability for the KFM stack"
-   title: "[FEAT] <concise title>"
-   labels: ["enhancement"]
-   assignees: []
-   ---
-   ```
+```markdown
+---
+name: "✨ Feature request"
+about: "Propose a new capability for the KFM stack"
+title: "[FEAT] <concise title>"
+labels: ["enhancement"]
+assignees: []
+---
+```
+
 3. Keep prompts **actionable** and include:
 
    * Motivation / user story
@@ -113,27 +102,26 @@ Please include whenever applicable:
 
 ---
 
-## Tips for great issues
+## 🤖 Automation cues
 
-* **Concise title** + outcome-oriented summary.
-* For bugs: **minimal, reliable, reproducible** steps.
-* For data: **license first**, then CRS/extent/time; attach a **STAC or source stub**.
-* For experiments: define **success criteria up front**.
+* **Roadmap sync** (`roadmap.yml`) may add/normalize labels & milestones.
+* **CI runs**:
 
----
-
-## Automation cues
-
-* Roadmap sync (`roadmap.yml`) may add or normalize labels/milestones.
-* CI runs:
-
-  * `stac-validate.yml` for catalog integrity
-  * `tests.yml` for pytest suite (including web config schemas)
-  * `site.yml` for Pages deploy after checks pass
+  * `site.yml` — build & deploy Pages
+  * `stac-badges.yml` — catalog integrity/badges
+  * `codeql.yml` — CodeQL security scans
+  * *(optional)* `tests.yml` — pytest/docs when enabled
 
 Keep issues aligned with these jobs for faster reviews.
 
 ---
+
+## ✅ Tips for great issues
+
+* **Concise title** + outcome-oriented summary.
+* Bugs: **minimal, reliable, reproducible** steps.
+* Data: **license first**, then CRS/extent/time; attach a **STAC or source stub**.
+* Experiments: define **success criteria** up front.
 
 ```
 ```
