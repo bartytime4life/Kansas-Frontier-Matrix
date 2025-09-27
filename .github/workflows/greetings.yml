@@ -1,0 +1,34 @@
+name: "Community — Greetings"
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send greeting
+        uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # First-time issue message
+          issue-message: |
+            👋 Welcome to **Kansas-Frontier-Matrix**!  
+            Thanks for opening your first issue. Please check out our contributing guide and roadmap.  
+            We’ll review this soon — in the meantime, feel free to tag it with `help wanted` or `discussion`.
+
+          # First-time PR message
+          pr-message: |
+            🎉 Thanks for your first pull request to **Kansas-Frontier-Matrix**!  
+            Our CI will run checks (STAC validation, docs, security, etc.).  
+            A maintainer will review and provide feedback shortly. 🚀
