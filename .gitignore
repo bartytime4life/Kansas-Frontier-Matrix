@@ -1,144 +1,100 @@
 # ================================
-# Kansas-Frontier-Matrix / MCP Repo
-# .gitignore (upgraded)
+# Kansas-Frontier-Matrix — .gitignore
 # ================================
 
-# --- OS / Editor junk ---
+# --- OS / Editors ---
 .DS_Store
-._*
 Thumbs.db
-Desktop.ini
+Icon?
+ehthumbs.db
 *.swp
 *.swo
-*.bak
+*.swn
 *.tmp
-~$*
+*.bak
 *.orig
-.vscode/
 .idea/
-*.iml
+.vscode/
+*.code-workspace
+*.sublime-*
 
-# --- Python artifacts / envs / logs ---
+# --- Python ---
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
-*.egg-info/
-.eggs/
+.ipynb_checkpoints/
+.pytype/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.tox/
+.nox/
+.coverage*
+htmlcov/
+.cache/
 .venv/
 venv/
 env/
 pip-wheel-metadata/
-.python-version
-*.log
-logs/
 
-# Tooling caches
-.ruff_cache/
-.mypy_cache/
-.pytest_cache/
-.tox/
-.cache/
-__pypackages__/
-
-# Coverage
-.coverage
-.coverage.*
-*.coverage
-*.cover
-*.cov
-*.lcov
-*.prof
-*.out
-coverage/
-htmlcov/
-
-# --- Node/JS frontend (web/) & generic build dirs ---
+# --- Node / Web ---
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-dist/
-build/
-
-# Framework/preview caches
-web/.cache/
-web/.vite/
-web/.next/
 web/dist/
 web/build/
+web/.cache/
+.pnpm-store/
+.npm/
+*.log
+
+# Tiles & heavy web outputs (keep configs & small JSON)
 web/tiles/
 web/assets/tiles/
+web/**/*.pmtiles
+web/**/*.mbtiles
 
-# --- Docker / Compose ---
-docker/*.log
-docker/*.tmp
-docker-compose.override.yml
+# If app.config.json is generated only in CI, you may ignore it;
+# by default we KEEP it tracked for GitHub Pages:
+# web/app.config.json
 
-# --- Catalogs / sources (keep small text descriptors) ---
-# STAC at top-level `stac/` is tracked (no ignore for stac/**)
+# --- Docs / MkDocs / Site artifacts ---
+_site/
+_site_docs/
+site/
+docs/_build/
 
-# Keep config descriptors; ignore other payloads in that subtree
-data/sources/**
-!data/sources/**/*.json
-!data/sources/**/*.jsonc
-!data/sources/**/*.yaml
-!data/sources/**/*.yml
-!data/sources/**/*.toml
-!data/sources/**/.gitkeep
-!data/sources/**/.keep
-
-# --- Generated / transient data (ignore) ---
-data/raw/
-data/interim/
-data/cache/
-data/tmp/
-data/derivatives/
-data/outputs/
-data/cogs/
-data/processed/
-data/tiles/
-assets/tiles/
-
-# GDAL aux / overviews / sidecars
-*.aux.xml
-*.ovr
-*.tfw
-*.wld
-
-# Databases / locks / journal files
-*.sqlite
-*.db
-*.gpkg
-*.gpkg-journal
-*.gpkg-wal
-*.gpkg-shm
-*.lock
-
-# --- Rasters / vectors / containers (usually large/generated) ---
+# --- Data / GIS (keep small metadata like JSON/GeoJSON) ---
+# common heavy geospatial binaries
 *.tif
 *.tiff
 *.vrt
-*.img
-*.bil
-*.jp2
-*.nc
-*.h5
-*.mbtiles
-*.pmtiles
-*.parquet
-*.geoparquet
+*.ovr
+*.aux.xml
+*.ntf
+*.sid
 *.las
 *.laz
+*.bil
+*.img
 *.kmz
-*.kml
-*.qgz
-*.qgs
-*.gdb/
-*.gdb
+*.mbtiles
+*.pmtiles
+*.gpkg
+*.sqlite
+*.spx
+*.geoparquet
+*.parquet
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.qmd
+*.sbn
+*.sbx
+*.qpj
 
-# Archives / bundles
+# Archives & large bundles
 *.zip
 *.7z
 *.tar
@@ -148,66 +104,45 @@ assets/tiles/
 *.xz
 *.zst
 
-# Checksums & temp signatures
-*.sha256
+# --- STAC / Processed data caches (metadata JSON stays tracked) ---
+data/processed/**/*.aux.xml
+data/processed/**/*.ovr
+data/processed/**/*.tif
+data/processed/**/*.tiff
+data/processed/**/*.mbtiles
+data/processed/**/*.pmtiles
+data/raw/
+data/outputs/
+earth/cache/
+earth/exports/
 
-# --- Jupyter / notebooks ---
-.ipynb_checkpoints/
-.notebooks_cache/
-outputs/
-*.nbconvert.ipynb
-
-# --- Docs / static site builds ---
-site/
-docs/_build/
-docs/_autosummary/
-.mkdtemp/
-*.doctree
-*.pickle
-_site/
-_site_docs/
-.lychee_cache/
-
-# --- Secrets / local overrides ---
-.env
-.env.local
-.env.*.local
-.envrc
-!*.env.example
-config/local.yaml
-config/secrets.yaml
-
-# --- GitHub / automation (ignore caches only) ---
-.github/workflows/*.log
-.github/actions/cache/
-
-# --- Project specific ---
-web/*.local.js
-web/*.config.local.json
-mcp/experiments/*/outputs/
-mcp/experiments/*/logs/
-mcp/experiments/*/figures/
-
-# --- DVC (track metadata, ignore cache/tmp) ---
-# DO NOT ignore *.dvc files; they must be tracked
+# --- DVC (keep config and dvc files, ignore cache/tmp) ---
 .dvc/cache/
 .dvc/tmp/
+*.dvc.lock
 
-# --- CI artifacts / reports ---
-build/stac_report.json
-pytest-report.xml
-CHECKSUMS.txt
+# --- Docker / Compose / Devcontainers ---
+*.pid
+docker/*.pid
+docker/**/tmp/
+.devcontainer/*/history.log
 
-# --- Optional: allow curated tiny sample datasets under version control ----
-# (Parent re-include first, then specific types; this overrides global ignores above)
-!data/samples/**
-!data/samples/**/*.json
-!data/samples/**/*.geojson
-!data/samples/**/*.csv
-!data/samples/**/*.tsv
-!data/samples/**/*.kml
-!data/samples/**/*.kmz
-!data/samples/**/*.tif
-!data/samples/**/*.tiff
-!data/samples/**/*.gpkg
-!data/samples/**/*.fgb
+# --- Secrets & env (store securely; never commit) ---
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.p12
+*.crt
+*.der
+*.asc
+*.gpg
+
+# --- CI / Tooling caches ---
+.pre-commit-*
+coverage.xml
+pytestdebug.log
+
+# --- PDFs & large binary docs (source lives elsewhere; commit selectively) ---
+*.pdf
