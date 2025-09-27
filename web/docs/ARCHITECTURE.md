@@ -35,36 +35,43 @@ web/
 └── docs/               # Documentation
     ├── ARCHITECTURE.md ← (this file)
     ├── STYLE_GUIDE.md
+    ├── DEVELOPER_GUIDE.md
     └── README.md
+````
 
-Path rule: All URLs/paths in configs are web-relative (e.g., ./tiles/..., ./vectors/...).
-Avoid ../ — it will 404 on GitHub Pages.
+**Path rule:** All URLs/paths in configs are web-relative (e.g., `./tiles/...`, `./vectors/...`).
+Avoid `../` — it will 404 on GitHub Pages.
 
-⸻
+---
 
-Component Architecture
+## Component Architecture
 
+```mermaid
 flowchart TD
-  A["Config:\napp.config.json"] --> B["Viewer Logic:\nindex.html/app.js"]
+  A["Config:\napp.config.json"] --> B["Viewer Logic:\nindex.html / app.js"]
   B --> C["MapLibre Map"]
-  B --> D["Sidebar UI (layer list,\nlegend, controls)"]
+  B --> D["Sidebar UI\n(layer list, legend, controls)"]
   B --> E["Timeline Control"]
   C --> F["Raster Layers\n(e.g., hillshade, slope)"]
-  C --> G["GeoJSON Layers\n(e.g., treaties, railroads,\nhydrology)"]
+  C --> G["GeoJSON Layers\n(e.g., treaties, railroads, hydrology)"]
   D -- "toggles, opacity" --> C
   E -- "year filter" --> C
+```
 
-Notes
-	•	Config-driven: Viewer loads configs in order: ./app.config.json → ./config/app.config.json → ./layers.json
-	•	MapLibre: Supports raster tiles, single images, and GeoJSON overlays.
-	•	Sidebar: Built dynamically from layers[] in config.
-	•	Timeline: Filters by time.start / time.end (year-based).
-	•	Legend: Auto-built from optional layer.legend.
+**Notes**
 
-⸻
+* Config-driven: Viewer loads configs in order:
+  `./app.config.json` → `./config/app.config.json` → `./layers.json`
+* MapLibre: Supports raster tiles, single images, and GeoJSON overlays.
+* Sidebar: Built dynamically from `layers[]` in config.
+* Timeline: Filters by `time.start` / `time.end` (year-based).
+* Legend: Auto-built from optional `layer.legend`.
 
-Config Schema
+---
 
+## Config Schema
+
+```mermaid
 classDiagram
   direction LR
 
@@ -73,9 +80,9 @@ classDiagram
     +string title
     +string subtitle
     +string style
-    +float[2] center  "[-98.3, 38.5]"
+    +float[2] center "[-98.3, 38.5]"
     +number zoom
-    +TimeBounds time  "{min,max}"
+    +TimeBounds time "{min,max}"
     +number defaultYear
     +Defaults defaults
     +string[] groups
@@ -83,8 +90,8 @@ classDiagram
   }
 
   class TimeBounds {
-    +string min   "YYYY-MM-DD"
-    +string max   "YYYY-MM-DD"
+    +string min "YYYY-MM-DD"
+    +string max "YYYY-MM-DD"
   }
 
   class Defaults {
@@ -93,21 +100,21 @@ classDiagram
     +number tileSize
     +boolean visible
     +number opacity
-    +float[4] bounds  "[W,S,E,N]"
-    +TimeWindow time  "{start,end}"
+    +float[4] bounds "[W,S,E,N]"
+    +TimeWindow time "{start,end}"
   }
 
   class Layer {
     +string id
     +string title
     +string group
-    +string type  "raster|geojson|image"
-    +string url   "for raster/image"
-    +string path  "for geojson"
+    +string type "raster|geojson|image"
+    +string url "for raster/image"
+    +string path "for geojson"
     +number opacity
     +boolean visible
     +TimeWindow time
-    +Paint paint     "geojson only"
+    +Paint paint "geojson only"
     +LegendItem[] legend
     +string attribution
     +number minzoom
@@ -116,8 +123,8 @@ classDiagram
   }
 
   class TimeWindow {
-    +string start  "YYYY-MM-DD|null"
-    +string end    "YYYY-MM-DD|null"
+    +string start "YYYY-MM-DD|null"
+    +string end "YYYY-MM-DD|null"
   }
 
   class Paint {
@@ -145,12 +152,12 @@ classDiagram
   }
 
   class LegendItem {
-    +string type   "line|fill|circle"
+    +string type "line|fill|circle"
     +string label
     +string color
-    +number width     "line only"
-    +string outline   "fill only"
-    +number radius    "circle only"
+    +number width "line only"
+    +string outline "fill only"
+    +number radius "circle only"
   }
 
   AppConfig --> TimeBounds : "time"
@@ -163,9 +170,13 @@ classDiagram
   Paint     --> LinePaint
   Paint     --> FillPaint
   Paint     --> CirclePaint
+```
 
-Config Load Order
+---
 
+## Config Load Order
+
+```mermaid
 flowchart TD
   A["Try:\n./app.config.json"] -->|if missing| B["Try:\n./config/app.config.json"]
   B -->|if missing| C["Try:\n./layers.json (legacy)"]
@@ -173,58 +184,68 @@ flowchart TD
   B -->|if found| D
   C -->|if found| D
   D --> E["Init MapLibre + UI\n(basemap, layers, legend, timeline)"]
+```
 
+---
 
-⸻
+## Data Flow
 
-Data Flow
-	1.	Load config → from app.config.json (or fallbacks).
-	2.	Normalize layers → ensure id, type, url/path, time, paint, legend.
-	3.	Init map → basemap + terrain (hillshade, optional slope, aspect).
-	4.	Build UI → grouped layer list, toggles, opacity sliders, legend.
-	5.	Bind timeline → year slider sets visibility by time.start/time.end.
-	6.	Interact → toggles/opacity/year update MapLibre layers in real time.
+1. **Load config** → from `app.config.json` (or fallbacks).
+2. **Normalize layers** → ensure `id`, `type`, `url/path`, `time`, `paint`, `legend`.
+3. **Init map** → basemap + terrain (hillshade, slope, aspect).
+4. **Build UI** → grouped layer list, toggles, opacity sliders, legend.
+5. **Bind timeline** → year slider sets visibility by `time.start` / `time.end`.
+6. **Interact** → toggles/opacity/year update MapLibre layers in real time.
 
-⸻
+---
 
-CSS Layering
-	•	app.css — single source of truth:
-	•	Tokens (--bg, --accent, --shadow, etc.)
-	•	Layout (sidebar width, safe areas, mobile drawer)
-	•	Components (buttons, sliders, layer list, legend)
-	•	Accessibility (focus-visible, reduced motion, forced-colors)
-	•	RTL safety & z-index for controls/popups
+## CSS Layering
 
-(Older layout.css / theme.css references are consolidated into app.css.)
+* **`app.css`** is the single source of truth:
 
-⸻
+  * Tokens (`--bg`, `--accent`, `--shadow`, etc.)
+  * Layout (sidebar width, safe areas, mobile drawer)
+  * Components (buttons, sliders, layer list, legend)
+  * Accessibility (`:focus-visible`, reduced motion, forced-colors)
+  * RTL safety & z-index for controls/popups
 
-Extensibility
+*(Older `layout.css` / `theme.css` references are consolidated into `app.css`.)*
 
-Add datasets
-	1.	Place assets in web/tiles/ (raster) or web/vectors/ / web/data/processed/ (GeoJSON).
-	2.	Add/update layers[] in app.config.json (use url for raster, path for GeoJSON).
-	3.	Include legend and attribution where helpful.
-	4.	Validate with jq (syntax) and optional CI tests.
+---
 
-Add UI panels
-	•	Extend the sidebar creation in index.html / app.js (e.g., search, bookmarks, inspector).
+## Extensibility
 
-Add themes
-	•	Add CSS overrides (e.g., archival sepia), or rely on prefers-color-scheme.
+**Add datasets**
 
-⸻
+1. Place assets in `web/tiles/` (raster) or `web/vectors/` / `web/data/processed/` (GeoJSON).
+2. Add/update `layers[]` in `app.config.json` (use `url` for raster, `path` for GeoJSON).
+3. Include legend and attribution where helpful.
+4. Validate with `jq` (syntax) and optional CI tests.
 
-Roadmap
-	•	Add demo_entities.geojson for styling tests
-	•	Extend time filtering to cover more raster cases with open-ended dates
-	•	Implement search for treaties, railroads, hydrology features
-	•	Improve mobile drawer gestures/resizing
-	•	Add alternate themes (archival sepia, night mode)
+**Add UI panels**
 
-⸻
+* Extend the sidebar creation in `index.html` / `app.js` (e.g., search, bookmarks, inspector).
 
-See also:
-	•	web/docs/STYLE_GUIDE.md — tokens, controls, JSON schema-lite, CI checks
-	•	web/docs/README.md — file catalog and contributor notes
+**Add themes**
 
+* Add CSS overrides (e.g., archival sepia), or rely on `prefers-color-scheme`.
+
+---
+
+## Roadmap
+
+* Add `demo_entities.geojson` for styling tests
+* Extend time filtering to cover raster cases with open-ended dates
+* Implement search for treaties, railroads, hydrology features
+* Improve mobile drawer gestures/resizing
+* Add alternate themes (archival sepia, night mode)
+
+---
+
+## See also
+
+* [`web/docs/STYLE_GUIDE.md`](STYLE_GUIDE.md) — tokens, controls, JSON schema-lite, CI checks
+* [`web/docs/DEVELOPER_GUIDE.md`](DEVELOPER_GUIDE.md) — config loading, adding layers, debugging
+* [`web/docs/README.md`](README.md) — file catalog and contributor notes
+
+```
