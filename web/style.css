@@ -2,7 +2,7 @@
    Kansas-Frontier-Matrix — web/style.css  (connected, upgraded, debugged)
    Purpose: Minimal, modern, responsive styles for the time-aware MapLibre UI.
    Notes:
-     - Harmonized with app.css guidance in /web/docs/STYLE_GUIDE.md.
+     - Harmonized with config contracts (legend chips, layer toggles, time UI).
      - Targets MapLibre container #map and year slider #year + #year-label.
      - Includes fallbacks where color-mix/backdrop-filter are unsupported.
      - Accessibility: focus rings, prefers-reduced-motion, forced-colors, RTL.
@@ -113,9 +113,7 @@ button { font: inherit; }
   backdrop-filter: saturate(140%) blur(6px);
 }
 @supports (background: color-mix(in oklab, white 10%, black)) {
-  .header {
-    background: color-mix(in oklab, var(--panel) 85%, transparent);
-  }
+  .header { background: color-mix(in oklab, var(--panel) 85%, transparent); }
 }
 
 .header__inner {
@@ -127,22 +125,13 @@ button { font: inherit; }
   align-items: center;
   gap: var(--gap-3);
 }
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-2);
-  font-weight: 700;
-  letter-spacing: 0.2px;
-}
+.brand { display: inline-flex; align-items: center; gap: var(--gap-2); font-weight: 700; letter-spacing: 0.2px; }
 .brand img { width: 28px; height: 28px; }
 .header__spacer { flex: 1; }
 .header__actions { display: inline-flex; gap: var(--gap-2); align-items: center; }
 
 /* Map container (MapLibre expects a fixed-height container) */
-.map-wrapper {
-  position: relative;
-  z-index: var(--z-map);
-}
+.map-wrapper { position: relative; z-index: var(--z-map); }
 #map {
   width: 100%;
   height: calc(100vh - var(--header-h));
@@ -199,12 +188,7 @@ button { font: inherit; }
   padding-top: var(--gap-2);
   border-top: 1px dashed var(--border);
 }
-.label {
-  font-size: 12px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+.label { font-size: 12px; letter-spacing: 0.3px; text-transform: uppercase; color: var(--muted); }
 
 /* ---- Year Slider --------------------------------------------------------- */
 .year-row {
@@ -238,21 +222,14 @@ button { font: inherit; }
 #year::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--accent-2);
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent-2);
   box-shadow: var(--focus-ring);
   cursor: pointer;
   margin-top: -6px; /* center on 6px track (Safari) */
 }
 /* Firefox track & thumb */
-#year::-moz-range-track {
-  height: 6px;
-  border-radius: 999px;
-  background: var(--border);
-}
+#year::-moz-range-track { height: 6px; border-radius: 999px; background: var(--border); }
 #year.kfm-range--fill::-moz-range-track {
   background:
     linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) left/var(--value) 100% no-repeat,
@@ -290,6 +267,21 @@ button { font: inherit; }
   border-radius: var(--radius-sm);
 }
 .legend__swatch { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #0004; }
+
+/* Swatch helpers for line/fill/circle symbols */
+.legend__swatch--line {
+  width: 24px; height: 4px; border-radius: 2px;
+  background: currentColor;
+}
+.legend__swatch--circle {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: currentColor; border: 1px solid #0004;
+}
+.legend__swatch--fill {
+  width: 14px; height: 14px; border-radius: 3px;
+  background: currentColor; border: 1px solid #0004;
+}
+
 .legend__row {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -407,6 +399,22 @@ button { font: inherit; }
   border-radius: 8px;
 }
 
+/* ---- Toasts (optional runtime notices) ---------------------------------- */
+.kfm-toast {
+  position: fixed;
+  inset-inline-end: 16px;
+  inset-block-end: 16px;
+  z-index: var(--z-tooltip);
+  padding: 10px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  box-shadow: var(--shadow-1);
+  max-width: min(420px, 90vw);
+  font-size: 13px;
+}
+
 /* ---- Tooltips ------------------------------------------------------------ */
 .tooltip {
   position: absolute;
@@ -441,6 +449,16 @@ button { font: inherit; }
   box-shadow: var(--shadow);
 }
 .maplibregl-popup-tip { border-top-color: var(--panel) !important; }
+
+/* ---- RTL mirroring ------------------------------------------------------- */
+:root:dir(rtl) .kfm-sidebar {
+  inset-inline-start: auto;
+  inset-inline-end: max(16px, env(safe-area-inset-right));
+}
+:root:dir(rtl) .controls {
+  inset-inline-end: auto;
+  inset-inline-start: max(16px, env(safe-area-inset-left));
+}
 
 /* ---- Responsive ---------------------------------------------------------- */
 @media (max-width: 960px) {
