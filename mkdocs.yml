@@ -10,7 +10,7 @@ docs_dir: docs
 site_dir: _site_docs
 
 use_directory_urls: true
-strict: true  # Fail on broken links (good in CI)
+strict: true  # fail on broken links
 
 theme:
   name: material
@@ -21,20 +21,23 @@ theme:
     - navigation.sections
     - navigation.expand
     - navigation.tracking
+    - navigation.top
     - toc.integrate
-    - navigation.top          # adds “back to top”
     # Content UX
     - content.code.copy
     - content.code.annotate
     - content.tabs.link
     - content.tooltips
-    - content.action.edit     # “Edit this page” button
+    - content.action.edit
     # Search
     - search.highlight
     - search.suggest
     - search.share
   palette:
     - scheme: default
+      primary: blue
+      accent: indigo
+    - scheme: slate
       primary: blue
       accent: indigo
   icon:
@@ -46,19 +49,12 @@ plugins:
   - search:
       separator: '[\s\-,:!=\[\]()"`/]+'
       prebuild_index: true
-  - git-revision-date-localized:
-      fallback_to_build_date: true
-      type: date
-  - minify:
-      minify_html: true
-  - redirects:
-      redirect_maps:
-        # (optional) keep old links working if you rename/move pages
-        # "old_name.md": "new_name.md"
-  - include-markdown:
-      # allows including README/md fragments across docs
-      opening_tag: "{!"
-      closing_tag: "!}"
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
 
 markdown_extensions:
   # Core
@@ -70,7 +66,7 @@ markdown_extensions:
   - md_in_html
   - toc:
       permalink: true
-  # Material + pymdownx
+  # Pymdownx / Material
   - pymdownx.highlight:
       anchor_linenums: true
       linenums: true
@@ -84,6 +80,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.snippets
   - pymdownx.inlinehilite
+  - pymdownx.magiclink
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
@@ -93,7 +90,6 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - attr_list
-  - admonition
 
 extra:
   social:
@@ -106,19 +102,19 @@ extra:
     title: Cookie consent
     description: >
       We use local storage for search and navigation enhancements. No tracking.
+  copyright:
+    text: "© Kansas-Frontier-Matrix — MIT License"
 
 extra_css:
-  - assets/css/extra.css        # safe if missing
+  - assets/css/extra.css
 extra_javascript:
-  # Pin Mermaid & init (ensures GitHub-compatible Mermaid renders locally too)
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - assets/js/mermaid-init.js   # create with: mermaid.initialize({ startOnLoad: true });
+  - assets/js/mermaid-init.js  # create with: mermaid.initialize({ startOnLoad: true });
 
-# Optional: speed up local `mkdocs serve` when editing outside docs/
+# Optional: faster live-reload while editing outside docs/
 watch:
   - web
   - stac
-  - data
   - scripts
 
 nav:
