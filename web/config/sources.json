@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "generated": "2025-09-26T18:00:00Z",
+  "version": "1.2.0",
+  "generated": "2025-09-27T15:00:00Z",
   "sources": {
     "basemap_osm": {
       "title": "Basemap — OpenStreetMap",
@@ -12,19 +12,22 @@
       "maxzoom": 19,
       "tileSize": 256,
       "visible": true,
-      "opacity": 1.0
+      "opacity": 1.0,
+      "legendKey": "basemap"
     },
 
     "kansas_counties": {
       "title": "Kansas Counties",
       "type": "geojson",
-      "data": "data/vectors/kansas_counties.geojson",
-      "attribution": "Kansas Data Access & Support Center",
+      "data": "data/kansas_counties.geojson",
+      "attribution": "Kansas GIS (compiled)",
       "category": "reference",
       "visible": false,
       "opacity": 0.8,
       "minzoom": 4,
-      "maxzoom": 19
+      "maxzoom": 19,
+      "legendKey": "counties",
+      "time": { "start": "1854-01-01", "end": null }
     },
 
     "ks_dem_2018_2020": {
@@ -34,21 +37,25 @@
       "attribution": "Kansas GIS / USGS 3DEP",
       "category": "terrain",
       "visible": false,
-      "opacity": 0.8,
+      "opacity": 0.75,
       "minzoom": 6,
-      "maxzoom": 19
+      "maxzoom": 19,
+      "legendKey": "dem",
+      "time": { "start": "2018-01-01", "end": "2020-12-31" }
     },
 
     "ks_hillshade_2018": {
       "title": "Kansas Hillshade (LiDAR-derived, 2018)",
       "type": "raster",
       "data": "data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
-      "attribution": "Kansas Data Access & Support Center (KGS/Kansas DASC)",
+      "attribution": "KARS / State of Kansas",
       "category": "terrain",
-      "visible": false,
-      "opacity": 0.85,
-      "minzoom": 6,
-      "maxzoom": 19
+      "visible": true,
+      "opacity": 0.9,
+      "minzoom": 0,
+      "maxzoom": 14,
+      "legendKey": "hillshade",
+      "time": { "start": "2018-01-01", "end": "2020-12-31" }
     },
 
     "usgs_topo_1894_larned": {
@@ -57,50 +64,127 @@
       "data": "data/cogs/overlays/usgs_topo_larned_1894.tif",
       "attribution": "USGS Historical Topographic Map Collection",
       "category": "historical",
-      "visible": false,
-      "opacity": 0.75,
+      "visible": true,
+      "opacity": 0.7,
       "minzoom": 0,
-      "maxzoom": 19
+      "maxzoom": 16,
+      "legendKey": "historic_topo",
+      "time": { "start": "1894-01-01", "end": "1894-12-31" }
+    },
+
+    "ks_hydro": {
+      "title": "Rivers & Waterbodies",
+      "type": "geojson",
+      "data": "data/processed/hydrology.json",
+      "attribution": "NHD / KGS",
+      "category": "environment",
+      "visible": false,
+      "opacity": 1.0,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legendKey": "hydrology",
+      "time": { "start": null, "end": null }
+    },
+
+    "ks_landcover": {
+      "title": "Land Cover Snapshots (1992–2021)",
+      "type": "geojson",
+      "data": "data/processed/landcover_timeslices.json",
+      "attribution": "NLCD 1992–2021",
+      "category": "environment",
+      "visible": false,
+      "opacity": 0.6,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legendKey": "landcover",
+      "time": { "start": "1992-01-01", "end": "2021-12-31" }
+    },
+
+    "ks_settlements": {
+      "title": "Settlements, Forts, Trading Posts",
+      "type": "geojson",
+      "data": "data/processed/towns_points.json",
+      "attribution": "Compiled / KFM",
+      "category": "culture",
+      "visible": true,
+      "opacity": 1.0,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legendKey": "towns",
+      "time": { "start": "1800-01-01", "end": null }
     },
 
     "ks_treaties": {
       "title": "Kansas Treaties & Land Cessions",
       "type": "geojson",
-      "data": "data/vectors/ks_treaties.json",
+      "data": "data/processed/treaties.json",
       "attribution": "Kansas Historical Society; compiled KFM",
       "category": "documents",
       "timeProperty": "year",
-      "visible": false,
+      "visible": true,
       "opacity": 0.9,
       "minzoom": 0,
-      "maxzoom": 19
+      "maxzoom": 19,
+      "legendKey": "treaties",
+      "time": { "start": "1854-01-01", "end": null }
     },
 
     "ks_railroads": {
-      "title": "Kansas Railroads (19th c.)",
+      "title": "Kansas Railroads (c. 1900)",
       "type": "geojson",
-      "data": "data/vectors/ks_railroads.json",
-      "attribution": "Kansas Historical GIS; compiled KFM",
+      "data": "data/processed/railroads_1900.geojson",
+      "attribution": "Compiled rail lines circa 1900",
       "category": "infrastructure",
       "timeProperty": "year_built",
+      "visible": true,
+      "opacity": 0.95,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legendKey": "railroads",
+      "time": { "start": "1900-01-01", "end": "1900-12-31" }
+    },
+
+    "ks_trails": {
+      "title": "Trails",
+      "type": "geojson",
+      "data": "data/processed/trails.geojson",
+      "attribution": "Compiled historic trails",
+      "category": "infrastructure",
       "visible": false,
       "opacity": 0.9,
       "minzoom": 0,
-      "maxzoom": 19
+      "maxzoom": 19,
+      "legendKey": "trails",
+      "time": { "start": "1800-01-01", "end": null }
     },
 
-    "events_sample": {
-      "title": "Sample Events",
+    "tornado_tracks_ks": {
+      "title": "Tornado Tracks",
       "type": "geojson",
-      "data": "data/demo_events.json",
-      "attribution": "Demo dataset",
-      "category": "historical",
-      "timeProperty": "date",
+      "data": "data/processed/tornado_tracks_ks.json",
+      "attribution": "NOAA / SPC (processed)",
+      "category": "hazards",
       "visible": false,
-      "opacity": 1.0,
-      "minzoom": 3,
-      "maxzoom": 19
+      "opacity": 0.95,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legendKey": "tornado",
+      "time": { "start": "1950-01-01", "end": null }
+    },
+
+    "ks_wildfire": {
+      "title": "Wildfire Perimeters",
+      "type": "geojson",
+      "data": "data/processed/wildfire_polygons.json",
+      "attribution": "USGS/Geomac derived (processed)",
+      "category": "hazards",
+      "visible": false,
+      "opacity": 0.8,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legendKey": "wildfire",
+      "time": { "start": "2000-01-01", "end": null }
     }
   },
-  "attribution": "Kansas-Frontier-Matrix — Sources aligned to app.config.json layers"
+  "attribution": "Kansas-Frontier-Matrix — Sources aligned with app.config.json and legend.json"
 }
