@@ -1,18 +1,24 @@
 /* web/app.js
-   Kansas-Frontier-Matrix — MapLibre App (upgraded, connected, resilient)
+   Kansas-Frontier-Matrix — MapLibre App (Timeline-wired + per-feature ranges)
    ----------------------------------------------------------------------
    ✅ Config priority: ./config/app.config.json → viewer.json → layers.json → legacy ./layers.json
    ✅ Optional merge: ./config/time_config.json (overrides time + defaultYear, fps, loop, step, presets)
    ✅ Layer types: raster (XYZ/TileJSON/COG), raster-dem (hillshade fallback), image overlays, geojson, vector
-   ✅ Timeline: filters layers by [start,end] (YYYY|ISO|time.start|time.end); supports presets + autoplay
+   ✅ Timeline: uses web/components/timeline.js (autoplay, loop, fps, keyboard/wheel, events)
    ✅ Sidebar UI: toggles + opacity sliders (class .kfm-sidebar if available)
    ✅ Connections:
       - window.LegendControl? legend control
-      - window.attachPopup?    popup wiring (map, { layers: ['id', ...], maxFeatures })
-   ✅ Extras: robust date parsing; idempotent add; localStorage UI state; safer source/layer add ordering
+      - window.wireTimelineToLegend? binds Timeline → legend year badge
+      - window.attachPopup? popup wiring (map, { layers: ['id', ...], maxFeatures })
+   ✅ Per-feature time filter:
+      - Single-year:   timeProperty
+      - Range:         timeStartProperty + timeEndProperty (either end optional; inclusive)
+      (string or numeric; year extracted from ISO strings)
    ✅ Image assets: one logical "image" layer can auto-switch scanned sheets by year (nearest)
-   ✅ Debug surface: window.KFM { map, cfg, setYear, setVisible, setOpacity, getLayer, addLayer, flyTo }
+   ✅ Debug surface: window.KFM { map, cfg, setYear, setVisible, setOpacity, getLayer, addLayer, flyTo, timeline }
 */
+
+import Timeline from "./components/timeline.js";
 
 (() => {
   // ------------------------------- tiny DOM utils -------------------------------
@@ -36,11 +42,12 @@
     cfg: null,
     defaults: {},
     year: null,
-    layersById: new Map(),       // id -> normalized layer
-    uiState: loadUIState(),      // persisted UI (visibility/opacity/year)
+    timeline: null,
+    layersById: new Map(),
+    uiState: loadUIState(),
     map: null,
-    readySources: new Set(),     // sources that finished addSource
-    layerAddQueue: [],           // queued layer ids waiting for source
+    readySources: new Set(),
+    layerAddQueue: [],
   };
 
   function loadUIState() {
@@ -59,7 +66,6 @@
       state.defaults = cfg.defaults || {};
       ensureDOMSkeleton(cfg);
 
-      // style (use object or URL; fallback to OSM)
       const defaultStyle = {
         version: 8,
         sources: {
@@ -90,7 +96,7 @@
 
       // load
       map.on("load", () => {
-        // normalize & register layers (defer add until used)
+        // normalize & register layers
         (cfg.layers || []).forEach(registerLayer);
 
         // popups
@@ -104,22 +110,19 @@
         }
 
         // legend
+        let legend = null;
         if (typeof window.LegendControl === "function") {
           try {
-            map.addControl(new window.LegendControl({ layersConfig: cfg.layers, title: cfg.legendTitle || "Legend" }), "bottom-right");
+            legend = new window.LegendControl({ layersConfig: cfg.layers, title: cfg.legendTitle || "Legend", position: "bottom-right" });
+            map.addControl(legend, legend.getDefaultPosition?.() || "bottom-right");
           } catch (e) { console.warn("Legend addControl failed:", e); }
         }
 
         // UI
-        buildTimeUI(cfg);
         buildLayerUI(cfg, map);
+        buildTimelineUI(cfg, legend);
 
-        // initial year (uiState > config > time.default)
-        const fallbackYear = toYear(cfg.defaultYear ?? cfg.time?.defaultYear ?? 1900);
-        const y0 = clampYear(toYear(state.uiState.year ?? fallbackYear), cfg);
-        updateYear(y0, map);
-
-        // if some layers persisted as visible, ensure added now
+        // initial visibility: ensure persisted-visible layers get added
         (cfg.layers || []).forEach(l => {
           const L = state.layersById.get(l.id);
           if (!L) return;
@@ -141,6 +144,7 @@
       window.KFM = {
         map,
         cfg,
+        timeline: () => state.timeline,
         setYear: (y) => updateYear(clampYear(toYear(y), cfg), map),
         setVisible: (id, v) => setLayerVisibility(map, id, !!v),
         setOpacity: (id, a) => setLayerOpacity(map, id, +a),
@@ -186,16 +190,13 @@
       console.info("[KFM] Merged time_config.json");
     } catch {}
 
-    // sensible defaults
     base.time = base.time || {};
     base.defaults = base.defaults || {};
     return base;
   }
 
   function ensureDOMSkeleton(cfg) {
-    // map
     if (!$("#map")) document.body.appendChild(el("div", { id: "map" }));
-    // sidebar
     if (!$("#sidebar")) {
       const sidebar = el("div", { id: "sidebar", class: "kfm-sidebar" }, [
         el("div", { style: { padding: "12px 12px 6px 12px", borderBottom: "1px solid var(--border, #eee)" } }, [
@@ -262,7 +263,11 @@
       category: l.category || l.group || "Layers",
       attribution: l.attribution || "",
       interactive: l.interactive !== false,
-      timeProperty: l.timeProperty || l["time-property"] || null, // optional for per-feature filtering in GeoJSON
+
+      // per-feature time props (GeoJSON only)
+      timeProperty: l.timeProperty || l["time-property"] || null,                  // single-year property
+      timeStartProperty: l.timeStartProperty || l["time-start-property"] || null,  // range start property
+      timeEndProperty: l.timeEndProperty || l["time-end-property"] || null,        // range end property
 
       // image assetization
       assets: Array.isArray(l.assets) ? l.assets : null,
@@ -326,7 +331,6 @@
     const anyAlready = [layer.id, layer.id + "_line", layer.id + "_circle"].some(id => !!map.getLayer(id));
     if (map.getSource(srcId) && anyAlready) return;
 
-    // ensure source then add layer(s)
     const ensure = () => {
       switch (layer.type) {
         case "raster":      return addRaster(map, layer, srcId);
@@ -339,7 +343,6 @@
       }
     };
 
-    // if source exists and loaded, add now; if exists but not loaded, queue; else add and rely on on('sourcedata')
     if (map.getSource(srcId)) {
       if (state.readySources.has(srcId)) ensure();
       else enqueueLayer(srcId, layer.id, ensure);
@@ -350,7 +353,6 @@
   }
 
   function enqueueLayer(srcId, layerId, fn) {
-    // prevent duplicates
     if (!state.layerAddQueue.find(q => q.srcId === srcId && q.layerId === layerId)) {
       state.layerAddQueue.push({ srcId, layerId, fn });
     }
@@ -369,7 +371,6 @@
     try {
       if (map.getSource(srcId)) return;
 
-      // Raster: accept tiles array or TileJSON url
       if (layer.type === "raster") {
         const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
         if (looksTileJSON) map.addSource(srcId, { type: "raster", url: layer.url, tileSize: layer.tileSize || 256 });
@@ -381,14 +382,13 @@
         const looksTileJSON = typeof layer.url === "string" && /\.json(\?|$)/i.test(layer.url);
         if (looksTileJSON) map.addSource(srcId, { type: "raster-dem", url: layer.url, tileSize: layer.tileSize || 512 });
         else {
-          // fallback treat as raster
+          // fallback: treat as raster
           map.addSource(srcId, { type: "raster", tiles: layer.tiles, tileSize: layer.tileSize || 256, bounds: layer.bounds || undefined });
         }
         return;
       }
 
       if (layer.type === "image") {
-        // support assetized images (choose initial)
         let url = layer.url, coords = layer.coordinates;
         if ((!url || !Array.isArray(coords)) && Array.isArray(layer.assets) && layer.assets.length) {
           const initial = pickAssetForYear(layer, state.year ?? (layer.assets[0]?.[layer.assetKey || "year"] ?? 0)) || layer.assets[0];
@@ -442,13 +442,11 @@
         });
       }
     } else {
-      // fallback already added a raster source; draw as raster
       addRaster(map, layer, srcId);
     }
   }
 
   function addImage(map, layer, srcId) {
-    // source already added in addSource; just add a raster layer
     if (!map.getLayer(layer.id)) {
       map.addLayer({
         id: layer.id,
@@ -461,7 +459,6 @@
   }
 
   function addGeoJSON(map, layer, srcId) {
-    // We add 3 companions: circle (points), line (LineString), fill (Polygon)
     const baseVisible = layer.visible ? "visible" : "none";
 
     if (!map.getLayer(layer.id + "_circle")) {
@@ -511,13 +508,15 @@
       });
     }
 
-    // Optional per-feature year filter if layer.timeProperty present
-    if (layer.timeProperty) applyPerFeatureTimeFilter(layer);
+    // Per-feature time filters
+    if (layer.timeProperty || layer.timeStartProperty || layer.timeEndProperty) {
+      applyPerFeatureTimeFilter(layer);
+    }
   }
 
   function addVector(map, layer, srcId) {
     const sourceLayer = layer.sourceLayer;
-    if (!sourceLayer) { console.warn("Vector layer missing source-layer:", layer.id); return; }
+    if (!sourceLayer || typeof sourceLayer !== "string") { console.warn("Vector layer missing source-layer:", layer.id); return; }
 
     if (!map.getLayer(layer.id)) {
       map.addLayer({
@@ -567,117 +566,58 @@
     if (baseType === "line")   apply(layerId, "line-opacity", opacity);
     if (baseType === "hillshade") apply(layerId, "hillshade-exaggeration", Math.max(0.1, opacity)); // proxy
 
-    // companions
     apply(layerId + "_line", "line-opacity", opacity);
     apply(layerId + "_circle", "circle-opacity", Math.min(opacity, 0.9));
   }
 
-  // ------------------------------- time UI + logic -------------------------------
-  function buildTimeUI(cfg) {
+  // ------------------------------- Timeline (component) -------------------------------
+  function buildTimelineUI(cfg, legend) {
     const timebox = $("#timebox");
     timebox.innerHTML = "";
 
     const min = toYear(cfg.time?.min) ?? 1700;
     const max = toYear(cfg.time?.max) ?? 2100;
     const step = nnum(cfg.time?.step, 1);
+    const fps = nnum(cfg.time?.fps, 8);
+    const loop = cfg.time?.loop !== false; // default true
     const persisted = toYear(state.uiState.year);
     const cur = clampYear(toYear(coalesce(persisted, cfg.defaultYear, cfg.time?.defaultYear, min)), cfg);
 
-    const labelRow = el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px", flexWrap: "wrap" } }, [
-      el("strong", { style: { fontSize: "13px" } }, ["Year:"]),
-      el("span", { id: "yearLabel", style: { fontVariantNumeric: "tabular-nums" } }, [String(cur)]),
-      el("div", { style: { marginLeft: "auto", display: "flex", gap: "6px", alignItems: "center" } }, [
-        (Array.isArray(cfg.timePresets) && cfg.timePresets.length)
-          ? presetSelect(cfg.timePresets, cur) : el("span", {}, []),
-      ]),
-    ]);
+    const tl = new Timeline({
+      min, max, value: cur, step,
+      autoplay: !!cfg.time?.autoplay,
+      fps, loop,
+      label: "Year:",
+      showControls: true,
+      formatLabel: (y) => String(y)
+    }).mount(timebox);
 
-    const slider = el("input", {
-      id: "yearSlider", type: "range", min: String(min), max: String(max), step: String(step), value: String(cur),
-      style: { width: "100%" },
-      oninput: (e) => {
-        const y = clampYear(parseInt(e.target.value, 10), cfg);
-        $("#yearLabel").textContent = String(y);
-        scheduleYearUpdate(y);
-      }
+    // Persist + apply year
+    tl.onChange((y) => {
+      state.uiState.year = y; saveUIState();
+      updateYear(y, state.map);
     });
 
-    // keyboard nudging
-    slider.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft" || e.key === "ArrowDown") slider.stepDown();
-      if (e.key === "ArrowRight" || e.key === "ArrowUp") slider.stepUp();
-      const y = clampYear(parseInt(slider.value, 10), cfg);
-      $("#yearLabel").textContent = String(y);
-      scheduleYearUpdate(y);
-    });
-
-    timebox.append(labelRow, slider);
-
-    // autoplay dock
-    if (cfg.time && (cfg.time.loop || cfg.time.fps)) {
-      const dock = el("div", { style: { marginTop: "8px", display: "flex", gap: "6px" } });
-      const btnPrev = el("button", { class: "btn", title: "Step backward", onclick: () => { slider.stepDown(); slider.dispatchEvent(new Event("input")); } }, ["⟨"]);
-      const btnNext = el("button", { class: "btn", title: "Step forward",  onclick: () => { slider.stepUp();   slider.dispatchEvent(new Event("input")); } }, ["⟩"]);
-      let playing = false, raf = null, last = 0;
-      const fps = nnum(cfg.time.fps, 8);
-      const loop = !!cfg.time.loop;
-
-      const btnPlay = el("button", { class: "btn btn--primary" }, ["▶"]);
-      btnPlay.onclick = () => { playing ? stop() : play(); };
-
-      function play() {
-        playing = true; btnPlay.textContent = "⏸"; last = performance.now();
-        const minY = +slider.min, maxY = +slider.max;
-        const tick = (now) => {
-          if (!playing) return;
-          const interval = 1000 / Math.max(1, fps);
-          if (now - last >= interval) {
-            last = now;
-            const before = +slider.value;
-            slider.stepUp();
-            if (+slider.value === before && loop) slider.value = String(minY);
-            slider.dispatchEvent(new Event("input", { bubbles: true }));
-            if (+slider.value >= maxY && !loop) stop();
-          }
-          raf = requestAnimationFrame(tick);
-        };
-        raf = requestAnimationFrame(tick);
-      }
-      function stop() { playing = false; btnPlay.textContent = "▶"; if (raf) cancelAnimationFrame(raf); }
-
-      dock.append(btnPrev, btnPlay, btnNext);
-      timebox.appendChild(dock);
+    // Wire to legend badge
+    if (legend && typeof window.wireTimelineToLegend === "function") {
+      window.wireTimelineToLegend(tl, legend);
     }
-  }
 
-  function presetSelect(presets, cur) {
-    const sel = el("select", { title: "Time presets", style: { fontSize: "12px" } },
-      [el("option", { value: "" }, ["Presets"])].concat(
-        presets.map(p => el("option", { value: String(p.year || p) }, [p.label || String(p)]))
-      )
-    );
-    sel.value = String(cur);
-    sel.addEventListener("change", () => {
-      const y = toYear(sel.value);
-      if (y != null) scheduleYearUpdate(y);
+    // Title flourish (optional)
+    tl.addEventListener?.("change", (e) => {
+      const y = e.detail?.value ?? tl.getState().value;
+      const base = document.querySelector("meta[property='og:site_name']")?.content
+        || document.title.replace(/\s+\|\s+Year:\s+\d{3,4}$/, "");
+      document.title = `${base} | Year: ${y}`;
     });
-    return sel;
+
+    // Apply initial year once map is ready
+    updateYear(cur, state.map);
+
+    state.timeline = tl;
   }
 
-  let _yearRaf = null, _yearPending = null;
-  function scheduleYearUpdate(y) {
-    _yearPending = y;
-    if (_yearRaf) return;
-    _yearRaf = requestAnimationFrame(() => {
-      _yearRaf = null;
-      if (_yearPending != null) {
-        updateYear(_yearPending, state.map);
-        state.uiState.year = _yearPending; saveUIState();
-        _yearPending = null;
-      }
-    });
-  }
-
+  // ------------------------------- time logic -------------------------------
   function isActiveForYear(layer, year) {
     const s = toYear(layer.start), e = toYear(layer.end);
     if (s == null && e == null) return true;
@@ -694,42 +634,77 @@
       const active = isActiveForYear(l, year);
       setLayerVisibility(map, l.id, active && l.visible !== false);
 
-      // assetized image layers: swap to nearest sheet for current year
       if (l.type === "image" && Array.isArray(l.assets) && active) {
         updateImageAsset(map, l, year);
       }
 
-      // per-feature filtering for GeoJSON if timeProperty provided
-      if (l.type === "geojson" && l.timeProperty) applyPerFeatureTimeFilter(l);
+      if (l.type === "geojson" && (l.timeProperty || l.timeStartProperty || l.timeEndProperty)) {
+        applyPerFeatureTimeFilter(l);
+      }
     });
-
-    $("#yearLabel") && ($("#yearLabel").textContent = String(year));
-    const slider = $("#yearSlider"); if (slider) slider.value = String(year);
   }
 
+  // ------------------------------- per-feature time FILTERS -------------------------------
+  // Accepts:
+  //  - timeProperty:           exact year match
+  //  - timeStartProperty/timeEndProperty: inclusive range (either end optional)
+  // Each prop may be number (e.g., 1872) or string (e.g., "1872-05-01").
+  // We extract the first 4 chars and coerce to number via ["to-number", ["slice", ...]].
   function applyPerFeatureTimeFilter(layer) {
-    // For GeoJSON layers with a timeProperty, filter feature visibility on the three companions.
-    const prop = layer.timeProperty;
     const y = state.year;
+    const prop = layer.timeProperty;
+    const sProp = layer.timeStartProperty;
+    const eProp = layer.timeEndProperty;
 
-    const toFilter = (id) => {
-      const exists = state.map.getLayer(id);
-      if (!exists) return;
-      // accept ISO date strings or numeric years; equality on year
-      const filter = [
-        "all",
-        ["any",
-          ["==", ["typeof", ["get", prop]], "number"],
-          ["==", ["typeof", ["get", prop]], "string"]
-        ],
-        ["==", ["to-number", ["slice", ["concat", ["get", prop], ""], 0, 4]], y]
+    const singleYearFilter = (p) => ([
+      "all",
+      ["any",
+        ["==", ["typeof", ["get", p]], "number"],
+        ["==", ["typeof", ["get", p]], "string"]
+      ],
+      ["==", ["to-number", ["slice", ["concat", ["get", p], ""], 0, 4]], y]
+    ]);
+
+    const rangeFilter = (ps, pe) => {
+      const startYear = ["to-number", ["slice", ["concat", ["get", ps], ""], 0, 4]];
+      const endYear   = ["to-number", ["slice", ["concat", ["get", pe], ""], 0, 4]];
+      // Build guards for type presence; allow missing ends
+      const hasStart = ["any",
+        ["==", ["typeof", ["get", ps]], "number"],
+        ["==", ["typeof", ["get", ps]], "string"]
       ];
-      state.map.setFilter(id, filter);
+      const hasEnd = ["any",
+        ["==", ["typeof", ["get", pe]], "number"],
+        ["==", ["typeof", ["get", pe]], "string"]
+      ];
+
+      // Cases:
+      // 1) both present: (start <= y) AND (y <= end)
+      // 2) only start:   (start <= y)
+      // 3) only end:     (y <= end)
+      // 4) neither:      false (hide unless you want to show always)
+      return [
+        "any",
+        ["all", hasStart, hasEnd, ["<=", startYear, y], ["<=", y, endYear]],
+        ["all", hasStart, ["!=", hasEnd, true], ["<=", startYear, y]],
+        ["all", hasEnd,   ["!=", hasStart, true], ["<=", y, endYear]],
+      ];
     };
 
-    toFilter(layer.id + "_circle");
-    toFilter(layer.id + "_line");
-    toFilter(layer.id);
+    const buildFilter = () => {
+      if (sProp || eProp) return rangeFilter(sProp || "__no_start__", eProp || "__no_end__");
+      if (prop) return singleYearFilter(prop);
+      return ["literal", true];
+    };
+
+    const filter = buildFilter();
+
+    const apply = (id) => {
+      if (state.map.getLayer(id)) state.map.setFilter(id, filter);
+    };
+    apply(layer.id + "_circle");
+    apply(layer.id + "_line");
+    apply(layer.id);
   }
 
   // ------------------------------- layer UI -------------------------------
@@ -737,7 +712,6 @@
     const layerbox = $("#layerbox");
     layerbox.innerHTML = "";
 
-    // group by category
     const groups = (cfg.layers || []).reduce((acc, l) => {
       const key = l.group || l.category || "Layers";
       (acc[key] = acc[key] || []).push(l);
@@ -752,7 +726,7 @@
       ls.forEach((l) => {
         const L = state.layersById.get(l.id) || normalizeLayer(l);
         state.layersById.set(L.id, L);
-        // pre-add to ensure instant control effect (defer heavy vector/geojson until visible)
+
         if (L.visible !== false) addLayerToMap(map, L);
 
         const chkId = `chk_${L.id}`;
