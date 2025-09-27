@@ -1,0 +1,83 @@
+# .github/.pre-commit-config.yaml
+# Kansas-Frontier-Matrix — Pre-Commit Hooks
+# ------------------------------------------------
+# Ensures schema validation, STAC integrity, Python style,
+# JSON/YAML correctness, and docs hygiene before commits.
+# Matches CI checks in .github/workflows/* for reproducibility.
+
+repos:
+  # --- Core file hygiene ---
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+      - id: detect-private-key
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  # --- Python: formatting + linting ---
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  # --- Shell scripts ---
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  # --- Markdown + docs ---
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.13.0
+    hooks:
+      - id: markdownlint
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint-cli
+        args: ["--fix"]
+
+  # --- STAC validation ---
+  - repo: local
+    hooks:
+      - id: stac-validate
+        name: STAC Validator
+        entry: stac-validator
+        language: system
+        types: [json]
+        files: ^stac/
+
+  # --- JSON schema validation for configs ---
+  - repo: local
+    hooks:
+      - id: jsonschema-validate
+        name: JSON Schema Validation
+        entry: scripts/validate_json_schema.sh
+        language: system
+        types: [json]
+        files: ^web/config/.*\.json$
+
+  # --- Security scanning (basic) ---
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        args: ["-q", "-r", "src"]
+
+default_language_version:
+  python: python3
