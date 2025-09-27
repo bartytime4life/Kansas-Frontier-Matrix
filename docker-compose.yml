@@ -14,6 +14,7 @@ x-env-defaults: &env_defaults
   # Makefile / STAC paths honored inside container
   KFM_DATA_DIR: "/app/data"
   KFM_STAC_DIR: "/app/stac"
+  KFM_WEB_DIR: "/app/web"
 
 x-volume-mounts: &vol_mounts
   - ./:/app:rw
@@ -80,7 +81,7 @@ services:
       retries: 3
       start_period: 20s
     logging: *logging_defaults
-    <<: [*security_defaults]
+    <<: *security_defaults
     ulimits: *ulimits_defaults
 
   # Tiny HTTP server to preview ./web (dev-only)
@@ -108,15 +109,18 @@ services:
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       <<: *env_defaults
+    read_only: true                # root FS readonly; /app is explicit rw via bind, tmp via tmpfs
+    tmpfs: *tmpfs_mounts
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "command -v curl >/dev/null 2>&1 && curl -fsS --max-time 2 http://127.0.0.1:8080 >/dev/null || exit 1"]
+      # Avoid curl dependency; use Python stdlib
+      test: ["CMD-SHELL", "python - <<'PY'\nimport urllib.request,sys;urllib.request.urlopen('http://127.0.0.1:8080',timeout=2);sys.exit(0)\nPY"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
     logging: *logging_defaults
-    <<: [*security_defaults]
+    <<: *security_defaults
     ulimits: *ulimits_defaults
 
   # CI-style one-shot runner: validates STAC & writes preview manifest then exits
@@ -153,11 +157,13 @@ PY
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       <<: *env_defaults
+    read_only: true
+    tmpfs: *tmpfs_mounts
     logging: *logging_defaults
-    <<: [*security_defaults]
+    <<: *security_defaults
     ulimits: *ulimits_defaults
 
-  # Optional: live docs preview (MkDocs) on http://127.0.0.1:8001
+  # Live docs preview (MkDocs) on http://127.0.0.1:8001
   docs:
     profiles: ["docs"]             # docker compose --profile docs up docs
     image: ${IMAGE_NAME:-kfm:local}
@@ -167,22 +173,25 @@ PY
       kfm:
         condition: service_healthy
     command: >
-      bash -lc 'python -m pip install -q mkdocs mkdocs-material mkdocs-redirects mkdocs-include-markdown-plugin mkdocs-minify-plugin mkdocs-git-revision-date-localized-plugin || true; mkdocs serve -a 0.0.0.0:8001'
+      bash -lc 'python -m pip install -q mkdocs mkdocs-material "mkdocstrings[python]" || true;
+      mkdocs serve -a 0.0.0.0:8001'
     ports:
       - "127.0.0.1:8001:8001"
     volumes: *vol_mounts
     user: "${UID:-1000}:${GID:-1000}"
     environment:
       <<: *env_defaults
+    read_only: true
+    tmpfs: *tmpfs_mounts
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "command -v curl >/dev/null 2>&1 && curl -fsS --max-time 2 http://127.0.0.1:8001 >/dev/null || exit 1"]
+      test: ["CMD-SHELL", "python - <<'PY'\nimport urllib.request,sys;urllib.request.urlopen('http://127.0.0.1:8001',timeout=2);sys.exit(0)\nPY"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
     logging: *logging_defaults
-    <<: [*security_defaults]
+    <<: *security_defaults
     ulimits: *ulimits_defaults
 
 # ──────────────────────────────────────────────────────────────────────────────
