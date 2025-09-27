@@ -464,7 +464,8 @@ def coerce_year(value: Any) -> Optional[int]:
             y = int(value[:4])
             if 0 <= y <= 9999:
                 return y
-    except Exception:
+    except (ValueError, TypeError):
+        # Expected: value cannot be coerced to a valid year (int/str parse failed)
         pass
     return None
 
