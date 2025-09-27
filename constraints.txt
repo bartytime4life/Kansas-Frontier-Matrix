@@ -7,7 +7,8 @@
 # - Raster/geo pins align with manylinux/macos wheels; no system GDAL needed.
 # - NumPy stays on 1.26.x to match rasterio 1.3.x ABI (<2.0).
 # - Adds stac-validator so `stac-validate` is reproducible in CI.
-# - Pins common transitive deps to avoid resolver churn.
+# - Pins common transitives to avoid resolver churn.
+# Tested on Python 3.10 / 3.11 / 3.12.
 # ===========================================================
 
 ############################
@@ -20,21 +21,23 @@ shapely==2.0.4
 pyproj==3.6.1
 Pillow==10.4.0
 
-# Rasterio transitive (geo)
+# Rasterio/geo transitives
 affine==2.4.0
 attrs==24.2.0
 cligj==0.7.2
+snuggs==1.4.7
 
 ############################
 # STAC / schema / validator
 ############################
 pystac==1.10.1
 pystac-client==0.7.6
+stac-validator==3.3.1
+
 jsonschema==4.23.0
 jsonschema-specifications==2023.12.1
 referencing==0.35.1
 rpds-py==0.20.0
-stac-validator==3.3.1
 
 # time utils used across libs
 python-dateutil==2.9.0.post0
@@ -47,20 +50,24 @@ click==8.1.7
 rich==13.7.1
 requests==2.32.3
 tqdm==4.66.5
+packaging==24.1
 
-# Requests transitive
+# Requests transitives
 certifi==2024.8.30
 charset-normalizer==3.3.2
 idna==3.8
 urllib3==2.2.3
 
-# Rich transitive
+# Rich transitives
 Pygments==2.18.0
 markdown-it-py==3.0.0
 mdurl==0.1.2
 
 # Windows-only console colors (used by tqdm/rich)
 colorama==0.4.6; platform_system == "Windows"
+
+# Typing backport when running on Python < 3.11
+typing-extensions==4.12.2; python_version < "3.11"
 
 ############################
 # Optional stacks
