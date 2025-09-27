@@ -19,10 +19,10 @@ This doc mirrors **`.github/roadmap/roadmap.yaml`** and is synced to GitHub **la
 
 ```mermaid
 flowchart TD
-  M1["Milestone 1\n\"Enrich Data Sources\" (Oct 31, 2025)"] --> M2["Milestone 2\n\"Analytical Enhancements\" (Nov 30, 2025)"]
-  M2 --> M3["Milestone 3\n\"Storytelling & Education\" (Dec 31, 2025)"]
-  M3 --> M4["Milestone 4\n\"Technical Enhancements\""]
-  M4 --> M5["Milestone 5\n\"MCP Integration\""]
+  M1["Milestone 1\n&quot;Enrich Data Sources&quot; (Oct 31, 2025)"] --> M2["Milestone 2\n&quot;Analytical Enhancements&quot; (Nov 30, 2025)"]
+  M2 --> M3["Milestone 3\n&quot;Storytelling &amp; Education&quot; (Dec 31, 2025)"]
+  M3 --> M4["Milestone 4\n&quot;Technical Enhancements&quot;"]
+  M4 --> M5["Milestone 5\n&quot;MCP Integration&quot;"]
 ````
 
 ---
