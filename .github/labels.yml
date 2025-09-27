@@ -1,0 +1,67 @@
+# .github/labels.yml
+# Kansas-Frontier-Matrix — Canonical Label Set
+# ------------------------------------------------
+# Single source of truth for GitHub labels.
+# Managed by .github/workflows/labels.yml (EndBug/label-sync).
+
+labels:
+  # --- Merge automation ---
+  - name: "automerge"
+    color: "2ea44f"
+    description: "Automatically merge when all checks pass"
+
+  - name: "no-automerge"
+    color: "d93f0b"
+    description: "Explicitly block automerge"
+
+  - name: "wip"
+    color: "fbca04"
+    description: "Work in progress (do not merge yet)"
+
+  # --- Roadmap & planning ---
+  - name: "roadmap"
+    color: "5319e7"
+    description: "Tracked in roadmap.yml / project roadmap"
+
+  - name: "needs-triage"
+    color: "fef2c0"
+    description: "New issue/PR awaiting triage"
+
+  - name: "on-hold"
+    color: "c5def5"
+    description: "Paused / waiting on external dependency"
+
+  - name: "discussion"
+    color: "f9d0c4"
+    description: "Open discussion / design question"
+
+  - name: "milestone"
+    color: "0366d6"
+    description: "Tied to a milestone deliverable"
+
+  # --- Quality & hygiene ---
+  - name: "stale"
+    color: "ededed"
+    description: "Marked stale by automation (close-stale.yml)"
+
+  - name: "help wanted"
+    color: "008672"
+    description: "Community contributions welcome"
+
+  - name: "good first issue"
+    color: "7057ff"
+    description: "Low-barrier issue for first-time contributors"
+
+  # --- Security ---
+  - name: "security"
+    color: "b60205"
+    description: "Security-related issue or PR"
+
+  # --- CI / build system ---
+  - name: "ci"
+    color: "0e8a16"
+    description: "Continuous integration / build system"
+
+  - name: "dependencies"
+    color: "0366d6"
+    description: "Dependency updates (Dependabot, etc.)"
