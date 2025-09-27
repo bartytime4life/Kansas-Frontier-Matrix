@@ -1,4 +1,3 @@
-````markdown
 ---
 name: "🧪 Experiment Report"
 about: "Plan, run, and log a reproducible experiment (MCP-grade)"
