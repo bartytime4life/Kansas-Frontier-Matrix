@@ -1,133 +1,209 @@
 # DEM COGs — Kansas Geo Timeline
 
-Cloud-Optimized GeoTIFFs (COGs) for **Digital Elevation Models** used across the Kansas-Frontier-Matrix stack.  
-These rasters back terrain visualizations (hillshade, slope, aspect), time-aware overlays, and downstream
-analysis in the web app and Google Earth/KML [oai_citation:0‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-CrPP4mcnyNq5sGJotXDwSv).
+Cloud-Optimized GeoTIFFs (COGs) for **Digital Elevation Models** used across the
+Kansas Frontier Matrix / Kansas Geo Timeline stack.  
+These rasters power terrain visualizations (hillshade, slope, aspect), time-aware overlays,
+and downstream analysis in the web app and KML/Google Earth.
 
 ---
 
-## Contents
+## Directory layout
 
-- `ks_1m_dem_2018_2020.tif` — statewide mosaic (1 m) as **COG**
-- `ks_1m_dem_2018_2020.meta.json` — acquisition, tiling, CRS, nodata
-- `ks_1m_dem_2018_2020.sha256` — integrity & reproducibility
-- (Optional) county/tiles COGs if the statewide mosaic is chunked
+```
 
-> The DEM is referenced in the repository’s data plans; add county LiDAR where available to improve
-  derivatives in priority areas [oai_citation:1‡Data resource analysis.pdf](file-service://file-GdS9Kcw7Xbfqpy4xwwdqWS).
+data/cogs/dem/
+├── ks_1m_dem_2018_2020.tif         # statewide mosaic (COG)
+├── ks_1m_dem_2018_2020.tif.sha256  # checksum (GNU format)
+└── README.md
 
----
+```
 
-## Naming & Conventions
-
-_.tif
-ks_1m_dem_2018_2020.tif
-
-- **COG layout**: internal tiling, overviews, web-friendly compression
-- **NODATA**: set to a safe value (e.g., -9999) and documented in `.meta.json`
-- **CRS**: analysis in projected CRS; distribute web copies in EPSG:4326/3857 when needed (document in metadata)
+> Project-wide metadata lives in **STAC items** under `stac/items/**` (source of truth).
+> A local `.meta.json` is optional if you need non-STAC notes.
 
 ---
 
-## Provenance & STAC
+## Conventions
 
-Every COG must have a **STAC Item** (`stac/items/*.json`) that records:
+- **COG layout:** internal tiles **512×512**, internal overviews to ~512 px min dimension.
+- **CRS (web copy):** **EPSG:4326** (WGS84).  
+  Prefer a **projected CRS** for analysis (e.g., UTM 14N: EPSG:26914 / EPSG:6344).
+- **NoData:** set to a safe value (e.g., `-9999`) and document in STAC.
+- **Compression:** `DEFLATE` with `PREDICTOR=2` for continuous rasters.
+- **Integrity:** every `.tif` has a `.tif.sha256` sidecar.
 
-- `datetime` / `start_datetime`–`end_datetime`
-- `proj:` / `raster:` extensions (grid, nodata, statistics)
-- `checksum:sha256`
-- source lineage and license
+**Naming**
+```
 
-This aligns with the hub’s **contract-first** design; STAC is consumed by the site and the
-knowledge graph for time and provenance [oai_citation:2‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-CrPP4mcnyNq5sGJotXDwSv).
+ks_1m_dem_2018_2020.tif         # <region>*<resolution>*<theme>_<temporal>.tif
+
+````
+If you publish tiled mosaics, suffix tile keys, e.g. `ks_1m_dem_2018_2020_w98n39.tif`.
 
 ---
 
-## Quick Generation (GDAL)
+## Reproducible build
 
-> Use a projected working CRS (e.g., UTM 14N) for best local accuracy; reproject for web copies.
+### Option A — Use the project script
 
 ```bash
-# 1) Build analysis mosaic
-gdalbuildvrt dem.vrt ./ingest/*.tif
+# Convert a prepared DEM to COG (auto reproject to EPSG:4326 if needed)
+python scripts/convert.py raster-to-cog \
+  data/raw/dem/ks_1m_dem_2018_2020.tif \
+  data/cogs/dem/ks_1m_dem_2018_2020.tif
+````
 
-# 2) Reproject to working CRS (example: EPSG:26914)
+This writes the COG **and** `ks_1m_dem_2018_2020.tif.sha256`.
+
+### Option B — Canonical GDAL flow
+
+```bash
+# 1) Build VRT from source tiles
+gdalbuildvrt dem.vrt data/raw/dem/*.tif
+
+# 2) Reproject to working CRS (UTM 14N example) and set NoData
 gdalwarp -t_srs EPSG:26914 -r bilinear -dstnodata -9999 -multi -wo NUM_THREADS=ALL_CPUS \
   dem.vrt dem_utm14.tif
 
-# 3) Create COG
-gdal_translate dem_utm14.tif ks_1m_dem_2018_2020.tif \
-  -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co NUM_THREADS=ALL_CPUS \
-  -co OVERVIEWS=AUTO -co BIGTIFF=YES
+# 3) Create web copy as COG (WGS84)
+gdalwarp -t_srs EPSG:4326 -r bilinear -dstnodata -9999 \
+  dem_utm14.tif /tmp/dem_wgs84.tif
 
-# 4) Checksums
-sha256sum ks_1m_dem_2018_2020.tif > ks_1m_dem_2018_2020.sha256
+gdal_translate -of COG \
+  -co COMPRESS=DEFLATE -co PREDICTOR=2 \
+  -co BLOCKSIZE=512 \
+  -co NUM_THREADS=ALL_CPUS -co BIGTIFF=IF_SAFER \
+  -co OVERVIEW_RESAMPLING=AVERAGE \
+  /tmp/dem_wgs84.tif data/cogs/dem/ks_1m_dem_2018_2020.tif
 
-Update ks_1m_dem_2018_2020.meta.json with CRS, resolution, nodata, sources.
+# 4) Checksum
+sha256sum data/cogs/dem/ks_1m_dem_2018_2020.tif \
+  > data/cogs/dem/ks_1m_dem_2018_2020.tif.sha256
+```
 
-⸻
+---
 
-Derivatives
+## Derivatives (terrain products)
 
-Generate terrain products from the working CRS, then COG:
+Generate from your **working CRS** (projected), then COG-ify if publishing:
 
-# Hillshade (multi-directional: generate at several azimuths & merge if desired)
-gdaldem hillshade dem_utm14.tif hillshade.tif -az 315 -alt 45 -z 1.0 -s 1.0
+```bash
+# Hillshade (common azimuth/altitude)
+gdaldem hillshade -az 315 -alt 45 -compute_edges dem_utm14.tif hillshade.tif
+# Optional softer light:
+# gdaldem hillshade -multidirectional -compute_edges dem_utm14.tif hillshade.tif
 
 # Slope / Aspect
 gdaldem slope  dem_utm14.tif slope.tif  -s 1.0
 gdaldem aspect dem_utm14.tif aspect.tif
 
-# COG-ify
-gdal_translate hillshade.tif hillshade_cog.tif -of COG -co COMPRESS=DEFLATE -co OVERVIEWS=AUTO
-gdal_translate slope.tif     slope_cog.tif     -of COG -co COMPRESS=DEFLATE -co OVERVIEWS=AUTO
-gdal_translate aspect.tif    aspect_cog.tif    -of COG -co COMPRESS=DEFLATE -co OVERVIEWS=AUTO
+# Convert to COGs (lossless)
+gdal_translate -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co OVERVIEW_RESAMPLING=AVERAGE \
+  hillshade.tif data/cogs/hillshade/ks_hillshade_2018_2020.tif
+gdal_translate -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co OVERVIEW_RESAMPLING=AVERAGE \
+  slope.tif     data/cogs/dem/ks_slope_2018_2020.tif
+gdal_translate -of COG -co COMPRESS=DEFLATE -co PREDICTOR=2 -co OVERVIEW_RESAMPLING=AVERAGE \
+  aspect.tif    data/cogs/dem/ks_aspect_2018_2020.tif
+```
 
-Tip: Include hillshade/slope in stac/items/ and wire into the web map config for fast, layered terrain
-displays ￼. Higher-res county LiDAR can meaningfully sharpen these derivatives ￼.
+> Remember to emit checksums and STAC items for each published derivative.
 
-⸻
+---
 
-Using in the Web App & Earth
-	•	Web (MapLibre): reference the COG via a tile service or static hosting—listed in web/app.config.json.
-The time slider and layered overlays use the validated configs produced by templates in src/ ￼.
-	•	Google Earth: export regionated KML/KMZ for 3D elevation/overlays (progressive loading) when needed ￼.
+## STAC registration
 
-⸻
+Create a STAC Item for each COG to record:
 
-Data Sources & Coverage
-	•	Kansas 1-m DEM (state services / USGS endpoints) — baseline for statewide products ￼
-	•	County LiDAR (USGS 3DEP / FEMA / KGS) — incorporate where available to densify terrain ￼
+* `datetime` / `start_datetime`–`end_datetime`
+* `proj:*` (EPSG, transform, shape), `raster:*` (bands, nodata), `file:*` (size), `checksum:sha256`
+* `processing` notes (warp, resampling, compression)
+* Providers + license
 
-Maintain docs/data_sources.md with API endpoints, licenses, and update cadences per design-audit guidance ￼.
+**Fast path (Python API):**
 
-⸻
+```python
+from kansas_geo_timeline.ingest import ingest_raster
+out, item = ingest_raster(
+    "data/cogs/dem/ks_1m_dem_2018_2020.tif",
+    stac_items_dir="stac/items",
+    stac_collection="kfm-dem"
+)
+print(out, item["id"])
+```
 
-Quality & Uncertainty
+**CLI (Make):**
 
-Document:
-	•	Resolution and resampling used during warp/merge
-	•	NODATA handling and void-fill approach
-	•	Vertical datum and units
-	•	Georeferencing accuracy (RMS or estimated error)—surface in STAC and metadata
+```bash
+make stac stac-validate-items
+```
 
-Surfacing uncertainty is required across layers to align with the platform’s scientific rigor and design audit
-recommendations ￼.
+---
 
-⸻
+## Web & Earth integration
 
-Performance Tips
-	•	Prefer COG with internal overviews (and BLOCKSIZE=512) for snappy map UX.
-	•	Split statewide DEM into logical tiles (e.g., 1x1 degree or county) if your hosting or clients struggle with the monolith.
-	•	Keep analysis in projected CRS; publish additional web copies in EPSG:4326/3857 as needed, each with its own STAC item.
+**Web (MapLibre):** reference the DEM for terrain (if your viewer supports raster-dem) or use hillshade as a raster layer.
 
-⸻
+```json
+{
+  "id": "ks_1m_dem_2018_2020",
+  "title": "DEM (1 m, 2018–2020)",
+  "type": "raster-dem",
+  "data": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
+  "maxzoom": 14,
+  "attribution": "USGS 3DEP / Kansas DASC (Public Domain)"
+}
+```
 
-Links & References
-	•	System architecture (STAC, ingestion, web app, KML) ￼
-	•	Data resource analysis (DEM plan, LiDAR opportunities, hydrology/soils endpoints to add) ￼
-	•	Design audit (uncertainty, data source documentation, storytelling additions) ￼
-	•	Hazard/Climate integration (for future terrain-climate overlays) ￼
+**Google Earth / KML:** for very large areas, export regionated KML/KMZ; keep DEM in projected CRS for analysis, publish a WGS84 copy for visualization.
 
-Contract-first rule: if a raster fails to display or validate, fix the metadata or STAC—not the template ￼.
+---
 
+## Validation & QA
+
+```bash
+# Verify checksums
+find data/cogs/dem -name "*.tif.sha256" -print0 | xargs -0 -I{} sha256sum -c {}
+
+# Quick gdalinfo checks
+gdalinfo -checksum data/cogs/dem/ks_1m_dem_2018_2020.tif | head -n 40
+
+# Optional (rio-cogeo)
+rio cogeo validate data/cogs/dem/ks_1m_dem_2018_2020.tif
+```
+
+Document in STAC (and optional `.meta.json`):
+
+* Resolution, transform, vertical units/datum
+* Resampling used in warps/overviews
+* NoData handling and any void fill
+* Estimated georeferencing accuracy (RMS or equivalent)
+
+---
+
+## Performance tips
+
+* Prefer **BLOCKSIZE=512** and internal overviews for snappy UX.
+* If clients struggle with a statewide monolith, publish **tiled COGs** (quad key or county).
+* Keep heavy analysis in **projected CRS**; publish additional web copies in **EPSG:4326** as needed (each with its own STAC).
+* For viewer efficiency, consider tiler/PMTiles for public delivery; keep raw COGs for provenance.
+
+---
+
+## Checklist (new DEM)
+
+1. Build/warp DEM to working CRS; set **NoData**.
+2. Produce **web copy** as **COG (EPSG:4326)**.
+3. Write **`.tif.sha256`** sidecar.
+4. Emit **STAC Item** (`stac/items/**`) and validate.
+5. (Optional) Generate derivatives (hillshade, slope, aspect) → COG + STAC.
+6. Wire into the **web viewer** (raster-dem or hillshade layer).
+7. Run **validation** (`sha256sum -c`, `gdalinfo`, optional `rio cogeo validate`).
+8. Commit; CI validates and publishes.
+
+---
+
+✅ **Mission-grade principle:** DEM COGs must be **fast, verifiable, and fully traceable**
+via STAC. If it doesn’t validate or display, **fix the metadata** (or STAC) first, then the data.
+
+```
+```
