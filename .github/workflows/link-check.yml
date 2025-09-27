@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: link-check-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -52,32 +52,29 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Collect candidate files
+          # ----- collect targets (md/html) -----
           collect_targets() {
             local mode="$1"
             local -a files=()
 
             if [[ "$mode" == "pr" ]]; then
-              # Robust merge-base for PRs (works for forks, too)
+              # Robust merge-base for PRs (works for forks)
               BASE_SHA="${{ github.event.pull_request.base.sha || '' }}"
               if [[ -z "$BASE_SHA" ]]; then
                 git fetch -q origin "${{ github.base_ref }}" || true
-                BASE_SHA="$(git rev-parse "origin/${{ github.base_ref }}" || echo "")"
+                BASE_SHA="$(git rev-parse "origin/${{ github.base_ref }}" 2>/dev/null || echo "")"
               fi
-              if [[ -z "$BASE_SHA" ]]; then
-                # Fallback: just scan full set
-                mode="full"
+              if [[ -n "$BASE_SHA" ]]; then
+                MERGE_BASE="$(git merge-base "$BASE_SHA" HEAD 2>/dev/null || echo "")"
+              fi
+              if [[ -n "$MERGE_BASE" ]]; then
+                while IFS= read -r f; do
+                  [[ -z "$f" ]] && continue
+                  [[ "$f" =~ \.(md|html)$ ]] || continue
+                  files+=("$f")
+                done < <(git --no-pager diff --name-only "$MERGE_BASE"...HEAD | tr -d '\r')
               else
-                MERGE_BASE="$(git merge-base "$BASE_SHA" HEAD || echo "")"
-                if [[ -n "$MERGE_BASE" ]]; then
-                  while IFS= read -r f; do
-                    [[ -z "$f" ]] && continue
-                    [[ "$f" =~ \.(md|html)$ ]] || continue
-                    files+=("$f")
-                  done < <(git --no-pager diff --name-only "$MERGE_BASE"...HEAD | tr -d '\r')
-                else
-                  mode="full"
-                fi
+                mode="full"
               fi
             fi
 
@@ -113,9 +110,17 @@ jobs:
 
           mkdir -p lychee
 
-          BASE_ARGS=(--no-progress --verbose --max-retries 3 --retry-wait-time 2 --require-https)
-          # Accept 200 + 429 (rate limited) as non-failing to reduce flaky CI, still reported
-          BASE_ARGS+=(--accept 200,429)
+          BASE_ARGS=(
+            --no-progress
+            --verbose
+            --max-retries 3
+            --retry-wait-time 2
+            --timeout 20
+            --max-concurrency 8
+            --require-https
+            # Accept 429 (rate limits) as non-fatal; still reported in output
+            --accept 200,429
+          )
 
           # Emit both JSON and Markdown reports
           OUT_ARGS=(--format json --output lychee/results.json --format markdown --output lychee.md)
@@ -128,6 +133,7 @@ jobs:
             'https://*.googleapis.com/*'
             'https://*.arcgis.com/*'
             'https://api.mapbox.com/*'
+            'https://earthengine.googleapis.com/*'
           )
 
           ARGS=( "${BASE_ARGS[@]}" "${OUT_ARGS[@]}" )
@@ -155,15 +161,24 @@ jobs:
             lychee.md
             lychee/results.json
           if-no-files-found: warn
-          retention-days: 7
+          retention-days: 10
 
       - name: Job Summary
         if: always()
         shell: bash
         run: |
+          set -euo pipefail
+          TOTAL=0 BAD=0 WARN=0
+          if [[ -f lychee/results.json ]]; then
+            TOTAL=$(jq 'length' lychee/results.json 2>/dev/null || echo 0)
+            # lychee JSON schema: items with "status" not 200 (or accepted) count as failures
+            BAD=$(jq '[ .[] | select(.status? and (.status|tonumber? // 0) >= 400) ] | length' lychee/results.json 2>/dev/null || echo 0)
+            WARN=$(jq '[ .[] | select(.status? and (.status|tostring) == "429") ] | length' lychee/results.json 2>/dev/null || echo 0)
+          fi
           {
             echo "## Link Check (Lychee)"
             echo "- Mode: **${{ steps.args.outputs.mode || 'full' }}**"
+            echo "- Checked targets: **$TOTAL** | Errors: **$BAD** | 429s: **$WARN**"
             if [ -f lychee.md ]; then
               echo
               echo "### Report excerpt"
