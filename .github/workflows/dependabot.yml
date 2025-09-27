@@ -1,3 +1,4 @@
+# .github/workflows/dependabot.yml
 version: 2
 
 updates:
@@ -15,12 +16,15 @@ updates:
     rebase-strategy: auto
     open-pull-requests-limit: 5
     labels: [deps, "deps:actions"]
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
       prefix: "deps(actions)"
       include: scope
     groups:
       actions-all:
-        patterns: ["*"] # group all GH Actions into a single PR
+        patterns: ["*"]  # group all GH Actions into a single PR
+        update-types: ["minor", "patch"]
 
   # ────────────────────────────────────────────────────────────────────────────
   # 2) Python (pip) — repo root (requirements*.txt)
@@ -35,10 +39,12 @@ updates:
       timezone: America/Chicago
     rebase-strategy: auto
     allow:
-      - dependency-type: direct    # keep noise down; only direct deps
+      - dependency-type: direct          # keep noise down; only direct deps
     versioning-strategy: increase-if-necessary
     open-pull-requests-limit: 8
     labels: [deps, "deps:pip"]
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
       prefix: "deps(pip)"
       include: scope
@@ -58,11 +64,18 @@ updates:
       minor-and-patch:
         update-types: [minor, patch]
     ignore:
+      # Geospatial stacks can be heavy-breaking on majors; opt-in later
       - dependency-name: gdal
         update-types: ["version-update:semver-major"]
       - dependency-name: rasterio
         update-types: ["version-update:semver-major"]
       - dependency-name: geopandas
+        update-types: ["version-update:semver-major"]
+      - dependency-name: shapely
+        update-types: ["version-update:semver-major"]
+      - dependency-name: fiona
+        update-types: ["version-update:semver-major"]
+      - dependency-name: pyproj
         update-types: ["version-update:semver-major"]
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -78,8 +91,10 @@ updates:
       timezone: America/Chicago
     rebase-strategy: auto
     open-pull-requests-limit: 8
-    versioning-strategy: increase   # keep lockfile fresh even without manifest changes
+    versioning-strategy: increase          # keep lockfile fresh even without manifest changes
     labels: [deps, "deps:npm", "area:web"]
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
       prefix: "deps(npm)"
       include: scope
@@ -87,9 +102,11 @@ updates:
       dev-deps:
         dependency-type: development
         patterns: ["*"]
+        update-types: ["minor", "patch"]
       runtime:
         dependency-type: production
         patterns: ["*"]
+        update-types: ["minor", "patch"]
       # Optional: group map libs together (uncomment if desired)
       # map-stack:
       #   patterns:
@@ -123,12 +140,15 @@ updates:
     rebase-strategy: auto
     open-pull-requests-limit: 3
     labels: [deps, "deps:docker"]
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
       prefix: "deps(docker)"
       include: scope
     groups:
       base-image:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: docker
     directory: /docker
@@ -141,9 +161,12 @@ updates:
     rebase-strategy: auto
     open-pull-requests-limit: 3
     labels: [deps, "deps:docker"]
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
       prefix: "deps(docker)"
       include: scope
     groups:
       base-image:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
