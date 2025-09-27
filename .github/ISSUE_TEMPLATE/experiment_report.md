@@ -1,3 +1,5 @@
+````markdown
+---
 name: "🧪 Experiment Report"
 about: "Plan, run, and log a reproducible experiment (MCP-grade)"
 title: "[EXP] <concise title>"
@@ -9,11 +11,12 @@ assignees: []
 
 ## 0) Metadata
 
-- **Experiment ID**: `EXP-YYYYMMDD-<slug>`  
-- **Owner(s)**: @you  
-- **Status**: ☐ Planned ☐ Running ☐ Completed ☐ Abandoned  
-- **Scope areas**: `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`  
-- **Related issues/PRs**: Fixes #…, Relates #…
+- **Experiment ID**: `EXP-YYYYMMDD-<slug>`
+- **Owner(s)**: @you
+- **Status**: ☐ Planned ☐ Running ☐ Completed ☐ Abandoned
+- **Scope areas**: `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`
+- **Related issues/PRs**: Fixes #…, Closes #…, Relates #…
+- **Milestone**: `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp` (if applicable)
 
 ---
 
@@ -21,22 +24,25 @@ assignees: []
 
 **Question** — What are we trying to learn/compare?  
 **Hypothesis** — What outcome do you expect and why?  
-**Success criteria** — Decide up-front what “good” looks like (metrics, visuals, thresholds).
+**Success criteria** — Define “good” up-front (metrics, visuals, thresholds).
 
 ---
 
 ## 2) Datasets & Catalog
 
-- **Inputs** (IDs / paths):  
-  - STAC items/collections: `stac/items/<file>.json`, `stac/collections/<file>.json`  
-  - Source descriptors: `data/sources/<file>.json`
-- **Spatial/temporal bounds**: bbox, date range  
-- **Licenses / provenance**: cite sources; note any restrictions
+- **Inputs (IDs / paths)**  
+  - STAC: `stac/items/<file>.json`, `stac/collections/<file>.json`  
+  - Source descriptors: `data/sources/<file>.json|yml`
+- **Spatial/temporal bounds** — bbox, date range
+- **Licenses / provenance** — cite sources; note restrictions
 
 **Sanity checks**
 ```bash
 # JSON & STAC validation (best-effort)
-kgt validate-stac stac/items --report-json build/stac_report.json || true
+make stac-validate || true
+
+# Optional: config pack validation for web UI
+make config-validate || true
 ````
 
 ---
@@ -46,53 +52,56 @@ kgt validate-stac stac/items --report-json build/stac_report.json || true
 * **Design** — controls, treatments, parameters to sweep
 * **SOP links** — `mcp/sops/<doc>.md` (add/update if new)
 * **Randomness** — seeds, sampling rules
-* **Assumptions / constraints** — keep explicit
+* **Assumptions / constraints** — be explicit
 
 **Commands to reproduce (canonical)**
 
 ```bash
-# minimal deterministic sequence; prefer Make targets
-make <target>            # e.g., make fetch cogs terrain
-make stac                # (re)generate catalog artifacts
-make site                # update static viewer
+# Prefer Make targets for determinism
+make fetch           # if new sources are referenced
+make cogs            # build COGs
+make terrain         # hillshade/slope/aspect (COGs)
+make stac            # (re)generate STAC catalog artifacts
+make site            # write fallback web/layers.json and mirror small vectors
+make site-config     # render web/app.config.json from STAC (requires kgt)
 ```
 
 ---
 
 ## 4) Environment
 
-* **Host**: local / CI / container
-* **Image / Python**: `python -V` = …, Docker image = …
-* **Hardware**: CPU/GPU, RAM
-* **Key tool versions**: `rasterio`, `gdal`, `jinja2`, `jsonschema`, CLI `kgt --version`
+* **Host** — local / CI / container
+* **Image / Python** — `python -V` = …, Docker image = …
+* **Hardware** — CPU/GPU, RAM
+* **Key tools** — `rasterio`, `gdal`, `jinja2`, `jsonschema`, `kgt --version`
 
 ```bash
 python -V
-pip freeze | sed -n '1,120p'   # capture top of env (attach full file below)
+pip freeze | sed -n '1,120p'   # attach full freeze as file if long
 ```
 
 ---
 
 ## 5) Variables & Configuration
 
-* **Parameters** — list knobs/values (e.g., hillshade azimuth, Z-factor, resampling)
+* **Parameters** — knobs/values (e.g., hillshade azimuth, Z-factor, resampling)
 * **Config files edited** — paths + diffs if relevant
-* **Hash snapshot(s)** (optional):
+* **Hash snapshot(s)** (optional)
 
 ```bash
+mkdir -p build
 git rev-parse HEAD > build/git_sha.txt
-sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
+# If large trees: guard errors to keep report generation flowing
+(sha256sum data/cogs/**/* 2>/dev/null || true) | sort > build/artifact_hashes.txt
 ```
 
 ---
 
 ## 6) Results
 
-**Metrics / counts** — summarize key numbers, tables, or JSON snippets.
-
-**Visuals** — screenshots or link to Pages preview for layers/timeline.
-
-**Qualitative observations** — artifacts, anomalies, alignment notes, uncertainty.
+* **Metrics / counts** — summarize key numbers, tables, or JSON snippets
+* **Visuals** — screenshots or Pages preview link for layers/timeline
+* **Qualitative observations** — artifacts, anomalies, alignment/CRS notes, uncertainty
 
 ---
 
@@ -100,26 +109,28 @@ sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
 
 * Did results meet success criteria? Why / why not?
 * Threats to validity — sampling bias, georeferencing error, CRS mismatch, etc.
-* Error bars / uncertainty — confidence & how shown in UI.
+* Error bars / uncertainty — confidence & how it’s shown in UI
 
 ---
 
 ## 8) Artifacts
 
-* **Generated files** (paths):
+* **Generated files (paths)**
 
   * COGs / derivatives: `data/cogs/**/<file>.tif`
-  * Metadata: `*.meta.json`, `checksum:sha256` filled in STAC assets
+  * Metadata: `*.meta.json` with `checksum:sha256` / `file:size` in STAC assets
   * Reports: `build/stac_report.json`, `build/metrics.json`
-* **Experiment folder** (optional; attach in PR):
 
-  * `mcp/experiments/EXP-YYYYMMDD-<slug>/`
+* **Experiment folder** (optional; commit in PR)
 
-    * `README.md` (this report)
-    * `commands.sh` (exact commands run)
-    * `env.txt` (freeze)
-    * `figures/` (PNGs)
-    * `artifacts.jsonl` (paths, sizes, hashes)
+  ```
+  mcp/experiments/EXP-YYYYMMDD-<slug>/
+    README.md          # this report
+    commands.sh        # exact commands run
+    env.txt            # freeze
+    figures/           # PNG/SVG
+    artifacts.jsonl    # paths, sizes, hashes
+  ```
 
 ---
 
@@ -134,7 +145,7 @@ sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
 ## 10) Roll-forward Plan
 
 * Adopt / discard / iterate?
-* **Follow-ups** (open issues to track):
+* **Follow-ups** (open issues to track)
 
   * [ ] …
   * [ ] …
@@ -147,23 +158,23 @@ sha256sum data/cogs/**/* 2>/dev/null | sort > build/artifact_hashes.txt
 
 * [ ] Sources & STAC entries exist and validate
 * [ ] Make targets documented
-* [ ] Seed(s) / randomness policy set (if applicable)
+* [ ] Seeds / randomness policy set (if applicable)
 
 **Before merging**
 
 * [ ] Results reproducible with the commands above
-* [ ] STAC assets include `checksum:sha256` (COGs, derivatives)
-* [ ] Pages/site updated if visuals changed
+* [ ] STAC assets include `checksum:sha256` and `file:size` where applicable
+* [ ] Pages/site updated if visuals changed (`make site` / `make site-config`)
 * [ ] SOP / docs updated (if workflow changed)
 
 ---
 
 ### Attachments
 
-* `build/stac_report.json` (first 100 lines or attach file)
+* `build/stac_report.json` (attach file or first 100 lines)
 * `env.txt` (pip freeze)
 * Screens / figures (PNG/SVG)
-* Any logs useful for reproducing
+* Logs helpful for reproducing
 
 ```
 ```
