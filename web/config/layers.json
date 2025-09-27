@@ -1,12 +1,13 @@
 {
-  "version": "1.1.0",
-  "generated": "2025-09-26T18:00:00Z",
+  "version": "1.2.0",
+  "generated": "2025-09-27T00:00:00Z",
 
   "defaults": {
     "opacity": 1.0,
     "visible": true,
     "minzoom": 0,
     "maxzoom": 19,
+    "tileSize": 256,
     "bounds": [-102.051, 36.993, -94.588, 40.003],
     "time": { "start": "1700-01-01", "end": "2100-12-31" }
   },
@@ -17,7 +18,8 @@
     "defaultYear": 1930,
     "step": 1,
     "fps": 12,
-    "loop": false
+    "loop": false,
+    "autoplay": false
   },
 
   "layers": [
@@ -25,7 +27,7 @@
       "id": "basemap_osm",
       "title": "Basemap — OpenStreetMap",
       "type": "raster",
-      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
       "opacity": 1.0,
       "visible": true,
       "attribution": "© OpenStreetMap contributors",
@@ -34,28 +36,16 @@
       "minzoom": 0,
       "maxzoom": 19,
       "tileSize": 256,
-      "crossOrigin": "anonymous"
-    },
-
-    {
-      "id": "usgs_topo_1894_larned",
-      "title": "USGS Historic Topo — Larned (1894)",
-      "type": "raster",
-      "url": "data/cogs/overlays/usgs_topo_larned_1894.tif",
-      "opacity": 0.75,
-      "visible": false,
-      "attribution": "USGS Historical Topographic Map Collection",
-      "category": "historical",
-      "time": { "start": "1894-01-01", "end": "1894-12-31" },
-      "minzoom": 5,
-      "maxzoom": 19
+      "legend": [
+        { "color": "#cccccc", "label": "Base cartography" }
+      ]
     },
 
     {
       "id": "ks_dem_2018_2020",
       "title": "Kansas DEM (2018–2020)",
       "type": "raster-dem",
-      "url": "data/cogs/dem/ks_1m_dem_2018_2020.tif",
+      "url": "data/tiles/ks_dem_2018_2020/metadata.json",
       "opacity": 0.8,
       "visible": false,
       "attribution": "Kansas GIS / USGS 3DEP",
@@ -63,22 +53,49 @@
       "time": { "start": "2018-01-01", "end": "2020-12-31" },
       "minzoom": 6,
       "maxzoom": 19,
-      "terrain": true,
-      "terrainExaggeration": 1.25
+      "legend": [
+        { "gradient": ["#222222", "#aaaaaa", "#eeeeee"], "label": "Shaded relief (DEM hillshade)" }
+      ]
     },
 
     {
       "id": "ks_hillshade_2018",
       "title": "Kansas Hillshade (LiDAR-derived, 2018)",
       "type": "raster",
-      "url": "data/cogs/derivatives/ks_lidar_hillshade_2018.tif",
+      "tiles": ["data/tiles/ks_hillshade_2018/{z}/{x}/{y}.png"],
       "opacity": 0.85,
       "visible": false,
-      "attribution": "Kansas Data Access & Support Center (KGS/Kansas DASC)",
+      "attribution": "Kansas Data Access & Support Center (KGS / Kansas DASC)",
       "category": "terrain",
       "time": { "start": "2018-01-01", "end": "2018-12-31" },
-      "minzoom": 6,
-      "maxzoom": 19
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legend": [
+        { "gradient": ["#222222", "#aaaaaa", "#eeeeee"], "label": "Shaded relief" }
+      ]
+    },
+
+    {
+      "id": "usgs_topo_1894_larned",
+      "title": "USGS Historic Topo — Larned (1894)",
+      "type": "image",
+      "coordinates": [
+        [-99.5000, 38.5000],
+        [-98.5000, 38.5000],
+        [-98.5000, 38.0000],
+        [-99.5000, 38.0000]
+      ],
+      "url": "data/overlays/usgs_topo_larned_1894.jpg",
+      "opacity": 0.75,
+      "visible": false,
+      "attribution": "USGS Historical Topographic Map Collection",
+      "category": "historical",
+      "time": { "start": "1894-01-01", "end": "1894-12-31" },
+      "minzoom": 0,
+      "maxzoom": 19,
+      "legend": [
+        { "color": "#8b5a2b", "label": "Contours & cartography" }
+      ]
     },
 
     {
@@ -100,7 +117,10 @@
         "fillColor": "#000000",
         "fillOpacity": 0.0
       },
-      "popup": ["NAME", "FIPS"]
+      "popup": ["NAME", "FIPS"],
+      "legend": [
+        { "lineColor": "#555555", "lineWidth": 2, "label": "County boundary" }
+      ]
     },
 
     {
@@ -113,15 +133,18 @@
       "attribution": "Kansas Historical Society; compiled KFM",
       "category": "documents",
       "time": { "start": "1800-01-01", "end": "1900-12-31" },
+      "timeProperty": "year",
       "minzoom": 0,
       "maxzoom": 19,
-      "style": {
-        "fillColor": "rgba(200, 60, 60, 0.35)",
-        "fillOpacity": 0.35,
-        "lineColor": "#a33",
-        "lineWidth": 1.0
+      "paint": {
+        "fill": { "fill-color": "#c83c3c", "fill-opacity": 0.35 },
+        "line": { "line-color": "#a33", "line-width": 1.0 }
       },
-      "popup": ["name", "treaty", "year", "source"]
+      "popup": ["name", "treaty", "year", "source"],
+      "legend": [
+        { "color": "#c83c3c", "label": "Cession area" },
+        { "lineColor": "#a33", "lineWidth": 2, "label": "Boundary" }
+      ]
     },
 
     {
@@ -134,13 +157,17 @@
       "attribution": "Kansas Historical GIS; compiled KFM",
       "category": "infrastructure",
       "time": { "start": "1850-01-01", "end": "1950-12-31" },
+      "timeStartProperty": "year_built",
+      "timeEndProperty": "year_removed",
       "minzoom": 0,
       "maxzoom": 19,
-      "style": {
-        "lineColor": "#6b4e16",
-        "lineWidth": 1.5
+      "paint": {
+        "line": { "line-color": "#6b4e16", "line-width": 1.5 }
       },
-      "popup": ["name", "company", "year_built", "status"]
+      "popup": ["name", "company", "year_built", "status"],
+      "legend": [
+        { "lineColor": "#6b4e16", "lineWidth": 3, "label": "Rail line" }
+      ]
     },
 
     {
@@ -163,7 +190,10 @@
         "lineColor": "#FFFFFF",
         "lineWidth": 1
       },
-      "popup": ["title", "date", "summary", "url"]
+      "popup": ["title", "date", "summary", "url"],
+      "legend": [
+        { "pointColor": "#CC3300", "pointRadius": 8, "label": "Event" }
+      ]
     }
   ]
 }
