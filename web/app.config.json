@@ -1,6 +1,6 @@
 {
-  "version": "1.3.1",
-  "generated": "2025-09-26T00:30:00Z",
+  "version": "1.4.0",
+  "generated": "2025-09-27T10:00:00Z",
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time-aware historical GIS for Kansas",
 
@@ -24,12 +24,18 @@
 
   "groups": [
     "Basemaps & Terrain",
-    "Historic Topographic Maps",
-    "Hydrology",
-    "Vectors"
+    "Historical Maps",
+    "Environment & Hydrology",
+    "Culture & Documents",
+    "Infrastructure",
+    "Hazards",
+    "Reference"
   ],
 
   "layers": [
+    // ----------------------------
+    // Basemaps & Terrain
+    // ----------------------------
     {
       "id": "basemap_osm",
       "title": "Basemap — OpenStreetMap",
@@ -41,11 +47,11 @@
       "maxzoom": 19,
       "visible": true,
       "time": { "start": null, "end": null },
+      "legendKey": "basemap",
       "attribution": "© OpenStreetMap contributors"
     },
-
     {
-      "id": "terrain_hillshade",
+      "id": "ks_hillshade_2018",
       "title": "Hillshade (2018–2020)",
       "group": "Basemaps & Terrain",
       "type": "raster",
@@ -55,39 +61,31 @@
       "maxzoom": 14,
       "visible": true,
       "time": { "start": "2018-01-01", "end": "2020-12-31" },
+      "legendKey": "hillshade",
       "attribution": "DEM/Hillshade © KARS / State of Kansas"
     },
     {
-      "id": "terrain_slope",
-      "title": "Slope (degrees)",
+      "id": "ks_dem_2018_2020",
+      "title": "DEM (2018–2020)",
       "group": "Basemaps & Terrain",
       "type": "raster",
-      "url": "./tiles/terrain/slope/{z}/{x}/{y}.png",
-      "opacity": 0.85,
+      "url": "./tiles/terrain/dem/{z}/{x}/{y}.png",
+      "opacity": 0.75,
       "minzoom": 0,
       "maxzoom": 14,
       "visible": false,
       "time": { "start": "2018-01-01", "end": "2020-12-31" },
-      "attribution": "Derived from DEM © KARS / State of Kansas"
-    },
-    {
-      "id": "terrain_aspect",
-      "title": "Aspect (degrees)",
-      "group": "Basemaps & Terrain",
-      "type": "raster",
-      "url": "./tiles/terrain/aspect/{z}/{x}/{y}.png",
-      "opacity": 0.85,
-      "minzoom": 0,
-      "maxzoom": 14,
-      "visible": false,
-      "time": { "start": "2018-01-01", "end": "2020-12-31" },
-      "attribution": "Derived from DEM © KARS / State of Kansas"
+      "legendKey": "dem",
+      "attribution": "DEM © KARS / State of Kansas"
     },
 
+    // ----------------------------
+    // Historical Maps
+    // ----------------------------
     {
-      "id": "usgs_1894_larned",
+      "id": "usgs_topo_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
-      "group": "Historic Topographic Maps",
+      "group": "Historical Maps",
       "type": "raster",
       "url": "./tiles/historic/usgs_1894_larned/{z}/{x}/{y}.png",
       "opacity": 0.7,
@@ -95,151 +93,180 @@
       "maxzoom": 16,
       "visible": true,
       "time": { "start": "1894-01-01", "end": "1894-12-31" },
+      "legendKey": "historic_topo",
       "attribution": "USGS Historical Topographic Maps (Public Domain)"
     },
 
+    // ----------------------------
+    // Environment & Hydrology
+    // ----------------------------
     {
-      "id": "ksriv_channels",
-      "title": "Kansas River — Channels",
-      "group": "Hydrology",
+      "id": "ks_hydro",
+      "title": "Rivers & Waterbodies",
+      "group": "Environment & Hydrology",
       "type": "geojson",
-      "path": "./data/processed/hydrology/kansas_river/channels.geojson",
-      "opacity": 1.0,
-      "visible": true,
-      "time": { "start": "2000-01-01", "end": null },
-      "paint": {
-        "line": { "line-color": "#1e88e5", "line-width": 1.6, "line-opacity": 1.0 }
+      "data": "data/processed/hydrology.json",
+      "style": {
+        "lineColor": "#3A86FF",
+        "lineWidth": 1.0,
+        "lineOpacity": 0.9,
+        "fillColor": "#A0C4FF",
+        "fillOpacity": 0.6
       },
-      "legend": [
-        { "type": "line", "label": "Channel centerline", "color": "#1e88e5", "width": 1.6 }
-      ],
-      "attribution": "Kansas Geological Survey (KGS)"
+      "visible": false,
+      "time": { "start": null, "end": null },
+      "legendKey": "hydrology",
+      "attribution": "NHD / KGS"
     },
     {
-      "id": "ksriv_floodplains",
-      "title": "Kansas River — Floodplains",
-      "group": "Hydrology",
+      "id": "ks_landcover",
+      "title": "Land Cover Snapshots (1992–2021)",
+      "group": "Environment & Hydrology",
       "type": "geojson",
-      "path": "./data/processed/hydrology/kansas_river/floodplains.geojson",
-      "opacity": 0.6,
+      "data": "data/processed/landcover_timeslices.json",
+      "style": { "fillOpacity": 0.6 },
       "visible": false,
-      "time": { "start": "2000-01-01", "end": null },
-      "paint": {
-        "fill": { "fill-color": "#42a5f5", "fill-opacity": 0.25, "fill-outline-color": "#1976d2" },
-        "line": { "line-color": "#1976d2", "line-width": 0.5, "line-opacity": 0.9 }
-      },
-      "legend": [
-        { "type": "fill", "label": "Floodplain extent", "color": "#42a5f5", "outline": "#1976d2" }
-      ],
-      "attribution": "Kansas Geological Survey (KGS)"
-    },
-    {
-      "id": "ksriv_gauges",
-      "title": "Kansas River — Gauges",
-      "group": "Hydrology",
-      "type": "geojson",
-      "path": "./data/processed/hydrology/kansas_river/gauges.geojson",
-      "opacity": 1.0,
-      "visible": false,
-      "time": { "start": "2000-01-01", "end": null },
-      "paint": {
-        "circle": { "circle-color": "#0d47a1", "circle-radius": 4, "circle-opacity": 1.0 }
-      },
-      "legend": [
-        { "type": "circle", "label": "Gauge station", "color": "#0d47a1", "radius": 4 }
-      ],
-      "attribution": "Kansas Geological Survey (KGS)"
+      "time": { "start": "1992-01-01", "end": "2021-12-31" },
+      "timeProperty": "year",
+      "legendKey": "landcover",
+      "attribution": "NLCD (1992–2021)"
     },
 
+    // ----------------------------
+    // Culture & Documents
+    // ----------------------------
     {
-      "id": "railroads_1900",
-      "title": "Railroads (c. 1900)",
-      "group": "Vectors",
+      "id": "ks_settlements",
+      "title": "Settlements, Forts, Trading Posts",
+      "group": "Culture & Documents",
       "type": "geojson",
-      "path": "./vectors/infrastructure/railroads_1900.geojson",
-      "opacity": 1.0,
+      "data": "data/processed/towns_points.json",
+      "style": {
+        "circleColor": "#FF595E",
+        "circleRadius": 4,
+        "circleOpacity": 0.95,
+        "circleStrokeColor": "#FFFFFF",
+        "circleStrokeWidth": 1
+      },
+      "visible": true,
+      "time": { "start": "1800-01-01", "end": null },
+      "timeProperty": "year",
+      "popup": ["name", "type", "year", "year_end"],
+      "legendKey": "towns",
+      "attribution": "Compiled / KFM"
+    },
+    {
+      "id": "ks_treaties",
+      "title": "Treaty Boundaries",
+      "group": "Culture & Documents",
+      "type": "geojson",
+      "data": "data/processed/treaties.json",
+      "style": {
+        "fillColor": "rgba(200, 60, 60, 0.35)",
+        "fillOpacity": 0.35,
+        "lineColor": "#AA3333",
+        "lineWidth": 1
+      },
+      "visible": true,
+      "time": { "start": "1854-01-01", "end": null },
+      "legendKey": "treaties",
+      "attribution": "Digitized treaty boundaries"
+    },
+
+    // ----------------------------
+    // Infrastructure
+    // ----------------------------
+    {
+      "id": "ks_railroads",
+      "title": "Railroads (c. 1900)",
+      "group": "Infrastructure",
+      "type": "geojson",
+      "data": "data/processed/railroads_1900.geojson",
+      "style": {
+        "lineColor": "#6B4E16",
+        "lineWidth": 1.5,
+        "lineOpacity": 0.95
+      },
       "visible": true,
       "time": { "start": "1900-01-01", "end": "1900-12-31" },
-      "paint": {
-        "line": { "line-color": "#d97706", "line-width": 1.6, "line-opacity": 0.95 }
-      },
-      "legend": [
-        { "type": "line", "label": "Rail line (c.1900)", "color": "#d97706", "width": 1.6 }
-      ],
+      "legendKey": "railroads",
       "attribution": "Compiled rail lines circa 1900"
     },
     {
-      "id": "treaties_1854",
-      "title": "Treaty Boundaries (1854)",
-      "group": "Vectors",
+      "id": "ks_trails",
+      "title": "Trails",
+      "group": "Infrastructure",
       "type": "geojson",
-      "path": "./vectors/political/treaties_1854.geojson",
-      "opacity": 0.85,
-      "visible": true,
-      "time": { "start": "1854-01-01", "end": "1854-12-31" },
-      "paint": {
-        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.25, "fill-outline-color": "#1d4ed8" },
-        "line": { "line-color": "#1d4ed8", "line-width": 1.4, "line-opacity": 0.9 }
+      "data": "data/processed/trails.geojson",
+      "style": {
+        "lineColor": "#4361EE",
+        "lineWidth": 1.25,
+        "lineOpacity": 0.9,
+        "lineDasharray": [2, 2]
       },
-      "legend": [
-        { "type": "fill", "label": "Treaty area (1854)", "color": "#2563eb", "outline": "#1d4ed8" }
-      ],
-      "attribution": "Digitized treaty boundaries, 1854"
+      "visible": false,
+      "time": { "start": "1800-01-01", "end": null },
+      "legendKey": "trails",
+      "attribution": "Compiled historic trails"
     },
 
+    // ----------------------------
+    // Hazards
+    // ----------------------------
     {
-      "id": "ks-counties-demo",
-      "title": "Kansas Counties (demo)",
-      "group": "Vectors",
+      "id": "tornado_tracks_ks",
+      "title": "Tornado Tracks",
+      "group": "Hazards",
       "type": "geojson",
-      "path": "./data/kansas_counties.geojson",
-      "opacity": 1.0,
-      "visible": false,
-      "time": { "start": "1854-01-01", "end": null },
-      "paint": {
-        "fill": { "fill-color": "#2563eb", "fill-opacity": 0.18, "fill-outline-color": "#1d4ed8" },
-        "line": { "line-color": "#1d4ed8", "line-width": 1.2, "line-opacity": 0.9 }
+      "data": "data/processed/tornado_tracks_ks.json",
+      "style": {
+        "lineColor": "#D00000",
+        "lineWidth": 1.4,
+        "lineOpacity": 0.95
       },
-      "legend": [
-        { "type": "fill", "label": "County boundary", "color": "#2563eb", "outline": "#1d4ed8" }
-      ],
-      "attribution": "Demo boundaries for UI wiring"
+      "visible": false,
+      "time": { "start": "1950-01-01", "end": null },
+      "legendKey": "tornado",
+      "attribution": "NOAA / SPC (processed)"
     },
     {
-      "id": "demo-events",
-      "title": "Demo Events",
-      "group": "Vectors",
+      "id": "ks_wildfire",
+      "title": "Wildfire Perimeters",
+      "group": "Hazards",
       "type": "geojson",
-      "path": "./data/demo_events.json",
-      "opacity": 1.0,
-      "visible": true,
-      "time": { "start": "1854-01-01", "end": null },
-      "paint": {
-        "circle": { "circle-color": "#0ea5e9", "circle-radius": 5, "circle-opacity": 0.95 }
+      "data": "data/processed/wildfire_polygons.json",
+      "style": {
+        "fillColor": "#E76F51",
+        "fillOpacity": 0.35,
+        "lineColor": "#B3543F",
+        "lineWidth": 1
       },
-      "legend": [
-        { "type": "circle", "label": "Historical event", "color": "#0ea5e9", "radius": 5 }
-      ],
-      "attribution": "Demo events for UI wiring"
-    },
-    {
-      "id": "demo-entities",
-      "title": "Demo Entities",
-      "group": "Vectors",
-      "type": "geojson",
-      "path": "./data/demo_entities.json",
-      "opacity": 1.0,
       "visible": false,
-      "time": { "start": "1821-01-01", "end": null },
-      "paint": {
-        "line":   { "line-color": "#8b5cf6", "line-width": 2, "line-opacity": 0.95 },
-        "circle": { "circle-color": "#22c55e", "circle-radius": 5, "circle-opacity": 0.95 }
+      "time": { "start": "2000-01-01", "end": null },
+      "legendKey": "wildfire",
+      "attribution": "USGS/Geomac derived (processed)"
+    },
+
+    // ----------------------------
+    // Reference
+    // ----------------------------
+    {
+      "id": "kansas_counties",
+      "title": "Kansas Counties",
+      "group": "Reference",
+      "type": "geojson",
+      "data": "data/kansas_counties.geojson",
+      "style": {
+        "fillColor": "#000000",
+        "fillOpacity": 0.0,
+        "lineColor": "#555555",
+        "lineWidth": 1,
+        "lineOpacity": 0.8
       },
-      "legend": [
-        { "type": "circle", "label": "Settlement / event", "color": "#22c55e", "radius": 5 },
-        { "type": "line",   "label": "Trail / railroad",   "color": "#8b5cf6", "width": 2 }
-      ],
-      "attribution": "Demo entities for UI wiring"
+      "visible": false,
+      "time": { "start": "1854-01-01", "end": null },
+      "legendKey": "counties",
+      "attribution": "Kansas GIS (compiled)"
     }
   ]
 }
