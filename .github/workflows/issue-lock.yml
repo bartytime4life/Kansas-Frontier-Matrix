@@ -1,0 +1,40 @@
+name: "Hygiene — Lock Closed Issues and PRs"
+
+on:
+  schedule:
+    - cron: "0 4 * * *"   # Daily at 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lock closed issues and PRs
+        uses: dessant/lock-threads@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Number of days of inactivity before locking
+          issue-lock-inactive-days: 30
+          pr-lock-inactive-days: 30
+
+          # Lock label applied when locking
+          issue-lock-labels: "locked"
+          pr-lock-labels: "locked"
+
+          # Messages left on issues and PRs
+          issue-lock-comment: >
+            This issue has been automatically locked due to 30 days of inactivity after closure.
+            Please open a new issue if you need to continue the discussion.
+
+          pr-lock-comment: >
+            This pull request has been automatically locked due to 30 days of inactivity after closure.
+            Please open a new PR if you’d like to continue working on this.
+
+          # Skip issues/PRs with exempt labels
+          exempt-issue-labels: "pinned,security,roadmap,discussion"
+          exempt-pr-labels: "security,roadmap,discussion"
