@@ -21,6 +21,7 @@ import json
 import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
+import logging
 
 # ---------------------------------------------------------------------------
 # Version (stdlib importlib.metadata with backport fallback)
@@ -95,8 +96,8 @@ def _resource_pkg_dir(subdir: str) -> Optional[Path]:
         p = Path(str(traversable))
         if p.exists() and p.is_dir():
             return p
-    except Exception:
-        pass
+    except Exception as e:
+        logging.debug(f"_resource_pkg_dir({subdir!r}): failed to resolve resource directory: {e}", exc_info=True)
     return None
 
 def _first_existing(paths: Iterable[Optional[Path]]) -> Optional[Path]:
