@@ -50,6 +50,7 @@
   .card h2 { margin: 0 0 10px; font-size: 16px; }
   .hint { color: var(--muted); font-size: 12.5px; }
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); font-size: 12px; margin-left: 6px; }
+  .sr-only { position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
   input[type="search"] {
     width: 100%; background: var(--code); color: var(--ink); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; outline: none;
   }
@@ -79,11 +80,11 @@
   .muted { color: var(--muted); }
   [hidden] { display:none !important; }
   /* Filter visibility handling */
-  .tree [data-item] { display: none; }           /* hide by default when filtering is active */
-  .tree[data-filter=""] [data-item] { display: block; } /* if no filter, show all */
-  .tree .hit { display: block !important; }      /* show direct hits */
-  .tree .hit-anc { display: block !important; }  /* show ancestors of hits */
-  .tree .hit-desc { display: block !important; } /* show descendants of hits */
+  .tree [data-item] { display: none; }                 /* hide by default when filtering is active */
+  .tree[data-filter=""] [data-item] { display: block; }/* if no filter, show all */
+  .tree .hit { display: block !important; }            /* show direct hits */
+  .tree .hit-anc { display: block !important; }        /* show ancestors of hits */
+  .tree .hit-desc { display: block !important; }       /* show descendants of hits */
   /* Keyboard focus ring */
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 </style>
@@ -112,10 +113,29 @@
     <div class="card">
       <h2>Repo Facts</h2>
       <div class="kv">
-        <b>Top entrypoints</b> <div><a href="./Makefile">Makefile</a>, <a href="./web/index.html">web/index.html</a>, <a href="./src/kansas_geo_timeline/cli.py">CLI</a>, <a href="./tests/">tests/</a></div>
-        <b>Catalog</b> <div><span class="muted">STAC 1.0.0</span> under <code>./stac/</code>; connected to <code>web/app.config.json</code></div>
-        <b>Actions</b> <div><a href="./.github/workflows/site.yml">site.yml</a>, <a href="./.github/workflows/roadmap.yml">roadmap.yml</a>, <a href="./.github/workflows/stac-validate.yml">stac-validate.yml</a></div>
-        <b>Docs</b> <div><a href="./mkdocs.yml">mkdocs.yml</a> (if present), <a href="./docs/index.md">docs/</a></div>
+        <b>Top entrypoints</b>
+        <div>
+          <a href="./Makefile">Makefile</a>,
+          <a href="./web/index.html">web/index.html</a>,
+          <a href="./web/style.css">web/style.css</a>,
+          <a href="./src/kansas_geo_timeline/cli.py">CLI</a>,
+          <a href="./tests/">tests/</a>
+        </div>
+        <b>Catalog</b>
+        <div><span class="muted">STAC 1.0.0</span> under <code>./stac/</code>; renders to <code>web/app.config.json</code></div>
+        <b>Actions</b>
+        <div>
+          <a href="./.github/workflows/site.yml">site.yml</a>,
+          <a href="./.github/workflows/roadmap.yml">roadmap.yml</a>,
+          <a href="./.github/workflows/stac-validate.yml">stac-validate.yml</a>,
+          <a href="./.github/workflows/codeql.yml">codeql.yml</a>
+        </div>
+        <b>Docs</b>
+        <div>
+          <a href="./mkdocs.yml">mkdocs.yml</a>,
+          <a href="./docs/index.md">docs/</a>,
+          <a href="./web/config/README.md">web/config/README.md</a>
+        </div>
       </div>
     </div>
   </section>
@@ -131,7 +151,7 @@
       <ul class="list">
         <li><b>Data → COGs → Derivatives</b>: <code>data/sources/*.json</code> → <code>make fetch</code>/<code>make cogs</code> → <code>data/cogs/**</code> → <code>make terrain</code> creates <code>hillshade/slope/aspect</code> → <code>data/derivatives/</code>.</li>
         <li><b>STAC</b>: <code>make stac</code> writes Items/Collections under <code>./stac/</code>, then patches <code>file:size</code> + <code>checksum:sha256</code> if <code>.sha256</code> exists.</li>
-        <li><b>Web viewer</b>: <code>make site</code> writes <code>web/layers.json</code>; <code>kgt</code> can render <code>web/app.config.json</code> from STAC via <code>templates/app.config.json.j2</code>.</li>
+        <li><b>Web viewer</b>: <code>make site</code> mirrors small vectors to <code>web/data/**</code> and writes <code>web/layers.json</code>; <code>kgt</code> renders <code>web/app.config.json</code> from STAC.</li>
         <li><b>Google Earth</b>: regionated KML/KMZ under <code>earth/</code> can mirror key overlays.</li>
         <li><b>Roadmap sync</b>: <code>.github/roadmap/roadmap.yaml</code> → <code>scripts/sync-roadmap.js</code> → labels/milestones/issues.</li>
         <li><b>Tests</b>: <code>tests/test_stac.py</code>, <code>test_sources.py</code>, <code>test_cli.py</code> validate wiring.</li>
@@ -161,36 +181,54 @@
     <div class="codeblock"><pre id="raw" aria-label="Raw repo listing" tabindex="0">.
 |-- README.md
 |-- LICENSE
+|-- constraints.txt
+|-- requirements.txt
+|-- pyproject.toml
 |-- package.json
 |-- package-lock.json
-|-- pyproject.toml
 |-- Makefile
-|-- requirements.txt
+|-- docker-compose.yml
+|-- .dockerignore
 |-- .gitignore
 |-- .gitattributes
 |-- .editorconfig
 |-- .pre-commit-config.yaml
+|-- mkdocs.yml
+|-- Project Dir Overview.html
 |-- .github/
 |   |-- workflows/
 |   |   |-- site.yml
-|   |   |-- roadmap.yml        # Roadmap → Issues/Milestones sync (Actions)
-|   |   `-- stac-validate.yml  # STAC validation job (reproducibility)
+|   |   |-- roadmap.yml
+|   |   |-- stac-validate.yml
+|   |   `-- codeql.yml
 |   |-- roadmap/
-|   |   `-- roadmap.yaml       # Declarative roadmap (Milestones/Issues)
+|   |   `-- roadmap.yaml
 |   |-- ISSUE_TEMPLATE/
 |   |   |-- bug_report.md
 |   |   |-- data_addition.md
 |   |   `-- experiment_report.md
 |   `-- PULL_REQUEST_TEMPLATE.md
 |-- scripts/
-|   |-- sync-roadmap.js        # GitHub sync script (uses js-yaml, actions/*)
+|   |-- sync-roadmap.js
 |   |-- fetch.py
 |   |-- make_cog.py
 |   |-- make_hillshade.py
+|   |-- make_slope_aspect.py
+|   |-- make_terrain_pack.py
+|   |-- mosaic_lidar_county.py
+|   |-- regionate_kml.py
 |   |-- write_meta.py
 |   |-- make_stac.py
 |   |-- validate_sources.py
-|   `-- validate_stac.py
+|   |-- validate_stac.py
+|   |-- validate_cogs.py
+|   |-- gen_sha256.sh
+|   |-- patch_stac_asset.py
+|   |-- update_registry.py
+|   |-- badges/
+|   |   `-- source_map.json
+|   `-- collections/
+|       `-- archaeology_sites.sh
 |-- src/
 |   `-- kansas_geo_timeline/
 |       |-- __init__.py
@@ -209,7 +247,10 @@
 |   |   |-- usgs_historic_topo.json
 |   |   |-- ks_treaties.json
 |   |   |-- ks_railroads.json
-|   |   `-- schema.source.json
+|   |   |-- schema.source.json
+|   |   `-- land/
+|   |       `-- raw/
+|   |           `-- NLCD_1992_CONUS.tif  # placeholder
 |   |-- cogs/
 |   |   |-- dem/
 |   |   |   |-- ks_1m_dem_2018_2020.tif
@@ -222,30 +263,40 @@
 |   |   |   |-- usgs_topo_larned_1894.tif
 |   |   |   `-- usgs_topo_larned_1894.meta.json
 |   |   `-- landcover/
-|   |       `-- ks_landcover_1936_dustbowl.tif
-|   |-- processed/
-|   |   |-- dem/
-|   |   |   |-- ks_1m_dem.tif
-|   |   |   |-- ks_1m_hillshade.tif
-|   |   |   `-- _meta.json
-|   |   |-- overlays/
-|   |   |   |-- usgs_1894_larned.tif
-|   |   |   `-- _meta.json
-|   |   `-- vectors/
-|   |       |-- treaties.geojson
-|   |       |-- railroads_1900.geojson
-|   |       `-- _meta.json
+|   |       `-- nlcd_1992_ks_cog.tif
+|   |-- derivatives/
+|   |   |-- hillshade.tif
+|   |   |-- slope.tif
+|   |   `-- aspect.tif
+|   `-- processed/
+|       |-- hydrology/
+|       |   `-- kansas_river/
+|       |       |-- channels.geojson
+|       |       |-- floodplains.geojson
+|       |       `-- gauges.geojson
+|       |-- towns_points.json
+|       `-- vectors/
+|           |-- treaties.geojson
+|           |-- railroads_1900.geojson
+|           `-- _meta.json
 |-- stac/
 |   |-- collections/
 |   |   |-- elevation.json
 |   |   |-- historic_topo.json
-|   |   `-- vectors.json
+|   |   |-- vectors.json
+|   |   `-- ks_kansas_river.json
 |   `-- items/
-|       |-- ks_1m_dem.json
-|       |-- ks_1m_hillshade.json
-|       |-- usgs_1894_larned.json
-|       |-- treaties_1854.json
-|       `-- railroads_1900.json
+|       |-- elevation/
+|       |   `-- ks_1m_dem_2018_2020.json
+|       |-- overlays/
+|       |   `-- usgs_topo_larned_1894.json
+|       |-- vectors/
+|       |   |-- ks_treaties.json
+|       |   `-- ks_railroads.json
+|       `-- ks_kansas_river/
+|           |-- channels.json
+|           |-- floodplains.json
+|           `-- gauges.json
 |-- earth/
 |   |-- Kansas_Terrain.kmz
 |   |-- doc.kml
@@ -254,13 +305,35 @@
 |       `-- usgs_topo_1894.kml
 |-- web/
 |   |-- index.html
-|   |-- app.js
-|   |-- app.css
+|   |-- style.css
 |   |-- app.config.json
 |   |-- layers.json
-|   `-- assets/
-|       |-- favicon.svg
-|       `-- logo.png
+|   |-- config/
+|   |   |-- README.md
+|   |   |-- viewer.json
+|   |   |-- time_config.json
+|   |   |-- story_layers.json
+|   |   |-- legend.json
+|   |   |-- categories.json
+|   |   |-- sources.json
+|   |   |-- schema.json
+|   |   |-- app.config.schema.json
+|   |   `-- layers.schema.json
+|   |-- data/
+|   |   `-- processed/
+|   |       |-- hydrology/
+|   |       |   `-- kansas_river/
+|   |       |       |-- channels.geojson
+|   |       |       |-- floodplains.geojson
+|   |       |       `-- gauges.geojson
+|   |       `-- towns_points.json
+|   |-- assets/
+|   |   |-- favicon.svg
+|   |   `-- logo.png
+|   `-- tiles/
+|       `-- terrain/
+|           `-- hillshade/
+|               `-- {z}/{x}/{y}.png  # example
 |-- docker/
 |   |-- Dockerfile
 |   `-- compose.yaml
@@ -274,10 +347,21 @@
 |   |-- model_cards/
 |   |   `-- nlp_geoparse.md
 |   `-- glossary.md
-`-- tests/
-    |-- test_stac.py
-    |-- test_sources.py
-    `-- test_cli.py
+|-- tests/
+|   |-- test_stac.py
+|   |-- test_sources.py
+|   `-- test_cli.py
+`-- docs/
+    |-- index.md
+    |-- quickstart.md
+    |-- viewer.md
+    |-- stac.md
+    |-- cli.md
+    |-- data_sources.md
+    |-- troubleshooting.md
+    |-- roadmap.md
+    |-- requirements.md
+    `-- snapshots.md
 </pre></div>
   </section>
 
@@ -302,35 +386,28 @@
     return cleaned.startsWith('./') ? cleaned : './' + cleaned;
   };
 
-  // Compute depth: count leading "│", "|", " " blocks before the branch marker
-  // We detect a line that looks like: optional pipes/spaces, then |-- or `--, then a name
+  // Detect entries like: (pipes/spaces)... |-- NAME   or   `-- NAME
   const entryRe = /^\s*([|` ]*?)(?:\|--|`--)\s(.+)$/;
 
-  // Build a simple tree model first to make hit/ancestor/descendant marking easy
-  let root = { name: '.', path: '.', isDir: true, children: [], parent: null, el: null };
-  const stack = [root]; // stack[depth] holds the node at that depth
+  // Build a tree model: mark dirs by trailing slash in raw, strip comments from href
+  let rootNode = { name: '.', path: '.', isDir: true, children: [], parent: null, el: null };
+  const stack = [rootNode];
 
   for (const line of rawLines) {
     const m = entryRe.exec(line);
     if (!m) continue;
     const prefix = m[1] ?? '';
-    // The prefix often uses "   " for a level; count groups of 4 chars (~ Git tree style)
-    // Fallback: number of pipe/backtick groups divided by 4.
-    const depth = Math.max(0, Math.floor(prefix.length / 4));
+    const depth = Math.max(0, Math.floor(prefix.length / 4)); // rough tree depth
     let name = m[2].trim();
 
-    // strip trailing "/" from dir names in raw
     const isDir = name.endsWith('/');
     if (isDir) name = name.slice(0, -1);
 
-    // Some lines include inline comments like "file # note", drop from href but keep visible text
-    const display = name;
-    const hrefName = name.replace(/\s+#.*/, '');
+    const display = name;                                // keep comments in visible text (if any)
+    const hrefName = name.replace(/\s+#.*/, '');         // strip inline comments from link target
 
-    // Ascend to correct parent based on depth
     while (stack.length > depth + 1) stack.pop();
     const parent = stack[stack.length - 1];
-
     const fullPath = (parent.path === '.' ? hrefName : parent.path + '/' + hrefName);
 
     const node = { name: display, href: hrefName, path: fullPath, isDir, children: [], parent, el: null };
@@ -338,20 +415,20 @@
     if (isDir) stack.push(node);
   }
 
-  // DOM rendering
-  const container = $('#tree');
+  // Render
+  const container = tree;
   container.setAttribute('data-filter', '');
 
   const renderNode = (node, into) => {
-    if (node === root) {
+    if (node === rootNode) {
       node.el = into;
       node.el.dataset.item = '1';
-      node.el.classList.add('hit-anc'); // show root always
+      node.el.classList.add('hit-anc');
       return;
     }
     if (node.isDir) {
       const details = document.createElement('details');
-      details.open = node.parent === root; // expand top-level dirs initially
+      details.open = node.parent === rootNode; // expand top-level dirs initially
       details.setAttribute('role', 'treeitem');
       details.setAttribute('aria-expanded', String(details.open));
       details.dataset.item = '1';
@@ -393,105 +470,74 @@
     }
   };
 
-  renderNode(root, container);
+  renderNode(rootNode, container);
 
-  // Filter logic: mark hits, ancestors, descendants and hide others (via CSS)
+  // Filter logic
   const filterInput = $('#filter');
   const resultsNote = $('#resultsNote');
 
   const markAndCount = (q) => {
-    // Clear previous marks
     const clearMarks = (n) => {
       if (n.el) n.el.classList.remove('hit','hit-anc','hit-desc');
       for (const ch of n.children) clearMarks(ch);
     };
-    clearMarks(root);
+    clearMarks(rootNode);
 
     if (!q) {
       container.setAttribute('data-filter', '');
-      // expand top-level only
       $$('#tree > details').forEach(d => d.open = true);
       resultsNote.textContent = 'Showing all items';
       return;
     }
     container.setAttribute('data-filter', q);
 
-    // Predicate: a hit if node name or href/path includes q
-    const match = (n) => {
-      const hay = (n.name + ' ' + (n.path || '')).toLowerCase();
-      return hay.includes(q);
-    };
+    const match = (n) => (n.name + ' ' + (n.path || '')).toLowerCase().includes(q);
 
     let hits = 0;
-
     const markHits = (n) => {
       let selfHit = match(n);
       let descHit = false;
-      for (const ch of n.children) {
-        descHit = markHits(ch) || descHit;
-      }
+      for (const ch of n.children) descHit = markHits(ch) || descHit;
       const isHit = selfHit || descHit;
+
       if (n.el) {
         if (selfHit) n.el.classList.add('hit');
         if (descHit) n.el.classList.add('hit-anc');
-        // Mark descendants of a direct hit to keep nested context visible
         if (selfHit) {
-          const markDesc = (x) => {
-            if (x.el) x.el.classList.add('hit-desc');
-            x.children.forEach(markDesc);
-          };
+          const markDesc = (x) => { if (x.el) x.el.classList.add('hit-desc'); x.children.forEach(markDesc); };
           n.children.forEach(markDesc);
         }
       }
       if (selfHit && !n.isDir) hits++;
-      // Auto-expand ancestors of matches
-      if ((selfHit || descHit) && n.parent && n.parent.el?.tagName === 'DETAILS') {
-        n.parent.el.open = true;
-      }
+      if ((selfHit || descHit) && n.parent && n.parent.el?.tagName === 'DETAILS') n.parent.el.open = true;
       return isHit;
     };
-    markHits(root);
+    markHits(rootNode);
 
     resultsNote.textContent = hits ? `Found ${hits} file${hits!==1?'s':''}` : 'No matches';
   };
 
-  const onFilter = () => {
-    const q = filterInput.value.trim().toLowerCase();
-    markAndCount(q);
-  };
+  const onFilter = () => markAndCount(filterInput.value.trim().toLowerCase());
   filterInput.addEventListener('input', onFilter);
 
-  // Toolbar actions
-  $('#expandAll').addEventListener('click', () => {
-    $$('#tree details').forEach(d => d.open = true);
-  });
+  // Toolbar
+  $('#expandAll').addEventListener('click', () => { $$('#tree details').forEach(d => d.open = true); });
   $('#collapseAll').addEventListener('click', () => {
-    // Keep top-level open, collapse deeper
-    $$('#tree > details').forEach(top => {
-      top.open = true;
-      $$(':scope details', top).forEach(d => d.open = false);
-    });
+    $$('#tree > details').forEach(top => { top.open = true; $$(':scope details', top).forEach(d => d.open = false); });
   });
   $('#copyRaw').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText($('#raw').textContent);
-      resultsNote.textContent = 'Raw listing copied';
-      setTimeout(() => resultsNote.textContent = 'Ready', 1500);
-    } catch {
-      alert('Copy failed: your browser may block clipboard access.');
-    }
+    try { await navigator.clipboard.writeText($('#raw').textContent); resultsNote.textContent = 'Raw listing copied'; setTimeout(() => resultsNote.textContent = 'Ready', 1500); }
+    catch { alert('Copy failed: your browser may block clipboard access.'); }
   });
 
-  // Keyboard shortcuts: "/" focus search, "*" expand, "-" collapse
+  // Keyboard: "/" focus · "*" expand · "-" collapse
   window.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== filterInput) {
-      e.preventDefault(); filterInput.focus(); return;
-    }
+    if (e.key === '/' && document.activeElement !== filterInput) { e.preventDefault(); filterInput.focus(); return; }
     if (e.key === '*') { e.preventDefault(); $('#expandAll').click(); return; }
     if (e.key === '-') { e.preventDefault(); $('#collapseAll').click(); return; }
   });
 
-  // Initialize counts
+  // Init
   markAndCount('');
 })();
 </script>
