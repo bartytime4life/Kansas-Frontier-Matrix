@@ -2,15 +2,15 @@
    Kansas-Frontier-Matrix — web/style.css  (connected, upgraded, debugged)
    Purpose: Minimal, modern, responsive styles for the time-aware MapLibre UI.
    Notes:
-     - Harmonized with web/css/layout.css, theme.css, and components.css.
-     - Works with MapLibre container #map and year slider #year + #year-label.
+     - Harmonized with app.css guidance in /web/docs/STYLE_GUIDE.md.
+     - Targets MapLibre container #map and year slider #year + #year-label.
      - Includes fallbacks where color-mix/backdrop-filter are unsupported.
-     - Accessibility: focus rings, prefers-reduced-motion, forced-colors.
+     - Accessibility: focus rings, prefers-reduced-motion, forced-colors, RTL.
    ========================================================================== */
 
 /* ---- CSS Variables (Design Tokens) -------------------------------------- */
 :root {
-  /* Base surfaces & ink */
+  /* Surfaces & ink */
   --bg: #0f1115;
   --panel: #131720;
   --panel-2: #161b26;
@@ -30,6 +30,7 @@
   --shadow-1: 0 2px 10px rgba(0,0,0,.25);
   --shadow: 0 8px 24px rgba(0,0,0,0.25);
 
+  --radius-xs: 6px;
   --radius-sm: 8px;
   --radius: 14px;
   --radius-lg: 20px;
@@ -43,10 +44,12 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* Z-index */
-  --map-z: 1;
-  --controls-z: 10;
-  --tooltip-z: 20;
+  --z-map: 1;
+  --z-controls: 10;
+  --z-tooltip: 20;
 
+  /* Header & rings */
+  --header-h: 64px;
   --focus-ring: 0 0 0 3px rgba(79,178,255,0.35);
 }
 
@@ -101,7 +104,8 @@ button { font: inherit; }
 .header {
   position: sticky;
   top: 0;
-  z-index: var(--controls-z);
+  z-index: var(--z-controls);
+  height: var(--header-h);
   border-bottom: 1px solid var(--border);
   padding-left: max(env(safe-area-inset-left), 0px);
   padding-right: max(env(safe-area-inset-right), 0px);
@@ -118,12 +122,13 @@ button { font: inherit; }
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--gap-2) var(--gap-3);
+  height: 100%;
   display: flex;
   align-items: center;
   gap: var(--gap-3);
 }
 .brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--gap-2);
   font-weight: 700;
@@ -131,26 +136,26 @@ button { font: inherit; }
 }
 .brand img { width: 28px; height: 28px; }
 .header__spacer { flex: 1; }
-.header__actions { display: flex; gap: var(--gap-2); align-items: center; }
+.header__actions { display: inline-flex; gap: var(--gap-2); align-items: center; }
 
 /* Map container (MapLibre expects a fixed-height container) */
 .map-wrapper {
   position: relative;
-  z-index: var(--map-z);
+  z-index: var(--z-map);
 }
 #map {
   width: 100%;
-  height: calc(100vh - 64px); /* header ~64px */
+  height: calc(100vh - var(--header-h));
   background: #0a0d12;
   outline: none;
 }
 
-/* ---- Sidebar (optional when using layout.css/components.css) ------------- */
+/* ---- Sidebar (optional) -------------------------------------------------- */
 .kfm-sidebar {
   position: absolute;
-  left: max(16px, env(safe-area-inset-left));
-  top: calc(72px + env(safe-area-inset-top));
-  z-index: var(--controls-z);
+  inset-inline-start: max(16px, env(safe-area-inset-left));
+  inset-block-start: calc(var(--header-h) + 8px + env(safe-area-inset-top));
+  z-index: var(--z-controls);
   width: min(360px, 90vw);
   display: flex;
   flex-direction: column;
@@ -167,9 +172,9 @@ button { font: inherit; }
 /* ---- Floating Controls Panel -------------------------------------------- */
 .controls {
   position: absolute;
-  right: max(16px, env(safe-area-inset-right));
-  top: calc(72px + env(safe-area-inset-top)); /* sits below header */
-  z-index: var(--controls-z);
+  inset-inline-end: max(16px, env(safe-area-inset-right));
+  inset-block-start: calc(var(--header-h) + 8px + env(safe-area-inset-top));
+  z-index: var(--z-controls);
   width: min(360px, 90vw);
   display: flex;
   flex-direction: column;
@@ -221,7 +226,7 @@ button { font: inherit; }
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
 }
 
-/* Filled track via gradient variable set by JS (background-size) */
+/* Filled track via gradient sized by --value (0%..100%) */
 #year.kfm-range--fill {
   --value: 0%;
   background:
@@ -240,9 +245,9 @@ button { font: inherit; }
   border: 2px solid var(--accent-2);
   box-shadow: var(--focus-ring);
   cursor: pointer;
-  margin-top: -6px; /* center on 6px track (Safari fix) */
+  margin-top: -6px; /* center on 6px track (Safari) */
 }
-/* Firefox */
+/* Firefox track & thumb */
 #year::-moz-range-track {
   height: 6px;
   border-radius: 999px;
@@ -260,6 +265,7 @@ button { font: inherit; }
   cursor: pointer;
 }
 
+/* Label */
 #year-label {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -321,7 +327,7 @@ button { font: inherit; }
 }
 .switch[aria-checked="true"] { background: var(--accent-2); }
 .switch__dot {
-  position: absolute; top: 50%; left: 2px;
+  position: absolute; top: 50%; inset-inline-start: 2px;
   width: calc(var(--h) - 6px); height: calc(var(--h) - 6px);
   border-radius: 50%;
   background: #fff; transform: translate(0, -50%);
@@ -404,7 +410,7 @@ button { font: inherit; }
 /* ---- Tooltips ------------------------------------------------------------ */
 .tooltip {
   position: absolute;
-  z-index: var(--tooltip-z);
+  z-index: var(--z-tooltip);
   pointer-events: none;
   transform: translate(-50%, -120%);
   padding: 6px 10px;
@@ -426,6 +432,7 @@ button { font: inherit; }
   color: var(--text) !important;
   border-color: var(--border) !important;
 }
+.maplibregl-ctrl button:hover { filter: brightness(1.05); }
 .maplibregl-popup-content {
   background: var(--panel);
   color: var(--text);
@@ -437,14 +444,15 @@ button { font: inherit; }
 
 /* ---- Responsive ---------------------------------------------------------- */
 @media (max-width: 960px) {
-  #map { height: calc(100vh - 56px); }
-  .controls { right: 12px; top: calc(64px + env(safe-area-inset-top)); width: min(420px, 92vw); }
+  :root { --header-h: 56px; }
+  #map { height: calc(100vh - var(--header-h)); }
+  .controls { inset-inline-end: 12px; inset-block-start: calc(var(--header-h) + 8px + env(safe-area-inset-top)); width: min(420px, 92vw); }
   .header__inner { padding: var(--gap-2) var(--gap-2); }
 }
 @media (max-width: 640px) {
-  .controls { left: 12px; right: 12px; width: auto; }
+  .controls { inset-inline-start: 12px; inset-inline-end: 12px; width: auto; }
   .legend { grid-template-columns: auto 1fr; }
-  .kfm-sidebar { left: 12px; right: 12px; width: auto; }
+  .kfm-sidebar { inset-inline-start: 12px; inset-inline-end: 12px; width: auto; }
 }
 
 /* ---- Print (export static map) ------------------------------------------ */
@@ -483,4 +491,5 @@ button { font: inherit; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* reserved for custom theming */
+/* Utilities --------------------------------------------------------------- */
+.hidden { display: none !important; }
