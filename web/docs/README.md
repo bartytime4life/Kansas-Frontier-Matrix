@@ -22,14 +22,14 @@ The goal is to keep **architecture, design, and extension guides** close to the 
   - JSON config schema-lite (`layers[]` contract, paint/legend/time rules)
   - Commit guidelines and CI validation tips
 
-- *(planned)* **`DEVELOPER_GUIDE.md`**  
+- **`DEVELOPER_GUIDE.md`** *(planned)*  
   Practical contributor reference:
   - How `app.js` loads configs and builds the sidebar dynamically
   - Timeline slider logic and year-based filtering
   - Adding new layer types (e.g., GeoJSON with paint styles, raster tiles)
   - Debugging and testing workflows
 
-- *(planned)* **`UI_DESIGN.md`**  
+- **`UI_DESIGN.md`** *(planned)*  
   Visual/UI reference:
   - Sidebar & timeline placement
   - Responsive rules (desktop sidebar → mobile drawer)
@@ -41,27 +41,36 @@ The goal is to keep **architecture, design, and extension guides** close to the 
 ## Purpose
 
 The **web viewer** provides:
-- A **MapLibre-based map** with a **time slider** for filtering layers
-- Historical + terrain overlays (`./tiles/` and `./vectors/`)
-- Config-driven setup via [`app.config.json`](../app.config.json)
-- A bridge between **STAC metadata** and interactive visualization
+
+- A **MapLibre-based map** with a **time slider** for filtering layers  
+- Historical + terrain overlays (`./tiles/` and `./vectors/`)  
+- Config-driven setup via [`app.config.json`](../app.config.json)  
+- A bridge between **STAC metadata** and **interactive visualization**
 
 Documentation here ensures future developers can:
-- Add or extend layers cleanly
-- Maintain reproducibility across configs and UI
-- Connect new datasets without hardcoding
-- Keep accessibility and design consistent
+
+- Add or extend layers cleanly  
+- Maintain reproducibility across configs and UI  
+- Connect new datasets without hardcoding  
+- Keep accessibility and design consistent  
 
 ---
 
 ## Contribution Guidelines
 
-- Keep docs **short and focused** per file.
-- Reference project files by **relative paths** (e.g., `../app.css`, `../index.html`).
-- Use **Mermaid diagrams** for flows, but validate syntax in GitHub preview:
+- Keep docs **short and focused** per file.  
+- Reference project files by **relative paths** (e.g., `../app.css`, `../index.html`).  
+- Use **Mermaid diagrams** for flows, and validate syntax in GitHub preview.
 
-  ```mermaid
-  flowchart TD
-    A["Config:\napp.config.json"] --> B["Viewer:\nindex.html + app.js"]
-    B --> C["MapLibre:\nsources/layers"]
-    C --> D["UI:\nsidebar + time slider"]
+```mermaid
+flowchart TD
+  A["Config:\napp.config.json"] --> B["Viewer:\nindex.html / app.js"]
+  B --> C["MapLibre:\nsources / layers"]
+  C --> D["UI:\nsidebar + time slider"]
+````
+
+---
+
+✅ Following this structure ensures the Kansas-Frontier-Matrix web UI remains maintainable, accessible, and ready for contributors.
+
+```
