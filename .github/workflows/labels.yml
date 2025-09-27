@@ -1,0 +1,26 @@
+name: "Hygiene — Sync GitHub Labels"
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - ".github/labels.yml"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync labels from .github/labels.yml
+        uses: EndBug/label-sync@v2
+        with:
+          config-file: .github/labels.yml
+          delete-other-labels: false   # set true if you want strict sync (delete extras)
+          dry-run: false
