@@ -1,32 +1,28 @@
 // web/components/timeline.js
-// Kansas-Frontier-Matrix — Timeline / Year Slider Component
-// ---------------------------------------------------------
-// Lightweight, framework-free time control with:
-//  - Min/Max range, current value, and step
-//  - Label with tabular-nums, keyboard nudging, wheel support
-//  - Optional play/pause (auto-advance) and step ± buttons
-//  - Emits change events via onChange(cb)
-//  - Dock mode (uses .kfm-timeline-dock CSS if you mount without a container)
+// Kansas-Frontier-Matrix — Timeline / Year Slider Component (upgraded)
+// --------------------------------------------------------------------
+// See summary above for changes. Drop-in compatible with prior API.
 //
-// Example:
+// Usage:
+//   import Timeline from "./components/timeline.js";
+//   const tl = new Timeline({...}).mount("#timebox");
+//   tl.onChange(y => KFM.setYear(y));
+//   tl.addEventListener("change", e => console.log(e.detail.value));
 //
-// import Timeline from "./components/timeline.js";
+// Public API (selected):
+//   mount(containerOrSelector)         // returns this
+//   onChange(cb) / offChange(cb)
+//   setRange(min, max) / setStep(step)
+//   setValue(v) / stepBy(delta)
+//   setOptions(opts)                   // partial opts update
+//   setLabel(text)
+//   getState()                         // {min,max,value,step,playing,fps,loop}
+//   play() / pause() / toggle()
+//   destroy()
 //
-// const tl = new Timeline({
-//   min: 1700, max: 2100, value: 1900, step: 1,
-//   autoplay: false, fps: 12, loop: true,
-//   formatLabel: (y) => String(y)
-// }).mount(document.getElementById("timebox"));
-//
-// tl.onChange((y) => KFM.setYear(y));
-//
-// // Update programmatically:
-// tl.setValue(1936);
-//
-// // Change range:
-// tl.setRange(1800, 2025).setValue(1900);
+// Emits DOM events on root element: 'change', 'play', 'pause', 'rangechange'
 
-export default class Timeline {
+export default class Timeline extends EventTarget {
   /**
    * @param {Object} opts
    * @param {number} [opts.min=1700]
@@ -34,38 +30,49 @@ export default class Timeline {
    * @param {number} [opts.value=1900]
    * @param {number} [opts.step=1]
    * @param {boolean} [opts.autoplay=false]
-   * @param {number} [opts.fps=8] - frames/steps per second when playing
+   * @param {number} [opts.fps=8]              - frames/steps per second when playing (1..60)
    * @param {boolean} [opts.loop=true]
-   * @param {Function} [opts.formatLabel] - (val) => string
+   * @param {Function} [opts.formatLabel]      - (val) => string for the numeric label
    * @param {boolean} [opts.showControls=true] - show play/prev/next controls
-   * @param {string} [opts.label="Year:"] - label prefix
+   * @param {string} [opts.label="Year:"]      - label prefix, localized OK
+   * @param {string} [opts.ariaLabel]          - aria-label for the whole control
    */
   constructor(opts = {}) {
+    super();
     this.min = Number.isFinite(opts.min) ? +opts.min : 1700;
     this.max = Number.isFinite(opts.max) ? +opts.max : 2100;
     this.step = Number.isFinite(opts.step) ? +opts.step : 1;
     this.value = this._clamp(Number.isFinite(opts.value) ? +opts.value : this.min);
-    this.autoplay = !!opts.autoplay;
-    this.fps = Number.isFinite(opts.fps) ? +opts.fps : 8;
+    const reduceMotion = matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    this.autoplay = !!opts.autoplay && !reduceMotion;
+    this.fps = this._clampFps(Number.isFinite(opts.fps) ? +opts.fps : 8);
     this.loop = opts.loop !== false;
     this.formatLabel = typeof opts.formatLabel === "function" ? opts.formatLabel : (y) => String(y);
     this.showControls = opts.showControls !== false;
     this.labelText = opts.label ?? "Year:";
+    this.ariaLabel = opts.ariaLabel ?? "Timeline year slider";
 
     this._root = null;
     this._label = null;
     this._slider = null;
     this._btnPlay = null;
     this._raf = null;
-    this._lastTick = 0;
+    this._accum = 0;        // accumulated time (ms) for drift-free stepping
+    this._lastTs = 0;
     this._subscribers = new Set();
+    this._bound = {
+      tick: (ts) => this._tick(ts),
+      keydown: (e) => this._onKeydown(e),
+      wheel: (e) => this._onWheel(e),
+      visibility: () => this._onVisibility(),
+    };
   }
 
   // ---------------------------------------------------------------------------
   // Mount & DOM
   // ---------------------------------------------------------------------------
   mount(container) {
-    // If no container is provided, create a dock in the map using CSS hooks
+    if (typeof container === "string") container = document.querySelector(container);
     if (!container) {
       const dock = document.createElement("div");
       dock.className = "kfm-timeline-dock";
@@ -73,17 +80,51 @@ export default class Timeline {
       container = dock;
     }
 
-    // Skeleton
-    this._root = Timeline.el("div", {}, [
-      Timeline.el("div", { class: "kfm-timeline-label" }, [this.labelText]),
-      Timeline.el("div", { style: { display: "grid", gridTemplateColumns: this.showControls ? "auto 1fr auto" : "1fr", gap: "8px", alignItems: "center" } }, [
-        this.showControls ? this._controlsLeft() : "",
-        this._sliderBlock(),
-        this.showControls ? this._controlsRight() : ""
-      ])
+    // Root
+    this._root = Timeline.el("div", {
+      class: "kfm-timeline",
+      role: "group",
+      "aria-label": this.ariaLabel,
+      style: {
+        display: "grid",
+        gap: "8px",
+        userSelect: "none",
+      }
+    });
+
+    // Label row
+    const labelRow = Timeline.el("div", {
+      class: "kfm-timeline-row kfm-timeline-label",
+      style: { display: "flex", alignItems: "center", gap: "8px" }
+    }, [
+      Timeline.el("strong", { style: { fontSize: "13px" } }, [this.labelText]),
+      (this._label = Timeline.el("span", {
+        style: { fontVariantNumeric: "tabular-nums" },
+        "aria-live": "polite",
+        "aria-atomic": "true"
+      }, [this.formatLabel(this.value)]))
     ]);
 
+    // Slider row
+    const row = Timeline.el("div", {
+      class: "kfm-timeline-row",
+      style: {
+        display: "grid",
+        gridTemplateColumns: this.showControls ? "auto 1fr auto" : "1fr",
+        gap: "8px",
+        alignItems: "center"
+      }
+    }, [
+      this.showControls ? this._controlsLeft() : "",
+      this._sliderBlock(),
+      this.showControls ? this._controlsRight() : ""
+    ]);
+
+    this._root.append(labelRow, row);
     container.appendChild(this._root);
+
+    // Global listeners
+    document.addEventListener("visibilitychange", this._bound.visibility);
 
     // Kick off autoplay if requested
     if (this.autoplay) this.play();
@@ -92,7 +133,9 @@ export default class Timeline {
   }
 
   _controlsLeft() {
-    const wrap = Timeline.el("div", { style: { display: "flex", gap: "6px", alignItems: "center" } });
+    const wrap = Timeline.el("div", {
+      style: { display: "flex", gap: "6px", alignItems: "center" }
+    });
     const btnPrev = Timeline.btn("⟨", "Step backward", () => this.stepBy(-this.step));
     this._btnPlay = Timeline.btn("▶", "Play", () => this.toggle());
     wrap.appendChild(btnPrev);
@@ -101,18 +144,16 @@ export default class Timeline {
   }
 
   _controlsRight() {
-    const wrap = Timeline.el("div", { style: { display: "flex", gap: "6px", alignItems: "center", justifyContent: "flex-end" } });
+    const wrap = Timeline.el("div", {
+      style: { display: "flex", gap: "6px", alignItems: "center", justifyContent: "flex-end" }
+    });
     const btnNext = Timeline.btn("⟩", "Step forward", () => this.stepBy(+this.step));
     wrap.appendChild(btnNext);
     return wrap;
   }
 
   _sliderBlock() {
-    const block = Timeline.el("div", {});
-    const row = Timeline.el("div", { style: { display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" } }, [
-      Timeline.el("strong", { style: { fontSize: "13px" } }, ["Year:"]),
-      (this._label = Timeline.el("span", { style: { fontVariantNumeric: "tabular-nums" } }, [this.formatLabel(this.value)]))
-    ]);
+    const block = Timeline.el("div", { style: { display: "grid", gap: "6px" } });
 
     this._slider = Timeline.el("input", {
       type: "range",
@@ -121,39 +162,35 @@ export default class Timeline {
       step: String(this.step),
       value: String(this.value),
       style: { width: "100%" },
+      "aria-label": this.ariaLabel,
       oninput: (e) => {
         const v = this._clamp(+e.target.value);
         this._updateLabel(v);
-        this._emit(v);
+        this._emit(v, /*fromInteraction*/true);
       }
     });
 
-    // Keyboard nudging (while focused)
-    this._slider.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft" || e.key === "ArrowDown") this.stepBy(-this.step, true);
-      if (e.key === "ArrowRight" || e.key === "ArrowUp") this.stepBy(+this.step, true);
-    });
+    // Keyboard: fine + coarse controls
+    this._slider.addEventListener("keydown", this._bound.keydown, { passive: false });
 
-    // Mouse wheel adjusts value
-    this._slider.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      const delta = e.deltaY > 0 ? this.step : -this.step;
-      this.stepBy(delta, true);
-    }, { passive: false });
+    // Wheel: modifier-aware, debounced by frame
+    this._wheelPending = false;
+    this._slider.addEventListener("wheel", this._bound.wheel, { passive: false });
 
-    block.append(row, this._slider);
+    block.append(this._slider);
     return block;
   }
 
   // ---------------------------------------------------------------------------
-  // Playback (requestAnimationFrame-driven)
+  // Playback (requestAnimationFrame-driven; drift-free)
   // ---------------------------------------------------------------------------
   play() {
     if (this._raf) return this;
-    this._lastTick = performance.now();
-    this._tick = this._tick.bind(this);
-    this._raf = requestAnimationFrame(this._tick);
+    this._lastTs = 0;
+    this._accum = 0;
+    this._raf = requestAnimationFrame(this._bound.tick);
     this._setPlayLabel(true);
+    this._dispatch("play", { value: this.value });
     return this;
   }
 
@@ -162,6 +199,7 @@ export default class Timeline {
     cancelAnimationFrame(this._raf);
     this._raf = null;
     this._setPlayLabel(false);
+    this._dispatch("pause", { value: this.value });
     return this;
   }
 
@@ -169,22 +207,31 @@ export default class Timeline {
     return this._raf ? this.pause() : this.play();
   }
 
-  _tick(now) {
+  _tick(ts) {
+    if (!this._lastTs) this._lastTs = ts;
+    const dt = ts - this._lastTs;
+    this._lastTs = ts;
+
+    // accumulate and step in fixed increments based on fps
     const interval = 1000 / Math.max(1, this.fps);
-    if (now - this._lastTick >= interval) {
-      this._lastTick = now;
-      // Advance value by +step; clamp/loop if needed
+    this._accum += dt;
+    while (this._accum >= interval) {
+      this._accum -= interval;
       let next = this.value + this.step;
       if (next > this.max) next = this.loop ? this.min : this.max;
-      this._setValueInternal(next, true);
+      this._setValueInternal(next, /*fromInteraction*/false);
+      if (!this._raf) return; // might have been paused by user callback
+      if (!this.loop && this.value === this.max) this.pause();
     }
-    this._raf = requestAnimationFrame(this._tick);
+
+    this._raf = requestAnimationFrame(this._bound.tick);
   }
 
   _setPlayLabel(playing) {
     if (!this._btnPlay) return;
     this._btnPlay.textContent = playing ? "⏸" : "▶";
     this._btnPlay.title = playing ? "Pause" : "Play";
+    this._btnPlay.setAttribute("aria-pressed", String(playing));
   }
 
   // ---------------------------------------------------------------------------
@@ -203,20 +250,25 @@ export default class Timeline {
   setRange(min, max) {
     const lo = Number.isFinite(min) ? +min : this.min;
     const hi = Number.isFinite(max) ? +max : this.max;
-    this.min = Math.min(lo, hi);
-    this.max = Math.max(lo, hi);
+    const newMin = Math.min(lo, hi);
+    const newMax = Math.max(lo, hi);
+    if (newMin === this.min && newMax === this.max) return this;
+    this.min = newMin;
+    this.max = newMax;
     if (this._slider) {
       this._slider.min = String(this.min);
       this._slider.max = String(this.max);
     }
-    // Re-clamp current value
-    this.setValue(this.value);
+    this.setValue(this.value); // re-clamp
+    this._dispatch("rangechange", { min: this.min, max: this.max });
     return this;
   }
 
   setStep(step) {
-    this.step = Number.isFinite(step) ? +step : this.step;
-    if (this._slider) this._slider.step = String(this.step);
+    if (Number.isFinite(step) && step > 0) {
+      this.step = +step;
+      if (this._slider) this._slider.step = String(this.step);
+    }
     return this;
   }
 
@@ -225,14 +277,56 @@ export default class Timeline {
     return this;
   }
 
-  stepBy(delta, fromInteraction = false) {
+  stepBy(delta) {
     const v = this._clamp(this.value + (Number.isFinite(delta) ? +delta : this.step));
-    this._setValueInternal(v, fromInteraction);
+    this._setValueInternal(v, true);
     return this;
+  }
+
+  setOptions(opts = {}) {
+    if ("min" in opts || "max" in opts) this.setRange(opts.min ?? this.min, opts.max ?? this.max);
+    if ("step" in opts) this.setStep(opts.step);
+    if ("fps" in opts) this.fps = this._clampFps(+opts.fps);
+    if ("loop" in opts) this.loop = !!opts.loop;
+    if ("formatLabel" in opts && typeof opts.formatLabel === "function") {
+      this.formatLabel = opts.formatLabel;
+      this._updateLabel(this.value);
+    }
+    if ("label" in opts) this.setLabel(opts.label);
+    if ("ariaLabel" in opts) {
+      this.ariaLabel = String(opts.ariaLabel);
+      if (this._root) this._root.setAttribute("aria-label", this.ariaLabel);
+      if (this._slider) this._slider.setAttribute("aria-label", this.ariaLabel);
+    }
+    return this;
+  }
+
+  setLabel(text) {
+    this.labelText = String(text ?? "");
+    const strong = this._root?.querySelector(".kfm-timeline-label strong");
+    if (strong) strong.textContent = this.labelText;
+    return this;
+  }
+
+  getState() {
+    return {
+      min: this.min,
+      max: this.max,
+      value: this.value,
+      step: this.step,
+      playing: !!this._raf,
+      fps: this.fps,
+      loop: this.loop
+    };
   }
 
   destroy() {
     this.pause();
+    document.removeEventListener("visibilitychange", this._bound.visibility);
+    if (this._slider) {
+      this._slider.removeEventListener("keydown", this._bound.keydown);
+      this._slider.removeEventListener("wheel", this._bound.wheel);
+    }
     if (this._root?.parentNode) this._root.parentNode.removeChild(this._root);
     this._root = this._label = this._slider = this._btnPlay = null;
     this._subscribers.clear();
@@ -243,21 +337,24 @@ export default class Timeline {
   // ---------------------------------------------------------------------------
   _setValueInternal(v, fromInteraction) {
     const clamped = this._clamp(v);
-    if (clamped === this.value && fromInteraction) {
-      // still notify on UI interactions, to keep external state in sync
-      this._emit(clamped);
-      return;
-    }
+    const changed = clamped !== this.value;
     this.value = clamped;
-    if (this._slider) this._slider.value = String(clamped);
+    if (this._slider && this._slider.value !== String(clamped)) {
+      this._slider.value = String(clamped);
+    }
     this._updateLabel(clamped);
-    this._emit(clamped);
+    if (changed || fromInteraction) {
+      // callbacks
+      for (const cb of this._subscribers) {
+        try { cb(clamped); } catch (err) { console.error("Timeline onChange error:", err); }
+      }
+      // DOM event
+      this._dispatch("change", { value: clamped, user: !!fromInteraction });
+    }
   }
 
-  _emit(v) {
-    for (const cb of this._subscribers) {
-      try { cb(v); } catch (err) { console.error("Timeline onChange error:", err); }
-    }
+  _emit(v, fromInteraction = false) {
+    this._setValueInternal(v, fromInteraction);
   }
 
   _updateLabel(v) {
@@ -267,6 +364,61 @@ export default class Timeline {
   _clamp(v) {
     const num = Number.isFinite(v) ? +v : this.min;
     return Math.max(this.min, Math.min(this.max, num));
+  }
+
+  _clampFps(v) {
+    const n = Number.isFinite(v) ? v : 8;
+    return Math.max(1, Math.min(60, Math.round(n)));
+  }
+
+  _onKeydown(e) {
+    // Provide richer keyboard controls, prevent page scroll when appropriate
+    const key = e.key;
+    const big = Math.max(this.step, Math.ceil((this.max - this.min) / 20)); // coarse step
+    if (["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp", "PageUp", "PageDown", "Home", "End"].includes(key)) {
+      e.preventDefault();
+    }
+    switch (key) {
+      case "ArrowLeft":
+      case "ArrowDown":
+        this.stepBy(-this.step); break;
+      case "ArrowRight":
+      case "ArrowUp":
+        this.stepBy(+this.step); break;
+      case "PageDown":
+        this.stepBy(-big); break;
+      case "PageUp":
+        this.stepBy(+big); break;
+      case "Home":
+        this.setValue(this.min); break;
+      case "End":
+        this.setValue(this.max); break;
+    }
+  }
+
+  _onWheel(e) {
+    // Allow ctrl/cmd for coarse stepping, alt for fine quarter-step
+    e.preventDefault();
+    if (this._wheelPending) return;
+    this._wheelPending = true;
+    const dir = e.deltaY > 0 ? +1 : -1;
+    const modifier = e.ctrlKey || e.metaKey ? 5 : (e.altKey ? 0.25 : 1);
+    const delta = dir * Math.max(1, Math.round(this.step * modifier));
+    // Schedule at next frame to avoid flooding
+    requestAnimationFrame(() => {
+      this.stepBy(delta);
+      this._wheelPending = false;
+    });
+  }
+
+  _onVisibility() {
+    if (document.hidden && this._raf) this.pause();
+  }
+
+  _dispatch(type, detail) {
+    if (this._root) this._root.dispatchEvent(new CustomEvent(type, { detail }));
+    // Also allow consumers to addEventListener directly on instance
+    this.dispatchEvent(new CustomEvent(type, { detail }));
   }
 
   // ---------------------------------------------------------------------------
@@ -293,7 +445,7 @@ export default class Timeline {
     b.type = "button";
     b.textContent = text;
     b.title = title;
-    b.className = "kfm-btn"; // optional hook; styled by global or map.css if desired
+    b.className = "kfm-btn";
     b.style.padding = "4px 8px";
     b.style.border = "1px solid var(--kfm-border, #d1d5db)";
     b.style.borderRadius = "6px";
@@ -307,4 +459,3 @@ export default class Timeline {
     return b;
   }
 }
-
