@@ -12,8 +12,19 @@
 
     "title": { "type": "string" },
     "subtitle": { "type": ["string", "null"] },
+    "legendTitle": { "type": ["string", "null"] },
 
-    "style": { "type": "string" },
+    "style": {
+      "description": "MapLibre style — URL or inline style object",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": { "version": { "type": "integer" } },
+          "required": ["version"]
+        }
+      ]
+    },
     "center": {
       "type": "array",
       "minItems": 2,
@@ -27,8 +38,28 @@
       "maxItems": 4,
       "items": { "type": "number" }
     },
+    "hash": { "type": ["boolean", "null"] },
+    "navControl": { "type": ["boolean", "null"] },
 
     "time": { "$ref": "#/$defs/timeGlobal" },
+    "timePresets": {
+      "type": "array",
+      "items": {
+        "type": ["integer", "object"],
+        "oneOf": [
+          { "type": "integer" },
+          {
+            "type": "object",
+            "required": ["year"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": ["string", "null"] },
+              "year": { "type": "integer" }
+            }
+          }
+        ]
+      }
+    },
 
     "defaults": {
       "type": "object",
@@ -37,6 +68,7 @@
       "properties": {
         "minzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
         "maxzoom": { "type": "integer", "minimum": 0, "maximum": 24 },
+        "tileSize": { "type": ["integer", "null"], "enum": [256, 512, null] },
         "visible": { "type": "boolean" },
         "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
         "bounds": {
@@ -76,8 +108,31 @@
         "defaultYear": { "type": "integer" },
         "step":        { "type": "integer", "minimum": 1 },
         "loop":        { "type": "boolean" },
-        "fps":         { "type": "integer", "minimum": 1, "maximum": 60 }
+        "fps":         { "type": "integer", "minimum": 1, "maximum": 60 },
+        "autoplay":    { "type": ["boolean", "null"] }
       }
+    },
+
+    "legendItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": ["string", "null"] },
+        "color": { "type": ["string", "null"] },
+        "lineColor": { "type": ["string", "null"] },
+        "lineWidth": { "type": ["number", "null"] },
+        "pointColor": { "type": ["string", "null"] },
+        "pointRadius": { "type": ["number", "null"] },
+        "gradient": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "legend": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/legendItem" }
     },
 
     "commonLayerProps": {
@@ -87,20 +142,6 @@
         "id":         { "type": "string" },
         "title":      { "type": "string" },
         "group":      { "type": ["string", "null"] },
-        "url":        { "type": "string" },
-        "opacity":    { "type": "number", "minimum": 0, "maximum": 1 },
-        "minzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
-        "maxzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
-        "visible":    { "type": "boolean" },
-        "tileSize":   { "type": ["integer", "null"], "enum": [256, 512, null] },
-        "bounds": {
-          "type": "array",
-          "minItems": 4,
-          "maxItems": 4,
-          "items": { "type": "number" }
-        },
-        "time":        { "$ref": "#/$defs/timeRange" },
-        "attribution": { "type": ["string", "null"] },
         "category": {
           "type": ["string", "null"],
           "enum": [
@@ -114,25 +155,56 @@
             null
           ]
         },
+        "opacity":    { "type": "number", "minimum": 0, "maximum": 1 },
+        "minzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
+        "maxzoom":    { "type": ["integer", "null"], "minimum": 0, "maximum": 24 },
+        "visible":    { "type": "boolean" },
+        "tileSize":   { "type": ["integer", "null"], "enum": [256, 512, null] },
+        "bounds": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "type": "number" }
+        },
+        "time":        { "$ref": "#/$defs/timeRange" },
+        "attribution": { "type": ["string", "null"] },
 
-        /* Presentation blocks (either MapLibre-like "paint" or app-level "style") */
+        /* Data endpoints (use the appropriate one for the type) */
+        "url":   { "type": ["string", "null"] },
+        "tiles": {
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "data":  { "type": ["string", "null"] },
+
+        /* Vector tiling keys */
+        "source":       { "type": ["string", "null"] },
+        "source-layer": { "type": ["string", "null"] },
+        "sourceLayer":  { "type": ["string", "null"] },
+
+        /* Presentation blocks (either MapLibre-like flat paint or compound) */
         "paint": { "$ref": "#/$defs/paint" },
         "style": { "$ref": "#/$defs/style" },
 
-        /* Optional UI helpers for GeoJSON/vector */
+        /* UI helpers */
         "popup": {
           "type": "array",
           "items": { "type": "string" }
         },
-        "timeProperty": { "type": ["string", "null"] },
-        "endTimeProperty": { "type": ["string", "null"] }
+
+        /* Per-feature time (GeoJSON/vector) */
+        "timeProperty":       { "type": ["string", "null"] },
+        "timeStartProperty":  { "type": ["string", "null"] },
+        "timeEndProperty":    { "type": ["string", "null"] },
+
+        /* Legend */
+        "legend": { "$ref": "#/$defs/legend" }
       },
-      "required": ["id", "title", "url", "visible"]
+      "required": ["id", "title", "visible"]
     },
 
-    "paint": {
+    "paintFlat": {
       "type": "object",
-      "description": "Loose MapLibre paint keys. Allows common line/fill/circle props.",
       "additionalProperties": false,
       "properties": {
         "line-color": { "type": "string" },
@@ -145,8 +217,29 @@
 
         "circle-color": { "type": "string" },
         "circle-radius": { "type": "number" },
-        "circle-opacity": { "type": "number", "minimum": 0, "maximum": 1 }
+        "circle-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+
+        "raster-opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "hillshade-exaggeration": { "type": "number", "minimum": 0 }
       }
+    },
+
+    "paintCompound": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "line": { "$ref": "#/$defs/paintFlat" },
+        "fill": { "$ref": "#/$defs/paintFlat" },
+        "circle": { "$ref": "#/$defs/paintFlat" }
+      }
+    },
+
+    "paint": {
+      "description": "Either flat MapLibre paint keys or compound per-geometry blocks.",
+      "oneOf": [
+        { "$ref": "#/$defs/paintFlat" },
+        { "$ref": "#/$defs/paintCompound" }
+      ]
     },
 
     "style": {
@@ -179,8 +272,17 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "properties": { "type": { "const": "raster" } },
+          "properties": {
+            "type": { "const": "raster" }
+          },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["tiles"] },
+            { "required": ["url"] }
+          ]
         }
       ]
     },
@@ -193,6 +295,13 @@
           "additionalProperties": false,
           "properties": { "type": { "const": "raster-dem" } },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["tiles"] },
+            { "required": ["url"] }
+          ]
         }
       ]
     },
@@ -205,6 +314,13 @@
           "additionalProperties": false,
           "properties": { "type": { "const": "geojson" } },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["url"] },
+            { "required": ["data"] }
+          ]
         }
       ]
     },
@@ -215,10 +331,45 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "properties": { "type": { "const": "vector" } },
+          "properties": {
+            "type": { "const": "vector" },
+            "source-layer": { "type": ["string", "null"] },
+            "sourceLayer": { "type": ["string", "null"] }
+          },
           "required": ["type"]
+        },
+        {
+          "type": "object",
+          "oneOf": [
+            { "required": ["url"] },
+            { "required": ["tiles"] }
+          ]
         }
       ]
+    },
+
+    "imageAssets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["href", "coordinates"],
+        "additionalProperties": false,
+        "properties": {
+          "href": { "type": "string" },
+          "year": { "type": ["integer", "string", "null"] },
+          "coordinates": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": { "type": "number" }
+            }
+          }
+        }
+      }
     },
 
     "imageLayer": {
@@ -240,9 +391,16 @@
                 "maxItems": 2,
                 "items": { "type": "number" }
               }
-            }
+            },
+            "assets": { "$ref": "#/$defs/imageAssets" },
+            "assetKey": { "type": ["string", "null"], "default": "year" },
+            "assetStrategy": { "type": ["string", "null"], "enum": ["nearest", "exact", null] }
           },
-          "required": ["type", "coordinates"]
+          "required": ["type"],
+          "oneOf": [
+            { "required": ["url", "coordinates"] },
+            { "required": ["assets"] }
+          ]
         }
       ]
     },
