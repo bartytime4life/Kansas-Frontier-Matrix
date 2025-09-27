@@ -23,12 +23,12 @@ on:
     - cron: "15 3 * * 0"
 
 permissions:
-  contents: read
+  contents: write          # needed to attach assets on tag builds
   security-events: write   # SARIF upload (Grype)
-  id-token: write          # attestations
+  id-token: write          # OIDC for attestations
 
 concurrency:
-  group: sbom-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,6 +38,7 @@ jobs:
     timeout-minutes: 20
     env:
       OUT_DIR: artifacts/sbom/repo
+      SYFT_VERSION: v1.18.1   # pin for determinism; bump via Dependabot
 
     steps:
       - name: Checkout
@@ -49,7 +50,7 @@ jobs:
       - name: Setup Syft
         uses: anchore/syft-action/setup-syft@v1
         with:
-          syft-version: v1.18.1   # pin for determinism; bump via Dependabot
+          syft-version: ${{ env.SYFT_VERSION }}
 
       - name: Ensure output dir
         run: mkdir -p "$OUT_DIR"
@@ -76,7 +77,7 @@ jobs:
           name: sbom-repo-${{ github.sha }}
           path: artifacts/sbom/repo
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
 
       - name: Attest SBOM artifacts (repo)
         uses: actions/attest-build-provenance@v1
@@ -97,31 +98,22 @@ jobs:
 
       - name: Upload SARIF (repo vulns)
         if: always()
-        shell: bash
-        run: |
-          if [ -f artifacts/sbom/repo/grype-repo.sarif ]; then
-            echo "file=artifacts/sbom/repo/grype-repo.sarif" >> "$GITHUB_OUTPUT"
-          else
-            echo "No repo SARIF produced."
-            exit 0
-          fi
-        id: repo_sarif_path
-      - uses: github/codeql-action/upload-sarif@v3
-        if: steps.repo_sarif_path.outputs.file != ''
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.repo_sarif_path.outputs.file }}
+          sarif_file: artifacts/sbom/repo/grype-repo.sarif
           category: repo-sbom-grype
 
   image-sbom:
     name: Generate SBOM (image)
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     needs: repo-sbom
     if: |
       hashFiles('Dockerfile') != '' || hashFiles('docker/Dockerfile') != ''
     env:
       OUT_DIR: artifacts/sbom/image
       IMAGE_NAME: kfm-sbom:${{ github.sha }}
+      SYFT_VERSION: v1.18.1
 
     steps:
       - name: Checkout
@@ -129,25 +121,38 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Docker Buildx (cache)
+        uses: docker/setup-buildx-action@v3
+
       - name: Determine Dockerfile path
         id: df
         shell: bash
         run: |
           if [ -f Dockerfile ]; then
             echo "path=Dockerfile" >> "$GITHUB_OUTPUT"
+            echo "ctx=."         >> "$GITHUB_OUTPUT"
           elif [ -f docker/Dockerfile ]; then
             echo "path=docker/Dockerfile" >> "$GITHUB_OUTPUT"
+            echo "ctx=docker"             >> "$GITHUB_OUTPUT"
           else
             echo "::error::No Dockerfile found"; exit 1
           fi
 
-      - name: Build image (local)
-        run: docker build -f "${{ steps.df.outputs.path }}" -t "${IMAGE_NAME}" .
+      - name: Build image (local, cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ steps.df.outputs.ctx }}
+          file: ${{ steps.df.outputs.path }}
+          tags: ${{ env.IMAGE_NAME }}
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Setup Syft
         uses: anchore/syft-action/setup-syft@v1
         with:
-          syft-version: v1.18.1
+          syft-version: ${{ env.SYFT_VERSION }}
 
       - name: Ensure output dir
         run: mkdir -p "$OUT_DIR"
@@ -174,7 +179,7 @@ jobs:
           name: sbom-image-${{ github.sha }}
           path: artifacts/sbom/image
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
 
       - name: Attest SBOM artifacts (image)
         uses: actions/attest-build-provenance@v1
@@ -194,19 +199,9 @@ jobs:
 
       - name: Upload SARIF (image vulns)
         if: always()
-        shell: bash
-        run: |
-          if [ -f artifacts/sbom/image/grype-image.sarif ]; then
-            echo "file=artifacts/sbom/image/grype-image.sarif" >> "$GITHUB_OUTPUT"
-          else
-            echo "No image SARIF produced."
-            exit 0
-          fi
-        id: img_sarif_path
-      - uses: github/codeql-action/upload-sarif@v3
-        if: steps.img_sarif_path.outputs.file != ''
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.img_sarif_path.outputs.file }}
+          sarif_file: artifacts/sbom/image/grype-image.sarif
           category: image-sbom-grype
 
   release-attach:
