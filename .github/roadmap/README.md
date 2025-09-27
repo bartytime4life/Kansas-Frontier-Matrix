@@ -4,8 +4,8 @@ This folder holds the **single source of truth** for your project roadmap and th
 automation that syncs it to **GitHub labels, milestones, and issues**.
 
 - `roadmap.yaml` — declarative roadmap (human-edited)
-- The workflow **`.github/workflows/roadmap.yml`** reads `roadmap.yaml` and runs
-  `scripts/sync-roadmap.js` to create/update labels, milestones, and issues.
+- Workflow **[`.github/workflows/roadmap.yml`](../workflows/roadmap.yml)** reads `roadmap.yaml` and runs
+  **[`scripts/sync-roadmap.js`](../../scripts/sync-roadmap.js)** to create/update labels, milestones, and issues.
 
 > On **pull requests** the workflow runs in **DRY RUN** (no writes).  
 > On **pushes to `main`** and **manual dispatch** (unless `dry_run=true`) it **applies** changes.
@@ -18,8 +18,7 @@ automation that syncs it to **GitHub labels, milestones, and issues**.
 2. Ensure **labels** exist (create/update color & description).
 3. Ensure **milestones** exist (create/update title, due date, state).
 4. Ensure **issues** exist or are updated (title, body, labels, milestone, assignees).
-5. Track items by a stable **`key`** you define. The sync script writes a hidden marker
-   into each synced issue body:
+5. Track items by a stable **`key`** you define. The sync writes a hidden marker into each synced issue body:
 
 ```html
 <!-- roadmap:key=<your-key> -->
@@ -92,7 +91,7 @@ issues:
     milestone: m25q4
     labels: [area:data, type:chore, status:planned]
     body: |
-      Validate catalog/collections/items with pystac + json sanity.
+      Validate catalog/collections/items with pystac + JSON sanity checks.
       <!-- roadmap:key=stac-validate-ci -->
 ```
 
@@ -102,7 +101,7 @@ issues:
 * `milestone` references a `milestones[].key`.
 * `labels` are strings that must match `labels[].name` (the sync will create them if missing).
 * `assignees` are GitHub usernames (optional).
-* The sync script adds `<!-- roadmap:key=... -->` to issues so it can find and update them safely.
+* The sync adds `<!-- roadmap:key=... -->` so it can find and update issues safely.
 
 ---
 
@@ -110,23 +109,23 @@ issues:
 
 ### In CI (recommended)
 
-* The workflow `.github/workflows/roadmap.yml` runs automatically:
+Workflow **[`.github/workflows/roadmap.yml`](../workflows/roadmap.yml)** runs automatically:
 
-  * **PRs** → **DRY RUN** (no writes), shows a log in the job summary.
-  * **Push to `main`** → **APPLY** changes.
-  * **Manual**: `Run workflow` with `dry_run: true|false`.
+* **PRs** → **DRY RUN** (no writes), summary logs in the job output.
+* **Push to `main`** → **APPLY** changes.
+* **Manual**: “Run workflow” with `dry_run: true|false`.
 
 ### Locally (advanced)
 
 ```bash
-# In project root
+# project root
 export GITHUB_TOKEN=ghp_xxx   # classic or fine-grained token with 'repo' scope
-npm ci                        # from ROADMAP_WORKDIR (default: .)
-DRY_RUN=true node scripts/sync-roadmap.js   # simulate (logs only)
-DRY_RUN=false node scripts/sync-roadmap.js  # apply (creates/updates on GitHub)
+npm ci
+DRY_RUN=true  node scripts/sync-roadmap.js   # simulate (logs only)
+DRY_RUN=false node scripts/sync-roadmap.js   # apply (creates/updates on GitHub)
 ```
 
-> The workflow passes `DRY_RUN` via environment; prefer `DRY RUN` on PRs.
+> The workflow passes `DRY_RUN` via environment; prefer **DRY RUN** on PRs.
 
 ---
 
@@ -136,9 +135,9 @@ DRY_RUN=false node scripts/sync-roadmap.js  # apply (creates/updates on GitHub)
 
 * `area:*` — code/data area (`area:web`, `area:data`, `area:ci`, `area:docs`)
 * `type:*` — change type (`type:feature`, `type:bug`, `type:chore`, `type:refactor`)
-* `priority:p{1..3}` — P1 (highest) to P3
+* `priority:p{1..3}` — `p1` (highest) to `p3`
 * `status:*` — `planned`, `doing`, `blocked`, `done`
-* optional: `risk:*`, `needs:review`, `good first issue`
+* Optional: `risk:*`, `needs:review`, `good first issue`
 
 **Milestones**
 
@@ -148,34 +147,35 @@ DRY_RUN=false node scripts/sync-roadmap.js  # apply (creates/updates on GitHub)
 **Epics**
 
 * High-level containers with an `issues:` list.
-* The sync does **not** create GitHub “epic” objects (GitHub has Projects/Iterations); it creates a normal issue for the epic, then normal issues for its children. (If your script supports parent/child linking, it can reference the epic’s issue number after creation.)
+* The sync creates **normal issues** for epics and their children; if your script supports parent/child linking, it can add cross-links after creation.
 
 ---
 
 ## FAQ
 
 **Q: What if I rename a label or milestone?**
-A: Update `roadmap.yaml`. The sync updates titles/descriptions/colors but cannot safely “rename” labels in bulk across existing issues; it will create the new label and apply it to synced issues. You can remove old labels manually if needed.
+A: Update `roadmap.yaml`. The sync updates titles/descriptions/colors but cannot safely “rename” labels in bulk across historic issues—it will create the new label and apply it to synced issues. Clean up old labels as needed.
 
 **Q: How are issues matched across runs?**
-A: By the `<!-- roadmap:key=... -->` marker in the body. If missing, the script may match by title (best-effort), then writes the marker.
+A: By the `<!-- roadmap:key=... -->` marker. If missing, the script may match by title (best-effort), then writes the marker.
 
 **Q: Can I close issues via the roadmap?**
-A: If your `scripts/sync-roadmap.js` supports a `state: closed` attribute on issues, you can use it. Otherwise, close them manually—future runs won’t reopen unless the script is written to do so.
+A: If your sync script supports `state: closed` on issues, you can. Otherwise close manually—future runs won’t reopen unless configured.
 
 ---
 
 ## Gotchas
 
-* YAML is whitespace-sensitive. Validate with `yamllint` or your IDE if you see parse errors.
+* YAML is whitespace-sensitive—validate with `yamllint` or your IDE if you see parse errors.
 * Usernames in `assignees` must have access to the repo.
 * Labels must be unique by `name`.
-* Keep `key` stable—changing it creates a *new* issue.
+* Keep `key` **stable**—changing it creates a *new* issue.
 
 ---
 
 ## Changelog for this folder
 
-* **2025-09-23**: Initial roadmap sync docs. Supports DRY RUN on PRs, apply on `main`/manual.
+* **2025-09-23**: Initial roadmap sync docs (PRs → dry-run; main/manual → apply).
 
+```
 ```
