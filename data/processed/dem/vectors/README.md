@@ -84,7 +84,3 @@ ks_1m_dem_2018_stream_network.json
 ---
 
 ✅ This directory ensures DEM-derived vector products are **clean, reproducible, and discoverable** via STAC and the Kansas Frontier Matrix web map.
-
-```
-Want me to also **generate a starter STAC Item JSON** (e.g., `ks_1m_dem_2018_contours_10m.json` under `data/stac/items/dem/`) that links back to this folder, so you’ve got a working pattern to register vector derivatives right away?
-```
