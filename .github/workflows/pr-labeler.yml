@@ -1,0 +1,124 @@
+name: "Hygiene — PR Auto Labeler"
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+    branches: [ "main", "release/*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-labeler-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # Path-based labels via .github/labeler.yml (GitHub official labeler)
+  paths:
+    name: Path rules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels from .github/labeler.yml
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+          sync-labels: true   # remove labels if files no longer match on updates
+
+  # Size labels (XS/S/M/L/XL) based on total changed lines
+  size:
+    name: Size labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR size labeler
+        uses: codelytv/pr-size-labeler@v1.10.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Thresholds (inclusive maxima) — tweak to taste
+          xs_max: '19'
+          s_max: '99'
+          m_max: '499'
+          l_max: '999'
+          fail_if_xl: 'false'
+          label_prefix: 'size/'
+
+  # Label Dependabot PRs
+  dependabot:
+    name: Dependabot labeling
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add 'dependencies' label to Dependabot PRs
+        if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]' }}
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: dependencies
+
+  # Docs-only and tests-only detection using file globs
+  classify:
+    name: Docs/Tests classifiers
+    runs-on: ubuntu-latest
+    steps:
+      # Docs-only
+      - name: Detect docs-only changes
+        id: docs
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **/*.md
+            **/*.rst
+            docs/**
+            **/LICENSE*
+            **/CHANGELOG*
+            **/CONTRIBUTING*
+            **/CODE_OF_CONDUCT*
+            web/**/*.md
+      - name: Label 'documentation' for docs-only PRs
+        if: ${{ steps.docs.outputs.only_changed == 'true' && steps.docs.outputs.any_changed == 'true' }}
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: documentation
+
+      # Tests-only
+      - name: Detect tests-only changes
+        id: tests
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            tests/**
+            **/tests/**
+            **/*_test.py
+            **/test_*.py
+            **/*.spec.ts
+            **/*.test.ts
+            **/*.spec.js
+            **/*.test.js
+            **/*.snap
+      - name: Label 'tests' for tests-only PRs
+        if: ${{ steps.tests.outputs.only_changed == 'true' && steps.tests.outputs.any_changed == 'true' }}
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: tests
+
+  # CI/Workflow change classifier (optional but handy)
+  ci:
+    name: CI change classifier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Detect CI-only changes
+        id: ci
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            .github/workflows/**
+            .github/*.yml
+      - name: Label 'ci' for CI-only PRs
+        if: ${{ steps.ci.outputs.only_changed == 'true' && steps.ci.outputs.any_changed == 'true' }}
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: ci
