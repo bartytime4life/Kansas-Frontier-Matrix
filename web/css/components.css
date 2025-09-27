@@ -6,82 +6,138 @@
    These extend layout.css and theme.css.
 */
 
-/* --- Buttons --- */
+/* -------------------- Buttons -------------------- */
 .btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font: inherit;
   font-size: 0.9rem;
-  font-weight: 500;
-  border: 1px solid var(--color-border, #ccc);
-  border-radius: 6px;
-  background: var(--color-bg, #f9f9f9);
-  color: var(--color-text, #333);
+  font-weight: 600;
+  color: var(--text, #333);
+  background: var(--panel, #fff);
+  border: 1px solid var(--border, #ccc);
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.btn:hover {
-  background: var(--color-accent-light, #e6f0ff);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-.btn-primary {
-  background: var(--color-accent, #0066cc);
-  color: #fff;
-  border: none;
-}
-.btn-primary:hover {
-  background: var(--color-accent-dark, #004a99);
+.btn:hover { background: color-mix(in oklab, var(--accent, #06c) 8%, var(--panel, #fff)); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent, #06c) 35%, transparent);
 }
 
-/* --- Cards (for layer info, popups, panels) --- */
+.btn-primary,
+.btn.primary { /* alias */
+  background: linear-gradient(90deg, var(--accent, #06c), var(--accent-2, #22c55e));
+  color: #fff;
+  border-color: transparent;
+}
+.btn-primary:hover,
+.btn.primary:hover { filter: brightness(1.04); }
+.btn-primary:active,
+.btn.primary:active { transform: translateY(1px); }
+
+.btn-danger,
+.btn.danger {
+  background: color-mix(in oklab, var(--danger, #ef4444) 15%, var(--panel, #fff));
+  border-color: var(--danger, #ef4444);
+  color: var(--text, #333);
+}
+
+/* -------------------- Cards -------------------- */
 .card {
-  background: var(--color-bg, #fff);
-  border: 1px solid var(--color-border, #ddd);
-  border-radius: 8px;
+  background: var(--panel, #fff);
+  color: var(--text, #333);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 10px;
   padding: 1rem;
   margin: 0.5rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-1, 0 2px 4px rgba(0,0,0,0.08));
 }
 .card h3 {
   margin-top: 0;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--text, #333);
 }
-.card small {
-  color: var(--color-muted, #666);
-}
+.card small { color: var(--muted, #666); }
 
-/* --- Sliders (timeline, opacity controls) --- */
+/* -------------------- Sliders -------------------- */
 input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--color-track, #ddd);
-  outline: none;
+  height: 22px;
+  background: transparent;
   margin: 0.5rem 0;
 }
+
+/* Track */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--slider-track, #ddd);
+}
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--slider-track, #ddd);
+}
+
+/* Thumb */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  margin-top: -6px; /* centers on 6px track */
+  width: 16px; height: 16px;
   border-radius: 50%;
-  background: var(--color-accent, #0066cc);
+  background: var(--panel, #fff);
+  border: 2px solid var(--accent, #06c);
+  box-shadow: var(--shadow-1, 0 1px 2px rgba(0,0,0,.07));
   cursor: pointer;
-  transition: background 0.2s;
-}
-input[type="range"]::-webkit-slider-thumb:hover {
-  background: var(--color-accent-dark, #004a99);
+  transition: box-shadow .2s ease, background .2s ease, border-color .2s ease;
 }
 input[type="range"]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 16px; height: 16px;
   border-radius: 50%;
-  background: var(--color-accent, #0066cc);
+  background: var(--panel, #fff);
+  border: 2px solid var(--accent, #06c);
+  box-shadow: var(--shadow-1, 0 1px 2px rgba(0,0,0,.07));
   cursor: pointer;
 }
+input[type="range"]:focus-visible::-webkit-slider-thumb,
+input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent, #06c) 25%, transparent);
+}
 
-/* --- Toggle switches (layer visibility) --- */
+/* Filled track via gradient; JS sets --value as 0%..100% */
+input[type="range"].range--fill {
+  --value: 0%;
+  background:
+    linear-gradient(90deg, var(--slider-fill, linear-gradient(90deg, var(--accent-2, #22c55e), var(--accent, #06c)))) left/var(--value) 6px no-repeat,
+    var(--slider-track, #ddd);
+  height: 6px;
+  border-radius: 999px;
+}
+
+/* Larger hit area on coarse pointers */
+@media (pointer: coarse) {
+  input[type="range"] { height: 28px; }
+  input[type="range"]::-webkit-slider-thumb { width: 20px; height: 20px; margin-top: -7px; }
+  input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; }
+}
+
+/* -------------------- Toggle (layer visibility) -------------------- */
+/* Structure:
+  <label class="toggle">
+    <input type="checkbox" />
+    <span class="toggle-slider"></span>
+  </label>
+*/
 .toggle {
   position: relative;
   display: inline-block;
@@ -89,56 +145,101 @@ input[type="range"]::-moz-range-thumb {
   height: 20px;
 }
 .toggle input {
+  position: absolute;
+  inset: 0;
   opacity: 0;
-  width: 0;
-  height: 0;
+  cursor: pointer;
 }
 .toggle-slider {
   position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: 0.3s;
-  border-radius: 20px;
+  inset: 0;
+  background-color: color-mix(in oklab, var(--border, #ccc) 90%, transparent);
+  border: 1px solid var(--border, #ccc);
+  border-radius: 999px;
+  transition: background .2s ease, border-color .2s ease;
 }
-.toggle-slider:before {
-  position: absolute;
+.toggle-slider::before {
   content: "";
+  position: absolute;
   height: 14px; width: 14px;
-  left: 3px; bottom: 3px;
-  background-color: white;
-  transition: 0.3s;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  background-color: var(--panel, #fff);
   border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  transition: transform .2s ease, background .2s ease;
 }
 .toggle input:checked + .toggle-slider {
-  background-color: var(--color-accent, #0066cc);
+  background-color: var(--accent, #06c);
+  border-color: var(--accent, #06c);
 }
-.toggle input:checked + .toggle-slider:before {
+.toggle input:checked + .toggle-slider::before {
   transform: translateX(18px);
+  background: #fff;
+}
+.toggle input:focus-visible + .toggle-slider {
+  outline: 2px solid color-mix(in oklab, var(--accent, #06c) 35%, transparent);
+  outline-offset: 2px;
 }
 
-/* --- Popups & Tooltips --- */
-.popup {
-  background: var(--color-bg, #fff);
-  border: 1px solid var(--color-border, #ccc);
-  border-radius: 6px;
-  padding: 0.75rem;
-  font-size: 0.85rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+/* RTL thumb direction */
+[dir="rtl"] .toggle input:checked + .toggle-slider::before {
+  transform: translateX(-18px);
 }
+
+/* -------------------- Popups & Tooltips -------------------- */
+.popup {
+  background: var(--panel, #fff);
+  color: var(--text, #333);
+  border: 1px solid var(--border, #ccc);
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-1, 0 2px 8px rgba(0,0,0,0.2));
+  max-width: 36rem;
+}
+
 .tooltip {
   position: absolute;
-  background: #333;
+  background: color-mix(in oklab, var(--text, #333) 90%, transparent);
   color: #fff;
   font-size: 0.75rem;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s ease;
   z-index: 9999;
+  box-shadow: var(--shadow-1, 0 2px 8px rgba(0,0,0,0.2));
 }
-.tooltip.show {
-  opacity: 1;
+.tooltip.show { opacity: 1; }
+
+/* -------------------- A11y / Motion / HC -------------------- */
+:focus-visible { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
 }
+
+@media (forced-colors: active) {
+  .btn, .btn-primary, .btn-danger,
+  .card, .popup, .tooltip,
+  .toggle-slider {
+    border: 1px solid ButtonText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+  input[type="range"]::-webkit-slider-thumb,
+  input[type="range"]::-moz-range-thumb {
+    background: ButtonFace; border-color: ButtonText;
+  }
+  input[type="range"].range--fill { background: GrayText; }
+}
+
+/* -------------------- Print -------------------- */
+@media print {
+  .btn, .tooltip { box-shadow: none !important; }
+}
+```
