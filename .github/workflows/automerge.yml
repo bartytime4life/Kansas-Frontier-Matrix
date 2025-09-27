@@ -1,0 +1,55 @@
+# .github/automerge.yml
+# Kansas-Frontier-Matrix — PR Auto-Merge Policy
+# ------------------------------------------------
+# This file defines rules for automatic merging of pull requests.
+# It is consumed by workflows like .github/workflows/automerge.yml.
+# NASA-grade reproducibility: deterministic, schema-driven, auditable.
+
+version: 1
+merge_method: squash        # squash for clean history (use 'merge' or 'rebase' if desired)
+delete_branch_after_merge: true
+allow_merge_commit: false   # prevent noisy merge commits
+
+# Require successful workflows before auto-merge
+required_status_checks:
+  # Core CI
+  - name: "ci / build"
+  - name: "tests.yml"
+  - name: "ruff lint"
+  # STAC + data validation
+  - name: "stac-validate.yml"
+  - name: "stac-badges.yml"
+  - name: "schema-validate"
+  # Web & Docs
+  - name: "site.yml"
+  - name: "roadmap.yml (dry-run)"
+  # Security & provenance
+  - name: "codeql.yml"
+  - name: "sbom.yml"
+  # Docker build
+  - name: "docker.yml"
+
+# Branch rules
+branches:
+  - name: "main"
+    required_labels: ["automerge"]
+    blocking_labels: ["no-automerge", "wip", "needs-review"]
+    min_approvals: 1
+
+  - name: "release/*"
+    required_labels: ["release-approved"]
+    blocking_labels: ["no-automerge"]
+    min_approvals: 2
+
+# User/actor allowlist (only these can trigger automerge)
+users:
+  allow:
+    - "bartytime4life"     # repo owner
+    - "kansas-matrix-bot"  # service account
+
+# Notifications
+notify:
+  enabled: true
+  channels:
+    - "github-checks"      # status updates in PR
+    - "slack"              # if integrated later
