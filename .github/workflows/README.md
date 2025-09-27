@@ -41,8 +41,8 @@ flowchart TD
   A --> H["codeql.yml\n(\"security\")"]
   A --> I["sbom.yml\n(\"CycloneDX/SPDX + attest\")"]
   A --> M["stac-badges.yml\n(\"validate → badges\")"]
-  J["Tag \"vX.Y.Z\""] --> K["release.yml\n(\"sdist+wheel+SBOM → Release\")"]
-  L["roadmap.yml\n(\"dry-run on PRs\")"] -. "manual/push" .-> L
+  J["Tag vX.Y.Z"] --> K["release.yml\n(\"sdist+wheel+SBOM → Release\")"]
+  L["roadmap.yml\n(\"dry-run on PRs\")"] -.-> L["manual/push"]
 ````
 
 > ⚠️ **Mermaid on GitHub is picky** — quote labels with punctuation and use `\n` for line breaks.
