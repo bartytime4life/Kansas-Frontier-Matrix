@@ -1,32 +1,40 @@
 {
   "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
   "type": "Feature",
   "id": "ks_kansas_river_gauges",
+  "title": "Kansas River — Monitoring Gauges (Stations)",
   "collection": "ks_kansas_river",
-  "description": "Kansas River hydrology layer: monitoring gauges and station points.",
   "geometry": null,
   "bbox": [-97.7, 38.5, -95.0, 39.3],
   "properties": {
     "datetime": null,
-    "start_datetime": null,
-    "end_datetime": null,
     "proj:epsg": 4326,
     "kfm:source_id": "ks_kansas_river",
     "kfm:layer": "gauges",
-    "kfm:category": "hydrology"
+    "kfm:category": "hydrology",
+    "kfm:description": "Kansas River hydrology layer of monitoring gauges / station points."
   },
   "links": [
+    {
+      "rel": "self",
+      "href": "./ks_kansas_river_gauges.json",
+      "type": "application/json",
+      "title": "This STAC Item"
+    },
     {
       "rel": "collection",
       "href": "../collections/ks_kansas_river.json",
       "type": "application/json",
-      "title": "Kansas River Hydrology Map Service"
+      "title": "Kansas River Hydrology Collection"
     },
     {
       "rel": "source",
       "href": "https://www.kgs.ku.edu/Hydro/KansasRiver/map.html",
       "type": "text/html",
-      "title": "Kansas River Hydrology Interactive Map"
+      "title": "Kansas River Hydrology Interactive Map (KGS)"
     }
   ],
   "assets": {
@@ -34,14 +42,16 @@
       "href": "REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES",
       "type": "application/json",
       "roles": ["data", "service"],
-      "title": "ArcGIS REST - Kansas River Gauges",
-      "description": "ArcGIS REST endpoint for gauges / stations (points)."
+      "title": "ArcGIS REST — Kansas River Gauges",
+      "description": "ArcGIS REST Feature/Map Service endpoint for gauges / station points.",
+      "templated": true
     },
     "geojson": {
       "href": "REPLACE_WITH_EXPORT_URL_GAUGES_GEOJSON",
       "type": "application/geo+json",
       "roles": ["data"],
-      "title": "Gauges (GeoJSON export)"
+      "title": "Gauges (GeoJSON export)",
+      "templated": true
     }
   }
 }
