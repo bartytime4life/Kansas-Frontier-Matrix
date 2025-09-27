@@ -26,14 +26,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: stac-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate-and-render:
     name: Validate STAC & Render app.config.json
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       PYTHONUNBUFFERED: "1"
 
@@ -91,7 +91,7 @@ jobs:
           fi
           # Deterministic core validators
           pip install "jsonschema>=4.19,<5" "jinja2>=3.1,<4" "pystac>=1.9,<2" "stac-validator>=3.0,<4"
-          # Install project (editable) so console_scripts like `kgt` resolve if provided
+          # Install project (editable) for console_scripts like `kgt` if provided
           if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
             pip install -e ".[dev]" || pip install -e .
           fi
@@ -101,6 +101,33 @@ print("Python:", sys.version.split()[0])
 print("jsonschema:", jsonschema.__version__)
 print("pystac:", getattr(pystac, "__version__", "n/a"))
 PY
+
+      # ---------- Validate local JSON Schemas (metaschema) ----------
+      - name: Validate local JSON Schemas (Draft 2020-12)
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          SCHEMAS=(web/config/*.schema.json web/config/**/*.schema.json)
+          if [ "${#SCHEMAS[@]}" -eq 0 ]; then
+            echo "::notice::No local schemas found; skipping metaschema validation."
+            exit 0
+          fi
+          python - <<'PY'
+import sys, json, pathlib
+from jsonschema.validators import Draft202012Validator
+errors = 0
+for sp in map(pathlib.Path, sys.argv[1:]):
+    try:
+        sch = json.loads(sp.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(sch)
+        print(f"Schema OK: {sp}")
+    except Exception as e:
+        print(f"::error file={sp}::Schema invalid: {e}")
+        errors += 1
+sys.exit(errors)
+PY
+          "${SCHEMAS[@]}"
 
       # ---------- Detect renderer ----------
       - name: Detect renderer/CLI
@@ -112,8 +139,11 @@ PY
             echo "renderer=kgt" >> "$GITHUB_OUTPUT"
           elif python - <<'PY'; then
 import importlib.util, sys
-sys.exit(0 if importlib.util.find_spec('src.kansas_geo_timeline.cli') or
-             importlib.util.find_spec('kansas_geo_timeline.cli') else 3)
+ok = any([
+  importlib.util.find_spec('kansas_geo_timeline.cli'),
+  importlib.util.find_spec('src.kansas_geo_timeline.cli')
+])
+sys.exit(0 if ok else 3)
 PY
             echo "renderer=module" >> "$GITHUB_OUTPUT"
           else
@@ -166,7 +196,7 @@ for p in sorted(root.rglob("*.json")):
     except Exception as e:
         bad.append((str(p), str(e)))
 if bad:
-    for f,e in bad[:25]:
+    for f,e in bad[:50]:
         print(f"::error file={f}::{e}")
     sys.exit(2)
 print("pystac: all STAC JSON validate OK")
@@ -175,6 +205,59 @@ PY
           fi
           echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
           printf '{"status":"ok"}' > .artifacts/stac_report.json
+
+      # ---------- Verify local assets exist (+ optional checksums) ----------
+      - name: Verify STAC asset hrefs (local) and checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d stac ]; then
+            echo "::notice::No stac/ directory; skipping asset verification."
+            exit 0
+          fi
+          python - <<'PY'
+import json, pathlib, hashlib, sys
+root = pathlib.Path("stac")
+missing = []
+bad_sum = []
+def sha256_file(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for chunk in iter(lambda: f.read(1024*1024), b''):
+            h.update(chunk)
+    return h.hexdigest()
+for jf in sorted(root.rglob("*.json")):
+    try:
+        doc = json.loads(jf.read_text(encoding="utf-8"))
+    except Exception:
+        continue
+    for _, item in (doc.get("assets") or {}).items():
+        href = item.get("href")
+        if not href: continue
+        # Only check local relative/absolute paths (skip http/https/s3/etc.)
+        if "://" in href: 
+            continue
+        p = (jf.parent / href).resolve()
+        if not p.exists():
+            print(f"::error file={jf}::Missing local asset: {href}")
+            missing.append(str(p))
+            continue
+        # Optional checksum check when present
+        # STAC best practice: item['assets'][k]['checksum:sha256']
+        for key in ("checksum:sha256", "file:checksum"):
+            if key in item:
+                val = item[key]
+                if isinstance(val, str) and len(val) == 64:
+                    digest = sha256_file(p)
+                    if digest.lower() != val.lower():
+                        print(f"::error file={jf}::Checksum mismatch for {href} (expected {val}, got {digest})")
+                        bad_sum.append(str(p))
+                break
+status = 0
+if missing: status = 2
+if bad_sum: status = 2
+sys.exit(status)
+PY
 
       # ---------- Render app.config.json from STAC (if possible) ----------
       - name: Render web/app.config.json (from STAC)
@@ -187,17 +270,12 @@ PY
               kgt render-config --stac stac/items --output web/app.config.json --pretty
               ;;
             module)
-              # Try canonical module path first, then src.-prefixed
-              python - <<'PY'
-import runpy, sys
-try:
-    runpy.run_module("kansas_geo_timeline.cli", run_name="__main__")
-except ModuleNotFoundError:
-    runpy.run_module("src.kansas_geo_timeline.cli", run_name="__main__")
-PY
-              # If the CLI above takes args normally, prefer this call:
-              # python -m kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty || \
-              # python -m src.kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
+              # Prefer canonical module path; fallback to src.-prefixed
+              if python -c "import kansas_geo_timeline.cli" 2>/dev/null; then
+                python -m kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
+              else
+                python -m src.kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
+              fi
               ;;
             *)
               if [ -f web/app.config.json ]; then
