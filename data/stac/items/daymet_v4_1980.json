@@ -1,0 +1,62 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "daymet_v4_1980_tmax",
+  "properties": {
+    "title": "Daymet V4 Daily Maximum Temperature — 1980",
+    "description": "NASA Daymet V4 daily maximum temperature (tmax) for North America at 1 km resolution, covering January–December 1980.",
+    "start_datetime": "1980-01-01T00:00:00Z",
+    "end_datetime": "1980-12-31T23:59:59Z",
+    "license": "proprietary",
+    "providers": [
+      {
+        "name": "NASA ORNL DAAC",
+        "roles": ["producer", "licensor", "host"],
+        "url": "https://daac.ornl.gov/cgi-bin/dataset_lister.pl?p=32"
+      }
+    ],
+    "keywords": ["climate", "temperature", "daymet", "north america", "earth"],
+    "created": "2025-09-27T00:00:00Z"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [-180, -90],
+        [180, -90],
+        [180, 90],
+        [-180, 90],
+        [-180, -90]
+      ]
+    ]
+  },
+  "bbox": [-180, -90, 180, 90],
+  "assets": {
+    "tmax": {
+      "href": "data/earth/processed/daymet_v4/daily_tmax_1980.tif",
+      "title": "Daymet V4 Tmax (1980)",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data"],
+      "description": "Daily maximum temperature for 1980, converted from NetCDF to COG."
+    },
+    "source": {
+      "href": "https://thredds.daac.ornl.gov/thredds/catalog/ornldaac/2129/catalog.html",
+      "title": "Daymet V4 ORNL DAAC Catalog",
+      "roles": ["metadata"]
+    }
+  },
+  "links": [
+    {
+      "rel": "self",
+      "href": "./daymet_v4_1980.json"
+    },
+    {
+      "rel": "collection",
+      "href": "../collections/daymet_v4.json"
+    },
+    {
+      "rel": "license",
+      "href": "https://earthdata.nasa.gov/earth-observation-data/data-use-policy"
+    }
+  ]
+}
