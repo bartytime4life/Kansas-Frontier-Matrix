@@ -37,6 +37,7 @@ TERRAIN := $(COGS)/terrain
 DERIV   := $(DATA)/derivatives
 VEC     := $(DATA)/processed/vectors
 WEB     := web
+WEB_DATA:= $(WEB)/data
 WCONF   := $(WEB)/config
 STAC    := stac
 TESTS   := tests
@@ -171,7 +172,7 @@ define ensure_dir
 	@mkdir -p "$(1)"
 endef
 
-define mirror_derivatives
+define mirror
 	$(call ensure_dir,$(dir $(2)))
 	@if [ -f "$(1)" ]; then \
 	  if [ "$(HAVE_RSYNC)" = "yes" ]; then rsync -a --checksum "$(1)" "$(2)"; else cp -f "$(1)" "$(2)"; fi; \
@@ -200,7 +201,7 @@ help:
 	@echo "  meta                 Optional: update terrain meta JSON checksums (slope/aspect)"
 	@echo "  stac                 Build STAC items/collections into ./stac/ (auto-patch DEM if checksum exists)"
 	@echo "  stac-validate        Validate STAC + source schemas (scripts/ or kgt)"
-	@echo "  site                 Write web/layers.json (simple preview)"
+	@echo "  site                 Write web/layers.json (tiles + small vectors mirror into web/data)"
 	@echo "  site-config          Render web/app.config.json from STAC via kgt (if available)"
 	@echo "  registry             Build scripts/badges/source_map.json and inject into app.config.json (if present)"
 	@echo "  kml                  Build KMZ overlays (placeholder)"
@@ -286,9 +287,9 @@ endif
 
 # -------- Terrain (COGs) --------
 terrain: $(HILLSHADE) $(SLOPE) $(ASPECT)
-	$(call mirror_derivatives,$(HILLSHADE),$(DERIV)/hillshade.tif)
-	$(call mirror_derivatives,$(SLOPE),$(DERIV)/slope.tif)
-	$(call mirror_derivatives,$(ASPECT),$(DERIV)/aspect.tif)
+	$(call mirror,$(HILLSHADE),$(DERIV)/hillshade.tif)
+	$(call mirror,$(SLOPE),$(DERIV)/slope.tif)
+	$(call mirror,$(ASPECT),$(DERIV)/aspect.tif)
 	@echo "✓ terrain built (COGs) and mirrored into $(DERIV)"
 
 # Prefer helper scripts; fallback to raw GDAL toolchain
@@ -520,22 +521,81 @@ regionate:
 	  echo "[regionate] $(S)/regionate_kml.py missing."; \
 	fi
 
-# -------- Simple site manifest (always available) --------
+# -------- Simple site manifest (tiles + in-repo small vectors) --------
+# Mirrors small vectors from data/ → web/data/ so `site` container can serve them.
 site: | $(WEB)
+	@echo "[site] mirroring small vectors to web/data (if present) ..."
+	$(call ensure_dir,$(WEB_DATA)/processed/hydrology/kansas_river)
+	$(call ensure_dir,$(WEB_DATA)/processed)
+	$(call mirror,$(DATA)/processed/hydrology/kansas_river/channels.geojson,$(WEB_DATA)/processed/hydrology/kansas_river/channels.geojson)
+	$(call mirror,$(DATA)/processed/hydrology/kansas_river/floodplains.geojson,$(WEB_DATA)/processed/hydrology/kansas_river/floodplains.geojson)
+	$(call mirror,$(DATA)/processed/hydrology/kansas_river/gauges.geojson,$(WEB_DATA)/processed/hydrology/kansas_river/gauges.geojson)
+	$(call mirror,$(DATA)/processed/towns_points.json,$(WEB_DATA)/processed/towns_points.json)
+	@echo "[site] writing web/layers.json ..."
 	@$(PY) - <<'PYCODE'
-import json, pathlib
-p = pathlib.Path('web/layers.json')
-p.parent.mkdir(parents=True, exist_ok=True)
-layers = {
-  "layers": [
-    {"id": "hillshade", "title": "Hillshade",     "type": "raster", "path": "../data/derivatives/hillshade.tif"},
-    {"id": "slope",     "title": "Slope (deg)",   "type": "raster", "path": "../data/derivatives/slope.tif"},
-    {"id": "aspect",    "title": "Aspect (deg)",  "type": "raster", "path": "../data/derivatives/aspect.tif"}
-  ]
-}
-json.dump(layers, open(p, 'w'), indent=2)
+import json, pathlib, os
+root = pathlib.Path("web")
+tiles_ok = (root/"tiles/terrain/hillshade").exists()
+channels = root/"data/processed/hydrology/kansas_river/channels.geojson"
+floodplains = root/"data/processed/hydrology/kansas_river/floodplains.geojson"
+gauges = root/"data/processed/hydrology/kansas_river/gauges.geojson"
+towns = root/"data/processed/towns_points.json"
+
+layers = []
+
+# Basemap (always)
+layers.append({
+  "id":"basemap_osm","title":"Basemap — OpenStreetMap","group":"Basemaps & Terrain",
+  "type":"raster","url":"https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "opacity":1.0,"visible":True,"minzoom":0,"maxzoom":19
+})
+
+# Hillshade tiles if present
+if tiles_ok:
+    layers.append({
+      "id":"ks_hillshade_2018","title":"Hillshade (2018–2020)","group":"Basemaps & Terrain",
+      "type":"raster","url":"./tiles/terrain/hillshade/{z}/{x}/{y}.png",
+      "opacity":0.9,"visible":True,"minzoom":0,"maxzoom":14,
+      "time":{"start":"2018-01-01","end":"2020-12-31"}
+    })
+
+# Small vectors (only if mirrored files exist in web/data)
+if channels.exists():
+    layers.append({
+      "id":"ksriv_channels","title":"Kansas River — Channels","group":"Hydrology",
+      "type":"geojson","data":str(channels.relative_to(root)),
+      "style":{"lineColor":"#1e88e5","lineWidth":1.6,"lineOpacity":1.0},
+      "visible":True,"time":{"start":"1850-01-01","end":None}
+    })
+if floodplains.exists():
+    layers.append({
+      "id":"ksriv_floodplains","title":"Kansas River — Floodplains","group":"Hydrology",
+      "type":"geojson","data":str(floodplains.relative_to(root)),
+      "style":{"fillColor":"#42a5f5","fillOpacity":0.25,"fillOutlineColor":"#1976d2","lineColor":"#1976d2","lineWidth":0.5,"lineOpacity":0.9},
+      "visible":False,"time":{"start":"1900-01-01","end":None}
+    })
+if gauges.exists():
+    layers.append({
+      "id":"ksriv_gauges","title":"Kansas River — Gauges","group":"Hydrology",
+      "type":"geojson","data":str(gauges.relative_to(root)),
+      "style":{"circleColor":"#0d47a1","circleRadius":4,"circleOpacity":0.9},
+      "visible":False,"time":{"start":"1928-01-01","end":None}
+    })
+if towns.exists():
+    layers.append({
+      "id":"ks_settlements","title":"Settlements, Forts, Trading Posts","group":"Culture & Documents",
+      "type":"geojson","data":str(towns.relative_to(root)),
+      "style":{"circleColor":"#FF595E","circleRadius":4,"circleOpacity":0.95,"circleStrokeColor":"#FFFFFF","circleStrokeWidth":1},
+      "visible":True,"time":{"start":"1800-01-01","end":None},"timeProperty":"year",
+      "popup":["name","type","year","year_end"]
+    })
+
+out = {"version":"1.3.0","time":{"min":"1850-01-01","max":"2025-12-31"},"layers":layers}
+p = root/"layers.json"
+p.write_text(json.dumps(out, indent=2))
 print("wrote", p)
 PYCODE
+	@echo "✓ site fallback ready (serve with: docker compose --profile dev up -d site)"
 
 # -------- Config validation & formatting --------
 # Validates legend.json / categories.json / sources.json with web/config/schema.json
@@ -550,27 +610,30 @@ config-validate:
 	@if [ ! -f "$(WCONF)/sources.json" ]; then echo "[config-validate] Missing $(WCONF)/sources.json"; exit 1; fi
 	@$(PY) - <<'PY'
 import json, sys, pathlib
-from jsonschema import validate, Draft202012Validator
+from jsonschema import Draft202012Validator
 root = pathlib.Path("web/config")
 schema = json.loads((root/"schema.json").read_text())
-def check(doc_path, defs_key):
-    data = json.loads((root/doc_path).read_text())
-    # make a view schema that points at the requested $defs entry
-    view = {"$schema": schema.get("$schema","https://json-schema.org/draft/2020-12/schema"),
-            "$id": f"schema-view:{defs_key}",
-            **schema}
-    # Replace top-level schema with the defs subtree
-    view.clear()
-    view.update(schema["$defs"][defs_key])
-    Draft202012Validator(view).validate(data)
-for p, key in (("legend.json","legend"),("categories.json","categories"),("sources.json","sources")):
-    try:
-        check(p, key)
-        print(f"[config-validate] OK: {p}")
-    except Exception as e:
-        print(f"[config-validate] FAIL: {p} → {e}")
-        sys.exit(1)
-print("[config-validate] ✓ all config files valid")
+
+def validate_view(doc_path, defs_key):
+    doc = json.loads((root/doc_path).read_text())
+    # Build a view schema that keeps $defs in scope and points to the right branch
+    view = {
+        "$schema": schema.get("$schema","https://json-schema.org/draft/2020-12/schema"),
+        "$id": f"schema-view:{defs_key}",
+        "$defs": schema.get("$defs", {}),
+        "$ref": f"#/$defs/{defs_key}"
+    }
+    Draft202012Validator(view).validate(doc)
+    print(f"[config-validate] OK: {doc_path}")
+
+try:
+    validate_view("legend.json","legend")
+    validate_view("categories.json","categories")
+    validate_view("sources.json","sources")
+    print("[config-validate] ✓ all config files valid")
+except Exception as e:
+    print(f"[config-validate] FAIL → {e}")
+    sys.exit(1)
 PY
 
 config-fmt:
@@ -805,5 +868,5 @@ doctor:
 	test "$$miss" = "0" && echo "✓ GDAL toolchain present" || true
 
 # -------- Order-only dir prereqs --------
-$(RAW) $(COGS) $(HILLS) $(TERRAIN) $(VEC) $(WEB) $(STAC)/items $(STAC)/collections $(KSRIV_OUTDIR) $(DERIV):
+$(RAW) $(COGS) $(HILLS) $(TERRAIN) $(VEC) $(WEB) $(STAC)/items $(STAC)/collections $(KSRIV_OUTDIR) $(DERIV) $(WEB_DATA):
 	$(call ensure_dir,$@)
