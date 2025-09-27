@@ -1,3 +1,4 @@
+# .github/workflows/stac-badges.yml
 name: STAC Validate & Badges
 
 on:
@@ -11,148 +12,234 @@ on:
       - "pyproject.toml"
       - "requirements*.txt"
   schedule:
-    - cron: "0 9 * * *" # daily, 09:00 UTC
+    - cron: "0 9 * * *"  # daily 09:00 UTC
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   stac_and_badges:
+    name: Validate STAC → Build badge JSONs
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONUNBUFFERED: "1"
+      SRC_DIR: data/sources
+      BADGE_DIR: web/badges
+      REPORT: build/stac_report.json
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Ensure dirs
+        run: |
+          mkdir -p build "${BADGE_DIR}"
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: |
+            pyproject.toml
+            requirements*.txt
 
-      - name: Install deps (best-effort)
+      - name: Install deps (deterministic core)
         run: |
-          pip install -r requirements.txt || true
-          pip install . || true
-          pip install pystac stac-validator jsonschema jinja2 || true
-          sudo apt-get update
-          sudo apt-get install -y jq
+          python -m pip install --upgrade pip
+          # Project (best-effort)
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt || true; fi
+          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          pip install -e ".[dev]" || pip install -e . || true
+          # Validators
+          pip install "pystac>=1.9,<2" "stac-validator>=3.0,<4" "jsonschema>=4.19,<5" "jinja2>=3.1,<4"
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends jq curl
 
+      # ---------- STAC validation → JSON report ----------
       - name: Validate STAC → JSON report
+        shell: bash
         run: |
-          mkdir -p build
-          set +e
-          # Prefer your CLI if available
-          if command -v kgt >/dev/null 2>&1; then
-            echo "Using kgt validate-stac"
-            kgt validate-stac stac/items --report-json build/stac_report.json
-          # else try stac-validator (item-by-item)
-          elif command -v stac-validator >/dev/null 2>&1; then
-            echo "Using stac-validator fallback"
-            python - <<'PY'
+          set -euo pipefail
+          mkdir -p .artifacts
+          if [ ! -d stac ]; then
+            echo "::notice::No stac/ directory; writing empty report."
+            echo "[]" > "$REPORT"
+          else
+            if command -v kgt >/dev/null 2>&1; then
+              echo "Using kgt validate-stac"
+              # Prefer repo convention stac/items; fallback to stac root
+              if [ -d stac/items ]; then
+                kgt validate-stac stac/items --report-json "$REPORT" || echo "[]" > "$REPORT"
+              else
+                kgt validate-stac stac --report-json "$REPORT" || echo "[]" > "$REPORT"
+              fi
+            elif command -v stac-validator >/dev/null 2>&1; then
+              echo "Using stac-validator fallback"
+              python - <<'PY'
 import json, subprocess, pathlib, sys
-items = sorted(pathlib.Path("stac/items").rglob("*.json"))
+roots = [pathlib.Path("stac/items"), pathlib.Path("stac")]
+root = next((p for p in roots if p.exists()), None)
 rows = []
+if root is None:
+    print("[]")
+    sys.exit(0)
+items = sorted(root.rglob("*.json"))
 for p in items:
-    # stac-validator outputs JSON per file with 'num_errors' etc.
-    res = subprocess.run(["stac-validator", "--json", str(p)], capture_output=True, text=True)
     try:
+        res = subprocess.run(["stac-validator", "--json", str(p)],
+                             capture_output=True, text=True, check=False)
         data = json.loads(res.stdout.strip() or "[]")
         if isinstance(data, dict): data = [data]
         for d in data:
             rows.append({
-              "stac_item": str(p),
-              "errors": int(d.get("num_errors", 0)),
-              "warnings": int(d.get("num_warnings", 0) or 0)
+                "stac_item": str(p),
+                "errors": int(d.get("num_errors", 0) or 0),
+                "warnings": int(d.get("num_warnings", 0) or 0)
             })
     except Exception:
         rows.append({"stac_item": str(p), "errors": 1, "warnings": 0})
-with open("build/stac_report.json","w") as f: json.dump(rows, f, indent=2)
-print(f"Wrote build/stac_report.json with {len(rows)} rows")
+print(json.dumps(rows, indent=2))
 PY
-          else
-            echo "No validator found; writing empty report"
-            echo "[]" > build/stac_report.json
+              > "$REPORT"
+            else
+              echo "::notice::No validator found; writing empty report."
+              echo "[]" > "$REPORT"
+            fi
           fi
-          set -e
+          echo "Report rows: $(jq 'length' "$REPORT")"
+          # Save a human log
+          jq -r '.[] | "\(.stac_item)\terrors=\(.errors)\twarnings=\(.warnings)"' "$REPORT" \
+            > .artifacts/stac_report.tsv || true
 
-      - name: Write badge JSONs (per-source rollup)
+      # ---------- Per-source + overall badge JSONs ----------
+      - name: Write badge JSONs (per-source + overall)
         shell: bash
         run: |
           set -euo pipefail
-          SRC_DIR="data/sources"
-          BADGE_DIR="web/badges"
-          REPORT="build/stac_report.json"
-          mkdir -p "$BADGE_DIR"
-
-          # Collect source IDs from data/sources/*.json
-          mapfile -t SOURCES < <(jq -r '.id // empty' "$SRC_DIR"/*.json | sort -u)
-
-          # Write a shields.io endpoint JSON
+          # Helper to write shields.io endpoint JSON
           write_badge () {
-            local id="$1" label="$2" msg="$3" color="$4"
-            cat > "$BADGE_DIR/${id}.json" <<EOF
+            local out="$1" label="$2" msg="$3" color="$4"
+            cat > "$out" <<EOF
 { "schemaVersion": 1, "label": "${label}", "message": "${msg}", "color": "${color}" }
 EOF
           }
 
-          # If no report yet, default to ❌ (red)
-          if [ ! -s "$REPORT" ]; then
-            for id in "${SOURCES[@]}"; do write_badge "$id" "$id" "❌" "red"; done
+          # Build list of sources (graceful if none)
+          mapfile -t SOURCES < <( (jq -r '.id // empty' "$SRC_DIR"/*.json 2>/dev/null || true) | sort -u )
+
+          REPORT_DATA="$(cat "$REPORT")"
+          TOTAL=$(jq 'length' <<<"$REPORT_DATA")
+          ERR=$(jq '[.[] | .errors] | add // 0' <<<"$REPORT_DATA")
+          WARN=$(jq '[.[] | .warnings] | add // 0' <<<"$REPORT_DATA")
+
+          # Overall badge
+          OVERALL="${BADGE_DIR}/overall.json"
+          if [ "$TOTAL" -eq 0 ]; then
+            write_badge "$OVERALL" "STAC" "n/a" "lightgrey"
+          elif [ "$ERR" -gt 0 ]; then
+            write_badge "$OVERALL" "STAC" "❌ ${ERR} error(s)" "red"
+          elif [ "$WARN" -gt 0 ]; then
+            write_badge "$OVERALL" "STAC" "⚠ ${WARN} warning(s)" "orange"
           else
-            # Heuristic mapping: try source_map.json, else substring match of item filename
-            MAP="scripts/badges/source_map.json"
-            if [ -f "$MAP" ]; then
-              echo "Using scripts/badges/source_map.json for mapping"
-            else
-              echo '{"_auto":true}' > "$MAP"
-            fi
-
-            # Preload report
-            REPORT_DATA="$(cat "$REPORT")"
-
-            for id in "${SOURCES[@]}"; do
-              # 1) If user mapping exists, use it
-              if jq -e --arg sid "$id" 'has($sid)' "$MAP" >/dev/null 2>&1; then
-                ITEMS=$(jq -r --arg sid "$id" '.[$sid][]?' "$MAP" 2>/dev/null || echo "")
-              else
-                # 2) fallback: any stac item path containing the source id as substring
-                ITEMS=$(jq -r --arg sid "$id" '.[] | .stac_item? // .id? // "" | select(test($sid))' <<<"$REPORT_DATA" | sort -u)
-              fi
-
-              if [ -z "${ITEMS}" ]; then
-                # No items mapped yet → ❌
-                write_badge "$id" "$id" "❌" "red"
-                continue
-              fi
-
-              # Aggregate severities across matched rows
-              ERR=0; WARN=0; COUNT=0
-              while IFS= read -r key; do
-                row=$(jq -c --arg k "$key" '.[] | select((.stac_item==$k) or (.id==$k))' <<<"$REPORT_DATA")
-                if [ -n "$row" ]; then
-                  e=$(jq -r '.errors // 0' <<<"$row"); w=$(jq -r '.warnings // 0' <<<"$row")
-                  ERR=$((ERR+e)); WARN=$((WARN+w)); COUNT=$((COUNT+1))
-                fi
-              done <<< "$ITEMS"
-
-              if [ $COUNT -eq 0 ]; then
-                write_badge "$id" "$id" "❌" "red"
-              elif [ $ERR -gt 0 ]; then
-                write_badge "$id" "$id" "❌" "red"
-              elif [ $WARN -gt 0 ]; then
-                write_badge "$id" "$id" "⚠" "orange"
-              else
-                write_badge "$id" "$id" "✔" "brightgreen"
-              fi
-            done
+            write_badge "$OVERALL" "STAC" "✔ clean" "brightgreen"
           fi
 
-      - name: Commit badge JSONs
+          # Mapping file (optional, improves precision)
+          MAP="scripts/badges/source_map.json"
+          if [ ! -f "$MAP" ]; then
+            echo '{"_auto":true}' > "$MAP"
+          fi
+
+          # Per-source rollup
+          for id in "${SOURCES[@]}"; do
+            # 1) Use explicit mapping if present
+            if jq -e --arg sid "$id" 'has($sid)' "$MAP" >/dev/null 2>&1; then
+              ITEMS=$(jq -r --arg sid "$id" '.[$sid][]?' "$MAP" 2>/dev/null || echo "")
+            else
+              # 2) Fallback: substring heuristic on item path or id
+              ITEMS=$(jq -r --arg sid "$id" \
+                '.[] | (.stac_item? // .id? // "") | select(test($sid;"i"))' \
+                <<<"$REPORT_DATA" | sort -u)
+            fi
+
+            out="${BADGE_DIR}/${id}.json"
+            if [ -z "$ITEMS" ]; then
+              write_badge "$out" "$id" "❌" "red"
+              continue
+            fi
+
+            ERR=0; WARN=0; COUNT=0
+            while IFS= read -r key; do
+              [ -z "$key" ] && continue
+              row=$(jq -c --arg k "$key" '.[] | select((.stac_item==$k) or (.id==$k))' <<<"$REPORT_DATA")
+              if [ -n "$row" ]; then
+                e=$(jq -r '.errors // 0' <<<"$row"); w=$(jq -r '.warnings // 0' <<<"$row")
+                ERR=$((ERR+e)); WARN=$((WARN+w)); COUNT=$((COUNT+1))
+              fi
+            done <<< "$ITEMS"
+
+            if [ $COUNT -eq 0 ]; then
+              write_badge "$out" "$id" "❌" "red"
+            elif [ $ERR -gt 0 ]; then
+              write_badge "$out" "$id" "❌" "red"
+            elif [ $WARN -gt 0 ]; then
+              write_badge "$out" "$id" "⚠" "orange"
+            else
+              write_badge "$out" "$id" "✔" "brightgreen"
+            fi
+          done
+
+          # Create a tiny index for humans
+          echo "# STAC Badge Endpoints\n" > "${BADGE_DIR}/README.md"
+          echo "- Overall: \`web/badges/overall.json\`" >> "${BADGE_DIR}/README.md"
+          for id in "${SOURCES[@]}"; do
+            echo "- ${id}: \`web/badges/${id}.json\`" >> "${BADGE_DIR}/README.md"
+          done
+
+      - name: Write run summary
+        shell: bash
         run: |
-          if ! git diff --quiet; then
-            git config user.name "github-actions[bot]"
+          set -euo pipefail
+          {
+            echo "### STAC Badge Summary"
+            echo "- Items: $(jq 'length' "$REPORT")"
+            echo "- Errors total: $(jq '[.[] | .errors] | add // 0' "$REPORT")"
+            echo "- Warnings total: $(jq '[.[] | .warnings] | add // 0' "$REPORT")"
+            echo ""
+            echo "**Badge files written to:** \`${BADGE_DIR}/\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stac-badges-${{ github.run_id }}
+          path: |
+            ${{ env.REPORT }}
+            .artifacts/stac_report.tsv
+            ${{ env.BADGE_DIR }}/*.json
+            ${{ env.BADGE_DIR }}/README.md
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit badge JSONs (push/schedule only)
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          set -euo pipefail
+          if ! git diff --quiet -- "$BADGE_DIR" build; then
+            git config user.name  "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add web/badges/*.json build/stac_report.json || true
+            git add "$BADGE_DIR"/*.json "$BADGE_DIR"/README.md "$REPORT" || true
             git commit -m "chore(ci): update STAC badge JSONs"
             git push
+          else
+            echo "No badge changes to commit."
           fi
