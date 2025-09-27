@@ -13,7 +13,7 @@ ci:
 default_language_version:
   python: python3
 
-default_stages: [commit]   # sensible default; some hooks override to [push] or [manual]
+default_stages: [commit]   # most hooks run on commit; heavy ones set to [push]/[manual]
 
 # Skip heavy/binary trees when hooks support "exclude"
 exclude: |
@@ -61,6 +61,7 @@ repos:
       - id: check-toml
       - id: debug-statements
       - id: detect-private-key
+      - id: detect-aws-credentials
       - id: check-executables-have-shebang
       - id: name-tests-test
       - id: check-symlinks
@@ -71,7 +72,6 @@ repos:
     rev: v2.3.0
     hooks:
       - id: codespell
-        additional_dependencies: []
         args:
           - "--ignore-words-list=teh,ot,nd,unkown,adress,fo,hist"
           - "--skip=*.csv,*.geojson,*.jsonl,*.parquet,*.geoparquet,*.gpkg"
@@ -133,7 +133,7 @@ repos:
       - id: prettier
         files: "\\.(json|jsonc|ya?ml|md|html?|css|js|ts|tsx)$"
         args: ["--cache", "--ignore-unknown"]
-        additional_dependencies: []  # add plugins here if needed
+        additional_dependencies: []
 
   # --- Markdown link checks (manual by default) ------------------------------
   - repo: https://github.com/lycheeverse/lychee
@@ -142,7 +142,7 @@ repos:
       - id: lychee
         name: markdown link check (docs/)
         files: "^docs/.*\\.(md|markdown)$"
-        args: ["--no-progress", "--max-concurrency", "8", "--offline", "--accept", "200..399"]
+        args: ["--config", ".lychee.toml"]
         stages: [manual]
 
   # --- pyproject.toml canonical formatting ----------------------------------
@@ -274,5 +274,53 @@ repos:
           (sys.exit(0) if not (cfgp.exists() and schp.exists()) else None);
           cfg=json.load(open(cfgp)); sch=json.load(open(schp));
           errs=sorted(V(sch).iter_errors(cfg), key=lambda e:e.path);
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
+          sys.exit(1 if errs else 0)"
+
+      - id: web-config-schema-legend
+        name: web/config/legend.json schema validation (pack defs)
+        language: python
+        additional_dependencies: ["jsonschema>=4.23.0"]
+        files: "^web/config/legend\\.json$"
+        pass_filenames: false
+        entry: >
+          python -c "import json,sys,pathlib; from jsonschema import Draft202012Validator as V;
+          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/legend.json');
+          (sys.exit(0) if not (packp.exists() and docp.exists()) else None);
+          pack=json.load(open(packp)); doc=json.load(open(docp));
+          sch=pack.get('$defs',{}).get('legend',{}); 
+          errs=sorted(V(sch).iter_errors(doc), key=lambda e:e.path);
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
+          sys.exit(1 if errs else 0)"
+
+      - id: web-config-schema-categories
+        name: web/config/categories.json schema validation (pack defs)
+        language: python
+        additional_dependencies: ["jsonschema>=4.23.0"]
+        files: "^web/config/categories\\.json$"
+        pass_filenames: false
+        entry: >
+          python -c "import json,sys,pathlib; from jsonschema import Draft202012Validator as V;
+          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/categories.json');
+          (sys.exit(0) if not (packp.exists() and docp.exists()) else None);
+          pack=json.load(open(packp)); doc=json.load(open(docp));
+          sch=pack.get('$defs',{}).get('categories',{}); 
+          errs=sorted(V(sch).iter_errors(doc), key=lambda e:e.path);
+          [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
+          sys.exit(1 if errs else 0)"
+
+      - id: web-config-schema-sources
+        name: web/config/sources.json schema validation (pack defs)
+        language: python
+        additional_dependencies: ["jsonschema>=4.23.0"]
+        files: "^web/config/sources\\.json$"
+        pass_filenames: false
+        entry: >
+          python -c "import json,sys,pathlib; from jsonschema import Draft202012Validator as V;
+          packp=pathlib.Path('web/config/schema.json'); docp=pathlib.Path('web/config/sources.json');
+          (sys.exit(0) if not (packp.exists() and docp.exists()) else None);
+          pack=json.load(open(packp)); doc=json.load(open(docp));
+          sch=pack.get('$defs',{}).get('sources',{}); 
+          errs=sorted(V(sch).iter_errors(doc), key=lambda e:e.path);
           [print('-', '/'.join(map(str,e.path)) or '(root)', ':', e.message) for e in errs[:20]];
           sys.exit(1 if errs else 0)"
