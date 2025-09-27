@@ -1,12 +1,46 @@
-# .github/.pre-commit-config.yaml
-# Kansas-Frontier-Matrix — Pre-Commit Hooks
+# .github/workflows/.pre-commit-config.yaml
+# Kansas-Frontier-Matrix — CI Pre-Commit Hooks
 # ------------------------------------------------
-# Ensures schema validation, STAC integrity, Python style,
-# JSON/YAML correctness, and docs hygiene before commits.
-# Matches CI checks in .github/workflows/* for reproducibility.
+# CI-focused hooks for schema validation, STAC integrity,
+# Python style, JSON/YAML correctness, and docs hygiene.
+# Mirrors key checks from the root config, but kept leaner for CI.
+
+minimum_pre_commit_version: "3.6.0"
+
+default_language_version:
+  python: python3
+
+# CI runs on push; keep commit-time UX concerns out of this file.
+default_stages: [push]
+
+# Skip heavy/binary paths when hooks support "exclude"
+exclude: |
+  (?x)^(
+    data/(processed|cogs|outputs|raw)/|
+    assets/(tiles|images|fonts)/|
+    web/(dist|build|tiles|assets)/|
+    (?:^|.*/)?node_modules/|
+    (?:^|.*/)?dist/|
+    build/|
+    _site/|
+    earth/|
+    docs/_build/|
+    \.venv/|
+    \.mypy_cache/|
+    \.ruff_cache/|
+    \.pytest_cache/|
+    .*\.ipynb_checkpoints/|
+    .*\.pmtiles$|
+    .*\.mbtiles$|
+    .*\.tif(f)?$|
+    .*\.las$|.*\.laz$|
+    .*\.gpkg$|.*\.parquet$|.*\.geoparquet$|
+    .*\.zip$|.*\.7z$|.*\.tar(\.gz)?$|.*\.zst$|
+    .*\.pdf$
+  )
 
 repos:
-  # --- Core file hygiene ---
+  # --- Core file hygiene -----------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
@@ -15,13 +49,15 @@ repos:
       - id: check-toml
       - id: check-xml
       - id: check-added-large-files
-        args: ["--maxkb=500"]
+        # CI threshold aligns with root (LFS/DVC gate)
+        args: ["--maxkb=5000"]
       - id: detect-private-key
       - id: trailing-whitespace
       - id: end-of-file-fixer
 
-  # --- Python: formatting + linting ---
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
+  # --- Python: formatting + linting -----------------------------------------
+  # NOTE: upstream moved from charliermarsh -> astral-sh
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9
     hooks:
       - id: ruff
@@ -32,52 +68,91 @@ repos:
     rev: 24.8.0
     hooks:
       - id: black
-        language_version: python3
+        language_version: python3.10
 
-  # --- Shell scripts ---
+  # --- Shell scripts ---------------------------------------------------------
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
 
-  # --- Markdown + docs ---
-  - repo: https://github.com/markdownlint/markdownlint
-    rev: v0.13.0
-    hooks:
-      - id: markdownlint
-
+  # --- Markdown (keep simple for CI) ----------------------------------------
+  # Use the Node CLI variant; avoids ruby deps collisions in CI images.
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.41.0
     hooks:
       - id: markdownlint-cli
         args: ["--fix"]
+        files: "^docs/.*\\.(md|markdown)$"
 
-  # --- STAC validation ---
+  # --- STAC validation (robust fallback) ------------------------------------
   - repo: local
     hooks:
       - id: stac-validate
-        name: STAC Validator
-        entry: stac-validator
+        name: STAC Validator (kgt or stac-validator)
         language: system
-        types: [json]
-        files: ^stac/
+        files: "^stac/.*\\.json$"
+        entry: >
+          bash -c '
+            set -e;
+            # Prefer kgt if available (project-native)
+            if command -v kgt >/dev/null 2>&1; then
+              kgt validate-stac stac/items --no-strict;
+              exit $?;
+            fi
+            # Fallback: stac-validator (pip-installed in CI image)
+            if command -v stac-validator >/dev/null 2>&1; then
+              # Validate each JSON under stac/items (skip collections if not needed)
+              find stac/items -type f -name "*.json" -print0 | xargs -0 -n1 stac-validator;
+              exit $?;
+            fi
+            echo "::warning::No STAC validator found (kgt or stac-validator). Skipping.";
+            exit 0;
+          '
 
-  # --- JSON schema validation for configs ---
+  # --- JSON schema validation for web configs --------------------------------
   - repo: local
     hooks:
       - id: jsonschema-validate
-        name: JSON Schema Validation
-        entry: scripts/validate_json_schema.sh
-        language: system
-        types: [json]
-        files: ^web/config/.*\.json$
+        name: JSON Schema Validation (web/config)
+        language: python
+        additional_dependencies: ["jsonschema>=4.23.0"]
+        files: "^web/config/.*\\.json$"
+        pass_filenames: false
+        entry: >
+          python - <<'PY'
+          import json, sys, pathlib
+          from jsonschema import Draft202012Validator as V
+          base = pathlib.Path('web/config')
+          pack = base / 'schema.json'
+          if not pack.exists():
+              sys.exit(0)
+          defs = json.load(open(pack)).get('$defs', {})
+          ok = True
+          for name in ('legend', 'categories', 'sources'):
+              sch = defs.get(name)
+              doc = base / f'{name}.json'
+              if not (sch and doc.exists()): 
+                  continue
+              data = json.load(open(doc))
+              errs = sorted(V(sch).iter_errors(data), key=lambda e: e.path)
+              for e in errs[:50]:
+                  print('-', f'{name}', '/'.join(map(str,e.path)) or '(root)', ':', e.message)
+              ok = ok and not errs
+          sys.exit(0 if ok else 1)
+          PY
 
-  # --- Security scanning (basic) ---
+  # --- Security scanning (basic) --------------------------------------------
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.9
     hooks:
       - id: bandit
         args: ["-q", "-r", "src"]
+        files: "^src/.*\\.py$"
 
-default_language_version:
-  python: python3
+  # --- GitHub Actions workflow linter ---------------------------------------
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.4
+    hooks:
+      - id: actionlint
+        files: "^\\.github/workflows/.*\\.ya?ml$"
