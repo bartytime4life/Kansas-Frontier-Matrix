@@ -3,15 +3,12 @@
   "generated": "2025-09-27T10:00:00Z",
   "title": "Kansas-Frontier-Matrix",
   "subtitle": "Time-aware historical GIS for Kansas",
-
   "style": "https://demotiles.maplibre.org/style.json",
   "center": [-98.3, 38.5],
   "zoom": 6,
-
   "time": { "min": "1850-01-01", "max": "2025-12-31" },
   "defaultYear": 1930,
   "timeUI": { "step": 1, "fps": 12, "loop": false },
-
   "defaults": {
     "minzoom": 0,
     "maxzoom": 15,
@@ -21,7 +18,6 @@
     "bounds": [-102.051, 36.993, -94.588, 40.003],
     "time": { "start": null, "end": null }
   },
-
   "groups": [
     "Basemaps & Terrain",
     "Historical Maps",
@@ -31,11 +27,7 @@
     "Hazards",
     "Reference"
   ],
-
   "layers": [
-    // ----------------------------
-    // Basemaps & Terrain
-    // ----------------------------
     {
       "id": "basemap_osm",
       "title": "Basemap — OpenStreetMap",
@@ -78,10 +70,6 @@
       "legendKey": "dem",
       "attribution": "DEM © KARS / State of Kansas"
     },
-
-    // ----------------------------
-    // Historical Maps
-    // ----------------------------
     {
       "id": "usgs_topo_1894_larned",
       "title": "USGS Historic Topo — Larned (1894)",
@@ -96,10 +84,6 @@
       "legendKey": "historic_topo",
       "attribution": "USGS Historical Topographic Maps (Public Domain)"
     },
-
-    // ----------------------------
-    // Environment & Hydrology
-    // ----------------------------
     {
       "id": "ks_hydro",
       "title": "Rivers & Waterbodies",
@@ -131,10 +115,6 @@
       "legendKey": "landcover",
       "attribution": "NLCD (1992–2021)"
     },
-
-    // ----------------------------
-    // Culture & Documents
-    // ----------------------------
     {
       "id": "ks_settlements",
       "title": "Settlements, Forts, Trading Posts",
@@ -172,10 +152,6 @@
       "legendKey": "treaties",
       "attribution": "Digitized treaty boundaries"
     },
-
-    // ----------------------------
-    // Infrastructure
-    // ----------------------------
     {
       "id": "ks_railroads",
       "title": "Railroads (c. 1900)",
@@ -209,10 +185,6 @@
       "legendKey": "trails",
       "attribution": "Compiled historic trails"
     },
-
-    // ----------------------------
-    // Hazards
-    // ----------------------------
     {
       "id": "tornado_tracks_ks",
       "title": "Tornado Tracks",
@@ -246,10 +218,6 @@
       "legendKey": "wildfire",
       "attribution": "USGS/Geomac derived (processed)"
     },
-
-    // ----------------------------
-    // Reference
-    // ----------------------------
     {
       "id": "kansas_counties",
       "title": "Kansas Counties",
