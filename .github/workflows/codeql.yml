@@ -1,11 +1,9 @@
-# .github/workflows/codeql.yml
 name: CodeQL
 
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    # Skip assets/docs-only changes
     paths-ignore:
       - "**/*.md"
       - "**/*.png"
@@ -19,18 +17,21 @@ on:
     branches: [ main ]
     paths-ignore:
       - "**/*.md"
+      - "**/*.png"
+      - "**/*.jpg"
+      - "**/*.jpeg"
+      - "**/*.svg"
       - "docs/**"
       - "data/**"
       - "stac/**"
   schedule:
-    # Weekly (Sunday 02:45 UTC)
-    - cron: "45 2 * * 0"
+    - cron: "45 2 * * 0" # Weekly (Sunday 02:45 UTC)
 
 permissions:
   contents: read
-  security-events: write   # upload SARIF
   actions: read
   packages: read
+  security-events: write # upload SARIF
 
 concurrency:
   group: codeql-${{ github.ref }}
@@ -48,11 +49,19 @@ jobs:
         language: [ "javascript-typescript", "python" ]
 
     steps:
+      # -------- Harden the runner egress (set to 'block' if you want strict) --------
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: false
+          persist-credentials: false
+          clean: true
 
       # ---------- Optional local CodeQL config ----------
       - name: Detect local CodeQL config
@@ -61,11 +70,11 @@ jobs:
         run: |
           set -euo pipefail
           if [ -f .github/codeql/config.yml ]; then
-            echo "config=.github/codeql/config.yml" >> "$GITHUB_OUTPUT"
+            echo "path=.github/codeql/config.yml" >> "$GITHUB_OUTPUT"
           elif [ -f .github/codeql.yml ]; then
-            echo "config=.github/codeql.yml" >> "$GITHUB_OUTPUT"
+            echo "path=.github/codeql.yml" >> "$GITHUB_OUTPUT"
           else
-            echo "config=" >> "$GITHUB_OUTPUT"
+            echo "path=" >> "$GITHUB_OUTPUT"
           fi
 
       # ---------------- JS/TS prep (web/) ----------------
@@ -132,19 +141,35 @@ jobs:
             pip install -e ".[dev]" || pip install -e . || true
           fi
 
-      # ---------------- CodeQL ----------------
-      - name: Initialize CodeQL
+      # ---------------- CodeQL init (mutually exclusive) ----------------
+      - name: Initialize CodeQL (local config)
+        if: steps.cfg.outputs.path != ''
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: +security-extended,security-and-quality
-          # Prefer local config if present; else use inline paths filter
-          config-file: ${{ steps.cfg.outputs.config || '' }}
-          config: ${{ steps.cfg.outputs.config && '' || format('paths:\n  - src\n  - web\n  - scripts\npaths-ignore:\n  - data\n  - stac\n  - docs\n  - "**/*.min.js"\n') }}
+          config-file: ${{ steps.cfg.outputs.path }}
           build-mode: autobuild
 
-      # For JS/TS projects that need a build (e.g., TS → JS), autobuild usually works.
-      # If your app needs a custom build (vite/webpack/tsc), uncomment to force it:
+      - name: Initialize CodeQL (inline config)
+        if: steps.cfg.outputs.path == ''
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-extended,security-and-quality
+          config: |
+            paths:
+              - src
+              - web
+              - scripts
+            paths-ignore:
+              - data
+              - stac
+              - docs
+              - "**/*.min.js"
+          build-mode: autobuild
+
+      # For JS/TS builds that need bundling/transpile beyond autobuild, enable:
       # - name: Manual build (optional)
       #   if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
       #   working-directory: web
@@ -168,5 +193,5 @@ jobs:
             echo "- Language: **${{ matrix.language }}**"
             echo "- Event: **${{ github.event_name }}**"
             echo "- Ref: **${{ github.ref }}**"
-            echo "- Config: **${{ steps.cfg.outputs.config || 'inline (paths filtered)' }}**"
+            echo "- Config: **${{ steps.cfg.outputs.path || 'inline (paths filtered)' }}**"
           } >> "$GITHUB_STEP_SUMMARY"
