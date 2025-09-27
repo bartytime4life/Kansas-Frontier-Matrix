@@ -11,7 +11,7 @@ permissions:
   id-token: write         # for provenance attestation
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -20,6 +20,7 @@ env:
   EXTRAS_DIR: build/extras
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   PIP_NO_PYTHON_VERSION_WARNING: "1"
+  PYTHONUTF8: "1"
 
 jobs:
   build:
@@ -33,6 +34,13 @@ jobs:
         with:
           # setuptools_scm needs full history + tags
           fetch-depth: 0
+
+      - name: Derive SOURCE_DATE_EPOCH (reproducible builds)
+        id: sde
+        shell: bash
+        run: |
+          # Use latest commit time as reproducible timestamp
+          echo "epoch=$(git log -1 --pretty=%ct)" >> "$GITHUB_OUTPUT"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -54,6 +62,8 @@ jobs:
       - name: Verify tag matches project version
         id: tagcheck
         shell: bash
+        env:
+          SOURCE_DATE_EPOCH: ${{ steps.sde.outputs.epoch }}
         run: |
           set -euo pipefail
           TAG_RAW="${GITHUB_REF_NAME}"
@@ -73,6 +83,8 @@ PY
           echo "version=${PYVER}" >> "$GITHUB_OUTPUT"
 
       - name: Quick smoke (editable, no-deps)
+        env:
+          SOURCE_DATE_EPOCH: ${{ steps.sde.outputs.epoch }}
         run: |
           set -euo pipefail
           pip install -e . --no-deps || true
@@ -88,6 +100,8 @@ for m in mods:
 PY
 
       - name: Build sdist & wheel
+        env:
+          SOURCE_DATE_EPOCH: ${{ steps.sde.outputs.epoch }}
         run: |
           python -m build
           ls -lh "${{ env.DIST_DIR }}/"
@@ -95,7 +109,7 @@ PY
       - name: Twine check
         run: python -m twine check ${{ env.DIST_DIR }}/*
 
-      # Install from built wheel (not from repo) and import
+      # Verify sdist installs & imports when built into a wheel
       - name: Install built wheel and smoke-import
         shell: bash
         run: |
@@ -121,7 +135,7 @@ PY
             if [ -f pnpm-lock.yaml ]; then
               npm i -g pnpm@9
               pnpm install --frozen-lockfile
-              if pnpm run | grep -qE '^ *build( |:|$)'; then pnpm build || exit 0; fi
+              if pnpm run | grep -qE '^ *build( |:|$)'; then pnpm build || true; fi
             elif [ -f yarn.lock ]; then
               corepack enable
               yarn install --frozen-lockfile
@@ -136,6 +150,7 @@ PY
             echo "built=false" >> "$GITHUB_OUTPUT"
 
       - name: Bundle extras (STAC/web snapshots)
+        shell: bash
         run: |
           set -euo pipefail
           mkdir -p "${EXTRAS_DIR}"
@@ -164,7 +179,7 @@ PY
           if [ -d "${EXTRAS_DIR}" ]; then
             for f in "${EXTRAS_DIR}"/*.zip; do
               [ -e "$f" ] || continue
-              sha256sum "$f" | tee "$f.sha256"
+              sha256sum "$f" | tee "$f".sha256
             done
           fi
           {
@@ -201,7 +216,7 @@ PY
             ${{ env.EXTRAS_DIR }}/*.sha256
             CHECKSUMS.txt
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 21
 
       - name: Job summary
         run: |
