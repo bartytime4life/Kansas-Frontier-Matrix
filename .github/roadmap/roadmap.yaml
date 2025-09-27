@@ -8,7 +8,6 @@ version: 1
 project: "Kansas Geo Timeline"
 owner: "bartytime4life"
 
-# Optional enums your sync script can use for validation / normalization
 enums:
   priorities: [P1, P2, P3]
   estimates:  [XS, S, M, L, XL]
@@ -26,55 +25,37 @@ defaults:
     estimate: M
 
 # ------------------------------------------------------------------------------
-# Labels (idempotent): updated/created by color/description.
+# Labels (idempotent) — will be created/updated by name/color/description
 # ------------------------------------------------------------------------------
 
 labels:
-  - name: data
-    color: "1f77b4"
-    description: "Datasets, ingestion, sources"
-  - name: hydrology
-    color: "17becf"
-    description: "Water, flood, irrigation, aquifer"
-  - name: paleoclimate
-    color: "bcbd22"
-    description: "Tree rings, pollen, charcoal, proxies"
-  - name: ai
-    color: "9467bd"
-    description: "NLP, CV, geospatial ML, modeling"
-  - name: uncertainty
-    color: "7f7f7f"
-    description: "UQ, calibration, confidence, error bars"
-  - name: ontology
-    color: "8c564b"
-    description: "CIDOC-CRM, GeoSciML, KG, RDF/OWL"
-  - name: fractals
-    color: "e377c2"
-    description: "Fractals, scaling laws, clustering"
-  - name: storytelling
-    color: "ff7f0e"
-    description: "Narrative modules, timeline, glossary"
-  - name: crowdsourcing
-    color: "2ca02c"
-    description: "Submission portal, contributor flow"
-  - name: 3d
-    color: "d62728"
-    description: "CesiumJS, KML/KMZ, time-dynamic"
-  - name: api
-    color: "00b5ad"
-    description: "REST/GraphQL, downloads"
-  - name: architecture
-    color: "111111"
-    description: "Modularity, plugins, ext points"
-  - name: reproducibility
-    color: "9edae5"
-    description: "STAC validation, CI/CD"
-  - name: MCP
-    color: "6e6ef7"
-    description: "Master Coder Protocol artifacts"
-  - name: education
-    color: "c49c94"
-    description: "UI literacy, public comms"
+  # scope / domain
+  - name: data            ; color: "1f77b4" ; description: "Datasets, ingestion, sources"
+  - name: hydrology       ; color: "17becf" ; description: "Water, flood, irrigation, aquifer"
+  - name: paleoclimate    ; color: "bcbd22" ; description: "Tree rings, pollen, charcoal, proxies"
+  - name: ai              ; color: "9467bd" ; description: "NLP, CV, geospatial ML, modeling"
+  - name: uncertainty     ; color: "7f7f7f" ; description: "UQ, calibration, confidence, error bars"
+  - name: ontology        ; color: "8c564b" ; description: "CIDOC-CRM, GeoSciML, KG, RDF/OWL"
+  - name: fractals        ; color: "e377c2" ; description: "Fractals, scaling laws, clustering"
+  - name: storytelling    ; color: "ff7f0e" ; description: "Narrative modules, timeline, glossary"
+  - name: crowdsourcing   ; color: "2ca02c" ; description: "Submission portal, contributor flow"
+  - name: 3d              ; color: "d62728" ; description: "CesiumJS, KML/KMZ, time-dynamic"
+  - name: api             ; color: "00b5ad" ; description: "REST/GraphQL, downloads"
+  - name: architecture    ; color: "111111" ; description: "Modularity, plugins, extension points"
+  - name: reproducibility ; color: "9edae5" ; description: "STAC validation, CI/CD"
+  - name: MCP             ; color: "6e6ef7" ; description: "Master Coder Protocol artifacts"
+  - name: education       ; color: "c49c94" ; description: "UI literacy, public comms"
+  # viewer / infra
+  - name: stac            ; color: "0a7bbb" ; description: "STAC catalog, collections, items"
+  - name: web             ; color: "1f6feb" ; description: "MapLibre viewer, web/config pack"
+  - name: ci              ; color: "6a737d" ; description: "GitHub Actions, pipelines"
+  - name: docker          ; color: "2496ed" ; description: "Dockerfiles, compose, images"
+  - name: python          ; color: "3776ab" ; description: "Python packages, CLI, scripts"
+  - name: security        ; color: "b60205" ; description: "Vulns, CodeQL, secrets, supply chain"
+  # triage / defaults used by templates
+  - name: bug             ; color: "d73a4a" ; description: "Something isn’t working"
+  - name: enhancement     ; color: "a2eeef" ; description: "Feature request / improvement"
+  - name: triage          ; color: "fbca04" ; description: "Needs review / classification"
 
 # ------------------------------------------------------------------------------
 # Milestones → GitHub Milestones (with issues that create/update GH Issues).
@@ -88,7 +69,7 @@ milestones:
     due_on: "2025-10-31"
     description: >
       Expand coverage: oral histories, paleoclimate proxies, hydrology & water management.
-      Document sources and provenance in STAC catalog.
+      Document sources and provenance in the STAC catalog; wire key layers to the viewer.
     issues:
       - key: oral-histories
         title: "Oral Histories & Indigenous Narratives"
@@ -101,12 +82,12 @@ milestones:
 
           ### Tasks
           - [ ] Identify oral history archives (tribal, local historical societies, KHRI)
-          - [ ] Digitize + geocode transcripts (MCP `experiment.md`)
+          - [ ] Digitize + geocode transcripts (MCP experiment template)
           - [ ] Link narratives to features with glossary tooltips
           - [ ] Document sources in `data/sources/oral_histories.json`
 
           ### Deliverables
-          - `data/sources/oral_histories.json` with license, contact, update cadence
+          - `data/sources/oral_histories.json` (license, contact, update cadence)
           - Initial story map tie-ins (timeline + glossary)
         files:
           - data/sources/oral_histories.json
@@ -124,10 +105,10 @@ milestones:
           - [ ] Integrate NOAA/USDM drought indices and station normals
           - [ ] Add pollen/charcoal/fire records (Neotoma, state archives)
           - [ ] Cross-link KGS/Neotoma paleo records
-          - [ ] `data/sources/paleoclimate.json` with provenance
+          - [ ] Create `data/sources/paleoclimate.json` with provenance
 
           ### Deliverables
-          - `data/sources/paleoclimate.json` sources + STAC registration
+          - `data/sources/paleoclimate.json` + STAC registration
         files:
           - data/sources/paleoclimate.json
 
@@ -142,10 +123,10 @@ milestones:
 
           ### Tasks
           - [ ] Add flood event datasets (NOAA Storm Events, FEMA declarations)
-          - [ ] Add irrigation/management layers (canals, diversions where public)
+          - [ ] Add irrigation/management layers (canals/diversions where public)
           - [ ] Prototype HEC-RAS historical flood scenarios (MCP modeling SOP)
           - [ ] STAC registration for hydrology items/collections
-          - [ ] Wire Makefile + viewer to load layers
+          - [ ] Wire Makefile + viewer to load layers (`make site`, `make site-config`)
 
           ### Deliverables
           - `data/sources/hydrology.json` endpoints + licenses
@@ -156,30 +137,36 @@ milestones:
 
       - key: kgs-kansas-river
         title: "Kansas River (KGS) Integration — Source → STAC → Viewer"
-        labels: [data, hydrology, reproducibility]
+        labels: [data, hydrology, reproducibility, stac, web]
         priority: P1
         estimate: S
         body: |
           ### Goal
-          Incorporate KGS Kansas River map as a first-class hydrology layer: source descriptor, STAC
-          collection/items, fetch/export, and viewer overlays.
+          Incorporate KGS Kansas River as a first-class hydrology layer:
+          source descriptor, STAC collection/items, fetch/export, and viewer overlays.
 
           ### Tasks
           - [ ] Source: `data/sources/ks_kansas_river.json` (ArcGIS REST + metadata)
-          - [ ] STAC: `stac/collections/ks_kansas_river.json` (+ child link in `stac/collections/vectors.json`)
-          - [ ] STAC Items: `stac/items/ks_kansas_river_channels.json`, `..._floodplains.json`, `..._gauges.json`
-          - [ ] Makefile: `hydrology-fetch`, `hydrology-stac`, `hydrology` (meta), `site-hydrology`
-          - [ ] Web: `web/layers.json` + `web/app.config.json` entries (`ksriv-*`)
-          - [ ] CI: add job to run `make hydrology` with test endpoints (dry-run if needed)
+          - [ ] STAC: `stac/collections/ks_kansas_river.json`
+                (+ link under `stac/collections/vectors.json` if used)
+          - [ ] Items: `stac/items/ks_kansas_river/channels.json`,
+                `stac/items/ks_kansas_river/floodplains.json`,
+                `stac/items/ks_kansas_river/gauges.json`
+          - [ ] Makefile: `hydrology-fetch` (ogr2ogr), `hydrology-stac`
+                (href patch), plus `site`/`site-config` for preview
+          - [ ] Web: `ksriv_*` layers present in `web/layers.json` (fallback)
+                and `web/app.config.json` (STAC-rendered)
+          - [ ] CI: (optional) dry-run job to exercise `make hydrology-fetch`
 
-          ### Deliverables
-          - End-to-end: source → export (GeoJSON) → STAC-wired → visible in preview
+          ### Acceptance
+          - End-to-end path visible in preview: source → export (GeoJSON)
+            → STAC-wired → rendered in viewer (with attribution)
         files:
           - data/sources/ks_kansas_river.json
           - stac/collections/ks_kansas_river.json
-          - stac/items/ks_kansas_river_channels.json
-          - stac/items/ks_kansas_river_floodplains.json
-          - stac/items/ks_kansas_river_gauges.json
+          - stac/items/ks_kansas_river/channels.json
+          - stac/items/ks_kansas_river/floodplains.json
+          - stac/items/ks_kansas_river/gauges.json
           - data/processed/hydrology/kansas_river/channels.geojson
           - data/processed/hydrology/kansas_river/floodplains.geojson
           - data/processed/hydrology/kansas_river/gauges.geojson
@@ -204,7 +191,7 @@ milestones:
           Predict likely settlement sites using environmental drivers.
 
           ### Tasks
-          - [ ] Train model on DEM, hydrology, soils, land cover + known sites
+          - [ ] Train on DEM, hydrology, soils, land cover + known sites
           - [ ] Log in `mcp/experiments/EXP-SETTLE-PRED.md`
           - [ ] Explore Bayesian + hybrid ABM/GIS variants
 
@@ -234,7 +221,7 @@ milestones:
         estimate: M
         body: |
           ### Goal
-          Add CIDOC-CRM + GeoSciML ontologies and legal/treaty inference rules.
+          Add CIDOC-CRM + GeoSciML ontologies and treaty/legal inference rules.
 
           ### Tasks
           - [ ] Define core ontology schema and identity strategy (Wikidata)
@@ -269,7 +256,7 @@ milestones:
         estimate: M
         body: |
           ### Goal
-          Build narrative module for Santa Fe Trail with timeline & sources.
+          Build narrative module for the Santa Fe Trail with timeline & sources.
 
           ### Tasks
           - [ ] Assemble trail route layers + primary sources
@@ -343,7 +330,7 @@ milestones:
         estimate: S
         body: |
           ### Goal
-          Publish internal knowledge graph with entity linking.
+          Publish an internal knowledge graph with entity linking.
 
           ### Tasks
           - [ ] Map entities to Wikidata; export RDF
@@ -369,7 +356,7 @@ milestones:
         estimate: S
         body: |
           ### Goal
-          Provide REST/GraphQL endpoints, enable GeoJSON/CSV download.
+          Provide REST/GraphQL endpoints and GeoJSON/CSV downloads.
 
           ### Tasks
           - [ ] Dataset catalog endpoints
@@ -393,7 +380,7 @@ milestones:
           ### Tasks
           - [ ] `mcp/experiments/experiment_template.md` in use
           - [ ] Georeferencing experiment
-          - [ ] NLP place extraction experiment
+          - [ ] NLP placename extraction experiment
           - [ ] Predictive settlement modeling experiment
 
       - key: sop-docs
@@ -424,13 +411,13 @@ milestones:
 
       - key: ci-repro
         title: "CI/CD Reproducibility"
-        labels: [reproducibility]
+        labels: [reproducibility, ci]
         priority: P2
         estimate: S
         body: |
           ### Goal
-          Automated STAC validation and reproducibility check target.
+          Automated STAC validation and reproducibility checks.
 
           ### Tasks
           - [ ] GitHub Actions job to validate STAC JSON
-          - [ ] `make reproducibility` target
+          - [ ] `make prebuild` target documented in README
