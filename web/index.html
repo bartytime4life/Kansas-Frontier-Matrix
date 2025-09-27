@@ -10,10 +10,9 @@
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.7.0/dist/maplibre-gl.css"/>
   <script defer src="https://unpkg.com/maplibre-gl@3.7.0/dist/maplibre-gl.js"></script>
 
-  <!-- Theme (tokens) then App styles (structure/components) -->
+  <!-- App styles -->
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml"/>
-  <link rel="stylesheet" href="./css/theme.css"/>
-  <link rel="stylesheet" href="./app.css"/>
+  <link rel="stylesheet" href="./style.css"/>
 
   <style>
     /* page-only polish */
@@ -25,9 +24,10 @@
   </style>
 </head>
 <body>
-  <!-- Map (left/top) and Sidebar (right/bottom) laid out by app.css -->
+  <!-- Map (full bleed) -->
   <div id="map" aria-label="Time-aware map of Kansas"></div>
 
+  <!-- Sidebar -->
   <aside id="sidebar" class="kfm-sidebar" role="complementary" aria-label="Controls and layer list">
     <div class="header">
       <h2 id="app-title">Kansas-Frontier-Matrix</h2>
@@ -46,8 +46,8 @@
         <span class="dim mono" id="time-range"></span>
       </div>
       <div class="mt-8" aria-live="polite">
-        <input id="year" class="range--fill" type="range" min="1850" max="2025" step="1" value="1930" aria-label="Filter layers by year"/>
-        <span id="yearLabel" class="mono">1930</span>
+        <input id="year" class="kfm-range--fill" type="range" min="1850" max="2025" step="1" value="1930" aria-label="Filter layers by year"/>
+        <span id="year-label" class="mono">1930</span>
       </div>
       <div id="status" class="dim mt-8" role="status" aria-live="polite"></div>
     </section>
@@ -60,7 +60,7 @@
       </details>
     </section>
 
-    <!-- Legend (auto-built if layer.legend present) -->
+    <!-- Legend -->
     <section id="legendbox" class="section" role="region" aria-label="Legend">
       <details open>
         <summary>Legend</summary>
@@ -72,10 +72,9 @@
   <script>
   // -----------------------------------------------------------------------------
   // Kansas-Frontier-Matrix — Connected viewer
-  // - Reads ./app.config.json (preferred), falls back to ./config/app.config.json then ./layers.json
-  // - Supports layer.type: "raster" (url) and "geojson" (path)
-  // - Honors: visible, opacity, paint (line/fill/circle), time.start/time.end
-  // - Builds grouped layer list and simple legend from config
+  // Loads ./config/app.config.json → ./config/viewer.json → ./config/layers.json → ./layers.json
+  // Supports: raster (url/tiles), geojson (data/path), style|paint, time.start/end & timeProperty
+  // Builds grouped layer list and legend; wires timeline to layer visibility.
   // -----------------------------------------------------------------------------
   (async function () {
     const $ = (sel, root=document) => root.querySelector(sel);
@@ -93,7 +92,7 @@
 
     const statusEl = $('#status');
     const yearEl = $('#year');
-    const yearLabelEl = $('#yearLabel');
+    const yearLabelEl = $('#year-label');
     const timeRangeEl = $('#time-range');
     const layersWrap = $('#layers');
     const legendWrap = $('#legend');
@@ -104,9 +103,15 @@
 
     const setStatus = (msg) => { statusEl.textContent = msg || ''; };
 
-    // Try config locations (prefer root)
+    // Try config locations (preferred first)
     async function loadConfig() {
-      const attempts = ['./app.config.json', './config/app.config.json', './layers.json'];
+      const attempts = [
+        './app.config.json',
+        './config/app.config.json',
+        './config/viewer.json',
+        './config/layers.json',
+        './layers.json'
+      ];
       let lastErr;
       for (const url of attempts) {
         try {
@@ -125,11 +130,22 @@
       cfg = res.cfg;
     } catch (e) {
       console.error(e);
-      setStatus('Failed to load configuration (app.config.json / config/app.config.json / layers.json).');
+      setStatus('Failed to load configuration (checked app.config.json, viewer.json, layers.json).');
       return;
     }
 
-    // Apply title/subtitle if present
+    // Merge time_config.json if present
+    try {
+      const tr = await fetch('./config/time_config.json', { cache: 'no-store' });
+      if (tr.ok) {
+        const tc = await tr.json();
+        cfg.time = tc.time ?? cfg.time;
+        if (typeof tc.defaultYear !== 'undefined') cfg.defaultYear = tc.defaultYear;
+        if (tc.timeUI) cfg.timeUI = tc.timeUI;
+      }
+    } catch (_) { /* optional */ }
+
+    // Titles
     if (cfg.title) appTitle.textContent = cfg.title;
     if (cfg.subtitle) appSubtitle.textContent = cfg.subtitle;
 
@@ -161,19 +177,54 @@
       const pct = ((y - min) / (max - min)) * 100;
       yearEl.style.setProperty('--value', pct + '%');
     }
-
     yearEl.min = String(tMin.getUTCFullYear());
     yearEl.max = String(tMax.getUTCFullYear());
     setSliderValue(clampYear(defaultYear));
     timeRangeEl.textContent = `(${tMin.toISOString().slice(0,10)} → ${tMax.toISOString().slice(0,10)})`;
 
-    // Helpers
+    // Helper: tile URL list for rasters
     function tilesFrom(L) {
       if (Array.isArray(L.tiles) && L.tiles.length) return L.tiles;
       if (typeof L.url === 'string') return [L.url];
       if (typeof L.path === 'string') return [L.path];
       return null;
     }
+    // Helper: geojson data URL
+    function dataFrom(L) {
+      return L.data || L.path || null;
+    }
+    // Normalize style/paint to a single object {line, fill, circle}
+    function normalizePaint(L) {
+      if (L.paint) return L.paint;
+      const s = L.style || {};
+      const out = {};
+      if ('lineColor' in s || 'lineWidth' in s || 'lineOpacity' in s || 'lineDasharray' in s) {
+        out.line = {
+          'line-color': s.lineColor ?? '#000',
+          'line-width': s.lineWidth ?? 1,
+          'line-opacity': s.lineOpacity ?? 1,
+          ...(s.lineDasharray ? { 'line-dasharray': s.lineDasharray } : {})
+        };
+      }
+      if ('fillColor' in s || 'fillOpacity' in s || 'fillOutlineColor' in s) {
+        out.fill = {
+          'fill-color': s.fillColor ?? '#000',
+          'fill-opacity': s.fillOpacity ?? 0.4,
+          ...(s.fillOutlineColor ? { 'fill-outline-color': s.fillOutlineColor } : {})
+        };
+      }
+      if ('circleColor' in s || 'circleRadius' in s || 'circleOpacity' in s || 'circleStrokeColor' in s || 'circleStrokeWidth' in s) {
+        out.circle = {
+          'circle-color': s.circleColor ?? '#000',
+          'circle-radius': s.circleRadius ?? 3,
+          'circle-opacity': s.circleOpacity ?? 1,
+          ...(s.circleStrokeColor ? { 'circle-stroke-color': s.circleStrokeColor } : {}),
+          ...(s.circleStrokeWidth ? { 'circle-stroke-width': s.circleStrokeWidth } : {})
+        };
+      }
+      return out;
+    }
+    // Time window for layer
     function getTimeWindow(L) {
       const t = L.time || {};
       const s = t.start ? new Date(t.start).getUTCFullYear() : -Infinity;
@@ -185,19 +236,18 @@
       return s <= y && y <= e;
     }
 
-    // Layer adders
+    // Adders
     function addRaster(L) {
       const id = L.id;
       const tiles = tilesFrom(L);
       if (!tiles) { console.warn('Raster missing url/tiles:', L); return; }
-
       if (!map.getSource(id)) {
         map.addSource(id, {
           type: 'raster',
           tiles,
           tileSize: L.tileSize || defaults.tileSize || 256,
-          crossOrigin: 'anonymous',
-          attribution: L.attribution || undefined
+          attribution: L.attribution || undefined,
+          crossOrigin: 'anonymous'
         });
       }
       if (!map.getLayer(id)) {
@@ -211,21 +261,24 @@
 
     async function addGeoJSON(L) {
       const id = L.id;
-      if (!L.path) { console.warn('GeoJSON missing path:', L); return; }
+      const data = dataFrom(L);
+      if (!data) { console.warn('GeoJSON missing data/path:', L); return; }
 
       if (!map.getSource(id)) {
-        map.addSource(id, { type: 'geojson', data: L.path, attribution: L.attribution || undefined });
+        map.addSource(id, { type: 'geojson', data, attribution: L.attribution || undefined });
       }
-      const paint = L.paint || {};
+      const paint = normalizePaint(L);
+
       if (paint.line && !map.getLayer(id + '-line')) {
         map.addLayer({
           id: id + '-line',
           type: 'line',
           source: id,
           paint: {
-            'line-color': paint.line['line-color'] ?? '#000',
-            'line-width': paint.line['line-width'] ?? 1,
-            'line-opacity': paint.line['line-opacity'] ?? 1
+            'line-color': paint.line['line-color'],
+            'line-width': paint.line['line-width'],
+            'line-opacity': paint.line['line-opacity'],
+            ...(paint.line['line-dasharray'] ? { 'line-dasharray': paint.line['line-dasharray'] } : {})
           },
           layout: { visibility: (L.visible ?? true) ? 'visible' : 'none' }
         });
@@ -236,9 +289,9 @@
           type: 'fill',
           source: id,
           paint: {
-            'fill-color': paint.fill['fill-color'] ?? '#000',
-            'fill-opacity': (paint.fill['fill-opacity'] ?? 0.4) * (L.opacity ?? 1),
-            'fill-outline-color': paint.fill['fill-outline-color'] ?? undefined
+            'fill-color': paint.fill['fill-color'],
+            'fill-opacity': (paint.fill['fill-opacity'] ?? 0.4) * (typeof L.opacity === 'number' ? L.opacity : 1),
+            ...(paint.fill['fill-outline-color'] ? { 'fill-outline-color': paint.fill['fill-outline-color'] } : {})
           },
           layout: { visibility: (L.visible ?? true) ? 'visible' : 'none' }
         });
@@ -249,9 +302,11 @@
           type: 'circle',
           source: id,
           paint: {
-            'circle-color': paint.circle['circle-color'] ?? '#000',
-            'circle-radius': paint.circle['circle-radius'] ?? 3,
-            'circle-opacity': paint.circle['circle-opacity'] ?? 1
+            'circle-color': paint.circle['circle-color'],
+            'circle-radius': paint.circle['circle-radius'],
+            'circle-opacity': (paint.circle['circle-opacity'] ?? 1) * (typeof L.opacity === 'number' ? L.opacity : 1),
+            ...(paint.circle['circle-stroke-color'] ? { 'circle-stroke-color': paint.circle['circle-stroke-color'] } : {}),
+            ...(paint.circle['circle-stroke-width'] ? { 'circle-stroke-width': paint.circle['circle-stroke-width'] } : {})
           },
           layout: { visibility: (L.visible ?? true) ? 'visible' : 'none' }
         });
@@ -266,69 +321,71 @@
 
     // UI builders
     function makeLayerRow(L) {
-      const row = el('div', { class: 'layer-row', 'data-layer-id': L.id });
+      const row = el('div', { class: 'layer', 'data-layer-id': L.id });
 
-      // Checkbox + label (linked for a11y)
-      const inputId = `toggle-${L.id}`;
-      const cb = el('input', { id: inputId, type: 'checkbox', 'aria-label': `Toggle ${L.title || L.id}` });
-      cb.checked = !!(L.visible ?? true);
-      cb.addEventListener('change', () => {
+      // Toggle (switch)
+      const switchEl = el('button', {
+        class: 'switch',
+        role: 'switch',
+        'aria-checked': (L.visible ?? true) ? 'true' : 'false',
+        'aria-label': `Toggle ${L.title || L.id}`
+      }, [el('span', { class: 'switch__dot' })]);
+      switchEl.addEventListener('click', () => {
+        const now = switchEl.getAttribute('aria-checked') === 'true';
+        const next = !now;
+        switchEl.setAttribute('aria-checked', next ? 'true' : 'false');
         const ids = (L.type === 'geojson')
           ? [L.id + '-line', L.id + '-fill', L.id + '-circle']
           : [L.id];
-        const vis = cb.checked ? 'visible' : 'none';
+        const vis = next ? 'visible' : 'none';
         ids.forEach(x => map.getLayer(x) && map.setLayoutProperty(x, 'visibility', vis));
       });
 
-      const label = el('label', { for: inputId }, [
-        L.title || L.id,
-        el('span', { class: 'badge' }, L.group ? ` ${L.group}` : '')
-      ]);
+      const name = el('div', { class: 'layer__name' }, L.title || L.id);
 
       // Opacity slider
       const op = el('input', {
         type: 'range', min: '0', max: '1', step: '0.01',
-        value: String(L.opacity ?? 1), class: 'opacity-range',
+        value: String(L.opacity ?? 1), class: 'input--opacity',
         'aria-label': `Opacity ${L.title || L.id}`
       });
       op.addEventListener('input', () => {
         const v = parseFloat(op.value);
         if (L.type === 'geojson') {
-          if (map.getLayer(L.id + '-fill'))   map.setPaintProperty(L.id + '-fill',   'fill-opacity',   (L.paint?.fill?.['fill-opacity'] ?? 0.4) * v);
-          if (map.getLayer(L.id + '-line'))   map.setPaintProperty(L.id + '-line',   'line-opacity',   (L.paint?.line?.['line-opacity'] ?? 1)     * v);
-          if (map.getLayer(L.id + '-circle')) map.setPaintProperty(L.id + '-circle', 'circle-opacity', (L.paint?.circle?.['circle-opacity'] ?? 1) * v);
+          const paint = normalizePaint(L);
+          if (map.getLayer(L.id + '-fill'))   map.setPaintProperty(L.id + '-fill',   'fill-opacity',   (paint.fill?.['fill-opacity'] ?? 0.4) * v);
+          if (map.getLayer(L.id + '-line'))   map.setPaintProperty(L.id + '-line',   'line-opacity',   (paint.line?.['line-opacity'] ?? 1)     * v);
+          if (map.getLayer(L.id + '-circle')) map.setPaintProperty(L.id + '-circle', 'circle-opacity', (paint.circle?.['circle-opacity'] ?? 1) * v);
         } else if (map.getLayer(L.id)) {
           map.setPaintProperty(L.id, 'raster-opacity', v);
         }
       });
 
-      row.append(cb, label, op);
+      const right = el('div', { class: 'layer__controls' }, [switchEl, op]);
+      row.append(name, right);
       return row;
     }
 
     function addLegendFor(L) {
       if (!Array.isArray(L.legend) || !L.legend.length) return;
       for (const item of L.legend) {
-        const sw = el('span', { class: 'legend__swatch', style: `display:inline-block;width:14px;height:14px;border:1px solid var(--border);margin-right:6px;background:${item.color || '#999'}` });
+        const sw = el('span', { class: 'legend__swatch', style: `background:${item.color || '#999'}` });
         const name = el('span', { class: 'legend__name' }, item.label || L.title || L.id);
-        const row = el('div', { class: 'legend__row', style: 'display:flex;align-items:center;gap:6px;margin:4px 0' }, [sw, name]);
+        const row = el('div', { class: 'legend__row' }, [sw, name]);
         legendWrap.append(row);
       }
     }
 
     function buildLayerList() {
       layersWrap.textContent = '';
-      const groupOrder = Array.isArray(cfg.groups) ? cfg.groups : [];
+      const order = Array.isArray(cfg.groups) ? cfg.groups : [];
       const groups = new Map();
-
       for (const L of layers) {
         const g = L.group || 'Ungrouped';
         if (!groups.has(g)) groups.set(g, []);
         groups.get(g).push(L);
       }
-
-      const keys = [...groupOrder.filter(g => groups.has(g)), ...[...groups.keys()].filter(g => !groupOrder.includes(g))];
-
+      const keys = [...order.filter(g => groups.has(g)), ...[...groups.keys()].filter(g => !order.includes(g))];
       for (const g of keys) {
         const list = groups.get(g);
         const det = el('details', { open: true });
@@ -367,7 +424,7 @@
       map.easeTo({ center: ctr, zoom: zm, pitch: 0, bearing: 0, duration: 600 });
     });
 
-    // Bootstrap once map is ready
+    // Map load bootstrap
     map.on('load', async () => {
       try {
         await addAllLayers();
@@ -381,7 +438,7 @@
 
     // ---------------- Theme toggle (Auto → Light → Dark) ----------------
     (function themeToggle() {
-      const STORAGE_KEY = "kfm-theme";         // "auto" | "light" | "dark"
+      const STORAGE_KEY = "kfm-theme";  // "auto" | "light" | "dark"
       const CLASS_LIGHT = "kfm-theme-light";
       const CLASS_DARK  = "kfm-theme-dark";
       const root = document.documentElement;
@@ -390,9 +447,7 @@
         const saved = localStorage.getItem(STORAGE_KEY);
         return (saved === "light" || saved === "dark" || saved === "auto") ? saved : "auto";
       }
-      function labelFor(mode) {
-        return `Theme: ${mode[0].toUpperCase()}${mode.slice(1)}`;
-      }
+      function labelFor(mode) { return `Theme: ${mode[0].toUpperCase()}${mode.slice(1)}`; }
       function apply(mode) {
         root.classList.remove(CLASS_LIGHT, CLASS_DARK);
         if (mode === "light") {
@@ -408,14 +463,15 @@
       }
       function next(mode) { return mode === "auto" ? "light" : mode === "light" ? "dark" : "auto"; }
 
-      // React to OS theme changes when in auto
       const media = window.matchMedia("(prefers-color-scheme: dark)");
-      media.addEventListener?.("change", () => { if (current() === "auto") apply("auto"); });
+      if (typeof media.addEventListener === 'function') {
+        media.addEventListener("change", () => { if (current() === "auto") apply("auto"); });
+      } else if (typeof media.addListener === 'function') {
+        media.addListener(() => { if (current() === "auto") apply("auto"); });
+      }
 
-      // Init
       apply(current());
 
-      // Wire button
       btnTheme?.addEventListener("click", () => {
         const mode = next(current());
         localStorage.setItem(STORAGE_KEY, mode);
