@@ -21,7 +21,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -116,10 +116,13 @@ PY
             echo "has_pkgjson=true" >> "$GITHUB_OUTPUT"
             if [ -f web/pnpm-lock.yaml ]; then
               echo "pm=pnpm" >> "$GITHUB_OUTPUT"
+              echo "lock=web/pnpm-lock.yaml" >> "$GITHUB_OUTPUT"
             elif [ -f web/yarn.lock ]; then
               echo "pm=yarn" >> "$GITHUB_OUTPUT"
+              echo "lock=web/yarn.lock" >> "$GITHUB_OUTPUT"
             else
               echo "pm=npm" >> "$GITHUB_OUTPUT"
+              echo "lock=web/package-lock.json" >> "$GITHUB_OUTPUT"
             fi
           else
             echo "has_pkgjson=false" >> "$GITHUB_OUTPUT"
@@ -130,10 +133,7 @@ PY
         with:
           node-version: 20
           cache: ${{ steps.detect_tool.outputs.pm }}
-          cache-dependency-path: |
-            web/package-lock.json
-            web/pnpm-lock.yaml
-            web/yarn.lock
+          cache-dependency-path: ${{ steps.detect_tool.outputs.lock }}
 
       - name: Install pnpm (if selected)
         if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'pnpm'
@@ -209,7 +209,6 @@ PY
           for dir in stac data/sources; do
             if [ -d "$dir" ]; then
               while IFS= read -r -d '' f; do
-                echo "Validating $f"
                 jq -e 'type=="object"' "$f" || ok=0
               done < <(find "$dir" -type f -name '*.json' -print0)
             fi
