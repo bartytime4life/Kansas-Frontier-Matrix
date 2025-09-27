@@ -1,0 +1,78 @@
+name: "Hygiene — Close Stale Issues and PRs"
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # Daily at 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: close-stale
+  cancel-in-progress: false
+
+jobs:
+  stale:
+    name: Mark & close stale threads
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run stale bot
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # --- Timing windows ---
+          days-before-stale: 60            # issues go stale after 60d of inactivity
+          days-before-close: 14            # close 14d after being marked stale
+          days-before-pr-stale: 30         # PRs go stale after 30d of inactivity
+          days-before-pr-close: 14
+
+          # --- Stale labels & behavior ---
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          remove-stale-when-updated: true
+          exempt-draft-prs: true
+
+          # --- Exemptions (labels keep items from going stale) ---
+          exempt-issue-labels: >
+            pinned,security,good first issue,help wanted,roadmap,needs-triage,
+            on-hold,milestone,discussion
+          exempt-pr-labels: >
+            wip,no-automerge,security,roadmap,needs-triage,on-hold,discussion
+
+          # --- Extra safety: don't touch items with milestones or assignees ---
+          exempt-all-assignees: true
+          exempt-milestones: true
+
+          # --- Limits & noise control ---
+          operations-per-run: 200
+          ascending: false
+          only-labels: ""      # leave empty to process all unless exempted
+          labels-to-remove-when-unstale: "stale"
+
+          # --- Messages ---
+          stale-issue-message: |
+            This issue has been automatically marked as **stale** due to 60 days of inactivity.
+            If this is still relevant, please add a comment or apply any of the exempt labels
+            (e.g., `help wanted`, `roadmap`, `on-hold`) to keep it open. It will be closed in
+            14 days if no further activity occurs.
+
+            _Automation note: issues with assignees, milestones, or exempt labels are not marked stale._
+
+          close-issue-message: |
+            Closing this issue due to prolonged inactivity after being marked stale.
+            If you’d like to revisit it, feel free to reopen with an update or add an exempt label.
+
+          stale-pr-message: |
+            This pull request has been marked as **stale** after 30 days without activity.
+            Please push updates, leave a comment, or apply an exempt label (e.g., `wip`, `no-automerge`)
+            to keep it open. It will be closed in 14 days if no activity occurs.
+
+            _Draft PRs, PRs with assignees/milestones, or exempt labels are not marked stale._
+
+          close-pr-message: |
+            Closing this pull request due to prolonged inactivity after being marked stale.
+            Please reopen or open a new PR when you’re ready to continue. Thank you!
