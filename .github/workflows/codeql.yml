@@ -1,3 +1,4 @@
+# .github/workflows/codeql.yml
 name: CodeQL
 
 on:
@@ -34,7 +35,7 @@ permissions:
   security-events: write # upload SARIF
 
 concurrency:
-  group: codeql-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -49,7 +50,7 @@ jobs:
         language: [ "javascript-typescript", "python" ]
 
     steps:
-      # -------- Harden the runner egress (set to 'block' if you want strict) --------
+      # Harden egress (set to 'block' to strictly deny)
       - name: Harden Runner
         uses: step-security/harden-runner@v2
         with:
@@ -141,7 +142,7 @@ jobs:
             pip install -e ".[dev]" || pip install -e . || true
           fi
 
-      # ---------------- CodeQL init (mutually exclusive) ----------------
+      # ---------------- CodeQL init ----------------
       - name: Initialize CodeQL (local config)
         if: steps.cfg.outputs.path != ''
         uses: github/codeql-action/init@v3
@@ -167,14 +168,15 @@ jobs:
               - stac
               - docs
               - "**/*.min.js"
+              - "**/node_modules/**"
           build-mode: autobuild
 
-      # For JS/TS builds that need bundling/transpile beyond autobuild, enable:
+      # Optional: if autobuild struggles, enable a manual build step
       # - name: Manual build (optional)
       #   if: matrix.language == 'javascript-typescript' && hashFiles('web/package.json') != ''
       #   working-directory: web
       #   run: |
-      #     npm run build || yarn build || pnpm build
+      #     npm run build || yarn build || pnpm build || true
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
