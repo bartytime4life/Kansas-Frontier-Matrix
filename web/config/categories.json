@@ -1,35 +1,47 @@
 {
-  "version": "1.1.0",
-  "generated": "2025-09-26T18:00:00Z",
+  "version": "1.2.0",
+  "generated": "2025-09-27T00:00:00Z",
+  "notes": "Categories aligned to web/config/app.config.json; used for sidebar/legend grouping and ordering.",
+  "groupsOrder": ["reference", "terrain", "historical", "documents", "infrastructure"],
   "categories": {
     "reference": {
       "label": "Reference",
       "order": 0,
+      "icon": "🧭",
       "description": "Basemaps, boundaries, and contextual layers for orientation.",
+      "defaultOpen": true,
       "layers": ["basemap_osm"]
     },
     "terrain": {
       "label": "Terrain & Elevation",
       "order": 1,
+      "icon": "⛰️",
       "description": "DEM-derived products, hillshade, and relief.",
+      "defaultOpen": false,
       "layers": ["ks_hillshade_2018"]
     },
     "historical": {
       "label": "Historical Maps",
       "order": 2,
+      "icon": "🗺️",
       "description": "Scanned/rectified maps, plats, and archival overlays.",
+      "defaultOpen": true,
       "layers": ["usgs_topo_1894_larned"]
     },
     "documents": {
       "label": "Documents & Treaties",
       "order": 3,
+      "icon": "📜",
       "description": "Treaties, land cessions, and document-derived polygons.",
+      "defaultOpen": false,
       "layers": ["ks_treaties"]
     },
     "infrastructure": {
       "label": "Trails & Railroads",
       "order": 4,
+      "icon": "🚂",
       "description": "Transportation networks across time.",
+      "defaultOpen": false,
       "layers": ["ks_railroads"]
     }
   },
