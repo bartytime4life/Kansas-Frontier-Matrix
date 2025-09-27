@@ -6,6 +6,12 @@
 # --- Default text handling (cross-platform safety) ---
 *                           text=auto eol=lf
 
+# Explicit LF for common build/config files
+Makefile                    text eol=lf
+*.mk                        text eol=lf
+*.env                       text eol=lf
+*.ini                       text eol=lf
+
 # --- Code & docs (normalize + smart diffs) ---
 *.py                        text diff=python
 *.sh                        text eol=lf
@@ -16,9 +22,9 @@
 *.js                        text diff=javascript
 *.mjs                       text diff=javascript
 *.cjs                       text diff=javascript
-*.ts                        text
-*.tsx                       text
-*.jsx                       text
+*.ts                        text diff=javascript
+*.tsx                       text diff=javascript
+*.jsx                       text diff=javascript
 *.css                       text
 *.scss                      text
 *.html                      text
@@ -29,7 +35,6 @@
 *.plantuml                  text
 *.svg                       text
 *.toml                      text
-*.ini                       text
 *.yml                       text
 *.yaml                      text
 *.json                      text diff=json
@@ -47,6 +52,7 @@ Pipfile.lock                text linguist-generated
 package-lock.json           text linguist-generated
 pnpm-lock.yaml              text linguist-generated
 yarn.lock                   text linguist-generated
+uv.lock                     text linguist-generated
 
 # Minified / sourcemaps (generated noise)
 *.min.js                    text linguist-generated
@@ -59,11 +65,14 @@ yarn.lock                   text linguist-generated
 *.jpg                       binary
 *.jpeg                      binary
 *.gif                       binary
+*.webp                      binary
+*.avif                      binary
 *.ico                       binary
 *.woff                      binary
 *.woff2                     binary
 *.ttf                       binary
 *.otf                       binary
+*.eot                       binary
 
 # --- Geospatial rasters / vectors / containers -> LFS ---
 # Core rasters & sidecars
@@ -88,11 +97,16 @@ yarn.lock                   text linguist-generated
 # Point clouds / LiDAR
 *.las                       filter=lfs diff=lfs merge=lfs -text
 *.laz                       filter=lfs diff=lfs merge=lfs -text
+*.e57                       filter=lfs diff=lfs merge=lfs -text
 
 # Tiles / DB / vector containers
 *.pmtiles                   filter=lfs diff=lfs merge=lfs -text
 *.mbtiles                   filter=lfs diff=lfs merge=lfs -text
+*.mvt                       filter=lfs diff=lfs merge=lfs -text      # Mapbox Vector Tile
+*.pbf                       filter=lfs diff=lfs merge=lfs -text      # Protobuf tiles/OSM extracts
+*.geobuf                    filter=lfs diff=lfs merge=lfs -text
 *.sqlite                    filter=lfs diff=lfs merge=lfs -text
+*.db                        filter=lfs diff=lfs merge=lfs -text
 *.gpkg                      filter=lfs diff=lfs merge=lfs -text
 *.geoparquet                filter=lfs diff=lfs merge=lfs -text
 *.parquet                   filter=lfs diff=lfs merge=lfs -text
@@ -167,3 +181,7 @@ web/tiles/**                linguist-vendored linguist-generated
 .github/                    export-ignore
 tests/                      export-ignore
 docs/                       export-ignore
+data/                       export-ignore
+stac/                       export-ignore
+earth/                      export-ignore
+web/tiles/                  export-ignore
