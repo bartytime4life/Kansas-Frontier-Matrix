@@ -4,7 +4,7 @@
 # ================================
 
 # ---------------------------------------
-# Python artifacts
+# Python artifacts & caches
 # ---------------------------------------
 __pycache__/
 *.py[cod]
@@ -15,8 +15,6 @@ __pycache__/
 .eggs/
 __pypackages__/
 .buildozer/
-
-# Tooling caches
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
@@ -37,9 +35,10 @@ htmlcov/
 .idea/
 .editorconfig
 .pre-commit-config.yaml
+.lychee.toml
 
 # ---------------------------------------
-# Envs / logs
+# Envs / logs / local state
 # ---------------------------------------
 .venv/
 venv/
@@ -50,16 +49,16 @@ env/
 logs/
 
 # ---------------------------------------
-# Build outputs
+# Build outputs / packaging
 # ---------------------------------------
 build/
 dist/
 site/                  # MkDocs output
+_site/
+_site_docs/
 *.whl
 *.egg
 *.tar.gz
-
-# CI/test leftovers
 pytest-report.xml
 coverage.xml
 CHECKSUMS.txt
@@ -76,9 +75,27 @@ web/dist/
 web/build/
 web/tiles/             # heavy tile pyramids
 web/assets/tiles/
+web/**/*.pmtiles
+web/**/*.mbtiles
 web/*.local.js
 web/*.config.local.json
 web/.DS_Store
+
+# Keep small web configs & entrypoints (do NOT ignore these)
+!web/index.html
+!web/style.css
+!web/app.config.json
+!web/config/**
+
+# ---------------------------------------
+# Tests / docs / notebooks (not needed in image)
+# ---------------------------------------
+tests/
+docs/
+*.ipynb
+.ipynb_checkpoints/
+.notebooks_cache/
+outputs/
 
 # ---------------------------------------
 # DVC (keep .dvc files, drop cache/tmp)
@@ -107,6 +124,8 @@ data/**/*.tiff
 data/**/*.vrt
 data/**/*.ovr
 data/**/*.aux.xml
+data/**/*.tfw
+data/**/*.wld
 data/**/*.zip
 data/**/*.7z
 data/**/*.tar
@@ -152,19 +171,11 @@ stac/**/*.gz
 # ---------------------------------------
 # Earth / KML big artifacts
 # ---------------------------------------
-earth/*.kmz
-earth/*.kml
 earth/**/*.kmz
 earth/**/*.kml
 earth/networklinks/
-
-# ---------------------------------------
-# Notebooks + checkpoints
-# ---------------------------------------
-*.ipynb
-.ipynb_checkpoints/
-.notebooks_cache/
-outputs/
+earth/cache/
+earth/exports/
 
 # ---------------------------------------
 # OS cruft
