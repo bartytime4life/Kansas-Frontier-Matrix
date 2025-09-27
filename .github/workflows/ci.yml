@@ -31,12 +31,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: "ci-${{ github.ref }}"
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   lint:
-    name: Lint (ruff autodetect)
+    name: Lint (ruff / black autodetect)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -51,19 +51,77 @@ jobs:
             pyproject.toml
             requirements*.txt
 
-      - name: Detect & run ruff
+      - name: Install linters (as needed)
         shell: bash
         run: |
           set -euo pipefail
+          python -m pip install --upgrade pip
+          have_ruff=false
+          have_black=false
           if grep -qE '^\[tool\.ruff\]' pyproject.toml 2>/dev/null || [ -f ruff.toml ] || [ -f .ruff.toml ]; then
-            python -m pip install --upgrade pip
             pip install ruff
-            echo "::add-matcher::.github/matchers/ruff.json" || true
-            ruff --version
-            ruff check .
-          else
-            echo "No ruff config detected; skipping."
+            have_ruff=true
           fi
+          if grep -qE '^\[tool\.black\]' pyproject.toml 2>/dev/null || [ -f pyproject.toml ]; then
+            pip install black
+            have_black=true
+          fi
+          echo "have_ruff=$have_ruff"   >> "$GITHUB_OUTPUT"
+          echo "have_black=$have_black" >> "$GITHUB_OUTPUT"
+
+      - name: Ruff
+        if: steps.install_linters.outputs.have_ruff == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::add-matcher::.github/matchers/ruff.json" || true
+          ruff --version
+          ruff check .
+
+      - name: Black --check
+        if: steps.install_linters.outputs.have_black == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          black --version
+          black --check .
+
+  typecheck:
+    name: Type-check (mypy autodetect)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: |
+            pyproject.toml
+            requirements*.txt
+
+      - name: Install mypy (if configured)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -qE '^\[tool\.mypy\]' pyproject.toml 2>/dev/null || [ -f mypy.ini ] || ( [ -f setup.cfg ] && grep -q '^\[mypy\]' setup.cfg ); then
+            python -m pip install --upgrade pip
+            pip install mypy
+            echo "run_mypy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_mypy=false" >> "$GITHUB_OUTPUT"
+
+      - name: Run mypy
+        if: steps.install_mypy.outputs.run_mypy == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGETS="src"
+          [ -d tests ]   && TARGETS="$TARGETS tests"
+          [ -d scripts ] && TARGETS="$TARGETS scripts"
+          mypy $TARGETS
 
   test:
     name: Pytest (${{ matrix.python-version }})
@@ -103,7 +161,7 @@ jobs:
           need=false
           for f in requirements*.txt pyproject.toml; do
             [ -f "$f" ] || continue
-            if grep -Ei '(^|[[:space:]])(gdal|rasterio|geopandas|fiona|pyproj|rtree|spatialite|shapely)($|[[:space:]])' "$f"; then
+            if grep -Eiq '(^|[[:space:]])(gdal|rasterio|geopandas|fiona|pyproj|rtree|spatialite|shapely)($|[[:space:]])' "$f"; then
               need=true; break
             fi
           done
@@ -154,20 +212,23 @@ PY
             pytest -q --maxfail=1 --disable-warnings \
               --junitxml=.artifacts/pytest-report.xml
           fi
-          echo "### Pytest (py ${{ matrix.python-version }})" >> "$GITHUB_STEP_SUMMARY"
-          if [ -f .artifacts/coverage.xml ]; then
-            py - <<'PY' 2>/dev/null || python - <<'PY'
-import xml.etree.ElementTree as ET, sys
+          {
+            echo "### Pytest (py ${{ matrix.python-version }})"
+            if [ -f .artifacts/coverage.xml ]; then
+              # Try to extract line-rate; fallback to 'generated'
+              python - <<'PY'
+import xml.etree.ElementTree as ET
 try:
     root=ET.parse(".artifacts/coverage.xml").getroot()
     rate=float(root.attrib.get("line-rate",0))*100
     print(f"- Coverage: {rate:.1f}%")
 except Exception:
     print("- Coverage: generated")
-PY >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "- Coverage: n/a" >> "$GITHUB_STEP_SUMMARY"
-          fi
+PY
+            else
+              echo "- Coverage: n/a"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload test artifacts
         if: always()
