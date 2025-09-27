@@ -4,12 +4,13 @@
 # Targets: help, env, fetch, cogs, terrain, slope_classes, aspect_sectors,
 #          meta, stac, stac-validate, site, site-config, kml, clean, prebuild
 # Extras:  dem-checksum, hillshade-checksum, validate-cogs, mosaic-county, regionate
-# Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite
+# Dev:     install-dev, test, test-cli, test-sources, preview, prebuild-lite, fmt, doctor
 # Data:    nlcd   (1992–2021 NLCD land-cover → COGs, provenance)
 # Collections:
 #          collections-list, collections-build, collections-validate, collections-render
 # Utilities:
 #          registry (builds scripts/badges/source_map.json + injects into web/app.config.json)
+#          config-validate, config-fmt (validate web/config/*.json against schema)
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -36,6 +37,7 @@ TERRAIN := $(COGS)/terrain
 DERIV   := $(DATA)/derivatives
 VEC     := $(DATA)/processed/vectors
 WEB     := web
+WCONF   := $(WEB)/config
 STAC    := stac
 TESTS   := tests
 
@@ -96,6 +98,13 @@ SHA256FLAGS   := $(if $(filter yes,$(SHA256_IS_GNU)),,-a 256)
 HAVE_JQ     := $(shell command -v jq >/dev/null 2>&1 && echo yes || echo no)
 HAVE_RSYNC  := $(shell command -v rsync >/dev/null 2>&1 && echo yes || echo no)
 HAVE_KGT    := $(shell command -v kgt   >/dev/null 2>&1 && echo yes || echo no)
+
+# Python libs
+HAVE_JSONSCHEMA := $(shell $(PY) - <<'PY' 2>/dev/null || true
+import importlib,sys
+sys.exit(0 if importlib.util.find_spec("jsonschema") else 1)
+PY \
+&& echo yes || echo no)
 
 # GDAL tools
 HAVE_GDALDEM   := $(shell command -v gdaldem >/dev/null 2>&1 && echo yes || echo no)
@@ -175,7 +184,8 @@ endef
         validate-cogs mosaic-county regionate \
         collections-list collections-build collections-validate collections-render \
         arch-sites arch-sites-validate arch-sites-render registry \
-        install-dev test test-cli test-sources fmt doctor
+        install-dev test test-cli test-sources fmt doctor \
+        config-validate config-fmt
 
 # -------- Help --------
 help:
@@ -196,11 +206,15 @@ help:
 	@echo "  kml                  Build KMZ overlays (placeholder)"
 	@echo "  validate-cogs        Validate COGs under data/cogs (JSON report)"
 	@echo "  mosaic-county        Fetch+mosaic LiDAR tiles for a county (DEM COG)"
-	@echo "  regionate            Regionate GeoJSON/KML to network-linked KML/KMZ"
-	@echo "  clean                Remove generated raster outputs (keeps stac/)"
-	@echo "  prebuild             stac-validate + site (used by CI)"
+	@echo "  regionate            Regionate GeoJSON/KML to KML tree / KMZ"
+	@echo "  clean                Remove generated raster outputs (keeps stac/ and data/raw)"
+	@echo "  prebuild             stac-validate + config-validate + site (CI-friendly)"
 	@echo "  preview              Minimal local preview (site only)"
 	@echo "  prebuild-lite        Site only (no validation/checksums)"
+	@echo ""
+	@echo "Config:"
+	@echo "  config-validate      Validate web/config/*.json against web/config/schema.json (jsonschema)"
+	@echo "  config-fmt           Pretty-print web/config/*.json (jq)"
 	@echo ""
 	@echo "Collections:"
 	@echo "  collections-list     List available collection scripts"
@@ -232,7 +246,7 @@ env:
 	@echo "PY=$(PY)"
 	@echo "DEM=$(DEM)"
 	@echo "STAC_DIR=$(STAC)"
-	@echo "HAVE_KGT=$(HAVE_KGT)  HAVE_JQ=$(HAVE_JQ)"
+	@echo "HAVE_KGT=$(HAVE_KGT)  HAVE_JQ=$(HAVE_JQ)  HAVE_JSONSCHEMA=$(HAVE_JSONSCHEMA)"
 	@echo "HAVE_GDALDEM=$(HAVE_GDALDEM) HAVE_GDALTRANS=$(HAVE_GDALTRANS) HAVE_GDALADDO=$(HAVE_GDALADDO) HAVE_GDALWARP=$(HAVE_GDALWARP)"
 	@echo "GDAL_POLY_BIN=$(GDAL_POLY_BIN) GDAL_CALC_BIN=$(GDAL_CALC_BIN)"
 	@echo "HAVE_MAKEHILLSHADE=$(if $(HAVE_MAKEHILLSHADE),yes,no) HAVE_MAKE_SLOPEASP=$(if $(HAVE_MAKE_SLOPEASP),yes,no) HAVE_MAKE_TERRAIN=$(if $(HAVE_MAKE_TERRAIN),yes,no)"
@@ -244,11 +258,12 @@ env:
 print-%:
 	@echo '$*=$($*)'
 
-prebuild: stac-validate site
+# Prebuild now also validates web/config *.json against schema (if jsonschema present)
+prebuild: stac-validate config-validate site
 	@echo ">> Prebuild complete."
 
 preview: site
-	@echo "✓ preview assets written (skipped STAC validation/patching)"
+	@echo "✓ preview assets written (skipped STAC/config validation)"
 
 prebuild-lite: site
 	@echo ">> Prebuild-lite complete (no validation/checksums)."
@@ -522,6 +537,51 @@ json.dump(layers, open(p, 'w'), indent=2)
 print("wrote", p)
 PYCODE
 
+# -------- Config validation & formatting --------
+# Validates legend.json / categories.json / sources.json with web/config/schema.json
+config-validate:
+	@if [ "$(HAVE_JSONSCHEMA)" != "yes" ]; then \
+	  echo "[config-validate] python jsonschema not found. Try: pip install jsonschema"; \
+	  exit 1; \
+	fi
+	@if [ ! -f "$(WCONF)/schema.json" ]; then echo "[config-validate] Missing $(WCONF)/schema.json"; exit 1; fi
+	@if [ ! -f "$(WCONF)/legend.json" ]; then echo "[config-validate] Missing $(WCONF)/legend.json"; exit 1; fi
+	@if [ ! -f "$(WCONF)/categories.json" ]; then echo "[config-validate] Missing $(WCONF)/categories.json"; exit 1; fi
+	@if [ ! -f "$(WCONF)/sources.json" ]; then echo "[config-validate] Missing $(WCONF)/sources.json"; exit 1; fi
+	@$(PY) - <<'PY'
+import json, sys, pathlib
+from jsonschema import validate, Draft202012Validator
+root = pathlib.Path("web/config")
+schema = json.loads((root/"schema.json").read_text())
+def check(doc_path, defs_key):
+    data = json.loads((root/doc_path).read_text())
+    # make a view schema that points at the requested $defs entry
+    view = {"$schema": schema.get("$schema","https://json-schema.org/draft/2020-12/schema"),
+            "$id": f"schema-view:{defs_key}",
+            **schema}
+    # Replace top-level schema with the defs subtree
+    view.clear()
+    view.update(schema["$defs"][defs_key])
+    Draft202012Validator(view).validate(data)
+for p, key in (("legend.json","legend"),("categories.json","categories"),("sources.json","sources")):
+    try:
+        check(p, key)
+        print(f"[config-validate] OK: {p}")
+    except Exception as e:
+        print(f"[config-validate] FAIL: {p} → {e}")
+        sys.exit(1)
+print("[config-validate] ✓ all config files valid")
+PY
+
+config-fmt:
+	@if [ "$(HAVE_JQ)" != "yes" ]; then echo "[config-fmt] jq not found"; exit 1; fi
+	@for f in legend.json categories.json sources.json schema.json; do \
+	  if [ -f "$(WCONF)/$$f" ]; then \
+	    jq . "$(WCONF)/$$f" > "$(WCONF)/$$f.tmp" && mv "$(WCONF)/$$f.tmp" "$(WCONF)/$$f"; \
+	    echo "[config-fmt] formatted $(WCONF)/$$f"; \
+	  fi; \
+	done
+
 # -------- COG validation + helpers --------
 validate-cogs:
 	@if [ -n "$(HAVE_VALIDATE_COGS)" ]; then \
@@ -585,8 +645,6 @@ collections-list:
 	  for f in $(COLLECTION_SCRIPTS); do echo "  - $${f}"; done; \
 	fi
 
-# Run a single collection with COLLECTION=name (file stem) or all if unset
-# If a script doesn't implement 'build', fallback to: fetch→unpack→process→stac→validate→render
 collections-build:
 	@if [ -n "$(COLLECTION)" ]; then \
 	  f="$(COLLECTIONS_DIR)/$(COLLECTION).sh"; \
