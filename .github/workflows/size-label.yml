@@ -1,0 +1,34 @@
+name: "Hygiene — PR Size Labels"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [ "main", "release/*" ]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  size-label:
+    name: Apply size labels
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Apply size labels
+        uses: codelytv/pr-size-labeler@v1.10.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Thresholds (inclusive max values for each bucket)
+          xs_max: '19'     # 0–19 lines changed → size/XS
+          s_max:  '99'     # 20–99 → size/S
+          m_max:  '499'    # 100–499 → size/M
+          l_max:  '999'    # 500–999 → size/L
+          # 1000+ lines → size/XL
+
+          # Optional settings
+          label_prefix: "size/"
+          fail_if_xl: "false"     # don't fail XL PRs, just label them
+          message_if_xl: "PR is very large (size/XL). Please consider breaking it down."
