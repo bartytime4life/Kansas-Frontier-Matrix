@@ -77,7 +77,10 @@
 }
 
 /* RTL support */
-[dir="rtl"] :root { --safe-left: env(safe-area-inset-right, 0px); --safe-right: env(safe-area-inset-left, 0px); }
+[dir="rtl"] :root {
+  --safe-left: env(safe-area-inset-right, 0px);
+  --safe-right: env(safe-area-inset-left, 0px);
+}
 
 *,
 *::before,
@@ -103,7 +106,8 @@ html, body {
 }
 
 /* Allow a class-based alternate sidebar selector (if used in HTML) */
-#sidebar, .kfm-sidebar {
+#sidebar,
+.kfm-sidebar {
   position: absolute;
   top: 0; right: 0; bottom: 0;
   width: calc(var(--sidebar-w) + var(--safe-right));
@@ -152,6 +156,8 @@ html, body {
   margin-bottom: 8px;
   font-size: var(--fs-13);
 }
+
+/* Keep id in sync with app.js: year label */
 #yearLabel {
   font-variant-numeric: tabular-nums;
   padding: 2px 8px;
