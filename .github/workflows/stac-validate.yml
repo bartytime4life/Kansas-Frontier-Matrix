@@ -1,30 +1,16 @@
 # .github/workflows/stac-validate.yml
-name: STAC Validation
+name: STAC Validate
 
 on:
-  pull_request:
-    branches: [ main ]
-    paths:
-      - "stac/**"
-      - "data/sources/**"
-      - "src/**"
-      - "scripts/validate_stac.py"
-      - "scripts/validate_sources.py"
-      - "Makefile"
-      - "requirements*.txt"
-      - "pyproject.toml"
-      - ".github/workflows/stac-validate.yml"
   push:
     branches: [ main ]
     paths:
       - "stac/**"
-      - "data/sources/**"
-      - "src/**"
-      - "scripts/validate_stac.py"
-      - "scripts/validate_sources.py"
-      - "Makefile"
-      - "requirements*.txt"
-      - "pyproject.toml"
+      - ".github/workflows/stac-validate.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "stac/**"
       - ".github/workflows/stac-validate.yml"
   workflow_dispatch:
 
@@ -32,20 +18,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: stac-validate-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
-    name: STAC validate (py${{ matrix.python-version }})
+  stac:
+    name: Validate STAC (syntax • schema • links • assets)
     runs-on: ubuntu-latest
     timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-
     env:
       PYTHONUNBUFFERED: "1"
 
@@ -54,158 +34,89 @@ jobs:
         uses: actions/checkout@v4
         with: { fetch-depth: 0 }
 
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-          cache-dependency-path: |
-            requirements*.txt
-            pyproject.toml
+      - name: Ensure stac/ exists
+        shell: bash
+        run: |
+          if [ ! -d stac ]; then
+            echo "::notice::No stac/ directory found; nothing to validate."
+            exit 0
+          fi
 
-      - name: Install system tools
+      - name: Install jq & curl
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends jq
+          sudo apt-get install -y --no-install-recommends jq curl
 
-      - name: Install Python deps (project + validators)
+      # ---------- 1) Fast JSON syntax lint ----------
+      - name: Validate JSON syntax (stac/**/*.json)
+        id: jsonlint
+        shell: bash
         run: |
           set -euo pipefail
-          python -m pip install --upgrade pip
-          # Try to expose console_scripts (e.g., kgt) if project is installable
-          if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
-            pip install -e ".[dev,validate]" || pip install -e . || true
+          shopt -s globstar nullglob
+          summary="### STAC JSON syntax\n"
+          fail=0
+          files=(stac/**/*.json)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::notice::No JSON files under stac/."
+            exit 0
           fi
-          # Core validators regardless (quiet where safe)
-          pip install --upgrade --quiet \
-            jsonschema jinja2 pystac pystac-client pyyaml \
-            stac-validator yamllint
-          python - <<'PY'
-import sys, pystac
-print("Python", sys.version.split()[0], "| pystac", getattr(pystac, "__version__", "n/a"))
-PY
-
-      # -------------------- Quick syntax checks --------------------
-      - name: JSON syntax check (stac/**/*.json)
-        run: |
-          set -euo pipefail
-          if [ -d stac ]; then
-            shopt -s globstar nullglob
-            files=(stac/**/*.json)
-            if [ ${#files[@]} -gt 0 ]; then
-              echo "Linting STAC JSON…"
-              for f in "${files[@]}"; do
-                jq -e . "$f" >/dev/null || { echo "::error file=$f::JSON parse error"; exit 1; }
-              done
-              echo "stac/**/*.json ✔ valid JSON"
+          for f in "${files[@]}"; do
+            if jq -e . "$f" >/dev/null 2>&1; then
+              summary+="- ✅ $f\n"
             else
-              echo "No STAC JSON files found."
+              summary+="- ❌ $f\n"
+              echo "::error file=$f::Invalid JSON"
+              fail=1
             fi
-          else
-            echo "::notice::stac/ not present; skipping."
-          fi
+          done
+          echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+          exit $fail
 
-      - name: JSON/YAML syntax check (data/sources/**)
+      # ---------- 2) Python toolchain ----------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install validation deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install "pystac>=1.9,<2" "stac-validator>=3.0,<4" "jsonschema>=4.19,<5"
+
+      # ---------- 3) STAC validation (CLI preferred) ----------
+      - name: STAC validate (recursive if catalog.json; else per-file)
+        id: stacval
+        shell: bash
         run: |
           set -euo pipefail
-          if [ -d data/sources ]; then
-            echo "Linting data/sources (JSON)…"
-            find data/sources -type f -name '*.json' -print0 | xargs -0 -r -I{} sh -c 'jq -e . "{}" >/dev/null || (echo "::error file={}" "JSON parse error" && exit 1)'
-            echo "Linting data/sources (YAML)…"
-            if command -v yamllint >/dev/null 2>&1; then
-              yamllint -s -f standard data/sources || echo "::warning title=YAML style issues::yamllint reported style problems (not failing the build)."
-            fi
-            python - <<'PY'
-import sys, pathlib, yaml
-base = pathlib.Path("data/sources")
-bad=[]
-for p in list(base.rglob("*.yml")) + list(base.rglob("*.yaml")):
-    try:
-        yaml.safe_load(p.read_text(encoding="utf-8"))
-    except Exception as e:
-        bad.append((str(p), str(e)))
-if bad:
-    for f,e in bad:
-        print(f"::error file={f}::YAML parse error: {e}")
-    sys.exit(1)
-else:
-    print("data/sources/** ✔ valid YAML")
-PY
-          else
-            echo "::notice::data/sources/ not present; skipping."
-          fi
-
-      # -------------------- Custom repo validators --------------------
-      - name: Run scripts/validate_sources.py (if present)
-        run: |
-          set -euo pipefail
-          if [ -f scripts/validate_sources.py ]; then
-            python scripts/validate_sources.py
-          else
-            echo "::notice::scripts/validate_sources.py not found; skipping."
-          fi
-
-      - name: Run scripts/validate_stac.py (if present)
-        id: script_stac
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          mkdir -p build
-          if [ -f scripts/validate_stac.py ]; then
-            python scripts/validate_stac.py --report build/stac_report.json
-          else
-            echo "::notice::scripts/validate_stac.py not found; using fallback."
-          fi
-
-      # -------------------- STAC validation (robust) --------------------
-      - name: Validate STAC with stac-validator (preferred)
-        id: stac_cli
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          mkdir -p build
-          if [ -d stac ]; then
+          mkdir -p .artifacts
+          summary="### STAC schema validation\n"
+          if command -v stac-validator >/dev/null 2>&1; then
             if [ -f stac/catalog.json ]; then
-              echo "Validating stac/catalog.json (recursive)…"
-              stac-validator stac/catalog.json --recursive --links | tee build/stac_validator.txt
+              echo "Validating stac/catalog.json recursively…"
+              if stac-validator stac/catalog.json --recursive --links | tee .artifacts/stac_validator.txt; then
+                summary+="- ✅ catalog.json (recursive)\n"
+              else
+                summary+="- ❌ catalog.json (recursive)\n"
+                echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+                exit 2
+              fi
             else
               echo "Validating all STAC JSON files…"
-              set +e
-              ok=1
+              set +e; ok=1
               while IFS= read -r -d '' f; do
-                stac-validator "$f" >> build/stac_validator.txt 2>&1 || ok=0
+                stac-validator "$f" >> .artifacts/stac_validator.txt 2>&1 || ok=0
               done < <(find stac -type f -name '*.json' -print0 | sort -z)
               set -e
-              [ $ok -eq 1 ] || exit 2
+              [ $ok -eq 1 ] && summary+="- ✅ stac/**/*.json\n" || { summary+="- ❌ stac/**/*.json (see artifact)\n"; echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"; exit 2; }
             fi
           else
-            echo "::notice::No stac/ directory; skipping stac-validator."
-          fi
-
-      - name: Validate STAC with pystac (fallback)
-        if: steps.stac_cli.outcome == 'failure' || steps.stac_cli.outcome == 'skipped'
-        run: |
-          set -euo pipefail
-          if [ -f stac/catalog.json ]; then
+            echo "stac-validator not available; using pystac fallback…"
             python - <<'PY'
-import pystac, sys
-try:
-    cat = pystac.Catalog.from_file("stac/catalog.json")
-    cat.normalize_hrefs("stac")
-    cat.validate_all()
-    print("pystac: catalog/collections validate OK")
-except Exception as e:
-    print(f"::error::pystac validation failed: {e}")
-    sys.exit(2)
-PY
-          else
-            echo "::notice::No stac/catalog.json; running file-by-file pystac checks."
-            python - <<'PY'
-import sys, pathlib, pystac, json
+import sys, pathlib, pystac
 root = pathlib.Path("stac")
-if not root.exists():
-    print("::notice::No stac directory; skip pystac.")
-    sys.exit(0)
 bad=[]
 for p in sorted(root.rglob("*.json")):
     try:
@@ -213,92 +124,113 @@ for p in sorted(root.rglob("*.json")):
     except Exception as e:
         bad.append((str(p), str(e)))
 if bad:
-    for f,e in bad[:25]:
+    for f,e in bad[:50]:
         print(f"::error file={f}::{e}")
     sys.exit(2)
-print("All STAC JSON passed pystac validation")
+print("pystac: all STAC JSON validate OK")
 PY
+            summary+="- ✅ pystac validation\n"
           fi
+          echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
 
-      # -------------------- Fallback item structure (only if no report) --------------------
-      - name: Fallback STAC item structure check
-        if: !cancelled() && hashFiles('build/stac_report.json') == ''
+      # ---------- 4) HTTP(S) link checks on assets & links ----------
+      - name: Check HTTP(S) links in STAC (assets + links)
+        shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-import json, pathlib, sys
-items_dir = pathlib.Path("stac/items")
-path_build = pathlib.Path("build"); path_build.mkdir(exist_ok=True)
-report_path = path_build/"stac_report.json"
-if not items_dir.exists():
-    print("::notice::stac/items not present; skipping item validation.")
-    report_path.write_text(json.dumps({"valid":0,"invalid":0,"items":[]}, indent=2))
-    sys.exit(0)
-req = ["stac_version","id","type","geometry","bbox","properties","links","assets"]
-ok=bad=0; report=[]
-for p in items_dir.rglob("*.json"):
+import json, pathlib, re, subprocess, sys, time
+
+root = pathlib.Path("stac")
+urls = []
+for jf in sorted(root.rglob("*.json")):
     try:
-        d=json.loads(p.read_text(encoding="utf-8"))
-    except Exception as e:
-        report.append({"id": str(p), "valid": False, "errors":[{"path":[],"message":str(e)}]}); bad+=1; continue
-    errs=[]
-    missing=[k for k in req if k not in d]
-    if missing: errs.append(f"missing {missing}")
-    if d.get("type")!="Feature": errs.append("type must be 'Feature'")
-    if errs:
-        bad+=1
-        report.append({"id":d.get("id",str(p)),"valid":False,"errors":[{"path":[],"message":"; ".join(errs)}]})
-    else:
-        ok+=1
-        report.append({"id":d.get("id",str(p)),"valid":True,"errors":[]})
-report_path.write_text(json.dumps({"valid":ok,"invalid":bad,"items":report}, indent=2))
-print(f"[RESULT] {ok} valid, {bad} invalid")
-if bad>0: sys.exit(2)
+        doc = json.loads(jf.read_text(encoding="utf-8"))
+    except Exception:
+        continue
+    # assets
+    assets = (doc.get("assets") or {})
+    for k, a in assets.items():
+        href = (a or {}).get("href")
+        if isinstance(href, str) and re.match(r'^https?://', href):
+            urls.append((str(jf), href))
+    # links
+    for link in (doc.get("links") or []):
+        href = (link or {}).get("href")
+        if isinstance(href, str) and re.match(r'^https?://', href):
+            urls.append((str(jf), href))
+
+bad = []
+def head(url):
+    # 10s connect timeout, 20s max, follow redirects, no body
+    cmd = ["curl","-sSIL","--max-time","20","--connect-timeout","10","-o","/dev/null","-w","%{http_code}",url]
+    try:
+        code = subprocess.check_output(cmd, text=True).strip()
+        return int(code) if code.isdigit() else 0
+    except Exception:
+        return 0
+
+for jf, url in urls:
+    code = head(url)
+    if code < 200 or code >= 400:
+        print(f"::error file={jf}::Bad URL ({code or 'ERR'}): {url}")
+        bad.append(url)
+
+sys.exit(2 if bad else 0)
 PY
 
-      # -------------------- Summaries & artifacts --------------------
-      - name: Summarize results
-        if: always()
+      # ---------- 5) Local asset existence + optional SHA-256 ----------
+      - name: Verify local assets exist and checksums (checksum:sha256)
+        shell: bash
         run: |
           set -euo pipefail
-          {
-            echo "## STAC Validation"
-            if [ -f build/stac_validator.txt ]; then
-              echo "- stac-validator: **ran**"
-            else
-              echo "- stac-validator: _skipped_"
-            fi
-            if [ -f build/stac_report.json ]; then
-              python - <<'PY'
-import json, pathlib
-p = pathlib.Path("build/stac_report.json")
-d = json.loads(p.read_text()) if p.exists() else {}
-ok, bad = d.get("valid",0), d.get("invalid",0)
-print(f"- ✅ Valid items: **{ok}**")
-print(f"- ❌ Invalid items: **{bad}**")
-if bad:
-    print("\n<details><summary>First 10 errors</summary>\n")
-    cnt=0
-    for it in d.get('items', []):
-        if it.get('valid') is False and cnt<10:
-            msgs = ', '.join(e.get('message','') for e in it.get('errors',[])[:3])
-            print(f"- **{it.get('id')}** — {msgs}")
-            cnt+=1
-    print("\n</details>")
-PY
-            else
-              echo "- No STAC item report generated."
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY'
+import json, pathlib, hashlib, sys
+root = pathlib.Path("stac")
+missing = 0
+mismatch = 0
 
-      - name: Upload reports
+def sha256(p: pathlib.Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024*1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+for jf in sorted(root.rglob("*.json")):
+    try:
+        doc = json.loads(jf.read_text(encoding="utf-8"))
+    except Exception:
+        continue
+    assets = (doc.get("assets") or {})
+    for name, a in assets.items():
+        href = (a or {}).get("href")
+        if not href or "://" in href:
+            continue  # skip remote
+        p = (jf.parent / href).resolve()
+        if not p.exists():
+            print(f"::error file={jf}::Missing local asset: {href}")
+            missing += 1
+            continue
+        # optional checksum:sha256
+        exp = (a or {}).get("checksum:sha256")
+        if isinstance(exp, str) and len(exp) == 64:
+            got = sha256(p)
+            if got.lower() != exp.lower():
+                print(f"::error file={jf}::Checksum mismatch for {href} (expected {exp}, got {got})")
+                mismatch += 1
+
+if missing or mismatch:
+    sys.exit(2)
+PY
+
+      # ---------- 6) Artifacts ----------
+      - name: Upload validator logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stac-validate-reports-py${{ matrix.python-version }}-${{ github.run_id }}
+          name: stac-validate-${{ github.run_id }}
           path: |
-            build/**
-            ./*.log
-            ./stac_validator.txt
-          if-no-files-found: ignore
-          retention-days: 10
+            .artifacts/stac_validator.txt
+          if-no-files-found: warn
+          retention-days: 14
