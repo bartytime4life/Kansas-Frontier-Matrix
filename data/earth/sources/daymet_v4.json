@@ -1,0 +1,27 @@
+{
+  "id": "daymet_v4",
+  "title": "NASA Daymet V4 Daily Surface Weather Data (1980–Present)",
+  "type": "raster",
+  "endpoint": {
+    "type": "http",
+    "urls": [
+      "https://thredds.daac.ornl.gov/thredds/fileServer/ornldaac/2129/daymet_v4_daily_na_tmax_1980.nc4",
+      "https://thredds.daac.ornl.gov/thredds/fileServer/ornldaac/2129/daymet_v4_daily_na_tmin_1980.nc4"
+    ]
+  },
+  "spatial": {
+    "bbox": [-180, -90, 180, 90],
+    "crs": "EPSG:4326"
+  },
+  "temporal": {
+    "start": "1980-01-01",
+    "end": null
+  },
+  "license": "Open Data (NASA EOSDIS, Earthdata Login required)",
+  "description": "Gridded daily weather parameters (1 km) for North America from NASA Daymet V4. Variables include tmax, tmin, precipitation, shortwave radiation, snow water equivalent, vapor pressure.",
+  "outputs": {
+    "cog": "data/earth/processed/daymet_v4/daily_tmax_1980.tif"
+  },
+  "attribution": "NASA ORNL DAAC — Daymet V4 Daily Surface Weather Data",
+  "keywords": ["climate", "temperature", "precipitation", "daymet", "earth", "north america"]
+}
