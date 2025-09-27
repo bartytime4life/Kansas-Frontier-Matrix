@@ -1,9 +1,9 @@
 # `web/config/` — Kansas-Frontier-Matrix Viewer Configuration (2025-09)
 
 This folder holds **declarative JSON** that drives the MapLibre viewer (`web/app.js`).
-Configs define **what** to load (layers), **how** to render (legend/categories/style), and **when** to show it (time).
+Configs define **what** to load (layers), **how** to render (legend/categories/styles), and **when** to show it (time).
 
-Design goal: **zero hand-tuning in code** — the viewer should be driven by STAC + these configs.
+**Design goal:** *zero hand-tuning in code* — the viewer is driven by STAC + these configs.
 
 ---
 
@@ -12,18 +12,18 @@ Design goal: **zero hand-tuning in code** — the viewer should be driven by STA
 | File                     | Required? | Purpose                                                   | Edited by           | Source of truth        |
 | ------------------------ | --------: | --------------------------------------------------------- | ------------------- | ---------------------- |
 | `app.config.json`        |         ✅ | Final merged viewer config (defaults + layers + time)     | Generated from STAC | **Yes**                |
-| `viewer.json`            |         ➖ | Full, hand-edited config for local/dev override           | Devs                | No (fallback only)     |
+| `viewer.json`            |         ➖ | Hand-edited local/dev override                            | Devs                | No (fallback only)     |
 | `layers.json`            |         ➖ | Layers-only catalog for quick tests/dev                   | Devs                | No (fallback only)     |
-| `time_config.json`       |         ➖ | Overrides active config’s `time` + presets                | Devs                | Merges over active     |
-| `legend.json`            |         ➖ | Global symbology tokens; may bind to layer IDs            | Devs/Cartography    | Referenced by UI       |
-| `categories.json`        |         ➖ | Sidebar grouping: labels + order (+ optional layer lists) | Devs/Cartography    | Referenced by UI       |
-| `sources.json`           |         ➖ | (Optional) audit registry for layers → data sources       | Devs/Data           | Helpful for provenance |
-| `story_layers.json`      |         ➖ | Curated “themes” (layersOn/off, opacity, flyTo)           | Editors/Outreach    | Used by story UI       |
+| `time_config.json`       |         ➖ | Overrides active config’s `time`, `defaultYear`, `timeUI` | Devs                | Merges over active     |
+| `legend.json`            |         ➖ | Global symbology tokens; optional layer id bindings       | Devs/Cartography    | Referenced by UI       |
+| `categories.json`        |         ➖ | Sidebar grouping (labels + order + optional layer lists)  | Devs/Cartography    | Referenced by UI       |
+| `sources.json`           |         ➖ | Provenance/audit registry for layers → data sources       | Devs/Data           | Helpful for provenance |
+| `story_layers.json`      |         ➖ | Curated themes (layersOn/off, opacity, flyTo)             | Editors/Outreach    | Used by story UI       |
 | `schema.json`            |         ➖ | Pack of JSON Schemas (legend / categories / sources)      | Devs                | Used by CI/local       |
 | `app.config.schema.json` |         ➖ | Schema for `app.config.json`                              | Devs                | Used by CI/local       |
 | `layers.schema.json`     |         ➖ | Schema for `layers.json`                                  | Devs                | Used by CI/local       |
 
-> **Rule of thumb**: Keep **`app.config.json` generated**. Use `viewer.json`/`layers.json` only for experiments.
+> **Rule of thumb:** Keep **`app.config.json` generated**. Use `viewer.json` / `layers.json` only for experiments.
 
 ---
 
@@ -31,12 +31,12 @@ Design goal: **zero hand-tuning in code** — the viewer should be driven by STA
 
 `web/app.js` loads the first file found:
 
-1. `./config/app.config.json`
-2. `./config/viewer.json`
-3. `./config/layers.json`
+1. `./config/app.config.json`  
+2. `./config/viewer.json`  
+3. `./config/layers.json`  
 4. `./layers.json` *(legacy root)*
 
-If `time_config.json` exists, its `time` block **overrides** the active config.
+If `time_config.json` exists, its `time`, `defaultYear`, and `timeUI` **override** the active config.
 If `legend.json` / `categories.json` exist, the UI uses them for **legend chips** and **sidebar grouping**.
 
 ---
@@ -47,12 +47,12 @@ If `legend.json` / `categories.json` exist, the UI uses them for **legend chips*
 # 1) Build/refresh STAC items
 make stac
 
-# 2) Render viewer config
+# 2) Render viewer config (STAC → app.config.json)
 kgt render-config \
   --stac stac/items \
   --output web/config/app.config.json \
   --pretty
-```
+````
 
 Re-run after adding/removing/changing any STAC items.
 
@@ -62,21 +62,27 @@ Re-run after adding/removing/changing any STAC items.
 
 ### Top-level (`app.config.json` / `viewer.json`)
 
-```jsonc
+```json
 {
-  "version": "1.3.0",
-  "generated": "2025-09-26T18:00:00Z",
+  "version": "1.4.0",
+  "generated": "2025-09-27T10:00:00Z",
   "title": "Kansas-Frontier-Matrix",
-  "subtitle": "Time-aware Kansas GIS",
+  "subtitle": "Time-aware historical GIS for Kansas",
   "style": "https://demotiles.maplibre.org/style.json",
   "center": [-98.3, 38.5],
   "zoom": 6,
   "bounds": [-102.051, 36.993, -94.588, 40.003],
 
-  "time": { "min": "1800-01-01", "max": "2025-12-31", "defaultYear": 1930, "step": 1, "loop": false, "fps": 12 },
+  "time": { "min": "1850-01-01", "max": "2025-12-31" },
+  "defaultYear": 1930,
+  "timeUI": { "step": 1, "loop": false, "fps": 12 },
 
   "defaults": {
-    "minzoom": 0, "maxzoom": 15, "opacity": 1.0, "visible": true,
+    "minzoom": 0,
+    "maxzoom": 15,
+    "opacity": 1.0,
+    "visible": true,
+    "bounds": [-102.051, 36.993, -94.588, 40.003],
     "time": { "start": null, "end": null }
   },
 
@@ -86,48 +92,51 @@ Re-run after adding/removing/changing any STAC items.
 
 ### Layer schema (common keys)
 
-```jsonc
+```json
 {
   "id": "unique_id",
   "title": "Display Title",
   "type": "raster | raster-dem | vector | geojson | image",
-  "url": "path/or/url/to/source",
+  "url": "https://tiles/{z}/{x}/{y}.png",
+  "data": "data/processed/small.geojson",
   "visible": false,
   "opacity": 0.8,
   "minzoom": 0,
   "maxzoom": 19,
-  "category": "reference | terrain | historical | documents | infrastructure | environment | culture",
-  "attribution": "Source name / license",
+  "category": "reference | terrain | historical | documents | infrastructure | environment | culture | hazards",
+  "legendKey": "symbol_id_in_legend",
+  "attribution": "Source / license",
   "time": { "start": "YYYY-MM-DD|null", "end": "YYYY-MM-DD|null" },
 
-  // Optional app-level vector style (camelCase)
   "style": {
     "fillColor": "#A0C4FF",
     "fillOpacity": 0.6,
     "lineColor": "#3A86FF",
     "lineWidth": 1.0,
+    "lineOpacity": 0.9,
+    "lineDasharray": [2, 2],
     "circleColor": "#FF595E",
     "circleRadius": 4,
-    "lineDasharray": [2, 2]
+    "circleOpacity": 0.95,
+    "circleStrokeColor": "#FFFFFF",
+    "circleStrokeWidth": 1
   },
 
-  // GeoJSON popups and per-feature time
   "popup": ["name", "type", "year", "year_end"],
   "timeProperty": "year",
   "endTimeProperty": "year_end",
 
-  // Image overlay bounds (clockwise from NW)
-  "coordinates": [[lonW,latN],[lonE,latN],[lonE,latS],[lonW,latS]]
+  "coordinates": [[lonW,latN],[lonE,latN],[lonE,latS],[lonW,latS]]  // for image overlays
 }
 ```
 
 **Type specifics**
 
-* `raster` → tile servers **or** local COG/GeoTIFF
-* `raster-dem` → elevation grids; viewer may enable terrain/hillshade
-* `vector` → vector tiles (TileJSON)
-* `geojson` → inline/URL GeoJSON (tile large datasets or simplify)
-* `image` → single image overlay; must include `coordinates`
+* `raster` → **tile servers only** (e.g., `/tiles/…/{z}/{x}/{y}.png`). *Do not point at raw `.tif`.*
+* `raster-dem` → terrain sources (use tiles or platform DEM style; same rule: not raw `.tif`).
+* `vector` → vector tiles (TileJSON).
+* `geojson` → inline/URL GeoJSON (tile or simplify when large).
+* `image` → single image overlay; must include `coordinates`.
 
 ---
 
@@ -135,53 +144,64 @@ Re-run after adding/removing/changing any STAC items.
 
 ```json
 {
-  "version": "1.1.0",
-  "generated": "2025-09-26T18:00:00Z",
-  "time": {
-    "min": "1800-01-01",
-    "max": "2025-12-31",
-    "step": 1,
-    "defaultYear": 1930,
-    "loop": false,
-    "fps": 12
-  },
+  "version": "1.2.0",
+  "generated": "2025-09-27T15:00:00Z",
+  "time": { "min": "1850-01-01", "max": "2025-12-31" },
+  "defaultYear": 1930,
+  "timeUI": { "step": 1, "loop": false, "fps": 12 },
   "presets": [
-    { "label": "Bleeding Kansas", "start": 1854, "end": 1861 },
-    { "label": "Dust Bowl", "start": 1930, "end": 1940 }
+    { "label": "Bleeding Kansas",   "start": "1854-01-01", "end": "1861-12-31" },
+    { "label": "Railroad Era",      "start": "1865-01-01", "end": "1900-12-31" },
+    { "label": "Dust Bowl",         "start": "1930-01-01", "end": "1940-12-31" },
+    { "label": "Modern Kansas",     "start": "1990-01-01", "end": "2025-12-31" }
   ]
 }
 ```
 
-> Dates can be `YYYY` or `YYYY-MM-DD`; the viewer normalizes them.
->
-> Filtering uses **layer `time.start/end`** or **feature `timeProperty`/`endTimeProperty`**.
+> Filtering uses **layer `time`** (uniform spans) or **feature `timeProperty`** / `endTimeProperty` (heterogeneous features).
 
 ---
 
-## Legend & categories
+## Legend & categories (UI contracts)
 
-### `legend.json` (tokens + bindings)
+### `legend.json`
+
+* Defines **symbols** (style tokens).
+* Optional `layerBindings` map `layer.id → symbolId`.
 
 ```json
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
+  "generated": "2025-09-27T00:00:00Z",
   "symbols": {
-    "historic_topo": { "raster": true, "preview": "#c6b79e" },
-    "dem": { "rasterDem": true, "preview": "#9e9e9e" },
-    "hillshade": { "raster": true, "preview": "#7f7f7f" },
-    "counties": { "lineColor": "#555", "lineWidth": 1, "fillOpacity": 0.0 },
-    "treaties": { "fillColor": "rgba(200,60,60,0.35)", "lineColor": "#a33" },
-    "railroads": { "lineColor": "#6b4e16", "lineWidth": 1.5 },
-    "events": { "circleColor": "#CC3300", "circleRadius": 4 }
+    "basemap":       { "raster": true, "preview": "#BFC7CF" },
+    "counties":      { "lineColor": "#555555", "lineWidth": 1, "fillOpacity": 0.0 },
+    "dem":           { "rasterDem": true, "preview": "#9E9E9E" },
+    "hillshade":     { "raster": true, "preview": "#7F7F7F" },
+    "historic_topo": { "raster": true, "preview": "#C6B79E", "opacity": 0.85 },
+    "treaties":      { "fillColor": "rgba(200, 60, 60, 0.35)", "lineColor": "#AA3333", "lineWidth": 1 },
+    "trails":        { "lineColor": "#4361EE", "lineWidth": 1.25, "lineDasharray": [2, 2] },
+    "railroads":     { "lineColor": "#6B4E16", "lineWidth": 1.5 },
+    "hydrology":     { "lineColor": "#3A86FF", "fillColor": "#A0C4FF", "fillOpacity": 0.6 },
+    "towns":         { "circleColor": "#FF595E", "circleRadius": 4, "circleStrokeColor": "#FFFFFF", "circleStrokeWidth": 1 },
+    "landcover":     { "fillOpacity": 0.6 },
+    "tornado":       { "lineColor": "#D00000", "lineWidth": 1.4 },
+    "wildfire":      { "fillColor": "#E76F51", "fillOpacity": 0.35, "lineColor": "#B3543F", "lineWidth": 1 }
   },
   "layerBindings": {
-    "usgs_topo_1894_larned": "historic_topo",
+    "basemap_osm": "basemap",
+    "kansas_counties": "counties",
     "ks_dem_2018_2020": "dem",
     "ks_hillshade_2018": "hillshade",
-    "kansas_counties": "counties",
+    "usgs_topo_1894_larned": "historic_topo",
     "ks_treaties": "treaties",
+    "ks_trails": "trails",
     "ks_railroads": "railroads",
-    "events_sample": "events"
+    "ks_hydro": "hydrology",
+    "ks_settlements": "towns",
+    "ks_landcover": "landcover",
+    "tornado_tracks_ks": "tornado",
+    "ks_wildfire": "wildfire"
   }
 }
 ```
@@ -191,38 +211,40 @@ Re-run after adding/removing/changing any STAC items.
 ```json
 {
   "version": "1.1.0",
-  "generated": "2025-09-26T18:00:00Z",
+  "generated": "2025-09-27T00:00:00Z",
   "categories": {
-    "reference":     { "label": "Reference", "order": 0 },
-    "terrain":       { "label": "Terrain & Elevation", "order": 1 },
-    "environment":   { "label": "Land & Water", "order": 2 },
-    "historical":    { "label": "Historical Maps", "order": 3 },
-    "documents":     { "label": "Documents & Treaties", "order": 4 },
-    "infrastructure":{ "label": "Trails & Railroads", "order": 5 },
-    "culture":       { "label": "Settlements & Sites", "order": 6 }
+    "reference":      { "label": "Reference",               "order": 0 },
+    "terrain":        { "label": "Terrain & Elevation",     "order": 1 },
+    "environment":    { "label": "Land & Water",            "order": 2 },
+    "historical":     { "label": "Historical Maps",         "order": 3 },
+    "documents":      { "label": "Documents & Treaties",    "order": 4 },
+    "infrastructure": { "label": "Trails & Railroads",      "order": 5 },
+    "culture":        { "label": "Settlements & Sites",     "order": 6 },
+    "hazards":        { "label": "Hazards",                 "order": 7 }
   }
 }
 ```
 
 ---
 
-## Examples
+## Examples (correct patterns)
 
-### Historical raster (COG)
+### Historical raster (tiled)
 
 ```json
 {
   "id": "usgs_topo_1894_larned",
   "title": "USGS Historic Topo — Larned (1894)",
   "type": "raster",
-  "url": "data/cogs/overlays/usgs_topo_larned_1894.tif",
-  "opacity": 0.75,
-  "visible": false,
+  "url": "./tiles/historic/usgs_1894_larned/{z}/{x}/{y}.png",
+  "opacity": 0.7,
+  "visible": true,
   "category": "historical",
+  "legendKey": "historic_topo",
   "attribution": "USGS Historical Topographic Map Collection",
   "time": { "start": "1894-01-01", "end": "1894-12-31" },
   "minzoom": 0,
-  "maxzoom": 19
+  "maxzoom": 16
 }
 ```
 
@@ -230,17 +252,24 @@ Re-run after adding/removing/changing any STAC items.
 
 ```json
 {
-  "id": "events_sample",
-  "title": "Sample Events",
+  "id": "ks_settlements",
+  "title": "Settlements, Forts, Trading Posts",
   "type": "geojson",
-  "url": "data/demo_events.json",
-  "category": "historical",
-  "time": { "start": "1800-01-01", "end": "1950-12-31" },
-  "timeProperty": "date",
-  "popup": ["title", "date", "summary", "url"],
-  "style": { "circleColor": "#E63946", "circleRadius": 5, "circleOpacity": 0.9 },
-  "visible": false,
-  "attribution": "Demo dataset"
+  "data": "data/processed/towns_points.json",
+  "category": "culture",
+  "legendKey": "towns",
+  "time": { "start": "1800-01-01", "end": null },
+  "timeProperty": "year",
+  "popup": ["name", "type", "year", "year_end"],
+  "style": {
+    "circleColor": "#FF595E",
+    "circleRadius": 4,
+    "circleOpacity": 0.95,
+    "circleStrokeColor": "#FFFFFF",
+    "circleStrokeWidth": 1
+  },
+  "visible": true,
+  "attribution": "Compiled / KFM"
 }
 ```
 
@@ -251,44 +280,45 @@ Re-run after adding/removing/changing any STAC items.
 **Local quick checks**
 
 ```bash
-# lint JSON
+# Lint JSON
 jq . web/config/app.config.json > /dev/null
 
-# schema validation (app/layers)
+# Schema validation (viewer/app/layers)
 ajv validate -s web/config/app.config.schema.json -d web/config/app.config.json
-ajv validate -s web/config/layers.schema.json -d web/config/layers.json
+ajv validate -s web/config/layers.schema.json      -d web/config/layers.json
 
-# schema pack (legend/categories/sources)
-ajv validate -s web/config/schema.json -d web/config/legend.json    -r web/config/schema.json
+# Schema pack (legend/categories/sources)
+ajv validate -s web/config/schema.json -d web/config/legend.json     -r web/config/schema.json
 ajv validate -s web/config/schema.json -d web/config/categories.json -r web/config/schema.json
 ajv validate -s web/config/schema.json -d web/config/sources.json    -r web/config/schema.json
 ```
 
 **CI guarantees**
 
-* `tests/test_web_configs.py` validates structure, URLs, categories, time, and legend bindings.
 * STAC → `app.config.json` generation is checked; broken STAC = failed build.
+* Tests assert: structure, categories, legend bindings, time ranges (`time` vs `timeProperty`), and file existence.
 
 ---
 
 ## Troubleshooting
 
-* **Layer not visible** → Check `type`, `url`, `minzoom/maxzoom`, file availability. For GeoTIFFs, ensure they are **COGs**.
-* **Timeline no-op** → Provide `time` block (layer) or `timeProperty` (feature); validate date formats.
-* **Legend chip missing** → Add `legend.json` `layerBindings[layerId] = symbolId`, and ensure `symbols[symbolId]` exists.
-* **Wrong sidebar group** → Verify `category` matches a key in `categories.json`.
-* **Slow vectors** → Tile or simplify statewide/dense GeoJSON; prefer vector tiles for large datasets.
+* **Layer not visible** → Check `type`, tiles `url` vs GeoJSON `data`, `minzoom/maxzoom`, and file paths.
+* **Timeline inert** → Provide `time` (layer) or `timeProperty`/`endTimeProperty` (features); use ISO dates.
+* **Legend chip missing** → `legendKey` must match `legend.json.symbols` (or add `layerBindings[id]`).
+* **Wrong sidebar group** → Ensure `category` key exists in `categories.json`.
+* **Slow vectors** → Tile or simplify statewide/dense GeoJSON; reserve raw GeoJSON for small sets.
+* **Raster DEM** → Treat as tiles; don’t point at raw `.tif`. Use `/tiles/terrain/dem/{z}/{x}/{y}.png`.
 
 ---
 
 ## Story themes (`story_layers.json`)
 
-Curated toggles for demos/tours, e.g.:
+Curated presets for demos/tours:
 
 ```json
 {
   "schema": "kfm-story/1.1",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "title": "Curated Story Themes",
   "themes": [
     {
@@ -305,44 +335,29 @@ Curated toggles for demos/tours, e.g.:
 
 ---
 
-## Common workflows
+## Minimal data-flow
 
-**Generate fresh from STAC**
-
-```bash
-make stac
-kgt render-config --stac stac/items --output web/config/app.config.json --pretty
-```
-
-**Add a time preset (no STAC regen)**
-
-```bash
-jq '.presets += [{ "label":"Santa Fe Trail", "start":1821, "end":1880 }]' \
-  web/config/time_config.json > /tmp/time && mv /tmp/time web/config/time_config.json
-```
-
-**Audit a layer’s provenance (if `sources.json` present)**
-
-```bash
-jq '.sources["ks_railroads"]' web/config/sources.json
+```mermaid
+flowchart TD
+  A["STAC Items\n(stac/items/*.json)"] --> B["Config Renderer\n(kgt render-config)"]
+  B --> C["Viewer Config\n(web/config/app.config.json)"]
+  C --> D["MapLibre App\n(web/app.js)"]
+  D --> E["UI\n(Time Slider, Legend, Sidebar)"]
 ```
 
 ---
 
-## Future-proofing & conventions
+## Conventions
 
-* **Rasters**: prefer **COG**; reproject to **EPSG:4326**.
-* **Vectors**: **GeoJSON** only for small/medium; otherwise **tiles**.
-* **IDs**: `snake_case`, stable across releases; include source + vintage (e.g., `usgs_topo_1894_larned`).
-* **Categories**: keep in sync with `categories.json`; pick exactly one per layer.
-* **Legend**: keep `layerBindings` in sync with actual `layers[].id`.
-* **Time**: whole-layer `time` for uniform timespans; feature `timeProperty` for heterogeneous data.
-* **Schemas**: update `*.schema.json` when adding new keys; CI will enforce.
+* **IDs**: `snake_case`, stable, include vintage when helpful (`usgs_topo_1894_larned`).
+* **Categories**: pick exactly one per layer; keep in sync with `categories.json`.
+* **Legend**: keep `legendKey` (or `layerBindings`) aligned with `legend.json.symbols`.
+* **Time**: layer-level spans in `time`; heterogeneous features via `timeProperty`/`endTimeProperty`.
+* **CRS & rasters**: store/serve COGs in pipelines, **tile to PNG** for web rendering (EPSG:4326/3857).
+* **Schemas**: bump `*.schema.json` when adding keys; CI will enforce.
 
----
+**TL;DR**
+Generate **`app.config.json`** from STAC → tweak UX with **`time_config.json`**, **`legend.json`**, **`categories.json`**, and **`story_layers.json`** → validate → ship.
 
-### TL;DR
-
-* Generate **`app.config.json`** from STAC and treat it as **source of truth**.
-* Use **`time_config.json`**, **`legend.json`**, **`categories.json`**, and **`story_layers.json`** to tweak UX without code.
-* Validate configs; prefer COG/tiles and EPSG:4326 for smooth, scalable rendering.
+```
+```
