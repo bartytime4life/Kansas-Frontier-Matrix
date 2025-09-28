@@ -1,114 +1,139 @@
-# 📚 Kansas-Frontier-Matrix — GitHub Workflows & Standards
+# 📚 Kansas-Frontier-Matrix — GitHub Automation, CI/CD & Governance
 
-This directory contains **automation, CI/CD, and governance files** for the  
-[Kansas-Frontier-Matrix](../README.md) project.
+This folder centralizes **community docs, workflows, and project metadata** that make the repo **reproducible, secure, testable, and contributor-friendly**.
 
-The `.github/` folder centralizes **community docs, workflows, and project metadata** to keep the repo **reproducible**, **secure**, and **contributor-friendly**.
-
----
-
-## 📖 Contents
-
-- **README.md** — (this file) overview of `.github/`
-- **workflows/** — GitHub Actions CI/CD:
-  - [`site.yml`](./workflows/site.yml) → build & deploy the static site (MapLibre + STAC)
-  - [`stac-badges.yml`](./workflows/stac-badges.yml) → generate STAC/source status badges
-  - [`codeql.yml`](./workflows/codeql.yml) → CodeQL scanning (Python + JS/TS)
-  - _(optional)_ add `tests.yml` (pytest/MkDocs/etc.) when ready
-- **ISSUE_TEMPLATE/** — structured templates for bugs, data requests, experiment reports
-- **PULL_REQUEST_TEMPLATE.md** — contributor checklist (tests, schemas, STAC, security)
-- **SECURITY.md** — coordinated disclosure & current security practices
-- **dependabot.yml** — automated dependency updates ([`.github/dependabot.yml`](./dependabot.yml))
-
-> Tip: GitHub looks for **`.github/dependabot.yml`** (lowercase). Ensure the file name matches.
+> Scope: everything under `.github/**` — actions, issue/PR templates, security, and automation configs.
 
 ---
 
-## 🛰️ CI/CD Philosophy
+## 📦 What’s here
 
-- **Reproducible by default** — pipelines prefer `make prebuild` (STAC + web config validation + site fallback).
-- **Fail-safe scaffolding** — workflows **skip gracefully** when optional inputs are missing (e.g., first-run repos).
-- **Version-pinned** — actions and containers use pinned versions to reduce supply-chain drift.
-- **Least privilege** — workflows declare minimal permissions and use concurrency groups.
-- **Fast feedback** — config/schema checks run early; heavy jobs (link check, audits) can be manual or scheduled.
+* **README.md** — (this file) overview and standards for `.github/`
+* **workflows/** — GitHub Actions CI/CD:
 
----
+  * `site.yml` → Build & publish the static site (MapLibre viewer + STAC-backed config)
+  * `stac-badges.yml` → Generate & commit STAC/source status badges
+  * `codeql.yml` → CodeQL scanning (Python + JS/TS)
+  * `automerge.yml` → Safe auto-merge for labeled/green PRs (optional & guarded)
+  * *(optional)* `tests.yml` → Py/JS tests, schema checks, and lightweight web build
+* **ISSUE_TEMPLATE/** — structured templates (bug, data/source request, experiment report)
+* **PULL_REQUEST_TEMPLATE.md** — contributor checklist (tests, schemas, STAC, security, docs)
+* **SECURITY.md** — Report handling & current security posture
+* **dependabot.yml** — Automated dependency PRs (Actions, npm, pip, docker)
 
-## 🧪 What CI checks (today)
-
-| Workflow | Purpose | Triggers | Key paths |
-|---|---|---|---|
-| `site.yml` | Build & publish `web/` to Pages | `push` to `main`, manual | `web/**`, `stac/**`, `scripts/**`, `Makefile` |
-| `stac-badges.yml` | Generate source/status badges | scheduled, manual | `data/sources/**`, `stac/**`, `web/badges/**` |
-| `codeql.yml` | CodeQL security analysis | `push`, `pull_request`, scheduled | `src/**`, `web/**`, `scripts/**` |
-
-> Add a `tests.yml` when ready to run `pytest`, `mkdocs build`, or other checks per PR.
+> 🔎 Tip: GitHub expects **`.github/dependabot.yml`** (lowercase) and **`.github/workflows/*.yml`**.
 
 ---
 
-## 🔁 Dependency Updates
+## 🛰️ CI/CD Principles
 
-Managed by [Dependabot](./dependabot.yml):
-
-- **Weekly** updates for **GitHub Actions**, **npm (web/)**, **pip**, and **docker** (minor/patch grouped)
-- **Daily “security” lane** to raise advisories more quickly  
-- Timezone is set to `America/Chicago` to align with project schedules
-
----
-
-## 🔐 Security
-
-- See **[SECURITY.md](./SECURITY.md)** for reporting instructions (use private advisories or `security@kansasfrontier.org`)
-- CodeQL runs on Python + JS/TS
-- Secrets scanning via pre-commit (`gitleaks` on push) and `detect-aws-credentials`
-- Hardened runners (egress audit), least-privilege workflow permissions
+* **Reproducible by default**: pipelines call project make targets (e.g. `make prebuild`, `make stac`, `make site-config`) so local == CI.
+* **Fail-safe**: workflows **gracefully skip** when optional inputs are missing (e.g., first-run repos, empty caches).
+* **Pinned & minimal**: actions pinned to versions; permissions set to least-privilege; concurrency configured to prevent stampedes.
+* **Fast feedback first**: JSON Schema + STAC validation and linting before heavy builds.
+* **Artifacted**: validation reports and site bundles are uploaded as artifacts for inspection when applicable.
 
 ---
 
-## 🧰 Local pre-flight (before you push)
+## 🧪 Current workflows at a glance
 
-Run these locally to match CI:
+| Workflow                            | What it does                                             | Triggers                         | Key paths / Inputs                                       | Notes                                                        |
+| ----------------------------------- | -------------------------------------------------------- | -------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------ |
+| **Site** (`site.yml`)               | Build & publish `web/` to Pages; validates viewer config | `push` to `main`, manual         | `web/**`, `stac/**`, `data/**`, `scripts/**`, `Makefile` | Uses repo targets (`make site`, `make site-config`)          |
+| **STAC Badges** (`stac-badges.yml`) | Generate STAC/source status badges & push                | schedule, manual                 | `data/sources/**`, `stac/**`, `web/badges/**`            | Commits shields; safe no-op if nothing changed               |
+| **CodeQL** (`codeql.yml`)           | CodeQL analysis (Python + JS/TS)                         | `push`, `pull_request`, schedule | `src/**`, `web/**`, `scripts/**`                         | Uploads SARIF to Code Scanning alerts                        |
+| **Auto-merge** (`automerge.yml`)    | Auto-merge green PRs w/ specific labels                  | `pull_request`                   | n/a                                                      | Requires label & passing checks; adheres to protection rules |
+| **Tests (optional)** (`tests.yml`)  | Unit tests + schema checks + quick web build             | `pull_request`, manual           | `tests/**`, `web/**`, `stac/**`                          | Enable once tests exist                                      |
+
+---
+
+## 🔁 Dependency updates (Dependabot)
+
+* **Ecosystems**: GitHub Actions, npm (web), pip, docker.
+* **Cadence**: weekly for routine updates; daily for **security** advisories.
+* **Timezone**: `America/Chicago`.
+* Grouping turned on for minor/patch where supported to reduce PR noise.
+
+---
+
+## 🔐 Security practices
+
+* **Reporting**: see **`SECURITY.md`** (private advisories or `security@kansasfrontier.org`)
+* **Static analysis**: CodeQL on Python & JS/TS
+* **Secret hygiene**: ensure secrets are **only** scoped to workflows that need them; avoid repo-wide secrets for job-local needs
+* **Runner hardening**: jobs declare minimal `permissions`; jobs disable `GITHUB_TOKEN` write unless required; concurrency blocks double-runs
+
+---
+
+## 🧰 Local pre-flight (match CI)
+
+Run these locally to get the same signals CI uses:
 
 ```bash
-# fast hygiene
+# Fast hygiene
 pre-commit run -a
 
-# STAC + config validation
-make prebuild          # = stac-validate + config-validate + site (fallback)
+# STAC + config validation + safe site fallback
+make prebuild
 
-# optional: full checks
-pytest -q              # if tests are present
-mkdocs build -q        # if using docs
-````
+# Optional: tests & docs if present
+pytest -q             # if tests/ exists
+mkdocs build -q       # if docs/ exists
+```
+
+> If pre-commit isn’t installed: `pipx install pre-commit && pre-commit install`
 
 ---
 
-## 🗺 Useful pointers
+## 🧩 Adding/maintaining workflows
 
-* Repo root: [README](../README.md) · [Makefile](../Makefile) · [Roadmap](../ROADMAP.md)
-* Web configs: [`web/config/`](../web/config/) (legend/categories/sources/time/schema)
+1. **Create a new file** in `.github/workflows/NAME.yml`
+2. **Pin actions** (e.g., `uses: actions/checkout@v4`)
+3. **Set minimal permissions**, e.g.:
+
+```yaml
+permissions:
+  contents: read
+  actions: read
+  security-events: write   # only if uploading SARIF
+```
+
+4. **Use repo make targets** instead of re-implementing logic in YAML (easier to test & reuse)
+5. **Cache sanely** (keyed by lockfiles, pyproject, etc.)
+6. **Document inputs** in this README if the workflow is meant to be re-used (matrix vars, env, required secrets)
+
+---
+
+## ✅ Standards & conventions
+
+* **Branch protection** on `main` (require CI green + reviews)
+* **Commit style**: imperative + link issues (e.g., `Fix: STAC schema failure for topo` / `Closes #123`)
+* **Artifacts**: large geospatial assets via Git LFS/DVC; keep STAC & config JSONs in-repo under version control
+* **Schemas everywhere**: when adding/altering config keys, update relevant JSON Schemas (e.g., `web/config/layers.schema.json`) and let CI enforce them
+* **Badges**: generated under `web/badges/` by the `stac-badges.yml` job; don’t hand-edit
+
+---
+
+## 🧭 Useful pointers
+
+* Root: [README](../README.md) · [Makefile](../Makefile) · Roadmap ([`.github/roadmap/`](../.github/roadmap/))
+* Web config: [`web/config/`](../web/config/) (legend, categories, sources, time, schemas)
 * STAC: [`stac/collections/`](../stac/collections/) · [`stac/items/`](../stac/items/)
-* Contribution flow: [PR template](./PULL_REQUEST_TEMPLATE.md) · Issue templates in [`ISSUE_TEMPLATE/`](./ISSUE_TEMPLATE/)
+* Contribution flow: PR template ([`.github/PULL_REQUEST_TEMPLATE.md`](./PULL_REQUEST_TEMPLATE.md)) · Issue templates (`.github/ISSUE_TEMPLATE/**`)
 
 ---
 
-## ✅ Standards & Conventions
+## 🧯 Troubleshooting (common CI gotchas)
 
-* **Branch protection** on `main` (require CI + reviews)
-* **Commit style**: imperative mood + linked issues (e.g., `Fixes #123`)
-* **Artifacts**: large rasters/vectors via **Git LFS** or DVC; keep STAC & small JSON in-repo
-* **Schemas**: update `web/config/schema.json` when adding new config keys; CI & pre-commit will enforce
-
----
-
-## 📜 License
-
-MIT (see [LICENSE](../LICENSE)). Data licensing follows original sources (USGS, NOAA, FEMA, KGS, etc.).
+* **Pre-commit fails in CI**: make sure hooks & versions match (`.pre-commit-config.yaml`); run `pre-commit autoupdate` locally and commit.
+* **Schema validation fails**: run `make prebuild` locally and inspect the produced validation report in `.artifacts/` (CI uploads as artifact on failure).
+* **Pages deployment stuck**: ensure `site.yml` sets `pages` permissions and uses the **official** pages deploy action (pinned) with the artifact name used by the build step.
+* **CodeQL stalled**: verify the language matrix matches repo contents and that `security-events: write` is granted only for the CodeQL job.
 
 ---
 
-> 🧭 *The `.github/` directory is the governance anchor of Kansas-Frontier-Matrix —
-> enabling open, reproducible, and scientifically rigorous collaboration across code, data, and history.*
+## 📝 Philosophy
 
-```
-```
+All automation here exists to uphold the project’s **reproducibility**, **traceability**, and **safety rails**: consistent pre-commit hygiene, schema-enforced configs, STAC metadata integrity, and measurable build outputs. Keep YAML thin and push logic into tested scripts/Make targets.
+
+---
