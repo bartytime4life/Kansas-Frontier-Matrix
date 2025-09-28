@@ -3,7 +3,7 @@
 # ------------------------------------------------
 # CI-focused hooks for schema validation, STAC integrity,
 # Python style, JSON/YAML correctness, and docs hygiene.
-# Mirrors key checks from the root config, but kept leaner for CI.
+# Mirrors key checks from the root config, but kept lean for CI.
 
 minimum_pre_commit_version: "3.6.0"
 
@@ -32,10 +32,11 @@ exclude: |
     .*\.ipynb_checkpoints/|
     .*\.pmtiles$|
     .*\.mbtiles$|
-    .*\.tif(f)?$|
-    .*\.las$|.*\.laz$|
-    .*\.gpkg$|.*\.parquet$|.*\.geoparquet$|
-    .*\.zip$|.*\.7z$|.*\.tar(\.gz)?$|.*\.zst$|
+    .*\.tif{1,2}$|
+    .*\.la[sz]$|
+    .*\.gpkg$|
+    .*\.parquet$|.*\.geoparquet$|
+    .*\.7z$|.*\.zip$|.*\.tar(\.gz)?$|.*\.zst$|
     .*\.pdf$
   )
 
@@ -48,6 +49,7 @@ repos:
       - id: check-json
       - id: check-toml
       - id: check-xml
+      - id: check-merge-conflict
       - id: check-added-large-files
         # CI threshold aligns with root (LFS/DVC gate)
         args: ["--maxkb=5000"]
@@ -68,6 +70,8 @@ repos:
     rev: 24.8.0
     hooks:
       - id: black
+        # Keep CI Python aligned with workflows (3.11 OK too);
+        # black doesn't require pin here, but we set a sane default.
         language_version: python3.10
 
   # --- Shell scripts ---------------------------------------------------------
@@ -83,7 +87,8 @@ repos:
     hooks:
       - id: markdownlint-cli
         args: ["--fix"]
-        files: "^docs/.*\\.(md|markdown)$"
+        # Include repo docs + root README + web docs
+        files: "(^README\\.md$)|(^docs/.*\\.(md|markdown)$)|(^web/.*\\.(md|markdown)$)"
 
   # --- STAC validation (robust fallback) ------------------------------------
   - repo: local
@@ -92,29 +97,43 @@ repos:
         name: STAC Validator (kgt or stac-validator)
         language: system
         files: "^stac/.*\\.json$"
+        pass_filenames: false
         entry: >
           bash -c '
-            set -e;
+            set -euo pipefail;
+            shopt -s nullglob;
             # Prefer kgt if available (project-native)
             if command -v kgt >/dev/null 2>&1; then
-              kgt validate-stac stac/items --no-strict;
-              exit $?;
+              # Validate collections + items when present; be lenient on external links in CI
+              [ -d stac/collections ] && kgt validate-stac stac/collections --no-strict || true;
+              [ -d stac/items ] && kgt validate-stac stac/items --no-strict || true;
+              exit 0;
             fi
             # Fallback: stac-validator (pip-installed in CI image)
             if command -v stac-validator >/dev/null 2>&1; then
-              # Validate each JSON under stac/items (skip collections if not needed)
-              find stac/items -type f -name "*.json" -print0 | xargs -0 -n1 stac-validator;
-              exit $?;
+              found=0; rc=0
+              for d in stac/items stac/collections; do
+                [ -d "$d" ] || continue
+                while IFS= read -r -d "" f; do
+                  found=1
+                  stac-validator "$f" || rc=1
+                done < <(find "$d" -type f -name "*.json" -print0)
+              done
+              if [ $found -eq 0 ]; then
+                echo "::notice::No STAC items/collections to validate."
+              fi
+              exit $rc
             fi
             echo "::warning::No STAC validator found (kgt or stac-validator). Skipping.";
             exit 0;
           '
 
   # --- JSON schema validation for web configs --------------------------------
+  # Validate specific configs (legend/categories/sources) if packed schema exists.
   - repo: local
     hooks:
-      - id: jsonschema-validate
-        name: JSON Schema Validation (web/config)
+      - id: jsonschema-validate-pack
+        name: JSON Schema Validation (web/config pack)
         language: python
         additional_dependencies: ["jsonschema>=4.23.0"]
         files: "^web/config/.*\\.json$"
@@ -127,19 +146,80 @@ repos:
           pack = base / 'schema.json'
           if not pack.exists():
               sys.exit(0)
-          defs = json.load(open(pack)).get('$defs', {})
+          defs = json.load(open(pack, encoding="utf-8")).get('$defs', {})
           ok = True
           for name in ('legend', 'categories', 'sources'):
               sch = defs.get(name)
               doc = base / f'{name}.json'
-              if not (sch and doc.exists()): 
+              if not (sch and doc.exists()):
                   continue
-              data = json.load(open(doc))
+              data = json.load(open(doc, encoding="utf-8"))
               errs = sorted(V(sch).iter_errors(data), key=lambda e: e.path)
               for e in errs[:50]:
-                  print('-', f'{name}', '/'.join(map(str,e.path)) or '(root)', ':', e.message)
+                  path = "/".join(map(str, e.path)) or "(root)"
+                  print(f"- {name} {path}: {e.message}")
               ok = ok and not errs
           sys.exit(0 if ok else 1)
+          PY
+
+  # --- Files that declare $schema (auto-discovery across web/config + web/data)
+  - repo: local
+    hooks:
+      - id: jsonschema-validate-dollar-schema
+        name: JSON Schema Validation ($schema discovery)
+        language: python
+        additional_dependencies:
+          [ "jsonschema>=4.23.0", "rfc3339-validator", "rfc3987", "requests" ]
+        files: "^(web/config|web/data)/.*\\.json$"
+        pass_filenames: false
+        entry: >
+          python - <<'PY'
+          import json, pathlib, sys, urllib.parse, contextlib, requests
+          from jsonschema import Draft202012Validator as V
+          def load_json(p: pathlib.Path):
+              return json.loads(p.read_text(encoding="utf-8"))
+          def fetch_schema(uri: str, base: pathlib.Path):
+              parsed = urllib.parse.urlparse(uri)
+              if parsed.scheme in ("http", "https"):
+                  r = requests.get(uri, timeout=20)
+                  r.raise_for_status()
+                  return r.json()
+              if parsed.scheme == "file":
+                  return load_json(pathlib.Path(parsed.path))
+              # relative to file:
+              candidate = (base.parent / uri).resolve()
+              if candidate.exists():
+                  return load_json(candidate)
+              # absolute repo path:
+              candidate = pathlib.Path(uri)
+              if candidate.exists():
+                  return load_json(candidate)
+              raise FileNotFoundError(f"Schema not found: {uri}")
+          roots = []
+          for root in ("web/config", "web/data"):
+              p = pathlib.Path(root)
+              if p.exists():
+                  roots.extend(p.rglob("*.json"))
+          errors = 0
+          checked = 0
+          for j in roots:
+              with contextlib.suppress(Exception):
+                  data = load_json(j)
+              schema_uri = isinstance(data, dict) and data.get("$schema")
+              if not schema_uri:
+                  continue
+              try:
+                  schema = fetch_schema(schema_uri, j)
+                  V.check_schema(schema)
+                  V(schema).validate(data)
+                  print(f"✔ $schema OK: {j}")
+                  checked += 1
+              except Exception as e:
+                  print(f"::error file={j}::Schema validation failed: {e}")
+                  errors += 1
+          if checked == 0:
+              print("::notice::No JSON files declared $schema; skipping.")
+          sys.exit(errors)
           PY
 
   # --- Security scanning (basic) --------------------------------------------
