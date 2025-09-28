@@ -10,7 +10,7 @@ owner: "bartytime4life"
 
 enums:
   priorities: [P1, P2, P3]
-  estimates:  [XS, S, M, L, XL]
+  estimates: [XS, S, M, L, XL]
 
 defaults:
   create_missing_labels: true
@@ -25,44 +25,45 @@ defaults:
     estimate: M
 
 # ------------------------------------------------------------------------------
-# Labels (idempotent) — will be created/updated by name/color/description
+# Labels (idempotent)
 # ------------------------------------------------------------------------------
 
 labels:
   # scope / domain
-  - name: data            ; color: "1f77b4" ; description: "Datasets, ingestion, sources"
-  - name: hydrology       ; color: "17becf" ; description: "Water, flood, irrigation, aquifer"
-  - name: paleoclimate    ; color: "bcbd22" ; description: "Tree rings, pollen, charcoal, proxies"
-  - name: ai              ; color: "9467bd" ; description: "NLP, CV, geospatial ML, modeling"
-  - name: uncertainty     ; color: "7f7f7f" ; description: "UQ, calibration, confidence, error bars"
-  - name: ontology        ; color: "8c564b" ; description: "CIDOC-CRM, GeoSciML, KG, RDF/OWL"
-  - name: fractals        ; color: "e377c2" ; description: "Fractals, scaling laws, clustering"
-  - name: storytelling    ; color: "ff7f0e" ; description: "Narrative modules, timeline, glossary"
-  - name: crowdsourcing   ; color: "2ca02c" ; description: "Submission portal, contributor flow"
-  - name: 3d              ; color: "d62728" ; description: "CesiumJS, KML/KMZ, time-dynamic"
-  - name: api             ; color: "00b5ad" ; description: "REST/GraphQL, downloads"
-  - name: architecture    ; color: "111111" ; description: "Modularity, plugins, extension points"
-  - name: reproducibility ; color: "9edae5" ; description: "STAC validation, CI/CD"
-  - name: MCP             ; color: "6e6ef7" ; description: "Master Coder Protocol artifacts"
-  - name: education       ; color: "c49c94" ; description: "UI literacy, public comms"
+  - { name: data,            color: "1f77b4", description: "Datasets, ingestion, sources" }
+  - { name: hydrology,       color: "17becf", description: "Water, flood, irrigation, aquifer" }
+  - { name: paleoclimate,    color: "bcbd22", description: "Tree rings, pollen, charcoal, proxies" }
+  - { name: ai,              color: "9467bd", description: "NLP, CV, geospatial ML, modeling" }
+  - { name: uncertainty,     color: "7f7f7f", description: "UQ, calibration, confidence, error bars" }
+  - { name: ontology,        color: "8c564b", description: "CIDOC-CRM, GeoSciML, KG, RDF/OWL" }
+  - { name: fractals,        color: "e377c2", description: "Fractals, scaling laws, clustering" }
+  - { name: storytelling,    color: "ff7f0e", description: "Narrative modules, timeline, glossary" }
+  - { name: crowdsourcing,   color: "2ca02c", description: "Submission portal, contributor flow" }
+  - { name: "3d",            color: "d62728", description: "CesiumJS, KML/KMZ, time-dynamic" }
+  - { name: api,             color: "00b5ad", description: "REST/GraphQL, downloads" }
+  - { name: architecture,    color: "111111", description: "Modularity, plugins, extension points" }
+  - { name: reproducibility, color: "9edae5", description: "STAC validation, CI/CD" }
+  - { name: MCP,             color: "6e6ef7", description: "Master Coder Protocol artifacts" }
+  - { name: education,       color: "c49c94", description: "UI literacy, public comms" }
   # viewer / infra
-  - name: stac            ; color: "0a7bbb" ; description: "STAC catalog, collections, items"
-  - name: web             ; color: "1f6feb" ; description: "MapLibre viewer, web/config pack"
-  - name: ci              ; color: "6a737d" ; description: "GitHub Actions, pipelines"
-  - name: docker          ; color: "2496ed" ; description: "Dockerfiles, compose, images"
-  - name: python          ; color: "3776ab" ; description: "Python packages, CLI, scripts"
-  - name: security        ; color: "b60205" ; description: "Vulns, CodeQL, secrets, supply chain"
+  - { name: stac,            color: "0a7bbb", description: "STAC catalog, collections, items" }
+  - { name: web,             color: "1f6feb", description: "MapLibre viewer, web/config pack" }
+  - { name: ci,              color: "6a737d", description: "GitHub Actions, pipelines" }
+  - { name: docker,          color: "2496ed", description: "Dockerfiles, compose, images" }
+  - { name: python,          color: "3776ab", description: "Python packages, CLI, scripts" }
+  - { name: security,        color: "b60205", description: "Vulns, CodeQL, secrets, supply chain" }
   # triage / defaults used by templates
-  - name: bug             ; color: "d73a4a" ; description: "Something isn’t working"
-  - name: enhancement     ; color: "a2eeef" ; description: "Feature request / improvement"
-  - name: triage          ; color: "fbca04" ; description: "Needs review / classification"
+  - { name: bug,             color: "d73a4a", description: "Something isn’t working" }
+  - { name: enhancement,     color: "a2eeef", description: "Feature request / improvement" }
+  - { name: triage,          color: "fbca04", description: "Needs review / classification" }
 
 # ------------------------------------------------------------------------------
 # Milestones → GitHub Milestones (with issues that create/update GH Issues).
-# Each milestone and issue includes a stable 'key' for idempotent sync.
+# Each milestone/issue includes a stable 'key' for idempotent sync.
 # ------------------------------------------------------------------------------
 
 milestones:
+
   - key: m1-data
     title: "Milestone 1 — Enrich Data Sources"
     state: open
@@ -71,6 +72,7 @@ milestones:
       Expand coverage: oral histories, paleoclimate proxies, hydrology & water management.
       Document sources and provenance in the STAC catalog; wire key layers to the viewer.
     issues:
+
       - key: oral-histories
         title: "Oral Histories & Indigenous Narratives"
         labels: [data, storytelling, MCP]
@@ -181,6 +183,7 @@ milestones:
     description: >
       Predictive modeling, uncertainty, symbolic reasoning, fractal/pattern analytics.
     issues:
+
       - key: predictive-modeling
         title: "Predictive Modeling"
         labels: [ai]
@@ -249,6 +252,7 @@ milestones:
     description: >
       Public-facing narrative modules, educational overlays, glossary tooltips, and submission portal.
     issues:
+
       - key: sft-storymap
         title: "Interactive Story Maps — Santa Fe Trail"
         labels: [storytelling, education]
@@ -310,9 +314,10 @@ milestones:
     description: >
       3D/temporal, semantic web, modular plugins, APIs, and download endpoints.
     issues:
+
       - key: time-3d
         title: "3D Time Animation"
-        labels: [3d]
+        labels: ["3d"]
         priority: P3
         estimate: M
         body: |
@@ -368,6 +373,7 @@ milestones:
     description: >
       Experiments, SOPs, model cards, and CI/STAC validation for mission-grade reproducibility.
     issues:
+
       - key: experiments-first-3
         title: "Experiment Reports (First Three)"
         labels: [MCP, reproducibility]
