@@ -1,7 +1,3 @@
-Here’s a tightened, corrected, and better-connected `.github/workflows/README.md`.
-Fixes include: added `web/data/**/*.json` to Web Config Validate triggers, clarified outputs, ensured least-privilege notes, and made the Mermaid diagram GitHub-safe (quoted labels + `\n`).
-
-````markdown
 # Kansas-Frontier-Matrix — GitHub Workflows
 
 This folder (`.github/workflows/`) contains the **CI/CD + security automation** for the project.  
