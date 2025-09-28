@@ -3,12 +3,13 @@
 # ------------------------------------------------
 # Single source of truth for GitHub labels.
 # Managed by .github/workflows/labels.yml (EndBug/label-sync).
+# Run: `make labels-sync` or trigger workflow to apply.
 
 labels:
   # --- Merge automation ---
   - name: "automerge"
     color: "2ea44f"
-    description: "Automatically merge when all checks pass"
+    description: "Automatically merge when all required checks pass"
 
   - name: "no-automerge"
     color: "d93f0b"
@@ -21,7 +22,7 @@ labels:
   # --- Roadmap & planning ---
   - name: "roadmap"
     color: "5319e7"
-    description: "Tracked in roadmap.yml / project roadmap"
+    description: "Tracked in roadmap.yaml / long-term planning"
 
   - name: "needs-triage"
     color: "fef2c0"
@@ -33,10 +34,10 @@ labels:
 
   - name: "discussion"
     color: "f9d0c4"
-    description: "Open discussion / design question"
+    description: "Open design or architectural discussion"
 
   - name: "milestone"
-    color: "0366d6"
+    color: "0d7ef9"
     description: "Tied to a milestone deliverable"
 
   # --- Quality & hygiene ---
@@ -64,4 +65,39 @@ labels:
 
   - name: "dependencies"
     color: "0366d6"
-    description: "Dependency updates (Dependabot, etc.)"
+    description: "Dependency updates (Dependabot, pip, npm, docker)"
+
+  # --- Data & STAC ---
+  - name: "data"
+    color: "5319e7"
+    description: "Data acquisition, cleaning, or integration task"
+
+  - name: "stac"
+    color: "1d76db"
+    description: "STAC metadata item/collection change"
+
+  - name: "catalog"
+    color: "0052cc"
+    description: "Catalog wiring, schemas, provenance updates"
+
+  # --- Web / front-end ---
+  - name: "web"
+    color: "ff7f0e"
+    description: "Web viewer, MapLibre, timeline UI changes"
+
+  - name: "ui/ux"
+    color: "d4c5f9"
+    description: "User interface / design / usability improvements"
+
+  # --- Docs & governance ---
+  - name: "docs"
+    color: "cfd3d7"
+    description: "Documentation, guides, governance updates"
+
+  - name: "mcp"
+    color: "a2eeef"
+    description: "Master Coder Protocol (experiments, SOPs, model cards)"
+
+  - name: "chore"
+    color: "d4c5f9"
+    description: "Housekeeping: repo structure, config, cleanup"
