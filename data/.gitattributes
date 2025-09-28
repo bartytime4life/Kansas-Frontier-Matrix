@@ -46,23 +46,23 @@
 *.bil                            filter=lfs diff=lfs merge=lfs -text
 *.bsq                            filter=lfs diff=lfs merge=lfs -text
 *.bip                            filter=lfs diff=lfs merge=lfs -text
-*.sdat                           filter=lfs diff=lfs merge=lfs -text   # SAGA
-*.sgrd                           filter=lfs diff=lfs merge=lfs -text   # SAGA
+*.sdat                           filter=lfs diff=lfs merge=lfs -text   # SAGA grid
+*.sgrd                           filter=lfs diff=lfs merge=lfs -text   # SAGA grid
 
 # Raster tiles / bundles
 *.mbtiles                        filter=lfs diff=lfs merge=lfs -text
 *.pmtiles                        filter=lfs diff=lfs merge=lfs -text
 *.kmz                            filter=lfs diff=lfs merge=lfs -text
-*.pbf                            filter=lfs diff=lfs merge=lfs -text    # vector tiles
+*.pbf                            filter=lfs diff=lfs merge=lfs -text   # vector tiles
 *.mvt                            filter=lfs diff=lfs merge=lfs -text
 
 # Vector bundles / containers
 *.gpkg                           filter=lfs diff=lfs merge=lfs -text
-*.fgb                            filter=lfs diff=lfs merge=lfs -text    # FlatGeobuf
+*.fgb                            filter=lfs diff=lfs merge=lfs -text   # FlatGeobuf
 *.parquet                        filter=lfs diff=lfs merge=lfs -text
 *.feather                        filter=lfs diff=lfs merge=lfs -text
 
-# Shapefile family (recommend zipping as one blob; safe to LFS)
+# Shapefile family (recommend zipping as one blob; put parts in LFS)
 *.shp                            filter=lfs diff=lfs merge=lfs -text
 *.shx                            filter=lfs diff=lfs merge=lfs -text
 *.dbf                            filter=lfs diff=lfs merge=lfs -text
@@ -83,9 +83,18 @@
 *.bag                            filter=lfs diff=lfs merge=lfs -text
 *.h5                             filter=lfs diff=lfs merge=lfs -text
 *.hdf5                           filter=lfs diff=lfs merge=lfs -text
-*.nc                             filter=lfs diff=lfs merge=lfs -text    # NetCDF
+*.nc                             filter=lfs diff=lfs merge=lfs -text   # NetCDF
 *.grd                            filter=lfs diff=lfs merge=lfs -text
 *.tiledb                         filter=lfs diff=lfs merge=lfs -text
+
+# DBs (common GIS stores)
+*.sqlite                         filter=lfs diff=lfs merge=lfs -text
+*.sqlite3                        filter=lfs diff=lfs merge=lfs -text
+*.spatialite                     filter=lfs diff=lfs merge=lfs -text
+*.gpkg-wal                      filter=lfs diff=lfs merge=lfs -text
+*.gpkg-shm                      filter=lfs diff=lfs merge=lfs -text
+# ESRI File Geodatabase (directory of many binary files)
+*.gdb/**                         filter=lfs diff=lfs merge=lfs -text
 
 # Archives (raw acquisitions, packaged tiles, etc.)
 *.zip                            filter=lfs diff=lfs merge=lfs -text
@@ -113,8 +122,8 @@
 *.woff2                          filter=lfs diff=lfs merge=lfs -text
 
 # GDAL/OGR sidecars
-*.aux.xml                        text                 # small, inspectable
-*.ovr                            filter=lfs diff=lfs merge=lfs -text    # can be huge
+*.aux.xml                        text                # small, inspectable
+*.ovr                            filter=lfs diff=lfs merge=lfs -text   # can be huge
 *.idx                            filter=lfs diff=lfs merge=lfs -text
 *.rrd                            filter=lfs diff=lfs merge=lfs -text
 *.tfw                            text
@@ -130,36 +139,36 @@
 # Path-focused safety rails for data/
 # (binaries to LFS by default)
 # ====================================
-data/raw/**                     filter=lfs diff=lfs merge=lfs -text
-data/processed/**               filter=lfs diff=lfs merge=lfs -text
-data/cogs/**                    filter=lfs diff=lfs merge=lfs -text
-data/derivatives/**             filter=lfs diff=lfs merge=lfs -text
-data/tiles/**                   filter=lfs diff=lfs merge=lfs -text
-data/earth/**/overlays/**       filter=lfs diff=lfs merge=lfs -text
+data/raw/**                      filter=lfs diff=lfs merge=lfs -text
+data/processed/**                filter=lfs diff=lfs merge=lfs -text
+data/cogs/**                     filter=lfs diff=lfs merge=lfs -text
+data/derivatives/**              filter=lfs diff=lfs merge=lfs -text
+data/tiles/**                    filter=lfs diff=lfs merge=lfs -text
+data/earth/**/overlays/**        filter=lfs diff=lfs merge=lfs -text
 
 # ====================================
 # Preserve text metadata & descriptors
 # (override LFS rails above; last wins)
 # ====================================
-data/**/**/_meta.json           text
-data/**/**/*.meta.json          text
-data/**/**/*.manifest*.json     text
-data/**/**/*.stac.json          text
-data/**/**/*.sha256             text
-data/**/**/*.json               text
-data/**/**/*.csv                text
-data/**/**/*.tsv                text
-data/**/**/*.yml                text
-data/**/**/*.yaml               text
-data/**/**/*.md                 text
-data/**/**/*.kml                text
-data/**/**/*.geojson            text
-data/**/**/*.topojson           text
+data/**/**/_meta.json            text
+data/**/**/*.meta.json           text
+data/**/**/*.manifest*.json      text
+data/**/**/*.stac.json           text
+data/**/**/*.sha256              text
+data/**/**/*.json                text
+data/**/**/*.csv                 text
+data/**/**/*.tsv                 text
+data/**/**/*.yml                 text
+data/**/**/*.yaml                text
+data/**/**/*.md                  text
+data/**/**/*.kml                 text
+data/**/**/*.geojson             text
+data/**/**/*.topojson            text
 
 # ============================
 # Optional: Linguist hints
 # ============================
-docs/**                          linguist-documentation
-web/**                           linguist-documentation
-assets/**                        linguist-vendored
-dist/**                          linguist-generated
+docs/**                           linguist-documentation
+web/**                            linguist-documentation
+assets/**                         linguist-vendored
+dist/**                           linguist-generated
