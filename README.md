@@ -47,13 +47,19 @@ flowchart TD
   E -->|serve| F["MapLibre Viewer"]
   D -->|export| G["KML/KMZ\n(earth/)"]
 
-classDef src fill=#FFD166,stroke=#333;
-classDef cogs fill=#06D6A0,stroke=#333;
-classDef stac fill=#118AB2,stroke=#fff;
-classDef web fill=#073B4C,stroke=#fff;
-classDef earth fill=#EF476F,stroke=#fff;
+classDef src fill="#FFD166",stroke="#333",stroke-width=1px;
+classDef cogs fill="#06D6A0",stroke="#333",stroke-width=1px;
+classDef stac fill="#118AB2",stroke="#fff",stroke-width=1px;
+classDef web fill="#073B4C",stroke="#fff",stroke-width=1px;
+classDef earth fill="#EF476F",stroke="#fff",stroke-width=1px;
 
-class A src; class B cogs; class C cogs; class D stac; class E web; class F web; class G earth;
+class A src;
+class B cogs;
+class C cogs;
+class D stac;
+class E web;
+class F web;
+class G earth;
 ````
 
 ---
