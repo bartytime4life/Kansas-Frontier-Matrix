@@ -42,20 +42,20 @@ Every workflow is **scoped, cached, concurrent-safe, and least-privilege permiss
 
 ```mermaid
 flowchart TD
-  A["Push/PR"] --> B["web-config-validate.yml\n(\"JSON lint\" + schema)"]
-  A --> C["stac-validate.yml\n(\"stac-validator\" → \"pystac\")"]
-  A --> D["ci.yml / tests.yml\n(\"pytest\", \"ruff\", web)"]
-  C --> E["stac.yml\n(\"render app.config.json\")"]
-  E --> F["site.yml\n(\"build + Pages + link check\")"]
-  A --> G["docker.yml\n(\"buildx\" → GHCR)"]
-  A --> H["codeql.yml\n(\"security\")"]
-  A --> I["sbom.yml\n(\"CycloneDX/SPDX + attest\")"]
-  A --> M["stac-badges.yml\n(\"validate\" → badges)"]
-  A --> S["trivy.yml\n(\"fs/config/image scans + SBOM\")"]
-  A --> T["secret-scanning.yml\n(\"Gitleaks\")"]
-  A --> U["ossf-scorecard.yml\n(\"repo health\")"]
-  J["Tag vX.Y.Z"] --> K["release.yml\n(\"sdist+wheel+SBOM\" → Release)"]
-  L["roadmap.yml\n(\"dry-run on PRs\")"] -. "manual/push" .-> L
+  A["Push/PR"] --> B["web-config-validate.yml\n(JSON lint + schema)"]
+  A --> C["stac-validate.yml\n(stac-validator -> pystac)"]
+  A --> D["ci.yml / tests.yml\n(pytest, ruff, web)"]
+  C --> E["stac.yml\n(render app.config.json)"]
+  E --> F["site.yml\n(build + Pages + link check)"]
+  A --> G["docker.yml\n(buildx -> GHCR)"]
+  A --> H["codeql.yml\n(security)"]
+  A --> I["sbom.yml\n(CycloneDX/SPDX + attest)"]
+  A --> M["stac-badges.yml\n(validate -> badges)"]
+  A --> S["trivy.yml\n(fs/config/image scans + SBOM)"]
+  A --> T["secret-scanning.yml\n(Gitleaks)"]
+  A --> U["ossf-scorecard.yml\n(repo health)"]
+  J["Tag vX.Y.Z"] --> K["release.yml\n(sdist+wheel+SBOM -> Release)"]
+  L["roadmap.yml\n(dry-run on PRs)"] -.-> L["manual/push"]
 ````
 
 > ⚠️ **Mermaid on GitHub is picky** — *quote labels that contain punctuation* and use `\n` for line breaks.
