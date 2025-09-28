@@ -22,58 +22,54 @@ and historical analyses.
 ```
 
 data/sources/dem/
-├── ks\_dem\_1m.json             # Statewide 1-m DEM (Kansas DASC / USGS 3DEP)
-├── ks\_lidar\_county.json       # Example LiDAR tile index for county-level fetch
-├── ks\_hillshade.json          # Derived hillshade (example config)
-├── usgs\_3dep\_index.json       # 3DEP coverage metadata
-├── processed/                 # Derived COGs (hillshade, slope, aspect)
-└── README.md                  # This file
+├── ks_dem_1m.json          # Statewide 1-m DEM (Kansas DASC / USGS 3DEP)
+├── ks_lidar_county.json    # Example LiDAR tile index for county-level fetch
+├── usgs_3dep_index.json    # 3DEP coverage metadata
+├── ks_hillshade.json       # Example config for derived hillshade layer
+├── processed/              # Derived COGs (hillshade, slope, aspect)
+└── README.md               # This file
 
 ````
+
+> **Note:** Large binaries (GeoTIFFs, COGs, LiDAR tiles) are not tracked directly —  
+> they go to **Git LFS** or `data/raw/` (ignored). Only descriptors, sidecars, and metadata live in git.
 
 ---
 
 ## Metadata Requirements
 
-Each DEM source config (`.json` or `.yml`) must follow the **STAC-like schema**:
+Each DEM source config (`.json` or `.yml`) must follow the **KFM Source Descriptor schema**  
+(`data/sources/schema.source.json`). Example:
 
 ```json
 {
   "id": "ks_dem_1m",
   "title": "Kansas Statewide DEM (1-m resolution)",
   "type": "raster",
-  "version": "1.0.0",
   "description": "1-m DEM mosaic from Kansas DASC / USGS 3DEP program.",
-  "temporal": {
-    "start": "2012-01-01",
-    "end": "2020-12-31"
-  },
-  "spatial": {
-    "bbox": [-102.05, 36.99, -94.61, 40.00]
-  },
-  "endpoints": [
-    {
-      "type": "http",
-      "role": ["source"],
-      "urls": [
-        "https://prd-tnm.s3.amazonaws.com/Lidar/KS/DEM_1m_2020.tif"
-      ]
-    }
+  "period": "2012-2020",
+  "bbox": [-102.05, 36.99, -94.61, 40.00],
+  "urls": [
+    "https://prd-tnm.s3.amazonaws.com/Lidar/KS/DEM_1m_2020.tif"
   ],
-  "lineage": [
-    "Fetched from USGS TNM S3",
-    "Converted to Cloud-Optimized GeoTIFF",
-    "Tile pyramids built for MapLibre viewer"
-  ],
-  "license": "public-domain",
+  "license": {
+    "name": "Public Domain",
+    "url": "https://www.usgs.gov/faqs/data-policy"
+  },
   "provenance": {
-    "retrieved": "2025-09-21",
-    "checksum_sha256": "placeholder123abc…",
-    "filesize_bytes": null
+    "attribution": "USGS 3DEP / Kansas DASC",
+    "retrieved": "2025-09-21T00:00:00Z"
   },
   "keywords": ["DEM", "elevation", "Kansas", "LiDAR", "terrain"]
 }
 ````
+
+Key rules:
+
+* `bbox` must be in EPSG:4326 (WGS84 lon/lat).
+* `urls[]` may list multiple tiles; `make fetch` will fan-out.
+* Always include `license` and `provenance`.
+* Use `period` to link with time slider and STAC temporal fields.
 
 ---
 
@@ -88,19 +84,41 @@ Each DEM source config (`.json` or `.yml`) must follow the **STAC-like schema**:
 
 ## Integration Notes
 
-* All DEMs should be converted to **Cloud-Optimized GeoTIFFs (COGs)**.
+* All DEMs should be converted to **Cloud-Optimized GeoTIFFs (COGs)** (`make cogs`).
 * Derivatives (hillshade, slope, aspect) stored in `processed/` with **STAC Items**.
 * Link to **knowledge graph** via `Place` nodes (counties, watersheds).
-* Document uncertainty: use **confidence flags** if DEMs contain voids or artifacts.
+* Document uncertainty: use `confidence` if DEMs contain voids or artifacts.
+* CI validates COG structure (`make validate-cogs`) and schema compliance.
 
 ---
 
 ## Best Practices
 
-* Maintain **checksums** and record fetch dates in `data/provenance/`.
-* Keep **raw LiDAR tiles** in `data/raw/` and only serve mosaicked COGs here.
-* Align DEM CRS with EPSG:4326 for web viewer, but retain original projection in raw storage.
-* Use **Makefile targets** (`make dem`, `make hillshade`) for automated processing.
+* Maintain **checksums** (`*.sha256`) and record fetch dates in `provenance`.
+* Keep **raw LiDAR tiles** in `data/raw/dem/` (ignored by git).
+* Use original CRS in raw storage, but normalize to **EPSG:4326** for web viewer.
+* Automate builds:
+
+  ```bash
+  make dem        # build statewide DEM COGs
+  make hillshade  # hillshade derivatives
+  make terrain    # slope/aspect/roughness stack
+  ```
+* Ensure each artifact has a sidecar `_meta.json` with lineage + stats.
+
+---
+
+## Debugging & Validation
+
+* `make validate-sources` → check JSON descriptors against schema.
+* `make validate-cogs` → verify COG tiling, compression, and overviews.
+* `make checksums` → refresh `.sha256` sidecars.
+* Check STAC compliance:
+
+  ```bash
+  make stac
+  make validate-stac
+  ```
 
 ---
 
@@ -108,10 +126,14 @@ Each DEM source config (`.json` or `.yml`) must follow the **STAC-like schema**:
 
 * [USGS 3DEP](https://www.usgs.gov/3d-elevation-program)
 * [Kansas DASC LiDAR & DEM](https://www.kansasgis.org/)
-* [Kansas Frontier Matrix Design: Environmental & Terrain Layers]: contentReference[oaicite:0]{index=0}
-* [Data Resource Analysis Report — DEM/LiDAR gaps]: contentReference[oaicite:1]{index=1}
-* [MCP Scientific Method Templates]: contentReference[oaicite:2]{index=2}
+* Data Resource Analysis Report — DEM/LiDAR gaps (see `/docs/reports/`)
+* MCP Scientific Method Templates (`/docs/mcp/`)
 
 ---
+
+✦ **Summary:**
+`data/sources/dem/` contains descriptors for Kansas DEM sources and processing configs.
+They guarantee that elevation products are **traceable**, **reproducible**, and **integrated** into the
+STAC catalog, CI validation, and downstream terrain analysis.
 
 ```
