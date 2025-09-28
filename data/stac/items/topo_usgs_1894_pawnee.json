@@ -1,0 +1,43 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "topo_usgs_1894_pawnee",
+  "collection": "topo",
+  "properties": {
+    "start_datetime": "1894-01-01T00:00:00Z",
+    "end_datetime": "1894-12-31T23:59:59Z",
+    "proj:epsg": 4326,
+    "kfm:edition": "USGS 15' series",
+    "kfm:source": "USGS Historical Topographic Map Collection"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-99.75, 38.40], [-99.00, 38.40],
+      [-99.00, 38.00], [-99.75, 38.00],
+      [-99.75, 38.40]
+    ]]
+  },
+  "bbox": [-99.75, 38.00, -99.00, 38.40],
+  "assets": {
+    "image": {
+      "href": "data/cogs/topo/usgs_1894_pawnee.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "overlay"],
+      "title": "USGS Topographic Map (1894, Pawnee Co.)"
+    },
+    "thumbnail": {
+      "href": "data/cogs/topo/usgs_1894_pawnee.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Thumbnail"
+    }
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "../collections/topo.json",
+      "type": "application/json"
+    }
+  ]
+}
