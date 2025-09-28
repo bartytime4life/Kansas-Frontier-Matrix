@@ -203,17 +203,3 @@ See [`ROADMAP.md`](ROADMAP.md) for details.
 Keep STAC 1.0.0 valid, configs schema-checked, and provenance intact.
 
 ```
-
----
-
-### Why this rebuild is cleaner
-
-- **Narrative-first**: starts with *what/why*, then flows into tech.  
-- **Modern repo map**: directory tree matches your actual structure.  
-- **Mermaid-safe**: chart quotes + line breaks.  
-- **Quickstart split**: Python (venv) vs Docker Compose.  
-- **CI + reproducibility** section consolidated (checksums, badges, workflows).  
-- **Troubleshooting** distilled to common gotchas.  
-- **Roadmap** simplified into milestones, pointing to `ROADMAP.md`.
-
----
