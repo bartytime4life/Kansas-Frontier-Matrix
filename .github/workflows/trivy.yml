@@ -1,3 +1,4 @@
+# .github/workflows/trivy.yml
 name: "Security — Trivy"
 
 on:
@@ -19,55 +20,48 @@ jobs:
   trivy:
     name: Trivy Security Scans
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Cache Trivy DB
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/trivy
-          key: trivy-db-${{ runner.os }}-${{ hashFiles('**/lockfiles/**', '**/requirements*.txt', '**/poetry.lock', '**/package-lock.json', '**/yarn.lock') }}
-          restore-keys: |
-            trivy-db-${{ runner.os }}-
-
-      # -----------------------------
       # Filesystem scan (code, deps, secrets, misconfig)
-      # -----------------------------
-      - name: Trivy FS (vuln+secrets+misconfig)
+      - name: Trivy FS (vuln + secrets + misconfig)
+        id: trivy-fs
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-fs.sarif'
-          severity: 'HIGH,CRITICAL'
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-fs.sarif
+          severity: HIGH,CRITICAL
           ignore-unfixed: true
-          exit-code: '1'         # fail on findings
-          vuln-type: 'os,library'
-          scanners: 'vuln,secret,misconfig'
+          exit-code: 1               # fail the job on findings
+          vuln-type: os,library
+          scanners: vuln,secret,misconfig
+          cache: true
 
-      # -----------------------------
-      # Dockerfile / IaC config scan
-      # -----------------------------
+      # Config scan (Dockerfile / IaC) – only if a Dockerfile exists
       - name: Trivy Config (Dockerfile & IaC)
+        id: trivy-config
         if: ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          scan-type: 'config'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-config.sarif'
-          severity: 'HIGH,CRITICAL'
-          exit-code: '1'
+          scan-type: config
+          scan-ref: .
+          format: sarif
+          output: trivy-config.sarif
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          cache: true
 
-      # -----------------------------
-      # Build local image (if Dockerfile present)
-      # -----------------------------
+      # Build a local image (no push) if Dockerfile present
       - name: Build image (local)
         if: ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
         uses: docker/build-push-action@v5
@@ -77,64 +71,65 @@ jobs:
           load: true
           tags: local/kfm:${{ github.sha }}
 
-      # -----------------------------
-      # Container image scan
-      # -----------------------------
+      # Image vuln scan
       - name: Trivy Image (local/kfm:${{ github.sha }})
+        id: trivy-image
         if: ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          image-ref: 'local/kfm:${{ github.sha }}'
-          format: 'sarif'
-          output: 'trivy-image.sarif'
-          severity: 'HIGH,CRITICAL'
+          image-ref: local/kfm:${{ github.sha }}
+          format: sarif
+          output: trivy-image.sarif
+          severity: HIGH,CRITICAL
           ignore-unfixed: true
-          exit-code: '1'
-          vuln-type: 'os,library'
-          scanners: 'vuln'
+          exit-code: 1
+          vuln-type: os,library
+          scanners: vuln
+          cache: true
 
-      # -----------------------------
-      # SBOM generation (CycloneDX + SPDX)
-      # -----------------------------
+      # SBOM generation (CycloneDX via Trivy action)
       - name: SBOM (CycloneDX)
         uses: aquasecurity/trivy-action@0.24.0
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'cyclonedx'
-          output: 'sbom.cdx.json'
-          exit-code: '0'
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: sbom.cdx.json
+          exit-code: 0
+          cache: true
+
+      # Install Trivy CLI for SPDX JSON SBOM
+      - name: Setup Trivy CLI
+        uses: aquasecurity/setup-trivy@v0.2.1
 
       - name: SBOM (SPDX JSON)
-        run: |
-          trivy sbom --format spdx-json --output sbom.spdx.json .
+        run: trivy sbom --format spdx-json --output sbom.spdx.json .
 
       - name: Upload SBOM artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sbom-trivy-${{ github.sha }}
+          name: sbom-trivy-${{ github.run_id }}
           path: |
             sbom.cdx.json
             sbom.spdx.json
+          if-no-files-found: warn
           retention-days: 14
 
-      # -----------------------------
       # Upload SARIF to code scanning
-      # -----------------------------
       - name: Upload SARIF (FS)
-        if: always()
+        if: ${{ always() }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-fs.sarif
 
       - name: Upload SARIF (Config)
-        if: always() && ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        if: ${{ always() && hashFiles('Dockerfile', '**/Dockerfile') != '' }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-config.sarif
 
       - name: Upload SARIF (Image)
-        if: always() && ${{ hashFiles('Dockerfile', '**/Dockerfile') != '' }}
+        if: ${{ always() && hashFiles('Dockerfile', '**/Dockerfile') != '' }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-image.sarif
