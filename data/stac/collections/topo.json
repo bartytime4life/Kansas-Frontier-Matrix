@@ -1,0 +1,65 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "topo",
+  "title": "Kansas Frontier Matrix — Topographic & Elevation Collection",
+  "description": "Historic USGS topo sheets, statewide DEMs, and derived terrain (hillshade, slope, aspect, contours) for Kansas. Time-aware where applicable (map survey/publication year; DEM vintage).",
+  "keywords": ["Kansas", "USGS", "topographic", "DEM", "hillshade", "slope", "aspect", "contours", "historic maps", "COG", "GeoJSON"],
+  "license": "public-domain",
+  "providers": [
+    {
+      "name": "USGS National Map / Historical Topo Map Collection",
+      "roles": ["producer", "licensor"],
+      "url": "https://www.usgs.gov/programs/national-geospatial-program/historical-topographic-maps-preserving-past"
+    },
+    {
+      "name": "Kansas DASC / KARS",
+      "roles": ["host", "processor"],
+      "url": "https://data.kansasgis.org/"
+    },
+    {
+      "name": "Kansas Frontier Matrix",
+      "roles": ["processor", "host"],
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    }
+  ],
+  "extent": {
+    "spatial": {
+      "bbox": [[-102.051, 36.993, -94.588, 40.003]]
+    },
+    "temporal": {
+      "interval": [["1880-01-01T00:00:00Z", null]]
+    }
+  },
+  "summaries": {
+    "proj:epsg": [4326],
+    "gsd": [1.0, 10.0, 30.0],
+    "platform": ["LiDAR", "NED", "historic-maps"],
+    "file:byte_order": ["little"]
+  },
+  "item_assets": {
+    "image": {
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "overlay"],
+      "title": "COG GeoTIFF"
+    },
+    "vector": {
+      "type": "application/geo+json",
+      "roles": ["data", "overlay"],
+      "title": "GeoJSON Vector"
+    },
+    "thumbnail": {
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "PNG thumbnail"
+    }
+  },
+  "assets": {},
+  "links": [
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json"
+    }
+  ]
+}
