@@ -2,13 +2,15 @@
   "id": "groundwater_levels",
   "title": "USGS NWIS Groundwater Levels (Kansas)",
   "type": "collection",
-  "description": "Groundwater level observations from USGS NWIS for Kansas wells (stateCd=ks). Includes historical and current measurements.",
+  "description": "Groundwater level observations from USGS NWIS for Kansas wells (stateCd=ks). Includes historical and current measurements joined to well coordinates.",
   "period": "1900-2025",
   "bbox": [-102.05, 36.99, -94.61, 40.00],
+  "crs": "EPSG:4326",
   "urls": [
     "https://waterservices.usgs.gov/nwis/gwlevels?format=rdb&stateCd=ks",
     "https://waterservices.usgs.gov/nwis/gwlevels?format=json&stateCd=ks",
-    "https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=ks&siteType=GW"
+    "https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=ks&siteType=GW",
+    "https://waterservices.usgs.gov/nwis/site/?format=json&stateCd=ks&siteType=GW"
   ],
   "license": {
     "name": "Public Domain (USGS)",
@@ -16,16 +18,50 @@
   },
   "provenance": {
     "attribution": "USGS National Water Information System (NWIS)",
-    "retrieved": "2025-09-27T00:00:00Z",
-    "notes": "Primary data: gwlevels RDB/JSON; optional site catalog for mapping well locations. Downstream steps convert to point features with timeseries linkage."
+    "notes": "Primary time series from gwlevels (RDB/JSON). Site catalog used to map well locations and attributes. ETL joins on site_no.",
+    "documentation": "https://waterservices.usgs.gov/rest/GW-Levels-Service.html"
   },
+  "retrieved": "2025-09-27T00:00:00Z",
   "keywords": [
     "groundwater",
     "water levels",
     "wells",
     "Kansas",
     "USGS",
-    "NWIS"
+    "NWIS",
+    "timeseries"
   ],
-  "confidence": 0.95
+  "confidence": 0.95,
+
+  "transform": {
+    "class": "nwis_gwlevels",
+    "time_series": {
+      "format": "rdb",
+      "primary_url": "https://waterservices.usgs.gov/nwis/gwlevels?format=rdb&stateCd=ks",
+      "datetime_field": "lev_dt",
+      "value_field": "lev_va",
+      "site_id_field": "site_no",
+      "units_field": "lev_units",
+      "remarks_field": "lev_acy_cd"
+    },
+    "sites": {
+      "format": "rdb",
+      "primary_url": "https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=ks&siteType=GW",
+      "site_id_field": "site_no",
+      "lat_field": "dec_lat_va",
+      "lon_field": "dec_long_va",
+      "elev_field": "alt_va",
+      "datum_field": "alt_datum_cd"
+    },
+    "join": {
+      "left": "time_series.site_no",
+      "right": "sites.site_no",
+      "how": "inner"
+    },
+    "outputs": {
+      "points_geojson": "data/processed/hydro/groundwater_wells_ks.geojson",
+      "timeseries_parquet": "data/processed/hydro/groundwater_levels_ks.parquet"
+    },
+    "notes": "After join, emit well points with latest measurement for mapping, and a long timeseries table for analytics."
+  }
 }
