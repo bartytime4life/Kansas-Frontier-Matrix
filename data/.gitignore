@@ -3,20 +3,38 @@
 # ============================================================
 
 # -----------------------------
+# 0) Notes
+# -----------------------------
+# - This file applies ONLY to the data/ subtree.
+# - Ephemeral staging (tmp/, work/) stays untracked by default.
+# - Canonical inputs/outputs live under sources/, cogs/, processed/, derivatives/, stac/.
+# - STAC, manifests, checksums, and small descriptors remain tracked for CI/docs.
+
+# -----------------------------
 # 1) Generated / ephemeral dirs
 # -----------------------------
 work/**
 tmp/**
 cache/**
 _cache/**
-tiles/**
+tiles/**          # web tiles (generated)
+staging/**        # optional local staging area
+joins/**          # ad-hoc merges
+ocr/**            # raw OCR dumps
+logs/**
 
 # Keep readmes/keepers if present
+!work/README.md
 !work/**/README.md
+!tmp/README.md
 !tmp/**/README.md
 !cache/**/README.md
 !_cache/**/README.md
 !tiles/**/README.md
+!staging/**/README.md
+!joins/**/README.md
+!ocr/**/README.md
+!logs/**/README.md
 !**/.gitkeep
 
 # ------------------------------------
@@ -24,15 +42,40 @@ tiles/**
 #    Keep catalogs + metadata in git
 # ------------------------------------
 processed/**
-!processed/**/
-!processed/**/_meta.json
+!processed/**/           # keep folder structure
 !processed/**/README.md
-!processed/**/*.meta.json
+# Allow small, curated sidecars only:
+!processed/**/*_meta.json
+!processed/**/*manifest*.json
+!processed/**/*.stac.json
 !processed/**/*.sha256
-!processed/**/*.json
+!processed/**/*.csv
+!processed/**/*.tsv
 
 # ------------------------------------
-# 3) Tool detritus / scratch files
+# 3) Heavy/binary data buckets
+#    (track via STAC; don't commit blobs)
+# ------------------------------------
+cogs/**
+derivatives/**
+raw/**
+
+# Keep minimal docs/sidecars in these buckets
+!cogs/**/
+!derivatives/**/
+!raw/**/
+!cogs/**/README.md
+!derivatives/**/README.md
+!raw/**/README.md
+!cogs/**/*.sha256
+!derivatives/**/*.sha256
+!raw/**/*.sha256
+!cogs/**/*_meta.json
+!derivatives/**/*_meta.json
+!raw/**/*_meta.json
+
+# ------------------------------------
+# 4) GIS/tool detritus / scratch files
 # ------------------------------------
 # GDAL/OGR & raster/vector sidecars (recreatable)
 *.ovr
@@ -45,13 +88,46 @@ processed/**
 *.lock
 *.vrt
 
+# Common raster formats (avoid accidental commits)
+*.tif
+*.tiff
+*.geotiff
+*.img
+*.jp2
+*.sid
+
+# Common vector bundles (prefer GeoJSON or vector tiles artifacts via STAC)
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.qpj
+*.sbn
+*.sbx
+*.gpkg
+*.gpkg-shm
+*.gpkg-wal
+*.fgb
+*.gml
+*.dxf
+*.dwg
+*.gdb/
+*.gdb/**
+
+# Tile caches & bundles
+*.mbtiles
+*.pmtiles
+*.pbf
+*.mvt
+
 # Spatial/DB temp & journals
+*.sqlite
+*.sqlite3
 *.sqlite-journal
 *-journal
 *-wal
 *-shm
-*.gpkg-shm
-*.gpkg-wal
 
 # Notebook & Python cache
 .ipynb_checkpoints/
@@ -62,21 +138,23 @@ __pycache__/
 Thumbs.db
 
 # ------------------------------------
-# 4) Archives staged for import
-#    Prefer committing via LFS,
-#    so don’t ignore by default.
+# 5) Archives staged for import
+#    Prefer LFS or fetch scripts; don't ignore globally.
 # ------------------------------------
-# (If you need a throwaway staging area, use data/tmp/ or data/work/)
+# If you need a throwaway staging area, use data/tmp/ or data/work/
 # Uncomment below to ignore bulk archives placed directly under data/
 # *.zip
 # *.7z
 # *.tar
 # *.tar.gz
+# *.rar
 
 # ------------------------------------
-# 5) NEVER ignore curated descriptors
-#    (these stay tracked for CI & docs)
+# 6) STAC, configs, and curated descriptors — ALWAYS tracked
 # ------------------------------------
+!stac/**
+
+# Curated descriptors and lightweight data definitions
 !**/*.kml
 !**/*.kmz
 !**/*.geojson
