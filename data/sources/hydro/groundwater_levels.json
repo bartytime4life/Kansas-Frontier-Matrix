@@ -1,0 +1,31 @@
+{
+  "id": "groundwater_levels",
+  "title": "USGS NWIS Groundwater Levels (Kansas)",
+  "type": "collection",
+  "description": "Groundwater level observations from USGS NWIS for Kansas wells (stateCd=ks). Includes historical and current measurements.",
+  "period": "1900-2025",
+  "bbox": [-102.05, 36.99, -94.61, 40.00],
+  "urls": [
+    "https://waterservices.usgs.gov/nwis/gwlevels?format=rdb&stateCd=ks",
+    "https://waterservices.usgs.gov/nwis/gwlevels?format=json&stateCd=ks",
+    "https://waterservices.usgs.gov/nwis/site/?format=rdb&stateCd=ks&siteType=GW"
+  ],
+  "license": {
+    "name": "Public Domain (USGS)",
+    "url": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"
+  },
+  "provenance": {
+    "attribution": "USGS National Water Information System (NWIS)",
+    "retrieved": "2025-09-27T00:00:00Z",
+    "notes": "Primary data: gwlevels RDB/JSON; optional site catalog for mapping well locations. Downstream steps convert to point features with timeseries linkage."
+  },
+  "keywords": [
+    "groundwater",
+    "water levels",
+    "wells",
+    "Kansas",
+    "USGS",
+    "NWIS"
+  ],
+  "confidence": 0.95
+}
