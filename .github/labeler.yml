@@ -1,0 +1,10 @@
+web:
+  - 'web/**'
+stac:
+  - 'stac/**'
+data:
+  - 'data/**'
+ci:
+  - '.github/**'
+docs:
+  - '**/*.md'
