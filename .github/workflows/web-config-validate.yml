@@ -9,6 +9,7 @@ on:
       - "web/app.config.json"
       - "web/layers.json"
       - "web/config/**/*.json"
+      - "web/data/**/*.json"
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
   pull_request:
@@ -17,6 +18,7 @@ on:
       - "web/app.config.json"
       - "web/layers.json"
       - "web/config/**/*.json"
+      - "web/data/**/*.json"
       - "tests/test_web_configs.py"
       - ".github/workflows/web-config-validate.yml"
 
@@ -60,13 +62,22 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob globstar
-          summary="### JSON syntax check\n"
-          had_any=false
-          fail=0
 
-          check() {
-            local f="$1"
-            had_any=true
+          # Gather all JSONs we care about (config + data)
+          files=()
+          [ -e web/app.config.json ] && files+=("web/app.config.json")
+          [ -e web/layers.json ] && files+=("web/layers.json")
+          for f in web/config/**/*.json; do files+=("$f"); done
+          for f in web/data/**/*.json;   do files+=("$f"); done
+
+          summary="### JSON syntax check\n"
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo -e "${summary}(No web JSON files present)\n" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          fail=0
+          for f in "${files[@]}"; do
             if jq -e . "$f" >/dev/null 2>&1; then
               summary+="- ✅ $f\n"
             else
@@ -74,20 +85,7 @@ jobs:
               echo "::error file=$f::Invalid JSON"
               fail=1
             fi
-          }
-
-          for f in web/app.config.json web/layers.json; do
-            [ -e "$f" ] && check "$f"
           done
-
-          for f in web/config/**/*.json; do
-            [ -e "$f" ] && check "$f"
-          done
-
-          if ! $had_any; then
-            summary+="(No web config JSON files present)\n"
-          fi
-
           echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
@@ -101,10 +99,9 @@ jobs:
       - name: Install schema tooling
         run: |
           python -m pip install --upgrade pip
-          pip install jsonschema==4.* rfc3339-validator rfc3987
+          pip install "jsonschema==4.*" rfc3339-validator rfc3987
 
       # ---------- Validate local JSON Schemas themselves ----------
-      # Ensures web/config/*.schema.json are valid Draft 2020-12 schemas
       - name: Validate local JSON Schemas (metaschema)
         shell: bash
         run: |
@@ -134,8 +131,6 @@ PY
           "${SCHEMAS[@]}"
 
       # ---------- Auto-discover & validate any JSON with $schema ----------
-      # Reads any JSON files (web/app.config.json, web/layers.json, web/config/**/*.json)
-      # that declare a $schema and validates them against local or remote schema.
       - name: Validate files that declare $schema
         shell: bash
         run: |
@@ -143,45 +138,42 @@ PY
           shopt -s nullglob globstar
           python - <<'PY'
 import os, sys, json, pathlib, urllib.parse
-from jsonschema import Draft202012Validator, RefResolver, validate
+from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
-
-ROOTS = ["web/app.config.json", "web/layers.json"]
-ROOTS += [str(p) for p in pathlib.Path("web/config").glob("**/*.json")]
 
 def load_json(p: pathlib.Path):
     return json.loads(p.read_text(encoding="utf-8"))
 
 def resolve_schema_uri(uri: str, base: pathlib.Path):
-    # Handle local paths, file: URIs, and relative paths
     parsed = urllib.parse.urlparse(uri)
     if parsed.scheme in ("http", "https"):
-        # For CI, prefer local schemas; allow remote if needed
         import urllib.request
         with urllib.request.urlopen(uri) as r:
             return json.loads(r.read().decode("utf-8"))
     if parsed.scheme == "file":
         return load_json(pathlib.Path(parsed.path))
-    # relative path (likely local)
     candidate = (base.parent / uri).resolve()
     if candidate.exists():
         return load_json(candidate)
-    # Try treat as absolute repo path
     candidate = pathlib.Path(uri)
     if candidate.exists():
         return load_json(candidate)
     raise FileNotFoundError(f"Schema not found: {uri}")
 
+roots = []
+for p in ["web/app.config.json", "web/layers.json"]:
+    if pathlib.Path(p).exists():
+        roots.append(p)
+roots += [str(p) for p in pathlib.Path("web/config").glob("**/*.json")]
+roots += [str(p) for p in pathlib.Path("web/data").glob("**/*.json")]
+
 errors = 0
 checked = 0
-for s in ROOTS:
+for s in roots:
     p = pathlib.Path(s)
-    if not p.exists():
-        continue
     try:
         data = load_json(p)
     except Exception as e:
-        # jq step should have caught syntax; still guard
         print(f"::error file={p}::Failed to parse JSON: {e}")
         errors += 1
         continue
@@ -190,7 +182,7 @@ for s in ROOTS:
         continue
     try:
         schema = resolve_schema_uri(schema_uri, p)
-        Draft202012Validator.check_schema(schema)  # sanity-check
+        Draft202012Validator.check_schema(schema)
         Draft202012Validator(schema).validate(data)
         print(f"Validated with $schema: {p}")
         checked += 1
@@ -268,7 +260,6 @@ PY
             pip install -r requirements.txt
           fi
           pip install pytest
-          # If project is installable, add it (expose console_scripts/tests helpers)
           if [ -f pyproject.toml ] || [ -f setup.cfg ] || [ -f setup.py ]; then
             pip install -e ".[dev]" || pip install -e .
           fi
