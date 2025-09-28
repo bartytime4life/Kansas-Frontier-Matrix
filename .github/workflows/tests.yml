@@ -57,20 +57,26 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          # ruff if configured
-          if grep -qE '^\[tool\.ruff\]' pyproject.toml 2>/dev/null || [ -f ruff.toml ] || [ -f .ruff.toml ]; then
+          if [ -f pyproject.toml ] && grep -qE '^\[tool\.ruff\]' pyproject.toml; then
+            pip install ruff
+          elif [ -f ruff.toml ] || [ -f .ruff.toml ]; then
             pip install ruff
           fi
-          # black if configured (tool.black block or pyproject present with typical usage)
-          if grep -qE '^\[tool\.black\]' pyproject.toml 2>/dev/null || [ -f pyproject.toml ]; then
+          if [ -f pyproject.toml ] && grep -qE '^\[tool\.black\]' pyproject.toml; then
+            pip install black
+          elif [ -f pyproject.toml ]; then
+            # many repos still use black without explicit tool block
             pip install black
           fi
 
-      - name: Ruff (if configured)
+      - name: Ruff (if installed)
         shell: bash
         run: |
           set -euo pipefail
-          if python -c "import importlib; importlib.import_module('ruff')" 2>/dev/null; then
+          if python - <<'PY' 2>/dev/null; then
+import importlib; importlib.import_module('ruff'); print('ok')
+PY
+          then
             echo "::group::ruff check"
             ruff --version
             ruff check .
@@ -79,17 +85,20 @@ jobs:
             echo "No ruff config; skipping."
           fi
 
-      - name: Black --check (if configured)
+      - name: Black --check (if installed)
         shell: bash
         run: |
           set -euo pipefail
-          if python -c "import importlib; importlib.import_module('black')" 2>/dev/null; then
+          if python - <<'PY' 2>/dev/null; then
+import importlib; importlib.import_module('black'); print('ok')
+PY
+          then
             echo "::group::black --check"
             black --version
             black --check .
             echo "::endgroup::"
           else
-            echo "No black config; skipping."
+            echo "No black detected; skipping."
           fi
 
   typecheck:
@@ -112,8 +121,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if grep -qE '^\[tool\.mypy\]' pyproject.toml 2>/dev/null || [ -f mypy.ini ] || [ -f setup.cfg ] && grep -q '\[mypy\]' setup.cfg 2>/dev/null; then
-            python -m pip install --upgrade pip
+          python -m pip install --upgrade pip
+          need=false
+          if [ -f pyproject.toml ] && grep -qE '^\[tool\.mypy\]' pyproject.toml; then need=true; fi
+          if [ -f mypy.ini ]; then need=true; fi
+          if [ -f setup.cfg ] && grep -q '^\[mypy\]' setup.cfg; then need=true; fi
+          if $need; then
             pip install mypy
           else
             echo "No mypy configuration detected; skipping install."
@@ -123,12 +136,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if python -c "import importlib; importlib.import_module('mypy')" 2>/dev/null; then
+          if python - <<'PY' 2>/dev/null; then
+import importlib; importlib.import_module('mypy'); print('ok')
+PY
+          then
             mypy --version
-            # Default to src/ if present, otherwise the repo root.
-            TARGETS="src"
+            TARGETS=""
+            [ -d src ] && TARGETS="$TARGETS src"
             [ -d tests ] && TARGETS="$TARGETS tests"
             [ -d scripts ] && TARGETS="$TARGETS scripts"
+            [ -z "$TARGETS" ] && TARGETS="."
             mypy $TARGETS
           else
             echo "mypy not installed; skipping."
@@ -172,7 +189,7 @@ jobs:
           need=false
           for f in requirements*.txt pyproject.toml; do
             [ -f "$f" ] || continue
-            if grep -Eiq '(^|[[:space:]])(gdal|rasterio|geopandas|fiona|pyproj|rtree|spatialite|shapely)($|[[:space:]])' "$f"; then
+            if grep -Eiq '(gdal|rasterio|geopandas|fiona|pyproj|rtree|spatialite|shapely)' "$f"; then
               need=true; break
             fi
           done
@@ -207,8 +224,7 @@ jobs:
 import sys, importlib
 print("Python:", sys.version.split()[0])
 try:
-    import pytest
-    print("pytest:", pytest.__version__)
+    import pytest; print("pytest:", pytest.__version__)
 except Exception as e:
     print("pytest: not found", e)
 PY
@@ -218,7 +234,10 @@ PY
         run: |
           set -euo pipefail
           mkdir -p .artifacts
-          if python -c "import importlib; importlib.import_module('pytest_cov')" 2>/dev/null; then
+          if python - <<'PY' 2>/dev/null; then
+import importlib; importlib.import_module('pytest_cov'); print('ok')
+PY
+          then
             pytest -q --maxfail=1 --disable-warnings \
               --cov=. --cov-report=xml:.artifacts/coverage.xml \
               --junitxml=.artifacts/pytest-report.xml
@@ -250,7 +269,7 @@ PY
     name: Web (tests + build)
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    if: hashFiles('web/package.json') != ''
+    if: ${{ hashFiles('web/package.json') != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -311,8 +330,10 @@ PY
           set -euo pipefail
           if npm run | grep -qE '^ *build( |:|$)'; then
             npm run build
-            echo "### Web (Node)" >> "$GITHUB_STEP_SUMMARY"
-            echo "- Built successfully" >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo "### Web (Node)"
+              echo "- Built successfully"
+            } >> "$GITHUB_STEP_SUMMARY"
           else
             echo "No build script; skipping."
           fi
