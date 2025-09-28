@@ -38,6 +38,11 @@ jobs:
         uses: actions/checkout@v4
         with: { fetch-depth: 0 }
 
+      - name: Install system tools (jq, rsync)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends jq rsync
+
       # --------------------------------------------------------------
       # Optional: Makefile path (uses your validated targets)
       # --------------------------------------------------------------
@@ -128,7 +133,7 @@ PY
             echo "has_pkgjson=false" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node (only if building a JS app)
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson == 'true'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -136,14 +141,14 @@ PY
           cache-dependency-path: ${{ steps.detect_tool.outputs.lock }}
 
       - name: Install pnpm (if selected)
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'pnpm'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'pnpm' }}
         run: npm i -g pnpm@9
 
       # --------------------------------------------------------------
       # Build web app OR copy static site
       # --------------------------------------------------------------
       - name: Build web (npm)
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'npm'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'npm' }}
         working-directory: web
         run: |
           set -euo pipefail
@@ -151,7 +156,7 @@ PY
           if npm run | grep -qE '^ *build( |:|$)'; then npm run build; else echo "::error::No build script in web/package.json"; exit 1; fi
 
       - name: Build web (yarn)
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'yarn'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'yarn' }}
         working-directory: web
         run: |
           set -euo pipefail
@@ -160,7 +165,7 @@ PY
           if yarn run | grep -qE '^ *build( |:|$)'; then yarn build; else echo "::error::No build script in web/package.json"; exit 1; fi
 
       - name: Build web (pnpm)
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'pnpm'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.pm == 'pnpm' }}
         working-directory: web
         run: |
           set -euo pipefail
@@ -168,7 +173,7 @@ PY
           if pnpm run | grep -qE '^ *build( |:|$)'; then pnpm build; else echo "::error::No build script in web/package.json"; exit 1; fi
 
       - name: Prepare site dir from web build
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson == 'true'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -183,7 +188,7 @@ PY
           fi
 
       - name: Copy static web/ (when no Node build)
-        if: steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson != 'true'
+        if: ${{ steps.made_site.outputs.site_ready != 'true' && steps.detect_tool.outputs.has_pkgjson != 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -199,12 +204,10 @@ PY
       # Fast JSON sanity (STAC & sources) when Makefile isn't used
       # --------------------------------------------------------------
       - name: Validate JSON catalogs (jq quick check)
-        if: steps.prebuild.outputs.has_make == 'false'
+        if: ${{ steps.prebuild.outputs.has_make == 'false' }}
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update -y >/dev/null
-          sudo apt-get install -y jq >/dev/null
           ok=1
           for dir in stac data/sources; do
             if [ -d "$dir" ]; then
