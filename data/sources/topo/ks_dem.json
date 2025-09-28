@@ -1,0 +1,40 @@
+{
+  "id": "ks_dem",
+  "title": "Kansas Statewide DEM (LiDAR 1m + USGS NED 10m)",
+  "type": "raster-dem",
+  "version": "1.0.0",
+  "description": "Digital Elevation Model for Kansas. Primary coverage from 1m LiDAR DEMs (KARS/DASC), supplemented with 10m USGS NED for areas without LiDAR. Provides base elevation for hillshade, slope, aspect, and hydrology derivations.",
+  "temporal": { "start": "2015-01-01", "end": null },
+  "spatial": { "bbox": [-102.051, 36.993, -94.588, 40.003] },
+  "endpoints": [
+    {
+      "type": "http",
+      "role": ["source"],
+      "urls": [
+        "https://services.kansasgis.org/arcgis/rest/services/DEM/Kansas_DEM/ImageServer",
+        "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1/TIFF/current/"
+      ]
+    }
+  ],
+  "lineage": [
+    "Fetched from Kansas DASC/KARS 1m LiDAR ImageServer",
+    "Supplemented with USGS 3DEP 10m NED coverage",
+    "Converted to Cloud-Optimized GeoTIFF (COG)",
+    "Reprojected to EPSG:4326 for web integration"
+  ],
+  "license": "public-domain",
+  "provenance": {
+    "retrieved": "2025-09-21",
+    "checksum_sha256": "placeholder123...",
+    "filesize_bytes": null
+  },
+  "outputs": {
+    "cog": "data/cogs/dem/ks_dem_1m.tif",
+    "hillshade": "data/derivatives/terrain/hillshade.tif",
+    "slope": "data/derivatives/terrain/slope.tif",
+    "aspect": "data/derivatives/terrain/aspect.tif",
+    "contours": "data/derivatives/terrain/contours.json"
+  },
+  "keywords": ["DEM", "LiDAR", "elevation", "Kansas", "terrain", "NED"],
+  "confidence": "high"
+}
