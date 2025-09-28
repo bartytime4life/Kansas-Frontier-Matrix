@@ -4,10 +4,10 @@
 #   pip install -r requirements.txt --constraint constraints.txt
 #
 # Notes:
-# - Raster/geo pins align with manylinux/macos wheels; no system GDAL needed.
-# - NumPy stays on 1.26.x to match rasterio 1.3.x ABI (<2.0).
-# - Adds stac-validator so `stac-validate` is reproducible in CI.
-# - Pins common transitives to avoid resolver churn.
+# - Raster/geo pins match manylinux/macos wheels (no system GDAL required).
+# - NumPy stays on 1.26.x for rasterio 1.3.x ABI compatibility (<2.0).
+# - Pins stac-validator + jsonschema stack so `stac-validate` is reproducible.
+# - Locks common transitives to minimize resolver churn.
 # Tested on Python 3.10 / 3.11 / 3.12.
 # ===========================================================
 
@@ -63,14 +63,13 @@ Pygments==2.18.0
 markdown-it-py==3.0.0
 mdurl==0.1.2
 
-# Windows-only console colors (used by tqdm/rich)
+# Windows-only console colors (tqdm/rich)
 colorama==0.4.6; platform_system == "Windows"
 
-# Typing backport when running on Python < 3.11
+# Typing backport for Python < 3.11
 typing-extensions==4.12.2; python_version < "3.11"
 
 ############################
-# Optional stacks
+# Optional stacks (left unpinned)
 ############################
-# Keep optional/experimental dependencies unpinned here unless needed in CI
-# (e.g., geopandas, pyogrio, rio-tiler, titiler-core, httpx, jinja2)
+# geopandas, pyogrio, rio-tiler, titiler-core, httpx, jinja2, simplekml, etc.
