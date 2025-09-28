@@ -1,0 +1,46 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "vectors_towns",
+  "collection": "culture",
+  "properties": {
+    "start_datetime": "1800-01-01T00:00:00Z",
+    "end_datetime": null,
+    "proj:epsg": 4326,
+    "kfm:source": "Kansas GIS Open Data / County Historical Atlases",
+    "kfm:lineage": "Raw shapefiles/CSVs -> ogr2ogr to GeoJSON (EPSG:4326); optional dedupe/QA; town year attributes for timeline.",
+    "kfm:confidence": "medium"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.051, 36.993],
+      [-94.588, 36.993],
+      [-94.588, 40.003],
+      [-102.051, 40.003],
+      [-102.051, 36.993]
+    ]]
+  },
+  "bbox": [-102.051, 36.993, -94.588, 40.003],
+  "assets": {
+    "vector": {
+      "href": "data/processed/vectors/towns.json",
+      "type": "application/geo+json",
+      "roles": ["data", "overlay"],
+      "title": "Settlements, Towns, Forts (points; time-aware via properties.year)"
+    },
+    "thumbnail": {
+      "href": "data/processed/vectors/thumbnails/towns.png",
+      "type": "image/png",
+      "roles": ["thumbnail"],
+      "title": "Towns overlay thumbnail"
+    }
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "../../collections/culture.json",
+      "type": "application/json"
+    }
+  ]
+}
