@@ -1,26 +1,41 @@
 # Kansas-Frontier-Matrix — Roadmap
 
-This doc mirrors **`.github/roadmap/roadmap.yaml`** and is synced to GitHub **labels, milestones, and issues** via `.github/workflows/roadmap.yml`.
+This doc mirrors **`.github/roadmap/roadmap.yaml`** and is synced to GitHub **labels, milestones, and issues** via **`.github/workflows/roadmap.yml`** (drives `scripts/sync-roadmap.js`).
 
-> 🔁 **PRs** run the sync in **dry-run** (no writes).  
-> ✅ **Pushes to `main`** (or a manual run with `dry_run=false`) **apply** changes.
+> 🔁 **Pull Requests** run the sync in **dry-run** (no writes).  
+> ✅ **Pushes to `main`** (or manual dispatch with `dry_run=false`) **apply** changes.
+
+---
+
+## Contents
+
+- [Milestones (targets)](#milestones-targets)
+- [Milestone 1 — Enrich Data Sources (`m1-data`)](#milestone-1--enrich-data-sources-m1-data)
+- [Milestone 2 — Analytical Enhancements (`m2-analytics`)](#milestone-2--analytical-enhancements-m2-analytics)
+- [Milestone 3 — Storytelling & Education (`m3-story`)](#milestone-3--storytelling--education-m3-story)
+- [Milestone 4 — Technical Enhancements (`m4-tech`)](#milestone-4--technical-enhancements-m4-tech)
+- [Milestone 5 — MCP Integration (`m5-mcp`)](#milestone-5--mcp-integration-m5-mcp)
+- [Label taxonomy (suggested)](#label-taxonomy-suggested)
+- [Working agreements](#working-agreements)
+- [Edit the source roadmap](#edit-the-source-roadmap)
+- [Run the sync locally (optional)](#run-the-sync-locally-optional)
 
 ---
 
 ## Milestones (targets)
 
-| Key            | Title                        | Target date |
-|----------------|------------------------------|-------------|
-| `m1-data`      | Enrich Data Sources          | 2025-10-31  |
-| `m2-analytics` | Analytical Enhancements      | 2025-11-30  |
-| `m3-story`     | Storytelling & Education     | 2025-12-31  |
-| `m4-tech`      | Technical Enhancements       | —           |
-| `m5-mcp`       | MCP Integration              | —           |
+| Key            | Title                     | Target date |
+|----------------|---------------------------|-------------|
+| `m1-data`      | Enrich Data Sources       | 2025-10-31  |
+| `m2-analytics` | Analytical Enhancements   | 2025-11-30  |
+| `m3-story`     | Storytelling & Education  | 2025-12-31  |
+| `m4-tech`      | Technical Enhancements    | —           |
+| `m5-mcp`       | MCP Integration           | —           |
 
 ```mermaid
 flowchart TD
-  M1["Milestone 1\n&quot;Enrich Data Sources&quot; (Oct 31, 2025)"] --> M2["Milestone 2\n&quot;Analytical Enhancements&quot; (Nov 30, 2025)"]
-  M2 --> M3["Milestone 3\n&quot;Storytelling &amp; Education&quot; (Dec 31, 2025)"]
+  M1["Milestone 1\n&quot;Enrich Data Sources&quot;\n(Oct 31, 2025)"] --> M2["Milestone 2\n&quot;Analytical Enhancements&quot;\n(Nov 30, 2025)"]
+  M2 --> M3["Milestone 3\n&quot;Storytelling &amp; Education&quot;\n(Dec 31, 2025)"]
   M3 --> M4["Milestone 4\n&quot;Technical Enhancements&quot;"]
   M4 --> M5["Milestone 5\n&quot;MCP Integration&quot;"]
 ````
@@ -54,7 +69,7 @@ flowchart TD
 **Deliverables**
 
 * `data/sources/paleoclimate.json`
-* STAC items/collections under `stac/collections/*`, `stac/items/*`.
+* STAC collections/items under `stac/collections/*`, `stac/items/*`.
 
 ---
 
@@ -68,7 +83,7 @@ flowchart TD
 **Deliverables**
 
 * `data/sources/hydrology.json`
-* Hydrology STAC wiring under `stac/collections/` & `stac/items/`.
+* Hydrology wired in STAC (`stac/collections/`, `stac/items/`).
 
 ---
 
@@ -79,12 +94,12 @@ flowchart TD
 * [ ] Source: `data/sources/ks_kansas_river.json` (ArcGIS REST + metadata).
 * [ ] STAC: `stac/collections/ks_kansas_river.json` (+ children).
 * [ ] Items: channels/floodplains/gauges under `stac/items/ks_kansas_river/*.json`.
-* [ ] Makefile targets: `hydrology-fetch`, `hydrology-stac` (plus `site` to mirror small vectors to `web/data/**`).
-* [ ] Web config: ensure `ksriv_*` layers exist in `web/app.config.json` **and** fallback `web/layers.json`.
+* [ ] Makefile: `hydrology-fetch`, `hydrology-stac` (plus `site` to mirror vectors to `web/data/**`).
+* [ ] Web config: ensure `ksriv_*` layers in generated `web/app.config.json` and fallback `web/layers.json`.
 
 **Acceptance**
 
-* Layers render in the web viewer; provenance is present in STAC; `make site` shows mirrored `web/data/processed/hydrology/kansas_river/*.geojson`.
+* Layers render in the web viewer; provenance in STAC; `make site` mirrors `web/data/processed/hydrology/kansas_river/*.geojson`.
 
 **Directories touched**
 
@@ -274,7 +289,7 @@ flowchart TD
 
 **Acceptance**
 
-* SOPs followed by CI checks.
+* SOPs enforced by CI checks.
 
 ---
 
@@ -313,7 +328,7 @@ flowchart TD
 * **Each Milestone → GitHub Milestone.**
 * **Each Issue → GitHub Issue**, linked to a milestone (auto-synced).
 * **Tasks** are the issue checklist items.
-* **Experiments** live in `mcp/experiments/`; **model cards** in `mcp/model_cards/`; **SOPs** in `mcp/sops/`.
+* **Experiments** in `mcp/experiments/`; **model cards** in `mcp/model_cards/`; **SOPs** in `mcp/sops/`.
 
 **Propose new work:** open an Issue using `.github/ISSUE_TEMPLATE/`
 — Bug: `bug_report.md`, Data: `data_addition.md`, Experiment: `experiment_report.md`.
