@@ -2,11 +2,14 @@
 name: "🧪 Experiment Report"
 about: "Plan, run, and log a reproducible experiment (MCP-grade)"
 title: "[EXP] <concise title>"
-labels: ["MCP", "reproducibility"]
+labels: ["mcp", "reproducibility", "experiment"]
 assignees: []
 ---
 
-> Fill this out when proposing **and** after completing an experiment. Keep it copy-paste runnable and deterministic.
+> Use this template when **planning and completing** an experiment.  
+> Keep everything **deterministic** and **copy–paste runnable**.
+
+---
 
 ## 0) Metadata
 
@@ -15,15 +18,15 @@ assignees: []
 - **Status**: ☐ Planned ☐ Running ☐ Completed ☐ Abandoned
 - **Scope areas**: `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`
 - **Related issues/PRs**: Fixes #…, Closes #…, Relates #…
-- **Milestone**: `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp` (if applicable)
+- **Milestone**: `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp`
 
 ---
 
 ## 1) Objective / Hypothesis
 
-**Question** — What are we trying to learn/compare?  
-**Hypothesis** — What outcome do you expect and why?  
-**Success criteria** — Define “good” up-front (metrics, visuals, thresholds).
+- **Question** — What are we trying to learn/compare?  
+- **Hypothesis** — What outcome do you expect and why?  
+- **Success criteria** — Metrics/thresholds/visuals that define “good”.
 
 ---
 
@@ -37,32 +40,28 @@ assignees: []
 
 **Sanity checks**
 ```bash
-# JSON & STAC validation (best-effort)
-make stac-validate || true
-
-# Optional: config pack validation for web UI
-make config-validate || true
+make stac-validate     # validate STAC items/collections
+make config-validate   # optional: validate web/config/*.json
 ````
 
 ---
 
 ## 3) Methods / Protocol (SOP)
 
-* **Design** — controls, treatments, parameters to sweep
-* **SOP links** — `mcp/sops/<doc>.md` (add/update if new)
+* **Design** — controls, treatments, parameter sweeps
+* **SOP links** — `mcp/sops/<doc>.md`
 * **Randomness** — seeds, sampling rules
-* **Assumptions / constraints** — be explicit
+* **Assumptions / constraints** — note explicitly
 
 **Commands to reproduce (canonical)**
 
 ```bash
-# Prefer Make targets for determinism
-make fetch           # if new sources are referenced
+make fetch           # fetch new sources (if needed)
 make cogs            # build COGs
-make terrain         # hillshade/slope/aspect (COGs)
-make stac            # (re)generate STAC catalog artifacts
-make site            # write fallback web/layers.json and mirror small vectors
-make site-config     # render web/app.config.json from STAC (requires kgt)
+make terrain         # terrain derivatives (hillshade/slope/aspect)
+make stac            # regenerate STAC catalog artifacts
+make site            # fallback layers.json + small vector mirrors
+make site-config     # render web/config/app.config.json (from STAC)
 ```
 
 ---
@@ -72,25 +71,23 @@ make site-config     # render web/app.config.json from STAC (requires kgt)
 * **Host** — local / CI / container
 * **Image / Python** — `python -V` = …, Docker image = …
 * **Hardware** — CPU/GPU, RAM
-* **Key tools** — `rasterio`, `gdal`, `jinja2`, `jsonschema`, `kgt --version`
+* **Key tools** — `rasterio`, `gdal`, `jinja2`, `jsonschema`, `kgt`
 
 ```bash
 python -V
-pip freeze | sed -n '1,120p'   # attach full freeze as file if long
+pip freeze > env.txt   # attach file in PR
 ```
 
 ---
 
 ## 5) Variables & Configuration
 
-* **Parameters** — knobs/values (e.g., hillshade azimuth, Z-factor, resampling)
-* **Config files edited** — paths + diffs if relevant
-* **Hash snapshot(s)** (optional)
+* **Parameters** — list knobs (e.g., hillshade azimuth, Z-factor, resampling)
+* **Config files edited** — paths + diffs
+* **Hash snapshot(s)**
 
 ```bash
-mkdir -p build
 git rev-parse HEAD > build/git_sha.txt
-# If large trees: guard errors to keep report generation flowing
 (sha256sum data/cogs/**/* 2>/dev/null || true) | sort > build/artifact_hashes.txt
 ```
 
@@ -98,53 +95,53 @@ git rev-parse HEAD > build/git_sha.txt
 
 ## 6) Results
 
-* **Metrics / counts** — summarize key numbers, tables, or JSON snippets
-* **Visuals** — screenshots or Pages preview link for layers/timeline
-* **Qualitative observations** — artifacts, anomalies, alignment/CRS notes, uncertainty
+* **Metrics** — tables / JSON snippets
+* **Visuals** — screenshots, Pages preview link
+* **Qualitative notes** — anomalies, CRS alignment issues
 
 ---
 
 ## 7) Analysis & Interpretation
 
 * Did results meet success criteria? Why / why not?
-* Threats to validity — sampling bias, georeferencing error, CRS mismatch, etc.
-* Error bars / uncertainty — confidence & how it’s shown in UI
+* Threats to validity — sampling bias, CRS mismatch, georef error
+* Error bars / uncertainty — how shown in outputs/UI
 
 ---
 
 ## 8) Artifacts
 
-* **Generated files (paths)**
+* **Generated files**
 
-  * COGs / derivatives: `data/cogs/**/<file>.tif`
-  * Metadata: `*.meta.json` with `checksum:sha256` / `file:size` in STAC assets
+  * COGs: `data/cogs/**/<file>.tif`
+  * Metadata: `*.meta.json` with `checksum:sha256`, `file:size`
   * Reports: `build/stac_report.json`, `build/metrics.json`
 
-* **Experiment folder** (optional; commit in PR)
+* **Experiment folder** (commit optional)
 
   ```
   mcp/experiments/EXP-YYYYMMDD-<slug>/
-    README.md          # this report
-    commands.sh        # exact commands run
-    env.txt            # freeze
-    figures/           # PNG/SVG
-    artifacts.jsonl    # paths, sizes, hashes
+    README.md
+    commands.sh
+    env.txt
+    figures/
+    artifacts.jsonl
   ```
 
 ---
 
 ## 9) Ethics / Privacy / Legal
 
-* Sensitive locations generalized or withheld? ☐
-* Licenses verified and attributions added? ☐
-* Community/Indigenous data use reviewed if applicable? ☐
+* [ ] Sensitive locations generalized or withheld
+* [ ] Licenses verified / attribution added
+* [ ] Indigenous/community data use reviewed (if applicable)
 
 ---
 
 ## 10) Roll-forward Plan
 
 * Adopt / discard / iterate?
-* **Follow-ups** (open issues to track)
+* **Follow-ups** (convert to issues)
 
   * [ ] …
   * [ ] …
@@ -157,23 +154,22 @@ git rev-parse HEAD > build/git_sha.txt
 
 * [ ] Sources & STAC entries exist and validate
 * [ ] Make targets documented
-* [ ] Seeds / randomness policy set (if applicable)
+* [ ] Seeds/randomness policy set
 
 **Before merging**
 
-* [ ] Results reproducible with the commands above
-* [ ] STAC assets include `checksum:sha256` and `file:size` where applicable
-* [ ] Pages/site updated if visuals changed (`make site` / `make site-config`)
-* [ ] SOP / docs updated (if workflow changed)
+* [ ] Results reproducible with commands above
+* [ ] STAC assets include `checksum:sha256` and `file:size`
+* [ ] Site rebuilt (`make site`, `make site-config`) if visuals changed
+* [ ] SOP/docs updated if workflows changed
 
 ---
 
 ### Attachments
 
-* `build/stac_report.json` (attach file or first 100 lines)
+* `build/stac_report.json` (attach or excerpt)
 * `env.txt` (pip freeze)
-* Screens / figures (PNG/SVG)
-* Logs helpful for reproducing
+* Figures (PNG/SVG)
+* Logs or console output helpful for reproducibility
 
-```
 ```
