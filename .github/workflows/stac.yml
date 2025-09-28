@@ -65,8 +65,15 @@ jobs:
               fail=1
             fi
           }
-          for f in web/app.config.json web/layers.json web/config/**/*.json; do [ -e "$f" ] && check "$f"; done
-          for f in stac/**/*.json; do [ -e "$f" ] && check "$f"; done
+          for f in web/app.config.json web/layers.json; do
+            [ -e "$f" ] && check "$f"
+          done
+          for f in web/config/**/*.json web/data/**/*.json; do
+            [ -e "$f" ] && check "$f"
+          done
+          for f in stac/**/*.json; do
+            [ -e "$f" ] && check "$f"
+          done
           echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
           exit $fail
 
@@ -113,7 +120,7 @@ PY
             echo "::notice::No local schemas found; skipping metaschema validation."
             exit 0
           fi
-          python - <<'PY'
+          python - <<'PY' "${SCHEMAS[@]}"
 import sys, json, pathlib
 from jsonschema.validators import Draft202012Validator
 errors = 0
@@ -127,7 +134,6 @@ for sp in map(pathlib.Path, sys.argv[1:]):
         errors += 1
 sys.exit(errors)
 PY
-          "${SCHEMAS[@]}"
 
       # ---------- Detect renderer ----------
       - name: Detect renderer/CLI
@@ -145,6 +151,7 @@ ok = any([
 ])
 sys.exit(0 if ok else 3)
 PY
+          then
             echo "renderer=module" >> "$GITHUB_OUTPUT"
           else
             echo "renderer=none" >> "$GITHUB_OUTPUT"
@@ -182,7 +189,13 @@ PY
                 stac-validator "$f" >> .artifacts/stac_validator.txt 2>&1 || ok=0
               done < <(find stac -type f -name '*.json' -print0 | sort -z)
               set -e
-              [ $ok -eq 1 ] && summary+="- ✅ stac/**/*.json\n" || { summary+="- ❌ stac/**/*.json (see artifact)\n"; echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"; exit 2; }
+              if [ $ok -eq 1 ]; then
+                summary+="- ✅ stac/**/*.json\n"
+              else
+                summary+="- ❌ stac/**/*.json (see artifact)\n"
+                echo -e "$summary" >> "$GITHUB_STEP_SUMMARY"
+                exit 2
+              fi
             fi
           else
             echo "stac-validator not available; using pystac fallback…"
@@ -231,11 +244,13 @@ for jf in sorted(root.rglob("*.json")):
         doc = json.loads(jf.read_text(encoding="utf-8"))
     except Exception:
         continue
-    for _, item in (doc.get("assets") or {}).items():
+    assets = doc.get("assets") or {}
+    for _, item in assets.items():
         href = item.get("href")
-        if not href: continue
+        if not href:
+            continue
         # Only check local relative/absolute paths (skip http/https/s3/etc.)
-        if "://" in href: 
+        if "://" in href:
             continue
         p = (jf.parent / href).resolve()
         if not p.exists():
@@ -243,7 +258,6 @@ for jf in sorted(root.rglob("*.json")):
             missing.append(str(p))
             continue
         # Optional checksum check when present
-        # STAC best practice: item['assets'][k]['checksum:sha256']
         for key in ("checksum:sha256", "file:checksum"):
             if key in item:
                 val = item[key]
@@ -254,8 +268,8 @@ for jf in sorted(root.rglob("*.json")):
                         bad_sum.append(str(p))
                 break
 status = 0
-if missing: status = 2
-if bad_sum: status = 2
+if missing or bad_sum:
+    status = 2
 sys.exit(status)
 PY
 
@@ -265,26 +279,22 @@ PY
         shell: bash
         run: |
           set -euo pipefail
-          case "${{ steps.detect_cli.outputs.renderer }}" in
-            kgt)
-              kgt render-config --stac stac/items --output web/app.config.json --pretty
-              ;;
-            module)
-              # Prefer canonical module path; fallback to src.-prefixed
-              if python -c "import kansas_geo_timeline.cli" 2>/dev/null; then
-                python -m kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
-              else
-                python -m src.kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
-              fi
-              ;;
-            *)
-              if [ -f web/app.config.json ]; then
-                echo "::notice title=Renderer unavailable::Using existing web/app.config.json"
-              else
-                echo "::notice title=No renderer::Skipping render step"
-              fi
-              ;;
-          esac
+          renderer="${{ steps.detect_cli.outputs.renderer }}"
+          if [ "$renderer" = "kgt" ]; then
+            kgt render-config --stac stac/items --output web/app.config.json --pretty
+          elif [ "$renderer" = "module" ]; then
+            if python -c "import kansas_geo_timeline.cli" 2>/dev/null; then
+              python -m kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
+            else
+              python -m src.kansas_geo_timeline.cli render-config --stac stac/items --output web/app.config.json --pretty
+            fi
+          else
+            if [ -f web/app.config.json ]; then
+              echo "::notice title=Renderer unavailable::Using existing web/app.config.json"
+            else
+              echo "::notice title=No renderer::Skipping render step"
+            fi
+          fi
           if [ -f web/app.config.json ]; then
             jq -e . web/app.config.json >/dev/null
             echo "### Render" >> "$GITHUB_STEP_SUMMARY"
