@@ -1,3 +1,4 @@
+---
 name: "🧩 Data Addition Request"
 about: "Propose a new dataset (map, layer, catalog, or document set) for Kansas-Frontier-Matrix"
 title: "[DATA] <concise dataset name>"
