@@ -25,7 +25,7 @@ defaults:
     estimate: M
 
 # ------------------------------------------------------------------------------
-# Labels (idempotent)
+# Labels (idempotent) — will be created/updated by name/color/description
 # ------------------------------------------------------------------------------
 
 labels:
