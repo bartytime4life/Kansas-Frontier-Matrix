@@ -4,21 +4,23 @@ This folder contains **guided templates** for filing issues with strong
 **reproducibility** and **data provenance** signals (MCP style).  
 Templates ship with sensible defaults and auto-labels to speed up triage.
 
+> Template visibility is configured in [`config.yml`](./config.yml).
+
 ---
 
 ## 📦 Available templates
 
 - **[`bug_report.md`](./bug_report.md)** — Something broke in the site, data pipeline, AI reasoning, or docs.  
-  Auto-labels: `bug`, `triage`  
-  Includes: env block, logs, STAC/DVC/LFS pointers, geospatial context.
+  **Auto-labels:** `bug`, `needs-triage`  
+  **Includes:** env block, logs, STAC/DVC/LFS pointers, geospatial context.
 
 - **[`data_addition.md`](./data_addition.md)** — Propose a new dataset (map/layer/catalog/docs).  
-  Auto-labels: `data`, `enhancement`, `stac`, `web`  
-  Includes: license/provenance, CRS/extent/time, STAC/Source stub, storage plan (DVC/LFS).
+  **Auto-labels:** `data`, `enhancement`, `stac`, `catalog`  
+  **Includes:** license/provenance, CRS/extent/time, STAC/Source stub, storage plan (DVC/LFS).
 
 - **[`experiment_report.md`](./experiment_report.md)** — Plan and log a deterministic experiment (MCP).  
-  Auto-labels: `MCP`, `reproducibility`  
-  Includes: hypothesis, SOP/commands, env freeze, artifacts, success criteria.
+  **Auto-labels:** `mcp`, `reproducibility`, `experiment`  
+  **Includes:** hypothesis, SOP/commands, env freeze, artifacts, success criteria.
 
 > If you don’t see a fit, open a minimal **bug** or **data** issue and we’ll retag.
 
@@ -29,11 +31,12 @@ Templates ship with sensible defaults and auto-labels to speed up triage.
 Roadmap-managed labels live in **[`.github/roadmap/roadmap.yaml`](../roadmap/roadmap.yaml)**.  
 Common areas:
 
-`data`, `hydrology`, `paleoclimate`, `ai`, `uncertainty`, `ontology`, `fractals`,  
-`storytelling`, `crowdsourcing`, `3d`, `api`, `architecture`, `reproducibility`, `MCP`, `education`
+`data`, `hydrology`, `paleoclimate`, `ai`, `uncertainty`, `ontology`,  
+`storytelling`, `crowdsourcing`, `3d`, `api`, `architecture`, `reproducibility`, `mcp`, `education`
 
 GitHub defaults like `bug`, `enhancement` are used by templates.  
-If your repo does not have a label referenced by a template, add it in the roadmap file or once in the UI.
+If your repo does not have a label referenced by a template, add it to
+[`labels.yml`](../labels.yml) (and sync) or create it once in the UI.
 
 ---
 
@@ -82,7 +85,7 @@ jq -e 'type=="object"' path/to/*.json
 
 ```markdown
 ---
-name: "✨ Feature request"
+name: "✨ Feature Request"
 about: "Propose a new capability for the KFM stack"
 title: "[FEAT] <concise title>"
 labels: ["enhancement"]
@@ -97,14 +100,15 @@ assignees: []
    * Risks / rollbacks
    * Repro commands or integration points (web config, STAC, Make targets)
 
-> After adding labels referenced by a new template, consider updating
-> [`roadmap.yaml`](../roadmap/roadmap.yaml) so the sync job can create them consistently.
+> After adding labels referenced by a new template, update
+> [`labels.yml`](../labels.yml) (and optionally [`roadmap.yaml`](../roadmap/roadmap.yaml))
+> so automation can create/sync them consistently.
 
 ---
 
 ## 🤖 Automation cues
 
-* **Roadmap sync** (`roadmap.yml`) may add/normalize labels & milestones.
+* **Roadmap sync** workflow may add/normalize labels & milestones.
 * **CI runs**:
 
   * `site.yml` — build & deploy Pages
