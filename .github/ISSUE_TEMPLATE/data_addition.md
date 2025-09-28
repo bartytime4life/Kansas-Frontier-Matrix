@@ -1,8 +1,7 @@
----
-name: "🧩 Data addition request"
+name: "🧩 Data Addition Request"
 about: "Propose a new dataset (map, layer, catalog, or document set) for Kansas-Frontier-Matrix"
 title: "[DATA] <concise dataset name>"
-labels: ["data", "enhancement", "stac", "web"]
+labels: ["data", "enhancement", "stac", "catalog"]
 assignees: []
 ---
 
@@ -32,7 +31,7 @@ assignees: []
 - **File(s) / endpoints**: list URLs or API queries  
 - **Estimated size**: per-file and total  
 - **Proposed storage**: **DVC** (preferred for large data) / **Git LFS** / small in-repo  
-- **Checksum(s)**: md5/sha256 if available  
+- **Checksum(s)**: sha256 if available  
 - **Mirroring needed?** yes/no (explain)
 
 > Large rasters/vectors should use **DVC/LFS**, not plain Git.
@@ -47,7 +46,7 @@ assignees: []
 - **Resolution / scale**: e.g., 1 m DEM, 1:24k topo  
 - **Spatial extent (bbox)**: `minx, miny, maxx, maxy`  
 - **Temporal coverage**: single date / range (list years/editions)  
-- **Known quirks**: nodata values, tiling, projection oddities, missing metadata
+- **Known quirks**: nodata values, tiling, projection oddities, metadata gaps
 
 ---
 
@@ -79,7 +78,7 @@ Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**
 }
 ````
 
-**Example Item (single layer/COG)**
+**Example Item**
 
 ```json
 {
@@ -119,11 +118,11 @@ Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**
 ## 6) Integration Plan (Viewer & Config)
 
 * **Timeline placement**: suggested year(s) / range
-* **Legend & category**: symbol in `web/config/legend.json` and group in `web/config/categories.json`
-* **Provenance surface**: attribution string for the UI
-* **Derivatives**: tiles (PNG `{z}/{x}/{y}.png`), hillshade/slope/aspect, thumbnails (if raster)
+* **Legend & category**: symbol in `web/config/legend.json`, group in `web/config/categories.json`
+* **Attribution**: string for UI
+* **Derivatives**: tiles (PNG/JPEG `{z}/{x}/{y}.png`), hillshade/slope/aspect, thumbnails (if raster)
 
-*If you have a suggested layer block for the viewer, paste it:*
+**Optional layer block (viewer wiring):**
 
 ```json
 {
@@ -140,8 +139,6 @@ Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**
 }
 ```
 
-> For rasters in the web app, **serve tiles** (PNG/JPEG). Do **not** point the viewer at raw `.tif`.
-
 ---
 
 ## 7) Validation & Repro Steps (proposed)
@@ -149,24 +146,18 @@ Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**
 **Commands**
 
 ```bash
-# deterministic sequence; prefer Make targets
 make fetch           # if applicable
 make cogs            # COG conversion
 make stac            # (re)generate catalog entries
-make site            # update fallback viewer config + mirror small vectors
-make site-config     # render STAC → web/app.config.json (requires kgt)
+make site            # update fallback viewer config
+make site-config     # render STAC → web/app.config.json
 ```
 
 **Checks**
 
 ```bash
-# STAC validation (kgt or Python validators)
 kgt validate-stac stac/items --no-strict || true
-
-# Config pack validation for viewer
 make config-validate || true
-
-# JSON sanity (quick)
 jq -e 'type == "object"' stac/items/**/*.json
 ```
 
@@ -175,7 +166,7 @@ jq -e 'type == "object"' stac/items/**/*.json
 ## 8) Risks / Constraints
 
 * Licenses / usage restrictions: …
-* Sensitive locations or cultural heritage concerns: …
+* Sensitive locations / heritage concerns: …
 * Data quality / uncertainty notes: …
 
 ---
@@ -190,5 +181,4 @@ jq -e 'type == "object"' stac/items/**/*.json
 * [ ] Validation steps noted (`kgt validate-stac`, `make config-validate`)
 * [ ] UI placement (timeline/legend/category) proposed
 
-```
 ```
