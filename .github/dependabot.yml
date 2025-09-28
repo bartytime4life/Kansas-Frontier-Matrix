@@ -1,4 +1,5 @@
 # .github/dependabot.yml
+# Kansas-Frontier-Matrix — Dependabot configuration (aligned to .github/labels.yml)
 version: 2
 
 updates:
@@ -12,10 +13,10 @@ updates:
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
     rebase-strategy: auto
-    labels: [deps, security, ci]
+    labels: ["dependencies", "security", "ci"]
     groups:
       actions-minor-patch:
-        update-types: [minor, patch]
+        update-types: ["minor", "patch"]
 
   # ── NPM / Node (web client) ──────────────────────────────────────────────────
   - package-ecosystem: npm
@@ -27,16 +28,16 @@ updates:
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
     rebase-strategy: auto
-    labels: [deps, frontend, security]
+    labels: ["dependencies", "security", "web"]
     versioning-strategy: increase
     groups:
       web-minor-patch:
         patterns: ["*"]
-        update-types: [minor, patch]
+        update-types: ["minor", "patch"]
     ignore:
       # Hold back major MapLibre jumps until manually tested
       - dependency-name: maplibre-gl
-        update-types: [version-update:semver-major]
+        update-types: ["version-update:semver-major"]
 
   # ── Python (pip / backend & tooling) ─────────────────────────────────────────
   - package-ecosystem: pip
@@ -48,15 +49,15 @@ updates:
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
     rebase-strategy: auto
-    labels: [deps, python, security]
+    labels: ["dependencies", "security"]
     groups:
       python-minor-patch:
         patterns: ["*"]
-        update-types: [minor, patch]
+        update-types: ["minor", "patch"]
     ignore:
       # Pin GDAL major jumps until CI base images/toolchains are updated
-      - dependency-name: GDAL
-        update-types: [version-update:semver-major]
+      - dependency-name: gdal
+        update-types: ["version-update:semver-major"]
 
   # ── Docker (container builds) ────────────────────────────────────────────────
   - package-ecosystem: docker
@@ -68,11 +69,11 @@ updates:
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
     rebase-strategy: auto
-    labels: [deps, docker, security]
+    labels: ["dependencies", "security"]
     groups:
       docker-minor-patch:
         patterns: ["*"]
-        update-types: [minor, patch]
+        update-types: ["minor", "patch"]
 
   # ── Security fast-lane (daily advisory-based bumps) ──────────────────────────
   - package-ecosystem: github-actions
@@ -80,7 +81,7 @@ updates:
     schedule:
       interval: daily
       timezone: "America/Chicago"
-    labels: [deps, security, priority]
+    labels: ["dependencies", "security", "ci"]
     commit-message:
       prefix: "chore(security)"
 
@@ -89,7 +90,7 @@ updates:
     schedule:
       interval: daily
       timezone: "America/Chicago"
-    labels: [deps, security, priority]
+    labels: ["dependencies", "security", "web"]
     commit-message:
       prefix: "chore(security)"
 
@@ -98,7 +99,7 @@ updates:
     schedule:
       interval: daily
       timezone: "America/Chicago"
-    labels: [deps, security, priority]
+    labels: ["dependencies", "security"]
     commit-message:
       prefix: "chore(security)"
 
@@ -106,6 +107,7 @@ updates:
     directory: /
     schedule:
       interval: daily
-    labels: [deps, security, priority]
+      timezone: "America/Chicago"
+    labels: ["dependencies", "security"]
     commit-message:
       prefix: "chore(security)"
