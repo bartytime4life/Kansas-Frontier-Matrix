@@ -1,24 +1,24 @@
 ---
-name: "🐞 Bug report"
+name: "🐞 Bug Report"
 about: "Report a reproducible problem in the site, data pipeline, AI reasoning, or docs"
 title: "[BUG] <short summary>"
-labels: ["bug", "triage"]
+labels: ["bug", "needs-triage"]
 assignees: []
 ---
 
-## Summary
+## 📝 Summary
 
 **What happened?**  
 _A clear, concise description of the problem._
 
 **Where did it happen?**  
-- Area: `web UI` | `data pipeline` | `NLP/AI` | `GIS layer` | `docs` | `CI`
+- Area: `web` | `data pipeline` | `NLP/AI` | `GIS layer` | `docs` | `ci`
 - Path (if code): `web/...`, `scripts/...`, `src/...`, `mcp/...`
-- URL (if Pages): <link to live page / map view>
+- URL (if Pages): <link to live map/viewer page>
 
 ---
 
-## Steps to Reproduce
+## 🔁 Steps to Reproduce
 
 1. …
 2. …
@@ -28,14 +28,14 @@ _A clear, concise description of the problem._
 _What you thought would happen._
 
 **Actual behavior**  
-_What actually happened (include messages, screenshots)._
+_What actually happened (include error messages, screenshots)._
 
 ---
 
-## Environment
+## 💻 Environment
 
 - OS: macOS | Linux | Windows
-- Browser (if UI): Chrome | Firefox | Safari (version)
+- Browser (if UI): Chrome | Firefox | Safari — version
 - Python: `python --version`
 - Node (if web build): `node -v` / `npm -v`
 - GDAL: `gdalinfo --version`
@@ -45,48 +45,48 @@ _What actually happened (include messages, screenshots)._
 
 ---
 
-## Data & Reproducibility (MCP/DVC)
+## 📦 Data & Reproducibility (MCP / DVC)
 
-> ⚠️ **Do not attach large binaries.** Link artifacts or provide IDs.
+⚠️ **Do not attach large binaries.** Link artifacts or provide IDs.
 
-- STAC / sources JSON entry (if applicable):  
-  - File: `stac/items/<file>.json` or `stac/collections/<file>.json` or `data/sources/<file>.json`
-  - Item/Collection ID: `<id>`
-- DVC-tracked artifacts (if used):  
+- **STAC / sources JSON**:  
+  - Path: `stac/items/<id>.json` | `stac/collections/<id>.json` | `data/sources/<file>.json`  
+  - ID: `<id>`
+- **DVC-tracked artifacts**:  
   - `.dvc` file path(s): `data/raw/.../foo.tif.dvc`  
-  - DVC checksum(s): `md5: <hash>`
-- Git LFS (if used): list path(s) to large files managed via LFS.
-- Minimal repro dataset or link (public source / DOI): …
+  - Checksum(s): `md5: <hash>`
+- **Git LFS files**: paths to large files under LFS
+- **Minimal repro dataset**: public URL / DOI if available
 
-**Helpful checks (paste output if relevant):**
+**Helpful checks (optional, paste output):**
 ```bash
-# STAC items quick check (requires kgt, optional)
+# STAC items validation (requires kgt)
 kgt validate-stac stac/items --no-strict || true
 
-# JSON sanity for changed files (optional)
+# JSON sanity check for changed files
 jq -e 'type=="object"' <changed.json>
 ````
 
 ---
 
-## Geospatial Context (if map/data related)
+## 🌍 Geospatial Context (if map/data related)
 
-* Layer/file(s): `data/processed/...` or served tileset ID
+* Layer/file(s): `data/processed/...` or tileset ID
 * Geometry type: raster | vector (points | lines | polygons)
 * CRS: `EPSG:4326` | `EPSG:3857` | other
 * Spatial extent / AOI: bbox or WKT
 * Time slice(s): year(s) / timestamp(s)
-* Styling/config involved: `web/app.config.json` fragments or style snippets
+* Styling/config involved: fragments from `web/config/app.config.json` or style JSON
 
 ---
 
-## Logs / Console / Trace
+## 📜 Logs / Console / Trace
 
 <details>
-<summary>Show logs</summary>
+<summary>Expand logs</summary>
 
-* Browser console (UI bugs): paste or attach text
-* Build logs (Node/GDAL/Python): paste relevant excerpt
+* Browser console (UI bugs): …
+* Build logs (Node/GDAL/Python): …
 * Python traceback (pipeline/AI): …
 * CI run link (if failing in Actions): …
 
@@ -94,37 +94,36 @@ jq -e 'type=="object"' <changed.json>
 
 ---
 
-## Screenshots / Screen recordings
+## 🖼 Screenshots / Recordings
 
-> Redact sensitive info (secrets, precise coordinates of protected sites).
+> Redact sensitive info (secrets, protected site coordinates).
 
 * Image(s): drag & drop or link
 * Short GIF/video (optional): …
 
 ---
 
-## Impact
+## ⚠️ Impact
 
-* Severity: `blocker` | `high` | `medium` | `low`
-* Affected outputs: map layer(s) | docs page | model output | CI job
-* Does it break reproducibility (`make prebuild` / pipeline)? yes/no
-* Regression? If yes, **last known good commit/tag**: …
+* **Severity**: `blocker` | `high` | `medium` | `low`
+* **Affected outputs**: map layer(s) | docs page | model output | CI job
+* **Reproducibility break?** (`make prebuild` / pipeline): yes/no
+* **Regression?** yes/no → last known good commit/tag: …
 
 ---
 
-## Additional Notes / Hypothesis
+## 💡 Additional Notes / Hypothesis
 
 *Any clues, bisect results, suspected commit, or config diffs.*
 
 ---
 
-## Checklist
+## ✅ Checklist
 
 * [ ] Reproduced on **main** at latest commit
-* [ ] Included **exact steps** and **environment**
+* [ ] Included **exact steps** and **environment details**
 * [ ] Linked **STAC/sources** entry or **DVC/LFS IDs** (no big uploads)
 * [ ] Added **logs/screenshots**
-* [ ] Confirmed not a **data license / access** issue
+* [ ] Confirmed not a **data license/access** issue
 
-```
 ```
