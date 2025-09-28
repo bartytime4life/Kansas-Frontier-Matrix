@@ -1,301 +1,213 @@
 # Kansas Geo Timeline — **Time · Terrain · History**
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate & Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
 [![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
-[![Secrets](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/secret-scanning.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/secret-scanning.yml)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](.github/.pre-commit-config.yaml)
-[![Python](https://img.shields.io/badge/python-3.10%2B-brightgreen.svg)](pyproject.toml)
-[![Node](https://img.shields.io/badge/node-18%2B-brightgreen.svg)](package.json)
-[![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg?logo=docker&logoColor=white)](docker/Dockerfile)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](.github/.pre-commit-config.yaml)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](pyproject.toml)
+[![Node](https://img.shields.io/badge/node-18+-green.svg)](package.json)
 [![STAC](https://img.shields.io/badge/STAC-1.0.0-0A7BBB.svg)](stac/catalog.json)
 [![MapLibre](https://img.shields.io/badge/MapLibre-Web%20Viewer-1f6feb.svg)](web/index.html)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A minimal **Google Earth + Web (GitHub Pages)** mapping system for Kansas elevation and historical layers, built around **STAC 1.0.0** and a reproducible Makefile-driven pipeline.  
-Time-aware **MapLibre** viewer, **COG** terrain pipeline, and clean **provenance** via STAC.
+---
+
+## 🌟 What is this?
+
+The **Kansas Geo Timeline** is an open-source system to explore **Kansas’s terrain and history through time**.  
+It combines **scientific-grade geospatial data** with **storytelling layers**:
+
+- Elevation (LiDAR DEM, shaded relief, slope, aspect)  
+- Historic maps (USGS topo scans, overlays)  
+- Cultural & historical layers (treaties, railroads, towns, trails)  
+- Environmental layers (land cover, soils, hydrology, wildfires, tornadoes)  
+
+All datasets are tracked, validated, and published using **STAC 1.0.0**, then rendered via a **MapLibre web viewer** with a **timeline slider** and optional **Google Earth KML/KMZ exports**.
+
+Think of it as a **time-aware atlas + knowledge hub**.
 
 ---
 
-## 📋 Project Metadata
+## 🚀 Live Access
 
-| Component | Minimum / Spec | Key Files | Notes |
-|---|---|---|---|
-| Python | **3.10+** | [`pyproject.toml`](pyproject.toml) · [`requirements.txt`](requirements.txt) | CLI `kgt`, STAC/terrain helpers |
-| Node | **18+** | [`package.json`](package.json) | Roadmap sync utility; web is static |
-| Docker/Compose | Dockerfile + Compose | [`docker/Dockerfile`](docker/Dockerfile) · [`docker-compose.yml`](docker-compose.yml) | Local dev: `site`/`docs` profiles |
-| STAC | **1.0.0** | [`stac/catalog.json`](stac/catalog.json) · [`stac/collections/`](stac/collections) · [`stac/items/`](stac/items) | Catalog → Collections → Items |
-| Web | MapLibre viewer | [`web/index.html`](web/index.html) · [`web/style.css`](web/style.css) · [`web/app.config.json`](web/app.config.json) | Time slider; legend/categories |
-| Web config pack | JSON Schemas | [`web/config/schema.json`](web/config/schema.json) | Validates `legend/categories/sources` |
-| CI | GitHub Actions | [`site.yml`](.github/workflows/site.yml) · [`stac-badges.yml`](.github/workflows/stac-badges.yml) · [`codeql.yml`](.github/workflows/codeql.yml) | Pages build, STAC badges, CodeQL |
-| Quality | Hooks & lint | [`.pre-commit-config.yaml`](.github/.pre-commit-config.yaml) | Ruff, Black, yamllint, prettier, actionlint |
+- 🌐 **Web Viewer**: [MapLibre + Timeline](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)  
+- 🌍 **Google Earth**: [Kansas Terrain KMZ](https://bartytime4life.github.io/Kansas-Frontier-Matrix/earth/Kansas_Terrain.kmz)  
 
 ---
 
-## 🛠 Tech Stack
-
-[![Rasterio](https://img.shields.io/badge/Rasterio-1.3+-yellow.svg)](https://rasterio.readthedocs.io/)
-[![rio-cogeo](https://img.shields.io/badge/rio--cogeo-5+-orange.svg)](https://cogeotiff.github.io/rio-cogeo/)
-[![GDAL](https://img.shields.io/badge/GDAL-3.6+-informational.svg)](https://gdal.org/)
-[![Shapely](https://img.shields.io/badge/Shapely-2.0+-blueviolet.svg)](https://shapely.readthedocs.io/)
-[![PySTAC](https://img.shields.io/badge/PySTAC-1.10+-0A7BBB.svg)](https://pystac.readthedocs.io/)
-[![MapLibre](https://img.shields.io/badge/MapLibre-GL--JS-1f6feb.svg)](https://maplibre.org/)
-
----
-
-## 🌐 Live Demo
-
-- **Web Viewer (MapLibre + Time Slider)** → <https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/>
-- **Google Earth KMZ** → <https://bartytime4life.github.io/Kansas-Frontier-Matrix/earth/Kansas_Terrain.kmz>
-
-> The viewer prefers **`web/app.config.json`** generated from STAC; a **fallback** `web/layers.json` is also written by `make site`.
-
----
-
-## 📑 Data Sources (tracked in `data/sources/`)
-
-> These Shields **endpoint** badges are generated by CI and read JSON under `web/badges/`.  
-> They may 404 until Pages is deployed at least once.
-
-| Status | ID | Title | File | Notes |
-|:--:|--|--|--|--|
-| ![ks_dem_1m](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/ks_dem_1m.json) | `ks_dem_1m` | Kansas DEM (1 m) | [`ks_dem.json`](data/sources/ks_dem.json) | ArcGIS ImageServer |
-| ![usgs_topo_1894_1950](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/usgs_topo_1894_1950.json) | `usgs_topo_1894_1950` | USGS Historical Topos (KS subset) | [`usgs_historic_topo.json`](data/sources/usgs_historic_topo.json) | HTMC GeoTIFFs |
-| ![ks_treaties](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/ks_treaties.json) | `ks_treaties` | Kansas Treaties (vectors) | [`ks_treaties.json`](data/sources/ks_treaties.json) | Digitized boundaries |
-| ![ks_railroads](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/ks_railroads.json) | `ks_railroads` | Kansas Railroads | [`ks_railroads.json`](data/sources/ks_railroads.json) | Historic rail lines |
-| ![schema.source](https://img.shields.io/endpoint?url=https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/badges/schema.source.json) | `schema.source` | Source descriptor schema | [`schema.source.json`](data/sources/schema.source.json) | JSON schema |
-
-✔ = clean STAC validation · ⚠ = warnings · ❌ = failed/missing
-
----
-
-## 📊 Pipeline Overview
+## 📊 How the System Works
 
 ```mermaid
 flowchart TD
-  A["Data Sources"] -->|fetch| B["COGs (DEM,\nOverlays)"]
-  B -->|terrain| C["Derivatives (Slope,\nAspect, Hillshade)"]
-  C -->|stac| D["STAC Catalog & Items"]
-  D -->|render-config| E["Web Viewer Config\n(web/app.config.json)"]
-  D -->|kml| F["KML / KMZ for\nGoogle Earth"]
-  E -->|serve| G["MapLibre\nWeb Viewer"]
-  F --> H["Google Earth\n3D"]
-````
+  A["Sources\n(data/sources/*.json)"] -->|fetch| B["COGs\n(data/cogs/**/*.tif)"]
+  B -->|derive| C["Terrain & Overlays\n(data/derivatives/*)"]
+  C -->|index| D["STAC\n(stac/catalog.json, items/)"]
+  D -->|render| E["Configs\n(web/app.config.json)"]
+  E -->|serve| F["MapLibre Viewer"]
+  D -->|export| G["KML/KMZ\n(earth/)"]
 
-> Labels are **quoted** and line-broken (`\n`) so GitHub’s Mermaid renders cleanly.
+classDef src fill=#FFD166,stroke=#333;
+classDef cogs fill=#06D6A0,stroke=#333;
+classDef stac fill=#118AB2,stroke=#fff;
+classDef web fill=#073B4C,stroke=#fff;
+classDef earth fill=#EF476F,stroke=#fff;
+
+class A src; class B cogs; class C cogs; class D stac; class E web; class F web; class G earth;
+````
 
 ---
 
-## ⚡ Quickstart
+## 🛠 Quickstart
 
-### Option A — Python
+### Option A — Local Python
 
 ```bash
+# Setup
 python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
 
-# 1) Configure & fetch sources
-make fetch
-
-# 2) Build terrain COGs
-make cogs
-make terrain
-
-# 3) Generate + validate STAC
-make stac
-make stac-validate
-
-# 4) Render viewer config & serve locally
-make site-config
+# Build pipeline
+make fetch           # download raw data
+make cogs            # convert GeoTIFF → COG
+make terrain         # slope, aspect, hillshade
+make stac            # generate STAC catalog/items
+make stac-validate   # validate
+make site-config     # build web/app.config.json
 python -m http.server -d web 8080
 ```
 
 ### Option B — Docker Compose
 
 ```bash
-# build base image
 docker compose build kfm
-
-# preview static site (serves ./web at http://127.0.0.1:8080)
-docker compose --profile dev up -d site
-
-# live docs (http://127.0.0.1:8001)
-docker compose --profile docs up -d docs
+docker compose --profile dev up -d site   # serve viewer
+docker compose --profile docs up -d docs  # serve live docs
 ```
 
 ---
 
-## 🧰 Make targets
+## 📂 Repository Layout
 
-**Common**
+```
+data/
+  sources/       # JSON descriptors (URL, CRS, bounds, license)
+  cogs/          # Cloud Optimized GeoTIFFs (immutable)
+  derivatives/   # terrain, contours, hydrology, etc.
+  processed/     # vectors/rasters post-cleanup
+stac/            # STAC 1.0.0 catalog, collections, items
+web/             # static site for GitHub Pages
+  config/        # legend.json, categories.json, sources.json, schema
+  data/          # small vectors (mirrored for dev)
+  tiles/         # optional raster tiles {z}/{x}/{y}.png
+earth/           # KMZ/KML exports
+scripts/         # ETL, STAC tools, config renderers
+docker/          # reproducible environments
+.github/         # CI/CD workflows
+```
+
+---
+
+## 📑 Data Sources (examples)
+
+| ID             | Title                  | File                                                  | Notes                   |
+| -------------- | ---------------------- | ----------------------------------------------------- | ----------------------- |
+| `ks_dem_1m`    | Kansas DEM (1 m LiDAR) | [`ks_dem.json`](data/sources/ks_dem.json)             | ArcGIS ImageServer      |
+| `usgs_topo`    | Historic USGS Topos    | [`usgs_topo.json`](data/sources/usgs_topo.json)       | 1894–1950 GeoTIFF scans |
+| `ks_treaties`  | Kansas Treaties        | [`ks_treaties.json`](data/sources/ks_treaties.json)   | Time-aware polygons     |
+| `ks_railroads` | Railroads (historic)   | [`ks_railroads.json`](data/sources/ks_railroads.json) | Digitized vectors       |
+
+---
+
+## 🧰 Make Targets
 
 ```bash
-make fetch              # download per data/sources/*.json
-make cogs               # GeoTIFF → COG
-make terrain            # hillshade/slope/aspect (COGs)
-make stac               # build STAC (auto-patch DEM size/hash if .sha256 exists)
-make stac-validate      # validate STAC + sources
-make site-config        # render web/app.config.json from STAC (requires kgt)
-make site               # fallback web/layers.json + mirror small vectors to web/data/**
-make prebuild           # stac-validate + config-validate + site (CI-friendly)
+make fetch           # download raw sources
+make cogs            # raw GeoTIFF → COG
+make terrain         # gdaldem slope/aspect/hillshade
+make stac            # build STAC catalog + items
+make stac-validate   # validate catalog/items
+make site-config     # render web/app.config.json
+make site            # fallback: write web/layers.json + mirror small vectors
+make prebuild        # validation + configs (CI shortcut)
 ```
 
-**Optional**
+Optional:
 
 ```bash
-make validate-cogs      # COG conformance → data/validation/cog_validate.report.json
-make mosaic-county      # LiDAR mosaic (DEM COG) per county
-make dem-checksum       # write+verify .sha256, echo STAC patch fields
-make regionate          # GeoJSON/KML → regionated KML tree / KMZ
+make validate-cogs   # conformance checks
+make mosaic-county   # county-level LiDAR mosaics
+make dem-checksum    # write/verify .sha256
+make regionate       # regionated KML/KMZ tree
 ```
 
-**Config pack (web/config)**
+---
+
+## ✅ Reproducibility & CI
+
+* `.sha256` and `.meta.json` sidecars for every major artifact
+* CI builds:
+
+  * `site.yml` → GitHub Pages
+  * `stac-badges.yml` → Shields endpoint badges
+  * `codeql.yml` + `trivy.yml` → security
+* Pre-commit hooks: lint, format, STAC/config validate
+
+Run before pushing:
 
 ```bash
-make config-validate    # validate legend.json / categories.json / sources.json
-make config-fmt         # pretty-print the config pack with jq
+make prebuild
 ```
-
----
-
-## 📚 STAC Structure
-
-* **Root catalog** → `stac/catalog.json`
-* **Collections** → `stac/collections/*.json`
-* **Items** → `stac/items/**/**/*.json`
-
-Validate with CLI:
-
-```bash
-kgt validate-stac stac/items --no-strict
-```
-
-The Makefile will use Python validators if present; otherwise falls back to `kgt`.
-
----
-
-## 🖥 Web viewer (MapLibre + Time)
-
-* Primary config: `web/app.config.json` (**generated** from STAC via `make site-config`).
-* Fallback for dev: `web/layers.json` (**tiles only**; no raw `.tif`), written by `make site`.
-* UI tuning: `web/config/`
-
-  * `legend.json` (style tokens + optional `layerBindings`)
-  * `categories.json` (sidebar groups)
-  * `sources.json` (provenance registry)
-  * `time_config.json` (min/max, `defaultYear`, and presets)
-  * `schema.json` (pack with `$defs` for the above)
-
-Serve locally:
-
-```bash
-python -m http.server -d web 8080
-# or
-docker compose --profile dev up -d site
-```
-
----
-
-## 🌍 Google Earth (KML/KMZ)
-
-Exports under `earth/`:
-
-```
-earth/
-  Kansas_Terrain.kmz
-  networklinks/
-    ks_1m_hillshade.kml
-    usgs_topo_1894.kml
-```
-
-Regionation utilities live in `scripts/regionate_kml.py` (optional).
-
----
-
-## 📂 Repository Layout (high level)
-
-```
-data/                        # inputs/outputs (raw, processed, cogs, derivatives)
-  sources/                   # source descriptors (endpoints, CRS, bounds, license)
-  processed/                 # vectors/rasters post-conversion
-stac/                        # STAC 1.0.0: catalog + collections + items
-scripts/                     # fetch/convert/derive/validate/index tools
-  collections/               # grouped ETL pipelines
-web/                         # static site (MapLibre) for GitHub Pages
-  config/                    # legend/categories/sources/time schema pack
-  data/                      # small mirrored vectors used by site dev server
-  tiles/                     # (optional) raster tiles {z}/{x}/{y}.png
-earth/                       # KML/KMZ export and NetworkLinks
-docker/                      # container env (reproducible build)
-```
-
----
-
-## ✅ Checks & reproducibility
-
-* Run `make prebuild` before pushing.
-* CI writes `web/badges/*.json` → live ✔/⚠/❌ Shields (via `img.shields.io/endpoint?url=`).
-* Major artifacts produce `.sha256` + `.meta.json` sidecars.
-* DEM assets auto-patched for size/hash during `make stac` when checksums exist.
-* Defense-in-depth: CodeQL, Trivy (fs/config/image), Gitleaks; optional bandit/pip-audit locally.
 
 ---
 
 ## 🗺 Roadmap
 
-See **[`ROADMAP.md`](ROADMAP.md)**. High-level flow:
+* **Milestone 1**: Enrich Data Sources (DEM, treaties, railroads)
+* **Milestone 2**: Terrain + Hydrology analysis
+* **Milestone 3**: Storytelling & Education layers
+* **Milestone 4**: Technical enhancements (tiles, UI)
+* **Milestone 5**: MCP integration (scientific method protocols)
 
-```mermaid
-flowchart TD
-  M1["Milestone 1\n&quot;Enrich Data Sources&quot; (Oct 31, 2025)"] --> M2["Milestone 2\n&quot;Analytical Enhancements&quot; (Nov 30, 2025)"]
-  M2 --> M3["Milestone 3\n&quot;Storytelling &amp; Education&quot; (Dec 31, 2025)"]
-  M3 --> M4["Milestone 4\n&quot;Technical Enhancements&quot;"]
-  M4 --> M5["Milestone 5\n&quot;MCP Integration&quot;"]
-```
-
----
-
-## 🧯 Troubleshooting
-
-* **Mermaid fails to render** → quote labels and use `\n` for line breaks (see charts above).
-* **Viewer loads but rasters don’t** → do not point at raw `.tif`; serve **tiles** (e.g., `.../{z}/{x}/{y}.png`).
-* **Timeline inert** → ensure layer-level `time.start/end` or feature-level `timeProperty` exists.
-* **Legend chips missing** → set `legendKey` in layers or provide `layerBindings` in `legend.json`.
-* **Local file URLs blocked** → serve via HTTP (`python -m http.server` or `docker compose --profile dev up -d site`).
+See [`ROADMAP.md`](ROADMAP.md) for details.
 
 ---
 
 ## 📦 Requirements
 
-* Python stack: `rasterio`, `rio-cogeo`, `pyproj`, `shapely`, `pystac`, `jsonschema` (pack), `Pillow`
-* GDAL CLI: `gdal_translate`, `gdaldem`, `gdalwarp`, `gdalinfo`
-* `kgt` (viewer config + STAC validation fallback)
+* Python: `rasterio`, `rio-cogeo`, `pyproj`, `shapely`, `pystac`, `jsonschema`
+* GDAL CLI: `gdal_translate`, `gdalwarp`, `gdaldem`, `gdalinfo`
+* Node: build utilities + roadmap sync
+* Docker: reproducible builds
 
 ---
 
-## 📊 Status Snapshot
+## 💡 Troubleshooting
 
-| Layer                       | STAC Item                                        | Asset Path                                       |
-| --------------------------- | ------------------------------------------------ | ------------------------------------------------ |
-| DEM (1 m, 2018–2020)        | `stac/items/elevation/ks_1m_dem_2018_2020.json`  | `data/cogs/dem/ks_1m_dem_2018_2020.tif`          |
-| Hillshade (derived)         | same Collection                                  | `data/cogs/hillshade/ks_hillshade_2018_2020.tif` |
-| Historic Topo (Larned 1894) | `stac/items/overlays/usgs_topo_larned_1894.json` | `data/cogs/overlays/usgs_topo_larned_1894.tif`   |
+* **Mermaid fails to render** → quote labels, use `\n` for line breaks
+* **Rasters don’t show** → serve tiles or COGs, not raw `.tif`
+* **Timeline inert** → layer must have `time.start/end` or `timeProperty`
+* **Legend chips missing** → set `legendKey` or define in `legend.json`
+* **File:// blocked** → serve via HTTP (`python -m http.server` or Docker dev site)
 
 ---
 
-**PRs welcome!** Keep STAC 1.0.0 valid, use relative links, and validate configs before commit.
+**PRs welcome.**
+Keep STAC 1.0.0 valid, configs schema-checked, and provenance intact.
 
 ```
 
-**Highlights of what I fixed/updated**
+---
 
-- **Badges for STAC source health** now use Shields’ endpoint mode, so they render:  
-  `https://img.shields.io/endpoint?url=https://…/web/badges/<id>.json` (the old direct JSON image links don’t render).
-- **pre-commit link** points to `.github/.pre-commit-config.yaml` (your current layout), not a root file.
-- **Mermaid** code blocks have quoted labels and `\n` line breaks for GitHub’s strict renderer.
-- **Quickstart** removes a reference to `constraints.txt` (avoid 404 in fresh clones).
-- **Security workflows** (Trivy, Secret Scanning) are surfaced in the top badges + Checks section to reflect your current CI set.
-- **Consistency** across STAC, web config, Make targets, and directory structure matches the repo conventions you’ve been wiring throughout.
-- **Shields table note** clarifies first-deploy behavior to avoid confusion on new forks.
+### Why this rebuild is cleaner
+
+- **Narrative-first**: starts with *what/why*, then flows into tech.  
+- **Modern repo map**: directory tree matches your actual structure.  
+- **Mermaid-safe**: chart quotes + line breaks.  
+- **Quickstart split**: Python (venv) vs Docker Compose.  
+- **CI + reproducibility** section consolidated (checksums, badges, workflows).  
+- **Troubleshooting** distilled to common gotchas.  
+- **Roadmap** simplified into milestones, pointing to `ROADMAP.md`.
+
+---
