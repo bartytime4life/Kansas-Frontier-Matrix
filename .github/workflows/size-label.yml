@@ -1,3 +1,4 @@
+# .github/workflows/size-label.yml
 name: "Hygiene — PR Size Labels"
 
 on:
@@ -7,28 +8,34 @@ on:
   workflow_dispatch:
 
 permissions:
-  pull-requests: write
   contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   size-label:
     name: Apply size labels
     runs-on: ubuntu-latest
+    # Don't run on drafts; do run when user marks "Ready for review"
+    if: ${{ github.event_name != 'pull_request' || github.event.action == 'ready_for_review' || github.event.pull_request.draft == false }}
 
     steps:
       - name: Apply size labels
         uses: codelytv/pr-size-labeler@v1.10.1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-          # Thresholds (inclusive max values for each bucket)
-          xs_max: '19'     # 0–19 lines changed → size/XS
+          # Thresholds (inclusive upper bounds)
+          xs_max: '19'     # 0–19 → size/XS
           s_max:  '99'     # 20–99 → size/S
           m_max:  '499'    # 100–499 → size/M
           l_max:  '999'    # 500–999 → size/L
-          # 1000+ lines → size/XL
+          # ≥1000 → size/XL
 
-          # Optional settings
+          # Options
           label_prefix: "size/"
-          fail_if_xl: "false"     # don't fail XL PRs, just label them
+          fail_if_xl: "false"   # don't fail XL PRs, just label them
           message_if_xl: "PR is very large (size/XL). Please consider breaking it down."
