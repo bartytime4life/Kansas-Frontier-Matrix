@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # 📂 Kansas-Frontier-Matrix — `data/`
@@ -6,9 +5,11 @@
 **Mission:** keep **inputs reproducible**, **artifacts derivable**, and **catalogs discoverable**.  
 This directory implements the project’s **MCP-style data lifecycle** end-to-end.
 
-[![Build & Deploy](../.github/badges/site.svg)](../actions/workflows/site.yml)
-[![STAC Validate](../.github/badges/stac.svg)](../actions/workflows/stac-badges.yml)
-[![Pre-commit](../.github/badges/precommit.svg)](../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/raw/main/.github/badges/precommit.svg)](../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
 
 </div>
 
@@ -87,9 +88,16 @@ Git & LFS Policy
 
 .gitattributes
 	•	Route heavy binaries to Git LFS:
-*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx *.zip *.7z *.laz *.las *.pdf
+
+*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx
+*.zip *.7z *.laz *.las *.pdf
+
+
 	•	Keep diff-friendly text in normal Git:
-*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz (use LFS for very large KMZ)
+
+*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz
+
+(use LFS for very large KMZ)
 
 ⸻
 
@@ -268,3 +276,4 @@ TL;DR
 	•	Guarded by .gitignore, .gitattributes, pre-commit, and CI
 	•	Every step emits provenance + checksums for auditability
 
+---
