@@ -2,6 +2,29 @@
   "type": "FeatureCollection",
   "name": "landcover_timeslices",
   "bbox": [-100.0, 38.0, -98.0, 39.0],
+
+  "kfm_meta": {
+    "generated": "2025-09-26T00:00:00Z",
+    "schema_version": "1.1",
+    "description": "NLCD land-cover demo timeslices for Kansas Frontier Matrix (small polygons for wiring/tests). Replace with county/state-wide tiles or vectors.",
+    "coordinate_reference": "WGS84 (EPSG:4326)",
+    "license": "CC BY 4.0",
+    "properties_schema": {
+      "year": "Integer year (e.g., 2011, 2021)",
+      "time_start": "Timeline start (YYYY-01-01 for the given year)",
+      "time_end": "Timeline end (YYYY-12-31 for the given year)",
+      "nlcd": "NLCD class code (number)",
+      "lc_code": "NLCD class code (string, zero/none-padded)",
+      "class_code": "Alias of lc_code (string) for legend palette lookups",
+      "class_name": "NLCD class name",
+      "area_km2": "Polygon area (km²) — optional/approximate",
+      "source": "Provenance / data source"
+    },
+    "defaults": {
+      "time_end": null
+    }
+  },
+
   "features": [
     {
       "type": "Feature",
@@ -9,10 +32,14 @@
       "bbox": [-99.6, 38.6, -99.59, 38.61],
       "properties": {
         "year": 1992,
+        "time_start": "1992-01-01",
+        "time_end": "1992-12-31",
+
         "nlcd": 11,
         "lc_code": "11",
-        "class": "11",
+        "class_code": "11",
         "class_name": "Open Water",
+
         "area_km2": 0.8,
         "source": "NLCD (demo record)"
       },
@@ -35,10 +62,14 @@
       "bbox": [-99.2, 38.8, -99.19, 38.81],
       "properties": {
         "year": 2011,
+        "time_start": "2011-01-01",
+        "time_end": "2011-12-31",
+
         "nlcd": 42,
         "lc_code": "42",
-        "class": "42",
+        "class_code": "42",
         "class_name": "Evergreen Forest",
+
         "area_km2": 0.7,
         "source": "NLCD (demo record)"
       },
@@ -61,10 +92,14 @@
       "bbox": [-98.6, 38.3, -98.59, 38.31],
       "properties": {
         "year": 2021,
+        "time_start": "2021-01-01",
+        "time_end": "2021-12-31",
+
         "nlcd": 82,
         "lc_code": "82",
-        "class": "82",
+        "class_code": "82",
         "class_name": "Cultivated Crops",
+
         "area_km2": 0.9,
         "source": "NLCD (demo record)"
       },
