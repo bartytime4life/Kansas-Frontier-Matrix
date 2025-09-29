@@ -1,27 +1,26 @@
 <div align="center">
 
+# 🗂️ Kansas-Frontier-Matrix — **STAC Catalog** (`data/stac/`)
 
-🗂️ Kansas-Frontier-Matrix — STAC Catalog (data/stac/)
-
-Purpose: a strict, machine-readable SpatioTemporal Asset Catalog (STAC 1.0.0) that is the single source of truth for:
-what datasets exist, where they live, when/where they apply, and how they were produced.
+**Purpose:** a strict, machine-readable **SpatioTemporal Asset Catalog (STAC 1.0.0)** that is the **single source of truth** for:  
+**what** datasets exist, **where** they live, **when/where** they apply, and **how** they were produced.
 
 </div>
 
+---
 
+## Why STAC here?
 
-⸻
+- **Discoverability** — one entry point (`catalog.json`) for humans & machines.  
+- **Interoperability** — STAC Items/Collections follow a public spec (1.0.0).  
+- **Reproducibility** — provenance, versions, checksums, links to processing logs.  
+- **Separation of concerns** — raw/processed artifacts live in `data/**`; **only metadata** lives here.  
 
-Why STAC here?
-	•	Discoverability — one entry point (catalog.json) for humans & machines.
-	•	Interoperability — STAC Items/Collections follow a public spec (1.0.0).
-	•	Reproducibility — provenance, versions, checksums, links to processing logs.
-	•	Separation of concerns — raw/processed artifacts live in data/**; only metadata lives here.
+---
 
-⸻
+## Catalog Layout
 
-Catalog Layout
-
+```text
 data/stac/
 ├── catalog.json                 # Root STAC catalog (entry point)
 ├── collections/                 # Logical groupings
@@ -58,11 +57,11 @@ Conventions
 
 IDs & Names
 	•	Lowercase, underscores: ks_1m_dem_2018, usgs_larned_1894, ks_treaties.
-	•	Stable over time; use version extension to track updates.
+	•	Stable over time; use the version extension to track updates.
 
 Datetime
 	•	Single date (e.g., publication or acquisition): properties.datetime.
-	•	Intervals: properties.start_datetime + properties.end_datetime (omit datetime).
+	•	Intervals: properties.start_datetime and properties.end_datetime (omit datetime).
 
 Assets & Media types
 	•	COG raster: image/tiff; application=geotiff; profile=cloud-optimized
@@ -87,9 +86,8 @@ Always include:
 
 ⸻
 
-How to Add a Dataset (authoritative check-list)
+How to Add a Dataset (authoritative checklist)
 	1.	Prepare the artifact
-
 	•	Raster → COG
 
 rio cogeo create input.tif data/cogs/my_layer.tif --web-optimized
@@ -100,26 +98,24 @@ rio cogeo create input.tif data/cogs/my_layer.tif --web-optimized
 ogr2ogr -f GeoJSON -t_srs EPSG:4326 data/processed/my_layer.json input.shp
 
 
-	•	Optional tiles → PMTiles/MBTiles (if needed for web perf).
+	•	(Optional) tiles → PMTiles/MBTiles (if needed for web perf).
 
 	2.	Compute checksum
 
 sha256sum data/cogs/my_layer.tif > data/cogs/my_layer.tif.sha256
 
+
 	3.	Create the STAC Item
-
 	•	Copy a template (see Templates below).
-	•	Update: id, bbox, geometry, datetime/start_datetime+end_datetime, assets.href, checksum:sha256, links.
-
+	•	Update: id, bbox, geometry, datetime or start_datetime+end_datetime, assets.href, checksum:sha256, links.
 	4.	Link into a Collection
-
-	•	Add the item’s link to the correct collections/*.json OR ensure the collection’s links contain the item path (root catalog must also include the collection).
-
+	•	Add the Item’s link to the correct collections/*.json or ensure the Collection’s links contain the Item path (root catalog must also include the Collection).
 	5.	Validate
 
 make stac
 make stac-validate
 pre-commit run --all-files
+
 
 
 ⸻
@@ -267,10 +263,9 @@ Versioning & Deprecation
 ⸻
 
 Integration Points (beyond STAC)
-	•	Provenance registry → data/provenance/registry.json holds lineage: raw → processed → STAC.
-Link with rel:"via" or rel:"derived_from".
+	•	Provenance registry → data/provenance/registry.json holds lineage: raw → processed → STAC. Link with rel:"via" or rel:"derived_from".
 	•	Web viewer → layer manifests in web/data/*.json should reference STAC ids or hrefs.
-	•	Knowledge graph → the ETL writes nodes/edges and stores back-refs: add a links entry with rel:"related" to the graph API/entity when available.
+	•	Knowledge graph → ETL writes nodes/edges and stores back-refs; add a links entry with rel:"related" to the graph API/entity when available.
 	•	Experiments (MCP) → cite STAC IDs in docs/experiments/**/experiment.md for reproducibility.
 
 ⸻
@@ -308,19 +303,16 @@ flowchart TD
   E --> F[Commit & PR<br/>(pre-commit OK?)]
   F --> G[CI validates & publishes]
 
-<!-- END OF MERMAID -->
-
-
 
 ⸻
 
 Media-type crib sheet
 
 Type	Media type	Roles
-COG	image/tiff; application=geotiff; profile=cloud-optimized	data / visual
+COG	image/tiff; application=geotiff; profile=cloud-optimized	data, visual
 GeoJSON	application/geo+json	data
-PMTiles	application/vnd.mapbox-vector-tile (or vendor/pmtiles if used)	tiles
-KMZ	application/vnd.google-earth.kmz	data / visual
+PMTiles	application/vnd.mapbox-vector-tile (or vendor/pmtiles)	tiles
+KMZ	application/vnd.google-earth.kmz	data, visual
 Thumbnail	image/png	thumbnail
 
 
@@ -332,4 +324,3 @@ TL;DR
 	•	Collections are clean, Items are specific, CI keeps us honest.
 	•	If in doubt: copy a template, fill the blanks, validate, then PR.
 
-⸻
