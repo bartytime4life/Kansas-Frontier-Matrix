@@ -108,8 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: repo-sbom
-    if: |
-      hashFiles('Dockerfile') != '' || hashFiles('docker/Dockerfile') != ''
+    if: ${{ hashFiles('Dockerfile') != '' || hashFiles('docker/Dockerfile') != '' }}
     env:
       OUT_DIR: artifacts/sbom/image
       IMAGE_NAME: kfm-sbom:${{ github.sha }}
