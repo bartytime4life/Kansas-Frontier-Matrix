@@ -1,3 +1,4 @@
+
 <div align="center">
 
 # 📂 Kansas-Frontier-Matrix — `data/`
@@ -206,8 +207,8 @@ STAC Guidance
 	•	Items → concrete datasets (e.g., hydrography_1936)
 
 Each STAC Item must include:
-	•	geometry, bbox, and properties.datetime or properties.start_datetime/end_datetime
-	•	≥1 asset (COG or GeoJSON) with:
+	•	geometry, bbox, and properties.datetime or properties.start_datetime / end_datetime
+	•	≥ 1 asset (COG or GeoJSON) with:
 	•	roles (e.g., ["data"], optional ["visual"] for hillshade/tiles/KMZ)
 	•	checksum:sha256, type (MIME), title, href
 	•	license
