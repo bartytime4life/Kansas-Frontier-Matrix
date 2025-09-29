@@ -85,38 +85,34 @@ docker/      # reproducible containers
 
 ⸻
 
-📊 Coverage Status (Root Catalog)
+## 📊 Coverage Status (Root Catalog)
 
 <!-- ROOT_COVERAGE_START -->
 
-
-Layer / Domain	Data Sources	Status
-🏔 DEM & Terrain	USGS LiDAR, KGS, 3DEP	
-🗺 Hillshade/Derivatives	LiDAR COGs → slope, aspect	
-🌊 Hydrology	NHD, Kansas River floods	
-🌱 Land Cover	NLCD 1992–2021	
-🧭 Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	
-🪶 Treaties & Lands	Boundary polygons	
-🚂 Railroads & Trails	1850–1920 GIS	
-🗺 Historic Topos	USGS, UT PCL	
-🌡 Climate Normals	NOAA 1991–2020, Daymet	
-🌪 Hazards — Tornado	NOAA SPC 1950–2024	
-🌊 Hazards — Floods	FEMA, USGS	
-🔥 Hazards — Wildfire	NIFC, KS perimeter sets	
-🪨 Paleoclimate / Fire	NOAA cores, charcoal	
-🪶 Oral Histories & Arch.	Tribal narratives, archaeology	
-⛏ Geology / Core Samples	KGS drill cores	
+| Layer / Domain           | Data Sources                     | Status |
+|---------------------------|----------------------------------|--------|
+| 🏔 DEM & Terrain          | USGS LiDAR, KGS, 3DEP            | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🗺 Hillshade/Derivatives  | LiDAR COGs → slope, aspect       | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🌊 Hydrology              | NHD, Kansas River floods         | ![In Progress](https://img.shields.io/badge/status-in--progress-yellow) |
+| 🌱 Land Cover             | NLCD 1992–2021                   | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🧭 Soils / PLSS / Parcels | NRCS SSURGO, KS GIS Hub          | ![In Progress](https://img.shields.io/badge/status-in--progress-yellow) |
+| 🪶 Treaties & Lands       | Boundary polygons                | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🚂 Railroads & Trails     | 1850–1920 GIS                    | ![In Progress](https://img.shields.io/badge/status-in--progress-yellow) |
+| 🗺 Historic Topos         | USGS, UT PCL                     | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🌡 Climate Normals        | NOAA 1991–2020, Daymet           | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🌪 Hazards — Tornado      | NOAA SPC 1950–2024               | ![Complete](https://img.shields.io/badge/status-complete-brightgreen) |
+| 🌊 Hazards — Floods       | FEMA, USGS                       | ![In Progress](https://img.shields.io/badge/status-in--progress-yellow) |
+| 🔥 Hazards — Wildfire     | NIFC, KS perimeter sets          | ![In Progress](https://img.shields.io/badge/status-in--progress-yellow) |
+| 🪨 Paleoclimate / Fire    | NOAA cores, charcoal             | ![Planned](https://img.shields.io/badge/status-planned-lightgrey) |
+| 🪶 Oral Histories & Arch. | Tribal narratives, archaeology   | ![Planned](https://img.shields.io/badge/status-planned-lightgrey) |
+| ⛏ Geology / Core Samples  | KGS drill cores                  | ![Planned](https://img.shields.io/badge/status-planned-lightgrey) |
 
 <!-- ROOT_COVERAGE_END -->
 
-
-Legend:
-
- Complete ·
-
- In Progress ·
-
- Planned
+**Legend:**  
+![Complete](https://img.shields.io/badge/status-complete-brightgreen) Complete ·  
+![In Progress](https://img.shields.io/badge/status-in--progress-yellow) In Progress ·  
+![Planned](https://img.shields.io/badge/status-planned-lightgrey) Planned
 
 ⸻
 
