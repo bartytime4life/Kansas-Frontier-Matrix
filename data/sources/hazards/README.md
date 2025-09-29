@@ -3,13 +3,13 @@
 
 # 🌪 Kansas-Frontier-Matrix — Hazards & Disasters Sources
 
-**Mission:** catalog Kansas hazard & disaster datasets so they are  
+**Mission:** Catalog Kansas hazard & disaster datasets so they are  
 **traceable, reproducible, and discoverable** in the STAC catalog,  
-and link into the Frontier-Matrix **timeline + knowledge graph**.
+and linked into the Frontier-Matrix **timeline + knowledge graph**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/.pre-commit-config.yaml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
 
 </div>
 
@@ -17,16 +17,17 @@ and link into the Frontier-Matrix **timeline + knowledge graph**.
 
 ## 🎯 Purpose
 
-- Track **hazard events** (tornadoes, floods, droughts, wildfires, storms).  
-- Provide **geospatial layers** (vectors, rasters, tabular CSVs).  
-- Link hazards to **documents and events** (e.g., Greensburg Tornado 2007).  
-- Maintain **provenance + licensing** per Master Coder Protocol (MCP).  
-- Enable **cross-domain reasoning**: climate ↔ settlement ↔ environment.  
+- Track **hazard events** (tornadoes, floods, droughts, wildfires, storms)  
+- Provide **geospatial layers** (vectors, rasters, tabular CSVs)  
+- Link hazards to **documents and events** (e.g., Greensburg Tornado 2007)  
+- Maintain **provenance & licensing** per Master Coder Protocol (MCP)  
+- Enable **cross-domain reasoning**: climate ↔ settlement ↔ environment  
 
 ---
 
 ## 📂 Directory Layout
 
+```text
 data/sources/hazards/
 ├── tornado_tracks.json       # NOAA SPC tornado paths (1950–present)
 ├── severe_storms.json        # Hail / wind reports (1955–present)
@@ -37,18 +38,17 @@ data/sources/hazards/
 ├── vectors/                  # Converted shapefiles/GeoJSONs
 └── README.md                 # This file
 
-> **Note:** Large binaries (shapefiles, rasters) → `data/raw/` (ignored)  
-> Processed outputs → `data/processed/hazards/` (LFS).  
-> Only **descriptors, checksums, metadata** live here.
+Note: Large binaries (shapefiles, rasters) → data/raw/ (ignored).
+Processed outputs → data/processed/hazards/ (LFS).
+Only descriptors, checksums, metadata live here.
 
----
+⸻
 
-## 📑 Descriptor Schema
+📑 Descriptor Schema
 
-Each hazard config must follow the  
-**KFM Source Descriptor Schema** (`data/sources/schema.source.json`).
+Each hazard config must follow the
+KFM Source Descriptor Schema (data/sources/schema.source.json).
 
-```json
 {
   "id": "tornado_tracks",
   "title": "NOAA SPC Tornado Paths (1950–present)",
@@ -68,45 +68,45 @@ Each hazard config must follow the
   "keywords": ["tornado", "hazard", "Kansas", "SPC"]
 }
 
-Rules:
-	•	bbox → EPSG:4326 (lon/lat WGS84).
-	•	period → temporal extent for STAC & timeline.
-	•	Always include license & provenance.
-	•	urls[] → API endpoints, shapefile zips, feature services.
+Key Rules
+	•	bbox → EPSG:4326 (lon/lat WGS84)
+	•	period → temporal extent for STAC & timeline
+	•	Always include license & provenance
+	•	urls[] → API endpoints, shapefile zips, or services
 
 ⸻
 
 🌍 Recommended Hazard Sources
-	•	NOAA Storm Events Database (multi-hazard archive, 1950–present)
-	•	NOAA SPC Severe Weather GIS (tornado tracks, hail, wind, 1950–2024)
-	•	FEMA Disaster Declarations (county-level, 1953–present)
-	•	U.S. Drought Monitor (weekly drought polygons, 2000–present)
-	•	NIFC Wildfire Perimeters (large fire polygons, 2000–present)
-	•	Kansas Forest Service (state wildfire perimeter datasets)
+	•	NOAA Storm Events Database — multi-hazard archive (1950–present)
+	•	NOAA SPC Severe Weather GIS — tornado tracks, hail, wind (1950–2024)
+	•	FEMA Disaster Declarations — county-level, 1953–present
+	•	U.S. Drought Monitor — weekly drought polygons (2000–present)
+	•	NIFC Wildfire Perimeters — national dataset, 2000–present
+	•	Kansas Forest Service — state wildfire perimeter datasets
 
 ⸻
 
 🔗 Integration Notes
-	•	Hazards are time-enabled: descriptors must include start/end dates.
-	•	Tornadoes: polylines with EF scale, width, fatalities.
-	•	Droughts: weekly polygons (D0–D4 categories).
-	•	Floods: link FEMA + NOAA Storm Events.
-	•	Wildfires: polygons with ignition date, acres, names.
+	•	Hazards are time-enabled: descriptors must include start/end dates
+	•	Tornadoes: polylines with EF scale, path width, fatalities
+	•	Droughts: polygons (D0–D4 categories), weekly snapshots = time series
+	•	Floods: link FEMA declarations + NOAA Storm Events
+	•	Wildfires: polygons with ignition date, acres burned, fire name
 
 Hazards link into the Knowledge Graph:
-	•	Event → “Greensburg Tornado 2007”
-	•	Place → county, watershed, polygon
+	•	Event → e.g., Greensburg Tornado 2007
+	•	Place → county, watershed, or polygon
 	•	Document → FEMA reports, NOAA Storm Data, newspapers
 
 ⸻
 
 ✅ Best Practices
-	•	Store raw shapefiles/CSVs → data/raw/hazards/.
-	•	Store converted GeoJSON/COGs → data/processed/hazards/.
-	•	Update .sha256 + retrieved after pulls.
-	•	Use confidence flags if geometries incomplete.
-	•	Normalize CRS → EPSG:4326 for viewer; record original CRS in _meta.json.
-	•	Verify license compliance (NOAA/FEMA/NIFC = public domain; check Kansas Forest Service).
+	•	Store raw shapefiles/CSVs → data/raw/hazards/
+	•	Store converted GeoJSON/COGs → data/processed/hazards/
+	•	Update .sha256 + retrieved date after pulls
+	•	Use confidence flags if geometries incomplete
+	•	Normalize CRS → EPSG:4326 for viewer; record original CRS in _meta.json
+	•	Verify license compliance (NOAA/FEMA/NIFC = public domain; check Kansas Forest Service)
 
 ⸻
 
@@ -122,7 +122,7 @@ make checksums          # update integrity files
 
 ⸻
 
-📊 Data Lifecycle (Mermaid)
+📊 Data Lifecycle
 
 flowchart TD
   S[Hazard Descriptors\n(data/sources/hazards/*.json)] -->|fetch| R[Raw Data\n(data/raw/hazards/)]
@@ -148,9 +148,11 @@ flowchart TD
 ⸻
 
 ✦ Summary
-data/sources/hazards/ holds the blueprints for hazard & disaster datasets.
+data/sources/hazards/ defines the blueprints for hazard & disaster datasets.
 They ensure tornadoes, floods, droughts, wildfires, and FEMA disasters are
 auditable, reproducible, and time-aware — powering the Kansas-Frontier-Matrix
 knowledge graph, STAC catalog, and interactive viewer.
 
 ---
+
+⚡ Now it’s GitHub-ready: badges render, Mermaid compiles, and sections are cleanly structured.  
