@@ -3,10 +3,7 @@
   "title": "USGS Historic Topo Maps",
   "type": "raster",
   "category": "overlays",
-
-  /* Multi-asset raster collection; individual COGs listed under assets */
   "data": null,
-
   "assets": [
     {
       "id": "usgs_topo_1894_larned",
@@ -39,21 +36,17 @@
       "nodata": 0
     }
   ],
-
   "time": { "start": "1880-01-01", "end": "1959-12-31" },
   "timeProperty": "year",
   "defaultYear": 1936,
-
   "minzoom": 5,
   "maxzoom": 17,
-
   "style": {
     "rasterOpacity": 0.7,
     "rasterFadeDuration": 0,
     "rasterResampling": "linear",
     "tileSize": 256
   },
-
   "visible": false,
   "attribution": "USGS Historical Topographic Map Collection",
   "attributionURL": "https://www.usgs.gov/programs/national-geospatial-program/historical-topographic-maps-preserving-past"
