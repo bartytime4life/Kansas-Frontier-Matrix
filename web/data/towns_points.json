@@ -1,102 +1,136 @@
 {
   "type": "FeatureCollection",
   "name": "towns_points",
-  "bbox": [-100.0170, 37.7550, -94.6270, 39.3900],
+  "bbox": [-100.017000, 37.755000, -94.627000, 39.390000],
+
+  "kfm_meta": {
+    "generated": "2025-09-26T00:00:00Z",
+    "schema_version": "1.1",
+    "description": "Key Kansas towns/forts/trading posts (demo points for wiring & timeline tests). Replace/augment with authoritative gazetteer entries.",
+    "coordinate_reference": "WGS84 (EPSG:4326)",
+    "license": "CC BY 4.0",
+    "properties_schema": {
+      "name": "Place name",
+      "type": "Place type: 'town' | 'fort' | 'trading_post'",
+      "year": "Founding/opening year (ISO date YYYY-MM-DD; normalized to Jan 1)",
+      "year_end": "Closure/cessation year (ISO date YYYY-MM-DD; normalized to Dec 31), or null if ongoing",
+      "time_start": "Duplicate of 'year' for timeline helpers",
+      "time_end": "Duplicate of 'year_end' for timeline helpers (null allowed)",
+      "source": "Data provenance / citation"
+    },
+    "defaults": {
+      "year": "1800-01-01",
+      "year_end": null
+    }
+  },
+
   "features": [
     {
       "type": "Feature",
       "id": "settlement-fort-larned",
-      "bbox": [-99.2185, 38.1893, -99.2185, 38.1893],
+      "bbox": [-99.218500, 38.189300, -99.218500, 38.189300],
       "properties": {
         "name": "Fort Larned",
         "type": "fort",
-        "year": 1859,
-        "year_end": 1878,
+        "year": "1859-01-01",
+        "year_end": "1878-12-31",
+        "time_start": "1859-01-01",
+        "time_end": "1878-12-31",
         "source": "Compiled / KFM"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-99.2185, 38.1893]
+        "coordinates": [-99.218500, 38.189300]
       }
     },
     {
       "type": "Feature",
       "id": "settlement-council-grove-trading-post",
-      "bbox": [-96.4920, 38.6610, -96.4920, 38.6610],
+      "bbox": [-96.492000, 38.661000, -96.492000, 38.661000],
       "properties": {
         "name": "Council Grove Trading Post",
         "type": "trading_post",
-        "year": 1847,
-        "year_end": 1870,
+        "year": "1847-01-01",
+        "year_end": "1870-12-31",
+        "time_start": "1847-01-01",
+        "time_end": "1870-12-31",
         "source": "Compiled / KFM"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-96.4920, 38.6610]
+        "coordinates": [-96.492000, 38.661000]
       }
     },
     {
       "type": "Feature",
       "id": "settlement-nicodemus",
-      "bbox": [-99.6170, 39.3900, -99.6170, 39.3900],
+      "bbox": [-99.617000, 39.390000, -99.617000, 39.390000],
       "properties": {
         "name": "Nicodemus",
         "type": "town",
-        "year": 1877,
+        "year": "1877-01-01",
         "year_end": null,
+        "time_start": "1877-01-01",
+        "time_end": null,
         "source": "Compiled / KFM"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-99.6170, 39.3900]
+        "coordinates": [-99.617000, 39.390000]
       }
     },
     {
       "type": "Feature",
       "id": "settlement-leavenworth",
-      "bbox": [-94.6270, 39.3110, -94.6270, 39.3110],
+      "bbox": [-94.627000, 39.311000, -94.627000, 39.311000],
       "properties": {
         "name": "Leavenworth",
         "type": "town",
-        "year": 1854,
+        "year": "1854-01-01",
         "year_end": null,
+        "time_start": "1854-01-01",
+        "time_end": null,
         "source": "Compiled / KFM"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-94.6270, 39.3110]
+        "coordinates": [-94.627000, 39.311000]
       }
     },
     {
       "type": "Feature",
       "id": "settlement-dodge-city",
-      "bbox": [-100.0170, 37.7550, -100.0170, 37.7550],
+      "bbox": [-100.017000, 37.755000, -100.017000, 37.755000],
       "properties": {
         "name": "Dodge City",
         "type": "town",
-        "year": 1872,
+        "year": "1872-01-01",
         "year_end": null,
+        "time_start": "1872-01-01",
+        "time_end": null,
         "source": "Compiled / KFM"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-100.0170, 37.7550]
+        "coordinates": [-100.017000, 37.755000]
       }
     },
     {
       "type": "Feature",
       "id": "settlement-hays",
-      "bbox": [-99.3260, 38.8790, -99.3260, 38.8790],
+      "bbox": [-99.326000, 38.879000, -99.326000, 38.879000],
       "properties": {
         "name": "Hays (Fort Hays)",
         "type": "fort",
-        "year": 1867,
-        "year_end": 1889,
+        "year": "1867-01-01",
+        "year_end": "1889-12-31",
+        "time_start": "1867-01-01",
+        "time_end": "1889-12-31",
         "source": "Compiled / KFM"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [-99.3260, 38.8790]
+        "coordinates": [-99.326000, 38.879000]
       }
     }
   ]
