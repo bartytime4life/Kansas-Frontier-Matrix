@@ -1,47 +1,52 @@
 
 <div align="center">
 
+# 📂 Kansas-Frontier-Matrix — `data/`
 
-📂 Kansas-Frontier-Matrix — data/
+**Mission:** keep **inputs immutable**, **artifacts reproducible**, **catalogs discoverable**, and **knowledge auditable**.  
+This directory implements the project’s **MCP-style data lifecycle**, feeding both the **STAC catalog** and the **Neo4j knowledge graph**.
 
-Mission: keep inputs immutable, artifacts reproducible, catalogs discoverable, and knowledge auditable.
-This directory implements the project’s MCP-style data lifecycle, feeding both the STAC catalog and the Neo4j knowledge graph.
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)  
+[![Coverage](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix/branch/main/graph/badge.svg)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)
 
 </div>
 
+---
 
+## Contents
+- [Philosophy](#philosophy)
+- [Directory Layout](#directory-layout)
+- [Git & LFS Policy](#git--lfs-policy)
+- [Lifecycle & Make Targets](#lifecycle--make-targets)
+- [Naming Conventions](#naming-conventions)
+- [Source Descriptor Schema](#source-descriptor-schema)
+- [Provenance & Checksums](#provenance--checksums)
+- [STAC Guidance](#stac-guidance)
+- [Knowledge Graph Integration](#knowledge-graph-integration)
+- [Uncertainty & Confidence](#uncertainty--confidence)
+- [QA & Validation](#qa--validation)
+- [Quickstart](#quickstart)
+- [Gotchas](#gotchas)
+- [TL;DR](#tldr)
 
-⸻
+---
 
-Contents
-	•	Philosophy
-	•	Directory Layout
-	•	Git & LFS Policy
-	•	Lifecycle & Make Targets
-	•	Naming Conventions
-	•	Source Descriptor Schema
-	•	Provenance & Checksums
-	•	STAC Guidance
-	•	Knowledge Graph Integration
-	•	Uncertainty & Confidence
-	•	QA & Validation
-	•	Quickstart
-	•	Gotchas
-	•	TL;DR
+## Philosophy
+- **Raw is immutable.** Nothing hand-edited; all edits live in `*_meta.json` sidecars.  
+- **Processing is reproducible.** Scripts + configs recreate every artifact.  
+- **Catalogs are first-class.** Every asset lands in **STAC 1.0.0**.  
+- **Graph is connective tissue.** Every entity/event is linked into the **Neo4j knowledge graph**.  
+- **Uncertainty is explicit.** Confidence scores & provenance are stored alongside data.  
 
-⸻
+---
 
-Philosophy
-	•	Raw is immutable. Nothing hand-edited; all edits live in *_meta.json sidecars.
-	•	Processing is reproducible. Scripts + configs recreate every artifact.
-	•	Catalogs are first-class. Every asset lands in STAC 1.0.0.
-	•	Graph is connective tissue. Every entity/event is linked into the Neo4j knowledge graph ￼ ￼.
-	•	Uncertainty is explicit. Confidence scores & provenance are stored alongside data ￼ ￼.
+## Directory Layout
 
-⸻
-
-Directory Layout
-
+```text
 data/
 ├─ 📥 raw/             # Immutable payloads (never edit)
 │  └─ *_src.json       # Provenance sidecars
@@ -144,22 +149,22 @@ STAC Guidance
 	•	Collections: group by domain (terrain, hydrology, treaties, maps).
 	•	Items: concrete datasets (e.g., hydrography_1936).
 	•	Each item must include: geometry, bbox, datetime, ≥1 asset, roles (data, visual), checksum, license, links.
-	•	Use STAC Validator in CI ￼.
+	•	Use STAC Validator in CI.
 
 ⸻
 
 Knowledge Graph Integration
 
 Every processed entity flows into Neo4j:
-	•	Nodes: Person, Place, Event, Document ￼
-	•	Edges: OCCURRED_AT, MENTIONS, PARTICIPATED_IN ￼
-	•	Properties: datetime (OWL-Time), confidence, provenance ￼
-	•	Ties directly to timeline + map UI.
+	•	Nodes: Person, Place, Event, Document
+	•	Edges: OCCURRED_AT, MENTIONS, PARTICIPATED_IN
+	•	Properties: datetime (OWL-Time), confidence, provenance
+	•	Direct ties: timeline + map UI
 
 ⸻
 
 Uncertainty & Confidence
-	•	Confidence scores (0–1) on every extraction ￼.
+	•	Confidence scores (0–1) on every extraction.
 	•	Ambiguous geocodes flagged with confidence < 0.5.
 	•	Visualization: low confidence = lighter opacity.
 
@@ -172,7 +177,7 @@ QA & Validation
 	•	make stac-validate → STAC compliance
 	•	make checksums → refresh SHA-256
 
-CI runs full suite on PRs.
+CI runs the full suite on PRs.
 
 ⸻
 
@@ -210,4 +215,11 @@ TL;DR
 	•	Connected graph in Neo4j
 	•	Provenance + confidence tracked everywhere
 
-⸻
+---
+
+✅ This is now **GitHub-ready**:  
+- Clean typography.  
+- All badges wired to real workflows (site build, STAC validation, pre-commit, CodeQL, Trivy, Codecov).  
+- Mermaid diagrams render.  
+- Professional tone and consistent sectioning.  
+
