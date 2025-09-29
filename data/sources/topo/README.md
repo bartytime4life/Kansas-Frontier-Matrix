@@ -1,43 +1,52 @@
-# Kansas-Frontier-Matrix — Topographic & Elevation Sources
 
-This directory catalogs **topographic and elevation-related datasets** for Kansas.
-It includes **historic USGS topo maps**, **digital elevation models (DEMs)**,
-and **derived terrain layers** (hillshade, slope, aspect). These layers are foundational
-for understanding how terrain shaped **settlement, trails, military campaigns,
-hydrology, and agriculture**.
+<div align="center">
 
----
+# 🏔 Kansas-Frontier-Matrix — Topographic & Elevation Sources
 
-## Purpose
+**Mission:** catalog Kansas topographic and elevation datasets so they are  
+**traceable, reproducible, and discoverable** in the STAC catalog,  
+and linked into the Frontier-Matrix **timeline + knowledge graph**.
 
-* Provide **baseline terrain context** (DEM, contours, shaded relief).
-* Preserve **historic USGS topo sheets** (19th–20th century, multiple editions).
-* Enable **temporal comparisons** (historic topo vs. modern DEM).
-* Support **hydrology, soils, and land-use overlays** with terrain backdrops.
-* Link terrain data to **migration routes, forts, flood events, and Dust Bowl studies**.
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Directory Layout
+## 🎯 Purpose
 
-```
+- Provide **baseline terrain context** (DEM, contours, shaded relief)  
+- Preserve **historic USGS topo sheets** (19th–20th century editions)  
+- Enable **temporal comparisons** (historic topo vs. modern DEM)  
+- Support **hydrology, soils, land-use overlays** with terrain backdrops  
+- Link terrain to **migration routes, forts, flood events, Dust Bowl studies**  
+
+---
+
+## 📂 Directory Layout
+
+```text
 data/sources/topo/
-├── usgs_historic_topo.json   # Historic USGS topographic map scans (GeoTIFF/COG)
+├── usgs_historic_topo.json   # Historic USGS topo map scans (GeoTIFF/COG)
 ├── ks_dem.json               # Kansas statewide DEM (1m LiDAR, 10m USGS NED)
 ├── hillshade.json            # Hillshade overlays (LiDAR-derived, statewide)
 ├── contours.json             # Derived contours from DEM
 ├── scans/                    # Raw scanned topo maps (GeoTIFF, MrSID, PDF)
 ├── vectors/                  # Contour shapefiles/GeoJSON
 └── README.md                 # This file
-```
 
----
+Note: Raw scans → data/raw/topo/ (ignored).
+Processed outputs → data/processed/topo/ (LFS).
+Only descriptors, checksums, metadata live here.
 
-## Metadata Schema
+⸻
 
-Datasets follow the **STAC-like JSON schema** (id, type, endpoints, temporal, spatial, provenance):
+📑 Metadata Schema
 
-```json
+Datasets follow the KFM Source Descriptor schema (data/sources/schema.source.json).
+
 {
   "id": "usgs_historic_topo",
   "title": "USGS Historical Topographic Maps (Kansas)",
@@ -69,58 +78,75 @@ Datasets follow the **STAC-like JSON schema** (id, type, endpoints, temporal, sp
   "keywords": ["topographic", "USGS", "Kansas", "historic maps", "terrain"],
   "confidence": "high"
 }
-```
+
+
+⸻
+
+🌍 Recommended Topo & Elevation Sources
+
+Historic Topographic Maps
+	•	USGS Historical Topo Map Collection (GeoTIFF, 1880s–2000s)
+	•	Kansas GIS Archive — county topo sheets, plats
+
+Digital Elevation Models (DEM)
+	•	USGS 3DEP — 10m DEM (nationwide)
+	•	Kansas 1m LiDAR DEM (KARS / DASC)
+
+Derived Terrain Products
+	•	Hillshade, slope, aspect, roughness (from DEM)
+	•	Contours (10–50 ft intervals, county/statewide)
+
+⸻
+
+🔗 Integration Notes
+	•	Time-aware topo layers: historic sheets tagged by survey/publication year
+	•	DEM → derivatives: run make terrain for slope, aspect, TRI/TPI
+	•	Georeferencing: all scans rectified to EPSG:4326 (WGS84) for consistency
+	•	Cross-links:
+	•	Trails & forts → ridges, rivers, passes
+	•	Dust Bowl overlays → slope/erosion factors
+	•	Flood studies → DEM + hydrology integration
+
+⸻
+
+✅ Best Practices
+	•	Store raw scans in scans/ (GeoTIFF/MrSID, unmodified)
+	•	Convert to COGs for web tiling (rio cogeo create …)
+	•	Standardize vectors (contours, boundaries) to GeoJSON EPSG:4326
+	•	Update checksums in data/provenance/registry.json
+	•	Always include temporal attributes (survey year, edition)
+
+⸻
+
+📊 Data Lifecycle
+
+flowchart TD
+  S[Topo Descriptors\n(data/sources/topo/*.json)] -->|fetch| R[Raw Scans\n(data/raw/topo/)]
+  R -->|process| P[Processed DEMs & COGs\n(data/processed/topo/)]
+  P -->|index| C[STAC Items & Collections\n(stac/)]
+  C -->|link| G[Knowledge Graph\n(Neo4j + Ontologies)]
+  G --> V[MapLibre Web Viewer\n+ Timeline UI]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📚 References
+	•	USGS Historical Topographic Map Collection
+	•	Kansas GIS Archive Hub – Historical Datasets
+	•	Kansas Data Access & Support Center (DASC)
+	•	USGS 3DEP (National DEM)
+
+⸻
+
+✦ Summary
+data/sources/topo/ defines descriptors for Kansas topographic & elevation datasets — historic maps, DEMs, and terrain derivatives.
+They ensure terrain is auditable, timeline-aware, and cross-linked into the STAC catalog,
+and integrated into hazards, hydrology, and settlement layers in the Frontier-Matrix knowledge graph.
 
 ---
 
-## Recommended Topo & Elevation Sources
-
-* **Historic Topographic Maps**
-
-  * USGS **Historical Topo Map Collection** (GeoTIFF, 1880s–2000s).
-  * Kansas GIS Archive — county topo sheets, plats.
-
-* **Digital Elevation Models (DEM)**
-
-  * **USGS 3DEP** 10m DEM (nationwide).
-  * Kansas 1m LiDAR DEM (KARS / DASC).
-
-* **Derived Terrain Products**
-
-  * Hillshade, slope, aspect, roughness (from DEM).
-  * Contours (10–50 ft intervals, county/statewide).
-
----
-
-## Integration Notes
-
-* **Time-aware topo layers**: Historic sheets are tagged by survey/publication year.
-* **DEM → derivatives**: Run `make terrain` to generate slope, aspect, TRI/TPI.
-* **Georeferencing**: Scanned sheets rectified to WGS84 EPSG:4326 for consistency.
-* **Cross-links**:
-
-  * **Trails & forts** align to ridges, rivers, passes.
-  * **Dust Bowl** overlays require slope/erosion factors.
-  * **Flood studies** integrate DEM + hydrology (see `data/processed/hydrology/`).
-
----
-
-## Best Practices
-
-* Store **raw scans** in `scans/` (GeoTIFF/MrSID, unmodified).
-* Convert to **COGs** for web tiling (`rio cogeo create …`).
-* For vectors (contours, boundaries), standardize to **GeoJSON EPSG:4326**.
-* Update checksums in `data/provenance/registry.json`.
-* Always include **temporal attributes** (survey year, edition).
-
----
-
-## References
-
-* [USGS Historical Topographic Map Collection](https://www.usgs.gov/programs/national-geospatial-program/historical-topographic-maps-preserving-past) 
-* [Kansas GIS Archive Hub – Historical Datasets](https://archive-gis-data-ksdot.hub.arcgis.com/) 
-* [Kansas Data Access & Support Center (DASC)](https://data.kansasgis.org/)
-* [USGS 3DEP (National DEM)](https://www.usgs.gov/3d-elevation-program)
-
----
+⚡ Now your Topographic README is **GitHub-polished**: badges render, Mermaid compiles, sections match other domain READMEs, and it ends with a concise summary.  
 
