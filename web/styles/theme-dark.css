@@ -1,0 +1,252 @@
+/* ------------------------------------------------------------------
+   Kansas Frontier Matrix — Theme: Dark
+   File: web/styles/theme-dark.css
+   Purpose: Dedicated dark theme tokens & semantic color ramps.
+   Usage:
+     1) Load after base.css
+     2) Apply `.theme-dark` on <html> or <body> (recommended),
+        or rely on prefers-color-scheme: dark.
+   ------------------------------------------------------------------ */
+
+/* A) Global dark defaults (prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neutrals */
+    --color-bg: #121212;
+    --color-surface: #1c1c1c;
+    --color-elev-1: #1e1e1e;
+    --color-elev-2: #2a2a2a;
+
+    --color-fg: #f0f0f0;
+    --color-fg-muted: #aaaaaa;
+    --color-border: #333333;
+
+    /* Accents */
+    --color-accent: #3a86ff;
+    --color-accent-contrast: #ffffff;
+    --color-accent-alt: #d770d4;
+    --color-accent-alt-contrast: #ffffff;
+
+    /* Status / qualitative */
+    --color-ok: #3dd9a6;
+    --color-warn: #ff6b5a;
+    --color-info: #4aa3ff;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.6);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.7);
+
+    /* Typography */
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-heading: "Zilla Slab", Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+    /* Sizing */
+    --base-font-size: 16px;
+    --line-height: 1.5;
+    --radius: 10px;
+
+    /* Component surfaces */
+    --sidebar-bg: var(--color-elev-1);
+    --timeline-bg: var(--color-elev-1);
+    --popup-bg: var(--color-elev-1);
+    --control-bg: var(--color-elev-1);
+
+    /* Link states */
+    --link: var(--color-accent);
+    --link-hover: #6da8ff;
+    --link-visited: #b38cff;
+
+    /* Focus ring */
+    --focus-ring: 0 0 0 3px rgba(58, 134, 255, 0.45);
+
+    /* Map water / land fallbacks (behind tiles) */
+    --map-water: #1c2736;
+    --map-land: #1a1a1a;
+
+    /* -------- Semantic ramps for Kansas layers -------- */
+    /* Hydrology */
+    --hydro-100: #172033;
+    --hydro-200: #1f2d4a;
+    --hydro-300: #284072;
+    --hydro-400: #2e549d;
+    --hydro-500: #3a86ff;
+    --hydro-600: #6da8ff;
+    --hydro-700: #a7c9ff;
+
+    /* Terrain */
+    --terrain-100: #2a241e;
+    --terrain-200: #3a3028;
+    --terrain-300: #4d4137;
+    --terrain-400: #655645;
+    --terrain-500: #806e55;
+    --terrain-600: #9c8b74;
+    --terrain-700: #b7a58f;
+
+    /* Vegetation */
+    --veg-100: #1c2a1c;
+    --veg-200: #234323;
+    --veg-300: #2d5c2d;
+    --veg-400: #367636;
+    --veg-500: #409040;
+    --veg-600: #5fb95f;
+    --veg-700: #8fd88f;
+
+    /* Treaties / boundaries */
+    --treaty-fill: #7a5c20;
+    --treaty-stroke: #e0c080;
+
+    /* Rail & trails */
+    --rail-line: #aaaaaa;
+    --trail-line: #d68a50;
+
+    /* Hazards */
+    --hazard-flood: #4aa3ff;
+    --hazard-drought: #e9a03b;
+    --hazard-wildfire: #ff7a5c;
+    --hazard-tornado: #bb86fc;
+
+    /* Opacities for layering */
+    --op-weak: 0.25;
+    --op-mid: 0.5;
+    --op-strong: 0.85;
+  }
+}
+
+/* B) Explicit class hook (preferred for deterministic theming) */
+.theme-dark {
+  color-scheme: dark;
+
+  --color-bg: #121212;
+  --color-surface: #1c1c1c;
+  --color-elev-1: #1e1e1e;
+  --color-elev-2: #2a2a2a;
+
+  --color-fg: #f0f0f0;
+  --color-fg-muted: #aaaaaa;
+  --color-border: #333333;
+
+  --color-accent: #3a86ff;
+  --color-accent-contrast: #ffffff;
+  --color-accent-alt: #d770d4;
+  --color-accent-alt-contrast: #ffffff;
+
+  --color-ok: #3dd9a6;
+  --color-warn: #ff6b5a;
+  --color-info: #4aa3ff;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.7);
+
+  --sidebar-bg: var(--color-elev-1);
+  --timeline-bg: var(--color-elev-1);
+  --popup-bg: var(--color-elev-1);
+  --control-bg: var(--color-elev-1);
+
+  --link: var(--color-accent);
+  --link-hover: #6da8ff;
+  --link-visited: #b38cff;
+
+  --focus-ring: 0 0 0 3px rgba(58, 134, 255, 0.45);
+
+  --map-water: #1c2736;
+  --map-land: #1a1a1a;
+
+  --hydro-100: #172033;
+  --hydro-200: #1f2d4a;
+  --hydro-300: #284072;
+  --hydro-400: #2e549d;
+  --hydro-500: #3a86ff;
+  --hydro-600: #6da8ff;
+  --hydro-700: #a7c9ff;
+
+  --terrain-100: #2a241e;
+  --terrain-200: #3a3028;
+  --terrain-300: #4d4137;
+  --terrain-400: #655645;
+  --terrain-500: #806e55;
+  --terrain-600: #9c8b74;
+  --terrain-700: #b7a58f;
+
+  --veg-100: #1c2a1c;
+  --veg-200: #234323;
+  --veg-300: #2d5c2d;
+  --veg-400: #367636;
+  --veg-500: #409040;
+  --veg-600: #5fb95f;
+  --veg-700: #8fd88f;
+
+  --treaty-fill: #7a5c20;
+  --treaty-stroke: #e0c080;
+
+  --rail-line: #aaaaaa;
+  --trail-line: #d68a50;
+
+  --hazard-flood: #4aa3ff;
+  --hazard-drought: #e9a03b;
+  --hazard-wildfire: #ff7a5c;
+  --hazard-tornado: #bb86fc;
+
+  --op-weak: 0.25;
+  --op-mid: 0.5;
+  --op-strong: 0.85;
+}
+
+/* C) Token applications to common elements */
+.theme-dark,
+@media (prefers-color-scheme: dark) {
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  .sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--color-border); }
+  .timeline { background: var(--timeline-bg); border-top: 1px solid var(--color-border); }
+
+  a { color: var(--link); }
+  a:hover { color: var(--link-hover); }
+  a:visited { color: var(--link-visited); }
+
+  button,
+  .btn {
+    background: var(--control-bg);
+    color: var(--color-fg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  button:hover,
+  .btn:hover { box-shadow: var(--shadow-md); }
+
+  /* Focus ring for accessibility */
+  :where(button, a, input, select, textarea, [tabindex]):focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Map fallbacks */
+  #map { background: linear-gradient(180deg, var(--map-water), var(--map-land)); }
+}
+
+/* D) Utility swatches for legends (optional helpers) */
+.swatch-hydro   { background: var(--hydro-500); border: 1px solid var(--color-border); }
+.swatch-terrain { background: var(--terrain-400); border: 1px solid var(--color-border); }
+.swatch-veg     { background: var(--veg-500); border: 1px solid var(--color-border); }
+.swatch-treaty  { background: var(--treaty-fill); border: 1px solid var(--treaty-stroke); }
+.swatch-rail    { background: var(--rail-line); }
+.swatch-trail   { background: var(--trail-line); }
+
+.badge-flood    { background: color-mix(in srgb, var(--hazard-flood), #000000 25%); color: #eaf6ff; }
+.badge-drought  { background: color-mix(in srgb, var(--hazard-drought), #000000 25%); color: #fff4e0; }
+.badge-wildfire { background: color-mix(in srgb, var(--hazard-wildfire), #000000 25%); color: #fff2ec; }
+.badge-tornado  { background: color-mix(in srgb, var(--hazard-tornado), #000000 25%); color: #f8f0ff; }
+
+/* E) Optional subtle card style */
+.card {
+  background: var(--color-elev-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
