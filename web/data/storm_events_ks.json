@@ -2,6 +2,42 @@
   "type": "FeatureCollection",
   "name": "storm_events_ks",
   "bbox": [-101.95, 37.95, -94.62, 39.25],
+
+  "kfm_meta": {
+    "generated": "2025-09-26T00:00:00Z",
+    "schema_version": "1.1",
+    "description": "Kansas storm events (demo). Mixed geometries (tracks & points) for tornado, hail, and flash flood. Replace/expand with authoritative NWS/NOAA exports.",
+    "coordinate_reference": "WGS84 (EPSG:4326)",
+    "license": "CC BY 4.0",
+    "properties_schema": {
+      "event_id": "Provider event identifier",
+      "event_type": "Provider event type (e.g., Tornado, Hail, Flash Flood)",
+      "hazard": "Unified hazard key: tornado | hail | flood | wind | other",
+      "begin_date": "Event start (ISO 8601, UTC)",
+      "end_date": "Event end (ISO 8601, UTC)",
+      "time_start": "Duplicate of begin_date for timeline filtering",
+      "time_end": "Duplicate of end_date for timeline filtering",
+      "ef_scale": "Tornado EF label (e.g., EF2), optional",
+      "f_scale": "Legacy F label (e.g., F5), optional",
+      "ef": "Tornado EF numeric (0–5), optional",
+      "f": "Tornado F numeric (0–5), optional",
+      "hail_size_in": "Max hail size (inches), optional",
+      "rain_total_in": "Estimated rainfall total (inches), optional",
+      "magnitude": "Unified numeric magnitude (EF/F value, hail inches, rainfall inches)",
+      "magnitude_units": "Units for magnitude (EF, F, in)",
+      "severity": "Heuristic bucket: minor | moderate | severe | extreme",
+      "deaths": "Fatalities",
+      "injuries": "Injuries",
+      "damage_usd": "Estimated damage (USD), optional",
+      "fips": "County FIPS (semicolon-separated if multiple)",
+      "source": "Provenance",
+      "notes": "Remarks"
+    },
+    "defaults": {
+      "time_end": null
+    }
+  },
+
   "features": [
     {
       "type": "Feature",
@@ -10,14 +46,29 @@
       "properties": {
         "event_id": "20120525-KS-0001",
         "event_type": "Tornado",
+        "hazard": "tornado",
+
         "begin_date": "2012-05-25T22:14:00Z",
-        "end_date": "2012-05-25T22:42:00Z",
+        "end_date":   "2012-05-25T22:42:00Z",
+        "time_start": "2012-05-25T22:14:00Z",
+        "time_end":   "2012-05-25T22:42:00Z",
+
         "ef_scale": "EF2",
+        "ef": 2,
+        "f_scale": null,
+        "f": null,
+
+        "magnitude": 2,
+        "magnitude_units": "EF",
+        "severity": "severe",
+
+        "length_km": 35.2,
+        "width_m": 450,
         "deaths": 0,
         "injuries": 3,
         "damage_usd": 1250000,
         "source": "NWS",
-        "fips": "20083", 
+        "fips": "20083",
         "notes": "Track across Hodgeman Co; scattered structure damage."
       },
       "geometry": {
@@ -31,6 +82,7 @@
         ]
       }
     },
+
     {
       "type": "Feature",
       "id": "se-1999-06-12-hail",
@@ -38,9 +90,19 @@
       "properties": {
         "event_id": "19990612-KS-0007",
         "event_type": "Hail",
+        "hazard": "hail",
+
         "begin_date": "1999-06-12T01:30:00Z",
-        "end_date": "1999-06-12T02:05:00Z",
+        "end_date":   "1999-06-12T02:05:00Z",
+        "time_start": "1999-06-12T01:30:00Z",
+        "time_end":   "1999-06-12T02:05:00Z",
+
         "hail_size_in": 1.75,
+
+        "magnitude": 1.75,
+        "magnitude_units": "in",
+        "severity": "moderate",
+
         "deaths": 0,
         "injuries": 0,
         "damage_usd": 45000,
@@ -53,6 +115,7 @@
         "coordinates": [-97.33, 38.95]
       }
     },
+
     {
       "type": "Feature",
       "id": "se-2007-07-04-flash-flood",
@@ -60,9 +123,19 @@
       "properties": {
         "event_id": "20070704-KS-0012",
         "event_type": "Flash Flood",
+        "hazard": "flood",
+
         "begin_date": "2007-07-04T05:10:00Z",
-        "end_date": "2007-07-04T08:40:00Z",
+        "end_date":   "2007-07-04T08:40:00Z",
+        "time_start": "2007-07-04T05:10:00Z",
+        "time_end":   "2007-07-04T08:40:00Z",
+
         "rain_total_in": 4.2,
+
+        "magnitude": 4.2,
+        "magnitude_units": "in",
+        "severity": "moderate",
+
         "deaths": 0,
         "injuries": 0,
         "damage_usd": 90000,
