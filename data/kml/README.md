@@ -1,46 +1,46 @@
-# KML / KMZ Exports
+# Kansas-Frontier-Matrix — KML / KMZ Exports
 
-This folder holds **Google Earth–ready** exports of our rasters and vectors:
-- Regionated KML/KMZ **super-overlays** of large rasters (DEM hillshade, georef’d historic topos).
-- Lightweight KMLs for vectors (treaties, railroads, trails).
-- Small JSON sidecars (`*.meta.json`) for provenance + traceability (MCP-style).
+This folder holds **Google Earth–ready** exports of our rasters and vectors:  
+- Regionated **KML/KMZ super-overlays** of large rasters (DEM hillshade, georeferenced historic topos).  
+- Lightweight **KMLs** for vectors (treaties, railroads, trails, floodplains).  
+- Small JSON sidecars (`*.meta.json`) for provenance + traceability (MCP-style).  
 
-> Tip: Prefer **KMZ** (zipped KML + assets) for distribution; aim to keep each file < ~100–200 MB.
+> 💡 Tip: Prefer **KMZ** (zipped KML + assets) for distribution; aim to keep each file < ~100–200 MB.  
+> KMZ files can be attached to GitHub releases or published as project deliverables for educators,  
+> historians, and the public.
 
 ---
 
 ## What belongs here
 
-- `*.kmz` — regionated raster super-overlays for Google Earth.
-- `*.kml` — vectors (and very small rasters).
-- `*.meta.json` — optional per-export metadata (who/when/how, inputs, checksums).
-- `README.md` — this doc.
+- `*.kmz` — regionated raster super-overlays for Google Earth.  
+- `*.kml` — vectors (and very small rasters).  
+- `*.meta.json` — per-export metadata (who/when/how, inputs, checksums).  
+- `README.md` — this documentation.  
 
 We **do not** stage raw/processed COGs or GeoJSON here; those live under `data/cogs/**` and `data/processed/**`.  
-This directory is strictly for **Earth viewer** exports.
+This directory is strictly for **Earth viewer exports** [oai_citation:0‡Kansas Frontier Matrix – GIS Archive & Deeds Data Integration Guide.pdf](file-service://file-A8GiBPZM1dWsKG68SXPHjE).
 
 ---
 
 ## Conventions
 
 ### CRS
-- Google Earth renders in geographic WGS84. Export tools will reproject as needed.
-- Sources may be any CRS; record the source CRS in the meta.
+- Google Earth renders in geographic WGS84. Export tools will reproject automatically.  
+- Always record the **source CRS** in metadata.
 
 ### Naming
-```
 
-<topic>\[\_<year-or-range>].kmz
+[_].kmz
 e.g.,
-ks\_hillshade\_2018\_2020.kmz
-usgs\_topo\_larned\_1894.kmz
+ks_hillshade_2018_2020.kmz
+usgs_topo_larned_1894.kmz
 treaties.kml
-railroads\_1900.kml
+railroads_1900.kml
 
-````
+### Metadata (`*.meta.json`)
+Create a JSON sidecar alongside each KML/KMZ:
 
-### Metadata (optional but recommended)
-Create a `*.meta.json` alongside the KML/KMZ:
 ```json
 {
   "id": "usgs_topo_larned_1894_kmz",
@@ -51,40 +51,27 @@ Create a `*.meta.json` alongside the KML/KMZ:
   "rms_georef_m": 8.6,
   "license": "Public Domain (USGS)",
   "created": "2025-09-19T20:30:00Z",
-  "sha256": "<optional checksum of KMZ>"
+  "sha256": "<checksum of KMZ>"
 }
-````
 
----
+Metadata ensures traceability and MCP reproducibility ￼.
 
-## How to generate
+⸻
 
-### A) Raster → **KMZ super-overlay** (recommended for large rasters)
+How to generate
 
-**GDAL translate (one-liner):**
+A) Raster → KMZ super-overlay
 
-```bash
 gdal_translate -of KMLSUPEROVERLAY \
-  -co FORMAT=PNG \                    # PNG preserves transparency; use JPEG for photos
+  -co FORMAT=PNG \
   data/cogs/hillshade/ks_hillshade_2018_2020.tif \
   data/kml/ks_hillshade_2018_2020.kmz
-```
 
-**Alternative (explicit KML tree → zip yourself):**
+	•	Use PNG for transparency (hillshade, topos).
+	•	Use JPEG for photographic imagery (smaller KMZ).
 
-```bash
-gdal_translate -of KMLSUPEROVERLAY -co FORMAT=PNG input.tif out_folder   # writes out_folder/doc.kml + tiles/
-zip -r data/kml/out.kmz out_folder
-```
+B) Vector → KML
 
-> Notes:
->
-> * Use `FORMAT=PNG` for overlays with transparency (hillshade, historic map collars).
-> * Use `FORMAT=JPEG` for photographic rasters without transparency (smaller KMZ).
-
-### B) Vector (GeoJSON/GeoPackage/SHP) → **KML**
-
-```bash
 # Treaties (polygon)
 ogr2ogr -f KML data/kml/treaties.kml data/processed/vectors/treaties.geojson \
   -dsco NameField=name -select id,name,year
@@ -92,11 +79,9 @@ ogr2ogr -f KML data/kml/treaties.kml data/processed/vectors/treaties.geojson \
 # Railroads circa 1900 (line)
 ogr2ogr -f KML data/kml/railroads_1900.kml data/processed/vectors/railroads_1900.geojson \
   -nlt PROMOTE_TO_MULTI -select id,name,year
-```
 
-### C) Color-relief or styled rasters (optional pre-step)
+C) Styled rasters (optional pre-step)
 
-```bash
 gdaldem color-relief \
   data/processed/dem/ks_1m_dem.tif \
   configs/colorramps/hillshade.txt \
@@ -104,16 +89,15 @@ gdaldem color-relief \
 
 gdal_translate -of KMLSUPEROVERLAY -co FORMAT=PNG \
   /tmp/ks_hillshade_rgba.tif data/kml/ks_hillshade_2018_2020.kmz
-```
 
----
 
-## Makefile snippets (drop into project `Makefile`)
+⸻
 
-```make
+Makefile Integration
+
 KML_DIR := data/kml
 
-# --- Raster → KMZ (expects COGs or processed GeoTIFFs) -----------------
+# Raster → KMZ
 $(KML_DIR)/%.kmz: data/cogs/hillshade/%.tif
 	@mkdir -p $(KML_DIR)
 	gdal_translate -of KMLSUPEROVERLAY -co FORMAT=PNG $< $@
@@ -123,7 +107,7 @@ $(KML_DIR)/usgs_topo_%.kmz: data/cogs/overlays/usgs_topo_%.tif
 	@mkdir -p $(KML_DIR)
 	gdal_translate -of KMLSUPEROVERLAY -co FORMAT=PNG $< $@
 
-# --- Vectors → KML -----------------------------------------------------
+# Vectors → KML
 $(KML_DIR)/%.kml: data/processed/vectors/%.geojson
 	@mkdir -p $(KML_DIR)
 	ogr2ogr -f KML $@ $<
@@ -133,50 +117,42 @@ kml-all: \
 	$(KML_DIR)/ks_hillshade_2018_2020.kmz \
 	$(KML_DIR)/treaties.kml \
 	$(KML_DIR)/railroads_1900.kml
-```
 
-Usage:
 
-```bash
-make data/kml/ks_hillshade_2018_2020.kmz
-make data/kml/treaties.kml
-```
+⸻
+
+Quality & Troubleshooting
+	•	KMZ too large? Crop/downsample first (gdalwarp -te …).
+	•	Blurred tiles? Export from the highest-resolution source; avoid double pyramids.
+	•	Transparency lost? Ensure alpha band or NODATA is set.
+	•	Vector clutter? Simplify and trim attributes (ogr2ogr -simplify 0.0005).
+	•	Layer names wrong? Use -dsco NameField=<field> with ogr2ogr.
+
+⸻
+
+Checklist before committing
+	•	✅ Opens cleanly in Google Earth Pro (desktop).
+	•	✅ Reasonable size (prefer KMZ).
+	•	✅ *.meta.json present (provenance, inputs, tool versions).
+	•	✅ Titles/descriptions are non-technical.
+	•	✅ Linked to STAC items in stac/items/kml/.
+
+⸻
+
+Examples staged next
+	•	ks_hillshade_2018_2020.kmz — DEM hillshade super-overlay.
+	•	usgs_topo_larned_1894.kmz — georeferenced historic topo.
+	•	treaties.kml — treaty/reservation polygons.
+	•	railroads_1900.kml — 1900-era railroads (for time slider).
+
+⸻
+
+See Also
+	•	data/cogs/ — source rasters for KMZ exports.
+	•	data/processed/vectors/ — source vectors for KML exports.
+	•	data/stac/ — STAC items documenting exports and provenance.
+	•	docs/ — MCP method & reproducibility templates.
 
 ---
 
-## Quality & troubleshooting
-
-* **KMZ too large?** Crop or downsample first:
-
-  ```bash
-  gdalwarp -te <minx> <miny> <maxx> <maxy> -r bilinear in.tif /tmp/crop.tif
-  ```
-* **Seams/blur at certain zooms?** Export from the highest-resolution source; avoid pre-pyramids in the input TIFF.
-* **Transparency missing?** Ensure the source has an alpha band or a proper `NODATA` set before export; prefer `-co FORMAT=PNG`.
-* **Label clutter (vectors)?** Simplify/trim attributes:
-
-  ```bash
-  ogr2ogr -simplify 0.0005 -select id,name,year -f KML out.kml src.geojson
-  ```
-* **Wrong layer names?** Use `-dsco NameField=<field>` (dataset name) or `-lco NameField=<field>` (layer name) with `ogr2ogr`.
-
----
-
-## Checklist before committing
-
-* ✅ Opens cleanly in **Google Earth Pro** (desktop).
-* ✅ Reasonable size (prefer **KMZ**).
-* ✅ `*.meta.json` present (provenance, tool/version, dates).
-* ✅ Titles/descriptions are non-developer friendly.
-* ✅ If derived from project data, input paths recorded in meta.
-
----
-
-## Examples to stage next
-
-* `ks_hillshade_2018_2020.kmz` — DEM hillshade super-overlay.
-* `usgs_topo_larned_1894.kmz` — georef’d historic topo super-overlay.
-* `treaties.kml` — treaty/reservation polygons.
-* `railroads_1900.kml` — 1900 lines for time-slider demos.
-
-```
+Would you like me to also generate a **`treaties.meta.json`** and a **`railroads_1900.meta.json`** example so those vector KML exports are immediately STAC-linked and MCP-compliant?
