@@ -1,55 +1,156 @@
 {
   "id": "storm_events",
   "title": "NOAA Storm Events (KS)",
-  "type": "geojson",
-  "url": "data/processed/storm_events_ks.json",
+  "type": "vector",
+  "data": "web/data/storm_events_ks.json",
   "category": "hazards",
 
   "time": { "start": "1950-01-01", "end": null },
-  "timeProperty": "begin_date",
+  "timeMapping": {
+    "start": "time_start",
+    "end": "time_end",
+    "fallbackStart": "begin_date",
+    "fallbackEnd": "end_date"
+  },
 
+  "idProperty": "event_id",
+  "interactive": true,
   "visible": false,
+
   "minzoom": 4,
   "maxzoom": 19,
+  "opacity": 1.0,
+  "zIndex": 55,
 
-  "popup": ["event_type", "begin_date", "deaths", "damage_usd"],
-
-  "paint": {
-    "circle": {
-      "circle-radius": 3,
-      "circle-color": [
-        "match",
-        ["downcase", ["get", "event_type"]],
-        "tornado", "#D00000",
-        "thunderstorm wind", "#EE9B00",
-        "hail", "#3A86FF",
-        "flash flood", "#577590",
-        "flood", "#577590",
-        "wildfire", "#E76F51",
-        "winter storm", "#6C757D",
-        "blizzard", "#6C757D",
-        "#EE9B00"
-      ],
-      "circle-stroke-color": "#FFFFFF",
-      "circle-stroke-width": 0.6,
-      "circle-opacity": 0.9
-    },
-    "line": { "line-opacity": 0 },
-    "fill": { "fill-opacity": 0 }
-  },
+  "popup": [
+    "event_type",
+    "hazard",
+    "begin_date",
+    "end_date",
+    "magnitude",
+    "magnitude_units",
+    "deaths",
+    "injuries",
+    "damage_usd",
+    "fips",
+    "source",
+    "notes"
+  ],
 
   "fields": {
-    "event_type":  { "type": "string", "description": "NOAA event type (e.g., Tornado, Hail, Flood)" },
-    "begin_date":  { "type": "string", "format": "date-time", "description": "Event start (ISO8601)" },
-    "end_date":    { "type": "string", "format": "date-time", "description": "Event end (ISO8601, optional)" },
-    "deaths":      { "type": "number", "description": "Total fatalities (direct + indirect, if pre-summed)" },
-    "injuries":    { "type": "number", "description": "Total injuries (optional)" },
-    "damage_usd":  { "type": "number", "description": "Estimated damage (USD, inflation not adjusted unless noted)" },
-    "source":      { "type": "string", "description": "Reporting source (optional)" },
-    "fips":        { "type": "string", "description": "County/area code (optional)" }
+    "event_id":     { "type": "string", "description": "Provider event identifier" },
+    "event_type":   { "type": "string", "description": "NOAA event type (e.g., Tornado, Hail, Flash Flood)" },
+    "hazard":       { "type": "string", "description": "Unified hazard key: tornado | hail | flood | wind | other" },
+    "begin_date":   { "type": "string", "format": "date-time", "description": "Event start (ISO 8601, UTC)" },
+    "end_date":     { "type": ["string", "null"], "format": "date-time", "description": "Event end (ISO 8601, UTC)" },
+    "time_start":   { "type": "string", "format": "date-time", "description": "Timeline start (duplicate of begin_date)" },
+    "time_end":     { "type": ["string", "null"], "format": "date-time", "description": "Timeline end (duplicate of end_date)" },
+    "magnitude":    { "type": ["number", "null"], "description": "Unified magnitude (EF/F value, hail inches, rainfall inches)" },
+    "magnitude_units": { "type": ["string", "null"], "description": "EF | F | in" },
+    "deaths":       { "type": "number", "description": "Fatalities" },
+    "injuries":     { "type": "number", "description": "Injuries" },
+    "damage_usd":   { "type": ["number", "null"], "description": "Estimated damage (USD)" },
+    "fips":         { "type": "string", "description": "County FIPS (semicolon-separated if multiple)" },
+    "source":       { "type": "string", "description": "Provenance" },
+    "notes":        { "type": "string", "description": "Remarks" }
   },
 
-  "search": { "qFields": ["event_type", "begin_date", "fips"] },
+  "search": { "qFields": ["event_type", "hazard", "begin_date", "fips", "notes"] },
+
+  "legend": {
+    "title": "Storm Events",
+    "items": [
+      { "label": "Tornado (track)",  "lineColor": "#D00000", "lineWidth": 2.0 },
+      { "label": "Hail (point)",     "circleColor": "#3A86FF", "circleRadius": 4 },
+      { "label": "Flood (point)",    "circleColor": "#577590", "circleRadius": 4 },
+      { "label": "Wind/Other",       "circleColor": "#EE9B00", "circleRadius": 4 }
+    ]
+  },
+
+  "sublayers": [
+    {
+      "id": "storm_tracks",
+      "filter": { "geometry": ["LineString", "MultiLineString"] },
+      "style": {
+        "lineCap": "round",
+        "lineJoin": "round",
+        "lineOpacity": 0.95
+      },
+      "styleBy": [
+        {
+          "property": "hazard",
+          "when": { "eq": "tornado" },
+          "lineColor": "#D00000",
+          "lineWidth": 2.0
+        },
+        {
+          "property": "hazard",
+          "when": { "neq": "tornado" },
+          "lineColor": "#6C757D",
+          "lineWidth": 1.2,
+          "lineDasharray": [2, 2]
+        }
+      ],
+      "hoverStyle": { "lineOpacity": 1.0, "lineWidth": 0.6, "lineWidthAdditive": true },
+      "selectedStyle": { "lineOpacity": 1.0, "lineWidth": 1.0, "lineWidthAdditive": true },
+      "labels": {
+        "textField": "{event_type}",
+        "minzoom": 11,
+        "maxzoom": 24,
+        "textHaloWidth": 1.0
+      }
+    },
+    {
+      "id": "storm_points",
+      "filter": { "geometry": ["Point", "MultiPoint"] },
+      "cluster": { "enabled": true, "maxzoom": 8, "radius": 40, "color": "#6C757D", "textColor": "#FFFFFF" },
+      "style": {
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#FFFFFF",
+        "circleStrokeWidth": 0.8
+      },
+      "styleBy": [
+        {
+          "property": "hazard",
+          "when": { "eq": "tornado" },
+          "circleColor": "#D00000",
+          "circleRadius": 4
+        },
+        {
+          "property": "hazard",
+          "when": { "eq": "hail" },
+          "circleColor": "#3A86FF",
+          "circleRadius": { "scale": "linear", "field": "magnitude", "domain": [0.5, 3.0], "range": [3, 7] }
+        },
+        {
+          "property": "hazard",
+          "when": { "eq": "flood" },
+          "circleColor": "#577590",
+          "circleRadius": { "scale": "linear", "field": "magnitude", "domain": [1, 6], "range": [3, 8] }
+        },
+        {
+          "property": "hazard",
+          "when": { "eq": "wind" },
+          "circleColor": "#EE9B00",
+          "circleRadius": 4
+        },
+        {
+          "property": "hazard",
+          "when": { "neq": "tornado|hail|flood|wind" },
+          "circleColor": "#6C757D",
+          "circleRadius": 3
+        }
+      ],
+      "hoverStyle": { "circleRadius": 1, "circleRadiusAdditive": true, "circleOpacity": 1.0 },
+      "selectedStyle": { "circleRadius": 2, "circleRadiusAdditive": true, "circleOpacity": 1.0 },
+      "labels": {
+        "textField": "{event_type}",
+        "minzoom": 10,
+        "maxzoom": 24,
+        "textHaloWidth": 1.0
+      }
+    }
+  ],
 
   "legendSymbol": "events",
   "attribution": "NOAA NCEI Storm Events Database"
