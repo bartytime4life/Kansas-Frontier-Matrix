@@ -1,7 +1,3 @@
-Perfect — here’s the finalized README.md for data/sources/hazards/, with a clean badge bar, consistent formatting, and a Mermaid flowchart showing the hazard data lifecycle into STAC and the Knowledge Graph. It follows the Kansas-Frontier-Matrix style you’ve been building.
-
-⸻
-
 
 <div align="center">
 
@@ -158,5 +154,3 @@ auditable, reproducible, and time-aware — powering the Kansas-Frontier-Matrix
 knowledge graph, STAC catalog, and interactive viewer.
 
 ---
-
-Do you want me to also make a **companion `stac/collections/hazards.json` template** (with schema + collection-level metadata) so these descriptors plug cleanly into your catalog? That way hazards will slot directly into the STAC 1.0.0 structure without guesswork.
