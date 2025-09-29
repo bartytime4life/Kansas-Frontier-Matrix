@@ -129,24 +129,24 @@ For quick dev. Same keys, minimal:
 
 ⸻
 
-📊 Coverage Status (Web Viewer)
+## 📊 Coverage Status (Web Viewer)
 
 <!-- WEB_COVERAGE_START -->
 
-
-Layer Type / Domain	Example Source	Web Support
-🏔 DEM / Terrain	USGS LiDAR → hillshade tiles	
-🗺 Historic Topos	USGS Historic Topo maps	
-🌊 Hydrology	Kansas River channels (GeoJSON)	
-🌱 Land Cover	NLCD slices (vectorized / COG)	
-🧭 Soils / Parcels	NRCS SSURGO (vector, simplified)	
-🪶 Treaties & Lands	Boundary polygons (GeoJSON)	
-🚂 Railroads & Trails	1850–1920 GIS (line GeoJSON)	
-🌡 Climate Normals	NOAA NCEI 1991–2020 (station points)	
-🌪 Hazards — Tornado	SPC Tornado Paths (polylines)	
-🌊 Hazards — Floods	FEMA / USGS flood zones	
-🔥 Hazards — Wildfire	NIFC perimeters	
-🪶 Oral Histories & Arch.	Tribal narratives (points)	
+| Layer Type / Domain       | Example Source                            | Web Support |
+|---------------------------|-------------------------------------------|-------------|
+| 🏔 DEM / Terrain          | USGS LiDAR → hillshade tiles              |             |
+| 🗺 Historic Topos         | USGS Historic Topo maps                   |             |
+| 🌊 Hydrology              | Kansas River channels (GeoJSON)           |             |
+| 🌱 Land Cover             | NLCD slices (vectorized / COG)            |             |
+| 🧭 Soils / Parcels        | NRCS SSURGO (vector, simplified)          |             |
+| 🪶 Treaties & Lands       | Boundary polygons (GeoJSON)               |             |
+| 🚂 Railroads & Trails     | 1850–1920 GIS (line GeoJSON)              |             |
+| 🌡 Climate Normals        | NOAA NCEI 1991–2020 (station points)      |             |
+| 🌪 Hazards — Tornado      | SPC Tornado Paths (polylines)             |             |
+| 🌊 Hazards — Floods       | FEMA / USGS flood zones                   |             |
+| 🔥 Hazards — Wildfire     | NIFC perimeters                           |             |
+| 🪶 Oral Histories & Arch. | Tribal narratives (points)                |             |
 
 <!-- WEB_COVERAGE_END -->
 
