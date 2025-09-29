@@ -1,4 +1,3 @@
-# .github/workflows/codeql.yml
 name: CodeQL
 
 on:
@@ -28,6 +27,7 @@ on:
   schedule:
     - cron: "45 2 * * 0" # Weekly (Sunday 02:45 UTC)
 
+# Repo-wide least privilege
 permissions:
   contents: read
   actions: read
@@ -43,6 +43,11 @@ jobs:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+      security-events: write
 
     strategy:
       fail-fast: false
@@ -50,7 +55,7 @@ jobs:
         language: [ "javascript-typescript", "python" ]
 
     steps:
-      # Harden egress (set to 'block' to strictly deny)
+      # Harden egress (set to 'block' once you have all endpoints enumerated)
       - name: Harden Runner
         uses: step-security/harden-runner@v2
         with:
@@ -150,7 +155,6 @@ jobs:
           languages: ${{ matrix.language }}
           queries: +security-extended,security-and-quality
           config-file: ${{ steps.cfg.outputs.path }}
-          build-mode: autobuild
 
       - name: Initialize CodeQL (inline config)
         if: steps.cfg.outputs.path == ''
@@ -169,7 +173,6 @@ jobs:
               - docs
               - "**/*.min.js"
               - "**/node_modules/**"
-          build-mode: autobuild
 
       # Optional: if autobuild struggles, enable a manual build step
       # - name: Manual build (optional)
