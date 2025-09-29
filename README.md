@@ -71,10 +71,11 @@ flowchart TD
   H --> E
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
-<!-- END OF MERMAID -->
 
 
 ⸻
+<!-- END OF MERMAID -->
+
 
 ✨ Pipeline Highlights
 	•	📂 STAC 1.0.0 catalog → provenance + temporal coverage
