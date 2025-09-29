@@ -39,26 +39,13 @@ It’s more than maps — it’s a **time-aware knowledge hub** for Kansas.
 
 ```mermaid
 flowchart TD
-  A["Sources\n(data/sources/*.json)"] -->|fetch| B["COGs\n(data/cogs/**/*.tif)"]
-  B -->|derive| C["Derivatives\n(slope, aspect, hillshade, hydrology)"]
-  C -->|index| D["STAC Catalog\n(stac/catalog.json, items/)"]
-  D -->|graph| H["Knowledge Graph\n(Neo4j + Ontologies)"]
-  D -->|render| E["Configs\n(web/config/*.json)"]
-  H --> E
-  E --> F["MapLibre Web Viewer"]
-  D -->|export| G["KML/KMZ\n(earth/)"]
-
-  classDef src   fill:#FFD166,stroke:#333,stroke-width:1px;
-  classDef cogs  fill:#06D6A0,stroke:#333,stroke-width:1px;
-  classDef stac  fill:#118AB2,stroke:#fff,stroke-width:1px;
-  classDef web   fill:#073B4C,stroke:#fff,stroke-width:1px,color:#fff;
-  classDef earth fill:#EF476F,stroke:#fff,stroke-width:1px;
-
-  class A src;
-  class B,C cogs;
-  class D,H stac;
-  class E,F web;
-  class G earth;
+  A["Sources"] --> B["COGs"]
+  B --> C["Derivatives"]
+  C --> D["STAC Catalog"]
+  D --> E["Configs"]
+  E --> F["MapLibre Viewer"]
+  D --> G["KML/KMZ"]
+  D --> H["Knowledge Graph"]
 
 ⸻
 
