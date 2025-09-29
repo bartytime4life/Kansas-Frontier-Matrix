@@ -74,28 +74,26 @@ data/
 │
 └─ 🗺 tiles/                 # Ephemeral web map tiles (PNG/PMTiles, ignored)
 
-----
-> **Rule:** Every derivation should emit a `*_meta.json` capturing command, inputs, timestamps, versions, and checksums.
+Rule: Every derivation should emit a *_meta.json capturing command, inputs, timestamps, versions, and checksums.
 
----
+⸻
 
-## Git & LFS Policy
+Git & LFS Policy
 
-**`.gitignore`**
-- Keep `processed/**`, `cogs/**`, `derivatives/**`, `work/**`, `tmp/**`, and `tiles/**` out **by default**.
-- Allow only: `*_meta.json`, `.sha256`, curated CSV/TSV/GeoJSON, and small README docs.
+.gitignore
+	•	Keep processed/**, cogs/**, derivatives/**, work/**, tmp/**, and tiles/** out by default.
+	•	Allow only: *_meta.json, .sha256, curated CSV/TSV/GeoJSON, and small README docs.
 
-**`.gitattributes`**
-- Route heavy binaries to **Git LFS**:
-  - `*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx *.zip *.7z *.laz *.las *.pdf`
-- Keep diff-friendly text in normal Git:
-  - `*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz (kmz via LFS if large)`
+.gitattributes
+	•	Route heavy binaries to Git LFS:
+	•	*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx *.zip *.7z *.laz *.las *.pdf
+	•	Keep diff-friendly text in normal Git:
+	•	*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz (kmz via LFS if large)
 
----
+⸻
 
-## Lifecycle & Make Targets
+Lifecycle & Make Targets
 
-```mermaid
 flowchart TD
   S[Define Source\n(data/sources/*.json)] --> F[Fetch\nmake fetch]
   F --> P1[Process Vectors\nmake vectors]
