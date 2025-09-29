@@ -1,100 +1,121 @@
-# `data/work/` — Scratch + Intermediate Workspace
+# Kansas-Frontier-Matrix — `data/work/` (Scratch + Intermediate Workspace)
 
-This folder is a **sandbox for in-progress work products**:
-temporary outputs, drafts, or exploratory runs that are **not yet analysis-ready**.
-It exists to support reproducibility of the scientific process, while keeping
-canonical datasets (`data/cogs/`), curated sources (`data/sources/`),
-and reproducible derivatives (`data/derivatives/`) clean.
+This folder is a **sandbox for in-progress work products**:  
+temporary outputs, drafts, or exploratory runs that are **not yet analysis-ready**.  
 
----
+It exists to support **reproducibility of the scientific process**, while keeping canonical datasets  
+(`data/raw/`, `data/cogs/`, `data/processed/`, `data/derivatives/`) clean and stable.
 
-## What belongs here (and what doesn’t)
-
-- ✅ **Belongs**:
-  - intermediate artifacts from ETL pipelines (e.g. un-cleaned CSVs, OCR text, staging GeoTIFFs before conversion to COGs)
-  - scratch joins / test merges of sources before formal schema integration
-  - temporary outputs from notebooks or scripts under review
-  - experimental exports (e.g. clipping county DEMs, trial STAC items)  
-- 🚫 **Doesn’t**:
-  - canonical raw downloads → `data/sources/**`
-  - analysis-ready COGs, GeoJSON, or tiled outputs → `data/cogs/**` or `data/derivatives/**`
-  - validated STAC items and collections → `data/stac/**`
-
-Think of `work/` as a **lab bench**: messy by design, but wiped down
-once results are formalized and promoted.
+Think of `work/` as the **lab bench**: messy by design, wiped down once results are formalized and promoted.
 
 ---
 
-## Directory layout
+## What Belongs Here (and What Doesn’t)
 
-```
+### ✅ Belongs
+- **Intermediate artifacts** from ETL pipelines (e.g., uncleaned CSVs, OCR text dumps, staging GeoTIFFs before COG conversion).  
+- **Scratch joins / test merges** of sources before formal schema integration.  
+- **Temporary outputs** from notebooks, scripts, or pipelines under review.  
+- **Experimental exports** (e.g., clipping county DEMs, trial STAC Items, trial vectorizations).  
 
-data/
-└─ work/
-├─ scratch/        # ad-hoc scripts, CSVs, GeoJSONs, test exports
-├─ ocr/            # raw text from OCR before cleaning
-├─ staging/        # intermediate rasters/vectors prior to COG/GeoJSON conversion
-├─ joins/          # temporary merges or overlays of multiple sources
-└─ tmp/            # transient files (ignored by git except when explicitly promoted)
-
-```
-
-> Note: `.gitignore` is set to exclude large binaries and `tmp/` contents.
-> Only promote files here into version control if they represent a reproducible
-> intermediate stage worth documenting.
+### 🚫 Doesn’t
+- Canonical raw downloads → `data/raw/**`.  
+- Analysis-ready COGs, GeoJSON, MBTiles, PMTiles → `data/cogs/**` or `data/derivatives/**`.  
+- Validated STAC Items & Collections → `data/stac/**`.  
 
 ---
 
-## Workflow policy
+## Suggested Directory Layout
+
+data/work/
+├── scratch/        # ad-hoc scripts, CSVs, GeoJSONs, test exports
+├── ocr/            # raw OCR text prior to cleanup/normalization
+├── staging/        # intermediate rasters/vectors prior to COG/GeoJSON conversion
+├── joins/          # temporary merges or overlays of multiple sources
+└── tmp/            # transient files (ignored by git)
+
+> `.gitignore` excludes large binaries and `tmp/`.  
+> Only promote files here into version control if they represent a reproducible intermediate stage worth documenting.
+
+---
+
+## Workflow Policy
 
 1. **Stage here first**  
-   New raw pulls, OCR runs, or geoprocessing steps land here before normalization.
+   - New raw pulls, OCR runs, or geoprocessing steps should land in `work/` before normalization.  
 
 2. **Promote when reproducible**  
-   Once a file is cleaned, standardized (EPSG:4326, COG, GeoJSON, etc.), and
-   documented, it should be moved to `data/processed/` or `data/derivatives/`
-   with an accompanying STAC item.
+   - Once a file is cleaned, standardized (EPSG:4326, COG, GeoJSON, etc.), and documented:  
+     - Move to `data/processed/` (analysis-ready reproducible outputs).  
+     - Or to `data/derivatives/` (final products such as hillshade, slope classes).  
+     - Create/update a corresponding STAC Item.  
 
 3. **Ephemeral by default**  
-   Files in `work/` may be overwritten or discarded. If a file represents a unique
-   effort (e.g. hand-digitized boundaries), promote it to `sources/` with full provenance.
+   - Files here may be overwritten or discarded.  
+   - If a file represents unique human effort (e.g., hand-digitized polygons), promote it to `data/raw/` or `data/sources/` with provenance metadata.  
 
 ---
 
-## Provenance and Documentation
+## Provenance & Documentation
 
-Even though `work/` is scratch space, **minimum metadata** is still expected:
+Even in scratch space, **minimum metadata** is required:
 
-- Name files descriptively: `countyX_dem_clip_raw.tif`, `ocr_treaty_1854.txt`
-- If a step is non-reproducible (manual fix, GUI QGIS operation), **log the action**
-  in a sidecar `.md` note or `work_log.jsonl`
-- Use consistent datetime and version stamps for clarity.
+- Use descriptive filenames:  
+  - `countyX_dem_clip_raw.tif`  
+  - `ocr_treaty_1854.txt`  
+
+- If a step is **non-reproducible** (e.g., manual QGIS edits), log it in a sidecar:  
+  - Markdown note: `clip_log.md`  
+  - Or append to `work_log.jsonl` with: `timestamp, action, notes`.  
+
+- Use consistent datetime stamps in filenames for clarity:  
+  - `trial_merge_2025-09-28.geojson`.  
 
 ---
 
 ## Connections to MCP & Knowledge Hub
 
-This folder aligns with **Master Coder Protocol** practices:
-
-- Mirrors the **“lab notebook”** stage in experiment templates:contentReference[oaicite:0]{index=0}
-- Allows integration of **cartographic, geological, and historical data** before
-  final STAC ingestion:contentReference[oaicite:1]{index=1}
-- Supports **AI/ETL backend pipelines** that often require staging directories for
-  OCR text, NLP-extracted entities, or batch geocoding before pushing to the
-  Neo4j knowledge graph:contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+- Mirrors the **“lab notebook”** stage in MCP experiment templates [oai_citation:0‡Integrating Historical, Cartographic, and Geological Research (MCP Reference).pdf](file-service://file-HTPyrF5na2BY7mrNRai468).  
+- Supports **integration of cartographic, geological, and historical data** before formal STAC ingestion.  
+- Provides a staging ground for **AI/ETL backend pipelines**: OCR text, NLP-extracted entities, batch geocoding, or graph linking before promotion to Neo4j [oai_citation:1‡Kansas Historical Knowledge Hub – System Design.pdf](file-service://file-P6gGz263QNwmmVYw8LBSvB).  
+- Helps bridge raw historical scans → cleaned processed files → **discoverable STAC Items** used by the web viewer.  
 
 ---
 
-## Cleanup
+## Cleanup & CI
 
-- Run `make clean-work` (see Makefile) to purge temporary files safely.
-- Promote anything worth keeping before cleanup.
-- CI jobs may fail if `work/` contains large untracked binaries.
+- Run `make clean-work` to purge temporary files safely.  
+- Promote anything worth keeping **before cleanup**.  
+- CI jobs may fail if `work/` contains large untracked binaries.  
 
----
+### Suggested Makefile Targets
 
-✦ **Summary:** `data/work/` is a **scratch + staging workspace** — ephemeral, flexible,
-documented only enough to reproduce key steps, and cleaned regularly.
+```makefile
+clean-work:
+\trm -rf data/work/*
+
+promote-work-to-processed:
+\t# example placeholder: move staged outputs to processed + run STAC update
+
+
+⸻
+
+Lifecycle Connections
+
+tmp/   →   work/   →   processed/ | cogs/   →   derivatives/   →   stac/   →   web/
+
+	•	tmp/ → transient, safe to wipe.
+	•	work/ → staging, exploratory, logged but not canonical.
+	•	processed/ → reproducible, analysis-ready.
+	•	cogs/ → mission-final rasters.
+	•	derivatives/ → reproducible analysis products.
+	•	stac/ → catalog metadata (discoverability + provenance).
+	•	web/ → published artifacts for viewer / public distribution.
+
+⸻
+
+✅ Summary:
+data/work/ is a scratch + staging workspace — ephemeral but documented enough to support reproducibility, and cleaned regularly.
 It is the bridge between raw data chaos and structured archival order.
-```
 
+---
