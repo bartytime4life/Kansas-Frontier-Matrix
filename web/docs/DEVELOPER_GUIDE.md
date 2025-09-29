@@ -46,6 +46,9 @@ flowchart TD
   B --> D["UI:\nsidebar + legend + time slider"]
   D -- "toggles · opacity" --> C
   D -- "year filter" --> C
+```
+
+<!-- END OF MERMAID -->
 
 
 ⸻
