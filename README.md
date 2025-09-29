@@ -1,36 +1,70 @@
 ⸻
 
-🌾 Kansas Geo Timeline — Time · Terrain · History
 
-Mission
-Build an open-source, reproducible system to uncover Kansas’s layered history — where terrain, climate, culture, and events intersect.
-The Frontier-Matrix integrates maps, LiDAR terrain, treaties, railroads, disasters, archaeology, and oral histories into an interactive atlas + knowledge graph, with both a MapLibre viewer and Google Earth (KMZ/KML).
+<div align="center">
 
+# 🌾 Kansas Geo Timeline  
+### **Time · Terrain · History**
 
-⸻
+**An open-source, reproducible knowledge hub for Kansas’s layered history**  
+Where **terrain, climate, culture, and events** intersect.
 
-🚀 Quick Links
-	•	🌐 Live Web Viewer
-	•	🌍 Google Earth KMZ
-	•	📊 STAC Catalog
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](stac/catalog.json)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](…)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](…)
 
-⸻
+</div>
 
-🗺 Why It Matters
+---
 
-Kansas history is fragmented — scattered across treaties, disasters, geology, maps, and stories.
-This project builds a time-aware knowledge hub so communities can explore:
-	•	🚂 Railroads vs. tribal lands — how towns spread along rights-of-way
-	•	🌪 Droughts, floods, Dust Bowl storms reshaping settlement
-	•	🪶 Archaeology & oral histories tied to rivers, prairies, and forts
-	•	🔥 Paleoclimate & fire regimes shaping resilience and ecology
+<details>
+<summary>📑 Table of Contents</summary>
 
-👉 It’s more than maps — it’s a forensic storytelling engine for Kansas.
+- [🚀 Quick Links](#-quick-links)  
+- [🗺 Why It Matters](#-why-it-matters)  
+- [🔧 How It Works](#-how-it-works)  
+- [✨ Pipeline Highlights](#-pipeline-highlights)  
+- [⚡ Quickstart](#-quickstart)  
+- [📂 Repository Layout](#-repository-layout)  
+- [📊 Data Coverage Matrix](#-data-coverage-matrix)  
+- [🎯 Use Cases](#-use-cases)  
+- [✅ Reproducibility & CI](#-reproducibility--ci)  
+- [🛠 Roadmap](#-roadmap)  
+- [🤝 Contributing](#-contributing)  
+- [📚 Citation](#-citation)  
+- [⚖️ License](#️-license)  
+- [✨ Notes](#-notes)  
 
-⸻
+</details>
 
-🔧 How It Works
+---
 
+## 🚀 Quick Links
+🔗 Fast access to core artifacts:  
+
+- 🌐 **[Live Web Viewer](#)**  
+- 🌍 **[Google Earth KMZ](#)**  
+- 📊 **[STAC Catalog](stac/catalog.json)**  
+
+---
+
+## 🗺 Why It Matters
+> 💡 Kansas history is **fragmented** — scattered across treaties, disasters, geology, maps, and stories.  
+> This project builds a **time-aware knowledge hub** so communities can explore how environment and culture shaped resilience.
+
+**Exploration examples:**  
+- 🚂 Railroads vs. tribal lands → how towns spread  
+- 🌪 Dust Bowl storms → reshaping settlement  
+- 🪶 Oral histories → tied to rivers, prairies, forts  
+- 🔥 Fire regimes → ecological resilience  
+
+👉 Not just maps — a **forensic storytelling engine** for Kansas.
+
+---
+
+## 🔧 How It Works
+```mermaid
 flowchart TD
   A["📥 Sources\n(data/sources/*.json)"] -->|fetch| B["🗺️ COGs\n(data/cogs/**/*.tif)"]
   B -->|derive| C["📐 Derivatives\n(slope, aspect, hillshade, hydrology)"]
@@ -58,7 +92,9 @@ flowchart TD
 
 ⚡ Quickstart
 
-🐍 Local Dev (Python)
+<details>
+<summary>🐍 Local Dev (Python)</summary>
+
 
 python -m venv .venv
 . .venv/bin/activate
@@ -67,14 +103,26 @@ pip install -r requirements.txt
 make fetch cogs terrain stac stac-validate site
 python -m http.server -d web 8080
 
-🐳 Docker
+</details>
+
+
+<details>
+<summary>🐳 Docker</summary>
+
 
 docker compose up -d site
+
+</details>
+
 
 
 ⸻
 
 📂 Repository Layout
+
+<details>
+<summary>Directory tree</summary>
+
 
 data/
   sources/       # JSON descriptors (URLs, CRS, bounds, license, time)
@@ -87,6 +135,9 @@ earth/           # Google Earth exports (KML/KMZ)
 scripts/         # ETL, STAC tools, validators
 docker/          # reproducible containers
 .github/         # CI/CD workflows, roadmap, pre-commit
+
+</details>
+
 
 
 ⸻
@@ -123,8 +174,11 @@ Geology / Core Samples	KGS drill cores	🚧
 ⸻
 
 ✅ Reproducibility & CI
-	•	🔐 Checksums: .sha256 sidecars for every artifact
-	•	📏 Validation: STAC + JSON Schema in CI
+
+🧪 Following MCP principles: every dataset, config, and artifact is versioned, validated, and reproducible.
+
+	•	🔐 Checksums → .sha256 sidecars for every artifact
+	•	📏 Validation → STAC + JSON Schema in CI
 	•	🛠 Pipelines:
 	•	site.yml → build & deploy
 	•	stac-badges.yml → dataset health shields
@@ -148,10 +202,9 @@ make prebuild
 
 🤝 Contributing
 
-We welcome contributions!
-	•	✔️ Keep STAC valid + configs schema-checked
-	•	✔️ Use MCP templates (experiment.md, sop.md, model_card.md)
-	•	✔️ Follow CI hooks + submit PRs with clear commits
+✔️ Keep STAC valid + configs schema-checked
+✔️ Use MCP templates (experiment.md, sop.md, model_card.md)
+✔️ Follow CI hooks + submit PRs with clear commits
 
 ⸻
 
