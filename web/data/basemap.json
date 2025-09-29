@@ -1,21 +1,103 @@
 {
   "id": "basemap_osm",
-  "title": "Basemap — OpenStreetMap",
+  "title": "Basemap — OpenStreetMap (Standard)",
   "type": "raster",
+  "format": "xyz",
+  "tile_format": "png",
   "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  "attribution": "© <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap contributors</a>",
+
   "category": "reference",
   "time": { "start": null, "end": null },
+
+  "bounds": [-180.0, -85.06, 180.0, 85.06],
   "minzoom": 0,
   "maxzoom": 19,
+  "maxNativeZoom": 19,
+  "maxOverzoom": 22,
   "tileSize": 256,
+  "devicePixelRatioStrategy": "auto-512-if-dpr>=2",   // viewer may upgrade to 512 tiles on HiDPI
   "visible": true,
   "opacity": 1.0,
-  "bounds": [-180, -85.06, 180, 85.06],
+
+  "style": {
+    "renderer": "raster",
+    "rasterOpacity": 1.0,
+    "rasterResampling": "linear"                      // viewer can map to MapLibre's raster-resampling
+  },
+
+  "controls": {
+    "toggle": true,
+    "opacitySlider": true,
+    "zIndex": 0
+  },
+
+  "attribution": "© OpenStreetMap contributors",
   "license": "ODbL-1.0",
+
   "provenance": {
-    "source": "OpenStreetMap",
+    "source": "OpenStreetMap Standard tile layer",
     "retrieved": "2025-09-26T00:00:00Z",
-    "notes": "Default basemap; kept outside Kansas-only extent for global context"
+    "notes": "Default global basemap for reference; consider a commercial tile provider or self-hosted tiles for higher-volume production."
+  },
+
+  "connections": {
+    "related_layers": [
+      "web/data/hillshade.json",
+      "web/data/contours.json",
+      "web/data/terrain.json",
+      "web/data/landcover.json",
+      "web/data/climate_normals.json"
+    ],
+    "preferred_overlay_order": ["hillshade", "contours", "terrain", "landcover"]
+  },
+
+  "guidance": {
+    "usage_policy": "Respect OSM Tile Usage Policy. Avoid heavy traffic on the default OSM server.",
+    "production_recommendation": "Use a paid provider or self-hosted tiles for sustained traffic."
+  },
+
+  "fallbacks": [
+    {
+      "id": "basemap_cartolight",
+      "title": "Basemap — CARTO Positron (API key)",
+      "type": "raster",
+      "format": "xyz",
+      "tile_format": "png",
+      "url": "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?api_key={CARTO_API_KEY}",
+      "subdomains": ["a", "b", "c", "d"],
+      "requiresApiKey": true,
+      "envVar": "CARTO_API_KEY",
+      "minzoom": 0,
+      "maxzoom": 20,
+      "tileSize": 256,
+      "attribution": "© OpenStreetMap contributors © CARTO",
+      "license": "ODbL-1.0 / CARTO terms"
+    },
+    {
+      "id": "basemap_maptiler_streets",
+      "title": "Basemap — MapTiler Streets (API key)",
+      "type": "raster",
+      "format": "xyz",
+      "tile_format": "png",
+      "url": "https://api.maptiler.com/tiles/streets/{z}/{x}/{y}.png?key={MAPTILER_KEY}",
+      "requiresApiKey": true,
+      "envVar": "MAPTILER_KEY",
+      "minzoom": 0,
+      "maxzoom": 20,
+      "tileSize": 512,
+      "attribution": "© OpenStreetMap contributors © MapTiler",
+      "license": "ODbL-1.0 / MapTiler terms"
+    }
+  ],
+
+  "network": {
+    "timeoutMs": 12000,
+    "retry": { "count": 2, "backoffMs": 500 }
+  },
+
+  "validation": {
+    "required": ["id", "type", "url", "minzoom", "maxzoom", "tileSize"],
+    "bounds_check": true,
+    "url_has_xyz_tokens": true
   }
 }
