@@ -26,6 +26,7 @@ This directory implements the project’s **MCP-style data lifecycle** end-to-en
 - [QA & Validation](#qa--validation)
 - [Quickstart](#quickstart)
 - [Gotchas](#gotchas)
+- [TL;DR](#tldr)
 
 ---
 
@@ -150,7 +151,7 @@ All curated sources must validate against sources/schema.source.json.
   "additionalProperties": true
 }
 
-Example (excerpt)
+Example
 
 {
   "id": "ks_hydrography_1936",
@@ -175,7 +176,7 @@ Each output directory should contain:
 	•	*.sha256 → one line per binary (COGs, PMTiles, GPKG, ZIP, PDFs…)
 	•	_meta.json → optional subtree index
 
-*_meta.json (minimal example)
+Example *_meta.json
 
 {
   "command": "make terrain HILLSHADE=1 SOURCE=data/processed/dem/ks_1m_dem_2018.tif",
@@ -210,16 +211,14 @@ Each STAC Item must include:
 	•	roles: e.g., ["data"], optional ["visual"] for hillshade/tiles/KMZ
 	•	checksum:sha256, type (MIME), title, href
 	•	license
-	•	Links to:
-	•	self, parent (collection), root (catalog)
-	•	Optional provenance registry: data/provenance/registry.json
+	•	Links: self, parent, root
+	•	Optional provenance link → data/provenance/registry.json
 
-Build + validate:
+Build + validate
 
 make stac
 make stac-validate
 
-The top-level catalog is referenced from the root README and by the web viewer.
 
 ⸻
 
@@ -265,7 +264,5 @@ TL;DR
 	•	Immutable payloads in raw/
 	•	Reproducible outputs in processed/, cogs/, derivatives/
 	•	Discoverable metadata in stac/
-	•	Guarded by .gitignore, .gitattributes, pre-commit, and CI.
-	•	Every step emits provenance + checksums for auditability.
-
----
+	•	Guarded by .gitignore, .gitattributes, pre-commit, and CI
+	•	Every step emits provenance + checksums for auditability
