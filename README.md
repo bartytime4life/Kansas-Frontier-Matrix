@@ -1,6 +1,3 @@
-⸻
-
-
 <div align="center">
 
 # 🌾 Kansas Geo Timeline  
