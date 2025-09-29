@@ -1,4 +1,3 @@
-Here’s a clean, drop-in replacement for your README section. It fixes Markdown/HTML nesting, closes all code fences, removes invalid content inside the Mermaid block, normalizes heading levels to match the ToC, converts the coverage list into a proper table, and makes all code snippets copy-pasteable.
 
 <div align="center">
 
@@ -229,13 +228,3 @@ MIT © 2025 — Kansas Frontier Matrix
 	•	🗂 Coverage matrix embedded
 	•	📜 Anchored in MCP reproducibility standards
 	•	🔗 Connects maps, archives, disasters, & oral histories into one forensic timeline
-
-**What I fixed (high level):**
-- Closed the Mermaid fence and removed the inline HTML comment that was breaking rendering.
-- Normalized heading levels so your ToC anchors resolve.
-- Converted the coverage list into a valid Markdown table.
-- Wrapped all shell commands in fenced code blocks and removed stray lines.
-- Kept your centered header and badges but fixed their target links.
-- Removed any content that could cause GitHub’s Mermaid or Markdown parser to error out.
-
-If you want this split into `README.md` + `docs/` fragments (or want the Mermaid graph themed/styled), say the word and I’ll generate that too.
