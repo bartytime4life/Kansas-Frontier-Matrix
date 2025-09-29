@@ -1,13 +1,14 @@
-Kansas Geo Timeline — Web App
+# Kansas Geo Timeline — Web App
 
-Time · Terrain · History — a tiny, dependency-light MapLibre viewer with a time slider.
-It prefers a STAC-derived config and gracefully falls back to simple JSON (for local dev).
-Designed to run from web/ (GitHub Pages-friendly), no servers required.
+**Time · Terrain · History** — a tiny, dependency-light MapLibre viewer with a time slider.  
+It prefers a **STAC-derived config** and gracefully falls back to simple JSON (for local dev).  
+Designed to run from **`web/`** (GitHub Pages-friendly), no servers required.
 
-⸻
+---
 
-What’s in web/
+## What’s in `web/`
 
+```text
 web/
 ├─ index.html              # MapLibre bootstrap + UI (loads config JSON, builds UI)
 ├─ style.css               # Tokens, layout, legend, toggles, accessibility
@@ -75,7 +76,7 @@ Configs the web app understands
 
 1) STAC-driven (preferred) — app.config.json
 
-Typically produced by make site-config. Minimal shape:
+Produced by make site-config. Minimal shape:
 
 {
   "version": "1.4.0",
@@ -125,7 +126,7 @@ Typically produced by make site-config. Minimal shape:
 
 2) Fallback — viewer.json / layers.json
 
-Use for quick dev. Same keys, but you can be minimal:
+Use for quick dev. Same keys, but minimal:
 
 {
   "version": "1.3.0",
@@ -152,28 +153,24 @@ Use for quick dev. Same keys, but you can be minimal:
   ]
 }
 
-Note: Rasters are tile URLs (…/{z}/{x}/{y}.png). Do not point to raw .tif here.
+Note: Rasters are tile URLs (…/{z}/{x}/{y}.png). Do not point to raw .tif.
 Vectors use data for GeoJSON; rasters use url or tiles.
 
 ⸻
 
-How layers load (at runtime)
-	•	Raster → MapLibre raster source from url/tiles (PNG/JPEG tiles).
-	•	GeoJSON → MapLibre geojson source from data (or path alias).
-	•	Styling (camelCase keys):
+How layers load
+	•	Raster → MapLibre raster source from url/tiles (PNG/JPEG tiles)
+	•	GeoJSON → MapLibre geojson source from data (or path)
+	•	Styling (camelCase):
 	•	Lines: lineColor, lineWidth, lineOpacity, lineDasharray
 	•	Fills: fillColor, fillOpacity, fillOutlineColor
 	•	Circles: circleColor, circleRadius, circleOpacity, circleStrokeColor, circleStrokeWidth
-	•	Legend → auto from layer props or external config/legend.json via legendKey + layerBindings.
-	•	Time → either layer‐level (time.start/end) or feature-level (timeProperty, optional endTimeProperty).
-Feature-level filtering applies when the layer’s data has per-feature year/date values.
-	•	Categories → sidebar groups controlled by config/categories.json.
+	•	Legend → auto from layer props or external config/legend.json via legendKey + layerBindings
+	•	Time → layer-level (time.start/end) or feature-level (timeProperty, endTimeProperty)
 
 ⸻
 
-URL permalinks & debug options
-
-The viewer accepts simple URL params (all optional):
+URL parameters
 
 ?year=1930
 &layers=ks_hillshade_2018,ksriv_channels
@@ -181,35 +178,18 @@ The viewer accepts simple URL params (all optional):
 &zoom=7
 &debug=1
 
-	•	year sets the time slider.
-	•	layers toggles default visibility (comma-separated layer ids).
-	•	center and zoom override map initial view.
-	•	debug=1 shows layer ids + console diagnostics.
+	•	year → sets slider
+	•	layers → initial visibility
+	•	center + zoom → map view override
+	•	debug=1 → console + overlay diagnostics
 
 ⸻
 
-Accessibility & UX
-	•	Keyboard-navigable controls, focus-visible, large hit targets.
-	•	System color-scheme aware; ensure contrast in style.css.
-	•	Timeline control supports arrow keys (←/→ by year; hold Shift for larger steps if configured).
-	•	Popups present meaningful labels; avoid color-only encodings in legends.
-
-⸻
-
-Conventions & schema hints
-	•	IDs: snake_case, stable, include vintage when useful (usgs_topo_1894_larned).
-	•	Categories (one per layer):
-reference, terrain, environment, historical, documents, infrastructure, culture, hazards.
-	•	CRS: serve tiles/GeoJSON in EPSG:3857/4326; raw COGs live outside web/ (built into tiles).
-	•	Validation: use web/config/schema.json + repo CI to validate changes before publish.
-
-⸻
-
-Publishing (GitHub Pages or static host)
-	1.	Ensure web/ has a valid config (app.config.json preferred, or /config/viewer.json / /layers.json).
-	2.	CI: run make prebuild to validate STAC + render configs.
-	3.	Configure Pages to serve /web (or a build artifact directory).
-	4.	(Optional) Link check with a simple .lychee.toml:
+Publishing
+	1.	Ensure web/ has a valid config (app.config.json preferred)
+	2.	Run make prebuild before pushing (validates + generates configs)
+	3.	GitHub Pages: set /web or /site as publish dir
+	4.	(Optional) Add .lychee.toml for link checks
 
 base_url = "https://<user>.github.io/<repo>/"
 include = ["web/**", "README.md", "site/**"]
@@ -219,33 +199,23 @@ fail_if_empty = false
 ⸻
 
 Troubleshooting
-	•	Blank map / 404s → Check devtools console. Paths must be relative to web/. Serve via HTTP, not file://.
-	•	Tiles don’t render → Confirm tile path pattern and actual tile existence (…/{z}/{x}/{y}.png).
-	•	Slider seems inert → You need either:
-	•	top-level time bounds, and layer-level time, or
-	•	per-feature properties timeProperty (and optional endTimeProperty) + top-level time.
-	•	Legend chip missing → legendKey must match config/legend.json.symbols and be bound in layerBindings.
-	•	Slow GeoJSON → Simplify or tile; use raw GeoJSON only for small sets (dev/test).
-	•	Mixed content → If hosting over HTTPS, ensure all sources are also HTTPS.
-
-⸻
-
-CI hooks (brief)
-	•	Schemas: JSON validation of app.config.json, viewer.json, legend.json, categories.json.
-	•	STAC: make stac-validate to keep STAC-→viewer sync consistent.
-	•	Prebuild: make prebuild to generate/update app.config.json and ensure linkability.
+	•	Blank map / 404s → check devtools console, paths must be relative to web/
+	•	Tiles don’t render → confirm {z}/{x}/{y}.png tiles exist
+	•	Slider inert → missing time/timeProperty
+	•	Legend missing → legendKey not bound in legend.json
+	•	Slow vectors → simplify or tile; use raw GeoJSON only for small sets
 
 ⸻
 
 Roadmap (web)
-	•	Vector tiles (PMTiles/TiTiler) for large layers.
-	•	Permalinks with full state (year, center/zoom, active layers).
-	•	“Story mode” presets (timeline + layer recipes) for guided narratives.
-	•	Light i18n scaffolding for UI strings.
-	•	Optional hash-based cache-busting for config updates.
+	•	Vector tiles (PMTiles/TiTiler)
+	•	Permalinks (year + layers + view state)
+	•	Story mode (config/story_layers.json)
+	•	I18n scaffolding for UI strings
 
 ⸻
 
-License
+License: MIT (see repo root)
+Issues / ideas: open a GitHub issue
 
-MIT (see repo root). Open a GitHub issue for questions or ideas.
+---
