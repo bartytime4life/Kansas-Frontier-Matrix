@@ -1,7 +1,9 @@
 # Kansas-Frontier-Matrix — Web App Architecture
 
-This document describes the **structure and data flow** of the web-based viewer (`web/`),  
+This document describes the **structure and data flow** of the web viewer (`web/`),  
 which complements the **Google Earth (KML/KMZ)** deliverables and the **STAC catalog**.
+
+**Design philosophy:** *minimal dependencies, modular configs, reproducible outputs.*
 
 ---
 
@@ -9,13 +11,11 @@ which complements the **Google Earth (KML/KMZ)** deliverables and the **STAC cat
 
 The **web app** is a **lightweight MapLibre viewer** featuring:
 
-- **Config-driven rendering** (`app.config.json` + fallbacks)
-- **Historical + terrain overlays** (`tiles/`, `vectors/`, `data/processed/`)
-- **Sidebar UI** for toggling layers and adjusting opacity
-- **Timeline slider** for filtering layers by temporal attributes
-- **Accessible theming** (dark/light, reduced motion, high-contrast, print-safe)
-
-**Design philosophy:** *minimal dependencies, modular configs, reproducible outputs.*
+- **Config-driven rendering** (`app.config.json` + fallbacks)  
+- **Historical + terrain overlays** (`tiles/`, `vectors/`, `data/processed/`)  
+- **Sidebar UI** for toggles, legend, and opacity  
+- **Timeline slider** for time filtering (layer or feature level)  
+- **Accessible theming** (light/dark, reduced motion, high-contrast)
 
 ---
 
@@ -23,55 +23,94 @@ The **web app** is a **lightweight MapLibre viewer** featuring:
 
 ```text
 web/
-├── index.html          # Entry point (loads MapLibre, sidebar, timeline, configs)
-├── app.css             # Tokens, layout, components, accessibility
-├── app.config.json     # Primary config (preferred by index.html)
-├── config/             # Fallback configs (viewer.json, layers.json)
+├── index.html          # Entry (loads MapLibre and the viewer module)
+├── app.js              # Viewer module (fetch config, build UI, wire timeline)
+├── style.css           # Tokens, layout, components, accessibility
+├── app.config.json     # Preferred, generated from STAC (see web/config/README.md)
+├── config/             # Overrides & fallbacks (viewer.json, layers.json, time_config.json, legend.json)
 │   └── README.md
-├── tiles/              # Raster tiles (/{z}/{x}/{y}.png)
-├── vectors/            # GeoJSON overlays (e.g., political, infrastructure)
-├── data/processed/     # Processed hydrology & other derived data
+├── tiles/              # Raster tiles (/{z}/{x}/{y}.png or .jpg)
+├── vectors/            # GeoJSON overlays (small dev/test sets)
+├── data/processed/     # Heavier GeoJSON derived artifacts (ingested via config)
 ├── assets/             # Logos, favicons, icons
-└── docs/               # Documentation
-    ├── ARCHITECTURE.md ← (this file)
+└── docs/               # Developer & contributor documentation
+    ├── ARCHITECTURE.md
     ├── STYLE_GUIDE.md
     ├── DEVELOPER_GUIDE.md
+    ├── UI_DESIGN.md
     └── README.md
-```
 
-**Path rule:** All URLs/paths in configs are web-relative (e.g., `./tiles/...`, `./vectors/...`).  
-Avoid `../` — it will 404 on GitHub Pages.
+Path rule: Use web-relative paths in configs (e.g., ./tiles/..., ./data/processed/...).
+Avoid ../ — it will 404 on GitHub Pages.
 
----
+⸻
 
-## Component Architecture
+Component Architecture
 
-```mermaid
 flowchart TD
   A["Config:\napp.config.json"] --> B["Viewer Logic:\nindex.html / app.js"]
   B --> C["MapLibre Map"]
-  B --> D["Sidebar UI\n(layer list, legend, controls)"]
+  B --> D["Sidebar UI\n(layer list · legend · controls)"]
   B --> E["Timeline Control"]
-  C --> F["Raster Layers\n(e.g., hillshade, slope)"]
-  C --> G["GeoJSON Layers\n(e.g., treaties, railroads, hydrology)"]
-  D -- "toggles, opacity" --> C
+  C --> F["Raster Layers\n(hillshade · topo · imagery)"]
+  C --> G["GeoJSON Layers\n(treaties · railroads · hydrology)"]
+  D -- "toggles · opacity" --> C
   E -- "year filter" --> C
-```
 
-**Notes**
+Key connections
+	•	Config-driven load order (first hit wins):
+./app.config.json → ./config/app.config.json → ./config/viewer.json → ./config/layers.json → ./layers.json
+	•	Legend & categories: optional config/legend.json and config/categories.json drive UI chips/groups via legendKey/category.
+	•	Time: layer-level spans via time.start/end, or feature-level via timeProperty (and optional endTimeProperty).
+	•	Rasters: tiles only (e.g., …/{z}/{x}/{y}.png). Do not point at raw .tif.
 
-* Config-driven: Viewer loads configs in order:
-  `./app.config.json` → `./config/app.config.json` → `./layers.json`
-* MapLibre: Supports raster tiles, single images, and GeoJSON overlays.
-* Sidebar: Built dynamically from `layers[]` in config.
-* Timeline: Filters by `time.start` / `time.end` (year-based).
-* Legend: Auto-built from optional `layer.legend`.
+⸻
 
----
+Runtime Lifecycle (Sequence Diagram)
 
-## Config Schema
+sequenceDiagram
+  autonumber
+  participant U as User
+  participant H as index.html
+  participant A as app.js
+  participant L as ConfigLoader
+  participant M as MapLibre
+  participant UI as Sidebar/Legend
+  participant T as Timeline
+  participant S as Sources/Layers
 
-```mermaid
+  U->>H: Open /web/
+  H->>A: load module (app.js)
+  A->>L: resolve config (prefer app.config.json)
+  alt app.config.json present
+    L-->>A: ./app.config.json
+  else fallback chain
+    L-->>A: ./config/app.config.json → ./config/viewer.json → ./config/layers.json → ./layers.json
+  end
+  A->>A: normalize (defaults · legend bindings · categories)
+  A->>M: init map (style · center · zoom)
+  A->>S: register sources (raster tiles / geojson)
+  A->>S: add layers (paint/layout · visibility · opacity)
+  A->>UI: build sidebar (groups · toggles · sliders)
+  A->>UI: build legend (legendKey → legend.json)
+  A->>T: init time slider (bounds · defaultYear)
+
+  U->>UI: toggle/opacity
+  UI->>S: set visibility/paint
+  U->>T: change year
+  T->>S: filter by time window (layer.time or feature timeProperty)
+  S->>M: update rendered map
+
+  Note over A,M,UI,T: Config-driven; ISO dates; camelCase style keys
+
+
+⸻
+
+Config Schema (Conceptual)
+
+Actual JSON Schemas live in web/config/*.schema.json.
+Keys below mirror the viewer’s expectations (camelCase, ISO dates).
+
 classDiagram
   direction LR
 
@@ -80,12 +119,13 @@ classDiagram
     +title: string
     +subtitle: string
     +style: string
-    +center: float[]        // e.g. [-98.3, 38.5]
+    +center: float[]       // [-98.3, 38.5]
     +zoom: number
+    +bounds: float[]       // [W,S,E,N] (optional)
     +time: TimeBounds
     +defaultYear: number
+    +timeUI: TimeUI
     +defaults: Defaults
-    +groups: string[]
     +layers: Layer[]
   }
 
@@ -94,157 +134,168 @@ classDiagram
     +max: string           // YYYY-MM-DD
   }
 
+  class TimeUI {
+    +step: number
+    +loop: boolean
+    +fps: number
+  }
+
   class Defaults {
     +minzoom: number
     +maxzoom: number
-    +tileSize: number
-    +visible: boolean
     +opacity: number
-    +bounds: float[]       // [W,S,E,N]
+    +visible: boolean
+    +bounds: float[]       // optional
     +time: TimeWindow
   }
 
   class Layer {
     +id: string
     +title: string
-    +group: string
-    +type: string          // raster|geojson|image
-    +url: string           // for raster/image
-    +path: string          // for geojson
+    +category: string      // reference|terrain|environment|historical|documents|infrastructure|culture|hazards
+    +type: string          // raster|geojson|image|raster-dem
+    +url: string           // raster/image tiles
+    +data: string          // GeoJSON path (or inline data)
     +opacity: number
     +visible: boolean
-    +time: TimeWindow
-    +paint: Paint          // geojson only
-    +legend: LegendItem[]
-    +attribution: string
     +minzoom: number
     +maxzoom: number
-    +tileSize: number
+    +legendKey: string
+    +attribution: string
+    +time: TimeWindow
+    +timeProperty: string
+    +endTimeProperty: string
+    +style: Paint          // camelCase
+    +popup: string[]
+    +coordinates: float[][] // image overlays (four corners)
   }
 
   class TimeWindow {
-    +start: string         // YYYY-MM-DD or null
-    +end: string           // YYYY-MM-DD or null
+    +start: string | null
+    +end: string | null
   }
 
   class Paint {
-    +line: LinePaint
-    +fill: FillPaint
-    +circle: CirclePaint
-  }
-
-  class LinePaint {
-    +line_color: string
-    +line_width: number
-    +line_opacity: number
-  }
-
-  class FillPaint {
-    +fill_color: string
-    +fill_opacity: number
-    +fill_outline_color: string
-  }
-
-  class CirclePaint {
-    +circle_color: string
-    +circle_radius: number
-    +circle_opacity: number
-  }
-
-  class LegendItem {
-    +type: string          // line|fill|circle
-    +label: string
-    +color: string
-    +width: number         // line only
-    +outline: string       // fill only
-    +radius: number        // circle only
+    +lineColor: string
+    +lineWidth: number
+    +lineOpacity: number
+    +lineDasharray: number[]
+    +fillColor: string
+    +fillOpacity: number
+    +fillOutlineColor: string
+    +circleColor: string
+    +circleRadius: number
+    +circleOpacity: number
+    +circleStrokeColor: string
+    +circleStrokeWidth: number
   }
 
   AppConfig --> TimeBounds : time
+  AppConfig --> TimeUI     : timeUI
   AppConfig --> Defaults   : defaults
   AppConfig --> Layer      : layers
   Defaults  --> TimeWindow : time
   Layer     --> TimeWindow : time
-  Layer     --> Paint      : paint
-  Layer     --> LegendItem : legend
-  Paint     --> LinePaint
-  Paint     --> FillPaint
-  Paint     --> CirclePaint
-```
+  Layer     --> Paint      : style
 
----
 
-## Config Load Order
+⸻
 
-```mermaid
+Config Resolution (Load Order)
+
 flowchart TD
   A["Try:\n./app.config.json"] -->|if missing| B["Try:\n./config/app.config.json"]
-  B -->|if missing| C["Try:\n./layers.json (legacy)"]
-  A -->|if found| D["Parse & normalize"]
-  B -->|if found| D
-  C -->|if found| D
-  D --> E["Init MapLibre + UI\n(basemap, layers, legend, timeline)"]
-```
+  B -->|if missing| C["Try:\n./config/viewer.json"]
+  C -->|if missing| D["Try:\n./config/layers.json"]
+  D -->|if missing| E["Try:\n./layers.json (legacy)"]
+  A -->|if found| Z["Parse & normalize"]
+  B -->|if found| Z
+  C -->|if found| Z
+  D -->|if found| Z
+  E -->|if found| Z
+  Z --> M["Init MapLibre + UI\n(basemap · layers · legend · timeline)"]
 
----
+Optional overrides
+	•	config/time_config.json → overrides top-level time, defaultYear, timeUI
+	•	config/legend.json / config/categories.json → drive legend chips and sidebar grouping
 
-## Data Flow
+⸻
 
-1. **Load config** → from `app.config.json` (or fallbacks).
-2. **Normalize layers** → ensure `id`, `type`, `url/path`, `time`, `paint`, `legend`.
-3. **Init map** → basemap + terrain (hillshade, slope, aspect).
-4. **Build UI** → grouped layer list, toggles, opacity sliders, legend.
-5. **Bind timeline** → year slider sets visibility by `time.start` / `time.end`.
-6. **Interact** → toggles/opacity/year update MapLibre layers in real time.
+Data Flow (Runtime)
+	1.	Load config → from preferred file (see load order).
+	2.	Normalize layers → ensure id, type, url/data, time, style, category, legendKey.
+	3.	Init map → basemap/style, center/zoom, optional bounds.
+	4.	Register sources → raster tiles / GeoJSON.
+	5.	Add layers → apply style, opacity, default visible.
+	6.	Build UI → groups, toggles, opacity sliders, legend.
+	7.	Bind timeline → filter by time or timeProperty.
+	8.	Interact → UI changes update MapLibre sources/layers in real time.
 
----
+⸻
 
-## CSS Layering
+CSS & Theming
+	•	style.css is authoritative for:
+	•	Design tokens (--bg, --text, --accent, --focus-ring, --z-*)
+	•	Layout (sidebar widths, safe areas, responsive rules)
+	•	Components (buttons, popups, sliders, timeline, legend)
+	•	Accessibility (:focus-visible, forced-colors, reduced motion)
+	•	Theming (light/dark via prefers-color-scheme or .theme-* classes)
 
-* **`app.css`** is the single source of truth:
+⸻
 
-  * Tokens (`--bg`, `--accent`, `--shadow`, etc.)
-  * Layout (sidebar width, safe areas, mobile drawer)
-  * Components (buttons, sliders, layer list, legend)
-  * Accessibility (`:focus-visible`, reduced motion, forced-colors)
-  * RTL safety & z-index for controls/popups
+Extensibility
 
-*(Older `layout.css` / `theme.css` references are consolidated into `app.css`.)*
+Add datasets
+	1.	Place raster tiles in web/tiles/ or GeoJSON in web/vectors/ / web/data/processed/.
+	2.	Add a layers[] entry in app.config.json (raster → url, vector → data).
+	3.	Include category, legendKey, attribution.
+	4.	Validate JSON (jq) and schema (see Validation).
 
----
+Add UI panels
+	•	Extend app.js sidebar composition (e.g., search, bookmarks, inspectors).
+	•	Keep controls modular and keyboard-accessible.
 
-## Extensibility
+Add themes
+	•	Add CSS overrides (e.g., archival/sepia) or rely on system prefers-color-scheme.
+	•	Use CSS variables so map styling adapts across themes.
 
-**Add datasets**
+⸻
 
-1. Place assets in `web/tiles/` (raster) or `web/vectors/` / `web/data/processed/` (GeoJSON).
-2. Add/update `layers[]` in `app.config.json` (use `url` for raster, `path` for GeoJSON).
-3. Include legend and attribution where helpful.
-4. Validate with `jq` (syntax) and optional CI tests.
+Validation & Troubleshooting
 
-**Add UI panels**
+Local checks
 
-* Extend the sidebar creation in `index.html` / `app.js` (e.g., search, bookmarks, inspector).
+# Serve
+cd web && python -m http.server 8080
 
-**Add themes**
+# Generate from STAC (preferred) and validate
+make stac stac-validate site-config
 
-* Add CSS overrides (e.g., archival sepia), or rely on `prefers-color-scheme`.
+# Lint/validate configs
+jq . web/config/app.config.json > /dev/null
+ajv validate -s web/config/app.config.schema.json -d web/config/app.config.json
+ajv validate -s web/config/layers.schema.json      -d web/config/layers.json
 
----
+Common issues
+	•	Blank map / 404s → Wrong relative paths; must be from web/. Avoid file://.
+	•	Tiles not rendering → Ensure {z}/{x}/{y}.png exists; don’t reference .tif.
+	•	Timeline inert → Provide layer time or feature timeProperty; use ISO dates.
+	•	Legend missing → legendKey must match legend.json.symbols (or bind via layerBindings).
+	•	Slow vectors → Simplify or tile; keep raw GeoJSON small.
 
-## Roadmap
+⸻
 
-* Add `demo_entities.geojson` for styling tests
-* Extend time filtering to cover raster cases with open-ended dates
-* Implement search for treaties, railroads, hydrology features
-* Improve mobile drawer gestures/resizing
-* Add alternate themes (archival sepia, night mode)
+Roadmap
+	•	PMTiles/TiTiler vector/raster tile support for large datasets
+	•	Full permalink state (year, center/zoom, layers)
+	•	Search/index for treaties, railroads, hydrology features
+	•	Mobile drawer gestures and layout refinements
+	•	Alternate themes (archival sepia, high-contrast)
 
----
+⸻
 
-## See also
+See also
+	•	STYLE_GUIDE.md — tokens, controls, schema-lite, CI checks
+	•	DEVELOPER_GUIDE.md — config loading, adding layers, debugging
+	•	README.md — documentation index and contributor notes
 
-* [`web/docs/STYLE_GUIDE.md`](STYLE_GUIDE.md) — tokens, controls, JSON schema-lite, CI checks
-* [`web/docs/DEVELOPER_GUIDE.md`](DEVELOPER_GUIDE.md) — config loading, adding layers, debugging
-* [`web/docs/README.md`](README.md) — file catalog and contributor notes
-````
