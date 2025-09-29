@@ -95,15 +95,15 @@ Git & LFS Policy
 Lifecycle & Make Targets
 
 flowchart TD
-  S[Define Source\n(data/sources/*.json)] --> F[Fetch\nmake fetch]
-  F --> P1[Process Vectors\nmake vectors]
-  F --> P2[Process Rasters\nmake cogs]
-  P2 --> T[Terrain Derivatives\nmake terrain]
-  P1 --> D[Derivatives\nmake derivatives]
+  S[Define Source<br/>(data/sources/*.json)] --> F[Fetch<br/>make fetch]
+  F --> P1[Process Vectors<br/>make vectors]
+  F --> P2[Process Rasters<br/>make cogs]
+  P2 --> T[Terrain Derivatives<br/>make terrain]
+  P1 --> D[Derivatives<br/>make derivatives]
   P2 --> D
-  D --> C[STAC Build\nmake stac]
-  C --> V[Validate\nmake validate-*]
-  C --> X[Exports\nmake kml / make site]
+  D --> C[STAC Build<br/>make stac]
+  C --> V[Validate<br/>make validate-*]
+  C --> X[Exports<br/>make kml / make site]
 
 Canonical targets
 	1.	Define → data/sources/*.json
