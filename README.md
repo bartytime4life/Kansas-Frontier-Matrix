@@ -46,7 +46,7 @@ flowchart TD
   E --> F["MapLibre Viewer"]
   D --> G["KML/KMZ"]
   D --> H["Knowledge Graph"]
-
+```
 ⸻
 
 ⚡ Quickstart
