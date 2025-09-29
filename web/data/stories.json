@@ -1,64 +1,109 @@
 {
-  "schema": "kfm-story/1.0",
-  "version": "1.1.0",
+  "schema": "kfm-story/1.2",
+  "version": "1.2.0",
   "generated": "2025-09-26T00:00:00Z",
   "id": "story_layers",
   "title": "Curated Story Themes",
+
+  "defaults": {
+    "transitionMs": 350,
+    "syncTimeline": true,
+    "respectUserToggles": true
+  },
+
+  "ui": {
+    "showPanel": true,
+    "showThumbnails": false
+  },
+
   "themes": [
     {
       "id": "dust_bowl",
       "title": "Dust Bowl & Drought",
       "description": "Drought progression, storms, and societal impacts across the central Plains.",
-      "year": 1935,
+      "date": "1935-04-14",
       "layersOn": ["drought_monitor", "storm_events", "climate_normals"],
       "layersOff": [],
+      "labelsOn": [],
+      "labelsOff": [],
       "opacity": {
         "drought_monitor": 0.85,
         "storm_events": 1.0,
         "climate_normals": 0.65
       },
+      "basemap": "terrain",
       "flyTo": { "center": [-99.3, 38.4], "zoom": 6.2 }
     },
+
     {
       "id": "treaties_trails",
       "title": "Treaties, Trails, and Displacement",
       "description": "Shifting treaty areas, migration routes, and settlement pressure in Kansas.",
-      "year": 1863,
+      "date": "1863-01-01",
       "layersOn": ["ks_treaties", "ks_trails", "ks_settlements", "ks_hydro"],
       "layersOff": ["ks_landcover"],
+      "labelsOn": [],
+      "labelsOff": [],
       "opacity": {
         "ks_treaties": 0.35,
         "ks_trails": 1.0,
         "ks_settlements": 1.0,
         "ks_hydro": 0.8
       },
+      "basemap": "light",
       "flyTo": { "center": [-98.5, 38.6], "zoom": 6.5 }
     },
+
     {
       "id": "railroads_growth",
       "title": "Railroads & Town Growth",
       "description": "Rail expansion and the grid of new towns on the prairie.",
-      "year": 1887,
+      "date": "1887-01-01",
       "layersOn": ["ks_railroads", "ks_settlements", "ks_counties"],
       "layersOff": [],
+      "labelsOn": [],
+      "labelsOff": [],
       "opacity": {
         "ks_railroads": 1.0,
         "ks_settlements": 1.0,
         "ks_counties": 0.9
       },
+      "basemap": "light",
       "flyTo": { "center": [-97.5, 38.0], "zoom": 6.7 }
     },
+
     {
       "id": "soil_surveys_archival",
       "title": "Archival Soil Surveys",
       "description": "Switch to the nearest historical USDA/NRCS soil sheet for the selected year.",
-      "year": 1937,
+      "date": "1937-01-01",
       "layersOn": ["ks_soil_surveys"],
       "layersOff": [],
+      "labelsOn": [],
+      "labelsOff": [],
       "opacity": {
         "ks_soil_surveys": 0.6
       },
+      "basemap": "terrain",
       "flyTo": { "center": [-99.25, 38.3], "zoom": 7.2 }
+    },
+
+    {
+      "id": "tornado_outbreaks",
+      "title": "Tornado Outbreaks",
+      "description": "Significant tornado days and tracks in Kansas.",
+      "date": "2012-05-25",
+      "layersOn": ["tornado_tracks", "storm_events", "ks_hydro"],
+      "layersOff": [],
+      "labelsOn": [],
+      "labelsOff": [],
+      "opacity": {
+        "tornado_tracks": 1.0,
+        "storm_events": 1.0,
+        "ks_hydro": 0.75
+      },
+      "basemap": "satellite",
+      "flyTo": { "center": [-99.7, 38.7], "zoom": 7.0 }
     }
   ]
 }
