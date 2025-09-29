@@ -65,12 +65,6 @@ flowchart TD
   class F web
   class G earth
 
-	•	STAC 1.0.0 catalog tracks provenance and time.
-	•	Cloud-Optimized GeoTIFFs (COGs) serve terrain + maps.
-	•	Neo4j Knowledge Graph links people, places, and events.
-	•	MapLibre Viewer renders layers with a timeline slider.
-	•	Google Earth exports provide KMZ/KML for 3D exploration.
-
 ⸻
 
 ⚡ Quickstart
