@@ -65,14 +65,14 @@ Examples:
 
 ```mermaid
 flowchart TD
-  A["📥 Sources (data/sources/*.json)"] -->|fetch| B["🗺️ COGs (data/cogs/**/*.tif)"]
-  B -->|derive| C["📐 Derivatives (slope, aspect, hillshade, hydrology)"]
-  C -->|index| D["🗂️ STAC Catalog (stac/catalog.json, items/)"]
-  D -->|graph| H["🧩 Knowledge Graph (Neo4j + ontologies)"]
-  D -->|render| E["⚙️ Configs (web/config/*.json)"]
+  A["📥 Sources\ndata/sources/*.json"] -->|fetch| B["🗺️ COGs\ndata/cogs/**/*.tif"]
+  B -->|derive| C["📐 Derivatives\nslope, aspect, hillshade, hydrology"]
+  C -->|index| D["🗂️ STAC Catalog\nstac/catalog.json + items/"]
+  D -->|graph| H["🧩 Knowledge Graph\nNeo4j + ontologies"]
+  D -->|render| E["⚙️ Configs\nweb/config/*.json"]
   H --> E
   E --> F["🖥️ MapLibre Web Viewer"]
-  D --> G["🌍 KML/KMZ (Google Earth)"]
+  D --> G["🌍 KML/KMZ\nGoogle Earth"]
 
 
 ⸻
@@ -143,22 +143,22 @@ docker/          # reproducible containers
 
 📊 Data Coverage Matrix
 
-Domain / Layer	Sources	Status
-DEM / Terrain	USGS LiDAR 1m, KGS, 3DEP	✅
-Hillshade / Derivatives	LiDAR COGs → slope, aspect	✅
-Hydrology	USGS NHD, KS River floods	🚧
-Land Cover	NLCD 1992–2021	✅
-Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	🚧
-Treaties & Tribal Lands	Boundary polygons	✅/Expand
-Railroads & Trails	1850–1920 rail GIS	🚧
-Topographic Maps	USGS Historic Topo, UT PCL	✅
-Climate Normals	NOAA 1991–2020, Daymet	✅
-Hazards — Tornado	NOAA SPC 1950–2024	✅
-Hazards — Floods	FEMA, USGS flood data	🚧
-Hazards — Wildfire	NIFC + KS perimeter sets	🚧
-Paleoclimate / Fire	NOAA cores, charcoal	🚧
-Oral Histories & Arch.	Tribal narratives, sites	🚧
-Geology / Core Samples	KGS drill cores	🚧
+Domain / Layer	Sources Integrated	Status
+DEM / Terrain	USGS LiDAR 1m, KGS, 3DEP	✅ Complete
+Hillshade / Derivatives	LiDAR COGs → slope, aspect	✅ Complete
+Hydrology	USGS NHD, KS River floods	🚧 In Progress
+Land Cover	NLCD 1992–2021	✅ Complete
+Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	🚧 In Progress
+Treaties & Tribal Lands	Boundary polygons	✅ Complete (expanding)
+Railroads & Trails	1850–1920 rail GIS	🚧 In Progress
+Topographic Maps	USGS Historic Topo, UT PCL	✅ Complete
+Climate Normals	NOAA 1991–2020, Daymet	✅ Complete
+Hazards — Tornado	NOAA SPC 1950–2024	✅ Complete
+Hazards — Floods	FEMA, USGS flood data	🚧 In Progress
+Hazards — Wildfire	NIFC + KS perimeter sets	🚧 In Progress
+Paleoclimate / Fire	NOAA cores, charcoal	🚧 In Progress
+Oral Histories & Arch.	Tribal narratives, archaeology	🚧 In Progress
+Geology / Core Samples	KGS drill cores	🚧 In Progress
 
 
 ⸻
