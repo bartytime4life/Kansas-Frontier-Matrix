@@ -1,4 +1,3 @@
-# .github/workflows/ci.yml
 name: CI
 
 on:
@@ -52,20 +51,28 @@ jobs:
             requirements*.txt
 
       - name: Install linters (as needed)
+        id: install_linters
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
           have_ruff=false
           have_black=false
+
+          # Ruff if configured
           if grep -qE '^\[tool\.ruff\]' pyproject.toml 2>/dev/null || [ -f ruff.toml ] || [ -f .ruff.toml ]; then
             pip install ruff
             have_ruff=true
           fi
-          if grep -qE '^\[tool\.black\]' pyproject.toml 2>/dev/null || [ -f pyproject.toml ]; then
+
+          # Black if configured OR there are .py files (common default)
+          if grep -qE '^\[tool\.black\]' pyproject.toml 2>/dev/null || \
+             [ -f pyproject.toml -a -n "$(grep -E '^\[tool\.black\]' -n pyproject.toml || true)" ] || \
+             [ -n "$(git ls-files '*.py')" ]; then
             pip install black
             have_black=true
           fi
+
           echo "have_ruff=$have_ruff"   >> "$GITHUB_OUTPUT"
           echo "have_black=$have_black" >> "$GITHUB_OUTPUT"
 
@@ -74,6 +81,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Use matcher if you have it (ignored if missing)
           echo "::add-matcher::.github/matchers/ruff.json" || true
           ruff --version
           ruff check .
@@ -103,10 +111,12 @@ jobs:
             requirements*.txt
 
       - name: Install mypy (if configured)
+        id: install_mypy
         shell: bash
         run: |
           set -euo pipefail
-          if grep -qE '^\[tool\.mypy\]' pyproject.toml 2>/dev/null || [ -f mypy.ini ] || ( [ -f setup.cfg ] && grep -q '^\[mypy\]' setup.cfg ); then
+          if grep -qE '^\[tool\.mypy\]' pyproject.toml 2>/dev/null || [ -f mypy.ini ] || \
+             ( [ -f setup.cfg ] && grep -q '^\[mypy\]' setup.cfg ); then
             python -m pip install --upgrade pip
             pip install mypy
             echo "run_mypy=true" >> "$GITHUB_OUTPUT"
@@ -166,14 +176,14 @@ jobs:
             fi
           done
           echo "need=$need" >> "$GITHUB_OUTPUT"
-          sudo apt-get update -y
+          sudo apt-get -qq update
           if $need; then
-            sudo apt-get install -y --no-install-recommends \
+            sudo apt-get -y --no-install-recommends install \
               gdal-bin libgdal-dev libspatialindex-dev libsqlite3-mod-spatialite jq
             gdalinfo --version || true
             ogrinfo --version || true
           else
-            sudo apt-get install -y --no-install-recommends jq
+            sudo apt-get -y --no-install-recommends install jq
           fi
 
       - name: Install Python deps
@@ -215,7 +225,6 @@ PY
           {
             echo "### Pytest (py ${{ matrix.python-version }})"
             if [ -f .artifacts/coverage.xml ]; then
-              # Try to extract line-rate; fallback to 'generated'
               python - <<'PY'
 import xml.etree.ElementTree as ET
 try:
@@ -304,14 +313,28 @@ PY
           fi
 
       - name: Build web (if build script exists)
+        id: web_build
         working-directory: web
         shell: bash
         run: |
           set -euo pipefail
           if npm run | grep -qE '^ *build( |:|$)'; then
             npm run build
+            echo "built=true" >> "$GITHUB_OUTPUT"
             echo "### Web build" >> "$GITHUB_STEP_SUMMARY"
             echo "- Built web assets successfully" >> "$GITHUB_STEP_SUMMARY"
           else
+            echo "built=false" >> "$GITHUB_OUTPUT"
             echo "No build script in web/; skipping."
           fi
+
+      - name: Upload web build (artifact)
+        if: steps.web_build.outputs.built == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist-${{ github.run_id }}
+          path: |
+            web/dist
+            web/build
+          if-no-files-found: ignore
+          retention-days: 7
