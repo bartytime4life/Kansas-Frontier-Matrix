@@ -34,16 +34,26 @@ jobs:
     name: Lychee link check
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # fetch-depth 0 so we can diff PRs properly (forks included)
           fetch-depth: 0
 
+      # Cache lychee's URL status cache to reduce re-checks across runs
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/lychee
+          key: lychee-${{ runner.os }}-${{ github.ref }}
+          restore-keys: |
+            lychee-${{ runner.os }}-
+
       # Build args dynamically:
-      # - PRs: check only changed Markdown/HTML files (vs merge-base with base branch)
+      # - PRs: check only changed Markdown/HTML files (vs merge-base with base branch), fork-safe
       # - Push/Schedule/Dispatch: scan README + docs + web
       # - If .lychee.toml exists, prefer it (we still pass explicit targets)
       - name: Compute lychee args
@@ -58,21 +68,27 @@ jobs:
             local -a files=()
 
             if [[ "$mode" == "pr" ]]; then
-              # Robust merge-base for PRs (works for forks)
+              # Attempt to derive a merge-base with the main repo's base branch (fork-safe)
+              BASE_REF="${{ github.base_ref }}"
               BASE_SHA="${{ github.event.pull_request.base.sha || '' }}"
-              if [[ -z "$BASE_SHA" ]]; then
-                git fetch -q origin "${{ github.base_ref }}" || true
-                BASE_SHA="$(git rev-parse "origin/${{ github.base_ref }}" 2>/dev/null || echo "")"
+
+              if [[ -z "${BASE_SHA}" && -n "${BASE_REF}" ]]; then
+                # Add upstream pointing to the main repository; public fetch requires no token
+                git remote add upstream "https://github.com/${{ github.repository }}.git" || true
+                git fetch -q upstream "${BASE_REF}" || true
+                BASE_SHA="$(git rev-parse "upstream/${BASE_REF}" 2>/dev/null || echo "")"
               fi
-              if [[ -n "$BASE_SHA" ]]; then
-                MERGE_BASE="$(git merge-base "$BASE_SHA" HEAD 2>/dev/null || echo "")"
+
+              if [[ -n "${BASE_SHA}" ]]; then
+                MERGE_BASE="$(git merge-base "${BASE_SHA}" HEAD 2>/dev/null || echo "")"
               fi
-              if [[ -n "$MERGE_BASE" ]]; then
+
+              if [[ -n "${MERGE_BASE}" ]]; then
                 while IFS= read -r f; do
                   [[ -z "$f" ]] && continue
                   [[ "$f" =~ \.(md|html)$ ]] || continue
                   files+=("$f")
-                done < <(git --no-pager diff --name-only "$MERGE_BASE"...HEAD | tr -d '\r')
+                done < <(git --no-pager diff --name-only "${MERGE_BASE}"...HEAD | tr -d '\r')
               else
                 mode="full"
               fi
@@ -120,6 +136,8 @@ jobs:
             --require-https
             # Accept 429 (rate limits) as non-fatal; still reported in output
             --accept 200,429
+            # Enable lychee's local cache (pairs with actions/cache above)
+            --cache
           )
 
           # Emit both JSON and Markdown reports
@@ -148,9 +166,18 @@ jobs:
         uses: lycheeverse/lychee-action@v2
         with:
           args: ${{ steps.args.outputs.args }}
+          # default 'fail' behavior is to fail on errors; keep defaults
         env:
           # Token improves rate limits for links to github.com (raw, releases, etc.)
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Persist cache updates
+      - name: Save lychee cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/lychee
+          key: lychee-${{ runner.os }}-${{ github.ref }}
 
       - name: Upload lychee report
         if: always()
@@ -168,17 +195,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          # Try to parse totals from JSON; be forgiving if schema changes.
           TOTAL=0 BAD=0 WARN=0
           if [[ -f lychee/results.json ]]; then
-            TOTAL=$(jq 'length' lychee/results.json 2>/dev/null || echo 0)
-            # lychee JSON schema: items with "status" not 200 (or accepted) count as failures
-            BAD=$(jq '[ .[] | select(.status? and (.status|tonumber? // 0) >= 400) ] | length' lychee/results.json 2>/dev/null || echo 0)
-            WARN=$(jq '[ .[] | select(.status? and (.status|tostring) == "429") ] | length' lychee/results.json 2>/dev/null || echo 0)
+            # TOTAL: number of checked links (best-effort across versions)
+            TOTAL=$(jq 'if type=="array" then length else (.links // [] | length) end' lychee/results.json 2>/dev/null || echo 0)
+            # BAD: HTTP status >= 400
+            BAD=$(jq '
+              (.. | objects | select(has("status")) | .status) as $s
+              | if ($s|type) == "string" then ($s|tonumber? // 0) else ($s // 0) end
+              | select(. >= 400) | 1
+            ' lychee/results.json 2>/dev/null | wc -l | tr -d ' ' || echo 0)
+            # WARN: 429s
+            WARN=$(jq '
+              (.. | objects | select(has("status")) | .status) as $s
+              | if ($s|type) == "string" then ($s|tonumber? // 0) else ($s // 0) end
+              | select(. == 429) | 1
+            ' lychee/results.json 2>/dev/null | wc -l | tr -d ' ' || echo 0)
           fi
+
           {
             echo "## Link Check (Lychee)"
             echo "- Mode: **${{ steps.args.outputs.mode || 'full' }}**"
-            echo "- Checked targets: **$TOTAL** | Errors: **$BAD** | 429s: **$WARN**"
+            echo "- Checked targets: **$TOTAL** | Errors: **$BAD** | 429s (rate-limited): **$WARN**"
             if [ -f lychee.md ]; then
               echo
               echo "### Report excerpt"
