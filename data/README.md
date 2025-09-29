@@ -86,24 +86,24 @@ Git & LFS Policy
 
 .gitattributes
 	•	Route heavy binaries to Git LFS:
-	•	*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx *.zip *.7z *.laz *.las *.pdf
+*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx *.zip *.7z *.laz *.las *.pdf
 	•	Keep diff-friendly text in normal Git:
-	•	*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz (kmz via LFS if large)
+*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz (use LFS for very large KMZ)
 
 ⸻
 
 Lifecycle & Make Targets
 
 flowchart TD
-  S[Define Source<br/>(data/sources/*.json)] --> F[Fetch<br/>make fetch]
-  F --> P1[Process Vectors<br/>make vectors]
-  F --> P2[Process Rasters<br/>make cogs]
-  P2 --> T[Terrain Derivatives<br/>make terrain]
-  P1 --> D[Derivatives<br/>make derivatives]
+  S["Define Source<br/>(data/sources/*.json)"] --> F["Fetch<br/>make fetch"]
+  F --> P1["Process Vectors<br/>make vectors"]
+  F --> P2["Process Rasters<br/>make cogs"]
+  P2 --> T["Terrain Derivatives<br/>make terrain"]
+  P1 --> D["Derivatives<br/>make derivatives"]
   P2 --> D
-  D --> C[STAC Build<br/>make stac]
-  C --> V[Validate<br/>make validate-*]
-  C --> X[Exports<br/>make kml / make site]
+  D --> C["STAC Build<br/>make stac"]
+  C --> V["Validate<br/>make validate-*"]
+  C --> X["Exports<br/>make kml / make site"]
 
 Canonical targets
 	1.	Define → data/sources/*.json
@@ -121,9 +121,9 @@ All steps should refresh *_meta.json and *.sha256.
 
 Naming Conventions
 	•	Vectors → data/processed/vectors/<layer>_<period>.geojson
-	•	e.g., hydrography_1936.geojson
+e.g., hydrography_1936.geojson
 	•	Rasters → data/processed/dem/<id>.tif
-	•	e.g., ks_1m_dem_2018.tif
+e.g., ks_1m_dem_2018.tif
 	•	COGs → data/cogs/<id>.tif
 	•	STAC Items → data/stac/items/<collection>/<id>.json
 	•	Periods → {YYYY | YYYY-YYYY | 1930s | late-19c} (lowercase, hyphenated)
@@ -206,15 +206,15 @@ STAC Guidance
 	•	Items → concrete datasets (e.g., hydrography_1936)
 
 Each STAC Item must include:
-	•	geometry, bbox, and properties.datetime or properties.start_datetime / end_datetime
-	•	At least one asset (COG or GeoJSON), with:
-	•	roles: e.g., ["data"], optional ["visual"] for hillshade/tiles/KMZ
+	•	geometry, bbox, and properties.datetime or properties.start_datetime/end_datetime
+	•	≥1 asset (COG or GeoJSON) with:
+	•	roles (e.g., ["data"], optional ["visual"] for hillshade/tiles/KMZ)
 	•	checksum:sha256, type (MIME), title, href
 	•	license
-	•	Links: self, parent, root
+	•	links: self, parent, root
 	•	Optional provenance link → data/provenance/registry.json
 
-Build + validate
+Build & validate
 
 make stac
 make stac-validate
@@ -266,3 +266,4 @@ TL;DR
 	•	Discoverable metadata in stac/
 	•	Guarded by .gitignore, .gitattributes, pre-commit, and CI
 	•	Every step emits provenance + checksums for auditability
+
