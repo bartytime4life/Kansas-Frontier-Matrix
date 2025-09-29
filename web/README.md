@@ -1,38 +1,55 @@
-# Kansas Geo Timeline — Web App
 
-**Time · Terrain · History** — a tiny, dependency-light MapLibre viewer with a time slider.  
-It prefers a **STAC-derived config** and gracefully falls back to simple JSON (for local dev).  
-Designed to run from **`web/`** (GitHub Pages-friendly), no servers required.
+<div align="center">
+
+# 🌐 Kansas Geo Timeline — Web App  
+### **Time · Terrain · History**
+
+A **dependency-light MapLibre viewer** with a time slider.  
+It prefers a **STAC-derived config** and gracefully falls back to JSON for dev/preview.  
+Runs directly from **`web/`** — Pages-ready, no servers required.
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+
+![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python)
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)
+![Last Commit](https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix)
+![Repo Size](https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix)
+![Stars](https://img.shields.io/github/stars/bartytime4life/Kansas-Frontier-Matrix?style=social)
+
+</div>
 
 ---
 
-## What’s in `web/`
+## 📦 What’s in `web/`
 
 ```text
 web/
-├─ index.html              # MapLibre bootstrap + UI (loads config JSON, builds UI)
+├─ index.html              # MapLibre bootstrap + UI
 ├─ style.css               # Tokens, layout, legend, toggles, accessibility
-├─ app.config.json         # (preferred) generated from STAC (see “Build & Generate”)
-├─ layers.json             # (fallback) quick dev/preview catalog
-├─ config/                 # optional UI/config overrides (all are optional)
-│  ├─ app.config.json      # alt location for generated config (same shape as /app.config.json)
-│  ├─ viewer.json          # dev override (super-set of app.config.json)
-│  ├─ layers.json          # layers-only dev override (subset)
-│  ├─ time_config.json     # overrides { time, defaultYear, timeUI } + adds presets
-│  ├─ legend.json          # symbol tokens + layerBindings (id→legendKey)
-│  ├─ categories.json      # sidebar groups (id→{ label, order })
-│  └─ schema.json          # JSON Schemas (legend/categories/sources) for validation
+├─ app.config.json         # (preferred) generated from STAC
+├─ layers.json             # (fallback) dev/preview catalog
+├─ config/                 # optional overrides
+│  ├─ app.config.json      # alt generated config
+│  ├─ viewer.json          # dev override (superset)
+│  ├─ layers.json          # layers-only override
+│  ├─ time_config.json     # time overrides + presets
+│  ├─ legend.json          # symbol tokens + layer bindings
+│  ├─ categories.json      # sidebar groups
+│  └─ schema.json          # JSON Schemas for validation
 └─ assets/
    ├─ logo.png
    └─ favicon.svg
 
 Runtime load order (first hit wins):
 ./app.config.json → ./config/app.config.json → ./config/viewer.json → ./config/layers.json → ./layers.json
-If ./config/time_config.json exists it overrides top-level time, defaultYear, and timeUI.
+If ./config/time_config.json exists, it overrides { time, defaultYear, timeUI }.
 
 ⸻
 
-Quick start
+⚡ Quick Start
 
 A) One-liner (Python)
 
@@ -49,9 +66,9 @@ docker compose --profile dev up -d site
 
 ⸻
 
-Build & Generate (data + configs)
+🛠 Build & Generate (data + configs)
 
-From the repo root (see Makefile targets):
+From repo root (Makefile targets):
 
 # Discover tools/env
 make env
@@ -65,14 +82,14 @@ make site
 # Preferred: STAC → web/config/app.config.json (+ sync UI assets)
 make stac stac-validate site-config
 
-Optional DEM override while building terrain:
+Optional DEM override:
 
 make terrain DEM=/path/to/dem.tif
 
 
 ⸻
 
-Configs the web app understands
+📑 Configs the Web App Understands
 
 1) STAC-driven (preferred) — app.config.json
 
@@ -87,90 +104,64 @@ Produced by make site-config. Minimal shape:
   "time": { "min": "1850-01-01", "max": "2025-12-31" },
   "defaultYear": 1930,
   "timeUI": { "step": 1, "loop": false, "fps": 12 },
-  "defaults": {
-    "minzoom": 0, "maxzoom": 15, "opacity": 1.0, "visible": true,
-    "time": { "start": null, "end": null }
-  },
-  "layers": [
-    {
-      "id": "usgs_topo_1894_larned",
-      "title": "USGS Historic Topo — Larned (1894)",
-      "type": "raster",
-      "url": "./tiles/historic/usgs_1894_larned/{z}/{x}/{y}.png",
-      "opacity": 0.7,
-      "visible": true,
-      "category": "historical",
-      "legendKey": "historic_topo",
-      "time": { "start": "1894-01-01", "end": "1894-12-31" }
-    },
-    {
-      "id": "ks_settlements",
-      "title": "Settlements, Forts, Trading Posts",
-      "type": "geojson",
-      "data": "data/processed/towns_points.json",
-      "category": "culture",
-      "legendKey": "towns",
-      "time": { "start": "1800-01-01", "end": null },
-      "timeProperty": "year",
-      "style": {
-        "circleColor": "#FF595E",
-        "circleRadius": 4,
-        "circleOpacity": 0.95,
-        "circleStrokeColor": "#FFFFFF",
-        "circleStrokeWidth": 1
-      },
-      "popup": ["name", "type", "year", "year_end"]
-    }
-  ]
+  "layers": [...]
 }
 
 2) Fallback — viewer.json / layers.json
 
-Use for quick dev. Same keys, but minimal:
+For quick dev. Same keys, minimal:
 
 {
   "version": "1.3.0",
   "time": { "min": "1850-01-01", "max": "2025-12-31" },
-  "layers": [
-    {
-      "id": "ks_hillshade_2018",
-      "title": "Hillshade (2018–2020)",
-      "type": "raster",
-      "url": "./tiles/terrain/hillshade/{z}/{x}/{y}.png",
-      "opacity": 0.9,
-      "visible": true,
-      "time": { "start": "2018-01-01", "end": "2020-12-31" }
-    },
-    {
-      "id": "ksriv_channels",
-      "title": "Kansas River — Channels",
-      "type": "geojson",
-      "data": "./data/processed/hydrology/kansas_river/channels.geojson",
-      "style": { "lineColor": "#1e88e5", "lineWidth": 1.6, "lineOpacity": 1.0 },
-      "visible": true,
-      "time": { "start": "1850-01-01", "end": null }
-    }
-  ]
+  "layers": [...]
 }
 
-Note: Rasters are tile URLs (…/{z}/{x}/{y}.png). Do not point to raw .tif.
-Vectors use data for GeoJSON; rasters use url or tiles.
 
 ⸻
 
-How layers load
-	•	Raster → MapLibre raster source from url/tiles (PNG/JPEG tiles)
-	•	GeoJSON → MapLibre geojson source from data (or path)
-	•	Styling (camelCase):
-	•	Lines: lineColor, lineWidth, lineOpacity, lineDasharray
-	•	Fills: fillColor, fillOpacity, fillOutlineColor
-	•	Circles: circleColor, circleRadius, circleOpacity, circleStrokeColor, circleStrokeWidth
-	•	Legend → auto from layer props or external config/legend.json via legendKey + layerBindings
-	•	Time → layer-level (time.start/end) or feature-level (timeProperty, endTimeProperty)
+🧩 Layer Handling
+	•	Raster → MapLibre raster source from url/tiles
+	•	GeoJSON → MapLibre geojson source from data
+	•	Styling → lineColor, fillColor, circleColor, etc.
+	•	Legend → from props or bound via legend.json
+	•	Time → time.start/end or feature-level timeProperty
 
 ⸻
 
-URL parameters
+📊 Coverage Status (Web Viewer)
+
+<!-- WEB_COVERAGE_START -->
+
+
+Layer Type / Domain	Example Source	Web Support
+🏔 DEM / Terrain	USGS LiDAR → hillshade tiles	
+🗺 Historic Topos	USGS Historic Topo maps	
+🌊 Hydrology	Kansas River channels (GeoJSON)	
+🌱 Land Cover	NLCD slices (vectorized / COG)	
+🧭 Soils / Parcels	NRCS SSURGO (vector, simplified)	
+🪶 Treaties & Lands	Boundary polygons (GeoJSON)	
+🚂 Railroads & Trails	1850–1920 GIS (line GeoJSON)	
+🌡 Climate Normals	NOAA NCEI 1991–2020 (station points)	
+🌪 Hazards — Tornado	SPC Tornado Paths (polylines)	
+🌊 Hazards — Floods	FEMA / USGS flood zones	
+🔥 Hazards — Wildfire	NIFC perimeters	
+🪶 Oral Histories & Arch.	Tribal narratives (points)	
+
+<!-- WEB_COVERAGE_END -->
+
+
+Legend:
+
+ Complete ·
+
+ Partial ·
+
+ Planned
+
+⸻
+
+🔗 URL Parameters
 
 ?year=1930
 &layers=ks_hillshade_2018,ksriv_channels
@@ -178,18 +169,14 @@ URL parameters
 &zoom=7
 &debug=1
 
-	•	year → sets slider
-	•	layers → initial visibility
-	•	center + zoom → map view override
-	•	debug=1 → console + overlay diagnostics
 
 ⸻
 
-Publishing
-	1.	Ensure web/ has a valid config (app.config.json preferred)
-	2.	Run make prebuild before pushing (validates + generates configs)
-	3.	GitHub Pages: set /web or /site as publish dir
-	4.	(Optional) Add .lychee.toml for link checks
+🚀 Publishing
+	1.	Ensure web/ has a valid config (app.config.json preferred).
+	2.	Run make prebuild before pushing.
+	3.	GitHub Pages → set /web or /site as publish dir.
+	4.	(Optional) Add .lychee.toml for link checks:
 
 base_url = "https://<user>.github.io/<repo>/"
 include = ["web/**", "README.md", "site/**"]
@@ -198,24 +185,35 @@ fail_if_empty = false
 
 ⸻
 
-Troubleshooting
-	•	Blank map / 404s → check devtools console, paths must be relative to web/
-	•	Tiles don’t render → confirm {z}/{x}/{y}.png tiles exist
+🧯 Troubleshooting
+	•	Blank map / 404s → check console, paths must be relative to web/
+	•	Tiles don’t render → confirm {z}/{x}/{y}.png exist
 	•	Slider inert → missing time/timeProperty
 	•	Legend missing → legendKey not bound in legend.json
-	•	Slow vectors → simplify or tile; use raw GeoJSON only for small sets
+	•	Slow vectors → simplify/tile; raw GeoJSON only for small sets
 
 ⸻
 
-Roadmap (web)
-	•	Vector tiles (PMTiles/TiTiler)
+🎯 Roadmap (Web)
+	•	Vector tiles (PMTiles / TiTiler)
 	•	Permalinks (year + layers + view state)
 	•	Story mode (config/story_layers.json)
 	•	I18n scaffolding for UI strings
 
 ⸻
 
-License: MIT (see repo root)
-Issues / ideas: open a GitHub issue
+⚖️ License
+
+MIT © 2025 — Kansas Frontier Matrix
+
+💡 Issues & ideas → open a GitHub issue
+
+---
+
+### 🔑 What’s included
+- ✅ Color-coded **support badges** (green = complete, yellow = partial, grey = planned).  
+- ✅ **Markers (`WEB_COVERAGE_START/END`)** for auto-updating via CI.  
+- ✅ Aligned with **root README.md** + `.github/README.md`.  
+- ✅ Sections polished for GitHub rendering.  
 
 ---
