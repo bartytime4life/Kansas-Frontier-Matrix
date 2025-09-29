@@ -71,6 +71,7 @@ flowchart TD
   H --> E
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
+<!-- END OF MERMAID -->
 
 
 ⸻
