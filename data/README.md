@@ -275,5 +275,3 @@ TL;DR
 	•	Discoverable metadata in stac/
 	•	Guarded by .gitignore, .gitattributes, pre-commit, and CI
 	•	Every step emits provenance + checksums for auditability
-
----
