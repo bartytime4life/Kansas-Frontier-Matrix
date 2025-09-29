@@ -1,6 +1,6 @@
 # ================================
 # Kansas-Frontier-Matrix / MCP Repo
-# .pre-commit-config.yaml  (upgraded)
+# .pre-commit-config.yaml (upgraded)
 # ================================
 
 minimum_pre_commit_version: "3.6.0"
@@ -27,6 +27,7 @@ exclude: |
     (?:^|.*/)?dist/|
     build/|
     _site/|
+    _site_docs/|
     earth/|
     docs/_build/|
     \.venv/|
@@ -132,7 +133,7 @@ repos:
     rev: v3.3.3
     hooks:
       - id: prettier
-        files: "\\.(json|jsonc|ya?ml|md|html?|css|js|ts|tsx)$"
+        files: "\\.(json|jsonc|ya?ml|md|markdown|html?|css|js|ts|tsx)$"
         args: ["--cache", "--ignore-unknown"]
         additional_dependencies: []
 
@@ -211,6 +212,14 @@ repos:
       - id: git-lfs-check
         args:
           - "--pattern=*.tif,*.tiff,*.vrt,*.ovr,*.aux.xml,*.mbtiles,*.pmtiles,*.shp,*.dbf,*.shx,*.cpg,*.prj,*.gpkg,*.geoparquet,*.parquet,*.las,*.laz,*.zip,*.7z,*.tar,*.tar.gz,*.tgz,*.bz2,*.xz,*.zst"
+
+  # --- Conventional Commits (manual guard for release hygiene) --------------
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.5.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [manual]
+        args: ["--types", "feat,fix,docs,style,refactor,perf,test,build,ci,chore,revert"]
 
   # --- Local project hooks (fast, targeted) ---------------------------------
   - repo: local
