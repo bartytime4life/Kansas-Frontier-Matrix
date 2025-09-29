@@ -1,76 +1,140 @@
-# Kansas-Frontier-Matrix — Web Documentation
+# Kansas-Frontier-Matrix — Web Documentation (`web/docs/`)
 
-This folder (`web/docs/`) contains **developer and contributor documentation**  
-for the **Kansas-Frontier-Matrix web viewer**.
-
-The goal is to keep **architecture, design, and extension guides** close to the codebase so the UI remains **consistent, reproducible, and contributor-friendly**.
+This folder contains **developer and contributor documentation** for the **Kansas-Frontier-Matrix web viewer**.  
+Keep **architecture, design, and extension guides** close to the codebase so the UI stays **consistent, reproducible, and contributor-friendly**.
 
 ---
 
-## Files
+## Index of documents
 
-- **`ARCHITECTURE.md`**  
-  High-level overview of the web app:
-  - Component flow (`app.config.json` → `index.html`/`app.js` → MapLibre → UI)
-  - Data pipelines (JSON / GeoJSON layers, STAC item references)
-  - Directory layout and extension patterns
+| File                | Status     | Purpose                                                                                |
+|---------------------|------------|----------------------------------------------------------------------------------------|
+| `ARCHITECTURE.md`   | ✅ current | High-level app flow, runtime data paths, and directory layout                          |
+| `STYLE_GUIDE.md`    | ✅ current | CSS tokens & theming, responsive rules, JS conventions, JSON config rules              |
+| `DEVELOPER_GUIDE.md`| 🚧 planned | How `app.js` loads/merges configs, timeline filtering, adding new layer types          |
+| `UI_DESIGN.md`      | 🚧 planned | Sidebar/timeline patterns, light/dark/sepia themes, wireframes & states                |
+| `CONTRIBUTING.md`   | ✅ current | How to propose changes, run local checks, pass CI                                      |
+| `CHANGELOG.md`      | ✅ current | User-visible changes to the web app and docs                                           |
 
-- **`STYLE_GUIDE.md`**  
-  Coding & design conventions:
-  - CSS tokens, responsive layout, accessibility
-  - JavaScript helpers & config-driven logic
-  - JSON config schema-lite (`layers[]` contract, paint/legend/time rules)
-  - Commit guidelines and CI validation tips
-
-- **`DEVELOPER_GUIDE.md`** *(planned)*  
-  Practical contributor reference:
-  - How `app.js` loads configs and builds the sidebar dynamically
-  - Timeline slider logic and year-based filtering
-  - Adding new layer types (e.g., GeoJSON with paint styles, raster tiles)
-  - Debugging and testing workflows
-
-- **`UI_DESIGN.md`** *(planned)*  
-  Visual/UI reference:
-  - Sidebar & timeline placement
-  - Responsive rules (desktop sidebar → mobile drawer)
-  - CSS design tokens & theming (light/dark, archival/sepia mode)
-  - Example wireframes and mockups
+> Keep docs **small and focused**. Cross-link with **relative paths** into `web/` (e.g., `../index.html`, `../styles/`).
 
 ---
 
-## Purpose
-
-The **web viewer** provides:
-
-- A **MapLibre-based map** with a **time slider** for filtering layers  
-- Historical + terrain overlays (`./tiles/` and `./vectors/`)  
-- Config-driven setup via [`app.config.json`](../app.config.json)  
-- A bridge between **STAC metadata** and **interactive visualization**
-
-Documentation here ensures future developers can:
-
-- Add or extend layers cleanly  
-- Maintain reproducibility across configs and UI  
-- Connect new datasets without hardcoding  
-- Keep accessibility and design consistent  
-
----
-
-## Contribution Guidelines
-
-- Keep docs **short and focused** per file.  
-- Reference project files by **relative paths** (e.g., `../app.css`, `../index.html`).  
-- Use **Mermaid diagrams** for flows, and validate syntax in GitHub preview.
+## How these docs connect to the app
 
 ```mermaid
 flowchart TD
-  A["Config:\napp.config.json"] --> B["Viewer:\nindex.html / app.js"]
-  B --> C["MapLibre:\nsources / layers"]
-  C --> D["UI:\nsidebar + time slider"]
-````
+  A["STAC & Sources\n(stac/items/**)"] --> B["Config Build\n(make site-config)"]
+  B --> C["Viewer Config\n(web/config/app.config.json)"]
+  C --> D["Runtime\n(web/index.html + app.js)"]
+  D --> E["MapLibre\n(sources/layers)"]
+  D --> F["UI\n(sidebar, legend, time slider)"]
 
----
+	•	Authoritative config: web/config/app.config.json (generated) → first choice at runtime.
+	•	Fallbacks: web/config/viewer.json, web/config/layers.json, web/layers.json.
+	•	Styles & tokens: web/styles/ (light/dark themes, z-index, focus rings).
+	•	Docs: this folder explains the above so contributors ship changes that pass CI and don’t break the viewer.
 
-✅ Following this structure ensures the Kansas-Frontier-Matrix web UI remains maintainable, accessible, and ready for contributors.
+⸻
 
-```
+Authoring standards (applies to all docs here)
+	•	Headings: start at # per file; no skipped levels.
+	•	Code fences: must be closed; use language hints (bash, json, js, html, mermaid).
+	•	Line-length: keep paragraphs concise; lists and tables are preferred over long prose.
+	•	Links: use relative paths within the repo; avoid hard-coding external URLs when an internal reference exists.
+	•	Mermaid: validate in GitHub preview; quote labels containing punctuation and use \n for line breaks.
+	•	Examples: mirror actual keys used by the app (camelCase for style options, ISO-8601 dates).
+
+⸻
+
+Quick pointers (what goes where)
+	•	Add a layer? Document it in DEVELOPER_GUIDE.md with a minimal JSON example, then ensure STYLE_GUIDE.md covers any new tokens (e.g., --treaty-fill).
+	•	New UI pattern? Specify placement & states in UI_DESIGN.md, and reference any CSS tokens.
+	•	Architectural change? Update ARCHITECTURE.md plus the Mermaid flow if build or runtime load order changes.
+	•	Breaking change? Note in CHANGELOG.md and reference commit/PR.
+
+⸻
+
+Minimal contracts to reference while writing docs
+
+Viewer config (top-level excerpt)
+
+{
+  "version": "1.4.0",
+  "title": "Kansas-Frontier-Matrix",
+  "style": "https://demotiles.maplibre.org/style.json",
+  "center": [-98.3, 38.5],
+  "zoom": 6,
+  "time": { "min": "1850-01-01", "max": "2025-12-31" },
+  "defaultYear": 1930,
+  "timeUI": { "step": 1, "loop": false, "fps": 12 },
+  "layers": []
+}
+
+Layer snippet (raster vs. GeoJSON)
+
+{
+  "id": "usgs_topo_1894_larned",
+  "title": "USGS Historic Topo — Larned (1894)",
+  "type": "raster",
+  "url": "./tiles/historic/usgs_1894_larned/{z}/{x}/{y}.png",
+  "visible": true,
+  "opacity": 0.7,
+  "category": "historical",
+  "time": { "start": "1894-01-01", "end": "1894-12-31" }
+}
+
+{
+  "id": "ks_settlements",
+  "title": "Settlements, Forts, Trading Posts",
+  "type": "geojson",
+  "data": "data/processed/towns_points.json",
+  "category": "culture",
+  "timeProperty": "year",
+  "popup": ["name", "type", "year", "year_end"],
+  "style": {
+    "circleColor": "#FF595E",
+    "circleRadius": 4,
+    "circleOpacity": 0.95,
+    "circleStrokeColor": "#FFFFFF",
+    "circleStrokeWidth": 1
+  }
+}
+
+
+⸻
+
+Local preview & validation
+
+# Serve the site (from repo root or ./web)
+cd web && python -m http.server 8080
+
+# Generate & validate configs from STAC
+make stac stac-validate site-config
+
+# Lint/validate JSON configs
+jq . web/config/app.config.json > /dev/null
+ajv validate -s web/config/app.config.schema.json -d web/config/app.config.json
+ajv validate -s web/config/layers.schema.json      -d web/config/layers.json
+
+
+⸻
+
+Contribution workflow (docs)
+	1.	Branch from main, commit small, focused changes.
+	2.	Run local checks (Mermaid previews, JSON examples are syntactically valid).
+	3.	Open PR with a short summary and links to affected files (include screenshots if visual).
+	4.	Pass CI (schema validation, link checks where applicable).
+	5.	Update CHANGELOG.md when user-visible.
+
+⸻
+
+FAQ (docs-specific)
+	•	Where do we document design tokens? STYLE_GUIDE.md with references to ../styles/base.css.
+	•	Where do we explain timeline filtering logic? DEVELOPER_GUIDE.md (runtime) + ARCHITECTURE.md (flow).
+	•	Where do we put mockups? UI_DESIGN.md with image assets under web/assets/ (keep file sizes small).
+
+⸻
+
+✅ Following this structure keeps the web UI maintainable, accessible, and easy to extend for new Kansas layers and stories.
+
