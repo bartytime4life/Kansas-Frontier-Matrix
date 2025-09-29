@@ -84,24 +84,25 @@ docker/      # reproducible containers
 
 ⸻
 
-📊 Coverage Status
+## 📊 Coverage Status
 
-Layer / Domain	Data Sources	Status
-🏔 DEM & Terrain	USGS LiDAR, KGS, 3DEP	
-🗺 Hillshade/Derivatives	LiDAR COGs → slope, aspect	
-🌊 Hydrology	NHD, Kansas River floods	
-🌱 Land Cover	NLCD 1992–2021	
-🧭 Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	
-🪶 Treaties & Lands	Boundary polygons	
-🚂 Railroads & Trails	1850–1920 GIS	
-🗺 Historic Topos	USGS, UT PCL	
-🌡 Climate Normals	NOAA 1991–2020, Daymet	
-🌪 Hazards — Tornado	NOAA SPC 1950–2024	
-🌊 Hazards — Floods	FEMA, USGS	
-🔥 Hazards — Wildfire	NIFC, KS perimeter sets	
-🪨 Paleoclimate / Fire	NOAA cores, charcoal	
-🪶 Oral Histories & Arch.	Tribal narratives, archaeology	
-⛏ Geology / Core Samples	KGS drill cores	
+| Layer / Domain           | Data Sources                     |
+|---------------------------|----------------------------------|
+| 🏔 DEM & Terrain          | USGS LiDAR, KGS, 3DEP            |
+| 🗺 Hillshade/Derivatives  | LiDAR COGs → slope, aspect       |
+| 🌊 Hydrology              | NHD, Kansas River floods         |
+| 🌱 Land Cover             | NLCD 1992–2021                   |
+| 🧭 Soils / PLSS / Parcels | NRCS SSURGO, KS GIS Hub          |
+| 🪶 Treaties & Lands       | Boundary polygons                |
+| 🚂 Railroads & Trails     | 1850–1920 GIS                    |
+| 🗺 Historic Topos         | USGS, UT PCL                     |
+| 🌡 Climate Normals        | NOAA 1991–2020, Daymet           |
+| 🌪 Hazards — Tornado      | NOAA SPC 1950–2024               |
+| 🌊 Hazards — Floods       | FEMA, USGS                       |
+| 🔥 Hazards — Wildfire     | NIFC, KS perimeter sets          |
+| 🪨 Paleoclimate / Fire    | NOAA cores, charcoal             |
+| 🪶 Oral Histories & Arch. | Tribal narratives, archaeology   |
+| ⛏ Geology / Core Samples  | KGS drill cores                  |
 
 
 ⸻
