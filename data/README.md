@@ -40,6 +40,7 @@ This directory implements the project’s **MCP-style data lifecycle** end-to-en
 
 ## Directory Layout
 
+```text
 data/
 ├─ 📥 raw/                  # Immutable source payloads (original downloads, never edited)
 │  ├─ …/
