@@ -1,74 +1,50 @@
 {
   "type": "FeatureCollection",
   "name": "railroads_lines",
+  "bbox": [-99.0986, 37.4152, -95.3533, 38.9251],
+
+  "kfm_meta": {
+    "generated": "2025-09-26T00:00:00Z",
+    "schema_version": "1.1",
+    "description": "Historic & modern Kansas railroad linework (demo segments). Replace/extend with authoritative alignment & status history.",
+    "coordinate_reference": "WGS84 (EPSG:4326)",
+    "license": "CC BY 4.0",
+    "properties_schema": {
+      "name": "Railroad line or subdivision name",
+      "operator": "Operating company (historical code/name)",
+      "built": "Construction date (ISO YYYY or YYYY-MM-DD)",
+      "opened": "Opening date to traffic (ISO)",
+      "abandoned_year": "Year line was abandoned (if applicable)",
+      "status": "active | abandoned | railbanked | removed",
+      "source": "Data provenance / citation",
+      "time_start": "Timeline start (derived: opened || built)",
+      "time_end": "Timeline end (derived: abandoned → Dec 31; otherwise null)",
+      "notes": "Free text notes"
+    },
+    "defaults": {
+      "status": "active",
+      "time_end": null
+    }
+  },
+
   "features": [
     {
       "type": "Feature",
       "id": "rr-atsf-larned-greatbend-01",
+      "bbox": [-99.0986, 38.1837, -98.7640, 38.3649],
       "properties": {
         "name": "Atchison, Topeka & Santa Fe (Main)",
         "operator": "ATSF",
-        "built": "1872",
+        "built": "1872-01-01",
         "opened": "1872-10-01",
         "status": "active",
         "source": "State GIS / Historical compilations",
-        "license": "CC BY 4.0"
+        "license": "CC BY 4.0",
+
+        "time_start": "1872-10-01",
+        "time_end": null
       },
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [-99.0986, 38.1837],
-          [-99.0458, 38.2086],
-          [-98.9952, 38.2259],
-          [-98.9151, 38.3649],
-          [-98.7640, 38.3649]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "rr-kp-salina-abilene-01",
-      "properties": {
-        "name": "Kansas Pacific (Salina–Abilene)",
-        "operator": "KP",
-        "built": "1867",
-        "opened": "1867-08-15",
-        "status": "abandoned",
-        "abandoned_year": 1993,
-        "source": "State GIS / Historical compilations",
-        "license": "CC BY 4.0"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [-97.6156, 38.8402],
-          [-97.5480, 38.9133],
-          [-97.3802, 38.9251],
-          [-97.2214, 38.9188]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "rr-mkt-neosho-01",
-      "properties": {
-        "name": "Missouri–Kansas–Texas (Neosho Branch)",
-        "operator": "MKT",
-        "built": "1890-06-01",
-        "opened": "1890-12-01",
-        "status": "active",
-        "source": "State GIS / Historical compilations",
-        "license": "CC BY 4.0"
-      },
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [-95.6395, 37.4152],
-          [-95.5574, 37.4939],
-          [-95.4485, 37.5596],
-          [-95.3533, 37.6102]
-        ]
-      }
-    }
-  ]
-}
+          [-99.
