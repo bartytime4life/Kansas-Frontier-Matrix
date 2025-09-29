@@ -73,6 +73,7 @@ data/
 │
 └─ 🗺 tiles/                 # Ephemeral web map tiles (PNG/PMTiles, ignored)
 
+----
 > **Rule:** Every derivation should emit a `*_meta.json` capturing command, inputs, timestamps, versions, and checksums.
 
 ---
