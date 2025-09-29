@@ -39,14 +39,29 @@ It’s more than maps — it’s a **time-aware knowledge hub** for Kansas.
 
 ```mermaid
 flowchart TD
-  A[Sources data/sources/*.json] --> B[COGs data/cogs/**/*.tif]
-  B --> C[Derivatives slope aspect hillshade hydrology]
-  C --> D[STAC Catalog stac/catalog.json items/]
-  D --> H[Knowledge Graph Neo4j and Ontologies]
-  D --> E[Configs web/config/*.json]
+  classDef src fill:#FFD166,stroke:#333,stroke-width:1px;
+  classDef cogs fill:#06D6A0,stroke:#333,stroke-width:1px;
+  classDef stac fill:#118AB2,stroke:#fff,stroke-width:1px;
+  classDef web fill:#073B4C,stroke:#fff,stroke-width:1px;
+  classDef earth fill:#EF476F,stroke:#fff,stroke-width:1px;
+
+  A[Sources] --> B[COGs]
+  B --> C[Derivatives]
+  C --> D[STAC Catalog]
+  D --> H[Knowledge Graph]
+  D --> E[Configs]
   H --> E
   E --> F[MapLibre Web Viewer]
-  D --> G[KML KMZ earth/]
+  D --> G[KML KMZ]
+
+  class A src;
+  class B cogs;
+  class C cogs;
+  class D stac;
+  class E web;
+  class F web;
+  class G earth;
+  class H stac;
 
 
 	•	STAC 1.0.0 catalog tracks provenance and time.
