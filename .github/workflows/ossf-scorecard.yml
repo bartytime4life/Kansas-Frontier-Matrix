@@ -16,36 +16,45 @@ permissions:
   actions: read
   id-token: write           # publish_results to OpenSSF (OIDC)
 
+concurrency:
+  group: ossf-scorecard-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: false
+
 jobs:
   scorecard:
     name: OpenSSF Scorecard
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+      id-token: write
 
     steps:
-      - name: Checkout
+      - name: Checkout (full history for accurate checks)
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       # Cache GitHub API responses used by Scorecard to speed up repeated runs
       - name: Restore Scorecard cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ossf-scorecard
-          key: ossf-scorecard-${{ runner.os }}-${{ github.ref }}-${{ github.sha }}
+          key: ossf-scorecard-${{ runner.os }}-${{ github.ref }}
           restore-keys: |
-            ossf-scorecard-${{ runner.os }}-${{ github.ref }}-
             ossf-scorecard-${{ runner.os }}-
 
-      # Run OpenSSF Scorecard (pinned to a specific version)
+      # Run OpenSSF Scorecard
       - name: Run Scorecard
         id: scorecard
         uses: ossf/scorecard-action@v2.3.1
         with:
           results_file: scorecard.sarif
-          results_format: sarif         # also supports 'json'
-          # Set to 'true' to publish results to the OpenSSF API for badges/aggregations
-          publish_results: true
+          results_format: sarif           # also supports 'json'
+          publish_results: true           # OIDC used to publish to OpenSSF
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
       # Upload SARIF to GitHub code scanning so findings appear under
@@ -56,7 +65,7 @@ jobs:
         with:
           sarif_file: scorecard.sarif
 
-      # Optionally also keep the SARIF as a build artifact
+      # Keep the SARIF as a build artifact for auditing
       - name: Upload Scorecard artifact
         if: always()
         uses: actions/upload-artifact@v4
