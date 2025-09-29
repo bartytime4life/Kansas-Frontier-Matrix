@@ -18,7 +18,7 @@ The Frontier-Matrix integrates maps, LiDAR terrain, treaties, railroads, disaste
 Kansas history is fragmented — scattered across treaties, disasters, geology, maps, and stories.
 This project builds a time-aware knowledge hub so communities can explore:
 	•	🚂 Railroads vs. tribal lands — how towns spread along rights-of-way.
-	•	🌪 Droughts, floods, and Dust Bowl storms reshaping settlement.
+	•	🌪 Droughts, floods, Dust Bowl storms reshaping settlement.
 	•	🪶 Archaeology & oral histories tied to rivers, prairies, and forts.
 	•	🔥 Paleoclimate & fire regimes shaping resilience and ecology.
 
@@ -41,10 +41,13 @@ flowchart TD
 <!-- END OF MERMAID -->
 
 
+
+⸻
+
 ✨ Pipeline Highlights
-	•	📂 STAC 1.0.0 catalog → provenance + temporal coverage ￼
-	•	🗺️ COGs → terrain & historical rasters ￼
-	•	🧩 Neo4j Knowledge Graph → people ↔ places ↔ events ￼
+	•	📂 STAC 1.0.0 catalog → provenance + temporal coverage
+	•	🗺️ COGs → terrain & historical rasters
+	•	🧩 Neo4j Knowledge Graph → people ↔ places ↔ events
 	•	🖥️ MapLibre Viewer → timeline slider + dynamic layers
 	•	🌍 Google Earth exports → immersive 3D exploration
 
@@ -52,7 +55,7 @@ flowchart TD
 
 ⚡ Quickstart
 
-🐍 Python (local dev)
+🐍 Local Dev (Python)
 
 python -m venv .venv
 . .venv/bin/activate
@@ -88,21 +91,21 @@ docker/          # reproducible containers
 📊 Data Coverage Matrix
 
 🌐 Domain / Layer	🔗 Sources Integrated	📌 Status
-DEM / Terrain	USGS LiDAR 1 m, KGS, 3DEP	✅
-Hillshade / Derivatives	LiDAR COGs → slope, aspect, hydrology	✅
-Hydrology	USGS NHD, KS River floods ￼	🚧
-Land Cover	NLCD 1992–2021 ￼	✅
-Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub ￼	🚧
-Treaties & Tribal Lands	Boundary polygons ￼	✅ / Expand
-Railroads & Trails	1850–1920 rail GIS ￼	🚧
-Topographic Maps	USGS Historic Topo, UT PCL ￼	✅
-Climate Normals	NOAA 1991–2020, Daymet ￼	✅
-Hazards — Tornado	NOAA SPC 1950–2024 ￼	✅
-Hazards — Floods	FEMA, USGS flood data ￼	🚧
-Hazards — Wildfire	NIFC + KS perimeter sets ￼	🚧
-Paleoclimate / Fire	NOAA cores, charcoal ￼	🚧
-Oral Histories & Archaeology	Tribal narratives, sites ￼	🚧
-Geology / Core Samples	KGS drill cores ￼	🚧
+DEM / Terrain	USGS LiDAR 1m, KGS, 3DEP	✅
+Hillshade / Derivatives	LiDAR COGs → slope, aspect, hydro	✅
+Hydrology	USGS NHD, KS River floods	🚧
+Land Cover	NLCD 1992–2021	✅
+Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	🚧
+Treaties & Tribal Lands	Boundary polygons	✅ / Expand
+Railroads & Trails	1850–1920 rail GIS	🚧
+Topographic Maps	USGS Historic Topo, UT PCL	✅
+Climate Normals	NOAA 1991–2020, Daymet	✅
+Hazards — Tornado	NOAA SPC 1950–2024	✅
+Hazards — Floods	FEMA, USGS flood data	🚧
+Hazards — Wildfire	NIFC + KS perimeter sets	🚧
+Paleoclimate / Fire	NOAA cores, charcoal	🚧
+Oral Histories & Arch.	Tribal narratives, sites	🚧
+Geology / Core Samples	KGS drill cores	🚧
 
 
 ⸻
@@ -111,20 +114,18 @@ Geology / Core Samples	KGS drill cores ￼	🚧
 	•	🚂 Animate railroad expansion (1850–1910) alongside treaties.
 	•	🌪 Overlay Dust Bowl land-cover change with NOAA drought indices.
 	•	🪶 Link oral histories to forts, rivers, & counties.
-	•	🌊 Compare pre-dam vs post-dam Kansas River floods.
+	•	🌊 Compare pre-dam vs. post-dam Kansas River floods.
 	•	🔥 Integrate fire regimes + archaeology into resilience narratives.
 
 ⸻
 
 ✅ Reproducibility & CI
-	•	🔐 Checksums: .sha256 sidecars for every artifact ￼
-	•	📏 Validation: STAC + JSON Schema in CI ￼
-	•	🛠️ Pipelines:
+	•	🔐 Checksums: .sha256 sidecars for every artifact
+	•	📏 Validation: STAC + JSON Schema in CI
+	•	🛠 Pipelines:
 	•	site.yml → build & deploy
 	•	stac-badges.yml → dataset health shields
 	•	codeql.yml + trivy.yml → security & provenance checks
-
-Run:
 
 make prebuild
 
@@ -136,7 +137,7 @@ make prebuild
 	•	📌 M2: Terrain & hydrology modeling (flowdir, floodplains)
 	•	📌 M3: Storytelling layers (oral histories, archaeology)
 	•	📌 M4: UI enhancements (story maps, vector tiles)
-	•	📌 M5: Predictive modeling & NASA-grade simulations ￼
+	•	📌 M5: Predictive modeling & NASA-grade simulations
 
 👉 See ROADMAP.md
 
@@ -154,10 +155,10 @@ We welcome contributions!
 📚 Citation
 
 @software{kansas_geo_timeline_2025,
-  title = {Kansas Geo Timeline — Frontier Matrix},
+  title  = {Kansas Geo Timeline — Frontier Matrix},
   author = {Barta, Andy and contributors},
-  year = {2025},
-  url = {https://github.com/bartytime4life/Kansas-Frontier-Matrix}
+  year   = {2025},
+  url    = {https://github.com/bartytime4life/Kansas-Frontier-Matrix}
 }
 
 
@@ -169,10 +170,10 @@ MIT © 2025 — Kansas Frontier Matrix
 
 ⸻
 
-✨ This README:
-	•	Uses dynamic badges wired to CI
-	•	Embeds live data coverage matrix
-	•	Anchors content in MCP reproducibility standards
-	•	Connects maps, archives, disasters, & oral histories into one forensic timeline
+✨ Notes
+	•	🛡 Dynamic badges wired to CI
+	•	🗂 Coverage matrix embedded
+	•	📜 Anchored in MCP reproducibility standards ￼ ￼
+	•	🔗 Cross-connects maps, archives, disasters, & oral histories into one forensic timeline
 
 ⸻
