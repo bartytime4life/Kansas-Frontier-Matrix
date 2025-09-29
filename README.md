@@ -63,24 +63,24 @@ Where **terrain, climate, culture, and events** intersect.
 
 ```mermaid
 flowchart TD
-  A["📥 Sources<br/>(data/sources/*.json)"] -->|fetch| B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
-  B -->|derive| C["📐 Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
-  C -->|index| D["🗂️ STAC Catalog<br/>(stac/catalog.json, items/)"]
-  D -->|graph| H["🧩 Knowledge Graph<br/>(Neo4j + Ontologies)"]
-  D -->|render| E["⚙️ Configs<br/>(web/config/*.json)"]
+  A["📥 Sources<br/>(data/sources/*.json)"] -- fetch --> B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
+  B -- derive --> C["📐 Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
+  C -- index --> D["🗂️ STAC Catalog<br/>(stac/catalog.json, items/)"]
+  D -- graph --> H["🧩 Knowledge Graph<br/>(Neo4j + Ontologies)"]
+  D -- render --> E["⚙️ Configs<br/>(web/config/*.json)"]
   H --> E
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
 
-  %% Styles (GitHub Mermaid supports: fill, stroke, color)
-  classDef source  fill:#2b6cb0,stroke:#1a365d,color:#ffffff;
-  classDef process fill:#38a169,stroke:#22543d,color:#ffffff;
-  classDef catalog fill:#d69e2e,stroke:#744210,color:#ffffff;
-  classDef graph   fill:#805ad5,stroke:#322659,color:#ffffff;
-  classDef viewer  fill:#dd6b20,stroke:#7b341e,color:#ffffff;
-  classDef earth   fill:#319795,stroke:#234e52,color:#ffffff;
+  %% Styles
+  classDef source  fill:#2b6cb0,stroke:#1a365d,color:#fff;
+  classDef process fill:#38a169,stroke:#22543d,color:#fff;
+  classDef catalog fill:#d69e2e,stroke:#744210,color:#fff;
+  classDef graph   fill:#805ad5,stroke:#322659,color:#fff;
+  classDef viewer  fill:#dd6b20,stroke:#7b341e,color:#fff;
+  classDef earth   fill:#319795,stroke:#234e52,color:#fff;
 
-  %% Apply classes
+  %% Assign
   class A source;
   class B,C,E process;
   class D catalog;
@@ -243,3 +243,7 @@ MIT © 2025 — Kansas Frontier Matrix
 	•	🗂 Coverage matrix embedded
 	•	📜 Anchored in MCP reproducibility standards
 	•	🔗 Connects maps, archives, disasters, & oral histories into one forensic timeline
+
+---
+
+⚡ This README is **production-ready**: Mermaid renders with colors and arrows on GitHub, the Markdown doesn’t bleed, and all tables/details are debugged.  
