@@ -17,6 +17,7 @@ ehthumbs.db
 .vscode/
 *.code-workspace
 *.sublime-*
+*.iml
 
 # --- Python ---
 __pycache__/
@@ -28,6 +29,8 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .pytest_cache/
+.pyright/
+.pyre/
 .tox/
 .nox/
 .coverage*
@@ -37,6 +40,10 @@ htmlcov/
 venv/
 env/
 pip-wheel-metadata/
+.eggs/
+*.egg-info/
+.python-version
+.envrc
 
 # --- Node / Web ---
 node_modules/
@@ -63,36 +70,34 @@ _site_docs/
 site/
 docs/_build/
 
-# --- Data / GIS (keep small metadata like JSON/GeoJSON) ---
-# common heavy geospatial binaries
-*.tif
-*.tiff
-*.vrt
-*.ovr
-*.aux.xml
-*.ntf
-*.sid
-*.las
-*.laz
-*.bil
-*.img
-*.kmz
-*.mbtiles
-*.pmtiles
-*.gpkg
-*.sqlite
-*.spx
-*.geoparquet
-*.parquet
-*.shp
-*.shx
-*.dbf
-*.prj
-*.cpg
-*.qmd
-*.sbn
-*.sbx
-*.qpj
+# --- Data / GIS (scoped ignores; metadata like JSON/GeoJSON stay tracked) ---
+# Avoid global *.tif/*.gpkg/etc ignores so Git-LFS can track when needed.
+# Instead, ignore heavy binaries under known data/output dirs.
+
+# Raw/processed/cogs/derivatives
+data/raw/
+data/outputs/
+data/cogs/
+data/derivatives/
+
+# Block heavy binaries only within data/processed (allow .json/.geojson/.md)
+data/processed/**/*.aux.xml
+data/processed/**/*.ovr
+data/processed/**/*.tif
+data/processed/**/*.tiff
+data/processed/**/*.vrt
+data/processed/**/*.mbtiles
+data/processed/**/*.pmtiles
+data/processed/**/*.gpkg
+data/processed/**/*.sqlite
+data/processed/**/*.geoparquet
+data/processed/**/*.parquet
+data/processed/**/*.las
+data/processed/**/*.laz
+
+# Earth exports & caches (keep KML/KMZ examples elsewhere if desired)
+earth/cache/
+earth/exports/
 
 # Archives & large bundles
 *.zip
@@ -104,19 +109,7 @@ docs/_build/
 *.xz
 *.zst
 
-# --- STAC / Processed data caches (metadata JSON stays tracked) ---
-data/processed/**/*.aux.xml
-data/processed/**/*.ovr
-data/processed/**/*.tif
-data/processed/**/*.tiff
-data/processed/**/*.mbtiles
-data/processed/**/*.pmtiles
-data/raw/
-data/outputs/
-earth/cache/
-earth/exports/
-
-# --- DVC (keep config and dvc files, ignore cache/tmp) ---
+# --- DVC (keep config and .dvc files, ignore cache/tmp) ---
 .dvc/cache/
 .dvc/tmp/
 *.dvc.lock
@@ -144,5 +137,5 @@ docker/**/tmp/
 coverage.xml
 pytestdebug.log
 
-# --- PDFs & large binary docs (source lives elsewhere; commit selectively) ---
+# --- Binary docs (source lives elsewhere; commit selectively) ---
 *.pdf
