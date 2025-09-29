@@ -7,7 +7,7 @@
 Where **terrain, climate, culture, and events** intersect.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](stac/catalog.json)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
 [![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
 
@@ -30,7 +30,7 @@ Where **terrain, climate, culture, and events** intersect.
 - [🛠 Roadmap](#-roadmap)  
 - [🤝 Contributing](#-contributing)  
 - [📚 Citation](#-citation)  
-- [⚖️ License](#️-license)  
+- [⚖️ License](#-license)  
 - [✨ Notes](#-notes)  
 
 </details>
@@ -38,7 +38,6 @@ Where **terrain, climate, culture, and events** intersect.
 ---
 
 ## 🚀 Quick Links
-🔗 Fast access to core artifacts:  
 
 - 🌐 **[Live Web Viewer](#)**  
 - 🌍 **[Google Earth KMZ](#)**  
@@ -50,7 +49,7 @@ Where **terrain, climate, culture, and events** intersect.
 > 💡 Kansas history is **fragmented** — scattered across treaties, disasters, geology, maps, and stories.  
 > This project builds a **time-aware knowledge hub** so communities can explore how environment and culture shaped resilience.
 
-**Exploration examples:**  
+**Exploration examples**
 - 🚂 Railroads vs. tribal lands → how towns spread  
 - 🌪 Dust Bowl storms → reshaping settlement  
 - 🪶 Oral histories → tied to rivers, prairies, forts  
@@ -61,6 +60,7 @@ Where **terrain, climate, culture, and events** intersect.
 ---
 
 ## 🔧 How It Works
+
 ```mermaid
 flowchart TD
   A["📥 Sources<br/>(data/sources/*.json)"] -->|fetch| B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
@@ -173,7 +173,7 @@ Geology / Core Samples	KGS drill cores	🚧
 
 	•	🔐 Checksums → .sha256 sidecars for every artifact
 	•	📏 Validation → STAC + JSON Schema in CI
-	•	🛠 Pipelines:
+	•	🛠 Pipelines
 	•	site.yml → build & deploy
 	•	stac-badges.yml → dataset health shields
 	•	codeql.yml + trivy.yml → security & provenance checks
