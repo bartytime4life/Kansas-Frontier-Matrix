@@ -1,42 +1,75 @@
 {
   "id": "ks_settlements",
   "title": "Settlements, Forts, Trading Posts",
-  "type": "geojson",
-  "url": "data/processed/towns_points.json",
+  "type": "vector",
+  "data": "web/data/towns_points.json",
   "category": "culture",
 
   "time": { "start": "1800-01-01", "end": null },
-  "timeProperty": "year",
 
+  "timeMapping": {
+    "start": "time_start",
+    "end": "time_end",
+    "fallbackStart": "year",
+    "fallbackEnd": "year_end"
+  },
+
+  "idProperty": "id",
+  "interactive": true,
   "visible": true,
+
   "minzoom": 4,
   "maxzoom": 19,
-  "interactive": true,
+  "opacity": 1.0,
+  "zIndex": 60,
 
-  "popup": ["name", "type", "year", "year_end"],
+  "popup": ["name", "type", "year", "year_end", "source"],
 
-  "paint": {
-    "circle": {
-      "circle-color": "#FF595E",
-      "circle-radius": 4,
-      "circle-opacity": 0.95,
-      "circle-stroke-color": "#FFFFFF",
-      "circle-stroke-width": 1
-    },
-    "line": { "line-opacity": 0 },
-    "fill": { "fill-opacity": 0 }
+  "style": {
+    "circleColor": "#FF595E",
+    "circleRadius": 4,
+    "circleOpacity": 0.95,
+    "circleStrokeColor": "#FFFFFF",
+    "circleStrokeWidth": 1
+  },
+
+  "hoverStyle": {
+    "circleRadius": 5,
+    "circleOpacity": 1.0,
+    "circleStrokeWidth": 1.5
+  },
+
+  "selectedStyle": {
+    "circleRadius": 6,
+    "circleOpacity": 1.0,
+    "circleStrokeWidth": 2
+  },
+
+  "labels": {
+    "textField": "{name}",
+    "minzoom": 8,
+    "maxzoom": 24,
+    "textHaloWidth": 1.0
+  },
+
+  "cluster": {
+    "enabled": true,
+    "maxzoom": 7,
+    "radius": 40,
+    "color": "#FF595E",
+    "textColor": "#FFFFFF"
   },
 
   "fields": {
     "name":     { "type": "string", "description": "Place name" },
-    "type":     { "type": "string", "description": "Settlement type (fort, trading post, town, mission, etc.)" },
-    "year":     { "type": "number", "description": "Establishment year (used by the time slider)" },
-    "year_end": { "type": "number", "description": "End/abandonment year (optional, informational)" },
-    "source":   { "type": "string", "description": "Provenance / dataset source (optional)" }
+    "type":     { "type": "string", "description": "Settlement type (fort, trading_post, town, mission, etc.)" },
+    "year":     { "type": "string", "description": "Start date (ISO YYYY-MM-DD); mirrors 'time_start' when present" },
+    "year_end": { "type": ["string", "null"], "description": "End date (ISO YYYY-MM-DD) or null; mirrors 'time_end' when present" },
+    "source":   { "type": "string", "description": "Provenance / dataset source" }
   },
 
-  "search": { "qFields": ["name", "type", "year"] },
+  "search": { "qFields": ["name", "type"] },
 
   "legendSymbol": "settlements",
-  "attribution": "Compiled / KFM"
+  "attribution": "Compiled / KFM (demo gazetteer)"
 }
