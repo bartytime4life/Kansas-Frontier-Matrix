@@ -72,7 +72,7 @@ flowchart TD
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
 
-  %% --- Styles (GitHub-safe: fill, stroke, color only) ---
+  %% Styles (GitHub Mermaid supports: fill, stroke, color)
   classDef source  fill:#2b6cb0,stroke:#1a365d,color:#ffffff;
   classDef process fill:#38a169,stroke:#22543d,color:#ffffff;
   classDef catalog fill:#d69e2e,stroke:#744210,color:#ffffff;
@@ -80,13 +80,15 @@ flowchart TD
   classDef viewer  fill:#dd6b20,stroke:#7b341e,color:#ffffff;
   classDef earth   fill:#319795,stroke:#234e52,color:#ffffff;
 
-  %% --- Apply classes ---
+  %% Apply classes
   class A source;
   class B,C,E process;
   class D catalog;
   class H graph;
   class F viewer;
   class G earth;
+
+<!-- END OF MERMAID -->
 
 
 ⸻
