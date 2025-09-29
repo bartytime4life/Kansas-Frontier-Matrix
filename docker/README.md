@@ -1,261 +1,276 @@
-# Docker — Kansas Frontier Matrix / Kansas Geo Timeline
+Docker — Kansas-Frontier-Matrix / Kansas Geo Timeline
 
-Mission-grade, repeatable containers for building terrain COGs, validating STAC, and previewing the web viewer — **without polluting your host**.
+Mission-grade, reproducible containers for building terrain COGs, tiling vectors, validating STAC, and previewing the web viewer — without polluting your host.
 
-> **Base image:** `ghcr.io/osgeo/gdal:ubuntu-small-latest` (configurable via `--build-arg`)
+Base image (configurable): ghcr.io/osgeo/gdal:ubuntu-small-latest
+See docker/Dockerfile for optional feature flags: Node, tippecanoe/pmtiles, AWS CLI.
 
----
+⸻
 
-## Quickstart
+TL;DR (fast path)
 
-```bash
-# Build local image (tag chosen for clarity)
-docker build -t kfm:dev .
+# 1) Build (with wheels-first Python, GDAL preinstalled)
+docker build -t kfm:dev -f docker/Dockerfile .
 
-# Drop into an interactive shell with the repo mounted read-write
-docker run --rm -it \
-  -v "$PWD":/workspace \
-  -w /workspace \
-  kfm:dev bash
-````
+# 2) Open a shell with the repo mounted
+docker run --rm -it -u $(id -u):$(id -g) -v "$PWD":/workspace -w /workspace kfm:dev bash
 
-Inside the container:
+# 3) Do work inside the container
+make terrain                # build hillshade/slope/aspect etc.
+make stac stac-validate     # create & validate STAC
+make site                   # build viewer/site artifacts
 
-```bash
-# Optional: install dev deps for tests/lint
-make install-dev
+Prefer the helper script:
 
-# Build terrain derivatives (hillshade/slope/aspect)
-make terrain
+# Build with local buildx cache and open a shell
+./docker/build-and-run.sh
 
-# Create/patch STAC + validate + write simple site manifest
-make stac stac-validate site
+# Run Make targets
+./docker/build-and-run.sh make terrain
+./docker/build-and-run.sh make stac stac-validate-items site
 
-# Items-only fast validation pass
-make stac-validate-items
+# Use Compose service (with optional db/storage/web profiles)
+./docker/build-and-run.sh --compose shell
+./docker/build-and-run.sh --compose make prebuild
 
-# Clean generated rasters (keeps ./stac)
-make clean
-```
 
----
+⸻
 
-## Why containers for this project?
+What’s in the image
+	•	GDAL/PROJ + common CLI tools (gdal_translate, gdaldem, ogr2ogr).
+	•	Python (wheels-first) with your project installed in editable mode.
+	•	Optional:
+	•	Node.js + corepack for web viewer builds (ENABLE_NODE=1).
+	•	tippecanoe + pmtiles CLIs for vector tiling & serving (ENABLE_TILES=1).
+	•	AWS CLI for S3/MinIO sync and STAC pushes (ENABLE_AWSCLI=1).
+	•	git-lfs for large rasters.
+	•	Non-root default user; /workspace prepared for bind mount.
+	•	Healthcheck validates GDAL + core geo libs (and pmtiles if enabled).
 
-* **GDAL stability** — Pin a known-good GDAL across Linux/macOS/WSL.
-* **Reproducible builds** — Same Makefile + Python toolchain in CI and local.
-* **Zero host deps** — Avoid installing GDAL, PROJ, or Python libs on your workstation.
+Build-time flags (override with --build-arg)
 
----
+ARG	Default	Purpose
+GDAL_IMAGE	ghcr.io/osgeo/gdal:ubuntu-small-latest	Base image / GDAL pin
+BUILD_NATIVE	0	Allow source builds if wheels are missing
+ENABLE_NODE	1	Install Node.js for web build
+ENABLE_TILES	1	Install tippecanoe + pmtiles CLIs
+ENABLE_AWSCLI	1	Install AWS CLI
+USER_ID/GROUP_ID	10001	Image user mapping
+VCS_REF/BUILD_DATE	injected by CI or helper script	Provenance labels
 
-## Host ↔ Container volume layout
+Example:
 
-The image is stateless. Everything lands in your mounted repo:
-
-```
-/workspace
-├── data/               # raw/ cogs/ derivatives/ processed/
-├── stac/               # items/ collections/
-├── scripts/            # helper CLIs (convert, validate, etc.)
-├── web/                # viewer config + assets
-└── Makefile
-```
-
-Run with:
-
-```bash
-docker run --rm -it \
-  -v "$PWD":/workspace \
-  -w /workspace \
-  kfm:dev bash
-```
-
-**Linux tip:** add `-u $(id -u):$(id -g)` to avoid root-owned files (see “UID/GID & permissions”).
-
----
-
-## Common run patterns
-
-### 1) Fire-and-forget target
-
-```bash
-# Run a single Make target
-docker run --rm \
-  -v "$PWD":/workspace -w /workspace \
-  kfm:dev make terrain
-```
-
-Chain targets:
-
-```bash
-docker run --rm \
-  -v "$PWD":/workspace -w /workspace \
-  kfm:dev bash -lc "make stac && make stac-validate && make site"
-```
-
-### 2) Override DEM path
-
-```bash
-docker run --rm \
-  -v "$PWD":/workspace -w /workspace \
-  kfm:dev make terrain DEM=data/cogs/dem/ks_1m_dem_2018_2020.tif
-```
-
-### 3) Hydrology export (optional)
-
-Provide layer URLs at runtime:
-
-```bash
-docker run --rm \
-  -v "$PWD":/workspace -w /workspace \
-  -e KSRIV_CHANNELS="https://.../FeatureServer/0" \
-  -e KSRIV_FLOODPLAIN="https://.../FeatureServer/1" \
-  -e KSRIV_GAUGES="https://.../FeatureServer/2" \
-  kfm:dev make hydrology-fetch hydrology-stac
-```
-
----
-
-## Image build options
-
-Override the GDAL base:
-
-```bash
 docker build \
+  -t kfm:dev \
+  -f docker/Dockerfile \
+  --build-arg ENABLE_TILES=1 \
+  --build-arg ENABLE_NODE=1 \
   --build-arg GDAL_IMAGE=ghcr.io/osgeo/gdal:ubuntu-small-3.9.0 \
-  -t kfm:dev .
-```
+  .
 
-Recommended tagging:
 
-```bash
-docker build -t ghcr.io/<you>/kfm:dev -t kfm:dev .
-```
+⸻
 
----
+Compose stack (optional but recommended)
 
-## Makefile integration (inside the container)
+docker/compose.yml defines a profile-driven stack:
+	•	kfm (dev toolbox)
+	•	db profile: PostGIS + pgAdmin
+	•	storage profile: MinIO + bootstrap (buckets for cogs/ and tiles/)
+	•	web profile: Caddy (serves _site/) + pmtiles server
 
-Targets auto-detect:
+Examples:
 
-* **GDAL tools:** `gdaldem`, `gdal_translate`, `gdaladdo`, `ogr2ogr`
-* **Python helpers:** `scripts/convert.py`, etc.
-* **Validators:** `scripts/validate_stac.py` (if present) or `kgt validate-stac` (if installed)
-* **Checksums:** `sha256sum` / `gsha256sum` / `shasum` (auto-detected)
-
-Helpful targets:
-
-* `make env` — prints detected tools + paths
-* `make prebuild` — STAC validate + site (CI-friendly)
-* `make stac-validate-items` — fast pass over `./stac/items`
-* `make clean` — removes generated rasters but keeps `./stac`
-
----
-
-## GPU & heavy processing
-
-This stack is CPU-oriented. If you add CUDA/GPU workflows later:
-
-* Run with `--gpus all` and use a CUDA-enabled base image.
-* Keep Makefile logic; only the image changes.
-
----
-
-## Docker Compose (optional)
-
-Create `docker/compose.yml`:
-
-```yaml
-services:
-  kfm:
-    build:
-      context: ..
-      dockerfile: Dockerfile
-    image: kfm:dev
-    working_dir: /workspace
-    volumes:
-      - ../:/workspace
-    tty: true
-```
-
-Run:
-
-```bash
-# Interactive shell
+# Shell in dev container (lean)
 docker compose -f docker/compose.yml run --rm kfm bash
 
-# One-shot target
-docker compose -f docker/compose.yml run --rm kfm make terrain
-```
+# Bring up PostGIS & pgAdmin too
+docker compose -f docker/compose.yml --profile db up -d
 
----
+# Bring up MinIO (S3-compatible) + pmtiles + Caddy
+docker compose -f docker/compose.yml --profile storage --profile web up -d
 
-## UID/GID & permissions (Linux)
+Ports (defaults):
+Postgres 5432, pgAdmin 8081, MinIO 9000/9001, Caddy 8080, PMTiles 8082.
 
-Avoid root-owned files by matching host UID/GID:
+⸻
 
-```bash
+Host ↔ Container layout
+
+All artifacts stay on the host via bind mount:
+
+/workspace
+├── data/               # raw/, cogs/, processed/, derivatives/, tiles/
+├── stac/               # items/, collections/
+├── scripts/            # CLI helpers (convert, validate, etc.)
+├── web/                # viewer config + assets
+├── _site/              # built site (served by Caddy in 'web' profile)
+└── Makefile
+
+Run pattern:
+
 docker run --rm -it \
   -u $(id -u):$(id -g) \
   -v "$PWD":/workspace -w /workspace \
   kfm:dev bash
-```
 
-You can also bake a user into the image via `--build-arg USER_ID/GROUP_ID`, but the runtime flag is simplest.
 
----
+⸻
 
-## Caching tips
+Environment variables (pass-through)
 
-* **Build cache:** keep the base image fresh
+These are respected by build-and-run.sh and compose.yml:
 
-  ```bash
-  docker pull ghcr.io/osgeo/gdal:ubuntu-small-latest
-  ```
-* **Data cache:** `data/` is host-mounted; repeated runs reuse downloads & COGs.
+Variable	What it’s used for
+KFM_ENV	environment tag (dev, ci, …)
+KFM_DATA_ROOT	path to data/ (default /workspace/data)
+KFM_STAC_ROOT	path to stac/ (default /workspace/stac)
+KSRIV_CHANNELS	hydrology channels service/URL
+KSRIV_FLOODPLAIN	floodplain service/URL
+KSRIV_GAUGES	gauges service/URL
+PGHOST/PGPORT/PGDATABASE/PGUSER/PGPASSWORD	PostGIS connectivity
+S3_ENDPOINT_URL/AWS_*	MinIO/S3 connectivity
 
----
+Example .env (optional)
 
-## Troubleshooting
+KFM_ENV=dev
+KFM_DATA_ROOT=/workspace/data
+KFM_STAC_ROOT=/workspace/stac
 
-* **“gdaldem not found”** — Ensure you built from the GDAL base and are using the right image:
-  `docker run kfm:dev gdaldem --version`
-* **“No validators found”** — Add `scripts/validate_stac.py` or `pip install kgt` inside the container.
-* **“Permission denied” writing to `data/`** — Use `-u $(id -u):$(id -g)` on Linux.
-* **“KSRIV_… not set”** — Provide the three env vars or edit Makefile defaults.
+# Hydrology (optional)
+KSRIV_CHANNELS=
+KSRIV_FLOODPLAIN=
+KSRIV_GAUGES=
 
----
+# Postgres (compose db profile)
+PGHOST=db
+PGPORT=5432
+PGDATABASE=kfm
+PGUSER=kfm
+PGPASSWORD=kfm
 
-## CI usage (GitHub Actions)
+# MinIO (compose storage profile)
+S3_ENDPOINT_URL=http://minio:9000
+AWS_ACCESS_KEY_ID=kfm
+AWS_SECRET_ACCESS_KEY=kfm-secret
+AWS_DEFAULT_REGION=us-east-1
 
-Example job step:
 
-```yaml
-- name: Build image
-  run: docker build -t kfm:ci .
+⸻
 
-- name: Validate STAC + write site
+Common workflows
+
+Make targets (inside container)
+
+make env                      # print detected tools & paths
+make terrain                  # hillshade/slope/aspect/tri/tpi (as configured)
+make stac stac-validate       # generate STAC & validate collections/items
+make stac-validate-items      # fast pass over ./stac/items
+make site                     # generate site manifest/config
+make clean                    # remove generated rasters (keeps ./stac)
+
+Vector tiling (if ENABLE_TILES=1)
+
+# Tippecanoe → PMTiles
+tippecanoe -o data/tiles/ks_roads.pmtiles -zg -pf -pk -ps -ai data/processed/roads.geojson
+# Serve locally (compose 'web' profile also provides a pmtiles server)
+pmtiles serve data/tiles
+
+Hydrology fetch (with env URLs)
+
+docker run --rm \
+  -v "$PWD":/workspace -w /workspace \
+  -e KSRIV_CHANNELS="https://…/FeatureServer/0" \
+  -e KSRIV_FLOODPLAIN="https://…/FeatureServer/1" \
+  -e KSRIV_GAUGES="https://…/FeatureServer/2" \
+  kfm:dev make hydrology-fetch hydrology-stac
+
+
+⸻
+
+Performance & caching
+	•	Buildx cache: ./docker/build-and-run.sh uses ./.cache/buildx for fast incremental builds.
+	•	pip/npm caches: created under ./.cache/{pip,npm} and mounted in the container.
+	•	Data reuse: data/ is host-mounted, so downloads/COGs/tiles persist.
+
+Keep the base fresh:
+
+docker pull ghcr.io/osgeo/gdal:ubuntu-small-latest
+
+
+⸻
+
+UID/GID & permissions (Linux)
+
+Prevent root-owned files:
+
+docker run --rm -it \
+  -u $(id -u):$(id -g) \
+  -v "$PWD":/workspace -w /workspace \
+  kfm:dev bash
+
+The image also supports --build-arg USER_ID/GROUP_ID to bake a matching user.
+
+⸻
+
+GPU / heavy runs (optional)
+
+This stack is CPU-first. If you later add CUDA workflows:
+
+# Requires NVIDIA runtime & CUDA-enabled base
+docker run --rm --gpus all -v "$PWD":/workspace -w /workspace your-cuda-image make <target>
+
+The helper supports --gpu to request GPUs when present.
+
+⸻
+
+CI usage (GitHub Actions)
+
+- name: Build image (w/ provenance labels)
+  run: |
+    docker build \
+      -t kfm:ci \
+      -f docker/Dockerfile \
+      --build-arg VCS_REF=${{ github.sha }} \
+      --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ) \
+      .
+
+- name: Validate STAC + build site
   run: |
     docker run --rm \
       -v "$PWD":/workspace -w /workspace \
       kfm:ci bash -lc "make stac && make stac-validate-items && make site"
-```
 
----
+To exercise the full stack in CI, use compose with selected profiles (db/storage/web) as needed.
 
-## Security & provenance
+⸻
 
-* **Pin base images** for releases (e.g., `:3.9.0`), and generate SBOMs with Syft if needed.
-* The image copies none of your data by default; all artifacts remain in the mounted repo.
-* Keep `LICENSE`/`NOTICE` in the repo; reference in release notes.
+Troubleshooting
+	•	gdaldem: command not found
+Confirm you built with the provided Dockerfile:
+docker run --rm kfm:dev gdaldem --version
+	•	Wheels missing / source build required
+Rebuild with --build-arg BUILD_NATIVE=1 or add missing wheels to constraints.txt.
+	•	Permission denied writing to data/
+Run with -u $(id -u):$(id -g) or set USER_ID/GROUP_ID at build time.
+	•	MinIO/pmtiles not reachable
+Ensure compose profiles storage and/or web are up:
+docker compose -f docker/compose.yml --profile storage --profile web up -d
+	•	PostGIS not ready
+Compose db profile includes healthchecks; wait for healthy status:
+docker compose ps
 
----
+⸻
 
-## See also
+Security & provenance
+	•	Pin base images for releases (e.g., :ubuntu-small-3.9.0) and record VCS_REF, BUILD_DATE.
+	•	Generate SBOMs (e.g., Syft) in release workflows if required.
+	•	Image does not copy your data; all artifacts stay in the mounted repo.
 
-* `Dockerfile` (root)
-* `Makefile` — targets referenced above
-* `scripts/` — helper CLIs (`convert.py`, validators, etc.)
+⸻
 
-```
-```
+See also
+	•	docker/Dockerfile — feature-flagged GDAL + Python + tiling toolchain
+	•	docker/compose.yml — dev stack with PostGIS, MinIO, Caddy, pmtiles
+	•	docker/build-and-run.sh — buildx-cached helper with Compose & GPU options
+	•	Makefile — canonical targets used in docs above
