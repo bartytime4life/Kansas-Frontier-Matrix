@@ -8,8 +8,8 @@ Where **terrain, climate, culture, and events** intersect.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](stac/catalog.json)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](…)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](…)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
 
 </div>
 
@@ -61,6 +61,7 @@ Where **terrain, climate, culture, and events** intersect.
 ---
 
 ## 🔧 How It Works
+```mermaid
 flowchart TD
   A["📥 Sources<br/>(data/sources/*.json)"] -->|fetch| B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
   B -->|derive| C["📐 Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
@@ -70,7 +71,6 @@ flowchart TD
   H --> E
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
-
 
 
 ⸻
@@ -195,10 +195,9 @@ make prebuild
 ⸻
 
 🤝 Contributing
-
-✔️ Keep STAC valid + configs schema-checked
-✔️ Use MCP templates (experiment.md, sop.md, model_card.md)
-✔️ Follow CI hooks + submit PRs with clear commits
+	•	✔️ Keep STAC valid + configs schema-checked
+	•	✔️ Use MCP templates (experiment.md, sop.md, model_card.md)
+	•	✔️ Follow CI hooks + submit PRs with clear commits
 
 ⸻
 
@@ -225,5 +224,3 @@ MIT © 2025 — Kansas Frontier Matrix
 	•	🗂 Coverage matrix embedded
 	•	📜 Anchored in MCP reproducibility standards
 	•	🔗 Connects maps, archives, disasters, & oral histories into one forensic timeline
-
-⸻
