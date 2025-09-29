@@ -46,28 +46,19 @@ flowchart TD
   D -->|render| E["Configs\n(web/config/*.json)"]
   H --> E
   E --> F["MapLibre Web Viewer"]
-  D --> G["KML/KMZ\n(earth/)"]
+  D -->|export| G["KML/KMZ\n(earth/)"]
 
-  classDef src fill:#FFD166,stroke:#333;
-  classDef cogs fill:#06D6A0,stroke:#333;
-  classDef stac fill:#118AB2,stroke:#fff;
-  classDef web fill:#073B4C,stroke:#fff;
-  classDef earth fill:#EF476F,stroke:#fff;
+  classDef src   fill:#FFD166,stroke:#333,stroke-width:1px;
+  classDef cogs  fill:#06D6A0,stroke:#333,stroke-width:1px;
+  classDef stac  fill:#118AB2,stroke:#fff,stroke-width:1px;
+  classDef web   fill:#073B4C,stroke:#fff,stroke-width:1px,color:#fff;
+  classDef earth fill:#EF476F,stroke:#fff,stroke-width:1px;
 
   class A src;
-  class B cogs;
-  class C cogs;
-  class D stac;
-  class E web;
-  class F web;
+  class B,C cogs;
+  class D,H stac;
+  class E,F web;
   class G earth;
-  class H stac;
-
-	•	STAC 1.0.0 catalog tracks provenance and time.
-	•	Cloud-Optimized GeoTIFFs (COGs) serve terrain + maps.
-	•	Neo4j Knowledge Graph links people, places, and events.
-	•	MapLibre Viewer renders layers with a timeline slider.
-	•	Google Earth exports provide KMZ/KML for 3D exploration.
 
 ⸻
 
