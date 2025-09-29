@@ -79,16 +79,15 @@ web/**/*.pmtiles
 web/**/*.mbtiles
 web/*.local.js
 web/*.config.local.json
-web/.DS_Store
 
-# Keep small web configs & entrypoints (do NOT ignore these)
+# Keep small web configs & entrypoints
 !web/index.html
 !web/style.css
 !web/app.config.json
 !web/config/**
 
 # ---------------------------------------
-# Tests / docs / notebooks (not needed in image)
+# Tests / docs / notebooks
 # ---------------------------------------
 tests/
 docs/
@@ -98,14 +97,14 @@ docs/
 outputs/
 
 # ---------------------------------------
-# DVC (keep .dvc files, drop cache/tmp)
+# DVC (keep metadata, drop cache/tmp)
 # ---------------------------------------
 .dvc/cache/
 .dvc/tmp/
 
 # ---------------------------------------
 # Data (mount at runtime)
-# Keep text descriptors, schemas, and catalogs
+# Keep curated configs & descriptors, block heavy artifacts
 # ---------------------------------------
 data/**
 
@@ -118,7 +117,7 @@ data/**
 !data/**/*.dvc
 !data/samples/**
 
-# block heavy files in data/ or stac/ trees
+# block heavy geospatial binaries
 data/**/*.tif
 data/**/*.tiff
 data/**/*.vrt
@@ -139,8 +138,11 @@ data/**/*.parquet
 data/**/*.geoparquet
 data/**/*.mbtiles
 data/**/*.pmtiles
+data/**/*.sqlite
+data/**/*.qgz
+data/**/*.qgs
 
-# legacy/derived outputs (always ignore)
+# legacy/derived outputs
 data/cogs/
 data/processed/
 data/outputs/
@@ -151,11 +153,10 @@ data/tiles/
 assets/tiles/
 
 # ---------------------------------------
-# STAC catalogs are small: keep them
+# STAC catalogs (keep small JSON, block heavy)
 # ---------------------------------------
 !stac/**
 
-# but exclude any heavy rasters/archives that sneak in
 stac/**/*.tif
 stac/**/*.tiff
 stac/**/*.vrt
@@ -169,10 +170,12 @@ stac/**/*.tar.xz
 stac/**/*.gz
 
 # ---------------------------------------
-# Earth / KML big artifacts
+# Earth / KML large artifacts
 # ---------------------------------------
 earth/**/*.kmz
 earth/**/*.kml
+earth/**/*.qgz
+earth/**/*.qgs
 earth/networklinks/
 earth/cache/
 earth/exports/
