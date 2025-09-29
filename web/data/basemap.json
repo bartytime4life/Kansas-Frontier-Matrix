@@ -9,20 +9,20 @@
   "category": "reference",
   "time": { "start": null, "end": null },
 
-  "bounds": [-180.0, -85.06, 180.0, 85.06],
+  "bounds": [-180.0, -85.0511, 180.0, 85.0511],
   "minzoom": 0,
   "maxzoom": 19,
   "maxNativeZoom": 19,
   "maxOverzoom": 22,
   "tileSize": 256,
-  "devicePixelRatioStrategy": "auto-512-if-dpr>=2",   // viewer may upgrade to 512 tiles on HiDPI
+  "devicePixelRatioStrategy": "auto-512-if-dpr>=2",
   "visible": true,
   "opacity": 1.0,
 
   "style": {
     "renderer": "raster",
     "rasterOpacity": 1.0,
-    "rasterResampling": "linear"                      // viewer can map to MapLibre's raster-resampling
+    "rasterResampling": "linear"
   },
 
   "controls": {
