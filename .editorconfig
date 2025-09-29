@@ -17,9 +17,14 @@ indent_size = 2
 # --- Python ---
 [*.py]
 indent_size = 4
-# Note: max_line_length is not a core EditorConfig key; some tools may ignore it.
 max_line_length = 100
 trim_trailing_whitespace = true
+
+# Typing stubs / Cython (mirror Python style sensibly)
+[*.pyi]
+indent_size = 4
+[*.pyx]
+indent_size = 4
 
 # --- Shell / Make / YAML ---
 [*.sh]
@@ -92,9 +97,14 @@ max_line_length = off
 [*.geojson]
 indent_size = 2
 max_line_length = off
+[topojson]
+indent_size = 2
+max_line_length = off
 
-# Templates
+# Templates (Jinja)
 [*.j2]
+indent_size = 2
+[*.jinja]
 indent_size = 2
 [*.jinja2]
 indent_size = 2
@@ -118,6 +128,9 @@ max_line_length = off
 indent_size = 2
 max_line_length = off
 [*.mermaid]
+indent_size = 2
+max_line_length = off
+[*.plantuml]
 indent_size = 2
 max_line_length = off
 
@@ -231,7 +244,7 @@ insert_final_newline = false
 max_line_length = off
 trim_trailing_whitespace = false
 
-# JSON Schemas / configs may be long (use **/*.json rather than **.json)
+# JSON Schemas / configs may be long
 [web/config/**/*.json]
 max_line_length = off
 trim_trailing_whitespace = false
