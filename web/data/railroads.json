@@ -1,26 +1,103 @@
 {
   "id": "ks_railroads",
-  "title": "Railroads (Year Built)",
+  "title": "Railroads (Year Built / Opened → Abandoned)",
   "type": "vector",
-  "data": "data/processed/railroads_lines.json",
+  "data": "web/data/railroads_lines.json",
   "category": "historical",
   "visible": false,
   "attribution": "State GIS / Historical compilations",
 
-  "time": { "start": "1860-01-01", "end": "1950-12-31" },
-  "timeProperty": "built",
-  "filter": ["has", "built"],
+  "time": { "start": "1860-01-01", "end": null },
+  "timeMapping": {
+    "start": "time_start",
+    "end": "time_end",
+    "fallbackStart": "opened",
+    "fallbackEnd": null
+  },
+
+  "idProperty": "id",
+  "interactive": true,
 
   "minzoom": 5,
   "maxzoom": 19,
+  "opacity": 1.0,
+  "zIndex": 30,
+
+  "filter": ["any", ["has", "time_start"], ["has", "opened"], ["has", "built"]],
 
   "style": {
     "lineColor": "#8D99AE",
     "lineWidth": 1.2,
     "lineOpacity": 0.95,
-    "lineDasharray": ["case", ["==", ["get", "status"], "abandoned"], [2, 2], [1, 0]]
+    "lineCap": "round",
+    "lineJoin": "round"
   },
 
-  "popup": ["name", "operator", "built", "status", "abandoned", "abandoned_year"],
+  "styleBy": [
+    {
+      "property": "status",
+      "when": { "eq": "abandoned" },
+      "lineDasharray": [2, 2],
+      "lineOpacity": 0.9
+    },
+    {
+      "property": "status",
+      "when": { "eq": "railbanked" },
+      "lineDasharray": [1, 2],
+      "lineOpacity": 0.9
+    },
+    {
+      "property": "status",
+      "when": { "eq": "removed" },
+      "lineDasharray": [1, 3],
+      "lineOpacity": 0.7
+    }
+  ],
+
+  "hoverStyle": {
+    "lineWidth": 0.6,
+    "lineWidthAdditive": true,
+    "lineOpacity": 1.0
+  },
+
+  "selectedStyle": {
+    "lineWidth": 1.2,
+    "lineWidthAdditive": true,
+    "lineOpacity": 1.0
+  },
+
+  "labels": {
+    "textField": "{name}",
+    "minzoom": 10,
+    "maxzoom": 24,
+    "textHaloWidth": 1.0
+  },
+
+  "popup": ["name", "operator", "built", "opened", "status", "abandoned_year", "source"],
+
+  "fields": {
+    "name":           { "type": "string", "description": "Line/subdivision name" },
+    "operator":       { "type": "string", "description": "Operating company (historical)" },
+    "built":          { "type": "string", "description": "Construction date (ISO)" },
+    "opened":         { "type": "string", "description": "Opening date to traffic (ISO)" },
+    "status":         { "type": "string", "enum": ["active", "abandoned", "railbanked", "removed"] },
+    "abandoned_year": { "type": ["integer", "null"], "description": "Abandonment year (if applicable)" },
+    "time_start":     { "type": "string", "format": "date-time", "description": "Timeline start (derived)" },
+    "time_end":       { "type": ["string", "null"], "format": "date-time", "description": "Timeline end (derived)" },
+    "source":         { "type": "string", "description": "Provenance / citation" }
+  },
+
+  "search": { "qFields": ["name", "operator"] },
+
+  "legend": {
+    "title": "Rail Line Status",
+    "items": [
+      { "label": "Active",     "lineColor": "#8D99AE", "lineWidth": 1.2 },
+      { "label": "Railbanked", "lineColor": "#8D99AE", "lineWidth": 1.2, "dash": [1, 2] },
+      { "label": "Abandoned",  "lineColor": "#8D99AE", "lineWidth": 1.2, "dash": [2, 2] },
+      { "label": "Removed",    "lineColor": "#8D99AE", "lineWidth": 1.2, "dash": [1, 3] }
+    ]
+  },
+
   "legendSymbol": "railroads"
 }
