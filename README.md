@@ -61,7 +61,7 @@ Where **terrain, climate, culture, and events** intersect.
 
 ## 🔧 How It Works
 
-```mermaid
+mermaid
 flowchart TD
   A["📥 Sources<br/>(data/sources/*.json)"] -->|fetch| B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
   B -->|derive| C["📐 Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
