@@ -13,10 +13,10 @@ ci:
 default_language_version:
   python: python3
 
-# Most hooks run on commit; heavy ones set to [push]/[manual]
+# Most hooks run at commit; heavy ones are [push] or [manual]
 default_stages: [commit]
 
-# Skip heavy/binary trees when hooks support "exclude"
+# Global excludes to keep hooks fast and avoid binary churn
 exclude: |
   (?x)^(
     data/(processed|cogs|outputs|raw)/|
@@ -60,10 +60,12 @@ repos:
         args: ["--fix=lf"]
       - id: check-yaml
       - id: check-json
+        exclude: "(?x)^(data/|assets/|web/(dist|build)/)"  # skip large/bundled trees
       - id: check-toml
       - id: debug-statements
       - id: detect-private-key
       - id: detect-aws-credentials
+        args: ["--allow-missing-credentials"]  # avoid false positives in examples
       - id: check-executables-have-shebang
       - id: name-tests-test
       - id: check-symlinks
@@ -154,6 +156,12 @@ repos:
       - id: pyproject-fmt
 
   # --- Jupyter notebooks (nbQA wrappers + strip outputs) --------------------
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.6.1
+    hooks:
+      - id: nbstripout
+        files: "\\.ipynb$"
+
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
     hooks:
@@ -170,18 +178,12 @@ repos:
         args: ["--nbqa-mutate"]
         files: "\\.ipynb$"
 
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.6.1
-    hooks:
-      - id: nbstripout
-        files: "\\.ipynb$"
-
   # --- Security / safety -----------------------------------------------------
   - repo: https://github.com/zricethezav/gitleaks
     rev: v8.18.4
     hooks:
       - id: gitleaks
-        stages: [push]           # run on push to catch secrets before remote
+        stages: [push]  # catch secrets before remote
 
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.9
@@ -196,7 +198,7 @@ repos:
     hooks:
       - id: pip-audit
         args: ["-P"]
-        stages: [manual]         # heavy; run manually or in CI
+        stages: [manual]  # heavy; run manually or in CI
 
   # --- GitHub Actions workflow linter ---------------------------------------
   - repo: https://github.com/rhysd/actionlint
@@ -350,7 +352,7 @@ repos:
           PY
 
       # --- Docs quality gates (fast)
-      # Block stray :contentReference[oaicite:...] artifacts from leaking into docs.
+      # Block stray contentReference artifacts from leaking into docs.
       - id: docs-block-bad-citations
         name: docs: block broken contentReference artifacts
         language: system
