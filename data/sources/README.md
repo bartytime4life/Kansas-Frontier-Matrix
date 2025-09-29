@@ -1,96 +1,122 @@
-# `data/sources/` — Curated Source Descriptors
+<div align="center">
 
-This folder contains **small, hand-edited JSON descriptors** for all data sources
-used in the Kansas-Frontier-Matrix pipeline.  
-They serve as the **source of truth** for fetch/ETL jobs and are validated against
-a schema (`schema.source.json`).
+# 🗂️ Kansas-Frontier-Matrix — **Source Descriptors** (`data/sources/`)
+
+**Mission:** This folder contains **small, curated JSON descriptors** for every dataset used in the Kansas Frontier Matrix pipeline.  
+They are the **canonical index** of external dependencies: URLs, licenses, provenance, temporal/spatial extents.  
+
+📌 **Tiny, explicit, hand-edited JSONs** (a few KB).  
+📌 **Never** store raw payloads here — those live in `data/raw/**`.  
+📌 Validated against [`schema.source.json`](./schema.source.json).  
+
+</div>
 
 ---
 
 ## Purpose
 
-- Document external data dependencies (URLs, license, provenance).
-- Provide reproducible recipes for fetching raw datasets.
-- Feed into the `make fetch` and `make stac` targets.
-- Ensure **transparency & reproducibility** in the historical GIS pipeline.
+- 📖 Document external dependencies (URLs, licenses, provenance).  
+- 🔄 Provide reproducible fetch/ETL recipes.  
+- ⚙️ Drive `make fetch` and `make stac` jobs.  
+- 🔍 Guarantee transparency & reproducibility in the historical GIS pipeline.  
 
-Descriptors are kept **tiny and explicit** (usually a few KB).  
-Large raw data files are never stored here — they go to `data/raw/` (ignored by git).
-
----
-
-## Descriptor schema
-
-See [`schema.source.json`](./schema.source.json).  
-Core required fields:
-
-| Field        | Type    | Description                                                      |
-|--------------|---------|------------------------------------------------------------------|
-| `id`         | string  | Unique machine-safe identifier (lowercase, `_` or `-` allowed).  |
-| `title`      | string  | Human-readable name of the dataset.                              |
-| `type`       | enum    | One of `vector`, `raster`, `collection`, `service`.              |
-| `period`     | string  | Temporal coverage (e.g. `1936`, `1930s`, `1854-1861`).           |
-| `urls`       | array   | Download URLs or service endpoints.                              |
-| `bbox`       | array   | Spatial extent `[west, south, east, north]` in EPSG:4326.        |
-| `crs`        | string  | Coordinate system (default: `EPSG:4326`).                        |
-| `license`    | object  | Name + URL to license info.                                      |
-| `provenance` | object  | Attribution, publisher, DOI, or citation.                        |
-| `retrieved`  | string  | ISO 8601 datetime when last fetched.                             |
-| `confidence` | number  | Optional confidence score (0.0–1.0).                             |
-| `notes`      | string  | Free-form comments.                                              |
+Descriptors = **truth table** of data inputs → all downstream stages depend on them.
 
 ---
 
-## Workflow
+## Directory Layout
 
-1. **Create/edit a descriptor** under `data/sources/*.json`.
-2. **Validate** against schema:
-   ```bash
-   make validate-sources
-````
+```text
+data/sources/
+├── schema.source.json   # JSON Schema for validation
+├── ks_hydrography.json  # Example descriptor: hydrography
+├── ks_roads_1930s.json  # Example descriptor: historic roads
+└── ks_landcover_1936.json
 
-3. **Fetch raw data**:
 
-   ```bash
-   make fetch
-   ```
+⸻
 
-   → downloads to `data/raw/` and records checksums.
-4. **Process** via `make cogs`, `make vectors`, etc.
-   → outputs to `data/processed/**` or `data/cogs/**`.
-5. **Build STAC** metadata:
+Schema — Core Fields
 
-   ```bash
-   make stac
-   ```
+Field	Type	Description
+id	string	Unique machine-safe ID (lowercase, underscores or hyphens).
+title	string	Human-readable dataset title.
+type	enum	One of: vector, raster, collection, service.
+period	string	Temporal coverage (1936, 1930s, 1854-1861).
+urls	array	Download URLs or service endpoints.
+bbox	array	[west, south, east, north] in EPSG:4326.
+crs	string	Coordinate system (default: EPSG:4326).
+license	object	License name + URL.
+provenance	object	Attribution, publisher, DOI, or citation.
+retrieved	string	ISO 8601 datetime when last fetched.
+confidence	number	(Optional) confidence score (0.0–1.0).
+notes	string	(Optional) free-form comments.
 
----
 
-## Examples
+⸻
 
-* `ks_hydrography.json` — Kansas surface water layers.
-* `ks_roads_1930s.json` — Historic roads dataset.
-* `ks_landcover_1936.json` — Land-cover classification snapshot.
+Workflow
 
-Each descriptor may point to multiple files in `urls[]`
-(e.g., county-by-county sheets). The fetch step will fan-out and merge.
+flowchart TD
+  A[Create/Edit Descriptor<br/>data/sources/*.json] --> B[Validate<br/>make validate-sources]
+  B --> C[Fetch Raw Data<br/>make fetch → data/raw/** + checksums]
+  C --> D[Process<br/>make cogs / make vectors → data/processed/**, data/cogs/**]
+  D --> E[Build STAC<br/>make stac → data/stac/items/**]
 
----
+<!-- END OF MERMAID -->
 
-## Git policy
 
-* Descriptors are **always tracked** in git.
-* `.gitignore` keeps raw data (`data/raw/**`) out of version control.
-* Changes to descriptors trigger CI checks:
 
-  * schema validation
-  * license/provenance presence
-  * STAC rebuild
+⸻
 
----
+Examples
+	•	ks_hydrography.json — Kansas surface water layers.
+	•	ks_roads_1930s.json — Historic roads dataset.
+	•	ks_landcover_1936.json — Land-cover snapshot.
 
-✦ **Summary:**
-`data/sources/` is the **curated index** of all inputs.
-It guarantees reproducibility, transparency, and traceability from source → processed artifact → STAC catalog.
+👉 urls[] can list multiple files (e.g., county sheets). Fetch step will fan out and merge.
 
-```
+⸻
+
+Git Policy
+	•	✅ Always tracked in git.
+	•	🚫 data/raw/** ignored by .gitignore.
+	•	🔔 CI triggers on changes:
+	•	Schema validation (make validate-sources)
+	•	License/provenance checks
+	•	STAC rebuild
+
+⸻
+
+Quickstart
+	1.	Add a descriptor
+
+$ $EDITOR data/sources/ks_new_dataset.json
+
+
+	2.	Validate
+
+make validate-sources
+
+
+	3.	Fetch raw data
+
+make fetch
+
+
+	4.	Process & publish
+
+make cogs vectors stac
+
+
+
+⸻
+
+TL;DR
+	•	data/sources/ = curated index of inputs.
+	•	Keeps raw payloads out of git, but guarantees reproducibility.
+	•	Bridges source → raw → processed → STAC.
+	•	Backbone of transparency, traceability, and MCP-grade reproducibility.
+
+✅ If it’s in the pipeline, it must be listed here.
+
