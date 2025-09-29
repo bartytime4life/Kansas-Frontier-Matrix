@@ -1,8 +1,3 @@
-Got it ✅ — here’s your new root README.md with the coverage table upgraded to use markers + shields.io badges, matching the Web README style.
-This is ready for the updater script later, but works manually as-is.
-
-⸻
-
 
 <div align="center">
 
@@ -172,8 +167,3 @@ Every dataset, config, and artifact is versioned, validated, and reproducible.
 MIT © 2025 — Kansas Frontier Matrix
 
 ---
-
-✅ Now the root README is **marker-ready** like the web README.  
-Both coverage tables (`ROOT_COVERAGE` + `WEB_COVERAGE`) can be updated automatically from JSON with a single updater script.  
-
-Would you like me to now go ahead and **write `scripts/update_coverage.py`** that updates both tables from JSON in one run, ready for CI?
