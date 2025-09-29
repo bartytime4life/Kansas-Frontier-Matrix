@@ -2,6 +2,30 @@
   "type": "FeatureCollection",
   "name": "oral_histories_points",
   "bbox": [-99.2185, 38.1893, -98.7402, 38.8209],
+
+  "kfm_meta": {
+    "generated": "2025-09-26T00:00:00Z",
+    "schema_version": "1.1",
+    "description": "Curated oral history points for Kansas Frontier Matrix (demo). Replace/augment with authoritative records and consent metadata.",
+    "coordinate_reference": "WGS84 (EPSG:4326)",
+    "license": "CC BY-NC",
+    "properties_schema": {
+      "title": "Story title as presented",
+      "narrator": "Primary speaker/storyteller name",
+      "community": "Community/people affiliation (e.g., Kiowa, Cheyenne)",
+      "summary": "1–3 sentence abstract",
+      "url": "Canonical web URL",
+      "date": "Event or narrative focus date (ISO 8601; may be approximate)",
+      "year": "Convenience numeric year (optional)",
+      "time_start": "Timeline start (usually same as 'date')",
+      "time_end": "Timeline end (null for point-in-time narratives)",
+      "source": "Provenance / holding institution",
+      "license": "Usage license for this record",
+      "tags": "Array of lightweight keywords (optional)"
+    },
+    "defaults": { "time_end": null }
+  },
+
   "features": [
     {
       "type": "Feature",
@@ -9,13 +33,17 @@
       "bbox": [-98.7402, 38.8209, -98.7402, 38.8209],
       "properties": {
         "title": "“Crossing the Smoky Hill” — Emma Redbird",
+        "narrator": "Emma Redbird",
         "community": "Kiowa",
         "summary": "Emma Redbird recounts a family crossing near the Smoky Hill River and seasonal movements in the 1870s.",
         "url": "https://example.org/oral-histories/emma-redbird",
         "date": "1873-06-01",
         "year": 1873,
+        "time_start": "1873-06-01",
+        "time_end": null,
         "source": "Community archives",
-        "license": "CC BY-NC"
+        "license": "CC BY-NC",
+        "tags": ["oral history", "Smoky Hill River", "mobility", "Kiowa"]
       },
       "geometry": {
         "type": "Point",
@@ -28,13 +56,17 @@
       "bbox": [-99.2185, 38.1893, -99.2185, 38.1893],
       "properties": {
         "title": "Fort Larned memories — Thomas Grayhorse",
+        "narrator": "Thomas Grayhorse",
         "community": "Cheyenne",
         "summary": "Brief account of trade, conflict, and camp life around Fort Larned; mentions a severe winter.",
         "url": "https://example.org/oral-histories/thomas-grayhorse",
         "date": "1868-01-01",
         "year": 1868,
+        "time_start": "1868-01-01",
+        "time_end": null,
         "source": "Tribal partners",
-        "license": "CC BY-NC"
+        "license": "CC BY-NC",
+        "tags": ["oral history", "Fort Larned", "trade", "Cheyenne"]
       },
       "geometry": {
         "type": "Point",
