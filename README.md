@@ -1,3 +1,9 @@
+Got it ✅ — here’s your new root README.md with the coverage table upgraded to use markers + shields.io badges, matching the Web README style.
+This is ready for the updater script later, but works manually as-is.
+
+⸻
+
+
 <div align="center">
 
 # 🌾 Kansas Geo Timeline  
@@ -84,26 +90,38 @@ docker/      # reproducible containers
 
 ⸻
 
-## 📊 Coverage Status
+## 📊 Coverage Status (Root Catalog)
 
-| Layer / Domain           | Data Sources                     |
-|---------------------------|----------------------------------|
-| 🏔 DEM & Terrain          | USGS LiDAR, KGS, 3DEP            |
-| 🗺 Hillshade/Derivatives  | LiDAR COGs → slope, aspect       |
-| 🌊 Hydrology              | NHD, Kansas River floods         |
-| 🌱 Land Cover             | NLCD 1992–2021                   |
-| 🧭 Soils / PLSS / Parcels | NRCS SSURGO, KS GIS Hub          |
-| 🪶 Treaties & Lands       | Boundary polygons                |
-| 🚂 Railroads & Trails     | 1850–1920 GIS                    |
-| 🗺 Historic Topos         | USGS, UT PCL                     |
-| 🌡 Climate Normals        | NOAA 1991–2020, Daymet           |
-| 🌪 Hazards — Tornado      | NOAA SPC 1950–2024               |
-| 🌊 Hazards — Floods       | FEMA, USGS                       |
-| 🔥 Hazards — Wildfire     | NIFC, KS perimeter sets          |
-| 🪨 Paleoclimate / Fire    | NOAA cores, charcoal             |
-| 🪶 Oral Histories & Arch. | Tribal narratives, archaeology   |
-| ⛏ Geology / Core Samples  | KGS drill cores                  |
+<!-- ROOT_COVERAGE_START -->
 
+| Layer / Domain           | Data Sources                     | Status |
+|---------------------------|----------------------------------|--------|
+| 🏔 DEM & Terrain          | USGS LiDAR, KGS, 3DEP            |        |
+| 🗺 Hillshade/Derivatives  | LiDAR COGs → slope, aspect       |        |
+| 🌊 Hydrology              | NHD, Kansas River floods         |        |
+| 🌱 Land Cover             | NLCD 1992–2021                   |        |
+| 🧭 Soils / PLSS / Parcels | NRCS SSURGO, KS GIS Hub          |        |
+| 🪶 Treaties & Lands       | Boundary polygons                |        |
+| 🚂 Railroads & Trails     | 1850–1920 GIS                    |        |
+| 🗺 Historic Topos         | USGS, UT PCL                     |        |
+| 🌡 Climate Normals        | NOAA 1991–2020, Daymet           |        |
+| 🌪 Hazards — Tornado      | NOAA SPC 1950–2024               |        |
+| 🌊 Hazards — Floods       | FEMA, USGS                       |        |
+| 🔥 Hazards — Wildfire     | NIFC, KS perimeter sets          |        |
+| 🪨 Paleoclimate / Fire    | NOAA cores, charcoal             |        |
+| 🪶 Oral Histories & Arch. | Tribal narratives, archaeology   |        |
+| ⛏ Geology / Core Samples  | KGS drill cores                  |        |
+
+<!-- ROOT_COVERAGE_END -->
+
+
+Legend:
+
+ Complete ·
+
+ In Progress ·
+
+ Planned
 
 ⸻
 
@@ -155,9 +173,7 @@ MIT © 2025 — Kansas Frontier Matrix
 
 ---
 
-✅ Now you’ve got a **three-tier badge system**:  
-- 🟢 Complete  
-- 🟡 In Progress  
-- 🔴 Not Started  
+✅ Now the root README is **marker-ready** like the web README.  
+Both coverage tables (`ROOT_COVERAGE` + `WEB_COVERAGE`) can be updated automatically from JSON with a single updater script.  
 
-Do you also want me to wire these badge colors into **GitHub Actions outputs** (so CI automatically marks datasets complete/in-progress/not-started), or keep them manual for now?
+Would you like me to now go ahead and **write `scripts/update_coverage.py`** that updates both tables from JSON in one run, ready for CI?
