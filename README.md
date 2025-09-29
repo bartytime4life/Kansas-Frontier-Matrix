@@ -38,7 +38,7 @@ It’s more than maps — it’s a **time-aware knowledge hub** for Kansas.
 ## 🔧 How It Works
 
 ```mermaid
-flowchart LR
+flowchart TD
   A["Sources (data/sources/*.json)"] -->|fetch| B["COGs (data/cogs/**/*.tif)"]
   B -->|derive| C["Derivatives (slope, aspect, hillshade, hydrology)"]
   C -->|index| D["STAC Catalog (stac/catalog.json, items/)"]
