@@ -2,9 +2,180 @@
   "type": "FeatureCollection",
   "name": "Kansas Frontier Demo Entities",
   "description": "Sample entities (settlements, treaties, trails, railroads) for demo and testing in the Kansas-Frontier-Matrix web viewer.",
-  "generated": "2025-09-26T00:00:00Z",
+  "generated": "2025-09-28T00:00:00Z",
   "bbox": [-100.8903, 37.7, -94.6, 39.0997],
   "attribution": "Demo entities for UI wiring — compiled from public-domain sources.",
+  "license": "CC0-1.0",
+
+  "kfm_meta": {
+    "schema_version": "1.2",
+    "category": "narrative",
+    "timeProperty": {
+      "mode": "auto",
+      "prefer": { "start": "properties.time.start", "end": "properties.time.end", "format": "date" },
+      "fallback": { "start": "properties.date", "end": null, "format": "date" }
+    },
+    "popup": ["title", "time", "place", "type", "desc", "sources"],
+    "legend": {
+      "type": "mixed",
+      "label": "Entity type",
+      "classes": [
+        { "label": "Settlement", "stroke": "#16a34a", "fill": "#22c55e", "symbol": "circle" },
+        { "label": "Treaty/Legislation", "stroke": "#1d4ed8", "fill": "#2563eb", "symbol": "circle" },
+        { "label": "Trail", "stroke": "#8b5cf6" },
+        { "label": "Railroad", "stroke": "#d97706" }
+      ]
+    },
+    "style": {
+      "renderer": "sublayers",
+      "sublayers": [
+        {
+          "id": "entities_trails",
+          "filter": { "all": [{ "geometry": "LineString" }, { "properties.type": "trail" }] },
+          "lineColor": "#8b5cf6",
+          "lineOpacity": 0.95,
+          "lineJoin": "round",
+          "lineCap": "round",
+          "lineWidthByZoom": [
+            { "zoom": 5, "width": 1.2 },
+            { "zoom": 9, "width": 2.0 },
+            { "zoom": 12, "width": 2.4 },
+            { "zoom": 15, "width": 3.0 }
+          ]
+        },
+        {
+          "id": "entities_railroads",
+          "filter": { "all": [{ "geometry": "LineString" }, { "properties.type": "railroad" }] },
+          "lineColor": "#d97706",
+          "lineOpacity": 0.95,
+          "lineJoin": "round",
+          "lineCap": "round",
+          "lineDasharray": [6, 2],
+          "lineWidthByZoom": [
+            { "zoom": 5, "width": 1.2 },
+            { "zoom": 9, "width": 2.0 },
+            { "zoom": 12, "width": 2.6 },
+            { "zoom": 15, "width": 3.2 }
+          ]
+        },
+        {
+          "id": "entities_settlements",
+          "filter": { "all": [{ "geometry": "Point" }, { "properties.type": "settlement" }] },
+          "symbol": "circle",
+          "circleColor": "#22c55e",
+          "circleOpacity": 0.92,
+          "circleStrokeColor": "#ffffff",
+          "circleStrokeWidth": 0.9,
+          "circleRadiusByZoom": [
+            { "zoom": 5, "radius": 3.2 },
+            { "zoom": 9, "radius": 4.6 },
+            { "zoom": 12, "radius": 6.0 },
+            { "zoom": 15, "radius": 7.2 }
+          ]
+        },
+        {
+          "id": "entities_treaties",
+          "filter": { "all": [{ "geometry": "Point" }, { "properties.type": "treaty" }] },
+          "symbol": "circle",
+          "circleColor": "#2563eb",
+          "circleOpacity": 0.92,
+          "circleStrokeColor": "#ffffff",
+          "circleStrokeWidth": 0.9,
+          "circleRadiusByZoom": [
+            { "zoom": 5, "radius": 3.2 },
+            { "zoom": 9, "radius": 4.6 },
+            { "zoom": 12, "radius": 6.0 },
+            { "zoom": 15, "radius": 7.2 }
+          ]
+        }
+      ],
+      "hover": {
+        "lineColor": "#111827",
+        "lineWidthDelta": 0.6,
+        "circleStrokeColor": "#111827",
+        "circleStrokeWidthDelta": 0.8
+      },
+      "selection": {
+        "lineColor": "#111827",
+        "lineWidthDelta": 0.9,
+        "circleStrokeColor": "#111827",
+        "circleStrokeWidthDelta": 1.2
+      }
+    },
+    "cluster": {
+      "enabled": true,
+      "radius": 34,
+      "maxZoom": 12,
+      "style": {
+        "circleColor": "#93c5fd",
+        "circleOpacity": 0.8,
+        "circleStrokeColor": "#1d4ed8",
+        "circleStrokeWidth": 1.0,
+        "circleRadius": {
+          "stops": [[5, 10], [25, 16], [100, 22]],
+          "property": "point_count",
+          "type": "exponential",
+          "base": 1.2
+        },
+        "textField": "{point_count_abbreviated}",
+        "textSize": 11,
+        "textColor": "#0b1020"
+      }
+    },
+    "filters": {
+      "quick": [
+        { "label": "Settlements", "where": { "type": "settlement" } },
+        { "label": "Treaties",    "where": { "type": "treaty" } },
+        { "label": "Trails",      "where": { "type": "trail" } },
+        { "label": "Railroads",   "where": { "type": "railroad" } },
+        { "label": "Before 1860", "where": { "properties.time.start$lt": "1860-01-01" } },
+        { "label": "1860–1880",   "where": { "all": [{ "properties.time.start$gte": "1860-01-01" }, { "properties.time.start$lt": "1880-01-01" }] } }
+      ],
+      "advanced": {
+        "dateRangeField": "properties.time.start",
+        "groupBy": ["type", "title"]
+      }
+    },
+    "search": {
+      "qFields": ["title", "type", "desc", "tags", "place"],
+      "accentFold": true,
+      "minLength": 2,
+      "placeholder": "Search entities…"
+    },
+    "ordering": {
+      "zindex": 640,
+      "before": "documents_index",
+      "after": "fema_disasters"
+    },
+    "stac": {
+      "collection": "kfm-entities",
+      "item": "demo_entities_mixed"
+    },
+    "alternates": {
+      "data_fallbacks": [
+        { "format": "pmtiles", "url": "web/tiles/demo_entities.pmtiles", "note": "Prefer tiled rendering at statewide scales" },
+        { "format": "geojson", "url": "web/data/demo_entities.json" }
+      ]
+    }
+  },
+
+  "fields": {
+    "id":       { "type": "string", "description": "Stable entity id" },
+    "type":     { "type": "string", "enum": ["settlement", "treaty", "trail", "railroad"], "description": "Entity type" },
+    "title":    { "type": "string", "description": "Human-readable title" },
+    "desc":     { "type": "string", "description": "Short description" },
+    "place":    { "type": "string", "description": "Named place (city/region)" },
+    "time":     { "type": "object", "description": "Optional span {start,end} (ISO dates)" },
+    "tags":     { "type": "array", "items": { "type": "string" }, "description": "Keywords/tags" },
+    "sources":  { "type": "array", "items": { "type": "string" }, "description": "Source labels" },
+    "marker-color": { "type": "string", "description": "Legacy viewer color hint (kept for compatibility)", "optional": true },
+    "marker-size":  { "type": "string", "description": "Legacy viewer size hint", "optional": true }
+  },
+
+  "provenance": {
+    "source": "KFM demo entities for wiring; replace with pipeline export keeping ids and time spans consistent."
+  },
+
   "features": [
     {
       "type": "Feature",
@@ -21,10 +192,7 @@
         "marker-color": "#22c55e",
         "marker-size": "medium"
       },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-95.2353, 38.9717]
-      }
+      "geometry": { "type": "Point", "coordinates": [-95.2353, 38.9717] }
     },
     {
       "type": "Feature",
@@ -41,10 +209,7 @@
         "marker-color": "#2563eb",
         "marker-size": "medium"
       },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-96.0, 39.0]
-      }
+      "geometry": { "type": "Point", "coordinates": [-96.0, 39.0] }
     },
     {
       "type": "Feature",
