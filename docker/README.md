@@ -1,3 +1,14 @@
+Docker — Kansas-Frontier-Matrix / Kansas Geo Timeline
+
+Mission-grade, reproducible containers for building terrain COGs, tiling vectors, validating STAC, and previewing the web viewer — without polluting your host.
+
+Base image (configurable): ghcr.io/osgeo/gdal:ubuntu-small-latest
+See docker/Dockerfile for optional feature flags: Node, tippecanoe/pmtiles, AWS CLI.
+
+⸻
+
+TL;DR (fast path)
+
 # 1) Build (with wheels-first Python, GDAL preinstalled)
 docker build -t kfm:dev -f docker/Dockerfile .
 
