@@ -38,30 +38,16 @@ It’s more than maps — it’s a **time-aware knowledge hub** for Kansas.
 ## 🔧 How It Works
 
 ```mermaid
-flowchart TD
-  A["Sources<br/>(data/sources/*.json)"] -->|fetch| B["COGs<br/>(data/cogs/**/*.tif)"]
-  B -->|derive| C["Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
-  C -->|index| D["STAC Catalog<br/>(stac/catalog.json, items/)"]
-  D -->|graph| H["Knowledge Graph<br/>(Neo4j + Ontologies)"]
-  D -->|render| E["Configs<br/>(web/config/*.json)"]
+flowchart LR
+  A["Sources (data/sources/*.json)"] -->|fetch| B["COGs (data/cogs/**/*.tif)"]
+  B -->|derive| C["Derivatives (slope, aspect, hillshade, hydrology)"]
+  C -->|index| D["STAC Catalog (stac/catalog.json, items/)"]
+  D -->|graph| H["Knowledge Graph (Neo4j + Ontologies)"]
+  D -->|render| E["Configs (web/config/*.json)"]
   H --> E
   E --> F["MapLibre Web Viewer"]
-  D --> G["KML/KMZ<br/>(earth/)"]
+  D --> G["KML/KMZ (earth/)"]
 
-  classDef src fill:#FFD166,stroke:#333;
-  classDef cogs fill:#06D6A0,stroke:#333;
-  classDef stac fill:#118AB2,stroke:#fff;
-  classDef web fill:#073B4C,stroke:#fff;
-  classDef earth fill:#EF476F,stroke:#fff;
-
-  class A src;
-  class B cogs;
-  class C cogs;
-  class D stac;
-  class E web;
-  class F web;
-  class G earth;
-  class H stac;
 
 	•	STAC 1.0.0 catalog tracks provenance and time.
 	•	Cloud-Optimized GeoTIFFs (COGs) serve terrain + maps.
