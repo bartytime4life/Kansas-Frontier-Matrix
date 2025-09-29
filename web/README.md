@@ -209,11 +209,3 @@ MIT © 2025 — Kansas Frontier Matrix
 💡 Issues & ideas → open a GitHub issue
 
 ---
-
-### 🔑 What’s included
-- ✅ Color-coded **support badges** (green = complete, yellow = partial, grey = planned).  
-- ✅ **Markers (`WEB_COVERAGE_START/END`)** for auto-updating via CI.  
-- ✅ Aligned with **root README.md** + `.github/README.md`.  
-- ✅ Sections polished for GitHub rendering.  
-
----
