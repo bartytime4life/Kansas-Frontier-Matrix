@@ -37,13 +37,14 @@ data/gcp/
 
 ## GCP File Formats
 
-- **Plaintext (`.gcp`)** — common in GDAL/QGIS:  
+- **Plaintext (`.gcp`)** — common in GDAL/QGIS:
 
 pixel_x, pixel_y, lon, lat
 1340, 2250, -98.1234, 38.7654
-2075, 310,  -98.2000, 38.8901
+2075,  310, -98.2000, 38.8901
 
-- **GeoJSON (`.geojson`)** — points with properties:  
+- **GeoJSON (`.geojson`)** — points with properties:
+
 ```json
 {
   "type": "FeatureCollection",
@@ -63,7 +64,7 @@ Each file should include:
 	•	source scan name + date
 	•	projection (target CRS, usually EPSG:4326 or EPSG:3857)
 	•	number of points + RMS error
-	•	notes on point selection (e.g., “church spire”, “railroad junction”).
+	•	notes on point selection (e.g., “church spire”, “railroad junction”)
 
 ⸻
 
@@ -79,7 +80,7 @@ Notes
 	•	Prefer stable features (river confluences, PLSS intersections) over transient ones (fence lines).
 	•	Include at least 4–6 points well spread across the map. More points improve warp quality.
 	•	Store raw + refined versions if iterations are done.
-	•	Follow MCP reproducibility: every georeferencing step must reference its exact GCP input ￼ ￼.
+	•	Follow MCP reproducibility: every georeferencing step must reference its exact GCP input ￼.
 
 ⸻
 
