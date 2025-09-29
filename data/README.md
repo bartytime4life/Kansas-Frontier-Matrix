@@ -40,40 +40,37 @@ This directory implements the project’s **MCP-style data lifecycle** end-to-en
 ## Directory Layout
 
 data/
-├─ raw/                     # Immutable source payloads (GeoTIFF, ZIP, CSV, GPKG, PDF…)
-│  ├─ /…
-│  └─ _src.json       # Minimal provenance sidecar for the adjacent payload
+├─ 📥 raw/                  # Immutable source payloads (original downloads, never edited)
+│  ├─ …/
+│  └─ *_src.json            # Provenance sidecar for adjacent payload
 │
-├─ sources/                 # Human-curated descriptors & lookups (small, texty)
-│  ├─ schema.source.json    # JSON Schema for validation
-│  ├─ ks_hydrography.json
-│  └─ ks_landcover_1936.json
+├─ 📝 sources/              # Human-curated descriptors & lookup tables
+│  ├─ schema.source.json
+│  └─ example_source.json
 │
-├─ work/                    # Scratch, staging, temporary intermediates (non-committed)
-├─ tmp/                     # Ephemeral (ignored), wiped by CI
+├─ 🛠 work/                 # Scratch / intermediate staging (not committed)
+├─ 🧹 tmp/                  # Ephemeral (ignored), wiped by CI
 │
-├─ processed/               # Analysis-ready outputs (vectors/rasters/joins)
+├─ 📊 processed/            # Analysis-ready outputs (vectors / rasters)
 │  ├─ vectors/
-│  │  ├─ hydrography_1936.geojson
-│  │  └─ roads_1930s.geojson
-│  ├─ dem/
-│  │  └─ ks_1m_dem_2018.tif
-│  └─ _meta.json            # Optional index of subtree provenance
+│  │  └─ example_layer.geojson
+│  ├─ rasters/
+│  │  └─ example_raster.tif
+│  └─ _meta.json
 │
-├─ cogs/                    # Canonical Cloud-Optimized GeoTIFFs (mission-final rasters)
-│  └─ hillshade_2020.tif
+├─ 🛰 cogs/                 # Canonical Cloud-Optimized GeoTIFFs
+│  └─ example_cog.tif
 │
-├─ derivatives/             # Higher-order blends/analytics (TRI, TPI, roughness, shaded relief)
-│  └─ terrain/tri_2020.tif
+├─ 🔬 derivatives/          # Higher-order products (metrics, blends, analyses)
+│  └─ example_metric.tif
 │
-├─ stac/                    # Space-time discovery catalog (collections + items)
+├─ 📂 stac/                 # Space-time catalog (collections + items)
 │  ├─ collections/
-│  │  └─ ks_hydrography.json
+│  │  └─ example_collection.json
 │  └─ items/
-│     ├─ vectors/hydrography_1936.json
-│     └─ vectors/roads_1930s.json
+│     └─ example_item.json
 │
-└─ tiles/                   # Ephemeral z/x/y PNGs or PMTiles for local preview (ignored)
+└─ 🗺 tiles/                 # Ephemeral web map tiles (PNG/PMTiles, ignored)
 
 > **Rule:** Every derivation should emit a `*_meta.json` capturing command, inputs, timestamps, versions, and checksums.
 
