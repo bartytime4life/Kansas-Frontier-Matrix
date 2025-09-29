@@ -61,7 +61,7 @@ Where **terrain, climate, culture, and events** intersect.
 
 ## 🔧 How It Works
 
-mermaid
+```mermaid
 flowchart TD
   A["📥 Sources<br/>(data/sources/*.json)"] -->|fetch| B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
   B -->|derive| C["📐 Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
@@ -72,10 +72,11 @@ flowchart TD
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
 
-
-⸻
 <!-- END OF MERMAID -->
 
+
+
+⸻
 
 ✨ Pipeline Highlights
 	•	📂 STAC 1.0.0 catalog → provenance + temporal coverage
