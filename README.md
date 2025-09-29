@@ -189,7 +189,6 @@ Geology / Core Samples	KGS drill cores	🚧
 ✅ Reproducibility & CI
 
 🧪 Following MCP principles: every dataset, config, and artifact is versioned, validated, and reproducible.
-
 	•	🔐 Checksums → .sha256 sidecars for every artifact
 	•	📏 Validation → STAC + JSON Schema in CI
 	•	🛠 Pipelines
@@ -244,6 +243,6 @@ MIT © 2025 — Kansas Frontier Matrix
 	•	📜 Anchored in MCP reproducibility standards
 	•	🔗 Connects maps, archives, disasters, & oral histories into one forensic timeline
 
----
+⸻
 
-⚡ This README is **production-ready**: Mermaid renders with colors and arrows on GitHub, the Markdown doesn’t bleed, and all tables/details are debugged.  
+⚡ This README is production-ready: Mermaid renders with colors and arrows on GitHub, the Markdown doesn’t bleed, and all tables/details are debugged.
