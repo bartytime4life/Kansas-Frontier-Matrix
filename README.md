@@ -72,20 +72,19 @@ flowchart TD
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
 
-  %% Node styling
-  classDef source fill:#2b6cb0,stroke:#1a365d,color:#fff,font-weight:bold;
-  classDef process fill:#38a169,stroke:#22543d,color:#fff,font-weight:bold;
-  classDef catalog fill:#d69e2e,stroke:#744210,color:#fff,font-weight:bold;
-  classDef graph fill:#805ad5,stroke:#322659,color:#fff,font-weight:bold;
-  classDef viewer fill:#dd6b20,stroke:#7b341e,color:#fff,font-weight:bold;
-  classDef earth fill:#319795,stroke:#234e52,color:#fff,font-weight:bold;
+  %% --- Styles (GitHub-safe: fill, stroke, color only) ---
+  classDef source  fill:#2b6cb0,stroke:#1a365d,color:#ffffff;
+  classDef process fill:#38a169,stroke:#22543d,color:#ffffff;
+  classDef catalog fill:#d69e2e,stroke:#744210,color:#ffffff;
+  classDef graph   fill:#805ad5,stroke:#322659,color:#ffffff;
+  classDef viewer  fill:#dd6b20,stroke:#7b341e,color:#ffffff;
+  classDef earth   fill:#319795,stroke:#234e52,color:#ffffff;
 
-  %% Apply classes
+  %% --- Apply classes ---
   class A source;
-  class B,C process;
+  class B,C,E process;
   class D catalog;
   class H graph;
-  class E process;
   class F viewer;
   class G earth;
 
