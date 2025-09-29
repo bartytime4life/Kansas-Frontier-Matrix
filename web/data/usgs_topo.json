@@ -4,37 +4,45 @@
   "type": "raster",
   "category": "overlays",
 
-  "data": null,                          
+  /* Multi-asset raster collection; individual COGs listed under assets */
+  "data": null,
 
   "assets": [
     {
+      "id": "usgs_topo_1894_larned",
       "year": 1894,
-      "title": "Larned 1894 (15’)",
+      "title": "Larned 1894 (15′)",
       "scale": "1:125,000",
       "href": "data/cogs/overlays/usgs_topo_1894_larned.tif",
       "bounds": [-99.5, 37.8, -98.8, 38.4],
+      "crs": "EPSG:4326",
       "nodata": 255
     },
     {
+      "id": "usgs_topo_1905_fort_hays",
       "year": 1905,
-      "title": "Fort Hays 1905 (15’)",
+      "title": "Fort Hays 1905 (15′)",
       "scale": "1:125,000",
       "href": "data/cogs/overlays/usgs_topo_1905_fort_hays.tif",
       "bounds": [-99.5, 38.6, -99.0, 39.0],
+      "crs": "EPSG:4326",
       "nodata": 255
     },
     {
+      "id": "usgs_topo_1936_topeka",
       "year": 1936,
-      "title": "Topeka 1936 (7.5’)",
+      "title": "Topeka 1936 (7.5′)",
       "scale": "1:24,000",
       "href": "data/cogs/overlays/usgs_topo_1936_topeka.tif",
-      "bounds": [-95.85, 39.00, -95.55, 39.25],
+      "bounds": [-95.85, 39.0, -95.55, 39.25],
+      "crs": "EPSG:4326",
       "nodata": 0
     }
   ],
 
   "time": { "start": "1880-01-01", "end": "1959-12-31" },
   "timeProperty": "year",
+  "defaultYear": 1936,
 
   "minzoom": 5,
   "maxzoom": 17,
@@ -42,9 +50,11 @@
   "style": {
     "rasterOpacity": 0.7,
     "rasterFadeDuration": 0,
-    "rasterResampling": "linear"
+    "rasterResampling": "linear",
+    "tileSize": 256
   },
 
   "visible": false,
-  "attribution": "USGS Historical Topographic Map Collection"
+  "attribution": "USGS Historical Topographic Map Collection",
+  "attributionURL": "https://www.usgs.gov/programs/national-geospatial-program/historical-topographic-maps-preserving-past"
 }
