@@ -74,20 +74,6 @@ flowchart TD
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ\nGoogle Earth"]
 
-  classDef source  fill:#2b6cb0,stroke:#1a365d,color:#fff;
-  classDef process fill:#38a169,stroke:#22543d,color:#fff;
-  classDef catalog fill:#d69e2e,stroke:#744210,color:#fff;
-  classDef kg      fill:#805ad5,stroke:#322659,color:#fff;
-  classDef viewer  fill:#dd6b20,stroke:#7b341e,color:#fff;
-  classDef earth   fill:#319795,stroke:#234e52,color:#fff;
-
-  class A source;
-  class B,C,E process;
-  class D catalog;
-  class H kg;
-  class F viewer;
-  class G earth;
-
 ⸻
 
 ✨ Pipeline Highlights
