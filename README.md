@@ -48,12 +48,14 @@ flowchart TD
   E --> F["MapLibre Web Viewer"]
   D --> G["KML/KMZ\n(earth/)"]
 
-  classDef src fill:#FFD166,stroke:#333;
-  classDef cogs fill:#06D6A0,stroke:#333;
-  classDef stac fill:#118AB2,stroke:#fff;
-  classDef web fill:#073B4C,stroke:#fff;
-  classDef earth fill:#EF476F,stroke:#fff;
+  %% --- Class styles ---
+  classDef src fill:#FFD166,stroke:#333
+  classDef cogs fill:#06D6A0,stroke:#333
+  classDef stac fill:#118AB2,stroke:#fff
+  classDef web fill:#073B4C,stroke:#fff
+  classDef earth fill:#EF476F,stroke:#fff
 
+  %% --- Assignments ---
   class A src
   class B cogs
   class C cogs
