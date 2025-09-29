@@ -1,32 +1,35 @@
-# data/raw
+# Kansas-Frontier-Matrix — Raw Data
 
-Immutable **source payloads** live here — exactly as acquired from upstream providers (no edits, no re-projection). Every file must ship with:
-- a `*.sha256` checksum, and
+This directory is the **landing zone** for immutable source payloads:  
+files are stored here *exactly as acquired from upstream providers*  
+(no edits, no reprojection, no clipping).  
+
+Every raw payload **must ship with**:  
+- a `*.sha256` checksum file, and  
 - a compact provenance sidecar `*.src.json`.
 
-This folder is a **landing zone** used by the ingestion pipeline to create reproducible derivatives under `data/processed/**` and `data/cogs/**`. Do **not** modify, clip, reproject, or repackage files in place; any fixups belong in processing scripts with documented steps.
+This folder feeds the ingestion pipeline that creates reproducible derivatives under `data/processed/**` and `data/cogs/**`.  
+**Do not** modify files in place. Any fixups or enhancements must be scripted in `scripts/` or `Makefile` targets,  
+with results saved to processed directories.
 
 ---
 
-## Layout & sidecars
-
-```
+## Directory Layout & Sidecars
 
 data/raw/
 ├── elevation/
-│   ├── ks\_1m\_dem\_2018\_2020.tif               # as-downloaded (if mirroring tiles, store the original bundle/zip)
-│   ├── ks\_1m\_dem\_2018\_2020.tif.sha256        # SHA-256 of the raw payload
-│   └── ks\_1m\_dem\_2018\_2020.src.json          # compact provenance (see example below)
-├── historic\_maps/
-│   └── usgs\_topo\_larned\_1894.tif
+│   ├── ks_1m_dem_2018_2020.tif               # as-downloaded (no edits)
+│   ├── ks_1m_dem_2018_2020.tif.sha256        # SHA-256 checksum of payload
+│   └── ks_1m_dem_2018_2020.src.json          # provenance sidecar (see below)
+├── historic_maps/
+│   └── usgs_topo_larned_1894.tif
 ├── vectors/
-│   └── plss\_ks\_2020.zip
+│   └── plss_ks_2020.zip
 └── docs/
-└── treaty\_osage\_1825.pdf
+└── treaty_osage_1825.pdf
 
-````
+### Example `*.src.json` (minimal, publication-safe)
 
-**Sidecar `*.src.json` (minimal, publication-safe):**
 ```json
 {
   "title": "Kansas DEM (1 m; 2018–2020)",
@@ -38,101 +41,112 @@ data/raw/
   "temporal": { "start": "2018-01-01", "end": "2020-12-31" },
   "sha256": "<match file.sha256>"
 }
-````
 
-This mirrors the project principle of **documentation-first + traceability** without leaking pipeline internals into raw storage.
+Sidecars mirror the project principle of documentation-first + traceability,
+without leaking pipeline internals into raw storage.
 
----
+⸻
 
-## What is allowed here
+What Belongs Here
 
-* **Original** rasters (GeoTIFF/IMG), archives (ZIP/TGZ), tabular/vector sources (SHP/FGDB/GeoPackage), and **primary docs** (PDF/CSV) straight from publishers.
-* **No edits**: keep upstream CRS, tiling, compression, nodata as-is. Derivatives must be emitted to `data/processed/**` and cataloged with STAC-like metadata.
+✅ Allowed:
+	•	Original payloads → rasters (GeoTIFF/IMG), archives (ZIP/TGZ), vector/tabular bundles (SHP/FGDB/GeoPackage), and primary docs (PDF/CSV).
+	•	Stored exactly as published (retain CRS, tiling, compression, nodata).
 
----
+❌ Not allowed:
+	•	Reprojected, clipped, resampled, or edited versions → must go to data/processed/**.
+	•	Mission-final rasters (COGs) → must go to data/cogs/**.
 
-## Size & storage policy
+⸻
 
-* Prefer **remote references** (service URLs) when sources are stable and rate-limits allow; mirror locally only what’s required for reproducibility or offline builds.
-* Large artifacts should use **Git LFS**/**DVC**; git tracks **checksums + metadata** only.
-* Default caps (tune in `Makefile`/CI):
+Storage & Size Policy
+	•	Prefer remote references when sources are stable and reproducible (STAC can point directly at URLs).
+	•	Mirror locally only what’s required for reproducibility or offline builds.
+	•	Large payloads must be tracked with Git LFS or DVC.
+	•	Suggested caps (can be tuned in Makefile/CI):
+	•	Single raw file ≤ 8 GB
+	•	Bundled dataset ≤ 20 GB
+	•	Supplement bundles ≤ 200 MB (with pointer to DOI for full-resolution)
 
-  * Raw file ≤ **8 GB** (single); bundle ≤ **20 GB**
-  * Journal supplement bundles ≤ **200 MB** (downsampled visuals; full-res via DOI)
+⸻
 
----
+Provenance & Integrity
+	1.	Checksum every raw file:
 
-## Provenance & checksums
-
-Create SHA-256 and record it in the sidecar:
-
-```bash
 shasum -a 256 data/raw/elevation/ks_1m_dem_2018_2020.tif \
   | awk '{print $1}' > data/raw/elevation/ks_1m_dem_2018_2020.tif.sha256
-```
 
-Capture minimal **source** fields (who/what/when/where/license/sha) — enough for readers to relocate and verify.
 
-> If license is unclear or conflicting, move the payload to `data/raw/_quarantine/` and resolve before use.
+	2.	Record provenance in .src.json (source URL, license, spatial/temporal extent, checksum).
+	3.	Quarantine rule:
+	•	If license is unclear or conflicting → move to data/raw/_quarantine/ and resolve before use.
 
----
+⸻
 
-## Ingestion → processing (typical flow)
+Ingestion → Processing Flow
+	1.	Validate → checksum, license, format.
+	2.	Catalog → via lightweight source descriptors (data/sources/**.json).
+	3.	Process → transform into COGs/GeoJSON under data/cogs/** and data/processed/**.
+	4.	Publish → update STAC (data/stac/items/**) and provenance registry (data/provenance/registry.json).
 
-1. **Validate** raw payload (checksum, license, format).
-2. **Catalog** via a lightweight **sources JSON** (STAC-like entry used by the app/pipeline).
-3. **Derive** COGs/GeoJSON to `data/cogs/**` and `data/processed/**` with full metadata (roles, MIME, checksums).
-4. **Publish** compact, publication-ready JSON + CITATION (CFF); limit supplements to checksums + downsampled visuals.
+This ensures raw → processed → STAC lineage is always traceable ￼.
 
----
+⸻
 
-## Naming
+Naming Conventions
 
-Use stable slugs:
-`<topic>_<year-or-range>[_{region|scale|edition}].<ext>`
+Stable slugs:
+
+<topic>_<year-or-range>[_{region|scale|edition}].<ext>
 
 Examples:
+	•	ks_1m_dem_2018_2020.tif
+	•	usgs_topo_larned_1894.tif
+	•	plss_ks_2020.zip
 
-* `ks_1m_dem_2018_2020.tif`
-* `usgs_topo_larned_1894.tif`
-* `plss_ks_2020.zip`
+⸻
 
----
+Licensing & Ethics
+	•	Record license verbatim in .src.json.
+	•	For culturally sensitive materials (e.g., sacred sites, oral histories):
+	•	Apply ethics guardrails (access controls, attribute generalization).
+	•	Consult provenance and community guidelines before publication ￼.
 
-## Licensing & ethics
+⸻
 
-* Record **license** verbatim in `*.src.json`.
-* For culturally sensitive layers (e.g., sacred sites, oral histories), apply the project’s ethics guardrails; use access controls or spatial/attribute generalization as required.
+Quick Validation Checks
 
----
-
-## Quick checks
-
-```bash
 # Inspect spatial metadata
 gdalinfo data/raw/elevation/ks_1m_dem_2018_2020.tif | sed -n '1,80p'
 
-# Validate GeoTIFF tags minimally
+# Validate GeoTIFF tags
 listgeo -no_norm data/raw/elevation/*.tif | head -n 40
 
 # Verify ZIP integrity
 unzip -t data/raw/vectors/plss_ks_2020.zip
-```
+
+
+⸻
+
+DOs / DON’Ts
+	•	✅ Keep original bits immutable.
+	•	✅ Add sidecars (.sha256, .src.json) for provenance and verification.
+	•	✅ Use LFS/DVC for large payloads.
+	•	❌ Don’t reproject, clip, or compress here (do it in data/processed/**).
+	•	❌ Don’t commit multi-GB binaries without LFS/DVC + checksum entries.
+
+⸻
+
+Notes for Maintainers
+	•	.gitattributes must route large binaries to LFS and disable auto-merging.
+	•	CI should:
+	•	Verify checksums (*.sha256)
+	•	Validate .src.json against schema (provenance.schema.json)
+	•	data/raw/** should be ignored by linters/formatters — validation only.
+
+⸻
+
+✅ This directory ensures Kansas Frontier Matrix raw datasets are immutable, verifiable, and traceable,
+forming the foundation for reproducible pipelines, STAC compliance, and MCP-grade audit trails.
 
 ---
-
-## DOs / DON’Ts
-
-* ✅ Keep original bits **immutable**; add sidecars for **provenance + sha256**.
-* ✅ Store a compact **pub JSON** only when mirroring in-repo for papers.
-* ❌ Don’t reproject/clip/compress here (do it in processing).
-* ❌ Don’t commit multi-GB datasets to git without LFS/DVC + checksum entries.
-
----
-
-## Notes for maintainers
-
-* Ensure `.gitattributes` treats large binaries as **LFS** and prevents auto-merge on binaries.
-* `data/raw/**` should be ignored by most linters/formatters; CI should only **verify checksums** and **validate sidecars**.
-
-```
