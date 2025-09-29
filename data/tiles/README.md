@@ -1,40 +1,43 @@
-# `data/tile/` — Web Map Tiles (Raster & Vector)
+# Kansas-Frontier-Matrix — Web Map Tiles
 
-> Ephemeral, build-from-source outputs. This folder is **ignored by Git** (see `data/.gitignore`) except for this README (and any `.gitkeep` you add). Use it for local previews or staging before publishing tiles as versioned artifacts elsewhere (e.g., `web/`, releases, or object storage).
+This directory (`data/tiles/`) is for **ephemeral, build-from-source outputs** — raster and vector tiles  
+used for local previews or staging before publishing.  
 
-## What goes here
-
-- **Raster tiles**: pyramids from COG/GeoTIFF (e.g., hillshade, scanned topo mosaics)
-  - Layouts: `/{z}/{x}/{y}.png` (or `.jpg`), or single-file **PMTiles** (`.pmtiles`)
-- **Vector tiles**: `pbf` sets or single-file **PMTiles** built from GeoJSON/GeoPackage
-
-> For long-term storage and CI reproducibility, prefer single-file **PMTiles** or **MBTiles** committed via **Git LFS** outside this folder (e.g., `data/derivatives/tiles/` or `web/tiles/`).
+> ⚠️ **Ignored by Git** (`data/.gitignore`), except this README and any `.gitkeep`.  
+> For versioned or distributable tiles, use **Git LFS** in `data/derivatives/tiles/` or `web/tiles/`.
 
 ---
 
-## Naming
+## What Goes Here
 
-```
+- **Raster tiles** → pyramids built from COG/GeoTIFF (hillshade, scanned topo mosaics).  
+  - Layouts: `/{z}/{x}/{y}.png` (or `.jpg`)  
+  - Or single-file **PMTiles** (`.pmtiles`)  
 
-data/tile/
-├── <layer>*<period>/           # z/x/y pyramid for quick local preview
+- **Vector tiles** → `pbf` z/x/y sets or **PMTiles** from GeoJSON/GeoPackage.  
+
+> ✅ For long-term reproducibility and CI integration → prefer **PMTiles** (or MBTiles)  
+> tracked via Git LFS outside this folder (`data/derivatives/tiles/`, `web/tiles/`).  
+
+---
+
+## Layout & Naming
+
+data/tiles/
+├── /           # z/x/y pyramid for local preview
 │   └── {z}/{x}/{y}.png
-└── <layer>*<period>.pmtiles    # single-file alternative for publishing
-
-````
+└── .pmtiles    # single-file alternative (preferred for publishing)
 
 Examples:
-- `hillshade_2018_2020/…`
-- `usgs_topo_larned_1894/…`
-- `roads_1930s.pmtiles`
+- `hillshade_2018_2020/…`  
+- `usgs_topo_larned_1894/…`  
+- `railroads_1900.pmtiles`  
 
 ---
 
-## Build recipes
+## Build Recipes
 
 ### 1) Raster → z/x/y PNG/JPEG (quick preview)
-
-Using `gdal2tiles.py`:
 
 ```bash
 gdal2tiles.py \
@@ -42,166 +45,131 @@ gdal2tiles.py \
   -r bilinear \
   -s EPSG:3857 \
   -w none \
-  data/processed/hillshade/ks_hillshade_2018_2020.tif \
-  data/tile/hillshade_2018_2020
-````
+  data/processed/dem/overlays/ks_1m_dem_2018_hillshade.tif \
+  data/tiles/hillshade_2018
 
 Tips:
+	•	For COGs, GDAL will use internal overviews efficiently.
+	•	Limit zoom levels (-z) to prevent disk bloat.
 
-* For COGs, GDAL will read overviews efficiently.
-* Use `-z` to cap zoom levels; deeper zooms explode disk usage.
+⸻
 
-### 2) Raster → PMTiles (single file)
+2) Raster → PMTiles (single file, portable)
 
-Using `rio pmtiles` (rasterio-pmtiles) or `cog2pmtiles`:
-
-```bash
-# rasterio-pmtiles (install: pip install pmtiles rio-pmtiles)
+# Requires rio-pmtiles (pip install pmtiles rio-pmtiles)
 rio pmtiles create \
-  data/processed/hillshade/ks_hillshade_2018_2020.tif \
-  data/tile/hillshade_2018_2020.pmtiles \
+  data/processed/dem/overlays/ks_1m_dem_2018_hillshade.tif \
+  data/tiles/hillshade_2018.pmtiles \
   --minzoom 5 --maxzoom 14
-```
 
-### 3) Vector (GeoJSON) → PBF (z/x/y) with tippecanoe
 
-```bash
+⸻
+
+3) Vector → MBTiles/PMTiles with Tippecanoe
+
 tippecanoe \
-  -o data/tile/roads_1930s.mbtiles \
+  -o data/tiles/railroads_1900.mbtiles \
   -zg -Z5 -B5 \
-  --coalesce --drop-densest-as-needed \
-  --layer=roads_1930s \
-  data/processed/vectors/roads_1930s.geojson
-```
+  --layer=railroads_1900 \
+  data/processed/vectors/ks_railroads.json
 
-Convert MBTiles → PMTiles (optional):
-
-```bash
-pmtiles convert data/tile/roads_1930s.mbtiles data/tile/roads_1930s.pmtiles
-```
+pmtiles convert data/tiles/railroads_1900.mbtiles data/tiles/railroads_1900.pmtiles
 
 Or export z/x/y:
 
-```bash
-mb-util --image_format=pbf data/tile/roads_1930s.mbtiles data/tile/roads_1930s/
-```
+mb-util --image_format=pbf data/tiles/railroads_1900.mbtiles data/tiles/railroads_1900/
 
----
 
-## Metadata & checksums
+⸻
 
-Even though this folder is ignored, you should still produce side metadata for provenance:
+Metadata & Provenance
 
-* `*_meta.json` alongside the source artifacts in `data/processed/**`
-* `*.sha256` for any published PMTiles/MBTiles (usually stored **outside** `data/tile/`)
+Even if tiles here are ignored, provenance must be preserved:
+	•	Create side metadata (*_meta.json) under processed sources.
+	•	Store checksums for published PMTiles in data/provenance/registry.json ￼.
 
 Example checksum:
 
-```bash
-sha256sum data/tile/roads_1930s.pmtiles > data/tile/roads_1930s.pmtiles.sha256
-```
+sha256sum data/tiles/railroads_1900.pmtiles > data/tiles/railroads_1900.pmtiles.sha256
 
-(For committed artifacts, move both files to your LFS-tracked path before committing.)
+When publishing, move .pmtiles + .sha256 to an LFS-tracked path.
 
----
+⸻
 
-## Serving locally
+Serving Locally
 
-### Static z/x/y directory
+Static z/x/y tiles
 
-Any static file server works:
+python -m http.server --directory data/tiles 8000
+# Access: http://localhost:8000/<layer>_{period}/{z}/{x}/{y}.png
 
-```bash
-python -m http.server --directory data/tile 8000
-# tiles at: http://localhost:8000/<layer>_<period>/{z}/{x}/{y}.png
-```
+PMTiles (preferred)
 
-### PMTiles (no server needed)
+MapLibre can read .pmtiles directly:
 
-MapLibre can read `.pmtiles` directly via the PMTiles plugin.
-
-```html
 <script src="https://unpkg.com/pmtiles@3/dist/pmtiles.js"></script>
 <script>
   const protocol = new pmtiles.Protocol();
   maplibregl.addProtocol("pmtiles", protocol.tile);
-  const url = "pmtiles://data/tile/roads_1930s.pmtiles";
 
-  map.addSource("roads", {
-    type: "vector",
-    url,                    // PMTiles vector source
+  map.addSource("hillshade", {
+    type: "raster",
+    tiles: ["pmtiles://data/tiles/hillshade_2018.pmtiles"],
+    tileSize: 256
   });
-  map.addLayer({
-    id: "roads-line",
-    type: "line",
-    source: "roads",
-    "source-layer": "roads_1930s",   // tippecanoe layer name
-    paint: { "line-width": 1.2 }
-  });
+  map.addLayer({ id: "hillshade", type: "raster", source: "hillshade" });
 </script>
-```
 
-For raster PMTiles:
 
-```javascript
-map.addSource("hillshade", {
-  type: "raster",
-  tiles: ["pmtiles://data/tile/hillshade_2018_2020.pmtiles"],
-  tileSize: 256
-});
-map.addLayer({ id: "hillshade", type: "raster", source: "hillshade", paint: { "raster-opacity": 0.75 }});
-```
+⸻
 
----
+Git / LFS Policy
+	•	data/tiles/** is ignored.
+	•	Committable artifacts → place in:
+	•	data/derivatives/tiles/*.pmtiles
+	•	web/tiles/*.pmtiles
 
-## Git/LFS policy
+.gitattributes routes *.pmtiles, *.mbtiles, *.pbf to Git LFS.
 
-* `data/tile/**` is **ignored** to keep the repo light and CI fast.
-* If you need to commit distributable single-file tiles, place them in an **LFS-tracked** path such as:
+⸻
 
-  * `data/derivatives/tiles/*.pmtiles` or
-  * `web/tiles/*.pmtiles`
-* `.gitattributes` already routes `*.pmtiles`, `*.mbtiles`, and `*.pbf` to **Git LFS**.
+Publishing
+	•	Web app → move .pmtiles to web/tiles/ and reference in MapLibre configs (pmtiles:// URLs).
+	•	GitHub Releases → attach .pmtiles + .sha256 as immutable assets.
+	•	Cloud storage (S3/GCS) → upload and reference with HTTPS URLs.
 
----
+STAC Items should include links to PMTiles artifacts as "roles": ["tiles"] ￼.
 
-## Publishing
+⸻
 
-* **GitHub Pages / web app**: move `.pmtiles` to `web/tiles/` (LFS) and reference with `pmtiles://` URLs in your MapLibre config.
-* **Releases**: attach `.pmtiles`/`.mbtiles` plus `*.sha256` to a GitHub Release for immutable distribution.
-* **Object storage (S3/GCS)**: upload and reference via `https://…/roads_1930s.pmtiles` (use `pmtiles://` custom protocol mapping if desired).
+Suggested Makefile Targets
 
----
-
-## Make targets (suggested)
-
-Add to your `Makefile`:
-
-```makefile
 tile-raster:
-\tgdal2tiles.py -z 5-14 -r bilinear -s EPSG:3857 -w none \\
-\t\tdata/processed/hillshade/ks_hillshade_2018_2020.tif \\
-\t\tdata/tile/hillshade_2018_2020
+\tgdal2tiles.py -z 5-14 -r bilinear -s EPSG:3857 -w none \
+\t\tdata/processed/dem/overlays/ks_1m_dem_2018_hillshade.tif \
+\t\tdata/tiles/hillshade_2018
 
 tile-vector:
-\ttippecanoe -o data/tile/roads_1930s.mbtiles -zg -Z5 -B5 --layer=roads_1930s \\
-\t\tdata/processed/vectors/roads_1930s.geojson
-\tpmtiles convert data/tile/roads_1930s.mbtiles data/tile/roads_1930s.pmtiles
+\ttippecanoe -o data/tiles/railroads_1900.mbtiles -zg -Z5 -B5 --layer=railroads_1900 \
+\t\tdata/processed/vectors/ks_railroads.json
+\tpmtiles convert data/tiles/railroads_1900.mbtiles data/tiles/railroads_1900.pmtiles
 
 tile-clean:
-\trm -rf data/tile/*
+\trm -rf data/tiles/*
 
 .PHONY: tile-raster tile-vector tile-clean
-```
+
+
+⸻
+
+Notes & Gotchas
+	•	Zoom levels → Keep Kansas-wide datasets ≤ z14 unless heavily simplified.
+	•	Vector consistency → Always set --layer name in Tippecanoe for stable MapLibre configs.
+	•	Reproducibility → STAC Items and provenance registry must point to the source dataset and link to the published .pmtiles.
+
+⸻
+
+✅ This folder is for temporary tile builds only.
+Final distributable tiles belong in data/derivatives/tiles/ or web/tiles/, tracked with LFS, linked in STAC, and referenced in the web viewer.
 
 ---
-
-### Notes & gotchas
-
-* Deep zoom levels (`z>=16`) grow fast; keep Kansas-wide layers to \~`z<=14` unless heavily generalized.
-* Prefer **PMTiles** for portability and easier hosting; keep raw z/x/y only for quick local checks.
-* Ensure vector layers declare a stable **layer name** (`--layer`) so your style JSONs remain consistent.
-
-```
-```
-
