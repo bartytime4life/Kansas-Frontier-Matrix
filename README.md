@@ -85,25 +85,25 @@ docker/      # reproducible containers
 
 ⸻
 
-📊 Coverage Status
+## 📊 Coverage Status
 
-Layer / Domain	Data Sources	Status
-🏔 DEM & Terrain	USGS LiDAR, KGS, 3DEP	✅ Complete
-🗺 Hillshade/Derivatives	LiDAR COGs → slope, aspect	✅ Complete
-🌊 Hydrology	NHD, Kansas River floods	🚧 In Progress
-🌱 Land Cover	NLCD 1992–2021	✅ Complete
-🧭 Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	🚧 In Progress
-🪶 Treaties & Lands	Boundary polygons	✅ Complete (expanding)
-🚂 Railroads & Trails	1850–1920 GIS	🚧 In Progress
-🗺 Historic Topos	USGS, UT PCL	✅ Complete
-🌡 Climate Normals	NOAA 1991–2020, Daymet	✅ Complete
-🌪 Hazards — Tornado	NOAA SPC 1950–2024	✅ Complete
-🌊 Hazards — Floods	FEMA, USGS	🚧 In Progress
-🔥 Hazards — Wildfire	NIFC, KS perimeter sets	🚧 In Progress
-🪨 Paleoclimate / Fire	NOAA cores, charcoal	🚧 In Progress
-🪶 Oral Histories & Arch.	Tribal narratives, archaeology	🚧 In Progress
-⛏ Geology / Core Samples	KGS drill cores	🚧 In Progress
-
+| Layer / Domain           | Data Sources                     | Status              |
+|---------------------------|----------------------------------|---------------------|
+| 🏔 DEM & Terrain          | USGS LiDAR, KGS, 3DEP            | ✅ Complete         |
+| 🗺 Hillshade/Derivatives  | LiDAR COGs → slope, aspect       | ✅ Complete         |
+| 🌊 Hydrology              | NHD, Kansas River floods         | 🚧 In Progress      |
+| 🌱 Land Cover             | NLCD 1992–2021                   | ✅ Complete         |
+| 🧭 Soils / PLSS / Parcels | NRCS SSURGO, KS GIS Hub          | 🚧 In Progress      |
+| 🪶 Treaties & Lands       | Boundary polygons                | ✅ Complete (expanding) |
+| 🚂 Railroads & Trails     | 1850–1920 GIS                    | 🚧 In Progress      |
+| 🗺 Historic Topos         | USGS, UT PCL                     | ✅ Complete         |
+| 🌡 Climate Normals        | NOAA 1991–2020, Daymet           | ✅ Complete         |
+| 🌪 Hazards — Tornado      | NOAA SPC 1950–2024               | ✅ Complete         |
+| 🌊 Hazards — Floods       | FEMA, USGS                       | 🚧 In Progress      |
+| 🔥 Hazards — Wildfire     | NIFC, KS perimeter sets          | 🚧 In Progress      |
+| 🪨 Paleoclimate / Fire    | NOAA cores, charcoal             | 🚧 In Progress      |
+| 🪶 Oral Histories & Arch. | Tribal narratives, archaeology   | 🚧 In Progress      |
+| ⛏ Geology / Core Samples  | KGS drill cores                  | 🚧 In Progress      |
 
 ⸻
 
