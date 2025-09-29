@@ -1,102 +1,121 @@
-# DEM Overlays — Kansas Frontier Matrix
+# Kansas-Frontier-Matrix — DEM Overlays
 
 This folder contains **derived overlays** generated from processed DEMs in `../`.  
-These products provide visual and analytical enhancements such as **hillshade**, **slope**, and **aspect**.  
-All overlays are reproducible, lightweight compared to the base DEM, and referenced in the STAC catalog
-(`data/stac/items/dem/*.json`) and web configs (`web/config/layers.json`).
+Overlays are lighter-weight derivatives that emphasize terrain characteristics and improve visualization.  
+They are reproducible from base DEMs and are referenced in:
+
+- **STAC catalog** → `data/stac/items/dem/*.json`  
+- **Web configs** → `web/config/layers.json`  
+- **KML exports** → `data/kml/` (Google Earth KMZ overlays)
 
 ---
 
 ## Typical Contents
 
-```
-
 data/processed/dem/overlays/
-ks_1m_dem_2018_hillshade.tif
-ks_1m_dem_2018_slope.tif
-ks_1m_dem_2018_aspect.tif
-ks_1m_dem_2020_hillshade.tif
-ks_1m_dem_2020_slope.tif
+├── ks_1m_dem_2018_hillshade.tif
+├── ks_1m_dem_2018_slope.tif
+├── ks_1m_dem_2018_aspect.tif
+├── ks_1m_dem_2020_hillshade.tif
+├── ks_1m_dem_2020_slope.tif
+└── ks_1m_dem_2020_aspect.tif
 
-````
+### Core overlay types
+- **Hillshade** → Simulated shaded relief (illumination from azimuth/elevation).  
+- **Slope** → Gradient of terrain in degrees or percent rise.  
+- **Aspect** → Compass orientation of slope (0–360°).  
 
-- **Hillshade** — Shaded relief (illumination simulation) for visualization.  
-- **Slope** — Gradient in degrees or percent rise.  
-- **Aspect** — Compass direction of slope.  
-- Other overlays (curvature, TPI, TRI) may be added later.
+### Optional / advanced overlays
+- **Curvature** → Slope concavity/convexity.  
+- **TRI / TPI** → Terrain Ruggedness / Topographic Position Index.  
+- **Roughness** → Local terrain variability.  
 
 ---
 
 ## Workflow
 
 1. **Source DEM**  
-   - Must exist in `data/processed/dem/` as a COG.  
+   - Must exist in `data/processed/dem/` as a **COG**.  
+   - Example: `ks_1m_dem_2018.tif`
 
 2. **Generate overlays** (via Makefile or GDAL):  
+
    - Hillshade:  
      ```bash
-     gdaldem hillshade ks_1m_dem_2018.tif ks_1m_dem_2018_hillshade.tif -compute_edges -co COMPRESS=LZW
+     gdaldem hillshade ks_1m_dem_2018.tif ks_1m_dem_2018_hillshade.tif \
+       -compute_edges -az 315 -alt 45 -co COMPRESS=LZW
      ```
+
    - Slope:  
      ```bash
-     gdaldem slope ks_1m_dem_2018.tif ks_1m_dem_2018_slope.tif -compute_edges -co COMPRESS=LZW
+     gdaldem slope ks_1m_dem_2018.tif ks_1m_dem_2018_slope.tif \
+       -compute_edges -co COMPRESS=LZW
      ```
+
    - Aspect:  
      ```bash
-     gdaldem aspect ks_1m_dem_2018.tif ks_1m_dem_2018_aspect.tif -compute_edges -co COMPRESS=LZW
+     gdaldem aspect ks_1m_dem_2018.tif ks_1m_dem_2018_aspect.tif \
+       -compute_edges -co COMPRESS=LZW
      ```
 
-3. **Convert to COG** (if not already):  
+3. **Convert to COG** (if not written directly as one):  
    ```bash
-   rio cogeo create ks_1m_dem_2018_hillshade.tif ks_1m_dem_2018_hillshade.tif --web-optimized
-````
+   rio cogeo create ks_1m_dem_2018_hillshade.tif \
+     ks_1m_dem_2018_hillshade.tif --web-optimized
 
-4. **Store here** under `data/processed/dem/overlays/`.
+	4.	Store outputs here (data/processed/dem/overlays/).
+	5.	Generate checksums for provenance:
 
-5. **Checksum**:
+scripts/gen_sha256.sh data/processed/dem/overlays/*.tif
 
-   ```bash
-   scripts/gen_sha256.sh data/processed/dem/overlays/*.tif
-   ```
 
-6. **STAC Update**:
+	6.	Update STAC Item for the parent DEM (data/stac/items/dem/ks_1m_dem_2018.json):
 
-   * Add `assets` entries to the corresponding DEM STAC Item (`data/stac/items/dem/ks_1m_dem_2018.json`)
-   * Example:
+"assets": {
+  "dem": {
+    "href": "../../../processed/dem/ks_1m_dem_2018.tif",
+    "roles": ["data"]
+  },
+  "hillshade": {
+    "href": "../../../processed/dem/overlays/ks_1m_dem_2018_hillshade.tif",
+    "title": "DEM Hillshade Overlay (2018)",
+    "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+    "roles": ["visual"],
+    "checksum:sha256": "<sha256sum>"
+  }
+}
 
-     ```json
-     "hillshade": {
-       "href": "../../../processed/dem/overlays/ks_1m_dem_2018_hillshade.tif",
-       "title": "DEM Hillshade Overlay (2018)",
-       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-       "roles": ["visual"],
-       "checksum:sha256": "<sha256sum>"
-     }
-     ```
+
+
+⸻
+
+Integration
+	•	Web Viewer → Overlays referenced in web/data/dem_layers.json and validated against web/config/layers.schema.json.
+	•	Google Earth (KML/KMZ) → Exported from overlays into data/kml/ for use in Earth desktop and web ￼.
+	•	Experiments → Inputs for archaeological site modeling, hydrology analysis, floodplain mapping, and erosion studies ￼.
+	•	STAC → All overlays attached to parent DEM Items for discoverability and reproducibility ￼.
+
+⸻
+
+Notes
+	•	Naming convention → <dem_id>_<overlay>.tif
+	•	Example: ks_1m_dem_2018_hillshade.tif
+	•	Compression → Use LZW or DEFLATE for smaller file sizes.
+	•	Storage → Track with Git LFS or DVC for large files.
+	•	MCP reproducibility → Never hand-edit overlays; regenerate from DEMs with documented parameters.
+	•	Consistency → Overlays must always be linked in STAC and web configs.
+
+⸻
+
+See Also
+	•	../ → Base processed DEMs.
+	•	../vectors/ → Contours and terrain vectorizations.
+	•	data/kml/ → Google Earth–ready KMZ exports of hillshade and other styled rasters.
+	•	data/stac/items/dem/ → STAC Items documenting DEMs and overlays.
+	•	experiments/ → MCP logs and configs for DEM processing.
+
+⸻
+
+✅ This directory ensures DEM overlays are optimized, reproducible, and linked across STAC, Makefile workflows, web maps, and Earth/KML exports.
 
 ---
-
-## Integration
-
-* **Web Viewer**:
-  Overlays are referenced in `web/config/layers.json` for dynamic toggle in MapLibre.
-* **Experiments**:
-  Used in terrain analysis, archaeological site modeling, and hydrological reconstruction.
-* **Reproducibility**:
-  Always regenerate overlays from DEMs — never edit them manually.
-
----
-
-## Notes
-
-* File naming convention: `<dem_id>_<overlay>.tif`
-  e.g., `ks_1m_dem_2018_hillshade.tif`
-* Keep outputs compressed (LZW/DEFLATE).
-* Track with **Git LFS or DVC** if file size >5 MB.
-* Always include overlays in STAC Items to maintain discoverability.
-
----
-
-✅ This directory ensures DEM overlays are **optimized, versioned, and linked** to both the STAC catalog and the web map for consistent visualization and analysis.
-
-```
