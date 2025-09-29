@@ -1,18 +1,192 @@
+# docker/compose.yml
+# Kansas-Frontier-Matrix — Dev & Services Stack (profile-driven)
+# Usage examples:
+#   docker compose -f docker/compose.yml up -d
+#   docker compose -f docker/compose.yml --profile db --profile storage up -d
+#   docker compose -f docker/compose.yml --profile web up -d
+#
+# Notes:
+# - Profiles: "db" (PostGIS + pgAdmin), "storage" (MinIO + bootstrap), "web" (Caddy + PMTiles)
+# - The main dev container mounts the repo and includes GDAL tools via your Dockerfile.
+# - Honors .env values when present (POSTGRES_*, MINIO_*, etc.). Safe fallbacks below.
+
+name: kansas-frontier-matrix
+
 services:
   kfm:
     build:
       context: ..
       dockerfile: Dockerfile
       args:
-        # override if needed, or delete
-        GDAL_IMAGE: ghcr.io/osgeo/gdal:ubuntu-small-latest
+        # Override in .env if your Dockerfile supports it; otherwise this is ignored safely.
+        GDAL_IMAGE: ${GDAL_IMAGE:-ghcr.io/osgeo/gdal:ubuntu-small-latest}
     image: kfm:dev
     working_dir: /workspace
-    volumes:
-      - ../:/workspace
+    user: "${UID:-1000}:${GID:-1000}"   # keeps file ownership sane on host
     tty: true
+    stdin_open: true
     environment:
-      # optional hydrology vars; set here or pass at runtime
-      KSRIV_CHANNELS: ""
-      KSRIV_FLOODPLAIN: ""
-      KSRIV_GAUGES: ""
+      # Base dev ergonomics
+      PYTHONDONTWRITEBYTECODE: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_CACHE_DIR: /home/dev/.cache/pip
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      # Project toggles
+      KFM_ENV: ${KFM_ENV:-dev}
+      KFM_DATA_ROOT: ${KFM_DATA_ROOT:-/workspace/data}
+      KFM_STAC_ROOT: ${KFM_STAC_ROOT:-/workspace/stac}
+      # Optional hydrology vars (override or set at runtime)
+      KSRIV_CHANNELS: "${KSRIV_CHANNELS:-}"
+      KSRIV_FLOODPLAIN: "${KSRIV_FLOODPLAIN:-}"
+      KSRIV_GAUGES: "${KSRIV_GAUGES:-}"
+      # Database connection hints (used by scripts; db service is optional)
+      PGHOST: ${PGHOST:-db}
+      PGPORT: ${PGPORT:-5432}
+      PGDATABASE: ${PGDATABASE:-kfm}
+      PGUSER: ${PGUSER:-kfm}
+      PGPASSWORD: ${PGPASSWORD:-kfm}
+      # MinIO / S3-compatible endpoint (optional)
+      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL:-http://minio:9000}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-kfm}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-kfm-secret}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
+    volumes:
+      - ../:/workspace:cached
+      - pip-cache:/home/dev/.cache/pip
+      - npm-cache:/home/dev/.npm
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    # Start a long-lived shell by default so `docker exec -it` works cleanly
+    command: /bin/bash -lc "echo 'KFM dev ready'; tail -f /dev/null"
+    healthcheck:
+      test: ["CMD-SHELL", "gdalinfo --version >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  # -----------------------
+  # Optional: Database tier
+  # -----------------------
+  db:
+    profiles: ["db"]
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ${PGDATABASE:-kfm}
+      POSTGRES_USER: ${PGUSER:-kfm}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-kfm}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${PGPORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-kfm} -d ${PGDATABASE:-kfm} -h 127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  pgadmin:
+    profiles: ["db"]
+    image: dpage/pgadmin4:8
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True"
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "10"
+    ports:
+      - "${PGADMIN_PORT:-8081}:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  # -----------------------
+  # Optional: Object store
+  # -----------------------
+  minio:
+    profiles: ["storage"]
+    image: quay.io/minio/minio:RELEASE.2025-01-20T00-00-00Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID:-kfm}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY:-kfm-secret}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    healthcheck:
+      test: ["CMD-SHELL", "mc alias set local http://127.0.0.1:9000 ${AWS_ACCESS_KEY_ID:-kfm} ${AWS_SECRET_ACCESS_KEY:-kfm-secret} >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  minio-bootstrap:
+    profiles: ["storage"]
+    image: quay.io/minio/mc:RELEASE.2025-01-20T00-00-00Z
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+      mc alias set local http://minio:9000 ${AWS_ACCESS_KEY_ID:-kfm} ${AWS_SECRET_ACCESS_KEY:-kfm-secret} &&
+      mc mb -p local/kfm || true &&
+      mc mb -p local/kfm/cogs || true &&
+      mc mb -p local/kfm/tiles || true &&
+      mc anonymous set download local/kfm/tiles || true &&
+      echo 'MinIO buckets ready'
+      "
+    restart: "no"
+
+  # -----------------------
+  # Optional: Web serving
+  # -----------------------
+  web:
+    profiles: ["web"]
+    image: caddy:2-alpine
+    depends_on:
+      - kfm
+    environment:
+      CADDY_ADMIN: "0.0.0.0:2019"
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      # Serve the built site (e.g., _site/) and optionally data/ for quick local testing
+      - ../_site:/srv
+      - ../data:/srv/data:ro
+      - ./web/Caddyfile:/etc/caddy/Caddyfile:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/ || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  pmtiles:
+    profiles: ["web"]
+    image: ghcr.io/protomaps/pmtiles:latest
+    # Serves PMTiles over HTTP; mount your tiles directory below.
+    command: ["serve", "--host=0.0.0.0", "/tiles"]
+    volumes:
+      - ../data/tiles:/tiles:ro
+    ports:
+      - "${PMTILES_PORT:-8082}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/ || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  pgdata:
+  pgadmin-data:
+  minio-data:
+  pip-cache:
+  npm-cache:
