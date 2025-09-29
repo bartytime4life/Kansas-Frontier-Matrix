@@ -7,14 +7,14 @@ Keep **architecture, design, and extension guides** close to the codebase so the
 
 ## Index of documents
 
-| File                | Status     | Purpose                                                                                |
-|---------------------|------------|----------------------------------------------------------------------------------------|
-| `ARCHITECTURE.md`   | ✅ current | High-level app flow, runtime data paths, and directory layout                          |
-| `STYLE_GUIDE.md`    | ✅ current | CSS tokens & theming, responsive rules, JS conventions, JSON config rules              |
-| `DEVELOPER_GUIDE.md`| 🚧 planned | How `app.js` loads/merges configs, timeline filtering, adding new layer types          |
-| `UI_DESIGN.md`      | 🚧 planned | Sidebar/timeline patterns, light/dark/sepia themes, wireframes & states                |
-| `CONTRIBUTING.md`   | ✅ current | How to propose changes, run local checks, pass CI                                      |
-| `CHANGELOG.md`      | ✅ current | User-visible changes to the web app and docs                                           |
+| File                 | Status     | Purpose                                                                |
+|----------------------|------------|------------------------------------------------------------------------|
+| `ARCHITECTURE.md`    | ✅ current | High-level app flow, runtime data paths, and directory layout           |
+| `STYLE_GUIDE.md`     | ✅ current | CSS tokens & theming, responsive rules, JS conventions, JSON config     |
+| `DEVELOPER_GUIDE.md` | 🚧 planned | How `app.js` loads configs, timeline filtering, adding new layer types  |
+| `UI_DESIGN.md`       | 🚧 planned | Sidebar/timeline patterns, theming, wireframes & states                 |
+| `CONTRIBUTING.md`    | ✅ current | How to propose changes, run local checks, pass CI                       |
+| `CHANGELOG.md`       | ✅ current | User-visible changes to the web app and docs                            |
 
 > Keep docs **small and focused**. Cross-link with **relative paths** into `web/` (e.g., `../index.html`, `../styles/`).
 
@@ -25,43 +25,46 @@ Keep **architecture, design, and extension guides** close to the codebase so the
 ~~~mermaid
 flowchart TD
   A["STAC & Sources\n(stac/items/**)"] --> B["Config Build\n(make site-config)"]
-  B --> C["Viewer Config\n(web/config.app.config.json)"]
+  B --> C["Viewer Config\n(web/config/app.config.json)"]
   C --> D["Runtime\n(web/index.html + app.js)"]
   D --> E["MapLibre\n(sources/layers)"]
   D --> F["UI\n(sidebar, legend, time slider)"]
 ~~~
 
-<hr>
+---
 
-	•	Authoritative config: web/config/app.config.json (generated) → first choice at runtime.
-	•	Fallbacks: web/config/viewer.json, web/config/layers.json, web/layers.json.
-	•	Styles & tokens: web/styles/ (light/dark themes, z-index, focus rings).
-	•	Docs: this folder explains the above so contributors ship changes that pass CI and don’t break the viewer.
+- **Authoritative config** → `web/config/app.config.json` (generated) is first choice at runtime  
+- **Fallbacks** → `web/config/viewer.json`, `web/config/layers.json`, `web/layers.json`  
+- **Styles & tokens** → `web/styles/` (light/dark themes, z-index, focus rings)  
+- **Docs** → this folder explains the above so contributors ship changes that **pass CI** and don’t break the viewer  
 
-⸻
+---
 
-Authoring standards (applies to all docs here)
-	•	Headings: start at # per file; no skipped levels.
-	•	Code fences: must be closed; use language hints (bash, json, js, html, mermaid).
-	•	Line-length: keep paragraphs concise; lists and tables are preferred over long prose.
-	•	Links: use relative paths within the repo; avoid hard-coding external URLs when an internal reference exists.
-	•	Mermaid: validate in GitHub preview; quote labels containing punctuation and use \n for line breaks.
-	•	Examples: mirror actual keys used by the app (camelCase for style options, ISO-8601 dates).
+## Authoring standards
 
-⸻
+- Headings: start at `#` per file; no skipped levels  
+- Code fences: must be closed; use language hints (`bash`, `json`, `js`, `html`, `mermaid`)  
+- Paragraphs: keep concise; prefer lists/tables for structure  
+- Links: use relative paths within the repo  
+- Mermaid: validate in GitHub preview; quote labels with punctuation and use `\n` for line breaks  
+- Examples: mirror actual keys used by the app (camelCase for style, ISO-8601 dates)  
 
-Quick pointers (what goes where)
-	•	Add a layer? Document it in DEVELOPER_GUIDE.md with a minimal JSON example, then ensure STYLE_GUIDE.md covers any new tokens (e.g., --treaty-fill).
-	•	New UI pattern? Specify placement & states in UI_DESIGN.md, and reference any CSS tokens.
-	•	Architectural change? Update ARCHITECTURE.md plus the Mermaid flow if build or runtime load order changes.
-	•	Breaking change? Note in CHANGELOG.md and reference commit/PR.
+---
 
-⸻
+## Quick pointers
 
-Minimal contracts to reference while writing docs
+- **Add a layer?** → Document in `DEVELOPER_GUIDE.md` with JSON example, update `STYLE_GUIDE.md` for tokens  
+- **New UI pattern?** → Specify placement in `UI_DESIGN.md`, reference CSS tokens  
+- **Architectural change?** → Update `ARCHITECTURE.md` and the Mermaid flow  
+- **Breaking change?** → Note in `CHANGELOG.md` and reference commit/PR  
 
-Viewer config (top-level excerpt)
+---
 
+## Minimal contracts
+
+### Viewer config (top-level excerpt)
+
+```json
 {
   "version": "1.4.0",
   "title": "Kansas-Frontier-Matrix",
@@ -74,7 +77,7 @@ Viewer config (top-level excerpt)
   "layers": []
 }
 
-Layer snippet (raster vs. GeoJSON)
+Layer snippet (raster)
 
 {
   "id": "usgs_topo_1894_larned",
@@ -86,6 +89,8 @@ Layer snippet (raster vs. GeoJSON)
   "category": "historical",
   "time": { "start": "1894-01-01", "end": "1894-12-31" }
 }
+
+Layer snippet (GeoJSON)
 
 {
   "id": "ks_settlements",
@@ -123,21 +128,22 @@ ajv validate -s web/config/layers.schema.json      -d web/config/layers.json
 
 ⸻
 
-Contribution workflow (docs)
-	1.	Branch from main, commit small, focused changes.
-	2.	Run local checks (Mermaid previews, JSON examples are syntactically valid).
-	3.	Open PR with a short summary and links to affected files (include screenshots if visual).
-	4.	Pass CI (schema validation, link checks where applicable).
-	5.	Update CHANGELOG.md when user-visible.
+Contribution workflow
+	1.	Branch from main, commit small, focused changes
+	2.	Run local checks (Mermaid previews, JSON validity)
+	3.	Open PR with summary and links (screenshots if visual)
+	4.	Pass CI (schema validation, link checks)
+	5.	Update CHANGELOG.md for user-visible changes
 
 ⸻
 
-FAQ (docs-specific)
-	•	Where do we document design tokens? STYLE_GUIDE.md with references to ../styles/base.css.
-	•	Where do we explain timeline filtering logic? DEVELOPER_GUIDE.md (runtime) + ARCHITECTURE.md (flow).
-	•	Where do we put mockups? UI_DESIGN.md with image assets under web/assets/ (keep file sizes small).
+FAQ
+	•	Design tokens? → STYLE_GUIDE.md with references to ../styles/base.css
+	•	Timeline filtering logic? → DEVELOPER_GUIDE.md (runtime) + ARCHITECTURE.md (flow)
+	•	Mockups? → UI_DESIGN.md with image assets under web/assets/
 
 ⸻
 
-✅ Following this structure keeps the web UI maintainable, accessible, and easy to extend for new Kansas layers and stories.
+✅ This structure keeps the web UI maintainable, accessible, and easy to extend for new Kansas layers and stories.
 
+---
