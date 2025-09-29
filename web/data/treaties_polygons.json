@@ -1,27 +1,31 @@
 {
   "type": "FeatureCollection",
   "name": "treaties_polygons",
+  "bbox": [-96.55, 38.85, -94.95, 39.60],
 
   "kfm_meta": {
     "generated": "2025-09-26T00:00:00Z",
-    "schema_version": "1.0",
-    "description": "Treaty/Reservation polygons for Kansas (demo geometries for wiring & UI tests). Replace with authoritative boundaries.",
+    "schema_version": "1.1",
+    "description": "Treaty / Reservation polygons for Kansas (DEMO geometries for wiring & UI tests). Replace with authoritative boundaries when ready.",
+    "coordinate_reference": "WGS84 (EPSG:4326)",
+    "license": "CC BY 4.0",
     "properties_schema": {
       "name": "Reservation or treaty area name",
       "tribe": "Primary tribal nation(s) associated",
       "year": "ISO date (YYYY-MM-DD) — start/effective date",
       "year_end": "ISO date (YYYY-MM-DD) — end/cessation date",
+      "time_start": "Duplicate of start date as YYYY-MM-DD (timeline helper)",
+      "time_end": "Duplicate of end date as YYYY-MM-DD (timeline helper)",
       "source": "Data provenance / citation",
-      "notes": "Free text notes",
       "url": "Reference URL",
+      "notes": "Free text notes",
       "accuracy": "authoritative | approximate | illustrative",
-      "treaty_id": "Stable identifier (optional)"
+      "treaty_id": "Stable identifier"
     },
     "defaults": {
       "year": "1800-01-01",
       "year_end": "1900-12-31"
-    },
-    "license": "CC BY 4.0 (adjust as needed)"
+    }
   },
 
   "features": [
@@ -33,9 +37,11 @@
         "tribe": "Kansa (Kaw)",
         "year": "1846-01-01",
         "year_end": "1873-12-31",
+        "time_start": "1846-01-01",
+        "time_end": "1873-12-31",
         "source": "Kansas Historical Society; NPS (placeholder)",
-        "notes": "Illustrative rectangle near the Kansas River corridor. Replace with surveyed boundary.",
         "url": "https://www.kshs.org/",
+        "notes": "Illustrative rectangle near the Kansas River corridor. Replace with surveyed boundary.",
         "accuracy": "illustrative",
         "treaty_id": "KAW_1846_DEMO"
       },
@@ -59,9 +65,11 @@
         "tribe": "Shawnee",
         "year": "1854-05-10",
         "year_end": "1869-12-31",
+        "time_start": "1854-05-10",
+        "time_end": "1869-12-31",
         "source": "Territorial records; KHS (placeholder)",
-        "notes": "Illustrative polygon south of Kansas River. Replace with authoritative tract lines.",
         "url": "https://www.kshs.org/",
+        "notes": "Illustrative polygon south of the Kansas River. Replace with authoritative tract lines.",
         "accuracy": "illustrative",
         "treaty_id": "SHA_1854_DEMO"
       },
@@ -85,9 +93,11 @@
         "tribe": "Potawatomi Nation",
         "year": "1846-01-01",
         "year_end": "1871-12-31",
+        "time_start": "1846-01-01",
+        "time_end": "1871-12-31",
         "source": "Treaty-era records; NPS/KHS (placeholder)",
-        "notes": "Illustrative polygon north of Topeka corridor. Replace with surveyed boundary.",
         "url": "https://www.nps.gov/",
+        "notes": "Illustrative polygon north of the Topeka corridor. Replace with surveyed boundary.",
         "accuracy": "illustrative",
         "treaty_id": "POT_1846_DEMO"
       },
