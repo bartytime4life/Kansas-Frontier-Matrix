@@ -1,27 +1,34 @@
-# Kansas-Frontier-Matrix — Hydrology & Water Resources Sources
 
-This directory catalogs **hydrological datasets** for Kansas.  
-Layers include rivers, streams, lakes, wetlands, aquifers, and water-quality records.  
-These datasets are essential for analyzing **settlement patterns, hazards (floods/droughts),  
-and environmental change** across time.
+<div align="center">
 
----
+# 💧 Kansas-Frontier-Matrix — Hydrology & Water Resources Sources
 
-## Purpose
+**Mission:** catalog Kansas hydrological datasets so they are  
+**traceable, reproducible, and discoverable** in the STAC catalog,  
+and linked into the Frontier-Matrix **timeline + knowledge graph**.
 
-- Represent **surface water networks** (streams, rivers, reservoirs, wetlands).  
-- Integrate **groundwater and aquifer extents** (High Plains/Ogallala, Equus Beds, etc.).  
-- Link hydrology to **historical events** (floods, irrigation projects, treaties).  
-- Provide **baseline water-quality and monitoring data** (KDHE, USGS).  
-- Enable **time-aware visualization** (pre-dam vs. post-dam river courses, floodplains).  
-- Connect water data to **hazards** (floods, droughts, HABs) and **land use change**.
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Directory Layout
+## 🎯 Purpose
 
-```
+- Represent **surface water networks** (streams, rivers, reservoirs, wetlands)  
+- Integrate **groundwater and aquifer extents** (High Plains/Ogallala, Equus Beds, etc.)  
+- Link hydrology to **historical events** (floods, irrigation projects, treaties)  
+- Provide **baseline water-quality and monitoring data** (KDHE, USGS)  
+- Enable **time-aware visualization** (pre-dam vs. post-dam courses, floodplains)  
+- Connect water data to **hazards** (floods, droughts, HABs) and **land-use change**  
 
+---
+
+## 📂 Directory Layout
+
+```text
 data/sources/hydro/
 ├── rivers_streams.json       # NHD flowlines & waterbody polygons
 ├── lakes_reservoirs.json     # USACE & KDHE reservoirs/lakes
@@ -33,20 +40,17 @@ data/sources/hydro/
 ├── vectors/                  # Processed shapefiles/GeoJSON layers
 └── README.md                 # This file
 
-````
+Note: Raw shapefiles & rasters → data/raw/hydro/ (ignored).
+Processed outputs → data/processed/hydro/ (LFS).
+Only descriptors, checksums, metadata live here.
 
-> **Note:** Large shapefiles and rasters live in `data/raw/hydro/` (ignored).  
-> Only JSON descriptors, checksums, and metadata are tracked here.  
-> Processed outputs (`data/processed/hydro/**`) are in Git LFS.
+⸻
 
----
+📑 Descriptor Schema
 
-## Metadata Schema
+Each dataset config must follow the
+KFM Source Descriptor schema (data/sources/schema.source.json).
 
-Each dataset config must follow the  
-**KFM Source Descriptor schema** (`data/sources/schema.source.json`). Example:
-
-```json
 {
   "id": "rivers_streams",
   "title": "Kansas Rivers and Streams (NHD Subset)",
@@ -67,86 +71,99 @@ Each dataset config must follow the
   },
   "keywords": ["hydrology", "rivers", "streams", "Kansas"]
 }
-````
 
-**Rules:**
+Key Rules
+	•	bbox → EPSG:4326 (WGS84 lon/lat)
+	•	period → explicit (YYYY, YYYY-YYYY, 1930s, or current)
+	•	Always include license + provenance
+	•	urls[] → multiple services/endpoints as needed
 
-* `bbox` always in EPSG:4326 (WGS84 lon/lat).
-* `period` should be explicit (`YYYY`, `YYYY-YYYY`, `1930s`, or `current`).
-* Always include `license` and `provenance`.
-* `urls[]` may list multiple services, e.g. one per HUC or county.
+⸻
+
+🌍 Recommended Hydrology Sources
+
+Surface Water
+	•	USGS National Hydrography Dataset (NHD) — rivers, streams, lakes
+	•	USFWS National Wetlands Inventory (NWI) — wetlands polygons
+	•	USACE & KDHE Reservoir Data — major dams/lakes (Tuttle Creek, Cheney, Milford, etc.)
+	•	FEMA Flood Insurance Rate Maps (FIRM) — historical & modeled floodplains
+
+Groundwater
+	•	USGS/KGS Aquifer Extents (Ogallala, Equus Beds, Great Bend Prairie)
+	•	KGS Groundwater-Level Monitoring Wells (time series)
+	•	DWR/USGS Water Use Reports (irrigation, municipal, industrial)
+
+Water Quality
+	•	KDHE Surface Water Monitoring Program — 327 stream stations, 175 lakes
+	•	EPA/STORET Water Quality Portal — chemistry, nutrients, HABs
+
+⸻
+
+🔗 Integration Notes
+	•	Timeline-aware: reservoir construction, channel modifications
+	•	Flood history: 1903, 1951, 1993 Kansas River floods → linked to hazards (NOAA/FEMA)
+	•	Aquifer depletion: Ogallala decline post-1950 → irrigation expansion
+	•	Cross-domain links:
+	•	Hazards (Event: floods, droughts)
+	•	Settlements (Place: towns along rivers)
+	•	Documents (USACE reports, KDHE advisories)
+
+⸻
+
+✅ Best Practices
+	•	Store raw shapefiles/GeoDBs in data/raw/
+	•	Store processed GeoJSON/COGs in data/processed/hydro/ (LFS)
+	•	Update .sha256 checksums + retrieved date on refresh
+	•	Normalize CRS → EPSG:4326 for viewer; record original CRS in _meta.json
+	•	Automate with:
+
+make fetch hydro
+make vectors
+make stac
+
+
+	•	Add confidence flags for incomplete datasets (e.g. wells with short records)
+
+⸻
+
+🔍 Debugging & Validation
+
+make validate-sources   # schema validation
+make fetch              # pull raw data
+make vectors            # shapefile → GeoJSON
+make stac               # rebuild STAC items
+make validate-stac      # STAC 1.0.0 compliance
+make checksums          # refresh integrity sidecars
+
+
+⸻
+
+📊 Data Lifecycle
+
+flowchart TD
+  S[Hydrology Descriptors\n(data/sources/hydro/*.json)] -->|fetch| R[Raw Data\n(data/raw/hydro/)]
+  R -->|convert| P[Processed GeoJSON/COGs\n(data/processed/hydro/)]
+  P -->|index| C[STAC Items & Collections\n(stac/)]
+  C -->|link| G[Knowledge Graph\n(Neo4j + Ontologies)]
+  G --> V[MapLibre Web Viewer\n+ Timeline UI]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📚 References
+	•	USGS National Hydrography Dataset
+	•	Kansas GIS Data Portal – Hydrology
+	•	Kansas Geological Survey – Groundwater Data
+	•	KDHE Water Quality Monitoring Strategy 2019–2028
+	•	FEMA Flood Insurance Maps
+
+⸻
+
+✦ Summary
+data/sources/hydro/ defines descriptors for Kansas hydrology datasets — rivers, lakes, wetlands, aquifers, and water quality.
+They ensure water resources are auditable, timeline-aware, and cross-linked into the STAC catalog, hazards layers, and the Frontier-Matrix knowledge graph.
 
 ---
-
-## Recommended Hydrology Sources
-
-### Surface Water
-
-* USGS **National Hydrography Dataset (NHD)** — rivers, streams, lakes.
-* USFWS **National Wetlands Inventory (NWI)** — wetlands polygons.
-* USACE & KDHE **Reservoir Data** — major dams/lakes (Tuttle Creek, Cheney, Milford, etc.).
-* FEMA **Flood Insurance Rate Maps (FIRM)** — historical + modeled floodplains.
-
-### Groundwater
-
-* USGS/KGS **Aquifer Extents** (Ogallala, Equus Beds, Great Bend Prairie).
-* KGS **Groundwater-Level Monitoring Wells** (time series).
-* DWR/USGS **Water Use Reports** (irrigation, municipal, industrial).
-
-### Water Quality
-
-* KDHE **Surface Water Monitoring Program** — 327 stream stations, 175 lakes.
-* EPA/STORET **Water Quality Portal** — chemistry, nutrients, HABs.
-
----
-
-## Integration Notes
-
-* **Timeline-aware**: annotate reservoir construction and channel modifications.
-* **Flood history**: link 1903, 1951, 1993 Kansas River floods to hazard datasets (NOAA/FEMA).
-* **Aquifer depletion**: tie groundwater decline (post-1950 Ogallala) to irrigation expansion.
-* **Cross-domain links**:
-
-  * Hazards (`Event`: floods, droughts).
-  * Settlements (`Place`: towns along rivers).
-  * Documents (USACE reports, KDHE advisories).
-
----
-
-## Best Practices
-
-* Keep **raw shapefiles/GeoDBs** in `data/raw/` (ignored by git).
-* Store **processed GeoJSON/COGs** in `data/processed/hydro/` (LFS).
-* Update **checksums (`*.sha256`)** and **fetch dates** when refreshing data.
-* Normalize to **EPSG:4326** for viewer; record original CRS in `_meta.json`.
-* Use `make fetch hydro`, `make vectors`, and `make stac` for automation.
-* Add `confidence` flags for incomplete datasets (e.g., wells with short records).
-
----
-
-## Debugging & Validation
-
-* `make validate-sources` → schema validation.
-* `make fetch` → pulls shapefiles/GeoDBs.
-* `make vectors` → converts to GeoJSON.
-* `make stac` → rebuilds STAC Items for rivers, aquifers, etc.
-* `make validate-stac` → ensures STAC compliance.
-* `make checksums` → refresh integrity sidecars.
-
----
-
-## References
-
-* [USGS National Hydrography Dataset](https://www.usgs.gov/national-hydrography)
-* [Kansas GIS Data Portal – Hydrology Layers](https://hub.kansasgis.org/)
-* [Kansas Geological Survey – Groundwater Data](https://www.kgs.ku.edu/)
-* [KDHE Water Quality Monitoring Strategy 2019–2028](https://www.kdhe.ks.gov/)
-* [FEMA Flood Insurance Maps](https://msc.fema.gov/portal/home)
-
----
-
-✦ **Summary:**
-`data/sources/hydro/` contains descriptors for Kansas hydrology datasets — rivers, lakes, wetlands, aquifers, and water quality.
-They ensure water resources are **traceable**, **timeline-aware**, and linked into the STAC catalog, hazards layers, and the Kansas-Frontier-Matrix knowledge graph.
-
-```
