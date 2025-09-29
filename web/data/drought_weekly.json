@@ -1,125 +1,159 @@
 {
-  "type": "FeatureCollection",
-  "name": "drought_weekly",
-  "generated": "2025-09-26T00:00:00Z",
-  "attribution": "USDM — NOAA / USDA / NDMC",
-  "license": "Public Domain / US Government data",
-  "provenance": {
-    "source": "US Drought Monitor weekly polygons (sample for wiring; replace with official export)",
-    "notes": "Polygons simplified as rectangles within Kansas for QA; categories/colors follow standard USDM ramp"
+  "id": "drought_weekly",
+  "title": "US Drought Monitor — Weekly (KS)",
+  "type": "vector",
+  "format": "geojson",
+  "data": "web/data/drought_weekly.json",
+  "category": "hazards",
+
+  "version": "1.2",
+  "generated": "2025-09-28T00:00:00Z",
+
+  "time": { "start": "2000-01-01", "end": null },
+  "timeProperty": { "start": "week", "end": null, "format": "date" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
+  "visible": false,
+  "opacity": 0.85,
+
+  "popup": ["week", "category", "dm", "area_km2"],
+
+  "legend": {
+    "type": "fill",
+    "label": "USDM Category",
+    "classes": [
+      { "label": "D4 Exceptional", "fill": "#BD0026", "stroke": "#7F001A" },
+      { "label": "D3 Extreme",     "fill": "#F03B20", "stroke": "#B02916" },
+      { "label": "D2 Severe",      "fill": "#FEB24C", "stroke": "#B77D35" },
+      { "label": "D1 Moderate",    "fill": "#FED976", "stroke": "#B79A50" },
+      { "label": "D0 Abnormally Dry", "fill": "#FFEDA0", "stroke": "#B7AE6B" }
+    ],
+    "notes": "Color ramp follows common USDM palette."
   },
+
+  "style": {
+    "renderer": "sublayers",
+
+    /* Draw high-severity (D4) last so it sits on top of D0–D3. */
+    "sublayers": [
+      {
+        "id": "usdm_d0",
+        "filter": { "any": [{ "category": "D0" }, { "dm": 0 }] },
+        "fillColor": "#FFEDA0",
+        "fillOpacityByZoom": [
+          { "zoom": 5, "opacity": 0.35 },
+          { "zoom": 8, "opacity": 0.45 },
+          { "zoom": 10, "opacity": 0.55 }
+        ],
+        "lineColor": "#B7AE6B",
+        "lineWidth": 0.5,
+        "lineJoin": "round"
+      },
+      {
+        "id": "usdm_d1",
+        "filter": { "any": [{ "category": "D1" }, { "dm": 1 }] },
+        "fillColor": "#FED976",
+        "fillOpacity": 0.5,
+        "lineColor": "#B79A50",
+        "lineWidth": 0.6,
+        "lineJoin": "round"
+      },
+      {
+        "id": "usdm_d2",
+        "filter": { "any": [{ "category": "D2" }, { "dm": 2 }] },
+        "fillColor": "#FEB24C",
+        "fillOpacity": 0.55,
+        "lineColor": "#B77D35",
+        "lineWidth": 0.7,
+        "lineJoin": "round"
+      },
+      {
+        "id": "usdm_d3",
+        "filter": { "any": [{ "category": "D3" }, { "dm": 3 }] },
+        "fillColor": "#F03B20",
+        "fillOpacity": 0.6,
+        "lineColor": "#B02916",
+        "lineWidth": 0.8,
+        "lineJoin": "round"
+      },
+      {
+        "id": "usdm_d4",
+        "filter": { "any": [{ "category": "D4" }, { "dm": 4 }] },
+        "fillColor": "#BD0026",
+        "fillOpacity": 0.65,
+        "lineColor": "#7F001A",
+        "lineWidth": 0.9,
+        "lineJoin": "round"
+      }
+    ],
+
+    "hover": {
+      "lineColor": "#111827",
+      "lineWidthDelta": 0.6
+    },
+    "selection": {
+      "lineColor": "#111827",
+      "lineWidthDelta": 0.9
+    }
+  },
+
   "fields": {
-    "week":     { "type": "string", "format": "date", "description": "USDM week date (Thursday)" },
-    "category": { "type": "string", "enum": ["D0","D1","D2","D3","D4"] },
-    "dm":       { "type": "number", "enum": [0,1,2,3,4] },
-    "state":    { "type": "string", "description": "State code (prefiltered to KS in ETL)" },
+    "week":     { "type": "string", "format": "date", "description": "USDM week (Thursday)" },
+    "category": { "type": "string", "enum": ["D0","D1","D2","D3","D4"], "description": "USDM category" },
+    "dm":       { "type": "number", "enum": [0,1,2,3,4], "description": "Numeric category" },
+    "state":    { "type": "string", "description": "KS for this layer" },
     "area_km2": { "type": "number", "units": "km²", "description": "Approx polygon area (optional)" }
   },
-  "features": [
-    {
-      "type": "Feature",
-      "id": "usdm_2000_01_06_d0_ne",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-95.50, 38.80],
-          [-95.00, 38.80],
-          [-95.00, 39.30],
-          [-95.50, 39.30],
-          [-95.50, 38.80]
-        ]]
-      },
-      "properties": {
-        "week": "2000-01-06",
-        "category": "D0",
-        "dm": 0,
-        "state": "KS",
-        "area_km2": 2400
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "usdm_2002_08_08_d3_sw",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-101.80, 37.10],
-          [-100.90, 37.10],
-          [-100.90, 37.70],
-          [-101.80, 37.70],
-          [-101.80, 37.10]
-        ]]
-      },
-      "properties": {
-        "week": "2002-08-08",
-        "category": "D3",
-        "dm": 3,
-        "state": "KS",
-        "area_km2": 5600
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "usdm_2011_08_11_d4_sc",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-98.80, 37.90],
-          [-98.30, 37.90],
-          [-98.30, 38.30],
-          [-98.80, 38.30],
-          [-98.80, 37.90]
-        ]]
-      },
-      "properties": {
-        "week": "2011-08-11",
-        "category": "D4",
-        "dm": 4,
-        "state": "KS",
-        "area_km2": 2200
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "usdm_2019_05_16_d1_ne",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-96.20, 39.10],
-          [-95.60, 39.10],
-          [-95.60, 39.60],
-          [-96.20, 39.60],
-          [-96.20, 39.10]
-        ]]
-      },
-      "properties": {
-        "week": "2019-05-16",
-        "category": "D1",
-        "dm": 1,
-        "state": "KS",
-        "area_km2": 1900
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "usdm_2023_10_12_d2_central",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-99.30, 38.30],
-          [-98.70, 38.30],
-          [-98.70, 38.85],
-          [-99.30, 38.85],
-          [-99.30, 38.30]
-        ]]
-      },
-      "properties": {
-        "week": "2023-10-12",
-        "category": "D2",
-        "dm": 2,
-        "state": "KS",
-        "area_km2": 2600
-      }
+
+  "filters": {
+    "quick": [
+      { "label": "D4 only", "where": { "dm": 4 } },
+      { "label": "D3–D4",   "where": { "dm$in": [3,4] } },
+      { "label": "D0–D2",   "where": { "dm$in": [0,1,2] } },
+      { "label": "Since 2010", "where": { "week$gte": "2010-01-01" } }
+    ],
+    "advanced": {
+      "dateRangeField": "week",
+      "groupBy": ["category"]
     }
-  ]
+  },
+
+  "search": {
+    "qFields": ["category"],
+    "minLength": 1,
+    "placeholder": "Filter by USDM (e.g., D3)"
+  },
+
+  "ordering": {
+    "zindex": 515,
+    "before": "fema_disasters",
+    "after": "ks_hydro"
+  },
+
+  "attribution": "USDM — NOAA / USDA / NDMC",
+  "license": "Public Domain / US Government data",
+
+  "provenance": {
+    "source": "US Drought Monitor weekly polygons (KS subset); simplified for demo",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "Use official weekly export in pipeline; keep dm (0–4) and category (D0–D4) synchronized."
+  },
+
+  "kfm_meta": {
+    "schema_version": "1.1",
+    "popup": ["week", "category", "dm", "area_km2"],
+    "stac": {
+      "collection": "kfm-hazards",
+      "item": "usdm_weekly_ks"
+    }
+  },
+
+  "alternates": {
+    "data_fallbacks": [
+      { "format": "pmtiles", "url": "web/tiles/usdm_weekly_ks.pmtiles", "note": "Prefer tiled polygons at state scale" },
+      { "format": "geojson", "url": "web/data/drought_weekly.json" }
+    ]
+  }
 }
