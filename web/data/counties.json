@@ -5,41 +5,130 @@
   "format": "geojson",
   "data": "data/processed/counties_timeslices.json",
   "category": "reference",
+
+  "version": "1.3",
+  "generated": "2025-09-28T00:00:00Z",
+
   "time": { "start": "1855-01-01", "end": null },
   "timeProperty": { "start": "valid_start", "end": "valid_end", "format": "date" },
+
   "bounds": [-102.051, 36.993, -94.588, 40.003],
   "minzoom": 5,
   "maxzoom": 19,
   "visible": false,
   "opacity": 1.0,
-  "popup": ["name", "valid_start", "valid_end"],
+
+  "popup": ["name", "valid_start", "valid_end", "source"],
+
   "legend": {
     "type": "line",
     "label": "Historical county boundaries",
-    "stroke": "#222222"
+    "classes": [
+      { "label": "Current (valid_end = null)", "stroke": "#222222" },
+      { "label": "Historical (ended)",         "stroke": "#222222", "dash": [3, 2] }
+    ]
   },
+
   "style": {
-    "renderer": "fill",
-    "fillColor": "#000000",
-    "fillOpacity": 0.0,
-    "lineColor": "#222222",
-    "lineWidth": 0.8,
-    "lineJoin": "round",
-    "lineCap": "round"
+    "renderer": "sublayers",
+    "sublayers": [
+      {
+        "id": "counties_historic",
+        "filter": { "valid_end$notnull": true },
+        "fillColor": "#000000",
+        "fillOpacityByZoom": [
+          { "zoom": 5, "opacity": 0.00 },
+          { "zoom": 10, "opacity": 0.00 }
+        ],
+        "lineColor": "#222222",
+        "lineJoin": "round",
+        "lineCap": "round",
+        "lineDasharray": [3, 2],
+        "lineWidthByZoom": [
+          { "zoom": 5,  "width": 0.6 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.1 }
+        ]
+      },
+      {
+        "id": "counties_current",
+        "filter": { "valid_end$null": true },
+        "fillColor": "#000000",
+        "fillOpacityByZoom": [
+          { "zoom": 5,  "opacity": 0.00 },
+          { "zoom": 10, "opacity": 0.00 }
+        ],
+        "lineColor": "#222222",
+        "lineJoin": "round",
+        "lineCap": "round",
+        "lineWidthByZoom": [
+          { "zoom": 5,  "width": 0.8 },
+          { "zoom": 10, "width": 1.0 },
+          { "zoom": 14, "width": 1.2 }
+        ]
+      }
+    ],
+    "hover": {
+      "lineColor": "#111827",
+      "lineWidthDelta": 0.6
+    },
+    "selection": {
+      "lineColor": "#111827",
+      "lineWidthDelta": 0.9
+    }
   },
+
   "fields": {
-    "name":        { "type": "string", "description": "County name (at that time)" },
-    "fips":        { "type": "string", "description": "Modern FIPS (if applicable)" },
-    "valid_start": { "type": "string", "format": "date", "description": "Boundary start date" },
-    "valid_end":   { "type": "string", "format": "date|null", "description": "Boundary end date (null = still valid)" },
-    "source":      { "type": "string", "description": "Cartographic / archival source" }
+    "name":        { "type": "string",             "description": "County name (at that time)" },
+    "fips":        { "type": "string",             "description": "Modern FIPS (if applicable)" },
+    "valid_start": { "type": "string", "format": "date",      "description": "Boundary start date" },
+    "valid_end":   { "type": ["string","null"], "format": "date|null", "description": "Boundary end date (null = still valid)" },
+    "source":      { "type": "string",             "description": "Cartographic / archival source" }
   },
-  "search": { "qFields": ["name"] },
-  "attribution": "© <a href=\"https://data.kansasgis.org/\" target=\"_blank\">Kansas DASC</a> (Archive layers)",
+
+  "filters": {
+    "quick": [
+      { "label": "Current only",    "where": { "valid_end$null": true } },
+      { "label": "Historical only", "where": { "valid_end$notnull": true } },
+      { "label": "Before 1861",     "where": { "valid_start$lt": "1861-01-01" } }
+    ]
+  },
+
+  "search": {
+    "qFields": ["name", "fips", "source"],
+    "accentFold": true,
+    "minLength": 2,
+    "placeholder": "Search counties…"
+  },
+
+  "ordering": {
+    "zindex": 335,
+    "before": "plss_parcels",
+    "after": "ks_hydro"
+  },
+
+  "alternates": {
+    "data_fallbacks": [
+      { "format": "pmtiles", "url": "web/tiles/counties_timeslices.pmtiles", "note": "Prefer tiled polygons at statewide scales" },
+      { "format": "geojson", "url": "data/processed/counties_timeslices.json" }
+    ]
+  },
+
+  "attribution": "© <a href=\"https://data.kansasgis.org/\" target=\"_blank\" rel=\"noopener\">Kansas DASC</a> (Archive layers)",
   "license": "Public Domain / State of Kansas",
+
   "provenance": {
     "source": "Kansas GIS Archive (DASC), historical county boundary compilations",
     "retrieved": "2025-09-26T00:00:00Z",
-    "notes": "Timesliced polygons; dates normalized to ISO 8601"
+    "notes": "Timesliced polygons; dates normalized to ISO 8601."
+  },
+
+  "kfm_meta": {
+    "schema_version": "1.2",
+    "popup": ["name", "valid_start", "valid_end", "source"],
+    "stac": {
+      "collection": "kfm-admin",
+      "item": "counties_timeslices_index"
+    }
   }
 }
