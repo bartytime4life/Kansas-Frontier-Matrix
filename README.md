@@ -19,19 +19,19 @@ Where **terrain, climate, culture, and events** intersect.
 <details>
 <summary>📑 Table of Contents</summary>
 
-- [🚀 Quick Links](#-quick-links)  
-- [🗺 Why It Matters](#-why-it-matters)  
-- [🔧 How It Works](#-how-it-works)  
-- [✨ Pipeline Highlights](#-pipeline-highlights)  
-- [⚡ Quickstart](#-quickstart)  
-- [📂 Repository Layout](#-repository-layout)  
-- [📊 Data Coverage Matrix](#-data-coverage-matrix)  
-- [🎯 Use Cases](#-use-cases)  
-- [✅ Reproducibility & CI](#-reproducibility--ci)  
-- [🛠 Roadmap](#-roadmap)  
-- [🤝 Contributing](#-contributing)  
-- [📚 Citation](#-citation)  
-- [⚖️ License](#-license)  
+- [🚀 Quick Links](#-quick-links)
+- [🗺 Why It Matters](#-why-it-matters)
+- [🔧 How It Works](#-how-it-works)
+- [✨ Pipeline Highlights](#-pipeline-highlights)
+- [⚡ Quickstart](#-quickstart)
+- [📂 Repository Layout](#-repository-layout)
+- [📊 Data Coverage Matrix](#-data-coverage-matrix)
+- [🎯 Use Cases](#-use-cases)
+- [✅ Reproducibility & CI](#-reproducibility--ci)
+- [🛠 Roadmap](#-roadmap)
+- [🤝 Contributing](#-contributing)
+- [📚 Citation](#-citation)
+- [⚖️ License](#-license)
 - [✨ Notes](#-notes)
 
 </details>
@@ -40,8 +40,8 @@ Where **terrain, climate, culture, and events** intersect.
 
 ## 🚀 Quick Links
 
-- 🌐 **[Live Web Viewer](#)**  
-- 🌍 **[Google Earth KMZ](#)**  
+- 🌐 **[Live Web Viewer](#)**
+- 🌍 **[Google Earth KMZ](#)**
 - 📊 **[STAC Catalog](stac/catalog.json)**
 
 ---
@@ -51,11 +51,11 @@ Where **terrain, climate, culture, and events** intersect.
 > Kansas history is **fragmented** — scattered across treaties, disasters, geology, maps, and stories.  
 > This project builds a **time-aware knowledge hub** so communities can explore how environment and culture shaped resilience.
 
-**Exploration examples**
+Examples:
 - 🚂 Railroads vs. tribal lands → how towns spread  
 - 🌪 Dust Bowl storms → reshaping settlement  
 - 🪶 Oral histories → tied to rivers, prairies, forts  
-- 🔥 Fire regimes → ecological resilience
+- 🔥 Fire regimes → ecological resilience  
 
 👉 Not just maps — a **forensic storytelling engine** for Kansas.
 
@@ -65,11 +65,11 @@ Where **terrain, climate, culture, and events** intersect.
 
 ```mermaid
 flowchart TD
-  A["📥 Sources<br/>(data/sources/*.json)"] -->|fetch| B["🗺️ COGs<br/>(data/cogs/**/*.tif)"]
-  B -->|derive| C["📐 Derivatives<br/>(slope, aspect, hillshade, hydrology)"]
-  C -->|index| D["🗂️ STAC Catalog<br/>(stac/catalog.json, items/)"]
-  D -->|graph| H["🧩 Knowledge Graph<br/>(Neo4j + ontologies)"]
-  D -->|render| E["⚙️ Configs<br/>(web/config/*.json)"]
+  A["📥 Sources (data/sources/*.json)"] -->|fetch| B["🗺️ COGs (data/cogs/**/*.tif)"]
+  B -->|derive| C["📐 Derivatives (slope, aspect, hillshade, hydrology)"]
+  C -->|index| D["🗂️ STAC Catalog (stac/catalog.json, items/)"]
+  D -->|graph| H["🧩 Knowledge Graph (Neo4j + ontologies)"]
+  D -->|render| E["⚙️ Configs (web/config/*.json)"]
   H --> E
   E --> F["🖥️ MapLibre Web Viewer"]
   D --> G["🌍 KML/KMZ (Google Earth)"]
@@ -78,9 +78,9 @@ flowchart TD
 ⸻
 
 ✨ Pipeline Highlights
-	•	📂 STAC 1.0.0 catalog → provenance + temporal coverage
+	•	📂 STAC 1.0.0 → provenance + temporal coverage
 	•	🗺️ COGs → terrain & historical rasters
-	•	🧩 Neo4j Knowledge Graph → people ↔ places ↔ events
+	•	🧩 Neo4j → people ↔ places ↔ events
 	•	🖥️ MapLibre Viewer → timeline slider + dynamic layers
 	•	🌍 Google Earth exports → immersive 3D exploration
 
@@ -96,10 +96,10 @@ python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
 
-# Build core artifacts and site
+# Build core artifacts + site
 make fetch cogs terrain stac stac-validate site
 
-# Serve the web app locally
+# Serve locally
 python -m http.server -d web 8080
 
 </details>
@@ -143,13 +143,13 @@ docker/          # reproducible containers
 
 📊 Data Coverage Matrix
 
-🌐 Domain / Layer	🔗 Sources Integrated	📌 Status
+Domain / Layer	Sources	Status
 DEM / Terrain	USGS LiDAR 1m, KGS, 3DEP	✅
 Hillshade / Derivatives	LiDAR COGs → slope, aspect	✅
 Hydrology	USGS NHD, KS River floods	🚧
 Land Cover	NLCD 1992–2021	✅
 Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	🚧
-Treaties & Tribal Lands	Boundary polygons	✅ / Expand
+Treaties & Tribal Lands	Boundary polygons	✅/Expand
 Railroads & Trails	1850–1920 rail GIS	🚧
 Topographic Maps	USGS Historic Topo, UT PCL	✅
 Climate Normals	NOAA 1991–2020, Daymet	✅
@@ -164,8 +164,8 @@ Geology / Core Samples	KGS drill cores	🚧
 ⸻
 
 🎯 Use Cases
-	•	🚂 Animate railroad expansion (1850–1910) alongside treaties
-	•	🌪 Overlay Dust Bowl land-cover change with NOAA drought indices
+	•	🚂 Animate railroad expansion (1850–1910) with treaties
+	•	🌪 Overlay Dust Bowl land-cover with drought indices
 	•	🪶 Link oral histories to forts, rivers, & counties
 	•	🌊 Compare pre-dam vs. post-dam Kansas River floods
 	•	🔥 Integrate fire regimes + archaeology into resilience narratives
@@ -174,9 +174,9 @@ Geology / Core Samples	KGS drill cores	🚧
 
 ✅ Reproducibility & CI
 
-Following MCP principles: every dataset, config, and artifact is versioned, validated, and reproducible.
-	•	🔐 Checksums → .sha256 sidecars for every artifact
-	•	📏 Validation → STAC + JSON Schema in CI
+Every dataset, config, and artifact is versioned, validated, and reproducible.
+	•	🔐 .sha256 checksums for every artifact
+	•	📏 STAC + JSON Schema validation in CI
 	•	🛠 Pipelines:
 	•	site.yml → build & deploy
 	•	stac-badges.yml → dataset health shields
@@ -194,7 +194,7 @@ make prebuild
 	•	📌 M4: UI enhancements (story maps, vector tiles)
 	•	📌 M5: Predictive modeling & NASA-grade simulations
 
-👉 See ROADMAP.md.
+👉 See ROADMAP.md
 
 ⸻
 
@@ -224,7 +224,9 @@ MIT © 2025 — Kansas Frontier Matrix
 ⸻
 
 ✨ Notes
-	•	🛡 Dynamic badges wired to CI
+	•	🛡 CI badges wired to workflows
 	•	🗂 Coverage matrix embedded
 	•	📜 Anchored in MCP reproducibility standards
 	•	🔗 Connects maps, archives, disasters, & oral histories into one forensic timeline
+
+---
