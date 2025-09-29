@@ -1,6 +1,9 @@
+⸻
+
 🌾 Kansas Geo Timeline — Time · Terrain · History
 
-Mission: Build an open-source, reproducible system to uncover Kansas’s layered history — where terrain, climate, culture, and events intersect.
+Mission
+Build an open-source, reproducible system to uncover Kansas’s layered history — where terrain, climate, culture, and events intersect.
 The Frontier-Matrix integrates maps, LiDAR terrain, treaties, railroads, disasters, archaeology, and oral histories into an interactive atlas + knowledge graph, with both a MapLibre viewer and Google Earth (KMZ/KML).
 
 
@@ -17,10 +20,10 @@ The Frontier-Matrix integrates maps, LiDAR terrain, treaties, railroads, disaste
 
 Kansas history is fragmented — scattered across treaties, disasters, geology, maps, and stories.
 This project builds a time-aware knowledge hub so communities can explore:
-	•	🚂 Railroads vs. tribal lands — how towns spread along rights-of-way.
-	•	🌪 Droughts, floods, Dust Bowl storms reshaping settlement.
-	•	🪶 Archaeology & oral histories tied to rivers, prairies, and forts.
-	•	🔥 Paleoclimate & fire regimes shaping resilience and ecology.
+	•	🚂 Railroads vs. tribal lands — how towns spread along rights-of-way
+	•	🌪 Droughts, floods, Dust Bowl storms reshaping settlement
+	•	🪶 Archaeology & oral histories tied to rivers, prairies, and forts
+	•	🔥 Paleoclimate & fire regimes shaping resilience and ecology
 
 👉 It’s more than maps — it’s a forensic storytelling engine for Kansas.
 
@@ -92,7 +95,7 @@ docker/          # reproducible containers
 
 🌐 Domain / Layer	🔗 Sources Integrated	📌 Status
 DEM / Terrain	USGS LiDAR 1m, KGS, 3DEP	✅
-Hillshade / Derivatives	LiDAR COGs → slope, aspect, hydro	✅
+Hillshade / Derivatives	LiDAR COGs → slope, aspect	✅
 Hydrology	USGS NHD, KS River floods	🚧
 Land Cover	NLCD 1992–2021	✅
 Soils / PLSS / Parcels	NRCS SSURGO, KS GIS Hub	🚧
@@ -111,11 +114,11 @@ Geology / Core Samples	KGS drill cores	🚧
 ⸻
 
 🎯 Use Cases
-	•	🚂 Animate railroad expansion (1850–1910) alongside treaties.
-	•	🌪 Overlay Dust Bowl land-cover change with NOAA drought indices.
-	•	🪶 Link oral histories to forts, rivers, & counties.
-	•	🌊 Compare pre-dam vs. post-dam Kansas River floods.
-	•	🔥 Integrate fire regimes + archaeology into resilience narratives.
+	•	🚂 Animate railroad expansion (1850–1910) alongside treaties
+	•	🌪 Overlay Dust Bowl land-cover change with NOAA drought indices
+	•	🪶 Link oral histories to forts, rivers, & counties
+	•	🌊 Compare pre-dam vs. post-dam Kansas River floods
+	•	🔥 Integrate fire regimes + archaeology into resilience narratives
 
 ⸻
 
@@ -147,7 +150,7 @@ make prebuild
 
 We welcome contributions!
 	•	✔️ Keep STAC valid + configs schema-checked
-	•	✔️ Use MCP templates (experiment.md, sop.md, model_card.md) ￼
+	•	✔️ Use MCP templates (experiment.md, sop.md, model_card.md)
 	•	✔️ Follow CI hooks + submit PRs with clear commits
 
 ⸻
@@ -173,7 +176,7 @@ MIT © 2025 — Kansas Frontier Matrix
 ✨ Notes
 	•	🛡 Dynamic badges wired to CI
 	•	🗂 Coverage matrix embedded
-	•	📜 Anchored in MCP reproducibility standards ￼ ￼
-	•	🔗 Cross-connects maps, archives, disasters, & oral histories into one forensic timeline
+	•	📜 Anchored in MCP reproducibility standards
+	•	🔗 Connects maps, archives, disasters, & oral histories into one forensic timeline
 
 ⸻
