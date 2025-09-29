@@ -1,41 +1,46 @@
-# `data/sources/dem/tile_indexes/` — DEM & LiDAR Tile Indexes
+<div align="center">
 
-This directory contains **tile index descriptors** for Digital Elevation Models (DEM)  
-and LiDAR collections. Indexes define how to fetch, mosaic, and manage tiled elevation data  
-(county-level LiDAR, USGS 3DEP, FEMA/USACE surveys, etc.) before conversion into statewide  
-Cloud-Optimized GeoTIFFs (COGs).
+# 🗺️ Kansas-Frontier-Matrix — **DEM & LiDAR Tile Indexes** (`data/sources/dem/tile_indexes/`)
+
+**Mission:** Provide curated descriptors for **DEM & LiDAR tile indexes** (county LiDAR, USGS 3DEP, FEMA/USACE surveys, etc.),  
+enabling reproducible **fetch → mosaic → COG conversion** pipelines.  
+
+📌 Validated against [`schema.source.json`](../../schema.source.json)  
+📌 Drive **`make fetch` → `make mosaic` → `make stac`** workflows  
+📌 Guarantee **traceability, provenance, and spatial footprints** for tiled elevation data  
+
+</div>
 
 ---
 
 ## Purpose
 
-- Store **curated descriptors** (`*.json`, `*.yml`) for tile indexes (shapefiles, GeoJSON, REST services).  
-- Enable reproducible **fetch + mosaic** workflows in the Makefile pipeline.  
-- Document provenance for each LiDAR/DEM collection (publisher, coverage, period, license).  
-- Provide spatial footprints for STAC Items & Collections.
+- 📖 Store **descriptor JSON/YAML** files for DEM & LiDAR tile indexes (GeoJSON, Shapefile, REST services).  
+- 🔄 Enable reproducible **fetch + mosaic workflows** in the Makefile pipeline.  
+- 🧾 Document provenance: publisher, coverage, time period, license.  
+- 🌍 Provide **spatial footprints** for STAC Items & Collections.  
 
 ---
 
-## Typical Contents
+## Directory Layout
 
-```
-
+```text
 data/sources/dem/tile_indexes/
 ├── ks_lidar_county_index.json   # County-based LiDAR tile index descriptor
 ├── usgs_3dep_index.json         # USGS 3DEP nationwide tile index (subset: Kansas)
 ├── fema_flood_lidar.json        # FEMA/USACE project-level LiDAR indexes
 └── README.md                    # This file
 
-````
+⚠️ Large binaries (LAS/LAZ/GeoTIFF tiles) → stored in data/raw/** and tracked with Git LFS/DVC.
+✅ Only descriptors, metadata, and sidecars live in git.
 
----
+⸻
 
-## Descriptor Schema
+Descriptor Schema
 
-Tile index descriptors must follow the **KFM Source Descriptor schema**  
-(`data/sources/schema.source.json`). Example:
+Tile index descriptors must follow the KFM Source Descriptor schema.
+Example:
 
-```json
 {
   "id": "ks_lidar_county",
   "title": "Kansas County LiDAR Tile Index",
@@ -55,65 +60,66 @@ Tile index descriptors must follow the **KFM Source Descriptor schema**
   },
   "keywords": ["DEM", "LiDAR", "Kansas", "tile index"]
 }
-````
 
----
 
-## Workflow
+⸻
 
-1. **Add/edit a descriptor** here (`*_index.json`).
-2. **Validate** with:
+Workflow
 
-   ```bash
-   make validate-sources
-   ```
-3. **Fetch** the tile index:
+flowchart TD
+  A[Add/Edit Descriptor<br/>data/sources/dem/tile_indexes/*.json] --> B[Validate<br/>make validate-sources]
+  B --> C[Fetch Tile Index<br/>make fetch → data/raw/dem/tile_indexes/**]
+  C --> D[Fetch Tiles + Mosaic<br/>make dem / make mosaic]
+  D --> E[Convert to COGs<br/>make cogs → data/cogs/dem/**]
+  E --> F[Catalog<br/>make stac → data/stac/items/**]
 
-   ```bash
-   make fetch
-   ```
+<!-- END OF MERMAID -->
 
-   → downloads to `data/raw/dem/tile_indexes/` (ignored by git).
-4. Use `make dem` or `make mosaic` targets to:
 
-   * Fetch referenced DEM/LiDAR tiles.
-   * Mosaic into statewide/region COGs.
-   * Generate `_meta.json` and `*.sha256` sidecars.
-5. **Catalog**:
 
-   ```bash
-   make stac
-   ```
+⸻
 
-   → builds STAC Items for each index and mosaic.
+Integration Notes
+	•	🗜️ All mosaicked DEMs → COGs (make cogs).
+	•	📦 Raw LiDAR LAS/LAZ → data/raw/** (ignored by git).
+	•	🌐 Normalize CRS to EPSG:4326 for web viewer, but preserve original CRS in _meta.json.
+	•	STAC Items should include:
+	•	geometry footprint of the index
+	•	kfm:tile_count for QA
+	•	proj:epsg CRS metadata
 
----
+⸻
 
-## Integration Notes
+Best Practices
+	•	🧾 Maintain checksums (*.sha256) for both indexes and mosaics.
+	•	⏱️ Record retrieved datetime each time an index is updated.
+	•	⚠️ Use confidence flags for partial/incomplete coverage.
+	•	📑 Group multi-project indexes logically (county, watershed, FEMA project).
 
-* Always convert raw DEMs to **COGs** (`make cogs`).
-* Keep raw LiDAR LAS/LAZ in `data/raw/` — only publish mosaics.
-* Normalize CRS to **EPSG:4326** for viewer, but keep original CRS recorded in `_meta.json`.
-* STAC items should include:
+⸻
 
-  * `geometry` footprint of the index.
-  * `kfm:tile_count` for QA.
-  * `proj:epsg` for CRS.
+Debugging & Validation
+	•	Validate descriptors:
 
----
+make validate-sources
 
-## Best Practices
 
-* Maintain **checksums** (`*.sha256`) for both index and derived mosaics.
-* Record `retrieved` datetime each time an index is updated.
-* Use **confidence flags** if index coverage is incomplete.
-* Group multi-project indexes logically (e.g., by watershed, county, or FEMA project).
+	•	Verify COGs:
 
----
+make validate-cogs
 
-✦ **Summary:**
-`data/sources/dem/tile_indexes/` is the **blueprint for tiled DEM/LiDAR collections**.
-It ensures that raw elevation tiles can be consistently located, mosaicked, and published
-as reproducible COGs with full provenance.
 
-```
+	•	Rebuild STAC:
+
+make stac
+make validate-stac
+
+
+
+⸻
+
+✦ Summary:
+data/sources/dem/tile_indexes/ contains blueprints for tiled DEM/LiDAR collections.
+They ensure raw elevation tiles can be consistently located, mosaicked, and published as reproducible COGs
+with complete provenance and STAC discoverability.
+
