@@ -1,55 +1,51 @@
-# .github/automerge.yml
-# Kansas-Frontier-Matrix — PR Auto-Merge Policy
-# ------------------------------------------------
-# This file defines rules for automatic merging of pull requests.
-# It is consumed by workflows like .github/workflows/automerge.yml.
-# NASA-grade reproducibility: deterministic, schema-driven, auditable.
+name: "PR Auto-Merge"
 
-version: 1
-merge_method: squash        # squash for clean history (use 'merge' or 'rebase' if desired)
-delete_branch_after_merge: true
-allow_merge_commit: false   # prevent noisy merge commits
+on:
+  pull_request_target:
+    types:
+      - labeled
+      - unlabeled
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+  pull_request_review:
+    types: [submitted, dismissed]
+  check_suite:
+    types: [completed]
+  status: {}
+  issue_comment:
+    types: [created]
+  workflow_dispatch: {}
 
-# Require successful workflows before auto-merge
-required_status_checks:
-  # Core CI
-  - name: "ci / build"
-  - name: "tests.yml"
-  - name: "ruff lint"
-  # STAC + data validation
-  - name: "stac-validate.yml"
-  - name: "stac-badges.yml"
-  - name: "schema-validate"
-  # Web & Docs
-  - name: "site.yml"
-  - name: "roadmap.yml (dry-run)"
-  # Security & provenance
-  - name: "codeql.yml"
-  - name: "sbom.yml"
-  # Docker build
-  - name: "docker.yml"
+permissions:
+  contents: write       # needed to merge & delete branches
+  pull-requests: write  # needed to update PRs / labels
+  checks: read
+  statuses: read
 
-# Branch rules
-branches:
-  - name: "main"
-    required_labels: ["automerge"]
-    blocking_labels: ["no-automerge", "wip", "needs-review"]
-    min_approvals: 1
+concurrency:
+  group: automerge-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
-  - name: "release/*"
-    required_labels: ["release-approved"]
-    blocking_labels: ["no-automerge"]
-    min_approvals: 2
+jobs:
+  automerge:
+    name: Auto-merge if policy satisfied
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: >
+      github.event_name != 'pull_request_target' ||
+      (github.event.pull_request.user.login != 'dependabot[bot]' &&
+       github.event.pull_request.user.login != 'github-actions[bot]')
 
-# User/actor allowlist (only these can trigger automerge)
-users:
-  allow:
-    - "bartytime4life"     # repo owner
-    - "kansas-matrix-bot"  # service account
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-# Notifications
-notify:
-  enabled: true
-  channels:
-    - "github-checks"      # status updates in PR
-    - "slack"              # if integrated later
+      - name: Run AutoMerge Action
+        uses: pascalgn/automerge-action@v0.16.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          config: .github/automerge.yml
