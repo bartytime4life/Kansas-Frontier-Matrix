@@ -64,7 +64,6 @@ Examples:
 ## 🔧 How It Works
 
 ```mermaid
-```mermaid
 flowchart TD
   A["📥 Sources\ndata/sources/*.json"] -->|fetch| B["🗺️ COGs\ndata/cogs/**/*.tif"]
   B -->|derive| C["📐 Derivatives\nslope, aspect, hillshade, hydrology"]
