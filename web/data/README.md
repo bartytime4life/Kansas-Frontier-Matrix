@@ -1,329 +1,290 @@
-Kansas-Frontier-Matrix — web/data/ (Rebuilt)
+Kansas-Frontier-Matrix — web/data/ (Layers & Map Data)
 
-This folder is the UI wiring layer between our archival assets (STAC, COGs, GeoJSON, PMTiles) and the interactive MapLibre/Google-Earth viewer. Each JSON file here is either:
-	•	a layer spec the viewer reads (id, title, type, format, time, style, attribution), or
-	•	a data file (GeoJSON/JSON/PMTiles/COG references) used by that layer.
+This folder contains the layer configs and map-ready data references used by the web viewer (MapLibre + time slider). Each JSON file here is either:
+	•	a layer spec the viewer reads (id, title, type, format, time, attribution, legend, style), or
+	•	a data pointer the layer consumes (GeoJSON/PMTiles/COG endpoints, service URLs, etc.).
 
-Design goals: compact, explicit, time-aware, and reproducible across CI and local dev.
+This directory is the bridge between the project’s ETL/STAC pipeline and the interactive map UI (timeline + toggles).  ￼  ￼  ￼
 
 ⸻
 
-How layers work (contract)
+What lives here (at a glance)
 
-All layer JSONs must validate against web/config/layers.schema.json in CI. Minimal canonical shape:
+web/
+└─ data/
+   ├─ layers.json                 # main layer index consumed by the UI
+   ├─ categories.json             # optional grouping (e.g., basemap, environment, hazards, movement, sovereignty, culture)
+   ├─ *.layer.json                # per-layer specs (split files recommended for large sets)
+   ├─ legends/                    # legend presets (ramp, fill, line)
+   ├─ styles/                     # optional style presets shared by layers
+   ├─ templates/                  # example snippets for new layers
+   └─ docs/                       # optional layer notes (provenance, QA results)
+
+The actual data artifacts (COGs, PMTiles, GeoJSON) are generated/managed by the ETL and referenced from here—do not check large binaries into web/data/. Prefer COG for rasters and PMTiles for large vectors for web performance.  ￼
+
+⸻
+
+Layer spec (schema)
+
+Each layer file follows a minimal canonical shape; the viewer merges these into UI controls and the time slider.
 
 {
   "id": "unique_layer_id",
-  "title": "Layer Title",
+  "title": "Human-readable Layer Title",
+  "category": "basemap | environment | hazards | movement | sovereignty | culture",
   "type": "vector | raster | image | raster-dem",
-  "format": "geojson | pmtiles | cog | xyz | image",
-  "data": "web/data/<file>.geojson | data/processed/<artifact>.pmtiles | data/cogs/<raster>.tif",
-  "category": "reference | environment | hazards | movement | sovereignty | culture",
-  "time": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD or null" },
-  "timeProperty": "per-feature date field (e.g., 'year' or 'valid_from')",
-  "popup": ["field1", "field2"],
-  "style": {},
-  "visible": false,
-  "attribution": "Source / License"
-}
-
-Notes
-	•	Time can be global via time.start/end or per-feature via timeProperty (e.g., year, year_end).
-	•	Vectors are typically GeoJSON (UTF-8, WGS84). Heavy vectors should use PMTiles.
-	•	Rasters are COGs or XYZ; DEMs are raster-dem.
-	•	The viewer (MapLibre + app code) reads these specs, applies the time slider, and attaches popups.
-
-⸻
-
-Quick templates
-
-1) Vector (GeoJSON points)
-
-{
-  "id": "towns",
-  "title": "Towns & Posts",
-  "type": "vector",
-  "format": "geojson",
-  "data": "web/data/towns_points.geojson",
-  "category": "reference",
-  "time": { "start": null, "end": null },
+  "format": "geojson | pmtiles | cog | xyz | wms",
+  "data": "relative/or/absolute/url/to/data",
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
   "minzoom": 5,
   "maxzoom": 19,
   "visible": false,
-  "popup": ["name", "year_founded", "source"],
-  "style": {
-    "renderer": "circle",
-    "circleColor": "#1f77b4",
-    "circleRadius": 4,
-    "circleStrokeColor": "#ffffff",
-    "circleStrokeWidth": 0.6
-  },
-  "attribution": "Curated frontier gazetteers (see STAC item)",
-  "license": "CC-BY-4.0",
-  "connections": {
-    "stac_item": "stac/items/towns.json",
-    "related_layers": ["web/data/railroads.json"]
-  }
-}
-
-2) Raster (XYZ basemap)
-
-{
-  "id": "basemap_osm",
-  "title": "Basemap — OpenStreetMap (Standard)",
-  "type": "raster",
-  "format": "xyz",
-  "tile_format": "png",
-  "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-  "category": "reference",
-  "time": { "start": null, "end": null },
-  "bounds": [-180.0, -85.0511, 180.0, 85.0511],
-  "minzoom": 0,
-  "maxzoom": 19,
-  "tileSize": 256,
-  "visible": true,
   "opacity": 1.0,
-  "style": { "renderer": "raster", "rasterOpacity": 1.0 },
-  "attribution": "© OpenStreetMap contributors",
-  "license": "ODbL-1.0"
+
+  "time": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" },
+  "timeProperty": "optional_property_on_features_for_time",
+  "timeFormat": "iso-date | year | year-month | ordinal",
+  "timePrecision": "day | month | year",
+
+  "popup": ["field_a", "field_b", "field_c"],
+
+  "legend": {
+    "type": "fill | line | ramp | gradient",
+    "label": "Legend Title",
+    "classes": [
+      { "label": "class name", "fill": "#hex", "stroke": "#hex", "value": 1 }
+    ]
+  },
+
+  "style": {
+    "lineColor": "#3A86FF",
+    "lineWidth": 1.5,
+    "fillColor": "#A0C4FF",
+    "fillOpacity": 0.8,
+    "circleColor": "#FF006E",
+    "circleRadius": 3
+  },
+
+  "attribution": "Source | Org | Year",
+  "license": "license string or URL",
+  "provenance": "link to STAC item or source descriptor"
 }
 
-3) Raster overlay (COG)
+Required keys
+	•	id, title, category, type, format, data
+	•	attribution, license (don’t ship anything without these)
+	•	Time: Add either a layer-level time range or per-feature timeProperty (see below).
+
+Optional keys
+	•	bounds, minzoom/maxzoom, visible, opacity
+	•	legend, style, popup, timeFormat, timePrecision, provenance
+
+Our time-aware UI expects either a global time range (static slice) or a timeProperty on features to filter/animate across years/decades. Keep time metadata precise and machine-parsable; it powers the historical narrative, confidence overlays, and story mode.  ￼  ￼
+
+⸻
+
+Data formats & performance (strongly recommended)
+	•	Vectors
+	•	Small → GeoJSON
+	•	Medium/large or statewide/long-time series → PMTiles (single-file tiles, CDN-friendly)
+	•	Rasters
+	•	COG (Cloud-Optimized GeoTIFF) with internal overviews; serve via HTTP range requests
+	•	XYZ/WMTS can be referenced when hosted elsewhere
+	•	DEM
+	•	type: "raster-dem" with COG hillshade or terrain tiles as backends
+
+These choices align with the project’s ETL/COG and tiling patterns and keep the viewer fast. Use the pipeline convertors (rio-cogeo, gdal/ogr, tippecanoe/pmtiles) from the Makefile targets.  ￼  ￼
+
+⸻
+
+Time support (how the slider reads your layer)
+	1.	Static time window (layer-level)
+
+"time": { "start": "1894-01-01", "end": "1894-12-31" }
+
+Use for a single historic map or a particular survey year.
+
+	2.	Per-feature time (dynamic)
+
+"timeProperty": "year",
+"timeFormat": "year",
+"timePrecision": "year"
+
+The viewer filters features as the slider moves (e.g., year within current interval). Works for hazard events, rail expansion by year, drought polygons by week, etc.  ￼
+
+When time is approximate (e.g., “spring 1850s”), normalize to a best-effort machine value and (optionally) add a _confidence field for the popup; uncertainty is first-class in the hub.  ￼  ￼
+
+⸻
+
+Categories (suggested)
+	•	basemap (terrain/DEM, hillshade, historic topographic sheets)
+	•	environment (landcover, soils, vegetation, wetlands)
+	•	hazards (tornado tracks, floods, wildfire perimeters, drought polygons)
+	•	movement (trails, railroads by year, road milestones)
+	•	sovereignty (treaties/reservations, counties by era)
+	•	culture (settlements, forts, cemeteries, oral histories, POIs)
+
+These map to UI groupings and storytelling lanes.  ￼  ￼
+
+⸻
+
+Examples (snippets you can copy)
+
+1) Historic topo (raster, single year)
 
 {
-  "id": "ks_hillshade",
-  "title": "Hillshade (LiDAR 1 m)",
+  "id": "topo_1894_pawnee",
+  "title": "USGS Topographic Map — Pawnee (1894)",
+  "category": "basemap",
   "type": "raster",
   "format": "cog",
-  "data": "data/cogs/overlays/ks_lidar_hillshade.tif",
-  "category": "reference",
-  "time": { "start": null, "end": null },
-  "minzoom": 5,
-  "maxzoom": 18,
-  "visible": false,
-  "opacity": 0.7,
-  "style": { "renderer": "raster", "rasterOpacity": 0.7 },
-  "attribution": "KARS / USGS 3DEP (public domain)",
+  "data": "data/cogs/topo/pawnee_1894.tif",
+  "time": { "start": "1894-01-01", "end": "1894-12-31" },
+  "opacity": 0.85,
+  "attribution": "USGS Historical Topographic Map Collection",
   "license": "Public Domain",
-  "connections": {
-    "stac_item": "stac/items/ks_hillshade.json"
-  }
+  "provenance": "stac/items/topo_1894_pawnee.json"
 }
 
-Use COG/GeoJSON/PMTiles to stay fast and web-friendly; convert upstream with the ETL recipes (COG via rio-cogeo, vectors to GeoJSON, or PMTiles for large sets).
+Use COG derived from archive MrSID/TIFF; keep datum and georeferencing clean in ETL.  ￼
 
-⸻
-
-Connections (wiring to STAC & siblings)
+2) Tornado tracks (vector PMTiles, 1950-present)
 
 {
-  "connections": {
-    "stac_item": "stac/items/<layer>.json",
-    "related_layers": [
-      "web/data/hillshade.json",
-      "web/data/landcover.json"
-    ],
-    "preferred_overlay_order": ["hillshade", "contours", "terrain", "landcover"]
-  }
+  "id": "tornado_tracks",
+  "title": "Tornado Tracks (1950–Present)",
+  "category": "hazards",
+  "type": "vector",
+  "format": "pmtiles",
+  "data": "https://cdn.example.org/ks_tornado_tracks.pmtiles",
+  "timeProperty": "yr",
+  "timeFormat": "year",
+  "style": { "lineColor": "#D83C3C", "lineWidth": 1.2, "opacity": 0.9 },
+  "popup": ["date", "ef_scale", "length_km", "fatalities"],
+  "attribution": "NOAA SPC",
+  "license": "Public Domain",
+  "provenance": "stac/items/haz_tornado_tracks.json"
 }
 
-	•	stac_item: authoritative metadata/provenance.
-	•	related_layers: peer configs to toggle together.
-	•	preferred_overlay_order: viewer draw-order guidance.
-Tie every map layer to a STAC Item for provenance and reproducibility in CI.
+Source SPC tracks + attributes (date, EF, path); tile and compress for performance.  ￼
+
+3) Drought (weekly polygons)
+
+{
+  "id": "drought_usdm",
+  "title": "U.S. Drought Monitor (Weekly)",
+  "category": "hazards",
+  "type": "vector",
+  "format": "pmtiles",
+  "data": "https://cdn.example.org/usdm_weekly.pmtiles",
+  "timeProperty": "week_iso",
+  "timeFormat": "iso-date",
+  "legend": {
+    "type": "ramp",
+    "label": "Drought Category",
+    "classes": [
+      { "label": "D0 Abnormally Dry", "fill": "#ffffb2", "value": 0 },
+      { "label": "D1 Moderate",        "fill": "#fecc5c", "value": 1 },
+      { "label": "D2 Severe",          "fill": "#fd8d3c", "value": 2 },
+      { "label": "D3 Extreme",         "fill": "#f03b20", "value": 3 },
+      { "label": "D4 Exceptional",     "fill": "#bd0026", "value": 4 }
+    ]
+  },
+  "attribution": "USDM (NOAA/USDA/NDMC)",
+  "license": "Public Domain",
+  "provenance": "stac/items/haz_usdm_weekly.json"
+}
+
+Weekly shapefiles → PMTiles; slider scrubs week date.  ￼
+
+4) Treaties & reservations (polygons with eras)
+
+{
+  "id": "treaties_reservations",
+  "title": "Treaties & Reservations (Historical)",
+  "category": "sovereignty",
+  "type": "vector",
+  "format": "geojson",
+  "data": "data/processed/sovereignty/treaties_reservations.geojson",
+  "timeProperty": "year",
+  "legend": { "type": "fill", "label": "Status", "classes": [
+    { "label": "Reservation", "fill": "#4C78A8" },
+    { "label": "Treaty Area", "fill": "#9EC1CF" }
+  ]},
+  "popup": ["name", "tribe", "year", "year_end", "accuracy", "source"],
+  "attribution": "Compiled from historical sources",
+  "license": "Open (see feature properties)",
+  "provenance": "stac/items/sovereignty_treaties.json"
+}
+
+Include year_end and accuracy for uncertainty transparency.  ￼
 
 ⸻
 
-Complete file index (suggested baseline)
-
-Reference & Base
-	•	basemap.json — Basemap configuration(s)
-	•	counties.json — Kansas county boundaries (static)
-	•	counties_timeslices.json — Historical county slices (time-aware)
-	•	kansas_counties.geojson — County geometries (data)
-	•	elevation.json — DEM/terrain layers & derivatives
-	•	plss_sections.json — PLSS township/section index
-	•	historic_parcels.json — Historic parcels/deeds overview
-
-Environment & Climate
-	•	climate_normals.json — Layer spec for normals
-	•	climate_normals_ks.json — Kansas stations FC
-	•	drought.json / drought_weekly.json — U.S. Drought Monitor (weekly time slices)
-	•	soil_surveys.json — SSURGO/STATSGO references
-	•	hydrology.json — Rivers, streams, waterbodies
-	•	landcover.json — NLCD specs
-	•	landcover_timeslices.json — NLCD 1992–2021 snapshots
-
-Hazards
-	•	fema_disasters.json / _ks.json
-	•	storm_events.json / _ks.json
-	•	tornado_tracks.json / _ks.json
-	•	wildfire_perimeters.json
-
-Movement & Infrastructure
-	•	railroads.json / railroads_lines.json
-	•	trails.json / trails_lines.json
-	•	usgs_topo.json — Historic topo COG/tiles
-
-Sovereignty & Treaties
-	•	treaties.json — Layer spec
-	•	treaties_polygons.json — Treaty/reservation polygons (GeoJSON)
-
-Culture, Documents & Stories
-	•	oral_histories.json / _points.json
-	•	documents.json / _points.json
-	•	stories.json
-
-Towns & Demo
-	•	towns.json / towns_points.json
-	•	demo_entities.json / demo_events.json
-	•	timeline.json — Global timeline feed
-
-Cartography Tokens
-	•	legend.json — Central symbology
-	•	style_tokens.json — Shared UI tokens
-
-Hazard, drought, tornado, FEMA, and wildfire layers should point to official sources (NCEI Storm Events, SPC GIS, FEMA OpenFEMA, USDM, NIFC), time-indexed for the slider.
+Attribution, license, provenance (non-negotiable)
+	•	Every layer must declare attribution, license, and a traceable provenance link (STAC item, source descriptor).
+	•	When integrating external services (ArcGIS, WMS), mirror the provider’s attribution and terms.
+	•	For compiled layers, enumerate source blend and date of synthesis in STAC.
+These rules uphold reproducibility and credit, and enable QA back-tracing from the UI to raw inputs.  ￼  ￼
 
 ⸻
 
-Data flow (visual)
-
-flowchart TD
-  A["STAC Items\n(stac/items/*.json)"] --> B["Processed Data\n(data/processed/*.json|.geojson|.pmtiles|.tif)"]
-  B --> C["Layer Configs\n(web/data/*.json)"]
-  C --> D["Web Viewer Logic\n(web/app.js)"]
-  D --> E["MapLibre UI\n(Time Slider,\nSidebar,\nPopups)"]
-
-  classDef stac fill:#FFD166,stroke:#333,stroke-width:1px;
-  classDef processed fill:#06D6A0,stroke:#333,stroke-width:1px;
-  classDef webdata fill:#118AB2,stroke:#fff,stroke-width:1px;
-  classDef viewer fill:#073B4C,stroke:#fff,stroke-width:1px;
-  classDef ui fill:#EF476F,stroke:#fff,stroke-width:1px;
-
-  class A stac;
-  class B processed;
-  class C webdata;
-  class D viewer;
-  class E ui;
-
-The pipeline is STAC-first, ETL generates COG/PMTiles/GeoJSON, layer JSONs reference those artifacts, and the viewer composes time-aware maps.
+How to add a new layer (checklist)
+	1.	Create/convert data artifact
+	•	Vector → GeoJSON (small) or PMTiles (large); Raster → COG.
+	•	Normalize to WGS84 (EPSG:4326). Add overviews (COG).  ￼
+	2.	STAC + source descriptor
+	•	Write a STAC Item under stac/items/ with assets pointing to the artifact (media types: image/tiff; application=geotiff; profile=cloud-optimized, application/vnd.pmtiles).
+	•	Ensure bounding box, time extents, licensing, and providers are filled.  ￼
+	3.	Author the layer spec
+	•	Add a new .layer.json (or append to layers.json) with the schema above.
+	•	Include time metadata, category, legend/style, popup fields.
+	4.	Validate
+	•	Run schema validation & lints (make config-validate, CI hooks) and open the layer locally (dev viewer).
+	•	Check attribute names used in popup/timeProperty.  ￼
+	5.	Performance sanity
+	•	Inspect size & load behavior; tile if necessary; reduce geometry noise; add simplification/overviews.
+	6.	Document
+	•	Add a short note in web/data/docs/ (edge cases, caveats, uncertainty, source anomalies).
 
 ⸻
 
-Thematic organization (visual)
-
-flowchart LR
-  subgraph Ref["Reference & Base"]
-    basemap["basemap.json"]
-    counties["counties.json"]
-    counties_ts["counties_timeslices.json"]
-    kc_geo["kansas_counties.geojson"]
-    elevation["elevation.json"]
-    plss["plss_sections.json"]
-    parcels["historic_parcels.json"]
-  end
-  subgraph Env["Environment & Climate"]
-    climate_normals["climate_normals.json"]
-    climate_normals_ks["climate_normals_ks.json"]
-    drought["drought.json"]
-    drought_weekly["drought_weekly.json"]
-    soils["soil_surveys.json"]
-    hydro["hydrology.json"]
-    landcover["landcover.json"]
-    landcover_ts["landcover_timeslices.json"]
-  end
-  subgraph Haz["Hazards"]
-    fema["fema_disasters.json"]
-    fema_ks["fema_disasters_ks.json"]
-    storm["storm_events.json"]
-    storm_ks["storm_events_ks.json"]
-    tornado["tornado_tracks.json"]
-    tornado_ks["tornado_tracks_ks.json"]
-    wildfire["wildfire_perimeters.json"]
-  end
-  subgraph Move["Movement & Infrastructure"]
-    rail["railroads.json"]
-    rail_lines["railroads_lines.json"]
-    trails["trails.json"]
-    trails_lines["trails_lines.json"]
-    topo["usgs_topo.json"]
-  end
-  subgraph Sov["Sovereignty & Treaties"]
-    treaties["treaties.json"]
-    treaties_poly["treaties_polygons.json"]
-  end
-  subgraph Cult["Culture, Docs & Stories"]
-    oral["oral_histories.json"]
-    oral_pts["oral_histories_points.json"]
-    docs["documents.json"]
-    docs_pts["documents_points.json"]
-    stories["stories.json"]
-  end
-  subgraph Demo["Towns & Demo"]
-    towns["towns.json"]
-    towns_pts["towns_points.json"]
-    demo_entities["demo_entities.json"]
-    demo_events["demo_events.json"]
-    timeline["timeline.json"]
-  end
-  subgraph Carto["Cartography Tokens"]
-    legend["legend.json"]
-    style_tokens["style_tokens.json"]
-  end
-
+Conventions & tips
+	•	IDs: snake_case, stable, no spaces (used in state & bookmarks).
+	•	Fields: keep popup fields concise; consider human vs machine names (ef_scale + EF Scale).
+	•	Legends: prefer explicit classes for reproducibility (no magic in code).
+	•	Bounds: set to layer bbox; used to auto-zoom when toggled.
+	•	Uncertainty: add _confidence or accuracy per feature when relevant; surface in popup.  ￼
 
 ⸻
 
-Conventions
-	•	Keep configs lean; heavy geometry and rasters live under data/processed/ or data/cogs/, with STAC pointing to originals, checksums, and lineage.
-	•	Reuse legend colors and style_tokens for consistency.
-	•	Always include attribution, license, and provenance (as connections.stac_item).
-	•	Prefer PMTiles for large vectors; COGs for rasters; WGS84 (EPSG:4326) throughout the web stack.
-	•	Time semantics: if features have year or valid_from/valid_to, set timeProperty and keep global time for layer’s overall extent.
+Example categories to prioritize (starter set)
+	•	Basemaps: Hillshade/DEM (COG), 1890s–1950s USGS quads (COG)  ￼
+	•	Hazards: Tornado tracks (SPC), floods/FEMA declarations, drought (USDM), wildfire perimeters (NIFC)  ￼
+	•	Sovereignty: Treaties/reservations, historical counties by year
+	•	Movement: Trails, rail buildout by year
+	•	Environment: Landcover (NLCD timeslices), soils/SSURGO, wetlands (NWI)
+	•	Culture: Forts/settlements by era, cemeteries, oral histories POIs
+
+These layers support the story-forward, time-aware exploration that’s central to the hub’s design.  ￼
 
 ⸻
 
-Validation & QA
-
-JSON sanity
-
-jq . web/data/*.json >/dev/null
-
-Schema check
-
-python -m scripts.validate_config web/data --schema web/config/layers.schema.json
-
-Repo tests (if configured)
-
-pytest -k web_configs
-
-Common pitfalls
-	•	JSON comments: don’t use // or /* */.
-	•	Bounds: global rasters must respect Web-Mercator vertical limit ±85.0511.
-	•	Paths: use web/data/..., data/processed/..., or data/cogs/... consistently.
-	•	Time: set either global time or timeProperty (or both) appropriately; don’t contradict STAC item dates.
+Why this design
+	•	Keeps UI configuration declarative & testable and decoupled from data pipelines.
+	•	Aligns with open, reproducible geospatial publishing (COG/PMTiles, STAC, explicit legends).
+	•	Supports timeline narrative, uncertainty expression, and provenance-centric QA required by the broader KFM architecture.  ￼  ￼
 
 ⸻
 
-Ingest & formats (field-ready tips)
-	•	Convert rasters to COG (rio cogeo create … --web-optimized) and vectors to GeoJSON (or PMTiles) in WGS84.
-	•	When sourcing historic maps (MrSID, scanned PDFs), georeference to GeoTIFF, then COG; record year for the time slider; index sheets in STAC.
-	•	For hazards and climate:
-	•	NCEI Storm Events (CSV by state/year) for multi-hazard timelines,
-	•	SPC Tornado/Hail/Wind GIS for paths/points (annual rolls),
-	•	US Drought Monitor weekly polygons (shp/geojson/WMS),
-	•	NIFC wildfire perimeters (2000+) and KFS state perimeters.
-Attach each to STAC, then wire a lean layer JSON here.
+References (internal)
+	•	System/Viewer design (timeline, toggles, story mode): Kansas-Frontier-Matrix Hub Design.  ￼
+	•	Design audit (story maps, uncertainty, analytics): Design Audit – Gaps & Enhancements.  ￼
+	•	ETL → COG/PMTiles → STAC (archive integration): GIS Archive & Deeds Integration Guide.  ￼
+	•	Backend/graph & API contracts (provenance, time): Developer Documentation.  ￼
+	•	Hazards & climate datasets (KS-focused catalog): Historical Dataset Integration.  ￼
+	•	Knowledge/uncertainty semantics (MCP alignment): Data Resources & MCP.  ￼
 
 ⸻
 
-Why this shape?
-	•	It keeps the viewer config small and declarative, while STAC carries full lineage and licensing.
-	•	It aligns with our ETL/AI + graph + viewer architecture and CI reproducibility targets.
-	•	It leaves room for analytics (time-aware hazards, climate, sovereignty layers) without bloating the UI config.
-
-⸻
-
-References (project design & ingestion guides):
-Architecture & viewer contract  • Integration gaps & analytics focus  • GIS archive ingestion & formats (COG/GeoJSON/PMTiles)  • Hazard/climate datasets and timelines
+Ready to ship: drop your new .layer.json here, reference data from STAC, pass config-validate, and you’re live in the viewer with time, legends, and popups wired—no code changes needed.
