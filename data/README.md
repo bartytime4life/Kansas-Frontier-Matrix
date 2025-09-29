@@ -1,103 +1,83 @@
+
 <div align="center">
 
-# 📂 Kansas-Frontier-Matrix — `data/`
 
-**Mission:** keep **inputs reproducible**, **artifacts derivable**, and **catalogs discoverable**.  
-This directory implements the project’s **MCP-style data lifecycle** end-to-end.
+📂 Kansas-Frontier-Matrix — data/
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/raw/main/.github/badges/precommit.svg)](../.pre-commit-config.yaml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+Mission: keep inputs immutable, artifacts reproducible, catalogs discoverable, and knowledge auditable.
+This directory implements the project’s MCP-style data lifecycle, feeding both the STAC catalog and the Neo4j knowledge graph.
 
 </div>
 
----
 
-## Contents
 
-- [Philosophy](#philosophy)
-- [Directory Layout](#directory-layout)
-- [Git & LFS Policy](#git--lfs-policy)
-- [Lifecycle & Make Targets](#lifecycle--make-targets)
-- [Naming Conventions](#naming-conventions)
-- [Source Descriptor Schema](#source-descriptor-schema)
-- [Provenance & Checksums](#provenance--checksums)
-- [STAC Guidance](#stac-guidance)
-- [QA & Validation](#qa--validation)
-- [Quickstart](#quickstart)
-- [Gotchas](#gotchas)
-- [TL;DR](#tldr)
+⸻
 
----
+Contents
+	•	Philosophy
+	•	Directory Layout
+	•	Git & LFS Policy
+	•	Lifecycle & Make Targets
+	•	Naming Conventions
+	•	Source Descriptor Schema
+	•	Provenance & Checksums
+	•	STAC Guidance
+	•	Knowledge Graph Integration
+	•	Uncertainty & Confidence
+	•	QA & Validation
+	•	Quickstart
+	•	Gotchas
+	•	TL;DR
 
-## Philosophy
+⸻
 
-- **Raw is immutable.** We never hand-edit downloads; we annotate with tiny sidecars.  
-- **Processing is reproducible.** Any artifact is re-creatable from scripts + configs.  
-- **Catalogs are first-class.** Everything lands in **STAC 1.0.0** for discovery + time.
+Philosophy
+	•	Raw is immutable. Nothing hand-edited; all edits live in *_meta.json sidecars.
+	•	Processing is reproducible. Scripts + configs recreate every artifact.
+	•	Catalogs are first-class. Every asset lands in STAC 1.0.0.
+	•	Graph is connective tissue. Every entity/event is linked into the Neo4j knowledge graph ￼ ￼.
+	•	Uncertainty is explicit. Confidence scores & provenance are stored alongside data ￼ ￼.
 
----
+⸻
 
-## Directory Layout
+Directory Layout
 
-```text
 data/
-├─ 📥 raw/                  # Immutable source payloads (original downloads, never edited)
-│  ├─ …/
-│  └─ *_src.json            # Provenance sidecar for adjacent payload
+├─ 📥 raw/             # Immutable payloads (never edit)
+│  └─ *_src.json       # Provenance sidecars
 │
-├─ 📝 sources/              # Human-curated descriptors & lookup tables
-│  ├─ schema.source.json
-│  └─ example_source.json
+├─ 📝 sources/         # Curated descriptors (JSON/YAML, validated)
+│  └─ schema.source.json
 │
-├─ 🛠 work/                 # Scratch / intermediate staging (not committed)
-├─ 🧹 tmp/                  # Ephemeral (ignored), wiped by CI
+├─ 🛠 work/            # Scratch staging (ignored in git)
+├─ 🧹 tmp/             # Ephemeral build (cleared in CI)
 │
-├─ 📊 processed/            # Analysis-ready outputs (vectors / rasters)
-│  ├─ vectors/
-│  │  └─ example_layer.geojson
-│  ├─ rasters/
-│  │  └─ example_raster.tif
+├─ 📊 processed/       # Analysis-ready products
+│  ├─ vectors/*.geojson
+│  ├─ rasters/*.tif
 │  └─ _meta.json
 │
-├─ 🛰 cogs/                 # Canonical Cloud-Optimized GeoTIFFs
-│  └─ example_cog.tif
+├─ 🛰 cogs/            # Canonical Cloud-Optimized GeoTIFFs
+├─ 🔬 derivatives/     # Higher-order blends & indices
 │
-├─ 🔬 derivatives/          # Higher-order products (metrics, blends, analyses)
-│  └─ example_metric.tif
+├─ 📂 stac/            # STAC catalog (collections + items)
 │
-├─ 📂 stac/                 # Space-time catalog (collections + items)
-│  ├─ collections/
-│  │  └─ example_collection.json
-│  └─ items/
-│     └─ example_item.json
-│
-└─ 🗺 tiles/                 # Ephemeral web map tiles (PNG/PMTiles, ignored)
+├─ 🗺 tiles/            # Web tiles (PNG/PMTiles, ignored)
+└─ 📖 provenance/      # Registry of checksums & experiment logs
 
-Rule: Every derivation should emit a *_meta.json capturing command, inputs, timestamps, versions, and checksums.
+Rule: each derivation emits _meta.json and .sha256.
 
 ⸻
 
 Git & LFS Policy
 
 .gitignore
-	•	Keep processed/**, cogs/**, derivatives/**, work/**, tmp/**, and tiles/** out by default.
-	•	Allow only: *_meta.json, .sha256, curated CSV/TSV/GeoJSON, and small README docs.
+	•	Ignore processed/**, cogs/**, derivatives/**, work/**, tmp/**, tiles/**.
+	•	Commit only: *_meta.json, .sha256, curated descriptors, small docs.
 
 .gitattributes
-	•	Route heavy binaries to Git LFS:
-
-*.tif *.tiff *.mbtiles *.pmtiles *.gpkg *.fgb *.shp *.dbf *.prj *.shx
-*.zip *.7z *.laz *.las *.pdf
-
-
-	•	Keep diff-friendly text in normal Git:
-
-*.json *.geojson *.topojson *.yaml *.yml *.csv *.tsv *.kml *.kmz
-
-(use LFS for very large KMZ)
+	•	Route heavy binaries to LFS (*.tif, *.gpkg, *.laz, etc.).
+	•	Keep diff-friendly text (JSON, GeoJSON, CSV, YAML) in normal Git.
 
 ⸻
 
@@ -105,74 +85,48 @@ Lifecycle & Make Targets
 
 flowchart TD
   S["Define Source<br/>(data/sources/*.json)"] --> F["Fetch<br/>make fetch"]
-  F --> P1["Process Vectors<br/>make vectors"]
-  F --> P2["Process Rasters<br/>make cogs"]
+  F --> P1["Vectors<br/>make vectors"]
+  F --> P2["Rasters → COGs<br/>make cogs"]
   P2 --> T["Terrain Derivatives<br/>make terrain"]
   P1 --> D["Derivatives<br/>make derivatives"]
   P2 --> D
   D --> C["STAC Build<br/>make stac"]
-  C --> V["Validate<br/>make validate-*"]
+  C --> V["Validation<br/>make validate-*"]
   C --> X["Exports<br/>make kml / make site"]
 
-Canonical targets
-	1.	Define → data/sources/*.json
-	2.	Fetch → make fetch
-	3.	Vectors → make vectors (reproject to EPSG:4326, normalize fields)
-	4.	Rasters → make cogs (COG-ify) · make terrain (hillshade, slope, aspect)
-	5.	Derive → make derivatives (TRI/TPI/roughness, blends)
-	6.	STAC → make stac (collections/items under data/stac/**)
-	7.	Validate → make validate-* (schema, CRS, COG, STAC, checksums)
-	8.	Export → make kml / make site (KMZ/KML + web viewer overlays)
+<!-- END OF MERMAID -->
 
-All steps should refresh *_meta.json and *.sha256.
+
 
 ⸻
 
 Naming Conventions
-	•	Vectors → data/processed/vectors/<layer>_<period>.geojson
-e.g., hydrography_1936.geojson
-	•	Rasters → data/processed/dem/<id>.tif
-e.g., ks_1m_dem_2018.tif
-	•	COGs → data/cogs/<id>.tif
-	•	STAC Items → data/stac/items/<collection>/<id>.json
-	•	Periods → {YYYY | YYYY-YYYY | 1930s | late-19c} (lowercase, hyphenated)
+	•	processed/vectors/<layer>_<period>.geojson → hydrography_1936.geojson
+	•	processed/dem/<id>.tif → ks_1m_dem_2018.tif
+	•	cogs/<id>.tif → canonical COGs
+	•	stac/items/<collection>/<id>.json → STAC items
+	•	Periods: {YYYY | YYYY-YYYY | 1930s | late-19c} (lowercase, hyphenated)
 
 ⸻
 
 Source Descriptor Schema
 
-All curated sources must validate against sources/schema.source.json.
+All sources validate against sources/schema.source.json.
 
 {
-  "required": ["id", "title", "type", "license", "provenance", "retrieved"],
+  "required": ["id","title","type","license","provenance","retrieved"],
   "properties": {
-    "id":        { "type": "string", "pattern": "^[a-z0-9_\\-]+$" },
-    "title":     { "type": "string" },
-    "type":      { "enum": ["vector", "raster", "collection", "service", "document"] },
-    "period":    { "type": "string" },
-    "bbox":      { "type": "array", "minItems": 4, "maxItems": 4 },
-    "urls":      { "type": "array", "items": { "type": "string", "format": "uri" } },
-    "license":   { "type": "object" },
-    "provenance":{ "type": "object" },
-    "retrieved": { "type": "string", "format": "date-time" },
-    "confidence":{ "type": "number", "minimum": 0, "maximum": 1 }
-  },
-  "additionalProperties": true
-}
-
-Example
-
-{
-  "id": "ks_hydrography_1936",
-  "title": "Kansas Hydrography (ca. 1936)",
-  "type": "vector",
-  "period": "1930s",
-  "bbox": [-102.051, 36.993, -94.588, 40.003],
-  "urls": ["https://.../download.zip"],
-  "license": { "name": "Public Domain" },
-  "provenance": { "agency": "NHD/USGS", "notes": "Digitized from 1930s sheets" },
-  "retrieved": "2025-09-26T00:00:00Z",
-  "confidence": 0.82
+    "id": {"type":"string","pattern":"^[a-z0-9_\\-]+$"},
+    "title": {"type":"string"},
+    "type": {"enum":["vector","raster","collection","service","document"]},
+    "period": {"type":"string"},
+    "bbox": {"type":"array","minItems":4,"maxItems":4},
+    "urls": {"type":"array","items":{"type":"string","format":"uri"}},
+    "license": {"type":"object"},
+    "provenance": {"type":"object"},
+    "retrieved": {"type":"string","format":"date-time"},
+    "confidence": {"type":"number","minimum":0,"maximum":1}
+  }
 }
 
 
@@ -180,80 +134,60 @@ Example
 
 Provenance & Checksums
 
-Each output directory should contain:
-	•	*_meta.json → command, inputs, CRS, bbox, stats, versions (GDAL, PROJ), wall-time
-	•	*.sha256 → one line per binary (COGs, PMTiles, GPKG, ZIP, PDFs…)
-	•	_meta.json → optional subtree index
-
-Example *_meta.json
-
-{
-  "command": "make terrain HILLSHADE=1 SOURCE=data/processed/dem/ks_1m_dem_2018.tif",
-  "started": "2025-09-26T12:00:00Z",
-  "finished": "2025-09-26T12:05:09Z",
-  "inputs": [
-    "data/processed/dem/ks_1m_dem_2018.tif",
-    "scripts/terrain.py"
-  ],
-  "outputs": [
-    "data/cogs/hillshade_2020.tif"
-  ],
-  "software": { "gdal": "3.9.0", "proj": "9.4.0", "python": "3.12" },
-  "crs": "EPSG:4326",
-  "bbox": [-102.051, 36.993, -94.588, 40.003],
-  "stats": { "pixels": 123456789, "nodata": -9999 },
-  "checksums": {
-    "data/cogs/hillshade_2020.tif": "sha256:abc123..."
-  }
-}
-
+Each directory should include:
+	•	*_meta.json → command, inputs, outputs, CRS, bbox, stats, versions
+	•	*.sha256 → one per binary artifact
 
 ⸻
 
 STAC Guidance
-	•	Collections → thematic groupings (dem, terrain, vectors, overlays)
-	•	Items → concrete datasets (e.g., hydrography_1936)
+	•	Collections: group by domain (terrain, hydrology, treaties, maps).
+	•	Items: concrete datasets (e.g., hydrography_1936).
+	•	Each item must include: geometry, bbox, datetime, ≥1 asset, roles (data, visual), checksum, license, links.
+	•	Use STAC Validator in CI ￼.
 
-Each STAC Item must include:
-	•	geometry, bbox, and properties.datetime or properties.start_datetime / end_datetime
-	•	≥ 1 asset (COG or GeoJSON) with:
-	•	roles (e.g., ["data"], optional ["visual"] for hillshade/tiles/KMZ)
-	•	checksum:sha256, type (MIME), title, href
-	•	license
-	•	links: self, parent, root
-	•	Optional provenance link → data/provenance/registry.json
+⸻
 
-Build & validate
+Knowledge Graph Integration
 
-make stac
-make stac-validate
+Every processed entity flows into Neo4j:
+	•	Nodes: Person, Place, Event, Document ￼
+	•	Edges: OCCURRED_AT, MENTIONS, PARTICIPATED_IN ￼
+	•	Properties: datetime (OWL-Time), confidence, provenance ￼
+	•	Ties directly to timeline + map UI.
 
+⸻
+
+Uncertainty & Confidence
+	•	Confidence scores (0–1) on every extraction ￼.
+	•	Ambiguous geocodes flagged with confidence < 0.5.
+	•	Visualization: low confidence = lighter opacity.
 
 ⸻
 
 QA & Validation
-	•	make validate-sources → JSON Schema for sources/**
-	•	make validate-vectors → CRS, topology, bbox sanity
-	•	make validate-cogs → COG tiling, overviews, compression
-	•	make stac-validate → STAC 1.0.0 compliance
-	•	make checksums → refresh SHA-256 sidecars
+	•	make validate-sources → JSON Schema
+	•	make validate-vectors → CRS/topology
+	•	make validate-cogs → COG structure
+	•	make stac-validate → STAC compliance
+	•	make checksums → refresh SHA-256
 
-CI runs STAC + checksum verification on PRs.
+CI runs full suite on PRs.
 
 ⸻
 
 Quickstart
 
-# 1) Add a source descriptor
-$ $EDITOR data/sources/ks_hydrography.json
+# 1. Add a new source descriptor
+$ $EDITOR data/sources/ks_hydrography_1936.json
 
-# 2) Fetch + process
+# 2. Fetch & process
 $ make fetch vectors stac
 
-# 3) Validate + record
+# 3. Validate
 $ make validate-sources validate-vectors checksums
 
-# 4) Inspect outputs
+# 4. Explore
 $ open data/processed/vectors/hydrography_1936.geojson
 $ open data/stac/items/vectors/hydrography_1936.json
 
@@ -261,17 +195,19 @@ $ open data/stac/items/vectors/hydrography_1936.json
 ⸻
 
 Gotchas
-	•	Shapefiles are brittle → prefer GeoPackage or FlatGeobuf.
-	•	Normalize to EPSG:4326 (unless there’s a strong, documented reason).
-	•	When regenerating, commit _meta.json + .sha256 together.
-	•	Scratch stays in work/ or tmp/ — never commit ephemeral intermediates.
+	•	Shapefiles are brittle → prefer GeoPackage / FlatGeobuf.
+	•	Always reproject to EPSG:4326 unless documented otherwise.
+	•	Commit _meta.json + .sha256 together.
+	•	Never commit intermediates (work/, tmp/).
 
 ⸻
 
 TL;DR
+	•	Immutable raw in raw/
 	•	Curated descriptors in sources/
-	•	Immutable payloads in raw/
 	•	Reproducible outputs in processed/, cogs/, derivatives/
 	•	Discoverable metadata in stac/
-	•	Guarded by .gitignore, .gitattributes, pre-commit, and CI
-	•	Every step emits provenance + checksums for auditability
+	•	Connected graph in Neo4j
+	•	Provenance + confidence tracked everywhere
+
+⸻
