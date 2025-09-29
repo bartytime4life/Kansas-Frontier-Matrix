@@ -2,25 +2,41 @@
   "id": "wildfire_perimeters",
   "title": "Wildfire Perimeters (2000–present)",
   "type": "vector",
-  "data": "data/processed/wildfire_perimeters.json",
   "category": "hazards",
 
-  "time": { "start": "2000-01-01", "end": null },
-  "timeProperty": "year",
+  "data": "data/processed/hazards/wildfire_perimeters.geojson",
 
-  "popup": ["incident_name", "year", "year_end", "acres", "cause", "source"],
+  "time": { "start": "2000-01-01", "end": null },
+
+  /* When different sources use different field names, the viewer
+     can resolve them via these aliases (first match wins). */
+  "propertyMap": {
+    "name":   ["incident_name", "IncidentName", "fire_name", "FIRE_NAME", "FIRENAME"],
+    "year":   ["fire_year", "FIREYEAR", "year"],
+    "yearEnd":["cont_year", "YearEnd", "year_end"],
+    "acres":  ["gis_acres", "GIS_ACRES", "acres", "ACRES"],
+    "cause":  ["stat_cause_descr", "STAT_CAUSE_DESCR", "cause", "CAUSE"],
+    "source": ["source", "SOURCE", "agency", "AGENCY"]
+  },
+
+  /* If your app supports explicit time fields, these help time slider bindings. */
+  "timePropertyStart": ["fire_year", "FIREYEAR", "year"],
+  "timePropertyEnd":   ["cont_year", "YearEnd", "year_end"],
+
+  "popup": ["name", "year", "yearEnd", "acres", "cause", "source"],
 
   "style": {
-    "lineColor": "#E63946",
+    "lineColor": "var(--hazard-wildfire)",
     "lineWidth": 1.0,
     "lineOpacity": 0.9,
-    "fillColor": "#E76F51",
+    "fillColor": "var(--hazard-wildfire)",
     "fillOpacity": 0.25
   },
 
   "minzoom": 5,
   "maxzoom": 14,
-
   "visible": false,
-  "attribution": "NIFC / Kansas Forest Service"
+
+  "attribution": "NIFC Historic Wildfire Perimeters / Kansas Forest Service",
+  "attributionURL": "https://data-nifc.opendata.arcgis.com/"
 }
