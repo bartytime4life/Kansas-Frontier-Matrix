@@ -11,6 +11,8 @@
 # Utilities:
 #          registry (builds scripts/badges/source_map.json + injects into web/app.config.json)
 #          config-validate, config-fmt (validate web/config/*.json against schema)
+# Compose:
+#          compose-up-dev, compose-up-docs, compose-up-ci, compose-down, compose-logs
 # Notes:
 #   - Repo-aware STAC path: ./stac
 #   - Script fallbacks + GDAL tools when available
@@ -186,7 +188,8 @@ endef
         collections-list collections-build collections-validate collections-render \
         arch-sites arch-sites-validate arch-sites-render registry \
         install-dev test test-cli test-sources fmt doctor \
-        config-validate config-fmt
+        config-validate config-fmt \
+        compose-up-dev compose-up-docs compose-up-ci compose-down compose-logs
 
 # -------- Help --------
 help:
@@ -233,9 +236,12 @@ help:
 	@echo "  dem-checksum         Write+verify checksum(s) for DEM and print STAC fields"
 	@echo "  hillshade-checksum   Write+verify checksum(s) for hillshade"
 	@echo ""
-	@echo "Hydrology (optional):"
-	@echo "  hydrology-fetch      Export Kansas River channels/floodplains/gauges (GeoJSON)"
-	@echo "  hydrology-stac       Wire local GeoJSON hrefs into the hydrology STAC Items"
+	@echo "Compose:"
+	@echo "  compose-up-dev       Launch site preview (profile=dev) on 127.0.0.1:8080"
+	@echo "  compose-up-docs      Launch mkdocs (profile=docs) on 127.0.0.1:8001"
+	@echo "  compose-up-ci        Run prebuild one-shot (profile=ci)"
+	@echo "  compose-logs         Tail all service logs"
+	@echo "  compose-down         Stop and remove services"
 	@echo ""
 	@echo "Dev:"
 	@echo "  install-dev, test, test-cli, test-sources, fmt, doctor"
@@ -616,7 +622,6 @@ schema = json.loads((root/"schema.json").read_text())
 
 def validate_view(doc_path, defs_key):
     doc = json.loads((root/doc_path).read_text())
-    # Build a view schema that keeps $defs in scope and points to the right branch
     view = {
         "$schema": schema.get("$schema","https://json-schema.org/draft/2020-12/schema"),
         "$id": f"schema-view:{defs_key}",
@@ -816,57 +821,8 @@ clean:
 # ====================================================================
 # Kansas River Hydrology — fetch/export + STAC wiring (optional)
 # ====================================================================
-
 hydrology-fetch: | $(KSRIV_OUTDIR)
 	@if [ "$(KSRIV_CHANNELS)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_CHANNELS" ]; then echo "Set KSRIV_CHANNELS=..."; exit 1; fi
 	@if [ "$(KSRIV_FLOODPLAIN)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_FLOODPLAINS" ]; then echo "Set KSRIV_FLOODPLAIN=..."; exit 1; fi
 	@if [ "$(KSRIV_GAUGES)" = "REPLACE_WITH_ARCGIS_REST_LAYER_URL_GAUGES" ]; then echo "Set KSRIV_GAUGES=..."; exit 1; fi
-	@if ! command -v ogr2ogr >/dev/null 2>&1; then echo "ERROR: ogr2ogr (GDAL) is required."; exit 1; fi
-	ogr2ogr -f GeoJSON "$(KSRIV_CHANNELS_GJ)"   "$(KSRIV_CHANNELS)?where=1=1&f=json&outSR=4326"    -t_srs EPSG:4326
-	ogr2ogr -f GeoJSON "$(KSRIV_FLOODPLAIN_GJ)" "$(KSRIV_FLOODPLAIN)?where=1=1&f=json&outSR=4326" -t_srs EPSG:4326
-	ogr2ogr -f GeoJSON "$(KSRIV_GAUGES_GJ)"     "$(KSRIV_GAUGES)?where=1=1&f=json&outSR=4326"     -t_srs EPSG:4326
-	@echo "✓ Kansas River hydrology exported → $(KSRIV_OUTDIR)"
-
-hydrology-stac:
-	@if [ "$(HAVE_JQ)" != "yes" ]; then echo "ERROR: jq is required for hydrology-stac"; exit 1; fi
-	@if [ ! -f "$(KSRIV_ITEM_CHANNELS)" ] || [ ! -f "$(KSRIV_ITEM_FP)" ] || [ ! -f "$(KSRIV_ITEM_GAUGES)" ]; then \
-	  echo "ERROR: hydrology STAC items missing under $(KSRIV_ITEM_DIR)"; exit 1; fi
-	jq --arg H "$(KSRIV_CHANNELS_GJ)"   '.assets.geojson.href = $H' "$(KSRIV_ITEM_CHANNELS)" > "$(KSRIV_ITEM_CHANNELS).tmp" && mv "$(KSRIV_ITEM_CHANNELS).tmp" "$(KSRIV_ITEM_CHANNELS)"
-	jq --arg H "$(KSRIV_FLOODPLAIN_GJ)" '.assets.geojson.href = $H' "$(KSRIV_ITEM_FP)"       > "$(KSRIV_ITEM_FP).tmp"       && mv "$(KSRIV_ITEM_FP).tmp"       "$(KSRIV_ITEM_FP)"
-	jq --arg H "$(KSRIV_GAUGES_GJ)"     '.assets.geojson.href = $H' "$(KSRIV_ITEM_GAUGES)"   > "$(KSRIV_ITEM_GAUGES).tmp"   && mv "$(KSRIV_ITEM_GAUGES).tmp"   "$(KSRIV_ITEM_GAUGES)"
-	@echo "✓ STAC Items updated with local GeoJSON hrefs"
-
-# ====================================================================
-# Dev / Tests
-# ====================================================================
-
-install-dev:
-	@python -m pip install --upgrade pip
-	@python -m pip install -r requirements-dev.txt $(ALLOW_FAIL)
-
-test: install-dev
-	@pytest -q $(ALLOW_FAIL)
-
-test-cli: install-dev
-	@pytest -q $(TESTS)/test_cli.py $(ALLOW_FAIL)
-
-test-sources: install-dev
-	@pytest -q $(TESTS)/test_sources.py $(ALLOW_FAIL)
-
-fmt:
-	@echo "Running formatters/linters where available..."
-	@command -v ruff >/dev/null 2>&1 && ruff check --fix || echo "ruff not installed"
-	@command -v black >/dev/null 2>&1 && black . || echo "black not installed"
-	@command -v jq >/dev/null 2>&1 || echo "jq not installed (JSON formatting skipped)"
-
-doctor:
-	@echo "Doctor: quick health check"; \
-	miss=0; \
-	for t in gdaldem gdal_translate gdaladdo gdalwarp ogr2ogr; do \
-	  if ! command -v $$t >/dev/null 2>&1; then echo " - MISSING: $$t"; miss=1; fi; \
-	done; \
-	test "$$miss" = "0" && echo "✓ GDAL toolchain present" || true
-
-# -------- Order-only dir prereqs --------
-$(RAW) $(COGS) $(HILLS) $(TERRAIN) $(VEC) $(WEB) $(STAC)/items $(STAC)/collections $(KSRIV_OUTDIR) $(DERIV) $(WEB_DATA):
-	$(call ensure_dir,$@)
+	@if ! command -v ogr2
