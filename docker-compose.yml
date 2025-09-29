@@ -15,6 +15,7 @@ x-env-defaults: &env_defaults
   KFM_DATA_DIR: "/app/data"
   KFM_STAC_DIR: "/app/stac"
   KFM_WEB_DIR: "/app/web"
+  TZ: ${TZ:-America/Chicago}
 
 x-volume-mounts: &vol_mounts
   - ./:/app:rw
@@ -63,19 +64,19 @@ services:
     platform: ${PLATFORM:-linux/amd64}
     working_dir: /app
     user: "${UID:-1000}:${GID:-1000}"
-    volumes: *vol_mounts
     env_file:
       - .env
     environment:
       <<: *env_defaults
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}
       AWS_PROFILE: ${AWS_PROFILE:-default}
+    volumes: *vol_mounts
     tmpfs: *tmpfs_mounts
     tty: true
     stdin_open: true
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "command -v gdalinfo >/dev/null 2>&1 && gdalinfo --version >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL", "gdalinfo --version >/dev/null 2>&1 && python -c 'import json;print(0)' >/dev/null 2>&1 || exit 1"]
       interval: 60s
       timeout: 5s
       retries: 3
@@ -113,7 +114,6 @@ services:
     tmpfs: *tmpfs_mounts
     restart: unless-stopped
     healthcheck:
-      # Avoid curl dependency; use Python stdlib
       test: ["CMD-SHELL", "python - <<'PY'\nimport urllib.request,sys;urllib.request.urlopen('http://127.0.0.1:8080',timeout=2);sys.exit(0)\nPY"]
       interval: 30s
       timeout: 5s
@@ -125,7 +125,7 @@ services:
 
   # CI-style one-shot runner: validates STAC & writes preview manifest then exits
   prebuild:
-    profiles: ["ci"]                # docker compose --profile ci up --abort-on-container-exit
+    profiles: ["ci"]                # docker compose --profile ci up --abort-on-container-exit prebuild
     image: ${IMAGE_NAME:-kfm:local}
     platform: ${PLATFORM:-linux/amd64}
     working_dir: /app
@@ -139,7 +139,7 @@ services:
         make prebuild
       else
         echo "[info] No 'prebuild' target; running quick schema checks"
-        python -m pip install -q jsonschema || true
+        python -m pip install -q 'jsonschema>=4.23' || true
         if [ -f web/app.config.json ] && [ -f web/config/app.config.schema.json ]; then
           python - <<'PY'
 import json, sys
@@ -190,6 +190,31 @@ PY
       timeout: 5s
       retries: 3
       start_period: 5s
+    logging: *logging_defaults
+    <<: *security_defaults
+    ulimits: *ulimits_defaults
+
+  # Optional GPU-enabled worker (NVIDIA) — disabled unless profile=gpu
+  gpu-worker:
+    profiles: ["gpu"]
+    image: ${IMAGE_NAME:-kfm:local}
+    platform: ${PLATFORM:-linux/amd64}
+    working_dir: /app
+    depends_on:
+      kfm:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+    environment:
+      <<: *env_defaults
+    volumes: *vol_mounts
+    user: "${UID:-1000}:${GID:-1000}"
+    command: bash -lc "nvidia-smi || true; sleep infinity"
+    tmpfs: *tmpfs_mounts
+    restart: unless-stopped
     logging: *logging_defaults
     <<: *security_defaults
     ulimits: *ulimits_defaults
