@@ -1,13 +1,180 @@
 {
-  "type": "FeatureCollection",
-  "name": "fema_disasters_ks",
-  "generated": "2025-09-26T00:00:00Z",
-  "attribution": "FEMA OpenFEMA",
-  "license": "Public Domain / US Government data",
-  "provenance": {
-    "source": "OpenFEMA Disaster Declarations Summaries (sample points for wiring)",
-    "notes": "County centroids; replace/append with pipeline export"
+  "id": "fema_disasters_ks",
+  "title": "FEMA Disaster Declarations — Kansas",
+  "type": "vector",
+  "format": "geojson",
+  "data": "web/data/fema_disasters_ks.json",
+
+  "category": "hazards",
+  "version": "1.3",
+  "generated": "2025-09-28T00:00:00Z",
+
+  "time": { "start": "1950-01-01", "end": null },
+  "timeProperty": { "start": "declaration_date", "end": null, "format": "date" },
+
+  "bounds": [-102.051, 36.993, -94.588, 40.003],
+  "minzoom": 5,
+  "maxzoom": 19,
+  "visible": true,
+  "opacity": 1.0,
+
+  "popup": [
+    "declaration_title",
+    "incident_type",
+    "declaration_type",
+    "disaster_number",
+    "declaration_date",
+    "county",
+    "fips",
+    "url"
+  ],
+
+  "legend": {
+    "type": "point",
+    "label": "FEMA Disaster Declarations (by incident type)",
+    "classes": [
+      { "label": "Flood",           "fill": "#2563eb", "stroke": "#1d4ed8" },
+      { "label": "Severe Storm(s)", "fill": "#10b981", "stroke": "#059669" },
+      { "label": "Tornado",         "fill": "#f59e0b", "stroke": "#d97706" },
+      { "label": "Fire",            "fill": "#ef4444", "stroke": "#dc2626" },
+      { "label": "Drought",         "fill": "#a78bfa", "stroke": "#7c3aed" },
+      { "label": "Other/Unknown",   "fill": "#6b7280", "stroke": "#4b5563" }
+    ]
   },
+
+  "style": {
+    "renderer": "sublayers",
+    "cluster": {
+      "enabled": true,
+      "clusterRadius": 36,
+      "minzoom": 5,
+      "maxzoom": 12,
+      "label": "{point_count}",
+      "fillColor": "#60a5fa",
+      "fillOpacity": 0.75,
+      "lineColor": "#1d4ed8",
+      "lineWidth": 1.0
+    },
+    "sublayers": [
+      {
+        "id": "fema_points_flood",
+        "filter": { "incident_type": "Flood" },
+        "symbol": "circle",
+        "circleColor": "#2563eb",
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#1d4ed8",
+        "circleStrokeWidthByZoom": [
+          { "zoom": 5, "width": 0.3 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.2 }
+        ],
+        "circleRadiusByZoom": [
+          { "zoom": 5, "radius": 3.2 },
+          { "zoom": 10, "radius": 5.0 },
+          { "zoom": 14, "radius": 6.5 }
+        ]
+      },
+      {
+        "id": "fema_points_storm",
+        "filter": { "incident_type": "Severe Storm(s)" },
+        "symbol": "circle",
+        "circleColor": "#10b981",
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#059669",
+        "circleStrokeWidthByZoom": [
+          { "zoom": 5, "width": 0.3 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.2 }
+        ],
+        "circleRadiusByZoom": [
+          { "zoom": 5, "radius": 3.2 },
+          { "zoom": 10, "radius": 5.0 },
+          { "zoom": 14, "radius": 6.5 }
+        ]
+      },
+      {
+        "id": "fema_points_tornado",
+        "filter": { "incident_type": "Tornado" },
+        "symbol": "circle",
+        "circleColor": "#f59e0b",
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#d97706",
+        "circleStrokeWidthByZoom": [
+          { "zoom": 5, "width": 0.3 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.2 }
+        ],
+        "circleRadiusByZoom": [
+          { "zoom": 5, "radius": 3.2 },
+          { "zoom": 10, "radius": 5.0 },
+          { "zoom": 14, "radius": 6.5 }
+        ]
+      },
+      {
+        "id": "fema_points_fire",
+        "filter": { "incident_type": "Fire" },
+        "symbol": "circle",
+        "circleColor": "#ef4444",
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#dc2626",
+        "circleStrokeWidthByZoom": [
+          { "zoom": 5, "width": 0.3 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.2 }
+        ],
+        "circleRadiusByZoom": [
+          { "zoom": 5, "radius": 3.2 },
+          { "zoom": 10, "radius": 5.0 },
+          { "zoom": 14, "radius": 6.5 }
+        ]
+      },
+      {
+        "id": "fema_points_drought",
+        "filter": { "incident_type": "Drought" },
+        "symbol": "circle",
+        "circleColor": "#a78bfa",
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#7c3aed",
+        "circleStrokeWidthByZoom": [
+          { "zoom": 5, "width": 0.3 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.2 }
+        ],
+        "circleRadiusByZoom": [
+          { "zoom": 5, "radius": 3.2 },
+          { "zoom": 10, "radius": 5.0 },
+          { "zoom": 14, "radius": 6.5 }
+        ]
+      },
+      {
+        "id": "fema_points_other",
+        "filter": { "not": { "incident_type": ["Flood", "Severe Storm(s)", "Tornado", "Fire", "Drought"] } },
+        "symbol": "circle",
+        "circleColor": "#6b7280",
+        "circleOpacity": 0.9,
+        "circleStrokeColor": "#4b5563",
+        "circleStrokeWidthByZoom": [
+          { "zoom": 5, "width": 0.3 },
+          { "zoom": 10, "width": 0.8 },
+          { "zoom": 14, "width": 1.2 }
+        ],
+        "circleRadiusByZoom": [
+          { "zoom": 5, "radius": 3.2 },
+          { "zoom": 10, "radius": 5.0 },
+          { "zoom": 14, "radius": 6.5 }
+        ]
+      }
+    ],
+    "hover": {
+      "circleStrokeColor": "#111827",
+      "circleStrokeWidthDelta": 0.8
+    },
+    "selection": {
+      "circleStrokeColor": "#111827",
+      "circleStrokeWidthDelta": 1.2
+    }
+  },
+
   "fields": {
     "disaster_number":   { "type": "string", "description": "FEMA disaster number" },
     "incident_type":     { "type": "string", "description": "Event type (Flood, Severe Storm(s), Tornado, Fire, Drought, etc.)" },
@@ -19,102 +186,74 @@
     "fips":              { "type": "string", "description": "County FIPS" },
     "url":               { "type": "string", "format": "uri", "description": "Link to OpenFEMA record" }
   },
-  "features": [
-    {
-      "type": "Feature",
-      "id": "fema_1957_tornado_sedgwick",
-      "geometry": { "type": "Point", "coordinates": [-97.337, 37.690] },
-      "properties": {
-        "disaster_number": "DR-84",
-        "incident_type": "Tornado",
-        "declaration_date": "1957-05-26",
-        "declaration_title": "Tornado Outbreak — Wichita Area",
-        "declaration_type": "Major Disaster",
-        "county": "Sedgwick",
-        "state": "KS",
-        "fips": "20173",
-        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "fema_1977_flood_shawnee",
-      "geometry": { "type": "Point", "coordinates": [-95.692, 39.042] },
-      "properties": {
-        "disaster_number": "DR-1234",
-        "incident_type": "Flood",
-        "declaration_date": "1977-07-20",
-        "declaration_title": "Severe Flooding — Kansas River Basin",
-        "declaration_type": "Major Disaster",
-        "county": "Shawnee",
-        "state": "KS",
-        "fips": "20177",
-        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "fema_1993_flood_wyandotte",
-      "geometry": { "type": "Point", "coordinates": [-94.747, 39.116] },
-      "properties": {
-        "disaster_number": "DR-999",
-        "incident_type": "Flood",
-        "declaration_date": "1993-07-09",
-        "declaration_title": "Great Flood of 1993 — KS Portion",
-        "declaration_type": "Major Disaster",
-        "county": "Wyandotte",
-        "state": "KS",
-        "fips": "20209",
-        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "fema_2011_fire_barber",
-      "geometry": { "type": "Point", "coordinates": [-98.682, 37.233] },
-      "properties": {
-        "disaster_number": "FM-2941",
-        "incident_type": "Fire",
-        "declaration_date": "2011-08-10",
-        "declaration_title": "Wildfire — Barber County",
-        "declaration_type": "Fire Mgmt Assistance",
-        "county": "Barber",
-        "state": "KS",
-        "fips": "20007",
-        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "fema_2012_drought_finney",
-      "geometry": { "type": "Point", "coordinates": [-100.872, 37.964] },
-      "properties": {
-        "disaster_number": "DR-4063",
-        "incident_type": "Drought",
-        "declaration_date": "2012-07-25",
-        "declaration_title": "Extreme Drought — Southwest KS",
-        "declaration_type": "Emergency",
-        "county": "Finney",
-        "state": "KS",
-        "fips": "20055",
-        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "fema_2021_severe_storms_jo",
-      "geometry": { "type": "Point", "coordinates": [-94.831, 38.883] },
-      "properties": {
-        "disaster_number": "DR-4603",
-        "incident_type": "Severe Storm(s)",
-        "declaration_date": "2021-07-09",
-        "declaration_title": "Severe Storms, Straight-line Winds, and Tornadoes",
-        "declaration_type": "Major Disaster",
-        "county": "Johnson",
-        "state": "KS",
-        "fips": "20091",
-        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+
+  "filters": {
+    "quick": [
+      { "label": "Flood",           "where": { "incident_type": "Flood" } },
+      { "label": "Severe Storm(s)", "where": { "incident_type": "Severe Storm(s)" } },
+      { "label": "Tornado",         "where": { "incident_type": "Tornado" } },
+      { "label": "Fire",            "where": { "incident_type": "Fire" } },
+      { "label": "Drought",         "where": { "incident_type": "Drought" } },
+      { "label": "Since 2000",      "where": { "declaration_date$gte": "2000-01-01" } },
+      { "label": "1970s–1990s",     "where": { "all": [{ "declaration_date$gte": "1970-01-01" }, { "declaration_date$lt": "2000-01-01" }] } }
+    ],
+    "advanced": {
+      "dateRangeField": "declaration_date",
+      "groupBy": ["incident_type", "declaration_type", "county"]
+    }
+  },
+
+  "search": {
+    "qFields": ["declaration_title", "incident_type", "county", "disaster_number"],
+    "accentFold": true,
+    "minLength": 2,
+    "placeholder": "Search FEMA events (e.g., Flood 1993, DR-4603)"
+  },
+
+  "ordering": {
+    "zindex": 520,
+    "before": "plss_parcels",
+    "after": "ks_hydro"
+  },
+
+  "attribution": "FEMA OpenFEMA",
+  "license": "Public Domain / US Government data",
+
+  "provenance": {
+    "source": "OpenFEMA Disaster Declarations Summaries (points at county centroids for demo; replace with pipeline export)",
+    "retrieved": "2025-09-26T00:00:00Z",
+    "notes": "When switching to pipeline export, prefer county polygons or per-incident footprints; persist source `disaster_number` and original URL."
+  },
+
+  "kfm_meta": {
+    "schema_version": "1.1",
+    "popup": ["declaration_title", "incident_type", "declaration_type", "disaster_number", "declaration_date", "county", "fips", "url"],
+    "stac": {
+      "collection": "kfm-hazards",
+      "item": "fema_disasters_ks_points"
+    }
+  },
+
+  "alternates": {
+    "data_fallbacks": [
+      { "format": "pmtiles", "url": "web/tiles/fema_disasters_ks.pmtiles", "note": "Use when present for clustering at scale" },
+      { "format": "geojson", "url": "web/data/fema_disasters_ks.json" }
+    ]
+  },
+
+  "type_overrides": {
+    "icon": {
+      "match": {
+        "property": "incident_type",
+        "stops": [
+          ["Flood", "water"],
+          ["Severe Storm(s)", "wind"],
+          ["Tornado", "tornado"],
+          ["Fire", "fire"],
+          ["Drought", "droplet-slash"]
+        ],
+        "default": "alert"
       }
     }
-  ]
+  }
 }
