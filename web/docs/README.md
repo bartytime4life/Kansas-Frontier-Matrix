@@ -29,7 +29,7 @@ flowchart TD
   C --> D["Runtime\n(web/index.html + app.js)"]
   D --> E["MapLibre\n(sources/layers)"]
   D --> F["UI\n(sidebar, legend, time slider)"]
-
+---
 	•	Authoritative config: web/config/app.config.json (generated) → first choice at runtime.
 	•	Fallbacks: web/config/viewer.json, web/config/layers.json, web/layers.json.
 	•	Styles & tokens: web/styles/ (light/dark themes, z-index, focus rings).
