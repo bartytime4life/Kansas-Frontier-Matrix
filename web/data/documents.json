@@ -6,6 +6,9 @@
   "data": "data/processed/documents_points.json",
   "category": "documents",
 
+  "version": "1.3",
+  "generated": "2025-09-28T00:00:00Z",
+
   "time": { "start": "1800-01-01", "end": null },
   "timeProperty": { "start": "date", "end": null, "format": "date" },
 
@@ -16,19 +19,53 @@
   "opacity": 1.0,
 
   "popup": ["title", "source", "date", "url"],
+
   "legend": {
     "type": "circle",
     "label": "Documents (point locations)",
-    "stroke": "#ffffff",
-    "fill": "#6A4C93"
+    "classes": [
+      { "label": "KHS Archives",        "fill": "#2563eb", "stroke": "#ffffff" },
+      { "label": "Chronicling America", "fill": "#10b981", "stroke": "#ffffff" },
+      { "label": "USGS Historic Notes", "fill": "#f59e0b", "stroke": "#ffffff" },
+      { "label": "Register of Deeds",   "fill": "#a855f7", "stroke": "#ffffff" },
+      { "label": "Other",               "fill": "#6A4C93", "stroke": "#ffffff" }
+    ]
   },
 
   "style": {
     "renderer": "circle",
-    "circleColor": "#6A4C93",
-    "circleRadius": 3,
+
+    "circleColor": {
+      "match": {
+        "property": "source",
+        "stops": [
+          ["KHS Archives", "#2563eb"],
+          ["Chronicling America", "#10b981"],
+          ["USGS Historic Topo Notes", "#f59e0b"],
+          ["Register of Deeds", "#a855f7"]
+        ],
+        "default": "#6A4C93"
+      }
+    },
+
+    "circleRadiusByZoom": [
+      { "zoom": 5,  "radius": 3.0 },
+      { "zoom": 9,  "radius": 4.2 },
+      { "zoom": 12, "radius": 5.4 },
+      { "zoom": 15, "radius": 6.6 }
+    ],
+    "circleOpacity": 0.92,
     "circleStrokeColor": "#ffffff",
-    "circleStrokeWidth": 0.6
+    "circleStrokeWidth": 0.8,
+
+    "hover": {
+      "circleStrokeColor": "#111827",
+      "circleStrokeWidthDelta": 0.8
+    },
+    "selection": {
+      "circleStrokeColor": "#111827",
+      "circleStrokeWidthDelta": 1.2
+    }
   },
 
   "cluster": {
@@ -37,14 +74,15 @@
     "maxZoom": 12,
     "style": {
       "circleColor": "#6A4C93",
+      "circleOpacity": 0.85,
+      "circleStrokeColor": "#ffffff",
+      "circleStrokeWidth": 1.0,
       "circleRadius": {
         "stops": [[5, 10], [50, 16], [200, 22]],
         "property": "point_count",
         "type": "exponential",
         "base": 1.2
       },
-      "circleStrokeColor": "#ffffff",
-      "circleStrokeWidth": 1.0,
       "textField": "{point_count_abbreviated}",
       "textSize": 11,
       "textColor": "#ffffff"
@@ -56,16 +94,59 @@
     "source":  { "type": "string", "description": "Archive/source label" },
     "date":    { "type": "string", "format": "date", "description": "Document date" },
     "url":     { "type": "string", "format": "uri", "description": "Link to the document" },
-    "doc_id":  { "type": "string", "description": "Internal/graph ID (optional)" }
+    "doc_id":  { "type": "string", "description": "Internal/graph ID (optional)", "optional": true }
   },
 
-  "search": { "qFields": ["title", "source"] },
+  "filters": {
+    "quick": [
+      { "label": "KHS Archives",        "where": { "source": "KHS Archives" } },
+      { "label": "Chronicling America", "where": { "source": "Chronicling America" } },
+      { "label": "Register of Deeds",   "where": { "source": "Register of Deeds" } },
+      { "label": "Before 1900",         "where": { "date$lt": "1900-01-01" } },
+      { "label": "1900–1950",           "where": { "all": [{ "date$gte": "1900-01-01" }, { "date$lt": "1950-01-01" }] } },
+      { "label": "Since 1950",          "where": { "date$gte": "1950-01-01" } }
+    ],
+    "advanced": {
+      "dateRangeField": "date",
+      "groupBy": ["source"]
+    }
+  },
+
+  "search": {
+    "qFields": ["title", "source", "doc_id"],
+    "accentFold": true,
+    "minLength": 2,
+    "placeholder": "Search documents…"
+  },
+
+  "ordering": {
+    "zindex": 610,
+    "before": "fema_disasters",
+    "after": "drought_monitor"
+  },
+
+  "alternates": {
+    "data_fallbacks": [
+      { "format": "pmtiles", "url": "web/tiles/documents_points.pmtiles", "note": "Prefer tiled points for scale" },
+      { "format": "geojson", "url": "data/processed/documents_points.json" }
+    ]
+  },
 
   "attribution": "© KFM Knowledge Hub",
   "license": "CC-BY or as specified per source",
+
   "provenance": {
     "source": "KFM Knowledge Hub (graph export of geotagged items)",
     "retrieved": "2025-09-26T00:00:00Z",
-    "notes": "Points represent geocoded document mentions; dates normalized to ISO 8601"
+    "notes": "Points represent geocoded document mentions; dates normalized to ISO 8601."
+  },
+
+  "kfm_meta": {
+    "schema_version": "1.2",
+    "popup": ["title", "source", "date", "url"],
+    "stac": {
+      "collection": "kfm-documents",
+      "item": "documents_points_index"
+    }
   }
 }
