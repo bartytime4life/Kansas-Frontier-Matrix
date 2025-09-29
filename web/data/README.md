@@ -1,3 +1,5 @@
+⸻
+
 Kansas-Frontier-Matrix — Web Data
 
 This folder contains layer configs and map data references used by the web viewer (web/).
