@@ -10,7 +10,7 @@ docs_dir: docs
 site_dir: _site_docs
 
 use_directory_urls: true
-strict: true  # fail on broken links
+strict: true   # fail on broken links (kept)
 
 theme:
   name: material
@@ -22,6 +22,7 @@ theme:
     - navigation.expand
     - navigation.tracking
     - navigation.top
+    - navigation.footer
     - toc.integrate
     # Content UX
     - content.code.copy
@@ -29,6 +30,7 @@ theme:
     - content.tabs.link
     - content.tooltips
     - content.action.edit
+    - content.footnote.tooltips
     # Search
     - search.highlight
     - search.suggest
@@ -55,6 +57,12 @@ plugins:
           options:
             docstring_style: google
             show_source: false
+  - redirects: {}         # optional: maintain old -> new paths via docs/.redirects
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
+  - minify:
+      minify_html: true
 
 markdown_extensions:
   # Core
@@ -107,9 +115,10 @@ extra:
 
 extra_css:
   - assets/css/extra.css
+
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
-  - assets/js/mermaid-init.js  # create with: mermaid.initialize({ startOnLoad: true });
+  - assets/js/mermaid-init.js   # must call: mermaid.initialize({ startOnLoad: true });
 
 # Optional: faster live-reload while editing outside docs/
 watch:
@@ -130,3 +139,6 @@ nav:
   - Roadmap: roadmap.md
   - Requirements: requirements.md
   - Status Snapshots: snapshots.md
+  # Optional (if you expose mkdocstrings for Python API)
+  # - API Reference:
+  #     - kansas_geo_timeline: api/kansas_geo_timeline.md
