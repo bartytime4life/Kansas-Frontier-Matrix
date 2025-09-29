@@ -1,57 +1,54 @@
-# Kansas Geo Timeline — **Time · Terrain · History**
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](.github/.pre-commit-config.yaml)
-[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](pyproject.toml)
-[![Node](https://img.shields.io/badge/node-18+-green.svg)](package.json)
-[![STAC](https://img.shields.io/badge/STAC-1.0.0-0A7BBB.svg)](stac/catalog.json)
-[![MapLibre](https://img.shields.io/badge/MapLibre-Web%20Viewer-1f6feb.svg)](web/index.html)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+⸻
 
----
+Kansas Geo Timeline — Time · Terrain · History
 
-## 🌟 What is this?
 
-The **Kansas Geo Timeline** is an open-source system to explore **Kansas’s terrain and history through time**.  
-It combines **scientific-grade geospatial data** with **storytelling layers**:
+⸻
 
-- Elevation (LiDAR DEM, shaded relief, slope, aspect)  
-- Historic maps (USGS topo scans, overlays)  
-- Cultural & historical layers (treaties, railroads, towns, trails)  
-- Environmental layers (land cover, soils, hydrology, wildfires, tornadoes)  
+🌟 What is this?
 
-All datasets are tracked, validated, and published using **STAC 1.0.0**, then rendered via a **MapLibre web viewer** with a **timeline slider** and optional **Google Earth KML/KMZ exports**.
+The Kansas Geo Timeline is an open-source, MCP-aligned knowledge hub to explore
+Kansas’s terrain, climate, culture, and history through time.
 
-Think of it as a **time-aware atlas + knowledge hub**.
+It combines scientific-grade geospatial data with historical narratives:
+	•	🌄 Elevation & Terrain — LiDAR DEM, shaded relief, slope/aspect, contours
+	•	🗺 Historic Maps — USGS topo scans, county plats, early soil surveys
+	•	🧭 Culture & Sovereignty — treaties, tribal land transfers, railroads, trails, settlements
+	•	🌱 Environment & Hazards — land cover, soils, hydrology, wildfires, tornadoes, droughts
+	•	📖 Archival Narratives — diaries, newspapers, oral histories, archaeology finds
 
----
+All datasets are indexed with STAC 1.0.0 for reproducibility, linked into a
+Neo4j knowledge graph for reasoning, and rendered via a MapLibre timeline viewer
+with optional Google Earth KML/KMZ exports ￼ ￼.
 
-## 🚀 Live Access
+Think of it as a time-aware atlas + historical knowledge graph.
 
-- 🌐 **Web Viewer**: [MapLibre + Timeline](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)  
-- 🌍 **Google Earth**: [Kansas Terrain KMZ](https://bartytime4life.github.io/Kansas-Frontier-Matrix/earth/Kansas_Terrain.kmz)  
+⸻
 
----
+🚀 Live Access
+	•	🌐 Web Viewer: MapLibre + Timeline
+	•	🌍 Google Earth: Kansas Terrain KMZ
 
-## 📊 How the System Works
+⸻
 
-```mermaid
+📊 System Architecture
+
 flowchart TD
   A["Sources\n(data/sources/*.json)"] -->|fetch| B["COGs\n(data/cogs/**/*.tif)"]
-  B -->|derive| C["Terrain & Overlays\n(data/derivatives/*)"]
-  C -->|index| D["STAC\n(stac/catalog.json, items/)"]
-  D -->|render| E["Configs\n(web/app.config.json)"]
+  B -->|derive| C["Derivatives\n(slope, aspect, hillshade, vectors)"]
+  C -->|index| D["STAC Catalog\n(stac/catalog.json, items/)"]
+  D -->|graph| H["Knowledge Graph\n(Neo4j, CIDOC CRM schema)"]
+  D -->|render| E["Configs\n(web/config/*.json)"]
+  H -->|serve| E
   E -->|serve| F["MapLibre Viewer"]
   D -->|export| G["KML/KMZ\n(earth/)"]
 
-  classDef src fill:#FFD166,stroke:#333,stroke-width:1px;
-  classDef cogs fill:#06D6A0,stroke:#333,stroke-width:1px;
-  classDef stac fill:#118AB2,stroke:#fff,stroke-width:1px;
-  classDef web fill:#073B4C,stroke:#fff,stroke-width:1px;
-  classDef earth fill:#EF476F,stroke:#fff,stroke-width:1px;
+  classDef src fill:#FFD166,stroke:#333;
+  classDef cogs fill:#06D6A0,stroke:#333;
+  classDef stac fill:#118AB2,stroke:#fff;
+  classDef web fill:#073B4C,stroke:#fff;
+  classDef earth fill:#EF476F,stroke:#fff;
 
   class A src;
   class B cogs;
@@ -60,16 +57,17 @@ flowchart TD
   class E web;
   class F web;
   class G earth;
-````
+  class H stac;
 
----
+Layers are semantically enriched with ontologies (CIDOC CRM, OWL-Time, PeriodO)
+for temporal and cultural reasoning ￼.
 
-## 🛠 Quickstart
+⸻
 
-### Option A — Local Python
+🛠 Quickstart
 
-```bash
-# Setup
+Option A — Local Python
+
 python -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
@@ -79,127 +77,136 @@ make fetch           # download raw data
 make cogs            # convert GeoTIFF → COG
 make terrain         # slope, aspect, hillshade
 make stac            # generate STAC catalog/items
-make stac-validate   # validate
+make stac-validate   # schema + STAC validation
 make site-config     # build web/app.config.json
 python -m http.server -d web 8080
-```
 
-### Option B — Docker Compose
+Option B — Docker Compose
 
-```bash
 docker compose build kfm
 docker compose --profile dev up -d site   # serve viewer
 docker compose --profile docs up -d docs  # serve live docs
-```
 
----
 
-## 📂 Repository Layout
+⸻
 
-```
+📂 Repository Layout
+
 data/
-  sources/       # JSON descriptors (URL, CRS, bounds, license)
+  sources/       # JSON descriptors (URL, CRS, bounds, license, temporal span)
   cogs/          # Cloud Optimized GeoTIFFs (immutable)
-  derivatives/   # terrain, contours, hydrology, etc.
-  processed/     # vectors/rasters post-cleanup
+  derivatives/   # terrain, contours, hydrology, change maps
+  processed/     # cleaned vectors/rasters (ready-to-use)
 stac/            # STAC 1.0.0 catalog, collections, items
-web/             # static site for GitHub Pages
-  config/        # legend.json, categories.json, sources.json, schema
-  data/          # small vectors (mirrored for dev)
-  tiles/         # optional raster tiles {z}/{x}/{y}.png
-earth/           # KMZ/KML exports
+web/             # MapLibre web viewer
+  config/        # layers.schema.json, categories.json, legends
+  data/          # small GeoJSONs mirrored for dev
+earth/           # KML/KMZ exports (regionated)
 scripts/         # ETL, STAC tools, config renderers
 docker/          # reproducible environments
-.github/         # CI/CD workflows
-```
+.github/         # CI/CD workflows, roadmap, pre-commit hooks
 
----
 
-## 📑 Data Sources (examples)
+⸻
 
-| ID             | Title                  | File                                                  | Notes                   |
-| -------------- | ---------------------- | ----------------------------------------------------- | ----------------------- |
-| `ks_dem_1m`    | Kansas DEM (1 m LiDAR) | [`ks_dem.json`](data/sources/ks_dem.json)             | ArcGIS ImageServer      |
-| `usgs_topo`    | Historic USGS Topos    | [`usgs_topo.json`](data/sources/usgs_topo.json)       | 1894–1950 GeoTIFF scans |
-| `ks_treaties`  | Kansas Treaties        | [`ks_treaties.json`](data/sources/ks_treaties.json)   | Time-aware polygons     |
-| `ks_railroads` | Railroads (historic)   | [`ks_railroads.json`](data/sources/ks_railroads.json) | Digitized vectors       |
+📑 Key Data Sources
 
----
+ID	Title	File/Entry	Notes
+ks_dem_1m	Kansas DEM (1 m LiDAR)	ks_dem.json	Statewide LiDAR via ArcGIS
+usgs_topo	Historic USGS Topos	usgs_topo.json	1890–1950 georeferenced scans
+ks_treaties	Kansas Treaties	treaties_polygons.json	Time-aware polygons
+ks_railroads	Railroads (historic)	ks_railroads.json	Digitized expansion by year
+hazards	Tornadoes, Floods, Fires	NOAA SPC + FEMA + NIFC	Multi-hazard GIS ￼
+oral_hist	Oral Histories	Tribal narratives & interviews ￼	Linked to places & events
 
-## 🧰 Make Targets
+See data/sources/ for the full catalog.
 
-```bash
-make fetch           # download raw sources
-make cogs            # raw GeoTIFF → COG
-make terrain         # gdaldem slope/aspect/hillshade
-make stac            # build STAC catalog + items
-make stac-validate   # validate catalog/items
-make site-config     # render web/app.config.json
-make site            # fallback: write web/layers.json + mirror small vectors
-make prebuild        # validation + configs (CI shortcut)
-```
+⸻
 
-Optional:
+🧰 Make Targets
 
-```bash
-make validate-cogs   # conformance checks
-make mosaic-county   # county-level LiDAR mosaics
-make dem-checksum    # write/verify .sha256
-make regionate       # regionated KML/KMZ tree
-```
+make fetch            # download raw sources
+make cogs             # raw GeoTIFF → COG
+make terrain          # gdaldem slope/aspect/hillshade
+make stac             # build STAC catalog + items
+make stac-validate    # validate catalog/items
+make site-config      # render web/app.config.json
+make site             # fallback: layers.json + dev mirrors
+make prebuild         # validation + configs (CI shortcut)
 
----
+Extras:
 
-## ✅ Reproducibility & CI
+make validate-cogs    # conformance checks
+make mosaic-county    # county-level LiDAR mosaics
+make dem-checksum     # write/verify .sha256
+make regionate        # regionated KML/KMZ tree
 
-* `.sha256` and `.meta.json` sidecars for every major artifact
-* CI builds:
 
-  * `site.yml` → GitHub Pages
-  * `stac-badges.yml` → Shields endpoint badges
-  * `codeql.yml` + `trivy.yml` → security
-* Pre-commit hooks: lint, format, STAC/config validate
+⸻
 
-Run before pushing:
+✅ Reproducibility & CI
+	•	Sidecars: .sha256 + .meta.json for every artifact
+	•	CI pipelines:
+	•	site.yml → GitHub Pages
+	•	stac-badges.yml → live Shields badges
+	•	codeql.yml + trivy.yml → security scans
+	•	pre-commit → lint, format, schema validate
+	•	MCP protocols: every data operation = experiment step ￼ ￼
 
-```bash
-make prebuild
-```
+make prebuild   # run all validation before pushing
 
----
 
-## 🗺 Roadmap
+⸻
 
-* **Milestone 1**: Enrich Data Sources (DEM, treaties, railroads)
-* **Milestone 2**: Terrain + Hydrology analysis
-* **Milestone 3**: Storytelling & Education layers
-* **Milestone 4**: Technical enhancements (tiles, UI)
-* **Milestone 5**: MCP integration (scientific method protocols)
+🗺 Roadmap
+	•	M1: Enrich Data Sources (DEM, treaties, railroads, hazards)
+	•	M2: Terrain & Hydrology analysis (flowdir, floodplains)
+	•	M3: Storytelling & Education layers (oral histories, archaeology)
+	•	M4: Technical Enhancements (vector tiles, UI polish, story maps) ￼
+	•	M5: MCP Integration (experiment logging, predictive models ￼)
 
-See [`ROADMAP.md`](ROADMAP.md) for details.
+See ROADMAP.md and .github/roadmap/roadmap.yaml.
 
----
+⸻
 
-## 📦 Requirements
+📦 Requirements
+	•	Python: rasterio, rio-cogeo, pyproj, shapely, pystac, jsonschema
+	•	GDAL CLI: gdal_translate, gdalwarp, gdaldem
+	•	Node.js: roadmap sync, site build
+	•	Docker: reproducible environments
+	•	Neo4j (optional): knowledge graph integration ￼
 
-* Python: `rasterio`, `rio-cogeo`, `pyproj`, `shapely`, `pystac`, `jsonschema`
-* GDAL CLI: `gdal_translate`, `gdalwarp`, `gdaldem`, `gdalinfo`
-* Node: build utilities + roadmap sync
-* Docker: reproducible builds
+⸻
 
----
+💡 Troubleshooting
+	•	Mermaid doesn’t render → quote labels, use \n
+	•	Rasters not showing → serve COGs/tiles, not raw .tif
+	•	Timeline inert → ensure time.start/end or timeProperty present
+	•	Legends missing → define in legend.json or per-layer
+	•	File:// blocked → always serve via HTTP (python -m http.server or Docker)
 
-## 💡 Troubleshooting
+⸻
 
-* **Mermaid fails to render** → quote labels, use `\n` for line breaks
-* **Rasters don’t show** → serve tiles or COGs, not raw `.tif`
-* **Timeline inert** → layer must have `time.start/end` or `timeProperty`
-* **Legend chips missing** → set `legendKey` or define in `legend.json`
-* **File:// blocked** → serve via HTTP (`python -m http.server` or Docker dev site)
+🤝 Contributing
 
----
+We welcome PRs!
+Follow MCP experiment templates: state problem, hypothesis, method, data, and conclusion ￼.
+See CONTRIBUTING.md.
 
-**PRs welcome.**
-Keep STAC 1.0.0 valid, configs schema-checked, and provenance intact.
+⸻
 
-```
+📚 References
+	•	Kansas GIS Hub
+	•	USGS Historical Topos
+	•	Kansas Geological Survey
+	•	NOAA Climate & Storm Events
+	•	PeriodO Gazetteer
+
+⸻
+
+🔗 Summary:
+This README now ties together terrain + history + hazards + oral traditions with MCP rigor, CI reproducibility, and semantic integration. It serves both as a public landing page and a developer’s map into the repo.
+
+⸻
+
+Would you like me to also generate a shorter “Public-facing README” (for GitHub Pages visitors) while keeping this one as the developer README in the repo? That way, casual users see an atlas-style intro, while contributors get the full MCP + CI depth.
