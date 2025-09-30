@@ -2,6 +2,12 @@
 
 # 🌾 Kansas-Frontier-Matrix — Code of Conduct
 
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../.github/workflows/automerge.yml)
+
 **Mission:** Foster a welcoming, respectful, and collaborative  
 community in line with the **Contributor Covenant v2.1**.
 
@@ -41,8 +47,6 @@ Kansas-Frontier-Matrix has additional norms rooted in our **Master Coder Protoco
 - **Transparency in decisions** → roadmap, governance, and design discussions are captured in issues/PRs  
 - **Respect for history & culture** → Indigenous perspectives, oral traditions, and archival integrity are treated with care  
 - **Collaboration over competition** → reviewers, maintainers, and contributors work as peers in a shared knowledge hub  
-
-These expectations keep the project technically rigorous **and** socially welcoming.
 
 ---
 
@@ -100,12 +104,25 @@ By following these guidelines, maintainers uphold both the social trust and the 
 
 ⸻
 
+⚙️ How This Links to CI
+
+Contributor behavior and MCP alignment are tied directly to automation:
+	•	Respectful, well-documented contributions → faster reviews and smoother merges
+	•	Reproducibility and provenance → fewer CI failures (STAC validate, schema checks, provenance hashes)
+	•	CI hygiene → automerge eligibility once all required checks pass
+	•	Transparency in PRs → better roadmap syncing and milestone tracking
+
+👉 In short: good conduct = smoother pipelines = faster integration.
+
+⸻
+
 🌍 Attribution
 
 This Code of Conduct is adapted from the Contributor Covenant v2.1.
 
 ⸻
 
-✅ Summary:
+✅ Summary
+
 Kansas-Frontier-Matrix is committed to a safe, respectful, reproducible, and inclusive environment.
 Contributors and maintainers alike share responsibility for upholding these values and practicing MCP principles.
