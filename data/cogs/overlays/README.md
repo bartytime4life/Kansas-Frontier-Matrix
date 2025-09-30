@@ -1,34 +1,37 @@
-# `data/cogs/overlays/` — Cloud-Optimized Raster Overlays
+<div align="center">
 
-This folder stores **web-ready COGs (Cloud-Optimized GeoTIFFs)** used as
-map overlays in the Kansas Frontier Matrix / Kansas Geo Timeline viewer
-(e.g., historic scans, hillshade, slope classes, fire perimeters,
-newspaper map insets, treaty boundary rasters).
+# 🖼️ Kansas Geo Timeline — Overlay COGs
 
-**Everything here must be:**
-- **COG** (internal tiling + overviews)
-- **EPSG:4326 (WGS84)**
-- Have **nodata/mask** set correctly
-- Have a **`.sha256` sidecar**
-- Registered in **STAC** (`stac/items/`)
+**Web-ready Cloud-Optimized GeoTIFFs (COGs)** used as  
+map overlays in the **Kansas Frontier Matrix / Kansas Geo Timeline** viewer.  
 
----
+Overlays include historic scans, terrain renderings, wildfire rasters, treaty boundaries,  
+and other cartographic textures used to enrich the timeline + map.
 
-## What belongs here?
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
 
-- 🗺️ **Scanned historic maps** that you’ve georeferenced
-- 🏔️ **Terrain derivatives** (hillshade, slope/aspect renditions)
-- 🔥 **Rasterized events** (e.g., wildfire perimeters per date)
-- 🧭 **Cartographic textures** (hachures, stipple masks, relief tint)
-
-> Vector data (trails, hydrology lines/polygons, settlements) **does not**
-> live here. Keep vectors as GeoJSON in `data/processed/`.
+</div>
 
 ---
 
-## Layout & Naming
+```mermaid
+flowchart LR
+  A["Raw scans / rasters\n(data/raw/**)"] --> B["Georeference & Reproject\n(gdalwarp → EPSG:4326)"]
+  B --> C["Convert to COG\n(data/cogs/overlays/**)"]
+  C --> D["Checksums\n(.sha256)"]
+  C --> E["STAC Items\n(stac/items)"]
+  C --> F["Web Viewer\n(MapLibre overlays)"]
+  E --> G["Validate\n(stac validate)"]
 
-```
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📂 Directory layout
 
 data/cogs/overlays/
 ├── hillshade_1m_ks_2018-2020.tif
@@ -37,97 +40,101 @@ data/cogs/overlays/
 ├── treaty_boundaries_1854.tif
 └── <name>.tif
 
-```
+Everything here must be:
+• Cloud-Optimized GeoTIFF
+• EPSG:4326 (WGS84)
+• Mask/NoData set correctly
+• .sha256 sidecar
+• Registered in STAC
 
-**Naming convention (recommended):**
-```
+⸻
+
+🧭 What belongs here?
+	•	🗺️ Scanned historic maps (georeferenced)
+	•	🏔️ Terrain derivatives (hillshade, slope/aspect renderings)
+	•	🔥 Rasterized events (e.g., wildfire perimeters per date)
+	•	🧭 Cartographic textures (hachures, stipple masks, relief tints)
+
+❌ Vector data (trails, hydrology, settlements) lives in data/processed/ as GeoJSON.
+
+⸻
+
+🏷 Naming convention
 
 <theme>*<resolution|scale>*<region>_<year-or-range>.tif
 
-````
-Examples: `usgs_quad_1894_larned.tif`, `hillshade_1m_ks_2018-2020.tif`.
+Examples:
+	•	usgs_quad_1894_larned.tif
+	•	hillshade_1m_ks_2018-2020.tif
 
----
+⸻
 
-## COG Specs (house standard)
+⚙️ COG specs (house standard)
 
-| Property                | Value / Guidance                                              |
-|-------------------------|---------------------------------------------------------------|
-| CRS                    | `EPSG:4326`                                                   |
-| Tiling                 | 512×512 internal tiles                                        |
-| Overviews              | Down to ~512 px min dimension (auto)                          |
-| Compression            | `deflate` (lossless) or `webp` (lossy, for photo-like scans)  |
-| Mask / NoData          | Internal mask; set `nodata` where appropriate                 |
-| Bit depth              | Prefer 8-bit (Byte). Convert if the source allows             |
-| Checksums              | Write `<file>.tif.sha256` (GNU format)                        |
+Property	Value / Guidance
+CRS	EPSG:4326 (WGS84)
+Tiling	512×512 internal tiles
+Overviews	Down to ~512 px min dimension
+Compression	deflate (lossless) or webp (lossy, for photo-like scans)
+Mask / NoData	Internal mask; set nodata explicitly if applicable
+Bit depth	Prefer 8-bit (Byte)
+Checksums	Write <file>.tif.sha256 (GNU format)
 
----
 
-## Create / Convert
+⸻
 
-### Option A — Use the project script (recommended)
+🛠️ Create / Convert
 
-**Raster → COG (lossless, deflate):**
-```bash
+Option A — Project script
+
+Lossless (deflate):
+
 python scripts/convert.py raster-to-cog \
   data/raw/maps/usgs_quad_1894_larned_raw.tif \
   data/cogs/overlays/usgs_quad_1894_larned.tif
-````
 
-**Raster → COG (photo scans, smaller, webp):**
+Web-optimized (photo scans, webp):
 
-```bash
 python scripts/convert.py raster-to-cog \
   --web-optimized \
   data/raw/scans/relief_tint_1938.tif \
   data/cogs/overlays/relief_tint_ks_1938.tif
-```
 
-> The script will reproject to **EPSG:4326**, build overviews, and emit a
-> `.sha256` sidecar automatically.
+Option B — Python API
 
-### Option B — Python API (ingest module)
-
-```python
 from kansas_geo_timeline.ingest import ingest_raster
-out, item = ingest_raster("data/raw/scans/usgs_quad_1894_larned.tif",
-                          out_dir="data/cogs/overlays",
-                          profile="deflate")
+out, item = ingest_raster(
+    "data/raw/scans/usgs_quad_1894_larned.tif",
+    out_dir="data/cogs/overlays",
+    profile="deflate"
+)
 print(out, item["id"])
-```
 
----
 
-## Georeferencing notes
+⸻
 
-* If your scan is **not** georeferenced yet, use `gdal_translate` with GCPs
-  then `gdalwarp` to WGS84 first, **then** convert to COG.
-* Crop/deskew before conversion; trim white borders to improve compression.
-* For line art / labels, prefer **deflate** to avoid lossy artifacts.
+📌 Georeferencing notes
+	•	If the scan is not georeferenced, apply GCPs + gdalwarp to EPSG:4326 before conversion.
+	•	Crop/deskew before COG; trim borders to improve compression.
+	•	For line art / labels → prefer deflate (avoid lossy artifacts).
 
----
+⸻
 
-## STAC registration
+📇 STAC registration
+	•	Automatic when using ingest_raster() above.
+	•	Or regenerate with Make:
 
-Every overlay COG needs a STAC Item:
+make stac stac-validate-items
 
-* **Automatic** when using `ingest_raster()` (above).
-* Or regenerate via Make:
+Each STAC item includes bbox, checksum, file stats, and media type
+(image/tiff; application=geotiff; profile=cloud-optimized).
 
-  ```bash
-  make stac stac-validate-items
-  ```
+⸻
 
-STAC items appear under `stac/items/`. Each includes bbox, checksum,
-file stats, and media type (`image/tiff; application=geotiff; profile=cloud-optimized`).
+🗺️ Web viewer wiring
 
----
+Add a layer entry in web/config/*.json:
 
-## Wiring to the web viewer
-
-Add/adjust a layer config in `web/data/*.json` (or in your generator):
-
-```json
 {
   "id": "relief_tint_1938",
   "title": "Relief Tint (1938)",
@@ -139,53 +146,39 @@ Add/adjust a layer config in `web/data/*.json` (or in your generator):
   "visible": false,
   "attribution": "Source: …"
 }
-```
 
-> Keep legend colors/symbols in `web/config/legend.json` and ensure the file
-> path is **relative** so GitHub Pages can serve it.
+Keep legends in web/config/legend.json; use relative paths so GitHub Pages can serve.
 
----
+⸻
 
-## QA / Validation
+🧪 QA / validation
 
-* Quick check:
+# Quick metadata check
+gdalinfo -checksum data/cogs/overlays/<file>.tif | less
 
-  ```bash
-  gdalinfo -checksum data/cogs/overlays/<file>.tif | less
-  ```
-* Validate COG structure (optional, if `rio-cogeo` CLI available):
+# Validate COG structure
+rio cogeo validate data/cogs/overlays/<file>.tif
 
-  ```bash
-  rio cogeo validate data/cogs/overlays/<file>.tif
-  ```
-* Verify sidecar:
+# Verify checksum
+sha256sum -c data/cogs/overlays/<file>.tif.sha256
 
-  ```bash
-  sha256sum -c data/cogs/overlays/<file>.tif.sha256
-  ```
 
----
+⸻
 
-## Attribution & Licensing
+⚖️ Attribution & licensing
+	•	Add source, citation, and license to the layer’s STAC properties & viewer attribution.
+	•	Do not include restricted scans; prefer open licenses (CC-BY / CC0 / Public Domain).
 
-* Include source, citation, and license in the layer’s **STAC properties** and
-  **viewer attribution** field.
-* Do **not** include restricted scans. Favor open licenses (CC-BY/CC0).
+⸻
 
----
+🐛 Troubleshooting
+	•	Jagged edges at small scales → rebuild with overviews.
+	•	Colors washed out → preserve 8-bit, avoid implicit scaling.
+	•	File too large → use --web-optimized (webp) for photo scans.
+	•	Misalignment → fix georeferencing before COG conversion.
 
-## Troubleshooting
+⸻
 
-* **Edges look jagged at small scales** → ensure overviews exist; reconvert.
-* **Colors washed out** → avoid implicit scaling; keep 8-bit; prefer `deflate`.
-* **Heavy file** → try `--web-optimized` (webp) for photographic content.
-* **Misaligned** → confirm the scan’s georeferencing before COG conversion.
+✅ Mission-grade principle: Overlay COGs must be clean, verifiable, and traceable via STAC.
+If it’s not reproducible and fast in the viewer, it doesn’t ship here.
 
----
-
-✅ **Mission-grade principle:** Overlays are **clean, verifiable COGs**
-with clear provenance. If it’s not reproducible and fast in the viewer,
-it doesn’t ship here.
-
-```
-```
