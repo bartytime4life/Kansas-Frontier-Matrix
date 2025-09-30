@@ -9,8 +9,8 @@ as the foundation for Kansas Frontier Matrix terrain, hydrology, and historical 
 📌 Drive `make fetch` → `make cogs` → `make stac` workflows  
 📌 Guarantee **traceability, reproducibility, and STAC compliance**  
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
 [![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
 
 </div>
@@ -89,7 +89,7 @@ Rules:
 🔗 Integration notes
 	•	🗜️ All DEMs → converted to COGs (make cogs).
 	•	🖼️ Derivatives (hillshade, slope, aspect) → written to processed/ and published as STAC Items.
-	•	🔗 Linked to knowledge graph via Place nodes (counties, watersheds).
+	•	🔗 Linked to the Knowledge Graph via Place nodes (counties, watersheds).
 	•	⚠️ Document confidence for void-filled or artifacted DEMs.
 	•	✅ CI enforces schema + COG structure validation.
 
@@ -112,7 +112,7 @@ make terrain    # slope/aspect/roughness
 
 🔍 Debugging & validation
 	•	make validate-sources → JSON schema validation.
-	•	make validate-cogs → check tiling, overviews, compression.
+	•	make validate-cogs → check COG tiling, overviews, compression.
 	•	make checksums → regenerate .sha256.
 	•	make stac && make validate-stac → ensure STAC compliance.
 
@@ -130,6 +130,6 @@ make terrain    # slope/aspect/roughness
 	•	data/sources/dem/ = blueprints for Kansas DEMs.
 	•	Each descriptor must include provenance, license, bbox, and temporal coverage.
 	•	Pipeline = raw → processed/COG → STAC → Knowledge Graph.
-	•	Ensures Kansas elevation layers are traceable, reproducible, MCP-grade auditable.
+	•	Ensures Kansas elevation layers are traceable, reproducible, and MCP-grade auditable.
 
 ✅ If it shapes Kansas terrain → it belongs here.
