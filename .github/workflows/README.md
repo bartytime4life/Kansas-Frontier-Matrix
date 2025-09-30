@@ -42,7 +42,7 @@ Every workflow is **scoped, cached, concurrent-safe, and least-privilege**.
 ---
 
 ## How workflows connect
-flowchart TD
+flowchart LR
   A["Push or PR"] --> B["web config validate yml\nJSON lint and schema"]
   A --> C["stac validate yml\nstac validator and pystac with link checks"]
   A --> D["ci yml or tests yml\nruff and pytest mypy optional"]
@@ -54,7 +54,6 @@ flowchart TD
   A --> J["stac badges yml\nShields JSON badges"]
   K["Tag vX Y Z"] --> L["release yml\nsdist wheel checksums"]
 
-<!-- END OF MERMAID -->
 ---
 
 ## Reusable patterns (copy-paste ready)
