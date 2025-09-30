@@ -1,78 +1,97 @@
-# Kansas-Frontier-Matrix — Processed Data
+<div align="center">
 
-This directory contains **derived, cleaned, and ready-for-use geospatial and historical datasets**.  
-All files here are **pipeline outputs** (ETL workflows, experiments, or transformations),  
-and every artifact is referenced in the **STAC catalog** (`data/stac/items/`).
+# 📂 Kansas Geo Timeline — Processed Data
 
----
+This directory contains **derived, cleaned, and ready-for-use geospatial + historical datasets**.  
 
-## Principles
+All files are **pipeline outputs** (ETL workflows, experiments, or transformations) and  
+every artifact is referenced in the **STAC catalog** (`data/stac/items/`).  
 
-- **Immutable inputs, reproducible outputs**  
-  - Raw data lives under `data/raw/` or is fetched from authoritative sources.  
-  - Processed data here must be **reproducible** from scripts + configs + GCPs.  
-  - Nothing in this directory is hand-edited.
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
 
-- **STAC integration**  
-  - Every file here should map to a **STAC Item** (`data/stac/items/**.json`).  
-  - Each item must record: datetime, bbox, checksum, license, provenance.  
-  - Items are grouped into thematic STAC collections (`data/stac/collections/`).
-
-- **Lightweight storage**  
-  - Large rasters are tracked with **Git LFS** or **DVC**.  
-  - Vectors and tables should be optimized (GeoJSON, Parquet).  
-  - This folder is not an archive; it holds only **current, published outputs** for  
-    experiments, the web viewer, and reproducible analysis.
-
-- **MCP reproducibility** [oai_citation:0‡Integrating Historical, Cartographic, and Geological Research (MCP Reference).pdf](file-service://file-HTPyrF5na2BY7mrNRai468) [oai_citation:1‡Kansas Data Resources for Frontier-Matrix Project.pdf](file-service://file-Q9AC5RwLTeV6QgadxHDf5P)  
-  - Each dataset must trace back to its experiment, config, or Makefile step.  
-  - Provenance sidecars (`.sha256`, `.meta.json`) are required.  
-  - Outputs are treated as experiment results with documented lineage.
+</div>
 
 ---
 
-## Typical Contents
+```mermaid
+flowchart TD
+  A["Raw data\n(data/raw/**)"] --> B["ETL / Cleaning\n(scripts, notebooks)"]
+  B --> C["Processed outputs\n(data/processed/**)"]
+  C --> D["Provenance sidecars\n(.sha256 · .meta.json)"]
+  C --> E["STAC Items\n(data/stac/items/**)"]
+  E --> F["Validate\n(stac-validate · schema)"]
+  F --> G["Web viewer layers\n(web/config/**)"]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+🧭 Principles
+	•	Immutable inputs, reproducible outputs
+	•	Raw data lives in data/raw/.
+	•	Outputs here must be reproducible from scripts + configs + GCPs.
+	•	Nothing in this directory is hand-edited.
+	•	STAC integration
+	•	Every file here links to a STAC Item in data/stac/items/.
+	•	Each item records: datetime, bbox, checksum, license, provenance.
+	•	Items are grouped into STAC Collections (data/stac/collections/).
+	•	Lightweight storage
+	•	Large rasters tracked with Git LFS or DVC.
+	•	Vectors & tables stored as GeoJSON, CSV, Parquet.
+	•	Holds only current, published outputs (not archives).
+	•	MCP reproducibility
+	•	Each dataset traces back to an experiment, config, or Makefile step.
+	•	Provenance sidecars (.sha256, .meta.json) required.
+	•	Outputs treated as experiment results with full lineage.
+
+⸻
+
+📂 Typical contents
 
 data/processed/
-├── towns_points.json          # Settlement points (GeoJSON)
-├── ks_treaties.json           # Treaty polygons (historic boundaries)
-├── ks_railroads.json          # Historic railroad lines
-├── hydrology.json             # Rivers and waterbodies (vectorized)
-├── landcover_timeslices.json  # Land cover snapshots (NLCD, 1992–2021)
-├── dem/                       # Processed DEMs and terrain derivatives
+├── towns_points.json          # Settlements (GeoJSON)
+├── ks_treaties.json           # Treaty boundaries (historic polygons)
+├── ks_railroads.json          # Railroad lines (historic)
+├── hydrology.json             # Rivers and waterbodies
+├── landcover_timeslices.json  # NLCD 1992–2021 snapshots
+├── dem/
 │   ├── ks_1m_hillshade.tif
 │   ├── ks_slope.tif
 │   └── vectors/contours.json
-├── hydrology/                 # Hydrology subdatasets (e.g. Kansas River, floodplains)
-└── oral_histories.csv         # Structured oral history index
+├── hydrology/                 # Subsets (Kansas River, floodplains)
+└── oral_histories.csv         # Oral history index (structured)
 
-Formats:
-- **Vector datasets** → GeoJSON (`*.json`, `*.geojson`)  
-- **Tabular data** → CSV (`*.csv`) or Parquet (`*.parquet`)  
-- **Derived rasters** (small to medium) → GeoTIFF/COG (`*.tif`)  
-- **Metadata** → JSON sidecars (`*.meta.json`)  
+Formats
+	•	Vectors → GeoJSON (*.json, *.geojson)
+	•	Tables → CSV (*.csv), Parquet (*.parquet)
+	•	Rasters → GeoTIFF/COG (*.tif)
+	•	Metadata → JSON (*.meta.json)
 
-Schemas should match `web/config/layers.schema.json` so web layers load seamlessly.
+Schemas align with web/config/layers.schema.json for seamless viewer integration.
 
----
+⸻
 
-## Workflow
+🔄 Workflow
+	1.	Fetch raw data → data/raw/
 
-1. **Fetch raw data** → `data/raw/`  
-   ```bash
-   make fetch
+make fetch
 
-	2.	Transform / clean → using scripts in scripts/ or notebooks in experiments/*/
-	•	Examples: reproject, clip to Kansas extent, normalize fields.
-	3.	Save outputs → data/processed/ in open, web-friendly formats (GeoJSON, CSV, COG).
-	4.	Generate checksum + provenance
+
+	2.	Transform / clean → scripts or notebooks (experiments/*/)
+	•	Reproject, clip to Kansas extent, normalize fields.
+	3.	Save outputs → data/processed/ in open formats.
+	4.	Generate checksums
 
 scripts/gen_sha256.sh data/processed/<file>
 
 
-	5.	Update STAC Item → under data/stac/items/
-	•	Each processed file must have a STAC item with correct href, checksum, and links.
-	6.	Validate → JSON schema + STAC validation
+	5.	Update STAC Item → data/stac/items/
+	•	Ensure href, checksum, and links are correct.
+	6.	Validate → schema + STAC
 
 make stac-validate
 pre-commit run --all-files
@@ -81,40 +100,39 @@ pre-commit run --all-files
 
 ⸻
 
-Example Entries
+📑 Example entries
 
 Vector GeoJSON
 	•	File: data/processed/ks_treaties.json
-	•	STAC Item: data/stac/items/vectors/ks_treaties.json
-	•	Linked Layer: web/data/treaties.json
+	•	STAC: data/stac/items/vectors/ks_treaties.json
+	•	Viewer: web/data/treaties.json
 
 Raster COG
 	•	File: data/processed/dem/ks_1m_hillshade.tif
-	•	STAC Item: data/stac/items/topo/ks_1m_hillshade.json
-	•	Linked Layer: web/data/hillshade.json
-	•	Exported KML/KMZ: data/kml/ks_hillshade_2018_2020.kmz ￼
+	•	STAC: data/stac/items/topo/ks_1m_hillshade.json
+	•	Viewer: web/data/hillshade.json
+	•	Export: data/kml/ks_hillshade_2018_2020.kmz
 
 ⸻
 
-Notes
-	•	❌ Do not manually edit files in this directory. Always regenerate via pipelines.
-	•	✅ Document provenance — configs, GCPs, scripts must be linked in metadata.
-	•	🔗 Keep filenames stable so references in STAC, Makefile, and web configs remain valid.
-	•	🗂️ Use collections (data/stac/collections/) to group related processed data (e.g. landcover, treaties, DEM).
-	•	📦 Use make clean to clear processed rasters when rebuilding experiments.
+📝 Notes
+	•	❌ Do not manually edit files here — regenerate via pipeline.
+	•	✅ Document provenance (configs, scripts, GCPs).
+	•	🔗 Keep filenames stable for references (STAC, Makefile, configs).
+	•	🗂️ Use collections (data/stac/collections/) to group datasets (e.g., treaties, DEM, landcover).
+	•	📦 Use make clean to clear rasters when rebuilding experiments.
 
 ⸻
 
-See Also
-	•	data/raw/ — raw, unaltered acquisitions.
-	•	data/cogs/ — cloud-optimized GeoTIFFs (mission-final rasters).
-	•	data/stac/ — STAC items and collections for catalog integration.
-	•	web/data/ — JSON layer configs consumed by the web viewer.
-	•	data/kml/ — KML/KMZ exports for Google Earth.
-	•	experiments/ — MCP-style experiment logs and notebooks that produce these files.
+📚 See also
+	•	data/raw/ — raw acquisitions.
+	•	data/cogs/ — cloud-optimized mission-final rasters.
+	•	data/stac/ — STAC items & collections.
+	•	web/data/ — configs for the web viewer.
+	•	data/kml/ — KML/KMZ Earth exports.
+	•	experiments/ — MCP-style experiment logs.
 
 ⸻
 
-✅ This directory ensures Kansas Frontier Matrix datasets are consistent, versioned, STAC-compliant, and reproducible across experiments, pipelines, and web viewer layers.
+✅ Mission-grade principle: Processed datasets must be consistent, versioned, STAC-compliant, and reproducible across pipelines, experiments, and web layers.
 
-----
