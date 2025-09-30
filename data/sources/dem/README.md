@@ -37,6 +37,7 @@ data/sources/dem/
 ├── processed/              # Processed derivatives (hillshade, slope, aspect)
 └── README.md
 
+
 🔒 **Note:** Raw GeoTIFFs, LiDAR tiles, and large COGs live in `data/raw/**` (ignored) or tracked via LFS/DVC.  
 Only descriptors, metadata, and sidecars are committed to git.  
 
