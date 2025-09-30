@@ -57,7 +57,6 @@ flowchart LR
   K["Tag vX Y Z"] --> L["release yml\nsdist wheel checksums"]
 
 <!-- END OF MERMAID -->
----
 
 ## Reusable patterns (copy-paste ready)
 
