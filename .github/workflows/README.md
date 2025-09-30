@@ -58,6 +58,8 @@ flowchart LR
 
 <!-- END OF MERMAID -->
 
+----
+
 ## Reusable patterns (copy-paste ready)
 
 ### 1) Concurrency guard (no overlapping per ref)
