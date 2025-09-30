@@ -1,81 +1,102 @@
-# Hydrology — Kansas Frontier Matrix
+<div align="center">
 
-This folder contains **processed hydrological datasets** derived from DEMs, USGS/NHD layers, FEMA flood maps, and Kansas GIS Hub sources.  
-Outputs are stored in open formats (GeoJSON, CSV, Cloud-Optimized GeoTIFFs) and are **reproducible** from raw inputs in `data/raw/`.  
-All datasets must be registered in the STAC catalog (`data/stac/items/hydrology/`) with metadata, checksums, and provenance.
+# 💧 Kansas Geo Timeline — Hydrology
+
+This folder contains **processed hydrological datasets**  
+derived from DEMs, USGS/NHD, FEMA flood maps, and Kansas GIS Hub sources.  
+
+Outputs are stored in **open formats** (GeoJSON, CSV, Cloud-Optimized GeoTIFFs) and are  
+**reproducible** from raw inputs in `data/raw/`.  
+
+All datasets must be registered in the **STAC catalog** (`data/stac/items/hydrology/`)  
+with metadata, checksums, and provenance.  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Structure
+```mermaid
+flowchart TD
+  A["Raw hydrology sources\n(data/raw/hydrology/**)"] --> B["Process\n(clean · reproject · simplify)"]
+  B --> C["Processed outputs\n(data/processed/hydrology/**)"]
+  C --> D["Checksums + meta\n(.sha256 · .meta.json)"]
+  C --> E["STAC Items\n(data/stac/items/hydrology/**)"]
+  E --> F["Validate\n(stac-validate)"]
+  F --> G["Viewer integration\n(web/config/layers.json)"]
 
-```
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📂 Structure
 
 data/processed/hydrology/
-kansas_river/                # Kansas River mainstem and watershed
-watersheds/                  # Statewide or regional watershed polygons
-floodplains/                 # Historic and modeled floodplain extents
-stream_networks.json         # Generalized stream/river vector network
-lakes_wetlands.json          # Major lakes and wetlands polygons
+├── kansas_river/        # Kansas River centerlines, watershed, floodplains, gauges
+├── watersheds/          # HUC-based watershed polygons (HUC8, HUC12)
+├── floodplains/         # FEMA + historic floodplain extents
+├── stream_networks.json # generalized statewide stream network
+├── lakes_wetlands.json  # major lakes & wetlands polygons
+└── README.md
 
-````
+	•	kansas_river/ → Kansas River–specific hydrology datasets.
+	•	watersheds/ → statewide or regional HUC-based polygons.
+	•	floodplains/ → FEMA and reconstructed floodplain layers.
+	•	Other files → generalized or statewide hydrology vectors.
 
-- **`kansas_river/`** → Kansas River–specific centerlines, watersheds, floodplains, gauges.  
-- **`watersheds/`** → HUC-based watershed polygons (e.g., HUC8, HUC12).  
-- **`floodplains/`** → FEMA flood maps, historic floodplain reconstructions.  
-- **Other files** → statewide or general hydrology layers.
+⸻
 
----
+🧭 File conventions
+	•	Vectors → GeoJSON (*.json, *.geojson)
+	•	Rasters → Cloud-Optimized GeoTIFFs (*.tif) for flood models, depth grids
+	•	Tables → CSV for gauges, time series, metadata
+	•	Projection → EPSG:4326 (WGS84 lat/long) required for all outputs
 
-## File Conventions
+⸻
 
-- **Vectors**: GeoJSON (`*.json`, `*.geojson`)  
-- **Rasters**: Cloud-Optimized GeoTIFFs (`*.tif`) for flood models, depth grids  
-- **Tables**: CSV for gauges, time series, or metadata  
-- **Projection**: EPSG:4326 (WGS84 lat/long) is required for all outputs
+🔄 Workflow
+	1.	Acquire raw sources → data/raw/
+	•	Sources: USGS NHD, NOAA NWIS, FEMA, Kansas GIS Hub.
+	2.	Process
+	•	Clean, reproject to EPSG:4326
+	•	Simplify/dissolve geometries as needed
+	•	Export to GeoJSON/COG/CSV
+	3.	Checksums
 
----
+scripts/gen_sha256.sh data/processed/hydrology/*
 
-## Workflow
 
-1. **Acquire raw sources** → `data/raw/` (USGS NHD, NOAA NWIS, FEMA, Kansas GIS Hub).  
-2. **Process**  
-   - Clean, reproject to EPSG:4326  
-   - Simplify or dissolve geometries if needed  
-   - Export to GeoJSON/COG/CSV
-3. **Checksum**  
-   ```bash
-   scripts/gen_sha256.sh data/processed/hydrology/*
-````
+	4.	Register in STAC
+	•	Add/update Item JSON under data/stac/items/hydrology/
+	•	Link assets with roles: ["data"] + checksum:sha256
+	5.	Validate
 
-4. **Register in STAC**
+pre-commit run stac-validate --all-files
 
-   * Create/update Item JSON under `data/stac/items/hydrology/`
-   * Link assets with `roles: ["data"]` and `checksum:sha256`
-5. **Validate**
 
-   ```bash
-   pre-commit run stac-validate --all-files
-   ```
 
----
+⸻
 
-## Integration
+🔗 Integration
+	•	Web Viewer → layers referenced in web/config/layers.json for MapLibre visualization.
+	•	Experiments → used in floodplain reconstruction, treaty overlays, archaeological + erosion studies.
+	•	Knowledge Hub → cross-links hydrology with treaties, settlements, geology, environment.
 
-* **Web Viewer** — Hydrology layers appear in `web/config/layers.json` for MapLibre visualization.
-* **Experiments** — Used for floodplain reconstructions, treaty overlays, archaeological site analysis, and erosion studies.
-* **Knowledge Hub** — Hydrology data cross-links with treaties, settlements, geology, and environmental records.
+⸻
 
----
+📝 Notes
+	•	❌ Do not manually edit processed outputs.
+	•	✅ Always regenerate from raw + documented scripts or notebooks.
+	•	Use stable filenames (<theme>_<year>.json) so STAC + web configs remain valid.
+	•	Track large files with Git LFS / DVC.
+	•	Document provenance and methods in experiments/<ID>_.../experiment.md.
 
-## Notes
+⸻
 
-* Do **not** manually edit processed outputs — always regenerate from raw + scripts or notebooks.
-* Use **stable filenames** (`<theme>_<year>.json`) so STAC + web configs remain valid.
-* Track large files with **Git LFS or DVC**.
-* Document provenance and methods in related `experiments/<ID>_.../experiment.md`.
+✅ Mission-grade principle: Hydrology datasets must be consistent, reproducible, STAC-linked, and ready for cross-domain analysis in the Kansas Frontier Matrix.
 
----
-
-✅ This folder ensures hydrology datasets are **consistent, reproducible, and discoverable** across the Kansas Frontier Matrix system.
-
-```
