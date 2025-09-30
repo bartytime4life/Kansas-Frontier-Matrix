@@ -56,6 +56,7 @@ flowchart LR
   A --> J["stac badges yml\nShields JSON badges"]
   K["Tag vX Y Z"] --> L["release yml\nsdist wheel checksums"]
 
+<!-- END OF MERMAID -->
 ---
 
 ## Reusable patterns (copy-paste ready)
