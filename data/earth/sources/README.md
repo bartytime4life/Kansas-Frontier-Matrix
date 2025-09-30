@@ -1,92 +1,121 @@
-# Kansas-Frontier-Matrix — Earth Data Sources
+<div align="center">
 
-This directory catalogs **Earth-observation and global reference datasets**  
-that underpin the Kansas Frontier Matrix. These sources provide the  
-**planetary context** for Kansas history — from DEMs and climate normals  
-to satellite basemaps and global hazards. They complement Kansas-specific  
-layers in `data/sources/` and are referenced by STAC metadata.
+# 🌐 Kansas Geo Timeline — Earth Data Sources
 
----
+Catalog of **Earth-observation and global reference datasets**  
+that provide the **planetary context** for Kansas history.  
 
-## Purpose
+These include DEMs, climate normals, satellite imagery, basemaps, and global hazard layers.  
+They **complement Kansas-specific sources** in `data/sources/` and are referenced via STAC metadata.
 
-- Anchor Kansas datasets within a **global geospatial framework**.  
-- Provide **baseline Earth data** (terrain, imagery, hazards, climate).  
-- Support **comparisons across scales** (Kansas vs. Plains vs. World).  
-- Enable **integration of NASA/NOAA/USGS reference products**.  
-- Document provenance for **scientific reproducibility (MCP style)** [oai_citation:0‡Foundational Templates and Glossary for Scientific Method _ Research _ Master Coder Protocol.pdf](file-service://file-XygDDSfCPa5gz3jmjRV81b).  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Directory Layout
+```mermaid
+flowchart TD
+  A["Global Earth sources\n(data/earth/sources/*.json)"] --> B["Fetch\n(make fetch)"]
+  B --> C["Raw archives\n(data/earth/raw/**)"]
+  C --> D["Processed outputs\n(COG, GeoJSON, MBTiles)\n(data/earth/processed/**)"]
+  D --> E["STAC Items\n(data/earth/stac/items/**)"]
+  E --> F["Validate\n(make stac-validate)"]
+  F --> G["Viewer integration\n(web/app.config.json)"]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+🎯 Purpose
+	•	Anchor Kansas datasets within a global geospatial framework.
+	•	Provide baseline Earth data (terrain, imagery, climate, hazards).
+	•	Enable Kansas vs. Plains vs. World comparisons.
+	•	Integrate NASA/NOAA/USGS reference products.
+	•	Maintain provenance for scientific reproducibility (MCP).
+
+⸻
+
+📂 Directory layout
 
 data/earth/sources/
-├── dem_global.json           # SRTM, Copernicus, or NASADEM global DEMs
-├── landsat.json              # Landsat scenes/collections (surface reflectance)
-├── modis.json                # MODIS time series (NDVI, fire, snow)
-├── sentinel2.json            # Sentinel-2 MSI imagery (10–20 m)
-├── climate_global.json       # WorldClim / ERA5 / Daymet / NOAA GHCN gridded
-├── hazards_global.json       # EM-DAT, NASA FIRMS fire, GFDRR hazard maps
-├── tectonics.json            # Global faults, seismic hazard maps (USGS GEM)
-└── README.md                 # This file
+├── dem_global.json       # SRTM, NASADEM, Copernicus DEMs
+├── landsat.json          # Landsat scenes/collections
+├── modis.json            # MODIS time series (NDVI, fire, snow)
+├── sentinel2.json        # Sentinel-2 MSI imagery (10–20 m)
+├── climate_global.json   # WorldClim / ERA5 / Daymet / NOAA GHCN
+├── hazards_global.json   # EM-DAT, FIRMS, GFDRR hazard maps
+├── tectonics.json        # Global faults, seismic hazard
+└── README.md
 
----
 
-## Data Domains
+⸻
 
-### 🌍 Global Terrain & DEM
-- **SRTM (Shuttle Radar Topography Mission)** — 30 m global DEM.  
-- **NASADEM / Copernicus DEM** — improved versions, ~30 m.  
-- Used to compare with Kansas 1-m LiDAR [oai_citation:1‡Data resource analysis.pdf](file-service://file-GdS9Kcw7Xbfqpy4xwwdqWS).
+🌍 Data domains
 
-### 🛰️ Satellite Imagery
-- **Landsat (USGS/NASA, 1972–present)** — long-term Earth record.  
-- **MODIS (NASA, 2000–present)** — daily to 8-day composites.  
-- **Sentinel-2 (ESA, 2015–present)** — higher resolution, vegetation change.  
-- All can be subset to Kansas, but global holdings provide **baselines**.
+Terrain & DEM
+	•	SRTM — 30 m global DEM.
+	•	NASADEM / Copernicus DEM — improved 30 m products.
+	•	Used for comparison with Kansas LiDAR DEMs.
 
-### 🌡️ Climate & Environmental
-- **WorldClim** — historical and projected climate normals.  
-- **ERA5 (ECMWF)** — hourly reanalysis, global.  
-- **Daymet** (NASA ORNL DAAC) — 1-km daily climate for North America [oai_citation:2‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).  
-- **NOAA GHCN** — global station datasets [oai_citation:3‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).
+Satellite imagery
+	•	Landsat (1972–present) — long-term Earth record.
+	•	MODIS (2000–present) — daily to 8-day composites.
+	•	Sentinel-2 (2015–present) — 10–20 m resolution, vegetation change.
+	•	Global holdings give context baselines for Kansas subsets.
 
-### ⚠️ Hazards
-- **NASA FIRMS** — global fire detections.  
-- **EM-DAT (CRED)** — global disaster database.  
-- **USGS ShakeMap / GEM Global Seismic Hazard** — earthquake context.  
-- **GFDRR hazard layers** — floods, cyclones, landslides.
+Climate & environment
+	•	WorldClim — historical and projected normals.
+	•	ERA5 (ECMWF) — hourly global reanalysis.
+	•	Daymet — 1 km daily climate (North America).
+	•	NOAA GHCN — global station datasets.
 
-### 🌐 Geology & Tectonics
-- **USGS Global Faults & Folds**.  
-- **OneGeology / CGMW tectonic maps**.  
-- Provides backdrop for Kansas seismicity [oai_citation:4‡Data Resources for Kansas.pdf](file-service://file-3VZh97sQTEG1TSo7jN7w8p).
+Hazards
+	•	NASA FIRMS — global fire detections.
+	•	EM-DAT — disaster database.
+	•	USGS ShakeMap / GEM Seismic Hazard — earthquake context.
+	•	GFDRR — global hazard layers (floods, cyclones, landslides).
 
----
+Geology & tectonics
+	•	USGS Global Faults & Folds.
+	•	OneGeology / CGMW tectonic maps.
+	•	Provides geologic backdrop for Kansas seismicity.
 
-## Integration
+⸻
 
-- Each `.json` file conforms to `sources_catalog.schema.json`.  
-- Metadata includes:  
-  - `id`, `title`, `url(s)` or API endpoints  
-  - `spatial` (bbox, CRS)  
-  - `temporal` (coverage dates)  
-  - `license` and `attribution`  
-- Datasets are converted into **COGs (for rasters)** and **GeoJSON/PMTiles (for vectors)** [oai_citation:5‡Kansas Frontier Matrix – GIS Archive & Deeds Data Integration Guide.pdf](file-service://file-A8GiBPZM1dWsKG68SXPHjE).  
-- Linked to **STAC items** under `stac/items/earth/`.
+🛠️ Integration
+	•	Each .json conforms to sources_catalog.schema.json.
+	•	Metadata includes:
+	•	id, title, urls or API endpoints
+	•	spatial (bbox, CRS)
+	•	temporal (coverage)
+	•	license, attribution
 
----
+Processing:
+	•	Convert to COGs (rasters) or GeoJSON/PMTiles (vectors).
+	•	Register in STAC Items under stac/items/earth/.
 
-## Notes
+⸻
 
-- Kansas-centric sources live under `data/sources/` (e.g. `topo/`, `hydro/`).  
-- This directory holds **global reference data**, useful for context and comparisons.  
-- All data must have **checksums** (`.sha256`) and provenance sidecars, per MCP reproducibility guidelines [oai_citation:6‡Foundational Templates and Glossary for Scientific Method _ Research _ Master Coder Protocol.pdf](file-service://file-XygDDSfCPa5gz3jmjRV81b) [oai_citation:7‡Kansas Data Resources for Frontier-Matrix Project.pdf](file-service://file-Q9AC5RwLTeV6QgadxHDf5P).  
+📝 Notes
+	•	Kansas-centric datasets live under data/sources/.
+	•	data/earth/sources/ is for global context layers only.
+	•	All datasets must include checksums (.sha256) and provenance sidecars.
+	•	Follow MCP reproducibility principles: every source must be documented, validated, and traceable.
 
----
+⸻
 
-## See Also
+📚 See also
+	•	data/sources/topo/README.md — Kansas DEM & topo sources.
+	•	data/stac/ — STAC catalog and item registry.
+	•	docs/ — MCP templates and glossary.
 
-- `data/sources/topo/README.md` — Kansas DEM and topo sources.  
-- `data/stac/` — STAC catalog and items for all datasets.  
-- `docs/` — MCP protocols, experiment templates, glossary.
+⸻
+
+✅ Mission-grade principle: Earth data sources must be standardized, reproducible, and globally contextual,
+anchoring Kansas datasets within the planetary geospatial fabric.
+
