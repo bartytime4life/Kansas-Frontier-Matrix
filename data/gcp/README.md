@@ -1,51 +1,70 @@
-# Kansas-Frontier-Matrix — Ground Control Points (GCP)
+<div align="center">
 
-This directory stores **Ground Control Points (GCPs)** and related tie point files  
-used to georeference scanned maps, aerial photos, and other imagery in the  
-Kansas Frontier Matrix.  
+# 📍 Kansas Geo Timeline — Ground Control Points (GCP)
 
-GCPs are the foundation for turning **raw historical scans** into spatially  
-referenced layers (GeoTIFFs / COGs) that align with modern coordinate systems.  
-They are essential for reproducibility, accuracy, and integration across  
-historical datasets.
+This directory stores **Ground Control Points (GCPs)** and tie point files  
+for georeferencing scanned maps, aerial photos, and historic imagery  
+in the **Kansas Frontier Matrix**.  
 
----
+GCPs transform **raw historical scans** into spatially referenced layers  
+(GeoTIFFs / COGs) that align with modern coordinate systems.  
+They are essential for **accuracy, reproducibility, and cross-dataset integration**.
 
-## Purpose
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
 
-- Provide **documented control points** for georeferencing historic imagery.  
-- Support reproducible workflows: every rectified map cites its GCP file.  
-- Enable **cross-checking accuracy** (residuals, error statistics).  
-- Maintain an archive of **reference locations** (courthouses, section corners,  
-  survey benchmarks, river confluences, etc.) across Kansas.  
-- Link GCP sets to **STAC items** for provenance and time-aware usage [oai_citation:0‡Integrating Historical, Cartographic, and Geological Research (MCP Reference).pdf](file-service://file-HTPyrF5na2BY7mrNRai468) [oai_citation:1‡Kansas Frontier Matrix – GIS Archive & Deeds Data Integration Guide.pdf](file-service://file-A8GiBPZM1dWsKG68SXPHjE).  
+</div>
 
 ---
 
-## Directory Layout
+```mermaid
+flowchart TD
+  A["Raw scans\n(data/raw/maps/**)"] --> B["Ground Control Points\n(data/gcp/**)"]
+  B --> C["Rectified rasters\n(make rectified / gdalwarp)"]
+  C --> D["COGs / Overlays\n(data/cogs/overlays/**)"]
+  D --> E["STAC Items\n(stac/items/topo | plat)"]
+  E --> F["Validate\n(stac-validate)"]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+🎯 Purpose
+	•	Provide documented control points for georeferencing historic imagery.
+	•	Support reproducible workflows — every rectified map cites its GCP file.
+	•	Enable cross-checking accuracy (residuals, RMS error stats).
+	•	Maintain an archive of stable reference features (PLSS corners, survey benchmarks, river confluences).
+	•	Link GCPs to STAC items for provenance and time-aware usage.
+
+⸻
+
+📂 Directory layout
 
 data/gcp/
-├── README.md               # This file
-├── kansas_topos/           # GCPs for historical topo maps
-│   ├── 1894_ellsworth.gcp   # tie points for 1894 Ellsworth quad
-│   └── 1937_salina.gcp      # tie points for 1937 Salina quad
-├── aerials/                # GCPs for aerial photographs (county-level, 1930s–1950s)
-├── plats/                  # GCPs for county plats / cadastral sheets
-└── shared_benchmarks.json  # Common control locations (PLSS corners, benchmarks)
+├── README.md
+├── kansas_topos/           # topo map GCPs
+│   ├── 1894_ellsworth.gcp
+│   └── 1937_salina.gcp
+├── aerials/                # aerial photo GCPs (1930s–1950s)
+├── plats/                  # county plat/cadastral sheets
+└── shared_benchmarks.json  # common PLSS corners & benchmarks
 
----
 
-## GCP File Formats
+⸻
 
-- **Plaintext (`.gcp`)** — common in GDAL/QGIS:
+🗂️ File formats
+
+Plaintext (.gcp) — GDAL/QGIS convention:
 
 pixel_x, pixel_y, lon, lat
 1340, 2250, -98.1234, 38.7654
 2075,  310, -98.2000, 38.8901
 
-- **GeoJSON (`.geojson`)** — points with properties:
+GeoJSON (.geojson) — structured points with metadata:
 
-```json
 {
   "type": "FeatureCollection",
   "features": [
@@ -57,36 +76,41 @@ pixel_x, pixel_y, lon, lat
   ]
 }
 
-	•	CSV (.csv) — tabular for bulk import/export.
-	•	JSON (.json) — structured control point sets, linked to STAC metadata.
+Other formats:
+	•	CSV (.csv) — bulk import/export.
+	•	JSON (.json) — structured sets, often linked to STAC metadata.
 
 Each file should include:
-	•	source scan name + date
-	•	projection (target CRS, usually EPSG:4326 or EPSG:3857)
-	•	number of points + RMS error
-	•	notes on point selection (e.g., “church spire”, “railroad junction”)
+	•	Source scan name + date
+	•	Target CRS (EPSG:4326 or EPSG:3857 typical)
+	•	Number of points + RMS error
+	•	Notes on feature choice (e.g., “church spire”, “railroad junction”)
 
 ⸻
 
-Integration
-	•	Referenced in data/sources/ descriptors for scanned maps.
-	•	Used by make rectified or make cogs targets in the Makefile to warp rasters ￼.
-	•	Residuals/errors documented in provenance sidecars.
-	•	STAC items in stac/items/topo/ or stac/items/plat/ cite the associated GCP file.
+🔗 Integration
+	•	Referenced in data/sources/*.json descriptors for scanned maps.
+	•	Consumed by make rectified / make cogs to warp rasters.
+	•	Residuals & errors logged in provenance sidecars.
+	•	Cited by STAC items (stac/items/topo/, stac/items/plat/).
 
 ⸻
 
-Notes
+📝 Notes
 	•	Prefer stable features (river confluences, PLSS intersections) over transient ones (fence lines).
-	•	Include at least 4–6 points well spread across the map. More points improve warp quality.
-	•	Store raw + refined versions if iterations are done.
-	•	Follow MCP reproducibility: every georeferencing step must reference its exact GCP input ￼.
+	•	Include at least 4–6 well-spread points; more improves warp accuracy.
+	•	Store raw + refined versions if iterative corrections are made.
+	•	Follow MCP reproducibility: each georeferencing step must reference the exact GCP file used.
 
 ⸻
 
-See Also
-	•	data/earth/sources/README.md — global basemaps used for checking alignment.
-	•	data/processed/dem/overlays/README.md — raster overlays generated after georeferencing.
-	•	stac/items/ — STAC metadata linking imagery to its GCP files.
+📚 See also
+	•	data/earth/sources/README.md — global basemaps for alignment checks.
+	•	data/cogs/overlays/README.md — raster overlays generated after rectification.
+	•	stac/items/ — STAC metadata linking imagery to its GCPs.
 
----
+⸻
+
+✅ Mission-grade principle: GCPs must be archived, cited, and reproducible.
+No georeferenced map is valid without its documented GCP inputs.
+
