@@ -94,6 +94,7 @@ clean-scratch:
 
 ⸻
 
+
 ✅ Summary:
 data/work/scratch/ = low-stakes sandbox.
 Use it for quick tests and drafts; promote only if reproducible.
