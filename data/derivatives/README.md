@@ -1,7 +1,14 @@
+
+<div align="center">
+
+
 🧭 Kansas-Frontier-Matrix — Derived Geospatial Products
 
 Purpose: hold analysis-ready derivatives computed from canonical COGs in data/cogs/ and curated inputs in data/sources/.
 All outputs are reproducible, checksummed, and preferably registered as STAC Items.
+
+</div>
+
 
 flowchart LR
   A["COGs and sources\n(data/cogs and data/sources)"] --> B["Derive\n(terrain hydro change)"]
@@ -70,7 +77,7 @@ Verify later:
 
 sha256sum -c data/derivatives/<subdir>/<name>.<ext>.sha256
 
-2) Optional .meta.json (use STAC when possible)
+2) Optional .meta.json (prefer STAC when possible)
 
 {
   "id": "ks_slope_2018_2020",
@@ -136,8 +143,6 @@ Hydrology (fill depressions → flowdir → flowacc)
 
 gdaldem fillnodata fills NoData, not true depressions. Use WhiteboxTools, TauDEM, or RichDEM.
 
-WhiteboxTools example:
-
 whitebox_tools -r FillDepressions    -i data/cogs/dem/ks_1m_dem_2018_2020.tif -o /tmp/ks_dem_filled.tif
 whitebox_tools -r D8Pointer          -i /tmp/ks_dem_filled.tif -o /tmp/ks_flowdir.tif
 whitebox_tools -r D8FlowAccumulation -i /tmp/ks_dem_filled.tif -o /tmp/ks_flowacc.tif
@@ -155,7 +160,7 @@ gdal_contour -a elev -i 10.0 \
 
 DEM of Difference (DoD)
 
-Align to a common grid (CRS, resolution, extent, alignment) before differencing:
+Align to a common grid (CRS, resolution, extent, alignment) before differencing.
 
 # Align newer to older (example; adjust EPSG and extent)
 gdalwarp -t_srs EPSG:26914 -r bilinear -tap -tr 1 1 -te_srs EPSG:26914 \
@@ -250,5 +255,3 @@ If tiled, use the tile URL or pmtiles://… instead of the raw COG.
 
 Owner: Data Engineering / MCP
 PR label: data:derivative
-
-⸻
