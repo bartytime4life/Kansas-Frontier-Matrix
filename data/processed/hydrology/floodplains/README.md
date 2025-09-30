@@ -1,81 +1,104 @@
-# Floodplains — Kansas Frontier Matrix
+<div align="center">
+
+# 🌊 Kansas Geo Timeline — Floodplains
 
 This folder contains **processed floodplain datasets** for Kansas.  
-It includes both **authoritative FEMA maps** and **historic floodplain reconstructions** derived from DEMs, hydrological models, and archival sources (e.g., 1890s maps).  
-All datasets here are reproducible, linked to provenance, and referenced in the STAC catalog (`data/stac/items/hydrology/floodplains/`).
+
+It includes both **authoritative FEMA maps** and **historic floodplain reconstructions**  
+derived from DEMs, hydrological models, and archival maps (e.g., 1890s Kansas River).  
+
+All datasets are **reproducible**, **provenance-linked**, and registered in the  
+**STAC catalog** (`data/stac/items/hydrology/floodplains/`).  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Typical Contents
+```mermaid
+flowchart TD
+  A["Raw sources\n(FEMA NFHL/FIRM, historic scans, DEM runs)"] --> B["Process & convert\n(reproject EPSG:4326, clean)"]
+  B --> C["Outputs\n(data/processed/hydrology/floodplains/**)"]
+  C --> D["Checksums + meta\n(.sha256 · .meta.json)"]
+  C --> E["STAC Items\n(data/stac/items/hydrology/floodplains/**)"]
+  E --> F["Validate\n(stac-validate)"]
+  F --> G["Integration\n(web configs, experiments, Knowledge Hub)"]
 
-```
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📂 Typical contents
 
 data/processed/hydrology/floodplains/
-fema_floodplain_2020.json
-fema_floodplain_2022.json
-kansas_river_floodplain_1890s.json
-statewide_flood_zones.json
+├── fema_floodplain_2020.json
+├── fema_floodplain_2022.json
+├── kansas_river_floodplain_1890s.json
+├── statewide_flood_zones.json
+└── README.md
 
-````
+	•	FEMA layers → official datasets by year/version (FIRM, NFHL).
+	•	Historic reconstructions → polygons digitized from archival maps.
+	•	Modeled layers → DEM-based flood depth/extent grids.
 
-- **FEMA Floodplain Layers** — official datasets by year/version (FIRM, NFHL).  
-- **Historic Reconstructions** — polygons digitized from historic maps (e.g., 1890s Kansas River floodplain).  
-- **Modeled Layers** — flood depth or extent grids from DEM hydrology simulations.
+⸻
 
----
+🔄 Workflow
+	1.	Acquire raw sources
+	•	FEMA NFHL/FIRM (shapefiles, GDBs) from FEMA Map Service Center.
+	•	Historical maps (USGS / Kansas archives, stored under data/raw/).
+	•	DEM-based hydrology models (TauDEM, WhiteboxTools, GRASS).
+	2.	Process & convert
+	•	Reproject → EPSG:4326 (WGS84).
+	•	Clean/dissolve polygons if needed.
+	•	Export → GeoJSON for vectors, COG for rasters.
+	3.	Checksums
 
-## Workflow
+scripts/gen_sha256.sh data/processed/hydrology/floodplains/*
 
-1. **Raw sources**  
-   - FEMA NFHL/FIRM data (shapefiles, GDBs) from FEMA Map Service Center.  
-   - Historical maps scanned from USGS/Kansas archives (`data/raw/`).  
-   - DEM-based hydrology runs (TauDEM, WhiteboxTools, GRASS).
 
-2. **Process & Convert**  
-   - Reproject to EPSG:4326 (WGS84).  
-   - Clean/dissolve polygons as needed.  
-   - Export to **GeoJSON** (`*.json`) for vectors, or **COG** (`*.tif`) for rasters.
+	4.	Register in STAC
+	•	Create STAC Item in data/stac/items/hydrology/floodplains/.
+	•	Example asset entry:
 
-3. **Checksum**  
-   ```bash
-   scripts/gen_sha256.sh data/processed/hydrology/floodplains/*
-````
+"fema_floodplain_2020": {
+  "href": "../../../processed/hydrology/floodplains/fema_floodplain_2020.json",
+  "title": "FEMA Floodplain (2020)",
+  "type": "application/geo+json",
+  "roles": ["data"],
+  "checksum:sha256": "<sha256sum>"
+}
 
-4. **Register in STAC**
 
-   * Create Item JSON under `data/stac/items/hydrology/floodplains/`.
-   * Example asset reference:
+	5.	Validate
 
-     ```json
-     "fema_floodplain_2020": {
-       "href": "../../../processed/hydrology/floodplains/fema_floodplain_2020.json",
-       "title": "FEMA Floodplain (2020)",
-       "type": "application/geo+json",
-       "roles": ["data"],
-       "checksum:sha256": "<sha256sum>"
-     }
-     ```
+make stac-validate
+pre-commit run --all-files
 
----
 
-## Integration
 
-* **Web Viewer** — Layers toggle-able in `web/config/layers.json`.
-* **Experiments** — Used in flood risk analysis, treaty boundary overlays, settlement vulnerability studies.
-* **Knowledge Hub** — Links to Kansas River hydrology, climate, and historical event datasets.
+⸻
 
----
+🔗 Integration
+	•	Web viewer → floodplain layers toggle in web/config/layers.json.
+	•	Experiments → inputs for flood risk analysis, treaty overlays, vulnerability studies.
+	•	Knowledge Hub → linked with Kansas River hydrology, climate datasets, and historical flood events.
 
-## Notes
+⸻
 
-* **Naming convention**: `<source>_<theme>_<year>.json`
-  Example: `fema_floodplain_2020.json`, `kansas_river_floodplain_1890s.json`.
-* **Provenance required**: Document sources (FEMA, USGS, archives) in `experiment.md` or STAC metadata.
-* **Large rasters**: Use COG format, track with **Git LFS/DVC**.
-* **Never edit by hand**: regenerate from raw or experiment scripts.
+📝 Notes
+	•	Naming convention → <source>_<theme>_<year>.json
+	•	Example: fema_floodplain_2020.json, kansas_river_floodplain_1890s.json.
+	•	Provenance required → document sources (FEMA, USGS, archives) in experiment.md or STAC.
+	•	Large rasters → store as COGs, track with Git LFS / DVC.
+	•	❌ Never hand-edit; always regenerate via pipeline.
 
----
+⸻
 
-✅ This folder ensures Kansas floodplain datasets are **traceable, reproducible, and interoperable** across experiments, STAC, and the web map.
+✅ Mission-grade principle: Floodplain datasets must be traceable, reproducible, and STAC-linked, ready for use in research, visualization, and the Kansas Frontier Matrix web map.
 
-```
