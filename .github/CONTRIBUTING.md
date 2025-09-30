@@ -69,23 +69,23 @@ pytest -q              # if tests/ exist
 mkdocs build -q        # if docs/ exist
 
 CI will run:
-	•	STAC validation (stac-validate.yml)
-	•	Web config validation (web-config-validate.yml)
-	•	Tests (ci.yml, tests.yml)
-	•	Security scans (CodeQL, Trivy, secret scanning)
+	•	STAC validation → stac-validate.yml
+	•	Web config validation → web-config-validate.yml
+	•	Tests → ci.yml, tests.yml
+	•	Security scans → CodeQL, Trivy, secret scanning
 
 ⸻
 
 🛡️ Review & Governance
 	•	PRs require at least one maintainer review
 	•	Branch protection → main requires CI green + schema checks + CodeQL
-	•	Automerge only for Dependabot minor/patch PRs with label + passing CI
+	•	Automerge → Dependabot minor/patch PRs with label + passing CI
 
 ⸻
 
 🧭 Community Norms
 	•	Respect the Code of Conduct
-	•	Follow Security Policy for sensitive disclosures
+	•	Follow the Security Policy for sensitive disclosures
 	•	Uphold MCP values:
 	•	Reproducibility → make targets, not one-off commands
 	•	Documentation-first → update READMEs + schemas before merge
@@ -101,7 +101,9 @@ CI will run:
 
 ⸻
 
-✅ Summary:
+✅ Summary
+
 Contributing to Kansas-Frontier-Matrix means following MCP principles:
 document everything, keep it reproducible, and ensure provenance.
+
 Together we build a mission-grade, auditable knowledge hub for Kansas.
