@@ -1,3 +1,8 @@
+Here’s the updated .github/workflows/README.md with the emoji-enhanced lifecycle diagram and a GitHub-friendly index table (clean columns, code-formatted filenames, no layout glitches). It matches the house style used across your repo.
+
+⸻
+
+
 <div align="center">
 
 # 🧩 Kansas-Frontier-Matrix — GitHub Workflows (`.github/workflows/`)
@@ -5,9 +10,9 @@
 **Mission:** Automate **CI/CD, validation, security, and release**  
 so every change is **reproducible, auditable, and safe-by-default**.
 
-[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
-[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](./stac-badges.yml)
+[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)  
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](./stac-badges.yml)  
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
 
 📌 **Fail fast** (lint, schemas, STAC) before heavy work  
@@ -22,14 +27,14 @@ so every change is **reproducible, auditable, and safe-by-default**.
 
 ```mermaid
 flowchart LR
-  A["Push / PR / Tag / Manual"] --> B["Config & Schema checks\n(web-config-validate, stac-validate)"]
-  A --> C["CI / Tests\n(ruff, pytest, mypy?)"]
-  B --> D["Render configs\n(stac.yml → app.config.json)"]
-  D --> E["Publish site\n(site.yml → Pages)"]
-  A --> F["Security & SBOM\n(codeql, trivy, sbom)"]
-  A --> G["Containers\n(docker → GHCR)"]
-  A --> H["Badges & Reports\n(stac-badges)"]
-  A --> I["Release\n(tag vX.Y.Z → assets)"]
+  A["🔀 Events\nPush / PR / Tag / Manual"] --> B["🧪 Config & Schemas\nweb-config-validate · stac-validate"]
+  A --> C["🧪 CI / Tests\nruff · pytest · (mypy)"]
+  B --> D["🌐 Render Configs\nstac.yml → app.config.json"]
+  D --> E["🌐 Publish Site\nsite.yml → Pages"]
+  A --> F["🔒 Security & 📦 SBOM\ncodeql · trivy · sbom"]
+  A --> G["🐳 Containers\nDocker → GHCR"]
+  A --> H["🌐 Badges & Reports\nstac-badges"]
+  A --> I["📦 Release\nTag vX.Y.Z → wheels + checksums"]
 
 <!-- END OF MERMAID -->
 
@@ -38,28 +43,30 @@ Safety: Writers (Pages, GHCR, Releases) never execute on PRs. Each workflow sets
 
 ⸻
 
-📚 Index (what runs where)
+📚 Index (Workflows Overview)
 
-Workflow	Purpose	Triggers (paths)	Outputs / artifacts
-CI (ci.yml)	Python lint/tests (ruff/pytest), optional mypy; light web smoke	src/**, tests/**, pyproject.toml, requirements*	JUnit/coverage in .artifacts/, run summary
-Tests (tests.yml)	Quick test matrix	tests/**	pytest-report.xml, coverage (if enabled)
-Web Config Validate	JSON lint + $schema validate; targeted tests	web/**.json, web/config/**, tests/**	step summaries, pytest-web-configs.xml
-STAC Validate	stac-validator → pystac fallback; HTTP/asset checks	stac/**	.artifacts/stac_validator.txt, link reports
-STAC & Config Render (stac.yml)	Validate STAC, then render web/app.config.json; schema-check result	stac/**, src/**, web/**	.artifacts/stac_report.json, web/app.config.json
-STAC Badges	Produce Shields-ready JSON for catalog coverage	stac/**, data/sources/**	web/badges/*.json, build/stac_report.json
-Site (Pages) (site.yml)	Build & deploy MapLibre site; optional link check	web/**, stac/**, mkdocs.yml	_site/ artifact → Pages
-Docker (docker.yml)	Multi-arch Buildx → GHCR; provenance; Trivy image scan	docker/**, Dockerfile	image tags, trivy-image.sarif
-SBOM (sbom.yml)	CycloneDX/SPDX for repo (and image if present)	push/schedule/manual	artifacts/sbom/**
-CodeQL (codeql.yml)	Static analysis (Python, JS/TS)	push/PR/schedule	Code scanning alerts (SARIF)
-Trivy (trivy.yml)	FS/config/image scans; SBOMs; SARIF	push/PR/schedule	trivy-*.sarif, SBOM JSON
-Secret Scanning	Gitleaks for secrets in diffs/history	push/PR/schedule	gitleaks.sarif
-OpenSSF Scorecard	Repo health/security checks	push/PR/weekly	scorecard.sarif
-Release (release.yml)	Tag-driven build (sdist+wheel); checksums; optional SBOM; GH Release	tags v*	dist/**, CHECKSUMS.txt
-Roadmap Sync (roadmap.yml)	Parse .github/roadmap/roadmap.yaml → labels/milestones/issues	roadmap changes/manual	build/roadmap-sync.log
-Labels Sync (labels.yml)	Sync labels from .github/labels.yml	push/manual	—
-Automerge	Label-gated auto-merge once checks pass	PR labeled automerge	—
-Close Stale / Issue Lock	Mark/close inactive items; lock closed issues after inactivity	nightly/manual	bot comments
-Link Check (optional)	Lychee across README/docs/web	push/PR	lychee.md, results.json
+Category	Workflow	File	Purpose	Triggers (paths/events)	Outputs / Artifacts
+🧪	CI	ci.yml	Python lint/tests (ruff/pytest), optional mypy; smoke web	src/**, tests/**, pyproject.toml, requirements*	JUnit/coverage → .artifacts/
+🧪	Tests	tests.yml	Quick test matrix	tests/**	pytest-report.xml, coverage
+🧪	Web Config Validate	web-config-validate.yml	JSON lint + $schema validate; targeted tests	web/**.json, web/config/**, tests/**	pytest-web-configs.xml, step summaries
+🌐	STAC Validate	stac-validate.yml	stac-validator → pystac fallback; asset checks	stac/**	.artifacts/stac_validator.txt, broken-link list
+🌐	STAC & Render Config	stac.yml	Validate STAC, render web/app.config.json, schema-check	stac/**, src/**, web/**	.artifacts/stac_report.json, rendered config
+🌐	STAC Badges	stac-badges.yml	Generate Shields JSON for catalog coverage	stac/**, data/sources/**	web/badges/*.json, build/stac_report.json
+🌐	Site (Pages)	site.yml	Build & deploy MapLibre site to Pages; optional link check	web/**, stac/**, mkdocs.yml	_site/ artifact → Pages
+🐳	Docker Build	docker.yml	Multi-arch Buildx → GHCR; provenance; Trivy image scan	docker/**, Dockerfile	GHCR tags, trivy-image.sarif
+📦	SBOM	sbom.yml	CycloneDX/SPDX for repo (and image if present)	push/schedule/manual	artifacts/sbom/**
+🔒	CodeQL	codeql.yml	Static analysis (Python, JS/TS)	push/PR/schedule	SARIF alerts → Code scanning
+🔒	Trivy	trivy.yml	FS/config/image scans; SBOMs; SARIF	push/PR/schedule	trivy-*.sarif, SBOM JSON
+🔒	Secret Scanning	secret-scanning.yml	Gitleaks diff/history scan	push/PR/schedule	gitleaks.sarif
+🔒	OpenSSF Scorecard	ossf-scorecard.yml	Repo health/security checks	push/PR/weekly	scorecard.sarif
+📦	Release	release.yml	Tag-driven Python release (sdist + wheel, checksums)	tags v*	dist/**, CHECKSUMS.txt
+🗺️	Roadmap Sync	roadmap.yml	Sync .github/roadmap/roadmap.yaml → labels/milestones	roadmap changes/manual	build/roadmap-sync.log
+🏷️	Labels Sync	labels.yml	Sync labels from .github/labels.yml	push/manual	—
+🤖	Automerge	automerge.yml	Auto-merge PRs with label after all checks pass	PR labeled automerge	—
+⏳	Close Stale	close-stale.yml	Mark/close inactive issues/PRs	nightly/manual	bot comments
+🔒	Issue Lock	issue-lock.yml	Lock closed issues after inactivity	nightly/manual	bot comments
+🏷️	PR Labeler	pr-labeler.yml	Auto-label PRs by path/size/type	PR open/sync	labels
+🔗	Link Check (opt)	link-check.yml	Lychee over README/docs/web	push/PR	lychee.md, results.json
 
 
 ⸻
@@ -156,14 +163,14 @@ permissions: { contents: read, security-events: write }
 	•	Schema-first: JSON/YAML configs linted + schema-validated before builds.
 	•	Geo deps on demand: GDAL/PROJ installed only where needed.
 	•	Cache discipline: caches keyed to lockfiles/requirements.
-	•	Artifacts always: tests, STAC reports, and renders go to .artifacts/ (or _site/).
-	•	Branch safety: any writer (Pages, GHCR, Releases) is gated to default branch/tags; never writes on PRs.
+	•	Artifacts always: tests, STAC reports, and renders → .artifacts/ (or _site/).
+	•	Branch safety: writers (Pages, GHCR, Releases) gated to default branch/tags; never writes on PRs.
 	•	Run summaries: “What changed / validated / next steps” in job summaries.
 
 ⸻
 
 👩‍💻 Typical Developer Flows
-	•	Add or modify a web layer → edit stac/** + web/config/**
+	•	Add/modify a web layer → edit stac/** + web/config/**
 → web-config-validate.yml + stac-validate.yml fail fast
 → stac.yml renders web/app.config.json
 → site.yml publishes to Pages (main only).
@@ -216,3 +223,7 @@ permissions: { contents: read, security-events: write }
 .github/workflows/ is the automation backbone of Frontier-Matrix.
 Workflows are pinned, least-privilege, and fail fast with rich artifacts —
 enforcing MCP principles of reproducibility, provenance, and safety.
+
+---
+
+If you want, I can add the same emoji tags to **job step summaries** your workflows print (e.g., “🧪 Tests: ✅ 132 passed”) so the category cues carry through to CI output.
