@@ -1,34 +1,42 @@
+---
+
 # 📍 Roadmap → GitHub Sync
 
-This folder holds the **single source of truth** for the project roadmap and the
-automation that syncs it to **GitHub labels, milestones, and issues**.
+This folder is the **single source of truth** for the project roadmap and the automation that syncs it to **GitHub labels, milestones, and issues**.
 
-- `roadmap.yaml` — declarative roadmap (human-edited)  
-- Workflow **[`.github/workflows/roadmap.yml`](../workflows/roadmap.yml)** reads `roadmap.yaml` and calls  
-  **[`scripts/sync-roadmap.js`](../../scripts/sync-roadmap.js)** to create/update labels, milestones, and issues.
+* `roadmap.yaml` — declarative roadmap (human-edited)
+* Workflow **[`.github/workflows/roadmap.yml`](../workflows/roadmap.yml)** reads `roadmap.yaml` and calls
+  **[`scripts/sync-roadmap.js`](../../scripts/sync-roadmap.js)** to apply changes.
 
-> 🔒 On **pull requests** the workflow runs in **DRY RUN** (no writes).  
-> 🚀 On **pushes to `main`** and **manual dispatch** (unless `dry_run=true`) it **applies** changes.
+> 🔒 **Pull requests** run in **DRY RUN** (no writes).
+> 🚀 **Pushes to `main`** and **manual dispatch** (unless `dry_run=true`) **apply changes**.
 
 ---
 
-## ⚙️ How it works (idempotent sync)
+## How it flows
 
-1. Parse `roadmap.yaml`.  
-2. Ensure **labels** exist (create/update color & description).  
-3. Ensure **milestones** exist (create/update title, due date, state).  
-4. Ensure **issues** exist or are updated (title, body, labels, milestone, assignees).  
-5. Track items by a stable **`key`** you define. The sync writes a hidden marker into each synced issue body:
+```mermaid
+flowchart LR
+  A["Edit roadmap.yaml"] --> B["roadmap.yml workflow"]
+  B --> C["sync-roadmap.js DRY RUN on PRs"]
+  B --> D["sync-roadmap.js APPLY on main or manual"]
+  D --> E["Labels create or update"]
+  D --> F["Milestones create or update"]
+  D --> G["Issues create or update by key marker"]
+  G --> H["Provenance marker in issue body"]
+```
+
+<!-- END OF MERMAID -->
+
+**Idempotent by design.** Each synced issue carries a hidden marker so re-runs safely update instead of duplicating:
 
 ```html
-<!-- roadmap:key=<your-key> -->
-````
-
-This marker makes the sync **repeatable** and safe to run anytime.
+<!-- roadmap:key=<your-stable-key> -->
+```
 
 ---
 
-## 🧩 Minimal example: `roadmap.yaml`
+## Minimal, practical `roadmap.yaml`
 
 ```yaml
 version: 1
@@ -36,10 +44,10 @@ version: 1
 labels:
   - name: area:web
     color: 1f6feb
-    description: Web viewer / UI
+    description: Web viewer and UI
   - name: area:data
     color: 0e8a16
-    description: Data & STAC
+    description: Data pipelines and STAC
   - name: type:feature
     color: fbca04
   - name: type:chore
@@ -55,13 +63,13 @@ labels:
 
 milestones:
   - key: m25q4
-    title: 2025 Q4
+    title: "2025 Q4"
     due_on: 2025-12-31
     state: open
 
 epics:
   - key: epic-web-v1
-    title: Web Viewer v1 (MapLibre + time)
+    title: "Web Viewer v1"
     milestone: m25q4
     labels: [area:web, type:feature, priority:p1, status:planned]
     body: |
@@ -69,105 +77,182 @@ epics:
       - Time slider across layers
       - Schema-validated configs
       - Pages deploy CI
+
     issues:
       - key: web-config-schema
-        title: Schema: app.config.json & layers.json
+        title: "Schema: app.config.json and layers.json"
         labels: [area:web, type:chore, status:doing]
         assignees: [bartytime4life]
         body: |
-          Validate app/layers configs against JSON Schema in CI.
+          Validate app and layers configs against JSON Schema in CI.
           <!-- roadmap:key=web-config-schema -->
+
       - key: web-pages-deploy
-        title: Pages: Build & Deploy workflow
+        title: "Pages: Build and Deploy workflow"
         labels: [area:web, type:feature, status:planned]
         body: |
-          Build `_site` and deploy via actions/deploy-pages@v4.
+          Build _site and deploy via actions/deploy-pages@v4.
           <!-- roadmap:key=web-pages-deploy -->
 
 issues:
   - key: stac-validate-ci
-    title: STAC validation workflow
+    title: "STAC validation workflow"
     milestone: m25q4
     labels: [area:data, type:chore, status:planned]
     body: |
-      Validate catalog/collections/items with pystac + JSON sanity checks.
+      Validate catalog, collections, items with pystac and JSON sanity checks.
       <!-- roadmap:key=stac-validate-ci -->
 ```
 
 ---
 
-## 🛠 Running the sync
+## Strong suggestions (taxonomy & keys)
+
+**Labels**
+
+* `area:*` — domain (`area:web`, `area:data`, `area:ci`, `area:docs`)
+* `type:*` — change class (`type:feature`, `type:bug`, `type:chore`, `type:refactor`)
+* `priority:p{1..3}` — `p1` highest
+* `status:*` — `planned`, `doing`, `blocked`, `done`
+* Optional: `needs:review`, `good first issue`, `risk:*`
+
+**Milestones**
+
+* Timeboxed (`YYYY Q#`) or release-named (`vX.Y`).
+* Use a stable `key` (e.g., `m25q4`) so renames don’t break sync.
+
+**Keys**
+
+* Treat `key` as immutable IDs. If you change it, the sync will create a **new** issue.
+
+---
+
+## Run it
 
 ### In CI (recommended)
 
-Workflow **[`.github/workflows/roadmap.yml`](../workflows/roadmap.yml)** runs automatically:
+Workflow **[`.github/workflows/roadmap.yml`](../workflows/roadmap.yml)**:
 
-* **PRs** → **DRY RUN** (no writes), logs summary in job output.
-* **Push to `main`** → **APPLY** changes.
-* **Manual**: “Run workflow” with `dry_run: true|false`.
+* **PRs** → DRY RUN, summary in logs.
+* **Push to `main`** → apply changes.
+* **Manual dispatch** → choose `dry_run: true|false`.
 
 ### Locally (advanced)
 
 ```bash
-# project root
+# from repo root
 export GITHUB_TOKEN=ghp_xxx   # token with 'repo' scope
 npm ci
-DRY_RUN=true  node scripts/sync-roadmap.js   # simulate (logs only)
-DRY_RUN=false node scripts/sync-roadmap.js   # apply (creates/updates issues)
+DRY_RUN=true  node scripts/sync-roadmap.js    # simulate (no writes)
+DRY_RUN=false node scripts/sync-roadmap.js    # apply (writes)
 ```
 
-> CI passes `DRY_RUN` via env; PRs always use **DRY RUN**.
+> In CI, `DRY_RUN` is set by the workflow based on event type.
 
 ---
 
-## 🗂 Conventions
+## Validation & guardrails
 
-**Label taxonomy (suggested)**
+1. **YAML sanity**
 
-* `area:*` — code/data area (`area:web`, `area:data`, `area:ci`, `area:docs`)
-* `type:*` — change type (`type:feature`, `type:bug`, `type:chore`, `type:refactor`)
-* `priority:p{1..3}` — `p1` (highest) to `p3`
-* `status:*` — `planned`, `doing`, `blocked`, `done`
-* Optional: `risk:*`, `needs:review`, `good first issue`
+```bash
+yamllint .github/roadmap/roadmap.yaml
+```
 
-**Milestones**
+2. **Schema check (optional but recommended)**
+   Create `.github/roadmap/schema.json` (see starter below) and validate in CI:
 
-* Timeboxed (`YYYY Q#`) or release tags (`vX.Y`).
-* Use `key` for stable refs (e.g., `m25q4`, `v1-0`).
+```bash
+python -m jsonschema -i .github/roadmap/roadmap.yaml .github/roadmap/schema.json
+```
 
-**Epics**
+**Starter schema** (kept intentionally lightweight):
 
-* High-level containers with an `issues:` list.
-* Sync creates **normal issues** for epics and children.
-* If your script supports it, cross-links can be added after creation.
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["version"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "color"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "color": { "type": "string", "pattern": "^[0-9a-fA-F]{6}$" },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "title"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "due_on": { "type": "string", "format": "date" },
+          "state": { "type": "string", "enum": ["open", "closed"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "epics": { "type": "array" },
+    "issues": { "type": "array" }
+  },
+  "additionalProperties": true
+}
+```
 
 ---
 
-## ❓ FAQ
+## Troubleshooting
 
-**Q: What if I rename a label or milestone?**
-A: Update `roadmap.yaml`. Sync updates labels/milestones going forward but cannot bulk-rename history. Clean up old labels manually.
+* **Duplicate issues created**
+  The old issue likely lacks the key marker. Add
+  `<!-- roadmap:key=the-same-key -->` to its body and re-run, or close the duplicate.
 
-**Q: How are issues matched?**
-A: By `<!-- roadmap:key=... -->`. If missing, sync may match by title (best-effort), then writes the marker.
+* **Label color rejected**
+  Must be 6-digit hex (no `#`). Example: `1f6feb`.
 
-**Q: Can I close issues via roadmap?**
-A: If supported by your script, yes (`state: closed`). Otherwise close manually—sync won’t reopen unless configured.
+* **Assignee fails**
+  Username must have access to the repo.
 
----
-
-## ⚠️ Gotchas
-
-* YAML is whitespace-sensitive—validate with `yamllint`.
-* `assignees` must be valid GitHub usernames with repo access.
-* Label names must be unique.
-* Keep `key` **stable**—changing it creates a new issue.
+* **Dry run surprised you**
+  On PRs, writes are always off. Push to `main` or run the workflow manually with `dry_run=false`.
 
 ---
 
-## 🗓 Changelog for this folder
+## Security & provenance
 
-* **2025-09-28**: Updated docs for label alignment + clearer local run instructions.
-* **2025-09-23**: Initial roadmap sync docs (PRs → dry-run; main/manual → apply).
+* The workflow runs with **least-privilege** permissions (labels, issues, milestones only).
+* **No writes on PRs** (fork safety).
+* The sync adds a **provenance marker** to issue bodies; changes are fully auditable in git + workflow run logs.
+
+---
+
+## Folder map
 
 ```
+.github/roadmap/
+├── README.md                # (this file)
+├── roadmap.yaml             # source of truth (edit me)
+└── schema.json              # optional, for CI validation
+```
+
+---
+
+## Changelog (for this folder)
+
+* **2025-09-30**: Rebuilt README with flow diagram, schema starter, and stricter guardrails.
+* **2025-09-28**: Clarified local run instructions and label alignment.
+* **2025-09-23**: Initial roadmap sync docs.
+
+---
+
+Questions or improvements? Open an issue with `[roadmap]` in the title and link the workflow run URL.
