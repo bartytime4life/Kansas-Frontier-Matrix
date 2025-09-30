@@ -1,104 +1,109 @@
-# Kansas-Frontier-Matrix — `data/tmp/` (Ephemeral Temporary Files)
+<div align="center">
 
-This folder is reserved for **purely transient artifacts** — files created during builds, tests, or experiments  
-that **do not belong in version control** and can be safely deleted at any time.
+# 🗂️ Kansas-Frontier-Matrix — Temporary Files (`data/tmp/`)
 
-It acts as a scratchpad for pipelines, fetchers, and experiments so canonical data directories (`raw/`, `processed/`, `cogs/`, `derivatives/`) remain clean.
+**Mission:** Provide a **scratch space for ephemeral artifacts** —  
+build leftovers, test outputs, or transient pipeline files —  
+that **never belong in version control** and may be wiped at any time.
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+
+📌 Excluded via `.gitignore`.  
+📌 CI/CD ignores this directory completely.  
+📌 **If it matters → promote & document. If not → let it vanish.**
+
+</div>
 
 ---
 
-## Purpose
+## 🎯 Purpose
 
-- Provide a writable sandbox for scripts and Makefile targets.  
-- Hold downloads, unzipped archives, or intermediate exports that will be discarded after use.  
-- Prevent clutter or accidental pollution in reproducible directories.  
-- Serve as a **pipeline buffer**: e.g., temporary mosaics before COG conversion, OCR scratch text, clipped shapefiles before reproject.  
+- Sandbox for **build pipelines** and **scripts**.  
+- Buffer for **unzipped archives**, **API caches**, or **intermediate exports**.  
+- Prevent clutter in canonical directories (`raw/`, `processed/`, `cogs/`, `derivatives/`).  
+- Safe space for testing, prototyping, and debugging.  
 
 ---
 
-## Rules
+## 📂 Typical Contents
+
+- Temporary mosaics before COG conversion.  
+- Clipped shapefiles or reprojection scratch layers.  
+- Unpacked ZIP/TAR archives awaiting processing.  
+- Intermediate OCR text dumps.  
+- Test thumbnails, draft exports, or inspection files.  
+
+---
+
+## 🚦 Rules
 
 - 🚫 **Never commit files in `data/tmp/`.**  
-  - This directory is excluded by `.gitignore`.  
-  - CI jobs ignore its contents entirely.  
+  - This path is `.gitignore`d and excluded from CI/CD.  
 
-- ✅ If a temporary file proves useful, **promote it**:  
-  - → `data/work/` if it is an intermediate worth tracking short-term.  
-  - → `data/processed/` or `data/cogs/` if it is analysis-ready.  
-  - → `data/raw/` if it is a canonical upstream input.  
-  - Update **STAC Items** and **provenance** if promoted.  
+- ✅ **Promote if useful:**  
+  - → `data/work/` for short-term intermediates.  
+  - → `data/processed/` or `data/cogs/` if analysis-ready.  
+  - → `data/raw/` if canonical input.  
+  - Always update **STAC Items** + **checksums** if promoted.  
 
-- 🧹 Everything here is **safe to delete** — scripts and Makefile rules must regenerate outputs as needed.  
-
----
-
-## Typical Contents
-
-- Temporary raster/vector conversions before COG/GeoJSON promotion.  
-- Cache files from fetch scripts or API queries.  
-- Zipped archives extracted mid-pipeline.  
-- Test exports, thumbnails, or draft images.  
-- Partial OCR text dumps during document processing.  
-- Scratch shapefiles or clipped regions for inspection.  
+- 🧹 **Safe to delete anytime** — pipelines must regenerate outputs.  
 
 ---
 
-## Connections in Data Lifecycle
+## 🔄 Lifecycle Position
 
-This folder sits at the **lowest rung** of the data lifecycle:
+```mermaid
+flowchart LR
+  A["Ephemeral scratch\n(data/tmp/)"] --> B["Work-in-progress\n(data/work/)"]
+  B --> C["Processed / COGs\n(data/processed, data/cogs)"]
+  C --> D["Derivatives\n(data/derivatives)"]
+  D --> E["Catalog\n(stac/items)"]
 
-tmp/  →  work/  →  processed/ | cogs/  →  derivatives/  →  stac/
+<!-- END OF MERMAID -->
 
-- `tmp/` → ephemeral, ignored, wipeable.  
-- `work/` → semi-scratch, tracked if reproducibility is valuable.  
-- `processed/` & `cogs/` → validated, canonical inputs.  
-- `derivatives/` → reproducible analysis outputs.  
-- `stac/` → metadata catalog for discovery, versioning, and lineage.  
 
-> MCP principle: **If it matters, promote it and document it. If not, let it vanish.** [oai_citation:0‡Integrating Historical, Cartographic, and Geological Research (MCP Reference).pdf](file-service://file-HTPyrF5na2BY7mrNRai468)
 
----
+⸻
 
-## Usage Examples
+🛠️ Usage Examples
 
-### DEM pipeline scratch
-```bash
-# Mosaic raw tiles before creating a final COG
+DEM pipeline scratch
+
+# Mosaic raw DEM tiles before COG conversion
 gdal_merge.py -o data/tmp/ks_mosaic_2018.tif data/raw/elevation/tiles/*.tif
 rio cogeo create data/tmp/ks_mosaic_2018.tif data/cogs/dem/ks_1m_dem_2018.tif
 
 OCR scratch
 
-# Store intermediate OCR text here, not in processed/
+# Write intermediate OCR text here (not in processed/)
 tesseract data/raw/docs/treaty_osage_1825.pdf data/tmp/treaty_osage_1825 -l eng
 
 
 ⸻
 
-Makefile Integration
+🧹 Makefile Integration
 
-Add tmp as a safe build target:
+Add a clean target to wipe scratch files:
 
 clean-tmp:
-\trm -rf data/tmp/*
+	rm -rf data/tmp/*
 
 .PHONY: clean-tmp
 
-CI pipelines can call make clean-tmp after runs to prevent accumulation.
+CI/CD pipelines can run make clean-tmp after jobs to prevent buildup.
 
 ⸻
 
-Provenance & STAC Connections
-	•	No provenance or STAC entries are required for files in data/tmp/.
-	•	If promotion happens, immediately:
-	•	Compute checksum (scripts/gen_sha256.sh)
-	•	Add an entry to data/provenance/registry.json
-	•	Create/update the relevant STAC Item (data/stac/items/**.json)
+📜 Provenance & STAC
+	•	❌ No provenance or STAC entries required for files in data/tmp/.
+	•	⏫ On promotion:
+	•	Generate SHA-256 checksum.
+	•	Add provenance entry (data/provenance/registry.json).
+	•	Create/update STAC Item under stac/items/.
 
 ⸻
 
 ✅ Summary:
-Use data/tmp/ for anything transient and disposable.
-If a file becomes important → promote and document it; otherwise, let it vanish.
-
-----
+data/tmp/ = ephemeral scratchpad.
+Use it for anything transient; promote & document only if the file becomes important.
