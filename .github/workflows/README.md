@@ -42,6 +42,8 @@ Every workflow is **scoped, cached, concurrent-safe, and least-privilege**.
 ---
 
 ## How workflows connect
+
+```mermaid
 flowchart LR
   A["Push or PR"] --> B["web config validate yml\nJSON lint and schema"]
   A --> C["stac validate yml\nstac validator and pystac with link checks"]
