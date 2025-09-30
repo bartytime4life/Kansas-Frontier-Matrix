@@ -45,19 +45,16 @@ Every workflow is **scoped, cached, concurrent-safe, and least-privilege**.
 
 ```mermaid
 flowchart TD
-  A["Push / PR"] --> B["web-config-validate.yml\n\"JSON lint + schema\""]
-  A --> C["stac-validate.yml\n\"stac-validator → pystac + link checks\""]
-  A --> D["ci.yml / tests.yml\n\"ruff + pytest (+mypy)\""]
-  C --> E["stac.yml\n\"render app.config.json\""]
-  E --> F["site.yml\n\"build → Pages\""]
-  A --> G["docker.yml\n\"buildx → GHCR (+Trivy)\""]
-  A --> H["codeql.yml\n\"static analysis\""]
-  A --> I["sbom.yml\n\"CycloneDX/SPDX + attest\""]
-  A --> J["stac-badges.yml\n\"Shields JSON\""]
-  K["Tag vX.Y.Z"] --> L["release.yml\n\"sdist+wheel+checksums\""]
-```
-
-<!-- END OF MERMAID -->
+  A["Push / PR"] --> B["web-config-validate.yml\nJSON lint + schema"]
+  A --> C["stac-validate.yml\nstac-validator → pystac + link checks"]
+  A --> D["ci.yml / tests.yml\nruff + pytest (+mypy)"]
+  C --> E["stac.yml\nrender app.config.json"]
+  E --> F["site.yml\nbuild → Pages"]
+  A --> G["docker.yml\nbuildx → GHCR (+Trivy)"]
+  A --> H["codeql.yml\nstatic analysis"]
+  A --> I["sbom.yml\nCycloneDX/SPDX + attest"]
+  A --> J["stac-badges.yml\nShields JSON"]
+  K["Tag vX.Y.Z"] --> L["release.yml\nsdist+wheel+checksums"]
 
 ---
 
