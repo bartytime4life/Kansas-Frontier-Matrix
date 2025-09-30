@@ -1,61 +1,88 @@
-# Kansas-Frontier-Matrix — Processed DEMs
+<div align="center">
 
-This folder contains **Digital Elevation Model (DEM) derivatives** that have been processed from raw sources  
-(e.g., USGS 3DEP 1-m DEMs, LiDAR tiles, statewide mosaics).  
+# 🏔️ Kansas Geo Timeline — Processed DEMs
 
-All outputs here are reproducible from raw inputs (`data/raw/`) using documented Makefile targets and scripts,  
-and are referenced in the STAC catalog (`data/stac/items/dem/*.json`).
+This folder contains **Digital Elevation Model (DEM) derivatives**  
+processed from raw sources (e.g., USGS 3DEP 1-m DEMs, LiDAR tiles, statewide mosaics).  
+
+All outputs are **reproducible** from `data/raw/` using Makefile targets + scripts  
+and are referenced in the **STAC catalog** (`data/stac/items/dem/*.json`).  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Typical Contents
+```mermaid
+flowchart TD
+  A["Raw DEM tiles\n(data/raw/dem/**)"] --> B["Mosaic + Reproject\n(gdalwarp → EPSG:4326)"]
+  B --> C["COG Conversion\n(rio cogeo / gdal_translate)"]
+  C --> D["Processed DEMs\n(data/processed/dem/**)"]
+  D --> E["Derivatives\n(slope · aspect · hillshade)"]
+  E --> F["Overlays\n(color relief, blends)"]
+  D --> G["Checksums + Meta\n(.sha256 · .meta.json)"]
+  G --> H["STAC Items\n(data/stac/items/dem/**)"]
+  H --> I["Validate\n(stac-validate)"]
+  I --> J["Viewer + KML\n(web configs · data/kml/)"]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📂 Typical contents
 
 data/processed/dem/
-├── ks_1m_dem_2018.tif             # 1m DEM (2018 statewide mosaic, COG)
-├── ks_1m_dem_2020.tif             # 1m DEM (2020 update, COG)
+├── ks_1m_dem_2018.tif             # statewide DEM (2018 mosaic, COG)
+├── ks_1m_dem_2020.tif             # statewide DEM (2020 update, COG)
 ├── ks_1m_dem_2018_hillshade.tif   # hillshade derivative
-├── ks_1m_dem_2018_slope.tif       # slope raster (degrees or percent rise)
-├── ks_1m_dem_2018_aspect.tif      # aspect raster (azimuthal)
-└── overlays/                      # styled versions (color relief, blends)
+├── ks_1m_dem_2018_slope.tif       # slope raster
+├── ks_1m_dem_2018_aspect.tif      # aspect raster
+├── overlays/                      # styled blends (color-relief, tinted hillshades)
 └── hillshade_color.tif
 
-- **DEM rasters** → stored as **Cloud-Optimized GeoTIFFs (COG)** with internal pyramids/overviews.  
-- **Derivatives** → slope, aspect, hillshade, TRI/TPI, roughness, etc.  
-- **Overlays** → styled derivatives (color-relief, shaded relief blends) for web/KML exports.
+	•	DEM rasters → Cloud-Optimized GeoTIFFs (COGs) with overviews.
+	•	Derivatives → slope, aspect, hillshade, TRI/TPI, roughness.
+	•	Overlays → styled rasters (color relief, blends) for web & KMZ exports.
 
----
+⸻
 
-## Workflow
+🔄 Workflow
+	1.	Fetch raw DEMs → data/raw/
+	•	USGS 3DEP / Kansas GIS Hub.
+	•	Mosaicked into county/statewide extents.
+	•	Record year, resolution, source CRS.
+	2.	Mosaic & reproject → EPSG:4326 (web copy).
 
-1. **Fetch raw DEM** from USGS 3DEP / Kansas GIS Hub → `data/raw/`  
-   - Single LiDAR tiles are mosaicked into county or statewide extents.  
-   - Metadata (year, resolution, source CRS) must be recorded.
+gdalwarp -t_srs EPSG:4326 raw_tiles/*.tif /tmp/ks_1m_dem_2018.tif
 
-2. **Mosaic & reproject** into **EPSG:4326** (WGS84 geographic lat/long) for web compatibility.  
-   ```bash
-   gdalwarp -t_srs EPSG:4326 raw_tiles/*.tif /tmp/ks_1m_dem_2018.tif
 
-	3.	Convert to COG with overviews:
+	3.	Convert to COG
 
 rio cogeo create /tmp/ks_1m_dem_2018.tif \
   data/processed/dem/ks_1m_dem_2018.tif \
   --overview-level=5 --web-optimized
 
 
-	4.	Generate derivatives:
+	4.	Generate derivatives
 
-make terrain     # slope, aspect, hillshade
+make terrain          # slope, aspect, hillshade
 make slope_classes
 make aspect_sectors
 
 
-	5.	Compute checksums for provenance:
+	5.	Compute checksums
 
 scripts/gen_sha256.sh data/processed/dem/*.tif
 
 
-	6.	Update STAC Items in data/stac/items/dem/ with bbox, datetime, license, and checksums.
-	7.	Validate with schema + STAC tools:
+	6.	Update STAC items → data/stac/items/dem/
+	•	Fill bbox, datetime, license, checksums.
+	7.	Validate
 
 make stac-validate
 pre-commit run --all-files
@@ -64,35 +91,35 @@ pre-commit run --all-files
 
 ⸻
 
-Integration
-	•	STAC → Each DEM and derivative is documented as a STAC Item (data/stac/items/dem/…json) ￼.
-	•	Web layers → Hillshade/slope/aspect are referenced in web/data/*.json configs and validated against web/config/layers.schema.json.
-	•	KML exports → Styled DEMs (hillshade, color-relief) are exported to data/kml/ as KMZ overlays ￼.
-	•	Experiments → Used in MCP workflows: hydrology modeling, archaeological predictive modeling, floodplain reconstructions, erosion studies.
+🔗 Integration
+	•	STAC — Each DEM & derivative documented as STAC Item (data/stac/items/dem/**).
+	•	Web viewer — Hillshade, slope, aspect wired via web/data/*.json, validated against layers.schema.json.
+	•	KML exports — Styled outputs (hillshade, color-relief) published under data/kml/.
+	•	Experiments — Used in MCP workflows: hydrology modeling, archaeology predictive models, floodplain reconstruction, erosion studies.
 
 ⸻
 
-Notes
-	•	Store processed DEMs as COG only — no raw .tif tiles here.
-	•	Use stable filenames (ks_1m_dem_<year>.tif) so STAC/web configs don’t break.
-	•	Track large files with Git LFS or DVC.
-	•	Always link back to authoritative provenance (USGS metadata, Kansas GIS Hub, KGS surveys) in the STAC item.
-	•	Document any GCPs or control points used in rectification under data/gcp/.
-	•	MCP reproducibility: each processing step must be logged as an experiment or ETL step ￼.
+📝 Notes
+	•	Store only processed DEMs — raw tiles remain in data/raw/.
+	•	Stable naming (ks_1m_dem_<year>.tif) so configs don’t break.
+	•	Track large rasters with Git LFS or DVC.
+	•	Always link back to authoritative provenance (USGS, Kansas GIS Hub, KGS surveys) in STAC.
+	•	If rectified with GCPs, document under data/gcp/.
+	•	Follow MCP reproducibility — log every step as an experiment or ETL pipeline action.
 
 ⸻
 
-See Also
-	•	data/raw/ — raw DEM tiles (as delivered by USGS/DASC).
-	•	data/cogs/ — mission-final COGs (authoritative rasters).
-	•	data/processed/dem/overlays/ — styled hillshades and color blends.
-	•	data/processed/dem/vectors/ — contour lines and vectorized terrain derivatives.
-	•	data/stac/items/dem/ — STAC items documenting DEMs and derivatives.
-	•	data/kml/ — Google Earth–ready KMZ exports.
-	•	experiments/ — MCP logs, configs, and notebooks documenting DEM experiments.
+📚 See also
+	•	data/raw/ — raw DEM tiles (from USGS/DASC).
+	•	data/cogs/ — mission-final authoritative COGs.
+	•	data/processed/dem/overlays/ — styled hillshades & blends.
+	•	data/processed/dem/vectors/ — contour lines & vectorized terrain.
+	•	data/stac/items/dem/ — STAC catalog entries.
+	•	data/kml/ — KMZ super-overlays for Google Earth.
+	•	experiments/ — MCP logs, configs, notebooks.
 
 ⸻
 
-✅ This folder ensures Kansas DEM datasets are processed, optimized, STAC-compliant, and reproducible, ready for research, visualization, and web delivery.
+✅ Mission-grade principle: Processed DEMs must be COG-optimized, STAC-registered, and reproducible.
+They provide the terrain foundation for analysis, visualization, and historical reconstructions.
 
----
