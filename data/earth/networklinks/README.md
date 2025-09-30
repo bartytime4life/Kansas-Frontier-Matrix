@@ -1,103 +1,133 @@
-# Kansas-Frontier-Matrix — Earth Network Links
+<div align="center">
 
-This directory contains **network-linked Earth datasets** used by the Kansas Frontier Matrix.  
-Whereas `data/earth/sources/` lists **static source descriptors** (files, COGs, GeoJSON),  
-this directory documents **remote or live feeds** that can be consumed directly via network links:  
+# 🌐 Kansas Geo Timeline — Earth Network Links
 
-- 🌐 **OGC services** (WMS, WMTS, WCS, WFS)  
-- 🔗 **ArcGIS REST endpoints** (ImageServer / FeatureServer)  
-- 📡 **Tiled basemaps** (XYZ, PMTiles, TileJSON)  
-- 🛰️ **Live hazard feeds** (NASA FIRMS, USGS ShakeMap, NOAA storm tracks)  
+**Network-linked Earth datasets** used by the **Kansas Frontier Matrix**.  
 
-These links provide **dynamic Earth context layers** — global basemaps, live environmental data, and hazard overlays —  
-which can be pulled into the web viewer or into GIS workflows without storing large raster/vector files locally.
+Unlike `data/earth/sources/` (static file descriptors),  
+this directory documents **remote or live feeds** consumed directly via network links:  
+
+- 🛰️ OGC services (WMS, WMTS, WCS, WFS)  
+- 🔗 ArcGIS REST endpoints (ImageServer / FeatureServer)  
+- 🗺️ Tiled basemaps (XYZ, PMTiles, TileJSON)  
+- ⚠️ Live hazard feeds (NASA FIRMS, USGS ShakeMap, NOAA storm tracks)  
+
+These provide **dynamic Earth context layers** — global basemaps, live environmental data, and hazard overlays —  
+for use in the MapLibre viewer and GIS workflows, without storing bulky rasters/vectors locally.
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Purpose
+```mermaid
+flowchart TD
+  A["Network services\n(WMS · WMTS · WCS · REST)"] --> B["JSON descriptors\n(data/earth/networklinks/*.json)"]
+  B --> C["Web Viewer\n(live overlays)"]
+  B --> D["STAC Items\n(stac/items/earth)"]
+  D --> E["Validate\n(stac-validate)"]
+  E --> F["Reproducible provenance\n(MCP logging)"]
 
-- Supply **global Earth reference data** via remote services.  
-- Allow the **web viewer** to connect directly to live feeds (time-aware layers, hazards).  
-- Complement Kansas-specific static datasets with **planetary context**.  
-- Document provenance and service endpoints for **reproducibility** [oai_citation:0‡Foundational Templates and Glossary for Scientific Method _ Research _ Master Coder Protocol.pdf](file-service://file-XygDDSfCPa5gz3jmjRV81b) [oai_citation:1‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-CrPP4mcnyNq5sGJotXDwSv).  
+<!-- END OF MERMAID -->
 
----
 
-## Directory Layout
+
+⸻
+
+🎯 Purpose
+	•	Provide global Earth reference data via live services.
+	•	Allow the web viewer to consume near real-time feeds (hazards, time-aware climate).
+	•	Complement Kansas-specific static layers with planetary context.
+	•	Document provenance and endpoints for reproducibility  .
+
+⸻
+
+📂 Directory layout
 
 data/earth/networklinks/
-├── basemaps.json        # Global basemaps (Blue Marble, Natural Earth, OSM, etc.)
-├── climate.json         # Live climate & reanalysis feeds (NOAA, Copernicus, ERA5 APIs)
-├── hazards.json         # Earthquake, wildfire, storm feeds (USGS, NASA FIRMS, NOAA SPC)
-├── tectonics.json       # Global faults, seismic hazard services (USGS, GEM, OneGeology)
-├── water.json           # Global hydrography, oceans, wetlands (HydroSHEDS, NHDPlus HR WMS)
-└── README.md            # This file
+├── basemaps.json    # Global basemaps (Blue Marble, Natural Earth, OSM)
+├── climate.json     # Live climate & reanalysis feeds (NOAA, Copernicus, ERA5 APIs)
+├── hazards.json     # Earthquake, wildfire, storm feeds (USGS, NASA FIRMS, NOAA SPC)
+├── tectonics.json   # Faults, seismic hazard services (USGS, GEM, OneGeology)
+├── water.json       # Hydrography, oceans, wetlands (HydroSHEDS, NHDPlus HR)
+└── README.md
 
----
-
-## Example Network Links
-
-### 🌍 Basemaps
-- **NASA Blue Marble / GIBS** — WMTS service, monthly global mosaics.  
-- **Natural Earth tiles** — PMTiles or XYZ raster tiles.  
-- **OpenStreetMap (OSM)** — XYZ/WMTS basemap.  
-
-### 🌡️ Climate
-- **Copernicus ERA5 (ECMWF)** — API for global reanalysis.  
-- **NASA Daymet WCS** — 1 km daily climate for North America [oai_citation:2‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).  
-- **WorldClim WMS** — long-term climate normals.  
-
-### ⚠️ Hazards
-- **NASA FIRMS Fire Data** — live wildfire detections (WMS/GeoJSON feed).  
-- **USGS ShakeMap / Earthquake Feeds** — global seismic events (GeoJSON/WMS).  
-- **NOAA SPC Tornado / Severe Weather Tracks** — GIS endpoints [oai_citation:3‡Historical Dataset Integration for Kansas Frontier Matrix.pdf](file-service://file-EG371w17RJTzXWjXvqgsB6).  
-
-### 🌐 Tectonics
-- **USGS Global Faults WMS**.  
-- **GEM Seismic Hazard Map** — global raster hazard intensity.  
-- **OneGeology services** — lithology and tectonic frameworks.  
-
-### 🌊 Water
-- **HydroSHEDS (WWF)** — rivers/basins (WMS/WFS).  
-- **NHDPlus HR (USGS)** — high-resolution hydrography, ArcGIS REST.  
-- **NASA OceanColor / MODIS Aqua** — WMS services.  
-
----
-
-## Integration
-
-- Each `.json` descriptor follows the **networklinks schema**:  
-  ```json
-  {
-    "id": "fao_globallandcover",
-    "title": "FAO Global Land Cover WMS",
-    "type": "wms",
-    "endpoint": "https://example.org/geoserver/wms",
-    "layers": ["landcover:global"],
-    "attribution": "FAO / UN",
-    "license": "CC-BY-4.0"
-  }
-
-	•	These descriptors can be loaded by the web viewer alongside local sources.
-	•	STAC items in stac/items/earth/ may reference these network links instead of local assets ￼.
+Each .json file lists services following the networklinks schema.
 
 ⸻
 
-Notes
-	•	Use network links when:
+🌍 Example network links
+
+Basemaps
+	•	NASA Blue Marble / GIBS — WMTS mosaics.
+	•	Natural Earth tiles — PMTiles / XYZ raster tiles.
+	•	OpenStreetMap — XYZ or WMTS basemap.
+
+Climate
+	•	Copernicus ERA5 — global reanalysis API.
+	•	NASA Daymet WCS — 1 km daily climate for North America .
+	•	WorldClim WMS — long-term climate normals.
+
+Hazards
+	•	NASA FIRMS Fire Data — live wildfire detections (WMS/GeoJSON).
+	•	USGS ShakeMap / Earthquake Feeds — global seismic events.
+	•	NOAA SPC Tornado & Severe Weather Tracks — GIS endpoints .
+
+Tectonics
+	•	USGS Global Faults WMS.
+	•	GEM Seismic Hazard Map — global raster hazard intensity.
+	•	OneGeology — lithology & tectonic services.
+
+Water
+	•	HydroSHEDS — global rivers/basins (WMS/WFS).
+	•	NHDPlus HR (USGS) — high-resolution hydrography, ArcGIS REST.
+	•	NASA OceanColor / MODIS Aqua — WMS services.
+
+⸻
+
+🛠️ Integration
+
+Schema example:
+
+{
+  "id": "fao_globallandcover",
+  "title": "FAO Global Land Cover WMS",
+  "type": "wms",
+  "endpoint": "https://example.org/geoserver/wms",
+  "layers": ["landcover:global"],
+  "attribution": "FAO / UN",
+  "license": "CC-BY-4.0"
+}
+
+	•	These .json descriptors are consumed by the web viewer alongside local layers.
+	•	STAC Items in stac/items/earth/ may reference network links instead of local files.
+
+⸻
+
+📝 Notes
+
+Use network links when:
 	•	Data volume is too large to host locally.
-	•	A dataset is updated frequently (e.g., near real-time hazards).
-	•	The provider’s service is authoritative and persistent.
-	•	For reproducibility, always record:
-	•	Service URL and layer name(s).
-	•	Access date (if snapshots are taken).
-	•	License/usage constraints.
+	•	Dataset updates frequently (e.g. real-time hazards).
+	•	Provider service is authoritative and persistent.
+
+Always record:
+	•	Service URL + layer name(s).
+	•	Access date (if snapshot taken).
+	•	License / usage constraints.
 
 ⸻
 
-See Also
-	•	data/earth/sources/README.md — static global Earth datasets.
-	•	data/stac/README.md — STAC catalog and how network links fit into the item model.
-	•	docs/ — MCP documentation on reproducibility and experiment logging.
+📚 See also
+	•	data/earth/sources/README.md — static Earth datasets.
+	•	data/stac/README.md — STAC catalog & item model.
+	•	docs/ — MCP guides on reproducibility and experiment logging.
 
----
+⸻
+
+✅ Mission-grade principle: Network links must be documented, reproducible, and STAC-referenced.
+If the service can’t be validated or cited, it doesn’t belong here.
+
