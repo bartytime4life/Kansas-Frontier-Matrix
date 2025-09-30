@@ -29,14 +29,13 @@ as the foundation for Kansas Frontier Matrix terrain, hydrology, and historical 
 
 ## 📂 Directory layout
 
-data/sources/dem/
+[data/sources/dem/]
 ├── ks_dem_1m.json          # Statewide 1-m DEM (DASC / USGS 3DEP)
 ├── ks_lidar_county.json    # Example LiDAR tile index
 ├── usgs_3dep_index.json    # USGS 3DEP coverage metadata
 ├── ks_hillshade.json       # Derived hillshade config
 ├── processed/              # Processed derivatives (hillshade, slope, aspect)
 └── README.md
-
 
 🔒 **Note:** Raw GeoTIFFs, LiDAR tiles, and large COGs live in `data/raw/**` (ignored) or tracked via LFS/DVC.  
 Only descriptors, metadata, and sidecars are committed to git.  
@@ -134,4 +133,3 @@ make terrain    # slope/aspect/roughness
 	•	Ensures Kansas elevation layers are traceable, reproducible, MCP-grade auditable.
 
 ✅ If it shapes Kansas terrain → it belongs here.
-
