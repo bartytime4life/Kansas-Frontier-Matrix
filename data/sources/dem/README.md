@@ -1,17 +1,17 @@
 <div align="center">
 
-# 🏔️ Kansas Geo Timeline — DEM & Elevation Sources (`data/sources/dem/`)
+# 🏔️ Kansas-Frontier-Matrix — DEM & Elevation Sources (`data/sources/dem/`)
 
 **Mission:** Provide **Digital Elevation Models (DEMs)** and derivatives (hillshade, slope, aspect, contours)  
-as the foundation for Kansas Frontier Matrix terrain, hydrology, and historical analyses.  
+as the foundation for Kansas Frontier Matrix terrain, hydrology, and historical analyses.
 
 📌 Descriptors follow [`schema.source.json`](../schema.source.json)  
-📌 Drive `make fetch` → `make cogs` → `make stac` workflows  
-📌 Guarantee **traceability, reproducibility, and STAC compliance**  
+📌 Lifecycle: `make fetch` → `make cogs` → `make stac`  
+📌 Guarantee **traceability, reproducibility, and STAC compliance**
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
 
 </div>
 
@@ -21,14 +21,15 @@ as the foundation for Kansas Frontier Matrix terrain, hydrology, and historical 
 
 - 🌍 Supply **baseline statewide and county DEMs**.  
 - 🖼️ Support **derivatives** (hillshade, slope, aspect, roughness).  
-- 📜 Enable **historical comparisons** (e.g., pre-dam vs modern).  
+- 📜 Enable **historical comparisons** (e.g., pre-dam vs. modern).  
 - 🔬 Integrate **LiDAR & USGS 3DEP** for high-resolution terrain.  
 - 🧾 Maintain **checksums + provenance** for MCP reproducibility.  
 
 ---
 
-## 📂 Directory layout
+## 📂 Directory Layout
 
+```text
 [data/sources/dem/]
 ├── ks_dem_1m.json          # Statewide 1-m DEM (DASC / USGS 3DEP)
 ├── ks_lidar_county.json    # Example LiDAR tile index
@@ -37,18 +38,17 @@ as the foundation for Kansas Frontier Matrix terrain, hydrology, and historical 
 ├── processed/              # Processed derivatives (hillshade, slope, aspect)
 └── README.md
 
-🔒 **Note:** Raw GeoTIFFs, LiDAR tiles, and large COGs live in `data/raw/**` (ignored) or tracked via LFS/DVC.  
-Only descriptors, metadata, and sidecars are committed to git.  
+🔒 Note: Raw GeoTIFFs, LiDAR tiles, and large COGs live in data/raw/** (ignored) or tracked via LFS/DVC.
+Only descriptors, metadata, and sidecars are committed to git.
 
----
+⸻
 
-## 🧭 Metadata requirements
+🧭 Metadata Requirements
 
-Each DEM descriptor must comply with the **KFM Source Descriptor schema**.  
+Every DEM descriptor must comply with schema.source.json.
 
 Example:
 
-```json
 {
   "id": "ks_dem_1m",
   "title": "Kansas Statewide DEM (1-m resolution)",
@@ -72,13 +72,13 @@ Example:
 
 Rules:
 	•	bbox in EPSG:4326 (lon/lat).
-	•	urls[] may list multiple tiles (fanned by make fetch).
+	•	urls[] may list multiple tiles (expanded by make fetch).
 	•	Always include license + provenance.
 	•	period must map directly to STAC temporal extent.
 
 ⸻
 
-🌍 Recommended sources
+🌍 Recommended Sources
 	•	Kansas DASC → 1-m statewide DEM, LiDAR services.
 	•	USGS 3DEP → official LiDAR & DEM coverage.
 	•	FEMA / USACE → watershed & county surveys.
@@ -86,7 +86,7 @@ Rules:
 
 ⸻
 
-🔗 Integration notes
+🔗 Integration Notes
 	•	🗜️ All DEMs → converted to COGs (make cogs).
 	•	🖼️ Derivatives (hillshade, slope, aspect) → written to processed/ and published as STAC Items.
 	•	🔗 Linked to the Knowledge Graph via Place nodes (counties, watersheds).
@@ -95,23 +95,22 @@ Rules:
 
 ⸻
 
-📝 Best practices
+📝 Best Practices
 	•	🧾 Maintain .sha256 checksums + provenance timestamps.
 	•	📦 Keep raw LiDAR tiles in data/raw/dem/ (ignored by git).
-	•	🗺️ Store raw DEMs in original CRS, normalize processed outputs to EPSG:4326.
+	•	🗺️ Store raw DEMs in original CRS; normalize processed outputs to EPSG:4326.
 	•	⚙️ Automate builds with Make:
 
 make dem        # statewide DEM COGs
 make hillshade  # hillshades
 make terrain    # slope/aspect/roughness
 
-
 	•	🗂️ Each artifact requires a _meta.json lineage sidecar.
 
 ⸻
 
-🔍 Debugging & validation
-	•	make validate-sources → JSON schema validation.
+🔍 Debugging & Validation
+	•	make validate-sources → JSON Schema validation.
 	•	make validate-cogs → check COG tiling, overviews, compression.
 	•	make checksums → regenerate .sha256.
 	•	make stac && make validate-stac → ensure STAC compliance.
@@ -130,6 +129,6 @@ make terrain    # slope/aspect/roughness
 	•	data/sources/dem/ = blueprints for Kansas DEMs.
 	•	Each descriptor must include provenance, license, bbox, and temporal coverage.
 	•	Pipeline = raw → processed/COG → STAC → Knowledge Graph.
-	•	Ensures Kansas elevation layers are traceable, reproducible, and MCP-grade auditable.
+	•	Ensures Kansas elevation layers are traceable, reproducible, MCP-grade auditable.
 
 ✅ If it shapes Kansas terrain → it belongs here.
