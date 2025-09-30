@@ -10,7 +10,7 @@
 **Mission:** Hold **analysis-ready derivatives** computed from canonical COGs (`data/cogs/`)  
 and curated inputs (`data/sources/`).  
 
-All outputs must be **reproducible, checksummed, and preferably registered as STAC Items**.  
+All outputs must be **reproducible, checksummed, and (preferably) registered as STAC Items**.
 
 </div>
 
@@ -40,7 +40,7 @@ data/derivatives/
 ├─ terrain/     # slope, aspect, TRI, TPI, roughness
 ├─ hydrology/   # filled DEM, flowdir, flowacc, streams, basins
 ├─ contours/    # vector contours (GPKG)
-├─ change/      # DEMs of Difference (DoD), erosion-deposition
+├─ change/      # DEMs of Difference (DoD), erosion–deposition
 ├─ vectors/     # extracted ridges/valleys, geomorph features (GPKG)
 ├─ tiles/       # PMTiles / MBTiles (raster or vector)
 └─ _meta/       # schemas, templates, palettes
@@ -57,7 +57,7 @@ Each artifact should include:
 
 <theme>/<region>*<product>[*<params>]_<year-or-range>[_v<semver>].<ext>
 
-Examples:
+Examples
 	•	terrain/ks_slope_2018_2020.tif
 	•	terrain/ks_aspect_2018_2020.tif
 	•	contours/ks_contours_10m_2018_2020.gpkg
@@ -67,18 +67,18 @@ Examples:
 
 ⸻
 
-🔐 Sidecars
+🔐 Sidecars (Checksums & Meta)
 
-Checksum generation:
+Generate checksum
 
 cd data/derivatives/<subdir> && \
   sha256sum <name>.<ext> > <name>.<ext>.sha256
 
-Verification:
+Verify later
 
 sha256sum -c data/derivatives/<subdir>/<name>.<ext>.sha256
 
-Optional .meta.json example (prefer STAC when possible):
+Optional .meta.json (prefer STAC)
 
 {
   "id": "ks_slope_2018_2020",
@@ -158,16 +158,17 @@ derivatives-all: \
 ⸻
 
 ✅ Validation
-	•	STAC Items:
+
+STAC Items
 
 make stac-validate-items
 
-	•	Meta JSON sanity check:
+Meta JSON sanity check
 
 find data/derivatives -name "*.meta.json" -print0 | \
   xargs -0 -I{} jq -e 'type=="object"' {}
 
-	•	Checksum verification:
+Checksum verification
 
 find data/derivatives -name "*.sha256" -print0 | \
   xargs -0 -I{} sha256sum -c {}
@@ -195,10 +196,10 @@ If tiled, use a pmtiles://… URL instead of a raw COG.
 ⸻
 
 🧭 Tips
-	•	Prefer tile size 512 for large rasters (faster range reads)
+	•	Prefer tile size 512 for large rasters (better range reads)
 	•	Continuous rasters → DEFLATE + PREDICTOR=2; scanned maps → JPEG/WebP
-	•	Hydrology & DoD require exact grid alignment
-	•	Track big artifacts with Git LFS or DVC; commit only checksums + STAC JSON
+	•	Hydrology & DoD demand exact grid alignment
+	•	Track large artifacts with Git LFS/DVC; commit checksums + STAC JSON only
 
 ⸻
 
@@ -207,5 +208,5 @@ If tiled, use a pmtiles://… URL instead of a raw COG.
 data/derivatives/ = analysis-ready products, reproducible from canonical COGs + sources.
 Each derivative must be checksummed, STAC-registered, and documented.
 
-This directory bridges raw inputs and end-user visualizations — ensuring Kansas-Frontier-Matrix
-remains mission-grade, auditable, and MCP-compliant.
+This directory bridges raw inputs and end-user visualizations — keeping Kansas-Frontier-Matrix
+mission-grade, auditable, and MCP-compliant.
