@@ -1,7 +1,3 @@
-Here’s the updated .github/workflows/README.md with the emoji-enhanced lifecycle diagram and a GitHub-friendly index table (clean columns, code-formatted filenames, no layout glitches). It matches the house style used across your repo.
-
-⸻
-
 
 <div align="center">
 
@@ -223,7 +219,3 @@ permissions: { contents: read, security-events: write }
 .github/workflows/ is the automation backbone of Frontier-Matrix.
 Workflows are pinned, least-privilege, and fail fast with rich artifacts —
 enforcing MCP principles of reproducibility, provenance, and safety.
-
----
-
-If you want, I can add the same emoji tags to **job step summaries** your workflows print (e.g., “🧪 Tests: ✅ 132 passed”) so the category cues carry through to CI output.
