@@ -1,43 +1,63 @@
-# Kansas-Frontier-Matrix — Treaty & Land Transfer Sources
+<div align="center">
+
+# 📜 Kansas Geo Timeline — Treaty & Land Transfer Sources
 
 This directory stores **treaty boundaries, land cessions, and reservation maps**  
-relevant to Kansas history. These layers connect **documents** (treaty texts, oral
-histories, legal records) with **geospatial features** (boundary polygons, dates, 
-and attributes).
+relevant to Kansas history.  
+
+These layers connect **documents** (treaty texts, oral histories, legal records)  
+with **geospatial features** (boundary polygons, dates, attributes).  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+
+</div>
 
 ---
 
-## Purpose
+```mermaid
+flowchart TD
+  A["Raw treaty scans\n(data/sources/treaties/scans/**)"] --> B["Digitization\n(QGIS · OCR · transcription)"]
+  B --> C["Vectors\n(data/sources/treaties/vectors/**)"]
+  C --> D["Metadata JSON\n(data/sources/treaties/*.json)"]
+  D --> E["Provenance + checksums\n(data/provenance/**)"]
+  E --> F["STAC Items\n(data/stac/items/treaties/**)"]
+  F --> G["Viewer integration\n(web/config/layers.json)"]
+  G --> H["Knowledge Graph\n(Document ↔ Event ↔ Place ↔ Organization)"]
 
-- Document the **changing geography** of Native American lands in Kansas.
-- Provide **vector layers** (GeoJSON, Shapefiles) that can be overlaid in the map UI.
-- Link treaties to their **source documents** (scans, transcriptions, legal texts).
-- Support **timeline queries** (treaty year, reservation boundaries by date).
-- Maintain **provenance** with checksums and license details.
+<!-- END OF MERMAID -->
 
----
 
-## Directory Layout
 
-```
+⸻
+
+🎯 Purpose
+	•	Document the changing geography of Native American lands in Kansas.
+	•	Provide vector layers (GeoJSON, Shapefiles) for map overlays.
+	•	Link treaties to source documents (scans, transcriptions, legal texts).
+	•	Support timeline queries (e.g., boundary changes by year).
+	•	Maintain provenance with checksums and license details.
+
+⸻
+
+📂 Directory layout
 
 data/sources/treaties/
-├── treaties\_1854\_kansas.json      # Example: Kansas–Nebraska Act treaty boundaries
-├── treaties\_1867\_medicine\_lodge.json
-├── tribal\_cessions\_index.json     # Master index of all treaties and cessions
-├── scans/                         # Scanned originals (PDF, TIFF, JPG)
-├── vectors/                       # GeoJSON / Shapefile boundary layers
-└── README.md                      # This file
+├── treaties_1854_kansas.json        # Kansas–Nebraska Act boundaries
+├── treaties_1867_medicine_lodge.json
+├── tribal_cessions_index.json       # Master index of treaties/cessions
+├── scans/                           # Scanned originals (PDF, TIFF, JPG)
+├── vectors/                         # Digitized boundaries (GeoJSON, Shapefiles)
+└── README.md
 
-````
 
----
+⸻
 
-## Metadata Requirements
+🧭 Metadata requirements
 
-Each treaty dataset (`.json` or `.yml`) should follow the **STAC-like schema**:
+Each treaty dataset (.json or .yml) follows a STAC-like schema:
 
-```json
 {
   "id": "treaty_kansas_nebraska_1854",
   "title": "Kansas–Nebraska Act Treaty Boundaries (1854)",
@@ -70,48 +90,46 @@ Each treaty dataset (`.json` or `.yml`) should follow the **STAC-like schema**:
     "checksum_sha256": "abc123…"
   }
 }
-````
 
----
 
-## Recommended Sources
+⸻
 
-* **National Archives (NARA)** — treaty texts, scanned microfilm.
-* **Kansas Historical Society** — maps, manuscripts, tribal records.
-* **Library of Congress** — 19th-century treaty maps.
-* **Bureau of Indian Affairs (BIA)** — reservation boundary records.
-* **Tribal archives** — oral histories and community-provided boundary definitions.
+📚 Recommended sources
+	•	National Archives (NARA) — treaty texts & microfilm scans.
+	•	Kansas Historical Society — manuscripts, tribal records.
+	•	Library of Congress — 19th-century treaty maps.
+	•	Bureau of Indian Affairs (BIA) — reservation boundary records.
+	•	Tribal archives — oral histories & community-provided boundaries.
 
----
+⸻
 
-## Integration Notes
+🔗 Integration notes
+	•	Treaties must be time-enabled (start/end dates per polygon).
+	•	Link into the Knowledge Graph:
+	•	Document node → treaty text.
+	•	Event node → treaty signing.
+	•	Place node → boundary polygon.
+	•	Organization node → tribes, U.S. government.
+	•	Support story map layers (timeline of land transfers, narrative tours).
 
-* Treaties should be **time-enabled**: each polygon tagged with start/end dates.
-* Link to **knowledge graph** via:
+⸻
 
-  * `Document` node → treaty text.
-  * `Event` node → treaty signing.
-  * `Place` node → boundary polygon.
-  * `Organization` node → tribes, U.S. government.
-* Support **story map layers** (e.g., timeline of land transfers, narrative tours).
+📝 Best practices
+	•	Keep raw scans (scans/) separate from digitized vectors (vectors/).
+	•	Record confidence scores if boundaries are approximate.
+	•	Reference tribal historians and oral accounts, not only federal records.
+	•	Log every edit in data/provenance/.
 
----
+⸻
 
-## Best Practices
+📚 References
+	•	STAC 1.0.0 Specification
+	•	Kansas Frontier Matrix — Design Audit: Tribal Land Transfers & Treaties
+	•	Historical Dataset Integration Report
+	•	Kansas Historical Knowledge Hub — System Design
 
-* Always keep **raw scans** (`scans/`) separate from **digitized vectors** (`vectors/`).
-* Record **confidence scores** if boundaries are approximate.
-* Reference **tribal historians** and oral accounts, not just federal records.
-* Document every edit in `data/provenance/`.
+⸻
 
----
-
-## References
-
-* [STAC 1.0.0 Specification](https://stacspec.org/)
-* [Kansas Frontier Matrix — Design Audit: Tribal Land Transfers & Treaties]: contentReference[oaicite:1]{index=1}
-* [Historical Dataset Integration Report]: contentReference[oaicite:2]{index=2}
-* [Kansas Historical Knowledge Hub — System Design]: contentReference[oaicite:3]{index=3}
-
----
+✅ Mission-grade principle: Treaty datasets must be traceable, time-aware, and STAC-linked,
+integrating documents, maps, and oral histories into a reproducible knowledge system.
 
