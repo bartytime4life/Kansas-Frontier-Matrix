@@ -42,21 +42,18 @@ Every workflow is **scoped, cached, concurrent-safe, and least-privilege**.
 ---
 
 ## How workflows connect
-
-```mermaid
 flowchart TD
-  A["Push / PR"] --> B["web-config-validate.yml\nJSON lint and schema"]
-  A --> C["stac-validate.yml\nstac-validator and pystac with link checks"]
-  A --> D["ci.yml / tests.yml\nruff and pytest (mypy optional)"]
-  C --> E["stac.yml\nrender app.config.json"]
-  E --> F["site.yml\nbuild and deploy to Pages"]
-  A --> G["docker.yml\nbuildx to GHCR with Trivy"]
-  A --> H["codeql.yml\nstatic analysis"]
-  A --> I["sbom.yml\nCycloneDX or SPDX with attest"]
-  A --> J["stac-badges.yml\nShields JSON badges"]
-  K["Tag vX.Y.Z"] --> L["release.yml\nsdist wheel checksums"]
+  A["Push or PR"] --> B["web config validate yml\nJSON lint and schema"]
+  A --> C["stac validate yml\nstac validator and pystac with link checks"]
+  A --> D["ci yml or tests yml\nruff and pytest mypy optional"]
+  C --> E["stac yml\nrender app config json"]
+  E --> F["site yml\nbuild and deploy to Pages"]
+  A --> G["docker yml\nbuildx to GHCR with Trivy"]
+  A --> H["codeql yml\nstatic analysis"]
+  A --> I["sbom yml\nCycloneDX or SPDX with attest"]
+  A --> J["stac badges yml\nShields JSON badges"]
+  K["Tag vX Y Z"] --> L["release yml\nsdist wheel checksums"]
 
-<!-- END OF MERMAID -->
 
 ---
 
