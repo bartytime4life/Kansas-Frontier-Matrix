@@ -1,7 +1,4 @@
 
-⸻
-
-
 <div align="center">
 
 # 🧭 Kansas-Frontier-Matrix — Derived Geospatial Products
