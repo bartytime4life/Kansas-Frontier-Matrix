@@ -1,32 +1,58 @@
-Kansas-Frontier-Matrix — web/data/ (Layers & Map Data)
+<div align="center">
 
-This folder contains the layer configs and map-ready data references used by the web viewer (MapLibre + time slider). Each JSON file here is either:
-	•	a layer spec the viewer reads (id, title, type, format, time, attribution, legend, style), or
-	•	a data pointer the layer consumes (GeoJSON/PMTiles/COG endpoints, service URLs, etc.).
+# 🗂️ Kansas-Frontier-Matrix — Web Data (Layers & Map Data)  
+`web/data/`
 
-This directory is the bridge between the project’s ETL/STAC pipeline and the interactive map UI (timeline + toggles).  ￼  ￼  ￼
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+
+**Mission:** Provide **layer specs** and **map-ready data references** for the MapLibre viewer  
+(timeline + toggles). Each JSON here is either a **layer spec** (id, title, type, time, legend, style)  
+or a **data pointer** (GeoJSON/PMTiles/COG/XYZ/WMS).
+
+This directory is the **bridge** between the project’s **ETL/STAC pipeline** and the **interactive map UI**.
+
+</div>
+
+---
+
+## 📈 Lifecycle
+
+```mermaid
+flowchart TD
+  A["ETL / Derivatives\n(data/processed/** · data/derivatives/**)"] --> B["STAC Items\n(stac/items/**)"]
+  B --> C["Config Render\n(kgt render-config → web/config/app.config.json)"]
+  C --> D["Layer Specs & Data Pointers\n(web/data/**)"]
+  D --> E["MapLibre Viewer\n(web/index.html + app.js)"]
+
+<!-- END OF MERMAID -->
+
+
 
 ⸻
 
-What lives here (at a glance)
+📂 What lives here
 
 web/
 └─ data/
    ├─ layers.json                 # main layer index consumed by the UI
    ├─ categories.json             # optional grouping (e.g., basemap, environment, hazards, movement, sovereignty, culture)
-   ├─ *.layer.json                # per-layer specs (split files recommended for large sets)
+   ├─ *.layer.json                # per-layer specs (recommended for large sets)
    ├─ legends/                    # legend presets (ramp, fill, line)
    ├─ styles/                     # optional style presets shared by layers
    ├─ templates/                  # example snippets for new layers
    └─ docs/                       # optional layer notes (provenance, QA results)
 
-The actual data artifacts (COGs, PMTiles, GeoJSON) are generated/managed by the ETL and referenced from here—do not check large binaries into web/data/. Prefer COG for rasters and PMTiles for large vectors for web performance.  ￼
+Data artifacts (COGs, PMTiles, GeoJSON) are produced by ETL and referenced here.
+Do not check large binaries into web/data/. Prefer COG for rasters and PMTiles for large vectors.
 
 ⸻
 
-Layer spec (schema)
+🧩 Layer spec (canonical shape)
 
-Each layer file follows a minimal canonical shape; the viewer merges these into UI controls and the time slider.
+Each layer file follows a minimal shape; the viewer merges these into UI controls and the timeline.
 
 {
   "id": "unique_layer_id",
@@ -72,65 +98,63 @@ Each layer file follows a minimal canonical shape; the viewer merges these into 
 
 Required keys
 	•	id, title, category, type, format, data
-	•	attribution, license (don’t ship anything without these)
-	•	Time: Add either a layer-level time range or per-feature timeProperty (see below).
+	•	attribution, license
+	•	Time: either a layer-level time range or timeProperty (per-feature)
 
 Optional keys
-	•	bounds, minzoom/maxzoom, visible, opacity
+	•	bounds, minzoom, maxzoom, visible, opacity
 	•	legend, style, popup, timeFormat, timePrecision, provenance
 
-Our time-aware UI expects either a global time range (static slice) or a timeProperty on features to filter/animate across years/decades. Keep time metadata precise and machine-parsable; it powers the historical narrative, confidence overlays, and story mode.  ￼  ￼
-
 ⸻
 
-Data formats & performance (strongly recommended)
-	•	Vectors
-	•	Small → GeoJSON
-	•	Medium/large or statewide/long-time series → PMTiles (single-file tiles, CDN-friendly)
-	•	Rasters
-	•	COG (Cloud-Optimized GeoTIFF) with internal overviews; serve via HTTP range requests
-	•	XYZ/WMTS can be referenced when hosted elsewhere
-	•	DEM
-	•	type: "raster-dem" with COG hillshade or terrain tiles as backends
+🕰️ Time support (how the slider reads your layer)
 
-These choices align with the project’s ETL/COG and tiling patterns and keep the viewer fast. Use the pipeline convertors (rio-cogeo, gdal/ogr, tippecanoe/pmtiles) from the Makefile targets.  ￼  ￼
-
-⸻
-
-Time support (how the slider reads your layer)
-	1.	Static time window (layer-level)
+1) Static window (layer-level)
 
 "time": { "start": "1894-01-01", "end": "1894-12-31" }
 
-Use for a single historic map or a particular survey year.
+Use for a single historic map or a survey year.
 
-	2.	Per-feature time (dynamic)
+2) Per-feature time (dynamic)
 
 "timeProperty": "year",
 "timeFormat": "year",
 "timePrecision": "year"
 
-The viewer filters features as the slider moves (e.g., year within current interval). Works for hazard events, rail expansion by year, drought polygons by week, etc.  ￼
-
-When time is approximate (e.g., “spring 1850s”), normalize to a best-effort machine value and (optionally) add a _confidence field for the popup; uncertainty is first-class in the hub.  ￼  ￼
+The viewer filters features as the slider moves (e.g., events by year).
+For approximate time (e.g., “spring 1850s”), normalize to a machine value and add an _confidence field for popups.
 
 ⸻
 
-Categories (suggested)
-	•	basemap (terrain/DEM, hillshade, historic topographic sheets)
+💾 Data formats & performance (recommended)
+	•	Vectors
+	•	Small → GeoJSON
+	•	Medium/large or statewide/time-series → PMTiles (single-file, CDN-friendly)
+	•	Rasters
+	•	COG with internal overviews (HTTP ranged reads)
+	•	XYZ/WMTS only if hosted elsewhere
+	•	DEM
+	•	type: "raster-dem"; serve tile sources for terrain/hillshade
+
+Align with pipeline converters (rio-cogeo, GDAL/OGR, tippecanoe/pmtiles) from Makefile targets.
+
+⸻
+
+🧭 Categories (suggested)
+	•	basemap (terrain/DEM, hillshade, historic USGS sheets)
 	•	environment (landcover, soils, vegetation, wetlands)
-	•	hazards (tornado tracks, floods, wildfire perimeters, drought polygons)
-	•	movement (trails, railroads by year, road milestones)
+	•	hazards (tornado tracks, floods, wildfire perimeters, drought)
+	•	movement (trails, railroads by year, roads)
 	•	sovereignty (treaties/reservations, counties by era)
-	•	culture (settlements, forts, cemeteries, oral histories, POIs)
+	•	culture (settlements, forts, cemeteries, oral histories)
 
-These map to UI groupings and storytelling lanes.  ￼  ￼
+These map to sidebar groupings and storytelling lanes.
 
 ⸻
 
-Examples (snippets you can copy)
+✅ Examples (snippets to copy)
 
-1) Historic topo (raster, single year)
+1) Historic topo (raster COG, single year)
 
 {
   "id": "topo_1894_pawnee",
@@ -146,9 +170,7 @@ Examples (snippets you can copy)
   "provenance": "stac/items/topo_1894_pawnee.json"
 }
 
-Use COG derived from archive MrSID/TIFF; keep datum and georeferencing clean in ETL.  ￼
-
-2) Tornado tracks (vector PMTiles, 1950-present)
+2) Tornado tracks (vector PMTiles, 1950–present)
 
 {
   "id": "tornado_tracks",
@@ -165,8 +187,6 @@ Use COG derived from archive MrSID/TIFF; keep datum and georeferencing clean in 
   "license": "Public Domain",
   "provenance": "stac/items/haz_tornado_tracks.json"
 }
-
-Source SPC tracks + attributes (date, EF, path); tile and compress for performance.  ￼
 
 3) Drought (weekly polygons)
 
@@ -195,8 +215,6 @@ Source SPC tracks + attributes (date, EF, path); tile and compress for performan
   "provenance": "stac/items/haz_usdm_weekly.json"
 }
 
-Weekly shapefiles → PMTiles; slider scrubs week date.  ￼
-
 4) Treaties & reservations (polygons with eras)
 
 {
@@ -217,74 +235,80 @@ Weekly shapefiles → PMTiles; slider scrubs week date.  ￼
   "provenance": "stac/items/sovereignty_treaties.json"
 }
 
-Include year_end and accuracy for uncertainty transparency.  ￼
 
 ⸻
 
-Attribution, license, provenance (non-negotiable)
-	•	Every layer must declare attribution, license, and a traceable provenance link (STAC item, source descriptor).
-	•	When integrating external services (ArcGIS, WMS), mirror the provider’s attribution and terms.
-	•	For compiled layers, enumerate source blend and date of synthesis in STAC.
-These rules uphold reproducibility and credit, and enable QA back-tracing from the UI to raw inputs.  ￼  ￼
+🧾 Attribution, license, provenance (non-negotiable)
+	•	Every layer must declare attribution, license, and a traceable provenance link (STAC item or source descriptor).
+	•	For external services (ArcGIS, WMS), mirror the provider’s attribution & terms.
+	•	For compiled layers, enumerate source blend and synthesis date in STAC.
 
 ⸻
 
-How to add a new layer (checklist)
-	1.	Create/convert data artifact
-	•	Vector → GeoJSON (small) or PMTiles (large); Raster → COG.
-	•	Normalize to WGS84 (EPSG:4326). Add overviews (COG).  ￼
+🧪 How to add a new layer (checklist)
+	1.	Create/convert the artifact
+
+	•	Vector → GeoJSON (small) or PMTiles (large)
+	•	Raster → COG with overviews
+	•	Normalize to EPSG:4326
+
 	2.	STAC + source descriptor
-	•	Write a STAC Item under stac/items/ with assets pointing to the artifact (media types: image/tiff; application=geotiff; profile=cloud-optimized, application/vnd.pmtiles).
-	•	Ensure bounding box, time extents, licensing, and providers are filled.  ￼
+
+	•	Write a STAC Item under stac/items/ with assets pointing to the artifact
+	•	Include bbox, time, licensing, providers
+
 	3.	Author the layer spec
-	•	Add a new .layer.json (or append to layers.json) with the schema above.
-	•	Include time metadata, category, legend/style, popup fields.
+
+	•	Add *.layer.json (or append layers.json) with schema above
+	•	Include time metadata, category, legend/style, popup fields
+
 	4.	Validate
-	•	Run schema validation & lints (make config-validate, CI hooks) and open the layer locally (dev viewer).
-	•	Check attribute names used in popup/timeProperty.  ￼
+
+make config-validate
+
+	•	Open locally in the dev viewer; verify popup fields & time attributes
+
 	5.	Performance sanity
-	•	Inspect size & load behavior; tile if necessary; reduce geometry noise; add simplification/overviews.
+
+	•	Tile if necessary; simplify dense geometry; confirm overviews
+
 	6.	Document
-	•	Add a short note in web/data/docs/ (edge cases, caveats, uncertainty, source anomalies).
+
+	•	Add a short note in web/data/docs/ (edge cases, uncertainty, source anomalies)
 
 ⸻
 
-Conventions & tips
-	•	IDs: snake_case, stable, no spaces (used in state & bookmarks).
-	•	Fields: keep popup fields concise; consider human vs machine names (ef_scale + EF Scale).
-	•	Legends: prefer explicit classes for reproducibility (no magic in code).
-	•	Bounds: set to layer bbox; used to auto-zoom when toggled.
-	•	Uncertainty: add _confidence or accuracy per feature when relevant; surface in popup.  ￼
+🧭 Conventions & tips
+	•	IDs: snake_case, stable, no spaces (usgs_topo_1894_larned)
+	•	Fields: keep popups concise; consider human vs machine names (ef_scale vs “EF Scale”)
+	•	Legends: prefer explicit classes for reproducibility (no hidden magic)
+	•	Bounds: set to layer bbox; used for auto-zoom on toggle
+	•	Uncertainty: add _confidence / accuracy per feature when relevant and surface in popups
 
 ⸻
 
-Example categories to prioritize (starter set)
-	•	Basemaps: Hillshade/DEM (COG), 1890s–1950s USGS quads (COG)  ￼
-	•	Hazards: Tornado tracks (SPC), floods/FEMA declarations, drought (USDM), wildfire perimeters (NIFC)  ￼
+📚 Example categories to prioritize
+	•	Basemaps: Hillshade/DEM (COG), 1890s–1950s USGS quads (COG)
+	•	Hazards: Tornado tracks (SPC), floods/FEMA, drought (USDM), wildfire perimeters (NIFC)
 	•	Sovereignty: Treaties/reservations, historical counties by year
-	•	Movement: Trails, rail buildout by year
+	•	Movement: Trails, rail build-out by year
 	•	Environment: Landcover (NLCD timeslices), soils/SSURGO, wetlands (NWI)
 	•	Culture: Forts/settlements by era, cemeteries, oral histories POIs
 
-These layers support the story-forward, time-aware exploration that’s central to the hub’s design.  ￼
+⸻
+
+🔗 See also
+	•	web/config/ — viewer-wide config, categories & legend schemas
+	•	stac/items/ — authoritative metadata & asset links
+	•	data/processed/ · data/derivatives/ — generated artifacts referenced here
 
 ⸻
 
-Why this design
-	•	Keeps UI configuration declarative & testable and decoupled from data pipelines.
-	•	Aligns with open, reproducible geospatial publishing (COG/PMTiles, STAC, explicit legends).
-	•	Supports timeline narrative, uncertainty expression, and provenance-centric QA required by the broader KFM architecture.  ￼  ￼
+✅ Mission Principle
+
+Keep the UI configuration declarative & testable, aligned with COG/PMTiles and STAC.
+Do the work in pipelines, declare it here, validate, and ship — no code changes required.
 
 ⸻
 
-References (internal)
-	•	System/Viewer design (timeline, toggles, story mode): Kansas-Frontier-Matrix Hub Design.  ￼
-	•	Design audit (story maps, uncertainty, analytics): Design Audit – Gaps & Enhancements.  ￼
-	•	ETL → COG/PMTiles → STAC (archive integration): GIS Archive & Deeds Integration Guide.  ￼
-	•	Backend/graph & API contracts (provenance, time): Developer Documentation.  ￼
-	•	Hazards & climate datasets (KS-focused catalog): Historical Dataset Integration.  ￼
-	•	Knowledge/uncertainty semantics (MCP alignment): Data Resources & MCP.  ￼
 
-⸻
-
-Ready to ship: drop your new .layer.json here, reference data from STAC, pass config-validate, and you’re live in the viewer with time, legends, and popups wired—no code changes needed.
