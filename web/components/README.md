@@ -1,26 +1,51 @@
-# `web/components/` — Kansas-Frontier-Matrix UI Modules
+<div align="center">
 
-Modular, framework-free JavaScript that powers the **Kansas-Frontier-Matrix** MapLibre viewer.  
-Each module is standalone, ES-module friendly, and designed to plug into `web/app.js` and styles in [`web/css/map.css`](../css/map.css).
+# `web/components/` — Kansas-Frontier-Matrix UI Modules  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+
+**Mission:** Modular, framework-free JavaScript powering the **Kansas-Frontier-Matrix** MapLibre viewer.  
+Each module is ES-module friendly, standalone, and plugs into `web/app.js` + styles in [`web/css/map.css`](../css/map.css).  
+
+</div>
 
 ---
 
-## 📦 What’s here
+## 📈 Lifecycle
 
-### `timeline.js`
+```mermaid
+flowchart TD
+  A["UI Modules (timeline.js · legend.js · popup.js · sidebar.js)"] --> B["Import into app.js"]
+  B --> C["Wire with MapLibre layers"]
+  C --> D["Style via map.css"]
+  D --> E["Deploy site + viewer"]
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+📦 Components
+
+⏳ timeline.js
+
 Interactive year slider / timeline control.
 
-**Highlights**
-- Min/max/step with robust clamping
-- Play / pause with drift-free RAF and FPS control
-- Keyboard (arrows, PageUp/Down, Home/End) + wheel with modifiers
-- A11y labels (`aria-*`), optional `formatValueText` for screen readers
-- Emits callbacks **and** DOM events (`change`, `play`, `pause`, `rangechange`)
-- Optional tick marks (`showTicks`, `ticks`, `tickInterval`)
-- Public API: `mount()`, `setValue()`, `setRange()/setBounds()`, `setOptions()`, `onChange()/offChange()`, `isPlaying()`, `setDisabled()`, `getState()`, `destroy()`
+Highlights
+	•	Min/max/step with robust clamping
+	•	Play/pause with drift-free RAF + FPS control
+	•	Keyboard + wheel navigation
+	•	A11y: aria-*, formatValueText for screen readers
+	•	Emits callbacks and DOM events (change, play, pause)
+	•	Optional tick marks (ticks, tickInterval)
+	•	Public API: mount(), setValue(), setRange(), setOptions(), onChange(), getState(), destroy()
 
-**Usage**
-```js
+Usage
+
 import Timeline from "./components/timeline.js";
 
 const tl = new Timeline({
@@ -28,38 +53,31 @@ const tl = new Timeline({
   autoplay: false, fps: 12, loop: true, showTicks: true, tickInterval: 10
 }).mount("#timebox");
 
-tl.onChange((y) => KFM.setYear(y));         // callback API
-tl.addEventListener("change", e => {        // DOM event API (optional)
-  console.log("Year:", e.detail.value);
-});
-````
+tl.onChange((y) => KFM.setYear(y));
+tl.addEventListener("change", e => console.log("Year:", e.detail.value));
 
----
 
-### `legend.js`
+⸻
 
-**Dynamic** legend control that can infer symbology from live map layers and/or read explicit entries from config.
+🗂️ legend.js
 
-**Highlights**
+Dynamic legend control that infers symbology from map layers or explicit config.
 
-* Groups by `category`/`group`
-* Shows entries only for visible layers (and GeoJSON companions)
-* Can auto-derive swatches for line/fill/circle/raster/hillshade/image
-* Year badge via `setYear(y)`
-* Public API: `refresh()`, `setLayersConfig(cfg)`, `setYear(y)`, `getContainer()`, `destroy()`
+Highlights
+	•	Groups by category/group
+	•	Auto-derives swatches (line/fill/circle/raster)
+	•	Year badge via setYear(y)
+	•	Public API: refresh(), setLayersConfig(), setYear(), getContainer(), destroy()
 
-**Attach**
+Usage
 
-```js
 import LegendControl from "./components/legend.js";
 const legend = new LegendControl({ layersConfig: cfg.layers, title: "Legend" });
 map.addControl(legend, legend.getDefaultPosition?.() || "bottom-right");
 legend.setYear(1936);
-```
 
-**Explicit legend (in `config` layer entry)**
+Explicit legend example
 
-```json
 {
   "id": "ks_landcover",
   "title": "Land Cover",
@@ -69,86 +87,70 @@ legend.setYear(1936);
     { "color": "#7570b3", "label": "Urban" }
   ]
 }
-```
 
----
 
-### `legend-control.js`
+⸻
 
-**Minimal** legend control with a live Year badge and tiny builder API. Use this if you want a very small control and you’ll populate rows yourself.
+🗂️ legend-control.js
 
-**Highlights**
+Minimal legend with year badge + builder API.
 
-* Collapsible header with persisted state
-* Optional year row (`showYear`)
-* Helpers: `clear()`, `addSection(title)`, `addRow(section, item)`, `setBody(node)`, `setTitle()`, `setCollapsed()`
-* Wire timeline → legend via `wireTimelineToLegend(timeline, legend)`
+Highlights
+	•	Collapsible header, persisted state
+	•	Helpers: clear(), addSection(), addRow(), setTitle()
+	•	Wire timeline → legend via wireTimelineToLegend()
 
-**Attach**
+Usage
 
-```js
-import "./components/legend-control.js"; // IIFE exposes window.LegendControl + wireTimelineToLegend
+import "./components/legend-control.js"; // exposes window.LegendControl
 
-const legend = new window.LegendControl({ title: "Legend", position: "bottom-right" });
-map.addControl(legend, legend.getDefaultPosition());
+const legend = new window.LegendControl({ title: "Legend" });
+map.addControl(legend);
 
-// Optional: build rows
 const sec = legend.addSection("Trails");
 legend.addRow(sec, { lineColor: "#4361EE", lineWidth: 3, label: "Historic Trail" });
-
-// Timeline sync
 window.wireTimelineToLegend(tl, legend);
-```
 
-**When to use which legend**
 
-* Use **`legend.js`** if you want automatic symbology from the map + grouping from config.
-* Use **`legend-control.js`** for a minimal shell you’ll fill manually.
+⸻
 
----
+📌 popup.js
 
-### `popup.js`
+Popup builder + multi-layer click handler.
 
-Popup builder + multi-layer click handler utilities.
+Highlights
+	•	Escape-safe HTML, flexible field mapping
+	•	Dedupes overlapping results
+	•	Cluster expansion for clustered sources
+	•	Optional feature highlighting (setFeatureState)
+	•	API: attachPopup(map, opts), attachLayerPopup(map, layerId, opts)
 
-**Highlights**
+Usage
 
-* Escape-safe HTML, flexible field mapping (`title/meta/date/desc/link`)
-* Dedupes overlapping results; optional debug properties view
-* Optional **cluster** expansion (for clustered GeoJSON sources)
-* Optional **feature highlight** via `setFeatureState({selected:true})`
-* Exposes `attachPopup(map, opts)` and `attachLayerPopup(map, layerId, opts)`
-
-**Usage**
-
-```js
 import { attachPopup } from "./components/popup.js";
 
 attachPopup(map, {
   layers: ["events_point", "places_point"],
   maxFeatures: 10,
-  clusterSourceId: "events_src", // if the source uses clustering
-  highlight: true                // style must read ["feature-state","selected"]
+  clusterSourceId: "events_src",
+  highlight: true
 });
-```
 
----
 
-### `sidebar.js`
+⸻
 
-Sidebar container and utilities for a right-docked panel.
+📑 sidebar.js
 
-**Highlights**
+Sidebar container for map controls + layer toggles.
 
-* Header + `#timebox` + `#layerbox`
-* Groups as `<details>` with persisted open/closed state
-* Row helper with checkbox + opacity slider
-* Emits events: `openchange`, `rowtoggle`, `rowopacity`
-* Row API: `setChecked()`, `setOpacity()`, `setBadge()`, `setTitle()`, `focus()`
+Highlights
+	•	Header with title/subtitle + groups as <details>
+	•	Row helpers with checkbox + opacity slider
+	•	Emits events: rowtoggle, rowopacity, openchange
+	•	API: addGroup(), addLayerRow(), setBadge(), setOpacity()
 
-**Usage**
+Usage
 
-```js
 import Sidebar from "./components/sidebar.js";
 
 const sidebar = new Sidebar({
@@ -166,75 +168,57 @@ group.addLayerRow({
   onToggle: (checked) => KFM.setVisible("usgs_topo_1894", checked),
   onOpacity: (v) => KFM.setOpacity("usgs_topo_1894", v)
 });
-```
 
----
 
-## 🔌 Integration pattern (in `web/app.js`)
+⸻
 
-```js
+🔌 Integration Pattern (web/app.js)
+
 import Timeline from "./components/timeline.js";
 import LegendControl from "./components/legend.js";
 import { attachPopup } from "./components/popup.js";
 import Sidebar from "./components/sidebar.js";
 
-// Sidebar skeleton
-const sidebar = new Sidebar({ title: cfg.title, subtitle: cfg.subtitle }).mount();
-
-// Timeline → year updates map + legend
-const tl = new Timeline({
-  min: toYear(cfg.time?.min) ?? 1700,
-  max: toYear(cfg.time?.max) ?? 2100,
-  value: initialYear, step: cfg.time?.step ?? 1,
-  autoplay: !!cfg.time?.autoplay, fps: cfg.time?.fps ?? 8, loop: cfg.time?.loop !== false
-}).mount("#timebox");
+const sidebar = new Sidebar({ title: cfg.title }).mount();
+const tl = new Timeline({ min: 1700, max: 2100, step: 1 }).mount("#timebox");
 tl.onChange((y) => KFM.setYear(y));
 
-// Legend
-const legend = new LegendControl({ layersConfig: cfg.layers, title: cfg.legendTitle || "Legend" });
-map.addControl(legend, legend.getDefaultPosition?.() || "bottom-right");
+const legend = new LegendControl({ layersConfig: cfg.layers });
+map.addControl(legend);
 
-// Popups
 attachPopup(map, { layers: visibleInteractiveLayerIds, maxFeatures: 12 });
-```
 
----
 
-## 🎨 Styling hooks (see [`map.css`](../css/map.css))
+⸻
 
-* `.kfm-legend`, `.kfm-legend-header`, `.kfm-legend-year`, `.kfm-year-badge`, `.kfm-legend-section`, `.kfm-legend-row`, `.kfm-legend-swatch`, `.kfm-legend-label`
-* `.kfm-popup-*` (title, meta, desc, debug)
-* `.kfm-sidebar` (container), `.kfm-badge` (small pill)
-* `.kfm-timeline`, `.kfm-timeline-dock`, `.kfm-btn`
+🎨 Styling Hooks (web/css/map.css)
+	•	.kfm-legend, .kfm-legend-row, .kfm-legend-swatch
+	•	.kfm-popup-* (title, meta, desc, debug)
+	•	.kfm-sidebar, .kfm-badge
+	•	.kfm-timeline, .kfm-btn
 
-Dark mode is automatic via `prefers-color-scheme`. Safe-area insets are respected via CSS variables.
+Dark mode is automatic via prefers-color-scheme. Safe-area insets respected with CSS vars.
 
----
+⸻
 
-## ⚙️ Conventions & tips
+⚙️ Conventions & Tips
+	•	Keep modules decoupled (no cross-imports).
+	•	Expose callbacks + DOM events so app.js wires state.
+	•	For per-feature time, use config (timeProperty, timeStartProperty).
+	•	When adding a new component:
+	1.	Add JS file to this folder
+	2.	Add CSS hooks in web/css/map.css
+	3.	Update usage examples here
 
-* **No cross-imports** between components; keep them decoupled.
-* Prefer **callbacks + DOM events** (both are exposed) so `app.js` can wire any state machine.
-* For GeoJSON **per-feature time**, use layer config fields (`timeProperty`, `timeStartProperty`, `timeEndProperty`) and let `app.js` apply filters.
-* If you add a new component, update:
+⸻
 
-  1. this folder with the JS file,
-  2. CSS hooks in `web/css/map.css`,
-  3. a usage example in this README.
+🔍 Troubleshooting
+	•	Legend empty? Check that map layer IDs match config.
+	•	Popups not firing? Confirm opts.layers exist in MapLibre.
+	•	Timeline not advancing? Check fps > 0, loop, and prefers-reduced-motion.
 
----
+⸻
 
-## 🔍 Troubleshooting
+📝 License
 
-* Legend shows nothing? Ensure the layer is added to the map and visible; for GeoJSON helpers, the legend checks `id`, `id_line`, `id_circle`.
-* Popups not firing? Confirm `opts.layers` are actual **layer IDs** and that `queryRenderedFeatures` can see them at your zoom.
-* Timeline not advancing? Check `fps > 0`, `loop` setting, and `prefers-reduced-motion` (autoplay is disabled for users who prefer reduced motion).
-
----
-
-## 📝 License
-
-These modules are MIT-licensed with the rest of the repository.
-
-```
-```
+These UI modules are MIT-licensed with the rest of the repository.
