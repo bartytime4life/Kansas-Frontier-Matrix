@@ -1,11 +1,17 @@
 <div align="center">
 
-# 🌐 Kansas Geo Timeline — Earth Network Links
+# 🌐 Kansas-Frontier-Matrix — Earth Network Links  
+`data/earth/networklinks/`
 
-**Network-linked Earth datasets** used by the **Kansas Frontier Matrix**.  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+
+**Mission:** Document **network-linked Earth datasets** consumed by the Frontier Matrix.  
 
 Unlike `data/earth/sources/` (static file descriptors),  
-this directory documents **remote or live feeds** consumed directly via network links:  
+this directory catalogs **remote or live feeds** accessed directly over the network:  
 
 - 🛰️ OGC services (WMS, WMTS, WCS, WFS)  
 - 🔗 ArcGIS REST endpoints (ImageServer / FeatureServer)  
@@ -13,15 +19,13 @@ this directory documents **remote or live feeds** consumed directly via network 
 - ⚠️ Live hazard feeds (NASA FIRMS, USGS ShakeMap, NOAA storm tracks)  
 
 These provide **dynamic Earth context layers** — global basemaps, live environmental data, and hazard overlays —  
-for use in the MapLibre viewer and GIS workflows, without storing bulky rasters/vectors locally.
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+for use in the MapLibre viewer and GIS workflows, without storing bulky rasters/vectors locally.  
 
 </div>
 
 ---
+
+## 📈 Lifecycle
 
 ```mermaid
 flowchart TD
@@ -39,13 +43,13 @@ flowchart TD
 
 🎯 Purpose
 	•	Provide global Earth reference data via live services.
-	•	Allow the web viewer to consume near real-time feeds (hazards, time-aware climate).
-	•	Complement Kansas-specific static layers with planetary context.
-	•	Document provenance and endpoints for reproducibility  .
+	•	Allow the web viewer to consume near real-time feeds (hazards, climate, time-aware overlays).
+	•	Complement Kansas static layers with planetary context.
+	•	Document provenance and endpoints for scientific reproducibility (MCP).
 
 ⸻
 
-📂 Directory layout
+📂 Directory Layout
 
 data/earth/networklinks/
 ├── basemaps.json    # Global basemaps (Blue Marble, Natural Earth, OSM)
@@ -55,64 +59,111 @@ data/earth/networklinks/
 ├── water.json       # Hydrography, oceans, wetlands (HydroSHEDS, NHDPlus HR)
 └── README.md
 
-Each .json file lists services following the networklinks schema.
+	•	Each .json follows the networklinks.schema.json.
+	•	Defines service type, endpoint, layers, attribution, and license.
 
 ⸻
 
-🌍 Example network links
+🌍 Example Network Links
 
 Basemaps
-	•	NASA Blue Marble / GIBS — WMTS mosaics.
-	•	Natural Earth tiles — PMTiles / XYZ raster tiles.
-	•	OpenStreetMap — XYZ or WMTS basemap.
+	•	NASA Blue Marble / GIBS → WMTS mosaics.
+	•	Natural Earth → PMTiles / XYZ tiles.
+	•	OpenStreetMap → XYZ or WMTS basemaps.
 
 Climate
-	•	Copernicus ERA5 — global reanalysis API.
-	•	NASA Daymet WCS — 1 km daily climate for North America .
-	•	WorldClim WMS — long-term climate normals.
+	•	Copernicus ERA5 → global reanalysis API.
+	•	NASA Daymet WCS → 1 km daily climate (North America).
+	•	WorldClim WMS → long-term climate normals.
 
 Hazards
-	•	NASA FIRMS Fire Data — live wildfire detections (WMS/GeoJSON).
-	•	USGS ShakeMap / Earthquake Feeds — global seismic events.
-	•	NOAA SPC Tornado & Severe Weather Tracks — GIS endpoints .
+	•	NASA FIRMS → live wildfire detections (WMS/GeoJSON).
+	•	USGS ShakeMap & Earthquake Feeds → global seismic events.
+	•	NOAA SPC → tornado & severe weather tracks.
 
 Tectonics
 	•	USGS Global Faults WMS.
-	•	GEM Seismic Hazard Map — global raster hazard intensity.
-	•	OneGeology — lithology & tectonic services.
+	•	GEM Seismic Hazard Map → raster hazard intensity.
+	•	OneGeology → lithology & tectonic services.
 
 Water
-	•	HydroSHEDS — global rivers/basins (WMS/WFS).
-	•	NHDPlus HR (USGS) — high-resolution hydrography, ArcGIS REST.
-	•	NASA OceanColor / MODIS Aqua — WMS services.
+	•	HydroSHEDS → global rivers/basins (WMS/WFS).
+	•	NHDPlus HR (USGS) → ArcGIS REST high-resolution hydrography.
+	•	NASA OceanColor / MODIS Aqua → WMS services.
 
 ⸻
 
 🛠️ Integration
 
-Schema example:
+Schema example for a network link descriptor (hazards.json entry):
 
 {
-  "id": "fao_globallandcover",
-  "title": "FAO Global Land Cover WMS",
+  "id": "nasa_firms_fires",
+  "title": "NASA FIRMS — Active Fire Data",
   "type": "wms",
-  "endpoint": "https://example.org/geoserver/wms",
-  "layers": ["landcover:global"],
-  "attribution": "FAO / UN",
-  "license": "CC-BY-4.0"
+  "endpoint": "https://firms.modaps.eosdis.nasa.gov/wms/",
+  "layers": ["fires_viirs"],
+  "attribution": "NASA FIRMS",
+  "license": "Free and open (NASA EarthData policy)"
 }
 
-	•	These .json descriptors are consumed by the web viewer alongside local layers.
-	•	STAC Items in stac/items/earth/ may reference network links instead of local files.
+	•	.json descriptors are consumed by the web viewer alongside local layers.
+	•	STAC Items in stac/items/earth/ may reference network services instead of local files.
+
+⸻
+
+📑 Example STAC Item (NASA FIRMS — Active Fire WMS)
+
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "earth_firms_fire_wms",
+  "properties": {
+    "title": "NASA FIRMS — Active Fire Data (WMS)",
+    "description": "Near real-time global fire detections from NASA FIRMS, exposed as an OGC WMS feed.",
+    "start_datetime": "2025-09-01T00:00:00Z",
+    "end_datetime": null,
+    "kfm:method": "WMS service consumption",
+    "kfm:lineage": [
+      "https://firms.modaps.eosdis.nasa.gov/wms/"
+    ],
+    "qa:status": "live"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-180, -90],
+      [-180, 90],
+      [180, 90],
+      [180, -90],
+      [-180, -90]
+    ]]
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "../../../stac/collections/earth.json"
+    }
+  ],
+  "assets": {
+    "wms": {
+      "href": "https://firms.modaps.eosdis.nasa.gov/wms/",
+      "title": "NASA FIRMS Active Fire (WMS)",
+      "type": "application/xml",
+      "roles": ["data", "service"]
+    }
+  }
+}
+
 
 ⸻
 
 📝 Notes
 
 Use network links when:
-	•	Data volume is too large to host locally.
-	•	Dataset updates frequently (e.g. real-time hazards).
-	•	Provider service is authoritative and persistent.
+	•	Data is too large to store locally.
+	•	Dataset updates frequently (e.g., real-time hazards).
+	•	Provider is authoritative and persistent.
 
 Always record:
 	•	Service URL + layer name(s).
@@ -121,13 +172,14 @@ Always record:
 
 ⸻
 
-📚 See also
-	•	data/earth/sources/README.md — static Earth datasets.
-	•	data/stac/README.md — STAC catalog & item model.
-	•	docs/ — MCP guides on reproducibility and experiment logging.
+📚 See Also
+	•	data/earth/sources/README.md → static Earth datasets.
+	•	data/stac/README.md → STAC catalog & item registry.
+	•	docs/ → MCP guides on reproducibility and experiment logging.
 
 ⸻
 
-✅ Mission-grade principle: Network links must be documented, reproducible, and STAC-referenced.
-If the service can’t be validated or cited, it doesn’t belong here.
+✅ Mission Principle
 
+Network links must be documented, reproducible, and STAC-referenced.
+If a service can’t be validated or cited, it doesn’t belong here.
