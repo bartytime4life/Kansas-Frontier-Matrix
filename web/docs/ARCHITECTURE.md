@@ -23,7 +23,7 @@ The **web app** is a modular MapLibre-based viewer with:
 - **Historical & terrain overlays** (tiles, vectors, processed datasets)  
 - **Sidebar UI** (layer toggles, legends, opacity sliders)  
 - **Timeline slider** (filter features by year or interval)  
-- **Accessible theming** (light/dark, reduced motion, high contrast)  
+- **Accessible theming** (light/dark, reduced motion, high contrast)
 
 > 🔑 **Design principle:** *Minimal dependencies, modular configs, reproducible outputs.*
 
@@ -68,9 +68,6 @@ flowchart TD
   D -- "toggles · opacity" --> C
   E -- "year filter" --> C
 
-<!-- END OF MERMAID -->
-
-
 
 ⸻
 
@@ -89,26 +86,23 @@ sequenceDiagram
 
   U->>H: Open /web/
   H->>A: Load module (app.js)
-  A->>L: Resolve config (prefer app.config.json)
+  A->>L: Resolve config
   alt Preferred config
     L-->>A: ./app.config.json
   else Fallback chain
     L-->>A: ./config/app.config.json → viewer.json → layers.json
   end
-  A->>M: Init map (style, center, zoom)
-  A->>S: Register sources (tiles, GeoJSON)
-  A->>S: Add layers (style, visibility, opacity)
+  A->>M: Init map
+  A->>S: Register sources
+  A->>S: Add layers
   A->>UI: Build sidebar + legend
-  A->>T: Init timeline (bounds, default year)
+  A->>T: Init timeline
 
   U->>UI: Toggle/opacity
-  UI->>S: Update map state
+  UI->>S: Update map
   U->>T: Move year slider
   T->>S: Apply time filter
   S->>M: Re-render map
-
-<!-- END OF MERMAID -->
-
 
 
 ⸻
@@ -128,9 +122,6 @@ flowchart TD
   E -->|if found| Z
 
   Z --> M["Init MapLibre + UI\n(basemap · layers · legend · timeline)"]
-
-<!-- END OF MERMAID -->
-
 
 Overrides:
 	•	config/time_config.json → time bounds & slider settings
@@ -168,7 +159,7 @@ make stac stac-validate site-config
 jq . web/config/app.config.json > /dev/null
 ajv validate -s web/config/app.config.schema.json -d web/config/app.config.json
 
-⚠ Common issues:
+Common issues
 	•	Blank map → wrong relative paths (avoid file://)
 	•	Tiles missing → must be {z}/{x}/{y}.png, not .tif
 	•	Timeline inert → missing time or timeProperty keys
@@ -204,9 +195,9 @@ classDiagram
     +title: string
     +subtitle: string
     +style: string
-    +center: float[]       // [-98.3, 38.5]
+    +center: float[]
     +zoom: number
-    +bounds: float[]       // [W,S,E,N] (optional)
+    +bounds: float[]
     +time: TimeBounds
     +defaultYear: number
     +timeUI: TimeUI
@@ -215,8 +206,8 @@ classDiagram
   }
 
   class TimeBounds {
-    +min: string // YYYY-MM-DD
-    +max: string // YYYY-MM-DD
+    +min: string
+    +max: string
   }
 
   class TimeUI {
@@ -237,10 +228,10 @@ classDiagram
   class Layer {
     +id: string
     +title: string
-    +category: string      // terrain|environment|historical|hazards|culture|etc.
-    +type: string          // raster|geojson|image|raster-dem
-    +url: string           // tiles
-    +data: string          // GeoJSON path
+    +category: string
+    +type: string
+    +url: string
+    +data: string
     +opacity: number
     +visible: boolean
     +minzoom: number
@@ -256,8 +247,8 @@ classDiagram
   }
 
   class TimeWindow {
-    +start: string | null
-    +end: string | null
+    +start: string
+    +end: string
   }
 
   class Paint {
@@ -270,12 +261,11 @@ classDiagram
     +circleOpacity: number
   }
 
-  AppConfig --> TimeBounds : time
-  AppConfig --> TimeUI : timeUI
-  AppConfig --> Defaults : defaults
-  AppConfig --> Layer : layers
-  Defaults --> TimeWindow : time
-  Layer --> TimeWindow : time
-  Layer --> Paint : style
+  AppConfig --> TimeBounds
+  AppConfig --> TimeUI
+  AppConfig --> Defaults
+  AppConfig --> Layer
+  Defaults --> TimeWindow
+  Layer --> TimeWindow
+  Layer --> Paint
 
-<!-- END OF MERMAID -->
