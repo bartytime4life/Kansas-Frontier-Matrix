@@ -123,7 +123,7 @@ flowchart TD
 
   Z --> M["Init MapLibre + UI\n(basemap · layers · legend · timeline)"]
 
-Overrides:
+Overrides
 	•	config/time_config.json → time bounds & slider settings
 	•	config/legend.json / config/categories.json → legend chips & sidebar grouping
 
