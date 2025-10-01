@@ -1,20 +1,22 @@
 <div align="center">
 
-# 🌍 Kansas Geo Timeline — Earth Context Layers
+# 🌍 Kansas Geo Timeline — Earth Context Layers  
+`data/earth/`
 
-**Earth observation datasets** and **global reference layers**  
-that complement the Kansas-focused datasets under `data/`.  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../.github/workflows/stac-badges.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../.pre-commit-config.yaml)
 
-These provide **basemaps, climate context, and environmental indices**  
-for comparative analysis in the **Kansas Frontier Matrix**.
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+**Mission:** Provide **Earth observation datasets** and **global reference layers**  
+that complement Kansas-focused data under `data/`.  
+These layers give **basemaps, climate context, and environmental indices**  
+for comparative analysis in the **Kansas Frontier Matrix**.  
 
 </div>
 
 ---
+
+## 📈 Lifecycle
 
 ```mermaid
 flowchart TD
@@ -32,73 +34,75 @@ flowchart TD
 ⸻
 
 🧭 Scope
-	•	🌍 Global context — datasets beyond Kansas: NASA/NOAA satellite products, DEMs, land cover, vegetation indices.
-	•	🛰️ Remote sensing — MODIS, Sentinel, Landsat, Daymet, NLCD, GEDI, HydroSHEDS.
-	•	🌱 Environmental indices — NDVI, EVI, drought indices, fire perimeters, global soils.
-	•	🗺️ Basemaps — Natural Earth, coastlines, political boundaries, rivers, global topo backgrounds.
+	•	🌍 Global context → datasets beyond Kansas (NASA/NOAA satellite products, DEMs, global land cover, vegetation indices).
+	•	🛰️ Remote sensing → MODIS, Sentinel, Landsat, Daymet, NLCD, GEDI, HydroSHEDS.
+	•	🌱 Environmental indices → NDVI, EVI, drought indices, fire perimeters, global soils.
+	•	🗺️ Basemaps → Natural Earth, coastlines, political boundaries, rivers, topo backgrounds.
 
-Kansas is the core. These global layers exist only for context and comparison.
+Kansas remains the core. Global layers exist only for context and comparison.
 
 ⸻
 
-📂 Structure
+📂 Directory Structure
 
 data/earth/
-├── sources/       # JSON descriptors (STAC-style or source metadata)
-├── raw/           # downloaded archives / unprocessed rasters/vectors
-├── processed/     # reprojected/cleaned GeoJSON, COGs, vector tiles
-├── stac/          # STAC Items & Collections referencing processed assets
+├── sources/       # JSON descriptors (STAC-style metadata)
+├── raw/           # Downloads (tar/zip, HDF, NetCDF, GeoTIFF, etc.)
+├── processed/     # Reprojected/cleaned GeoJSON, COGs, PMTiles
+├── stac/          # STAC Items & Collections for Earth datasets
 └── README.md
 
-	•	sources/ → *.json descriptors used by scripts/fetch.py + make fetch
-	•	raw/ → untouched downloads (tar/zip, HDF, NetCDF, GeoTIFF, etc.)
-	•	processed/ → converted outputs (COG, GeoJSON, MBTiles/PMTiles)
-	•	stac/ → metadata to connect to the hub
+	•	sources/ → *.json descriptors used by scripts/fetch.py + make fetch.
+	•	raw/ → untouched downloads (archives or native formats).
+	•	processed/ → converted outputs (COG, GeoJSON, PMTiles).
+	•	stac/ → metadata linking assets into the STAC catalog.
 
 ⸻
 
 ⚙️ Conventions
-	•	CRS: EPSG:4326 (WGS84) unless justified otherwise.
-	•	Raster: Cloud-Optimized GeoTIFF (.tif) with internal overviews.
-	•	Vector: GeoJSON (small/medium) or MBTiles/PMTiles (large).
-	•	Metadata: Every dataset has a STAC Item in stac/items/.
-	•	Checksums: .sha256 sidecars for raw + processed artifacts.
+	•	CRS → EPSG:4326 (WGS84) unless otherwise justified.
+	•	Rasters → Cloud-Optimized GeoTIFF (.tif) with internal overviews.
+	•	Vectors → GeoJSON (small/medium) or PMTiles (large).
+	•	Metadata → every dataset must have a STAC Item in stac/items/.
+	•	Checksums → .sha256 sidecars for all raw + processed artifacts.
 
 ⸻
 
 🔗 Connections
-	•	stac-badges.yml → validates data/earth/stac/** and builds Shields badges.
-	•	stac.yml → renders web/app.config.json including earth layers.
-	•	site.yml → deploys processed layers into MapLibre viewer.
+	•	stac-badges.yml → validates data/earth/stac/** and generates Shields badges.
+	•	stac.yml → renders web/app.config.json including Earth layers.
+	•	site.yml → deploys processed Earth layers to the MapLibre viewer.
 
 ⸻
 
-📋 Common tasks
+📋 Common Tasks
 
-Add a new dataset:
-	1.	Create data/earth/sources/<dataset>.json (endpoint, license, bbox, temporal).
-	2.	Run make fetch → downloads to data/earth/raw/.
+Add a new dataset
+	1.	Create data/earth/sources/<dataset>.json (endpoint, license, bbox, temporal coverage).
+	2.	Run make fetch → downloads into data/earth/raw/.
 	3.	Convert: make cogs (rasters) / make vectors (shapefiles → GeoJSON).
-	4.	Write STAC Item in data/earth/stac/items/.
+	4.	Write a STAC Item in data/earth/stac/items/.
 	5.	Validate with make stac-validate.
 
-Update an existing dataset:
+Update an existing dataset
 	•	Refresh source JSON → make fetch + reprocess.
-	•	Re-run validation.
+	•	Re-run validation and update STAC Items.
 
-Link to viewer:
+Link to viewer
 	•	Reference STAC Item in scripts/badges/source_map.json.
 	•	Regenerate web/app.config.json with make stac.
 
 ⸻
 
 📝 Notes
-	•	Global datasets can be huge → prefer per-tile or per-year subsets.
+	•	Global datasets can be very large → prefer per-tile or per-year subsets.
 	•	Always record license in sources/*.json (e.g., NASA EarthData, Copernicus, CC-BY-4.0).
 	•	Use scripts/gen_sha256.sh to hash large files after fetch.
 
 ⸻
 
-✅ Mission-grade principle: Kansas remains the focus.
-Earth layers add the environmental + global context needed for robust historical + geospatial analysis.
+✅ Mission Principle
 
+Kansas is the focus.
+Earth datasets are added only to provide context, baselines, and comparative layers
+that strengthen Kansas historical and geospatial analysis.
