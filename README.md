@@ -184,11 +184,3 @@ gantt
 ## ⚖️ License
 
 MIT © 2025 — Kansas Frontier Matrix
-
----
-
-✅ This README now:  
-- Integrates **badges, live links, coverage, roadmap, and reproducibility**.  
-- Embeds **MCP rigor** (checksums, schemas, provenance).  
-- Connects to **GIS archives, oral histories, paleoclimate, and predictive modeling** per your uploaded audits [oai_citation:13‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-BgUSuffTiRq4qidye2sPwN) [oai_citation:14‡Data resource analysis.pdf](file-service://file-GdS9Kcw7Xbfqpy4xwwdqWS) [oai_citation:15‡Kansas Data Resources for Frontier-Matrix Project.pdf](file-service://file-Q9AC5RwLTeV6QgadxHDf5P).  
-- Uses **Mermaid diagrams** fully GitHub-compatible.  
