@@ -3,13 +3,13 @@
 # 🌍 Kansas-Frontier-Matrix — Earth Context Layers  
 `data/earth/`
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../.github/workflows/stac-badges.yml)  
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
 
 **Mission:** Curate **Earth observation datasets** and **global reference layers**  
-to provide **context, baselines, and environmental indices**  
-that complement Kansas-focused datasets in the Frontier Matrix.  
+to provide **context, baselines, and environmental indices** that complement Kansas-focused datasets.
 
 </div>
 
@@ -68,9 +68,9 @@ data/earth/
 ⸻
 
 🔗 Repo Connections
-	•	stac-badges.yml → validates data/earth/stac/**, builds Shields badges.
-	•	stac.yml → generates web/app.config.json (includes Earth layers).
-	•	site.yml → deploys processed datasets into MapLibre viewer.
+	•	stac-validate.yml → validates data/earth/stac/** in CI.
+	•	site.yml → deploys processed datasets to the MapLibre viewer.
+	•	stac.yml (if present) → can generate web/app.config.json with Earth layers.
 
 ⸻
 
@@ -80,15 +80,15 @@ data/earth/
 	1.	Create data/earth/sources/<dataset>.json.
 	2.	Run make fetch → saves to data/earth/raw/.
 	3.	Convert: make cogs (rasters) or make vectors (shapefiles → GeoJSON).
-	4.	Write STAC Item → data/earth/stac/items/.
+	4.	Write a STAC Item → data/earth/stac/items/.
 	5.	Validate → make stac-validate.
 
 ♻️ Update an existing dataset
-	•	Update source JSON → rerun make fetch + reprocess.
+	•	Update the source JSON → rerun make fetch + reprocess.
 	•	Refresh STAC Item and validate.
 
 🔗 Link to viewer
-	•	Reference STAC Item in scripts/badges/source_map.json.
+	•	Reference the STAC Item in your source map index (e.g., scripts/badges/source_map.json).
 	•	Rebuild config → make stac.
 
 ⸻
@@ -147,17 +147,9 @@ data/earth/
 
 ⸻
 
-📝 Notes
-	•	Global datasets can be very large → subset by year or tile.
-	•	Always record license in sources/*.json (NASA EarthData, Copernicus, CC-BY-4.0).
-	•	Use scripts/gen_sha256.sh to hash large files after fetch.
-
-⸻
-
 ✅ Mission Principle
 
-Kansas is the focus.
-Earth datasets are included only to strengthen Kansas analysis by providing:
-	•	climate + environmental baselines,
+Kansas is the focus. Earth datasets are included only to strengthen Kansas analysis by providing:
+	•	climate and environmental baselines,
 	•	comparative global indices,
 	•	and reference context for geospatial history.
