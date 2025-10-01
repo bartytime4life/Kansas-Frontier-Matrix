@@ -35,6 +35,16 @@ This project rebuilds that story into a **time-aware atlas + knowledge graph**, 
 
 ---
 
+## 🌐 Live Demos & Previews
+
+- 🖥️ **Web Viewer (MapLibre)** → [View Interactive Atlas](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)  
+- 🌍 **Google Earth (KMZ)** → [Download KMZ](https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/latest)  
+- 📊 **STAC Catalog** → [Browse STAC JSON](https://bartytime4life.github.io/Kansas-Frontier-Matrix/stac/)  
+
+> ⚠️ These links are placeholders — update with your actual **GitHub Pages** or **deployment URLs** once the CI/CD site build is live.
+
+---
+
 ## 🏗 Architecture
 
 ```mermaid
@@ -138,6 +148,30 @@ Milestone	Goal	Status
 
 👉 See ROADMAP.md for full details.
 
+📅 Gantt Timeline
+
+gantt
+  title Roadmap Timeline (2025–2026)
+  dateFormat  YYYY-MM-DD
+  axisFormat  %b %Y
+
+  section Milestones
+  M1 — Sources & Hazards        :done,    m1, 2025-01-01, 2025-03-31
+  M2 — Terrain & Hydrology      :active,  m2, 2025-04-01, 2025-07-31
+  M3 — Stories & Archaeology    :planned, m3, 2025-08-01, 2025-10-31
+  M4 — UI Enhancements          :planned, m4, 2025-10-01, 2025-12-31
+  M5 — Modeling & Simulation    :planned, m5, 2025-11-15, 2026-02-28
+
+  %% style mappings
+  classDef done fill:#2ecc71,stroke:#2ecc71,stroke-width:2px,color:#fff
+  classDef active fill:#f1c40f,stroke:#f1c40f,stroke-width:2px,color:#000
+  classDef planned fill:#bdc3c7,stroke:#7f8c8d,stroke-width:1px,color:#000
+
+  class m1 done
+  class m2 active
+  class m3,m4,m5 planned
+
+
 ⸻
 
 ✅ Reproducibility & CI
@@ -177,3 +211,10 @@ MIT © 2025 — Kansas Frontier Matrix
 
 ⸻
 
+
+---
+
+✅ Now your README has:  
+- **Live links** for the viewer, KMZ, and STAC previews.  
+- Consistent **Mermaid diagrams** (Architecture + Quickstart Workflow + Roadmap Gantt).  
+- Coverage + Roadmap with badges for at-a-glance progress.  
