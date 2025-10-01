@@ -118,8 +118,3 @@ web/assets/icons/
 
 Icons must be consistent, optimized, and cross-platform ready.
 They guarantee the Frontier Matrix web viewer looks professional everywhere — browsers, devices, and apps.
-
-⸻
-
-
-Would you like me to also include a **Makefile snippet** (`make icons-generate`) showing how to auto-generate all PNG + manifest files from `favicon.svg` in CI?
