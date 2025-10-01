@@ -93,7 +93,7 @@ flowchart TD
   R --> R2["boundaries (counties)"]
   R --> R3["grids / indexes"]
 
-Diagram shows Category → example layers with the legend color value per category.
+Diagram shows Category → example layers, with each node labeled by its legend color.
 
 ⸻
 
