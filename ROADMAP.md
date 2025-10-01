@@ -1,51 +1,57 @@
 <div align="center">
 
+# 🚦 Kansas-Frontier-Matrix — Roadmap  
 
-🚦 Kansas-Frontier-Matrix — Roadmap
+**Mission:** Track milestones, issues, and MCP deliverables in sync with  
+`.github/roadmap/roadmap.yaml` via `.github/workflows/roadmap.yml`.  
 
-This doc mirrors .github/roadmap/roadmap.yaml and stays in lock-step via .github/workflows/roadmap.yml (drives scripts/sync-roadmap.js).
+[![Roadmap Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/roadmap.yml/badge.svg)](../../actions/workflows/roadmap.yml)  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../actions/workflows/stac-badges.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../actions/workflows/trivy.yml)  
 
-🔁 PRs run the sync in dry-run (no writes).
-✅ Pushes to main (or manual dispatch with dry_run=false) apply changes.
+🔁 **PRs** → dry-run only (no writes)  
+✅ **Pushes to `main`** → apply roadmap changes  
 
 </div>
 
+---
 
+## 📚 Contents
+- [Milestones (targets)](#-milestones-targets)
+- [Dependency graph](#-dependency-graph)
+- [Progress snapshot](#-progress-snapshot)
+- [Milestone 1 — Enrich Data Sources (`m1-data`)](#-milestone-1--enrich-data-sources-m1-data)
+- [Milestone 2 — Analytical Enhancements (`m2-analytics`)](#-milestone-2--analytical-enhancements-m2-analytics)
+- [Milestone 3 — Storytelling & Education (`m3-story`)](#-milestone-3--storytelling--education-m3-story)
+- [Milestone 4 — Technical Enhancements (`m4-tech`)](#-milestone-4--technical-enhancements-m4-tech)
+- [Milestone 5 — MCP Integration (`m5-mcp`)](#-milestone-5--mcp-integration-m5-mcp)
+- [Label taxonomy](#-label-taxonomy)
+- [Definitions of Done (DoD)](#-definitions-of-done-dod)
+- [Working agreements](#-working-agreements)
+- [Edit the source roadmap](#-edit-the-source-roadmap)
+- [Run the sync locally](#-run-the-sync-locally)
+- [FAQ / Troubleshooting](#-faq--troubleshooting)
 
-⸻
+---
 
-📚 Contents
-	•	Milestones (targets)
-	•	Dependency graph
-	•	Progress snapshot
-	•	Milestone 1 — Enrich Data Sources (m1-data)
-	•	Milestone 2 — Analytical Enhancements (m2-analytics)
-	•	Milestone 3 — Storytelling & Education (m3-story)
-	•	Milestone 4 — Technical Enhancements (m4-tech)
-	•	Milestone 5 — MCP Integration (m5-mcp)
-	•	Label taxonomy
-	•	Definitions of Done (DoD)
-	•	Working agreements
-	•	Edit the source roadmap
-	•	Run the sync locally
-	•	FAQ / Troubleshooting
+## 🎯 Milestones (targets)
 
-⸻
+| Key            | Title                    | Target date |
+|----------------|--------------------------|-------------|
+| `m1-data`      | Enrich Data Sources      | 2025-10-31  |
+| `m2-analytics` | Analytical Enhancements  | 2025-11-30  |
+| `m3-story`     | Storytelling & Education | 2025-12-31  |
+| `m4-tech`      | Technical Enhancements   | —           |
+| `m5-mcp`       | MCP Integration          | —           |
 
-🎯 Milestones (targets)
-
-Key	Title	Target date
-m1-data	Enrich Data Sources	2025-10-31
-m2-analytics	Analytical Enhancements	2025-11-30
-m3-story	Storytelling & Education	2025-12-31
-m4-tech	Technical Enhancements	—
-m5-mcp	MCP Integration	—
-
+```mermaid
 flowchart TD
-  M1["Milestone 1<br/>“Enrich Data Sources”<br/>(Oct 31, 2025)"] --> M2["Milestone 2<br/>“Analytical Enhancements”<br/>(Nov 30, 2025)"]
-  M2 --> M3["Milestone 3<br/>“Storytelling & Education”<br/>(Dec 31, 2025)"]
-  M3 --> M4["Milestone 4<br/>“Technical Enhancements”"]
-  M4 --> M5["Milestone 5<br/>“MCP Integration”"]
+  M1["Milestone 1<br/>Enrich Data Sources<br/>(Oct 31, 2025)"] --> M2["Milestone 2<br/>Analytical Enhancements<br/>(Nov 30, 2025)"]
+  M2 --> M3["Milestone 3<br/>Storytelling & Education<br/>(Dec 31, 2025)"]
+  M3 --> M4["Milestone 4<br/>Technical Enhancements"]
+  M4 --> M5["Milestone 5<br/>MCP Integration"]
 
 
 ⸻
@@ -65,7 +71,7 @@ graph LR
 
 📈 Progress snapshot
 
-Update by editing .github/roadmap/roadmap.yaml. The sync renders status here.
+Auto-rendered from .github/roadmap/roadmap.yaml
 
 	•	M1 — Enrich Data Sources: ██████████ 75%
 	•	M2 — Analytical Enhancements: ███████░░ 60%
@@ -85,11 +91,11 @@ Tasks
 	•	Link narratives to features via glossary tooltips/popups.
 
 Deliverables
-	•	data/sources/oral_histories.json (license, contact, update cadence).
-	•	Story hooks in web/config/story_layers.json.
+	•	data/sources/oral_histories.json
+	•	Story hooks in web/config/story_layers.json
 
 DoD
-	•	Provenance (license/attribution) captured in STAC; sample narrative appears as a timeline card + map popup with glossary links.
+	•	Narrative appears as a timeline card + map popup with glossary links.
 
 ⸻
 
@@ -97,259 +103,108 @@ Issue: Paleoclimate & Fire Regimes (paleo-fire)
 
 Tasks
 	•	Integrate drought indices, pollen cores, charcoal/fire records.
-	•	Cross-link with KGS & Neotoma; add STAC collections/items.
+	•	Cross-link with KGS & Neotoma; add STAC entries.
 
 Deliverables
 	•	data/sources/paleoclimate.json
-	•	STAC under stac/collections/*, stac/items/*.
+	•	stac/collections/*, stac/items/*
 
 DoD
-	•	At least one drought time series overlays the timeline; fire regime layer renders with citation + uncertainty.
+	•	Drought + fire layers visible with citation + uncertainty.
 
 ⸻
 
-Issue: Hydrology & Water Management Expansion (hydro-expansion)
+Issue: Hydrology & Water Management (hydro-expansion)
 
 Tasks
-	•	Add flood-event datasets (NOAA/FEMA) & irrigation/management (when public).
-	•	Prototype historical flood scenarios (HEC-RAS; MCP modeling SOP).
+	•	Add NOAA/FEMA flood-event datasets & irrigation/management.
+	•	Prototype flood scenarios (HEC-RAS; MCP modeling SOP).
 
 Deliverables
 	•	data/sources/hydrology.json
-	•	STAC wired (collections/items).
+	•	STAC wired collections/items
 
 DoD
-	•	Flood layers visible (map + time slider), with scenario doc in mcp/experiments/.
+	•	Flood layers visible with timeline + experiment doc.
 
 ⸻
 
-Issue: Kansas River (KGS) — Source → STAC → Viewer (kgs-kansas-river)
+Issue: Kansas River (KGS) → STAC → Viewer (kgs-kansas-river)
 
 Tasks
-	•	Source: data/sources/ks_kansas_river.json (ArcGIS REST + metadata).
-	•	STAC: stac/collections/ks_kansas_river.json (+ children).
-	•	Items: channels/floodplains/gauges under stac/items/ks_kansas_river/*.json.
-	•	Makefile: hydrology-fetch, hydrology-stac (and site to mirror vectors).
-	•	Web config: ensure ksriv_* layers in web/app.config.json / web/layers.json.
+	•	Source: data/sources/ks_kansas_river.json
+	•	STAC: stac/collections/ks_kansas_river.json (+ children)
+	•	Items: channels/floodplains/gauges in stac/items/ks_kansas_river/*.json
+	•	Makefile: hydrology-fetch, hydrology-stac, site mirror
+	•	Web config: ensure ksriv_* in web/app.config.json / layers.json
 
 Acceptance
-	•	Layers render in the web viewer; provenance in STAC; make site mirrors web/data/processed/hydrology/kansas_river/*.geojson.
-
-Dirs touched
-	•	data/processed/hydrology/kansas_river/
-	•	stac/collections/ks_kansas_river.json
-	•	stac/items/ks_kansas_river/*.json
-	•	web/data/processed/hydrology/kansas_river/*.geojson
-	•	web/app.config.json, web/layers.json
+	•	Layers render in viewer; provenance in STAC; mirrored to web/data/processed/hydrology/kansas_river/*.geojson.
 
 ⸻
 
 📊 Milestone 2 — Analytical Enhancements (m2-analytics)
-
-Issue: Predictive Modeling (predictive-modeling)
-
-Tasks
-	•	Train on settlement sites + drivers (DEM, hydrology, soils).
-	•	Log experiments in mcp/experiments/EXP-SETTLE-PRED.md.
-	•	Explore Bayesian + ABM/GIS hybrids.
-
-Acceptance
-	•	Reproducible notebook + experiment report with metrics, seed, data snapshots.
-
-⸻
-
-Issue: Uncertainty Quantification (uncertainty-quant)
-
-Tasks
-	•	Confidence scores for NLP toponyms & georeferencing/rectification.
-	•	UI encodings: opacity/error bars/probabilistic shading.
-
-Acceptance
-	•	Uncertainty visible in UI; documented in STAC assets + docs/uncertainty.md.
-
-⸻
-
-Issue: Symbolic & Knowledge-Based Reasoning (symbolic-reasoning)
-
-Tasks
-	•	Ontology schema (CIDOC-CRM + GeoSciML + treaty/legal vocabs).
-	•	Treaty/legal land-transfer inference rules.
-
-Acceptance
-	•	Example SPARQL/GraphQL queries + rule snippets; RDF/OWL snapshot in exports/semantic/.
-
-⸻
-
-Issue: Fractal & Pattern Analysis (fractal-patterns)
-
-Tasks
-	•	Meander fractal dimension, sinuosity metrics; clustering/power-law tests.
-
-Acceptance
-	•	Metrics JSON in analytics/metrics/ + brief analysis note; optional overlay layer configured.
+	•	Predictive Modeling (predictive-modeling): ABM/Bayesian hybrids; reproducible notebook + experiment report.
+	•	Uncertainty Quantification (uncertainty-quant): Confidence scores for NLP/georeferencing; UI encodings.
+	•	Symbolic Reasoning (symbolic-reasoning): Ontology schema (CIDOC-CRM + GeoSciML); treaty inference rules.
+	•	Fractal & Pattern Analysis (fractal-patterns): Sinuosity metrics, clustering/power-law analysis.
 
 ⸻
 
 📖 Milestone 3 — Storytelling & Education (m3-story)
-
-Issue: Interactive Story Maps — Santa Fe Trail (sft-storymap)
-
-Tasks
-	•	Assemble routes + primary sources; timeline step-through views.
-
-Acceptance
-	•	Hosted story page (in web/story/) with linked sources; offline build step in make site.
-
-⸻
-
-Issue: Dust Bowl Timeline Prototype (dustbowl-timeline)
-
-Tasks
-	•	Compose 1930s overlays (climate + newspapers + soils).
-
-Acceptance
-	•	Time slider demo with source footers + uncertainty badges.
-
-⸻
-
-Issue: Glossary & Educational Annotations (glossary-annotations)
-
-Tasks
-	•	Link glossary terms into map tooltips.
-	•	Overlays: railroads, treaties, forts, migration routes.
-
-Acceptance
-	•	Glossary tooltips render with term IDs; examples captured in docs/education/.
-
-⸻
-
-Issue: Crowdsourcing Submission Portal (crowdsourcing-portal)
-
-Tasks
-	•	Web form → GitHub PR bot; contributor guide docs/CONTRIBUTING.md.
-
-Acceptance
-	•	End-to-end submission merged via PR; CI validates file format & STAC.
+	•	Santa Fe Trail Story Map (sft-storymap): Routes + sources → interactive story page.
+	•	Dust Bowl Timeline (dustbowl-timeline): 1930s overlays (climate + newspapers).
+	•	Glossary Annotations (glossary-annotations): Glossary-linked tooltips on map features.
+	•	Crowdsourcing Portal (crowdsourcing-portal): Web form → PR bot → validated in CI.
 
 ⸻
 
 🧩 Milestone 4 — Technical Enhancements (m4-tech)
-
-Issue: 3D Time Animation (time-3d)
-
-Tasks
-	•	CesiumJS prototype (1850–present); regionated KML/KMZ exports.
-
-Acceptance
-	•	3D demo + KML sample in earth/ and link from viewer.
-
-⸻
-
-Issue: Semantic Web Integration (semantic-web)
-
-Tasks
-	•	Map entities to Wikidata; publish RDF/OWL.
-
-Acceptance
-	•	RDF dump + minimal SPARQL/GraphQL access plan in docs/semantic/.
-
-⸻
-
-Issue: Modularity & Extensibility (modularity)
-
-Tasks
-	•	Define plugin boundaries for ingestion/AI/UI; document extension points.
-
-Acceptance
-	•	docs/architecture.md updated; minimal plugin example under examples/plugins/.
-
-⸻
-
-Issue: APIs & External Tools (apis-downloads)
-
-Tasks
-	•	REST/GraphQL endpoints; GeoJSON/CSV downloads.
-
-Acceptance
-	•	Minimal API spec in docs/api.md + sample responses in examples/api/.
+	•	3D Time Animation (time-3d): CesiumJS prototype + regionated KMZ.
+	•	Semantic Web (semantic-web): Map entities to Wikidata; RDF/OWL dump.
+	•	Modularity (modularity): Define plugin boundaries; doc in docs/architecture.md.
+	•	APIs & Downloads (apis-downloads): REST/GraphQL endpoints; GeoJSON/CSV exports.
 
 ⸻
 
 🧪 Milestone 5 — MCP Integration (m5-mcp)
-
-Issue: Experiment Reports (First Three) (experiments-first-3)
-
-Tasks
-	•	Use mcp/experiments/experiment_template.md.
-	•	Georeferencing, NLP placename extraction, predictive settlement modeling.
-
-Acceptance
-	•	Three completed reports with code, inputs, outputs, and discussion.
-
-⸻
-
-Issue: SOP Documentation (sop-docs)
-
-Tasks
-	•	mcp/sops/georeference_map.md, mcp/sops/add_dataset.md.
-
-Acceptance
-	•	SOPs referenced by CI preflight; make prebuild enforces.
-
-⸻
-
-Issue: Model Cards (model-cards)
-
-Tasks
-	•	mcp/model_cards/nlp_placename.md, mcp/model_cards/change_detection.md.
-
-Acceptance
-	•	Model cards linked from README & docs; includes training data lineage + eval metrics.
-
-⸻
-
-Issue: CI/CD Reproducibility (ci-repro)
-
-Tasks
-	•	STAC validation job + CodeQL in CI; make prebuild path green.
-
-Acceptance
-	•	CI green; docs updated in README.md and docs/ci.md.
+	•	Experiment Reports (experiments-first-3): Georeferencing, NLP placenames, predictive modeling.
+	•	SOPs (sop-docs): Georeference + dataset SOPs; CI enforced.
+	•	Model Cards (model-cards): NLP placenames, change detection; lineage + metrics.
+	•	CI/CD Reproducibility (ci-repro): STAC validate + CodeQL + prebuild path green.
 
 ⸻
 
 🏷 Label taxonomy
 
-data, hydrology, stac, web, story, education, analytics, uncertainty, ontology, reasoning, fractal, 3d, semantic-web, api, mcp, sop, model-card, ci, docs, good-first-issue
-
-Tip: add color & emoji to top labels for fast scanning (e.g., data = teal 📦, analytics = purple 📈).
+data, hydrology, stac, web, story, education, analytics, uncertainty,
+ontology, reasoning, fractal, 3d, semantic-web, api,
+mcp, sop, model-card, ci, docs, good-first-issue
 
 ⸻
 
 ✅ Definitions of Done (DoD)
-	•	STAC-complete: Asset has STAC item + collection, license, bbox, temporal extent, checksums.
-	•	Reproducible: make fetch … stac site builds the same artifacts locally and in CI.
-	•	Provenance: Source metadata (license, source URL, date fetched) is captured in STAC + data/sources/*.json.
-	•	Docs: A short entry in docs/CHANGELOG.md and, if user-visible, docs/whats-new.md.
-	•	Uncertainty: If applicable, include confidence or error fields and UI encoding plan.
-	•	Security: CodeQL & Trivy pass; no secrets in repo; .env.example provided when needed.
+	•	STAC-complete: item + collection, license, bbox, temporal, checksum.
+	•	Reproducible: make fetch … stac site works locally + CI.
+	•	Provenance: source metadata logged in STAC + data/sources/*.json.
+	•	Docs: update docs/CHANGELOG.md / whats-new.md if user-facing.
+	•	Uncertainty: confidence/error fields & UI encoding plan.
+	•	Security: CodeQL & Trivy pass; .env.example included.
 
 ⸻
 
 🤝 Working agreements
-	•	One issue = one clear outcome; checklist tasks map to commits.
-	•	Every PR has a linked Issue + Milestone.
-	•	Schema first: propose JSON schemas for new data before adding files.
-	•	MCP discipline: experiments, SOPs, and model cards live under mcp/** and are referenced from issues.
-	•	Sync cadence: roadmap sync runs on PR (dry-run) and main (apply).
+	•	One issue = one outcome; checklist tasks map to commits.
+	•	Every PR linked to an Issue + Milestone.
+	•	Schema first for new data.
+	•	MCP discipline: experiments, SOPs, model cards under mcp/**.
+	•	Roadmap sync: PR = dry-run, main = apply.
 
 ⸻
 
 🛠 Edit the source roadmap
 
 Edit .github/roadmap/roadmap.yaml; this doc is generated from it.
-
-Example snippet
 
 milestones:
   - key: m1-data
@@ -361,45 +216,40 @@ issues:
     title: Kansas River (KGS) — Source → STAC → Viewer
     milestone: m1-data
     labels: [data, hydrology, stac, web]
-    tasks:
-      - Add sources, collections, items
-      - Wire Makefile hydrology targets
-      - Mirror vectors to web/data and render layers
 
 
 ⸻
 
 🧪 Run the sync locally
 
-# Validate roadmap schema and scripts
 npm ci
 npm run validate
 
-# Dry run (prints plan, no writes)
+# Dry run (no writes)
 npm run sync:dry
 
-# Apply (writes to GitHub; requires a token with repo scope)
+# Apply (requires GH token with repo scope)
 GITHUB_TOKEN=ghp_xxx npm run sync
 
-Workflow triggers
-	•	On PR: dry_run=true (no writes).
-	•	On main: dry_run=false (apply).
-	•	Manual dispatch: override dry_run.
+Triggers:
+	•	PR → dry_run=true (no writes)
+	•	main → dry_run=false (apply)
+	•	Manual dispatch → override dry_run
 
 ⸻
 
 ❓ FAQ / Troubleshooting
+	•	Edited this file but sync says “no changes”?
+→ Edit .github/roadmap/roadmap.yaml instead; re-run sync.
+	•	CI fails STAC validation?
+→ Run make stac-validate locally; fix bbox/datetime/license.
+	•	New dataset not rendering?
+→ Ensure layer in web/app.config.json + layers.json; check assets under web/data/**.
+	•	Where do MCP docs live?
+→ Experiments → mcp/experiments/*.md
+→ SOPs → mcp/sops/*.md
+→ Model cards → mcp/model_cards/*.md
 
-The sync says “no changes” but I edited this doc
-This file is generated; edit .github/roadmap/roadmap.yaml, then re-run the sync.
+⸻
 
-CI fails STAC validation
-Run: make stac-validate locally; fix missing fields (bbox, datetime, license) or invalid JSON.
-
-New dataset isn’t rendering
-Check web/app.config.json and web/layers.json entries exist; verify assets under web/data/**; clear cache or hard refresh.
-
-Where do I put experiments / SOPs / model cards?
-	•	Experiments → mcp/experiments/*.md
-	•	SOPs → mcp/sops/*.md
-	•	Model cards → mcp/model_cards/*.md
+💡 Pro tip: Add a Project board badge here and link this doc from your main README so contributors see milestones, labels, and DoD at a glance.
