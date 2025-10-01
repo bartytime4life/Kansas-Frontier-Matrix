@@ -1,26 +1,30 @@
 <div align="center">
 
-# 🌐 Kansas Geo Timeline — Earth Data Sources
+# 🌐 Kansas-Frontier-Matrix — Earth Data Sources  
+`data/earth/sources/`
 
-Catalog of **Earth-observation and global reference datasets**  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+
+**Mission:** Catalog **Earth-observation and global reference datasets**  
 that provide the **planetary context** for Kansas history.  
 
 These include DEMs, climate normals, satellite imagery, basemaps, and global hazard layers.  
-They **complement Kansas-specific sources** in `data/sources/` and are referenced via STAC metadata.
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
+They **complement Kansas-specific sources** in `data/sources/` and are referenced via **STAC metadata**.  
 
 </div>
 
 ---
 
+## 📈 Lifecycle
+
 ```mermaid
 flowchart TD
   A["Global Earth sources\n(data/earth/sources/*.json)"] --> B["Fetch\n(make fetch)"]
   B --> C["Raw archives\n(data/earth/raw/**)"]
-  C --> D["Processed outputs\n(COG, GeoJSON, MBTiles)\n(data/earth/processed/**)"]
+  C --> D["Processed outputs\n(COG, GeoJSON, PMTiles)\n(data/earth/processed/**)"]
   D --> E["STAC Items\n(data/earth/stac/items/**)"]
   E --> F["Validate\n(make stac-validate)"]
   F --> G["Viewer integration\n(web/app.config.json)"]
@@ -34,13 +38,13 @@ flowchart TD
 🎯 Purpose
 	•	Anchor Kansas datasets within a global geospatial framework.
 	•	Provide baseline Earth data (terrain, imagery, climate, hazards).
-	•	Enable Kansas vs. Plains vs. World comparisons.
-	•	Integrate NASA/NOAA/USGS reference products.
-	•	Maintain provenance for scientific reproducibility (MCP).
+	•	Enable Kansas ↔ Plains ↔ World comparisons.
+	•	Integrate NASA / NOAA / USGS reference products.
+	•	Maintain provenance and scientific reproducibility (MCP principles).
 
 ⸻
 
-📂 Directory layout
+📂 Directory Layout
 
 data/earth/sources/
 ├── dem_global.json       # SRTM, NASADEM, Copernicus DEMs
@@ -52,70 +56,114 @@ data/earth/sources/
 ├── tectonics.json        # Global faults, seismic hazard
 └── README.md
 
+	•	Each *.json conforms to sources_catalog.schema.json.
+	•	Metadata fields include:
+	•	id, title, urls or API endpoints
+	•	spatial (bbox, CRS)
+	•	temporal coverage
+	•	license & attribution
 
 ⸻
 
-🌍 Data domains
+🌍 Data Domains
 
 Terrain & DEM
 	•	SRTM — 30 m global DEM.
-	•	NASADEM / Copernicus DEM — improved 30 m products.
-	•	Used for comparison with Kansas LiDAR DEMs.
+	•	NASADEM / Copernicus DEM — improved global DEMs.
+	•	Provides comparison with Kansas LiDAR DEMs.
 
-Satellite imagery
-	•	Landsat (1972–present) — long-term Earth record.
+Satellite Imagery
+	•	Landsat (1972–present) — long-term record.
 	•	MODIS (2000–present) — daily to 8-day composites.
-	•	Sentinel-2 (2015–present) — 10–20 m resolution, vegetation change.
-	•	Global holdings give context baselines for Kansas subsets.
+	•	Sentinel-2 (2015–present) — 10–20 m resolution.
+	•	Context baselines for Kansas subsets.
 
-Climate & environment
-	•	WorldClim — historical and projected normals.
-	•	ERA5 (ECMWF) — hourly global reanalysis.
+Climate & Environment
+	•	WorldClim — historical & projected normals.
+	•	ERA5 (ECMWF) — hourly reanalysis.
 	•	Daymet — 1 km daily climate (North America).
-	•	NOAA GHCN — global station datasets.
+	•	NOAA GHCN — station datasets.
 
 Hazards
 	•	NASA FIRMS — global fire detections.
 	•	EM-DAT — disaster database.
-	•	USGS ShakeMap / GEM Seismic Hazard — earthquake context.
-	•	GFDRR — global hazard layers (floods, cyclones, landslides).
+	•	USGS ShakeMap / GEM — seismic hazard and events.
+	•	GFDRR — floods, cyclones, landslides.
 
-Geology & tectonics
+Geology & Tectonics
 	•	USGS Global Faults & Folds.
 	•	OneGeology / CGMW tectonic maps.
-	•	Provides geologic backdrop for Kansas seismicity.
+	•	Provides seismic & geologic backdrop for Kansas.
 
 ⸻
 
 🛠️ Integration
-	•	Each .json conforms to sources_catalog.schema.json.
-	•	Metadata includes:
-	•	id, title, urls or API endpoints
-	•	spatial (bbox, CRS)
-	•	temporal (coverage)
-	•	license, attribution
-
-Processing:
-	•	Convert to COGs (rasters) or GeoJSON/PMTiles (vectors).
+	•	Each JSON source descriptor → fetchable + reproducible.
+	•	Processing outputs:
+	•	Rasters → COGs
+	•	Vectors → GeoJSON / PMTiles
 	•	Register in STAC Items under stac/items/earth/.
+	•	Validate with CI (make stac-validate).
+
+⸻
+
+📑 Example Source Descriptor (modis.json)
+
+{
+  "id": "earth_modis",
+  "title": "MODIS Global NDVI (MOD13A3)",
+  "description": "Global MODIS NDVI monthly composites for environmental monitoring, subsettable for Kansas.",
+  "type": "raster",
+  "format": "HDF",
+  "providers": [
+    {
+      "name": "NASA LP DAAC",
+      "roles": ["producer", "licensor"],
+      "url": "https://lpdaac.usgs.gov/"
+    }
+  ],
+  "license": "NASA Data Policy (free & open)",
+  "temporal": {
+    "start": "2000-02-18",
+    "end": null,
+    "resolution": "monthly"
+  },
+  "spatial": {
+    "bbox": [-180, -90, 180, 90],
+    "crs": "EPSG:4326"
+  },
+  "assets": {
+    "source": {
+      "href": "https://e4ftl01.cr.usgs.gov/MOLT/MOD13A3.061/",
+      "type": "application/x-hdf"
+    }
+  },
+  "provenance": {
+    "created": "2025-10-01",
+    "commit": "abc123def456",
+    "checksum:sha256": "placeholder_for_sha256_hash"
+  }
+}
+
 
 ⸻
 
 📝 Notes
-	•	Kansas-centric datasets live under data/sources/.
-	•	data/earth/sources/ is for global context layers only.
-	•	All datasets must include checksums (.sha256) and provenance sidecars.
-	•	Follow MCP reproducibility principles: every source must be documented, validated, and traceable.
+	•	Kansas-centric datasets → data/sources/.
+	•	data/earth/sources/ → global context layers only.
+	•	All datasets must include .sha256 checksums + provenance sidecars.
+	•	Follow MCP: every source must be documented, validated, and reproducible.
 
 ⸻
 
-📚 See also
-	•	data/sources/topo/README.md — Kansas DEM & topo sources.
-	•	data/stac/ — STAC catalog and item registry.
-	•	docs/ — MCP templates and glossary.
+📚 See Also
+	•	data/sources/topo/README.md → Kansas DEM & topo sources.
+	•	data/stac/ → STAC catalog & registry.
+	•	docs/ → MCP templates & glossary.
 
 ⸻
 
-✅ Mission-grade principle: Earth data sources must be standardized, reproducible, and globally contextual,
+✅ Mission Principle
+
+Earth data sources must be standardized, reproducible, and globally contextual,
 anchoring Kansas datasets within the planetary geospatial fabric.
-
