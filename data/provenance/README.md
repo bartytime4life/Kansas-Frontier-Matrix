@@ -1,22 +1,25 @@
 <div align="center">
 
-# 🧾 Kansas Geo Timeline — Data Provenance
+# 🧾 Kansas-Frontier-Matrix — Data Provenance  
+`data/provenance/`
 
-This directory tracks **provenance, lineage, and licensing**  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+
+**Mission:** Track **provenance, lineage, and licensing**  
 for all datasets in the **Kansas Frontier Matrix** knowledge hub.  
 
-It provides a **mission-grade audit trail** of data origins, transformations, and integrity checks.  
-
+This directory provides a **mission-grade audit trail** of dataset origins, transformations, and integrity checks.  
 Provenance is the **backbone of MCP reproducibility**:  
 every file in `data/` must map to a record here and to its corresponding **STAC Item/Collection**.  
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/.pre-commit-config.yaml)
 
 </div>
 
 ---
+
+## 📈 Lifecycle
 
 ```mermaid
 flowchart TD
@@ -34,15 +37,15 @@ flowchart TD
 ⸻
 
 🎯 Purpose
-	•	Guarantee reproducibility → every dataset is traceable from raw → processed → published.
-	•	Maintain lineage → record transformations (e.g., GCP warps, reprojections).
-	•	Track checksums & sizes → ensure file integrity.
-	•	Record licenses → comply with open-data usage.
-	•	Provide audit logs aligned with the Master Coder Protocol (MCP).
+	•	Guarantee reproducibility → every dataset is traceable from raw → processed → published
+	•	Maintain lineage → record transformations (GCP warps, reprojections, clipping, etc.)
+	•	Track checksums & sizes → ensure file integrity
+	•	Record licenses → comply with open-data usage
+	•	Provide audit logs aligned with the Master Coder Protocol (MCP)
 
 ⸻
 
-📂 Directory layout
+📂 Directory Layout
 
 data/provenance/
 ├── registry.json      # Master dataset registry (IDs → URLs, checksums, lineage)
@@ -53,39 +56,38 @@ data/provenance/
 
 ⸻
 
-🔄 Provenance workflow
+🔄 Provenance Workflow
 	1.	Fetch raw data
-	•	Record source URLs, retrieval date, metadata.
-	•	Save unmodified files in data/raw/.
+	•	Record source URLs, retrieval date, metadata
+	•	Save unmodified files in data/raw/
 	2.	Checksums
-	•	Compute SHA256 + file size:
+	•	Compute SHA256 + file size
 
 scripts/gen_sha256.sh data/raw/<file>
 scripts/gen_sha256.sh data/processed/<file>
 
-
-	•	Store in registry.json keyed by dataset ID.
+	•	Store in registry.json keyed by dataset ID
 
 	3.	Process
-	•	Document transformations (reprojection, clipping, OCR, GCPs).
-	•	Record Makefile targets, script parameters, or experiment IDs.
+	•	Document transformations (reprojection, clipping, OCR, GCPs)
+	•	Record Makefile targets, script parameters, or experiment IDs
 	4.	STAC entry
-	•	Add metadata in data/stac/items/ or data/stac/collections/.
-	•	Each Item must link back to provenance (href, checksum).
+	•	Add metadata in data/stac/items/ or data/stac/collections/
+	•	Each Item must link back to provenance (href, checksum)
 	5.	License & attribution
-	•	Record license text in LICENSES.md.
-	•	Note terms (Public Domain, CC-BY, etc.).
+	•	Record license text in LICENSES.md
+	•	Note terms (Public Domain, CC-BY, CC0, etc.)
 
 ⸻
 
-📝 Example registry.json entry
+📑 Example Provenance Entry (registry.json)
 
 {
   "id": "usgs_topo_1894_larned",
   "version": "1.1.0",
   "source_url": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS_15x15_1894_Larned_Geo.tif",
   "retrieved": "2025-09-20",
-  "checksum_sha256": "abc123def456…",
+  "checksum_sha256": "abc123def456...",
   "filesize_bytes": 104857600,
   "license": "public-domain",
   "lineage": [
@@ -99,22 +101,22 @@ scripts/gen_sha256.sh data/processed/<file>
 
 ⸻
 
-📌 Best practices
-	•	Every dataset must have a provenance record (registry + audit if needed).
-	•	Mark uncertain data (OCR, ambiguous features) with a confidence flag.
-	•	Keep audit logs human-readable and long-term accessible.
-	•	Prefer authoritative sources (USGS, NOAA, FEMA, Kansas GIS Hub, KGS).
-	•	Dataset IDs must be stable to avoid breaking STAC/web references.
-	•	Sync registry updates with Makefile pipelines for integrity.
+📌 Best Practices
+	•	Every dataset must have a provenance record (registry + audit if needed)
+	•	Mark uncertain data (OCR, ambiguous features) with a confidence flag
+	•	Keep audit logs human-readable and long-term accessible
+	•	Prefer authoritative sources (USGS, NOAA, FEMA, Kansas GIS Hub, KGS)
+	•	Dataset IDs must be stable to avoid breaking STAC/web references
+	•	Sync registry updates with Makefile pipelines for integrity
 
 ⸻
 
 🔗 Connections
-	•	STAC catalog → Items reference provenance checksums + lineage.
-	•	Makefile workflows → provenance updated after make fetch, make terrain, make stac.
-	•	Web configs → every web layer traces back to provenance.
-	•	Experiments → MCP experiment logs must cite provenance IDs.
-	•	KML exports → KMZ overlays must link back to provenance records.
+	•	STAC catalog → Items reference provenance checksums + lineage
+	•	Makefile workflows → provenance updated after make fetch, make terrain, make stac
+	•	Web configs → every web layer traces back to provenance
+	•	Experiments → MCP experiment logs must cite provenance IDs
+	•	KML exports → KMZ overlays must link back to provenance records
 
 ⸻
 
@@ -126,6 +128,7 @@ scripts/gen_sha256.sh data/processed/<file>
 
 ⸻
 
-✅ Mission-grade principle: All datasets must be auditable, reproducible, and MCP-compliant.
-This directory is the single source of truth for lineage + licensing across the Kansas Frontier Matrix.
+✅ Mission Principle
 
+All datasets must be auditable, reproducible, and MCP-compliant.
+This directory is the single source of truth for lineage + licensing across the Kansas Frontier Matrix.
