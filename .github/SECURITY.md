@@ -34,134 +34,170 @@ coordinating fixes, and practicing **MCP-grade security hygiene**.
 
 ```mermaid
 flowchart TD
-  A["Researcher finds issue"] --> B["🔐 Private report<br/>(security@kansasfrontier.org or GitHub advisory)"]
-  B --> C["⏱️ Acknowledgment<br/>within 72h"]
-  C --> D["🧮 CVSS triage<br/>(severity + scope)"]
-  D --> E["🛠️ Mitigation<br/>(token revoke, artifact quarantine)"]
-  E --> F["🔧 Patch & tests<br/>(backport if needed)"]
-  F --> G["📢 Advisory & release notes<br/>credit researcher unless anonymous"]
+  A["Researcher finds issue"] --> B["🔐 Private report\nsecurity@kansasfrontier.org or GitHub advisory"]
+  B --> C["⏱️ Acknowledgment\nwithin 72h"]
+  C --> D["🧮 CVSS triage\nseverity + scope"]
+  D --> E["🛠️ Mitigation\ntoken revoke · artifact quarantine"]
+  E --> F["🔧 Patch & tests\nbackport if needed"]
+  F --> G["📢 Advisory & release notes\ncredit researcher unless anonymous"]
+````
 
 <!-- END OF MERMAID -->
 
+---
 
+## 📌 Supported Versions
 
-⸻
-
-📌 Supported Versions
-	•	✅ Main branch → security fixes always applied
-	•	⏳ Older tags/branches → may not receive patches
-
-⸻
-
-📨 How to Report
-
-⚠️ Do NOT open a public issue for vulnerabilities.
-
-Preferred channels
-	•	📧 security@kansasfrontier.org
-	•	🔐 Private GitHub advisory
-
-Include details
-	•	Affected files/paths + commit SHA(s)
-	•	Repro steps / PoC (minimal & safe)
-	•	Impact (e.g., RCE, token leak, supply-chain)
-	•	Environment info (OS, Python/Node versions)
-	•	Suggested mitigations (optional)
-
-Response targets
-	•	📨 Acknowledgment → within 72h
-	•	🛠️ Initial triage/mitigation → ≤ 7 days (severity-dependent)
-	•	🔧 Full fix/advisory → prioritized by severity
-
-If your report involves exposed secrets, say so clearly — we will rotate tokens immediately.
-
-⸻
-
-🎯 Scope
-
-In scope
-	•	Repo code: src/, scripts/, web/
-	•	GitHub Actions workflows: .github/workflows/**
-	•	Container files: docker/**, Dockerfile, docker-compose.yml
-	•	Data pipelines, STAC validation, rendering CLIs
-	•	Docs build chain (if exploitable in CI/site builds)
-
-Out of scope
-	•	Dataset content/accuracy (e.g. historical OCR noise)
-	•	Vulnerabilities in upstream deps (report upstream; we patch locally as needed)
-
-⸻
-
-🤝 Safe Harbor (Responsible Testing)
-
-We welcome good-faith research that:
-	•	Avoids privacy violations, data exfiltration, or service disruption
-	•	Respects rate limits (no DoS/flooding)
-	•	Keeps PoCs local/offline (the site is static)
-	•	Does not target third-party services without consent
-
-If you follow these rules, we will not pursue action under law or ToS.
-
-⸻
-
-🧮 Severity (CVSS v3.1 Guidance)
-
-Severity	Examples in repo	Target response
-🔴 Critical	RCE in CLI/scripts; supply-chain takeover	Hotfix ASAP + advisory
-🟠 High	Token leak; path traversal → overwrite	Patch ≤ 7 days
-🟡 Medium	Script injection in docs/build; weak defaults	Patch in next release
-🟢 Low	Non-exploitable hardening gap	Backlog + tracking
-
-
-⸻
-
-🛡️ Current Security Practices
-	•	CI & Scanning
-	•	CodeQL → Python + JS/TS (codeql.yml)
-	•	Trivy → FS/config/image scans (trivy.yml)
-	•	Secret scanning → gitleaks + detect-aws-credentials (secret-scanning.yml)
-	•	Least-Privilege CI
-	•	Minimal workflow permissions
-	•	Concurrency guards to avoid duplicate runs
-	•	Supply-Chain Hygiene
-	•	Pinned base images (docker/)
-	•	.dockerignore / .gitignore exclude unsafe artifacts
-	•	JSON Schema validation for configs (legends, sources, categories)
-	•	Dependabot (daily) for Actions, npm, pip, Docker
-	•	Reproducibility
-	•	Deterministic Make targets (make prebuild, make stac-validate)
-	•	SHA-256 checksums + metadata sidecars for artifacts
-	•	Optional SBOM workflow included in advisories (if enabled)
-
-⸻
-
-🔧 Maintainer Response Flow
-	1.	Acknowledge → CVSS assessment (CVE if applicable)
-	2.	Mitigate → revoke tokens, quarantine artifacts, disable risky jobs
-	3.	Fix → patch + tests, hardening, backport if needed
-	4.	Disclose → GitHub advisory + release notes; credit researcher (unless anonymous)
-
-⸻
-
-📢 Coordinated Disclosure
-	•	Keep details private until fix is released
-	•	Publish advisory + release notes after patch
-	•	Researchers credited unless anonymity requested
-
-⸻
-
-📬 Contact
-	•	📨 Sensitive reports → security@kansasfrontier.org or private advisory
-	•	💬 General questions → Discussions or Issues
-
-🙏 Thank you for helping keep Kansas-Frontier-Matrix safe for everyone.
+* ✅ `main` branch — security fixes always applied
+* ⏳ Older tags/branches — patches not guaranteed
 
 ---
 
-### Notes on the badges
+## 📨 How to Report
 
-- **CodeQL / Trivy / Secret Scanning**: These are standard GHA badges that render from your workflows. If the workflow filenames differ, change `codeql.yml`, `trivy.yml`, `secret-scanning.yml` accordingly.
-- **Dependabot Updates**: Indicates that automated dependency updates are enabled.
-- **Dependabot Alerts**: Direct link to your repo’s Security tab; GitHub doesn’t expose a live count badge for private alerts, so this uses a labeled link.
-- **OpenSSF Scorecard**: This badge auto-updates via the Scorecards service. If you haven’t run Scorecard yet, the badge will still render but may show a baseline; enable GitHub’s **Scorecards** action to keep it fresh.
-- **Optional badges (commented)**: Un-comment when you enable OSV scanning, SBOM generation, etc.
+⚠️ **Do NOT open a public issue for vulnerabilities.**
+
+**Preferred channels**
+
+* 📧 `security@kansasfrontier.org`
+* 🔐 Private GitHub security advisory
+
+**Include details**
+
+* Affected files/paths + commit SHA(s)
+* Repro steps / PoC (minimal & safe)
+* Impact (e.g., RCE, token leak, supply-chain)
+* Environment info (OS, Python/Node versions)
+* Suggested mitigations (optional)
+
+**Response targets**
+
+* 📨 Acknowledgment → **within 72h**
+* 🛠️ Initial triage/mitigation → **≤ 7 days** (severity-dependent)
+* 🔧 Full fix/advisory → prioritized by severity
+
+If your report involves **exposed secrets**, say so clearly — we will **rotate tokens immediately**.
+
+---
+
+## 🎯 Scope
+
+**In scope**
+
+* Repository code: `src/`, `scripts/`, `web/`
+* GitHub Actions: `.github/workflows/**`
+* Container files: `docker/**`, `Dockerfile`, `docker-compose.yml`
+* Data pipelines, STAC validation, render CLIs
+* Docs build chain (where exploitable in CI/site builds)
+
+**Out of scope**
+
+* Dataset content/accuracy (e.g., historical OCR noise)
+* Vulnerabilities in upstream dependencies (report upstream; we patch/pin locally as needed)
+
+---
+
+## 🤝 Safe Harbor (Responsible Testing)
+
+We welcome good-faith research that:
+
+* Avoids privacy violations, data exfiltration, or service disruption
+* Respects rate limits (no DoS/flooding)
+* Keeps PoCs local/offline (the site is static)
+* Does **not** target third-party services without consent
+
+If you follow these rules, we will not pursue action under law or ToS.
+
+---
+
+## 🧮 Severity (CVSS v3.1 Guidance)
+
+|    Severity | Examples in repo                              | Target response        |
+| ----------: | --------------------------------------------- | ---------------------- |
+| 🔴 Critical | RCE in CLI/scripts; supply-chain takeover     | Hotfix ASAP + advisory |
+|     🟠 High | Token leak; path traversal → overwrite        | Patch ≤ 7 days         |
+|   🟡 Medium | Script injection in docs/build; weak defaults | Patch in next release  |
+|      🟢 Low | Non-exploitable hardening gap                 | Backlog + tracking     |
+
+---
+
+## 🛡️ Current Security Practices
+
+**CI & Scanning**
+
+* CodeQL → Python + JS/TS (`codeql.yml`)
+* Trivy → FS/config/image scans (`trivy.yml`)
+* Secret scanning → `gitleaks`/credential detectors (`secret-scanning.yml`)
+
+**Least-Privilege CI**
+
+* Minimal workflow permissions
+* Concurrency guards to prevent duplicate runs
+
+**Supply-Chain Hygiene**
+
+* Pinned base images (`docker/`)
+* `.dockerignore` / `.gitignore` exclude unsafe artifacts
+* JSON Schema validation for configs (legends, sources, categories)
+* Dependabot (daily) for Actions, npm, pip, Docker
+
+**Reproducibility**
+
+* Deterministic Make targets (`make prebuild`, `make stac-validate`)
+* SHA-256 checksums + metadata sidecars for artifacts
+* Optional SBOM workflow referenced in advisories (if enabled)
+
+---
+
+## 🔧 Maintainer Response Flow
+
+1. **Acknowledge** → CVSS assessment (CVE if applicable)
+2. **Mitigate** → revoke tokens, quarantine artifacts, disable risky jobs
+3. **Fix** → patch + tests, hardening, backport if needed
+4. **Disclose** → GitHub advisory + release notes; credit researcher (unless anonymous)
+
+---
+
+## 📢 Coordinated Disclosure
+
+* Keep details private until a fix is released
+* Publish advisory + release notes after patch
+* Researchers credited unless anonymity requested
+
+---
+
+## 🧩 Snippets (for Maintainers)
+
+**Minimal workflow permissions & concurrency**
+
+```yaml
+permissions:
+  contents: read
+  actions: none
+  checks: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
+**Example Dependabot group (npm/web)**
+
+```yaml
+- package-ecosystem: npm
+  directory: /web
+  schedule:
+    interval: weekly
+  groups:
+    minor-and-patch:
+      patterns: ["*"]
+      update-types: ["minor", "patch"]
+```
+
+---
+
+## 📬 Contact
+
+* 📨 Sensitive reports → `security@kansasfrontier.org` or private advisory
+* 💬 General questions → Discussions or Issues
+
+🙏 Thank you for helping keep Kansas-Frontier-Matrix safe for everyone.
