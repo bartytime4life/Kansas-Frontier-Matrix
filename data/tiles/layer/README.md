@@ -1,13 +1,21 @@
 <div align="center">
 
-# 🗺️ Kansas-Frontier-Matrix — Tile Layer (`data/tiles/layer/`)
+# 🗺️ Kansas-Frontier-Matrix — Tile Layer  
+`data/tiles/layer/`
 
 **Mission:** Temporary build space for **ephemeral tile artifacts**  
 (raster pyramids or vector PMTiles) for a **single map layer**.  
-Supports **local preview & staging** before publishing reproducible outputs.
+Supports **local preview & staging** before publishing reproducible outputs.  
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+[![Docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../../../.github/workflows/docs.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://app.codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 📌 **Ignored by Git** (`.gitignore`), except this `README.md`.  
 📌 Final, reproducible tiles must move to  
@@ -124,6 +132,8 @@ flowchart TD
 
 ⸻
 
-✅ Summary:
-This folder = temporary build space for one layer.
-Final reproducible artifacts → LFS-tracked data/derivatives/tiles/ or web/tiles/.
+✦ Summary
+
+data/tiles/layer/ is a temporary build space for one map layer.
+Final reproducible artifacts must move to LFS-tracked data/derivatives/tiles/ or web/tiles/,
+ensuring tiles are previewed locally, published reproducibly, and registered in STAC.
