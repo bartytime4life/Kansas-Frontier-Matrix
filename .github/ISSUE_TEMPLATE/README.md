@@ -9,7 +9,10 @@ Templates auto-label and guide contributors so triage is fast,
 and artifacts always tie back to STAC, schemas, or Make targets.  
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../.github/workflows/stac-badges.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)  
+[![Labels Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/labels.yml/badge.svg)](../../.github/workflows/labels.yml)  
+[![PR Labeler](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pr-labeler.yml/badge.svg)](../../.github/workflows/pr-labeler.yml)  
+[![Roadmap Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/roadmap.yml/badge.svg)](../../.github/workflows/roadmap.yml)  
 
 </div>
 
@@ -26,7 +29,7 @@ and artifacts always tie back to STAC, schemas, or Make targets.
 - **[`experiment_report.md`](./experiment_report.md)** — deterministic MCP experiment log  
   _Labels:_ `mcp`, `experiment`, `reproducibility` · _Includes:_ hypothesis, SOP/commands, env freeze, artifacts  
 
-> Configured by [`config.yml`](./config.yml). If none fit, open a minimal **bug** or **data** issue.
+Configured by [`config.yml`](./config.yml). If none fit, open a minimal **bug** or **data** issue.
 
 ---
 
@@ -47,33 +50,33 @@ flowchart TD
   B --> C["Classification\nadd domain + priority labels"]
   C --> D["Assignment\nCODEOWNERS / @-mentions"]
   D --> E["Linkage\nmilestones + related PRs/issues"]
-  E --> F["Verification\n(STAC refs, repro steps, CI links)"]
+  E --> F["Verification\nSTAC refs · repro steps · CI links"]
   F --> G["Closure\nonly after validation passes"]
+````
 
 <!-- END OF MERMAID -->
 
+---
 
+## 🔖 Label Lifecycle
 
-⸻
-
-🔖 Label Lifecycle
-
+```mermaid
 flowchart LR
-  L0["Template labels\n(bug, data, mcp, …)"] --> L1["Roadmap sync\n(labels.yml / roadmap.yaml)"]
+  L0["Template labels\n(bug, data, mcp, …)"] --> L1["Roadmap sync\nlabels.yml / roadmap.yaml"]
   L1 --> L2["Triage labeling\n(domain, priority:p1–p3)"]
-  L2 --> L3["Milestone\n(roadmap stage)"]
-  L3 --> L4["Automation\n(badges, reports)"]
-  L4 --> L5["Resolution\n(close)"]
-  L5 --> L6["Metrics\n(review coverage & velocity)"]
+  L2 --> L3["Milestone\nroadmap stage"]
+  L3 --> L4["Automation\nbadges · reports"]
+  L4 --> L5["Resolution\nclose"]
+  L5 --> L6["Metrics\ncoverage · velocity"]
+```
 
 <!-- END OF MERMAID -->
 
+---
 
+## 📑 Example: `labels.yml`
 
-⸻
-
-📑 Example: labels.yml
-
+```yaml
 # .github/labels.yml
 - name: bug
   color: d73a4a
@@ -93,13 +96,15 @@ flowchart LR
 - name: priority:p1
   color: b60205
   description: Highest priority / blocking
+```
 
-This file allows automation or scripts (scripts/sync-labels.js) to create/sync labels consistently.
+Automation (`scripts/sync-labels.js`) ensures labels stay consistent.
 
-⸻
+---
 
-📑 Example: roadmap.yaml
+## 📑 Example: `roadmap.yaml`
 
+```yaml
 # .github/roadmap/roadmap.yaml
 milestones:
   - title: "M1: Basemaps & DEM"
@@ -114,40 +119,46 @@ milestones:
   - title: "M4: Hazards & Climate"
     description: "Tornadoes, droughts, paleoclimate; linked to settlement events."
     labels: ["hazards", "climate", "mcp"]
+```
 
-This roadmap drives milestone auto-assignment and helps organize project phases.
+Roadmap milestones auto-assign issues and structure project phases.
 
-⸻
+---
 
-♻️ Reproducibility Expectations
+## ♻️ Reproducibility Expectations
 
 Always include:
 
+```bash
 # Env block
 python -V
 gdalinfo --version || true
 node -v || true; npm -v || true
+```
 
-	•	Provenance: link STAC items/collections or data/sources/*.json
-	•	Checks (best effort):
+* **Provenance:** link STAC items/collections or `data/sources/*.json`
+* **Checks (best effort):**
 
+```bash
 # STAC validation
 kgt validate-stac stac/items --no-strict || true
 
 # JSON quick check
 jq -e 'type=="object"' path/to/*.json
+```
 
+---
 
-⸻
+## ✅ Good Practice
 
-✅ Good Practice
-	•	Concise title + outcome-oriented summary
-	•	Bugs → minimal, reliable, reproducible steps
-	•	Data → license first, then CRS/extent/time + STAC stub
-	•	Experiments → define success criteria up front
+* Concise title + outcome-oriented summary
+* **Bugs** → minimal, reliable, reproducible steps
+* **Data** → license first, then CRS/extent/time + STAC stub
+* **Experiments** → define success criteria up front
 
-⸻
+---
 
-✅ Summary:
-.github/ISSUE_TEMPLATE/ ensures all issues are MCP-grade — reproducible, provenance-linked, and triage-ready.
-Labels and milestones are synchronized via labels.yml + roadmap.yaml, closing the loop between templates, automation, and roadmap governance.
+## ✅ Summary
+
+`.github/ISSUE_TEMPLATE/` ensures all issues are **MCP-grade** — reproducible, provenance-linked, and triage-ready.
+Labels and milestones are synchronized via `labels.yml` + `roadmap.yaml`, closing the loop between templates, automation, and roadmap governance.
