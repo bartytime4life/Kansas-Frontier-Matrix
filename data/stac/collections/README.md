@@ -5,11 +5,11 @@
 
 **Mission:** Collections are the **containers** of the STAC catalog.  
 They define shared metadata — **spatial/temporal extent, providers, license, keywords** —  
-and group related STAC Items into discoverable, reproducible sets.  
+and group related STAC Items into **discoverable, reproducible sets**.  
 
-📌 Collections link **upward** to the **root catalog** (`../catalog.json`).  
-📌 Collections link **downward** to their STAC **Items** (`../items/<collection>/*.json`).  
-📌 Collections provide **context, grouping, and searchability** across the Kansas Frontier Matrix ecosystem.  
+📌 **Upward:** Collections link to the **root catalog** (`../catalog.json`).  
+📌 **Downward:** Collections link to their STAC **Items** (`../items/<collection>/*.json`).  
+📌 **Purpose:** Provide **context, grouping, and searchability** across the Kansas-Frontier-Matrix ecosystem.  
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
@@ -27,17 +27,17 @@ and group related STAC Items into discoverable, reproducible sets.
 
 ## 📂 Contents
 
-- [Structure](#structure)  
-- [Authoring Checklist](#authoring-checklist)  
-- [Template Collection](#template-collection)  
-- [Integration Points](#integration-points)  
-- [Validation](#validation)  
-- [Common Pitfalls](#common-pitfalls)  
-- [TL;DR](#tldr)  
+- [Structure](#-structure)  
+- [Authoring Checklist](#-authoring-checklist)  
+- [Template Collection](#-template-collection)  
+- [Integration Points](#-integration-points)  
+- [Validation](#-validation)  
+- [Common Pitfalls](#-common-pitfalls)  
+- [TL;DR](#-tldr)  
 
 ---
 
-## 🏗️ Structure
+## 🏗 Structure
 
 ```text
 data/stac/collections/
@@ -46,9 +46,9 @@ data/stac/collections/
 ├── overlays.json     # DEM/map overlays, soils, styled rasters
 └── vectors.json      # Vectors (treaties, trails, towns, railroads…)
 
-../catalog.json → root catalog that references these collections.  
-../items/<collection>/*.json → STAC Items grouped by these collections.  
-*.json → must follow STAC 1.0.0 Collection spec.  
+../catalog.json              → root catalog that references these collections  
+../items/<collection>/*.json → STAC Items grouped by these collections  
+*.json                       → must follow STAC 1.0.0 Collection spec  
 
 
 ⸻
@@ -80,7 +80,8 @@ data/stac/collections/
 
 
 	6.	License
-	•	Use SPDX identifiers ("CC-BY-4.0", "PDDL-1.0", "public-domain").
+	•	Use SPDX identifiers.
+	•	Examples: "CC-BY-4.0", "PDDL-1.0", "public-domain".
 	7.	Links
 	•	Every Collection must include:
 	•	rel: root → back to ../catalog.json
@@ -126,7 +127,7 @@ data/stac/collections/
 	•	Provenance: Collections link back to data/provenance/registry.json.
 	•	Web Viewer: Collections inform grouping in web/config/layers.schema.json.
 	•	Makefile: make stac and make stac-validate refresh and check collections.
-	•	Experiments (MCP): logs in docs/experiments/** cite Collection IDs.
+	•	Experiments (MCP): docs/experiments/** cite Collection IDs for reproducibility.
 
 ⸻
 
@@ -149,16 +150,16 @@ CI
 ⚠️ Common Pitfalls
 	•	❌ Missing extent → every Collection must declare both spatial and temporal.
 	•	❌ Keywords omitted → reduces discoverability.
-	•	❌ No provider attribution → always credit producers/licensors.
+	•	❌ Missing provider attribution → always credit producers/licensors.
 	•	❌ Item links missing → all contained Items must be explicitly linked.
-	•	❌ Wrong license string → must be SPDX or "public-domain".
+	•	❌ Wrong license string → must be SPDX-compliant or "public-domain".
 
 ⸻
 
 TL;DR
 	•	Collections = grouped metadata for Items.
 	•	Must include ID, title, description, license, extent, keywords, providers.
-	•	Must link back to root catalog and forward to Items.
+	•	Must link back to root and forward to Items.
 	•	Validate with pre-commit or CI before merge.
 
 ✅ Collections ensure Items are grouped, discoverable, attributed, and reproducible.
