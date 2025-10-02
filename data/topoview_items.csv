@@ -1,3 +1,0 @@
-sheet,quad,state,year,scale,product,url,out_name
-Larned,Larned,KS,1894,1:125000,GeoTIFF,https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/GeoTIFF/KS/USGS_15x15_1894_Larned_Geo.tif,usgs_topo_larned_1894.tif
-Larned,Larned,KS,1894,1:125000,KMZ,https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/HistoricalTopo/KMZ/KS/USGS_15x15_1894_Larned.kmz,usgs_topo_larned_1894.kmz
