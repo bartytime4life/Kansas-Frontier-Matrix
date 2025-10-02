@@ -1,17 +1,24 @@
 <div align="center">
 
-# 🗺️ Kansas-Frontier-Matrix — Web Map Tiles (`data/tiles/`)
+# 🗺️ Kansas-Frontier-Matrix — Web Map Tiles  
+`data/tiles/`
 
 **Mission:** Provide **ephemeral, build-from-source tile outputs** (raster + vector)  
 for local preview or staging before publishing.  
 
-📌 This directory is **ignored by Git** (see `data/.gitignore`)  
-📌 Final reproducible tiles → store in `data/derivatives/tiles/` or `web/tiles/` via **Git LFS**  
-📌 Guarantees **traceability + reproducibility** by requiring provenance sidecars for published tiles  
+📌 This directory is **ignored by Git** (see `data/.gitignore`).  
+📌 Final reproducible tiles → store in `data/derivatives/tiles/` or `web/tiles/` via **Git LFS**.  
+📌 Guarantees **traceability + reproducibility** by requiring provenance sidecars for published tiles.  
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+[![Docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../../../.github/workflows/docs.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://app.codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 </div>
 
@@ -19,24 +26,25 @@ for local preview or staging before publishing.
 
 ## 🎯 Purpose
 
-- 🗺️ Hold **temporary tile pyramids** (z/x/y or PMTiles) for local map previews.  
-- 🔄 Support quick testing of raster & vector layers before final publishing.  
-- 🚫 **Do not version raw tiles here** → move to derivatives or `web/tiles/` for LFS-tracked publishing.  
+- 🗺️ Hold **temporary tile pyramids** (`z/x/y` or PMTiles) for local map previews.  
+- 🔄 Support quick testing of raster & vector layers before publishing.  
+- 🚫 **Do not version raw tiles here** → publish to `data/derivatives/tiles/` or `web/tiles/` with Git LFS.  
 
 ---
 
 ## 📂 Directory Layout
 
 ```text
-[data/tiles/]
+data/tiles/
 ├── <layer>/            # z/x/y pyramid for local preview
 │   └── {z}/{x}/{y}.png
 └── <layer>.pmtiles     # single-file alternative (preferred for publishing)
 
 Examples:
-	•	hillshade_2018_2020/…
-	•	usgs_topo_larned_1894/…
-	•	railroads_1900.pmtiles
+  • hillshade_2018_2020/…
+  • usgs_topo_larned_1894/…
+  • railroads_1900.pmtiles
+
 
 ⸻
 
@@ -133,32 +141,32 @@ PMTiles (preferred)
 	•	data/derivatives/tiles/*.pmtiles
 	•	web/tiles/*.pmtiles
 
-.gitattributes routes *.pmtiles, *.mbtiles, *.pbf → Git LFS.
+.gitattributes ensures *.pmtiles, *.mbtiles, *.pbf are tracked via Git LFS.
 
 ⸻
 
 🚀 Publishing
-	•	Web app: move .pmtiles → web/tiles/ and reference in MapLibre configs (pmtiles:// URLs).
-	•	GitHub Releases: attach .pmtiles + .sha256 as immutable assets.
-	•	Cloud storage (S3/GCS): upload and reference with HTTPS URLs.
-	•	STAC Items should include links to PMTiles artifacts as "roles": ["tiles"].
+	•	Web app: Move .pmtiles → web/tiles/ and reference in MapLibre configs (pmtiles:// URLs).
+	•	GitHub Releases: Attach .pmtiles + .sha256 as immutable assets.
+	•	Cloud storage (S3/GCS): Upload and reference with HTTPS URLs.
+	•	STAC Items: Must include links to PMTiles artifacts with "roles": ["tiles"].
 
 ⸻
 
 🛠 Suggested Makefile Targets
 
 tile-raster:
-\tgdal2tiles.py -z 5-14 -r bilinear -s EPSG:3857 -w none \
-\t\tdata/processed/dem/overlays/ks_1m_dem_2018_hillshade.tif \
-\t\tdata/tiles/hillshade_2018
+	gdal2tiles.py -z 5-14 -r bilinear -s EPSG:3857 -w none \
+		data/processed/dem/overlays/ks_1m_dem_2018_hillshade.tif \
+		data/tiles/hillshade_2018
 
 tile-vector:
-\ttippecanoe -o data/tiles/railroads_1900.mbtiles -zg -Z5 -B5 --layer=railroads_1900 \
-\t\tdata/processed/vectors/ks_railroads.json
-\tpmtiles convert data/tiles/railroads_1900.mbtiles data/tiles/railroads_1900.pmtiles
+	tippecanoe -o data/tiles/railroads_1900.mbtiles -zg -Z5 -B5 --layer=railroads_1900 \
+		data/processed/vectors/ks_railroads.json
+	pmtiles convert data/tiles/railroads_1900.mbtiles data/tiles/railroads_1900.pmtiles
 
 tile-clean:
-\trm -rf data/tiles/*
+	rm -rf data/tiles/*
 
 .PHONY: tile-raster tile-vector tile-clean
 
@@ -172,5 +180,8 @@ tile-clean:
 
 ⸻
 
-✅ This folder is for temporary tile builds only.
+✦ Summary
+
+data/tiles/ is for temporary, build-from-source tile outputs only.
 Final distributable tiles belong in data/derivatives/tiles/ or web/tiles/, tracked with LFS and registered in STAC.
+This ensures tiles are ephemeral for preview, permanent for publishing, and fully reproducible.
