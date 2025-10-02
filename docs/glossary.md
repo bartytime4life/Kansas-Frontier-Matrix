@@ -1,98 +1,121 @@
-# Glossary — Kansas Frontier Matrix (MCP Standard)
+<div align="center">
 
-This glossary provides **canonical definitions** for cross-disciplinary terms used in the  
-Kansas Frontier Matrix project. It unifies historical, cartographic, geological, archaeological,  
-and computational vocabularies to ensure clarity across experiments, datasets, and workflows.
+# 📖 Glossary — Kansas Frontier Matrix (MCP Standard)
 
----
+**Mission:** Provide **canonical definitions** for cross-disciplinary terms used in the  
+Kansas Frontier Matrix project. This glossary unifies historical, cartographic, geological, archaeological,  
+and computational vocabularies to ensure clarity across experiments, datasets, pipelines, and workflows.  
 
-## Core Scientific & MCP Terms
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)  
+[![Coverage](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix/branch/main/graph/badge.svg)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20+%20OWL--Time-purple)](https://www.cidoc-crm.org/)  
+[![STAC](https://img.shields.io/badge/STAC-1.0.0-blue)](https://stacspec.org/)  
+[![Simulation](https://img.shields.io/badge/Simulation-NASA--grade-green)](./templates/experiment.md)  
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)  
 
-- **Experiment (MCP)** — A structured research activity documented with Problem, Hypothesis, Method,  
-  Variables, Data, Results, and Conclusion. Ensures reproducibility and transparency:contentReference[oaicite:4]{index=4}.  
-- **Hypothesis** — A testable prediction framed as *If X, then Y*. Central to MCP experiment design:contentReference[oaicite:5]{index=5}.  
-- **Independent Variable (IV)** — The factor manipulated in an experiment.  
-- **Dependent Variable (DV)** — The factor measured in response to IV changes.  
-- **Control Variable** — Constant factors held steady to reduce bias or confounding effects.  
-- **Reproducibility** — Ability for an experiment to be independently repeated with the same results,  
-  requiring documented methods, datasets, and configurations:contentReference[oaicite:6]{index=6}.  
-- **Uncertainty** — Degree of error or variability in measurement, interpretation, or model output:contentReference[oaicite:7]{index=7}.  
-
----
-
-## Historical & Archival Terms
-
-- **Primary Source** — Contemporary record of an event (e.g., diaries, treaties, maps):contentReference[oaicite:8]{index=8}.  
-- **Secondary Source** — Later interpretation of events (e.g., history books, newspaper retrospectives).  
-- **Oral History** — Spoken accounts passed down, often Indigenous or community narratives:contentReference[oaicite:9]{index=9}.  
-- **Treaty Boundary** — Official demarcation of land agreements between the U.S. and Native tribes:contentReference[oaicite:10]{index=10}.  
-- **Archival Document** — Digitized or scanned source (letters, journals, legal deeds) ingested into the Knowledge Hub:contentReference[oaicite:11]{index=11}.  
+</div>
 
 ---
 
-## Cartographic & GIS Terms
+## 🔤 Alphabetical Quick Index
 
-- **Cartography** — Science and art of map-making; abstraction of geographic reality via symbology,  
-  projection, and scale:contentReference[oaicite:12]{index=12}.  
-- **Georeferencing** — Aligning scanned maps or images to a coordinate system for GIS use.  
-- **STAC (SpatioTemporal Asset Catalog)** — JSON-based standard describing geospatial datasets with  
-  metadata (spatial extent, temporal coverage, provenance):contentReference[oaicite:13]{index=13}.  
-- **COG (Cloud-Optimized GeoTIFF)** — Raster format optimized for web delivery and tiled access:contentReference[oaicite:14]{index=14}.  
+<!-- INDEX_START -->
+<!-- INDEX_END -->
+
+> ⚙️ The A–Z index above is **auto-generated** by `scripts/update_glossary_index.py`.  
+> Do not edit between the markers; run `make update-glossary-index` to refresh.
+
+---
+
+## 📑 Core Scientific & MCP Terms
+- **Experiment (MCP)** — Structured activity with **Problem, Hypothesis, Method, Variables, Data, Results, Conclusion**. Ensures **reproducibility and transparency**.  
+- **Hypothesis** — Testable prediction framed as *If X, then Y*.  
+- **Independent Variable (IV)** — Manipulated factor.  
+- **Dependent Variable (DV)** — Observed/response factor.  
+- **Control Variable** — Held constant to reduce bias and confounding.  
+- **Reproducibility** — Ability to replicate results with the same methods, data, and configs.  
+- **Uncertainty** — Degree of error/variability in measurement, interpretation, or model output.  
+
+---
+
+## 📜 Historical & Archival Terms
+- **Primary Source** — Contemporary record of an event (e.g., diaries, treaties, maps).  
+- **Secondary Source** — Interpretation produced later (e.g., history books, retrospectives).  
+- **Oral History** — Indigenous/community narratives preserved and shared through speech.  
+- **Treaty Boundary** — Legal demarcation of land agreements between the U.S. and Native tribes.  
+- **Archival Document** — Digitized/ingested letters, deeds, journals, plats, or maps used by the Knowledge Hub.  
+
+---
+
+## 🗺️ Cartographic & GIS Terms
+- **Cartography** — Science & art of map-making (scale, projection, symbology, generalization).  
+- **Georeferencing** — Aligning scans or imagery to a coordinate system for GIS use.  
+- **STAC (SpatioTemporal Asset Catalog)** — JSON metadata standard describing geospatial datasets (spatiotemporal extent, provenance).  
+- **COG (Cloud-Optimized GeoTIFF)** — Raster format optimized for HTTP range requests and tiled access on the web.  
 - **Vector Data** — Points, lines, polygons representing discrete features (towns, rivers, parcels).  
-- **Raster Data** — Grid-based data (elevation models, scanned imagery, land cover).  
-- **DEM (Digital Elevation Model)** — Raster of terrain elevation, often LIDAR-derived:contentReference[oaicite:15]{index=15}.  
-- **Hillshade** — Shaded relief visualization derived from DEMs to show terrain features.  
+- **Raster Data** — Grid-based data (DEM, landcover, scanned imagery).  
+- **DEM (Digital Elevation Model)** — Raster of terrain elevation (often LiDAR-derived).  
+- **Hillshade** — Shaded-relief visualization derived from DEMs to highlight terrain.  
 
 ---
 
-## Geological & Environmental Terms
-
-- **Stratigraphy** — Study of layered sediments/rocks to reconstruct Earth or site history:contentReference[oaicite:16]{index=16}.  
-- **Uniformitarianism** — Geological principle that present-day processes operated the same way in the past:contentReference[oaicite:17]{index=17}.  
-- **Paleoclimate Proxy** — Natural record (tree rings, pollen, cores, isotopes) used to infer past climate:contentReference[oaicite:18]{index=18}.  
-- **Alluvial Soil** — Sediment deposited by rivers; fertile ground often linked to settlement patterns.  
-- **Erosion Model** — Computational tool simulating soil loss (e.g., Kansas Daily Erosion Project):contentReference[oaicite:19]{index=19}.  
-- **Core Sample** — Cylindrical section of earth extracted for geological and paleoenvironmental analysis:contentReference[oaicite:20]{index=20}.  
-
----
-
-## Archaeological Terms
-
-- **Excavation Unit** — Defined square or trench systematically dug during fieldwork:contentReference[oaicite:21]{index=21}.  
-- **Stratum (plural: strata)** — A distinct soil or cultural layer in archaeological context:contentReference[oaicite:22]{index=22}.  
-- **Provenience** — Exact 3D location of an artifact within an excavation:contentReference[oaicite:23]{index=23}.  
-- **Context** — Association of finds within a layer, critical for interpretation.  
-- **Harris Matrix** — Diagram showing stratigraphic relationships of archaeological layers:contentReference[oaicite:24]{index=24}.  
-- **Radiocarbon Dating (C-14)** — Method for determining age of organic remains up to ~50,000 years:contentReference[oaicite:25]{index=25}.  
-- **Dendrochronology** — Dating via tree-ring analysis; also yields climate signals:contentReference[oaicite:26]{index=26}.  
+## 🌍 Geological & Environmental Terms
+- **Stratigraphy** — Study of layered sediments/rocks to reconstruct Earth or site history.  
+- **Uniformitarianism** — Principle that present-day geological processes also operated in the past.  
+- **Paleoclimate Proxy** — Natural record (tree rings, pollen, cores, isotopes) used to infer past climates.  
+- **Alluvial Soil** — River-deposited sediment; often fertile and settlement-associated.  
+- **Erosion Model** — Computational tool simulating soil loss (e.g., hillslope or watershed erosion).  
+- **Core Sample** — Cylindrical section extracted for geological/paleoenvironmental analysis.  
 
 ---
 
-## AI, Data, and Modeling Terms
-
-- **Knowledge Graph** — Graph database of entities (People, Places, Events, Documents) and their relationships,  
-  used as the core of the Kansas Frontier Matrix:contentReference[oaicite:27]{index=27}.  
-- **Entity Recognition (NER)** — AI process of extracting people, places, dates from unstructured text:contentReference[oaicite:28]{index=28}.  
-- **Entity Linking** — Aligning extracted text with canonical entries in the knowledge graph (e.g., “Ft. Leavenworth” → “Fort Leavenworth, KS”):contentReference[oaicite:29]{index=29}.  
-- **Geocoding** — Converting place names into geographic coordinates:contentReference[oaicite:30]{index=30}.  
-- **Summarization (AI)** — Condensing long historical text into concise descriptions:contentReference[oaicite:31]{index=31}.  
-- **Simulation** — Computational model of processes over time (deterministic or stochastic):contentReference[oaicite:32]{index=32}.  
-- **Agent-Based Model (ABM)** — Simulation of individuals/agents to observe emergent system behavior:contentReference[oaicite:33]{index=33}.  
-- **System Dynamics (SD)** — Aggregate modeling of stocks and flows using differential equations:contentReference[oaicite:34]{index=34}.  
-- **Hybrid Modeling** — Integration of multiple simulation paradigms to capture multi-scale processes:contentReference[oaicite:35]{index=35}.  
+## 🏺 Archaeological Terms
+- **Excavation Unit** — Defined trench/square systematically dug during fieldwork.  
+- **Stratum (plural: strata)** — Distinct soil or cultural layer in archaeological context.  
+- **Provenience** — Exact **3D** location of an artifact within an excavation.  
+- **Context** — Association of finds within a layer; critical for interpretation.  
+- **Harris Matrix** — Diagram showing stratigraphic relationships of archaeological layers.  
+- **Radiocarbon Dating (C-14)** — Method for dating organic remains up to ~50,000 years.  
+- **Dendrochronology** — Tree-ring dating; also yields climate signals.  
 
 ---
 
-## Kansas-Specific Terms
+## 🤖 AI, Data, and Modeling Terms
+- **Knowledge Graph** — Graph database of entities (**People, Places, Events, Documents**) and their relationships; core of the KFM system.  
+- **Entity Recognition (NER)** — AI process that extracts people, places, dates from unstructured text.  
+- **Entity Linking** — Aligns extracted mentions with canonical graph entries (e.g., “Ft. Leavenworth” → “Fort Leavenworth, KS”).  
+- **Geocoding** — Converts place names to geographic coordinates.  
+- **Summarization (AI)** — Condenses long historical text into concise descriptions.  
+- **Simulation** — Computational model of processes/events (deterministic or stochastic).  
+- **Agent-Based Model (ABM)** — Simulation of individual agents to observe emergent behavior.  
+- **System Dynamics (SD)** — Aggregate modeling of stocks/flows via differential equations.  
+- **Hybrid Modeling** — Integrates multiple paradigms (e.g., ABM + SD) to capture multi-scale processes.  
 
-- **PLSS (Public Land Survey System)** — Grid system dividing Kansas into townships, ranges, and sections:contentReference[oaicite:36]{index=36}.  
-- **Homestead Act** — U.S. legislation (1862) granting land, shaping Kansas settlement patterns.  
-- **Dust Bowl** — 1930s ecological disaster in Kansas/Great Plains caused by drought and poor land management:contentReference[oaicite:37]{index=37}.  
+---
+
+## 🌾 Kansas-Specific Terms
+- **PLSS (Public Land Survey System)** — Township-range-section grid that organizes Kansas land surveys.  
+- **Homestead Act (1862)** — U.S. land grant policy that shaped Kansas settlement patterns.  
+- **Dust Bowl** — 1930s ecological disaster in the Great Plains driven by drought and land practices.  
 - **Santa Fe Trail** — Historic 19th-century trade route crossing Kansas.  
-- **Cheyenne Bottoms** — Kansas wetland ecosystem, historically altered by hydrology and land use:contentReference[oaicite:38]{index=38}.  
+- **Cheyenne Bottoms** — Major Kansas wetland altered by hydrologic engineering and land use.  
 
 ---
 
-✅ This glossary is a **living document**.  
-Update it as new disciplines, datasets, and experiment types are integrated into the Kansas Frontier Matrix.  
-Always cross-link glossary terms in experiment reports and documentation for clarity.
+## 🔗 Cross-Disciplinary Connections
+- **History ↔ GIS** — Treaty boundaries × PLSS/county overlays; time-aware maps.  
+- **Geology ↔ Archaeology** — Stratigraphy informs cultural sequences and site formation.  
+- **Climate ↔ Society** — Dust Bowl dynamics linked to landcover and settlement shifts.  
+- **AI ↔ Archives** — OCR + NLP turn newspapers/treaties into searchable graph knowledge.  
+- **Ontology ↔ MCP** — CIDOC CRM + OWL-Time harmonize semantics and temporal reasoning across datasets.  
+
+---
+
+✅ **Living document:**  
+- Expand as new domains/datasets/methods are integrated.  
+- Cross-link terms in **experiments, SOPs, STAC Items, and documentation**.  
+- Treat changes as **MCP-governed, peer-reviewed, versioned artifacts**.
