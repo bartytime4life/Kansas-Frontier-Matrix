@@ -1,20 +1,30 @@
-name: "🐞 Bug Report"
-about: "Report a reproducible problem in the site, data pipeline, AI reasoning, or docs"
-title: "[BUG] <short summary>"
-labels: ["bug", "needs-triage"]
-assignees: []
----
-
 <div align="center">
 
 # 🐞 Kansas-Frontier-Matrix — Bug Report
 
-[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../actions/workflows/tests.yml)
-[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../actions/workflows/stac-validate.yml)
-[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../actions/workflows/site.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../actions/workflows/trivy.yml)
+<!-- Core CI/CD -->
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../actions/workflows/tests.yml)  
+[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)  
+[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../actions/workflows/stac-validate.yml)  
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../actions/workflows/stac-badges.yml)  
+
+<!-- Security / Supply Chain -->
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../actions/workflows/trivy.yml)  
+[![Secret Scanning](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/secret-scanning.yml/badge.svg)](../../actions/workflows/secret-scanning.yml)  
+[![OpenSSF Scorecard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ossf-scorecard.yml/badge.svg)](../../actions/workflows/ossf-scorecard.yml)  
+
+<!-- Governance / Roadmap -->
+[![Roadmap Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/roadmap.yml/badge.svg)](../../actions/workflows/roadmap.yml)  
+[![Labels Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/labels.yml/badge.svg)](../../actions/workflows/labels.yml)  
+[![PR Labeler](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pr-labeler.yml/badge.svg)](../../actions/workflows/pr-labeler.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../actions/workflows/automerge.yml)  
+
+<!-- Repo Hygiene -->
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)  
+![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)  
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)  
 
 </div>
 
@@ -26,17 +36,17 @@ assignees: []
 _A clear, concise description of the problem._
 
 **Where did it happen?**  
-- Area: `web` | `data pipeline` | `NLP/AI` | `GIS layer` | `docs` | `ci`
-- Path (if code): `web/...`, `scripts/...`, `src/...`, `mcp/...`
-- URL (if Pages): <link to live map/viewer page>
+- Area: `web` | `data pipeline` | `NLP/AI` | `GIS layer` | `docs` | `ci`  
+- Path (if code): `web/...`, `scripts/...`, `src/...`, `mcp/...`  
+- URL (if Pages): <link to live map/viewer page>  
 
 ---
 
 ## 🔁 Steps to Reproduce
 
-1. …
-2. …
-3. …
+1. …  
+2. …  
+3. …  
 
 **Expected behavior**  
 _What you thought would happen._
@@ -48,14 +58,14 @@ _What actually happened (include error messages, screenshots)._
 
 ## 💻 Environment
 
-- OS: macOS | Linux | Windows
-- Browser (if UI): Chrome | Firefox | Safari — version
-- Python: `python --version`
-- Node (if web build): `node -v` / `npm -v`
-- GDAL: `gdalinfo --version`
-- QGIS (if relevant): version
-- Git SHA (commit reproducing bug): `abcdef1`
-- Branch: `main` | `feature/...`
+- OS: macOS | Linux | Windows  
+- Browser (if UI): Chrome | Firefox | Safari — version  
+- Python: `python --version`  
+- Node (if web build): `node -v` / `npm -v`  
+- GDAL: `gdalinfo --version`  
+- QGIS (if relevant): version  
+- Git SHA (commit reproducing bug): `abcdef1`  
+- Branch: `main` | `feature/...`  
 
 ---
 
@@ -65,12 +75,12 @@ _What actually happened (include error messages, screenshots)._
 
 - **STAC / sources JSON**:  
   - Path: `stac/items/<id>.json` | `stac/collections/<id>.json` | `data/sources/<file>.json`  
-  - ID: `<id>`
+  - ID: `<id>`  
 - **DVC-tracked artifacts**:  
   - `.dvc` file path(s): `data/raw/.../foo.tif.dvc`  
-  - Checksum(s): `md5: <hash>`
-- **Git LFS files**: paths to large files under LFS
-- **Minimal repro dataset**: public URL / DOI if available
+  - Checksum(s): `md5: <hash>`  
+- **Git LFS files**: paths to large files under LFS  
+- **Minimal repro dataset**: public URL / DOI if available  
 
 **Helpful checks (optional, paste output):**
 
