@@ -1,0 +1,1 @@
+# Filled by commands.sh: SHA-256 hashes of key artifacts (sorted)
