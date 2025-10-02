@@ -147,3 +147,4 @@ Even though scratch is **ephemeral**, it underpins:
 * ✅ Debugged (fixed badge targets, consistent links).
 * ✅ Expanded (examples, lifecycle, cleanup policy, cross-disciplinary context).
 * ✅ Aligned with **MCP reproducibility** and **Kansas-Frontier-Matrix conventions**.
+
