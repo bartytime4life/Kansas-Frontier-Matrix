@@ -1,19 +1,31 @@
 <div align="center">
 
-# 🗂️ Kansas-Frontier-Matrix — **STAC Collections** (`data/stac/collections/`)
+# 🗂️ Kansas-Frontier-Matrix — STAC Collections  
+`data/stac/collections/`
 
-**Purpose:** Collections are the **containers** of the STAC catalog.  
-They define shared metadata — **spatial/temporal extent, providers, license, keywords** — and group related STAC Items.  
+**Mission:** Collections are the **containers** of the STAC catalog.  
+They define shared metadata — **spatial/temporal extent, providers, license, keywords** —  
+and group related STAC Items into discoverable, reproducible sets.  
 
-📌 Collections link **upward** to the **root** `../catalog.json`.  
+📌 Collections link **upward** to the **root catalog** (`../catalog.json`).  
 📌 Collections link **downward** to their STAC **Items** (`../items/<collection>/*.json`).  
-📌 Collections provide **context** and **discoverability** across the Kansas Frontier Matrix ecosystem.
+📌 Collections provide **context, grouping, and searchability** across the Kansas Frontier Matrix ecosystem.  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+[![Docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../../../.github/workflows/docs.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://app.codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 </div>
 
 ---
 
-## Contents
+## 📂 Contents
 
 - [Structure](#structure)  
 - [Authoring Checklist](#authoring-checklist)  
@@ -25,7 +37,7 @@ They define shared metadata — **spatial/temporal extent, providers, license, k
 
 ---
 
-## Structure
+## 🏗️ Structure
 
 ```text
 data/stac/collections/
@@ -34,13 +46,14 @@ data/stac/collections/
 ├── overlays.json     # DEM/map overlays, soils, styled rasters
 └── vectors.json      # Vectors (treaties, trails, towns, railroads…)
 
-	•	../catalog.json → root catalog that references these collections.
-	•	../items/<collection>/*.json → STAC Items grouped by these collections.
-	•	Collection JSON → must end in .json and follow the STAC 1.0.0 Collection spec.
+../catalog.json → root catalog that references these collections.  
+../items/<collection>/*.json → STAC Items grouped by these collections.  
+*.json → must follow STAC 1.0.0 Collection spec.  
+
 
 ⸻
 
-Authoring Checklist
+🧾 Authoring Checklist
 	1.	STAC compliance
 	•	Required header:
 
@@ -58,7 +71,7 @@ Authoring Checklist
 	•	Thematic tags for search/discovery.
 	•	Example: "keywords": ["DEM", "LiDAR", "elevation", "Kansas"]
 	5.	Providers
-	•	Credit upstream data producers & licensors.
+	•	Credit upstream producers/licensors.
 	•	Example:
 
 "providers": [
@@ -67,17 +80,16 @@ Authoring Checklist
 
 
 	6.	License
-	•	Use SPDX identifiers.
-	•	Examples: "CC-BY-4.0", "PDDL-1.0", "public-domain".
+	•	Use SPDX identifiers ("CC-BY-4.0", "PDDL-1.0", "public-domain").
 	7.	Links
 	•	Every Collection must include:
-	•	rel: root → back to ../catalog.json.
-	•	rel: item → forward to each contained Item.
-	•	Optionally: rel: derived_from → provenance (../../provenance/registry.json).
+	•	rel: root → back to ../catalog.json
+	•	rel: item → forward to each contained Item
+	•	rel: derived_from → provenance (../../provenance/registry.json)
 
 ⸻
 
-Template Collection
+📑 Template Collection
 
 {
   "stac_version": "1.0.0",
@@ -110,15 +122,15 @@ Template Collection
 
 ⸻
 
-Integration Points
-	•	Provenance → Collections link back to data/provenance/registry.json.
-	•	Web Viewer → Collections inform grouping in web/config/layers.schema.json.
-	•	Makefile → make stac and make stac-validate refresh and check collections.
-	•	Experiments (MCP) → logs in docs/experiments/** cite Collection IDs.
+🔗 Integration Points
+	•	Provenance: Collections link back to data/provenance/registry.json.
+	•	Web Viewer: Collections inform grouping in web/config/layers.schema.json.
+	•	Makefile: make stac and make stac-validate refresh and check collections.
+	•	Experiments (MCP): logs in docs/experiments/** cite Collection IDs.
 
 ⸻
 
-Validation
+✅ Validation
 
 Local
 
@@ -134,11 +146,11 @@ CI
 
 ⸻
 
-Common Pitfalls
+⚠️ Common Pitfalls
 	•	❌ Missing extent → every Collection must declare both spatial and temporal.
 	•	❌ Keywords omitted → reduces discoverability.
 	•	❌ No provider attribution → always credit producers/licensors.
-	•	❌ Item links missing → all contained Items must be explicitly linked (unless using a crawler).
+	•	❌ Item links missing → all contained Items must be explicitly linked.
 	•	❌ Wrong license string → must be SPDX or "public-domain".
 
 ⸻
@@ -146,8 +158,7 @@ Common Pitfalls
 TL;DR
 	•	Collections = grouped metadata for Items.
 	•	Must include ID, title, description, license, extent, keywords, providers.
-	•	Must link back to root and forward to Items.
+	•	Must link back to root catalog and forward to Items.
 	•	Validate with pre-commit or CI before merge.
 
 ✅ Collections ensure Items are grouped, discoverable, attributed, and reproducible.
-
