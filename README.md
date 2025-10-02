@@ -4,19 +4,19 @@
 
 ### **Time · Terrain · History**
 
-**An interactive, reproducible knowledge hub for Kansas’s layered history**
+**An interactive, reproducible knowledge hub for Kansas’s layered history**  
 Where **terrain, climate, culture, and events** intersect across centuries.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
-[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](.pre-commit-config.yaml)
-[![Coverage](https://img.shields.io/badge/coverage-stac%20catalog-blueviolet)](stac/)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python)
-![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)
-![Last Commit](https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix)
-![Repo Size](https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)  
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](.pre-commit-config.yaml)  
+[![Coverage](https://img.shields.io/badge/coverage-stac%20catalog-blueviolet)](stac/)  
+![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg?logo=python)  
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)  
+![Last Commit](https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix)  
+![Repo Size](https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix)  
 ![Stars](https://img.shields.io/github/stars/bartytime4life/Kansas-Frontier-Matrix?style=social)
 
 </div>
@@ -25,24 +25,24 @@ Where **terrain, climate, culture, and events** intersect across centuries.
 
 ## 🚀 Overview
 
-Kansas’s history is **fragmented** — treaties, disasters, railroads, floods, climate, and oral histories are scattered across archives.
+Kansas’s history is **fragmented** — treaties, disasters, railroads, floods, climate, and oral histories are scattered across archives.  
 This project rebuilds that story into a **time-aware atlas + knowledge graph**, linking data and narrative.
 
 ✨ **Core Deliverables**
 
-* 📂 **STAC Catalogs** → provenance & temporal coverage
-* 🗺️ **COGs & GeoJSON** → terrain + historic rasters
-* 🧩 **Knowledge Graphs** → people ↔ places ↔ events
-* 🖥️ **MapLibre Viewer** → timeline slider + dynamic layers
-* 🌍 **Google Earth KMZ/KML** → immersive 3D exploration
+* 📂 **STAC Catalogs** → provenance & temporal coverage  
+* 🗺️ **COGs & GeoJSON** → terrain + historic rasters  
+* 🧩 **Knowledge Graphs** → people ↔ places ↔ events  
+* 🖥️ **MapLibre Viewer** → timeline slider + dynamic layers  
+* 🌍 **Google Earth KMZ/KML** → immersive 3D exploration  
 
 ---
 
 ## 🌐 Live Demos & Previews
 
-* 🖥️ **Web Viewer (MapLibre)** → [Interactive Atlas](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)
-* 🌍 **Google Earth (KMZ)** → [Download KMZ](https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/latest)
-* 📊 **STAC Catalog** → [Browse STAC JSON](https://bartytime4life.github.io/Kansas-Frontier-Matrix/stac/)
+* 🖥️ **Web Viewer (MapLibre)** → [Interactive Atlas](https://bartytime4life.github.io/Kansas-Frontier-Matrix/web/)  
+* 🌍 **Google Earth (KMZ)** → [Download KMZ](https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/latest)  
+* 📊 **STAC Catalog** → [Browse STAC JSON](https://bartytime4life.github.io/Kansas-Frontier-Matrix/stac/)  
 
 ---
 
@@ -50,15 +50,15 @@ This project rebuilds that story into a **time-aware atlas + knowledge graph**, 
 
 ```mermaid
 flowchart TD
-  A[Sources<br/>scans · rasters · vectors · documents] --> B[ETL Pipeline<br/>Makefile · Python · checksums]
-  B --> C[COGs & Processed Layers<br/>raster cogs · geojson]
-  C --> D[STAC Catalog<br/>collections · items · assets]
-  D --> E[Config Build<br/>app.config.json · layers.json]
-  E --> F[Web Viewer (MapLibre)<br/>timeline · legend · popups]
-  E --> G[Google Earth Exports<br/>KML · KMZ]
-  D --> H[Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time]
+  A["Sources\nscans · rasters · vectors · documents"] --> B["ETL Pipeline\nMakefile · Python · checksums"]
+  B --> C["COGs & Processed Layers\nraster COGs · GeoJSON"]
+  C --> D["STAC Catalog\ncollections · items · assets"]
+  D --> E["Config Build\napp.config.json · layers.json"]
+  E --> F["Web Viewer (MapLibre)\ntimeline · legend · popups"]
+  E --> G["Google Earth Exports\nKML · KMZ"]
+  D --> H["Knowledge Graph\nNeo4j · CIDOC CRM · OWL-Time"]
   H --> F
-```
+````
 
 <!-- END OF MERMAID -->
 
@@ -141,16 +141,19 @@ docker/      # reproducible containers
 
 ```mermaid
 gantt
-  title Roadmap Timeline (2025–2026)
+  title "Roadmap Timeline (2025–2026)"
   dateFormat  YYYY-MM-DD
   axisFormat  %b %Y
+
   section Milestones
   M1 — Sources & Hazards        :done,    m1, 2025-01-01, 2025-03-31
   M2 — Terrain & Hydrology      :active,  m2, 2025-04-01, 2025-07-31
-  M3 — Stories & Archaeology    :planned, m3, 2025-08-01, 2025-10-31
-  M4 — UI Enhancements          :planned, m4, 2025-10-01, 2025-12-31
-  M5 — Modeling & Simulation    :planned, m5, 2025-11-15, 2026-02-28
+  M3 — Stories & Archaeology    :crit,    m3, 2025-08-01, 2025-10-31
+  M4 — UI Enhancements          :         m4, 2025-10-01, 2025-12-31
+  M5 — Modeling & Simulation    :         m5, 2025-11-15, 2026-02-28
 ```
+
+<!-- END OF MERMAID -->
 
 ---
 
