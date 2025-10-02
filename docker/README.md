@@ -1,13 +1,33 @@
-# Kansas-Frontier-Matrix — Docker Dev Toolkit
+<div align="center">
 
-Containerized dev environment for **GDAL/PROJ + Python (wheels-first)** with optional **Node / tippecanoe / pmtiles / S3 / PostGIS / Neo4j**.
+# 🐳 Kansas-Frontier-Matrix — Docker Dev Toolkit
+
+**Mission:** provide a **containerized, reproducible dev environment** for  
+GDAL/PROJ + Python (wheels-first), with optional **Node · tippecanoe · pmtiles · S3 · PostGIS · Neo4j**.  
 Keep your host clean while producing **reproducible data artifacts** and **valid STAC catalogs**.
 
-> **Why containers?** Same tools, same versions, same flags — across macOS, Linux, and CI. No “it works on my machine.”
+[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+
+[![Docker Build](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docker.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docker.yml)
+[![SBOM](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/sbom.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/sbom.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+[![OpenSSF Scorecard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ossf-scorecard.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ossf-scorecard.yml)
+
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)
+![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)
+
+</div>
+
+> **Why containers?** Same tools, same versions, same flags — across macOS, Linux, and CI. No “works on my machine.”
 
 ---
 
-## TL;DR (3 steps)
+## 🧪 TL;DR (3 steps)
 
 ```bash
 # 1) Build (GDAL pinned; wheels-first Python)
@@ -21,7 +41,7 @@ docker run --rm -it -u $(id -u):$(id -g) \
 make terrain                # hillshade / slope / aspect (and configured terrain metrics)
 make stac stac-validate     # build & validate STAC collections/items
 make site                   # build viewer/site artifacts
-```
+````
 
 Prefer the helper (buildx cache + one-liners):
 
@@ -40,15 +60,15 @@ Prefer the helper (buildx cache + one-liners):
 
 ---
 
-## What’s in the base image
+## 🏗️ What’s in the base image
 
-* **GDAL/PROJ + core CLIs** (`gdal_translate`, `gdaldem`, `ogr2ogr`, etc.)
-* **Python** (wheels-first; repo installed in editable mode at runtime)
-* **git-lfs** (large rasters) — enabled by default
-* **Non-root default user**; `/workspace` prepared for bind mount
-* **Healthchecks** validate GDAL & geo toolchain; when enabled, also validate tiling CLIs
+* **GDAL/PROJ + core CLIs** (`gdal_translate`, `gdaldem`, `ogr2ogr`, …)
+* **Python** (wheels-first; repo installed editable at runtime)
+* **git-lfs** for large rasters
+* **Non-root default user**; `/workspace` ready for bind mount
+* **Healthchecks** for GDAL & geo toolchain (and tiling CLIs when enabled)
 
-### Optional feature flags (build-args)
+### 🔧 Feature flags (build args)
 
 | ARG             | Default                                  | Purpose                                 |
 | --------------- | ---------------------------------------- | --------------------------------------- |
@@ -74,7 +94,7 @@ docker build -t kfm:dev -f docker/Dockerfile \
 
 ---
 
-## Compose stack (optional, recommended)
+## 🧩 Compose stack (profiles)
 
 `docker/compose.yml` defines a profile-driven stack:
 
@@ -83,8 +103,6 @@ docker build -t kfm:dev -f docker/Dockerfile \
 * `storage` profile — **MinIO** (S3-compatible) + bootstrap (buckets for `cogs/`, `tiles/`)
 * `web` profile — **Caddy** (serves `_site/`) + **pmtiles-server**
 * `graph` profile — **Neo4j** (knowledge graph) + volume persistence
-
-**Examples**
 
 ```bash
 # Shell in dev container (lean)
@@ -100,12 +118,11 @@ docker compose -f docker/compose.yml --profile storage --profile web up -d
 docker compose -f docker/compose.yml --profile graph up -d
 ```
 
-**Default ports**
-Postgres 5432, pgAdmin 8081, MinIO 9000/9001, Caddy 8080, PMTiles 8082, Neo4j 7474/7687.
+**Default ports:** Postgres **5432**, pgAdmin **8081**, MinIO **9000/9001**, Caddy **8080**, PMTiles **8082**, Neo4j **7474/7687**.
 
 ---
 
-## Host ↔ Container layout
+## 🗺️ Host ↔ Container layout
 
 Artifacts stay on the host via bind mount:
 
@@ -119,7 +136,7 @@ Artifacts stay on the host via bind mount:
 └── Makefile            # canonical entry points
 ```
 
-**Run pattern** (non-root to avoid root-owned files on host)
+**Run pattern** (non-root to avoid root-owned files on host):
 
 ```bash
 docker run --rm -it \
@@ -130,7 +147,7 @@ docker run --rm -it \
 
 ---
 
-## Environment variables (pass-through)
+## 🔐 Environment variables (pass-through)
 
 The helper and compose pass these through:
 
@@ -166,7 +183,7 @@ AWS_DEFAULT_REGION=us-east-1
 
 ---
 
-## Common workflows
+## 🧵 Common workflows
 
 **Make targets (inside container)**
 
@@ -206,7 +223,7 @@ docker run --rm -v "$PWD":/workspace -w /workspace \
 
 ---
 
-## Performance & caching
+## ⚡ Performance & caching
 
 * **Buildx cache** — `./docker/build-and-run.sh` uses `./.cache/buildx` for incremental builds
 * **pip/npm caches** — persisted under `./.cache/{pip,npm}`, mounted into the container
@@ -220,7 +237,7 @@ docker pull ghcr.io/osgeo/gdal:ubuntu-small-latest
 
 ---
 
-## UID/GID (Linux) & permissions
+## 👤 UID/GID & permissions
 
 Prevent root-owned files on host:
 
@@ -238,13 +255,13 @@ docker build -t kfm:dev -f docker/Dockerfile \
   --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) .
 ```
 
-**macOS (Apple Silicon):** use `docker buildx build --platform` if you need `linux/amd64` for CI parity; QEMU emulation may be slower for GDAL.
+**macOS (Apple Silicon):** for CI parity requiring `linux/amd64`, use buildx `--platform linux/amd64`. QEMU emulation can be slower for GDAL.
 
 ---
 
-## GPU / heavy runs (optional)
+## 🧠 GPU / heavy runs (optional)
 
-This stack is CPU-first. For CUDA workflows (future):
+This stack is CPU-first. For CUDA workflows:
 
 ```bash
 # Requires NVIDIA runtime + CUDA-capable base image
@@ -256,7 +273,7 @@ The helper supports `--gpu` to request GPUs when present.
 
 ---
 
-## CI usage (GitHub Actions)
+## 🤖 CI usage (GitHub Actions)
 
 ```yaml
 - name: Build image (with provenance labels)
@@ -279,48 +296,51 @@ docker compose -f docker/compose.yml --profile storage --profile web up -d
 
 ---
 
-## Troubleshooting
+## 🧰 Troubleshooting
 
-* **`gdaldem: command not found`**
-  Confirm you built the provided Dockerfile and are inside the toolbox container:
+* **`gdaldem: command not found`** — ensure you built the provided Dockerfile & are inside the toolbox container:
   `docker run --rm kfm:dev gdaldem --version`
-
-* **Wheels missing / source build required**
-  Rebuild with `--build-arg BUILD_NATIVE=1` or add missing wheels to `constraints.txt`.
-
-* **Permission denied on `data/`**
-  Run with `-u $(id -u):$(id -g)` or bake `USER_ID/GROUP_ID` at build time.
-
-* **MinIO / pmtiles not reachable**
-  Ensure profiles are up:
+* **Wheels missing / source build required** — rebuild with `--build-arg BUILD_NATIVE=1` or add wheels to `constraints.txt`.
+* **Permission denied on `data/`** — run with `-u $(id -u):$(id -g)` or bake `USER_ID/GROUP_ID` at build time.
+* **MinIO / pmtiles not reachable** — bring up profiles:
   `docker compose -f docker/compose.yml --profile storage --profile web up -d`
-
-* **PostGIS not ready**
-  Compose has healthchecks; wait for `healthy`:
-  `docker compose ps`
-
-* **Neo4j auth / volume**
-  First boot initializes `/data`. Check env vars (`NEO4J_AUTH=neo4j/test`) and mapped volumes.
+* **PostGIS not ready** — compose healthchecks gate ready state: `docker compose ps`.
+* **Neo4j auth/volume** — first boot initializes `/data`; set `NEO4J_AUTH=neo4j/test` and map volumes.
 
 ---
 
-## Security & provenance
+## 🛡️ Security & provenance
 
 * **Pin base images** for releases (e.g., `:ubuntu-small-3.9.0`), set **`VCS_REF`** and **`BUILD_DATE`** labels
-* Optionally generate **SBOMs** (e.g., **Syft**) in release workflows
-* Image **never copies your data**; all artifacts remain in the mounted repo
+* Generate **SBOMs** (e.g., Syft) in release workflows
+* Image **never copies your data**; artifacts remain in the mounted repo
 * Prefer **read-only S3 credentials** for CI uploads; scope MinIO users per bucket
 
 ---
 
-## Notes for Windows users
+## 🪟 Notes for Windows users
 
-* Use **WSL2** + Docker Desktop. Bind mount `\\wsl$\<distro>\home\<you>\…` or repo path inside WSL to avoid path/perm issues.
-* Line endings: keep scripts `LF` to avoid `bash` execution problems in containers.
+* Use **WSL2** + Docker Desktop. Bind mount repo paths inside WSL to avoid path/perm issues.
+* Line endings: keep scripts **LF** to avoid `bash` execution problems.
 
 ---
 
-## See also
+## 🗺️ Overview (Mermaid)
+
+```mermaid
+flowchart LR
+  A["Host\nrepo mount: /workspace"] --> B["kfm:dev\nGDAL · Python · Node (opt)"]
+  B --> C["Make targets\ncogs · terrain · stac · site"]
+  B --> D["Services via Compose\nPostGIS · MinIO · pmtiles · Caddy · Neo4j"]
+  C --> E["Artifacts on host\nCOGs · tiles · _site · STAC"]
+  D --> E
+```
+
+<!-- END OF MERMAID -->
+
+---
+
+## 🔎 See also
 
 * `docker/Dockerfile` — feature-flagged GDAL + Python + tiling toolchain
 * `docker/compose.yml` — dev stack with PostGIS, MinIO, Caddy, pmtiles server, Neo4j
@@ -332,3 +352,6 @@ docker compose -f docker/compose.yml --profile storage --profile web up -d
 ---
 
 Happy mapping. 🌾
+
+```
+```
