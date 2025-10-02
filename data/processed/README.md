@@ -3,14 +3,17 @@
 # 📂 Kansas-Frontier-Matrix — Processed Data  
 `data/processed/`
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![Docs](https://img.shields.io/badge/docs-MCP%20Standards-blue.svg)](../../../docs/)  
+[![Data Provenance](https://img.shields.io/badge/provenance-verified✅-green.svg)](../../../stac/items/)  
 
 **Mission:** Hold **derived, cleaned, and ready-for-use geospatial + historical datasets**.  
-All files here are **pipeline outputs** (ETL workflows, experiments, transformations)  
-and every artifact is referenced in the **STAC catalog** (`data/stac/items/`).  
+All files here are **pipeline outputs** (ETL workflows, experiments, transformations).  
+Every artifact is referenced in the **STAC catalog** (`data/stac/items/`) and validated against schemas for seamless integration into the web viewer.  
 
 </div>
 
@@ -20,12 +23,13 @@ and every artifact is referenced in the **STAC catalog** (`data/stac/items/`).
 
 ```mermaid
 flowchart TD
-  A["Raw data\n(data/raw/**)"] --> B["ETL / Cleaning\n(scripts, notebooks)"]
+  A["Raw data\n(data/raw/**)"] --> B["ETL / Cleaning\n(scripts · notebooks · configs)"]
   B --> C["Processed outputs\n(data/processed/**)"]
   C --> D["Provenance sidecars\n(.sha256 · .meta.json)"]
   C --> E["STAC Items\n(data/stac/items/**)"]
-  E --> F["Validate\n(make stac-validate · schema)"]
-  F --> G["Web viewer layers\n(web/config/**)"]
+  E --> F["Validate\n(make stac-validate · schema checks)"]
+  F --> G["Web viewer integration\n(web/config/**)"]
+  G --> H["Knowledge Hub links\n(cross-domain integration)"]
 
 <!-- END OF MERMAID -->
 
@@ -37,7 +41,7 @@ flowchart TD
 	•	Immutable inputs, reproducible outputs
 	•	Raw data lives in data/raw/
 	•	Outputs here must be reproducible from scripts + configs + GCPs
-	•	Nothing in this directory is hand-edited
+	•	❌ Nothing here is hand-edited
 	•	STAC integration
 	•	Every file here links to a STAC Item in data/stac/items/
 	•	Each item records: datetime, bbox, checksum, license, provenance
@@ -53,7 +57,7 @@ flowchart TD
 
 ⸻
 
-📂 Typical Contents
+📂 Directory Structure
 
 data/processed/
 ├── towns_points.json          # Settlements (GeoJSON)
@@ -81,22 +85,21 @@ Formats:
 
 make fetch
 
-
 	2.	Transform / clean → scripts or notebooks (experiments/*/)
-	•	Reproject, clip to Kansas extent, normalize fields
+	•	Reproject to EPSG:4326
+	•	Clip to Kansas extent
+	•	Normalize schema fields
 	3.	Save outputs → data/processed/ in open formats
 	4.	Generate checksums
 
 scripts/gen_sha256.sh data/processed/<file>
 
-
-	5.	Update STAC Item → data/stac/items/
+	5.	Update STAC Items → data/stac/items/
 	•	Ensure href, checksum, and links are correct
 	6.	Validate → schema + STAC
 
 make stac-validate
 pre-commit run --all-files
-
 
 
 ⸻
@@ -122,10 +125,7 @@ Vector (Treaty Boundaries, GeoJSON)
     "qa:status": "provisional"
   },
   "links": [
-    {
-      "rel": "collection",
-      "href": "../../stac/collections/vectors.json"
-    }
+    { "rel": "collection", "href": "../../stac/collections/vectors.json" }
   ],
   "assets": {
     "geojson": {
@@ -167,10 +167,7 @@ Raster (DEM Hillshade, COG)
     ]]
   },
   "links": [
-    {
-      "rel": "collection",
-      "href": "../../stac/collections/terrain.json"
-    }
+    { "rel": "collection", "href": "../../stac/collections/terrain.json" }
   ],
   "assets": {
     "cog": {
@@ -185,11 +182,21 @@ Raster (DEM Hillshade, COG)
 
 ⸻
 
+✅ QA Checklist
+	•	All outputs reprojected to EPSG:4326
+	•	Checksums generated (.sha256)
+	•	STAC Items updated with correct href, roles, and checksums
+	•	Filenames stable for STAC + Makefile references
+	•	Large files tracked with Git LFS or DVC
+	•	Provenance documented in experiments/
+
+⸻
+
 📝 Notes
-	•	❌ Do not manually edit files here — regenerate via pipeline
+	•	❌ Do not manually edit files here — always regenerate via pipeline
 	•	✅ Document provenance (configs, scripts, GCPs)
 	•	🔗 Keep filenames stable for references (STAC, Makefile, configs)
-	•	🗂️ Use collections (data/stac/collections/) to group datasets (treaties, DEM, landcover)
+	•	🗂️ Use data/stac/collections/ to group datasets (treaties, DEM, landcover)
 	•	📦 Use make clean to clear rasters when rebuilding experiments
 
 ⸻
@@ -204,7 +211,12 @@ Raster (DEM Hillshade, COG)
 
 ⸻
 
-✅ Mission Principle
 
-Processed datasets must be consistent, versioned, STAC-compliant, and reproducible
-across pipelines, experiments, and web layers.
+<div align="center">
+
+
+✅ Mission Principle
+Processed datasets must be consistent, versioned, STAC-compliant, and reproducible across pipelines, experiments, and web layers.
+
+</div>
+```
