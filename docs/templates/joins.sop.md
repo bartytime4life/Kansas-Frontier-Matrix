@@ -1,23 +1,25 @@
 <div align="center">
 
-# 🔗 Joins SOP — Reproducible Merges/Overlays
-
+# 🔗 Joins SOP — Reproducible Merges/Overlays  
 `docs/templates/joins.sop.md`
 
 **Scope:** Define a **reproducible procedure** for exploratory joins in `data/work/joins/` → promotion into canonical directories with **validation, provenance, STAC registration**, and optional **graph ingestion**.
 
 **Audience:** Contributors performing spatial joins, overlays, dissolves, or schema merges (e.g., treaties × counties, flood rasters × landcover, OCR entities × features).
 
-[![Build & Deploy](../../.github/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![STAC Validate](../../.github/workflows/stac-badges.yml/badge.svg)](../../.github/workflows/stac-badges.yml)
-[![Pre-commit](../../.github/workflows/pre-commit.yml/badge.svg)](../../.github/workflows/pre-commit.yml)
-[![CodeQL](../../.github/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
-[![Trivy Security](../../.github/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
 [![Coverage](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix/branch/main/graph/badge.svg)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)
 [![STAC](https://img.shields.io/badge/STAC-1.0.0-blue)](https://stacspec.org)
 [![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20+%20OWL--Time-purple)](https://www.cidoc-crm.org/)
-[![Simulation](https://img.shields.io/badge/Simulation-NASA--grade-green)](../templates/experiment.md)
+[![Simulation](https://img.shields.io/badge/Simulation-NASA--grade-green)](./experiment.md)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
+
+</div>
+
 
 </div>
 
