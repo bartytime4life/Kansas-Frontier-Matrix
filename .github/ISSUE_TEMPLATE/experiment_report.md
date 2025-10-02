@@ -1,9 +1,32 @@
----
-name: "🧪 Experiment Report"
-about: "Plan, run, and log a reproducible experiment (MCP-grade)"
-title: "[EXP] <concise title>"
-labels: ["mcp", "reproducibility", "experiment"]
-assignees: []
+<div align="center">
+
+# 🧪 Kansas-Frontier-Matrix — Experiment Report
+
+<!-- Core CI/CD -->
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)  
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../.github/workflows/tests.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)  
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../.github/workflows/stac-badges.yml)  
+
+<!-- Security -->
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)  
+[![Secret Scanning](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/secret-scanning.yml/badge.svg)](../../.github/workflows/secret-scanning.yml)  
+[![OpenSSF Scorecard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ossf-scorecard.yml/badge.svg)](../../.github/workflows/ossf-scorecard.yml)  
+
+<!-- Governance -->
+[![Roadmap Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/roadmap.yml/badge.svg)](../../.github/workflows/roadmap.yml)  
+[![Labels Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/labels.yml/badge.svg)](../../.github/workflows/labels.yml)  
+[![PR Labeler](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pr-labeler.yml/badge.svg)](../../.github/workflows/pr-labeler.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../.github/workflows/automerge.yml)  
+
+<!-- Repo Hygiene -->
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)  
+![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)  
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)  
+
+</div>
+
 ---
 
 > Use this template when **planning and completing** an experiment.  
@@ -13,12 +36,12 @@ assignees: []
 
 ## 0) Metadata
 
-- **Experiment ID**: `EXP-YYYYMMDD-<slug>`
-- **Owner(s)**: @you
-- **Status**: ☐ Planned ☐ Running ☐ Completed ☐ Abandoned
-- **Scope areas**: `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`
-- **Related issues/PRs**: Fixes #…, Closes #…, Relates #…
-- **Milestone**: `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp`
+- **Experiment ID**: `EXP-YYYYMMDD-<slug>`  
+- **Owner(s)**: @you  
+- **Status**: ☐ Planned ☐ Running ☐ Completed ☐ Abandoned  
+- **Scope areas**: `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`  
+- **Related issues/PRs**: Fixes #…, Closes #…, Relates #…  
+- **Milestone**: `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp`  
 
 ---
 
@@ -26,7 +49,7 @@ assignees: []
 
 - **Question** — What are we trying to learn/compare?  
 - **Hypothesis** — What outcome do you expect and why?  
-- **Success criteria** — Metrics/thresholds/visuals that define “good”.
+- **Success criteria** — Metrics/thresholds/visuals that define “good”.  
 
 ---
 
@@ -34,11 +57,12 @@ assignees: []
 
 - **Inputs (IDs / paths)**  
   - STAC: `stac/items/<file>.json`, `stac/collections/<file>.json`  
-  - Source descriptors: `data/sources/<file>.json|yml`
-- **Spatial/temporal bounds** — bbox, date range
-- **Licenses / provenance** — cite sources; note restrictions
+  - Source descriptors: `data/sources/<file>.json|yml`  
+- **Spatial/temporal bounds** — bbox, date range  
+- **Licenses / provenance** — cite sources; note restrictions  
 
 **Sanity checks**
+
 ```bash
 make stac-validate     # validate STAC items/collections
 make config-validate   # optional: validate web/config/*.json
@@ -117,7 +141,7 @@ git rev-parse HEAD > build/git_sha.txt
   * Metadata: `*.meta.json` with `checksum:sha256`, `file:size`
   * Reports: `build/stac_report.json`, `build/metrics.json`
 
-* **Experiment folder** (commit optional)
+* **Experiment folder** (commit optional):
 
   ```
   mcp/experiments/EXP-YYYYMMDD-<slug>/
@@ -141,14 +165,26 @@ git rev-parse HEAD > build/git_sha.txt
 ## 10) Roll-forward Plan
 
 * Adopt / discard / iterate?
-* **Follow-ups** (convert to issues)
+* **Follow-ups** (convert to issues):
 
   * [ ] …
   * [ ] …
 
 ---
 
-## Checklists
+## 📑 Roadmap Link (if applicable)
+
+* Milestone: …
+* Related epic/issue: …
+* Roadmap marker:
+
+  ```
+  <!-- roadmap:key=exp-<stable-key> -->
+  ```
+
+---
+
+## ✅ Checklists
 
 **Before running**
 
@@ -165,11 +201,9 @@ git rev-parse HEAD > build/git_sha.txt
 
 ---
 
-### Attachments
+### 📎 Attachments
 
 * `build/stac_report.json` (attach or excerpt)
 * `env.txt` (pip freeze)
 * Figures (PNG/SVG)
 * Logs or console output helpful for reproducibility
-
-```
