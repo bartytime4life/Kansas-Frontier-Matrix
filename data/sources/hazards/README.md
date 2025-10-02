@@ -1,15 +1,17 @@
-
 <div align="center">
 
-# 🌪 Kansas-Frontier-Matrix — Hazards & Disasters Sources
+# 🌪 Kansas-Frontier-Matrix — Hazards & Disasters STAC Items  
+`stac/items/hazards/`
 
-**Mission:** Catalog Kansas hazard & disaster datasets so they are  
-**traceable, reproducible, and discoverable** in the STAC catalog,  
-and linked into the Frontier-Matrix **timeline + knowledge graph**.
+**Mission:** Provide **time-aware STAC Item descriptors** for Kansas hazard datasets,  
+ensuring tornadoes, floods, droughts, wildfires, and FEMA disasters are  
+**auditable, reproducible, and linked** into the Frontier-Matrix knowledge hub.  
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 </div>
 
@@ -17,142 +19,173 @@ and linked into the Frontier-Matrix **timeline + knowledge graph**.
 
 ## 🎯 Purpose
 
-- Track **hazard events** (tornadoes, floods, droughts, wildfires, storms)  
-- Provide **geospatial layers** (vectors, rasters, tabular CSVs)  
-- Link hazards to **documents and events** (e.g., Greensburg Tornado 2007)  
-- Maintain **provenance & licensing** per Master Coder Protocol (MCP)  
-- Enable **cross-domain reasoning**: climate ↔ settlement ↔ environment  
+- Define **STAC Item JSONs** for each hazard dataset  
+- Guarantee **traceability, provenance, and licensing**  
+- Enable **timeline + map viewer** integration  
+- Support **knowledge graph linking** (Event ↔ Place ↔ Document)  
 
 ---
 
 ## 📂 Directory Layout
 
 ```text
-data/sources/hazards/
-├── tornado_tracks.json       # NOAA SPC tornado paths (1950–present)
-├── severe_storms.json        # Hail / wind reports (1955–present)
-├── fema_disasters.json       # FEMA declarations (1953–present)
-├── drought_monitor.json      # US Drought Monitor (2000–present)
-├── wildfire_perimeters.json  # NIFC & Kansas Forest Service polygons
-├── scans/                    # Optional scanned maps / PDFs
-├── vectors/                  # Converted shapefiles/GeoJSONs
-└── README.md                 # This file
+stac/items/hazards/
+├── tornado_tracks_1950_2024.json
+├── drought_monitor_2000_present.json
+├── wildfire_perimeters_2000_present.json
+└── README.md
 
-Note: Large binaries (shapefiles, rasters) → data/raw/ (ignored).
-Processed outputs → data/processed/hazards/ (LFS).
-Only descriptors, checksums, metadata live here.
 
 ⸻
 
-📑 Descriptor Schema
-
-Each hazard config must follow the
-KFM Source Descriptor Schema (data/sources/schema.source.json).
+🌪 Tornado Tracks (1950–2024)
 
 {
-  "id": "tornado_tracks",
-  "title": "NOAA SPC Tornado Paths (1950–present)",
-  "type": "vector",
-  "description": "Tornado tracks across Kansas with EF scale, path width, fatalities, damage.",
-  "period": "1950-2024",
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "tornado_tracks_1950_2024",
   "bbox": [-102.05, 36.99, -94.61, 40.00],
-  "urls": ["https://www.spc.noaa.gov/gis/svrgis/"],
-  "license": {
-    "name": "Public Domain",
-    "url": "https://www.spc.noaa.gov/gis/svrgis/"
+  "properties": {
+    "title": "NOAA SPC Tornado Tracks (1950–2024)",
+    "description": "Tornado tracks across Kansas with EF scale, path width, fatalities, and damage estimates.",
+    "start_datetime": "1950-01-01T00:00:00Z",
+    "end_datetime": "2024-12-31T23:59:59Z",
+    "license": "public-domain",
+    "providers": [
+      {
+        "name": "NOAA Storm Prediction Center",
+        "roles": ["producer", "licensor"],
+        "url": "https://www.spc.noaa.gov/gis/svrgis/"
+      }
+    ],
+    "keywords": ["tornado", "hazard", "Kansas", "SPC", "severe weather"]
   },
-  "provenance": {
-    "attribution": "NOAA Storm Prediction Center",
-    "retrieved": "2025-09-21T00:00:00Z"
+  "assets": {
+    "data": {
+      "href": "https://www.spc.noaa.gov/gis/svrgis/Tornado/1950-2024_tornado_tracks.shp.zip",
+      "type": "application/zip",
+      "roles": ["data"]
+    },
+    "geojson": {
+      "href": "../../data/processed/hazards/tornado_tracks_1950_2024.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"]
+    }
   },
-  "keywords": ["tornado", "hazard", "Kansas", "SPC"]
+  "links": [
+    { "rel": "self", "href": "./tornado_tracks_1950_2024.json" },
+    { "rel": "collection", "href": "../collections/hazards.json" }
+  ]
 }
 
-Key Rules
-	•	bbox → EPSG:4326 (lon/lat WGS84)
-	•	period → temporal extent for STAC & timeline
-	•	Always include license & provenance
-	•	urls[] → API endpoints, shapefile zips, or services
 
 ⸻
 
-🌍 Recommended Hazard Sources
-	•	NOAA Storm Events Database — multi-hazard archive (1950–present)
-	•	NOAA SPC Severe Weather GIS — tornado tracks, hail, wind (1950–2024)
-	•	FEMA Disaster Declarations — county-level, 1953–present
-	•	U.S. Drought Monitor — weekly drought polygons (2000–present)
-	•	NIFC Wildfire Perimeters — national dataset, 2000–present
-	•	Kansas Forest Service — state wildfire perimeter datasets
+🌵 Drought Monitor (2000–present)
+
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "drought_monitor_2000_present",
+  "bbox": [-102.05, 36.99, -94.61, 40.00],
+  "properties": {
+    "title": "U.S. Drought Monitor (2000–present)",
+    "description": "Weekly drought polygons (D0–D4 categories) for Kansas.",
+    "start_datetime": "2000-01-01T00:00:00Z",
+    "end_datetime": null,
+    "license": "public-domain",
+    "providers": [
+      {
+        "name": "NOAA / USDA / NDMC",
+        "roles": ["producer", "licensor"],
+        "url": "https://droughtmonitor.unl.edu/"
+      }
+    ],
+    "keywords": ["drought", "hazard", "Kansas", "NDMC", "time series"]
+  },
+  "assets": {
+    "data": {
+      "href": "https://droughtmonitor.unl.edu/data/shapefiles_m/USDM_20250121_M.zip",
+      "type": "application/zip",
+      "roles": ["data"]
+    },
+    "timeseries": {
+      "href": "../../data/processed/hazards/drought_monitor_timeseries.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"]
+    }
+  },
+  "links": [
+    { "rel": "self", "href": "./drought_monitor_2000_present.json" },
+    { "rel": "collection", "href": "../collections/hazards.json" }
+  ]
+}
+
+
+⸻
+
+🔥 Wildfire Perimeters (2000–present)
+
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "wildfire_perimeters_2000_present",
+  "bbox": [-102.05, 36.99, -94.61, 40.00],
+  "properties": {
+    "title": "Wildfire Perimeters (2000–present)",
+    "description": "Large wildfire perimeters across Kansas, with fire name, ignition date, and acres burned.",
+    "start_datetime": "2000-01-01T00:00:00Z",
+    "end_datetime": null,
+    "license": "public-domain",
+    "providers": [
+      {
+        "name": "NIFC + Kansas Forest Service",
+        "roles": ["producer", "licensor"],
+        "url": "https://data-nifc.opendata.arcgis.com/"
+      }
+    ],
+    "keywords": ["wildfire", "hazard", "Kansas", "NIFC", "Kansas Forest Service"]
+  },
+  "assets": {
+    "data": {
+      "href": "https://data-nifc.opendata.arcgis.com/datasets/wildfire-perimeters-2000-present.zip",
+      "type": "application/zip",
+      "roles": ["data"]
+    },
+    "geojson": {
+      "href": "../../data/processed/hazards/wildfire_perimeters_2000_present.geojson",
+      "type": "application/geo+json",
+      "roles": ["data"]
+    }
+  },
+  "links": [
+    { "rel": "self", "href": "./wildfire_perimeters_2000_present.json" },
+    { "rel": "collection", "href": "../collections/hazards.json" }
+  ]
+}
+
 
 ⸻
 
 🔗 Integration Notes
-	•	Hazards are time-enabled: descriptors must include start/end dates
-	•	Tornadoes: polylines with EF scale, path width, fatalities
-	•	Droughts: polygons (D0–D4 categories), weekly snapshots = time series
-	•	Floods: link FEMA declarations + NOAA Storm Events
-	•	Wildfires: polygons with ignition date, acres burned, fire name
-
-Hazards link into the Knowledge Graph:
-	•	Event → e.g., Greensburg Tornado 2007
-	•	Place → county, watershed, or polygon
-	•	Document → FEMA reports, NOAA Storm Data, newspapers
+	•	Each Item belongs to stac/collections/hazards.json
+	•	Assets include raw shapefiles/archives + processed GeoJSONs
+	•	Temporal extent drives timeline slider in MapLibre UI
+	•	Keywords & providers support search & provenance
 
 ⸻
 
 ✅ Best Practices
-	•	Store raw shapefiles/CSVs → data/raw/hazards/
-	•	Store converted GeoJSON/COGs → data/processed/hazards/
-	•	Update .sha256 + retrieved date after pulls
-	•	Use confidence flags if geometries incomplete
-	•	Normalize CRS → EPSG:4326 for viewer; record original CRS in _meta.json
-	•	Verify license compliance (NOAA/FEMA/NIFC = public domain; check Kansas Forest Service)
-
-⸻
-
-🔍 Debugging & Validation
-
-make validate-sources   # schema validation
-make fetch              # download hazard data
-make vectors            # shapefile → GeoJSON
-make stac               # build STAC Items/Collections
-make validate-stac      # validate STAC 1.0.0
-make checksums          # update integrity files
-
-
-⸻
-
-📊 Data Lifecycle
-
-flowchart TD
-  S[Hazard Descriptors\n(data/sources/hazards/*.json)] -->|fetch| R[Raw Data\n(data/raw/hazards/)]
-  R -->|convert| P[Processed GeoJSON/COGs\n(data/processed/hazards/)]
-  P -->|index| C[STAC Items & Collections\n(stac/)]
-  C -->|link| G[Knowledge Graph\n(Neo4j + Ontologies)]
-  G --> V[MapLibre Web Viewer\n+ Timeline UI]
-
-<!-- END OF MERMAID -->
-
-
-
-⸻
-
-📚 References
-	•	NOAA Storm Events Database
-	•	NOAA SPC Severe Weather GIS
-	•	FEMA Disaster Declarations
-	•	U.S. Drought Monitor
-	•	NIFC Open Fire Data
-	•	Kansas GIS Hub – Wildfire Perimeters
+	•	Maintain .sha256 checksums for all assets
+	•	Normalize CRS → EPSG:4326 (record original in _meta.json)
+	•	Add thumbnail assets when available for map previews
+	•	Update retrieved timestamps whenever refreshed
 
 ⸻
 
 ✦ Summary
-data/sources/hazards/ defines the blueprints for hazard & disaster datasets.
-They ensure tornadoes, floods, droughts, wildfires, and FEMA disasters are
-auditable, reproducible, and time-aware — powering the Kansas-Frontier-Matrix
-knowledge graph, STAC catalog, and interactive viewer.
 
----
-
-⚡ Now it’s GitHub-ready: badges render, Mermaid compiles, and sections are cleanly structured.  
+These STAC Items define Kansas hazard & disaster layers in a machine-readable,
+STAC 1.0.0-compliant format. They ensure tornadoes, droughts, and wildfires
+are fully documented, reproducible, and integrated into the Kansas-Frontier-Matrix
+knowledge graph, catalog, and interactive timeline viewer.
