@@ -1,21 +1,23 @@
 <div align="center">
 
-# 🗺️ Kansas-Frontier-Matrix — DEM-Derived Vectors  
-`data/processed/dem/vectors/`
+# 🏔️ Kansas-Frontier-Matrix — DEM Overlays  
+`data/processed/dem/overlays/`
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../.pre-commit-config.yaml)  
+[![Docs](https://img.shields.io/badge/docs-MCP%20Standards-blue.svg)](../../../docs/)  
+[![Data Provenance](https://img.shields.io/badge/provenance-verified✅-green.svg)](../../../stac/items/dem/)
 
-**Mission:** Store **vector products derived from DEMs**.  
-These are extracted or modeled from rasters in `../` and `../overlays/`,  
-stored as **GeoJSON** for maximum interoperability.  
+**Mission:** Store **DEM-derived overlays** generated from processed DEMs in `../`.  
+Overlays emphasize terrain characteristics and enhance visualization.
 
-All vector layers must be:  
-- **Reproducible** from DEM inputs (no manual edits)  
-- **Linked to provenance** in the STAC catalog (`data/stac/items/dem/*.json`)  
-- **Schema-validated** against `web/config/layers.schema.json`  
+They are reproducible from base DEMs and linked in:  
+- **STAC catalog** → `stac/items/dem/*.json`  
+- **Web configs** → `web/config/layers.json`  
+- **KML exports** → `data/kml/` (Google Earth KMZ overlays)
 
 </div>
 
@@ -25,12 +27,12 @@ All vector layers must be:
 
 ```mermaid
 flowchart TD
-  A["Processed DEMs\n(data/processed/dem/**)"] --> B["Generate vectors\n(contours · watersheds · streams)"]
-  B --> C["GeoJSON outputs\n(data/processed/dem/vectors/**)"]
+  A["Processed DEMs\n(data/processed/dem/**)"] --> B["Generate overlays\n(gdaldem hillshade · slope · aspect)"]
+  B --> C["Overlay rasters\n(data/processed/dem/overlays/**)"]
   C --> D["Checksums + meta\n(.sha256 · .meta.json)"]
-  C --> E["STAC Items\n(data/stac/items/dem/**)"]
-  E --> F["Validate\n(stac-validate · schema)"]
-  F --> G["Web viewer\n(web/config/layers.json)"]
+  C --> E["STAC Item assets\n(stac/items/dem/**)"]
+  E --> F["Validate\n(make stac-validate)"]
+  F --> G["Viewer integration\n(web/config/layers.json)"]
   F --> H["Earth exports\n(data/kml/**)"]
 
 <!-- END OF MERMAID -->
@@ -41,95 +43,111 @@ flowchart TD
 
 📂 Typical Contents
 
-data/processed/dem/vectors/
-├── ks_1m_dem_2018_contours_10m.json       # 10 m interval contours
-├── ks_1m_dem_2018_watersheds_huc12.json   # watershed polygons
-├── ks_1m_dem_2018_stream_network.json     # extracted stream lines
-└── ks_1m_dem_2020_contours_5m.json        # alternate contour interval
+data/processed/dem/overlays/
+├── ks_1m_dem_2018_hillshade.tif
+├── ks_1m_dem_2018_slope.tif
+├── ks_1m_dem_2018_aspect.tif
+├── ks_1m_dem_2020_hillshade.tif
+├── ks_1m_dem_2020_slope.tif
+└── ks_1m_dem_2020_aspect.tif
 
-Common types
-	•	Contours → elevation isolines at fixed intervals
-	•	Watersheds / Basins → polygons derived from flow accumulation
-	•	Stream networks → centerlines from flow routing thresholds
-	•	Landform classes → slope/aspect zones, geomorph classes
+Core overlays
+	•	Hillshade → shaded relief (azimuth + altitude)
+	•	Slope → gradient (degrees or percent rise)
+	•	Aspect → slope orientation (0–360°)
+
+Optional overlays
+	•	Curvature → concavity/convexity
+	•	TRI / TPI → terrain ruggedness / topographic position index
+	•	Roughness → local variability
+
+⸻
+
+🔧 Parameters (reference)
+
+Overlay	Tool/Arg	Recommended Defaults	Notes
+Hillshade	gdaldem hillshade	-az 315 -alt 45 -compute_edges	Adjust az/alt for lighting experiments.
+Slope	gdaldem slope	-compute_edges	Add -p for percent rise if desired.
+Aspect	gdaldem aspect	-compute_edges	0–360°, 0/360 = North.
+
+All outputs should be COG (tiled, overviews). Use LZW or DEFLATE compression.
 
 ⸻
 
 🔄 Workflow
 	1.	Source DEM
-	•	Must exist as a COG in data/processed/dem/
+
+	•	Must exist in data/processed/dem/ as a COG
 	•	Example: ks_1m_dem_2018.tif
-	2.	Generate vectors
 
-Contours (10m)
+	2.	Generate overlays
 
-gdal_contour -a elev -i 10 \
-  data/processed/dem/ks_1m_dem_2018.tif \
-  /tmp/ks_1m_dem_2018_contours_10m.shp
+# Hillshade
+gdaldem hillshade ks_1m_dem_2018.tif ks_1m_dem_2018_hillshade.tif \
+  -compute_edges -az 315 -alt 45 -co COMPRESS=LZW
 
-ogr2ogr -f GeoJSON -t_srs EPSG:4326 \
-  data/processed/dem/vectors/ks_1m_dem_2018_contours_10m.json \
-  /tmp/ks_1m_dem_2018_contours_10m.shp
+# Slope
+gdaldem slope ks_1m_dem_2018.tif ks_1m_dem_2018_slope.tif \
+  -compute_edges -co COMPRESS=LZW
 
-Watersheds (HUC12 equivalent)
-	•	Tools: TauDEM, WhiteboxTools, GRASS GIS
-	•	Workflow: flow direction → flow accumulation → stream & basin delineation
+# Aspect
+gdaldem aspect ks_1m_dem_2018.tif ks_1m_dem_2018_aspect.tif \
+  -compute_edges -co COMPRESS=LZW
 
-Stream networks
+	3.	Convert to COG
 
-wbt_breach_depressions --dem=ks_1m_dem_2018.tif --output=/tmp/filled.tif
-wbt_d8_flow_accumulation --dem=/tmp/filled.tif --out_type=catchment-area --output=/tmp/accum.tif
-wbt_extract_streams --flow_accum=/tmp/accum.tif --threshold=1000 --output=/tmp/streams.tif
-gdal_polygonize.py /tmp/streams.tif -f GeoJSON \
-  data/processed/dem/vectors/ks_1m_dem_2018_stream_network.json
+rio cogeo create ks_1m_dem_2018_hillshade.tif \
+  ks_1m_dem_2018_hillshade.tif --web-optimized
 
-	3.	Reproject → always EPSG:4326 (WGS84 lat/long)
-	4.	Checksums
+	4.	Store outputs → data/processed/dem/overlays/
+	5.	Checksums
 
-scripts/gen_sha256.sh data/processed/dem/vectors/*.json
+scripts/gen_sha256.sh data/processed/dem/overlays/*.tif
 
-	5.	Update STAC Items → add vector assets to parent DEM
+	6.	Update STAC items (parent DEM)
+Example: stac/items/dem/ks_1m_dem_2018.json
 
-"contours_10m": {
-  "href": "../../../processed/dem/vectors/ks_1m_dem_2018_contours_10m.json",
-  "title": "DEM Contours 10m (2018)",
-  "type": "application/geo+json",
-  "roles": ["data"],
-  "checksum:sha256": "<sha256sum>"
+"assets": {
+  "dem": {
+    "href": "../../../processed/dem/ks_1m_dem_2018.tif",
+    "roles": ["data"]
+  },
+  "hillshade": {
+    "href": "../../../processed/dem/overlays/ks_1m_dem_2018_hillshade.tif",
+    "title": "DEM Hillshade Overlay (2018)",
+    "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+    "roles": ["visual"],
+    "checksum:sha256": "<sha256sum>"
+  }
 }
 
 
 ⸻
 
-📑 Example STAC Item (DEM 10m Contours)
+📑 Example STAC Item (DEM Hillshade Overlay)
 
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "ks_1m_contours_10m_2018",
+  "id": "ks_1m_hillshade_2018",
   "properties": {
-    "title": "Kansas DEM Contours 10m (2018)",
-    "description": "10m contour lines derived from the 2018 Kansas 1m DEM mosaic.",
+    "title": "Kansas Hillshade (2018, 1m DEM)",
+    "description": "Hillshade overlay generated from 2018 Kansas 1m DEM mosaic.",
     "datetime": "2018-06-01T00:00:00Z",
     "proj:epsg": 4326,
-    "kfm:method": "gdal_contour -i 10",
-    "kfm:lineage": [
-      "data/processed/dem/ks_1m_dem_2018.tif"
-    ],
+    "kfm:method": "gdaldem hillshade (az=315, alt=45)",
+    "kfm:lineage": ["data/processed/dem/ks_1m_dem_2018.tif"],
     "qa:status": "provisional"
   },
   "links": [
-    {
-      "rel": "collection",
-      "href": "../../../../stac/collections/terrain.json"
-    }
+    { "rel": "collection", "href": "../../../../stac/collections/terrain.json" }
   ],
   "assets": {
-    "geojson": {
-      "href": "../../../../data/processed/dem/vectors/ks_1m_dem_2018_contours_10m.json",
-      "title": "Contours (10m, 2018 DEM)",
-      "type": "application/geo+json",
-      "roles": ["data", "vector"]
+    "cog": {
+      "href": "../../../../data/processed/dem/overlays/ks_1m_dem_2018_hillshade.tif",
+      "title": "Hillshade (2018 DEM, 1m)",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "roles": ["data", "raster", "visual"]
     }
   }
 }
@@ -137,35 +155,69 @@ scripts/gen_sha256.sh data/processed/dem/vectors/*.json
 
 ⸻
 
+🧪 Make Targets (suggested)
+
+overlays: hillshade slope aspect stac-overlays
+
+hillshade:
+\tgdaldem hillshade $(DEM) $(OUT_HS) -compute_edges -az 315 -alt 45 -co COMPRESS=LZW
+\trio cogeo create $(OUT_HS) $(OUT_HS) --web-optimized
+
+slope:
+\tgdaldem slope $(DEM) $(OUT_SLP) -compute_edges -co COMPRESS=LZW
+\trio cogeo create $(OUT_SLP) $(OUT_SLP) --web-optimized
+
+aspect:
+\tgdaldem aspect $(DEM) $(OUT_ASP) -compute_edges -co COMPRESS=LZW
+\trio cogeo create $(OUT_ASP) $(OUT_ASP) --web-optimized
+
+stac-overlays:
+\t# script to patch parent DEM STAC items with overlay assets + checksums
+
+
+⸻
+
+✅ QA Checklist
+	•	Outputs are COG with internal overviews
+	•	Checksums generated and stored (.sha256)
+	•	STAC items updated (assets → roles:["visual"], correct href, checksum)
+	•	web/config/layers.json entries added/updated
+	•	KMZ exports (if required) created under data/kml/
+	•	Large files tracked by Git LFS or DVC
+
+⸻
+
 🔗 Integration
-	•	STAC catalog → ensures discoverability (contours, watersheds, streams)
-	•	Web viewer → layers referenced in web/config/layers.json
-	•	KML exports → selected DEM vectors exported under data/kml/
-	•	Experiments → used in terrain analysis, archaeology, hydrology, flood modeling
-	•	Reproducibility → regenerate outputs via pipelines; never hand-edit
+	•	Web viewer → overlays referenced in web/config/layers.json (schema validated)
+	•	Google Earth (KML/KMZ) → exported under data/kml/
+	•	Experiments → archaeology, hydrology, floodplain mapping, erosion studies
+	•	STAC → overlays attached as assets under parent DEM items
 
 ⸻
 
 📝 Notes
-	•	Canonical format = GeoJSON (.json)
-	•	For very large sets, tile or convert to MBTiles/PMTiles (but keep canonical GeoJSON here)
-	•	Track large files with Git LFS or DVC
-	•	Document exact tools/parameters in experiments/*/experiment.md
-	•	Naming convention: <dem_id>_<layer>_<parameters>.json
-	•	Example: ks_1m_dem_2018_contours_10m.json
+	•	Naming → <dem_id>_<overlay>.tif (e.g., ks_1m_dem_2018_hillshade.tif)
+	•	Compression → LZW or DEFLATE
+	•	Reproducibility → regenerate overlays; never hand-edit rasters
+	•	Consistency → overlays must be linked in STAC + web configs
 
 ⸻
 
 📚 See Also
 	•	../ → Base processed DEMs
-	•	../overlays/ → Raster derivatives (hillshade, slope, aspect)
-	•	../../stac/items/dem/ → STAC items linking DEMs and vector derivatives
-	•	../../kml/ → KML/KMZ exports
-	•	experiments/ → MCP logs + configs for vector derivation
+	•	../vectors/ → Contours and terrain vectorizations
+	•	data/kml/ → KMZ exports of hillshades & styled rasters
+	•	stac/items/dem/ → STAC items for DEMs + overlays
+	•	experiments/ → MCP logs + configs for DEM workflows
 
 ⸻
 
-✅ Mission Principle
 
-DEM-derived vectors must be clean, reproducible, STAC-linked, and ready for integration
-in Kansas Frontier Matrix workflows and web mapping.
+<div align="center">
+
+
+✅ Mission Principle
+DEM overlays must be optimized, reproducible, and traceable across STAC, web configs, Makefile workflows, and KML exports.
+
+</div>
+```
