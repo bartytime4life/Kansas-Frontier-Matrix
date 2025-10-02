@@ -1,15 +1,21 @@
-
 <div align="center">
 
-# 💧 Kansas-Frontier-Matrix — Hydrology & Water Resources Sources
+# 💧 Kansas-Frontier-Matrix — Hydrology & Water Resources Sources  
+`data/sources/hydro/`
 
-**Mission:** catalog Kansas hydrological datasets so they are  
+**Mission:** Catalog Kansas hydrological datasets so they are  
 **traceable, reproducible, and discoverable** in the STAC catalog,  
 and linked into the Frontier-Matrix **timeline + knowledge graph**.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+[![Docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../../../.github/workflows/docs.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://app.codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 </div>
 
@@ -40,13 +46,13 @@ data/sources/hydro/
 ├── vectors/                  # Processed shapefiles/GeoJSON layers
 └── README.md                 # This file
 
-Note: Raw shapefiles & rasters → data/raw/hydro/ (ignored).
-Processed outputs → data/processed/hydro/ (LFS).
-Only descriptors, checksums, metadata live here.
+⚠️ Raw shapefiles & rasters → data/raw/hydro/ (ignored).
+✅ Processed outputs → data/processed/hydro/ (tracked with LFS).
+📑 Only descriptors, checksums, metadata live here.
 
 ⸻
 
-📑 Descriptor Schema
+🧭 Descriptor Schema
 
 Each dataset config must follow the
 KFM Source Descriptor schema (data/sources/schema.source.json).
@@ -74,9 +80,9 @@ KFM Source Descriptor schema (data/sources/schema.source.json).
 
 Key Rules
 	•	bbox → EPSG:4326 (WGS84 lon/lat)
-	•	period → explicit (YYYY, YYYY-YYYY, 1930s, or current)
+	•	period → explicit (YYYY, YYYY–YYYY, 1930s, or current)
 	•	Always include license + provenance
-	•	urls[] → multiple services/endpoints as needed
+	•	urls[] → multiple services/endpoints allowed
 
 ⸻
 
@@ -101,7 +107,7 @@ Water Quality
 
 🔗 Integration Notes
 	•	Timeline-aware: reservoir construction, channel modifications
-	•	Flood history: 1903, 1951, 1993 Kansas River floods → linked to hazards (NOAA/FEMA)
+	•	Flood history: 1903, 1951, 1993 Kansas River floods → link to hazards (NOAA/FEMA)
 	•	Aquifer depletion: Ogallala decline post-1950 → irrigation expansion
 	•	Cross-domain links:
 	•	Hazards (Event: floods, droughts)
@@ -111,8 +117,8 @@ Water Quality
 ⸻
 
 ✅ Best Practices
-	•	Store raw shapefiles/GeoDBs in data/raw/
-	•	Store processed GeoJSON/COGs in data/processed/hydro/ (LFS)
+	•	Store raw shapefiles/GeoDBs → data/raw/hydro/
+	•	Store processed GeoJSON/COGs → data/processed/hydro/ (LFS)
 	•	Update .sha256 checksums + retrieved date on refresh
 	•	Normalize CRS → EPSG:4326 for viewer; record original CRS in _meta.json
 	•	Automate with:
@@ -121,8 +127,7 @@ make fetch hydro
 make vectors
 make stac
 
-
-	•	Add confidence flags for incomplete datasets (e.g. wells with short records)
+	•	Add confidence flags for incomplete datasets (e.g., wells with short records)
 
 ⸻
 
@@ -163,7 +168,6 @@ flowchart TD
 ⸻
 
 ✦ Summary
-data/sources/hydro/ defines descriptors for Kansas hydrology datasets — rivers, lakes, wetlands, aquifers, and water quality.
-They ensure water resources are auditable, timeline-aware, and cross-linked into the STAC catalog, hazards layers, and the Frontier-Matrix knowledge graph.
 
----
+data/sources/hydro/ defines descriptors for Kansas hydrology datasets — rivers, lakes, wetlands, aquifers, and water quality.
+They ensure water resources are auditable, timeline-aware, and cross-linked into the STAC catalog, hazard layers, and the Frontier-Matrix knowledge graph.
