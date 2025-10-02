@@ -5,10 +5,28 @@
 **Mission:** Automate **CI/CD, validation, security, and release**  
 so every change is **reproducible, auditable, and safe-by-default**.
 
-[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)  
-[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](./stac-badges.yml)  
+<!-- Core CI/CD -->
+[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
+[![CI / Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](./tests.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](./stac-badges.yml)
+
+<!-- Security / Supply Chain -->
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)
+[![Secret Scanning](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/secret-scanning.yml/badge.svg)](./secret-scanning.yml)
+[![SBOM](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/sbom.yml/badge.svg)](./sbom.yml)
+[![OpenSSF Scorecard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ossf-scorecard.yml/badge.svg)](./ossf-scorecard.yml)
+
+<!-- Packaging / Releases / Ops -->
+[![Docker Build](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docker.yml/badge.svg)](./docker.yml)
+[![Release](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/release.yml/badge.svg)](./release.yml)
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](./automerge.yml)
+[![Link Check](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/link-check.yml/badge.svg)](./link-check.yml)
+
+<!-- Repo hygiene (informational) -->
+[![Dependabot Updates](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](../../network/updates)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](../../.pre-commit-config.yaml)
 
 📌 **Fail fast** (lint, schemas, STAC) before heavy work  
 📌 **Least-privilege** tokens + safe on PRs (no writes)  
@@ -42,28 +60,28 @@ Each workflow sets minimal permissions.
 ## 📚 Index (Workflows Overview)
 
 | Category | Workflow             | File                      | Purpose                                                    | Triggers (paths/events)                                 | Outputs / Artifacts                               |
-| -------- | -------------------- | ------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| 🧪       | CI                   | `ci.yml`                  | Python lint/tests (ruff/pytest), optional mypy; smoke web  | `src/**`, `tests/**`, `pyproject.toml`, `requirements*` | JUnit/coverage → `.artifacts/`                    |
-| 🧪       | Tests                | `tests.yml`               | Quick test matrix                                          | `tests/**`                                              | `pytest-report.xml`, coverage                     |
-| 🧪       | Web Config Validate  | `web-config-validate.yml` | JSON lint + `$schema` validate; targeted tests             | `web/**.json`, `web/config/**`, `tests/**`              | `pytest-web-configs.xml`, step summaries          |
-| 🌐       | STAC Validate        | `stac-validate.yml`       | `stac-validator` → pystac fallback; asset checks           | `stac/**`                                               | `.artifacts/stac_validator.txt`, broken-link list |
-| 🌐       | STAC & Render Config | `stac.yml`                | Validate STAC, render `web/app.config.json`, schema-check  | `stac/**`, `src/**`, `web/**`                           | `.artifacts/stac_report.json`, rendered config    |
-| 🌐       | STAC Badges          | `stac-badges.yml`         | Generate Shields JSON for catalog coverage                 | `stac/**`, `data/sources/**`                            | `web/badges/*.json`, `build/stac_report.json`     |
-| 🌐       | Site (Pages)         | `site.yml`                | Build & deploy MapLibre site to Pages; optional link check | `web/**`, `stac/**`, `mkdocs.yml`                       | `_site/` artifact → Pages                         |
-| 🐳       | Docker Build         | `docker.yml`              | Multi-arch Buildx → GHCR; provenance; Trivy image scan     | `docker/**`, `Dockerfile`                               | GHCR tags, `trivy-image.sarif`                    |
-| 📦       | SBOM                 | `sbom.yml`                | CycloneDX/SPDX for repo (and image if present)             | push/schedule/manual                                    | `artifacts/sbom/**`                               |
-| 🔒       | CodeQL               | `codeql.yml`              | Static analysis (Python, JS/TS)                            | push/PR/schedule                                        | SARIF alerts → Code scanning                      |
-| 🔒       | Trivy                | `trivy.yml`               | FS/config/image scans; SBOMs; SARIF                        | push/PR/schedule                                        | `trivy-*.sarif`, SBOM JSON                        |
-| 🔒       | Secret Scanning      | `secret-scanning.yml`     | Gitleaks diff/history scan                                 | push/PR/schedule                                        | `gitleaks.sarif`                                  |
-| 🔒       | OpenSSF Scorecard    | `ossf-scorecard.yml`      | Repo health/security checks                                | push/PR/weekly                                          | `scorecard.sarif`                                 |
-| 📦       | Release              | `release.yml`             | Tag-driven Python release (sdist + wheel, checksums)       | tags `v*`                                               | `dist/**`, `CHECKSUMS.txt`                        |
-| 🗺️      | Roadmap Sync         | `roadmap.yml`             | Sync `.github/roadmap/roadmap.yaml` → labels/milestones    | roadmap changes/manual                                  | `build/roadmap-sync.log`                          |
-| 🏷️      | Labels Sync          | `labels.yml`              | Sync labels from `.github/labels.yml`                      | push/manual                                             | —                                                 |
-| 🤖       | Automerge            | `automerge.yml`           | Auto-merge PRs with label after all checks pass            | PR labeled `automerge`                                  | —                                                 |
-| ⏳        | Close Stale          | `close-stale.yml`         | Mark/close inactive issues/PRs                             | nightly/manual                                          | bot comments                                      |
-| 🔒       | Issue Lock           | `issue-lock.yml`          | Lock closed issues after inactivity                        | nightly/manual                                          | bot comments                                      |
-| 🏷️      | PR Labeler           | `pr-labeler.yml`          | Auto-label PRs by path/size/type                           | PR open/sync                                            | labels                                            |
-| 🔗       | Link Check (opt)     | `link-check.yml`          | Lychee over README/docs/web                                | push/PR                                                 | `lychee.md`, `results.json`                       |
+| -------: | -------------------- | ------------------------- | ---------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------- |
+|       🧪 | CI                   | `ci.yml`                  | Python lint/tests (ruff/pytest), optional mypy; smoke web  | `src/**`, `tests/**`, `pyproject.toml`, `requirements*` | JUnit/coverage → `.artifacts/`                    |
+|       🧪 | Tests                | `tests.yml`               | Quick test matrix                                          | `tests/**`                                              | `pytest-report.xml`, coverage                     |
+|       🧪 | Web Config Validate  | `web-config-validate.yml` | JSON lint + `$schema` validate; targeted tests             | `web/**.json`, `web/config/**`, `tests/**`              | `pytest-web-configs.xml`, step summaries          |
+|       🌐 | STAC Validate        | `stac-validate.yml`       | `stac-validator` → pystac fallback; asset checks           | `stac/**`                                               | `.artifacts/stac_validator.txt`, broken-link list |
+|       🌐 | STAC & Render Config | `stac.yml`                | Validate STAC, render `web/app.config.json`, schema-check  | `stac/**`, `src/**`, `web/**`                           | `.artifacts/stac_report.json`, rendered config    |
+|       🌐 | STAC Badges          | `stac-badges.yml`         | Generate Shields JSON for catalog coverage                 | `stac/**`, `data/sources/**`                            | `web/badges/*.json`, `build/stac_report.json`     |
+|       🌐 | Site (Pages)         | `site.yml`                | Build & deploy MapLibre site to Pages; optional link check | `web/**`, `stac/**`, `mkdocs.yml`                       | `_site/` artifact → Pages                         |
+|       🐳 | Docker Build         | `docker.yml`              | Multi-arch Buildx → GHCR; provenance; Trivy image scan     | `docker/**`, `Dockerfile`                               | GHCR tags, `trivy-image.sarif`                    |
+|       📦 | SBOM                 | `sbom.yml`                | CycloneDX/SPDX for repo (and image if present)             | push/schedule/manual                                    | `artifacts/sbom/**`                               |
+|       🔒 | CodeQL               | `codeql.yml`              | Static analysis (Python, JS/TS)                            | push/PR/schedule                                        | SARIF alerts → Code scanning                      |
+|       🔒 | Trivy                | `trivy.yml`               | FS/config/image scans; SBOMs; SARIF                        | push/PR/schedule                                        | `trivy-*.sarif`, SBOM JSON                        |
+|       🔒 | Secret Scanning      | `secret-scanning.yml`     | Gitleaks diff/history scan                                 | push/PR/schedule                                        | `gitleaks.sarif`                                  |
+|       🔒 | OpenSSF Scorecard    | `ossf-scorecard.yml`      | Repo health/security checks                                | push/PR/weekly                                          | `scorecard.sarif`                                 |
+|       📦 | Release              | `release.yml`             | Tag-driven Python release (sdist + wheel, checksums)       | tags `v*`                                               | `dist/**`, `CHECKSUMS.txt`                        |
+|      🗺️ | Roadmap Sync         | `roadmap.yml`             | Sync `.github/roadmap/roadmap.yaml` → labels/milestones    | roadmap changes/manual                                  | `build/roadmap-sync.log`                          |
+|      🏷️ | Labels Sync          | `labels.yml`              | Sync labels from `.github/labels.yml`                      | push/manual                                             | —                                                 |
+|       🤖 | Automerge            | `automerge.yml`           | Auto-merge PRs with label after all checks pass            | PR labeled `automerge`                                  | —                                                 |
+|        ⏳ | Close Stale          | `close-stale.yml`         | Mark/close inactive issues/PRs                             | nightly/manual                                          | bot comments                                      |
+|       🔒 | Issue Lock           | `issue-lock.yml`          | Lock closed issues after inactivity                        | nightly/manual                                          | bot comments                                      |
+|      🏷️ | PR Labeler           | `pr-labeler.yml`          | Auto-label PRs by path/size/type                           | PR open/sync                                            | labels                                            |
+|       🔗 | Link Check (opt)     | `link-check.yml`          | Lychee over README/docs/web                                | push/PR                                                 | `lychee.md`, `results.json`                       |
 
 ---
 
