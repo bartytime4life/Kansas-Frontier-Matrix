@@ -42,7 +42,7 @@ data/sources/dem/
 ├── processed/              # Processed derivatives (hillshade, slope, aspect)
 └── README.md
 
-🔒 **Note:** Raw GeoTIFFs, LiDAR tiles, and large COGs live in `data/raw/**` (ignored) or tracked via LFS/DVC.  
+🔒 **Note:** Raw GeoTIFFs, LiDAR tiles, and large COGs live in `data/raw/**` (ignored) or tracked via Git LFS/DVC.  
 Only descriptors, metadata, and sidecars are committed to git.  
 
 ---
@@ -75,7 +75,7 @@ Every DEM descriptor must comply with `schema.source.json`.
   "keywords": ["DEM", "elevation", "Kansas", "LiDAR", "terrain"]
 }
 
-Rules:
+Rules
 	•	bbox must be EPSG:4326 (lon/lat).
 	•	urls[] may list multiple tiles (expanded by make fetch).
 	•	Always include license + provenance.
@@ -104,7 +104,7 @@ Rules:
 	•	🧾 Maintain .sha256 checksums + provenance timestamps.
 	•	📦 Keep raw LiDAR tiles in data/raw/dem/ (ignored by git).
 	•	🗺️ Store raw DEMs in original CRS; normalize processed outputs to EPSG:4326.
-	•	⚙️ Automate builds with Make:
+	•	⚙️ Automate builds with Makefile targets:
 
 make dem        # statewide DEM COGs
 make hillshade  # hillshades
