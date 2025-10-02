@@ -1,33 +1,71 @@
-# 🔬 MCP Experiment — TEMPLATE
+<div align="center">
 
-> Copy this folder and rename to `mcp/experiments/EXP-YYYYMMDD-<slug>/`.
+# 🔬 Kansas-Frontier-Matrix — MCP Experiment Template  
+### `mcp/experiments/template/`
+
+**Mission:** Provide a **deterministic scaffold** for experiments, ensuring reproducibility, provenance, and MCP-grade rigor.  
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../../.github/workflows/tests.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../../.github/workflows/stac-badges.yml)  
+
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Roadmap Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/roadmap.yml/badge.svg)](../../../.github/workflows/roadmap.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)  
+![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)  
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)  
+
+</div>
+
+---
+
+## 📂 How to Use
+
+> Copy this folder and rename to:  
+> `mcp/experiments/EXP-YYYYMMDD-<slug>/`
+
+Each experiment must remain **self-contained** and **deterministic**.
+
+---
 
 ## 0) Metadata
 
-- **Experiment ID:** `EXP-YYYYMMDD-<slug>`
-- **Owner(s):** @you
-- **Status:** ☐ Planned ☐ Running ☐ Completed ☐ Abandoned
-- **Scope areas:** `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`
-- **Related issues/PRs:** Fixes #…, Relates #…
-- **Milestone:** `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp`
+- **Experiment ID:** `EXP-YYYYMMDD-<slug>`  
+- **Owner(s):** @you  
+- **Status:** ☐ Planned ☐ Running ☐ Completed ☐ Abandoned  
+- **Scope areas:** `data` | `stac` | `web` | `src` | `scripts` | `ci` | `docker`  
+- **Related issues/PRs:** Fixes #…, Relates #…  
+- **Milestone:** `m1-data` | `m2-analytics` | `m3-story` | `m4-tech` | `m5-mcp`  
+
+---
 
 ## 1) Objective / Hypothesis
 
-- **Question:** …
-- **Hypothesis:** …
-- **Success criteria:** …
+- **Question:** …  
+- **Hypothesis:** …  
+- **Success criteria:** …  
+
+---
 
 ## 2) Inputs & Bounds
 
-- **STAC inputs:** list item/collection IDs or paths
-- **Source descriptors:** `data/sources/*.json`
-- **AOI / timeframe:** bbox / dates
-- **Licenses / provenance:** notes + citations
+- **STAC inputs:** list item/collection IDs or paths  
+- **Source descriptors:** `data/sources/*.json`  
+- **AOI / timeframe:** bbox / dates  
+- **Licenses / provenance:** notes + citations  
+
+---
 
 ## 3) Method (SOP)
 
-- Controls/treatments/params noted in `params.yaml`
-- Deterministic commands live in `commands.sh`
+- Controls/treatments/params noted in `params.yaml`  
+- Deterministic commands live in [`commands.sh`](./commands.sh)  
+
+---
 
 ## 4) Repro Commands
 
@@ -35,140 +73,105 @@ Run from repo root (or this dir) after activating your venv:
 
 ```bash
 bash mcp/experiments/EXP-YYYYMMDD-<slug>/commands.sh
+````
+
 This script:
 
-Validates STAC & configs
+* Validates STAC & configs
+* Builds derivatives if needed
+* Captures env + git SHA
+* Snapshots artifact hashes
+* Writes metrics & a STAC report to `results/`
 
-Builds derivatives if needed
+---
 
-Captures env + git SHA
+## 5) Results
 
-Snapshots artifact hashes
+* **Metrics:** `results/metrics.json`
+* **STAC report:** `results/stac_report.json`
+* **Figures:** `figures/` (PNG/SVG)
 
-Writes metrics & a STAC report to results/
+---
 
-5) Results
-Metrics: results/metrics.json
+## 6) Provenance
 
-STAC report: results/stac_report.json
+* **Git commit:** `provenance/git_sha.txt`
+* **Artifact hashes:** `provenance/artifact_hashes.txt` (SHA-256)
 
-Figures: figures/ (PNG/SVG)
+---
 
-6) Provenance
-Git commit: provenance/git_sha.txt
+## 7) Ethics / Legal
 
-Artifact hashes: provenance/artifact_hashes.txt (SHA-256)
+* [ ] Sensitive locations handled?
+* [ ] Licenses verified?
+* [ ] Indigenous/community data reviewed where applicable?
 
-7) Ethics / Legal
-Sensitive locations handled?
+---
 
-Licenses verified?
+## 8) Follow-ups
 
-Indigenous/community data reviewed where applicable?
+* [ ] …
+* [ ] …
 
-8) Follow-ups
- …
+---
 
- …
+## ✅ Validation & CI Hooks
 
-Validation & CI hooks
-bash
-Copy code
+```bash
 make stac-validate
 make config-validate || true
-mermaid
-Copy code
+```
+
+```mermaid
 flowchart TD
   A["Params & SOP"] --> B["Run commands.sh"]
   B --> C["Artifacts & Figures"]
   B --> D["Metrics & Reports"]
   B --> E["Provenance\n(git SHA + hashes)"]
   D --> F["Review vs. Success Criteria"]
+```
+
 <!-- END OF MERMAID -->
-bash
-Copy code
 
 ---
 
-# `mcp/experiments/template/commands.sh`
+## 🔧 Implementation Notes
 
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
+### `commands.sh`
 
-# --- Config -------------------------------------------------------------------
-EXP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || echo "$(pwd)")"
-cd "$ROOT_DIR"
+This script is the **canonical run log**. It:
 
-EXP_NAME="${EXP_DIR##*/}"   # e.g., EXP-20251001-kansas-hillshade
-OUT_DIR="$EXP_DIR"
-RESULTS_DIR="$OUT_DIR/results"
-ENV_DIR="$OUT_DIR/env"
-PROV_DIR="$OUT_DIR/provenance"
-FIG_DIR="$OUT_DIR/figures"
-PARAMS="$OUT_DIR/params.yaml"
+* Fetches sources (optional via `params.yaml`)
+* Builds derivatives (`make cogs`, `make terrain`)
+* Validates STAC + configs
+* Captures environment + git SHA
+* Computes metrics + writes reports
+* Snapshots artifact hashes
 
-mkdir -p "$RESULTS_DIR" "$ENV_DIR" "$PROV_DIR" "$FIG_DIR"
-
-# --- Helpers ------------------------------------------------------------------
-log() { printf "\n\033[1;34m[%s]\033[0m %s\n" "$(date +%H:%M:%S)" "$*"; }
-
-# --- 0) Capture environment ---------------------------------------------------
-log "Capturing environment"
-python -V || true
-{ python -V; echo; pip freeze || true; } > "$ENV_DIR/env.txt"
-git rev-parse HEAD > "$PROV_DIR/git_sha.txt" 2>/dev/null || true
-
-# --- 1) Optional: fetch / build inputs ---------------------------------------
-# Customize these if your experiment needs new data.
-if grep -q '^fetch:' "$PARAMS" 2>/dev/null; then
-  log "Fetching sources (per params.yaml)"
-  make fetch || true
-fi
-
-# --- 2) Build derivatives (if requested) -------------------------------------
-if grep -q '^build_derivatives:' "$PARAMS" 2>/dev/null; then
-  log "Building derivatives"
-  make cogs || true
-  make terrain || true
-fi
-
-# --- 3) STAC + config validation ---------------------------------------------
-log "Validating STAC & viewer config"
-make stac-validate || true
-make config-validate || true
-
-# --- 4) Render site config (if needed) ---------------------------------------
-if grep -q '^render_site_config:' "$PARAMS" 2>/dev/null; then
-  log "Rendering web/app.config.json"
-  make site-config || true
-fi
-
-# --- 5) Compute metrics (placeholder) ----------------------------------------
-# Implement your metrics below. Example leaves a stub JSON.
-log "Computing metrics (placeholder)"
-jq -n --arg exp "$EXP_NAME" \
-  '{experiment:$exp, metrics:{example_metric:0}, timestamp:now}' \
-  > "$RESULTS_DIR/metrics.json"
-
-# --- 6) STAC report (placeholder) --------------------------------------------
-log "Writing STAC report (placeholder)"
-jq -n --arg exp "$EXP_NAME" \
-  '{experiment:$exp, stac_validation:"see CI artifacts or local validator output"}' \
-  > "$RESULTS_DIR/stac_report.json"
-
-# --- 7) Snapshot artifact hashes ---------------------------------------------
-log "Hashing artifacts (SHA-256)"
-# You can scope this to relevant output dirs; the glob handles missing dirs.
-( find data/cogs -type f -name '*.tif' 2>/dev/null
-  find data/processed -type f 2>/dev/null
-  find web -maxdepth 1 -type f -name '*.json' 2>/dev/null
-) | LC_ALL=C sort | xargs -r sha256sum > "$PROV_DIR/artifact_hashes.txt" || true
-
-log "Done. Results in: $OUT_DIR"
 Make it executable:
 
-bash
-Copy code
+```bash
 chmod +x mcp/experiments/template/commands.sh
+```
+
+---
+
+## 📑 Roadmap Link (if applicable)
+
+* Milestone: …
+* Related epic/issue: …
+* Roadmap marker:
+
+  ```
+  <!-- roadmap:key=exp-<stable-key> -->
+  ```
+
+---
+
+## ✅ Checklist (before merging)
+
+* [ ] Sources & STAC entries exist and validate
+* [ ] Results reproducible with `commands.sh`
+* [ ] STAC assets include `checksum:sha256` + `file:size`
+* [ ] Site rebuilt (`make site`, `make site-config`) if visuals changed
+* [ ] SOP/docs updated if workflows changed
