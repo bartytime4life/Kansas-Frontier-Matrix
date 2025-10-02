@@ -1,16 +1,39 @@
----
-name: "🧩 Data Addition Request"
-about: "Propose a new dataset (map, layer, catalog, or document set) for Kansas-Frontier-Matrix"
-title: "[DATA] <concise dataset name>"
-labels: ["data", "enhancement", "stac", "catalog"]
-assignees: []
+<div align="center">
+
+# 🧩 Kansas-Frontier-Matrix — Data Addition Request
+
+<!-- Core CI/CD -->
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../actions/workflows/site.yml)  
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../actions/workflows/tests.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../actions/workflows/stac-validate.yml)  
+[![STAC Badges](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](../../actions/workflows/stac-badges.yml)  
+
+<!-- Security -->
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../actions/workflows/trivy.yml)  
+[![Secret Scanning](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/secret-scanning.yml/badge.svg)](../../actions/workflows/secret-scanning.yml)  
+[![OpenSSF Scorecard](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ossf-scorecard.yml/badge.svg)](../../actions/workflows/ossf-scorecard.yml)  
+
+<!-- Governance -->
+[![Roadmap Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/roadmap.yml/badge.svg)](../../actions/workflows/roadmap.yml)  
+[![Labels Sync](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/labels.yml/badge.svg)](../../actions/workflows/labels.yml)  
+[![PR Labeler](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pr-labeler.yml/badge.svg)](../../actions/workflows/pr-labeler.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../actions/workflows/automerge.yml)  
+
+<!-- Repo Hygiene -->
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)  
+![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)  
+![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)  
+
+</div>
+
 ---
 
 ## 1) Overview
 
-**Dataset name**  
-**Short description** — what it is, why it matters  
-**Primary use case(s)** — layers, timelines, story themes, or AI reasoning it enables
+- **Dataset name**:  
+- **Short description** — what it is, why it matters  
+- **Primary use case(s)** — layers, timelines, story themes, or AI reasoning it enables  
 
 ---
 
@@ -20,9 +43,9 @@ assignees: []
 - **Original citation / DOI (if any)**:  
 - **License**: `CC-BY` / `CC0` / `Public Domain` / `Other (specify)`  
 - **Redistribution allowed?** yes / no / unclear  
-- **Required attribution string**: _paste exact text if specified_
+- **Required attribution string**:  
 
-> We require clear **provenance** and **legal status** before ingestion.
+> ✅ We require clear **provenance** and **legal status** before ingestion.
 
 ---
 
@@ -33,9 +56,9 @@ assignees: []
 - **Estimated size**: per-file and total  
 - **Proposed storage**: **DVC** (preferred for large data) / **Git LFS** / small in-repo  
 - **Checksum(s)**: sha256 if available  
-- **Mirroring needed?** yes/no (explain)
+- **Mirroring needed?** yes/no (explain)  
 
-> Large rasters/vectors should use **DVC/LFS**, not plain Git.
+> ⚠️ Large rasters/vectors should use **DVC/LFS**, not plain Git.
 
 ---
 
@@ -43,11 +66,11 @@ assignees: []
 
 - **Type**: raster (DEM/COG), vector (points/lines/polys), tiles, docs  
 - **Format(s)**: GeoTIFF/COG, GeoJSON, Shapefile, MBTiles/PMTiles, CSV, PDF, KML/KMZ  
-- **CRS**: `EPSG:4326` / `EPSG:3857` / other  
+- **CRS**: `EPSG:4326` | `EPSG:3857` | other  
 - **Resolution / scale**: e.g., 1 m DEM, 1:24k topo  
 - **Spatial extent (bbox)**: `minx, miny, maxx, maxy`  
 - **Temporal coverage**: single date / range (list years/editions)  
-- **Known quirks**: nodata values, tiling, projection oddities, metadata gaps
+- **Known quirks**: nodata values, tiling, projection oddities, metadata gaps  
 
 ---
 
@@ -55,7 +78,9 @@ assignees: []
 
 Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**`) or a **source descriptor** (`data/sources/*.json`).
 
-**Example Collection**
+<details>
+<summary>Example Collection</summary>
+
 ```json
 {
   "stac_version": "1.0.0",
@@ -79,7 +104,10 @@ Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**
 }
 ````
 
-**Example Item**
+</details>
+
+<details>
+<summary>Example Item</summary>
 
 ```json
 {
@@ -111,6 +139,8 @@ Provide either a **STAC Collection/Item** (`stac/collections/**`, `stac/items/**
   ]
 }
 ```
+
+</details>
 
 > If proposing web wiring, include a `legendKey` and `category` for the viewer.
 
@@ -172,7 +202,19 @@ jq -e 'type == "object"' stac/items/**/*.json
 
 ---
 
-## Checklist
+## 📑 Roadmap Link (if applicable)
+
+* Milestone: …
+* Related epic/issue: …
+* Roadmap marker:
+
+  ```
+  <!-- roadmap:key=data-<stable-key> -->
+  ```
+
+---
+
+## ✅ Checklist
 
 * [ ] Source & license verified (redistribution OK or documented)
 * [ ] Size estimated; storage plan (**DVC/LFS/in-repo**) chosen
@@ -181,5 +223,3 @@ jq -e 'type == "object"' stac/items/**/*.json
 * [ ] Proposed Make targets / commands listed
 * [ ] Validation steps noted (`kgt validate-stac`, `make config-validate`)
 * [ ] UI placement (timeline/legend/category) proposed
-
-```
