@@ -138,12 +138,3 @@ While staging is **temporary**, it supports:
 * `data/work/staging/` = **pre-flight zone for rasters/vectors**.
 * Use it to **prep data for standardization**; promote only once reproducible & documented.
 * Ephemeral by design → wipe freely, keep only what advances the pipeline.
-
----
-
-✨ This README is now:
-
-* ✅ Badge-rich (build, validate, lint, security, coverage, ontology, simulation, license).
-* ✅ Debugged (fixed badge links & paths).
-* ✅ Expanded (examples, lifecycle diagram, ontology + simulation context).
-* ✅ Consistent with **MCP reproducibility standards** and **Kansas-Frontier-Matrix conventions**.
