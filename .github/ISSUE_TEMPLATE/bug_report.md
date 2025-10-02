@@ -1,9 +1,23 @@
----
 name: "🐞 Bug Report"
 about: "Report a reproducible problem in the site, data pipeline, AI reasoning, or docs"
 title: "[BUG] <short summary>"
 labels: ["bug", "needs-triage"]
 assignees: []
+---
+
+<div align="center">
+
+# 🐞 Kansas-Frontier-Matrix — Bug Report
+
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../actions/workflows/tests.yml)
+[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../actions/workflows/stac-validate.yml)
+[![Site](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../actions/workflows/site.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../actions/workflows/trivy.yml)
+
+</div>
+
 ---
 
 ## 📝 Summary
@@ -59,8 +73,9 @@ _What actually happened (include error messages, screenshots)._
 - **Minimal repro dataset**: public URL / DOI if available
 
 **Helpful checks (optional, paste output):**
+
 ```bash
-# STAC items validation (requires kgt)
+# Validate STAC items (requires kgt)
 kgt validate-stac stac/items --no-strict || true
 
 # JSON sanity check for changed files
@@ -118,6 +133,18 @@ jq -e 'type=="object"' <changed.json>
 
 ---
 
+## 📑 Roadmap Link (if applicable)
+
+* Milestone: …
+* Related epic/issue: …
+* Roadmap marker:
+
+  ```
+  <!-- roadmap:key=bug-<stable-key> -->
+  ```
+
+---
+
 ## ✅ Checklist
 
 * [ ] Reproduced on **main** at latest commit
@@ -125,5 +152,3 @@ jq -e 'type=="object"' <changed.json>
 * [ ] Linked **STAC/sources** entry or **DVC/LFS IDs** (no big uploads)
 * [ ] Added **logs/screenshots**
 * [ ] Confirmed not a **data license/access** issue
-
-```
