@@ -1,6 +1,0 @@
-{
-  "experiment": "EXP-YYYYMMDD-slug",
-  "stac_validation": "Attach CI artifact or write local summary here.",
-  "items_checked": 0,
-  "errors": []
-}
