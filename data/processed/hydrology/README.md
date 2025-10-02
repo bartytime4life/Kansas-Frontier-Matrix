@@ -3,18 +3,21 @@
 # 💧 Kansas-Frontier-Matrix — Hydrology  
 `data/processed/hydrology/`
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![Docs](https://img.shields.io/badge/docs-MCP%20Standards-blue.svg)](../../../docs/)  
+[![Data Provenance](https://img.shields.io/badge/provenance-verified✅-green.svg)](../../../stac/items/hydrology/)  
 
-**Mission:** Hold **processed hydrological datasets** derived from DEMs, NHD, FEMA flood maps,  
+**Mission:** Hold **processed hydrological datasets** derived from DEMs, USGS NHD, FEMA flood maps,  
 NOAA/NWIS gauges, and Kansas GIS Hub sources.  
 
 Outputs are stored in **open formats** (GeoJSON, CSV, Cloud-Optimized GeoTIFFs)  
 and are **reproducible** from raw inputs in `data/raw/`.  
 
-All datasets must be registered in the **STAC catalog** (`data/stac/items/hydrology/`)  
+All datasets must be registered in the **STAC catalog** (`stac/items/hydrology/`)  
 with metadata, checksums, and provenance.  
 
 </div>
@@ -27,10 +30,11 @@ with metadata, checksums, and provenance.
 flowchart TD
   A["Raw hydrology sources\n(data/raw/hydrology/**)"] --> B["Process\n(clean · reproject · simplify)"]
   B --> C["Processed outputs\n(data/processed/hydrology/**)"]
-  C --> D["Checksums + meta\n(.sha256 · .meta.json)"]
-  C --> E["STAC Items\n(data/stac/items/hydrology/**)"]
-  E --> F["Validate\n(stac-validate)"]
+  C --> D["Checksums + metadata\n(.sha256 · .meta.json)"]
+  C --> E["STAC Items\n(stac/items/hydrology/**)"]
+  E --> F["Validate\n(make stac-validate)"]
   F --> G["Viewer integration\n(web/config/layers.json)"]
+  G --> H["Knowledge Hub links\n(treaties · settlements · geology)"]
 
 <!-- END OF MERMAID -->
 
@@ -38,7 +42,7 @@ flowchart TD
 
 ⸻
 
-📂 Structure
+📂 Directory Structure
 
 data/processed/hydrology/
 ├── kansas_river/        # Kansas River centerlines, watershed, floodplains, gauges
@@ -51,7 +55,8 @@ data/processed/hydrology/
 	•	kansas_river/ → Kansas River–specific hydrology datasets
 	•	watersheds/ → statewide or regional HUC-based polygons
 	•	floodplains/ → FEMA and reconstructed floodplain layers
-	•	Other files → generalized or statewide hydrology vectors
+	•	stream_networks.json → simplified statewide stream network
+	•	lakes_wetlands.json → major lakes and wetlands polygons
 
 ⸻
 
@@ -64,25 +69,23 @@ data/processed/hydrology/
 ⸻
 
 🔄 Workflow
-	1.	Acquire raw sources → data/raw/
-	•	Sources: USGS NHD, NOAA NWIS, FEMA, Kansas GIS Hub
+	1.	Acquire raw sources → data/raw/hydrology/
+	•	Sources: USGS NHD, NOAA NWIS, FEMA DFIRM, Kansas GIS Hub
 	2.	Process
-	•	Clean, reproject to EPSG:4326
-	•	Simplify/dissolve geometries as needed
+	•	Clean geometries, reproject to EPSG:4326
+	•	Simplify/dissolve as needed (scale-aware generalization)
 	•	Export to GeoJSON / COG / CSV
 	3.	Checksums
 
 scripts/gen_sha256.sh data/processed/hydrology/*
 
-
 	4.	Register in STAC
-	•	Add/update Item JSON under data/stac/items/hydrology/
+	•	Add/update Item JSON under stac/items/hydrology/
 	•	Link assets with roles: ["data"] + checksum:sha256
 	5.	Validate
 
 make stac-validate
 pre-commit run stac-validate --all-files
-
 
 
 ⸻
@@ -101,16 +104,11 @@ Watershed (HUC12, vector)
     "datetime": "2020-01-01T00:00:00Z",
     "proj:epsg": 4326,
     "kfm:method": "Delineated from USGS NHD & DEM flow accumulation",
-    "kfm:lineage": [
-      "data/raw/hydrology/nhd/ks_huc12.gpkg"
-    ],
+    "kfm:lineage": ["data/raw/hydrology/nhd/ks_huc12.gpkg"],
     "qa:status": "verified"
   },
   "links": [
-    {
-      "rel": "collection",
-      "href": "../../../stac/collections/hydrology.json"
-    }
+    { "rel": "collection", "href": "../../../stac/collections/hydrology.json" }
   ],
   "assets": {
     "geojson": {
@@ -122,7 +120,7 @@ Watershed (HUC12, vector)
   }
 }
 
-Floodplain (FEMA, raster COG)
+Floodplain (FEMA DFIRM, raster COG)
 
 {
   "type": "Feature",
@@ -134,27 +132,9 @@ Floodplain (FEMA, raster COG)
     "datetime": "2021-01-01T00:00:00Z",
     "proj:epsg": 4326,
     "kfm:method": "Rasterized FEMA DFIRM flood zones to 100-year flood extent",
-    "kfm:lineage": [
-      "data/raw/hydrology/fema/dfirm_ks_2021.gdb"
-    ],
+    "kfm:lineage": ["data/raw/hydrology/fema/dfirm_ks_2021.gdb"],
     "qa:status": "provisional"
   },
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [[
-      [-102.05, 36.99],
-      [-102.05, 40.00],
-      [-94.59, 40.00],
-      [-94.59, 36.99],
-      [-102.05, 36.99]
-    ]]
-  },
-  "links": [
-    {
-      "rel": "collection",
-      "href": "../../../stac/collections/hydrology.json"
-    }
-  ],
   "assets": {
     "cog": {
       "href": "../../../data/processed/hydrology/floodplains/ks_floodplain_100yr.tif",
@@ -169,9 +149,9 @@ Floodplain (FEMA, raster COG)
 ⸻
 
 🔗 Integration
-	•	Web Viewer → layers referenced in web/config/layers.json for MapLibre visualization
-	•	Experiments → floodplain reconstruction, treaty overlays, archaeology + erosion studies
-	•	Knowledge Hub → cross-links hydrology with treaties, settlements, geology, environment
+	•	Web Viewer → layers referenced in web/config/layers.json for MapLibre
+	•	Knowledge Hub → cross-links hydrology with treaties, settlements, geology, and climate
+	•	Experiments → used for floodplain reconstruction, treaty overlays, archaeology + erosion studies
 
 ⸻
 
@@ -179,20 +159,25 @@ Floodplain (FEMA, raster COG)
 	•	❌ Do not manually edit processed outputs
 	•	✅ Always regenerate from raw + documented scripts or notebooks
 	•	Use stable filenames (<theme>_<year>.json) so STAC + web configs remain valid
-	•	Track large files with Git LFS / DVC
-	•	Document provenance + methods in experiments/<ID>_.../experiment.md
+	•	Track large files with Git LFS or DVC
+	•	Document provenance + methods in experiments/<ID>_*/experiment.md
 
 ⸻
 
 📚 See Also
-	•	data/raw/ → raw hydrology sources
+	•	data/raw/hydrology/ → raw hydrology sources
 	•	data/processed/dem/vectors/ → DEM-derived stream networks + basins
-	•	data/stac/items/hydrology/ → STAC Items for hydrology datasets
+	•	stac/items/hydrology/ → STAC Items for hydrology datasets
 	•	experiments/ → MCP-style experiment logs for hydrology modeling
 
 ⸻
 
-✅ Mission Principle
 
-Hydrology datasets must be consistent, reproducible, STAC-linked, and ready
-for cross-domain analysis in the Kansas Frontier Matrix.
+<div align="center">
+
+
+✅ Mission Principle
+Hydrology datasets must be consistent, reproducible, STAC-linked, and cross-domain ready for integration in the Kansas Frontier Matrix.
+
+</div>
+```
