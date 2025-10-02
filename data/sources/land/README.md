@@ -1,15 +1,21 @@
-
 <div align="center">
 
-# 🗺 Kansas-Frontier-Matrix — Land, Soils & Cadastral Sources
+# 🗺 Kansas-Frontier-Matrix — Land, Soils & Cadastral Sources  
+`data/sources/land/`
 
-**Mission:** catalog Kansas land-related datasets so they are  
+**Mission:** Catalog Kansas land-related datasets so they are  
 **traceable, reproducible, and discoverable** in the STAC catalog,  
-and linked into the Frontier-Matrix **timeline + knowledge graph**.
+and linked into the Frontier-Matrix **timeline + knowledge graph**.  
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+[![Docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../../../.github/workflows/docs.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://app.codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 </div>
 
@@ -39,15 +45,16 @@ data/sources/land/
 ├── vectors/                  # Processed shapefiles/GeoJSON
 └── README.md                 # This file
 
-Note: Raw shapefiles/scans → data/raw/land/ (ignored).
-Processed outputs → data/processed/land/ (LFS).
-Only descriptors, checksums, metadata live here.
+⚠️ Raw shapefiles/scans → data/raw/land/ (ignored).
+✅ Processed outputs → data/processed/land/ (LFS).
+📑 Only descriptors, checksums, metadata live here.
 
 ⸻
 
-📑 Metadata Schema
+🧭 Metadata Schema
 
-Each dataset follows the KFM Source Descriptor schema (data/sources/schema.source.json).
+Each dataset follows the
+KFM Source Descriptor schema (data/sources/schema.source.json).
 
 {
   "id": "plss",
@@ -83,7 +90,7 @@ Each dataset follows the KFM Source Descriptor schema (data/sources/schema.sourc
 
 Rules
 	•	bbox → EPSG:4326 (lon/lat WGS84)
-	•	temporal → explicit (YYYY, YYYY-YYYY, 1930s, or current)
+	•	temporal → explicit (YYYY, YYYY–YYYY, 1930s, or current)
 	•	Always include license + provenance
 	•	endpoints → multiple services/endpoints as needed
 
@@ -115,22 +122,22 @@ Historical Atlases & Plats
 ⸻
 
 🔗 Integration Notes
-	•	Timeline support
+	•	Timeline support:
 	•	PLSS grid (1850s–present)
 	•	Parcels with temporal attributes (owner, year)
 	•	Land-cover datasets (1992+, plus historic vegetation)
-	•	Soil surveys connect to settlement + agriculture narratives
-	•	Historic plats (scanned) can be georeferenced with data/gcp/*.yml
-	•	AI modules link land units with treaties, disasters, diaries
+	•	Soil surveys: connect to settlement + agriculture narratives
+	•	Historic plats: georeferenced with data/gcp/*.yml
+	•	Cross-links: treaties, tribal cessions, disasters, diaries
 	•	Tag datasets with confidence flags where coverage incomplete
 
 ⸻
 
 ✅ Best Practices
-	•	Store raw scans in scans/, digitized vectors in vectors/
+	•	Store raw scans → scans/, digitized vectors → vectors/
 	•	Update checksums in data/provenance/registry.json
 	•	Harmonize CRS → EPSG:4326 for web; retain originals for precision
-	•	Cross-link to treaties & tribal cessions (land cessions → PLSS → parcels)
+	•	Cross-link PLSS ↔ treaties ↔ parcels for land-cession analysis
 	•	Record uncertainty metadata (confidence scores, alignment errors)
 
 ⸻
@@ -138,7 +145,7 @@ Historical Atlases & Plats
 🚀 Advanced Concepts
 	•	Predictive modeling: simulate land-use under drought/fire scenarios
 	•	Fractal analysis: detect self-similar patterns in parcels/settlement clusters
-	•	Geoarchaeology: soil cores + land overlays to separate natural vs human change
+	•	Geoarchaeology: soil cores + land overlays to separate natural vs. human change
 	•	Story-mapping: tie parcels & plats to narratives (settler diaries, tribal oral histories)
 
 ⸻
@@ -163,18 +170,15 @@ flowchart TD
 	•	Kansas GIS Data Portal
 	•	Kansas GIS Archive Hub
 	•	USDA NRCS SSURGO
-	•	[Kansas GAP Analysis Land Cover Map (2001)]
-	•	[Kansas Ecological Systems Map (2017–18, Sentinel-2)]
+	•	Kansas GAP Analysis Land Cover Map (2001)
+	•	Kansas Ecological Systems Map (2017–18, Sentinel-2)
 	•	Kansas Geological Survey Core Library
 	•	Kansas Historical Society – County Plat Maps
 
 ⸻
 
 ✦ Summary
+
 data/sources/land/ defines descriptors for cadastral, soils, and land-cover datasets in Kansas.
-They ensure land resources are auditable, timeline-aware, and cross-linked into the STAC catalog,
-treaties, hazards, and the Frontier-Matrix knowledge graph.
-
----
-
-⚡ Now your Land README is **GitHub-polished**: badges render, Mermaid compiles, sections consistent with Hazards/Hydro, and it closes with a professional summary.  
+They ensure land resources are auditable, timeline-aware, and cross-linked into the
+STAC catalog, treaty layers, hazards, and the Frontier-Matrix knowledge graph.
