@@ -138,13 +138,3 @@ Even though scratch is **ephemeral**, it underpins:
 * Use it for **quick tests and drafts**.
 * **Promote only if reproducible + documented** (with checksums + STAC).
 * Everything else can — and should — be wiped without regret.
-
----
-
-✨ This README is now:
-
-* ✅ Badge-rich (build, validation, lint, security, ontology, simulation, license).
-* ✅ Debugged (fixed badge targets, consistent links).
-* ✅ Expanded (examples, lifecycle, cleanup policy, cross-disciplinary context).
-* ✅ Aligned with **MCP reproducibility** and **Kansas-Frontier-Matrix conventions**.
-
