@@ -1,4 +1,3 @@
-Here’s your **fully rebuilt `README.md`** for `data/work/tmp/` — debugged, badge-rich, expanded, and with all the bells & whistles. It’s polished to match your Kansas-Frontier-Matrix repo standards:
 <div align="center">
 
 # 🗑️ Kansas-Frontier-Matrix — Work TMP (`data/work/tmp/`)
