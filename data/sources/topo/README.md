@@ -1,15 +1,21 @@
-
 <div align="center">
 
-# 🏔 Kansas-Frontier-Matrix — Topographic & Elevation Sources
+# 🏔 Kansas-Frontier-Matrix — Topographic & Elevation Sources  
+`data/sources/topo/`
 
-**Mission:** catalog Kansas topographic and elevation datasets so they are  
+**Mission:** Catalog Kansas topographic and elevation datasets so they are  
 **traceable, reproducible, and discoverable** in the STAC catalog,  
-and linked into the Frontier-Matrix **timeline + knowledge graph**.
+and linked into the Frontier-Matrix **timeline + knowledge graph**.  
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-badges.yml)
-[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.pre-commit-config.yaml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)  
+[![Pre-commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.pre-commit-config.yaml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)  
+[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../../../.github/workflows/automerge.yml)  
+[![Docs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../../../.github/workflows/docs.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://app.codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)  
 
 </div>
 
@@ -20,7 +26,7 @@ and linked into the Frontier-Matrix **timeline + knowledge graph**.
 - Provide **baseline terrain context** (DEM, contours, shaded relief)  
 - Preserve **historic USGS topo sheets** (19th–20th century editions)  
 - Enable **temporal comparisons** (historic topo vs. modern DEM)  
-- Support **hydrology, soils, land-use overlays** with terrain backdrops  
+- Support **hydrology, soils, and land-use overlays** with terrain backdrops  
 - Link terrain to **migration routes, forts, flood events, Dust Bowl studies**  
 
 ---
@@ -37,15 +43,16 @@ data/sources/topo/
 ├── vectors/                  # Contour shapefiles/GeoJSON
 └── README.md                 # This file
 
-Note: Raw scans → data/raw/topo/ (ignored).
-Processed outputs → data/processed/topo/ (LFS).
-Only descriptors, checksums, metadata live here.
+⚠️ Raw scans → data/raw/topo/ (ignored).
+✅ Processed outputs → data/processed/topo/ (LFS).
+📑 Only descriptors, checksums, metadata live here.
 
 ⸻
 
-📑 Metadata Schema
+🧭 Metadata Schema
 
-Datasets follow the KFM Source Descriptor schema (data/sources/schema.source.json).
+Datasets follow the
+KFM Source Descriptor schema (data/sources/schema.source.json).
 
 {
   "id": "usgs_historic_topo",
@@ -79,6 +86,11 @@ Datasets follow the KFM Source Descriptor schema (data/sources/schema.source.jso
   "confidence": "high"
 }
 
+Rules
+	•	bbox → EPSG:4326 (lon/lat WGS84)
+	•	temporal → explicit (year, year range, or current)
+	•	Always include license + provenance
+	•	endpoints[] → multiple sources supported
 
 ⸻
 
@@ -100,19 +112,19 @@ Derived Terrain Products
 
 🔗 Integration Notes
 	•	Time-aware topo layers: historic sheets tagged by survey/publication year
-	•	DEM → derivatives: run make terrain for slope, aspect, TRI/TPI
-	•	Georeferencing: all scans rectified to EPSG:4326 (WGS84) for consistency
+	•	DEM derivatives: use make terrain for slope, aspect, TRI/TPI
+	•	Georeferencing: all scans rectified to EPSG:4326 (WGS84)
 	•	Cross-links:
-	•	Trails & forts → ridges, rivers, passes
-	•	Dust Bowl overlays → slope/erosion factors
-	•	Flood studies → DEM + hydrology integration
+	•	Trails & forts ↔ ridges, rivers, passes
+	•	Dust Bowl overlays ↔ slope/erosion factors
+	•	Flood studies ↔ DEM + hydrology integration
 
 ⸻
 
 ✅ Best Practices
 	•	Store raw scans in scans/ (GeoTIFF/MrSID, unmodified)
 	•	Convert to COGs for web tiling (rio cogeo create …)
-	•	Standardize vectors (contours, boundaries) to GeoJSON EPSG:4326
+	•	Standardize vectors (contours, boundaries) → GeoJSON EPSG:4326
 	•	Update checksums in data/provenance/registry.json
 	•	Always include temporal attributes (survey year, edition)
 
@@ -142,11 +154,7 @@ flowchart TD
 ⸻
 
 ✦ Summary
+
 data/sources/topo/ defines descriptors for Kansas topographic & elevation datasets — historic maps, DEMs, and terrain derivatives.
 They ensure terrain is auditable, timeline-aware, and cross-linked into the STAC catalog,
 and integrated into hazards, hydrology, and settlement layers in the Frontier-Matrix knowledge graph.
-
----
-
-⚡ Now your Topographic README is **GitHub-polished**: badges render, Mermaid compiles, sections match other domain READMEs, and it ends with a concise summary.  
-
