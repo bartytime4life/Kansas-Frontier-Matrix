@@ -1,5 +1,3 @@
-Got it — here’s a GitHub-safe, aligned, and consistently titled rewrite you can drop into data/architecture.md. I removed fragile Unicode dividers, standardized headings, fixed center alignment, and made the Mermaid block GitHub-parser-friendly (quoted labels + closing comment).
-
 <div align="center">
 
 # 🗃️ Kansas Frontier Matrix — Data & Catalog Architecture  
@@ -230,8 +228,3 @@ Roadmap
 	•	Deeper CIDOC-CRM profiles for treaties, deeds, oral histories
 
 ⸻
-
-Rebuild everything:
-make fetch cogs vectors tables stac checksums
-
-If you want, I can also push a variant that replaces the centered HTML wrapper with a plain H1 (some orgs prefer zero HTML in markdown).
