@@ -41,14 +41,15 @@ data/
 
 ⸻
 
-🧰 Data Lifecycle
+## 🧰 Data Lifecycle
 
+```mermaid
 flowchart TD
-  A[Sources (manifests and APIs)] --> B[Raw data (data/raw)]
-  B --> C[Processing and ETL (data/processed)]
-  C --> D[STAC catalog (data/stac)]
-  D --> E[Derivatives (data/derivatives, tiles)]
-  E --> F[Web and Knowledge Graph]
+  A[SOURCES: manifests and APIs] --> B[RAW: data/raw]
+  B --> C[ETL: data/processed]
+  C --> D[STAC: data/stac]
+  D --> E[DERIVATIVES: data/derivatives, tiles]
+  E --> F[WEB + KNOWLEDGE GRAPH]
 
 	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata.
 	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only).
