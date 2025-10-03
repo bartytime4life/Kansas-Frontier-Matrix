@@ -5,26 +5,26 @@
 **Mission:** Store, organize, and version-control all datasets powering the  
 Kansas Frontier Matrix knowledge hub — maps, rasters, vectors, documents, and tables.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)  
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.github/workflows/pre-commit.yml)
 
 </div>
 
 ---
 
-## 📚 Purpose
+## Purpose
 
-- Central hub for **all project data assets**  
-- Ensures **reproducibility** (Makefile-driven ETL)  
-- Enforces **provenance rules** (checksums, metadata, schemas)  
-- Feeds the **map + timeline + knowledge graph**
+- Central hub for all project data assets  
+- Ensures reproducibility (Makefile-driven ETL)  
+- Enforces provenance rules (checksums, metadata, schemas)  
+- Feeds the map, timeline, and knowledge graph
 
 ---
 
-## 📂 Layout
+## Layout
 
 ```bash
 data/
@@ -40,7 +40,7 @@ data/
 
 ⸻
 
-🧰 Data Lifecycle
+Data Lifecycle
 
 flowchart TD
   A[SOURCES manifests and APIs] --> B[RAW data/raw]
@@ -52,35 +52,35 @@ flowchart TD
 	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata
 	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only)
 	•	Processed → Open formats (GeoJSON, COG GeoTIFF, CSV); reproducible via ETL scripts
-	•	STAC → Indexed collections & items with spatial/temporal metadata
-	•	Derivatives → Hillshades, slope/aspect, mosaics, statistical summaries
+	•	STAC → Indexed collections and items with spatial/temporal metadata
+	•	Derivatives → Hillshades, slope/aspect, mosaics, statistics
 	•	Tiles → Build-only tiles (z/x/y pyramids, PMTiles) for web/app previews
 
 ⸻
 
-📦 Standards
-	•	🌍 Vectors → GeoJSON (EPSG:4326 WGS84)
-	•	🏔️ Rasters → Cloud-Optimized GeoTIFF (COG)
-	•	⏳ Catalogs → STAC 1.0.0
-	•	📑 Metadata → JSON Schema, DCAT-compatible
-	•	🔐 Integrity → .sha256 for every artifact
+Standards
+	•	Vectors → GeoJSON (EPSG:4326 WGS84)
+	•	Rasters → Cloud-Optimized GeoTIFF (COG)
+	•	Catalogs → STAC 1.0.0
+	•	Metadata → JSON Schema, DCAT-compatible
+	•	Integrity → .sha256 for every artifact
 
 ⸻
 
-📜 Provenance Rules
+Provenance Rules
 
 Every dataset must include:
-	•	✅ Manifest → data/sources/{id}.json (title, URL, license, extent, temporal)
-	•	✅ Checksum → .sha256 for raw + processed
-	•	✅ STAC Item → in data/stac/
-	•	✅ Explicit license (MIT, CC-BY, PD, etc.)
-	•	✅ Docs updated (README.md, changelog)
+	•	Manifest → data/sources/{id}.json (title, URL, license, extent, temporal)
+	•	Checksum → .sha256 for raw and processed artifacts
+	•	STAC Item → in data/stac/ with links to processed outputs
+	•	Explicit license (MIT, CC-BY, Public Domain, etc.)
+	•	Docs updated (README.md, changelog)
 
-If it can’t be verified, reproduced, or cited → it does not go in main/.
+If it cannot be verified, reproduced, or cited → it does not go in main/.
 
 ⸻
 
-🔍 Example Manifest
+Example Manifest
 
 {
   "id": "usgs_topo_larned_1894",
@@ -103,29 +103,21 @@ If it can’t be verified, reproduced, or cited → it does not go in main/.
 
 ⸻
 
-🏛 Example Domains
-	•	🌾 Land & Soils → SSURGO, STATSGO, historic soil maps
-	•	🏔️ Terrain → LiDAR DEMs, USGS 3DEP, slope/aspect
-	•	🌊 Hydrology → USGS NWIS, Kansas River floods
-	•	🌪️ Hazards → NOAA Storm Events, FEMA disasters
-	•	📜 Cultural & History → Kansas Memory, treaties, newspapers
-	•	🏹 Indigenous Data → Oral histories, land cessions
+Example Domains
+	•	Land and Soils → SSURGO, STATSGO, historic soil maps
+	•	Terrain → LiDAR DEMs, USGS 3DEP, slope/aspect
+	•	Hydrology → USGS NWIS, Kansas River floods
+	•	Hazards → NOAA Storm Events, FEMA disasters
+	•	Cultural and History → Kansas Memory, treaties, newspapers
+	•	Indigenous Data → Oral histories, land cessions
 
 ⸻
 
-⚠️ Notes
-	•	Large files → use Git LFS / DVC, never commit binaries
+Notes
+	•	Large files → use Git LFS or DVC; do not commit binaries
 	•	Tiles → ephemeral, always rebuilt
 	•	work/ and tmp/ → ignored by Git
 
 ⸻
 
 
-<div align="center">
-
-
-✅ /data/ is the engine room of Kansas Frontier Matrix —
-turning scattered archives into traceable, reproducible, open datasets.
-
-</div>
-```
