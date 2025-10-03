@@ -3,14 +3,13 @@
 # 🗂️ Kansas-Frontier-Matrix — Data (`/data/`)
 
 **Mission:** Store, organize, and version-control all datasets powering the  
-Kansas Frontier Matrix knowledge hub — maps, rasters, vectors, documents, and tables.  
+Kansas Frontier Matrix knowledge hub — maps, rasters, vectors, documents, and tables.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)  
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)  
 [![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)  
-[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.github/workflows/pre-commit.yml)  
-[![MCP Protocol](https://img.shields.io/badge/Docs-MCP%20Aligned-green)](../docs/)  
+[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.github/workflows/pre-commit.yml)
 
 </div>
 
@@ -18,10 +17,10 @@ Kansas Frontier Matrix knowledge hub — maps, rasters, vectors, documents, and 
 
 ## 📚 Purpose
 
-- Central hub for **all project data assets**.  
-- Ensures **reproducibility** (Makefile-driven ETL).  
-- Enforces **MCP provenance rules** (checksums, metadata, schemas).  
-- Feeds the **map + timeline + knowledge graph**.  
+- Central hub for **all project data assets**  
+- Ensures **reproducibility** (Makefile-driven ETL)  
+- Enforces **provenance rules** (checksums, metadata, schemas)  
+- Feeds the **map + timeline + knowledge graph**
 
 ---
 
@@ -41,22 +40,21 @@ data/
 
 ⸻
 
-## 🧰 Data Lifecycle
+🧰 Data Lifecycle
 
-```mermaid
 flowchart TD
-  A[SOURCES: manifests and APIs] --> B[RAW: data/raw]
-  B --> C[ETL: data/processed]
-  C --> D[STAC: data/stac]
-  D --> E[DERIVATIVES: data/derivatives, tiles]
-  E --> F[WEB + KNOWLEDGE GRAPH]
+  A[SOURCES manifests and APIs] --> B[RAW data/raw]
+  B --> C[ETL data/processed]
+  C --> D[STAC data/stac]
+  D --> E[DERIVATIVES data/derivatives tiles]
+  E --> F[WEB and Knowledge Graph]
 
-	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata.
-	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only).
-	•	Processed → Open formats (GeoJSON, COG GeoTIFF, CSV); reproducible via ETL scripts.
-	•	STAC → Indexed collections & items with spatial/temporal metadata.
-	•	Derivatives → Hillshades, slope/aspect, mosaics, statistical summaries.
-	•	Tiles → Build-only tiles (z/x/y pyramids, PMTiles) for web/app previews.
+	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata
+	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only)
+	•	Processed → Open formats (GeoJSON, COG GeoTIFF, CSV); reproducible via ETL scripts
+	•	STAC → Indexed collections & items with spatial/temporal metadata
+	•	Derivatives → Hillshades, slope/aspect, mosaics, statistical summaries
+	•	Tiles → Build-only tiles (z/x/y pyramids, PMTiles) for web/app previews
 
 ⸻
 
@@ -72,11 +70,11 @@ flowchart TD
 📜 Provenance Rules
 
 Every dataset must include:
-	•	✅ Manifest → data/sources/{id}.json (title, URL, license, extent, temporal).
-	•	✅ Checksum → .sha256 for raw + processed.
-	•	✅ STAC Item → in data/stac/.
-	•	✅ Explicit license (MIT, CC-BY, PD, etc.).
-	•	✅ Docs updated (README.md, changelog).
+	•	✅ Manifest → data/sources/{id}.json (title, URL, license, extent, temporal)
+	•	✅ Checksum → .sha256 for raw + processed
+	•	✅ STAC Item → in data/stac/
+	•	✅ Explicit license (MIT, CC-BY, PD, etc.)
+	•	✅ Docs updated (README.md, changelog)
 
 If it can’t be verified, reproduced, or cited → it does not go in main/.
 
@@ -116,9 +114,9 @@ If it can’t be verified, reproduced, or cited → it does not go in main/.
 ⸻
 
 ⚠️ Notes
-	•	Large files → use Git LFS / DVC, never commit binaries.
-	•	Tiles → ephemeral, always rebuilt.
-	•	work/ + tmp/ → ignored by Git.
+	•	Large files → use Git LFS / DVC, never commit binaries
+	•	Tiles → ephemeral, always rebuilt
+	•	work/ and tmp/ → ignored by Git
 
 ⸻
 
