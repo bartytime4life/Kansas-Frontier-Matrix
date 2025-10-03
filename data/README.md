@@ -1,4 +1,3 @@
-Here it is, rebuilt clean so it renders in GitHub (no smart separators, proper fences, working Mermaid, plain ASCII labels).
 
 <div align="center">
 
@@ -121,6 +120,3 @@ Notes
 	•	work/ and tmp/ → ignored by Git
 
 ⸻
-
-
-If you want, I’ll apply the same “safe Mermaid” fix across your other docs so you don’t hit this again anywhere.
