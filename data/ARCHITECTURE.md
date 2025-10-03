@@ -41,22 +41,22 @@ This document defines the **data architecture** for KFM, following **MCP** (docu
 
 ## Repository Layout
 
+```text
 data/
 ├─ sources/     # JSON descriptors (external pointers + metadata)
 ├─ raw/         # fetched originals (DVC/LFS; not stored in Git history)
 ├─ processed/   # normalized outputs (COG, GeoJSON, CSV/Parquet)
 └─ stac/        # STAC Collections/Items indexing processed assets
 
-- **`sources/`**: minimal JSON manifests (id, title, license, bbox/time, endpoints).  
-- **`raw/`**: originals fetched via `make fetch` (tracked with **DVC** or **Git LFS**), plus `*.sha256`.  
-- **`processed/`**: analysis/web-ready outputs (COG rasters, GeoJSON vectors, CSV/Parquet tables).  
-- **`stac/`**: authoritative catalog (Items/Collections + assets + provenance links).
+	•	sources/: minimal JSON manifests (id, title, license, bbox/time, endpoints).
+	•	raw/: originals fetched via make fetch (tracked with DVC or Git LFS), plus *.sha256.
+	•	processed/: analysis/web-ready outputs (COG rasters, GeoJSON vectors, CSV/Parquet tables).
+	•	stac/: authoritative catalog (Items/Collections + assets + provenance links).
 
----
+⸻
 
-## End-to-End Flow
+End-to-End Flow
 
-```mermaid
 flowchart TD
   A["Sources\n\"scans, rasters, vectors, docs\""] --> B["ETL Pipeline\n\"Makefile, Python, checksums\""]
   B --> C["Processed Layers\n\"COGs, GeoJSON, tables\""]
@@ -114,14 +114,14 @@ STAC Catalog (data/stac/)
 
 Items describe individual assets; Collections group related items.
 
-Minimal Item (COG asset):
+Minimal Item (COG asset)
 
 {
   "type": "Feature",
   "stac_version": "1.0.0",
   "id": "usgs_topo_larned_1894",
   "properties": { "datetime": "1894-01-01T00:00:00Z" },
-  "geometry": { "type": "Polygon", "coordinates": [[[...]]]},
+  "geometry": { "type": "Polygon", "coordinates": [[[0,0],[1,0],[1,1],[0,1],[0,0]]]},
   "bbox": [-99.4, 38.1, -99.0, 38.4],
   "assets": {
     "cog": {
@@ -136,21 +136,6 @@ Minimal Item (COG asset):
 }
 
 STAC is the single source of truth for discovery, powering UI configs and API queries.
-
-⸻
-
-Provenance & Integrity
-	•	Checksums: *.sha256 sidecars for fetched and key processed files (make checksums).
-	•	DVC/LFS: large binaries tracked out-of-Git with immutable content hashes.
-	•	Determinism: ETL steps are repeatable; schemas validated in CI.
-	•	Uncertainty: include confidence fields where applicable; surface in UI symbology.
-
-⸻
-
-Open Standards & Semantics
-	•	Formats: COG, GeoJSON, CSV/Parquet; vector tiles/PMTiles for scale.
-	•	Catalogs: STAC 1.0; optional DCAT/JSON-LD export.
-	•	Ontology: CIDOC-CRM for heritage entities; OWL-Time for intervals; PeriodO for named eras.
 
 ⸻
 
@@ -173,6 +158,21 @@ stac:
 checksums:
 	python tools/checksums.py --verify
 
+
+⸻
+
+Provenance & Integrity
+	•	Checksums: *.sha256 sidecars for fetched and key processed files (make checksums).
+	•	DVC/LFS: large binaries tracked out-of-Git with immutable content hashes.
+	•	Determinism: ETL steps are repeatable; schemas validated in CI.
+	•	Uncertainty: include confidence fields where applicable; surface in UI symbology.
+
+⸻
+
+Open Standards & Semantics
+	•	Formats: COG, GeoJSON, CSV/Parquet; vector tiles/PMTiles for scale.
+	•	Catalogs: STAC 1.0; optional DCAT/JSON-LD export.
+	•	Ontology: CIDOC-CRM for heritage entities; OWL-Time for intervals; PeriodO for named eras.
 
 ⸻
 
@@ -205,9 +205,11 @@ Vector source (multi-year)
 
 STAC roles (raster)
 
-"assets": {
-  "cog":   { "href": "...", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"] },
-  "thumb": { "href": ".../thumb.jpg", "type": "image/jpeg", "roles": ["thumbnail"] }
+{
+  "assets": {
+    "cog":   { "href": "...", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"] },
+    "thumb": { "href": ".../thumb.jpg", "type": "image/jpeg", "roles": ["thumbnail"] }
+  }
 }
 
 
@@ -226,5 +228,3 @@ Roadmap
 	•	PMTiles for statewide vector/raster layers
 	•	Confidence-aware styling in the UI
 	•	Deeper CIDOC-CRM profiles for treaties, deeds, oral histories
-
-⸻
