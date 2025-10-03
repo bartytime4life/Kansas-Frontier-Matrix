@@ -33,6 +33,7 @@ Following **Master Coder Protocol (MCP)**, all tests must be:
 
 ## 📚 Structure
 
+```text
 tests/
 ├── python/          # Pytest-based unit + integration tests for ETL, AI/ML, graph DB
 │   ├── test_ingest.py
@@ -51,9 +52,9 @@ tests/
 │   ├── ks_county_sample.geojson
 │   └── dem_sample.tif
 └── e2e/             # End-to-end system tests (API + UI integration)
-├── test_api_endpoints.py
-├── test_graphql_queries.py
-└── test_browser_flows.js
+    ├── test_api_endpoints.py
+    ├── test_graphql_queries.py
+    └── test_browser_flows.js
 
 ---
 
