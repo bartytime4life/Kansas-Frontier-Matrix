@@ -11,9 +11,9 @@ Time · Terrain · History · Knowledge Graphs
 
 ⸻
 
-Overview
+📌 Overview
 
-This document defines the mission-grade data architecture for the Kansas-Frontier-Matrix (KFM). It explains how sources are described, fetched, transformed into open formats, cataloged with STAC, and wired into CI for provenance, integrity, and reproducibility. The design follows the project’s documentation-first / MCP principles and the end-to-end stack shown in the Architecture docs.  ￼  ￼
+This document describes the data architecture of Kansas-Frontier-Matrix (KFM), following Master Coder Protocol (MCP) principles: documentation-first, provenance, and full reproducibility. It explains directory roles, the ETL pipeline, STAC cataloging, and integrity controls used to keep data interoperable and auditable.
 
 ⸻
 
@@ -26,57 +26,45 @@ This document defines the mission-grade data architecture for the Kansas-Frontie
 	•	Open Formats & Interoperability
 	•	Tooling & Automation
 	•	Contributing New Data
+	•	Appendix: Minimal Source Descriptor
 
 ⸻
 
 Directory Structure
 
-In KFM, all datasets and metadata live under data/, split by lifecycle stage.  ￼
+All datasets and metadata live under data/, organized by lifecycle stage.
 
 data/
 ├─ sources/     # JSON manifests (external pointers + metadata)
-├─ raw/         # fetched originals (DVC/LFS pointers)
-├─ processed/   # COGs, GeoJSON, CSV/Parquet — analysis-ready
+├─ raw/         # fetched originals (tracked via DVC/LFS pointers)
+├─ processed/   # analysis-/web-ready outputs (COGs, GeoJSON, CSV/Parquet)
 └─ stac/        # STAC catalog (collections/items/assets)
 
 data/sources/ {#datasources}
 
-What it is: a lightweight catalog of manifests (JSON) that declare what a dataset is, where it comes from (URLs/APIs), license, spatial/temporal extent, and expected outputs. Pipelines read these to fetch/convert data without committing bulky binaries.  ￼
-
-Why: keeps the repo lean and reproducible; every dataset starts with documented provenance.
-
-⸻
+Manifest catalog declaring each dataset: id, title, source URLs/APIs, bbox, temporal coverage, license/credits, and expected outputs. Pipelines read these to fetch/convert data while keeping the repo lean.
 
 data/raw/ {#dataraw}
 
-What it is: a workspace for downloaded originals (archives, shapefiles, GeoTIFFs). We track pointers via DVC/Git LFS; not the bytes. Integrity sidecars (.sha256) accompany files.  ￼
-
-Why: avoid repo bloat while retaining versioned, re-fetchable inputs.
-
-⸻
+Fetched originals (archives, shapefiles, GeoTIFFs, CSVs). Large binaries are not committed—use DVC/Git LFS pointers. Integrity sidecars (.sha256) accompany important files.
 
 data/processed/ {#dataprocessed}
 
-What it is: analysis- and web-ready outputs in open formats:
-	•	rasters → COG GeoTIFF (with internal overviews)
-	•	vectors → GeoJSON/TopoJSON
-	•	tables → CSV/Parquet
-
-Consistent CRS (EPSG:4326) unless noted.  ￼
-
-Why: interoperable, streamable layers for MapLibre, notebooks, and exports.  ￼
-
-⸻
+Analysis- and web-ready outputs in open formats:
+	•	Rasters → Cloud-Optimized GeoTIFF (COG) with internal overviews
+	•	Vectors → GeoJSON/TopoJSON
+	•	Tables → CSV/Parquet
+Default CRS EPSG:4326 unless noted.
 
 data/stac/ {#datastac}
 
-What it is: a STAC catalog (collections/items) indexing every processed asset with time, space, hrefs, media types, and provenance. Drives discoverability and UI layer config.  ￼  ￼
+STAC catalog indexing every processed asset with accurate spatiotemporal metadata, MIME types, and provenance links. Drives discovery and UI layer configuration.
 
 ⸻
 
 Data Processing Pipeline
 
-The ETL pipeline converts sources/ manifests into processed layers and STAC entries; it is Makefile-orchestrated with Python scripts.  ￼
+Makefile-orchestrated ETL converts sources/ manifests to processed assets and STAC entries.
 
 flowchart TD
   A["Manifest JSON<br/>(data/sources/*.json)"] -->|make fetch| B["Raw Files<br/>(data/raw/)"]
@@ -88,63 +76,54 @@ flowchart TD
 <!-- END OF MERMAID -->
 
 
-	•	Fetch — declarative downloads (HTTP/ArcGIS REST/API) with checksum verification.  ￼
-	•	Transform — reprojection to WGS84, COG creation (rio-cogeo), GeoJSON conversion (ogr2ogr), attribute cleaning.
-	•	Catalog — STAC item/collection generation + schema validation in CI.  ￼
+Fetch → declarative downloads (HTTP/REST/API) with checksum verification
+Transform → reprojection to WGS84, COG creation (rio-cogeo), vector conversion (ogr2ogr), attribute cleanup
+Catalog → programmatic STAC item/collection generation + validation in CI
 
 ⸻
 
 Spatial Catalog (STAC)
-
-KFM uses STAC 1.x to index all geospatial assets:
-	•	Collections group related items (e.g., “Historic Topographic Maps”).
-	•	Items include id, bbox/geometry, properties.datetime/interval, assets (e.g., COG or GeoJSON with accurate MIME types), and derived-from/source links for traceability.  ￼  ￼
-
-Benefits: machine-readable discovery, consistent temporal/CRS metadata, smooth handoff to the web UI (layers config) and Earth/KML exports.  ￼
+	•	Collections group related Items (e.g., “Historic Topographic Maps”).
+	•	Items include id, bbox/geometry, properties.datetime/interval, and assets (COG/GeoJSON with proper media types), plus rel:derived_from or rel:source for provenance.
+	•	Enables machine-readable discovery, temporal filtering, and smooth handoff to the web UI and external catalogs.
 
 ⸻
 
 Provenance & Reproducibility
-
-KFM bakes MCP rigor into data ops:
-	•	Checksums — .sha256 sidecars for raw & processed artifacts detect drift and enable cacheable builds.  ￼
-	•	Versioning — DVC/LFS pointers for large files; manifests are Git-tracked; all steps scripted.
-	•	CI/Quality — GitHub Actions run STAC & JSON Schema validation, unit tests, CodeQL, and Trivy scans on every PR.
-	•	Docs-first — SOPs, architecture, and experiment logs live in docs/ and are kept current (MCP).
+	•	Checksums — .sha256 sidecars detect drift and ensure byte-level fidelity.
+	•	Versioned storage — DVC/LFS for large files; manifests & code in Git.
+	•	Deterministic builds — scripted ETL (Make/Python) yields identical outputs from identical inputs.
+	•	CI Guardrails — GitHub Actions run STAC & JSON Schema validation, unit tests, CodeQL, Trivy, SBOM export, and pre-commit checks.
+	•	Docs-first MCP — every dataset/change includes documentation & metadata updates.
 
 ⸻
 
 Open Formats & Interoperability
-	•	COG GeoTIFF / GeoJSON / CSV/Parquet are the canonical outputs for web + analysis.  ￼
-	•	STAC powers indexing; metadata can be exposed as DCAT/JSON-LD where needed.  ￼
-	•	Temporal semantics align with OWL-Time, and cultural-heritage entities (events/people/places) map into a CIDOC-CRM-aligned knowledge graph (beyond this doc’s scope, see Architecture + KG docs).  ￼
+	•	COG GeoTIFF, GeoJSON/TopoJSON, CSV/Parquet as canonical outputs.
+	•	STAC 1.x for indexing; optional DCAT/JSON-LD crosswalks.
+	•	Temporal semantics align with OWL-Time; cultural-heritage entities map to CIDOC-CRM in the knowledge graph.
 
 ⸻
 
 Tooling & Automation
-	•	Makefile targets: fetch, cogs, vectors, stac, checksums, site.  ￼
-	•	Python ETL: ingest/*, pipelines/* with modular converters and validators.
-	•	GDAL/rio-cogeo for reprojection/COG; ogr2ogr for vector conversion; PySTAC for catalog build.
+	•	Makefile: fetch, cogs, vectors, stac, checksums, site.
+	•	Python ETL: src/pipelines/**, modular converters & validators.
+	•	GDAL/rasterio/rio-cogeo for rasters; OGR/Fiona/ogr2ogr for vectors; PySTAC for catalog build.
+	•	Pre-commit formatting/linting; GitHub Actions for CI; DVC/LFS for data lineage.
 
 ⸻
 
 Contributing New Data
+	1.	Create a source manifest (data/sources/<id>.json): id, title, endpoint.urls, bbox, temporal, license.
+	2.	Run ETL: make fetch → make cogs/make vectors → make stac.
+	3.	Verify integrity: commit .sha256 sidecars; ensure STAC validates in CI.
+	4.	Wire to UI (if applicable): ensure the collection/item is discoverable by the web config build (layers are generated from STAC).
 
-Goal: add a dataset once, with complete provenance, and have it appear in the timeline/map automatically.
-
-	1.	Author a source manifest in data/sources/ (id, title, endpoint.urls or service, bbox/crs, temporal coverage, license). Keep CRS/time accurate for the timeline.
-	2.	Run ETL — make fetch → make cogs/make vectors → make stac. Confirm outputs land in data/processed/ and a new STAC item appears.  ￼
-	3.	Verify integrity — commit .sha256 sidecars and manifest; let CI validate STAC/schema.  ￼
-	4.	(If UI-facing) — ensure the collection or item is discoverable by the web config build (layers are generated from STAC).  ￼
-
-Tips
-	•	Prefer GeoTIFF → COG and Shapefile → GeoJSON conversions; set output EPSG:4326 unless a different CRS is essential.
-	•	Capture a precise time (single date or interval) for map/timeline filtering.  ￼
-	•	Cite the original license/source in the manifest and check redistribution terms.
+Tips: Prefer GeoTIFF→COG and Shapefile→GeoJSON; default to EPSG:4326; capture precise datetimes/intervals for the timeline; cite original license/source.
 
 ⸻
 
-Appendix — Example minimal source descriptor
+Appendix — Minimal Source Descriptor
 
 {
   "id": "usgs_topo_larned_1894",
@@ -157,9 +136,4 @@ Appendix — Example minimal source descriptor
   "outputs": { "cog": "data/processed/overlays/usgs_topo_larned_1894.tif" }
 }
 
-Processed COG will be referenced by a STAC Item with assets.cog.href pointing to the path above; UI layers are resolved from STAC.  ￼  ￼
-
-⸻
-
-References
-Architecture & ETL/CI:  ￼ · Data layout & STAC:  ￼ · UI wiring:  · Source integration (GIS):  · Project docs/MCP:
+Processed COG is referenced by a STAC Item (assets.cog.href) and becomes discoverable to the web UI from the STAC catalog.
