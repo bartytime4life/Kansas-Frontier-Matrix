@@ -47,28 +47,28 @@ data/
 🧰 Data Lifecycle
 
 flowchart TD
-A[“Sources\n(manifests, APIs)”] –> B[“Raw Fetch\n(data/raw)”]
-B –> C[“Processing & ETL\n(data/processed)”]
-C –> D[“STAC Catalog\n(data/stac)”]
-D –> E[“Derivatives\n(data/derivatives, tiles)”]
-E –> F[“Web & Knowledge Graph\n(MapLibre, Neo4j, Google Earth)”]
+  A["Sources\n(manifests, APIs)"] --> B["Raw Fetch\n(data/raw)"]
+  B --> C["Processing & ETL\n(data/processed)"]
+  C --> D["STAC Catalog\n(data/stac)"]
+  D --> E["Derivatives\n(data/derivatives, tiles)"]
+  E --> F["Web & Knowledge Graph\n(MapLibre, Neo4j, Google Earth)"]
 
 <!-- END OF MERMAID -->
 
 
-	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata ￼.
+	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata.
 	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only).
 	•	Processed → Open formats (GeoJSON, COG GeoTIFF, CSV); reproducible via ETL scripts.
-	•	STAC → Indexed collections & items with spatial/temporal metadata ￼.
+	•	STAC → Indexed collections & items with spatial/temporal metadata.
 	•	Derivatives → Hillshades, slope/aspect, mosaics, statistical summaries.
-	•	Tiles → Build-only tiles (z/x/y pyramids, PMTiles) for web/app previews ￼.
+	•	Tiles → Build-only tiles (z/x/y pyramids, PMTiles) for web/app previews.
 
 ⸻
 
 📦 Data Standards
 	•	🌍 Vectors → GeoJSON (EPSG:4326 WGS84)
 	•	🏔️ Rasters → Cloud-Optimized GeoTIFF (COG)
-	•	⏳ Catalogs → STAC 1.0.0 (JSON) ￼
+	•	⏳ Catalogs → STAC 1.0.0 (JSON)
 	•	📑 Metadata → JSON Schema validated, DCAT-compatible
 	•	🔐 Integrity → .sha256 sidecars for all fetched & processed data
 
@@ -80,7 +80,7 @@ Every dataset must include:
 	•	✅ Manifest → data/sources/{id}.json with title, URL, license, spatial extent, temporal coverage.
 	•	✅ Checksum → .sha256 file for every raw/processed artifact.
 	•	✅ STAC Item → in data/stac/ with links to processed outputs.
-	•	✅ License → Explicit license field in metadata (MIT, CC-BY, PD, etc.) ￼.
+	•	✅ License → Explicit license field in metadata (MIT, CC-BY, PD, etc.).
 	•	✅ Docs → Contribution must update relevant README.md + changelog.
 
 Rule: If it cannot be verified, reproduced, or cited → it does not belong in main/.
@@ -115,7 +115,7 @@ Rule: If it cannot be verified, reproduced, or cited → it does not belong in m
 	•	🏔️ Terrain — LiDAR DEMs, USGS 3DEP, hillshades, slope/aspect.
 	•	🌊 Hydrology — USGS NWIS streams, Kansas River flood maps.
 	•	🌪️ Hazards — NOAA Storm Events, FEMA disaster declarations.
-	•	📜 Cultural & History — Kansas Memory archives, treaties, newspapers ￼.
+	•	📜 Cultural & History — Kansas Memory archives, treaties, newspapers.
 	•	🏹 Indigenous Data — Oral histories, land cession boundaries.
 
 (See data/sources/ for full manifest set.)
@@ -123,7 +123,7 @@ Rule: If it cannot be verified, reproduced, or cited → it does not belong in m
 ⸻
 
 ⚠️ Notes
-	•	Large files → managed via Git LFS or DVC; never checked into GitHub directly ￼.
+	•	Large files → managed via Git LFS or DVC; never checked into GitHub directly.
 	•	Ephemeral tiles → always rebuilt, never version-controlled (data/tiles/).
 	•	Work & tmp → ignored by .gitignore; promote only important products.
 
