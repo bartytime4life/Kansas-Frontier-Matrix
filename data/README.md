@@ -44,11 +44,11 @@ data/
 🧰 Data Lifecycle
 
 flowchart TD
-  A["Sources<br/>manifests & APIs"] --> B["Raw<br/>(data/raw)"]
-  B --> C["Processing & ETL<br/>(data/processed)"]
-  C --> D["STAC Catalog<br/>(data/stac)"]
-  D --> E["Derivatives<br/>(data/derivatives, tiles)"]
-  E --> F["Web and Knowledge Graph"]
+  A[Sources (manifests and APIs)] --> B[Raw data (data/raw)]
+  B --> C[Processing and ETL (data/processed)]
+  C --> D[STAC catalog (data/stac)]
+  D --> E[Derivatives (data/derivatives, tiles)]
+  E --> F[Web and Knowledge Graph]
 
 	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata.
 	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only).
