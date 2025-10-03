@@ -1,17 +1,16 @@
 <div align="center">
 
-# 🏛 Kansas Frontier Matrix — **System Architecture**
-
+# 🏛 Kansas Frontier Matrix — **System Architecture**  
 `src/ARCHITECTURE.md`
 
-**⛰ Time · 🌍 Terrain · 📜 History · 🔗 Knowledge Graphs**
-*A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kansas*
+**⛰ Time · 🌍 Terrain · 📜 History · 🔗 Knowledge Graphs**  
+_A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kansas_
 
-[![Build & Deploy](../.github/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
-[![STAC Validate](../.github/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
-[![CodeQL](../.github/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
-[![Trivy Security](../.github/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Docs: MCP](https://img.shields.io/badge/docs-MCP-blue.svg)](../docs/)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)  
+[![Docs: MCP](https://img.shields.io/badge/docs-MCP-blue.svg)](../docs/)  
 [![License: MIT/CC-BY](https://img.shields.io/badge/license-MIT%20%7C%20CC--BY-green)](../LICENSE)
 
 </div>
@@ -19,34 +18,30 @@
 ---
 
 ## 📚 Table of Contents
-
-1. [🔭 Overview](#-overview)
-2. [🏗 System Layers](#-system-layers)
-
-   * [1) ETL / Data Ingestion](#1-data-ingestion-etl)
-   * [2) AI/ML Enrichment](#2-aiml-enrichment)
-   * [3) Knowledge Graph](#3-knowledge-graph)
-   * [4) API Layer](#4-api-layer)
-   * [5) Frontend Application](#5-frontend-web-app)
-3. [🗂 Data Standards & Semantic Interoperability](#-data-standards--semantic-interoperability)
-4. [🔬 Reproducibility & Observability](#-reproducibility--observability)
-5. [🚀 Extending the System](#-extending-the-system)
-6. [📁 Repository & Data Layout](#-repository--data-layout)
-7. [📖 References & Further Reading](#-references--further-reading)
+1. [🔭 Overview](#-overview)  
+2. [🏗 System Layers](#-system-layers)  
+3. [🧭 High-Level Architecture (Mermaid)](#-high-level-architecture-mermaid)  
+4. [📦 Pipeline Sequence (Swimlane)](#-pipeline-sequence-swimlane)  
+5. [🎨 Layer Timeline Legend](#-layer-timeline-legend)  
+6. [🗂 Data Standards & Semantic Interoperability](#-data-standards--semantic-interoperability)  
+7. [🔬 Reproducibility & Observability](#-reproducibility--observability)  
+8. [🚀 Extending the System](#-extending-the-system)  
+9. [📁 Repository & Data Layout](#-repository--data-layout)  
+10. [📖 References & Further Reading](#-references--further-reading)  
 
 ---
 
 ## 🔭 Overview
+Kansas Frontier Matrix (KFM) is a **multi-disciplinary, open-source spatiotemporal knowledge hub** integrating **geography, climate, archaeology, treaties, disasters, and oral histories** into a unified **map + timeline + semantic knowledge graph**.
 
-Kansas Frontier Matrix (KFM) is a **multi-disciplinary, open-source spatiotemporal knowledge hub** that integrates **geography, climate, archaeology, treaties, disasters, and oral histories** into a unified **map + timeline + semantic knowledge graph**.
+---
 
-**At a glance**:
-
-* ⚙️ **ETL pipelines** (Python + Makefile) for reproducible ingestion.
-* 🤖 **AI/ML enrichment** for entity extraction, linking, and summarization.
-* 🕸 **Semantic knowledge graph** (Neo4j, CIDOC CRM, OWL-Time).
-* 🔌 **APIs** (FastAPI/GraphQL) powering web + Google Earth.
-* 🗺 **React + MapLibreGL frontend** with interactive storytelling.
+## 🏗 System Layers
+- **ETL / Ingestion:** normalize inputs (COG/GeoJSON), compute checksums, generate STAC items  
+- **AI/ML Enrichment:** NER, geoparsing, summarization, entity linking  
+- **Knowledge Graph:** semantic nodes/edges with provenance & confidence  
+- **API Layer:** time/space/graph queries, dossier endpoints  
+- **Frontend:** interactive timeline + map, layer toggles, story mode, KML/KMZ exports  
 
 ---
 
@@ -54,175 +49,97 @@ Kansas Frontier Matrix (KFM) is a **multi-disciplinary, open-source spatiotempor
 
 ```mermaid
 flowchart TD
-  %% LAYER TITLES
-  A["**Sources**<br/>scans · rasters · vectors · documents"]:::layer --> B["**ETL Pipeline**<br/>Makefile · Python · checksums"]:::compute
-  B --> C["**Processed Layers**<br/>COGs · GeoJSON · Parquet"]:::data
-  B --> I["**AI/ML Enrichment**<br/>NER · geocoding · summarization · linking"]:::compute
+    A["Sources<br/>Scans · Rasters · Vectors · Documents"] --> B["ETL Pipeline<br/>Makefile · Python · Checksums"]
+    B --> C["Processed Layers<br/>COGs · GeoJSON · Parquet"]
+    B --> I["AI/ML Enrichment<br/>NER · Geocoding · Summarization · Linking"]
 
-  C --> D["**STAC Catalog**<br/>collections · items · assets"]:::data
-  D --> H["**Knowledge Graph**<br/>Neo4j · CIDOC CRM · OWL-Time"]:::graph
-  I --> H
+    C --> D["STAC Catalog<br/>Collections · Items · Assets"]
+    D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
+    I --> H
 
-  D --> J["**API Layer**<br/>FastAPI · GraphQL"]:::api
-  H --> J
+    D --> J["API Layer<br/>FastAPI · GraphQL"]
+    H --> J
 
-  J --> F["**Frontend (React + MapLibreGL)**<br/>timeline · search · filters"]:::ui
-  D --> F
+    J --> F["Frontend<br/>React + MapLibreGL<br/>Timeline · Search · Filters"]
+    D --> F
 
-  E["**Config Build**<br/>app.config.json · layers.json"]:::cfg --> F
-  E --> G["**Google Earth Exports**<br/>KML · KMZ"]:::ui
+    E["Config Build<br/>app.config.json · layers.json"] --> F
+    E --> G["Google Earth Exports<br/>KML · KMZ"]
+````
 
-  classDef layer fill:#222,color:#fff,stroke:#555,stroke-width:1px;
-  classDef compute fill:#0b7285,color:#fff,stroke:#073642,stroke-width:1px;
-  classDef data fill:#2b8a3e,color:#fff,stroke:#0b3d16,stroke-width:1px;
-  classDef api fill:#6a00f4,color:#fff,stroke:#2b0066,stroke-width:1px;
-  classDef ui fill:#99582a,color:#fff,stroke:#4f2b13,stroke-width:1px;
-  classDef graph fill:#3a0ca3,color:#fff,stroke:#12043b,stroke-width:1px;
-  classDef cfg fill:#495057,color:#fff,stroke:#212529,stroke-width:1px;
-```
+---
 
-<!-- END OF MERMAID -->
-
-> 💡 **Why this design?** It separates ingestion, enrichment, knowledge, and presentation so each layer can scale independently and be tested, documented, and reproduced.
-
-### Mini Sequence (data → map)
+## 📦 Pipeline Sequence (Swimlane)
 
 ```mermaid
 sequenceDiagram
-  autonumber
-  participant Src as Source
-  participant ETL as ETL
-  participant STAC as STAC
-  participant KG as Knowledge Graph
-  participant API as API
-  participant UI as Web UI
+    autonumber
+    participant SRC as Source
+    participant ETL as ETL
+    participant STAC as STAC Catalog
+    participant KG as Knowledge Graph
+    participant API as API
+    participant UI as Web UI
 
-  Src->>ETL: Provide scans/vectors/tables
-  ETL->>STAC: Publish assets + metadata
-  ETL->>KG: Upsert entities/relations
-  UI->>API: /events?start=1850&end=1870&bbox=...
-  API->>KG: Graph query
-  API-->>UI: Timeline slice + GeoJSON/COG links
-  UI->>STAC: Fetch COG tiles/GeoJSON
-  UI-->>User: Map + timeline + AI summaries
+    SRC->>ETL: Provide scans/vectors/tables
+    ETL->>ETL: Convert (COG/GeoJSON), reproject, checksums
+    ETL->>STAC: Publish items/assets + temporal/spatial metadata
+    ETL->>KG: Upsert entities + relations (provenance/confidence)
+    UI->>API: /events?start=1850&end=1870&bbox=...
+    API->>KG: Graph query (time + space filters)
+    API-->>UI: Timeline slice + entity summaries
+    UI->>STAC: Fetch COG/GeoJSON for map layers
+    UI-->>User: Interactive map + timeline + AI dossier panel
 ```
 
-<!-- END OF MERMAID -->
-
 ---
 
-## 🏗 System Layers
+## 🎨 Layer Timeline Legend
 
-### 1) Data Ingestion (ETL)
+| Layer Category             | Example Dataset(s)                  | Timeline Range     | Map/Timeline Color Token | Notes                                         |
+| -------------------------- | ----------------------------------- | ------------------ | ------------------------ | --------------------------------------------- |
+| 🏔 **Terrain & DEMs**      | LiDAR 1m DEM, Hillshade             | 2018–2020 (modern) | `#6C757D` (gray)         | Basemap foundation, hillshade overlay         |
+| 🗺 **Historic Topos**      | USGS 1894 Larned Map, 1930s Topos   | 1890–1950s         | `#8D5524` (sepia brown)  | Scanned topo sheets, tiled COGs               |
+| 🧾 **Treaties & Cessions** | 1854 Treaty, Royce Cession Polygons | 1820–1870s         | `#0077B6` (deep blue)    | Polygon overlays linked to treaty docs        |
+| 🌊 **Hydrology**           | Kansas River Flood 1951, Streamflow | 1850–Present       | `#0096C7` (cyan)         | River floodplains, water levels               |
+| 🌾 **Land Use & Soils**    | 1937 Soil Survey, NLCD Landcover    | 1850–Present       | `#52B788` (green)        | Cropland, prairie loss, soil maps             |
+| 🚂 **Infrastructure**      | 1900s Railroads, Trails             | 1850–1950s         | `#E63946` (red)          | Trails/rail lines with fade-out on disuse     |
+| 🌪 **Hazards**             | Tornado Tracks, Drought Episodes    | 1950–Present       | `#F77F00` (orange)       | Tornado lines/points, FEMA disasters          |
+| 🏛 **Cultural/Oral**       | Oral Histories, Site Dossiers       | Any (tagged)       | `#9D4EDD` (violet)       | Linked to knowledge graph text, not just maps |
 
-* **Sources:** Historic maps, DEMs, treaties, deeds, oral histories, FEMA & NOAA events.
-* **Pipeline:** Orchestrated with Makefiles; Python ETL scripts (see `src/pipelines/`).
-* **Transform:** Reproject to EPSG:4326; normalize to COG/GeoJSON; compute `.sha256` sidecars.
-* **Catalog:** All assets indexed in **STAC** (`data/stac/`) for spatial & temporal discoverability.
-
-> **Pro tip:** keep heavy inputs out of Git history—use DVC/Git LFS pointers and STAC manifests to drive fetch/build.
-
----
-
-### 2) AI/ML Enrichment
-
-* **NLP:** spaCy + Transformers for NER (people, places, dates, events), OCR text ingestion, summarization.
-* **Geocoding & Linking:** Gazetteer-backed resolution (e.g., GNIS), fuzzy + context matching to canonical graph nodes with confidence scores.
-* **Cross-Modal Correlation:** Compares text vs. maps vs. timeseries—surfaces robust change signals (river shifts, faded settlements, drought clusters).
-
----
-
-### 3) Knowledge Graph
-
-* **DB:** Neo4j or RDF triplestore.
-* **Schema:** CIDOC CRM classes & properties; OWL-Time for intervals & instants; PeriodO for historical periods.
-* **Entities:** `Person`, `Place`, `Event`, `Document` (+ relations `OCCURRED_AT`, `MENTIONS`, `PARTICIPATED_IN`, etc.).
-* **Provenance & Uncertainty:** Each triple/node references source(s) + confidence; UI can render with translucency/flags.
-
----
-
-### 4) API Layer
-
-* **Framework:** FastAPI + GraphQL (`src/api/`).
-* **Endpoints:**
-
-  * `GET /events?start=YYYY-MM-DD&end=YYYY-MM-DD&bbox=minx,miny,maxx,maxy`
-  * `GET /entity/{id}` (AI dossier: summary + citations + linked entities)
-  * Spatial queries: buffered proximity, within polygon, etc.
-* **Notes:** Keep heavy traversals server-side; return concise, cacheable JSON/GeoJSON.
-
----
-
-### 5) Frontend Web App
-
-* **Stack:** React SPA + **MapLibre GL** for mapping + HTML5 **Canvas** for a smooth (60fps) timeline.
-* **Features:**
-
-  * ⏳ Time slider linked to map visibility windows.
-  * 🗂 Layer switcher (treaties, DEM hillshade, trails, disasters, land cover).
-  * 📝 Detail panel: AI summaries, media, and source citations.
-  * 📖 Story Mode: guided narratives (Bleeding Kansas, Dust Bowl, Floods).
-* **Exports:** KMZ/KML outputs with regionation for Google Earth.
-* **A11y:** ARIA roles, keyboard nav, high-contrast support.
+> 🖌 **Design Note:** Colors are harmonized with timeline & legend UI for consistency. Suggested to add these tokens in `web/config/layers.json` under each layer definition.
 
 ---
 
 ## 🗂 Data Standards & Semantic Interoperability
 
-| Aspect      | Standard                    | Purpose                                                    |
-| ----------- | --------------------------- | ---------------------------------------------------------- |
-| Vector      | **GeoJSON**, TopoJSON       | Web-native vector layers, easy styling/tooling             |
-| Raster      | **COG GeoTIFF**             | Tiled, cloud-friendly georasters                           |
-| Catalog     | **STAC 1.0**                | Discovery: spatial/temporal/provenance metadata for assets |
-| Semantics   | **CIDOC CRM**, **OWL-Time** | Cultural heritage graph model + chronology                 |
-| Periods     | **PeriodO**                 | Controlled vocabulary for historical period names          |
-| Linked Data | **JSON-LD**                 | Interoperation with external knowledge graphs              |
+* **Formats:** GeoJSON, Cloud-Optimized GeoTIFF, CSVW, Parquet
+* **Catalog:** STAC 1.0.0 (collections/items/assets) + JSON Schema CI validation
+* **Ontologies:** CIDOC CRM (heritage), OWL-Time (temporality), PeriodO (periods)
+* **Linked Data:** JSON-LD export for external graph interoperability
 
 ---
 
 ## 🔬 Reproducibility & Observability
 
-**MCP (docs-first)**
-
-* 🧭 `docs/architecture.md` → blueprint
-* 🧪 `docs/experiment.md` → experiment logs
-* 🧰 `docs/sop.md` → SOP playbooks
-* 🧠 `docs/model_card.md` → model transparency
-
-**CI/CD (GitHub Actions)**
-
-* Linting & tests (`tests/`)
-* STAC + JSON Schema validation
-* CodeQL (static analysis) & Trivy (container security)
-* Docker builds with pinned versions & SBOMs
-
-**Data Integrity**
-
-* SHA-256 sidecars
-* DVC/LFS pointers for large assets
-* Deterministic Make targets for reproducible builds
+* **MCP (docs-first):** `docs/architecture.md`, `docs/sop.md`, `docs/experiment.md`, `docs/model_card.md`
+* **CI/CD (GitHub Actions):** lint/tests, STAC validation, CodeQL, Trivy, container builds
+* **Containers:** Docker Compose stack (ETL, API, DB, UI) with pinned versions
+* **Data Integrity:** `.sha256` sidecars; DVC/Git LFS for large artifacts
 
 ---
 
 ## 🚀 Extending the System
 
-> **Add a new dataset** in 4 steps:
-
-1. **Manifest** → create `data/sources/{id}.json` (id, title, endpoints, bbox, time, license).
-2. **Build** →
+1. Create manifest → `data/sources/{id}.json`
+2. Run:
 
    ```bash
    make fetch && make cogs && make stac
    ```
-3. **Graph** → extend ETL to upsert new entities/relations if applicable (`src/pipelines/`).
-4. **UI** → add a layer entry in `web/config/layers.json` (title, style, fields, timeline window).
-
-**Checklist**
-
-* [ ] STAC item valid
-* [ ] Checksums present
-* [ ] SOP/docs updated
-* [ ] PR includes test(s) or sample data
+3. Extend ETL → upsert entities/relations into Knowledge Graph
+4. Add config → `web/config/layers.json` with style + popup fields
+5. Update docs → `docs/sop.md` + screenshots
 
 ---
 
@@ -231,7 +148,7 @@ sequenceDiagram
 ```text
 KansasFrontierMatrix/
 ├─ src/               # Python ETL + AI/ML + API code
-├─ web/               # React frontend (MapLibre + Canvas timeline)
+├─ web/               # React frontend
 ├─ data/
 │  ├─ sources/        # dataset manifests (no big binaries in git)
 │  ├─ raw/            # fetched artifacts (DVC/LFS)
@@ -247,12 +164,16 @@ KansasFrontierMatrix/
 
 ## 📖 References & Further Reading
 
-* **System Docs:** Architecture, AI Dev Guide, Web UI Design, Monorepo/Repo Design, File/Data Architecture
-* **Standards:** STAC 1.0, CIDOC CRM, OWL-Time, PeriodO
-* **Data Hubs:** USGS 3DEP, NOAA NCEI, FEMA OpenFEMA, Kansas GIS Hub, KHS Archives
+* **System Docs:** Architecture, AI Dev Guide, Web UI Design, Repo/Monorepo Design, File/Data Architecture
+* **Standards:** STAC 1.0.0, CIDOC CRM, OWL-Time, PeriodO
+* **Data Hubs:** USGS 3DEP, NOAA NCEI, FEMA OpenFEMA, Kansas GIS Hub, Kansas Historical Society Archives
 
 ---
 
 > ✨ *“KFM is not just a data platform—it’s a living atlas of Kansas, built for reproducibility, discovery, and storytelling.”*
->
-> Questions or ideas? Open a discussion/PR and link your `SOP` or `experiment` changes.
+
+```
+
+---
+
+✅ With this **Layer Timeline Legend**, devs/designers now have a **style guide + temporal index** to keep UI/timeline consistent with backend data.  
