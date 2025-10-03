@@ -1,9 +1,9 @@
 <div align="center">
 
-# 🗂️ Kansas-Frontier-Matrix — Data Directory (`/data/`)
+# 🗂️ Kansas-Frontier-Matrix — Data (`/data/`)
 
-**Mission:** Organize, validate, and track all geospatial & historical datasets  
-that power the Kansas Frontier Matrix interactive map, timeline, and knowledge graph.  
+**Mission:** Store, organize, and version-control all datasets powering the  
+Kansas Frontier Matrix knowledge hub — maps, rasters, vectors, documents, and tables.  
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)  
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
@@ -18,13 +18,10 @@ that power the Kansas Frontier Matrix interactive map, timeline, and knowledge g
 
 ## 📚 Purpose
 
-This directory holds all **data references, metadata, and derived products** used in the project.  
-It is designed for **reproducibility, provenance, and STAC-driven discoverability**:
-
-- 🔗 **Manifests** describe external sources (no raw bulk in Git).  
-- 🛠️ **Pipelines** fetch, process, and validate data into open formats.  
-- 📜 **Provenance** is tracked with checksums, schema validation, and metadata.  
-- 🌐 **Outputs** power the timeline map, knowledge graph, and Google Earth exports.  
+- Central hub for **all project data assets**.  
+- Ensures **reproducibility** (Makefile-driven ETL).  
+- Enforces **MCP provenance rules** (checksums, metadata, schemas).  
+- Feeds the **map + timeline + knowledge graph**.  
 
 ---
 
@@ -32,14 +29,14 @@ It is designed for **reproducibility, provenance, and STAC-driven discoverabilit
 
 ```bash
 data/
-├── sources/      # JSON/YAML manifests describing external datasets
-├── raw/          # Local cache of fetched raw data (Git LFS/DVC pointers only)
-├── processed/    # Clean, normalized outputs (GeoJSON, COGs, CSVs)
-├── stac/         # SpatioTemporal Asset Catalog (collections & items in JSON)
-├── derivatives/  # Computed products (hillshades, contours, mosaics, stats)
-├── tiles/        # Ephemeral raster/vector tiles (PMTiles, MBTiles for previews)
-├── work/         # Scratch space for pipelines, ephemeral only
-└── tmp/          # Build leftovers, ignored by Git
+├── sources/       # JSON manifests for external datasets (URLs, metadata, licenses)
+├── raw/           # Fetched raw files (Git LFS/DVC pointers only, never pushed)
+├── processed/     # Normalized open formats (GeoJSON, COGs, CSVs)
+├── stac/          # STAC catalog (collections & items JSON)
+├── derivatives/   # Computed layers (hillshade, slope, mosaics, stats)
+├── tiles/         # Ephemeral web tiles (PMTiles, MBTiles)
+├── work/          # Scratch/workspace for pipelines
+└── tmp/           # Build leftovers, ignored by Git
 
 
 ⸻
@@ -47,14 +44,11 @@ data/
 🧰 Data Lifecycle
 
 flowchart TD
-  A["Sources\n(manifests, APIs)"] --> B["Raw Fetch\n(data/raw)"]
-  B --> C["Processing & ETL\n(data/processed)"]
-  C --> D["STAC Catalog\n(data/stac)"]
-  D --> E["Derivatives\n(data/derivatives, tiles)"]
-  E --> F["Web & Knowledge Graph\n(MapLibre, Neo4j, Google Earth)"]
-
-<!-- END OF MERMAID -->
-
+  A["Sources<br/>manifests & APIs"] --> B["Raw<br/>(data/raw)"]
+  B --> C["Processing & ETL<br/>(data/processed)"]
+  C --> D["STAC Catalog<br/>(data/stac)"]
+  D --> E["Derivatives<br/>(data/derivatives, tiles)"]
+  E --> F["Web and Knowledge Graph"]
 
 	•	Sources → JSON manifests (data/sources/*.json) define IDs, URLs, metadata.
 	•	Raw → Downloaded via make fetch; never committed directly (LFS/DVC pointers only).
@@ -65,29 +59,29 @@ flowchart TD
 
 ⸻
 
-📦 Data Standards
+📦 Standards
 	•	🌍 Vectors → GeoJSON (EPSG:4326 WGS84)
 	•	🏔️ Rasters → Cloud-Optimized GeoTIFF (COG)
-	•	⏳ Catalogs → STAC 1.0.0 (JSON)
-	•	📑 Metadata → JSON Schema validated, DCAT-compatible
-	•	🔐 Integrity → .sha256 sidecars for all fetched & processed data
+	•	⏳ Catalogs → STAC 1.0.0
+	•	📑 Metadata → JSON Schema, DCAT-compatible
+	•	🔐 Integrity → .sha256 for every artifact
 
 ⸻
 
-📜 Provenance & MCP Rules
+📜 Provenance Rules
 
 Every dataset must include:
-	•	✅ Manifest → data/sources/{id}.json with title, URL, license, spatial extent, temporal coverage.
-	•	✅ Checksum → .sha256 file for every raw/processed artifact.
-	•	✅ STAC Item → in data/stac/ with links to processed outputs.
-	•	✅ License → Explicit license field in metadata (MIT, CC-BY, PD, etc.).
-	•	✅ Docs → Contribution must update relevant README.md + changelog.
+	•	✅ Manifest → data/sources/{id}.json (title, URL, license, extent, temporal).
+	•	✅ Checksum → .sha256 for raw + processed.
+	•	✅ STAC Item → in data/stac/.
+	•	✅ Explicit license (MIT, CC-BY, PD, etc.).
+	•	✅ Docs updated (README.md, changelog).
 
-Rule: If it cannot be verified, reproduced, or cited → it does not belong in main/.
+If it can’t be verified, reproduced, or cited → it does not go in main/.
 
 ⸻
 
-🔍 Example: Source Descriptor
+🔍 Example Manifest
 
 {
   "id": "usgs_topo_larned_1894",
@@ -111,21 +105,19 @@ Rule: If it cannot be verified, reproduced, or cited → it does not belong in m
 ⸻
 
 🏛 Example Domains
-	•	🌾 Land & Soils — SSURGO/STATSGO surveys, historic soil maps.
-	•	🏔️ Terrain — LiDAR DEMs, USGS 3DEP, hillshades, slope/aspect.
-	•	🌊 Hydrology — USGS NWIS streams, Kansas River flood maps.
-	•	🌪️ Hazards — NOAA Storm Events, FEMA disaster declarations.
-	•	📜 Cultural & History — Kansas Memory archives, treaties, newspapers.
-	•	🏹 Indigenous Data — Oral histories, land cession boundaries.
-
-(See data/sources/ for full manifest set.)
+	•	🌾 Land & Soils → SSURGO, STATSGO, historic soil maps
+	•	🏔️ Terrain → LiDAR DEMs, USGS 3DEP, slope/aspect
+	•	🌊 Hydrology → USGS NWIS, Kansas River floods
+	•	🌪️ Hazards → NOAA Storm Events, FEMA disasters
+	•	📜 Cultural & History → Kansas Memory, treaties, newspapers
+	•	🏹 Indigenous Data → Oral histories, land cessions
 
 ⸻
 
 ⚠️ Notes
-	•	Large files → managed via Git LFS or DVC; never checked into GitHub directly.
-	•	Ephemeral tiles → always rebuilt, never version-controlled (data/tiles/).
-	•	Work & tmp → ignored by .gitignore; promote only important products.
+	•	Large files → use Git LFS / DVC, never commit binaries.
+	•	Tiles → ephemeral, always rebuilt.
+	•	work/ + tmp/ → ignored by Git.
 
 ⸻
 
@@ -133,8 +125,8 @@ Rule: If it cannot be verified, reproduced, or cited → it does not belong in m
 <div align="center">
 
 
-✅ In short: /data/ is the heart of the Kansas Frontier Matrix,
-turning fragmented archives into traceable, reproducible, open science datasets.
+✅ /data/ is the engine room of Kansas Frontier Matrix —
+turning scattered archives into traceable, reproducible, open datasets.
 
 </div>
 ```
