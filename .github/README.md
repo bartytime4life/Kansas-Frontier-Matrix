@@ -1,122 +1,171 @@
 <div align="center">
 
-# ⚙️ Kansas-Frontier-Matrix — GitHub Automation & Governance (`.github/`)
+# ⚙️ Kansas Frontier Matrix — GitHub Automation & Governance  
+`.github/`
 
-**Mission:** Centralize all **automation, CI/CD, and governance assets**  
-that keep this repository **reproducible, secure, and contributor-friendly**.  
+**Mission:** Centralize and manage **automation, CI/CD workflows, issue templates, and governance tools**  
+for the Kansas Frontier Matrix (KFM) — ensuring reproducibility, validation, and compliance across all data and code pipelines.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)  
-[![Trivy Security Scan](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)  
-[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../.github/workflows/pre-commit.yml)  
-[![Automerge](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/automerge.yml/badge.svg)](../.github/workflows/automerge.yml)  
-[![Docs Check](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs.yml/badge.svg)](../.github/workflows/docs.yml)  
-[![License](https://img.shields.io/badge/License-MIT%20%2B%20CC--BY-blue)](/LICENSE)  
-[![MCP Aligned](https://img.shields.io/badge/Docs-MCP%20Protocol-green)](/docs/)  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Contents
+## 📚 Overview
 
-- [Overview](#-overview)
-- [Workflows](#-workflows)
-- [Templates](#-templates)
-- [Badges & Status](#-badges--status)
-- [MCP Governance](#-mcp-governance)
-- [Contributing](#-contributing)
+The `.github/` directory houses **GitHub-specific automation assets** and  
+configuration files that enforce reproducibility, integrity, and project governance.
 
----
+This includes:
+- 🧠 Continuous integration (CI) and deployment workflows  
+- 🧩 Validation pipelines for data, STAC metadata, and checksums  
+- 🧱 Security scans, build tests, and documentation publishing  
+- 🪶 Templates for pull requests, issues, and discussions  
+- ⚙️ Policy definitions ensuring compliance with the **Master Coder Protocol (MCP)**  
 
-## 🚀 Overview
-
-The `.github/` directory contains all **repository-level automation and templates** that ensure  
-the **Kansas Frontier Matrix** remains:
-
-- 🧪 **Reproducible** — workflows validate data, STAC catalogs, and experiments [oai_citation:5‡File and Data Architecture for the Kansas Frontier Matrix Project.pdf](file-service://file-3dXLjptkFjdMerKJTvzzW7)  
-- 🔐 **Secure** — CodeQL and Trivy scans protect against vulnerabilities [oai_citation:6‡Generate architecture file.pdf](file-service://file-Efds5c6rLayShGSZRCjLBa)  
-- 📜 **Documented** — contributions follow MCP (Master Coder Protocol) rules for clarity [oai_citation:7‡Kansas Frontier Matrix Documentation.pdf](file-service://file-Kh5A494Gau4gS5ihmMLDuS)  
-- 🤝 **Contributor-friendly** — PR templates, issue templates, and automerge policies streamline work  
+All automation defined here helps guarantee that Kansas Frontier Matrix remains  
+**auditable**, **reproducible**, and **standards-compliant** across all data and software layers.
 
 ---
 
-## 🔄 Workflows
+## 🗂️ Directory Layout
 
-Located in `.github/workflows/`:
+```bash
+.github/
+├── README.md
+├── workflows/                # CI/CD workflow definitions
+│   ├── site.yml              # Build & deploy static documentation site
+│   ├── stac-validate.yml     # STAC validation for data/stac catalog
+│   ├── fetch.yml             # Automated data fetching via manifests
+│   ├── checksums.yml         # Compute & verify SHA-256 integrity hashes
+│   ├── codeql.yml            # Code quality and dependency scanning
+│   ├── trivy.yml             # Security vulnerability scanning
+│   ├── pre-commit.yml        # Automated linting and formatting checks
+│   └── auto-merge.yml        # Automated PR merging when all checks pass
+├── ISSUE_TEMPLATE/           # Issue templates (feature, bug, documentation)
+│   ├── bug_report.md
+│   ├── feature_request.md
+│   └── data_request.md
+├── PULL_REQUEST_TEMPLATE.md  # PR description and checklist for contributors
+└── FUNDING.yml               # Optional: open-source funding configuration
+````
 
-- **`site.yml`** → Build & deploy the static web viewer (React + MapLibreGL).  
-- **`stac-validate.yml`** → Validate all STAC Items & Collections for compliance.  
-- **`codeql.yml`** → Run GitHub CodeQL static analysis (Python + JS).  
-- **`trivy.yml`** → Run container & dependency security scans.  
-- **`pre-commit.yml`** → Enforce linting, formatting, schema checks.  
-- **`automerge.yml`** → Automerge PRs with passing checks & approvals.  
-- **`docs.yml`** → Ensure all documentation builds & passes link checks.  
-
-Each workflow is **version-pinned, containerized, and CI/CD-ready** for full reproducibility [oai_citation:8‡Generate architecture file.pdf](file-service://file-Efds5c6rLayShGSZRCjLBa).  
-
----
-
-## 📝 Templates
-
-- **Pull Request Template** — prompts contributors to include:
-  - ✅ Linked issue(s)  
-  - ✅ Source metadata (provenance, license, citation)  
-  - ✅ Tests & validation evidence  
-
-- **Issue Templates**  
-  - 🐛 **Bug Report** — clear repro steps, environment, screenshots.  
-  - 💡 **Feature Request** — structured proposal w/ rationale.  
-  - 📊 **Data Addition** — enforce metadata & provenance before merging.  
-
-Templates enforce **MCP documentation-first discipline** [oai_citation:9‡Kansas Frontier Matrix – Monorepo Repository Design.pdf](file-service://file-AyrVktEWfFAidjtGFw9NEH).  
+> **Note:** All workflows are fully reproducible and version-controlled under MCP documentation standards.
 
 ---
 
-## 🏅 Badges & Status
+## ⚙️ Core Workflows
 
-Every workflow publishes **status badges** at the repo level.  
-These badges reflect:
-- Data pipeline integrity (STAC validation)  
-- Build & deploy success  
-- Code & container security  
-- Documentation health  
-
-If any badge **fails red**, contributions are blocked until resolved.
-
----
-
-## 📐 MCP Governance
-
-This repo adheres to **Master Coder Protocol (MCP)**:
-
-- **Experiments** logged in `docs/experiment.md` (Problem → Hypothesis → Method → Data → Results).  
-- **SOPs** in `docs/sop.md` for reproducible processes.  
-- **Model Cards** in `docs/model_card.md` describing AI/ML models used.  
-- **Architecture Docs** version-controlled (`docs/architecture.md`, `docs/glossary.md`).  
-
-Every CI/CD workflow embeds **provenance logging**, checksums, and auditability [oai_citation:10‡Kansas Data Resources for Frontier-Matrix Project.pdf](file-service://file-Q9AC5RwLTeV6QgadxHDf5P) [oai_citation:11‡File and Data Architecture for the Kansas Frontier Matrix Project.pdf](file-service://file-3dXLjptkFjdMerKJTvzzW7).  
+| Workflow                | Purpose                                                           | Trigger                      | Key Output                             |
+| :---------------------- | :---------------------------------------------------------------- | :--------------------------- | :------------------------------------- |
+| **`site.yml`**          | Builds and deploys the documentation site and static web assets.  | `push` to `main`             | `_site/` static site                   |
+| **`stac-validate.yml`** | Validates all STAC collections and items in `data/stac/`.         | `pull_request` or `push`     | Validation report (`stac-report.json`) |
+| **`fetch.yml`**         | Automates data acquisition using `data/sources/*.json` manifests. | Scheduled or manual dispatch | Updated `data/raw/`                    |
+| **`checksums.yml`**     | Computes and validates SHA-256 checksums for all datasets.        | On data changes              | `data/checksums/` updates              |
+| **`codeql.yml`**        | Runs GitHub’s CodeQL scanner for Python security analysis.        | Weekly schedule              | CodeQL dashboard                       |
+| **`trivy.yml`**         | Scans container images and dependencies for CVEs.                 | On `push` or `PR`            | Security report                        |
+| **`pre-commit.yml`**    | Enforces code quality, formatting, and linting.                   | Every PR                     | Pre-commit validation log              |
+| **`auto-merge.yml`**    | Merges PRs automatically if all checks and reviews pass.          | Post-check success           | Auto-merged PRs                        |
 
 ---
 
-## 🤝 Contributing
+## 🧩 Issue & PR Governance
 
-Contributions welcome! Please follow:
+### 🪶 Pull Request Template
 
-1. Fork & branch from `main`.  
-2. Run `make tests` to verify data + code integrity.  
-3. Use PR templates — include provenance for all new datasets.  
-4. Expect CI to enforce MCP standards — failing CI = blocked merge.  
+Each PR uses `.github/PULL_REQUEST_TEMPLATE.md`,
+enforcing structured change descriptions and reproducibility compliance.
 
-See [CONTRIBUTING.md](/CONTRIBUTING.md) for details.  
+**Example Checklist:**
+
+```markdown
+- [ ] Code and documentation follow MCP standards
+- [ ] Added or updated relevant README files
+- [ ] Checksum and STAC validation passed
+- [ ] All CI workflows succeeded
+```
+
+### 🧾 Issue Templates
+
+Located under `.github/ISSUE_TEMPLATE/`, these provide structured guidance for:
+
+* **Bug reports:** Reproducible descriptions of software or data issues.
+* **Feature requests:** Proposals for new features or data domains.
+* **Data requests:** Requests to integrate new datasets into KFM.
+
+---
+
+## 🧮 CI/CD Workflow Integration
+
+The CI/CD architecture connects GitHub Actions directly to KFM’s ETL and validation pipelines.
+
+```mermaid
+flowchart TD
+  A["Push or PR"] --> B["🔍 Pre-Commit + Lint"]
+  B --> C["⚙️ Build & Test Pipelines (CodeQL, Trivy)"]
+  C --> D["📦 Data Validation (STAC + Checksums)"]
+  D --> E["🧠 Deploy Site + Artifacts"]
+  E --> F["✅ Auto Merge if All Checks Pass"]
+
+  style A fill:#f8f9fa,stroke:#555
+  style D fill:#eafaf1,stroke:#228b22
+  style E fill:#e8f0ff,stroke:#0055cc
+```
+
+<!-- END OF MERMAID -->
+
+---
+
+## 🧠 MCP Compliance Summary
+
+| MCP Principle           | Implementation                                                          |
+| :---------------------- | :---------------------------------------------------------------------- |
+| **Documentation-first** | Every automation workflow and policy documented in `.github/README.md`. |
+| **Reproducibility**     | Workflows produce deterministic results with logged runs.               |
+| **Open Standards**      | Uses YAML for configuration, aligned with GitHub Actions specs.         |
+| **Provenance**          | CI logs stored and versioned automatically.                             |
+| **Auditability**        | All automation steps traceable in workflow history.                     |
+
+---
+
+## 🧩 Integration with Repository Components
+
+| Directory        | Connection                                            |
+| :--------------- | :---------------------------------------------------- |
+| `data/`          | Validated by checksum and STAC workflows.             |
+| `src/pipelines/` | Linked to data ETL steps and CI job outputs.          |
+| `web/`           | Deployed through `site.yml` build workflow.           |
+| `docs/`          | Published automatically from `main` after validation. |
+
+---
+
+## 🧹 Maintenance & Security
+
+* **Update Frequency:** Review all workflow dependencies monthly.
+* **Secrets Management:** Store API keys in GitHub Actions secrets (`Settings → Secrets → Actions`).
+* **Workflow Review:** Major updates require 1 peer review and MCP compliance check.
+* **Security Validation:** Trivy and CodeQL run automatically weekly.
+
+---
+
+## 📅 Version History
+
+| Version | Date       | Summary                                                                           |
+| :------ | :--------- | :-------------------------------------------------------------------------------- |
+| v1.0    | 2025-10-04 | Initial GitHub automation directory documentation (workflows, governance, CI/CD). |
 
 ---
 
 <div align="center">
 
-💡 **In short:**  
-This `.github/` folder is the **automation nerve center** of the Kansas Frontier Matrix,  
-ensuring everything is **traceable, secure, reproducible, and community-driven**.  
+**Kansas Frontier Matrix** — *“Automation with Integrity — Every Workflow Proven.”*
+📍 [`.github/`](.) · Centralized automation, CI/CD, and governance system for the Kansas Frontier Matrix.
 
 </div>
