@@ -1,9 +1,11 @@
 <div align="center">
 
-# 💧 Kansas Frontier Matrix — Hydrology Metadata (`data/processed/metadata/hydrology/`)
+# 💧 Kansas Frontier Matrix — Hydrology Metadata  
+`data/processed/metadata/hydrology/`
 
-**Mission:** Curate, document, and standardize all **processed hydrological data layers**  
-supporting Kansas Frontier Matrix’s time-aware exploration of rivers, watersheds, floods, and droughts.
+**Mission:** Curate, document, and standardize all **processed hydrology datasets**  
+powering Kansas Frontier Matrix’s temporal exploration of rivers, watersheds, aquifers,  
+and flood records.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
@@ -19,17 +21,53 @@ supporting Kansas Frontier Matrix’s time-aware exploration of rivers, watershe
 
 ## 📚 Overview
 
-This directory documents **hydrology-related processed datasets** for the  
-Kansas Frontier Matrix (KFM) platform — integrating Kansas’s **rivers, watersheds, aquifers, and flood records**  
-into a unified, reproducible geospatial data framework.
+This directory contains metadata and provenance documentation for all **hydrology-related processed datasets**  
+within the Kansas Frontier Matrix (KFM). These datasets underpin the system’s interactive **map + timeline**,  
+linking Kansas’s rivers, watersheds, floods, and groundwater observations through time.
 
-Each dataset includes:
-- STAC 1.0-compliant metadata JSON files  
-- Provenance records (`.sha256` checksums, license, and source URL)  
-- Reproducible processing pipelines defined in `src/pipelines/hydrology/`  
+Each layer here is:
+- Stored in **open formats** (`GeoJSON`, `COG`, `CSV`)  
+- Indexed in the project’s **STAC catalog** (`data/stac/hydrology/`)  
+- Processed via reproducible **Makefile + Python pipelines**  
+- Tracked with **SHA-256 checksums** for provenance  
 
-These datasets power KFM’s **map and timeline layers** visualizing historical and modern hydrological changes —  
-from the 1951 Kansas River Flood to modern groundwater decline in the Ogallala Aquifer.
+---
+
+## 🗂️ Directory Layout
+
+```
+
+data/
+└── processed/
+├── hydrology/                     # Processed hydrology data (GeoJSON, CSV, COG)
+│   ├── nhd_flowlines_ks.geojson
+│   ├── watersheds_huc12_ks.geojson
+│   ├── fema_nfhl_ks.geojson
+│   ├── groundwater_levels_ks.geojson
+│   ├── flood_events_ks.geojson
+│   └── checksums/                 # SHA-256 hash sidecars for integrity
+│
+├── metadata/
+│   ├── hydrology/                 # ← This directory (metadata, STAC, schema docs)
+│   │   ├── README.md
+│   │   ├── ks_watersheds_huc12_2019.json
+│   │   ├── ks_fema_nfhl_2024.json
+│   │   └── ks_groundwater_levels_2025.json
+│   └── schema/                    # Shared JSON Schemas
+│       ├── hydrology.schema.json
+│       └── examples/
+│           └── hydrology_example.json
+│
+└── stac/
+└── hydrology/                 # STAC Items / Collections
+├── ks_hydrology_collection.json
+├── ks_watersheds_huc12_2019.json
+└── ks_flood_events_2025.json
+
+````
+
+> **Note:** Every hydrology layer has an associated STAC Item and checksum;  
+> this ensures full traceability and CI-validated reproducibility.
 
 ---
 
@@ -38,17 +76,16 @@ from the 1951 Kansas River Flood to modern groundwater decline in the Ogallala A
 | Layer | Source | Format | Spatial Unit | Temporal Coverage | Output |
 |-------|---------|---------|---------------|------------------|---------|
 | **Rivers & Streams (NHD Flowlines)** | USGS NHD / KS DASC | GeoJSON | Statewide | 2020 | `data/processed/hydrology/nhd_flowlines_ks.geojson` |
-| **Watersheds (HUC-8/12)** | USGS WBD / EPA | GeoJSON | Subbasins | 2019 | `data/processed/hydrology/watersheds_huc12_ks.geojson` |
+| **Watersheds (HUC-12)** | USGS WBD / EPA | GeoJSON | Sub-basins | 2019 | `data/processed/hydrology/watersheds_huc12_ks.geojson` |
 | **Flood Hazard Zones (NFHL)** | FEMA NFHL | GeoJSON | County | 2024 | `data/processed/hydrology/fema_nfhl_ks.geojson` |
 | **Groundwater Levels (NWIS)** | USGS NWIS API | CSV → GeoJSON | Wells | 1950–2025 | `data/processed/hydrology/groundwater_levels_ks.geojson` |
 | **Major Flood Events** | NOAA / USGS | CSV + GeoJSON | Event Points | 1900–2025 | `data/processed/hydrology/flood_events_ks.geojson` |
 
-All data are standardized to **EPSG:4326 (WGS84)** and validated via  
-the project’s **STAC catalog** (`data/stac/hydrology/`).
+All layers use **EPSG 4326 (WGS84)** and are indexed under `data/stac/hydrology/`.
 
 ---
 
-## 💾 Metadata Schema (STAC Example)
+## 💾 Example STAC Metadata
 
 ```json
 {
@@ -58,7 +95,7 @@ the project’s **STAC catalog** (`data/stac/hydrology/`).
   "properties": {
     "title": "Kansas Watershed Boundaries (HUC-12, 2019)",
     "datetime": "2019-06-01T00:00:00Z",
-    "description": "Watershed hydrologic units delineating Kansas subbasins under the WBD framework.",
+    "description": "Hydrologic units delineating Kansas sub-basins (USGS WBD).",
     "proj:epsg": 4326,
     "themes": ["hydrology", "watersheds"],
     "license": "Public Domain (USGS/EPA)",
@@ -73,9 +110,6 @@ the project’s **STAC catalog** (`data/stac/hydrology/`).
       "href": "../hydrology/watersheds_huc12_ks.geojson",
       "type": "application/geo+json",
       "roles": ["data"]
-    },
-    "thumbnail": {
-      "href": "../thumbnails/watersheds_huc12_ks.png"
     }
   },
   "bbox": [-102.05, 36.99, -94.59, 40.00]
@@ -86,90 +120,78 @@ the project’s **STAC catalog** (`data/stac/hydrology/`).
 
 ## 🧩 Semantic & Ontological Alignment
 
-Hydrology metadata aligns with **CIDOC CRM**, **W3C OWL-Time**, and the
-**HydroOntology (HY_Features)** model for cross-domain reasoning:
-
 | Entity                  | Ontology Mapping                      | Example                 |
-| ----------------------- | ------------------------------------- | ----------------------- |
+| :---------------------- | :------------------------------------ | :---------------------- |
 | River segment           | `E26_Physical_Feature` + `E53_Place`  | Arkansas River reach    |
 | Watershed               | `E27_Site` + `E53_Place`              | Smoky Hill Basin        |
 | Flood Event             | `E5_Event` + `P7_took_place_at`       | 1951 Kansas River Flood |
 | Observation (flow/well) | `E16_Measurement` + OWL-Time interval | NWIS groundwater record |
 
-Each record can be temporally queried within KFM’s Neo4j graph
-(e.g., *“show all hydrologic events between 1950–1970 in northeast Kansas”*).
+Semantic grounding allows graph-level queries such as
+*“show hydrologic events overlapping the 1930s Dust Bowl era.”*
 
 ---
 
 ## ⚙️ ETL & Processing Workflow
 
 **Pipeline:**
-`make hydrology` → executes `src/pipelines/hydrology/hydrology_pipeline.py`
+`make hydrology` → runs `src/pipelines/hydrology/hydrology_pipeline.py`
 
 **Dependencies:**
 `geopandas`, `rasterio`, `rio-cogeo`, `requests`, `usgs`, `pandas`, `pyproj`
 
-**ETL Steps:**
+**Steps:**
 
-1. Fetch datasets via USGS, EPA, NOAA, and FEMA APIs
-2. Harmonize geometry → `EPSG:4326` (WGS84)
-3. Simplify polygons for web visualization
-4. Merge multi-county shapefiles → state composite layers
-5. Derive centroids, flow grids, or event points as needed
-6. Export GeoJSON and generate STAC metadata
-7. Compute `.sha256` checksums for provenance verification
+1. Fetch data (USGS, EPA, NOAA, FEMA)
+2. Reproject geometries → EPSG 4326
+3. Simplify shapes for web use
+4. Merge multi-county shapefiles → statewide layers
+5. Derive flow grids / centroids
+6. Export GeoJSON + generate STAC
+7. Compute `.sha256` hash for provenance
 
-Logs and hashes are retained in `data/processed/checksums/hydrology/`.
+Logs + hashes are stored in `data/processed/checksums/hydrology/`.
 
 ---
 
 ## 🧮 Provenance & Validation
 
-* **Checksums:** SHA-256 sidecars for each file
-* **Licensing:** Public domain (USGS/EPA/FEMA); derived composites → CC-BY 4.0
-* **Validation:**
-
-  * STAC Item structure validation
-  * JSON Schema conformity (`data/processed/metadata/schema/`)
-  * CI checks via GitHub Actions (`stac-validate.yml`)
-
-All metadata and outputs are **traceable** from source → transformation → product.
+* **Checksums:** SHA-256 sidecars for all outputs
+* **Licensing:** USGS/EPA/FEMA → Public Domain; derived layers → CC-BY 4.0
+* **Validation:** JSON Schema + STAC validator in CI/CD
+* **Cross-links:** `data/sources/hydrology/*.json` maintains source records
 
 ---
 
 ## 🔗 Integration Points
 
-| Component                      | Purpose                                   |
-| ------------------------------ | ----------------------------------------- |
-| `data/stac/hydrology/`         | STAC Items for all hydrology layers       |
-| `web/config/layers.json`       | Map configuration for hydrology overlays  |
-| `src/graph/hydrology_nodes.py` | Graph ingestion & relationships           |
-| `docs/architecture.md`         | Documentation reference for ETL pipelines |
-| `data/processed/hazards/`      | Linked hazard datasets (floods, droughts) |
-
-Frontend visualizations (via MapLibreGL) use these metadata entries
-to render animated flood extents, watercourse networks, and drought-affected basins
-through time.
+| Component                      | Role                                   |
+| ------------------------------ | -------------------------------------- |
+| `data/stac/hydrology/`         | STAC Items & Collections for discovery |
+| `web/config/layers.json`       | Frontend MapLibre layer configuration  |
+| `src/graph/hydrology_nodes.py` | Graph import and relationships         |
+| `docs/architecture.md`         | Pipeline and system design reference   |
+| `data/processed/hazards/`      | Linked flood/drought hazard layers     |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| Principle               | Implementation                                     |
-| ----------------------- | -------------------------------------------------- |
-| **Documentation-first** | Every hydrology layer documented via STAC & README |
-| **Reproducibility**     | Makefile + Python pipelines with logged parameters |
-| **Open Standards**      | GeoJSON, COG, CSV, STAC, and JSON Schema           |
-| **Provenance**          | Source URL, date, checksum, and license embedded   |
-| **Auditability**        | CI-based validation and reproducible rebuilds      |
+| Principle               | Implementation                                   |
+| ----------------------- | ------------------------------------------------ |
+| **Documentation-first** | README + STAC per layer                          |
+| **Reproducibility**     | Make + Python pipelines logged deterministically |
+| **Open Formats**        | GeoJSON, CSV, COG only                           |
+| **Provenance**          | URLs + checksums tracked                         |
+| **Auditability**        | CI validation via STAC and hash tests            |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                                               |
-| ------- | ---------- | ----------------------------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial hydrology metadata release — includes rivers, watersheds, floodplains, and groundwater layers |
+| Version | Date       | Summary                                                                           |
+| :------ | :--------- | :-------------------------------------------------------------------------------- |
+| v1.0    | 2025-10-04 | Initial hydrology metadata release — rivers, watersheds, floodplains, groundwater |
 
 ---
 
@@ -177,10 +199,10 @@ through time.
 
 * [USGS National Hydrography Dataset (NHD)](https://www.usgs.gov/national-hydrography)
 * [EPA Watershed Boundary Dataset (WBD)](https://www.epa.gov/waterdata/watershed-boundary-dataset)
-* [USGS NWIS Water Data](https://waterdata.usgs.gov/nwis)
 * [FEMA National Flood Hazard Layer (NFHL)](https://msc.fema.gov/portal/home)
-* [NOAA Storm Events / Flood Records](https://www.ncei.noaa.gov/stormevents/)
-* [Master Coder Protocol Documentation](../../../docs/templates/)
+* [USGS NWIS Water Data](https://waterdata.usgs.gov/nwis)
+* [NOAA Storm Events Archive](https://www.ncei.noaa.gov/stormevents/)
+* [Master Coder Protocol Docs](../../../docs/templates/)
 
 ---
 
@@ -190,4 +212,3 @@ through time.
 📍 [`data/processed/metadata/hydrology/`](.) · 🔗 Integrated with the STAC Data Catalog Layer
 
 </div>
-```
