@@ -1,1 +1,169 @@
+```mermaid
+%%----------------------------------------------------------
+%% Kansas Frontier Matrix — Data Flow Diagram (Mermaid source)
+%% File: docs/architecture/diagrams/data_flow.mmd
+%% Purpose: Visual overview of KFM data lifecycle (source → raw → ETL → processed → STAC → checksums → tiles/web)
+%% Author: KFM Documentation Team
+%% Version: 1.0
+%% Date: 2025-10-04
+%% License: CC-BY 4.0
+%% Commit: <insert-commit-hash-on-export>
+%%----------------------------------------------------------
+
+flowchart TD
+  %% ===== LAYERS =====
+  subgraph SRC["🌐 Sources (`data/sources/`)"]
+    S1["JSON Manifests\n• endpoints\n• license\n• scope\n• update cadence"]
+  end
+
+  subgraph RAW["📦 Raw Data (`data/raw/`)"]
+    R1["Immutable Downloads\n(USGS/NOAA/USDA/KSHS)\n• GeoTIFF/GeoJSON/CSV/NetCDF/TXT"]
+  end
+
+  subgraph ETL["⚙️ ETL Pipelines (`src/pipelines/`)"]
+    E0["Makefile Orchestration"]
+    E1["Terrain"]
+    E2["Hydrology"]
+    E3["Landcover"]
+    E4["Climate"]
+    E5["Hazards"]
+    E6["Tabular"]
+    E7["Text / OCR & NLP"]
+  end
+
+  subgraph P["✅ Processed Data (`data/processed/`)"]
+    P1["Raster (COG)"]
+    P2["Vector (GeoJSON)"]
+    P3["Tabular (CSV/Parquet)"]
+    P4["Text (JSONL/TXT)"]
+  end
+
+  subgraph M["🧩 Metadata & Catalog"]
+    M1["STAC Items & Collections\n`data/stac/`"]
+    M2["Domain Metadata & Thumbnails\n`data/processed/metadata/`"]
+  end
+
+  subgraph V["🔐 Integrity & Validation"]
+    C1["Checksums (SHA-256)\n`data/checksums/`"]
+    V1["Schema & STAC Validation\n(GitHub Actions)"]
+  end
+
+  subgraph W["🌎 Publication & Visualization"]
+    T1["Raster/Vector Tiles\n`data/tiles/`"]
+    WEB["Web UI (MapLibre)\n`web/` + `web/config/*.json`"]
+    DOCS["Static Docs Site\n`_site/` (CI deploy)"]
+  end
+
+  subgraph WORK["🛠️ Workspaces (Ephemeral)"]
+    TMP["tmp/ — ETL intermediates"]
+    CACHE["cache/ — re-usable artifacts"]
+    STAGE["staging/ — pre-validate outputs"]
+    LOGS["logs/ — pipeline & CI logs"]
+  end
+
+  subgraph CI["🤖 CI/CD & Governance (`.github/workflows/`)"]
+    CI1["stac-validate.yml"]
+    CI2["checksums.yml"]
+    CI3["site.yml"]
+    CI4["codeql.yml / trivy.yml"]
+    CI5["pre-commit.yml / auto-merge.yml"]
+  end
+
+  subgraph USERS["🧠 Users & Systems"]
+    U1["Researchers & Public"]
+    U2["API / External Tools"]
+  end
+
+  %% ===== FLOWS =====
+  S1 -->|manifest-driven fetch| R1
+  R1 -->|inputs| E0
+  E0 --> E1 & E2 & E3 & E4 & E5 & E6 & E7
+
+  %% ETL writes processed
+  E1 --> P1
+  E2 --> P2
+  E3 --> P1
+  E4 --> P1 & P3
+  E5 --> P1 & P2
+  E6 --> P3
+  E7 --> P4
+
+  %% Processed -> Metadata & Catalog
+  P1 --> M1
+  P2 --> M1
+  P3 --> M1
+  P4 --> M1
+  P1 --> M2
+  P2 --> M2
+  P3 --> M2
+  P4 --> M2
+
+  %% Validation & Checksums
+  P1 --> C1
+  P2 --> C1
+  P3 --> C1
+  P4 --> C1
+  M1 --> V1
+  M2 --> V1
+  C1 --> V1
+
+  %% Tiles + Web
+  P1 -->|tiling| T1
+  P2 -->|vector tiling| T1
+  M1 --> WEB
+  T1 --> WEB
+  M2 --> WEB
+  WEB --> DOCS
+
+  %% Users
+  DOCS --> U1
+  WEB --> U1
+  M1 --> U2
+  P1 & P2 & P3 & P4 --> U2
+
+  %% Workspaces connections
+  E0 -. logs .-> LOGS
+  E1 -. tmp/cache .-> TMP
+  E2 -. tmp/cache .-> TMP
+  E3 -. cache .-> CACHE
+  E4 -. cache .-> CACHE
+  E5 -. staging .-> STAGE
+  E6 -. staging .-> STAGE
+  E7 -. tmp .-> TMP
+  CI1 -. logs .-> LOGS
+  CI2 -. logs .-> LOGS
+  CI3 -. logs .-> LOGS
+
+  %% CI/CD governance links
+  M1 & C1 --> CI1
+  P1 & P2 & P3 & P4 --> CI2
+  WEB & DOCS --> CI3
+  E0 --> CI5
+  SRC --> CI5
+  CI4 -. security scans .-> E0
+  CI4 -. dependency CVEs .-> WEB
+
+  %% ===== STYLES =====
+  classDef layer fill:#ffffff,stroke:#888,stroke-width:1px,color:#111;
+  classDef focus fill:#fffbea,stroke:#e8a500,stroke-width:1.2px;
+  classDef data fill:#ecf9f0,stroke:#33aa33,stroke-width:1.2px;
+  classDef etl fill:#fff0f5,stroke:#cc0088,stroke-width:1.2px;
+  classDef val fill:#f0e8ff,stroke:#8844cc,stroke-width:1.2px;
+  classDef web fill:#eef8ff,stroke:#0077cc,stroke-width:1.2px;
+  classDef work fill:#f7f7f7,stroke:#999,stroke-width:1px,stroke-dasharray: 4 2;
+  classDef ci fill:#eaf2ff,stroke:#5b8def,stroke-width:1.2px;
+  classDef users fill:#f5f5f5,stroke:#666,stroke-width:1px;
+
+  class SRC,RAW layer
+  class ETL etl
+  class P data
+  class M focus
+  class V val
+  class W web
+  class WORK work
+  class CI ci
+  class USERS users
+```
+
+<!-- END OF MERMAID -->
 
