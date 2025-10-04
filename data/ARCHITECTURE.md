@@ -1,230 +1,199 @@
 <div align="center">
 
-# 🗃️ Kansas Frontier Matrix — Data & Catalog Architecture  
-`data/architecture.md`
+# 🧱 Kansas Frontier Matrix — Data Architecture  
+`data/ARCHITECTURE.md`
 
-[![Build & Deploy](../.github/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
-[![STAC Validate](../.github/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
-[![CodeQL](../.github/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
-[![Trivy](../.github/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Pre-commit](../.github/workflows/pre-commit.yml/badge.svg)](../.github/workflows/pre-commit.yml)
+**Mission:** Define the **end-to-end data architecture** of the Kansas Frontier Matrix (KFM) —  
+detailing how raw inputs are transformed, validated, documented, and visualized within a fully reproducible,  
+STAC-compliant, and MCP-governed data ecosystem.
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
-[![License: Code](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../LICENSE)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
 
 </div>
 
 ---
 
-## Overview
+## 📚 Overview
 
-This document defines the **data architecture** for KFM, following **MCP** (documentation-first + reproducibility). It explains how data is **organized**, **processed** (ETL), **cataloged** (STAC), and **verified** (provenance + CI).
+The **Kansas Frontier Matrix Data Architecture** governs the structure, flow,  
+and governance of all data within the repository — from acquisition and validation  
+to metadata generation and web visualization.
 
----
+It ensures that every dataset:
+- Is **traceable** from its source manifest to its STAC metadata.  
+- Follows **reproducible** ETL and validation workflows.  
+- Is **auditable** through checksums, provenance logs, and MCP documentation.  
+- Adheres to **open standards** for interoperability and accessibility.  
 
-## Table of Contents
-
-- [Repository Layout](#repository-layout)
-- [End-to-End Flow](#end-to-end-flow)
-- [Source Descriptors (`data/sources/`)](#source-descriptors-datasources)
-- [Processed Outputs (`data/processed/`)](#processed-outputs-dataprocessed)
-- [STAC Catalog (`data/stac/`)](#stac-catalog-datastac)
-- [Provenance & Integrity](#provenance--integrity)
-- [Open Standards & Semantics](#open-standards--semantics)
-- [Pipelines & Make Targets](#pipelines--make-targets)
-- [CI/CD & Validation](#cicd--validation)
-- [Examples](#examples)
-- [Troubleshooting](#troubleshooting)
-- [Roadmap](#roadmap)
+This document provides a **high-level blueprint** of the data subsystem and its lifecycle within KFM.
 
 ---
 
-## Repository Layout
+## 🗺️ Data Architecture Overview
 
-```text
-data/
-├─ sources/     # JSON descriptors (external pointers + metadata)
-├─ raw/         # fetched originals (DVC/LFS; not stored in Git history)
-├─ processed/   # normalized outputs (COG, GeoJSON, CSV/Parquet)
-└─ stac/        # STAC Collections/Items indexing processed assets
-
-	•	sources/: minimal JSON manifests (id, title, license, bbox/time, endpoints).
-	•	raw/: originals fetched via make fetch (tracked with DVC or Git LFS), plus *.sha256.
-	•	processed/: analysis/web-ready outputs (COG rasters, GeoJSON vectors, CSV/Parquet tables).
-	•	stac/: authoritative catalog (Items/Collections + assets + provenance links).
-
-⸻
-
-End-to-End Flow
-
+```mermaid
 flowchart TD
-  A["Sources\n\"scans, rasters, vectors, docs\""] --> B["ETL Pipeline\n\"Makefile, Python, checksums\""]
-  B --> C["Processed Layers\n\"COGs, GeoJSON, tables\""]
-  B --> I["AI/ML Enrichment\n\"NER, geocoding, linking\""]
-  C --> D["STAC Catalog\n\"collections, items, assets\""]
-  D --> E["Web Config Build\n\"app.config.json, layers.json\""]
-  D --> H["Knowledge Graph\n\"Neo4j, CIDOC CRM, OWL-Time\""]
-  I --> H
-  H --> J["API Layer\n\"FastAPI, GraphQL\""]
-  D --> J
-  J --> F["Frontend (React + MapLibre)\n\"map, timeline, search\""]
+  A["🌐 External Sources\n(data/sources/)"] --> B["📦 Raw Data\n(data/raw/)"]
+  B --> C["⚙️ ETL Processing & Cleaning\n(src/pipelines/)"]
+  C --> D["✅ Processed Data\n(data/processed/)"]
+  D --> E["🧩 Metadata & STAC\n(data/processed/metadata/, data/stac/)"]
+  E --> F["🧾 Checksums & Validation\n(data/checksums/)"]
+  F --> G["🌎 Web & Visualization Layers\n(data/tiles/, web/config/, web/app.js)"]
+
+  style A fill:#f8f9fa,stroke:#888
+  style B fill:#f0f8ff,stroke:#0088cc
+  style C fill:#fff0f5,stroke:#cc0088
+  style D fill:#e8fff0,stroke:#33aa33
+  style E fill:#faf5e6,stroke:#e8a500
+  style F fill:#f0e8ff,stroke:#7d33aa
+  style G fill:#f7f7f7,stroke:#333
+````
+
 <!-- END OF MERMAID -->
 
+---
 
-⸻
+## 🧩 Data Lifecycle Stages
 
-Source Descriptors (data/sources/)
+| Stage                       | Directory                                | Purpose                                                         | Key Artifacts                     |
+| :-------------------------- | :--------------------------------------- | :-------------------------------------------------------------- | :-------------------------------- |
+| **1. Source Registration**  | `data/sources/`                          | Defines dataset origins, access methods, and licensing.         | JSON manifests (`*.json`)         |
+| **2. Raw Acquisition**      | `data/raw/`                              | Stores unmodified data as acquired from sources.                | Raw files (COGs, CSVs, NetCDFs)   |
+| **3. ETL Processing**       | `src/pipelines/`                         | Transforms, cleans, and standardizes data for analysis.         | Python scripts, logs              |
+| **4. Processed Data**       | `data/processed/`                        | Houses validated and cleaned data, ready for publication.       | GeoTIFF, GeoJSON, CSV, JSONL      |
+| **5. Metadata & STAC**      | `data/processed/metadata/`, `data/stac/` | Describes dataset provenance, structure, and temporal coverage. | STAC Items & Collections          |
+| **6. Integrity Validation** | `data/checksums/`                        | Provides SHA-256 hashes for reproducibility verification.       | `.sha256` hash files              |
+| **7. Visualization**        | `data/tiles/`, `web/config/`             | Hosts pre-rendered tiles and viewer configurations.             | Raster/vector tiles, JSON configs |
 
-Each dataset begins as a descriptor: a compact JSON contract the pipeline reads to fetch, normalize, and catalog data.
+---
 
-Typical fields
-	•	id, title, description, license, providers
-	•	spatial (bbox, crs), temporal (start, end or datetime)
-	•	endpoint (type: http/api/arcgis; urls list)
-	•	optional outputs (suggested target paths under data/processed/)
+## ⚙️ ETL Pipeline Architecture
 
-Example
+The KFM ETL (Extract, Transform, Load) system operates as a **deterministic, domain-driven pipeline**
+powered by Makefiles and modular Python scripts under `src/pipelines/`.
 
-{
-  "id": "usda_soil_1967",
-  "title": "Soil Survey Map (1967)",
-  "type": "raster",
-  "license": "Public Domain",
-  "spatial": { "bbox": [-101.5, 39.0, -100.8, 39.5], "crs": "EPSG:4326" },
-  "temporal": { "start": "1967-01-01", "end": "1967-12-31" },
-  "endpoint": { "type": "http", "urls": ["https://example.org/soils/kansas_1967_map.tif"] },
-  "outputs": { "cog": "data/processed/overlays/usda_soil_1967.tif" }
-}
+### 🧱 Pipeline Modules
 
-Guideline: Prefer canonical inputs (GeoTIFF/MrSID for rasters; Shapefile/FGDB/GeoJSON for vectors). Everything is normalized to COG/GeoJSON.
+| Domain        | Pipeline Script         | Output Directory            | Description                                 |
+| :------------ | :---------------------- | :-------------------------- | :------------------------------------------ |
+| **Terrain**   | `terrain_pipeline.py`   | `data/processed/terrain/`   | DEM, hillshade, slope/aspect generation     |
+| **Hydrology** | `hydrology_pipeline.py` | `data/processed/hydrology/` | River, watershed, flood modeling            |
+| **Landcover** | `landcover_pipeline.py` | `data/processed/landcover/` | NLCD, vegetation, land use                  |
+| **Climate**   | `climate_pipeline.py`   | `data/processed/climate/`   | Precipitation, temperature, drought indices |
+| **Hazards**   | `hazards_pipeline.py`   | `data/processed/hazards/`   | Tornado, wildfire, and flood layers         |
+| **Tabular**   | `tabular_pipeline.py`   | `data/processed/tabular/`   | Census, agricultural, and economic data     |
+| **Text**      | `text_pipeline.py`      | `data/processed/text/`      | OCR, NLP, and transcript datasets           |
 
-⸻
+Each pipeline:
 
-Processed Outputs (data/processed/)
-	•	Rasters → COG (Cloud-Optimized GeoTIFF)
-	•	Tiled, overviewed, HTTP-range friendly; default EPSG:4326 unless otherwise justified.
-	•	Vectors → GeoJSON (Vector tiles optional for scale)
-	•	WGS84 coordinates; split by county/year when heavy.
-	•	Tables → CSV/Parquet
-	•	Small factual tables may live directly in Git; larger via LFS/DVC.
+* Fetches data from `data/sources/`
+* Logs all processing steps to `data/work/logs/`
+* Writes intermediate artifacts to `data/work/tmp/`
+* Generates checksums in `data/checksums/`
+* Produces metadata in `data/processed/metadata/`
 
-⸻
+---
 
-STAC Catalog (data/stac/)
+## 🧮 Validation & Integrity Architecture
 
-Items describe individual assets; Collections group related items.
+Validation ensures that **all data products** meet reproducibility and consistency standards.
 
-Minimal Item (COG asset)
+| Component             | Function                                                             | Tooling                            |
+| :-------------------- | :------------------------------------------------------------------- | :--------------------------------- |
+| **Checksums**         | SHA-256 hashes verify file integrity across rebuilds.                | `hashlib`, Makefile tasks          |
+| **Schema Validation** | JSON Schema ensures metadata and source manifests meet requirements. | `jsonschema`, `stac-validator`     |
+| **STAC Compliance**   | Ensures catalog structure follows STAC 1.0.0 specification.          | GitHub Action: `stac-validate.yml` |
+| **CI/CD Workflows**   | Automated validation for every dataset addition or modification.     | GitHub Actions                     |
+| **Manual Review**     | Peer verification for critical datasets or major updates.            | MCP peer review protocol           |
 
-{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "id": "usgs_topo_larned_1894",
-  "properties": { "datetime": "1894-01-01T00:00:00Z" },
-  "geometry": { "type": "Polygon", "coordinates": [[[0,0],[1,0],[1,1],[0,1],[0,0]]]},
-  "bbox": [-99.4, 38.1, -99.0, 38.4],
-  "assets": {
-    "cog": {
-      "href": "../../data/processed/overlays/usgs_topo_larned_1894.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "title": "USGS Topographic Map (1894) — Larned"
-    }
-  },
-  "links": [
-    { "rel": "derived_from", "href": "../../data/sources/usgs_topo_larned_1894.json" }
-  ]
-}
+---
 
-STAC is the single source of truth for discovery, powering UI configs and API queries.
+## 🧠 Provenance Tracking
 
-⸻
+Provenance in KFM follows a **source → raw → processed → metadata → visualization** chain.
 
-Pipelines & Make Targets
+Each dataset is tracked by:
 
-# Fetch all sources
-fetch:
-	python tools/fetch_data.py
+* **Source Manifest** (`data/sources/*.json`)
+* **Checksum File** (`data/checksums/<domain>/*.sha256`)
+* **STAC Item** (`data/stac/<domain>/*.json`)
+* **Processing Log** (`data/work/logs/*.log`)
+* **ETL Script Reference** (`src/pipelines/<domain>_pipeline.py`)
 
-# Process: rasters->COG, vectors->GeoJSON, tables->CSV/Parquet
-cogs vectors tables:
-	python tools/process.py --stage $@
+Together, these ensure that every product is **auditable, reproducible, and transparent**.
 
-# Generate & validate STAC
-stac:
-	python tools/generate_stac.py
-	python tools/validate_stac.py
+---
 
-# Verify integrity
-checksums:
-	python tools/checksums.py --verify
+## 🧩 Integration with the MCP Framework
 
+KFM’s data architecture fully adheres to **Master Coder Protocol (MCP)** standards:
 
-⸻
+| MCP Principle           | Implementation                                                                |
+| :---------------------- | :---------------------------------------------------------------------------- |
+| **Documentation-first** | Every data stage includes a README and structured metadata.                   |
+| **Reproducibility**     | Deterministic ETL and checksum validation ensure consistency.                 |
+| **Open Standards**      | STAC 1.0.0, GeoTIFF (COG), GeoJSON, NetCDF, CSV.                              |
+| **Provenance**          | Source manifests, STAC links, and logs document full lineage.                 |
+| **Auditability**        | CI/CD logging, peer validation, and hash verification guarantee transparency. |
 
-Provenance & Integrity
-	•	Checksums: *.sha256 sidecars for fetched and key processed files (make checksums).
-	•	DVC/LFS: large binaries tracked out-of-Git with immutable content hashes.
-	•	Determinism: ETL steps are repeatable; schemas validated in CI.
-	•	Uncertainty: include confidence fields where applicable; surface in UI symbology.
+---
 
-⸻
+## 🧩 CI/CD Data Governance
 
-Open Standards & Semantics
-	•	Formats: COG, GeoJSON, CSV/Parquet; vector tiles/PMTiles for scale.
-	•	Catalogs: STAC 1.0; optional DCAT/JSON-LD export.
-	•	Ontology: CIDOC-CRM for heritage entities; OWL-Time for intervals; PeriodO for named eras.
+GitHub Actions workflows automate validation, documentation, and reproducibility checks:
 
-⸻
+| Workflow            | Purpose                                            | Trigger             |
+| :------------------ | :------------------------------------------------- | :------------------ |
+| `fetch.yml`         | Downloads new raw data based on source manifests.  | On push or schedule |
+| `stac-validate.yml` | Validates STAC catalog structure and links.        | On PR or commit     |
+| `checksums.yml`     | Recomputes and verifies all SHA-256 checksums.     | On data update      |
+| `site.yml`          | Builds documentation and deploys data viewer site. | On main branch push |
 
-CI/CD & Validation
-	•	GitHub Actions: pre-commit, unit tests, STAC validation, JSON Schema checks, CodeQL, Trivy.
-	•	Fail-fast on metadata drift (missing fields, invalid bbox, wrong media types).
+Logs for these workflows are stored under `data/work/logs/`.
 
-⸻
+---
 
-Examples
+## 🧱 Architectural Philosophy
 
-Vector source (multi-year)
+KFM’s architecture is built on three principles:
 
-{
-  "id": "ks_railroads_1900s",
-  "title": "Kansas Railroads (1900s)",
-  "type": "vector",
-  "license": "CC-BY",
-  "endpoint": {
-    "type": "http",
-    "urls": [
-      "https://example.org/ks/railroads_1900.shp",
-      "https://example.org/ks/railroads_1910.shp"
-    ]
-  },
-  "spatial": {"bbox": [-102.1, 36.9, -94.6, 40.1], "crs": "EPSG:4326"},
-  "temporal": {"start": "1900-01-01", "end": "1919-12-31"},
-  "outputs": { "geojson": "data/processed/transport/railroads_1900s.geojson" }
-}
+1. **Transparency:**
+   Every dataset must have a clear, documented lineage — from acquisition to publication.
 
-STAC roles (raster)
+2. **Reproducibility:**
+   Every data transformation is deterministic and scriptable, ensuring consistent rebuilds.
 
-{
-  "assets": {
-    "cog":   { "href": "...", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"] },
-    "thumb": { "href": ".../thumb.jpg", "type": "image/jpeg", "roles": ["thumbnail"] }
-  }
-}
+3. **Interoperability:**
+   Every file format, metadata schema, and workflow must comply with open standards.
 
+---
 
-⸻
+## 📎 Related Documentation
 
-Troubleshooting
-	•	STAC won’t validate → run make stac then the validator; check datetime, bbox, media type.
-	•	COG slow → ensure internal overviews (e.g., rio cogeo create --overview-level=5) and HTTP range.
-	•	Vectors too heavy → split by county/year or produce vector tiles/PMTiles.
-	•	CRS mismatch → standardize to EPSG:4326; record original CRS in spatial.
+| Path                     | Description                               |
+| :----------------------- | :---------------------------------------- |
+| `data/README.md`         | General overview of all data directories. |
+| `data/sources/README.md` | Source manifests and provenance registry. |
+| `data/stac/README.md`    | STAC catalog and metadata integration.    |
+| `docs/architecture/`     | High-level project architecture overview. |
+| `src/pipelines/`         | ETL and transformation pipelines.         |
 
-⸻
+---
 
-Roadmap
-	•	DCAT/JSON-LD exports from STAC
-	•	PMTiles for statewide vector/raster layers
-	•	Confidence-aware styling in the UI
-	•	Deeper CIDOC-CRM profiles for treaties, deeds, oral histories
+## 📅 Version History
+
+| Version | Date       | Summary                                                                        |
+| :------ | :--------- | :----------------------------------------------------------------------------- |
+| v1.0    | 2025-10-04 | Initial data architecture documentation covering source-to-visualization flow. |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix** — *“Data Without Mystery: Every Byte Proven, Every Layer Reproducible.”*
+📍 [`data/ARCHITECTURE.md`](.) · Blueprint for the data subsystem within the Kansas Frontier Matrix.
+
+</div>
