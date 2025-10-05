@@ -11,10 +11,22 @@ across all datasets, pipelines, and documentation.
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../docs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
 
 </div>
+
+---
+
+## 🔗 Quick Links
+
+| Reference | Path |
+|------------|------|
+| **📘 Documentation** | [`../docs/`](../docs/) |
+| **🧱 Architecture** | [`../docs/architecture/`](../docs/architecture/) |
+| **🗃️ Data & STAC** | [`../data/`](../data/) · [`../data/stac/`](../data/stac/) |
+| **👩‍💻 Contributing** | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) |
+| **⚖️ License** | [`../LICENSE`](../LICENSE) |
 
 ---
 
@@ -28,6 +40,7 @@ across all datasets, pipelines, and documentation.
 - [Security & Maintenance](#security--maintenance)
 - [Integration Overview](#integration-overview)
 - [Maintainer Guidelines](#maintainer-guidelines)
+- [Quick Commands](#quick-commands)
 - [Version History](#version-history)
 
 ---
@@ -35,14 +48,15 @@ across all datasets, pipelines, and documentation.
 ## 🧠 Overview
 
 The `.github/` directory defines how **Kansas Frontier Matrix** automates, validates, and governs  
-its codebase and datasets using **GitHub Actions**, **pre-commit hooks**, and **Master Coder Protocol** standards.
+its codebase and datasets using **GitHub Actions**, **pre-commit hooks**, and **Master Coder Protocol (MCP)** standards.
 
-Automation here keeps the entire repository:
-- Deterministic ✅  
-- Traceable 🔍  
-- Secure 🧱  
-- Self-documenting 🧾  
-- Aligned with MCP reproducibility principles 🧮  
+Automation here ensures the repository remains:
+
+- ✅ Deterministic  
+- 🔍 Traceable  
+- 🧱 Secure  
+- 🧾 Self-documenting  
+- 🧮 MCP-aligned  
 
 ---
 
@@ -64,6 +78,7 @@ Automation here keeps the entire repository:
 ├── PULL_REQUEST_TEMPLATE.md   # MCP-compliant PR checklist
 └── FUNDING.yml
 
+
 ⸻
 
 🎯 Purpose
@@ -74,22 +89,21 @@ Automation here keeps the entire repository:
 
 ⸻
 
-## ⚙️ Core Workflows
+⚙️ Core Workflows
 
-| **Workflow** | **Purpose** | **Trigger** | **Primary Output** |
-|---------------|-------------|--------------|--------------------|
-| `site.yml` | Build & deploy documentation and static site. | `push` to `main` | `_site/` |
-| `stac-validate.yml` | Validate STAC collections/items & JSON Schemas. | `push`, `pull_request` | `stac-report.json` |
-| `codeql.yml` | Run CodeQL static analysis for Python code. | `schedule`, `push` | CodeQL dashboard |
-| `trivy.yml` | Scan containers and dependencies for CVEs. | `push`, `pull_request` | Trivy SARIF report |
-| `pre-commit.yml` | Run linting, formatting, and tests. | `pull_request` | Pre-commit log |
-| `auto-merge.yml` | Auto-merge PRs when all checks succeed. | post-check success | Merged PR |
+Workflow	Purpose	Trigger	Primary Output
+site.yml	Build & deploy documentation and static site.	push → main	_site/
+stac-validate.yml	Validate STAC collections/items & JSON Schemas.	push, pull_request	stac-report.json
+codeql.yml	Run CodeQL static analysis for Python code.	schedule, push	CodeQL dashboard
+trivy.yml	Scan containers and dependencies for CVEs.	push, pull_request	Trivy SARIF report
+pre-commit.yml	Run linting, formatting, and tests.	pull_request	Pre-commit log
+auto-merge.yml	Auto-merge PRs when all checks succeed.	post-check success	Merged PR
+
 
 ⸻
 
-## 🧩 CI/CD Flow Diagram
-```
-mermaid
+🧩 CI/CD Flow Diagram
+
 flowchart TD
     A([Start: Push or Pull Request])
     B([Pre-Commit Hooks])
@@ -118,19 +132,31 @@ flowchart TD
     class G,H end;
 
 <!-- END OF MERMAID -->
-```
+
+
+🎨 Legend
+
+Color	Stage	Purpose
+⚪️ White	Trigger	Push / PR Event
+🩶 Gray	Pre-Processing	Pre-Commit Hooks
+🩵 Blue	Testing	Lint & Unit Tests
+🟩 Green	Validation	STAC + Checksum
+🟨 Yellow	Security	CodeQL / Trivy
+🟪 Purple	Deployment	Site Build / Docs
+🟢 Bright Green	End	Auto-Merge Success
+
 
 ⸻
 
-## 🧮 MCP Compliance Matrix
+🧮 MCP Compliance Matrix
 
-| **MCP Principle**     | **Implementation in `.github/`** |
-|------------------------|----------------------------------|
-| **Documentation-First** | Each workflow is documented, versioned, and traceable. |
-| **Reproducibility**    | Deterministic CI/CD with pinned actions and dependencies. |
-| **Provenance**         | SHA-256 checksums + STAC metadata link datasets to source. |
-| **Auditability**       | CI logs and reports retained in workflow history. |
-| **Open Standards**     | YAML configs, STAC 1.0.0, and JSON Schema validation. |
+MCP Principle	Implementation in .github/
+Documentation-First	Each workflow documented, versioned, and traceable.
+Reproducibility	Deterministic CI/CD with pinned actions and dependencies.
+Provenance	SHA-256 checksums + STAC metadata link datasets to source.
+Auditability	CI logs and reports retained in workflow history.
+Open Standards	YAML configs, STAC 1.0.0, and JSON Schema validation.
+
 
 ⸻
 
@@ -138,11 +164,11 @@ flowchart TD
 
 🪶 Pull Request Template
 
-- [ ] Updated all relevant documentation
-- [ ] STAC + checksum validation passed
-- [ ] CodeQL + Trivy scans clean
-- [ ] All CI workflows succeeded
-- [ ] MCP reproducibility verified
+- [ ] Updated all relevant documentation  
+- [ ] STAC + checksum validation passed  
+- [ ] CodeQL + Trivy scans clean  
+- [ ] All CI workflows succeeded  
+- [ ] MCP reproducibility verified  
 
 🧾 Issue Templates
 
@@ -154,30 +180,33 @@ Located in .github/ISSUE_TEMPLATE/:
 ⸻
 
 🔒 Security & Maintenance
-	•	🔑 Secrets: Use Settings → Secrets → Actions
-	•	🧩 Weekly Scans: Trivy + CodeQL
-	•	🧰 Peer Review: Required for workflow changes
-	•	🧼 Monthly Maintenance: Update dependencies and pinned versions
-	•	🧱 Branch Protection: Enforce review + CI pass before merge
+
+Focus Area	Policy / Action
+🔑 Secrets	Store in Settings → Secrets → Actions
+🧩 Weekly Scans	Run Trivy + CodeQL automatically
+🧰 Peer Review	Required for all workflow changes
+🧼 Monthly Maintenance	Update pinned actions and dependencies
+🧱 Branch Protection	Enforce review + CI pass before merge
+
 
 ⸻
 
-## 🧱 Integration Overview
+🧱 Integration Overview
 
-| **Repository Area** | **Validated / Managed By** |
-|----------------------|-----------------------------|
-| `data/`             | STAC + checksum validation workflows |
-| `src/pipelines/`    | Linked to ETL and validation CI |
-| `docs/`             | Built and deployed via `site.yml` |
-| `web/`              | Static frontend deployed via GitHub Pages |
+Repository Area	Validated / Managed By
+data/	STAC + checksum validation workflows
+src/pipelines/	Linked to ETL and validation CI
+docs/	Built and deployed via site.yml
+web/	Static frontend deployed via GitHub Pages
+
 
 ⸻
 
 🧭 Maintainer Guidelines
 	1.	Keep workflows modular — one purpose per YAML.
 	2.	Pin action versions (avoid @latest).
-	3.	Use actions/cache for large deps.
-	4.	Fail fast with clear logs.
+	3.	Use actions/cache for heavy dependencies.
+	4.	Fail fast with clear, actionable logs.
 	5.	Only auto-merge PRs passing all CI checks.
 
 ⸻
@@ -191,6 +220,7 @@ pre-commit run --all-files
 # Manually trigger a workflow
 gh workflow run site.yml
 
+
 ⸻
 
 🕓 Version History
@@ -198,9 +228,11 @@ gh workflow run site.yml
 Version	Date	Summary
 v1.0.0	2025-10-04	Initial automation & governance documentation
 v1.1.0	2025-10-06	GitHub-verified rendering; uniform styling
-v1.2.0	2025-10-07	Final MCP-aligned formatting & section dividers
+v1.2.0	2025-10-07	Final MCP-aligned formatting & layout consistency
+
 
 ⸻
+
 
 <div align="center">
 
@@ -214,3 +246,4 @@ for the Kansas Frontier Matrix Knowledge Infrastructure.
 🌐 Full Documentation » · 📦 Data Architecture » · 🧮 STAC Catalog »
 
 </div>
+```
