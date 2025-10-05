@@ -49,13 +49,13 @@ Each treaty typically has **textual documentation (Kappler’s _Indian Affairs: 
 ## ⚙️ Integration Workflow
 
 flowchart TD
-  A["Treaty Texts<br/>Kappler / Avalon / LOC"] --> B["NLP Parsing<br/>NER · date · tribe · place"]
-  A2["Cession Maps<br/>USFS / BIA / Royce shapefiles"] --> C["Geospatial Processing<br/>reproject → GeoJSON"]
-  B --> D["Entity Linking<br/>Tribes ↔ Places ↔ Dates"]
+  A["Treaty Texts\nKappler / Avalon / LOC"] --> B["NLP Parsing\nNER · date · tribe · place"]
+  A2["Cession Maps\nUSFS / BIA / Royce shapefiles"] --> C["Geospatial Processing\nreproject → GeoJSON"]
+  B --> D["Entity Linking\nTribes ↔ Places ↔ Dates"]
   C --> D
-  D --> E["Knowledge Graph<br/>Neo4j · CIDOC CRM"]
-  E --> F["STAC Catalog & Layers.json<br/>treaties.geojson · metadata.json"]
-  F --> G["Frontend<br/>Map overlay · Timeline event nodes"]
+  D --> E["Knowledge Graph\nNeo4j · CIDOC CRM"]
+  E --> F["STAC Catalog & Layers.json\nTreaties GeoJSON · metadata.json"]
+  F --> G["Frontend\nMap overlay · Timeline event nodes"]
 
 <!-- END OF MERMAID -->
 
