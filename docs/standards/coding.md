@@ -1,11 +1,12 @@
 <div align="center">
 
-# 💻 Kansas Frontier Matrix — Coding Standards & Style Guide  
+# 💻 Kansas Frontier Matrix — **Coding Standards & Style Guide**
+
 `docs/standards/coding.md`
 
-**Purpose:** Define consistent **coding, formatting, documentation, and governance standards**  
-for all source code and configuration files across the **Kansas Frontier Matrix (KFM)** repository —  
-ensuring maintainability, reproducibility, and MCP-aligned auditability.
+**Purpose:** Define consistent **coding, formatting, documentation, security, and governance** standards
+for all source and configuration files across **Kansas Frontier Matrix (KFM)** — ensuring maintainability,
+reproducibility, and **MCP-aligned** auditability.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../../LICENSE)
@@ -16,245 +17,355 @@ ensuring maintainability, reproducibility, and MCP-aligned auditability.
 
 ## 📚 Overview
 
-The **KFM Coding Standards** exist to guarantee that:
-- Code is **reproducible** and deterministic.
-- Implementations are **transparent**, well-documented, and auditable.
-- Practices are **consistent** across data, pipelines, web, and automation systems.
-- All contributors adhere to **MCP principles**:  
+The **KFM Coding Standards** guarantee that:
+
+* Code is **reproducible** and deterministic.
+* Implementations are **transparent**, documented, and auditable.
+* Practices are **consistent** across data pipelines, web UI, and automation.
+* All work follows **MCP** principles:
   📘 Documentation-first · 🔁 Reproducible · 🌍 Open-standard · 🔗 Provenance · 🧾 Auditable.
 
-These standards apply to:
-- `src/` (Python ETL and pipeline scripts)
-- `web/` (JavaScript + MapLibre visualization)
-- `.github/workflows/` (YAML automation scripts)
-- `Makefile`, configuration files, and documentation scripts.
+**Applies to**
+
+* `src/` (Python ETL/AI/graph/pipeline code)
+* `web/` (React, MapLibre, JS/TS)
+* `.github/workflows/` (CI/CD YAML)
+* `Makefile`, `Dockerfile`, Infra configs
+* Docs build scripts and dataset tooling
 
 ---
 
 ## 🧩 Core Coding Principles (MCP-Aligned)
 
-| Principle | Description | Implementation |
-|:-----------|:--------------|:----------------|
-| **Documentation-first** | Code must include clear docstrings and README references. | Use docstrings for all functions and modules. |
-| **Reproducibility** | All code must produce identical results given the same inputs. | Version-lock dependencies in `requirements.txt` or `package.json`. |
-| **Open Standards** | Use open libraries and formats only. | Prefer `GeoTIFF`, `GeoJSON`, `CSV`, `JSON Schema`. |
-| **Provenance** | Code must log transformations and data lineage. | Use `data/work/logs/` for logging. |
-| **Auditability** | Code must pass linting, type checking, and security scans. | CI/CD workflows enforce `pre-commit` and `CodeQL`. |
+| Principle               | Description                   | Implementation Examples                                 |
+| :---------------------- | :---------------------------- | :------------------------------------------------------ |
+| **Documentation-first** | Design + doc before code      | Module `README.md`, docstrings, ADRs                    |
+| **Reproducibility**     | Same inputs ⇒ same outputs    | Pinned deps, containers, seeds, idempotent Make targets |
+| **Open Standards**      | Prefer open formats/tools     | GeoJSON, COG, CSV/JSON, STAC, JSON Schema               |
+| **Provenance**          | Log lineage + decisions       | `data/work/logs/`, provenance records, STAC links       |
+| **Auditability**        | Machine-checked quality gates | pre-commit, CodeQL, Trivy, tests in CI                  |
 
 ---
 
 ## 🐍 Python Standards
 
-### Code Style
-- Follow **PEP 8** style conventions.
-- Maximum line length: **100 characters**.
-- Indentation: **4 spaces** (no tabs).
-- Imports:
-  - Standard library imports first.
-  - Third-party libraries next.
-  - Local imports last.
-- Use **type hints** for all functions and class methods.
+### Style & Structure
 
-### Example
+* **PEP 8** with line length **100**.
+* Indentation **4 spaces**; no tabs.
+* Imports: stdlib → third-party → local; group with blank lines.
+* **Type hints** required on all public functions/classes.
+* **Pure functions** where feasible; keep side effects explicit.
+* **Small modules**: single responsibility; prefer composition over inheritance.
+
 ```python
 from pathlib import Path
+from typing import Final
+
 import geopandas as gpd
-from utils.checksum import sha256_file
+
+DEFAULT_CRS: Final[int] = 4326
 
 def process_terrain(input_file: Path, output_dir: Path) -> Path:
     """
-    Process terrain raster data into a standardized GeoTIFF output.
+    Reproject terrain vector/raster and persist in a standard format.
 
     Args:
-        input_file (Path): Path to input DEM file.
-        output_dir (Path): Directory for processed output.
+        input_file: Input dataset path (vector or raster).
+        output_dir: Output directory for processed artifact(s).
 
     Returns:
-        Path: Path to validated GeoTIFF.
+        Path to the processed artifact.
     """
-    terrain = gpd.read_file(input_file)
-    processed = terrain.to_crs(epsg=4326)
-    output_path = output_dir / "processed_dem.tif"
-    processed.to_file(output_path)
-    sha256_file(output_path)
-    return output_path
-````
+    gdf = gpd.read_file(input_file)
+    gdf = gdf.to_crs(epsg=DEFAULT_CRS)
 
----
+    output = output_dir / "processed_dem.tif"
+    gdf.to_file(output)
+    return output
+```
 
-### Naming Conventions
+### Naming
 
-| Element                | Convention                 | Example                        |
-| :--------------------- | :------------------------- | :----------------------------- |
-| **Modules / Packages** | lowercase with underscores | `terrain_pipeline.py`          |
-| **Classes**            | PascalCase                 | `TerrainProcessor`             |
-| **Functions**          | lowercase with underscores | `generate_checksum()`          |
-| **Variables**          | lowercase with underscores | `input_path`, `checksum_value` |
-| **Constants**          | ALL_CAPS                   | `DEFAULT_CRS = 4326`           |
-
----
+| Element          | Convention   | Example               |
+| :--------------- | :----------- | :-------------------- |
+| Modules/Packages | `snake_case` | `terrain_pipeline.py` |
+| Classes          | `PascalCase` | `TerrainProcessor`    |
+| Functions        | `snake_case` | `generate_checksum()` |
+| Variables        | `snake_case` | `input_path`          |
+| Constants        | `ALL_CAPS`   | `DEFAULT_CRS = 4326`  |
 
 ### Documentation
 
-| Element             | Requirement                                              | Example                      |
-| :------------------ | :------------------------------------------------------- | :--------------------------- |
-| **Docstrings**      | Required for all public functions, classes, and modules. | PEP 257 format.              |
-| **Inline Comments** | Short, context-specific, limited to <80 chars.           | `# Compute DEM slope values` |
-| **README.md**       | Each module directory must have one.                     | Describes purpose and usage. |
+* **Docstrings** (PEP 257) mandatory for modules, public classes, functions (Google or reST).
+* Inline comments are short, **≤ 80 chars**, for non-obvious logic only.
+* Each subpackage has a **README.md** with purpose, usage, and small example.
+
+### Linting, Types & Formatting
+
+| Tool           | Purpose             | Config                                             |
+| :------------- | :------------------ | :------------------------------------------------- |
+| **Black**      | Auto-format         | Line length 100                                    |
+| **Ruff**       | Lint + import rules | `.ruff.toml` (enable flake8/pycodestyle/pyupgrade) |
+| **isort**      | Import ordering     | Via Ruff or `.isort.cfg`                           |
+| **mypy**       | Static typing       | `mypy.ini` (strict on `src/`, relaxed in tests)    |
+| **pre-commit** | Local checks        | `.pre-commit-config.yaml`                          |
+
+**Recommended `mypy.ini` excerpt**
+
+```ini
+[mypy]
+python_version = 3.11
+warn_unused_ignores = True
+warn_return_any = True
+disallow_untyped_defs = True
+disallow_incomplete_defs = True
+no_implicit_optional = True
+```
+
+### Logging & Errors
+
+* Use **`logging`** (no `print`) with structured context; default level `INFO` in apps, `WARNING` in libs.
+* **Never** swallow exceptions. Convert to domain-specific errors if needed and re-raise.
+* Emit file/record identifiers that support provenance links.
+
+```python
+import logging
+logger = logging.getLogger(__name__)
+
+try:
+    # step…
+except Exception as exc:  # noqa: BLE001
+    logger.exception("terrain.process_failed file=%s", input_file)
+    raise
+```
+
+### Config & Secrets
+
+* Use `pydantic-settings`/`dotenv` or environment variables; **no secrets in code**.
+* Define a single settings module per service; support overrides via `ENV`.
 
 ---
 
-### Linting & Formatting
+## 🌐 JavaScript / TypeScript (Web)
 
-| Tool           | Purpose                                  | Configuration              |
-| :------------- | :--------------------------------------- | :------------------------- |
-| **Black**      | Auto-format Python code.                 | Line length 100.           |
-| **Ruff**       | Fast linter for style and import checks. | `.ruff.toml`               |
-| **Isort**      | Enforces import sorting.                 | Integrated via pre-commit. |
-| **Mypy**       | Type-checking for all Python scripts.    | Optional in CI/CD.         |
-| **Pre-Commit** | Runs all checks automatically.           | `.pre-commit-config.yaml`  |
+### Frameworks
 
----
+* React 18+, **MapLibre GL JS**, optional D3/Turf.
+* Prefer **TypeScript** for new code; otherwise JSDoc types.
 
-## 🌐 JavaScript / Web Standards
+### Style
 
-### Frameworks & Tools
+* Indentation **2 spaces**, max line **100**.
+* Use `const`/`let` (never `var`).
+* **Functional components + hooks**; avoid class components.
+* Keep components small; extract hooks for data fetching.
 
-* Use **Vanilla JS** or **MapLibre GL JS** for mapping.
-* Optional libraries: D3.js, Turf.js, or Lodash (only if documented and justified).
-* Follow **ES6+ syntax** and modern JS conventions.
-
-### Code Style
-
-* Indentation: **2 spaces**.
-* Max line length: **100 characters**.
-* Use `const` and `let` instead of `var`.
-* Always include inline JSDoc comments for functions.
-
-```javascript
+```ts
 /**
- * Add terrain layer to MapLibre map viewer.
- * @param {Object} map - MapLibre map instance.
- * @param {string} id - Unique layer ID.
+ * Add raster terrain layer.
  */
-function addTerrainLayer(map, id) {
-  map.addSource(id, {
-    type: "raster",
-    tiles: ["data/tiles/terrain/{z}/{x}/{y}.png"],
-    tileSize: 256,
-  });
-
-  map.addLayer({
-    id: id,
-    type: "raster",
-    source: id,
-    paint: { "raster-opacity": 0.85 },
-  });
+export function addTerrainLayer(map: maplibregl.Map, id: string, tiles: string[]) {
+  map.addSource(id, { type: "raster", tiles, tileSize: 256 });
+  map.addLayer({ id, type: "raster", source: id, paint: { "raster-opacity": 0.85 } });
 }
 ```
 
+### Lint, Format, Build
+
+| Tool               | Purpose               | Config                       |
+| :----------------- | :-------------------- | :--------------------------- |
+| **ESLint**         | Linting (TS/JS/React) | `.eslintrc.json`             |
+| **Prettier**       | Formatting            | `.prettierrc`                |
+| **TypeScript**     | Types                 | `tsconfig.json`              |
+| **Vite / Webpack** | Bundling              | `vite.config.ts` (preferred) |
+
+**Accessibility**
+
+* Use ARIA roles/labels, keyboard navigation, and color-contrast tokens.
+* Run automated a11y checks (axe) in CI for critical routes.
+
+**Security (Web)**
+
+* Avoid `innerHTML`; sanitize untrusted input.
+* Set CSP/security headers at serving layer; use HTTPS-only endpoints.
+
 ---
 
-### JavaScript Linting & Build
+## ⚙️ YAML / GitHub Actions
 
-| Tool            | Purpose               | Configuration               |
-| :-------------- | :-------------------- | :-------------------------- |
-| **ESLint**      | JavaScript linting    | `.eslintrc.json`            |
-| **Prettier**    | Code formatting       | `.prettierrc`               |
-| **Node.js**     | Dependency management | `package.json`              |
-| **Mermaid CLI** | Diagram generation    | used in documentation build |
+* YAML 1.2 compliant; avoid anchors for readability.
+* Workflow names must be explicit: `Validate STAC`, `Checksums`, `CodeQL`.
+* Use matrices where helpful, but restrict triggers with `paths`/`paths-ignore`.
 
----
-
-## ⚙️ YAML / Workflow Standards
-
-| Standard           | Description                                                              |
-| :----------------- | :----------------------------------------------------------------------- |
-| **YAML Schema**    | All GitHub Actions workflows must validate under YAML 1.2.               |
-| **Workflow Names** | Use clear, descriptive names: `Build & Deploy Docs`, `Validate STAC`     |
-| **Secrets**        | Managed only via GitHub Actions secrets. Never hardcoded.                |
-| **Triggers**       | Minimize redundant workflow triggers. Use `paths-ignore` and `branches`. |
+```yaml
+name: Validate STAC
+on:
+  pull_request:
+    paths: ["data/stac/**", ".github/workflows/stac-validate.yml"]
+jobs:
+  stac:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install stac-validator
+      - run: stac-validator data/stac --recursive --links
+```
 
 ---
 
 ## 🧩 Makefile Conventions
 
-| Target                              | Purpose                               |
-| :---------------------------------- | :------------------------------------ |
-| **make all**                        | Run all major pipelines sequentially. |
-| **make terrain / hydrology / etc.** | Run domain-specific ETL.              |
-| **make checksums**                  | Generate and validate SHA-256 hashes. |
-| **make stac-validate**              | Validate STAC and metadata.           |
-| **make site**                       | Build documentation and deploy site.  |
-| **make clean-***                    | Remove temporary or cache files.      |
+| Target                       | Purpose                    |
+| :--------------------------- | :------------------------- |
+| `make all`                   | Run top-level pipelines    |
+| `make terrain/hydrology/...` | Domain ETL                 |
+| `make checksums`             | Generate/verify SHA-256    |
+| `make stac-validate`         | Validate STAC/JSON schema  |
+| `make site`                  | Build + deploy docs/site   |
+| `make clean-*`               | Remove temp or cache files |
 
-All Makefile commands must:
+**Rules**
 
-* Be **idempotent** (safe to rerun).
-* Log all operations to `data/work/logs/`.
-* Fail gracefully with clear messages.
+* Idempotent; safe to re-run.
+* Log to `data/work/logs/` with timestamps.
+* Exit non-zero on failures; concise error messages.
 
 ---
 
-## 🧠 Security & Governance Standards
+## 🐳 Containers & Repro Environments
 
-| Policy                 | Implementation                                          |
-| :--------------------- | :------------------------------------------------------ |
-| **Code Signing**       | Commits verified via GPG or GitHub verified signatures. |
-| **Dependencies**       | Locked in `requirements.txt` / `package-lock.json`.     |
-| **Secrets Management** | Environment variables or GitHub Secrets only.           |
-| **Static Analysis**    | CodeQL + Trivy scan results reviewed before merge.      |
-| **Access Control**     | Write permissions restricted to maintainers and CI/CD.  |
+* Each service has a **Dockerfile** with pinned versions and a minimal runtime (e.g., `python:3.11-slim`).
+* Multi-stage builds for smaller images; include **SBOM** generation (Syft) when possible.
+* Prefer **rootless** containers, drop caps, and read-only filesystem for runtime.
+
+---
+
+## 🛡️ Security & Governance
+
+| Policy                  | Enforcement                                                     |
+| :---------------------- | :-------------------------------------------------------------- |
+| **Commit verification** | GPG or GitHub Verified                                          |
+| **Dependencies**        | Locked (`requirements.txt`, `poetry.lock`, `package-lock.json`) |
+| **Static analysis**     | CodeQL; JS/TS rules enabled                                     |
+| **Vuln scanning**       | Trivy for images/deps                                           |
+| **Secrets**             | GitHub/OIDC; no plaintext in code/logs                          |
+| **Access control**      | Least privilege; PRs require review                             |
+
+---
+
+## 🧪 Testing Standards
+
+* **Unit tests** for pure logic; **integration** for I/O and data flows; **contract** tests for APIs.
+* Minimum coverage goals (guideline): **70% unit**, **smoke** coverage for pipelines.
+* Store test fixtures under `tests/fixtures/`.
+* Use deterministic seeds and temporary dirs; clean up artifacts.
+
+```bash
+pytest -q --maxfail=1 --disable-warnings
+```
 
 ---
 
 ## 🧾 Version Control Practices
 
-| Rule                | Description                                                               |
-| :------------------ | :------------------------------------------------------------------------ |
-| **Commit Messages** | Use semantic prefixes: `feat:`, `fix:`, `docs:`, `data:`, `ci:`, `chore:` |
-| **Branch Naming**   | Use lowercase hyphenated format: `feature/add-stac-validation`            |
-| **Pull Requests**   | Must include a link to related issue or ADR.                              |
-| **Tags**            | Use `vX.Y.Z` semantic versioning for releases.                            |
-| **Code Reviews**    | Required before merging to `main`.                                        |
+| Rule                     | Description                                                              |
+| :----------------------- | :----------------------------------------------------------------------- |
+| **Conventional Commits** | `feat:`, `fix:`, `docs:`, `data:`, `ci:`, `refactor:`, `chore:`          |
+| **Branch naming**        | `feature/add-stac-validation`, `fix/terrain-proj-bug`                    |
+| **PR requirements**      | Link issue/ADR; include screenshots for UI; attach logs for data changes |
+| **Tags**                 | `vX.Y.Z` semver; changelog entries required                              |
+| **Code reviews**         | 1+ approval; CI green; large PRs require design notes/ADR                |
+
+---
+
+## 🧰 Pre-Commit (Reference Snippet)
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks: [{ id: ruff, args: ["--fix"] }, { id: ruff-format }]
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks: [{ id: black }]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks: [{ id: prettier }]
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        types: [python]
+```
+
+---
+
+## 🗂️ .editorconfig (Reference)
+
+```ini
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.py]
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+[*.{js,ts,jsx,tsx,css,scss}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+```
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                              |
-| :---------------------- | :---------------------------------------------------------- |
-| **Documentation-first** | Code and workflows documented before merge.                 |
-| **Reproducibility**     | Configs and dependencies versioned; CI/CD verified.         |
-| **Open Standards**      | Python, JS, YAML, JSON Schema, STAC.                        |
-| **Provenance**          | Logs + metadata track code and data lineage.                |
-| **Auditability**        | CodeQL, pre-commit, and CI/CD enforce traceable validation. |
+| MCP Principle           | Implementation                                  |
+| :---------------------- | :---------------------------------------------- |
+| **Documentation-first** | Docstrings, module READMEs, ADRs before merge   |
+| **Reproducibility**     | Pinned deps, containers, Make idempotence       |
+| **Open Standards**      | STAC, GeoJSON, COG, CSV/JSON, JSON Schema       |
+| **Provenance**          | Logs + checksums + provenance templates         |
+| **Auditability**        | pre-commit, CodeQL, Trivy, CI gates, PR reviews |
 
 ---
 
-## 📎 Related Documentation
+## 🔗 Related Documentation
 
-| File                                   | Description                                  |
-| :------------------------------------- | :------------------------------------------- |
-| `docs/standards/metadata-standards.md` | Metadata and schema conventions.             |
-| `docs/architecture/ci-cd.md`           | CI/CD automation enforcing coding standards. |
-| `.pre-commit-config.yaml`              | Pre-commit hook configuration.               |
-| `.github/workflows/codeql.yml`         | Code security scanning workflow.             |
-| `.github/workflows/trivy.yml`          | Dependency vulnerability scanning.           |
+| File                             | Description                                |
+| :------------------------------- | :----------------------------------------- |
+| `docs/standards/data-formats.md` | File/format rules (GeoJSON, COG, CSV/JSON) |
+| `docs/standards/metadata.md`     | STAC + JSON Schema conventions             |
+| `docs/architecture/ci-cd.md`     | CI/CD workflows and gates                  |
+| `.pre-commit-config.yaml`        | Local quality automation                   |
+| `.github/workflows/codeql.yml`   | Static analysis setup                      |
+| `.github/workflows/trivy.yml`    | Vulnerability scanning pipeline            |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author                 | Summary                                                      |
-| :------ | :--------- | :--------------------- | :----------------------------------------------------------- |
-| v1.0    | 2025-10-04 | KFM Documentation Team | Initial coding standards and style guide for MCP compliance. |
+| Version | Date       | Author                 | Summary                                                        |
+| :-----: | :--------- | :--------------------- | :------------------------------------------------------------- |
+|   v1.0  | 2025-10-04 | KFM Documentation Team | Initial coding standards (MCP compliant)                       |
+|   v1.1  | 2025-10-05 | KFM Engineering        | Added TS, containers, a11y/security, mypy strictness, examples |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Line Documented. Every Function Proven.”*
-📍 [`docs/standards/coding.md`](.) · Official coding standards and style guide for reproducible development in KFM.
+📍 [`docs/standards/coding.md`](.) · Official code & style standards for reproducible development in KFM.
 
 </div>
