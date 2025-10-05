@@ -1,11 +1,12 @@
 <div align="center">
 
-# 📝 Kansas Frontier Matrix — Documentation Standards  
+# 📝 Kansas Frontier Matrix — Documentation & Writing Standards
+
 `docs/standards/documentation.md`
 
-**Purpose:** Define the official documentation, writing, and formatting standards for the  
-**Kansas Frontier Matrix (KFM)** repository — ensuring that every file is written,  
-structured, and maintained with **clarity**, **consistency**, and **MCP reproducibility**.
+**Purpose:** Define the official **documentation, formatting, and governance standards** for
+the **Kansas Frontier Matrix (KFM)** — ensuring every document is **clear**, **consistent**,
+and **reproducible** under the **Master Coder Protocol (MCP)**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -16,128 +17,134 @@ structured, and maintained with **clarity**, **consistency**, and **MCP reproduc
 
 ## 📚 Overview
 
-The **KFM Documentation Standards** ensure that every document, README, SOP, and architecture file is:
-- 🧠 **Documentation-first** — written before or alongside implementation  
-- 🧩 **Consistent** — structured uniformly for human and machine readability  
-- 🔁 **Reproducible** — describes procedures that can be repeated exactly  
-- 🔗 **Provenance-tracked** — includes version, authorship, and relationships  
-- 🧾 **Auditable** — validated through CI/CD and peer review  
+The KFM documentation system is the **living backbone** of the project.
+All text artifacts — from architecture notes to dataset metadata — must be:
 
-All documentation is **Markdown-based**, uses **open standards (MD + JSON Schema + STAC)**,  
-and is automatically validated during builds via `make site` and `.github/workflows/site.yml`.
+| Principle                  | Description                                              |
+| :------------------------- | :------------------------------------------------------- |
+| 🧠 **Documentation-first** | Drafted before or alongside code and data changes.       |
+| 🧩 **Consistent**          | Structured and formatted identically across directories. |
+| 🔁 **Reproducible**        | Fully re-buildable and verifiable by any contributor.    |
+| 🔗 **Provenance-tracked**  | Authorship, version, and file lineage embedded within.   |
+| 🧾 **Auditable**           | Validated automatically in CI/CD and peer-review logs.   |
 
----
-
-## 🧩 Documentation Structure
-
-Each document follows a standardized structure for clarity and auditability.
-
-### 🧱 Recommended Markdown Layout
-
-| Section | Description |
-|:-----------|:-------------|
-| **Title Block** | Includes document title, repository path, purpose, and badges. |
-| **Overview** | High-level summary and scope of the document. |
-| **Core Content** | Main topic sections (procedures, methods, diagrams, etc.). |
-| **MCP Compliance Summary** | Table showing adherence to MCP principles. |
-| **Related Documentation** | Links to connected files or references. |
-| **Version History** | Tracks updates, authors, and summary of changes. |
-| **Footer** | Tagline and file location for reproducibility. |
+All content uses **GitHub-Flavored Markdown (GFM)** and, where relevant,
+**open interchange standards** — **JSON Schema**, **STAC 1.0.0**, and **DCAT**.
+Validation runs via `make docs-validate` and the CI workflow `.github/workflows/site.yml`.
 
 ---
 
-### Example File Header
+## 🧩 Document Anatomy
+
+Each Markdown file follows this standard composition for clarity and MCP traceability.
+
+| Section                  | Description                                                  |
+| :----------------------- | :----------------------------------------------------------- |
+| **Title Block**          | File path, title, purpose, and badges in a centered `<div>`. |
+| **Overview**             | A concise statement of scope and context.                    |
+| **Core Sections**        | Procedures, diagrams, methods, or standards content.         |
+| **MCP Compliance Table** | Declares how MCP principles are implemented.                 |
+| **Related Docs**         | Cross-links to other standards or architecture files.        |
+| **Version History**      | Semantic version, date, author, and summary of edits.        |
+| **Footer Tagline**       | Official MCP provenance quote and file path.                 |
+
+---
+
+### 🧱 Example Header
 
 ```markdown
 <div align="center">
 
-# 🧱 Kansas Frontier Matrix — Example Document Title  
+# 🧱 Kansas Frontier Matrix — Example Title  
 `path/to/file.md`
 
-**Purpose:** Short one-sentence summary of document’s purpose.
+**Purpose:** Short one-sentence summary of intent.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
-````
+```
 
 ---
 
-## 🧱 Writing Standards
+## ✍️ Writing & Style Guide
 
-| Area            | Standard                                                     | Example                                            |
-| :-------------- | :----------------------------------------------------------- | :------------------------------------------------- |
-| **Language**    | Clear, concise, professional English.                        | “This workflow validates all STAC metadata.”       |
-| **Tone**        | Objective, instructional, and consistent.                    | Avoid jargon and subjective phrasing.              |
-| **Perspective** | Second-person (you/your) for guides; third-person for specs. | “You can run this with `make site`.”               |
-| **Verb Tense**  | Present tense for procedures; past tense for results.        | “This process generates a checksum.”               |
-| **Voice**       | Active preferred over passive.                               | ✅ “Run validation.” ❌ “Validation should be run.”  |
-| **Clarity**     | Avoid redundancy or ambiguity.                               | “Use the `stac-validator` tool to check metadata.” |
+| Category        | Requirement                              | Example                                            |
+| :-------------- | :--------------------------------------- | :------------------------------------------------- |
+| **Language**    | Clear, precise technical English.        | “This workflow validates all STAC items.”          |
+| **Tone**        | Objective / instructional.               | Avoid hype or ambiguity.                           |
+| **Perspective** | Guides = 2nd person; Specs = 3rd person. | “You can run this with `make site`.”               |
+| **Tense**       | Present for process; past for results.   | “This script generates checksums.”                 |
+| **Voice**       | Prefer active.                           | ✅ “Run validation.”  ❌ “Validation should be run.” |
+| **Clarity**     | One idea per sentence; avoid redundancy. | “Use `stac-validator` to check metadata.”          |
+
+All new files must pass Markdown linting and human editorial review before merge.
 
 ---
 
 ## 🧾 Formatting Conventions
 
-| Element         | Format                                           | Notes                                             |
-| :-------------- | :----------------------------------------------- | :------------------------------------------------ |
-| **Headings**    | Use `#`, `##`, `###` hierarchically.             | Start with one `#` per file.                      |
-| **Tables**      | GitHub-flavored Markdown tables.                 | Align columns with `:` for readability.           |
-| **Code Blocks** | Triple backticks with language tag.              | `bash` for commands, `json` for metadata.         |
-| **Lists**       | Use `-` for unordered, `1.` for ordered lists.   | Nested lists indented 2 spaces.                   |
-| **Emphasis**    | `**bold**` for key terms, *italic* for emphasis. | Avoid overuse.                                    |
-| **Links**       | Relative paths within repo.                      | `[architecture.md](architecture/architecture.md)` |
-| **Badges**      | Include MCP and license badges in header.        | See example header above.                         |
+| Element         | Standard                                    | Notes                                   |
+| :-------------- | :------------------------------------------ | :-------------------------------------- |
+| **Headings**    | `#`, `##`, `###` hierarchy.                 | Only one top-level `#` per file.        |
+| **Tables**      | GFM tables with colons for alignment.       | Keep ≤ 4 columns per table if possible. |
+| **Code Blocks** | Triple backticks + language tag.            | `bash`, `json`, `python`, `mermaid`.    |
+| **Lists**       | `-` unordered, `1.` ordered.                | Indent 2 spaces for nested.             |
+| **Emphasis**    | `**bold**` key terms; *italic* for context. | Avoid decorative emphasis.              |
+| **Links**       | Relative paths within repo.                 | `[architecture.md](../architecture/)`   |
+| **Badges**      | MCP + License required.                     | Add workflow badges as relevant.        |
+
+> ℹ️ Use the examples from `docs/standards/coding.md` for code-block colorization and emoji support (see 🧾 GitHub Formatting Guide).
 
 ---
 
-## 🧩 Versioning & Provenance Metadata
+## 🧩 Version & Provenance Metadata
 
-Each document must include version control and authorship metadata.
+Every document must include explicit metadata at the end **and** in the Git commit.
 
-| Field       | Description                     | Example                                    |
-| :---------- | :------------------------------ | :----------------------------------------- |
-| **Version** | Semantic version (vX.Y).        | `v1.0`                                     |
-| **Date**    | Last modification date.         | `2025-10-04`                               |
-| **Author**  | Document creator or maintainer. | `KFM Documentation Team`                   |
-| **Summary** | One-line change summary.        | “Initial data architecture documentation.” |
+| Field       | Example                                   |
+| :---------- | :---------------------------------------- |
+| **Version** | `v1.2`                                    |
+| **Date**    | `2025-10-05`                              |
+| **Author**  | `KFM Docs Team`                           |
+| **Summary** | “Added CI validation table and examples.” |
 
-**All version histories must appear in a table at the end of the document.**
+Append a **Version History Table**:
 
----
-
-## 🧠 Diagrams & Visual Standards
-
-Visual assets must be stored under:
-
-```
-docs/architecture/diagrams/exported/
-```
-
-| Type                       | Format                             | Standard                                          |
-| :------------------------- | :--------------------------------- | :------------------------------------------------ |
-| **Architecture Diagrams**  | Mermaid (`.mmd` → `.svg` / `.png`) | Must render correctly in GitHub preview.          |
-| **Data Flow / Provenance** | Mermaid Flowcharts                 | Include directional arrows and clear node labels. |
-| **ER Diagrams**            | Mermaid `erDiagram`                | Follow STAC and MCP terminology.                  |
-| **Metadata Visuals**       | STAC or JSON Schema examples       | Embed as fenced code blocks.                      |
-
-> All diagrams must include title comments, version, author, and commit hash in their Mermaid source files.
+| Version | Date       | Author    | Summary                         |
+| :------ | :--------- | :-------- | :------------------------------ |
+| v1.2    | 2025-10-05 | Docs Team | Expanded MCP compliance matrix. |
+| v1.0    | 2025-10-04 | Docs Team | Initial release.                |
 
 ---
 
-## 🧮 Document Validation
+## 🧠 Diagram Standards
 
-Documentation is validated automatically through the CI/CD pipeline.
+All diagrams live under `docs/architecture/diagrams/exported/`.
 
-| Validation Type           | Tool / Workflow              | Description                                    |
-| :------------------------ | :--------------------------- | :--------------------------------------------- |
-| **Markdown Linting**      | `markdownlint-cli`           | Checks syntax, headers, links, and tables.     |
-| **Broken Link Check**     | `remark-lint`                | Validates internal cross-references.           |
-| **Style Compliance**      | `pre-commit` hooks           | Ensures adherence to repo writing conventions. |
-| **CI Build Test**         | `.github/workflows/site.yml` | Builds static site to confirm render success.  |
-| **Spellcheck (Optional)** | `codespell`                  | Detects common spelling errors.                |
+| Diagram Type                 | Format                  | Rule                                       |
+| :--------------------------- | :---------------------- | :----------------------------------------- |
+| **Architecture / Data Flow** | Mermaid (`.mmd → .svg`) | Must render correctly on GitHub.           |
+| **Entity Relations (ER)**    | `erDiagram` syntax      | Use STAC + MCP nomenclature.               |
+| **Process Flows**            | `flowchart TD` or `LR`  | Include labeled arrows & version comments. |
+| **Metadata Examples**        | JSON code blocks        | Show realistic file snippets.              |
 
-Example command:
+Each `.mmd` source includes a comment header with title, author, date, commit hash.
+
+---
+
+## 🔍 Automated Validation
+
+| Check            | Tool / Workflow              | Purpose                                     |
+| :--------------- | :--------------------------- | :------------------------------------------ |
+| Markdown Lint    | `markdownlint-cli`           | Syntax & structure consistency.             |
+| Link Validation  | `remark-lint`                | Ensures internal cross-links resolve.       |
+| Style Compliance | `pre-commit` hooks           | Applies coding + docs format rules.         |
+| CI Build         | `.github/workflows/site.yml` | Verifies render and static site generation. |
+| Spellcheck       | `codespell` (optional)       | Catches common typos.                       |
+
+Run manually:
 
 ```bash
 make docs-validate
@@ -145,77 +152,69 @@ make docs-validate
 
 ---
 
-## 🧾 Documentation Storage & Organization
+## 🗂 Directory Organization
 
-| Directory            | Purpose                                                |
-| :------------------- | :----------------------------------------------------- |
-| `docs/architecture/` | System, data, and CI/CD architecture documentation.    |
-| `docs/standards/`    | Governance standards and validation rules.             |
-| `docs/templates/`    | Reusable MCP templates for reproducible documentation. |
-| `docs/glossary.md`   | Canonical term definitions.                            |
-| `docs/README.md`     | Documentation system index.                            |
+| Path                 | Contents                                      |
+| :------------------- | :-------------------------------------------- |
+| `docs/architecture/` | System, data, and workflow architecture docs. |
+| `docs/standards/`    | Governance rules (MCP, coding, format, data). |
+| `docs/templates/`    | MCP templates (experiment, sop, model card).  |
+| `docs/glossary.md`   | Canonical definitions across disciplines.     |
+| `docs/README.md`     | Entry index with navigation tree.             |
 
-All directories must include:
-
-* A `README.md` describing contents and dependencies.
-* Internal cross-links for navigation.
-* Version history at the bottom.
+Every directory includes its own `README.md`, cross-links, and version table.
 
 ---
 
-## 🧩 Documentation Governance & Review
+## 🧩 Governance & Review Workflow
 
-Documentation updates must pass peer review and CI validation before merge.
+| Review Type | Reviewer        | Responsibility                     |
+| :---------- | :-------------- | :--------------------------------- |
+| Technical   | Domain Expert   | Accuracy of facts and processes.   |
+| Editorial   | Docs Lead       | Grammar, tone, and clarity.        |
+| Compliance  | Governance Team | MCP alignment and provenance logs. |
 
-| Review Type           | Reviewer Role      | Validation                                      |
-| :-------------------- | :----------------- | :---------------------------------------------- |
-| **Technical Review**  | Domain Expert      | Ensures factual correctness.                    |
-| **Editorial Review**  | Documentation Lead | Ensures clarity and consistency.                |
-| **Compliance Review** | Governance Team    | Confirms MCP adherence and provenance accuracy. |
-
-Reviews are recorded under:
-
-```
-data/work/logs/docs/review_<filename>.log
-```
+All reviews logged under:
+`data/work/logs/docs/review_<filename>.log`
 
 ---
 
-## 🧠 MCP Compliance Summary
+## 🧮 MCP Compliance Matrix
 
-| MCP Principle           | Implementation                                                        |
-| :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | All procedures and standards documented before implementation.        |
-| **Reproducibility**     | Docs, diagrams, and metadata validated by CI/CD workflows.            |
-| **Open Standards**      | Markdown, JSON Schema, STAC 1.0.0 used throughout.                    |
-| **Provenance**          | Version history, authorship, and commit linkage embedded in each doc. |
-| **Auditability**        | Validation logs archived in `data/work/logs/docs/`.                   |
-
----
-
-## 📎 Related Documentation
-
-| File                                | Description                                                         |
-| :---------------------------------- | :------------------------------------------------------------------ |
-| `docs/README.md`                    | Overview of the entire documentation system.                        |
-| `docs/standards/coding.md`          | Coding and formatting conventions supporting documentation quality. |
-| `docs/standards/data-formats.md`    | Defines approved file formats for referenced content.               |
-| `docs/architecture/architecture.md` | Core architectural overview linked by documentation system.         |
-| `.github/workflows/site.yml`        | CI/CD workflow that builds and validates documentation.             |
+| MCP Principle           | Implementation                                      |
+| :---------------------- | :-------------------------------------------------- |
+| **Documentation-first** | All specs authored before execution.                |
+| **Reproducibility**     | CI pipelines verify syntax & output.                |
+| **Open Standards**      | Markdown + JSON Schema + STAC used project-wide.    |
+| **Provenance**          | Version and commit metadata embedded per file.      |
+| **Auditability**        | Validation logs retained in `data/work/logs/docs/`. |
 
 ---
 
-## 📅 Version History
+## 🔗 Related References
 
-| Version | Date       | Author                 | Summary                                                         |
-| :------ | :--------- | :--------------------- | :-------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | KFM Documentation Team | Initial documentation and writing standards for MCP compliance. |
+| File                                | Purpose                             |
+| :---------------------------------- | :---------------------------------- |
+| `docs/README.md`                    | Index of documentation system.      |
+| `docs/standards/coding.md`          | Coding & commenting style.          |
+| `docs/standards/data-formats.md`    | Approved data and metadata formats. |
+| `docs/architecture/architecture.md` | System overview and data flow.      |
+| `.github/workflows/site.yml`        | CI build & validation workflow.     |
 
 ---
 
 <div align="center">
 
+### 📘 Version History
+
+| Version | Date       | Author    | Summary                                       |
+| :------ | :--------- | :-------- | :-------------------------------------------- |
+| v1.2    | 2025-10-05 | Docs Team | Expanded formatting rules + CI matrix.        |
+| v1.0    | 2025-10-04 | Docs Team | Initial MCP-compliant documentation standard. |
+
+---
+
 **Kansas Frontier Matrix** — *“Every Word Accounted For. Every Page Proven.”*
-📍 [`docs/standards/documentation.md`](.) · Official documentation and writing standards under MCP governance for Kansas Frontier Matrix.
+📍 [`docs/standards/documentation.md`](.) · Maintained under MCP governance.
 
 </div>
