@@ -96,7 +96,7 @@ flowchart TD
     C --> D["STAC + Checksum Validation"]
     D --> E["CodeQL and Trivy Scans"]
     E --> F["Build & Deploy Docs (site.yml)"]
-    F --> G["Auto-Merge if All Checks Pass"]
+    F --> G["Auto-Merge if All Checks Pass"]:
 
     %% --- Node Styles ---
     style A fill:#ffffff,stroke:#555,stroke-width:1px
