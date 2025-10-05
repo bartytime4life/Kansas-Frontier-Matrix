@@ -55,7 +55,7 @@ Automation here ensures the repository is:
 ├── PULL_REQUEST_TEMPLATE.md   # MCP-compliant PR checklist
 └── FUNDING.yml
 
-```
+---
 
 ## ⚙️ Core Workflows
 
@@ -68,7 +68,7 @@ Automation here ensures the repository is:
 | `pre-commit.yml` | Run linting, formatting, and tests | `pull_request` | Pre-commit log |
 | `auto-merge.yml` | Auto-merge PRs when all checks succeed | post-check success | Merged PR |
 
-```
+---
 
 ## 🧩 CI/CD Flow Diagram
 
@@ -102,7 +102,7 @@ flowchart TD
 ✅ Tip: This diagram is 100% valid for GitHub’s native Mermaid renderer.
 Just commit and view it directly in the repo — it will render cleanly.
 
-```
+---
 
 🧮 MCP Compliance Matrix
 
@@ -114,7 +114,7 @@ Auditability	CI logs and artifacts retained for review
 Open Standards	YAML configs, STAC 1.0.0, JSON Schema validation
 
 
-```
+---
 
 🧾 Issue & PR Governance
 
@@ -131,7 +131,7 @@ Open Standards	YAML configs, STAC 1.0.0, JSON Schema validation
 	•	💡 Feature Request — proposed enhancement & rationale
 	•	🗺️ Data Request — dataset proposal with source & license
 
-```
+---
 
 🔒 Security & Maintenance
 
@@ -143,7 +143,7 @@ Focus Area	Policy / Action
 🧱 Branch Protection	Enforce review + CI pass before merge
 
 
-```
+---
 
 🧱 Integration Overview
 
@@ -154,7 +154,7 @@ docs/	Built and deployed via site.yml
 web/	Static frontend deployed via GitHub Pages
 
 
-```
+---
 
 🧭 Maintainer Guidelines
 	1.	Keep workflows modular — one YAML per purpose
@@ -163,7 +163,7 @@ web/	Static frontend deployed via GitHub Pages
 	4.	Fail fast with clear logs
 	5.	Auto-merge only when all checks pass
 
-```
+---
 
 💻 Quick Commands
 
@@ -175,7 +175,7 @@ pre-commit run --all-files
 gh workflow run site.yml
 
 
-```
+---
 
 🕓 Version History
 
@@ -185,7 +185,7 @@ v1.1.0	2025-10-06	Improved table layout & readability
 v1.2.0	2025-10-07	Final MCP-aligned formatting for GitHub rendering
 
 
-```
+---
 
 Kansas Frontier Matrix
 Automation with Integrity — Every Workflow Proven.
