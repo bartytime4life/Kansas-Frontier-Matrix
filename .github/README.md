@@ -87,33 +87,35 @@ Automation here keeps the entire repository:
 
 ⸻
 
-🧩 CI/CD Flow Diagram
+## 🧩 CI/CD Flow Diagram
 
+```mermaid
 flowchart TD
-    A["🧑‍💻 Push or Pull Request"] --> B["🧹 Pre-Commit Hooks"]
-    B --> C["🧮 Lint & Test"]
-    C --> D["🧱 STAC + Checksum Validation"]
-    D --> E["🛡️ CodeQL + Trivy Scans"]
-    E --> F["📦 Build & Deploy Docs (site.yml)"]
-    F --> G["✅ Auto-Merge if All Checks Pass"]
+A["Push or Pull Request"] --> B["Pre-Commit Hooks"]
+B --> C["Lint & Test"]
+C --> D["STAC + Checksum Validation"]
+D --> E["CodeQL + Trivy Scans"]
+E --> F["Build & Deploy Docs (site.yml)"]
+F --> G["Auto-Merge if All Checks Pass"]
 
-    style A fill:#ffffff,stroke:#555,stroke-width:1px
-    style D fill:#eafaf1,stroke:#0a6,stroke-width:1px
-    style E fill:#e8f0ff,stroke:#006,stroke-width:1px
+style A fill:#ffffff,stroke:#555,stroke-width:1px
+style D fill:#eafaf1,stroke:#0a6,stroke-width:1px
+style E fill:#e8f0ff,stroke:#006,stroke-width:1px
 
 <!-- END OF MERMAID -->
 
 
 ⸻
 
-🧮 MCP Compliance Matrix
+## 🧮 MCP Compliance Matrix
 
-MCP Principle	Implementation in .github/
-Documentation-First	Each workflow documented, versioned, and traceable.
-Reproducibility	Deterministic CI/CD with pinned actions and dependencies.
-Provenance	SHA-256 checksums + STAC metadata link datasets to source.
-Auditability	CI logs and reports retained in workflow history.
-Open Standards	YAML configs, STAC 1.0.0, JSON Schema validation.
+| **MCP Principle**     | **Implementation in `.github/`** |
+|------------------------|----------------------------------|
+| **Documentation-First** | Each workflow is documented, versioned, and traceable. |
+| **Reproducibility**    | Deterministic CI/CD with pinned actions and dependencies. |
+| **Provenance**         | SHA-256 checksums + STAC metadata link datasets to source. |
+| **Auditability**       | CI logs and reports retained in workflow history. |
+| **Open Standards**     | YAML configs, STAC 1.0.0, and JSON Schema validation. |
 
 ⸻
 
