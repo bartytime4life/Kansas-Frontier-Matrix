@@ -98,10 +98,14 @@ flowchart TD
     E --> F["Build & Deploy Docs (site.yml)"]
     F --> G["Auto-Merge if All Checks Pass"]
 
+    %% --- Node Styles ---
     style A fill:#ffffff,stroke:#555,stroke-width:1px
-    style D fill:#eafaf1,stroke:#0a6,stroke-width:1px
-    style E fill:#e8f0ff,stroke:#006,stroke-width:1px
-    style G fill:#eafaf1,stroke:#0a6,stroke-width:1px
+    style B fill:#f9f9f9,stroke:#888,stroke-width:1px
+    style C fill:#e7f3ff,stroke:#0078d4,stroke-width:1px
+    style D fill:#eafaf1,stroke:#1a7f37,stroke-width:1px
+    style E fill:#fff8e1,stroke:#ffb300,stroke-width:1px
+    style F fill:#f3e8ff,stroke:#6a1b9a,stroke-width:1px
+    style G fill:#eafaf1,stroke:#1a7f37,stroke-width:1px
 
 <!-- END OF MERMAID -->
 
