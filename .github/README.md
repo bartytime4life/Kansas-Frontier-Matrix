@@ -91,19 +91,31 @@ Automation here keeps the entire repository:
 
 ```mermaid
 flowchart TD
-    START([Push or Pull Request])
-    END(((Auto-Merge)))
+    A([Start: Push or Pull Request])
+    B([Pre-Commit Hooks])
+    C([Lint & Test])
+    D([STAC + Checksum Validation])
+    E([CodeQL + Trivy Scans])
+    F([Build & Deploy Docs (site.yml)])
+    G([Auto-Merge if All Checks Pass])
+    H([End])
 
-    START --> B[Pre-Commit Hooks]
-    B --> C[Lint and Test]
-    C --> D[STAC + Checksum Validation]
-    D --> E[CodeQL and Trivy Scans]
-    E --> F[Build & Deploy Docs (site.yml)]
-    F --> END
+    A --> B --> C --> D --> E --> F --> G --> H
 
-    %% Styles
-    classDef terminal fill:#eafaf1,stroke:#1a7f37,stroke-width:2px;
-    class START,END terminal;
+    %% --- Node Styles ---
+    classDef start fill:#ffffff,stroke:#555,stroke-width:1px,color:#111;
+    classDef test fill:#e7f3ff,stroke:#0078d4,stroke-width:1px,color:#111;
+    classDef validate fill:#eafaf1,stroke:#1a7f37,stroke-width:1px,color:#111;
+    classDef secure fill:#fff8e1,stroke:#ffb300,stroke-width:1px,color:#111;
+    classDef deploy fill:#f3e8ff,stroke:#6a1b9a,stroke-width:1px,color:#111;
+    classDef end fill:#d1ffd7,stroke:#1a7f37,stroke-width:2px,color:#111;
+
+    class A,B start;
+    class C test;
+    class D validate;
+    class E secure;
+    class F deploy;
+    class G,H end;
 
 <!-- END OF MERMAID -->
 
