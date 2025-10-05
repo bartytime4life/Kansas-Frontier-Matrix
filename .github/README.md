@@ -81,14 +81,22 @@ flowchart TD
     E --> F([Build & Deploy Docs / Web UI])
     F --> G([Auto-Merge if All Checks Pass])
     G --> H([End])
+
+    %% Color themes (GitHub-safe)
     classDef default fill:#ffffff,stroke:#555,color:#111;
     classDef test fill:#d7ebff,stroke:#0078d4,color:#111;
     classDef validate fill:#eafaf1,stroke:#1a7f37,color:#111;
     classDef secure fill:#fff8e1,stroke:#ffb300,color:#111;
     classDef deploy fill:#ede7f6,stroke:#6a1b9a,color:#111;
-    classDef end fill:#d1ffd7,stroke:#1a7f37,color:#111;
-    class A default; class B,C test; class D validate;
-    class E secure; class F deploy; class G,H end;
+    classDef done fill:#d1ffd7,stroke:#1a7f37,color:#111;
+
+    class A default;
+    class B,C test;
+    class D validate;
+    class E secure;
+    class F deploy;
+    class G,H done;
+
 ```
 
 <!-- END OF MERMAID -->
