@@ -88,8 +88,8 @@ Automation here keeps the entire repository:
 ⸻
 
 ## 🧩 CI/CD Flow Diagram
-
-```mermaid
+```
+mermaid
 flowchart TD
     A([Start: Push or Pull Request])
     B([Pre-Commit Hooks])
@@ -118,7 +118,7 @@ flowchart TD
     class G,H end;
 
 <!-- END OF MERMAID -->
-
+```
 
 ⸻
 
