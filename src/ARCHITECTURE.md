@@ -6,11 +6,11 @@
 **⛰ Time · 🌍 Terrain · 📜 History · 🔗 Knowledge Graphs**  
 _A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kansas_
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)  
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)  
-[![Docs: MCP](https://img.shields.io/badge/docs-MCP-blue.svg)](../docs/)  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml)
+[![Docs: MCP](https://img.shields.io/badge/docs-MCP-blue.svg)](../docs/)
 [![License: MIT/CC-BY](https://img.shields.io/badge/license-MIT%20%7C%20CC--BY-green)](../LICENSE)
 
 </div>
@@ -27,7 +27,7 @@ _A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kan
 7. [🔬 Reproducibility & Observability](#-reproducibility--observability)  
 8. [🚀 Extending the System](#-extending-the-system)  
 9. [📁 Repository & Data Layout](#-repository--data-layout)  
-10. [📖 References & Further Reading](#-references--further-reading)  
+10. [📖 References & Further Reading](#-references--further-reading)
 
 ---
 
@@ -41,7 +41,7 @@ Kansas Frontier Matrix (KFM) is a **multi-disciplinary, open-source spatiotempor
 - **AI/ML Enrichment:** NER, geoparsing, summarization, entity linking  
 - **Knowledge Graph:** semantic nodes/edges with provenance & confidence  
 - **API Layer:** time/space/graph queries, dossier endpoints  
-- **Frontend:** interactive timeline + map, layer toggles, story mode, KML/KMZ exports  
+- **Frontend:** interactive timeline + map, layer toggles, story mode, KML/KMZ exports
 
 ---
 
@@ -67,6 +67,8 @@ flowchart TD
     E --> G["Google Earth Exports<br/>KML · KMZ"]
 ````
 
+> **Note:** Keep Mermaid identifiers short and avoid reserved words like `graph` or `end` in class names if you style diagrams elsewhere.
+
 ---
 
 ## 📦 Pipeline Sequence (Swimlane)
@@ -81,7 +83,7 @@ sequenceDiagram
     participant API as API
     participant UI as Web UI
 
-    SRC->>ETL: Provide scans/vectors/tables
+    SRC->>ETL: Provide scans / vectors / tables
     ETL->>ETL: Convert (COG/GeoJSON), reproject, checksums
     ETL->>STAC: Publish items/assets + temporal/spatial metadata
     ETL->>KG: Upsert entities + relations (provenance/confidence)
@@ -96,34 +98,54 @@ sequenceDiagram
 
 ## 🎨 Layer Timeline Legend
 
-| Layer Category             | Example Dataset(s)                  | Timeline Range     | Map/Timeline Color Token | Notes                                         |
-| -------------------------- | ----------------------------------- | ------------------ | ------------------------ | --------------------------------------------- |
-| 🏔 **Terrain & DEMs**      | LiDAR 1m DEM, Hillshade             | 2018–2020 (modern) | `#6C757D` (gray)         | Basemap foundation, hillshade overlay         |
-| 🗺 **Historic Topos**      | USGS 1894 Larned Map, 1930s Topos   | 1890–1950s         | `#8D5524` (sepia brown)  | Scanned topo sheets, tiled COGs               |
-| 🧾 **Treaties & Cessions** | 1854 Treaty, Royce Cession Polygons | 1820–1870s         | `#0077B6` (deep blue)    | Polygon overlays linked to treaty docs        |
-| 🌊 **Hydrology**           | Kansas River Flood 1951, Streamflow | 1850–Present       | `#0096C7` (cyan)         | River floodplains, water levels               |
-| 🌾 **Land Use & Soils**    | 1937 Soil Survey, NLCD Landcover    | 1850–Present       | `#52B788` (green)        | Cropland, prairie loss, soil maps             |
-| 🚂 **Infrastructure**      | 1900s Railroads, Trails             | 1850–1950s         | `#E63946` (red)          | Trails/rail lines with fade-out on disuse     |
-| 🌪 **Hazards**             | Tornado Tracks, Drought Episodes    | 1950–Present       | `#F77F00` (orange)       | Tornado lines/points, FEMA disasters          |
-| 🏛 **Cultural/Oral**       | Oral Histories, Site Dossiers       | Any (tagged)       | `#9D4EDD` (violet)       | Linked to knowledge graph text, not just maps |
+| Layer Category             | Example Dataset(s)                | Timeline Range     | Map/Timeline Color Token | Notes                                       |
+| -------------------------- | --------------------------------- | ------------------ | ------------------------ | ------------------------------------------- |
+| 🏔 **Terrain & DEMs**      | LiDAR 1m DEM, Hillshade           | 2018–2020 (modern) | `#6C757D` (gray)         | Basemap foundation, hillshade overlay       |
+| 🗺 **Historic Topos**      | USGS 1894 Larned Map, 1930s Topos | 1890–1950s         | `#8D5524` (sepia brown)  | Scanned topos, tiled COGs                   |
+| 🧾 **Treaties & Cessions** | 1854 Treaty, Royce Polygons       | 1820–1870s         | `#0077B6` (deep blue)    | Polygons linked to treaty docs              |
+| 🌊 **Hydrology**           | 1951 Flood, Streamflow series     | 1850–Present       | `#0096C7` (cyan)         | Floodplains, flows, reservoirs              |
+| 🌾 **Land Use & Soils**    | 1937 Soil Survey, NLCD            | 1850–Present       | `#52B788` (green)        | Cropland/prairie change, soils              |
+| 🚂 **Infrastructure**      | 1900s Railroads, Trails           | 1850–1950s         | `#E63946` (red)          | Trails/rails with fade-out on disuse        |
+| 🌪 **Hazards**             | Tornado Tracks, FEMA disasters    | 1950–Present       | `#F77F00` (orange)       | Tornado lines/points, drought, declarations |
+| 🏛 **Cultural/Oral**       | Oral Histories, Site Dossiers     | Any (tagged)       | `#9D4EDD` (violet)       | Linked to graph text & sources              |
 
-> 🖌 **Design Note:** Colors are harmonized with timeline & legend UI for consistency. Suggested to add these tokens in `web/config/layers.json` under each layer definition.
+**Example `layers.json` entry (style + time):**
+
+```json
+{
+  "id": "treaty_1854",
+  "label": "Treaty of 1854",
+  "type": "vector-geojson",
+  "source": { "url": "/data/processed/treaty_1854.geojson" },
+  "time": { "start": "1854-01-01", "end": "1854-12-31" },
+  "style": {
+    "fillColor": "#0077B6",
+    "fillOpacity": 0.35,
+    "strokeColor": "#004C7F",
+    "strokeWidth": 1
+  },
+  "legend": { "category": "Treaties & Cessions" },
+  "visible": false
+}
+```
+
+> Keep tokens consistent with map & timeline UI. Colors above map well to light/dark base styles.
 
 ---
 
 ## 🗂 Data Standards & Semantic Interoperability
 
-* **Formats:** GeoJSON, Cloud-Optimized GeoTIFF, CSVW, Parquet
-* **Catalog:** STAC 1.0.0 (collections/items/assets) + JSON Schema CI validation
-* **Ontologies:** CIDOC CRM (heritage), OWL-Time (temporality), PeriodO (periods)
-* **Linked Data:** JSON-LD export for external graph interoperability
+* **Formats:** GeoJSON, COG GeoTIFF, CSVW, Parquet
+* **Catalog:** **STAC 1.0.0** (collections/items/assets) with JSON Schema CI checks
+* **Ontologies:** **CIDOC CRM** (heritage), **OWL-Time** (temporality), **PeriodO** (historical periods)
+* **Linked Data:** optional JSON-LD export for integration with external graphs
 
 ---
 
 ## 🔬 Reproducibility & Observability
 
 * **MCP (docs-first):** `docs/architecture.md`, `docs/sop.md`, `docs/experiment.md`, `docs/model_card.md`
-* **CI/CD (GitHub Actions):** lint/tests, STAC validation, CodeQL, Trivy, container builds
+* **CI/CD:** GitHub Actions lint/tests, STAC validation, CodeQL, Trivy, container builds
 * **Containers:** Docker Compose stack (ETL, API, DB, UI) with pinned versions
 * **Data Integrity:** `.sha256` sidecars; DVC/Git LFS for large artifacts
 
@@ -137,9 +159,9 @@ sequenceDiagram
    ```bash
    make fetch && make cogs && make stac
    ```
-3. Extend ETL → upsert entities/relations into Knowledge Graph
-4. Add config → `web/config/layers.json` with style + popup fields
-5. Update docs → `docs/sop.md` + screenshots
+3. ETL → upsert entities/relations into the Knowledge Graph
+4. Add layer config → `web/config/layers.json` (style + popup fields)
+5. Update docs → `docs/sop.md` (+ screenshots if applicable)
 
 ---
 
@@ -148,7 +170,7 @@ sequenceDiagram
 ```text
 KansasFrontierMatrix/
 ├─ src/               # Python ETL + AI/ML + API code
-├─ web/               # React frontend
+├─ web/               # React frontend (MapLibre + Canvas)
 ├─ data/
 │  ├─ sources/        # dataset manifests (no big binaries in git)
 │  ├─ raw/            # fetched artifacts (DVC/LFS)
@@ -156,7 +178,7 @@ KansasFrontierMatrix/
 │  └─ stac/           # STAC catalog (collections/items/assets)
 ├─ docs/              # architecture, SOPs, experiments, model cards
 ├─ tools/             # CLI + automation helpers
-├─ tests/             # unit/integration tests for Python/JS
+├─ tests/             # unit/integration tests (Python/JS), schemas, e2e
 └─ .github/           # CI/CD workflows, PR/issue templates
 ```
 
@@ -170,10 +192,4 @@ KansasFrontierMatrix/
 
 ---
 
-> ✨ *“KFM is not just a data platform—it’s a living atlas of Kansas, built for reproducibility, discovery, and storytelling.”*
-
-```
-
----
-
-✅ With this **Layer Timeline Legend**, devs/designers now have a **style guide + temporal index** to keep UI/timeline consistent with backend data.  
+> ✨ *“KFM is not just a data platform — it’s a living atlas of Kansas, built for reproducibility, discovery, and storytelling.”*
