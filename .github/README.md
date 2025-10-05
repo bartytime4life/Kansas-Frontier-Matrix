@@ -37,19 +37,22 @@ Automation here ensures the repository is:
 
 ## 🧱 Directory Layout
 
+```bash
 .github/
 ├── workflows/
-│   ├── site.yml               → Build & deploy docs and web UI
-│   ├── stac-validate.yml      → Validate STAC + JSON Schemas
-│   ├── codeql.yml             → Static analysis and dependency scanning
-│   ├── trivy.yml              → Vulnerability scan (containers & deps)
-│   ├── pre-commit.yml         → Linting, formatting, and unit tests
-│   └── auto-merge.yml         → Safe PR auto-merge when all checks pass
+│   ├── site.yml               # Build & deploy docs and web UI
+│   ├── stac-validate.yml      # Validate STAC + JSON Schemas
+│   ├── codeql.yml             # Static analysis and dependency scanning
+│   ├── trivy.yml              # Vulnerability scan (containers & deps)
+│   ├── pre-commit.yml         # Linting, formatting, and unit tests
+│   └── auto-merge.yml         # Safe PR auto-merge when all checks pass
+│
 ├── ISSUE_TEMPLATE/
 │   ├── bug_report.md
 │   ├── feature_request.md
 │   └── data_request.md
-├── PULL_REQUEST_TEMPLATE.md   → MCP-compliant PR checklist
+│
+├── PULL_REQUEST_TEMPLATE.md   # MCP-compliant PR checklist
 └── FUNDING.yml
 
 ---
