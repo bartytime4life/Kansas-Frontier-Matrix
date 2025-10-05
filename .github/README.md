@@ -89,22 +89,21 @@ Automation here ensures the repository remains:
 
 ⸻
 
-## ⚙️ Core Workflows
+⚙️ Core Workflows
 
-| **Workflow** | **Purpose** | **Trigger** | **Primary Output** |
-|---------------|-------------|--------------|--------------------|
-| `site.yml` | Build & deploy documentation and static site. | `push → main` | `_site/` |
-| `stac-validate.yml` | Validate STAC collections/items & JSON Schemas. | `push`, `pull_request` | `stac-report.json` |
-| `codeql.yml` | Run CodeQL static analysis for Python code. | `schedule`, `push` | CodeQL dashboard |
-| `trivy.yml` | Scan containers and dependencies for CVEs. | `push`, `pull_request` | Trivy SARIF report |
-| `pre-commit.yml` | Run linting, formatting, and tests. | `pull_request` | Pre-commit log |
-| `auto-merge.yml` | Auto-merge PRs when all checks succeed. | post-check success | Merged PR |
+Workflow	Purpose	Trigger	Primary Output
+site.yml	Build & deploy documentation and static site.	push → main	_site/
+stac-validate.yml	Validate STAC collections/items & JSON Schemas.	push, pull_request	stac-report.json
+codeql.yml	Run CodeQL static analysis for Python code.	schedule, push	CodeQL dashboard
+trivy.yml	Scan containers and dependencies for CVEs.	push, pull_request	Trivy SARIF report
+pre-commit.yml	Run linting, formatting, and tests.	pull_request	Pre-commit log
+auto-merge.yml	Auto-merge PRs when all checks succeed.	post-check success	Merged PR
 
----
 
-## 🧩 CI/CD Flow Diagram
+⸻
 
-```mermaid
+🧩 CI/CD Flow Diagram
+
 flowchart TD
     A([Start: Push or Pull Request])
     B([Pre-Commit Hooks])
@@ -133,6 +132,9 @@ flowchart TD
 
 <!-- END OF MERMAID -->
 
+
+
+⸻
 
 🎨 Legend
 
@@ -163,26 +165,25 @@ Open Standards	YAML configs, STAC 1.0.0, and JSON Schema validation.
 🧾 Issue & PR Governance
 
 🪶 Pull Request Template
-
-- [ ] Updated all relevant documentation  
-- [ ] STAC + checksum validation passed  
-- [ ] CodeQL + Trivy scans clean  
-- [ ] All CI workflows succeeded  
-- [ ] MCP reproducibility verified  
+	•	Updated all relevant documentation
+	•	STAC + checksum validation passed
+	•	CodeQL + Trivy scans clean
+	•	All CI workflows succeeded
+	•	MCP reproducibility verified
 
 🧾 Issue Templates
 
 Located in .github/ISSUE_TEMPLATE/:
-	•	🐞 Bug Report: reproducible steps, logs, and environment
+	•	🐞 Bug Report: reproducible steps, logs, and environment details
 	•	💡 Feature Request: proposed enhancement and rationale
-	•	🗺️ Data Request: dataset proposal with source and license
+	•	🗺️ Data Request: dataset proposal with source, license, and scope
 
 ⸻
 
 🔒 Security & Maintenance
 
 Focus Area	Policy / Action
-🔑 Secrets	Store in Settings → Secrets → Actions
+🔑 Secrets	Stored securely in Settings → Secrets → Actions
 🧩 Weekly Scans	Run Trivy + CodeQL automatically
 🧰 Peer Review	Required for all workflow changes
 🧼 Monthly Maintenance	Update pinned actions and dependencies
@@ -203,7 +204,7 @@ web/	Static frontend deployed via GitHub Pages
 ⸻
 
 🧭 Maintainer Guidelines
-	1.	Keep workflows modular — one purpose per YAML.
+	1.	Keep workflows modular — one purpose per YAML file.
 	2.	Pin action versions (avoid @latest).
 	3.	Use actions/cache for heavy dependencies.
 	4.	Fail fast with clear, actionable logs.
@@ -238,6 +239,7 @@ v1.2.0	2025-10-07	Final MCP-aligned formatting & layout consistency
 
 
 Kansas Frontier Matrix
+
 “Automation with Integrity — Every Workflow Proven.”
 
 📍 /.github/ — Centralized Automation, Validation, and Governance hub
