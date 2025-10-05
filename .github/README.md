@@ -91,16 +91,17 @@ Automation here keeps the entire repository:
 
 ```mermaid
 flowchart TD
-A["Push or Pull Request"] --> B["Pre-Commit Hooks"]
-B --> C["Lint & Test"]
-C --> D["STAC + Checksum Validation"]
-D --> E["CodeQL + Trivy Scans"]
-E --> F["Build & Deploy Docs (site.yml)"]
-F --> G["Auto-Merge if All Checks Pass"]
+    A["Push or Pull Request"] --> B["Pre-Commit Hooks"]
+    B --> C["Lint and Test"]
+    C --> D["STAC + Checksum Validation"]
+    D --> E["CodeQL and Trivy Scans"]
+    E --> F["Build & Deploy Docs (site.yml)"]
+    F --> G["Auto-Merge if All Checks Pass"]
 
-style A fill:#ffffff,stroke:#555,stroke-width:1px
-style D fill:#eafaf1,stroke:#0a6,stroke-width:1px
-style E fill:#e8f0ff,stroke:#006,stroke-width:1px
+    style A fill:#ffffff,stroke:#555,stroke-width:1px
+    style D fill:#eafaf1,stroke:#0a6,stroke-width:1px
+    style E fill:#e8f0ff,stroke:#006,stroke-width:1px
+    style G fill:#eafaf1,stroke:#0a6,stroke-width:1px
 
 <!-- END OF MERMAID -->
 
@@ -147,13 +148,14 @@ Located in .github/ISSUE_TEMPLATE/:
 
 ⸻
 
-🧱 Integration Overview
+## 🧱 Integration Overview
 
-Repository Area	Validated / Managed By
-data/	STAC + checksum validation workflows
-src/pipelines/	Linked to ETL and validation CI
-docs/	Built and deployed via site.yml
-web/	Static frontend deployed via Pages
+| **Repository Area** | **Validated / Managed By** |
+|----------------------|-----------------------------|
+| `data/`             | STAC + checksum validation workflows |
+| `src/pipelines/`    | Linked to ETL and validation CI |
+| `docs/`             | Built and deployed via `site.yml` |
+| `web/`              | Static frontend deployed via GitHub Pages |
 
 ⸻
 
