@@ -5,7 +5,7 @@
 
 ### 🎯 Mission
 Provide a **centralized automation and governance hub** for the **Kansas Frontier Matrix (KFM)** —  
-ensuring **reproducibility, security, provenance, and MCP compliance** across all datasets, pipelines, and documentation.
+ensuring **reproducibility**, **security**, **provenance**, and **MCP compliance** across all datasets, pipelines, and documentation.
 
 ---
 
@@ -20,12 +20,12 @@ ensuring **reproducibility, security, provenance, and MCP compliance** across al
 
 ---
 
-## 📚 Overview
+## 🧠 Overview
 
 The `.github/` directory defines how **Kansas Frontier Matrix** automates, validates, and governs  
-its codebase and datasets using **GitHub Actions**, **pre-commit hooks**, and **MCP (Master Coder Protocol)** principles.
+its codebase and datasets using **GitHub Actions**, **pre-commit hooks**, and **Master Coder Protocol (MCP)** principles.
 
-Automation ensures the repository is:
+Automation here ensures the repository is:
 
 - ✅ Deterministic  
 - 🔍 Traceable  
@@ -35,7 +35,7 @@ Automation ensures the repository is:
 
 ---
 
-## 📁 Directory Layout
+## 🧱 Directory Layout
 
 .github/
 ├── workflows/
@@ -56,14 +56,14 @@ Automation ensures the repository is:
 
 ## ⚙️ Core Workflows
 
-| Workflow | Purpose | Trigger | Output |
-|-----------|----------|----------|--------|
-| **`site.yml`** | Build & deploy documentation and static site | Push → `main` | `_site/` |
-| **`stac-validate.yml`** | Validate STAC collections/items & JSON Schemas | Push, PR | `stac-report.json` |
-| **`codeql.yml`** | Run CodeQL static analysis for Python code | Scheduled, Push | CodeQL dashboard |
-| **`trivy.yml`** | Scan containers and dependencies for CVEs | Push, PR | Trivy report |
-| **`pre-commit.yml`** | Run linting, formatting, and tests | Pull Request | Pre-commit log |
-| **`auto-merge.yml`** | Auto-merge PRs when all checks succeed | On check success | Merged PR |
+| **Workflow** | **Purpose** | **Trigger** | **Primary Output** |
+|---------------|-------------|--------------|--------------------|
+| `site.yml` | Build & deploy documentation and static site | `push → main` | `_site/` |
+| `stac-validate.yml` | Validate STAC collections/items & JSON Schemas | `push`, `pull_request` | `stac-report.json` |
+| `codeql.yml` | Run CodeQL static analysis for Python code | `schedule`, `push` | CodeQL dashboard |
+| `trivy.yml` | Scan containers and dependencies for CVEs | `push`, `pull_request` | Trivy SARIF report |
+| `pre-commit.yml` | Run linting, formatting, and tests | `pull_request` | Pre-commit log |
+| `auto-merge.yml` | Auto-merge PRs when all checks succeed | post-check success | Merged PR |
 
 ---
 
@@ -71,44 +71,51 @@ Automation ensures the repository is:
 
 ```mermaid
 flowchart TD
-    A([Push or Pull Request])
-    B([Pre-Commit Hooks])
-    C([Lint & Unit Tests])
-    D([STAC + Checksum Validation])
-    E([CodeQL + Trivy Scans])
-    F([Build & Deploy Docs])
-    G([Auto-Merge if All Checks Pass])
-    H([End])
+    A([Push or Pull Request]) --> B([Pre-Commit Hooks])
+    B --> C([Lint & Unit Tests])
+    C --> D([STAC + Checksum Validation])
+    D --> E([CodeQL + Trivy Security Scans])
+    E --> F([Build & Deploy Docs / Web UI])
+    F --> G([Auto-Merge if All Checks Pass])
+    G --> H([End])
 
-    A --> B --> C --> D --> E --> F --> G --> H
+    %% Color styles (GitHub Mermaid safe)
+    classDef default fill:#ffffff,stroke:#555,stroke-width:1px,color:#111;
+    classDef test fill:#d7ebff,stroke:#0078d4,stroke-width:1px,color:#111;
+    classDef validate fill:#eafaf1,stroke:#1a7f37,stroke-width:1px,color:#111;
+    classDef secure fill:#fff8e1,stroke:#ffb300,stroke-width:1px,color:#111;
+    classDef deploy fill:#ede7f6,stroke:#6a1b9a,stroke-width:1px,color:#111;
+    classDef end fill:#d1ffd7,stroke:#1a7f37,stroke-width:1.5px,color:#111;
 
-Legend
+    class A default;
+    class B test;
+    class C test;
+    class D validate;
+    class E secure;
+    class F deploy;
+    class G end;
+    class H end;
 
-Stage	Description
-🩵 Testing	Lint & unit tests
-🟩 Validation	STAC + Checksum verification
-🟨 Security	CodeQL + Trivy scans
-🟪 Deployment	Build & deploy docs
-🟢 End	Auto-merge success
-
+✅ Tip: This diagram is 100% valid for GitHub’s native Mermaid renderer.
+Just commit and view it directly in the repo — it will render cleanly.
 
 ⸻
 
 🧮 MCP Compliance Matrix
 
-MCP Principle	Implementation
-Documentation-First	All workflows are documented and versioned
+MCP Principle	Implementation in .github/
+Documentation-First	Every workflow documented and versioned
 Reproducibility	Deterministic CI/CD with pinned dependencies
-Provenance	STAC + SHA-256 validation links to source data
-Auditability	Logs and artifacts retained for review
-Open Standards	YAML, STAC 1.0.0, JSON Schema
+Provenance	STAC + SHA-256 validation links all datasets
+Auditability	CI logs and artifacts retained for review
+Open Standards	YAML configs, STAC 1.0.0, JSON Schema validation
 
 
 ⸻
 
 🧾 Issue & PR Governance
 
-Pull Request Template
+✅ Pull Request Template
 
 - [ ] Documentation updated  
 - [ ] STAC + checksum validation passed  
@@ -116,38 +123,38 @@ Pull Request Template
 - [ ] All CI workflows succeeded  
 - [ ] MCP reproducibility verified  
 
-Issue Templates
-	•	🐞 Bug Report — steps to reproduce + logs
-	•	💡 Feature Request — new feature or improvement
-	•	🗺️ Data Request — new dataset or source manifest
+🧩 Issue Templates
+	•	🐞 Bug Report — reproducible steps, logs, environment
+	•	💡 Feature Request — proposed enhancement & rationale
+	•	🗺️ Data Request — dataset proposal with source & license
 
 ⸻
 
 🔒 Security & Maintenance
 
-Focus	Policy
-Secrets	Store only in Settings → Secrets → Actions
-Weekly Scans	Run Trivy + CodeQL automatically
-Peer Review	Required for all workflow changes
-Maintenance	Update pinned action versions monthly
-Branch Protection	Enforce review + CI pass before merge
+Focus Area	Policy / Action
+🔑 Secrets	Store only in Settings → Secrets → Actions
+🧩 Weekly Scans	Run Trivy + CodeQL automatically
+🧰 Peer Review	Required for all workflow changes
+🧼 Monthly Maintenance	Update pinned action versions
+🧱 Branch Protection	Enforce review + CI pass before merge
 
 
 ⸻
 
 🧱 Integration Overview
 
-Component	Managed By
-data/	STAC + checksum workflows
-src/pipelines/	ETL + CI validation
+Repository Area	Managed By
+data/	STAC + checksum validation workflows
+src/pipelines/	ETL & CI validation
 docs/	Built and deployed via site.yml
-web/	Deployed as static frontend (GitHub Pages)
+web/	Static frontend deployed via GitHub Pages
 
 
 ⸻
 
 🧭 Maintainer Guidelines
-	1.	Keep workflows modular — one purpose per YAML
+	1.	Keep workflows modular — one YAML per purpose
 	2.	Pin all action versions (avoid @latest)
 	3.	Use actions/cache for dependencies
 	4.	Fail fast with clear logs
@@ -171,17 +178,14 @@ gh workflow run site.yml
 
 Version	Date	Summary
 v1.0.0	2025-10-04	Initial automation & governance documentation
-v1.1.0	2025-10-06	Improved rendering & layout
-v1.2.0	2025-10-07	Final MCP-aligned formatting
+v1.1.0	2025-10-06	Improved table layout & readability
+v1.2.0	2025-10-07	Final MCP-aligned formatting for GitHub rendering
 
 
 ⸻
 
-📍 Repository Philosophy
+Kansas Frontier Matrix
+Automation with Integrity — Every Workflow Proven.
 
-“Automation with Integrity — Every Workflow Proven.”
-
-.github/ is the automation and governance core for the Kansas Frontier Matrix,
-managing validation, deployment, and compliance for all data and documentation pipelines.
-
-⸻
+.github/ serves as the automation, validation, and governance hub
+for the Kansas Frontier Matrix Knowledge Infrastructure.
