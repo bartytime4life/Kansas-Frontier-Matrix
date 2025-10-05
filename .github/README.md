@@ -91,21 +91,19 @@ Automation here keeps the entire repository:
 
 ```mermaid
 flowchart TD
-    A["Push or Pull Request"] --> B["Pre-Commit Hooks"]
-    B --> C["Lint and Test"]
-    C --> D["STAC + Checksum Validation"]
-    D --> E["CodeQL and Trivy Scans"]
-    E --> F["Build & Deploy Docs (site.yml)"]
-    F --> G["Auto-Merge if All Checks Pass"]:
+    START([Push or Pull Request])
+    END(((Auto-Merge)))
 
-    %% --- Node Styles ---
-    style A fill:#ffffff,stroke:#555,stroke-width:1px
-    style B fill:#f9f9f9,stroke:#888,stroke-width:1px
-    style C fill:#e7f3ff,stroke:#0078d4,stroke-width:1px
-    style D fill:#eafaf1,stroke:#1a7f37,stroke-width:1px
-    style E fill:#fff8e1,stroke:#ffb300,stroke-width:1px
-    style F fill:#f3e8ff,stroke:#6a1b9a,stroke-width:1px
-    style G fill:#eafaf1,stroke:#1a7f37,stroke-width:1px
+    START --> B[Pre-Commit Hooks]
+    B --> C[Lint and Test]
+    C --> D[STAC + Checksum Validation]
+    D --> E[CodeQL and Trivy Scans]
+    E --> F[Build & Deploy Docs (site.yml)]
+    F --> END
+
+    %% Styles
+    classDef terminal fill:#eafaf1,stroke:#1a7f37,stroke-width:2px;
+    class START,END terminal;
 
 <!-- END OF MERMAID -->
 
