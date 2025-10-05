@@ -5,13 +5,14 @@
 ### **Time · Terrain · History** — *A mission-grade, open-source, spatiotemporal knowledge hub for Kansas*
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](./.github/workflows/site.yml)
+[![Pages Deploy](https://img.shields.io/github/deployments/bartytime4life/Kansas-Frontier-Matrix/github-pages?label=Pages%20Deploy)](https://bartytime4life.github.io/Kansas-Frontier-Matrix/)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](./.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](./.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](./.github/workflows/trivy.yml)
 [![Docs: MCP](https://img.shields.io/badge/Docs-Master%20Coder%20Protocol-6f42c1)](./docs/)
-[![License](https://img.shields.io/badge/license-MIT%20\(code\)%20%7C%20CC--BY%20\(data\)-blue)](./LICENSE)
+[![License](https://img.shields.io/badge/license-MIT%20(code)%20%7C%20CC--BY%20(data)-blue)](./LICENSE)
 
-**A living atlas of Kansas** that fuses historical documents, maps, climate & hazards data into a **timeline + map** you can explore, query, and extend.
+**A living atlas of Kansas** that fuses historical documents, maps, climate & hazards data into a **timeline + map** you can explore, query, and extend.  
 Built for **reproducibility, provenance, and open science**.
 
 </div>
@@ -20,8 +21,8 @@ Built for **reproducibility, provenance, and open science**.
 
 ## 🔭 What is this?
 
-Kansas-Frontier-Matrix (KFM) ingests **scans, rasters, vectors, and texts**, enriches them with **AI/NLP**, links them in a **knowledge graph**, and serves them via an **interactive React/MapLibre web app** (timeline + map).
-Under the hood: **ETL pipelines (Python/Make)**, a **STAC catalog**, **Neo4j** (with CIDOC-CRM + OWL-Time alignment), and **FastAPI/GraphQL** for access. 
+Kansas-Frontier-Matrix (KFM) ingests **scans, rasters, vectors, and texts**, enriches them with **AI/NLP**, links them in a **knowledge graph**, and serves them via an **interactive React/MapLibre web app** (timeline + map).  
+Under the hood: **ETL pipelines (Python/Make)**, a **STAC catalog**, **Neo4j** (aligned to CIDOC-CRM + OWL-Time), and **FastAPI/GraphQL** for access.
 
 ---
 
@@ -40,8 +41,8 @@ cd Kansas-Frontier-Matrix
 make bootstrap
 
 # 3) fetch & process data (sources -> COG/GeoJSON -> STAC)
-make data         # fetches declared sources (data/sources/*.json), runs ETL
-make stac         # builds/validates STAC catalog
+make data         # fetch declared sources (data/sources/*.json) + ETL
+make stac         # build/validate STAC catalog
 make checksums    # integrity sidecars for provenance
 
 # 4) run the stack
@@ -49,8 +50,8 @@ docker compose up -d           # api + db + tiles + web
 make serve-web                 # dev server for the React app
 
 # 5) open the viewer
-# http://localhost:5173  (MapLibre timeline + layers) 
-```
+# http://localhost:5173  (MapLibre timeline + layers)
+````
 
 > All ETL steps are **scripted & reproducible** (Make + Python), with **checksums** and **schema validation** baked into CI.
 
@@ -59,7 +60,7 @@ make serve-web                 # dev server for the React app
 ## 🗂️ Repository layout (monorepo)
 
 ```
-KansasFrontierMatrix/
+Kansas-Frontier-Matrix/
 ├─ src/          # ETL, AI/NLP, graph code (Python)
 ├─ web/          # React app (MapLibre timeline + UI)
 ├─ data/
@@ -67,7 +68,7 @@ KansasFrontierMatrix/
 │  ├─ raw/       # fetched artifacts (DVC/LFS pointers)
 │  ├─ processed/ # COGs, GeoJSON, CSV; derived outputs
 │  └─ stac/      # STAC collections/items/assets (JSON)
-├─ docs/         # MCP docs: SOPs, experiment templates, model cards, arch
+├─ docs/         # MCP docs: SOPs, experiment templates, model cards, architecture
 ├─ tools/        # utilities (importers, georef scripts, etc.)
 ├─ tests/        # CI tests for ETL/NLP/graph/web
 └─ .github/      # workflows, issue/PR templates
@@ -95,8 +96,6 @@ flowchart TD
   E --> G["Google Earth Exports (KML · KMZ)"]
 ```
 
-<!-- END OF MERMAID -->
-
 *Reference architecture.*
 
 ---
@@ -107,7 +106,7 @@ flowchart TD
 * **Processed outputs** use **COG GeoTIFF** (rasters) & **GeoJSON** (vectors) for broad GIS compatibility and efficient web delivery.
 * **STAC** (`data/stac/`) indexes every layer with spatial, temporal, and provenance metadata for discovery and validation.
 
-**Pro tip:** Convert historic MrSID or non-WGS84 data to **COG(EPSG:4326)** with overviews; reproject NAD27/NAD83 using GDAL before publish.
+> **Pro tip:** Convert historic MrSID or non-WGS84 data to **COG (EPSG:4326)** with overviews; reproject NAD27/NAD83 using GDAL before publish.
 
 ---
 
@@ -115,8 +114,8 @@ flowchart TD
 
 **Basemaps & terrain**
 
-* **Kansas LiDAR / 1-m DEM** → hillshade/slope/aspect rasters (COGs).
-* **Historic Topographic Maps** (USGS & UT PCL) — 1890s–1950s DRGs & quads, georeferenced & time-tagged.
+* Kansas LiDAR / 1-m DEM → hillshade/slope/aspect rasters (COGs).
+* Historic Topographic Maps (USGS & UT PCL) — 1890s–1950s DRGs & quads, georeferenced & time-tagged.
 
 **Hydrology & land cover**
 
@@ -128,25 +127,25 @@ flowchart TD
 
 **Boundaries, routes & settlements**
 
-* Treaty & reservation boundaries (time-enabled), county formation timeline; **Santa Fe/Oregon trails**; railroad expansion by year; forts/towns POIs.
+* Treaty & reservation boundaries (time-enabled), county formation timeline; **Santa Fe/Oregon Trails**; railroad expansion by year; forts/towns POIs.
 
 **Climate & hazards**
 
-* NOAA **GHCN-Daily** station time-series (1880s–present), **Daymet** gridded daily (1980–present), **U.S. Climate Normals** baselines.
+* NOAA **GHCN-Daily** (1880s–present), **Daymet** (1980–present), **U.S. Climate Normals** baselines.
 * **NOAA Storm Events** (1950–present), **SPC Tornado tracks** (1950–present), **FEMA disasters** (1953–present).
 
 **Cultural & textual overlays**
 
-* Kansas Memory (KSHS) photos/letters/diaries, Chronicling America newspapers → NER-extracted **People/Places/Events**, geo-tagged snippets on the map.
+* Kansas Memory (KSHS), Chronicling America — OCR’d texts → **NER-extracted People/Places/Events**, geo-tagged snippets on the map.
 
-**Data resources index** (for power users): see **`docs/data-resources.md`** (curated links to KDOT, USGS, UT PCL, county GIS, FEMA MSC, Drought Monitor, KGS, etc.).
+> **Power users:** see **`docs/`** for data-resource guides, ingestion notes, and licensing details.
 
 ---
 
 ## 🤖 AI/ML enrichment & knowledge graph
 
-* **NLP Pipeline (spaCy + transformers):** extract **dates, places, people, orgs, events** from OCR’d texts; geocode via GNIS; summarize for tooltips; log provenance to each fact.
-* **Entity linking & scoring:** alias/fuzzy/context disambiguation to connect references into the **Neo4j** graph; confidence scores & curator review queues.
+* **NLP (spaCy + transformers):** extract **dates, places, people, orgs, events** from OCR’d texts; geocode via GNIS; summarize for tooltips; log provenance to each fact.
+* **Entity linking & scoring:** alias/fuzzy/context disambiguation to connect references into **Neo4j**; confidence scores & curator review queues.
 * **Semantics:** align graph patterns to **CIDOC-CRM** (cultural events) + **OWL-Time** (intervals) to enable chronology-aware queries & inference.
 * **Symbolic rules:** optional rule layer (e.g., “TreatySigning involves Place inside Territory ⇒ link Territory as affected”) to **deduce implicit facts** and surface uncertainty.
 
@@ -154,19 +153,19 @@ flowchart TD
 
 ## 🖥 Web UI (React + MapLibre + Canvas)
 
-* **Map**: GPU-accelerated vector/raster rendering (MapLibre), layer toggles, legends, filter chips.
-* **Timeline**: fast, **HTML5 Canvas**–based track with zoom/pan & brushing to filter map by time. (Canvas sizing/animation best-practices apply.)
-* **Details panel**: entity dossiers (AI summaries + citations), with cross-links to documents, trails, hazards, and people.
-* **Accessibility**: WAI-ARIA roles; keyboard focus paths; responsive layout.
+* **Map:** GPU-accelerated vector/raster rendering (MapLibre), layer toggles, legends, filter chips.
+* **Timeline:** fast, **HTML5 Canvas**–based track with zoom/pan & brushing to filter map by time.
+* **Details panel:** entity dossiers (AI summaries + citations), with cross-links to documents, trails, hazards, and people.
+* **Accessibility:** WAI-ARIA roles; keyboard focus paths; responsive layout.
 
-> The UI is event-driven (single UI thread) with retained/virtual rendering under the hood; long tasks are offloaded to keep interactions snappy.
+> The UI is event-driven (single UI thread) with retained rendering; long tasks are offloaded to keep interactions snappy.
 
 ---
 
 ## 🧪 Reproducibility & MCP (Master Coder Protocol)
 
-* **Docs-first**: architecture, SOPs, experiments, and model cards live under `docs/` and gate changes via PR review.
-* **Experiment template** for any analysis/model — Problem → Hypothesis → Method → Variables → Data → Results → Conclusion.
+* **Docs-first:** architecture, SOPs, experiments, and model cards live under `docs/` and gate changes via PR review.
+* **Experiment template:** Problem → Hypothesis → Method → Variables → Data → Results → Conclusion.
 * **STAC & JSON Schema** validation in CI, **checksums** for all artifacts, and **data pointers (DVC/LFS)** to avoid repo bloat while keeping lineage.
 
 ---
@@ -185,41 +184,33 @@ flowchart TD
 We welcome historians, GIS pros, developers, and students. Start with:
 
 * **Good first issues** (help-wanted label)
-* **Data additions**: propose a `data/sources/*.json` entry + short README + license
-* **Experiments**: open a PR with `docs/experiments/EXP-…md` using the template
+* **Data additions:** propose a `data/sources/*.json` entry + brief README + license
+* **Experiments:** open a PR with `docs/experiments/EXP-…md` using the template
 
-> All contributions must include **provenance** (source URLs, license, method) and **validation artefacts** where applicable.
+> All contributions must include **provenance** (source URLs, license, method) and **validation artifacts** where applicable.
 
 ---
 
 ## 🧩 Roadmap highlights
 
-* **Paleoclimate & proxies**: integrate tree rings, pollen cores, charcoal/fire regimes; link to drought/flood narratives.
-* **Predictive layers**: ML models for likely settlement corridors & site discovery; agent/system-dynamics sims for drought/hazard scenarios.
-* **Tribal treaties UX**: narrative overlays & oral histories co-curated with tribal partners.
+* **Paleoclimate & proxies:** tree rings, pollen cores, charcoal/fire regimes → drought/flood links.
+* **Predictive layers:** ML for settlement corridors & site discovery; sims for drought/hazard scenarios.
+* **Tribal treaties UX:** narrative overlays & oral histories co-curated with tribal partners.
 
 ---
 
 ## 🔗 Selected upstream data portals (curated)
 
-KDOT & Kansas GIS Hub • USGS Topo & NWIS • UT PCL Maps • FEMA MSC • Drought Monitor • KGS geology/water • NOAA Storm Events • SPC tornado tracks.
-(See **Docs → Data Resources** for the full list and usage notes.)
-
----
-
-## 🧠 Design notes & inspirations
-
-* **Virtual world design**: balance **change** vs **persistence**, ownership of content (players vs designers), and the **soul** of the world.
-* **Canvas performance** & justified text blocks for dense timelines.  
-* **R-based spatial analysis** playbook for explorers (buffers, K-density, GWR).
+KDOT & Kansas GIS Hub • USGS Topo & NWIS • UT PCL Maps • FEMA MSC • Drought Monitor • KGS geology/water • NOAA Storm Events • SPC tornado tracks
+(See **Docs** for the full index and usage notes.)
 
 ---
 
 ## 📄 Citation & license
 
-* **Code**: MIT
-* **Generated data & docs**: CC-BY 4.0 (cite this repo and the original data providers)
-* **Source datasets** retain their original licenses/terms (see each STAC Item).
+* **Code:** MIT
+* **Generated data & docs:** CC-BY 4.0 (cite this repo and the original data providers)
+* **Source datasets** retain their original licenses / terms (see each STAC Item).
 
 When citing this project, please reference **Kansas-Frontier-Matrix** and the relevant **STAC Items** for datasets used.
 
@@ -232,10 +223,12 @@ Let’s stitch Kansas’s fragmented history into a shared, auditable, and beaut
 
 ---
 
-<sub>Frontend canvas/text techniques informed by HTML5/Canvas/CSS guides.   </sub>
+<sub>Frontend canvas / text techniques informed by standard HTML5 / Canvas / CSS practices.</sub>
 
+```
 
-Medical References:
-1. None — DOI: file-JVHz9AXJnpY5YjuWonmQ4x
-2. None — DOI: file-7fT2zjYCiooDLCcuwUFsr2
-3. None — DOI: file-G8bTkTVm7aYDcDbHF8kVcy
+---
+
+Once your **`site.yml`** workflow successfully deploys to Pages, that **Pages Deploy badge** will turn green and link straight to:
+
+> 🔗 https://bartytime4life.github.io/Kansas-Frontier-Matrix/
