@@ -49,7 +49,7 @@ to the knowledge graph (Neo4j / CIDOC CRM ontology).
 
 ## 🧩 Integration Workflow
 
-### **1️⃣ Extract**
+## 1️⃣ Extract
 
 - Download or access the USFS Indian Land Cessions GIS layer via ArcGIS REST:
   ```bash
@@ -65,7 +65,7 @@ to the knowledge graph (Neo4j / CIDOC CRM ontology).
 
 ---
 
-### **2️⃣ Transform**
+## 2️⃣ Transform
 
 * Normalize fields → `treaty_name`, `tribe`, `date_signed`, `royce_id`, `geometry`.
 * Convert geometries to **EPSG:4326** and output as **GeoJSON** or **COG GeoTIFFs** (for raster overlays).
@@ -86,7 +86,7 @@ to the knowledge graph (Neo4j / CIDOC CRM ontology).
 
 ---
 
-### **3️⃣ Load**
+## 3️⃣ Load
 
 * Run ETL:
 
@@ -120,7 +120,7 @@ These mappings enable semantic linking between textual, spatial, and temporal da
 
 ## 🧠 AI / NLP Integration
 
-### **Named Entity Recognition (NER)**
+## Named Entity Recognition (NER)
 
 * Detect entities: `PERSON`, `ORG`, `DATE`, `LOC`, `LAW`.
 * Example Input:
@@ -135,7 +135,7 @@ These mappings enable semantic linking between textual, spatial, and temporal da
   * `Place`: *Osage Agency, Kansas*
   * `Date`: *1865-10-29*
 
-### **Entity Linking & Summarization**
+## Entity Linking & Summarization
 
 * Automatically link mentions to the correct treaty node in Neo4j using context scoring.
 * Generate 2–3 sentence treaty abstracts (BART/T5 transformers) for map UI popups and timeline.
@@ -171,7 +171,7 @@ These mappings enable semantic linking between textual, spatial, and temporal da
 
 ## 🧭 Visualization in Web UI
 
-### **MapLibre Layer Definition**
+## MapLibre Layer Definition
 
 ```json
 {
@@ -183,7 +183,7 @@ These mappings enable semantic linking between textual, spatial, and temporal da
 }
 ```
 
-### **Timeline & Popups**
+## Timeline & Popups
 
 * Each treaty’s date appears as a timeline marker.
 * Hover tooltips: treaty name + tribes involved.
