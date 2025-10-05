@@ -1,14 +1,16 @@
 <div align="center">
 
-# 🧪 Kansas Frontier Matrix — Experiment Template  
+# 🧪 Kansas Frontier Matrix — **Experiment Documentation Template**
+
 `docs/templates/experiment.md`
 
-**Purpose:** Provide a **structured, reproducible template** for documenting any scientific, analytical, or data-driven experiment  
-within the Kansas Frontier Matrix (KFM) — ensuring consistency, traceability, and compliance with the  
-**Master Coder Protocol (MCP)** documentation-first standards.
+**Purpose:** Provide a **structured, reproducible MCP-compliant format** for documenting any analytical, computational, or scientific experiment within the
+**Kansas Frontier Matrix (KFM)** — ensuring clarity, traceability, and transparency from hypothesis to result.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Build & Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+[![Reproducibility](https://img.shields.io/badge/Reproducible-Yes%20✅-blueviolet)](../../docs/standards/reproducibility.md)
 
 </div>
 
@@ -16,175 +18,193 @@ within the Kansas Frontier Matrix (KFM) — ensuring consistency, traceability, 
 
 ## 🧭 Experiment Metadata
 
-| Field | Description |
-|:------|:-------------|
-| **Experiment ID** | Unique identifier (e.g., `EXP-2025-001-TERRAIN`) |
-| **Title** | Descriptive experiment name |
-| **Author(s)** | Contributor(s) performing the experiment |
-| **Date Created** | YYYY-MM-DD |
-| **Last Updated** | YYYY-MM-DD |
-| **Version** | v1.0, v1.1, etc. |
-| **Domain** | Terrain / Hydrology / Climate / Hazards / Landcover / Tabular / Text |
-| **Status** | Draft / In Review / Completed / Archived |
-| **Associated Pipeline(s)** | Link to `src/pipelines/<domain>_pipeline.py` |
-| **Related Dataset(s)** | List STAC Items or data paths (`data/processed/...`) |
-| **License** | CC-BY 4.0 (data), MIT (code), or other |
+| Field                      | Description                                                          |
+| :------------------------- | :------------------------------------------------------------------- |
+| **Experiment ID**          | Unique identifier (e.g., `EXP-2025-001-TERRAIN`)                     |
+| **Title**                  | Descriptive title summarizing purpose                                |
+| **Author(s)**              | Lead and contributing researchers                                    |
+| **Affiliation(s)**         | Organization or project group                                        |
+| **Date Created**           | YYYY-MM-DD                                                           |
+| **Last Updated**           | YYYY-MM-DD                                                           |
+| **Version**                | v1.0, v1.1, etc.                                                     |
+| **Domain**                 | Terrain / Hydrology / Climate / Hazards / Landcover / Text / Tabular |
+| **Status**                 | Draft / In Review / Completed / Archived                             |
+| **Associated Pipeline(s)** | `src/pipelines/<domain>_pipeline.py`                                 |
+| **Related Dataset(s)**     | Linked STAC items or paths (`data/processed/...`)                    |
+| **Linked Issues / ADRs**   | Related design or experiment discussions                             |
+| **License**                | CC-BY 4.0 (data), MIT (code), or specified otherwise                 |
 
 ---
 
 ## 🎯 Objective
 
-Clearly define **the purpose and hypothesis** of this experiment.
+> **Define the goal and hypothesis.**
+> Clearly describe *what question this experiment addresses* and *what outcome you expect.*
 
-> Example:  
-> *To evaluate the accuracy and elevation consistency between USGS 3DEP 1m DEM and KS DASC LiDAR data for central Kansas.*
+**Example:**
+*To evaluate vertical consistency between USGS 3DEP 1m DEM and Kansas DASC LiDAR data across Ellsworth County to validate hydrological modeling accuracy.*
 
 ---
 
 ## 🧩 Background & Rationale
 
-Provide context and justification for conducting this experiment.  
-Include relevant literature, previous work, or historical observations.
+Explain why this experiment is important in the context of KFM.
+Provide any relevant **historical, scientific, or technical basis**.
 
-> Example:  
-> *Terrain datasets vary by acquisition method; this experiment tests consistency between DEM derivatives to support watershed delineation accuracy.*
+> *Example:*
+> *Previous terrain analyses revealed minor inconsistencies between LiDAR and 3DEP-derived DEMs. This experiment quantifies elevation offsets to improve cross-dataset hydrological integration.*
 
 ---
 
 ## ⚙️ Methodology
 
 ### 1️⃣ Data Sources
-List and describe all input datasets and metadata used.
 
-| Source | Description | License | Location |
-|:---------|:-------------|:----------|:------------|
-| `usgs_3dep_dem` | 1m Digital Elevation Model | Public Domain | `data/raw/terrain/ks_3dep_2018_2020.tif` |
-| `ks_dasc_lidar` | Kansas LiDAR Elevation Data | CC-BY 4.0 | `data/raw/terrain/ks_dasc_2018.tif` |
+| Dataset         | Description                 | Source    | License       | Location                                 |
+| :-------------- | :-------------------------- | :-------- | :------------ | :--------------------------------------- |
+| `usgs_3dep_dem` | 1m Digital Elevation Model  | USGS 3DEP | Public Domain | `data/raw/terrain/ks_3dep_2018_2020.tif` |
+| `ks_dasc_lidar` | Kansas LiDAR Elevation Data | DASC      | CC-BY 4.0     | `data/raw/terrain/ks_dasc_2018.tif`      |
+
+> 🧾 Each dataset must have a corresponding **metadata file** under `data/sources/` with checksum and provenance.
 
 ---
 
 ### 2️⃣ Tools & Environment
-Specify the tools, software, and versions required for reproducibility.
 
-| Tool / Library | Version | Purpose |
-|:----------------|:-----------|:-----------|
-| Python | 3.11 | Primary scripting environment |
-| GDAL | 3.8 | Raster reprojection and analysis |
-| Rasterio | 1.4 | DEM data manipulation |
-| Pandas | 2.2 | Tabular data aggregation |
-| Makefile | — | Task orchestration |
-| GitHub Actions | — | CI/CD experiment validation |
+| Tool / Library | Version | Purpose                           |
+| :------------- | :------ | :-------------------------------- |
+| Python         | 3.11    | Core scripting environment        |
+| GDAL           | 3.8     | Raster reprojection & analysis    |
+| Rasterio       | 1.4     | Raster manipulation               |
+| Pandas         | 2.2     | Tabular analytics                 |
+| Makefile       | —       | Pipeline orchestration            |
+| GitHub Actions | —       | CI/CD validation (STAC, checksum) |
 
 ---
 
 ### 3️⃣ Data Processing Workflow
 
-Outline the steps used to execute this experiment.
-
 ```bash
 # Example workflow
 make terrain
 python src/pipelines/terrain_pipeline.py --config configs/terrain_experiment.yaml
-python scripts/analyze_dem_consistency.py
-````
+python scripts/analyze_dem_consistency.py --metrics rmse,bias
+```
+
+> ✅ **Note:** All commands must be reproducible via `make <target>` or containerized execution.
+
+---
+
+<details>
+<summary><b>📦 Input → Process → Output Diagram (click to expand)</b></summary>
+
+```mermaid
+flowchart LR
+  A["Raw Datasets<br>USGS DEM · DASC LiDAR"] --> B["ETL Pipeline<br>Normalization & Reprojection"]
+  B --> C["Comparison & Metrics<br>RMSE, Bias, Correlation"]
+  C --> D["Outputs<br>CSV Reports · PNG Maps · Logs"]
+  D --> E["STAC Item<br>Indexed Metadata + Provenance"]
+```
+
+</details>
 
 ---
 
 ## 🧮 Analysis & Metrics
 
-Describe how results are evaluated and what metrics are used.
+Define **quantitative metrics** and formulas used to evaluate results.
 
-| Metric                  | Description                                    | Formula / Tool                |
-| :---------------------- | :--------------------------------------------- | :---------------------------- |
-| **RMSE**                | Root Mean Square Error between DEM datasets    | GDAL diff + NumPy             |
-| **Mean Elevation Bias** | Average offset per pixel                       | `np.mean(dem1 - dem2)`        |
-| **Data Coverage (%)**   | Percentage of study area covered by valid data | Raster mask area / total area |
-| **Checksum Match**      | Integrity verification of outputs              | SHA-256                       |
+| Metric                  | Description                             | Formula / Tool                    |
+| :---------------------- | :-------------------------------------- | :-------------------------------- |
+| **RMSE (m)**            | Root Mean Square Error between surfaces | `sqrt(mean((DEM1 - DEM2)^2))`     |
+| **Mean Elevation Bias** | Average vertical offset                 | `np.mean(DEM1 - DEM2)`            |
+| **Coverage (%)**        | % of valid elevation pixels             | `mask_valid / total_pixels * 100` |
+| **Checksum Match**      | File integrity check                    | `sha256sum <filename>`            |
+
+> 🧮 *Metrics should align with MCP’s reproducibility checklist and be automated where possible.*
 
 ---
 
 ## 🧾 Results Summary
 
-Summarize the findings, including visual or tabular results.
+| Output File                 | Description                          | Storage Path                            |
+| :-------------------------- | :----------------------------------- | :-------------------------------------- |
+| `dem_comparison_map.png`    | Hillshade and difference map overlay | `data/processed/terrain/thumbnails/`    |
+| `elevation_bias_report.csv` | Quantitative comparison results      | `data/processed/tabular/`               |
+| `validation.log`            | Full execution log                   | `data/work/logs/terrain_experiment.log` |
 
-| Output                      | Description                   | Location                                |
-| :-------------------------- | :---------------------------- | :-------------------------------------- |
-| `dem_comparison_map.png`    | Visual comparison of DEMs     | `data/processed/terrain/thumbnails/`    |
-| `elevation_bias_report.csv` | Elevation bias results        | `data/processed/tabular/`               |
-| `validation.log`            | Process log of the experiment | `data/work/logs/terrain_experiment.log` |
-
----
-
-### 📊 Example Visualization
-
-Attach plots, maps, or charts that illustrate your results.
-
-```mermaid
-graph LR
-  A["DEM 3DEP"] --> B["Raster Comparison\n(Diff, RMSE, Bias)"]
-  B --> C["Summary Metrics"]
-  B --> D["Map Visualization"]
-  C --> E["Report Generation"]
-```
-
-<!-- END OF MERMAID -->
+> 📊 *Include both visual and tabular evidence of findings.*
 
 ---
 
 ## 🔍 Interpretation
 
-Discuss what the results reveal in the context of KFM’s data and research goals.
-Include insights, limitations, or anomalies discovered during testing.
+Explain what the results mean in KFM context.
+Identify **anomalies, uncertainties, or implications**.
 
 > Example:
-> *The comparison indicates <1.5 m RMSE difference between datasets,
-> validating that DASC and 3DEP DEMs can be merged for watershed-level analysis.*
+> *The results confirm an RMSE of 1.4m between datasets, within expected tolerance. Notable localized bias in steep valleys suggests differences in acquisition date and vegetation modeling.*
 
 ---
 
 ## 🧠 Conclusions
 
-Summarize major findings and implications for future work or data integration.
+Summarize findings and their **impact on future research or pipelines.**
 
-* DEM consistency confirmed statewide within acceptable thresholds.
-* Recommend annual validation as new LiDAR data is ingested.
-* Integrate results into hydrology and landcover models.
+* 3DEP and DASC datasets are spatially compatible statewide.
+* Recommend automated bias correction for terrain fusion workflows.
+* Integrate results into hydrology model calibration.
 
 ---
 
-## 🧾 Reproducibility Checklist (MCP)
+## 🧾 Reproducibility Checklist (MCP Compliance)
 
-| MCP Principle           | Verified Implementation                                 |
-| :---------------------- | :------------------------------------------------------ |
-| **Documentation-first** | Experiment documented before code execution.            |
-| **Reproducibility**     | All inputs, code, and configurations versioned.         |
-| **Open Standards**      | Data formats: GeoTIFF, CSV, JSON; Metadata: STAC 1.0.0. |
-| **Provenance**          | Linked STAC metadata and checksums for all outputs.     |
-| **Auditability**        | Logs and results stored under `data/work/logs/`.        |
+| MCP Principle           | Verified Implementation             |
+| :---------------------- | :---------------------------------- |
+| **Documentation-first** | Fully documented before execution   |
+| **Reproducibility**     | All code & data version-controlled  |
+| **Open Standards**      | GeoTIFF, CSV, JSON, STAC 1.0.0 used |
+| **Provenance**          | Checksums and STAC metadata linked  |
+| **Auditability**        | Logs stored under `data/work/logs/` |
+| **Containerization**    | Reproducible via Docker or Makefile |
+
+---
+
+<details>
+<summary><b>🧩 Extended MCP Integration (click to expand)</b></summary>
+
+* ✅ **SHA256 verification** before and after each ETL step
+* 🧱 **Data version control (DVC)** pointers tracked in Git for large files
+* 🔁 **CI/CD validation** via `.github/workflows/stac-validate.yml`
+* 📜 **Experiment lineage** automatically recorded in `data/stac/` items
+* 📦 **Artifacts archived** with timestamps and configuration hashes
+
+</details>
 
 ---
 
 ## 📎 References
 
-List external data providers, publications, or relevant documentation.
-
-1. USGS 3DEP Program — [https://www.usgs.gov/3dep](https://www.usgs.gov/3dep)
-2. Kansas Data Access & Support Center (DASC) — [https://www.kansasgis.org/](https://www.kansasgis.org/)
-3. STAC Specification v1.0.0 — [https://stacspec.org](https://stacspec.org)
+1. [USGS 3DEP Program](https://www.usgs.gov/3dep)
+2. [Kansas DASC GIS Portal](https://www.kansasgis.org/)
+3. [STAC Specification v1.0.0](https://stacspec.org)
+4. [CIDOC CRM Ontology](https://cidoc-crm.org/)
+5. [Master Coder Protocol Standards](../../docs/standards/)
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author             | Summary                                                  |
-| :------ | :--------- | :----------------- | :------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Documentation Team | Initial experiment template for MCP-compliant workflows. |
+| Version | Date       | Author             | Summary                                     |
+| :------ | :--------- | :----------------- | :------------------------------------------ |
+| v1.0    | 2025-10-04 | Documentation Team | Initial MCP experiment template release     |
+| v1.1    | 2025-10-05 | KFM Engineering    | Enhanced structure & reproducibility schema |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Test Reproducible. Every Result Traceable.”*
-📍 [`docs/templates/experiment.md`](.) · Template for standardized research experiment documentation.
+📍 [`docs/templates/experiment.md`](.) · Standardized scientific documentation template for the Kansas Frontier Matrix.
 
 </div>
