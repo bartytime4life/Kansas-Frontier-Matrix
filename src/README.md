@@ -65,20 +65,24 @@ Visit → **[http://localhost:8000/docs](http://localhost:8000/docs)** for inter
 
 ```mermaid
 flowchart LR
-  A["Raw Sources<br/>Scans · Rasters · Vectors · Documents"]
-  --> B["pipelines/<br/>ETL → COG · GeoJSON · Parquet"]
+  A["Raw Sources<br/>Scans · Rasters · Vectors · Documents"] --> B["pipelines/<br/>ETL → COG · GeoJSON · Parquet"]
   B --> C["nlp/<br/>NER · Geocoding · Summaries"]
-  C --> D["graph/<br/>Neo4j · Entities · Relations"]
+  C --> D["kg/<br/>Neo4j · Entities · Relations"]
   D --> E["api/<br/>FastAPI + GraphQL · /events · /entity · /search"]
   E --> F["Frontend<br/>React + MapLibreGL · Timeline · Map · Story Mode"]
 
+  %% Styles (GitHub-safe)
   classDef src fill:#d7ebff,stroke:#0078d4,color:#111;
   classDef ai fill:#eafaf1,stroke:#1a7f37,color:#111;
-  classDef graph fill:#fff8e1,stroke:#ffb300,color:#111;
+  classDef kg fill:#fff8e1,stroke:#ffb300,color:#111;
   classDef api fill:#ede7f6,stroke:#6a1b9a,color:#111;
   classDef ui fill:#d1ffd7,stroke:#1a7f37,color:#111;
 
-  class A,B src; class C ai; class D graph; class E api; class F ui;
+  class A,B src;
+  class C ai;
+  class D kg;
+  class E api;
+  class F ui;
 ```
 
 ---
