@@ -3,12 +3,11 @@
 # 🧱 Kansas Frontier Matrix — Architecture Decision Record (ADR) Template  
 `docs/templates/adr.md`
 
-**Purpose:** Provide a **structured, reproducible format** for documenting design and architectural decisions  
-made throughout the **Kansas Frontier Matrix (KFM)** project — ensuring clarity, provenance, and auditability  
-across technical and data infrastructure evolution.
+**Mission:** Provide a **standardized, reproducible template** for documenting architectural, technical, and governance decisions within the **Kansas Frontier Matrix (KFM)** — ensuring clarity, provenance, and long-term traceability of every change.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+[![Architecture Decisions](https://img.shields.io/badge/ADR-Standardized-brightgreen)](README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
 
 </div>
 
@@ -18,169 +17,164 @@ across technical and data infrastructure evolution.
 
 | Field | Description |
 |:------|:-------------|
-| **ADR ID** | Unique identifier (e.g., `ADR-2025-001-DATA-CATALOG`) |
-| **Title** | Short, descriptive name of the decision |
-| **Author(s)** | Name(s) of contributors documenting this ADR |
+| **ADR ID** | Unique identifier (e.g., `ADR-2025-001-PIPELINE-STRUCTURE`) |
+| **Title** | Concise title summarizing the decision |
+| **Author(s)** | Names and roles of contributors |
 | **Date Created** | YYYY-MM-DD |
 | **Last Updated** | YYYY-MM-DD |
-| **Status** | Proposed / Approved / Deprecated / Superseded |
-| **Related Components** | (e.g., `data/stac/`, `web/config/`, `src/pipelines/`) |
+| **Status** | Proposed / Approved / Implemented / Superseded / Deprecated |
 | **Decision Type** | Technical / Process / Governance / Infrastructure |
-| **Linked Issues / PRs** | (e.g., `#142`, `#193`, `PR #58`) |
-| **Supersedes / Superseded By** | Reference previous or newer ADRs |
+| **Related Components** | (e.g., `data/stac/`, `src/pipelines/`, `web/config/`) |
+| **Linked Issues / PRs** | (e.g., `#142`, `PR #58`) |
+| **Supersedes / Superseded By** | Reference any older/newer ADRs |
 
 ---
 
 ## 🎯 Context
 
-Describe the **problem, motivation, or background** that led to this decision.  
-Include relevant alternatives considered and the rationale for exploring this issue.
+Describe the **problem statement**, **motivations**, and **background** behind this decision.  
+Include performance, scalability, or policy considerations, and note any competing approaches evaluated.
 
-> Example:  
-> *As KFM expands to integrate multi-temporal datasets, a decision is needed on how to structure  
-> metadata relationships in STAC Collections versus Items for maximum compatibility and performance.*
+> *Example:*  
+> As Kansas Frontier Matrix evolves to handle multi-temporal, multi-modal datasets, a decision is required regarding the data catalog hierarchy. Options include a flat metadata structure or a hierarchical STAC Collection → Item model with provenance relationships.
 
 ---
 
 ## 🧠 Decision
 
-Clearly state the **final decision** and rationale.  
-Provide technical and procedural reasoning, referencing any related standards, experiments, or data.
+State the **final decision**, including the rationale and any trade-offs made.  
+Describe why this approach was chosen, referencing standards, experiments, or documentation.
 
-> Example:  
-> *The project will use STAC 1.0.0 Collection → Item relationships for metadata hierarchy,  
-> linking derivative datasets using `rel:derived_from` and storing provenance in `data/stac/`.*
+> *Example:*  
+> KFM will adopt **STAC 1.0.0 hierarchical metadata**, linking derived datasets via `rel:derived_from` and embedding provenance in `data/stac/` for full lineage tracking.
 
 ---
 
-## ⚙️ Implementation
+## ⚙️ Implementation Plan
 
-Explain **how this decision will be implemented** in the codebase, workflows, or architecture.
+Define how the decision will be carried out across relevant systems.
 
-| Implementation Area | Description | Responsible Team |
-|:----------------------|:--------------|:------------------|
-| **Pipelines** | Modify ETL scripts to include STAC links in outputs. | Data Engineering |
-| **Metadata** | Update all `collection.json` files with hierarchical relationships. | Metadata Team |
-| **CI/CD** | Add STAC structure validation to GitHub Actions. | Automation Team |
+| Implementation Area | Action Item | Responsible Team |
+|:----------------------|:-------------|:------------------|
+| **ETL Pipelines** | Update STAC generation scripts in `src/pipelines/`. | Data Engineering |
+| **Metadata** | Revise `collection.json` files for hierarchical relationships. | Metadata Curators |
+| **Automation** | Add schema validation workflow to `.github/workflows/stac-validate.yml`. | CI/CD Team |
+| **Documentation** | Update affected diagrams and docs in `docs/architecture/`. | Documentation Team |
 
 ---
 
 ## 🧮 Decision Drivers
 
-List the **key factors** that influenced the decision.
-
-| Factor | Explanation |
-|:---------|:-------------|
-| **Standards Compliance** | Aligns with STAC 1.0.0 and OGC specifications. |
-| **Reproducibility** | Supports deterministic metadata generation. |
-| **Interoperability** | Compatible with external STAC aggregators. |
-| **Maintainability** | Simplifies long-term schema evolution. |
-| **Performance** | Reduces redundancy in metadata storage. |
+| Factor | Justification |
+|:--------|:---------------|
+| **Standards Alignment** | Ensures compliance with STAC 1.0.0 and OGC metadata models. |
+| **Reproducibility** | Enables deterministic data lineage and consistent validation. |
+| **Maintainability** | Simplifies evolution of metadata schemas. |
+| **Performance** | Optimizes data discovery without increasing complexity. |
+| **Transparency** | Improves user access to provenance information. |
 
 ---
 
 ## 🧾 Alternatives Considered
 
 | Alternative | Pros | Cons |
-|:--------------|:------|:------|
-| **Flat Metadata Directory** | Simple structure, easy navigation | Lacks hierarchy and provenance tracking |
-| **STAC Hierarchy (Chosen)** | STAC-compliant, semantically rich | Requires schema validation |
-| **Hybrid STAC + Graph Model** | Connects metadata to RDF | Complex integration and maintenance |
+|:-------------|:------|:------|
+| **Flat Directory Model** | Simple and easy to navigate | No explicit hierarchy; poor provenance visibility |
+| **Hierarchical STAC (Chosen)** | Standards-based and interoperable | Adds complexity to schema validation |
+| **STAC + Knowledge Graph Hybrid** | Future extensibility for RDF integration | High implementation overhead |
 
 ---
 
-## 🧠 Consequences
+## 🧩 Consequences
 
-List **expected impacts** and **trade-offs** resulting from this decision.
-
-| Impact | Type | Description |
-|:---------|:------|:-------------|
-| **Positive** | ✅ | Improves interoperability and compliance with STAC validators |
-| **Negative** | ⚠️ | Requires migration of existing metadata |
-| **Neutral** | ⚙️ | Does not affect existing data pipeline execution |
+| Type | Impact | Description |
+|:------|:---------|:-------------|
+| ✅ Positive | Compatibility | Fully compliant with STAC and external metadata tools |
+| ⚠️ Negative | Migration Cost | Requires reindexing of current datasets |
+| ⚙️ Neutral | Operations | Does not alter CI/CD or deployment process |
 
 ---
 
-## 🧾 Validation & Provenance
+## 🔍 Validation & Provenance
 
-Document **how this decision is validated**, tested, and recorded for reproducibility.
+Define how the decision will be **validated**, **tested**, and **logged** for MCP compliance.
 
-| Validation Method | Tool / Workflow | Evidence |
-|:--------------------|:------------------|:------------|
-| **Schema Validation** | `stac-validator`, `jsonschema` | ✅ Passed in CI/CD |
-| **Checksum Verification** | `make checksums` | ✅ Verified |
-| **Documentation Update** | `docs/architecture/data-architecture.md` | ✅ Updated |
-| **CI/CD Log Record** | `.github/workflows/stac-validate.yml` | ✅ Logged |
+| Validation Step | Tool / Workflow | Verification Evidence |
+|:------------------|:------------------|:-----------------------|
+| **STAC Validation** | `stac-validator`, `jsonschema` | ✅ Validation report stored under `_reports/` |
+| **Checksums** | `make checksums` | ✅ Logged SHA-256 manifests |
+| **Workflow Run** | `.github/workflows/stac-validate.yml` | ✅ CI/CD build logs |
+| **Documentation Update** | `docs/architecture/data-architecture.md` | ✅ Commit verified |
 
-> All validation evidence should be stored under `data/work/logs/adr/<ADR-ID>.log`.
+> 🗒️ **All validation evidence must be saved in:** `data/work/logs/adr/<ADR-ID>.log`.
 
 ---
 
 ## 🔐 Governance & Review
 
 | Reviewer | Role | Review Date | Decision |
-|:------------|:--------|:--------------|:------------|
-| **Project Lead** | Approver | YYYY-MM-DD | ✅ Approved |
-| **Data Engineer** | Technical Reviewer | YYYY-MM-DD | ✅ Approved |
-| **Metadata Curator** | Documentation Reviewer | YYYY-MM-DD | ✅ Approved |
+|:-----------|:--------|:--------------|:------------|
+| Project Lead | Approver | YYYY-MM-DD | ✅ Approved |
+| Technical Architect | Reviewer | YYYY-MM-DD | ✅ Approved |
+| Data Steward | Compliance | YYYY-MM-DD | ✅ Approved |
 
 ---
 
-## 🧱 Revision & Version Control
+## 🧱 Revision & Versioning
 
-Describe how this ADR will evolve over time and under what conditions it may be superseded.
+Describe how this ADR can evolve, be deprecated, or superseded by a new one.
 
-| Version | Date | Summary | Author |
-|:-----------|:------|:-----------|:-----------|
-| v1.0 | 2025-10-04 | Initial decision on metadata structure standardization. | Documentation Team |
-| v1.1 | TBD | (Describe changes or deprecations) |  |
+| Version | Date | Author | Summary |
+|:-----------|:------|:----------|:----------|
+| v1.0 | 2025-10-05 | Documentation Team | Initial decision structure established. |
+| v1.1 | TBD | TBD | Future update or revision summary. |
 
 ---
 
-## 🧩 Related Documentation
+## 📎 Related Documents
 
 | Path | Description |
 |:------|:-------------|
 | `docs/architecture/architecture.md` | High-level system overview |
-| `docs/architecture/data-architecture.md` | Data and metadata flow context |
-| `docs/architecture/knowledge-graph.md` | RDF and STAC graph integration |
-| `docs/templates/sop.md` | Standard Operating Procedure template |
-| `.github/workflows/stac-validate.yml` | Workflow enforcing metadata validation |
+| `docs/architecture/data-architecture.md` | Data model and metadata lineage |
+| `docs/architecture/knowledge-graph.md` | Semantic relationships and RDF mappings |
+| `docs/templates/sop.md` | Procedural steps related to ADR enforcement |
+| `.github/workflows/stac-validate.yml` | CI/CD metadata validation workflow |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle | Implementation |
-|:--------------|:----------------|
-| **Documentation-first** | Decision documented prior to implementation. |
-| **Reproducibility** | All outcomes validated by deterministic processes. |
-| **Open Standards** | Aligned with STAC 1.0.0 and OGC specifications. |
-| **Provenance** | Recorded in version control and CI/CD logs. |
-| **Auditability** | Linked to workflows, validation logs, and commit history. |
+| MCP Principle | Implementation Example |
+|:---------------|:------------------------|
+| **Documentation-first** | ADR written before implementation or deployment. |
+| **Reproducibility** | Validated through CI/CD workflows and checksum evidence. |
+| **Open Standards** | Decision aligns with STAC, OGC, and FAIR data practices. |
+| **Provenance** | Recorded in version control and ADR log directories. |
+| **Auditability** | Linked to workflows, commit hashes, and data manifests. |
 
 ---
 
 ## 🧾 References
 
-1. **STAC Specification v1.0.0** — [https://stacspec.org](https://stacspec.org)  
-2. **Master Coder Protocol (MCP)** — KFM Documentation Framework  
-3. **Architecture Decision Records (Nygard, 2011)** — ADR methodology reference  
-4. **Open Geospatial Consortium (OGC) Standards** — [https://ogc.org](https://ogc.org)
+1. [STAC Specification v1.0.0](https://stacspec.org)  
+2. [Open Geospatial Consortium (OGC)](https://ogc.org)  
+3. [Architecture Decision Records (Nygard, 2011)](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions.html)  
+4. **Master Coder Protocol (MCP)** — KFM Documentation Framework  
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-|:---------|:------|:----------|:----------|
-| v1.0 | 2025-10-04 | KFM Documentation Team | Initial ADR template for system-level decisions. |
+| Version | Date | Author | Notes |
+|:---------|:------|:----------|:--------|
+| **v1.0** | 2025-10-05 | Kansas Frontier Matrix Documentation Team | Initial MCP-aligned ADR template for KFM architecture decisions. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Decision Documented. Every Choice Proven.”*  
-📍 [`docs/templates/adr.md`](.) · Template for Architecture Decision Records (ADRs) under MCP standards.
+📍 [`docs/templates/adr.md`](.) · MCP-compliant Architecture Decision Record template for reproducible design governance.
 
 </div>
