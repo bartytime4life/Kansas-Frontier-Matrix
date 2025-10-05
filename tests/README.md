@@ -172,4 +172,3 @@ def test_stac_item_min(fixtures_dir):
 *If a helper script breaks, reproducibility breaks — test the helpers like production code.*
 
 </div>
-```
