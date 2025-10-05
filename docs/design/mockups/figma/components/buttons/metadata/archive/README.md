@@ -39,7 +39,7 @@ docs/design/mockups/figma/components/buttons/metadata/archive/
 ├── button_primary_v2.0.yml                  # Deprecated (replaced by v2.1)
 ├── button_secondary_v1.8.yml                # Replaced version
 ├── button_icon_v1.0.yml                     # Superseded icon-only button
-└── metadata/                        # YAML descriptors of archival context
+└── archive-metadata/                        # YAML descriptors of archival context
 ````
 
 ---
