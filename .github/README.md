@@ -74,15 +74,16 @@ Automation here keeps the entire repository:
 
 ⸻
 
-⚙️ Core Workflows
+## ⚙️ Core Workflows
 
-Workflow	Purpose	Trigger	Primary Output
-site.yml	Build & deploy documentation and static site.	push to main	_site/
-stac-validate.yml	Validate STAC collections/items & JSON Schemas.	push, pull_request	stac-report.json
-codeql.yml	Run CodeQL static analysis for Python code.	Weekly / push	CodeQL dashboard
-trivy.yml	Scan containers and dependencies for CVEs.	push, pull_request	Trivy SARIF report
-pre-commit.yml	Run linting, formatting, and tests.	pull_request	Pre-commit log
-auto-merge.yml	Auto-merge PRs when all checks succeed.	Post-check success	Merged PR
+| **Workflow** | **Purpose** | **Trigger** | **Primary Output** |
+|---------------|-------------|--------------|--------------------|
+| `site.yml` | Build & deploy documentation and static site. | `push` to `main` | `_site/` |
+| `stac-validate.yml` | Validate STAC collections/items & JSON Schemas. | `push`, `pull_request` | `stac-report.json` |
+| `codeql.yml` | Run CodeQL static analysis for Python code. | `schedule`, `push` | CodeQL dashboard |
+| `trivy.yml` | Scan containers and dependencies for CVEs. | `push`, `pull_request` | Trivy SARIF report |
+| `pre-commit.yml` | Run linting, formatting, and tests. | `pull_request` | Pre-commit log |
+| `auto-merge.yml` | Auto-merge PRs when all checks succeed. | post-check success | Merged PR |
 
 ⸻
 
