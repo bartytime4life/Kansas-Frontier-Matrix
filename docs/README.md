@@ -4,12 +4,14 @@
 `docs/README.md`
 
 **Mission:** Serve as the **comprehensive documentation hub** for the  
-Kansas Frontier Matrix (KFM) — connecting all technical, architectural,  
-and procedural documents under a unified, reproducible framework.
+Kansas Frontier Matrix (KFM) — connecting technical, architectural,  
+and procedural docs under a unified, reproducible framework.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
 
 </div>
@@ -18,16 +20,14 @@ and procedural documents under a unified, reproducible framework.
 
 ## 📖 Overview
 
-The `docs/` directory contains all documentation for the **Kansas Frontier Matrix**,  
-organized according to **MCP (Master Coder Protocol)** principles of:
+The `docs/` directory is the **source of truth** for the **Kansas Frontier Matrix** and a **published knowledge hub** (GitHub Pages).  
+It follows **MCP (Master Coder Protocol)** principles:
 
-- 🧠 **Documentation-first** — every process and system is explained before implementation  
-- 🔁 **Reproducibility** — workflows can be replicated exactly via provided instructions  
-- 🌍 **Open Standards** — Markdown, JSON Schema, STAC, and Mermaid diagrams  
-- 🧩 **Provenance** — every document includes authorship, version, and context metadata  
-- 🧾 **Auditability** — CI/CD pipelines validate documentation consistency  
-
-This directory is both the **source of truth** for repository operations and a **published knowledge hub** when deployed to GitHub Pages.
+- 🧠 **Documentation-first** — define intent, scope, and interfaces *before* code.
+- 🔁 **Reproducibility** — every reader can re-run builds and validations as documented.
+- 🌐 **Open standards** — Markdown, JSON Schema, STAC 1.0, Mermaid.
+- 🧩 **Provenance** — each artifact declares authorship, version, and context.
+- 🧾 **Auditability** — CI/CD validates docs, links, and schemas.
 
 ---
 
@@ -35,8 +35,8 @@ This directory is both the **source of truth** for repository operations and a *
 
 ```bash
 docs/
-├── README.md                        # This file (documentation index)
-├── architecture/                    # System, data, API, CI/CD, and web design docs
+├── README.md                        # Documentation index (this file)
+├── architecture/                    # System, data, API, CI/CD, web design
 │   ├── architecture.md
 │   ├── data-architecture.md
 │   ├── file-architecture.md
@@ -49,177 +49,186 @@ docs/
 │       ├── README.md
 │       ├── exported/
 │       └── templates/
-├── standards/                       # Style guides, metadata standards, and data schema docs
+├── standards/                       # Style guides & validation specs
 │   ├── metadata-standards.md
 │   ├── naming-conventions.md
 │   └── validation-protocols.md
-├── templates/                       # MCP templates for experiments, SOPs, and model cards
+├── templates/                       # MCP templates
 │   ├── sop.md
 │   ├── experiment.md
 │   └── model_card.md
-└── glossary.md                      # Definitions of KFM-specific and cross-disciplinary terms
+└── glossary.md                      # Cross-disciplinary terms
 ````
 
-> **Note:** Each directory includes its own `README.md`, providing localized documentation and compliance context.
+> **Note:** Each subdirectory includes its own `README.md` or header block describing scope, ownership, and version.
 
 ---
 
-## 🧭 Navigation Guide
+## 🧭 Quick Navigation
 
-| Category               | Description                                                        | Key Documents                                          |
-| :--------------------- | :----------------------------------------------------------------- | :----------------------------------------------------- |
-| 🧱 **Architecture**    | System, data, and process blueprints.                              | `architecture/architecture.md`, `data-architecture.md` |
-| ⚙️ **Pipelines**       | ETL process documentation and automation patterns.                 | `architecture/pipelines.md`                            |
-| 🌐 **Web & API**       | Frontend visualization and programmatic access architecture.       | `web-ui-architecture.md`, `api-architecture.md`        |
-| 🧩 **Knowledge Graph** | Semantic and RDF data integration system.                          | `knowledge-graph.md`                                   |
-| 🔄 **CI/CD**           | Automated validation, testing, and deployment system.              | `ci-cd.md`                                             |
-| 🗃️ **Standards**      | Metadata formats, schema validation, and naming policies.          | `standards/metadata-standards.md`                      |
-| 🧪 **Templates**       | MCP-compliant research and procedural templates.                   | `templates/experiment.md`, `templates/sop.md`          |
-| 📚 **Glossary**        | Unified definitions for technical and domain-specific terminology. | `glossary.md`                                          |
-
----
-
-## 🧩 Rendering & Site Deployment
-
-Documentation is automatically compiled and published as a static site via
-the **`site.yml`** GitHub Actions workflow.
-
-| Task                | Command                        | Output                                    |
-| :------------------ | :----------------------------- | :---------------------------------------- |
-| **Build Docs**      | `make site`                    | Generates `_site/` directory              |
-| **Preview Locally** | `python -m http.server _site/` | Local preview at `http://localhost:8000`  |
-| **Deploy (CI/CD)**  | Triggered by `site.yml`        | Published to GitHub Pages (`main` branch) |
+| Category               | Description                                  | Primary Docs                                                                                                                |
+| ---------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 🧱 **Architecture**    | System & process blueprints                  | [`architecture/architecture.md`](architecture/architecture.md), [`data-architecture.md`](architecture/data-architecture.md) |
+| ⚙️ **Pipelines**       | ETL + AI/ML design and automation            | [`architecture/pipelines.md`](architecture/pipelines.md)                                                                    |
+| 🌐 **Web & API**       | Frontend visualization & programmatic access | [`web-ui-architecture.md`](architecture/web-ui-architecture.md), [`api-architecture.md`](architecture/api-architecture.md)  |
+| 🧠 **Knowledge Graph** | Ontologies, schema, reasoning                | [`knowledge-graph.md`](architecture/knowledge-graph.md)                                                                     |
+| 🔄 **CI/CD**           | Validation, security, and deploy workflows   | [`ci-cd.md`](architecture/ci-cd.md)                                                                                         |
+| 📏 **Standards**       | Metadata, naming, validation policies        | [`standards/metadata-standards.md`](standards/metadata-standards.md)                                                        |
+| 🧪 **Templates**       | MCP SOPs, experiments, model cards           | [`templates/`](templates/)                                                                                                  |
+| 📚 **Glossary**        | Canonical terminology                        | [`glossary.md`](glossary.md)                                                                                                |
 
 ---
 
-## 🧮 Diagram & Visualization Standards
+## 🧩 Render & Deploy
 
-All diagrams and charts are built using **Mermaid** syntax and exported to
-SVG/PNG formats through reproducible CLI commands.
+Documentation is built and published by **GitHub Actions** (`site.yml`) as a static site.
 
-**Example Build:**
+| Task                | Command                               | Output                  |
+| ------------------- | ------------------------------------- | ----------------------- |
+| **Build docs**      | `make site`                           | `_site/` (static site)  |
+| **Preview locally** | `python -m http.server -d _site 8000` | `http://localhost:8000` |
+| **Deploy (CI/CD)**  | Triggered by `site.yml` on `main`     | GitHub Pages            |
+
+---
+
+## 🧮 Diagrams & Visuals
+
+All diagrams are authored in **Mermaid** and reproducibly exported.
 
 ```bash
 make diagrams
 ```
 
-Outputs are stored in:
+Artifacts live in `docs/architecture/diagrams/exported/` and are referenced with relative paths, e.g.:
 
+```md
+![System Overview](architecture/diagrams/exported/system_overview.svg)
 ```
-docs/architecture/diagrams/exported/
-```
-
-Diagrams appear across:
-
-* `architecture.md` → system overview
-* `data-architecture.md` → data lineage
-* `ci-cd.md` → automation flow
-* `web-ui-architecture.md` → visualization pipeline
 
 ---
 
-## 🧠 Documentation Governance (MCP Compliance)
+## 🧠 Governance & MCP Compliance
 
-| MCP Principle           | Enforcement Mechanism                                                              |
-| :---------------------- | :--------------------------------------------------------------------------------- |
-| **Documentation-first** | Required README + architecture files for every module.                             |
-| **Reproducibility**     | `make docs` + `make site` regenerate identical output.                             |
-| **Open Standards**      | Markdown + JSON Schema + STAC for all documentation.                               |
-| **Provenance**          | Version headers, author metadata, and commit IDs in all docs.                      |
-| **Auditability**        | CI/CD (`site.yml`, `stac-validate.yml`) verifies consistency and schema integrity. |
+| MCP Principle           | Enforcement                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| **Documentation-first** | Each module has a README + design doc before code merges.                          |
+| **Reproducibility**     | `make docs`, `make site`, and validation targets must pass.                        |
+| **Open Standards**      | Docs rely on Markdown, JSON Schema, STAC, Mermaid.                                 |
+| **Provenance**          | Headers include author(s), version, date; PRs require semantic commits.            |
+| **Auditability**        | CI (`site.yml`, `stac-validate.yml`, pre-commit) checks links, schemas, and style. |
 
 ---
 
-## 🧾 Writing & Formatting Standards
+## 🧾 Writing & Formatting Guide
 
-| Type            | Standard                            | Example                                                          |       |             |   |
-| :-------------- | :---------------------------------- | :--------------------------------------------------------------- | ----- | ----------- | - |
-| **Headings**    | Use hierarchical `##` for clarity   | `## Section → ### Subsection`                                    |       |             |   |
-| **Code Blocks** | Use triple backticks + language tag | ```bash                                                          |       |             |   |
-| **Tables**      | GitHub Markdown syntax              | `                                                                | Field | Description | ` |
-| **Links**       | Relative paths within repo          | `[architecture.md](architecture/architecture.md)`                |       |             |   |
-| **Images**      | Relative to `docs/` directory       | `![Diagram](architecture/diagrams/exported/system_overview.png)` |       |             |   |
-| **Metadata**    | Top-of-file comments or YAML blocks | Author, version, date                                            |       |             |   |
+Use **GitHub-Flavored Markdown (GFM)** and keep content lint-clean.
+
+**Headings**
+
+```md
+## Section
+### Subsection
+#### Detail
+```
+
+**Code Blocks**
+
+<pre markdown="1">
+
+```bash
+make site
+```
+```python
+print("hello, KFM")
+```
+</pre>
+
+**Tables**
+
+| Field     | Description               |
+| :-------- | :------------------------ |
+| `id`      | Unique identifier         |
+| `license` | Data/document usage terms |
+
+**Links & Images**
+
+* Prefer **relative** links: `[Pipelines](architecture/pipelines.md)`
+* Place assets under `docs/architecture/diagrams/exported/`
+
+**Front-Matter Metadata (optional)**
+
+```md
+<!--
+Author: Your Name
+Version: v1.1
+Last-Updated: 2025-10-05
+Scope: Docs Hub Index
+-->
+```
 
 ---
 
 ## 🔍 CI/CD Validation of Docs
 
-| Workflow                       | Function                                                       | Frequency          |
-| :----------------------------- | :------------------------------------------------------------- | :----------------- |
-| **`site.yml`**                 | Builds and publishes all Markdown docs as a static site.       | On merge to `main` |
-| **`stac-validate.yml`**        | Checks for valid JSON links and broken references.             | On PR / commit     |
-| **`pre-commit.yml`**           | Ensures style, linting, and structure of Markdown docs.        | Every PR           |
-| **`codeql.yml` / `trivy.yml`** | Scans for security vulnerabilities in code referenced by docs. | Weekly             |
+| Workflow                   | Function                              | When               |
+| -------------------------- | ------------------------------------- | ------------------ |
+| `site.yml`                 | Build & publish static docs site      | On merge to `main` |
+| `stac-validate.yml`        | Validate STAC JSON & links            | On PR / commit     |
+| `pre-commit.yml`           | Lint Markdown & check structure       | Every PR           |
+| `codeql.yml` / `trivy.yml` | Security scanning (code & containers) | Scheduled / PR     |
 
 ---
 
-## 🧩 Documentation Contribution Workflow
+## 🧩 Contributor Workflow
 
-1. **Create or Edit a Doc**
-   Add/update a `.md` file in the appropriate `docs/` subdirectory.
-
-2. **Validate Locally**
+1. **Create / Update** a doc in `docs/` (and add diagrams if needed).
+2. **Validate locally**:
 
    ```bash
    make docs-validate
    ```
-
-3. **Commit with Semantic Message**
+3. **Commit (semantic)**:
 
    ```bash
-   git commit -m "docs(architecture): update ci-cd section"
+   git commit -m "docs(architecture): clarify ETL lineage and add diagram"
    ```
+4. **Open a PR** and ensure all docs checks pass.
+5. **Merge** — CI publishes the site.
 
-4. **Open Pull Request**
-   Ensure all CI/CD documentation checks pass (`site.yml`, `pre-commit.yml`).
-
-5. **Merge + Deploy**
-   Once approved, GitHub Actions automatically rebuilds and publishes documentation.
+> For new subsystems, include: scope, interfaces, dependencies, failure modes, and testing strategy.
 
 ---
 
-## 🧩 Recommended Reading Order
+## 🧭 Recommended Reading Order
 
-1. [`architecture/architecture.md`](architecture/architecture.md) — **System Overview**
-2. [`architecture/data-architecture.md`](architecture/data-architecture.md) — **Data Flow + Provenance**
-3. [`architecture/pipelines.md`](architecture/pipelines.md) — **ETL and Processing Design**
-4. [`architecture/ci-cd.md`](architecture/ci-cd.md) — **Automation and Governance**
-5. [`architecture/web-ui-architecture.md`](architecture/web-ui-architecture.md) — **Visualization + User Experience**
-6. [`architecture/knowledge-graph.md`](architecture/knowledge-graph.md) — **Semantic Data Layer**
-7. [`standards/metadata-standards.md`](standards/metadata-standards.md) — **Metadata + Schema Compliance**
-8. [`glossary.md`](glossary.md) — **Reference + Definitions**
-
----
-
-## 🧠 MCP Compliance Summary
-
-| MCP Principle           | Implementation                                                    |
-| :---------------------- | :---------------------------------------------------------------- |
-| **Documentation-first** | All systems and processes are documented prior to deployment.     |
-| **Reproducibility**     | Documentation site can be regenerated and verified automatically. |
-| **Open Standards**      | Uses Markdown, Mermaid, JSON Schema, and STAC 1.0.0 formats.      |
-| **Provenance**          | File headers include author, version, and date.                   |
-| **Auditability**        | Docs validated via CI/CD workflows and manual peer review.        |
+1. `architecture/architecture.md` — **System Overview**
+2. `architecture/data-architecture.md` — **Data Flow & Provenance**
+3. `architecture/pipelines.md` — **ETL & AI/ML**
+4. `architecture/ci-cd.md` — **Automation & Governance**
+5. `architecture/web-ui-architecture.md` — **Visualization Pipeline**
+6. `architecture/knowledge-graph.md` — **Semantic Layer**
+7. `standards/metadata-standards.md` — **Schemas & Compliance**
+8. `glossary.md` — **Terminology**
 
 ---
 
-## 📎 Related Documentation
+## 🧷 Appendix — Doc Status Badges
 
-| Path                 | Description                                             |
-| :------------------- | :------------------------------------------------------ |
-| `data/README.md`     | Data management overview and organization.              |
-| `.github/README.md`  | Automation and governance documentation.                |
-| `web/README.md`      | Web viewer, visualization layers, and UI documentation. |
-| `docs/architecture/` | All system and process design documents.                |
+Use these shields at the top of new documents to indicate maturity and scope:
+
+* ![Status: Draft](https://img.shields.io/badge/Status-Draft-yellow)
+* ![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)
+* ![Scope: Architecture](https://img.shields.io/badge/Scope-Architecture-blue)
+* ![Scope: Pipelines](https://img.shields.io/badge/Scope-Pipelines-purple)
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                          |
-| :------ | :--------- | :------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial documentation hub and MCP-compliant structure for the `docs/` directory. |
+| Version  | Date       | Summary                                                                                                   |
+| -------- | ---------- | --------------------------------------------------------------------------------------------------------- |
+| **v1.1** | 2025-10-05 | Added governance, rendering commands, improved tables/format, doc-status badges, and local preview steps. |
+| **v1.0** | 2025-10-04 | Initial documentation hub and MCP-compliant structure for `docs/`.                                        |
 
 ---
 
