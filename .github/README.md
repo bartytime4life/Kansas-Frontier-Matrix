@@ -89,21 +89,22 @@ Automation here ensures the repository remains:
 
 ⸻
 
-⚙️ Core Workflows
+## ⚙️ Core Workflows
 
-Workflow	Purpose	Trigger	Primary Output
-site.yml	Build & deploy documentation and static site.	push → main	_site/
-stac-validate.yml	Validate STAC collections/items & JSON Schemas.	push, pull_request	stac-report.json
-codeql.yml	Run CodeQL static analysis for Python code.	schedule, push	CodeQL dashboard
-trivy.yml	Scan containers and dependencies for CVEs.	push, pull_request	Trivy SARIF report
-pre-commit.yml	Run linting, formatting, and tests.	pull_request	Pre-commit log
-auto-merge.yml	Auto-merge PRs when all checks succeed.	post-check success	Merged PR
+| **Workflow** | **Purpose** | **Trigger** | **Primary Output** |
+|---------------|-------------|--------------|--------------------|
+| `site.yml` | Build & deploy documentation and static site. | `push → main` | `_site/` |
+| `stac-validate.yml` | Validate STAC collections/items & JSON Schemas. | `push`, `pull_request` | `stac-report.json` |
+| `codeql.yml` | Run CodeQL static analysis for Python code. | `schedule`, `push` | CodeQL dashboard |
+| `trivy.yml` | Scan containers and dependencies for CVEs. | `push`, `pull_request` | Trivy SARIF report |
+| `pre-commit.yml` | Run linting, formatting, and tests. | `pull_request` | Pre-commit log |
+| `auto-merge.yml` | Auto-merge PRs when all checks succeed. | post-check success | Merged PR |
 
+---
 
-⸻
+## 🧩 CI/CD Flow Diagram
 
-🧩 CI/CD Flow Diagram
-
+```mermaid
 flowchart TD
     A([Start: Push or Pull Request])
     B([Pre-Commit Hooks])
@@ -116,7 +117,6 @@ flowchart TD
 
     A --> B --> C --> D --> E --> F --> G --> H
 
-    %% --- Node Styles ---
     classDef start fill:#ffffff,stroke:#555,stroke-width:1px,color:#111;
     classDef test fill:#e7f3ff,stroke:#0078d4,stroke-width:1px,color:#111;
     classDef validate fill:#eafaf1,stroke:#1a7f37,stroke-width:1px,color:#111;
