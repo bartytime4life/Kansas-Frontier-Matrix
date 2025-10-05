@@ -1,3 +1,4 @@
+````markdown
 <div align="center">
 
 # 🔄 Kansas Frontier Matrix — Data Transformation Pipelines  
@@ -218,4 +219,4 @@ All transformation steps log metadata to `logs/pipelines/transform.log`:
 *Open Science · Open Data · Reproducible History*
 
 </div>
-
+```
