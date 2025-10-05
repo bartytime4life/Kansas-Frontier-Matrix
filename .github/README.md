@@ -101,8 +101,6 @@ flowchart TD
 
 <!-- END OF MERMAID -->
 
-✅ **Tip:** This diagram renders correctly in GitHub’s native Mermaid engine.
-
 ---
 
 ## 🧮 MCP Compliance Matrix
