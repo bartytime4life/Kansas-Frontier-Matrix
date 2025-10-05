@@ -1,3 +1,34 @@
+---
+id: ai_drawer_v1.0_team_audit
+title: AI Assistant Drawer (v1.0) — Archived Accessibility Audit
+author: accessibility.team
+date: 2025-09-20
+source_figma: https://www.figma.com/file/XYZ67890/KFM-AI-Drawer
+plugin_used:
+  - Able v2.3
+  - Stark v4.1
+criteria:
+  - 1.4.3 Contrast (Minimum)
+  - 1.4.11 Non-Text Contrast
+  - 2.4.7 Focus Visible
+  - 2.1.1 Keyboard Accessibility
+  - 2.3.3 Animation from Interactions
+result: fail
+issues_found: 3
+status: "Deprecated — Replaced by v1.1"
+license: CC-BY-4.0
+archived_on: 2025-10-06
+archived_by: accessibility.team
+replaced_by: ../ai_drawer_v1.1_team_audit.md
+linked_review: ../../../../../reviews/2025-09-20_ai_drawer_v1.0_figma.md
+linked_design: ../../../../exports/archive/ai_drawer_v1.0_team.pdf
+related_docs:
+  - ../../../../../ui-guidelines.md
+  - ../../../../../style-guide.md
+  - ../../../../../interaction-patterns.md
+  - ../../../../../storytelling.md
+---
+
 # 🗃️ Archived Accessibility Audit Report  
 **Component:** AI Assistant Drawer (v1.0)  
 **Date of Audit:** September 20 2025  
