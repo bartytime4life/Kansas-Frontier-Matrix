@@ -1,71 +1,70 @@
+<div align="center">
+
+
 🧭 Kansas Frontier Matrix — Navigation Components
 
-docs/design/mockups/figma/components/navigation/README.md
+docs/design/mockups/figma/components/navigation/
 
-GitHub-ready spec for the KFM web UI navigation: header, global search, timeline, layer controls, detail panel, and accessibility/keyboard behavior. Designed to render cleanly on GitHub, with a Mermaid diagram that passes the strict parser.
+Interactive · Temporal · Spatial · Accessible Navigation System
 
-⸻
+</div>
 
-Overview
 
-The navigation system coordinates time (timeline), space (map + layers), and discovery (search) across the KFM web app. It stitches the TimelineView, MapView, Layer Controls, Search, and Detail Panel into one cohesive, accessible experience, backed by a FastAPI/GraphQL API and a Neo4j knowledge graph.  ￼
-
-Goals
-	•	Fast orientation: users can land, search, scrub time, and reveal details in ≤3 interactions.
-	•	Temporal + spatial sync: timeline range filters the map; selecting a map entity focuses the timeline.  ￼
-	•	Modularity: components are independent and versioned with the monorepo; new layers/features plug in via configuration.  ￼
 
 ⸻
 
-Components (UI spec)
+🪶 Overview
 
-1) Header Bar
-	•	Brand/home (click → reset view to current default extent & time window)
-	•	Global Search (type-ahead across People/Places/Events; Enter to open details; ↓/↑ navigate results)
-	•	Utility: Help, Language, Admin/Login (admin switches to curation actions)  ￼
+The Navigation Components define the core interaction framework of the Kansas Frontier Matrix (KFM) web interface — uniting space, time, and knowledge discovery.
 
-2) Timeline (bottom)
-	•	Zoomable, pannable range.
-	•	Scrub by drag; zoom with wheel/trackpad; play for auto-advance.
-	•	Emits [start,end] to filter visible layers/events; the map updates in place.  ￼
-
-3) Map Toolbar (left)
-	•	Zoom / Locate / Measure (optional)
-	•	Layer Controls: toggles + legends grouped by theme (Maps, Environment, Settlements, Documents). Reads from the STAC-driven layer config.  ￼
-
-4) Detail Panel (right)
-	•	“Site dossier” with title, summary, facts, linked entities, sources; deep-links to map/timeline.
-	•	Includes AI summary (with citations) and “related” items.  ￼
-
-5) Keyboard & Accessibility
-	•	Global: / focuses search, ? opens shortcuts, Esc closes panels.
-	•	Timeline: ←/→ nudge window; Shift+arrow = larger step.
-	•	Search list: roving tabindex, ARIA combobox roles, proper labelling for screen readers.
-	•	Complies with WAI-ARIA roles (banner, search, navigation, main, complementary).  ￼
+This system integrates the Header, Timeline, Layer Controls, and Detail Panel into an accessible, modular, and time-aware UI connected to the KFM knowledge graph and STAC-driven map layers.
 
 ⸻
 
-Interaction model (GitHub-safe Mermaid)
+🧩 Components
+
+Component	Description	Key Features
+Header Bar	Branding, global search, and utility actions.	Brand → Home, / → focus search, Help, Language, Auth
+Timeline	Time navigation and filtering tool.	Zoom, play, drag, filter events, synchronized map layers
+Layer Controls	Visibility and legend management.	Toggle overlays, adjust opacity, STAC-driven structure
+Detail Panel	Displays selected entity/event data.	AI summary, related entities, source citations
+Keyboard & Accessibility	Ensures full interaction parity.	WAI-ARIA roles, shortcuts, focus management
+
+
+⸻
+
+🧱 Directory Layout
+
+docs/design/mockups/figma/components/navigation/
+├── README.md                 # This specification file
+├── wireframes/               # PNG/SVG design exports
+├── figma-refs.json           # Mappings to Figma nodes
+└── assets/                   # Icons, color tokens, and layout previews
+
+
+⸻
+
+🧭 System Integration (GitHub-Safe Mermaid)
 
 flowchart LR
-  subgraph UI["Navigation Surface"]
+  subgraph UI["User Interface"]
     A["Header\n(search · help · admin)"]
     B["Timeline\n(range · play · zoom)"]
     C["Layer Controls\n(toggles · legends)"]
-    D["Map View\n(markers · overlays)"]
-    E["Detail Panel\n(dossier · sources)"]
+    D["Map View\n(overlays · events)"]
+    E["Detail Panel\n(summaries · links)"]
   end
 
-  subgraph API["API Layer"]
+  subgraph API["Backend API"]
     F["FastAPI / GraphQL"]
   end
 
-  subgraph DATA["Data"]
-    G["Neo4j\n(people · places · events)"]
+  subgraph DATA["Knowledge Systems"]
+    G["Neo4j Graph\n(entities · events · links)"]
     H["STAC Catalog\n(layers.json)"]
   end
 
-  %% Flows
+  %% Data flow
   A --> F
   B --> F
   C --> H
@@ -75,88 +74,111 @@ flowchart LR
   F --> H
   H --> D
 
-  %% Notes
-  %% All labels quoted; end marker below for GitHub
-
 <!-- END OF MERMAID -->
 
 
-This diagram mirrors the documented frontend–API–graph/STAC wiring and uses only GitHub-safe Mermaid features.  ￼
 
 ⸻
 
-States & events (contract)
+🔄 Event Flow Contracts
 
 Emitter	Event	Payload	Consumer	Effect
-Timeline	time:changed	{ start, end }	Map, API	Filter layers/events by range
-Search	search:selected	{ entityId, type }	Map, Timeline	Zoom to entity; focus its time
-Map (marker)	map:entity:clicked	{ entityId }	Detail Panel	Open dossier, fetch summary
-Layers	layers:toggle	`{ layerId, on	off }`	Map
-Detail actions	detail:relation:selected	{ entityId }	Map, Timeline	Navigate to related item
+Timeline	time:changed	{ start, end }	Map	Filters visible events/layers
+Search	search:selected	{ entityId }	Map, Timeline	Zoom and focus on entity
+Map	map:entity:clicked	{ entityId }	Detail Panel	Fetch dossier and sources
+Layers	layers:toggle	{ layerId, on }	Map	Show/hide overlay
+Detail Panel	detail:relation:selected	{ relatedId }	Map, Timeline	Jump to related entity
 
-Server-side heavy lifting (graph traversals, aggregations) happens in the API; the client stays light.  ￼
-
-⸻
-
-Rendering & data sources
-	•	Map: MapLibre GL JS; basemap + historical overlays (COGs, GeoJSON, or tiles) from STAC-declared assets.  ￼
-	•	Timeline: HTML5 Canvas for smooth, dense timelines at 60 fps.
-	•	Config: layers.json generated from the STAC catalog; includes time extents & legends.  ￼
 
 ⸻
 
-Accessibility & inclusive design checklist
-	•	Keyboard access to all controls; visible focus states.
-	•	ARIA roles and labelled regions: banner, search, navigation, main, complementary.
-	•	Timeline has aria-described instructions and live region feedback for range updates.
-	•	Color contrast meets WCAG AA; legends use shape/texture, not color alone.
-	•	Screen-reader friendly search (combobox pattern).  ￼
+🧠 Accessibility & Inclusivity
+	•	Fully keyboard navigable (Tab, Enter, Esc)
+	•	Screen-reader support (ARIA: banner, search, main, complementary)
+	•	Timeline instructions as aria-describedby regions
+	•	Color contrast ≥ WCAG 2.1 AA
+	•	Non-color differentiation in map legends
 
 ⸻
 
-Performance & testing
-	•	Canvas timeline to avoid DOM thrash; cluster map markers; lazy-load detail content.
-	•	Tests: search → select → focus flows; timeline–map sync; layer toggles; detail navigation (RTL + E2E).
-	•	CI enforces passing tests before merge.  ￼
+⚙️ Rendering & Data Sources
+
+Subsystem	Technology	Purpose
+Map	MapLibre GL JS	Spatial rendering, overlays, interactivity
+Timeline	HTML5 Canvas	High-FPS temporal rendering
+Layer Config	STAC-derived layers.json	Defines source URLs, legends, extents
+Graph	Neo4j	Entity linkage and relationships
+API	FastAPI / GraphQL	Data delivery and search endpoints
+
 
 ⸻
 
-Authoring & contribution (for designers/devs)
-	•	Figma: keep component names aligned to code (Header, TimelineView, LayerControls, MapView, DetailPanel).
-	•	PR checklist: update this README and any diagrams first; add/adjust tests; ensure layer config and STAC are valid; bump changelog if behavior changes.  ￼
-	•	Docs-first: commit doc updates with the code (MCP).  ￼
+🧪 Testing & QA
+
+Category	Tool	Scope
+Unit	Vitest / Jest	Timeline logic, state synchronization
+Integration	Playwright	Search → Detail → Map workflow
+Accessibility	Axe-core	Keyboard, ARIA compliance
+Performance	Lighthouse	FPS, network latency, bundle size
+
 
 ⸻
 
-How to preview locally
-	1.	Start the stack (API, graph, tiles, web):
-
-make bootstrap
-make data            # fetch → process → stac-validate
-make up              # docker compose up (api, neo4j, web)
-
-	2.	Open the web app; test search → select → detail → time scrub.  ￼
-
-⸻
-
-Non-goals (keep out of navigation)
-	•	Raw data editing (belongs in admin curation).
-	•	Heavy analytics UI (separate “analysis” mode/module).
-	•	Map styling editor (managed in config).
+🧰 Developer & Designer Workflow
+	1.	Figma → Code Parity
+Maintain identical component names between Figma and React components.
+	2.	Update Procedure
+	•	Modify UI → update figma-refs.json
+	•	Sync design tokens → run make design-sync
+	•	Commit README + assets changes together
+	3.	PR Checklist
+✅ Documentation updated
+✅ Accessibility tested
+✅ Layer config validated
+✅ Mermaid diagram renders cleanly
 
 ⸻
 
-Appendix — Rationale & sources
-	•	Separation of concerns (UI vs. API vs. graph/STAC) keeps the client responsive and the system extensible.  ￼
-	•	STAC-driven layers allow add/remove overlays without code changes.  ￼
-	•	AI “dossiers” surface concise, cited context without overwhelming the UI.  ￼
+🧭 Usage Demo (Local Preview)
+
+# Build & serve the design system locally
+make data             # Prepare STAC + configs
+make site             # Build site
+make serve            # Serve at http://localhost:4000
+
+Then open the app and test:
+	1.	Global search (/)
+	2.	Timeline scrub (drag / play)
+	3.	Toggle layers
+	4.	Inspect detail panels
 
 ⸻
 
-Change log (snippet)
-	•	2025-10-05: Initial GitHub-compliant rebuild (timeline/search/layers/detail spec & Mermaid)
-	•	2025-10-06: Added accessibility section and PR checklist
+🧩 Design Tokens (Sample)
+
+Token	Light	Dark	Purpose
+--kfm-color-bg	#ffffff	#0b1020	Page background
+--kfm-color-accent	#7ec8ff	#7ec8ff	Active elements
+--kfm-font-body	"Inter", sans-serif	"Inter", sans-serif	UI text
+
 
 ⸻
 
-End of file
+📜 Change Log
+
+Date	Version	Summary
+2025-10-05	v1.0	Initial GitHub-compliant release
+2025-10-06	v1.1	Added accessibility & event contracts
+2025-10-07	v1.2	Revised Mermaid diagram & design tokens
+
+
+⸻
+
+
+<div align="center">
+
+
+© Kansas Frontier Matrix Project
+A Master-Coder-Protocol documentation standard — for reproducibility, design clarity, and long-term maintainability.
+
+</div>
