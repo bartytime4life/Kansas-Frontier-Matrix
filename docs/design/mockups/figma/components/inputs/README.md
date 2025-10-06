@@ -1,11 +1,11 @@
 <div align="center">
 
 # 🧩 Kansas Frontier Matrix — Figma Input Components  
-`docs/design/mockups/figma/components/inputs/README.md`
+`docs/design/mockups/figma/components/inputs/`
 
-**Mission:** Define **canonical, accessible, and reproducible input components** for the  
-**Kansas Frontier Matrix (KFM)** design system — ensuring **visual consistency**, **semantic accuracy**,  
-and **UI–code parity** between **Figma prototypes** and **React implementation**.
+**Mission:** Establish canonical, accessible, and reproducible **input components**  
+for the **Kansas Frontier Matrix (KFM)** design system — ensuring perfect **UI parity**  
+between **Figma prototypes** and **React implementation**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
@@ -20,70 +20,79 @@ and **UI–code parity** between **Figma prototypes** and **React implementation
 
 ```
 
-docs/
-└── design/
-└── mockups/
-└── figma/
-└── components/
-└── inputs/
-├── README.md              → Design & implementation guidelines (this file)
-├── examples.md            → Visual & React code examples for component variants
-├── tokens.json            → Input-specific design tokens (spacing, colors, focus)
-├── figma-refs.json        → Figma component IDs & version metadata
-├── accessibility.md       → WCAG + ARIA usage reference
-└── changelog.md           → Version notes when Figma/code props are updated
+docs/design/mockups/figma/components/inputs/
+├── README.md              → Design & implementation standards (this file)
+├── examples.md            → Visual + React examples of each input type
+├── tokens.json            → Input design tokens (colors, spacing, focus rings)
+├── figma-refs.json        → Figma component IDs & metadata
+├── accessibility.md       → WCAG + ARIA documentation
+└── changelog.md           → Version & design update history
 
 ````
 
-> 🧭 *This structure ensures documentation-first parity between design and development.  
-> Each input type and variant must be documented in both `README.md` (rules) and `examples.md` (visuals).*
+> 🧭 *This folder defines all **input-related UI elements** for the KFM design system —  
+> bridging design (Figma) and development (React) with unified, versioned documentation.*
 
 ---
 
 ## 📘 Overview
 
-This document provides **Figma + React design specifications** for all **input controls**  
-used across the **Kansas Frontier Matrix** platform — including forms, filters, dialogs, and  
-map/timeline query components. All elements follow **MCP (Master Coder Protocol)**  
-standards for documentation-first reproducibility, semantic markup, and accessibility compliance.
+This documentation specifies how **input components** (text fields, selects, sliders, etc.)  
+are designed, built, and maintained in the Kansas Frontier Matrix system.  
+
+Inputs appear in:
+- **Search & filter panels** (timeline/map)  
+- **Form dialogs** and **dataset editors**  
+- **Configuration tools** in admin views  
+
+All follow **Master Coder Protocol (MCP)** standards for:
+- Documentation-first reproducibility  
+- Accessibility-first UI (WCAG AA)  
+- Token-driven design  
+- Cross-platform parity  
 
 ---
 
-## 🧭 Principles
+## 🧭 Core Principles
 
-- **Clarity first** — Labels are always visible; placeholders never replace labels.  
-- **Predictable states** — Hover ≠ Focus; Error ≠ Warning.  
-- **Accessible by default** — WCAG AA contrast, ARIA labels, keyboard support.  
-- **Composable** — Inputs integrate into filters, dialogs, or story UIs seamlessly.  
-- **Temporal & spatial awareness** — Optimized for time and geography filters (timeline/map).  
+- **Clarity first** — Labels are visible and persistent.  
+- **Predictable states** — Each state (hover/focus/error) is visually distinct.  
+- **Accessibility by default** — Every control meets or exceeds WCAG 2.1 AA.  
+- **Composable** — Works seamlessly in different layouts (map sidebar, modal, form).  
+- **Temporal + spatial awareness** — Inputs integrate with map/timeline filters.  
 
 ---
 
 ## 🎨 Design Tokens
 
-| Token | Purpose | Examples |
-|:------|:---------|:----------|
-| `--color-fg`, `--color-danger`, `--color-focus` | Text / status colors | Label, error, focus ring |
-| `--color-bg`, `--color-surface`, `--color-border` | Field + border layers | Input base & hover |
-| `--radius-sm`, `--radius-md` | Corner radius | Field, dropdowns |
-| `--space-1..4` | Vertical/horizontal spacing | Padding, gaps |
-| `--font-sans`, `--font-size-sm..md` | Typography | Label, input text |
-| `--shadow-focus` | Accessible ring | Focus/active outline |
+| Token | Purpose | Example Use |
+|:------|:---------|:-------------|
+| `--color-fg` / `--color-border` | Foreground & borders | Field text / outline |
+| `--color-bg` / `--color-surface` | Background layers | Field base & hover |
+| `--color-focus` / `--shadow-focus` | Focus indication | Accessible outlines |
+| `--radius-sm`, `--radius-md` | Corner rounding | Field, menu corners |
+| `--space-1..4` | Spacing scale | Padding & gaps |
+| `--font-sans`, `--font-size-sm..md` | Typography | Labels, input text |
 
-> 🔁 **Dark Mode:** Tokens auto-swap via CSS custom properties.
+> 🎨 Tokens are defined globally in `web/src/styles/tokens.css` and synchronized in Figma variables.  
+> **Dark mode** variants are automatically applied via token aliases.
 
 ---
 
-## ⚙️ Anatomy
+## ⚙️ Input Anatomy
 
-Each input contains:  
-**Label → Field → Affordances (icons, clear buttons) → Hint/Error text**
+Every input component follows this structure:
+
+1. **Label** — visible, linked via `for` or `aria-labelledby`.  
+2. **Field** — editable or interactive element.  
+3. **Affordance** — optional icon, clear button, or spinner.  
+4. **Helper / Status text** — hint, warning, or error message.  
 
 ```mermaid
-flowchart LR
+flowchart TD
   A[Label] --> B[Field]
   B --> C{Affordance?}
-  C -->|Yes| D[Icon/Clear/Spinner]
+  C -->|Yes| D[Icon / Clear / Spinner]
   B --> E[Hint or Error Text]
 ````
 
@@ -98,103 +107,93 @@ flowchart LR
 | **State**   | `rest`, `hover`, `focus`, `filled`, `disabled`, `readonly`, `invalid`, `success` |
 | **Size**    | `sm`, `md`                                                                       |
 | **Density** | `default`, `compact`                                                             |
-| **Width**   | `inline`, `fill`, `max-chars`                                                    |
+| **Width**   | `inline`, `fill`, `auto`                                                         |
 
-> Compact density reduces vertical padding by 20% for map filters or data trays.
+> Compact density reduces padding by ~20% for map filter trays or dense UIs.
 
 ---
 
-## 🧱 Figma Library Components
+## 🧱 Figma Components
 
-Located in **`Figma → Components / Inputs`**
+**Path:** `Figma → Components / Inputs`
 
-**Component Types**
+| Component                          | Description               |
+| :--------------------------------- | :------------------------ |
+| `TextField`, `TextArea`            | Base text inputs          |
+| `PasswordField`                    | Secure entry w/ toggle    |
+| `SearchField`                      | Search w/ loupe & clear   |
+| `NumberField`                      | Numeric + stepper         |
+| `Select`, `Combobox`               | Dropdowns + autocomplete  |
+| `DatePicker`, `DateRange`          | Temporal filters          |
+| `Checkbox`, `Switch`, `RadioGroup` | Boolean + grouped inputs  |
+| `Slider`, `RangeSlider`            | Continuous range controls |
+| `FileDrop`                         | File uploads (drag/drop)  |
+| `TagInput`                         | Tokenized multi-select    |
 
-* `TextField` / `TextArea`
-* `PasswordField` (visibility toggle)
-* `NumberField`
-* `SearchField` (clearable)
-* `Select` / `Combobox`
-* `DatePicker` / `DateRange`
-* `Checkbox` / `Switch` / `RadioGroup`
-* `Slider` / `RangeSlider`
-* `FileDrop` (drag-and-drop)
-* `TagInput` (tokenized)
-
-**Component Properties**
-
-| Property                       | Options                                   |
-| :----------------------------- | :---------------------------------------- |
-| `State`                        | Rest / Hover / Focus / Invalid / Disabled |
-| `Size`                         | sm / md                                   |
-| `Label`                        | Shown / Hidden                            |
-| `HelperText`                   | On / Off                                  |
-| `LeadingIcon` / `TrailingIcon` | On / Off                                  |
-| `Density`                      | Default / Compact                         |
-
-Auto layout: vertical flow (label → field → helper/status) with `gap: var(--space-1)`.
+All Figma variants use auto-layout vertical stacking:
+**Label → Field → Helper Text** (`gap: var(--space-1)`).
 
 ---
 
 ## 🧩 Usage Guidelines
 
-| Type                    | Use Case                                             |
-| :---------------------- | :--------------------------------------------------- |
-| **Text vs. TextArea**   | Short entry vs. narrative or comments                |
-| **Select vs. Combobox** | Small finite list vs. searchable large dataset       |
-| **Number**              | For years, coordinates, numeric filters              |
-| **Date/Range**          | Timeline filters (ISO format; UTC alignment)         |
-| **Search**              | Debounced (250–300 ms), returns contextual results   |
-| **TagInput**            | Multi-tag filters (e.g., “Treaty”, “Flood”, “1860s”) |
+| Type                   | Best Used For                            |
+| :--------------------- | :--------------------------------------- |
+| **TextField**          | Short text (e.g. search or label inputs) |
+| **TextArea**           | Long notes, comments, or narratives      |
+| **Select**             | Static, short lists                      |
+| **Combobox**           | Searchable or async large lists          |
+| **NumberField**        | Years, coordinates, numeric filters      |
+| **DatePicker / Range** | Timeline or range filtering              |
+| **TagInput**           | Multi-facet tagging (“Treaty”, “Flood”)  |
 
 ---
 
 ## ♿ Accessibility
 
-* All inputs require a **visible label** or **`aria-labelledby`**.
-* Hints and errors use **`aria-describedby`**.
-* Keyboard behaviors:
+* Every field has a **visible label** or `aria-labelledby`.
+* Hints/errors linked by `aria-describedby`.
+* **Keyboard Support**
 
-  * **Text fields**: Typing, `Esc` clears.
-  * **Selects/Comboboxes**: `↑`/`↓` navigate, `Enter` select, `Esc` close.
-  * **Checkbox/Switch**: `Space` toggles.
-  * **Slider**: `←/→` adjust, `Shift+←/→` fine step, `Home/End` extremes.
-* Focus rings use `--color-focus` + `--shadow-focus` (visible at 3:1 contrast).
+  * Text: standard editing; `Esc` clears (if clear icon shown).
+  * Combobox: `↑/↓` navigate, `Enter` select, `Esc` close.
+  * Checkbox/Switch: `Space` toggles.
+  * Slider: `←/→` adjust, `Shift+←/→` fine-tune, `Home/End` extremes.
+* **Focus Ring** uses `--color-focus` + `--shadow-focus`, ≥3:1 contrast ratio.
 
 ---
 
 ## ✅ Validation Rules
 
-* Validate on **blur** or **submit**; real-time validation for light constraints only.
-* Errors replace hints and are concise and actionable.
-* Numeric/date validation:
+* Validate on **blur** and **submit**; real-time for lightweight rules only.
+* Error messages are short, specific, and override hints.
+* Only one visible status at a time.
+* Date and number rules:
 
-  * Year: range `1541–present` (Kansas dataset coverage).
-  * Ranges: enforce `start ≤ end`; provide hint “Leave blank for open-ended.”
+  * Year: range `1541–present` (Kansas data coverage).
+  * Ranges: enforce `start ≤ end`; hint “Leave blank for open-ended.”
 
 ---
 
 ## 🌐 Internationalization
 
-* RTL supported via logical CSS properties.
-* ISO 8601 for storage, localized display for UI.
-* Avoid hardcoded units; tokenized strings only.
-* Wrap long labels, prefer text wrapping over truncation.
+* Fully supports **RTL** layout using logical CSS properties.
+* Dates stored as ISO 8601; localized at render time.
+* Strings tokenized for translation.
+* Wrap labels; never truncate important text.
 
 ---
 
 ## ⚡ Performance
 
-* All searches debounced (250–300 ms).
-* Async requests cancel on new input.
-* Virtualize long option lists in comboboxes.
-* Avoid blocking main thread on filter changes.
+* Debounce interactive inputs (250–300 ms).
+* Cancel async requests when input changes.
+* Virtualize long lists (Combobox, Select).
+* Avoid forced reflows on resize or focus changes.
 
 ---
 
 ## 💻 React Code Examples
-
-> Implementation examples (TypeScript + React + Tailwind)
 
 ### 🔍 Search Field
 
@@ -208,28 +207,29 @@ function SearchField({ onSearch }: { onSearch: (q: string) => void }) {
   return (
     <div className="kfm-field">
       <label htmlFor="q" className="kfm-label">Search places, events, years</label>
-      <input id="q" className="kfm-input" type="search" value={q}
-             onChange={(e) => setQ(e.target.value)} aria-describedby="q-hint" />
+      <input id="q" type="search" value={q} onChange={(e) => setQ(e.target.value)}
+             className="kfm-input" aria-describedby="q-hint" />
       <div id="q-hint" className="kfm-hint">Try “flood 1951” or “Osage treaty”.</div>
     </div>
   );
 }
 ```
 
-### 📅 Year Range Filter
+### 📅 Year Range Input
 
 ```tsx
 function YearRange({ onChange }: { onChange: (r: {from?: number, to?: number}) => void }) {
-  const [years, setYears] = React.useState({ from: "", to: "" });
+  const [years, set] = React.useState({ from: "", to: "" });
   const update = (k: "from" | "to") => (e: React.ChangeEvent<HTMLInputElement>) =>
-    setYears({ ...years, [k]: e.target.value });
+    set({ ...years, [k]: e.target.value });
   React.useEffect(() => {
     const { from, to } = years;
-    if (Number(from) <= Number(to) || !to) onChange({ from: +from || undefined, to: +to || undefined });
+    if (!to || Number(from) <= Number(to))
+      onChange({ from: +from || undefined, to: +to || undefined });
   }, [years]);
   return (
     <fieldset className="kfm-field">
-      <legend className="kfm-label">Year range</legend>
+      <legend className="kfm-label">Year Range</legend>
       <div className="kfm-grid-2">
         <input placeholder="From" onChange={update("from")} className="kfm-input" />
         <input placeholder="To" onChange={update("to")} className="kfm-input" />
@@ -244,15 +244,26 @@ function YearRange({ onChange }: { onChange: (r: {from?: number, to?: number}) =
 
 ## 🧪 QA Checklist
 
-| Category            | Criteria                                         |
-| :------------------ | :----------------------------------------------- |
-| **Accessibility**   | Labels, focus, keyboard, ARIA roles all verified |
-| **Visual Contrast** | ≥ 4.5:1 text; ≥ 3:1 focus outline                |
-| **Validation**      | Clear copy; errors override hints                |
-| **Dark Mode**       | Tokens render correctly                          |
-| **Performance**     | Debounced + virtualized                          |
-| **i18n**            | RTL verified; localized date formatting          |
+| Category          | Criteria                                         |
+| :---------------- | :----------------------------------------------- |
+| **Accessibility** | Label visible, ARIA connected, keyboard operable |
+| **Contrast**      | ≥4.5:1 text; ≥3:1 focus ring                     |
+| **Validation**    | Error clarity + consistency                      |
+| **Dark Mode**     | Tokens render properly                           |
+| **Performance**   | Inputs debounced; async cancelled                |
+| **i18n**          | RTL verified, localized strings work             |
 
 ---
 
 <div align="center">
+
+### ✨ Contributor Notes
+
+When updating or creating a new input:
+
+* Document variants and token usage in **`README.md`**.
+* Add working samples to **`examples.md`**.
+* Update **`figma-refs.json`** when Figma components change.
+* Record all version changes in **`changelog.md`**.
+
+</div>
