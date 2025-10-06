@@ -1,1 +1,82 @@
-y
+%%-------------------------------------------------------------
+%% Kansas Frontier Matrix — UI Component Flow (React ↔ FastAPI)
+%% File: docs/design/diagrams/ui_component_flow.mmd
+%% Author: Kansas Frontier Matrix · Systems & UI Architecture Team
+%% License: CC-BY-4.0
+%% Last Updated: {{ ISO8601_DATE }}
+%%-------------------------------------------------------------
+
+flowchart LR
+  %% ===== FRONTEND (React SPA) =====
+  subgraph FE["Frontend (React + MapLibreGL + D3.js)"]
+    SB["🔎 SearchBar.tsx\n• query input\n• autosuggest\n• keyboard nav"]
+    TL["🕰️ TimelineCanvas.tsx\n• D3/canvas render\n• range select\n• play controls"]
+    MV["🗺️ MapView.tsx\n• MapLibreGL layers\n• popups/markers\n• hover/select"]
+    DP["📋 DetailPanel.tsx\n• entity dossier\n• sources & links\n• AI summary"]
+    LC["🧭 LayerControls.tsx\n• toggle STAC layers\n• legends\n• opacity"]
+    AP["🤖 AssistantPanel.tsx\n• /ask Q&A\n• context injection\n• citations"]
+
+    ST["🧠 UI State (Context/Store)\n• selectedEntity\n• timeRange\n• activeLayers\n• searchQuery"]
+    SB -->|setQuery| ST
+    TL -->|setTimeRange| ST
+    LC -->|setActiveLayers| ST
+    MV -->|setSelectedEntity| ST
+    ST --> MV
+    ST --> TL
+    ST --> DP
+    ST --> LC
+  end
+
+  %% ===== BACKEND (FastAPI + Graph DB + Files) =====
+  subgraph BE["Backend (FastAPI · GraphQL · Neo4j · COG/GeoJSON Store)"]
+    API_SEARCH["/search\n• people/places/events\n• suggestions"]
+    API_EVENTS["/events\n• time-filtered list\n• bbox filter"]
+    API_ENTITY["/entity/{id}\n• node + relations\n• provenance"]
+    API_LAYERS["/layers-config\n• STAC-driven list\n• styles/legends"]
+    API_ASK["/ask\n• NL Q&A\n• citations"]
+
+    NEO["Neo4j\n(knowledge graph)"]
+    STAC["STAC Catalog\n(data/stac/*)"]
+    FILES["Static Files / Tiles\n• COG rasters\n• GeoJSON vectors"]
+    API_SEARCH --> NEO
+    API_EVENTS --> NEO
+    API_ENTITY --> NEO
+    API_LAYERS --> STAC
+    MV <-->|tiles / data| FILES
+  end
+
+  %% ===== DATA FLOWS =====
+  SB -- "GET /search?q=…" --> API_SEARCH
+  API_SEARCH -- "results" --> SB
+
+  TL -- "GET /events?start={t0}&end={t1}&bbox=…" --> API_EVENTS
+  API_EVENTS -- "events[]" --> TL
+  TL -- "select event" --> DP
+
+  MV -- "GET /layers-config" --> API_LAYERS
+  API_LAYERS -- "layer list" --> MV
+  LC -- "toggle layer" --> MV
+  MV -- "click marker → load entity" --> API_ENTITY
+  API_ENTITY -- "entity + relations" --> DP
+
+  AP -- "POST /ask {question, context}" --> API_ASK
+  API_ASK -- "answer + citations" --> AP
+  AP --> DP
+
+  %% ===== STATE SYNC =====
+  ST -. "selectedEntity change" .-> DP
+  ST -. "timeRange change" .-> MV
+  ST -. "activeLayers change" .-> MV
+
+  %% ===== ERROR & RETRY PATHS =====
+  classDef warn fill:#FFF6E5,stroke:#FF851B,stroke-width:1px,color:#5A3E00
+  ERR1["⚠️ Network/Error Handler\n• backoff retry\n• toast/inline message\n• accessibility alerts"]
+  FE --> ERR1
+  BE --> ERR1
+
+  %% ===== STYLES =====
+  style FE fill:#F8FAFF,stroke:#6A8BD1,stroke-width:2px
+  style BE fill:#F6FFFB,stroke:#2ECC71,stroke-width:2px
+  style ST fill:#FFF0F5,stroke:#FF69B4,stroke-width:1.5px
+
+%% END OF MERMAID
