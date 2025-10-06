@@ -1,1 +1,103 @@
-y
+%%-------------------------------------------------------------
+%% Kansas Frontier Matrix — Data Pipeline Overview
+%% File: docs/design/diagrams/data_pipeline_overview.mmd
+%% License: CC-BY-4.0
+%% Last Updated: {{ ISO8601_DATE }}
+%%-------------------------------------------------------------
+
+flowchart TD
+  %% ============== SOURCES =================
+  subgraph S["Data Sources"]
+    S1["🌎 USGS / KGS\nLiDAR · DEM · Hydro"]
+    S2["🌦 NOAA / NCEI\nStations · Daymet"]
+    S3["⚠️ FEMA / SPC\nDisasters · Tornado tracks"]
+    S4["📜 Archives\nTreaties · Newspapers · Photos"]
+    S5["🗺 Historical Maps\nUSGS DRGs · County atlases"]
+  end
+
+  %% ============== FETCH ===================
+  subgraph F["Extract (Fetch) · Makefile: make fetch"]
+    F1["fetch.py\nHTTP/API connectors"]
+    F2["auth & rate-limit\n(backoff, caching)"]
+    F3["store to data/raw/\n(DVC/LFS pointers)"]
+    F1 --> F2 --> F3
+  end
+
+  %% ============== TRANSFORM ===============
+  subgraph T["Transform · Makefile: make transform"]
+    T1["Geospatial\n• reproject → WGS84\n• vector ⇄ raster prep"]
+    T2["Text & OCR\n• Tesseract\n• cleanup & segmentation"]
+    T3["NLP Enrichment\n• spaCy NER (Person/Place/Event)\n• geocoding (GNIS)\n• summarization"]
+    T4["Normalization\n• schemas (CSV/JSON)\n• tiling/overviews"]
+    T1 --> T4
+    T2 --> T3 --> T4
+  end
+
+  %% ============== VALIDATE ================
+  subgraph V["Validate · Makefile: make validate"]
+    V1["checksums\nSHA-256 sidecars"]
+    V2["JSON Schema / STAC\nlint & structural checks"]
+    V3["GIS sanity checks\nbbox · CRS · geometry validity"]
+    V4["Accessibility (docs assets)\ncontrast · alt text"]
+    V1 --> V2 --> V3 --> V4
+  end
+
+  %% ============== PRODUCE =================
+  subgraph P["Produce Processed Layers · Makefile: make cogs"]
+    P1["GeoJSON (vectors)\npaths: data/processed/*.geojson"]
+    P2["COG GeoTIFF (rasters)\npaths: data/processed/*.tif"]
+    P3["Tables\nCSV/Parquet"]
+  end
+
+  %% ============== CATALOG =================
+  subgraph C["Catalog · Makefile: make stac"]
+    C1["STAC Items + Collections\n(data/stac/items/*.json)"]
+    C2["Temporal & spatial extents"]
+    C3["Provenance & licenses"]
+    C1 --> C2 --> C3
+  end
+
+  %% ============== GRAPH ===================
+  subgraph G["Load Knowledge Graph · Makefile: make graph"]
+    G1["Neo4j\nnodes: Person · Place · Event · Document"]
+    G2["Edges\nPARTICIPATED_IN · OCCURRED_AT · MENTIONS"]
+    G3["Semantic alignment\nCIDOC CRM · OWL-Time"]
+    G1 --> G2 --> G3
+  end
+
+  %% ============== API/UI ==================
+  subgraph A["Serve · Makefile: make up"]
+    A1["FastAPI / GraphQL\n/search · /events · /entity/{id}\n/layers-config · /ask"]
+    A2["Static tiles\nCOG / GeoJSON"]
+    A3["React + MapLibre + D3\nMap · Timeline · Panels"]
+    A1 --> A3
+    A2 --> A3
+  end
+
+  %% ============== OBSERVABILITY ===========
+  subgraph O["CI/CD & Observability"]
+    O1["GitHub Actions\npre-commit · codeql · trivy"]
+    O2["Data tests\nschema · stac-validate"]
+    O3["Build & deploy docs/site"]
+    O4["Metrics & logs\nETL durations · error rates"]
+    O1 --> O2 --> O3 --> O4
+  end
+
+  %% ============== FLOWS ===================
+  S1 & S2 & S3 & S4 & S5 --> F
+  F --> T --> V --> P --> C --> G --> A
+  V -.on_fail.-> ERR["🛑 Halt & Report\n• raise CI failure\n• open issue with logs"]
+  C -.exports.-> X1["KML/KMZ (Google Earth)\nMakefile: make kml"]
+  C -.feeds.-> A1
+  P -.tiles.-> A2
+
+  %% ============== STYLES ==================
+  classDef kfm fill:#f8fbff,stroke:#6A8BD1,stroke-width:2px
+  classDef green fill:#f2fff7,stroke:#2ECC71,stroke-width:2px
+  classDef amber fill:#fff7e6,stroke:#FF851B,stroke-width:2px
+  class S,F,T,V,P,C,G,A,O kfm
+  class P,C,G,A green
+  class V,O amber
+  style ERR fill:#FFE6E6,stroke:#FF4136,stroke-width:2px
+
+%% END OF MERMAID
