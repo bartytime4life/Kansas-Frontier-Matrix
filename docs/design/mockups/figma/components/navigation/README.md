@@ -1,182 +1,178 @@
-# 🧭 Kansas Frontier Matrix — Navigation Components
-`docs/design/mockups/figma/components/navigation/`
+🧭 Navigation Components — Figma → KFM UI
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)
-[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../docs/design/)
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
+docs/design/mockups/figma/components/navigation/README.md
 
----
-
-## 🪶 Overview
-
-This directory defines the **Navigation Layer** for the **Kansas Frontier Matrix Design System** —  
-the unified set of elements that enable **spatial**, **temporal**, and **contextual exploration** across the interactive web platform.
-
-Each navigation element — whether a **header bar**, **sidebar**, or **timeline slider** — is a verified Figma export mapped directly to its React implementation.  
-These maintain visual and functional consistency between Figma prototypes and the live React app.
-
----
-
-## 🗂️ Directory Layout
-
-```text
-docs/design/mockups/figma/components/navigation/
-├── README.md                       # Documentation (this file)
-├── header/                         # Site header and top-level navigation
-├── sidebar/                        # Layer & filter panel navigation
-├── map-controls/                   # Map interaction elements (zoom, compass)
-├── timeline-controls/              # Time slider and playback UI
-├── breadcrumbs/                    # Contextual path indicators
-└── tabs/                           # Secondary tab navigation
-
-Each subfolder includes:
-	•	Figma exports (.svg, .png, .json)
-	•	Interaction specifications (.figspec.md)
-	•	Behavioral mapping (component_map.json)
-	•	Visual previews (_preview.png)
+Purpose: This guide standardizes how we design, name, export, and implement navigation components (header, sidebars, menus, breadcrumbs, tabs, timeline controls) so they render cleanly in GitHub and map 1-to-1 into the KFM React/MapLibre UI. It follows our web-UI architecture and MCP documentation conventions.
 
 ⸻
 
-🧩 Component Reference
-
-Component	Description	Placement	Primary Function
-Header	Fixed top bar with branding, title, and global search.	Top viewport	Global navigation and identity
-Sidebar	Expandable panel for layers, filters, and data toggles.	Left side	Layer and theme navigation
-Map Controls	Floating tools (zoom, compass, legend, base map style).	Map overlay	Interactive map manipulation
-Timeline Controls	Temporal slider with play/pause and date range selection.	Bottom timeline area	Chronological exploration
-Breadcrumbs	Path indicators for detail and admin views.	Above panels	Orientation and hierarchy
-Tabs	Inline secondary navigation for entities and admin sections.	Within content	Section switching and organization
-
-
-⸻
-
-🎨 Design Tokens
-
-All components use shared tokens from:
-/docs/design/tokens/
-
-Token	Description	Default
---color-accent-nav	Primary accent color for active navigation	#2B5D9C
---color-bg-nav	Background color for nav surfaces	#F8F9FB
---font-nav	Typeface and size for navigation labels	Inter, 14px
---radius-nav	Corner radius for buttons and cards	8px
---shadow-nav	Drop shadow for elevated nav elements	0 2px 8px rgba(0,0,0,0.15)
-
+📚 Contents
+	•	Scope
+	•	Directory layout
+	•	Design tokens (quick reference)
+	•	Component inventory
+	•	Figma → repo export workflow
+	•	Naming & file conventions
+	•	Accessibility checklist
+	•	Mermaid system map
+	•	Do / Don’t
+	•	Contributing checklist
 
 ⸻
 
-🧭 Interaction Principles
+🎯 Scope
 
-Responsiveness
-	•	Mobile-first design approach.
-	•	Sidebar collapses into a sliding drawer on narrow viewports.
-	•	Timeline converts to a tap-to-scrub slider on touch devices.
+These assets cover global app navigation and time/space navigation specific to KFM:
+	•	Global: top app bar, primary/secondary menus, command palette trigger, sidebar section switcher, search, breadcrumbs, tabs.
+	•	Temporal/Spatial: timeline rail + handles, zoom controls, layer legend toggle, filter trays, map toolbar.
 
-Accessibility
-	•	Uses proper ARIA attributes (role="navigation", aria-label, aria-current).
-	•	Fully keyboard-navigable (Tab, Enter, Space, Arrow Keys).
-	•	Minimum contrast ratio: WCAG 2.1 AA compliance.
-
-UX Logic
-	•	Navigation mirrors user mental mapping of time and space.
-	•	Hover and focus states include tooltips.
-	•	Icons include text fallbacks using screen-reader utilities (.sr-only).
-	•	Active states use light opacity or scale transitions (0.15s ease).
+All components must map cleanly to the React SPA (frontend) and FastAPI data endpoints that drive the timeline and map state.
 
 ⸻
 
-🔗 Integration with React
+📁 Directory layout
 
-All navigation components are implemented in:
+docs/
+└─ design/
+   └─ mockups/
+      └─ figma/
+         └─ components/
+            └─ navigation/
+               ├─ README.md                  # this file
+               ├─ tokens.md                  # extended token notes (optional)
+               ├─ export/                    # exported SVG/PNG (sliced from Figma)
+               │  ├─ header/
+               │  ├─ sidebar/
+               │  ├─ menus/
+               │  ├─ timeline/
+               │  └─ controls/
+               └─ specs/
+                  ├─ header.spec.md
+                  ├─ sidebar.spec.md
+                  ├─ timeline.spec.md
+                  └─ menus.spec.md
 
-web/src/components/navigation/
-
-Each Figma export corresponds 1:1 with a React component.
-
-Figma Name	React Component	Example Import
-Header_Main	Header.tsx	import Header from "@/components/navigation/Header";
-Sidebar_Layers	Sidebar.tsx	import Sidebar from "@/components/navigation/Sidebar";
-Timeline_Playbar	TimelineControls.tsx	import TimelineControls from "@/components/navigation/TimelineControls";
-
-Example Usage
-
-import Header from "@/components/navigation/Header";
-import Sidebar from "@/components/navigation/Sidebar";
-import TimelineControls from "@/components/navigation/TimelineControls";
-
-export default function Layout() {
-  return (
-    <>
-      <Header />
-      <Sidebar />
-      <TimelineControls />
-    </>
-  );
-}
-
+Use monospace code fences for trees and keep indent widths consistent so grids/trees render correctly in GitHub.
 
 ⸻
 
-🧱 Development Notes
-	•	Testing: Interactive components validated with Cypress (tests/ui/navigation/).
-	•	Sync: Weekly automated visual diff compares Figma exports vs React components.
-	•	Versioning: Each export tagged with Figma component ID and timestamp.
-	•	Styling: CSS tokens imported globally from web/src/styles/tokens.css.
+🎨 Design tokens (quick reference)
+
+Use tokens to keep Figma and code in sync with our React/MapLibre UI.
+
+Token	Example value	Notes
+--kfm-color-bg	#0b1020 / #ffffff	Auto switch dark/light
+--kfm-color-fg	#e9edf3 / #0f1216	Body text
+--kfm-color-accent	#4ea1ff	Focus rings, active states
+--kfm-radius-xl	16px	Cards/menus corners
+--kfm-gap-xs..xl	4, 8, 12, 16, 24	Spacing scale
+--kfm-z-nav	1000	Keep nav above map canvas
+--kfm-tap-target	44px	Touch min size (a11y)
+
+Map overlays & timeline are GPU-accelerated; keep shadows subtle and avoid heavy blurs.
 
 ⸻
 
-🧰 Workflow
-	1.	Design → Export
-	•	Export Figma frames as SVG/PNG (+ JSON specs).
-	•	Save to the matching subdirectory with metadata.
-	2.	Versioning
-	•	Include:
-	•	component_name.svg
-	•	_meta.json (width, height, tokens, date)
-	•	_preview.png for documentation.
-	3.	Integration
-	•	Sync exports with React components using npm run sync:figma (script in /tools/).
-	4.	Validation
-	•	CI confirms component parity between
-/figma/components/navigation/ and /web/src/components/navigation/.
+📦 Component inventory
+
+Each navigation component below has a Figma frame name, an intended React mapping, and status.
+
+Component	Purpose	Figma Frame	React Mapping (example)	Status
+App Header (Top Bar)	Brand, search, primary actions	nav/header/default	<Header />	✅
+Left Sidebar (Layers)	Layer toggles, legends, filters	nav/sidebar/layers	<LayerSidebar />	✅
+Right Panel (Details)	Entity/timeline details	nav/sidebar/details	<DetailsPanel />	✅
+Main Menu / Kebab	Secondary actions	nav/menus/kebab	<OverflowMenu />	✅
+Breadcrumbs	Hierarchy & quick back	nav/breadcrumbs	<Breadcrumbs />	✅
+Tabs (Section Switcher)	Swap sections (Map / Timeline / Docs)	nav/tabs/primary	<Tabs />	✅
+Timeline Rail + Handles	Time navigation	nav/timeline/rail	<Timeline />	✅
+Timeline Zoom+Snap	Zoom & snapping to periods	nav/timeline/controls	<TimelineControls />	✅
+Map Toolbar	Zoom, locate, measure, reset view	nav/controls/map	<MapToolbar />	✅
+Command Palette (⌘K)	Global command/search	nav/command	<CommandPalette />	🔄
+
+These map to the SPA and API endpoints used by timeline and map (e.g., /events?start=…&end=…, /layers-config, /entity/{id}).
 
 ⸻
 
-🧭 Design Guidelines
-
-Rule	Description
-Hierarchy Clarity	Header (primary) and sidebar/tabs (secondary) use distinct visual levels.
-Spatial Continuity	Transitions between map ↔ timeline maintain spatial context.
-Temporal Awareness	Timeline state and map layers remain synchronized.
-Consistency	Uniform spacing, typography, and animations across all components.
-
-
-⸻
-
-🧾 Related Documentation
-	•	docs/design/mockups/figma/components/README.md — Figma component index
-	•	web/src/components/navigation/ — React implementation
-	•	tests/ui/navigation/ — UI test suite
-	•	docs/design/README.md — Design documentation
-	•	docs/architecture/README.md — System architecture overview
+📤 Figma → repo export workflow
+	1.	Name frames & variants predictably
+	•	nav/<area>/<component>[/variant] (e.g., nav/timeline/rail/compact).
+	2.	Slice & export
+	•	Export SVG for icons, PNG @2x for composite mocks; keep transparent backgrounds.
+	3.	Drop into export/ under the matching subfolder (see tree above).
+	4.	Spec files
+	•	For each component, create specs/<component>.spec.md with: anatomy, states, spacing, tokens, and a “dev notes” callout linking to React mapping.
+	5.	Open a PR with before/after thumbnails in the description to ease review (use collapsible sections for long images).
 
 ⸻
 
-Navigation as Knowledge
+🧾 Naming & file conventions
+	•	Frames: nav/<region>/<component>/<state> (lowercase, kebab-case inside segments).
+	•	Icons: ic-<name>-24.svg (24px grid).
+	•	Specs: One spec per component; include success, hover, active, focus, disabled states.
+	•	ARIA & roles: Annotate in spec (e.g., role="tablist", aria-current="page").
+	•	Do not embed HTML <div align="center"> in docs—use pure Markdown headings and tables for reliable GitHub rendering.
 
-Guiding exploration through time, terrain, and story.
+⸻
 
----
+♿ Accessibility checklist
+	•	Keyboard: Tab / Shift+Tab traversal order matches visual order; Esc closes menus/panels.
+	•	Focus: Visible 3:1 contrast ring using --kfm-color-accent.
+	•	Hit area: ≥ 44×44 px for touch.
+	•	Labels: aria-label/aria-expanded on toggles and menus; aria-current on active tab/breadcrumb.
+	•	Timeline: Provide text equivalents (e.g., “Showing 1850–1875”) and buttons for zoom/snap.
+	•	Color: All states meet WCAG AA for text/controls.
+(Reference these in each *.spec.md.)
 
-### ✅ What’s Fixed for GitHub
+⸻
 
-| Issue Type | Fix |
-|-------------|-----|
-| **HTML tags (`<div align>` etc.)** | Removed — replaced with Markdown headers & horizontal rules |
-| **Collapsed tables** | Re-built with strict pipe alignment |
-| **List spacing** | Converted to `-` bullets, added blank lines for GFM spacing |
-| **Code blocks** | Wrapped in triple backticks with language tags |
-| **Mixed indentation** | Normalized to spaces for uniform rendering |
+🗺 Mermaid system map
 
-This version **renders identically inside GitHub** — tables, code, and lists all line up and preserve spacing.
+Diagram of how navigation surfaces coordinate the Timeline, Map, and API. The syntax matches our project mermaid rules and renders in GitHub.
+
+flowchart LR
+  A["Header\nsearch · menus · tabs"] --> B["Timeline\nrail · handles · zoom"]
+  A --> C["Map Toolbar\nzoom · locate · layers"]
+  B --> D["API\nGET /events?start&end"]
+  C --> E["API\nGET /layers-config"]
+  A --> F["Details Panel\nGET /entity/{id}"]
+  D --> G["React State\nselectedTimeRange"]
+  E --> H["React State\nactiveLayers"]
+  F --> I["React State\nselectedEntity"]
+
+<!-- END OF MERMAID -->
+
+
+Keep labels short, escape line breaks with \n, and always end Mermaid blocks with the comment marker to satisfy our strict parser.
+
+⸻
+
+✅ Do / ❌ Don’t
+
+Do
+	•	Use tokens (colors, radius, spacing) and include them in specs.
+	•	Provide clear keyboard order and focus states.
+	•	Export clean SVGs (merged shapes, no stray groups).
+	•	Write brief variant rationale (e.g., compact vs. roomy sidebar).
+
+Don’t
+	•	Don’t rely on absolute pixel positioning that won’t translate to responsive React.
+	•	Don’t mix icon sizes; standardize to 24px grid.
+	•	Don’t paste large images raw into README—use export/ and thumbnails with collapsible sections.
+
+⸻
+
+🧩 Contributing checklist
+	•	Figma frame named per convention.
+	•	Exported assets placed under export/<component>/.
+	•	specs/<component>.spec.md added/updated (anatomy, states, tokens, ARIA).
+	•	Screenshots added to PR (collapsed).
+	•	Verified Mermaid block renders locally (if included).
+	•	Links to Web UI Design Doc / Web UI Architecture where relevant for dev handoff.
+
+⸻
+
+References
+	•	KFM Web UI Design Document — app structure, timeline & map behaviors.
+	•	KFM Web UI Architecture — component/data flow between React and FastAPI/Neo4j.
+	•	Generate architecture file — project-approved Mermaid block style.
+	•	Advanced GitHub Formatting — tables, badges, collapsible sections; keep docs GitHub-clean.
