@@ -1,1 +1,82 @@
-y
+%%-------------------------------------------------------------
+%% Kansas Frontier Matrix — Timeline ⇄ Map Synchronization Flow
+%% File: docs/design/diagrams/timeline_map_sync.mmd
+%% License: CC-BY-4.0
+%% Last Updated: {{ ISO8601_DATE }}
+%%-------------------------------------------------------------
+
+flowchart LR
+  %% ===== FRONTEND CONTEXT =====
+  subgraph FE["Frontend (React + MapLibreGL + D3.js)"]
+    TL["🕰️ TimelineCanvas\n• zoom/scroll\n• range handles\n• play/step"]
+    MV["🗺️ MapView\n• STAC layers\n• markers/popups\n• hover/select"]
+    LC["🧭 LayerControls\n• toggle layers\n• opacity/legend"]
+    ST["🧠 UI Store (Context)\n• timeRange\n• activeLayers\n• selectedEntity\n• bbox"]
+    ACC["♿ Accessibility Hooks\n• focus order\n• ARIA\n• keyboard nav"]
+    TL -->|set timeRange| ST
+    LC -->|set activeLayers| ST
+    MV -->|set selectedEntity| ST
+    ACC --- TL
+    ACC --- MV
+  end
+
+  %% ===== API & DATA =====
+  subgraph BE["Backend (FastAPI · GraphQL · Neo4j · STAC)"]
+    API_EVENTS["/events?start={t0}&end={t1}&bbox=…\n• time-filtered entities"]
+    API_LAYERS["/layers-config\n• STAC-driven list\n• style/legend"]
+    API_ENTITY["/entity/{id}\n• node + relations\n• provenance"]
+    NEO["Neo4j Knowledge Graph\n(Person · Place · Event · Document)"]
+    STAC["STAC Catalog\n(data/stac/*)\n• temporal/spatial extents"]
+    API_EVENTS --> NEO
+    API_ENTITY --> NEO
+    API_LAYERS --> STAC
+  end
+
+  %% ===== TILE/ASSET =====
+  subgraph FS["Static Data / Tiles"]
+    TILES["COG tiles (rasters)"]
+    GEOJSON["GeoJSON vectors (events, trails)"]
+  end
+
+  %% ===== INTERACTIONS =====
+  ST -- "timeRange change" --> TL
+  ST -- "timeRange change" --> MV
+  ST -- "activeLayers change" --> MV
+  ST -- "selectedEntity change" --> MV
+
+  TL -- "GET /events (t0,t1,bbox)" --> API_EVENTS
+  API_EVENTS -- "events[]" --> TL
+  TL -- "hover/click event" --> MV
+
+  MV -- "GET /layers-config" --> API_LAYERS
+  API_LAYERS -- "layers[]" --> MV
+  MV <-->|tiles/data| TILES
+  MV <-->|features| GEOJSON
+
+  MV -- "click marker → /entity/{id}" --> API_ENTITY
+  API_ENTITY -- "entity + relations" --> MV
+
+  %% ===== PLAYBACK LOOP =====
+  subgraph PLAY["Story/Playback"]
+    BTN["▶︎ Play / ⏸ Pause / ⏮ ⏭ Step"]
+    TICK["Frame Ticker\n• Δt per step\n• easing"]
+  end
+  BTN --> TICK --> TL
+  TICK -->|update timeRange| ST
+
+  %% ===== ERROR/RETRY =====
+  classDef warn fill:#FFF6E5,stroke:#FF851B,stroke-width:1px,color:#5A3E00
+  ERR["⚠️ Network/Error Handler\n• backoff retry\n• offline hint\n• a11y announcements"]
+  FE --> ERR
+  BE --> ERR
+
+  %% ===== LAYERS OF CONCERN =====
+  classDef fe fill:#F8FAFF,stroke:#6A8BD1,stroke-width:2px
+  classDef be fill:#F6FFFB,stroke:#2ECC71,stroke-width:2px
+  classDef fs fill:#F0FFFF,stroke:#39CCCC,stroke-width:2px
+  classDef play fill:#FFF0F5,stroke:#FF69B4,stroke-width:2px
+  class FE fe
+  class BE be
+  class FS fs
+  class PLAY play
+  class ERR warn
