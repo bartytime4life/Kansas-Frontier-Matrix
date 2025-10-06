@@ -16,6 +16,30 @@ and **UI–code parity** between **Figma prototypes** and **React implementation
 
 ---
 
+## 🗂️ Directory Layout
+
+```
+
+docs/
+└── design/
+└── mockups/
+└── figma/
+└── components/
+└── inputs/
+├── README.md              → Design & implementation guidelines (this file)
+├── examples.md            → Visual & React code examples for component variants
+├── tokens.json            → Input-specific design tokens (spacing, colors, focus)
+├── figma-refs.json        → Figma component IDs & version metadata
+├── accessibility.md       → WCAG + ARIA usage reference
+└── changelog.md           → Version notes when Figma/code props are updated
+
+````
+
+> 🧭 *This structure ensures documentation-first parity between design and development.  
+> Each input type and variant must be documented in both `README.md` (rules) and `examples.md` (visuals).*
+
+---
+
 ## 📘 Overview
 
 This document provides **Figma + React design specifications** for all **input controls**  
