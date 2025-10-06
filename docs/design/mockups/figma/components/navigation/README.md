@@ -105,14 +105,14 @@ Use nav/<region>/<component>/<state> — e.g., nav/timeline/rail/compact.
 🗺️ System Integration Diagram
 
 flowchart LR
-  A["Header\nsearch · menus · tabs"] --> B["Timeline\nrail · handles · zoom"]
-  A --> C["Map Toolbar\nzoom · locate · layers"]
-  B --> D["API\nGET /events?start&end"]
-  C --> E["API\nGET /layers-config"]
-  A --> F["Details Panel\nGET /entity/{id}"]
-  D --> G["React State\nselectedTimeRange"]
-  E --> H["React State\nactiveLayers"]
-  F --> I["React State\nselectedEntity"]
+A[“Header\nsearch · menus · tabs”] –> B[“Timeline\nrail · handles · zoom”]
+A –> C[“Map Toolbar\nzoom · locate · layers”]
+B –> D[“API\nGET /events?start&end”]
+C –> E[“API\nGET /layers-config”]
+A –> F[“Details Panel\nGET /entity/{id}”]
+D –> G[“React State\nselectedTimeRange”]
+E –> H[“React State\nactiveLayers”]
+F –> I[“React State\nselectedEntity”]
 <!-- END OF MERMAID -->
 
 
