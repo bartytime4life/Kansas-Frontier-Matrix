@@ -113,7 +113,6 @@ flowchart LR
   D --> G["React State\nselectedTimeRange"]
   E --> H["React State\nactiveLayers"]
   F --> I["React State\nselectedEntity"]
-
 <!-- END OF MERMAID -->
 
 
