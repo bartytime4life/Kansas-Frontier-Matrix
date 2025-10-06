@@ -1,1 +1,137 @@
-y
+<div align="center">
+
+# 🖼️ Kansas Frontier Matrix — Excalidraw Thumbnails  
+`docs/design/mockups/excalidraw/exports/thumbnails/`
+
+**Preview · Lightweight · Visual Indexing**
+
+</div>
+
+---
+
+## 🧭 Overview
+
+This directory contains **thumbnail images** generated from Excalidraw sketches.  
+These thumbnails serve as **lightweight previews** for browsing and indexing visual artifacts in the  
+Kansas Frontier Matrix (KFM) documentation system.
+
+Each thumbnail represents a downscaled version of a full sketch export (from `/exports/`) and  
+is designed to provide quick visual context for architecture, UI, and workflow designs without  
+requiring users to open or render the full-size image.
+
+---
+
+## 📁 Directory Structure
+
+```text
+docs/design/mockups/excalidraw/exports/thumbnails/
+├── README.md                           # This spec (GitHub-safe)
+├── *.png                               # Small raster previews (≤400px width)
+└── *.webp                              # Optional compressed thumbnails (preferred for web)
+
+Naming Convention:
+YYYYMMDD_topic-shortdesc-thumb.webp
+Example → 20251007_navigation-flow-thumb.webp
+
+⸻
+
+🎯 Purpose
+	•	Provide quick visual previews in documentation and GitHub listings.
+	•	Allow fast page loads in Markdown indexes or data catalogs.
+	•	Support automated gallery views (e.g., MkDocs or GitHub Pages grid layouts).
+	•	Maintain visual consistency across design assets and directories.
+
+⸻
+
+🧱 Thumbnail Creation Workflow
+	1.	Locate the Source File
+Find the full export in:
+docs/design/mockups/excalidraw/sketches/exports/
+	2.	Generate the Thumbnail
+Resize the image to ≤400px width (maintain aspect ratio).
+Recommended toolchain:
+
+# Using ImageMagick
+magick 20251007_navigation-flow.svg -resize 400x400 thumbnails/20251007_navigation-flow-thumb.webp
+
+
+	3.	Optimize File Size
+Compress using lossless WebP or PNG optimization:
+
+cwebp -q 80 input.png -o output.webp
+
+
+	4.	Name and Place
+Follow naming conventions and store inside this directory.
+	5.	Link in Metadata
+Reference the thumbnail path in the metadata file for the parent sketch (example below).
+
+⸻
+
+🧾 Example Metadata Linkage
+
+Excerpt from
+docs/design/mockups/excalidraw/sketches/metadata/20251007_navigation-flow.json
+
+{
+  "id": "navigation-flow",
+  "title": "Navigation Flow Sketch",
+  "author": "Kansas Frontier Matrix Design Team",
+  "created": "2025-10-07",
+  "export": "../exports/20251007_navigation-flow.svg",
+  "thumbnail": "../exports/thumbnails/20251007_navigation-flow-thumb.webp",
+  "tags": ["navigation", "ui", "timeline"],
+  "status": "active",
+  "license": "CC-BY-4.0"
+}
+
+
+⸻
+
+🖥️ Embedding Thumbnails
+
+To embed thumbnails in docs (e.g., galleries, indexes, or experiment logs):
+
+<a href="../exports/20251007_navigation-flow.svg">
+  <img src="../exports/thumbnails/20251007_navigation-flow-thumb.webp" width="300" alt="Navigation Flow Sketch">
+</a>
+
+💡 Tip:
+Wrap thumbnails in anchor tags linking to full-size exports for a simple “click-to-enlarge” behavior
+in GitHub and MkDocs pages.
+
+⸻
+
+🧮 Optimization Guidelines
+
+Asset Type	Format	Target Size	Notes
+Thumbnails	.webp	≤200 KB	Best balance of quality and speed
+PNG Fallback	.png	≤300 KB	Use only if transparency is required
+Width	≤400 px	Maintain original aspect ratio	
+
+Keep all thumbnails visually aligned: consistent padding, aspect ratio, and neutral background.
+
+⸻
+
+🔐 Provenance & Version Control
+	•	All thumbnails are derived from official exports in /sketches/exports/.
+	•	Never generate thumbnails directly from .excalidraw source files.
+	•	Track updates via Git commits with descriptive messages referencing the parent sketch.
+	•	Do not overwrite thumbnails — instead, version them (-v2, -v3) when design changes occur.
+
+⸻
+
+⚖️ License
+
+All assets in this directory are released under the
+Creative Commons Attribution 4.0 International (CC-BY 4.0) license.
+
+Credit: Kansas Frontier Matrix Design Team · 2025
+
+⸻
+
+🗓️ Change Log
+
+Date	Description
+2025-10-07	Initial version — directory structure, naming, and workflow added
+2025-10-08	Aligned formatting with KFM Markdown standards and accessibility
