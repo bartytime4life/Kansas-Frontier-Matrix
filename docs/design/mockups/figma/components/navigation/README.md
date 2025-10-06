@@ -1,117 +1,179 @@
 <div align="center">
 
-# 🧭 Navigation Components — Figma Exports  
+# 🧭 Kansas Frontier Matrix — Navigation Components  
 `docs/design/mockups/figma/components/navigation/`
 
-**Kansas Frontier Matrix — Design System**
+**Interactive · Temporal · Spatial · Intuitive Navigation**
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)  
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../docs/design/)  
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 🎯 Purpose
+## 🪶 Overview
 
-This directory houses the **navigation-related components** exported from Figma for the  
-**Kansas Frontier Matrix** web application design system.  
-These elements define how users move through the system — including **menus**, **headers**, **tabs**, and **map/timeline controls** — ensuring consistency between Figma mockups and live React components.
+This directory defines the **Navigation Layer** for the **Kansas Frontier Matrix Design System** —  
+all interface elements that enable **spatial**, **temporal**, and **contextual exploration** across the  
+interactive web platform.
 
-All navigation components are version-controlled, documented, and linked to their source in the Figma design file.
+Each navigation element — whether a **header bar**, **sidebar**, or **timeline slider** — is a verified  
+Figma export mapped directly to its React implementation. These components maintain cohesion  
+between design prototypes and live deployments, ensuring seamless user experience and historical clarity.
 
 ---
 
-## 🧩 Directory Structure
+## 🗂️ Directory Layout
 
 ```text
 docs/design/mockups/figma/components/navigation/
-├── README.md                     # Index and documentation (this file)
-├── header/                       # Top-level site header & logo placement
-├── sidebar/                      # Collapsible sidebar navigation
-├── map-controls/                 # Zoom, layer toggles, compass, legends
-├── timeline-controls/            # Time slider, play/pause buttons
-├── breadcrumbs/                  # Page breadcrumbs & contextual paths
-└── tabs/                         # Secondary navigation (tabbed sections)
+├── README.md                       # Documentation & usage guidelines (this file)
+├── header/                         # Site-wide header: logo, title, global nav
+├── sidebar/                        # Layer, legend, and filter navigation panels
+├── map-controls/                   # Zoom, compass, layer toggle buttons
+├── timeline-controls/              # Temporal slider & playback UI
+├── breadcrumbs/                    # Path context in detail & admin views
+└── tabs/                           # Secondary content navigation (tabbed layout)
 
-Each subfolder contains:
-	•	Exported SVG/PNG assets from Figma
-	•	Optional .json metadata or .figspec.md describing component behavior
-	•	Screenshots for documentation and version control comparison
+Each subfolder includes:
+	•	Figma exports (.svg, .png, .json)
+	•	Interaction specifications (.figspec.md)
+	•	Behavioral mapping to React (component_map.json)
+	•	Visual previews for documentation (_preview.png)
 
 ⸻
 
-🧱 Component Overview
+🧩 Component Reference
 
-Component	Description	Usage Context
-Header	Fixed top navigation bar with branding and search.	Appears on all major views (Map, Timeline, Docs).
-Sidebar	Expandable vertical menu for layers and filters.	Left side of UI (Map/Terrain view).
-Map Controls	Buttons for zoom, compass, legend, and base layer toggles.	Overlay within MapLibre canvas.
-Timeline Controls	Interactive slider and temporal filters.	Bottom timeline pane.
-Breadcrumbs	Path indicators for detail or admin views.	Appears above content panels.
-Tabs	Secondary navigation for sub-sections.	Used in admin, entity, and data panels.
+Component	Description	Placement	Primary Function
+Header	Fixed top bar with branding, project title, and global search.	Top viewport	Persistent global nav & identity
+Sidebar	Expandable panel with map layers, filters, and data toggles.	Left side	Thematic and layer navigation
+Map Controls	Floating set of tools (zoom, compass, legend, style toggles).	Map overlay	Interactive map manipulation
+Timeline Controls	Horizontal temporal slider with play/pause buttons.	Bottom	Controls chronological visualization
+Breadcrumbs	Contextual path indicators for detail and admin views.	Above content panels	Orientation & hierarchy
+Tabs	Inline secondary navigation for entity views or admin panels.	Within content	Sectional switching & categorization
 
 
 ⸻
 
 🎨 Design Tokens
 
-All Figma exports follow the shared Design Token Specification
-defined under /docs/design/tokens/.
+All components derive from global tokens defined in
+/docs/design/tokens/.
+Use of tokens ensures consistent styling across Figma, CSS, and React.
 
-Token	Description	Example
---color-accent-nav	Primary accent color for navigation elements.	#2B5D9C
---font-nav	Font used for labels and menu items.	Inter / 14px
---radius-nav	Border radius for active buttons.	8px
---shadow-nav	Drop shadow used under fixed nav elements.	0 2px 6px rgba(0,0,0,0.1)
+Token	Description	Default
+--color-accent-nav	Primary accent for active navigation elements.	#2B5D9C
+--color-bg-nav	Background color for nav surfaces.	#F8F9FB
+--font-nav	Typeface for menu labels and controls.	Inter, 14px
+--radius-nav	Corner radius for nav buttons & cards.	8px
+--shadow-nav	Shadow under fixed headers or floating nav.	0 2px 8px rgba(0,0,0,0.15)
+
+
+⸻
+
+🧭 Interaction Principles
+
+📱 Responsiveness
+	•	All navigation components are mobile-first.
+	•	Sidebar collapses into a floating drawer on small screens.
+	•	Timeline becomes a tap-to-scrub slider with gesture support.
+
+♿ Accessibility
+	•	Uses ARIA roles (role="navigation", aria-label, aria-current).
+	•	All elements are fully keyboard-navigable (Tab, Enter, Arrow Keys).
+	•	Minimum contrast ratio: WCAG 2.1 AA.
+
+🧠 UX Logic
+	•	Navigation reflects user cognitive mapping — time and space are primary axes.
+	•	Hover states show tooltips for clarity.
+	•	Each icon includes text fallback (<span class="sr-only">) for screen readers.
+	•	Active states animate subtly with opacity and scale transitions (0.15s ease).
+
+⸻
+
+🔗 Integration with React
+
+All navigation components are implemented under:
+
+web/src/components/navigation/
+
+Each Figma export corresponds to a React component, maintaining name parity:
+
+Figma Name	React Component	Example Import
+Header_Main	Header.tsx	import Header from "@/components/navigation/Header";
+Sidebar_Layers	Sidebar.tsx	import Sidebar from "@/components/navigation/Sidebar";
+Timeline_Playbar	TimelineControls.tsx	import TimelineControls from "@/components/navigation/TimelineControls";
 
 
 ⸻
 
-🧭 Interaction Guidelines
-	•	Consistency: Navigation elements must match the Figma prototypes exactly in position, hierarchy, and typography.
-	•	Responsiveness: Components adapt to desktop (split map/timeline view) and mobile (drawer navigation).
-	•	Accessibility:
-	•	All buttons include ARIA roles (aria-label, aria-current).
-	•	Keyboard navigation via Tab and Enter supported.
-	•	State Management:
-	•	Active states shown with accent color highlight.
-	•	Disabled states use 40% opacity of default token colors.
+🧱 Development Notes
+	•	Testing: Interactive elements tested via Cypress (tests/ui/navigation/)
+	•	Documentation: Figma–React sync verified weekly via automated diff visual tests.
+	•	Version Control: Each asset revision tagged with Figma version ID and export timestamp.
+	•	CSS Tokens: Imported globally from /web/src/styles/tokens.css
 
-⸻
-
-🔄 Figma Integration Workflow
-	1.	All navigation components originate in
-Figma › Kansas Frontier Matrix / Components / Navigation.
-	2.	Components are exported as .svg or .png assets.
-	3.	Each export includes metadata (width, height, color tokens).
-	4.	Assets are versioned here and referenced in the web app at:
-web/src/components/navigation/.
-
-✅ Tip: Keep exported asset names identical to their Figma component names (e.g. header_logo.svg, timeline_play.svg) to ensure synchronization scripts function properly.
-
-⸻
-
-🧰 Developer Notes
-	•	React Integration: Navigation elements correspond to components under
-web/src/components/navigation/.
-Example:
+Example Component Usage
 
 import Header from "@/components/navigation/Header";
 import Sidebar from "@/components/navigation/Sidebar";
+import TimelineControls from "@/components/navigation/TimelineControls";
 
+export default function Layout() {
+  return (
+    <>
+      <Header />
+      <Sidebar />
+      <TimelineControls />
+    </>
+  );
+}
 
-	•	CSS Tokens are imported globally from /web/src/styles/tokens.css.
-	•	Testing: Interactive behaviors are verified via Cypress tests under tests/ui/navigation/.
 
 ⸻
 
-📘 Related Documentation
-	•	docs/design/README.md — Global design overview
-	•	docs/design/mockups/figma/components/README.md — Component index
-	•	web/src/components/navigation/ — Implementation
-	•	tests/ui/navigation/ — Test suite
+🧰 Workflow
+
+1. Design → Export
+	•	Figma components exported using Frame → SVG/PNG + JSON spec.
+	•	Saved to corresponding subdirectory with metadata.
+
+2. Versioning
+	•	Each export includes:
+	•	component_name.svg
+	•	_meta.json (width, height, color tokens, date)
+	•	_preview.png for documentation
+
+3. Integration
+	•	Exports synced with React components during npm run sync:figma (Node script under /tools/).
+
+4. Validation
+	•	CI verifies parity: component count in /figma/components/navigation/
+equals implemented React components in /web/src/components/navigation/.
+
+⸻
+
+🧭 Design Guidelines
+
+Design Rule	Description
+Hierarchy Clarity	Primary (header) and secondary (sidebar/tabs) nav layers are visually distinct.
+Spatial Continuity	Transitions between map/timeline maintain orientation and user context.
+Temporal Awareness	Timeline controls and map states are synchronized to the same temporal domain.
+Consistency	Component spacing, typography, and animation timings are standardized across all views.
+
+
+⸻
+
+🧾 Related Documentation
+	•	docs/design/mockups/figma/components/README.md – Figma component index
+	•	web/src/components/navigation/ – React implementation
+	•	tests/ui/navigation/ – UI test suite
+	•	docs/design/README.md – Design architecture
+	•	docs/architecture/README.md – System overview
 
 ⸻
 
@@ -119,7 +181,8 @@ import Sidebar from "@/components/navigation/Sidebar";
 <div align="center">
 
 
-Kansas Frontier Matrix Design System
-🧭 Navigation as Knowledge — Guiding exploration through time and terrain.
+🧭 Kansas Frontier Matrix — Navigation as Knowledge
+
+“Guiding exploration through time, terrain, and story.”
 
 </div>
