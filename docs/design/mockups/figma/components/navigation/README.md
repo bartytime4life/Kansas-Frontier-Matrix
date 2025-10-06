@@ -1,208 +1,198 @@
-# 🧭 Kansas Frontier Matrix — Navigation Components
-`docs/design/mockups/figma/components/navigation/`
+🧭 Navigation Components — Kansas Frontier Matrix
 
-**Purpose:** Define the UI and interaction model for moving through **time**, **space**, and **story** in the Kansas Frontier Matrix web app.  
+docs/design/mockups/figma/components/navigation/README.md
 
----
+A GitHub-ready spec for the Navigation system used across the Kansas Frontier Matrix (KFM) web UI: header, global search, timeline controls, map layer controls, and detail panel hooks. This doc is formatted to render cleanly on GitHub (pure Markdown headings, fenced code blocks, GitHub-safe Mermaid, compact tables). It aligns with the project’s web/UI architecture and MCP documentation standards.  ￼
 
-## 🪶 Overview
-Navigation includes:
+⸻
 
-- **Global Header** — brand, search, menus  
-- **Primary Tabs** — Map · Timeline · Stories · Data  
-- **Context Rail** — Layers / Filters (left)  
-- **Detail Panel** — Entity dossier (right)  
-- **Map Toolbar** — Zoom · Locate · Layers  
-- **Timeline Controls** — Scrub · Zoom · Play  
-- **Breadcrumbs** — Place ▸ Collection ▸ Item  
+Contents
+	•	Scope
+	•	Anatomy
+	•	Interaction model
+	•	States
+	•	Accessibility
+	•	Design tokens
+	•	Data contracts (props / API)
+	•	Events & telemetry
+	•	Responsive rules
+	•	QA checklist
+	•	Changelog
 
-Each piece is modular and synchronized across devices and views.
+⸻
 
----
+Scope
 
-## 🧩 System Diagram (GitHub-safe Mermaid)
+The Navigation system orchestrates time, space, and search:
+	•	Header bar: brand, global search, language/help, admin/login.
+	•	Timeline controls: time range, zoom, scrubber, play/pause.
+	•	Map layer controls: layer toggles, legend, opacity.
+	•	Detail panel hook: opens entity/event “dossier” on selection.
+	•	Keyboard & screen reader flow across all regions.
 
-```mermaid
+It connects the React SPA to the FastAPI/GraphQL API and Neo4j graph, and drives MapLibre GL and the Canvas timeline.  ￼
+
+⸻
+
+Anatomy
+
+[Header]
+ ├─ Brand / Home
+ ├─ Global Search (entity/event/place)
+ ├─ Utility: Help, Language, Admin/Login
+
+[Main]
+ ├─ Left Sidebar: Layer Controls (+ Legend)
+ ├─ Map View (MapLibre)
+ ├─ Right Panel: Detail / AI summary (toggle)
+
+[Bottom]
+ └─ Timeline (Canvas): handles + zoom + range
+
+Component IDs (for code & analytics)
+	•	nav.header, nav.search, nav.util, nav.layers, nav.legend, nav.map, nav.detail, nav.timeline.
+
+⸻
+
+Interaction model
+
 flowchart LR
-  subgraph FE["Frontend"]
-    A["Header\nbrand · search · menus"]
-    B["Timeline\nscrub · zoom · play"]
-    C["Map Toolbar\nzoom · locate · layers"]
-    D["Left Rail\nlayers · filters"]
-    E["Detail Panel\nentity dossier"]
+  subgraph "User"
+    K["Keyboard / Screen reader"]
+    M["Mouse / Touch"]
   end
 
-  subgraph API["Backend API"]
-    F["GET /events?start&end"]
-    G["GET /layers-config"]
-    H["GET /entity/{id}"]
-  end
+  H["Header\nbrand · search · utility"] --> T["Timeline\nrange · zoom · play"]
+  H --> L["Layers\nvisibility · style"]
+  T --> API["API\n/events?start&end"]
+  L --> CFG["Layers Config\n(STAC-driven)"]
+  API --> ST["State\nselectedTimeRange"]
+  CFG --> LA["State\nactiveLayers"]
+  ST --> MAP["Map View\nfilter by time"]
+  LA --> MAP
+  MAP --> DP["Detail Panel\nentity dossier"]
 
-  subgraph STATE["Client State"]
-    I["selectedTimeRange"]
-    J["activeLayers"]
-    K["selectedEntity"]
-  end
-
-  A --> B
-  A --> C
-  A --> D
-  B --> F
-  C --> G
-  E --> H
-  F --> I
-  G --> J
-  H --> K
-  I --> C
-  I --> B
-  J --> C
-  K --> E
-
+  %% Accessibility flow
+  K --> H
+  K --> T
+  K --> L
+  K --> DP
+  M --> H
+  M --> T
+  M --> L
+  M --> DP
 <!-- END OF MERMAID -->
 
-
-
-⸻
-
-📁 Directory Structure
-
-navigation/
-├── README.md
-├── tokens.css
-├── NavigationHeader.tsx
-├── PrimaryTabs.tsx
-├── Breadcrumbs.tsx
-├── LeftRail.tsx
-├── MapToolbar.tsx
-├── TimelineControls.tsx
-├── DetailPanel.tsx
-├── Navigation.types.ts
-├── Navigation.a11y.test.tsx
-└── stories/
-    └── Navigation.stories.tsx
-
+	•	Timeline and map are synchronized by a shared state store; server-side filtering prevents heavy client computation.  ￼
+	•	Layer config derives from the STAC catalog (data/stac), keeping UI declarative.
 
 ⸻
 
-🎨 Design Tokens
+States
 
-:root {
-  --kfm-nav-h: 56px;
-  --kfm-rail-w: 320px;
-  --kfm-panel-w: 380px;
-  --kfm-gap: 8px;
-  --kfm-color-bg: #0b1020;
-  --kfm-color-fg: #e6e9f2;
-  --kfm-color-accent: #62b0ff;
-  --kfm-focus: 2px solid #62b0ff;
-}
+Region	Default	Hover/Focus	Active/Busy	Empty/Error
+Header/brand	Link visible	Underline on focus	—	—
+Search	Placeholder; Ctrl+/ focus	Focus ring; suggestions	Loading spinner	“No results”
+Layers	All off except base	Tooltip legends	Indeterminate while fetching	Error banner
+Timeline	Project default period	Handle focus ring	Play anim / loading data	“No events”
+Detail panel	Collapsed	—	Expanded with skeleton	“No details available”
 
+(Use system focus outlines + ARIA on all controls; never remove focus styles.)
 
 ⸻
 
-♿ Accessibility
+Accessibility
+	•	Landmarks: <header role="banner">, <nav aria-label="Layer controls">, <main>, <aside role="complementary">, <footer role="contentinfo">.
+	•	Keyboard map:
+	•	Tab/Shift+Tab traversal across header → timeline → layers → detail.
+	•	Ctrl+/ focus search; Esc close detail; Space/Enter toggles; arrows adjust sliders.
+	•	ARIA: aria-expanded, aria-controls, role="slider" for timeline handles, role="switch" for layer toggles, live region for search suggestions.
+	•	Contrast: WCAG AA min; respect prefers-reduced-motion.
 
-Roles
-
-Region	ARIA Role	Label
-Header	banner	App header
-Tabs	navigation	Primary
-Left Rail	complementary	Layers and Filters
-Details	region	Details
-Timeline	group	Timeline Controls
-
-Keyboard Shortcuts
-
-Action	Keys
-Focus search	Alt + /
-Close panel	Esc
-Cycle focus	F6
-Scrub timeline	← / →
-Zoom timeline	+ / −
-Play / pause	Space
-
+Matches project guidance for a11y and responsive SPA.
 
 ⸻
 
-🧱 Layout Example
+Design tokens
 
-.app {
-  display: grid;
-  grid-template-rows: var(--kfm-nav-h) 1fr auto;
-  height: 100vh;
-}
+Keep tokens centralized (light/dark support). Suggested minimal set:
 
-.main {
-  display: grid;
-  grid-template-columns: var(--kfm-rail-w) 1fr var(--kfm-panel-w);
-  gap: var(--kfm-gap);
-}
+Token	Usage
+--kfm-color-bg, --kfm-color-surface, --kfm-color-text	Base layers
+--kfm-color-accent, --kfm-color-accent-contrast	Primary CTAs
+--kfm-focus-ring	Focus outlines
+--kfm-space-2/4/6/8	Spacing scale
+--kfm-radius-2xl	Panel corners
+--kfm-z-nav, --kfm-z-detail, --kfm-z-tooltip	Z-index layers
 
-@media (max-width: 1024px) {
-  .main { grid-template-columns: 1fr; }
-  .left-rail, .details { display: none; }
-}
-
+Use CSS variables; align with the web UI’s tokenization and MapLibre styles.
 
 ⸻
 
-🔌 Component APIs (React)
+Data contracts (props / API)
 
-interface NavHeaderProps {
-  onSearch: (q: string) => void;
-  tabs: { id: string; label: string; href: string }[];
-  activeTabId: string;
-}
+Global Search
+	•	Input: string q
+	•	API: GET /search?q={q} → { hits:[ {id,type,label,summary?} ] }
+	•	Select: emits nav.select(entityId); map & timeline center on entity.  ￼
 
-interface LeftRailProps {
-  sections: { id: string; label: string; items: React.ReactNode }[];
-  collapsed?: boolean;
-  onToggle?: () => void;
-}
+Timeline
+	•	State: {start: ISODate, end: ISODate, zoom:number}
+	•	API: GET /events?start&end → array of events {id,type,t0,t1,title,importance}
+	•	Emit: nav.time.change(range); debounced 250ms.
 
-interface MapToolbarProps {
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onLocate: () => void;
-  onBasemap: () => void;
-  onLayers: () => void;
-}
+Layers
+	•	Config: GET /layers-config (derived from STAC)
+	•	State: {[layerId]: {visible:boolean, opacity:0..1}}
+	•	Emit: nav.layers.change(state); persisted to localStorage.
 
-interface TimelineControlsProps {
-  range: [number, number];
-  value: number;
-  onChange: (t: number) => void;
-  onZoom: (d: number) => void;
-  playing: boolean;
-  onTogglePlay: () => void;
-}
-
-interface DetailPanelProps {
-  title: string;
-  onClose: () => void;
-  children: React.ReactNode;
-  width?: number;
-}
-
+Detail Panel
+	•	API: GET /entity/{id} → entity graph, summary, sources
+	•	Close: nav.detail.close(); maintains selection history.  ￼
 
 ⸻
 
-🧪 Testing
-	•	Unit – Props, callbacks, disabled states
-	•	Accessibility – ARIA labels, focus order
-	•	Visual – Storybook regression tests
-	•	E2E – Timeline ↔ Map ↔ Details synchronization
+Events & telemetry
+	•	nav.search.submit, nav.search.select
+	•	nav.time.change, nav.time.play, nav.time.pause
+	•	nav.layers.toggle, nav.layers.opacity
+	•	nav.detail.open, nav.detail.close
+
+Log to client analytics (console-safe in dev) with breadcrumbing; never send PII.  ￼
 
 ⸻
 
-🧭 Figma Handoff
-	•	Component names: Nav/Header, Nav/Tabs, Nav/Toolbar, Nav/Timeline, Nav/Panel
-	•	Frame sizes: 1440×900 (desktop), 1024×768 (tablet), 375×812 (mobile)
-	•	Export icons as SVG, 24×24 grid
+Responsive rules
+	•	≥1280px: left Layers open, right Detail collapsible, timeline 140–180px.
+	•	768–1279px: Layers collapsed by default; timeline 120px; Detail overlays map.
+	•	<768px: Header compact; search as modal; timeline collapsible; single sidebar overlay.
+The SPA is optimized for desktop but degrades gracefully to mobile.
 
 ⸻
 
-📜 Changelog
+QA checklist
+	•	GitHub rendering: headings, code fences, Mermaid block validates (no HTML wrappers).
+	•	Keyboard: full traversal; visible focus; shortcuts working.
+	•	Screen reader: regions, labels, live announcements for search results.
+	•	Timeline↔API: filters match returned events; debounce respected.  ￼
+	•	Layers/STAC: toggles reflect STAC config; legends match symbology.
+	•	Detail: entity fetch includes summary + linked entities; error states handled.  ￼
 
-Version	Date	Notes
-1.0	2025-10-05	Initial GitHub-safe formatting and diagram
+⸻
+
+Changelog
+	•	v1.0: First GitHub-compliant spec. Synchronized state model; STAC-driven layers; a11y map; events & telemetry defined. (2025-10-05)
+
+⸻
+
+References
+	•	Web UI Design & Architecture: timeline + map, SPA + API, component layout.  ￼
+	•	STAC-driven layers, ETL/graph pipeline, and config flow.
+	•	GitHub documentation and formatting guardrails.
+
+⸻
+
+Formatting notes for contributors
+	•	Use pure Markdown headings, fenced code blocks, and GitHub-safe Mermaid (quoted labels, \n for line breaks, end with <!-- END OF MERMAID -->).
+	•	Keep directory trees inside triple-backtick fences with text or none.
+	•	Keep badges minimal in component docs to avoid layout overflow on GitHub.
