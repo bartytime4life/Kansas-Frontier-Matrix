@@ -1,111 +1,171 @@
-Got it — here’s a clean, GitHub-safe replacement you can paste directly into
-docs/design/mockups/figma/components/navigation/README.md.
-No HTML wrappers, no special tokens, and the Mermaid block validates on GitHub.
+🧭 Kansas Frontier Matrix — Navigation Components
 
-⸻
-
-🧭 Navigation Components — Kansas Frontier Matrix
-
-docs/design/mockups/figma/components/navigation/README.md
+docs/design/mockups/figma/components/navigation/
 
 Specification for the KFM web UI navigation system: Header, Global Search, Timeline, Layer Controls, and Detail Panel.
-This doc follows strict GitHub rendering rules (pure Markdown headings, fenced code blocks, GitHub-safe Mermaid, compact tables).
+Formatted to pass GitHub’s strict Markdown/Mermaid parser.
 
 ⸻
 
-Contents
-	•	Scope
-	•	Anatomy
-	•	Interaction Model
-	•	States
-	•	Accessibility
-	•	Design Tokens
-	•	Data Contracts
-	•	Events & Telemetry
-	•	Responsive Rules
-	•	QA Checklist
-	•	Changelog
+🔖 Badge Grid
+
+Build & Deploy	STAC Validate	CodeQL	Trivy	Pre-Commit	Docs · MCP	Design System	License
+							
+
 
 ⸻
 
-Scope
+🪶 Overview
 
 The Navigation system coordinates time (timeline), space (map layers), and discovery (search):
-	•	Header: brand/home, global search, utility actions (help, language, auth).
-	•	Timeline: range selection, zoom, scrub/play.
-	•	Layers: toggle visibility, set opacity, view legend.
-	•	Detail Panel: entity/event dossier with sources.
-	•	Keyboard + screen reader support across all regions.
+	•	Header → brand/home, global search, utility actions (help, language, auth)
+	•	Timeline → range selection, zoom, scrub/play
+	•	Layers → toggle visibility, set opacity, view legend
+	•	Detail Panel → entity/event dossier with sources
+	•	Keyboard + screen reader support across all regions
 
 ⸻
 
-Anatomy
+📁 Directory
 
-[Header]
+docs/design/mockups/figma/components/navigation/
+├── README.md                 # This spec
+├── wireframes/               # PNG/SVG exports (optional)
+├── figma-refs.json           # Mappings to Figma nodes (optional)
+└── notes.md                  # Design decisions & ADR links
+
+
+⸻
+
+🎨 Figma Linkage (Authoritative Mapping)
+
+Keep this table in sync when Figma frames or component names change.
+The Node ID values can be copied from Figma’s “Copy link” (the node-id query param).
+
+Artboards (Frames)
+
+Area	Figma Page	Frame Name	Node ID	Purpose
+Header	KFM · UI	Header · Nav	0:1	Brand, search, utility buttons
+Timeline	KFM · UI	Timeline · Controls	0:2	Range handles, zoom, play/pause
+Layers	KFM · UI	Sidebar · Layers + Legend	0:3	Layer toggles, opacity, legend
+Detail	KFM · UI	Detail Panel · Entity	0:4	Entity dossier + sources
+Map	KFM · UI	Map View · MapLibre	0:5	Map viewport + overlays
+
+Components ↔ Code Regions
+
+Figma Component	Code Region / Hook	Notes
+Comp/SearchField	nav.search	Ctrl+/ shortcut; async suggestions (ARIA live region)
+Comp/LayerToggle	nav.layers	role="switch"; tri-state supported during fetch
+Comp/OpacitySlider	nav.layers.opacity	Keyboard arrows + role="slider"
+Comp/TimeHandle	nav.timeline.handle	Focus ring + snap increments
+Comp/PlayButton	nav.timeline.play	Toggles play/pause; disabled while fetching
+Comp/DetailPanel	nav.detail	aria-expanded + history of selections
+
+If you maintain a JSON mapping, store it as figma-refs.json:
+
+{
+  "frames": {
+    "header": {"page": "KFM · UI", "name": "Header · Nav", "node": "0:1"},
+    "timeline": {"page": "KFM · UI", "name": "Timeline · Controls", "node": "0:2"},
+    "layers": {"page": "KFM · UI", "name": "Sidebar · Layers + Legend", "node": "0:3"}
+  },
+  "components": {
+    "SearchField": {"hook": "nav.search"},
+    "LayerToggle": {"hook": "nav.layers"},
+    "TimeHandle": {"hook": "nav.timeline.handle"}
+  }
+}
+
+
+⸻
+
+🧩 Component Structure
+
+Header
  ├─ Brand / Home
- ├─ Global Search  (entities · events · places)
- └─ Utility (Help · Language · Login)
+ ├─ Global Search
+ └─ Utility (Help · Language · Auth)
 
-[Main]
- ├─ Left Sidebar: Layer Controls (+ Legend)
+Main
+ ├─ Sidebar (Layer Controls · Legend)
  ├─ Map View (MapLibre)
- └─ Right Panel: Detail / AI Summary (toggle)
+ └─ Detail Panel (Entity Information)
 
-[Bottom]
- └─ Timeline: range handles · zoom · play/pause
+Footer
+ └─ Timeline (Handles · Zoom · Play)
 
 
 ⸻
 
-Interaction Model
+🗺️ System Integration (GitHub-safe Mermaid)
 
 flowchart LR
-  A["Header\nbrand · search · help"] --> B["Timeline\nrange · zoom · play"]
-  A --> C["Layers\nvisibility · opacity · legend"]
-  B --> D["API\nGET /events?start&end"]
-  C --> E["Config\nGET /layers-config"]
-  A --> F["Detail Panel\nentity dossier"]
-  D --> G["State\nselectedTimeRange"]
-  E --> H["State\nactiveLayers"]
-  F --> I["State\nselectedEntity"]
-  G --> MAP["Map View\nfiltered by time"]
-  H --> MAP
-  I --> MAP
+  subgraph UI["User Interface"]
+    A["Header\nsearch · menus · help"]
+    B["Timeline\nrange · zoom · play"]
+    C["Layers\nvisibility · opacity"]
+    D["Detail Panel\nentity dossier"]
+  end
+
+  subgraph STATE["Application State"]
+    E["selectedTimeRange"]
+    F["activeLayers"]
+    G["selectedEntity"]
+  end
+
+  subgraph API["Backend API"]
+    H["GET /events?start&end"]
+    I["GET /layers-config"]
+    J["GET /entity/{id}"]
+  end
+
+  subgraph MAP["Renderer"]
+    K["MapLibre View\nfilters by time & layer"]
+  end
+
+  A --> B
+  A --> C
+  A --> D
+
+  B --> H
+  C --> I
+  D --> J
+
+  H --> E
+  I --> F
+  J --> G
+
+  E --> K
+  F --> K
+  G --> K
 
 <!-- END OF MERMAID -->
 
 
-Notes
-	•	Timeline and Map share state; API filters by {start,end} to reduce client load.
-	•	Layer UI is driven by declarative config produced from the STAC catalog.
 
 ⸻
 
-States
+🧱 State & Interaction Model
 
-Region	Default	Hover/Focus	Active/Busy	Empty/Error
-Header/Brand	Clickable home	Underline on focus	—	—
-Search	Placeholder; Ctrl+/ focus	Focus ring; suggestions	Spinner while fetching	“No results”
-Layers	Base layers only	Tooltip/legend visible	Toggle disabled during fetch	Error banner
-Timeline	Project default window	Handle focus ring	Play animation / loading	“No events”
-Detail Panel	Collapsed	—	Skeleton while loading	“No details available”
+Region	Default	Interaction / Focus	Active / Loading	Empty / Error
+Header	Visible, home link	Tab / click	—	—
+Search	Placeholder; Ctrl+/	Focus ring; async suggestions	Spinner while fetching	“No results”
+Layers	Base visible	Toggle + tooltip legend	Disabled during fetch	“Layer unavailable”
+Timeline	Default project window	Arrows / drag handles	Loading or playing animation	“No events”
+Detail Panel	Collapsed	Open on select (Enter/click)	Skeleton loader	“No details available”
 
 
 ⸻
 
-Accessibility
-	•	Landmarks:
-header[role="banner"], nav[aria-label="Layer controls"], main, aside[role="complementary"], footer[role="contentinfo"]
-	•	Keyboard:
-	•	Tab / Shift+Tab traverse Header → Timeline → Layers → Detail.
-	•	Ctrl+/ focus Search; Esc closes Detail; Space/Enter toggles; arrows adjust sliders.
-	•	ARIA:
-role="search", role="slider" (timeline handles), role="switch" (layer toggles), aria-expanded, aria-controls, live region for async search results.
-	•	Motion/Contrast: Respect prefers-reduced-motion; maintain WCAG AA contrast.
+♿ Accessibility
+	•	Landmarks: header[role="banner"], nav[aria-label="Layer controls"], main, aside[role="complementary"], footer[role="contentinfo"]
+	•	Keyboard: Tab/Shift+Tab traversal; Ctrl+/ focuses Search; Esc closes Detail; arrows adjust sliders
+	•	ARIA: role="search", role="slider", role="switch", aria-expanded, aria-controls, live region for search results
+	•	Motion/Contrast: respect prefers-reduced-motion; maintain WCAG AA contrast
 
 ⸻
 
-Design Tokens
+🎛 Design Tokens
 
 Token	Purpose
 --kfm-color-bg, --kfm-color-surface, --kfm-color-text	Base surfaces & text
@@ -113,13 +173,12 @@ Token	Purpose
 --kfm-focus-ring	Focus outline color/style
 --kfm-space-2/4/6/8	Spacing scale
 --kfm-radius-2xl	Panel corner radius
---kfm-z-nav, --kfm-z-detail, --kfm-z-tooltip	Z-index stacking
+--kfm-z-nav, --kfm-z-detail, --kfm-z-tooltip	Z-index layers
 
-Keep tokens centralized; mirror in MapLibre layer styles where appropriate.
 
 ⸻
 
-Data Contracts
+🔗 Data Contracts
 
 Global Search
 
@@ -127,24 +186,24 @@ GET /search?q={q}
 
 {
   "hits": [
-    {"id": "ent:ks:Topeka", "type": "place", "label": "Topeka, Kansas", "summary": "Capital of Kansas"},
-    {"id": "evt:1856:bleeding", "type": "event", "label": "Bleeding Kansas (1854–1861)"}
+    {"id": "ent:ks:Topeka", "type": "place", "label": "Topeka, Kansas"},
+    {"id": "evt:1861:statehood", "type": "event", "label": "Kansas Statehood (1861)"}
   ]
 }
 
-Emits: nav.select(entityId) → centers map/timeline on selection.
+Emits → nav.select(entityId)
 
 Timeline
 
 GET /events?start=1850-01-01&end=1870-12-31
 
 [
-  {"id":"evt:1854:kansas-nebraska","type":"treaty","t0":"1854-05-30","t1":null,"title":"Kansas–Nebraska Act"},
-  {"id":"evt:1861:statehood","type":"statehood","t0":"1861-01-29","t1":null,"title":"Kansas Statehood"}
+  {"id":"evt:1854:kansas-nebraska","type":"act","t0":"1854-05-30","title":"Kansas–Nebraska Act"},
+  {"id":"evt:1861:statehood","type":"statehood","t0":"1861-01-29","title":"Kansas Statehood"}
 ]
 
-State: { "start": ISODate, "end": ISODate, "zoom": number }
-Emits: nav.time.change(range) (debounced ~250 ms).
+State → { "start": ISODate, "end": ISODate, "zoom": number }
+Emits → nav.time.change(range) (debounced ~250 ms)
 
 Layers (STAC-derived)
 
@@ -158,8 +217,8 @@ GET /layers-config
   ]
 }
 
-State: { [layerId]: { "visible": boolean, "opacity": 0.0..1.0 } }
-Emits: nav.layers.change(state) (persist to localStorage).
+State → { [layerId]: { "visible": boolean, "opacity": 0.0..1.0 } }
+Emits → nav.layers.change(state) (persist to localStorage)
 
 Detail Panel
 
@@ -172,45 +231,38 @@ GET /entity/{id}
   "links":[{"rel":"source","href":"..."}]
 }
 
-Emits: nav.detail.open(id) / nav.detail.close().
+Emits → nav.detail.open(id) / nav.detail.close()
 
 ⸻
 
-Events & Telemetry
-	•	nav.search.submit, nav.search.select
-	•	nav.time.change, nav.time.play, nav.time.pause
-	•	nav.layers.toggle, nav.layers.opacity
-	•	nav.detail.open, nav.detail.close
-
-Log breadcrumbs in dev; avoid PII; batch network sends.
+📱 Responsive Rules
+	•	≥1280px: Layers sidebar open; Detail collapsible; Timeline 140–180px
+	•	768–1279px: Layers collapsed; Detail overlays Map; Timeline ~120px
+	•	<768px: Compact Header; Search modal; single overlay sidebar; collapsible Timeline
 
 ⸻
 
-Responsive Rules
-	•	≥1280px: Layers sidebar open; Detail collapsible; Timeline 140–180 px tall.
-	•	768–1279px: Layers collapsed by default; Detail overlays Map; Timeline ~120 px.
-	•	<768px: Compact Header; Search modal; single overlay sidebar; collapsible Timeline.
+🧪 QA Checklist
+	•	Headings, tables, Mermaid, and code fences render correctly on GitHub
+	•	Full keyboard traversal with visible focus (do not remove outlines)
+	•	Screen reader labels/roles present; live announcements for async search
+	•	Debounced Timeline requests; layer state persists; errors clearly surfaced
+	•	Timeline ↔ Map synchronization verified (time filter honored)
 
 ⸻
 
-QA Checklist
-	•	Headings, code fences, tables, and Mermaid render on GitHub.
-	•	Full keyboard traversal with visible focus (no removed outlines).
-	•	Screen reader labels/roles present; live announcement for async search results.
-	•	Timeline ↔ API filters align; debounce in effect.
-	•	Layers reflect STAC config; legend matches symbology.
-	•	Detail loads with skeleton; errors show clear messages.
+🧾 Changelog
+
+Version	Date	Notes
+v1.2	2025-10-05	Added Figma linkage section + badge grid; tightened Mermaid labels
+v1.1	2025-10-05	GitHub-compliant redesign; removed HTML wrappers
+v1.0	2025-10-04	Initial component spec
+
 
 ⸻
 
-Changelog
-	•	v1.1 — Fix GitHub rendering: removed HTML wrappers, validated Mermaid, tightened tables.
-	•	v1.0 — Initial spec.
-
-⸻
-
-Mermaid Tips (GitHub)
-	•	Use triple backticks with the mermaid language.
-	•	Quote labels that contain punctuation and use \n for line breaks.
-	•	Put <!-- END OF MERMAID --> outside the code fence (as shown above).
-	•	Avoid HTML comments inside Mermaid blocks.
+Contributor Rules (Formatting)
+	•	Pure Markdown headings; no <div align> wrappers
+	•	Mermaid labels quoted; line breaks via \n; end block as shown above
+	•	Keep badge URLs relative upward where possible; avoid absolute repo links in subtrees
+	•	Update Figma tables whenever node IDs change
