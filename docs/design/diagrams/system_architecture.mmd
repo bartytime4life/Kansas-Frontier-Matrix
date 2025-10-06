@@ -1,1 +1,102 @@
-y
+%%-------------------------------------------------------------
+%% Kansas Frontier Matrix — System Architecture Diagram
+%% File: docs/design/diagrams/system_architecture.mmd
+%% Author: Kansas Frontier Matrix · Systems & UI Architecture Team
+%% License: CC-BY-4.0
+%% Last Updated: {{ ISO8601_DATE }}
+%%-------------------------------------------------------------
+
+flowchart TD
+  %% === DATA INGESTION LAYER ===
+  subgraph A["Data Sources"]
+    A1["🌎 USGS · LiDAR · DEMs"]
+    A2["🌦 NOAA · Climate Records"]
+    A3["📜 FEMA · Disasters"]
+    A4["🏛 KGS · Geological & Hydrologic Data"]
+    A5["🗂 Historical Documents · Archives"]
+  end
+
+  %% === ETL PIPELINE ===
+  subgraph B["ETL Pipeline\n(Python + Makefile)"]
+    B1["Extract\n(fetch.py · API connectors)"]
+    B2["Transform\n(Normalize · Geocode · Clean)"]
+    B3["Load\n(Write GeoJSON/COG/CSV)"]
+    B1 --> B2 --> B3
+  end
+
+  %% === PROCESSED DATA ===
+  subgraph C["Processed Layers"]
+    C1["🗺️ Vector Data\n(GeoJSON / Shapefile)"]
+    C2["🌄 Raster Data\n(COG / GeoTIFF)"]
+    C3["📊 Tabular Data\n(CSV / JSON)"]
+  end
+
+  %% === METADATA / CATALOG ===
+  subgraph D["STAC Catalog\n(SpatioTemporal Asset Catalog)"]
+    D1["📇 Collections & Items"]
+    D2["🕓 Temporal Metadata"]
+    D3["📍 Spatial Extents"]
+    D1 --> D2 --> D3
+  end
+
+  %% === KNOWLEDGE GRAPH ===
+  subgraph E["Knowledge Graph\n(Neo4j · CIDOC CRM · OWL-Time)"]
+    E1["🧑 Person"]
+    E2["📍 Place"]
+    E3["📆 Event"]
+    E4["📄 Document"]
+    E5["🔗 Relationships"]
+    E1 --> E3
+    E2 --> E3
+    E4 --> E3
+    E3 --> E5
+  end
+
+  %% === API LAYER ===
+  subgraph F["API Layer\n(FastAPI · GraphQL)"]
+    F1["🔎 /search"]
+    F2["🧭 /events"]
+    F3["📘 /entity/{id}"]
+    F1 --> F2 --> F3
+  end
+
+  %% === FRONTEND ===
+  subgraph G["Frontend\n(React + MapLibreGL + D3.js)"]
+    G1["🗺️ Map Viewer\n(MapLibreGL)"]
+    G2["🕰️ Timeline Component\n(D3.js Canvas)"]
+    G3["📋 Detail Panel\n(Entity Metadata)"]
+    G4["🤖 AI Assistant Panel\n(NLP Summaries)"]
+    G1 --> G2 --> G3 --> G4
+  end
+
+  %% === USER ===
+  subgraph H["User & Audience"]
+    H1["👩‍💻 Researchers"]
+    H2["🏫 Educators"]
+    H3["🌎 Public Viewers"]
+  end
+
+  %% === DATA FLOW ===
+  A1 & A2 & A3 & A4 & A5 --> B
+  B --> C
+  C --> D
+  D --> E
+  E --> F
+  F --> G
+  G --> H
+
+  %% === STYLE DEFINITIONS ===
+  style A fill:#E6F2FF,stroke:#0074D9,stroke-width:2px
+  style B fill:#F8E6FF,stroke:#B10DC9,stroke-width:2px
+  style C fill:#E5FFEB,stroke:#2ECC40,stroke-width:2px
+  style D fill:#FFF7E6,stroke:#FF851B,stroke-width:2px
+  style E fill:#FFF0F5,stroke:#FF4136,stroke-width:2px
+  style F fill:#E6F9FF,stroke:#39CCCC,stroke-width:2px
+  style G fill:#F0FFF4,stroke:#2ECC40,stroke-width:2px
+  style H fill:#FFFDEA,stroke:#FFDC00,stroke-width:2px
+
+  %% === TITLE ===
+  classDef title fill:#003366,color:#FFFFFF,font-size:20px,font-weight:bold
+  class A,B,C,D,E,F,G,H title
+
+%% END OF MERMAID
