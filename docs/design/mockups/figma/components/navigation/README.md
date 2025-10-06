@@ -22,7 +22,7 @@ The Navigation system coordinates time (timeline), space (map layers), and disco
 	•	Timeline → range selection, zoom, scrub/play
 	•	Layers → toggle visibility, set opacity, view legend
 	•	Detail Panel → entity/event dossier with sources
-	•	Keyboard + screen reader support across all regions
+	•	Accessibility → full keyboard and screen reader support across regions
 
 ⸻
 
@@ -39,8 +39,8 @@ docs/design/mockups/figma/components/navigation/
 
 🎨 Figma Linkage (Authoritative Mapping)
 
-Keep this table in sync when Figma frames or component names change.
-The Node ID values can be copied from Figma’s “Copy link” (the node-id query param).
+Keep this table in sync when Figma frame/component names change.
+The Node ID values come from Figma “Copy link” (node-id query param).
 
 Artboards (Frames)
 
@@ -54,25 +54,25 @@ Map	KFM · UI	Map View · MapLibre	0:5	Map viewport + overlays
 Components ↔ Code Regions
 
 Figma Component	Code Region / Hook	Notes
-Comp/SearchField	nav.search	Ctrl+/ shortcut; async suggestions (ARIA live region)
+Comp/SearchField	nav.search	Ctrl + / shortcut; async suggestions (ARIA live region)
 Comp/LayerToggle	nav.layers	role="switch"; tri-state supported during fetch
-Comp/OpacitySlider	nav.layers.opacity	Keyboard arrows + role="slider"
-Comp/TimeHandle	nav.timeline.handle	Focus ring + snap increments
-Comp/PlayButton	nav.timeline.play	Toggles play/pause; disabled while fetching
-Comp/DetailPanel	nav.detail	aria-expanded + history of selections
+Comp/OpacitySlider	nav.layers.opacity	Keyboard arrows; role="slider"
+Comp/TimeHandle	nav.timeline.handle	Focus ring; snap increments
+Comp/PlayButton	nav.timeline.play	Toggle play/pause; disabled while fetching
+Comp/DetailPanel	nav.detail	aria-expanded; selection history
 
 If you maintain a JSON mapping, store it as figma-refs.json:
 
 {
   "frames": {
-    "header": {"page": "KFM · UI", "name": "Header · Nav", "node": "0:1"},
+    "header":   {"page": "KFM · UI", "name": "Header · Nav", "node": "0:1"},
     "timeline": {"page": "KFM · UI", "name": "Timeline · Controls", "node": "0:2"},
-    "layers": {"page": "KFM · UI", "name": "Sidebar · Layers + Legend", "node": "0:3"}
+    "layers":   {"page": "KFM · UI", "name": "Sidebar · Layers + Legend", "node": "0:3"}
   },
   "components": {
     "SearchField": {"hook": "nav.search"},
     "LayerToggle": {"hook": "nav.layers"},
-    "TimeHandle": {"hook": "nav.timeline.handle"}
+    "TimeHandle":  {"hook": "nav.timeline.handle"}
   }
 }
 
@@ -149,19 +149,19 @@ flowchart LR
 
 Region	Default	Interaction / Focus	Active / Loading	Empty / Error
 Header	Visible, home link	Tab / click	—	—
-Search	Placeholder; Ctrl+/	Focus ring; async suggestions	Spinner while fetching	“No results”
+Search	Placeholder; Ctrl + /	Focus ring; async suggestions	Spinner while fetching	“No results”
 Layers	Base visible	Toggle + tooltip legend	Disabled during fetch	“Layer unavailable”
-Timeline	Default project window	Arrows / drag handles	Loading or playing animation	“No events”
-Detail Panel	Collapsed	Open on select (Enter/click)	Skeleton loader	“No details available”
+Timeline	Default project window	Arrow keys / drag handles	Loading or playing animation	“No events”
+Detail Panel	Collapsed	Open on select (Enter / click)	Skeleton loader	“No details available”
 
 
 ⸻
 
 ♿ Accessibility
 	•	Landmarks: header[role="banner"], nav[aria-label="Layer controls"], main, aside[role="complementary"], footer[role="contentinfo"]
-	•	Keyboard: Tab/Shift+Tab traversal; Ctrl+/ focuses Search; Esc closes Detail; arrows adjust sliders
+	•	Keyboard: Tab/Shift+Tab traversal; Ctrl + / focuses Search; Esc closes Detail; arrows adjust sliders
 	•	ARIA: role="search", role="slider", role="switch", aria-expanded, aria-controls, live region for search results
-	•	Motion/Contrast: respect prefers-reduced-motion; maintain WCAG AA contrast
+	•	Motion/Contrast: Respect prefers-reduced-motion; maintain WCAG AA contrast
 
 ⸻
 
@@ -191,7 +191,7 @@ GET /search?q={q}
   ]
 }
 
-Emits → nav.select(entityId)
+Emits: nav.select(entityId)
 
 Timeline
 
@@ -202,8 +202,8 @@ GET /events?start=1850-01-01&end=1870-12-31
   {"id":"evt:1861:statehood","type":"statehood","t0":"1861-01-29","title":"Kansas Statehood"}
 ]
 
-State → { "start": ISODate, "end": ISODate, "zoom": number }
-Emits → nav.time.change(range) (debounced ~250 ms)
+State: { "start": ISODate, "end": ISODate, "zoom": number }
+Emits: nav.time.change(range) (debounced ~250 ms)
 
 Layers (STAC-derived)
 
@@ -217,8 +217,8 @@ GET /layers-config
   ]
 }
 
-State → { [layerId]: { "visible": boolean, "opacity": 0.0..1.0 } }
-Emits → nav.layers.change(state) (persist to localStorage)
+State: { "<layerId>": { "visible": boolean, "opacity": 0.0..1.0 } }
+Emits: nav.layers.change(state) (persist to localStorage)
 
 Detail Panel
 
@@ -231,22 +231,22 @@ GET /entity/{id}
   "links":[{"rel":"source","href":"..."}]
 }
 
-Emits → nav.detail.open(id) / nav.detail.close()
+Emits: nav.detail.open(id) / nav.detail.close()
 
 ⸻
 
 📱 Responsive Rules
-	•	≥1280px: Layers sidebar open; Detail collapsible; Timeline 140–180px
-	•	768–1279px: Layers collapsed; Detail overlays Map; Timeline ~120px
-	•	<768px: Compact Header; Search modal; single overlay sidebar; collapsible Timeline
+	•	≥ 1280 px: Layers sidebar open; Detail collapsible; Timeline 140–180 px
+	•	768–1279 px: Layers collapsed; Detail overlays map; Timeline ~120 px
+	•	< 768 px: Compact header; Search modal; single overlay sidebar; collapsible timeline
 
 ⸻
 
 🧪 QA Checklist
 	•	Headings, tables, Mermaid, and code fences render correctly on GitHub
 	•	Full keyboard traversal with visible focus (do not remove outlines)
-	•	Screen reader labels/roles present; live announcements for async search
-	•	Debounced Timeline requests; layer state persists; errors clearly surfaced
+	•	Screen reader labels/roles present; live announcements for async search results
+	•	Debounced timeline requests; layer state persists; clear error messages
 	•	Timeline ↔ Map synchronization verified (time filter honored)
 
 ⸻
@@ -263,6 +263,10 @@ v1.0	2025-10-04	Initial component spec
 
 Contributor Rules (Formatting)
 	•	Pure Markdown headings; no <div align> wrappers
-	•	Mermaid labels quoted; line breaks via \n; end block as shown above
-	•	Keep badge URLs relative upward where possible; avoid absolute repo links in subtrees
+	•	Mermaid labels quoted; line breaks via \n; end block exactly as shown above
+	•	Keep badge URLs relative upward where possible
 	•	Update Figma tables whenever node IDs change
+
+⸻
+
+If any section still renders oddly in your repo, point me to the exact file path & commit and I’ll align spacing and tables to your repo’s Markdown lints (some repos enforce MDX/remark rules that tweak table spacing).
