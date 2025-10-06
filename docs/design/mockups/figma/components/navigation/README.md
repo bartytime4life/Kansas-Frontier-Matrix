@@ -39,19 +39,54 @@ docs/design/mockups/figma/components/navigation/
 🧩 System Integration (GitHub-safe Mermaid)
 
 flowchart LR
-  A["Header\nsearch · menus · tabs"] --> B["Timeline\nrail · handles · zoom"]
-  A --> C["Map Toolbar\nzoom · locate · layers"]
-  B --> D["API\nGET /events?start&end"]
-  C --> E["API\nGET /layers-config"]
-  A --> F["Details Panel\nGET /entity/{id}"]
-  D --> G["React State\nselectedTimeRange"]
-  E --> H["React State\nactiveLayers"]
-  F --> I["React State\nselectedEntity"]
-  G --> J["Map View Updates"]
+  %% Lanes
+  subgraph FE["Frontend"]
+    A["Header\nsearch · menus · tabs"]
+    B["Timeline\nrail · handles · zoom"]
+    C["Map Toolbar\nzoom · locate · layers"]
+    P["Detail Panel\nAI summaries"]
+  end
+
+  subgraph API["Backend API"]
+    D["GET /events?start&end"]
+    E["GET /layers-config"]
+    F["GET /entity/{id}"]
+  end
+
+  subgraph STATE["React State"]
+    G["selectedTimeRange"]
+    H["activeLayers"]
+    I["selectedEntity"]
+  end
+
+  subgraph MAP["Renderer"]
+    J["Map View\nlayer updates"]
+    K["Timeline View\nwindow + markers"]
+  end
+
+  %% Flows
+  A --> B
+  A --> C
+  A --> P
+
+  B --> D
+  C --> E
+  P --> F
+
+  D --> G
+  E --> H
+  F --> I
+
+  G --> J
   H --> J
   I --> J
-  J --> K["Rendered Output\nTimeline + Map + Panels"]
+  G --> K
 
+  %% Styles
+  classDef lane fill:#0b1020,stroke:#2b2f42,color:#fafafa;
+  class FE,API,STATE,MAP lane;
+  classDef box fill:#121833,stroke:#4a6cff,stroke-width:1px,color:#eaeefc;
+  class A,B,C,P,D,E,F,G,H,I,J,K box;
 <!-- END OF MERMAID -->
 
 
