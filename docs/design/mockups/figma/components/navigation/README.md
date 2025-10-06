@@ -1,272 +1,162 @@
 🧭 Kansas Frontier Matrix — Navigation Components
 
-docs/design/mockups/figma/components/navigation/
+docs/design/mockups/figma/components/navigation/README.md
 
-Specification for the KFM web UI navigation system: Header, Global Search, Timeline, Layer Controls, and Detail Panel.
-Formatted to pass GitHub’s strict Markdown/Mermaid parser.
-
-⸻
-
-🔖 Badge Grid
-
-Build & Deploy	STAC Validate	CodeQL	Trivy	Pre-Commit	Docs · MCP	Design System	License
-							
-
+GitHub-ready spec for the KFM web UI navigation: header, global search, timeline, layer controls, detail panel, and accessibility/keyboard behavior. Designed to render cleanly on GitHub, with a Mermaid diagram that passes the strict parser.
 
 ⸻
 
-🪶 Overview
+Overview
 
-The Navigation system coordinates time (timeline), space (map layers), and discovery (search):
-	•	Header → brand/home, global search, utility actions (help, language, auth)
-	•	Timeline → range selection, zoom, scrub/play
-	•	Layers → toggle visibility, set opacity, view legend
-	•	Detail Panel → entity/event dossier with sources
-	•	Accessibility → full keyboard and screen reader support across regions
+The navigation system coordinates time (timeline), space (map + layers), and discovery (search) across the KFM web app. It stitches the TimelineView, MapView, Layer Controls, Search, and Detail Panel into one cohesive, accessible experience, backed by a FastAPI/GraphQL API and a Neo4j knowledge graph.  ￼
 
-⸻
-
-📁 Directory
-
-docs/design/mockups/figma/components/navigation/
-├── README.md                 # This spec
-├── wireframes/               # PNG/SVG exports (optional)
-├── figma-refs.json           # Mappings to Figma nodes (optional)
-└── notes.md                  # Design decisions & ADR links
-
+Goals
+	•	Fast orientation: users can land, search, scrub time, and reveal details in ≤3 interactions.
+	•	Temporal + spatial sync: timeline range filters the map; selecting a map entity focuses the timeline.  ￼
+	•	Modularity: components are independent and versioned with the monorepo; new layers/features plug in via configuration.  ￼
 
 ⸻
 
-🎨 Figma Linkage (Authoritative Mapping)
+Components (UI spec)
 
-Keep this table in sync when Figma frame/component names change.
-The Node ID values come from Figma “Copy link” (node-id query param).
+1) Header Bar
+	•	Brand/home (click → reset view to current default extent & time window)
+	•	Global Search (type-ahead across People/Places/Events; Enter to open details; ↓/↑ navigate results)
+	•	Utility: Help, Language, Admin/Login (admin switches to curation actions)  ￼
 
-Artboards (Frames)
+2) Timeline (bottom)
+	•	Zoomable, pannable range.
+	•	Scrub by drag; zoom with wheel/trackpad; play for auto-advance.
+	•	Emits [start,end] to filter visible layers/events; the map updates in place.  ￼
 
-Area	Figma Page	Frame Name	Node ID	Purpose
-Header	KFM · UI	Header · Nav	0:1	Brand, search, utility buttons
-Timeline	KFM · UI	Timeline · Controls	0:2	Range handles, zoom, play/pause
-Layers	KFM · UI	Sidebar · Layers + Legend	0:3	Layer toggles, opacity, legend
-Detail	KFM · UI	Detail Panel · Entity	0:4	Entity dossier + sources
-Map	KFM · UI	Map View · MapLibre	0:5	Map viewport + overlays
+3) Map Toolbar (left)
+	•	Zoom / Locate / Measure (optional)
+	•	Layer Controls: toggles + legends grouped by theme (Maps, Environment, Settlements, Documents). Reads from the STAC-driven layer config.  ￼
 
-Components ↔ Code Regions
+4) Detail Panel (right)
+	•	“Site dossier” with title, summary, facts, linked entities, sources; deep-links to map/timeline.
+	•	Includes AI summary (with citations) and “related” items.  ￼
 
-Figma Component	Code Region / Hook	Notes
-Comp/SearchField	nav.search	Ctrl + / shortcut; async suggestions (ARIA live region)
-Comp/LayerToggle	nav.layers	role="switch"; tri-state supported during fetch
-Comp/OpacitySlider	nav.layers.opacity	Keyboard arrows; role="slider"
-Comp/TimeHandle	nav.timeline.handle	Focus ring; snap increments
-Comp/PlayButton	nav.timeline.play	Toggle play/pause; disabled while fetching
-Comp/DetailPanel	nav.detail	aria-expanded; selection history
-
-If you maintain a JSON mapping, store it as figma-refs.json:
-
-{
-  "frames": {
-    "header":   {"page": "KFM · UI", "name": "Header · Nav", "node": "0:1"},
-    "timeline": {"page": "KFM · UI", "name": "Timeline · Controls", "node": "0:2"},
-    "layers":   {"page": "KFM · UI", "name": "Sidebar · Layers + Legend", "node": "0:3"}
-  },
-  "components": {
-    "SearchField": {"hook": "nav.search"},
-    "LayerToggle": {"hook": "nav.layers"},
-    "TimeHandle":  {"hook": "nav.timeline.handle"}
-  }
-}
-
+5) Keyboard & Accessibility
+	•	Global: / focuses search, ? opens shortcuts, Esc closes panels.
+	•	Timeline: ←/→ nudge window; Shift+arrow = larger step.
+	•	Search list: roving tabindex, ARIA combobox roles, proper labelling for screen readers.
+	•	Complies with WAI-ARIA roles (banner, search, navigation, main, complementary).  ￼
 
 ⸻
 
-🧩 Component Structure
-
-Header
- ├─ Brand / Home
- ├─ Global Search
- └─ Utility (Help · Language · Auth)
-
-Main
- ├─ Sidebar (Layer Controls · Legend)
- ├─ Map View (MapLibre)
- └─ Detail Panel (Entity Information)
-
-Footer
- └─ Timeline (Handles · Zoom · Play)
-
-
-⸻
-
-🗺️ System Integration (GitHub-safe Mermaid)
+Interaction model (GitHub-safe Mermaid)
 
 flowchart LR
-  subgraph UI["User Interface"]
-    A["Header\nsearch · menus · help"]
-    B["Timeline\nrange · zoom · play"]
-    C["Layers\nvisibility · opacity"]
-    D["Detail Panel\nentity dossier"]
+  subgraph UI["Navigation Surface"]
+    A["Header\n(search · help · admin)"]
+    B["Timeline\n(range · play · zoom)"]
+    C["Layer Controls\n(toggles · legends)"]
+    D["Map View\n(markers · overlays)"]
+    E["Detail Panel\n(dossier · sources)"]
   end
 
-  subgraph STATE["Application State"]
-    E["selectedTimeRange"]
-    F["activeLayers"]
-    G["selectedEntity"]
+  subgraph API["API Layer"]
+    F["FastAPI / GraphQL"]
   end
 
-  subgraph API["Backend API"]
-    H["GET /events?start&end"]
-    I["GET /layers-config"]
-    J["GET /entity/{id}"]
+  subgraph DATA["Data"]
+    G["Neo4j\n(people · places · events)"]
+    H["STAC Catalog\n(layers.json)"]
   end
 
-  subgraph MAP["Renderer"]
-    K["MapLibre View\nfilters by time & layer"]
-  end
+  %% Flows
+  A --> F
+  B --> F
+  C --> H
+  D --> F
+  E --> F
+  F --> G
+  F --> H
+  H --> D
 
-  A --> B
-  A --> C
-  A --> D
-
-  B --> H
-  C --> I
-  D --> J
-
-  H --> E
-  I --> F
-  J --> G
-
-  E --> K
-  F --> K
-  G --> K
+  %% Notes
+  %% All labels quoted; end marker below for GitHub
 
 <!-- END OF MERMAID -->
 
 
+This diagram mirrors the documented frontend–API–graph/STAC wiring and uses only GitHub-safe Mermaid features.  ￼
 
 ⸻
 
-🧱 State & Interaction Model
+States & events (contract)
 
-Region	Default	Interaction / Focus	Active / Loading	Empty / Error
-Header	Visible, home link	Tab / click	—	—
-Search	Placeholder; Ctrl + /	Focus ring; async suggestions	Spinner while fetching	“No results”
-Layers	Base visible	Toggle + tooltip legend	Disabled during fetch	“Layer unavailable”
-Timeline	Default project window	Arrow keys / drag handles	Loading or playing animation	“No events”
-Detail Panel	Collapsed	Open on select (Enter / click)	Skeleton loader	“No details available”
+Emitter	Event	Payload	Consumer	Effect
+Timeline	time:changed	{ start, end }	Map, API	Filter layers/events by range
+Search	search:selected	{ entityId, type }	Map, Timeline	Zoom to entity; focus its time
+Map (marker)	map:entity:clicked	{ entityId }	Detail Panel	Open dossier, fetch summary
+Layers	layers:toggle	`{ layerId, on	off }`	Map
+Detail actions	detail:relation:selected	{ entityId }	Map, Timeline	Navigate to related item
 
-
-⸻
-
-♿ Accessibility
-	•	Landmarks: header[role="banner"], nav[aria-label="Layer controls"], main, aside[role="complementary"], footer[role="contentinfo"]
-	•	Keyboard: Tab/Shift+Tab traversal; Ctrl + / focuses Search; Esc closes Detail; arrows adjust sliders
-	•	ARIA: role="search", role="slider", role="switch", aria-expanded, aria-controls, live region for search results
-	•	Motion/Contrast: Respect prefers-reduced-motion; maintain WCAG AA contrast
+Server-side heavy lifting (graph traversals, aggregations) happens in the API; the client stays light.  ￼
 
 ⸻
 
-🎛 Design Tokens
-
-Token	Purpose
---kfm-color-bg, --kfm-color-surface, --kfm-color-text	Base surfaces & text
---kfm-color-accent, --kfm-color-accent-contrast	Primary actions
---kfm-focus-ring	Focus outline color/style
---kfm-space-2/4/6/8	Spacing scale
---kfm-radius-2xl	Panel corner radius
---kfm-z-nav, --kfm-z-detail, --kfm-z-tooltip	Z-index layers
-
+Rendering & data sources
+	•	Map: MapLibre GL JS; basemap + historical overlays (COGs, GeoJSON, or tiles) from STAC-declared assets.  ￼
+	•	Timeline: HTML5 Canvas for smooth, dense timelines at 60 fps.
+	•	Config: layers.json generated from the STAC catalog; includes time extents & legends.  ￼
 
 ⸻
 
-🔗 Data Contracts
-
-Global Search
-
-GET /search?q={q}
-
-{
-  "hits": [
-    {"id": "ent:ks:Topeka", "type": "place", "label": "Topeka, Kansas"},
-    {"id": "evt:1861:statehood", "type": "event", "label": "Kansas Statehood (1861)"}
-  ]
-}
-
-Emits: nav.select(entityId)
-
-Timeline
-
-GET /events?start=1850-01-01&end=1870-12-31
-
-[
-  {"id":"evt:1854:kansas-nebraska","type":"act","t0":"1854-05-30","title":"Kansas–Nebraska Act"},
-  {"id":"evt:1861:statehood","type":"statehood","t0":"1861-01-29","title":"Kansas Statehood"}
-]
-
-State: { "start": ISODate, "end": ISODate, "zoom": number }
-Emits: nav.time.change(range) (debounced ~250 ms)
-
-Layers (STAC-derived)
-
-GET /layers-config
-
-{
-  "layers": [
-    {"id":"basemap.terrain","label":"Terrain","type":"raster","visible":true,"opacity":1.0},
-    {"id":"hist.topomaps","label":"Historic Topo Maps","type":"raster","visible":false,"opacity":0.8},
-    {"id":"hydro.rivers","label":"Rivers","type":"vector","visible":true,"opacity":1.0}
-  ]
-}
-
-State: { "<layerId>": { "visible": boolean, "opacity": 0.0..1.0 } }
-Emits: nav.layers.change(state) (persist to localStorage)
-
-Detail Panel
-
-GET /entity/{id}
-
-{
-  "id":"ent:ks:Topeka",
-  "label":"Topeka, Kansas",
-  "summary":"Capital on the Kansas River.",
-  "links":[{"rel":"source","href":"..."}]
-}
-
-Emits: nav.detail.open(id) / nav.detail.close()
+Accessibility & inclusive design checklist
+	•	Keyboard access to all controls; visible focus states.
+	•	ARIA roles and labelled regions: banner, search, navigation, main, complementary.
+	•	Timeline has aria-described instructions and live region feedback for range updates.
+	•	Color contrast meets WCAG AA; legends use shape/texture, not color alone.
+	•	Screen-reader friendly search (combobox pattern).  ￼
 
 ⸻
 
-📱 Responsive Rules
-	•	≥ 1280 px: Layers sidebar open; Detail collapsible; Timeline 140–180 px
-	•	768–1279 px: Layers collapsed; Detail overlays map; Timeline ~120 px
-	•	< 768 px: Compact header; Search modal; single overlay sidebar; collapsible timeline
+Performance & testing
+	•	Canvas timeline to avoid DOM thrash; cluster map markers; lazy-load detail content.
+	•	Tests: search → select → focus flows; timeline–map sync; layer toggles; detail navigation (RTL + E2E).
+	•	CI enforces passing tests before merge.  ￼
 
 ⸻
 
-🧪 QA Checklist
-	•	Headings, tables, Mermaid, and code fences render correctly on GitHub
-	•	Full keyboard traversal with visible focus (do not remove outlines)
-	•	Screen reader labels/roles present; live announcements for async search results
-	•	Debounced timeline requests; layer state persists; clear error messages
-	•	Timeline ↔ Map synchronization verified (time filter honored)
+Authoring & contribution (for designers/devs)
+	•	Figma: keep component names aligned to code (Header, TimelineView, LayerControls, MapView, DetailPanel).
+	•	PR checklist: update this README and any diagrams first; add/adjust tests; ensure layer config and STAC are valid; bump changelog if behavior changes.  ￼
+	•	Docs-first: commit doc updates with the code (MCP).  ￼
 
 ⸻
 
-🧾 Changelog
+How to preview locally
+	1.	Start the stack (API, graph, tiles, web):
 
-Version	Date	Notes
-v1.2	2025-10-05	Added Figma linkage section + badge grid; tightened Mermaid labels
-v1.1	2025-10-05	GitHub-compliant redesign; removed HTML wrappers
-v1.0	2025-10-04	Initial component spec
+make bootstrap
+make data            # fetch → process → stac-validate
+make up              # docker compose up (api, neo4j, web)
 
-
-⸻
-
-Contributor Rules (Formatting)
-	•	Pure Markdown headings; no <div align> wrappers
-	•	Mermaid labels quoted; line breaks via \n; end block exactly as shown above
-	•	Keep badge URLs relative upward where possible
-	•	Update Figma tables whenever node IDs change
+	2.	Open the web app; test search → select → detail → time scrub.  ￼
 
 ⸻
 
-If any section still renders oddly in your repo, point me to the exact file path & commit and I’ll align spacing and tables to your repo’s Markdown lints (some repos enforce MDX/remark rules that tweak table spacing).
+Non-goals (keep out of navigation)
+	•	Raw data editing (belongs in admin curation).
+	•	Heavy analytics UI (separate “analysis” mode/module).
+	•	Map styling editor (managed in config).
+
+⸻
+
+Appendix — Rationale & sources
+	•	Separation of concerns (UI vs. API vs. graph/STAC) keeps the client responsive and the system extensible.  ￼
+	•	STAC-driven layers allow add/remove overlays without code changes.  ￼
+	•	AI “dossiers” surface concise, cited context without overwhelming the UI.  ￼
+
+⸻
+
+Change log (snippet)
+	•	2025-10-05: Initial GitHub-compliant rebuild (timeline/search/layers/detail spec & Mermaid)
+	•	2025-10-06: Added accessibility section and PR checklist
+
+⸻
+
+End of file
