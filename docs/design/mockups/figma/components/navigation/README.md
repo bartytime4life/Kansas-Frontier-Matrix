@@ -1,246 +1,117 @@
 <div align="center">
 
-# 🧭 Kansas Frontier Matrix — Figma Navigation Components  
+# 🧭 Navigation Components — Figma Exports  
 `docs/design/mockups/figma/components/navigation/`
 
-**Mission:** Define, document, and maintain all **navigation-related Figma components**  
-for the **Kansas Frontier Matrix (KFM)** — ensuring consistent, accessible, and scalable  
-user flows across the web platform, mobile layouts, and embedded map/timeline interfaces.  
+**Kansas Frontier Matrix — Design System**
 
-Navigation in KFM represents the **user’s compass** — guiding exploration through **time, terrain, and history**,  
-anchored in design consistency and accessibility excellence.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)
-[![Design System](https://img.shields.io/badge/Design-Figma%20Components-pink)](https://www.figma.com)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-green)](https://www.w3.org/WAI/WCAG21/quickref/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-yellow)](../../../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../docs/design/)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 🗂️ Directory Layout
+## 🎯 Purpose
 
-navigation/
-│
-├── README.md            → Overview & standards (this file)
-├── examples.md          → Figma + React navigation component examples
-├── tokens.json          → Navigation tokens (colors, sizes, spacing)
-├── figma-refs.json      → Figma component IDs & version metadata
-├── accessibility.md     → WCAG + ARIA usage documentation
-└── changelog.md         → Version history & design updates
+This directory houses the **navigation-related components** exported from Figma for the  
+**Kansas Frontier Matrix** web application design system.  
+These elements define how users move through the system — including **menus**, **headers**, **tabs**, and **map/timeline controls** — ensuring consistency between Figma mockups and live React components.
+
+All navigation components are version-controlled, documented, and linked to their source in the Figma design file.
 
 ---
 
-## 📘 Overview
+## 🧩 Directory Structure
 
-The **Navigation System** serves as the **structural backbone** of the Kansas Frontier Matrix interface —  
-from the global header and footer to contextual map/timeline controls.  
+```text
+docs/design/mockups/figma/components/navigation/
+├── README.md                     # Index and documentation (this file)
+├── header/                       # Top-level site header & logo placement
+├── sidebar/                      # Collapsible sidebar navigation
+├── map-controls/                 # Zoom, layer toggles, compass, legends
+├── timeline-controls/            # Time slider, play/pause buttons
+├── breadcrumbs/                  # Page breadcrumbs & contextual paths
+└── tabs/                         # Secondary navigation (tabbed sections)
 
-All navigation components are designed to be:  
-- **Modular** — reusable across multiple layouts  
-- **Token-driven** — visually consistent via shared design variables  
-- **Accessible** — WCAG 2.1 AA compliant  
-- **Reproducible** — version-controlled under Master Coder Protocol (MCP)  
+Each subfolder contains:
+	•	Exported SVG/PNG assets from Figma
+	•	Optional .json metadata or .figspec.md describing component behavior
+	•	Screenshots for documentation and version control comparison
 
----
+⸻
 
-## 🧭 Navigation Categories
+🧱 Component Overview
 
-| Category | Description | Example ID | React Equivalent |
-|:----------|:-------------|:------------|:----------------|
-| **Header** | Global top bar with logo, timeline, and search | `nav_header_v2.0` | `<Header />` |
-| **Footer** | Page footer with credits, licenses, and version | `nav_footer_v1.4` | `<Footer />` |
-| **Tabs** | Sectional navigation (Map / Timeline / Archives) | `nav_tabs_v1.2` | `<NavTabs />` |
-| **Breadcrumbs** | Hierarchical navigation trail | `nav_breadcrumbs_v1.1` | `<Breadcrumbs />` |
-| **Sidebar Menu** | Collapsible drawer with filters & datasets | `nav_sidebar_v1.3` | `<SidebarNav />` |
-| **Floating Controls** | Map-level actions (zoom, compass, reset) | `nav_controls_v1.0` | `<MapControls />` |
-
----
-
-## 🎨 Design Tokens
-
-| Token | Purpose | Example Value |
-|:-------|:---------|:--------------|
-| `--nav-height-header` | Header height | `64px` |
-| `--nav-height-footer` | Footer height | `48px` |
-| `--nav-bg` | Navigation background | `var(--color-surface)` |
-| `--nav-fg` | Text and icon color | `var(--color-fg)` |
-| `--nav-hover-bg` | Hover state background | `var(--color-surface-alt)` |
-| `--nav-accent` | Accent color for active states | `var(--color-accent)` |
-| `--nav-radius` | Corner radius for tabs/buttons | `6px` |
-| `--nav-gap` | Default spacing between elements | `12px` |
-| `--nav-font` | Font style | `var(--font-sans)` |
-
-> 💡 Tokens unify the visual rhythm between navigation, map, timeline, and input components.
-
----
-
-## 🧱 Core Components
-
-### 🧭 Header (`nav_header_v2.0`)
-
-**Purpose:** Global site header featuring the Kansas Frontier Matrix logo,  
-global search, and links to key modules (Map, Timeline, Archives).
-
-| Property | Value |
-|:-----------|:------|
-| Height | `--nav-height-header` (`64px`) |
-| Background | `--nav-bg` |
-| Layout | Fixed top, sticky behavior |
-| Interactive Elements | Logo, Search, Navigation Tabs, Menu Button |
-| Accessibility | `<header role="banner">` + `aria-label="Main Header"` |
-| Figma ID | `ic/navigation/header_v2.0` |
-| React File | `/web/src/components/navigation/Header.tsx` |
-
----
-
-### 🧭 Footer (`nav_footer_v1.4`)
-
-**Purpose:** Displays attributions, data licenses, and project version.  
-
-| Property | Value |
-|:-----------|:------|
-| Height | `--nav-height-footer` (`48px`) |
-| Contrast | ≥ 4.5:1 text contrast ratio |
-| Layout | Fixed bottom or static (context dependent) |
-| Accessibility | `<footer role="contentinfo">` |
-| Figma ID | `ic/navigation/footer_v1.4` |
-| React File | `/web/src/components/navigation/Footer.tsx` |
-
----
-
-### 🧭 Tab Navigation (`nav_tabs_v1.2`)
-
-**Purpose:** Provides contextual mode switching (Map ↔ Timeline ↔ Archives).  
-Styled for clarity with tokenized active, hover, and focus states.
-
-| State | Visual |
-|:-------|:--------|
-| Default | Neutral text with underline hover |
-| Active | Accent bottom border (`--nav-accent`) |
-| Focus | Tokenized shadow focus ring |
-| Disabled | Muted color with reduced opacity |
-
-**ARIA Pattern:**  
-```html
-<nav role="tablist">
-  <button role="tab" aria-selected="true" aria-controls="map">Map</button>
-  <button role="tab" aria-selected="false" aria-controls="timeline">Timeline</button>
-</nav>
+Component	Description	Usage Context
+Header	Fixed top navigation bar with branding and search.	Appears on all major views (Map, Timeline, Docs).
+Sidebar	Expandable vertical menu for layers and filters.	Left side of UI (Map/Terrain view).
+Map Controls	Buttons for zoom, compass, legend, and base layer toggles.	Overlay within MapLibre canvas.
+Timeline Controls	Interactive slider and temporal filters.	Bottom timeline pane.
+Breadcrumbs	Path indicators for detail or admin views.	Appears above content panels.
+Tabs	Secondary navigation for sub-sections.	Used in admin, entity, and data panels.
 
 
 ⸻
 
-🧭 Sidebar Menu (nav_sidebar_v1.3)
+🎨 Design Tokens
 
-Purpose: Collapsible dataset/layer drawer with keyboard accessibility.
+All Figma exports follow the shared Design Token Specification
+defined under /docs/design/tokens/.
 
-Feature	Description
-Behavior	Expands/collapses via button toggle
-Keyboard Support	Tab, Esc, and Shift+Tab navigation
-ARIA	<aside aria-expanded="true" aria-label="Sidebar Navigation">
-Figma ID	ic/navigation/sidebar_v1.3
-React File	/web/src/components/navigation/Sidebar.tsx
-
-
-⸻
-
-🧭 Floating Map Controls (nav_controls_v1.0)
-
-Purpose: Compact UI for spatial navigation — zoom, compass, and reset map state.
-
-Feature	Description
-Layout	Circular icon buttons with tokenized spacing
-Keyboard Access	All controls tabbable (Tab, Enter)
-Figma ID	ic/navigation/controls_v1.0
-React File	/web/src/components/navigation/MapControls.tsx
+Token	Description	Example
+--color-accent-nav	Primary accent color for navigation elements.	#2B5D9C
+--font-nav	Font used for labels and menu items.	Inter / 14px
+--radius-nav	Border radius for active buttons.	8px
+--shadow-nav	Drop shadow used under fixed nav elements.	0 2px 6px rgba(0,0,0,0.1)
 
 
 ⸻
 
-♿ Accessibility Guidelines
-
-Requirement	Description	Validation Tool
-Keyboard Navigation	All tabs and menus navigable via keyboard	Manual / Playwright
-Landmark Roles	Use <header>, <nav>, <footer> for structure	Axe DevTools
-Focus Indicators	Focus ring visible, ≥ 3:1 contrast	Figma / Stark
-Color Contrast	Text ≥ 4.5:1; icons ≥ 3:1	WebAIM Contrast Checker
-ARIA Labels	Each region labeled via aria-label	Screen Reader Test
-
-✅ All accessibility mappings are documented in accessibility.md.
-
-⸻
-
-💻 React Example — Global Header
-
-import { IconSearch, IconMenu } from "@/icons";
-
-export function Header() {
-  return (
-    <header className="kfm-header" role="banner" aria-label="Kansas Frontier Matrix Global Header">
-      <div className="kfm-logo">KFM</div>
-
-      <nav role="navigation" aria-label="Primary Navigation">
-        <ul className="kfm-nav-links">
-          <li><a href="/map" className="active">Map</a></li>
-          <li><a href="/timeline">Timeline</a></li>
-          <li><a href="/archives">Archives</a></li>
-        </ul>
-      </nav>
-
-      <div className="kfm-actions">
-        <button aria-label="Search"><IconSearch size="20" /></button>
-        <button aria-label="Open Menu"><IconMenu size="20" /></button>
-      </div>
-    </header>
-  );
-}
-
+🧭 Interaction Guidelines
+	•	Consistency: Navigation elements must match the Figma prototypes exactly in position, hierarchy, and typography.
+	•	Responsiveness: Components adapt to desktop (split map/timeline view) and mobile (drawer navigation).
+	•	Accessibility:
+	•	All buttons include ARIA roles (aria-label, aria-current).
+	•	Keyboard navigation via Tab and Enter supported.
+	•	State Management:
+	•	Active states shown with accent color highlight.
+	•	Disabled states use 40% opacity of default token colors.
 
 ⸻
 
-🧩 Design–Development Mapping
+🔄 Figma Integration Workflow
+	1.	All navigation components originate in
+Figma › Kansas Frontier Matrix / Components / Navigation.
+	2.	Components are exported as .svg or .png assets.
+	3.	Each export includes metadata (width, height, color tokens).
+	4.	Assets are versioned here and referenced in the web app at:
+web/src/components/navigation/.
 
-Figma Component	React Component	Path	Description
-nav_header_v2.0	<Header />	/web/src/components/navigation/Header.tsx	Sticky top bar
-nav_footer_v1.4	<Footer />	/web/src/components/navigation/Footer.tsx	Footer attribution
-nav_tabs_v1.2	<NavTabs />	/web/src/components/navigation/Tabs.tsx	Tab mode selector
-nav_sidebar_v1.3	<SidebarNav />	/web/src/components/navigation/Sidebar.tsx	Dataset drawer
-nav_controls_v1.0	<MapControls />	/web/src/components/navigation/MapControls.tsx	Floating map tools
-
-
-⸻
-
-🧾 Example Metadata (navigation.yml)
-
-id: nav_header_v2.0
-title: Global Header Navigation
-category: navigation
-version: v2.0
-author: design.system.team
-status: active
-source_figma: https://www.figma.com/file/ABCDE12345/KFM-Component-Library?node-id=105%3A101
-description: >
-  Global header navigation bar with logo, search, and mode tabs.
-accessibility:
-  contrast_ratio: 5.0 : 1
-  keyboard_focus: true
-  reduced_motion: true
-linked_docs:
-  - ../../../../../ui-guidelines.md
-  - ../../../../../style-guide.md
-license: CC-BY-4.0
-
+✅ Tip: Keep exported asset names identical to their Figma component names (e.g. header_logo.svg, timeline_play.svg) to ensure synchronization scripts function properly.
 
 ⸻
 
-🧰 Related Files
-	•	../README.md — Figma component index
-	•	../../../../../ui-guidelines.md — Accessibility & usability standards
-	•	../../../../../style-guide.md — Design tokens & color usage
-	•	../../../../../interaction-patterns.md — Navigation & interaction patterns
-	•	../../../../../reviews/ — Design review logs
+🧰 Developer Notes
+	•	React Integration: Navigation elements correspond to components under
+web/src/components/navigation/.
+Example:
+
+import Header from "@/components/navigation/Header";
+import Sidebar from "@/components/navigation/Sidebar";
+
+
+	•	CSS Tokens are imported globally from /web/src/styles/tokens.css.
+	•	Testing: Interactive behaviors are verified via Cypress tests under tests/ui/navigation/.
+
+⸻
+
+📘 Related Documentation
+	•	docs/design/README.md — Global design overview
+	•	docs/design/mockups/figma/components/README.md — Component index
+	•	web/src/components/navigation/ — Implementation
+	•	tests/ui/navigation/ — Test suite
 
 ⸻
 
@@ -248,9 +119,7 @@ license: CC-BY-4.0
 <div align="center">
 
 
-🧭 “Navigation is the map of experience —
-
-design it like a compass that always points true.”
-— Kansas Frontier Matrix Design System Team
+Kansas Frontier Matrix Design System
+🧭 Navigation as Knowledge — Guiding exploration through time and terrain.
 
 </div>
