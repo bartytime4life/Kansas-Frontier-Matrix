@@ -39,7 +39,6 @@ docs/design/mockups/figma/components/navigation/
 🧩 System Integration (GitHub-safe Mermaid)
 
 flowchart LR
-  %% Lanes
   subgraph FE["Frontend"]
     A["Header\nsearch · menus · tabs"]
     B["Timeline\nrail · handles · zoom"]
@@ -64,7 +63,6 @@ flowchart LR
     K["Timeline View\nwindow + markers"]
   end
 
-  %% Flows
   A --> B
   A --> C
   A --> P
@@ -82,7 +80,6 @@ flowchart LR
   I --> J
   G --> K
 
-  %% Styles
   classDef lane fill:#0b1020,stroke:#2b2f42,color:#fafafa;
   class FE,API,STATE,MAP lane;
   classDef box fill:#121833,stroke:#4a6cff,stroke-width:1px,color:#eaeefc;
