@@ -1,276 +1,241 @@
-<div align="center">
+🧭 Kansas Frontier Matrix — Navigation Components
 
-# 🧭 Kansas Frontier Matrix — Navigation Components  
-`docs/design/mockups/figma/components/navigation/README.md`
+docs/design/mockups/figma/components/navigation/README.md
 
-**Interactive · Temporal · Spatial · Intuitive Navigation**
+Goal: Define the information architecture and reusable UI parts for navigating the KFM web app (timeline ↔ map ↔ detail views), with GitHub‑safe diagrams, accessible patterns, and copy‑paste code snippets.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)
-[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../)
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../../../../../docs/standards/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
+⸻
 
-</div>
+1) Overview
 
----
+The Navigation set provides consistent affordances for moving through time, space, and stories:
+	•	Global header (brand, search, app‑level menus)
+	•	Primary tabs (Map, Timeline, Stories, Data)
+	•	Context rail (left) for layers/filters
+	•	Detail panel (right) for entity dossiers
+	•	Map toolbar (zoom, locate, measure, basemap, layers)**
+	•	Timeline controls (scrub, zoom, play/pause, jump‑to)
+	•	Breadcrumbs (Place ▸ Collection ▸ Item)
 
-## 🪶 Overview
+Each element is modular and responsive; together they synchronize the user’s temporal window, spatial extent, and selected entity.
 
-The **Navigation Components** define the **core exploration and movement interface** for the Kansas Frontier Matrix (KFM) web application — the connective tissue between **space**, **time**, and **knowledge**.  
-They synchronize **map**, **timeline**, and **detail panels**, enabling users to traverse centuries of Kansas data with precision and clarity.
+⸻
 
-- **Design source:** KFM Figma library (shared tokens & primitives)  
-- **Implementation:** React / TypeScript under `web/src/components/navigation/`  
-- **Standards:** MCP documentation-first, WCAG 2.1 AA, GitHub-safe diagrams
+2) What “good” looks like
+	•	Discoverable: core actions visible at a glance; secondary actions progressively disclosed.
+	•	Focusable: keyboard and screen‑reader compatible (tab order, ARIA roles, visible focus).
+	•	Stable: layout persists across pages; only content changes.
+	•	Contextual: timeline, map, and details always reflect the same selection state.
 
----
+⸻
 
-## 🧭 Component Hierarchy
+3) GitHub‑safe System Diagram (Mermaid)
 
-docs/design/mockups/figma/components/navigation/
-├── README.md
-├── header/               # Global top bar: search, tabs, global actions
-├── sidebar/              # Layers, filters, legends
-├── timeline-controls/    # Time rail, handles, play/pause, zoom in/out
-├── map-toolbar/          # Zoom, locate, layers toggle, mode switch
-└── panels/               # Detail/context drawers & overlays
-
-> Each folder includes: `README.md` (usage), `props.ts` (types), `*.tsx` (component), `*.test.tsx` (unit tests), and `a11y.md` (patterns).
-
----
-
-## 🔗 System Integration (Data → State → View)
-
-```mermaid
 flowchart LR
-  subgraph FE["Frontend (React)"]
-    A["Header\nSearch · Tabs · Menus"]
-    B["Timeline Controls\nRail · Handles · Zoom"]
-    C["Map Toolbar\nZoom · Locate · Layers"]
-    P["Detail Panel\nAI Summaries · Metadata"]
+  subgraph FE["Frontend"]
+    A["Header\nbrand · search · menus"]
+    B["Timeline Controls\nscrub · zoom · play"]
+    C["Map Toolbar\nzoom · locate · layers"]
+    D["Left Rail\nlayers · filters"]
+    E["Detail Panel\nentity dossier"]
   end
 
-  subgraph API["Backend API (FastAPI)"]
-    D["GET /events?start&end"]
-    E["GET /layers-config"]
-    F["GET /entity/{id}"]
+  subgraph API["Backend API"]
+    F["GET /events?start&end"]
+    G["GET /layers-config"]
+    H["GET /entity/{id}"]
   end
 
-  subgraph STATE["Application State (Context/Store)"]
-    G["selectedTimeRange"]
-    H["activeLayers"]
-    I["selectedEntity"]
-  end
-
-  subgraph MAP["Renderer (MapLibre)"]
-    J["Map View\nLayers & Styling"]
-    K["Timeline Markers\nWindow & Highlights"]
+  subgraph STATE["Client State"]
+    I["selectedTimeRange"]
+    J["activeLayers"]
+    K["selectedEntity"]
   end
 
   A --> B
   A --> C
-  A --> P
-  B --> D
-  C --> E
-  P --> F
-  D --> G
+  A --> D
+  B --> F
+  C --> G
   E --> H
   F --> I
   G --> J
-  H --> J
-  I --> J
-  G --> K
+  H --> K
+  I --> C
+  I --> B
+  J --> C
+  K --> E
 
-Contract: Route responses (Pydantic models) ↔️ TypeScript interfaces guarantee schema parity.
+<!-- END OF MERMAID -->
 
-⸻
 
-🧱 Responsive Layout Modes
-
-flowchart TD
-  Desk["🖥️ Desktop\nMap + Timeline + Sidebar + Detail Panel"] --> Tab["📱 Tablet\nMap + Toggle Timeline/Panel"]
-  Tab --> Mob["📱 Mobile\nMap focus · Slide-up Timeline/Details"]
-
-	•	Desktop: all regions visible; detail panel docks right.
-	•	Tablet: timeline collapsible; sidebar overlays.
-	•	Mobile: map first; timeline & details as slide-ups with focus management.
+Notes: All labels with punctuation are quoted; explicit <!-- END OF MERMAID --> marker ensures GitHub’s renderer finishes correctly.
 
 ⸻
 
-⚙️ State Lifecycle (Deterministic)
+4) Files & Structure
 
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Loading : fetchData()
-  Loading --> Ready : setState(data)
-  Ready --> Updating : userInteraction()
-  Updating --> Ready : render()
-
-	•	Coalesced updates: batched renders on time-window & layer changes
-	•	Idempotent actions: repeatable event → state transitions (MCP reproducibility)
-
-⸻
-
-🎨 Design Tokens (Theme-agnostic)
-
-Token	Example (Dark/Light)	Purpose
---kfm-color-bg	#0b1020 / #ffffff	Background
---kfm-color-fg	#fafafa / #111111	Foreground
---kfm-accent	#22a7f0	Interactive states
---kfm-radius-lg	12px	Rounding scale
---kfm-shadow-md	0 2px 8px rgba(0,0,0,.25)	Elevation
-
-Tokens: web/src/styles/tokens.css (exported to Figma as variables).
-
-⸻
-
-🔌 API Touchpoints
-
-Endpoint	Function	Consumed By
-/api/events?start={t0}&end={t1}	Fetch events in time window	Timeline Controls
-/api/layers-config	Get map layers & styles	Map Toolbar
-/api/entity/{id}	Fetch entity detail panel content	Panels / Drawer
-
-Parity: Pydantic ↔︎ TypeScript types; strict nullability enforced.
-
-⸻
-
-♿ Accessibility (WCAG 2.1 AA)
-
-Area	Technique
-Keyboard	Tab/Shift+Tab/Arrows across sliders, menus; Space/Enter to activate
-Roles & Names	role="slider", aria-valuenow, aria-controls for timeline; aria-expanded for accordions
-Contrast	≥4.5:1; accent passes in both themes
-Focus	:focus-visible outline; easy to spot on dark/light
-Motion	Reduced motion honors prefers-reduced-motion
-Touch	Hit targets ≥44px; drag handles accessible
-
-Audit tools: Axe, Pa11y, Lighthouse (CI); manual keyboard walkthroughs.
-
-⸻
-
-🧪 Testing & QA
-
-Area	Method
-Unit	Jest + React Testing Library (input handling, disabled states, aria updates)
-E2E	Playwright (search → select → zoom timeline → inspect detail → toggle layer)
-Visual	Percy (snapshots per Figma commit ref)
-A11y	Axe & Pa11y CI gates; color tokens checked by Stark
-
-CI: .github/workflows/pre-commit.yml and site.yml run full doc + a11y + build checks.
-
-⸻
-
-🔧 Implementation Notes
-
-Header
-	•	Search debounced 250ms; result list keyboard-navigable
-	•	Tabbed navigation controls route hash (deep linkable)
-
-Timeline Controls
-	•	Virtualized ticks; windowed rendering
-	•	Drag handles announce aria-valuenow; PageUp/Down for coarse seek
-	•	Play/pause uses requestAnimationFrame; pauses on tab blur
-
-Map Toolbar
-	•	Layer toggle reads from /api/layers-config and persists to local storage
-	•	“Locate” checks permissions; fallback to manual “jump to county”
-
-Detail Panels
-	•	Focus trap on open; Esc closes; returns focus to origin
-	•	AI summary includes source citations with keyboard nav
-
-⸻
-
-🧩 Integration Notes
-	•	State management: lightweight Context + reducers; no global store required
-	•	Type safety: zod guards + generated Pydantic typings ensure runtime validation
-	•	Error handling: optimistic UI; toast on failure; retriable fetchers
-	•	i18n-ready: text labels live in web/src/i18n/strings.ts
-
-⸻
-
-🔐 Governance Metadata
-
-Field	Value
-Design Source	Figma — KFM shared library
-Frontend Stack	React 18, MapLibre GL, TypeScript 5
-Backend Stack	FastAPI + Neo4j (CIDOC CRM / OWL-Time)
-Maintainers	KFM Design & Accessibility Team
-Last Updated	2025-10
-License	CC-BY 4.0
+navigation/
+├─ README.md                  # this file
+├─ tokens.css                 # CSS custom properties (colors, spacing, z‑index)
+├─ NavigationHeader.tsx       # brand, search, menus
+├─ PrimaryTabs.tsx            # Map | Timeline | Stories | Data
+├─ Breadcrumbs.tsx            # hierarchical context
+├─ LeftRail.tsx               # layers & filters
+├─ MapToolbar.tsx             # zoom/locate/measure/basemap
+├─ TimelineControls.tsx       # scrub/zoom/play/jump
+├─ DetailPanel.tsx            # entity dossier shell
+├─ Navigation.types.ts        # shared types & enums
+├─ Navigation.a11y.test.tsx   # keyboard & aria tests
+└─ stories/
+   └─ Navigation.stories.tsx  # Storybook scenarios
 
 
 ⸻
 
-🧭 Usage Examples (TSX)
+5) Design Tokens (CSS variables)
 
-Timeline handle (keyboard)
+Use a single source of truth (light/dark aware):
 
-<button
-  role="slider"
-  aria-valuemin={start}
-  aria-valuemax={end}
-  aria-valuenow={value}
-  aria-label="Timeline start"
-  onKeyDown={onKeyDownHandle}
-  className="timeline__handle"
-/>
-
-Map layer toggle item
-
-<label>
-  <input
-    type="checkbox"
-    checked={active}
-    onChange={() => toggleLayer(id)}
-    aria-pressed={active}
-    aria-label={`Toggle layer ${name}`}
-  />
-  {name}
-</label>
+:root{
+  --kfm-nav-h: 56px;
+  --kfm-rail-w: 320px;
+  --kfm-panel-w: 380px;
+  --kfm-gap: 8px;
+  --kfm-color-bg: #0b1020; /* dark */
+  --kfm-color-fg: #e6e9f2;
+  --kfm-color-muted: #9aa4b2;
+  --kfm-color-accent: #62b0ff;
+  --kfm-focus: 2px solid #62b0ff;
+}
+@media (prefers-color-scheme: light){
+  :root{ --kfm-color-bg:#ffffff; --kfm-color-fg:#172033; --kfm-color-muted:#5a6573; }
+}
 
 
 ⸻
 
-🧾 Accessibility Audit (Snapshot)
+6) Accessibility & Keyboard Maps
 
-Check	Result	Notes
-Keyboard focus order	✅	Logical, no traps
-Slider semantics	✅	Roles/values announced
-Contrast	✅	All tokens ≥ 4.5:1
-Motion	✅	Respects prefers-reduced-motion
-Screen reader	✅	Labels & descriptions provided
+Roles
+	•	Header: role="banner"
+	•	Primary nav: role="navigation" + aria-label="Primary"
+	•	Left rail: role="complementary" + aria-label="Layers and Filters"
+	•	Detail panel: role="region" + aria-label="Details"
+	•	Timeline group: role="group" + aria-label="Timeline Controls"
+
+Keyboard
+	•	Global: Alt+/ focus search; Esc close open panels; F6 cycle header ↔ rail ↔ map ↔ timeline ↔ details.
+	•	Tabs: Arrow keys move among tabs; Enter selects; Home/End jump.
+	•	Timeline: ←/→ scrub; Shift+←/→ coarse scrub; +/− zoom; Space play/pause.
+	•	Map toolbar: + zoom in, - out, l locate, m basemap menu.
+
+Focus
+	•	Use visible outlines: outline: var(--kfm-focus); outline-offset: 2px;
+	•	Ensure trap & restore: opening Detail Panel traps focus; closing returns focus to invoker.
+
+⸻
+
+7) Component API (React)
+
+<NavigationHeader />
+
+interface NavHeaderProps {
+  onSearch:(q:string)=>void
+  tabs: { id:string; label:string; href:string }[]
+  activeTabId:string
+}
+
+<LeftRail />
+
+interface LeftRailProps {
+  sections: Array<{ id:string; label:string; items:React.ReactNode }>
+  collapsed?: boolean
+  onToggle?: () => void
+}
+
+<MapToolbar />
+
+interface MapToolbarProps {
+  onZoomIn:()=>void; onZoomOut:()=>void; onLocate:()=>void;
+  onBasemap:()=>void; onLayers:()=>void
+}
+
+<TimelineControls />
+
+interface TimelineControlsProps {
+  range:[number,number]; value:number;
+  onChange:(t:number)=>void; onZoom:(d:number)=>void; playing:boolean; onTogglePlay:()=>void
+}
+
+<DetailPanel />
+
+interface DetailPanelProps {
+  title:string; onClose:()=>void; children:React.ReactNode; width?:number
+}
 
 
 ⸻
 
-📦 Change Log (Design & Code)
+8) Layout Recipes
 
-Version	Date	Summary	Ref
-v1.2	2025-10-05	Added governance, test matrix, and a11y audit section; mermaid fenced; API parity notes.	#nav-126
-v1.1	2025-10-04	Token unification; keyboard handling for sliders; tablet layout refinements.	#nav-109
-v1.0	2025-10-03	Initial navigation components and Figma linkage.	#nav-087
+App shell (CSS grid)
+
+.app{ display:grid; grid-template-rows: var(--kfm-nav-h) 1fr auto; height:100dvh; }
+.main{ display:grid; grid-template-columns: var(--kfm-rail-w) 1fr var(--kfm-panel-w); gap:var(--kfm-gap); }
+.header{ grid-row:1; }
+.left-rail{ grid-column:1; }
+.map{ grid-column:2; }
+.details{ grid-column:3; }
+.timeline{ grid-row:3; grid-column:1 / span 3; }
+@media (max-width: 1024px){ .main{ grid-template-columns: 1fr; } .left-rail,.details{ display:none; } }
 
 
 ⸻
 
-🔗 Related Documentation
-	•	docs/architecture/web-ui-architecture.md
-	•	docs/architecture/api-architecture.md
-	•	docs/standards/metadata-standards.md
-	•	web/src/components/navigation/*
-	•	.github/workflows/pre-commit.yml, site.yml
+9) Content Guidelines
+	•	Labels: short verb‑first (e.g., Add layer, Export KML).
+	•	Empty states: provide guidance and a primary action.
+	•	Errors: human‑readable messages + retry; never dead‑end.
+	•	Loading: skeleton in panel; shimmer for list; spinner only if brief.
 
 ⸻
 
+10) Do / Don’t
 
-<div align="center">
+Do
+	•	Keep primary actions in fixed positions (top left/right, bottom bar on mobile)
+	•	Mirror states across surfaces (selected entity appears in header breadcrumbs, detail panel title)
+	•	Provide direct links (deep‑linkable URLs for entities/times)
 
+Don’t
+	•	Hide critical actions behind more than one disclosure
+	•	Use only color for state (add icon/label; meet contrast ratios)
+	•	Reflow the header on every route; reserve animation for content
 
-🧭 “Navigation is not motion — it’s understanding.”
-The KFM navigation system turns movement into discovery, linking every map layer and historical moment through accessible, intuitive interaction.
+⸻
 
-</div>
+11) Testing & QA
+	•	Unit: props, callbacks, disabled/readonly states
+	•	A11y: axe/pa11y pass; keyboard paths; ARIA roles/labels present
+	•	Visual: Storybook regression per component state (light/dark, compact/comfortable)
+	•	E2E: map ↔ timeline ↔ details synchronization (playback, selection, back/forward)
 
+⸻
+
+12) Figma Handoff
+	•	Components named Nav/Header, Nav/Tabs, Nav/Toolbar, Nav/Timeline, Nav/Panel
+	•	Use Auto‑layout; frame sizes: 1440×900 (desktop), 1024×768 (tablet), 375×812 (mobile)
+	•	Export tokens as CSS variables; export icons as SVG (24×24 grid)
+
+⸻
+
+13) Change Log
+	•	v1.0: Initial GitHub‑safe README, component API, Mermaid diagram, a11y patterns.
+
+⸻
+
+14) References
+	•	HTML5 semantics & ARIA landmarks (for roles and keyboard navigation)
+	•	KFM architecture (integration points: /events, /layers-config, /entity/{id})
+	•	WCAG 2.2 AA color & focus guidance
