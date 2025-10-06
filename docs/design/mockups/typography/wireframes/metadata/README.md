@@ -1,1 +1,161 @@
-y
+<div align="center">
+
+# 🔤 Kansas Frontier Matrix — Typography Wireframe Metadata  
+`docs/design/mockups/typography/wireframes/metadata/`
+
+**Purpose:** Define and validate structured metadata for **typography wireframes and exports**,  
+linking design artifacts to accessibility standards, Figma sources, and KFM design tokens.
+
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../../..)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../../../..)  
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../../../../../../../..)  
+[![JSON Schema](https://img.shields.io/badge/Schema-Validated-orange)](https://json-schema.org)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../../../LICENSE)
+
+</div>
+
+---
+
+## 🧭 Overview
+
+This directory stores **metadata JSON records** describing each exported typography wireframe  
+in `../exports/`. These metadata entries record essential design details — including visual hierarchy,  
+accessibility validation, font token mapping, and design provenance — forming a reproducible archive  
+for Kansas Frontier Matrix (KFM)’s typography design system.
+
+Each record follows **MCP documentation-first principles**, ensuring traceability, accessibility,  
+and validation through automated CI pipelines.
+
+---
+
+## 🗂️ Directory Layout
+
+```text
+docs/design/mockups/typography/wireframes/metadata/
+├── README.md                              # This file
+├── typography_wireframes_metadata.json    # Aggregate metadata index
+└── schema/                                # JSON Schema definitions for validation
+    ├── typography_wireframe.schema.json
+    └── index.schema.json
+
+
+⸻
+
+🧱 Metadata Structure
+
+Each metadata record defines key design data points about a wireframe export,
+including style categories (headings, body, code), CSS variable mappings, and accessibility compliance.
+
+Example Record
+
+{
+  "id": "typography_heading_hierarchy",
+  "title": "Typography — Heading Hierarchy",
+  "thumbnail": "../exports/heading_hierarchy.png",
+  "description": "Wireframe showcasing typographic hierarchy for headings H1–H6 and subheadings, based on Inter font family.",
+  "category": "headings",
+  "theme": ["typography", "hierarchy", "readability"],
+  "creator": "KFM Design System Team",
+  "license": "CC-BY-4.0",
+  "source_figma": "figma/typography_wireframes_v1.fig",
+  "checksum": "sha256-b2f9736ee98cde9a4317f03f96cfd2812a7bb1dfde99a1...",
+  "tokens_reference": {
+    "font_family": "--kfm-font-sans",
+    "font_weight": "--kfm-font-weight-bold",
+    "line_height": "--kfm-line-height-base",
+    "color_token": "--kfm-color-fg"
+  },
+  "provenance": {
+    "derived_from": "typography_wireframes_v1.fig",
+    "created_with": "Figma Export",
+    "commit": "{{ GIT_COMMIT }}"
+  },
+  "accessibility": {
+    "contrast_ratio": 4.7,
+    "alt_text": "Wireframe preview showing heading styles H1 through H6 with standardized spacing and alignment."
+  }
+}
+
+
+⸻
+
+🧩 Field Reference
+
+Field	Type	Description
+id	string	Unique identifier for the wireframe (kebab-case).
+title	string	Readable display name.
+thumbnail	string	Path to exported PNG/JPG asset.
+description	string	Short summary of layout and purpose.
+category	string	Classification (headings, paragraphs, code, responsive).
+theme	array	Tags describing context and design use.
+creator	string	Author or design contributor.
+license	string	License for the asset (default: CC-BY-4.0).
+source_figma	string	Source .fig file path or link.
+checksum	string	SHA-256 checksum for export integrity verification.
+tokens_reference	object	CSS variable mappings linking design to implementation.
+provenance	object	Tracks file lineage and commit reference.
+accessibility	object	Contains WCAG compliance data and descriptive alt text.
+
+
+⸻
+
+🧮 Validation Workflow
+
+All metadata files undergo schema validation in CI/CD pipelines using
+jsonschema.yml and stac-validate.yml.
+
+Automated Checks
+	•	✅ Validates structure against typography_wireframe.schema.json
+	•	✅ Confirms linked image files exist in ../exports/
+	•	✅ Verifies SHA-256 checksums for file integrity
+	•	✅ Checks accessibility metadata (contrast_ratio, alt_text)
+	•	✅ Ensures all referenced design tokens (--kfm-*) exist in tokens.css
+
+Manual Validation Example:
+
+python -m jsonschema -i typography_wireframes_metadata.json schema/typography_wireframe.schema.json
+
+
+⸻
+
+♿ Accessibility Requirements
+
+Typography wireframes must pass WCAG 2.1 AA compliance:
+	•	Contrast Ratio: ≥ 4.5 for text and UI labels
+	•	Alt Text: Required for each exported image
+	•	Readable Type Scale: Text sizes ≥ 16px for paragraphs
+	•	Font Tokens: Linked to valid CSS variables for consistency
+
+Accessibility reports are logged per record for ongoing design audits.
+
+⸻
+
+🧾 Provenance & Integrity
+	•	Source Design: typography_wireframes_v1.fig
+	•	Generated By: scripts/generate_wireframe_metadata.py
+	•	Validated In: CI pipelines (JSON Schema + checksum verification)
+	•	Checksum Tracking: SHA-256 values recorded per export
+	•	License: CC-BY-4.0 (open design documentation)
+	•	MCP Compliance: Documented → Validated → Versioned → Published
+
+⸻
+
+📚 Related References
+	•	Typography Wireframes (Main)
+	•	Typography Wireframe Exports
+	•	Typography Thumbnails Metadata
+	•	Panels Wireframe Metadata
+	•	Design Tokens Reference
+	•	Kansas Frontier Matrix Web UI Architecture
+
+⸻
+
+
+<div align="center">
+
+
+Kansas Frontier Matrix — Documentation-First Design
+Readability · Accessibility · Traceability · Reproducibility
+
+</div>
+```
