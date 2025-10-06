@@ -101,7 +101,7 @@ All navigation components are implemented under:
 
 web/src/components/navigation/
 
-Each Figma export corresponds to a React component, maintaining name parity:
+Each Figma export corresponds to a React component, maintaining name parity.
 
 Figma Name	React Component	Example Import
 Header_Main	Header.tsx	import Header from "@/components/navigation/Header";
@@ -112,10 +112,10 @@ Timeline_Playbar	TimelineControls.tsx	import TimelineControls from "@/components
 ⸻
 
 🧱 Development Notes
-	•	Testing: Interactive elements tested via Cypress (tests/ui/navigation/)
+	•	Testing: Interactive elements tested via Cypress (tests/ui/navigation/).
 	•	Documentation: Figma–React sync verified weekly via automated diff visual tests.
 	•	Version Control: Each asset revision tagged with Figma version ID and export timestamp.
-	•	CSS Tokens: Imported globally from /web/src/styles/tokens.css
+	•	CSS Tokens: Imported globally from /web/src/styles/tokens.css.
 
 Example Component Usage
 
@@ -137,23 +137,18 @@ export default function Layout() {
 ⸻
 
 🧰 Workflow
-
-1. Design → Export
+	1.	Design → Export
 	•	Figma components exported using Frame → SVG/PNG + JSON spec.
 	•	Saved to corresponding subdirectory with metadata.
-
-2. Versioning
+	2.	Versioning
 	•	Each export includes:
 	•	component_name.svg
 	•	_meta.json (width, height, color tokens, date)
-	•	_preview.png for documentation
-
-3. Integration
+	•	_preview.png for documentation.
+	3.	Integration
 	•	Exports synced with React components during npm run sync:figma (Node script under /tools/).
-
-4. Validation
-	•	CI verifies parity: component count in /figma/components/navigation/
-equals implemented React components in /web/src/components/navigation/.
+	4.	Validation
+	•	CI verifies parity: component count in /figma/components/navigation/ equals implemented React components in /web/src/components/navigation/.
 
 ⸻
 
