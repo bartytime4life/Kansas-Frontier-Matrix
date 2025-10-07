@@ -1,1 +1,122 @@
+flowchart TD
+  %% Pipeline Overview Template — Kansas Frontier Matrix
+  %% Purpose: outline end-to-end flow from sources → processing → publication.
+  %% Edit labels only inside quotes; use \n for line breaks; keep IDs alphanumeric/underscores.
 
+  %% 0) External Inputs
+  subgraph SRC["Sources\n(scans · rasters · vectors · documents · APIs)"]
+    S1["Source A\n(e.g., USGS DEM)"]
+    S2["Source B\n(e.g., NOAA climate)"]
+    S3["Source C\n(e.g., Kansas GIS Archive)"]
+    S4["Source D\n(e.g., Historical PDFs/OCR)"]
+  end
+
+  %% 1) ETL / Processing
+  subgraph ETL["ETL Pipeline\n(Makefile · Python · checksums)"]
+    FET["Fetch\nscripts/fetch_data.py"]
+    TRF["Transform\nreproject · convert · normalize"]
+    QA["Validate\nschema · STAC · checksums"]
+    OUT["Processed Outputs\nCOG · GeoJSON · CSV/Parquet"]
+  end
+
+  %% 2) Catalog / Metadata
+  subgraph CAT["Catalog & Metadata\n(STAC · DCAT · JSON-LD)"]
+    COLL["STAC Collection\nfamily metadata"]
+    ITEM["STAC Item\nspatial · temporal · asset hrefs"]
+    SHA["SHA256 sidecars\nintegrity"]
+  end
+
+  %% 3) AI/ML Enrichment
+  subgraph AIML["AI/ML Enrichment\n(NER · geocoding · linking · summarization)"]
+    NER["Entity Extraction\npeople · places · dates · events"]
+    GEO["Geoparsing / Geocoding\nGNIS · gazetteers"]
+    LINK["Entity Linking\nfuzzy + context score"]
+    SUM["Summarization\nBART/T5 (optional)"]
+  end
+
+  %% 4) Knowledge Graph
+  subgraph KG["Knowledge Graph\n(Neo4j · CIDOC CRM · OWL-Time)"]
+    NODE["Nodes\n(Person · Place · Event · Document)"]
+    REL["Relationships\n(OCCURRED_AT · MENTIONS · SOURCE_OF)"]
+    CONF["Evidence / Confidence\ncross-source corroboration"]
+  end
+
+  %% 5) API Layer
+  subgraph API["API Layer\n(FastAPI · GraphQL)"]
+    REST["REST endpoints\n/events · /entity · /search · /layers-config"]
+    GQL["GraphQL\nentity dossiers · traversals"]
+    AUTH["Auth\nJWT/cookies · roles (optional)"]
+  end
+
+  %% 6) Publication / UI
+  subgraph UI["Publication\n(Web UI · exports)"]
+    WEB["Web UI\nReact · MapLibre · timeline/map"]
+    EXP["Exports\nKML · KMZ · downloads (optional)"]
+  end
+
+  %% 7) Storage / Static Assets
+  subgraph FILES["Static Assets / Tiles\n(CDN · tile server · object storage)"]
+    COGS["Raster tiles / COG\nhillshade · scans"]
+    VECT["Vector data\nGeoJSON · vector tiles"]
+  end
+
+  %% 8) Observability (optional)
+  subgraph OBS["Observability\n(CI/CD · logs · metrics · traces)"]
+    CI["CI/CD\nlint · tests · STAC validate · security scans"]
+    O11Y["Telemetry\nOpenTelemetry · dashboards"]
+  end
+
+  %% --- Flows ---
+  S1 --> FET
+  S2 --> FET
+  S3 --> FET
+  S4 --> FET
+
+  FET --> TRF --> QA --> OUT
+  OUT --> COLL
+  OUT --> ITEM
+  ITEM --> SHA
+
+  OUT --> NER
+  NER --> GEO --> LINK
+  NER --> SUM
+  LINK --> NODE
+  LINK --> REL
+  SUM --> NODE
+  NODE --> CONF
+  REL --> CONF
+  SHA -. "provenance" .- NODE
+  ITEM -. "asset hrefs" .- NODE
+
+  COLL --> REST
+  ITEM --> REST
+  NODE --> REST
+  REL --> REST
+  CONF --> REST
+  REST --> GQL
+  AUTH --> REST
+
+  REST -- "JSON/GeoJSON" --> WEB
+  REST -- "downloads" --> EXP
+  WEB <-- "tiles · COG · GeoJSON" --> FILES
+  COGS -. "raster href" .- ITEM
+  VECT -. "vector href" .- ITEM
+
+  CI --> O11Y
+  REST --> O11Y
+  WEB --> O11Y
+
+  %% --- Styling (optional) ---
+  classDef block fill:#f7f7f7,stroke:#333,stroke-width:1px;
+  classDef data fill:#e6f2ff,stroke:#31708f,stroke-width:1px;
+  classDef graph fill:#f9e6ff,stroke:#6b3c76,stroke-width:1px;
+  class SRC,ETL,CAT,AIML,KG,API,UI,FILES,OBS block;
+  class OUT,COLL,ITEM,SHA data;
+  class NODE,REL,CONF graph;
+
+  %% Notes:
+  %% - Duplicate/rename nodes as needed for your specific pipeline.
+  %% - Keep labels concise; use \n for multi-line clarity.
+  %% - Connect FILES directly to Web UI for large tiles/COGs to avoid API bottlenecks.
+
+<!-- END OF MERMAID -->
