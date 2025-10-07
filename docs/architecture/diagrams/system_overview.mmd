@@ -1,1 +1,131 @@
+flowchart TD
+  %% System Overview — Kansas Frontier Matrix
+  %% GitHub-safe syntax: quoted labels; \n for line breaks
 
+  %% 0) External Sources
+  subgraph SRC["Sources\nscans · rasters · vectors · documents · APIs"]
+    S_USGS["USGS / 3DEP\nDEM · hydrology"]
+    S_NOAA["NOAA\nclimate · storms"]
+    S_FEMA["FEMA\nDisaster Declarations"]
+    S_DASC["Kansas GIS Archive\nGeoTIFF · Shapefile · REST"]
+    S_DOCS["Historical Documents\nPDF · OCR · text"]
+  end
+
+  %% 1) ETL & Processing
+  subgraph ETL["ETL Pipeline\nMakefile · Python · checksums"]
+    FET["Fetch\nscripts/fetch_data.py"]
+    TRF["Transform\nreproject · convert · normalize"]
+    QA["Validate\nJSON Schema · STAC validator"]
+    OUTP["Processed Layers\nCOG · GeoJSON · CSV/Parquet"]
+  end
+
+  %% 2) Catalog
+  subgraph STAC["STAC Catalog\ncollections · items · assets"]
+    SCOLL["Collection\nfamily metadata"]
+    SITEM["Item\nspatial · temporal · hrefs"]
+    SHA["SHA256 sidecars\nintegrity"]
+  end
+
+  %% 3) AI/ML Enrichment
+  subgraph AIML["AI/ML Enrichment\nNER · geocoding · summarization · linking"]
+    NER["Entity Extraction\npeople · places · dates · events"]
+    GEO["Geoparsing/Geocoding\nGNIS · gazetteers"]
+    SUM["Summarization\nBART/T5"]
+    LINK["Entity Linking\nfuzzy + context scoring"]
+  end
+
+  %% 4) Knowledge Graph
+  subgraph KG["Knowledge Graph\nNeo4j · CIDOC CRM · OWL-Time"]
+    NODES["Nodes\nPerson · Place · Event · Document"]
+    RELS["Relationships\nOCCURRED_AT · MENTIONS · SOURCE_OF"]
+    CONF["Evidence & Confidence\ncross-source corroboration"]
+  end
+
+  %% 5) API Layer
+  subgraph API["API Layer\nFastAPI · GraphQL"]
+    REST["REST endpoints\n/events · /search · /entity · /layers-config · /ask"]
+    GQL["GraphQL\nentity dossiers · graph traversals"]
+    AUTH["Auth\nJWT/cookies · roles"]
+  end
+
+  %% 6) Frontend
+  subgraph UI["Frontend (Web UI)\nReact · MapLibre GL · Canvas"]
+    HD["Header\nsearch · lang · auth"]
+    TL["TimelineView (Canvas)\nzoom · pan · brush"]
+    MV["MapView (MapLibre)\nbase tiles · overlays · interactivity"]
+    LC["Layer Controls\ntoggles · legends · filters"]
+    DP["Detail Panel\nAI summary · citations"]
+    AIUI["AI Assistant\nQ&A · references"]
+  end
+
+  %% 7) Storage / Files
+  subgraph FILES["GIS File Storage\nstatic hosting · tiles · CDN"]
+    COGS["Raster tiles / COG\nhillshade · scans"]
+    VECT["Vector data\nGeoJSON · vector tiles"]
+  end
+
+  %% 8) Observability & Ops
+  subgraph OBS["Ops & Observability\nCI/CD · logs · metrics · traces"]
+    CICD["GitHub Actions\nlint · tests · STAC validate · CodeQL · Trivy"]
+    LOGS["OpenTelemetry\nlogs · metrics · traces"]
+    POL["Policies\nbranch protection · required checks"]
+  end
+
+  %% Flows: Sources -> ETL -> STAC/Processed
+  S_USGS --> FET
+  S_NOAA --> FET
+  S_FEMA --> FET
+  S_DASC --> FET
+  S_DOCS --> FET
+
+  FET --> TRF --> QA --> OUTP
+  OUTP --> SCOLL
+  OUTP --> SITEM
+  SITEM --> SHA
+
+  %% Enrichment -> KG
+  OUTP --> NER
+  S_DOCS --> NER
+  NER --> GEO --> LINK
+  NER --> SUM
+  LINK --> NODES
+  LINK --> RELS
+  SUM --> NODES
+  SHA -. "provenance" .- NODES
+  SITEM -. "asset hrefs" .- NODES
+  NODES --> CONF
+  RELS --> CONF
+
+  %% STAC & KG -> API
+  SCOLL --> REST
+  SITEM --> REST
+  NODES --> REST
+  RELS --> REST
+  CONF --> REST
+  REST --> GQL
+  AUTH --> REST
+
+  %% API -> UI
+  REST -- "JSON/GeoJSON payloads" --> TL
+  REST -- "layer metadata" --> MV
+  REST -- "entity dossier" --> DP
+  REST -- "search results" --> HD
+  REST -- "answer + citations" --> AIUI
+
+  %% Tiles & assets direct to Map
+  MV <-- "tiles · COG · GeoJSON" --> FILES
+  COGS -. "raster href" .- SITEM
+  VECT -. "vector href" .- SITEM
+
+  %% UI synchronization
+  TL <-- "time window" --> MV
+  MV <-- "map click · select entity" --> DP
+  LC --> MV
+  LC --> TL
+
+  %% CI/CD & Observability
+  CICD --> LOGS
+  REST --> LOGS
+  UI --> LOGS
+  OBS --- POL
+<!-- END OF MERMAID -->
