@@ -1,1 +1,61 @@
+flowchart TD
+  %% Provenance & Reproducibility Chain — Kansas Frontier Matrix
+  %% GitHub-safe syntax: quoted labels; \n for line breaks
 
+  subgraph SRC["Source & Acquisition\nExternal Archives · APIs · Scans"]
+    EXT1["USGS / NOAA / FEMA\nPublic APIs · Download URLs"]
+    EXT2["Kansas GIS Archive\nGeoTIFF · Shapefile · REST Services"]
+    EXT3["Historical Documents\nPDF · OCR · Text"]
+  end
+
+  subgraph ETL["ETL Pipeline\nMakefile · Python · Checksums"]
+    FET["Fetch Step\nscripts/fetch_data.py"]
+    TRF["Transform Step\nReproject · Convert · Normalize"]
+    LD["Load Step\nInsert → processed/ & STAC"]
+    VLD["Validate Step\nJSON Schema · STAC Validator"]
+  end
+
+  subgraph STAC["STAC Catalog & Metadata\nspatial · temporal · provenance"]
+    STCOLL["STAC Collection\nmetadata for dataset family"]
+    STITEM["STAC Item\nindividual asset record"]
+    CHECK["SHA256 Checksums\nintegrity sidecars (*.sha256)"]
+  end
+
+  subgraph KG["Knowledge Graph\nNeo4j · CIDOC CRM · OWL-Time"]
+    NODES["Entities (Person · Place · Event · Doc)"]
+    RELS["Relationships (OCCURRED_AT · MENTIONS · SOURCE_OF)"]
+    CONF["Confidence / Evidence Links\ncross-source correlation"]
+  end
+
+  subgraph API["API Layer\nFastAPI · GraphQL"]
+    ENDPTS["/events · /search · /entity · /ask"]
+    LOGS["Provenance Headers\ncommit · dataset ID · checksum"]
+  end
+
+  subgraph UI["Frontend (Map + Timeline)\nReact · MapLibre · Canvas"]
+    USER["User Interaction\nmap click · timeline scrub"]
+    PANEL["Detail Panel\nAI summary · citations"]
+  end
+
+  %% Provenance flow
+  EXT1 --> FET
+  EXT2 --> FET
+  EXT3 --> FET
+  FET --> TRF --> LD --> VLD --> STCOLL --> STITEM --> NODES
+  STITEM --> CHECK
+  NODES --> RELS --> CONF --> ENDPTS --> PANEL
+  LOGS --> PANEL
+
+  %% Feedback / audit loops
+  PANEL -. "flag error / submit feedback" .-> ENDPTS
+  ENDPTS -. "write audit log" .-> LOGS
+  LOGS -. "traceability metadata" .-> CHECK
+  CHECK -. "verifies integrity of" .-> STITEM
+  STITEM -. "linked to raw source in" .-> SRC
+
+  %% Labels
+  classDef proc fill:#f2f2f2,stroke:#333,stroke-width:1px;
+  classDef data fill:#d9edf7,stroke:#31708f,stroke-width:1px;
+  class SRC,ETL,STAC,KG,API,UI proc;
+  class EXT1,EXT2,EXT3,STCOLL,STITEM,CHECK,NODES,RELS,CONF,ENDPTS,LOGS data;
+<!-- END OF MERMAID -->
