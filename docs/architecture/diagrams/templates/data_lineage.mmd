@@ -1,1 +1,94 @@
+flowchart LR
+  %% Data Lineage Template — Kansas Frontier Matrix
+  %% Purpose: trace data flow from sources → transformations → outputs → publication
+  %% Use \n for line breaks; quote labels with punctuation; end with <!-- END OF MERMAID -->
 
+  %% ----- Source Layer -----
+  subgraph SRC["Data Sources\n(raw inputs · external APIs · archives)"]
+    EXT1["Source 1\n(e.g., USGS DEM)"]
+    EXT2["Source 2\n(e.g., NOAA Climate)"]
+    EXT3["Source 3\n(e.g., Historical Documents)"]
+  end
+
+  %% ----- Ingestion / ETL -----
+  subgraph ETL["ETL Pipeline\nfetch · transform · load"]
+    FET["Fetch Step\nscripts/fetch_data.py"]
+    TRF["Transform Step\nclean · reproject · normalize"]
+    QA["Validation\nschema · checksums"]
+  end
+
+  %% ----- Processed Outputs -----
+  subgraph PROC["Processed Data\nstandardized open formats"]
+    GEO["Vector Layers\nGeoJSON · shapefiles"]
+    RAS["Raster Layers\nCOG GeoTIFF · hillshade"]
+    TBL["Tabular Data\nCSV · Parquet"]
+  end
+
+  %% ----- Catalog / Metadata -----
+  subgraph META["Metadata & Catalog\nprovenance · STAC · DCAT"]
+    STAC["STAC Items\ncollections · spatial · temporal"]
+    CHECK["Checksums\nSHA256 sidecars"]
+    JSONLD["JSON-LD / DCAT export\nsemantic metadata"]
+  end
+
+  %% ----- Knowledge Graph -----
+  subgraph KG["Knowledge Graph\nNeo4j · CIDOC CRM · OWL-Time"]
+    NODE["Nodes\n(Person · Place · Event · Document)"]
+    REL["Relations\n(OCCURRED_AT · MENTIONS · SOURCE_OF)"]
+    CONF["Evidence / Confidence Scores"]
+  end
+
+  %% ----- API / Publication -----
+  subgraph PUB["API & Publication\nFastAPI · GraphQL · Web UI"]
+    API["API Endpoints\n/events · /entity · /layers-config"]
+    WEB["Web UI\nReact · MapLibre · timeline/map"]
+    KML["Exports\nKML · KMZ · downloads"]
+  end
+
+  %% ----- Flow Connections -----
+  EXT1 --> FET
+  EXT2 --> FET
+  EXT3 --> FET
+
+  FET --> TRF --> QA
+  QA --> GEO
+  QA --> RAS
+  QA --> TBL
+
+  GEO --> STAC
+  RAS --> STAC
+  TBL --> STAC
+  STAC --> JSONLD
+  STAC --> CHECK
+  STAC --> NODE
+  CHECK --> CONF
+
+  NODE --> REL --> CONF
+  CONF --> API
+  API --> WEB
+  API --> KML
+
+  %% ----- Styling -----
+  classDef src fill:#f2f2f2,stroke:#333,stroke-width:1px;
+  classDef etl fill:#e6f2ff,stroke:#31708f,stroke-width:1px;
+  classDef proc fill:#fdf5e6,stroke:#8a6d3b,stroke-width:1px;
+  classDef meta fill:#eef9f2,stroke:#3c763d,stroke-width:1px;
+  classDef graph fill:#f9e6ff,stroke:#6b3c76,stroke-width:1px;
+  classDef pub fill:#e0e0e0,stroke:#000,stroke-width:1px;
+
+  class SRC src;
+  class ETL etl;
+  class PROC proc;
+  class META meta;
+  class KG graph;
+  class PUB pub;
+
+  %% Legend suggestion:
+  %% src = external data
+  %% etl = transformation steps
+  %% proc = processed outputs
+  %% meta = metadata/citation
+  %% graph = knowledge integration
+  %% pub = end-user access
+
+<!-- END OF MERMAID -->
