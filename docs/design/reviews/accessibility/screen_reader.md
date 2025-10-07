@@ -3,13 +3,14 @@
 # 🗣 Kansas Frontier Matrix — Accessibility Audit: Screen Reader  
 `docs/design/reviews/accessibility/screen_reader.md`
 
-**Goal:** Guarantee that every component of the Kansas Frontier Matrix web UI is fully perceivable and navigable using screen-reader technologies (NVDA, JAWS, VoiceOver, Orca).  
-Accessibility is a first-class citizen of the Master Coder Protocol (MCP): if it’s not accessible, it’s not reproducible.
+**Goal:** Guarantee that every component of the Kansas Frontier Matrix web UI is fully perceivable and navigable  
+via assistive technologies (NVDA, JAWS, VoiceOver, Orca). Accessibility is fundamental to the  
+**Master Coder Protocol (MCP)** — *if it’s not accessible, it’s not reproducible.*
 
-[![Accessibility](https://img.shields.io/badge/WCAG-2.1AA-yellow)](#summary-results)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../)
-[![Design System](https://img.shields.io/badge/Design-System-green)](../../)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY-4.0-lightgrey)](../../../LICENSE)
+[![Accessibility](https://img.shields.io/badge/WCAG-2.1AA-yellow)](#📊-summary-results)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY--4.0-lightgrey)](../../../LICENSE)
 
 </div>
 
@@ -17,8 +18,9 @@ Accessibility is a first-class citizen of the Master Coder Protocol (MCP): if it
 
 ## 🎯 Purpose
 
-This audit validates the **semantic correctness**, **ARIA roles**, and **screen-reader readability** of the KFM user interface—across all views (MapLibre map, Timeline Canvas, AI Assistant, and Detail Panels).  
-It ensures that every interactive region has an accessible name, role, and state.
+This audit validates the **semantic correctness**, **ARIA roles**, and **screen-reader readability**  
+of the KFM interface across all major regions — **MapLibre**, **Timeline Canvas**, **AI Assistant**,  
+and **Detail Panels** — ensuring all content has an accessible **name**, **role**, and **state**.
 
 ---
 
@@ -26,29 +28,29 @@ It ensures that every interactive region has an accessible name, role, and state
 
 | Region | Description | Assistive Features Tested |
 |---------|--------------|---------------------------|
-| **Header & Navigation** | Branding, global search, language toggle, help menu | ARIA landmarks (`role="banner"`, `nav`); skip links |
-| **Timeline Canvas** | Chronological event visualization | Accessible name for range input; keyboard focus announcements |
-| **Map View (MapLibre)** | Map overlays and markers | `aria-label`, `aria-describedby` on controls and popups |
-| **Layer Controls** | Toggles, legends, opacity sliders | Live updates to `aria-pressed` and dynamic labels |
-| **AI Assistant Panel** | Chat region + history | `aria-live="polite"` for responses; focus management |
-| **Detail Panel** | Event/Entity details | Headings hierarchy + `role="region"` for segmentation |
+| **Header & Navigation** | Branding, search, language toggle, help menu | ARIA landmarks (`role="banner"`, `nav`); skip links |
+| **Timeline Canvas** | Chronological event visualization | Range input labeling + focus announcements |
+| **Map View (MapLibre)** | Map overlays and markers | `aria-label`, `aria-describedby` on controls |
+| **Layer Controls** | Toggles, legends, opacity sliders | Dynamic labels + live updates to `aria-pressed` |
+| **AI Assistant Panel** | Chat input + responses | `aria-live="polite"` for replies; focus management |
+| **Detail Panel** | Entity / event information | Heading hierarchy · `role="region"` for segmentation |
 
 ---
 
 ## 🧩 Checklist (WCAG 2.1 AA + ARIA 1.2)
 
 | # | Requirement | Status | Notes |
-|----|--------------|--------|-------|
-| 1 | Landmarks used (`header`, `nav`, `main`, `footer`) | ✅ | Verified by NVDA |
-| 2 | Every interactive element has an accessible name | ✅ | Buttons, toggles labeled via `aria-label` |
-| 3 | Dynamic content updates via `aria-live` or `role="status"` | ✅ | AI responses and alerts correctly announced |
-| 4 | Headings follow a logical hierarchy (`h1`–`h4`) | ✅ | Confirmed with VoiceOver rotor |
-| 5 | Focused elements announced with role + name | ✅ | Timeline and map controls tested |
-| 6 | No redundant announcements (e.g., duplicate alt text) | ✅ | Cleaned up nested labels |
-| 7 | Modal focus trap preserves screen-reader context | ⚙️ | Works, but needs retest post React update |
-| 8 | MapLibre controls exposed to accessibility tree | ⚙️ | Pending upstream MapLibre patch |
-| 9 | Timeline Canvas has accessible summary description | ✅ | `aria-label="Historical timeline of Kansas events"` |
-| 10 | SVG icons have descriptive `title` or `aria-hidden="true"` | ✅ | Passed audit |
+|:--:|--------------|:-------:|-------|
+| 1 | Landmarks (`header`, `nav`, `main`, `footer`) present | ✅ | Verified NVDA |
+| 2 | Every interactive element has accessible name | ✅ | Buttons, toggles labeled |
+| 3 | Dynamic updates via `aria-live` / `role="status"` | ✅ | AI Assistant + alerts |
+| 4 | Logical heading hierarchy (`h1–h4`) | ✅ | Verified with VoiceOver rotor |
+| 5 | Focused elements announce role + name | ✅ | Timeline + map controls |
+| 6 | No duplicate / redundant announcements | ✅ | Nested label cleanup done |
+| 7 | Modal focus trap preserves context | ⚙️ | Retest post React update |
+| 8 | MapLibre controls visible in accessibility tree | ⚙️ | Pending upstream patch |
+| 9 | Timeline Canvas accessible summary | ✅ | `aria-label="Kansas events timeline"` |
+| 10 | SVG icons labeled or hidden (`aria-hidden`) | ✅ | Audit complete |
 
 ---
 
@@ -56,38 +58,38 @@ It ensures that every interactive region has an accessible name, role, and state
 
 | Tool | Purpose | Result |
 |------|----------|--------|
-| **NVDA 2023.3 (Windows)** | Primary navigation audit | ✅ Pass |
-| **JAWS 2024** | Landmarks + forms test | ✅ Pass |
-| **VoiceOver (macOS 14)** | Semantic region order | ✅ Pass |
-| **Chrome DevTools Accessibility Tree** | DOM structure validation | ✅ Pass |
-| **Axe Core CLI v4.10** | Automated ARIA/role check | ✅ Pass |
-| **Lighthouse CI** | Accessibility score ≥ 90 | ✅ Pass |
+| NVDA 2023.3 (Windows) | Primary navigation audit | ✅ Pass |
+| JAWS 2024 | Landmarks + forms test | ✅ Pass |
+| VoiceOver (macOS 14) | Semantic region order | ✅ Pass |
+| Chrome A11y Tree | DOM structure + labels | ✅ Pass |
+| Axe Core CLI v4.10 | Automated ARIA check | ✅ Pass |
+| Lighthouse CI | Accessibility ≥ 90 | ✅ Pass |
 
 ---
 
 ## 🗂️ Audit Steps
 
-1. Launch site with screen-reader enabled.  
-2. Verify **landmarks and regions** are announced in correct order.  
-3. Tab through all interactive elements—ensure descriptive labels and focus order.  
-4. Trigger AI Assistant responses; verify live announcements.  
-5. Open Detail Panel; confirm heading levels and label hierarchy.  
-6. Switch map layers and observe announcements of state changes.  
-7. Record issues and retest after fixes.
+1. Launch site with screen-reader active (NVDA, JAWS, or VoiceOver).  
+2. Verify **landmarks** and **regions** are announced in correct order.  
+3. Tab through interactive items — ensure descriptive labels + visible focus.  
+4. Trigger AI Assistant response → confirm `aria-live` announcements.  
+5. Open Detail Panel → check heading hierarchy and labels.  
+6. Switch map layers → confirm ARIA state changes.  
+7. Document findings → retest post-correction.
 
 ---
 
 ## 📊 Summary Results
 
 | Section | Status | Notes |
-|----------|--------|-------|
-| Header & Navigation | ✅ | Fully compliant |
-| Map View | ⚙️ | MapLibre missing role on zoom buttons (pending PR) |
-| Timeline Canvas | ✅ | Focus + announcements OK |
-| Detail Panel | ✅ | Proper heading structure |
-| AI Assistant | ✅ | `aria-live` polite region verified |
-| Layer Controls | ✅ | Dynamic state labels added |
-| Global Skip Links | ✅ | Confirmed visible on Tab start |
+|----------|:------:|-------|
+| Header & Navigation | ✅ | Landmarks correct; skip links visible |
+| Map View | ⚙️ | Missing roles on zoom controls (PR open) |
+| Timeline Canvas | ✅ | Focus + role announcements pass |
+| Detail Panel | ✅ | Logical headings, regions confirmed |
+| AI Assistant | ✅ | `aria-live="polite"` verified |
+| Layer Controls | ✅ | Dynamic `aria-pressed` updates added |
+| Global Skip Links | ✅ | Appears and functions correctly |
 
 ---
 
@@ -95,45 +97,88 @@ It ensures that every interactive region has an accessible name, role, and state
 
 ```mermaid
 flowchart TD
-  A["Header\n(role='banner')"] --> B["Navigation\n(role='navigation')"]
-  B --> C["Main Content\n(role='main')"]
+  A["Header\nrole='banner'"] --> B["Navigation\nrole='navigation'"]
+  B --> C["Main Content\nrole='main'"]
   C --> D["Timeline Canvas\naria-label='Kansas Events Timeline'"]
   D --> E["Map View\naria-label='Interactive Map of Kansas'"]
-  E --> F["Detail Panel\n(role='region' aria-labelledby='entity-title')"]
-  F --> G["AI Assistant Drawer\n(role='complementary')"]
-  G --> H["Footer\n(role='contentinfo')"]
-<!-- END OF MERMAID -->
+  E --> F["Detail Panel\nrole='region' aria-labelledby='entity-title'"]
+  F --> G["AI Assistant Drawer\nrole='complementary'"]
+  G --> H["Footer\nrole='contentinfo'"]
 
+  style A fill:#E6EFFF,stroke:#0074D9,stroke-width:2px
+  style B fill:#F8F8FF,stroke:#6C63FF,stroke-width:1.5px
+  style C fill:#FFFDE7,stroke:#FBC02D,stroke-width:1.5px
+  style D fill:#E3F2FD,stroke:#1976D2,stroke-width:1.5px
+  style E fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px
+  style F fill:#FFF3C4,stroke:#FFB700,stroke-width:2px
+  style G fill:#FFF9C4,stroke:#F57F17,stroke-width:1.5px
+  style H fill:#F1F8E9,stroke:#43A047,stroke-width:1.5px
 
-⸻
+  %% END OF MERMAID
+````
 
-🪶 Recommendations
-	1.	✅ Add aria-current="page" to active navigation items.
-	2.	✅ Use aria-describedby for map marker popups referencing contextual text.
-	3.	⚙️ Investigate custom ARIA roles for MapLibre controls to ensure compatibility.
-	4.	⚙️ Retest modal focus trap post React 18 upgrade.
-	5.	🧩 Integrate screen-reader regression tests in CI (Pa11y + NVDA automation).
+---
 
-⸻
+## 🧩 Recommendations
 
-🧾 Provenance
+1. ✅ Add `aria-current="page"` to active nav items.
+2. ✅ Apply `aria-describedby` for map markers referencing nearby text.
+3. ⚙️ Add ARIA roles to MapLibre custom buttons (zoom / toggle).
+4. ⚙️ Retest modal focus after React 18 upgrade.
+5. 🧩 Integrate automated **screen-reader regression tests** via Pa11y + NVDA automation.
 
-Field	Value
-Reviewer(s)	@accessibility-team / @design-lead
-Review Date	{{ ISO8601_DATE }}
-Components Audited	Navigation v0.3.2 · Timeline v0.4.0 · Map Controls v0.5.1 · AI Assistant v0.3.0
-Commit Hash	{{ GIT_COMMIT }}
-Result	✅ AA Compliant (MapLibre enhancement pending)
+---
 
+## ⚙️ Continuous Integration (Screen Reader QA)
 
-⸻
+```yaml
+# .github/workflows/a11y_screen_reader.yml
+on:
+  pull_request:
+    paths:
+      - "web/src/components/**"
+      - "docs/design/reviews/accessibility/screen_reader.md"
+jobs:
+  screenreader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install a11y tools
+        run: npm i -g axe-core-cli pa11y-ci
+      - name: Run ARIA/role audit
+        run: pa11y-ci --config .pa11yci.aria.json > aria-report.json
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenreader-audit-report
+          path: aria-report.json
+```
 
-🪪 License
+---
 
-Released under Creative Commons CC-BY 4.0
+## 🧾 Provenance
+
+| Field                  | Value                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------- |
+| **Reviewer(s)**        | @accessibility-team · @design-lead                                              |
+| **Review Date**        | `2025-10-07`                                                                    |
+| **Components Audited** | Navigation v0.3.2 · Timeline v0.4.0 · Map Controls v0.5.1 · AI Assistant v0.3.0 |
+| **Commit Hash**        | `{{ GIT_COMMIT }}`                                                              |
+| **Result**             | ✅ AA Compliant (MapLibre patch pending)                                         |
+
+---
+
+## 🪪 License
+
+Released under **Creative Commons CC-BY 4.0**
 © 2025 Kansas Frontier Matrix Design Collective
 
-⸻
+---
 
+<div align="center">
 
+### 🗣 Kansas Frontier Matrix — Accessibility by Semantics
 
+**Audible · Navigable · Reproducible**
+
+</div>
