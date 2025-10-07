@@ -3,12 +3,13 @@
 # 🧩 Kansas Frontier Matrix — Design Reviews  
 `docs/design/reviews/`
 
-**Purpose:** Centralize design-review templates, guidelines, and outcomes for all visual, interaction, and architectural components of the KFM system.
+**Purpose:** Centralize design-review templates, guidelines, and outcomes  
+for all visual, interaction, and architectural components of the KFM system.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../)
-[![Design System](https://img.shields.io/badge/Design-System-green)](../)
-[![Accessibility](https://img.shields.io/badge/WCAG-2.1AA-compliant-yellow)](#accessibility)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC-BY-4.0-lightgrey)](../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../)  
+[![Accessibility](https://img.shields.io/badge/WCAG-2.1AA-compliant-yellow)](#accessibility--compliance)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
 
 </div>
 
@@ -16,20 +17,21 @@
 
 ## 🎯 Purpose
 
-This directory stores **design-review documentation** for Kansas Frontier Matrix (KFM), including:
+This directory houses **design-review documentation** for Kansas Frontier Matrix (KFM), covering:
 
-* Visual & UX audits  
-* Component-level feedback (Figma, MapLibre, React)  
-* Accessibility evaluations (WCAG 2.1 AA)  
-* Architecture diagram reviews (Mermaid/GitHub render)  
-* Style-system and token consistency checks  
-* AI-assistant and interactive-UI evaluations  
+- 🖼️ Visual & UX audits  
+- 🧭 Component-level feedback (Figma → React → MapLibre)  
+- ♿ Accessibility evaluations (WCAG 2.1 AA + ARIA)  
+- 🧱 Architecture diagram reviews (Mermaid/GitHub render)  
+- 🎨 Design-token and style-system consistency checks  
+- 🤖 AI-assistant and interaction-UX evaluations  
 
-Design reviews ensure that **time, space, and story** remain synchronized across all user interactions—meeting the MCP standard of *documentation-first reproducibility*.
+Design reviews ensure that **time, space, and story** remain synchronized across all user interactions — meeting  
+the **Master Coder Protocol (MCP)** standard of *documentation-first reproducibility*.
 
 ---
 
-## 🧭 Directory Structure
+## 🗂️ Directory Structure
 
 ```text
 docs/design/reviews/
@@ -51,94 +53,144 @@ docs/design/reviews/
     ├── design_review_template.md
     ├── accessibility_checklist.md
     └── component_audit_form.md
+````
 
+---
 
-⸻
+## 🪶 Review Types
 
-🪶 Review Types
+| Review Type              | Scope                                        | Deliverables                           | Frequency       |
+| ------------------------ | -------------------------------------------- | -------------------------------------- | --------------- |
+| **Visual Design**        | Layouts · colors · typography                | Annotated screenshots / Figma comments | Per component   |
+| **Interaction Design**   | Map + Timeline sync · gestures · search flow | Updated wireframes · interaction logs  | Major release   |
+| **Architecture Diagram** | Mermaid & STAC flowcharts                    | Validated `.mmd` + SVG exports         | Quarterly       |
+| **Accessibility**        | Keyboard · color · screen reader             | Checklist + compliance score           | Every milestone |
+| **AI UX Review**         | Prompt flow · AI panel · summaries           | Feedback log + UI iteration notes      | As needed       |
 
-Review Type	Scope	Deliverables	Frequency
-Visual Design	Layouts, colors, typography	Annotated screenshots / Figma comments	Per component
-Interaction Design	Map + Timeline sync, gestures, search flow	Updated wireframes, interaction logs	Major release
-Architecture Diagram	Mermaid & STAC flowcharts	Validated .mmd diagrams + SVG export	Quarterly
-Accessibility	Keyboard, color, screen reader	Checklist + compliance score	Every milestone
-AI UX Review	Prompt flow, AI panel, summaries	Feedback log + UI iteration notes	As needed
+---
 
+## 🧩 Review Process
 
-⸻
+1. **Initiate** — Create a new file from `templates/design_review_template.md`.
+2. **Reference** — Link related mockups, PRs, or `.mmd` diagrams.
+3. **Evaluate** — Apply MCP checklist → clarity · consistency · compliance · reproducibility.
+4. **Record** — Document findings, recommendations, and version metadata.
+5. **Approve** — Tag reviewers · assign version bump (semver patch / minor).
+6. **Archive** — Move closed reviews to `/archive/` for provenance.
 
-🧩 Review Process
-	1.	Initiate — Create a new file in this directory from a template (templates/design_review_template.md).
-	2.	Reference — Link to related mockups, PRs, or .mmd diagrams under review.
-	3.	Evaluate — Use MCP checklist: clarity · consistency · compliance · reproducibility.
-	4.	Record — Document findings, recommendations, and version metadata.
-	5.	Approve — Tag reviewers in PR and assign version bump (semver: patch or minor).
-	6.	Archive — Move closed reviews to /archive/ if necessary for historical record.
+---
 
-⸻
+## 🧠 Evaluation Checklist (MCP-Aligned)
 
-🧠 Evaluation Checklist (MCP Aligned)
+| Category               | Criteria                                     | Status |
+| ---------------------- | -------------------------------------------- | ------ |
+| **Readability**        | Font ≥ 16 px; clear hierarchy                | ☐      |
+| **Contrast**           | Meets WCAG AA (≥ 4.5:1 text/bg)              | ☐      |
+| **Layout**             | Responsive on ≥ 3 breakpoints                | ☐      |
+| **Interactivity**      | Hover/focus states visible; tooltips labeled | ☐      |
+| **Timeline Sync**      | Map ↔ timeline update < 200 ms               | ☐      |
+| **Semantic Structure** | Proper ARIA roles; heading hierarchy         | ☐      |
+| **Color System**       | Follows design tokens (`--kfm-color-*`)      | ☐      |
+| **Performance**        | ≤ 2 s first paint on median hardware         | ☐      |
+| **Documentation**      | README + diagram updated; version tagged     | ☐      |
 
-Category	Criteria	Pass ✅ / Fail ❌ / N/A – Notes
-Readability	Font size ≥ 16 px; clear hierarchy	
-Contrast	Meets WCAG AA (≥ 4.5:1 text/background)	
-Layout	Responsive on ≥ 3 breakpoints	
-Interactivity	Hover/focus states visible; tooltips labeled	
-Timeline Sync	Map + timeline update within 200 ms	
-Semantic Structure	Proper ARIA roles; headings hierarchy	
-Color System	Follows design tokens (--kfm-color-*)	
-Performance	< 2 s first paint on median hardware	
-Documentation	README + diagram updated; version tagged	
+---
 
+## 🧩 Mermaid Example — Design Review Flow
 
-⸻
-
-🧩 Mermaid Example (Design Review Flow)
-
+```mermaid
 flowchart TD
-  A["Start Review\n(Template Created)"] --> B["Visual Audit\n(Figma · Screenshots)"]
-  B --> C["Accessibility Check\n(WCAG · ARIA · Tokens)"]
-  C --> D["Architecture Diagram Validation\n(Mermaid · STAC)"]
-  D --> E["Reviewer Feedback Logged\n(PR · Comments)"]
+  A["Start Review\nTemplate Created"] --> B["Visual Audit\nFigma · Screenshots"]
+  B --> C["Accessibility Check\nWCAG · ARIA · Tokens"]
+  C --> D["Architecture Diagram Validation\nMermaid · STAC"]
+  D --> E["Reviewer Feedback Logged\nPR · Comments"]
   E --> F["Sign-off · Merge · Archive"]
-<!-- END OF MERMAID -->
 
+  style A fill:#E6EFFF,stroke:#0074D9,stroke-width:2px
+  style B fill:#F8F8FF,stroke:#6C63FF,stroke-width:1.5px
+  style C fill:#FFFDE7,stroke:#FBC02D,stroke-width:1.5px
+  style D fill:#E3F2FD,stroke:#1976D2,stroke-width:1.5px
+  style E fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px
+  style F fill:#FFF3C4,stroke:#FFB700,stroke-width:2px
 
-⸻
+  %% END OF MERMAID
+```
 
-🔒 Accessibility & Compliance
+---
 
-All design components must meet WCAG 2.1 AA, Section 508, and MCP reproducibility standards.
-Reviews document both technical accessibility (markup, ARIA) and cognitive accessibility (color, motion, clarity).
+## 🔒 Accessibility & Compliance
 
-⸻
+All design components must satisfy **WCAG 2.1 AA**, **Section 508**, and **MCP reproducibility** standards.
+Reviews assess both **technical accessibility** (markup · ARIA) and **cognitive accessibility**
+(color · motion · clarity). Any failed criterion must document remediation steps.
 
-🧾 Provenance & Versioning
+---
+
+## 🧾 Provenance & Versioning
 
 Every review record includes:
-	•	commit: Git hash of the design version under review
-	•	mockup_version: Figma frame ID or export tag
-	•	reviewed_by: GitHub handles of reviewers
-	•	approved_on: ISO date
 
-All completed reviews link to their related pull request and STAC asset IDs if visual layers were affected.
+| Field                  | Description                             |
+| ---------------------- | --------------------------------------- |
+| **commit**             | Git hash of design version under review |
+| **mockup_version**     | Figma frame ID / export tag             |
+| **reviewed_by**        | GitHub handles of reviewers             |
+| **approved_on**        | ISO 8601 date                           |
+| **stac_id (optional)** | Related visual layer asset ID           |
 
-⸻
+Completed reviews link to related PRs and STAC metadata for full traceability.
 
-🧰 Related Docs
-	•	Architecture Overview
-	•	Mockups Index
-	•	UI Component Specs
-	•	Accessibility Checklist Template
+---
 
-⸻
+## 🧰 Related Documentation
 
-🪪 License
+* [Architecture Overview](../architecture/)
+* [Mockups Index](../mockups/)
+* [UI Component Specs](../mockups/figma/components/)
+* [Accessibility Checklist Template](./templates/accessibility_checklist.md)
 
-All review documents are released under Creative Commons CC-BY 4.0
-© 2025 Kansas Frontier Matrix Design Collective
+---
 
-⸻
+## ⚙️ Continuous Integration (Design QA)
 
+All design reviews are validated via **GitHub Actions** (`design-review.yml`):
 
+* Lints Markdown for heading hierarchy and table integrity.
+* Validates Mermaid syntax (`@mermaid-js/mermaid-cli`).
+* Checks WCAG JSON reports for contrast violations.
+* Posts summary to PR comment via GitHub Bot.
 
+```yaml
+# .github/workflows/design-review.yml
+on:
+  pull_request:
+    paths:
+      - "docs/design/reviews/**/*.md"
+jobs:
+  lint-design-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx @mermaid-js/mermaid-cli --version
+      - name: Validate Mermaid blocks
+        run: npx @mermaid-js/mermaid-cli -i docs/design/reviews/README.md -o temp.svg
+      - name: Lint Markdown
+        run: npx markdownlint-cli2 "docs/design/reviews/**/*.md"
+```
+
+---
+
+## 🪪 License
+
+All review documents are released under **Creative Commons CC-BY 4.0**.
+© 2025 Kansas Frontier Matrix Design Collective.
+
+---
+
+<div align="center">
+
+### 🧭 Kansas Frontier Matrix — Documentation-First Design Governance
+
+**Spatial · Temporal · Narrative · Reproducible**
+
+</div>
