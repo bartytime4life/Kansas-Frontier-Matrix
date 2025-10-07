@@ -61,6 +61,101 @@ docs/design/diagrams/exports/
 
 ---
 
+## 🧩 Visual Reference
+
+Below are **reference previews** of exported diagrams
+(rendered directly from the authoritative `.mmd` files).
+
+### System Architecture (ETL → Graph → Web)
+
+```mermaid
+flowchart TD
+  A["Data Sources\nUSGS · NOAA · FEMA · KGS"] --> B["ETL Pipeline\nPython + Makefile"]
+  B --> C["Processed Layers\nGeoJSON · COG · CSV"]
+  C --> D["STAC Catalog\nSpatial + Temporal Index"]
+  D --> E["Knowledge Graph\nNeo4j · CIDOC CRM · OWL-Time"]
+  E --> F["API Layer\nFastAPI · GraphQL"]
+  F --> G["Web Frontend\nReact + MapLibreGL"]
+  G --> H["Users\nResearchers · Educators · Public"]
+
+  style A fill:#E6EFFF,stroke:#0074D9,stroke-width:2px
+  style G fill:#E0FFE0,stroke:#2ECC40,stroke-width:2px
+  style H fill:#FFF3C4,stroke:#FFB700,stroke-width:2px
+
+  %% END OF MERMAID
+```
+
+### UI Component Flow (React + FastAPI)
+
+```mermaid
+flowchart LR
+  subgraph Frontend ["Frontend (React + MapLibre)"]
+    SB["SearchBar.tsx"]
+    TL["Timeline.tsx"]
+    MV["MapView.tsx"]
+    DP["DetailPanel.tsx"]
+  end
+
+  subgraph Backend ["Backend (FastAPI + Neo4j)"]
+    E["/search API"]
+    F["/events API"]
+    G["/entity/{id} API"]
+    H["Graph Database\nNeo4j Knowledge Graph"]
+  end
+
+  SB --> E
+  TL --> F
+  MV --> F
+  DP --> G
+  E --> H
+  F --> H
+  G --> H
+  H --> DP
+  DP --> MV
+  MV --> TL
+
+  style Frontend fill:#f9f9f9,stroke:#888
+  style Backend fill:#e8f0fe,stroke:#0074D9
+
+  %% END OF MERMAID
+```
+
+### Knowledge Graph Schema (CIDOC CRM Core)
+
+```mermaid
+erDiagram
+  PERSON ||--o{ EVENT : "participated_in"
+  PLACE  ||--o{ EVENT : "occurred_at"
+  DOCUMENT ||--o{ EVENT : "mentions"
+
+  EVENT {
+    string id
+    date start_date
+    date end_date
+    string type
+  }
+
+  PERSON {
+    string name
+    string role
+  }
+
+  PLACE {
+    string name
+    float latitude
+    float longitude
+  }
+
+  DOCUMENT {
+    string title
+    string source
+  }
+
+  %% END OF MERMAID
+```
+
+---
+
 ## 🛠️ Local Export (CLI)
 
 Use Mermaid CLI for `.mmd` sources:
@@ -131,7 +226,7 @@ Each image includes an accessibility sidecar with **alt text**, **long descripti
 * Generate/verify `.sha256`.
 * Ensure `*.alt.json` exists for every image.
 
-**Example workflow snippet** (reference & adapt under `.github/workflows/diagram-validate.yml`):
+**Example workflow snippet:**
 
 ```yaml
 name: Diagram Validate & Export
@@ -195,27 +290,28 @@ When embedding in Markdown, include a short alt text and (optionally) link to th
 
 ## ✅ Review Checklist (PR Gate)
 
-* [ ] Export filenames match source stems.
-* [ ] Both **PNG** and **SVG** present.
-* [ ] **Checksum** files exist and validate.
-* [ ] **Alt JSON** present with accurate descriptions/provenance.
-* [ ] No orphan exports (images without a source).
-* [ ] Visual spot-check against latest source commit.
+* [ ] Export filenames match source stems
+* [ ] Both **PNG** and **SVG** present
+* [ ] **Checksum** files exist and validate
+* [ ] **Alt JSON** present with accurate descriptions/provenance
+* [ ] No orphan exports (images without a source)
+* [ ] Visual spot-check against latest source commit
 
 ---
 
 ## 🧾 Provenance & Licensing
 
-* **Source of Truth:** `docs/design/diagrams/*.mmd` (Mermaid) / `*.puml` (optional).
-* **Generated With:** Mermaid CLI / PlantUML.
-* **Integrity:** SHA-256 checksums; CI verifies drift.
-* **License:** CC-BY-4.0. Include attribution when images are reused externally.
+* **Source of Truth:** `docs/design/diagrams/*.mmd` (Mermaid) / `*.puml` (optional)
+* **Generated With:** Mermaid CLI / PlantUML
+* **Integrity:** SHA-256 checksums; CI verifies drift
+* **License:** CC-BY-4.0 — include attribution when reused externally
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Reproducible Visuals**
+### 🧭 Kansas Frontier Matrix — Reproducible Visuals
+
 *Spatial · Temporal · Narrative · Verified*
 
 </div>
