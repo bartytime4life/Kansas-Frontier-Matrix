@@ -1,1 +1,47 @@
+flowchart TD
+  %% Blank Flowchart Template — Kansas Frontier Matrix
+  %% Usage:
+  %% - Edit labels inside quotes only.
+  %% - Use \n for line breaks in node labels.
+  %% - Keep IDs simple (letters/numbers/underscores).
+  %% - End the block with <!-- END OF MERMAID --> for GitHub.
 
+  %% Direction: TD (top→down), LR (left→right), BT (bottom→top), RL (right→left)
+  %% Change here if needed:
+  %% flowchart LR
+
+  %% ----- Subgraph placeholders (optional) -----
+  subgraph GROUP1["Group 1 Title\n(short description)"]
+    A["Node A\n(one-liner)"]
+    B["Node B\n(one-liner)"]
+  end
+
+  subgraph GROUP2["Group 2 Title\n(short description)"]
+    C["Node C\n(one-liner)"]
+    D["Node D\n(one-liner)"]
+  end
+
+  %% ----- Edges (connect your nodes) -----
+  A --> B
+  B --> C
+  C -. "dashed / annotation" .-> D
+  D -- "labeled edge" --> A
+
+  %% ----- Styling (optional) -----
+  %% Define reusable classes:
+  classDef group fill:#f7f7f7,stroke:#333,stroke-width:1px;
+  classDef node fill:#e8f1fa,stroke:#31708f,stroke-width:1px;
+  classDef accent fill:#fff3cd,stroke:#8a6d3b,stroke-width:1px;
+
+  %% Apply classes:
+  class GROUP1,GROUP2 group;
+  class A,B,C,D node;
+  %% Example accent:
+  %% class B accent;
+
+  %% Notes:
+  %% - To add more nodes: X["Label"] then connect: A --> X
+  %% - To add a third group, copy a subgraph block and rename IDs/titles.
+  %% - Keep labels concise; use \n for multi-line.
+
+<!-- END OF MERMAID -->
