@@ -75,7 +75,9 @@ flowchart TD
   style A fill:#E6EFFF,stroke:#0074D9,stroke-width:2px
   style G fill:#E0FFE0,stroke:#2ECC40,stroke-width:2px
   style H fill:#FFF3C4,stroke:#FFB700,stroke-width:2px
-<!-- END OF MERMAID -->
+
+  %% END OF MERMAID
+
 ```
 
 ---
@@ -114,7 +116,9 @@ flowchart LR
 
   style Frontend fill:#f9f9f9,stroke:#888
   style Backend fill:#e8f0fe,stroke:#0074D9
-<!-- END OF MERMAID -->
+
+  %% END OF MERMAID
+
 ```
 
 ---
@@ -152,7 +156,9 @@ erDiagram
     string title
     string source
   }
-<!-- END OF MERMAID -->
+
+  %% END OF MERMAID
+
 ```
 
 ---
