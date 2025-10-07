@@ -1,1 +1,88 @@
+flowchart TD
+  %% CI/CD Pipeline — Kansas Frontier Matrix
+  %% GitHub-safe syntax: quoted labels; \n for line breaks
 
+  %% Triggers
+  subgraph TRG["Triggers\npush · pull_request · schedule (cron) · tag/release"]
+    BR_MAIN["Branch: main\nprotected"]
+    BR_FEAT["Feature Branches\nfeat/* · fix/*"]
+    PR["Pull Request\nreview · checks required"]
+    TAG["Tag/Release\nvX.Y.Z"]
+  end
+
+  %% CI Stages
+  subgraph CI["CI Stages\nGitHub Actions"]
+    PC["Pre-commit Hooks\nformat · lint · import order"]
+    LINT["Static Lint\nPython (ruff) · JS (eslint) · styles"]
+    UNIT["Unit Tests\npytest · jest"]
+    INT["Integration Tests\nAPI · graph · ETL smoke"]
+    STACV["STAC Validation\nschema · links · dates"]
+    CODEQL["CodeQL Analysis\nSAST"]
+    TRIVY["Container Scan (Trivy)\nbase images · deps · CVEs"]
+    SBOM["SBOM/Deps\npip/uv + npm audit (advisories)"]
+  end
+
+  %% Build & Artifacts
+  subgraph ART["Build & Artifacts"]
+    PKG["Build Artifacts\nPython wheels · web bundle"]
+    IMG["Container Images\napi:sha · web:sha · jobs:sha"]
+    META["Provenance & Metadata\n.gitinfo · checksums · SBOM"]
+    CACHE["Caches\npip/uv · node · docker layers"]
+  end
+
+  %% Environments / CD
+  subgraph CD["CD Environments\nGitHub Envs · approvals"]
+    DEV["Deploy: Dev\npreview URLs"]
+    STAGE["Deploy: Stage\nsmoke · E2E"]
+    PROD["Deploy: Prod\nblue/green · canary"]
+  end
+
+  %% Observability & Compliance
+  subgraph OBS["Observability & Compliance"]
+    LOGS["Logs · Metrics · Traces\nOpenTelemetry"]
+    POL["Policies\nbranch protection · required checks"]
+    NOTI["Notifications\nSlack/Email · PR status"]
+  end
+
+  %% Flows: Triggers -> CI
+  BR_FEAT --> PR
+  BR_MAIN --> CI
+  PR --> CI
+  TAG --> CI
+
+  %% CI flow
+  CI --> PC --> LINT --> UNIT --> INT --> STACV
+  LINT --> CODEQL
+  IMG -. "scan" .-> TRIVY
+  LINT --> SBOM
+
+  %% Build when CI gates pass
+  STACV --> PKG
+  STACV --> IMG
+  CODEQL --> META
+  TRIVY --> META
+  SBOM --> META
+  PC --> CACHE
+  LINT --> CACHE
+
+  %% CD gating
+  PKG --> DEV
+  IMG --> DEV
+  DEV --> STAGE
+  STAGE --> PROD
+
+  %% Feedback & Observability
+  CI --> NOTI
+  CD --> NOTI
+  PROD --> LOGS
+  CI --> POL
+  CD --> POL
+
+  %% Legend styles
+  classDef block fill:#f7f7f7,stroke:#333,stroke-width:1px;
+  classDef gate fill:#e6f2ff,stroke:#31708f,stroke-width:1px;
+  classDef risk fill:#fff3cd,stroke:#8a6d3b,stroke-width:1px;
+  class TRG,CI,ART,CD,OBS block;
+  class PC,LINT,UNIT,INT,STACV gate;
+  class CODEQL,TRIVY,SBOM risk;
+<!-- END OF MERMAID -->
