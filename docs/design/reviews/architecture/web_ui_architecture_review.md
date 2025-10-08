@@ -3,11 +3,14 @@
 # 🧩 Kansas Frontier Matrix — Web UI Architecture Review  
 `docs/design/reviews/architecture/web_ui_architecture_review.md`
 
-**Purpose:** Evaluate and validate the frontend architecture of the Kansas Frontier Matrix (KFM) — focusing on **React**, **MapLibre GL**, **HTML5 Canvas**, and integration with **FastAPI / GraphQL** backend layers.
+**Purpose:** Evaluate and validate the **frontend architecture** of the Kansas Frontier Matrix (KFM) —  
+focusing on **React**, **MapLibre GL**, **HTML5 Canvas**, and integration with the **FastAPI / GraphQL** backend.  
+Reviews are governed by the **Master Coder Protocol (MCP)** to ensure reproducibility, accessibility,  
+and performance at every system layer.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../)
-[![Accessibility](https://img.shields.io/badge/WCAG-2.1AA-yellow)](../../accessibility/)
-[![Design System](https://img.shields.io/badge/Design-System-green)](../../../)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../)  
+[![Accessibility](https://img.shields.io/badge/WCAG-2.1AA-yellow)](../../accessibility/)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../../)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY--4.0-lightgrey)](../../../LICENSE)
 
 </div>
@@ -16,17 +19,17 @@
 
 ## 🎯 Review Scope
 
-This review audits the design and performance of the **Web UI architecture** and its relationship to backend systems.  
-It ensures the frontend meets Kansas Frontier Matrix goals for **interactivity**, **accessibility**, and **reproducibility** under the Master Coder Protocol (MCP).
+This review audits the **Web UI architecture** and its relationship to backend APIs, ensuring the  
+interface meets Kansas Frontier Matrix goals for **interactivity**, **accessibility**, and **reproducibility**.
 
 | Layer | Technology | Key Focus |
 |-------|-------------|-----------|
-| **Frontend Framework** | React 18+, TypeScript | Modularity, context/state management |
-| **Mapping Engine** | MapLibre GL JS | Performance, accessibility, and layer sync |
-| **Timeline Renderer** | HTML5 Canvas | Smooth 60fps rendering with linked map state |
-| **API Integration** | FastAPI + GraphQL | Efficient data loading, no N+1 queries |
-| **Accessibility** | ARIA 1.2 + WCAG 2.1 AA | Keyboard focus, readable semantics |
-| **Testing & CI** | Jest · Lighthouse CI · Pa11y | Coverage, regressions, accessibility score ≥ 90 |
+| **Frontend Framework** | React 18+ · TypeScript | Modularity · context/state management |
+| **Mapping Engine** | MapLibre GL JS | Performance · accessibility · layer synchronization |
+| **Timeline Renderer** | HTML5 Canvas | Smooth 60 fps rendering with map sync |
+| **API Integration** | FastAPI + GraphQL | Efficient loading · no N+1 queries |
+| **Accessibility** | ARIA 1.2 + WCAG 2.1 AA | Keyboard focus · semantic roles |
+| **Testing / CI** | Jest · Lighthouse CI · Pa11y | Regression coverage ≥ 85 % · Accessibility ≥ 90  |
 
 ---
 
@@ -34,82 +37,138 @@ It ensures the frontend meets Kansas Frontier Matrix goals for **interactivity**
 
 ```mermaid
 flowchart LR
-  A["Frontend (React SPA)\nComponents + Hooks + Context"] --> B["API Layer (FastAPI / GraphQL)\nREST endpoints /events, /entity, /search"]
-  A --> C["Static Assets\nCOG · GeoJSON · Tile Layers (CDN)"]
-  B --> D["Neo4j Knowledge Graph\n(Entities · Relations · Confidence)"]
-  C --> A
-  A --> E["User Interface\nMapLibre GL · Canvas Timeline · Detail Panel"]
-  E --> F["Accessibility Layer\nARIA roles · WCAG tokens"]
-<!-- END OF MERMAID -->
+  subgraph Frontend ["Frontend (React SPA)"]
+    A["Components · Hooks · Context"]
+    B["UI Layer (MapLibre GL · Canvas Timeline · Panels)"]
+    C["Accessibility · ARIA 1.2 · Tokens"]
+  end
 
-The UI stack synchronizes time (timeline), space (map), and story (knowledge graph) in real-time.
-All user interactions propagate through React’s context state, ensuring global awareness of selections, filters, and time ranges.
+  subgraph Backend ["Backend (FastAPI / GraphQL)"]
+    D["REST / GraphQL Endpoints\n/events · /entity · /search"]
+    E["Neo4j Knowledge Graph\nEntities · Relations · Confidence"]
+  end
 
-⸻
+  A --> D
+  B --> D
+  D --> E
+  B --> C
 
-🧩 Evaluation Criteria
+  style Frontend fill:#f9f9f9,stroke:#888,stroke-width:1px
+  style Backend fill:#e8f0fe,stroke:#0074D9,stroke-width:1px
+  style C fill:#FFFDE7,stroke:#FBC02D,stroke-width:1px
 
-Criterion	Metric / Target	Status	Notes
-Component Modularity	1 component = 1 feature (SRP)	✅	Well-structured under web/src/components/
-Map–Timeline Synchronization	Event update latency < 200 ms	✅	Verified in dev build
-Accessibility Compliance	WCAG 2.1 AA	⚙️	Minor MapLibre control role updates needed
-Performance	60 fps Canvas render under 1 k events	✅	Stable on Chrome/Edge
-Bundle Size	< 1.5 MB gzipped (main + vendor)	✅	1.32 MB measured
-Internationalization	i18n-ready / fallback en-US	✅	Implemented via React-i18next
-Error Boundaries	All major components wrapped	✅	Timeline + Map wrapped via ErrorBoundary
-Offline Cache	Optional via Workbox	⚙️	Planned Q4 addition
+  %% END OF MERMAID
+````
 
+The UI unifies **space (map)**, **time (timeline)**, and **narrative (knowledge graph)**
+through a synchronized global React state, ensuring every interaction is observable and reproducible.
 
-⸻
+---
 
-🧠 Strengths
-	•	Strong decoupling of presentation and data-fetch layers.
-	•	Real-time synchronization between map and timeline using React Context.
-	•	Excellent code clarity with documented component props and state.
-	•	Accessibility tokens integrated (--kfm-color-*, focus outlines, ARIA labeling).
-	•	STAC-driven layer configuration allows non-developers to add map datasets easily.
-	•	Test coverage at 89% for React components.
+## 🧩 Evaluation Criteria
 
-⸻
+| Criterion                | Metric / Target                   | Status | Notes                                             |
+| ------------------------ | --------------------------------- | :----: | ------------------------------------------------- |
+| **Component Modularity** | SRP — one component = one feature |    ✅   | Strong file organization in `web/src/components/` |
+| **Map–Timeline Sync**    | Event latency < 200 ms            |    ✅   | Verified in dev build                             |
+| **Accessibility**        | WCAG 2.1 AA compliance            |   ⚙️   | Minor MapLibre control updates pending            |
+| **Performance**          | 60 fps Canvas render @ 1 k events |    ✅   | Stable in Chrome/Edge                             |
+| **Bundle Size**          | < 1.5 MB gzipped (main + vendor)  |    ✅   | 1.32 MB current                                   |
+| **i18n**                 | Fallback en-US via React-i18next  |    ✅   | Implemented                                       |
+| **Error Boundaries**     | All major components wrapped      |    ✅   | Map + Timeline protected                          |
+| **Offline Cache**        | Optional via Workbox              |   ⚙️   | Planned Q4 feature                                |
 
-⚙️ Areas for Improvement
+---
 
-Issue	Severity	Recommendation
-MapLibre GL overlays not fully exposed to screen readers	Medium	Add custom ARIA descriptors to zoom and layer buttons.
-Timeline scroll performance on low-end devices	Low	Investigate WebGL-based offscreen rendering.
-Missing CI regression test for ARIA role changes	Low	Add Pa11y pipeline step to GitHub Actions.
-Light/Dark mode flicker during theme switch	Low	Cache computed theme in localStorage.
+## 🧠 Strengths
 
+* **Decoupled architecture:** Presentation separated from data-fetch logic.
+* **Real-time synchronization** between MapLibre and Timeline via React Context.
+* **Accessible theming** with design tokens (`--kfm-color-*`, focus outlines).
+* **STAC-driven configuration** enables dataset updates without code changes.
+* **High test coverage:** 89 % Jest + Lighthouse CI integration.
+* **Excellent developer experience:** clear prop types + Storybook documentation.
 
-⸻
+---
 
-🧩 Performance Metrics
+## ⚙️ Areas for Improvement
 
-Metric	Result	Tool
-Lighthouse Accessibility	92/100	GitHub CI (Lighthouse CI)
-Lighthouse Performance	96/100	GitHub CI
-FPS (Timeline Scroll)	60 fps	Chrome Profiler
-Memory Footprint	128 MB avg	Chrome Performance
-Map Initialization	680 ms avg	MapLibre Bench
-API Query /events	230 ms median	Postman / GraphQL Playground
+| Issue                                            | Severity | Recommendation                                      |
+| ------------------------------------------------ | -------- | --------------------------------------------------- |
+| MapLibre controls not readable by screen readers | Medium   | Add custom ARIA descriptors to zoom / layer buttons |
+| Timeline scroll performance on low-end devices   | Low      | Investigate WebGL off-screen rendering              |
+| Missing CI regression for ARIA changes           | Low      | Add Pa11y step in GitHub Actions                    |
+| Light/Dark mode flicker                          | Low      | Cache computed theme in localStorage                |
 
+---
 
-⸻
+## 🧩 Performance Metrics
 
-🧩 Accessibility Verification Flow
+| Metric                   |     Result    | Tool                         |
+| ------------------------ | :-----------: | ---------------------------- |
+| Lighthouse Accessibility |    92 / 100   | CI (Lighthouse CI)           |
+| Lighthouse Performance   |    96 / 100   | CI (Lighthouse CI)           |
+| Timeline FPS             |     60 fps    | Chrome Profiler              |
+| Memory Usage             |   128 MB avg  | Chrome Performance           |
+| Map Init Time            |   680 ms avg  | MapLibre Bench               |
+| API /events Query        | 230 ms median | Postman / GraphQL Playground |
 
+---
+
+## ♿ Accessibility Verification Flow
+
+```mermaid
 flowchart TD
-  A["UI Components\n(React / MapLibre / Canvas)"] --> B["Axe / Lighthouse / Pa11y"]
+  A["UI Components\nReact · MapLibre · Canvas"] --> B["Automated Testing\nAxe · Lighthouse · Pa11y"]
   B --> C["Accessibility Report\nContrast · Roles · Focus"]
-  C --> D["Manual Audit\nNVDA / VoiceOver / Keyboard Navigation"]
+  C --> D["Manual Audit\nNVDA · VoiceOver · Keyboard Navigation"]
   D --> E["Fix & Verify\nPatch PR → CI Re-test"]
-<!-- END OF MERMAID -->
 
+  style A fill:#E6EFFF,stroke:#0074D9,stroke-width:2px
+  style B fill:#F8F8FF,stroke:#6C63FF,stroke-width:1.5px
+  style C fill:#FFFDE7,stroke:#FBC02D,stroke-width:1.5px
+  style D fill:#E3F2FD,stroke:#1976D2,stroke-width:1.5px
+  style E fill:#E8F5E9,stroke:#2E7D32,stroke-width:1.5px
 
-⸻
+  %% END OF MERMAID
+```
 
-🧾 Review Metadata
+---
 
+## ⚙️ Continuous Integration (UI Validation)
+
+```yaml
+# .github/workflows/web_ui_validate.yml
+on:
+  pull_request:
+    paths:
+      - "web/src/**"
+      - "docs/design/reviews/architecture/web_ui_architecture_review.md"
+jobs:
+  webui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: npm test -- --coverage
+      - name: Run Lighthouse CI
+        run: npm run lighthouse:ci
+      - name: Run Pa11y Accessibility Tests
+        run: npx pa11y-ci --config .pa11yci.json
+      - name: Upload Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: webui-reports
+          path: reports/
+```
+
+---
+
+## 🧾 Review Metadata
+
+```yaml
 review_id: "web_ui_architecture_{{ version }}"
 reviewed_by:
   - "@architecture-team"
@@ -117,20 +176,27 @@ reviewed_by:
   - "@accessibility-team"
 date: "{{ ISO8601_DATE }}"
 commit: "{{ GIT_COMMIT }}"
+scope: "frontend · integration · accessibility"
 status: "approved"
 confidence: "high"
-scope: "frontend · integration · accessibility"
-summary: "Web UI architecture validated; MapLibre accessibility patch pending."
+summary: >
+  Web UI architecture validated.  
+  MapLibre accessibility patch pending; all performance and build metrics within targets.
+```
 
+---
 
-⸻
+## 🪪 License
 
-🪪 License
-
-All review materials are released under Creative Commons CC-BY 4.0.
+All review materials are released under **Creative Commons CC-BY 4.0**
 © 2025 Kansas Frontier Matrix Architecture & Design Collective
 
-⸻
+---
 
+<div align="center">
 
+### 🧩 Kansas Frontier Matrix — Web Architecture Governance
 
+**Interactive · Accessible · Performant · Reproducible**
+
+</div>
