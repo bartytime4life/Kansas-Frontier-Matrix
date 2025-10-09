@@ -3,10 +3,11 @@
 # 🧩 Kansas Frontier Matrix — Timeline Wireframe Metadata Schema  
 `docs/design/mockups/timeline/wireframes/metadata/schema/`
 
-**Purpose:** Define JSON Schemas to validate **timeline wireframe metadata** used in KFM documentation and UI design, ensuring consistency, provenance, accessibility, and time-aware interoperability.
+**Purpose:** Define and validate JSON Schemas for **timeline wireframe metadata**  
+to ensure design integrity, provenance, accessibility, and temporal interoperability across the KFM stack.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../..)  
-[![JSON Schema](https://img.shields.io/badge/Schema-validated-orange)](https://json-schema.org)  
+[![JSON Schema](https://img.shields.io/badge/Schema-Validated-orange)](https://json-schema.org)  
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../../../../../../..)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../../../LICENSE)
 
@@ -16,16 +17,15 @@
 
 ## 🧭 Overview
 
-This directory contains the **authoritative JSON Schemas** for all metadata entries in  
-`docs/design/mockups/timeline/wireframes/metadata/`.
+This directory defines the **authoritative JSON Schemas** for  
+`docs/design/mockups/timeline/wireframes/metadata/`.  
 
-The schemas enforce:
-
-- 📊 **Structural consistency** across all timeline wireframe records  
-- 🧾 **Provenance & integrity** (Figma source, Git commit, checksums)  
-- ♿ **Accessibility** (contrast ratios, meaningful alt text)  
-- ⌛ **Temporal semantics** (variant/zoom behavior aligned with OWL-Time concepts)  
-- 🔗 **Interoperability** with related specs (STAC temporal fields, Map/Panel wireframe schemas)
+These schemas enforce:
+- 📊 **Structural consistency** for all timeline wireframe metadata records  
+- 🧾 **Provenance integrity** — Figma source, Git commit, checksum linkage  
+- ♿ **Accessibility compliance** — contrast ratios and alt text validation  
+- ⌛ **Temporal semantics** — zoom and granularity rules aligned with OWL-Time  
+- 🔗 **Interoperability** — with STAC, map, and panel metadata schemas  
 
 ---
 
@@ -33,22 +33,21 @@ The schemas enforce:
 
 ```text
 docs/design/mockups/timeline/wireframes/metadata/schema/
-├── README.md                        # This file
-├── timeline_wireframe.schema.json   # Schema for a single timeline wireframe record
-└── index.schema.json                # Schema for the aggregated metadata index
+├── README.md                        # This documentation file
+├── timeline_wireframe.schema.json   # Single-record schema definition
+└── index.schema.json                # Schema for aggregated metadata index
+````
 
+---
 
-⸻
+## 📘 `timeline_wireframe.schema.json`
 
-📘 timeline_wireframe.schema.json
+**Purpose:** Define the schema for an individual wireframe metadata record describing one layout variant
+(`default`, `condensed`, `mobile`, or `overlay_map`).
 
-Description
+### 🧩 Schema Outline
 
-Defines the structure of a single timeline wireframe metadata record describing one design variant
-(e.g., default, condensed, mobile, overlay_map).
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Timeline Wireframe Metadata Schema",
@@ -58,9 +57,9 @@ Schema Outline
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9_\\-]+$",
-      "description": "Unique identifier (kebab/slug)."
+      "description": "Unique identifier (kebab-case)."
     },
-    "title": { "type": "string", "description": "Human-readable name of the wireframe." },
+    "title": { "type": "string", "description": "Human-readable name for the wireframe." },
     "variant": {
       "type": "string",
       "enum": ["default", "condensed", "mobile", "overlay_map"],
@@ -68,55 +67,49 @@ Schema Outline
     },
     "thumbnail": {
       "type": "string",
-      "description": "Relative path to the exported PNG/JPG (e.g., ../exports/timeline_default.png)."
+      "description": "Path to exported image (e.g., ../exports/timeline_default.png)."
     },
-    "description": {
-      "type": "string",
-      "description": "Brief summary of the layout and intended use."
-    },
+    "description": { "type": "string", "description": "Brief description of layout and intent." },
     "theme": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Tags (e.g., ['timeline','map_sync','overlay'])."
+      "description": "Tags such as ['timeline','map_sync','overlay']."
     },
     "zoom_behavior": {
       "type": "string",
       "enum": ["discrete_ticks", "continuous_scale", "hybrid"],
-      "description": "How the timeline zoom model is presented."
+      "description": "Timeline zoom model."
     },
     "time_granularity": {
       "type": "string",
       "enum": ["year", "decade", "century", "mixed"],
-      "description": "Primary granularity emphasized in the design."
+      "description": "Primary time granularity visualized."
     },
     "linked_components": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "React components tied to this design (e.g., TimelineCanvas.tsx)."
+      "description": "React components tied to this design (e.g. TimelineCanvas.tsx)."
     },
-    "source_figma": {
-      "type": "string",
-      "description": "Path/URL to the Figma file or frame."
-    },
+    "source_figma": { "type": "string", "description": "URL/path to Figma file or frame." },
     "license": {
       "type": "string",
       "default": "CC-BY-4.0",
-      "description": "License for the design export."
+      "description": "License covering this design artifact."
     },
     "checksum": {
       "type": "string",
       "pattern": "^sha256-[A-Fa-f0-9]+$",
-      "description": "SHA-256 checksum for the export image."
+      "description": "SHA-256 checksum for verifying export integrity."
     },
     "provenance": {
       "type": "object",
       "required": ["derived_from"],
       "properties": {
-        "derived_from": { "type": "string", "description": "Figma source or export path." },
-        "created_with": { "type": "string", "description": "Tool/process used (e.g., Figma Export)." },
-        "commit": { "type": "string", "description": "Git commit reference." }
+        "derived_from": { "type": "string" },
+        "created_with": { "type": "string" },
+        "commit": { "type": "string" }
       },
-      "description": "Reproducibility and lineage details."
+      "description": "Record of design lineage and reproducibility."
     },
     "accessibility": {
       "type": "object",
@@ -125,29 +118,29 @@ Schema Outline
         "contrast_ratio": {
           "type": "number",
           "minimum": 4.5,
-          "description": "Minimum contrast ratio validated (WCAG 2.1 AA)."
+          "description": "Measured contrast ratio (WCAG 2.1 AA)."
         },
         "alt_text": {
           "type": "string",
-          "description": "Screen-reader description of the export."
+          "description": "Descriptive text for assistive technologies."
         }
       },
-      "description": "Accessibility audit data."
+      "description": "Accessibility audit metadata."
     }
   }
 }
+```
 
+---
 
-⸻
+## 📗 `index.schema.json`
 
-📗 index.schema.json
+**Purpose:** Validate the aggregate metadata index file `timeline_wireframes_metadata.json`
+for bulk QA and automation.
 
-Description
+### 🧩 Schema Outline
 
-Specifies the aggregate metadata index for timeline wireframes, enabling bulk validation and automation.
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Timeline Wireframes Metadata Index",
@@ -162,53 +155,69 @@ Schema Outline
     }
   }
 }
+```
 
+---
 
-⸻
+## 🧮 Validation Workflow
 
-🧮 Validation Workflow
+All schema validations are automated in CI/CD through
+`jsonschema.yml` and `stac-validate.yml`.
 
-These schemas are enforced by CI/CD (e.g., jsonschema.yml, stac-validate.yml):
-	•	✅ JSON Schema compliance for each record
-	•	🔒 SHA-256 checksum verification for referenced exports
-	•	🖼️ Path existence checks for ../exports/*.png
-	•	♿ Accessibility audit fields required (contrast_ratio, alt_text)
-	•	🔗 Optional cross-checks with STAC temporal metadata (where applicable)
+### ✅ Automated Checks
 
-Manual validation:
+* JSON Schema compliance for each record
+* SHA-256 checksum verification
+* File path existence for `../exports/*.png`
+* Accessibility attributes (`contrast_ratio`, `alt_text`) required
+* Optional cross-validation with STAC temporal metadata
 
+### 🧰 Manual Validation
+
+```bash
 python -m jsonschema -i ../timeline_wireframes_metadata.json schema/timeline_wireframe.schema.json
+```
 
+---
 
-⸻
+## 🧠 Integration Notes
 
-🧠 Integration Notes
+| Target                 | Purpose                                     | Linkage                                         |
+| ---------------------- | ------------------------------------------- | ----------------------------------------------- |
+| **Figma**              | Source of truth for wireframe layouts       | `timeline_wireframes_v1.fig`                    |
+| **Web UI (React)**     | Implementation of timeline components       | `web/src/components/timeline/*`                 |
+| **Docs Portal**        | Auto-generated previews & indexes           | `docs/design/mockups/timeline/*`                |
+| **Temporal Semantics** | OWL-Time alignment for intervals & instants | [W3C OWL-Time](https://www.w3.org/TR/owl-time/) |
+| **STAC Integration**   | Temporal fields filtered by timeline UI     | `data/stac/*`                                   |
 
-Target	Purpose	Linkage
-Figma	Source of truth for layouts	timeline_wireframes_v1.fig
-Web UI (React)	Implementation reference for Timeline components	web/src/components/timeline/*
-Docs Portals	Auto-generated previews & indexes	docs/design/mockups/timeline/*
-Temporal Semantics	Alignment with OWL-Time for periods/instants	OWL-Time (W3C)
-STAC	Temporal fields in data layers filtered by the UI	data/stac/*
+---
 
+## 🧾 Provenance & Compliance
 
-⸻
+| Attribute          | Description                                                               |
+| ------------------ | ------------------------------------------------------------------------- |
+| **Generated By**   | `scripts/generate_schema_docs.py`                                         |
+| **Validated In**   | CI pipelines: `jsonschema.yml`, `stac-validate.yml`                       |
+| **Schema Draft**   | [JSON Schema Draft 2020-12](https://json-schema.org/draft/2020-12/schema) |
+| **License**        | [CC-BY 4.0](../../../../../../../LICENSE)                                 |
+| **MCP Compliance** | Documented → Validated → Published                                        |
 
-📚 Related References
-	•	Timeline Wireframe Metadata
-	•	Timeline Wireframe Exports
-	•	Panels Wireframe Metadata Schema
-	•	Map Wireframe Metadata Schema
-	•	Kansas Frontier Matrix Web UI Architecture
+---
 
-⸻
+## 📚 Related References
 
+* [Timeline Wireframe Metadata](../README.md)
+* [Timeline Wireframe Exports](../../exports/README.md)
+* [Panels Wireframe Metadata Schema](../../../panels/wireframes/metadata/schema/README.md)
+* [Map Wireframe Metadata Schema](../../../map/wireframes/metadata/schema/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../../../../architecture/web_ui_architecture_review.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Time · Terrain · History · Knowledge Graphs**
 
 </div>
-```
