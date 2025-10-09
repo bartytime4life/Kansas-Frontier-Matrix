@@ -22,13 +22,14 @@ traceability, accessibility, and reproducibility.
 This directory contains **metadata records** describing each exported timeline wireframe  
 in `../exports/`. Each metadata entry captures the design’s **purpose**, **layout variant**,  
 **accessibility metrics**, **provenance**, and **checksum integrity** — forming a reproducible record  
-of how timeline UI concepts evolve across the KFM project.
+of how timeline UI concepts evolve across the KFM design system.
 
-These metadata files feed into:
-- 🧩 Design documentation (Markdown READMEs, gallery previews)
-- 🌐 MCP documentation index (JSON-LD + STAC linkage)
-- 🧮 Continuous validation (CI/CD JSON Schema checks)
-- ♿ Accessibility audit tracking
+These metadata records feed into:
+
+- 🧩 Design documentation (Markdown READMEs & gallery previews)  
+- 🌐 MCP documentation index (JSON-LD + STAC integration)  
+- 🧮 Continuous validation (CI/CD JSON Schema checks)  
+- ♿ Accessibility audit tracking & compliance history  
 
 ---
 
@@ -41,18 +42,19 @@ docs/design/mockups/timeline/wireframes/metadata/
 └── schema/                            # JSON Schema definitions for validation
     ├── timeline_wireframe.schema.json
     └── index.schema.json
+````
 
+---
 
-⸻
+## 🧱 Metadata Structure
 
-🧱 Metadata Structure
+Each wireframe record documents what the timeline design represents,
+how it was created, and its compliance attributes.
+All records must validate against `schema/timeline_wireframe.schema.json`.
 
-Each wireframe record defines what the timeline design represents,
-how it was created, and its accessibility and design compliance.
-All records are validated via schema/timeline_wireframe.schema.json.
+### 🧩 Example Record
 
-Example Record
-
+```json
 {
   "id": "timeline_overlay_map",
   "title": "Timeline + Map Overlay Layout",
@@ -74,82 +76,103 @@ Example Record
     "alt_text": "Overlay timeline wireframe displaying 1850–1950 period above Kansas map view."
   }
 }
+```
 
+---
 
-⸻
+## 🧩 Field Reference
 
-🧩 Field Reference
+| Field             | Type   | Description                                                         |
+| ----------------- | ------ | ------------------------------------------------------------------- |
+| **id**            | string | Unique identifier (kebab-case).                                     |
+| **title**         | string | Human-readable name of the wireframe.                               |
+| **thumbnail**     | string | Relative path to exported image file.                               |
+| **description**   | string | Concise summary of design purpose and function.                     |
+| **variant**       | string | Layout type (e.g. `default`, `condensed`, `overlay_map`, `mobile`). |
+| **theme**         | array  | Tags indicating design scope or use case.                           |
+| **creator**       | string | Author or team responsible for the design.                          |
+| **license**       | string | License identifier (default: `CC-BY-4.0`).                          |
+| **source_figma**  | string | Path to original Figma design source.                               |
+| **checksum**      | string | SHA-256 hash for export file integrity verification.                |
+| **provenance**    | object | Metadata detailing creation, derivation, and Git commit linkage.    |
+| **accessibility** | object | Accessibility attributes (contrast ratio, alt text).                |
 
-Field	Type	Description
-id	string	Unique identifier (kebab-case).
-title	string	Human-readable wireframe name.
-thumbnail	string	Path to exported wireframe image.
-description	string	Concise summary of layout purpose.
-variant	string	Layout type (e.g., default, condensed, overlay_map, mobile).
-theme	array	Design tags describing visual context or features.
-source_figma	string	Reference to original Figma file.
-license	string	License (default: CC-BY-4.0).
-checksum	string	SHA-256 hash for export integrity verification.
-provenance	object	Metadata about creation process and Git commit link.
-accessibility	object	Accessibility data (contrast ratio, alt text).
+---
 
+## 🧮 Validation Workflow
 
-⸻
+All metadata entries are automatically validated via CI/CD pipelines
+(`jsonschema.yml` and `stac-validate.yml`).
 
-🧮 Validation Workflow
+### ✅ Automated Checks
 
-All metadata entries are validated through the CI/CD pipeline (jsonschema.yml + stac-validate.yml).
+* Schema validation (`timeline_wireframe.schema.json`)
+* File path verification for all exports (`../exports/*.png`)
+* SHA-256 checksum verification
+* Required field validation (title, description, provenance, license)
+* Accessibility compliance (contrast ratio ≥ 4.5:1)
 
-Automated Checks
-	•	✅ Schema validation via timeline_wireframe.schema.json
-	•	✅ File path verification (../exports/*.png)
-	•	✅ SHA-256 checksum verification
-	•	✅ Required fields populated (title, description, provenance, license)
-	•	✅ Accessibility compliance (contrast ratio ≥ 4.5)
+### 🧰 Manual Validation Example
 
-Manual Validation Example
-
+```bash
 python -m jsonschema -i timeline_wireframes_metadata.json schema/timeline_wireframe.schema.json
+```
 
+---
 
-⸻
+## ♿ Accessibility & Compliance
 
-♿ Accessibility & Compliance
+Accessibility attributes are **mandatory** for each wireframe metadata entry.
 
-Accessibility attributes are mandatory for every timeline wireframe:
-	•	Contrast Ratio: Must meet or exceed 4.5:1 (WCAG 2.1 AA standard).
-	•	Alt Text: Required for each export to support screen readers.
-	•	Color Use: Avoid reliance on hue alone to differentiate interactive elements.
+| Requirement        | Threshold                   | Validation                           |
+| ------------------ | --------------------------- | ------------------------------------ |
+| **Contrast Ratio** | ≥ 4.5 : 1                   | Verified in Figma export QA          |
+| **Alt Text**       | Required                    | Present in metadata for every export |
+| **Color Use**      | No hue-only differentiation | Manual design check                  |
 
-Accessibility compliance is reviewed in Figma and tracked in metadata for transparency.
+Accessibility compliance is reviewed and logged during Figma QA.
+Metadata captures all relevant attributes for audit transparency.
 
-⸻
+---
 
-🧾 Provenance & Reproducibility
-	•	Design Source: timeline_wireframes_v1.fig (Figma master file)
-	•	Generated By: scripts/generate_timeline_thumbnails.py
-	•	Validated In CI: jsonschema.yml + stac-validate.yml
-	•	Checksums: Recorded in timeline_wireframes_metadata.json
-	•	MCP Compliance: Documented → Built → Validated → Versioned
+## 🧾 Provenance & Reproducibility
 
-⸻
+| Attribute          | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| **Design Source**  | `timeline_wireframes_v1.fig` (Figma master file) |
+| **Generated By**   | `scripts/generate_timeline_thumbnails.py`        |
+| **Validated In**   | `jsonschema.yml`, `stac-validate.yml`            |
+| **Checksums**      | Stored in `timeline_wireframes_metadata.json`    |
+| **MCP Compliance** | Documented → Built → Validated → Versioned       |
 
-📚 Related References
-	•	Timeline Wireframes (Main)
-	•	Timeline Wireframe Exports
-	•	Panels Wireframes
-	•	Map Wireframes
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	Accessibility Standards
+---
 
-⸻
+## 🧭 Linked Standards
 
+| Domain                  | Standard                                        |
+| ----------------------- | ----------------------------------------------- |
+| 🕰️ Temporal Semantics  | [W3C OWL-Time](https://www.w3.org/TR/owl-time/) |
+| 📅 Historical Periods   | [PeriodO Gazetteer](https://perio.do)           |
+| 🏺 Cultural Context     | [CIDOC CRM](https://www.cidoc-crm.org)          |
+| 🗺️ Geospatial Metadata | [STAC 1.0.0](https://stacspec.org)              |
+
+---
+
+## 📚 Related References
+
+* [Timeline Wireframes (Main)](../README.md)
+* [Timeline Wireframe Exports](../exports/README.md)
+* [Panels Wireframes](../../../panels/wireframes/README.md)
+* [Map Wireframes](../../../map/wireframes/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../../architecture/web_ui_architecture_review.md)
+* [Accessibility Standards](../../../../../design/reviews/accessibility/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Time · Terrain · History · Knowledge Graphs**
 
 </div>
-```
