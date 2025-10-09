@@ -1,9 +1,10 @@
 <div align="center">
 
-# 🚀 Kansas Frontier Matrix — Pull Request Template  
+# 🚀 Kansas Frontier Matrix — Pull Request Template
+
 **Path:** `.github/PULL_REQUEST_TEMPLATE.md`
 
-**Purpose:** Ensure every change to KFM is **documented, reproducible, validated, and auditable**,  
+**Purpose:** Ensure every change to KFM is **documented, reproducible, validated, and auditable**,
 in accordance with the **Master Coder Protocol (MCP)** and repository governance standards.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
@@ -22,7 +23,7 @@ in accordance with the **Master Coder Protocol (MCP)** and repository governance
 
 Concise description of what this PR changes and why.
 
-> _Example:_  
+> *Example:*
 > Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and wires the layer into `layers.json`.
 
 ---
@@ -31,38 +32,38 @@ Concise description of what this PR changes and why.
 
 Link to relevant GitHub issues, discussions, or project tasks.
 
-- Closes #\<id\>
-- Related: #\<id\>  
-- Discussion: \<link\>
-- Project / Milestone: \<link\>
+* Closes #<id>
+* Related: #<id>
+* Discussion: <link>
+* Project / Milestone: <link>
 
 ---
 
 ## 🧠 Type of Change
 
-_Select all that apply:_
+*Select all that apply:*
 
-- [ ] 🐛 **Bug Fix** — non-breaking fix resolving a reproducible issue  
-- [ ] 💡 **Feature / Enhancement** — new functionality or workflow improvement  
-- [ ] 🗃️ **New Dataset / Integration** — new source, manifest, or STAC metadata  
-- [ ] 🧩 **Metadata Update** — STAC/schema documentation corrections  
-- [ ] 📖 **Documentation Update** — READMEs, guides, ADRs  
-- [ ] ⚙️ **CI/CD / Workflow** — Actions, pre-commit, or automation changes  
-- [ ] 🔒 **Security / Validation** — checksums, licenses, supply-chain updates  
-- [ ] 🧹 **Refactor / Cleanup** — readability, structure, or naming improvements  
-- [ ] 💥 **Breaking Change** — behavior or API contract change (see section below)
+* [ ] 🐛 **Bug Fix** — non-breaking fix resolving a reproducible issue
+* [ ] 💡 **Feature / Enhancement** — new functionality or workflow improvement
+* [ ] 🗃️ **New Dataset / Integration** — new source, manifest, or STAC metadata
+* [ ] 🧩 **Metadata Update** — STAC/schema documentation corrections
+* [ ] 📖 **Documentation Update** — READMEs, guides, ADRs
+* [ ] ⚙️ **CI/CD / Workflow** — Actions, pre-commit, or automation changes
+* [ ] 🔒 **Security / Validation** — checksums, licenses, supply-chain updates
+* [ ] 🧹 **Refactor / Cleanup** — readability, structure, or naming improvements
+* [ ] 💥 **Breaking Change** — behavior or API contract change (see below)
 
 ---
 
 ## 🧮 Implementation Details
 
-| Field | Description |
-|:--|:--|
-| **Affected Directories** | (e.g., `data/processed/climate/`, `data/stac/`, `src/pipelines/`) |
-| **New Files Added** | (scripts, datasets, metadata; include paths) |
-| **Pipelines Modified** | (e.g., `terrain_pipeline.py`, `climate_pipeline.py`) |
-| **Dependencies Updated** | (pip/Node; GitHub Actions pins) |
-| **Validation Performed** | (checksum verified, STAC/JSON Schema validated, tests passing) |
+| Field                    | Description                                                     |
+| :----------------------- | :-------------------------------------------------------------- |
+| **Affected Directories** | (e.g. `data/processed/climate/`, `src/pipelines/`)              |
+| **New Files Added**      | (scripts, datasets, metadata; include paths)                    |
+| **Pipelines Modified**   | (e.g. `terrain_pipeline.py`, `climate_pipeline.py`)             |
+| **Dependencies Updated** | (pip/Node; GitHub Actions pins)                                 |
+| **Validation Performed** | (checksums verified, STAC/JSON Schema validated, tests passing) |
 
 <details><summary><b>Changelog Snippet (Keep a Changelog / SemVer)</b></summary>
 
@@ -78,51 +79,56 @@ _Select all that apply:_
 
 ### Security
 - Bumped `actions/setup-node@v4` (pinned) and refreshed GH cache keys
+```
 
 </details>
 
+---
 
+## ✅ Checklist (MCP + CI/CD Compliance)
 
-⸻
+### 🧠 Documentation-First
 
-✅ Checklist (MCP + CI/CD Compliance)
+* [ ] Updated or added `README.md` for affected directories
+* [ ] Added/revised STAC metadata (Items/Collections)
+* [ ] Updated `data/sources/*.json` manifests with `last_verified`
 
-🧠 Documentation-First
-	•	Updated/added README.md for affected directories
-	•	Added or revised STAC metadata (Items/Collections)
-	•	Documented sources in data/sources/*.json (with last_verified)
+### 🔄 Reproducibility
 
-🔄 Reproducibility
-	•	Ran make <target> successfully (list targets in comments)
-	•	Regenerated checksums for new/changed artifacts
-	•	Outputs are deterministic (same input → same output)
+* [ ] Ran `make <target>` successfully (list targets below in comments)
+* [ ] Regenerated checksums for new/changed artifacts
+* [ ] Outputs are deterministic (same input → same output)
 
-🧩 Open Standards
-	•	STAC validation passes (stac-validator)
-	•	Only open formats used (COG, GeoTIFF, GeoJSON, CSV, JSON, NetCDF)
-	•	Naming/Schema follow MCP conventions
+### 🧩 Open Standards
 
-🔍 Provenance
-	•	Source links in data/sources/*.json + citation/license included
-	•	Updated provenance chains when lineage changed
-	•	SHA-256 checksums added/updated
+* [ ] STAC validation passes (`stac-validator`)
+* [ ] Only open formats used (COG, GeoTIFF, GeoJSON, CSV, JSON, NetCDF)
+* [ ] Naming/schema follow MCP conventions
 
-🧾 Auditability
-	•	All workflows green (site, stac-validate, codeql, trivy, pre-commit)
-	•	Logs available in data/work/logs/ (or linked as artifacts)
-	•	Peer review requested (@core-maintainers)
+### 🔍 Provenance
 
-⸻
+* [ ] Source links in `data/sources/*.json` include citation + license
+* [ ] Updated provenance chains for modified datasets
+* [ ] SHA-256 checksums added/updated
 
-🧰 Validation Commands (Examples)
+### 🧾 Auditability
 
+* [ ] All workflows green (site, stac-validate, codeql, trivy, pre-commit)
+* [ ] Logs stored in `data/work/logs/` or linked as artifacts
+* [ ] Peer review requested (`@core-maintainers`)
+
+---
+
+## 🧰 Validation Commands (Examples)
+
+```bash
 # Validate STAC structure
 make stac-validate
 
 # Rebuild specific pipeline
 make terrain
 
-# Compute/refresh checksums
+# Compute / refresh checksums
 make checksums
 
 # Lint + unit tests
@@ -130,10 +136,11 @@ pre-commit run --all-files
 
 # Build docs/site locally
 make site && open _site/index.html
+```
 
 <details><summary><b>gh CLI / Advanced</b></summary>
 
-
+```bash
 # Trigger workflow manually
 gh workflow run stac-validate.yml
 
@@ -142,125 +149,133 @@ gh run list
 
 # Download validation artifact
 gh run download --name "stac-report.json"
+```
 
 </details>
 
+---
 
+## 📎 Supporting Artifacts
 
-⸻
+| Type                 | Reference                                      |
+| -------------------- | ---------------------------------------------- |
+| Logs                 | `data/work/logs/<domain>_etl_debug.log`        |
+| Checksums            | `data/checksums/<domain>/*.sha256`             |
+| STAC Items           | `data/stac/<domain>/*.json`                    |
+| Visuals / Thumbnails | `data/processed/metadata/<domain>/thumbnails/` |
+| Screenshots          | (attach below)                                 |
 
-📎 Supporting Artifacts
+---
 
-Type	Reference
-Logs	data/work/logs/<domain>_etl_debug.log
-Checksums	data/checksums/<domain>/*.sha256
-STAC Item(s)	data/stac/<domain>/*.json
-Visuals / Thumbnails	data/processed/metadata/<domain>/thumbnails/
-Screenshots	(attach below)
+## 🧪 Test & QA Notes
 
+* Unit / integration test coverage: … %
+* Manual QA steps:
 
-⸻
+  1. …
+  2. …
+* Performance considerations (if any): …
 
-🧪 Test & QA Notes
-	•	Unit / integration test coverage: %
-	•	Manual QA steps:
-	1.	…
-	2.	…
-	•	Performance considerations (if any): …
+---
 
-⸻
+## 🧠 MCP Compliance Summary
 
-🧠 MCP Compliance Summary
+| MCP Principle       | Implementation Verified                       |
+| ------------------- | --------------------------------------------- |
+| Documentation-first | 🗹 Updated README/metadata/manifest           |
+| Reproducibility     | 🗹 Deterministic pipelines + checksum outputs |
+| Open Standards      | 🗹 Formats adhere to public specs             |
+| Provenance          | 🗹 Source, checksum, and STAC links verified  |
+| Auditability        | 🗹 CI/SARIF logs retained and green           |
 
-MCP Principle	Implementation Verified
-Documentation-first	🗹 Updated README/metadata/manifest
-Reproducibility	🗹 Deterministic pipelines + checksum outputs
-Open Standards	🗹 Formats adhere to public specs
-Provenance	🗹 Source, checksum, and STAC links verified
-Auditability	🗹 CI/SARIF logs retained and green
+---
 
+## ♿ Accessibility (If UI Changes)
 
-⸻
+* [ ] Keyboard navigation verified (focus order, skip links)
+* [ ] Color contrast ≥ 4.5 : 1 (light/dark)
+* [ ] ARIA roles/labels added or updated
+* [ ] `prefers-reduced-motion` respected
 
-♿ Accessibility (If UI Changes)
-	•	Keyboard navigation verified (focus order, skip links)
-	•	Color contrast ≥ 4.5:1 (light/dark)
-	•	ARIA roles/labels added or updated
-	•	prefers-reduced-motion respected
+---
 
-⸻
+## 🔒 Security / Licensing
 
-🔒 Security / Licensing
-	•	No secrets committed; env handled via Actions Secrets
-	•	Licenses verified for datasets and code dependencies
-	•	SBOM / supply-chain (actions pinned, dependencies scanned)
-	•	CVE scan clean (CodeQL/Trivy)
+* [ ] No secrets committed; env handled via Actions › Secrets
+* [ ] Licenses verified for datasets and code dependencies
+* [ ] SBOM / supply-chain reviewed (actions pinned, dependencies scanned)
+* [ ] CVE scan clean (CodeQL / Trivy)
 
-⸻
+---
 
-💥 Breaking Changes (If Any)
+## 💥 Breaking Changes (If Any)
 
 Describe the breaking change and the migration steps required.
-	•	Impact: (who/what breaks)
-	•	Migration: (step-by-step)
-	•	Deprecation period: (date/version)
 
-⸻
+* **Impact:** (who / what breaks)
+* **Migration:** (step-by-step)
+* **Deprecation Period:** (date / version)
 
-🔖 Labels & Automation
+---
 
-Suggest labels to help triage and automation:
+## 🔖 Labels & Automation
 
-area:data, area:web, type:feature, type:bug, security, docs, priority:p1, good-first-issue
+Suggested labels for triage and automation:
+`area:data`, `area:web`, `type:feature`, `type:bug`, `security`, `docs`, `priority:p1`, `good-first-issue`
 
-⸻
+---
 
-🧩 Reviewer Checklist (Maintainers)
-	•	All CI workflows pass
-	•	No schema violations detected
-	•	Checksums verified and updated
-	•	Documentation conforms to MCP standards
-	•	Code readability + formatting confirmed
-	•	Datasets linked in STAC catalog
-	•	License/provenance validated
-	•	(If UI) Accessibility verified
+## 🧩 Reviewer Checklist (Maintainers)
 
-⸻
+* [ ] All CI workflows pass
+* [ ] No schema violations detected
+* [ ] Checksums verified and updated
+* [ ] Documentation conforms to MCP standards
+* [ ] Code readability + formatting confirmed
+* [ ] Datasets linked in STAC catalog
+* [ ] License / provenance validated
+* [ ] (If UI) Accessibility verified
 
-🧭 PR Validation Flow (Reference)
+---
 
+## 🧭 PR Validation Flow (Reference)
+
+```mermaid
 flowchart TD
-  A([Open PR]) --> B([Pre-Commit Lint + Tests])
-  B --> C([STAC + JSON Schema Validation])
-  C --> D([CodeQL + Trivy Security])
-  D --> E([Preview Build / Site])
-  E --> F([Reviewer Approval])
-  F --> G([Auto-Merge + Provenance Archival])
+  A["Open PR"] --> B["Pre-Commit Lint + Tests"]
+  B --> C["STAC + JSON Schema Validation"]
+  C --> D["CodeQL + Trivy Security"]
+  D --> E["Preview Build / Site"]
+  E --> F["Reviewer Approval"]
+  F --> G["Auto-Merge + Provenance Archival"]
 
   classDef node fill:#fafafa,stroke:#555,color:#111;
   class A,B,C,D,E,F,G node;
+%% END OF MERMAID
+```
 
-<!-- END OF MERMAID -->
+---
 
+## 📊 Release Notes (Preview)
 
+Optional short entry for the CHANGELOG / Release Notes.
 
-⸻
+* Add: NOAA Climate 2020–2024 STAC items and layers
+* Change: CRS metadata corrections for `soil_survey_1967`
+* Security: Pin `actions/setup-node@v4` and refresh caches
 
-📊 Release Notes (Preview)
+---
 
-Optional: Provide a short entry suitable for the CHANGELOG / Release Notes.
-
-	•	Add: NOAA Climate 2020–2024 STAC items and layers
-	•	Change: CRS metadata corrections for soil_survey_1967
-	•	Security: Pin actions/setup-node@v4 and refresh caches
-
-⸻
-
-✍️ Additional Comments
+## ✍️ Additional Comments
 
 (Notes for reviewers, edge cases, known limitations, follow-ups, or backport plans.)
 
-⸻
+---
 
-Kansas Frontier Matrix — “Every Pull Request Builds the Past, Present, and Future.”
+<div align="center">
 
+### 🧭 Kansas Frontier Matrix
+
+**“Every Pull Request Builds the Past, Present, and Future.”**
+
+</div>
