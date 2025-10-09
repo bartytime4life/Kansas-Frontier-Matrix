@@ -1,34 +1,16 @@
-<div align="center">
-
-# 🧩 Kansas Frontier Matrix — Map Thumbnail Metadata Schema  
-`docs/design/mockups/map/thumbnails/metadata/schema/`
-
-**Purpose:** JSON Schemas defining the **structure and validation rules** for map thumbnail metadata files  
-used in both **documentation** and the **web interface** of the Kansas Frontier Matrix (KFM).
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../..)  
-[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../../../.github/workflows/stac-validate.yml)  
-[![JSON Schema](https://img.shields.io/badge/Schema-JSON%20Validated-orange)](https://json-schema.org)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../../../LICENSE)
-
 </div>
 
 ---
 
 ## 🧭 Overview
 
-This directory defines **validation schemas** for all **map thumbnail metadata** used throughout  
-KFM’s documentation and UI design layers. Each thumbnail metadata JSON file must conform  
-to these schemas to ensure interoperability with the KFM **STAC catalog**, **frontend layer configuration**,  
-and **AI/ML data provenance pipeline**.
+This directory provides the **authoritative JSON Schemas** for validating **map thumbnail metadata** stored under  
+`docs/design/mockups/map/thumbnails/metadata/`. Conformance to these schemas guarantees:
 
-The schemas support:
-
-- 🧩 Validation of thumbnail metadata files (`*.json`) in `docs/design/mockups/map/thumbnails/metadata/`  
-- 🔗 Integration with STAC assets (`data/stac/items/*.json`) via linked identifiers  
-- 🔍 Consistent fields across design and data layers (title, source, license, spatial/temporal extents)  
-- 🧾 Provenance and reproducibility metadata (checksum, creation date, source attribution)  
-- ♿ Accessibility and design-standard metadata (contrast rating, visual theme, thumbnail alt text)
+- 🔗 Interoperability with the KFM **STAC** catalog (`data/stac/items/*.json`)  
+- 🧩 Consistent fields across design & data layers (title, license, spatial/temporal extents)  
+- 🧾 Provenance and reproducibility (checksum, derived_from, commit)  
+- ♿ Accessibility metadata (contrast, alt text) for inclusive documentation and UI previews
 
 ---
 
@@ -39,19 +21,18 @@ docs/design/mockups/map/thumbnails/metadata/schema/
 ├── README.md                 # This documentation file
 ├── thumbnail.schema.json     # Schema for individual thumbnail metadata
 └── index.schema.json         # Schema for the aggregated thumbnail index
+````
 
+---
 
-⸻
+## 📘 `thumbnail.schema.json`
 
-📘 thumbnail.schema.json
+**Purpose:** Validate a single map thumbnail metadata record (e.g., `ks_topo_1894.json`).
+Each record describes a preview image for one geospatial/historical layer and its linkage to data sources.
 
-Description
+### 🧩 Schema Outline (Draft 2020-12)
 
-Defines a single thumbnail metadata record (e.g., ks_topo_1894.json).
-Each file describes a preview image for one geospatial or historical layer and its linkage to data sources.
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Map Thumbnail Metadata",
@@ -61,81 +42,86 @@ Schema Outline
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9_\\-]+$",
-      "description": "Unique identifier for the thumbnail (matches STAC item ID)"
+      "description": "Unique identifier for the thumbnail (ideally matches STAC item ID)."
     },
-    "title": { "type": "string", "description": "Human-readable title" },
-    "thumbnail": { "type": "string", "description": "Relative path to PNG or JPG file" },
-    "description": { "type": "string", "description": "Short description of the map layer" },
+    "title": { "type": "string", "description": "Human-readable title." },
+    "thumbnail": { "type": "string", "description": "Relative path to PNG/JPG/WebP file." },
+    "description": { "type": "string", "description": "Short description of the map layer." },
     "source_stac": {
       "type": "string",
-      "description": "Path to linked STAC item (e.g., data/stac/items/ks_topo_1894.json)"
+      "description": "Path to linked STAC item (e.g., data/stac/items/ks_topo_1894.json)."
     },
     "spatial_extent": {
       "type": "array",
       "minItems": 4,
       "maxItems": 4,
       "items": { "type": "number" },
-      "description": "Bounding box [W, S, E, N] in WGS84 coordinates"
+      "description": "Bounding box [W, S, E, N] in WGS84 coordinates."
     },
     "temporal_extent": {
       "type": "object",
       "properties": {
         "start": { "type": "string", "format": "date" },
-        "end": { "type": "string", "format": "date" }
+        "end":   { "type": "string", "format": "date" }
       },
-      "required": ["start"]
+      "required": ["start"],
+      "additionalProperties": false,
+      "description": "Dataset coverage interval; end optional for open-ended ranges."
     },
     "theme": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Design theme or map layer categories"
+      "description": "Design/theme tags (e.g., ['hydrology','cartography'])."
     },
     "color_key": {
       "type": "array",
       "items": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6})$" },
-      "description": "Array of color hex codes representing dominant colors"
+      "description": "Hex color palette representing the layer."
     },
-    "license": { "type": "string", "description": "License of the thumbnail asset" },
+    "license": { "type": "string", "description": "License of the thumbnail asset." },
     "checksum": {
       "type": "string",
       "pattern": "^sha256-[A-Fa-f0-9]+$",
-      "description": "SHA-256 checksum for image integrity verification"
+      "description": "SHA-256 checksum for image integrity verification."
     },
     "provenance": {
       "type": "object",
+      "required": ["derived_from"],
       "properties": {
-        "derived_from": { "type": "string" },
-        "created_with": { "type": "string" },
-        "commit": { "type": "string" }
+        "derived_from": { "type": "string", "description": "Origin file (e.g., COG/GeoJSON) or design export." },
+        "created_with": { "type": "string", "description": "Tool/script used to generate the thumbnail." },
+        "commit":       { "type": "string", "description": "Git commit hash linking to repo history." }
       },
-      "required": ["derived_from"]
+      "additionalProperties": false
     },
     "accessibility": {
       "type": "object",
       "properties": {
         "contrast_ratio": { "type": "number", "minimum": 4.5 },
-        "alt_text": { "type": "string" }
-      }
+        "alt_text":       { "type": "string" }
+      },
+      "additionalProperties": false,
+      "description": "WCAG 2.1 AA metadata (contrast ratio and descriptive alt text)."
     }
-  }
+  },
+  "additionalProperties": false
 }
+```
 
+---
 
-⸻
+## 📗 `index.schema.json`
 
-📗 index.schema.json
+**Purpose:** Validate the aggregated index file (e.g., `thumbnails_metadata.json`) used for bulk validation, search, and catalog integration.
 
-Description
+### 🧩 Schema Outline (Draft 2020-12)
 
-Defines the aggregate metadata structure for all map thumbnails (e.g., thumbnails_metadata.json).
-This index enables bulk validation, search, and catalog integration.
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Map Thumbnails Metadata Index",
   "type": "object",
+  "required": ["version", "thumbnails"],
   "properties": {
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
     "updated": { "type": "string", "format": "date-time" },
@@ -144,42 +130,56 @@ Schema Outline
       "items": { "$ref": "./thumbnail.schema.json" }
     }
   },
-  "required": ["version", "thumbnails"]
+  "additionalProperties": false
 }
+```
 
+---
 
-⸻
+## 🧮 Validation Workflow
 
-🧮 Validation Workflow
+Validation runs automatically via **GitHub Actions**:
 
-These schemas are validated automatically in GitHub Actions via the
-stac-validate.yml workflow:
-	•	Validates all JSON files under metadata/ against thumbnail.schema.json
-	•	Confirms all referenced STAC assets exist
-	•	Cross-verifies SHA-256 checksums
-	•	Publishes validation report to GitHub Actions summary
+| Step  | Check                                   | Workflow            |
+| ----- | --------------------------------------- | ------------------- |
+| **1** | JSON Schema compliance                  | `jsonschema.yml`    |
+| **2** | Checksum integrity (SHA-256)            | `stac-validate.yml` |
+| **3** | STAC linkage (resolvable `source_stac`) | `stac-validate.yml` |
+| **4** | License & attribution present           | `jsonschema.yml`    |
+| **5** | Accessibility metadata present          | `jsonschema.yml`    |
 
-Manual Validation Example:
+### Manual Validation Example
 
-python -m jsonschema -i ks_topo_1894.json schema/thumbnail.schema.json
+```bash
+python -m jsonschema -i thumbnails_metadata.json schema/thumbnail.schema.json
+```
 
+---
 
-⸻
+## 🔗 Integration Notes
 
-🧾 Related References
-	•	Map Thumbnails Metadata
-	•	STAC Catalog
-	•	Kansas Frontier Matrix Architecture
-	•	Data Format Standards
+| Component                       | Purpose                                                | Link                                  |
+| ------------------------------- | ------------------------------------------------------ | ------------------------------------- |
+| **STAC Catalog**                | Connects thumbnails to datasets and temporal metadata. | `data/stac/catalog.json`              |
+| **Web UI (React + MapLibreGL)** | Uses thumbnails in Layer Browser and previews.         | `web/config/layers.json`              |
+| **Docs Site (MCP)**             | Renders thumbnails in READMEs and indexes.             | `docs/design/mockups/map/thumbnails/` |
 
-⸻
+---
 
+## 📚 Related References
+
+* [Map Thumbnails Metadata](../README.md)
+* [STAC Catalog](../../../../../../data/stac/catalog.json)
+* [Kansas Frontier Matrix Architecture](../../../../../../architecture/README.md)
+* [Data Format Standards](../../../../../../docs/standards/data-formats.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Spatial Context · Interop by Design · Accessible Previews**
 
 </div>
 ```
