@@ -18,15 +18,17 @@ Kansas Frontier Matrix’s design system.
 
 ## 🧭 Overview
 
-This directory defines **JSON Schema specifications** for metadata files under  
+This directory contains **JSON Schema specifications** for validating  
+`typography_thumbnails_metadata.json` under  
 `docs/design/mockups/typography/thumbnails/metadata/`.
 
-Schemas are used to validate typography-related thumbnail metadata, guaranteeing:
-- 📐 **Consistent structure** across all documentation artifacts  
-- ♿ **Accessibility compliance** (contrast ratios, alt text)  
-- 🔍 **Traceability** via Figma, CSS token, and commit references  
-- 🧩 **Integration** with other design metadata systems (Map, Panels, Timeline)  
-- 🔒 **Reproducibility** in MCP workflows (document → validate → version → release)  
+Schemas guarantee:
+
+- 📐 **Consistent structure** for all design metadata  
+- ♿ **Accessibility validation** through contrast and alt-text fields  
+- 🔍 **Traceability** back to Figma, CSS tokens, and commit history  
+- 🧩 **Integration** with related KFM schema modules (Map, Panels, Timeline)  
+- 🔒 **Reproducibility** in MCP workflows (`Document → Validate → Version → Release`)  
 
 ---
 
@@ -34,56 +36,33 @@ Schemas are used to validate typography-related thumbnail metadata, guaranteeing
 
 ```text
 docs/design/mockups/typography/thumbnails/metadata/schema/
-├── README.md                          # This documentation file
+├── README.md                          # This file
 ├── typography_thumbnail.schema.json   # Schema for individual thumbnail metadata
-└── index.schema.json                  # Schema for the aggregated index
+└── index.schema.json                  # Schema for aggregated metadata index
+````
 
+---
 
-⸻
+## 📘 `typography_thumbnail.schema.json`
 
-📘 typography_thumbnail.schema.json
-
-Description
-
-Defines the structure of an individual typography thumbnail metadata record.
-Each record corresponds to a PNG/JPG preview showing part of the typography system
+Defines the **structure of individual metadata records** for each typography thumbnail
 (e.g., type scale, headings, paragraphs, or code blocks).
 
-Schema Outline
+### 🧩 Schema Outline
 
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Typography Thumbnail Metadata Schema",
   "type": "object",
   "required": ["id", "title", "category", "thumbnail", "license", "provenance", "accessibility"],
   "properties": {
-    "id": {
-      "type": "string",
-      "pattern": "^[a-z0-9_\\-]+$",
-      "description": "Unique identifier for the thumbnail asset"
-    },
-    "title": {
-      "type": "string",
-      "description": "Readable name of the design thumbnail"
-    },
-    "category": {
-      "type": "string",
-      "enum": ["headings", "paragraphs", "code", "scale", "tokens"],
-      "description": "The type of typography asset represented"
-    },
-    "thumbnail": {
-      "type": "string",
-      "description": "Relative path to the image file (e.g., ../heading_styles_thumb.png)"
-    },
-    "description": {
-      "type": "string",
-      "description": "Brief explanation of what the image represents"
-    },
-    "theme": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Tags or visual themes (e.g., ['typography','hierarchy','accessibility'])"
-    },
+    "id": { "type": "string", "pattern": "^[a-z0-9_\\-]+$", "description": "Unique identifier for the thumbnail asset" },
+    "title": { "type": "string", "description": "Human-readable name of the design thumbnail" },
+    "category": { "type": "string", "enum": ["headings", "paragraphs", "code", "scale", "tokens"], "description": "Typography category" },
+    "thumbnail": { "type": "string", "description": "Relative path to the thumbnail file (e.g., ../heading_styles_thumb.png)" },
+    "description": { "type": "string", "description": "Brief explanation of what the image represents" },
+    "theme": { "type": "array", "items": { "type": "string" }, "description": "Tags or visual themes" },
     "tokens_reference": {
       "type": "object",
       "properties": {
@@ -92,63 +71,43 @@ Schema Outline
         "line_height": { "type": "string" },
         "color_token": { "type": "string" }
       },
-      "description": "References to CSS variables in web/src/styles/tokens.css"
+      "description": "References to CSS variables (web/src/styles/tokens.css)"
     },
-    "source_figma": {
-      "type": "string",
-      "description": "Path or URL to the Figma source file"
-    },
-    "license": {
-      "type": "string",
-      "default": "CC-BY-4.0",
-      "description": "License covering this design artifact"
-    },
-    "checksum": {
-      "type": "string",
-      "pattern": "^sha256-[A-Fa-f0-9]+$",
-      "description": "SHA-256 hash for verifying file integrity"
-    },
+    "source_figma": { "type": "string", "description": "Path or URL to Figma source" },
+    "license": { "type": "string", "default": "CC-BY-4.0", "description": "License for this design artifact" },
+    "checksum": { "type": "string", "pattern": "^sha256-[A-Fa-f0-9]+$", "description": "SHA-256 checksum for integrity" },
     "provenance": {
       "type": "object",
       "required": ["derived_from"],
       "properties": {
-        "derived_from": { "type": "string", "description": "Figma file or export path" },
-        "created_with": { "type": "string", "description": "Tool or process used" },
-        "commit": { "type": "string", "description": "Git commit hash linking this version" }
+        "derived_from": { "type": "string" },
+        "created_with": { "type": "string" },
+        "commit": { "type": "string" }
       },
-      "description": "Record of design lineage and reproducibility"
+      "description": "Design lineage and reproducibility metadata"
     },
     "accessibility": {
       "type": "object",
       "required": ["contrast_ratio", "alt_text"],
       "properties": {
-        "contrast_ratio": {
-          "type": "number",
-          "minimum": 4.5,
-          "description": "Measured contrast ratio according to WCAG 2.1 AA"
-        },
-        "alt_text": {
-          "type": "string",
-          "description": "Descriptive text for screen readers and non-visual contexts"
-        }
+        "contrast_ratio": { "type": "number", "minimum": 4.5 },
+        "alt_text": { "type": "string" }
       },
-      "description": "Accessibility metadata for documentation and auditing"
+      "description": "Accessibility metrics for WCAG compliance"
     }
   }
 }
+```
 
+---
 
-⸻
+## 📗 `index.schema.json`
 
-📗 index.schema.json
+Defines the **aggregate index schema** for validating batches of thumbnail metadata.
 
-Description
+### 🧮 Schema Outline
 
-Defines the aggregate metadata index for typography thumbnail metadata files.
-Used to verify completeness, timestamps, and batch consistency across assets.
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Typography Thumbnails Metadata Index",
@@ -163,66 +122,98 @@ Schema Outline
     }
   }
 }
+```
 
+---
 
-⸻
+## 🧱 Field Validation Summary
 
-🧮 Validation Workflow
+| Field                 | Required | Validation             | Purpose                              |
+| --------------------- | -------- | ---------------------- | ------------------------------------ |
+| **id**                | ✅        | Regex: `^[a-z0-9_-]+$` | Unique identifier                    |
+| **category**          | ✅        | Enum constraint        | Thumbnail type classification        |
+| **checksum**          | ⚙️       | SHA-256 pattern        | File integrity verification          |
+| **contrast_ratio**    | ✅        | ≥ 4.5                  | WCAG 2.1 AA compliance               |
+| **alt_text**          | ✅        | Non-empty string       | Screen-reader accessibility          |
+| **tokens_reference**  | ⚙️       | CSS token link         | Synchronization with style variables |
+| **provenance.commit** | ⚙️       | Git hash               | Traceability & version link          |
 
-All JSON metadata is validated via GitHub Actions CI/CD pipelines.
+---
 
-Automated Checks Include:
-	•	✅ Schema structure compliance (JSON Schema Draft 2020-12)
-	•	✅ Checksum match for image integrity
-	•	✅ File existence checks for referenced thumbnails
-	•	✅ Contrast ratio ≥ 4.5 for accessibility
-	•	✅ Valid tokens_reference matching defined CSS variables
+## 🔄 Validation Workflow
 
-Manual validation example:
+All JSON metadata is validated through **GitHub Actions** (CI/CD).
 
-python -m jsonschema -i ../typography_thumbnails_metadata.json schema/typography_thumbnail.schema.json
+### ✅ Automated Checks
 
+* JSON Schema compliance (Draft 2020-12)
+* Checksum verification (SHA-256)
+* File existence for all thumbnail references
+* Accessibility: contrast ≥ 4.5 : 1
+* Valid CSS token linkage
 
-⸻
+### 🧰 Manual Validation Example
 
-♿ Accessibility Compliance
+```bash
+python -m jsonschema \
+  -i ../typography_thumbnails_metadata.json \
+  schema/typography_thumbnail.schema.json
+```
 
-Typography metadata includes strict accessibility validation fields:
+---
 
-Field	Requirement	Description
-contrast_ratio	≥ 4.5	Ensures legible type and compliant color contrast
-alt_text	Required	Describes the image content for screen readers
-tokens_reference	Required	Ensures design reflects actual implemented tokens in CSS
-color_safe	Recommended	Confirms palette visibility for color-blind users
+## ♿ Accessibility Schema Fields
 
+| Field                | Requirement | Description                                     |
+| -------------------- | ----------- | ----------------------------------------------- |
+| **contrast_ratio**   | ≥ 4.5       | Ensures legible type per WCAG 2.1 AA            |
+| **alt_text**         | Required    | Describes content for assistive technologies    |
+| **tokens_reference** | Required    | Verifies design reflects implemented CSS tokens |
+| **color_safe**       | Recommended | Confirms visibility for color-blind users       |
 
-⸻
+---
 
-🧾 Provenance & Integrity
-	•	Design Source: typography_design_v1.fig (Figma)
-	•	Generated By: scripts/generate_thumbnails.py
-	•	Validated By: CI (jsonschema.yml, stac-validate.yml)
-	•	Checksum Storage: Recorded in typography_thumbnails_metadata.json
-	•	MCP Compliance: Documented → Validated → Versioned → Published
+## 🧾 Provenance & Integrity
 
-⸻
+* **Design Source:** `typography_design_v1.fig`
+* **Generated By:** `scripts/generate_thumbnails.py`
+* **Validated By:** CI pipelines (`jsonschema.yml`, `stac-validate.yml`)
+* **Checksum Storage:** in `typography_thumbnails_metadata.json`
+* **License:** [CC-BY 4.0](../../../../../../../../LICENSE) — attribution required
+* **MCP Compliance:** Documented → Validated → Versioned → Published
 
-📚 Related References
-	•	Typography Thumbnails Metadata
-	•	Typography Thumbnails
-	•	Panels Thumbnails Metadata Schema
-	•	Map Thumbnails Metadata Schema
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	KFM Design Tokens
+---
 
-⸻
+## 🧭 Traceability Diagram (GitHub-Safe Mermaid)
 
+```mermaid
+flowchart LR
+  A["Figma Source\n(typography_design_v1.fig)"]
+    --> B["Thumbnail Metadata JSON\n(heading_styles_thumb, etc.)"]
+    --> C["Schema Validation\n(typography_thumbnail.schema.json)"]
+    --> D["Index Validation\n(index.schema.json)"]
+    --> E["CI/CD Verification\n(jsonschema.yml · stac-validate.yml)"]
+    --> F["Publication\n(KFM Docs & Design System)"]
+%% END OF MERMAID
+```
+
+---
+
+## 📚 Related References
+
+* [Typography Thumbnails Metadata](../README.md)
+* [Typography Thumbnails](../../README.md)
+* [Panels Thumbnails Metadata Schema](../../../panels/thumbnails/metadata/schema/README.md)
+* [Map Thumbnails Metadata Schema](../../../map/thumbnails/metadata/schema/README.md)
+* [KFM Web UI Architecture](../../../../../../../../architecture/web_ui_architecture_review.md)
+* [Design Token Reference](../../../../../design-tokens/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Readability · Accessibility · Traceability · Reproducibility
+*Readability · Accessibility · Traceability · Reproducibility*
 
 </div>
-```
