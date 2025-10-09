@@ -3,7 +3,8 @@
 # 🧭 Kansas Frontier Matrix — Map Wireframe Thumbnails  
 `docs/design/mockups/map/wireframes/thumbnails/`
 
-**Purpose:** Visualize and document compact **thumbnail previews** of map wireframes used in design documentation and UI mockups.
+**Purpose:** Provide, manage, and validate compact **thumbnail previews** of KFM map wireframes  
+used across design documentation, galleries, and automated MCP build workflows.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../..)  
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../..)  
@@ -16,13 +17,16 @@
 
 ## 🗺️ Overview
 
-This directory contains **thumbnail images** generated from the main **map wireframes** (`../`) for use in:
+This directory stores **thumbnail images** derived from the **Map Wireframes** (`../`)  
+to serve as lightweight visual previews for documentation, UI design reviews, and web interface galleries.
 
-- 🧩 Documentation previews (Markdown, GitHub READMEs)  
-- 🌐 Web UI layer browsers and galleries  
-- 🖼️ MCP visual documentation workflows (thumbnails referenced in metadata)  
+These assets:
+- 🧩 Enhance Markdown READMEs and component indexes.  
+- 🖼️ Appear in the KFM **Design System Gallery** and **MCP visual documentation** portal.  
+- 🌐 Integrate with **Layer Preview Panels** within the KFM web UI.  
+- ♿ Support accessibility audits through consistent metadata and contrast validation.  
 
-Each thumbnail represents a **design state or layout variant** of the KFM Map Viewer — such as the default layout, mobile view, or timeline overlay integration.
+Each thumbnail corresponds to a **distinct design variant** (default desktop, mobile map-first, or timeline overlay).
 
 ---
 
@@ -31,50 +35,46 @@ Each thumbnail represents a **design state or layout variant** of the KFM Map Vi
 ```text
 docs/design/mockups/map/wireframes/thumbnails/
 ├── README.md                       # This file
-├── map_default_thumb.png            # Default full-size desktop wireframe
-├── map_mobile_thumb.png             # Mobile responsive version
-├── map_timeline_overlay_thumb.png   # Combined map + timeline overlay
-├── archive/                         # Previous versions / alternate concepts
+├── map_default_thumb.png            # Default full-size desktop map wireframe
+├── map_mobile_thumb.png             # Mobile responsive variant
+├── map_timeline_overlay_thumb.png   # Map + Timeline overlay visualization
+├── archive/                         # Older or alternative design concepts
 │   ├── map_concept_v0_thumb.png
 │   └── map_darkmode_thumb.png
-└── metadata/                        # Metadata for thumbnails (JSON or YAML)
+└── metadata/                        # Thumbnail metadata & validation schema
     └── thumbnails_index.json
+````
 
+---
 
-⸻
+## 📐 Thumbnail Standards
 
-📐 Thumbnail Standards
+| Property              | Standard                       | Description                                     |
+| --------------------- | ------------------------------ | ----------------------------------------------- |
+| **Aspect Ratio**      | 16 : 9                         | Consistent framing across all map variants      |
+| **Resolution**        | 1280×720 px                    | Optimized for documentation and preview display |
+| **Format**            | PNG (preferred) / JPG fallback | Transparency allowed                            |
+| **Color Space**       | sRGB                           | Ensures cross-browser color consistency         |
+| **Naming Convention** | `map_{variant}_thumb.png`      | Lowercase, underscores only                     |
+| **Accessibility**     | Text contrast ≥ 4.5 : 1        | WCAG 2.1 AA-compliant overlays                  |
 
-Each thumbnail adheres to the Design System standards for consistency and accessibility:
+Thumbnails are resized and optimized automatically via the `scripts/generate_thumbnails.py` pipeline.
 
-Property	Standard	Description
-Aspect Ratio	16:9	Consistent framing across all map design variants
-Resolution	1280×720 px	Optimized for documentation display
-Format	PNG (preferred), JPG fallback	Transparent background allowed
-Color Space	sRGB	Ensures consistent rendering across browsers
-Naming Convention	map_{variant}_thumb.png	Use lowercase, underscores only
-Accessibility	Text overlays ≥ 4.5:1 contrast	Follows WCAG 2.1 AA color standards
+---
 
+## 🧩 Metadata Index
 
-⸻
+All thumbnails are registered in `metadata/thumbnails_index.json`,
+providing essential linkage between **visual assets**, **Figma wireframes**, and **version history**.
 
-🧩 Metadata Index
+### Example Entry
 
-All thumbnail files are registered in metadata/thumbnails_index.json, which provides:
-	•	File name
-	•	Linked wireframe (source Figma export or PNG)
-	•	Description
-	•	Theme or purpose (desktop, mobile, overlay)
-	•	Creation and update timestamps
-	•	Provenance (creator, source commit, associated STAC layer)
-
-Example:
-
+```json
 {
   "id": "map_timeline_overlay_thumb",
   "title": "Map + Timeline Overlay (Wireframe)",
   "file": "map_timeline_overlay_thumb.png",
-  "description": "Wireframe showing synchronized timeline overlay and map layout for Kansas Frontier Matrix web UI.",
+  "description": "Thumbnail preview showing synchronized timeline overlay and map layout for Kansas Frontier Matrix web UI.",
   "theme": ["timeline", "map", "overlay"],
   "created": "2025-10-06",
   "source": "../map_wireframes_v1.fig",
@@ -85,51 +85,80 @@ Example:
   },
   "license": "CC-BY-4.0"
 }
+```
 
-This metadata index supports automated display of previews in documentation and can be parsed by scripts in the docs or web build system.
+**Purpose of metadata:**
 
-⸻
+* Enables automated rendering in MCP documentation portals.
+* Provides traceability between design source, export, and thumbnail artifact.
+* Supports integrity validation (checksums, schema compliance) in CI pipelines.
 
-🧠 Integration Notes
-	•	Docs Rendering:
-These thumbnails are referenced in Markdown READMEs across the /docs/design/mockups/map/ hierarchy.
-For example:
+---
 
-![Map + Timeline Overlay](thumbnails/map_timeline_overlay_thumb.png)
+## 🧠 Integration Notes
 
+| Integration Target      | Function              | Description                                                                       |
+| ----------------------- | --------------------- | --------------------------------------------------------------------------------- |
+| **Docs Rendering**      | Markdown Preview      | Used in READMEs across `/docs/design/mockups/map/` for visual context.            |
+| **Web UI (React)**      | Layer Preview Panel   | Displayed as static previews before STAC layer loading.                           |
+| **Automation Script**   | Thumbnail Generator   | `scripts/generate_thumbnails.py` resizes wireframe exports and updates metadata.  |
+| **Validation Pipeline** | CI Schema Enforcement | `jsonschema.yml` + `stac-validate.yml` ensure structure and provenance integrity. |
 
-	•	Web UI Integration:
-The web app can display these thumbnails in its Layer Preview Panel (for static preloads when STAC previews aren’t yet generated).
-	•	Automation:
-The script scripts/generate_thumbnails.py reads wireframe exports, resizes them, and generates updated metadata in metadata/thumbnails_index.json.
+**Markdown Example**
 
-⸻
+```markdown
+![Map + Timeline Overlay](map_timeline_overlay_thumb.png)
+```
 
-🧮 Provenance & Validation
-	•	Generated By: Figma exports (map_wireframes_v1.fig)
-	•	Processed Using: scripts/generate_thumbnails.py
-	•	Checksums: SHA-256 sidecars in metadata/
-	•	Validation: GitHub Actions run schema + image lint checks during CI
-	•	Validates metadata JSON schema compliance
-	•	Ensures all referenced image files exist
-	•	Confirms all thumbnails have valid license and attribution fields
+---
 
-⸻
+## 🧮 Provenance & Validation
 
-🧾 Related References
-	•	Map Wireframes (Main)
-	•	Map Thumbnails Metadata
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	STAC Catalog
+| Attribute               | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| **Generated By**        | Figma export via `map_wireframes_v1.fig`     |
+| **Processed Using**     | `scripts/generate_thumbnails.py`             |
+| **Checksum Storage**    | SHA-256 sidecar files in `metadata/`         |
+| **Validation**          | JSON Schema & image integrity verified in CI |
+| **Accessibility Audit** | Verified text/icon contrast (≥ 4.5 : 1)      |
+| **License**             | [CC-BY 4.0](../../../../../../LICENSE)       |
 
-⸻
+CI workflows ensure:
 
+* ✅ Schema compliance for metadata JSON.
+* ✅ File existence and checksum matching.
+* ✅ License and attribution fields present.
+* ✅ Accessibility metadata complete.
+
+---
+
+## ♿ Accessibility Verification
+
+Thumbnails undergo automated and manual checks:
+
+* Verified color contrast ratios (≥ 4.5 : 1).
+* ARIA-compliant `alt_text` entries within metadata.
+* Light/dark mode readability confirmed via design QA.
+* Results logged in `metadata/thumbnails_index.json`.
+
+Accessibility tests are performed using **axe-core** and **Figma plugin contrast validators**.
+
+---
+
+## 🧾 Related References
+
+* [🗺 Map Wireframes (Main)](../README.md)
+* [🧩 Map Thumbnails Metadata](../../thumbnails/metadata/README.md)
+* [🧱 Kansas Frontier Matrix Web UI Architecture](../../../../../../architecture/web_ui_architecture_review.md)
+* [📖 STAC Catalog](../../../../../../data/stac/catalog.json)
+* [♿ Accessibility Standards](../../../../../design/reviews/accessibility/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Spatial Precision · Visual Consistency · Accessibility by Design**
 
 </div>
-```
