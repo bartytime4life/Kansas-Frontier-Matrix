@@ -24,11 +24,12 @@ from `docs/design/mockups/typography/thumbnails/`.
 Each record represents a visual preview of typographic standards (headings, paragraphs, type scale, etc.)  
 and includes accessibility validation, provenance, and semantic linkage to Figma and style tokens.
 
-These JSON files ensure:
-- 📊 **Traceable provenance** for each design artifact  
+These JSON records guarantee:
+
+- 📊 **Traceable provenance** for every design artifact  
 - ♿ **Accessibility compliance** through WCAG 2.1 AA contrast metrics  
 - 🔒 **Checksum validation** for reproducibility  
-- 🧩 **Cross-linking** between typography assets and KFM’s CSS variable definitions  
+- 🧩 **Cross-linking** between thumbnail assets and KFM’s CSS design tokens  
 
 ---
 
@@ -41,17 +42,18 @@ docs/design/mockups/typography/thumbnails/metadata/
 └── schema/                               # Validation schemas
     ├── typography_thumbnail.schema.json
     └── index.schema.json
+````
 
+---
 
-⸻
+## 🧱 Metadata Structure
 
-🧱 Metadata Structure
+Each entry documents a **single typography thumbnail asset** within the KFM Design System.
+Metadata captures design origin, accessibility validation, and token linkage for reproducibility.
 
-Each entry documents a single typography thumbnail asset used in the KFM Design System.
-Metadata includes font hierarchy, design origin, contrast compliance, and provenance details.
+### 🧩 Example Record
 
-Example Record
-
+```json
 {
   "id": "heading_styles_thumb",
   "title": "Heading Styles Thumbnail",
@@ -78,87 +80,106 @@ Example Record
     "line_height": "--kfm-line-height-base"
   }
 }
+```
 
+---
 
-⸻
+## 🧩 Field Reference
 
-🧩 Field Reference
+| Field                | Type     | Description                                                         |
+| -------------------- | -------- | ------------------------------------------------------------------- |
+| **id**               | `string` | Unique identifier for the thumbnail (kebab-case).                   |
+| **title**            | `string` | Human-readable name for the asset.                                  |
+| **file**             | `string` | Path to the thumbnail image file.                                   |
+| **description**      | `string` | Short summary describing the visual content.                        |
+| **category**         | `string` | Type of typography (e.g., headings, paragraphs, monospace).         |
+| **theme**            | `array`  | Tags representing design context (e.g., “hierarchy”, “legibility”). |
+| **creator**          | `string` | Author or design team attribution.                                  |
+| **license**          | `string` | Asset license (default: CC-BY-4.0).                                 |
+| **source_figma**     | `string` | Reference to the original Figma source file.                        |
+| **checksum**         | `string` | SHA-256 hash ensuring file integrity.                               |
+| **provenance**       | `object` | Metadata describing file creation, derivation, and commit.          |
+| **accessibility**    | `object` | WCAG validation data: contrast ratio, alt text, etc.                |
+| **tokens_reference** | `object` | Links to CSS tokens controlling typography properties.              |
 
-Field	Type	Description
-id	string	Unique identifier for the thumbnail (kebab-case).
-title	string	Human-readable title.
-file	string	Path to the thumbnail image file.
-description	string	Short summary of what the thumbnail represents.
-category	string	Type of typography (e.g. headings, paragraphs, monospace).
-theme	array	Design context tags (e.g. “hierarchy”, “legibility”).
-creator	string	Author or design team attribution.
-license	string	Asset license (default: CC-BY-4.0).
-source_figma	string	Reference to the original Figma file.
-checksum	string	SHA-256 hash to verify the exported file integrity.
-provenance	object	Metadata about file creation, source, and Git reference.
-accessibility	object	Contrast ratio and alt text for accessibility validation.
-tokens_reference	object	Links to KFM CSS variable definitions controlling typography.
+---
 
+## 🧮 Validation Workflow
 
-⸻
+All metadata is validated in **CI/CD pipelines** (`jsonschema.yml` + `stac-validate.yml`)
+to enforce completeness, consistency, and accessibility conformance.
 
-🧮 Validation Workflow
+### ✅ Automated Checks
 
-All metadata is validated in CI/CD pipelines (jsonschema.yml + stac-validate.yml)
-to ensure completeness and compliance with documentation standards.
+* Schema validation → `typography_thumbnail.schema.json`
+* File existence and correct path resolution
+* SHA-256 checksum verification
+* Accessibility compliance (contrast ≥ 4.5 : 1)
+* Token linkage validation against `--kfm-font-*` definitions
 
-Validation Checks
-	•	✅ Schema compliance with typography_thumbnail.schema.json
-	•	✅ File existence and path validation
-	•	✅ SHA-256 checksum validation
-	•	✅ Accessibility compliance (contrast ≥ 4.5)
-	•	✅ Token reference existence (--kfm-font-* variables verified in CSS)
+### 🧰 Manual Validation Example
 
-Manual Validation Example:
+```bash
+python -m jsonschema \
+  -i typography_thumbnails_metadata.json \
+  schema/typography_thumbnail.schema.json
+```
 
-python -m jsonschema -i typography_thumbnails_metadata.json schema/typography_thumbnail.schema.json
+---
 
+## ♿ Accessibility & Typography Guidelines
 
-⸻
+Typography thumbnails must adhere to **KFM Accessibility Design Framework** and **WCAG 2.1 AA**:
 
-♿ Accessibility & Typography Guidelines
+* Contrast ratio ≥ **4.5 : 1** for body text, ≥ **3 : 1** for headings
+* Descriptive alt-text describing hierarchy and intent
+* Use of accessible, open-source fonts (`Inter`, `Roboto Mono`, etc.)
+* Alignment with KFM CSS tokens (`--kfm-font-size-*`, `--kfm-line-height-*`)
 
-Typography thumbnails must conform to the KFM Accessibility Design Framework:
-	•	Contrast ratio ≥ 4.5:1 for body text and ≥ 3:1 for headings
-	•	Alt text describes the visual style hierarchy and intent
-	•	Fonts verified for legibility (Inter, Roboto Mono, or equivalent open-source family)
-	•	Alignment with CSS tokens (--kfm-font-size-*, --kfm-line-height-*)
+Accessibility checks are **automated during CI** and verified manually during design QA.
 
-Accessibility is validated during the design QA process and automated through CI.
+---
 
-⸻
+## 🧾 Provenance & Integrity
 
-🧾 Provenance & Integrity
-	•	Design Source: typography_design_v1.fig
-	•	Generated By: scripts/generate_thumbnails.py
-	•	Validated In: CI pipelines (JSON Schema, checksum, and accessibility tests)
-	•	Checksums: Recorded per asset for reproducibility
-	•	License: CC-BY 4.0 (Attribution required for derivative works)
-	•	MCP Compliance: Document → Validate → Version → Release
+* **Design Source:** `figma/typography_design_v1.fig`
+* **Generated By:** `scripts/generate_thumbnails.py`
+* **Validated In:** `jsonschema.yml`, `stac-validate.yml`
+* **Checksums:** Recorded per asset in metadata JSON
+* **License:** [CC-BY 4.0](../../../../../../../LICENSE) — attribution required for reuse
+* **MCP Compliance:** Document → Validate → Version → Release
 
-⸻
+---
 
-📚 Related References
-	•	Typography Thumbnails (Main)
-	•	Typography Metadata Schema
-	•	Panels Thumbnails Metadata
-	•	Map Thumbnails Metadata
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	Design Token Reference
+## 🧭 Traceability Diagram (GitHub-Safe Mermaid)
 
-⸻
+```mermaid
+flowchart LR
+  A["Figma Source\n(typography_design_v1.fig)"]
+    --> B["Thumbnail Exports\n(PNGs, 1280×720 px)"]
+    --> C["Metadata JSON\n(provenance · tokens · accessibility)"]
+    --> D["Schema Validation\n(jsonschema.yml · stac-validate.yml)"]
+    --> E["Documentation Publication\n(KFM Design System & Web UI)"]
+%% END OF MERMAID
+```
 
+---
+
+## 📚 Related References
+
+* [Typography Thumbnails (Main)](../README.md)
+* [Typography Metadata Schema](schema/README.md)
+* [Panels Thumbnails Metadata](../../../panels/thumbnails/metadata/README.md)
+* [Map Thumbnails Metadata](../../../map/thumbnails/metadata/README.md)
+* [Web UI Architecture](../../../../../../../architecture/web_ui_architecture_review.md)
+* [Design Token Reference](../../../../design-tokens/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Readability · Accessibility · Consistency · Provenance
+*Readability · Accessibility · Consistency · Provenance*
 
 </div>
-```
