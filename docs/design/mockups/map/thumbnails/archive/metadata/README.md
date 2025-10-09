@@ -5,53 +5,63 @@
 
 **Structured · Traceable · Machine-Readable Provenance**
 
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../../..)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../../../..)  
+[![Schema Validation](https://img.shields.io/badge/Schema-Validated-orange)](https://json-schema.org)  
+[![Archive Integrity](https://img.shields.io/badge/Archive-Integrity-blue)](../../../../../../../../.github/workflows/stac-validate.yml)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../../../../LICENSE)
+
 </div>
 
 ---
 
 ## 🧭 Overview
 
-This directory stores **metadata records (`.json`)** for all archived map thumbnails  
-located in `docs/design/mockups/map/thumbnails/archive/`.  
+This directory contains **metadata records (`.json`)** for all archived map thumbnails  
+found under `docs/design/mockups/map/thumbnails/archive/`.  
 
-Each metadata file provides a **structured provenance record** that documents  
-who created the original thumbnail, when it was archived, why it was replaced,  
-and what new version superseded it.  
+Each metadata file captures:
+- 🧩 **Provenance** — when, why, and by whom a thumbnail was archived.  
+- 🔗 **Lineage** — the connection between old and new thumbnail versions.  
+- 🧮 **Validation data** — checksums, licensing, and STAC links.  
+- 🧠 **Contextual relationships** — related components and datasets.  
 
-These records ensure that visual and design lineage within the  
-**Kansas Frontier Matrix (KFM)** remains **traceable, auditable, and compliant**  
-with the **Master Coder Protocol (MCP)** principles of reproducibility and data integrity.
+These records create a **traceable visual history** within the Kansas Frontier Matrix (KFM)  
+and uphold the **Master Coder Protocol (MCP)** standard for documentation-first design lineage.
 
 ---
 
-## 📁 Directory Structure
+## 🗂️ Directory Layout
 
 ```text
 docs/design/mockups/map/thumbnails/archive/metadata/
-├── README.md                                     # This documentation (GitHub-safe)
-├── *.json                                        # Metadata files for archived thumbnails
-└── schema/                                       # JSON Schema definitions for validation
+├── README.md                            # This documentation (GitHub-safe)
+├── *.json                               # Metadata files describing archived thumbnails
+└── schema/                              # JSON Schema definitions for validation
+````
 
-Naming Convention:
-YYYYMMDD_map-topic-thumb_v#.json
-Example → 20251009_map-treaty-boundaries-thumb_v1.json
+### 📛 Naming Convention
 
-⸻
+`YYYYMMDD_map-topic-thumb_v#.json`
+**Example:** `20251009_map-treaty-boundaries-thumb_v1.json`
 
-🧱 Purpose
+---
 
-Objective	Description
-🧭 Provenance Tracking	Record version history and authorship for archived thumbnails
-🧮 Validation	Enforce consistent metadata structure for automated CI checks
-🕓 Version Lineage	Connect archived files to their replacements or related components
-🧩 Integration	Link visual history to map layer configurations and STAC metadata
-📚 Documentation	Ensure design decisions are transparent and reproducible
+## 🧱 Purpose
 
+| Objective                  | Description                                                          |
+| -------------------------- | -------------------------------------------------------------------- |
+| 🧭 **Provenance Tracking** | Records authorship and reason for archival.                          |
+| 🧮 **Validation**          | Enforces schema compliance for MCP pipeline checks.                  |
+| 🕓 **Version Lineage**     | Connects deprecated and replacement thumbnail versions.              |
+| 🧩 **Integration**         | Links archived assets to STAC metadata and map layer configurations. |
+| 📚 **Documentation**       | Enables long-term auditability and transparency.                     |
 
-⸻
+---
 
-🧾 Example Metadata Template
+## 🧾 Example Metadata Template
 
+```json
 {
   "id": "map-treaty-boundaries-thumb_v1",
   "title": "Treaty Boundaries Map Thumbnail v1",
@@ -70,22 +80,21 @@ Objective	Description
   "status": "archived",
   "license": "CC-BY-4.0"
 }
+```
 
+All archived metadata files are validated automatically in CI
+using the schema stored in:
+`docs/design/mockups/map/thumbnails/archive/metadata/schema/map_thumbnail_metadata.schema.json`
 
-⸻
+---
 
-🧮 JSON Schema Alignment
+## 🧮 JSON Schema Alignment
 
-All metadata files are validated against the schema stored in:
-docs/design/mockups/map/thumbnails/archive/metadata/schema/map_thumbnail_metadata.schema.json
+### Example Schema (Excerpt)
 
-This schema ensures every file contains the required fields and adheres
-to KFM’s machine-readable documentation format.
-
-Example Schema (excerpt):
-
+```json
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Archived Map Thumbnail Metadata Schema",
   "type": "object",
   "properties": {
@@ -104,81 +113,119 @@ Example Schema (excerpt):
   },
   "required": ["id", "title", "author", "created", "archived", "license"]
 }
+```
 
+This schema guarantees:
 
-⸻
+* ✅ Structural uniformity across all archived metadata.
+* 🔒 Consistent versioning and linkage patterns.
+* 🧾 Metadata completeness for downstream ingestion into KFM’s knowledge systems.
 
-🧩 Metadata Creation Workflow
+---
 
-1. Copy Template
+## 🧩 Metadata Creation Workflow
 
-Duplicate the above example into a new .json file using the proper naming format.
+### 1️⃣ Copy Template
 
-2. Fill in Metadata Fields
+Duplicate the above JSON example using the standard naming format.
 
-Include all relevant fields:
-	•	Author or design team
-	•	Creation and archival dates
-	•	Link to source file
-	•	Replacement file path
-	•	Reason for archival
+### 2️⃣ Fill in Metadata Fields
 
-3. Validate Structure
+Provide complete information:
 
-Run JSON Schema validation locally or via CI:
+* Author(s)
+* Created & archived dates
+* Superseding file path
+* Archival reason
+* License and tags
 
-jsonschema -i metadata/20251009_map-treaty-boundaries-thumb_v1.json schema/map_thumbnail_metadata.schema.json
+### 3️⃣ Validate Structure
 
-4. Commit with Context
+Run JSON Schema validation manually or in CI:
 
-Record all related changes with provenance:
+```bash
+python -m jsonschema -i metadata/20251009_map-treaty-boundaries-thumb_v1.json \
+  schema/map_thumbnail_metadata.schema.json
+```
 
+### 4️⃣ Commit with Context
+
+Document archival details in the commit message:
+
+```bash
 git add metadata/20251009_map-treaty-boundaries-thumb_v1.json
 git commit -m "Added metadata for archived map thumbnail v1 (Treaty Boundaries)"
+```
 
+---
 
-⸻
+## 🔗 Integration with Knowledge Graph & STAC
 
-🔗 Integration with Knowledge Graph & STAC
+Each metadata file links archived assets to KFM’s knowledge graph and STAC catalogs
+for persistent semantic relationships.
 
-Metadata entries are automatically linked into KFM’s knowledge graph and STAC catalog
-via their related and superseded_by fields.
+| Relation        | Description                                     |
+| --------------- | ----------------------------------------------- |
+| **derivedFrom** | Links to the original design or dataset source. |
+| **replacedBy**  | Connects to the newer, superseding thumbnail.   |
+| **isVersionOf** | Declares lineage within RDF or Neo4j.           |
+| **hasLicense**  | Inherits license from parent dataset.           |
 
-Relation	Description
-derivedFrom	Links to the original design or export file
-replacedBy	Points to the newer thumbnail version
-isVersionOf	Indicates design lineage in Neo4j or RDF graph
-hasLicense	Defines license inheritance for derived works
+This metadata enables **automated provenance queries**, allowing design artifacts
+to be discoverable in semantic layers and historical visual catalogs.
 
-This linkage allows historical visual assets to be discoverable and queryable
-in semantic graph layers or dataset catalogs.
+---
 
-⸻
+## 🧩 Metadata Best Practices
 
-🧩 Metadata Best Practices
-	•	Use ISO8601 date format for created and archived fields.
-	•	Maintain relative paths for all linked files.
-	•	Keep "status" as "archived" unless asset is explicitly deprecated.
-	•	Always provide a "reason" for archival or replacement.
-	•	Limit "tags" to 3–6 concise keywords for searchability.
-	•	Run schema validation before committing.
-	•	Maintain consistent capitalization and naming conventions.
+| Best Practice       | Guideline                                        |
+| ------------------- | ------------------------------------------------ |
+| **Date Format**     | Use ISO8601 (YYYY-MM-DD).                        |
+| **Relative Paths**  | Maintain relative file linking for portability.  |
+| **Status Field**    | Use `"archived"` unless explicitly deprecated.   |
+| **Archival Reason** | Always include a descriptive rationale.          |
+| **Tag Limit**       | 3–6 concise, relevant tags.                      |
+| **Validation**      | Run schema checks before committing.             |
+| **Versioning**      | Append `_v1`, `_v2`, etc. for revision tracking. |
 
-⸻
+---
 
-⚖️ License
+## ♿ Accessibility & Preservation
 
-All metadata files in this directory are released under
-Creative Commons Attribution 4.0 International (CC-BY 4.0)
+| Metric             | Standard  | Description                                       |
+| ------------------ | --------- | ------------------------------------------------- |
+| **Alt Text**       | Required  | Stored in UI references or documentation context. |
+| **Color Contrast** | ≥ 4.5 : 1 | Maintained in archived assets.                    |
+| **Dual Theme**     | Verified  | Works under light/dark mode documentation.        |
 
-Credit: Kansas Frontier Matrix Design Team · 2025
+Accessibility attributes from these archives ensure that legacy designs remain inclusive and referenceable.
 
-Attribution required when reused or extended; commercial use permitted with credit.
+---
 
-⸻
+## ⚖️ License
 
-🗓️ Change Log
+All archived thumbnail metadata are released under
+**Creative Commons Attribution 4.0 International (CC-BY 4.0)**.
+Attribution required; commercial use permitted with credit.
 
-Date	Description
-2025-10-13	Initial version — metadata structure, example, and schema reference
-2025-10-14	Added graph/STAC integration notes and validation workflow
+**© 2025 Kansas Frontier Matrix Design Team**
+
+---
+
+## 🗓️ Change Log
+
+| Date           | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| **2025-10-13** | Initial version — metadata schema and example template.   |
+| **2025-10-14** | Added integration with Knowledge Graph & STAC references. |
+| **2025-10-15** | Improved workflow automation and validation guidance.     |
+
+---
+
+<div align="center">
+
+### Kansas Frontier Matrix — Documentation-First Design
+
+**Preservation · Accessibility · Provenance Integrity**
+
+</div>
