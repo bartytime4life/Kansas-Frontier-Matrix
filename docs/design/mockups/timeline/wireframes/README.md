@@ -4,7 +4,7 @@
 `docs/design/mockups/timeline/wireframes/`
 
 **Purpose:** Define and document wireframe layouts for the **Timeline UI module** of the  
-Kansas Frontier Matrix (KFM) — visualizing how time and story synchronize with map,  
+Kansas Frontier Matrix (KFM) — visualizing how time and story synchronize with the map,  
 knowledge graph, and AI assistant panels.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../..)  
@@ -18,12 +18,14 @@ knowledge graph, and AI assistant panels.
 
 ## 🧭 Overview
 
-The **Timeline component** is a core feature of the Kansas Frontier Matrix web interface.  
-It allows users to traverse history dynamically — exploring **events, periods, and entities**  
-through an interactive time slider synchronized with the map and detail panels.
+The **Timeline component** is a cornerstone of the Kansas Frontier Matrix web interface.  
+It enables users to traverse history dynamically — exploring **events, periods, and entities**  
+through an interactive time slider synchronized with the **map**, **knowledge graph**, and **detail panels**.
 
-This directory contains **Figma wireframes**, **exported previews**, and **metadata** describing  
-timeline design variations (e.g., horizontal scroll, condensed mode, and mobile view).
+This directory contains:
+- 🎨 **Figma wireframes** defining layout and structure  
+- 🖼️ **Exported previews** for visual reference  
+- 🧾 **Metadata JSON** documenting accessibility, schema, and provenance compliance  
 
 ---
 
@@ -40,119 +42,132 @@ docs/design/mockups/timeline/wireframes/
 │   └── timeline_overlay_map.png
 └── metadata/                       # JSON metadata for each wireframe
     └── timeline_wireframes_metadata.json
+````
 
+---
 
-⸻
+## 🧱 Design Goals
 
-🧱 Design Goals
+| Objective                   | Description                                                                               |
+| --------------------------- | ----------------------------------------------------------------------------------------- |
+| 🕰️ **Temporal Navigation** | Users should scroll or zoom across years, decades, or centuries smoothly.                 |
+| 🗺️ **Map Synchronization** | The timeline’s range filters data shown on the map (via STAC temporal metadata).          |
+| 📑 **Event Representation** | Each event node or span should link to a KFM Knowledge Graph entity (type, date, source). |
+| 🎞️ **Storytelling Mode**   | Support animated playback of events using a scrubber-based “story mode.”                  |
+| ⚙️ **Flexibility**          | Adaptable to multiple datasets (historical eras, environmental, cultural, etc.).          |
+| ♿ **Accessibility**         | Fully keyboard navigable and WCAG 2.1 AA color-contrast compliant.                        |
 
-Objective	Description
-🕰️ Temporal Navigation	Users should scroll or zoom across years, decades, or centuries smoothly.
-🗺️ Map Synchronization	The timeline’s range filters data shown on the map (via STAC layer temporal metadata).
-📑 Event Representation	Each event node or span should link to a KFM Knowledge Graph entity (with type, date, and source).
-🎞️ Storytelling Mode	Support playback of events through animation or scrubber-based “story mode.”
-⚙️ Flexibility	Adaptable to different datasets (historical periods, environmental data, etc.).
-♿ Accessibility	Fully keyboard navigable and color-contrast compliant (WCAG 2.1 AA).
+---
 
+## 🧩 Key Components (UI Regions)
 
-⸻
+| Component                 | Function                                                           | React Module           |
+| ------------------------- | ------------------------------------------------------------------ | ---------------------- |
+| **TimelineCanvas**        | Renders years, ticks, and event nodes via Canvas or D3.js.         | `TimelineCanvas.tsx`   |
+| **TimelineRangeSelector** | Enables range selection and zoom (drag handles).                   | `RangeSelector.tsx`    |
+| **TimelinePlayControls**  | Play, step, and pause controls for animation.                      | `TimelineControls.tsx` |
+| **EventTooltip / Popup**  | Displays brief summaries for hovered or selected events.           | `EventTooltip.tsx`     |
+| **PeriodBands**           | Colored overlays for historical eras (linked to PeriodO ontology). | `PeriodBands.tsx`      |
 
-🧩 Key Components (UI Regions)
+---
 
-Component	Function	React Module
-TimelineCanvas	Renders years, tick marks, and event nodes via Canvas or D3.js.	TimelineCanvas.tsx
-TimelineRangeSelector	Allows range selection and zooming (drag handles).	RangeSelector.tsx
-TimelinePlayControls	Playback, step, and pause controls for dynamic visualization.	TimelineControls.tsx
-EventTooltip / Popup	Displays summary info for hovered or selected events.	EventTooltip.tsx
-PeriodBands	Colored overlays denoting historical eras (linked to PeriodO).	PeriodBands.tsx
+## 🕹️ Interaction Flow
 
-
-⸻
-
-🕹️ Interaction Flow (GitHub-safe Mermaid)
-
+```mermaid
 flowchart LR
-  A["User Loads Page"] --> B["Timeline Initializes\n(loads events from API)"]
+  A["User Loads Page"] --> B["Timeline Initializes\n(loads events via API)"]
   B --> C["Map Syncs to Initial Time Range"]
   C --> D["User Scrolls or Zooms Timeline"]
   D --> E["Visible Range Updates"]
-  E --> F["Map and Panels Refresh with Filtered Events"]
+  E --> F["Map and Panels Refresh\n(Filtered Events Displayed)"]
   F --> G["User Clicks Event Node"]
-  G --> H["Detail Panel Opens → Linked Data Loaded"]
+  G --> H["Detail Panel Opens\nLinked Data Fetched"]
   H --> I["User Activates Play Controls"]
-  I --> J["Timeline Animates Over Period\n(showing evolving data layers)"]
+  I --> J["Timeline Animates Over Period\n(Evolving Data Layers)"]
   J --> C
-<!-- END OF MERMAID -->
+%% END OF MERMAID
+```
 
+---
 
-⸻
+## 🎨 Visual Design Standards
 
-🎨 Visual Design Standards
+| Element              | Font / Size                 | Color Tokens                                                                   | Notes                                      |
+| -------------------- | --------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------ |
+| **Year Labels**      | Inter 12–14px               | `--kfm-color-fg-muted`                                                         | Remain visible at all zoom levels          |
+| **Event Nodes**      | Circle (6–10px)             | Thematic colors (`--kfm-color-accent-war`, `--kfm-color-accent-climate`, etc.) | Tooltip-enabled                            |
+| **Era Bands**        | Semi-transparent rectangles | Light tints per PeriodO ID                                                     | Indicate historical eras                   |
+| **Background**       | Neutral gray gradient       | `#F5F6F7`                                                                      | Maintains clarity in both light/dark modes |
+| **Playback Buttons** | Icon-only, 20–24px          | `--kfm-color-primary`                                                          | ARIA-labeled, keyboard-accessible          |
 
-Element	Font / Size	Color Tokens	Notes
-Year Labels	Inter 12–14px	--kfm-color-fg-muted	Visible at varying zoom levels
-Event Nodes	Circle / 6–10px	Thematic colors by type (e.g. --kfm-color-accent-war, --kfm-color-accent-climate)	Tooltip-enabled
-Era Bands	Semi-transparent rectangles	Light tints by PeriodO ID	Denote broader historical context
-Background	Neutral gray gradient	#F5F6F7	Maintains clarity in light/dark modes
-Playback Buttons	Icon-only, 20–24px	--kfm-color-primary	ARIA-labeled for screen readers
+---
 
+## ♿ Accessibility & Responsiveness
 
-⸻
+**Keyboard Support**
 
-♿ Accessibility & Responsiveness
-	•	Keyboard Support:
-	•	← / → — step backward/forward
-	•	+ / - — zoom in/out
-	•	Space — play/pause animation
-	•	ARIA Labels:
-All interactive elements labeled (role="slider", aria-valuenow for handles).
-	•	Contrast:
-Minimum 4.5:1 contrast verified for all text and icons.
-	•	Responsive Layouts:
-	•	≥1200px: Full-width timeline + play controls
-	•	768–1199px: Collapsible controls
-	•	≤767px: Compact vertical timeline for mobile
+* ← / → : Step backward or forward
+* * / – : Zoom in or out
+* Space : Play / pause animation
 
-⸻
+**ARIA Labels**
 
-🧾 Provenance & Validation
-	•	Design Source: timeline_wireframes_v1.fig
-	•	Metadata Schema: Validated via schema/timeline_wireframe.schema.json
-	•	Exports: Linked in ../thumbnails/metadata/ with SHA-256 checksums
-	•	Validation Pipelines:
-	•	jsonschema.yml — schema validation
-	•	stac-validate.yml — linkage to STAC temporal fields
+* All interactive elements include roles (e.g. `role="slider"`)
+* Dynamic values via `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
 
-Manual Validation Example:
+**Contrast & Responsiveness**
 
+* Minimum contrast ratio **≥ 4.5:1** verified for text/icons
+* Responsive breakpoints:
+
+  * ≥1200px → full timeline with controls
+  * 768–1199px → collapsible controls
+  * ≤767px → compact vertical timeline (mobile mode)
+
+---
+
+## 🧾 Provenance & Validation
+
+| Category                 | Details                                                   |
+| ------------------------ | --------------------------------------------------------- |
+| **Design Source**        | `timeline_wireframes_v1.fig`                              |
+| **Metadata Schema**      | `schema/timeline_wireframe.schema.json`                   |
+| **Export Checksums**     | `../thumbnails/metadata/checksums.sha256`                 |
+| **Validation Pipelines** | `jsonschema.yml` & `stac-validate.yml` (CI/CD automation) |
+
+**Manual Validation Example**
+
+```bash
 python -m jsonschema -i metadata/timeline_wireframes_metadata.json schema/timeline_wireframe.schema.json
+```
 
+---
 
-⸻
+## 🧮 Linked Standards
 
-🧮 Linked Standards
-	•	Temporal Ontology: W3C OWL-Time
-	•	Historical Periods: PeriodO
-	•	Cultural Heritage Context: CIDOC CRM
-	•	Geospatial Alignment: STAC 1.0.0
+| Domain                   | Standard                                        |
+| ------------------------ | ----------------------------------------------- |
+| ⏳ Temporal Ontology      | [W3C OWL-Time](https://www.w3.org/TR/owl-time/) |
+| 🗓️ Historical Periods   | [PeriodO Gazetteer](https://perio.do)           |
+| 🏺 Cultural Context      | [CIDOC CRM](https://www.cidoc-crm.org)          |
+| 🗺️ Geospatial Alignment | [STAC 1.0.0](https://stacspec.org)              |
 
-⸻
+---
 
-📚 Related References
-	•	Timeline Module (Design Overview)
-	•	Panels Wireframes
-	•	Map Wireframes
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	Accessibility Standards
+## 📚 Related References
 
-⸻
+* [Timeline Module (Design Overview)](../README.md)
+* [Panels Wireframes](../../panels/wireframes/README.md)
+* [Map Wireframes](../../map/wireframes/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../architecture/web_ui_architecture_review.md)
+* [Accessibility Standards](../../../../design/reviews/accessibility/README.md)
 
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Time · Terrain · History · Knowledge Graphs**
 
 </div>
-```
