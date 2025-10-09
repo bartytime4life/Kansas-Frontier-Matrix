@@ -201,4 +201,3 @@ Commercial use permitted with credit.
 **Validation · Provenance · Accessibility · Reproducibility**
 
 </div>
-```
