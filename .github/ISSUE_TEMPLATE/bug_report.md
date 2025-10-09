@@ -7,7 +7,6 @@ assignees: []
 ---
 
 ## 🐞 Summary
-
 A clear and concise description of the issue or unexpected behavior.
 
 ---
@@ -17,7 +16,7 @@ A clear and concise description of the issue or unexpected behavior.
 | Field | Description |
 |:------|:-------------|
 | **Module / Workflow** | (e.g., `terrain_pipeline.py`, `stac-validate.yml`) |
-| **Data Domain** | (e.g., Terrain, Hydrology, Climate, Landcover, etc.) |
+| **Data Domain** | (e.g., Terrain, Hydrology, Climate, Landcover) |
 | **Branch / Commit** | (e.g., `main`, `d4f9e12`) |
 | **Environment** | (OS, Python version, GitHub runner type) |
 | **Date Observed** | (e.g., `2025-10-04`) |
@@ -25,8 +24,7 @@ A clear and concise description of the issue or unexpected behavior.
 ---
 
 ## 🔁 Steps to Reproduce
-
-Please provide **deterministic steps** so that the issue can be reproduced.
+Provide **deterministic steps** to reproduce the issue.
 
 ```bash
 # Example
@@ -69,7 +67,7 @@ Attach or paste logs, tracebacks, or CI/CD run links that illustrate the problem
 
 ## 🔍 Checksum Validation
 
-If this issue involves **data integrity**, please include any related checksum results:
+If this issue involves **data integrity**, include any related checksum results.
 
 | File                                             | Expected Hash | Observed Hash |
 | :----------------------------------------------- | :------------ | :------------ |
@@ -87,11 +85,11 @@ If this issue involves **data integrity**, please include any related checksum r
 
 ---
 
-## 🧰 Suggested Fix or Next Steps (Optional)
+## 🧰 Suggested Fix or Next Steps *(Optional)*
 
 If you have insights or possible resolutions, please document them here.
 
-* [ ] Patch in ETL pipeline
+* [ ] Patch ETL pipeline
 * [ ] Update STAC metadata
 * [ ] Regenerate checksums
 * [ ] Other (describe)
@@ -110,11 +108,10 @@ If you have insights or possible resolutions, please document them here.
 
 ---
 
-### 🧩 Additional Notes
+## 🧩 Additional Notes
 
-(Include anything else useful for reviewers — references, screenshots, related issues, etc.)
+Include any other context, screenshots, related issues, or insights helpful to reviewers.
 
 ---
 
 **Kansas Frontier Matrix — “Every Bug Leaves a Trace.”**
-
