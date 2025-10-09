@@ -8,12 +8,12 @@ for the **Kansas Frontier Matrix (KFM)** — ensuring
 **reproducibility**, **security**, **provenance**, and **MCP compliance**  
 across all datasets, pipelines, and documentation.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../docs/)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)  
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../docs/)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
 
 </div>
@@ -22,12 +22,14 @@ across all datasets, pipelines, and documentation.
 
 ## 🧭 Overview
 
-The `.github/` directory defines **how KFM automates, validates, and secures**  
-its entire system lifecycle using **GitHub Actions**, **pre-commit hooks**,  
-and **Master Coder Protocol (MCP)** principles.
+The `.github/` directory defines **how KFM automates, validates, governs, and secures**  
+its entire system lifecycle using **GitHub Actions**, **pre-commit hooks**, and  
+**Master Coder Protocol (MCP)** standards.
 
 Automation here ensures the repository remains:  
 ✅ **Deterministic** 🔍 **Traceable** 🔐 **Secure** 🧾 **Self-Documenting** 🧮 **MCP-Verified**
+
+Every commit, workflow, dataset, and artifact becomes part of the **verifiable chain of reproducibility**.
 
 ---
 
@@ -36,179 +38,193 @@ Automation here ensures the repository remains:
 ```bash
 .github/
 ├── workflows/
-│   ├── site.yml               # Build & deploy documentation (GitHub Pages)
-│   ├── stac-validate.yml      # Validate STAC collections & JSON schemas
-│   ├── codeql.yml             # Static code analysis and dependency scanning
-│   ├── trivy.yml              # Container & dependency vulnerability scans
-│   ├── pre-commit.yml         # Enforce linting, formatting, and tests
-│   └── auto-merge.yml         # Automatically merges PRs when all checks pass
+│   ├── site.yml               # Build & deploy docs and site (GitHub Pages)
+│   ├── stac-validate.yml      # Validate STAC collections/items & JSON Schemas
+│   ├── codeql.yml             # Static analysis for Python/JS
+│   ├── trivy.yml              # Container vulnerability scans (CVE reports)
+│   ├── pre-commit.yml         # Linting + style enforcement + unit tests
+│   └── auto-merge.yml         # Automatically merge passing PRs
 │
 ├── ISSUE_TEMPLATE/
-│   ├── bug_report.md
-│   ├── feature_request.md
-│   └── data_request.md
+│   ├── bug_report.md          # Structured bug report (logs + env info)
+│   ├── feature_request.md     # Enhancement proposals
+│   └── data_request.md        # Dataset addition or change request
 │
-├── PULL_REQUEST_TEMPLATE.md   # MCP-compliant PR checklist
-└── FUNDING.yml
-````
+├── PULL_REQUEST_TEMPLATE.md   # MCP-aligned PR checklist (reproducibility, provenance)
+└── FUNDING.yml                # Funding + sponsor links
 
----
 
-## ⚙️ Core Workflows
+⸻
 
-| Workflow              | Purpose                                        | Trigger              | Primary Output          |
-| --------------------- | ---------------------------------------------- | -------------------- | ----------------------- |
-| **site.yml**          | Build & deploy documentation & web UI          | `push → main`        | `_site/` (GitHub Pages) |
-| **stac-validate.yml** | Validate STAC collections/items + JSON schemas | `push, pull_request` | `stac-report.json`      |
-| **codeql.yml**        | Run CodeQL static analysis for Python code     | `schedule, push`     | CodeQL Dashboard        |
-| **trivy.yml**         | Scan containers & dependencies for CVEs        | `push, pull_request` | Trivy SARIF Report      |
-| **pre-commit.yml**    | Run linting, formatting, and unit tests        | `pull_request`       | Pre-commit Log          |
-| **auto-merge.yml**    | Auto-merge PRs when all checks pass            | `post-check success` | Merged PR               |
+⚙️ Core Workflows
 
-> ℹ️ **Note:** Enable “Allow auto-merge” in repo settings for automation to function.
-> CI/CD is fully deterministic with **pinned action versions** and reproducible logs.
+Workflow	Purpose	Trigger	Output
+site.yml	Builds + deploys documentation, site, and web UI	push → main	_site/ → GitHub Pages
+stac-validate.yml	Validates STAC catalogs + schemas	push, pull_request	stac-report.json
+codeql.yml	Runs CodeQL static analysis (security audit)	schedule, push	CodeQL Dashboard
+trivy.yml	Scans Docker + dependencies for CVEs	push, pull_request	SARIF vulnerability report
+pre-commit.yml	Runs lint, format, tests, and spellcheck	pull_request	Pre-commit log
+auto-merge.yml	Merges PRs when all checks pass	post-check success	Merged PR + audit trail
 
----
+💡 All actions are pinned (@v3 or commit SHA) for deterministic execution and verifiable builds.
 
-## 🧩 CI/CD Flow Diagram
+⸻
 
-```mermaid
+🧩 CI/CD Flow Visualization
+
 flowchart TD
-    A([Push or Pull Request]) --> B([Pre-Commit Hooks])
-    B --> C([Lint & Unit Tests])
+    A([Push / Pull Request]) --> B([Pre-Commit Hooks])
+    B --> C([Lint & Tests])
     C --> D([STAC + Checksum Validation])
-    D --> E([CodeQL + Trivy Security Scans])
-    E --> F([Build & Deploy Docs / Web UI])
-    F --> G([Auto-Merge if All Checks Pass])
-    G --> H([End])
+    D --> E([Security Scans → CodeQL + Trivy])
+    E --> F([Build & Deploy Docs + Site])
+    F --> G([Auto-Merge + Provenance Log])
+    G --> H([Artifact Archival & MCP Verification])
 
     classDef default fill:#fff,stroke:#555,color:#111;
-    classDef test fill:#d7ebff,stroke:#0078d4,color:#111;
-    classDef validate fill:#eafaf1,stroke:#1a7f37,color:#111;
-    classDef secure fill:#fff8e1,stroke:#ffb300,color:#111;
-    classDef deploy fill:#ede7f6,stroke:#6a1b9a,color:#111;
-    classDef done fill:#d1ffd7,stroke:#1a7f37,color:#111;
+    classDef lint fill:#e3f2fd,stroke:#1565c0,color:#111;
+    classDef validate fill:#e8f5e9,stroke:#2e7d32,color:#111;
+    classDef secure fill:#fffde7,stroke:#f9a825,color:#111;
+    classDef deploy fill:#ede7f6,stroke:#4527a0,color:#111;
+    classDef audit fill:#f3e5f5,stroke:#6a1b9a,color:#111;
 
     class A default;
-    class B,C test;
+    class B,C lint;
     class D validate;
     class E secure;
     class F deploy;
-    class G,H done;
-```
+    class G,H audit;
 
 <!-- END OF MERMAID -->
 
----
 
-## 🧮 MCP Compliance Matrix
 
-| MCP Principle           | Implementation Example in `.github/`                 |
-| ----------------------- | ---------------------------------------------------- |
-| **Documentation-First** | Each workflow documented & versioned in PRs          |
-| **Reproducibility**     | Deterministic pipelines using pinned versions        |
-| **Provenance**          | STAC + SHA-256 validation ensures dataset integrity  |
-| **Auditability**        | Logs, SARIF, & CI artifacts retained for review      |
-| **Open Standards**      | YAML + JSON Schema + STAC 1.0.x adopted project-wide |
+⸻
 
----
+🧮 MCP Compliance Matrix
 
-## 🧾 Issue & PR Governance
+MCP Principle	Implementation in .github/
+Documentation-First	Each workflow and policy has embedded documentation and version tracking.
+Reproducibility	Workflows use pinned dependencies and produce reproducible artifacts.
+Provenance	SHA-256 checksums and STAC validations establish file/data lineage.
+Auditability	CI logs, SARIF files, and artifacts preserved as verifiable records.
+Open Standards	YAML + JSON Schema + STAC 1.0.x adopted across all systems.
+Accessibility	Workflow status badges and logs are publicly visible.
+Security Transparency	CodeQL & Trivy reports included in release artifacts.
 
-**✅ Pull Request Checklist**
 
-* [x] Documentation updated
-* [x] STAC + checksum validation passed
-* [x] CodeQL + Trivy scans clean
-* [x] All CI workflows successful
-* [x] MCP reproducibility verified
+⸻
 
-**🧩 Issue Templates**
+🧾 Issue & Pull Request Governance
 
-* 🐞 Bug Report — reproduction steps, environment, logs
-* 💡 Feature Request — rationale, impact statement
-* 🗺️ Data Request — dataset proposal & license source
+✅ Pull Request Checklist
+	•	Documentation updated and linked
+	•	STAC and checksum validation passed
+	•	CodeQL & Trivy scans clear
+	•	Unit + integration tests passed
+	•	MCP reproducibility verified
+	•	Provenance metadata attached
 
----
+🧩 Issue Templates
 
-## 🔒 Security & Maintenance Policy
+Template	Purpose
+🐞 Bug Report	Capture reproducible error with environment and logs
+💡 Feature Request	Describe desired feature, benefits, and use case
+🗺️ Data Request	Propose dataset inclusion with license and source verification
 
-| Focus Area       | Policy / Action                                     |
-| ---------------- | --------------------------------------------------- |
-| **Secrets**      | Stored only in → Settings › Secrets › Actions       |
-| **Weekly Scans** | Trivy & CodeQL scheduled weekly                     |
-| **Peer Review**  | Require two-review approval for workflow changes    |
-| **Maintenance**  | Monthly: update action versions & dependency caches |
-| **Branch Rules** | Require signed commits & passing status checks      |
 
----
+⸻
 
-## 🧠 Maintainer Guidelines
+🔒 Security & Maintenance Policy
 
-1. Keep workflows **modular** — one YAML per automation purpose.
-2. Always **pin versions** (`@v3`, never `@latest`).
-3. Use `actions/cache` for dependency acceleration.
-4. Fail fast with clear log visibility and error exits.
-5. Auto-merge only after all MCP and CI policies are met.
+Focus Area	Policy / Action
+Secrets	Stored only in → Settings › Secrets › Actions
+Weekly Scans	Automated CodeQL + Trivy analysis each Sunday
+Peer Review	Minimum 2 reviews required for workflow edits
+Branch Rules	Require signed commits + passing checks
+Dependency Hygiene	Monthly dependency update automation
+Audit Retention	Logs, SARIF, and STAC reports retained ≥ 90 days
 
----
+🔐 Security Posture:
+Zero-trust principles enforced — workflows cannot access external repos
+or secrets unless explicitly permitted through reviewed YAML declarations.
 
-## 💻 Quick CLI Reference
+⸻
 
-```bash
-# Run pre-commit locally
+🧠 Maintainer Guidelines
+	1.	🧩 Modular Workflows: One purpose per YAML.
+	2.	🧾 Document Everything: Comments and changelog per workflow.
+	3.	🔒 Pin Versions: No @latest actions; always use tagged or SHA reference.
+	4.	🚦 Fail Fast: Prefer explicit exit codes and readable logs.
+	5.	🧪 Test Locally: Use act or gh workflow run for validation before merging.
+	6.	🧰 Cache Wisely: Use actions/cache@v3 for dependencies to accelerate runs.
+	7.	🔁 Audit Regularly: Run gh workflow view monthly to ensure compliance.
+
+⸻
+
+🧭 Workflow Dependency Graph
+
+graph LR
+    subgraph "Continuous Integration"
+    A["Pre-Commit Checks"] --> B["STAC Validation"]
+    B --> C["CodeQL Scan"]
+    C --> D["Trivy Security Audit"]
+    D --> E["Build + Deploy (Docs/Web UI)"]
+    E --> F["Auto-Merge + Provenance Log"]
+    end
+
+    F --> G["Artifacts → MCP Verification"]
+    G --> H["Audit Trail (SARIF + JSON Logs)"]
+
+    classDef node fill:#fafafa,stroke:#555,color:#111;
+    class A,B,C,D,E,F,G,H node;
+
+<!-- END OF MERMAID -->
+
+
+
+⸻
+
+💻 CLI Utilities
+
+# 🔍 Run pre-commit checks
 pre-commit install
 pre-commit run --all-files
 
-# Trigger a workflow manually
+# 🧪 Trigger workflow manually
 gh workflow run site.yml
 
-# List recent runs
+# 📜 List latest workflow runs
 gh run list
-```
 
----
+# 🧾 Download artifact from last run
+gh run download --name "stac-report.json"
 
-## 🧭 Workflow Dependency Graph
 
-```mermaid
-graph LR
-    subgraph CI/CD
-    A["Pre-Commit Checks"] --> B["STAC Validation"]
-    B --> C["CodeQL Scan"]
-    C --> D["Trivy Security"]
-    D --> E["Build + Deploy"]
-    E --> F["Auto-Merge"]
-    end
+⸻
 
-    A --> G["Artifacts & Logs → Audit Trail"]
-    F --> H["MCP Verification Log"]
+🕓 Version History
 
-    classDef node fill:#f8f9fa,stroke:#555,color:#111;
-    class A,B,C,D,E,F,H node;
-```
+Version	Date	Summary
+v1.0.0	2025-10-04	Initial CI/CD governance structure
+v1.1.0	2025-10-06	Added workflow documentation & diagrams
+v1.2.0	2025-10-07	Enhanced MCP compliance + STAC reporting
+v1.3.0	2025-10-08	Introduced security policy & auto-merge
+v1.4.0	2025-10-09	Added dependency graph, CLI examples, and badges
 
-<!-- END OF MERMAID -->
 
----
+⸻
 
-## 🕓 Version History
-
-| Version    | Date       | Summary                                          |
-| ---------- | ---------- | ------------------------------------------------ |
-| **v1.0.0** | 2025-10-04 | Initial governance & CI/CD documentation         |
-| **v1.1.0** | 2025-10-06 | Improved workflow tables & visual hierarchy      |
-| **v1.2.0** | 2025-10-07 | Full MCP alignment + accessibility diagram fixes |
-| **v1.3.0** | 2025-10-08 | Added dependency graph + security policy section |
-
----
 
 <div align="center">
 
-### ⚙️ Kansas Frontier Matrix — Automation with Integrity
 
-**“.github/” serves as the orchestration layer for reproducibility, verification, and MCP governance across the entire repository.**
+⚙️ Kansas Frontier Matrix — Automation with Integrity
 
-🧭 *Every workflow. Every dataset. Every artifact — Proven.*
+“.github/” orchestrates reproducibility, verification, and governance
+across every dataset, pipeline, and artifact — the heartbeat of MCP compliance.
+
+🧭 Every workflow. Every commit. Every result — Proven and reproducible.
 
 </div>
+```
