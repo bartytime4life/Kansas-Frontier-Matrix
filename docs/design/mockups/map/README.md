@@ -5,9 +5,9 @@
 
 **Spatial · Interactive · Time-Aware Exploration**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
-[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../docs/design/)
-[![Figma Source](https://img.shields.io/badge/Figma-Map%20Interface-purple)](./figma-refs.json)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../docs/design/)  
+[![Figma Source](https://img.shields.io/badge/Figma-Map%20Interface-purple)](./figma-refs.json)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../LICENSE)
 
 </div>
@@ -16,36 +16,37 @@
 
 ## 🎯 Purpose
 
-The **Map Interface** is the visual core of the Kansas Frontier Matrix, enabling users to explore Kansas’s historical and environmental data through **space and time**.  
-It combines spatial layers (maps, vector data, raster overlays) with temporal awareness from the **timeline** and contextual data from the **knowledge graph**.
+The **Map Interface** is the visual and interactive foundation of the Kansas Frontier Matrix (KFM),  
+linking geography, time, and knowledge. It allows users to explore **Kansas’s historical, cultural, and environmental narratives** through an integrated map synchronized with the **timeline** and **knowledge graph**.
 
-The map interface is designed to be:
-- **Interactive** — Zoom, pan, and toggle thematic layers dynamically.  
-- **Temporal** — Synchronize data visibility with the timeline scrubber.  
-- **Informative** — Display popups, highlights, and AI-assisted summaries for selected entities.  
-- **Accessible** — Fully keyboard- and screen reader-friendly, WCAG 2.1 AA compliant.  
+Design principles include:
+- 🌎 **Interactive:** Zoom, pan, and toggle thematic layers dynamically.  
+- 🕰 **Temporal:** Filter and synchronize map layers with the timeline scrubber.  
+- 🧭 **Contextual:** Integrate AI summaries and provenance links in popups.  
+- ♿ **Accessible:** Fully keyboard navigable, ARIA-labeled, and WCAG 2.1 AA-compliant.  
+- 🔄 **Reproducible:** STAC-driven configuration ensures consistent spatial layer management.
 
 ---
 
 ## 🧭 Key Features
 
 | Feature | Description | Implementation |
-|----------|--------------|----------------|
-| 🗺 **Dynamic Layers** | Toggle historical base maps, hydrology, treaties, or events | STAC-driven configuration (`layers.json`) |
-| 🕰 **Timeline Sync** | Map filters automatically update when the timeline range changes | React hook emits `{start, end}` to MapLibre sources |
-| 🔍 **Entity Highlights** | Clicking a place/event zooms and outlines corresponding geometry | Layer style updates + React context |
-| 📜 **Tooltips & Popups** | Contextual cards show metadata, sources, and AI summaries | Markdown-enabled popups rendered from `/entity/{id}` |
-| 📚 **Basemap Modes** | Switch between terrain, sepia, and light/dark basemaps | MapLibre style switching via dropdown |
-| ♿ **Accessibility** | Keyboard navigation and ARIA-compliant map controls | Implemented via focus rings, `tabindex`, and ARIA labels |
+|----------|-------------|----------------|
+| 🗺 **Dynamic Layers** | Toggle historical base maps, hydrology, boundaries, or events. | STAC-driven configuration (`layers.json`) |
+| 🕰 **Timeline Sync** | Map automatically filters to selected time range. | React context hook emitting `{start, end}` to MapLibre sources. |
+| 🔍 **Entity Highlights** | Click on a feature to zoom and outline geometry. | MapLibre `feature-state` updates and focus ring. |
+| 📜 **Tooltips & Popups** | Display entity metadata and AI summaries inline. | Markdown-rendered popups via `/entity/{id}`. |
+| 🧩 **Basemap Modes** | Switch between terrain, sepia, and dark/light themes. | MapLibre GL style switcher dropdown. |
+| ♿ **Accessibility** | Full keyboard and ARIA-compliant control set. | Focus management and `tabindex` navigation. |
 
 ---
 
-## 📁 Directory Structure
+## 🗂️ Directory Layout
 
 ```text
 docs/design/mockups/map/
-├── README.md                  # This file
-├── wireframes/                # Map interface mockups (Figma exports)
+├── README.md                  # This documentation file
+├── wireframes/                # Figma exports for interface layouts
 │   ├── map-main-view.png
 │   ├── layer-controls.svg
 │   ├── popup-preview.png
@@ -55,100 +56,135 @@ docs/design/mockups/map/
 │   ├── icon-layers.svg
 │   ├── icon-map-style.svg
 │   └── checksums.txt
-├── thumbnails/                # Small preview images for docs
+├── thumbnails/                # Thumbnail previews for documentation
 │   ├── map-overview-thumb.png
 │   └── popup-thumb.png
 └── figma-refs.json            # Figma node reference metadata
+````
 
+---
 
-⸻
+## 🧩 System Integration
 
-🧩 System Integration (GitHub-Safe Mermaid)
-
+```mermaid
 flowchart LR
-  A["Timeline Component\n(start,end)"] --> B["Map Controller\n(MapLibre React Hook)"]
+  A["Timeline Component\n(start, end)"] --> B["Map Controller\n(MapLibre React Hook)"]
   B --> C["MapLibre GL JS\n(base + overlay layers)"]
   C --> D["STAC Metadata\n(data/stac/catalog.json)"]
   B --> E["Popup Manager\n(fetch /entity/{id})"]
   E --> F["Knowledge Graph (Neo4j)\nvia FastAPI"]
+%% END OF MERMAID
+```
 
-<!-- END OF MERMAID -->
+The map interface synchronizes with both **timeline filters** and the **knowledge graph** backend, ensuring
+spatial and temporal data stay in sync across events, entities, and historical datasets.
 
+---
 
-The map interface connects to both the timeline and the knowledge graph, ensuring spatial events and entities stay synchronized in time and context.
+## 🧠 Layer Taxonomy
 
-⸻
+| Category           | Example Layer                   | Format              | Source                                |
+| ------------------ | ------------------------------- | ------------------- | ------------------------------------- |
+| **Base Maps**      | USGS Kansas Topographic (1880s) | GeoTIFF (COG)       | `data/stac/items/usgs_topo_1880.json` |
+| **Boundaries**     | County & Treaty Lines           | GeoJSON             | `data/stac/items/treaty_1854.json`    |
+| **Hydrology**      | Rivers, Lakes, Aquifers         | GeoJSON / Shapefile | `data/sources/hydro/`                 |
+| **Infrastructure** | Railroads, Trails               | GeoJSON             | `data/sources/transport/`             |
+| **Events**         | Tornado Tracks, Flood Zones     | CSV → GeoJSON       | `data/sources/hazards/`               |
 
-🧠 Layer Taxonomy
+> All spatial layers are indexed via **STAC (SpatioTemporal Asset Catalog)** in `data/stac/catalog.json`,
+> enabling auto-discovery and standardization across the KFM data ecosystem.
 
-Category	Example Layer	Format	Source
-Base Maps	Kansas Topographic (USGS 1880s)	GeoTIFF (COG)	data/stac/items/usgs_topo_1880.json
-Boundaries	County & Treaty Lines	GeoJSON	data/stac/items/treaty_1854.json
-Hydrology	Rivers, Lakes, Aquifers	Shapefile / GeoJSON	data/sources/hydro/
-Infrastructure	Railroads, Trails	GeoJSON	data/sources/transport/
-Events	Tornado Paths, Floods	CSV → GeoJSON	data/sources/hazards/
+---
 
-All layers are indexed via STAC and described in data/stac/catalog.json, allowing the map to dynamically discover and render available content.
+## 🎨 Design Tokens
 
-⸻
+| Token             | Example            | Purpose                            |
+| ----------------- | ------------------ | ---------------------------------- |
+| `--kfm-map-bg`    | `#0b1020`          | Map background (dark mode)         |
+| `--kfm-highlight` | `#4F9CF9`          | Active entity border highlight     |
+| `--kfm-water`     | `#3BA2E0`          | River and lake coloring            |
+| `--kfm-hillshade` | `rgba(0,0,0,0.15)` | Elevation shading overlay          |
+| `--kfm-legend-bg` | `#ffffffd9`        | Semi-transparent legend background |
 
-🎨 Design Tokens
+Design tokens align with the global palette defined in `web/src/styles/tokens.css` and ensure consistent cross-theme visuals.
 
-Token	Example	Purpose
---kfm-map-bg	#0b1020	Map background color (dark mode)
---kfm-highlight	#4F9CF9	Entity highlight border
---kfm-water	#3BA2E0	River and lake coloring
---kfm-hillshade	rgba(0,0,0,0.15)	Elevation shading overlay
---kfm-legend-bg	#ffffffd9	Legend panel background
+---
 
-These tokens ensure consistent theming across layers and interaction states.
+## 🧾 Interaction Flow
 
-⸻
-
-🧾 Interaction Flow
-
+```mermaid
 sequenceDiagram
   participant User
   participant MapUI
   participant API
   participant Graph
-  User->>MapUI: Click on Map Feature
+  User->>MapUI: Click Map Feature
   MapUI->>API: GET /entity/{id}
-  API->>Graph: Cypher query (entity metadata)
+  API->>Graph: Cypher Query (retrieve entity metadata)
   Graph-->>API: JSON (entity + relationships)
-  API-->>MapUI: Render popup with metadata + links
-  MapUI-->>User: Highlight entity + show linked events
+  API-->>MapUI: Render popup with metadata and related events
+  MapUI-->>User: Highlight entity and show contextual data
+%% END OF MERMAID
+```
 
-<!-- END OF MERMAID -->
+This real-time workflow connects **user interaction → API → Knowledge Graph**, providing
+live contextual details while maintaining synchronization with the timeline range.
 
+---
 
+## ♿ Accessibility & Usability
 
-⸻
+| Accessibility Requirement | Implementation                                                  |
+| ------------------------- | --------------------------------------------------------------- |
+| **Keyboard Navigation**   | `Tab`, `Shift+Tab`, `Enter` navigate and activate map controls. |
+| **ARIA Labels**           | Applied to all icons and map controls for screen readers.       |
+| **Color Contrast**        | All text ≥ 4.5:1, icons ≥ 3:1 (measured in Figma).              |
+| **Focus States**          | High-visibility outlines for map markers and buttons.           |
+| **Responsive Layouts**    | Collapsible map control panel for screens ≤ 768 px.             |
 
-🔍 Provenance & Integrity
+Accessibility audits are conducted using **axe-core**, verified in **CI**, and tracked via design metadata.
 
-Asset	Figma Node	Exported	SHA256
-map-main-view.png	figma://node/44:18	2025-09-30	sha256-3d7a…
-layer-controls.svg	figma://node/44:21	2025-09-30	sha256-19cd…
-popup-preview.png	figma://node/44:25	2025-09-30	sha256-f24e…
-timeline-linked-map.svg	figma://node/44:28	2025-09-30	sha256-7ae9…
+---
 
-Checksums are verified in CI to maintain consistency between exported assets and documented references.
+## 🧾 Provenance & Integrity
 
-⸻
+| Asset                     | Figma Node           | Exported   | SHA-256        |
+| ------------------------- | -------------------- | ---------- | -------------- |
+| `map-main-view.png`       | `figma://node/44:18` | 2025-09-30 | `sha256-3d7a…` |
+| `layer-controls.svg`      | `figma://node/44:21` | 2025-09-30 | `sha256-19cd…` |
+| `popup-preview.png`       | `figma://node/44:25` | 2025-09-30 | `sha256-f24e…` |
+| `timeline-linked-map.svg` | `figma://node/44:28` | 2025-09-30 | `sha256-7ae9…` |
 
-🧾 Related Documents
-	•	Navigation Components
-	•	Web UI Architecture
-	•	System Architecture
-	•	Data Format Standards
-	•	Design Tokens
+Checksums are validated in CI pipelines to guarantee integrity, reproducibility, and MCP compliance.
 
-⸻
+---
 
-📜 License & Credits
+## 🧮 CI/CD Integration
 
-Map interface design © 2025 Kansas Frontier Matrix Project.
-Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
-Created by the KFM Design & Interaction Team, adhering to Master Coder Protocol principles of documentation-first, open standards, and reproducibility.
+| Stage | Action               | Validation Target                      |
+| ----- | -------------------- | -------------------------------------- |
+| **1** | Schema Validation    | `map_wireframes_metadata.json`         |
+| **2** | File Integrity       | SHA-256 checksum verification          |
+| **3** | Accessibility Review | Contrast and ARIA validation           |
+| **4** | Provenance Trace     | Figma → Commit → Export lineage        |
+| **5** | Publication          | Documentation deployment to MCP portal |
 
+---
+
+## 📚 Related References
+
+* [🧭 Navigation Components](../figma/components/navigation/README.md)
+* [🪶 Panels & Detail Views](../panels/README.md)
+* [🧱 Web UI Architecture](../../../../architecture/web_ui_architecture_review.md)
+* [🧩 System Architecture](../../../../architecture/README.md)
+* [🎨 Design Tokens](../../../../design/reviews/accessibility/README.md)
+
+---
+
+<div align="center">
+
+### Kansas Frontier Matrix — Documentation-First Design
+
+**Spatial Intelligence · Temporal Context · Provenance Integrity**
+
+</div>
