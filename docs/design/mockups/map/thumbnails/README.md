@@ -5,93 +5,105 @@
 
 **Preview · Lightweight · Spatial Summaries**
 
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../..)  
+[![Design System](https://img.shields.io/badge/Design-System-green)](../../../../..)  
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
+
 </div>
 
 ---
 
 ## 🧭 Overview
 
-This directory stores **map thumbnails** — lightweight, downscaled previews of  
-map designs, thematic layers, and UI concepts created for the  
-**Kansas Frontier Matrix (KFM)** project.  
+This directory stores **map thumbnails** — lightweight, optimized visual previews representing key map designs,  
+thematic layers, or UI compositions within the **Kansas Frontier Matrix (KFM)** design system.
 
-These thumbnails provide **quick visual summaries** for use in READMEs,  
-architecture documents, and design indexes, enabling fast recognition of  
-map-based components without loading full-resolution maps or live viewers.  
+These thumbnails are used in:
+- 📘 Documentation (READMEs, architecture diagrams, and experiments)  
+- 🌐 Web UI mockups and preview panels  
+- 🧩 MCP documentation galleries and design indexes  
 
-Each thumbnail is a compressed visual reference linked to its corresponding  
-map concept or configuration file (`layers.json`, `app.config.json`, etc.),  
-supporting the KFM documentation-first and reproducibility ethos of the  
-**Master Coder Protocol (MCP)**.
+Each thumbnail provides a **quick spatial summary**, improving comprehension and navigation without the overhead of rendering large interactive maps.
+
+All thumbnails comply with the **Master Coder Protocol (MCP)**: reproducible, traceable, and version-controlled.
 
 ---
 
-## 📁 Directory Structure
+## 🗂️ Directory Layout
 
 ```text
 docs/design/mockups/map/thumbnails/
-├── README.md                          # This spec (GitHub-safe)
-├── *.webp                             # Primary thumbnail format (preferred)
-├── *.png                              # Fallback raster format (if transparency needed)
-├── archive/                           # Deprecated or superseded thumbnails
-└── metadata/                          # JSON metadata files describing each thumbnail
+├── README.md                          # This file
+├── *.webp                             # Optimized thumbnails (preferred format)
+├── *.png                              # Fallback raster format (transparency supported)
+├── archive/                           # Legacy or superseded thumbnails
+└── metadata/                          # JSON metadata describing each thumbnail
+````
 
-Naming Convention:
-YYYYMMDD_map-topic-thumb.webp
-Example → 20251012_map-layers-overview-thumb.webp
+### 🧱 Naming Convention
 
-⸻
+`YYYYMMDD_map-topic-thumb.webp`
+**Example:** `20251012_map-layers-overview-thumb.webp`
 
-🎯 Purpose
+---
 
-Goal	Description
-🗺️ Visual Preview	Serve as static image previews for map-based KFM components
-⚙️ Documentation	Embedded in READMEs, design docs, and experiment reports
-🧩 Integration	Linked to map configurations (e.g., layers.json, stac/collections/)
-🧠 Comprehension	Help readers quickly grasp spatial composition or theming
-🧮 Provenance	Provide traceable link between design concept and implementation
+## 🎯 Purpose
 
+| Goal                   | Description                                                                |
+| ---------------------- | -------------------------------------------------------------------------- |
+| 🗺️ **Visual Preview** | Static image preview for map-based KFM components.                         |
+| ⚙️ **Documentation**   | Embedded in READMEs, SOPs, and experiments for reference.                  |
+| 🧩 **Integration**     | Linked to map configurations (e.g., `layers.json`, `stac/catalog.json`).   |
+| 🧠 **Comprehension**   | Provides immediate context to spatial layouts and layer structure.         |
+| 🧮 **Provenance**      | Tracks lineage between design concepts, exports, and live implementations. |
 
-⸻
+---
 
-🧱 Workflow for Creating Thumbnails
+## 🧱 Workflow for Creating Thumbnails
 
-1. Generate a Map Snapshot
+### 1️⃣ Generate a Map Snapshot
 
-Capture a relevant view from the live MapLibre interface, Figma mockup, or exported KML/KMZ layer.
-Save as a lossless image (PNG, WebP preferred).
+Capture from the **MapLibre viewer**, **Figma wireframe**, or **KML/KMZ overlay**.
+Save as a lossless format (PNG preferred).
 
-2. Resize and Optimize
+### 2️⃣ Resize and Optimize
 
-Create a small, lightweight thumbnail (max width: 480 px) for use in documentation.
+Resize for web use (max width: 480 px).
 
-# Example using ImageMagick
-magick 20251012_map-layers-overview.png -resize 480x480 thumbnails/20251012_map-layers-overview-thumb.webp
+```bash
+magick 20251012_map-layers-overview.png -resize 480x480 \
+  thumbnails/20251012_map-layers-overview-thumb.webp
+```
 
-3. Compress for Web Use
+### 3️⃣ Compress for Web
 
-Use cwebp or oxipng to reduce file size while preserving clarity.
+Reduce file size using compression utilities.
 
-cwebp -q 80 20251012_map-layers-overview-thumb.webp -o 20251012_map-layers-overview-thumb.webp
+```bash
+cwebp -q 80 thumbnails/20251012_map-layers-overview-thumb.webp \
+  -o thumbnails/20251012_map-layers-overview-thumb.webp
+```
 
-4. Add Metadata
+### 4️⃣ Add Metadata
 
-Create a matching JSON metadata record (see example below) in the /metadata/ subfolder.
+Create a `.json` record under `/metadata/` documenting provenance, author, and links.
 
-5. Commit with Provenance
+### 5️⃣ Commit with Provenance
 
-Include thumbnail, metadata, and source links in the commit message.
+```bash
+git add thumbnails/20251012_map-layers-overview-thumb.webp \
+        metadata/20251012_map-layers-overview-thumb.json
+git commit -m "Add map thumbnail for Map Layers Overview (linked to layers.json v1.3)"
+```
 
-git add thumbnails/20251012_map-layers-overview-thumb.webp metadata/20251012_map-layers-overview-thumb.json
-git commit -m "Added thumbnail preview for Map Layers Overview (linked to layers.json v1.3)"
+---
 
+## 🧾 Example Metadata Record
 
-⸻
+**File:** `metadata/20251012_map-layers-overview-thumb.json`
 
-🧾 Example Metadata File
-
-metadata/20251012_map-layers-overview-thumb.json
-
+```json
 {
   "id": "map-layers-overview",
   "title": "Map Layers Overview",
@@ -108,76 +120,90 @@ metadata/20251012_map-layers-overview-thumb.json
   "status": "active",
   "license": "CC-BY-4.0"
 }
+```
 
+Metadata records are validated via JSON Schema (`metadata/schema/thumbnail.schema.json`)
+and checked automatically during CI/CD builds.
 
-⸻
+---
 
-🖼️ Embedding Thumbnails in Documentation
+## 🖼️ Embedding Thumbnails in Documentation
 
-Embed map thumbnails in Markdown or MkDocs pages as visual previews:
+You can embed thumbnails in Markdown as static or linked previews.
 
+```markdown
 <a href="../exports/20251012_map-layers-overview.png">
-  <img src="../thumbnails/20251012_map-layers-overview-thumb.webp" 
+  <img src="../thumbnails/20251012_map-layers-overview-thumb.webp"
        width="380" alt="Map Layers Overview Preview">
 </a>
+```
 
-💡 Tip:
-Wrap thumbnails in clickable links to their full-size exports for quick visual navigation
-without embedding large images directly in documentation.
+> 💡 **Tip:** Use clickable thumbnails that link to full-resolution exports to balance clarity and performance.
 
-⸻
+---
 
-🎨 Design & Formatting Standards
+## 🎨 Design & Formatting Standards
 
-Attribute	Requirement	Notes
-Max Width	≤480 px	Ensures consistent visual scale across docs
-File Format	.webp (preferred), .png (fallback)	WebP recommended for compression
-Background	Transparent or neutral gray	Avoid strong background colors
-File Size	≤300 KB	Enables fast GitHub rendering
-License	CC-BY 4.0	Attribution required for reuse
-Metadata	Required	Provides traceability and linkage
-Theme	Neutral, light/dark compatible	Ensure visible edges in both modes
+| Attribute       | Requirement                          | Notes                                     |
+| --------------- | ------------------------------------ | ----------------------------------------- |
+| **Max Width**   | ≤ 480 px                             | Consistent scale across docs.             |
+| **File Format** | `.webp` (preferred), `.png` fallback | WebP = better compression ratio.          |
+| **Background**  | Transparent or neutral gray          | Avoid bold or saturated tones.            |
+| **File Size**   | ≤ 300 KB                             | Optimized for GitHub rendering.           |
+| **License**     | CC-BY 4.0                            | Attribution required for reuse.           |
+| **Metadata**    | Required                             | Ensures traceability and reproducibility. |
+| **Theme**       | Dual-mode compatible                 | Visible in light and dark themes.         |
 
+---
 
-⸻
+## 🧩 Integration with Documentation
 
-🧩 Integration with Documentation
+| Context           | Example Usage                                          |
+| ----------------- | ------------------------------------------------------ |
+| `architecture.md` | Overview snapshots of system or map composition.       |
+| `README.md`       | Inline galleries linking to design mockups.            |
+| `experiment.md`   | Visual summaries of analysis results or data overlays. |
+| `SOP.md`          | Step-by-step workflow illustrations.                   |
+| STAC Docs         | Previews for collections and temporal datasets.        |
 
-Context	Use
-architecture.md	Overview snapshots of system or layer composition
-README.md	Inline gallery previews for navigation, design, or mockups
-experiment.md	Visual result logs or test map captures
-SOP.md	Step-by-step illustrations for spatial workflows
-STAC Docs	Thumbnail previews of map collections or temporal datasets
+---
 
+## 🔐 Provenance & Versioning
 
-⸻
+| Artifact      | Type             | Tracking | Notes                           |
+| ------------- | ---------------- | -------- | ------------------------------- |
+| **Thumbnail** | `.webp` / `.png` | Git      | Stored under `/thumbnails/`.    |
+| **Metadata**  | `.json`          | Git      | Records lineage and references. |
+| **Source**    | `.png` / `.svg`  | Git LFS  | For large design exports.       |
 
-🔐 Provenance & Versioning
+> 🧭 **Do not overwrite** existing thumbnails. Use date or version suffixes (`-v2`, `-v3`)
+> to maintain a traceable visual history of design evolution.
 
-Artifact	Type	Tracking	Notes
-Thumbnail	.webp / .png	Git	Stored in /thumbnails/
-Metadata	.json	Git	Captures author, linkage, and version context
-Source	.png / .svg	Git LFS	Large or full-resolution maps (optional)
+---
 
-Do not overwrite existing thumbnails — version them by date or suffix (-v2, -v3)
-to preserve the design lineage and change history.
+## ⚖️ License
 
-⸻
+All thumbnails and metadata are licensed under
+**Creative Commons Attribution 4.0 International (CC-BY 4.0)**.
+Attribution required; commercial reuse permitted with credit.
 
-⚖️ License
+**© 2025 Kansas Frontier Matrix Design Team**
 
-All thumbnails and metadata are distributed under
-Creative Commons Attribution 4.0 International (CC-BY 4.0)
+---
 
-Credit: Kansas Frontier Matrix Design Team · 2025
+## 🗓️ Change Log
 
-Attribution required when reused; commercial use permitted with credit.
+| Date           | Description                                                                           |
+| -------------- | ------------------------------------------------------------------------------------- |
+| **2025-10-12** | Initial version — added structure, metadata, and embedding standards.                 |
+| **2025-10-13** | Enhanced with integration examples, compression workflow, and accessibility guidance. |
 
-⸻
+---
 
-🗓️ Change Log
+<div align="center">
 
-Date	Description
-2025-10-12	Initial version — added structure, metadata, and embedding guidelines
-2025-10-13	Enhanced with integration examples and compression workflow
+### Kansas Frontier Matrix — Documentation-First Design
+
+**Spatial Clarity · Lightweight Documentation · Provenance by Design**
+
+</div>
