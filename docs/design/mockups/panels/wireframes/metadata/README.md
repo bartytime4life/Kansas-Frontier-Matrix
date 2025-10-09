@@ -4,7 +4,7 @@
 `docs/design/mockups/panels/wireframes/metadata/`
 
 **Purpose:** Define structured metadata for **panel wireframe assets** used in the Kansas Frontier Matrix (KFM)  
-web UI and documentation system — ensuring traceability, accessibility, and reproducibility.
+Web UI and documentation system — ensuring **traceability**, **accessibility**, and **reproducibility**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../..)  
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../..)  
@@ -17,12 +17,17 @@ web UI and documentation system — ensuring traceability, accessibility, and re
 
 ## 🧭 Overview
 
-This directory houses the **metadata index** describing all exported panel wireframes  
-found in `../exports/`. Each JSON record corresponds to one design variant (e.g., Detail Panel, AI Assistant Panel).  
+This directory houses the **metadata index** describing all exported **panel wireframes**  
+from `../exports/`. Each JSON record corresponds to one design variant (e.g., Detail Panel, AI Assistant Panel).  
 
-Metadata files are machine-readable and validated against JSON Schemas in  
-`schema/panel_wireframe.schema.json`, following the **Master Coder Protocol (MCP)**  
-for reproducible design documentation.
+All metadata follows the **Master Coder Protocol (MCP)** design documentation standards —  
+ensuring every visual artifact is versioned, validated, and linked to its source (`panel_wireframes_v1.fig`).
+
+Metadata files are:
+- 🧾 **Machine-readable** (JSON format, validated via JSON Schema)  
+- ♿ **Accessibility-compliant** (includes alt text & contrast ratios)  
+- 🔁 **Reproducible** (includes provenance and SHA-256 checksums)  
+- 🔍 **Cross-linked** to related STAC, Figma, and UI component references  
 
 ---
 
@@ -31,22 +36,22 @@ for reproducible design documentation.
 ```text
 docs/design/mockups/panels/wireframes/metadata/
 ├── README.md                           # This file
-├── panel_wireframes_metadata.json      # Master metadata index for all panel wireframes
-└── schema/                             # JSON Schemas for validation
+├── panel_wireframes_metadata.json      # Aggregated metadata index
+└── schema/                             # JSON Schema definitions
     ├── panel_wireframe.schema.json
     └── index.schema.json
+````
 
+---
 
-⸻
+## 🧱 Metadata Structure
 
-🧱 Metadata Structure
+Each metadata record defines the **identity**, **context**, **provenance**, and **accessibility metrics**
+of a single panel wireframe export. These entries support documentation automation and CI validation.
 
-Each wireframe entry describes its identity, function, source, accessibility,
-and visual provenance. It enables consistent cross-referencing between Figma designs,
-documentation assets, and frontend component specifications.
+### 🧩 Example Record
 
-Example Record
-
+```json
 {
   "id": "panel_detail_default",
   "title": "Detail Panel (Default Layout)",
@@ -66,83 +71,105 @@ Example Record
   },
   "accessibility": {
     "contrast_ratio": 4.8,
-    "alt_text": "Detail panel with metadata, tabs, and linked entity preview."
+    "alt_text": "Detail panel with metadata tabs and linked entity preview."
   }
 }
+```
 
+---
 
-⸻
+## 🧩 Field Reference
 
-🧩 Field Reference
+| Field             | Type   | Description                                                         |
+| ----------------- | ------ | ------------------------------------------------------------------- |
+| **id**            | string | Unique identifier for the wireframe (kebab-case).                   |
+| **title**         | string | Human-readable title for the panel wireframe.                       |
+| **thumbnail**     | string | Relative path to the exported PNG/JPG.                              |
+| **description**   | string | Concise summary of the wireframe’s purpose.                         |
+| **panel_type**    | string | Type of panel (`detail`, `ai_assistant`, `filter`, `search`, etc.). |
+| **variant**       | string | Layout variation (`desktop_default`, `mobile`, etc.).               |
+| **theme**         | array  | Design tags indicating function, color scheme, or purpose.          |
+| **creator**       | string | Author or design team responsible for the asset.                    |
+| **source_figma**  | string | Figma source file or frame reference.                               |
+| **license**       | string | Usage license (default: `CC-BY-4.0`).                               |
+| **checksum**      | string | SHA-256 hash for verifying export integrity.                        |
+| **provenance**    | object | Metadata for creation lineage and version tracking.                 |
+| **accessibility** | object | WCAG audit data: contrast ratio, alt text, etc.                     |
 
-Field	Type	Description
-id	string	Unique identifier (kebab-case).
-title	string	Human-readable wireframe name.
-thumbnail	string	Relative path to exported PNG/JPG.
-description	string	Concise explanation of panel purpose.
-panel_type	string	Type of panel (detail, ai_assistant, filter, search, etc.).
-variant	string	Layout variation (desktop_default, mobile, etc.).
-theme	array	Design tags (visual theme, function, context).
-source_figma	string	Figma file or frame origin.
-license	string	License (default CC-BY-4.0).
-checksum	string	SHA-256 checksum of image export.
-provenance	object	Metadata about creation (tools, commit, source).
-accessibility	object	WCAG metrics and alt text description.
+---
 
+## 🧮 Validation Workflow
 
-⸻
+Metadata integrity is continuously validated via **GitHub Actions** (`jsonschema.yml` + `stac-validate.yml`).
 
-🧮 Validation Workflow
-	•	Schema compliance enforced by CI (jsonschema.yml + stac-validate.yml workflows).
-	•	Each JSON file validated against schema/panel_wireframe.schema.json.
-	•	Cross-checks ensure:
-	•	All referenced images exist in ../exports/.
-	•	Checksums match file hashes.
-	•	Required fields and licenses are present.
-	•	Accessibility compliance (contrast_ratio >= 4.5).
+### ✅ Automated Checks
 
-Manual Validation Example:
+* Schema compliance (`panel_wireframe.schema.json`)
+* Export file existence verification (`../exports/*.png`)
+* SHA-256 checksum consistency
+* Required field completion and license verification
+* Accessibility compliance (contrast ratio ≥ 4.5 : 1)
 
+### 🧰 Manual Validation Example
+
+```bash
 python -m jsonschema -i panel_wireframes_metadata.json schema/panel_wireframe.schema.json
+```
 
+---
 
-⸻
+## ♿ Accessibility Metadata
 
-♿ Accessibility Metadata
+Accessibility is a required field for each record and validated in CI pipelines.
 
-Accessibility is tracked within each record:
-	•	contrast_ratio: Minimum verified ratio between text and background.
-	•	alt_text: Descriptive text for screen readers.
-	•	verified_by: Optional reviewer or validation process name.
+| Field              | Requirement | Description                                       |
+| ------------------ | ----------- | ------------------------------------------------- |
+| **contrast_ratio** | ≥ 4.5 : 1   | Minimum verified text/background contrast.        |
+| **alt_text**       | Required    | Descriptive caption for assistive technologies.   |
+| **verified_by**    | Optional    | Reviewer, audit script, or QA process identifier. |
 
-This ensures all mockups meet WCAG 2.1 AA standards.
+Accessibility compliance ensures every visual element in the design suite meets **WCAG 2.1 AA** standards.
 
-⸻
+---
 
-🧾 Provenance & Integrity
-	•	Generated By: scripts/generate_wireframe_metadata.py
-	•	Source: panel_wireframes_v1.fig (Figma)
-	•	Validated By: GitHub Actions (stac-validate.yml)
-	•	Checksums: Tracked per export file in SHA-256 format
-	•	MCP Compliance: Documentation-first → Design → Validation → Versioning
+## 🧾 Provenance & Integrity
 
-⸻
+| Attribute           | Description                                   |
+| ------------------- | --------------------------------------------- |
+| **Generated By**    | `scripts/generate_wireframe_metadata.py`      |
+| **Source File**     | `panel_wireframes_v1.fig` (Figma)             |
+| **Validated In CI** | `stac-validate.yml`, `jsonschema.yml`         |
+| **Checksums**       | Recorded in `panel_wireframes_metadata.json`  |
+| **License**         | [CC-BY 4.0](../../../../../../LICENSE)        |
+| **MCP Compliance**  | Documented → Designed → Validated → Published |
 
-📚 Related References
-	•	Panels Wireframes (Main)
-	•	Panel Wireframe Exports
-	•	Map Wireframes
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	Design System Accessibility Standards
+---
 
-⸻
+## 🧭 Integration Notes
 
+| Integration                 | Purpose                                | Reference                            |
+| --------------------------- | -------------------------------------- | ------------------------------------ |
+| **Panel Wireframe Exports** | Corresponding full-resolution images   | `../exports/`                        |
+| **Metadata Schema**         | JSON Schema definitions for validation | `schema/panel_wireframe.schema.json` |
+| **Figma Reference**         | Design provenance link                 | `figma/panel_wireframes_v1.fig`      |
+| **Design Token Sync**       | Styling consistency across components  | `web/src/styles/tokens.css`          |
+
+---
+
+## 📚 Related References
+
+* [Panels Wireframes (Main)](../README.md)
+* [Panel Wireframe Exports](../exports/README.md)
+* [Map Wireframes](../../../map/wireframes/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../../../architecture/web_ui_architecture_review.md)
+* [Accessibility Design Standards](../../../../design/reviews/accessibility/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Context · Accessibility · Provenance · Reproducibility**
 
 </div>
-```
