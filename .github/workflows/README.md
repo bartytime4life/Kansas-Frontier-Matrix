@@ -96,8 +96,7 @@ flowchart TD
   class D secure;
   class E deploy;
   class F,G audit;
-<!-- END OF MERMAID -->
-```
+%% END OF MERMAID
 
 ---
 
