@@ -3,8 +3,9 @@
 # 🕰️ Kansas Frontier Matrix — Timeline Thumbnails  
 `docs/design/mockups/timeline/thumbnails/`
 
-**Purpose:** Provide and manage **thumbnail previews** of the timeline design states (default, condensed, mobile, overlay)  
-used in documentation, mockups, and automated gallery displays for the Kansas Frontier Matrix (KFM).
+**Purpose:** Provide and manage **thumbnail previews** of the timeline design states  
+(default, condensed, mobile, overlay) used in documentation, mockups, and automated gallery  
+displays for the Kansas Frontier Matrix (KFM).
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../..)  
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../..)  
@@ -17,12 +18,12 @@ used in documentation, mockups, and automated gallery displays for the Kansas Fr
 
 ## 🧭 Overview
 
-This directory stores **thumbnail image assets** derived from the exported timeline wireframes  
-(`../wireframes/exports/`). These smaller previews are optimized for quick reference in documentation,  
-metadata listings, and automated UI previews.
+This directory stores **thumbnail image assets** derived from exported timeline wireframes  
+(`../wireframes/exports/`). These smaller previews are optimized for quick display within documentation,  
+metadata indexes, and automated UI galleries in the KFM design catalog.
 
-Thumbnails visually summarize each timeline variant — such as **Default**, **Condensed**,  
-**Mobile**, and **Map Overlay** layouts — in a consistent, accessible, and reproducible format.
+Each thumbnail visually represents a **timeline variant** —  
+**Default**, **Condensed**, **Mobile**, or **Map Overlay** — ensuring consistent visual language and accessibility compliance.
 
 ---
 
@@ -31,37 +32,38 @@ Thumbnails visually summarize each timeline variant — such as **Default**, **C
 ```text
 docs/design/mockups/timeline/thumbnails/
 ├── README.md                              # This file
-├── timeline_default_thumb.png              # Default timeline layout
-├── timeline_condensed_thumb.png            # Compact version for dense datasets
-├── timeline_mobile_thumb.png               # Mobile vertical timeline
-├── timeline_overlay_map_thumb.png          # Map overlay timeline
+├── timeline_default_thumb.png              # Default desktop timeline layout
+├── timeline_condensed_thumb.png            # Condensed timeline for dense datasets
+├── timeline_mobile_thumb.png               # Mobile-optimized vertical timeline
+├── timeline_overlay_map_thumb.png          # Overlay version with map integration
 └── metadata/                               # JSON metadata for thumbnails
     └── timeline_thumbnails_metadata.json
+````
 
+---
 
-⸻
+## 🧱 Thumbnail Standards
 
-🧱 Thumbnail Standards
+| Property              | Standard                       | Description                              |
+| --------------------- | ------------------------------ | ---------------------------------------- |
+| **Format**            | PNG (preferred)                | Transparent or neutral background        |
+| **Resolution**        | 1280×720 px                    | Optimized for web and documentation      |
+| **Aspect Ratio**      | 16 : 9                         | Consistent visual proportions            |
+| **DPI**               | 144                            | Retina-quality rendering                 |
+| **Color Space**       | sRGB                           | Web-consistent color fidelity            |
+| **Background**        | `#F5F5F5`                      | Consistent light-neutral background      |
+| **Naming Convention** | `timeline_{variant}_thumb.png` | Lowercase, underscores only              |
+| **Accessibility**     | ≥ 4.5 : 1 contrast             | WCAG 2.1 AA-compliant text and icons     |
+| **Metadata**          | JSON index in `metadata/`      | Machine-readable registry for validation |
 
-Property	Standard	Description
-Format	PNG (preferred)	Transparent or light-gray background
-Resolution	1280×720 px	Uniform across all thumbnails
-Aspect Ratio	16:9	Optimized for docs and web display
-DPI	144	Retina and high-resolution friendly
-Color Space	sRGB	Standard web-compatible color profile
-Background	Neutral #F5F5F5	Consistent visual frame
-Naming Convention	timeline_{variant}_thumb.png	Lowercase, underscores only
-Accessibility	≥ 4.5:1 contrast	WCAG 2.1 AA-compliant text and icon visibility
-Metadata	JSON index in metadata/	Machine-readable design registry
+---
 
+## 🧩 Example Metadata Record
 
-⸻
+Each thumbnail is documented within
+`metadata/timeline_thumbnails_metadata.json`, capturing accessibility, provenance, and integrity attributes.
 
-🧩 Example Metadata Record
-
-Each thumbnail is described in the metadata index
-metadata/timeline_thumbnails_metadata.json, which includes accessibility, provenance, and checksum data.
-
+```json
 {
   "id": "timeline_overlay_map_thumb",
   "title": "Timeline + Map Overlay Thumbnail",
@@ -79,66 +81,90 @@ metadata/timeline_thumbnails_metadata.json, which includes accessibility, proven
   },
   "accessibility": {
     "contrast_ratio": 4.7,
-    "alt_text": "Timeline overlay above map with labeled time intervals and play controls."
+    "alt_text": "Timeline overlay above map with labeled intervals and play controls."
   }
 }
+```
 
+---
 
-⸻
+## 🧮 Validation Workflow
 
-🧮 Validation Workflow
+Thumbnail metadata and assets are continuously validated in CI/CD
+(`jsonschema.yml` + `stac-validate.yml`) to ensure reproducibility and integrity.
 
-All thumbnail metadata is validated in the CI/CD pipeline (jsonschema.yml + stac-validate.yml).
+### ✅ Automated Checks
 
-Automated checks include:
-	•	✅ Schema validation (timeline_thumbnail.schema.json)
-	•	✅ File existence and path checks (*.png)
-	•	✅ Checksum verification (SHA-256 integrity)
-	•	✅ License and provenance completeness
-	•	✅ Accessibility compliance (contrast ≥ 4.5, alt text provided)
+* Schema compliance (`timeline_thumbnail.schema.json`)
+* File existence verification (`*.png`)
+* SHA-256 checksum validation
+* Provenance & license completeness
+* Accessibility compliance (contrast ≥ 4.5 : 1 and descriptive alt text)
 
-Manual validation example:
+### 🧰 Manual Validation Example
 
+```bash
 python -m jsonschema -i metadata/timeline_thumbnails_metadata.json schema/timeline_thumbnail.schema.json
+```
 
+---
 
-⸻
+## ♿ Accessibility Review
 
-♿ Accessibility Review
+All thumbnails must meet WCAG 2.1 AA standards, documented in metadata.
 
-Accessibility metadata ensures all design previews meet WCAG 2.1 AA standards.
-Required checks per file include:
-	•	Verified contrast ratio ≥ 4.5
-	•	Meaningful and descriptive alt text
-	•	Color-safe palette review (avoiding hue-only distinctions)
-	•	Visual legibility under both light and dark documentation themes
+| Requirement             | Standard                    | Verification                   |
+| ----------------------- | --------------------------- | ------------------------------ |
+| **Contrast Ratio**      | ≥ 4.5 : 1                   | Verified via Figma or QA audit |
+| **Alt Text**            | Required                    | Recorded in metadata JSON      |
+| **Color Safety**        | No hue-only differentiation | Manual review                  |
+| **Theme Compatibility** | Light & dark documentation  | Dual-preview verification      |
 
-⸻
+Accessibility audits ensure thumbnails remain legible across color modes and responsive layouts.
 
-🧾 Provenance & Integrity
-	•	Design Source: timeline_wireframes_v1.fig (Figma)
-	•	Generated By: scripts/generate_thumbnails.py
-	•	Validated In CI: stac-validate.yml, jsonschema.yml
-	•	Checksums: Recorded in metadata/timeline_thumbnails_metadata.json
-	•	MCP Compliance: Documentation → Validation → Versioning → Reproducibility
+---
 
-⸻
+## 🧾 Provenance & Integrity
 
-📚 Related References
-	•	Timeline Wireframes
-	•	Timeline Wireframe Metadata
-	•	Panels Thumbnails
-	•	Map Thumbnails Metadata
-	•	Kansas Frontier Matrix Web UI Architecture
+| Attribute             | Description                                              |
+| --------------------- | -------------------------------------------------------- |
+| **Design Source**     | `timeline_wireframes_v1.fig` (Figma master)              |
+| **Generated By**      | `scripts/generate_thumbnails.py`                         |
+| **Checksum Tracking** | Recorded in `metadata/timeline_thumbnails_metadata.json` |
+| **Validated In CI**   | `jsonschema.yml`, `stac-validate.yml`                    |
+| **License**           | [CC-BY 4.0](../../../../../../LICENSE)                   |
+| **MCP Compliance**    | Documented → Validated → Versioned → Published           |
 
-⸻
+---
 
+## 🧠 Usage in Documentation
+
+These thumbnails appear throughout the KFM documentation suite and the MCP portal gallery
+as lightweight visual cues for timeline design states.
+
+| Preview                                             | Description                                 |
+| --------------------------------------------------- | ------------------------------------------- |
+| ![Default Timeline](timeline_default_thumb.png)     | Standard desktop timeline layout            |
+| ![Overlay Timeline](timeline_overlay_map_thumb.png) | Overlay timeline with spatial-temporal sync |
+
+They are referenced in both **README previews** and **metadata-linked auto-indexes** for faster navigation.
+
+---
+
+## 📚 Related References
+
+* [Timeline Wireframes (Main)](../wireframes/README.md)
+* [Timeline Wireframe Metadata](../wireframes/metadata/README.md)
+* [Panels Thumbnails](../../panels/thumbnails/README.md)
+* [Map Thumbnails Metadata](../../map/thumbnails/metadata/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../../../architecture/web_ui_architecture_review.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Time · Terrain · History · Knowledge Graphs**
 
 </div>
-```
