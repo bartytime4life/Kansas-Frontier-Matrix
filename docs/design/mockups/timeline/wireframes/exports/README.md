@@ -3,7 +3,8 @@
 # 🕰️ Kansas Frontier Matrix — Timeline Wireframe Exports  
 `docs/design/mockups/timeline/wireframes/exports/`
 
-**Purpose:** Store and version exported **wireframe images** of the Timeline module’s design variants for documentation, testing, and accessibility review.
+**Purpose:** Store and version exported **wireframe images** of the Timeline module’s design variants  
+for documentation, testing, and accessibility review.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../..)  
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../..)  
@@ -16,11 +17,15 @@
 
 ## 🧭 Overview
 
-This directory contains **Figma-exported PNG wireframes** representing the design layouts of the Kansas Frontier Matrix **Timeline interface**.  
-These assets serve as **canonical visual references** for developers and designers when implementing the frontend Timeline components and synchronizing them with the **Map** and **Detail Panels**.
+This directory contains **Figma-exported PNG wireframes** representing the design layouts of  
+the Kansas Frontier Matrix (KFM) **Timeline interface**.  
 
-Each export corresponds to a design state or responsive variant of the timeline (desktop, mobile, overlay).  
-Exports are verified in CI for consistency, integrity, and accessibility compliance.
+These exports serve as **canonical visual references** for developers and designers implementing  
+the Timeline components — ensuring synchronization between **map**, **timeline**, and **detail panels**  
+in the KFM web application.
+
+Each file represents a distinct **state or responsive variant** of the timeline (desktop, condensed, overlay, or mobile).  
+Exports are automatically validated in CI for **integrity**, **naming**, and **accessibility compliance**.
 
 ---
 
@@ -29,103 +34,115 @@ Exports are verified in CI for consistency, integrity, and accessibility complia
 ```text
 docs/design/mockups/timeline/wireframes/exports/
 ├── README.md                      # This file
-├── timeline_default.png            # Full desktop timeline layout
-├── timeline_condensed.png          # Condensed scrollable variant
-├── timeline_mobile.png             # Mobile compact version
-└── timeline_overlay_map.png        # Map + timeline combined overlay
+├── timeline_default.png            # Standard desktop layout
+├── timeline_condensed.png          # Compact scrollable version
+├── timeline_mobile.png             # Vertical mobile timeline
+└── timeline_overlay_map.png        # Overlay variant with map integration
+````
 
+---
 
-⸻
+## 🧱 Export Standards
 
-🧱 Export Standards
+| Property              | Standard                                      | Description                                 |
+| --------------------- | --------------------------------------------- | ------------------------------------------- |
+| **Format**            | PNG                                           | Transparent or neutral background preferred |
+| **Resolution**        | 1920×1080 px (desktop) / 1280×720 px (mobile) | High-resolution exports                     |
+| **Aspect Ratio**      | 16 : 9                                        | Consistent visual proportions               |
+| **DPI**               | 144                                           | Retina-ready quality for docs and galleries |
+| **Color Space**       | sRGB                                          | Web-standard rendering consistency          |
+| **Background**        | `#F5F5F5` or transparent                      | Readable in light/dark modes                |
+| **Naming Convention** | `timeline_{variant}.png`                      | Lowercase, underscores only                 |
+| **Accessibility**     | ≥ 4.5 : 1 contrast ratio                      | WCAG 2.1 AA compliance                      |
 
-Property	Standard	Description
-Format	PNG	Transparent or neutral background preferred
-Resolution	1920×1080 px (desktop) / 1280×720 px (mobile)	High-resolution exports
-Aspect Ratio	16:9	Consistent aspect ratio for all design previews
-DPI	144	Retina-ready for GitHub and design documentation
-Color Space	sRGB	Web-consistent rendering
-Background	Neutral gray #F5F5F5 or transparent	Maintains visibility in both dark/light docs
-Naming Convention	timeline_{variant}.png	Lowercase, underscores only
-Accessibility	≥ 4.5:1 contrast ratio	WCAG 2.1 AA compliance for legibility
+---
 
+## 🧩 Design Variants
 
-⸻
+| Filename                     | Layout Description                                                  | Primary Use                                             |
+| ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------- |
+| **timeline_default.png**     | Standard desktop timeline showing event bands, ticks, and controls. | Reference for main web layout implementation.           |
+| **timeline_condensed.png**   | Compact horizontal timeline with reduced spacing.                   | Used for dense datasets or mid-sized screens.           |
+| **timeline_mobile.png**      | Vertical, scrollable timeline for mobile (< 768 px).                | Optimized for phones and narrow viewports.              |
+| **timeline_overlay_map.png** | Overlay version combining timeline and map regions.                 | Demonstrates synchronized spatial-temporal interaction. |
 
-🧩 Design Variants
+---
 
-Filename	Layout Description	Primary Use
-timeline_default.png	Standard desktop layout showing event bands, time markers, and play controls.	Reference for primary web implementation.
-timeline_condensed.png	Compact horizontal version with minimized event density.	Used for dense event visualization or small screens.
-timeline_mobile.png	Vertical stacked timeline optimized for mobile screens.	Used for phone viewports (<768px).
-timeline_overlay_map.png	Overlay version showing timeline interacting directly above the map.	Demonstrates synchronized spatial-temporal navigation.
+## 🧮 Validation Workflow
 
+All exports undergo validation through CI/CD pipelines
+(`jsonschema.yml` + `stac-validate.yml`).
 
-⸻
+### ✅ Automated Checks
 
-🧮 Validation Workflow
+* File presence and naming consistency
+* SHA-256 checksum validation against metadata
+* Metadata linkage in `../metadata/timeline_wireframes_metadata.json`
+* Accessibility verification (contrast ≥ 4.5 : 1 and alt-text present)
 
-All exported images are validated automatically via the GitHub Actions CI pipeline (stac-validate.yml + jsonschema.yml).
+### 🧰 Manual Checksum Example
 
-Checks include:
-	•	✅ File existence and naming consistency
-	•	✅ SHA-256 checksum verification
-	•	✅ Metadata presence and compliance (../metadata/timeline_wireframes_metadata.json)
-	•	✅ Accessibility validation (contrast, alt text)
-
-Manual Checksum Generation Example:
-
+```bash
 shasum -a 256 *.png > checksums.sha256
+```
 
+---
 
-⸻
+## ♿ Accessibility Verification
 
-♿ Accessibility Verification
+Every exported wireframe must include **accessibility metadata** within its corresponding JSON entry.
 
-Each export must include accessibility metadata defined in its corresponding metadata JSON entry:
-	•	Contrast Ratio ≥ 4.5:1 (measured in Figma or design review)
-	•	Alt Text describing visual layout and UI function
-	•	Color Palette reviewed for color-blind accessibility
+| Requirement        | Standard                    | Validation                                                |
+| ------------------ | --------------------------- | --------------------------------------------------------- |
+| **Contrast Ratio** | ≥ 4.5 : 1                   | Measured via Figma or design QA                           |
+| **Alt Text**       | Required                    | Stored in `../metadata/timeline_wireframes_metadata.json` |
+| **Color Safety**   | No hue-only differentiation | Manual review per WCAG 2.1 AA                             |
 
-Accessibility reviews are documented in ../metadata/timeline_wireframes_metadata.json.
+Accessibility audits are reviewed in design QA and recorded in the metadata index.
 
-⸻
+---
 
-🧾 Provenance & Integrity
-	•	Source File: timeline_wireframes_v1.fig (Figma)
-	•	Generated By: KFM Design Team (Figma Export Workflow)
-	•	Checksum Tracking: SHA-256 hash recorded in metadata
-	•	Validated By: CI workflows during pull requests
-	•	License: CC-BY 4.0 (Creative Commons Attribution 4.0 International)
+## 🧾 Provenance & Integrity
 
-⸻
+| Attribute             | Detail                                     |
+| --------------------- | ------------------------------------------ |
+| **Design Source**     | `timeline_wireframes_v1.fig`               |
+| **Generated By**      | KFM Design Team · Figma Export Workflow    |
+| **Checksum Tracking** | SHA-256 hashes logged in metadata          |
+| **Validated In CI**   | `jsonschema.yml`, `stac-validate.yml`      |
+| **License**           | [CC-BY 4.0](../../../../../../LICENSE)     |
+| **MCP Compliance**    | Documented → Built → Validated → Versioned |
 
-🧠 Usage in Documentation
+---
 
-These exports are used in Markdown previews and linked READMEs across the project:
+## 🧠 Usage in Documentation
 
-![Timeline Default](timeline_default.png)
-![Timeline Overlay](timeline_overlay_map.png)
+These exports appear in **design READMEs** and **MCP portal galleries**
+as official timeline design references.
 
-Additionally, they appear in the MCP documentation portal and design catalog as visual summaries of the Timeline module.
+| Preview                                       | Description                          |
+| --------------------------------------------- | ------------------------------------ |
+| ![Timeline Default](timeline_default.png)     | Standard timeline layout (desktop)   |
+| ![Timeline Overlay](timeline_overlay_map.png) | Timeline + Map overlay demonstration |
 
-⸻
+Each image is referenced in higher-level design guides and auto-indexed in the MCP design catalog.
 
-📚 Related References
-	•	Timeline Wireframes (Main)
-	•	Timeline Wireframes Metadata
-	•	Panels Wireframes
-	•	Map Wireframes
-	•	Kansas Frontier Matrix Web UI Architecture
+---
 
-⸻
+## 📚 Related References
 
+* [Timeline Wireframes (Main)](../README.md)
+* [Timeline Wireframes Metadata](../metadata/README.md)
+* [Panels Wireframes](../../../panels/wireframes/README.md)
+* [Map Wireframes](../../../map/wireframes/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../../../architecture/web_ui_architecture_review.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Time · Terrain · History · Knowledge Graphs**
 
 </div>
-```
