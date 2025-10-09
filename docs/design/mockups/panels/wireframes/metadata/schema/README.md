@@ -4,11 +4,11 @@
 `docs/design/mockups/panels/wireframes/metadata/schema/`
 
 **Purpose:** Define the **JSON Schema** structure for validating wireframe metadata  
-used to describe Kansas Frontier Matrix (KFM) **UI panel components** — ensuring consistency,  
-traceability, and reproducibility across documentation, design, and implementation.
+describing Kansas Frontier Matrix (KFM) **UI panel components** — ensuring consistency,  
+traceability, accessibility, and reproducibility between documentation, design, and implementation.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../..)  
-[![JSON Schema](https://img.shields.io/badge/Schema-validated-orange)](https://json-schema.org)  
+[![JSON Schema](https://img.shields.io/badge/Schema-Validated-orange)](https://json-schema.org)  
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../../../../../..)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../../../LICENSE)
 
@@ -18,14 +18,19 @@ traceability, and reproducibility across documentation, design, and implementati
 
 ## 🧭 Overview
 
-This directory defines **validation schemas** for metadata files under  
+This directory defines **validation schemas** for metadata files stored in  
 `docs/design/mockups/panels/wireframes/metadata/`.  
-These JSON Schemas ensure all exported panel wireframe metadata (`*.json`) follows a unified structure,  
-linking designs to their provenance, accessibility audits, and Figma source files.
 
-The schema extends the **Map Wireframe Metadata Schema** with panel-specific fields like:
-- `panel_type` (e.g., detail, ai_assistant, filter, search)  
-- `ui_variant` (desktop_default, mobile, tablet, etc.)  
+These JSON Schemas ensure:
+- 📊 **Consistent structure** across all wireframe metadata records  
+- 🔗 **Linked provenance** to Figma design sources and Git commits  
+- ♿ **Accessibility validation** for alt text and color contrast ratios  
+- 🧩 **Interoperability** with related schemas (Map, Timeline, AI Assistant)  
+- 🧱 **Reproducibility** following MCP pipeline standards (`Document → Validate → Publish`)  
+
+The schema extends common KFM metadata fields with **panel-specific properties**:
+- `panel_type` (e.g., detail, ai_assistant, filter, search, mobile_stack)  
+- `ui_variant` (e.g., desktop_default, mobile, tablet)  
 - `interaction_model` (scroll, tabbed, collapsible)  
 - `linked_component` (React component path)  
 
@@ -35,22 +40,21 @@ The schema extends the **Map Wireframe Metadata Schema** with panel-specific fie
 
 ```text
 docs/design/mockups/panels/wireframes/metadata/schema/
-├── README.md                       # This file
-├── panel_wireframe.schema.json     # Schema for individual wireframe metadata
+├── README.md                       # This documentation file
+├── panel_wireframe.schema.json     # Schema for individual metadata entries
 └── index.schema.json               # Schema for aggregated metadata index
+````
 
+---
 
-⸻
+## 📘 `panel_wireframe.schema.json`
 
-📘 panel_wireframe.schema.json
+**Purpose:** Define the JSON Schema for validating a single wireframe record —
+enforcing structural consistency, accessibility fields, and provenance tracking.
 
-Description
+### 🧩 Schema Outline
 
-Defines the structure for a single panel wireframe record, validating metadata properties
-for exported panel images and ensuring consistent linkage between design artifacts and code components.
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Panel Wireframe Metadata Schema",
@@ -60,87 +64,95 @@ Schema Outline
     "id": {
       "type": "string",
       "pattern": "^[a-z0-9_\\-]+$",
-      "description": "Unique identifier for the panel wireframe"
+      "description": "Unique identifier for the panel wireframe."
     },
-    "title": { "type": "string", "description": "Readable name for the wireframe design" },
+    "title": { "type": "string", "description": "Readable name for the wireframe design." },
     "panel_type": {
       "type": "string",
       "enum": ["detail", "ai_assistant", "filter", "search", "mobile_stack"],
-      "description": "Panel category (defines UI behavior and content type)"
+      "description": "Defines the panel’s function and UI behavior."
     },
     "ui_variant": {
       "type": "string",
       "enum": ["desktop_default", "mobile", "tablet", "timeline_overlay"],
-      "description": "Responsive layout variant represented by this design"
+      "description": "Responsive layout or display variation."
     },
     "thumbnail": {
       "type": "string",
-      "description": "Relative path to exported PNG/JPG thumbnail image"
+      "description": "Relative path to the exported PNG/JPG thumbnail image."
     },
     "description": {
       "type": "string",
-      "description": "Summary of panel purpose and design intent"
+      "description": "Short summary of panel intent and context."
     },
     "theme": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Visual and contextual theme tags"
+      "description": "Tags denoting color scheme, function, or design theme."
     },
     "linked_component": {
       "type": "string",
-      "description": "React component name or path (e.g., web/src/components/panels/DetailPanel.tsx)"
+      "description": "Path to React component (e.g., web/src/components/panels/DetailPanel.tsx)."
     },
     "source_figma": {
       "type": "string",
-      "description": "Path or URL to original Figma file or frame ID"
+      "description": "Reference to original Figma file or frame ID."
     },
     "license": {
       "type": "string",
       "default": "CC-BY-4.0",
-      "description": "License for the design asset"
+      "description": "License for reuse of the wireframe asset."
     },
     "checksum": {
       "type": "string",
       "pattern": "^sha256-[A-Fa-f0-9]+$",
-      "description": "SHA-256 checksum for image validation"
+      "description": "SHA-256 hash used to verify export integrity."
     },
     "provenance": {
       "type": "object",
       "required": ["derived_from"],
       "properties": {
-        "derived_from": { "type": "string", "description": "Figma source file or image export" },
-        "created_with": { "type": "string", "description": "Tool or process used for generation" },
-        "commit": { "type": "string", "description": "Git commit reference" }
-      }
+        "derived_from": { "type": "string", "description": "Figma source file or export name." },
+        "created_with": { "type": "string", "description": "Tool or script used to generate export." },
+        "commit": { "type": "string", "description": "Git commit ID linking version." }
+      },
+      "description": "Reproducibility and design lineage metadata."
     },
     "accessibility": {
       "type": "object",
+      "required": ["contrast_ratio", "alt_text"],
       "properties": {
-        "contrast_ratio": { "type": "number", "minimum": 4.5 },
-        "alt_text": { "type": "string" }
+        "contrast_ratio": {
+          "type": "number",
+          "minimum": 4.5,
+          "description": "Verified contrast ratio per WCAG 2.1 AA."
+        },
+        "alt_text": {
+          "type": "string",
+          "description": "Descriptive text for assistive technologies."
+        }
       },
-      "description": "Accessibility metadata for UI contrast and screen-reader descriptions"
+      "description": "Accessibility audit and validation data."
     }
   }
 }
+```
 
+---
 
-⸻
+## 📗 `index.schema.json`
 
-📗 index.schema.json
+**Purpose:** Validate the aggregated index file `panel_wireframes_metadata.json` —
+used for batch validation, automated ingestion, and documentation rendering.
 
-Description
+### 🧩 Schema Outline
 
-Defines the metadata index structure for panel_wireframes_metadata.json,
-enabling bulk validation and automation across multiple panel entries.
-
-Schema Outline
-
+```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "KFM Panel Wireframes Metadata Index",
   "type": "object",
-  "required": ["version", "panels"],
+  "required": ["version", "updated", "panels"],
   "properties": {
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
     "updated": { "type": "string", "format": "date-time" },
@@ -150,52 +162,67 @@ Schema Outline
     }
   }
 }
+```
 
+---
 
-⸻
+## 🧮 Validation Workflow
 
-🧮 Validation Workflow
+Validation is performed automatically in CI/CD pipelines for consistency, provenance, and accessibility compliance.
 
-All panel wireframe metadata undergoes validation in CI/CD workflows:
-	•	🧾 Schema validation via jsonschema.yml and stac-validate.yml
-	•	✅ Required fields (id, title, type, provenance, accessibility)
-	•	🔗 Reference validation (image paths, Figma files)
-	•	🔒 Checksum verification (sha256-* pattern)
-	•	♿ Accessibility compliance (contrast ≥ 4.5)
+| Step  | Process                       | Validation Target                           |
+| ----- | ----------------------------- | ------------------------------------------- |
+| **1** | JSON Schema validation        | `panel_wireframe.schema.json`               |
+| **2** | Metadata integrity check      | `panel_wireframes_metadata.json`            |
+| **3** | File existence verification   | `../exports/*.png`                          |
+| **4** | SHA-256 checksum verification | Exported image hashes                       |
+| **5** | Accessibility audit           | Contrast ≥ 4.5 : 1 and descriptive alt text |
 
-Manual Validation Example:
+### 🧰 Manual Validation Example
 
+```bash
 python -m jsonschema -i ../panel_wireframes_metadata.json schema/panel_wireframe.schema.json
+```
 
+---
 
-⸻
+## 🧠 Design Integration
 
-🧠 Design Integration
+| Target             | Purpose                                  | Linked Resource                |
+| ------------------ | ---------------------------------------- | ------------------------------ |
+| **Figma**          | Primary design source                    | `panel_wireframes_v1.fig`      |
+| **Web UI (React)** | Panel component linkage                  | `web/src/components/panels/*`  |
+| **Documentation**  | Auto-included metadata in panel READMEs  | `docs/design/mockups/panels/*` |
+| **CI/CD**          | Schema and checksum validation workflows | `.github/workflows/*`          |
 
-Integration Target	Description	Linked Spec
-Figma	Source of truth for UI layouts	panel_wireframes_v1.fig
-Web UI (React)	References validated metadata for panel rendering	/web/src/components/panels/*
-Documentation	Pulls metadata for automated inclusion in Markdown READMEs	docs/design/mockups/panels/*
-CI/CD	Automated schema validation, checksum checks, and accessibility audits	.github/workflows/*
+---
 
+## 🧾 Provenance & MCP Compliance
 
-⸻
+| Attribute        | Description                                                               |
+| ---------------- | ------------------------------------------------------------------------- |
+| **Generated By** | `scripts/generate_panel_schema_docs.py`                                   |
+| **Validated In** | CI Workflows: `jsonschema.yml`, `stac-validate.yml`                       |
+| **Schema Draft** | [JSON Schema Draft 2020-12](https://json-schema.org/draft/2020-12/schema) |
+| **License**      | [CC-BY 4.0](../../../../../../../LICENSE)                                 |
+| **MCP Stage**    | Documented → Validated → Published                                        |
 
-📚 Related References
-	•	Panels Wireframe Metadata
-	•	Panel Wireframe Exports
-	•	Map Wireframe Metadata Schema
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	Accessibility Standards
+---
 
-⸻
+## 📚 Related References
 
+* [Panels Wireframe Metadata](../README.md)
+* [Panel Wireframe Exports](../../exports/README.md)
+* [Map Wireframe Metadata Schema](../../../map/wireframes/metadata/schema/README.md)
+* [Kansas Frontier Matrix Web UI Architecture](../../../../../../../architecture/web_ui_architecture_review.md)
+* [Accessibility Standards](../../../../../design/reviews/accessibility/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Time · Terrain · History · Knowledge Graphs
+**Structure · Accessibility · Provenance · Reproducibility**
 
 </div>
-```
