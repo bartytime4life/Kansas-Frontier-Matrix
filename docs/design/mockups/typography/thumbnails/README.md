@@ -18,13 +18,14 @@ showcasing font hierarchies, type scales, and design tokens in the Kansas Fronti
 ## 🧭 Overview
 
 This directory contains **visual thumbnail previews** of typography mockups — the foundational  
-text and font standards that ensure readability, hierarchy, and aesthetic coherence across the  
-Kansas Frontier Matrix documentation and web interface.
+text and font standards that ensure **readability**, **hierarchy**, and **aesthetic coherence** across  
+Kansas Frontier Matrix documentation and the web interface.
 
-Each thumbnail illustrates:
-- Font stacks and style tokens (`--kfm-font-*`)  
-- Typographic scale and rhythm  
-- Responsive type adjustments (mobile vs. desktop)  
+Each thumbnail demonstrates:
+
+- Font stacks and CSS tokens (`--kfm-font-*`)  
+- Typographic scale and vertical rhythm  
+- Responsive text adjustments (mobile vs. desktop)  
 - Accessibility-compliant font weights and contrast ratios  
 
 ---
@@ -40,31 +41,32 @@ docs/design/mockups/typography/thumbnails/
 ├── code_block_thumb.png                  # Monospace code typography preview
 └── metadata/                             # JSON metadata index
     └── typography_thumbnails_metadata.json
+````
 
+---
 
-⸻
+## 🧱 Thumbnail Standards
 
-🧱 Thumbnail Standards
+| Property              | Standard                       | Description                                     |
+| --------------------- | ------------------------------ | ----------------------------------------------- |
+| **Format**            | PNG (preferred)                | Optimized for web documentation                 |
+| **Resolution**        | 1280×720 px                    | High-resolution export, consistent aspect ratio |
+| **Aspect Ratio**      | 16 : 9                         | Ideal for previews in documentation & UI        |
+| **DPI**               | 144                            | Retina-ready export quality                     |
+| **Color Profile**     | sRGB                           | Ensures consistent rendering across devices     |
+| **Background**        | Neutral `#F5F5F5`              | Matches light documentation theme               |
+| **Naming Convention** | `typography_{theme}_thumb.png` | Lowercase, underscores only                     |
+| **Accessibility**     | ≥ 4.5 : 1 contrast ratio       | WCAG 2.1 AA-compliant design                    |
+| **Metadata**          | JSON index (`metadata/`)       | Includes provenance, accessibility, checksum    |
 
-Property	Standard	Description
-Format	PNG (preferred)	Optimized for web documentation
-Resolution	1280×720 px	High-resolution with consistent aspect ratio
-Aspect Ratio	16:9	Suitable for documentation and UI previews
-DPI	144	Retina-optimized export quality
-Color Profile	sRGB	Ensures consistent rendering across devices
-Background	Neutral #F5F5F5	Matches light documentation theme
-Naming Convention	typography_{theme}_thumb.png	Lowercase, underscores only
-Accessibility	≥ 4.5:1 contrast ratio	WCAG 2.1 AA-compliant
-Metadata	JSON index in metadata/	Includes provenance, accessibility, checksum
+---
 
+## 🧩 Example Metadata Record
 
-⸻
+Each thumbnail entry in `metadata/typography_thumbnails_metadata.json`
+captures provenance, accessibility, and version tracking:
 
-🧩 Example Metadata Record
-
-Each thumbnail is documented in the metadata/typography_thumbnails_metadata.json index
-for provenance, accessibility, and version tracking.
-
+```json
 {
   "id": "heading_styles_thumb",
   "title": "Heading Styles Thumbnail",
@@ -86,65 +88,86 @@ for provenance, accessibility, and version tracking.
     "alt_text": "Typography hierarchy showing H1–H6 styles with proper spacing and contrast."
   }
 }
+```
 
+---
 
-⸻
+## 🧮 Validation Workflow
 
-🧮 Validation Workflow
+Typography thumbnail metadata and assets are validated automatically through
+CI/CD pipelines for **schema compliance, accessibility, and file integrity**.
 
-Metadata validation is automated via the GitHub CI/CD pipeline (jsonschema.yml, stac-validate.yml).
+### ✅ Automated Checks
 
-Validation Checks
-	•	✅ Schema compliance (typography_thumbnail.schema.json)
-	•	✅ File existence and path validation
-	•	✅ Checksum verification (SHA-256)
-	•	✅ License and provenance completeness
-	•	✅ Accessibility checks (contrast ≥ 4.5, descriptive alt text)
+* Schema compliance (`typography_thumbnail.schema.json`)
+* File existence and path validation
+* Checksum verification (SHA-256)
+* License & provenance completeness
+* Accessibility: contrast ≥ 4.5 and alt-text present
 
-Manual validation example:
+### 🧰 Manual Validation Example
 
-python -m jsonschema -i metadata/typography_thumbnails_metadata.json schema/typography_thumbnail.schema.json
+```bash
+python -m jsonschema \
+  -i metadata/typography_thumbnails_metadata.json \
+  schema/typography_thumbnail.schema.json
+```
 
+---
 
-⸻
+## ♿ Accessibility Compliance
 
-♿ Accessibility Compliance
+Typography thumbnails are verified for legibility under **WCAG 2.1 AA** guidelines.
 
-Typography thumbnails are verified for legibility and contrast under WCAG 2.1 AA standards.
-Accessibility requirements include:
-	•	Contrast ratio ≥ 4.5:1 for body text, ≥ 3:1 for large headings
-	•	Screen-reader compatible alt text
-	•	Representative sampling of dark/light mode readability
-	•	Verification against design tokens (--kfm-color-fg, --kfm-color-bg)
+| Criterion              | Threshold                               | Verification Tool             |
+| ---------------------- | --------------------------------------- | ----------------------------- |
+| **Contrast Ratio**     | ≥ 4.5 : 1 (body), ≥ 3 : 1 (headings)    | Figma Contrast / Axe DevTools |
+| **Screen-Reader Text** | Required alt text                       | JSON metadata                 |
+| **Mode Coverage**      | Light / Dark parity                     | Design QA checks              |
+| **Token Validation**   | Uses `--kfm-color-fg`, `--kfm-color-bg` | CSS variable alignment        |
 
-⸻
+---
 
-🧾 Provenance & Integrity
-	•	Design Source: typography_design_v1.fig (Figma master file)
-	•	Generated By: scripts/generate_thumbnails.py
-	•	Validated In: CI/CD pipelines (jsonschema.yml, stac-validate.yml)
-	•	Checksums: SHA-256 for each thumbnail, recorded in metadata
-	•	License: CC-BY-4.0 (Open documentation and design reuse permitted)
-	•	MCP Compliance: Documented → Validated → Versioned → Published
+## 🧾 Provenance & Integrity
 
-⸻
+* **Design Source:** `figma/typography_design_v1.fig`
+* **Generated By:** `scripts/generate_thumbnails.py`
+* **Validated In:** `jsonschema.yml`, `stac-validate.yml`
+* **Checksums:** SHA-256 stored in `metadata/typography_thumbnails_metadata.json`
+* **License:** [CC-BY-4.0](../../../../../../LICENSE) — reuse with attribution
+* **MCP Compliance:** Documented → Validated → Versioned → Published
 
-📚 Related References
-	•	Typography Design Mockups (Main)
-	•	Typography Metadata
-	•	Panels Thumbnails
-	•	Map Thumbnails
-	•	Kansas Frontier Matrix Web UI Architecture
-	•	Design Token Standards
+---
 
-⸻
+## 🧭 Traceability Diagram (GitHub-Safe Mermaid)
 
+```mermaid
+flowchart LR
+  A["Figma Source\n(typography_design_v1.fig)"]
+    --> B["Exported Thumbnails\n(PNGs 1280×720 px)"]
+    --> C["Metadata JSON\n(provenance · checksum · accessibility)"]
+    --> D["CI/CD Validation\n(jsonschema.yml · stac-validate.yml)"]
+    --> E["Published Docs\n(KFM Design System & Web UI)"]
+%% END OF MERMAID
+```
+
+---
+
+## 📚 Related References
+
+* [Typography Design Mockups (Main)](../README.md)
+* [Typography Metadata](../metadata/README.md)
+* [Panels Thumbnails](../../panels/thumbnails/README.md)
+* [Map Thumbnails](../../map/thumbnails/README.md)
+* [Web UI Architecture](../../../../../../architecture/web_ui_architecture_review.md)
+* [Design Token Standards](../../../../design-tokens/README.md)
+
+---
 
 <div align="center">
 
+### Kansas Frontier Matrix — Documentation-First Design
 
-Kansas Frontier Matrix — Documentation-First Design
-Readability · Hierarchy · Accessibility · Consistency
+*Readability · Hierarchy · Accessibility · Consistency*
 
 </div>
-```
