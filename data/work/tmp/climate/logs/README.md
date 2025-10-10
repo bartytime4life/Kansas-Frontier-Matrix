@@ -8,8 +8,11 @@ and QA/QC operations — providing transparency and traceability across the Kans
 climate data processing pipelines.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../../LICENSE)
 
 </div>
 
@@ -18,16 +21,17 @@ climate data processing pipelines.
 ## 📚 Overview
 
 The `data/work/tmp/climate/logs/` directory contains **ephemeral diagnostic logs**  
-created during ETL and validation of climate-related datasets, including temperature, precipitation,  
+produced during the ETL and QA stages of climate datasets — including precipitation, temperature,  
 drought indices, and NOAA climate normals.  
 
 These logs help developers and CI/CD systems:
-- Track ETL progress and processing duration  
-- Debug NetCDF conversions and reprojection tasks  
-- Record checksum and metadata validation reports  
-- Audit temporary climate data transformations  
+- Track ETL progress and runtime performance  
+- Debug NetCDF conversions, reprojections, and metadata extraction  
+- Record checksum and schema validation results  
+- Document QA/QC steps before final publishing  
 
-Logs are **not version-controlled** and are regenerated automatically each time pipelines run.
+Logs are **transient**, **not version-controlled**, and **automatically regenerated**  
+each time the climate ETL pipeline executes.
 
 ---
 
@@ -42,113 +46,113 @@ data/work/tmp/climate/logs/
 └── checksum_audit_report.log
 ````
 
-> **Note:** Log names and contents vary based on current ETL tasks,
-> diagnostic runs, or metadata validation sessions.
+> **Note:** Filenames and contents vary by dataset and active ETL step.
+> All files are replaced or cleared between pipeline runs.
 
 ---
 
 ## ⚙️ Logging Guidelines
 
-| Log Type                   | Purpose                                                                                      |
-| :------------------------- | :------------------------------------------------------------------------------------------- |
-| **`*_etl_debug.log`**      | Captures the complete ETL process, including file reads, transformations, and reprojections. |
-| **`*_conversion.log`**     | Records raster or NetCDF-to-GeoTIFF conversion operations.                                   |
-| **`*_validation.log`**     | Summarizes QA/QC checks for drought or temperature datasets.                                 |
-| **`*_checksum_audit.log`** | Stores validation results comparing dataset hashes to reference checksums.                   |
+| Log Type                   | Purpose                                                                         |
+| :------------------------- | :------------------------------------------------------------------------------ |
+| **`*_etl_debug.log`**      | Captures the full ETL process — download, reprojection, transformation, export. |
+| **`*_conversion.log`**     | Records NetCDF → GeoTIFF or CSV conversion diagnostics.                         |
+| **`*_validation.log`**     | Summarizes QA/QC for precipitation, drought, or temperature products.           |
+| **`*_checksum_audit.log`** | Lists hash comparisons to verify dataset reproducibility.                       |
 
-All logs use plain-text UTF-8 format to ensure readability and cross-platform compatibility.
+All logs are plain-text **UTF-8** files for open review and long-term readability.
 
 ---
 
 ## ⚙️ Log Management Workflow
 
-Logs are generated automatically during pipeline execution.
+Logs are produced automatically during ETL runs and optionally via manual invocation.
 
-**Makefile target:**
+**Makefile target**
 
 ```bash
 make climate
 ```
 
-**Python example:**
+**Python command**
 
 ```bash
 python src/pipelines/climate/climate_pipeline.py --log data/work/tmp/climate/logs/climate_etl_debug.log
 ```
 
-**Lifecycle:**
+**Lifecycle**
 
-1. ETL process starts → log file initialized or overwritten.
-2. Key events (download, reprojection, aggregation, checksum) are streamed in real time.
-3. Logs are used by developers or CI jobs for validation and review.
-4. Logs are cleared automatically on cleanup or pipeline completion.
+1. Pipeline starts and initializes or overwrites log files.
+2. Each ETL stage writes process details and validation results.
+3. Logs are reviewed by developers and CI/CD validators.
+4. Cleared automatically after QA completion or via `make clean-logs`.
 
 ---
 
 ## 🧹 Cleanup Policy
 
-Climate logs are **temporary** and can be safely deleted or automatically purged
-once ETL operations have completed successfully.
+Logs are **temporary artifacts** and deleted between workflow executions.
 
-**Makefile target:**
+**Makefile target**
 
 ```bash
 make clean-logs
 ```
 
-**Manual cleanup:**
+**Manual cleanup**
 
 ```bash
 rm -rf data/work/tmp/climate/logs/*
 ```
 
-All pipeline-critical outputs are safely stored under:
+Validated datasets and metadata reside in:
 
-* `data/processed/climate/` — finalized climate datasets
-* `data/checksums/climate/` — integrity verification files
-* `data/processed/metadata/climate/` — STAC metadata and documentation
+* `data/processed/climate/` — permanent climate rasters and tables
+* `data/checksums/climate/` — integrity hashes for reproducibility
+* `data/processed/metadata/climate/` — STAC metadata for dataset publication
 
 ---
 
 ## 🧩 Integration with Pipelines
 
-| Linked Component                            | Function                                                       |
-| :------------------------------------------ | :------------------------------------------------------------- |
-| `src/pipelines/climate/climate_pipeline.py` | Writes ETL and validation logs during processing.              |
-| `.github/workflows/stac-validate.yml`       | Uses logs for diagnostics in checksum validation.              |
-| `data/work/tmp/climate/`                    | Parent temporary directory for all intermediate climate files. |
-| `data/processed/climate/`                   | Final climate data products validated via logs.                |
+| Linked Component                            | Function                                                  |
+| :------------------------------------------ | :-------------------------------------------------------- |
+| `src/pipelines/climate/climate_pipeline.py` | Generates ETL and QA logs during processing.              |
+| `.github/workflows/stac-validate.yml`       | References logs for checksum and metadata validation.     |
+| `data/work/tmp/climate/`                    | Parent directory for temporary climate data artifacts.    |
+| `data/processed/climate/`                   | Destination for finalized and validated climate datasets. |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                        |
-| :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | README defines logging structure, policies, and workflow integration. |
-| **Reproducibility**     | Logs capture deterministic pipeline steps for full traceability.      |
-| **Open Standards**      | Logs are plain UTF-8 text; no proprietary formats used.               |
-| **Provenance**          | Each log captures ETL lineage between raw and processed datasets.     |
-| **Auditability**        | Logs serve as transparent records for debugging and QA verification.  |
+| MCP Principle           | Implementation                                                   |
+| :---------------------- | :--------------------------------------------------------------- |
+| **Documentation-first** | README defines log purpose, structure, and cleanup protocols.    |
+| **Reproducibility**     | Log generation is deterministic and reproducible across runs.    |
+| **Open Standards**      | UTF-8 text ensures cross-platform transparency.                  |
+| **Provenance**          | Logs record timestamps, dataset lineage, and ETL stage metadata. |
+| **Auditability**        | Logs guarantee traceability for QA, CI/CD, and checksum reviews. |
 
 ---
 
 ## 📎 Related Directories
 
-| Path                               | Description                                            |
-| :--------------------------------- | :----------------------------------------------------- |
-| `data/work/tmp/climate/`           | Temporary workspace for climate ETL intermediates.     |
-| `data/processed/climate/`          | Final climate outputs (Daymet, NOAA, drought indices). |
-| `data/checksums/climate/`          | SHA-256 verification of processed datasets.            |
-| `data/processed/metadata/climate/` | Metadata and STAC catalog for climate layers.          |
+| Path                               | Description                                               |
+| :--------------------------------- | :-------------------------------------------------------- |
+| `data/work/tmp/climate/`           | Temporary workspace for ETL and diagnostics.              |
+| `data/processed/climate/`          | Validated climate datasets (Daymet, NOAA, Drought).       |
+| `data/checksums/climate/`          | SHA-256 integrity checks for reproducibility tracking.    |
+| `data/processed/metadata/climate/` | STAC metadata and dataset documentation for climate data. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                       |
-| :------ | :--------- | :------------------------------------------------------------ |
-| v1.0    | 2025-10-04 | Initial creation of climate ETL logs workspace documentation. |
+| Version | Date       | Summary                                                 |
+| :------ | :--------- | :------------------------------------------------------ |
+| v1.0    | 2025-10-04 | Initial climate ETL log documentation created.          |
+| v1.0.1  | 2025-10-09 | Added metadata, badges, provenance, and MCP compliance. |
 
 ---
 
