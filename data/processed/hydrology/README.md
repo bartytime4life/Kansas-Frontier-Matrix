@@ -1,63 +1,55 @@
 <div align="center">
 
-# 💧 Kansas-Frontier-Matrix — Processed Hydrology Data (`data/processed/hydrology/`)
 
-**Mission:** Store and document all **hydrology-processed datasets** — sink-filled DEMs, flow direction grids,  
-and pre-derivative hydrologic surfaces — that serve as the foundation for stream networks, watershed delineations,  
-and flood-risk modeling across Kansas.
+💧 Kansas-Frontier-Matrix — Processed Hydrology Data
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.github/workflows/pre-commit.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../LICENSE)
+data/processed/hydrology/
+
+Mission: Preserve validated hydrologic base surfaces—hydro-conditioned DEMs, D8 flow direction, base flow accumulation, water masks, and seed points—used to derive stream networks, basins, flood pathways, and other hazards across Kansas.
 
 </div>
 
----
 
-## 📚 Table of Contents
-- [Overview](#overview)
-- [Directory Layout](#directory-layout)
-- [Core Hydrology Datasets](#core-hydrology-datasets)
-- [STAC Metadata](#stac-metadata)
-- [Processing Workflow](#processing-workflow)
-- [Reproducibility & Validation](#reproducibility--validation)
-- [Contributing New Hydrology Data](#contributing-new-hydrology-data)
-- [References](#references)
 
----
+⸻
 
-## 🌊 Overview
+📚 Table of Contents
+	•	Overview
+	•	Directory Layout
+	•	Core Hydrology Datasets
+	•	STAC & Provenance
+	•	Processing Workflow
+	•	Visualization Hints
+	•	Reproducibility & Validation
+	•	Contributing New Hydrology Data
+	•	References
 
-This subdirectory contains **processed hydrologic surfaces and layers** generated from  
-DEM preprocessing and flow modeling routines.  
+⸻
 
-These datasets are used as inputs for derivative products such as flow accumulation,  
-stream extraction, and watershed boundary delineation (see `data/derivatives/hydrology/`).
+🌊 Overview
 
-Data sources include LiDAR-derived DEMs (1 m), historical topographic DEMs (10–30 m),  
-and auxiliary hydrologic datasets from **USGS NHD**, **NOAA**, and **Kansas DASC**.  
+This folder stores processed hydrologic base layers generated from DEM pre-processing and flow routing.
+They serve as inputs for downstream products (see data/derivatives/hydrology/) such as:
+	•	Flow accumulation thresholds → stream networks
+	•	Seeds + flow dir/accum → watershed/basin delineations
+	•	Hydro DEM + water mask → flood extent prototyping & hydraulic pre-conditioning
 
-All outputs are standardized as **Cloud-Optimized GeoTIFFs (COGs)**, reprojected to  
-EPSG:4326, and cataloged via [STAC metadata](../../stac/).
+Sources: LiDAR-derived DEM (1 m), historical topo DEMs (10–30 m), and auxiliary hydrology from USGS NHD, NOAA, and Kansas DASC.
+Formats: Cloud-Optimized GeoTIFF (COG) for rasters, GeoJSON for vectors, EPSG:4326 (WGS84).
+Catalog: Indexed in STAC under data/stac/items/*.
 
----
+⸻
 
-## 🧱 Directory Layout
+🧱 Directory Layout
 
-```bash
 data/
 └── processed/
     └── hydrology/
-        ├── dem_filled_1m_ks.tif           # Hydrologically conditioned DEM (sink-filled)
-        ├── flow_dir_d8_1m_ks.tif          # D8 flow direction raster
-        ├── flow_accum_base_1m_ks.tif      # Base accumulation raster
-        ├── stream_seed_points.geojson     # Outlets and pour points for basins
-        ├── watermask_ks.tif               # Binary raster water mask (water=1)
+        ├── dem_filled_1m_ks.tif           # Hydro-conditioned DEM (sink-filled)
+        ├── flow_dir_d8_1m_ks.tif          # D8 flow direction grid
+        ├── flow_accum_base_1m_ks.tif      # Base (pre-threshold) accumulation
+        ├── watermask_ks.tif               # Binary water mask (1=water, 0=land)
+        ├── stream_seed_points.geojson     # Outlets / pour-points
         ├── metadata/
         │   ├── dem_filled_1m_ks.json
         │   ├── flow_dir_d8_1m_ks.json
@@ -67,137 +59,157 @@ data/
         │   ├── flow_dir_d8_1m_ks.tif.sha256
         │   └── flow_accum_base_1m_ks.tif.sha256
         └── README.md
-````
 
-Each product here represents a validated, intermediate hydrologic surface ready for
-further derivative generation (streamlines, basins, hazard mapping).
 
----
+⸻
 
-## 💦 Core Hydrology Datasets
+💦 Core Hydrology Datasets
 
-| Product                      | File                         | Description                                                         | Source          | Units   | Format        |
-| ---------------------------- | ---------------------------- | ------------------------------------------------------------------- | --------------- | ------- | ------------- |
-| **Filled DEM**               | `dem_filled_1m_ks.tif`       | 1 m LiDAR DEM with hydrologic sink filling                          | KS LiDAR / 3DEP | meters  | GeoTIFF (COG) |
-| **Flow Direction (D8)**      | `flow_dir_d8_1m_ks.tif`      | Encodes downslope flow direction (1–255)                            | Derived         | integer | GeoTIFF (COG) |
-| **Flow Accumulation (Base)** | `flow_accum_base_1m_ks.tif`  | Raw flow accumulation before thresholding                           | Derived         | cells   | GeoTIFF (COG) |
-| **Stream Seed Points**       | `stream_seed_points.geojson` | Candidate outlet/pour points for watershed segmentation             | Derived         | n/a     | GeoJSON       |
-| **Water Mask**               | `watermask_ks.tif`           | Binary raster (1 = water, 0 = land) derived from NLCD + Hydrography | USGS / DASC     | binary  | GeoTIFF (COG) |
+Product	File	Description	Source	Units	Format
+Filled DEM	dem_filled_1m_ks.tif	1 m LiDAR DEM after hydrologic sink filling	KS LiDAR / USGS 3DEP	meters	COG GeoTIFF
+Flow Direction (D8)	flow_dir_d8_1m_ks.tif	Downslope flow direction codes (ESRI D8; 1–128)	Derived (WBT)	integer	COG GeoTIFF
+Flow Accumulation (Base)	flow_accum_base_1m_ks.tif	Raw cell-based accumulation prior to any stream thresholding	Derived (WBT)	cells	COG GeoTIFF
+Water Mask	watermask_ks.tif	Binary water mask fused from NLCD + hydrography (1=water, 0=land)	USGS / DASC / Derived	binary	COG GeoTIFF
+Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour-points for basin segmentation & QC of drainage	Derived	n/a	GeoJSON
 
----
+Note: Where historical DEM resolutions are used (10–30 m), filenames follow the same pattern with a _10m/_30m suffix.
 
-## 🧩 STAC Metadata
+⸻
 
-All processed hydrology files are indexed in the project’s STAC catalog (`data/stac/items/hydro_*`)
-with full provenance, lineage, and temporal coverage.
+🧩 STAC & Provenance
 
-Example STAC Item:
+All files are registered as STAC Items with lineage, software, parameters, and licensing. Example:
 
-```json
 {
   "type": "Feature",
   "stac_version": "1.0.0",
   "id": "flow_dir_d8_1m_ks",
   "properties": {
     "title": "Flow Direction (D8) – Kansas LiDAR DEM",
+    "description": "D8 pointer grid from hydro-conditioned 1 m DEM.",
     "datetime": "2020-01-01T00:00:00Z",
-    "description": "Flow direction grid computed using D8 algorithm from hydrologically conditioned 1 m DEM.",
     "processing:software": "WhiteboxTools 2.2.0",
+    "processing:steps": ["FillDepressions", "D8Pointer"],
+    "parameters": { "fill": { "flat_treatment": "breach_or_fill" }, "d8": { "force_four": false } },
     "mcp_provenance": "sha256:4be51c…",
     "derived_from": ["data/processed/hydrology/dem_filled_1m_ks.tif"],
-    "license": "CC-BY 4.0"
+    "license": "CC-BY-4.0"
   },
   "assets": {
     "data": {
       "href": "./flow_dir_d8_1m_ks.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["data"]
+    },
+    "metadata": {
+      "href": "./metadata/flow_dir_d8_1m_ks.json",
+      "type": "application/json",
+      "roles": ["metadata"]
     }
-  }
+  },
+  "bbox": [-102.05, 36.99, -94.59, 40.00]
 }
-```
 
----
 
-## ⚙️ Processing Workflow
+⸻
 
-All processing follows reproducible steps using **WhiteboxTools**, **GDAL**, and **Python**
-scripts in `tools/hydro/`. These workflows are invoked through the project `Makefile`.
+⚙️ Processing Workflow
 
-Example CLI sequence:
+flowchart TD
+  A["Raw DEM (1 m / 10–30 m)\nLiDAR / topo"] --> B["Fill sinks\n(WhiteboxTools: FillDepressions)"]
+  B --> C["Flow direction (D8)\n(WhiteboxTools: D8Pointer)"]
+  B --> D["Flow accumulation\n(WhiteboxTools: D8FlowAccumulation)"]
+  E["Water sources\nNLCD water, NHD/GNIS"] --> F["Water mask fusion\nGDAL calc · logical OR"]
+  C --> G["Seed points\n(threshold & outlet logic)"]
+  D --> G
+  B & C & D & F & G --> H["Reproject + COG\n(rio cogeo)"]
+  H --> I["STAC Items + checksums\n(data/stac/items/* , *.sha256)"]
+<!-- END OF MERMAID -->
 
-```bash
-# 1. Hydrologic conditioning – fill sinks
+Example CLI (reproducible)
+
+# 1) Hydrologic conditioning (fill/breach)
 whitebox_tools --run=FillDepressions -i dem_1m_ks.tif -o dem_filled_1m_ks.tif
 
-# 2. Generate flow direction (D8)
+# 2) D8 pointer
 whitebox_tools --run=D8Pointer -i dem_filled_1m_ks.tif -o flow_dir_d8_1m_ks.tif
 
-# 3. Compute base flow accumulation
+# 3) D8 flow accumulation
 whitebox_tools --run=D8FlowAccumulation -i dem_filled_1m_ks.tif -o flow_accum_base_1m_ks.tif
 
-# 4. Create water mask (from NLCD & NHD)
-gdal_calc.py -A nlcd_water_ks.tif -B nhd_water_ks.tif --outfile=watermask_ks.tif --calc="(A>0)|(B>0)"
+# 4) Water mask from NLCD + hydrography
+gdal_calc.py -A nlcd_water_ks.tif -B nhd_water_ks.tif \
+  --outfile=watermask_ks.tif --calc="((A>0) | (B>0)).astype(uint8)"
 
-# 5. Export pour points for basin modeling
+# 5) Seed points (choose threshold by scale)
 python tools/hydro/seed_points.py --accum flow_accum_base_1m_ks.tif --threshold 500
-```
 
-Outputs are automatically reprojected and converted to COG format via `rio cogeo create`.
+# 6) COG conversion & STAC emit are handled by Make targets
 
----
 
-## 🔁 Reproducibility & Validation
+⸻
 
-* **Checksums:** `.sha256` hashes ensure file integrity.
-* **STAC Validation:** Metadata tested in CI against STAC 1.0 schema.
-* **Makefile Targets:**
+🎨 Visualization Hints
+	•	Flow Dir (D8) — categorical scheme (e.g., 8 hues for the 8 directions; 0 or NoData transparent).
+	•	Flow Accumulation — log stretch; suggested ramp: #f7fbff → #6baed6 → #08519c (blue scale).
+	•	Water Mask — 1 = #2b8cbe (water), 0 = transparent.
+	•	Filled DEM — hillshade for QC; keep grayscale underlays subtle to emphasize flow features.
 
-  * `make hydrology` — rebuild all hydrologic processed layers
-  * `make validate-hydro` — validate metadata and checksums
-* **Containerization:** Runs within Docker (GDAL + WhiteboxTools + Python) for full reproducibility.
-* **QA Checks:** Stream outlets and DEM fills visually verified in QGIS and compared against NHD baselines.
+⸻
 
----
+🔁 Reproducibility & Validation
 
-## 🧠 Contributing New Hydrology Data
+Make targets
 
-1. Add new processed outputs (COG or GeoJSON) to this folder.
-2. Create a STAC metadata JSON under `metadata/` and a `.sha256` checksum under `checksums/`.
-3. Add a `DERIVATION.md` documenting:
+make hydrology           # rebuild hydrologic processed layers
+make validate-hydro      # validate STAC + checksums
+make stac-validate       # run STAC schema checks repo-wide
 
-   * input datasets (`derived_from`),
-   * tools used,
-   * key parameters (e.g., D8 threshold).
-4. Validate locally with:
+Integrity & CI
+	•	Checksums: .sha256 for each artifact (verified in CI).
+	•	STAC Validation: All items validated against STAC 1.0 schema in CI.
+	•	Containers: Workflows run in Docker images with GDAL + WhiteboxTools + Python pinned by digest.
+	•	QC: Visual QA in QGIS; compare extracted streams vs. NHD high-res; spot-check sinks & flats.
 
-   ```bash
-   make validate-hydro
-   ```
-5. Submit a Pull Request including:
+Caveats
+	•	Flat prairie zones may require breach-depressions or least-cost carving; document chosen method in metadata/*.json.
+	•	When mixing 1 m and 10–30 m DEMs, maintain separate products or resample explicitly—record resampling kernel & scale in metadata.
 
-   * data sources & licenses,
-   * description of purpose,
-   * visualization suggestions (color ramp, legend).
+⸻
 
----
+🧠 Contributing New Hydrology Data
+	1.	Place files (COG GeoTIFF or GeoJSON) in this folder with clear, consistent names.
+	2.	Create metadata in metadata/ (STAC-aligned JSON) and a .sha256 in checksums/.
+	3.	Add DERIVATION.md summarizing:
+	•	Inputs (derived_from), sources & licenses
+	•	Tools & versions (e.g., WBT 2.2.0, GDAL 3.8.x)
+	•	Key params (e.g., accumulation thresholds, breach/fill options)
+	4.	Validate locally
 
-## 📖 References
+make validate-hydro
 
-* **WhiteboxTools:** [https://www.whiteboxgeo.com/manual/wbt_book/hydro.html](https://www.whiteboxgeo.com/manual/wbt_book/hydro.html)
-* **TauDEM (Hydrologic Modeling):** [https://hydrology.usu.edu/taudem/](https://hydrology.usu.edu/taudem/)
-* **GDAL Utilities:** [https://gdal.org/](https://gdal.org/)
-* **USGS NHD Dataset:** [https://www.usgs.gov/national-hydrography](https://www.usgs.gov/national-hydrography)
-* **Kansas DASC GIS Hub:** [https://hub.kansasgis.org](https://hub.kansasgis.org)
-* **STAC Spec 1.0:** [https://stacspec.org](https://stacspec.org)
-* **MCP Documentation:** [`docs/standards/`](../../../docs/standards/)
+	5.	Open a PR including:
+	•	Purpose & intended derivatives (streams, basins, flood work)
+	•	STAC snippet(s) and any style guidance (ramps, legends)
+	•	Screenshots/GIFs for reviewer QC (optional but helpful)
 
----
+⸻
+
+📖 References
+	•	WhiteboxTools (Hydrology): https://www.whiteboxgeo.com/manual/wbt_book/hydro.html
+	•	TauDEM: https://hydrology.usu.edu/taudem/
+	•	GDAL: https://gdal.org/
+	•	USGS National Hydrography Dataset (NHD): https://www.usgs.gov/national-hydrography
+	•	Kansas DASC GIS Hub: https://hub.kansasgis.org
+	•	STAC 1.0 Spec: https://stacspec.org
+	•	Project Standards (MCP): docs/standards/
+
+⸻
+
 
 <div align="center">
 
-*“From high plains to river valleys — these grids trace the flow that carved Kansas’s landscape.”*
+
+“From high plains to river valleys — these grids trace the flow that carved Kansas’s landscape.”
 
 </div>
-```
-
