@@ -1,24 +1,3 @@
-```yaml
----
-name: 🗃️ Data Request
-about: Propose adding or integrating a new dataset into the Kansas Frontier Matrix (KFM) repository.
-title: "[DATA REQUEST] <Dataset Name or Theme>"
-labels: ["data-request", "needs-review", "triage"]
-assignees: []
-version: "v2.1.0"
-last_updated: "2025-10-10"
-tags: ["data", "integration", "stac", "manifest", "provenance"]
-governance:
-  requires_license_check: true
-  requires_checksum: true
-  reviewers_required: 2
-mcp:
-  documentation_required: true
-  provenance_required: true
-  validation_required: true
----
-```
-
 <div align="center">
 
 # 🗃️ Kansas Frontier Matrix — Data Request Template
