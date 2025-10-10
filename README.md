@@ -71,11 +71,11 @@ data/
 4) Processing Workflow (GitHub-safe Mermaid)
 
 flowchart TD
-  A["Raw DEMs (1 m / 10–30 m)"] --> B["Fill Depressions<br/>WhiteboxTools FillDepressions"]
+  A["Raw DEMs<br/>1 m · 10–30 m"] --> B["Fill Depressions<br/>WhiteboxTools FillDepressions"]
   B --> C["D8 Flow Direction<br/>WhiteboxTools D8Pointer"]
   B --> D["D8 Flow Accumulation<br/>WhiteboxTools D8FlowAccumulation"]
-  C --> E["Seed Point Extraction<br/>Threshold Logic"]
-  D --> E["Seed Point Extraction<br/>Threshold Logic"]
+  C --> E["Seed Point Extraction<br/>Threshold logic"]
+  D --> E["Seed Point Extraction<br/>Threshold logic"]
   F["NLCD Water + NHD Hydrography"] --> G["Water Mask<br/>GDAL Calc"]
   B --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
   C --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
