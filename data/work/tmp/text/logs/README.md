@@ -8,8 +8,11 @@ and QA/QC workflows — enabling transparency and traceability throughout the Ka
 text and document processing pipelines.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../../LICENSE)
 
 </div>
 
@@ -20,14 +23,14 @@ text and document processing pipelines.
 The `data/work/tmp/text/logs/` directory temporarily stores **pipeline logs**  
 created during ETL and natural language processing (NLP) operations.  
 
-These logs record:
+These logs document:
 - OCR extraction, cleaning, and normalization steps  
 - NLP processes such as tokenization, summarization, and entity extraction  
 - Validation reports for text quality and schema conformity  
 - Metadata and checksum verification events  
 
 Logs are **ephemeral** — automatically generated and deleted during ETL runs —  
-but they ensure full transparency in the transformation of textual data from raw source to structured output.
+but ensure full transparency in the transformation of textual data from raw source to structured output.
 
 ---
 
@@ -148,6 +151,7 @@ Permanent files and validated metadata reside in:
 | Version | Date       | Summary                                                 |
 | :------ | :--------- | :------------------------------------------------------ |
 | v1.0    | 2025-10-04 | Initial creation of text ETL and NLP log documentation. |
+| v1.0.1  | 2025-10-09 | Added YAML metadata, JSON-LD schema, and MCP badges.    |
 
 ---
 
