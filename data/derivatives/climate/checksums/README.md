@@ -1,29 +1,33 @@
 <div align="center">
 
+# 🧾 Kansas Frontier Matrix — Climate Derivative Checksums  
+`data/derivatives/climate/checksums/`
 
-🧾 Climate Derivative Checksums
+**Purpose:** Provide reproducible, machine-verifiable integrity for climate-derivative artifacts  
+(COG · GeoJSON · Parquet · CSV) produced by the ETL pipeline.
 
-data/derivatives/climate/checksums/
-
-Purpose: provide reproducible, machine-verifiable integrity for climate derivative artifacts (COGs, GeoJSON, Parquet, CSV) produced by the ETL pipeline.
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-brightgreen)](../../../../../docs/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC-BY%204.0-lightgrey)](../../../../../LICENSE)
 
 </div>
 
+---
 
+## 📚 Overview
 
-⸻
+This directory stores **SHA-256 checksum manifests** for all climate-derivative outputs under  
+`data/derivatives/climate/ …`.  
+Checksums function as **integrity anchors** across KFM’s full chain — **ETL → STAC → Knowledge Graph → API → Web UI** — ensuring that every artifact used in research or visualization can be independently verified and reproduced.
 
-📚 Overview
+---
 
-This folder stores SHA-256 checksum manifests for climate derivative outputs under data/derivatives/climate/….
-Checksums are used throughout KFM’s ETL → STAC → Knowledge Graph → API → Web UI stack to guarantee artifact integrity, enable cache-safe rebuilds, and document provenance as required by the project’s MCP standards. The architecture and Makefile-driven pipeline explicitly call out checksums as first-class build artifacts and validation gates.
+## 🧭 When and where checksums are created
 
-⸻
-
-🧭 When and where checksums are created
-
-Mermaid (GitHub-safe) diagram of the checksum flow within the climate derivatives path:
-
+```mermaid
 flowchart TD
   A["Sources\nNOAA · Daymet · Normals"] --> B["ETL\nnormalize · reproject · derive"]
   B --> C["Climate Derivatives\nCOGs · GeoJSON · Parquet"]
@@ -38,7 +42,6 @@ flowchart TD
 <!-- END OF MERMAID -->
 
 
-KFM’s ETL/Makefile orchestrates standardized steps (fetch → process → checksums → STAC validate).
 
 ⸻
 
@@ -51,125 +54,98 @@ data/derivatives/climate/
     ├── daymet_1980_2024_tmin_ks_cog.tif.sha256
     ├── drought_index_annual_ks.parquet.sha256
     ├── station_normals_points.geojson.sha256
-    └── README.md  # this file
+    └── README.md
 
-Scope: this folder tracks only .sha256 manifests; binaries live one level up in data/derivatives/climate/.
-
-⸻
-
-🧪 Algorithm & file format
-	•	Algorithm: SHA-256 (hex digest)
-	•	Format: single line: <HEX_DIGEST>  <FILENAME>
-	•	Line endings: LF (\n)
-	•	Relative pathing: hash is computed over the binary file as stored in data/derivatives/climate/ (not over symlinks).
-	•	Why SHA-256? Modern, collision-resistant and widely available across toolchains (shasum, sha256sum, openssl dgst). KFM’s data architecture calls for checksums and metadata to ensure reproducibility and provenance across STAC and graph ingest.
+Only .sha256 files reside here; binaries live one level up in data/derivatives/climate/.
 
 ⸻
 
-🛠️ Generate & verify
+🧪 Algorithm & File Format
 
-Generate (from repo root)
+Property	Value/Explanation
+Algorithm	SHA-256 (hex digest)
+Format	<HEX_DIGEST>  <filename> (one line per file)
+Line Endings	LF (\n)
+Scope	Hashes are computed over raw binary files (not symlinks)
+Why SHA-256	Collision-resistant and portable across toolchains (sha256sum, shasum -a 256, openssl dgst)
 
-# generate checksums for selected climate derivatives
+
+⸻
+
+🛠️ Generate & Verify
+
+Generate
+
 cd data/derivatives/climate
-for f in *.tif *.tif.cog *.parquet *.geojson *.csv; do
+for f in *.tif *.parquet *.geojson *.csv; do
   [ -f "$f" ] || continue
   shasum -a 256 "$f" > "checksums/${f}.sha256"
 done
 
-Prefer shasum -a 256 (macOS) or sha256sum (GNU coreutils). Either yields a hex digest compatible with our CI verification.
-
-Verify (from repo root)
+Verify
 
 cd data/derivatives/climate
-# verify all checksums in the folder
 for c in checksums/*.sha256; do
   base=$(basename "$c" .sha256)
-  if command -v sha256sum >/dev/null 2>&1; then
-    sha256sum -c "checksums/${base}.sha256"
-  else
-    # Portable check for macOS 'shasum'
-    diff <(shasum -a 256 "$base" | awk '{print $1}') <(awk '{print $1}' "checksums/${base}.sha256")
-  fi
+  sha256sum -c "checksums/${base}.sha256"
 done
 
-Makefile target (convention)
-
-KFM uses a Makefile-driven pipeline; checksum generation commonly occurs after processing and before STAC validation. You may expose a helper target such as:
-
-checksums:
-	@cd data/derivatives/climate && \
-	for f in *.tif *.parquet *.geojson *.csv; do \
-	  [ -f "$$f" ] || continue; \
-	  shasum -a 256 "$$f" > "checksums/$$f.sha256"; \
-	done
-
-The KFM architecture documents the Makefile-orchestrated flow and integrity gates (checksums + STAC validation).
 
 ⸻
 
-🔗 STAC integration (provenance)
+🔗 STAC Integration (Provenance)
 
-Each climate derivative asset is described in STAC with:
-	•	assets.<key>.href → relative path to the artifact
-	•	assets.<key>.checksum:sha256 → hex digest (from this folder)
-	•	properties['kfm:provenance'] → optional link to source ids in data/sources/ and the generating ETL task
+Each climate asset’s STAC item includes its digest for traceability:
 
-Why: STAC metadata makes derivatives discoverable and verifiable in downstream tooling and the API/graph.
+Key	Example
+assets.<key>.href	data/derivatives/climate/daymet_1980_2024_tmin_ks_cog.tif
+assets.<key>.checksum:sha256	fa9c…​3b2d
+properties['kfm:provenance']	data/sources/daymet.json
 
-KFM treats STAC as the canonical catalog for processed layers; checksums are used as validation gates in CI/STAC workflows.
-
-⸻
-
-🧩 Knowledge Graph + API usage
-	•	During graph load, we attach checksum_sha256 to asset nodes/edges to preserve evidential provenance and enable end-to-end validation.
-	•	The API can expose a HEAD/GET metadata route to return the checksum for a requested asset, enabling client-side verification before display or analysis. (See KFM API/Frontend docs).
+Checksums act as CI validation gates in the stac-validate workflow.
 
 ⸻
 
-🧱 Naming conventions
+🧩 Knowledge Graph & API Usage
+	•	checksum_sha256 properties attach to asset nodes in Neo4j for evidential provenance.
+	•	API route GET /api/assets/{id}/checksum returns the digest for client-side validation.
+
+⸻
+
+🧱 Naming Conventions
 
 Pattern	Example	Notes
-<dataset>_<temporal>_<var>_ks_cog.tif.sha256	daymet_1980_2024_tmin_ks_cog.tif.sha256	Use inclusive year ranges; _ks for statewide coverage
-<dataset>_<period>_<name>.parquet.sha256	drought_index_annual_ks.parquet.sha256	Parquet for tabular derivatives
-<dataset>_<layer>.geojson.sha256	station_normals_points.geojson.sha256	Points/lines/polygons suffix helps readers
-<dataset>_<period>_<var>.csv.sha256	normals_1991_2020_prcp.csv.sha256	For small CSV derivatives
+<dataset>_<temporal>_<var>_ks_cog.tif.sha256	daymet_1980_2024_tmin_ks_cog.tif.sha256	Year range + KS suffix
+<dataset>_<period>_<name>.parquet.sha256	drought_index_annual_ks.parquet.sha256	Tabular derivative
+<dataset>_<layer>.geojson.sha256	station_normals_points.geojson.sha256	Vector layer naming
+<dataset>_<period>_<var>.csv.sha256	normals_1991_2020_prcp.csv.sha256	Small CSV outputs
 
 
 ⸻
 
 ✅ Policy
-	1.	Every derivative file must have a matching .sha256 before it is considered “publishable” (ready for STAC/graph).
-	2.	Never edit a checksum file by hand—recompute after any transformation.
-	3.	CI will fail if a referenced asset’s digest does not match its .sha256 or STAC checksum:sha256. (See STAC validate workflow.)
-	4.	Include checksum links in PRs affecting climate derivatives; reviewers verify locally or via CI logs.
+
+1️⃣ Every derivative file must have a matching .sha256 before publication.
+2️⃣ Never edit digests by hand — recompute after any modification.
+3️⃣ CI fails if hash ≠ STAC record.
+4️⃣ All PRs touching derivatives must include updated checksums.
 
 ⸻
 
-🧪 Example: recompute after regeneration
+🔒 Reproducibility & MCP Alignment
 
-# After updating a COG with a new overview pyramid:
-gdaladdo -r average data/derivatives/climate/daymet_1980_2024_tmin_ks_cog.tif 2 4 8 16
-shasum -a 256 data/derivatives/climate/daymet_1980_2024_tmin_ks_cog.tif \
-  > data/derivatives/climate/checksums/daymet_1980_2024_tmin_ks_cog.tif.sha256
-
+Checksums embody KFM’s Master Coder Protocol principles — verifiable data integrity, traceable provenance, and container-reproducible ETL runs across data/sources/, data/processed/, and data/stac/.
 
 ⸻
 
-🔒 Reproducibility & MCP alignment
-	•	Checksums are part of KFM’s reproducible ETL and open data posture. The data/file architecture and monorepo design emphasize provenance, versioning, and integrity across data/sources/, data/processed/, and data/stac/.
-	•	Architecture docs show checksums in the canonical flow and integrity checks in CI.
+🧱 Related Docs
+	•	docs/architecture.md · docs/data-architecture.md
+	•	data/stac/catalog.json (STAC entries with checksum:sha256)
+	•	Monorepo Design → Integrity Gates section
 
 ⸻
 
-🧱 Related docs
-	•	Architecture (root): docs/ → KFM Architecture / Data Architecture / Monorepo
-	•	Data architecture: rationale for data/sources, data/processed, data/stac and integrity gates.
-	•	STAC catalog: data/stac/ items (ensure checksum:sha256)
+🗓 Version History
 
-⸻
-
-🗓 Version history
-	•	0.1.0 (2025-10-10): Initial checksum policy, naming, examples, and STAC integration.
-
-⸻
+Version	Date	Notes
+0.1.0	2025-10-10	Initial checksum policy and examples
