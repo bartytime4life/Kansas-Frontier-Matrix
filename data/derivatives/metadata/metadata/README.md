@@ -52,10 +52,31 @@ flowchart TD
 🗂️ Directory Layout
 
 metadata/
-├── climate_metadata_summary.json
-├── hydrology_metadata_summary.json
-├── hazards_metadata_summary.json
-├── landcover_metadata_summary.json
+├── climate/
+│   ├── climate_metadata_summary.json
+│   └── README.md
+│
+├── hydrology/
+│   ├── hydrology_metadata_summary.json
+│   └── README.md
+│
+├── hazards/
+│   ├── hazards_metadata_summary.json
+│   └── README.md
+│
+├── landcover/
+│   ├── landcover_metadata_summary.json
+│   └── README.md
+│
+├── terrain/
+│   ├── terrain_metadata_summary.json
+│   └── README.md
+│
+├── schema/
+│   ├── domain_metadata_summary.schema.json
+│   ├── global_derivative_registry.schema.json
+│   └── README.md
+│
 └── README.md
 
 Each file acts as a domain-level metadata summary, describing all derivative datasets contained under that category
