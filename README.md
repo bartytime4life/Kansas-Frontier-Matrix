@@ -11,20 +11,30 @@
 [![License](https://img.shields.io/badge/license-MIT%20(code)%20%7C%20CC--BY--4.0%20(data)-blue)](../../../LICENSE)
 
 **Hydrologically conditioned DEMs, flow direction, accumulation, and water masks**  
-powering **reproducible watershed and flood modeling** across Kansas.
+powering **reproducible watershed, stream, and flood modeling** across Kansas.
 
 </div>
 
 ---
 
 ## 🌊 Overview
-Processed hydrologic layers generated from DEM preprocessing, flow-routing, and terrain conditioning.  
-They provide the base data for **stream extraction, basin delineation, flood simulation,** and long-term  
-**geomorphologic and climate-hydrology analyses**.
 
-**Sources:** LiDAR 1 m DEMs (Kansas DASC / USGS 3DEP), historic 10–30 m DEMs, NLCD Water, NHD hydrography, GNIS features  
-**Formats:** COG GeoTIFF (rasters) · GeoJSON (vectors) · EPSG:4326 (WGS84)  
-**Catalog:** Indexed under `data/stac/items/hydro_*` for discovery and API access.  
+This directory contains **processed hydrologic layers** produced from DEM preprocessing,  
+flow-routing, and terrain conditioning workflows. These form the geospatial base for:
+
+- Stream network extraction & basin delineation  
+- Flood and runoff modeling  
+- Watershed & terrain morphology analysis  
+- Historical hydrology comparison and climate-hydrology modeling  
+
+**Primary Sources:**  
+- LiDAR 1 m DEMs (Kansas DASC / USGS 3DEP)  
+- Historic 10–30 m DEMs  
+- NLCD Water and NHD Hydrography layers  
+- GNIS geographic features  
+
+**Formats:** COG GeoTIFF (rasters) • GeoJSON (vectors) • EPSG 4326 (WGS84)  
+**Indexed In:** `data/stac/items/hydro_*` for discovery, validation, and API access  
 
 ---
 
@@ -73,7 +83,7 @@ Stream Seeds	stream_seed_points.geojson	Candidate outlets / pour points for basi
     "title": "Flow Direction (D8) – Kansas LiDAR DEM",
     "datetime": "2020-01-01T00:00:00Z",
     "processing:software": "WhiteboxTools 2.2.0",
-    "mcp_provenance": "sha256:4be51c…",
+    "mcp_provenance": "sha256:4be51c...",
     "derived_from": ["data/processed/hydrology/dem_filled_1m_ks.tif"],
     "license": "CC-BY-4.0"
   },
@@ -90,13 +100,12 @@ Stream Seeds	stream_seed_points.geojson	Candidate outlets / pour points for basi
 
 ⸻
 
-## ⚙️ Processing Workflow
+⚙️ Processing Workflow
 
-```mermaid
 flowchart TD
   A["Raw DEMs (1 m / 10–30 m)"] --> B["Fill Depressions\nWhiteboxTools FillDepressions"]
-  B --> C["D8 Flow Direction\nD8Pointer"]
-  B --> D["D8 Flow Accumulation\nD8FlowAccumulation"]
+  B --> C["D8 Flow Direction\nWhiteboxTools D8Pointer"]
+  B --> D["D8 Flow Accumulation\nWhiteboxTools D8FlowAccumulation"]
   C & D --> E["Seed Point Extraction\nThreshold Logic"]
   F["NLCD Water + NHD Hydrography"] --> G["Water Mask\nGDAL Calc"]
   B & C & D & E & G --> H["Reproject → EPSG:4326\nGDAL Warp"]
@@ -128,9 +137,9 @@ QA/QC	Visual inspection (QGIS vs NHD streams)
 
 1️⃣ Add new COG or GeoJSON outputs.
 2️⃣ Create matching STAC metadata (metadata/) and checksums (checksums/).
-3️⃣ Record inputs, parameters, and software in DERIVATION.md.
-4️⃣ Run make validate-hydro locally to verify.
-5️⃣ Submit PR with sources, licenses, and (preferably) preview image.
+3️⃣ Record inputs and software in DERIVATION.md.
+4️⃣ Run make validate-hydro to verify.
+5️⃣ Submit PR with sources, licenses, and (preferably) a preview image.
 
 ✅ All data must pass STAC and checksum validation before merge.
 
@@ -139,9 +148,9 @@ QA/QC	Visual inspection (QGIS vs NHD streams)
 📖 References
 	•	WhiteboxTools Manual
 	•	TauDEM Toolkit
-	•	GDAL Docs
+	•	GDAL Documentation
 	•	USGS NHD
-	•	Kansas DASC Hub
+	•	Kansas DASC Geoportal
 	•	STAC 1.0 Specification
 	•	Master Coder Protocol Docs
 
