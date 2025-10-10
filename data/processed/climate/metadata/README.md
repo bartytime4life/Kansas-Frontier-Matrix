@@ -1,10 +1,11 @@
 <div align="center">
 
-# 🌦️ Kansas-Frontier-Matrix — Processed Climate Metadata (`data/processed/climate/metadata/`)
+# 🌦️ Kansas Frontier Matrix — Processed Climate Metadata  
+`data/processed/climate/metadata/`
 
-**Mission:** Maintain **metadata records** for all processed climate datasets — documenting provenance,  
-data lineage, spatial and temporal coverage, and processing software — ensuring every climate grid or  
-timeseries in Kansas Frontier Matrix is fully auditable and reproducible.
+**Mission:** Maintain authoritative **metadata records** for all processed climate datasets — documenting  
+provenance, spatial/temporal coverage, and processing lineage — to ensure every dataset in Kansas Frontier Matrix  
+is **auditable, interoperable, and reproducible** in accordance with MCP and STAC standards.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
@@ -25,19 +26,20 @@ timeseries in Kansas Frontier Matrix is fully auditable and reproducible.
 - [STAC Integration](#stac-integration)
 - [Validation & Provenance](#validation--provenance)
 - [Adding or Updating Metadata](#adding-or-updating-metadata)
+- [Version History](#version-history)
 - [References](#references)
 
 ---
 
 ## 🧠 Overview
 
-This directory contains **JSON metadata records** for all processed climate datasets  
-found in `data/processed/climate/`. Each file describes a specific dataset’s attributes —  
-including source lineage, temporal coverage, processing tools, and checksum provenance —  
-providing a transparent record for scientific reproducibility.
+This folder stores **JSON metadata records** describing each processed climate dataset in  
+`data/processed/climate/`. Every file documents the dataset’s **lineage**, **source inputs**,  
+**processing tools**, and **checksum provenance**, establishing a transparent, machine-readable record  
+of the entire ETL workflow.
 
-These metadata files act as the authoritative **climate dataset registry** within  
-the Kansas Frontier Matrix framework, used to populate the STAC catalog and MCP provenance chain.
+These metadata files serve as the canonical registry for the **Climate Collection** within KFM,  
+automatically synchronized to the STAC catalog and linked to checksums and source datasets via MCP provenance.
 
 ---
 
@@ -54,21 +56,19 @@ data/
             ├── climate_normals_1991_2020.json
             ├── template.json
             └── README.md
-````
 
-Each file documents one processed dataset stored in `data/processed/climate/`.
-A `template.json` is provided for new metadata creation following MCP + STAC schemas.
+Each file represents one dataset in data/processed/climate/, describing its provenance,
+lineage, and processing configuration. template.json provides a scaffold for new metadata.
 
----
+⸻
 
-## 🧩 Metadata Schema
+🧩 Metadata Schema
 
-Each metadata file follows the **MCP-STAC hybrid schema** shared across Kansas Frontier Matrix.
-It defines the dataset’s provenance, spatial-temporal extent, and reproducibility context.
+Each metadata file conforms to the MCP–STAC hybrid schema, blending reproducibility metadata (MCP)
+with spatial/temporal discoverability (STAC).
 
-### Example
+Example JSON
 
-```json
 {
   "type": "Feature",
   "stac_version": "1.0.0",
@@ -76,18 +76,15 @@ It defines the dataset’s provenance, spatial-temporal extent, and reproducibil
   "properties": {
     "title": "Total Annual Precipitation (1895–2024) – Kansas",
     "datetime": "2024-01-01T00:00:00Z",
-    "description": "Gridded total annual precipitation for Kansas aggregated from NOAA and PRISM datasets (1895–2024).",
+    "description": "Gridded total annual precipitation for Kansas aggregated from NOAA and PRISM datasets.",
     "processing:software": "Python + xarray + rasterio + GDAL 3.8.0",
-    "mcp_provenance": "sha256:4bd72e...",
+    "mcp_provenance": "sha256:4bd72e4e...",
     "license": "CC-BY 4.0",
     "derived_from": [
       "data/raw/noaa_precip_1895_2024.csv",
       "data/raw/prism_precip_monthly.nc"
     ],
-    "temporal_extent": {
-      "start": "1895-01-01",
-      "end": "2024-12-31"
-    },
+    "temporal_extent": { "start": "1895-01-01", "end": "2024-12-31" },
     "spatial_extent": [-102.05, 36.99, -94.59, 40.01],
     "keywords": ["precipitation", "climate", "Kansas", "PRISM", "NOAA"]
   },
@@ -99,93 +96,95 @@ It defines the dataset’s provenance, spatial-temporal extent, and reproducibil
     }
   }
 }
-```
 
-### Required Metadata Fields
+Required Fields
 
-| Field                 | Description                               | Example                                          |
-| --------------------- | ----------------------------------------- | ------------------------------------------------ |
-| `id`                  | Unique dataset identifier                 | `"temp_mean_annual_1895_2024"`                   |
-| `title`               | Human-readable dataset title              | `"Mean Annual Temperature (1895–2024) – Kansas"` |
-| `description`         | Short description of dataset content      | `"Derived from NOAA and PRISM sources"`          |
-| `datetime`            | Processing date or dataset reference date | `"2024-01-01T00:00:00Z"`                         |
-| `derived_from`        | Source datasets                           | `["data/raw/prism_temp.nc"]`                     |
-| `processing:software` | Tools used for data creation              | `"Python + xarray + rasterio"`                   |
-| `mcp_provenance`      | SHA-256 checksum reference                | `"sha256:de23a9..."`                             |
-| `license`             | License type                              | `"CC-BY 4.0"`                                    |
-| `spatial_extent`      | Bounding box [W, S, E, N]                 | `[-102.05, 36.99, -94.59, 40.01]`                |
-| `temporal_extent`     | Start and end date                        | `{"start": "1895-01-01", "end": "2024-12-31"}`   |
+Field	Description	Example
+id	Unique dataset identifier	"temp_mean_annual_1895_2024"
+title	Descriptive dataset title	"Mean Annual Temperature (1895–2024) – Kansas"
+description	Dataset summary	"Derived from NOAA NCEI and PRISM data"
+datetime	Reference or processing date	"2024-01-01T00:00:00Z"
+derived_from	Source datasets	["data/raw/prism_temp_monthly.nc"]
+processing:software	Tools used in generation	"Python + xarray + rasterio"
+mcp_provenance	Checksum reference	"sha256:de23a9..."
+license	Dataset license	"CC-BY 4.0"
+spatial_extent	Bounding box [W, S, E, N]	[-102.05, 36.99, -94.59, 40.01]
+temporal_extent	Coverage range	{"start": "1895-01-01", "end": "2024-12-31"}
 
----
 
-## 🌐 STAC Integration
+⸻
 
-Each metadata JSON is synchronized with the project-wide **STAC catalog** under
-`data/stac/items/climate_*`. These entries allow:
+🌐 STAC Integration
 
-* Spatial filtering of climate datasets by bounding box
-* Temporal filtering by observation period
-* Search by tag (e.g., “precipitation”, “drought”)
-* Direct data linking for web applications and notebooks
+Each metadata record is mirrored as a STAC Item under data/stac/items/climate_*.
+This allows:
+	•	Spatial and temporal filtering of datasets
+	•	Keyword-based discovery ("precipitation", "drought", etc.)
+	•	Automated ingestion into visualization and API layers
+	•	Direct provenance linking to raw and derivative datasets
 
-The project’s CI automatically rebuilds STAC indexes whenever new metadata is added.
+🧩 The STAC index rebuilds automatically via GitHub Actions upon metadata additions.
 
----
+⸻
 
-## 🔍 Validation & Provenance
+🔍 Validation & Provenance
 
-Validation steps ensure that each file adheres to STAC and MCP standards:
+Validation ensures metadata adheres to MCP and STAC schema standards.
+	1.	Schema Validation: JSON checked for required structure and types.
+	2.	Checksum Match: mcp_provenance hash validated against .sha256 files.
+	3.	Temporal Extent Check: Confirms metadata coverage aligns with dataset content.
+	4.	License Verification: Ensures license inheritance from source datasets.
 
-1. **JSON Schema Validation:** Confirms required fields and value types.
-2. **Checksum Validation:** Confirms the `mcp_provenance` hash matches the `.sha256` checksum file.
-3. **Temporal Validation:** Ensures `temporal_extent` aligns with dataset content.
-4. **License Compliance:** Verifies declared licenses align with source datasets.
+Run validations locally:
 
-Run local validation:
-
-```bash
 make validate-climate
-```
 
-Results are logged in `validation_report.json` in this directory.
+A validation_report.json is generated with summary results.
 
----
+⸻
 
-## 🧠 Adding or Updating Metadata
+🧠 Adding or Updating Metadata
+	1.	Copy template.json and rename to the dataset ID.
+	2.	Fill all required fields (see schema).
+	3.	Include dataset checksum (mcp_provenance).
+	4.	Validate with:
 
-1. Copy `template.json` → rename appropriately (e.g. `temp_mean_annual_1895_2024.json`).
-2. Fill in all required fields (see table above).
-3. Add checksum from the processed file’s `.sha256`.
-4. Validate:
+make validate-climate
 
-   ```bash
-   make validate-climate
-   ```
-5. Commit and open a Pull Request. CI/CD will automatically validate schema compliance.
 
-If data are reprocessed, update both:
+	5.	Commit both metadata and data updates, then open a Pull Request.
+CI/CD automatically enforces STAC and MCP compliance.
 
-* The dataset’s checksum (`.sha256`)
-* The metadata `mcp_provenance` and `datetime` fields
+When reprocessing data: update both the .sha256 and the metadata mcp_provenance and datetime.
 
----
+⸻
 
-## 📖 References
+📅 Version History
 
-* **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
-* **NOAA National Centers for Environmental Information (NCEI):** [https://www.ncei.noaa.gov/](https://www.ncei.noaa.gov/)
-* **PRISM Climate Group:** [https://prism.oregonstate.edu/](https://prism.oregonstate.edu/)
-* **NASA Daymet:** [https://daac.ornl.gov/DAYMET/](https://daac.ornl.gov/DAYMET/)
-* **xarray Documentation:** [https://docs.xarray.dev/](https://docs.xarray.dev/)
-* **JSON Schema Specification:** [https://json-schema.org](https://json-schema.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../../docs/standards/)
+Version	Date	Summary
+1.0.1	2025-10-10	Enhanced schema documentation and CI validation integration.
+1.0.0	2025-10-04	Initial processed climate metadata documentation and files.
 
----
+
+⸻
+
+📖 References
+	•	STAC Specification 1.0: https://stacspec.org
+	•	NOAA NCEI: https://www.ncei.noaa.gov/
+	•	PRISM Climate Group: https://prism.oregonstate.edu/
+	•	NASA Daymet: https://daac.ornl.gov/DAYMET/
+	•	xarray: https://docs.xarray.dev/
+	•	JSON Schema: https://json-schema.org
+	•	MCP Standards: ../../../../docs/standards/
+
+⸻
+
 
 <div align="center">
 
-*“Every temperature, every raindrop — these metadata records preserve the provenance of Kansas’s climate story.”*
+
+“Every temperature, every raindrop — these metadata records preserve the provenance of Kansas’s climate story.”
+📍 data/processed/climate/metadata/
 
 </div>
 ```
-
