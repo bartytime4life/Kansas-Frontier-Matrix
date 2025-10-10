@@ -7,10 +7,10 @@
 that power the Kansas Frontier Matrix (KFM) — integrating Kansas’s geography, climate, hydrology,  
 land use, and history into a unified, reproducible open-data ecosystem.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](.github/workflows/trivy.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
 [![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
 
@@ -45,24 +45,23 @@ data/
 │
 ├── sources/                # JSON manifests describing raw data endpoints
 ├── stac/                   # STAC 1.0 catalog and items for spatial assets
-└── checksums/              # Project-wide checksum manifest (data integrity)
+└── checksums/              # Project-wide checksum manifests (data integrity)
 ````
 
-> **Tip:** Each subdirectory contains its own `README.md` following the MCP documentation standard,
-> with schema definitions, workflow descriptions, and STAC metadata examples.
+> **Tip:** Each subdirectory includes a local `README.md` (MCP format) with schema notes, ETL steps, and STAC examples.
 
 ---
 
 ## 🧩 Data Model & Provenance Chain
 
-| Stage            | Directory                      | Purpose                                                                         |
-| :--------------- | :----------------------------- | :------------------------------------------------------------------------------ |
-| **Source**       | `data/sources/`                | Defines origin, license, and retrieval method for each dataset.                 |
-| **Raw**          | `data/raw/`                    | Immutable snapshots of downloaded or ingested source data.                      |
-| **Processed**    | `data/processed/`              | Cleaned, transformed, or derived datasets ready for analysis and visualization. |
-| **Metadata**     | `data/processed/**/metadata/`  | STAC and schema metadata files describing processed outputs.                    |
-| **Checksums**    | `data/processed/**/checksums/` | SHA-256 hashes verifying data integrity and reproducibility.                    |
-| **STAC Catalog** | `data/stac/`                   | Global catalog of all spatiotemporal assets for indexing and discovery.         |
+| Stage            | Directory                      | Purpose                                                                          |
+| :--------------- | :----------------------------- | :------------------------------------------------------------------------------- |
+| **Source**       | `data/sources/`                | Defines origin, license, and retrieval method for each dataset.                  |
+| **Raw**          | `data/raw/`                    | Immutable snapshots of downloaded or ingested source data.                       |
+| **Processed**    | `data/processed/`              | Cleaned, transformed, or derived datasets ready for analysis/visualization.      |
+| **Metadata**     | `data/processed/**/metadata/`  | STAC/schema metadata files describing processed outputs (thumbnails, JSON, etc.) |
+| **Checksums**    | `data/processed/**/checksums/` | SHA-256 hashes verifying data integrity and reproducibility.                     |
+| **STAC Catalog** | `data/stac/`                   | Global catalog of all spatiotemporal assets for indexing and discovery.          |
 
 ---
 
@@ -82,21 +81,19 @@ data/
 ## ⚙️ Data Processing Workflow
 
 1. **Ingest** — Fetch raw datasets via API, FTP, or local archives (`data/sources/`).
-2. **Transform** — Standardize CRS, normalize attributes, clean and format.
+2. **Transform** — Standardize CRS, normalize attributes, clean/format to open standards.
 3. **Derive** — Create new layers (e.g., hillshade, slope, hydrologic boundaries).
-4. **Validate** — Apply schema and checksum validation through CI/CD.
-5. **Catalog** — Register each dataset in the STAC catalog (`data/stac/`).
-6. **Visualize** — Generate thumbnails and previews for web UI integration.
+4. **Validate** — Apply schema and checksum validation via CI/CD.
+5. **Catalog** — Register each dataset in STAC (`data/stac/`).
+6. **Visualize** — Generate thumbnails and previews for the web UI.
 
-**Automation:**
-All workflows are reproducible using Makefile commands (e.g., `make terrain`, `make stac`, `make site`)
-and are continuously validated in GitHub Actions.
+**Automation:** Reproducible via Make (e.g., `make terrain`, `make stac`, `make site`) with continuous validation in GitHub Actions.
 
 ---
 
 ## 🧰 Example: STAC Metadata Reference
 
-Each dataset is represented by a STAC item describing its content, source, and spatial extent.
+Each dataset is represented by a STAC Item describing its content, source, and spatial extent.
 
 ```json
 {
@@ -109,35 +106,57 @@ Each dataset is represented by a STAC item describing its content, source, and s
     "license": "Public Domain (USGS 3DEP)",
     "themes": ["terrain", "elevation"],
     "providers": [
-      {"name": "USGS 3DEP", "roles": ["producer"]},
-      {"name": "Kansas DASC", "roles": ["processor"]}
+      { "name": "USGS 3DEP", "roles": ["producer"] },
+      { "name": "Kansas DASC", "roles": ["processor"] }
     ]
   },
   "assets": {
     "data": {
-      "href": "processed/terrain/ks_1m_dem_2018_2020.tif",
+      "href": "../processed/terrain/ks_1m_dem_2018_2020.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["data"]
     },
     "thumbnail": {
-      "href": "processed/terrain/metadata/thumbnails/ks_1m_dem_2018_2020.png"
+      "href": "../processed/terrain/metadata/thumbnails/ks_1m_dem_2018_2020.png",
+      "type": "image/png",
+      "roles": ["thumbnail"]
     }
   },
   "bbox": [-102.05, 36.99, -94.59, 40.00]
 }
 ```
 
+> **Note:** When Items live under `data/stac/`, asset `href` values are typically **relative** (e.g., `../processed/...`) for portability.
+
+---
+
+## 🧪 Make Targets (Data-Focused)
+
+```bash
+# Fetch sources declared in data/sources/*.json → data/raw/
+make fetch
+
+# Convert rasters→COG, vectors→GeoJSON (EPSG:4326), build derivatives → data/processed/
+make cogs vectors
+
+# Build and validate STAC catalog → data/stac/
+make stac
+
+# Generate/verify SHA-256 sidecars under data/processed/**/checksums/
+make checksums
+```
+
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                           |
-| :---------------------- | :----------------------------------------------------------------------- |
-| **Documentation-first** | Every directory includes a README and STAC metadata.                     |
-| **Reproducibility**     | Data lineage preserved via ETL logs, checksums, and Makefile automation. |
-| **Open Standards**      | All formats are open (GeoTIFF, GeoJSON, Parquet, STAC, JSON Schema).     |
-| **Provenance**          | Source, processing, and output metadata tracked across all levels.       |
-| **Auditability**        | Continuous validation via GitHub Actions ensures transparency.           |
+| MCP Principle           | Implementation                                                          |
+| :---------------------- | :---------------------------------------------------------------------- |
+| **Documentation-first** | Each folder includes README + STAC examples and schema references.      |
+| **Reproducibility**     | ETL logs + checksums + Make automation preserve data lineage.           |
+| **Open Standards**      | GeoTIFF (COG), GeoJSON, Parquet, STAC, JSON Schema across all layers.   |
+| **Provenance**          | Source, processing, and output metadata tracked end-to-end.             |
+| **Auditability**        | CI validates schemas, checksums, and catalog integrity on every change. |
 
 ---
 
@@ -146,7 +165,7 @@ Each dataset is represented by a STAC item describing its content, source, and s
 * [SpatioTemporal Asset Catalog (STAC) 1.0.0](https://stacspec.org)
 * [Master Coder Protocol (MCP)](../docs/templates/)
 * [Cloud-Optimized GeoTIFF (COG)](https://www.cogeo.org/)
-* [GeoJSON Specification (RFC 7946)](https://datatracker.ietf.org/doc/html/rfc7946)
+* [GeoJSON (RFC 7946)](https://datatracker.ietf.org/doc/html/rfc7946)
 * [Apache Parquet](https://parquet.apache.org/)
 * [USGS 3DEP LiDAR Program](https://www.usgs.gov/3dep)
 * [Kansas Data Access & Support Center (DASC)](https://www.kansasgis.org/)
