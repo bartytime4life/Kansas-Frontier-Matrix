@@ -1,6 +1,7 @@
 <div align="center">
 
-# 🏔️ Kansas-Frontier-Matrix — Terrain Derivatives (`data/derivatives/terrain/`)
+# 🏔️ Kansas Frontier Matrix — Terrain Derivatives  
+`data/derivatives/terrain/`
 
 **Mission:** Curate and maintain all **terrain-derived raster products** — slope, aspect, curvature, hillshade,  
 and elevation composites — generated from canonical DEMs in `data/cogs/`.
@@ -31,12 +32,13 @@ and elevation composites — generated from canonical DEMs in `data/cogs/`.
 ---
 
 ## 🗺️ Overview
-This subdirectory contains **terrain analysis outputs** derived from Kansas’s statewide and regional  
-Digital Elevation Models (DEMs). These datasets quantify slope, aspect, hillshade, and surface morphology,  
-forming the foundation for hydrologic modeling, landform classification, and historical topography studies.
 
-All files follow **open geospatial standards** and are registered in the project’s  
-[STAC catalog](../../stac/) with complete provenance, license, and temporal metadata.
+This directory contains **terrain analysis products** derived from Kansas’s statewide and regional  
+**Digital Elevation Models (DEMs)**. These datasets quantify **slope, aspect, hillshade, and curvature**,  
+providing the physical foundation for hydrology, geomorphology, land use, and historical topography research.
+
+All data conform to **open geospatial standards** (GeoTIFF/COG, STAC, DCAT), and are fully documented  
+in the [STAC catalog](../../stac/) with provenance, checksum, and license metadata for each derivative.
 
 ---
 
@@ -46,52 +48,50 @@ All files follow **open geospatial standards** and are registered in the project
 data/
 └── derivatives/
     └── terrain/
-        ├── slope_1m_ks.tif              # Percent slope derived from 1-m LiDAR DEM
-        ├── aspect_1m_ks.tif             # Aspect (azimuth) in degrees
-        ├── curvature_1m_ks.tif          # Surface curvature (profile + plan)
-        ├── hillshade_1m_ks.tif          # Analytical hillshade (45° sun angle)
-        ├── elevation_10m_hist.tif       # Historic generalized DEM (10 m res)
+        ├── slope_1m_ks.tif              # Percent slope from 1-m LiDAR DEM
+        ├── aspect_1m_ks.tif             # Azimuth orientation of slope faces
+        ├── curvature_1m_ks.tif          # Combined plan/profile curvature
+        ├── hillshade_1m_ks.tif          # Analytical hillshade (45° illumination)
+        ├── elevation_10m_hist.tif       # Historical DEM reconstruction (10 m)
         ├── metadata/
-        │   ├── slope_1m_ks.json         # STAC item metadata
+        │   ├── slope_1m_ks.json
         │   ├── aspect_1m_ks.json
         │   └── hillshade_1m_ks.json
         ├── checksums/
         │   ├── slope_1m_ks.tif.sha256
         │   └── aspect_1m_ks.tif.sha256
         └── README.md                    # (this file)
-````
 
----
+🧩 Note: Each .tif has an associated .sha256 for integrity and a .json for STAC metadata.
 
-## 🌄 Core Terrain Products
+⸻
 
-| Product          | File                     | Description                                | Source DEM         | Units    | Format        |
-| ---------------- | ------------------------ | ------------------------------------------ | ------------------ | -------- | ------------- |
-| **Slope**        | `slope_1m_ks.tif`        | Rate of elevation change (percent rise)    | KS 1-m LiDAR       | %        | GeoTIFF (COG) |
-| **Aspect**       | `aspect_1m_ks.tif`       | Direction of slope faces (azimuth degrees) | KS 1-m LiDAR       | °        | GeoTIFF (COG) |
-| **Curvature**    | `curvature_1m_ks.tif`    | Combined plan/profile curvature            | KS 1-m LiDAR       | unitless | GeoTIFF (COG) |
-| **Hillshade**    | `hillshade_1m_ks.tif`    | Simulated shaded relief (45° sun)          | KS 1-m LiDAR       | DN 0–255 | GeoTIFF (COG) |
-| **Historic DEM** | `elevation_10m_hist.tif` | Reconstructed 19th-century DEM (10 m)      | USGS topo archives | m        | GeoTIFF       |
+🌄 Core Terrain Products
 
-All files are **Cloud-Optimized GeoTIFFs (COGs)** to support fast, range-based HTTP access and
-render seamlessly in MapLibreGL or GIS tools.
+Product	File	Description	Source DEM	Units	Format
+🟤 Slope	slope_1m_ks.tif	Rate of elevation change (% rise)	KS 1-m LiDAR	%	GeoTIFF (COG)
+🧭 Aspect	aspect_1m_ks.tif	Orientation of slope faces (azimuth)	KS 1-m LiDAR	°	GeoTIFF (COG)
+⛰ Curvature	curvature_1m_ks.tif	Combined plan/profile curvature	KS 1-m LiDAR	unitless	GeoTIFF (COG)
+🌞 Hillshade	hillshade_1m_ks.tif	Simulated illumination (45° azimuth, 315° sun)	KS 1-m LiDAR	DN 0–255	GeoTIFF (COG)
+🕰 Historic DEM	elevation_10m_hist.tif	Generalized 19th-century terrain model	USGS archives	m	GeoTIFF
 
----
+All raster outputs are Cloud-Optimized GeoTIFFs (COGs), designed for web streaming and rapid rendering
+in MapLibreGL, QGIS, and STAC-aware applications.
 
-## 🧩 STAC Metadata
+⸻
 
-Each raster layer is indexed as a STAC Item under `data/stac/items/terrain_*` with complete metadata.
-Example:
+🧩 STAC Metadata
 
-```json
+Each derivative raster is registered as a STAC Item with full spatial, temporal, and processing provenance.
+
 {
   "type": "Feature",
   "stac_version": "1.0.0",
   "id": "hillshade_1m_ks",
   "properties": {
-    "title": "Hillshade – Kansas LiDAR 1 m DEM",
+    "title": "Hillshade — Kansas LiDAR 1 m DEM",
     "datetime": "2020-01-01T00:00:00Z",
-    "description": "Analytical hillshade from Kansas 1 m LiDAR DEM, azimuth 315°, altitude 45°.",
+    "description": "Analytical hillshade generated from Kansas 1 m LiDAR DEM (azimuth 315°, altitude 45°).",
     "processing:software": "GDAL 3.8.0",
     "mcp_provenance": "sha256:fb2e5e…",
     "license": "CC-BY 4.0",
@@ -103,82 +103,79 @@ Example:
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["data"]
     }
-  },
-  "links": []
+  }
 }
-```
 
----
+🧠 Tip: Use consistent naming: terrain_<product>_<resolution>_<region> for IDs and filenames.
 
-## ⚙️ Processing Workflow
+⸻
 
-Terrain derivatives are generated from DEMs using reproducible **GDAL- and rasterio-based** workflows
-invoked via `Makefile` targets or Python scripts in `tools/terrain/`.
+⚙️ Processing Workflow
 
-Typical processing sequence:
+Terrain derivatives are generated through a deterministic, reproducible ETL pipeline using GDAL, rasterio,
+and Makefile automation (make terrain).
 
-```bash
-# 1. Compute slope (percent rise)
+Example sequence:
+
+# 1️⃣ Slope (% rise)
 gdaldem slope dem_1m_ks.tif slope_1m_ks.tif -s 111120
 
-# 2. Compute aspect (azimuth)
+# 2️⃣ Aspect (degrees)
 gdaldem aspect dem_1m_ks.tif aspect_1m_ks.tif -zero_for_flat yes
 
-# 3. Generate curvature
+# 3️⃣ Curvature (topographic roughness index)
 gdaldem TRI dem_1m_ks.tif curvature_1m_ks.tif
 
-# 4. Generate analytical hillshade
+# 4️⃣ Hillshade (az=315°, alt=45°)
 gdaldem hillshade dem_1m_ks.tif hillshade_1m_ks.tif -az 315 -alt 45 -z 1.0
-```
 
-All outputs are automatically tiled and converted to **COG** via `rio cogeo create`.
+All final rasters are tiled and converted to COG using:
 
----
+rio cogeo create <input>.tif <output>.tif --overview-level=5 --web-optimized
 
-## 🔁 Reproducibility & Validation
 
-* **Checksums:** `.sha256` sidecars verify file integrity.
-* **Metadata validation:** JSON metadata is tested in CI against the STAC 1.0 schema.
-* **Makefile targets:**
+⸻
 
-  * `make terrain` — rebuild all terrain derivatives.
-  * `make validate-terrain` — run metadata and checksum checks.
-* **Containerized build:** Terrain processing runs in a Dockerized GDAL environment for consistency.
-* **Visualization QA:** Each raster is previewed in QGIS and via `maplibre-gl` test tiles.
+🔁 Reproducibility & Validation
 
----
+Check	Description
+🧮 Checksums	Every .tif has a .sha256 file for byte-level integrity verification.
+🧾 Metadata Validation	All .json metadata validated against the STAC 1.0 schema via CI.
+🧰 Makefile Targets	make terrain (build) · make validate-terrain (QA).
+🐳 Dockerized Builds	Terrain processing runs in a standardized GDAL container.
+🛰 QA Visualization	Automated test tiles rendered with MapLibre for verification.
 
-## 🧠 Contributing New Terrain Layers
 
-1. Place the source DEM or derivative script in `data/cogs/` or `tools/terrain/`.
-2. Generate the raster as a COG GeoTIFF (WGS84 or EPSG:4326).
-3. Add STAC metadata JSON under `metadata/` and `.sha256` checksum under `checksums/`.
-4. Document your process in a short `DERIVATION.md` (inputs, parameters, software).
-5. Run:
+⸻
 
-   ```bash
-   make validate-terrain
-   ```
+🧠 Contributing New Terrain Layers
+	1.	Prepare Source: Place DEM or processing script in data/cogs/ or tools/terrain/.
+	2.	Process Raster: Output as COG GeoTIFF in EPSG:4326.
+	3.	Add Metadata: Create STAC JSON under metadata/, checksum under checksums/.
+	4.	Document: Add DERIVATION.md outlining parameters and sources.
+	5.	Validate:
 
-   to confirm schema and checksums pass.
-6. Submit a pull request with a clear description, data license, and visual style suggestion.
+make validate-terrain
 
----
 
-## 📖 References
+	6.	Submit PR: Include dataset summary, license, and suggested visualization style.
 
-* **GDAL DEM utilities:** [https://gdal.org/programs/gdaldem.html](https://gdal.org/programs/gdaldem.html)
-* **STAC Spec 1.0:** [https://stacspec.org](https://stacspec.org)
-* **COG Format:** [https://www.cogeo.org](https://www.cogeo.org)
-* **USGS 3DEP LiDAR for Kansas:** [https://www.usgs.gov/3DEP](https://www.usgs.gov/3DEP)
-* **Kansas DASC GIS Hub:** [https://hub.kansasgis.org](https://hub.kansasgis.org)
-* **MCP Documentation:** [`docs/standards/`](../../../docs/standards/)
+⸻
 
----
+📖 References
+	•	🗺 GDAL DEM Utilities: https://gdal.org/programs/gdaldem.html
+	•	📘 STAC Specification: https://stacspec.org
+	•	☁️ COG Format: https://www.cogeo.org
+	•	🛰 USGS 3DEP LiDAR: https://www.usgs.gov/3DEP
+	•	🧩 Kansas DASC GIS Hub: https://hub.kansasgis.org
+	•	📑 MCP Docs: docs/standards/
+
+⸻
+
 
 <div align="center">
 
-*“Every contour holds a story — from prairie swales to frontier bluffs, Kansas terrain is the canvas of history.”*
+
+“Every contour holds a story — from prairie swales to frontier bluffs, Kansas terrain is the canvas of history.”
 
 </div>
-```
