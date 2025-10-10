@@ -4,9 +4,7 @@
 
 **Path:** `.github/ISSUE_TEMPLATE/`
 
-**Mission:** Standardize **issue reporting, feature proposals, and data requests**
-to maintain **reproducibility**, **transparency**, and **high-quality collaboration**
-within the **Kansas Frontier Matrix (KFM)** project.
+**Mission:** Standardize **issue reporting, feature proposals, data requests, and governance topics** to keep KFM **reproducible, auditable, versioned, and MCP-compliant**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
@@ -15,17 +13,21 @@ within the **Kansas Frontier Matrix (KFM)** project.
 
 ---
 
+```yaml
+---
+title: "KFM • Issue Templates"
+version: "v2.0.0"
+last_updated: "2025-10-10"
+owners: ["@kfm-architecture", "@kfm-data", "@kfm-security"]
+maturity: "Production"
+tags: ["governance","issue-forms","triage","mcp","reproducibility","provenance"]
+license: "MIT"
+---
+```
+
 ## 📚 Overview
 
-The `.github/ISSUE_TEMPLATE/` directory defines **pre-formatted GitHub Issue templates**
-that ensure **structured, auditable, and reproducible communication** across KFM domains —
-including code, data, documentation, and research.
-
-Each template follows the **Master Coder Protocol (MCP)** philosophy:
-documentation-first, provenance-linked, and reproducibility-driven.
-
-Templates enforce completeness and consistency, helping contributors provide
-all necessary metadata and ensuring issues remain traceable throughout their lifecycle.
+`.github/ISSUE_TEMPLATE/` hosts **GitHub Issue Forms** that enforce **documentation-first**, **provenance-linked**, and **reproducibility-driven** reporting across code, data, docs, and research. Templates capture the **who/what/where/when/how** so every issue remains traceable from report → resolution → validation.
 
 ---
 
@@ -34,134 +36,259 @@ all necessary metadata and ensuring issues remain traceable throughout their lif
 ```bash
 .github/ISSUE_TEMPLATE/
 ├── README.md
-├── bug_report.md          # Report defects in code, data, or metadata
-├── feature_request.md     # Propose new features or enhancements
-├── data_request.md        # Suggest new datasets or integrations
-└── config.yml             # GitHub Issue Forms configuration
+├── bug_report.yml           # Report defects in code, data, or metadata
+├── feature_request.yml      # Propose features/enhancements
+├── data_request.yml         # Suggest datasets/integrations
+├── data_correction.yml      # Correct existing datasets/metadata
+├── research_issue.yml       # Research/hypothesis/ADR input
+├── accessibility_issue.yml  # UI/UX accessibility (WCAG/ARIA)
+├── security_vuln.yml        # Vulnerability disclosure (redacted details)
+├── governance_question.yml  # Governance/process clarification
+└── config.yml               # Issue Forms configuration + defaults
 ```
 
-> 💡 **Tip:**
-> These templates leverage **GitHub Issue Forms (YAML)** for improved user experience
-> and automatic metadata capture in the GitHub UI.
+> **Why YAML forms?** They provide **required fields**, **labels**, **assignments**, and **structured metadata** directly in the GitHub UI.
 
 ---
 
 ## 🧾 Template Summaries
 
-### 🐛 Bug Report (`bug_report.md`)
+### 🐞 `bug_report.yml`
 
-| Field                   | Purpose                                                       |
-| :---------------------- | :------------------------------------------------------------ |
-| **Summary**             | Concise description of the bug or problem.                    |
-| **Steps to Reproduce**  | Deterministic steps to replicate the issue.                   |
-| **Expected vs. Actual** | Highlight discrepancy between expected and observed behavior. |
-| **System Context**      | OS, Python version, workflow ID, etc.                         |
-| **Related Workflow**    | Identify affected pipeline or CI process.                     |
-| **Proposed Fix**        | (Optional) Suggested resolution or next steps.                |
+| Field                  | Purpose                                               |
+| ---------------------- | ----------------------------------------------------- |
+| **Summary**            | Concise description of the bug.                       |
+| **Steps to Reproduce** | Deterministic steps + minimal inputs.                 |
+| **Expected vs Actual** | Clarify discrepancy.                                  |
+| **System Context**     | OS, Python/Node versions, workflow run IDs.           |
+| **Related Workflow**   | Link to CI job URL or pipeline module.                |
+| **Logs / Screenshots** | Attach evidence.                                      |
+| **Proposed Fix**       | Optional suggestion or quick patch.                   |
+| **Provenance**         | Affected paths, dataset IDs, STAC items, commit SHAs. |
 
----
+### 💡 `feature_request.yml`
 
-### 💡 Feature Request (`feature_request.md`)
+| Field                     | Purpose                                 |
+| ------------------------- | --------------------------------------- |
+| **Motivation / Use Case** | Problem statement & stakeholders.       |
+| **Proposed Solution**     | Functional sketch + UX notes.           |
+| **Alternatives**          | Solutions considered/rejected.          |
+| **Dependencies**          | Tools, APIs, data, permissions.         |
+| **Impact**                | Expected effects on ETL, graph, UI, CI. |
+| **Acceptance Criteria**   | Testable completion definition.         |
 
-| Field                       | Purpose                                              |
-| :-------------------------- | :--------------------------------------------------- |
-| **Motivation / Use Case**   | Explain why this feature is valuable or needed.      |
-| **Proposed Solution**       | Describe the design or functionality.                |
-| **Alternatives Considered** | Note any similar solutions reviewed.                 |
-| **Dependencies**            | List tools, data, or configurations required.        |
-| **Impact**                  | Describe expected effects on data or code pipelines. |
+### 🗃️ `data_request.yml`
 
----
+| Field                  | Purpose                                 |
+| ---------------------- | --------------------------------------- |
+| **Dataset Name**       | Human-readable title.                   |
+| **Source / URL**       | API, portal, or archive link.           |
+| **License**            | Terms (Public domain, CC-BY-4.0, etc.). |
+| **Temporal / Spatial** | Time range + bbox/CRS.                  |
+| **Data Type**          | Raster, vector, tabular, text, mixed.   |
+| **Provenance**         | Citation, lineage, and quality notes.   |
+| **Integration Target** | ETL pipeline & STAC collection.         |
 
-### 🗃️ Data Request (`data_request.md`)
+### 🧰 `data_correction.yml`
 
-| Field                         | Purpose                                         |
-| :---------------------------- | :---------------------------------------------- |
-| **Dataset Name**              | Name of proposed dataset.                       |
-| **Source / URL**              | Reference link, API endpoint, or archive.       |
-| **License**                   | Usage terms or data license.                    |
-| **Temporal / Spatial Scope**  | Geographic extent and time range.               |
-| **Data Type**                 | Raster, vector, tabular, text, or mixed.        |
-| **Intended Use**              | Describe integration purpose or output target.  |
-| **Provenance Considerations** | Attribution, citation, or lineage requirements. |
+| Field                 | Purpose                                       |
+| --------------------- | --------------------------------------------- |
+| **Issue Description** | What’s wrong in current data/metadata.        |
+| **Evidence**          | Documentation, alternate source, or QA plots. |
+| **Scope**             | Items/Collections affected + version fields.  |
+| **Fix Proposal**      | How to correct + validation steps.            |
+
+### 🧪 `research_issue.yml`
+
+| Field                     | Purpose                            |
+| ------------------------- | ---------------------------------- |
+| **Hypothesis / Question** | Research framing.                  |
+| **Data / Methods**        | Datasets, models, SOPs, ADR links. |
+| **Expected Outcome**      | Metrics, figures, or narrative.    |
+| **Risks / Limitations**   | Data gaps, bias, thresholds.       |
+
+### ♿ `accessibility_issue.yml`
+
+| Field              | Purpose                                      |
+| ------------------ | -------------------------------------------- |
+| **Barrier**        | Description + affected user(s).              |
+| **WCAG Ref**       | Guideline & level (e.g., 2.1 AA 1.4.3).      |
+| **Repro Steps**    | Keyboard, reader, contrast evidence.         |
+| **Fix Suggestion** | ARIA roles/labels, color tokens, focus mgmt. |
+
+### 🔒 `security_vuln.yml`
+
+| Field                 | Purpose                                        |
+| --------------------- | ---------------------------------------------- |
+| **Summary**           | High-level vuln description (no secrets).      |
+| **Impact**            | Potential risk/severity (CVSS if known).       |
+| **Repro (sanitized)** | Safe steps/logs without sensitive data.        |
+| **Environment**       | Versions, image hashes, Actions refs.          |
+| **Disclosure**        | Contact for private details (see SECURITY.md). |
+
+### 🧭 `governance_question.yml`
+
+| Field        | Purpose                              |
+| ------------ | ------------------------------------ |
+| **Topic**    | Process/roles/reviews/branch policy. |
+| **Context**  | Where confusion arose.               |
+| **Proposal** | Suggested governance tweak.          |
 
 ---
 
 ## ⚙️ Issue Forms Configuration (`config.yml`)
 
-GitHub allows repository-wide defaults for issue creation.
-
-**Example Configuration:**
-
 ```yaml
 blank_issues_enabled: false
 contact_links:
-  - name: 🧠 Kansas Frontier Matrix Discussion Forum
+  - name: 🧠 KFM Discussions
     url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/discussions
-    about: For open discussions, ideas, or general questions.
+    about: For open questions, ideation, and design dialogue.
   - name: 📬 Data Contribution Requests
-    url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_request.md
-    about: Submit new dataset proposals or integrations.
+    url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_request.yml
+    about: Propose new datasets or integrations.
+
+# Defaults
+issue_template:
+  - name: Bug Report
+    about: Report a defect in code/data/metadata
+    labels: ["bug","needs-triage"]
+    assignees: ["@kfm-architecture"]
+    body: []
 ```
 
----
-
-## 🧠 Governance & MCP Alignment
-
-| MCP Principle           | Implementation                                                 |
-| :---------------------- | :------------------------------------------------------------- |
-| **Documentation-first** | All issues must include context and metadata.                  |
-| **Reproducibility**     | Requires deterministic reproduction or test case.              |
-| **Open Standards**      | Templates use Markdown/YAML for GitHub-native workflows.       |
-| **Provenance**          | Issues reference dataset, workflow, or commit IDs.             |
-| **Auditability**        | Issue lifecycle tracked from report → resolution → validation. |
+> **Auto-Labeling:** Pair with a simple workflow (e.g., `.github/workflows/auto-label.yml`) that adds domain labels (e.g., `area:data`, `area:web`) based on file changes.
 
 ---
 
-## 🧩 Contributor Workflow
+## 🧠 MCP & Governance Alignment
 
-1. **Choose Template:** Select *Bug Report*, *Feature Request*, or *Data Request*.
-2. **Complete Fields:** Fill in all reproducibility, context, and provenance details.
-3. **Submit Issue:** Auto-labeled according to template type.
-4. **Review & Validation:** Core maintainers triage and assign reviewers.
-5. **Close / Convert:** Issue closed or linked to corresponding pull request.
-
----
-
-## 🧰 Labels & Automation
-
-Labels are applied automatically via `.github/workflows/auto-label.yml`.
-
-| Label           | Description                              |
-| :-------------- | :--------------------------------------- |
-| `bug`           | Auto-applied to bug reports.             |
-| `enhancement`   | For feature or performance improvements. |
-| `data-request`  | For dataset or integration proposals.    |
-| `documentation` | For docs-related improvements or issues. |
-| `needs-review`  | Marks items awaiting maintainer triage.  |
+| MCP Principle           | Implementation                                                              |
+| ----------------------- | --------------------------------------------------------------------------- |
+| **Documentation-First** | Required fields capture story, context, and rationale.                      |
+| **Reproducibility**     | Steps, environment, expected/actual results mandated.                       |
+| **Open Standards**      | Markdown + YAML Issue Forms; STAC links for dataset issues.                 |
+| **Provenance**          | Commit SHAs, STAC items, dataset IDs required.                              |
+| **Auditability**        | Lifecycle tracked; cross-linked to PRs and workflow runs.                   |
+| **Versioning**          | Issues ask for **SemVer impact** and **STAC `properties.version`** changes. |
 
 ---
 
-## 🧹 Maintenance
+## 🧱 Contributor Workflow
 
-* Review templates **quarterly** for relevance and clarity.
-* Update `config.yml` when adding new categories or communication links.
-* Archive resolved issues periodically for long-term recordkeeping.
+1. **Choose Template** — Bug, Feature, Data Request, Data Correction, Research, Accessibility, Security, Governance.
+2. **Fill Required Fields** — Provide reproducible steps, provenance links, and impact.
+3. **Submit** — Templates auto-label (`bug`, `enhancement`, `data-request`, etc.).
+4. **Triage** — Maintainers assign reviewers, add `priority:` and `area:` labels, and set milestone.
+5. **Resolve** — Link to PR(s), validate in CI, close with summary + references.
 
-**Optional Makefile Target:**
+---
+
+## 🏷️ Labels & Automation
+
+**Auto-labels** via `auto-label.yml` (or Dependabot defaults):
+
+| Label                            | Purpose                            |
+| -------------------------------- | ---------------------------------- |
+| `bug`                            | Defects in code/data/docs.         |
+| `enhancement`                    | New features or improvements.      |
+| `data-request`                   | New dataset/integration proposals. |
+| `documentation`                  | Docs and governance updates.       |
+| `security`                       | Vulnerability & hardening.         |
+| `accessibility`                  | UI/UX compliance issues.           |
+| `needs-triage`                   | Awaiting maintainer review.        |
+| `priority:p0/p1/p2`              | Urgency levels.                    |
+| `semver:patch/minor/major`       | Proposed version impact.           |
+| `area:data/web/api/etl/graph/ci` | Domain routing.                    |
+
+---
+
+## 🧰 Example: Issue Form (Bug)
+
+```yaml
+name: "🐞 Bug Report"
+description: "Report a defect in code, data, or metadata"
+labels: ["bug","needs-triage"]
+assignees: ["@kfm-architecture"]
+body:
+  - type: textarea
+    id: summary
+    attributes: { label: "Summary", placeholder: "What happened?" }
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Include deterministic steps and minimal inputs"
+      placeholder: |
+        1) …
+        2) …
+        3) …
+    validations: { required: true }
+  - type: input
+    id: expected
+    attributes: { label: "Expected Result" }
+    validations: { required: true }
+  - type: input
+    id: actual
+    attributes: { label: "Actual Result" }
+    validations: { required: true }
+  - type: input
+    id: context
+    attributes:
+      label: "System Context"
+      description: "OS, Python/Node, workflow run URL, container/image hash"
+  - type: textarea
+    id: provenance
+    attributes:
+      label: "Provenance"
+      description: "Paths, STAC items, dataset IDs, commit SHA(s)"
+    validations: { required: true }
+  - type: textarea
+    id: logs
+    attributes: { label: "Logs / Screenshots" }
+  - type: dropdown
+    id: semver
+    attributes:
+      label: "SemVer Impact"
+      options: ["none","patch","minor","major"]
+      default: 0
+```
+
+> Use similar YAML for other templates; keep **required** fields for reproducibility & provenance.
+
+---
+
+## 🔧 Triage & Automation Hooks
+
+* **Auto-Label**: map changed paths to `area:*` labels (e.g., `data/**` → `area:data`).
+* **Project Assignment**: workflow assigns issues to project board columns (e.g., *Triage*, *In Progress*, *Done*).
+* **Stale Bot (optional)**: mark inactive issues with `status:stale` after N days; auto-close after grace period.
+* **Discussion Converter**: convert general questions to Discussions.
+
+---
+
+## ♻️ Maintenance
+
+* **Quarterly**: Review templates for clarity & add/remove fields as needed.
+* **Monthly**: Sync labels with governance (`.github/labels.yml` if used).
+* **Security**: Keep `security_vuln.yml` aligned with `SECURITY.md` contacts and SLA.
+* **Accessibility**: Update contrast tokens/ARIA guidance if design system evolves.
 
 ```bash
-make sync-templates
+# Optional utility
+make sync-templates   # lints YAML forms, checks references, syncs defaults
 ```
 
 ---
 
-## 📅 Version History
+## 🕓 Version History
 
-| Version    | Date       | Summary                                                             |
-| :--------- | :--------- | :------------------------------------------------------------------ |
-| **v1.0.0** | 2025-10-04 | Initial issue template documentation (bug, feature, data requests). |
-| **v1.1.0** | 2025-10-09 | Added MCP governance and auto-label workflow documentation.         |
+| Version | Date       | Summary                                                                                                                                                  |
+| ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v2.0.0  | 2025-10-10 | Added **versioned** YAML Issue Forms, new templates (data correction, research, accessibility, security, governance), SemVer impact & provenance fields. |
+| v1.1.0  | 2025-10-09 | Added MCP governance & auto-label docs.                                                                                                                  |
+| v1.0.0  | 2025-10-04 | Initial issue template documentation (bug, feature, data request).                                                                                       |
 
 ---
 
