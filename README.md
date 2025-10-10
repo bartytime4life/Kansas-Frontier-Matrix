@@ -71,23 +71,23 @@ data/
 4) Processing Workflow (GitHub-safe Mermaid)
 
 flowchart TD
-  A["Raw DEMs (1 m / 10–30 m)"] --> B["Fill Depressions\nWhiteboxTools FillDepressions"]
-  B --> C["D8 Flow Direction\nWhiteboxTools D8Pointer"]
-  B --> D["D8 Flow Accumulation\nWhiteboxTools D8FlowAccumulation"]
-  C --> E["Seed Point Extraction\nThreshold Logic"]
-  D --> E
-  F["NLCD Water + NHD Hydrography"] --> G["Water Mask\nGDAL Calc"]
-  B --> H["Reproject to EPSG:4326\nGDAL Warp"]
-  C --> H
-  D --> H
-  E --> H
-  G --> H
-  H --> I["Convert to COG\nrio cogeo create"]
-  I --> J["Visual QC / Validation\nQGIS vs NHD"]
-  I --> K["Emit STAC Items\nSTAC 1.0"]
-  I --> L["Compute Checksums\nSHA-256"]
-  K --> M["CI Validation\nSTAC Validate · Hash Verify"]
-  L --> M
+  A["Raw DEMs (1 m / 10–30 m)"] --> B["Fill Depressions<br/>WhiteboxTools FillDepressions"]
+  B --> C["D8 Flow Direction<br/>WhiteboxTools D8Pointer"]
+  B --> D["D8 Flow Accumulation<br/>WhiteboxTools D8FlowAccumulation"]
+  C --> E["Seed Point Extraction<br/>Threshold Logic"]
+  D --> E["Seed Point Extraction<br/>Threshold Logic"]
+  F["NLCD Water + NHD Hydrography"] --> G["Water Mask<br/>GDAL Calc"]
+  B --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
+  C --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
+  D --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
+  E --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
+  G --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
+  H --> I["Convert to COG<br/>rio cogeo create"]
+  I --> J["Visual QC / Validation<br/>QGIS vs NHD"]
+  I --> K["Emit STAC Items<br/>STAC 1.0"]
+  I --> L["Compute Checksums<br/>SHA-256"]
+  K --> M["CI Validation<br/>STAC Validate · Hash Verify"]
+  L --> M["CI Validation<br/>STAC Validate · Hash Verify"]
 
 <!-- END OF MERMAID -->
 
