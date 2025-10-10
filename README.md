@@ -96,14 +96,26 @@ flowchart TD
   A["Raw DEMs\n(1 m / 10–30 m)"] --> B["Fill Depressions (WhiteboxTools)"]
   B --> C["D8 Flow Direction (D8Pointer)"]
   B --> D["D8 Flow Accumulation (D8FlowAccumulation)"]
-  C & D --> E["Seed Point Extraction (threshold logic)"]
+
+  C --> E["Seed Point Extraction (threshold logic)"]
+  D --> E["Seed Point Extraction (threshold logic)"]
+
   F["NLCD Water +\nNHD Hydrography"] --> G["Water Mask (GDAL Calc)"]
-  B & C & D & E & G --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+
+  B --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+  C --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+  D --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+  E --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+  G --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+
   H --> I["Convert → COG (rio cogeo create)"]
+
   I --> J["Visual QC (QGIS vs NHD)"]
   I --> K["Emit STAC Items (STAC 1.0 schema)"]
   I --> L["Compute Checksums (SHA-256)"]
-  K & L --> M["Continuous Integration\n(STAC validate · hash verify)"]
+
+  K --> M["Continuous Integration\n(STAC validate · hash verify)"]
+  L --> M["Continuous Integration\n(STAC validate · hash verify)"]
 
 <!-- END OF MERMAID -->
 
