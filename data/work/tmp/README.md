@@ -1,6 +1,7 @@
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — Temporary Workspace (`data/work/tmp/`)
+# 🧩 Kansas Frontier Matrix — Temporary Workspace  
+`data/work/tmp/`
 
 **Mission:** Provide a **short-term scratch space** for temporary files generated  
 during ETL, validation, testing, or data transformation processes —  
@@ -45,53 +46,53 @@ data/work/tmp/
 └── text/              # NLP and OCR text preprocessing dumps
 ````
 
-> **Note:** The subfolders mirror KFM’s primary data domains, ensuring structural
-> consistency between temporary and processed datasets.
+> **Note:** Subfolders mirror KFM’s primary data domains, maintaining parity
+> between temporary artifacts and final processed datasets.
 
 ---
 
 ## ⚙️ Usage Guidelines
 
-| Policy                 | Description                                                                            |
-| :--------------------- | :------------------------------------------------------------------------------------- |
-| **Ephemeral Only**     | Do not store permanent datasets here. Contents may be deleted at any time.             |
-| **Reproducible State** | All files must be regenerable using documented Makefile targets or scripts.            |
-| **CI/CD Ignored**      | This directory is excluded from automated validation, except for specific debug tests. |
-| **Logs & Cache**       | Temporary debug logs or processing caches may be stored here.                          |
-| **File Size Limit**    | Keep individual files ≤ 1 GB to maintain build and cleanup efficiency.                 |
+| Policy                 | Description                                                             |
+| :--------------------- | :---------------------------------------------------------------------- |
+| **Ephemeral Only**     | Do not store permanent datasets here — contents can be deleted anytime. |
+| **Reproducible State** | All files must be regenerable via Makefile targets or ETL scripts.      |
+| **CI/CD Ignored**      | Excluded from validation unless explicitly called by debug tests.       |
+| **Logs & Cache**       | Temporary debug logs and caches may reside here safely.                 |
+| **File Size Limit**    | Keep individual files ≤ 1 GB to ensure efficient cleanup.               |
 
 ---
 
 ## ⚙️ Typical Use Cases
 
-| Task                    | Example                                          |
-| :---------------------- | :----------------------------------------------- |
-| **Raster Processing**   | Subset DEMs for regional validation.             |
-| **STAC Testing**        | Validate metadata generation before commit.      |
-| **Checksum Debugging**  | Regenerate test hashes for pipeline validation.  |
-| **Thumbnail Testing**   | Render low-resolution previews for QA.           |
-| **Tabular ETL Testing** | Transform partial datasets for schema alignment. |
+| Task                    | Example                                                    |
+| :---------------------- | :--------------------------------------------------------- |
+| **Raster Processing**   | Subset DEMs for regional validation.                       |
+| **STAC Testing**        | Validate draft metadata before committing to `data/stac/`. |
+| **Checksum Debugging**  | Regenerate hashes for validation tests.                    |
+| **Thumbnail Testing**   | Render low-res previews for QA.                            |
+| **Tabular ETL Testing** | Transform partial datasets for schema checks.              |
 
 ---
 
 ## 🧹 Cleanup Policy
 
-Temporary files are cleared automatically during maintenance operations
-and may also be purged manually.
+Temporary files are cleared automatically by maintenance jobs or manually as needed.
 
-**Makefile target:**
+**Makefile Target**
 
 ```bash
 make clean-tmp
 ```
 
-**Manual command:**
+**Manual Command**
 
 ```bash
 rm -rf data/work/tmp/*
 ```
 
-All data here is reproducible through the documented ETL pipelines.
+All data here is **reproducible** through documented ETL pipelines
+(e.g., `make terrain`, `make hydrology`, `make landcover`).
 
 ---
 
@@ -99,19 +100,19 @@ All data here is reproducible through the documented ETL pipelines.
 
 | MCP Principle           | Implementation                                                       |
 | :---------------------- | :------------------------------------------------------------------- |
-| **Documentation-first** | README documents structure and use of temporary workspace.           |
-| **Reproducibility**     | All temporary artifacts are regenerable from ETL scripts.            |
-| **Open Standards**      | Temporary files conform to project-wide formats (GeoJSON, COG, CSV). |
-| **Provenance**          | Even short-lived data follows consistent file naming conventions.    |
-| **Auditability**        | Logs and debug outputs can be reviewed before cleanup.               |
+| **Documentation-first** | README explains structure and safe usage.                            |
+| **Reproducibility**     | All temporary artifacts regenerable via ETL scripts.                 |
+| **Open Standards**      | Temporary files follow KFM’s open-format policy (GeoJSON, COG, CSV). |
+| **Provenance**          | Even ephemeral outputs maintain domain naming conventions.           |
+| **Auditability**        | Logs and debug caches may be reviewed before cleanup.                |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                        |
-| :------ | :--------- | :----------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial creation of temporary workspace documentation (ETL scratch directory). |
+| Version    | Date       | Summary                                                                        |
+| :--------- | :--------- | :----------------------------------------------------------------------------- |
+| **v1.0.0** | 2025-10-04 | Initial creation of temporary workspace documentation (ETL scratch directory). |
 
 ---
 
