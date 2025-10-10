@@ -1,10 +1,11 @@
 <div align="center">
 
-# 🌦️ Kansas-Frontier-Matrix — Processed Climate Checksums (`data/processed/climate/checksums/`)
+# 🌦️ Kansas Frontier Matrix — Processed Climate Checksums  
+`data/processed/climate/checksums/`
 
 **Mission:** Maintain **checksum files (`.sha256`)** verifying the integrity of all processed climate datasets —  
-gridded temperature, precipitation, and drought indices — ensuring long-term reproducibility, authenticity,  
-and provenance for Kansas Frontier Matrix climate archives.
+gridded temperature, precipitation, and drought indices — ensuring **long-term reproducibility, authenticity,**  
+and **provenance** for Kansas Frontier Matrix climate archives.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
@@ -26,18 +27,19 @@ and provenance for Kansas Frontier Matrix climate archives.
 - [Verification Workflow](#verification-workflow)
 - [Integration with MCP & STAC](#integration-with-mcp--stac)
 - [Adding or Updating Checksums](#adding-or-updating-checksums)
+- [Maintenance & Best Practices](#maintenance--best-practices)
+- [Version History](#version-history)
 - [References](#references)
 
 ---
 
 ## 🧠 Overview
 
-This directory contains **SHA-256 checksum files** used to verify the integrity and authenticity  
-of all processed climate data products stored in `data/processed/climate/`.  
+This directory contains **SHA-256 checksum files** used to verify the **integrity and authenticity**  
+of all processed climate products stored in `data/processed/climate/`.
 
-Checksums ensure that each temperature, precipitation, or drought raster remains unchanged since  
-its creation, supporting **data reproducibility, scientific transparency, and long-term validation**  
-as required by the **Master Coder Protocol (MCP)**.
+Checksums ensure each temperature, precipitation, or drought raster/table remains **unchanged** since creation,  
+supporting **reproducibility**, **scientific transparency**, and **long-term validation** under the **Master Coder Protocol (MCP)**.
 
 Each checksum file corresponds directly to a processed climate asset and its metadata entry in  
 `data/processed/climate/metadata/`.
@@ -46,10 +48,10 @@ Each checksum file corresponds directly to a processed climate asset and its met
 
 ## 🎯 Purpose
 
-- **Integrity Verification:** Detect accidental or unauthorized data modification.  
-- **Reproducibility Assurance:** Confirm that scientific analyses reproduce exact results.  
-- **Provenance Linking:** Tie file hashes to their `mcp_provenance` entries in metadata and STAC catalogs.  
-- **Automation:** Allow continuous integration (CI/CD) to perform automated hash checks during build and release.  
+- **Integrity Verification:** Detect accidental/unauthorized data modification.  
+- **Reproducibility Assurance:** Confirm analyses reproduce exact results from published artifacts.  
+- **Provenance Linking:** Tie file hashes to `mcp_provenance` fields in metadata and STAC Items.  
+- **Automation:** Allow CI/CD to perform automated hash checks during build and release cycles.  
 
 ---
 
@@ -65,112 +67,125 @@ data/
             ├── drought_spi12_1895_2024.tif.sha256
             ├── climate_normals_1991_2020.parquet.sha256
             └── README.md
-````
 
-Each `.sha256` file contains a single SHA-256 hash line referencing its corresponding dataset,
-following the GNU Coreutils format.
+Each .sha256 contains a single SHA-256 line referencing its dataset (GNU Coreutils format):
 
-Example:
-
-```text
 9c1a24e3374e6dbfcd3ef11a8a9a5568c4f5f7f2b6c77714569e34138ab7f91b  temp_mean_annual_1895_2024.tif
-```
 
----
 
-## 🧩 Checksum Standards
+⸻
 
-| Standard    | Algorithm           | Output                             | Description                                 |
-| ----------- | ------------------- | ---------------------------------- | ------------------------------------------- |
-| **SHA-256** | 256-bit hash        | 64-character hexadecimal string    | Cryptographic fingerprint for file identity |
-| **Format**  | GNU `sha256sum`     | `<hash>  <filename>`               | Human- and machine-readable                 |
-| **Mode**    | Binary (`--binary`) | Ensures cross-platform consistency | Avoids newline discrepancies                |
+🧩 Checksum Standards
 
-All hashes can be verified using Linux, macOS, or Windows CLI tools.
+Standard	Algorithm	Output	Description
+SHA-256	256-bit hash	64 char hexadecimal string	Cryptographic fingerprint for file identity
+Format	GNU sha256sum	<hash>␠␠<filename>	Human- & machine-readable
+Mode	--binary	Platform-consistent hashing	Avoids EOL/newline discrepancies
 
----
+Hashes can be generated/verified on Linux, macOS, or Windows (WSL/PowerShell equivalents).
 
-## 🔍 Verification Workflow
+⸻
 
-To confirm dataset integrity locally or in CI environments:
+🔍 Verification Workflow
 
-```bash
+Validate locally or in CI:
+
 # Verify a single file
 sha256sum -c data/processed/climate/checksums/temp_mean_annual_1895_2024.tif.sha256
 
-# Verify all climate data checksums
+# Verify all checksums
 find data/processed/climate/checksums -name "*.sha256" -exec sha256sum -c {} \;
-```
 
-**Expected output:**
+Expected:
 
-```
 temp_mean_annual_1895_2024.tif: OK
 precip_total_annual_1895_2024.tif: OK
-```
 
-If an error occurs:
+On mismatch:
 
-```
 drought_spi12_1895_2024.tif: FAILED
 sha256sum: WARNING: 1 computed checksum did NOT match
-```
 
----
 
-## 🌐 Integration with MCP & STAC
+⸻
 
-Each checksum is tied directly to the project’s metadata and catalog layers:
+🌐 Integration with MCP & STAC
 
-1. **MCP Provenance**
+1) MCP Provenance
+Each metadata JSON includes an mcp_provenance field:
 
-   * Every metadata JSON includes an `"mcp_provenance"` field:
+"mcp_provenance": "sha256:9c1a24e3374e6dbfcd3ef11a8a9a5568c4f5f7f2b6c77714569e34138ab7f91b"
 
-     ```json
-     "mcp_provenance": "sha256:9c1a24e3374e6dbfcd3ef11a8a9a5568c4f5f7f2b6c77714569e34138ab7f91b"
-     ```
-   * This connects the dataset’s content to its unique cryptographic signature.
+2) STAC Catalog
+STAC Items in data/stac/items/climate_* embed the same SHA-256 hash (e.g., in properties or assets.checksum:sha256)
+for cross-layer verification and catalog integrity tracking.
 
-2. **STAC Catalog**
+⸻
 
-   * STAC items in `data/stac/items/climate_*` include the same SHA-256 hash,
-     enabling cross-layer verification and catalog integrity tracking.
+⚙️ Adding or Updating Checksums
+	1.	Generate checksum for a new/updated dataset:
 
----
+sha256sum <dataset> > data/processed/climate/checksums/<dataset>.sha256
 
-## ⚙️ Adding or Updating Checksums
 
-1. Generate checksum for a new or modified dataset:
+	2.	Validate locally:
 
-   ```bash
-   sha256sum <dataset> > data/processed/climate/checksums/<dataset>.sha256
-   ```
-2. Validate locally:
+sha256sum -c data/processed/climate/checksums/<dataset>.sha256
 
-   ```bash
-   sha256sum -c data/processed/climate/checksums/<dataset>.sha256
-   ```
-3. Update the corresponding `mcp_provenance` field in the dataset’s metadata JSON.
-4. Commit both the dataset and checksum file together.
-5. Push and open a Pull Request — GitHub Actions will automatically run validation.
 
----
+	3.	Update metadata: replace the mcp_provenance digest in the dataset’s STAC/metadata JSON.
+	4.	Commit together: include both the dataset and checksum; push your branch.
+	5.	Open a PR: CI will rerun verification (failing on mismatch).
 
-## 📖 References
+⸻
 
-* **GNU Coreutils SHA Utilities:** [https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html](https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html)
-* **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
-* **JSON Schema Validation:** [https://json-schema.org](https://json-schema.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../../docs/standards/)
-* **NOAA NCEI Climate Data:** [https://www.ncei.noaa.gov/](https://www.ncei.noaa.gov/)
-* **PRISM Climate Group:** [https://prism.oregonstate.edu/](https://prism.oregonstate.edu/)
+🛠️ Verification in CI/CD
 
----
+GitHub Actions re-hash datasets and validate checksums in:
+	•	.github/workflows/stac-validate.yml
+	•	(optional) .github/workflows/integrity-check.yml
+
+CI command (example):
+
+sha256sum -c data/processed/climate/checksums/*.sha256
+
+If any digest fails, the workflow blocks merge/deploy until the dataset is corrected and re-hashed.
+
+⸻
+
+🧰 Maintenance & Best Practices
+	•	🔄 After updates: Recompute checksums whenever a climate dataset changes.
+	•	🧾 Filename parity: Checksum filenames must exactly match their datasets.
+	•	📜 Bulk audits: Maintain a _manifest_all.sha256 to verify releases at scale.
+	•	🧪 Pre-commit hook (optional): Reject commits with stale/missing checksums.
+	•	🧠 Metadata sync: Ensure mcp_provenance in STAC/metadata reflects the latest digest.
+
+⸻
+
+📅 Version History
+
+Version	Date	Summary
+1.0.1	2025-10-10	Upgraded README with MCP front matter, CI integration, and best-practice guidance.
+1.0.0	2025-10-04	Initial processed climate checksum documentation and hash files.
+
+
+⸻
+
+📖 References
+	•	GNU Coreutils — SHA utilities: https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html
+	•	STAC 1.0 Specification: https://stacspec.org
+	•	JSON Schema: https://json-schema.org
+	•	MCP Standards: ../../../../docs/standards/
+	•	NOAA NCEI: https://www.ncei.noaa.gov/
+	•	PRISM Climate Group: https://prism.oregonstate.edu/
+
+⸻
+
 
 <div align="center">
 
-*“Every climate grid, every anomaly — these checksums preserve the integrity of Kansas’s atmospheric memory.”*
+
+“Every climate grid, every anomaly — these checksums preserve the integrity of Kansas’s atmospheric memory.”
 
 </div>
 ```
-
