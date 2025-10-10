@@ -1,10 +1,11 @@
 <div align="center">
 
-# ⚠️ Kansas-Frontier-Matrix — Processed Hazards Checksums (`data/processed/hazards/checksums/`)
+# ⚠️ Kansas Frontier Matrix — Processed Hazards Checksums  
+`data/processed/hazards/checksums/`
 
 **Mission:** Maintain **checksum files (`.sha256`)** verifying the integrity of all processed hazard datasets —  
 drought indices, tornado tracks, flood polygons, wildfire detections, and FEMA disaster summaries —  
-ensuring scientific reproducibility, authenticity, and transparent provenance for Kansas hazard data.
+ensuring **scientific reproducibility, authenticity, and transparent provenance** for Kansas hazard data.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
@@ -26,28 +27,26 @@ ensuring scientific reproducibility, authenticity, and transparent provenance fo
 - [Verification Workflow](#verification-workflow)
 - [Integration with MCP & STAC](#integration-with-mcp--stac)
 - [Adding or Updating Checksums](#adding-or-updating-checksums)
+- [Maintenance & Best Practices](#maintenance--best-practices)
+- [Version History](#version-history)
 - [References](#references)
 
 ---
 
 ## 🌪️ Overview
 
-This directory stores **SHA-256 checksum files** for all processed hazard datasets  
-contained in `data/processed/hazards/`. These checksums ensure that all hazard products  
-(tornado, flood, drought, and wildfire datasets) remain unaltered from their validated versions.  
-
-Checksum verification forms the backbone of **data integrity** within the  
-**Master Coder Protocol (MCP)** and integrates directly with **STAC metadata**  
-for cross-referenced provenance tracking.
+This directory stores **SHA-256 checksum files** for all processed hazard datasets under `data/processed/hazards/`.  
+These digests ensure hazard products (**tornado**, **flood**, **drought**, **wildfire**, and **FEMA** datasets) remain **unaltered** from their validated versions and provide a verifiable, cryptographic link in the MCP provenance chain.  
+Each checksum corresponds directly to a dataset and its metadata entry in `data/processed/hazards/metadata/`.
 
 ---
 
 ## 🎯 Purpose
 
-- **Integrity Validation:** Ensure each hazard dataset (GeoTIFF/GeoJSON) remains identical post-build.  
-- **Transparency:** Provide verifiable hashes linked to STAC and MCP provenance records.  
-- **Reproducibility:** Enable third-party researchers to independently confirm data consistency.  
-- **Automation:** Integrate with continuous integration (CI/CD) for auto-validation of all hazard layers.  
+- **Integrity Validation:** Detect any post-build or post-transfer change in GeoJSON/COG artifacts.  
+- **Transparency:** Publish verifiable hashes cross-referenced in STAC and MCP records.  
+- **Reproducibility:** Enable independent re-checks by downstream researchers and apps.  
+- **Automation:** Power CI/CD gates that block merges/releases on checksum mismatch.  
 
 ---
 
@@ -64,129 +63,125 @@ data/
             ├── wildfire_points_2000_2023.geojson.sha256
             ├── flood_events_1900_2020.geojson.sha256
             └── README.md
-````
 
-Each `.sha256` file corresponds directly to its associated dataset and metadata entry
-found under `data/processed/hazards/metadata/`.
+Each .sha256 is a single-line digest referencing its dataset (GNU Coreutils format):
 
-Example content:
-
-```text
 1b5a7f129bc0cde23c18da63b32b17e6b12a926a9b92b57975db5ef938c3f142  tornado_tracks_1950_2024.geojson
-```
 
----
 
-## 🧩 Checksum Standards
+⸻
 
-| Property      | Value                                                                |
-| ------------- | -------------------------------------------------------------------- |
-| **Algorithm** | SHA-256 (Secure Hash Algorithm, 256-bit)                             |
-| **Format**    | GNU Coreutils `sha256sum` (`<hash>  <filename>`)                     |
-| **Encoding**  | Binary mode (`--binary`) for OS-independent consistency              |
-| **Purpose**   | Reproducible cryptographic fingerprint ensuring dataset immutability |
+🧩 Checksum Standards
 
----
+Property	Value
+Algorithm	SHA-256 (Secure Hash Algorithm, 256-bit)
+Format	GNU sha256sum: <hash>␠␠<filename>
+Mode	Binary (--binary) for OS-independent hashes
+Purpose	Reproducible fingerprint proving immutability
 
-## 🔍 Verification Workflow
+Hashes are verifiable on Linux/macOS/Windows (WSL/PowerShell equivalents).
 
-### Manual Verification
+⸻
 
-```bash
-# Verify a single dataset checksum
+🔍 Verification Workflow
+
+Manual Verification
+
+# Verify one dataset
 sha256sum -c data/processed/hazards/checksums/tornado_tracks_1950_2024.geojson.sha256
 
-# Verify all hazard checksums
+# Verify all hazards checksums
 find data/processed/hazards/checksums -name "*.sha256" -exec sha256sum -c {} \;
-```
 
-### Example Output
+Expected output:
 
-```
 tornado_tracks_1950_2024.geojson: OK
 flood_events_1900_2020.geojson: OK
 drought_spi12_1950_2024.tif: OK
-```
 
-If mismatches are detected:
+On mismatch:
 
-```
 fema_disasters_1953_2024.geojson: FAILED
 sha256sum: WARNING: 1 computed checksum did NOT match
-```
 
-### Automated CI Verification
+Automated CI Verification
 
-GitHub Actions (`.github/workflows/stac-validate.yml`) automatically validates these checksums
-on every commit and Pull Request, ensuring the project repository remains trustworthy.
+GitHub Actions (.github/workflows/stac-validate.yml) automatically re-hash and validate checksums on every commit/PR.
 
----
+⸻
 
-## 🌐 Integration with MCP & STAC
+🌐 Integration with MCP & STAC
 
-Checksums serve as the **cryptographic glue** between file-level integrity and semantic metadata.
+Checksums are the cryptographic glue linking file integrity to semantic metadata:
+	1.	MCP Provenance — Each metadata JSON includes the hash:
 
-1. **MCP Provenance**
-   Each dataset’s metadata JSON includes:
+"mcp_provenance": "sha256:1b5a7f129bc0cde23c18da63b32b17e6b12a926a9b92b57975db5ef938c3f142"
 
-   ```json
-   "mcp_provenance": "sha256:1b5a7f129bc0cde23c18da63b32b17e6b12a926a9b92b57975db5ef938c3f142"
-   ```
+	2.	STAC Linkage — STAC Items in data/stac/items/hazards_* reference the same digest
+(e.g., in properties or assets.checksum:sha256) for cross-layer verification.
 
-   This binds the file’s identity to its metadata.
+Together, these provide end-to-end verification across the KFM data architecture.
 
-2. **STAC Catalog Linkage**
-   STAC Items in `data/stac/items/hazards_*` reference these hashes, ensuring that catalog entries
-   reflect verified and validated datasets.
+⸻
 
-Together, this ensures **end-to-end verification** across all layers of the Kansas Frontier Matrix data architecture.
+⚙️ Adding or Updating Checksums
+	1.	Generate checksum for a new/updated dataset:
 
----
+sha256sum <dataset> > data/processed/hazards/checksums/<dataset>.sha256
 
-## ⚙️ Adding or Updating Checksums
 
-1. Generate a checksum for a new or modified file:
+	2.	Validate locally:
 
-   ```bash
-   sha256sum <dataset> > data/processed/hazards/checksums/<dataset>.sha256
-   ```
+sha256sum -c data/processed/hazards/checksums/<dataset>.sha256
 
-2. Verify integrity:
 
-   ```bash
-   sha256sum -c data/processed/hazards/checksums/<dataset>.sha256
-   ```
+	3.	Sync metadata: update mcp_provenance in the dataset’s metadata and STAC Item.
+	4.	Commit data + .sha256 together.
+	5.	Validate:
 
-3. Update the corresponding `mcp_provenance` field in metadata and STAC entries.
+make validate-hazards
 
-4. Commit both dataset and `.sha256` file together.
 
-5. Validate using Make:
+	6.	Open a PR — CI will re-verify all digests.
 
-   ```bash
-   make validate-hazards
-   ```
+⸻
 
-6. Submit a Pull Request — automated CI will re-verify all checksums.
+🛠️ Maintenance & Best Practices
+	•	🔄 After reprocessing: Regenerate checksums and update metadata/STAC digests.
+	•	🧾 Filename parity: Checksum filenames must match dataset names exactly.
+	•	📜 Bulk audits: Maintain a _manifest_all.sha256 for release-wide verification.
+	•	🧪 Pre-commit hook (optional): Block commits with stale/missing .sha256 files.
+	•	🧠 Doc sync: Record digest changes in PR descriptions and STAC changelogs.
 
----
+⸻
 
-## 📖 References
+📅 Version History
 
-* **NOAA Storm Events Database:** [https://www.ncei.noaa.gov/stormevents/](https://www.ncei.noaa.gov/stormevents/)
-* **FEMA Disaster Declarations Open Data:** [https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2](https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2)
-* **NASA FIRMS Fire Data:** [https://firms.modaps.eosdis.nasa.gov/](https://firms.modaps.eosdis.nasa.gov/)
-* **US Drought Monitor:** [https://droughtmonitor.unl.edu/](https://droughtmonitor.unl.edu/)
-* **USGS Flood Science:** [https://www.usgs.gov/mission-areas/water-resources/science/floods](https://www.usgs.gov/mission-areas/water-resources/science/floods)
-* **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../../docs/standards/)
+Version	Date	Summary
+1.0.1	2025-10-10	Upgraded README with MCP front matter, CI workflow details, and maintenance guidance.
+1.0.0	2025-10-04	Initial hazards checksum documentation and SHA-256 manifests.
 
----
+
+⸻
+
+📖 References
+	•	NOAA Storm Events: https://www.ncei.noaa.gov/stormevents/
+	•	FEMA Declarations (OpenFEMA): https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2
+	•	NASA FIRMS: https://firms.modaps.eosdis.nasa.gov/
+	•	U.S. Drought Monitor: https://droughtmonitor.unl.edu/
+	•	USGS Flood Science: https://www.usgs.gov/mission-areas/water-resources/science/floods
+	•	GNU Coreutils — SHA utilities: https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html
+	•	STAC 1.0: https://stacspec.org
+	•	MCP Standards: ../../../../docs/standards/
+
+⸻
+
 
 <div align="center">
 
-*“Every storm, every fire, every flood — these checksums ensure the history of Kansas hazards remains untampered and true.”*
+
+“Every storm, every fire, every flood — these checksums ensure the history of Kansas hazards remains untampered and true.”
+📍 data/processed/hazards/checksums/
 
 </div>
 ```
-
