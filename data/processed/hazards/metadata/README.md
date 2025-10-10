@@ -1,18 +1,20 @@
 <div align="center">
 
-# ⚠️ Kansas-Frontier-Matrix — Processed Hazards Metadata (`data/processed/hazards/metadata/`)
+# ⚠️ Kansas Frontier Matrix — Processed Hazard Data  
+`data/processed/hazards/`
 
-**Mission:** Maintain **metadata documentation** for all processed hazard datasets —  
-floods, droughts, tornadoes, wildfires, and severe weather events — ensuring transparent  
-provenance, schema compliance, and reproducibility for Kansas’s hazard history.
+**Mission:** Store and document all **processed hazard datasets** — cleaned, merged, and standardized records  
+of droughts, floods, wildfires, tornadoes, and severe weather — used for temporal analysis and risk modeling  
+in the Kansas Frontier Matrix system.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../../LICENSE)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
+[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.github/workflows/pre-commit.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../LICENSE)
 
 </div>
 
@@ -21,25 +23,32 @@ provenance, schema compliance, and reproducibility for Kansas’s hazard history
 ## 📚 Table of Contents
 - [Overview](#overview)
 - [Directory Layout](#directory-layout)
-- [Metadata Schema](#metadata-schema)
-- [STAC Integration](#stac-integration)
-- [Validation & Provenance](#validation--provenance)
-- [Adding or Updating Metadata](#adding-or-updating-metadata)
+- [Core Hazard Datasets](#core-hazard-datasets)
+- [STAC Metadata](#stac-metadata)
+- [Processing Workflow](#processing-workflow)
+- [Reproducibility & Validation](#reproducibility--validation)
+- [Contributing New Hazard Data](#contributing-new-hazard-data)
+- [Version History](#version-history)
 - [References](#references)
 
 ---
 
 ## 🌪️ Overview
 
-This directory contains **metadata JSON records** for all processed hazard datasets  
-stored in `data/processed/hazards/`.  
+This directory contains **processed hazard event datasets**, cleaned and standardized from **NOAA**, **FEMA**, **NASA**,  
+and **USGS** archives to form the **historical hazard record** for Kansas.
 
-Each record captures **data lineage, processing parameters, software environment, and license details**,  
-enabling reproducibility and long-term discoverability through the **Master Coder Protocol (MCP)**  
-and the **SpatioTemporal Asset Catalog (STAC 1.0)**.
+Outputs include **event-level GeoJSONs** and **gridded hazard indices**, forming the base for derivative layers —  
+density rasters, risk composites, and frequency models (see `data/derivatives/hazards/`).
 
-These files provide a transparent record of Kansas’s environmental hazards — ensuring that  
-every flood extent, tornado track, and drought index is traceable from source to product.
+Primary sources:
+- **NOAA Storm Events** & **SPC** (tornado/hail/wind, floods)
+- **FEMA Disaster Declarations** (county-level disasters since 1953)
+- **NASA FIRMS** (wildfire detections)
+- **U.S. Drought Monitor** & **NOAA CPC SPI** (drought intensity)
+- **USGS Water Resources** (flood measurements & extents)
+
+All outputs are reprojected to **EPSG:4326 (WGS84)** and formatted as **GeoTIFF (COG)** or **GeoJSON**.
 
 ---
 
@@ -49,154 +58,150 @@ every flood extent, tornado track, and drought index is traceable from source to
 data/
 └── processed/
     └── hazards/
-        └── metadata/
-            ├── tornado_tracks_1950_2024.json
-            ├── fema_disasters_1953_2024.json
-            ├── drought_spi12_1950_2024.json
-            ├── wildfire_points_2000_2023.json
-            ├── flood_events_1900_2020.json
-            ├── template.json
-            └── README.md
-````
+        ├── tornado_tracks_1950_2024.geojson    # Cleaned NOAA SPC tornado tracks (Kansas subset)
+        ├── fema_disasters_1953_2024.geojson    # FEMA disaster declarations (KS counties)
+        ├── drought_spi12_1950_2024.tif         # 12-month SPI drought index (COG)
+        ├── wildfire_points_2000_2023.geojson   # NASA FIRMS active fire detections
+        ├── flood_events_1900_2020.geojson      # Digitized flood polygons & attributes
+        ├── metadata/
+        │   ├── tornado_tracks_1950_2024.json
+        │   ├── drought_spi12_1950_2024.json
+        │   └── fema_disasters_1953_2024.json
+        ├── checksums/
+        │   ├── tornado_tracks_1950_2024.geojson.sha256
+        │   ├── drought_spi12_1950_2024.tif.sha256
+        │   └── fema_disasters_1953_2024.geojson.sha256
+        └── README.md
 
-Each JSON metadata file corresponds to a dataset in `data/processed/hazards/`.
-The `template.json` provides a reusable metadata skeleton consistent with MCP-STAC schemas.
 
----
+⸻
 
-## 🧩 Metadata Schema
+🌩️ Core Hazard Datasets
 
-All hazard metadata files follow the **hybrid MCP-STAC schema**, ensuring compatibility with
-geospatial standards and reproducibility frameworks.
+Product	File	Description	Source	Units	Format
+Tornado Tracks (1950–2024)	tornado_tracks_1950_2024.geojson	Cleaned tornado path polylines (Kansas subset)	NOAA SPC	categorical	GeoJSON
+FEMA Disasters (1953–2024)	fema_disasters_1953_2024.geojson	County-level disaster declarations and types	FEMA Open Data	categorical	GeoJSON
+Drought SPI (12-Month)	drought_spi12_1950_2024.tif	12-month standardized precipitation index	NOAA CPC	index	GeoTIFF (COG)
+Wildfire Points (2000–2023)	wildfire_points_2000_2023.geojson	MODIS/NASA fire detections	NASA FIRMS	count	GeoJSON
+Flood Events (1900–2020)	flood_events_1900_2020.geojson	Digitized flood polygons with event metadata	USGS · KGS	binary	GeoJSON
 
-### Example Metadata File
 
-```json
+⸻
+
+🧩 STAC Metadata
+
+Each processed hazard file is registered as a STAC Item under data/stac/items/hazards_*, including provenance, lineage, and citation.
+
+Example:
+
 {
   "type": "Feature",
   "stac_version": "1.0.0",
   "id": "tornado_tracks_1950_2024",
   "properties": {
-    "title": "Tornado Tracks (1950–2024) – Kansas",
+    "title": "NOAA SPC Tornado Tracks (1950–2024)",
     "datetime": "2024-01-01T00:00:00Z",
-    "description": "Cleaned and merged tornado path dataset from NOAA SPC, including EF scale, track length, and fatalities.",
-    "processing:software": "Python + GeoPandas + Shapely",
-    "mcp_provenance": "sha256:a3c9b5...",
-    "derived_from": [
-      "data/raw/noaa_tornado_tracks.zip",
-      "data/raw/noaa_storm_events.csv"
-    ],
-    "spatial_extent": [-102.05, 36.99, -94.59, 40.01],
-    "temporal_extent": {
-      "start": "1950-01-01",
-      "end": "2024-12-31"
-    },
-    "license": "CC-BY 4.0",
-    "keywords": ["tornado", "hazard", "Kansas", "NOAA", "severe weather"]
+    "description": "Cleaned tornado path dataset from NOAA Storm Prediction Center (Kansas subset).",
+    "processing:software": "Python + GeoPandas + Shapely + GDAL",
+    "mcp_provenance": "sha256:e17a9b…",
+    "derived_from": ["data/raw/noaa_tornado_tracks.zip"],
+    "license": "CC-BY 4.0"
   },
   "assets": {
     "data": {
-      "href": "../tornado_tracks_1950_2024.geojson",
+      "href": "./tornado_tracks_1950_2024.geojson",
       "type": "application/geo+json",
       "roles": ["data"]
     }
   }
 }
-```
 
-### Required Metadata Fields
 
-| Field                 | Description                          | Example                                                  |
-| --------------------- | ------------------------------------ | -------------------------------------------------------- |
-| `id`                  | Unique dataset identifier            | `"flood_events_1900_2020"`                               |
-| `title`               | Human-readable dataset name          | `"Flood Events (1900–2020) – Kansas"`                    |
-| `description`         | Summary of dataset contents          | `"Digitized flood polygons from USGS and FEMA archives"` |
-| `datetime`            | Dataset or processing reference date | `"2020-12-31T00:00:00Z"`                                 |
-| `derived_from`        | Source datasets                      | `["data/raw/usgs_floods.zip"]`                           |
-| `processing:software` | Software stack used                  | `"GDAL 3.8.0 + Python GeoPandas"`                        |
-| `mcp_provenance`      | SHA256 checksum reference            | `"sha256:d83a1f..."`                                     |
-| `license`             | Data license (default CC-BY 4.0)     | `"CC-BY 4.0"`                                            |
-| `spatial_extent`      | Bounding box [W, S, E, N]            | `[-102.05, 36.99, -94.59, 40.01]`                        |
-| `temporal_extent`     | Period of record                     | `{"start": "1900-01-01", "end": "2020-12-31"}`           |
+⸻
 
-Optional fields include:
+⚙️ Processing Workflow
 
-* `keywords` (array of thematic tags)
-* `quality:metrics` (validation or confidence indicators)
-* `hazard:type` (e.g., `"drought"`, `"flood"`, `"tornado"`)
+Processing and harmonization are automated via Makefile targets and Python tools in tools/hazards/
+using Python, GeoPandas, Shapely, and GDAL. Rasters are converted to COGs with overviews.
 
----
+Example CLI:
 
-## 🌐 STAC Integration
+# 1) Clean tornado track shapefile
+python tools/hazards/clean_tornado_tracks.py \
+  --input data/raw/noaa_tornado_tracks.zip \
+  --output data/processed/hazards/tornado_tracks_1950_2024.geojson
 
-Each metadata file feeds directly into the **STAC catalog** (`data/stac/items/hazards_*`),
-supporting search and filtering by hazard type, time range, or region.
+# 2) Process FEMA disaster declarations (KS subset)
+python tools/hazards/fema_disasters.py \
+  --input data/raw/fema_disasters.csv \
+  --state "Kansas" \
+  --output data/processed/hazards/fema_disasters_1953_2024.geojson
 
-STAC integration enables:
+# 3) Generate SPI drought raster (12-month)
+python tools/hazards/drought_spi.py \
+  --input data/raw/noaa_precip_1950_2024.csv \
+  --window 12 \
+  --output data/processed/hazards/drought_spi12_1950_2024.tif
 
-* **Interoperable catalog access** (via APIs and Python clients)
-* **Time-aware mapping** of events in the Frontier Matrix web viewer
-* **Metadata synchronization** with the project’s graph database
 
-All metadata are validated against the STAC 1.0 JSON Schema before deployment.
+⸻
 
----
+🔁 Reproducibility & Validation
+	•	Checksums: Each dataset has a .sha256 digest under checksums/ for integrity verification.
+	•	STAC Validation: All metadata JSON validated against STAC 1.0 schema in CI.
+	•	Makefile Targets:
+	•	make hazards → process all hazard datasets
+	•	make validate-hazards → validate STAC and checksum integrity
+	•	Containerized Runtime: Processing runs in a pinned Docker image (Python + GDAL + GeoPandas).
+	•	QA Checks: Event counts, date ranges, and spatial bounds cross-checked against source providers (NOAA/FEMA/USGS).
 
-## 🔍 Validation & Provenance
+⸻
 
-Validation ensures metadata accuracy and completeness through multiple checks:
+🧠 Contributing New Hazard Data
+	1.	Add cleaned raster/vector datasets to this folder.
+	2.	Create a STAC Item in metadata/ and a checksum in checksums/.
+	3.	Add a DERIVATION.md (inputs, methods, software, assumptions).
+	4.	Validate:
 
-1. **JSON Schema Validation:** Confirms required fields and formats.
-2. **Checksum Verification:** Ensures `mcp_provenance` hashes match `.sha256` records.
-3. **STAC Compliance:** Validates assets, types, and version numbers.
-4. **Cross-Linkage:** Confirms all `derived_from` sources exist and are referenced in metadata.
-
-Local validation command:
-
-```bash
 make validate-hazards
-```
 
-Results are logged to `validation_report.json`.
 
----
+	5.	Open a PR including:
+	•	Data license and citations
+	•	Script references and parameterization
+	•	Visualization guidance (symbology, class breaks, temporal coverage)
 
-## 🧠 Adding or Updating Metadata
+All PRs are automatically checked by CI for schema and integrity compliance.
 
-1. Copy `template.json` → rename to match dataset ID (e.g., `wildfire_points_2000_2023.json`).
-2. Fill out required MCP and STAC fields (see schema above).
-3. Add checksum reference under `mcp_provenance` using the dataset’s `.sha256` hash.
-4. Validate:
+⸻
 
-   ```bash
-   make validate-hazards
-   ```
-5. Commit changes and open a Pull Request — CI/CD will auto-run validation checks.
+📅 Version History
 
-If updating a dataset (new version or expanded date range), ensure:
+Version	Date	Summary
+1.0.1	2025-10-10	Upgraded README with MCP front matter, CI targets, and QA verification details.
+1.0.0	2025-10-04	Initial processed hazards datasets and documentation.
 
-* `datetime` and `temporal_extent` are updated
-* Corresponding `.sha256` checksum is regenerated
 
----
+⸻
 
-## 📖 References
+📖 References
+	•	NOAA Storm Events: https://www.ncei.noaa.gov/stormevents/
+	•	FEMA Declarations (OpenFEMA): https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2
+	•	NASA FIRMS: https://firms.modaps.eosdis.nasa.gov/
+	•	U.S. Drought Monitor: https://droughtmonitor.unl.edu/
+	•	USGS Flood Science: https://www.usgs.gov/mission-areas/water-resources/science/floods
+	•	GDAL / GeoPandas: https://gdal.org · https://geopandas.org
+	•	STAC 1.0: https://stacspec.org
+	•	MCP Standards: ../../../docs/standards/
 
-* **NOAA Storm Events Database:** [https://www.ncei.noaa.gov/stormevents/](https://www.ncei.noaa.gov/stormevents/)
-* **FEMA Disaster Declarations:** [https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2](https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2)
-* **NASA FIRMS Fire Archive:** [https://firms.modaps.eosdis.nasa.gov/](https://firms.modaps.eosdis.nasa.gov/)
-* **US Drought Monitor:** [https://droughtmonitor.unl.edu/](https://droughtmonitor.unl.edu/)
-* **USGS Flood Hazards:** [https://www.usgs.gov/mission-areas/water-resources/science/floods](https://www.usgs.gov/mission-areas/water-resources/science/floods)
-* **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
-* **JSON Schema Specification:** [https://json-schema.org](https://json-schema.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../../docs/standards/)
+⸻
 
----
 
 <div align="center">
 
-*“Storms fade, fires cool, rivers recede — but these metadata preserve the memory of Kansas’s hazards for generations.”*
+
+“From storm paths to drought scars — these processed datasets chronicle the forces that have shaped Kansas resilience.”
+📍 data/processed/hazards/
 
 </div>
 ```
-
