@@ -3,9 +3,7 @@
 # 🚀 Kansas Frontier Matrix — Pull Request Template
 
 **Path:** `.github/PULL_REQUEST_TEMPLATE.md`
-
-**Purpose:** Ensure every change to KFM is **documented, reproducible, validated, and auditable**,
-in accordance with the **Master Coder Protocol (MCP)** and repository governance standards.
+**Purpose:** Make every change **documented, reproducible, validated, versioned, and auditable** per **Master Coder Protocol (MCP)** and repo governance.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
@@ -19,23 +17,37 @@ in accordance with the **Master Coder Protocol (MCP)** and repository governance
 
 ---
 
+```yaml
+---
+template: "KFM Pull Request"
+version: "v1.4.0"                       # template version
+last_updated: "2025-10-10"
+required_labels: ["triage", "semver", "domain"]
+governance:
+  required_reviews: 2
+  codeowners_enforced: true
+  branch: "main"
+security:
+  actions_pinned: true
+  allow_secrets_from_forks: false
+---
+```
+
 ## 🧩 Summary
 
-Concise description of what this PR changes and why.
+> Concise description of what this PR changes and why.
 
-> *Example:*
-> Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and wires the layer into `layers.json`.
+*Example:* Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and wires the layer into `web/config/layers.json`.
 
 ---
 
 ## 🔄 Related Issues / Discussions
 
-Link to relevant GitHub issues, discussions, or project tasks.
-
-* Closes #<id>
-* Related: #<id>
-* Discussion: <link>
-* Project / Milestone: <link>
+* Closes #…
+* Related: #…
+* Discussion: …
+* Project / Milestone: …
+* ADR (Architecture Decision Record): `docs/adr/ADR-XXXX-<title>.md` (if applicable)
 
 ---
 
@@ -49,23 +61,25 @@ Link to relevant GitHub issues, discussions, or project tasks.
 * [ ] 🧩 **Metadata Update** — STAC/schema documentation corrections
 * [ ] 📖 **Documentation Update** — READMEs, guides, ADRs
 * [ ] ⚙️ **CI/CD / Workflow** — Actions, pre-commit, or automation changes
-* [ ] 🔒 **Security / Validation** — checksums, licenses, supply-chain updates
-* [ ] 🧹 **Refactor / Cleanup** — readability, structure, or naming improvements
+* [ ] 🔒 **Security / Validation** — checksums, licenses, SBOM/supply-chain
+* [ ] 🧹 **Refactor / Cleanup** — readability, structure, or naming
 * [ ] 💥 **Breaking Change** — behavior or API contract change (see below)
 
 ---
 
 ## 🧮 Implementation Details
 
-| Field                    | Description                                                     |
-| :----------------------- | :-------------------------------------------------------------- |
-| **Affected Directories** | (e.g. `data/processed/climate/`, `src/pipelines/`)              |
-| **New Files Added**      | (scripts, datasets, metadata; include paths)                    |
-| **Pipelines Modified**   | (e.g. `terrain_pipeline.py`, `climate_pipeline.py`)             |
-| **Dependencies Updated** | (pip/Node; GitHub Actions pins)                                 |
-| **Validation Performed** | (checksums verified, STAC/JSON Schema validated, tests passing) |
+| Field                    | Description                                                   |
+| :----------------------- | :------------------------------------------------------------ |
+| **Affected Directories** | e.g. `data/processed/climate/`, `src/pipelines/`              |
+| **New Files Added**      | scripts, datasets, metadata; include paths                    |
+| **Pipelines Modified**   | e.g. `terrain_pipeline.py`, `climate_pipeline.py`             |
+| **Dependencies Updated** | pip/Node updates; GitHub Actions pins                         |
+| **Validation Performed** | checksums verified; STAC/JSON Schema validated; tests passing |
+| **Performance/Costs**    | runtime, memory, cache impacts; storage growth estimates      |
+| **Data Quality Checks**  | missingness, CRS, spatial joins, value ranges                 |
 
-<details><summary><b>Changelog Snippet (Keep a Changelog / SemVer)</b></summary>
+<details><summary><b>Changelog Snippet (Keep a Changelog + SemVer)</b></summary>
 
 ```markdown
 ### Added
@@ -78,44 +92,89 @@ Link to relevant GitHub issues, discussions, or project tasks.
 - Corrected CRS metadata for `soil_survey_1967` item
 
 ### Security
-- Bumped `actions/setup-node@v4` (pinned) and refreshed GH cache keys
+- Pinned `actions/setup-node@v4` + refreshed caches; SBOM attached to release
 ```
 
 </details>
 
 ---
 
-## ✅ Checklist (MCP + CI/CD Compliance)
+## 🧭 Versioning (SemVer) & Release Impact
+
+> Declare the *proposed* version change(s). Maintainers confirm during review.
+
+**Repo SemVer Impact:**
+
+* [ ] `PATCH` (fixes only)
+* [ ] `MINOR` (backward-compatible feature)
+* [ ] `MAJOR` (breaking changes)
+
+**Domains Affected:**
+
+* API: bump? `v… → v…`
+* Datasets (STAC `properties.version` updated):
+
+  * [ ] Climate
+  * [ ] Hydrology
+  * [ ] Treaties/Deeds
+  * [ ] Topo/Overlays
+  * [ ] Other: …
+
+**Models:** `docs/model_card.md` updated with **model version**, dataset snapshot, training hash
+**Release Notes (preview):** (see end of template)
+
+---
+
+## 📦 Dataset & STAC Impact (if datasets involved)
+
+| Dataset / Item Path                     | Change Type | `properties.version` | License | Source URL | Checksum (.sha256) |
+| --------------------------------------- | ----------- | -------------------- | ------- | ---------- | ------------------ |
+| `data/stac/climate/noaa_2020_2024.json` | Add/Update  | v…                   | …       | …          | ✅                  |
+| …                                       | …           | …                    | …       | …          | …                  |
+
+* [ ] Updated `data/sources/*.json` with `last_verified` date & citation
+* [ ] Rebuilt COG/GeoJSON with deterministic settings (reprojection to EPSG:4326, internal tiling)
+* [ ] Regenerated checksums in `checksums/`
+
+---
+
+## ✅ MCP + CI/CD Compliance Checklist
 
 ### 🧠 Documentation-First
 
-* [ ] Updated or added `README.md` for affected directories
-* [ ] Added/revised STAC metadata (Items/Collections)
-* [ ] Updated `data/sources/*.json` manifests with `last_verified`
+* [ ] READMEs updated for affected directories
+* [ ] STAC Items/Collections added/updated (valid JSON)
+* [ ] ADR authored/updated if design change
 
 ### 🔄 Reproducibility
 
-* [ ] Ran `make <target>` successfully (list targets below in comments)
-* [ ] Regenerated checksums for new/changed artifacts
-* [ ] Outputs are deterministic (same input → same output)
+* [ ] `make <targets>` executed successfully (list below)
+* [ ] Deterministic outputs confirmed (same input → same output)
+* [ ] Environment pinned (Dockerfile/requirements/lockfiles)
 
 ### 🧩 Open Standards
 
-* [ ] STAC validation passes (`stac-validator`)
-* [ ] Only open formats used (COG, GeoTIFF, GeoJSON, CSV, JSON, NetCDF)
-* [ ] Naming/schema follow MCP conventions
+* [ ] STAC validation passes (`make stac-validate`)
+* [ ] Only open formats (COG, GeoTIFF, GeoJSON, CSV/JSON, NetCDF)
+* [ ] Naming/schema follow KFM/MCP conventions
 
 ### 🔍 Provenance
 
-* [ ] Source links in `data/sources/*.json` include citation + license
-* [ ] Updated provenance chains for modified datasets
+* [ ] Sources cited with license in `data/sources/*.json`
+* [ ] STAC `derived_from` populated; lineage documented
 * [ ] SHA-256 checksums added/updated
 
 ### 🧾 Auditability
 
 * [ ] All workflows green (site, stac-validate, codeql, trivy, pre-commit)
-* [ ] Logs stored in `data/work/logs/` or linked as artifacts
-* [ ] Peer review requested (`@core-maintainers`)
+* [ ] Logs uploaded as artifacts or stored under `data/work/logs/`
+* [ ] Peer review requested from CODEOWNERS
+
+### 🔒 Security & Supply Chain
+
+* [ ] No secrets in code; Actions secrets used where needed
+* [ ] Actions pinned by tag/commit; SBOM generated (if build)
+* [ ] CodeQL + Trivy scans clean (no new High/Critical)
 
 ---
 
@@ -174,19 +233,7 @@ gh run download --name "stac-report.json"
 
   1. …
   2. …
-* Performance considerations (if any): …
-
----
-
-## 🧠 MCP Compliance Summary
-
-| MCP Principle       | Implementation Verified                       |
-| ------------------- | --------------------------------------------- |
-| Documentation-first | 🗹 Updated README/metadata/manifest           |
-| Reproducibility     | 🗹 Deterministic pipelines + checksum outputs |
-| Open Standards      | 🗹 Formats adhere to public specs             |
-| Provenance          | 🗹 Source, checksum, and STAC links verified  |
-| Auditability        | 🗹 CI/SARIF logs retained and green           |
+* Performance impacts / budgets: …
 
 ---
 
@@ -201,27 +248,26 @@ gh run download --name "stac-report.json"
 
 ## 🔒 Security / Licensing
 
-* [ ] No secrets committed; env handled via Actions › Secrets
-* [ ] Licenses verified for datasets and code dependencies
-* [ ] SBOM / supply-chain reviewed (actions pinned, dependencies scanned)
+* [ ] Dataset and code licenses verified / recorded
+* [ ] SBOM reviewed / attached to release (if build artifact)
 * [ ] CVE scan clean (CodeQL / Trivy)
+* [ ] DCO/Signoff present (if required by repo policy)
 
 ---
 
 ## 💥 Breaking Changes (If Any)
 
-Describe the breaking change and the migration steps required.
-
-* **Impact:** (who / what breaks)
-* **Migration:** (step-by-step)
-* **Deprecation Period:** (date / version)
+**Impact:** (who / what breaks)
+**Migration:** (step-by-step)
+**Deprecation Period:** (date / version)
+**Backports:** (release branches to target, if any)
 
 ---
 
 ## 🔖 Labels & Automation
 
-Suggested labels for triage and automation:
-`area:data`, `area:web`, `type:feature`, `type:bug`, `security`, `docs`, `priority:p1`, `good-first-issue`
+Suggested labels:
+`area:data`, `area:web`, `type:feature`, `type:bug`, `security`, `docs`, `priority:p1`, `good-first-issue`, `semver:patch|minor|major`
 
 ---
 
@@ -232,9 +278,10 @@ Suggested labels for triage and automation:
 * [ ] Checksums verified and updated
 * [ ] Documentation conforms to MCP standards
 * [ ] Code readability + formatting confirmed
-* [ ] Datasets linked in STAC catalog
+* [ ] Datasets linked/updated in STAC catalog
 * [ ] License / provenance validated
 * [ ] (If UI) Accessibility verified
+* [ ] Version bump rationale (SemVer) validated; release notes ready
 
 ---
 
@@ -258,17 +305,17 @@ flowchart TD
 
 ## 📊 Release Notes (Preview)
 
-Optional short entry for the CHANGELOG / Release Notes.
+Short entry for CHANGELOG / Release:
 
 * Add: NOAA Climate 2020–2024 STAC items and layers
 * Change: CRS metadata corrections for `soil_survey_1967`
-* Security: Pin `actions/setup-node@v4` and refresh caches
+* Security: Pin `actions/setup-node@v4`, refresh caches, attach SBOM
 
 ---
 
 ## ✍️ Additional Comments
 
-(Notes for reviewers, edge cases, known limitations, follow-ups, or backport plans.)
+(Notes for reviewers, edge cases, known limitations, follow-ups, or backport plan.)
 
 ---
 
