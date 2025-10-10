@@ -7,8 +7,8 @@
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-Master Coder Protocol-6f42c1)](../../../docs/)
-[![License](https://img.shields.io/badge/license-MIT (code)%20%7C CC--BY--4.0 (data)-blue)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-Master%20Coder%20Protocol-6f42c1)](../../../docs/)
+[![License](https://img.shields.io/badge/license-MIT%20(code)%20%7C%20CC--BY--4.0%20(data)-blue)](../../../LICENSE)
 
 **Hydrologically conditioned DEMs, flow direction, accumulation, and water masks**  
 powering **reproducible watershed and flood modeling** across Kansas.
@@ -58,7 +58,7 @@ Filled DEM	dem_filled_1m_ks.tif	Hydrologically conditioned 1 m DEM (sink-filled)
 Flow Direction (D8)	flow_dir_d8_1m_ks.tif	D8 flow direction grid (1–128 pointers)	Derived via WhiteboxTools	int	COG GeoTIFF
 Flow Accumulation (Base)	flow_accum_base_1m_ks.tif	Raw accumulation (pre-threshold)	Derived via WhiteboxTools	cells	COG GeoTIFF
 Water Mask	watermask_ks.tif	Binary water layer (NLCD + NHD fusion)	USGS / DASC	binary	COG GeoTIFF
-Stream Seeds	stream_seed_points.geojson	Candidate outlets/pour points for basins	Derived	n/a	GeoJSON
+Stream Seeds	stream_seed_points.geojson	Candidate outlets / pour points for basins	Derived	n/a	GeoJSON
 
 
 ⸻
@@ -93,17 +93,17 @@ Stream Seeds	stream_seed_points.geojson	Candidate outlets/pour points for basins
 ⚙️ Processing Workflow
 
 flowchart TD
-  A["Raw DEMs<br/>(1 m / 10–30 m)"] --> B["Fill Depressions<br/>(WhiteboxTools FillDepressions)"]
-  B --> C["D8 Flow Direction<br/>(D8Pointer)"]
-  B --> D["D8 Flow Accumulation<br/>(D8FlowAccumulation)"]
-  C & D --> E["Seed Point Extraction<br/>(Threshold Logic)"]
-  F["NLCD Water + NHD Hydrography"] --> G["Water Mask<br/>(GDAL Calc)"]
-  B & C & D & E & G --> H["Reproject → EPSG:4326<br/>(GDAL Warp)"]
-  H --> I["Convert → COG<br/>(rio cogeo create)"]
-  I --> J["Visual QC / Validation<br/>(QGIS vs NHD)"]
-  I --> K["Emit STAC Items<br/>(STAC 1.0 Schema)"]
-  I --> L["Compute Checksums<br/>(SHA-256)"]
-  K & L --> M["Continuous Integration<br/>(STAC Validate · Hash Verify)"]
+  A["Raw DEMs\n(1 m / 10–30 m)"] --> B["Fill Depressions\n(WhiteboxTools FillDepressions)"]
+  B --> C["D8 Flow Direction\n(D8Pointer)"]
+  B --> D["D8 Flow Accumulation\n(D8FlowAccumulation)"]
+  C & D --> E["Seed Point Extraction\n(Threshold Logic)"]
+  F["NLCD Water + NHD Hydrography"] --> G["Water Mask\n(GDAL Calc)"]
+  B & C & D & E & G --> H["Reproject → EPSG:4326\n(GDAL Warp)"]
+  H --> I["Convert → COG\n(rio cogeo create)"]
+  I --> J["Visual QC / Validation\n(QGIS vs NHD)"]
+  I --> K["Emit STAC Items\n(STAC 1.0 Schema)"]
+  I --> L["Compute Checksums\n(SHA-256)"]
+  K & L --> M["Continuous Integration\n(STAC Validate · Hash Verify)"]
 
 <!-- END OF MERMAID -->
 
@@ -153,3 +153,4 @@ QA/QC	Visual inspection (QGIS vs NHD streams)
 “From high plains to river valleys — these grids trace the flow that carved Kansas’s landscape.”
 
 </div>
+```
