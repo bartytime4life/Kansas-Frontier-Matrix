@@ -1,23 +1,3 @@
-```yaml
----
-name: 🐛 Bug Report
-about: Report a reproducible issue in code, data, pipelines, workflows, or documentation.
-title: "[BUG] <Concise, action-oriented summary>"
-labels: ["bug", "needs-review", "triage"]
-assignees: []
-version: "v2.0.0"
-last_updated: "2025-10-10"
-tags: ["bug", "reproducibility", "ci", "stac", "data-integrity"]
-governance:
-  requires_repro_steps: true
-  requires_logs: true
-  requires_provenance: true
-  reviewers_required: 2
-security:
-  sensitive_data: "Do not include secrets or API keys in issue content."
----
-```
-
 <div align="center">
 
 # 🐞 Kansas Frontier Matrix — Bug Report Template
