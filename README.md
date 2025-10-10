@@ -98,17 +98,17 @@ flowchart TD
   B --> D["D8 Flow Accumulation (D8FlowAccumulation)"]
 
   C --> E["Seed Point Extraction (threshold logic)"]
-  D --> E["Seed Point Extraction (threshold logic)"]
+  D --> E
 
   F["NLCD Water +\nNHD Hydrography"] --> G["Water Mask (GDAL Calc)"]
 
-  B --> H["Reproject → EPSG:4326 (GDAL Warp)"]
-  C --> H["Reproject → EPSG:4326 (GDAL Warp)"]
-  D --> H["Reproject → EPSG:4326 (GDAL Warp)"]
-  E --> H["Reproject → EPSG:4326 (GDAL Warp)"]
-  G --> H["Reproject → EPSG:4326 (GDAL Warp)"]
+  B --> H["Reproject to EPSG:4326 (GDAL Warp)"]
+  C --> H
+  D --> H
+  E --> H
+  G --> H
 
-  H --> I["Convert → COG (rio cogeo create)"]
+  H --> I["Convert to COG (rio cogeo create)"]
 
   I --> J["Visual QC (QGIS vs NHD)"]
   I --> K["Emit STAC Items (STAC 1.0 schema)"]
