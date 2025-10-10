@@ -7,8 +7,11 @@
 providing transparency and traceability while maintaining a clean, reproducible workflow under the Kansas Frontier Matrix (KFM) system.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../../LICENSE)
 
 </div>
 
@@ -17,12 +20,12 @@ providing transparency and traceability while maintaining a clean, reproducible 
 ## 📚 Overview
 
 The `data/work/tmp/terrain/logs/` directory temporarily stores **pipeline logs and debug reports**  
-created during terrain data processing. These logs provide a record of intermediate operations —  
+created during terrain data processing. These logs record key intermediate operations —  
 such as elevation reprojection, hillshade generation, slope/aspect calculation, and checksum verification.  
 
-Logs are **ephemeral** and can be deleted or regenerated without loss of reproducibility.  
-They exist to help developers, data engineers, and CI systems verify ETL progress, diagnose issues,  
-and document intermediate results before cleanup.
+Logs are **ephemeral** and regenerable for full reproducibility.  
+They enable developers, data engineers, and CI/CD systems to validate ETL progress,  
+diagnose issues, and document QA outputs prior to cleanup.
 
 ---
 
@@ -36,8 +39,8 @@ data/work/tmp/terrain/logs/
 └── terrain_validation_report.log
 ````
 
-> **Note:** Log filenames follow a structured convention to reflect the pipeline stage or test type.
-> All logs here are excluded from version control and automatically regenerated during ETL runs.
+> **Note:** File names mirror pipeline stages.
+> Logs are excluded from version control and regenerated during each ETL cycle.
 
 ---
 
@@ -46,42 +49,42 @@ data/work/tmp/terrain/logs/
 | Log Type                      | Purpose                                                                                            |
 | :---------------------------- | :------------------------------------------------------------------------------------------------- |
 | **`*_etl_debug.log`**         | Captures core ETL operations, including input/output paths, reprojection steps, and run durations. |
-| **`*_projection_test.log`**   | Records CRS conversions, GDAL reprojection tests, and coordinate accuracy validation.              |
-| **`*_validation_report.log`** | Summarizes checksum verification, data completeness, and STAC schema tests.                        |
-| **`*_qa_metrics.log`**        | (Optional) Stores intermediate quality metrics or comparison scores from pipeline testing.         |
+| **`*_projection_test.log`**   | Records CRS conversions, GDAL reprojection trials, and coordinate accuracy checks.                 |
+| **`*_validation_report.log`** | Summarizes checksum verification, completeness audits, and STAC schema validation.                 |
+| **`*_qa_metrics.log`**        | (Optional) Stores terrain quality metrics or raster comparison statistics.                         |
 
-All logs follow UTF-8 text format for portability and readability across systems.
+All logs are **UTF-8 plain-text** for portability and transparency.
 
 ---
 
 ## ⚙️ Log Management Workflow
 
-Logs are generated automatically by ETL and validation scripts.
+Logs are automatically created and managed by terrain ETL and QA scripts.
 
-**Example Makefile command:**
+**Makefile target:**
 
 ```bash
 make terrain
 ```
 
-**Equivalent Python invocation:**
+**Python command:**
 
 ```bash
 python src/pipelines/terrain/terrain_pipeline.py --log data/work/tmp/terrain/logs/terrain_etl_debug.log
 ```
 
-**Lifecycle:**
+**Lifecycle**
 
-1. Pipeline starts and creates or overwrites the log file.
-2. Operations (download, reprojection, transformation, checksum) are written in real time.
-3. CI/CD or developers can inspect logs for diagnostics.
-4. Logs are cleared with cleanup routines or on subsequent pipeline runs.
+1. Pipeline initializes → log file created or overwritten.
+2. Processing operations stream progress and errors in real time.
+3. Logs inspected manually or via CI/CD diagnostics.
+4. Auto-purged after validation or on next pipeline run.
 
 ---
 
 ## 🧹 Cleanup Policy
 
-This directory is **temporary** — logs are routinely purged after validation or deployment.
+This directory is **non-persistent** and cleared automatically to prevent clutter.
 
 **Makefile target:**
 
@@ -95,18 +98,23 @@ make clean-logs
 rm -rf data/work/tmp/terrain/logs/*
 ```
 
-CI jobs may automatically delete or overwrite logs after successful validation to conserve space.
+Automated cleanup runs post-validation during GitHub Actions workflows.
+
+Permanent terrain datasets and metadata live under:
+
+* `data/processed/terrain/` — verified DEMs, hillshades, and derivatives
+* `data/checksums/terrain/` — reproducibility hashes
 
 ---
 
 ## 🧩 Integration with KFM Pipelines
 
-| Linked Component                            | Function                                                            |
-| :------------------------------------------ | :------------------------------------------------------------------ |
-| `src/pipelines/terrain/terrain_pipeline.py` | Writes ETL logs during DEM and derivative processing.               |
-| `data/processed/terrain/`                   | Target directory for processed terrain outputs.                     |
-| `.github/workflows/stac-validate.yml`       | Uses logs for checksum and validation diagnostics.                  |
-| `data/work/tmp/terrain/`                    | Parent directory for temporary terrain testing and sandbox outputs. |
+| Linked Component                            | Function                                                   |
+| :------------------------------------------ | :--------------------------------------------------------- |
+| `src/pipelines/terrain/terrain_pipeline.py` | Generates terrain ETL logs and QA metrics.                 |
+| `data/processed/terrain/`                   | Receives final processed raster outputs.                   |
+| `.github/workflows/stac-validate.yml`       | References logs for checksum and schema validation.        |
+| `data/work/tmp/terrain/`                    | Parent directory for all temporary terrain workspace data. |
 
 ---
 
@@ -114,29 +122,30 @@ CI jobs may automatically delete or overwrite logs after successful validation t
 
 | MCP Principle           | Implementation                                                        |
 | :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | This README defines structure, lifecycle, and purpose of logs.        |
+| **Documentation-first** | README defines structure, lifecycle, and purpose of terrain logs.     |
 | **Reproducibility**     | Log generation is deterministic and reproducible across environments. |
-| **Open Standards**      | Logs are stored as plain UTF-8 text; no proprietary formats.          |
-| **Provenance**          | Logs record intermediate pipeline steps for full traceability.        |
-| **Auditability**        | Enables verification and debugging of ETL outputs before cleanup.     |
+| **Open Standards**      | UTF-8 plain text ensures cross-platform transparency.                 |
+| **Provenance**          | Logs trace intermediate pipeline stages for terrain data lineage.     |
+| **Auditability**        | Each ETL stage provides verifiable QA evidence before cleanup.        |
 
 ---
 
 ## 📎 Related Directories
 
-| Path                      | Description                                                    |
-| :------------------------ | :------------------------------------------------------------- |
-| `data/work/tmp/terrain/`  | Temporary workspace for terrain data processing.               |
-| `data/processed/terrain/` | Permanent location for validated terrain datasets.             |
-| `data/checksums/terrain/` | SHA-256 checksums ensuring reproducibility of terrain outputs. |
+| Path                      | Description                                                |
+| :------------------------ | :--------------------------------------------------------- |
+| `data/work/tmp/terrain/`  | Temporary workspace for terrain ETL and QA.                |
+| `data/processed/terrain/` | Final validated DEMs, hillshades, and derived rasters.     |
+| `data/checksums/terrain/` | SHA-256 checksum validation for reproducibility assurance. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                                 |
-| :------ | :--------- | :-------------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial terrain log workspace documentation created for ETL and validation diagnostics. |
+| Version | Date       | Summary                                                      |
+| :------ | :--------- | :----------------------------------------------------------- |
+| v1.0    | 2025-10-04 | Initial creation of terrain ETL log workspace documentation. |
+| v1.0.1  | 2025-10-09 | Added YAML metadata, JSON-LD schema, badges, and provenance. |
 
 ---
 
