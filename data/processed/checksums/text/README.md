@@ -3,9 +3,9 @@
 # 📜 Kansas Frontier Matrix — Text Checksums  
 `data/processed/checksums/text/`
 
-**Mission:** Safeguard the **integrity, provenance, and reproducibility**  
-of all processed textual datasets — including newspapers, oral histories, and treaties —  
-by maintaining SHA-256 checksum verification for each file in Kansas Frontier Matrix.
+**Mission:** Preserve the **integrity, provenance, and reproducibility** of all processed **textual datasets** —  
+including historical newspapers, oral histories, treaties, and transcripts — through verified SHA-256 checksums  
+that uphold the principles of open, auditable scholarship under the Master Coder Protocol (MCP).
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
@@ -19,17 +19,17 @@ by maintaining SHA-256 checksum verification for each file in Kansas Frontier Ma
 
 ## 📚 Overview
 
-This folder contains **SHA-256 checksum files (`.sha256`)**  
-for all processed **text datasets** within Kansas Frontier Matrix (KFM).  
+This directory contains **SHA-256 checksum files (`.sha256`)** for all processed **text datasets**  
+in the Kansas Frontier Matrix (KFM).  
 
-These checksums act as immutable fingerprints that:
-- **Verify file integrity** for textual datasets  
-- **Confirm reproducible ETL outputs** during AI/NLP processing  
-- **Provide provenance** linking to STAC and metadata layers  
-- **Enable auditability** via automated CI validation  
+Each checksum acts as a **cryptographic signature** that ensures:
+- 📜 **Integrity** — text files remain unmodified from their validated state.  
+- 🔁 **Reproducibility** — AI/NLP and OCR workflows yield consistent outputs.  
+- 🔗 **Provenance** — datasets remain traceable across source → metadata → STAC → publication.  
+- ⚙️ **Auditability** — every checksum is continuously validated in CI/CD workflows.
 
-Generated automatically during the text ETL pipeline (`make text`),  
-these checksums are validated through GitHub Actions to maintain end-to-end reproducibility.
+Checksums are automatically generated during the **text ETL pipeline** (`make text`) and revalidated  
+via GitHub Actions to ensure project-wide reproducibility and authenticity.
 
 ---
 
@@ -41,110 +41,125 @@ data/processed/checksums/text/
 ├── newspaper_articles_1850_1920.jsonl.sha256
 ├── oral_histories_transcripts.json.sha256
 └── treaties_legislation_1820_1900.json.sha256
-````
 
-> **Note:** Each `.sha256` file corresponds to its dataset in
-> `data/processed/text/` and is verified automatically in CI via `sha256sum -c`.
+Each .sha256 corresponds 1:1 to its dataset in data/processed/text/.
+CI workflows (stac-validate.yml) re-hash all text files during builds to verify their immutability.
 
----
+⸻
 
-## 🔐 Purpose of Checksums
+🎯 Purpose
 
-| Objective                  | Description                                                                  |
-| :------------------------- | :--------------------------------------------------------------------------- |
-| **Integrity Verification** | Detects any modification or corruption in text-based datasets.               |
-| **Reproducibility**        | Confirms NLP and OCR processing produce deterministic results.               |
-| **Provenance Tracking**    | Links dataset outputs to STAC metadata and source manifests.                 |
-| **CI Enforcement**         | GitHub Actions re-hash all text outputs to ensure parity with stored values. |
+Objective	Description
+Integrity Verification	Detects file corruption or unauthorized edits post-processing.
+Reproducibility	Confirms deterministic AI/NLP and OCR pipeline outputs.
+Provenance Tracking	Connects processed datasets with STAC metadata and source lineage.
+CI Enforcement	Automated validation ensures MCP reproducibility and audit compliance.
 
----
 
-## 🧮 Example `.sha256` File
+⸻
 
-```bash
+🧮 Example .sha256 File
+
 # File: newspaper_articles_1850_1920.jsonl.sha256
 acbbfca1d5e56b2ef14898ce22d0837ffb7341a912d1b5206de91f08a64cc8b1  newspaper_articles_1850_1920.jsonl
-```
 
-This checksum authenticates the dataset
-`data/processed/text/newspaper_articles_1850_1920.jsonl`.
+This checksum authenticates the text dataset
+data/processed/text/newspaper_articles_1850_1920.jsonl, ensuring it matches the last verified build artifact.
 
----
+⸻
 
-## ⚙️ Checksum Generation Workflow
+⚙️ Checksum Generation Workflow
 
-Checksums are created automatically during or after text dataset processing.
+Checksums are produced automatically after text ETL completion.
 
-**Makefile target:**
+Makefile target
 
-```bash
 make text-checksums
-```
 
-**Equivalent Python command:**
+Equivalent Python utility
 
-```bash
 python src/utils/generate_checksums.py data/processed/text/ --algo sha256
-```
 
-**Workflow Steps:**
+Steps
+	1.	Locate processed text datasets (.txt, .json, .jsonl, .csv).
+	2.	Compute SHA-256 hash using Python’s hashlib or GNU sha256sum --binary.
+	3.	Write <filename>.sha256 files into this directory.
+	4.	Validate these hashes automatically in CI/CD workflows.
 
-1. Locate processed text datasets (`.txt`, `.json`, `.jsonl`).
-2. Compute SHA-256 hash for each file using Python’s `hashlib`.
-3. Write `<filename>.sha256` into this folder.
-4. Validate checksums on each CI build or deployment.
+💡 Use sha256sum --binary for platform-independent hash generation.
 
----
+⸻
 
-## 🧰 CI/CD Validation
+🔎 CI/CD Validation
 
-Checksum verification occurs automatically in GitHub Actions workflows.
+Checksum validation runs automatically in GitHub Actions workflows for every build or PR.
 
-**Example validation command:**
+Example validation command
 
-```bash
 sha256sum -c data/processed/checksums/text/*.sha256
-```
 
-If any hash fails validation, the build fails — ensuring no altered or corrupted
-text data reaches publication or deployment stages.
+If any mismatch is detected, the pipeline fails, blocking merges or deployments
+until the affected dataset is reprocessed and revalidated.
+All validation logs are archived to maintain a permanent MCP audit trail.
 
----
+⸻
 
-## 🧩 Integration with Metadata & STAC
+🧩 Integration with Metadata & STAC
 
-| Linked Component                      | Purpose                                                           |
-| :------------------------------------ | :---------------------------------------------------------------- |
-| `data/processed/metadata/text/`       | Metadata JSON files reference associated checksums                |
-| `src/pipelines/text/text_pipeline.py` | Generates and verifies all text dataset hashes                    |
-| `.github/workflows/stac-validate.yml` | CI automation of STAC and checksum integrity checks               |
-| `data/stac/text/`                     | STAC catalog includes checksum references for provenance tracking |
+Linked Component	Purpose
+data/processed/metadata/text/	STAC Items reference .sha256 for dataset integrity.
+src/pipelines/text/text_pipeline.py	Automates hash generation and verification within ETL.
+.github/workflows/stac-validate.yml	CI workflow verifying checksum and STAC metadata compliance.
+data/stac/text/	STAC catalog embeds SHA-256 digests in assets.checksum:sha256.
 
----
 
-## 🧠 MCP Compliance Summary
+⸻
 
-| MCP Principle           | Implementation                                              |
-| :---------------------- | :---------------------------------------------------------- |
-| **Documentation-first** | Each text dataset includes `.sha256` checksum and metadata  |
-| **Reproducibility**     | Hashes confirm deterministic NLP + ETL output consistency   |
-| **Open Standards**      | SHA-256 (FIPS 180-4) cryptographic hashing                  |
-| **Provenance**          | Checksum links form part of dataset lineage and audit trail |
-| **Auditability**        | Automated CI/CD verification of checksum integrity          |
+🧠 MCP Compliance Summary
 
----
+MCP Principle	Implementation
+Documentation-first	Each dataset has corresponding .sha256 and metadata record.
+Reproducibility	Hashes confirm deterministic NLP/OCR results and unchanged artifacts.
+Open Standards	SHA-256 (FIPS 180-4) ensures robust cross-platform consistency.
+Provenance	Hashes link datasets across metadata, STAC, and source archives.
+Auditability	CI/CD workflows enforce continuous verification and changelog transparency.
 
-## 📅 Version History
 
-| Version | Date       | Summary                                                  |
-| :------ | :--------- | :------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial release of text checksum documentation and files |
+⸻
 
----
+🧮 Maintenance & Best Practices
+	•	🔄 Checksum Refresh: Regenerate checksums after reprocessing or NLP pipeline updates.
+	•	🧾 Naming Consistency: Ensure checksum filenames match exactly with their dataset names.
+	•	📜 Version Tracking: Update mcp_provenance fields in STAC/metadata after regenerating hashes.
+	•	🧪 Bulk Validation: Maintain a _manifest_all.sha256 for large-scale text audits.
+	•	⚙️ Automation: Add pre-commit hooks to prevent stale or missing checksums in commits.
+
+⸻
+
+📅 Version History
+
+Version	Date	Summary
+1.0.1	2025-10-10	Upgraded README with CI/CD integration, MCP best practices, and workflow steps.
+1.0.0	2025-10-04	Initial text checksum documentation and validation manifests.
+
+
+⸻
+
+📖 References
+	•	GNU Coreutils — SHA utilities: https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html
+	•	STAC 1.0 Specification: https://stacspec.org
+	•	JSON Schema: https://json-schema.org
+	•	MCP Standards (KFM): ../../../../docs/standards/
+	•	Open Data Provenance: https://www.nature.com/articles/s41597-019-0193-2
+
+⸻
+
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Word Verified: Integrity in the Historical Record.”*
-📍 [`data/processed/checksums/text/`](.) · Linked to the **Text STAC Collection**
+
+Kansas Frontier Matrix — “Every Word Verified: Integrity in the Historical Record.”
+📍 data/processed/checksums/text/ · Linked to the Text STAC Collection
 
 </div>
+```
