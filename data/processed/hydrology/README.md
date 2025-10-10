@@ -112,13 +112,27 @@ Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour-points fo
 ⚙️ Processing Workflow
 
 flowchart TD
-  A["Raw DEMs (1 m / 10–30 m)"] --> B["Fill Depressions\n(WhiteboxTools)"]
+  A["Raw DEMs\n(1 m / 10–30 m)"] --> B["Fill Depressions\n(WhiteboxTools)"]
+
+  %% Primary hydrology rasters
   B --> C["D8 Flow Direction\n(D8Pointer)"]
   B --> D["D8 Flow Accumulation\n(D8FlowAccumulation)"]
+
+  %% Seed points from accumulation (threshold logic)
   C & D --> E["Seed Point Extraction\n(threshold logic)"]
-  F["NLCD Water +\nNHD Hydrography"] --> G["Water Mask\n(GDAL Calc)"]
-  B & C & D & E & G --> H["Reproject + Convert to COG\n(rio cogeo)"]
-  H --> I["Emit STAC Items\n+ Checksums"]
+
+  %% Water mask fusion
+  F["NLCD Water\n+ NHD Hydrography"] --> G["Water Mask\n(GDAL Calc)"]
+
+  %% Reprojection and COG are explicit, then QC
+  B & C & D & E & G --> H["Reproject to EPSG:4326\n(GDAL)"]
+  H --> I["Convert to COG\n(rio cogeo)"]
+  I --> J["QC & Visual Check\n(QGIS vs NHD)"]
+
+  %% Metadata & integrity
+  I --> K["Emit STAC Items\n(STAC 1.0)"]
+  I --> L["Compute Checksums\n(.sha256)"]
+  K & L --> M["Ready for CI\n(Validate STAC • Verify hashes)"]
 <!-- END OF MERMAID -->
 
 Example Commands
