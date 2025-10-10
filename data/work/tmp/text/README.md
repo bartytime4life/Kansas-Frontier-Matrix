@@ -20,7 +20,8 @@ used during ETL, validation, and analysis in the Kansas Frontier Matrix (KFM).
 The `data/work/tmp/text/` directory serves as a **sandbox environment**  
 for handling intermediate textual artifacts during ETL and NLP pipeline execution.  
 
-These temporary files include:
+These temporary files may include:
+
 - OCR-processed raw text fragments (e.g., from scanned newspapers)  
 - Tokenized or vectorized text data for machine learning models  
 - Intermediate JSONL exports of named entities or summaries  
@@ -43,52 +44,52 @@ data/work/tmp/text/
     └── text_etl_debug.log
 ````
 
-> **Note:** Example files listed above are representative;
-> actual contents depend on current ETL or NLP preprocessing tasks.
+> **Note:** Example files shown above are placeholders;
+> actual contents depend on active ETL or NLP processing tasks.
 
 ---
 
 ## ⚙️ Usage Guidelines
 
-| Policy                    | Description                                                           |
-| :------------------------ | :-------------------------------------------------------------------- |
-| **Ephemeral Storage**     | Files are transient and automatically cleared.                        |
-| **Regenerable Artifacts** | All text artifacts are reproducible via ETL/NLP scripts.              |
-| **CI/CD Exclusion**       | This directory is ignored in automated builds except for diagnostics. |
-| **Open Formats**          | Use open formats (TXT, JSON, JSONL, CSV) only.                        |
-| **Data Sensitivity**      | Do not store personally identifiable or restricted content here.      |
+| Policy                    | Description                                                         |
+| :------------------------ | :------------------------------------------------------------------ |
+| **Ephemeral Storage**     | Files here are transient and automatically purged.                  |
+| **Regenerable Artifacts** | All text artifacts are reproducible via ETL or NLP scripts.         |
+| **CI/CD Exclusion**       | Directory ignored by automated builds except for debug diagnostics. |
+| **Open Formats**          | Use only open formats (TXT, JSON, JSONL, CSV).                      |
+| **Data Sensitivity**      | Do **not** store personally identifiable or restricted content.     |
 
 ---
 
 ## ⚙️ Typical Use Cases
 
-| Task                         | Example                                                              |
-| :--------------------------- | :------------------------------------------------------------------- |
-| **OCR Testing**              | Generate partial OCR output from scanned newspaper PDFs.             |
-| **Entity Extraction**        | Store temporary JSONL exports of NER results before graph ingestion. |
-| **Text Cleaning Validation** | Preview normalization and tokenization results.                      |
-| **Summarization QA**         | Validate AI-generated summaries for historical archives.             |
-| **Checksum Verification**    | Validate processed text files against existing SHA-256 records.      |
+| Task                         | Example                                                    |
+| :--------------------------- | :--------------------------------------------------------- |
+| **OCR Testing**              | Generate partial OCR output from scanned PDFs.             |
+| **Entity Extraction**        | Store JSONL exports of NER results before graph ingestion. |
+| **Text Cleaning Validation** | Preview tokenization or normalization results.             |
+| **Summarization QA**         | Validate AI-generated summaries of historical archives.    |
+| **Checksum Verification**    | Compare processed text with existing SHA-256 records.      |
 
 ---
 
 ## 🧹 Cleanup Policy
 
-This directory is **automatically cleared** during cleanup operations or at the start of new ETL runs.
+This directory is **automatically cleared** during scheduled maintenance or at the start of new ETL runs.
 
-**Makefile target:**
+**Makefile Target**
 
 ```bash
 make clean-tmp
 ```
 
-**Manual cleanup:**
+**Manual Command**
 
 ```bash
 rm -rf data/work/tmp/text/*
 ```
 
-Permanent and validated datasets are stored under:
+Permanent and validated datasets are stored in:
 
 * `data/processed/text/` — Final cleaned and structured text datasets
 * `data/checksums/text/` — SHA-256 integrity validation files
@@ -98,32 +99,32 @@ Permanent and validated datasets are stored under:
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                        |
-| :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | README defines structure, policy, and reproducibility.                |
-| **Reproducibility**     | All text files can be regenerated deterministically.                  |
-| **Open Standards**      | UTF-8 plain text, JSON, and JSONL formats ensure interoperability.    |
-| **Provenance**          | Temporary data correspond to logged ETL and NLP stages.               |
-| **Auditability**        | Logs and intermediate files maintain traceable lineage until cleanup. |
+| MCP Principle           | Implementation                                                   |
+| :---------------------- | :--------------------------------------------------------------- |
+| **Documentation-first** | README defines structure, policy, and reproducibility.           |
+| **Reproducibility**     | All text files regenerable deterministically via ETL/NLP.        |
+| **Open Standards**      | UTF-8, JSON, and JSONL ensure interoperability.                  |
+| **Provenance**          | Temporary files align with logged ETL/NLP stages.                |
+| **Auditability**        | Logs and intermediates maintain traceable lineage until cleanup. |
 
 ---
 
 ## 📎 Related Directories
 
-| Path                            | Description                                                     |
-| :------------------------------ | :-------------------------------------------------------------- |
-| `data/processed/text/`          | Final cleaned text datasets (OCR, transcripts, and summaries).  |
-| `data/checksums/text/`          | SHA-256 hashes ensuring text data integrity.                    |
-| `data/processed/metadata/text/` | Metadata and STAC entries for text datasets.                    |
-| `data/work/tmp/`                | Root temporary workspace for all ETL and validation subdomains. |
+| Path                            | Description                                                |
+| :------------------------------ | :--------------------------------------------------------- |
+| `data/processed/text/`          | Final cleaned text datasets (OCR, transcripts, summaries). |
+| `data/checksums/text/`          | SHA-256 hashes ensuring text data integrity.               |
+| `data/processed/metadata/text/` | STAC metadata entries for text datasets.                   |
+| `data/work/tmp/`                | Root workspace for all ETL and validation subdomains.      |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                               |
-| :------ | :--------- | :-------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial text temporary workspace documentation (ETL and NLP sandbox). |
+| Version    | Date       | Summary                                                                |
+| :--------- | :--------- | :--------------------------------------------------------------------- |
+| **v1.0.0** | 2025-10-04 | Initial documentation of temporary text workspace (ETL + NLP sandbox). |
 
 ---
 
