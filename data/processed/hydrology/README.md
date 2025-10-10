@@ -16,30 +16,28 @@ watershed delineations, and flood-risk modeling across Kansas.
 ⸻
 
 📚 Table of Contents
-	•	Overview
-	•	Directory Layout
-	•	Core Hydrology Datasets
-	•	STAC Metadata
-	•	Processing Workflow
-	•	Reproducibility & Validation
-	•	Contributing
-	•	References
+	•	🌊 Overview
+	•	🧱 Directory Layout
+	•	💦 Core Hydrology Datasets
+	•	🧩 STAC Metadata
+	•	⚙️ Processing Workflow
+	•	🔁 Reproducibility & Validation
+	•	🧠 Contributing
+	•	📖 References
 
 ⸻
 
 🌊 Overview
 
 This directory stores processed hydrologic surfaces and layers generated from
-DEM preprocessing and flow-routing routines.
+DEM preprocessing and flow-routing workflows.
 
-These outputs serve as the base for derivative modeling — flow accumulation, stream extraction,
-basin segmentation, and flood simulations — all reproducible via scripted ETL and STAC validation.
+These are the intermediate, validated surfaces used to derive
+flow accumulation, stream extraction, basin segmentation, and flood simulations.
 
-Sources: LiDAR-derived 1 m DEMs, historical 10–30 m DEMs, and auxiliary hydrologic datasets
-from USGS NHD, NOAA, and Kansas DASC.
-
-All rasters are standardized as Cloud-Optimized GeoTIFFs (COGs) in EPSG:4326 and indexed in
-the STAC catalog under data/stac/items/hydro_*.
+Sources: LiDAR 1 m DEMs, historical 10–30 m DEMs, and auxiliary hydrology from USGS NHD, NOAA, and Kansas DASC.
+Formats: Cloud-Optimized GeoTIFF (COG) in EPSG:4326; vectors in GeoJSON.
+Catalog: Indexed via STAC under data/stac/items/hydro_*.
 
 ⸻
 
@@ -48,11 +46,11 @@ the STAC catalog under data/stac/items/hydro_*.
 data/
 └── processed/
     └── hydrology/
-        ├── dem_filled_1m_ks.tif           # Hydrologically conditioned DEM (sink-filled)
-        ├── flow_dir_d8_1m_ks.tif          # D8 flow direction raster
+        ├── dem_filled_1m_ks.tif           # Hydro-conditioned DEM (sink-filled)
+        ├── flow_dir_d8_1m_ks.tif          # D8 flow direction grid
         ├── flow_accum_base_1m_ks.tif      # Base flow accumulation
         ├── watermask_ks.tif               # Binary water mask (1 = water)
-        ├── stream_seed_points.geojson     # Outlets & pour points
+        ├── stream_seed_points.geojson     # Outlets & pour-points
         ├── metadata/
         │   ├── dem_filled_1m_ks.json
         │   ├── flow_dir_d8_1m_ks.json
@@ -69,9 +67,9 @@ data/
 💦 Core Hydrology Datasets
 
 Product	File	Description	Source	Units	Format
-Filled DEM	dem_filled_1m_ks.tif	1 m LiDAR DEM, hydrologically conditioned (sink-filled)	KS LiDAR / USGS 3DEP	meters	COG GeoTIFF
+Filled DEM	dem_filled_1m_ks.tif	1 m LiDAR DEM after hydrologic sink filling	KS LiDAR / USGS 3DEP	meters	COG GeoTIFF
 Flow Direction (D8)	flow_dir_d8_1m_ks.tif	Downslope pointer grid (ESRI D8; 1–128)	Derived (WBT)	integer	COG GeoTIFF
-Flow Accumulation (Base)	flow_accum_base_1m_ks.tif	Raw accumulation before thresholding	Derived (WBT)	cells	COG GeoTIFF
+Flow Accumulation (Base)	flow_accum_base_1m_ks.tif	Raw accumulation prior to thresholding	Derived (WBT)	cells	COG GeoTIFF
 Water Mask	watermask_ks.tif	Binary raster (NLCD + NHD fusion)	USGS / DASC	binary	COG GeoTIFF
 Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour points	Derived	n/a	GeoJSON
 
@@ -80,8 +78,7 @@ Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour points	De
 
 🧩 STAC Metadata
 
-All layers are indexed via SpatioTemporal Asset Catalog (STAC 1.0) for discoverability, provenance,
-and validation. Example item:
+Each layer includes a STAC 1.0 JSON with full provenance and lineage.
 
 {
   "type": "Feature",
@@ -113,13 +110,13 @@ flowchart TD
   A["Raw DEM (1 m / 10–30 m)"] --> B["Fill Depressions (WhiteboxTools)"]
   B --> C["D8 Flow Direction"]
   B --> D["D8 Flow Accumulation"]
-  C & D --> E["Stream Seed Points"]
-  F["NLCD + NHD"] --> G["Water Mask Fusion (GDAL calc)"]
+  C & D --> E["Seed Points (threshold logic)"]
+  F["NLCD + NHD"] --> G["Water Mask (GDAL calc)"]
   B & C & D & E & G --> H["Reproject + COG (rio cogeo)"]
   H --> I["STAC Items + Checksums"]
 <!-- END OF MERMAID -->
 
-Example CLI:
+Example CLI
 
 whitebox_tools --run=FillDepressions -i dem_1m_ks.tif -o dem_filled_1m_ks.tif
 whitebox_tools --run=D8Pointer -i dem_filled_1m_ks.tif -o flow_dir_d8_1m_ks.tif
@@ -128,7 +125,6 @@ gdal_calc.py -A nlcd_water_ks.tif -B nhd_water_ks.tif \
   --outfile=watermask_ks.tif --calc="((A>0)|(B>0)).astype(uint8)"
 python tools/hydro/seed_points.py --accum flow_accum_base_1m_ks.tif --threshold 500
 
-All outputs are reprojected and converted to COG via rio cogeo create.
 
 ⸻
 
@@ -136,22 +132,23 @@ All outputs are reprojected and converted to COG via rio cogeo create.
 
 Check	Method
 Integrity	.sha256 hashes verified in CI
-Metadata	STAC 1.0 schema validation (make stac-validate)
-Pipeline	Rebuild with make hydrology or make validate-hydro
+Metadata	STAC 1.0 validation (make stac-validate)
+Pipeline	Rebuild via make hydrology or make validate-hydro
 Environment	Docker container (GDAL + WhiteboxTools + Python)
-QA/QC	Visual inspection in QGIS vs USGS NHD baseline
+QA/QC	Visual check in QGIS vs USGS NHD baseline
 
 
 ⸻
 
 🧠 Contributing
-	1.	Add new processed files (COG / GeoJSON).
-	2.	Create matching STAC JSON → metadata/ + checksum → checksums/.
-	3.	Document derivation (DERIVATION.md) — inputs, tools, parameters.
-	4.	Validate locally → make validate-hydro.
-	5.	Submit PR with: sources + licenses + visual examples.
 
-All new data must pass STAC and checksum validation before merge.
+1️⃣ Add new COG / GeoJSON outputs.
+2️⃣ Create metadata → metadata/ and checksum → checksums/.
+3️⃣ Write DERIVATION.md (includes inputs, tools, parameters).
+4️⃣ Validate → make validate-hydro.
+5️⃣ Submit PR with sources, licenses, and visual examples.
+
+All new data must pass STAC + checksum validation before merge.
 
 ⸻
 
@@ -160,7 +157,7 @@ All new data must pass STAC and checksum validation before merge.
 	•	TauDEM: hydrology.usu.edu/taudem
 	•	GDAL: gdal.org
 	•	USGS NHD: usgs.gov/national-hydrography
-	•	Kansas DASC GIS Hub: hub.kansasgis.org
+	•	Kansas DASC Hub: hub.kansasgis.org
 	•	STAC Spec 1.0: stacspec.org
 	•	MCP Docs: docs/standards/
 
@@ -173,3 +170,6 @@ All new data must pass STAC and checksum validation before merge.
 “From high plains to river valleys — these grids trace the flow that carved Kansas’s landscape.”
 
 </div>
+
+
+✅ Now all header sizes, div spacing, and typographic hierarchy match your other finalized KFM markdowns — large H2 section headers, consistent horizontal rules, and properly scaled emoji titles for uniform rendering on GitHub.
