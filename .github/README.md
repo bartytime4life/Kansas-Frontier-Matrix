@@ -4,10 +4,8 @@
 
 **Path:** `.github/`
 
-**Mission:** Serve as the **central automation and governance hub**
-for the **Kansas Frontier Matrix (KFM)** — ensuring
-**reproducibility**, **security**, **provenance**, and **MCP compliance**
-across all datasets, pipelines, and documentation.
+**Mission:** Central **automation + governance hub** for the Kansas Frontier Matrix (KFM) — enforcing
+**reproducibility**, **security**, **provenance**, **versioning**, and **MCP compliance** across all code, data, and docs.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
@@ -21,14 +19,26 @@ across all datasets, pipelines, and documentation.
 
 ---
 
+```yaml
+---
+title: "KFM • .github — Automation & Governance"
+version: "v1.5.0"
+last_updated: "2025-10-10"
+owners: ["@bartytime4life", "@kfm-architecture", "@kfm-security"]
+status: "Stable"
+maturity: "Production"
+tags: ["ci", "cd", "governance", "security", "mcp", "stac", "provenance", "versioning"]
+license: "MIT"
+---
+```
+
+---
+
 ## 🧭 Overview
 
-The `.github/` directory defines **how KFM automates, validates, governs, and secures**
-its entire system lifecycle using **GitHub Actions**, **pre-commit hooks**, and
-**Master Coder Protocol (MCP)** standards.
-
-Automation ensures the repository remains:
-✅ **Deterministic** 🔍 **Traceable** 🔐 **Secure** 🧾 **Self-Documenting** 🧮 **MCP-Verified**
+`.github/` defines **how** KFM automates, validates, governs, versions, and secures its lifecycle using
+**GitHub Actions**, **branch protections**, **pre-commit**, and **MCP** standards.
+Automation guarantees the repo is: ✅ **Deterministic** 🔍 **Traceable** 🔐 **Secure** 🧾 **Auditable** 🧮 **MCP-Verified**
 
 Every commit, workflow, dataset, and artifact becomes part of the **verifiable chain of reproducibility**.
 
@@ -43,32 +53,35 @@ Every commit, workflow, dataset, and artifact becomes part of the **verifiable c
 │   ├── stac-validate.yml      # Validate STAC collections/items & JSON Schemas
 │   ├── codeql.yml             # Static analysis for Python/JS
 │   ├── trivy.yml              # Container vulnerability scans (CVE reports)
-│   ├── pre-commit.yml         # Linting + style enforcement + unit tests
-│   └── auto-merge.yml         # Automatically merge passing PRs
+│   ├── pre-commit.yml         # Linting + style enforcement + tests
+│   └── auto-merge.yml         # Automatically merge passing PRs (policy-bound)
 │
 ├── ISSUE_TEMPLATE/
 │   ├── bug_report.md          # Structured bug report (logs + env info)
 │   ├── feature_request.md     # Enhancement proposals
-│   └── data_request.md        # Dataset addition or change request
+│   └── data_request.md        # Dataset addition/change request
 │
 ├── PULL_REQUEST_TEMPLATE.md   # MCP-aligned PR checklist (reproducibility, provenance)
-└── FUNDING.yml                # Funding + sponsor links
+├── FUNDING.yml                # Funding + sponsor links
+├── CODEOWNERS                 # Review routing and ownership (enforced by branch rules)
+├── GOVERNANCE.md              # Roles, responsibilities, decision model
+└── SECURITY.md                # Security policy, disclosure, rotation & hardening
 ```
+
+> **Pinning Policy:** All Actions are **pinned** by version or commit SHA (no `@latest`) for deterministic runs.
 
 ---
 
 ## ⚙️ Core Workflows
 
-| Workflow            | Purpose                                          | Trigger            | Output                     |
-| ------------------- | ------------------------------------------------ | ------------------ | -------------------------- |
-| `site.yml`          | Builds & deploys documentation, site, and web UI | push → main        | `_site/ → GitHub Pages`    |
-| `stac-validate.yml` | Validates STAC catalogs + schemas                | push, pull_request | `stac-report.json`         |
-| `codeql.yml`        | Runs CodeQL static analysis (security audit)     | schedule, push     | CodeQL Dashboard           |
-| `trivy.yml`         | Scans Docker + dependencies for CVEs             | push, pull_request | SARIF vulnerability report |
-| `pre-commit.yml`    | Runs lint, format, tests, and spellcheck         | pull_request       | Pre-commit log             |
-| `auto-merge.yml`    | Merges PRs when all checks pass                  | post-check success | Merged PR + audit trail    |
-
-💡 **Note:** All actions are **pinned** (`@v3` or commit SHA) for deterministic execution and verifiable builds.
+| Workflow            | Purpose                                       | Trigger        | Output                     |
+| ------------------- | --------------------------------------------- | -------------- | -------------------------- |
+| `site.yml`          | Builds & deploys documentation + site         | push → `main`  | `_site/` → GitHub Pages    |
+| `stac-validate.yml` | Validates STAC catalogs + checksums + schemas | push, PR       | `stac-report.json`         |
+| `codeql.yml`        | Static analysis (security audit)              | schedule, push | CodeQL Dashboard           |
+| `trivy.yml`         | CVE scans for images/deps                     | push, PR       | SARIF vulnerability report |
+| `pre-commit.yml`    | Lint/format/tests/spellcheck                  | pull_request   | Pre-commit log             |
+| `auto-merge.yml`    | Policy-gated auto-merge                       | checks success | Merged PR + audit trail    |
 
 ---
 
@@ -104,64 +117,121 @@ flowchart TD
 
 ## 🧮 MCP Compliance Matrix
 
-| MCP Principle             | Implementation in `.github/`                                     |
-| ------------------------- | ---------------------------------------------------------------- |
-| **Documentation-First**   | Every workflow includes inline comments and version tracking.    |
-| **Reproducibility**       | Pinned dependencies ensure reproducible builds and artifacts.    |
-| **Provenance**            | SHA-256 checksums and STAC validations establish lineage.        |
-| **Auditability**          | CI logs, SARIF, and build artifacts serve as verifiable records. |
-| **Open Standards**        | YAML + JSON Schema + STAC 1.0.x adopted universally.             |
-| **Accessibility**         | Workflow statuses and logs are publicly viewable.                |
-| **Security Transparency** | CodeQL & Trivy reports bundled in release artifacts.             |
+| MCP Principle         | Implementation in `.github/`                              |
+| --------------------- | --------------------------------------------------------- |
+| Documentation-First   | Inline workflow docs + version tags + CHANGELOG entries   |
+| Reproducibility       | Pinned actions + deterministic build matrices             |
+| Provenance            | SHA-256 checksums + STAC validation & reports             |
+| Auditability          | CI logs, SARIF, artifacts retained (≥ 90 days)            |
+| Open Standards        | YAML, JSON Schema, STAC 1.0.x used universally            |
+| Security Transparency | CodeQL & Trivy SARIF attached to runs + release bundles   |
+| Accessibility         | Actions status/logs publicly visible (non-secret outputs) |
 
 ---
 
 ## 🧾 Issue & Pull Request Governance
 
-### ✅ Pull Request Checklist
+### ✅ Pull Request Checklist (enforced by template / status checks)
 
 * [x] Documentation updated and linked
-* [x] STAC and checksum validation passed
-* [x] CodeQL & Trivy scans clear
+* [x] STAC + checksum validation passed
+* [x] CodeQL & Trivy scans clear (no new High/Critical)
 * [x] Unit + integration tests passed
-* [x] MCP reproducibility verified
-* [x] Provenance metadata attached
+* [x] Reproducible steps (commands/env) included
+* [x] Provenance metadata (sources, licenses) attached
 
 ### 🧩 Issue Templates
 
-| Template               | Purpose                                                      |
-| ---------------------- | ------------------------------------------------------------ |
-| 🐞 **Bug Report**      | Capture reproducible errors with environment + logs          |
-| 💡 **Feature Request** | Describe desired feature, benefit, and use case              |
-| 🗺️ **Data Request**   | Propose dataset inclusion with license + source verification |
+| Template               | Purpose                                              |
+| ---------------------- | ---------------------------------------------------- |
+| 🐞 **Bug Report**      | Repro errors w/ environment, logs, and screenshots   |
+| 💡 **Feature Request** | Proposal w/ rationale, acceptance criteria, UX notes |
+| 🗺️ **Data Request**   | Dataset + license + STAC metadata + validation scope |
 
 ---
 
 ## 🔒 Security & Maintenance Policy
 
-| Focus Area             | Policy / Action                                  |
-| ---------------------- | ------------------------------------------------ |
-| **Secrets**            | Stored only in Settings → Secrets → Actions      |
-| **Weekly Scans**       | Automated CodeQL + Trivy each Sunday             |
-| **Peer Review**        | Minimum two approvals for workflow edits         |
-| **Branch Rules**       | Require signed commits + passing checks          |
-| **Dependency Hygiene** | Monthly automated dependency updates             |
-| **Audit Retention**    | Logs, SARIF, and STAC reports retained ≥ 90 days |
+| Focus Area             | Policy / Action                                                   |
+| ---------------------- | ----------------------------------------------------------------- |
+| **Secrets**            | GitHub → Settings → Secrets (Actions only; least-privilege)       |
+| **Weekly Scans**       | CodeQL + Trivy every Sunday (cron)                                |
+| **Peer Review**        | **2 approvals** required for workflow / security changes          |
+| **Branch Rules**       | Signed commits + required checks + linear history                 |
+| **Dependencies**       | Monthly automated updates via Dependabot + lockfile refresh       |
+| **Audit Retention**    | Logs, SARIF, STAC reports kept **≥ 90 days**                      |
+| **Secret Rotation**    | Quarterly rotation; emergency rotation within 24h of exposure     |
+| **Permissions Bound.** | Actions run with `read` by default; `write` via explicit job only |
 
-🔐 **Security Posture:**
-Zero-trust enforced — workflows cannot access external repos or secrets unless explicitly declared and reviewed.
+> **Zero-Trust:** No external repo or secret access unless explicitly defined & reviewed.
+
+---
+
+## 🌿 Versioning & Release Management
+
+**Repository Release SemVer:** `vMAJOR.MINOR.PATCH`
+**Workflows SemVer Header:** each `*.yml` declares `x-kfm-version: vX.Y` (comment header)
+**Datasets:** version stored in STAC (`properties.version`) + CHANGELOG in dataset README
+**Models:** version + training manifest in `docs/model_card.md`
+**Tags & DOI:** Releases are tagged and mirrored to Zenodo for a citable DOI
+
+### Release Flow
+
+```text
+feature/* → PR → main
+          → tag vX.Y.Z → GitHub Release → Archive artifacts (STAC report, SARIF, site bundle)
+```
+
+**Backports:** Patch-only cherry-picks to `release/*` branches require approval by Security + Maintainers.
+
+---
+
+## 🌳 Branching Strategy & Protections
+
+* **main**: protected; production; squash merges; signed commits; all checks required
+* **release/***: backport patch-lines for supported versions
+* **feature/***: short-lived, rebased on latest `main` prior to merge
+
+**Required Checks:** pre-commit, tests, CodeQL, Trivy, STAC validate, pages build (if doc changes)
+
+---
+
+## 👥 Roles & CODEOWNERS
+
+### CODEOWNERS (excerpt)
+
+```txt
+# Core ownership
+*                                 @kfm-maintainers
+
+# Security-sensitive areas
+.github/workflows/*               @kfm-security @kfm-architecture
+tools/containers/*                @kfm-security
+
+# Data catalogs & STAC
+data/stac/**                      @kfm-data @kfm-architecture
+data/sources/**                   @kfm-data
+
+# Web UI
+web/**                            @kfm-web
+
+# ETL/AI/ML
+src/**                            @kfm-data @kfm-ml
+```
+
+> Ownership + 2-review policy enforced for security and workflow folders.
 
 ---
 
 ## 🧠 Maintainer Guidelines
 
-1. 🧩 **Modular Workflows** — One purpose per YAML
-2. 🧾 **Document Everything** — Comments + changelog per workflow
-3. 🔒 **Pin Versions** — No `@latest`; always tag or pin SHA
-4. 🚦 **Fail Fast** — Explicit exit codes and human-readable logs
-5. 🧪 **Test Locally** — Use `act` or `gh workflow run` before merge
-6. 🧰 **Cache Wisely** — Use `actions/cache@v3` for dependencies
-7. 🔁 **Audit Regularly** — Run `gh workflow view` monthly to confirm compliance
+1. **Modular Workflows** — One purpose per YAML; small, composable jobs
+2. **Document Everything** — Comment blocks + version header + link to issue/PR
+3. **Pin Versions** — No `@latest`; use tagged versions or SHAs
+4. **Fail Fast** — Clear exit codes, human-readable warnings, minimal noise
+5. **Test Locally** — `act` or `gh workflow run` prior to merge
+6. **Cache Wisely** — `actions/cache@v3` with precise keys; purge stale caches monthly
+7. **Regular Audits** — Monthly review of secrets, permissions, and job run-times
 
 ---
 
@@ -194,7 +264,7 @@ graph LR
 pre-commit install
 pre-commit run --all-files
 
-# 🧪 Trigger workflow manually
+# 🧪 Trigger a workflow manually
 gh workflow run site.yml
 
 # 📜 List latest workflow runs
@@ -206,15 +276,55 @@ gh run download --name "stac-report.json"
 
 ---
 
+## 📜 Example Policy Stubs
+
+**GOVERNANCE.md (excerpt)**
+
+```markdown
+# Governance
+## Roles
+- Maintainers: roadmap, releases, final reviews
+- Security: secret rotation, CVE triage, workflow approvals
+- Data Stewards: STAC schema, dataset provenance
+## Decisions
+- Lazy consensus in issues/PRs; escalate to Maintainers for tie-break
+## Meetings
+- Monthly triage; quarterly roadmap review
+```
+
+**SECURITY.md (excerpt)**
+
+```markdown
+# Security Policy
+- Report vulnerabilities to security@kfm.org (PGP key in repo)
+- SLA: triage 48h, fix plan 7d, patch release 14d (severity-dependent)
+- Secret Rotation: quarterly; immediate upon suspected compromise
+```
+
+**PULL_REQUEST_TEMPLATE.md (excerpt)**
+
+```markdown
+### Summary
+- [ ] Docs updated
+- [ ] STAC & checksums pass
+- [ ] Tests pass
+- [ ] CodeQL/Trivy clean
+- [ ] Provenance & license included
+- [ ] Repro steps (commands/env)
+```
+
+---
+
 ## 🕓 Version History
 
-| Version | Date       | Summary                                          |
-| ------- | ---------- | ------------------------------------------------ |
-| v1.0.0  | 2025-10-04 | Initial CI/CD governance structure               |
-| v1.1.0  | 2025-10-06 | Added workflow documentation & diagrams          |
-| v1.2.0  | 2025-10-07 | Enhanced MCP compliance + STAC reporting         |
-| v1.3.0  | 2025-10-08 | Introduced security policy & auto-merge          |
-| v1.4.0  | 2025-10-09 | Added dependency graph, CLI examples, and badges |
+| Version | Date       | Summary                                                           |
+| ------- | ---------- | ----------------------------------------------------------------- |
+| v1.5.0  | 2025-10-10 | Added versioning, release flow, CODEOWNERS, governance & security |
+| v1.4.0  | 2025-10-09 | Dependency graph, CLI examples, and badges                        |
+| v1.3.0  | 2025-10-08 | Enhanced MCP matrix + STAC reporting                              |
+| v1.2.0  | 2025-10-07 | Added security policy & auto-merge                                |
+| v1.1.0  | 2025-10-06 | Workflow documentation & diagrams                                 |
+| v1.0.0  | 2025-10-04 | Initial CI/CD governance structure                                |
 
 ---
 
@@ -222,9 +332,9 @@ gh run download --name "stac-report.json"
 
 ### ⚙️ Kansas Frontier Matrix — Automation with Integrity
 
-“.github/” orchestrates **reproducibility, verification, and governance**
-across every dataset, pipeline, and artifact — the heartbeat of MCP compliance.
+“.github/” orchestrates **reproducibility, verification, versioning, and governance**
+throughout every dataset, pipeline, and artifact — the **heartbeat of MCP**.
 
-🧭 Every workflow · Every commit · Every result — **Proven and reproducible.**
+🧭 Every workflow · Every commit · Every result — **Proven, versioned, and reproducible.**
 
 </div>
