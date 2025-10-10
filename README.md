@@ -11,7 +11,7 @@
 [![License](https://img.shields.io/badge/license-MIT%20(code)%20%7C%20CC--BY%20(data)-blue)](../../../LICENSE)
 
 **Hydrologically conditioned DEMs, flow direction, accumulation, and water masks**  
-for reproducible terrain and watershed modeling across Kansas.
+that power reproducible hydrology and watershed modeling across Kansas.
 
 </div>
 
@@ -20,14 +20,13 @@ for reproducible terrain and watershed modeling across Kansas.
 ## 🌊 Overview
 
 This directory contains **processed hydrologic surfaces and layers** generated from  
-DEM preprocessing, flow-routing, and conditioning workflows.
+DEM preprocessing, flow-routing, and terrain conditioning.  
 
-These datasets underpin hydrologic and geomorphic derivatives:  
-**flow accumulation, stream extraction, watershed segmentation, and flood modeling.**
+These base datasets support **stream extraction, basin delineation, and flood simulation**  
+for Kansas hydrology and geomorphology workflows.
 
-**Sources:**  
-LiDAR 1 m DEMs (Kansas DASC / USGS 3DEP), historical 10–30 m DEMs, NLCD water, NHD hydrography, and GNIS features.  
-**Standards:** Cloud-Optimized GeoTIFF (COG) for rasters, GeoJSON for vectors, EPSG 4326 (WGS84).  
+**Sources:** LiDAR 1 m DEMs (Kansas DASC / USGS 3DEP), historical 10–30 m DEMs, NLCD water, NHD hydrography, GNIS features.  
+**Standards:** Cloud-Optimized GeoTIFF (COG) for rasters, GeoJSON for vectors, EPSG:4326 (WGS84).  
 **Catalog:** Indexed under `data/stac/items/hydro_*`.
 
 ---
@@ -59,11 +58,11 @@ data/
 💦 Core Datasets
 
 Product	File	Description	Source	Units	Format
-Filled DEM	dem_filled_1m_ks.tif	1 m LiDAR DEM with sink filling for hydrologic continuity	KS LiDAR / USGS 3DEP	m	COG GeoTIFF
-Flow Direction (D8)	flow_dir_d8_1m_ks.tif	Downslope pointer grid (ESRI D8 model 1–128)	Derived (WhiteboxTools)	int	COG GeoTIFF
+Filled DEM	dem_filled_1m_ks.tif	Hydrologically conditioned 1 m DEM (sink-filled)	KS LiDAR / USGS 3DEP	m	COG GeoTIFF
+Flow Direction (D8)	flow_dir_d8_1m_ks.tif	D8 flow direction grid (1–128 pointer values)	Derived (WhiteboxTools)	int	COG GeoTIFF
 Flow Accumulation (Base)	flow_accum_base_1m_ks.tif	Raw accumulation before stream thresholding	Derived (WhiteboxTools)	cells	COG GeoTIFF
-Water Mask	watermask_ks.tif	Binary mask fused from NLCD water + NHD hydrography (1 = water)	USGS / DASC	binary	COG GeoTIFF
-Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour points for watershed delineation	Derived	n/a	GeoJSON
+Water Mask	watermask_ks.tif	Binary water layer (NLCD + NHD fusion, 1 = water)	USGS / DASC	binary	COG GeoTIFF
+Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour points for basins	Derived	n/a	GeoJSON
 
 
 ⸻
@@ -76,10 +75,9 @@ Stream Seed Points	stream_seed_points.geojson	Candidate outlets / pour points fo
   "id": "flow_dir_d8_1m_ks",
   "properties": {
     "title": "Flow Direction (D8) – Kansas LiDAR DEM",
-    "description": "D8 pointer grid derived from hydro-conditioned 1 m DEM.",
     "datetime": "2020-01-01T00:00:00Z",
     "processing:software": "WhiteboxTools 2.2.0",
-    "processing:steps": ["FillDepressions", "D8Pointer"],
+    "mcp_provenance": "sha256:4be51c…",
     "derived_from": ["data/processed/hydrology/dem_filled_1m_ks.tif"],
     "license": "CC-BY 4.0"
   },
@@ -112,15 +110,6 @@ flowchart TD
   K & L --> M["Continuous Integration\n(STAC validate · hash verify)"]
 %% END OF MERMAID
 
-Example CLI
-
-whitebox_tools --run=FillDepressions -i dem_1m_ks.tif -o dem_filled_1m_ks.tif
-whitebox_tools --run=D8Pointer -i dem_filled_1m_ks.tif -o flow_dir_d8_1m_ks.tif
-whitebox_tools --run=D8FlowAccumulation -i dem_filled_1m_ks.tif -o flow_accum_base_1m_ks.tif
-gdal_calc.py -A nlcd_water_ks.tif -B nhd_water_ks.tif \
-  --outfile=watermask_ks.tif --calc="((A>0)|(B>0)).astype(uint8)"
-python tools/hydro/seed_points.py --accum flow_accum_base_1m_ks.tif --threshold 500
-
 
 ⸻
 
@@ -139,10 +128,10 @@ QA/QC	Visual inspection in QGIS vs NHD streams
 🧠 Contributing
 
 1️⃣ Add new COG or GeoJSON outputs.
-2️⃣ Create STAC metadata → metadata/ and checksum → checksums/.
-3️⃣ Add DERIVATION.md detailing inputs, tools, parameters.
-4️⃣ Validate locally → make validate-hydro.
-5️⃣ Submit PR with sources, licenses, and visual examples.
+2️⃣ Create STAC metadata in metadata/ and checksum in checksums/.
+3️⃣ Document inputs, parameters, and software in DERIVATION.md.
+4️⃣ Validate locally using make validate-hydro.
+5️⃣ Submit a Pull Request with sources, licenses, and preview images.
 
 All new data must pass STAC and checksum validation before merge.
 
@@ -166,3 +155,4 @@ All new data must pass STAC and checksum validation before merge.
 “From high plains to river valleys — these grids trace the flow that carved Kansas’s landscape.”
 
 </div>
+```
