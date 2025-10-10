@@ -90,20 +90,21 @@ Stream Seeds	stream_seed_points.geojson	Candidate outlets / pour points for basi
 
 ⸻
 
-⚙️ Processing Workflow
+## ⚙️ Processing Workflow
 
+```mermaid
 flowchart TD
-  A["Raw DEMs\n(1 m / 10–30 m)"] --> B["Fill Depressions\n(WhiteboxTools FillDepressions)"]
-  B --> C["D8 Flow Direction\n(D8Pointer)"]
-  B --> D["D8 Flow Accumulation\n(D8FlowAccumulation)"]
-  C & D --> E["Seed Point Extraction\n(Threshold Logic)"]
-  F["NLCD Water + NHD Hydrography"] --> G["Water Mask\n(GDAL Calc)"]
-  B & C & D & E & G --> H["Reproject → EPSG:4326\n(GDAL Warp)"]
-  H --> I["Convert → COG\n(rio cogeo create)"]
-  I --> J["Visual QC / Validation\n(QGIS vs NHD)"]
-  I --> K["Emit STAC Items\n(STAC 1.0 Schema)"]
-  I --> L["Compute Checksums\n(SHA-256)"]
-  K & L --> M["Continuous Integration\n(STAC Validate · Hash Verify)"]
+  A["Raw DEMs (1 m / 10–30 m)"] --> B["Fill Depressions\nWhiteboxTools FillDepressions"]
+  B --> C["D8 Flow Direction\nD8Pointer"]
+  B --> D["D8 Flow Accumulation\nD8FlowAccumulation"]
+  C & D --> E["Seed Point Extraction\nThreshold Logic"]
+  F["NLCD Water + NHD Hydrography"] --> G["Water Mask\nGDAL Calc"]
+  B & C & D & E & G --> H["Reproject → EPSG:4326\nGDAL Warp"]
+  H --> I["Convert → COG\nrio cogeo create"]
+  I --> J["Visual QC / Validation\nQGIS vs NHD"]
+  I --> K["Emit STAC Items\nSTAC 1.0 Schema"]
+  I --> L["Compute Checksums\nSHA-256"]
+  K & L --> M["Continuous Integration\nSTAC Validate · Hash Verify"]
 
 <!-- END OF MERMAID -->
 
