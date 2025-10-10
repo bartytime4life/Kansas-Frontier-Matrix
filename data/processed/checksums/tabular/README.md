@@ -3,9 +3,9 @@
 # 📊 Kansas Frontier Matrix — Tabular Checksums  
 `data/processed/checksums/tabular/`
 
-**Mission:** Ensure the **integrity, provenance, and reproducibility** of all processed tabular datasets  
-within Kansas Frontier Matrix — protecting structured data such as census, agricultural, and economic tables  
-from corruption and guaranteeing consistent analytical outputs.
+**Mission:** Safeguard the **integrity, provenance, and reproducibility** of all processed **tabular datasets** —  
+including census, agricultural, demographic, and economic data — within the Kansas Frontier Matrix (KFM) system.  
+By maintaining SHA-256 checksums, this directory ensures analytical trust and reproducible scientific outcomes.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
@@ -19,14 +19,12 @@ from corruption and guaranteeing consistent analytical outputs.
 
 ## 📚 Overview
 
-This directory stores **SHA-256 checksum files (`.sha256`)** for all processed **tabular datasets**  
-in the Kansas Frontier Matrix (KFM).  
+This directory contains **SHA-256 checksum files (`.sha256`)** for all processed **tabular datasets** in KFM.  
+Checksums act as **cryptographic verifiers**, confirming that CSV, Parquet, or JSONL files have not changed since validation,  
+preserving **data lineage**, **ETL reproducibility**, and **transparency** across research environments.
 
-Checksums provide cryptographic verification that CSV and Parquet files have not been altered since processing,  
-linking the data to its provenance chain and guaranteeing reproducibility across environments.
-
-All checksum files are generated automatically during the **tabular ETL pipeline** (`make tabular`)  
-and validated continuously through GitHub Actions.
+All `.sha256` files are created automatically by the **tabular ETL pipeline** (`make tabular`)  
+and revalidated in CI/CD during every build, merge, or release.
 
 ---
 
@@ -38,108 +36,124 @@ data/processed/checksums/tabular/
 ├── census_population_1860_2020.parquet.sha256
 ├── agricultural_production_1870_2020.parquet.sha256
 └── economic_indicators_1900_2025.parquet.sha256
-````
 
-> **Note:** Each `.sha256` file represents a verified SHA-256 hash for its matching dataset
-> in `data/processed/tabular/` and is automatically re-checked during CI builds.
+Each .sha256 corresponds 1:1 with its dataset in data/processed/tabular/.
+CI workflows (stac-validate.yml) automatically recompute and verify each checksum.
 
----
+⸻
 
-## 🔐 Purpose of Checksums
+🎯 Purpose
 
-| Objective                  | Description                                                        |
-| :------------------------- | :----------------------------------------------------------------- |
-| **Integrity Verification** | Detects any change or corruption in structured tabular files.      |
-| **Reproducibility**        | Confirms that ETL outputs are identical across runs and systems.   |
-| **Provenance Tracking**    | Links each hash to its metadata and STAC entry for transparency.   |
-| **Automation in CI**       | GitHub Actions re-hash all tabular datasets to prevent divergence. |
+Objective	Description
+Integrity Verification	Detects data corruption, tampering, or incomplete transfers.
+Reproducibility	Ensures identical outputs from deterministic ETL processes.
+Provenance Tracking	Ties each dataset’s lineage through STAC, metadata, and checksum.
+Automation in CI	Continuous validation prevents version drift or data mismatch.
 
----
 
-## 🧮 Example `.sha256` File
+⸻
 
-```bash
+🧮 Example .sha256 File
+
 # File: census_population_1860_2020.parquet.sha256
 0d1e13dbde8fca82e7bc2184c23a7e231eb5b74b6e38e72df47f60bde8e54ccf  census_population_1860_2020.parquet
-```
 
-This file verifies the authenticity of
-`data/processed/tabular/census_population_1860_2020.parquet`.
+This checksum authenticates data/processed/tabular/census_population_1860_2020.parquet,
+verifying byte-level integrity and alignment with recorded provenance.
 
----
+⸻
 
-## ⚙️ Checksum Generation Workflow
+⚙️ Checksum Generation
 
-Checksums are produced as part of the tabular ETL process.
+Checksums are generated as a post-processing step in the tabular ETL workflow.
 
-**Makefile target:**
+Makefile target
 
-```bash
 make tabular-checksums
-```
 
-**Equivalent Python command:**
+Equivalent Python utility
 
-```bash
 python src/utils/generate_checksums.py data/processed/tabular/ --algo sha256
-```
 
-**Workflow Steps:**
+Workflow Steps
+	1.	Identify all tabular outputs (.csv, .parquet, .jsonl).
+	2.	Compute SHA-256 hash via Python’s hashlib or GNU sha256sum --binary.
+	3.	Write <filename>.sha256 into this directory.
+	4.	Revalidate in CI/CD and raise alerts if mismatched.
 
-1. Locate all processed tabular outputs (`.csv`, `.parquet`).
-2. Compute SHA-256 hashes using Python’s `hashlib` library.
-3. Write each hash to `<filename>.sha256` within this folder.
-4. Validate automatically in CI/CD pipelines.
+💡 Store checksums in binary-safe mode for cross-platform consistency.
 
----
+⸻
 
-## 🧰 CI/CD Validation
+🔎 CI/CD Validation
 
-Checksum verification runs on every build and deployment.
+GitHub Actions automatically re-verify tabular dataset integrity at every commit and release.
 
-```bash
+Command executed in CI:
+
 sha256sum -c data/processed/checksums/tabular/*.sha256
-```
 
-If a mismatch is detected, the pipeline halts and flags the dataset
-for re-processing to maintain MCP reproducibility guarantees.
+A single mismatch fails the workflow, ensuring immediate detection and mitigation of checksum drift.
+Logs are preserved to maintain a complete MCP audit trail for reproducibility.
 
----
+⸻
 
-## 🧩 Integration with Metadata & STAC
+🧩 Integration with Metadata & STAC
 
-| Linked Component                            | Purpose                                                       |
-| :------------------------------------------ | :------------------------------------------------------------ |
-| `data/processed/metadata/tabular/`          | Metadata JSON files reference checksums in their STAC assets  |
-| `src/pipelines/tabular/tabular_pipeline.py` | Handles checksum generation and re-validation                 |
-| `.github/workflows/stac-validate.yml`       | Runs checksum and STAC validation as part of CI               |
-| `data/stac/tabular/`                        | STAC catalog contains hash provenance for tabular collections |
+Linked Component	Purpose
+data/processed/metadata/tabular/	STAC and metadata JSONs embed SHA-256 checksums for validation.
+src/pipelines/tabular/tabular_pipeline.py	Handles hash generation and verification within ETL.
+.github/workflows/stac-validate.yml	CI job confirming checksum integrity on each push or pull request.
+data/stac/tabular/	STAC catalog stores hash provenance in assets and properties fields.
 
----
 
-## 🧠 MCP Compliance Summary
+⸻
 
-| MCP Principle           | Implementation                                               |
-| :---------------------- | :----------------------------------------------------------- |
-| **Documentation-first** | Each dataset includes README and `.sha256` record            |
-| **Reproducibility**     | Deterministic ETL + verified hashes ensure identical results |
-| **Open Standards**      | SHA-256 (FIPS 180-4) algorithm for all checksum operations   |
-| **Provenance**          | Hashes tied to STAC and metadata lineage                     |
-| **Auditability**        | CI logs all validations, creating a traceable audit trail    |
+🧠 MCP Compliance Summary
 
----
+MCP Principle	Implementation
+Documentation-first	Every tabular dataset includes a .sha256 and metadata documentation.
+Reproducibility	Deterministic ETL validated through hash equivalence.
+Open Standards	SHA-256 (FIPS 180-4) compliance ensures interoperability.
+Provenance	Hashes link the complete data lineage (source → ETL → STAC).
+Auditability	CI/CD validation provides a transparent, reviewable verification trail.
 
-## 📅 Version History
 
-| Version | Date       | Summary                                                          |
-| :------ | :--------- | :--------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial release of tabular checksum documentation and hash files |
+⸻
 
----
+🧮 Maintenance & Best Practices
+	•	🔄 After data updates: Recalculate checksums and increment metadata version numbers.
+	•	🧾 File pairing: Checksum filenames must match their datasets exactly.
+	•	📜 Bulk audits: Maintain a _manifest_all.sha256 for multi-file verification during releases.
+	•	🧪 Pre-commit hooks: Optionally enforce checksum updates before staging modified tabular data.
+	•	🧰 Metadata sync: Ensure STAC and metadata entries reflect the latest SHA-256 hash values.
+
+⸻
+
+📅 Version History
+
+Version	Date	Summary
+1.0.1	2025-10-10	Enhanced CI integration, MCP documentation, and validation workflow details.
+1.0.0	2025-10-04	Initial release of tabular checksum documentation and hash manifests.
+
+
+⸻
+
+📖 References
+	•	GNU Coreutils — SHA utilities: https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html
+	•	STAC 1.0 Specification: https://stacspec.org
+	•	JSON Schema: https://json-schema.org
+	•	MCP Standards (KFM): ../../../../docs/standards/
+	•	Data Provenance in Open Science: https://www.nature.com/articles/s41597-019-0193-2
+
+⸻
+
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Verifying Every Figure: Integrity in the Numbers.”*
-📍 [`data/processed/checksums/tabular/`](.) · Linked to the **Tabular STAC Collection**
+
+Kansas Frontier Matrix — “Verifying Every Figure: Integrity in the Numbers.”
+📍 data/processed/checksums/tabular/
 
 </div>
+```
