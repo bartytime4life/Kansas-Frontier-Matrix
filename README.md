@@ -71,23 +71,23 @@ data/
 4) Processing Workflow (GitHub-safe Mermaid)
 
 flowchart TD
-  A["Raw DEMs<br/>1 m · 10–30 m"] --> B["Fill Depressions<br/>WhiteboxTools FillDepressions"]
+  A["Raw DEMs<br/>1 m and 10-30 m"] --> B["Fill Depressions<br/>WhiteboxTools FillDepressions"]
   B --> C["D8 Flow Direction<br/>WhiteboxTools D8Pointer"]
   B --> D["D8 Flow Accumulation<br/>WhiteboxTools D8FlowAccumulation"]
   C --> E["Seed Point Extraction<br/>Threshold logic"]
   D --> E["Seed Point Extraction<br/>Threshold logic"]
-  F["NLCD Water + NHD Hydrography"] --> G["Water Mask<br/>GDAL Calc"]
-  B --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
-  C --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
-  D --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
-  E --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
-  G --> H["Reproject to EPSG:4326<br/>GDAL Warp"]
+  F["NLCD Water and NHD Hydrography"] --> G["Water Mask<br/>GDAL Calc"]
+  B --> H["Reproject to EPSG 4326<br/>GDAL Warp"]
+  C --> H["Reproject to EPSG 4326<br/>GDAL Warp"]
+  D --> H["Reproject to EPSG 4326<br/>GDAL Warp"]
+  E --> H["Reproject to EPSG 4326<br/>GDAL Warp"]
+  G --> H["Reproject to EPSG 4326<br/>GDAL Warp"]
   H --> I["Convert to COG<br/>rio cogeo create"]
-  I --> J["Visual QC / Validation<br/>QGIS vs NHD"]
+  I --> J["Visual QC and Validation<br/>QGIS vs NHD"]
   I --> K["Emit STAC Items<br/>STAC 1.0"]
   I --> L["Compute Checksums<br/>SHA-256"]
-  K --> M["CI Validation<br/>STAC Validate · Hash Verify"]
-  L --> M["CI Validation<br/>STAC Validate · Hash Verify"]
+  K --> M["CI Validation<br/>STAC Validate and Hash Verify"]
+  L --> M["CI Validation<br/>STAC Validate and Hash Verify"]
 
 <!-- END OF MERMAID -->
 
