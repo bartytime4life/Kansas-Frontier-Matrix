@@ -128,11 +128,11 @@ flowchart TD
   D --> E["STAC Metadata and Checksums\n(JSON and .sha256)"]
   E --> F["Knowledge Graph Integration\n(CIDOC CRM / ENVO Ontology)"]
   F --> G["Web Visualization\nReact + MapLibre Timeline"]
+```
+
 <!-- END OF MERMAID -->
 
 % END OF MERMAID %
-
-```
 
 ---
 
