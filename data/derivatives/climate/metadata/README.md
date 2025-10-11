@@ -51,7 +51,7 @@ flowchart TD
   F --> G["Knowledge Graph\nnodes + relations"]
   G --> H["API + Web UI\ntimeline · search · layer metadata"]
 %% END OF MERMAID
-<!-- END OF MERMAID -->
+
 ````
 
 ---
