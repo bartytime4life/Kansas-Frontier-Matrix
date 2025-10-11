@@ -113,9 +113,8 @@ data/derivatives/metadata/climate/
 
 ## 🧭 Data Lineage
 
-```mermaid
 flowchart TD
-  A["Source Datasets\n(NOAA Normals · PRISM · USGS)"] --> B["ETL & Harmonization\nPython · Makefile · Bias Correction"]
+  A["Source Datasets\n(NOAA Normals · PRISM · USGS)"] --> B["ETL &amp; Harmonization\nPython · Makefile · Bias Correction"]
   B --> C["Derived Products\nMean Temp · Precipitation · Evapotranspiration"]
   C --> D["Metadata Registry\n(data/derivatives/metadata/climate)"]
   D --> E["STAC Catalog\n(data/stac/collections/climate_derivatives)"]
