@@ -3,16 +3,16 @@
 # 🏔️ Kansas Frontier Matrix — Temporary Terrain Workspace  
 `data/work/tmp/terrain/`
 
-**Mission:** Provide a **scratch workspace** for intermediate and experimental terrain data products —  
-including DEM subsets, hillshade drafts, slope/aspect previews, and projection tests —  
-generated during ETL, validation, or QA workflows within the Kansas Frontier Matrix (KFM).
+**Mission:** Maintain a **controlled sandbox** for intermediate terrain data —  
+including DEM subsets, hillshade previews, slope/aspect calculations, and reprojection tests —  
+produced during ETL, QA, and validation workflows within the **Kansas Frontier Matrix (KFM)**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
 
 </div>
 
@@ -20,22 +20,17 @@ generated during ETL, validation, or QA workflows within the Kansas Frontier Mat
 
 ## 📚 Overview
 
-The `data/work/tmp/terrain/` directory functions as a **temporary workspace**  
-for processing, testing, and validating terrain and elevation datasets.  
+The `data/work/tmp/terrain/` directory provides a **short-term, reproducible workspace**  
+for processing, testing, and validating **terrain and elevation datasets**.  
 
-This workspace contains **non-persistent artifacts** produced during:
-- DEM tiling, mosaicking, or reprojection  
-- Hillshade or slope/aspect derivative generation  
-- Quality control, visualization, and transformation testing  
+It is used by automated pipelines and developers for:
+- DEM mosaicking, resampling, or reprojection validation  
+- Hillshade, slope, and aspect calculation testing  
+- Raster comparison and transformation QA  
+- Metadata extraction and checksum verification previews  
 
-All contents are **safe to delete** — they can be **recreated deterministically**  
-using commands such as:
-
-```bash
-make terrain
-# or
-python src/pipelines/terrain/terrain_pipeline.py
-````
+All files are **temporary** and **reproducible**, generated through deterministic ETL workflows.  
+Nothing in this directory is committed to version control, and contents are cleared between runs.
 
 ---
 
@@ -46,98 +41,135 @@ data/work/tmp/terrain/
 ├── README.md
 ├── dem_test_subset.tif
 ├── hillshade_preview.tif
-├── slope_test_area.tif
+├── slope_aspect_test_area.tif
 └── logs/
     └── terrain_etl_debug.log
-```
+````
 
-> **Note:** Example files are placeholders — actual contents vary with each ETL operation.
+> **Note:** Example files above are for demonstration only — actual files vary per ETL operation.
 
 ---
 
 ## ⚙️ Usage Guidelines
 
-| Policy                | Description                                                  |
-| :-------------------- | :----------------------------------------------------------- |
-| **Ephemeral Storage** | Files here are temporary and excluded from version control.  |
-| **Reproducibility**   | All data can be regenerated via deterministic ETL pipelines. |
-| **CI/CD Exclusion**   | Ignored in automated builds and validation workflows.        |
-| **Debugging Only**    | Intended for visual checks and intermediate ETL outputs.     |
-| **Safe Deletion**     | Auto-purged during cleanup tasks.                            |
+| Rule                      | Description                                                     |
+| :------------------------ | :-------------------------------------------------------------- |
+| **Ephemeral Data**        | All contents here are transient and excluded from Git tracking. |
+| **Reproducible Output**   | Artifacts can be regenerated via Makefile or ETL pipelines.     |
+| **No Persistent Storage** | Do not store validated datasets here — move to `processed/`.    |
+| **CI/CD Exclusion**       | Ignored by validation unless explicitly referenced for testing. |
+| **File Naming**           | Use descriptive names (`hillshade_preview_2025-10-10.tif`).     |
 
 ---
 
-## ⚙️ Typical Use Cases
+## 🧩 Typical Use Cases
 
-| Task                          | Example                                                         |
-| :---------------------------- | :-------------------------------------------------------------- |
-| **DEM Cropping**              | Extract a tile from statewide LiDAR DEM for projection testing. |
-| **Hillshade Validation**      | Generate shaded-relief previews for calibration.                |
-| **Slope & Aspect Derivation** | Test gradient calculations prior to batch runs.                 |
-| **Raster Comparison**         | Validate new outputs against checksum references.               |
-| **Debug Logging**             | Output intermediate raster stats for QA review.                 |
+| Task                         | Example                                                     |
+| :--------------------------- | :---------------------------------------------------------- |
+| **DEM Subsetting**           | Crop and reproject a DEM tile for testing or visualization. |
+| **Hillshade Validation**     | Render shaded-relief layers for calibration and QA.         |
+| **Slope/Aspect Calculation** | Test derivatives before full-scale production.              |
+| **Raster Comparison**        | Compare COG outputs against baseline checksum datasets.     |
+| **ETL Debug Logging**        | Capture raster processing stats for error tracking.         |
+
+---
+
+## 🧰 Workflow Integration
+
+Temporary terrain files are generated by the **Terrain ETL pipeline**:
+
+**Makefile target:**
+
+```bash
+make terrain
+```
+
+**Python CLI:**
+
+```bash
+python src/pipelines/terrain/terrain_pipeline.py --tmp data/work/tmp/terrain/
+```
+
+**Lifecycle Summary:**
+
+1. ETL process generates temporary DEM and hillshade files.
+2. Validation and visualization routines operate on these intermediates.
+3. Logs are stored in `/logs/` for traceability.
+4. Files are deleted automatically or manually during cleanup.
 
 ---
 
 ## 🧹 Cleanup Policy
 
-This directory is automatically cleared between pipeline runs
-to prevent retention of outdated artifacts.
+All temporary terrain files are purged between runs to prevent outdated or large file accumulation.
 
-**Makefile target:**
+**Makefile Target:**
 
 ```bash
 make clean-tmp
 ```
 
-**Manual cleanup:**
+**Manual Command:**
 
 ```bash
 rm -rf data/work/tmp/terrain/*
 ```
 
-Permanent datasets reside in:
+**Permanent Storage:**
 
-* `data/processed/terrain/` — validated DEMs, hillshades, and derivatives
-* `data/checksums/terrain/` — integrity hashes for reproducibility
+* ✅ `data/processed/terrain/` — Finalized DEMs, slopes, and hillshades.
+* ✅ `data/checksums/terrain/` — SHA-256 integrity manifests for reproducibility.
+* ✅ `data/processed/metadata/terrain/` — STAC metadata and lineage documentation.
+
+---
+
+## 🔒 Integration with CI/CD and Metadata
+
+| Component                             | Function                                             |
+| :------------------------------------ | :--------------------------------------------------- |
+| `src/pipelines/terrain_pipeline.py`   | Generates temporary files and logs ETL results.      |
+| `.github/workflows/stac-validate.yml` | Validates metadata and processed dataset structure.  |
+| `data/work/tmp/`                      | Parent directory for all ETL scratch subdomains.     |
+| `data/checksums/terrain/`             | Stores checksum records for validated datasets.      |
+| `data/stac/terrain/`                  | Includes provenance-linked STAC assets and metadata. |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                 |
-| :---------------------- | :------------------------------------------------------------- |
-| **Documentation-first** | README defines workspace scope, lifecycle, and cleanup policy. |
-| **Reproducibility**     | All terrain artifacts recreated deterministically via ETL.     |
-| **Open Standards**      | GeoTIFF/COG/VRT raster formats ensure interoperability.        |
-| **Provenance**          | Logged ETL stages record lineage of each generated file.       |
-| **Auditability**        | `/logs/` retains contextual trace data before cleanup.         |
+| MCP Principle           | Implementation                                                              |
+| :---------------------- | :-------------------------------------------------------------------------- |
+| **Documentation-first** | README outlines workspace purpose, lifecycle, and safety.                   |
+| **Reproducibility**     | ETL processes can regenerate all intermediate products deterministically.   |
+| **Open Standards**      | Uses GeoTIFF, COG, and VRT for cross-platform interoperability.             |
+| **Provenance**          | Temporary artifacts linked to deterministic pipeline logs for traceability. |
+| **Auditability**        | Debug logs in `/logs/` record all transformations before cleanup.           |
 
 ---
 
-## 📎 Related Directories
+## 🧩 Maintenance Recommendations
 
-| Path                               | Purpose                                                 |
-| :--------------------------------- | :------------------------------------------------------ |
-| `data/processed/terrain/`          | Finalized DEMs, hillshades, and derived rasters.        |
-| `data/checksums/terrain/`          | SHA-256 hashes for reproducibility validation.          |
-| `data/processed/metadata/terrain/` | STAC metadata and documentation for terrain datasets.   |
-| `data/work/tmp/`                   | Parent scratch directory for all temporary ETL outputs. |
+1. **Automated Cleanup:** Schedule `make clean-tmp` after every ETL run.
+2. **Monitor Disk Usage:** Keep workspace under 10 GB to prevent overflow during CI tests.
+3. **Run Validation:** Before cleanup, run `make stac-validate` to ensure successful pipeline output.
+4. **Avoid Cross-Pipeline Contamination:** Use subdirectories (`terrain/`, `hydrology/`, etc.) to isolate domains.
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                       |
-| :------ | :--------- | :------------------------------------------------------------ |
-| v1.0    | 2025-10-04 | Initial terrain temporary workspace documentation.            |
-| v1.0.1  | 2025-10-09 | Added YAML metadata, JSON-LD schema, CI badges, and MCP tags. |
+| Version | Date       | Summary                                                                    |
+| :------ | :--------- | :------------------------------------------------------------------------- |
+| v1.0.0  | 2025-10-04 | Initial creation of terrain temporary workspace documentation.             |
+| v1.0.1  | 2025-10-09 | Added schema metadata, badges, and MCP tags.                               |
+| v1.1.0  | 2025-10-10 | Expanded usage guidelines, workflow integration, and maintenance policies. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Temporary by Design. Verified by Process.”*
-📍 [`data/work/tmp/terrain/`](.) · Short-term workspace for terrain ETL experimentation and QA validation.
+📍 [`data/work/tmp/terrain/`](.) · Short-term workspace for terrain ETL experimentation, QA, and reproducibility testing.
 
 </div>
+```
