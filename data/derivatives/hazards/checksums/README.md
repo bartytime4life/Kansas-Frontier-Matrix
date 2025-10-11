@@ -1,18 +1,20 @@
 <div align="center">
 
-# ⚠️ Kansas Frontier Matrix — Hazard Derivative Checksums  
+# ⚠️ Kansas Frontier Matrix — Hazard **Derivative Checksums**
+
 `data/derivatives/hazards/checksums/`
 
-**Purpose:** Provide verifiable, machine-readable **SHA-256 integrity manifests**  
-for all hazard-related derivative datasets (e.g. tornado tracks, flood rasters, drought indices, disaster maps)  
-produced by the KFM ETL pipeline.
+**Purpose:** Maintain verifiable, machine-readable **SHA-256 integrity manifests**
+for all hazard derivative datasets — tornado tracks, drought indices, flood rasters, and severe weather composites —
+generated and validated through the Kansas Frontier Matrix (KFM) ETL pipeline.
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
 [![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../../.github/workflows/trivy.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC-BY%204.0-lightgrey)](../../../../../LICENSE)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
+[![Version](https://img.shields.io/badge/Version-v1.1.0-blueviolet)](#-version-history)
 
 </div>
 
@@ -20,141 +22,185 @@ produced by the KFM ETL pipeline.
 
 ## 📚 Overview
 
-This directory stores **SHA-256 checksum manifests** for all hazard derivative outputs under  
-`data/derivatives/hazards/`. These files ensure reproducible validation of data integrity for hazard models and layers such as:  
-- Tornado, hail, and wind track vectors (NOAA SPC)  
-- Flood and drought raster composites (FEMA, USGS, NOAA)  
-- Historical disaster intensity layers or event summaries  
+This directory houses **`.sha256` checksum manifests** for all hazard-related derivative products in
+`data/derivatives/hazards/`.
 
-Checksums verify that derivative artifacts remain **bit-for-bit identical** across ETL runs and serve as validation gates in the KFM CI/STAC workflow.
+These checksums safeguard **data integrity**, enforce **reproducibility**, and act as validation gates for:
+
+* Tornado, hail, and severe storm tracks (NOAA SPC)
+* Flood extent and drought index rasters (FEMA, USGS, NOAA)
+* Multi-hazard composites and disaster summaries
+
+Each checksum represents a **cryptographic fingerprint** ensuring the derivative file is unchanged across ETL runs,
+STAC registration, and archival.
 
 ---
 
-## 🧭 Checksum generation flow
+## 🧭 Checksum Generation Flow (GitHub-safe Mermaid)
 
 ```mermaid
 flowchart TD
-  A["Hazard Sources\nNOAA SPC · FEMA · USGS · NCEI Storm Events"] --> B["ETL\nExtract · Normalize · Derive"]
+  A["Hazard Sources\nNOAA SPC · FEMA · USGS · NCEI Storm Data"] --> B["ETL\nExtract · Normalize · Derive"]
   B --> C["Hazard Derivatives\nCOG · GeoJSON · Parquet · CSV"]
-  C --> D["Compute SHA-256\nCreate *.sha256 manifests"]
-  D --> E["STAC Items\nLink assets + checksums"]
-  E --> F["Knowledge Graph\nattach provenance nodes"]
-  F --> G["API & Web UI\nserve verified hazard layers"]
+  C --> D["Compute SHA-256\nGenerate *.sha256 manifests"]
+  D --> E["STAC Items\nEmbed checksum:sha256 fields"]
+  E --> F["Knowledge Graph\nAttach provenance nodes"]
+  F --> G["API & Web UI\nServe verified hazard layers"]
 %% END OF MERMAID
+```
 
-<!-- END OF MERMAID -->
+---
 
+## 🗂️ Directory Layout
 
-
-⸻
-
-🗂️ Directory Layout
-
+```bash
 checksums/
 ├── tornado_tracks_1950_2024.geojson.sha256
 ├── flood_zones_1990_2025_cog.tif.sha256
 ├── drought_index_annual_ks.parquet.sha256
 ├── severe_storm_reports_1955_2024.csv.sha256
 └── README.md
+```
 
-Each .sha256 file contains a single line of hex digest followed by its associated filename.
+> Each `.sha256` file contains a **single-line** hexadecimal digest followed by its file name,
+> corresponding directly to the artifact stored in `../hazards/`.
 
-⸻
+---
 
-🧾 File Format
+## 🧾 File Format Specification
 
-Property	Description
-Algorithm	SHA-256 (hex digest)
-Format	<HEX_DIGEST>  <filename>
-Line Endings	LF (\n)
-Relative Path	Calculated from data/derivatives/hazards/ directory
-Validation	Used by CI and stac-validate workflows
+| Property         | Description                                                      |
+| :--------------- | :--------------------------------------------------------------- |
+| **Algorithm**    | SHA-256 (hexadecimal digest)                                     |
+| **Format**       | `<HEX_DIGEST>  <filename>`                                       |
+| **Line Endings** | LF (`\n`)                                                        |
+| **Scope**        | Calculated for all derivative files (COG, GeoJSON, Parquet, CSV) |
+| **Purpose**      | Used by CI and STAC validation to verify data immutability       |
 
+**Example:**
 
-⸻
+```text
+b4a9e91a9a7c42a9b4a3e2b78a3c17f7f99e2e9b8f1d2f8e4b7e8f2a9c1a0d7b  flood_zones_1990_2025_cog.tif
+```
 
-🛠️ Generate & Verify
+---
 
-Generate checksums
+## 🛠️ Generate & Verify Checksums
 
+### ✅ Generate
+
+```bash
 cd data/derivatives/hazards
 for f in *.tif *.geojson *.parquet *.csv; do
   [ -f "$f" ] || continue
-  shasum -a 256 "$f" > "checksums/${f}.sha256"
+  sha256sum "$f" > "checksums/${f}.sha256"
 done
+```
 
-Verify checksums
+### 🔍 Verify
 
+```bash
 cd data/derivatives/hazards
 for c in checksums/*.sha256; do
-  base=$(basename "$c" .sha256)
-  sha256sum -c "checksums/${base}.sha256"
+  sha256sum -c "$c"
 done
+```
 
-✅ Either sha256sum (Linux) or shasum -a 256 (macOS) is acceptable — both yield consistent digests.
+> Works cross-platform — `sha256sum` (Linux) or `shasum -a 256` (macOS) produce equivalent digests.
 
-⸻
+---
 
-🔗 STAC Integration (Provenance)
+## 🔗 STAC Integration (Provenance)
 
-Each hazard layer is referenced in its STAC Item with a matching checksum:
+Checksums are embedded in STAC Item JSONs for reproducible metadata linking.
 
-STAC Key	Example
-assets.<key>.href	"flood_zones_1990_2025_cog.tif"
-assets.<key>.checksum:sha256	"b4a9e91…d37b"
-properties['kfm:provenance']	"data/sources/noaa_spc.json"
+| STAC Field                     | Example                           |
+| :----------------------------- | :-------------------------------- |
+| `assets.<key>.href`            | `"flood_zones_1990_2025_cog.tif"` |
+| `assets.<key>.checksum:sha256` | `"b4a9e91a9a7c42a9..."`           |
+| `properties['kfm:provenance']` | `"data/sources/noaa_spc.json"`    |
 
-Checksums are verified automatically during CI STAC validation to prevent broken lineage or tampered data.
+**STAC Validation:**
+During CI/CD (`stac-validate.yml`), these digests are cross-checked to confirm data integrity and metadata alignment.
 
-⸻
+---
 
-🧩 Knowledge Graph & API Use
-	•	During graph ingestion, checksum values attach to asset nodes and relations for evidential provenance.
-	•	API endpoint GET /api/hazards/{id}/checksum returns the SHA-256 digest for client-side integrity checks.
-	•	Frontend tools can display checksum validation status (e.g., ✅ Verified or ⚠️ Mismatch).
+## 🧩 Knowledge Graph & API Integration
 
-⸻
+* **Neo4j:** `checksum_sha256` properties attach to derivative asset nodes, allowing provenance queries and lineage visualization.
+* **API:** `/api/hazards/{id}/checksum` returns checksum info for client-side verification.
+* **Frontend:** Hazard data cards display checksum status badges:
 
-🧱 Naming Conventions
+  * ✅ **Verified:** STAC match confirmed
+  * ⚠️ **Pending:** Awaiting validation
+  * ❌ **Mismatch:** CI integrity failure
 
-Pattern	Example	Notes
-<dataset>_<years>.geojson.sha256	tornado_tracks_1950_2024.geojson.sha256	Tornado, hail, or storm vectors
-<dataset>_<period>_cog.tif.sha256	flood_zones_1990_2025_cog.tif.sha256	Raster hazard maps (COG format)
-<dataset>_<interval>.parquet.sha256	drought_index_annual_ks.parquet.sha256	Tabular indices
-<dataset>_<range>.csv.sha256	severe_storm_reports_1955_2024.csv.sha256	Flat tabular derivatives
+---
 
+## 🧱 Naming Conventions
 
-⸻
+| Pattern                               | Example                                     | Description                           |
+| :------------------------------------ | :------------------------------------------ | :------------------------------------ |
+| `<dataset>_<years>.geojson.sha256`    | `tornado_tracks_1950_2024.geojson.sha256`   | Tornado, hail, or storm vector layers |
+| `<dataset>_<period>_cog.tif.sha256`   | `flood_zones_1990_2025_cog.tif.sha256`      | Raster hazard composites              |
+| `<dataset>_<interval>.parquet.sha256` | `drought_index_annual_ks.parquet.sha256`    | Tabular or gridded datasets           |
+| `<dataset>_<range>.csv.sha256`        | `severe_storm_reports_1955_2024.csv.sha256` | Summary tables and event reports      |
 
-✅ Policy
+---
 
-1️⃣ All hazard derivatives must include a matching .sha256 file before publication.
-2️⃣ Recompute checksums after any modification or regeneration of artifacts.
-3️⃣ CI will fail if digests do not match STAC metadata.
-4️⃣ Include updated .sha256 files in every pull request affecting hazard derivatives.
+## ✅ Repository Policy
 
-⸻
+1️⃣ Every hazard derivative **must include** a `.sha256` file before commit.
+2️⃣ Checksums **must be regenerated** after any modification to datasets.
+3️⃣ **CI (STAC Validation)** will fail if digests mismatch their registered STAC entries.
+4️⃣ Pull requests altering derivative data **must include updated checksum files**.
+5️⃣ All checksum updates are logged in the corresponding **metadata changelog**.
 
-🔒 Reproducibility & MCP Alignment
+---
 
-These manifests align with MCP’s reproducibility and provenance principles:
-	•	Transparent, auditable verification of data artifacts.
-	•	Clear linkage between ETL outputs, STAC assets, and graph entities.
-	•	Secure, checksum-based validation in CI workflows.
+## 🔒 Reproducibility & MCP Compliance
 
-They guarantee that each hazard dataset (e.g., storm tracks, flood rasters) can be independently verified as authentic and unchanged.
+Checksums are integral to **Master Coder Protocol (MCP)** guarantees of scientific reproducibility:
 
-⸻
+* **Traceability:** Each artifact’s fingerprint connects ETL → STAC → Graph.
+* **Accountability:** Immutable digests prevent tampering and enable audit trails.
+* **Transparency:** CI validation ensures datasets remain authentic, versioned, and reproducible.
+* **Evidence Chain:** Hash integrity supports long-term archival verification.
 
-🧱 Related Docs
-	•	data/derivatives/hazards/metadata/README.md — metadata schema & relationships
-	•	data/derivatives/climate/checksums/README.md — parallel checksum policy
-	•	data/stac/README.md — STAC catalog design
-	•	docs/architecture.md — ETL and validation workflow
+```mermaid
+flowchart LR
+  A["ETL Output\n(COG / GeoJSON / CSV)"] --> B["Checksum Manifest\n(*.sha256)"]
+  B --> C["STAC Asset\nchecksum:sha256 field"]
+  C --> D["CI Validation\nCompare digests"]
+  D --> E["Public Dataset\nVerified & Immutable"]
+%% END OF MERMAID
+```
 
-⸻
+---
 
-🗓️ Version History
+## 🧱 Related Documentation
 
-Version	Date	Notes
-0.1.0	2025-10-10	Initial hazard checksum specification and examples
+* [`data/derivatives/hazards/metadata/README.md`](../../metadata/README.md) — Metadata linkage and schema
+* [`data/stac/README.md`](../../../../stac/README.md) — STAC catalog design
+* [`docs/architecture/`](../../../../../docs/architecture/) — Integrity validation and provenance flow
+* [`data/sources/README.md`](../../../../sources/README.md) — Hazard source manifests
+
+---
+
+## 🗓️ Version History
+
+|   Version  |    Date    | Notes                                                                 |
+| :--------: | :--------: | :-------------------------------------------------------------------- |
+| **v1.1.0** | 2025-10-11 | Added version badge, Mermaid diagram fix, and CI integration updates. |
+| **v1.0.0** | 2025-10-10 | Initial hazard checksum manifest documentation and examples.          |
+
+---
+
+<div align="center">
+
+**Maintainers:** KFM Hazards & Climate Team
+**Compliance:** MCP v2.1 · STAC 1.0.0 · JSON-Schema 2020-12
+
+*“Every verified byte protects a century of Kansas storms.”*
+
+</div>
