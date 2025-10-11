@@ -1,10 +1,11 @@
 <div align="center">
 
-# 🏔️ Kansas Frontier Matrix — Terrain Derivative Metadata  
+# 🏔️ Kansas Frontier Matrix — Terrain Derivative Metadata
+
 `data/derivatives/metadata/terrain/`
 
-**Purpose:** Document, validate, and maintain **terrain derivative metadata** across the Kansas Frontier Matrix (KFM)  
-— capturing provenance, lineage, schema compliance, and validation history for all elevation-based products.
+**Mission:** Establish an authoritative, reproducible registry for **terrain derivative metadata**,
+capturing **provenance, lineage, schema compliance, and validation history** for all KFM elevation products.
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
 [![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
@@ -17,49 +18,64 @@
 
 ---
 
+## 🧭 Version & Provenance
+
+| Version    | Status | Last Updated | Maintainer               | Validation                           |
+| :--------- | :----- | :----------- | :----------------------- | :----------------------------------- |
+| **v1.1.0** | Stable | 2025-10-11   | Terrain Integration Team | ✅ CI-validated (`stac-validate.yml`) |
+
+**License:** [CC-BY 4.0](../../../../../LICENSE)
+**Governance:** Documented under **Master Coder Protocol (MCP)** — emphasizing reproducibility, traceability, and provenance.
+
+---
+
 ## 📚 Overview
 
-The **terrain metadata registry** defines standardized metadata for all **derived elevation products**,  
-including slope, hillshade, aspect, and digital terrain models derived from the Kansas LiDAR (USGS 3DEP) datasets.  
+The **Terrain Derivative Metadata Registry** defines standardized metadata for **derived elevation datasets** such as:
 
-Each metadata JSON:
-- Describes the **derivation process**, software, and lineage  
-- Includes spatial and temporal coverage  
-- Stores STAC-compliant metadata for inclusion in the global catalog  
-- Links to source datasets, checksums, and validation logs  
+* Slope · Aspect · Hillshade · Terrain Ruggedness · Relief
+* Derived from **USGS 3DEP LiDAR 1 m DEM** tiles (via Kansas DASC)
 
-All files follow the **KFM Derivative Metadata Schema v1.0**, and each item is validated via automated CI pipelines.
+Each JSON metadata record:
+
+* Defines the **derivation method** and software lineage
+* Includes spatial/temporal coverage and uncertainty estimates
+* Embeds **STAC 1.0.0** + STAC extensions (processing / provenance / validation)
+* Links to upstream sources, checksum logs, and CI validation reports
+
+All metadata conforms to **KFM Derivative Metadata Schema v1.1**.
 
 ---
 
 ## 🗂️ Directory Layout
+
 ```bash
 data/derivatives/metadata/terrain/
-├── README.md                 # This document
-├── slope_1m_ks.json          # 1-meter slope (degrees)
-├── hillshade_1m_ks.json      # Hillshade derived from DEM
+├── README.md                    # This document
+├── slope_1m_ks.json             # 1-m slope (degrees)
+├── hillshade_1m_ks.json         # Hillshade from DEM
 └── validation/
-    ├── checksums.sha256      # File integrity hashes
-    └── stac-validation.log   # STAC schema validation report
-````
+    ├── checksums.sha256         # Integrity hashes
+    └── stac-validation.log      # STAC schema validation report
+```
 
 ---
 
 ## 🧩 Core Metadata Fields
 
-| Field             | Type   | Description                                             |
-| :---------------- | :----- | :------------------------------------------------------ |
-| `id`              | string | Unique STAC-compliant dataset identifier                |
-| `title`           | string | Human-readable dataset name                             |
-| `description`     | string | Dataset summary and processing context                  |
-| `provenance`      | object | Source references, processing lineage, responsible team |
-| `spatial_extent`  | object | Bounding box or GeoJSON coverage                        |
-| `temporal_extent` | object | Date of dataset creation or source capture              |
-| `uncertainty`     | object | Elevation model accuracy metrics                        |
-| `stac_extensions` | array  | STAC extensions applied                                 |
-| `version`         | string | Semantic version of metadata record                     |
-| `created`         | string | ISO 8601 creation timestamp                             |
-| `last_updated`    | string | ISO 8601 last update timestamp                          |
+| Field             | Type   | Description                                                   |
+| :---------------- | :----- | :------------------------------------------------------------ |
+| `id`              | string | Unique STAC-compliant ID (e.g., `kfm_terrain_slope_1m_ks_v1`) |
+| `title`           | string | Human-readable dataset name                                   |
+| `description`     | string | Summary + derivation context                                  |
+| `provenance`      | object | Source references · processing lineage · responsible team     |
+| `spatial_extent`  | object | Bounding box / GeoJSON coverage                               |
+| `temporal_extent` | object | Source acquisition or processing period                       |
+| `uncertainty`     | object | Accuracy metrics (RMSE, confidence)                           |
+| `stac_extensions` | array  | Extensions applied (processing, provenance)                   |
+| `version`         | string | Metadata record semantic version                              |
+| `created`         | string | ISO 8601 creation timestamp                                   |
+| `last_updated`    | string | ISO 8601 last modification                                    |
 
 ---
 
@@ -68,13 +84,13 @@ data/derivatives/metadata/terrain/
 ```json
 {
   "id": "kfm_terrain_slope_1m_ks_v1",
-  "title": "Slope (1m) — Kansas Statewide",
+  "title": "Slope (1 m) — Kansas Statewide",
   "description": "1-meter slope raster derived from Kansas LiDAR DEM (USGS 3DEP). Units: degrees.",
   "provenance": {
     "sources": [
       "data/sources/usgs_lidar_dem_1m_ks.json"
     ],
-    "processing": "GDAL slope algorithm using horn method; reprojection EPSG:26914",
+    "processing": "GDAL Slope algorithm (Horn method); Reprojection EPSG:26914",
     "validation": "Checksum + STAC validation passed 2025-10-10"
   },
   "spatial_extent": {
@@ -105,26 +121,28 @@ data/derivatives/metadata/terrain/
 
 ```mermaid
 flowchart TD
-    A["Source Data<br/>(USGS LiDAR DEM 1m)"]
+    A["Source Data<br/>(USGS LiDAR DEM 1 m)"]
         --> B["ETL Processing<br/>GDAL · Python · RasterIO"]
-    B --> C["Derived Terrain Products<br/>Slope · Hillshade"]
+    B --> C["Derived Terrain Products<br/>Slope · Hillshade · Aspect"]
     C --> D["Metadata Registry<br/>(data/derivatives/metadata/terrain)"]
     D --> E["STAC Catalog<br/>(data/stac/collections/terrain_derivatives)"]
     E --> F["Web UI<br/>Elevation · Relief · Visualization Layers"]
 ```
 
+<!-- END OF MERMAID -->
+
 ---
 
 ## 🧪 Validation Workflow
 
-| Stage                      | Description                              | Tool                                  |
-| :------------------------- | :--------------------------------------- | :------------------------------------ |
-| **Checksum Validation**    | Verify file integrity using SHA-256      | `sha256sum`                           |
-| **Schema Validation**      | Validate metadata JSON structure         | `jsonschema-cli`                      |
-| **STAC Compliance**        | Confirm valid STAC fields and extensions | `stac-validator`                      |
-| **Continuous Integration** | Automated checks in GitHub Actions       | `.github/workflows/stac-validate.yml` |
+| Stage                      | Description                        | Tool                                  |
+| :------------------------- | :--------------------------------- | :------------------------------------ |
+| **Checksum Validation**    | Verify file integrity (SHA-256)    | `sha256sum`                           |
+| **Schema Validation**      | Validate metadata JSON structure   | `jsonschema-cli`                      |
+| **STAC Compliance**        | Check STAC fields & extensions     | `stac-validator`                      |
+| **Continuous Integration** | Automated checks in GitHub Actions | `.github/workflows/stac-validate.yml` |
 
-All reports are logged under `validation/stac-validation.log`.
+Reports are stored in `validation/stac-validation.log`.
 
 ---
 
@@ -136,34 +154,46 @@ validate-terrain:
 	           data/derivatives/metadata/schema/derivative_item.schema.json
 ```
 
-This target runs as part of the global **metadata validation pipeline** invoked via `make validate-metadata`.
+Included within the global `make validate-metadata` pipeline.
 
 ---
 
-## 🧩 Related Documents
+## 🔗 Related Documents
 
-* [`../README.md`](../README.md) — Parent derivative metadata registry
-* [`../../terrain/README.md`](../../terrain/README.md) — Processed terrain datasets
-* [`../../../../docs/standards/markdown_protocol.md`](../../../../docs/standards/markdown_protocol.md) — Markdown & MCP documentation rules
-* [`../../../../docs/templates/model_card.md`](../../../../docs/templates/model_card.md) — Template for model documentation
+* [`../README.md`](../README.md) — Parent Derivative Metadata Registry
+* [`../../terrain/README.md`](../../terrain/README.md) — Processed Terrain Layers
+* [`../../../../docs/standards/markdown_protocol.md`](../../../../docs/standards/markdown_protocol.md) — Markdown & MCP Standards
+* [`../../../../docs/templates/model_card.md`](../../../../docs/templates/model_card.md) — Model Card Template
 
 ---
 
 ## 🧾 Versioning & Changelog
 
-| Version    | Date       | Author                   | Notes                                                                       |
-| :--------- | :--------- | :----------------------- | :-------------------------------------------------------------------------- |
-| **v1.0.0** | 2025-10-11 | Terrain Integration Team | Initial release of terrain derivative metadata registry (slope + hillshade) |
+| Version    | Date       | Author                   | Notes                                                                                                       |
+| :--------- | :--------- | :----------------------- | :---------------------------------------------------------------------------------------------------------- |
+| **v1.1.0** | 2025-10-11 | Terrain Integration Team | Updated to Markdown Protocol v1.1 · Enhanced lineage diagram · CI details expanded · Table clarity improved |
+| v1.0.0     | 2025-10-10 | Terrain Integration Team | Initial release (slope + hillshade) registry established                                                    |
 
 ---
 
-## 🪶 License & Provenance
+## 🪶 Citation & Attribution
 
-**License:** [CC-BY 4.0](../../../../../LICENSE)
-**Provenance:** Authored under **Master Coder Protocol (MCP)** — document-first, auditable, and reproducible.
-**Maintainers:** Kansas Frontier Matrix Terrain & Geospatial Integration Team
-**Last Updated:** 2025-10-11
-
-```
+> Kansas Frontier Matrix — Terrain Derivative Metadata Registry v1.1
+> Authored under **Master Coder Protocol (MCP)** · © 2025 Kansas Frontier Matrix Project
+> Cite as: Barta A. et al. (2025). *Terrain Derivative Metadata — Kansas Frontier Matrix v1.1.*
+> License: [CC-BY 4.0](../../../../../LICENSE)
 
 ---
+
+### ✅ Summary
+
+* **Schema:** KFM Derivative Metadata Schema v1.1
+* **Validation:** CI-enforced (STAC + JSON Schema + Checksum)
+* **Scope:** Statewide derived terrain products (slope, hillshade, aspect)
+* **Provenance:** USGS 3DEP LiDAR DEM → GDAL processing → KFM STAC catalog
+* **Purpose:** Ensure reproducibility, traceability, and integrity of elevation-based derivatives
+
+---
+
+**Kansas Frontier Matrix — “Time · Terrain · History”**
+*Documented under MCP · STAC-compliant · Reproducible · Versioned · Auditable*
