@@ -85,7 +85,8 @@ flowchart TD
   D --> F["Hydrology Derivatives\n(data/derivatives/hydrology)"]
   D --> G["Slope & Aspect Models\n(data/derivatives/terrain)"]
   G --> H["Web Visualization\n(MapLibre · QGIS · Timeline)"]
-<!-- END OF MERMAID -->
+  %% END OF MERMAID
+
 ```
 
 ---
