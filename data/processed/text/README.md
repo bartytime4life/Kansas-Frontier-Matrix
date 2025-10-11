@@ -4,9 +4,9 @@
 
 `data/processed/text/`
 
-**Mission:** Contain, document, and validate all **cleaned, parsed, and structured text corpora** — OCR-corrected archives,
-NLP-derived entities, and historical transcripts — forming the **linguistic foundation** for the KFM knowledge graph
-and AI/ML enrichment pipelines.
+**Mission:** Contain, document, and validate all **cleaned, parsed, and structured text corpora** —
+OCR-corrected archives, NLP-derived entities, and historical transcripts — forming the **linguistic foundation**
+for the KFM knowledge graph and AI/ML enrichment pipelines.
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../.github/workflows/site.yml)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
@@ -36,13 +36,13 @@ and AI/ML enrichment pipelines.
 
 ## 🧾 Overview
 
-`data/processed/text/` hosts **ETL-ready textual assets** derived from Kansas’s documentary heritage —
+`data/processed/text/` hosts **ETL-ready textual assets** from Kansas’s documentary heritage —
 letters, treaties, newspapers, and diaries — all **cleaned**, **tokenized**, and **semantically structured**.
 
-These bridge **raw OCR inputs** (`data/raw/text/`) with **AI-ready derivatives** (`data/derivatives/text/`), powering:
+These bridge **raw OCR inputs** (`data/raw/text/`) with **AI-ready derivatives** (`data/derivatives/text/`), enabling:
 
 * 📍 Entity extraction (people, places, tribes, events)
-* 🧭 Temporal/spatial linking to maps & timelines
+* 🧭 Temporal / spatial linking to maps & timelines
 * 🤖 AI summarization and classification
 * 🕸️ Knowledge-graph integration (Neo4j · CIDOC CRM · OWL-Time)
 
@@ -78,13 +78,13 @@ data/
 
 | Dataset                             | File                                  | Description                                             | Source                    | Format |
 | :---------------------------------- | :------------------------------------ | :------------------------------------------------------ | :------------------------ | :----- |
-| **Cleaned Diaries (1850-1900)**     | `ocr_cleaned_diaries_1850_1900.jsonl` | OCR-corrected settler diary entries                     | Kansas Historical Society | JSONL  |
+| **Cleaned Diaries (1850–1900)**     | `ocr_cleaned_diaries_1850_1900.jsonl` | OCR-corrected settler diary entries                     | Kansas Historical Society | JSONL  |
 | **Treaty Transcripts**              | `kansas_treaties_cleaned.jsonl`       | Normalized treaty texts with parsed tribe/date entities | Yale Avalon / Kappler     | JSONL  |
-| **Historic Newspapers (1854-1925)** | `newspapers_1854_1925_cleaned.jsonl`  | Cleaned Kansas articles from *Chronicling America*      | LOC / KHS                 | JSONL  |
+| **Historic Newspapers (1854–1925)** | `newspapers_1854_1925_cleaned.jsonl`  | Cleaned Kansas articles from *Chronicling America*      | LOC / KHS                 | JSONL  |
 | **NLP Entities Extracted**          | `nlp_entities_extracted.json`         | spaCy-derived entities (Person, Place, Event, Date)     | Derived                   | JSON   |
-| **Term Frequencies (Press)**        | `term_frequencies_ks_press.csv`       | Word frequency & co-occurrence stats by decade          | Derived                   | CSV    |
+| **Term Frequencies (Press)**        | `term_frequencies_ks_press.csv`       | Word frequency & co-occurrence by decade                | Derived                   | CSV    |
 
-Each JSONL record contains: `id`, `title`, `date`, `source`, `text`, `tokens`, `entities`.
+Each JSONL record includes `id`, `title`, `date`, `source`, `text`, `tokens`, `entities`.
 
 ---
 
@@ -174,7 +174,7 @@ python tools/text/term_stats.py \
 | **NER Quality**       | Sample precision/recall logs  | `make text-qa`       |
 
 ```bash
-sha256sum -c checksums/*.sha256
+sha256sum -c checksums/*.sha256  
 python -m json.tool metadata/*.json > /dev/null
 ```
 
@@ -182,21 +182,12 @@ python -m json.tool metadata/*.json > /dev/null
 
 ## 🧠 Contributing New Text Data
 
-1. Add cleaned `.jsonl` or `.csv` here.
-2. Create `metadata/<name>.json` with source, license, and processing info.
+1. Add cleaned `.jsonl` or `.csv`.
+2. Create `metadata/<name>.json` with source, license, and processing notes.
 3. Generate `.sha256` under `checksums/`.
 4. Update STAC Item linking the asset.
-5. Validate:
-
-```bash
-make validate-text && make stac-validate
-```
-
-6. Open a PR with:
-
-* STAC update + metadata
-* Checksums
-* Repro commands / notes
+5. Validate locally: `make validate-text && make stac-validate`.
+6. Open PR including metadata, checksums, and repro commands.
 
 *All submissions are CI-validated before merge.*
 
@@ -204,26 +195,12 @@ make validate-text && make stac-validate
 
 ## 🧮 Versioning & Changelog
 
-| Field               | Value                                                                               |
-| :------------------ | :---------------------------------------------------------------------------------- |
-| **Current Version** | `v2.3.0`                                                                            |
-| **Last Updated**    | 2025-10-11                                                                          |
-| **Maintainer**      | @kfm-data                                                                           |
-| **Change Type**     | ✳ Minor — Formatting standardized to match KFM protocols (repo-wide grid & spacing) |
-
-```md
-## v2.3.0 — 2025-10-11
-- Standardized layout to match KFM processed-data markdown grid  
-- Refined center banner alignment and badge stack  
-- Ensured consistent divider rhythm and code-block spacing
-
-## v2.2.0 — 2025-10-11
-- Added Mermaid lineage diagram and naming convention  
-- Added quick verification commands and STAC media type clarity
-
-## v2.1.0 — 2025-10-11
-- Introduced per-doc version block and repro matrix
-```
+| Version  | Date       | Notes                                                                                                            |
+| :------- | :--------- | :--------------------------------------------------------------------------------------------------------------- |
+| **v2.3** | 2025-10-11 | Standardized formatting to match KFM processed-data grid and badge layout; refined divider rhythm and alignment. |
+| **v2.2** | 2025-10-11 | Added lineage diagram, naming conventions, and quick verification commands; clarified STAC media type.           |
+| **v2.1** | 2025-10-11 | Introduced per-document version block, reproducibility matrix, and container details.                            |
+| **v2.0** | 2025-09-01 | Initial processed text data documentation with CI validation and STAC linkage.                                   |
 
 ---
 
