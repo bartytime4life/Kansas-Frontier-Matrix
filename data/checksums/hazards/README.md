@@ -4,15 +4,15 @@
 `data/checksums/hazards/`
 
 **Mission:** Guarantee **integrity, reproducibility, and provenance** of all processed **natural hazard datasets** —  
-including tornado tracks, floods, wildfires, drought indices, and disaster declarations — through **SHA-256 validation**  
-and continuous CI/CD verification within the Kansas Frontier Matrix (KFM) ecosystem.
+including tornado tracks, floods, wildfires, drought indices, and disaster declarations — through  
+**SHA-256 validation** and **automated CI/CD enforcement** across the Kansas Frontier Matrix (KFM).
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../../../.github/workflows/trivy.yml)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
@@ -20,21 +20,38 @@ and continuous CI/CD verification within the Kansas Frontier Matrix (KFM) ecosys
 
 ## 📚 Overview
 
-This directory contains **SHA-256 checksum files (`.sha256`)** for all **hazard datasets**  
-processed within the Kansas Frontier Matrix (KFM).  
+The `data/checksums/hazards/` directory contains **SHA-256 checksum manifests (`.sha256`)**  
+for all processed **hazard datasets** within KFM.  
 
-These cryptographic fingerprints verify that hazard data — from tornado paths to drought layers — remain  
-unaltered, reproducible, and transparent across the full MCP-compliant data lifecycle.
+These digests act as immutable fingerprints proving that hazard data —  
+such as tornado tracks, wildfire perimeters, and FEMA disaster records —  
+remain byte-for-byte consistent and reproducible across processing environments.
 
-**Checksums enforce:**
+**Checksums ensure:**
+- 🧱 **Integrity** — Detect silent corruption or unauthorized modification.  
+- 🔁 **Reproducibility** — Confirm deterministic ETL outputs across rebuilds.  
+- 🔗 **Provenance** — Link all assets to their STAC metadata and source manifests.  
+- 🧩 **Auditability** — Enable automatic verification and historical traceability in CI/CD.  
 
-- 🧱 **Integrity** — Detects corruption or unauthorized file changes.  
-- 🔁 **Reproducibility** — Ensures deterministic ETL outputs across rebuilds.  
-- 🧩 **Provenance** — Links each asset directly to metadata and STAC references.  
-- 🔍 **Auditability** — Enables automated validation and historical tracking through CI/CD logs.  
+All `.sha256` files are generated via the **Hazards ETL (`make hazards`)**  
+and validated in real-time during every workflow run.
 
-All `.sha256` files are automatically generated during the **Hazards ETL process (`make hazards`)**  
-and validated continuously during GitHub Action workflows.
+---
+
+## 🧭 Hazards Integrity Workflow
+
+```mermaid
+flowchart LR
+  S["data/sources/hazards/*.json\nSource Manifests"] --> R["data/raw/hazards/**\nNOAA · FEMA · USFS"]
+  R --> P["src/pipelines/hazards_pipeline.py\nETL · Merge · Derive"]
+  P --> O["data/processed/hazards/**\nGeoJSON · TIFF · CSV"]
+  O --> C["data/checksums/hazards/*.sha256\nIntegrity Proofs"]
+  O --> T["data/stac/hazards/**.json\nSTAC Items (checksum:sha256)"]
+  C --> V["CI Validation\nsha256sum -c + STAC parity"]
+%% END OF MERMAID
+````
+
+<!-- END OF MERMAID -->
 
 ---
 
@@ -48,22 +65,10 @@ data/checksums/hazards/
 ├── wildfire_perimeters_2000_2024.geojson.sha256
 ├── drought_index_2000_2025.tif.sha256
 └── fema_disaster_declarations_1953_2025.csv.sha256
-````
+```
 
-> **Note:** Each `.sha256` file corresponds to a dataset in
-> `data/processed/hazards/` and is verified via `sha256sum -c` in CI/CD validation jobs.
-
----
-
-## 🔐 Checksum Purpose and Role
-
-| Objective              | Description                                                                                  |
-| :--------------------- | :------------------------------------------------------------------------------------------- |
-| **Integrity Check**    | Detects accidental corruption, missing bytes, or unauthorized edits to hazard data.          |
-| **Reproducibility**    | Confirms consistent ETL output when pipelines re-run under identical conditions.             |
-| **Provenance Linkage** | Maintains verifiable connection between datasets, STAC metadata, and checksum registry.      |
-| **Automation**         | Continuous verification ensures early detection of data drift or processing errors.          |
-| **Transparency**       | Promotes scientific and operational accountability for hazard datasets used in public tools. |
+> Each `.sha256` corresponds to a dataset under `data/processed/hazards/`
+> and is verified automatically via `sha256sum -c` during CI.
 
 ---
 
@@ -74,103 +79,104 @@ data/checksums/hazards/
 8fb29cda3d0e44182f26c7bceff74b2c81b83e742d47d836b33151f871bb69d1  tornado_tracks_1950_2024.geojson
 ```
 
-The above verifies that the **Tornado Tracks** layer
-(`data/processed/hazards/tornado_tracks_1950_2024.geojson`) matches its canonical hash.
+This confirms that
+`data/processed/hazards/tornado_tracks_1950_2024.geojson`
+is identical to the last validated version and has not been altered.
 
 ---
 
-## ⚙️ Checksum Generation Workflow
+## ⚙️ Generation & Validation Workflow
 
-Checksums are produced automatically during pipeline execution or can be manually triggered.
-
-**Makefile target:**
+**Make targets**
 
 ```bash
-make hazards-checksums
+make hazards-checksums          # Generate checksums for all hazard outputs
+make hazards-checksums-verify   # Verify all hashes (CI enforcement)
 ```
 
-**Python CLI:**
+**Python CLI**
 
 ```bash
 python src/utils/generate_checksums.py data/processed/hazards/ --algo sha256
 ```
 
-**Workflow Steps:**
+**Steps**
 
-1. Identify all processed hazard outputs (`.geojson`, `.tif`, `.csv`).
-2. Compute SHA-256 hashes using Python’s `hashlib` for deterministic output.
-3. Write `<filename>.sha256` files to this directory.
-4. Verify all checksums via `sha256sum -c` in CI/CD pipelines.
-5. Log validation results in `data/work/logs/hazards_checksums.log`.
+1. Discover `.geojson`, `.tif`, `.csv` files under `data/processed/hazards/`.
+2. Compute SHA-256 using `hashlib` for deterministic hashing.
+3. Write `<filename>.sha256` to `data/checksums/hazards/`.
+4. CI validates all hashes; logs saved to `data/work/logs/hazards_checksums.log`.
 
 ---
 
-## 🧰 CI/CD Validation
+## 🧰 CI/CD Verification
 
-Checksum validation is enforced in the **KFM automated workflows** to prevent propagation of corrupted or outdated data.
-
-**Command executed in CI:**
+**Command executed by CI**
 
 ```bash
 sha256sum -c data/checksums/hazards/*.sha256
 ```
 
-**Validation behavior:**
+| Outcome     | Behavior                                              |
+| :---------- | :---------------------------------------------------- |
+| ✅ **Pass**  | Integrity verified, metadata synchronized.            |
+| ❌ **Fail**  | Pipeline stops; re-run ETL and regenerate checksums.  |
+| 🧾 **Logs** | Written to `data/work/logs/` for MCP audit retention. |
 
-* ❌ A failed hash triggers a workflow error and blocks deployment.
-* 🔁 Datasets must be regenerated (`make hazards`) and checksums recomputed.
-* 📜 Validation logs are archived in `data/work/logs/` for reproducibility and peer review.
+> Coupled with **STAC validation workflows** (`.github/workflows/stac-validate.yml`)
+> to ensure checksum–metadata consistency before merge or deploy.
 
 ---
 
 ## 🔗 Integration with Metadata & STAC
 
-| Linked Component                      | Purpose                                                                 |
-| :------------------------------------ | :---------------------------------------------------------------------- |
-| `data/processed/metadata/hazards/`    | Embeds `"checksum:sha256"` values in STAC assets.                       |
-| `src/pipelines/hazards_pipeline.py`   | Automates checksum generation post-processing.                          |
-| `.github/workflows/stac-validate.yml` | Revalidates STAC + checksum consistency in every PR or push.            |
-| `data/stac/hazards/`                  | STAC catalog stores checksum links for discovery and integrity tracing. |
-| `data/checksums/manifest.sha256`      | Global manifest references domain-level checksums for full validation.  |
+| Component                             | Function                                                      |
+| :------------------------------------ | :------------------------------------------------------------ |
+| `data/stac/hazards/**.json`           | STAC Items embed `"checksum:sha256"` for each hazard dataset. |
+| `data/processed/metadata/hazards/`    | Mirrors checksum values for non-STAC assets.                  |
+| `src/pipelines/hazards_pipeline.py`   | Automates checksum creation and validation after ETL.         |
+| `.github/workflows/stac-validate.yml` | Ensures checksum integrity + STAC schema conformance.         |
+| `data/checksums/manifest.sha256`      | Aggregates all domain manifests for global validation.        |
 
 ---
 
-## 🧩 Troubleshooting & Common Issues
+## 🧩 Troubleshooting & Maintenance
 
-| Issue                        | Likely Cause                                             | Resolution                                                        |
-| :--------------------------- | :------------------------------------------------------- | :---------------------------------------------------------------- |
-| **CI fails on mismatch**     | Dataset modified or rebuilt without updating hash.       | Re-run `make hazards-checksums` and commit regenerated checksums. |
-| **File missing in manifest** | New hazard dataset added but checksum not yet generated. | Add checksum via `python src/utils/generate_checksums.py`.        |
-| **Checksum drift from STAC** | STAC metadata not refreshed after reprocessing.          | Run `make stac` to sync hashes with STAC Items.                   |
-| **Inconsistent file paths**  | Relative path formatting inconsistency (`\` vs `/`).     | Normalize paths to POSIX in `.sha256` files.                      |
+| Issue                | Likely Cause                                      | Resolution                                           |
+| :------------------- | :------------------------------------------------ | :--------------------------------------------------- |
+| CI fails on mismatch | File changed or reprocessed without updated hash. | Run `make hazards-checksums` and recommit checksums. |
+| Missing `.sha256`    | New dataset not yet hashed.                       | Execute generator CLI or `make hazards-checksums`.   |
+| STAC drift           | STAC `checksum:sha256` not refreshed.             | Run `make stac` to rebuild metadata.                 |
+| Random mismatches    | Non-deterministic compression or timestamps.      | Set `SOURCE_DATE_EPOCH`; normalize export settings.  |
 
 ---
 
-## 🧠 MCP Compliance Summary
+## 🧠 MCP Compliance Matrix
 
-| MCP Principle           | Implementation                                                     |
-| :---------------------- | :----------------------------------------------------------------- |
-| **Documentation-first** | Each dataset includes an accompanying `.sha256` record and README. |
-| **Reproducibility**     | Deterministic SHA-256 ensures identical outputs across rebuilds.   |
-| **Open Standards**      | Employs FIPS 180-4 SHA-256 hashing, integrated with STAC schema.   |
-| **Provenance**          | Connects data lineage across ETL, metadata, and STAC catalogs.     |
-| **Auditability**        | CI/CD workflows log and enforce checksum verification globally.    |
+| MCP Principle           | Implementation                                        |
+| :---------------------- | :---------------------------------------------------- |
+| **Documentation-first** | Each dataset includes README + `.sha256` manifest.    |
+| **Reproducibility**     | Deterministic SHA-256 validation ensures consistency. |
+| **Open Standards**      | FIPS 180-4 SHA-256 + STAC checksum extension.         |
+| **Provenance**          | Datasets linked via ETL → checksum → STAC.            |
+| **Auditability**        | CI failure gates + archived logs for traceability.    |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                                           |
-| :------ | :--------- | :------------------------------------------------------------------------------------------------ |
-| v1.0.0  | 2025-10-04 | Initial hazards checksum documentation — tornado, flood, wildfire, and drought datasets verified. |
-| v1.1.0  | 2025-10-10 | Added FEMA disaster checksums, enhanced CI/STAC integration, troubleshooting, and log references. |
+| Version  | Date       | Summary                                                                                                          |
+| :------- | :--------- | :--------------------------------------------------------------------------------------------------------------- |
+| **v1.2** | 2025-10-11 | Upgraded to KFM Markdown Protocol v1.1; added Mermaid workflow, CI parity details, and reproducibility controls. |
+| **v1.1** | 2025-10-10 | Added FEMA disaster checksums, enhanced troubleshooting and STAC integration.                                    |
+| **v1.0** | 2025-10-04 | Initial checksum documentation — tornado, flood, wildfire, drought verified.                                     |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Storm Verified: Integrity Through Time.”*
-📍 [`data/checksums/hazards/`](.) · Linked to the **Hazards STAC Collection** and Global Manifest Registry.
+**Kansas Frontier Matrix** — *Every Storm Verified: Integrity Through Time.*
+📍 [`data/checksums/hazards/`](.) · Linked to **Hazards STAC Collection** and **Global Manifest Registry**.
 
 </div>
 ```
