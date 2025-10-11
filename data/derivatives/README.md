@@ -150,12 +150,3 @@ Bad PRs will fail CI if STAC/JSON Schema validation fails.
 
 </div>
 ```
-
----
-
-✅ **Highlights**
-
-* Uses all project-standard badges and formatting.
-* Mirrors your `data/sources` and `data/cogs` READMEs in tone and structure.
-* Adds full STAC integration, provenance, and CI details.
-* Includes explicit contributor workflow and reproducibility notes.
