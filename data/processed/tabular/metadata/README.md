@@ -21,15 +21,15 @@ to ensure open, reproducible, and interoperable structured data for long-term an
 ## 📚 Overview
 
 This directory contains **metadata JSON files** describing the structure, provenance, and  
-standards compliance for all tabular datasets under `data/processed/tabular/`.  
+standards compliance for all tabular datasets under `data/processed/tabular/`.
 
-These datasets represent **quantitative and statistical data** across Kansas — demography, agriculture, economics, and land use — and are essential for cross-domain analysis within KFM.
+Datasets span **demography, agriculture, economics, and land use** and are essential for cross-domain analysis within KFM.
 
 Each metadata file includes:
 - **STAC 1.0**-compliant JSON metadata  
+- **CSVW/JSON Table Schema** reference for columns & types  
 - **Provenance & licensing** information  
 - Associated **`.sha256`** integrity checksum  
-- **Schema validation** reference (`data/processed/metadata/schema/tabular.schema.json`)  
 - Links to **thumbnails** and visualization previews  
 
 ---
@@ -39,9 +39,9 @@ Each metadata file includes:
 ```mermaid
 flowchart TD
   A["Processed Tables\n(data/processed/tabular/*.csv|*.parquet)"] --> B["Metadata Authoring\n(this folder: *.json)"]
-  B --> C["Thumbnails\n(thumbnails/*.png)"]
-  B --> D["Schema Validation\n(CSVW/JSON Schema · STAC 1.0)"]
-  D --> E["CI Gate\n(GitHub Actions: stac-validate.yml)"]
+  B --> C["Schema & CSVW\n(tabular.schema.json · field dict)"]
+  B --> D["Thumbnails\n(thumbnails/*.png)"]
+  B --> E["CI Validation\n(CSVW/JSON Schema · STAC 1.0)"]
   E --> F["Catalog & Graph\n(data/stac/tabular/* · src/graph/tabular_nodes.py)"]
   %% END OF MERMAID
 ````
@@ -56,14 +56,15 @@ data/processed/tabular/metadata/
 ├── census_population_1860_2020.json
 ├── agricultural_production_1870_2020.json
 ├── economic_indicators_1900_2025.json
+├── tabular.schema.json                # CSVW/JSON Table Schema (shared)
 └── thumbnails/
     ├── census_population_1860_2020.png
     ├── agricultural_production_1870_2020.png
     └── economic_indicators_1900_2025.png
 ```
 
-> **Note:** Each `.json` conforms to **STAC 1.0** and references the processed dataset in
-> `data/processed/tabular/` as well as its checksum in the sibling folder `../checksums/`.
+> **Note:** Each `.json` conforms to **STAC 1.0**, references its processed dataset in
+> `../` (`data/processed/tabular/`), and its checksum in the sibling folder `../checksums/`.
 
 ---
 
@@ -75,8 +76,7 @@ data/processed/tabular/metadata/
 | **Agricultural Production (1870–2020)** | USDA NASS / KS Ag. Statistics               | Parquet | 1870–2020         | `data/processed/tabular/agricultural_production_1870_2020.parquet` |
 | **Economic Indicators (1900–2025)**     | BEA / BLS / KS Dept. of Revenue             | Parquet | 1900–2025         | `data/processed/tabular/economic_indicators_1900_2025.parquet`     |
 
-All datasets are validated for integration into KFM’s **knowledge graph** and analytics pipelines,
-use open formats (**CSV**, **Parquet**), and are cataloged under `data/stac/tabular/`.
+All datasets are validated for KFM’s **knowledge graph** and analytics pipelines, use open formats (**CSV**, **Parquet**), and are cataloged under `data/stac/tabular/`.
 
 ---
 
@@ -134,16 +134,57 @@ use open formats (**CSV**, **Parquet**), and are cataloged under `data/stac/tabu
 
 ---
 
-## 🧩 Semantic & Ontological Alignment
+## 🧮 CSVW / JSON Table Schema (field pattern)
 
-| Entity              | Ontology Mapping                                | Example                        |
-| :------------------ | :---------------------------------------------- | :----------------------------- |
-| Population Table    | CIDOC `E31_Document` + `E73_Information_Object` | County-level census dataset    |
-| Economic Indicator  | CIDOC `E16_Measurement` + `E55_Type`            | Per-capita income over time    |
-| Agricultural Output | CIDOC `E16_Measurement` + `E53_Place`           | Wheat yield in Sedgwick County |
-| Time Period         | **OWL-Time** interval                           | 1860–2020                      |
+> Use `tabular.schema.json` to define column names, types, units, constraints, and value semantics.
 
-These mappings make tabular data interoperable with KFM’s **spatial** and **narrative** layers.
+**Minimal example snippet:**
+
+```json
+{
+  "@context": "http://www.w3.org/ns/csvw",
+  "tables": [{
+    "url": "../tabular/census_population_1860_2020.parquet",
+    "tableSchema": {
+      "columns": [
+        {"name": "fips_code", "datatype": "string", "required": true},
+        {"name": "county_name", "datatype": "string"},
+        {"name": "year", "datatype": {"base": "gYear"}, "required": true},
+        {"name": "population", "datatype": "integer", "required": true},
+        {"name": "source", "datatype": "string"},
+        {"name": "license", "datatype": "string"}
+      ],
+      "primaryKey": ["fips_code", "year"]
+    }
+  }]
+}
+```
+
+---
+
+## 📓 Data Dictionary (per-dataset template)
+
+| Column        | Type    | Unit   | Description                               | Allowed / Notes           |
+| :------------ | :------ | :----- | :---------------------------------------- | :------------------------ |
+| `fips_code`   | string  | —      | County FIPS (5-digit, left-padded if CSV) | `^\d{5}$`                 |
+| `county_name` | string  | —      | County name (2020 boundaries)             | Title case                |
+| `year`        | gYear   | —      | Observation year                          | 1860–2025                 |
+| `population`  | integer | people | Population total                          | `>=0`                     |
+| `source`      | string  | —      | Originating dataset                       | e.g., “US Census”         |
+| `license`     | string  | —      | Data license                              | CC-BY-4.0 / Public Domain |
+
+> Place dataset-specific dictionaries beside each STAC item (e.g., `census_population_1860_2020.dict.md`).
+
+---
+
+## ✅ QA / CI Checklist (copy into PRs)
+
+* [ ] STAC item validates (CI badge green)
+* [ ] CSVW schema validates types & constraints
+* [ ] `.sha256` present in `../checksums/` and passes `sha256sum -c`
+* [ ] Thumbnail present & path correct in `assets.thumbnail`
+* [ ] `derived_from` / provenance fields populated
+* [ ] Data dictionary updated & consistent with CSVW schema
 
 ---
 
@@ -168,57 +209,58 @@ python src/pipelines/tabular/tabular_pipeline.py
 3. Convert to **Parquet** for efficient querying.
 4. Compute **`.sha256`** checksums (stored in `../checksums/`).
 5. Generate **STAC** items + thumbnails.
-6. Validate structure via **CSVW/JSON Schema** + **STAC 1.0** in CI.
+6. Validate via **CSVW/JSON Schema** + **STAC 1.0** in CI.
 
 ---
 
 ## 🧮 Provenance & Validation
 
-* **Checksums:** `data/processed/tabular/checksums/` (sibling folder)
+* **Checksums:** `data/processed/tabular/checksums/`
 * **Licensing:** Public domain or **CC-BY** (source-dependent)
-* **Validation:** STAC + JSON Schema validation in CI
+* **Validation:** STAC + CSVW/JSON Schema in CI
 * **Source Manifests:** `data/sources/tabular/*.json`
 
 ---
 
 ## 🔗 Integration Points
 
-| Component                           | Role                                               |
-| :---------------------------------- | :------------------------------------------------- |
-| `data/stac/tabular/`                | STAC Items & Collections for tabular datasets      |
-| `web/config/layers.json`            | UI integration for charts & summaries              |
-| `src/graph/tabular_nodes.py`        | Knowledge Graph ingestion + entity linking         |
-| `data/processed/tabular/checksums/` | Checksum verification for reproducibility          |
-| `docs/architecture.md`              | Data architecture overview for tabular integration |
+| Component                           | Role                                       |
+| :---------------------------------- | :----------------------------------------- |
+| `data/stac/tabular/`                | STAC Items & Collections                   |
+| `web/config/layers.json`            | UI integration for charts & summaries      |
+| `src/graph/tabular_nodes.py`        | Knowledge Graph ingestion + entity linking |
+| `data/processed/tabular/checksums/` | Reproducibility & integrity                |
+| `docs/architecture.md`              | End-to-end data architecture               |
 
 ---
 
 ## 🤖 AI & Metadata Notes
 
-* **Entity Extraction:** Auto-links datasets to places, periods, and topics (demography, economics, agriculture).
-* **Quality Signals:** Outlier detection + consistency checks recorded with `confidence` scores (0–1).
-* **Non-destructive:** AI inferences live under `data/processed/tabular/ai_metadata/` and are fully reversible.
+* **Entity extraction & linking** to places, periods, topics (demography, agriculture, economics).
+* **Quality signals** (outlier detection) with `confidence` scores (0–1).
+* **Non-destructive**: AI inferences stored in `data/processed/tabular/ai_metadata/`.
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| Principle           | Implementation                                               |
-| :------------------ | :----------------------------------------------------------- |
-| Documentation-first | README + per-dataset STAC item                               |
-| Reproducibility     | Containerized ETL, checksums, deterministic transforms       |
-| Open Standards      | CSV/Parquet, STAC 1.0, CSVW/JSON Schema                      |
-| Provenance          | Source → process → product lineage with cryptographic hashes |
-| Auditability        | CI validation logs + schema/STAC gates                       |
+| Principle           | Implementation                                         |
+| :------------------ | :----------------------------------------------------- |
+| Documentation-first | README + per-dataset STAC item + data dictionary       |
+| Reproducibility     | Containerized ETL, checksums, deterministic transforms |
+| Open Standards      | CSV/Parquet, **STAC 1.0**, **CSVW/JSON Table Schema**  |
+| Provenance          | Source → process → product with cryptographic hashes   |
+| Auditability        | CI validation logs + schema/STAC gates                 |
 
 ---
 
 ## 🧾 Version History
 
-|  Version  | Date       | Summary                                                                                      |
-| :-------: | :--------- | :------------------------------------------------------------------------------------------- |
-| **1.1.0** | 2025-10-11 | Upgraded README: corrected badge paths, added Mermaid flow, stronger STAC example, MCP table |
-|   1.0.0   | 2025-10-04 | Initial tabular metadata release (census, agriculture, economic datasets + thumbnails)       |
+|  Version  | Date       | Summary                                                                                                |
+| :-------: | :--------- | :----------------------------------------------------------------------------------------------------- |
+| **1.2.0** | 2025-10-11 | Added CSVW schema file, data-dictionary pattern, QA checklist; refined Mermaid; tightened STAC fields. |
+| **1.1.0** | 2025-10-11 | Badge paths fixed; Mermaid flow; stronger STAC example; MCP table                                      |
+|   1.0.0   | 2025-10-04 | Initial tabular metadata release (census, agriculture, economic datasets + thumbnails)                 |
 
 ---
 
