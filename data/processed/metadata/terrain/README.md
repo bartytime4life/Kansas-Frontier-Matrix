@@ -7,13 +7,13 @@
 that form the topographic foundation of the Kansas Frontier Matrix knowledge system —  
 supporting historical analysis, hydrology modeling, and visual storytelling of the Kansas landscape.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
 
@@ -21,16 +21,28 @@ supporting historical analysis, hydrology modeling, and visual storytelling of t
 
 ## 📚 Overview
 
-This directory documents **terrain and elevation datasets** processed within the  
-Kansas Frontier Matrix (KFM). These datasets define the physical surface of Kansas —  
-including elevation, hillshade, slope/aspect, and historical topographic map layers.  
+This directory documents **terrain and elevation datasets** processed within the Kansas Frontier Matrix (KFM).  
+Layers include **elevation, hillshade, slope/aspect**, and **historic topographic overlays**.
 
-Each dataset includes:
-- STAC 1.0-compliant metadata (`.json`)  
-- Provenance and checksum linkage (`.sha256`)  
-- Open license and data source information  
-- JSON Schema validation for structure and metadata compliance  
-- MCP-based reproducibility workflow and provenance logs  
+Each dataset provides:
+- **STAC 1.0** metadata (`.json`)  
+- **Provenance & checksum** linkage (`.sha256`)  
+- **Open licensing** and source attribution  
+- **JSON Schema** validation & **MCP** reproducibility fields
+
+---
+
+## 🧭 System Flow (Mermaid)
+
+```mermaid
+flowchart TD
+  A["Raw Elevation Inputs\n(USGS 3DEP · KS DASC · USGS Historic Topos)"] --> B["Processing\n(GDAL · PDAL · WhiteboxTools)"]
+  B --> C["Processed Terrain\n(data/processed/terrain/*.tif)"]
+  C --> D["Metadata Authoring\n(data/processed/metadata/terrain/*.json)"]
+  D --> E["Validation\n(JSON Schema · STAC 1.0 · CI)"]
+  E --> F["Catalog & UI\n(data/stac/terrain · web/config/layers.json)"]
+  %% END OF MERMAID
+````
 
 ---
 
@@ -46,46 +58,52 @@ data/processed/metadata/terrain/
     ├── ks_1m_dem_2018_2020.png
     ├── ks_hillshade_2018_2020.png
     └── slope_aspect_2018_2020.png
-````
+```
 
-> **Note:** Each `.json` metadata file describes a corresponding terrain dataset in
-> `data/processed/terrain/`, linking to its STAC entry and checksum record under
-> `data/processed/checksums/terrain/`.
+> **Note:** Each `.json` describes a dataset in `data/processed/terrain/` and references a checksum in
+> `data/processed/terrain/checksums/`. STAC items are synchronized under `data/stac/terrain/`.
 
 ---
 
 ## 🏔️ Terrain Layers (Processed Assets)
 
-| Dataset                                | Source                          | Format        | Resolution         | Temporal Range | Output                                              |
-| :------------------------------------- | :------------------------------ | :------------ | :----------------- | :------------- | :-------------------------------------------------- |
-| **DEM (1 m LiDAR)**                    | USGS 3DEP / KS DASC             | GeoTIFF (COG) | 1 m                | 2018–2020      | `data/processed/terrain/ks_1m_dem_2018_2020.tif`    |
-| **Hillshade (Derived)**                | Derived from DEM                | GeoTIFF (COG) | 1 m                | 2018–2020      | `data/processed/terrain/ks_hillshade_2018_2020.tif` |
-| **Slope & Aspect**                     | Derived from DEM                | GeoTIFF (COG) | 1 m                | 2018–2020      | `data/processed/terrain/slope_aspect_2018_2020.tif` |
-| **Historic Topo Overlays (1890–1950)** | USGS Historical Topo Collection | GeoTIFF       | 1:62,500–1:125,000 | 1894–1950      | `data/processed/terrain/usgs_topo_larned_1894.tif`  |
+| Dataset                                | Source                        | Format        | Resolution | Temporal Range | Output                                              |
+| :------------------------------------- | :---------------------------- | :------------ | :--------- | :------------- | :-------------------------------------------------- |
+| **DEM (1 m LiDAR)**                    | USGS 3DEP / KS DASC           | GeoTIFF (COG) | 1 m        | 2018–2020      | `data/processed/terrain/ks_1m_dem_2018_2020.tif`    |
+| **Hillshade (Derived)**                | Derived from DEM              | GeoTIFF (COG) | 1 m        | 2018–2020      | `data/processed/terrain/ks_hillshade_2018_2020.tif` |
+| **Slope & Aspect (Derived)**           | Derived from DEM              | GeoTIFF (COG) | 1 m        | 2018–2020      | `data/processed/terrain/slope_aspect_2018_2020.tif` |
+| **Historic Topo Overlays (1890–1950)** | USGS Historic Topo Collection | GeoTIFF       | map scale  | 1894–1950      | `data/processed/terrain/usgs_topo_larned_1894.tif`  |
 
-All datasets are standardized to **EPSG:4326 (WGS84)** and cataloged via STAC metadata in `data/stac/terrain/`.
+All rasters are standardized to **EPSG:4326 (WGS 84)** and optimized as **COGs** where applicable.
 
 ---
 
-## 💾 Example STAC Metadata
+## 💾 Example STAC Item (enhanced)
 
 ```json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
   "id": "ks_1m_dem_2018_2020",
+  "collection": "kfm_terrain",
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99], [-94.59, 36.99],
+      [-94.59, 40.00], [-102.05, 40.00],
+      [-102.05, 36.99]
+    ]]
+  },
   "properties": {
-    "title": "Kansas LiDAR Digital Elevation Model (1m, 2018–2020)",
+    "title": "Kansas LiDAR Digital Elevation Model (1 m, 2018–2020)",
+    "description": "Hydrologically conditioned 1 m DEM from USGS 3DEP/KS DASC LiDAR tiles.",
     "datetime": "2020-01-01T00:00:00Z",
-    "description": "High-resolution LiDAR-based DEM representing terrain elevation across Kansas.",
     "proj:epsg": 4326,
-    "themes": ["terrain", "elevation", "topography"],
-    "license": "Public Domain (USGS 3DEP)",
-    "providers": [
-      {"name": "USGS 3DEP", "roles": ["producer"]},
-      {"name": "Kansas DASC", "roles": ["processor"]},
-      {"name": "Kansas Frontier Matrix", "roles": ["curator"]}
-    ]
+    "themes": ["terrain","elevation","topography"],
+    "processing:software": "GDAL 3.8.0; WhiteboxTools 2.2.0",
+    "kfm:mcp_provenance": "sha256:<PUT_FILE_HASH_HERE>",
+    "license": "Public Domain (USGS 3DEP)"
   },
   "assets": {
     "data": {
@@ -94,10 +112,21 @@ All datasets are standardized to **EPSG:4326 (WGS84)** and cataloged via STAC me
       "roles": ["data"]
     },
     "thumbnail": {
-      "href": "thumbnails/ks_1m_dem_2018_2020.png"
+      "href": "thumbnails/ks_1m_dem_2018_2020.png",
+      "type": "image/png",
+      "roles": ["thumbnail"]
+    },
+    "checksum:sha256": {
+      "href": "../terrain/checksums/ks_1m_dem_2018_2020.tif.sha256",
+      "type": "text/plain",
+      "roles": ["metadata"]
     }
   },
-  "bbox": [-102.05, 36.99, -94.59, 40.00]
+  "links": [
+    { "rel": "collection", "href": "../../../stac/collections/kfm_terrain.json", "type": "application/json" },
+    { "rel": "self",       "href": "ks_1m_dem_2018_2020.json",               "type": "application/json" },
+    { "rel": "parent",     "href": ".",                                      "type": "text/html" }
+  ]
 }
 ```
 
@@ -105,88 +134,100 @@ All datasets are standardized to **EPSG:4326 (WGS84)** and cataloged via STAC me
 
 ## 🧩 Semantic & Ontological Alignment
 
-| Entity           | Ontology Mapping                                     | Example                     |
-| :--------------- | :--------------------------------------------------- | :-------------------------- |
-| Elevation Raster | `E73_Information_Object` + `E25_Man-Made_Feature`    | LiDAR-based elevation model |
-| Hillshade        | `E73_Information_Object` + `E29_Design_or_Procedure` | Shaded relief map of DEM    |
-| Slope & Aspect   | `E16_Measurement` + OWL-Time interval                | Derived gradient analysis   |
-| Historic Topo    | `E31_Document` + `E53_Place`                         | 1894 Larned topographic map |
+| Entity           | Ontology Mapping                                           | Example                    |
+| :--------------- | :--------------------------------------------------------- | :------------------------- |
+| Elevation Raster | CIDOC `E73_Information_Object` + `E25_Man-Made_Feature`    | LiDAR-based elevation grid |
+| Hillshade        | CIDOC `E73_Information_Object` + `E29_Design_or_Procedure` | Shaded-relief raster       |
+| Slope & Aspect   | CIDOC `E16_Measurement` + **OWL-Time** interval            | Gradient & aspect models   |
+| Historic Topo    | CIDOC `E31_Document` + `E53_Place`                         | 1894 Larned topo sheet     |
 
-These ontological mappings allow cross-domain reasoning between physical landscape,
-environmental processes, and cultural-historical data layers.
+These mappings enable cross-domain reasoning between landscape, environment, and history.
 
 ---
 
 ## ⚙️ ETL & Processing Workflow
 
-**Pipeline Command:**
+**Makefile**
 
 ```bash
 make terrain
 ```
 
-**Python Script:**
+**Pipeline**
 
 ```bash
 python src/pipelines/terrain/terrain_pipeline.py
 ```
 
-**Steps:**
+**Steps**
 
-1. Fetch LiDAR DEM tiles from USGS 3DEP or KS DASC services.
-2. Merge and reproject to WGS84 (EPSG:4326).
-3. Generate hillshade, slope, and aspect derivatives.
-4. Convert outputs to Cloud-Optimized GeoTIFF (COG).
-5. Compute `.sha256` checksums for integrity validation.
-6. Create STAC metadata entries and thumbnails.
-7. Validate using JSON Schema and STAC CI workflow.
+1. Fetch LiDAR/DEM tiles (USGS 3DEP / KS DASC).
+2. Merge & reproject → **EPSG:4326**.
+3. Generate **hillshade**, **slope**, **aspect**.
+4. Convert to **COG** (overviews & compression).
+5. Compute **`.sha256`** checksums (store in `data/processed/terrain/checksums/`).
+6. Generate **STAC** items + thumbnails.
+7. Validate via **JSON Schema** + **STAC 1.0** in CI.
 
 ---
 
 ## 🧮 Provenance & Validation
 
-* **Checksums:** Stored under `data/processed/checksums/terrain/` for every raster.
-* **Licensing:** Public domain (USGS / KS DASC). Derived products are CC-BY 4.0.
-* **Validation:** JSON Schema + STAC 1.0 validation performed automatically in CI.
-* **Cross-links:** Source manifests located in `data/sources/terrain/*.json`.
+* **Checksums:** `data/processed/terrain/checksums/`
+* **Licensing:** Public Domain sources; derived products **CC-BY 4.0**
+* **Validation:** STAC + JSON Schema & MCP rule checks in CI
+* **Source manifests:** `data/sources/terrain/*.json`
 
 ---
 
 ## 🔗 Integration Points
 
-| Component                           | Role                                                 |
-| :---------------------------------- | :--------------------------------------------------- |
-| `data/stac/terrain/`                | STAC Items and Collections for terrain datasets      |
-| `web/config/layers.json`            | Frontend map configuration for base elevation layers |
-| `src/graph/terrain_nodes.py`        | Knowledge graph ingestion and ontology mapping       |
-| `data/processed/checksums/terrain/` | Contains corresponding checksum records              |
-| `docs/architecture.md`              | Reference for data flow and component structure      |
+| Component                           | Role                                                   |
+| :---------------------------------- | :----------------------------------------------------- |
+| `data/stac/terrain/`                | STAC Items & Collections for terrain layers            |
+| `web/config/layers.json`            | Frontend map configuration (base elevation & previews) |
+| `src/graph/terrain_nodes.py`        | Knowledge graph ingestion & ontology binding           |
+| `data/processed/terrain/checksums/` | Integrity tracking (SHA-256)                           |
+| `docs/architecture.md`              | End-to-end data architecture & workflow references     |
+
+---
+
+## ✅ QA Checklist (copy into PRs)
+
+* [ ] STAC item validates (CI green)
+* [ ] `kfm:mcp_provenance` hash equals file checksum
+* [ ] `assets.data` is COG and path is correct & relative
+* [ ] Thumbnail present and referenced in `assets.thumbnail`
+* [ ] EPSG/CRS & temporal fields correct
+* [ ] Links (`self`, `collection`, `parent`) resolve
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                   |
-| :---------------------- | :--------------------------------------------------------------- |
-| **Documentation-first** | Each dataset includes README and STAC metadata                   |
-| **Reproducibility**     | Deterministic ETL with logged outputs and checksums              |
-| **Open Standards**      | GeoTIFF (COG), STAC 1.0, JSON Schema                             |
-| **Provenance**          | Source URLs, licenses, and timestamps stored in metadata         |
-| **Auditability**        | Continuous integration tests validate every dataset and checksum |
+| Principle           | Implementation                                                |
+| :------------------ | :------------------------------------------------------------ |
+| Documentation-first | README + per-dataset STAC item + thumbnail                    |
+| Reproducibility     | Containerized ETL; deterministic transforms; checksums        |
+| Open Standards      | **COG GeoTIFF**, **STAC 1.0**, **JSON Schema**                |
+| Provenance          | Source URLs, licenses, and cryptographic hashes               |
+| Auditability        | CI validation for schema/STAC; lineage tracked via MCP fields |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                                     |
-| :------ | :--------- | :------------------------------------------------------------------------------------------ |
-| v1.0    | 2025-10-04 | Initial terrain metadata release — DEM, hillshade, slope/aspect, and historic topo datasets |
+|  Version  | Date       | Summary                                                                                                         |
+| :-------: | :--------- | :-------------------------------------------------------------------------------------------------------------- |
+| **1.1.0** | 2025-10-11 | Fixed badge paths; added Mermaid flow; enhanced STAC example (collection/geometry/checksum/links); QA checklist |
+|   1.0.0   | 2025-10-04 | Initial terrain metadata release — DEM, hillshade, slope/aspect, and historic topo datasets                     |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Mapping the Ground Truth of the Kansas Frontier.”*
-📍 [`data/processed/metadata/terrain/`](.) · Integrated within the **Terrain STAC Collection**
+📍 [`data/processed/metadata/terrain/`](.)
 
 </div>
+```
