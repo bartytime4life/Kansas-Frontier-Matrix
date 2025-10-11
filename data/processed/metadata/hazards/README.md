@@ -211,7 +211,6 @@ flowchart TD
   D --> E["Graph/API\nNeo4j · FastAPI"]
   E --> F["Web UI\nMapLibre layers · Thumbnails"]
 % END OF MERMAID %
-
 ```
 
 ```mermaid
