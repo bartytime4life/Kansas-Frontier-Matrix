@@ -210,7 +210,8 @@ flowchart TD
   C --> D["STAC\nitems · collection"]
   D --> E["Graph/API\nNeo4j · FastAPI"]
   E --> F["Web UI\nMapLibre layers · Thumbnails"]
-<!-- END OF MERMAID -->
+% END OF MERMAID %
+
 ```
 
 ```mermaid
@@ -226,7 +227,7 @@ sequenceDiagram
   P->>V: STAC + JSON Schema validate
   P->>G: Upsert entities (Events, Places, Intervals)
   W->>G: Query items + entities for map & timeline
-<!-- END OF MERMAID -->
+% END OF MERMAID %
 ```
 
 > **Mermaid rules:** quote labels with punctuation, use `\n` for line breaks, and always end with `<!-- END OF MERMAID -->`.
