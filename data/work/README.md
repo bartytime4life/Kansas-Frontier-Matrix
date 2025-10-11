@@ -3,11 +3,11 @@
 # ⚙️ Kansas Frontier Matrix — Work Directory  
 `data/work/`
 
-**Mission:** Provide a **temporary, sandboxed workspace** for intermediate files,  
-debug outputs, and transient artifacts created during ETL, validation, and testing  
-within the Kansas Frontier Matrix (KFM) data pipelines.
+**Mission:** Provide a **sandboxed, temporary workspace** for intermediate artifacts, debug outputs,  
+and validation caches generated during ETL, STAC, and testing workflows within the **Kansas Frontier Matrix (KFM)**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
 [![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -18,16 +18,21 @@ within the Kansas Frontier Matrix (KFM) data pipelines.
 
 ## 📚 Overview
 
-The `data/work/` directory serves as a **volatile working area** for data engineers and automated processes  
-running Kansas Frontier Matrix pipelines. It is **not version-controlled** for data content (only structure and documentation)  
-and is intended exclusively for temporary use during:
+The `data/work/` directory acts as the **volatile workspace** for all Kansas Frontier Matrix data pipelines.  
+It holds **temporary files**, **debug data**, and **intermediate results** that appear during ETL, testing,  
+checksum computation, and validation processes.  
 
-- ETL and data transformation workflows  
-- STAC catalog generation and validation runs  
-- Thumbnail creation and checksum computation  
-- Experimental data processing and QA/QC checks  
+This directory is **not version-controlled for data** — only structure, configuration, and documentation are tracked.  
+It is intended solely for **short-term, reproducible operations**, not for persistent storage.
 
-All files stored here are **ephemeral** and can be safely deleted or regenerated at any time.
+### Typical Uses
+- ETL transformations and temporary joins  
+- Raster reprojections or clipping previews  
+- STAC pre-validation and draft metadata generation  
+- Thumbnail rendering and checksum staging  
+- Logging, QA/QC testing, or experimental data prep  
+
+All contents are **ephemeral** and can be safely deleted or regenerated at any time.
 
 ---
 
@@ -36,96 +41,115 @@ All files stored here are **ephemeral** and can be safely deleted or regenerated
 ```bash
 data/work/
 ├── README.md
-├── tmp/                  # Transient data used during ETL processing
-├── cache/                # Cached intermediate data or validation results
-├── staging/              # Temporary outputs awaiting integration into processed/
-└── logs/                 # Runtime logs for debugging and testing
+├── tmp/                  # Temporary ETL artifacts and working data
+├── cache/                # Cached validation, model, or preview results
+├── staging/              # Transitional outputs prior to commit into processed/
+└── logs/                 # Runtime and debugging logs for QA/QC
 ````
 
-> **Note:** The contents of this directory are excluded via `.gitignore`
-> to prevent accidental commits of large or temporary files.
+> **Note:** `.gitignore` ensures all subdirectory contents are excluded from version control
+> to avoid committing large or transient files. Only this README and structure persist.
 
 ---
 
-## ⚠️ Policy
+## ⚠️ Policies & Guidelines
 
-| Rule                   | Description                                               |
-| :--------------------- | :-------------------------------------------------------- |
-| **Ephemeral Storage**  | Files here may be deleted or overwritten at any time.     |
-| **No Persistent Data** | Long-term datasets belong under `data/processed/`.        |
-| **CI/CD Safety**       | Work data is ignored by CI except for validation outputs. |
-| **Version Control**    | Only structure, configs, and this README are tracked.     |
-
----
-
-## ⚙️ Typical Use Cases
-
-| Task                    | Example                                                         |
-| :---------------------- | :-------------------------------------------------------------- |
-| **Pipeline Debugging**  | Temporary raster subsets or vector slices during ETL runs.      |
-| **Checksum Validation** | Hash generation and revalidation staging.                       |
-| **Thumbnail Rendering** | Intermediate images before compression/export.                  |
-| **STAC Testing**        | Draft STAC validation before commit to `data/stac/`.            |
-| **Model Training Prep** | Transient tables used for ML preprocessing or NLP tokenization. |
+| Rule                    | Description                                                             |
+| :---------------------- | :---------------------------------------------------------------------- |
+| **Ephemeral Storage**   | Files here may be deleted, replaced, or regenerated at any time.        |
+| **No Persistent Data**  | Final data products must reside in `data/processed/`.                   |
+| **Version Control**     | Only directory structure and metadata documentation are tracked.        |
+| **CI/CD Safety**        | Work files are ignored by CI except when used for test outputs or logs. |
+| **Sandbox Environment** | This directory is isolated from published datasets for safety.          |
 
 ---
 
-## 🧰 Maintenance
+## ⚙️ Common Use Cases
 
-**This folder should remain clean.**
+| Task                         | Example                                                         |
+| :--------------------------- | :-------------------------------------------------------------- |
+| **Pipeline Debugging**       | Temporary raster slices or extracted tables during ETL testing. |
+| **Checksum Validation**      | Intermediate SHA-256 staging before global manifest generation. |
+| **Thumbnail Generation**     | Temporary image previews and compressions.                      |
+| **STAC Validation Tests**    | Pre-deployment metadata validation.                             |
+| **Machine Learning Staging** | Short-lived feature tables or tokenized text datasets.          |
 
-* Old or unused files should be purged automatically via scheduled maintenance.
-* Developers may manually clear contents using the provided Make target:
+---
+
+## 🧰 Maintenance Procedures
+
+This directory should remain **clean and disposable**.
+Stale files can accumulate during iterative runs, so automated and manual cleanup are both supported.
+
+### 🔁 Automated Cleanup (Preferred)
+
+Run the Make target:
 
 ```bash
 make clean-work
 ```
 
-Or directly from the CLI:
+### 🧹 Manual Cleanup (Developer)
+
+Remove files manually from each transient subdirectory:
 
 ```bash
 rm -rf data/work/tmp/* data/work/cache/* data/work/staging/* data/work/logs/*
 ```
 
-All critical outputs are **regenerated automatically** by domain-specific targets such as
-`make terrain`, `make hydrology`, `make landcover`, etc.
+**Safety:** All critical datasets are reproducible via domain-specific rebuild targets
+(e.g., `make terrain`, `make hydrology`, `make landcover`, etc.).
+
+---
+
+## 🔒 Integration with CI/CD and MCP
+
+| Component            | Description                                                               |
+| :------------------- | :------------------------------------------------------------------------ |
+| `.github/workflows/` | CI workflows may output logs or metrics here during validation runs.      |
+| `src/pipelines/*`    | ETL scripts use this workspace for in-memory or on-disk intermediates.    |
+| `data/checksums/`    | Hash computation results are temporarily staged here before publication.  |
+| `data/stac/`         | Draft STAC Items may be generated and validated here before finalization. |
+| `Makefile`           | Defines `clean-work` and related utility tasks to manage this directory.  |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                     |
-| :---------------------- | :----------------------------------------------------------------- |
-| **Documentation-first** | README defines directory purpose, retention, and safety rules.     |
-| **Reproducibility**     | Ensures transient processes can be re-run cleanly.                 |
-| **Open Standards**      | No proprietary formats; all temporary data mirror KFM conventions. |
-| **Provenance**          | Work artifacts trace back to deterministic pipeline inputs.        |
-| **Auditability**        | Logs and caches provide transparent intermediate records.          |
+| MCP Principle           | Implementation                                                            |
+| :---------------------- | :------------------------------------------------------------------------ |
+| **Documentation-first** | This README documents structure, retention policy, and workflow usage.    |
+| **Reproducibility**     | Ensures all transient steps can be cleanly rerun from source inputs.      |
+| **Open Standards**      | Uses open, human-readable, non-proprietary intermediate formats.          |
+| **Provenance**          | Each artifact corresponds to a deterministic pipeline step and log entry. |
+| **Auditability**        | Logs under `data/work/logs/` provide complete traceability of ETL events. |
 
 ---
 
-## 📎 Related Directories
+## 🧩 Related Directories
 
-| Path              | Description                            |
-| :---------------- | :------------------------------------- |
-| `data/raw/`       | Immutable original datasets.           |
-| `data/processed/` | Finalized and validated outputs.       |
-| `data/checksums/` | Integrity tracking for validated data. |
-| `data/stac/`      | Published metadata catalog.            |
+| Path              | Purpose                                                    |
+| :---------------- | :--------------------------------------------------------- |
+| `data/raw/`       | Immutable source data snapshots.                           |
+| `data/processed/` | Cleaned and validated dataset outputs.                     |
+| `data/checksums/` | SHA-256 manifests for all processed data.                  |
+| `data/stac/`      | STAC catalog and collection metadata for public discovery. |
 
 ---
 
 ## 📅 Version History
 
-| Version    | Date       | Summary                                                  |
-| :--------- | :--------- | :------------------------------------------------------- |
-| **v1.0.0** | 2025-10-04 | Initial creation of the working directory documentation. |
+| Version    | Date       | Summary                                                          |
+| :--------- | :--------- | :--------------------------------------------------------------- |
+| **v1.0.0** | 2025-10-04 | Initial creation of the work directory documentation.            |
+| **v1.1.0** | 2025-10-10 | Expanded MCP integration, CI/CD context, and maintenance policy. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Work Fast. Validate Often. Keep It Clean.”*
-📍 [`data/work/`](.) · Temporary workspace for intermediate and transient files.
+📍 [`data/work/`](.) · Temporary workspace for intermediate and transient files under MCP governance.
 
 </div>
+```
