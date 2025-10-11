@@ -27,6 +27,7 @@ and elevation composites — generated from canonical DEMs in `data/cogs/`.
 - [Processing Workflow](#processing-workflow)
 - [Reproducibility & Validation](#reproducibility--validation)
 - [Contributing New Terrain Layers](#contributing-new-terrain-layers)
+- [Changelog](#changelog)
 - [References](#references)
 
 ---
@@ -61,29 +62,32 @@ data/
         │   ├── slope_1m_ks.tif.sha256
         │   └── aspect_1m_ks.tif.sha256
         └── README.md                    # (this file)
+````
 
-🧩 Note: Each .tif has an associated .sha256 for integrity and a .json for STAC metadata.
+> 🧩 **Note:** Each `.tif` has an associated `.sha256` for integrity verification and `.json` for STAC metadata.
 
-⸻
+---
 
-🌄 Core Terrain Products
+## 🌄 Core Terrain Products
 
-Product	File	Description	Source DEM	Units	Format
-🟤 Slope	slope_1m_ks.tif	Rate of elevation change (% rise)	KS 1-m LiDAR	%	GeoTIFF (COG)
-🧭 Aspect	aspect_1m_ks.tif	Orientation of slope faces (azimuth)	KS 1-m LiDAR	°	GeoTIFF (COG)
-⛰ Curvature	curvature_1m_ks.tif	Combined plan/profile curvature	KS 1-m LiDAR	unitless	GeoTIFF (COG)
-🌞 Hillshade	hillshade_1m_ks.tif	Simulated illumination (45° azimuth, 315° sun)	KS 1-m LiDAR	DN 0–255	GeoTIFF (COG)
-🕰 Historic DEM	elevation_10m_hist.tif	Generalized 19th-century terrain model	USGS archives	m	GeoTIFF
+| Product             | File                     | Description                               | Source DEM    | Units    | Format        |
+| :------------------ | :----------------------- | :---------------------------------------- | :------------ | :------- | :------------ |
+| 🟤 **Slope**        | `slope_1m_ks.tif`        | Rate of elevation change (% rise)         | KS 1-m LiDAR  | %        | GeoTIFF (COG) |
+| 🧭 **Aspect**       | `aspect_1m_ks.tif`       | Orientation of slope faces (azimuth)      | KS 1-m LiDAR  | °        | GeoTIFF (COG) |
+| ⛰ **Curvature**     | `curvature_1m_ks.tif`    | Combined plan/profile curvature           | KS 1-m LiDAR  | unitless | GeoTIFF (COG) |
+| 🌞 **Hillshade**    | `hillshade_1m_ks.tif`    | Simulated illumination (az=315°, alt=45°) | KS 1-m LiDAR  | DN 0–255 | GeoTIFF (COG) |
+| 🕰 **Historic DEM** | `elevation_10m_hist.tif` | Generalized 19th-century terrain model    | USGS archives | m        | GeoTIFF       |
 
-All raster outputs are Cloud-Optimized GeoTIFFs (COGs), designed for web streaming and rapid rendering
+All raster outputs are **Cloud-Optimized GeoTIFFs (COGs)**, designed for web streaming and rapid rendering
 in MapLibreGL, QGIS, and STAC-aware applications.
 
-⸻
+---
 
-🧩 STAC Metadata
+## 🧩 STAC Metadata
 
-Each derivative raster is registered as a STAC Item with full spatial, temporal, and processing provenance.
+Each derivative raster is registered as a **STAC Item** with full spatial, temporal, and processing provenance.
 
+```json
 {
   "type": "Feature",
   "stac_version": "1.0.0",
@@ -105,18 +109,20 @@ Each derivative raster is registered as a STAC Item with full spatial, temporal,
     }
   }
 }
+```
 
-🧠 Tip: Use consistent naming: terrain_<product>_<resolution>_<region> for IDs and filenames.
+> 🧠 **Tip:** Use consistent naming — `terrain_<product>_<resolution>_<region>` — for STAC IDs and filenames.
 
-⸻
+---
 
-⚙️ Processing Workflow
+## ⚙️ Processing Workflow
 
-Terrain derivatives are generated through a deterministic, reproducible ETL pipeline using GDAL, rasterio,
-and Makefile automation (make terrain).
+Terrain derivatives are generated through a **deterministic, reproducible ETL pipeline** using GDAL, rasterio,
+and Makefile automation (`make terrain`).
 
 Example sequence:
 
+```bash
 # 1️⃣ Slope (% rise)
 gdaldem slope dem_1m_ks.tif slope_1m_ks.tif -s 111120
 
@@ -129,53 +135,71 @@ gdaldem TRI dem_1m_ks.tif curvature_1m_ks.tif
 # 4️⃣ Hillshade (az=315°, alt=45°)
 gdaldem hillshade dem_1m_ks.tif hillshade_1m_ks.tif -az 315 -alt 45 -z 1.0
 
-All final rasters are tiled and converted to COG using:
-
+# 5️⃣ Convert to Cloud-Optimized GeoTIFF
 rio cogeo create <input>.tif <output>.tif --overview-level=5 --web-optimized
+```
 
+```mermaid
+flowchart TD
+  A["DEM Source\n(data/cogs/)"] --> B["GDAL Processing\n(gdaldem / rasterio)"]
+  B --> C["Derived Terrain Layers\n(slope, aspect, etc.)"]
+  C --> D["STAC Registration\n(metadata/*.json)"]
+  D --> E["Integrity Verification\n(checksums/*.sha256)"]
+  E --> F["Publication\n(data/derivatives/terrain/)"]
+```
 
-⸻
+<!-- END OF MERMAID -->
 
-🔁 Reproducibility & Validation
+---
 
-Check	Description
-🧮 Checksums	Every .tif has a .sha256 file for byte-level integrity verification.
-🧾 Metadata Validation	All .json metadata validated against the STAC 1.0 schema via CI.
-🧰 Makefile Targets	make terrain (build) · make validate-terrain (QA).
-🐳 Dockerized Builds	Terrain processing runs in a standardized GDAL container.
-🛰 QA Visualization	Automated test tiles rendered with MapLibre for verification.
+## 🔁 Reproducibility & Validation
 
+| Check                      | Description                                                        |
+| :------------------------- | :----------------------------------------------------------------- |
+| 🧮 **Checksums**           | Each `.tif` includes a `.sha256` file for byte-level verification. |
+| 🧾 **Metadata Validation** | All JSON metadata validated against STAC 1.0 schema via CI.        |
+| 🧰 **Makefile Targets**    | `make terrain` (build) · `make validate-terrain` (QA).             |
+| 🐳 **Dockerized Builds**   | Processing runs in standardized GDAL container.                    |
+| 🛰 **QA Visualization**    | Automated test tiles rendered with MapLibre for verification.      |
 
-⸻
+---
 
-🧠 Contributing New Terrain Layers
-	1.	Prepare Source: Place DEM or processing script in data/cogs/ or tools/terrain/.
-	2.	Process Raster: Output as COG GeoTIFF in EPSG:4326.
-	3.	Add Metadata: Create STAC JSON under metadata/, checksum under checksums/.
-	4.	Document: Add DERIVATION.md outlining parameters and sources.
-	5.	Validate:
+## 🧠 Contributing New Terrain Layers
 
-make validate-terrain
+1. **Prepare Source:** Place DEM or processing script in `data/cogs/` or `tools/terrain/`.
+2. **Process Raster:** Output as COG GeoTIFF (EPSG 4326).
+3. **Add Metadata:** Create STAC JSON under `metadata/` and checksum under `checksums/`.
+4. **Document:** Add `DERIVATION.md` outlining parameters and sources.
+5. **Validate:**
 
+   ```bash
+   make validate-terrain
+   ```
+6. **Submit PR:** Include dataset summary, license, and suggested visualization style.
 
-	6.	Submit PR: Include dataset summary, license, and suggested visualization style.
+---
 
-⸻
+## 🧾 Changelog
 
-📖 References
-	•	🗺 GDAL DEM Utilities: https://gdal.org/programs/gdaldem.html
-	•	📘 STAC Specification: https://stacspec.org
-	•	☁️ COG Format: https://www.cogeo.org
-	•	🛰 USGS 3DEP LiDAR: https://www.usgs.gov/3DEP
-	•	🧩 Kansas DASC GIS Hub: https://hub.kansasgis.org
-	•	📑 MCP Docs: docs/standards/
+| Version    | Date       | Description                                                                                                             |
+| :--------- | :--------- | :---------------------------------------------------------------------------------------------------------------------- |
+| **v1.1.0** | 2025-10-11 | Upgraded to Markdown Protocol v1.0, added frontmatter + versioning, refined layout, and added Mermaid workflow diagram. |
+| **v1.0.0** | 2025-09-28 | Initial publication of terrain derivatives and STAC metadata.                                                           |
 
-⸻
+---
 
+## 📖 References
+
+* 🗺 [GDAL DEM Utilities](https://gdal.org/programs/gdaldem.html)
+* 📘 [STAC Specification](https://stacspec.org)
+* ☁️ [COG Format](https://www.cogeo.org)
+* 🛰 [USGS 3DEP LiDAR](https://www.usgs.gov/3DEP)
+* 🧩 [Kansas DASC GIS Hub](https://hub.kansasgis.org)
+* 📑 [Master Coder Protocol Docs](../../../docs/standards/)
+
+---
 
 <div align="center">
-
-
-“Every contour holds a story — from prairie swales to frontier bluffs, Kansas terrain is the canvas of history.”
-
+<i>“Every contour holds a story — from prairie swales to frontier bluffs, Kansas terrain is the canvas of history.”</i>
 </div>
+```
