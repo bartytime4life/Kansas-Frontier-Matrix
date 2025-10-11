@@ -7,12 +7,12 @@
 within the Kansas Frontier Matrix (KFM) — including historical census, agricultural, and economic data —  
 to ensure open, reproducible, and interoperable structured data for long-term analysis.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
 
@@ -23,16 +23,28 @@ to ensure open, reproducible, and interoperable structured data for long-term an
 This directory contains **metadata JSON files** describing the structure, provenance, and  
 standards compliance for all tabular datasets under `data/processed/tabular/`.  
 
-These datasets represent **quantitative and statistical data** across Kansas —  
-covering demography, agriculture, economics, and land use — and are essential for  
-cross-domain analysis within the Kansas Frontier Matrix.
+These datasets represent **quantitative and statistical data** across Kansas — demography, agriculture, economics, and land use — and are essential for cross-domain analysis within KFM.
 
 Each metadata file includes:
-- STAC 1.0-compliant JSON metadata  
-- Provenance and licensing information  
-- Associated `.sha256` integrity checksum  
-- Schema validation (`data/processed/metadata/schema/tabular.schema.json`)  
-- References to thumbnails and visualization previews  
+- **STAC 1.0**-compliant JSON metadata  
+- **Provenance & licensing** information  
+- Associated **`.sha256`** integrity checksum  
+- **Schema validation** reference (`data/processed/metadata/schema/tabular.schema.json`)  
+- Links to **thumbnails** and visualization previews  
+
+---
+
+## 🧭 System Flow (Mermaid)
+
+```mermaid
+flowchart TD
+  A["Processed Tables\n(data/processed/tabular/*.csv|*.parquet)"] --> B["Metadata Authoring\n(this folder: *.json)"]
+  B --> C["Thumbnails\n(thumbnails/*.png)"]
+  B --> D["Schema Validation\n(CSVW/JSON Schema · STAC 1.0)"]
+  D --> E["CI Gate\n(GitHub Actions: stac-validate.yml)"]
+  E --> F["Catalog & Graph\n(data/stac/tabular/* · src/graph/tabular_nodes.py)"]
+  %% END OF MERMAID
+````
 
 ---
 
@@ -48,11 +60,10 @@ data/processed/tabular/metadata/
     ├── census_population_1860_2020.png
     ├── agricultural_production_1870_2020.png
     └── economic_indicators_1900_2025.png
-````
+```
 
-> **Note:** Each `.json` file conforms to the STAC specification and references its
-> processed dataset in `data/processed/tabular/` as well as its checksum in
-> `data/processed/checksums/tabular/`.
+> **Note:** Each `.json` conforms to **STAC 1.0** and references the processed dataset in
+> `data/processed/tabular/` as well as its checksum in the sibling folder `../checksums/`.
 
 ---
 
@@ -62,30 +73,39 @@ data/processed/tabular/metadata/
 | :-------------------------------------- | :------------------------------------------ | :------ | :---------------- | :----------------------------------------------------------------- |
 | **Census Population (1860–2020)**       | US Census Bureau / Kansas State Data Center | Parquet | 1860–2020         | `data/processed/tabular/census_population_1860_2020.parquet`       |
 | **Agricultural Production (1870–2020)** | USDA NASS / KS Ag. Statistics               | Parquet | 1870–2020         | `data/processed/tabular/agricultural_production_1870_2020.parquet` |
-| **Economic Indicators (1900–2025)**     | BEA / BLS / Kansas Dept. of Revenue         | Parquet | 1900–2025         | `data/processed/tabular/economic_indicators_1900_2025.parquet`     |
+| **Economic Indicators (1900–2025)**     | BEA / BLS / KS Dept. of Revenue             | Parquet | 1900–2025         | `data/processed/tabular/economic_indicators_1900_2025.parquet`     |
 
-All datasets are structured and validated for integration into KFM’s graph and analytical systems.
-They adhere to open formats (`CSV`, `Parquet`) and are linked to STAC records under `data/stac/tabular/`.
+All datasets are validated for integration into KFM’s **knowledge graph** and analytics pipelines,
+use open formats (**CSV**, **Parquet**), and are cataloged under `data/stac/tabular/`.
 
 ---
 
-## 💾 Example STAC Metadata
+## 💾 Example STAC Item (GitHub-safe minimal)
 
 ```json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
   "id": "census_population_1860_2020",
+  "collection": "kfm_tabular",
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-102.05, 36.99], [-94.59, 36.99],
+      [-94.59, 40.00], [-102.05, 40.00],
+      [-102.05, 36.99]
+    ]]
+  },
   "properties": {
     "title": "Kansas Population Census Data (1860–2020)",
-    "datetime": "2020-01-01T00:00:00Z",
     "description": "Population totals by Kansas county from 1860 through 2020.",
+    "datetime": "2020-01-01T00:00:00Z",
     "themes": ["tabular", "demographics", "population"],
-    "license": "Public Domain (US Census Bureau)",
-    "providers": [
-      {"name": "US Census Bureau", "roles": ["producer"]},
-      {"name": "Kansas Frontier Matrix", "roles": ["processor"]}
-    ]
+    "processing:software": "Python 3.11; Pandas 2.x",
+    "kfm:mcp_provenance": "sha256:<PUT_FILE_HASH_HERE>",
+    "license": "CC-BY-4.0",
+    "csvw:schema": "tabular.schema.json"
   },
   "assets": {
     "data": {
@@ -94,10 +114,21 @@ They adhere to open formats (`CSV`, `Parquet`) and are linked to STAC records un
       "roles": ["data"]
     },
     "thumbnail": {
-      "href": "thumbnails/census_population_1860_2020.png"
+      "href": "thumbnails/census_population_1860_2020.png",
+      "type": "image/png",
+      "roles": ["thumbnail"]
+    },
+    "checksum:sha256": {
+      "href": "../checksums/census_population_1860_2020.parquet.sha256",
+      "type": "text/plain",
+      "roles": ["metadata"]
     }
   },
-  "bbox": [-102.05, 36.99, -94.59, 40.00]
+  "links": [
+    {"rel": "collection", "href": "../../../stac/collections/kfm_tabular.json", "type": "application/json"},
+    {"rel": "self", "href": "census_population_1860_2020.json", "type": "application/json"},
+    {"rel": "parent", "href": ".", "type": "text/html"}
+  ]
 }
 ```
 
@@ -105,87 +136,96 @@ They adhere to open formats (`CSV`, `Parquet`) and are linked to STAC records un
 
 ## 🧩 Semantic & Ontological Alignment
 
-| Entity              | Ontology Mapping                          | Example                        |
-| :------------------ | :---------------------------------------- | :----------------------------- |
-| Population Table    | `E31_Document` + `E73_Information_Object` | County-level census dataset    |
-| Economic Indicator  | `E16_Measurement` + `E55_Type`            | Per-capita income over time    |
-| Agricultural Output | `E16_Measurement` + `E53_Place`           | Wheat yield in Sedgwick County |
-| Time Period         | OWL-Time interval                         | 1860–2020                      |
+| Entity              | Ontology Mapping                                | Example                        |
+| :------------------ | :---------------------------------------------- | :----------------------------- |
+| Population Table    | CIDOC `E31_Document` + `E73_Information_Object` | County-level census dataset    |
+| Economic Indicator  | CIDOC `E16_Measurement` + `E55_Type`            | Per-capita income over time    |
+| Agricultural Output | CIDOC `E16_Measurement` + `E53_Place`           | Wheat yield in Sedgwick County |
+| Time Period         | **OWL-Time** interval                           | 1860–2020                      |
 
-This alignment ensures that tabular data is interoperable within the KFM knowledge graph
-and can connect with spatial and narrative layers through ontology mappings.
+These mappings make tabular data interoperable with KFM’s **spatial** and **narrative** layers.
 
 ---
 
 ## ⚙️ ETL & Processing Workflow
 
-**Pipeline Command:**
+**Makefile**
 
 ```bash
 make tabular
 ```
 
-**Python Script:**
+**Pipeline**
 
 ```bash
 python src/pipelines/tabular/tabular_pipeline.py
 ```
 
-**Steps:**
+**Steps**
 
-1. Fetch and normalize tabular datasets (CSV or API).
-2. Clean and harmonize column names and units.
-3. Convert to Parquet for efficient querying and storage.
-4. Compute `.sha256` checksums for reproducibility.
-5. Generate STAC metadata and preview thumbnails.
-6. Validate structure via JSON Schema + CI STAC tests.
+1. Fetch & normalize tabular datasets (CSV/API).
+2. Clean columns/units; enforce schema.
+3. Convert to **Parquet** for efficient querying.
+4. Compute **`.sha256`** checksums (stored in `../checksums/`).
+5. Generate **STAC** items + thumbnails.
+6. Validate structure via **CSVW/JSON Schema** + **STAC 1.0** in CI.
 
 ---
 
 ## 🧮 Provenance & Validation
 
-* **Checksums:** Located in `data/processed/checksums/tabular/`
-* **Licensing:** Public domain or CC-BY (depending on source)
-* **Validation:** STAC + JSON Schema validation via GitHub CI workflows
-* **Cross-links:** Sources documented in `data/sources/tabular/*.json`
+* **Checksums:** `data/processed/tabular/checksums/` (sibling folder)
+* **Licensing:** Public domain or **CC-BY** (source-dependent)
+* **Validation:** STAC + JSON Schema validation in CI
+* **Source Manifests:** `data/sources/tabular/*.json`
 
 ---
 
 ## 🔗 Integration Points
 
-| Component                           | Role                                                    |
-| :---------------------------------- | :------------------------------------------------------ |
-| `data/stac/tabular/`                | STAC items and collections for tabular datasets         |
-| `web/config/layers.json`            | Web interface integration for charts and data summaries |
-| `src/graph/tabular_nodes.py`        | Knowledge graph ingestion and entity linking            |
-| `data/processed/checksums/tabular/` | Checksum verification for reproducibility               |
-| `docs/architecture.md`              | Data architecture overview for tabular integration      |
+| Component                           | Role                                               |
+| :---------------------------------- | :------------------------------------------------- |
+| `data/stac/tabular/`                | STAC Items & Collections for tabular datasets      |
+| `web/config/layers.json`            | UI integration for charts & summaries              |
+| `src/graph/tabular_nodes.py`        | Knowledge Graph ingestion + entity linking         |
+| `data/processed/tabular/checksums/` | Checksum verification for reproducibility          |
+| `docs/architecture.md`              | Data architecture overview for tabular integration |
+
+---
+
+## 🤖 AI & Metadata Notes
+
+* **Entity Extraction:** Auto-links datasets to places, periods, and topics (demography, economics, agriculture).
+* **Quality Signals:** Outlier detection + consistency checks recorded with `confidence` scores (0–1).
+* **Non-destructive:** AI inferences live under `data/processed/tabular/ai_metadata/` and are fully reversible.
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                    |
-| :---------------------- | :------------------------------------------------ |
-| **Documentation-first** | README + STAC metadata per dataset                |
-| **Reproducibility**     | Deterministic ETL with tracked checksum outputs   |
-| **Open Standards**      | CSV, Parquet, STAC, JSON Schema                   |
-| **Provenance**          | Clear source-to-product lineage                   |
-| **Auditability**        | CI workflows validate schema, STAC, and checksums |
+| Principle           | Implementation                                               |
+| :------------------ | :----------------------------------------------------------- |
+| Documentation-first | README + per-dataset STAC item                               |
+| Reproducibility     | Containerized ETL, checksums, deterministic transforms       |
+| Open Standards      | CSV/Parquet, STAC 1.0, CSVW/JSON Schema                      |
+| Provenance          | Source → process → product lineage with cryptographic hashes |
+| Auditability        | CI validation logs + schema/STAC gates                       |
 
 ---
 
-## 📅 Version History
+## 🧾 Version History
 
-| Version | Date       | Summary                                                                                |
-| :------ | :--------- | :------------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial tabular metadata release — includes census, agriculture, and economic datasets |
+|  Version  | Date       | Summary                                                                                      |
+| :-------: | :--------- | :------------------------------------------------------------------------------------------- |
+| **1.1.0** | 2025-10-11 | Upgraded README: corrected badge paths, added Mermaid flow, stronger STAC example, MCP table |
+|   1.0.0   | 2025-10-04 | Initial tabular metadata release (census, agriculture, economic datasets + thumbnails)       |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Quantifying History: Turning Data Into Discovery.”*
-📍 [`data/processed/tabular/metadata/`](.) · Integrated with the **Tabular STAC Collection**
+📍 [`data/processed/tabular/metadata/`](.)
 
 </div>
+```
