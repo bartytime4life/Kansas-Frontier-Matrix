@@ -4,8 +4,8 @@
 
 `data/processed/text/`
 
-**Mission:** Store and document all **cleaned, parsed, and structured text corpora** — OCR-corrected archives, NLP-derived entities,
-and historical transcripts — forming the **linguistic foundation** for the Kansas-Frontier-Matrix (KFM) knowledge graph
+**Mission:** Contain, document, and validate all **cleaned, parsed, and structured text corpora** — OCR-corrected archives,
+NLP-derived entities, and historical transcripts — forming the **linguistic foundation** for the KFM knowledge graph
 and AI/ML enrichment pipelines.
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../.github/workflows/site.yml)
@@ -13,15 +13,13 @@ and AI/ML enrichment pipelines.
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../../.github/workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/pre-commit.yml?label=Pre-Commit)](../../../.github/workflows/pre-commit.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)  [![License: Data](https://img.shields.io/badge/License-CC-BY%204.0-green)](../../../LICENSE)  [![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../LICENSE)
 
 </div>
 
 ---
 
-## 🧭 Table of Contents
+### 🧭 Table of Contents
 
 * [Overview](#overview)
 * [Directory Layout](#directory-layout)
@@ -38,18 +36,17 @@ and AI/ML enrichment pipelines.
 
 ## 🧾 Overview
 
-`data/processed/text/` contains **ETL-ready textual assets** derived from Kansas’s documentary heritage —
-letters, treaties, newspapers, and field diaries — cleaned, tokenized, and semantically structured.
+`data/processed/text/` hosts **ETL-ready textual assets** derived from Kansas’s documentary heritage —
+letters, treaties, newspapers, and diaries — all **cleaned**, **tokenized**, and **semantically structured**.
 
-These records bridge the gap between **raw OCR outputs** (`data/raw/text/`)
-and **AI-ready derivatives** (`data/derivatives/text/`), enabling:
+These bridge **raw OCR inputs** (`data/raw/text/`) with **AI-ready derivatives** (`data/derivatives/text/`), powering:
 
-* 📍 *Entity extraction*: people, places, tribes, events
-* 🧭 *Temporal & spatial linking* to maps/timelines
-* 🤖 *AI summarization & classification*
-* 🕸️ *Knowledge-graph enrichment* (Neo4j · CIDOC CRM · OWL-Time)
+* 📍 Entity extraction (people, places, tribes, events)
+* 🧭 Temporal/spatial linking to maps & timelines
+* 🤖 AI summarization and classification
+* 🕸️ Knowledge-graph integration (Neo4j · CIDOC CRM · OWL-Time)
 
-All files are validated for **UTF-8 encoding**, **schema conformance**, and **checksum integrity** during CI.
+All files undergo **UTF-8**, **schema**, and **checksum** validation in CI.
 
 ---
 
@@ -59,11 +56,11 @@ All files are validated for **UTF-8 encoding**, **schema conformance**, and **ch
 data/
 └── processed/
     └── text/
-        ├── ocr_cleaned_diaries_1850_1900.jsonl       # OCR-corrected diary transcripts
-        ├── kansas_treaties_cleaned.jsonl             # Treaty transcripts (normalized & parsed)
-        ├── newspapers_1854_1925_cleaned.jsonl        # Cleaned historical newspaper articles
-        ├── nlp_entities_extracted.json               # Named entities (people, places, events)
-        ├── term_frequencies_ks_press.csv             # Decadal word frequency stats
+        ├── ocr_cleaned_diaries_1850_1900.jsonl
+        ├── kansas_treaties_cleaned.jsonl
+        ├── newspapers_1854_1925_cleaned.jsonl
+        ├── nlp_entities_extracted.json
+        ├── term_frequencies_ks_press.csv
         ├── metadata/
         │   ├── ocr_cleaned_diaries_1850_1900.json
         │   ├── newspapers_1854_1925_cleaned.json
@@ -79,22 +76,19 @@ data/
 
 ## ✍️ Core Text Datasets
 
-| Dataset                               | File                                  | Description                                                            | Source                    | Format |
-| :------------------------------------ | :------------------------------------ | :--------------------------------------------------------------------- | :------------------------ | :----- |
-| **Cleaned Diaries (1850 – 1900)**     | `ocr_cleaned_diaries_1850_1900.jsonl` | OCR-corrected diary entries from settlers and travelers                | Kansas Historical Society | JSONL  |
-| **Treaty Transcripts**                | `kansas_treaties_cleaned.jsonl`       | Normalized treaty & land-cession texts with parsed tribe/date entities | Yale Avalon / Kappler     | JSONL  |
-| **Historic Newspapers (1854 – 1925)** | `newspapers_1854_1925_cleaned.jsonl`  | OCR-cleaned Kansas articles from *Chronicling America*                 | LOC / KHS                 | JSONL  |
-| **NLP Entities Extracted**            | `nlp_entities_extracted.json`         | spaCy-derived entities (Person, Place, Event, Date)                    | Derived                   | JSON   |
-| **Term Frequencies (Press)**          | `term_frequencies_ks_press.csv`       | Word frequency & co-occurrence by decade                               | Derived                   | CSV    |
+| Dataset                             | File                                  | Description                                             | Source                    | Format |
+| :---------------------------------- | :------------------------------------ | :------------------------------------------------------ | :------------------------ | :----- |
+| **Cleaned Diaries (1850-1900)**     | `ocr_cleaned_diaries_1850_1900.jsonl` | OCR-corrected settler diary entries                     | Kansas Historical Society | JSONL  |
+| **Treaty Transcripts**              | `kansas_treaties_cleaned.jsonl`       | Normalized treaty texts with parsed tribe/date entities | Yale Avalon / Kappler     | JSONL  |
+| **Historic Newspapers (1854-1925)** | `newspapers_1854_1925_cleaned.jsonl`  | Cleaned Kansas articles from *Chronicling America*      | LOC / KHS                 | JSONL  |
+| **NLP Entities Extracted**          | `nlp_entities_extracted.json`         | spaCy-derived entities (Person, Place, Event, Date)     | Derived                   | JSON   |
+| **Term Frequencies (Press)**        | `term_frequencies_ks_press.csv`       | Word frequency & co-occurrence stats by decade          | Derived                   | CSV    |
 
-Each JSONL record holds:
-`id`, `title`, `date`, `source`, `text`, `tokens`, `entities`.
+Each JSONL record contains: `id`, `title`, `date`, `source`, `text`, `tokens`, `entities`.
 
 ---
 
 ## 🧩 Schema & Format
-
-### JSONL Example
 
 ```json
 {
@@ -112,8 +106,6 @@ Each JSONL record holds:
 }
 ```
 
-### CSV Example
-
 ```csv
 term,decade,frequency,relative_freq
 drought,1890,230,0.0018
@@ -124,8 +116,6 @@ railroad,1890,514,0.0040
 
 ## 🌐 STAC Metadata
 
-Each text corpus is indexed within the **STAC catalog** to ensure full lineage and reuse.
-
 ```json
 {
   "type": "Feature",
@@ -134,14 +124,17 @@ Each text corpus is indexed within the **STAC catalog** to ensure full lineage a
   "properties": {
     "title": "Kansas Newspapers (1854–1925) – Cleaned OCR Text",
     "datetime": "1925-01-01T00:00:00Z",
-    "description": "OCR-corrected and cleaned historical newspaper text corpus derived from Chronicling America (Kansas subset).",
+    "description": "OCR-cleaned historical newspaper corpus from Chronicling America (Kansas subset).",
     "processing:software": "Python + spaCy + regex + jsonlines",
     "mcp_provenance": "sha256:a9b2de…",
     "derived_from": ["data/raw/text/newspapers_1854_1925_ocr.zip"],
     "license": "CC-BY 4.0"
   },
   "assets": {
-    "data": { "href": "./newspapers_1854_1925_cleaned.jsonl", "type": "application/jsonl" }
+    "data": {
+      "href": "./newspapers_1854_1925_cleaned.jsonl",
+      "type": "application/x-jsonlines"
+    }
   }
 }
 ```
@@ -151,7 +144,7 @@ Each text corpus is indexed within the **STAC catalog** to ensure full lineage a
 ## ⚙️ Processing Workflow
 
 ```bash
-# 1️⃣ OCR correction & cleaning
+# 1️⃣ OCR cleaning
 python tools/text/ocr_clean.py \
   --input data/raw/text/newspapers_1854_1925_ocr.zip \
   --output data/processed/text/newspapers_1854_1925_cleaned.jsonl
@@ -161,67 +154,75 @@ python tools/text/nlp_extract.py \
   --input data/processed/text/newspapers_1854_1925_cleaned.jsonl \
   --output data/processed/text/nlp_entities_extracted.json
 
-# 3️⃣ Frequency analysis
+# 3️⃣ Term frequency analysis
 python tools/text/term_stats.py \
   --input data/processed/text/newspapers_1854_1925_cleaned.jsonl \
   --output data/processed/text/term_frequencies_ks_press.csv
 ```
 
-**All operations** run inside a containerized environment
-(`spaCy · regex · jsonlines · pandas · UTF-8 validation`).
+> All stages run inside the **containerized NLP stack** (spaCy · pandas · regex · jsonlines).
 
 ---
 
 ## 🔁 Reproducibility & Validation
 
-| Check                 | Method                      | CI Target            |
-| :-------------------- | :-------------------------- | :------------------- |
-| **Integrity**         | SHA-256 hash per file       | `make validate-text` |
-| **Schema Compliance** | STAC v1.0 + JSON Schema     | `make stac-validate` |
-| **Encoding**          | UTF-8 enforced              | `pre-commit`         |
-| **NER Quality**       | Random sample + metrics log | `make text-qa`       |
+| Check                 | Method                        | CI Target            |
+| :-------------------- | :---------------------------- | :------------------- |
+| **Integrity**         | `.sha256` hash per file       | `make validate-text` |
+| **Schema Compliance** | STAC v1.0 + JSON Schema       | `make stac-validate` |
+| **Encoding**          | UTF-8 enforced via pre-commit | `pre-commit`         |
+| **NER Quality**       | Sample precision/recall logs  | `make text-qa`       |
+
+```bash
+sha256sum -c checksums/*.sha256
+python -m json.tool metadata/*.json > /dev/null
+```
 
 ---
 
 ## 🧠 Contributing New Text Data
 
-1. Add cleaned `.jsonl` or `.csv` to this folder.
-2. Generate `.sha256` and metadata JSON under `metadata/`.
-3. Include `DERIVATION.md` detailing source, preprocessing, and NLP model version.
-4. Validate locally:
+1. Add cleaned `.jsonl` or `.csv` here.
+2. Create `metadata/<name>.json` with source, license, and processing info.
+3. Generate `.sha256` under `checksums/`.
+4. Update STAC Item linking the asset.
+5. Validate:
 
-   ```bash
-   make validate-text
-   ```
-5. Open a PR including:
+```bash
+make validate-text && make stac-validate
+```
 
-   * Updated STAC metadata
-   * Provenance / license details
-   * Repro commands
+6. Open a PR with:
 
-**All submissions are auto-checked** via CI before merge.
+* STAC update + metadata
+* Checksums
+* Repro commands / notes
+
+*All submissions are CI-validated before merge.*
 
 ---
 
 ## 🧮 Versioning & Changelog
 
-| Field               | Value                                                                             |
-| :------------------ | :-------------------------------------------------------------------------------- |
-| **Current Version** | `v2.1.0`                                                                          |
-| **Last Updated**    | 2025-10-11                                                                        |
-| **Maintainer**      | @kfm-data                                                                         |
-| **Change Type**     | ✳ Minor — Added explicit version block, reproducibility matrix, refined badge set |
-
-**Changelog**
+| Field               | Value                                                                               |
+| :------------------ | :---------------------------------------------------------------------------------- |
+| **Current Version** | `v2.3.0`                                                                            |
+| **Last Updated**    | 2025-10-11                                                                          |
+| **Maintainer**      | @kfm-data                                                                           |
+| **Change Type**     | ✳ Minor — Formatting standardized to match KFM protocols (repo-wide grid & spacing) |
 
 ```md
+## v2.3.0 — 2025-10-11
+- Standardized layout to match KFM processed-data markdown grid  
+- Refined center banner alignment and badge stack  
+- Ensured consistent divider rhythm and code-block spacing
+
+## v2.2.0 — 2025-10-11
+- Added Mermaid lineage diagram and naming convention  
+- Added quick verification commands and STAC media type clarity
+
 ## v2.1.0 — 2025-10-11
-- Added per-document versioning block & changelog section  
-- Updated badges to GitHub Actions shield variants  
-- Included reproducibility matrix & container details  
-- Optimized table formatting for GitHub rendering
-## v2.0.0 — 2025-09-01
-- Initial release of processed text data documentation
+- Introduced per-doc version block and repro matrix
 ```
 
 ---
@@ -229,12 +230,9 @@ python tools/text/term_stats.py \
 ## 📖 References
 
 * [Chronicling America](https://chroniclingamerica.loc.gov/)
-* [Kansas Historical Society Archives](https://www.kshs.org/)
-* [spaCy NLP Framework](https://spacy.io/)
-* [JSON Lines Spec](https://jsonlines.org/)
-* [GDAL / OGR](https://gdal.org/)
-* [STAC 1.0 Spec](https://stacspec.org)
-* [Master Coder Protocol (MCP)](../../../docs/standards/)
+* [Kansas Historical Society](https://www.kshs.org/)
+* [spaCy](https://spacy.io/) · [JSON Lines](https://jsonlines.org/) · [GDAL / OGR](https://gdal.org/)
+* [STAC 1.0 Spec](https://stacspec.org) · [MCP Standards](../../../docs/standards/)
 
 ---
 
