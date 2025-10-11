@@ -45,7 +45,8 @@ flowchart TD
   D --> F["STAC Items\nlink assets + metadata"]
   F --> G["Knowledge Graph\nentity creation + relations"]
   G --> H["API & Web UI\nriver basins · aquifers · floodplains"]
-<!-- END OF MERMAID -->
+%% END OF MERMAID
+
 ```
 
 ---
