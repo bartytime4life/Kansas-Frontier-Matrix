@@ -10,6 +10,7 @@ derivative metadata files within KFM — unifying hillshades, slope maps, DEMs, 
 [![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../../.github/workflows/trivy.yml)
+[![Pre-Commit](https://img.shields.io/badge/Pre--Commit-enabled-success)](../../../../../.github/workflows/pre-commit.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC-BY%204.0-lightgrey)](../../../../../LICENSE)
 
@@ -17,18 +18,30 @@ derivative metadata files within KFM — unifying hillshades, slope maps, DEMs, 
 
 ---
 
-## 📚 Overview
+## 📚 Table of Contents
+- [Overview](#overview)
+- [Metadata Summary Flow](#metadata-summary-flow)
+- [Directory Layout](#directory-layout)
+- [Summary JSON Schema](#summary-json-schema)
+- [Example Summary File](#example-summary-file)
+- [Validation & CI Hooks](#validation--ci-hooks)
+- [Best Practices](#best-practices)
+- [Relationships](#relationships)
+- [Changelog](#changelog)
+
+---
+
+## 🧠 Overview
 
 This directory defines the **terrain domain summary registry** for all metadata describing KFM’s topographic and elevation derivatives.  
-It consolidates metadata from `data/derivatives/terrain/metadata/` and records provenance links, STAC references, and ETL lineage  
-for all terrain layers, including:
+It consolidates metadata from `data/derivatives/terrain/metadata/` and records **provenance links**, **STAC references**, and **ETL lineage** for:
 
-- 🗺️ Digital Elevation Models (DEMs) — LiDAR or 3DEP based  
+- 🗺️ Digital Elevation Models (DEMs; LiDAR/3DEP)  
 - 🌄 Hillshade & slope rasters  
 - 🧭 Contour line vectors  
-- 🪨 Terrain classification and geomorphology models  
+- 🪨 Terrain classification / geomorphology models  
 
-The summary enables STAC cross-validation, CI checks, and Knowledge Graph indexing for all terrain datasets in KFM.
+The summary enables **STAC cross-validation**, **CI checks**, and **Knowledge Graph** indexing for all terrain datasets.
 
 ---
 
@@ -36,131 +49,185 @@ The summary enables STAC cross-validation, CI checks, and Knowledge Graph indexi
 
 ```mermaid
 flowchart TD
-  A["Terrain Metadata JSONs\n(data/derivatives/terrain/metadata/)"] --> B["Terrain Summary JSON\n(data/derivatives/metadata/metadata/terrain/)"]
+  A["Terrain Metadata JSONs\n(data/derivatives/terrain/metadata/)"] --> B["Terrain Summary JSON\n(this dir)"]
   B --> C["Derivative Metadata Registry\n(data/derivatives/metadata/metadata/)"]
   C --> D["STAC Catalog\n(data/stac/)"]
   D --> E["Knowledge Graph\nNeo4j · CIDOC CRM · OWL-Time"]
-%% END OF MERMAID
+````
 
 <!-- END OF MERMAID -->
 
+---
 
+## 🗂️ Directory Layout
 
-⸻
+```bash
+data/
+└── derivatives/
+    └── metadata/
+        └── metadata/
+            └── terrain/
+                ├── terrain_metadata_summary.json
+                └── README.md
+```
 
-🗂️ Directory Layout
+> This summary JSON is the **authoritative domain-level manifest** for processed terrain derivatives, linking each dataset to its metadata file and STAC item.
 
-terrain/
-├── terrain_metadata_summary.json
-└── README.md
+---
 
-This summary JSON acts as the authoritative domain-level manifest for all processed terrain derivatives,
-linking each dataset to its metadata file, checksum, and STAC item.
+## 🧾 Summary JSON Schema
 
-⸻
+> Validate `terrain_metadata_summary.json` against the (shared) domain summary schema:
+> `data/derivatives/metadata/metadata/schema/domain_metadata_summary.schema.json`
 
-🧾 Summary JSON Schema (Example)
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KFM Terrain Domain Metadata Summary",
+  "type": "object",
+  "required": ["id","title","domain","count","entries","last_updated","mcp_stage"],
+  "properties": {
+    "id": {"type":"string", "const":"terrain_metadata_summary"},
+    "title": {"type":"string"},
+    "description": {"type":"string"},
+    "domain": {"type":"string", "const":"terrain"},
+    "count": {"type":"integer","minimum":0},
+    "entries": {
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["id","title","path","format","source","stac_item"],
+        "properties":{
+          "id":{"type":"string"},
+          "title":{"type":"string"},
+          "path":{"type":"string"},
+          "temporal_range":{"type":"string"},
+          "variables":{"type":"array","items":{"type":"string"}},
+          "format":{"type":"string"},
+          "source":{"type":"string"},
+          "stac_item":{"type":"string"},
+          "license":{"type":"string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "license":{"type":"string"},
+    "last_updated":{"type":"string","format":"date"},
+    "mcp_stage":{"type":"string","enum":["derivatives"]}
+  },
+  "additionalProperties": false}
+```
 
+---
+
+## 🧪 Example Summary File
+
+```json
 {
   "id": "terrain_metadata_summary",
   "title": "Terrain Derivative Metadata Summary",
-  "description": "Aggregated metadata summary for terrain and topographic derivative datasets across Kansas Frontier Matrix.",
+  "description": "Aggregated metadata summary for terrain and topographic derivatives across Kansas Frontier Matrix.",
   "domain": "terrain",
   "entries": [
     {
       "id": "dem_1m_ks_lidar",
-      "title": "Kansas 1m LiDAR Digital Elevation Model (USGS 3DEP)",
+      "title": "Kansas 1 m LiDAR Digital Elevation Model (USGS 3DEP)",
       "path": "../../../../terrain/metadata/dem_1m_ks_lidar.json",
       "temporal_range": "2018–2023",
       "variables": ["elevation"],
       "format": "COG",
       "source": "../../../../sources/usgs_3dep_dem.json",
-      "stac_item": "../../../../stac/items/dem_1m_ks_lidar.json"
+      "stac_item": "../../../../stac/items/dem_1m_ks_lidar.json",
+      "license": "Public Domain (USGS)"
     },
     {
       "id": "hillshade_ks_1m",
-      "title": "Hillshade Raster (Kansas 1m DEM-derived)",
+      "title": "Hillshade Raster (Kansas 1 m DEM-derived)",
       "path": "../../../../terrain/metadata/hillshade_ks_1m.json",
       "temporal_range": "Derived from DEM (2018–2023)",
       "variables": ["illumination"],
       "format": "COG",
       "source": "../../../../sources/usgs_3dep_dem.json",
-      "stac_item": "../../../../stac/items/hillshade_ks_1m.json"
+      "stac_item": "../../../../stac/items/hillshade_ks_1m.json",
+      "license": "CC-BY 4.0"
     },
     {
       "id": "slope_map_ks",
-      "title": "Slope Map of Kansas (Degrees)",
+      "title": "Slope Map of Kansas (degrees)",
       "path": "../../../../terrain/metadata/slope_map_ks.json",
       "temporal_range": "Derived from DEM (2018–2023)",
       "variables": ["slope"],
       "format": "COG",
       "source": "../../../../sources/usgs_3dep_dem.json",
-      "stac_item": "../../../../stac/items/slope_map_ks.json"
+      "stac_item": "../../../../stac/items/slope_map_ks.json",
+      "license": "CC-BY 4.0"
     }
   ],
   "count": 3,
-  "license": "CC-BY-4.0",
-  "last_updated": "2025-10-10",
+  "license": "CC-BY 4.0",
+  "last_updated": "2025-10-11",
   "mcp_stage": "derivatives"
 }
+```
 
-💡 Tip: Always synchronize entries when new terrain metadata files are added in
-data/derivatives/terrain/metadata/, and update the count and last_updated fields.
+> 💡 **Tip:** When adding new files in `data/derivatives/terrain/metadata/`, update `entries`, bump `count`, and set `last_updated` (ISO).
 
-⸻
+---
 
-🧩 Relationship to Other Metadata Layers
+## 🔁 Validation & CI Hooks
 
-Layer	Path	Purpose
-🏔️ Terrain Metadata	data/derivatives/terrain/metadata/	Individual terrain metadata files (DEM, slope, hillshade).
-🧾 Domain Summary (This)	data/derivatives/metadata/metadata/terrain/	Aggregated summary for the terrain domain.
-🧮 Global Registry	data/derivatives/metadata/metadata/	Central registry linking all domain summaries.
-🗺️ STAC Catalog	data/stac/	Global index for spatial-temporal assets.
-🧠 Knowledge Graph	(Neo4j)	Semantic mapping of terrain datasets and their relationships.
+Add/ensure these targets exist:
 
+```make
+validate-terrain-summary:
+\tjsonschema -i data/derivatives/metadata/metadata/terrain/terrain_metadata_summary.json \
+\t  data/derivatives/metadata/metadata/schema/domain_metadata_summary.schema.json
 
-⸻
+crosscheck-terrain-vs-local:
+\tpython scripts/validate_registry_crossrefs.py \
+\t  --domain terrain \
+\t  --summary data/derivatives/metadata/metadata/terrain/terrain_metadata_summary.json \
+\t  --local-root data/derivatives/terrain/metadata
 
-🧠 Usage in the Pipeline
-	•	ETL Step: Once terrain derivatives are created, the pipeline automatically generates or updates this summary JSON.
-	•	Validation: CI workflows confirm each metadata file is registered and matches its STAC and checksum.
-	•	Graph Load: Neo4j importer uses this summary to link terrain assets to places, elevation attributes, and events.
-	•	Frontend Discovery: Enables map viewers to query all terrain layers available in KFM.
+stac-validate-terrain:
+\tstac-validator $(shell jq -r '.entries[].stac_item' data/derivatives/metadata/metadata/terrain/terrain_metadata_summary.json)
+```
 
-⸻
+> CI should **fail** if any `path` or `stac_item` is missing/invalid, or if `count` doesn’t match `entries.length`.
 
-🧱 Best Practices
+---
 
-Category	Guideline
-✅ Completeness	Include all files from terrain/metadata/.
-🔗 Cross-Referencing	Maintain valid relative paths to metadata, checksums, and STAC items.
-🧾 Licensing	Default license: CC-BY-4.0.
-🕓 Versioning	Update last_updated and increment count when datasets are modified.
-🧪 Validation	Run make validate or rely on CI STAC checks for consistency.
+## ✅ Best Practices
 
+| Category          | Guideline                                                                |
+| ----------------- | ------------------------------------------------------------------------ |
+| **Completeness**  | Include *all* files from `terrain/metadata/`.                            |
+| **Cross-Refs**    | Paths should be relative & resolvable; always include a `stac_item`.     |
+| **Licensing**     | Prefer explicit license per entry; default repository license if absent. |
+| **Versioning**    | Update `last_updated` & increment `count` on every change.               |
+| **Consistency**   | Keep `id`/filenames aligned: `terrain_<product>_<res>_<region>`.         |
+| **CI Discipline** | Run validation targets locally before pushing.                           |
 
-⸻
+---
 
-🔒 Reproducibility & MCP Alignment
+## 🔗 Relationships
 
-The terrain metadata summary aligns with Master Coder Protocol (MCP) principles by:
-	•	Documenting all terrain derivatives in one machine-readable manifest.
-	•	Linking datasets through STAC/DCAT metadata and checksum verification.
-	•	Enabling reproducibility across ETL, Knowledge Graph, and UI layers.
+| Layer                        | Path                                          | Purpose                                                    |
+| ---------------------------- | --------------------------------------------- | ---------------------------------------------------------- |
+| 🏔️ **Terrain Metadata**     | `data/derivatives/terrain/metadata/`          | Individual terrain metadata files (DEM, slope, hillshade). |
+| 🧾 **Domain Summary (this)** | `data/derivatives/metadata/metadata/terrain/` | Aggregated, validated terrain manifest.                    |
+| 🧮 **Global Registry**       | `data/derivatives/metadata/metadata/`         | Cross-domain index of summaries.                           |
+| 🗺️ **STAC Catalog**         | `data/stac/`                                  | Global spatial-temporal asset index.                       |
+| 🧠 **Knowledge Graph**       | (Neo4j)                                       | Semantic mapping of datasets and provenance.               |
 
-This ensures topographic data — from LiDAR-derived DEMs to slope and hillshade models — remain traceable, validated, and reusable.
+---
 
-⸻
+## 🗓 Changelog
 
-🧱 Related Documentation
-	•	data/derivatives/terrain/metadata/README.md — terrain metadata schema
-	•	data/derivatives/metadata/metadata/README.md — global derivative metadata registry
-	•	data/stac/README.md — STAC catalog integration and validation
-	•	docs/architecture.md — ETL and provenance workflow design
+| Version    | Date       | Notes                                                                                                                        |
+| :--------- | :--------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| **v1.1.0** | 2025-10-11 | Added frontmatter/versioning, domain schema excerpt, Makefile targets, and CI guidance; tightened Mermaid and relationships. |
+| **v0.1.0** | 2025-10-10 | Initial creation of terrain domain metadata summary.                                                                         |
 
-⸻
-
-🗓️ Version History
-
-Version	Date	Notes
-0.1.0	2025-10-10	Initial creation of terrain metadata summary for domain-level registry.
+```
+```
