@@ -1,16 +1,18 @@
 <div align="center">
 
-# 📜 Kansas-Frontier-Matrix — Processed Text Data (`data/processed/text/`)
+# 📜 Kansas-Frontier-Matrix — Processed Text Data
 
-**Mission:** Contain all **cleaned, parsed, and structured text datasets** — OCR outputs, NLP-extracted entities,  
-and historical document transcripts — serving as the linguistic foundation for Kansas Frontier Matrix’s  
-knowledge graph and AI/ML enrichment pipelines.
+`data/processed/text/`
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../.github/workflows/pre-commit.yml)
+**Mission:** Store and document all **cleaned, parsed, and structured text corpora** — OCR-corrected archives, NLP-derived entities,
+and historical transcripts — forming the **linguistic foundation** for the Kansas-Frontier-Matrix (KFM) knowledge graph
+and AI/ML enrichment pipelines.
+
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../../.github/workflows/trivy.yml)
+[![Pre-Commit](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/pre-commit.yml?label=Pre-Commit)](../../../.github/workflows/pre-commit.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
 [![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 [![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../LICENSE)
@@ -19,34 +21,35 @@ knowledge graph and AI/ML enrichment pipelines.
 
 ---
 
-## 📚 Table of Contents
-- [Overview](#overview)
-- [Directory Layout](#directory-layout)
-- [Core Text Datasets](#core-text-datasets)
-- [Schema & Format](#schema--format)
-- [STAC Metadata](#stac-metadata)
-- [Processing Workflow](#processing-workflow)
-- [Reproducibility & Validation](#reproducibility--validation)
-- [Contributing New Text Data](#contributing-new-text-data)
-- [References](#references)
+## 🧭 Table of Contents
+
+* [Overview](#overview)
+* [Directory Layout](#directory-layout)
+* [Core Text Datasets](#core-text-datasets)
+* [Schema & Format](#schema--format)
+* [STAC Metadata](#stac-metadata)
+* [Processing Workflow](#processing-workflow)
+* [Reproducibility & Validation](#reproducibility--validation)
+* [Contributing New Text Data](#contributing-new-text-data)
+* [Versioning & Changelog](#versioning--changelog)
+* [References](#references)
 
 ---
 
 ## 🧾 Overview
 
-This directory stores **processed text datasets** — transcribed, cleaned, and tokenized content  
-from Kansas’s historical archives, newspapers, treaties, letters, and reports.  
+`data/processed/text/` contains **ETL-ready textual assets** derived from Kansas’s documentary heritage —
+letters, treaties, newspapers, and field diaries — cleaned, tokenized, and semantically structured.
 
-These text files represent the **intermediate stage** between raw OCR outputs in `data/raw/text/`  
-and AI-ready derivatives in `data/derivatives/text/` (e.g., entity networks, summaries, NER datasets).  
+These records bridge the gap between **raw OCR outputs** (`data/raw/text/`)
+and **AI-ready derivatives** (`data/derivatives/text/`), enabling:
 
-They provide the linguistic and semantic backbone for:
-- Named Entity Recognition (people, places, events)  
-- Temporal and spatial reference extraction  
-- AI-driven document summarization  
-- Knowledge graph population and linking  
+* 📍 *Entity extraction*: people, places, tribes, events
+* 🧭 *Temporal & spatial linking* to maps/timelines
+* 🤖 *AI summarization & classification*
+* 🕸️ *Knowledge-graph enrichment* (Neo4j · CIDOC CRM · OWL-Time)
 
-All processed texts are validated for structure, encoding (UTF-8), and schema compliance.  
+All files are validated for **UTF-8 encoding**, **schema conformance**, and **checksum integrity** during CI.
 
 ---
 
@@ -57,10 +60,10 @@ data/
 └── processed/
     └── text/
         ├── ocr_cleaned_diaries_1850_1900.jsonl       # OCR-corrected diary transcripts
-        ├── kansas_treaties_cleaned.jsonl             # Treaty transcripts, normalized & parsed
-        ├── newspapers_1854_1925_cleaned.jsonl        # OCR-corrected historical newspaper articles
-        ├── nlp_entities_extracted.json               # NER-extracted entities (people, places, events)
-        ├── term_frequencies_ks_press.csv             # Term frequencies from Kansas press archives
+        ├── kansas_treaties_cleaned.jsonl             # Treaty transcripts (normalized & parsed)
+        ├── newspapers_1854_1925_cleaned.jsonl        # Cleaned historical newspaper articles
+        ├── nlp_entities_extracted.json               # Named entities (people, places, events)
+        ├── term_frequencies_ks_press.csv             # Decadal word frequency stats
         ├── metadata/
         │   ├── ocr_cleaned_diaries_1850_1900.json
         │   ├── newspapers_1854_1925_cleaned.json
@@ -70,29 +73,28 @@ data/
         │   ├── newspapers_1854_1925_cleaned.jsonl.sha256
         │   └── nlp_entities_extracted.json.sha256
         └── README.md
-````
+```
 
 ---
 
 ## ✍️ Core Text Datasets
 
-| Product                             | File                                  | Description                                                                 | Source                    | Format |
-| ----------------------------------- | ------------------------------------- | --------------------------------------------------------------------------- | ------------------------- | ------ |
-| **Cleaned Diaries (1850–1900)**     | `ocr_cleaned_diaries_1850_1900.jsonl` | OCR-corrected diary entries from settlers and travelers                     | Kansas Historical Society | JSONL  |
-| **Treaty Transcripts**              | `kansas_treaties_cleaned.jsonl`       | Parsed treaties and land cessions text with normalized date and tribe names | Yale Avalon / Kappler     | JSONL  |
-| **Historic Newspapers (1854–1925)** | `newspapers_1854_1925_cleaned.jsonl`  | OCR-corrected articles from Chronicling America                             | LOC / KHS                 | JSONL  |
-| **NLP Entities Extracted**          | `nlp_entities_extracted.json`         | Named entities (Person, Place, Event, Date) extracted via spaCy             | Derived                   | JSON   |
-| **Term Frequencies (Press)**        | `term_frequencies_ks_press.csv`       | Word frequency and co-occurrence stats by decade                            | Derived                   | CSV    |
+| Dataset                               | File                                  | Description                                                            | Source                    | Format |
+| :------------------------------------ | :------------------------------------ | :--------------------------------------------------------------------- | :------------------------ | :----- |
+| **Cleaned Diaries (1850 – 1900)**     | `ocr_cleaned_diaries_1850_1900.jsonl` | OCR-corrected diary entries from settlers and travelers                | Kansas Historical Society | JSONL  |
+| **Treaty Transcripts**                | `kansas_treaties_cleaned.jsonl`       | Normalized treaty & land-cession texts with parsed tribe/date entities | Yale Avalon / Kappler     | JSONL  |
+| **Historic Newspapers (1854 – 1925)** | `newspapers_1854_1925_cleaned.jsonl`  | OCR-cleaned Kansas articles from *Chronicling America*                 | LOC / KHS                 | JSONL  |
+| **NLP Entities Extracted**            | `nlp_entities_extracted.json`         | spaCy-derived entities (Person, Place, Event, Date)                    | Derived                   | JSON   |
+| **Term Frequencies (Press)**          | `term_frequencies_ks_press.csv`       | Word frequency & co-occurrence by decade                               | Derived                   | CSV    |
 
-Each JSONL document contains text metadata (`id`, `title`, `date`, `source`, `text`, `tokens`, `entities`).
+Each JSONL record holds:
+`id`, `title`, `date`, `source`, `text`, `tokens`, `entities`.
 
 ---
 
 ## 🧩 Schema & Format
 
-### JSONL (Line-Delimited JSON)
-
-Each line represents one document:
+### JSONL Example
 
 ```json
 {
@@ -101,18 +103,16 @@ Each line represents one document:
   "date": "1890-07-14",
   "source": "Topeka State Journal",
   "text": "The drought this season has affected the wheat crops severely...",
-  "tokens": ["drought", "season", "affected", "wheat", "crops"],
+  "tokens": ["drought","season","affected","wheat","crops"],
   "entities": [
-    {"type": "EVENT", "text": "drought"},
-    {"type": "PLACE", "text": "Western Kansas"},
-    {"type": "DATE", "text": "1890"}
+    {"type":"EVENT","text":"drought"},
+    {"type":"PLACE","text":"Western Kansas"},
+    {"type":"DATE","text":"1890"}
   ]
 }
 ```
 
-### CSV Format
-
-Used for analytical outputs (term frequencies, sentiment summaries, etc.):
+### CSV Example
 
 ```csv
 term,decade,frequency,relative_freq
@@ -124,8 +124,7 @@ railroad,1890,514,0.0040
 
 ## 🌐 STAC Metadata
 
-Every processed text corpus is indexed in the **STAC catalog** with complete provenance and
-processing metadata. Example:
+Each text corpus is indexed within the **STAC catalog** to ensure full lineage and reuse.
 
 ```json
 {
@@ -142,10 +141,7 @@ processing metadata. Example:
     "license": "CC-BY 4.0"
   },
   "assets": {
-    "data": {
-      "href": "./newspapers_1854_1925_cleaned.jsonl",
-      "type": "application/jsonl"
-    }
+    "data": { "href": "./newspapers_1854_1925_cleaned.jsonl", "type": "application/jsonl" }
   }
 }
 ```
@@ -154,80 +150,96 @@ processing metadata. Example:
 
 ## ⚙️ Processing Workflow
 
-Text processing pipelines are implemented under `tools/text/` and executed via `Makefile`.
-Key stages include:
-
 ```bash
-# 1. OCR correction & cleaning
-python tools/text/ocr_clean.py --input data/raw/text/newspapers_1854_1925_ocr.zip \
+# 1️⃣ OCR correction & cleaning
+python tools/text/ocr_clean.py \
+  --input data/raw/text/newspapers_1854_1925_ocr.zip \
   --output data/processed/text/newspapers_1854_1925_cleaned.jsonl
 
-# 2. Tokenization and entity extraction
-python tools/text/nlp_extract.py --input data/processed/text/newspapers_1854_1925_cleaned.jsonl \
+# 2️⃣ Tokenization & entity extraction
+python tools/text/nlp_extract.py \
+  --input data/processed/text/newspapers_1854_1925_cleaned.jsonl \
   --output data/processed/text/nlp_entities_extracted.json
 
-# 3. Frequency analysis
-python tools/text/term_stats.py --input data/processed/text/newspapers_1854_1925_cleaned.jsonl \
+# 3️⃣ Frequency analysis
+python tools/text/term_stats.py \
+  --input data/processed/text/newspapers_1854_1925_cleaned.jsonl \
   --output data/processed/text/term_frequencies_ks_press.csv
 ```
 
-All text is lowercased, de-noised, normalized (UTF-8), and filtered for relevance to Kansas.
+**All operations** run inside a containerized environment
+(`spaCy · regex · jsonlines · pandas · UTF-8 validation`).
 
 ---
 
 ## 🔁 Reproducibility & Validation
 
-* **Checksums:** `.sha256` integrity hashes accompany each processed file.
-* **STAC Validation:** Metadata verified against STAC 1.0 schema during CI/CD.
-* **Makefile Targets:**
-
-  * `make text` → runs text cleaning and entity extraction
-  * `make validate-text` → verifies checksums and schema compliance
-* **Containerized NLP:** All NLP and OCR cleaning runs in Dockerized Python (spaCy + jsonlines + regex).
-* **Quality Checks:** Random sampling, token distribution review, and NER accuracy metrics logged.
+| Check                 | Method                      | CI Target            |
+| :-------------------- | :-------------------------- | :------------------- |
+| **Integrity**         | SHA-256 hash per file       | `make validate-text` |
+| **Schema Compliance** | STAC v1.0 + JSON Schema     | `make stac-validate` |
+| **Encoding**          | UTF-8 enforced              | `pre-commit`         |
+| **NER Quality**       | Random sample + metrics log | `make text-qa`       |
 
 ---
 
 ## 🧠 Contributing New Text Data
 
-1. Place new cleaned text files (`.jsonl` or `.csv`) here.
-2. Add `.sha256` checksum and STAC metadata JSON under `metadata/`.
-3. Include `DERIVATION.md` explaining:
-
-   * data source and citation,
-   * preprocessing and NLP steps,
-   * language model and version used.
-4. Validate:
+1. Add cleaned `.jsonl` or `.csv` to this folder.
+2. Generate `.sha256` and metadata JSON under `metadata/`.
+3. Include `DERIVATION.md` detailing source, preprocessing, and NLP model version.
+4. Validate locally:
 
    ```bash
    make validate-text
    ```
-5. Submit a Pull Request including:
+5. Open a PR including:
 
-   * STAC metadata,
-   * source citation and license,
-   * processing method reference.
+   * Updated STAC metadata
+   * Provenance / license details
+   * Repro commands
 
-All contributions are automatically validated and indexed in the project catalog.
+**All submissions are auto-checked** via CI before merge.
+
+---
+
+## 🧮 Versioning & Changelog
+
+| Field               | Value                                                                             |
+| :------------------ | :-------------------------------------------------------------------------------- |
+| **Current Version** | `v2.1.0`                                                                          |
+| **Last Updated**    | 2025-10-11                                                                        |
+| **Maintainer**      | @kfm-data                                                                         |
+| **Change Type**     | ✳ Minor — Added explicit version block, reproducibility matrix, refined badge set |
+
+**Changelog**
+
+```md
+## v2.1.0 — 2025-10-11
+- Added per-document versioning block & changelog section  
+- Updated badges to GitHub Actions shield variants  
+- Included reproducibility matrix & container details  
+- Optimized table formatting for GitHub rendering
+## v2.0.0 — 2025-09-01
+- Initial release of processed text data documentation
+```
 
 ---
 
 ## 📖 References
 
-* **Chronicling America:** [https://chroniclingamerica.loc.gov/](https://chroniclingamerica.loc.gov/)
-* **Kansas Historical Society Archives:** [https://www.kshs.org/](https://www.kshs.org/)
-* **spaCy NLP Framework:** [https://spacy.io/](https://spacy.io/)
-* **jsonlines Format Spec:** [https://jsonlines.org/](https://jsonlines.org/)
-* **GDAL / OGR for Metadata Links:** [https://gdal.org/](https://gdal.org/)
-* **STAC Spec 1.0:** [https://stacspec.org](https://stacspec.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../docs/standards/)
+* [Chronicling America](https://chroniclingamerica.loc.gov/)
+* [Kansas Historical Society Archives](https://www.kshs.org/)
+* [spaCy NLP Framework](https://spacy.io/)
+* [JSON Lines Spec](https://jsonlines.org/)
+* [GDAL / OGR](https://gdal.org/)
+* [STAC 1.0 Spec](https://stacspec.org)
+* [Master Coder Protocol (MCP)](../../../docs/standards/)
 
 ---
 
 <div align="center">
 
-*“Every letter, law, and line of ink — these cleaned texts give voice to Kansas’s past in digital form.”*
+> *“Every letter, law, and line of ink — these processed texts give Kansas’s past a searchable, structured voice.”*
 
 </div>
-```
-
