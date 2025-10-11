@@ -3,14 +3,15 @@
 # 🧮 Kansas Frontier Matrix — Climate Derivative Metadata  
 `data/derivatives/climate/metadata/`
 
-**Purpose:** Store structured metadata describing each processed **climate derivative artifact**  
-(COG · GeoJSON · Parquet · CSV) and link them to their **provenance, checksum, and STAC representations**.
+**Purpose:** Maintain structured, machine-readable **metadata JSONs** describing every processed  
+**climate derivative artifact** (COG · GeoJSON · Parquet · CSV) and link them to their  
+**provenance**, **checksums**, and **STAC representations** for full lifecycle transparency.
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../.github/workflows/site.yml)  
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)  
+[![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../../.github/workflows/trivy.yml)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
 
 </div>
@@ -19,20 +20,22 @@
 
 ## 📚 Overview
 
-The `metadata/` directory contains **machine-readable JSON metadata files** describing each processed climate derivative product generated under `data/derivatives/climate/`.  
+The `metadata/` directory contains **JSON metadata files** describing each processed **climate derivative**  
+under `data/derivatives/climate/`.  
 
-Each file documents:
-- dataset **origin and lineage**
-- **variables**, units, and time range  
-- **coordinate system and spatial bounds**
-- links to its **checksum** and **STAC item**
+Each file defines:
+- dataset **origin, lineage, and version**
+- **variables**, units, and temporal coverage  
+- **coordinate reference system** and **spatial extent**
+- relative links to **checksums** and **STAC items**
 
-These metadata files act as the connective tissue between:
-- the raw climate derivative files  
-- their integrity manifests (`/checksums`)  
-- and the **STAC catalog** (`data/stac/`)  
+These metadata records form the connective tissue between:
+- raw and derived datasets  
+- integrity manifests (`/checksums`)  
+- and the global **STAC catalog** (`data/stac/`)  
 
-They ensure **traceability, reproducibility, and semantic interoperability** across the Kansas Frontier Matrix (KFM) ecosystem.
+They ensure **traceability**, **reproducibility**, and **semantic interoperability** across the entire  
+Kansas Frontier Matrix (KFM) ecosystem.
 
 ---
 
@@ -48,30 +51,30 @@ flowchart TD
   F --> G["Knowledge Graph\nnodes + relations"]
   G --> H["API + Web UI\ntimeline · search · layer metadata"]
 %% END OF MERMAID
-
 <!-- END OF MERMAID -->
+````
 
+---
 
+## 🗂️ Directory Layout
 
-⸻
-
-🗂️ Directory Layout
-
+```bash
 metadata/
 ├── daymet_1980_2024_tmin_ks.json
 ├── daymet_1980_2024_prcp_ks.json
 ├── normals_1991_2020_prcp.json
 ├── drought_index_annual_ks.json
 └── README.md
+```
 
-Each .json file corresponds directly to a derivative dataset and follows the KFM STAC/DCAT-aligned schema.
+Each `.json` file corresponds to a single derivative dataset and follows
+the **KFM STAC/DCAT-aligned schema**.
 
-⸻
+---
 
-🧾 JSON Metadata Schema
+## 🧾 JSON Metadata Schema (Canonical Example)
 
-Below is the canonical metadata schema structure:
-
+```json
 {
   "id": "daymet_1980_2024_tmin_ks",
   "title": "Daily Minimum Temperature (Daymet, 1980–2024, Kansas)",
@@ -99,67 +102,81 @@ Below is the canonical metadata schema structure:
   ],
   "license": "CC-BY-4.0",
   "created": "2025-10-10",
+  "last_updated": "2025-10-11",
   "mcp_stage": "derivatives"
 }
+```
 
-💡 Tip: Ensure file, checksum, and stac_item paths are relative and that metadata values align with
-data/sources/<source>.json and data/stac/items/<id>.json for validation consistency.
+💡 **Tip:** Keep all relative paths valid and synchronized with
+`data/sources/<source>.json` and `data/stac/items/<id>.json`.
+This guarantees validation success during CI (`make validate` / `stac-validate.yml`).
 
-⸻
+---
 
-🧩 Relationship to Other Metadata Layers
+## 🧩 Relationship to Other Metadata Layers
 
-Layer	Path	Purpose
-🧭 Source Metadata	data/sources/	Defines raw dataset provenance (Daymet, NOAA, etc.)
-🧮 Derivative Metadata	data/derivatives/climate/metadata/	Documents ETL-processed products
-🧾 Checksums	data/derivatives/climate/checksums/	Ensures file integrity
-🗺️ STAC Catalog	data/stac/	Registers assets with spatial + temporal metadata
-🧠 Knowledge Graph	(Neo4j)	Stores semantic links (HAS_DERIVATIVE, HAS_PROVENANCE)
+| Layer                  | Path                                  | Purpose                                                        |
+| :--------------------- | :------------------------------------ | :------------------------------------------------------------- |
+| 🧭 Source Metadata     | `data/sources/`                       | Defines raw dataset provenance (Daymet, NOAA, etc.)            |
+| 🧮 Derivative Metadata | `data/derivatives/climate/metadata/`  | Documents ETL-processed derivative products                    |
+| 🧾 Checksums           | `data/derivatives/climate/checksums/` | Ensures data file integrity                                    |
+| 🗺️ STAC Catalog       | `data/stac/`                          | Registers spatial + temporal metadata and asset URIs           |
+| 🧠 Knowledge Graph     | Neo4j                                 | Stores semantic relationships (HAS_DERIVATIVE, HAS_PROVENANCE) |
 
+---
 
-⸻
+## 🧠 Usage in the Pipeline
 
-🧠 Usage in the Pipeline
-	•	ETL Stage: Python ETL scripts auto-generate or update metadata after processing.
-	•	Validation: JSON Schema and STAC validators ensure structural compliance.
-	•	CI/CD: The stac-validate.yml workflow checks that every derivative file has matching metadata and checksum.
-	•	Graph Load: Neo4j ingestion parses these JSON files, linking metadata fields (e.g., temporal.start, variables.name) to entity nodes.
+* **ETL Stage:** Python ETL scripts auto-generate or update metadata after processing.
+* **Validation:** JSON Schema + STAC validators confirm structural and referential integrity.
+* **CI/CD:** `stac-validate.yml` ensures every derivative has a matching metadata + checksum file.
+* **Graph Load:** Neo4j ingestion links metadata fields (`temporal.start`, `variables.name`, etc.)
+  into the KFM knowledge graph entities.
 
-⸻
+---
 
-🧱 Metadata Best Practices
+## 🧱 Metadata Best Practices
 
-Category	Guideline
-✅ Completeness	Every derivative must have an accompanying metadata JSON file.
-🔗 Linkage	Always reference its checksum, STAC item, and source manifest.
-🕓 Timestamps	Include created and last_updated (ISO 8601).
-🧮 Variables	List all measured or derived variables with units.
-🧾 Licensing	Record dataset-specific license terms (default: CC-BY-4.0).
-🧪 Validation	Run make validate or rely on CI to enforce schema conformance.
+| Category       | Guideline                                                       |
+| :------------- | :-------------------------------------------------------------- |
+| ✅ Completeness | Each derivative must include a metadata JSON file.              |
+| 🔗 Linkage     | Reference checksum, STAC item, and source manifest explicitly.  |
+| 🕓 Timestamps  | Include both `created` and `last_updated` in ISO 8601 format.   |
+| 🧮 Variables   | List all derived/measured variables with units and definitions. |
+| 🧾 Licensing   | Always record dataset-specific license (default: CC-BY-4.0).    |
+| 🧪 Validation  | Run `make validate` or rely on CI schema enforcement.           |
 
+---
 
-⸻
+## 🔒 Reproducibility & MCP Alignment
 
-🔒 Reproducibility & MCP Alignment
+These metadata structures fully implement the **Master Coder Protocol (MCP)** principles:
 
-These metadata files embody Master Coder Protocol principles:
-	•	Documented provenance and semantic traceability.
-	•	Open, machine-readable formats (JSON/STAC/DCAT).
-	•	Clear lineage from raw → processed → graph → UI.
+* 📜 **Provenance:** Every artifact can trace its lineage back to original sources.
+* 🧩 **Transparency:** Metadata bridges data, code, and documentation layers.
+* 💡 **Machine-readability:** JSON/STAC/DCAT-aligned for cross-system interoperability.
+* 🧮 **Reproducibility:** Metadata ensures anyone can rebuild, validate, and verify the pipeline.
 
-They make every dataset self-describing, verifiable, and interoperable within KFM’s architecture.
+Together, they make the Kansas Frontier Matrix a **verifiable scientific knowledge system**.
 
-⸻
+---
 
-🧱 Related Documentation
-	•	data/derivatives/climate/checksums/README.md — hash integrity workflow
-	•	docs/architecture.md — ETL & provenance design
-	•	data/stac/README.md — STAC catalog schema
-	•	data/sources/README.md — raw dataset manifests
+## 🧱 Related Documentation
 
-⸻
+* [`data/derivatives/climate/checksums/README.md`](../checksums/README.md) — Hash integrity workflow
+* [`data/stac/README.md`](../../../stac/README.md) — STAC catalog schema
+* [`data/sources/README.md`](../../../sources/README.md) — Source dataset manifests
+* [`docs/architecture.md`](../../../../../docs/architecture.md) — ETL & provenance design
 
-🗓️ Version History
+---
 
-Version	Date	Notes
-0.1.0	2025-10-10	Initial creation of climate derivative metadata schema and examples
+## 🗓️ Version History
+
+| Version  | Date       | Notes                                                                                                |
+| :------- | :--------- | :--------------------------------------------------------------------------------------------------- |
+| **v1.1** | 2025-10-11 | Upgraded to KFM Markdown Protocols (v1.0); added front-matter, version block, CI/validation details. |
+| **v1.0** | 2025-10-10 | Initial creation of climate derivative metadata schema and examples.                                 |
+
+---
+
+```
