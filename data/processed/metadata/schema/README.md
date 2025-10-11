@@ -92,7 +92,8 @@ flowchart TD
   D --> E["Knowledge Graph Node\n(Neo4j · CIDOC CRM · OWL-Time)"]
   E --> F["Web UI Layer\n(MapLibre · Timeline · API)"]
   F --> G["AI Validation Feedback\n(LLM Metadata Analyzer)"]
-<!-- END OF MERMAID -->
+  %% END OF MERMAID
+
 ```
 
 This flow illustrates how schema validation feeds the **provenance chain**—from JSON metadata to the graph and web visualization layers.
