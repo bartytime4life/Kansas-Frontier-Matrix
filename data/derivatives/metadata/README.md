@@ -65,34 +65,58 @@ data/
 └── derivatives/
     └── metadata/
         ├── schema/
-        │   ├── derivative_item.schema.json          # Core KFM metadata schema
-        │   ├── stac_item.schema.json                # Reference STAC schema
-        │   └── validation_rules.json                # MCP validation rules
+        │   ├── README.md                       # Schema documentation and validation rules
+        │   ├── derivative_item.schema.json      # Core KFM metadata schema (STAC + MCP)
+        │   ├── stac_item.schema.json            # Reference STAC 1.0 schema (mirrored/pinned)
+        │   └── validation_rules.json            # MCP conditional logic and required field definitions
         ├── terrain/
-        │   ├── slope_1m_ks.json
-        │   └── hillshade_1m_ks.json
+        │   ├── README.md                        # Terrain derivative metadata registry
+        │   ├── slope_1m_ks.json                 # 1m slope raster metadata
+        │   ├── hillshade_1m_ks.json             # Hillshade derived from DEM
+        │   └── validation/
+        │       ├── README.md                    # Terrain metadata validation logs
+        │       ├── checksums.sha256             # File integrity hashes
+        │       └── stac-validation.log          # STAC + schema validation output
         ├── hydrology/
-        │   ├── flow_direction_1m_ks.json
-        │   └── flow_accumulation_1m_ks.json
+        │   ├── README.md                        # Hydrology derivative metadata registry
+        │   ├── flow_direction_1m_ks.json        # Flow direction (TauDEM D8)
+        │   ├── flow_accumulation_1m_ks.json     # Flow accumulation metadata
+        │   └── validation/
+        │       ├── README.md                    # Hydrology validation workflow + logs
+        │       ├── checksums.sha256
+        │       └── stac-validation.log
         ├── landcover/
-        │   ├── ndvi_2021_ks.json
-        │   └── nlcd_1992_2021_change.json
+        │   ├── README.md                        # Landcover derivative metadata registry
+        │   ├── ndvi_2021_ks.json                # NDVI (Normalized Difference Vegetation Index)
+        │   ├── nlcd_1992_2021_change.json       # NLCD landcover change detection
+        │   └── validation/
+        │       ├── README.md                    # Landcover metadata validation logs
+        │       ├── checksums.sha256
+        │       └── stac-validation.log
         ├── climate/
-        │   ├── README.md                          # Climate metadata registry
-        │   ├── mean_temperature_summary.json      # NOAA + PRISM composites
-        │   ├── precipitation_anomaly_summary.json # Rainfall deviation metrics
-        │   ├── drought_index_composite.json       # SPI · PDSI · SPEI indices
-        │   ├── evapotranspiration_trends.json     # Modeled ET trends
+        │   ├── README.md                        # Climate derivative metadata registry
+        │   ├── mean_temperature_summary.json     # NOAA + PRISM mean temperature composites
+        │   ├── precipitation_anomaly_summary.json# Rainfall deviation metrics
+        │   ├── drought_index_composite.json      # Combined SPI · PDSI · SPEI metrics
+        │   ├── evapotranspiration_trends.json    # Modeled ET and water-balance data
         │   ├── validation/
-        │   │   ├── checksums.sha256               # File integrity hashes
-        │   │   └── stac-validation.log            # STAC validation report
+        │   │   ├── README.md                    # Climate metadata validation logs
+        │   │   ├── checksums.sha256
+        │   │   └── stac-validation.log
         │   └── schema/
-        │       └── climate_derivative_metadata.schema.json  # Climate-specific schema
+        │       ├── README.md                    # Climate metadata schema documentation
+        │       └── climate_derivative_metadata.schema.json
         ├── hazards/
-        │   ├── tornado_density_1950_2024.json
-        │   └── flood_extent_1993_ks.json
-        ├── template.json                           # Template for new metadata
-        └── README.md                               # This document
+        │   ├── README.md                        # Hazards derivative metadata registry
+        │   ├── tornado_density_1950_2024.json    # Tornado density (NOAA SPC)
+        │   ├── flood_extent_1993_ks.json         # Flood extent polygons
+        │   └── validation/
+        │       ├── README.md                    # Hazards validation logs
+        │       ├── checksums.sha256
+        │       └── stac-validation.log
+        ├── template.json                         # Template for new derivative metadata files
+        └── README.md                             # This document (root metadata overview)
+
 ````
 
 ---
