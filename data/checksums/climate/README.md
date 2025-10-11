@@ -4,15 +4,14 @@
 `data/checksums/climate/`
 
 **Mission:** Guarantee **integrity, reproducibility, and provenance** for all processed climate datasets —  
-including temperature, precipitation, drought indices, and atmospheric anomalies — across the  
-Kansas Frontier Matrix (KFM) data ecosystem.
+temperature, precipitation, drought indices, and atmospheric anomalies — across the KFM ecosystem.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../../../.github/workflows/trivy.yml)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
@@ -20,18 +19,32 @@ Kansas Frontier Matrix (KFM) data ecosystem.
 
 ## 📚 Overview
 
-The `data/checksums/climate/` directory maintains **cryptographic SHA-256 signatures**  
-for every processed climate dataset in the KFM repository.  
+`data/checksums/climate/` maintains **SHA-256 checksum manifests (`.sha256`)**  
+for every processed climate dataset in KFM. These immutable digests guarantee:
 
-These checksums function as immutable digital fingerprints that guarantee:
+- 🔒 **Integrity** — detect corruption or unauthorized modification  
+- 🔁 **Reproducibility** — confirm deterministic ETL outputs over time  
+- 🔗 **Provenance** — bind derived assets to sources and **STAC** metadata  
+- 🧾 **Auditability** — enable end-to-end CI/CD validation and logging
 
-- **Integrity** — Detects data corruption or unauthorized modification.  
-- **Reproducibility** — Confirms deterministic ETL output across time and systems.  
-- **Provenance** — Links derived assets back to raw sources and STAC metadata.  
-- **Auditability** — Enables end-to-end validation during CI/CD workflows.  
+All `.sha256` files are produced by the **Climate ETL** (`make climate`) and revalidated on every commit.
 
-All `.sha256` files are generated automatically by the **climate ETL pipeline** (`make climate`)  
-and revalidated via GitHub Actions during every commit and pull request.
+---
+
+## 🧭 Climate Integrity Workflow
+
+```mermaid
+flowchart LR
+  S["data/sources/climate/*.json\nSource Manifests"] --> R["data/raw/climate/**\nDaymet · PRISM · NOAA"]
+  R --> P["src/pipelines/climate_pipeline.py\nETL · Resample · Derive"]
+  P --> O["data/processed/climate/**\nCOG · GeoJSON · CSV · Parquet"]
+  O --> C["data/checksums/climate/*.sha256\nPer-asset digests"]
+  O --> T["data/stac/climate/**.json\nSTAC Items (checksum:sha256)"]
+  C --> V["CI Validation\nsha256sum -c + STAC parity"]
+%% END OF MERMAID
+````
+
+<!-- END OF MERMAID -->
 
 ---
 
@@ -44,21 +57,20 @@ data/checksums/climate/
 ├── noaa_normals_1991_2020.geojson.sha256
 ├── drought_monitor_2000_2025.tif.sha256
 └── prism_temp_anomaly_1895_2024.tif.sha256
-````
+```
 
-> **Note:** Each `.sha256` file corresponds directly to a dataset under
-> `data/processed/climate/` and is validated automatically using `sha256sum -c`.
+> Each `.sha256` corresponds to an asset in `data/processed/climate/` and is verified in CI with `sha256sum -c`.
 
 ---
 
 ## 🔐 Checksum Governance
 
-| Objective           | Description                                                                 |
-| :------------------ | :-------------------------------------------------------------------------- |
-| **Data Integrity**  | Detects accidental or malicious corruption in raster or vector files.       |
-| **Reproducibility** | Ensures ETL pipeline output consistency across builds and environments.     |
-| **Provenance**      | Establishes verifiable linkage between raw → processed → STAC metadata.     |
-| **Automation**      | CI/CD workflows continuously validate all hashes for consistency and trust. |
+| Objective           | Description                                                 |
+| :------------------ | :---------------------------------------------------------- |
+| **Data Integrity**  | Detects accidental or malicious changes in rasters/vectors. |
+| **Reproducibility** | Ensures consistent ETL outputs across machines and time.    |
+| **Provenance**      | Maintains verifiable linkage among raw → processed → STAC.  |
+| **Automation**      | CI/CD continuously validates all digests and blocks drift.  |
 
 ---
 
@@ -69,124 +81,114 @@ data/checksums/climate/
 a7f9132dfe5b16c9783f3f0ec4a2f4da8a9bb5e7b739c3477325dcb0df836f41  daymet_1980_2024.tif
 ```
 
-The above verifies that
-`data/processed/climate/daymet_1980_2024.tif` is identical to its validated version in the repository.
+This proves `data/processed/climate/daymet_1980_2024.tif` matches the last validated build.
 
 ---
 
-## ⚙️ Generation Workflow
+## ⚙️ Generation & Verification
 
-Checksums are created automatically within the ETL process or can be triggered manually.
-
-**Makefile target:**
+**Make targets**
 
 ```bash
-make climate-checksums
+make climate-checksums          # generate checksums
+make climate-checksums-verify   # verify checksums (used by CI)
 ```
 
-**Python command:**
+**Python CLI**
 
 ```bash
 python src/utils/generate_checksums.py data/processed/climate/ --algo sha256
 ```
 
-**Workflow Steps:**
+**Steps**
 
-1. Traverse all outputs in `data/processed/climate/`.
-2. Compute SHA-256 for `.tif`, `.geojson`, `.csv`, or `.parquet` files.
-3. Write `<filename>.sha256` files to this directory.
-4. Validate during CI/CD (`sha256sum -c`) and report to workflow logs.
+1. Traverse `data/processed/climate/` for `.tif`, `.geojson`, `.csv`, `.parquet`.
+2. Compute SHA-256 (Python `hashlib` or `sha256sum`).
+3. Write `<filename>.sha256` into `data/checksums/climate/`.
+4. CI runs `sha256sum -c data/checksums/climate/*.sha256`; logs → `data/work/logs/climate_checksums.log`.
 
 ---
 
 ## 🧰 CI/CD Validation
 
-All checksums are automatically verified in continuous integration workflows.
-
-**Command executed in CI:**
+**Command executed by CI**
 
 ```bash
 sha256sum -c data/checksums/climate/*.sha256
 ```
 
-**Behavior:**
+**Behavior**
 
-* A single mismatch **fails CI** immediately.
-* Maintainers must reprocess the data and regenerate checksums before merging.
-* Validation logs are archived under `data/work/logs/` for long-term auditability.
-* STAC validation (`.github/workflows/stac-validate.yml`) crosschecks hash references.
+* ✅ **Pass:** hashes match; build proceeds.
+* ❌ **Fail:** pipeline halts; reprocess and regenerate digests.
+* 🧾 **Logs:** archived under `data/work/logs/` for MCP auditability.
+
+Integrated with **`.github/workflows/stac-validate.yml`** to enforce checksum–metadata parity.
 
 ---
 
 ## 🔗 Integration with Metadata & STAC
 
-| Linked Component                      | Purpose                                                                |
-| :------------------------------------ | :--------------------------------------------------------------------- |
-| `data/processed/metadata/climate/`    | STAC items embed `"checksum:sha256"` for reproducibility validation.   |
-| `src/pipelines/climate_pipeline.py`   | Generates and validates hashes as part of ETL processing.              |
-| `.github/workflows/stac-validate.yml` | Performs automated re-validation of hashes and metadata references.    |
-| `data/stac/climate/`                  | STAC Catalog includes checksums as part of its metadata specification. |
-
-> **Tip:** STAC and manifest hashes must always match.
-> Run `make stac` after updating any checksum to refresh all linked STAC metadata.
+| Linked Component                      | Purpose                                                |
+| :------------------------------------ | :----------------------------------------------------- |
+| `data/stac/climate/**.json`           | STAC Items embed `"checksum:sha256"` for each asset.   |
+| `data/processed/metadata/climate/`    | Mirrors checksum/provenance for non-STAC artifacts.    |
+| `src/pipelines/climate_pipeline.py`   | Generates/validates checksums; emits audit logs.       |
+| `.github/workflows/stac-validate.yml` | Revalidates checksum and STAC schema on every PR.      |
+| `data/checksums/manifest.sha256`      | Global roll-up manifest for cross-domain verification. |
 
 ---
 
-## 🔄 Cross-Domain Integration
+## 🔄 Cross-Domain Integrity
 
-Climate checksums are part of the **global checksum registry** under `data/checksums/`.
-They integrate with other domain manifests (e.g., terrain, hydrology) to enable
-whole-repository integrity checks via `make checksums-verify`.
-
-**Command:**
+Climate checksums participate in the **global registry** (`data/checksums/`) enabling whole-repo checks:
 
 ```bash
 sha256sum -c data/checksums/**/*.sha256
 ```
 
-**Outputs:**
-
-* ✅ Verified hashes print “OK” with relative path confirmation.
-* ❌ Invalid or missing files trigger error logs and block deployment.
+* ✅ All OK → repository integrity verified
+* ❌ Any failure → deployment blocked until resolved
 
 ---
 
 ## 🧩 Troubleshooting
 
-| Issue                           | Cause                                                | Resolution                                             |
-| :------------------------------ | :--------------------------------------------------- | :----------------------------------------------------- |
-| CI fails on checksum mismatch   | File modified or truncated post-build.               | Rerun ETL (`make climate`), regenerate hashes.         |
-| File missing from manifest      | New asset not captured in ETL output.                | Run `make climate-checksums` to rebuild manifests.     |
-| Hash differs from STAC metadata | Drift between data and STAC reference.               | Update STAC entries (`make stac`).                     |
-| Random validation errors        | Non-deterministic compression or timestamp metadata. | Reprocess with fixed seeds and normalized compression. |
+| Issue                     | Cause                                    | Resolution                                                  |
+| :------------------------ | :--------------------------------------- | :---------------------------------------------------------- |
+| CI mismatch               | File modified or truncated post-build    | Re-run ETL (`make climate`), then `make climate-checksums`. |
+| Missing `.sha256`         | New asset not hashed                     | Run generator and commit the sidecar.                       |
+| STAC drift                | STAC not refreshed after checksum change | `make stac` to sync Items.                                  |
+| Non-deterministic rasters | Compression/timestamps vary              | Pin libs, set `SOURCE_DATE_EPOCH`, normalize GDAL options.  |
 
 ---
 
-## 🧠 MCP Compliance Summary
+## 🧠 MCP Compliance Matrix
 
 | MCP Principle           | Implementation                                                   |
 | :---------------------- | :--------------------------------------------------------------- |
-| **Documentation-first** | Every dataset includes `.sha256` and README documentation.       |
-| **Reproducibility**     | SHA-256 ensures deterministic output validation.                 |
-| **Open Standards**      | Uses SHA-256 (FIPS 180-4) per STAC Checksum extension.           |
-| **Provenance**          | Links dataset lineage across ETL, metadata, and STAC references. |
-| **Auditability**        | Continuous verification in CI/CD with logs archived for review.  |
+| **Documentation-first** | README defines policy, structure, commands, CI hooks.            |
+| **Reproducibility**     | Deterministic SHA-256 hashing + enforced CI validation.          |
+| **Open Standards**      | FIPS 180-4 SHA-256; STAC checksum extension; UTF-8, POSIX paths. |
+| **Provenance**          | Checksums + STAC Items bind assets to immutable identities.      |
+| **Auditability**        | CI failure gates; logs retained for review.                      |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                                           |
-| :------ | :--------- | :------------------------------------------------------------------------------------------------ |
-| v1.0.0  | 2025-10-04 | Initial checksum documentation for Daymet, NOAA Normals, Drought Monitor datasets.                |
-| v1.1.0  | 2025-10-10 | Added PRISM anomaly dataset, CI/STAC integration section, and cross-domain verification workflow. |
+| Version  | Date       | Summary                                                                                        |
+| :------- | :--------- | :--------------------------------------------------------------------------------------------- |
+| **v1.2** | 2025-10-11 | Protocol v1.1 upgrade: front-matter, Mermaid flow, CI parity, cross-domain verification notes. |
+| **v1.1** | 2025-10-10 | Added PRISM anomaly dataset; CI/STAC integration and whole-repo check guidance.                |
+| **v1.0** | 2025-10-04 | Initial checksums for Daymet, NOAA Normals, Drought Monitor datasets.                          |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Integrity in Every Forecast: Verifying the Climate of Record.”*
-📍 [`data/checksums/climate/`](.) · Linked to the **Climate STAC Collection** and global checksum registry.
+**Kansas Frontier Matrix** — *Integrity in Every Forecast: Verifying the Climate of Record.*
+📍 [`data/checksums/climate/`](.) · Linked to **Climate STAC Collection** and **Global Checksum Registry**.
 
 </div>
 ```
