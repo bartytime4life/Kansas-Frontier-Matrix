@@ -1,8 +1,9 @@
 <div align="center">
 
-# 🧾 Kansas-Frontier-Matrix — Processed Tabular Data (`data/processed/tabular/`)
+# 🧾 Kansas Frontier Matrix — Processed Tabular Data  
+`data/processed/tabular/`
 
-**Mission:** Contain all **cleaned, structured, and analysis-ready tabular datasets** —  
+**Mission:** Store and document all **cleaned, structured, and analysis-ready tabular datasets** —  
 statistical summaries, time series, and cross-domain tables derived from Kansas historical, climatic,  
 and ecological data sources.
 
@@ -21,31 +22,46 @@ and ecological data sources.
 
 ## 📚 Table of Contents
 - [Overview](#overview)
+- [System Flow (Mermaid)](#system-flow-mermaid)
 - [Directory Layout](#directory-layout)
 - [Core Tabular Datasets](#core-tabular-datasets)
 - [Schema Standards](#schema-standards)
 - [STAC Metadata](#stac-metadata)
 - [Processing Workflow](#processing-workflow)
 - [Reproducibility & Validation](#reproducibility--validation)
+- [AI & Semantic Integration](#ai--semantic-integration)
 - [Contributing New Tabular Data](#contributing-new-tabular-data)
 - [References](#references)
+- [Version History](#version-history)
 
 ---
 
 ## 📊 Overview
 
 This subdirectory holds **processed tabular datasets** that have been cleaned,  
-validated, and formatted for integration with Kansas-Frontier-Matrix’s analytical layers.  
+validated, and normalized for analytical integration within the **Kansas Frontier Matrix (KFM)**.  
 
-These include **climate time series**, **demographic tables**, **ecological metrics**,  
-and **cross-domain data joins** linking geography, history, and environmental data.  
+Includes:
+- **Climate time series**
+- **Demographic and population tables**
+- **Ecological and land use metrics**
+- **Cross-domain relational datasets**
 
-All datasets here have:
-- standardized column names and units,  
-- explicit metadata (schema + provenance),  
-- and format compatibility with CSV, JSON, and Parquet for downstream use.  
+All files are **ready for ingestion** into analytics engines, dashboards, or the KFM knowledge graph.
 
-These files serve as **structured analytical bridges** between raw data and the knowledge graph.
+---
+
+## 🧭 System Flow (Mermaid)
+
+```mermaid
+flowchart TD
+  A["Raw CSVs / XLSX\n(data/raw/tabular)"] --> B["Cleaning & Transformation\n(Pandas · NumPy · CSVKit)"]
+  B --> C["Processed Tables\n(data/processed/tabular/*.csv)"]
+  C --> D["Metadata & Checksums\n(metadata/*.json · checksums/*.sha256)"]
+  D --> E["STAC Items\n(data/stac/tabular/*.json)"]
+  E --> F["Knowledge Graph Ingestion\n(src/graph/tabular_nodes.py)"]
+  %% END OF MERMAID
+````
 
 ---
 
@@ -55,11 +71,11 @@ These files serve as **structured analytical bridges** between raw data and the 
 data/
 └── processed/
     └── tabular/
-        ├── county_population_1850_2020.csv       # Historical population by county
-        ├── precipitation_trends_1895_2024.csv    # Annual precipitation trend data
-        ├── tornado_counts_1950_2024.csv          # Tornado event counts by county/year
-        ├── landuse_by_county_1992_2021.csv       # Landcover class percentages
-        ├── drought_summary_1895_2024.csv         # Drought SPI summary by year
+        ├── county_population_1850_2020.csv
+        ├── precipitation_trends_1895_2024.csv
+        ├── tornado_counts_1950_2024.csv
+        ├── landuse_by_county_1992_2021.csv
+        ├── drought_summary_1895_2024.csv
         ├── metadata/
         │   ├── county_population_1850_2020.json
         │   ├── tornado_counts_1950_2024.json
@@ -69,45 +85,44 @@ data/
         │   ├── precipitation_trends_1895_2024.csv.sha256
         │   └── tornado_counts_1950_2024.csv.sha256
         └── README.md
-````
+```
 
 ---
 
 ## 🧩 Core Tabular Datasets
 
-| Dataset                              | File                                 | Description                                  | Source     | Units  | Format |
-| ------------------------------------ | ------------------------------------ | -------------------------------------------- | ---------- | ------ | ------ |
-| **County Population (1850–2020)**    | `county_population_1850_2020.csv`    | Decennial population by county               | US Census  | people | CSV    |
-| **Precipitation Trends (1895–2024)** | `precipitation_trends_1895_2024.csv` | Annual precipitation anomaly per county      | NOAA NCEI  | mm     | CSV    |
-| **Tornado Counts (1950–2024)**       | `tornado_counts_1950_2024.csv`       | Tornado events aggregated by county and year | NOAA SPC   | count  | CSV    |
-| **Landcover by County (1992–2021)**  | `landuse_by_county_1992_2021.csv`    | Percent cover by NLCD class                  | USGS NLCD  | %      | CSV    |
-| **Drought Summary (1895–2024)**      | `drought_summary_1895_2024.csv`      | Annual SPI and drought occurrence index      | NOAA + CPC | index  | CSV    |
+| Dataset                              | File                                 | Description                              | Source     | Units  | Format |
+| :----------------------------------- | :----------------------------------- | :--------------------------------------- | :--------- | :----- | :----- |
+| **County Population (1850–2020)**    | `county_population_1850_2020.csv`    | Decennial population by county           | US Census  | people | CSV    |
+| **Precipitation Trends (1895–2024)** | `precipitation_trends_1895_2024.csv` | Annual precipitation anomalies           | NOAA NCEI  | mm     | CSV    |
+| **Tornado Counts (1950–2024)**       | `tornado_counts_1950_2024.csv`       | Tornado events aggregated by county-year | NOAA SPC   | count  | CSV    |
+| **Landcover by County (1992–2021)**  | `landuse_by_county_1992_2021.csv`    | Percent cover by NLCD class              | USGS NLCD  | %      | CSV    |
+| **Drought Summary (1895–2024)**      | `drought_summary_1895_2024.csv`      | Annual SPI / drought index               | NOAA + CPC | index  | CSV    |
 
 ---
 
 ## 🧮 Schema Standards
 
-All tabular datasets follow **MCP schema consistency rules** and column naming conventions:
+All tabular datasets conform to **MCP schema consistency rules** and column naming standards.
 
-| Field Type     | Example               | Description                                  |
-| -------------- | --------------------- | -------------------------------------------- |
-| `county_name`  | "Douglas County"      | County name standardized to 2020 boundaries  |
-| `fips_code`    | 20045                 | County FIPS identifier                       |
-| `year`         | 1993                  | Observation or record year                   |
-| `value`        | 874.5                 | Measurement value (unit defined in metadata) |
-| `source`       | "NOAA NCEI"           | Originating dataset                          |
-| `unit`         | "mm", "°C", "%"       | Measurement units                            |
-| `derived_from` | `data/raw/precip.csv` | Provenance pointer                           |
+| Field          | Example               | Description                          |
+| :------------- | :-------------------- | :----------------------------------- |
+| `county_name`  | "Douglas County"      | County standardized to 2020 boundary |
+| `fips_code`    | 20045                 | County FIPS identifier               |
+| `year`         | 1993                  | Observation or record year           |
+| `value`        | 874.5                 | Measurement value                    |
+| `source`       | "NOAA NCEI"           | Origin dataset or authority          |
+| `unit`         | "mm", "°C", "%"       | Measurement units                    |
+| `derived_from` | `data/raw/precip.csv` | Provenance pointer                   |
 
-Metadata JSON files define these fields in alignment with the **JSON Table Schema (CSVW)**
-and STAC property extensions for tabular data.
+Schemas follow **JSON Table Schema (CSVW)** + **STAC property extensions for tabular data**.
+Validation occurs automatically during CI via `make validate-tabular`.
 
 ---
 
 ## 🌐 STAC Metadata
 
-Each CSV dataset has an accompanying **STAC metadata file** describing
-source lineage, schema, and data type (tabular asset).
+Every dataset includes a **STAC-compliant item** documenting schema, provenance, and lineage.
 
 Example:
 
@@ -138,23 +153,27 @@ Example:
 
 ## ⚙️ Processing Workflow
 
-All processing and cleaning are performed via `tools/tabular/` scripts and the project `Makefile`.
-Typical tools include **Pandas**, **NumPy**, and **CSVKit**, executed in a Dockerized Python environment.
+Data cleaning and harmonization are handled by `tools/tabular/` scripts
+and the main project `Makefile`.
+All scripts are executed in Dockerized environments with **Python 3.11 + Pandas + GDAL**.
 
 Example pipeline:
 
 ```bash
-# 1. Clean raw population table
-python tools/tabular/clean_population.py --input data/raw/census_population.csv \
+# Clean population data
+python tools/tabular/clean_population.py \
+  --input data/raw/census_population.csv \
   --output data/processed/tabular/county_population_1850_2020.csv
 
-# 2. Join NOAA precipitation time series with county boundaries
-python tools/tabular/join_precip_counties.py --input data/raw/precip_1895_2024.csv \
+# Join precipitation data with county boundaries
+python tools/tabular/join_precip_counties.py \
+  --input data/raw/precip_1895_2024.csv \
   --geo data/sources/ks_counties.geojson \
   --output data/processed/tabular/precipitation_trends_1895_2024.csv
 
-# 3. Aggregate tornado events by county-year
-python tools/tabular/aggregate_tornado_counts.py --input data/raw/tornado_events.csv \
+# Aggregate tornado events
+python tools/tabular/aggregate_tornado_counts.py \
+  --input data/raw/tornado_events.csv \
   --output data/processed/tabular/tornado_counts_1950_2024.csv
 ```
 
@@ -162,43 +181,66 @@ python tools/tabular/aggregate_tornado_counts.py --input data/raw/tornado_events
 
 ## 🔁 Reproducibility & Validation
 
-* **Checksums:** Each CSV includes a `.sha256` integrity hash.
-* **Schema Validation:** CI validates all CSVs using JSON Table Schema definitions.
-* **STAC Validation:** Each metadata file tested for STAC 1.0 compliance.
-* **Makefile Targets:**
+| Validation Type       | Method                | Purpose                              |
+| :-------------------- | :-------------------- | :----------------------------------- |
+| **Checksums**         | `.sha256` per dataset | Ensures binary integrity             |
+| **Schema Validation** | JSON Table Schema     | Verifies structure & field types     |
+| **STAC Validation**   | STAC 1.0 + MCP schema | Ensures compliance & linkage         |
+| **CI Automation**     | GitHub Actions        | Validates metadata & checksums       |
+| **Containerization**  | Docker environment    | Guarantees reproducibility           |
+| **Cross-Validation**  | Archive comparison    | Confirms historical data consistency |
 
-  * `make tabular` → runs tabular ETL pipeline
-  * `make validate-tabular` → checks schema and STAC metadata
-* **Containerization:** Executed in Docker (Python + Pandas + GDAL).
-* **Cross-Validation:** Datasets checked against historical archives and official statistics for accuracy.
+**Makefile Targets**
+
+* `make tabular` → run ETL
+* `make validate-tabular` → run schema + STAC validation
 
 ---
 
-## 🧠 Contributing New Tabular Data
+## 🤖 AI & Semantic Integration
 
-1. Add the processed CSV/Parquet file here.
-2. Include:
+KFM’s AI pipelines automatically process tabular datasets to:
 
-   * `.sha256` checksum under `checksums/`
-   * STAC metadata JSON under `metadata/`
-   * Schema definition or reference (if new structure).
-3. Run validation:
+* Extract named entities and semantic relationships.
+* Map numeric series into the **Knowledge Graph** (e.g., population → region → time).
+* Compute **confidence scores** and detect outliers in trends.
+* Tag datasets with semantic metadata (domain = climate, demography, etc.).
 
-   ```bash
-   make validate-tabular
-   ```
-4. Document the source, schema, and transformation steps in a short `DERIVATION.md`.
-5. Submit a PR with data source citations, schema updates, and licensing info.
+All enrichments are stored in:
+`data/processed/tabular/ai_metadata/`
+and versioned for full auditability.
+
+---
+
+## 🧠 MCP Compliance Summary
+
+| MCP Principle           | Implementation                                        |
+| :---------------------- | :---------------------------------------------------- |
+| **Documentation-first** | README + STAC metadata per dataset                    |
+| **Reproducibility**     | Containerized ETL + schema validation                 |
+| **Open Standards**      | CSVW, JSON Table Schema, STAC 1.0                     |
+| **Provenance**          | Embedded hashes, lineage, and derived-from references |
+| **Auditability**        | CI/CD validation logs & reproducibility manifests     |
+
+---
+
+## 🧾 Version History
+
+| Version   | Date       | Summary                                                                                          |
+| :-------- | :--------- | :----------------------------------------------------------------------------------------------- |
+| **2.0.0** | 2025-10-11 | Added front-matter metadata, Mermaid workflow, AI semantic integration, and MCP compliance table |
+| 1.1.0     | 2025-08-20 | Schema updates and additional STAC metadata validation                                           |
+| 1.0.0     | 2025-07-02 | Initial release: processed CSV datasets + checksums + STAC metadata                              |
 
 ---
 
 ## 📖 References
 
-* **US Census Bureau Data:** [https://www.census.gov/data.html](https://www.census.gov/data.html)
-* **NOAA National Centers for Environmental Information (NCEI):** [https://www.ncei.noaa.gov/](https://www.ncei.noaa.gov/)
-* **USGS National Land Cover Database (NLCD):** [https://www.mrlc.gov/data](https://www.mrlc.gov/data)
+* **US Census Bureau:** [https://www.census.gov/data.html](https://www.census.gov/data.html)
+* **NOAA NCEI:** [https://www.ncei.noaa.gov/](https://www.ncei.noaa.gov/)
+* **USGS NLCD:** [https://www.mrlc.gov/data](https://www.mrlc.gov/data)
 * **FEMA Open Data Portal:** [https://www.fema.gov/openfema-data-page](https://www.fema.gov/openfema-data-page)
-* **CSVW JSON Table Schema:** [https://www.w3.org/TR/tabular-data-primer/](https://www.w3.org/TR/tabular-data-primer/)
+* **CSVW / JSON Table Schema:** [https://www.w3.org/TR/tabular-data-primer/](https://www.w3.org/TR/tabular-data-primer/)
 * **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
 * **Master Coder Protocol (MCP):** [`docs/standards/`](../../../docs/standards/)
 
@@ -206,8 +248,9 @@ python tools/tabular/aggregate_tornado_counts.py --input data/raw/tornado_events
 
 <div align="center">
 
-*“Behind every map lies a table — each row a fragment of Kansas history, structured for discovery.”*
+*“Behind every map lies a table —
+each row a fragment of Kansas history,
+structured for discovery.”*
 
 </div>
 ```
-
