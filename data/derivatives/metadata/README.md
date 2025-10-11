@@ -79,13 +79,22 @@ data/
         │   ├── ndvi_2021_ks.json
         │   └── nlcd_1992_2021_change.json
         ├── climate/
-        │   ├── temp_anomaly_1895_2024.json
-        │   └── drought_index_spi12.json
+        │   ├── README.md                          # Climate metadata registry (this subtree)
+        │   ├── mean_temperature_summary.json      # NOAA + PRISM mean-temperature composites
+        │   ├── precipitation_anomaly_summary.json # Rainfall deviation metrics
+        │   ├── drought_index_composite.json       # Combined SPI · PDSI · SPEI indices
+        │   ├── evapotranspiration_trends.json     # Modeled ET and water-balance trends
+        │   ├── validation/
+        │   │   ├── checksums.sha256               # File integrity hashes
+        │   │   └── stac-validation.log            # STAC validation report
+        │   └── schema/
+        │       └── climate_derivative_metadata.schema.json  # JSON Schema definition
         ├── hazards/
         │   ├── tornado_density_1950_2024.json
         │   └── flood_extent_1993_ks.json
         ├── template.json
         └── README.md
+
 ````
 
 ---
