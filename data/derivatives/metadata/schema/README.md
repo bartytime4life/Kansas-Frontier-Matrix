@@ -1,15 +1,15 @@
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — Derivative Metadata Schemas  
+# 🧩 Kansas Frontier Matrix — Derivative Metadata Schema Registry  
 `data/derivatives/metadata/schema/`
 
-**Purpose:** Define and maintain **JSON Schema specifications** for validating all derivative metadata records  
-across terrain, hydrology, landcover, climate, and hazard domains — ensuring consistency, traceability,  
-and MCP-aligned documentation for every KFM derivative dataset.
+**Mission:** Define, govern, and maintain **JSON Schema specifications** used to validate derivative metadata  
+across all KFM domains — ensuring reproducibility, STAC conformance, and audit-ready MCP documentation.
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../.github/workflows/site.yml)
 [![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../.github/workflows/trivy.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../LICENSE)
 
@@ -19,14 +19,17 @@ and MCP-aligned documentation for every KFM derivative dataset.
 
 ## 📚 Overview
 
-This directory contains **schema definitions** that govern the structure and validation  
-of all JSON metadata within `data/derivatives/metadata/`.  
+This directory defines **schema blueprints** governing every JSON metadata record  
+under `data/derivatives/metadata/`.  
 
-Each schema enforces:
-- **Required fields** (`id`, `title`, `description`, `version`, etc.)  
-- **Data lineage** and provenance traceability  
-- **Compliance** with STAC 1.0 and schema.org Dataset conventions  
-- **MCP reproducibility rules** (environment, software, checksum validation)
+Schemas ensure **interoperability, traceability, and reproducibility** by enforcing:
+
+- ✅ **Required fields** (`id`, `title`, `description`, `version`, etc.)  
+- 🔁 **Provenance linkage** to sources and processing environments  
+- 🌐 **Compliance** with **STAC 1.0**, **schema.org/Dataset**, and **ISO 19115**  
+- 🧮 **Validation logic** under MCP’s reproducibility and audit protocols  
+
+Each schema version is locked and version-controlled to preserve long-term compatibility.
 
 ---
 
@@ -36,31 +39,34 @@ data/derivatives/metadata/schema/
 ├── README.md                       # This document
 ├── derivative_item.schema.json      # Core schema for all derivative metadata records
 ├── stac_item.schema.json            # Reference STAC 1.0 Item schema (mirrored/pinned)
-└── validation_rules.json            # MCP custom rule set (conditional logic, required fields)
+└── validation_rules.json            # MCP custom validation rules (conditional, required fields)
 ````
 
 ---
 
 ## 🧮 Schema Architecture
 
-| Schema File                       | Role          | Description                                                                          |
-| :-------------------------------- | :------------ | :----------------------------------------------------------------------------------- |
-| **`derivative_item.schema.json`** | Primary       | Defines KFM-specific schema for all derivative metadata types.                       |
-| **`stac_item.schema.json`**       | Secondary     | Mirrors the STAC 1.0 schema to ensure STAC-compliant validation.                     |
-| **`validation_rules.json`**       | Supplementary | Adds MCP-specific logic (conditional rules, dependency checks, required provenance). |
+| Schema File                       | Layer       | Description                                                                               |
+| :-------------------------------- | :---------- | :---------------------------------------------------------------------------------------- |
+| **`derivative_item.schema.json`** | Core        | Defines the Kansas Frontier Matrix standard metadata structure (extends STAC 1.0).        |
+| **`stac_item.schema.json`**       | Base        | Mirrors official STAC 1.0 schema for local validation and schema pinning.                 |
+| **`validation_rules.json`**       | MCP Overlay | Adds custom logic: required provenance, checksum verification, and MCP conditional rules. |
 
-All schemas follow **JSON Schema Draft 2020-12**, and validation is enforced locally and via GitHub Actions.
+All schemas use **JSON Schema Draft 2020-12** and are validated via both local and CI workflows.
+
+> 🧠 **Governance principle:** All schema changes require version bumps, changelog updates, and
+> a peer-reviewed PR with documented MCP compliance.
 
 ---
 
-## 🧠 Example — Core Schema Stub
+## 🧠 Example — Derivative Schema Stub
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kansasfrontiermatrix.org/schema/derivative_item.schema.json",
   "title": "KFM Derivative Metadata Schema",
-  "description": "Schema definition for all derivative metadata records in the Kansas Frontier Matrix.",
+  "description": "Standard schema definition for all derivative metadata records within the Kansas Frontier Matrix.",
   "type": "object",
   "properties": {
     "id": { "type": "string", "description": "Unique dataset identifier" },
@@ -85,51 +91,58 @@ All schemas follow **JSON Schema Draft 2020-12**, and validation is enforced loc
 
 ```mermaid
 flowchart TD
-    A["Metadata JSON<br/>(data/derivatives/metadata/*/*.json)"]
+    A["Derivative Metadata JSON<br/>(data/derivatives/metadata/*/*.json)"]
         --> B["KFM Derivative Schema<br/>(derivative_item.schema.json)"]
-    B --> C["STAC Schema<br/>(stac_item.schema.json)"]
-    C --> D["MCP Rule Validation<br/>(validation_rules.json)"]
-    D --> E["Continuous Integration<br/>STAC Validate Workflow"]
+    B --> C["STAC Schema Validation<br/>(stac_item.schema.json)"]
+    C --> D["MCP Rule Enforcement<br/>(validation_rules.json)"]
+    D --> E["Continuous Integration<br/>(.github/workflows/stac-validate.yml)"]
 ```
 
 ---
 
-## 🧪 Schema Validation Workflow
+## 🧪 Validation Workflow
 
-| Step                 | Command                                                                            | Description                       |
-| :------------------- | :--------------------------------------------------------------------------------- | :-------------------------------- |
-| **Local validation** | `jsonschema -i ../terrain/slope_1m_ks.json derivative_item.schema.json`            | Validate a single metadata record |
-| **Batch validation** | `for f in ../*/**/*.json; do jsonschema -i "$f" derivative_item.schema.json; done` | Validate all derivative metadata  |
-| **STAC check**       | `stac-validator ../terrain/slope_1m_ks.json`                                       | Confirm STAC item compliance      |
-| **CI pipeline**      | GitHub Action: `.github/workflows/stac-validate.yml`                               | Automated validation for every PR |
+| Step                 | Command                                                                            | Description                                      |
+| :------------------- | :--------------------------------------------------------------------------------- | :----------------------------------------------- |
+| **Local validation** | `jsonschema -i ../terrain/slope_1m_ks.json derivative_item.schema.json`            | Validate individual metadata files               |
+| **Batch validation** | `for f in ../*/**/*.json; do jsonschema -i "$f" derivative_item.schema.json; done` | Validate all derivative metadata in batch        |
+| **STAC check**       | `stac-validator ../terrain/slope_1m_ks.json`                                       | Ensure STAC compliance                           |
+| **CI pipeline**      | `.github/workflows/stac-validate.yml`                                              | Runs automatic schema and STAC validation on PRs |
+
+All validation outputs are logged in domain-specific `validation/` folders under each derivative domain.
 
 ---
 
 ## 🧩 Related Directories
 
-| Path                             | Description                   |
-| :------------------------------- | :---------------------------- |
-| [`../terrain/`](../terrain/)     | Terrain derivative metadata   |
-| [`../climate/`](../climate/)     | Climate derivative metadata   |
-| [`../hydrology/`](../hydrology/) | Hydrology derivative metadata |
-| [`../landcover/`](../landcover/) | Landcover derivative metadata |
-| [`../hazards/`](../hazards/)     | Hazards derivative metadata   |
+| Path                                                                                                 | Description                                   |
+| :--------------------------------------------------------------------------------------------------- | :-------------------------------------------- |
+| [`../terrain/`](../terrain/)                                                                         | Terrain derivative metadata & validation logs |
+| [`../climate/`](../climate/)                                                                         | Climate derivative metadata schemas           |
+| [`../hydrology/`](../hydrology/)                                                                     | Hydrology derivative metadata                 |
+| [`../landcover/`](../landcover/)                                                                     | Landcover derivative metadata                 |
+| [`../hazards/`](../hazards/)                                                                         | Hazards derivative metadata                   |
+| [`../../../../docs/standards/markdown_protocol.md`](../../../../docs/standards/markdown_protocol.md) | Markdown Documentation Framework Standard     |
 
 ---
 
-## 🧾 Versioning & Changelog
+## 🧾 Versioning & Governance
 
-| Version    | Date       | Author                  | Notes                                                                              |
-| :--------- | :--------- | :---------------------- | :--------------------------------------------------------------------------------- |
-| **v1.0.0** | 2025-10-11 | KFM Data Standards Team | Initial release of derivative metadata schema definitions and MCP rule integration |
+Each schema follows **semantic versioning (SemVer)** and is traceable via the MCP provenance chain.
+
+| Version    | Date       | Author                           | Description                                                               |
+| :--------- | :--------- | :------------------------------- | :------------------------------------------------------------------------ |
+| **v1.1.0** | 2025-10-11 | Data Standards & Provenance Team | Refined structure, added CI lineage diagram and governance policy section |
+| **v1.0.0** | 2025-10-10 | KFM Data Standards Team          | Initial schema registry for derivative metadata                           |
 
 ---
 
 ## 🪶 License & Provenance
 
 **License:** [CC-BY 4.0](../../../../LICENSE)
-**Provenance:** Developed under the **Master Coder Protocol (MCP)** — ensuring documentation-first, validated, and reproducible data architecture.
-**Maintainers:** Kansas Frontier Matrix Data Standards Team
+**Provenance:** Authored under the **Master Coder Protocol (MCP)** — documentation-first, version-controlled,
+and reproducible across schema evolution.
+**Maintainers:** Kansas Frontier Matrix Data Standards & Provenance Engineering Team
 **Last Updated:** 2025-10-11
 
 ```
