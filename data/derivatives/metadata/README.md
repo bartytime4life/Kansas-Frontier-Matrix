@@ -37,25 +37,24 @@ documenting provenance, lineage, licensing, and schema validation for the full K
 ## 🧠 Overview
 
 The **`data/derivatives/metadata/`** directory contains canonical JSON metadata for all processed derivative products  
-(e.g., terrain, hydrology, landcover, climate, hazards).  
-Each record is the **authoritative source of truth** for dataset lineage, versioning, licensing, and reproducibility  
+(e.g., **terrain**, **hydrology**, **landcover**, **climate**, **hazards**).  
+Each record is the **source of truth** for dataset lineage, semantic versioning, licensing, and reproducibility  
 under the **Master Coder Protocol (MCP)**.
 
-All metadata conforms to:
+Conformance targets:
 - **STAC 1.0.0** (SpatioTemporal Asset Catalog)
 - **ISO 19115** (Geospatial Metadata)
 - **schema.org/Dataset**
-- **MCP Provenance Extensions**
+- **KFM MCP Provenance Extensions** (processing, parameters, checksum, environment)
 
 ---
 
 ## 🎯 Purpose & Role
 
-- Ensure each dataset in `data/derivatives/` has a reproducible metadata record.  
-- Preserve **provenance**: track every dataset’s origin and derivation chain.  
-- Encode **validation**, **licensing**, and **spatial/temporal context**.  
-- Provide ready-to-ingest metadata for the **STAC catalog** and **MapLibre UI**.  
-- Serve as the integration point between raw sources and derived public artifacts.
+- Guarantee each dataset in `data/derivatives/` ships with a **validated, reproducible** metadata record.  
+- Preserve **provenance** (sources → ETL → derivatives → catalog).  
+- Encode **validation**, **licensing**, **spatial/temporal** context, and **uncertainty**.  
+- Provide ready-to-ingest items for the **STAC catalog** and **MapLibre UI**.
 
 ---
 
@@ -65,10 +64,10 @@ data/
 └── derivatives/
     └── metadata/
         ├── schema/
-        │   ├── README.md                       # Schema documentation and validation rules
+        │   ├── README.md                        # Schema governance & rules (MCP)
         │   ├── derivative_item.schema.json      # Core KFM metadata schema (STAC + MCP)
-        │   ├── stac_item.schema.json            # Reference STAC 1.0 schema (mirrored/pinned)
-        │   └── validation_rules.json            # MCP conditional logic and required field definitions
+        │   ├── stac_item.schema.json            # Pinned STAC 1.0 Item schema
+        │   └── validation_rules.json            # MCP conditional & required-field logic
         ├── terrain/
         │   ├── README.md                        # Terrain derivative metadata registry
         │   ├── slope_1m_ks.json                 # 1m slope raster metadata
@@ -80,9 +79,9 @@ data/
         ├── hydrology/
         │   ├── README.md                        # Hydrology derivative metadata registry
         │   ├── flow_direction_1m_ks.json        # Flow direction (TauDEM D8)
-        │   ├── flow_accumulation_1m_ks.json     # Flow accumulation metadata
+        │   ├── flow_accumulation_1m_ks.json     # Flow accumulation raster
         │   └── validation/
-        │       ├── README.md                    # Hydrology validation workflow + logs
+        │       ├── README.md                    # Hydrology validation logs
         │       ├── checksums.sha256
         │       └── stac-validation.log
         ├── landcover/
@@ -90,21 +89,21 @@ data/
         │   ├── ndvi_2021_ks.json                # NDVI (Normalized Difference Vegetation Index)
         │   ├── nlcd_1992_2021_change.json       # NLCD landcover change detection
         │   └── validation/
-        │       ├── README.md                    # Landcover metadata validation logs
+        │       ├── README.md                    # Landcover validation logs
         │       ├── checksums.sha256
         │       └── stac-validation.log
         ├── climate/
         │   ├── README.md                        # Climate derivative metadata registry
-        │   ├── mean_temperature_summary.json     # NOAA + PRISM mean temperature composites
+        │   ├── mean_temperature_summary.json     # NOAA + PRISM composites
         │   ├── precipitation_anomaly_summary.json# Rainfall deviation metrics
-        │   ├── drought_index_composite.json      # Combined SPI · PDSI · SPEI metrics
-        │   ├── evapotranspiration_trends.json    # Modeled ET and water-balance data
+        │   ├── drought_index_composite.json      # SPI · PDSI · SPEI metrics
+        │   ├── evapotranspiration_trends.json    # Modeled ET & water balance
         │   ├── validation/
-        │   │   ├── README.md                    # Climate metadata validation logs
+        │   │   ├── README.md                    # Climate validation logs
         │   │   ├── checksums.sha256
         │   │   └── stac-validation.log
         │   └── schema/
-        │       ├── README.md                    # Climate metadata schema documentation
+        │       ├── README.md                    # Climate-schema documentation
         │       └── climate_derivative_metadata.schema.json
         ├── hazards/
         │   ├── README.md                        # Hazards derivative metadata registry
@@ -114,38 +113,36 @@ data/
         │       ├── README.md                    # Hazards validation logs
         │       ├── checksums.sha256
         │       └── stac-validation.log
-        ├── template.json                         # Template for new derivative metadata files
-        └── README.md                             # This document (root metadata overview)
-
+        ├── template.json                         # Template for new derivative metadata
+        └── README.md                             # This document
 ````
 
 ---
 
 ## 🧩 Metadata Standards
 
-Each metadata JSON merges **MCP Provenance** with **STAC 1.0 Core**, extended for
-machine reproducibility and knowledge-graph integration.
+Each metadata JSON merges **MCP Provenance** with **STAC 1.0 Core**, extended for machine reproducibility.
 
-| Standard               | Key Fields                                                                                                         | Description                           |
-| :--------------------- | :----------------------------------------------------------------------------------------------------------------- | :------------------------------------ |
-| **STAC Core**          | `id`, `type`, `stac_version`, `bbox`, `geometry`, `datetime`, `properties`, `assets`                               | Core item structure                   |
-| **MCP Provenance**     | `mcp_provenance`, `derived_from`, `processing:software`, `processing:parameters`, `author`, `created_at`, `commit` | Document lineage & environment        |
-| **Schema.org Dataset** | `keywords`, `citation`, `creator`, `isBasedOn`, `license`                                                          | Semantic enrichment for searchability |
+| Standard               | Key Fields                                                                                                         | Description                     |
+| :--------------------- | :----------------------------------------------------------------------------------------------------------------- | :------------------------------ |
+| **STAC Core**          | `id`, `type`, `stac_version`, `bbox`, `geometry`, `datetime`, `properties`, `assets`                               | Core item structure             |
+| **MCP Provenance**     | `mcp_provenance`, `derived_from`, `processing:software`, `processing:parameters`, `author`, `created_at`, `commit` | Lineage & environment           |
+| **Schema.org Dataset** | `keywords`, `citation`, `creator`, `isBasedOn`, `license`                                                          | Semantic enrichment & discovery |
 
-> 🧮 Validation: `schema/derivative_item.schema.json` → **local check**,
-> GitHub Actions `.github/workflows/stac-validate.yml` → **automated CI validation**.
+> 🧮 Validation: `schema/derivative_item.schema.json` → **local check**
+> CI: `.github/workflows/stac-validate.yml` → **automated STAC + schema validation**.
 
 ---
 
 ## 🌐 STAC Integration
 
-Every derivative metadata file contributes directly to the global **STAC catalog**:
+Every derivative metadata file feeds the global **STAC catalog**:
 
-* `data/stac/items/` → item-level JSON entries (each dataset)
+* `data/stac/items/` → item-level JSON entries
 * `data/stac/collections/` → thematic rollups (terrain, hydrology, climate, etc.)
 
-Checksums from the derivative folders populate `checksum:sha256` in STAC asset definitions.
-Automated workflows validate STAC compliance and maintain referential integrity.
+Checksums from derivative folders populate `checksum:sha256` in STAC asset definitions;
+workflows enforce integrity and referential consistency.
 
 ---
 
@@ -172,13 +169,13 @@ flowchart TD
    `id`, `stac_version`, `title`, `description`, `license`,
    `processing:software`, `derived_from[]`.
 3. **Add lineage:**
-   Ensure `derived_from` paths reference valid upstream sources.
+   Reference valid upstream sources in `derived_from`.
 4. **Record environment:**
-   Include `processing:parameters` and `container:image` if used.
-5. **Validate:**
+   Add `processing:parameters`, optional `container:image`.
+5. **Validate locally:**
    `make validate-metadata`
-6. **Commit + PR:**
-   Include dataset + checksum; CI auto-runs STAC and schema validation.
+6. **Commit & PR:**
+   Include dataset + checksum; CI auto-runs validation gates.
 
 ---
 
@@ -199,8 +196,8 @@ check-checksums:
 **Recommended pre-commit hooks**
 
 * `jsonlint` or `prettier --parser json`
-* Schema validation of `data/derivatives/metadata/**/*.json`
-* Require `checksum:sha256` for all assets
+* Schema validation for `data/derivatives/metadata/**/*.json`
+* Require `checksum:sha256` on all assets
 
 ---
 
@@ -220,7 +217,7 @@ check-checksums:
     "mcp_provenance": "sha256:a23be8...",
     "derived_from": ["data/sources/landsat8_ks_2021.tif"],
     "license": "CC-BY 4.0",
-    "keywords": ["NDVI", "Kansas", "remote sensing"]
+    "keywords": ["NDVI","Kansas","remote sensing"]
   },
   "assets": {
     "data": {
@@ -236,25 +233,25 @@ check-checksums:
 
 ## 📖 References
 
-* [STAC 1.0 Specification](https://stacspec.org)
-* [ISO 19115 — Geographic Metadata](https://www.iso.org/standard/53798.html)
-* [Schema.org Dataset](https://schema.org/Dataset)
-* [OGC GeoTIFF 1.1 Specification](https://docs.ogc.org/is/19-008r4/19-008r4.html)
-* [Master Coder Protocol Docs](../../../docs/standards/)
-* [KFM STAC Catalog](../../stac/)
+* STAC 1.0 Specification — [https://stacspec.org](https://stacspec.org)
+* ISO 19115 — [https://www.iso.org/standard/53798.html](https://www.iso.org/standard/53798.html)
+* Schema.org Dataset — [https://schema.org/Dataset](https://schema.org/Dataset)
+* OGC GeoTIFF 1.1 — [https://docs.ogc.org/is/19-008r4/19-008r4.html](https://docs.ogc.org/is/19-008r4/19-008r4.html)
+* MCP Docs — `../../../docs/standards/`
+* KFM STAC Catalog — `../../stac/`
 
 ---
 
 ## 🗓️ Changelog
 
-| Version    | Date       | Author                | Notes                                                                                       |
-| :--------- | :--------- | :-------------------- | :------------------------------------------------------------------------------------------ |
-| **v1.3.0** | 2025-10-11 | Data Integration Team | Expanded Climate directory structure, improved Mermaid rendering, and standardized CI hooks |
-| **v1.2.1** | 2025-10-11 | KFM Team              | Fixed fence balance and GitHub-safe rendering                                               |
-| **v1.2.0** | 2025-10-10 | KFM Team              | Added Makefile hooks, clarified MCP fields                                                  |
-| **v1.1.0** | 2025-10-08 | KFM Team              | Introduced hybrid MCP + STAC schema validation                                              |
-| **v1.0.0** | 2025-10-01 | KFM Core              | Initial metadata registry foundation                                                        |
+| Version    | Date       | Author                | Notes                                                                                    |
+| :--------- | :--------- | :-------------------- | :--------------------------------------------------------------------------------------- |
+| **v1.4.0** | 2025-10-11 | Data Integration Team | Upgraded layout with domain validation subtrees + schema README links; added frontmatter |
+| **v1.3.0** | 2025-10-11 | Data Integration Team | Expanded Climate directory structure; improved Mermaid; standardized CI hooks            |
+| **v1.2.1** | 2025-10-11 | KFM Team              | Fixed fence balance and GitHub-safe rendering                                            |
+| **v1.2.0** | 2025-10-10 | KFM Team              | Added Makefile hooks; clarified MCP fields                                               |
+| **v1.1.0** | 2025-10-08 | KFM Team              | Introduced hybrid MCP + STAC schema validation                                           |
+| **v1.0.0** | 2025-10-01 | KFM Core              | Initial metadata registry foundation                                                     |
 
 ```
-
----
+```
