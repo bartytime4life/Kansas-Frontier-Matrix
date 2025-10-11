@@ -1,6 +1,7 @@
 <div align="center">
 
-# 🧾 Kansas-Frontier-Matrix — Processed Metadata (`data/processed/metadata/`)
+# 🧾 Kansas-Frontier-Matrix — Processed Metadata  
+`data/processed/metadata/`
 
 **Mission:** Maintain **metadata records** describing all processed datasets — their lineage,  
 license, temporal coverage, and schema — ensuring traceability and reproducibility throughout  
@@ -22,42 +23,49 @@ the Kansas Frontier Matrix data lifecycle.
 ## 📚 Table of Contents
 - [Overview](#overview)
 - [Purpose & Scope](#purpose--scope)
+- [System Flow (Mermaid)](#system-flow-mermaid)
 - [Directory Layout](#directory-layout)
 - [Metadata Standards](#metadata-standards)
 - [STAC & MCP Integration](#stac--mcp-integration)
 - [Validation & Provenance](#validation--provenance)
 - [Adding or Updating Metadata](#adding-or-updating-metadata)
+- [QA Checklist (copy into PRs)](#qa-checklist-copy-into-prs)
 - [References](#references)
+- [Version History](#version-history)
 
 ---
 
 ## 🧠 Overview
 
-This directory contains the **metadata registry for all processed datasets** under  
-`data/processed/`. It acts as the canonical record for dataset provenance,  
-providing the “who, what, when, and how” for every intermediate product in  
-the Kansas Frontier Matrix data pipeline.
+This directory contains the **metadata registry for all processed datasets** under `data/processed/`.  
+It is the canonical record for **provenance, schema, licensing, coverage, and build context** for KFM’s intermediate and harmonized products.
 
-Each JSON file describes:
-- Source lineage (`derived_from`)  
-- Software and parameters used for processing  
-- Spatial and temporal coverage  
-- Licensing, versioning, and author information  
-
-All metadata here conforms to **STAC 1.0** and **Master Coder Protocol (MCP)**  
-documentation rules to ensure consistency across layers and subdomains.
+Each JSON file documents:
+- Source lineage (`derived_from`) and processing parameters  
+- Spatial/temporal coverage and data quality notes  
+- Licensing, versioning, and authorship  
+- STAC-compliant fields and MCP provenance hooks
 
 ---
 
 ## 🎯 Purpose & Scope
 
-This folder serves three main functions:
-1. **Traceability:** Provide clear provenance for each processed dataset.  
-2. **Validation:** Enable CI/CD automation to confirm schema compliance.  
-3. **Integration:** Supply the [STAC catalog](../../stac/) and frontend UI with descriptive metadata.
+1) **Traceability** — authoritative lineage for each processed artifact.  
+2) **Validation** — CI/CD checks ensure schema, STAC, and checksum compliance.  
+3) **Integration** — fuels the STAC catalog and UI/graph layers with rich metadata.
 
-Metadata in this directory connects *processed* datasets (intermediate, cleaned, or standardized)  
-to their original raw inputs and derived downstream products.
+---
+
+## 🧭 System Flow (Mermaid)
+
+```mermaid
+flowchart TD
+  A["Processed Artifacts\n(data/processed/*)"] --> B["Metadata Authoring\n(data/processed/metadata/*/*.json)"]
+  B --> C["Schema Validation\n(schema/*.json · MCP rules)"]
+  C --> D["STAC Sync\n(data/stac/items/*)"]
+  D --> E["Catalog & UI/Graph\n(web/* · src/graph/*)"]
+  %% END OF MERMAID
+````
 
 ---
 
@@ -70,7 +78,7 @@ data/
         ├── schema/
         │   ├── processed_item.schema.json        # JSON schema for processed metadata
         │   ├── stac_item.schema.json             # STAC compliance reference
-        │   └── validation_rules.json             # Additional MCP validation rules
+        │   └── validation_rules.json             # MCP policy & field rules
         ├── terrain/
         │   ├── dem_1m_ks_filled.json
         │   ├── dem_30m_ned_ks.json
@@ -92,108 +100,115 @@ data/
         ├── text/
         │   ├── newspapers_1854_1925_cleaned.json
         │   ├── ocr_cleaned_diaries_1850_1900.json
-        ├── template.json                         # Metadata template for new datasets
+        ├── template.json                         # Starter template for new datasets
         └── README.md
-````
-
-Each subfolder corresponds to a data domain (terrain, hydrology, etc.) and mirrors
-the structure of `data/processed/` for easy navigation and consistency.
+```
 
 ---
 
 ## 🧩 Metadata Standards
 
-All metadata files conform to the **hybrid MCP-STAC schema**, ensuring both machine-readability
-and scientific traceability.
+KFM uses a **hybrid MCP + STAC** approach: strict machine-readability with explicit scientific provenance.
 
-### Required Fields
+### Required Fields (per item)
 
-| Field                 | Description                          | Example                                                    |
-| --------------------- | ------------------------------------ | ---------------------------------------------------------- |
-| `id`                  | Unique dataset identifier            | `"dem_1m_ks_filled"`                                       |
-| `stac_version`        | STAC schema version                  | `"1.0.0"`                                                  |
-| `title`               | Human-readable dataset name          | `"Filled DEM (1m) – Kansas"`                               |
-| `description`         | Summary of dataset contents          | `"Hydrologically conditioned DEM derived from LiDAR data"` |
-| `datetime`            | Processing or dataset reference date | `"2020-01-01T00:00:00Z"`                                   |
-| `derived_from`        | Raw source(s) or prior datasets      | `["data/raw/dem_1m_ks.tif"]`                               |
-| `processing:software` | Tools or scripts used                | `"GDAL 3.8.0 + WhiteboxTools 2.2.0"`                       |
-| `mcp_provenance`      | SHA256 checksum or version hash      | `"sha256:cf1e98..."`                                       |
-| `license`             | Data license (default CC-BY 4.0)     | `"CC-BY 4.0"`                                              |
-| `authors`             | Responsible parties                  | `["Frontier Matrix Core Team"]`                            |
+| Field                            | Description                          | Example                                       |
+| -------------------------------- | ------------------------------------ | --------------------------------------------- |
+| `id`                             | Unique dataset identifier            | `"dem_1m_ks_filled"`                          |
+| `type`                           | STAC type                            | `"Feature"`                                   |
+| `stac_version`                   | STAC version                         | `"1.0.0"`                                     |
+| `properties.title`               | Human-friendly title                 | `"Filled DEM (1 m) – Kansas"`                 |
+| `properties.description`         | Summary                              | `"Hydrologically conditioned DEM from LiDAR"` |
+| `properties.datetime`            | Reference/processing date (ISO 8601) | `"2020-01-01T00:00:00Z"`                      |
+| `properties.processing:software` | Tools/versions used                  | `"GDAL 3.8.0; WhiteboxTools 2.2.0"`           |
+| `properties.kfm:mcp_provenance`  | SHA-256 or version hash              | `"sha256:cf1e98..."`                          |
+| `assets`                         | At least one `data` asset            | path + media type                             |
+| `license`                        | License string                       | `"CC-BY 4.0"`                                 |
 
-### Optional Extensions
+### Common Extensions (optional but recommended)
 
-* `keywords` (array of thematic tags)
-* `bbox` and `spatial_extent` (for geospatial datasets)
-* `temporal_extent` (start/end ISO dates)
-* `quality:metrics` (accuracy, completeness, etc.)
+* `bbox`, `geometry` (geospatial)
+* `temporal_extent.start` / `temporal_extent.end`
+* `quality:metrics.*` (accuracy, completeness, coverage)
+* `derived_from[]` (raw or upstream products)
+* `links[]` to collection, self, parent
 
 ---
 
 ## 🌐 STAC & MCP Integration
 
-Each processed metadata file is directly linked to:
-
-* **STAC Catalog:** Populates entries in `data/stac/items/processed_*`
-* **MCP Provenance Chain:** Enables automated lineage reconstruction via `mcp_provenance` fields
-
-During CI/CD (`.github/workflows/stac-validate.yml`), each JSON is validated against:
-
-1. `schema/processed_item.schema.json`
-2. `schema/stac_item.schema.json`
-3. MCP rules in `validation_rules.json`
-
-This guarantees interoperability with geospatial APIs and metadata aggregators.
+* **STAC Catalog:** Items auto-synchronized into `data/stac/` for discovery.
+* **MCP Provenance Chain:** `kfm:mcp_provenance` provides cryptographic linkage to checksums and build logs.
+* **CI Validation:** `.github/workflows/stac-validate.yml` enforces schema + STAC + rule compliance.
 
 ---
 
 ## 🔎 Validation & Provenance
 
-Automated validation includes:
+Automated checks include:
 
-* **JSON Schema Validation:** Checks required fields and value types.
-* **Checksum Verification:** Confirms all `mcp_provenance` hashes exist in corresponding checksum files.
-* **STAC Compliance:** Verifies required STAC 1.0 fields (`id`, `type`, `stac_version`, `assets`, `properties`).
-* **Temporal Consistency:** Confirms `datetime` and `temporal_extent` fields align with data content.
+* **JSON Schema validation** against `schema/processed_item.schema.json` & `schema/stac_item.schema.json`
+* **Checksum verification** (hash exists & matches in sibling `data/processed/*/checksums/`)
+* **STAC completeness** (`id`, `type`, `stac_version`, `properties`, `assets`)
+* **Temporal/geometric consistency** where applicable
 
-Run local validation with:
+Run locally:
 
 ```bash
 make validate-metadata
 ```
 
-Results are saved as `validation_report.json` for review.
+Outputs a `validation_report.json` with pass/fail details.
 
 ---
 
-## 🧠 Adding or Updating Metadata
+## ➕ Adding or Updating Metadata
 
-1. Copy `template.json` into the relevant subfolder (terrain, hydrology, etc.).
-2. Fill in all mandatory fields: `id`, `title`, `description`, `derived_from`, `processing:software`.
-3. Compute the dataset’s checksum and insert it into `mcp_provenance`.
-4. Validate:
+1. **Copy** `template.json` into the correct domain folder.
+2. **Fill** required fields (`id`, `properties.*`, `assets.data`, `license`).
+3. **Compute** SHA-256 for primary asset and place in sibling `checksums/`; record in `kfm:mcp_provenance`.
+4. **Validate** with:
 
    ```bash
    make validate-metadata
    ```
-5. Commit changes and submit a Pull Request including:
+5. **PR** with:
 
-   * Updated metadata file
-   * Associated dataset checksum
-   * Description of processing updates
+   * new/updated metadata JSON
+   * checksum file(s)
+   * brief processing notes (software, parameters, changes)
 
-All contributions are automatically validated during CI/CD.
+---
+
+## ☑️ QA Checklist (copy into PRs)
+
+* [ ] STAC item validates (CI green)
+* [ ] Required fields populated & accurate
+* [ ] `kfm:mcp_provenance` hash present and matches checksum file
+* [ ] `derived_from[]` references resolve to sources or upstream products
+* [ ] Temporal/geometry fields correct (if spatial/temporal)
+* [ ] Links (`self`, `parent`, `collection`) are relative & valid
 
 ---
 
 ## 📖 References
 
-* **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
-* **ISO 19115 Metadata Standard:** [https://www.iso.org/standard/53798.html](https://www.iso.org/standard/53798.html)
-* **Schema.org Dataset Vocabulary:** [https://schema.org/Dataset](https://schema.org/Dataset)
-* **JSON Schema Specification:** [https://json-schema.org](https://json-schema.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../docs/standards/)
-* **Frontier Matrix STAC Catalog:** [`data/stac/`](../../stac/)
+* **STAC 1.0** — `stacspec.org`
+* **ISO 19115** — dataset metadata standard
+* **Schema.org/Dataset** — semantic discovery
+* **JSON Schema** — `json-schema.org`
+* **Master Coder Protocol (MCP)** — `docs/standards/`
+* **KFM STAC Catalog** — `data/stac/`
+
+---
+
+## 🧾 Version History
+
+|  Version  | Date       | Summary                                                                                 |
+| :-------: | :--------- | :-------------------------------------------------------------------------------------- |
+| **1.2.0** | 2025-10-11 | Added Mermaid flow, QA checklist, expanded standards tables; clarified MCP/STAC linkage |
+|   1.1.0   | 2025-08-27 | Strengthened schema rules and CI instructions                                           |
+|   1.0.0   | 2025-07-14 | Initial metadata registry with STAC/MCP baseline                                        |
 
 ---
 
@@ -203,4 +218,3 @@ All contributions are automatically validated during CI/CD.
 
 </div>
 ```
-
