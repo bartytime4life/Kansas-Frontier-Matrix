@@ -122,13 +122,13 @@ with the broader **Frontier Matrix Knowledge Graph** and external ontologies.
 
 ```mermaid
 flowchart TD
-  A["Raw Sources\n(USGS NLCD, Vegetation Maps, Crop Data)"] --> B["ETL Pipeline\nPython + Makefile"]
-  B --> C["Processing\nReproject → Clip → COG/GeoJSON"]
-  C --> D["Derived Products\nLand Cover Change Grids"]
-  D --> E["STAC Metadata\n+ Checksums"]
-  E --> F["Knowledge Graph Linkage\nCIDOC CRM / ENVO Ontology"]
-  F --> G["Web Visualization\nReact + MapLibre"]
-<!-- END OF MERMAID -->
+  A["Raw Sources\n(USGS NLCD, Vegetation Maps, Crop Data)"] --> B["ETL Pipeline\n(Python + Makefile)"]
+  B --> C["Processing Stage\nReproject → Clip → Convert to COG/GeoJSON"]
+  C --> D["Derived Products\nLand Cover Change Grids & Vegetation Layers"]
+  D --> E["STAC Metadata + Checksums\n(JSON · .sha256)"]
+  E --> F["Knowledge Graph Integration\n(CIDOC CRM · ENVO Ontology)"]
+  F --> G["Web Visualization\nReact + MapLibre Timeline"]
+% END OF MERMAID %
 ```
 
 ---
