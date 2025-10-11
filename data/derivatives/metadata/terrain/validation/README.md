@@ -1,10 +1,11 @@
 <div align="center">
 
-# ✅ Kansas Frontier Matrix — Terrain Metadata Validation  
+# ✅ Kansas Frontier Matrix — Terrain Metadata Validation
+
 `data/derivatives/metadata/terrain/validation/`
 
-**Purpose:** Provide reproducible **QA/QC validation logs** for all terrain derivative metadata,  
-ensuring scientific integrity, STAC compliance, and MCP reproducibility across Kansas Frontier Matrix (KFM) datasets.
+**Mission:** Maintain reproducible **QA/QC validation artifacts** for all terrain derivative metadata —
+ensuring **scientific integrity, STAC compliance, and MCP reproducibility** across KFM datasets.
 
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../../../.github/workflows/site.yml)
 [![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../../.github/workflows/stac-validate.yml)
@@ -17,23 +18,34 @@ ensuring scientific integrity, STAC compliance, and MCP reproducibility across K
 
 ---
 
+## 🧭 Version & Governance
+
+| Version    | Status | Last Updated | Maintainer      | Validation   |
+| :--------- | :----: | :----------- | :-------------- | :----------- |
+| **v1.1.0** | Stable | 2025-10-11   | Terrain QA Team | ✅ CI passing |
+
+**License:** [CC-BY 4.0](../../../../../../LICENSE)
+**Protocol:** **Master Coder Protocol (MCP)** — documentation-first, auditable, reproducible.
+
+---
+
 ## 📚 Overview
 
-This directory stores **validation artifacts** that confirm the accuracy and reproducibility  
-of all **terrain derivative metadata** within the KFM repository.
+This directory stores **validation artifacts** that verify the accuracy and reproducibility of all **terrain derivative metadata** (e.g., `slope_1m_ks.json`, `hillshade_1m_ks.json`) describing products derived from **USGS 3DEP LiDAR**. Artifacts include:
 
-It includes checksum manifests and STAC validation logs for derivative metadata files such as  
-`slope_1m_ks.json` and `hillshade_1m_ks.json`, which describe terrain surfaces derived from Kansas LiDAR (USGS 3DEP).
+* **`checksums.sha256`** — integrity registry for metadata JSON
+* **`stac-validation.log`** — combined JSON Schema + STAC validation output
 
 ---
 
 ## 🗂️ Directory Layout
+
 ```bash
 data/derivatives/metadata/terrain/validation/
-├── README.md              # This document
-├── checksums.sha256       # SHA-256 hash registry for terrain metadata JSON files
-└── stac-validation.log    # Validation report for STAC and JSON Schema compliance
-````
+├── README.md                # This document
+├── checksums.sha256         # SHA-256 hashes for metadata JSONs
+└── stac-validation.log      # STAC + JSON Schema validation report
+```
 
 ---
 
@@ -41,89 +53,119 @@ data/derivatives/metadata/terrain/validation/
 
 ```mermaid
 flowchart TD
-    A["Terrain Metadata<br/>(slope_1m_ks.json · hillshade_1m_ks.json)"]
-        --> B["Checksum Verification<br/>(sha256sum)"]
-    B --> C["Schema Validation<br/>(jsonschema-cli)"]
-    C --> D["STAC Compliance<br/>(stac-validator)"]
-    D --> E["Continuous Integration<br/>(GitHub Actions)"]
-    E --> F["Validation Logs<br/>(checksums.sha256 · stac-validation.log)"]
+  A["Terrain Metadata<br/>slope_1m_ks.json · hillshade_1m_ks.json"]
+    --> B["Checksum Verification<br/>sha256sum"]
+  B --> C["Schema Validation<br/>jsonschema-cli"]
+  C --> D["STAC Compliance<br/>stac-validator"]
+  D --> E["CI Orchestration<br/>GitHub Actions"]
+  E --> F["Artifacts Published<br/>checksums.sha256 · stac-validation.log"]
 ```
+
+<!-- END OF MERMAID -->
 
 ---
 
 ## 🧩 Validation Components
 
-| Artifact                  | Description                                             | Tool                                  |
-| :------------------------ | :------------------------------------------------------ | :------------------------------------ |
-| **`checksums.sha256`**    | SHA-256 hash values for all terrain metadata JSON files | `sha256sum`                           |
-| **`stac-validation.log`** | Output log of STAC and JSON Schema validation checks    | `stac-validator`, `jsonschema-cli`    |
-| **CI Validation**         | Continuous testing on each PR or push event             | `.github/workflows/stac-validate.yml` |
+| Artifact                  | Description                                      | Tool(s)                               |
+| :------------------------ | :----------------------------------------------- | :------------------------------------ |
+| **`checksums.sha256`**    | SHA-256 values for each metadata JSON            | `sha256sum`                           |
+| **`stac-validation.log`** | Consolidated output of schema + STAC checks      | `jsonschema` (CLI), `stac-validator`  |
+| **CI Validation**         | Automated on PR/Push (quality gates + artifacts) | `.github/workflows/stac-validate.yml` |
 
 ---
 
-## 🧠 Example: `checksums.sha256`
+## 🧮 Commands (local reproduction)
+
+| Step                    | Command                                                                                               | Purpose                              |
+| :---------------------- | :---------------------------------------------------------------------------------------------------- | :----------------------------------- |
+| **Checksum generation** | `find .. -maxdepth 1 -name "*.json" -exec sha256sum {} \; > checksums.sha256`                         | Register integrity of metadata JSONs |
+| **Schema validation**   | `jsonschema -i ../*.json ../../schema/derivative_item.schema.json`                                    | Enforce JSON Schema compliance       |
+| **STAC validation**     | `stac-validator ../*.json --log stac-validation.log`                                                  | Validate STAC core + extensions      |
+| **Report aggregation**  | `echo -e "\n--- CHECKSUMS ---" >> stac-validation.log && cat checksums.sha256 >> stac-validation.log` | Append hashes to the log             |
+
+> Tip: Run all steps via `make validate-terrain`.
+
+---
+
+## 🔧 Makefile Integration
+
+```make
+validate-terrain:
+	@echo "[KFM] Terrain metadata validation..."
+	find data/derivatives/metadata/terrain -maxdepth 1 -name "*.json" -exec sha256sum {} \; > data/derivatives/metadata/terrain/validation/checksums.sha256
+	jsonschema -i data/derivatives/metadata/terrain/*.json \
+	           data/derivatives/metadata/schema/derivative_item.schema.json
+	stac-validator data/derivatives/metadata/terrain/*.json --log data/derivatives/metadata/terrain/validation/stac-validation.log
+	@echo "--- CHECKSUMS ---" >> data/derivatives/metadata/terrain/validation/stac-validation.log
+	@cat data/derivatives/metadata/terrain/validation/checksums.sha256 >> data/derivatives/metadata/terrain/validation/stac-validation.log
+```
+
+---
+
+## 🧪 CI/CD Integration (quality gates)
+
+The **STAC Validate** workflow (`.github/workflows/stac-validate.yml`) executes:
+
+1. **Checksum verification** — fail on mismatch
+2. **JSON Schema validation** — fail on invalid shape or required fields
+3. **STAC validation** — fail on non-conformant metadata or extensions
+4. **Artifact upload** — `stac-validation.log` + `checksums.sha256` retained per run
+
+**Exit codes & triage**
+
+| Failure Class     | Typical Cause                       | Where to Fix                                       |
+| :---------------- | :---------------------------------- | :------------------------------------------------- |
+| Checksum mismatch | Edited JSON without re-hashing      | Rebuild `checksums.sha256` via Makefile            |
+| Schema invalid    | Missing/incorrect fields or types   | Update JSON to match `derivative_item.schema.json` |
+| STAC invalid      | Bad links/extension versions/fields | Align with STAC core + extension versions          |
+
+---
+
+## 🧠 Example Artifacts
+
+**`checksums.sha256`**
 
 ```text
 4c9b18b2397b8c14ff323cae6f3077f5bca88e58a1ebd657b3a1a3e2af7a3c44  slope_1m_ks.json
 2e8fc37c2ed7d8b8418ff992e57c48c3df3162eece1ac15abf4db7cfac7b9a9d  hillshade_1m_ks.json
 ```
 
-These hashes are verified by GitHub Actions upon each commit to ensure that metadata
-has not been corrupted or altered outside approved workflows.
+**Excerpt from `stac-validation.log`**
+
+```text
+[jsonschema] PASS: ../slope_1m_ks.json conforms to derivative_item.schema.json
+[stac-validator] PASS: ../slope_1m_ks.json (STAC 1.0.0 + processing/provenance)
+[jsonschema] PASS: ../hillshade_1m_ks.json conforms to derivative_item.schema.json
+[stac-validator] PASS: ../hillshade_1m_ks.json (STAC 1.0.0 + processing/provenance)
+--- CHECKSUMS ---
+<sha256>  slope_1m_ks.json
+<sha256>  hillshade_1m_ks.json
+```
 
 ---
 
-## 🧮 Validation Commands
+## 🔗 Related Documents
 
-| Step                    | Command                                                            | Purpose                               |
-| :---------------------- | :----------------------------------------------------------------- | :------------------------------------ |
-| **Checksum generation** | `find .. -name "*.json" -exec sha256sum {} \; > checksums.sha256`  | Registers all terrain metadata hashes |
-| **Schema validation**   | `jsonschema -i ../*.json ../../schema/derivative_item.schema.json` | Ensures schema compliance             |
-| **STAC validation**     | `stac-validator ../*.json --log stac-validation.log`               | Checks STAC and extensions            |
-| **Report aggregation**  | `cat checksums.sha256 >> stac-validation.log`                      | Combines validation logs              |
-
-All commands can be executed via the Makefile target `make validate-terrain`.
-
----
-
-## 🧪 Integration in CI/CD
-
-The `.github/workflows/stac-validate.yml` pipeline automatically executes:
-
-1. **Checksum verification**
-2. **JSON Schema validation**
-3. **STAC compliance validation**
-4. **Artifact upload** for each validation log
-
-Results are visible in GitHub Actions → *STAC Validate* workflow logs.
+* [`../README.md`](../README.md) — Terrain derivative metadata registry
+* [`../../schema/derivative_item.schema.json`](../../schema/derivative_item.schema.json) — JSON Schema (derivative item)
+* [`../../../../../../.github/workflows/stac-validate.yml`](../../../../../../.github/workflows/stac-validate.yml) — CI workflow (STAC validate)
+* [`../../../../../../docs/standards/markdown_protocol.md`](../../../../../../docs/standards/markdown_protocol.md) — Markdown/MCP standards
 
 ---
 
 ## 🧾 Versioning & Changelog
 
-| Version    | Date       | Author          | Notes                                                                  |
-| :--------- | :--------- | :-------------- | :--------------------------------------------------------------------- |
-| **v1.0.0** | 2025-10-11 | Terrain QA Team | Initial creation of validation directory and schema-based QA workflows |
+| Version    | Date       | Author          | Notes                                                                    |
+| :--------- | :--------- | :-------------- | :----------------------------------------------------------------------- |
+| **v1.1.0** | 2025-10-11 | Terrain QA Team | Added version table, triage matrix, Makefile target, GitHub-safe Mermaid |
+| v1.0.0     | 2025-10-11 | Terrain QA Team | Initial validation directory + schema/STAC QA workflow                   |
 
 ---
 
-## 🧩 Related Documents
+## 🪶 Attribution
 
-* [`../README.md`](../README.md) — Terrain derivative metadata registry
-* [`../../schema/derivative_item.schema.json`](../../schema/derivative_item.schema.json) — Validation schema
-* [`../../../../../../docs/standards/markdown_protocol.md`](../../../../../../docs/standards/markdown_protocol.md) — Markdown / MCP standards
-* [`../../../../../../.github/workflows/stac-validate.yml`](../../../../../../.github/workflows/stac-validate.yml) — STAC validation workflow
+**Kansas Frontier Matrix — “Time · Terrain · History”**
+Authored under **MCP** · **STAC-compliant** · **Reproducible** · **Versioned** · **Auditable**
 
 ---
-
-## 🪶 License & Provenance
-
-**License:** [CC-BY 4.0](../../../../../../LICENSE)
-**Provenance:** Generated under the **Master Coder Protocol (MCP)** — ensuring transparent, documented, and reproducible validation practices.
-**Maintainers:** Kansas Frontier Matrix Terrain QA Team
-**Last Updated:** 2025-10-11
-
-```
-
----
-
