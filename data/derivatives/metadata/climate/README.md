@@ -120,7 +120,6 @@ flowchart TD
   C --> D["Metadata Registry\n(data/derivatives/metadata/climate)"]
   D --> E["STAC Catalog\n(data/stac/collections/climate_derivatives)"]
 
-
 <!-- END OF MERMAID -->
 ```
 
