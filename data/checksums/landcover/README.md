@@ -5,14 +5,14 @@
 
 **Mission:** Verify, preserve, and document the **integrity, reproducibility, and provenance**  
 of all processed **land cover datasets** — including vegetation, NLCD, crop distribution, and land use change —  
-to ensure transparent and auditable results across the Kansas Frontier Matrix (KFM).
+ensuring transparent, auditable, and MCP-compliant results across the Kansas Frontier Matrix (KFM).
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../.github/workflows/site.yml)  
+[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)  
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../../../.github/workflows/trivy.yml)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
@@ -20,20 +20,38 @@ to ensure transparent and auditable results across the Kansas Frontier Matrix (K
 
 ## 📚 Overview
 
-The `data/checksums/landcover/` directory contains **SHA-256 cryptographic checksum files (`.sha256`)**  
-for every **land cover dataset** processed within the Kansas Frontier Matrix (KFM).  
+The `data/checksums/landcover/` directory holds **SHA-256 checksum manifests**  
+for every **processed land cover dataset** in KFM — from historic vegetation reconstructions  
+to recent NLCD mosaics and crop distribution analyses.  
 
-These checksums certify that data representing Kansas’s **vegetation, cropland, and surface change history**  
-remains consistent, reproducible, and traceable through every stage of the MCP-governed data lifecycle.
+These checksums act as the **digital fingerprint** ensuring every land cover layer  
+remains reproducible, authentic, and verifiable through its lifecycle.
 
 **Guarantees provided:**
-- 🌾 **Integrity** — Prevents silent data corruption or tampering.  
-- 🔁 **Reproducibility** — Ensures deterministic ETL results across environments.  
-- 🔗 **Provenance** — Connects every dataset to its metadata, STAC record, and source manifest.  
-- 🧩 **Auditability** — Enables CI/CD workflows to verify and log dataset integrity automatically.  
+- 🌾 **Integrity** — Detects corruption or unauthorized edits.  
+- 🔁 **Reproducibility** — Confirms byte-for-byte identical ETL results.  
+- 🔗 **Provenance** — Links all land cover products to metadata, STAC Items, and sources.  
+- 🧩 **Auditability** — CI/CD continuously validates and logs data integrity.  
 
-All `.sha256` files are generated via the **landcover ETL pipeline (`make landcover`)**  
-and validated during each continuous integration (CI) run.
+All `.sha256` files are produced via the **Landcover ETL pipeline (`make landcover`)**  
+and verified automatically during each GitHub Actions build.
+
+---
+
+## 🧭 Land Cover Integrity Workflow
+
+```mermaid
+flowchart LR
+  S["data/sources/landcover/*.json\nSource Manifests"] --> R["data/raw/landcover/**\nNLCD · Crops · Vegetation"]
+  R --> P["src/pipelines/landcover_pipeline.py\nETL · Harmonize · Derive"]
+  P --> O["data/processed/landcover/**\nCOG · GeoJSON · CSV"]
+  O --> C["data/checksums/landcover/*.sha256\nIntegrity Proofs"]
+  O --> T["data/stac/landcover/**.json\nSTAC Items (checksum:sha256)"]
+  C --> V["CI Validation\nsha256sum -c + STAC parity"]
+%% END OF MERMAID
+````
+
+<!-- END OF MERMAID -->
 
 ---
 
@@ -47,22 +65,10 @@ data/checksums/landcover/
 ├── landcover_change_1992_2021.geojson.sha256
 ├── crop_distribution_2020.geojson.sha256
 └── canopy_cover_2016.tif.sha256
-````
+```
 
-> **Note:** Each `.sha256` file corresponds to its dataset in
-> `data/processed/landcover/` and is validated automatically through CI using `sha256sum -c`.
-
----
-
-## 🔐 Role of Checksums
-
-| Objective                  | Description                                                                  |
-| :------------------------- | :--------------------------------------------------------------------------- |
-| **Integrity Verification** | Detects corruption or unauthorized alteration of land cover files.           |
-| **Reproducibility**        | Confirms that re-running the ETL pipeline yields byte-identical results.     |
-| **Provenance**             | Links processed layers to their metadata and STAC asset references.          |
-| **Automation**             | CI/CD pipelines verify all hashes on every push, merge, and release build.   |
-| **Transparency**           | Promotes open, scientific accountability through MCP-governed documentation. |
+> Each `.sha256` references a dataset under `data/processed/landcover/`
+> and is validated during CI via `sha256sum -c`.
 
 ---
 
@@ -73,105 +79,104 @@ data/checksums/landcover/
 1e8a2a99ef45f582f821a4b8ac3adcc48f0c52b7c1d7ce1f92f4cb045c54cc54  nlcd_1992_2021.tif
 ```
 
-This file certifies the integrity of
+This manifest certifies the integrity of
 `data/processed/landcover/nlcd_1992_2021.tif`
-and ensures it matches the canonical version tracked in the repository.
+and confirms its reproducibility across all builds and platforms.
 
 ---
 
 ## ⚙️ Generation Workflow
 
-Checksums are created automatically upon ETL completion or can be executed manually.
-
-**Makefile target:**
+**Makefile target**
 
 ```bash
 make landcover-checksums
 ```
 
-**Python command:**
+**Python command**
 
 ```bash
 python src/utils/generate_checksums.py data/processed/landcover/ --algo sha256
 ```
 
-**Workflow Steps:**
+**Workflow Steps**
 
-1. Identify all outputs in `data/processed/landcover/` (`.tif`, `.geojson`, `.csv`).
-2. Compute SHA-256 digests using Python’s `hashlib`.
-3. Write `<filename>.sha256` files into this directory.
-4. Validate hashes during CI/CD workflows (`sha256sum -c`).
-5. Archive logs to `data/work/logs/landcover_checksums.log` for peer audit.
+1. Scan `data/processed/landcover/` for `.tif`, `.geojson`, `.csv`.
+2. Compute SHA-256 hashes with Python’s `hashlib` or `sha256sum`.
+3. Save `<filename>.sha256` in this directory.
+4. CI validates all hashes automatically.
+5. Logs archived under `data/work/logs/landcover_checksums.log`.
 
 ---
 
 ## 🧰 CI/CD Validation
 
-**CI command:**
+**Validation command**
 
 ```bash
 sha256sum -c data/checksums/landcover/*.sha256
 ```
 
-**Behavior:**
+| Result         | Behavior                                                  |
+| :------------- | :-------------------------------------------------------- |
+| ✅ **Verified** | Integrity confirmed; build proceeds.                      |
+| ❌ **Failed**   | Pipeline halts; dataset must be reprocessed and rehashed. |
+| 🧾 **Logs**    | Stored in `data/work/logs/` for MCP audit traceability.   |
 
-* ✅ Verified: All hashes match recorded values — dataset integrity confirmed.
-* ❌ Failed: CI halts, logs failure, and blocks deployment until checksums are regenerated.
-* 🧾 Logs: Validation details retained under `data/work/logs/` for reproducibility and compliance tracking.
-
-These checks are tied to the **STAC validation workflow** (`.github/workflows/stac-validate.yml`)
-to guarantee metadata and checksum parity.
+> This process runs within the **STAC validation workflow** (`.github/workflows/stac-validate.yml`)
+> ensuring checksum–metadata parity before deployment.
 
 ---
 
 ## 🔗 Integration with Metadata & STAC
 
-| Linked Component                      | Purpose                                                              |
-| :------------------------------------ | :------------------------------------------------------------------- |
-| `data/processed/metadata/landcover/`  | STAC Items embed `"checksum:sha256"` per asset for validation.       |
-| `src/pipelines/landcover_pipeline.py` | Generates, validates, and logs hashes as part of the ETL routine.    |
-| `.github/workflows/stac-validate.yml` | Automates checksum and STAC validation across branches.              |
-| `data/stac/landcover/`                | Catalog includes checksum values for global reproducibility.         |
-| `data/checksums/manifest.sha256`      | Global manifest linking domain checksums across all data categories. |
+| Linked Component                      | Purpose                                                      |
+| :------------------------------------ | :----------------------------------------------------------- |
+| `data/stac/landcover/**.json`         | STAC Items include `"checksum:sha256"` for each dataset.     |
+| `data/processed/metadata/landcover/`  | Mirrors checksum and provenance details for non-STAC layers. |
+| `src/pipelines/landcover_pipeline.py` | Generates, verifies, and logs checksum events.               |
+| `.github/workflows/stac-validate.yml` | Validates checksum–STAC consistency in CI/CD.                |
+| `data/checksums/manifest.sha256`      | Global registry aggregating all landcover digests.           |
 
 ---
 
 ## 🧩 Troubleshooting & Maintenance
 
-| Issue                         | Likely Cause                                           | Resolution                                                    |
-| :---------------------------- | :----------------------------------------------------- | :------------------------------------------------------------ |
-| CI fails on checksum mismatch | Dataset modified without updated hash.                 | Run `make landcover-checksums` and recommit `.sha256` files.  |
-| File missing from directory   | New dataset added but no checksum generated.           | Execute `python src/utils/generate_checksums.py`.             |
-| STAC mismatch                 | STAC `checksum:sha256` value out of sync.              | Run `make stac` to refresh STAC metadata.                     |
-| Non-deterministic output      | Randomized compression or timestamps in TIFF metadata. | Enforce deterministic GDAL settings; set `SOURCE_DATE_EPOCH`. |
+| Issue                        | Likely Cause                             | Resolution                                             |
+| :--------------------------- | :--------------------------------------- | :----------------------------------------------------- |
+| CI fails checksum validation | File changed or re-exported post-ETL     | Run `make landcover-checksums` and recommit hashes.    |
+| Missing `.sha256`            | New dataset added without checksum       | Execute generator manually and add file.               |
+| STAC mismatch                | STAC entry out of sync with checksum     | Run `make stac` or sync via CI validator.              |
+| Non-deterministic TIFFs      | Metadata timestamps or compression drift | Use `SOURCE_DATE_EPOCH`, pin GDAL compression options. |
 
 ---
 
-## 🧠 MCP Compliance Summary
+## 🧠 MCP Compliance Matrix
 
-| MCP Principle           | Implementation                                                         |
-| :---------------------- | :--------------------------------------------------------------------- |
-| **Documentation-first** | Each dataset includes README and `.sha256` verification record.        |
-| **Reproducibility**     | SHA-256 ensures deterministic validation across systems.               |
-| **Open Standards**      | Employs SHA-256 (FIPS 180-4) and STAC Checksum extension.              |
-| **Provenance**          | Links ETL outputs with metadata and STAC collections for traceability. |
-| **Auditability**        | Continuous CI/CD validation with log retention ensures transparency.   |
+| MCP Principle           | Implementation                                      |
+| :---------------------- | :-------------------------------------------------- |
+| **Documentation-first** | Every dataset includes README + checksum record.    |
+| **Reproducibility**     | SHA-256 hashing ensures deterministic verification. |
+| **Open Standards**      | FIPS 180-4, STAC Checksum extension, UTF-8 paths.   |
+| **Provenance**          | ETL outputs tied to metadata and STAC items.        |
+| **Auditability**        | CI/CD gates, logs, and retention policies applied.  |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                                                          |
-| :------ | :--------- | :----------------------------------------------------------------------------------------------- |
-| v1.0.0  | 2025-10-04 | Initial checksum documentation — NLCD, vegetation, crop, and land use change datasets verified.  |
-| v1.1.0  | 2025-10-10 | Added canopy cover dataset, improved CI log integration, troubleshooting, and metadata linkages. |
+| Version  | Date       | Summary                                                                                                         |
+| :------- | :--------- | :-------------------------------------------------------------------------------------------------------------- |
+| **v1.2** | 2025-10-11 | Protocol v1.1 upgrade: front-matter, Mermaid workflow, CI parity enforcement, compression determinism guidance. |
+| **v1.1** | 2025-10-10 | Added canopy cover dataset, improved CI logs, STAC linkage.                                                     |
+| **v1.0** | 2025-10-04 | Initial land cover checksum documentation — NLCD, vegetation, crop, and land use datasets verified.             |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Pixel Proven: Verifying the Living Surface of Kansas.”*
-📍 [`data/checksums/landcover/`](.) · Linked to the **Land Cover STAC Collection** and Global Manifest Registry.
+**Kansas Frontier Matrix** — *Every Pixel Proven: Verifying the Living Surface of Kansas.*
+📍 [`data/checksums/landcover/`](.) · Linked to the **Land Cover STAC Collection** and **Global Manifest Registry**.
 
 </div>
 ```
