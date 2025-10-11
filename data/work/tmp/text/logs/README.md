@@ -3,16 +3,16 @@
 # 🧾 Kansas Frontier Matrix — Text ETL Logs  
 `data/work/tmp/text/logs/`
 
-**Mission:** Store **temporary ETL and NLP process logs** generated during text extraction, cleaning, entity recognition,  
-and QA/QC workflows — enabling transparency and traceability throughout the Kansas Frontier Matrix (KFM)  
-text and document processing pipelines.
+**Mission:** Maintain **transparent, traceable, and reproducible logs** for all text-processing stages —  
+including OCR extraction, NLP entity recognition, summarization, and quality validation —  
+across the Kansas Frontier Matrix (KFM) pipeline ecosystem.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../../LICENSE)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../../../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
 
 </div>
 
@@ -20,17 +20,20 @@ text and document processing pipelines.
 
 ## 📚 Overview
 
-The `data/work/tmp/text/logs/` directory temporarily stores **pipeline logs**  
-created during ETL and natural language processing (NLP) operations.  
+The `data/work/tmp/text/logs/` directory is the **temporary logging workspace**  
+for all **text ETL and NLP operations** within the Kansas Frontier Matrix.  
 
-These logs document:
-- OCR extraction, cleaning, and normalization steps  
-- NLP processes such as tokenization, summarization, and entity extraction  
-- Validation reports for text quality and schema conformity  
-- Metadata and checksum verification events  
+Each log entry contributes to **MCP-aligned transparency**, ensuring every step —  
+from OCR extraction to NLP model inference — is recorded, traceable, and reproducible.
 
-Logs are **ephemeral** — automatically generated and deleted during ETL runs —  
-but ensure full transparency in the transformation of textual data from raw source to structured output.
+**Captured operations include:**
+- 📰 **OCR extraction** from historical scans or documents  
+- 🧠 **NLP processes** (tokenization, summarization, entity extraction)  
+- 🧩 **Checksum & validation reports** for text schema compliance  
+- 🧾 **QA/QC event logs** tracking content normalization and errors  
+
+Logs are **ephemeral** but crucial for debugging, auditability, and QA reviews.  
+They are regenerated automatically during ETL runs and purged upon pipeline completion.
 
 ---
 
@@ -42,55 +45,84 @@ data/work/tmp/text/logs/
 ├── text_etl_debug.log
 ├── ocr_processing_report.log
 ├── nlp_entity_extraction.log
+├── summarization_audit.log
 └── text_checksum_audit.log
 ````
 
-> **Note:** Log filenames and content vary by active ETL task or NLP stage.
-> Logs are overwritten or regenerated with each run for reproducibility.
+> **Note:** Log files are temporary, overwritten per run, and follow domain-based naming conventions
+> (`ocr_`, `nlp_`, `summarization_`, `checksum_`, etc.) for clarity and traceability.
 
 ---
 
-## ⚙️ Logging Guidelines
+## ⚙️ Logging Framework
 
-| Log Type                      | Purpose                                                                                 |
-| :---------------------------- | :-------------------------------------------------------------------------------------- |
-| **`*_etl_debug.log`**         | Captures high-level ETL process details including file I/O and transformation sequence. |
-| **`*_processing_report.log`** | Summarizes OCR, text normalization, and cleaning steps.                                 |
-| **`*_entity_extraction.log`** | Lists identified entities (people, places, events) and their confidence levels.         |
-| **`*_checksum_audit.log`**    | Records validation results from hash verification and schema tests.                     |
+KFM pipelines use a modular logging system built with **Python’s `logging` library**
+and extended handlers to write **human-readable and machine-parsable logs**.
 
-All logs use **UTF-8 plain-text format** for portability and open review across systems.
+**Configuration Example (YAML):**
+
+```yaml
+version: 1
+formatters:
+  default:
+    format: "%(asctime)s — %(levelname)s — %(message)s"
+handlers:
+  file:
+    class: logging.FileHandler
+    filename: data/work/tmp/text/logs/text_etl_debug.log
+    formatter: default
+root:
+  level: INFO
+  handlers: [file]
+```
+
+Logs are emitted automatically from `src/pipelines/text/text_pipeline.py`
+and linked to ETL run metadata (pipeline ID, timestamp, dataset, runtime).
 
 ---
 
-## ⚙️ Log Management Workflow
+## 🧾 Log Types & Purposes
 
-Logs are generated automatically by KFM’s text ETL pipeline.
+| Log Type                        | Description                                                                           |
+| :------------------------------ | :------------------------------------------------------------------------------------ |
+| **`*_etl_debug.log`**           | Captures end-to-end ETL process flow, including file I/O and transformation sequence. |
+| **`*_ocr_processing.log`**      | Details OCR operations, including error corrections and page confidence.              |
+| **`*_entity_extraction.log`**   | Lists extracted entities (people, places, events) with model confidence scores.       |
+| **`*_summarization_audit.log`** | Records summarization input-output pairs for AI explainability and QA.                |
+| **`*_checksum_audit.log`**      | Contains hash validation, file comparison results, and schema test outcomes.          |
 
-**Makefile target:**
+All logs use **UTF-8 plain text**, ensuring cross-platform accessibility and archiving compatibility.
+
+---
+
+## 🧩 Log Lifecycle
+
+**Makefile Target:**
 
 ```bash
 make text
 ```
 
-**Python command:**
+**Python Invocation:**
 
 ```bash
 python src/pipelines/text/text_pipeline.py --log data/work/tmp/text/logs/text_etl_debug.log
 ```
 
-**Lifecycle:**
+**Lifecycle Steps:**
 
-1. Pipeline initializes → log file created or overwritten.
-2. Each OCR, NLP, or checksum step appends output and diagnostics.
-3. Logs are inspected for debugging or QA validation.
-4. Logs are purged automatically during cleanup or rebuild.
+1. Log file initialized with timestamp and pipeline metadata.
+2. Each OCR/NLP stage appends structured log entries.
+3. Errors or anomalies flagged with `WARNING` or `ERROR` levels.
+4. Logs analyzed post-run for QA or during automated tests.
+5. Old logs purged during cleanup cycles (`make clean-logs`).
 
 ---
 
 ## 🧹 Cleanup Policy
 
-This directory is cleaned automatically during maintenance or at the start of new ETL runs.
+**Automatic Purge:**
+Logs are removed at the start of every new ETL run or scheduled cleanup job.
 
 **Makefile target:**
 
@@ -98,66 +130,78 @@ This directory is cleaned automatically during maintenance or at the start of ne
 make clean-logs
 ```
 
-**Manual cleanup:**
+**Manual Command:**
 
 ```bash
 rm -rf data/work/tmp/text/logs/*
 ```
 
-Permanent files and validated metadata reside in:
-
-* `data/processed/text/` — Final structured text datasets
-* `data/checksums/text/` — Integrity hashes for reproducibility
-* `data/processed/metadata/text/` — STAC metadata for text and document assets
+> Logs should not be preserved beyond active QA or validation sessions.
+> Permanent metadata and audit trails are instead stored under `data/processed/metadata/text/`.
 
 ---
 
-## 🧩 Integration with Pipelines
+## 🧰 Integration with CI/CD and ETL Pipelines
 
-| Linked Component                      | Function                                               |
-| :------------------------------------ | :----------------------------------------------------- |
-| `src/pipelines/text/text_pipeline.py` | Generates ETL and NLP logs during pipeline execution.  |
-| `.github/workflows/stac-validate.yml` | Uses logs for checksum and schema diagnostics.         |
-| `data/work/tmp/text/`                 | Parent temporary workspace for text ETL intermediates. |
-| `data/processed/text/`                | Final cleaned and validated text outputs.              |
+| Linked Component                      | Purpose                                                   |
+| :------------------------------------ | :-------------------------------------------------------- |
+| `src/pipelines/text/text_pipeline.py` | Generates and manages log files for ETL/NLP runs.         |
+| `.github/workflows/stac-validate.yml` | Consumes logs for validation and error context.           |
+| `data/work/tmp/text/`                 | Parent workspace for transient text processing artifacts. |
+| `data/processed/text/`                | Stores final cleaned text datasets.                       |
+| `data/checksums/text/`                | Contains hash-based integrity validation records.         |
+| `data/processed/metadata/text/`       | Maintains persistent STAC metadata for provenance.        |
+
+---
+
+## 🔒 Security & Privacy Considerations
+
+| Category             | Policy                                                                  |
+| :------------------- | :---------------------------------------------------------------------- |
+| **Sensitive Data**   | Logs must exclude personal information or sensitive text fragments.     |
+| **Access Control**   | Logs are local-only and excluded from repository commits.               |
+| **Retention Period** | Logs persist only through the current pipeline cycle.                   |
+| **Anonymization**    | Named entities (if logged) should use anonymized or hashed identifiers. |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                      |
-| :---------------------- | :------------------------------------------------------------------ |
-| **Documentation-first** | README defines logging structure, lifecycle, and cleanup.           |
-| **Reproducibility**     | Logs capture deterministic ETL and NLP steps for traceability.      |
-| **Open Standards**      | Logs stored as UTF-8 text files; fully platform-agnostic.           |
-| **Provenance**          | Each log traces the lineage of text transformations and metadata.   |
-| **Auditability**        | Logs provide transparent records for debugging, QA, and validation. |
+| MCP Principle           | Implementation                                                          |
+| :---------------------- | :---------------------------------------------------------------------- |
+| **Documentation-first** | This README documents purpose, policies, and reproducibility of logs.   |
+| **Reproducibility**     | Logs deterministically capture ETL/NLP actions and outcomes.            |
+| **Open Standards**      | Logs written as UTF-8 text using standard logging schemas.              |
+| **Provenance**          | Each log links transformations to pipeline steps and metadata.          |
+| **Auditability**        | Provides clear traceability and transparency across all NLP operations. |
 
 ---
 
 ## 📎 Related Directories
 
-| Path                            | Description                                         |
-| :------------------------------ | :-------------------------------------------------- |
-| `data/work/tmp/text/`           | Temporary workspace for text ETL and NLP files.     |
-| `data/processed/text/`          | Final processed text and transcript datasets.       |
-| `data/checksums/text/`          | Integrity validation for text data reproducibility. |
-| `data/processed/metadata/text/` | Metadata and STAC catalog for text assets.          |
+| Path                            | Description                                           |
+| :------------------------------ | :---------------------------------------------------- |
+| `data/work/tmp/text/`           | Temporary sandbox for text ETL and NLP intermediates. |
+| `data/processed/text/`          | Final structured text datasets and summaries.         |
+| `data/checksums/text/`          | SHA-256 checksum manifests ensuring reproducibility.  |
+| `data/processed/metadata/text/` | STAC-compliant metadata for text assets.              |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                 |
-| :------ | :--------- | :------------------------------------------------------ |
-| v1.0    | 2025-10-04 | Initial creation of text ETL and NLP log documentation. |
-| v1.0.1  | 2025-10-09 | Added YAML metadata, JSON-LD schema, and MCP badges.    |
+| Version | Date       | Summary                                                                      |
+| :------ | :--------- | :--------------------------------------------------------------------------- |
+| v1.0.0  | 2025-10-04 | Initial documentation for text ETL and NLP logs.                             |
+| v1.1.0  | 2025-10-09 | Added schema compliance notes and STAC integration references.               |
+| v1.2.0  | 2025-10-10 | Upgraded YAML logging config, added privacy policy and lifecycle automation. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Word Accounted For. Every Step Logged.”*
-📍 [`data/work/tmp/text/logs/`](.) · Temporary ETL & NLP logging workspace for textual datasets.
+📍 [`data/work/tmp/text/logs/`](.) · Temporary ETL & NLP logging workspace for text pipelines and audit transparency.
 
 </div>
+```
