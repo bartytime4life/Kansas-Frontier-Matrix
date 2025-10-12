@@ -246,4 +246,3 @@ Any failure **blocks deploys** until corrected.
 > **Version:** v1.1.0 · **Status:** Stable · **MCP-Compliant**
 
 </div>
-```
