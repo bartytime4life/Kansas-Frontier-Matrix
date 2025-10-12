@@ -1,16 +1,18 @@
 <div align="center">
 
-# 🧭 Kansas Frontier Matrix — STAC Catalog  
-`data/stac/`
+# 📜 Kansas Frontier Matrix — Text Source Manifests
 
-**Mission:** Maintain a **SpatioTemporal Asset Catalog (STAC)** archive describing all datasets  
-within the Kansas Frontier Matrix (KFM) — providing a reproducible, discoverable, and  
-interoperable framework for managing spatial and temporal data assets.
+`data/sources/text/`
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+**Mission:** Curate, document, and validate all **external text-based datasets**—including digitized documents, OCR archives, oral histories, and treaty transcripts—
+that serve as the linguistic and narrative foundation for the Kansas Frontier Matrix (KFM).
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
+[![Schema Validate](https://img.shields.io/badge/JSON%20Schema-validated-success?logo=json)](../schema/source.schema.json)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
+[![License: Data (CC-BY 4.0)](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
@@ -18,205 +20,326 @@ interoperable framework for managing spatial and temporal data assets.
 
 ## 📚 Overview
 
-The `data/stac/` directory contains the **STAC 1.0.0-compliant catalog**  
-for all datasets and data products in the Kansas Frontier Matrix.  
+The `data/sources/text/` directory houses **JSON manifests** describing every external text-based source integrated into KFM—
+ranging from historical treaties and scanned documents to oral history transcripts and OCR corpora.
 
-Each STAC record describes:
-- **What** the dataset is (title, description, schema)  
-- **Where** and **when** it applies (spatial and temporal extent)  
-- **How** it was created (provenance, providers, and processing)  
-- **How** it can be accessed and reused (links, licenses, and assets)  
+These sources provide the **linguistic, historical, and cultural backbone** of the Kansas knowledge system.
 
-The STAC catalog ensures **discoverability, transparency, and reproducibility**  
-across all KFM data domains — terrain, hydrology, climate, landcover, hazards, tabular, and text.
+They support:
+
+* Historical document digitization and transcription
+* Named Entity Recognition (NER) and NLP enrichment
+* Treaty and land-cession tracking
+* Oral history integration within the knowledge graph
+* STAC-linked provenance for textual archives
+
+Each manifest adheres to `data/sources/schema/source.schema.json`, enabling transparent provenance, licensing,
+and automated validation through CI/CD workflows.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```bash
-data/stac/
+data/sources/text/
 ├── README.md
-├── catalog.json                 # Root STAC catalog (links to collections)
-├── terrain/                     # Terrain & elevation datasets
-│   ├── collection.json
-│   ├── ks_1m_dem_2018_2020.json
-│   └── ks_hillshade_2018_2020.json
-├── hydrology/                   # Rivers, basins, flood zones
-│   ├── collection.json
-│   └── watersheds_huc12_2019.json
-├── landcover/                   # Vegetation, land use, crop maps
-│   ├── collection.json
-│   └── nlcd_1992_2021.json
-├── climate/                     # Temperature, precipitation, drought indices
-│   ├── collection.json
-│   └── daymet_1980_2024.json
-├── hazards/                     # Tornado, wildfire, flood, drought hazards
-│   ├── collection.json
-│   └── flood_events_1900_2025.json
-├── tabular/                     # Structured data (census, agriculture, economy)
-│   ├── collection.json
-│   └── census_population_1860_2020.json
-└── text/                        # Historical documents, transcripts, OCR text
-    ├── collection.json
-    └── newspaper_articles_1850_1920.json
-````
+├── loc_chronicling_america.json      # Library of Congress historical newspaper corpus
+├── kshs_oral_histories.json          # Kansas Historical Society oral history transcripts
+└── yale_avalon_treaties.json         # Yale Avalon Project — historical treaties & legal texts
+```
 
 > **Note:**
-> Each subdirectory contains both a `collection.json` (group-level metadata)
-> and individual STAC **Items** (`.json`) describing datasets and assets.
+> Every manifest records dataset identifiers, licensing, provenance, and verification timestamps
+> to ensure archival integrity and scholarly reproducibility.
 
 ---
 
-## 🧩 STAC Metadata Structure
-
-Each dataset’s metadata follows the **STAC 1.0.0** specification
-and the **Master Coder Protocol (MCP)** standards for reproducibility.
-
-### 🧱 Example: STAC Item (`ks_1m_dem_2018_2020.json`)
+## 🗞️ Example: `loc_chronicling_america.json`
 
 ```json
 {
-  "stac_version": "1.0.0",
-  "type": "Feature",
-  "id": "ks_1m_dem_2018_2020",
-  "properties": {
-    "title": "Kansas LiDAR DEM (1m, 2018–2020)",
-    "description": "High-resolution Digital Elevation Model (DEM) derived from LiDAR data for Kansas.",
-    "datetime": "2020-01-01T00:00:00Z",
-    "proj:epsg": 4326,
-    "license": "Public Domain (USGS 3DEP)",
-    "themes": ["terrain", "elevation", "topography"],
-    "providers": [
-      {"name": "USGS 3DEP", "roles": ["producer"]},
-      {"name": "Kansas DASC", "roles": ["processor"]},
-      {"name": "Kansas Frontier Matrix", "roles": ["curator"]}
-    ]
-  },
-  "assets": {
-    "data": {
-      "href": "../../processed/terrain/ks_1m_dem_2018_2020.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"]
-    },
-    "thumbnail": {
-      "href": "../../processed/metadata/terrain/thumbnails/ks_1m_dem_2018_2020.png",
-      "type": "image/png",
-      "roles": ["thumbnail"]
-    }
-  },
-  "bbox": [-102.05, 36.99, -94.59, 40.00],
-  "links": [
-    {"rel": "root", "href": "../catalog.json"},
-    {"rel": "collection", "href": "collection.json"}
-  ]
+  "id": "loc_chronicling_america",
+  "title": "Library of Congress — Chronicling America Historical Newspaper Corpus",
+  "provider": "Library of Congress (LOC)",
+  "description": "Digitized and OCR-processed newspaper archives spanning 1789–1963.",
+  "endpoint": "https://chroniclingamerica.loc.gov/",
+  "access_method": "HTTP API",
+  "license": "Public Domain (US Government)",
+  "data_type": "text",
+  "format": "JSONL",
+  "spatial_coverage": "Kansas, USA",
+  "temporal_coverage": "1854–1963",
+  "update_frequency": "Monthly",
+  "last_verified": "2025-10-12",
+  "linked_pipeline": "text_pipeline.py",
+  "notes": "Used for NLP entity extraction, OCR correction, and timeline construction."
 }
 ```
 
 ---
 
-## ⚙️ STAC Validation & Automation
+## 🧭 System Context (GitHub-safe Mermaid)
 
-STAC metadata are **automatically validated** using the
-[`stac-validate.yml`](../../.github/workflows/stac-validate.yml) workflow in GitHub Actions.
-
-**Validation workflow:**
-
-1. Generate STAC Items and Collections via ETL (`make stac`).
-2. Run JSON Schema validation for structure compliance.
-3. Verify asset links and relative paths.
-4. Compute and confirm dataset checksums.
-5. Publish validated catalog to the KFM web interface.
-
-**Manual validation command:**
-
-```bash
-stac-validator data/stac/catalog.json
-```
-
-**Makefile target:**
-
-```bash
-make stac-validate
+```mermaid
+flowchart TD
+  A["External Text Archives\nLOC · KSHS · Yale Avalon"] --> B["Source Manifests\n`data/sources/text/*.json`"]
+  B --> C["ETL Pipeline\n`src/pipelines/text_pipeline.py`"]
+  C --> D["Processed Text Corpora\n`data/processed/text/`"]
+  D --> E["Derivatives\nTokenized · Parsed · Linked Text"]
+  D --> F["STAC Collections\n`data/stac/collections/text.json`"]
+  F --> G["Knowledge Graph\nPeople ↔ Places ↔ Events ↔ Documents"]
+  E --> H["Web UI\nSearch · Timeline · Document Viewer"]
+%%END OF MERMAID%%
 ```
 
 ---
 
-## 🧮 STAC Collections & Domains
+## 🧾 Text Source Summary
 
-| Domain        | Directory              | Description                                           |
-| :------------ | :--------------------- | :---------------------------------------------------- |
-| **Terrain**   | `data/stac/terrain/`   | DEMs, hillshades, and topographic derivatives.        |
-| **Hydrology** | `data/stac/hydrology/` | Rivers, watersheds, aquifers, and flood zones.        |
-| **Landcover** | `data/stac/landcover/` | Vegetation, crop distribution, and land use changes.  |
-| **Climate**   | `data/stac/climate/`   | Temperature, precipitation, and drought indices.      |
-| **Hazards**   | `data/stac/hazards/`   | Natural hazard maps and temporal event layers.        |
-| **Tabular**   | `data/stac/tabular/`   | Structured data (census, agriculture, economy).       |
-| **Text**      | `data/stac/text/`      | Documents, OCR outputs, and historical text archives. |
-
-Each collection maintains a `collection.json` describing its datasets and
-links to `catalog.json` for hierarchical navigation.
+| Manifest File                  | Provider    | Description                                   | Coverage          | Format   | Verified     |
+| :----------------------------- | :---------- | :-------------------------------------------- | :---------------- | :------- | :----------- |
+| `loc_chronicling_america.json` | LOC         | OCR-based historical newspapers               | Kansas            | JSONL    | ✅ 2025-10-12 |
+| `kshs_oral_histories.json`     | KSHS        | Transcribed oral histories and interviews     | Kansas            | TXT      | ✅ 2025-10-12 |
+| `yale_avalon_treaties.json`    | Yale Avalon | Historical treaty and legal document archives | National / Global | HTML/TXT | ✅ 2025-10-12 |
 
 ---
 
-## 🧹 Maintenance & Rebuilding
+## 🧾 ETL Integration
 
-The STAC catalog can be rebuilt or refreshed at any time to reflect new data additions or metadata updates.
+**Pipeline:** `src/pipelines/text_pipeline.py`
+**Target Directory:** `data/processed/text/`
 
-**Makefile target:**
+### Workflow
+
+1. **Validate** manifests against schema (`make sources-validate`)
+2. **Ingest** text sources via HTTP/API or download
+3. **Normalize** (UTF-8 encoding, OCR cleanup, metadata tagging)
+4. **Tokenize** and extract entities via NLP pipeline
+5. **Link** documents to STAC items and knowledge graph entities
+6. **Publish** checksums and metadata to GitHub
+
+---
+
+## 🧪 Validation Commands
+
+**Manual Validation**
 
 ```bash
-make stac
+python src/utils/validate_sources.py data/sources/text/ --schema data/sources/schema/source.schema.json
 ```
 
-**Manual rebuild:**
+**Make Targets**
 
 ```bash
-python src/utils/build_stac_catalog.py --root data/stac/
+make text-sources
+make text-validate
 ```
 
-**Cleanup (optional):**
+**CI/CD Checks**
 
-```bash
-make clean-stac
-```
+* Schema structure validation
+* Endpoint and access check
+* License and attribution validation
+* Encoding consistency verification
+* Changelog generation on manifest update
+
+---
+
+## 🧩 Provenance Integration
+
+| Component                         | Function                                              |
+| :-------------------------------- | :---------------------------------------------------- |
+| `data/raw/text/`                  | Original OCR or transcript data                       |
+| `data/processed/text/`            | Cleaned and NLP-enriched textual datasets             |
+| `data/stac/collections/text.json` | STAC metadata linking back to manifests               |
+| `data/checksums/text/`            | SHA-256 integrity verification for processed corpora  |
+| `src/pipelines/text_pipeline.py`  | ETL process linking text sources to downstream assets |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                   |
-| :---------------------- | :--------------------------------------------------------------- |
-| **Documentation-first** | README documents STAC structure, workflow, and compliance.       |
-| **Reproducibility**     | STAC catalog generated deterministically via ETL scripts.        |
-| **Open Standards**      | Uses STAC 1.0.0, JSON Schema, and OGC metadata standards.        |
-| **Provenance**          | Each STAC record contains source, process, and provider details. |
-| **Auditability**        | Continuous STAC validation ensures full metadata traceability.   |
+| MCP Principle           | Implementation                                                  |
+| :---------------------- | :-------------------------------------------------------------- |
+| **Documentation-first** | Each text dataset captured in a JSON manifest before ingestion. |
+| **Reproducibility**     | ETL steps controlled via manifest-driven pipelines.             |
+| **Open Standards**      | JSON Schema · UTF-8 · STAC 1.0 · NLP Metadata JSON.             |
+| **Provenance**          | Traceable lineage: manifest → processed → knowledge graph.      |
+| **Auditability**        | CI-validated manifests and checksum enforcement.                |
 
 ---
 
-## 📎 Related Directories
+## 🧾 Changelog
 
-| Path                       | Description                                                  |
-| :------------------------- | :----------------------------------------------------------- |
-| `data/processed/metadata/` | Dataset-level metadata files linked to STAC assets.          |
-| `data/checksums/`          | SHA-256 verification ensuring asset integrity.               |
-| `data/tiles/`              | Raster and vector tiles linked as STAC visualization assets. |
-| `web/config/`              | Layer configuration files referencing STAC collections.      |
+| Version  | Date       | Summary                                                                   |
+| :------- | :--------- | :------------------------------------------------------------------------ |
+| **v1.1** | 2025-10-12 | Added workflow diagram, validation workflow, and LOC/KSHS/Yale manifests. |
+| v1.0     | 2025-10-04 | Initial creation of text source manifest documentation.                   |
 
 ---
 
-## 📅 Version History
+## 🏷️ Version Block
 
-| Version | Date       | Summary                                                                                    |
-| :------ | :--------- | :----------------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial STAC directory documentation — includes catalog hierarchy and validation workflow. |
+```text
+Component: data/sources/text/README.md
+SemVer: 1.1.0
+Spec Dependencies: MCP v1.0 · STAC 1.0
+Last Updated: 2025-10-12
+Maintainer: @bartytime4life
+```
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Cataloging Time, Terrain, and History — One Record at a Time.”*
-📍 [`data/stac/`](.) · Central STAC catalog for all datasets in the Kansas Frontier Matrix.
+**Kansas Frontier Matrix** — *“Voices of the past become data for the future.”*
+📍 [`data/sources/text/`](.) · Canonical registry of historical and linguistic sources powering KFM’s narrative and document intelligence.
+
+</div>
+
+
+<div align="center">
+
+# 📜 Kansas Frontier Matrix — Text Source Manifests
+
+`data/sources/text/`
+
+**Mission:** Curate, document, and validate all **external text-based data sources** that provide the historical and linguistic backbone for the Kansas Frontier Matrix (KFM).
+These include digitized newspapers, OCR archives, oral histories, and treaty collections that together form the state’s narrative record.
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
+[![Schema Validate](https://img.shields.io/badge/JSON%20Schema-validated-success?logo=json)](../schema/source.schema.json)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+
+</div>
+
+---
+
+## 📚 Overview
+
+`data/sources/text/` contains **JSON manifests** for every text source used in KFM.
+Each manifest captures provenance, licensing, endpoints, and temporal coverage so that
+narrative materials—newspapers, oral histories, treaties—can be ingested, parsed, and linked to the Knowledge Graph.
+
+---
+
+## 🗂️ Directory Layout
+
+```bash
+data/sources/text/
+├── README.md
+├── loc_chronicling_america.json      # Library of Congress newspaper corpus
+├── kshs_oral_histories.json          # Kansas Historical Society transcripts
+└── yale_avalon_treaties.json         # Yale Avalon Project treaties & legal docs
+```
+
+---
+
+## 🗞️ Example Manifest
+
+```json
+{
+  "id": "loc_chronicling_america",
+  "title": "Library of Congress – Chronicling America",
+  "provider": "Library of Congress",
+  "description": "OCR-processed historical newspaper pages (1789–1963).",
+  "endpoint": "https://chroniclingamerica.loc.gov/",
+  "access_method": "HTTP API",
+  "license": "Public Domain (US Government)",
+  "data_type": "text",
+  "format": "JSONL",
+  "spatial_coverage": "Kansas, USA",
+  "temporal_coverage": "1854–1963",
+  "update_frequency": "Monthly",
+  "last_verified": "2025-10-12",
+  "linked_pipeline": "text_pipeline.py",
+  "notes": "Used for OCR cleanup, entity extraction, and temporal indexing."
+}
+```
+
+---
+
+## 🧭 System Context (GitHub-safe Mermaid)
+
+```mermaid
+flowchart TD
+  A["External Text Archives\nLOC · KSHS · Yale Avalon"] --> B["Source Manifests\n`data/sources/text/*.json`"]
+  B --> C["ETL Pipeline\n`src/pipelines/text_pipeline.py`"]
+  C --> D["Processed Text Corpora\n`data/processed/text/`"]
+  D --> E["Derivatives\nTokenized · Parsed · Linked Text"]
+  D --> F["STAC Collections\n`data/stac/collections/text.json`"]
+  F --> G["Knowledge Graph\nPeople ↔ Places ↔ Events ↔ Documents"]
+%%END OF MERMAID%%
+```
+
+---
+
+## ⚙️ ETL Integration
+
+**Pipeline:** `src/pipelines/text_pipeline.py`
+**Output:** `data/processed/text/`
+
+### Steps
+
+1. Validate manifests (`make sources-validate`)
+2. Fetch text data via API or HTTP
+3. Normalize encodings and metadata
+4. Tokenize & extract named entities (NER)
+5. Link results to STAC and Knowledge Graph
+6. Publish checksums & provenance logs
+
+---
+
+## 🧩 Provenance Integration
+
+| Component                         | Function                            |
+| --------------------------------- | ----------------------------------- |
+| `data/raw/text/`                  | Original OCR or transcript files    |
+| `data/processed/text/`            | Cleaned & NLP-ready corpora         |
+| `data/stac/collections/text.json` | STAC metadata links                 |
+| `data/checksums/text/`            | SHA-256 verification                |
+| `src/pipelines/text_pipeline.py`  | Orchestrates ingestion & enrichment |
+
+---
+
+## 🧠 MCP Compliance Summary
+
+| MCP Principle           | Implementation                               |
+| ----------------------- | -------------------------------------------- |
+| **Documentation-first** | Every corpus defined by a JSON manifest.     |
+| **Reproducibility**     | Deterministic ETL using manifest parameters. |
+| **Open Standards**      | JSON Schema · UTF-8 · STAC 1.0.              |
+| **Provenance**          | Manifest → Processed → STAC → Graph.         |
+| **Auditability**        | CI validation and checksum enforcement.      |
+
+---
+
+## 🧾 Changelog
+
+| Version  | Date       | Summary                                                    |
+| -------- | ---------- | ---------------------------------------------------------- |
+| **v1.1** | 2025-10-12 | Added diagram, validation workflow, and manifest examples. |
+| v1.0     | 2025-10-04 | Initial creation of text source documentation.             |
+
+---
+
+## 🏷️ Version Block
+
+```text
+Component: data/sources/text/README.md
+SemVer: 1.1.0
+Spec Dependencies: MCP v1.0 · STAC 1.0
+Last Updated: 2025-10-12
+Maintainer: @bartytime4life
+```
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix** — *“Voices of the past become data for the future.”*
+📍 [`data/sources/text/`](.) · Canonical registry of historical and linguistic sources powering KFM’s narrative intelligence.
 
 </div>
