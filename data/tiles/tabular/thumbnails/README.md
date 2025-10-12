@@ -1,4 +1,4 @@
-div align="center">
+<div align="center">
 
 # 🖼️ Kansas Frontier Matrix — Tabular Thumbnails  
 `data/tiles/tabular/thumbnails/`
@@ -185,4 +185,3 @@ Tabular thumbnails enhance interpretability and support AI-driven analysis:
 
 </div>
 ```
-
