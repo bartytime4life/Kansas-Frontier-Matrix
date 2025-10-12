@@ -1,35 +1,52 @@
 <div align="center">
 
-# 📜 Kansas Frontier Matrix — Text Checksums  
+# 📜 Kansas Frontier Matrix — Text Checksums
+
 `data/processed/checksums/text/`
 
-**Mission:** Preserve the **integrity, provenance, and reproducibility** of all processed **textual datasets** —  
-including historical newspapers, oral histories, treaties, and transcripts — through verified SHA-256 checksums  
-that uphold the principles of open, auditable scholarship under the Master Coder Protocol (MCP).
+**Mission:** Safeguard the **integrity, provenance, and reproducibility** of all processed **textual datasets** —
+historical newspapers, oral histories, treaties, and transcripts — via verified **SHA-256 checksums**.
+These hashes anchor **transparent, auditable scholarship** under the **Master Coder Protocol (MCP)**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+[![License · Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+[![License · Code](https://img.shields.io/badge/License-MIT-yellow)](../../../../LICENSE)
 
 </div>
 
 ---
 
+## 🧩 Versioning
+
+| Field            | Value                                        |
+| :--------------- | :------------------------------------------- |
+| **Version**      | `v1.0.2`                                     |
+| **Status**       | Stable                                       |
+| **Maintainer**   | Kansas Frontier Matrix Data Engineering Team |
+| **Last Updated** | 2025-10-12                                   |
+| **Applies To**   | All datasets under `data/processed/text/`    |
+| **Provenance**   | MCP v1.0 · STAC 1.0.0 · SHA-256 Verified     |
+
+---
+
 ## 📚 Overview
 
-This directory contains **SHA-256 checksum files (`.sha256`)** for all processed **text datasets**  
-in the Kansas Frontier Matrix (KFM).  
+This directory stores **`.sha256` manifests** for every processed text dataset.
+Each hash acts as a **cryptographic fingerprint**, proving that a file remains unchanged since verification.
 
-Each checksum acts as a **cryptographic signature** that ensures:
-- 📜 **Integrity** — text files remain unmodified from their validated state.  
-- 🔁 **Reproducibility** — AI/NLP and OCR workflows yield consistent outputs.  
-- 🔗 **Provenance** — datasets remain traceable across source → metadata → STAC → publication.  
-- ⚙️ **Auditability** — every checksum is continuously validated in CI/CD workflows.
+**Guarantees**
 
-Checksums are automatically generated during the **text ETL pipeline** (`make text`) and revalidated  
-via GitHub Actions to ensure project-wide reproducibility and authenticity.
+| Symbol | Property        | Description                                      |
+| :----- | :-------------- | :----------------------------------------------- |
+| 📜     | Integrity       | Detects unauthorized modification or corruption. |
+| 🔁     | Reproducibility | Ensures deterministic NLP / OCR outputs.         |
+| 🔗     | Provenance      | Links datasets → metadata → STAC → publication.  |
+| ⚙️     | Auditability    | CI/CD workflows continuously validate hashes.    |
+
+Checksums are generated automatically in the **text ETL pipeline** (`make text`) and re-verified in GitHub Actions.
 
 ---
 
@@ -41,125 +58,124 @@ data/processed/checksums/text/
 ├── newspaper_articles_1850_1920.jsonl.sha256
 ├── oral_histories_transcripts.json.sha256
 └── treaties_legislation_1820_1900.json.sha256
+```
 
-Each .sha256 corresponds 1:1 to its dataset in data/processed/text/.
-CI workflows (stac-validate.yml) re-hash all text files during builds to verify their immutability.
+Each `.sha256` file corresponds 1 : 1 with its dataset in `data/processed/text/`.
+`stac-validate.yml` rehashes these during every build to confirm immutability.
 
-⸻
+---
 
-🎯 Purpose
+## ⚙️ Checksum Generation Workflow
 
-Objective	Description
-Integrity Verification	Detects file corruption or unauthorized edits post-processing.
-Reproducibility	Confirms deterministic AI/NLP and OCR pipeline outputs.
-Provenance Tracking	Connects processed datasets with STAC metadata and source lineage.
-CI Enforcement	Automated validation ensures MCP reproducibility and audit compliance.
+Checksums are created automatically after ETL completion or manually when validating updates.
 
+### Makefile target
 
-⸻
-
-🧮 Example .sha256 File
-
-# File: newspaper_articles_1850_1920.jsonl.sha256
-acbbfca1d5e56b2ef14898ce22d0837ffb7341a912d1b5206de91f08a64cc8b1  newspaper_articles_1850_1920.jsonl
-
-This checksum authenticates the text dataset
-data/processed/text/newspaper_articles_1850_1920.jsonl, ensuring it matches the last verified build artifact.
-
-⸻
-
-⚙️ Checksum Generation Workflow
-
-Checksums are produced automatically after text ETL completion.
-
-Makefile target
-
+```bash
 make text-checksums
+```
 
-Equivalent Python utility
+### Python utility
 
+```bash
 python src/utils/generate_checksums.py data/processed/text/ --algo sha256
+```
 
-Steps
-	1.	Locate processed text datasets (.txt, .json, .jsonl, .csv).
-	2.	Compute SHA-256 hash using Python’s hashlib or GNU sha256sum --binary.
-	3.	Write <filename>.sha256 files into this directory.
-	4.	Validate these hashes automatically in CI/CD workflows.
+**Steps**
 
-💡 Use sha256sum --binary for platform-independent hash generation.
+1. Locate processed text datasets (`.txt`, `.json`, `.jsonl`, `.csv`).
+2. Compute SHA-256 hash using Python `hashlib` or `sha256sum --binary`.
+3. Write `<filename>.sha256` files into this directory.
+4. CI/CD validates them automatically.
 
-⸻
+💡 Use `--binary` for platform-independent consistency.
 
-🔎 CI/CD Validation
+---
 
-Checksum validation runs automatically in GitHub Actions workflows for every build or PR.
+## 🔎 CI/CD Validation
 
-Example validation command
+Validation runs automatically for every build or PR:
 
+```bash
 sha256sum -c data/processed/checksums/text/*.sha256
+```
 
-If any mismatch is detected, the pipeline fails, blocking merges or deployments
-until the affected dataset is reprocessed and revalidated.
-All validation logs are archived to maintain a permanent MCP audit trail.
+If any mismatch occurs, the pipeline fails, blocking merge or deploy until fixed.
+Validation logs are archived to preserve a full MCP audit trail.
 
-⸻
+---
 
-🧩 Integration with Metadata & STAC
+## 🧩 Integration with Metadata & STAC
 
-Linked Component	Purpose
-data/processed/metadata/text/	STAC Items reference .sha256 for dataset integrity.
-src/pipelines/text/text_pipeline.py	Automates hash generation and verification within ETL.
-.github/workflows/stac-validate.yml	CI workflow verifying checksum and STAC metadata compliance.
-data/stac/text/	STAC catalog embeds SHA-256 digests in assets.checksum:sha256.
+| Linked Component                      | Purpose                                               |
+| :------------------------------------ | :---------------------------------------------------- |
+| `data/processed/metadata/text/`       | STAC Items reference `.sha256` digests for integrity. |
+| `src/pipelines/text/text_pipeline.py` | Automates hash generation + verification.             |
+| `.github/workflows/stac-validate.yml` | Runs checksum + STAC schema validation.               |
+| `data/stac/text/`                     | Embeds digests in `assets.checksum:sha256`.           |
 
+---
 
-⸻
+## 🧠 MCP Compliance Summary
 
-🧠 MCP Compliance Summary
+| MCP Principle       | Implementation                                            |
+| :------------------ | :-------------------------------------------------------- |
+| Documentation-first | Every dataset has a paired `.sha256` and metadata record. |
+| Reproducibility     | Hashes prove deterministic NLP/OCR outputs.               |
+| Open Standards      | SHA-256 (FIPS 180-4) ensures cross-platform consistency.  |
+| Provenance          | Hashes link datasets across metadata → STAC → source.     |
+| Auditability        | CI/CD enforces continuous verification + changelogs.      |
 
-MCP Principle	Implementation
-Documentation-first	Each dataset has corresponding .sha256 and metadata record.
-Reproducibility	Hashes confirm deterministic NLP/OCR results and unchanged artifacts.
-Open Standards	SHA-256 (FIPS 180-4) ensures robust cross-platform consistency.
-Provenance	Hashes link datasets across metadata, STAC, and source archives.
-Auditability	CI/CD workflows enforce continuous verification and changelog transparency.
+---
 
+## 🧮 Maintenance & Best Practices
 
-⸻
+* 🔄 **Refresh** checksums after any reprocessing or pipeline change.
+* 🧾 **Filename match** checksums exactly to datasets.
+* 📜 **Update mcp_provenance** fields when regenerating hashes.
+* 🧪 **Batch audits** via `_manifest_all.sha256`.
+* ⚙️ **Automation** with pre-commit hooks to prevent stale hashes.
 
-🧮 Maintenance & Best Practices
-	•	🔄 Checksum Refresh: Regenerate checksums after reprocessing or NLP pipeline updates.
-	•	🧾 Naming Consistency: Ensure checksum filenames match exactly with their dataset names.
-	•	📜 Version Tracking: Update mcp_provenance fields in STAC/metadata after regenerating hashes.
-	•	🧪 Bulk Validation: Maintain a _manifest_all.sha256 for large-scale text audits.
-	•	⚙️ Automation: Add pre-commit hooks to prevent stale or missing checksums in commits.
+---
 
-⸻
+## 🧭 Mermaid Data Flow
 
-📅 Version History
+```mermaid
+flowchart TD
+  A["Text Sources<br/>newspapers · oral histories · treaties"] --> B["ETL Process<br/>OCR · NLP · cleaning"]
+  B --> C["Processed Text Data<br/>JSONL · CSV · TXT"]
+  C --> D["Checksum Generation<br/>sha256sum per file"]
+  D --> E["Verification<br/>CI/CD · manual audit"]
+  E --> F["Catalog & Provenance<br/>STAC · MCP metadata"]
+  F --> G["Publication<br/>Data Hub · GitHub Pages · Google Earth"]
+%% END OF MERMAID %%
+```
 
-Version	Date	Summary
-1.0.1	2025-10-10	Upgraded README with CI/CD integration, MCP best practices, and workflow steps.
-1.0.0	2025-10-04	Initial text checksum documentation and validation manifests.
+---
 
+## 📅 Version History
 
-⸻
+| Version   | Date       | Summary                                                  |
+| :-------- | :--------- | :------------------------------------------------------- |
+| **1.0.2** | 2025-10-12 | Added Mermaid visualization and versioning metadata.     |
+| **1.0.1** | 2025-10-10 | Enhanced CI/CD integration and MCP best practices.       |
+| **1.0.0** | 2025-10-04 | Initial checksum documentation and validation manifests. |
 
-📖 References
-	•	GNU Coreutils — SHA utilities: https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html
-	•	STAC 1.0 Specification: https://stacspec.org
-	•	JSON Schema: https://json-schema.org
-	•	MCP Standards (KFM): ../../../../docs/standards/
-	•	Open Data Provenance: https://www.nature.com/articles/s41597-019-0193-2
+---
 
-⸻
+## 📖 References
 
+* 🔗 [GNU Coreutils SHA Utilities](https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html)
+* 🌐 [STAC 1.0 Specification](https://stacspec.org)
+* 🧩 [JSON Schema](https://json-schema.org)
+* 📘 [MCP Standards (KFM)](../../../../docs/standards/)
+* 🧭 [Data Provenance in Open Science](https://www.nature.com/articles/s41597-019-0193-2)
+
+---
 
 <div align="center">
 
-
-Kansas Frontier Matrix — “Every Word Verified: Integrity in the Historical Record.”
-📍 data/processed/checksums/text/ · Linked to the Text STAC Collection
+> **Kansas Frontier Matrix — “Every Word Verified: Integrity in the Historical Record.”**
+> 📍 `data/processed/checksums/text/` · Linked to the Text STAC Collection
 
 </div>
-```
