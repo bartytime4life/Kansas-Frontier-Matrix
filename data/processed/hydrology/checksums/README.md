@@ -1,53 +1,67 @@
 <div align="center">
 
-# 💧 Kansas-Frontier-Matrix — Processed Hydrology Checksums (`data/processed/hydrology/checksums/`)
+# 💧 Kansas Frontier Matrix — Processed Hydrology Checksums  
+`data/processed/hydrology/checksums/`
 
-**Mission:** Store and maintain **checksum files (`.sha256`)** that verify the integrity of all processed hydrology datasets —  
-sink-filled DEMs, flow direction and accumulation grids, and water masks — ensuring accuracy, reproducibility,  
-and data provenance throughout the Kansas Frontier Matrix hydrologic modeling system.
+**Mission:** Store and maintain **checksum manifests (`.sha256`)** verifying the integrity of all processed hydrology datasets —  
+sink-filled DEMs, flow direction and accumulation grids, and water masks — ensuring **accuracy, reproducibility,**  
+and **provenance integrity** throughout the Kansas Frontier Matrix (KFM) hydrologic modeling system.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
+[![Build & Deploy](https://img.shields.io/badge/CI-Build%20%26%20Deploy-blue)](../../../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/badge/STAC-Validate-green)](../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/badge/CodeQL-Security-yellow)](../../../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/badge/Container-Scan-informational)](../../../../.github/workflows/trivy.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![License: Code](https://img.shields.io/badge/License-MIT-yellow)](../../../../LICENSE)
+[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../LICENSE)
+[![License: Code](https://img.shields.io/badge/License-MIT-lightgrey)](../../../../LICENSE)
 
 </div>
 
 ---
 
+**Version:** v1.1.0  
+**Status:** Stable  
+**Last updated:** 2025-10-11  
+
+> Each `.sha256` file serves as a **cryptographic fingerprint** that binds every processed hydrology raster or vector dataset  
+> to its MCP provenance chain, STAC metadata, and automated CI validation.
+
+---
+
 ## 📚 Table of Contents
-- [Overview](#overview)
-- [Purpose](#purpose)
-- [Directory Layout](#directory-layout)
-- [Checksum Standards](#checksum-standards)
-- [Verification Workflow](#verification-workflow)
-- [Integration with MCP & STAC](#integration-with-mcp--stac)
-- [Adding or Updating Checksums](#adding-or-updating-checksums)
-- [References](#references)
+- [Overview](#-overview)
+- [Purpose](#-purpose)
+- [Directory Layout](#-directory-layout)
+- [Checksum Standards](#-checksum-standards)
+- [Verification Workflow](#-verification-workflow)
+- [Integration with MCP & STAC](#-integration-with-mcp--stac)
+- [Data Flow](#-data-flow)
+- [Adding or Updating Checksums](#-adding-or-updating-checksums)
+- [Version History](#-version-history)
+- [References](#-references)
 
 ---
 
 ## 🧠 Overview
+This folder contains **SHA-256 checksum files** for all processed hydrology datasets stored in  
+`data/processed/hydrology/`. These ensure data authenticity for sink-filled DEMs, D8 flow rasters,  
+accumulation grids, and water masks — foundational surfaces for flood modeling and watershed analysis.
 
-This folder contains **SHA-256 checksum files** for all processed hydrology products stored in  
-`data/processed/hydrology/`. Each checksum ensures the **data integrity** of hydrologic rasters  
-and vector datasets that form the foundation of flow modeling and watershed delineation pipelines  
-in the Kansas Frontier Matrix project.
-
-Checksums are essential for maintaining a **verifiable lineage** between raw source DEMs,  
-processed hydrologic layers, and their corresponding metadata and STAC catalog entries.
+Checksums establish **immutable provenance** between:
+- physical files (`.tif`, `.geojson`)  
+- metadata (`data/processed/hydrology/metadata/*.json`)  
+- STAC catalog items (`data/stac/hydrology/`)
 
 ---
 
 ## 🎯 Purpose
 
-- **Integrity Verification:** Ensure hydrology datasets are not corrupted or modified after generation.  
-- **Reproducibility:** Confirm datasets can be regenerated to match their original cryptographic signature.  
-- **Provenance Tracking:** Link every dataset to its corresponding `mcp_provenance` record in metadata.  
-- **Automation:** Support automated checksum verification in CI/CD workflows and `make validate-hydro`.  
+| Goal | Description |
+|:------|:-------------|
+| **Integrity** | Detect corruption or alteration in hydrology datasets |
+| **Reproducibility** | Guarantee regenerated data matches stored fingerprints |
+| **Automation** | Enable CI/CD validation via `make validate-hydro` |
+| **Provenance** | Link physical datasets with MCP & STAC metadata |
 
 ---
 
@@ -66,8 +80,7 @@ data/
             └── README.md
 ````
 
-Each `.sha256` file corresponds to one dataset in the parent directory and contains a
-cryptographic hash in GNU Coreutils format:
+Each `.sha256` file corresponds **1:1** with a processed artifact and contains a hash in GNU format:
 
 ```text
 2ef54c72b13c6a4e9c1acdb3b3e2dfae4d6cfbe85c51b38e9d1e278c66a4ff4a  flow_dir_d8_1m_ks.tif
@@ -77,110 +90,156 @@ cryptographic hash in GNU Coreutils format:
 
 ## 🧩 Checksum Standards
 
-| Standard    | Algorithm                   | Output                         | Description                                  |
-| ----------- | --------------------------- | ------------------------------ | -------------------------------------------- |
-| **SHA-256** | 256-bit secure hash         | 64-character hex               | Cryptographic fingerprint for file integrity |
-| **Format**  | GNU Coreutils (`sha256sum`) | `<hash>  <filename>`           | Machine- and human-readable format           |
-| **Mode**    | Binary (`--binary`)         | Prevents newline discrepancies | Platform-independent reproducibility         |
+| Parameter     | Specification                                    |
+| :------------ | :----------------------------------------------- |
+| **Algorithm** | SHA-256 (256-bit secure hash)                    |
+| **Format**    | `<hash>  <filename>` (GNU `sha256sum` style)     |
+| **Encoding**  | Binary (`--binary`) for cross-platform stability |
+| **Purpose**   | Immutable file identity for MCP/STAC provenance  |
 
-Each checksum acts as a **digital fingerprint**, uniquely identifying each processed file version.
+Each hash provides a **unique digital signature** per dataset version.
 
 ---
 
 ## 🔍 Verification Workflow
 
-To verify hydrology datasets locally:
+**Manual Verification**
 
 ```bash
-# Verify a single dataset
+# Verify one dataset
 sha256sum -c data/processed/hydrology/checksums/flow_dir_d8_1m_ks.tif.sha256
 
-# Verify all hydrology checksums
+# Verify all checksums
 find data/processed/hydrology/checksums -name "*.sha256" -exec sha256sum -c {} \;
 ```
 
-**Expected output:**
+Expected output:
 
 ```
 flow_dir_d8_1m_ks.tif: OK
 watermask_ks.tif: OK
 ```
 
-If discrepancies exist:
+Failure output:
 
 ```
 dem_filled_1m_ks.tif: FAILED
 sha256sum: WARNING: 1 computed checksum did NOT match
 ```
 
-### CI/CD Integration
+**CI/CD Validation**
 
-Checksum verification is built into the repository’s automated testing pipeline via
-`.github/workflows/stac-validate.yml`, which ensures every commit maintains verified integrity.
+Checksum integrity is automatically verified by
+`.github/workflows/stac-validate.yml` on each PR or merge.
 
 ---
 
 ## 🌐 Integration with MCP & STAC
 
-Checksums provide the **link between file integrity and semantic metadata** layers.
+Checksums bridge the **file**, **metadata**, and **catalog** layers.
 
 1. **MCP Provenance**
-   Each metadata record includes a corresponding checksum reference:
 
    ```json
    "mcp_provenance": "sha256:2ef54c72b13c6a4e9c1acdb3b3e2dfae4d6cfbe85c51b38e9d1e278c66a4ff4a"
    ```
 
-   This connects physical data files to their documented lineage.
+   → recorded in the dataset’s metadata JSON.
 
-2. **STAC Catalog Integration**
-   Each hydrology STAC item (`data/stac/items/hydro_*`) embeds the same checksum hash
-   for cross-layer verification and discoverability.
+2. **STAC Catalog**
 
-This integration ensures every hydrologic product remains scientifically verifiable and machine-traceable.
+   ```json
+   "checksum": {
+     "href": "../checksums/flow_dir_d8_1m_ks.tif.sha256",
+     "type": "text/plain",
+     "roles": ["metadata"]
+   }
+   ```
+
+   → embedded in STAC Items under `data/stac/hydrology/`.
+
+Together they form a **cross-verifiable data provenance system**.
+
+---
+
+## 🧭 Data Flow
+
+```mermaid
+flowchart TD
+  A["Processed Hydrology Datasets\n(COG · GeoJSON)"] --> B["Checksum Generation\n(sha256sum / ETL)"]
+  B --> C["Checksum Files\n(.sha256)"]
+  C --> D["Metadata JSON\n(mcp_provenance field)"]
+  D --> E["STAC Items\n(checksum assets)"]
+  E --> F["CI Validation\n(stac-validate.yml)"]
+  F --> G["Verified Provenance Ledger\n(MCP Chain)"]
+```
+
+% END OF MERMAID %
 
 ---
 
 ## ⚙️ Adding or Updating Checksums
 
-1. Generate new checksum:
+1. **Generate checksum**
 
    ```bash
    sha256sum <dataset> > data/processed/hydrology/checksums/<dataset>.sha256
    ```
-2. Verify file integrity:
+2. **Validate locally**
 
    ```bash
    sha256sum -c data/processed/hydrology/checksums/<dataset>.sha256
    ```
-3. Update metadata (`data/processed/hydrology/metadata/<dataset>.json`)
-   with the new `mcp_provenance` value.
-4. Run validation:
+3. **Update metadata**
+   Add the new hash under `mcp_provenance` in
+   `data/processed/hydrology/metadata/<dataset>.json`.
+4. **Validate repository**
 
    ```bash
    make validate-hydro
    ```
-5. Commit both the dataset and checksum file together, then open a Pull Request.
+5. **Commit & push**
+   Include both dataset + checksum file → PR triggers CI validation.
 
-Automated CI/CD will verify integrity before merging.
+---
+
+## 🧠 MCP Compliance Summary
+
+| MCP Principle           | Implementation                                 |
+| :---------------------- | :--------------------------------------------- |
+| **Documentation-first** | Checksums tracked beside each dataset          |
+| **Reproducibility**     | Deterministic SHA-256 algorithm                |
+| **Open Standards**      | GNU Coreutils checksum format                  |
+| **Provenance**          | Linked through metadata + STAC checksum assets |
+| **Auditability**        | CI-verified during every commit                |
+
+---
+
+## 📅 Version History
+
+| Version    | Date       | Summary                                                             |
+| :--------- | :--------- | :------------------------------------------------------------------ |
+| **v1.1.0** | 2025-10-11 | Added Mermaid data-flow, MCP table, CI integration details          |
+| **v1.0.0** | 2025-10-04 | Initial checksum documentation (DEM, D8, accumulation, mask, seeds) |
 
 ---
 
 ## 📖 References
 
-* **WhiteboxTools Hydrology Suite:** [https://www.whiteboxgeo.com/manual/wbt_book/hydro.html](https://www.whiteboxgeo.com/manual/wbt_book/hydro.html)
-* **GDAL DEM Processing Utilities:** [https://gdal.org/programs/gdaldem.html](https://gdal.org/programs/gdaldem.html)
-* **USGS National Hydrography Dataset (NHD):** [https://www.usgs.gov/national-hydrography](https://www.usgs.gov/national-hydrography)
-* **Kansas DASC GIS Hub:** [https://hub.kansasgis.org](https://hub.kansasgis.org)
-* **STAC Specification 1.0:** [https://stacspec.org](https://stacspec.org)
-* **Master Coder Protocol (MCP):** [`docs/standards/`](../../../../docs/standards/)
+* **WhiteboxTools Hydrology:** [https://www.whiteboxgeo.com/manual/wbt_book/hydro.html](https://www.whiteboxgeo.com/manual/wbt_book/hydro.html)
+* **GDAL DEM Tools:** [https://gdal.org/programs/gdaldem.html](https://gdal.org/programs/gdaldem.html)
+* **USGS NHD:** [https://www.usgs.gov/national-hydrography](https://www.usgs.gov/national-hydrography)
+* **Kansas DASC Hub:** [https://hub.kansasgis.org](https://hub.kansasgis.org)
+* **STAC 1.0:** [https://stacspec.org](https://stacspec.org)
+* **GNU Coreutils (`sha256sum`):** [https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html](https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html)
+* **MCP Docs:** `../../../../docs/standards/`
 
 ---
 
 <div align="center">
 
 *“Every flowline and basin boundary is secured — these checksums protect the hydrologic truth of Kansas’s terrain.”*
+📍 [`data/processed/hydrology/checksums/`](.)
 
 </div>
 ```
-
