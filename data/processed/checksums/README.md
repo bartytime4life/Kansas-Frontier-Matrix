@@ -193,7 +193,8 @@ flowchart TD
   D --> E["Verification<br/>CI/CD · local validation"]
   E --> F["Catalog & Provenance<br/>STAC · MCP metadata"]
   F --> G["Public Access<br/>GitHub · Data Hub · Google Earth"]
-<!-- END OF MERMAID -->
+%% END OF MERMAID %%
+
 ```
 
 ---
