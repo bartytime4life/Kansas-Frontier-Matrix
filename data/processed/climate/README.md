@@ -150,12 +150,13 @@ Standardization steps:
 
 ```mermaid
 flowchart TD
-  A["🌍 Raw Sources\n(NOAA · PRISM · Daymet)"] --> B["🧩 ETL Pipeline\n(Python · xarray · rasterio)"]
-  B --> C["📊 Processed Grids\n(COGs · CSV · Parquet)"]
-  C --> D["🗂️ STAC Items\n(Metadata + Provenance)"]
-  D --> E["🧠 Knowledge Graph\n(Lineage · Temporal Links)"]
-  C --> F["🌐 Web Visualization\n(MapLibre · Timeline)"]
-<!-- END OF MERMAID -->
+  A["Raw Sources\n(NOAA · PRISM · Daymet)"] --> B["ETL Pipeline\n(Python · xarray · rasterio)"]
+  B --> C["Processed Grids\n(COGs · CSV · Parquet)"]
+  C --> D["STAC Items\n(Metadata + Provenance)"]
+  D --> E["Knowledge Graph\n(Lineage · Temporal Links)"]
+  C --> F["Web Visualization\n(MapLibre · Timeline)"]
+%% END OF MERMAID
+
 ```
 
 ---
