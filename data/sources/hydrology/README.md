@@ -82,13 +82,13 @@ data/sources/hydrology/
 
 ```mermaid
 flowchart TD
-  A["External Hydrology Data\n(USGS · EPA · FEMA)"] --> B["Source Manifests\n`data/sources/hydrology/*.json`"]
+  A["External Hydrology Data\nUSGS · EPA · FEMA"] --> B["Source Manifests\n`data/sources/hydrology/*.json`"]
   B --> C["Hydrology Pipeline\n`src/pipelines/hydrology_pipeline.py`"]
   C --> D["Processed Hydrology Layers\n`data/processed/hydrology/`"]
   D --> E["STAC Collections\n`data/stac/collections/hydrology.json`"]
   E --> F["Web Layers Config\n`web/config/layers.json`"]
   D --> G["Derivatives\nFlow Accumulation · Watershed Boundaries · Flood Zones"]
-  G --> H["Knowledge Graph\n\"Hydrologic Connectivity\" Relationships"]
+  G --> H["Knowledge Graph\nHydrologic Connectivity Relationships"]
 %%END OF MERMAID%%
 ```
 
