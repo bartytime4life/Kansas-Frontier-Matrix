@@ -1,13 +1,16 @@
 <div align="center">
 
-# 🗺️ Kansas Frontier Matrix — Map Tiles Directory  
+# 🗺️ Kansas Frontier Matrix — Map Tiles Directory
+
 `data/tiles/`
 
-**Mission:** Store and document **pre-rendered raster and vector map tiles** used by  
-the Kansas Frontier Matrix (KFM) web mapping and visualization layers — enabling  
-fast, reproducible access to geospatial data across time, scale, and theme.
+**Mission:** Serve as the **central registry and storage** for pre-rendered raster and vector tiles used in the
+Kansas Frontier Matrix (KFM) web viewer — enabling reproducible, high-performance visualization of geospatial data
+across space, time, and thematic domains.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
 [![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
@@ -17,17 +20,16 @@ fast, reproducible access to geospatial data across time, scale, and theme.
 
 ## 📚 Overview
 
-The `data/tiles/` directory contains **generated map tiles** used for rendering  
-interactive maps in the Frontier Matrix web application and supporting STAC-linked  
-visualization layers.  
+The `data/tiles/` directory contains **pre-rendered raster and vector tiles** derived from validated datasets
+in `data/processed/`. These tiles provide optimized, multi-resolution visual layers for
+MapLibre, Leaflet, Cesium, and other web-mapping frameworks.
 
-Tiles are created from validated datasets under `data/processed/` and include both:  
-- **Raster tiles** — Cloud-Optimized GeoTIFFs (COGs) or `.png` tilesets for basemaps, terrain, and climate.  
-- **Vector tiles** — `.pbf` (Mapbox Vector Tile) layers for hydrology, boundaries, and features.  
+**Tile types include:**
 
-These tiles provide performant, multi-resolution access for visualization tools such as  
-**MapLibre**, **Leaflet**, and **Cesium**, supporting exploration of Kansas’s environmental, historical,  
-and geospatial datasets.
+* 🗻 **Raster tiles** — Hillshade, elevation, precipitation, drought, and temperature rasters.
+* 🧭 **Vector tiles** — Stream networks, floodplains, political boundaries, and historical features.
+
+Each tileset is **linked via STAC metadata**, ensuring provenance, auditability, and reproducibility.
 
 ---
 
@@ -36,70 +38,88 @@ and geospatial datasets.
 ```bash
 data/tiles/
 ├── README.md
-├── terrain/                 # Elevation, hillshade, and slope tiles
-├── hydrology/               # Rivers, basins, and floodplain tiles
-├── landcover/               # Vegetation, NLCD, and land-use classification tiles
-├── climate/                 # Precipitation, temperature, and drought index tiles
-├── hazards/                 # Tornado, wildfire, and flood hazard tiles
-├── tabular/                 # Derived grids from structured data (e.g., population density)
-└── text/                    # Text-based overlays or historical map annotations
-````
+├── terrain/                 # Elevation, hillshade, slope
+├── hydrology/               # Rivers, basins, floodplains
+├── landcover/               # NLCD, vegetation, land use
+├── climate/                 # Temperature, precipitation, drought indices
+├── hazards/                 # Tornado, wildfire, and flood hazards
+├── tabular/                 # Population density, economic surfaces
+└── text/                    # OCR overlays, historical annotations
+```
 
-> **Note:** Each subdirectory mirrors the domain structure of `data/processed/`,
-> providing reproducible geospatial tiles for each dataset category.
+> **Note:** Each subfolder mirrors the `data/processed/` structure — ensuring consistency
+> across ETL, rendering, and visualization pipelines.
+
+---
+
+## 🧭 System Context (GitHub-safe Mermaid)
+
+```mermaid
+flowchart TD
+  A["Processed Datasets\n`data/processed/*`"] --> B["Tile Generation\n`make tiles` · `generate_tiles.py`"]
+  B --> C["Raster Tiles\nCOG · PNG · JPG"]
+  B --> D["Vector Tiles\nPBF · GeoJSON"]
+  C --> E["Web Map Viewer\nMapLibre · Leaflet · Cesium"]
+  D --> E
+  B --> F["STAC Metadata\n`data/stac/tiles/*.json`"]
+  F --> G["Knowledge Graph\nTile ↔ Layer ↔ Dataset Links"]
+%%END OF MERMAID%%
+```
 
 ---
 
 ## ⚙️ Tile Generation Workflow
 
-Tiles are generated automatically from validated datasets using the ETL and rendering pipelines.
+Tiles are generated via deterministic scripts using GDAL, Tippecanoe, or MapTiler.
 
-**Makefile target:**
+**Makefile targets:**
 
 ```bash
 make tiles
+make clean-tiles
 ```
 
-**Python command:**
+**Python example:**
 
 ```bash
-python src/utils/generate_tiles.py --input data/processed/terrain/ks_1m_dem_2018_2020.tif \
-                                   --output data/tiles/terrain/ks_dem_1m/
+python src/utils/generate_tiles.py \
+  --input data/processed/terrain/ks_1m_dem_2018_2020.tif \
+  --output data/tiles/terrain/ks_dem_1m/
 ```
 
-**Workflow Steps:**
+**Workflow Steps**
 
-1. Load validated geospatial datasets (COGs, GeoJSONs, or Parquets).
-2. Define zoom levels and tile schema (Web Mercator, EPSG:3857).
-3. Generate raster or vector tiles using GDAL, Tippecanoe, or MapTiler.
-4. Save results to the appropriate domain subfolder.
-5. Validate structure with the `stac-validate` GitHub workflow.
+1. Load validated processed datasets (COG, GeoJSON, or Parquet).
+2. Set schema: `EPSG:3857` (Web Mercator).
+3. Render raster or vector tiles at defined zoom levels.
+4. Export to domain directory under `data/tiles/`.
+5. Validate structure via GitHub CI and STAC validation.
 
 ---
 
-## 🧰 Tile Standards & Formats
+## 🧰 Tile Standards & Metadata
 
-| Type             | Format                        | Description                                                        |
-| :--------------- | :---------------------------- | :----------------------------------------------------------------- |
-| **Raster Tiles** | `.png`, `.jpg`, `.tif` (COG)  | Visual layers (terrain, landcover, climate).                       |
-| **Vector Tiles** | `.pbf`                        | Encoded geometry and attribute data (rivers, hazards, boundaries). |
-| **Schema**       | EPSG:3857                     | Default Web Mercator projection for global map compatibility.      |
-| **Metadata**     | `metadata.json`, `tiles.json` | Defines layer info, bounding box, zoom levels, and attribution.    |
+| Type         | Format                        | Description                                              |
+| ------------ | ----------------------------- | -------------------------------------------------------- |
+| **Raster**   | `.png`, `.jpg`, `.tif` (COG)  | Map imagery: elevation, hillshade, or precipitation.     |
+| **Vector**   | `.pbf`                        | Encoded features such as rivers, parcels, or hazards.    |
+| **Schema**   | EPSG:3857                     | Standard Web Mercator projection.                        |
+| **Metadata** | `metadata.json`, `tiles.json` | Bounding boxes, zoom levels, attribution, and endpoints. |
 
-All tiles comply with [Mapbox Vector Tile Specification v2.1](https://docs.mapbox.com/data/tilesets/reference/).
+> All vector tiles comply with the [Mapbox Vector Tile Specification v2.1](https://docs.mapbox.com/data/tilesets/reference/).
 
 ---
 
 ## 🧩 Integration with the KFM Web Viewer
 
-| Component                  | Function                                                        |
-| :------------------------- | :-------------------------------------------------------------- |
-| `web/config/layers.json`   | Defines layer visibility, styling, and tile endpoints.          |
-| `web/app.js`               | Loads tiles dynamically in MapLibre via STAC or REST endpoints. |
-| `data/processed/metadata/` | Links each tileset to its STAC item and asset metadata.         |
-| `data/stac/tiles/`         | STAC catalog for spatial tile collections and coverage.         |
+| Component                  | Function                                            |
+| -------------------------- | --------------------------------------------------- |
+| `web/config/layers.json`   | Layer definitions, styling, and endpoints.          |
+| `web/app.js`               | Dynamically loads tiles via STAC or REST endpoints. |
+| `data/processed/metadata/` | Links tile assets to dataset metadata.              |
+| `data/stac/tiles/`         | Central STAC catalog of available tile collections. |
 
-**Example Integration Snippet:**
+**Example Layer Definition**
 
 ```json
 {
@@ -116,60 +136,78 @@ All tiles comply with [Mapbox Vector Tile Specification v2.1](https://docs.mapbo
 
 ---
 
-## 🧹 Cleanup & Regeneration
+## 🧪 Validation & CI/CD Integration
 
-Tiles can be safely removed and regenerated as needed for updated datasets or styles.
-
-**Makefile target:**
+**Local validation**
 
 ```bash
-make clean-tiles
+python src/utils/validate_tiles.py data/tiles/
 ```
 
-**Manual cleanup:**
+**GitHub Actions**
+
+* `stac-validate.yml` — Confirms tile STAC metadata validity
+* `site.yml` — Builds demo maps for PR previews
+* `codeql.yml` — Audits code and scripts for security
+* `trivy.yml` — Scans Docker tile-building environment
+
+---
+
+## 🧹 Cleanup & Regeneration
+
+**Makefile targets**
+
+```bash
+make clean-tiles      # Delete all generated tiles
+make tiles-refresh    # Rebuild updated tilesets
+```
+
+**Manual Cleanup**
 
 ```bash
 rm -rf data/tiles/*/
 ```
 
-> **Tip:** Regenerating tiles ensures consistency with the latest datasets and visualization styles.
+> 🧭 *Regenerate tiles whenever base datasets or styles are updated.*
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                        |
-| :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | README defines directory purpose, workflow, and standards.            |
-| **Reproducibility**     | Tiles generated deterministically via version-controlled ETL scripts. |
-| **Open Standards**      | Mapbox Vector Tile Spec, GeoTIFF (COG), EPSG:3857 projection.         |
-| **Provenance**          | All tiles linked to validated datasets and STAC metadata.             |
-| **Auditability**        | CI workflows verify tile schema, structure, and version integrity.    |
+| MCP Principle           | Implementation                                                   |
+| ----------------------- | ---------------------------------------------------------------- |
+| **Documentation-first** | README and schema-driven workflows define reproducibility.       |
+| **Reproducibility**     | Tiles generated deterministically via Makefile + Python scripts. |
+| **Open Standards**      | Mapbox Vector Tile Spec, COG, EPSG:3857, STAC 1.0.               |
+| **Provenance**          | Linked to validated datasets and STAC entries.                   |
+| **Auditability**        | Continuous validation in CI/CD pipelines ensures integrity.      |
 
 ---
 
-## 📎 Related Directories
+## 🧾 Changelog
 
-| Path                       | Description                                                |
-| :------------------------- | :--------------------------------------------------------- |
-| `data/processed/`          | Source datasets used to generate tiles.                    |
-| `data/processed/metadata/` | STAC metadata describing tile provenance.                  |
-| `web/config/`              | Layer configuration and visualization styles for web maps. |
-| `data/stac/tiles/`         | STAC catalog of available tile layers.                     |
+| Version  | Date       | Summary                                                                       |
+| -------- | ---------- | ----------------------------------------------------------------------------- |
+| **v1.1** | 2025-10-12 | Expanded CI validation, added Mermaid diagram, enhanced integration examples. |
+| v1.0     | 2025-10-04 | Initial creation of map tile documentation.                                   |
 
 ---
 
-## 📅 Version History
+## 🏷️ Version Block
 
-| Version | Date       | Summary                                                                                           |
-| :------ | :--------- | :------------------------------------------------------------------------------------------------ |
-| v1.0    | 2025-10-04 | Initial tile directory documentation — terrain, hydrology, landcover, climate, and hazard layers. |
+```text
+Component: data/tiles/README.md
+SemVer: 1.1.0
+Spec Dependencies: MCP v1.0 · STAC 1.0
+Last Updated: 2025-10-12
+Maintainer: @bartytime4life
+```
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Rendering the Past and Present — One Tile at a Time.”*
-📍 [`data/tiles/`](.) · Repository of reproducible raster and vector map tiles for the KFM web viewer.
+📍 [`data/tiles/`](.) · Reproducible registry of raster and vector map tiles powering the KFM visualization engine.
 
 </div>
