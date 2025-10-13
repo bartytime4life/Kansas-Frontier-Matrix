@@ -98,37 +98,55 @@ usgs_3dep_dem.json
       "type": "esri-image-server",
       "url": "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
       "auth": "none",
-      "rate_limit_rps": 10
+      "rate_limit_rps": 10,
+      "notes": "Server-side reprojection allowed; prefer WGS84 output for downstream consistency."
     }
   ],
   "license": {
     "type": "Public Domain",
     "attribution": "U.S. Geological Survey",
-    "url": "https://www.usgs.gov/information-policies-and-instructions"
+    "url": "https://www.usgs.gov/information-policies-and-instructions",
+    "use_constraints": "Attribution requested; verify derivative product metadata retains USGS credit."
   },
   "data": {
     "kind": "raster",
     "format": "GeoTIFF",
+    "encoding": "COG-ready",
     "resolution": "1 m",
-    "crs": "EPSG:3857",
-    "schema_ref": null
+    "crs": "EPSG:4326",
+    "vertical_datum": "NAVD88",
+    "nodata": -999999,
+    "schema_ref": null,
+    "quality": { "void_filled": true, "hydro_enforced": false }
   },
   "coverage": {
     "spatial": "Kansas, USA",
-    "temporal": {"start": "2018-01-01", "end": "2020-12-31"}
+    "bbox": [-102.05, 36.99, -94.59, 40.00],
+    "temporal": { "start": "2018-01-01", "end": "2020-12-31" }
   },
   "operations": {
     "update_frequency": "on_demand",
     "availability_slo": ">= 99.0%",
-    "last_verified": "2025-10-12",
-    "mirrors": []
+    "last_verified": "2025-10-13",
+    "mirrors": [],
+    "rate_limit_policy": "respect server guidance; default 10 rps; backoff 429/503"
   },
   "provenance": {
     "linked_pipeline": "terrain_pipeline.py",
     "produces": [
-      {"path": "data/processed/terrain/ks_dem_1m_2018_2020.tif", "checksum_sha256": null}
+      {
+        "path": "data/processed/terrain/ks_dem_1m_2018_2020.tif",
+        "checksum_sha256": null,
+        "expected_asset_type": "COG"
+      },
+      {
+        "path": "data/processed/terrain/ks_hillshade_1m.tif",
+        "checksum_sha256": null,
+        "expected_asset_type": "COG"
+      }
     ],
-    "stac_links": ["data/stac/collections/terrain.json"]
+    "stac_links": ["data/stac/collections/terrain.json"],
+    "trace": { "commit": "AUTO@ingest", "runner": "make sources-fetch" }
   },
   "status": "active",
   "notes": "Primary DEM source for hillshade, slope, and hydrology derivatives."
@@ -160,6 +178,17 @@ CI gates (PRs):
 	•	URL availability & rate-limit probe
 	•	License compliance (explicit license + attribution)
 	•	Change impact report (lists ETL + STAC items affected)
+
+⸻
+
+⚡ Quick Start (local dev)
+
+# lint & validate just this folder
+pre-commit run --files data/sources/**/*.json
+
+# generate impact report for changed manifests
+python src/utils/impact_report.py --paths data/sources/terrain/usgs_3dep_dem.json
+
 
 ⸻
 
@@ -236,7 +265,7 @@ endpoints[].type	enum	yes*	http, s3, esri-image-server, ftp
 license.type	string	yes	CC-BY 4.0, Public Domain, Custom
 data.kind	enum	yes	raster, vector, tabular, text
 coverage.temporal	object	no	{ "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" }
-operations.last_verified	date	yes	2025-10-12
+operations.last_verified	date	yes	2025-10-13
 provenance.produces[]	array	no	link outputs and optional expected checksums
 status	enum	yes	active, deprecated, experimental
 
@@ -245,7 +274,10 @@ status	enum	yes	active, deprecated, experimental
 
 🧾 Changelog
 
+Follow SemVer and update this table on every change impacting structure, fields, or CI.
+
 Version	Date	Changes
+v1.2	2025-10-13	Expanded example (crs, vertical_datum, rate_limit_policy, bbox, Quick Start).
 v1.1	2025-10-12	Added extended schema fields, CI gates, AI prompts, Mermaid diagrams, and maintenance rules.
 v1.0	2025-10-04	Initial creation of Source Manifests README and baseline layout.
 
@@ -255,9 +287,9 @@ v1.0	2025-10-04	Initial creation of Source Manifests README and baseline layout.
 🏷️ Version Block
 
 Component: data/sources/README.md
-SemVer: 1.1.0
+SemVer: 1.2.0
 Spec Dependencies: MCP v1.0, STAC 1.0
-Last Updated: 2025-10-12
+Last Updated: 2025-10-13
 Maintainers: @bartytime4life
 
 
