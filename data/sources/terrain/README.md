@@ -3,6 +3,8 @@
 
 🏔️ Kansas Frontier Matrix — Terrain Source Manifests
 
+data/sources/terrain/
+
 “All stories rise from the ground — and all ground begins with terrain.”
 
 </div>
@@ -16,7 +18,7 @@
 title: "Kansas Frontier Matrix — Terrain Source Manifests"
 version: "v1.2.0"
 last_updated: "2025-10-13"
-authors: ["KFM Data & Terrain Team"]
+authors: ["KFM Terrain & Data Systems Team"]
 status: "Stable"
 maturity: "Production"
 tags: ["terrain", "sources", "stac", "schema", "mcp"]
@@ -28,13 +30,15 @@ license: "CC-BY 4.0"
 
 📚 Overview
 
-The data/sources/terrain/ directory catalogs every terrain data source ingested into the KFM ecosystem, including:
-	•	🛰️ USGS 3DEP national elevation datasets
-	•	🗺️ Kansas LiDAR mosaics from DASC
-	•	🌎 Global DEM baselines (SRTM, Copernicus)
-	•	🧭 Derivative bases for slope, aspect, and hillshade generation
+The data/sources/terrain/ directory catalogs every terrain and elevation data source used by the Kansas Frontier Matrix (KFM) — the foundational layer powering Kansas’s environmental, hydrological, and historical reconstructions.
 
-Each JSON manifest conforms to data/sources/schema/source.schema.json and powers reproducible ingestion, reprojection, and provenance tracking throughout ETL pipelines.
+Sources include:
+	•	🛰️ USGS 3DEP — National LiDAR-derived DEM
+	•	🗺️ Kansas DASC LiDAR — High-resolution state DEMs
+	•	🌎 Global DEM baselines — SRTM, Copernicus, NASADEM
+	•	🧭 Derived layers — Hillshade, slope, aspect, accumulation
+
+Each manifest is validated against data/sources/schema/source.schema.json, ensuring every dataset’s provenance, license, and schema are traceable and reproducible.
 
 ⸻
 
@@ -45,7 +49,7 @@ data/sources/terrain/
 ├── ks_lidar_2018_2020.json        # Kansas LiDAR DEM collection (DASC)
 └── usgs_3dep_dem.json             # USGS 3DEP nationwide elevation model
 
-Tip: Each manifest carries a unique ID, license, temporal coverage, and STAC linkage, ensuring transparent data lineage.
+Tip: Every JSON manifest specifies its ID, provider, temporal coverage, and links to downstream STAC metadata for provenance tracking.
 
 ⸻
 
@@ -115,16 +119,16 @@ Workflow Steps
 python src/utils/validate_sources.py data/sources/terrain/ \
   --schema data/sources/schema/source.schema.json
 
-Make Targets
+Makefile Targets
 
 make terrain-sources
 make terrain-validate
 
 CI Automation
-	•	Schema validation
-	•	URL + license verification
+	•	JSON schema conformance
+	•	URL & license verification
 	•	Auto-changelog generation
-	•	Provenance cross-check (STAC ↔ sources)
+	•	Provenance consistency between STAC & source manifests
 
 ⸻
 
