@@ -15,15 +15,15 @@ Mission: Curate, document, and validate all external text-based datasets — dig
 
 🧭 Overview
 
-The data/sources/text/ directory contains JSON manifests describing each text dataset integrated into KFM.
-These manifests define provenance, licensing, access endpoints, and temporal coverage — forming a declarative registry for reproducible ingestion and validation.
+The data/sources/text/ directory stores JSON manifests describing each external text dataset used within KFM.
+Each manifest provides provenance, licensing, endpoints, and temporal coverage—forming a reproducible registry for ingestion and validation.
 
-Text sources empower:
+These datasets enable:
 	•	📰 Historical newspaper OCR & cleanup
-	•	🗣️ Oral history transcript alignment
-	•	📜 Treaty & legal text curation
+	•	🗣️ Oral-history transcript alignment
+	•	📜 Treaty & legal-text curation
 	•	🧠 NLP enrichment (NER, temporal tagging, entity linking)
-	•	🕰️ Knowledge Graph integration & time-aware discovery
+	•	🕰️ Knowledge-Graph integration & timeline discovery
 
 ⸻
 
@@ -31,11 +31,11 @@ Text sources empower:
 
 data/sources/text/
 ├── README.md
-├── loc_chronicling_america.json      # Library of Congress – historical newspapers
-├── kshs_oral_histories.json          # Kansas Historical Society – oral histories
+├── loc_chronicling_america.json      # Library of Congress – newspapers
+├── kshs_oral_histories.json          # Kansas Historical Society – transcripts
 └── yale_avalon_treaties.json         # Yale Avalon Project – treaties & legal texts
 
-🧩 Each manifest includes licensing, provenance, access details, and verification timestamps — ensuring long-term scholarly reproducibility.
+🧩 Each manifest includes licensing, provenance, access details, and verification timestamps to ensure archival reproducibility.
 
 ⸻
 
@@ -64,15 +64,15 @@ data/sources/text/
 
 🧮 Schema Essentials
 
-🔖 Field	📘 Description
+Field	Description
 id	Unique short identifier (snake_case)
-title	Full descriptive dataset name
-provider	Institutional or organizational source
-endpoint	Download/API URL or landing page
-license	Explicit reuse rights (SPDX or text)
-format	Primary data encoding (TXT, JSONL, HTML, CSV)
-temporal_coverage	ISO or natural-language range
-last_verified	YYYY-MM-DD provenance timestamp
+title	Human-readable dataset name
+provider	Source institution or organization
+endpoint	Download/API URL
+license	Explicit reuse rights
+format	Data format (TXT, JSONL, HTML, CSV)
+temporal_coverage	Date range (ISO 8601)
+last_verified	Provenance timestamp (YYYY-MM-DD)
 
 
 ⸻
@@ -89,7 +89,7 @@ flowchart TD
   E --> H["Web UI\nSearch · Timeline · Document Viewer"]
 %%END OF MERMAID%%
 
-💡 Tip: Always terminate with %%END OF MERMAID%% to guarantee correct GitHub rendering.
+💡 Always end with %%END OF MERMAID%% for consistent GitHub rendering.
 
 ⸻
 
@@ -101,10 +101,10 @@ Output: data/processed/text/
 Workflow
 	1.	🔍 Validate manifests (make sources-validate)
 	2.	⬇️ Ingest via API or HTTP
-	3.	🧹 Normalize (UTF-8, metadata, structure)
+	3.	🧹 Normalize encodings & metadata
 	4.	🧠 Enrich with NLP (NER, temporal parsing)
-	5.	🪢 Link to STAC + Knowledge Graph
-	6.	✅ Verify checksums & publish logs
+	5.	🪢 Link to STAC & Knowledge Graph
+	6.	✅ Verify checksums and publish provenance logs
 
 ⸻
 
@@ -112,10 +112,10 @@ Workflow
 
 Path	Purpose
 data/raw/text/	Immutable source text files
-data/processed/text/	Cleaned & NLP-ready corpora
+data/processed/text/	Cleaned, NLP-ready corpora
 data/stac/collections/text.json	STAC metadata registry
-data/checksums/text/	SHA-256 verification
-src/pipelines/text_pipeline.py	ETL orchestration layer
+data/checksums/text/	SHA-256 integrity verification
+src/pipelines/text_pipeline.py	ETL orchestration
 
 
 ⸻
@@ -127,7 +127,7 @@ Documentation-first	JSON manifest precedes ingestion
 Reproducibility	Deterministic ETL parameters
 Open Standards	JSON Schema · UTF-8 · STAC 1.0
 Provenance	Manifest → Processed → STAC → Graph
-Auditability	CI-enforced schema + checksum validation
+Auditability	CI-enforced schema + checksums
 
 
 ⸻
@@ -136,8 +136,8 @@ Auditability	CI-enforced schema + checksum validation
 
 Manifest	Provider	Description	Coverage	Format	Verified
 loc_chronicling_america.json	LOC	OCR newspaper corpus	Kansas	JSONL	✅ 2025-10-13
-kshs_oral_histories.json	KSHS	Oral history transcripts	Kansas	TXT	✅ 2025-10-13
-yale_avalon_treaties.json	Yale Avalon	Historical treaties & legal texts	US / Global	HTML/TXT	✅ 2025-10-13
+kshs_oral_histories.json	KSHS	Oral-history transcripts	Kansas	TXT	✅ 2025-10-13
+yale_avalon_treaties.json	Yale Avalon	Historical treaties & legal texts	U.S./Global	HTML/TXT	✅ 2025-10-13
 
 
 ⸻
@@ -147,10 +147,10 @@ yale_avalon_treaties.json	Yale Avalon	Historical treaties & legal texts	US / Glo
 python src/utils/validate_sources.py data/sources/text/ \
   --schema data/sources/schema/source.schema.json
 
-make text-sources      # fetch & stage
-make text-validate     # schema + endpoint check
-make text-stac         # STAC build/validate
-make text-checksums    # hash verification
+make text-sources
+make text-validate
+make text-stac
+make text-checksums
 
 CI Hooks
 	•	JSON Schema enforcement
@@ -164,8 +164,8 @@ CI Hooks
 🧾 Changelog
 
 Version	Date	Highlights
-v1.2	2025-10-13	Polished layout, added badges, semantic spacing, and CI hooks.
-v1.1	2025-10-12	Added system diagram, validation workflow, and manifest examples.
+v1.2	2025-10-13	Restored full-width titles, badge symmetry, improved readability.
+v1.1	2025-10-12	Added diagram, validation workflow, manifest examples.
 v1.0	2025-10-04	Initial documentation release.
 
 
@@ -188,7 +188,7 @@ Maintainer: @bartytime4life
 
 ✴️ “Voices of the past become data for the future.”
 
-Kansas Frontier Matrix · Canonical registry of textual archives & narratives
+Kansas Frontier Matrix — Canonical registry of textual archives & narratives
 📍 data/sources/text/
 
 </div>
