@@ -1,19 +1,19 @@
-<div align="center">
 
+⸻
 
-🏔️ Kansas Frontier Matrix — Terrain Source Manifests
+🏔️ KANSAS FRONTIER MATRIX — TERRAIN SOURCE MANIFESTS
 
 data/sources/terrain/
 
-Mission: Catalog, validate, and preserve all external terrain and elevation data sources that form the topographic backbone of the Kansas Frontier Matrix (KFM) — powering hydrology, landcover, hazard modeling, and temporal storytelling across Kansas and beyond.
+MISSION: Catalog, validate, and preserve all external terrain and elevation data sources that form the topographic backbone of the Kansas Frontier Matrix (KFM) — powering hydrology, landcover, hazard modeling, and temporal storytelling across Kansas and beyond.
 
-</div>
+⸻
 
 
 
 ⸻
 
-📚 Overview
+📚 OVERVIEW
 
 The data/sources/terrain/ directory defines every terrain data source ingested into the KFM ecosystem, including:
 	•	🛰️ USGS 3DEP national elevation datasets
@@ -21,11 +21,12 @@ The data/sources/terrain/ directory defines every terrain data source ingested i
 	•	🌎 Global DEM baselines (SRTM, Copernicus)
 	•	🧭 Derivative bases for slope, aspect, and hillshade generation
 
-Each JSON manifest is validated against data/sources/schema/source.schema.json and used by ETL pipelines to automate download, reprojection, and provenance capture.
+Each JSON manifest is validated against data/sources/schema/source.schema.json
+and used by ETL pipelines to automate download, reprojection, and provenance capture.
 
 ⸻
 
-🗂️ Directory Layout
+🗂️ DIRECTORY LAYOUT
 
 data/sources/terrain/
 ├── README.md
@@ -36,7 +37,7 @@ Tip: Each .json manifest contains unique IDs, licensing, temporal coverage, and 
 
 ⸻
 
-🧩 Example Manifest (ks_lidar_2018_2020.json)
+🧩 EXAMPLE MANIFEST — ks_lidar_2018_2020.json
 
 {
   "id": "ks_lidar_2018_2020",
@@ -59,7 +60,7 @@ Tip: Each .json manifest contains unique IDs, licensing, temporal coverage, and 
 
 ⸻
 
-🧭 System Context (GitHub-Safe Mermaid)
+🧭 SYSTEM CONTEXT (MERMAID DIAGRAM)
 
 flowchart TD
   A["External Terrain Data\n(USGS · DASC · NASA)"] --> B["Source Manifests\n`data/sources/terrain/*.json`"]
@@ -74,7 +75,7 @@ flowchart TD
 
 ⸻
 
-⚙️ Terrain Source Summary
+⚙️ TERRAIN SOURCE SUMMARY
 
 Manifest File	Provider	Description	Coverage	Format	Verified
 ks_lidar_2018_2020.json	Kansas DASC	1 m LiDAR DEM mosaic for Kansas	Kansas	GeoTIFF	✅ 2025-10-13
@@ -83,39 +84,39 @@ usgs_3dep_dem.json	USGS	National 1 m LiDAR DEM (3DEP)	Continental US	GeoTIFF	✅
 
 ⸻
 
-🧾 ETL Integration
+🧾 ETL INTEGRATION
 
 Pipeline: src/pipelines/terrain_pipeline.py
-Target: data/processed/terrain/
+Target Directory: data/processed/terrain/
 
-Workflow:
+Workflow Steps:
 	1.	✅ Validate manifests (make sources-validate)
 	2.	🌐 Fetch DEMs via HTTP or API
 	3.	📏 Reproject to EPSG:3857
-	4.	🧮 Generate COGs, hillshade, slope, aspect
-	5.	🗂️ Register outputs → STAC + checksum directories
+	4.	🧮 Generate COGs, hillshade, slope, and aspect
+	5.	🗂️ Register outputs → STAC & checksum directories
 
 ⸻
 
-🧪 Validation & CI/CD
+🧪 VALIDATION & CI/CD
 
 python src/utils/validate_sources.py data/sources/terrain/ \
   --schema data/sources/schema/source.schema.json
 
-Make Targets
+Makefile Targets
 
 make terrain-sources
 make terrain-validate
 
-CI Checks
-	•	JSON schema conformance
+CI Automation
+	•	Schema validation
 	•	URL & license verification
-	•	Auto-changelog on manifest updates
-	•	Provenance consistency between STAC & source manifests
+	•	Auto-changelog generation
+	•	Provenance validation between STAC and source manifests
 
 ⸻
 
-🧩 Provenance Chain
+🧩 PROVENANCE CHAIN
 
 Component	Role
 data/raw/terrain/	Immutable elevation data archives
@@ -127,10 +128,10 @@ src/pipelines/terrain_pipeline.py	Automated ingestion + preprocessing pipeline
 
 ⸻
 
-🧠 MCP Compliance Summary
+🧠 MCP COMPLIANCE SUMMARY
 
 MCP Principle	Implementation Example
-Documentation-first	All terrain datasets documented in versioned JSON manifests.
+Documentation-first	Terrain datasets documented in versioned JSON manifests.
 Reproducibility	Deterministic ETL + checksum validation.
 Open Standards	JSON Schema · STAC 1.0 · GeoTIFF COG.
 Provenance	Linked raw → processed → derivative layers.
@@ -139,28 +140,26 @@ Auditability	SHA-256 + CI logs + schema validation reports.
 
 ⸻
 
-🤖 AI Integration
+🤖 AI INTEGRATION
 
-These manifests are indexed by the AI Knowledge Graph to enable:
-	•	Entity recognition of terrain providers (e.g., USGS, DASC)
-	•	Automated provenance linking (terrain → hydrology → hazards)
-	•	Predictive modeling triggers for DEM updates
-
-AI pipelines use the metadata fields (provider, temporal_coverage, endpoint) to cross-link terrain evolution through Kansas history.
+AI agents index these manifests to:
+	•	Detect terrain provider entities (USGS, DASC)
+	•	Link terrain → hydrology → hazard layers
+	•	Predict DEM updates + topographic evolution
 
 ⸻
 
-🧾 Changelog
+🧾 CHANGELOG
 
 Version	Date	Highlights
-v1.2.0	2025-10-13	Added AI metadata integration, validation section, and new badges.
+v1.2.0	2025-10-13	Added AI integration, validation section, large-title format.
 v1.1.0	2025-10-12	Expanded documentation, CI references, updated examples.
 v1.0.0	2025-10-04	Initial terrain source manifest directory.
 
 
 ⸻
 
-🏷️ Version Block
+🏷️ VERSION BLOCK
 
 Component: data/sources/terrain/README.md
 SemVer: 1.2.0
@@ -171,15 +170,11 @@ Maintainer: @bartytime4life
 
 ⸻
 
+💬 KANSAS FRONTIER MATRIX
 
-<div align="center">
+“All stories rise from the ground — and all ground begins with terrain.”
 
-
-Kansas Frontier Matrix — “All stories rise from the ground — and all ground begins with terrain.”
-📍 data/sources/terrain/ · Core elevation source registry powering KFM’s geospatial foundation.
-
-</div>
-
-
+📍 data/sources/terrain/
+Core elevation source registry powering the Kansas Frontier Matrix geospatial foundation.
 
 ⸻
