@@ -16,7 +16,7 @@ Mission: Curate, document, and validate all external text-based datasets — dig
 🧭 Overview
 
 The data/sources/text/ directory stores JSON manifests describing each external text dataset used within KFM.
-Each manifest provides provenance, licensing, endpoints, and temporal coverage—forming a reproducible registry for ingestion and validation.
+Each manifest provides provenance, licensing, endpoints, and temporal coverage — forming a reproducible registry for ingestion and validation.
 
 These datasets enable:
 	•	📰 Historical newspaper OCR & cleanup
@@ -164,8 +164,8 @@ CI Hooks
 🧾 Changelog
 
 Version	Date	Highlights
-v1.2	2025-10-13	Restored full-width titles, badge symmetry, improved readability.
-v1.1	2025-10-12	Added diagram, validation workflow, manifest examples.
+v1.2	2025-10-13	Reformatted layout, enlarged titles, consistent spacing, full badge header.
+v1.1	2025-10-12	Added system diagram, validation workflow, manifest examples.
 v1.0	2025-10-04	Initial documentation release.
 
 
