@@ -1,62 +1,46 @@
 <div align="center">
 
-# 📜 Kansas Frontier Matrix — Text Source Manifests
 
-`data/sources/text/`
+📜 Kansas Frontier Matrix — Text Source Manifests
 
-**Mission:** Curate, document, and validate all **external text-based datasets**—including digitized documents, OCR archives, oral histories, and treaty transcripts—
-that serve as the linguistic and narrative foundation for the Kansas Frontier Matrix (KFM).
+data/sources/text/
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![Schema Validate](https://img.shields.io/badge/JSON%20Schema-validated-success?logo=json)](../schema/source.schema.json)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data (CC-BY 4.0)](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+Mission: Curate, document, and validate all external text-based datasets—digitized newspapers, OCR archives, oral histories, treaty transcripts—that form the linguistic and narrative backbone of the Kansas Frontier Matrix (KFM).
 
 </div>
 
----
 
-## 📚 Overview
 
-The `data/sources/text/` directory houses **JSON manifests** describing every external text-based source integrated into KFM—
-ranging from historical treaties and scanned documents to oral history transcripts and OCR corpora.
+⸻
 
-These sources provide the **linguistic, historical, and cultural backbone** of the Kansas knowledge system.
+📚 Overview
 
-They support:
+data/sources/text/ contains JSON manifests that declare provenance, licensing, access endpoints, temporal coverage, and validation metadata for every text source integrated into KFM.
+These manifests drive the ETL, enforce reproducibility, and link outputs to STAC and the Knowledge Graph.
 
-* Historical document digitization and transcription
-* Named Entity Recognition (NER) and NLP enrichment
-* Treaty and land-cession tracking
-* Oral history integration within the knowledge graph
-* STAC-linked provenance for textual archives
+They power:
+	•	OCR cleanup + normalization (UTF-8, diacritics, Unicode NFC)
+	•	NLP enrichment (tokenization, NER, coreference, date normalization)
+	•	Treaty & land-cession document tracking
+	•	Oral history alignment with people/places/events
+	•	STAC-linked provenance for time-aware discovery
 
-Each manifest adheres to `data/sources/schema/source.schema.json`, enabling transparent provenance, licensing,
-and automated validation through CI/CD workflows.
+⸻
 
----
+🗂️ Directory Layout
 
-## 🗂️ Directory Layout
-
-```bash
 data/sources/text/
 ├── README.md
-├── loc_chronicling_america.json      # Library of Congress historical newspaper corpus
-├── kshs_oral_histories.json          # Kansas Historical Society oral history transcripts
-└── yale_avalon_treaties.json         # Yale Avalon Project — historical treaties & legal texts
-```
+├── loc_chronicling_america.json      # Library of Congress historical newspapers
+├── kshs_oral_histories.json          # Kansas Historical Society transcripts
+└── yale_avalon_treaties.json         # Yale Avalon Project — treaties & legal texts
 
-> **Note:**
-> Every manifest records dataset identifiers, licensing, provenance, and verification timestamps
-> to ensure archival integrity and scholarly reproducibility.
+Note: Every manifest includes dataset identifiers, licensing, provenance, verification timestamps, and expected formats—enabling deterministic ingestion and audit-ready lineage.
 
----
+⸻
 
-## 🗞️ Example: `loc_chronicling_america.json`
+🗞️ Example Manifest (authoritative pattern)
 
-```json
 {
   "id": "loc_chronicling_america",
   "title": "Library of Congress — Chronicling America Historical Newspaper Corpus",
@@ -65,281 +49,172 @@ data/sources/text/
   "endpoint": "https://chroniclingamerica.loc.gov/",
   "access_method": "HTTP API",
   "license": "Public Domain (US Government)",
+  "license_url": "https://www.loc.gov/legal/",
   "data_type": "text",
   "format": "JSONL",
   "spatial_coverage": "Kansas, USA",
   "temporal_coverage": "1854–1963",
   "update_frequency": "Monthly",
   "last_verified": "2025-10-12",
-  "linked_pipeline": "text_pipeline.py",
-  "notes": "Used for NLP entity extraction, OCR correction, and timeline construction."
+  "stac_collection": "data/stac/collections/text.json",
+  "linked_pipeline": "src/pipelines/text_pipeline.py",
+  "contact": "digital@loc.gov",
+  "checksum_policy": "sha256 for downloaded bundles",
+  "notes": "NLP: NER, sentence segmentation, and temporal tagging for timeline construction."
 }
-```
 
----
+🔎 Schema essentials (../schema/source.schema.json)
+	•	Required: id, title, provider, endpoint, license, data_type, format, temporal_coverage, last_verified
+	•	Recommended: spatial_coverage, update_frequency, stac_collection, linked_pipeline, checksum_policy, license_url, contact
 
-## 🧭 System Context (GitHub-safe Mermaid)
+⸻
 
-```mermaid
+🧭 System Context (GitHub-safe Mermaid)
+
 flowchart TD
   A["External Text Archives\nLOC · KSHS · Yale Avalon"] --> B["Source Manifests\n`data/sources/text/*.json`"]
   B --> C["ETL Pipeline\n`src/pipelines/text_pipeline.py`"]
   C --> D["Processed Text Corpora\n`data/processed/text/`"]
-  D --> E["Derivatives\nTokenized · Parsed · Linked Text"]
+  D --> E["Derivatives\nTokenized · NER · Linked Entities"]
   D --> F["STAC Collections\n`data/stac/collections/text.json`"]
   F --> G["Knowledge Graph\nPeople ↔ Places ↔ Events ↔ Documents"]
   E --> H["Web UI\nSearch · Timeline · Document Viewer"]
 %%END OF MERMAID%%
-```
 
----
+Mermaid render-lock: The final line must be exactly %%END OF MERMAID%% on its own line (with the percent signs on both sides).
 
-## 🧾 Text Source Summary
+⸻
 
-| Manifest File                  | Provider    | Description                                   | Coverage          | Format   | Verified     |
-| :----------------------------- | :---------- | :-------------------------------------------- | :---------------- | :------- | :----------- |
-| `loc_chronicling_america.json` | LOC         | OCR-based historical newspapers               | Kansas            | JSONL    | ✅ 2025-10-12 |
-| `kshs_oral_histories.json`     | KSHS        | Transcribed oral histories and interviews     | Kansas            | TXT      | ✅ 2025-10-12 |
-| `yale_avalon_treaties.json`    | Yale Avalon | Historical treaty and legal document archives | National / Global | HTML/TXT | ✅ 2025-10-12 |
+⚙️ ETL Integration
 
----
+Pipeline: src/pipelines/text_pipeline.py
+Output: data/processed/text/
 
-## 🧾 ETL Integration
+Workflow
+	1.	Validate manifests against schema → make sources-validate
+	2.	Ingest via HTTP/API, persist to data/raw/text/ (immutable)
+	3.	Normalize encodings/line endings/metadata → UTF-8 + NFC
+	4.	Enrich with NLP (tokenize, NER, temporal parsing, entity linking)
+	5.	Register STAC Items/Collections and Graph edges (doc→entity)
+	6.	Verify checksums, write provenance logs, publish to CI artifacts
 
-**Pipeline:** `src/pipelines/text_pipeline.py`
-**Target Directory:** `data/processed/text/`
+⸻
 
-### Workflow
+🧪 Validation & CI
 
-1. **Validate** manifests against schema (`make sources-validate`)
-2. **Ingest** text sources via HTTP/API or download
-3. **Normalize** (UTF-8 encoding, OCR cleanup, metadata tagging)
-4. **Tokenize** and extract entities via NLP pipeline
-5. **Link** documents to STAC items and knowledge graph entities
-6. **Publish** checksums and metadata to GitHub
+Manual validation
 
----
+python src/utils/validate_sources.py data/sources/text/ \
+  --schema data/sources/schema/source.schema.json
 
-## 🧪 Validation Commands
+Make targets
 
-**Manual Validation**
+make text-sources         # fetch + stage
+make text-validate        # schema + endpoint checks
+make text-stac            # build/validate STAC items
+make text-checksums       # sha256 for processed corpora
 
-```bash
-python src/utils/validate_sources.py data/sources/text/ --schema data/sources/schema/source.schema.json
-```
+CI gates (summary)
+	•	JSON Schema validation (fail on required-missing/type mismatch)
+	•	Endpoint liveness + HTTP 2xx/3xx checks
+	•	License presence & attribution checks
+	•	Encoding/normalization scan (UTF-8, NFC)
+	•	Changelog enforcement on manifest edits
 
-**Make Targets**
+GitHub Actions (snippet)
 
-```bash
-make text-sources
-make text-validate
-```
+name: text-sources-validate
+on:
+  pull_request:
+    paths: [ "data/sources/text/**" ]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -r requirements.txt
+      - run: python src/utils/validate_sources.py data/sources/text/ \
+               --schema data/sources/schema/source.schema.json
+      - run: make text-stac
 
-**CI/CD Checks**
 
-* Schema structure validation
-* Endpoint and access check
-* License and attribution validation
-* Encoding consistency verification
-* Changelog generation on manifest update
+⸻
 
----
+🧩 Provenance Integration
 
-## 🧩 Provenance Integration
+Component	Purpose
+data/raw/text/	Immutable source files (as-fetched)
+data/processed/text/	Cleaned corpora ready for NLP/analysis
+data/stac/collections/text.json	Discovery + asset metadata (time/space/provenance)
+data/checksums/text/	SHA-256 manifests for reproducibility
+src/pipelines/text_pipeline.py	Orchestrates ingestion → enrich → publish → validate
 
-| Component                         | Function                                              |
-| :-------------------------------- | :---------------------------------------------------- |
-| `data/raw/text/`                  | Original OCR or transcript data                       |
-| `data/processed/text/`            | Cleaned and NLP-enriched textual datasets             |
-| `data/stac/collections/text.json` | STAC metadata linking back to manifests               |
-| `data/checksums/text/`            | SHA-256 integrity verification for processed corpora  |
-| `src/pipelines/text_pipeline.py`  | ETL process linking text sources to downstream assets |
 
----
+⸻
 
-## 🧠 MCP Compliance Summary
+🧠 AI / NLP Enrichment Profile (reference)
+	•	Tokenization: sentence + word (Punkt or spaCy default)
+	•	NER: person/org/place/treaty/legal refs; custom Gazetteer boost for Kansas entities
+	•	Temporal: ISO-8601 normalization, fuzzy date ranges, document date vs. event date disambiguation
+	•	Linking: entity IDs resolve to Knowledge Graph nodes; STAC relations mirror doc↔asset ties
+	•	Confidence: store per-span confidence; surface uncertainty in UI tooltips
 
-| MCP Principle           | Implementation                                                  |
-| :---------------------- | :-------------------------------------------------------------- |
-| **Documentation-first** | Each text dataset captured in a JSON manifest before ingestion. |
-| **Reproducibility**     | ETL steps controlled via manifest-driven pipelines.             |
-| **Open Standards**      | JSON Schema · UTF-8 · STAC 1.0 · NLP Metadata JSON.             |
-| **Provenance**          | Traceable lineage: manifest → processed → knowledge graph.      |
-| **Auditability**        | CI-validated manifests and checksum enforcement.                |
+⸻
 
----
+🧠 MCP Compliance Checklist (pre-merge)
+	•	Documentation before data/code (docs-first)
+	•	Schema-valid JSON manifests present and passing CI
+	•	Repro steps (make targets) verified locally
+	•	STAC items/collections updated and validated
+	•	Checksums written for processed corpora
+	•	CHANGELOG updated; version bumped (semver)
+	•	Mermaid ends with %%END OF MERMAID%%
 
-## 🧾 Changelog
+⸻
 
-| Version  | Date       | Summary                                                                   |
-| :------- | :--------- | :------------------------------------------------------------------------ |
-| **v1.1** | 2025-10-12 | Added workflow diagram, validation workflow, and LOC/KSHS/Yale manifests. |
-| v1.0     | 2025-10-04 | Initial creation of text source manifest documentation.                   |
+🧾 Text Source Summary
 
----
+Manifest File	Provider	Description	Coverage	Format	Verified
+loc_chronicling_america.json	LOC	OCR-based historical newspapers	Kansas	JSONL	✅ 2025-10-12
+kshs_oral_histories.json	KSHS	Transcribed oral histories and interviews	Kansas	TXT	✅ 2025-10-12
+yale_avalon_treaties.json	Yale Avalon	Treaty and historical legal documents	National/Global	HTML/TXT	✅ 2025-10-12
 
-## 🏷️ Version Block
 
-```text
+⸻
+
+❓ FAQ (quick hits)
+	•	Why JSON manifests? Deterministic, reviewable, CI-enforced ingestion configs.
+	•	How do we handle broken endpoints? CI fails with actionable message; fall back to archived mirrors if specified.
+	•	Mixed encodings? All inputs normalized to UTF-8/NFC; non-conforming inputs rejected with reason.
+
+⸻
+
+🧾 Changelog
+
+Version	Date	Summary
+v1.2	2025-10-13	Added MCP checklist, AI/NLP profile, CI snippet, schema essentials; tightened provenance.
+v1.1	2025-10-12	Added system diagram, validation workflow, and LOC/KSHS/Yale manifest examples.
+v1.0	2025-10-04	Initial creation of text source manifest documentation.
+
+
+⸻
+
+🏷️ Version Block
+
 Component: data/sources/text/README.md
-SemVer: 1.1.0
+SemVer: 1.2.0
 Spec Dependencies: MCP v1.0 · STAC 1.0
-Last Updated: 2025-10-12
+Last Updated: 2025-10-13
 Maintainer: @bartytime4life
-```
 
----
 
-<div align="center">
-
-**Kansas Frontier Matrix** — *“Voices of the past become data for the future.”*
-📍 [`data/sources/text/`](.) · Canonical registry of historical and linguistic sources powering KFM’s narrative and document intelligence.
-
-</div>
+⸻
 
 
 <div align="center">
 
-# 📜 Kansas Frontier Matrix — Text Source Manifests
 
-`data/sources/text/`
-
-**Mission:** Curate, document, and validate all **external text-based data sources** that provide the historical and linguistic backbone for the Kansas Frontier Matrix (KFM).
-These include digitized newspapers, OCR archives, oral histories, and treaty collections that together form the state’s narrative record.
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![Schema Validate](https://img.shields.io/badge/JSON%20Schema-validated-success?logo=json)](../schema/source.schema.json)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-
-</div>
-
----
-
-## 📚 Overview
-
-`data/sources/text/` contains **JSON manifests** for every text source used in KFM.
-Each manifest captures provenance, licensing, endpoints, and temporal coverage so that
-narrative materials—newspapers, oral histories, treaties—can be ingested, parsed, and linked to the Knowledge Graph.
-
----
-
-## 🗂️ Directory Layout
-
-```bash
-data/sources/text/
-├── README.md
-├── loc_chronicling_america.json      # Library of Congress newspaper corpus
-├── kshs_oral_histories.json          # Kansas Historical Society transcripts
-└── yale_avalon_treaties.json         # Yale Avalon Project treaties & legal docs
-```
-
----
-
-## 🗞️ Example Manifest
-
-```json
-{
-  "id": "loc_chronicling_america",
-  "title": "Library of Congress – Chronicling America",
-  "provider": "Library of Congress",
-  "description": "OCR-processed historical newspaper pages (1789–1963).",
-  "endpoint": "https://chroniclingamerica.loc.gov/",
-  "access_method": "HTTP API",
-  "license": "Public Domain (US Government)",
-  "data_type": "text",
-  "format": "JSONL",
-  "spatial_coverage": "Kansas, USA",
-  "temporal_coverage": "1854–1963",
-  "update_frequency": "Monthly",
-  "last_verified": "2025-10-12",
-  "linked_pipeline": "text_pipeline.py",
-  "notes": "Used for OCR cleanup, entity extraction, and temporal indexing."
-}
-```
-
----
-
-## 🧭 System Context (GitHub-safe Mermaid)
-
-```mermaid
-flowchart TD
-  A["External Text Archives\nLOC · KSHS · Yale Avalon"] --> B["Source Manifests\n`data/sources/text/*.json`"]
-  B --> C["ETL Pipeline\n`src/pipelines/text_pipeline.py`"]
-  C --> D["Processed Text Corpora\n`data/processed/text/`"]
-  D --> E["Derivatives\nTokenized · Parsed · Linked Text"]
-  D --> F["STAC Collections\n`data/stac/collections/text.json`"]
-  F --> G["Knowledge Graph\nPeople ↔ Places ↔ Events ↔ Documents"]
-%%END OF MERMAID%%
-```
-
----
-
-## ⚙️ ETL Integration
-
-**Pipeline:** `src/pipelines/text_pipeline.py`
-**Output:** `data/processed/text/`
-
-### Steps
-
-1. Validate manifests (`make sources-validate`)
-2. Fetch text data via API or HTTP
-3. Normalize encodings and metadata
-4. Tokenize & extract named entities (NER)
-5. Link results to STAC and Knowledge Graph
-6. Publish checksums & provenance logs
-
----
-
-## 🧩 Provenance Integration
-
-| Component                         | Function                            |
-| --------------------------------- | ----------------------------------- |
-| `data/raw/text/`                  | Original OCR or transcript files    |
-| `data/processed/text/`            | Cleaned & NLP-ready corpora         |
-| `data/stac/collections/text.json` | STAC metadata links                 |
-| `data/checksums/text/`            | SHA-256 verification                |
-| `src/pipelines/text_pipeline.py`  | Orchestrates ingestion & enrichment |
-
----
-
-## 🧠 MCP Compliance Summary
-
-| MCP Principle           | Implementation                               |
-| ----------------------- | -------------------------------------------- |
-| **Documentation-first** | Every corpus defined by a JSON manifest.     |
-| **Reproducibility**     | Deterministic ETL using manifest parameters. |
-| **Open Standards**      | JSON Schema · UTF-8 · STAC 1.0.              |
-| **Provenance**          | Manifest → Processed → STAC → Graph.         |
-| **Auditability**        | CI validation and checksum enforcement.      |
-
----
-
-## 🧾 Changelog
-
-| Version  | Date       | Summary                                                    |
-| -------- | ---------- | ---------------------------------------------------------- |
-| **v1.1** | 2025-10-12 | Added diagram, validation workflow, and manifest examples. |
-| v1.0     | 2025-10-04 | Initial creation of text source documentation.             |
-
----
-
-## 🏷️ Version Block
-
-```text
-Component: data/sources/text/README.md
-SemVer: 1.1.0
-Spec Dependencies: MCP v1.0 · STAC 1.0
-Last Updated: 2025-10-12
-Maintainer: @bartytime4life
-```
-
----
-
-<div align="center">
-
-**Kansas Frontier Matrix** — *“Voices of the past become data for the future.”*
-📍 [`data/sources/text/`](.) · Canonical registry of historical and linguistic sources powering KFM’s narrative intelligence.
+Kansas Frontier Matrix — “Voices of the past become data for the future.”
+📍 data/sources/text/ · Canonical registry of historical & linguistic sources powering KFM’s narrative intelligence.
 
 </div>
