@@ -1,30 +1,20 @@
-<div align="center">
+🧭 Kansas Frontier Matrix — Web Application
 
-# 🌐 Kansas Frontier Matrix — **Web Application**  
-`/web/`
+“Time · Terrain · History · Knowledge Graphs”
 
-### *Interactive · Temporal · Spatial · Narrative*
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
-[![Docs · MCP-DL](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+⸻
 
-</div>
 
----
-
-```yaml
 title: "Kansas Frontier Matrix — Web Application"
-version: "v1.6.0"
+version: "v1.0.0"
 last_updated: "2025-10-14"
 authors: ["KFM Web Team"]
-status: "Stable"
-maturity: "Production"
-tags: ["web","react","vite","typescript","maplibre","stac","timeline","mcp"]
+status: "Alpha"
+maturity: "Active Development"
+stack: ["React", "TypeScript", "MapLibre GL", "FastAPI", "Neo4j"]
 license: "MIT (code) | CC-BY 4.0 (docs)"
-semantic_alignment:
+alignment:
   - CIDOC CRM
   - OWL-Time
   - DCAT 2.0
@@ -34,186 +24,172 @@ semantic_alignment:
 ⸻
 
 📚 Table of Contents
-	•	🧭 Overview
-	•	🏗 Architecture at a Glance
-	•	🗂 Directory Layout
-	•	🚀 Quickstart
-	•	🔧 Environment Configuration
-	•	🔌 API Contracts
-	•	🧩 Key Components
-	•	🗺 Data & Semantics
-	•	⚙️ Configuration (generated)
-	•	🏗 UI Architecture
-	•	📱 Accessibility & Responsiveness
-	•	🛡 Security & Privacy
-	•	🛠 Dev Experience & MCP
-	•	⚡ Performance Guide
-	•	🧑‍💻 Developer Recipes
-	•	🧪 Troubleshooting
-	•	🧾 Change Log
-	•	🔗 References & Links
+	•	Overview
+	•	Architecture at a Glance
+	•	Directory Layout
+	•	Getting Started (Dev)
+	•	Running the App
+	•	Environment & Secrets
+	•	Testing & QA
+	•	Accessibility (A11y)
+	•	Data & Layers (STAC)
+	•	CI/CD & Quality Gates
+	•	Contributing
 
 ⸻
 
 🧭 Overview
 
-The KFM Web Application combines an interactive timeline and map with AI-assisted context.
-It renders COG rasters, GeoJSON vectors, and queries the Neo4j Knowledge Graph via FastAPI — dynamically discovering layers from a STAC catalog.
-
-Features include:
-	•	🕰 Timeline (Canvas): smooth zoom/pan/brush with animated playback
-	•	🗺 Map (MapLibre GL): raster + vector rendering, hit-testing
-	•	🔎 Search: graph-powered autocomplete & navigation
-	•	📑 Detail Panels: AI summaries, citations, relationships
-	•	🤖 AI Assistant: contextual Q&A with source links
+The KFM Web app is the interactive, map-and-timeline front end for the Kansas Frontier Matrix. It renders geotemporal data from the knowledge graph (Neo4j) via a FastAPI backend, lets users explore layers, and surfaces AI summaries (“site dossiers”) in context.  ￼  ￼
+	•	MapLibre GL powers the GPU map; Canvas/D3 powers the timeline for high-density event rendering.  ￼
+	•	The app emphasizes reproducibility (MCP), clear provenance, and standards-aligned metadata.  ￼  ￼
 
 ⸻
 
-🏗 Architecture at a Glance
+🏗️ Architecture at a Glance
 
-flowchart TD
-  A["User"] --> B["React SPA (Vite)"]
-  B --> C["TimelineView (Canvas)"]
-  B --> D["MapView (MapLibre GL)"]
-  B --> F["SearchBar"]
-  D --> E["DetailPanel"]
+Mermaid diagram (GitHub-safe) reflecting the thin-client UI and service boundaries:
 
-  subgraph Backend
-    G["FastAPI · /events /entity /search /ask"]
-    H["Layers Config · /layers-config (from STAC)"]
+flowchart LR
+  U["User\nBrowser"] --> R["React SPA\nTimeline (Canvas) · MapLibre GL"]
+  R -->|GraphQL/REST| A["FastAPI\nAPI Layer"]
+  A --> N["Neo4j\nKnowledge Graph"]
+  A --> S["Static Assets\nCOGs · GeoJSON · Tiles"]
+  subgraph ETL/AI
+    P["ETL Pipelines\nIngest · Normalize · STAC"] --> N
+    P --> S
+    M["AI/NLP\nNER · Summaries · Linking"] --> N
   end
+  style R fill:#eef,stroke:#99f
+  style A fill:#efe,stroke:#6c6
+  style N fill:#ffe,stroke:#cc9
+  style S fill:#f8f8f8,stroke:#bbb
+  style P fill:#fff0f0,stroke:#f99
+  style M fill:#fff0f0,stroke:#f99
 
-  C <-->|time window| D
-  C -->|GET /events| G
-  D -->|GET /layers-config| H
-  E -->|GET /entity/:id| G
-  F -->|GET /search| G
-
-<!-- END OF MERMAID -->
-
-
-
-⸻
-
-🗂 Directory Layout
-
-/web/
-├── src/
-│   ├── components/   # TimelineView, MapView, LayerControls, DetailPanel, SearchBar, AIAssistant
-│   ├── hooks/        # useTimelineWindow, useMapLayers, useDebounce, useHotkeys
-│   ├── context/      # AppContext, ThemeProvider
-│   ├── utils/        # api.ts, geometry.ts, stac.ts, time.ts
-│   ├── styles/       # tokens.css, global.css
-│   └── types/        # api.d.ts, graph.d.ts, stac.d.ts
-├── config/           # generated layers.json, app.config.json
-├── public/           # favicon, manifest, icons
-├── package.json
-├── vite.config.ts
-└── README.md
-
+%% END OF MERMAID
+	•	UI focuses on visualization & interaction; heavy logic (querying, geospatial IO, AI) runs server-side.  ￼
+	•	Data delivery relies on STAC-indexed COG/GeoJSON assets for fast, reproducible map layers.  ￼
 
 ⸻
 
-🚀 Quickstart
+🗂️ Directory Layout
 
-Prerequisites
-	•	Node.js 18+ (or 20+)
-	•	npm 10+ (or pnpm/yarn)
-	•	Running backend (see ../docs/sop.md)
+Keep the web app isolated and clean inside the monorepo:
 
+web/
+├─ src/
+│  ├─ components/         # MapView, Timeline, DetailPanel, LayerControls, Search
+│  ├─ maps/               # Map styles, sources, layer defs
+│  ├─ timeline/           # Canvas timeline modules
+│  ├─ api/                # API client (REST/GraphQL)
+│  ├─ state/              # Global state (Context/Redux)
+│  ├─ utils/              # formatters, a11y helpers
+│  └─ index.tsx
+├─ public/                # static assets
+├─ package.json
+├─ vite.config.ts         # or webpack.config.js
+└─ README.md              # this file
+
+This structure aligns with the monorepo’s top-level blueprint and separations of concern.  ￼
+
+⸻
+
+⚡ Getting Started (Dev)
+
+Prereqs
+	•	Node 18+ / PNPM or NPM
+	•	A running backend (FastAPI) and access to dev Neo4j (see /src backend docs)  ￼
+	•	Map assets & STAC catalog available (local or remote)  ￼
+
+Install & Run
+
+# from repo root
 cd web
-npm ci
-npm run dev        # http://localhost:5173
-npm run build      # production build
-npm run preview    # preview dist
-npm run lint       # eslint + prettier
-npm run test       # jest + testing-library
+pnpm install   # or npm i
 
+# env: see .env.example below
+pnpm dev       # or npm run dev
 
-⸻
-
-🔧 Environment Configuration
-
-.env example (Vite uses VITE_* vars):
+Environment variables (web/.env.local):
 
 VITE_API_BASE_URL=http://localhost:8000
-VITE_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/positron-gl-style/style.json
-VITE_APP_TITLE="Kansas Frontier Matrix"
-VITE_ENABLE_AI_ASSISTANT=true
-
-Notes:
-	•	Never embed secrets — only public VITE_* variables
-	•	For self-hosted tiles, update VITE_MAP_STYLE_URL
-
-⸻
-
-🔌 API Contracts
-
-Endpoint	Method	Query / Body	Returns	Used By
-/events	GET	start, end, bbox?, type?	Event[]	TimelineView, MapView
-/entity/{id}	GET	—	EntityDossier	DetailPanel
-/layers-config	GET	—	LayerDef[]	MapView
-/search	GET	q, limit?	EntitySummary[]	SearchBar
-/ask	POST	{ “question”: string }	{ “answer”: string, “citations”: [] }	AIAssistant
+VITE_MAP_STYLE_URL=/maps/style.json
+VITE_STAC_INDEX_URL=/stac/index.json
 
 
 ⸻
 
-🧩 Key Components
-	•	TimelineView: Canvas rendering, keyboard navigation, brush select
-	•	MapView: Raster + vector GeoJSON layers, click → select → DetailPanel
-	•	LayerControls: Toggles, opacity sliders, category filters
-	•	DetailPanel: Dossier view (summary, relations, citations)
-	•	SearchBar: Async autocomplete + flyTo on Enter
-	•	AIAssistant: Embedded Q&A panel with citations
+🗺️ Data & Layers (STAC)
+
+The app loads map sources (COG rasters, GeoJSON vectors) by reading the STAC index and attaching layers to MapLibre. Keep layers small and tiled when feasible.  ￼
+	•	COG for rasters; GeoJSON/MBTiles for vectors.  ￼
+	•	Historical topo sheets, DEM hillshades, soils, treaty polygons, hydrology, etc., are advertised via STAC Items.
 
 ⸻
 
-🗺 Data & Semantics
-	•	Vectors: GeoJSON (with time attributes)
-	•	Rasters: COGs (Cloud-Optimized GeoTIFFs)
-	•	STAC 1.0: drives /web/config/layers.json
-	•	Ontologies: CIDOC-CRM, OWL-Time, PeriodO
+🗺️+🕰️ Map & Timeline Concepts
+	•	Map: MapLibre GL layers + hover/click interactions → opens DetailPanel with summary, sources, related entities.  ￼
+	•	Timeline: Canvas draws dense events efficiently; zoom scales from decades to months; brushing updates map filters.  ￼
+	•	AI Dossiers: Summaries for places/events powered by NER + cross-source linking; surfaced as readable context on selection.  ￼
 
 ⸻
 
-🧪 Troubleshooting
+🧪 Testing & QA
+	•	Unit (Jest/RTL) for components and utilities.
+	•	Integration tests for API client and render flows.
+	•	Visual/Interaction checks for timeline performance (60fps target on typical data).  ￼
+	•	Lint/Format via pre-commit hooks.  ￼
 
-Symptom	Check
-Timeline empty	/events params valid? UTC? bbox correct?
-Layer missing	Exists in layers.json? CORS? zoom range?
-COG blurry/slow	Has internal overviews? correct tiles URL?
-AI answers blank	/ask reachable? sanitization too strict?
-Mermaid not rendering	Ensure fenced ```mermaid + closing comment 
+Run:
 
-
-⸻
-
-🧾 Change Log
-
-Version	Date	Author(s)	Summary
-v1.6.0	2025-10-14	KFM Web Team	Rebuilt README to MCP-DL v6.2, fixed Mermaid rendering
-v1.5.0	2025-09-10	KFM Web Team	Added STAC → layers.json pipeline
-v1.4.0	2025-08-02	KFM Web Team	Integrated AI Assistant panel
+pnpm test
+pnpm lint
+pnpm typecheck
 
 
 ⸻
 
-🔗 References & Links
-	•	web/ARCHITECTURE.md
-	•	../docs/architecture.md
-	•	../docs/sop.md
-	•	../docs/model_card.md
+♿ Accessibility (A11y)
+
+Follow WAI-ARIA patterns, keyboard navigation, color-contrast checks; ensure map overlays provide text equivalents / legends, and timeline is keyboard-operable.
 
 ⸻
 
+🔐 Environment & Secrets
+	•	Only non-sensitive map/style URLs in the frontend .env.
+	•	Backend secrets never live in the web app. Reference the API gateway for protected data access.  ￼
 
-<div align="center">
+⸻
 
+🔁 CI/CD & Quality Gates
+	•	Build, type-check, lint, test on PRs; enforce status checks before merge.  ￼
+	•	Optionally deploy preview builds for docs/site.
+	•	Validate STAC links in PR (fail if broken).  ￼
 
-KFM Web UI — Explore Kansas across time & space
-MIT License · MCP-DL v6.2 · Last Updated 2025-10-14
+⸻
 
-</div>
-```
+🤝 Contributing
 
+Please read the project’s contribution guidelines and MCP-style documentation practice. Add or modify UI with tests, docs, and reproducible demos.  ￼  ￼
+
+⸻
+
+🔗 Cross-References
+	•	System Design (Knowledge Hub) – end-to-end pipeline & KG APIs.  ￼
+	•	Web UI Design Document – component contracts, UX flows.  ￼
+	•	Monorepo Design – repository layout & governance.  ￼
+	•	File & Data Architecture (STAC, COG, GeoJSON) – data supply to the web app.  ￼
+	•	AI/NLP Developer Doc – summaries, NER, linking.  ￼
+	•	Design Audit (Gaps & Enhancements) – uncertainty, storytelling, simulations.  ￼
+	•	GUI Engineering Guide (Cross-platform UI principles) – event loops, retained vs immediate mode, declarative UI cues.  ￼
+
+⸻
+
+📜 License
+
+Code © KFM under MIT; documentation under CC-BY 4.0.
+
+⸻
+
+“Make it reproducible. Make it explorable. Make it Kansas.”
