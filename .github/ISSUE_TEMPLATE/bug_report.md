@@ -1,199 +1,307 @@
-<div align="center">
+name: "🐞 Bug Report"
+description: "Report a defect in code, data, metadata, or workflows — MCP-compliant & reproducible"
+title: "[Bug]: <short summary>"
+labels:
+  - bug
+  - needs-triage
+assignees:
+  - kfm-architecture
+# KFM header metadata (for humans)
+# version: v2.2.0
+# last_updated: 2025-10-13
+# owners: @kfm-architecture @kfm-data @kfm-security
 
-# 🐞 Kansas Frontier Matrix — Bug Report Template
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧩 Summary
+        *“Every Bug Leaves a Trace — Every Trace Leads to Reproducibility.”*
+        Please provide a concise description of the unexpected behavior or data discrepancy.
+        > Example: Terrain ETL workflow fails checksum verification for 2020 LiDAR tiles when reprojecting to EPSG:4326.
 
-### *“Every Bug Leaves a Trace — Every Trace Leads to Reproducibility.”*
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened? What were you trying to do?
+      placeholder: |
+        - ETL step failed during raster reprojection
+        - Graph build produced missing edges for treaty X
+    validations:
+      required: true
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+  - type: markdown
+    attributes:
+      value: "## 🧠 Context"
 
-</div>
+  - type: input
+    id: module
+    attributes:
+      label: Module / Workflow
+      description: File or workflow name
+      placeholder: terrain_pipeline.py | stac-validate.yml | src/graph/build_graph.py
+    validations:
+      required: true
 
----
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Data Domain
+      options:
+        - Terrain
+        - Hydrology
+        - Hazards
+        - Landcover
+        - Climate
+        - Text / AI / NLP
+        - Web / UI
+        - API
+        - ETL
+        - CI/CD
+        - Knowledge Graph
+      multiple: true
+    validations:
+      required: true
 
-## 🧩 Summary
+  - type: input
+    id: branch_commit
+    attributes:
+      label: Branch / Commit
+      placeholder: main | feature/lidar-v2 | 4a8e91c
+    validations:
+      required: true
 
-Clearly describe the **unexpected behavior** or **data discrepancy**. Include what you were attempting to do and what went wrong.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python/Node versions, container image hash, runner type
+      placeholder: Ubuntu 22.04 · Python 3.11 · node 20.x · gh-runner=ubuntu-latest · image sha256:…
+    validations:
+      required: true
 
-> **Example:**
-> Terrain ETL workflow fails checksum verification for 2020 LiDAR tiles when reprojecting to EPSG:4326.
+  - type: input
+    id: date_observed
+    attributes:
+      label: Date Observed
+      placeholder: "2025-10-13"
+    validations:
+      required: true
 
----
+  - type: input
+    id: stac_id
+    attributes:
+      label: Dataset Version / STAC ID
+      placeholder: terrain_ks_1m_v2.3 | data/stac/items/terrain_ks_2020.json
+    validations:
+      required: false
 
-## 🧠 Context
+  - type: input
+    id: ci_url
+    attributes:
+      label: Workflow Run URL (if applicable)
+      placeholder: https://github.com/.../runs/123456789
+    validations:
+      required: false
 
-| Field                         | Description                                                                    |
-| :---------------------------- | :----------------------------------------------------------------------------- |
-| **Module / Workflow**         | (e.g., `terrain_pipeline.py`, `stac-validate.yml`, `src/graph/build_graph.py`) |
-| **Data Domain**               | (e.g., Terrain, Hydrology, Hazards, Landcover, Climate, AI/NLP)                |
-| **Branch / Commit**           | (e.g., `main`, `feature/lidar-v2`, `4a8e91c`)                                  |
-| **Environment**               | (OS, Python/Node version, GitHub runner type, Docker image)                    |
-| **Date Observed**             | (e.g., `2025-10-10`)                                                           |
-| **Dataset Version / STAC ID** | (e.g., `terrain_ks_1m_v2.3`, `stac/items/terrain_ks_2020.json`)                |
-| **Workflow Run URL**          | (link to CI/CD run if applicable)                                              |
+  - type: markdown
+    attributes:
+      value: "## 🔁 Steps to Reproduce"
 
----
+  - type: textarea
+    id: steps
+    attributes:
+      label: Deterministic Steps
+      description: Minimal input, exact commands, reproducible steps
+      placeholder: |
+        1) make terrain
+        2) python src/pipelines/terrain/terrain_pipeline.py --config config/test_terrain.yaml
+        3) Observe FileNotFoundError for intermediate COG
+    validations:
+      required: true
 
-## 🔁 Steps to Reproduce
+  - type: markdown
+    attributes:
+      value: "## 🧠 Expected Behavior"
 
-Provide **deterministic steps** to replicate this issue.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+      placeholder: Expected artifact(s), message(s), or output structure
+    validations:
+      required: true
 
-```bash
-# Example
-make terrain
-# or
-python src/pipelines/terrain/terrain_pipeline.py --config config/test_terrain.yaml
+  - type: markdown
+    attributes:
+      value: "## 💥 Actual Behavior"
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+      description: Include error messages, stack traces, or screenshots
+      placeholder: |
+        FileNotFoundError: 'data/processed/terrain/ks_1m_dem_2020.tif' missing.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 📄 Logs & Evidence"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Evidence
+      description: Paste key snippets or attach artifacts (avoid secrets)
+      placeholder: data/work/logs/<domain>_etl_debug.log
+      render: shell
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "## 🔍 Checksum / Integrity Verification (if applicable)"
+
+  - type: textarea
+    id: checksum_table
+    attributes:
+      label: Checksum Comparisons
+      description: Compare Expected vs Observed SHA-256 when integrity is relevant
+      placeholder: |
+        | File                                        | Expected SHA-256 | Observed SHA-256 |
+        | :------------------------------------------ | :--------------- | :--------------- |
+        | data/processed/terrain/ks_1m_dem_2020.tif   | abc123…          | def789…          |
+        | data/stac/items/terrain_ks_2020.json        | ffd234…          | ffd234… ✅        |
+      render: markdown
+
+  - type: markdown
+    attributes:
+      value: "## 🧾 Impact Assessment"
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - "🟥 Critical"
+        - "🟧 Major"
+        - "🟨 Moderate"
+        - "🟩 Minor"
+    validations:
+      required: true
+
+  - type: textarea
+    id: downstream
+    attributes:
+      label: Affected Pipelines / Downstream Effects
+      description: Impact on ETL/web/graph/STAC, end users, or CI/CD
+      placeholder: |
+        - Affected pipelines: make terrain
+        - Downstream: web UI map missing tiles; STAC validate fails
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧰 Suggested Fix / Next Steps (Optional)"
+
+  - type: checkboxes
+    id: suggested
+    attributes:
+      label: Candidate Actions
+      options:
+        - label: Patch ETL pipeline logic
+        - label: Re-run `make checksums`
+        - label: Update STAC metadata (datetime, bbox, CRS)
+        - label: Regenerate missing artifacts
+        - label: Verify locally (`make validate-<domain>`)
+        - label: Submit PR referencing this issue
+
+  - type: markdown
+    attributes:
+      value: "## 🧪 Validation Commands"
+
+  - type: textarea
+    id: validation_cmds
+    attributes:
+      label: Commands for Validation
+      description: Exact commands others can run to reproduce/verify
+      placeholder: |
+        make checksums
+        make terrain
+        make stac-validate
+        pre-commit run --all-files
+      render: shell
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧭 Versioning Impact (SemVer / STAC)"
+
+  - type: textarea
+    id: versioning
+    attributes:
+      label: Versioning Summary
+      description: Indicate scope and proposed bump(s)
+      placeholder: |
+        | Scope                  | Current | Affected | Action        |
+        | :--------------------- | :------ | :------- | :------------ |
+        | Dataset / STAC         | v1.3.0  | ✅       | bump → v1.3.1 |
+        | Pipeline / Script      | v2.0.0  | ✅       | fix → v2.0.1  |
+        | Workflow (CI/CD)       | v1.2.0  | ❌       | none          |
+        | Repo Release (SemVer)  | v1.4.0  | ✅       | patch         |
+      render: markdown
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "## ✅ MCP Compliance Checklist"
+
+  - type: checkboxes
+    id: mcp_checklist
+    attributes:
+      label: MCP Principles
+      options:
+        - label: Documentation-first — Clear summary + structured context
+          required: true
+        - label: Reproducibility — Deterministic steps + validation commands
+          required: true
+        - label: Open Standards — Make/CI workflows used to reproduce
+          required: true
+        - label: Provenance — Logs, checksums, STAC items attached
+          required: true
+        - label: Auditability — CI run/links provided; evidence attached
+          required: true
+        - label: Versioning — SemVer / STAC version fields updated or impact noted
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧩 Related Issues / References"
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related Links
+      description: Link PRs, similar issues, affected STAC items, ADRs, SOPs
+      placeholder: |
+        - PR: #123
+        - Similar: #456
+        - STAC: data/stac/items/terrain_ks_2020.json
+        - Docs: docs/sop/terrain_pipeline.md
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Screenshots, specs, or diagnostic insight to accelerate triage
+    validations:
+      required: false
 ```
-
-1. **Step 1** — Command or Make target used
-2. **Step 2** — Input file(s) or dataset IDs
-3. **Step 3** — Observed output or failure state
-
----
-
-## 🧠 Expected Behavior
-
-Describe **what should have happened** if the system behaved correctly.
-*(Include file outputs, logs, or expected message.)*
-
----
-
-## 💥 Actual Behavior
-
-Describe **what actually happened** — including error messages, stack traces, or screenshots.
-
-```bash
-# Example error
-FileNotFoundError: 'data/processed/terrain/ks_1m_dem_2020.tif' missing.
-```
-
-> **Optional:** Attach log excerpt or upload `.log` file under `data/work/logs/`.
-
----
-
-## 📄 Logs & Evidence
-
-| Artifact              | Path / Link                                                    |
-| :-------------------- | :------------------------------------------------------------- |
-| **Log File**          | `data/work/logs/<domain>_etl_debug.log`                        |
-| **CI/CD Run URL**     | (e.g., `https://github.com/bartytime4life/.../runs/123456789`) |
-| **Screenshot / JSON** | Attach below (if UI or API related)                            |
-
-<details><summary><b>Example Traceback (expand)</b></summary>
-
-```bash
-Traceback (most recent call last):
-  File "src/pipelines/terrain_pipeline.py", line 214, in <module>
-    main()
-FileNotFoundError: Missing intermediate COG at data/work/tmp/dem_fill_stage.tif
-```
-
-</details>
-
----
-
-## 🔍 Checksum / Integrity Verification
-
-If the issue relates to data integrity, include hash comparisons.
-
-| File                                        | Expected SHA-256 | Observed SHA-256 |
-| :------------------------------------------ | :--------------- | :--------------- |
-| `data/processed/terrain/ks_1m_dem_2020.tif` | `abc123...`      | `def789...`      |
-| `data/stac/items/terrain_ks_2020.json`      | `ffd234...`      | `ffd234...` ✅    |
-
----
-
-## 🧾 Impact Assessment
-
-| Category               | Impact / Notes                                                         |
-| :--------------------- | :--------------------------------------------------------------------- |
-| **Severity**           | 🟥 Critical / 🟧 Major / 🟨 Moderate / 🟩 Minor                        |
-| **Affected Pipelines** | (`make terrain`, `make hydrology`, etc.)                               |
-| **Downstream Effects** | (e.g., web UI map missing tiles, graph edges broken, STAC invalidated) |
-| **User Impact**        | (Researchers, API clients, CI/CD jobs, public site)                    |
-
----
-
-## 🧰 Suggested Fix / Next Steps *(Optional)*
-
-If possible, provide proposed resolutions:
-
-* [ ] Patch ETL pipeline logic
-* [ ] Re-run `make checksums`
-* [ ] Update STAC metadata (datetime, bbox, CRS)
-* [ ] Regenerate missing artifacts
-* [ ] Verify in local environment (`make validate-<domain>`)
-* [ ] Submit PR referencing this issue
-
----
-
-## 🧪 Validation Commands
-
-Provide the exact commands to **validate or reproduce**.
-
-```bash
-# Verify checksum integrity
-make checksums
-
-# Rebuild affected pipeline
-make terrain
-
-# Validate STAC JSON
-make stac-validate
-
-# Run all pre-commit tests
-pre-commit run --all-files
-```
-
----
-
-## 🧭 Versioning Impact
-
-| Scope                     | Current Version | Affected | Action                 |
-| :------------------------ | :-------------- | :------- | :--------------------- |
-| **Dataset / STAC**        | `v1.3.0`        | ✅        | bump → `v1.3.1`        |
-| **Pipeline / Script**     | `v2.0.0`        | ✅        | fix → `v2.0.1`         |
-| **Workflow (CI/CD)**      | `v1.2.0`        | ❌        | none                   |
-| **Repo Release (SemVer)** | `v1.4.0`        | ✅        | patch release required |
-
----
-
-## 🧠 MCP Compliance Checklist
-
-| MCP Principle           | Confirmed                                        |
-| :---------------------- | :----------------------------------------------- |
-| **Documentation-first** | 🗹 Clear summary + structured context            |
-| **Reproducibility**     | 🗹 Steps + deterministic validation commands     |
-| **Open Standards**      | 🗹 Error reproducible via Make/CI workflows      |
-| **Provenance**          | 🗹 Logs, checksums, STAC items attached          |
-| **Auditability**        | 🗹 CI/CD reference linked; reproducible evidence |
-| **Versioning**          | 🗹 Version fields updated or impact noted        |
-
----
-
-## 🧩 Related Issues / References
-
-* Linked PRs: #…
-* Similar Issues: #…
-* Affected Datasets: `data/stac/items/...`
-* Documentation References: `docs/sop/terrain_pipeline.md`
-
----
-
-## 🧠 Additional Notes
-
-Include screenshots, system specs, related discussions, or diagnostic insight that can accelerate triage.
-
----
-
-<div align="center">
-
-### 🧭 Kansas Frontier Matrix — *“Every Bug Leaves a Trace · Every Trace Leads to Reproducibility.”*
-
-**Report · Verify · Fix · Document · Version.**
-
-</div>
