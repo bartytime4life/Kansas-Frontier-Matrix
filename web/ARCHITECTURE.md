@@ -1,18 +1,16 @@
 <div align="center">
 
-# 🧭 Kansas Frontier Matrix — **Web Application (`/web/`)**
+# 🌐 Kansas Frontier Matrix — **Web Application**
 
 ### *Interactive · Temporal · Spatial · Narrative*
 
-[![React 18+](https://img.shields.io/badge/React-18%2B-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-[![MapLibre GL](https://img.shields.io/badge/MapLibre%20GL-JS-brightgreen)](https://maplibre.org/)
-[![HTML5 Canvas](https://img.shields.io/badge/HTML5-Canvas-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009485?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
 [![Pages Deploy](https://img.shields.io/github/deployments/bartytime4life/Kansas-Frontier-Matrix/github-pages?label=Pages%20Deploy)](https://bartytime4life.github.io/Kansas-Frontier-Matrix/)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../../.github/workflows/trivy.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../docs/)
+[![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20(code)%20%7C%20CC--BY%204.0%20(docs)-blue)](../../LICENSE)
 
 </div>
 
@@ -21,7 +19,7 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Web Application"
-version: "v1.7.1"
+version: "v1.7.2"
 last_updated: "2025-10-14"
 authors: ["KFM Web Team"]
 status: "Stable"
@@ -38,14 +36,31 @@ semantic_alignment:
 
 ⸻
 
-🧭 Overview
-
-The Kansas Frontier Matrix Web App is the interactive exploration layer of the system — a React + MapLibre single-page application connecting time · terrain · story.
-It visualizes treaties, trails, hydrology, climate, and archival narratives synchronized with a FastAPI / Neo4j semantic backend built on CIDOC CRM + OWL-Time ontologies.
+📚 Table of Contents
+	•	Overview
+	•	Architecture at a Glance
+	•	Directory Layout
+	•	Quickstart
+	•	Core Components
+	•	Data Standards
+	•	Configuration
+	•	Accessibility
+	•	Security
+	•	Performance
+	•	Developer Reference
+	•	Troubleshooting
+	•	References
 
 ⸻
 
-🏗️ Architecture Snapshot
+🧭 Overview
+
+The Kansas Frontier Matrix Web Application is the interactive exploration layer of the project — a React + MapLibre GL single-page interface connecting time · terrain · story.
+It synchronizes maps, timelines, and documents backed by a FastAPI + Neo4j semantic backend aligned to CIDOC CRM and OWL-Time.
+
+⸻
+
+🏗️ Architecture at a Glance
 
 flowchart TD
   A["Sources<br/>maps · rasters · vectors · text archives"]
@@ -66,26 +81,26 @@ flowchart TD
 🗂️ Directory Layout
 
 web/
-├─ src/
-│  ├─ components/      # TimelineView · MapView · LayerControls · DetailPanel · SearchBar · AIAssistant
-│  ├─ hooks/           # useMap · useTimeline · useStac · useSearch
-│  ├─ context/         # Global state providers (timeline window, layer toggles)
-│  ├─ utils/           # API client · formatters · geometry helpers
-│  ├─ styles/          # Tailwind / SCSS tokens
-│  └─ types/           # TypeScript interfaces (API/graph/config)
-├─ public/             # Static assets (manifest, icons)
-├─ config/             # Generated configs (layers.json, app.config.json)
-├─ package.json        # Node project metadata
-├─ vite.config.ts      # Vite build config
-└─ README.md           # This file
+├── src/
+│   ├── components/   # TimelineView · MapView · LayerControls · DetailPanel · SearchBar · AIAssistant
+│   ├── hooks/        # useMap · useTimeline · useStac · useSearch
+│   ├── context/      # Global state (timeline window, layer toggles)
+│   ├── utils/        # API client · formatters · geometry helpers
+│   ├── styles/       # Tailwind / SCSS design tokens
+│   └── types/        # Shared TypeScript interfaces
+├── public/           # Static assets (icons, manifest)
+├── config/           # Auto-generated (layers.json, app.config.json)
+├── package.json      # Node project metadata
+├── vite.config.ts    # Vite build config
+└── README.md         # This file
 
 
 ⸻
 
 ⚡ Quickstart
 
-Prereqs
-	•	Node.js 18 or 20 + npm/yarn
+Prerequisites
+	•	Node.js 18+
 	•	Backend API running → ../docs/sop.md
 
 Environment
@@ -94,51 +109,45 @@ VITE_API_BASE_URL=http://localhost:8000
 VITE_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/positron-gl-style/style.json
 VITE_APP_TITLE="Kansas Frontier Matrix"
 
-Run
+Setup
 
 cd web
 npm install
-npm run dev       # local dev http://localhost:5173
-npm run build     # production bundle
-npm run preview   # serve build
+npm run dev
+npm run build
+npm run preview
 
 
 ⸻
 
-🔌 Core API Endpoints
+🧩 Core Components
 
-Endpoint	Method	Params	Returns	Used By
-/events	GET	start,end,bbox?,type?	Event[] (GeoJSON)	Timeline · Map
-/entity/{id}	GET	—	Entity dossier (summary, relations)	Detail Panel
-/layers-config	GET	—	Layer defs (from STAC)	Map · Controls
-/search	GET	q,limit?	Entity matches	Search Bar
-/ask	POST	{question}	{answer, citations[]}	AI Assistant
+Component	Purpose
+TimelineView	High-performance HTML5 Canvas timeline (zoom/pan/filter → emits time window)
+MapView	MapLibre GL map; renders GeoJSON & COGs; integrates with timeline filters
+LayerControls	Toggles, legends, and opacity; built from config/layers.json
+DetailPanel	Entity dossiers + AI summaries + source citations
+SearchBar	Graph search autocomplete → highlights on map/timeline
+AIAssistant	Conversational Q&A with citation links
 
-
-⸻
-
-🧩 Key Components
-	•	TimelineView — Canvas timeline (zoom/pan/filter → time window emit)
-	•	MapView — MapLibre map (GeoJSON + COG layers · hit testing)
-	•	LayerControls — Toggle/opacity UI (auto-generated from STAC)
-	•	DetailPanel — Entity dossier + AI summary + citations
-	•	SearchBar — Autocomplete graph search → flyTo + select
-	•	AIAssistant — Conversational Q&A with inline citations
 
 ⸻
 
-🗂 Data Standards
-	•	GeoJSON · COG · STAC 1.0 for map layers
-	•	CIDOC CRM + OWL-Time for semantic events & intervals
-	•	Temporal metadata drives timeline visibility
+🗺️ Data Standards
+	•	GeoJSON → vector features
+	•	COG (Cloud-Optimized GeoTIFF) → raster overlays
+	•	STAC Catalogs → spatio-temporal asset indexing
+	•	CIDOC CRM + OWL-Time → graph semantics for events, entities, and intervals
 
 ⸻
 
-⚙️ Config Example
+⚙️ Configuration
+
+Example layer entry from /config/layers.json:
 
 {
   "id": "usgs_topo_larned_1894",
-  "label": "USGS Topo Larned (1894)",
+  "label": "USGS Topographic Map — Larned (1894)",
   "type": "raster-cog",
   "source": { "url": "/tiles/usgs_topo_larned_1894.tif", "minzoom": 0, "maxzoom": 14 },
   "time": { "start": "1894-01-01", "end": "1894-12-31" },
@@ -147,64 +156,58 @@ Endpoint	Method	Params	Returns	Used By
   "opacity": 0.8
 }
 
+Vectors use "type": "vector-geojson" with "source": {"url": ".../layer.geojson"}.
+The time block syncs with timeline filters.
 
 ⸻
 
-♿ Accessibility & Responsiveness
-	•	Keyboard navigation (← → zoom time, f focus map, s search)
-	•	ARIA roles/labels · focus rings · skip-links
-	•	Color-blind-safe palette · high-contrast toggle
-	•	Reduced-motion compliant animations
+♿ Accessibility
+	•	Keyboard navigation (←/→ timeline, f focus map, s focus search)
+	•	WAI-ARIA roles/labels, skip-links, and focus rings
+	•	High-contrast color mode · reduced-motion animations
 
 ⸻
 
-🛡️ Security & Privacy
-	•	No secrets in client code (VITE_ = public vars)
-	•	HTTPS required in production
-	•	Escape/sanitize AI HTML output
-	•	Analytics opt-in only (no ID/BBox leaks)
+🛡️ Security
+	•	No secrets in client (VITE_ = public vars only)
+	•	HTTPS enforced in production
+	•	AI outputs sanitized; no user data logged
+	•	Analytics disabled by default (opt-in only)
 
 ⸻
 
-🧠 MCP & DevEx
-	•	CI/CD: GitHub Actions (build · lint · test · deploy)
-	•	Security: CodeQL + Trivy
-	•	Tests: Jest (unit) · Cypress (E2E planned)
-	•	Docs-first: update ../docs/{architecture,sop,model_card}.md with changes
-	•	Reproducibility: pinned deps · checksums · deterministic builds
+⚡️ Performance
+	•	Offscreen canvas buffers; rAF-driven redraw
+	•	MapLibre with overviews + vector tiles
+	•	Lazy-loaded routes; compressed static assets (Gzip/Brotli)
 
 ⸻
 
-⚡ Performance Notes
-	•	Canvas timeline off-screen buffers · rAF render · batched paints
-	•	MapLibre COGs with overviews · vector-tile sources for density
-	•	Network gzip/Brotli · lazy-load non-critical chunks
+🧪 Developer Reference
 
-⸻
+npm run dev       # start dev server
+npm run build     # build production bundle
+npm run preview   # serve built site
+npm run lint      # lint/format
+npm run test      # Jest unit tests
 
-🧪 Developer Cheat-Sheet
+Key Files:
+src/components/TimelineView.tsx · MapView.tsx · DetailPanel.tsx · config/layers.json
 
-npm run dev      # local dev
-npm run build    # prod bundle
-npm run preview  # serve build
-npm run lint     # lint/format
-npm run test     # Jest
-
-Key files:
-src/components/TimelineView.tsx, MapView.tsx, DetailPanel.tsx, config/layers.json
-
-Add layer → create STAC item → regenerate config → toggle appears.
+To add a new layer:
+	1.	Add STAC item under data/stac/
+	2.	Rebuild config → new toggle auto-appears
 
 ⸻
 
 🧰 Troubleshooting
 
-Issue	Check
-Timeline empty	API /events range/UTC
-Layer missing	config/layers.json path & CORS
-COG blurry	Internal overviews present
-AI silent	Backend /ask reachable
-Mermaid fails	Rename class end → done
+Issue	Solution
+Timeline empty	Verify /events returns valid date range (UTC).
+Missing layer	Confirm config/layers.json URL & CORS settings.
+Blurry raster	Add internal overviews in GeoTIFF (COG).
+AI silent	Ensure backend /ask service reachable.
+Mermaid fails in docs	Avoid end as class name → rename to done.
 
 
 ⸻
@@ -221,7 +224,8 @@ Mermaid fails	Rename class end → done
 <div align="center">
 
 
-✨ Kansas Frontier Matrix Web UI — Explore Kansas across Time and Space ✨
+✨ Kansas Frontier Matrix — Web Application ✨
+Exploring Kansas through Time, Terrain, and Story.
 
 </div>
 ```
