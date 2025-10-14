@@ -1,66 +1,68 @@
 <div align="center">
 
-
 ## 🌐 Kansas Frontier Matrix — Web Application (/web/)
 
 Interactive · Temporal · Spatial · Narrative
 
 </div>
 
-
-
-⸻
-
-
----
+<!--
 title: "KFM • Web Application"
-version: "v1.6.0"
-last_updated: "2025-10-13"
-owners: ["@kfm-web", "@kfm-architecture"]
-tags: ["web","react","maplibre","canvas","timeline","vite","typescript","mcp"]
-license: "MIT"
-status: "Stable"
+version: v1.6.0
+last_updated: 2025-10-14
+owners: [@kfm-web, @kfm-architecture]
+tags: [web, react, maplibre, canvas, timeline, vite, typescript, mcp]
+license: MIT
+status: Stable
+-->
+
+> **v1.6.0** · *Updated 2025-10-14* · **MIT License**  
+> Owners @kfm-web | @kfm-architecture · Tags web · react · maplibre · mcp
+
 ---
 
-📖 Overview
+## 📖 Overview
 
-The Kansas Frontier Matrix Web App is the user-facing portal. It merges:
-	•	🕰 Timeline (Canvas): performant zoom/pan/brush with animated playback
-	•	🗺 Map (MapLibre GL): COG rasters + GeoJSON vectors + hit-testing
-	•	🔎 Search: graph-powered autocomplete & results (entities / events)
-	•	📑 Detail Panels: AI summaries, citations, and graph relationships
-	•	🤖 AI Assistant: natural-language Q&A with source citations
+The **Kansas Frontier Matrix Web App** is the **user-facing portal**. It merges:
 
-The app talks to FastAPI for Neo4j knowledge-graph queries and to the STAC catalog for layer metadata.
+- 🕰 **Timeline (Canvas):** performant zoom / pan / brush with animated playback  
+- 🗺 **Map (MapLibre GL):** COG rasters + GeoJSON vectors + hit-testing  
+- 🔎 **Search:** graph-powered autocomplete & results (entities / events)  
+- 📑 **Detail Panels:** AI summaries, citations, and graph relationships  
+- 🤖 **AI Assistant:** natural-language Q&A with source citations  
 
-⸻
+The app talks to **FastAPI** for **Neo4j** knowledge-graph queries and to the **STAC catalog** for layer metadata.
 
-🧭 Table of Contents
-	•	Directory Layout
-	•	Quickstart
-	•	Environment Configuration
-	•	API Contracts
-	•	Key Components
-	•	Data & Semantics
-	•	Configuration (generated)
-	•	UI Architecture
-	•	Accessibility & Responsiveness
-	•	Security & Privacy
-	•	Dev Experience & MCP
-	•	Performance Guide
-	•	Developer Recipes
-	•	Troubleshooting
-	•	Change Log
-	•	References
+---
 
-⸻
+## 🧭 Table of Contents
 
-📂 Directory Layout
+- Directory Layout  
+- Quickstart  
+- Environment Configuration  
+- API Contracts  
+- Key Components  
+- Data & Semantics  
+- Configuration (generated)  
+- UI Architecture  
+- Accessibility & Responsiveness  
+- Security & Privacy  
+- Dev Experience & MCP  
+- Performance Guide  
+- Developer Recipes  
+- Troubleshooting  
+- Change Log  
+- References  
 
+---
+
+## 📂 Directory Layout
+
+```text
 /web/
 ├─ src/
-│  ├─ components/   # TimelineView, MapView, LayerControls, DetailPanel, SearchBar, AIAssistant, Legend, …
-│  ├─ hooks/        # useTimelineWindow, useMapLayers, useDebounce, useHotkeys, …
+│  ├─ components/   # TimelineView, MapView, LayerControls, DetailPanel, SearchBar, AIAssistant, Legend…
+│  ├─ hooks/        # useTimelineWindow, useMapLayers, useDebounce, useHotkeys…
 │  ├─ context/      # AppContext (selection, time, layers), ThemeProvider
 │  ├─ utils/        # api.ts, geometry.ts, stac.ts, time.ts, formatters.ts
 │  ├─ styles/       # tokens.css (design tokens), global.css, component styles
@@ -78,7 +80,7 @@ The app talks to FastAPI for Neo4j knowledge-graph queries and to the STAC catal
 
 Prereqs
 	•	Node.js 18+ (or 20+)
-	•	npm 10+ (or pnpm/yarn)
+	•	npm 10+ (or pnpm / yarn)
 	•	Backend running (see ../docs/sop.md)
 
 cd web
@@ -102,7 +104,7 @@ VITE_APP_TITLE="Kansas Frontier Matrix"
 VITE_ENABLE_AI_ASSISTANT=true
 
 Notes
-	•	No secrets in the client; only public endpoints here.
+	•	No secrets in client; only public endpoints here.
 	•	For self-hosted tiles, point VITE_MAP_STYLE_URL to your style JSON.
 
 ⸻
@@ -110,7 +112,7 @@ Notes
 🔌 API Contracts
 
 Endpoint	Method	Query/Body	Returns	Used by
-/events	GET	start (ISO), end (ISO), bbox?, type?	Event[] (GeoJSON FeatureCollection or array)	TimelineView, MapView
+/events	GET	start (ISO), end (ISO), bbox?, type?	Event[] (GeoJSON Feature[] or FeatureCollection)	TimelineView, MapView
 /entity/{id}	GET	—	EntityDossier (props, relations, summary)	DetailPanel
 /layers-config	GET	—	LayerDef[] (derived from STAC)	MapView, LayerControls
 /search	GET	q, limit?	EntitySummary[]	SearchBar
@@ -118,16 +120,27 @@ Endpoint	Method	Query/Body	Returns	Used by
 
 Type fragments (TS)
 
-export interface EventFeature { type:'Feature'; geometry:any; properties:{
-  id:string; label:string; type:string; start:string; end?:string; bbox?:number[];
-}}
-export interface EntityDossier { id:string; type:string; label:string; summary?:string;
-  relations:{ predicate:string; targetId:string; targetLabel:string; }[];
-  bbox?:number[]; time?:{ start:string; end?:string };
+export interface EventFeature {
+  type: 'Feature';
+  geometry: GeoJSON.Geometry;
+  properties: {
+    id: string; label: string; type: string; start: string; end?: string; bbox?: number[];
+  };
 }
-export interface LayerDef { id:string; label:string; type:'raster-cog'|'vector-geojson';
-  source:{ url:string; minzoom?:number; maxzoom?:number }; time?:{ start:string; end?:string };
-  legend?:{ category?:string; ramp?:string[] }; visible:boolean; opacity:number;
+
+export interface EntityDossier {
+  id: string; type: string; label: string; summary?: string;
+  relations: { predicate: string; targetId: string; targetLabel: string; }[];
+  bbox?: number[]; time?: { start: string; end?: string };
+}
+
+export interface LayerDef {
+  id: string; label: string;
+  type: 'raster-cog' | 'vector-geojson';
+  source: { url: string; minzoom?: number; maxzoom?: number };
+  time?: { start: string; end?: string };
+  legend?: { category?: string; ramp?: string[] };
+  visible: boolean; opacity: number;
 }
 
 
@@ -139,15 +152,15 @@ export interface LayerDef { id:string; label:string; type:'raster-cog'|'vector-g
 	•	LayerControls — config-driven toggles, opacity, categories, legends; persisted in localStorage.
 	•	DetailPanel — dossier (summary, citations, related); deep-links to entity routes (#/entity/:id).
 	•	SearchBar — async autocomplete; Enter → flyTo & select.
-	•	AIAssistant — Q&A with citations inline (sanitized HTML).
+	•	AIAssistant — Q&A with inline citations (sanitized HTML).
 
 ⸻
 
 🗂 Data & Semantics
 	•	Vectors: GeoJSON (API + static); features carry properties.start/end/type/id.
-	•	Rasters: COG (Cloud-Optimized GeoTIFF) with internal overviews for fast pan/zoom.
-	•	STAC: data/stac/ drives UI layers (collection/item → config/layers.json).
-	•	Ontologies: CIDOC CRM & OWL-Time align events/actors/time; PeriodO tags period names.
+	•	Rasters: COG (Cloud-Optimized GeoTIFF) with internal overviews for fast pan / zoom.
+	•	STAC: data/stac/ drives UI layers (collection / item → config/layers.json).
+	•	Ontologies: CIDOC-CRM (entities / relations), OWL-Time (instants / intervals), PeriodO (period labels).
 
 ⸻
 
@@ -156,14 +169,14 @@ export interface LayerDef { id:string; label:string; type:'raster-cog'|'vector-g
 /web/config/layers.json (generated from STAC) drives the map UI.
 
 {
-  "id": "usgs_topo_larned_1894",
-  "label": "USGS Topo — Larned (1894)",
-  "type": "raster-cog",
-  "source": { "url": "/tiles/usgs_topo_larned_1894.tif", "minzoom": 0, "maxzoom": 14 },
-  "time": { "start": "1894-01-01", "end": "1894-12-31" },
-  "legend": { "category": "Historic Topographic Maps" },
-  "visible": false,
-  "opacity": 0.8
+ "id": "usgs_topo_larned_1894",
+ "label": "USGS Topo — Larned (1894)",
+ "type": "raster-cog",
+ "source": { "url": "/tiles/usgs_topo_larned_1894.tif", "minzoom": 0, "maxzoom": 14 },
+ "time": { "start": "1894-01-01", "end": "1894-12-31" },
+ "legend": { "category": "Historic Topographic Maps" },
+ "visible": false,
+ "opacity": 0.8
 }
 
 Vectors: "type": "vector-geojson", "source": {"url": "…/layer.geojson"}.
@@ -205,44 +218,44 @@ A11y
 	•	Landmark roles, labels, skip-links, visible focus rings
 	•	Keyboard: ←/→ pan time, ± zoom, f focus map, s focus search
 	•	Color-blind-safe palette; respects prefers-reduced-motion
-	•	Touch targets ≥ 44×44px; headings in logical order
+	•	Touch targets ≥ 44×44 px; headings in logical order
 
 ⸻
 
 🛡 Security & Privacy
 	•	No secrets in client; public env vars only (VITE_*).
 	•	Enforce HTTPS in production; strict CORS for API.
-	•	Sanitize AI output (escape/strip HTML); never eval user content.
+	•	Sanitize AI output (escape / strip HTML); never eval user content.
 	•	No analytics by default; if enabled, anonymize & opt-in.
 
 ⸻
 
 🛠 Dev Experience & MCP
-	•	CI/CD: Actions build/test/deploy; status badges above.
+	•	CI/CD: GitHub Actions build / test / deploy; status badges in header.
 	•	Static Analysis: CodeQL + Trivy run repo-wide.
-	•	Testing
+	•	Testing:
 	•	Unit: Jest + RTL (npm run test)
 	•	E2E: Cypress (npm run cypress:open) (planned)
 	•	Docs-first: keep ../docs/architecture.md, ../docs/sop.md, ../docs/model_card.md in sync.
-	•	Reproducibility: pinned deps, deterministic Vite builds; STAC/COG integrity enforced in CI.
+	•	Reproducibility: pinned deps; deterministic Vite builds; STAC / COG integrity enforced in CI.
 
 ⸻
 
 ⚡ Performance Guide
 
 Canvas Timeline
-	•	Batch draw events; pre-render static bands (decades/eras) to offscreen buffers.
+	•	Batch draw events; pre-render static bands (decades / eras) to offscreen buffers.
 	•	Use requestAnimationFrame and debounced state updates.
 	•	Avoid layout thrash (measure once → render).
 
 MapLibre
-	•	Prefer COG with internal overviews; bound min/max zoom.
+	•	Prefer COG with internal overviews; bound min / max zoom.
 	•	Pre-tile heavy vectors; layer culling for hidden categories.
 	•	Reuse sources; throttle hover events.
 
 Network
-	•	Cache immutable assets (COGs, sprites); Cache-Control headers.
-	•	Brotli/Gzip; code-split vendor/app; lazy-load heavy panels.
+	•	Cache immutable assets (COGs, sprites) with Cache-Control.
+	•	Brotli / Gzip; code-split vendor / app; lazy-load heavy panels.
 
 ⸻
 
@@ -269,14 +282,23 @@ map.addLayer({ id:'trails-line', type:'line', source:'trails', paint:{ 'line-col
 
 4) Minimal Raster COG
 
-map.addSource('usgs1894', { type:'raster', tiles:[
-  '/tiles/usgs_topo_larned_1894.tif/{z}/{x}/{y}'
-], tileSize:256, minzoom:0, maxzoom:14 });
+map.addSource('usgs1894', {
+  type:'raster',
+  tiles:[ '/tiles/usgs_topo_larned_1894.tif/{z}/{x}/{y}' ],
+  tileSize:256, minzoom:0, maxzoom:14
+});
 map.addLayer({ id:'usgs1894', type:'raster', source:'usgs1894', paint:{ 'raster-opacity':0.8 }});
 
 5) Hotkeys (example)
 
-useHotkeys({ '+': zoomInTime, '-': zoomOutTime, ArrowLeft: panLeft, ArrowRight: panRight, f: focusMap, s: focusSearch });
+useHotkeys({
+  '+': zoomInTime,
+  '-': zoomOutTime,
+  ArrowLeft: panLeft,
+  ArrowRight: panRight,
+  f: focusMap,
+  s: focusSearch
+});
 
 
 ⸻
@@ -284,36 +306,6 @@ useHotkeys({ '+': zoomInTime, '-': zoomOutTime, ArrowLeft: panLeft, ArrowRight: 
 🧪 Troubleshooting
 	•	Timeline empty? Check /events?start&end; ensure UTC dates; verify bbox filter.
 	•	Layer missing? Confirm entry exists in config/layers.json; validate URL & CORS; check zoom range; visible:true.
-	•	COG blurry/slow? Ensure internal overviews; verify tile URL pattern; reduce opacity layers overdraw.
+	•	COG blurry / slow? Ensure internal overviews; verify tile URL pattern; reduce opacity overdraw.
 	•	AI answers blank? Check /ask health; backend reachable; sanitize guard not stripping content.
-	•	Mermaid fails in docs? End the block with %%END OF MERMAID%%.
-
-⸻
-
-🧾 Change Log
-
-Version	Date	Author(s)	Summary
-v1.6.0	2025-10-13	@kfm-web, @kfm-arch	Aligned to MCP-DL v6.2; added UI architecture diagram & a11y.
-v1.5.0	2025-09-10	@kfm-web	Introduced layers.json generation from STAC; perf guide.
-v1.4.0	2025-08-02	@kfm-web	Added AI Assistant panel and /ask endpoint integration.
-
-
-⸻
-
-📚 References
-	•	web/ARCHITECTURE.md — detailed UI architecture & flows
-	•	../docs/architecture.md — system-wide architecture
-	•	../docs/sop.md — reproducibility SOPs
-	•	../docs/model_card.md — AI model documentation
-
-⸻
-
-
-<div align="center">
-
-
-KFM Web UI · MIT License · MCP-DL v6.2 · Last Updated 2025-10-13
-
-✨ Explore Kansas across time & space. ✨
-
-</div>
+	•	**Mermaid fails
