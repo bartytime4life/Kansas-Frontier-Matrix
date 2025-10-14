@@ -22,14 +22,14 @@
 ```yaml
 ---
 title: "KFM • CI/CD Workflows"
-version: "v2.2.0"
-last_updated: "2025-10-10"
+version: "v2.3.0"
+last_updated: "2025-10-13"
 owners: ["@kfm-architecture", "@kfm-security", "@kfm-data"]
 maturity: "Production"
-tags: ["ci", "cd", "stac", "security", "provenance", "versioning", "governance"]
+tags: ["ci", "cd", "stac", "security", "provenance", "versioning", "governance", "slsa", "sbom"]
 license: "MIT"
 ---
-```
+````
 
 ## 📚 Overview
 
@@ -37,14 +37,14 @@ This directory defines all **GitHub Actions workflows** that power the KFM **CI/
 Each workflow follows **Master Coder Protocol (MCP)** so every run is:
 🧾 **Documented** 🔍 **Traceable** 🔒 **Secure** ♻️ **Reproducible** 🧮 **Verifiable** 🏷️ **Versioned**
 
-Automation covers six domains:
+Automation spans six domains:
 
 1. **Validation** — STAC catalog / schema / checksum integrity
 2. **Security** — CodeQL, Trivy, Dependency Review, SBOM/SARIF
 3. **Data Ingestion** — Scheduled fetching & snapshotting of external datasets
 4. **Build / Deploy** — Documentation, static site & web UI builds
 5. **Provenance** — SLSA provenance, artifact signing & retention
-6. **Governance** — Auto-merge policies, environments & approvals, SemVer release flow
+6. **Governance** — Auto-merge policies, environments/approvals, SemVer release flow
 
 ---
 
@@ -54,19 +54,19 @@ Automation covers six domains:
 .github/workflows/
 ├── README.md
 ├── site.yml               # Build & deploy docs + site (GitHub Pages)
-├── stac-validate.yml      # STAC + JSON Schema validation (passes/fails PRs)
+├── stac-validate.yml      # STAC + JSON Schema validation (gates PRs)
 ├── fetch.yml              # Manifest-based data acquisition (cron/manual)
 ├── checksums.yml          # Compute & verify SHA-256 hashes
-├── codeql.yml             # Static security analysis for Python/JS
+├── codeql.yml             # Static analysis for Python/JS
 ├── trivy.yml              # Container CVE scans + SBOM (SARIF)
 ├── pre-commit.yml         # Linting / formatting / unit tests
-├── release.yml            # SemVer tagging, release notes, artifact bundling
-├── provenance.yml         # SLSA provenance attestation + artifact signing
 ├── dependency-review.yml  # GitHub dependency review gate (PR)
+├── release.yml            # SemVer tagging, notes, artifact bundling
+├── provenance.yml         # SLSA provenance attestation + artifact signing
 └── auto-merge.yml         # Auto-merge on successful policy checks
 ```
 
-> ⚠️ If filenames change, update badge links and all cross-references in docs and status checks.
+> ⚠️ If filenames change, update badge links and all cross-references in docs and required status checks.
 
 ---
 
@@ -75,16 +75,16 @@ Automation covers six domains:
 | Workflow                  | Purpose                                       | Trigger                    | Output                                                  |
 | ------------------------- | --------------------------------------------- | -------------------------- | ------------------------------------------------------- |
 | **site.yml**              | Build & deploy docs/site                      | push→`main`, manual        | `_site/` → GitHub Pages                                 |
-| **stac-validate.yml**     | STAC + JSON Schema + link checks              | push/PR                    | `stac-report.json` (artifact)                           |
-| **fetch.yml**             | Fetch raw datasets from `data/sources/*.json` | daily cron, manual         | updated `data/raw/` snapshots + logs                    |
+| **stac-validate.yml**     | STAC + JSON Schema + link checks              | push/PR                    | `stac-report.json` artifact                             |
+| **fetch.yml**             | Fetch raw datasets from `data/sources/*.json` | daily cron, manual         | updated `data/raw/` snapshots + provenance logs         |
 | **checksums.yml**         | Compute & verify SHA-256 integrity            | data PR, manual            | `.sha256` files + validation logs                       |
-| **codeql.yml**            | Static security analysis                      | schedule, push             | CodeQL dashboard                                        |
-| **trivy.yml**             | Container/dependency CVE + SBOM               | schedule, PR               | SARIF + SBOM artifact                                   |
+| **codeql.yml**            | Static security analysis                      | schedule, push, PR         | CodeQL dashboard + SARIF                                |
+| **trivy.yml**             | Container/dependency CVE + SBOM               | schedule, PR               | SARIF + SPDX SBOM artifact                              |
 | **pre-commit.yml**        | Lint/format/tests/spellcheck                  | every PR                   | summary/annotations                                     |
 | **dependency-review.yml** | Block risky deps                              | PR                         | review annotations                                      |
 | **release.yml**           | SemVer release, notes, assets                 | manual, tag push           | GitHub Release, assets (site bundle, STAC, SARIF, SBOM) |
 | **provenance.yml**        | SLSA provenance + signing                     | on release                 | provenance attestations                                 |
-| **auto-merge.yml**        | Policy-gated automerge                        | all checks green + reviews | merged PR + audit log                                   |
+| **auto-merge.yml**        | Policy-gated automerge                        | checks green + 2 approvals | merged PR + audit log                                   |
 
 ---
 
@@ -122,8 +122,16 @@ flowchart TD
 permissions:
   contents: read
   actions: read
-  checks: write
   security-events: write   # only when uploading SARIF
+```
+
+### 🔐 OIDC for Deployments (No Long-Lived Secrets)
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+# Cloud side: trust GitHub OIDC issuer; map repo/env to deploy role
 ```
 
 ### 🚦 Concurrency (Cancel Redundant Runs)
@@ -134,16 +142,7 @@ concurrency:
   cancel-in-progress: true
 ```
 
-### 🧪 Matrices (Example)
-
-```yaml
-strategy:
-  matrix:
-    python-version: ["3.10", "3.11"]
-    os: ["ubuntu-latest"]
-```
-
-### ⚡ Caching (Pip + Pre-commit)
+### ⚡ Caching (pip + pre-commit)
 
 ```yaml
 - uses: actions/cache@v4
@@ -152,6 +151,15 @@ strategy:
       ~/.cache/pip
       ~/.cache/pre-commit
     key: ${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+```
+
+### 🧪 Matrices (Example)
+
+```yaml
+strategy:
+  matrix:
+    python-version: ["3.10", "3.11"]
+    os: ["ubuntu-latest"]
 ```
 
 ### 🧭 Triggers & Path Filters
@@ -165,9 +173,9 @@ on:
       - '.github/workflows/**'
 ```
 
-### 🏷️ Environment Protections & Approvals
+### 🏷️ Environments & Approvals
 
-Use **Environments** for prod deploys with required reviewers, timeouts, URL previews.
+Use **Environments** for prod deploys with required reviewers, URL previews, and timeouts.
 
 ```yaml
 environment:
@@ -179,7 +187,7 @@ environment:
 
 ## 🔐 Secrets & Environment Variables
 
-| Secret                   | Used by          | Purpose                |
+| Secret/Var               | Used by          | Purpose                |
 | ------------------------ | ---------------- | ---------------------- |
 | `PAGES_TOKEN` / `GH_PAT` | `site.yml`       | Pages deploy           |
 | `DATA_API_KEY_*`         | `fetch.yml`      | External data API auth |
@@ -198,20 +206,21 @@ environment:
 * Checks asset URLs, bbox/temporal metadata, JSON Schemas
 * Gated on PR; fails on schema error
 
-**Skeleton:**
+**Skeleton**
 
 ```yaml
 # x-kfm-version: v1.4
 name: STAC Validate
 on: [push, pull_request]
+permissions: { contents: read }
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3df4f6c4d8c9b # v4.1.1 (pinned)
     - name: Install stac-validator
       run: pipx install stac-validator
-    - name: Validate
+    - name: Validate recursively
       run: stac-validator data/stac/catalog.json --recursive
 ```
 
@@ -219,8 +228,6 @@ jobs:
 
 * Computes SHA-256; compares to stored `.sha256`
 * Fails on mismatch to keep outputs deterministic
-
-**Snippet:**
 
 ```yaml
 - name: Verify checksums
@@ -239,15 +246,34 @@ jobs:
 * Builds docs + static site; publishes to Pages
 * Uses **environment protections** for prod
 
-**Key steps:**
-
 ```yaml
-- name: Build site
-  run: make site
-- name: Deploy
-  uses: actions/deploy-pages@v4
-  with:
-    token: ${{ secrets.PAGES_TOKEN }}
+# x-kfm-version: v2.0
+name: Build & Deploy Site
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+permissions: { contents: read, pages: write, id-token: write }
+concurrency: { group: pages, cancel-in-progress: true }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@3df4f6c4d8c9b
+    - name: Build site
+      run: make site
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with: { path: _site }
+  deploy:
+    needs: [ build ]
+    environment:
+      name: production
+      url: https://bartytime4life.github.io/Kansas-Frontier-Matrix/
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy
+      uses: actions/deploy-pages@v4
 ```
 
 ---
@@ -260,9 +286,7 @@ jobs:
 
 ### 🧫 Trivy (`trivy.yml`)
 
-* Container & dependency CVE scan; SBOM export + SARIF upload
-
-**Example (SBOM+SARIF):**
+* Container & dependency CVE scan; **SBOM** export + **SARIF** upload
 
 ```yaml
 - name: Trivy SBOM (SPDX)
@@ -285,9 +309,7 @@ jobs:
 * Enforces **SemVer**: `vMAJOR.MINOR.PATCH`
 * Generates release notes from merged PRs + `CHANGELOG.md`
 * Bundles artifacts: **site bundle**, **STAC report**, **SARIF**, **SBOM**
-* Optional: publish to Zenodo for DOI
-
-**Inputs:**
+* Optional: publish to Zenodo for **DOI**
 
 ```yaml
 on:
@@ -302,7 +324,20 @@ on:
 ## 🔏 SLSA Provenance & Signing (`provenance.yml`)
 
 * Generates provenance attestations per **SLSA** guidance
-* Signs released artifacts (optional OIDC-based signing)
+* Signs released artifacts (OIDC-enabled if configured)
+
+---
+
+## 🧩 Workflow Header Convention
+
+Every workflow starts with a brief header comment including **purpose, owners, version, links**:
+
+```yaml
+# KFM Workflow: STAC Validate
+# Owners: @kfm-data, @kfm-architecture
+# x-kfm-version: v1.4
+# Docs: .github/workflows/README.md#stac-validation-stac-validateyml
+```
 
 ---
 
@@ -310,13 +345,13 @@ on:
 
 | MCP Principle       | Implementation                                                 |
 | ------------------- | -------------------------------------------------------------- |
-| Documentation-First | Each workflow has header docs, inputs/outputs, version tag     |
+| Documentation-First | Header docs, inputs/outputs, version tag per workflow          |
 | Reproducibility     | Pinned actions; deterministic jobs; checksum gating            |
 | Open Standards      | YAML, STAC, JSON Schema, SPDX SBOM                             |
 | Provenance          | STAC lineage, SLSA attestations, SHA-256                       |
 | Auditability        | SARIF + logs retained (≥ 90 days); artifact retention          |
 | Security            | CodeQL + Trivy; Dependency Review; least-privilege permissions |
-| Versioning          | SemVer release flow; version headers (`x-kfm-version`)         |
+| Versioning          | SemVer release flow; `x-kfm-version` header in every workflow  |
 
 ---
 
@@ -364,7 +399,7 @@ gh run download --name "stac-report.json"
 * **Composite Actions:** share repeated steps across jobs
 * **Path Filters:** speed up CI by limiting to domains (`data/stac/**`, `web/**`)
 * **Artifacts:** `retention-days:` set per workflow (default 90)
-* **Environments:** `staging` vs `production` + approvals
+* **Environments:** `staging` vs `production` with approvals
 * **OIDC:** cloud deploys without long-lived secrets
 * **Slack/Teams Hooks:** notify on red builds / release success
 * **Dependabot:** keep action and lib versions current and pinned
@@ -374,7 +409,7 @@ gh run download --name "stac-report.json"
 ## ♻️ Maintenance & Versioning
 
 * **Weekly:** CodeQL + Trivy scheduled scans
-* **Monthly:** Review & pin `actions/*` versions; rotate caches
+* **Monthly:** Pin/refresh `actions/*`; rotate caches
 * **Quarterly:** STAC schema re-validation; MCP doc refresh
 * **Releases:** Tag with SemVer; attach SBOM, SARIF, site bundle; create DOI (optional)
 
@@ -384,6 +419,7 @@ gh run download --name "stac-report.json"
 
 | Version | Date       | Summary                                                                                            |
 | ------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| v2.3.0  | 2025-10-13 | Added header convention, OIDC guidance, pinned examples; clarified permissions & environments      |
 | v2.2.0  | 2025-10-10 | Added **release**, **provenance**, **dependency-review**, SemVer flow; expanded options & examples |
 | v2.1.0  | 2025-10-09 | Refined flowchart, permission matrix, caching patterns                                             |
 | v2.0.0  | 2025-10-08 | Governance upgrades: environments, approvals, auto-merge policy                                    |
