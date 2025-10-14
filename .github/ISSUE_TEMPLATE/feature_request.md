@@ -1,176 +1,276 @@
-<div align="center">
+name: "💡 Feature Request"
+description: "Propose a feature/enhancement — documented, versioned, and reproducible"
+title: "[Feature]: <short title>"
+labels:
+  - enhancement
+  - needs-triage
+assignees:
+  - kfm-architecture
+  - kfm-data
+# KFM metadata
+# version: v2.2.0
+# last_updated: 2025-10-13
+# owners: @kfm-architecture @kfm-data
 
-# 💡 Kansas Frontier Matrix — Feature Request Template
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # 💡 Kansas Frontier Matrix — Feature Request
+        *“Every Feature Builds the Future · Every Change is Reproducible.”*
+        Please provide clear context, the problem to solve, and measurable outcomes.
 
-### *“Every Feature Builds the Future · Every Change is Reproducible.”*
+  - type: textarea
+    id: summary
+    attributes:
+      label: 💡 Summary
+      description: Describe the feature, enhancement, or optimization and expected benefits.
+      placeholder: "Add slope classification to terrain pipeline outputs and enable gradient visualization in MapLibre."
+    validations:
+      required: true
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+  - type: markdown
+    attributes:
+      value: "## 🎯 Motivation / Use Case"
 
-</div>
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain / Module
+      options:
+        - Terrain
+        - Hydrology
+        - Climate
+        - Hazards
+        - Landcover
+        - Knowledge Graph
+        - Web UI
+        - API
+        - Text / AI / NLP
+        - Metadata / Governance
+        - CI/CD
+        - Other
+    validations:
+      required: true
 
----
+  - type: input
+    id: component
+    attributes:
+      label: Pipeline / Component
+      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
+    validations:
+      required: true
 
-## 💡 Summary
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      placeholder: "Enable classification maps for slope ranges to support hazard & trail planning."
+    validations:
+      required: true
 
-Provide a clear, concise description of the **feature, enhancement, or optimization**.
-Include background context, existing limitation, and expected benefits.
+  - type: textarea
+    id: limitation
+    attributes:
+      label: Current Limitation
+      placeholder: "No slope visualization or classification available."
+    validations:
+      required: true
 
-> **Example:**
-> Add slope classification to terrain pipeline outputs and include gradient visualization in the MapLibre UI.
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Tools, APIs, libraries, schema updates, permissions
+      placeholder: "WhiteboxTools v2.2+, STAC schema update, web layer style"
+    validations:
+      required: false
 
----
+  - type: markdown
+    attributes:
+      value: "## 🧩 Proposed Solution"
 
-## 🎯 Motivation / Use Case
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Implementation
+      description: Include technical specifics, workflow changes, and architecture impacts.
+      placeholder: |
+        - Extend terrain_pipeline.py with --add-slope-classification
+        - Generate slope class COG + STAC property `slope_class_version`
+        - Add `layers.json` entry with gradient style
+      render: markdown
+    validations:
+      required: true
 
-Explain **why** this feature is needed and what **problem** it solves.
+  - type: checkboxes
+    id: change_types
+    attributes:
+      label: Change Type(s)
+      options:
+        - label: Add new data transformation module
+        - label: Modify ETL pipeline step
+        - label: Extend STAC metadata/schema
+        - label: Create new visualization layer
+        - label: Update documentation / SOP
+        - label: Other (describe in solution)
 
-| Field                    | Description                                                                                     |
-| :----------------------- | :---------------------------------------------------------------------------------------------- |
-| **Domain / Module**      | (Terrain, Hydrology, Climate, Metadata, Web UI, AI/NLP)                                         |
-| **Pipeline / Component** | (e.g., `terrain_pipeline.py`, `graph_ingest.py`, `stac-validate.yml`, `web/config/layers.json`) |
-| **Use Case**             | (e.g., “Enable classification maps for slope ranges.”)                                          |
-| **Current Limitation**   | (e.g., “No slope visualization or categorization available.”)                                   |
-| **Dependencies**         | (e.g., Requires WhiteboxTools v2.2+, or STAC schema update.)                                    |
+  - type: markdown
+    attributes:
+      value: "## 🧮 Expected Outcome"
 
----
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Expected Outcome / Metrics
+      placeholder: |
+        | Metric              | Target                                   |
+        | :------------------ | :----------------------------------------|
+        | Data Quality        | Add slope class attr; STAC fields updated|
+        | Reproducibility     | Deterministic outputs; SOP updated       |
+        | Usability           | Map layer toggle + legend                |
+        | Performance         | < +5% runtime impact                     |
+      render: markdown
+    validations:
+      required: true
 
-## 🧩 Proposed Solution
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Implementation Plan (Optional)"
 
-Describe the proposed implementation or design change in detail.
-Include technical specifics, proposed workflow changes, and architecture impacts.
+  - type: textarea
+    id: plan
+    attributes:
+      label: Steps & Owners
+      placeholder: |
+        1) Draft design (ADR-XXXX) — Owner …
+        2) Implement code — Owner …
+        3) Add unit/integration tests — Owner …
+        4) Docs + STAC updates — Owner …
+        5) Peer review + merge — Owner …
+    validations:
+      required: false
 
-```bash
-# Example Implementation
-python src/pipelines/terrain/terrain_pipeline.py --add-slope-classification
-```
+  - type: markdown
+    attributes:
+      value: "## 🧭 Versioning Impact (SemVer / STAC)"
 
-| Type                                   | Action | Expected Impact |
-| :------------------------------------- | :----- | :-------------- |
-| [ ] Add new data transformation module |        |                 |
-| [ ] Modify ETL pipeline step           |        |                 |
-| [ ] Extend STAC metadata schema        |        |                 |
-| [ ] Create new visualization layer     |        |                 |
-| [ ] Update documentation / SOP         |        |                 |
-| [ ] Other (describe below)             |        |                 |
+  - type: dropdown
+    id: semver
+    attributes:
+      label: Repo SemVer Impact
+      options: ["semver:none","semver:patch","semver:minor","semver:major"]
+      description: Patch=fix | Minor=new feature | Major=breaking change
+    validations:
+      required: true
 
----
+  - type: textarea
+    id: version_matrix
+    attributes:
+      label: Version Matrix
+      description: Bump any affected schema/data versions
+      placeholder: |
+        | Scope                 | Current | Proposed | Notes                      |
+        | :-------------------- | :------ | :------- | :------------------------- |
+        | Dataset / STAC Schema | v1.2.0  | v1.3.0   | Add metadata fields        |
+        | Pipeline / Script     | v2.0.0  | v2.1.0   | Terrain ETL refactor       |
+        | Repo (SemVer)         | v1.4.0  | v1.5.0   | Minor feature addition     |
+      render: markdown
+    validations:
+      required: false
 
-## 🧮 Expected Outcome
+  - type: markdown
+    attributes:
+      value: "## 🔗 Related Artifacts"
 
-Explain what the system will accomplish after implementation.
+  - type: textarea
+    id: related
+    attributes:
+      label: Related Items
+      placeholder: |
+        - STAC Items/Collections
+        - Checksums (if validation affected)
+        - Workflow run/log URLs
+        - Related Issues/PRs
+        - SOP / ADR links (docs/adr/ADR-XXXX-<title>.md)
+    validations:
+      required: false
 
-| Metric              | Expected Change                                           |
-| :------------------ | :-------------------------------------------------------- |
-| **Data Quality**    | (Improved accuracy, consistency, or schema richness.)     |
-| **Reproducibility** | (Deterministic outputs or better pipeline documentation.) |
-| **Usability**       | (Simpler workflows, improved automation, or UI clarity.)  |
-| **Performance**     | (Reduced runtime, lower memory, faster ETL execution.)    |
+  - type: markdown
+    attributes:
+      value: "## 🧠 MCP Compliance"
 
----
+  - type: checkboxes
+    id: mcp
+    attributes:
+      label: MCP Principles
+      options:
+        - label: Documentation-first — motivation + technical context
+          required: true
+        - label: Reproducibility — deterministic test/validation paths
+          required: true
+        - label: Open Standards — STAC/JSON Schema/COG conventions
+          required: true
+        - label: Provenance — linked datasets, commits, workflows
+          required: true
+        - label: Auditability — traceable via CI validation/review gates
+          required: true
+        - label: Versioning — SemVer bump & STAC versions updated
+          required: true
 
-## ⚙️ Implementation Plan *(Optional)*
+  - type: markdown
+    attributes:
+      value: "## 📈 Potential Impact"
 
-| Step | Action                        | Owner | Dependencies | Version Impact |
-| :--- | :---------------------------- | :---- | :----------- | :------------- |
-| 1    | Draft feature design          |       |              |                |
-| 2    | Implement or refactor code    |       |              |                |
-| 3    | Add unit / integration tests  |       |              |                |
-| 4    | Update docs and STAC metadata |       |              |                |
-| 5    | Peer review and merge         |       |              |                |
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact Analysis
+      placeholder: |
+        | Category                   | Description                             |
+        | :------------------------- | :-------------------------------------- |
+        | Performance                | Estimate runtime/memory changes         |
+        | Data Scope                 | Datasets/layers/models affected         |
+        | Backward Compatibility     | Any breaking changes?                   |
+        | UI / Visualization         | Map layers/timelines/legends changed    |
+        | Security / Compliance      | Access control / data exposure impacts  |
+      render: markdown
+    validations:
+      required: true
 
-> **Tip:** If this feature introduces versioned schema or data format changes, include a `CHANGELOG.md` entry and bump SemVer accordingly.
+  - type: markdown
+    attributes:
+      value: "## 🧮 Validation Requirements"
 
----
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Pre-Merge Checks
+      options:
+        - label: Unit tests added and passing
+          required: true
+        - label: STAC schema validated (`make stac-validate`)
+          required: true
+        - label: ETL reproducibility confirmed (deterministic outputs)
+          required: true
+        - label: License & data compliance verified
+          required: true
+        - label: Docs updated under `/docs/sop/` or `/docs/adr/`
+          required: true
+        - label: Version bump recorded in `CHANGELOG.md`
+          required: true
 
-## 🧭 Versioning Impact
+  - type: markdown
+    attributes:
+      value: "## 📊 Governance Review Checklist (Maintainers)"
 
-| Scope                     | Current Version | Proposed | Notes                    |
-| :------------------------ | :-------------- | :------- | :----------------------- |
-| **Dataset / STAC Schema** | `v1.2.0`        | `v1.3.0` | Adds new metadata fields |
-| **Pipeline / Script**     | `v2.0.0`        | `v2.1.0` | Refactored terrain ETL   |
-| **Repo (SemVer)**         | `v1.4.0`        | `v1.5.0` | Minor feature addition   |
-
-> Use **Semantic Versioning** rules:
-> 🩵 Patch → Fix · 💛 Minor → Feature · ❤️ Major → Breaking Change
-
----
-
-## 🔗 Related Artifacts
-
-| Artifact Type            | Reference                                                  |
-| :----------------------- | :--------------------------------------------------------- |
-| **STAC Item(s)**         | (If schema or property changes are required.)              |
-| **Checksum(s)**          | (If feature affects validation.)                           |
-| **Workflow / Log**       | (Relevant job or run URL.)                                 |
-| **Related Issues / PRs** | (List or link existing work.)                              |
-| **SOP / ADR Link**       | (`docs/adr/ADR-XXXX-<title>.md` or `docs/sop/<domain>.md`) |
-
----
-
-## 🧠 MCP Compliance
-
-| MCP Principle           | Confirmation                                                   |
-| :---------------------- | :------------------------------------------------------------- |
-| **Documentation-first** | 🗹 Feature documented with motivation and technical context.   |
-| **Reproducibility**     | 🗹 Deterministic test cases and validation paths defined.      |
-| **Open Standards**      | 🗹 Uses STAC, JSON Schema, or GeoTIFF/COG conventions.         |
-| **Provenance**          | 🗹 Linked to affected datasets, commits, and workflows.        |
-| **Auditability**        | 🗹 Traceable through CI validation and review checkpoints.     |
-| **Versioning**          | 🗹 Semantic version increment or dataset STAC version updated. |
-
----
-
-## 📈 Potential Impact
-
-| Category                   | Description                                                |
-| :------------------------- | :--------------------------------------------------------- |
-| **Performance**            | (Estimate time, memory, or computational improvements.)    |
-| **Data Scope**             | (Which datasets, layers, or models will be affected?)      |
-| **Backward Compatibility** | (Will legacy scripts break?)                               |
-| **UI / Visualization**     | (Will map layers, timelines, or popups change?)            |
-| **Security / Compliance**  | (Does this feature alter access control or data exposure?) |
-
----
-
-## 🧮 Validation Requirements
-
-Before merging this feature, confirm the following checks are performed:
-
-* [ ] Unit tests added and passing
-* [ ] STAC schema validated via `make stac-validate`
-* [ ] ETL reproducibility confirmed (input → output deterministic)
-* [ ] License and data compliance verified
-* [ ] Docs updated under `/docs/sop/` or `/docs/adr/`
-* [ ] Version bump in `CHANGELOG.md`
-
----
-
-## 📊 Governance Review Checklist (Maintainers)
-
-| Criteria                           | Reviewer Action               | Status |
-| :--------------------------------- | :---------------------------- | :----- |
-| Design Doc Submitted (`docs/adr/`) | Verify scope and traceability | ☐      |
-| STAC Schema Impact Assessed        | Review schema versioning      | ☐      |
-| CI/CD Tests Passing                | Confirm green checks          | ☐      |
-| Security Review Complete           | Verify no new vulnerabilities | ☐      |
-| Version / Tag Bump Approved        | Align with SemVer policy      | ☐      |
-
----
-
-## 🧩 Additional Notes
-
-Include sketches, UML diagrams, mockups, or example screenshots to aid understanding.
-If available, attach figures or JSON snippets showing expected outputs.
-
----
-
-<div align="center">
-
-### 💡 Kansas Frontier Matrix
-
-**“Every Feature Builds the Future — Versioned, Proven, and Reproducible.”**
-
-</div>
+  - type: checkboxes
+    id: governance
+    attributes:
+      label: Maintainer Review
+      options:
+        - label: Design Doc submitted (`docs/adr/`)
+        - label: STAC schema impact assessed (versioning)
+        - label: CI/CD tests passing (green checks)
+        - label: Security review complete (no new vulnerabilities)
+        - label: Version/tag bump approved (SemVer policy)
