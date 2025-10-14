@@ -184,8 +184,9 @@ The time block powers timeline filtering.
 
 ⸻
 
-🏗 UI Architecture
+## 🏗 UI Architecture
 
+```mermaid
 flowchart TD
   A["User"] --> B["React Router"]
   B --> C["TimelineView (Canvas)"]
@@ -194,10 +195,12 @@ flowchart TD
   D --> E["DetailPanel"]
   B --> F["SearchBar"]
   F --> D
+
   subgraph API
     G["FastAPI · /events /entity /search /ask"]
     H["Layers Config · /layers-config (from STAC)"]
   end
+
   C -->|GET /events| G
   D -->|GET /layers-config| H
   E -->|GET /entity/:id| G
