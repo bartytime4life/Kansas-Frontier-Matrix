@@ -2,24 +2,22 @@
 
 ### *“Time · Terrain · History · Knowledge Graphs”*
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](./.github/workflows/site.yml)
-[![Pages Deploy](https://img.shields.io/github/deployments/bartytime4life/Kansas-Frontier-Matrix/github-pages?label=Pages%20Deploy)](https://bartytime4life.github.io/Kansas-Frontier-Matrix/)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](./.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](./.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](./.github/workflows/trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](./docs/)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](./.github/workflows/site.yml)  
+[![Pages Deploy](https://img.shields.io/github/deployments/bartytime4life/Kansas-Frontier-Matrix/github-pages?label=Pages%20Deploy)](https://bartytime4life.github.io/Kansas-Frontier-Matrix/)  
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](./.github/workflows/stac-validate.yml)  
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](./.github/workflows/codeql.yml)  
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](./.github/workflows/trivy.yml)  
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](./docs/)  
 [![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20(code)%20%7C%20CC--BY%204.0%20(data)-blue)](./LICENSE)
-
-</div>
 
 ---
 
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Root Architecture Overview"
-version: "v1.5.0"
-last_updated: "2025-10-13"
+version: "v1.6.1"
+last_updated: "2025-10-14"
 authors: ["KFM Architecture Team"]
 status: "Stable"
 maturity: "Production"
@@ -55,8 +53,8 @@ semantic_alignment:
 
 ## 🌾 Mission
 
-**Kansas Frontier Matrix (KFM)** is a reproducible, open-science knowledge system connecting **Kansas’s environment, culture, and climate** through an AI-assisted **map + timeline + knowledge graph**.
-It integrates multi-domain data—hydrology, treaties, geology, and oral histories—into a single semantic framework for exploration and research.
+**Kansas Frontier Matrix (KFM)** is a reproducible, open-science knowledge system connecting **Kansas’s environment, culture, and climate** through an AI-assisted **map · timeline · knowledge graph**.
+It integrates hydrology, treaties, geology, hazards, newspapers, and oral histories into a single semantic framework for exploration and research.
 
 ---
 
@@ -69,16 +67,16 @@ flowchart TD
   B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
   B --> I["AI/ML Enrichment<br/>NER · OCR · Geocoding · Summaries"]
   C --> D["STAC Catalog<br/>Collections · Items · Assets"]
-  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
+  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL"]
   I --> H
   D --> J["API Layer<br/>FastAPI · GraphQL · REST"]
   H --> J
-  J --> F["Frontend (React + MapLibreGL)<br/>Map · Timeline · AI Panels"]
-  E["Google Earth Exports<br/>KML / KMZ"] --> F
+  J --> F["Frontend (React + MapLibre GL)<br/>Map · Timeline · AI Panels"]
+  C --> K["Google Earth Exports<br/>KML / KMZ"]
 %% END OF MERMAID
 ```
 
-*From raw archives to semantic graphs to interactive storytelling.*
+*From raw archives to semantic graphs to interactive storytelling (and exports).*
 
 ---
 
@@ -86,49 +84,49 @@ flowchart TD
 
 ### 1️⃣ Data Ingestion (ETL)
 
-* **Inputs:** Historic maps · hydrology · climate · treaties · text archives
+* **Inputs:** historic maps, hydrology, climate, treaties, OCR text archives
 * **Process:** `make fetch` → `make cogs` → `make stac` (standardized COG/GeoJSON outputs)
-* **Outputs:** Reproducible layers under `data/stac/` with full SHA-256 integrity.
+* **Outputs:** reproducible layers under `data/stac/` with full SHA-256 integrity
 
 > 🧩 *No dataset without provenance.*
 
 ### 2️⃣ AI / ML Enrichment
 
-* **NLP Stack:** spaCy + Transformers → extract people, places, events & dates.
-* **Entity Linking:** Contextual similarity → canonical graph nodes (e.g., “Fort Larned”).
-* **Summarization:** BART/T5 → human-readable narratives.
-* **Cross-source Inference:** detects spatial and temporal patterns (e.g., river migration).
+* **NLP:** spaCy + Transformers → extract people, places, events & dates
+* **Entity Linking:** string+context matching → canonical graph nodes (e.g., “Fort Larned”)
+* **Summarization:** BART/T5 → human-readable synopses for panels & tooltips
+* **Cross-source Inference:** detects spatial/temporal patterns (e.g., river migration, drought clusters)
 
 ### 3️⃣ Knowledge Graph
 
-* **Store:** Neo4j / RDF hybrid.
-* **Ontology:** CIDOC CRM + OWL-Time + PeriodO alignment.
-* **Relations:** `OCCURRED_AT` · `MENTIONS` · `PARTICIPATED_IN`.
-* **Reasoning:** rule engine + confidence scores for data credibility.
-* **Provenance:** W3C PROV-O links each edge to its source document.
+* **Store:** Neo4j (optionally projected to RDF)
+* **Ontology:** CIDOC CRM + OWL-Time + PeriodO (time spans)
+* **Relations:** `OCCURRED_AT` · `MENTIONS` · `PARTICIPATED_IN` · `LOCATED_IN`
+* **Reasoning:** rule engine + confidence; handles ambiguity and conflicting sources
+* **Provenance:** W3C PROV-O linking every edge to its source evidence
 
 ### 4️⃣ API Layer
 
-* **Framework:** FastAPI + GraphQL.
-* **Endpoints:** `/api/events`, `/api/entity/{id}`, `/api/search`.
-* **Outputs:** GeoJSON · CSV · KML · DCAT feeds.
-* **Security:** JWT auth, rate-limiting, audit logging.
+* **Framework:** FastAPI + GraphQL
+* **Endpoints:** `/api/events`, `/api/entity/{id}`, `/api/search`, `/api/tiles/*`
+* **Formats:** GeoJSON, CSV, DCAT, STAC; optional KML/KMZ export
+* **Security:** JWT (service-to-service); rate-limits; request auditing
 
 ### 5️⃣ Frontend Web App
 
-* **Stack:** React 18 + MapLibre GL + D3 Canvas timeline.
-* **Features:** Temporal slider · semantic filters · AI summaries · WCAG 2.1 AA accessibility.
-* **Visuals:** Topography, treaty polygons, hydrology, climate anomalies.
-* **Exports:** GeoJSON layers → Google Earth KMZ & static story maps.
+* **Stack:** React 18 + MapLibre GL + D3/Canvas timeline
+* **Features:** time slider, semantic filters, AI summaries, WCAG 2.1 AA accessibility
+* **Visuals:** topography, treaty polygons, hydrology, climate anomalies, tornado tracks
+* **Exports:** shareable links, KMZ overlays (select layers)
 
 ---
 
 ## 🧪 Reproducibility & Observability
 
-* **MCP Compliance:** Docs-first workflows · model cards · SOPs.
-* **Integrity:** SHA-256 hashes · checksum CI gates · DVC/LFS tracking.
-* **CI Pipelines:** CodeQL · Trivy · Markdown lint · STAC validation · pre-commit.
-* **Telemetry:** structured logs · ETL metrics · dataset lineage graph.
+* **MCP Compliance:** docs-first workflows, SOPs, model cards
+* **Integrity:** SHA-256 hashes; checksum CI gates; DVC/LFS tracking for large assets
+* **CI Pipelines:** CodeQL · Trivy · Markdown & STAC validation · pre-commit hooks
+* **Telemetry:** structured logs, ETL metrics, catalog lineage graph; failure budgets
 
 ---
 
@@ -137,21 +135,21 @@ flowchart TD
 | Standard                | Purpose                        |
 | :---------------------- | :----------------------------- |
 | **COG / GeoJSON**       | Spatial data interoperability  |
-| **STAC 1.0 / DCAT 2.0** | Dataset metadata catalogs      |
+| **STAC 1.0 / DCAT 2.0** | Dataset catalogs & metadata    |
 | **CIDOC CRM**           | Cultural-historical semantics  |
-| **OWL-Time / PeriodO**  | Temporal modeling              |
-| **GeoSPARQL / PROV-O**  | Spatial relations + provenance |
+| **OWL-Time / PeriodO**  | Temporal modeling & eras       |
+| **GeoSPARQL / PROV-O**  | Spatial relations & provenance |
 
-All metadata includes `@context` (JSON-LD) for machine-readability.
+All metadata includes JSON-LD `@context` for machine readability.
 
 ---
 
 ## 🧱 Extending the System
 
-1. Add new manifest: `data/sources/<dataset>.json`.
-2. Run `make fetch` → `make process` → `make stac`.
-3. Update layer style in `web/config/layers.json`.
-4. Commit and `make validate`.
+1. Add manifest: `data/sources/<dataset>.json`
+2. Run: `make fetch` → `make process` → `make stac`
+3. Update style (if needed): `web/config/layers.json`
+4. Commit & `make validate` (STAC + checksums + docs lint)
 
 > ✅ Merge blocked if STAC schema or checksum fails.
 
@@ -163,7 +161,7 @@ All metadata includes `@context` (JSON-LD) for machine-readability.
 make fetch            # download datasets
 make process          # normalize rasters/vectors
 make stac-validate    # verify STAC & checksums
-make serve            # launch local app
+make serve            # local dev (backend + web)
 ```
 
 **Sample API**
@@ -171,7 +169,7 @@ make serve            # launch local app
 ```http
 GET /api/events?start=1850&end=1870&bbox=-100,37,-94,40
 GET /api/entity/fort-larned
-GET /api/search?q=Medicine Lodge
+GET /api/search?q=Medicine%20Lodge
 ```
 
 ---
@@ -180,12 +178,12 @@ GET /api/search?q=Medicine Lodge
 
 ```text
 Kansas-Frontier-Matrix/
-├─ src/      # Python ETL + AI/ML pipelines
-├─ web/     # React SPA (MapLibre + Timeline)
-├─ data/    # sources · raw · processed · stac
-├─ docs/    # architecture · SOPs · model cards
-├─ tools/    # build/convert/validate scripts
-└─ .github/  # CI/CD workflows · issue templates
+├─ src/       # Python ETL + AI/ML pipelines
+├─ web/       # React SPA (MapLibre + Timeline)
+├─ data/      # sources · raw · processed · stac
+├─ docs/      # architecture · SOPs · model cards
+├─ tools/     # build/convert/validate scripts
+└─ .github/   # CI/CD workflows · issue/PR templates
 ```
 
 ---
@@ -194,10 +192,10 @@ Kansas-Frontier-Matrix/
 
 | Domain         | Mechanism                    | Description                           |
 | :------------- | :--------------------------- | :------------------------------------ |
-| **Code**       | SemVer `vMAJOR.MINOR.PATCH`  | Follows semver.org                    |
-| **Docs**       | `docs/CHANGELOG.md`          | Records authorship & revision notes   |
-| **Data**       | STAC `properties.version`    | Per-layer version tag                 |
-| **Models**     | Model Cards (`docs/models/`) | Architecture + metrics + bias notes   |
+| **Code**       | SemVer `vMAJOR.MINOR.PATCH`  | Release tags and changelogs           |
+| **Docs**       | `docs/CHANGELOG.md`          | Authorship & revision notes           |
+| **Data**       | STAC `properties.version`    | Per-layer version & dates             |
+| **Models**     | Model Cards (`docs/models/`) | Architecture, metrics, bias notes     |
 | **Releases**   | GitHub Tag + Zenodo DOI      | Citable snapshots                     |
 | **Governance** | `GOVERNANCE.md`              | Roles · review workflow · merge rules |
 
@@ -206,44 +204,42 @@ Kansas-Frontier-Matrix/
 ## 🚦 Status & Roadmap
 
 | Component                   | Status         | Target |
-| :-------------------------- | :------------- | :----- |
-| ETL & STAC Catalog          | ✅ Stable       | v1.0   |
-| Web UI (Map + Timeline)     | ✅ Stable       | v1.2   |
-| AI / ML Enrichment          | 🚧 Prototype   | v1.5   |
-| Treaty & Deed Layers        | 🚧 In Progress | v1.6   |
-| Fractal & Predictive Models | 🎯 Planned     | v2.0   |
-| Story Maps / KMZ Exports    | 🎯 Planned     | v2.1   |
-
----
-
-## 🧾 Change Log
-
-| Version | Date       | Author            | Summary                                                                        |
-| :------ | :--------- | :---------------- | :----------------------------------------------------------------------------- |
-| v1.5.0  | 2025-10-13 | Architecture Team | Upgraded to MCP-DL v6.2; added ontology context and semantic alignment section |
-| v1.4.0  | 2025-10-10 | Architecture Team | Added governance and frontmatter metadata                                      |
-| v1.3.0  | 2025-09-20 | Docs Team         | Enhanced diagram syntax and MCP badges                                         |
-| v1.2.0  | 2025-08-05 | Data Ops          | Linked STAC schemas & CI hooks                                                 |
-| v1.1.0  | 2025-07-01 | Core Dev          | Modular ETL and AI layer introduction                                          |
-| v1.0.0  | 2025-06-01 | Project Launch    | Initial public release                                                         |
+| :-------------------------- | :------------- | :----: |
+| ETL & STAC Catalog          | ✅ Stable       |  v1.0  |
+| Web UI (Map + Timeline)     | ✅ Stable       |  v1.3  |
+| AI / ML Enrichment          | 🚧 Prototype   |  v1.5  |
+| Treaty & Deed Layers        | 🚧 In Progress |  v1.6  |
+| Fractal & Predictive Models | 🎯 Planned     |  v2.0  |
+| Story Maps / KMZ Exports    | 🎯 Planned     |  v2.1  |
 
 ---
 
 ## 📚 References & Further Reading
 
-* *Kansas Frontier Matrix – System Design*
-* *Developer Docs (AI/ML Internals)*
-* *Web UI Design Document*
-* *File & Data Architecture / STAC*
-* *Monorepo Repository Design*
-* *Master Coder Protocol — Scientific Method Guide*
+* `docs/architecture.md` — System Architecture
+* `docs/file-and-data-architecture.md` — Data & STAC design
+* `docs/developer/ai-ml.md` — AI/ML internals & model cards
+* `web/ARCHITECTURE.md` — Frontend UI & sequences
+* `docs/standards/` — MCP-DL v6.2 templates & rules
 
 ---
 
-<div align="center">
+## 🧾 Change Log
+
+| Version | Date       | Author            | Summary                                                                |
+| :------ | :--------- | :---------------- | :--------------------------------------------------------------------- |
+| v1.6.1  | 2025-10-14 | Architecture Team | Refined exports path, added PROV-O & JSON-LD, clarified API formats    |
+| v1.5.0  | 2025-10-13 | Architecture Team | Upgraded to MCP-DL v6.2; ontology context & semantic alignment section |
+| v1.4.0  | 2025-10-10 | Architecture Team | Added governance & front matter metadata                               |
+| v1.3.0  | 2025-09-20 | Docs Team         | Enhanced diagram syntax and MCP badges                                 |
+| v1.2.0  | 2025-08-05 | Data Ops          | Linked STAC schemas & CI hooks                                         |
+| v1.1.0  | 2025-07-01 | Core Dev          | Modular ETL and AI layer introduction                                  |
+| v1.0.0  | 2025-06-01 | Project Launch    | Initial public release                                                 |
+
+---
 
 **Made with ❤️ for Kansas — bridging history, climate, and technology.**
 *Automation with Integrity · Every Workflow Proven · Versioned for Future Scholars.*
 
-</div>
+```
 ```
