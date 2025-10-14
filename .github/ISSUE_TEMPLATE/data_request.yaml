@@ -363,4 +363,3 @@ body:
       description: "Visuals, sample maps, metadata screenshots, or priority rationale"
     validations:
       required: false
-```
