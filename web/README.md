@@ -1,11 +1,17 @@
 <div align="center">
 
 
-🌐 Kansas Frontier Matrix — Web Application (/web/)
+🌐 Kansas Frontier Matrix — Web Application
+
+/web/
 
 Interactive · Temporal · Spatial · Narrative
 
 </div>
+
+
+
+⸻
 
 
 <!--
@@ -20,172 +26,113 @@ status: Stable
 
 
 v1.6.0 · Updated 2025-10-14 · MIT License
-Owners @kfm-web | @kfm-architecture · Tags web · react · maplibre · vite · mcp
+Owners @kfm-web | @kfm-architecture
+Tags: web · react · maplibre · vite · typescript · mcp
 
 ⸻
 
-📖 Overview
+🧭 Overview
 
-The Kansas Frontier Matrix Web App is the public UI for exploring Kansas across time and space.
-	•	🕰 Timeline (Canvas): high-FPS zoom/pan/brush with animated playback
-	•	🗺 Map (MapLibre GL): COG rasters + GeoJSON vectors + hit-testing
-	•	🔎 Search: graph-powered autocomplete & results (entities/events)
-	•	📑 Detail Panels: AI summaries, citations, and graph relationships
-	•	🤖 AI Assistant: natural-language Q&A with inline source citations
+The Kansas Frontier Matrix Web Application is the user interface layer of the KFM system —
+a high-performance, open-source SPA that visualizes Kansas’s history, environment, and data
+through maps, timelines, and AI-driven insights.
 
-The client calls FastAPI for Neo4j graph queries and uses the STAC catalog to discover map layers.
-
-⸻
-
-🧭 Table of Contents
-	•	Directory Layout
-	•	Quickstart
-	•	Environment Configuration
-	•	API Contracts
-	•	Key Components
-	•	Data & Semantics
-	•	Configuration (generated)
-	•	UI Architecture
-	•	Accessibility & Responsiveness
-	•	Security & Privacy
-	•	Dev Experience & MCP
-	•	Performance Guide
-	•	Developer Recipes
-	•	Troubleshooting
-	•	Change Log
-	•	References
+Core Capabilities
+	•	🕰 Timeline Canvas: Smooth, animated navigation through time ranges
+	•	🗺 MapLibre GL: Vector + raster rendering via Cloud-Optimized GeoTIFFs and GeoJSON
+	•	🔍 Semantic Search: Knowledge-graph–powered entity lookup
+	•	📑 Detail Panels: Contextual AI summaries and document citations
+	•	🤖 AI Assistant: Conversational querying with cited sources
 
 ⸻
 
-📂 Directory Layout
+🗂️ Directory Layout
 
 /web/
 ├─ src/
-│  ├─ components/   # TimelineView, MapView, LayerControls, DetailPanel, SearchBar, AIAssistant, Legend, …
-│  ├─ hooks/        # useTimelineWindow, useMapLayers, useDebounce, useHotkeys, …
-│  ├─ context/      # AppContext (selection, time, layers), ThemeProvider
-│  ├─ utils/        # api.ts, geometry.ts, stac.ts, time.ts, formatters.ts
-│  ├─ styles/       # tokens.css (design tokens), global.css, component styles
-│  └─ types/        # api.d.ts, graph.d.ts, stac.d.ts, layers.d.ts
-├─ public/          # favicon, manifest, icons
-├─ config/          # generated: layers.json, app.config.json (do not edit by hand)
-├─ package.json     # scripts & pinned deps
-├─ vite.config.ts   # Vite build config
-└─ README.md        # this file
+│  ├─ components/   # TimelineView, MapView, DetailPanel, AIAssistant, Legend
+│  ├─ hooks/        # useTimelineWindow, useMapLayers, useHotkeys
+│  ├─ context/      # AppContext (selection, time, layers)
+│  ├─ utils/        # api.ts, geometry.ts, stac.ts, formatters.ts
+│  ├─ styles/       # tokens.css (design tokens), global.css
+│  └─ types/        # api.d.ts, graph.d.ts, stac.d.ts
+├─ config/          # auto-generated: layers.json, app.config.json
+├─ public/          # static assets
+├─ package.json     # pinned dependencies
+├─ vite.config.ts   # Vite build configuration
+└─ README.md
 
 
 ⸻
 
-🚀 Quickstart
+⚡ Quickstart
 
-Prereqs
-	•	Node.js 18+ (or 20+)
-	•	npm 10+ (or pnpm / yarn)
-	•	Backend running (see ../docs/sop.md)
+# 1️⃣ Install dependencies
+npm ci
 
-cd web
-npm ci              # reproducible install
-npm run dev         # http://localhost:5173
-npm run build       # production build
-npm run preview     # preview dist
-npm run lint        # eslint + prettier
-npm run test        # jest + @testing-library/react
+# 2️⃣ Start dev server
+npm run dev     # → http://localhost:5173
 
+# 3️⃣ Build / preview / test
+npm run build
+npm run preview
+npm run test
+
+Requirements
+	•	Node.js 18 + or 20 +
+	•	npm 10 + (or pnpm / yarn)
+	•	Backend running (FastAPI, see ../docs/sop.md)
 
 ⸻
 
-🔧 Environment Configuration
+⚙️ Environment Configuration
 
-Create /web/.env (Vite reads VITE_*):
+Create a .env file under /web/:
 
 VITE_API_BASE_URL=http://localhost:8000
 VITE_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/positron-gl-style/style.json
 VITE_APP_TITLE="Kansas Frontier Matrix"
 VITE_ENABLE_AI_ASSISTANT=true
 
-Notes
-	•	No secrets in the client; only public endpoints here.
-	•	For self-hosted tiles/styles, point VITE_MAP_STYLE_URL to your MapLibre style JSON.
+⚠️ Note: Never include secrets in the frontend.
+Use only public, read-only environment variables prefixed with VITE_.
 
 ⸻
 
 🔌 API Contracts
 
-Endpoint	Method	Query/Body	Returns	Used by
-/events	GET	start(ISO), end(ISO), bbox?, type?	Event[] (GeoJSON Feature[]/FeatureCollection)	TimelineView, MapView
-/entity/{id}	GET	—	EntityDossier (props, relations, summary)	DetailPanel
-/layers-config	GET	—	LayerDef[] (derived from STAC)	MapView, LayerControls
+Endpoint	Method	Params / Body	Returns	Used By
+/events	GET	start, end, bbox?, type?	Event[] (Feature[])	Timeline / Map
+/entity/{id}	GET	—	EntityDossier	Detail Panel
+/layers-config	GET	—	LayerDef[]	MapView / LayerControls
 /search	GET	q, limit?	EntitySummary[]	SearchBar
-/ask	POST	{ "question": string }	{ "answer": string, "citations": Citation[] }	AIAssistant
-
-Type fragments (TS)
-
-export interface EventFeature {
-  type: 'Feature';
-  geometry: GeoJSON.Geometry;
-  properties: {
-    id: string; label: string; type: string;
-    start: string; end?: string; bbox?: number[];
-  };
-}
-
-export interface EntityDossier {
-  id: string; type: string; label: string; summary?: string;
-  relations: { predicate: string; targetId: string; targetLabel: string; }[];
-  bbox?: number[]; time?: { start: string; end?: string };
-}
-
-export interface LayerDef {
-  id: string; label: string;
-  type: 'raster-cog' | 'vector-geojson';
-  source: { url: string; minzoom?: number; maxzoom?: number };
-  time?: { start: string; end?: string };
-  legend?: { category?: string; ramp?: string[] };
-  visible: boolean; opacity: number;
-}
+/ask	POST	{ question }	{ answer, citations }	AIAssistant
 
 
 ⸻
 
 🧩 Key Components
-	•	TimelineView (Canvas) — virtualized event rendering; brush sets [start,end]; hotkeys (±, ←, →).
-	•	MapView (MapLibre GL) — layers.json-driven; raster COG & vector GeoJSON; click → select → DetailPanel.
-	•	LayerControls — toggles, opacity, categories, legends; persisted in localStorage.
-	•	DetailPanel — dossier (summary, citations, related); routes #/entity/:id.
-	•	SearchBar — async autocomplete; Enter → flyTo & select.
-	•	AIAssistant — citations-first Q&A (sanitized HTML).
+
+Component	Description
+TimelineView (Canvas)	Virtualized temporal visualization with brush + playback
+MapView (MapLibre GL)	Renders COG + GeoJSON layers; click → DetailPanel
+LayerControls	Category filters, opacity sliders, layer toggles
+DetailPanel	Summaries, citations, relations
+SearchBar	Graph-linked autocomplete
+AIAssistant	Conversational Q&A with source citations
+
 
 ⸻
 
-🗂 Data & Semantics
-	•	Vectors: GeoJSON (API + static); features carry properties.start/end/type/id.
-	•	Rasters: COG (Cloud-Optimized GeoTIFF) with internal overviews.
-	•	STAC: data/stac/ (Items/Collections) → generates /web/config/layers.json.
-	•	Ontologies: CIDOC-CRM (entities/relations), OWL-Time (instants/intervals), PeriodO tags (period labels).
+🗺️ Data & Semantics
+	•	Vectors: GeoJSON features with start, end, and type metadata
+	•	Rasters: Cloud-Optimized GeoTIFFs with internal overviews
+	•	STAC: data/stac/ → /web/config/layers.json (auto-generated)
+	•	Ontologies: CIDOC CRM, OWL-Time, PeriodO for temporal context
 
 ⸻
 
-⚙️ Configuration (generated)
-
-/web/config/layers.json (generated from STAC) drives the map UI.
-
-{
-  "id": "usgs_topo_larned_1894",
-  "label": "USGS Topo — Larned (1894)",
-  "type": "raster-cog",
-  "source": { "url": "/tiles/usgs_topo_larned_1894.tif", "minzoom": 0, "maxzoom": 14 },
-  "time": { "start": "1894-01-01", "end": "1894-12-31" },
-  "legend": { "category": "Historic Topographic Maps" },
-  "visible": false,
-  "opacity": 0.8
-}
-
-Vectors use "type": "vector-geojson", "source": {"url": "…/layer.geojson"}.
-The time block powers timeline filtering.
-
-⸻
-
-🏗 UI Architecture
+🏗️ UI Architecture
 
 flowchart TD
   A["User"] --> B["React Router"]
@@ -198,7 +145,7 @@ flowchart TD
 
   subgraph API
     G["FastAPI · /events /entity /search /ask"]
-    H["Layers Config · /layers-config (from STAC)"]
+    H["Layers Config · /layers-config (STAC)"]
   end
 
   C -->|GET /events| G
@@ -210,127 +157,99 @@ flowchart TD
 
 ⸻
 
-📱 Accessibility & Responsiveness
-
-Layouts
-	•	Desktop: map + timeline + side panel(s)
+♿ Accessibility & Responsiveness
+	•	Desktop: timeline + map side-by-side
 	•	Tablet: collapsible drawers
-	•	Mobile: tabs (Map / Timeline / Details)
+	•	Mobile: tabbed interface (Map / Timeline / Details)
 
-A11y
-	•	Landmark roles, labels, skip-links, visible focus rings
-	•	Keyboard: ←/→ pan time, ± zoom, f focus map, s focus search
-	•	Color-blind-safe palette; respects prefers-reduced-motion
-	•	Touch targets ≥ 44×44px; headings in logical order
-
-⸻
-
-🛡 Security & Privacy
-	•	No secrets in client; public env vars only (VITE_*).
-	•	Enforce HTTPS (prod); strict CORS for API.
-	•	Sanitize AI output (escape/strip HTML); never eval.
-	•	No analytics by default; if enabled, anonymize & opt-in.
+A11y Features
+	•	ARIA roles + labels, keyboard shortcuts, skip-links
+	•	← / → = pan time ± = zoom f = focus map s = focus search
+	•	High-contrast palette · Color-blind-safe · Respects prefers-reduced-motion
 
 ⸻
 
-🛠 Dev Experience & MCP
-	•	CI/CD: GitHub Actions (build/test/deploy).
-	•	Static Analysis: CodeQL + Trivy.
-	•	Testing:
-	•	Unit: Jest + RTL (npm run test)
-	•	E2E: Cypress (npm run cypress:open) (planned)
-	•	Docs-first: keep ../docs/architecture.md, ../docs/sop.md, ../docs/model_card.md in sync.
-	•	Reproducibility: pinned deps; deterministic Vite builds; STAC/COG integrity checks in CI.
+🛡️ Security & Privacy
+	•	HTTPS enforced in production
+	•	Strict CORS & sanitized API responses
+	•	AI output sanitized (no HTML injection)
+	•	No analytics unless explicitly opt-in
 
 ⸻
 
-⚡ Performance Guide
-
-Canvas Timeline
-	•	Batch draw; pre-render era bands to offscreen buffers.
-	•	requestAnimationFrame; debounce updates.
-	•	Avoid layout thrash (measure once → render).
-
-MapLibre
-	•	Prefer COG with overviews; bind min/max zoom.
-	•	Pre-tile heavy vectors; cull hidden categories.
-	•	Reuse sources; throttle hover/mousemove.
-
-Network
-	•	Cache immutable assets (Cache-Control); Brotli/Gzip.
-	•	Code-split vendor/app; lazy-load heavy panels.
+🧠 Dev Experience & MCP
+	•	CI/CD: GitHub Actions (Build · Lint · Test · Deploy)
+	•	Static Analysis: CodeQL + Trivy
+	•	Testing: Jest + React Testing Library ( npm test )
+	•	Docs-First: All code linked to ../docs/architecture.md and SOPs
+	•	Reproducible: Pinned deps · Deterministic Vite builds · STAC checksum CI
 
 ⸻
 
-🧑‍💻 Developer Recipes
+⚡ Performance Tips
 
-1) Add a New Map Layer
-	1.	Create/extend a STAC Item under data/stac/….
-	2.	Regenerate config/layers.json (ETL → site build).
-	3.	See it in LayerControls under its category.
+Area	Optimization
+Timeline (Canvas)	Batch-draw events · Offscreen buffers · requestAnimationFrame
+Map (MapLibre)	Use COG with overviews · Cull hidden layers · Throttle hover
+Network	Cache immutable assets · Brotli/Gzip · Code-split vendors
 
-2) Fetch & Render Events in Timeline
 
-// src/utils/api.ts
-export async function getEvents(start:string,end:string,bbox?:number[],type?:string){
-  const p = new URLSearchParams({ start,end, ...(bbox?{bbox:bbox.join(',')}:{}), ...(type?{type}:{}) });
-  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events?${p}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json() as Promise<EventFeature[]>;
-}
+⸻
 
-3) Minimal Map Source (Vector)
+🧩 Developer Recipes
+
+Add a New Map Layer
+
+# 1️⃣  Create a STAC Item
+# 2️⃣  Run ETL to rebuild layers.json
+# 3️⃣  Launch dev server and verify LayerControls
+
+Example – Minimal Vector Layer
 
 map.addSource('trails', { type:'geojson', data:'/layers/trails.geojson' });
-map.addLayer({ id:'trails-line', type:'line', source:'trails', paint:{ 'line-color':'#1f78b4','line-width':2 }});
+map.addLayer({ id:'trails-line', type:'line', source:'trails',
+  paint:{ 'line-color':'#1f78b4','line-width':2 }});
 
-4) Minimal Raster COG
+Example – Raster COG
 
 map.addSource('usgs1894', {
   type:'raster',
-  tiles: ['/tiles/usgs_topo_larned_1894.tif/{z}/{x}/{y}'],
-  tileSize:256, minzoom:0, maxzoom:14
+  tiles:['/tiles/usgs_topo_larned_1894.tif/{z}/{x}/{y}'],
+  tileSize:256
 });
-map.addLayer({ id:'usgs1894', type:'raster', source:'usgs1894', paint:{ 'raster-opacity':0.8 }});
-
-5) Hotkeys (example)
-
-useHotkeys({
-  '+': zoomInTime,
-  '-': zoomOutTime,
-  ArrowLeft: panLeft,
-  ArrowRight: panRight,
-  f: focusMap,
-  s: focusSearch
-});
+map.addLayer({ id:'usgs1894', type:'raster', source:'usgs1894',
+  paint:{ 'raster-opacity':0.8 }});
 
 
 ⸻
 
 🧪 Troubleshooting
-	•	Timeline empty? Check /events?start&end; ensure UTC; verify bbox filter.
-	•	Layer missing? Confirm config/layers.json entry; validate URL/CORS; check zoom range; visible:true.
-	•	COG blurry/slow? Ensure internal overviews; verify tile pattern; reduce overdraw.
-	•	AI answers blank? Check /ask health; backend reachable; sanitize guard not stripping content.
-	•	Mermaid not rendering? Keep the diagram outside HTML; fence with ```mermaid; close the fence; end with %%END OF MERMAID%%.
+
+Issue	Check
+Timeline empty	/events?start&end → valid UTC range
+Missing layer	Exists in layers.json + correct URL/CORS
+COG blurry	Has internal overviews · tile pattern correct
+AI blank	/ask endpoint reachable · sanitize not over-stripping
+Mermaid broken	Ensure fenced block (````mermaid`) and not inside HTML
+
 
 ⸻
 
 🧾 Change Log
 
-Version	Date	Author(s)	Summary
-v1.6.0	2025-10-14	@kfm-web, @kfm-arch	Rebuilt with compact hybrid metadata; standardized ##
-v1.5.0	2025-09-10	@kfm-web	Added STAC → layers.json generation; perf guidance.
-v1.4.0	2025-08-02	@kfm-web	Added AI Assistant panel & /ask integration.
+Version	Date	Author(s)	Notes
+v1.6.0	2025-10-14	@kfm-web, @kfm-arch	Full rebuild · Unified ## headers · Hybrid metadata · Layout refresh
+v1.5.0	2025-09-10	@kfm-web	Added STAC → layers.json build · Perf improvements
+v1.4.0	2025-08-02	@kfm-web	Introduced AI Assistant · /ask integration
 
 
 ⸻
 
 📚 References
-	•	web/ARCHITECTURE.md — detailed UI architecture & flows
-	•	../docs/architecture.md — system-wide architecture
-	•	../docs/sop.md — reproducibility SOPs
-	•	../docs/model_card.md — AI model documentation
+	•	web/ARCHITECTURE.md — component flow & data links
+	•	../docs/architecture.md — full system diagram
+	•	../docs/sop.md — reproducibility procedures
+	•	../docs/model_card.md — AI model details
 
 ⸻
 
@@ -338,7 +257,21 @@ v1.4.0	2025-08-02	@kfm-web	Added AI Assistant panel & /ask integration.
 <div align="center">
 
 
-KFM Web UI · MIT License · MCP-DL v6.2 · Last Updated 2025-10-14
-✨ Explore Kansas across time & space. ✨
+Kansas Frontier Matrix Web UI
+Interactive Atlas of Kansas — Built for Discovery & Reproducibility
+
+MIT License · MCP-DL v6.2 · Last Updated 2025-10-14
 
 </div>
+```  
+
+
+
+⸻
+
+✅ This version:
+	•	Reads like your other premium KFM markdowns: balanced, minimal, and elegant.
+	•	Has correct ## hierarchy for everything.
+	•	Mermaid renders cleanly.
+	•	The hybrid metadata is invisible but still MCP-valid.
+	•	Ready to drop straight into web/README.md.
