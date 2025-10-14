@@ -2,9 +2,8 @@
 
 # 🚀 Kansas Frontier Matrix — Pull Request Template
 
-**Path:** `.github/PULL_REQUEST_TEMPLATE.md`
-**Purpose:** Guarantee every change is **documented, reproducible, versioned, validated, and auditable** —
-governed by the **Master Coder Protocol (MCP)**, **Semantic Versioning (SemVer)**, and KFM governance standards.
+**Path:** `.github/PULL_REQUEST_TEMPLATE.md`  
+**Purpose:** Guarantee every change is **documented, reproducible, versioned, validated, and auditable** — governed by the **Master Coder Protocol (MCP)**, **Semantic Versioning (SemVer)**, and KFM governance standards.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
@@ -21,8 +20,8 @@ governed by the **Master Coder Protocol (MCP)**, **Semantic Versioning (SemVer)*
 ```yaml
 ---
 template: "KFM Pull Request Template"
-version: "v2.0.0"
-last_updated: "2025-10-10"
+version: "v2.1.0"
+last_updated: "2025-10-13"
 authors: ["@bartytime4life", "@kfm-architecture", "@kfm-dataops"]
 semver:
   bump: "auto-detect"
@@ -39,9 +38,9 @@ mcp:
   validation_required: true
   provenance_required: true
 ---
-```
+````
 
----
+> <!-- Reviewer note: keep titles short & actionable. Use ADR links for non-trivial design decisions. -->
 
 ## 🧩 Summary
 
@@ -58,13 +57,11 @@ Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and conne
 * Related: #…
 * Discussion: …
 * Project / Milestone: …
-* ADR (Architecture Decision Record): `docs/adr/ADR-XXXX-<title>.md`
+* ADR: `docs/adr/ADR-XXXX-<title>.md`
 
 ---
 
-## 🧠 Type of Change
-
-*Select all that apply:*
+## 🧠 Type of Change *(select all that apply)*
 
 * [ ] 🐛 **Bug Fix** — non-breaking fix resolving reproducible issue
 * [ ] 💡 **Feature / Enhancement** — new functionality or workflow improvement
@@ -80,14 +77,17 @@ Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and conne
 
 ## 🧮 Implementation Details
 
-| Field                      | Description                                                |
-| :------------------------- | :--------------------------------------------------------- |
-| **Affected Directories**   | e.g. `data/processed/hydro/`, `src/pipelines/`             |
-| **New Files Added**        | scripts, datasets, metadata; include relative paths        |
-| **Dependencies Updated**   | pip/Node, lockfile, GitHub Actions pins                    |
-| **Validation Performed**   | checksums verified, STAC validated, unit/integration tests |
-| **Backward Compatibility** | maintained or intentionally broken (document below)        |
-| **Versioning Impact**      | see section below                                          |
+| Field                      | Description                                                    |
+| :------------------------- | :------------------------------------------------------------- |
+| **Affected Directories**   | e.g. `data/processed/hydro/`, `src/pipelines/`                 |
+| **New Files Added**        | scripts, datasets, metadata; include relative paths            |
+| **Dependencies Updated**   | pip/Node, lockfile, GitHub Actions pins                        |
+| **Validation Performed**   | checksums verified, STAC validated, unit/integration tests     |
+| **Backward Compatibility** | maintained or intentionally broken (document below)            |
+| **Versioning Impact**      | see section below                                              |
+| **Size / Scope**           | ~X files changed, ~Y insertions/deletions; risk: Low/Med/High  |
+| **Rollback Plan**          | how to revert (tag/commit), cleanup steps, data rollback notes |
+| **Data Migration**         | steps to rebuild/rehydrate data if schema changed              |
 
 ---
 
@@ -150,8 +150,8 @@ Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and conne
 
 ## 🔍 Provenance / Data Lineage
 
-* [ ] Updated `data/sources/*.json` with source URLs, license, last_verified date
-* [ ] Added STAC `derived_from` field for lineage
+* [ ] Updated `data/sources/*.json` with source URLs, license, `last_verified` date
+* [ ] Added STAC `derived_from` / `dependencies` fields for lineage
 * [ ] Verified checksums in `data/checksums/<domain>/*.sha256`
 
 ---
@@ -211,33 +211,39 @@ make site && open _site/index.html
 
 ## 🔒 Security / License Review
 
-* [ ] SBOM (Software Bill of Materials) updated
+* [ ] SBOM updated (`tools/sbom` or CI artifact)
 * [ ] No new CVEs (CodeQL/Trivy)
 * [ ] License compliance confirmed for new datasets
-* [ ] Secrets verified absent
-* [ ] GitHub Actions versions pinned
+* [ ] Secrets verified absent (grep + secret-scan)
+* [ ] GitHub Actions versions **pinned** (no `@latest`)
+
+> **Pins & Secrets Mini-Audit**
+>
+> * Actions pinned by tag or SHA
+> * No plaintext secrets committed
+> * OIDC used for deployments (if applicable)
 
 ---
 
 ## 💥 Breaking Changes
 
-| Component | Description                                                         | Migration / Mitigation          |
-| --------- | ------------------------------------------------------------------- | ------------------------------- |
-| API       | Deprecated endpoint `/api/v1/events` replaced with `/api/v2/events` | See docs/api_migration.md       |
-| Dataset   | Hydrology structure refactored                                      | Rebuild using `make hydrology`  |
-| Web Layer | Map config renamed                                                  | Update `layers.json` references |
+| Component | Description                                    | Migration / Mitigation          |
+| --------: | ---------------------------------------------- | ------------------------------- |
+|       API | Deprecated `/api/v1/events` → `/api/v2/events` | See `docs/api_migration.md`     |
+|   Dataset | Hydrology structure refactor                   | Rebuild using `make hydrology`  |
+| Web Layer | Map config renamed                             | Update `layers.json` references |
 
 ---
 
 ## 🧾 Reviewer Versioning Checklist
 
 | Step | Reviewer Action                                         | Status |
-| ---- | ------------------------------------------------------- | ------ |
-| 1    | Confirm all `version:` headers updated in changed files | ☐      |
-| 2    | Check CHANGELOG and STAC versions incremented           | ☐      |
-| 3    | Ensure new release tag created (`vX.Y.Z`)               | ☐      |
-| 4    | Verify CI/CD green                                      | ☐      |
-| 5    | Approve and merge                                       | ☐      |
+| ---: | ------------------------------------------------------- | :----: |
+|    1 | Confirm all `version:` headers updated in changed files |    ☐   |
+|    2 | Check CHANGELOG and STAC versions incremented           |    ☐   |
+|    3 | Ensure release tag created (`vX.Y.Z`)                   |    ☐   |
+|    4 | Verify CI/CD green                                      |    ☐   |
+|    5 | Approve and merge                                       |    ☐   |
 
 ---
 
@@ -269,11 +275,12 @@ flowchart TD
 
 ## 🕓 Version History (Template)
 
-| Version | Date       | Author          | Summary                                    |
-| ------- | ---------- | --------------- | ------------------------------------------ |
-| v2.0.0  | 2025-10-10 | KFM Maintainers | Added full versioning + SemVer integration |
-| v1.4.0  | 2025-09-15 | Core Docs       | Enhanced template to match MCP compliance  |
-| v1.0.0  | 2025-07-01 | Project Launch  | Initial PR governance template             |
+| Version | Date       | Author          | Summary                                   |
+| ------: | ---------- | --------------- | ----------------------------------------- |
+|  v2.1.0 | 2025-10-13 | KFM Maintainers | Risk/rollback/data-migration enhancements |
+|  v2.0.0 | 2025-10-10 | KFM Maintainers | Full versioning + SemVer integration      |
+|  v1.4.0 | 2025-09-15 | Core Docs       | Enhanced template to match MCP compliance |
+|  v1.0.0 | 2025-07-01 | Project Launch  | Initial PR governance template            |
 
 ---
 
@@ -284,3 +291,4 @@ flowchart TD
 **“Every Pull Request Builds the Past, Present, and Future — Versioned Forever.”**
 
 </div>
+```
