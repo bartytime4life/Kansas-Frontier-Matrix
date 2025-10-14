@@ -304,4 +304,3 @@ body:
       description: Screenshots, specs, or diagnostic insight to accelerate triage
     validations:
       required: false
-```
