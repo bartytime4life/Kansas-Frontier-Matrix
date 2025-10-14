@@ -20,9 +20,9 @@ last_updated: "2025-10-14"
 authors: ["KFM Web Team"]
 status: "Stable"
 maturity: "Production"
-stack: ["React + Vite", "TypeScript", "MapLibre GL", "FastAPI", "Neo4j"]
+tags: ["web","react","vite","typescript","maplibre","stac","timeline","mcp"]
 license: "MIT (code) | CC-BY 4.0 (docs)"
-alignment:
+semantic_alignment:
   - CIDOC CRM
   - OWL-Time
   - DCAT 2.0
@@ -31,48 +31,30 @@ alignment:
 
 ⸻
 
-📚 Table of Contents
-	•	🧭 Overview
-	•	🏗️ Architecture at a Glance
-	•	🗂️ Directory Layout
-	•	⚡ Quickstart
-	•	🧩 Map & Timeline Core
-	•	📡 API & Knowledge Graph
-	•	🧪 Testing & QA
-	•	♿ Accessibility (A11y)
-	•	🔁 CI/CD Pipelines
-	•	🤝 Contributing
-	•	📎 References
+📘 Overview
+
+The Kansas Frontier Matrix Web Application is the user-facing layer of the Frontier-Matrix system — an open-source, temporal–spatial exploration interface that allows users to traverse Kansas history through time, geography, and narrative.
+Built with React + MapLibre GL JS, it renders interactive maps, time-linked datasets, and AI-generated story layers connected to the system’s Neo4j Knowledge Graph and FastAPI backend ￼ ￼.
+
+The frontend’s mission is to visualize the project’s integrated data — historical events, places, climate records, and cultural archives — in a cohesive, intuitive web interface that synchronizes map overlays and timelines, allowing users to “time-travel” across Kansas’s frontier past.
 
 ⸻
 
-🧭 Overview
-
-The Kansas Frontier Matrix Web App provides the interactive user interface—a fusion of map, timeline, and knowledge-graph exploration.
-It connects historical, ecological, and cultural layers of Kansas through reproducible, STAC-driven geospatial assets and AI-assisted narrative discovery.
-	•	Framework: React + Vite (TypeScript)
-	•	Mapping: MapLibre GL + COG raster overlays
-	•	Data: STAC catalog → FastAPI → Neo4j Knowledge Graph
-	•	AI: Natural-language summaries + entity linking
-	•	Compliance: Master Coder Protocol (MCP) v6.2 for provenance and reproducibility
-
-⸻
-
-🏗️ Architecture at a Glance
+🧩 Architecture at a Glance
 
 flowchart TD
-  A["Sources<br/>maps · rasters · vectors · text archives"]
-    --> B["ETL Pipeline<br/>Python Makefile · GDAL · Checksums"]
-  B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
-  B --> I["AI/ML Enrichment<br/>NER · OCR · Geocoding · Summaries"]
-  C --> D["STAC Catalog<br/>Collections · Items · Assets"]
-  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
-  I --> H
-  D --> J["API Layer<br/>FastAPI · GraphQL"]
-  J --> W["Web Frontend<br/>React · MapLibre · Timeline"]
-  W --> U["User Interface<br/>Exploration · AI Summaries · Downloads"]
+  A["Backend API<br/>FastAPI · GraphQL · STAC Endpoints"]
+    --> B["Web Client<br/>React · TypeScript · Vite"]
+  B --> C["Timeline View<br/>Canvas · D3 · OWL-Time"]
+  B --> D["Map View<br/>MapLibre GL · GeoJSON · COGs"]
+  B --> E["Knowledge Graph Queries<br/>Neo4j · CIDOC CRM"]
+  D --> F["AI Summaries<br/>LLM · spaCy · Transformers"]
+  E --> G["User Interaction Layer<br/>Events · Filters · Queries"]
+  G --> B
 %% END OF MERMAID
 
+The UI and backend communicate via REST/GraphQL endpoints that expose graph data and geospatial assets (STAC/GeoJSON).
+Heavy processing (ETL, AI/ML, NER) occurs server-side, while the web client focuses purely on rendering and interaction ￼.
 
 ⸻
 
@@ -80,103 +62,131 @@ flowchart TD
 
 web/
 ├── src/
-│   ├── components/         # UI elements (MapView, Timeline, Panels)
-│   ├── maps/               # MapLibre styles & layer definitions
-│   ├── timeline/           # Temporal visualization (Canvas/D3)
-│   ├── api/                # FastAPI/GraphQL clients
-│   ├── state/              # Zustand or Redux store
-│   ├── utils/              # Shared helpers and formatters
-│   ├── types/              # TypeScript interfaces (MCP-DL)
-│   └── index.tsx
-├── public/                 # Static assets (favicons, logos)
-├── vite.config.ts
-├── package.json
-└── README.md
+│   ├── components/        # React components (Map, Timeline, Panels, Search)
+│   ├── hooks/             # Custom React hooks (useMap, useTimeline, etc.)
+│   ├── pages/             # Route-level views (Home, Explore, Admin)
+│   ├── assets/            # Static assets (icons, images, JSON styles)
+│   ├── styles/            # CSS/SCSS or Tailwind configurations
+│   ├── types/             # Shared TypeScript type definitions
+│   ├── utils/             # Helper utilities (API client, formatters)
+│   ├── config.ts          # Environment and endpoint configuration
+│   └── main.tsx           # React entrypoint
+│
+├── public/                # Static files served at build time
+├── package.json           # Node dependencies
+├── vite.config.ts         # Vite build configuration
+├── tsconfig.json          # TypeScript compiler settings
+└── README.md              # (this file)
 
 
 ⸻
 
-⚡ Quickstart
+⚙️ Technology Stack
 
-🧩 Prerequisites
-	•	Node 18 + PNPM or NPM
-	•	Running backend (API + Neo4j)
-	•	Valid STAC catalog (data/stac/)
-
-🚀 Run in Dev Mode
-
-cd web
-pnpm install
-pnpm dev
-
-Environment (.env.local):
-
-VITE_API_BASE_URL=http://localhost:8000
-VITE_MAP_STYLE_URL=/maps/style.json
-VITE_STAC_INDEX_URL=/stac/index.json
+Layer	Framework / Library	Purpose
+Frontend Framework	React 18 + TypeScript	Modular UI components
+Map Engine	MapLibre GL JS	Vector-tile mapping, temporal overlays
+Timeline Renderer	HTML5 Canvas + D3.js	High-performance interactive timeline
+State Management	React Context / Zustand	Cross-component state sync
+API Client	Axios / GraphQL	Connects to FastAPI + Neo4j endpoints
+Build Tools	Vite + ESLint + Prettier	Fast bundling and code linting
+UI Library	Tailwind / ShadCN-UI	Themed responsive layout
+Testing	Jest + React Testing Library	Component/unit testing
+Accessibility	WAI-ARIA, WCAG 2.1 AA	Inclusive design standards
 
 
 ⸻
 
-🧩 Map & Timeline Core
-	•	MapLibre GL: renders STAC-linked layers (COG, GeoJSON)
-	•	Timeline Canvas: scrollable multi-scale event plot
-	•	Detail Panels: pull entity metadata & AI summaries
-	•	Brushing Sync: timeline filters map time window
+🧭 Core Features
+
+🗺️ Map & Layer Engine
+	•	Interactive MapLibre viewer with STAC-registered layers (GeoJSON / COG).
+	•	Time-based map layers toggle dynamically as the timeline moves.
+	•	Supports raster (historical maps, DEMs) and vector overlays (railroads, treaties, climate zones).
+
+🕰️ Timeline Visualization
+	•	Scrollable & zoomable HTML5 Canvas timeline linked to OWL-Time data structures.
+	•	Syncs with the map — clicking a timeline event zooms to its geographic location.
+	•	Can display events, eras (PeriodO definitions), or environmental cycles.
+
+🔍 Knowledge Graph Search
+	•	Federated search queries across People, Places, Events nodes in Neo4j.
+	•	Queries return contextual info: linked entities, related maps, and document snippets.
+	•	Supports fuzzy and semantic matching (leveraging CIDOC CRM and OWL-Time tags).
+
+🤖 AI-Assisted Summaries
+	•	AI models generate site dossiers and contextual summaries for selected entities.
+	•	Combines NLP (spaCy NER) and transformer summarizers to synthesize text across sources.
+	•	Provenance and confidence scores are displayed for each AI insight ￼.
+
+🧰 Admin Console
+	•	Secure access for curators to review, edit, or flag extracted data.
+	•	Includes “source linking” tools to associate entities with documents or maps.
+	•	Supports validation of AI-generated content through human review workflows.
 
 ⸻
 
-📡 API & Knowledge Graph
-	•	FastAPI serves layer metadata and entity search
-	•	Neo4j stores People ↔ Places ↔ Events ↔ Documents
-	•	Graph aligns with CIDOC CRM and OWL-Time ontologies
-	•	All responses include provenance and uncertainty scores
+🚀 Development & Build
+
+Prerequisites
+	•	Node.js ≥ 20.x
+	•	npm or pnpm (recommended)
+	•	Backend running at http://localhost:8000 (FastAPI server)
+
+Commands
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run linter and tests
+npm run lint && npm test
+
 
 ⸻
 
-🧪 Testing & QA
+🧩 Integration with Backend
 
-pnpm test
-pnpm lint
-pnpm typecheck
+The web client communicates with the FastAPI backend through REST/GraphQL endpoints:
 
-✅ Unit Tests (Jest) ✅ Integration (Mock API) ✅ A11y Audits ✅ Visual Diffs
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
-⸻
+async function fetchEvents(start: string, end: string) {
+  const res = await fetch(`${API_BASE}/events?start=${start}&end=${end}`);
+  return await res.json();
+}
 
-♿ Accessibility (A11y)
-	•	WCAG 2.1 AA compliance
-	•	Keyboard navigation for map/timeline
-	•	ARIA labels for dynamic components
-	•	Color contrast tokens from KFM Design System
+Endpoints are documented automatically via Swagger/OpenAPI in the backend.
+The frontend consumes STAC and metadata JSONs for available layers (from /data/stac/) and dynamically registers them as MapLibre sources.
 
 ⸻
 
-🔁 CI/CD Pipelines
-	•	Build & Deploy: Vite → GitHub Pages
-	•	STAC Validate: schema checks on PRs
-	•	CodeQL / Trivy: security scans
-	•	Pre-Commit: lint, format, typecheck
-	•	Docs: auto-sync to GitHub Pages / docs/
+🧪 Testing & CI/CD
+	•	Unit Tests: Run via Jest for React components and utility functions.
+	•	Integration Tests: Verify data integrity across API endpoints and timeline/map linking.
+	•	Continuous Integration: GitHub Actions run linting, build checks, and deploy to GitHub Pages (site.yml).
+	•	Security & Dependency Scanning: Automated via Trivy and CodeQL workflows.
 
 ⸻
 
-🤝 Contributing
+🧠 Documentation Alignment
 
-Follow Master Coder Protocol (MCP) standards:
-	•	Document before code
-	•	Include README, diagram, and CHANGELOG for each module
-	•	Validate STAC links and checksums
-	•	Commit with semantic version labels
+All web documentation follows the Master Coder Protocol (MCP):
+	•	Every component is documented inline with version and dependency notes.
+	•	Changes to UI or logic must include corresponding updates in /docs/web/ or /docs/architecture.md.
+	•	MCP compliance ensures provenance, reproducibility, and open-science traceability.
 
 ⸻
 
-📎 References
-	•	🧩 Monorepo Design
-	•	🧠 System Design (Developer Docs)
-	•	🎨 Web UI Design
-	•	🗺️ GIS Archive Integration
-	•	📚 Data Resources
+🪪 License
+
+Code is released under the MIT License, and documentation/content under CC-BY 4.0.
+Attribution and citation details are provided in CITATION.cff.
 
 ⸻
 
@@ -184,10 +194,14 @@ Follow Master Coder Protocol (MCP) standards:
 <div align="center">
 
 
-“Make it Reproducible · Make it Explorable · Make it Kansas”
+Kansas Frontier Matrix — “Time · Terrain · History · Knowledge Graphs”
+📍 Open-Source Digital Atlas of Kansas
+© 2025 Frontier-Matrix Contributors
 
 </div>
 
 
 
 ⸻
+
+Would you like me to generate companion files (web/src/README.md for components & types) to maintain consistency with the rest of your repo structure?
