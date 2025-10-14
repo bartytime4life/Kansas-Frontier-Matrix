@@ -42,7 +42,7 @@ semantic_alignment:
 	•	🔌 API Contracts
 	•	🧩 Key Components
 	•	🗺 Data & Semantics
-	•	⚙️ Configuration (Generated)
+	•	⚙️ Configuration (generated)
 	•	🏗 UI Architecture
 	•	📱 Accessibility & Responsiveness
 	•	🛡 Security & Privacy
@@ -57,11 +57,11 @@ semantic_alignment:
 
 🧭 Overview
 
-The Kansas Frontier Matrix (KFM) Web Application is the user-facing portal blending a timeline and interactive map with AI-assisted context. It renders COG rasters and GeoJSON vectors, queries the Neo4j knowledge graph via FastAPI, and discovers map layers from a STAC catalog.
-	•	🕰 Timeline (Canvas): Smooth zoom/pan/brush with animated playback
+The KFM Web Application blends a timeline and interactive map with AI-assisted context. It renders COG rasters and GeoJSON vectors, queries the Neo4j knowledge graph via FastAPI, and discovers map layers from a STAC catalog.
+	•	🕰 Timeline (Canvas): smooth zoom/pan/brush with animated playback
 	•	🗺 Map (MapLibre GL): COG rasters + GeoJSON vectors + feature hit-testing
-	•	🔎 Search: Graph-powered autocomplete & result navigation
-	•	📑 Detail Panels: Summaries, citations, relationships
+	•	🔎 Search: graph-powered autocomplete & result navigation
+	•	📑 Detail Panels: summaries, citations, relationships
 	•	🤖 AI Assistant: Q&A with source citations
 
 ⸻
@@ -86,7 +86,7 @@ flowchart TD
   E -->|GET /entity/:id| G
   F -->|GET /search| G
 
-%% END OF MERMAID
+%%END OF MERMAID%%
 
 ⸻
 
@@ -129,7 +129,7 @@ npm run test        # jest + @testing-library/react
 
 🔧 Environment Configuration
 
-Create /web/.env (Vite reads VITE_* variables):
+Create /web/.env (Vite reads VITE_*):
 
 VITE_API_BASE_URL=http://localhost:8000
 VITE_MAP_STYLE_URL=https://basemaps.cartocdn.com/gl/positron-gl-style/style.json
@@ -137,7 +137,7 @@ VITE_APP_TITLE="Kansas Frontier Matrix"
 VITE_ENABLE_AI_ASSISTANT=true
 
 Notes
-	•	No secrets in client; only public endpoints (VITE_*).
+	•	No secrets in the client; only public endpoints (VITE_*).
 	•	For self-hosted tiles, point VITE_MAP_STYLE_URL to your MapLibre style JSON.
 
 ⸻
@@ -180,24 +180,24 @@ export interface LayerDef {
 ⸻
 
 🧩 Key Components
-	•	TimelineView (Canvas): Virtualized event rendering; brush sets [start,end]; hotkeys (±, ←, →).
-	•	MapView (MapLibre GL): Consumes layers.json; raster COG & vector GeoJSON; click → select → DetailPanel.
-	•	LayerControls: Categories, toggles, opacity, legend; persisted in localStorage.
-	•	DetailPanel: Dossier (summary, citations, related items); deep-links #/entity/:id.
-	•	SearchBar: Async autocomplete; Enter → flyTo + select.
-	•	AIAssistant: Q&A with inline citations (sanitized HTML).
+	•	TimelineView (Canvas): virtualized event rendering; brush sets [start,end]; hotkeys (±, ←, →)
+	•	MapView (MapLibre GL): consumes layers.json; raster COG & vector GeoJSON; click → select → DetailPanel
+	•	LayerControls: categories, toggles, opacity, legend; persisted in localStorage
+	•	DetailPanel: dossier (summary, citations, related items); deep-links #/entity/:id
+	•	SearchBar: async autocomplete; Enter → flyTo + select
+	•	AIAssistant: Q&A with inline citations (sanitized HTML)
 
 ⸻
 
 🗺 Data & Semantics
-	•	Vectors: GeoJSON (API + static) with properties.start/end/type/id.
-	•	Rasters: COG (Cloud-Optimized GeoTIFF) with internal overviews for fast pan/zoom.
-	•	STAC: data/stac/ drives web/config/layers.json (Items/Collections → UI layers).
-	•	Ontologies: CIDOC-CRM (entities/relations), OWL-Time (instants/intervals), PeriodO (period tags).
+	•	Vectors: GeoJSON (API + static) with properties start/end/type/id
+	•	Rasters: COG (Cloud-Optimized GeoTIFF) with internal overviews for fast pan/zoom
+	•	STAC: data/stac/ drives web/config/layers.json (Items/Collections → UI layers)
+	•	Ontologies: CIDOC-CRM (entities/relations), OWL-Time (instants/intervals), PeriodO (period tags)
 
 ⸻
 
-⚙️ Configuration (Generated)
+⚙️ Configuration (generated)
 
 /web/config/layers.json (generated from STAC) configures the map UI.
 
@@ -236,46 +236,46 @@ flowchart TD
   E -->|GET /entity/:id| G
   F -->|GET /search?q=...| G
 
-%% END OF MERMAID
+%%END OF MERMAID%%
 
 ⸻
 
 📱 Accessibility & Responsiveness
-	•	Layouts: Desktop (map + timeline + panel), Tablet (collapsible drawers), Mobile (tabbed Map/Timeline/Details).
-	•	A11y: ARIA roles/labels, skip-links, visible focus rings. Keyboard: ←/→ pan, ± zoom, f focus map, s focus search.
-	•	Color-blind-safe palettes, respects prefers-reduced-motion, touch targets ≥ 44×44 px.
+	•	Desktop (map + timeline + panel), Tablet (collapsible drawers), Mobile (tabbed Map/Timeline/Details)
+	•	ARIA roles/labels, skip-links, visible focus rings; keyboard: ←/→ pan, ± zoom, f focus map, s focus search
+	•	Color-blind-safe palettes, honors prefers-reduced-motion, touch targets ≥ 44×44 px
 
 ⸻
 
 🛡 Security & Privacy
-	•	HTTPS in production; strict CORS; no secrets in client (VITE_* only).
-	•	Sanitize AI output (escape/strip HTML); never eval user content.
-	•	No analytics by default; if enabled, anonymize & opt-in.
+	•	HTTPS in production; strict CORS; no secrets in client (VITE_* only)
+	•	Sanitize AI output (escape/strip HTML); never eval user content
+	•	No analytics by default; if enabled, anonymize & opt-in
 
 ⸻
 
 🛠 Dev Experience & MCP
-	•	CI/CD: GitHub Actions (Build · Lint · Test · Deploy); STAC validation gates.
-	•	Static Analysis: CodeQL + Trivy.
-	•	Testing: Jest + React Testing Library; Cypress (planned).
-	•	Docs-first: Keep ../docs/architecture.md, ../docs/sop.md, and ../docs/model_card.md in sync.
-	•	Reproducibility: Pinned deps; deterministic Vite builds; COG/STAC checksums in CI.
+	•	CI/CD: GitHub Actions (Build · Lint · Test · Deploy); STAC validation gates
+	•	Static Analysis: CodeQL + Trivy
+	•	Testing: Jest + React Testing Library; Cypress (planned)
+	•	Docs-first: keep ../docs/architecture.md, ../docs/sop.md, ../docs/model_card.md in sync
+	•	Reproducibility: pinned deps; deterministic Vite builds; COG/STAC checksums in CI
 
 ⸻
 
 ⚡ Performance Guide
-	•	Timeline (Canvas): Batch draw · offscreen bands · requestAnimationFrame · debounced state.
-	•	Map (MapLibre): COG with overviews · min/max zoom bounds · pre-tile heavy vectors · cull hidden layers.
-	•	Network: Cache immutable assets (Cache-Control) · Brotli/Gzip · code-split vendor/app · lazy-load heavy panels.
+	•	Timeline (Canvas): batch draw · offscreen bands · requestAnimationFrame · debounced state
+	•	Map (MapLibre): COG with overviews · min/max zoom bounds · pre-tile heavy vectors · cull hidden layers
+	•	Network: cache immutable assets (Cache-Control) · Brotli/Gzip · code-split vendor/app · lazy-load heavy panels
 
 ⸻
 
 🧑‍💻 Developer Recipes
 
 Add a New Map Layer
-	1.	Create a STAC Item under data/stac/…
-	2.	Regenerate web/config/layers.json (ETL → site build).
-	3.	Toggle in LayerControls.
+	1.	Create a STAC Item under data/stac/...
+	2.	Regenerate web/config/layers.json (ETL → site build)
+	3.	Toggle in LayerControls
 
 Fetch & Render Events in Timeline
 
@@ -310,7 +310,7 @@ Timeline empty	/events?start&end valid? UTC? bbox filter correct?
 Layer missing	Entry in config/layers.json? URL/CORS ok? zoom range? visible:true?
 COG blurry/slow	Internal overviews present? tile URL correct? reduce overdraw
 AI answers blank	/ask reachable? sanitize not over-stripping?
-Mermaid not rendering	Fenced ```mermaid block closed properly and ends with %% END OF MERMAID
+Mermaid not rendering	Fenced ```mermaid block closed; line after has %%END OF MERMAID%%
 
 
 ⸻
@@ -318,7 +318,7 @@ Mermaid not rendering	Fenced ```mermaid block closed properly and ends with %% E
 🧾 Change Log
 
 Version	Date	Author(s)	Summary
-v1.6.0	2025-10-14	KFM Web Team	Rebuilt README to KFM house style; added badges & mermaid diagrams
+v1.6.0	2025-10-14	KFM Web Team	Rebuilt README to KFM house style; fixed Mermaid & layout
 v1.5.0	2025-09-10	KFM Web Team	STAC → layers.json generation; performance guidance
 v1.4.0	2025-08-02	KFM Web Team	AI Assistant panel + /ask integration
 
@@ -326,9 +326,9 @@ v1.4.0	2025-08-02	KFM Web Team	AI Assistant panel + /ask integration
 ⸻
 
 🔗 References & Links
-	•	web/ARCHITECTURE.md — Component flows & UI wiring
-	•	../docs/architecture.md — Full-stack system design
-	•	../docs/sop.md — Reproducibility SOPs
+	•	web/ARCHITECTURE.md — component flows & UI wiring
+	•	../docs/architecture.md — full-stack system design
+	•	../docs/sop.md — reproducibility SOPs
 	•	../docs/model_card.md — AI model documentation
 
 ⸻
