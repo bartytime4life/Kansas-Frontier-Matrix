@@ -1,86 +1,83 @@
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — Web Frontend Types  
-`web/src/types/`
 
-**Shared TypeScript Definitions · Data Models · API Interfaces**
+🧩 Kansas Frontier Matrix — Web Frontend Types
 
-[![Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/ci.yml?label=Build)](../../../../.github/workflows/ci.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../.github/workflows/codeql.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../LICENSE)
+web/src/types/
+
+Shared TypeScript Definitions · Data Models · API Interfaces
 
 </div>
 
----
 
-## 🧭 Overview
 
-The `web/src/types/` directory defines all **TypeScript type declarations** and **interfaces** shared across  
-the Kansas Frontier Matrix Web Application. These types ensure **type safety**, **clarity**, and **strong coupling**  
-between React components, utility functions, and backend API responses.
+⸻
 
-Types here model the **data contracts** between frontend and backend — including `Event`, `Entity`,  
-`Layer`, and `AIResponse` structures — ensuring the React app communicates consistently with the  
-FastAPI/GraphQL API and the underlying Neo4j Knowledge Graph.
+🧭 Overview
 
-This directory forms the foundation of **code correctness** and **interoperability** for the web layer under  
-the **Master Coder Protocol (MCP)** documentation-first methodology.
+web/src/types/ contains the single source of truth for all shared TypeScript interfaces, types, and enums used by the KFM web app.
+These definitions formalize the frontend↔backend contract (FastAPI/GraphQL → React/MapLibre) and align with the Neo4j knowledge graph schema and STAC/GeoJSON geospatial standards.
 
----
+This module implements MCP-DL v6.2: documentation-first, ontology-aware, and reproducible definitions that reinforce type safety, clarity, and interoperability across the Web UI.
 
-## 📚 Directory Structure
+⸻
 
-```text
+📚 Directory Layout
+
 web/src/types/
-├── api.d.ts           # Interfaces for API responses (Events, Entities, GraphQL types)
-├── data.d.ts          # STAC/GeoJSON feature definitions and spatial metadata
-├── entity.d.ts        # Knowledge graph entities (Person, Place, Event, Document)
-├── map.d.ts           # Map layer and overlay definitions (MapLibre GL config)
-├── timeline.d.ts      # Timeline event, range, and scale structures
-├── ai.d.ts            # AI Assistant response schema and metadata
-├── ui.d.ts            # Shared UI props (DetailPanel, LayerControls, etc.)
-└── index.d.ts         # Master type exports for global use
+├── ai.d.ts         # AI assistant responses, citations, extracted entities
+├── api.d.ts        # REST/GraphQL response payloads + error envelopes
+├── data.d.ts       # STAC items, assets, GeoJSON Feature/Geometry wrappers
+├── entity.d.ts     # Person, Place, Organization, Document, Event node shapes
+├── map.d.ts        # MapLibre layer specs, style & legend contracts
+├── timeline.d.ts   # Timeline event, range, zoom/scale, lane allocation
+├── ui.d.ts         # Shared UI props (panels, toasts, dialogs), ARIA helpers
+└── index.d.ts      # Re-exports for ergonomic imports
 
-Each file exports reusable interfaces, types, and enums that define data shapes for
-frontend–backend interoperability.
+Each file exports reusable interfaces and discriminated unions to guarantee consistent shapes in React components, hooks, utils, and API clients.
 
 ⸻
 
 🧱 Core Type Interfaces
 
-Type	Description	Source
-Event	Represents a single historical event with date, location, and category.	/api/events
-Entity	Abstract interface for people, places, and organizations.	/api/entity/{id}
-Layer	Defines map overlay metadata derived from the STAC catalog.	data/stac/catalog.json
-AIResponse	Schema for AI Assistant responses, including text, citations, and entities.	/api/ask
-TimelineRange	Holds current visible time window and zoom factor.	TimelineView
-GeoFeature	GeoJSON-compliant spatial feature used for map rendering.	map.d.ts
-STACItem	Represents a geospatial dataset from the STAC catalog.	data.d.ts
-DocumentLink	Metadata about source documents (title, URL, license).	entity.d.ts
+Type	Description	Source of Truth
+Event	Historical event with time, place, relations, and category	/api/events
+Entity	Base for Person, Place, Organization, Document	/api/entity/{id}
+Layer	Map overlay metadata derived from STAC items	data/stac/*.json
+AIResponse	AI answer text, evidence, and extracted entities	/api/ask
+TimelineRange	Visible time window and zoom/scale state	TimelineView
+GeoFeature	GeoJSON-compliant features for map rendering	data.d.ts
+STACItem	Geospatial dataset (assets, bbox, datetime, license)	data.d.ts
+DocumentLink	Source doc metadata (title, URL, license, provider)	entity.d.ts
 
 
 ⸻
 
-🧩 Example: Event Type Definition
+🧩 Example: Event (semantic, timeline-ready)
 
-// event.d.ts
+// entity.d.ts
+
+export type EventCategory =
+  | "battle" | "treaty" | "flood" | "drought"
+  | "settlement" | "wildfire" | "storm" | "other";
+
 export interface Event {
   id: string;
   title: string;
   description?: string;
-  category: "battle" | "treaty" | "flood" | "drought" | "settlement" | "other";
-  startDate: string;   // ISO 8601 date
-  endDate?: string;
-  placeId?: string;
-  coordinates?: [number, number];
-  relatedEntities?: string[];
-  importance?: number; // for timeline scaling
-  source?: string;     // dataset or document ID
+  category: EventCategory;
+  startDate: string;              // ISO 8601
+  endDate?: string;               // ISO 8601 (interval support)
+  placeId?: string;               // links to Place
+  coordinates?: [lon: number, lat: number];
+  relatedEntityIds?: string[];    // Person/Org/Doc ids
+  importance?: number;            // timeline scaling (0..1 or 0..100)
+  source?: string;                // dataset/doc id
+  confidence?: number;            // 0..1 (uncertainty surfacing)
+  tags?: string[];                // free-form keywords
 }
 
-This type definition ensures that timeline and map components display events consistently
-and that any new event data from the backend is validated at compile time.
+Why: This shape supports interval events, semantic linking, timeline importance, and confidence/uncertainty, per MCP guidance.
 
 ⸻
 
@@ -93,19 +90,46 @@ flowchart TD
   B --> E["GeoFeature (Map)"]
   D --> F["Entity (People, Orgs)"]
   F --> A
-%% END OF MERMAID
+%%END OF MERMAID%%
 
-The types mirror relationships defined in the backend Neo4j graph schema:
-Events link to Places, Documents, and Entities, forming a cohesive data graph
-that feeds both the map and timeline visualizations.
+Relationships mirror the backend graph: Events ↔ Places ↔ Documents/Entities; AI output enriches and cites graph elements to maintain provenance.
 
 ⸻
 
-⚙️ TypeScript Configuration
-	•	Compiler Options: strict, noImplicitAny, and esModuleInterop are enabled in tsconfig.json.
-	•	Global Declaration: index.d.ts exports all shared interfaces to global.d.ts scope.
-	•	Type Validation: Enforced via ESLint and checked in CI pipelines using tsc --noEmit.
-	•	IDE Support: Fully compatible with VSCode IntelliSense for autocompletion and refactoring.
+🗺️ STAC & GeoJSON Alignment (data.d.ts)
+
+export interface STACAsset {
+  href: string;
+  type?: string;              // e.g., "image/tiff; application=geotiff; profile=cloud-optimized"
+  roles?: ("data"|"overview"|"thumbnail"|"metadata")[];
+  title?: string;
+}
+
+export interface STACItem {
+  id: string;
+  type: "Feature";
+  bbox?: [number,number,number,number];
+  geometry?: GeoJSON.Geometry;
+  properties: {
+    datetime?: string;
+    start_datetime?: string;
+    end_datetime?: string;
+    license?: string;
+    "kfm:theme"?: string;     // custom extension for UI theming
+  };
+  assets: Record<string, STACAsset>;
+  links?: { rel: string; href: string; type?: string }[];
+}
+
+Why: Using canonical STAC shapes ensures layer metadata flows directly from the catalog to MapLibre layers and UI legends.
+
+⸻
+
+⚙️ TypeScript & Tooling
+	•	tsconfig.json: "strict": true, "noImplicitAny": true, "esModuleInterop": true, "skipLibCheck": true.
+	•	Global exports: index.d.ts aggregates all interfaces to simplify imports.
+	•	Validation: tsc --noEmit and ESLint run in CI; PRs must pass type checks.
+	•	DX: VSCode IntelliSense, path aliases (e.g., @types, @api, @ui) recommended for ergonomics.
 
 ⸻
 
@@ -113,39 +137,81 @@ that feeds both the map and timeline visualizations.
 
 import { Event, Layer } from "../types";
 
-function renderEventMarker(event: Event, layer: Layer) {
-  console.log(`Rendering ${event.title} on layer ${layer.id}`);
+export function renderEventMarker(event: Event, layer: Layer) {
+  console.debug(`Rendering ${event.title} on layer ${layer.id}`);
 }
 
-The import pattern above allows seamless type safety across all modules
-— React components, utils, and API clients share the same source of truth.
+Shared types eliminate “stringly-typed” code and keep React components, utils, and API clients in sync.
 
 ⸻
 
-🧾 Provenance & Integrity
+♿ Accessibility Helpers (ui.d.ts)
 
-Artifact	Description
-Inputs	Backend API schemas (FastAPI Pydantic, GraphQL SDL)
-Outputs	TypeScript definitions (.d.ts) used across frontend
-Dependencies	React, TypeScript, MapLibre GL, GeoJSON typings
-Integrity	Versioned in Git; validated by TypeScript compiler in CI
+export interface AriaLabelled {
+  "aria-label"?: string;
+  "aria-describedby"?: string;
+  role?: string;
+}
 
+export interface PanelProps extends AriaLabelled {
+  title: string;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+Encourages consistent WCAG 2.1 AA props in shared components.
+
+⸻
+
+🧾 Provenance · Integrity · Semantics
+
+Inputs: Backend Pydantic/GraphQL schemas, STAC catalog, ontology mappings
+Outputs: TypeScript definitions consumed across the Web UI
+Dependencies: React, TypeScript, MapLibre GL, @types/geojson
+Integrity: Versioned in Git; validated in CI; semantic fields align to:
+	•	CIDOC CRM: Event ≈ crm:E5_Event, Document ≈ crm:E31_Document
+	•	OWL-Time: startDate/endDate encode intervals
+	•	PROV-O: source + AI citations for evidence chains
+
+Optional JSON-LD snippet (for docs/tests):
+
+{
+  "@context": "https://kfm.org/contexts/kfm.context.jsonld",
+  "@type": "crm:E73_Information_Object",
+  "name": "web/src/types",
+  "prov:wasDerivedFrom": ["api schemas", "stac catalog"]
+}
+
+
+⸻
+
+🧪 MCP Checks (Docs · MCP v6.2)
+	•	✅ Documentation-first (this README + typed contracts)
+	•	✅ Reproducible (CI tsc, ESLint)
+	•	✅ Provenance (source pointers + citations in AI types)
+	•	✅ FAIR & Semantic (STAC, GeoJSON, CIDOC CRM, OWL-Time)
+	•	✅ Accessibility hooks in UI types
 
 ⸻
 
 🔗 Related Documentation
-	•	Web Frontend Overview
-	•	Web UI Architecture
-	•	Knowledge Graph API Reference
-	•	Monorepo Repository Design
+	•	Web Frontend Overview → web/README.md
+	•	Web UI Architecture → docs/architecture/web-ui.md
+	•	Knowledge Graph API Reference → docs/api/graph.md
+	•	Monorepo Repository Design → docs/repo/monorepo.md
+
+⸻
+
+🧩 Versioning & Change Log
+	•	Doc Version: v6.2
+	•	Last Updated: 2025-10-14
+	•	Maintainer: Web Platform Team (@KansasFrontierMatrix)
 
 ⸻
 
 📜 License
 
 Released under the MIT License.
-© 2025 Kansas Frontier Matrix — All code and documentation follow the Master Coder Protocol
-for clarity, semantic alignment, and open reproducibility.
+© 2025 Kansas Frontier Matrix — All code and docs follow the Master Coder Protocol for clarity, semantics, and open reproducibility.
 
 “Strong types make strong frontiers.”
-
