@@ -15,10 +15,9 @@ Shared TypeScript Definitions · Data Models · API Interfaces
 
 🧭 Overview
 
-The web/src/types/ directory defines all TypeScript type declarations and interfaces shared across
-the Kansas Frontier Matrix (KFM) Web Application. These definitions guarantee type safety, semantic interoperability, and strict schema alignment between frontend modules and backend API contracts.
+The web/src/types/ directory defines all TypeScript type declarations and interfaces shared across the Kansas Frontier Matrix (KFM) Web Application. These definitions guarantee type safety, semantic interoperability, and strict schema alignment between frontend modules and backend API contracts.
 
-All type definitions follow MCP-DL v6.2 — the Master Coder Protocol Documentation Language — ensuring reproducibility, provenance, and alignment with FAIR data and CIDOC CRM / OWL-Time ontologies.
+All types follow MCP-DL v6.2 (Master Coder Protocol · Documentation Language) for reproducibility, provenance, and alignment with FAIR, CIDOC CRM, and OWL-Time.
 
 ⸻
 
@@ -34,22 +33,21 @@ web/src/types/
 ├── ui.d.ts         # Shared UI/ARIA props (panels, toasts, dialogs)
 └── index.d.ts      # Root barrel export for global import convenience
 
-Each file exports reusable interfaces, enums, and utility types shared by React components,
-hooks, API clients, and MapLibre integrations — enforcing one consistent source of truth.
+Each file exports reusable interfaces, enums, and utility types shared by React components, hooks, API clients, and MapLibre integrations — enforcing one consistent source of truth.
 
 ⸻
 
 🧱 Core Type Interfaces
 
 Type	Description	Defined In / Source
-Event	Historical event entity with time, location, and category fields	/api/events
-Entity	Abstract base type for people, places, and organizations	/api/entity/{id}
+Event	Historical event with time, place, relations, and category	/api/events
+Entity	Base for Person, Place, Organization, Document	/api/entity/{id}
 Layer	Map overlay metadata derived from STAC catalog	data/stac/*.json
-AIResponse	Schema for AI Assistant responses and evidence	/api/ask
-TimelineRange	Visible time window & zoom factor for timeline	timeline.d.ts
-GeoFeature	GeoJSON-compliant spatial feature for maps	map.d.ts
-STACItem	Geospatial dataset object (STAC 1.0)	data.d.ts
-DocumentLink	Metadata describing linked sources	entity.d.ts
+AIResponse	AI response text, evidence links, extracted entities	/api/ask
+TimelineRange	Visible time window & zoom factor	timeline.d.ts
+GeoFeature	GeoJSON-compliant feature for map rendering	map.d.ts
+STACItem	STAC 1.0 item for geospatial datasets	data.d.ts
+DocumentLink	Linked document metadata (title, URL, license)	entity.d.ts
 
 
 ⸻
@@ -73,12 +71,11 @@ export interface Event {
   relatedEntityIds?: string[];    // People / Orgs / Docs
   importance?: number;            // timeline scaling weight
   source?: string;                // dataset or doc ID
-  confidence?: number;            // 0-1 uncertainty
+  confidence?: number;            // 0..1 uncertainty
   tags?: string[];                // custom keywords
 }
 
-This schema ensures strong typing for map, timeline, and AI modules and encodes
-temporal intervals + confidence in accordance with OWL-Time and PROV-O.
+Ensures strong typing for map, timeline, and AI modules; encodes temporal intervals + confidence per OWL-Time and PROV-O.
 
 ⸻
 
@@ -93,13 +90,13 @@ flowchart TD
   F --> A
 %%END OF MERMAID%%
 
-Interpretation: Types mirror Neo4j graph schema — Event ↔ Place ↔ Document ↔ Entity,
-enabling coherent visualizations and semantic traversal in both the map and timeline UIs.
+Interpretation: Types mirror the Neo4j graph schema — Event ↔ Place ↔ Document ↔ Entity — enabling coherent map/timeline visualization and semantic traversal.
 
 ⸻
 
 🗺️ STAC / GeoJSON Integration
 
+// data.d.ts
 export interface STACAsset {
   href: string;
   type?: string;
@@ -123,15 +120,14 @@ export interface STACItem {
   links?: { rel: string; href: string; type?: string }[];
 }
 
-This structure allows direct ingestion from STAC 1.0 catalogs and seamless linking
-between backend assets → map layers → timeline overlays.
+Allows direct ingestion from STAC 1.0 catalogs and seamless linking backend assets → map layers → timeline overlays.
 
 ⸻
 
 ⚙️ TypeScript Configuration
 	•	Compiler Settings: strict, noImplicitAny, esModuleInterop, skipLibCheck
-	•	Global Exports: index.d.ts exposes all interfaces to the project scope
-	•	Validation: tsc --noEmit + ESLint run in CI pipelines (.github/workflows/ci.yml)
+	•	Global Exports: index.d.ts aggregates all interfaces for ergonomic imports
+	•	Validation: tsc --noEmit + ESLint in CI (.github/workflows/ci.yml)
 	•	IDE Support: VS Code IntelliSense + path aliases (@types, @api, @ui)
 
 ⸻
@@ -144,13 +140,12 @@ function renderEventMarker(event: Event, layer: Layer) {
   console.log(`Rendering ${event.title} on layer ${layer.id}`);
 }
 
-The import pattern ensures type integrity between React components,
-utility functions, and backend API schemas.
 
 ⸻
 
 ♿ Accessibility (ARIA Helpers)
 
+// ui.d.ts
 export interface AriaLabelled {
   "aria-label"?: string;
   "aria-describedby"?: string;
@@ -171,10 +166,10 @@ Consistent with WCAG 2.1 AA, these types standardize accessibility props across 
 
 Field	Description
 Inputs	Backend schemas (FastAPI Pydantic / GraphQL SDL)
-Outputs	TypeScript .d.ts definitions consumed by Web UI
+Outputs	TypeScript .d.ts definitions used by Web UI
 Dependencies	React · TypeScript · MapLibre GL · @types/geojson
 Integrity	Versioned in Git · Validated by CI TypeScript compiler
-Ontology Links	crm:E5_Event, crm:E31_Document, time:Interval, prov:wasDerivedFrom
+Ontology	crm:E5_Event, crm:E31_Document, time:Interval, prov:wasDerivedFrom
 
 {
   "@context": "https://kfm.org/contexts/kfm.context.jsonld",
@@ -187,12 +182,11 @@ Ontology Links	crm:E5_Event, crm:E31_Document, time:Interval, prov:wasDerivedFro
 ⸻
 
 🧪 MCP Compliance Checklist
-
-✅ Documentation-first
-✅ Type-safe & strictly validated
-✅ Provenance tracked (links + citations)
-✅ Semantic / FAIR alignment (STAC, GeoJSON, CIDOC CRM, OWL-Time)
-✅ Accessibility integrated (WCAG 2.1 AA)
+	•	✅ Documentation-first
+	•	✅ Type-safe & strictly validated
+	•	✅ Provenance tracked (links + citations)
+	•	✅ Semantic / FAIR alignment (STAC, GeoJSON, CIDOC CRM, OWL-Time)
+	•	✅ Accessibility integrated (WCAG 2.1 AA)
 
 ⸻
 
@@ -209,7 +203,7 @@ Ontology Links	crm:E5_Event, crm:E31_Document, time:Interval, prov:wasDerivedFro
 Field	Value
 Doc Version	v6.2
 Last Updated	2025-10-14
-Maintainer	Web Platform Team (@KansasFrontierMatrix)
+Maintainer	Web Platform Team (@KFM)
 
 
 ⸻
@@ -217,8 +211,7 @@ Maintainer	Web Platform Team (@KansasFrontierMatrix)
 📜 License
 
 Released under the MIT License.
-© 2025 Kansas Frontier Matrix — All code and documentation follow the Master Coder Protocol (MCP-DL v6.2)
-for clarity, semantic alignment, and open reproducibility.
+© 2025 Kansas Frontier Matrix — All code and documentation follow MCP-DL v6.2 for clarity, semantics, and open reproducibility.
 
 “Strong types make strong frontiers.”
 
