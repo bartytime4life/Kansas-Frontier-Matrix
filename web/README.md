@@ -1,182 +1,241 @@
-<div align="center">
+🧩 Kansas Frontier Matrix — Web Frontend
 
-
-🌐 Kansas Frontier Matrix — Web Application
-
-/web/
-
-Interactive · Temporal · Spatial · Narrative
-
-</div>
+“Time · Terrain · History · Knowledge Graphs”
 
 
 ⸻
 
-title: "Kansas Frontier Matrix — Web Application"
+
+---
+title: "Kansas Frontier Matrix — Web Frontend"
 version: "v1.6.0"
 last_updated: "2025-10-14"
 authors: ["KFM Web Team"]
 status: "Stable"
 maturity: "Production"
-tags: ["web","react","vite","typescript","maplibre","stac","timeline","mcp"]
+tags: ["web","react","vite","typescript","maplibre","timeline","stac","mcp"]
 license: "MIT (code) | CC-BY 4.0 (docs)"
 semantic_alignment:
   - CIDOC CRM
   - OWL-Time
   - DCAT 2.0
   - STAC 1.0
+---
+
+
+⸻
+
+📚 Table of Contents
+	•	Overview
+	•	Architecture at a Glance
+	•	Directory Layout
+	•	Technology Stack
+	•	Core Features
+	•	Quickstart
+	•	Environment & Config
+	•	API Integration
+	•	Testing & CI/CD
+	•	Accessibility & UX
+	•	Styling & Theming
+	•	Versioning & Governance
+	•	Change Log
+	•	References
 
 ⸻
 
 🧭 Overview
 
-The Kansas Frontier Matrix Web Application is the interactive exploration layer of the Frontier-Matrix system — a visualization engine for time-aware, spatially-anchored historical data.
-Built with React + MapLibre GL JS, it merges temporal and geospatial narratives into a single interface that lets users traverse Kansas history dynamically through maps, timelines, and AI-generated insights.
-
-It connects directly to the FastAPI / Neo4j knowledge graph backend, rendering historical datasets (treaties, settlements, hydrology, climate records, oral histories) through time-synchronized map layers and entity panels ￼ ￼.
+The Web Frontend is the interactive layer of the Kansas Frontier Matrix (KFM): a React + MapLibre application that binds time (timeline) to space (map) and story (AI-assisted summaries, knowledge graph links). It visualizes treaty polygons, trails, hydrology, climate and archival narratives — synchronized through a semantic backend (Neo4j + FastAPI) aligned to CIDOC CRM and OWL-Time.
 
 ⸻
 
 🏗️ Architecture at a Glance
 
 flowchart TD
-  A["FastAPI Backend<br/>REST + GraphQL Endpoints"]
-    --> B["React Web Client<br/>TypeScript · Vite · Tailwind"]
-  B --> C["Timeline View<br/>Canvas · D3 · OWL-Time"]
-  B --> D["Map View<br/>MapLibre GL · COG · GeoJSON"]
-  B --> E["Knowledge Graph<br/>Neo4j · CIDOC CRM · SPARQL"]
-  D --> F["AI Pipeline<br/>spaCy · Transformers · Summarizer"]
-  E --> G["User Interaction Layer<br/>Filters · Queries · Playback"]
-  G --> B
+  A["Sources<br/>maps · rasters · vectors · text archives"]
+    --> B["ETL Pipeline<br/>Makefile · GDAL · Checksums"]
+  B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
+  B --> I["AI/ML Enrichment<br/>NER · OCR · Geocoding · Summaries"]
+  C --> D["STAC Catalog<br/>Collections · Items · Assets"]
+  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
+  I --> H
+  D --> J["API Layer<br/>FastAPI · GraphQL · REST"]
+  H --> J
+  J --> F["Web Frontend (React + MapLibre)<br/>Map · Timeline · AI Panels"]
 %% END OF MERMAID
 
-Every visual component synchronizes in real-time — selecting an event in the timeline highlights its location on the map, while panning the map updates the visible temporal window.
+From raw archives to semantic graphs to interactive storytelling.
 
 ⸻
 
 🗂️ Directory Layout
 
 web/
-├── src/
-│   ├── components/     # React UI modules — Map, Timeline, Panels, Search
-│   ├── hooks/          # Shared React hooks (useMap, useTimeline)
-│   ├── pages/          # Route-level views (Home, Explore, Admin)
-│   ├── styles/         # Tailwind / SCSS configs
-│   ├── assets/         # Icons, images, JSON style sheets
-│   ├── types/          # Shared TypeScript definitions
-│   ├── utils/          # Helper libs (API clients, formatters)
-│   └── main.tsx        # Application entrypoint
+├─ src/
+│  ├─ components/      # Map, Timeline, Panels, Search, Legends
+│  ├─ hooks/           # useMap, useTimeline, useStac, useSearch
+│  ├─ pages/           # Home, Explore, Admin
+│  ├─ styles/          # Tailwind / SCSS / tokens
+│  ├─ assets/          # Icons, map styles, images
+│  ├─ types/           # Shared TypeScript interfaces
+│  ├─ utils/           # API client, formatters, helpers
+│  └─ main.tsx         # App entry
 │
-├── public/             # Static assets served at build time
-├── package.json        # Node dependencies
-├── vite.config.ts      # Vite build configuration
-└── tsconfig.json       # TypeScript settings
+├─ public/             # Static assets served at build
+├─ package.json        # Dependencies and scripts
+├─ vite.config.ts      # Vite configuration
+└─ tsconfig.json       # TypeScript configuration
+
 
 ⸻
 
 ⚙️ Technology Stack
 
-Layer	Framework / Tool	Purpose
-Frontend Core	React 18 + TypeScript	Modular component architecture
-Mapping Engine	MapLibre GL JS	Interactive vector/raster rendering
-Timeline Renderer	HTML5 Canvas + D3.js	Smooth, scalable chronology
-API Layer	Axios / GraphQL Client	Connects to FastAPI/Neo4j
-UI Framework	Tailwind + ShadCN-UI	Unified, responsive design
-Build System	Vite + ESLint + Prettier	Modern development pipeline
-Testing	Jest + React Testing Library	Unit & integration coverage
-Accessibility	WAI-ARIA · WCAG 2.1 AA	Inclusive, keyboard-first UX
+Layer	Tech	Purpose
+Core	React 18 + TypeScript	Modular SPA architecture
+Mapping	MapLibre GL JS	Vector/raster rendering (COG/GeoJSON)
+Timeline	HTML5 Canvas + D3	Smooth, scalable chronology
+API	Fetch / Axios / GraphQL client	FastAPI + Graph endpoints
+Tooling	Vite · ESLint · Prettier	Fast builds, formatting & linting
+Testing	Jest · React Testing Library	Unit/integration coverage
+UI	Tailwind / shadcn-ui	Aesthetic, accessible components
+A11y	WAI-ARIA · WCAG 2.1 AA	Keyboard-first, screen-reader friendly
+
 
 ⸻
 
 🧩 Core Features
 
-🗺️ Map Engine
-	•	MapLibre GL-based temporal viewer with STAC-registered layers.
-	•	Supports COG rasters (DEM, hillshade, historic maps) and GeoJSON vectors (trails, treaties).
-	•	Layer visibility bound to timeline range.
+🗺️ Map + Layers
+	•	Temporal MapLibre viewer with STAC-registered overlays
+	•	COG rasters (DEM, hillshade, historic sheets), GeoJSON vectors (trails, treaties, hydrology)
+	•	Layer visibility bound to timeline range; legends and semantic filters
 
 🕰️ Timeline
-	•	GPU-accelerated HTML5 Canvas timeline with OWL-Time period linking.
-	•	Scroll, zoom, and play through Kansas history from 1800 → Present.
-	•	PeriodO eras (e.g., Territorial Kansas, Dust Bowl) automatically labeled.
+	•	GPU-accelerated Canvas timeline with zoom, pan, and playback
+	•	OWL-Time & PeriodO era labels (e.g., Territorial Kansas, Dust Bowl)
+	•	Selecting a timeslice updates map; selecting a map feature focuses timeline
 
-🔍 Knowledge Graph Search
-	•	Federated semantic search across People, Places, Events.
-	•	Contextual results highlight relationships in map + timeline simultaneously.
-	•	Queries resolved via Neo4j GraphQL endpoint.
+🔎 Knowledge Graph Search
+	•	Finds People · Places · Events, returns linked context
+	•	One-click centering on the map + pin on the timeline
+	•	Graph-aware facets (role, era, region)
 
-🤖 AI-Assisted Summaries
-	•	spaCy NER + transformer summarizers produce site dossiers and contextual narratives.
-	•	Each AI output includes provenance and confidence metadata per MCP standards ￼.
+🤖 AI Summaries (MCP-aligned)
+	•	NER + summarization to assemble site dossiers
+	•	Provenance + confidence inline; curator review workflows
 
-🧰 Admin Console
-	•	Secure role-based tools for curators to validate, tag, or correct extracted entities.
-	•	Source linking and audit trails preserve full provenance (MCP chain-of-evidence).
+🛠️ Admin Console
+	•	Role-based curation: validate entities, link sources, adjust geometries
+	•	Audit trails preserve chain-of-evidence (MCP)
 
 ⸻
 
-🚀 Development & Build
+⚡ Quickstart
 
-# Install dependencies
+# 1) Install dependencies
 npm install
 
-# Launch development server
+# 2) Start dev server
 npm run dev
 
-# Build production bundle
+# 3) Build production assets
 npm run build
 
-# Lint & test
+# 4) Lint and test
 npm run lint && npm test
 
-Environment variables (in .env) define API and map endpoints:
+
+⸻
+
+🔧 Environment & Config
+
+Create a .env (or .env.local) with:
 
 VITE_API_URL="http://localhost:8000/api"
 VITE_MAP_STYLE="/assets/styles/kfm-style.json"
-
-⸻
-
-🧪 Testing & CI Pipeline
-	•	✅ Unit Tests — React components and helpers via Jest.
-	•	🔁 Integration — Timeline↔Map synchronization & API contract checks.
-	•	🧩 CI/CD — GitHub Actions run lint/build/test + deploy to GitHub Pages (site.yml).
-	•	🔒 Security — Automated scans: Trivy (Security), CodeQL (SAST).
-
-⸻
-
-📘 Documentation & MCP Compliance
-
-All modules in /web/ follow Master Coder Protocol v6.2:
-	•	Inline doc-strings and version headers per component.
-	•	Corresponding entries in /docs/web/ with diagrams and usage.
-	•	Changes trigger automated doc validation in CI (Docs-MCP badge).
-
-This guarantees provenance, reproducibility, and clarity across all front-end workflows.
-
-⸻
-
-🪪 License
-	•	Code: MIT License
-	•	Documentation / Content: CC-BY 4.0
-	•	See LICENSE and CITATION.cff for citation & reuse details.
-
-⸻
-
-<div align="center">
-
-
-🧭 “Time · Terrain · History · Knowledge Graphs”
-
-Kansas Frontier Matrix — Open-Source Digital Atlas of Kansas
-
-© 2025 Frontier-Matrix Contributors
-
-</div>
+VITE_MAP_TOKEN=""   # if using a private tiles host (optional)
 
 
 ⸻
 
-That’s the fully restored fancy version — with all of your project’s emblematic styling intact (emojis, dividers, centered branding, YAML header, and glyph layout).
+🔌 API Integration
 
-Would you like me to now generate matching sub-READMEs for
-web/src/components/, web/src/types/, and web/src/utils/ in the same MCP-DL format?
+Frontend calls FastAPI/Graph endpoints:
+
+const API = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api";
+
+export async function fetchEvents(start: string, end: string) {
+  const res = await fetch(`${API}/events?start=${start}&end=${end}`);
+  if (!res.ok) throw new Error("Failed to load events");
+  return res.json();
+}
+
+export async function search(q: string) {
+  const res = await fetch(`${API}/search?q=${encodeURIComponent(q)}`);
+  return res.json();
+}
+
+STAC items for layers are loaded at runtime to auto-register COG/GeoJSON sources in MapLibre.
+
+⸻
+
+🧪 Testing & CI/CD
+	•	Unit tests: npm test (Jest + RTL)
+	•	Integration: Map↔Timeline sync, API contracts
+	•	CI: GitHub Actions — lint, test, build, STAC validation, pages deploy
+	•	Security: CodeQL (SAST) + Trivy scans
+	•	Pre-commit: formatting, linting, Markdown & Mermaid checks
+
+⸻
+
+♿ Accessibility & UX
+	•	Keyboard-navigable map controls and timeline focus rings
+	•	Descriptive ARIA roles/labels for markers and event groups
+	•	Color-contrast-safe theme; motion reduced when prefers-reduced-motion is set
+
+⸻
+
+🎨 Styling & Theming
+	•	Design tokens: spacing, type scale, z-layers, radii
+	•	Map theme: neutral terrain, high-contrast overlays, period-aware palettes
+	•	Components: shadcn-ui + Tailwind utilities for clean, consistent UI
+
+⸻
+
+🧭 Versioning & Governance
+
+Domain	Mechanism	Notes
+Code	SemVer	vMAJOR.MINOR.PATCH
+Docs	docs/CHANGELOG.md	Render-safe MCP-DL
+Data	STAC properties.version	Per-layer version
+Releases	GitHub Tag + DOI	Citable snapshots
+Governance	GOVERNANCE.md	Roles, review, merge rules
+
+
+⸻
+
+🧾 Change Log
+
+Version	Date	Author	Summary
+v1.6.0	2025-10-14	Web Team	Align README to MCP-DL v6.2; UX/A11y pass
+v1.5.0	2025-10-10	Web Team	Timeline zoom improvements; map legends
+v1.4.0	2025-09-15	Web Team	STAC autoload + layer registry
+v1.3.0	2025-08-20	Web Team	AI dossiers (curator-review)
+v1.2.0	2025-07-05	Web Team	Stable map/timeline sync
+v1.0.0	2025-06-01	Project Init	Initial web frontend
+
+
+⸻
+
+📚 References
+	•	System Architecture (/docs/architecture.md)
+	•	Web UI Design (/docs/)
+	•	File & Data / STAC (/docs/)
+	•	AI/ML Developer Docs (/docs/)
+	•	MCP — Scientific Method & SOPs (/docs/)
+
+⸻
+
+Made with ❤️ for Kansas — bridging history, climate, and technology.
+Automation with Integrity · Every Workflow Proven · Versioned for Future Scholars.
