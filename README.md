@@ -1,17 +1,15 @@
 <div align="center">
 
-# 💧 Kansas Frontier Matrix — Processed Hydrology Data
+# 🌾 Kansas Frontier Matrix  
+### _An Open-Source Geospatial-Historical Knowledge System for Kansas_
 
-### **Flow · Terrain · Reproducibility** — *Hydrologic foundation layers for Kansas Frontier Matrix*
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/hooks-pre--commit-orange)](../../../.pre-commit-config.yaml)
-[![OpenSSF Scorecard](https://img.shields.io/badge/OpenSSF-Scorecard-blue)](https://openssf.org/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-v6.2-blue)](../../../../docs/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../actions/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../actions/workflows/stac-validate.yml)
+[![CodeQL Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)
+[![Trivy Container Scan](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../actions/workflows/trivy.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](./docs/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](./LICENSE)
+[![Version](https://img.shields.io/badge/Version-MCP-DL v6.2-green)](./docs/standards/)
 
 </div>
 
@@ -19,161 +17,145 @@
 
 ## 📚 Overview
 
-Processed **hydrologic foundation layers** derived from LiDAR and legacy DEMs to support:
+**Kansas Frontier Matrix (KFM)** is an open, reproducible **geospatial-historical knowledge hub** that unites Kansas’s
+fragmented environmental, cartographic, and cultural records into an interactive **map-and-timeline interface**.  
+The system links **people ↔ places ↔ events ↔ documents** through a semantically enriched **knowledge graph**,  
+combining AI/ML pipelines, GIS data, and public archives under the **Master Coder Protocol (MCP)**.
 
-* Stream extraction and basin delineation  
-* Flood/runoff and hazard modeling  
-* Watershed and terrain morphology studies  
-* Historical hydrology–climate correlation  
-
-**Sources:** LiDAR 1 m DEMs (Kansas DASC / USGS 3DEP) · Historic 10–30 m DEMs · NLCD Water · USGS NHD  
-**Formats:** COG GeoTIFF (rasters) · GeoJSON (vectors) · EPSG 4326 (WGS 84)  
-**Catalog:** STAC Items under `data/stac/items/hydro_*`
-
-> ♿ **Accessibility:** All raster symbology and color palettes meet WCAG 2.1 AA contrast requirements.  
-> STAC metadata include `alt_text` fields for screen-reader accessibility.
+KFM follows **FAIR** principles — *Findable, Accessible, Interoperable, Reusable* — and all documentation is written in
+**MCP-DL v6.2**, ensuring clarity, provenance, and machine-readability.
 
 ---
 
-## 🌊 Data Products
+## 🧭 Mission
 
-| Product | File | Description | Source | Units | Format |
-|----------|------|-------------|---------|--------|---------|
-| **Filled DEM** | `dem_filled_1m_ks.tif` | Hydrologically conditioned (sink-filled) DEM (1 m) | KS LiDAR / USGS 3DEP | m | COG GeoTIFF |
-| **Flow Direction (D8)** | `flow_dir_d8_1m_ks.tif` | D8 pointer grid (1–128) | Derived (WhiteboxTools) | int | COG GeoTIFF |
-| **Flow Accumulation** | `flow_accum_base_1m_ks.tif` | Raw accumulation (pre-threshold) | Derived (WhiteboxTools) | cells | COG GeoTIFF |
-| **Water Mask** | `watermask_ks.tif` | Binary water layer (NLCD + NHD fusion) | USGS / DASC | binary | COG GeoTIFF |
-| **Stream Seeds** | `stream_seed_points.geojson` | Candidate outlets / pour points | Derived | n/a | GeoJSON |
+> _Reconstruct Kansas’s historical, ecological, and cultural frontier as an auditable, reproducible digital atlas._  
+> Every dataset, model, and document is traceable — from raw sources to processed layers — through standardized
+README and STAC metadata.
 
 ---
 
-## 🗂 Directory Layout
-
-```bash
-data/
-└── processed/
-    └── hydrology/
-        ├── dem_filled_1m_ks.tif
-        ├── flow_dir_d8_1m_ks.tif
-        ├── flow_accum_base_1m_ks.tif
-        ├── watermask_ks.tif
-        ├── stream_seed_points.geojson
-        ├── metadata/
-        │   ├── dem_filled_1m_ks.json
-        │   ├── flow_dir_d8_1m_ks.json
-        │   └── flow_accum_base_1m_ks.json
-        ├── checksums/
-        │   ├── dem_filled_1m_ks.tif.sha256
-        │   ├── flow_dir_d8_1m_ks.tif.sha256
-        │   └── flow_accum_base_1m_ks.tif.sha256
-        └── README.md
-````
-
----
-
-## ⚙️ Processing Workflow
+## 🏗 System Architecture
 
 ```mermaid
-flowchart TD
-  A["Raw DEMs <br/>1 m & 10–30 m"] --> B["Fill Depressions <br/>WhiteboxTools FillDepressions"]
-  B --> C["D8 Flow Direction <br/>WhiteboxTools D8Pointer"]
-  B --> D["D8 Flow Accumulation <br/>WhiteboxTools D8FlowAccumulation"]
-  C --> E["Seed Point Extraction <br/>Threshold Logic"]
-  D --> E
-  F["NLCD Water + NHD Hydrography"] --> G["Water Mask <br/>GDAL Calc"]
-  B --> H["Reproject → EPSG 4326 <br/>GDAL Warp"]
-  C --> H
-  D --> H
-  E --> H
-  G --> H
-  H --> I["Convert → COG <br/>rio cogeo create"]
-  I --> J["Visual QC & Validation <br/>QGIS vs NHD"]
-  I --> K["Emit STAC Items <br/>STAC 1.0 Spec"]
-  I --> L["Compute Checksums <br/>SHA-256"]
-  K --> M["CI Validation <br/>STAC Validate + Hash Verify"]
-  L --> M
-```
+flowchart LR
+    A["External Sources<br>(NOAA · USGS · FEMA · KHS · Treaties)"]
+    --> B["Python ETL + AI Pipeline<br>(NER · OCR · Geocoding · Summarization)"]
+    --> C["Neo4j Knowledge Graph<br>(People · Places · Events · Documents)"]
+    --> D["FastAPI / GraphQL API"]
+    --> E["React + MapLibre Web UI<br>(Map · Timeline · AI Panels)"]
+````
 
 <!-- END OF MERMAID -->
 
+**Layers**
+
+| Layer                | Technology                            | Function                                                         |
+| :------------------- | :------------------------------------ | :--------------------------------------------------------------- |
+| **Data Extraction**  | Python ETL scripts (`src/pipelines/`) | Fetch and normalize raw data from APIs and archives.             |
+| **AI/ML Processing** | spaCy, Transformers                   | NER, OCR, summarization, entity linking to graph.                |
+| **Knowledge Graph**  | Neo4j (+ GeoSPARQL extension)         | Stores entities and relations with spatial and temporal indexes. |
+| **API Layer**        | FastAPI (REST/GraphQL)                | Serves queries to frontend and external clients.                 |
+| **Frontend**         | React + MapLibre GL JS + D3           | Interactive map and timeline visualization.                      |
+| **Docs & CI/CD**     | GitHub Actions · MkDocs               | Continuous validation and site generation.                       |
+
 ---
 
-## 🗃 Example STAC Item
+## 🗂 Repository Layout (Monorepo)
 
-```json
-{
-  "type": "Feature",
-  "stac_version": "1.0.0",
-  "id": "flow_dir_d8_1m_ks",
-  "properties": {
-    "title": "Flow Direction (D8) – Kansas LiDAR DEM",
-    "datetime": "2020-01-01T00:00:00Z",
-    "processing:software": "WhiteboxTools 2.2.0",
-    "derived_from": ["data/processed/hydrology/dem_filled_1m_ks.tif"],
-    "integrity:sha256": "auto-fill-by-CI",
-    "license": "CC-BY-4.0"
-  },
-  "assets": {
-    "data": {
-      "href": "./flow_dir_d8_1m_ks.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"]
-    }
-  },
-  "bbox": [-102.05, 36.99, -94.59, 40.00]
-}
+```text
+Kansas-Frontier-Matrix/
+├─ src/          # Python ETL & AI pipelines (ingest, NER, graph integration)
+├─ web/          # React frontend (MapLibre GL + timeline UI)
+├─ data/
+│  ├─ sources/   # JSON source manifests (pointers to external data)
+│  ├─ raw/       # immutable original data (DVC/LFS tracked)
+│  ├─ processed/ # standardized outputs (COG, GeoJSON, CSV)
+│  └─ stac/      # SpatioTemporal Asset Catalog metadata
+├─ docs/         # Architecture, SOPs, model cards, MCP standards
+├─ tools/        # utility scripts (data converters, build/deploy)
+├─ tests/        # automated unit & integration tests
+└─ .github/      # CI/CD workflows, issue/PR templates, governance
 ```
 
+Each directory contains its own **README.md** per [MCP-DL v6.2](./docs/standards/) — no black boxes.
+
 ---
 
-## 🧪 Reproducibility & Validation
+## 🧮 Core Data Domains
 
-| Validation Step  | Command                                  | Purpose                                |
-| ---------------- | ---------------------------------------- | -------------------------------------- |
-| **Integrity**    | `sha256sum -c checksums/*.sha256`        | Verify file hashes (CI-enforced)       |
-| **STAC Schema**  | `make stac-validate`                     | Validate STAC 1.0 JSON schema          |
-| **Pipeline Run** | `make hydrology` / `make validate-hydro` | Rebuild or validate hydrology pipeline |
-| **Environment**  | Docker (GDAL • WhiteboxTools • Python)   | Containerized reproducibility          |
-| **QA/QC**        | Visual cross-check in QGIS vs NHD        | Spatial accuracy assessment            |
+| Domain                 | Example Datasets                             | Format / Standard                              |
+| :--------------------- | :------------------------------------------- | :--------------------------------------------- |
+| Terrain & Elevation    | USGS 3DEP LiDAR, KS DEM 1 m                  | Cloud-Optimized GeoTIFF (COG) · STAC Item JSON |
+| Hydrology              | NHD flowlines, Kansas rivers                 | GeoJSON / Shapefile · GeoSPARQL                |
+| Climate & Hazards      | NOAA Daymet, Storm Events, FEMA Disasters    | CSV / NetCDF / JSON · DCAT metadata            |
+| Historical Records     | Kansas Memory, Chronicling America, Treaties | Text + OCR JSON · CIDOC CRM E73 docs           |
+| Cultural & Archaeology | Site Inventories, Oral Histories             | GeoJSON + transcripts · CRM E5 Events          |
 
-**Integrity Metadata:**
+All datasets include provenance fields, license, bounding box, temporal extent, and SHA-256 checksum.
 
-* `integrity:sha256` values are stored in each STAC Item’s asset block.
-* Validation logs are archived under `/data/processed/hydrology/logs/` and attached as CI artifacts.
+---
+
+## 💠 Documentation Standards
+
+* **MCP-DL v6.2** – Markdown Documentation Language spec for structure & semantics.
+* **STAC 1.0 / DCAT 2.0** – dataset metadata standards.
+* **CIDOC CRM · OWL-Time · GeoSPARQL** – semantic ontology alignment.
+* **YAML Front-Matter + JSON-LD** in each doc for machine readability.
+* **Docs Validation CI** – automated Markdown/STAC linting in GitHub Actions.
+
+See [`docs/standards/`](./docs/standards/) for full rules and templates.
+
+---
+
+## 🤖 AI and Analytics Modules
+
+* **Entity Extraction (NER):** Custom spaCy model for frontier-era names and places.
+* **Summarization:** Hugging Face BART/T5 models for document synopses.
+* **Pattern Recognition:** Temporal + spatial clustering (Fractal & Bayesian methods).
+* **Symbolic Reasoning:** Ontology-driven inference over graph relations.
+
+Each model is documented with a [Model Card](./docs/templates/model_card.md) per MCP-DL.
 
 ---
 
 ## 🧩 Contributing
 
-1. Add new COG / GeoJSON outputs to this folder.
-2. Create matching STAC JSON under `metadata/` and SHA-256 in `checksums/`.
-3. Document inputs, parameters, and tool versions in `DERIVATION.md`.
-4. Run `make validate-hydro`.
-5. Open a PR including data sources, licenses, and (optional) preview PNG.
+We welcome historians, developers, and citizens to expand Kansas Frontier Matrix.
+Please see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for branch workflow, semantic commit rules, and MCP checklist.
+Every PR must include:
 
-> **Merge Gate:** Checksums and STAC validation must pass CI before merge.
-
----
-
-## 🔗 References
-
-GDAL • WhiteboxTools • TauDEM • USGS NHD • Kansas DASC Geoportal • STAC 1.0 • MCP-DL v6.2 Documentation
+1. Updated README or dataset metadata (STAC Item + checksum).
+2. Passing tests and docs lint (`make test`, `make docs-validate`).
+3. License confirmation for new data (CC-BY or Public Domain preferred).
 
 ---
 
-### ✅ Version History
+## 📜 License & Attribution
 
-| Version | Date       | Author            | Notes                                                                                                   |
-| ------- | ---------- | ----------------- | ------------------------------------------------------------------------------------------------------- |
-| v1.1    | 2025-10-13 | KFM Data Ops Team | Upgraded to MCP-DL v6.2 with frontmatter, accessibility note, integrity metadata, and footer hash block |
+* **Code:** MIT License – free for reuse with attribution.
+* **Data & Docs:** Creative Commons BY 4.0 (CC-BY-4.0).
+  Cite as:
+
+> *Barta, A. et al. (2025). Kansas Frontier Matrix v6.2 — An Open Geospatial-Historical Knowledge System.*
+> DOI: *pending (see `CITATION.cff`)*.
+
+---
+
+## 🧾 Version History
+
+| Version | Date       | Notes                                                                    |
+| :------ | :--------- | :----------------------------------------------------------------------- |
+| v6.2    | 2025-10-13 | Adopt MCP-DL v6.2 framework; add semantic ontologies and STAC alignment. |
+| v6.1    | 2025-09    | Initial repository standardization under MCP-DL v6 series.               |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — MCP-DL v6.2 Compliant**
-🔖 Document Hash (sha256): `auto-generated via CI`
-Validated ✅ | STAC Schema ✅ | Ontology Check ✅
+### 🏛 “Document the Frontier · Reconstruct the Past · Illuminate Connections.”
+
+© 2025 Kansas Frontier Matrix · MIT / CC-BY 4.0
 
 </div>
 ```
