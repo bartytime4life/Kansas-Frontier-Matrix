@@ -1,22 +1,3 @@
----
-title: "🚀 Kansas Frontier Matrix — Pull Request Template"
-document_type: "PULL_REQUEST_TEMPLATE"
-version: "v2.3.1"
-last_updated: "2025-10-15"
-path: ".github/PULL_REQUEST_TEMPLATE.md"
-status: "Stable"
-maturity: "Production"
-owners: ["@kfm-maintainers", "@kfm-architecture"]
-tags: ["governance","semver","mcp","stac","security","ci/cd","templates"]
-license: "MIT"
-semantic_alignment:
-  - MCP-DL v6.3
-  - STAC 1.0
-  - JSON Schema
-  - DCAT 2.0
-  - CIDOC CRM
----
-
 <div align="center">
 
 # 🚀 **Kansas Frontier Matrix — Pull Request Template**
