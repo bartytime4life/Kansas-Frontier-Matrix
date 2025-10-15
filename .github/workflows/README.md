@@ -70,18 +70,18 @@ Automation spans six domains:
 
 🧩 Workflow Summary
 
-Workflow	Purpose	Trigger	Output
-site.yml	Build & deploy docs/site	push→main, manual	_site/ → GitHub Pages
-stac-validate.yml	STAC + JSON Schema + link checks	push/PR	stac-report.json artifact
+🧱 Workflow	🎯 Purpose	⏰ Trigger(s)	📦 Key Outputs
+site.yml	Build & deploy docs/site	push → main, manual	_site/ → GitHub Pages
+stac-validate.yml	STAC + JSON Schema + link checks	push / PR	stac-report.json artifact
 fetch.yml	Fetch datasets from data/sources/*.json	daily cron, manual	data/raw/ snapshots + provenance logs
 checksums.yml	Compute & verify SHA-256 integrity	data PR, manual	.sha256 files + validation logs
 codeql.yml	Static security analysis	schedule, push, PR	CodeQL dashboard + SARIF
 trivy.yml	Container/dependency CVE + SBOM	schedule, PR	SARIF + SPDX SBOM artifact
-pre-commit.yml	Lint/format/tests/spellcheck	every PR	Annotated checks
-dependency-review.yml	Block risky deps	PR	Review annotations
-release.yml	SemVer release, notes, assets	manual, tag push	GitHub Release, assets (site bundle, STAC, SARIF, SBOM)
-provenance.yml	SLSA provenance + signing	on release	Attestations (in-toto/SLSA)
-auto-merge.yml	Policy-gated automerge	checks green + approvals	Merged PR + audit trail
+pre-commit.yml	Lint / format / tests / spellcheck	every PR	PR annotations + summary
+dependency-review.yml	Block risky deps	PR	inline review annotations
+release.yml	SemVer release, notes, assets	manual, tag push	GitHub Release + site bundle, STAC, SARIF, SBOM
+provenance.yml	SLSA provenance + signing	on release	in-toto/SLSA attestations
+auto-merge.yml	Policy-gated automerge	green checks + approvals	merged PR + audit trail
 
 
 ⸻
@@ -171,13 +171,12 @@ environment:
 
 🔐 Secrets & Environment Variables
 
-Secret/Var	Used by	Purpose
-PAGES_TOKEN / GH_PAT	site.yml	Pages deploy
-DATA_API_KEY_*	fetch.yml	External data API auth
-GH_TOKEN	auto-merge.yml	PR merge automation
-SIGNING_KEY (optional)	provenance.yml	Artifact signing
+🔑 Secret/Var	🧰 Used by	📝 Purpose	🔒 Notes
+PAGES_TOKEN / GH_PAT	site.yml	Pages deploy	Store in Actions → Secrets. No commits.
+DATA_API_KEY_*	fetch.yml	External data API auth	One per provider; scope to read-only if possible.
+GH_TOKEN	auto-merge.yml	PR merge automation	Fine-scope PAT if required; prefer GITHUB_TOKEN.
+SIGNING_KEY (optional)	provenance.yml	Artifact signing	Prefer keyless OIDC; if key used, rotate & scope.
 
-Store under Settings → Secrets and variables → Actions. Never commit credentials.
 
 ⸻
 
@@ -268,10 +267,10 @@ jobs:
 
 🧬 CodeQL (codeql.yml)
 	•	Multi-language static analysis; scheduled + on push
-	•	Uploads SARIF to Security tab
+	•	Uploads SARIF to the Security tab
 
 🧫 Trivy (trivy.yml)
-	•	Filesystem/dependency CVE scan; SBOM (SPDX) export + SARIF upload
+	•	Filesystem / dependency CVE scan; SBOM (SPDX) export + SARIF upload
 
 - name: Trivy SBOM (SPDX)
   run: trivy fs --format spdx-json --output sbom.json .
@@ -323,14 +322,14 @@ Each workflow begins with a short header comment:
 
 🧮 MCP Compliance Matrix
 
-MCP Principle	Implementation
-Documentation-First	Header docs; inputs/outputs; x-kfm-version per workflow
-Reproducibility	Pinned actions; deterministic builds; checksum gating
+🧭 MCP Principle	🧩 Implementation in CI/CD
+Documentation-First	Header docs; inputs/outputs; x-kfm-version per workflow; README anchors
+Reproducibility	Pinned actions; deterministic builds; checksum gating; path filters
 Open Standards	YAML, STAC 1.0, JSON Schema, SPDX SBOM, SARIF
-Provenance	STAC lineage; SLSA attestations; SHA-256
-Auditability	SARIF logs; artifacts retained ≥90 days; environments
-Security	CodeQL + Trivy; Dep Review; least-privilege permissions
-Versioning	SemVer releases; release notes; immutable tags
+Provenance	STAC lineage; SLSA attestations; SHA-256; immutable releases
+Auditability	SARIF logs; artifact retention ≥ 90 days; environments & approvals
+Security	CodeQL, Trivy, Dependency Review; least-privilege permissions
+Versioning	SemVer releases; release notes; immutable vX.Y.Z tags
 
 
 ⸻
@@ -385,16 +384,19 @@ gh run download --name "stac-report.json"
 ⸻
 
 ♻️ Maintenance & Versioning Cadence
-	•	Weekly: Scheduled CodeQL + Trivy scans
-	•	Monthly: Pin/refresh actions/*; rotate caches; verify OIDC policies
-	•	Quarterly: Re-validate STAC Schemas; MCP doc refresh; threat-model review
-	•	Releases: Tag with SemVer; attach SBOM, SARIF, site bundle; optionally mint DOI (Zenodo)
+
+🗓️ Cadence	🔧 Task	✅ Goal
+Weekly	Run scheduled CodeQL + Trivy scans	Early vuln detection; regressions surfaced
+Monthly	Pin/refresh actions/*; rotate caches; verify OIDC policies	Supply-chain hardening; faster CI
+Quarterly	Re-validate STAC Schemas; MCP doc refresh; threat-model review	Standards alignment; risk review
+Per-Release	Tag with SemVer; attach SBOM, SARIF, site bundle; optional DOI	Immutable, attestable releases
+
 
 ⸻
 
 🕓 Version History
 
-Version	Date	Summary
+🏷️ Version	📅 Date	✍️ Summary
 v2.4.0	2025-10-15	Pinning guidance, enhanced headers, clarified provenance/signing, refined maintenance cadence
 v2.3.0	2025-10-13	Header convention, OIDC guidance, permissions & environments hardening
 v2.2.0	2025-10-10	Added release, provenance, dependency-review, expanded options & examples
