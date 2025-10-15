@@ -1,30 +1,44 @@
 <div align="center">
 
-# 🌐 Kansas Frontier Matrix — Web Public Assets  
+# 🌐 Kansas Frontier Matrix — **Web Public Assets**  
 `web/public/`
 
 **Static Files · HTML Entry Point · Icons · PWA Manifest**
 
 [![Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/ci.yml?label=Build)](../../../.github/workflows/ci.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../docs/)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1-AA-yellow)](../../../docs/design/reviews/accessibility/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Web Public Assets (web/public/)"
+version: "v1.4.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-web", "@kfm-design"]
+tags: ["assets","pwa","html","icons","manifest","seo","mcp"]
+license: "MIT"
+semantic_alignment:
+  - WCAG 2.1 AA
+  - W3C HTML5
+  - W3C Web Manifest
+  - Search Engine Indexing (robots + sitemap)
+---
+````
+
+---
+
 ## 🧭 Overview
 
-The `web/public/` directory contains **all static assets** served directly by the web application.  
-These include the main **HTML entry point**, **favicons**, **logos**, **web manifest**,  
-and any other files required at runtime that are not processed by the build pipeline.
+The `web/public/` directory contains **static, unprocessed assets** served directly by the Kansas Frontier Matrix (KFM) web application.
+This includes the **HTML entry point**, **favicons**, **logos**, **PWA manifest**, and **SEO metadata** such as `robots.txt` and `sitemap.xml`.
 
-This directory acts as the **root of the deployed web client**, aligning with **Vite’s** and **React’s**  
-default static asset conventions. Everything placed here will be copied into the final  
-`build/` output directory verbatim.
-
-Under the **Master Coder Protocol (MCP)**, every public artifact must have a clear purpose,  
-traceable provenance, and version-controlled design linkage.
+These files form the **public interface of the web client**, copied verbatim into the build output (`/build/`).
+Under **MCP-DL v6.2**, every asset within this directory is **documented, licensed, and traceable**, ensuring transparent provenance and reproducible deployments.
 
 ---
 
@@ -32,13 +46,13 @@ traceable provenance, and version-controlled design linkage.
 
 ```text
 web/public/
-├── index.html             # HTML entry point for React (root mount point)
+├── index.html             # HTML entry point (Vite injects compiled React assets)
 ├── favicon.ico            # Browser tab icon
-├── apple-touch-icon.png   # iOS app icon
-├── manifest.webmanifest   # PWA metadata file
+├── apple-touch-icon.png   # iOS home screen icon
+├── manifest.webmanifest   # Progressive Web App (PWA) metadata
 ├── robots.txt             # Search engine directives
-├── sitemap.xml            # SEO and site indexing map
-├── assets/                # Static images, logos, and downloaded datasets (public domain)
+├── sitemap.xml            # SEO sitemap for route indexing
+├── assets/                # Static logos, icons, and imagery
 │   ├── logo.svg
 │   ├── logo-dark.svg
 │   ├── placeholder.jpg
@@ -47,23 +61,25 @@ web/public/
 │       ├── timeline-icon.svg
 │       └── ai-icon.svg
 └── README.md              # This documentation file
+```
 
+---
 
-⸻
+## 🏠 index.html
 
-🧩 Key Files and Their Roles
+The HTML root document of the KFM web application.
+Vite injects all built assets (`main.js`, `style.css`, etc.) at build time.
 
-🏠 index.html
-
-The main HTML template for the application.
-Vite injects compiled React bundles and CSS into this file during build.
-
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Kansas Frontier Matrix — Explore Kansas history through space and time." />
+    <meta name="description" content="Kansas Frontier Matrix — Explore Kansas history through time and terrain." />
+    <meta property="og:title" content="Kansas Frontier Matrix" />
+    <meta property="og:description" content="An interactive spatiotemporal knowledge map of Kansas history." />
+    <meta property="og:type" content="website" />
     <link rel="icon" href="/favicon.ico" />
     <title>Kansas Frontier Matrix</title>
   </head>
@@ -72,15 +88,17 @@ Vite injects compiled React bundles and CSS into this file during build.
     <div id="root"></div>
   </body>
 </html>
+```
 
+> The document is **semantically structured**, ensuring accessibility and search engine compatibility.
 
-⸻
+---
 
-📱 manifest.webmanifest
+## 📱 manifest.webmanifest
 
-Defines Progressive Web App (PWA) metadata so the application can be
-installed on devices like a native app.
+Defines Progressive Web App (PWA) properties to enable installable web behavior.
 
+```json
 {
   "name": "Kansas Frontier Matrix",
   "short_name": "FrontierMatrix",
@@ -93,94 +111,126 @@ installed on devices like a native app.
     { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
+```
 
-This file pulls brand colors and theme info from web/config/themes.json during build.
+This file inherits its theme configuration from `web/config/themes.json` during the CI build pipeline.
 
-⸻
+---
 
-🤖 robots.txt
+## 🤖 robots.txt
 
-Specifies which parts of the site should be indexed by search engines.
+Specifies which resources are indexable by web crawlers.
 
+```txt
 User-agent: *
 Allow: /
 Sitemap: https://frontiermatrix.org/sitemap.xml
+```
 
+> Maintained automatically in CI via the documentation build workflow.
 
-⸻
+---
 
-🗺️ sitemap.xml
+## 🗺️ sitemap.xml
 
-Auto-generated by CI to mirror all accessible public routes,
-including the interactive map, about page, and documentation.
+Defines the canonical route list for search engine indexing.
+Generated dynamically during build to reflect all public pages.
 
+```xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://frontiermatrix.org/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://frontiermatrix.org/docs/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
+```
 
+---
 
-⸻
+## 🎨 assets/
 
-🎨 assets/
+The `/assets/` directory holds static design artifacts — logos, icons, and imagery aligned with the official **Design System** (`docs/design/`).
 
-Contains static imagery and branding elements such as logos and
-UI icons used throughout the React application. These are not imported
-as modules but served statically from /assets/.
+| Asset               | Purpose                           | License   |
+| :------------------ | :-------------------------------- | :-------- |
+| `logo.svg`          | Default light-mode logo           | CC-BY 4.0 |
+| `logo-dark.svg`     | Dark theme version                | CC-BY 4.0 |
+| `map-marker.svg`    | Map icons for interactive markers | MIT       |
+| `timeline-icon.svg` | Timeline navigation icon          | MIT       |
+| `ai-icon.svg`       | AI Assistant badge                | MIT       |
 
-All assets follow the Design System specifications documented under
-docs/design/mockups/ and must include metadata (license and source).
+All files include license metadata within their SVG headers.
 
-⸻
+---
 
-🧩 Integration With Build System
-	•	The index.html file is injected by Vite during build.
-	•	manifest.webmanifest and robots.txt are copied unchanged to /build/.
-	•	The favicon and icons are referenced directly from the public root (/favicon.ico).
-	•	Environment variables defined in .env affect runtime metadata (e.g., app name).
-	•	Checksums for public files are computed in CI for reproducibility.
+## 🧩 Integration With Build System
 
-⸻
+* **Vite Injection:** `index.html` is processed by Vite and populated with asset references at build.
+* **Static Copy:** `manifest.webmanifest`, `robots.txt`, and all icons are copied directly to `/build/`.
+* **Environment Variables:** `.env` variables like `VITE_APP_TITLE` influence page titles and meta tags.
+* **Checksums:** CI computes SHA-256 checksums for static assets to ensure version integrity.
+* **Compression:** Assets are compressed and cached for long-term delivery (gzip + Brotli).
 
-♿ Accessibility and SEO
+---
 
-Concern	Implementation
-Semantic HTML	index.html uses appropriate headings, language attributes, and ARIA regions.
-Color Contrast	Images/icons designed for contrast compliance (≥ 4.5:1).
-Alt Text	All images include descriptive alt attributes.
-Metadata	Includes Open Graph and Twitter card meta tags for sharing previews.
-Search Indexing	robots.txt and sitemap.xml maintained automatically in CI.
+## ♿ Accessibility & SEO Compliance
 
+| Concern                   | Implementation                                                     |
+| :------------------------ | :----------------------------------------------------------------- |
+| **Semantic HTML**         | Proper heading hierarchy and language attributes (`lang="en"`)     |
+| **Contrast & Visibility** | Icons and logos tested for ≥ 4.5:1 color contrast ratio            |
+| **Alt Text**              | Every image includes descriptive `alt` or `<title>` attributes     |
+| **Metadata**              | Open Graph + Twitter Card tags provide structured preview data     |
+| **Indexing**              | robots.txt and sitemap.xml updated automatically via CI            |
+| **Keyboard Focus**        | Skip links and focus outlines enabled in `index.html` and base CSS |
 
-⸻
+---
 
-🧾 Provenance & Integrity
+## 🧾 Provenance & Integrity
 
-Artifact	Description
-Inputs	Branding assets, manifest data, sitemap generator, theme colors
-Outputs	Deployed static assets under build/public/
-Dependencies	Vite, Node.js, TailwindCSS, Favicon Generator
-Integrity	CI computes SHA256 checksums; assets versioned via Git and verified in deployment pipeline
+| Artifact         | Description                                                                      |
+| :--------------- | :------------------------------------------------------------------------------- |
+| **Inputs**       | Branding assets, sitemap generator, manifest configuration, theme tokens         |
+| **Outputs**      | Public build directory (`/build/`) deployed to GitHub Pages / CDN                |
+| **Dependencies** | Vite, Node.js, TailwindCSS, favicon generator                                    |
+| **Integrity**    | CI validates checksums, licenses, and metadata completeness per MCP-DL standards |
 
+---
 
-⸻
+## 🧠 MCP Compliance Checklist
 
-🔗 Related Documentation
-	•	Web Configuration
-	•	Web UI Architecture
-	•	Design System
-	•	Accessibility Reviews
+| MCP Principle       | Implementation                                         |
+| :------------------ | :----------------------------------------------------- |
+| Documentation-first | All public assets documented and licensed              |
+| Provenance          | SHA256 asset checksums logged in CI                    |
+| Accessibility       | WCAG 2.1 AA-compliant static layout                    |
+| Reproducibility     | Versioned public directory in Git                      |
+| Open Standards      | HTML5, Web Manifest, XML Sitemap, robots.txt           |
+| Traceability        | Design files link to `docs/design/mockups/` references |
 
-⸻
+---
 
-📜 License
+## 🔗 Related Documentation
 
-All public files (unless noted otherwise) are distributed under the MIT License.
-© 2025 Kansas Frontier Matrix — released under the Master Coder Protocol (MCP)
-for transparent, accessible, and open historical visualization.
+* **Web Configuration** — `web/config/README.md`
+* **Web UI Architecture** — `web/ARCHITECTURE.md`
+* **Design System Overview** — `docs/design/README.md`
+* **Accessibility Reviews** — `docs/design/reviews/accessibility/`
 
-“Public assets are the façade of the frontier — the first sight of Kansas’s digital landscape.”
+---
 
+## 📜 License
+
+All public files are distributed under the **MIT License** unless otherwise noted.
+© 2025 Kansas Frontier Matrix — built and released under **MCP-DL v6.2** for transparency, accessibility, and open digital heritage design.
+
+> *“Public assets are the façade of the frontier — the first sight of Kansas’s digital landscape.”*
+
+```
+```
