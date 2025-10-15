@@ -1,30 +1,45 @@
 <div align="center">
 
-# 🗺️ Kansas Frontier Matrix — Public Map Overlays  
+# 🗺️ Kansas Frontier Matrix — **Public Map Overlays**  
 `web/public/assets/maps/`
 
 **Historic Maps · Overlays · Geospatial Rasters**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../../docs/)
 [![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../.github/workflows/stac-validate.yml)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1-AA-yellow)](../../../../docs/design/reviews/accessibility/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Public Map Overlays (web/public/assets/maps/)"
+version: "v1.5.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-gis", "@kfm-data"]
+tags: ["maps","raster","overlay","stac","gis","geospatial","mcp"]
+license: "MIT"
+semantic_alignment:
+  - STAC 1.0
+  - EPSG:4326 (WGS84)
+  - WCAG 2.1 AA
+---
+````
+
+---
+
 ## 🧭 Overview
 
-The `web/public/assets/maps/` directory contains **static geospatial raster and vector overlays**  
-used by the **MapView** and **LayerControls** components of the Kansas Frontier Matrix web application.  
-These map assets include **historic USGS topographic maps**, **treaty boundary outlines**,  
-**hydrology layers**, and other specialized visualizations that support Kansas’s spatial and temporal storytelling.
+The `web/public/assets/maps/` directory hosts **static raster and vector overlays** that bring Kansas’s geography and history to life within the **MapView** and **LayerControls** components.
+It includes **historic USGS topographic maps**, **digitized treaty boundaries**, **hydrology networks**, and **environmental datasets** (e.g., floodplains, soil surveys, drought indices).
 
-All map overlays correspond to **STAC Items** defined under `data/stac/`, and are accessible  
-through both the **interactive web map** and the **Google Earth export pipeline** (KML/KMZ).
+Each asset corresponds to a **STAC Item** defined in `data/stac/`, enabling reproducible linking between map layers, timeline data, and provenance sources.
+All overlays are **georeferenced** to **EPSG:4326 (WGS84)** and optimized for web performance under the **Master Coder Protocol (MCP)** reproducibility framework.
 
-Each raster and vector file in this directory has been optimized for **fast web delivery**,  
-georeferenced to **EPSG:4326 (WGS84)**, and compressed for browser rendering via MapLibre GL JS.
+> **Mission:** Fuse historical cartography and scientific data into accessible, verified geospatial storytelling.
 
 ---
 
@@ -32,40 +47,44 @@ georeferenced to **EPSG:4326 (WGS84)**, and compressed for browser rendering via
 
 ```text
 web/public/assets/maps/
-├── topo_1894_overlay.png          # Historic USGS topographic scan (Larned, 1894)
+├── topo_1894_overlay.png          # Historic USGS topographic map (Larned, 1894)
 ├── topo_1905_overlay.png          # Historic USGS map (Fort Hays, 1905)
-├── treaty_boundaries_outline.svg  # Vector outline of tribal treaty areas
-├── hydrology_network_light.svg    # Simplified river and stream network overlay
-├── soil_survey_1967.png           # NRCS Soil Survey raster overlay (1967)
-├── floodplain_zones_1975.png      # Historical floodplain mapping (Kansas River)
+├── treaty_boundaries_outline.svg  # Vector outline of tribal treaty territories
+├── hydrology_network_light.svg    # Simplified Kansas river and stream network
+├── soil_survey_1967.png           # USDA NRCS Soil Survey overlay
+├── floodplain_zones_1975.png      # Historic Kansas River floodplain map
 ├── drought_index_1936.png         # Dust Bowl drought index visualization
-├── legend_treaty.png              # Legend graphic for treaty map
-├── legend_topo.png                # Legend for topographic overlay
+├── legend_treaty.png              # Legend for treaty boundary layers
+├── legend_topo.png                # Legend for topographic overlays
 └── README.md                      # This documentation file
+```
 
+---
 
-⸻
+## 🧩 Asset Categories
 
-🧩 Asset Types
+| File Type          | Description                                      | Format               | Use Case                            |
+| :----------------- | :----------------------------------------------- | :------------------- | :---------------------------------- |
+| **Raster Overlay** | Scanned historical maps or environmental rasters | PNG / WebP / GeoTIFF | Base map layers                     |
+| **Vector Overlay** | Simplified thematic data (boundaries, hydrology) | SVG / GeoJSON        | Overlay outlines                    |
+| **Legend Image**   | Descriptive reference for map interpretation     | PNG                  | Shown in LayerControls              |
+| **Composite Map**  | Blended raster combinations                      | WebP                 | Visual storytelling / preview tiles |
 
-File Type	Description	Format	Use Case
-Raster Overlay	Georeferenced image (e.g., scanned map, DEM hillshade).	PNG / GeoTIFF	Map background layer
-Vector Overlay	Scalable thematic data (boundaries, hydrology).	SVG / GeoJSON	Outline overlays
-Legend Image	Supporting graphic for data interpretation.	PNG	LayerControls panel
-Composite Map	Blended image combining multiple datasets.	WebP	Base thematic rendering
+---
 
+## 🌍 Geospatial Standards
 
-⸻
+| Parameter       | Specification                                                 |
+| :-------------- | :------------------------------------------------------------ |
+| **Projection**  | WGS84 (EPSG:4326)                                             |
+| **Resolution**  | 1–10 m/px optimized for web zoom (Z6–Z12)                     |
+| **Compression** | PNG (8-bit lossless) / WebP (85% quality)                     |
+| **Tile Size**   | 256×256 px (for tile generation)                              |
+| **Alignment**   | Overlays aligned to Kansas state grid using QGIS verification |
 
-🌍 Geospatial Standards
-	•	Projection: WGS84 (EPSG:4326)
-	•	Resolution: Optimized for 1–10 m/px web zoom levels
-	•	Compression: PNG (lossless, 8-bit) or WebP (85% quality)
-	•	Tile Size: 256×256 px (for tiled display when applicable)
-	•	Alignment: All overlays aligned to the modern Kansas state grid and verified in QGIS
+**Example Metadata (`topo_1894_overlay.json`):**
 
-Example metadata (topo_1894_overlay.json):
-
+```json
 {
   "id": "topo_1894_overlay",
   "title": "USGS Topographic Map (Larned, 1894)",
@@ -76,12 +95,13 @@ Example metadata (topo_1894_overlay.json):
   "license": "Public Domain",
   "source": "USGS Historical Topographic Map Collection"
 }
+```
 
+---
 
-⸻
+## 🗺️ Example Integration (MapLibre GL JS)
 
-🗺️ Example Integration (MapLibre)
-
+```js
 map.addSource("topo1894", {
   type: "raster",
   tiles: ["/assets/maps/topo_1894_overlay.png"],
@@ -94,76 +114,101 @@ map.addLayer({
   source: "topo1894",
   paint: { "raster-opacity": 0.8 }
 });
+```
 
-The map overlays are auto-registered in LayerControls from the corresponding STAC metadata.
+> These overlays are automatically registered within `LayerControls` via their STAC metadata definitions.
 
-⸻
+---
 
-🧮 Optimization & Provenance
+## 🧮 Optimization & Provenance
 
-Tool	Purpose
-GDAL	Georeferencing and coordinate reprojection
-rio-cogeo	Conversion to Cloud-Optimized GeoTIFFs (COGs)
-MapTiler	Tile generation for large rasters
-pngquant / cwebp	Raster compression
-SVGO	Vector simplification and optimization
-SHA256 Checksums	Integrity tracking for all assets
+| Tool                 | Purpose                                       |
+| :------------------- | :-------------------------------------------- |
+| **GDAL**             | Georeferencing, coordinate reprojection       |
+| **rio-cogeo**        | Conversion to Cloud-Optimized GeoTIFFs (COGs) |
+| **MapTiler**         | Tile generation for large rasters             |
+| **pngquant / cwebp** | Raster compression                            |
+| **SVGO**             | Vector simplification and optimization        |
+| **SHA256 Checksums** | Integrity verification for all map assets     |
 
-Every overlay includes a checksum (.sha256) and a metadata JSON descriptor
-for reproducibility and linkage to its original data source.
+Each overlay includes:
 
-⸻
+* A `.sha256` checksum for integrity
+* A `.json` descriptor documenting source, license, and transformation process
+* A `meta` tag referencing the dataset’s DOI or STAC ID
 
-♿ Accessibility and Thematic Design
-	•	Colorblind-friendly palettes for maps and legends (tested with Deuteranopia/Protanopia filters).
-	•	Descriptive titles and metadata exposed in tooltips and LayerControls.
-	•	Legend graphics labeled with large sans-serif fonts (≥ 12pt).
-	•	High-contrast outlines ensure visibility on light/dark basemaps.
-	•	ARIA labeling for map legends and descriptions when displayed in the UI.
+---
 
-⸻
+## ♿ Accessibility & Thematic Design
 
-🧾 Licensing & Attribution
+* **Colorblind-Safe Palettes:** Tested under Deuteranopia and Protanopia filters.
+* **Legends:** Large sans-serif text (≥ 12pt) and labeled color ramps.
+* **High Contrast:** Clear visibility on both light and dark map themes.
+* **ARIA Labels:** Accessible titles and metadata surfaced in LayerControls.
+* **Keyboard Navigation:** Focusable legends and toggle buttons for map overlays.
 
-Map Overlay	Source	License	Attribution
-topo_1894_overlay.png	USGS Historical Topographic Map Collection	Public Domain	U.S. Geological Survey
-treaty_boundaries_outline.svg	Kansas Frontier Matrix (digitized)	CC-BY 4.0	KFM Team
-soil_survey_1967.png	USDA NRCS	Public Domain	NRCS Archive
-floodplain_zones_1975.png	FEMA Map Archive	Public Domain	FEMA
-drought_index_1936.png	NOAA / NCEI	Public Domain	NOAA Data Center
-hydrology_network_light.svg	Derived from USGS NHD	CC-BY 4.0	Kansas Frontier Matrix
+Accessibility validation is automated in CI using **axe-core** and **Lighthouse** scans.
 
-All derivative work is cited with dataset DOI or repository link in STAC metadata.
-Where possible, the overlays are cross-referenced to official open government sources.
+---
 
-⸻
+## 🧾 Licensing & Attribution
 
-🧪 Validation Workflow (CI/CD)
-	•	Validate all map overlays against STAC schema using JSON Schema validator.
-	•	Ensure file naming matches dataset IDs in data/stac/items/.
-	•	Run checksum comparison to detect changes in underlying rasters.
-	•	Generate quick-look previews (128×128 px) for documentation and LayerControls.
-	•	Publish validation logs in CI build artifacts for transparency.
+| Map Overlay                     | Source                                     | License       | Attribution            |
+| :------------------------------ | :----------------------------------------- | :------------ | :--------------------- |
+| `topo_1894_overlay.png`         | USGS Historical Topographic Map Collection | Public Domain | U.S. Geological Survey |
+| `treaty_boundaries_outline.svg` | Digitized by KFM Team                      | CC-BY 4.0     | Kansas Frontier Matrix |
+| `soil_survey_1967.png`          | USDA NRCS Archive                          | Public Domain | NRCS / USDA            |
+| `floodplain_zones_1975.png`     | FEMA Archive                               | Public Domain | FEMA                   |
+| `drought_index_1936.png`        | NOAA NCEI Dataset                          | Public Domain | NOAA                   |
+| `hydrology_network_light.svg`   | Derived from USGS NHD                      | CC-BY 4.0     | KFM Hydrology Team     |
 
-⸻
+All derivative works are cited and cross-referenced in the project’s **STAC metadata** for traceability.
 
-🔗 Related Documentation
-	•	LayerControls Component
-	•	MapView Component
-	•	STAC Catalog Overview
-	•	Design Mockups — Map
-	•	Web UI Architecture
+---
 
-⸻
+## 🧪 Validation Workflow (CI/CD)
 
-📜 License
+* ✅ Validate all map overlays against **STAC schema** via JSON Schema Validator
+* ✅ Match filenames with dataset IDs in `data/stac/items/`
+* ✅ Compute & compare checksums to detect data drift
+* ✅ Generate 128×128 px previews for LayerControls & docs
+* ✅ Publish validation logs as build artifacts for transparency
 
-All map overlays and derivative visualizations created by the
-Kansas Frontier Matrix Team are released under the MIT License unless otherwise specified.
-Historic maps and datasets sourced from federal archives remain Public Domain.
+Validation results are archived under `ci/reports/map-validation/`.
 
-© 2025 Kansas Frontier Matrix — Produced under the Master Coder Protocol (MCP)
-for traceable, reproducible, and educational geospatial visualization.
+---
 
-“Maps are memory etched on the land — these overlays reveal Kansas’s stories through time and terrain.”
+## 🧠 MCP Compliance Checklist
 
+| MCP Principle       | Implementation                                        |
+| :------------------ | :---------------------------------------------------- |
+| Documentation-first | All geospatial overlays documented with metadata      |
+| Provenance          | Source metadata + checksum in every file              |
+| Reproducibility     | STAC-aligned descriptors ensure deterministic loading |
+| Accessibility       | Colorblind & contrast-tested palettes                 |
+| Open Standards      | EPSG:4326, STAC 1.0, GeoJSON, WebP                    |
+| Auditability        | CI pipeline produces verifiable validation logs       |
+
+---
+
+## 🔗 Related Documentation
+
+* **LayerControls Component** — `web/src/components/LayerControls/README.md`
+* **MapView Component** — `web/src/components/MapView/README.md`
+* **STAC Catalog Overview** — `data/stac/README.md`
+* **Design Mockups — Maps** — `docs/design/mockups/maps/`
+* **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 📜 License
+
+All map overlays and derivative works created by the Kansas Frontier Matrix are released under the **MIT License**,
+unless explicitly marked as **Public Domain** or **CC-BY 4.0** from their source archives.
+
+© 2025 Kansas Frontier Matrix — produced under **MCP-DL v6.2** for **traceable**, **reproducible**, and **educational geospatial visualization**.
+
+> *“Maps are memory etched on the land — these overlays reveal Kansas’s stories through time and terrain.”*
+
+```
+```
