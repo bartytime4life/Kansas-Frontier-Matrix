@@ -1,4 +1,4 @@
-<div align="center">
+#<div align="center">
 
 
 🚀 Kansas Frontier Matrix — Pull Request Template
@@ -39,7 +39,7 @@ license: "MIT | CC-BY 4.0"
 🧩 Summary
 
 Describe what this PR changes and why — motivation + measurable outcomes.
-Example: Adds STAC Items for NOAA Climate (2020-2024) and updates web/config/layers.json.
+Example: Adds STAC Items for NOAA Climate (2020–2024) and updates web/config/layers.json.
 
 ⸻
 
@@ -99,11 +99,14 @@ Release Checklist
 📜 Changelog (Sample)
 
 ### Added
-- NOAA Climate 2020-2024 STAC Items · map integration  
+- NOAA Climate 2020–2024 STAC Items · map integration  
+
 ### Changed
 - Reprojected `soil_survey_1967` → EPSG:4326  
+
 ### Fixed
 - Hydrology accumulation bug (D8 step)  
+
 ### Security
 - Pinned `actions/setup-node@v4` · SBOM regen · Trivy passed
 
@@ -245,3 +248,7 @@ v1.0.0	2025-07-01	Project Launch	Initial template release
 “Every Pull Request Builds the Past, Present, and Future — Versioned Forever.”
 
 </div>
+
+
+
+⸻
