@@ -24,7 +24,7 @@
 ```yaml
 ---
 title: "KFM • CI/CD Workflows"
-version: "v2.4.0"
+version: "v2.4.1"
 last_updated: "2025-10-15"
 owners: ["@kfm-architecture", "@kfm-security", "@kfm-data"]
 maturity: "Production"
@@ -48,6 +48,19 @@ Automation spans six domains:
 
 ⸻
 
+🧾 Table Alignment Cheatsheet (GFM)
+
+Use header colons to align:
+	•	:-- → left  --: → right  :--: → center
+
+| Left | Center | Right |
+|:-----|:------:|------:|
+| a    |   b    |     c |
+
+For consistent visual columns, wrap technical tokens in backticks (monospace) inside cells.
+
+⸻
+
 🗂️ Directory Layout
 
 .github/workflows/
@@ -62,26 +75,26 @@ Automation spans six domains:
 ├── dependency-review.yml  # GitHub dependency review gate (PR)
 ├── release.yml            # SemVer tagging, notes, artifact bundling
 ├── provenance.yml         # SLSA provenance attestation + signing
-└── auto-merge.yml         # Policy-gated automerge on green checks
+└── auto-merge.yml         # Policy-gated automerge
 
-⚠️ If filenames change, update badge links, required status checks, and cross-references in docs.
+⚠️ If filenames change, update badge links, required checks, and docs.
 
 ⸻
 
 🧩 Workflow Summary
 
 🧱 Workflow	🎯 Purpose	⏰ Trigger(s)	📦 Key Outputs
-site.yml	Build & deploy docs/site	push → main, manual	_site/ → GitHub Pages
-stac-validate.yml	STAC + JSON Schema + link checks	push / PR	stac-report.json artifact
-fetch.yml	Fetch datasets from data/sources/*.json	daily cron, manual	data/raw/ snapshots + provenance logs
-checksums.yml	Compute & verify SHA-256 integrity	data PR, manual	.sha256 files + validation logs
-codeql.yml	Static security analysis	schedule, push, PR	CodeQL dashboard + SARIF
-trivy.yml	Container/dependency CVE + SBOM	schedule, PR	SARIF + SPDX SBOM artifact
-pre-commit.yml	Lint / format / tests / spellcheck	every PR	PR annotations + summary
-dependency-review.yml	Block risky deps	PR	inline review annotations
-release.yml	SemVer release, notes, assets	manual, tag push	GitHub Release + site bundle, STAC, SARIF, SBOM
-provenance.yml	SLSA provenance + signing	on release	in-toto/SLSA attestations
-auto-merge.yml	Policy-gated automerge	green checks + approvals	merged PR + audit trail
+site.yml	Build & deploy docs/site	push → main, workflow_dispatch	_site/ → GitHub Pages
+stac-validate.yml	STAC + JSON Schema + link checks	push, pull_request	stac-report.json artifact
+fetch.yml	Fetch datasets from data/sources/*.json	schedule, workflow_dispatch	data/raw/ snapshots + provenance logs
+checksums.yml	Compute & verify SHA-256 integrity	data PR, workflow_dispatch	.sha256 files + validation logs
+codeql.yml	Static security analysis	schedule, push, pull_request	CodeQL dashboard + SARIF
+trivy.yml	Container/dependency CVE + SBOM	schedule, pull_request	SARIF + SPDX sbom.json
+pre-commit.yml	Lint / format / tests / spellcheck	pull_request	PR annotations + summary
+dependency-review.yml	Block risky deps	pull_request	Inline review annotations
+release.yml	SemVer release, notes, assets	tag push, workflow_dispatch	GitHub Release + site bundle, STAC, SARIF, SBOM
+provenance.yml	SLSA provenance + signing	release	in-toto/SLSA attestations
+auto-merge.yml	Policy-gated automerge	green checks + approvals	Merged PR + audit trail
 
 
 ⸻
@@ -160,8 +173,6 @@ on:
 
 🏷️ Environments & Approvals
 
-Use Environments for prod deploys with required reviewers, URL previews, and timeouts.
-
 environment:
   name: production
   url: https://bartytime4life.github.io/Kansas-Frontier-Matrix/
@@ -172,10 +183,10 @@ environment:
 🔐 Secrets & Environment Variables
 
 🔑 Secret/Var	🧰 Used by	📝 Purpose	🔒 Notes
-PAGES_TOKEN / GH_PAT	site.yml	Pages deploy	Store in Actions → Secrets. No commits.
-DATA_API_KEY_*	fetch.yml	External data API auth	One per provider; scope to read-only if possible.
-GH_TOKEN	auto-merge.yml	PR merge automation	Fine-scope PAT if required; prefer GITHUB_TOKEN.
-SIGNING_KEY (optional)	provenance.yml	Artifact signing	Prefer keyless OIDC; if key used, rotate & scope.
+PAGES_TOKEN / GH_PAT	site.yml	Pages deploy	Store in Actions → Secrets. Never commit creds.
+DATA_API_KEY_*	fetch.yml	External data API auth	One per provider; scope least-privilege read-only.
+GH_TOKEN	auto-merge.yml	PR merge automation	Prefer repo GITHUB_TOKEN; PAT only if necessary.
+SIGNING_KEY (optional)	provenance.yml	Artifact signing	Prefer keyless OIDC; rotate hardware-backed keys.
 
 
 ⸻
@@ -186,8 +197,6 @@ SIGNING_KEY (optional)	provenance.yml	Artifact signing	Prefer keyless OIDC; if k
 	•	Enforces STAC 1.0.x for data/stac/**
 	•	Validates asset URLs, bbox/temporal metadata, JSON Schemas
 	•	Gated on PR; fails on schema error
-
-Skeleton (pinned actions)
 
 # KFM Workflow: STAC Validate
 # Owners: @kfm-data, @kfm-architecture
@@ -221,8 +230,6 @@ jobs:
 ⸻
 
 🏗️ Build & Deploy (site.yml)
-	•	Builds docs + static site; publishes to GitHub Pages
-	•	Uses environment protections for production
 
 # KFM Workflow: Build & Deploy Site
 # Owners: @kfm-architecture
@@ -266,8 +273,7 @@ jobs:
 🛡️ Security Workflows
 
 🧬 CodeQL (codeql.yml)
-	•	Multi-language static analysis; scheduled + on push
-	•	Uploads SARIF to the Security tab
+	•	Multi-language static analysis; scheduled + on push; uploads SARIF
 
 🧫 Trivy (trivy.yml)
 	•	Filesystem / dependency CVE scan; SBOM (SPDX) export + SARIF upload
@@ -282,41 +288,7 @@ jobs:
     sarif_file: trivy.sarif
 
 🔍 Dependency Review (dependency-review.yml)
-	•	Blocks PRs adding vulnerable packages; annotates findings automatically
-
-⸻
-
-🧾 Release & Versioning (release.yml)
-	•	Enforces SemVer: vMAJOR.MINOR.PATCH
-	•	Generates release notes from merged PRs + CHANGELOG.md
-	•	Bundles artifacts: site bundle, STAC report, SARIF, SBOM
-	•	Optional: publish to Zenodo for a DOI
-
-on:
-  workflow_dispatch:
-    inputs:
-      version: { description: "vX.Y.Z", required: true }
-      notes:   { description: "Release notes summary", required: false }
-
-
-⸻
-
-🔏 SLSA Provenance & Signing (provenance.yml)
-	•	Generates provenance attestations (SLSA/in-toto) for released artifacts
-	•	Signs artifacts (keyless OIDC or SIGNING_KEY if configured)
-	•	Stores attestations with release for auditability
-
-⸻
-
-🧩 Workflow Header Convention
-
-Each workflow begins with a short header comment:
-
-# KFM Workflow: STAC Validate
-# Owners: @kfm-data, @kfm-architecture
-# x-kfm-version: v1.5
-# Docs: .github/workflows/README.md#stac-validation-stac-validateyml
-
+	•	Blocks PRs adding vulnerable packages; annotates findings
 
 ⸻
 
@@ -330,6 +302,33 @@ Provenance	STAC lineage; SLSA attestations; SHA-256; immutable releases
 Auditability	SARIF logs; artifact retention ≥ 90 days; environments & approvals
 Security	CodeQL, Trivy, Dependency Review; least-privilege permissions
 Versioning	SemVer releases; release notes; immutable vX.Y.Z tags
+
+
+⸻
+
+♻️ Maintenance & Versioning Cadence
+
+🗓️ Cadence	🔧 Task	✅ Goal
+Weekly	Run scheduled CodeQL + Trivy scans	Early vuln detection; regressions surfaced
+Monthly	Pin/refresh actions/*; rotate caches; verify OIDC	Supply-chain hardening; faster CI
+Quarterly	Re-validate STAC Schemas; MCP doc refresh; threat-model review	Standards alignment; risk review
+Per-Release	Tag with SemVer; attach SBOM, SARIF, site bundle; optional DOI	Immutable, attestable releases
+
+
+⸻
+
+🕓 Version History
+
+🏷️ Version	📅 Date	✍️ Summary
+v2.4.1	2025-10-15	Fancy aligned tables; added GFM alignment cheatsheet; minor copy edits
+v2.4.0	2025-10-15	Pinning guidance, enhanced headers, clarified provenance/signing, refined maintenance cadence
+v2.3.0	2025-10-13	Header convention, OIDC guidance, permissions & environments hardening
+v2.2.0	2025-10-10	Added release, provenance, dependency-review, expanded options & examples
+v2.1.0	2025-10-09	Refined flowchart, permission matrix, caching patterns
+v2.0.0	2025-10-08	Governance upgrades: environments, approvals, auto-merge policy
+v1.3.0	2025-10-07	Secrets table, MCP matrix, curated CLI examples
+v1.2.0	2025-10-06	Security context & diagrams; checksum gating
+v1.0.0	2025-10-04	Initial CI/CD workflow documentation
 
 
 ⸻
@@ -366,45 +365,6 @@ gh run download --name "stac-report.json"
 
 </details>
 
-
-
-⸻
-
-🧭 Options Catalog (enable as needed)
-	•	Runners: ubuntu-latest, self-hosted runners for GPU/GEOS builds
-	•	Reusable Workflows: workflow_call with required inputs/secrets
-	•	Composite Actions: DRY shared steps across jobs
-	•	Path Filters: limit CI scope (data/stac/**, web/**)
-	•	Artifacts: set retention-days: per workflow (default 90)
-	•	Environments: staging vs production with approvals
-	•	OIDC: cloud deploys without long-lived secrets
-	•	Notifications: Slack/Teams webhooks on failures/releases
-	•	Dependabot: keep action & library versions pinned and fresh
-
-⸻
-
-♻️ Maintenance & Versioning Cadence
-
-🗓️ Cadence	🔧 Task	✅ Goal
-Weekly	Run scheduled CodeQL + Trivy scans	Early vuln detection; regressions surfaced
-Monthly	Pin/refresh actions/*; rotate caches; verify OIDC policies	Supply-chain hardening; faster CI
-Quarterly	Re-validate STAC Schemas; MCP doc refresh; threat-model review	Standards alignment; risk review
-Per-Release	Tag with SemVer; attach SBOM, SARIF, site bundle; optional DOI	Immutable, attestable releases
-
-
-⸻
-
-🕓 Version History
-
-🏷️ Version	📅 Date	✍️ Summary
-v2.4.0	2025-10-15	Pinning guidance, enhanced headers, clarified provenance/signing, refined maintenance cadence
-v2.3.0	2025-10-13	Header convention, OIDC guidance, permissions & environments hardening
-v2.2.0	2025-10-10	Added release, provenance, dependency-review, expanded options & examples
-v2.1.0	2025-10-09	Refined flowchart, permission matrix, caching patterns
-v2.0.0	2025-10-08	Governance upgrades: environments, approvals, auto-merge policy
-v1.3.0	2025-10-07	Secrets table, MCP matrix, curated CLI examples
-v1.2.0	2025-10-06	Security context & diagrams; checksum gating
-v1.0.0	2025-10-04	Initial CI/CD workflow documentation
 
 
 ⸻
