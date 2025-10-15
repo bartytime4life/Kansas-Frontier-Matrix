@@ -1,32 +1,44 @@
 <div align="center">
 
-# 🖼️ Kansas Frontier Matrix — Public Assets  
+# 🖼️ Kansas Frontier Matrix — **Public Assets**  
 `web/public/assets/`
 
 **Logos · Icons · Images · Maps**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../docs/)
 [![Design System](https://img.shields.io/badge/Design-System-blue)](../../../docs/design/)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1-AA-yellow)](../../../docs/design/reviews/accessibility/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Public Assets (web/public/assets/)"
+version: "v1.5.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-design", "@kfm-web"]
+tags: ["assets","design","icons","maps","images","branding","mcp"]
+license: "MIT"
+semantic_alignment:
+  - WCAG 2.1 AA
+  - W3C SVG & Web Graphics
+  - MCP-DL v6.2 (Design Provenance)
+---
+````
+
+---
+
 ## 🧭 Overview
 
-The `web/public/assets/` directory contains **static media and brand assets**  
-used throughout the Kansas Frontier Matrix web application.  
-These include **logos, icons, placeholder images, and map overlays**  
-used in components such as the Header, MapView, Timeline, and Modals.
+The `web/public/assets/` directory contains the **visual and brand foundations** of the Kansas Frontier Matrix (KFM) web experience — including **logos**, **icons**, **images**, and **map overlays** used throughout the interactive interface.
 
-All assets here are **served directly from the CDN or build output** and  
-are not processed by Vite or Webpack. This ensures predictable URLs and  
-long-term caching for production deployments.
+All files in this directory are **served statically** from the CDN or `/build/assets/` output and are **not bundled** by Vite.
+They adhere to the **Kansas Frontier Matrix Design System** and the **Master Coder Protocol (MCP)** standards for provenance, accessibility, and reproducibility.
 
-Design and color palettes follow the **Kansas Frontier Matrix Design System**  
-under the **Master Coder Protocol (MCP)** — guaranteeing consistency,  
-reproducibility, and provenance tracking for every image or icon.
+> **Design Philosophy:** Each asset represents a piece of Kansas’s visual identity — unified through shared color tokens, geometry, and historical relevance.
 
 ---
 
@@ -34,8 +46,8 @@ reproducibility, and provenance tracking for every image or icon.
 
 ```text
 web/public/assets/
-├── logo.svg                # Primary logo (vector)
-├── logo-dark.svg           # Dark theme logo variant
+├── logo.svg                # Primary KFM logo (vector, light theme)
+├── logo-dark.svg           # Dark mode variant
 ├── favicon-32x32.png       # Browser favicon
 ├── icons/                  # UI icons for map, timeline, AI, etc.
 │   ├── map-marker.svg
@@ -43,118 +55,138 @@ web/public/assets/
 │   ├── ai-bot.svg
 │   ├── filter.svg
 │   └── info.svg
-├── images/                 # Static illustrations and placeholder media
+├── images/                 # Static images and placeholder media
 │   ├── placeholder.jpg
 │   ├── header-bg.jpg
 │   └── prairie-sunrise.jpg
-├── maps/                   # Geospatial overlays, scanned maps, static tiles
+├── maps/                   # Historical overlays, static maps, STAC-derived assets
 │   ├── topo_1894_overlay.png
 │   ├── treaty_boundaries_outline.svg
 │   └── hydrology_network_light.svg
 └── README.md               # This documentation file
+```
 
+---
 
-⸻
+## 🎨 Design System Integration
 
-🎨 Design System Integration
+All assets conform to **KFM Design Tokens** (defined in `web/config/themes.json` and `docs/design/mockups/`).
 
-Assets align with the official Design Mockups stored under
-docs/design/mockups/ and the theme tokens from web/config/themes.json.
+| Token                 | Example                      | Purpose                                              |
+| :-------------------- | :--------------------------- | :--------------------------------------------------- |
+| `--kfm-color-accent`  | `#00b3b3`                    | Primary turquoise accent across branding             |
+| `--kfm-color-bg-dark` | `#0b1020`                    | Background color for dark mode                       |
+| `--kfm-radius`        | `1rem`                       | Consistent corner radius for icons and UI components |
+| `--kfm-shadow`        | `0 2px 8px rgba(0,0,0,0.15)` | Drop shadow for elevation consistency                |
 
-Token	Example	Use
---kfm-color-accent	#00b3b3	Logo & primary highlight color
---kfm-color-bg-dark	#0b1020	Background fill for dark variant
---kfm-radius	1rem	Icon rounding and corner consistency
---kfm-shadow	0 2px 8px rgba(0,0,0,0.15)	Drop shadows for UI icons
+**SVGs** should utilize CSS variables for color and adapt dynamically to light/dark themes:
 
-All vector assets (.svg) should use CSS variables for color fills, allowing
-automatic adaptation to theme changes (light/dark).
-
-Example:
-
+```svg
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <circle cx="32" cy="32" r="30" fill="var(--kfm-color-accent)" />
 </svg>
+```
 
+---
 
-⸻
+## 🧩 Asset Provenance
 
-🧩 Asset Provenance
+| Asset                           | Source                       | License       | Purpose                            |
+| :------------------------------ | :--------------------------- | :------------ | :--------------------------------- |
+| `logo.svg`                      | Custom design (Figma export) | MIT           | Primary logo                       |
+| `map-marker.svg`                | Custom KFM icon set          | MIT           | Used in MapView markers            |
+| `ai-bot.svg`                    | Derived from RemixIcon       | MIT           | AI Assistant avatar                |
+| `placeholder.jpg`               | Unsplash (public domain)     | CC0           | Placeholder image for empty states |
+| `topo_1894_overlay.png`         | USGS Public Archive          | Public Domain | Historic map overlay               |
+| `treaty_boundaries_outline.svg` | Digitized by KFM Team        | CC-BY 4.0     | Treaty boundary layer              |
 
-Asset	Source	License	Purpose
-logo.svg	Custom KFM design (Figma export)	MIT	Main site logo
-map-marker.svg	Custom KFM icon set	MIT	MapView marker icon
-ai-bot.svg	RemixIcon derivative	MIT	AI Assistant
-placeholder.jpg	Unsplash (public domain)	CC0	Demo image for empty states
-topo_1894_overlay.png	USGS Public Archive	Public Domain	Historic map overlay
-treaty_boundaries_outline.svg	Digitized by KFM Team	CC-BY 4.0	Treaty visualization layer
+> Every asset has an accompanying metadata record stored in `/assets/meta/`
+> containing its origin, author, license, checksum, and last revision date.
 
-All third-party assets include a metadata header embedded in their filename
-or an accompanying .json descriptor under assets/meta/.
+---
 
-⸻
+## 🗺️ Usage in Components
 
-🗺️ Usage in Components
+| Component           | Asset                                                  | Description                           |
+| :------------------ | :----------------------------------------------------- | :------------------------------------ |
+| **Header**          | `logo.svg`, `logo-dark.svg`                            | Branding in the top navigation        |
+| **MapView**         | `/icons/map-marker.svg`, `/maps/topo_1894_overlay.png` | Interactive markers & overlays        |
+| **TimelineView**    | `/icons/timeline.svg`                                  | Toolbar and legend iconography        |
+| **AIAssistant**     | `/icons/ai-bot.svg`                                    | Assistant avatar and logo badge       |
+| **Modals**          | `/icons/info.svg`, `/icons/filter.svg`                 | UI controls and accessibility symbols |
+| **Public Branding** | `favicon-32x32.png`, `apple-touch-icon.png`            | Browser + PWA branding assets         |
 
-Component	Asset Used	Description
-Header	logo.svg, logo-dark.svg	Displayed in the navigation bar
-MapView	/icons/map-marker.svg, /maps/topo_1894_overlay.png	Map markers and historical overlays
-TimelineView	/icons/timeline.svg	Timeline toolbar icon
-AIAssistant	/icons/ai-bot.svg	Assistant avatar
-Modals	/icons/info.svg, /icons/filter.svg	Contextual icons for help/settings
-Public Branding	favicon-32x32.png, apple-touch-icon.png	Used in web manifest and browser tabs
+---
 
+## 📦 Asset Optimization Pipeline
 
-⸻
+All raster and vector assets are optimized via the **CI/CD pipeline**:
 
-📦 Asset Optimization
+| Process           | Tool                       | Description                                      |
+| :---------------- | :------------------------- | :----------------------------------------------- |
+| PNG Compression   | `pngquant`                 | Adaptive palette compression (80–95% quality)    |
+| JPEG Optimization | `mozjpeg`                  | Reduces file size while preserving quality (85%) |
+| SVG Minification  | `svgo --multipass`         | Removes metadata, comments, and redundant paths  |
+| Hashing           | `sha256sum`                | Generates per-asset integrity checks             |
+| CDN Deployment    | `gh-pages / Cloudflare R2` | Caches and serves optimized static assets        |
 
-All raster images undergo optimization using Sharp or ImageMagick
-in the CI pipeline:
-	•	PNGs compressed with pngquant --quality=80-95
-	•	JPEGs optimized with mozjpeg -quality 85
-	•	SVGs minified with svgo --multipass
-	•	Checksum (.sha256) generated for each asset in build output
+> Optimization results are logged in CI with before/after size metrics and validation reports.
 
-Optimized assets are published to the CDN or GitHub Pages under /assets/.
+---
 
-⸻
+## ♿ Accessibility & Compliance
 
-♿ Accessibility and Compliance
-	•	All decorative images include role="presentation" or empty alt attributes.
-	•	Informational graphics (maps, icons) include descriptive alt text or ARIA labels.
-	•	Icons use scalable vector paths to ensure crispness on high-DPI displays.
-	•	Colors adhere to WCAG 2.1 AA contrast guidelines.
-	•	Fallbacks provided for older browsers that do not support SVG.
+* **Alt Text:** Informative images include descriptive `alt` attributes; decorative icons use `role="presentation"`.
+* **ARIA Labels:** Applied to interactive graphics (`aria-label="Map marker icon"`).
+* **Color Contrast:** All design assets validated for ≥ 4.5:1 contrast ratio in both light/dark themes.
+* **Scalability:** SVGs ensure crisp rendering on high DPI/Retina displays.
+* **Fallbacks:** PNG or ICO fallbacks provided for browsers lacking SVG support.
 
-⸻
+Accessibility validations are automatically performed in CI using **axe-core** and **Lighthouse**.
 
-🧾 Provenance & Integrity
+---
 
-Artifact	Description
-Inputs	Design mockups, icon sets, STAC overlays
-Outputs	Optimized, versioned static assets
-Dependencies	Sharp, SVGO, TailwindCSS, Figma Export
-Integrity	SHA256 checksums, license metadata, Git version control
+## 🧾 Provenance & Integrity
 
+| Artifact         | Description                                                     |
+| :--------------- | :-------------------------------------------------------------- |
+| **Inputs**       | Design mockups, Figma exports, STAC overlays, open-source icons |
+| **Outputs**      | Optimized, licensed static assets for deployment                |
+| **Dependencies** | Sharp, SVGO, TailwindCSS, Node.js build scripts                 |
+| **Integrity**    | SHA256 checksums verified during CI/CD deployment               |
 
-⸻
+---
 
-🔗 Related Documentation
-	•	Web Public README
-	•	Web Configuration
-	•	Design Mockups
-	•	Accessibility Guidelines
+## 🧠 MCP Compliance Checklist
 
-⸻
+| MCP Principle       | Implementation                                                 |
+| :------------------ | :------------------------------------------------------------- |
+| Documentation-first | Each asset family documented and versioned                     |
+| Provenance          | Metadata (.json) tracking origin, license, and author          |
+| Accessibility       | WCAG 2.1 AA compliant design and icons                         |
+| Reproducibility     | CI optimization pipeline with deterministic hashing            |
+| Design Consistency  | Tokens + theme variables applied globally                      |
+| Open Standards      | SVG 1.1 · PNG 1.2 · JPEG 2000 · Public Domain Data Integration |
 
-📜 License
+---
 
-All custom KFM assets are released under the MIT License,
-with external assets attributed under their respective open licenses.
+## 🔗 Related Documentation
 
-© 2025 Kansas Frontier Matrix — Produced under the Master Coder Protocol (MCP)
-for verifiable provenance, open-source accessibility, and long-term archival value.
+* **Web Public README** — `web/public/README.md`
+* **Web Configuration** — `web/config/README.md`
+* **Design Mockups** — `docs/design/mockups/`
+* **Accessibility Guidelines** — `docs/design/reviews/accessibility/`
 
-“Every pixel and vector tells a story — the assets here visualize Kansas’s living history.”
+---
 
+## 📜 License
+
+All **custom Kansas Frontier Matrix assets** are distributed under the **MIT License**,
+while third-party resources retain their respective open licenses (CC-BY, CC0, or Public Domain).
+
+© 2025 Kansas Frontier Matrix — created under **MCP-DL v6.2** for **traceable provenance**, **inclusive design**, and **archival quality**.
+
+> *“Every pixel and vector tells a story — these assets visualize Kansas’s living digital frontier.”*
+
+```
+```
