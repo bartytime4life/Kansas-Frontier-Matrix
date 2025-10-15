@@ -1,5 +1,5 @@
 name: "💡 Feature Request"
-description: "Propose a new feature, enhancement, or workflow — MCP-compliant & reproducible"
+description: "Propose a new feature or enhancement — MCP-compliant & reproducible"
 title: "[Feature]: <short summary>"
 labels:
 
@@ -23,18 +23,18 @@ body:
   attributes:
   value: |
   ## 💡 Summary
-  *“Every Feature Builds the Future — Every Change is Reproducible.”*
-  Please describe the requested enhancement and its purpose.
+  *"Every Feature Builds the Future — Every Change is Reproducible."*
+  Please provide a concise description of the requested feature or enhancement.
   > Example: Add slope classification to terrain pipeline outputs and enable gradient visualization in MapLibre.
 
 * type: textarea
   id: summary
   attributes:
   label: Summary
-  description: Describe the feature or enhancement and its purpose.
+  description: What do you want to add or improve? Why?
   placeholder: |
-  - Add slope classification to terrain pipeline
-  - Create new visualization layer in MapLibre for terrain gradients
+  - Add slope classification to terrain ETL
+  - New MapLibre layer with gradient style and legend
   validations:
   required: true
 
@@ -46,8 +46,8 @@ body:
   id: module
   attributes:
   label: Module / Workflow
-  description: File or workflow impacted
-  placeholder: terrain_pipeline.py | src/pipelines/hydro/flow_accumulation.py | web/config/layers.json
+  description: File or workflow name
+  placeholder: terrain_pipeline.py | web/config/layers.json | src/graph/build_graph.py
   validations:
   required: true
 
@@ -61,13 +61,13 @@ body:
   - Hazards
   - Landcover
   - Climate
-  - Knowledge Graph
+  - Text / AI / NLP
   - Web / UI
   - API
-  - Text / AI / NLP
-  - Metadata / Governance
+  - ETL
   - CI/CD
-  - Other
+  - Knowledge Graph
+  - Metadata / Governance
   multiple: true
   validations:
   required: true
@@ -76,16 +76,16 @@ body:
   id: branch_commit
   attributes:
   label: Target Branch / Commit (if applicable)
-  placeholder: main | feature/terrain-upgrade | 1a2b3c4
+  placeholder: main | feature/terrain-upgrade | 4a8e91c
   validations:
   required: false
 
 * type: input
   id: environment
   attributes:
-  label: Environment
+  label: Environment (optional)
   description: OS, Python/Node versions, container image hash, runner type
-  placeholder: Ubuntu 22.04 · Python 3.11 · Node 20.x · gh-runner=ubuntu-latest
+  placeholder: Ubuntu 22.04 · Python 3.11 · node 20.x · gh-runner=ubuntu-latest · image sha256:…
   validations:
   required: false
 
@@ -97,7 +97,7 @@ body:
   id: limitation
   attributes:
   label: Current Limitation
-  placeholder: "Describe the limitation, gap, or inefficiency this feature resolves."
+  placeholder: "Describe the current limitation or gap this feature resolves."
   validations:
   required: true
 
@@ -109,11 +109,11 @@ body:
   id: proposal
   attributes:
   label: Proposed Implementation
-  description: Include technical details, architecture impacts, or data flow changes.
+  description: Include technical specifics, workflow changes, and architecture impacts.
   placeholder: |
   - Extend terrain_pipeline.py with --add-slope-classification
   - Generate slope class COG and add STAC property slope_class_version
-  - Update layers.json with new map style
+  - Update layers.json with gradient style and legend
   validations:
   required: true
 
@@ -127,11 +127,11 @@ body:
   - label: Extend STAC metadata/schema
   - label: Create new visualization layer
   - label: Update documentation / SOP
-  - label: Other (describe in proposal)
+  - label: Other (describe in Proposed Implementation)
 
 * type: markdown
   attributes:
-  value: "## 🧮 Expected Outcome"
+  value: "## 🧮 Expected Behavior"
 
 * type: textarea
   id: expected
@@ -140,7 +140,7 @@ body:
   placeholder: |
   | Metric              | Target                                   |
   | :------------------ | :----------------------------------------|
-  | Data Quality        | Slope class attribute added; STAC fields updated |
+  | Data Quality        | slope_class attribute present; STAC fields updated |
   | Reproducibility     | Deterministic outputs; SOP updated       |
   | Usability           | Map layer toggle + legend                |
   | Performance         | < +5% runtime impact                     |
@@ -150,7 +150,7 @@ body:
 
 * type: markdown
   attributes:
-  value: "## ⚙️ Implementation Plan"
+  value: "## ⚙️ Implementation Plan (Optional)"
 
 * type: textarea
   id: plan
@@ -173,12 +173,14 @@ body:
   id: versioning
   attributes:
   label: Versioning Summary
+  description: Indicate scope and proposed bump(s)
   placeholder: |
   | Scope                 | Current | Proposed | Notes                |
   | :-------------------- | :------ | :------- | :------------------- |
   | Dataset / STAC Schema | v1.2.0  | v1.3.0   | Add slope metadata   |
   | Pipeline / Script     | v2.0.0  | v2.1.0   | Terrain ETL refactor |
-  | Repo (SemVer)         | v1.4.0  | v1.5.0   | Minor feature add    |
+  | Workflow (CI/CD)      | v1.2.0  | v1.2.0   | none                 |
+  | Repo Release (SemVer) | v1.4.0  | v1.5.0   | minor feature        |
   render: markdown
   validations:
   required: false
@@ -188,7 +190,7 @@ body:
   value: "## 🧾 Impact Assessment"
 
 * type: dropdown
-  id: impact
+  id: severity
   attributes:
   label: Expected Impact
   options:
@@ -202,12 +204,11 @@ body:
 * type: textarea
   id: downstream
   attributes:
-  label: Downstream Effects
-  description: Describe affected modules, datasets, or users.
+  label: Affected Pipelines / Downstream Effects
+  description: Impact on ETL/web/graph/STAC, end users, or CI/CD
   placeholder: |
-  - Web map layer updates required
-  - New STAC schema affects validation workflow
-  - Adds new CLI option for terrain processing
+  - Affected pipelines: make terrain
+  - Downstream: new layer config; STAC validate update
   validations:
   required: false
 
@@ -228,7 +229,7 @@ body:
   required: true
   - label: Provenance — STAC metadata and ADR references included
   required: true
-  - label: Auditability — PR and issue linkage with reproducible steps
+  - label: Auditability — PR/issue linkage with reproducible steps
   required: true
   - label: Versioning — SemVer / STAC updated with change
   required: true
@@ -241,9 +242,9 @@ body:
   id: related
   attributes:
   label: Related Links
-  description: Link PRs, similar issues, affected STAC items, ADRs, SOPs.
+  description: Link PRs, similar issues, affected STAC items, ADRs, SOPs
   placeholder: |
-  - PR: #789
+  - PR: #123
   - Similar: #456
   - STAC: data/stac/items/terrain_ks_2020.json
   - Docs: docs/sop/terrain_pipeline.md
@@ -254,8 +255,5 @@ body:
   id: notes
   attributes:
   label: Additional Notes
-  description: Screenshots, mockups, or rationale for prioritization
   validations:
   required: false
-
----
