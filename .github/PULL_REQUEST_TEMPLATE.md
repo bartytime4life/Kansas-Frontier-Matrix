@@ -1,9 +1,10 @@
 <div align="center">
 
-# 🚀 Kansas Frontier Matrix — Pull Request Template
-
+# 🚀 Kansas Frontier Matrix — Pull Request Template  
 **Path:** `.github/PULL_REQUEST_TEMPLATE.md`  
-**Purpose:** Guarantee every change is **documented, reproducible, versioned, validated, and auditable** — governed by the **Master Coder Protocol (MCP)**, **Semantic Versioning (SemVer)**, and KFM governance standards.
+
+**Purpose:** Enforce **traceable, reproducible, versioned, validated, and auditable** development under the  
+**Master Coder Protocol (MCP)**, **FAIR** principles, and **KFM governance**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
@@ -11,7 +12,7 @@
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
+[![License MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
 
 </div>
 
@@ -19,13 +20,15 @@
 
 ```yaml
 ---
-template: "KFM Pull Request Template"
-version: "v2.1.0"
-last_updated: "2025-10-13"
+template: "Kansas Frontier Matrix Pull Request Template"
+version: "v2.2.0"
+last_updated: "2025-10-15"
 authors: ["@bartytime4life", "@kfm-architecture", "@kfm-dataops"]
+status: "Stable"
+maturity: "Production"
 semver:
   bump: "auto-detect"
-  allowed: ["patch", "minor", "major"]
+  allowed: ["patch","minor","major"]
   changelog_required: true
 governance:
   reviewers_required: 2
@@ -37,258 +40,239 @@ security:
 mcp:
   validation_required: true
   provenance_required: true
----
-````
-
-> <!-- Reviewer note: keep titles short & actionable. Use ADR links for non-trivial design decisions. -->
-
-## 🧩 Summary
-
-> Short description of what this PR does and *why*. Include motivation and measurable outcomes.
-
-*Example:*
-Adds STAC Items for **NOAA Climate (2020–2024)**, updates checksums, and connects layer to `web/config/layers.json`.
-
+fair:
+  findable: true
+  accessible: true
+  interoperable: true
+  reusable: true
+ontology:
+  aligns_with: ["CIDOC CRM:E7_Activity","W3C PROV:Activity","OWL-Time:Interval"]
+integrity:
+  checksum_sha256: "<insert-after-merge>"
+license: "MIT | CC-BY 4.0"
 ---
 
-## 🔄 Related Issues / Discussions
+<!-- Reviewers: link related ADRs for design decisions requiring architectural sign-off. -->
 
-* Closes #…
-* Related: #…
-* Discussion: …
-* Project / Milestone: …
-* ADR: `docs/adr/ADR-XXXX-<title>.md`
 
----
 
-## 🧠 Type of Change *(select all that apply)*
 
-* [ ] 🐛 **Bug Fix** — non-breaking fix resolving reproducible issue
-* [ ] 💡 **Feature / Enhancement** — new functionality or workflow improvement
-* [ ] 🗃️ **New Dataset / Integration** — new source, manifest, or STAC metadata
-* [ ] 🧩 **Metadata Update** — STAC/schema documentation corrections
-* [ ] 📖 **Documentation Update** — READMEs, guides, ADRs, or changelogs
-* [ ] ⚙️ **CI/CD / Workflow** — GitHub Actions, automation, pre-commit
-* [ ] 🔒 **Security / Validation** — CVE mitigation, checksum update, SBOM
-* [ ] 🧹 **Refactor / Cleanup** — readability, structure, or naming
-* [ ] 💥 **Breaking Change** — behavior or API contract change (see below)
+⸻
 
----
+🧩 Summary
 
-## 🧮 Implementation Details
+Describe what this PR does and why.
+Include measurable outcomes and relevant hypotheses (per MCP experiment format).
 
-| Field                      | Description                                                    |
-| :------------------------- | :------------------------------------------------------------- |
-| **Affected Directories**   | e.g. `data/processed/hydro/`, `src/pipelines/`                 |
-| **New Files Added**        | scripts, datasets, metadata; include relative paths            |
-| **Dependencies Updated**   | pip/Node, lockfile, GitHub Actions pins                        |
-| **Validation Performed**   | checksums verified, STAC validated, unit/integration tests     |
-| **Backward Compatibility** | maintained or intentionally broken (document below)            |
-| **Versioning Impact**      | see section below                                              |
-| **Size / Scope**           | ~X files changed, ~Y insertions/deletions; risk: Low/Med/High  |
-| **Rollback Plan**          | how to revert (tag/commit), cleanup steps, data rollback notes |
-| **Data Migration**         | steps to rebuild/rehydrate data if schema changed              |
+Example:
+Adds STAC Items for NOAA Climate (2020-2024), refreshes checksums, and updates web/config/layers.json.
 
----
+⸻
 
-## 🧭 Versioning Summary (SemVer Alignment)
+🔄 Related Issues / Discussions
+	•	Closes # …
+	•	Related # …
+	•	Discussion …
+	•	Milestone …
+	•	ADR → docs/adr/ADR-####-<title>.md
 
-### 📦 Repository Version Bump
+⸻
 
-| Scope        | Proposed Version                           | Reason / Impact             |
-| ------------ | ------------------------------------------ | --------------------------- |
-| Repo Overall | `vX.Y.Z → vX.Y+1.Z`                        | Added new ETL datasets      |
-| API          | `v1 → v2` (major) or `v1.3 → v1.4` (minor) | Endpoint change             |
-| Web UI       | `v1.1 → v1.2`                              | Layer toggles or UI changes |
-| Data STAC    | `v1.0.0 → v1.1.0`                          | Metadata schema update      |
+🧠 Type of Change (select all that apply)
+	•	🐛 Bug Fix — reproducible issue resolved
+	•	💡 Feature / Enhancement — new functionality or workflow improvement
+	•	🗃️ Dataset Integration — new source / manifest / STAC metadata
+	•	🧩 Metadata Update — schema or documentation correction
+	•	📖 Documentation Update — READMEs / guides / ADRs
+	•	⚙️ CI/CD Workflow — automation / linting / governance
+	•	🔒 Security / Validation — CVE mitigation / checksum update / SBOM
+	•	🧹 Refactor / Cleanup — structural / naming improvements
+	•	💥 Breaking Change — API or schema change (requires migration section)
 
-* [ ] **PATCH** (bug/security fix)
-* [ ] **MINOR** (backward-compatible feature)
-* [ ] **MAJOR** (breaking change requiring migration)
+⸻
 
-**Tag/Release Checklist**
+🧮 Implementation Details
 
-* [ ] Update `CHANGELOG.md`
-* [ ] Update STAC Item `properties.version`
-* [ ] Tag GitHub release (`vX.Y.Z`)
-* [ ] Attach build artifacts (STAC, SARIF, SBOM, site bundle)
-* [ ] Notify maintainers via Release Notes
+Field	Description
+Affected Directories	e.g. data/processed/hydro/, src/pipelines/
+New Files Added	scripts / datasets / metadata (relative paths)
+Dependencies Updated	pip/Node locks + Action pins
+Validation Performed	STAC + schema validated, tests pass
+Backward Compatibility	maintained / intentionally broken
+Versioning Impact	see SemVer section
+Size / Scope	X files changed · Y insertions · Risk Low/Med/High
+Rollback Plan	how to revert (tag + cleanup)
+Data Migration	rebuild / rehydrate instructions
 
----
 
-## 📜 Changelog (Keep a Changelog Format)
+⸻
 
-```markdown
+🧭 Versioning Summary (SemVer Alignment)
+
+Scope	Proposed Version	Reason / Impact
+Repo Overall	vX.Y.Z → vX.Y+1.Z	Added new datasets / pipelines
+API	v1 → v2 or v1.3 → v1.4	Endpoint change
+Web UI	v1.1 → v1.2	Layer / UI updates
+Data STAC	v1.0.0 → v1.1.0	Metadata schema update
+
+Tag Checklist
+	•	CHANGELOG updated
+	•	STAC Item properties.version bumped
+	•	Git Release tag vX.Y.Z created
+	•	Artifacts (SARIF/STAC/SBOM) attached
+	•	Maintainers notified via Release Notes
+
+⸻
+
+📜 Changelog (Keep a Changelog)
+
 ### Added
-- NOAA Climate 2020–2024 STAC items; added to map layers.
+- NOAA Climate 2020-2024 STAC items + map integration.
 
 ### Changed
-- Updated CRS for `soil_survey_1967` to EPSG:4326.
-- Refactored `terrain_pipeline.py` to modular subfunctions.
+- Re-projected `soil_survey_1967` → EPSG:4326.  
+- Modularized `terrain_pipeline.py`.
 
 ### Fixed
-- Hydrology accumulation bug in WhiteboxTools D8 step.
+- Hydrology accumulation bug in WhiteboxTools D8.
 
 ### Security
-- Pinned `actions/setup-node@v4`; SBOM regenerated; Trivy scan passed.
-```
+- Pinned `actions/setup-node@v4` · SBOM regenerated · Trivy scan passed.
 
----
 
-## ✅ MCP + CI/CD Compliance
+⸻
 
-| MCP Principle       | Verification                                         |
-| ------------------- | ---------------------------------------------------- |
-| **Documentation**   | READMEs, STAC metadata, changelogs updated           |
-| **Reproducibility** | Deterministic pipelines + checksum outputs           |
-| **Open Standards**  | COG · GeoJSON · CSV/JSON · NetCDF only               |
-| **Provenance**      | Source, license, checksum, and STAC lineage verified |
-| **Auditability**    | CI logs + artifacts retained ≥ 90 days               |
-| **Versioning**      | Semantic version updated across datasets + docs      |
+✅ MCP + CI/CD Compliance
 
----
+MCP Principle	Verification
+Documentation	READMEs / STAC metadata / CHANGELOG
+Reproducibility	deterministic pipelines + checksums
+Open Standards	COG · GeoJSON · CSV/JSON · NetCDF
+Provenance	source · license · checksum · STAC lineage
+Auditability	CI logs + artifacts retained ≥ 90 days
+Versioning	Semantic versions synced across domains
 
-## 🔍 Provenance / Data Lineage
 
-* [ ] Updated `data/sources/*.json` with source URLs, license, `last_verified` date
-* [ ] Added STAC `derived_from` / `dependencies` fields for lineage
-* [ ] Verified checksums in `data/checksums/<domain>/*.sha256`
+⸻
 
----
+🔍 Provenance / Data Lineage
+	•	data/sources/*.json updated (source URL + license + last_verified)
+	•	STAC derived_from / dependencies fields added
+	•	Checksums verified under data/checksums/<domain>/
 
-## 🧰 Validation Commands
+⸻
 
-```bash
-# STAC validation
+🧰 Validation Commands
+
 make stac-validate
-
-# Pipeline rebuild
 make hydro
-
-# Checksums refresh
 make checksums
-
-# Unit / Integration tests
 pre-commit run --all-files
-
-# Docs build
 make site && open _site/index.html
-```
 
----
 
-## 📎 Artifacts / Attachments
+⸻
 
-| Type                 | Path / Link                                |
-| -------------------- | ------------------------------------------ |
-| Logs                 | `data/work/logs/<domain>_etl_debug.log`    |
-| Checksums            | `data/checksums/<domain>/*.sha256`         |
-| STAC Items           | `data/stac/<domain>/*.json`                |
-| Visuals / Thumbnails | `data/processed/metadata/<domain>/thumbs/` |
-| Screenshots          | attach below                               |
+📎 Artifacts / Attachments
 
----
+Type	Path / Link
+Logs	data/work/logs/<domain>_etl_debug.log
+Checksums	data/checksums/<domain>/*.sha256
+STAC Items	data/stac/<domain>/*.json
+Visuals	data/processed/metadata/<domain>/thumbs/
+Screenshots	attach below
 
-## 🧪 Testing / QA Notes
 
-* Test coverage: … %
-* Steps for manual validation:
+⸻
 
-  1. …
-  2. …
-* Performance impacts: minimal / improved / N/A
+🧪 Testing / QA Notes
+	•	Coverage … %
+	•	Manual steps →
+	1.	…   2. …
+	•	Performance impact → minimal / improved / N A
 
----
+⸻
 
-## ♿ Accessibility (If UI Changes)
+♿ Accessibility (If UI Changes)
+	•	Keyboard navigation verified
+	•	Color contrast ≥ 4.5:1
+	•	ARIA labels/roles validated
+	•	prefers-reduced-motion honored
 
-* [ ] Keyboard navigation and focus order verified
-* [ ] Color contrast ≥ 4.5 : 1
-* [ ] ARIA labels/roles validated
-* [ ] `prefers-reduced-motion` respected
+⸻
 
----
+🔒 Security / License Review
+	•	SBOM updated  (tools/sbom)
+	•	No new CVEs (CodeQL + Trivy)
+	•	Dataset license compliance verified
+	•	No plaintext secrets (committed)
+	•	All Actions pinned (no @latest)
 
-## 🔒 Security / License Review
+Mini Audit — Pins ✔ · Secrets 🔐 · OIDC ✅
 
-* [ ] SBOM updated (`tools/sbom` or CI artifact)
-* [ ] No new CVEs (CodeQL/Trivy)
-* [ ] License compliance confirmed for new datasets
-* [ ] Secrets verified absent (grep + secret-scan)
-* [ ] GitHub Actions versions **pinned** (no `@latest`)
+⸻
 
-> **Pins & Secrets Mini-Audit**
->
-> * Actions pinned by tag or SHA
-> * No plaintext secrets committed
-> * OIDC used for deployments (if applicable)
+💥 Breaking Changes
 
----
+Component	Description	Migration / Mitigation
+API	/api/v1/events → /api/v2/events	see docs/api_migration.md
+Dataset	hydrology refactor	make hydrology
+Web UI	layer config renamed	update layers.json
 
-## 💥 Breaking Changes
 
-| Component | Description                                    | Migration / Mitigation          |
-| --------: | ---------------------------------------------- | ------------------------------- |
-|       API | Deprecated `/api/v1/events` → `/api/v2/events` | See `docs/api_migration.md`     |
-|   Dataset | Hydrology structure refactor                   | Rebuild using `make hydrology`  |
-| Web Layer | Map config renamed                             | Update `layers.json` references |
+⸻
 
----
+🧾 Reviewer Versioning Checklist
 
-## 🧾 Reviewer Versioning Checklist
+#	Action	Status
+1	Confirm version: headers bumped	☐
+2	CHANGELOG + STAC versions synced	☐
+3	Release tag vX.Y.Z created	☐
+4	CI/CD green	☐
+5	Approve + merge	☐
 
-| Step | Reviewer Action                                         | Status |
-| ---: | ------------------------------------------------------- | :----: |
-|    1 | Confirm all `version:` headers updated in changed files |    ☐   |
-|    2 | Check CHANGELOG and STAC versions incremented           |    ☐   |
-|    3 | Ensure release tag created (`vX.Y.Z`)                   |    ☐   |
-|    4 | Verify CI/CD green                                      |    ☐   |
-|    5 | Approve and merge                                       |    ☐   |
 
----
+⸻
 
-## 🧭 PR Validation Flow
+🧭 PR Validation Flow
 
-```mermaid
 flowchart TD
-  A["Open PR"] --> B["Pre-Commit + Unit Tests"]
-  B --> C["STAC + Schema Validation"]
+  A["Open PR"] --> B["Pre-Commit + Tests"]
+  B --> C["STAC / Schema Validate"]
   C --> D["Security Scans (CodeQL + Trivy)"]
-  D --> E["Version Sync Check (SemVer / STAC)"]
-  E --> F["Reviewer Approval + Merge"]
-  F --> G["Release Tag + Artifact Archival"]
-
-  classDef node fill:#fafafa,stroke:#555,color:#111;
-  class A,B,C,D,E,F,G node;
+  D --> E["Version Sync ( SemVer / STAC )"]
+  E --> F["Review + Merge"]
+  F --> G["Release Tag + Artifact Archive"]
 %% END OF MERMAID
-```
 
----
 
-## 📊 Release Notes (Preview)
+⸻
 
-* Add: NOAA Climate 2020–2024 STAC items and layers
-* Change: CRS metadata correction for `soil_survey_1967`
-* Security: Pin `actions/setup-node@v4` and attach SBOM
+📊 Release Notes (Preview)
+	•	Add NOAA Climate 2020-2024 STAC layers
+	•	Change CRS metadata for soil_survey_1967
+	•	Security Pin actions/setup-node@v4 · SBOM attached
 
----
+⸻
 
-## 🕓 Version History (Template)
+🕓 Version History
 
-| Version | Date       | Author          | Summary                                   |
-| ------: | ---------- | --------------- | ----------------------------------------- |
-|  v2.1.0 | 2025-10-13 | KFM Maintainers | Risk/rollback/data-migration enhancements |
-|  v2.0.0 | 2025-10-10 | KFM Maintainers | Full versioning + SemVer integration      |
-|  v1.4.0 | 2025-09-15 | Core Docs       | Enhanced template to match MCP compliance |
-|  v1.0.0 | 2025-07-01 | Project Launch  | Initial PR governance template            |
+Version	Date	Author	Summary
+v2.2.0	2025-10-15	KFM Maintainers	MCP-DL v6.2 upgrade · FAIR fields added
+v2.1.0	2025-10-13	KFM Maintainers	Risk / rollback enhancements
+v2.0.0	2025-10-10	KFM Maintainers	SemVer integration
+v1.4.0	2025-09-15	Core Docs	Enhanced template for MCP compliance
+v1.0.0	2025-07-01	Project Launch	Initial PR governance template
 
----
+
+⸻
+
 
 <div align="center">
 
-### 🧭 Kansas Frontier Matrix
 
-**“Every Pull Request Builds the Past, Present, and Future — Versioned Forever.”**
+🧭 Kansas Frontier Matrix
+
+“Every Pull Request builds the Past, Present, and Future — Versioned Forever.”
 
 </div>
-```
