@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — Data Pipelines  
+# 🧩 Kansas Frontier Matrix — **Data Pipelines**  
 `src/pipelines/README.md`
 
 **Time · Terrain · History · Knowledge Graphs**
@@ -9,24 +9,39 @@
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../docs/)
 [![License](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Data Pipelines (src/pipelines)"
+version: "v1.6.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-data", "@kfm-engineering"]
+tags: ["etl","stac","gis","ai","nlp","neo4j","mcp"]
+license: "MIT"
+semantic_alignment:
+  - STAC 1.0.0
+  - GeoJSON RFC 7946
+  - CIDOC CRM
+  - OWL-Time
+  - FAIR Principles
+---
+````
+
 ## 🎯 Purpose
 
-The `src/pipelines/` module houses the **ETL (Extract-Transform-Load)** and **AI/ML enrichment** pipelines that power the Kansas Frontier Matrix (KFM).  
-These scripts transform heterogeneous Kansas datasets—maps, climate series, land records, and historical texts—into standardized, provenance-tracked layers ready for:
+`src/pipelines/` contains **ETL (Extract–Transform–Load)** and **AI/ML enrichment** workflows that turn heterogeneous Kansas datasets—maps, climate series, land records, and historical texts—into standardized, **provenance-tracked** layers ready for:
 
-- 🗺 **Spatiotemporal mapping** (GeoJSON + COG GeoTIFF)  
-- 🧠 **Knowledge-graph ingestion** (Neo4j / RDF)  
-- ⚙️ **Semantic linking** via CIDOC CRM + OWL-Time  
-- 🔍 **Interactive discovery** through the web UI and API  
+* 🗺 **Spatiotemporal mapping** — GeoJSON & **COG GeoTIFF**
+* 🧠 **Knowledge-graph ingestion** — Neo4j (CIDOC CRM · OWL-Time · PeriodO)
+* 🔍 **Interactive exploration** — API & Web UI (Map + Timeline + AI)
 
-The directory implements MCP’s *documentation-first* and *reproducibility* principles: every script logs inputs, outputs, parameters, and checksums.
+All pipelines follow **MCP-DL v6.2**: *document-first, deterministic, logged, and schema-validated.*
 
 ---
 
@@ -34,159 +49,215 @@ The directory implements MCP’s *documentation-first* and *reproducibility* pri
 
 ```mermaid
 flowchart TD
-    A["Raw Sources (scans · rasters · vectors · texts)"]
-      --> B["Extract → download / fetch / OCR"]
-      --> C["Transform → clean · normalize · geocode"]
-      --> D["Load → GeoJSON · COG · Parquet · Graph DB"]
+    A["Raw Sources<br/>scans · rasters · vectors · texts"]
+      --> B["Extract<br/>download · REST · OCR"]
+      --> C["Transform<br/>clean · normalize · geocode · reproject"]
+      --> D["Load<br/>GeoJSON · COG · Parquet · STAC · Graph"]
 
-    C --> I["AI / ML Enrichment (NER · summarization · linking)"]
-    I --> H["Knowledge Graph (Neo4j · CIDOC CRM · OWL-Time)"]
+    C --> I["AI/ML Enrichment<br/>NER · summarization · entity linking"]
+    I --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
     D --> H
-    H --> J["API Layer → FastAPI / GraphQL"]
-    J --> F["Frontend → React / MapLibre timeline map"]
-````
+    H --> J["API Layer<br/>FastAPI · GraphQL"]
+    J --> F["Frontend<br/>React + MapLibre · Timeline · AI Assistant"]
+```
 
-<!-- END OF MERMAID -->
-
-Each ETL stage is modular and reproducible:
-
-| Stage                | Description                                                                                                        | Key Tools                                               |
-| :------------------- | :----------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------ |
-| **Extract**          | Fetch raw data from external APIs or archives (USGS, NOAA, FEMA, KHS, etc.).  Handles OCR for scanned PDFs / maps. | `requests`, `aiohttp`, `pytesseract`, `pdfplumber`      |
-| **Transform**        | Standardize formats → GeoJSON, CSV, COG; clean fields; geocode places; normalize dates.                            | `pandas`, `geopandas`, `rasterio`, `rio-cogeo`, `geopy` |
-| **Load**             | Upsert processed outputs to data/processed and Neo4j graph; generate STAC items + checksums.                       | `neo4j-driver`, `jsonschema`, `hashlib`                 |
-| **AI/ML Enrichment** | Apply NLP (entity extraction, summarization, fuzzy linking) and cross-source correlation.                          | `spaCy`, `transformers`, `sentence-transformers`        |
+> Each stage is **modular** (importable), **CLI-accessible**, and **CI-validated**.
 
 ---
 
 ## 📂 Directory Layout
 
-```
+```text
 src/pipelines/
 ├── __init__.py
-├── fetch/                 # data-source connectors (USGS, NOAA, FEMA, KHS etc.)
+├── pipeline_runner.py       # Orchestrator (targets, dry-run support)
+├── fetch/                   # Source connectors (USGS, NOAA, FEMA, KHS, etc.)
 │   ├── noaa_ingest.py
 │   ├── usgs_ingest.py
 │   ├── fema_ingest.py
 │   └── kansas_memory_ingest.py
-├── transform/             # normalization & conversion utilities
+├── transform/               # Normalization & conversion
 │   ├── geocode_utils.py
 │   ├── raster_to_cog.py
 │   ├── vector_to_geojson.py
 │   └── text_cleaner.py
-├── enrich/                # AI / ML processing modules
+├── enrich/                  # AI / ML processing
 │   ├── nlp_entities.py
 │   ├── summarizer.py
 │   ├── entity_linker.py
 │   └── correlate_sources.py
-├── load/                  # loaders → Neo4j & STAC
-│   ├── stac_writer.py
-│   ├── graph_loader.py
-│   └── checksum_utils.py
-└── pipeline_runner.py     # orchestrator · Makefile entrypoint
+└── load/                    # STAC & Graph loaders
+    ├── stac_writer.py
+    ├── graph_loader.py
+    └── checksum_utils.py
 ```
 
-Each submodule can be executed standalone for testing, or orchestrated via the project-level `Makefile`:
+Run standalone for development, or orchestrate via **Makefile**:
 
 ```bash
-# Rebuild all pipelines
+# Rebuild all pipelines (end-to-end)
 make pipelines
 
-# Or run a single stage
-python src/pipelines/fetch/noaa_ingest.py --year 2020
+# Run a single connector
+python src/pipelines/fetch/noaa_ingest.py --year 1936 --station KS001
+
+# Invoke orchestrator with a target
+python src/pipelines/pipeline_runner.py --target usgs_topo_1894
 ```
+
+---
+
+## 🧱 ETL Stage Matrix
+
+| Stage                | Description                                                                                 | Key Tools                                                          |
+| :------------------- | :------------------------------------------------------------------------------------------ | :----------------------------------------------------------------- |
+| **Extract**          | Fetch raw data from USGS/NOAA/FEMA/KHS APIs and archives; OCR for scanned PDFs/maps         | `requests`, `aiohttp`, `pdfplumber`, `pytesseract`                 |
+| **Transform**        | Standardize into **GeoJSON/COG/CSV/Parquet**; clean fields; geocode places; normalize dates | `pandas`, `geopandas`, `rasterio`, `rio-cogeo`, `shapely`, `geopy` |
+| **Load**             | Write to `data/processed/**`; generate **STAC Items**; upsert to **Neo4j**; write checksums | `pystac`, `jsonschema`, `neo4j-driver`, `hashlib`                  |
+| **AI/ML Enrichment** | NER, summarization, fuzzy linking; cross-source correlation                                 | `spaCy`, `transformers`, `sentence-transformers`                   |
 
 ---
 
 ## 🔬 AI / ML Workflow Summary
 
-1. **Named Entity Recognition (NER)** – `spaCy` model fine-tuned on Kansas texts to extract `PERSON`, `PLACE`, `DATE`, `EVENT`.
-2. **Geocoding** – Resolve place names via USGS GNIS API; attach lat/long & county context.
-3. **Summarization** – `BART-large-CNN` / `T5` models create concise summaries for documents and site dossiers.
-4. **Entity Linking & Scoring** – Fuzzy matching + context windowing align mentions to canonical graph nodes with confidence scores.
-5. **Cross-Modal Correlation** – Compare text vs map vs sensor data to flag verified historical changes (e.g., floodplain shift).
+1. **NER** — Fine-tuned `spaCy` model extracts `PERSON`, `PLACE`, `DATE`, `EVENT`.
+2. **Geocoding** — Resolve placenames via **USGS GNIS**; attach lat/long & county context.
+3. **Summarization** — `BART/T5` generate concise document and site summaries.
+4. **Entity Linking** — Fuzzy + context windows match mentions to canonical graph nodes with **confidence**.
+5. **Correlation** — Cross-modal checks (text ↔ map ↔ sensor) flag validated changes (e.g., 1930s floodplain shift).
 
 ---
 
-## 🧱 Data Outputs & Standards
+## 🧾 Outputs & Standards
 
-| Output          | Format                  | Destination               | Standard                  |
-| :-------------- | :---------------------- | :------------------------ | :------------------------ |
-| Raster Layers   | Cloud-Optimized GeoTIFF | `data/processed/rasters/` | STAC 1.0 · OGC COG        |
-| Vector Layers   | GeoJSON / TopoJSON      | `data/processed/vectors/` | GeoJSON 1.0               |
-| Tables          | CSV / Parquet           | `data/processed/tables/`  | CSVW · DCAT               |
-| Knowledge Graph | Neo4j DB                | `graph/`                  | CIDOC CRM · OWL-Time      |
-| Metadata        | JSON                    | `data/stac/`              | STAC · schema.org Dataset |
+| Output   | Format               | Destination               | Standard               |
+| :------- | :------------------- | :------------------------ | :--------------------- |
+| Rasters  | **COG GeoTIFF**      | `data/processed/rasters/` | STAC 1.0 · OGC COG     |
+| Vectors  | **GeoJSON/TopoJSON** | `data/processed/vectors/` | GeoJSON 1.0            |
+| Tables   | **CSV/Parquet**      | `data/processed/tables/`  | CSVW · DCAT            |
+| Graph    | **Neo4j**            | database                  | CIDOC CRM · OWL-Time   |
+| Metadata | **JSON**             | `data/stac/`              | STAC 1.0 + JSON Schema |
 
-All assets include **SHA-256** checksums and provenance metadata (source URL, license, ETL timestamp).
+All artifacts are accompanied by **SHA-256** sidecars and provenance metadata (source URL, license, ETL timestamp).
 
 ---
 
 ## 🧰 Configuration & Logging
 
-* **Config** files live in `config/` (YAML/JSON) defining paths, API keys, CRS codes, and STAC templates.
-* **Logging** uses Python’s `logging` module with rotating file handlers → `logs/pipelines/*.log`.
-* **Error Handling** wraps each task with try/except to ensure a failure in one source does not halt the entire ETL.
+* **Config**: `config/` YAML + `.env` envvars (consumed by `src/utils/config.py`)
+* **Logging**: `src/utils/logger.py` — structured logs with `run_id` context; files in `logs/pipelines/*.log`
+* **Error Isolation**: each task wrapped in try/except; failed sources are skipped with error report
 
-Example log line:
+**Example log**
 
 ```
-[2025-10-05 14:22:01] INFO | usgs_ingest | Fetched 12 new DEM tiles (2.3 GB) in 214 s ✔
+[2025-10-05 14:22:01] INFO  | usgs_ingest | Fetched 12 DEM tiles (2.3 GB) in 214 s ✔ [run_id=4bf7...]
 ```
 
 ---
 
-## 🔁 Reproducibility · CI/CD Integration
+## 🔁 Reproducibility & CI/CD
 
-* **Makefile** targets link directly into GitHub Actions: every commit runs `make validate` and `make stac-check`.
-* **STAC Validation** ensures metadata compliance before merge.
-* **Containerized runs** (Docker + Compose) guarantee identical environments across contributors.
-* **DVC integration** (coming soon) adds data version hashes to each ETL artifact.
-
----
-
-## 📘 Developer Notes
-
-* Follow PEP-8 style and Google-style docstrings for functions and modules.
-* Each script begins with a `@MCP-LOG` header summarizing its purpose, inputs, outputs, and expected runtime.
-* Add unit tests in `tests/pipelines/` whenever you extend a module.
-* When introducing a new data source, create a matching manifest under `data/sources/` and cite its license and URL.
+* **Makefile → GitHub Actions**: `make validate` + `make stac-check` on every PR
+* **STAC Validation**: schema compliance is a gate before merge
+* **Containers**: Docker/Compose recipes pin versions for consistent ETL
+* **Data Versioning**: optional **DVC** (planned) for large binary artifacts
 
 ---
 
-## 📈 Example Workflow
+## 🧪 Test Touchpoints
+
+* **Unit**: parsing, CLI flags, schema builders
+* **Integration**: tmp dirs for ETL paths; mocked HTTP/ArcGIS; tiny rasters (≤10×10)
+* **Schema**: `jsonschema` + `pystac` verify STAC & config files
+* **Graph**: mock Neo4j driver; assert Cypher & params only
+
+```bash
+pytest tests/pipelines -v --cov=src/pipelines
+```
+
+---
+
+## 🧭 Environment Variables (common)
+
+```bash
+# API endpoints
+export KFM_API_BASE=https://api.frontiermatrix.org
+
+# Data locations
+export KFM_DATA_DIR=$(pwd)/data
+export KFM_STAC_DIR=$(pwd)/data/stac
+
+# External services
+export KFM_GNIS_URL=https://geonames.usgs.gov
+export KFM_NEO4J_URI=bolt://localhost:7687
+export KFM_NEO4J_USER=neo4j
+export KFM_NEO4J_PASSWORD=pass
+```
+
+> All envs may also be provided via `.env` and loaded by `src/utils/config.py`.
+
+---
+
+## 📈 Example End-to-End Workflow
 
 ```bash
 # 1 · Fetch raw data from registered sources
 make fetch
 
-# 2 · Process raster + vector data → standard formats
-make process
+# 2 · Process rasters + vectors → standard formats
+make convert
 
-# 3 · Run AI enrichment (NER + summary)
+# 3 · Run enrichment (NER + summary)
 make enrich
 
-# 4 · Update STAC catalog and load graph database
+# 4 · Update STAC & load graph
 make stac graph
 ```
 
-Each step logs provenance → `logs/pipelines/` and outputs reproducible artifacts in `data/processed/`.
+Every step emits provenance logs → `logs/pipelines/` and reproducible outputs in `data/processed/`.
+
+---
+
+## 🧠 Developer Notes
+
+* Follow **PEP-8** and Google-style docstrings; include `@MCP-LOG` header (purpose, inputs, outputs, runtime).
+* When adding a new source:
+
+  1. create `data/sources/{id}.json` (license + URL)
+  2. implement `fetch/{id}_ingest.py`
+  3. write STAC with `load/stac_writer.py`
+  4. add graph upserts in `load/graph_loader.py`
+  5. extend tests under `tests/pipelines/` and update `docs/sop.md`.
+
+---
+
+## 🧠 MCP Compliance Checklist
+
+| MCP Principle       | Implementation                                       |
+| :------------------ | :--------------------------------------------------- |
+| Documentation-first | Readmes, docstrings, SOPs for every pipeline         |
+| Reproducibility     | Checksums, schema validation, pinned containers      |
+| Provenance          | STAC lineage, Cypher relations, run IDs in logs      |
+| Open Standards      | STAC · GeoJSON · COG · CSVW · CIDOC CRM · OWL-Time   |
+| Accessibility       | Clear CLI UX, helpful errors, human-readable logs    |
+| Auditability        | CI artifacts publish validation and checksum reports |
 
 ---
 
 ## 📎 References & Further Reading
 
-* *Kansas Frontier Matrix — AI System Developer Docs*
-* *File & Data Architecture Guide*
-* *Scientific Modeling & Simulation (NASA-Grade Guide)*
-* *Integrating Historical, Cartographic, and Geological Research (MCP Reference)*
+* **AI System Developer Docs** — `../../docs/`
+* **File & Data Architecture** — `../../docs/file-data-architecture.md`
+* **Scientific Modeling & Simulation (NASA-Grade Guide)**
+* **Integrating Historical, Cartographic, and Geological Research (MCP Reference)**
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025 · Open Knowledge · MIT License (code) | CC-BY 4.0 (data)**
+**Kansas Frontier Matrix © 2025 · MIT (code) · CC-BY 4.0 (data)**
 *“Document the past so the future can reproduce it.”*
 
 </div>
-
+```
