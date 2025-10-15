@@ -19,11 +19,12 @@ body:
       value: |
         ## 💡 Feature Overview
         *“Every Feature Builds the Future · Every Change is Reproducible.”*
+        Please describe the new functionality or enhancement you propose for Kansas Frontier Matrix.
 
   - type: input
     id: feature_name
     attributes:
-      label: Feature Name
+      label: "Feature Name"
       placeholder: "Slope Classification Enhancement for Terrain Pipeline"
     validations:
       required: true
@@ -31,7 +32,7 @@ body:
   - type: input
     id: related_component
     attributes:
-      label: Related Component / Module
+      label: "Related Component / Module"
       placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
     validations:
       required: true
@@ -39,7 +40,7 @@ body:
   - type: dropdown
     id: domain
     attributes:
-      label: Domain / Area of Impact
+      label: "Domain / Area of Impact"
       options:
         - Terrain
         - Hydrology
@@ -59,7 +60,7 @@ body:
   - type: textarea
     id: motivation
     attributes:
-      label: Motivation / Use Case
+      label: "Motivation / Use Case"
       placeholder: "Explain the problem this feature solves and who benefits."
     validations:
       required: true
@@ -67,16 +68,16 @@ body:
   - type: textarea
     id: limitation
     attributes:
-      label: Current Limitation
-      placeholder: "Describe the current limitation or gap."
+      label: "Current Limitation"
+      placeholder: "Describe the current limitation or gap this feature addresses."
     validations:
       required: true
 
   - type: textarea
     id: proposal
     attributes:
-      label: Proposed Implementation
-      description: "Include technical specifics, workflow changes, and architecture impacts."
+      label: "Proposed Implementation"
+      description: "Include technical details, workflow changes, and architecture impacts."
       placeholder: |
         - Extend terrain_pipeline.py with --add-slope-classification
         - Generate slope class COG and add STAC property slope_class_version
@@ -87,19 +88,19 @@ body:
   - type: checkboxes
     id: change_type
     attributes:
-      label: Change Type(s)
+      label: "Change Type(s)"
       options:
-        - label: Add new data transformation module
-        - label: Modify ETL pipeline step
-        - label: Extend STAC metadata/schema
-        - label: Create new visualization layer
-        - label: Update documentation / SOP
-        - label: Other (describe in proposal)
+        - label: "Add new data transformation module"
+        - label: "Modify ETL pipeline step"
+        - label: "Extend STAC metadata/schema"
+        - label: "Create new visualization layer"
+        - label: "Update documentation / SOP"
+        - label: "Other (describe in proposal)"
 
   - type: textarea
     id: expected_outcome
     attributes:
-      label: Expected Outcome / Metrics
+      label: "Expected Outcome / Metrics"
       placeholder: |
         | Metric          | Target                                        |
         | :-------------- | :---------------------------------------------|
@@ -113,7 +114,7 @@ body:
   - type: dropdown
     id: semver
     attributes:
-      label: Repo SemVer Impact
+      label: "Repo SemVer Impact"
       description: "Patch = fix; Minor = new feature; Major = breaking change."
       options:
         - semver:none
@@ -126,20 +127,18 @@ body:
   - type: checkboxes
     id: validation
     attributes:
-      label: Pre-Merge Checklist
+      label: "Pre-Merge Checklist"
       options:
-        - label: Unit tests added and passing
+        - label: "✅ Unit tests added and passing"
           required: true
-        - label: STAC schema validated (make stac-validate)
+        - label: "✅ STAC schema validated (make stac-validate)"
           required: true
-        - label: ETL reproducibility confirmed
+        - label: "✅ ETL reproducibility confirmed"
           required: true
-        - label: License & data compliance verified
+        - label: "✅ License & data compliance verified"
           required: true
-        - label: Docs updated under /docs/sop/ or /docs/adr/
+        - label: "✅ Docs updated under /docs/sop/ or /docs/adr/"
           required: true
-        - label: Version bump recorded in CHANGELOG.md
+        - label: "✅ Version bump recorded in CHANGELOG.md"
           required: true
 ```
-
----
