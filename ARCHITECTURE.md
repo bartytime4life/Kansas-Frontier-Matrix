@@ -1,290 +1,259 @@
-```yaml
-name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
-title: "[Feature]: <feature name> — <component/domain>"
-labels:
-  - enhancement
-  - needs-triage
-assignees:
-  - kfm-architecture
-  - kfm-data
+div align="center">
 
-# KFM metadata
-# version: v2.3.0
-# last_updated: 2025-10-15
-# owners: @kfm-architecture @kfm-data
+# 🏗️ **Kansas Frontier Matrix — System Architecture Overview**
 
-body:
-  - type: markdown
-    attributes:
-      value: |
-        ## 💡 Feature Overview
-        *“Every Feature Builds the Future. Every Change is Reproducible.”*
+### *“Time · Terrain · History · Knowledge Graphs”*
 
-  - type: input
-    id: feature_name
-    attributes:
-      label: Feature Name
-      placeholder: "Slope Classification Enhancement for Terrain Pipeline"
-    validations:
-      required: true
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../../.github/workflows/trivy.yml)
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
+[![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-blue)](../../LICENSE)
 
-  - type: input
-    id: component_module
-    attributes:
-      label: Primary Component / Module
-      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
-    validations:
-      required: true
+</div>
 
-  - type: dropdown
-    id: feature_type
-    attributes:
-      label: Feature Type
-      options: ["Backend","Frontend","Cross-Layer","Infrastructure","Docs/SOP"]
-    validations:
-      required: true
+---
 
-  - type: dropdown
-    id: impact
-    attributes:
-      label: Impact Level
-      options: ["Low","Moderate","High","Breaking"]
-    validations:
-      required: true
+## 📚 Table of Contents
+* [🌾 Mission](#🌾-mission)
+* [🏛 Architectural Principles](#🏛-architectural-principles)
+* [🏗 System Diagram](#🏗-system-diagram)
+* [⚙️ Core Layers](#⚙️-core-layers)
+* [🧭 Data & File Architecture](#🧭-data--file-architecture)
+* [🧮 AI / ML Pipeline](#🧮-ai--ml-pipeline)
+* [🌐 API & Integration](#🌐-api--integration)
+* [🗺 Web Frontend](#🗺-web-frontend)
+* [🔒 Security & Provenance](#🔒-security--provenance)
+* [🧾 Change Management](#🧾-change-management)
+* [📚 References](#📚-references)
 
-  - type: input
-    id: related_scope
-    attributes:
-      label: Related Scope / Module
-      placeholder: "ETL (terrain), Web Map layers, STAC schema, CI workflow"
-    validations:
-      required: true
+---
 
-  - type: input
-    id: release_target
-    attributes:
-      label: Target Release / Timeline
-      placeholder: "v2.4.0 — October; or ‘next minor’"
-    validations:
-      required: true
+## 🌾 Mission
 
-  - type: input
-    id: spec_ref
-    attributes:
-      label: Spec / ADR Link(s)
-      placeholder: "/docs/adr/0007-slope-classification.md; design doc URL"
+The **Kansas Frontier Matrix (KFM)** connects the *ecological, cultural, and historical record of Kansas*  
+through a reproducible, open-science platform. It integrates:
 
-  - type: input
-    id: steward
-    attributes:
-      label: Owner / Steward
-      placeholder: "@kfm-architecture · @kfm-data (or individual)"
+- Environmental & climate datasets (NOAA, USGS, Daymet)  
+- Historical documents & maps (KHS, archives, treaties)  
+- Semantic knowledge graph (Neo4j + CIDOC CRM)  
+- Interactive frontend (React + MapLibre + D3 timeline)
 
-  - type: markdown
-    attributes:
-      value: "## 🌐 Design Provenance"
+Each layer of the system is built under **Master Coder Protocol (MCP)** principles:
+> Documentation-first · Reproducible · Provenanced · Auditable · Versioned.
 
-  - type: textarea
-    id: provenance
-    attributes:
-      label: Design Provenance
-      description: "Official internal/external references, rationale, screenshots/quotes, standards alignment"
-      placeholder: |
-        - ADR: /docs/adr/0007-slope-classification.md
-        - SOP: /docs/sop/terrain_pipeline.md#slope
-        - Standards: STAC 1.0.x fields, OWL-Time, CIDOC CRM tags
-        - Rationale: why now; alternatives considered; decision summary
-    validations:
-      required: true
+---
 
-  - type: dropdown
-    id: integration_scope
-    attributes:
-      label: Integration Scope
-      options: ["Backend (ETL / AI / Graph)","Frontend (Map / Timeline / UI)","Cross-Layer (Full-stack)","Infrastructure (CI/CD / Deployment)","Documentation / SOP"]
-    validations:
-      required: true
+## 🏛 Architectural Principles
 
-  - type: textarea
-    id: artifacts
-    attributes:
-      label: Artifacts / Outputs
-      placeholder: ".py, .yml, .json, .md, .cog.tif, GeoJSON, OpenAPI/spec changes"
-    validations:
-      required: true
+| Principle | Description |
+| :-- | :-- |
+| **Documentation-First** | Every component change has an accompanying doc or SOP. |
+| **Reproducibility** | Deterministic ETL pipelines and checksums guarantee reproducible builds. |
+| **Open Standards** | Uses STAC, DCAT, CIDOC CRM, OWL-Time, GeoSPARQL for interoperability. |
+| **Version Control Everywhere** | Code (SemVer), Data (STAC), Docs (MCP-DL metadata). |
+| **Auditability** | All CI pipelines log checksums, signatures, and provenance events. |
 
-  - type: input
-    id: interfaces
-    attributes:
-      label: Interfaces / Contracts
-      placeholder: "Function signatures, API routes, CLI flags, config keys; note any breaking behavior"
-    validations:
-      required: true
+---
 
-  - type: dropdown
-    id: release_cadence
-    attributes:
-      label: Release Cadence
-      options: ["Static/One-off","Irregular/On-Demand","Quarterly","Monthly","Weekly","Daily"]
-    validations:
-      required: true
+## 🏗 System Diagram
 
-  - type: textarea
-    id: qa_strategy
-    attributes:
-      label: QA Strategy / References
-      placeholder: "Unit/integration tests, golden datasets, regression criteria, perf thresholds; link to test plan"
+```mermaid
+flowchart TD
+  A["Sources<br/>Historical Maps · Rasters · Text Archives · APIs"]
+    --> B["ETL Pipeline<br/>Python · GDAL · Makefile · Checksums"]
+  B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
+  B --> I["AI / ML Enrichment<br/>NER · OCR · Geocoding · Summaries"]
+  C --> D["STAC Catalog<br/>Collections · Items · Assets"]
+  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
+  I --> H
+  H --> J["API Layer<br/>FastAPI · GraphQL · REST"]
+  J --> F["Frontend (React + MapLibre GL)<br/>Timeline · Map · Search · AI Panels"]
+  C --> K["Google Earth Exports<br/>KML / KMZ"]
+%% END OF MERMAID
+````
 
-  - type: markdown
-    attributes:
-      value: "## 🎯 Motivation & Current Limitation"
+---
 
-  - type: textarea
-    id: motivation
-    attributes:
-      label: Motivation / Use Case
-      placeholder: "Explain the problem this feature solves and who benefits (users, pipelines, governance)."
-    validations:
-      required: true
+## ⚙️ Core Layers
 
-  - type: textarea
-    id: limitation
-    attributes:
-      label: Current Limitation
-      placeholder: "Describe the gap, constraints, or pain points in current behavior or architecture."
-    validations:
-      required: true
+### 🧩 1. ETL Pipeline
 
-  - type: markdown
-    attributes:
-      value: "## ⚙️ Proposed Implementation"
+* **Language:** Python (GDAL, Rasterio, Pandas)
+* **Stages:** Extract → Transform → Load
+* **Execution:** via `make fetch`, `make process`, `make stac`
+* **Output:** standardized GeoJSON / COG + STAC metadata
+* **Validation:** schema + checksum verification in CI
 
-  - type: textarea
-    id: proposal
-    attributes:
-      label: Proposed Implementation
-      description: "Include technical specifics, workflow changes, architecture impacts, and rollout."
-      placeholder: |
-        - Extend terrain_pipeline.py with --add-slope-classification
-        - Generate slope class COG and add STAC property slope_class_version
-        - Add layers.json entry with gradient style
-        - Update ADR/SOP; add unit/integration tests; validate STAC; perf gate
-    validations:
-      required: true
+### 🧠 2. AI / ML Enrichment
 
-  - type: checkboxes
-    id: change_type
-    attributes:
-      label: Change Type(s)
-      options:
-        - label: Add new module/component
-        - label: Modify ETL pipeline step
-        - label: Extend STAC metadata/schema
-        - label: Create new visualization layer
-        - label: Update documentation / SOP
-        - label: Other (describe in proposal)
+* **OCR:** Tesseract, OpenCV for scanned docs
+* **NLP:** spaCy + Transformers for entity extraction
+* **Summarization:** BART / T5 for document abstracts
+* **Entity Linking:** custom matchers aligning text entities → graph nodes
+* **Outputs:** structured entities (`Person`, `Place`, `Event`, `Document`)
 
-  - type: markdown
-    attributes:
-      value: "## 🧮 Expected Outcome / Metrics"
+### 🕸 3. Knowledge Graph
 
-  - type: textarea
-    id: expected_outcome
-    attributes:
-      label: Expected Outcome / Metrics
-      placeholder: |
-        | Metric          | Target                                        |
-        | :-------------- | :---------------------------------------------|
-        | Data Quality    | slope_class attribute present; STAC fields updated |
-        | Reproducibility | Deterministic outputs; SOP updated            |
-        | Usability       | Map layer toggle + legend                     |
-        | Performance     | < +5% runtime impact                          |
-    validations:
-      required: true
+* **Engine:** Neo4j
+* **Schema:** CIDOC CRM + OWL-Time + DCAT
+* **Relations:** `OCCURRED_AT`, `MENTIONS`, `LOCATED_IN`, `PARTICIPATED_IN`
+* **Spatial Index:** GeoSPARQL / WKT geometries
+* **Inference:** rule-based + confidence scoring
 
-  - type: markdown
-    attributes:
-      value: "## 🧩 Implementation Plan"
+### 🔌 4. API Layer
 
-  - type: textarea
-    id: impl_plan
-    attributes:
-      label: Steps & Owners
-      placeholder: |
-        1) Design review — Owner …
-        2) Implement changes — Owner …
-        3) Add tests — Owner …
-        4) Update docs/ADR/SOP — Owner …
-        5) Validate schema — Owner …
-        6) Perf/QA gates — Owner …
-        7) Release & comms — Owner …
+* **Framework:** FastAPI + GraphQL
+* **Endpoints:** `/events`, `/entities/{id}`, `/timeline`, `/search`
+* **Formats:** JSON, GeoJSON, CSV, STAC, DCAT
+* **Auth:** JWT + audit logging
+* **OpenAPI Spec:** auto-generated `/docs` route
 
-  - type: markdown
-    attributes:
-      value: "## 🧭 Versioning & Governance"
+### 🖥 5. Web Frontend
 
-  - type: textarea
-    id: versioning
-    attributes:
-      label: Versioning Summary (SemVer + Schema)
-      placeholder: |
-        | Scope               | Current | Proposed | Reason / Trigger       |
-        | :------------------ | :------ | :------- | :--------------------- |
-        | Component/Module    | v2.3.0  | v2.4.0   | feature enhancement    |
-        | CI Workflow         | v1.7.1  | v1.8.0   | new validation step    |
-        | Docs / SOP          | v1.2.0  | v1.3.0   | process updated        |
-      render: markdown
+* **Stack:** React + MapLibre GL + D3 Timeline
+* **Features:**
 
-  - type: markdown
-    attributes:
-      value: "## ✅ MCP Compliance"
+  * Interactive map + timeline linked to knowledge graph
+  * Search and AI-assistant sidebar
+  * Accessibility (WCAG 2.1 AA)
+* **Deployment:** GitHub Pages via `site.yml`
 
-  - type: checkboxes
-    id: mcp
-    attributes:
-      label: MCP Principles
-      options:
-        - label: Documentation-first — feature fully described with provenance
-          required: true
-        - label: Reproducibility — deterministic steps & checksums defined
-          required: true
-        - label: Open Standards — interoperable formats/specs used
-          required: true
-        - label: Provenance — ADR/SOP updates and traceable diffs
-          required: true
-        - label: Auditability — CI validation steps reproducible & archived
-          required: true
-        - label: Versioning — repo SemVer & schema versions updated
-          required: true
+---
 
-  - type: markdown
-    attributes:
-      value: "## 🧩 Related Issues / Attachments"
+## 🧭 Data & File Architecture
 
-  - type: textarea
-    id: related
-    attributes:
-      label: Related Issues / PRs / Data Requests
-      placeholder: |
-        - Related: #45 (ETL refactor)
-        - Dependent: #102 (web map overlay support)
-        - Supersedes: #37 (legacy pipeline flag)
-        - Linked Data Request: #201 (terrain COG integration)
+| Directory         | Purpose                                            |
+| :---------------- | :------------------------------------------------- |
+| `data/sources/`   | JSON manifests (source configs + provenance)       |
+| `data/raw/`       | Large external datasets (fetched, LFS/DVC tracked) |
+| `data/processed/` | Normalized GeoJSON / COG outputs                   |
+| `data/stac/`      | STAC catalog (items, collections)                  |
+| `src/`            | Python ETL + AI pipelines                          |
+| `web/`            | React frontend (Map + Timeline)                    |
+| `docs/`           | Architecture, SOPs, standards                      |
+| `.github/`        | Workflows, issue templates                         |
 
-  - type: textarea
-    id: attachments
-    attributes:
-      label: Attachments
-      description: "Diagrams, screenshots, or POC links"
-      placeholder: |
-        architecture_diagram.png — workflow impact
-        feature_diff.json — config patch example
-        prototype.mp4 — UI demo
+Each dataset must include:
 
-  - type: textarea
-    id: notes
-    attributes:
-      label: Additional Notes
-      description: "Visuals, risks, rollout plan, comms, or follow-up tasks"
+* ✅ **Provenance metadata** (source URL, license)
+* ✅ **SHA-256 checksum** sidecar
+* ✅ **STAC JSON** with `properties.version`
+* ✅ **Linked SOP or experiment record**
+
+---
+
+## 🧮 AI / ML Pipeline
+
+| Component      | Role                                 | Tools / Libs                     |
+| :------------- | :----------------------------------- | :------------------------------- |
+| OCR            | Convert scanned images → text        | Tesseract, OpenCV                |
+| NLP            | Extract names, places, events        | spaCy, Hugging Face Transformers |
+| Geocoding      | Resolve locations → coordinates      | GeoPy, USGS GNIS                 |
+| Summarization  | Condense large texts                 | BART, T5                         |
+| Entity Linking | Connect text entities to graph nodes | Custom ML + Neo4j driver         |
+
+> All models are documented via `docs/model_card.md`
+> Training datasets are versioned with DVC + checksum logs.
+
+---
+
+## 🌐 API & Integration
+
+**Endpoints**
+
+| Route                               | Description                      |
+| :---------------------------------- | :------------------------------- |
+| `/api/events`                       | Query events by time & geography |
+| `/api/entities/{id}`                | Retrieve linked data entity      |
+| `/api/search?q=<term>`              | Text/semantic search             |
+| `/api/timeline?start=<y1>&end=<y2>` | Chronological range query        |
+| `/api/tiles/{layer}`                | Tile service (GeoJSON / raster)  |
+
+**Format Compliance:**
+
+* STAC 1.0.x
+* DCAT 2.0
+* JSON-LD contexts for semantic linking
+
+**Integration Points:**
+
+* Web frontend (MapLibre layers)
+* Google Earth KML/KMZ exports
+* Research APIs for AI queries
+
+---
+
+## 🗺 Web Frontend
+
+| Layer             | Technology          | Purpose                             |
+| :---------------- | :------------------ | :---------------------------------- |
+| **UI Framework**  | React + Vite        | SPA structure                       |
+| **Map Engine**    | MapLibre GL JS      | render GIS layers & time data       |
+| **Timeline**      | D3 / Canvas         | spatio-temporal event visualization |
+| **Accessibility** | WAI-ARIA / WCAG 2.1 | inclusive design                    |
+| **Hosting**       | GitHub Pages        | static build deployment             |
+
+**Features**
+
+* Linked Map + Timeline views
+* Layer toggles (treaties, terrain, hydrology, etc.)
+* AI summary popups
+* Semantic highlighting of entities
+
+---
+
+## 🔒 Security & Provenance
+
+| Control                 | Mechanism                                        |
+| :---------------------- | :----------------------------------------------- |
+| **Authentication**      | JWT (FastAPI middleware)                         |
+| **Dependency Scanning** | Trivy CI workflow                                |
+| **Static Analysis**     | CodeQL                                           |
+| **Data Integrity**      | SHA-256 checksums per file                       |
+| **Access Control**      | Role-based permissions                           |
+| **Audit Logs**          | stored for ETL + API interactions                |
+| **CI/CD Governance**    | Signed actions, branch protection, version gates |
+
+---
+
+## 🧾 Change Management
+
+**Versioning Policy**
+
+* **Code:** Semantic Versioning (SemVer)
+* **Data:** STAC `properties.version`
+* **Docs:** MCP-DL metadata header
+* **Models:** Model Card revisions
+
+**Workflow**
+
+1. Create feature branch → `feature/<short-name>`
+2. Update documentation → `/docs/` + `/data/sources/`
+3. Validate STAC → `make stac-validate`
+4. Open PR using Feature Request template
+5. CI checks (unit, schema, security)
+6. Merge → version bump → changelog update
+
+---
+
+## 📚 References
+
+* [`File and Data Architecture`](../file-and-data-architecture.md)
+* [`Monorepo Repository Design`](../kansas-frontier-matrix-monorepo-repository-design.pdf)
+* [`GIS Archive & Deeds Integration`](../kansas-frontier-matrix-gis-archive--deeds-data-integration-guide.pdf)
+* [`Web UI Design`](../kansas-frontier-matrix-web-ui-design-document.pdf)
+* [`MCP Documentation`](../scientific-method--research--master-coder-protocol-documentation.pdf)
+
+---
+
+<div align="center">
+
+### 🏛 “Document the Frontier · Reconstruct the Past · Illuminate Connections.”
+
+© 2025 Kansas Frontier Matrix — MIT (code) · CC-BY 4.0 (data)
+
+</div>
 ```
