@@ -1,32 +1,3 @@
----
-title: "⚙️ Kansas Frontier Matrix — GitHub Automation & Governance"
-document_type: "README"
-version: "v1.6.4"
-last_updated: "2025-10-15"
-created: "2025-10-04"
-owners: ["@bartytime4life", "@kfm-architecture", "@kfm-security"]
-status: "Stable"
-maturity: "Production"
-tags: ["ci","cd","governance","security","mcp","stac","provenance","versioning","oidc","workflows","labels","issue-forms"]
-license: "MIT"
-semantic_alignment:
-  - STAC 1.0
-  - JSON Schema
-  - CIDOC CRM (provenance)
-  - OWL-Time (release windows)
-  - DCAT 2.0
-ci_required_checks:
-  - pre-commit
-  - unit-tests
-  - codeql
-  - trivy
-  - stac-validate
-  - pages-build-deployment
-provenance:
-  workflow_pin_policy: "actions pinned by tag or commit SHA"
-  artifact_retention_days: 90
----
-
 <div align="center">
 
 # ⚙️ **Kansas Frontier Matrix — GitHub Automation & Governance**  
