@@ -81,21 +81,21 @@ For consistent visual columns, wrap technical tokens in backticks (monospace) in
 
 ⸻
 
-🧩 Workflow Summary
+## 🧩 Workflow Summary
 
-🧱 Workflow	🎯 Purpose	⏰ Trigger(s)	📦 Key Outputs
-site.yml	Build & deploy docs/site	push → main, workflow_dispatch	_site/ → GitHub Pages
-stac-validate.yml	STAC + JSON Schema + link checks	push, pull_request	stac-report.json artifact
-fetch.yml	Fetch datasets from data/sources/*.json	schedule, workflow_dispatch	data/raw/ snapshots + provenance logs
-checksums.yml	Compute & verify SHA-256 integrity	data PR, workflow_dispatch	.sha256 files + validation logs
-codeql.yml	Static security analysis	schedule, push, pull_request	CodeQL dashboard + SARIF
-trivy.yml	Container/dependency CVE + SBOM	schedule, pull_request	SARIF + SPDX sbom.json
-pre-commit.yml	Lint / format / tests / spellcheck	pull_request	PR annotations + summary
-dependency-review.yml	Block risky deps	pull_request	Inline review annotations
-release.yml	SemVer release, notes, assets	tag push, workflow_dispatch	GitHub Release + site bundle, STAC, SARIF, SBOM
-provenance.yml	SLSA provenance + signing	release	in-toto/SLSA attestations
-auto-merge.yml	Policy-gated automerge	green checks + approvals	Merged PR + audit trail
-
+| 🧱 **Workflow**        | 🎯 **Purpose**                          | ⏰ **Trigger(s)**                               | 📦 **Key Outputs**                                       |
+|:-----------------------|:----------------------------------------|:------------------------------------------------|:---------------------------------------------------------|
+| `site.yml`             | Build & deploy docs/site                | `push → main`, `workflow_dispatch`              | `_site/` → **GitHub Pages**                              |
+| `stac-validate.yml`    | STAC + JSON Schema + link checks        | `push`, `pull_request`                           | `stac-report.json` (artifact)                            |
+| `fetch.yml`            | Fetch datasets from `data/sources/*.json` | `schedule`, `workflow_dispatch`                | `data/raw/` snapshots + provenance logs                  |
+| `checksums.yml`        | Compute & verify **SHA-256** integrity  | data PR, `workflow_dispatch`                     | `.sha256` files + validation logs                        |
+| `codeql.yml`           | Static security analysis                | `schedule`, `push`, `pull_request`               | **CodeQL** dashboard + `*.sarif`                         |
+| `trivy.yml`            | Container/dependency CVE + **SBOM**     | `schedule`, `pull_request`                       | `trivy.sarif` + SPDX `sbom.json`                         |
+| `pre-commit.yml`       | Lint / format / tests / spellcheck      | `pull_request`                                   | PR annotations + summary                                 |
+| `dependency-review.yml`| Block risky deps                        | `pull_request`                                   | Inline review annotations                                 |
+| `release.yml`          | **SemVer** release, notes, assets       | `tag push`, `workflow_dispatch`                  | GitHub Release + site bundle, STAC, SARIF, SBOM          |
+| `provenance.yml`       | **SLSA** provenance + signing           | `release`                                        | in-toto / SLSA attestations                              |
+| `auto-merge.yml`       | Policy-gated automerge                  | green checks + approvals                         | Merged PR + audit trail                                  |
 
 ⸻
 
