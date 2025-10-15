@@ -1,6 +1,48 @@
 ```yaml
 name: "Feature Request"
-description: "Propose a feature or enhancement — documented, versioned, and reproducible"
+description: "Propose a feature or enhancement"
+title: "[Feature]: <short title>"
+labels: [enhancement, needs-triage]
+assignees: [kfm-architecture, kfm-data]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Describe the feature and expected benefits."
+      placeholder: "Add slope classification to terrain pipeline and visualize in MapLibre."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: "Domain / Module"
+      options: ["Terrain","Hydrology","Climate","Hazards","Landcover","Knowledge Graph","Web UI","API","Text / AI / NLP","Metadata / Governance","CI/CD","Other"]
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: "Pipeline / Component"
+      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
+    validations:
+      required: true
+```
+
+Test: **Issues → New issue**. You should now see “Feature Request”.
+If that works, replace it with the full template below.
+
+---
+
+# 🧩 Full validated template (UTF-8, no BOM, no leading fences)
+
+**Path:** `.github/ISSUE_TEMPLATE/feature_request.yml`
+
+```yaml
+name: "Feature Request"
+description: "Propose a feature or enhancement — documented, versioned, reproducible"
 title: "[Feature]: <short title>"
 labels:
   - enhancement
@@ -8,12 +50,10 @@ labels:
 assignees:
   - kfm-architecture
   - kfm-data
-# ───────────────────────────────────────────────
 # Kansas Frontier Matrix — Issue Form
 # version: v2.3.3
 # last_updated: 2025-10-15
 # owners: @kfm-architecture @kfm-data
-# ───────────────────────────────────────────────
 
 body:
   - type: markdown
@@ -21,7 +61,7 @@ body:
       value: |
         # 💡 Kansas Frontier Matrix — Feature Request
         _"Every Feature Builds the Future · Every Change is Reproducible."_
-        Please provide clear context, the problem to solve, and measurable outcomes.
+        Provide clear context, the problem to solve, and measurable outcomes.
 
   - type: textarea
     id: summary
@@ -246,3 +286,5 @@ body:
         - label: "Security review complete"
         - label: "Version/tag bump approved (SemVer policy)"
 ```
+
+---
