@@ -1,154 +1,149 @@
-### `feature_request.yml` (minimal, safe, and working)
-
-```
-name: "Feature Request"
-description: "Propose a feature or enhancement"
+name: "💡 Feature Request"
+description: "Propose a feature or enhancement — documented, versioned, and reproducible"
 title: "[Feature]: <short title>"
-labels: [enhancement, needs-triage]
-assignees: [kfm-architecture, kfm-data]
+labels:
+
+* enhancement
+* needs-triage
+  assignees:
+* kfm-architecture
+* kfm-data
+
+# KFM metadata
+
+# version: v2.3.0
+
+# last_updated: 2025-10-15
+
+# owners: @kfm-architecture @kfm-data
+
 body:
-  - type: markdown
-    attributes:
-      value: |
-        # Feature Request
-        Please provide context, the problem to solve, and measurable outcomes.
 
-  - type: textarea
-    id: summary
-    attributes:
-      label: Summary
-      description: Describe the feature and expected benefits.
-      placeholder: "Add slope classification to terrain pipeline and visualize in MapLibre."
-    validations:
-      required: true
+* type: markdown
+  attributes:
+  value: |
+  ## 💡 Feature Overview
+  *“Every Feature Builds the Future · Every Change is Reproducible.”*
 
-  - type: dropdown
-    id: domain
-    attributes:
-      label: Domain / Module
-      options:
-        - Terrain
-        - Hydrology
-        - Climate
-        - Hazards
-        - Landcover
-        - Knowledge Graph
-        - Web UI
-        - API
-        - Text / AI / NLP
-        - Metadata / Governance
-        - CI/CD
-        - Other
-    validations:
-      required: true
+* type: input
+  id: feature_name
+  attributes:
+  label: Feature Name
+  placeholder: "Slope Classification Enhancement for Terrain Pipeline"
+  validations:
+  required: true
 
-  - type: input
-    id: component
-    attributes:
-      label: Pipeline / Component
-      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
-    validations:
-      required: true
+* type: input
+  id: related_component
+  attributes:
+  label: Related Component / Module
+  placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
+  validations:
+  required: true
 
-  - type: textarea
-    id: use_case
-    attributes:
-      label: Use Case
-      description: Who benefits and how this will be used.
-      placeholder: "Enable classification maps for slope ranges to support hazard and trail planning."
-    validations:
-      required: true
+* type: dropdown
+  id: domain
+  attributes:
+  label: Domain / Area of Impact
+  options:
+  - Terrain
+  - Hydrology
+  - Climate
+  - Hazards
+  - Landcover
+  - Knowledge Graph
+  - Web UI
+  - API
+  - Text / AI / NLP
+  - Metadata / Governance
+  - CI/CD
+  - Other
+  validations:
+  required: true
 
-  - type: textarea
-    id: limitation
-    attributes:
-      label: Current Limitation
-      placeholder: "No slope visualization or classification available."
-    validations:
-      required: true
+* type: textarea
+  id: motivation
+  attributes:
+  label: Motivation / Use Case
+  placeholder: "Explain the problem this feature solves and who benefits."
+  validations:
+  required: true
 
-  - type: textarea
-    id: solution
-    attributes:
-      label: Proposed Implementation
-      description: Include technical specifics, workflow changes, and architecture impacts.
-      placeholder: |
-        - Extend terrain_pipeline.py with --add-slope-classification
-        - Generate slope class COG and add STAC property slope_class_version
-        - Add layers.json entry with gradient style
-    validations:
-      required: true
+* type: textarea
+  id: limitation
+  attributes:
+  label: Current Limitation
+  placeholder: "Describe the current limitation or gap."
+  validations:
+  required: true
 
-  - type: checkboxes
-    id: change_types
-    attributes:
-      label: Change Type(s)
-      options:
-        - label: Add new data transformation module
-        - label: Modify ETL pipeline step
-        - label: Extend STAC metadata or schema
-        - label: Create new visualization layer
-        - label: Update documentation or SOP
-        - label: Other (describe in solution)
+* type: textarea
+  id: proposal
+  attributes:
+  label: Proposed Implementation
+  description: "Include technical specifics, workflow changes, and architecture impacts."
+  placeholder: |
+  - Extend terrain_pipeline.py with --add-slope-classification
+  - Generate slope class COG and add STAC property slope_class_version
+  - Add layers.json entry with gradient style
+  validations:
+  required: true
 
-  - type: textarea
-    id: outcome
-    attributes:
-      label: Expected Outcome and Metrics
-      description: Define measurable results and acceptance criteria.
-      placeholder: |
-        Metrics:
-        - Data Quality: slope_class attribute present; STAC fields updated
-        - Reproducibility: deterministic outputs; SOP updated
-        - Usability: map layer toggle and legend
-        - Performance: less than 5 percent runtime impact
-    validations:
-      required: true
+* type: checkboxes
+  id: change_type
+  attributes:
+  label: Change Type(s)
+  options:
+  - label: Add new data transformation module
+  - label: Modify ETL pipeline step
+  - label: Extend STAC metadata/schema
+  - label: Create new visualization layer
+  - label: Update documentation / SOP
+  - label: Other (describe in proposal)
 
-  - type: dropdown
-    id: semver
-    attributes:
-      label: Repo SemVer Impact
-      description: Patch = fix; Minor = new feature; Major = breaking change.
-      options:
-        - semver:none
-        - semver:patch
-        - semver:minor
-        - semver:major
-    validations:
-      required: true
+* type: textarea
+  id: expected_outcome
+  attributes:
+  label: Expected Outcome / Metrics
+  placeholder: |
+  | Metric              | Target                                   |
+  | :------------------ | :----------------------------------------|
+  | Data Quality        | slope_class attribute present; STAC fields updated |
+  | Reproducibility     | Deterministic outputs; SOP updated       |
+  | Usability           | Map layer toggle + legend                |
+  | Performance         | < +5% runtime impact                     |
+  validations:
+  required: true
 
-  - type: checkboxes
-    id: validation
-    attributes:
-      label: Pre-Merge Checks
-      options:
-        - label: Unit tests added and passing
-        - label: STAC schema validated (make stac-validate)
-        - label: ETL reproducibility confirmed
-        - label: License and data compliance verified
-        - label: Docs updated under /docs/sop/ or /docs/adr/
-        - label: Version bump recorded in CHANGELOG.md
-```
+* type: dropdown
+  id: semver
+  attributes:
+  label: Repo SemVer Impact
+  description: "Patch = fix; Minor = new feature; Major = breaking change."
+  options:
+  - semver:none
+  - semver:patch
+  - semver:minor
+  - semver:major
+  validations:
+  required: true
 
----
-
-### Optional: `config.yml` to show buttons on “New issue”
-
-Place at **`.github/ISSUE_TEMPLATE/config.yml`**:
-
-```
-blank_issues_enabled: false
-contact_links:
-  - name: KFM Discussions
-    url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/discussions
-    about: Questions, design exploration, and general discussion.
-
-issue_template:
-  - name: "Feature Request"
-    about: "Propose a feature or enhancement"
-    url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml
-    labels: ["enhancement","needs-triage"]
-```
+* type: checkboxes
+  id: validation
+  attributes:
+  label: Pre-Merge Checklist
+  options:
+  - label: Unit tests added and passing
+  required: true
+  - label: STAC schema validated (make stac-validate)
+  required: true
+  - label: ETL reproducibility confirmed
+  required: true
+  - label: License & data compliance verified
+  required: true
+  - label: Docs updated under /docs/sop/ or /docs/adr/
+  required: true
+  - label: Version bump recorded in CHANGELOG.md
+  required: true
 
 ---
