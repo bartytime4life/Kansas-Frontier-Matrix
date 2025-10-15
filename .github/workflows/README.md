@@ -1,7 +1,7 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — CI/CD Workflows"
 document_type: "README"
-version: "v2.4.2"
+version: "v2.4.3"
 last_updated: "2025-10-15"
 owners: ["@kfm-architecture", "@kfm-security", "@kfm-data"]
 maturity: "Production"
@@ -48,19 +48,7 @@ Automation spans six domains:
 5. **Provenance** — SLSA attestations, artifact signing & retention policies  
 6. **Governance** — Auto-merge, environments/approvals, SemVer releases
 
----
-
-## 🧾 Table Alignment Cheatsheet (GFM)
-
-Use header colons to align:
-
-- `:--` → left  `--:` → right  `:--:` → center
-
-| Left | Center | Right |
-|:-----|:------:|------:|
-| a    |   b    |     c |
-
-For consistent visual columns, wrap technical tokens in backticks (monospace) inside cells.
+> **Pinning Policy:** All Actions are pinned by **tag or commit SHA** for deterministic runs.
 
 ---
 
@@ -321,23 +309,6 @@ Per-Release	Tag with SemVer; attach SBOM, SARIF, site bundle; optional DOI	Immut
 
 ⸻
 
-🕓 Version History
-
-🏷️ Version	📅 Date	✍️ Summary
-v2.4.2	2025-10-15	House-style polish; YAML/mermaid fencing; minor copy edits
-v2.4.1	2025-10-15	Fancy aligned tables; GFM alignment cheatsheet; copy edits
-v2.4.0	2025-10-15	Pinning guidance; clarified provenance/signing; refined maintenance cadence
-v2.3.0	2025-10-13	Header convention; OIDC guidance; permissions & environments hardening
-v2.2.0	2025-10-10	Added release, provenance, dependency-review, expanded options & examples
-v2.1.0	2025-10-09	Refined flowchart, permission matrix, caching patterns
-v2.0.0	2025-10-08	Governance upgrades: environments, approvals, auto-merge policy
-v1.3.0	2025-10-07	Secrets table, MCP matrix, curated CLI examples
-v1.2.0	2025-10-06	Security context & diagrams; checksum gating
-v1.0.0	2025-10-04	Initial CI/CD workflow documentation
-
-
-⸻
-
 🧰 Common CLI (CI & local)
 
 # 🔧 Build documentation and site
@@ -370,6 +341,24 @@ gh run download --name "stac-report.json"
 
 </details>
 
+
+
+⸻
+
+🕓 Version History
+
+🏷️ Version	📅 Date	✍️ Summary
+v2.4.3	2025-10-15	Finalized KFM house-style; README hardened; badges & anchors verified
+v2.4.2	2025-10-15	House-style polish; YAML/Mermaid fencing; minor copy edits
+v2.4.1	2025-10-15	Fancy aligned tables; GFM alignment cheatsheet; copy edits
+v2.4.0	2025-10-15	Pinning guidance; clarified provenance/signing; refined maintenance cadence
+v2.3.0	2025-10-13	Header convention; OIDC guidance; permissions & environments hardening
+v2.2.0	2025-10-10	Added release, provenance, dependency-review, expanded options & examples
+v2.1.0	2025-10-09	Refined flowchart, permission matrix, caching patterns
+v2.0.0	2025-10-08	Governance upgrades: environments, approvals, auto-merge policy
+v1.3.0	2025-10-07	Secrets table, MCP matrix, curated CLI examples
+v1.2.0	2025-10-06	Security context & diagrams; checksum gating
+v1.0.0	2025-10-04	Initial CI/CD workflow documentation
 
 
 ⸻
