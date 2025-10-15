@@ -1,3 +1,4 @@
+```yaml
 name: "💡 Feature Request"
 description: "Propose a feature or enhancement — documented, versioned, and reproducible"
 title: "[Feature]: <feature name> — <component/domain>"
@@ -73,21 +74,13 @@ body:
     attributes:
       label: Spec / ADR Link(s)
       placeholder: "/docs/adr/0007-slope-classification.md; design doc URL"
-    validations:
-      required: true
-
-  - type: input
-    id: references
-    attributes:
-      label: References / Links
-      placeholder: "Related issues/PRs, prior discussions, external specs"
 
   - type: input
     id: steward
     attributes:
       label: Owner / Steward
       placeholder: "@kfm-architecture · @kfm-data (or individual)"
-  
+
   - type: markdown
     attributes:
       value: "## 🌐 Design Provenance"
@@ -114,7 +107,7 @@ body:
       required: true
 
   - type: textarea
-    id: artifacts
+    id: formats
     attributes:
       label: Artifacts / Outputs
       placeholder: ".py, .yml, .json, .md, .cog.tif, GeoJSON, OpenAPI/spec changes"
@@ -130,7 +123,7 @@ body:
       required: true
 
   - type: dropdown
-    id: release_cadence
+    id: update_frequency
     attributes:
       label: Release Cadence
       options: ["Static/One-off","Irregular/On-Demand","Quarterly","Monthly","Weekly","Daily"]
@@ -164,7 +157,7 @@ body:
       required: true
 
   - type: dropdown
-    id: schema_linkage
+    id: stac_linkage
     attributes:
       label: Schema / Standard Linkage
       options: ["Yes — new schema/extension","Yes — changes in existing schema","No/Not applicable"]
@@ -341,5 +334,5 @@ body:
     id: notes
     attributes:
       label: Additional Notes
-      description: "Risks, rollout plan, comms, or follow-ups"
+      description: "Visuals, risks, rollout plan, comms, or follow-up tasks"
 ```
