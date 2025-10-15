@@ -1,252 +1,345 @@
-<div align="center">
-
-# 🧭 **Kansas Frontier Matrix — Root Architecture Overview**  
-### *“Time · Terrain · History · Knowledge Graphs”*
-
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](./.github/workflows/site.yml)
-[![Pages Deploy](https://img.shields.io/github/deployments/bartytime4life/Kansas-Frontier-Matrix/github-pages?label=Pages%20Deploy)](https://bartytime4life.github.io/Kansas-Frontier-Matrix/)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](./.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](./.github/workflows/codeql.yml)
-[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](./.github/workflows/trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](./docs/)
-[![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20(code)%20%7C%20CC--BY%204.0%20(data)-blue)](./LICENSE)
-
-</div>
-
----
-
-```yaml
----
-title: "Kansas Frontier Matrix — Root Architecture Overview"
-version: "v1.6.2"
-last_updated: "2025-10-15"
-authors: ["KFM Architecture Team"]
-status: "Stable"
-maturity: "Production"
-tags: ["architecture","monorepo","stac","knowledge-graph","mcp","ontology"]
-license: "MIT (code) | CC-BY 4.0 (data)"
-semantic_alignment:
-  - CIDOC CRM
-  - OWL-Time
-  - GeoSPARQL
-  - DCAT 2.0
-  - STAC 1.0
----
-````
-
----
-
-## 📚 Table of Contents
-
-* [🌾 Mission](#🌾-mission)
-* [🏗️ Architecture at a Glance](#🏗️-architecture-at-a-glance)
-* [⚙️ Layered Design](#⚙️-layered-design)
-* [🧪 Reproducibility & Observability](#🧪-reproducibility--observability)
-* [🌐 Open Science & Semantic Interoperability](#🌐-open-science--semantic-interoperability)
-* [🧱 Extending the System](#🧱-extending-the-system)
-* [⚡ Quickstart Snippets](#⚡-quickstart-snippets)
-* [🗂 Repository & Data Layout](#🗂-repository--data-layout-monorepo)
-* [🧭 Versioning & Governance](#🧭-versioning--governance)
-* [🚦 Status & Roadmap](#🚦-status--roadmap)
-* [📚 References & Further Reading](#📚-references--further-reading)
-* [🧾 Change Log](#🧾-change-log)
-
----
-
-## 🌾 Mission
-
-**Kansas Frontier Matrix (KFM)** is a reproducible, open-science knowledge system connecting **Kansas’s environment, culture, and climate** through an AI-assisted **map · timeline · knowledge graph**.
-It integrates hydrology, treaties, geology, hazards, newspapers, and oral histories into one interoperable semantic framework for research and storytelling.
-
----
-
-## 🏗️ Architecture at a Glance
-
-```mermaid
-flowchart TD
-  A["Sources<br/>Maps · Rasters · Vectors · Text Archives"]
-    --> B["ETL Pipeline<br/>Python · GDAL · Checksums"]
-  B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
-  B --> I["AI/ML Enrichment<br/>NER · OCR · Geocoding · Summaries"]
-  C --> D["STAC Catalog<br/>Collections · Items · Assets"]
-  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL"]
-  I --> H
-  D --> J["API Layer<br/>FastAPI · GraphQL · REST"]
-  H --> J
-  J --> F["Frontend (React + MapLibre GL)<br/>Map · Timeline · AI Panels"]
-  C --> K["Google Earth Exports<br/>KML / KMZ"]
-%% END OF MERMAID
-```
-
-*From raw archives to semantic graphs to interactive storytelling (and exports).*
-
----
-
-## ⚙️ Layered Design
-
-### 1️⃣ Data Ingestion (ETL)
-
-* **Inputs:** Historic maps, hydrology, climate, treaties, OCR text archives
-* **Process:** `make fetch` → `make cogs` → `make stac` → reproducible COG/GeoJSON outputs
-* **Outputs:** Versioned STAC items in `data/stac/` with SHA-256 validation
-
-> 🧩 *Every dataset carries provenance and checksum verification.*
-
-### 2️⃣ AI / ML Enrichment
-
-* **NLP:** spaCy + Transformers → extract entities (people, places, events, dates)
-* **Entity Linking:** contextual string matching → canonical graph nodes (e.g. “Fort Larned”)
-* **Summarization:** BART/T5 → AI-generated synopses for UI panels & tooltips
-* **Pattern Discovery:** spatio-temporal clustering (droughts, migrations, hazards)
-
-### 3️⃣ Knowledge Graph
-
-* **Database:** Neo4j (optionally RDF-exportable)
-* **Ontology:** CIDOC CRM + OWL-Time + PeriodO
-* **Relations:** `OCCURRED_AT` · `MENTIONS` · `PARTICIPATED_IN` · `LOCATED_IN`
-* **Reasoning:** rule engine + confidence scores; provenance via W3C PROV-O
-* **Goal:** explainable, auditable, semantically rich history of Kansas
-
-### 4️⃣ API Layer
-
-* **Framework:** FastAPI + GraphQL endpoints
-* **Endpoints:** `/api/events`, `/api/entity/{id}`, `/api/search`, `/api/tiles/*`
-* **Formats:** GeoJSON, CSV, DCAT, STAC; export options for KML/KMZ
-* **Security:** JWT, rate-limiting, audit logs, observability hooks
-
-### 5️⃣ Frontend Web Application
-
-* **Stack:** React 18 · MapLibre GL · D3 Timeline
-* **Features:** Timeline slider, semantic filters, AI insights, accessible UI (WCAG 2.1 AA)
-* **Visual Layers:** topography, treaties, hydrology, climate, tornadoes, trails
-* **Outputs:** sharable URLs · KMZ overlay exports
-
----
-
-## 🧪 Reproducibility & Observability
-
-* **MCP Compliance:** Documentation-first pipelines, model cards, SOPs
-* **Integrity:** SHA-256 sidecars, checksum validation, LFS/DVC versioning
-* **CI Workflows:** CodeQL · Trivy · STAC/Markdown linters · pre-commit checks
-* **Observability:** ETL telemetry, STAC lineage tracking, build artifacts in CI
-
----
-
-## 🌐 Open Science & Semantic Interoperability
-
-| Standard               | Purpose                            |
-| :--------------------- | :--------------------------------- |
-| **COG / GeoJSON**      | Open spatial data formats          |
-| **STAC / DCAT 2.0**    | Dataset cataloging & metadata      |
-| **CIDOC CRM**          | Cultural-historical ontology       |
-| **OWL-Time / PeriodO** | Temporal reasoning & era alignment |
-| **GeoSPARQL / PROV-O** | Spatial + provenance integration   |
-
-All metadata includes JSON-LD `@context` for machine-readable interoperability.
-
----
-
-## 🧱 Extending the System
-
-1. Add dataset manifest → `data/sources/<name>.json`
-2. Run ETL: `make fetch && make process && make stac`
-3. Update `web/config/layers.json` for new visual layer
-4. Validate: `make validate` (schema + checksum CI)
-
-> ✅ Merge is blocked unless STAC + docs validations pass.
-
----
-
-## ⚡ Quickstart Snippets
-
-```bash
-make fetch           # Download raw data
-make process         # Normalize & convert to standard formats
-make stac-validate   # Verify STAC schema & integrity
-make serve           # Launch backend + frontend locally
-```
-
-**Sample API Calls**
-
-```http
-GET /api/events?start=1850&end=1870&bbox=-100,37,-94,40
-GET /api/entity/fort-larned
-GET /api/search?q=Medicine%20Lodge
-```
-
----
-
-## 🗂 Repository & Data Layout (Monorepo)
-
-```text
-Kansas-Frontier-Matrix/
-├─ src/        # Python ETL + AI/ML pipelines
-├─ web/        # React SPA (MapLibre + Timeline)
-├─ data/       # sources · raw · processed · stac
-├─ docs/       # architecture · SOPs · standards
-├─ tools/      # build, validate, checksum utilities
-└─ .github/    # CI/CD workflows + templates
-```
-
----
-
-## 🧭 Versioning & Governance
-
-| Domain         | Mechanism                 | Description                             |
-| :------------- | :------------------------ | :-------------------------------------- |
-| **Code**       | SemVer                    | Versioned releases + changelogs         |
-| **Docs**       | MCP-DL Metadata           | Author, revision, version tracking      |
-| **Data**       | STAC `properties.version` | Dataset version + temporal metadata     |
-| **Models**     | Model Cards               | Model architecture, performance, ethics |
-| **Releases**   | Zenodo DOI                | Citable, archival releases              |
-| **Governance** | `GOVERNANCE.md`           | Review roles & merge rules              |
-
----
-
-## 🚦 Status & Roadmap
-
-| Component                   | Status         | Target |
-| :-------------------------- | :------------- | :----: |
-| ETL & STAC Catalog          | ✅ Stable       |  v1.0  |
-| Web UI (Map + Timeline)     | ✅ Stable       |  v1.3  |
-| AI / ML Enrichment          | 🚧 Prototype   |  v1.5  |
-| Treaty & Deed Layers        | 🚧 In Progress |  v1.6  |
-| Predictive / Fractal Models | 🎯 Planned     |  v2.0  |
-| Story Maps / KMZ Exports    | 🎯 Planned     |  v2.1  |
-
----
-
-## 📚 References & Further Reading
-
-* `docs/architecture.md` — Core System Design
-* `docs/file-and-data-architecture.md` — Data Layout & STAC Rules
-* `docs/developer/ai-ml.md` — AI/ML Module Design
-* `web/ARCHITECTURE.md` — Frontend Sequence + UI Flow
-* `docs/standards/` — MCP-DL Templates, Rules, and Compliance
-
----
-
-## 🧾 Change Log
-
-| Version | Date       | Author            | Summary                                                              |
-| :------ | :--------- | :---------------- | :------------------------------------------------------------------- |
-| v1.6.2  | 2025-10-15 | Architecture Team | Updated to MCP-DL v6.3 · clarified interoperability & observability. |
-| v1.6.1  | 2025-10-14 | Architecture Team | Added PROV-O + JSON-LD · refined API schema definitions.             |
-| v1.5.0  | 2025-10-13 | Architecture Team | Upgraded to MCP-DL v6.2 · added ontology context mapping.            |
-| v1.4.0  | 2025-10-10 | Architecture Team | Governance & metadata alignment.                                     |
-| v1.3.0  | 2025-09-20 | Docs Team         | Enhanced diagrams, STAC validation badges.                           |
-| v1.2.0  | 2025-08-05 | Data Ops          | Linked STAC schema & CI pipelines.                                   |
-| v1.1.0  | 2025-07-01 | Core Dev          | Modular ETL & AI integration baseline.                               |
-| v1.0.0  | 2025-06-01 | Project Launch    | Initial release.                                                     |
-
----
-
-<div align="center">
-
-### 🏛 “Document the Frontier · Reconstruct the Past · Illuminate Connections.”
-
-© 2025 Kansas Frontier Matrix  ·  MIT / CC-BY 4.0
-
-</div>
+name: "💡 Feature Request"
+description: "Propose a feature or enhancement — documented, versioned, and reproducible"
+title: "[Feature]: <feature name> — <component/domain>"
+labels:
+  - enhancement
+  - needs-triage
+assignees:
+  - kfm-architecture
+  - kfm-data
+
+# KFM metadata
+# version: v2.3.0
+# last_updated: 2025-10-15
+# owners: @kfm-architecture @kfm-data
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Feature Overview
+        *“Every Feature Builds the Future. Every Change is Reproducible.”*
+
+  - type: input
+    id: feature_name
+    attributes:
+      label: Feature Name
+      placeholder: "Slope Classification Enhancement for Terrain Pipeline"
+    validations:
+      required: true
+
+  - type: input
+    id: component_module
+    attributes:
+      label: Primary Component / Module
+      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature_type
+    attributes:
+      label: Feature Type
+      options: ["Backend","Frontend","Cross-Layer","Infrastructure","Docs/SOP"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact (Breaking?)
+      options: ["Non-Breaking","Breaking"]
+    validations:
+      required: true
+
+  - type: input
+    id: scope_affected
+    attributes:
+      label: Scope / Affected Areas
+      placeholder: "ETL (terrain), Web Map layers, STAC schema, CI workflow"
+    validations:
+      required: true
+
+  - type: input
+    id: target_window
+    attributes:
+      label: Target Release / Timeline
+      placeholder: "v2.4.0 — October; or ‘next minor’"
+    validations:
+      required: true
+
+  - type: input
+    id: spec_or_adr_url
+    attributes:
+      label: Spec / ADR Link(s)
+      placeholder: "/docs/adr/0007-slope-classification.md; design doc URL"
+    validations:
+      required: true
+
+  - type: input
+    id: references
+    attributes:
+      label: References / Links
+      placeholder: "Related issues/PRs, prior discussions, external specs"
+
+  - type: input
+    id: steward
+    attributes:
+      label: Owner / Steward
+      placeholder: "@kfm-architecture · @kfm-data (or individual)"
+  
+  - type: markdown
+    attributes:
+      value: "## 🌐 Design Provenance"
+
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Design Provenance
+      description: "Official internal/external references, rationale, screenshots/quotes, standards alignment"
+      placeholder: |
+        - ADR: /docs/adr/0007-slope-classification.md
+        - SOP: /docs/sop/terrain_pipeline.md#slope
+        - Standards: STAC 1.0.x fields, OWL-Time, CIDOC CRM tags
+        - Rationale: why now; alternatives considered; decision summary
+    validations:
+      required: true
+
+  - type: dropdown
+    id: integration_scope
+    attributes:
+      label: Integration Scope
+      options: ["Backend (ETL / AI / Graph)","Frontend (Map / Timeline / UI)","Cross-Layer (Full-stack)","Infrastructure (CI/CD / Deployment)","Documentation / SOP"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Artifacts / Outputs
+      placeholder: ".py, .yml, .json, .md, .cog.tif, GeoJSON, OpenAPI/spec changes"
+    validations:
+      required: true
+
+  - type: input
+    id: interfaces
+    attributes:
+      label: Interfaces / Contracts
+      placeholder: "Function signatures, API routes, CLI flags, config keys; note any breaking behavior"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: release_cadence
+    attributes:
+      label: Release Cadence
+      options: ["Static/One-off","Irregular/On-Demand","Quarterly","Monthly","Weekly","Daily"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: quality
+    attributes:
+      label: QA Strategy / References
+      placeholder: "Unit/integration tests, golden datasets, regression criteria, perf thresholds; link to test plan"
+
+  - type: markdown
+    attributes:
+      value: "## 🧩 Intended Integration"
+
+  - type: input
+    id: pipeline
+    attributes:
+      label: Pipeline / Component Target
+      placeholder: "terrain_pipeline.py, src/graph/ingest.py, web/config/layers.json"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Feature Domain
+      options: ["Terrain","Hydrology","Hazards","Climate","Landcover","Knowledge Graph","Web UI","API","Text / AI / NLP","Metadata / Governance","CI/CD","Other"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: schema_linkage
+    attributes:
+      label: Schema / Standard Linkage
+      options: ["Yes — new schema/extension","Yes — changes in existing schema","No/Not applicable"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: visualization
+    attributes:
+      label: Visualization Layer
+      options: ["Web Map","Timeline","Story Map","3D Scene","API only"]
+    validations:
+      required: true
+
+  - type: input
+    id: ontology
+    attributes:
+      label: Semantic Ontology Tag(s)
+      placeholder: "CIDOC CRM class, OWL-Time interval, PeriodO ID"
+
+  - type: markdown
+    attributes:
+      value: "## 🧠 Metadata & Schema"
+
+  - type: textarea
+    id: attributes_cols
+    attributes:
+      label: Config Keys / Attributes
+      description: "List new/changed config keys, flags, or attributes"
+    validations:
+      required: true
+
+  - type: textarea
+    id: units
+    attributes:
+      label: Codes / Units / Flags
+      placeholder: "e.g., class bins, enum values, boolean flags"
+    validations:
+      required: true
+
+  - type: input
+    id: schema_url
+    attributes:
+      label: Schema / Spec Source URL
+      placeholder: "Link to OpenAPI, JSON Schema, or internal spec doc"
+
+  - type: input
+    id: encoding
+    attributes:
+      label: Encoding / Format
+      placeholder: "UTF-8 / YAML / JSON / GeoJSON"
+    validations:
+      required: true
+
+  - type: textarea
+    id: example_snippet
+    attributes:
+      label: Example Snippet
+      description: "Small JSON/YAML snippet (config, API payload, or output)"
+      render: json
+
+  - type: dropdown
+    id: metadata_standard
+    attributes:
+      label: Documentation / Spec Standard
+      options: ["ADR","SOP","OpenAPI","STAC 1.0.x","Other/Unknown"]
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧮 Validation Requirements"
+
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Pre-Merge Checklist
+      options:
+        - label: Unit & integration tests added and passing
+          required: true
+        - label: STAC/schema validation passes (make stac-validate / schema-check)
+          required: true
+        - label: ETL reproducibility confirmed (deterministic outputs + checksums)
+          required: true
+        - label: License & data compliance verified (no restricted content)
+          required: true
+        - label: Docs updated under /docs/sop/ or /docs/adr/
+          required: true
+        - label: Performance checked (meets target thresholds)
+          required: true
+        - label: Version bump recorded in CHANGELOG.md
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Implementation Plan (Optional)"
+
+  - type: textarea
+    id: impl_plan
+    attributes:
+      label: Steps & Owners
+      placeholder: |
+        1) Design review — Owner …
+        2) Implement changes — Owner …
+        3) Add tests — Owner …
+        4) Update docs/ADR/SOP — Owner …
+        5) Validate schema — Owner …
+        6) Perf/QA gates — Owner …
+        7) Release & comms — Owner …
+
+  - type: markdown
+    attributes:
+      value: "## 🧭 Versioning & Governance"
+
+  - type: textarea
+    id: versioning
+    attributes:
+      label: Versioning Summary (SemVer + Schema)
+      placeholder: |
+        | Scope               | Current | Proposed | Reason / Trigger       |
+        | :------------------ | :------ | :------- | :--------------------- |
+        | Component/Module    | v2.3.0  | v2.4.0   | feature enhancement    |
+        | CI Workflow         | v1.7.1  | v1.8.0   | new validation step    |
+        | Docs / SOP          | v1.2.0  | v1.3.0   | process updated        |
+      render: markdown
+
+  - type: markdown
+    attributes:
+      value: "## ✅ MCP Compliance"
+
+  - type: checkboxes
+    id: mcp
+    attributes:
+      label: MCP Principles
+      options:
+        - label: Documentation-first — feature fully described with provenance
+          required: true
+        - label: Reproducibility — deterministic steps & checksums defined
+          required: true
+        - label: Open Standards — interoperable formats/specs used
+          required: true
+        - label: Provenance — ADR/SOP updates and traceable diffs
+          required: true
+        - label: Auditability — CI validation steps reproducible & archived
+          required: true
+        - label: Versioning — repo SemVer & schema versions updated
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧩 Related Issues / Attachments"
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related Issues / PRs
+      placeholder: |
+        - Related: #45 (ETL refactor)
+        - Dependent: #102 (web map overlay support)
+        - Supersedes: #37 (legacy pipeline flag)
+        - Linked Data Request: #201 (terrain COG integration)
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: "Diagrams, screenshots, or POC links"
+      placeholder: |
+        architecture_diagram.png — workflow impact
+        feature_diff.json — config patch example
+        prototype.mp4 — UI demo
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: "Risks, rollout plan, comms, or follow-ups"
 ```
