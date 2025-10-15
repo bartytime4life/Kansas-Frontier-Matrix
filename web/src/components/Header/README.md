@@ -1,12 +1,13 @@
 <div align="center">
 
-# 🧭 Kansas Frontier Matrix — Header Component  
+# 🧭 Kansas Frontier Matrix — **Header Component**  
 `web/src/components/Header/`
 
 **Global Navigation · Search Bar · Theme Toggle · Branding**
 
 [![Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/ci.yml?label=Build)](../../../../../.github/workflows/ci.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../../../docs/)
 [![Accessibility](https://img.shields.io/badge/WCAG%202.1-AA-yellow)](../../../../../docs/design/reviews/accessibility/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../../LICENSE)
 
@@ -14,19 +15,35 @@
 
 ---
 
+```yaml
+---
+title: "KFM • Header Component (web/src/components/Header/)"
+version: "v1.4.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-web", "@kfm-ui"]
+tags: ["react","navigation","header","search","theme","accessibility","mcp"]
+license: "MIT"
+semantic_alignment:
+  - WCAG 2.1 AA
+  - WAI-ARIA 1.2
+  - CIDOC CRM (UI hierarchy)
+---
+````
+
+---
+
 ## 🧭 Overview
 
-The **Header Component** provides the Kansas Frontier Matrix application’s **top navigation bar**.  
-It acts as the user’s global control center, providing quick access to search, theme settings,  
-language toggle, and application-level modals (Help, About, Settings).
+The **Header Component** defines the **global navigation and branding interface** of the Kansas Frontier Matrix web application.
+It acts as the user’s control hub — providing quick access to search, theme toggling, language selection, and modal menus (Help, About, Settings).
 
-This component embodies the **Master Coder Protocol (MCP)** design ethos:  
-- Unified state management via `ThemeContext` and `AccessibilityContext`.  
-- Accessibility-first implementation (ARIA roles, keyboard shortcuts).  
-- Reproducible configuration through typed props and documented API contracts.  
+Built under **MCP-DL v6.2** principles, the Header embodies:
 
-The Header is present across all screens, ensuring a consistent user experience while maintaining  
-performance and responsiveness across devices.
+* **Unified State Management** via `ThemeContext` & `AccessibilityContext`
+* **Accessibility-First Design** (ARIA roles, keyboard shortcuts, focus order)
+* **Reproducibility & Documentation** through typed props and predictable UI contracts
+
+This component appears across all routes and ensures consistent behavior, responsiveness, and performance across screen sizes.
 
 ---
 
@@ -34,46 +51,49 @@ performance and responsiveness across devices.
 
 ```text
 web/src/components/Header/
-├── Header.tsx             # Main component logic and layout
-├── SearchBar.tsx          # Autocomplete entity search input
-├── ThemeToggle.tsx        # Dark/light mode switcher
-├── LanguageSwitcher.tsx   # Multi-language dropdown
-├── HelpMenu.tsx           # Modal with keyboard shortcuts + user guide
-├── styles.scss            # Header-specific layout and color scheme
-└── __tests__/             # Unit tests for UI interaction and API search
+├── Header.tsx             # Primary component and layout container
+├── SearchBar.tsx          # Entity search (autocomplete)
+├── ThemeToggle.tsx        # Dark/light mode toggle
+├── LanguageSwitcher.tsx   # Locale & i18n switcher
+├── HelpMenu.tsx           # Shortcut help + documentation links
+├── styles.scss            # Header styles and theme tokens
+└── __tests__/             # Jest + RTL tests for interaction, a11y, responsiveness
+```
 
+---
 
-⸻
+## ⚙️ Component Architecture
 
-⚙️ Component Architecture
-
+```mermaid
 flowchart LR
-  H["Header"] --> S["SearchBar\n(useDebounce + /search?q=)"]
-  H --> T["ThemeToggle\n(light/dark via ThemeContext)"]
-  H --> L["LanguageSwitcher\n(locale select)"]
-  H --> M["HelpMenu\nkeyboard shortcuts, docs links"]
+  H["Header<br/>(banner region)"] --> S["SearchBar<br/>(useDebounce + /search?q=)"]
+  H --> T["ThemeToggle<br/>dark|light via ThemeContext"]
+  H --> L["LanguageSwitcher<br/>locale select"]
+  H --> M["HelpMenu<br/>shortcuts · docs · about"]
   H --> LOGO["Branding / Project Title"]
-  S --> API["FastAPI\nGET /search?q="]
+  S --> API["FastAPI<br/>GET /search?q="]
+  H --> ACC["AccessibilityContext<br/>focus, skip-link"]
 %% END OF MERMAID
+```
 
+---
 
-⸻
+## 🔍 Core Features
 
-🔍 Core Features
+| Feature               | Description                                          | Data / Context Source  |
+| :-------------------- | :--------------------------------------------------- | :--------------------- |
+| **Search Bar**        | Autocomplete for entities (people, places, events)   | `/api/search`          |
+| **Theme Toggle**      | Light/Dark mode persistence via `localStorage`       | `ThemeContext`         |
+| **Language Switcher** | Adjusts locale + date formatting                     | i18n library           |
+| **Help Menu**         | Lists keyboard shortcuts and documentation links     | Static Config          |
+| **Branding**          | Displays title, logo, and version                    | `package.json`         |
+| **Accessibility**     | `role="banner"` landmark + skip link + focus outline | `AccessibilityContext` |
 
-Feature	Description	Data / Context Source
-Search Bar	Autocomplete-powered entity search (people, places, events).	/api/search
-Theme Toggle	Switch between dark/light mode, persisted via localStorage.	ThemeContext
-Language Switcher	Dynamically changes locale and date formatting.	i18n module
-Help / Info Menu	Displays documentation links, keyboard shortcuts, and About modal.	Static config
-Brand Identity	Displays project name, version, and logo (from package.json).	Local metadata
-Accessibility	Full keyboard navigation, focus outlines, and ARIA landmarks.	AccessibilityContext
+---
 
+## 💬 Example Implementation
 
-⸻
-
-💬 Example Implementation
-
+```tsx
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { SearchBar } from "./SearchBar";
@@ -85,7 +105,8 @@ export const Header: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <header className={`kfm-header ${theme}`}>
+    <header role="banner" className={`kfm-header ${theme}`}>
+      <a href="#main" className="skip-link">Skip to Content</a>
       <div className="logo">
         <img src="/assets/logo.svg" alt="Kansas Frontier Matrix logo" />
         <h1>Kansas Frontier Matrix</h1>
@@ -98,102 +119,141 @@ export const Header: React.FC = () => {
     </header>
   );
 };
+```
 
+> The Header orchestrates navigation, state synchronization, and accessibility — ensuring a smooth, responsive UX.
 
-⸻
+---
 
-🧠 Data Flow
+## 🧠 Data Flow
 
+```mermaid
 flowchart TD
-  U["User Input"] --> SB["SearchBar\n(useDebounce)"]
+  U["User Input"] --> SB["SearchBar<br/>(useDebounce + fetch)"]
   SB --> API["/api/search?q={term}"]
-  API --> RES["Entity Results"]
-  RES --> DP["DetailPanel\n(entity preview)"]
-  T["ThemeToggle"] --> TC["ThemeContext\n(persisted)"]
+  API --> RES["Entity Results<br/>JSON Response"]
+  RES --> DP["DetailPanel<br/>entity preview"]
+  T["ThemeToggle"] --> TC["ThemeContext<br/>persist preference"]
+  L["LanguageSwitcher"] --> I18N["i18n provider<br/>updates locale"]
 %% END OF MERMAID
+```
 
+---
 
-⸻
+## ⚙️ Search Functionality
 
-🎨 Styling & Layout
-	•	Uses flexbox layout (display: flex; justify-content: space-between; align-items: center;).
-	•	Theming controlled by CSS variables (--kfm-color-bg, --kfm-color-accent).
-	•	Responsive breakpoints:
-	•	<768px: collapses to a hamburger menu.
-	•	<1024px: hides logo text, keeps icon.
-	•	Transitions (Framer Motion): fade for theme toggle, slide-down for search results.
-	•	Accessible focus styling from web/src/styles/variables.scss.
+The SearchBar integrates with the backend `/api/search` endpoint to query entities across the knowledge graph.
 
-⸻
-
-⚡ Search Functionality
-
-The SearchBar integrates with the backend’s /api/search endpoint to find entities across
-the knowledge graph. Results appear as autocomplete suggestions.
-
+```ts
 const { query, setQuery } = useState("");
 const results = useFetch(`/api/search?q=${query}`);
+```
 
-Entities returned include:
+Returned entities conform to:
 
+```ts
 interface SearchResult {
   id: string;
   label: string;
   type: "Person" | "Place" | "Event" | "Document";
   summary?: string;
 }
+```
 
-Results are rendered with icons per type and clickable links to the DetailPanel.
+Each result is rendered with an icon per type and links directly to the `DetailPanel`.
 
-⸻
+---
 
-♿ Accessibility
-	•	role="banner" assigned to <header>.
-	•	Search input uses aria-label and focus outlines visible via keyboard.
-	•	Theme toggle and language switch buttons have aria-pressed and aria-label.
-	•	Skip-to-content anchor available at top of header.
-	•	Fully navigable via keyboard shortcuts (/ for focus search, T to toggle theme).
+## 🎨 Styling & Layout
 
-Accessibility tested with axe-core and Lighthouse, scoring ≥ 95.
+| Property                   | Description                                                            |
+| :------------------------- | :--------------------------------------------------------------------- |
+| **Layout**                 | Flexbox grid: logo → search → controls                                 |
+| **Theme Control**          | Colors from `--kfm-color-bg`, `--kfm-color-accent`, `--kfm-color-text` |
+| **Responsive Breakpoints** | `<768px`: hamburger menu · `<1024px`: text hides, icon persists        |
+| **Transitions**            | Framer Motion animations (fade-in toggle, slide-down search results)   |
+| **Focus Styling**          | Visible outlines via SCSS tokens (from `variables.scss`)               |
 
-⸻
+Example:
 
-🧪 Testing
+```scss
+.kfm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--kfm-color-bg);
+  color: var(--kfm-color-text);
+  padding: 0.5rem 1rem;
+  transition: background 0.3s ease;
+}
+```
 
-Test	Purpose	Tool
-Search API Mock	Verifies debounce + API request timing.	Jest + MSW
-Theme Persistence	Confirms mode persists across reloads.	React Testing Library
-Focus Management	Ensures keyboard users can cycle through header elements.	axe-core
-Responsive Rendering	Validates layout at all breakpoints.	Cypress E2E
+---
 
-Coverage target: ≥ 90%.
+## ♿ Accessibility (WCAG 2.1 AA)
 
-⸻
+* **Landmark Role:** `<header role="banner">`
+* **Skip Navigation:** “Skip to Content” link visible on keyboard focus
+* **Keyboard Navigation:** `/` focuses search, `T` toggles theme, `Alt+H` opens Help
+* **ARIA Attributes:** `aria-label` for search input, `aria-pressed` for toggle buttons
+* **Responsive A11y:** Collapsible menus maintain focus cycle via focus trap
 
-🧾 Provenance & Integrity
+Accessibility verified via **axe-core** and **Lighthouse** (score ≥ 95).
 
-Artifact	Description
-Inputs	API search endpoint, context providers (Theme, Accessibility)
-Outputs	Top navigation HTML/JSX rendered in AppShell
-Dependencies	React, Framer Motion, TailwindCSS, Axios
-Integrity	CI validates accessibility, snapshot consistency, and layout integrity
+---
 
+## 🧪 Testing
 
-⸻
+| Test                  | Purpose                                | Tool        |
+| :-------------------- | :------------------------------------- | :---------- |
+| **Search API Mock**   | Validates debounce + request timing    | Jest + MSW  |
+| **Theme Persistence** | Confirms theme saved & restored        | RTL         |
+| **Focus Management**  | Tests Tab order, skip links, shortcuts | axe-core    |
+| **Responsive Layout** | Verifies render at breakpoints         | Cypress E2E |
+| **Help Menu Trigger** | Ensures keyboard opens modal           | RTL         |
 
-🔗 Related Documentation
-	•	AppShell Component
-	•	Web Frontend Components
-	•	Context — Theme & Accessibility
-	•	Web UI Architecture
+**Coverage Target:** ≥ **90%** lines / branches.
 
-⸻
+---
 
-📜 License
+## 🧾 Provenance & Integrity
 
-Released under the MIT License.
-© 2025 Kansas Frontier Matrix — created under the Master Coder Protocol (MCP) for accessible,
-documented, and reproducible design.
+| Artifact         | Description                                               |
+| :--------------- | :-------------------------------------------------------- |
+| **Inputs**       | `/api/search`, `ThemeContext`, `AccessibilityContext`     |
+| **Outputs**      | Global navigation bar & modal controls                    |
+| **Dependencies** | React 18+, Framer Motion, TailwindCSS, Axios              |
+| **Integrity**    | CI enforces lint, type-check, a11y audits, snapshot tests |
 
-“The Header is Kansas Frontier Matrix’s compass — orienting users in time, data, and discovery.”
+---
 
+## 🧠 MCP Compliance Checklist
+
+| MCP Principle       | Implementation                                   |
+| :------------------ | :----------------------------------------------- |
+| Documentation-first | README + inline TSDoc before code merge          |
+| Reproducibility     | Deterministic layout & context states            |
+| Accessibility       | Full WCAG 2.1 AA compliance in CI                |
+| Provenance          | Context + API lineage documented                 |
+| Auditability        | Logs, coverage, and snapshots stored in pipeline |
+
+---
+
+## 🔗 Related Documentation
+
+* **AppShell Component** — `web/src/components/AppShell/README.md`
+* **Web Frontend Components** — `web/src/components/README.md`
+* **Context — Theme & Accessibility** — `web/src/context/README.md`
+* **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 📜 License
+
+Released under the **MIT License**.
+© 2025 Kansas Frontier Matrix — designed and documented under **MCP-DL v6.2** for accessible, reproducible, and human-centered interfaces.
+
+> *“The Header is Kansas Frontier Matrix’s compass — orienting users in time, data, and discovery.”*
+
+```
+```
