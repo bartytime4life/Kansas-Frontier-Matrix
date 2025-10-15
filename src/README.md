@@ -1,77 +1,101 @@
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — `src/` Codebase
+# 🧩 Kansas Frontier Matrix — **`src/` Codebase**
 
 **ETL · AI/ML · Knowledge Graph · API Services**  
-_The beating heart of the Kansas Frontier Matrix stack._
+_The beating heart of the Kansas Frontier Matrix architecture._
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/badge/hooks-pre--commit-orange)](https://pre-commit.com)
-[![Docs · MCP](https://img.shields.io/badge/docs-MCP-blue.svg)](../docs/)
-[![License: MIT/CC-BY](https://img.shields.io/badge/license-MIT%20%7C%20CC--BY-green)](../LICENSE)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../docs/)
+[![License: MIT / CC-BY](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY-green)](../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Purpose
-The `src/` directory contains all **core logic** for the Kansas Frontier Matrix:
-
-- ⚙️ **ETL Pipelines** → reproducible ingestion & transformation (COGs, GeoJSON, Parquet)  
-- 🤖 **AI/ML Modules** → NLP, entity linking, summarization, confidence scoring  
-- 🕸 **Knowledge Graph** → Neo4j integration (CIDOC CRM, OWL-Time, PeriodO)  
-- 🔌 **API Layer** → FastAPI / GraphQL endpoints powering the web app + KML exports  
-
-> Think of `src/` as the **engine room** where raw data becomes structured, searchable knowledge.
-
+```yaml
 ---
-
-## 🏗 Directory Structure
-```text
-src/
-├─ pipelines/      # ETL jobs: fetch, transform, load (scans, rasters, vectors, docs)
-├─ nlp/            # NLP + AI/ML enrichment (NER, linking, summarization)
-├─ graph/          # Graph schema + Neo4j integration (Cypher utils, entity upserts)
-├─ api/            # FastAPI/GraphQL services (REST endpoints, resolvers)
-├─ utils/          # Shared helpers (logging, config, checksum validation)
-└─ __tests__/      # Optional inline unit tests
+title: "KFM • src/ Codebase"
+version: "v1.5.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-engineering", "@kfm-data"]
+tags: ["etl","ai","api","graph","pipeline","mcp"]
+license: "MIT | CC-BY 4.0"
+semantic_alignment:
+  - STAC 1.0.0
+  - CIDOC CRM
+  - OWL-Time
+  - MCP-DL v6.2 (Reproducibility + Provenance)
+---
 ````
 
-🧭 For architectural context see [`src/ARCHITECTURE.md`](./ARCHITECTURE.md).
+---
+
+## 📚 Purpose
+
+The `src/` directory contains all **core logic and orchestration modules** powering the Kansas Frontier Matrix (KFM) backend stack.
+
+This is the **engine room** — where raw spatial, textual, and historical data become a structured, queryable knowledge graph.
+
+| Domain                 | Function                                                          |
+| :--------------------- | :---------------------------------------------------------------- |
+| ⚙️ **ETL Pipelines**   | Reproducible ingestion and transformation (COG, GeoJSON, Parquet) |
+| 🤖 **AI/ML Modules**   | NLP, entity extraction, summarization, confidence scoring         |
+| 🕸 **Knowledge Graph** | Neo4j integration — CIDOC CRM + OWL-Time + PeriodO ontology       |
+| 🔌 **API Services**    | FastAPI + GraphQL endpoints serving frontend and KML/KMZ exports  |
 
 ---
 
-## 🚀 Quickstart (Dev Setup)
+## 🏗️ Directory Structure
+
+```text
+src/
+├── pipelines/       # ETL jobs: fetch, transform, load (rasters, vectors, text)
+├── nlp/             # NLP + AI enrichment (NER, entity linking, summarization)
+├── graph/           # Neo4j schema + Cypher transactions + ontology bindings
+├── api/             # FastAPI / GraphQL services and REST endpoints
+├── utils/           # Logging, config parsing, checksum & validation helpers
+└── __tests__/       # Optional local unit tests
+```
+
+For component-level relationships, see [`src/ARCHITECTURE.md`](./ARCHITECTURE.md).
+
+---
+
+## 🚀 Developer Quickstart
 
 ```bash
-# 1. create environment
+# 1️⃣ Create environment
 python -m venv .venv && source .venv/bin/activate
-# 2. install deps
+
+# 2️⃣ Install dependencies
 pip install -r requirements.txt
-# 3. run ETL (example: DEMs)
+
+# 3️⃣ Run ETL for a dataset (e.g., DEMs)
 make fetch cogs stac
-# 4. launch API
+
+# 4️⃣ Start the API locally
 uvicorn src.api.main:app --reload --port 8000
 ```
 
-Visit → **[http://localhost:8000/docs](http://localhost:8000/docs)** for interactive Swagger UI.
+➡️ Visit **[http://localhost:8000/docs](http://localhost:8000/docs)** for interactive API documentation (Swagger UI).
 
 ---
 
-## 🧭 Data Flow
+## 🧭 Data Flow (End-to-End)
 
 ```mermaid
 flowchart LR
-  A["Raw Sources<br/>Scans · Rasters · Vectors · Documents"] --> B["pipelines/<br/>ETL → COG · GeoJSON · Parquet"]
-  B --> C["nlp/<br/>NER · Geocoding · Summaries"]
-  C --> D["kg/<br/>Neo4j · Entities · Relations"]
+  A["Raw Sources<br/>Maps · Rasters · Vectors · Documents"] --> B["pipelines/<br/>ETL → COG · GeoJSON · Parquet"]
+  B --> C["nlp/<br/>NER · Geocoding · AI Summaries"]
+  C --> D["graph/<br/>Neo4j · Entities · Relations"]
   D --> E["api/<br/>FastAPI + GraphQL · /events · /entity · /search"]
-  E --> F["Frontend<br/>React + MapLibreGL · Timeline · Map · Story Mode"]
+  E --> F["Frontend<br/>React + MapLibre GL · Timeline · Map · AI Assistant"]
 
-  %% Styles (GitHub-safe)
   classDef src fill:#d7ebff,stroke:#0078d4,color:#111;
   classDef ai fill:#eafaf1,stroke:#1a7f37,color:#111;
   classDef kg fill:#fff8e1,stroke:#ffb300,color:#111;
@@ -89,14 +113,14 @@ flowchart LR
 
 ## 🔬 Core Technologies
 
-| Domain             | Library / Framework                   |
-| ------------------ | ------------------------------------- |
-| API                | **FastAPI**, **GraphQL (Strawberry)** |
-| Graph              | **Neo4j / Cypher**, `py2neo`          |
-| NLP / ML           | **spaCy**, Transformers (BART / T5)   |
-| Geospatial         | **rasterio**, **rio-cogeo**, **GDAL** |
-| Catalog / Metadata | **pystac**, **jsonschema**            |
-| Language           | **Python 3.11 +**                     |
+| Domain                 | Framework / Library                     |
+| :--------------------- | :-------------------------------------- |
+| **API**                | FastAPI · GraphQL (Strawberry)          |
+| **Graph**              | Neo4j / Cypher · py2neo                 |
+| **AI / NLP**           | spaCy · Transformers (BART / T5)        |
+| **Geospatial**         | rasterio · rio-cogeo · GDAL · geopandas |
+| **Metadata**           | pystac · jsonschema                     |
+| **Language / Runtime** | Python 3.11+                            |
 
 ---
 
@@ -106,38 +130,45 @@ flowchart LR
 pytest src --maxfail=1 --disable-warnings -v --cov=src
 ```
 
-Tests live in `tests/python/` and optional inline `src/__tests__/`.
+* Primary test suite lives under `tests/python/`
+* Inline component tests under `src/__tests__/`
+* Coverage enforced ≥ 90%
 
 ---
 
 ## 🛡 Quality & Security
 
-* 🧹 **Pre-commit hooks:** `ruff`, `black`, `mypy`
-* 🧠 **CodeQL:** static analysis via GitHub Actions
-* 🧱 **Trivy:** dependency & container scan
-* 🧾 **STAC Validation:** verifies geospatial metadata compliance
+* 🧹 **Pre-Commit Hooks:** `ruff`, `black`, `mypy`
+* 🧠 **Static Analysis:** CodeQL via GitHub Actions
+* 🧱 **Container Scan:** Trivy CI workflow
+* 🧾 **Data Validation:** STAC compliance checks via `validate_stac.py`
+
+All pipelines produce SHA-256 checksums, provenance logs, and reproducible metadata reports.
 
 ---
 
 ## 🎯 Developer Workflows
 
-### Adding a New Dataset
+### 🧱 Adding a New Dataset
 
 1. Add manifest → `data/sources/{id}.json`
 2. Run ETL:
 
    ```bash
-   make fetch cogs stac
+   make fetch convert stac
    ```
-3. Add pipeline → `src/pipelines/{new_source}.py`
-4. Extend graph → `src/graph/schema.py`
-5. Document in `docs/sop.md` + add tests.
+3. Add a pipeline → `src/pipelines/{dataset}.py`
+4. Extend schema → `src/graph/schema.py`
+5. Document change → `docs/sop.md`
+6. Add new tests → `tests/pipelines/test_{dataset}.py`
 
-### Adding a New API Endpoint
+### ⚙️ Adding a New API Endpoint
 
 1. Create route → `src/api/routes/{endpoint}.py`
-2. Annotate with OpenAPI decorators
-3. Add tests → `tests/api/test_{endpoint}.py`
+2. Add request/response models using Pydantic
+3. Register route in `src/api/main.py`
+4. Document via OpenAPI decorators
+5. Add coverage tests under `tests/api/`
 
 ---
 
@@ -147,57 +178,77 @@ Tests live in `tests/python/` and optional inline `src/__tests__/`.
 GET /events?start=1850-01-01&end=1870-12-31&bbox=-100,37,-94,40
 ```
 
-Returns all Kansas events in range as GeoJSON + AI summaries.
+→ Returns all Kansas events in range as GeoJSON with linked AI summaries.
 
 ```http
 GET /entity/fort-larned
 ```
 
-Returns linked events, documents, and geospatial context.
+→ Returns metadata, relationships, and map coordinates for Fort Larned.
 
 ---
 
 ## 🎨 Layer & Timeline Integration
 
-Color tokens and time windows for the frontend reside in
-[`web/config/layers.json`](../web/config/layers.json).
-See **[Layer Timeline Legend](./ARCHITECTURE.md#-layer-timeline-legend)**
-for canonical visualization styles.
+Frontend layer control and temporal configuration are managed in
+[`web/config/layers.json`](../web/config/layers.json)
+and loaded automatically by the API for synchronization with timeline queries.
+
+See [`src/ARCHITECTURE.md#-layer-timeline-legend`](./ARCHITECTURE.md#-layer-timeline-legend)
+for canonical color palettes and time-window conventions.
 
 ---
 
-## 🗂 Documentation
+## 🧩 Integration Points
 
-* 📖 [`ARCHITECTURE.md`](./ARCHITECTURE.md) — component relationships
-* 🧭 [`../docs/`](../docs/) — SOPs · experiments · model cards
-* 🧪 [`../tests/`](../tests/) — test suites & coverage
-* ⚙️ `.github/workflows/` — CI/CD automation
-
----
-
-## 🤝 Contributing
-
-Follow **MCP (Master Coder Protocol)**:
-
-1. Document before code (SOP / experiment / architecture).
-2. Reproduce everything (checksum · schema · logs).
-3. Add tests for every change.
-4. Include provenance metadata in PR descriptions.
-
-See [`CONTRIBUTING.md`](../CONTRIBUTING.md).
+| Module       | Consumes                 | Produces                           | Downstream                |
+| :----------- | :----------------------- | :--------------------------------- | :------------------------ |
+| `pipelines/` | Raw datasets             | STAC Items + Processed Layers      | `validate_stac.py`, Graph |
+| `nlp/`       | Processed text, metadata | Entities + Summaries               | `graph/`, API             |
+| `graph/`     | Entities, relationships  | Neo4j knowledge graph              | API endpoints             |
+| `api/`       | Graph queries + datasets | REST/GraphQL responses             | Web Frontend              |
+| `utils/`     | All modules              | Logs, config, provenance utilities | Global                    |
 
 ---
 
-## 📖 References
+## 🧾 Provenance & Integrity
 
-* **STAC 1.0.0** — SpatioTemporal Asset Catalog standard
-* **CIDOC CRM + OWL-Time + PeriodO** — semantic and temporal ontologies
-* **Kansas GIS Hub · USGS 3DEP · NOAA NCEI · FEMA OpenFEMA · KSHS** — primary data sources
+| Artifact         | Description                                                       |
+| :--------------- | :---------------------------------------------------------------- |
+| **Inputs**       | Raw data, manifests, and STAC items                               |
+| **Outputs**      | Normalized, validated, and queryable datasets                     |
+| **Dependencies** | Python, GDAL, spaCy, Neo4j                                        |
+| **Integrity**    | Verified via CI + deterministic checksum hashes                   |
+| **Traceability** | Linked through STAC IDs, Neo4j relationships, and commit metadata |
+
+---
+
+## 🧠 MCP Compliance Checklist
+
+| MCP Principle       | Implementation                                            |
+| :------------------ | :-------------------------------------------------------- |
+| Documentation-first | SOPs, architecture docs, and code-level docstrings        |
+| Reproducibility     | Deterministic ETL & AI workflows + provenance logs        |
+| Provenance          | Dataset hashes, STAC IDs, and Cypher relationship lineage |
+| Accessibility       | WCAG & FAIR data principles adhered to throughout         |
+| Open Standards      | STAC, GeoJSON, CIDOC CRM, OWL-Time                        |
+| Auditability        | Full data lineage trace via CI and Neo4j metadata graph   |
+
+---
+
+## 📖 Documentation & References
+
+* **[`ARCHITECTURE.md`](./ARCHITECTURE.md)** — system-level design & dependencies
+* **[`../docs/`](../docs/)** — SOPs · experiments · model cards
+* **[`../tests/`](../tests/)** — test suites & fixtures
+* **[`../web/`](../web/)** — frontend integration
+* **STAC 1.0.0**, **CIDOC CRM**, **OWL-Time**, **PeriodO** — core metadata ontologies
 
 ---
 
 <div align="center">
 
-✨ *“The `src/` directory is where Kansas history is translated into a living, queryable atlas.”* ✨
+✨ *“The `src/` directory is the engine of the frontier — where Kansas’s archives become living, searchable knowledge.”* ✨
 
 </div>
+```
