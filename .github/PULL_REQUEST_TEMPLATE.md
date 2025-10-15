@@ -1,24 +1,19 @@
 <div align="center">
 
-# 🚀 Kansas Frontier Matrix — Pull Request Template  
 
-**Path:** `.github/PULL_REQUEST_TEMPLATE.md`  
-**Purpose:** Ensure every change is **documented · reproducible · versioned · validated · auditable**  
-under the **Master Coder Protocol (MCP)** · **Semantic Versioning (SemVer)** · **KFM Governance Standards**
+🚀 Kansas Frontier Matrix — Pull Request Template
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../.github/workflows/site.yml)  
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../.github/workflows/stac-validate.yml)  
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../.github/workflows/codeql.yml)  
-[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../.github/workflows/trivy.yml)  
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../docs/)  
-[![License MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
+Path: .github/PULL_REQUEST_TEMPLATE.md
+Purpose: Ensure every change is documented · reproducible · versioned · validated · auditable
+under the Master Coder Protocol (MCP) · Semantic Versioning (SemVer) · KFM Governance Standards
 
 </div>
 
----
 
-```yaml
+
+⸻
+
+
 ---
 template: "KFM Pull Request Template"
 version: "v2.3.0"
@@ -51,8 +46,8 @@ Example: Adds STAC Items for NOAA Climate (2020-2024) and updates web/config/lay
 🔄 Linked Issues / Discussions
 
 Type	Reference	Notes
-🧾 Issue	Closes # …	
-💬 Discussion	# …	Context / background
+🧾 Issue	Closes #…	
+💬 Discussion	#…	Context / background
 📘 ADR	docs/adr/ADR-####-<title>.md	Architecture Decision Record
 
 
@@ -173,7 +168,7 @@ Manual Steps	1️⃣ …  2️⃣ …
 
 Check	Status
 Keyboard Navigation	☑
-Color Contrast ≥ 4.5:1	☑
+Color Contrast ≥ 4.5 : 1	☑
 ARIA Labels / Roles	☑
 Reduced Motion Pref	☑
 
@@ -250,4 +245,4 @@ v1.0.0	2025-07-01	Project Launch	Initial template release
 “Every Pull Request Builds the Past, Present, and Future — Versioned Forever.”
 
 </div>
-```
+---
