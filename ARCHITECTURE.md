@@ -1,4 +1,4 @@
-div align="center">
+<div align="center">
 
 # 🏗️ **Kansas Frontier Matrix — System Architecture Overview**
 
