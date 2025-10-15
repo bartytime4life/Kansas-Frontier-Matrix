@@ -8,7 +8,7 @@ assignees:
   - kfm-data
   - kfm-architecture
 
-# KFM metadata
+# KFM metadata (informational comments are fine)
 # version: v2.2.0
 # last_updated: 2025-10-13
 # owners: @kfm-data @kfm-architecture
@@ -40,7 +40,13 @@ body:
     id: data_type
     attributes:
       label: Data Type
-      options: ["Raster","Vector","Tabular","Text","NetCDF","Mixed"]
+      options:
+        - Raster
+        - Vector
+        - Tabular
+        - Text
+        - NetCDF
+        - Mixed
     validations:
       required: true
 
@@ -48,7 +54,12 @@ body:
     id: license
     attributes:
       label: License
-      options: ["Public Domain","CC-BY 4.0","CC0","Restricted","Other"]
+      options:
+        - Public Domain
+        - CC-BY 4.0
+        - CC0
+        - Restricted
+        - Other
     validations:
       required: true
 
@@ -107,7 +118,13 @@ body:
     id: access_method
     attributes:
       label: Access Method
-      options: ["REST API","HTTP/HTTPS","FTP","Open Data Portal","Bulk Download","STAC"]
+      options:
+        - REST API
+        - HTTP/HTTPS
+        - FTP
+        - Open Data Portal
+        - Bulk Download
+        - STAC
     validations:
       required: true
 
@@ -131,7 +148,15 @@ body:
     id: update_frequency
     attributes:
       label: Update Frequency
-      options: ["Real-Time","Daily","Weekly","Monthly","Quarterly","Annual","Irregular/On-Demand","Static/Historical"]
+      options:
+        - Real-Time
+        - Daily
+        - Weekly
+        - Monthly
+        - Quarterly
+        - Annual
+        - Irregular/On-Demand
+        - Static/Historical
     validations:
       required: true
 
@@ -157,7 +182,15 @@ body:
     id: domain
     attributes:
       label: Data Domain
-      options: ["Terrain","Hydrology","Hazards","Climate","Landcover","Text","Tabular","Other"]
+      options:
+        - Terrain
+        - Hydrology
+        - Hazards
+        - Climate
+        - Landcover
+        - Text
+        - Tabular
+        - Other
     validations:
       required: true
 
@@ -165,7 +198,10 @@ body:
     id: stac_linkage
     attributes:
       label: STAC Linkage
-      options: ["Yes — new Collection + Items","Yes — Items in existing Collection","No/Not applicable"]
+      options:
+        - "Yes — new Collection + Items"
+        - "Yes — Items in existing Collection"
+        - "No/Not applicable"
     validations:
       required: true
 
@@ -173,7 +209,12 @@ body:
     id: visualization
     attributes:
       label: Visualization Layer
-      options: ["Web Map","Timeline","Story Map","3D Scene","API only"]
+      options:
+        - Web Map
+        - Timeline
+        - Story Map
+        - 3D Scene
+        - API only
     validations:
       required: true
 
@@ -222,13 +263,18 @@ body:
     attributes:
       label: Example Snippet
       description: "Small CSV/JSON/GeoJSON feature example"
-      render: json
+      placeholder: "{\n  \"type\": \"Feature\",\n  \"properties\": {\"elevation\": 1234},\n  \"geometry\": {\"type\": \"Point\", \"coordinates\": [-98.33, 38.52]}\n}"
 
   - type: dropdown
     id: metadata_standard
     attributes:
       label: Metadata Standard
-      options: ["ISO 19115","FGDC","DCAT","STAC 1.0.x","Other/Unknown"]
+      options:
+        - ISO 19115
+        - FGDC
+        - DCAT
+        - STAC 1.0.x
+        - Other/Unknown
     validations:
       required: true
 
@@ -271,7 +317,7 @@ body:
       placeholder: |
         1) Review license/provenance — Owner …
         2) Fetch to data/raw/<domain>/ — Owner …
-        3) Manifest in data/sources/<domain>/ — Owner …
+        3) Manifest in data/sources/<domain>/<source>.json — Owner …
         4) Checksums — Owner …
         5) Integrate (make <domain>) — Owner …
         6) STAC generation/validation — Owner …
@@ -292,7 +338,6 @@ body:
         | Domain Pipeline         | v2.1.0  | v2.2.0   | ETL updated         |
         | Repo Release (SemVer)   | v1.4.0  | v1.5.0   | dataset integration |
         | Data Source Manifest    | v1.0.0  | v1.0.1   | provenance update   |
-      render: markdown
 
   - type: markdown
     attributes:
