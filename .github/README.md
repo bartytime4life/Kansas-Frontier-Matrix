@@ -1,7 +1,7 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — GitHub Automation & Governance"
 document_type: "README"
-version: "v1.6.3"
+version: "v1.6.4"
 last_updated: "2025-10-15"
 created: "2025-10-04"
 owners: ["@bartytime4life", "@kfm-architecture", "@kfm-security"]
@@ -10,7 +10,7 @@ maturity: "Production"
 tags: ["ci","cd","governance","security","mcp","stac","provenance","versioning","oidc","workflows","labels","issue-forms"]
 license: "MIT"
 semantic_alignment:
-  - STAC 1.0.x
+  - STAC 1.0
   - JSON Schema
   - CIDOC CRM (provenance)
   - OWL-Time (release windows)
@@ -29,7 +29,7 @@ provenance:
 
 <div align="center">
 
-# ⚙️ Kansas Frontier Matrix — **GitHub Automation & Governance**  
+# ⚙️ **Kansas Frontier Matrix — GitHub Automation & Governance**  
 **Path:** `.github/`
 
 **Mission:** Central **automation + governance hub** for the Kansas Frontier Matrix (KFM) — enforcing  
@@ -40,7 +40,7 @@ provenance:
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
 
 </div>
@@ -52,7 +52,7 @@ provenance:
 `.github/` defines how KFM **automates, validates, governs, versions, and secures** its lifecycle using  
 GitHub Actions, branch protections, pre-commit, and MCP standards.  
 Automation guarantees the repo is **✅ Deterministic · 🔍 Traceable · 🔐 Secure · 🧾 Auditable · 🧮 MCP-Verified**.  
-Every commit, workflow, dataset, and artifact becomes part of the **verifiable chain of reproducibility**.
+Every commit, workflow, dataset, and artifact participates in a **verifiable chain of reproducibility**.
 
 ---
 
@@ -106,7 +106,7 @@ Every commit, workflow, dataset, and artifact becomes part of the **verifiable c
 
 ## 🧩 CI/CD Flow
 
- mermaid
+```mermaid
 flowchart TD
   A["Push / Pull Request"] --> B["Pre-Commit Hooks"]
   B --> C["Lint & Tests"]
@@ -115,7 +115,8 @@ flowchart TD
   E --> F["Build & Deploy Docs + Site"]
   F --> G["Auto-Merge + Provenance Log"]
   G --> H["Artifact Archival · MCP Verification"]
-%% END OF MERMAID %%
+%% END OF MERMAID
+```
 
 ---
 
@@ -123,9 +124,9 @@ flowchart TD
 
 | Principle           | Implementation                                            |
 | ------------------- | --------------------------------------------------------- |
-| Documentation-First | Inline workflow docs, PR templates, CHANGELOG entries     |
-| Reproducibility     | Pinned actions, deterministic matrices, container digests |
-| Provenance          | SHA-256 checksums, STAC reports, commit SHAs in artifacts |
+| Documentation-First | Inline workflow docs; PR templates; CHANGELOG entries     |
+| Reproducibility     | Pinned actions; deterministic matrices; container digests |
+| Provenance          | SHA-256 checksums; STAC reports; commit SHAs in artifacts |
 | Auditability        | CI logs & artifacts retained ≥ 90 days                    |
 | Open Standards      | YAML · JSON Schema · STAC 1.0 · SPDX                      |
 | Security            | CodeQL + Trivy (SARIF) · least-privilege permissions      |
@@ -154,10 +155,10 @@ concurrency:
 timeout-minutes: 20
 ```
 
-Pinned Actions (examples):
+**Pinned Actions (examples):**
 
 ```yaml
-uses: actions/checkout@3df4f6c4d8c9b0d2f6b5f1e6e3f7a1c2b4d5e6f # v4.1.1 (commit SHA)
+uses: actions/checkout@3df4f6c4d8c9b0d2f6b5f1e6e3f7a1c2b4d5e6f   # v4.1.1 (commit SHA)
 uses: actions/setup-node@v4
 ```
 
@@ -167,7 +168,7 @@ uses: actions/setup-node@v4
 
 **✅ PR Checklist**
 
-* Docs updated (MCP-DL v6.2)
+* Docs updated (MCP-DL v6.3)
 * STAC & checksums pass
 * Tests passed
 * CodeQL/Trivy clean
@@ -177,7 +178,7 @@ uses: actions/setup-node@v4
 
 | Template           | Purpose                              |
 | ------------------ | ------------------------------------ |
-| 🐞 Bug Report      | Repro errors with env + logs         |
+| 🐞 Bug Report      | Repro steps with environment + logs  |
 | 💡 Feature Request | Enhancement proposal                 |
 | 🗃️ Data Request   | Dataset addition + STAC metadata     |
 | 🧰 Data Correction | Fix current data/metadata + evidence |
@@ -193,7 +194,7 @@ uses: actions/setup-node@v4
 ```
 feature/* → PR → main
              ↓
-            tag vX.Y.Z → GitHub Release → (optional) Zenodo DOI
+           tag vX.Y.Z → GitHub Release → (optional) Zenodo DOI
 ```
 
 > **Note:** Backports allowed only with Security + Maintainer approval.
@@ -206,7 +207,7 @@ feature/* → PR → main
 * **release/*** — patch lines
 * **feature/*** — short-lived, rebase before merge
 
-Required checks: *pre-commit · tests · CodeQL · Trivy · STAC validate · Pages build*
+**Required checks:** *pre-commit · tests · CodeQL · Trivy · STAC validate · Pages build*
 
 ---
 
@@ -226,28 +227,29 @@ Required checks: *pre-commit · tests · CodeQL · Trivy · STAC validate · Pag
 
 ## 🧠 Maintainer Guidelines
 
-1. Modular Workflows — one purpose per YAML
-2. Document Everything — headers + links
-3. Pin Versions — never `@latest`
-4. Fail Fast — clear exit codes & messages
-5. Test Locally — `act` or `gh workflow run`
-6. Cache Wisely — prune monthly
-7. Audit Regularly — secrets · permissions · costs
+1. **Modular Workflows** — one purpose per YAML
+2. **Document Everything** — headers + links
+3. **Pin Versions** — never `@latest`
+4. **Fail Fast** — clear exit codes & messages
+5. **Test Locally** — `act` or `gh workflow run`
+6. **Cache Wisely** — prune monthly
+7. **Audit Regularly** — secrets · permissions · costs
 
 ---
 
 ## 🧭 Workflow Dependency Graph
 
-%% mermaid
+```mermaid
 graph LR
-A["Pre-Commit Checks"] --> B["STAC Validation"]
-B --> C["CodeQL Scan"]
-C --> D["Trivy Audit"]
-D --> E["Build + Deploy"]
-E --> F["Auto-Merge + Provenance"]
-F --> G["Artifacts → MCP Verify"]
-G --> H["Audit Trail (SARIF + Logs)"]
-%% end
+  A["Pre-Commit Checks"] --> B["STAC Validation"]
+  B --> C["CodeQL Scan"]
+  C --> D["Trivy Audit"]
+  D --> E["Build + Deploy"]
+  E --> F["Auto-Merge + Provenance"]
+  F --> G["Artifacts → MCP Verify"]
+  G --> H["Audit Trail (SARIF + Logs)"]
+%% END OF MERMAID
+```
 
 ---
 
@@ -297,6 +299,7 @@ gh run download --name "stac-report.json"
 
 | Version | Date       | Summary                                                           |
 | ------- | ---------- | ----------------------------------------------------------------- |
+| v1.6.4  | 2025-10-15 | MCP-DL v6.3 alignment · Mermaid fence fixes · governance polish   |
 | v1.6.3  | 2025-10-15 | Hybrid style update · lint-clean · badge and Mermaid format fixes |
 | v1.6.2  | 2025-10-15 | House-style polish (GFM tables, YAML & Mermaid fences)            |
 | v1.6.1  | 2025-10-15 | Fixed links · expanded matrices                                   |
