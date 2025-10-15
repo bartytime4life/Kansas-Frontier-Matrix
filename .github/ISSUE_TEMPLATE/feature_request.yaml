@@ -7,18 +7,21 @@ labels:
 assignees:
   - kfm-architecture
   - kfm-data
-# KFM metadata
-# version: v2.2.0
-# last_updated: 2025-10-13
+# ──────────────────────────────────────────────────────────────────────────────
+# KFM METADATA (for maintainers & automation)
+# version: v2.3.1
+# last_updated: 2025-10-15
 # owners: @kfm-architecture @kfm-data
+# semantic_alignment: [MCP-DL v6.3, STAC 1.0, JSON Schema, DCAT 2.0, CIDOC CRM]
+# ──────────────────────────────────────────────────────────────────────────────
 
 body:
   - type: markdown
     attributes:
       value: |
         # 💡 Kansas Frontier Matrix — Feature Request
-        *“Every Feature Builds the Future · Every Change is Reproducible.”*
-        Please provide clear context, the problem to solve, and measurable outcomes.
+        _“Every Feature Builds the Future · Every Change is Reproducible.”_
+        Please provide clear context, the problem to solve, and **measurable outcomes**.
 
   - type: textarea
     id: summary
@@ -96,7 +99,7 @@ body:
       label: Proposed Implementation
       description: Include technical specifics, workflow changes, and architecture impacts.
       placeholder: |
-        - Extend terrain_pipeline.py with --add-slope-classification
+        - Extend `terrain_pipeline.py` with `--add-slope-classification`
         - Generate slope class COG + STAC property `slope_class_version`
         - Add `layers.json` entry with gradient style
       render: markdown
@@ -159,8 +162,12 @@ body:
     id: semver
     attributes:
       label: Repo SemVer Impact
-      options: ["semver:none","semver:patch","semver:minor","semver:major"]
-      description: Patch=fix | Minor=new feature | Major=breaking change
+      description: Patch = fix · Minor = new feature · Major = breaking change
+      options:
+        - semver:none
+        - semver:patch
+        - semver:minor
+        - semver:major
     validations:
       required: true
 
@@ -192,7 +199,7 @@ body:
         - Checksums (if validation affected)
         - Workflow run/log URLs
         - Related Issues/PRs
-        - SOP / ADR links (docs/adr/ADR-XXXX-<title>.md)
+        - SOP / ADR links (e.g., docs/adr/ADR-XXXX-<title>.md)
     validations:
       required: false
 
@@ -274,3 +281,4 @@ body:
         - label: CI/CD tests passing (green checks)
         - label: Security review complete (no new vulnerabilities)
         - label: Version/tag bump approved (SemVer policy)
+```
