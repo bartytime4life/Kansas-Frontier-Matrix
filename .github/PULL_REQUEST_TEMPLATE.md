@@ -3,15 +3,15 @@
 # 🚀 Kansas Frontier Matrix — Pull Request Template  
 
 **Path:** `.github/PULL_REQUEST_TEMPLATE.md`  
-**Purpose:** Ensure every change is **documented · reproducible · versioned · validated · auditable** under the  
-**Master Coder Protocol (MCP)** · **Semantic Versioning (SemVer)** · **KFM Governance Standards**
+**Purpose:** Ensure every change is **documented · reproducible · versioned · validated · auditable**  
+under the **Master Coder Protocol (MCP)** · **Semantic Versioning (SemVer)** · **KFM Governance Standards**
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../docs/)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../.github/workflows/site.yml)  
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../.github/workflows/stac-validate.yml)  
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../.github/workflows/codeql.yml)  
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security)](../.github/workflows/trivy.yml)  
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../docs/)  
 [![License MIT](https://img.shields.io/badge/License-MIT-green.svg)](../LICENSE)
 
 </div>
@@ -44,7 +44,6 @@ license: "MIT | CC-BY 4.0"
 🧩 Summary
 
 Describe what this PR changes and why — motivation + measurable outcomes.
-
 Example: Adds STAC Items for NOAA Climate (2020-2024) and updates web/config/layers.json.
 
 ⸻
@@ -63,10 +62,10 @@ Type	Reference	Notes
 
 Option	Description
 🐛 Bug Fix	Resolve reproducible issue
-💡 Feature / Enhancement	New functionality / workflow
+💡 Feature / Enhancement	New functionality or workflow
 🗃️ Dataset / Integration	New source · manifest · STAC metadata
-📖 Documentation Update	READMEs · guides · ADRs
-⚙️ CI/CD / Workflow	Automation · pre-commit
+📖 Documentation	READMEs · guides · ADRs
+⚙️ CI/CD	Automation · pre-commit
 🔒 Security / Validation	CVE fix · checksum · SBOM
 🧹 Refactor / Cleanup	Readability · structure
 💥 Breaking Change	API / schema migration required
@@ -78,13 +77,13 @@ Option	Description
 
 Field	Description
 Affected Dirs	data/processed/hydro/ · src/pipelines/
-New Files	Scripts · datasets · metadata (relative paths)
+New Files	Scripts · datasets · metadata
 Deps Updated	pip / Node · Action pins
-Validation	STAC · schema · unit/integration tests
-Compatibility	Maintained / broken (see notes)
+Validation	STAC · schema · unit tests
+Compatibility	Maintained / broken
 Scope	≈ X files · Y insertions · Risk Low / Med / High
 Rollback Plan	Tag · cleanup · data revert
-Migration	Steps to rebuild data if schema changed
+Migration	Rebuild if schema changed
 
 
 ⸻
@@ -98,11 +97,7 @@ Web UI	UI toggle changes	v1.1 → v1.2
 Data STAC	Metadata update	v1.0.0 → v1.1.0
 
 Release Checklist
-	•	CHANGELOG updated
-	•	STAC properties.version bumped
-	•	Tag GitHub release vX.Y.Z
-	•	Attach STAC/SBOM/SARIF artifacts
-	•	Notify Maintainers via Release Notes
+• CHANGELOG updated • STAC version bumped • Tag vX.Y.Z • Artifacts attached • Maintainers notified
 
 ⸻
 
@@ -110,14 +105,10 @@ Release Checklist
 
 ### Added
 - NOAA Climate 2020-2024 STAC Items · map integration  
-
 ### Changed
 - Reprojected `soil_survey_1967` → EPSG:4326  
-- Modularized `terrain_pipeline.py`  
-
 ### Fixed
 - Hydrology accumulation bug (D8 step)  
-
 ### Security
 - Pinned `actions/setup-node@v4` · SBOM regen · Trivy passed
 
@@ -138,9 +129,10 @@ Principle	Verification
 ⸻
 
 🔍 Provenance / Data Lineage
-	•	data/sources/*.json updated (URL + license + last_verified)
-	•	Added STAC derived_from / dependencies fields
-	•	Checksums verified → data/checksums/<domain>/
+
+• data/sources/*.json updated (URL + license + last_verified)
+• Added STAC derived_from / dependencies fields
+• Checksums verified → data/checksums/<domain>/
 
 ⸻
 
@@ -197,7 +189,7 @@ License Compliance	☑
 Secrets Scan / OIDC	☑
 Actions Pinned (no @latest)	☑
 
-Mini Audit Summary: All Actions pinned ✔  ·  No plaintext secrets ✔  ·  OIDC deployments active ✔
+Mini-Audit Summary: All actions pinned ✔ · No plaintext secrets ✔ · OIDC deployments active ✔
 
 ⸻
 
