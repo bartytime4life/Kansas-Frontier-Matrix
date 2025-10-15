@@ -1,7 +1,7 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — GitHub Automation & Governance"
 document_type: "README"
-version: "v1.6.1"
+version: "v1.6.2"
 last_updated: "2025-10-15"
 created: "2025-10-04"
 owners: ["@bartytime4life", "@kfm-architecture", "@kfm-security"]
@@ -283,6 +283,7 @@ SECURITY.md (excerpt)
 🕓 Version History
 
 Version	Date	Summary
+v1.6.2	2025-10-15	House-style polish (GFM tables, fenced YAML & Mermaid), minor copyedits
 v1.6.1	2025-10-15	House-style polish, fixed relative links, expanded templates & matrices
 v1.6.0	2025-10-13	Hardened permissions/OIDC · added concurrency · reusable wf
 v1.5.0	2025-10-10	Release flow + CODEOWNERS + governance/security
