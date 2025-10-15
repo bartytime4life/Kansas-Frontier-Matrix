@@ -1,6 +1,6 @@
 name: "💡 Feature Request"
 description: "Propose a feature or enhancement — documented, versioned, and reproducible"
-title: "[Feature]: <short title> — <component or domain>"
+title: "[Feature]: <feature name> — <component/domain>"
 labels:
   - enhancement
   - needs-triage
@@ -31,7 +31,7 @@ body:
   - type: input
     id: related_component
     attributes:
-      label: Related Component / Module
+      label: Primary Component / Module
       placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
     validations:
       required: true
@@ -56,15 +56,89 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: owner_team
+    attributes:
+      label: Primary Owner / Team
+      placeholder: "@kfm-architecture · @kfm-data · @kfm-web"
+    validations:
+      required: true
+
   - type: markdown
     attributes:
-      value: "## 🎯 Motivation & Limitation"
+      value: "## 🌐 Design Provenance"
+
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Design References & Rationale
+      description: "Link ADRs/SOPs/specs, cite standards, include brief rationale with quotes/screens if applicable"
+      placeholder: |
+        - ADR: /docs/adr/0007-slope-classification.md (summary: why/alternatives/decision)
+        - SOP: /docs/sop/terrain_pipeline.md#slope
+        - Standards: STAC 1.0.x extension property, OWL-Time, CIDOC CRM tag(s)
+        - Rationale: why this change now, rejected options, alignment with roadmap
+    validations:
+      required: true
+
+  - type: dropdown
+    id: integration_scope
+    attributes:
+      label: Integration Scope
+      options:
+        - Backend (ETL / AI / Graph)
+        - Frontend (Map / Timeline / UI)
+        - Cross-Layer (Full-stack)
+        - Infrastructure (CI/CD / Deployment)
+        - Documentation / SOP
+    validations:
+      required: true
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Artifacts / Outputs
+      placeholder: ".py, .yml, .json, .md, .cog.tif, GeoJSON, OpenAPI/Schema changes"
+    validations:
+      required: true
+
+  - type: input
+    id: interfaces
+    attributes:
+      label: Interfaces / Contracts
+      placeholder: "Function signatures, API routes, CLI flags, config keys; any breaking/behavioral changes"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: release_cadence
+    attributes:
+      label: Release Cadence
+      options:
+        - Static/One-off
+        - Irregular/On-Demand
+        - Quarterly
+        - Monthly
+        - Weekly
+        - Daily
+    validations:
+      required: true
+
+  - type: textarea
+    id: quality
+    attributes:
+      label: QA Strategy / References
+      placeholder: "Unit/integration tests, golden datasets, regression criteria, perf thresholds; link to test plan"
+
+  - type: markdown
+    attributes:
+      value: "## 🎯 Motivation & Current Limitation"
 
   - type: textarea
     id: motivation
     attributes:
       label: Motivation / Use Case
-      placeholder: "Explain the problem this feature solves and who benefits."
+      placeholder: "Explain the problem this feature solves and who benefits (users, pipelines, governance)."
     validations:
       required: true
 
@@ -72,7 +146,7 @@ body:
     id: limitation
     attributes:
       label: Current Limitation
-      placeholder: "Describe the current limitation or gap this enhancement resolves."
+      placeholder: "Describe the gap, constraints, or pain points in current behavior or architecture."
     validations:
       required: true
 
@@ -83,12 +157,13 @@ body:
   - type: textarea
     id: proposal
     attributes:
-      label: Proposed Implementation
-      description: "Include technical specifics, workflow changes, and architecture impacts."
+      label: Implementation Plan (Technical)
+      description: "Include technical specifics, workflow changes, architecture impacts, and rollout."
       placeholder: |
         - Extend terrain_pipeline.py with --add-slope-classification
         - Generate slope class COG and add STAC property slope_class_version
         - Add layers.json entry with gradient style
+        - Update ADR/SOP; add unit/integration tests; validate STAC; perf gate
     validations:
       required: true
 
@@ -97,7 +172,7 @@ body:
     attributes:
       label: Change Type(s)
       options:
-        - label: Add new module or component
+        - label: Add new module/component
         - label: Modify ETL pipeline step
         - label: Extend STAC metadata/schema
         - label: Create new visualization layer
@@ -124,59 +199,127 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 🧩 Integration Context"
+      value: "## 🧩 Intended Integration"
 
-  - type: dropdown
-    id: integration_scope
+  - type: input
+    id: pipeline
     attributes:
-      label: Integration Scope
-      options:
-        - Backend (ETL / AI / Graph)
-        - Frontend (Map / Timeline / UI)
-        - Cross-Layer (Full-stack)
-        - Infrastructure (CI/CD / Deployment)
-        - Documentation / SOP
+      label: Pipeline / Component Target
+      placeholder: "hydrology_pipeline.py, terrain_pipeline.py, src/graph/ingest.py, web/config/layers.json"
     validations:
       required: true
 
   - type: dropdown
-    id: semver
+    id: feature_domain
     attributes:
-      label: Repo SemVer Impact
-      description: "Patch = fix; Minor = new feature; Major = breaking change."
+      label: Feature Domain
       options:
-        - semver:none
-        - semver:patch
-        - semver:minor
-        - semver:major
+        - Terrain
+        - Hydrology
+        - Hazards
+        - Climate
+        - Landcover
+        - Knowledge Graph
+        - Web UI
+        - API
+        - Text / AI / NLP
+        - Metadata / Governance
+        - CI/CD
+        - Other
     validations:
       required: true
+
+  - type: dropdown
+    id: schema_linkage
+    attributes:
+      label: Schema/Standard Linkage
+      options:
+        - Yes — new schema/extension
+        - Yes — changes in existing schema
+        - No / Not applicable
+    validations:
+      required: true
+
+  - type: dropdown
+    id: visualization
+    attributes:
+      label: Visualization Layer
+      options:
+        - Web Map
+        - Timeline
+        - Story Map
+        - 3D Scene
+        - API only
+    validations:
+      required: true
+
+  - type: input
+    id: ontology
+    attributes:
+      label: Semantic Ontology Tag(s)
+      placeholder: "CIDOC CRM class, OWL-Time interval, PeriodO ID, custom tag"
 
   - type: markdown
     attributes:
-      value: "## 🧠 Dependencies & Linkages"
+      value: "## 🧠 Interfaces & Config"
 
   - type: textarea
-    id: dependencies
+    id: config_keys
     attributes:
-      label: Dependencies / Related Components
+      label: Config / Flags / Keys
+      description: "List new/changed CLI flags, YAML keys, environment vars, or API params."
       placeholder: |
-        - Depends on: data/sources/terrain/usgs_dem.json
-        - Related workflows: src/pipelines/terrain_pipeline.py
-        - Requires STAC validation workflow update
-        - Potential impact on Web Map layer rendering
-      description: "List affected components, upstream/downstream dependencies, or required data."
+        - CLI: --add-slope-classification (bool)
+        - Config: pipeline.terrain.slope.class_bins: [0,5,15,30,90]
+        - API: GET /layers?slope_class_version=1.0.0
 
   - type: textarea
-    id: related_docs
+    id: example_snippet
     attributes:
-      label: Related Documentation / SOP
-      placeholder: "/docs/architecture/etl.md · /docs/sop/terrain_pipeline.md"
-      description: "Link to associated documentation or operational procedures."
+      label: Example Snippet
+      description: "Code/config snippet showing usage or output"
+      render: json
+
+  - type: dropdown
+    id: metadata_standard
+    attributes:
+      label: Documentation / Spec Standard
+      options:
+        - ADR
+        - SOP
+        - OpenAPI
+        - STAC 1.0.x
+        - Other/Unknown
+    validations:
+      required: true
 
   - type: markdown
     attributes:
-      value: "## 🧩 Implementation Plan"
+      value: "## 🧮 Validation Requirements"
+
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Pre-Merge Checklist
+      options:
+        - label: Unit & integration tests added and passing
+          required: true
+        - label: STAC/schema validation passes (make stac-validate / schema-check)
+          required: true
+        - label: ETL reproducibility confirmed (deterministic outputs + checksums)
+          required: true
+        - label: License & data compliance verified (no restricted content)
+          required: true
+        - label: Docs updated under /docs/sop/ or /docs/adr/
+          required: true
+        - label: Performance checked (meets target thresholds)
+          required: true
+        - label: Version bump recorded in CHANGELOG.md
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Implementation Plan (Optional)"
 
   - type: textarea
     id: impl_plan
@@ -184,11 +327,12 @@ body:
       label: Steps & Owners
       placeholder: |
         1) Design review — Owner …
-        2) Implement ETL change — Owner …
-        3) Add unit tests — Owner …
-        4) Update documentation & versioning — Owner …
-        5) Validate & merge — Owner …
-      description: "Break down key steps, assignments, and validation points."
+        2) Implement changes — Owner …
+        3) Add tests — Owner …
+        4) Update docs/ADR/SOP — Owner …
+        5) Validate STAC/schema — Owner …
+        6) Perf/QA gates — Owner …
+        7) Release & comms — Owner …
 
   - type: markdown
     attributes:
@@ -197,57 +341,35 @@ body:
   - type: textarea
     id: versioning
     attributes:
-      label: Versioning Summary
+      label: Versioning Summary (SemVer + Schema)
       placeholder: |
-        | Scope             | Current | Proposed | Reason / Trigger          |
-        | :---------------- | :------ | :-------- | :------------------------ |
-        | Component Module  | v2.3.0  | v2.4.0    | Feature enhancement added |
-        | CI Workflow       | v1.7.1  | v1.8.0    | STAC validation expanded  |
-        | Docs / SOP        | v1.2.0  | v1.3.0    | Process updated           |
+        | Scope                  | Current | Proposed | Reason / Trigger          |
+        | :---------------------- | :------ | :------- | :------------------------ |
+        | Component/Module        | v2.3.0  | v2.4.0   | feature enhancement       |
+        | CI Workflow             | v1.7.1  | v1.8.0   | new validation step       |
+        | Docs / SOP              | v1.2.0  | v1.3.0   | process updated           |
       render: markdown
 
   - type: markdown
     attributes:
-      value: "## ✅ Pre-Merge Validation"
-
-  - type: checkboxes
-    id: validation
-    attributes:
-      label: Pre-Merge Checklist
-      options:
-        - label: Unit tests added and passing
-          required: true
-        - label: STAC schema validated (make stac-validate)
-          required: true
-        - label: ETL reproducibility confirmed
-          required: true
-        - label: License & data compliance verified
-          required: true
-        - label: Docs updated under /docs/sop/ or /docs/adr/
-          required: true
-        - label: Version bump recorded in CHANGELOG.md
-          required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🧭 MCP Compliance"
+      value: "## ✅ MCP Compliance"
 
   - type: checkboxes
     id: mcp
     attributes:
       label: MCP Principles
       options:
-        - label: Documentation-first — feature documented and versioned
+        - label: Documentation-first — feature fully described with provenance
           required: true
-        - label: Reproducibility — deterministic implementation steps defined
+        - label: Reproducibility — deterministic steps & checksums defined
           required: true
-        - label: Provenance — source modules and changes traceable
+        - label: Open Standards — interoperable formats/specs used
           required: true
-        - label: Open Standards — compatible with STAC, DCAT, CIDOC CRM, OWL-Time
+        - label: Provenance — ADR/SOP updates and traceable diffs
           required: true
-        - label: Auditability — CI/CD and code review enforce compliance
+        - label: Auditability — CI validation steps reproducible & archived
           required: true
-        - label: Versioning — feature tracked in repo and SemVer updates applied
+        - label: Versioning — repo SemVer & schema versions updated
           required: true
 
   - type: markdown
@@ -257,26 +379,26 @@ body:
   - type: textarea
     id: related
     attributes:
-      label: Related Issues or PRs
+      label: Related Issues / PRs / Data Requests
       placeholder: |
         - Related: #45 (ETL refactor)
         - Dependent: #102 (web map overlay support)
         - Supersedes: #37 (legacy pipeline flag)
         - Linked Data Request: #201 (terrain COG integration)
-  
+
   - type: textarea
     id: attachments
     attributes:
       label: Attachments
-      description: "Optional diagrams, screenshots, or proof-of-concept links"
+      description: "Diagrams, screenshots, or POC links"
       placeholder: |
-        architecture_diagram.png — overview of workflow impact
+        architecture_diagram.png — workflow impact
         feature_diff.json — config patch example
-        prototype.mp4 — UI demo of enhancement
-  
+        prototype.mp4 — UI demo
+
   - type: textarea
     id: notes
     attributes:
       label: Additional Notes
-      placeholder: "Discussion points, risk notes, or follow-up tasks."
+      description: "Risks, rollout plan, comms, or follow-ups"
 ```
