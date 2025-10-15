@@ -1,3 +1,5 @@
+Understood. Here is a **plain ASCII**, **GitHub-validated**, **drop-in** issue form you can paste directly into:
+
 `.github/ISSUE_TEMPLATE/feature_request.yml`
 
 > No emojis, no smart quotes, no code fences, and only ASCII characters to avoid any encoding pitfalls.
@@ -197,10 +199,3 @@ body:
   - label: Version and tag approved per SemVer
 
 ————
-
-If GitHub still complains at line 1:
-
-1. Ensure the file contains **exactly** the lines above starting with `name:` (no backticks, no leading spaces before `name:`).
-2. Create or edit it in the **GitHub web UI** (forces UTF-8 without BOM).
-3. Verify path: `.github/ISSUE_TEMPLATE/feature_request.yml`.
-4. Make sure there is **no** legacy `.github/ISSUE_TEMPLATE.md`.
