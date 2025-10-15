@@ -1,7 +1,7 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — CI/CD Workflows"
 document_type: "README"
-version: "v2.4.4"
+version: "v2.5.0"
 last_updated: "2025-10-15"
 owners: ["@kfm-architecture", "@kfm-security", "@kfm-data"]
 maturity: "Production"
@@ -19,15 +19,15 @@ x-mcp: ["Documentation-First","Reproducibility","Provenance","Open-Standards","A
 **Mission:** Orchestrate **validation, security, data governance, release/versioning, and deployment** for the  
 **Kansas Frontier Matrix (KFM)** — delivering a fully **reproducible**, **auditable**, **secure**, and **standards-compliant** automation framework.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
-[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-validation-workflows)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)
-[![Dependency Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../../docs/)
-[![SLSA Provenance](https://img.shields.io/badge/SLSA-provenance-purple)](./provenance.yml)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)  
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)  
+[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-validation-workflows)  
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)  
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)  
+[![Dependency Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)  
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue.svg)](../../docs/)  
+[![SLSA Provenance](https://img.shields.io/badge/SLSA-provenance-purple)](./provenance.yml)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
 </div>
@@ -41,14 +41,14 @@ Each workflow complies with **MCP-DL v6.2**, ensuring all runs are:
 
 🧾 **Documented** · 🔍 **Traceable** · 🔒 **Secure** · ♻️ **Reproducible** · 🧮 **Verifiable** · 🏷️ **Versioned**
 
-Automation domains:
+**Automation Domains**
 
 - **Validation** — STAC catalog / JSON Schema / checksum integrity  
 - **Security** — CodeQL, Trivy, Dependency Review, SBOM/SARIF  
 - **Data Ingestion** — Scheduled dataset fetching / provenance logging  
 - **Build & Deploy** — Site, docs, and UI builds (GitHub Pages)  
 - **Provenance** — SLSA attestations, artifact signing, retention policies  
-- **Governance** — Auto-merge, approvals, SemVer releases
+- **Governance** — Auto-merge, approvals, SemVer releases  
 
 > **Pinning Policy:** All Actions are pinned by tag or commit SHA for deterministic reproducibility.
 
@@ -78,10 +78,10 @@ Automation domains:
 🧩 Workflow Summary
 
 🧱 Workflow	🎯 Purpose	⏰ Trigger(s)	📦 Outputs
-site.yml	Build & deploy documentation + site  via GitHub Pages	push → main, workflow_dispatch	_site/ → GitHub Pages
+site.yml	Build & deploy documentation + site via GitHub Pages	push → main, workflow_dispatch	_site/ → GitHub Pages
 stac-validate.yml	STAC + JSON Schema + link checks	push, pull_request	stac-report.json (artifact)
 fetch.yml	Fetch datasets from data/sources/*.json	schedule, workflow_dispatch	data/raw/ snapshots + provenance logs
-checksums.yml	Compute & verify SHA-256 integrity	data PR, workflow_dispatch	.sha256 files + validation logs
+checksums.yml	Compute & verify SHA-256 integrity	Data PR, workflow_dispatch	.sha256 files + validation logs
 codeql.yml	Static analysis (security audit)	schedule, push, pull_request	CodeQL SARIF report
 trivy.yml	Container/dependency CVE scan + SBOM	schedule, pull_request	trivy.sarif + SPDX sbom.json
 pre-commit.yml	Lint / format / tests / spellcheck	pull_request	PR annotations + summary
@@ -185,101 +185,6 @@ SIGNING_KEY (optional)	provenance.yml	Artifact signing	Prefer keyless OIDC; rota
 
 ⸻
 
-🧪 Validation Workflows
-
-🗺️ STAC Validation (stac-validate.yml)
-	•	Enforces STAC 1.0.x for data/stac/**
-	•	Validates asset URLs, bbox/temporal metadata, JSON Schemas
-	•	Gated on PR; fails on schema error
-
-name: STAC Validate
-on: [push, pull_request]
-permissions:
-  contents: read
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@3df4f6c4d8c9b8f2f4e9b219d1f9a3f6f2f9f0a
-    - name: Install stac-validator
-      run: pipx install stac-validator
-    - name: Validate recursively
-      run: stac-validator data/stac/catalog.json --recursive
-
-🔢 Checksums (checksums.yml)
-	•	Computes SHA-256; compares to stored .sha256
-	•	Fails on mismatch to keep outputs deterministic
-
-- name: Verify checksums
-  run: find data -name '*.sha256' -print0 | xargs -0 -n1 sha256sum -c
-
-🧰 Fetch / Acquisition (fetch.yml)
-	•	Reads data/sources/*.json, fetches, logs provenance to data/work/logs/
-	•	Validates incoming data against STAC constraints before admission
-
-⸻
-
-🏗️ Build & Deploy (site.yml)
-
-name: Build & Deploy Site
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@3df4f6c4d8c9b8f2f4e9b219d1f9a3f6f2f9f0a
-    - name: Build site
-      run: make site
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@65a9c7
-      with:
-        path: _site
-  deploy:
-    needs: [build]
-    environment:
-      name: production
-      url: https://bartytime4life.github.io/Kansas-Frontier-Matrix/
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy
-      uses: actions/deploy-pages@d6a7e2
-
-
-⸻
-
-🛡️ Security Workflows
-
-🧬 CodeQL (codeql.yml)
-	•	Multi-language static analysis
-	•	Runs on schedule and push
-	•	Uploads SARIF report for audit visibility
-
-🧫 Trivy (trivy.yml)
-	•	Filesystem + dependency CVE scan
-	•	Generates SPDX SBOM and SARIF outputs
-
-- name: Trivy SBOM (SPDX)
-  run: trivy fs --format spdx-json --output sbom.json .
-- name: Trivy Vulnerability Scan
-  run: trivy fs --format sarif --output trivy.sarif .
-- name: Upload SARIF
-  uses: github/codeql-action/upload-sarif@v3
-  with:
-    sarif_file: trivy.sarif
-
-🔍 Dependency Review (dependency-review.yml)
-	•	Blocks PRs adding vulnerable dependencies
-	•	Annotates affected files and versions inline
-
-⸻
-
 🧮 MCP Compliance Matrix
 
 🧭 Principle	🧩 Implementation
@@ -298,9 +203,9 @@ Versioning	SemVer releases, release notes, immutable tags
 
 🗓️ Cadence	🔧 Task	✅ Goal
 Weekly	Run CodeQL + Trivy scans	Early vulnerability detection
-Monthly	Pin/refresh actions/*, rotate caches, verify OIDC	Supply-chain hardening
+Monthly	Pin / refresh actions/*, rotate caches, verify OIDC	Supply-chain hardening
 Quarterly	Re-validate STAC Schemas, update MCP docs	Standards compliance
-Per-Release	Tag with SemVer, attach SBOM/SARIF/site bundle	Immutable, attestable release
+Per-Release	Tag with SemVer, attach SBOM / SARIF / site bundle	Immutable, attestable releases
 
 
 ⸻
@@ -344,7 +249,8 @@ gh run download --name "stac-report.json"
 🕓 Version History
 
 🏷️ Version	📅 Date	✍️ Summary
-v2.4.4	2025-10-15	Refactored tables and lists to strict GFM formatting; GitHub-render verified
+v2.5.0	2025-10-15	Major upgrade for GFM table integrity and rendering fidelity
+v2.4.4	2025-10-15	Refactored to strict GFM formatting, verified in GitHub
 v2.4.3	2025-10-15	Finalized KFM house-style; badges & anchors verified
 v2.4.2	2025-10-15	YAML/Mermaid fencing; copy edits
 v2.4.1	2025-10-15	GFM alignment cheatsheet; visual fixes
