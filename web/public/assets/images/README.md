@@ -1,28 +1,45 @@
 <div align="center">
 
-# 🖼️ Kansas Frontier Matrix — Public Images  
+# 🖼️ Kansas Frontier Matrix — **Public Images**  
 `web/public/assets/images/`
 
 **Static Illustrations · Backgrounds · Thumbnails**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../../docs/)
 [![Design System](https://img.shields.io/badge/Design-System-blue)](../../../../docs/design/)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1-AA-yellow)](../../../../docs/design/reviews/accessibility/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Public Images (web/public/assets/images/)"
+version: "v1.5.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-design", "@kfm-web"]
+tags: ["images","backgrounds","illustrations","branding","accessibility","mcp"]
+license: "MIT"
+semantic_alignment:
+  - WCAG 2.1 AA
+  - W3C Web Image Formats (PNG/JPG/WebP)
+  - MCP-DL v6.2 (Design Provenance)
+---
+````
+
+---
+
 ## 🧭 Overview
 
-The `web/public/assets/images/` directory contains **raster-based images and illustrations**  
-used throughout the Kansas Frontier Matrix web application.  
-These assets support the visual storytelling layer of the platform —  
-ranging from **backgrounds**, **header banners**, and **historical photos**,  
-to **placeholder images** and **component thumbnails** used in documentation or loading screens.
+The `web/public/assets/images/` directory houses **raster-based images and illustrations** that power the Kansas Frontier Matrix (KFM) web experience.
+These assets form the **visual storytelling layer** of the platform — from **hero backgrounds and header banners**, to **placeholders**, **historical imagery**, and **component thumbnails** in documentation and UI previews.
 
-All images here are **served statically** from the public CDN and are not bundled or transformed by the Vite build process.  
-They are optimized, compressed, and stored under open or public domain licenses with metadata provenance tracking.
+All files here are served **statically from the CDN** (not bundled by Vite), and optimized for performance, accessibility, and reproducibility.
+Every image’s source, license, and checksum are tracked under the **Master Coder Protocol (MCP)** for design provenance and archival integrity.
+
+> **Design Intent:** Every image captures Kansas’s light, land, and legacy — turning open imagery into open history.
 
 ---
 
@@ -30,46 +47,50 @@ They are optimized, compressed, and stored under open or public domain licenses 
 
 ```text
 web/public/assets/images/
-├── placeholder.jpg          # Fallback image for empty states
-├── header-bg.jpg            # Top banner background
-├── prairie-sunrise.jpg      # Thematic hero image for landing page
-├── kansas-river-aerial.webp # Optimized web background for hydrology sections
-├── topo-overlay.png         # Historic topographic image overlay
-├── timeline-bg.jpg          # Timeline gradient or texture background
-├── thumbnails/              # Component thumbnails and documentation imagery
+├── placeholder.jpg          # Generic fallback image
+├── header-bg.jpg            # Header and landing banner background
+├── prairie-sunrise.jpg      # Thematic hero image for branding
+├── kansas-river-aerial.webp # Hydrology section background (optimized)
+├── topo-overlay.png         # Historic topographic overlay (semi-transparent)
+├── timeline-bg.jpg          # Background texture for the timeline panel
+├── thumbnails/              # Component thumbnails for docs and previews
 │   ├── timeline-thumb.png
 │   ├── mapview-thumb.png
 │   └── aiassistant-thumb.png
 └── README.md                # This documentation file
+```
 
+---
 
-⸻
+## 🧩 Asset Categories
 
-🧩 Asset Categories
+| Category          | Description                                    | Format     | Example Use         |
+| :---------------- | :--------------------------------------------- | :--------- | :------------------ |
+| **Backgrounds**   | Full-width banners and hero sections           | JPG / WEBP | Home, About, Modals |
+| **Placeholders**  | Fallback images when no data visuals exist     | JPG        | DetailPanel, Cards  |
+| **Illustrations** | Scenic/abstract imagery tied to Kansas history | JPG / PNG  | Landing Pages       |
+| **Overlays**      | Transparent PNGs layered over maps/timelines   | PNG        | MapView overlays    |
+| **Thumbnails**    | Documentation and AI-generated previews        | PNG        | Docs / Storybook    |
 
-Category	Description	Format	Example Use
-Backgrounds	Full-width hero or panel backgrounds for headers and sections.	JPG / WEBP	Landing pages, Modals
-Placeholders	Default images used when datasets lack visual content.	JPG	DetailPanel, cards
-Illustrations	Scenic or abstract Kansas imagery for storytelling.	JPG / PNG	Home and About sections
-Overlays	Transparent PNGs layered on the MapView or Timeline.	PNG	MapView topographic overlay
-Thumbnails	Small UI representations for documentation or AI-generated content previews.	PNG	Docs, tooltips
+---
 
+## 🎨 Design & Theming Guidelines
 
-⸻
+All images conform to the **KFM Design System** principles:
 
-🧠 Design & Theming Guidelines
+* **Aspect Ratio:** Prefer 16:9 or 21:9 for hero banners
+* **Resolution:** ≥1920px width (desktop) · ≥1280px (tablet)
+* **Compression:** JPEG ≈ 85%, WebP ≈ 80%, PNG lossless
+* **Color Tokens:**
 
-All image selections and processing adhere to the Kansas Frontier Matrix Design System:
-	•	Aspect Ratio → Prefer 16:9 or 21:9 for hero backgrounds.
-	•	Resolution → Minimum width 1920 px (desktop) or 1280 px (tablet).
-	•	Compression → JPEG quality ≈ 85, WebP quality ≈ 80.
-	•	Color Palette → Harmonized to match the app’s theme:
-	•	Accent: #00b3b3
-	•	Neutral backgrounds: #0b1020 (dark) / #ffffff (light)
-	•	Dynamic Theming: Use prefers-color-scheme CSS to swap images (e.g., header-bg-dark.jpg).
+  * Accent → `#00b3b3`
+  * Background Dark → `#0b1020`
+  * Background Light → `#ffffff`
+* **Dynamic Theming:** Swap light/dark variants with CSS media queries
 
 Example:
 
+```css
 body {
   background-image: url("/assets/images/header-bg.jpg");
 }
@@ -78,47 +99,52 @@ body {
     background-image: url("/assets/images/header-bg-dark.jpg");
   }
 }
+```
 
+---
 
-⸻
+## 🧮 Optimization Pipeline
 
-🧮 Optimization Pipeline
+All images are processed in CI for **compression**, **conversion**, and **integrity verification**.
 
-Each raster asset passes through the automated CI compression and verification pipeline:
+| Tool            | Function                                           |
+| :-------------- | :------------------------------------------------- |
+| **Sharp**       | Resize & convert to JPEG/WebP                      |
+| **MozJPEG**     | Optimize JPEGs for high-quality progressive output |
+| **pngquant**    | Compress transparent PNGs (80–95% quality)         |
+| **cwebp**       | Generate modern WebP alternatives                  |
+| **ImageMagick** | Validate resolution, DPI, and EXIF metadata        |
+| **SHA256**      | Generate integrity checksums for cache validation  |
 
-Tool	Function
-Sharp	Converts large images → JPEG/WebP, optimizes size.
-MozJPEG	Compresses JPGs to high-quality progressive output.
-pngquant	Reduces color depth for transparent PNGs.
-cwebp	Generates modern WebP versions for supported browsers.
-ImageMagick	Validates resolution, DPI, and metadata.
-SHA-256 Checksums	Generated for reproducibility and cache integrity.
+Each processed image includes metadata such as original source, author, license, and checksum in `/meta/`.
 
+---
 
-⸻
+## ♿ Accessibility Standards
 
-♿ Accessibility Standards
-	•	Every image used in the UI must include descriptive alt text.
-	•	Decorative images should use empty alt="" or role="presentation".
-	•	Avoid text baked into images — use HTML/CSS for accessibility and localization.
-	•	Ensure minimum contrast ratio of 4.5:1 between overlays and background images.
-	•	All content imagery follows WCAG 2.1 AA compliance.
+* **Alt Text:** Every image includes clear `alt` text describing its content or function.
+* **Decorative Imagery:** Use `alt=""` or `role="presentation"` for non-informational backgrounds.
+* **No Text-in-Image:** All text rendered via HTML/CSS to support localization and screen readers.
+* **Contrast:** Maintain ≥ 4.5:1 ratio between overlays and background visuals.
+* **Compliance:** All visuals validated against WCAG 2.1 AA.
 
-⸻
+Accessibility checks are executed in CI with **axe-core** and **Lighthouse** reports.
 
-🧾 Provenance & Licensing
+---
 
-Asset	Source	License	Notes
-placeholder.jpg	Generated in-house	MIT	Generic placeholder
-prairie-sunrise.jpg	Unsplash (Public Domain)	CC0	Landscape background
-kansas-river-aerial.webp	USGS Public Archive	Public Domain	Hydrology section
-topo-overlay.png	USGS 1894 Topo Series	Public Domain	Map overlay
-timeline-bg.jpg	Custom KFM Design	MIT	Gradient background
+## 🧾 Provenance & Licensing
 
-Each asset includes a corresponding metadata .json file in the meta/ folder when attribution or license tracking is required.
+| Asset                      | Source                    | License       | Purpose           |
+| :------------------------- | :------------------------ | :------------ | :---------------- |
+| `placeholder.jpg`          | Custom KFM Design         | MIT           | Fallback asset    |
+| `prairie-sunrise.jpg`      | Unsplash (Public Domain)  | CC0           | Hero background   |
+| `kansas-river-aerial.webp` | USGS Public Archive       | Public Domain | Hydrology visual  |
+| `topo-overlay.png`         | USGS 1894 Topo Collection | Public Domain | Map overlay       |
+| `timeline-bg.jpg`          | Custom KFM Gradient       | MIT           | Timeline backdrop |
 
-Example:
+**Metadata Example:**
 
+```json
 {
   "id": "prairie-sunrise",
   "source": "Unsplash / John Doe",
@@ -126,50 +152,67 @@ Example:
   "tags": ["kansas", "sunrise", "prairie"],
   "checksum": "sha256:e4b9f1..."
 }
+```
 
+---
 
-⸻
+## 🧩 Usage in Components
 
-🧩 Usage in Components
+| Component        | Image                 | Purpose                              |
+| :--------------- | :-------------------- | :----------------------------------- |
+| **Header**       | `header-bg.jpg`       | Hero banner background               |
+| **MapView**      | `topo-overlay.png`    | Historic base overlay                |
+| **TimelineView** | `timeline-bg.jpg`     | Panel gradient background            |
+| **DetailPanel**  | `placeholder.jpg`     | Default image for missing visuals    |
+| **Docs/About**   | `prairie-sunrise.jpg` | Scenic illustration for storytelling |
 
-Component	Image	Purpose
-Header	header-bg.jpg	Hero banner background
-MapView	topo-overlay.png	Historical map layer overlay
-TimelineView	timeline-bg.jpg	Thematic gradient backdrop
-DetailPanel	placeholder.jpg	Fallback when no image provided
-Docs / About Page	prairie-sunrise.jpg	Scenic background illustration
+---
 
+## 🧪 Validation & Integrity
 
-⸻
+CI performs automated checks to ensure:
 
-🧪 Validation & Integrity
+* File structure & naming consistency
+* Resolution within defined bounds (min 1080p)
+* No embedded EXIF or geolocation metadata
+* Correct MIME type and file headers
+* Matching SHA256 hashes between versions
+* Metadata JSON schema conformance
 
-CI runs validation checks for:
-	•	File existence and naming consistency.
-	•	Minimum/maximum resolution limits.
-	•	File format compliance (no EXIF, embedded profiles).
-	•	SHA256 integrity validation.
-	•	JSON metadata schema conformance.
+All results are published in the CI/CD build report for transparent verification.
 
-Each release build attaches image checksums to the deployment manifest for version tracking.
+---
 
-⸻
+## 🧠 MCP Compliance Checklist
 
-🔗 Related Documentation
-	•	Public Assets Overview
-	•	Public Icons
-	•	Design Mockups
-	•	Accessibility Review
+| MCP Principle       | Implementation                                   |
+| :------------------ | :----------------------------------------------- |
+| Documentation-first | Each image tracked in metadata registry          |
+| Provenance          | Source, author, and license logged in meta files |
+| Reproducibility     | Deterministic image optimization pipeline        |
+| Accessibility       | WCAG 2.1 AA compliance verified in CI            |
+| Open Standards      | PNG, JPEG, WebP formats; JSON metadata schema    |
+| Auditability        | Hash-based validation + CI image integrity logs  |
 
-⸻
+---
 
-📜 License
+## 🔗 Related Documentation
 
-All custom images are released under the MIT License,
-with third-party photos used under CC0 or Public Domain licenses.
+* **Public Assets Overview** — `web/public/README.md`
+* **Public Icons** — `web/public/assets/icons/README.md`
+* **Design Mockups** — `docs/design/mockups/`
+* **Accessibility Reviews** — `docs/design/reviews/accessibility/`
 
-© 2025 Kansas Frontier Matrix — Produced under the Master Coder Protocol (MCP)
-for verifiable provenance, accessibility, and long-term archival value.
+---
 
-“Every image is a window into Kansas — the frontier’s light, land, and legacy rendered in pixels.”
+## 📜 License
 
+All **custom Kansas Frontier Matrix images** are released under the **MIT License**,
+and third-party materials are used under their respective **Public Domain** or **CC0** licenses.
+
+© 2025 Kansas Frontier Matrix — created under **MCP-DL v6.2** for **accessible**, **traceable**, and **archivally sound** visual storytelling.
+
+> *“Every image is a window into Kansas — the frontier’s light, land, and legacy rendered in pixels.”*
+
+```
+```
