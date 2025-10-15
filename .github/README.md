@@ -106,15 +106,15 @@ Every commit, workflow, dataset, and artifact becomes part of the **verifiable c
 
 ## 🧩 CI/CD Flow
 
-mermaid
+%% mermaid
 flowchart TD
-A["Push / Pull Request"] --> B["Pre-Commit Hooks"]
-B --> C["Lint & Tests"]
-C --> D["STAC + Checksum Validation"]
-D --> E["Security Scans (CodeQL + Trivy)"]
-E --> F["Build & Deploy Docs + Site"]
-F --> G["Auto-Merge + Provenance Log"]
-G --> H["Artifact Archival · MCP Verification"]
+  A["Push / Pull Request"] --> B["Pre-Commit Hooks"]
+  B --> C["Lint & Tests"]
+  C --> D["STAC + Checksum Validation"]
+  D --> E["Security Scans (CodeQL + Trivy)"]
+  E --> F["Build & Deploy Docs + Site"]
+  F --> G["Auto-Merge + Provenance Log"]
+  G --> H["Artifact Archival · MCP Verification"]
 %% END OF MERMAID %%
 
 ---
