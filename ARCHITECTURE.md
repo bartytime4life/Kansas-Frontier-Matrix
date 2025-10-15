@@ -1,6 +1,6 @@
 ```yaml
 name: "💡 Feature Request"
-description: "Propose a feature or enhancement — documented, versioned, and reproducible"
+description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
 title: "[Feature]: <feature name> — <component/domain>"
 labels:
   - enhancement
@@ -48,21 +48,21 @@ body:
   - type: dropdown
     id: impact
     attributes:
-      label: Impact (Breaking?)
-      options: ["Non-Breaking","Breaking"]
+      label: Impact Level
+      options: ["Low","Moderate","High","Breaking"]
     validations:
       required: true
 
   - type: input
-    id: scope_affected
+    id: related_scope
     attributes:
-      label: Scope / Affected Areas
+      label: Related Scope / Module
       placeholder: "ETL (terrain), Web Map layers, STAC schema, CI workflow"
     validations:
       required: true
 
   - type: input
-    id: target_window
+    id: release_target
     attributes:
       label: Target Release / Timeline
       placeholder: "v2.4.0 — October; or ‘next minor’"
@@ -70,7 +70,7 @@ body:
       required: true
 
   - type: input
-    id: spec_or_adr_url
+    id: spec_ref
     attributes:
       label: Spec / ADR Link(s)
       placeholder: "/docs/adr/0007-slope-classification.md; design doc URL"
@@ -107,7 +107,7 @@ body:
       required: true
 
   - type: textarea
-    id: formats
+    id: artifacts
     attributes:
       label: Artifacts / Outputs
       placeholder: ".py, .yml, .json, .md, .cog.tif, GeoJSON, OpenAPI/spec changes"
@@ -123,7 +123,7 @@ body:
       required: true
 
   - type: dropdown
-    id: update_frequency
+    id: release_cadence
     attributes:
       label: Release Cadence
       options: ["Static/One-off","Irregular/On-Demand","Quarterly","Monthly","Weekly","Daily"]
@@ -131,129 +131,81 @@ body:
       required: true
 
   - type: textarea
-    id: quality
+    id: qa_strategy
     attributes:
       label: QA Strategy / References
       placeholder: "Unit/integration tests, golden datasets, regression criteria, perf thresholds; link to test plan"
 
   - type: markdown
     attributes:
-      value: "## 🧩 Intended Integration"
-
-  - type: input
-    id: pipeline
-    attributes:
-      label: Pipeline / Component Target
-      placeholder: "terrain_pipeline.py, src/graph/ingest.py, web/config/layers.json"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: domain
-    attributes:
-      label: Feature Domain
-      options: ["Terrain","Hydrology","Hazards","Climate","Landcover","Knowledge Graph","Web UI","API","Text / AI / NLP","Metadata / Governance","CI/CD","Other"]
-    validations:
-      required: true
-
-  - type: dropdown
-    id: stac_linkage
-    attributes:
-      label: Schema / Standard Linkage
-      options: ["Yes — new schema/extension","Yes — changes in existing schema","No/Not applicable"]
-    validations:
-      required: true
-
-  - type: dropdown
-    id: visualization
-    attributes:
-      label: Visualization Layer
-      options: ["Web Map","Timeline","Story Map","3D Scene","API only"]
-    validations:
-      required: true
-
-  - type: input
-    id: ontology
-    attributes:
-      label: Semantic Ontology Tag(s)
-      placeholder: "CIDOC CRM class, OWL-Time interval, PeriodO ID"
-
-  - type: markdown
-    attributes:
-      value: "## 🧠 Metadata & Schema"
+      value: "## 🎯 Motivation & Current Limitation"
 
   - type: textarea
-    id: attributes_cols
+    id: motivation
     attributes:
-      label: Config Keys / Attributes
-      description: "List new/changed config keys, flags, or attributes"
+      label: Motivation / Use Case
+      placeholder: "Explain the problem this feature solves and who benefits (users, pipelines, governance)."
     validations:
       required: true
 
   - type: textarea
-    id: units
+    id: limitation
     attributes:
-      label: Codes / Units / Flags
-      placeholder: "e.g., class bins, enum values, boolean flags"
-    validations:
-      required: true
-
-  - type: input
-    id: schema_url
-    attributes:
-      label: Schema / Spec Source URL
-      placeholder: "Link to OpenAPI, JSON Schema, or internal spec doc"
-
-  - type: input
-    id: encoding
-    attributes:
-      label: Encoding / Format
-      placeholder: "UTF-8 / YAML / JSON / GeoJSON"
-    validations:
-      required: true
-
-  - type: textarea
-    id: example_snippet
-    attributes:
-      label: Example Snippet
-      description: "Small JSON/YAML snippet (config, API payload, or output)"
-      render: json
-
-  - type: dropdown
-    id: metadata_standard
-    attributes:
-      label: Documentation / Spec Standard
-      options: ["ADR","SOP","OpenAPI","STAC 1.0.x","Other/Unknown"]
+      label: Current Limitation
+      placeholder: "Describe the gap, constraints, or pain points in current behavior or architecture."
     validations:
       required: true
 
   - type: markdown
     attributes:
-      value: "## 🧮 Validation Requirements"
+      value: "## ⚙️ Proposed Implementation"
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Implementation
+      description: "Include technical specifics, workflow changes, architecture impacts, and rollout."
+      placeholder: |
+        - Extend terrain_pipeline.py with --add-slope-classification
+        - Generate slope class COG and add STAC property slope_class_version
+        - Add layers.json entry with gradient style
+        - Update ADR/SOP; add unit/integration tests; validate STAC; perf gate
+    validations:
+      required: true
 
   - type: checkboxes
-    id: validation
+    id: change_type
     attributes:
-      label: Pre-Merge Checklist
+      label: Change Type(s)
       options:
-        - label: Unit & integration tests added and passing
-          required: true
-        - label: STAC/schema validation passes (make stac-validate / schema-check)
-          required: true
-        - label: ETL reproducibility confirmed (deterministic outputs + checksums)
-          required: true
-        - label: License & data compliance verified (no restricted content)
-          required: true
-        - label: Docs updated under /docs/sop/ or /docs/adr/
-          required: true
-        - label: Performance checked (meets target thresholds)
-          required: true
-        - label: Version bump recorded in CHANGELOG.md
-          required: true
+        - label: Add new module/component
+        - label: Modify ETL pipeline step
+        - label: Extend STAC metadata/schema
+        - label: Create new visualization layer
+        - label: Update documentation / SOP
+        - label: Other (describe in proposal)
 
   - type: markdown
     attributes:
-      value: "## ⚙️ Implementation Plan (Optional)"
+      value: "## 🧮 Expected Outcome / Metrics"
+
+  - type: textarea
+    id: expected_outcome
+    attributes:
+      label: Expected Outcome / Metrics
+      placeholder: |
+        | Metric          | Target                                        |
+        | :-------------- | :---------------------------------------------|
+        | Data Quality    | slope_class attribute present; STAC fields updated |
+        | Reproducibility | Deterministic outputs; SOP updated            |
+        | Usability       | Map layer toggle + legend                     |
+        | Performance     | < +5% runtime impact                          |
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧩 Implementation Plan"
 
   - type: textarea
     id: impl_plan
@@ -313,7 +265,7 @@ body:
   - type: textarea
     id: related
     attributes:
-      label: Related Issues / PRs
+      label: Related Issues / PRs / Data Requests
       placeholder: |
         - Related: #45 (ETL refactor)
         - Dependent: #102 (web map overlay support)
