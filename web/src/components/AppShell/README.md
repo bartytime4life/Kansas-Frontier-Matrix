@@ -1,30 +1,44 @@
 <div align="center">
 
-# 🏗️ Kansas Frontier Matrix — AppShell Component  
+# 🏗️ Kansas Frontier Matrix — **AppShell Component**  
 `web/src/components/AppShell/`
 
 **Core Layout · Global Providers · Responsive Container**
 
 [![Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/ci.yml?label=Build)](../../../../../.github/workflows/ci.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../../../docs/)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1-AA-yellow)](../../../../../docs/design/reviews/accessibility/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • AppShell Component (web/src/components/AppShell/)"
+version: "v1.5.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-web", "@kfm-architecture"]
+tags: ["react","layout","context","theme","timeline","map","mcp"]
+license: "MIT"
+semantic_alignment:
+  - CIDOC CRM (UI structural context)
+  - OWL-Time (temporal data handling)
+  - WCAG 2.1 AA
+---
+````
+
+---
+
 ## 🧭 Overview
 
-The **AppShell** component is the **root layout and orchestration layer** of the  
-Kansas Frontier Matrix web application. It defines the application’s top-level structure,  
-loading global contexts, managing responsive layout regions, and rendering  
-the primary UI panels — **Header**, **MapView**, **TimelineView**, **LayerControls**,  
-**DetailPanel**, and **AIAssistant**.
+The **AppShell** component defines the **core structural framework** of the Kansas Frontier Matrix (KFM) web application.
+It initializes **global context providers**, manages **responsive layout regions**, and coordinates rendering of key UI modules —
+including **Header**, **MapView**, **TimelineView**, **LayerControls**, **DetailPanel**, and **AIAssistant**.
 
-All components inside AppShell share the same **Context Providers**, ensuring consistent  
-state between map, timeline, and AI panels.  
-
-It’s the “hub” where Kansas’s data, history, and user interactions converge.
+> **Purpose:** The AppShell acts as the “command center” of KFM — integrating time, map, and narrative layers into a cohesive, responsive user experience.
 
 ---
 
@@ -32,47 +46,51 @@ It’s the “hub” where Kansas’s data, history, and user interactions conve
 
 ```text
 web/src/components/AppShell/
-├── AppShell.tsx           # Main layout and routing logic
-├── AppLayout.tsx          # Grid / flex layout definitions
-├── LoadingScreen.tsx      # Initial app loading splash
-├── ErrorBoundary.tsx      # Catches rendering or network errors
-├── styles.scss            # Layout, grid, and theme styling
-└── __tests__/             # Tests for layout, context loading, and rendering
+├── AppShell.tsx        # Core layout + context orchestration
+├── AppLayout.tsx       # CSS Grid + flex-based layout definitions
+├── LoadingScreen.tsx   # Initial splash while loading configuration
+├── ErrorBoundary.tsx   # Captures component or API errors gracefully
+├── styles.scss         # Layout, grid templates, and theme integration
+└── __tests__/          # Jest + RTL tests for rendering & context state
+```
 
+---
 
-⸻
+## ⚙️ Component Architecture
 
-🧩 Component Architecture
-
+```mermaid
 flowchart TD
-  ROOT["AppShell\n(global entry)"]
-  ROOT --> H["Header"]
-  ROOT --> L["LayerControls"]
-  ROOT --> M["MapView"]
-  ROOT --> D["DetailPanel"]
-  ROOT --> AI["AIAssistant"]
-  ROOT --> T["TimelineView"]
-  ROOT --> ACC["Accessibility Components"]
+  ROOT["AppShell<br/>Global Entry Point"]
+  ROOT --> H["Header<br/>Global Navigation"]
+  ROOT --> L["LayerControls<br/>STAC-driven UI"]
+  ROOT --> M["MapView<br/>MapLibre GL Renderer"]
+  ROOT --> D["DetailPanel<br/>Entity/Event Metadata"]
+  ROOT --> AI["AIAssistant<br/>Conversational Context"]
+  ROOT --> T["TimelineView<br/>Temporal Visualization"]
+  ROOT --> ACC["Accessibility Components<br/>Focus · ARIA · Motion"]
 %% END OF MERMAID
+```
 
+> The AppShell ensures unified access to context and consistent data flow between visual components.
 
-⸻
+---
 
-🧠 Responsibilities
+## 🧠 Responsibilities
 
-Responsibility	Description
-Context Loading	Initializes all app-wide providers: Theme, Timeline, Map, Layer, AI, and Accessibility contexts.
-Layout Grid	Defines the responsive layout and flex behavior for all panels (map, timeline, detail).
-Routing & State	Handles top-level routing and persistent UI state (active panel, selected entity).
-Error Handling	Wraps children with ErrorBoundary and shows user-friendly fallback UI.
-Theming & Motion	Integrates Framer Motion transitions for smooth mounting/unmounting of panels.
-Initialization	Displays LoadingScreen while fetching configuration and STAC metadata.
+| Responsibility          | Description                                                                         |
+| :---------------------- | :---------------------------------------------------------------------------------- |
+| **Context Loading**     | Initializes all app-wide providers — Theme, Timeline, Map, Layer, AI, Accessibility |
+| **Layout Grid**         | Defines responsive region hierarchy for map, timeline, and side panels              |
+| **Routing & State**     | Manages high-level navigation and persistent UI state (selected entities, modals)   |
+| **Error Handling**      | Wraps children with `ErrorBoundary` for fail-safe recovery                          |
+| **Loading State**       | Displays `LoadingScreen` until configuration and STAC data are fetched              |
+| **Theming & Animation** | Integrates `Framer Motion` transitions across layouts and theme changes             |
 
+---
 
-⸻
+## 💬 Example Implementation
 
-⚙️ Example Implementation
-
+```tsx
 import React from "react";
 import {
   ThemeProvider,
@@ -99,7 +117,7 @@ export const AppShell: React.FC = () => {
           <TimelineProvider>
             <LayerProvider>
               <MapProvider>
-                <div className="app-shell">
+                <div className="app-shell" role="application">
                   <Header />
                   <main className="app-main">
                     <LayerControls />
@@ -117,73 +135,126 @@ export const AppShell: React.FC = () => {
     </AccessibilityProvider>
   );
 };
+```
 
+> This component ensures all child modules share the same contextual and semantic environment.
 
-⸻
+---
 
-🧮 Layout Grid
+## 🧮 Layout Grid
 
+```mermaid
 flowchart TB
-  H["Header (fixed top)"] --> MA["Main Area"]
-  MA --> L["Left: Layer Controls"]
+  H["Header (fixed top)"] --> MA["Main Grid Area"]
+  MA --> L["Left: LayerControls"]
   MA --> M["Center: MapView"]
-  MA --> D["Right: Detail Panel + AIAssistant"]
-  MA --> TL["Bottom: Timeline (responsive)"]
+  MA --> D["Right: DetailPanel + AIAssistant"]
+  MA --> TL["Bottom: Timeline (responsive overlay)"]
 %% END OF MERMAID
+```
 
-Grid behavior:
-	•	Uses CSS Grid with responsive breakpoints defined in styles.scss.
-	•	Panels auto-collapse on smaller screens; timeline becomes overlayed slider.
-	•	Map always occupies central focus (min-width prioritized).
+### Grid System Notes
 
-⸻
+* Implemented using **CSS Grid + Flexbox hybrid** for adaptive scaling
+* Responsive breakpoints:
 
-🎨 Styling & Theming
-	•	Color and typography tokens imported from web/src/styles/variables.scss.
-	•	Supports light/dark themes via ThemeContext.
-	•	Framer Motion animates transitions between modes (fade, slide).
-	•	Uses TailwindCSS utilities for flexible layout alignment.
+  * `≥1280px`: 3-column layout (Controls · Map · Panels)
+  * `768–1279px`: Timeline collapses to overlay drawer
+  * `<768px`: Stack layout (Map → Panels → Timeline)
+* Map retains priority with min-width enforcement
+* Timeline animates with `slideUp` / `slideDown` transitions
 
-⸻
+---
 
-🧪 Testing
+## 🎨 Styling & Theming
 
-Test Case	Description
-Renders All Panels	Asserts Header, Map, Timeline, and AI Assistant load.
-Context Availability	Ensures all providers deliver correct default values.
-ErrorBoundary	Catches thrown component errors gracefully.
-LoadingScreen	Displays until STAC catalog + API config are loaded.
-Responsive Layout	Snapshot tests for desktop, tablet, mobile breakpoints.
+| Feature             | Implementation                                                             |
+| :------------------ | :------------------------------------------------------------------------- |
+| **Theme Tokens**    | Inherits global CSS variables (`--kfm-color-bg`, `--kfm-color-text`, etc.) |
+| **Light/Dark Mode** | `ThemeContext` toggles global CSS root properties                          |
+| **Motion**          | `Framer Motion` animates mounting/unmounting of major panels               |
+| **Typography**      | Scales fluidly via `clamp()` functions; accessible contrast ratio ≥ 4.5:1  |
+| **Frameworks**      | TailwindCSS utilities combined with SCSS for custom grid layout            |
 
-Tools: Jest + React Testing Library + Cypress (for E2E).
-Accessibility tested with axe-core (focus traps, ARIA labels, color contrast).
+```scss
+.app-shell {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  background-color: var(--kfm-color-bg);
+  color: var(--kfm-color-text);
+}
+```
 
-⸻
+---
 
-🧾 Provenance & Integrity
+## ♿ Accessibility (WCAG 2.1 AA)
 
-Artifact	Description
-Inputs	Contexts (Timeline, Map, AI, Layer, Accessibility), STAC catalog, API endpoints
-Outputs	Fully rendered, interactive layout (HTML + React state tree)
-Dependencies	React 18+, Framer Motion, TailwindCSS, TypeScript
-Integrity	CI validates build integrity, accessibility score ≥ 95%, and 100% layout coverage
+* **Landmark Roles:** `role="application"` for AppShell · `role="main"` for central grid
+* **Keyboard Focus:** Logical tab order between Header → Map → Panels → Timeline
+* **ARIA Integration:** Context-driven dynamic `aria-live` updates (e.g., AI responses, selection changes)
+* **Reduced Motion:** All Framer Motion transitions disabled via `prefers-reduced-motion`
+* **Color Contrast:** Verified against light/dark backgrounds with axe-core in CI
 
+Accessibility Score: **≥ 95** (axe-core + Lighthouse)
 
-⸻
+---
 
-🔗 Related Documentation
-	•	Web Frontend Components
-	•	Context Providers
-	•	Web UI Architecture
-	•	Accessibility Design Guide
+## 🧪 Testing
 
-⸻
+| Test Case                | Description                                        | Tool       |
+| :----------------------- | :------------------------------------------------- | :--------- |
+| **Render Validation**    | Confirms all child components mount correctly      | Jest + RTL |
+| **Context Availability** | Validates providers expose default values          | Jest       |
+| **ErrorBoundary**        | Catches component render errors gracefully         | RTL        |
+| **LoadingScreen**        | Verifies splash persists until STAC metadata loads | Jest + MSW |
+| **Responsive Layout**    | Snapshot tests for mobile, tablet, desktop         | Cypress    |
+| **Accessibility Audit**  | Checks ARIA roles, tab order, color contrast       | axe-core   |
 
-📜 License
+> **Coverage Target:** ≥ **95%** across integration and accessibility tests.
 
-Released under the MIT License.
-© 2025 Kansas Frontier Matrix — Built with the Master Coder Protocol (MCP)
-for reproducible, accessible, and modular design.
+---
 
-“The AppShell is the frontier’s foundation — all stories, data, and design begin here.”
+## 🧾 Provenance & Integrity
 
+| Artifact         | Description                                                      |
+| :--------------- | :--------------------------------------------------------------- |
+| **Inputs**       | Context providers, STAC metadata, API endpoints                  |
+| **Outputs**      | Fully orchestrated React application layout                      |
+| **Dependencies** | React 18+, Framer Motion, TailwindCSS, TypeScript                |
+| **Integrity**    | CI/CD verifies reproducibility, performance, and a11y compliance |
+
+---
+
+## 🧠 MCP Compliance Checklist
+
+| MCP Principle       | Implementation                                  |
+| :------------------ | :---------------------------------------------- |
+| Documentation-first | README + inline TSDoc before merge              |
+| Reproducibility     | Consistent layout state via contexts            |
+| Accessibility       | WCAG 2.1 AA with automated CI validation        |
+| Provenance          | Context lineage + data source integrity logged  |
+| Open Standards      | Semantic HTML, ARIA roles, CSS Custom Props     |
+| Modularity          | Extensible grid layout supporting future panels |
+
+---
+
+## 🔗 Related Documentation
+
+* **Web Frontend Components** — `web/src/components/README.md`
+* **Context Providers** — `web/src/context/README.md`
+* **Web UI Architecture** — `web/ARCHITECTURE.md`
+* **Accessibility Design Guide** — `docs/design/reviews/accessibility/`
+
+---
+
+## 📜 License
+
+Released under the **MIT License**.
+© 2025 Kansas Frontier Matrix — constructed under **MCP-DL v6.2** for reproducible, accessible, and modular design.
+
+> *“The AppShell is the frontier’s foundation — where Kansas’s stories, data, and design converge.”*
+
+```
+```
