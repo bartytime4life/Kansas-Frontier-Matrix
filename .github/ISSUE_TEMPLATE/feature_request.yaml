@@ -20,7 +20,7 @@ body:
     attributes:
       value: |
         # 💡 Kansas Frontier Matrix — Feature Request
-        _“Every Feature Builds the Future · Every Change is Reproducible.”_
+        _"Every Feature Builds the Future · Every Change is Reproducible."_
         Please provide clear context, the problem to solve, and measurable outcomes.
 
   - type: textarea
@@ -110,13 +110,13 @@ body:
     id: change_types
     attributes:
       label: "Change Type(s)"
-      options:
-        - label: "Add new data transformation module"
-        - label: "Modify ETL pipeline step"
-        - label: "Extend STAC metadata/schema"
-        - label: "Create new visualization layer"
-        - label: "Update documentation / SOP"
-        - label: "Other (describe in solution)"
+    options:
+      - label: "Add new data transformation module"
+      - label: "Modify ETL pipeline step"
+      - label: "Extend STAC metadata/schema"
+      - label: "Create new visualization layer"
+      - label: "Update documentation / SOP"
+      - label: "Other (describe in solution)"
 
   - type: markdown
     attributes:
@@ -199,13 +199,13 @@ body:
     id: mcp
     attributes:
       label: "MCP Principles"
-      options:
-        - label: "Documentation-first — motivation + technical context"
-        - label: "Reproducibility — deterministic validation paths"
-        - label: "Open Standards — STAC/JSON Schema/COG conventions"
-        - label: "Provenance — linked datasets, commits, workflows"
-        - label: "Auditability — traceable via CI review gates"
-        - label: "Versioning — SemVer bump & STAC versions updated"
+    options:
+      - label: "Documentation-first — motivation + technical context"
+      - label: "Reproducibility — deterministic validation paths"
+      - label: "Open Standards — STAC/JSON Schema/COG conventions"
+      - label: "Provenance — linked datasets, commits, workflows"
+      - label: "Auditability — traceable via CI review gates"
+      - label: "Versioning — SemVer bump & STAC versions updated"
 
   - type: textarea
     id: impact
@@ -227,24 +227,22 @@ body:
     id: validation
     attributes:
       label: "Pre-Merge Checks"
-      options:
-        - label: "Unit tests added and passing"
-        - label: "STAC schema validated (`make stac-validate`)"
-        - label: "ETL reproducibility confirmed"
-        - label: "License & data compliance verified"
-        - label: "Docs updated under `/docs/sop/` or `/docs/adr/`"
-        - label: "Version bump recorded in `CHANGELOG.md`"
+    options:
+      - label: "Unit tests added and passing"
+      - label: "STAC schema validated (`make stac-validate`)"
+      - label: "ETL reproducibility confirmed"
+      - label: "License & data compliance verified"
+      - label: "Docs updated under `/docs/sop/` or `/docs/adr/`"
+      - label: "Version bump recorded in `CHANGELOG.md`"
 
   - type: checkboxes
     id: governance
     attributes:
       label: "Maintainer Review"
-      options:
-        - label: "Design Doc submitted (`docs/adr/`)"
-        - label: "STAC schema impact assessed (versioning)"
-        - label: "CI/CD tests passing (green checks)"
-        - label: "Security review complete"
-        - label: "Version/tag bump approved (SemVer policy)"
+    options:
+      - label: "Design Doc submitted (`docs/adr/`)"
+      - label: "STAC schema impact assessed (versioning)"
+      - label: "CI/CD tests passing (green checks)"
+      - label: "Security review complete"
+      - label: "Version/tag bump approved (SemVer policy)"
 ```
-
----
