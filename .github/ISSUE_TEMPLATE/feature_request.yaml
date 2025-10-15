@@ -1,201 +1,154 @@
-Understood. Here is a **plain ASCII**, **GitHub-validated**, **drop-in** issue form you can paste directly into:
+### `feature_request.yml` (minimal, safe, and working)
 
-`.github/ISSUE_TEMPLATE/feature_request.yml`
-
-> No emojis, no smart quotes, no code fences, and only ASCII characters to avoid any encoding pitfalls.
-
+```
 name: "Feature Request"
 description: "Propose a feature or enhancement"
 title: "[Feature]: <short title>"
 labels: [enhancement, needs-triage]
 assignees: [kfm-architecture, kfm-data]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        # Feature Request
+        Please provide context, the problem to solve, and measurable outcomes.
 
-* type: markdown
-  attributes:
-  value: |
-  # Feature Request
-  Please provide context, the problem to solve, and measurable outcomes.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the feature and expected benefits.
+      placeholder: "Add slope classification to terrain pipeline and visualize in MapLibre."
+    validations:
+      required: true
 
-* type: textarea
-  id: summary
-  attributes:
-  label: Summary
-  description: Describe the feature, enhancement, or optimization and expected benefits.
-  placeholder: "Add slope classification to terrain pipeline outputs and enable gradient visualization in MapLibre."
-  validations:
-  required: true
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain / Module
+      options:
+        - Terrain
+        - Hydrology
+        - Climate
+        - Hazards
+        - Landcover
+        - Knowledge Graph
+        - Web UI
+        - API
+        - Text / AI / NLP
+        - Metadata / Governance
+        - CI/CD
+        - Other
+    validations:
+      required: true
 
-* type: markdown
-  attributes:
-  value: "## Motivation / Use Case"
+  - type: input
+    id: component
+    attributes:
+      label: Pipeline / Component
+      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
+    validations:
+      required: true
 
-* type: dropdown
-  id: domain
-  attributes:
-  label: Domain / Module
-  options:
-  - Terrain
-  - Hydrology
-  - Climate
-  - Hazards
-  - Landcover
-  - Knowledge Graph
-  - Web UI
-  - API
-  - Text / AI / NLP
-  - Metadata / Governance
-  - CI/CD
-  - Other
-  validations:
-  required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      description: Who benefits and how this will be used.
+      placeholder: "Enable classification maps for slope ranges to support hazard and trail planning."
+    validations:
+      required: true
 
-* type: input
-  id: component
-  attributes:
-  label: Pipeline / Component
-  placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
-  validations:
-  required: true
+  - type: textarea
+    id: limitation
+    attributes:
+      label: Current Limitation
+      placeholder: "No slope visualization or classification available."
+    validations:
+      required: true
 
-* type: textarea
-  id: use_case
-  attributes:
-  label: Use Case
-  placeholder: "Enable classification maps for slope ranges to support hazard and trail planning."
-  validations:
-  required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Implementation
+      description: Include technical specifics, workflow changes, and architecture impacts.
+      placeholder: |
+        - Extend terrain_pipeline.py with --add-slope-classification
+        - Generate slope class COG and add STAC property slope_class_version
+        - Add layers.json entry with gradient style
+    validations:
+      required: true
 
-* type: textarea
-  id: limitation
-  attributes:
-  label: Current Limitation
-  placeholder: "No slope visualization or classification available."
-  validations:
-  required: true
+  - type: checkboxes
+    id: change_types
+    attributes:
+      label: Change Type(s)
+      options:
+        - label: Add new data transformation module
+        - label: Modify ETL pipeline step
+        - label: Extend STAC metadata or schema
+        - label: Create new visualization layer
+        - label: Update documentation or SOP
+        - label: Other (describe in solution)
 
-* type: textarea
-  id: dependencies
-  attributes:
-  label: Dependencies
-  description: Tools, APIs, libraries, schema updates, permissions.
-  placeholder: "WhiteboxTools v2.2+, STAC schema update, web layer style."
-  validations:
-  required: false
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Expected Outcome and Metrics
+      description: Define measurable results and acceptance criteria.
+      placeholder: |
+        Metrics:
+        - Data Quality: slope_class attribute present; STAC fields updated
+        - Reproducibility: deterministic outputs; SOP updated
+        - Usability: map layer toggle and legend
+        - Performance: less than 5 percent runtime impact
+    validations:
+      required: true
 
-* type: markdown
-  attributes:
-  value: "## Proposed Solution"
+  - type: dropdown
+    id: semver
+    attributes:
+      label: Repo SemVer Impact
+      description: Patch = fix; Minor = new feature; Major = breaking change.
+      options:
+        - semver:none
+        - semver:patch
+        - semver:minor
+        - semver:major
+    validations:
+      required: true
 
-* type: textarea
-  id: solution
-  attributes:
-  label: Proposed Implementation
-  description: Include technical specifics, workflow changes, and architecture impacts.
-  placeholder: |
-  - Extend terrain_pipeline.py with --add-slope-classification
-  - Generate slope class COG and STAC property slope_class_version
-  - Add layers.json entry with gradient style
-  validations:
-  required: true
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Pre-Merge Checks
+      options:
+        - label: Unit tests added and passing
+        - label: STAC schema validated (make stac-validate)
+        - label: ETL reproducibility confirmed
+        - label: License and data compliance verified
+        - label: Docs updated under /docs/sop/ or /docs/adr/
+        - label: Version bump recorded in CHANGELOG.md
+```
 
-* type: checkboxes
-  id: change_types
-  attributes:
-  label: Change Type(s)
-  options:
-  - label: Add new data transformation module
-  - label: Modify ETL pipeline step
-  - label: Extend STAC metadata or schema
-  - label: Create new visualization layer
-  - label: Update documentation or SOP
-  - label: Other (describe in solution)
+---
 
-* type: markdown
-  attributes:
-  value: "## Expected Outcome"
+### Optional: `config.yml` to show buttons on “New issue”
 
-* type: textarea
-  id: outcome
-  attributes:
-  label: Expected Outcome and Metrics
-  description: Define measurable results and acceptance criteria.
-  placeholder: |
-  Metrics:
-  - Data Quality: slope_class attribute present; STAC fields updated
-  - Reproducibility: deterministic outputs; SOP updated
-  - Usability: map layer toggle and legend
-  - Performance: less than 5 percent runtime impact
-  validations:
-  required: true
+Place at **`.github/ISSUE_TEMPLATE/config.yml`**:
 
-* type: markdown
-  attributes:
-  value: "## Versioning Impact (SemVer / STAC)"
+```
+blank_issues_enabled: false
+contact_links:
+  - name: KFM Discussions
+    url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/discussions
+    about: Questions, design exploration, and general discussion.
 
-* type: dropdown
-  id: semver
-  attributes:
-  label: Repo SemVer Impact
-  description: Patch = fix; Minor = new feature; Major = breaking change.
-  options:
-  - semver:none
-  - semver:patch
-  - semver:minor
-  - semver:major
-  validations:
-  required: true
+issue_template:
+  - name: "Feature Request"
+    about: "Propose a feature or enhancement"
+    url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml
+    labels: ["enhancement","needs-triage"]
+```
 
-* type: textarea
-  id: version_matrix
-  attributes:
-  label: Version Matrix (optional)
-  description: List any schema or data version bumps.
-  placeholder: |
-  Scope: Dataset / STAC Schema -> v1.2.0 to v1.3.0
-  Scope: Pipeline / Script -> v2.0.0 to v2.1.0
-  Scope: Repo (SemVer) -> v1.4.0 to v1.5.0
-  validations:
-  required: false
-
-* type: textarea
-  id: related
-  attributes:
-  label: Related Artifacts (optional)
-  description: Link STAC items, checksums, workflow runs, related issues/PRs, SOP/ADR docs.
-  placeholder: |
-  - STAC Collection or Item IDs
-  - Checksums if validation affected
-  - Workflow run URLs
-  - Related Issues or PRs
-  - docs/adr/ADR-XXXX-title.md
-  validations:
-  required: false
-
-* type: markdown
-  attributes:
-  value: "## Validation and Governance"
-
-* type: checkboxes
-  id: validation
-  attributes:
-  label: Pre-Merge Checks
-  options:
-  - label: Unit tests added and passing
-  - label: STAC schema validated (make stac-validate)
-  - label: ETL reproducibility confirmed
-  - label: License and data compliance verified
-  - label: Docs updated under /docs/sop/ or /docs/adr/
-  - label: Version bump recorded in CHANGELOG.md
-
-* type: checkboxes
-  id: governance
-  attributes:
-  label: Maintainer Review
-  options:
-  - label: Design doc submitted (docs/adr/)
-  - label: STAC schema impact assessed
-  - label: CI and security checks passing
-  - label: Version and tag approved per SemVer
-
-————
+---
