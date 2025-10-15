@@ -1,182 +1,241 @@
 <div align="center">
 
-# 🛠️ Kansas Frontier Matrix — Tools (`/tools/`)
+# 🛠️ Kansas Frontier Matrix — **Tools**  
+`/tools/`
 
-**Mission:** Provide **utility scripts and helper tools** that support  
-data ingestion, processing, validation, and deployment workflows  
-across the Kansas Frontier Matrix (KFM) project.  
+**Utility Scripts · Data Pipelines · Validation & Deployment Helpers**
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../.github/workflows/tests.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
 [![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../docs/)
 
 </div>
 
 ---
 
-## 🎯 Purpose
-
-The `/tools/` directory contains **scripts, utilities, and helper programs**  
-that are not part of the deployed production stack but are **essential** for:
-
-- 🗂️ **Data management** — fetching, converting, validating datasets.  
-- 🧪 **Testing & validation** — schema checks, STAC compliance, CI helpers.  
-- 🚀 **Automation** — build/deploy utilities and Makefile helpers.  
-- 🧭 **Exploration** — Jupyter notebooks or quick-analysis scripts.  
-
-> All utilities follow the **Master Coder Protocol (MCP)** — every operation is reproducible, documented, and provenance-logged.
-
+```yaml
 ---
-
-## 📚 Structure
-
-```text
-tools/
-├── fetch_data.py       # Fetch raw datasets from data/sources/*.json
-├── convert_gis.py      # Convert shapefiles/rasters → GeoJSON/COG GeoTIFF
-├── validate_stac.py    # Validate STAC collections/items via JSON Schema
-├── checksum.py         # Generate / verify SHA-256 provenance sidecars
-├── migrate_graph.py    # Load ETL outputs into Neo4j (batch Cypher inserts)
-├── build_config.py     # Regenerate app.config.json & layers.json for web UI
-├── notebooks/          # Jupyter notebooks (exploration / prototypes)
-└── utils/              # Shared helper modules (logging, config, etc.)
+title: "KFM • Tools (tools/)"
+version: "v1.5.0"
+last_updated: "2025-10-14"
+owners: ["@kfm-data", "@kfm-engineering"]
+tags: ["tools","scripts","automation","validation","stac","neo4j","mcp"]
+license: "MIT"
+semantic_alignment:
+  - STAC 1.0
+  - PROV-O (Provenance Tracking)
+  - FAIR Principles (Data Reproducibility)
+---
 ````
 
 ---
 
-## ⚙️ Key Tools
+## 🎯 Mission
+
+The `/tools/` directory provides **scripts, utilities, and helper programs** that automate and validate core workflows across the **Kansas Frontier Matrix (KFM)** project.
+
+These tools are **not production dependencies**, but they are **mission-critical for reproducibility** — enabling data ingestion, processing, validation, and deployment under **Master Coder Protocol (MCP-DL v6.2)** principles.
+
+> **Guiding Principle:** Every helper is deterministic, documented, and leaves a provenance trail.
+
+---
+
+## 🧱 Directory Structure
+
+```text
+tools/
+├── fetch_data.py         # Fetch raw datasets from data/sources/*.json manifests
+├── convert_gis.py        # Convert shapefiles/rasters → GeoJSON / COG GeoTIFF
+├── validate_stac.py      # Validate STAC collections/items via JSON Schema
+├── checksum.py           # Generate/verify SHA-256 provenance sidecars
+├── migrate_graph.py      # Load ETL outputs into Neo4j (batched Cypher inserts)
+├── build_config.py       # Regenerate web/config/*.json from STAC metadata
+├── notebooks/            # Jupyter notebooks (prototyping, exploratory analysis)
+└── utils/                # Shared helper modules (logging, config, constants)
+```
+
+---
+
+## ⚙️ Core Utilities
 
 ### `fetch_data.py`
 
-* Reads `data/sources/*.json` manifests.
-* Downloads referenced files (HTTP, REST, ArcGIS API).
-* Writes raw outputs to `data/raw/`.
+* Reads dataset manifests (`data/sources/*.json`)
+* Fetches remote data via HTTP, REST, or ArcGIS APIs
+* Stores outputs in `data/raw/`
+* Logs provenance (URL, timestamp, checksum)
 
 ### `convert_gis.py`
 
-* Converts GIS datasets to open formats:
+* Converts raw GIS data into open formats:
 
   * Vector → **GeoJSON**
   * Raster → **COG GeoTIFF**
-* Reprojects to **WGS84 (EPSG:4326)** for consistency.
+* Reprojects to **EPSG:4326 (WGS84)**
+* Uses **GDAL / rasterio / pyproj**
 
 ### `validate_stac.py`
 
-* Runs JSON Schema + STAC 1.0 validation.
-* Ensures every STAC Item in `data/stac/` passes compliance checks.
+* Validates **STAC 1.0 Items** and Collections
+* Ensures metadata completeness and schema compliance
+* Outputs CI validation reports and JSON summaries
 
 ### `checksum.py`
 
-* Generates `.sha256` files for all raw/processed assets.
-* Verifies integrity before ingestion or publish.
+* Computes and verifies **SHA-256** integrity checks for all raw and processed files
+* Used for provenance assurance and reproducible builds
 
 ### `migrate_graph.py`
 
-* Loads processed ETL outputs into the **Neo4j knowledge graph**.
-* Uses batched Cypher transactions; skips duplicate entities via alias matching.
+* Imports processed datasets into the **Neo4j knowledge graph**
+* Uses batch Cypher inserts
+* De-duplicates entities via alias matching and provenance links
 
 ### `build_config.py`
 
-* Rebuilds `app.config.json` and `layers.json` for the web app.
-* Pulls metadata from the STAC catalog; keeps the UI in sync with datasets.
+* Regenerates `web/config/app.config.json` and `web/config/layers.json`
+* Extracts STAC metadata for direct use by the frontend web UI
+* Guarantees synchronization between data backend and visualization layers
 
 ---
 
 ## 🚀 Usage
 
-Typical workflows are orchestrated via **Makefile** targets.
+All workflows can be executed directly or orchestrated via the **Makefile**.
 
 ```bash
-# Fetch all external datasets
+# Fetch external datasets
 make fetch
 
-# Convert raw GIS → open formats
+# Convert raw GIS to open formats
 make convert
 
-# Validate STAC catalog
+# Validate STAC metadata
 make stac-validate
 
 # Verify checksums
 make checksums
 
-# Migrate data into Neo4j
+# Load data into Neo4j
 make graph-migrate
 
-# Rebuild web UI configs
+# Rebuild web configurations
 make site-config
 ```
 
-For ad-hoc runs:
+**Direct CLI Usage Example:**
 
 ```bash
 python tools/fetch_data.py --source data/sources/usgs_topo.json
-python tools/convert_gis.py input.shp output.json
+python tools/convert_gis.py input.shp output.geojson
 python tools/validate_stac.py data/stac/items/*
 ```
 
 ---
 
-## 🧭 Development Guidelines
+## 🧩 Integration Workflow
 
-Every tool must:
-
-1. Include **inline docstrings** and CLI help (`-h/--help`).
-2. **Log** actions to stdout and optional provenance logs.
-3. Use open, well-maintained libraries (`requests`, `rasterio`, `pyproj`, `pystac`, `GDAL`).
-4. Remain **importable** as a module (`from tools import ...`) for pipeline reuse.
-5. Follow MCP structure → clear inputs / outputs, deterministic results.
-6. Large or experimental workflows → keep under `notebooks/` until production-ready.
-
----
-
-## 🧩 Integration Points
-
-| Stage              | Consumes              | Produces            | Downstream         |
-| ------------------ | --------------------- | ------------------- | ------------------ |
-| `fetch_data.py`    | `data/sources/*.json` | `data/raw/`         | `convert_gis.py`   |
-| `convert_gis.py`   | raw files             | `data/processed/`   | `validate_stac.py` |
-| `validate_stac.py` | processed files       | validation logs     | CI checks / build  |
-| `checksum.py`      | raw + processed       | `.sha256`           | provenance audits  |
-| `migrate_graph.py` | processed CSV/JSON    | Neo4j nodes/edges   | API / frontend     |
-| `build_config.py`  | `data/stac/`          | `web/config/*.json` | Web UI             |
+| Stage              | Consumes              | Produces            | Downstream          |
+| :----------------- | :-------------------- | :------------------ | :------------------ |
+| `fetch_data.py`    | `data/sources/*.json` | `data/raw/`         | `convert_gis.py`    |
+| `convert_gis.py`   | Raw files             | `data/processed/`   | `validate_stac.py`  |
+| `validate_stac.py` | Processed files       | Validation reports  | CI / Build Pipeline |
+| `checksum.py`      | Raw + Processed       | `.sha256` files     | Provenance Audits   |
+| `migrate_graph.py` | Processed data        | Neo4j nodes/edges   | API / Frontend      |
+| `build_config.py`  | STAC metadata         | Web UI config JSONs | `web/config/`       |
 
 ---
 
-## 🧪 Testing & CI Hooks
+## 🧪 Testing & CI Integration
 
-* **Unit tests:** under `tests/tools/`, executed by `pytest`.
-* **Pre-commit hooks:** lint (ruff/black), YAML schema checks.
-* **CI:** each tool exercised in GitHub Actions (`tests.yml`) with sample manifests.
-* **Logs:** CI artifacts include validation and checksum reports.
+* **Unit Tests:** `tests/tools/` executed via **pytest**
+* **Pre-commit Hooks:** Enforce linting (`ruff`, `black`), YAML/JSON schema validation
+* **CI Workflows:** Each tool exercised in `tests.yml` with fixture datasets
+* **Artifacts:** Validation reports and checksum logs stored in CI build artifacts
+
+All tools support `--dry-run`, `--verbose`, and `--output` flags for safe experimentation.
 
 ---
 
-## 🧱 Example Workflow (End-to-End)
+## 🧱 Example End-to-End Workflow
 
 ```bash
-# 1. Fetch & verify data
+# 1. Fetch & verify source data
 make fetch checksums
 
-# 2. Convert → COG / GeoJSON
+# 2. Convert GIS formats (COG, GeoJSON)
 make convert
 
-# 3. Validate STAC metadata
+# 3. Validate STAC compliance
 make stac-validate
 
-# 4. Migrate graph + rebuild configs
+# 4. Load to knowledge graph and rebuild configs
 make graph-migrate site-config
 ```
 
-All steps are traceable via generated `.sha256` and STAC provenance.
+Each stage emits structured logs and SHA-verified artifacts for traceable, reproducible processing.
 
 ---
 
-<div align="center">
+## 🧠 Development Guidelines
 
-🧩 *Tools are not throwaways — they are first-class, documented, and reproducible under MCP standards.*
-✨ *Automation with integrity — every helper leaves a trail.* ✨
+Every script must:
 
-</div>
+1. Include a clear **docstring** and CLI help (`-h` / `--help`).
+2. **Log all actions** with timestamps and output summaries.
+3. Use **only open-source, actively maintained libraries** (`requests`, `rasterio`, `pystac`, `GDAL`, etc.).
+4. Be **modular** — importable as a library for pipelines (`from tools import ...`).
+5. Produce **deterministic outputs**; identical inputs must yield identical hashes.
+6. Write **structured logs** to `logs/{tool_name}.log` for provenance tracking.
+
+> Larger or experimental workflows must first live in `/tools/notebooks/` before production inclusion.
+
+---
+
+## 🧾 Provenance & Integrity
+
+| Artifact         | Description                                                    |
+| :--------------- | :------------------------------------------------------------- |
+| **Inputs**       | Dataset manifests, raw data files, STAC metadata               |
+| **Outputs**      | Processed datasets, provenance checksums, config JSONs         |
+| **Dependencies** | Python 3.11+, GDAL, rasterio, pystac, neo4j-driver             |
+| **Integrity**    | Verified through CI logs, STAC validation, and checksum audits |
+| **Traceability** | Each execution stores operation logs and SHA256 signatures     |
+
+---
+
+## 🧠 MCP Compliance Checklist
+
+| MCP Principle       | Implementation                                           |
+| :------------------ | :------------------------------------------------------- |
+| Documentation-first | Every tool documented with docstrings + README reference |
+| Reproducibility     | Deterministic execution verified via checksum validation |
+| Provenance          | Input/output tracking with SHA-256 sidecars              |
+| Open Standards      | STAC 1.0, GeoJSON, EPSG:4326                             |
+| Auditability        | CI workflows archive validation and checksum logs        |
+| Accessibility       | CLI help, verbose logging, and config-driven operation   |
+
+---
+
+## 🔗 Related Documentation
+
+* **Data Ingestion Pipeline** — `data/README.md`
+* **STAC Catalog Overview** — `data/stac/README.md`
+* **Web Configuration** — `web/config/README.md`
+* **Monorepo Repository Design** — `docs/monorepo/README.md`
+
+---
+
+## 📜 License
+
+Released under the **MIT License**.
+© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for traceable, automated, and reproducible data engineering.
+
+> *“Tools are not throwaways — they are first-class citizens of reproducibility.”*
+> *Automation with integrity — every helper leaves a trail.*
+
+```
+```
