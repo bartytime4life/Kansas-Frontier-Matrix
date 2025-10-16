@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧱 Kansas Frontier Matrix — Data Architecture  
+# 🧱 Kansas Frontier Matrix — **Data Architecture**  
 `data/ARCHITECTURE.md`
 
 **Mission:** Define the **end-to-end data architecture** of the Kansas Frontier Matrix (KFM) —  
@@ -11,26 +11,46 @@ detailing how raw inputs are transformed, validated, documented, and visualized 
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
 [![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../docs/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Data Architecture (data/ARCHITECTURE.md)"
+version: "v1.3.0"
+last_updated: "2025-10-16"
+owners: ["@kfm-data", "@kfm-architecture"]
+tags: ["architecture","data","etl","stac","provenance","mcp","cog","geojson","parquet"]
+license: "CC-BY 4.0"
+semantic_alignment:
+  - STAC 1.0.0
+  - GeoJSON (RFC 7946)
+  - Cloud-Optimized GeoTIFF (COG)
+  - CSVW / Apache Parquet
+  - NetCDF / CF Conventions
+  - MCP-DL v6.2 (Reproducibility & Provenance)
+---
+```
+
+---
+
 ## 📚 Overview
 
-The **Kansas Frontier Matrix Data Architecture** governs how data moves through the repository —  
-from acquisition and transformation to metadata generation, validation, and visualization.  
+The **Kansas Frontier Matrix Data Architecture** defines how data moves through the repository —  
+from acquisition and transformation to metadata generation, validation, and visualization.
+
 It ensures that every layer of data is:
 
-- **Traceable** — from its source manifest to its published STAC Item.  
-- **Reproducible** — deterministic ETL and validation workflows.  
-- **Auditable** — via checksums, provenance logs, and MCP documentation.  
+- **Traceable** — from its `data/sources/*.json` manifest to its published **STAC Item**.  
+- **Reproducible** — deterministic **ETL** and **validation** workflows.  
+- **Auditable** — via **checksums**, provenance logs, and MCP documentation.  
 - **Open** — using transparent, standards-based formats for maximum interoperability.  
 
-This document serves as the **blueprint** for the KFM data subsystem — defining its lifecycle,  
-governance model, and automated verification pipeline.
+This document is the **blueprint** for the KFM data subsystem — describing its lifecycle, governance model, and automated verification pipelines.
 
 ---
 
@@ -38,161 +58,190 @@ governance model, and automated verification pipeline.
 
 ```mermaid
 flowchart TD
-  A["🌐 External Sources\n(data/sources/)"] --> B["📦 Raw Data\n(data/raw/)"]
+  A["🌐 External Sources\n(data/sources/)"] --> B["📦 Raw Data (immutable)\n(data/raw/)"]
   B --> C["⚙️ ETL Processing & Cleaning\n(src/pipelines/)"]
   C --> D["✅ Processed Data\n(data/processed/)"]
-  D --> E["🧩 Metadata & STAC\n(data/processed/metadata/ · data/stac/)"]
-  E --> F["🧾 Checksums & Validation\n(data/checksums/)"]
-  F --> G["🌎 Web & Visualization Layers\n(data/tiles/ · web/config/)"]
+  D --> E["🧩 Metadata & STAC\n(data/processed/**/metadata/ · data/stac/)"]
+  E --> F["🧾 Checksums & Validation\n(data/checksums/ · CI: stac-validate.yml)"]
+  F --> G["🌎 Visualization & Web\n(data/tiles/ · web/config/)"]
 
-  style A fill:#f8f9fa,stroke:#888;
-  style B fill:#f0f8ff,stroke:#0088cc;
-  style C fill:#fff0f5,stroke:#cc0088;
-  style D fill:#e8fff0,stroke:#33aa33;
-  style E fill:#faf5e6,stroke:#e8a500;
-  style F fill:#f0e8ff,stroke:#7d33aa;
+  style A fill:#f8f9fa,stroke:#777;
+  style B fill:#eef7ff,stroke:#0b6fff;
+  style C fill:#fff0f6,stroke:#d4007f;
+  style D fill:#e9fff0,stroke:#2daa2d;
+  style E fill:#fff7e6,stroke:#e7a200;
+  style F fill:#f0ebff,stroke:#7f2dea;
   style G fill:#f7f7f7,stroke:#333;
 %% END OF MERMAID
-````
+```
 
 ---
 
 ## 🧩 Data Lifecycle Stages
 
-| Stage                       | Directory                                | Purpose                                                   | Key Artifacts                     |
-| :-------------------------- | :--------------------------------------- | :-------------------------------------------------------- | :-------------------------------- |
-| **1. Source Registration**  | `data/sources/`                          | Defines dataset origins, access methods, and licensing.   | JSON manifests (`*.json`)         |
-| **2. Raw Acquisition**      | `data/raw/`                              | Immutable snapshots of ingested data.                     | GeoTIFF, CSV, NetCDF, JSON        |
-| **3. ETL Processing**       | `src/pipelines/`                         | Cleans, transforms, and standardizes inputs.              | Python scripts, ETL logs          |
-| **4. Processed Data**       | `data/processed/`                        | Validated outputs ready for analysis or visualization.    | GeoJSON, COG, CSV                 |
-| **5. Metadata & STAC**      | `data/processed/metadata/`, `data/stac/` | Records structure, provenance, spatial/temporal coverage. | STAC Items & Collections          |
-| **6. Integrity Validation** | `data/checksums/`                        | Verifies integrity through deterministic hashing.         | `.sha256` files                   |
-| **7. Visualization**        | `data/tiles/`, `web/config/`             | Powers map and timeline interfaces.                       | Raster/vector tiles, JSON configs |
+| Stage | Directory | Purpose | Key Artifacts |
+| :-- | :-- | :-- | :-- |
+| **1. Source Registration** | `data/sources/` | Defines dataset origins, endpoints, and license details. | JSON manifests |
+| **2. Raw Acquisition** | `data/raw/` | Immutable snapshots of downloaded or scraped source data. | GeoTIFF, CSV, NetCDF |
+| **3. ETL Processing** | `src/pipelines/` | Clean, reproject, transform, and normalize inputs. | Python scripts, logs |
+| **4. Processed Data** | `data/processed/` | Ready-to-use open datasets for analysis and visualization. | COGs, GeoJSON, CSV |
+| **5. Metadata & STAC** | `data/processed/**/metadata/`, `data/stac/` | Provides metadata and catalog structure for assets. | STAC Items & Collections |
+| **6. Integrity Validation** | `data/checksums/` | Verifies integrity using deterministic hashes. | `.sha256` manifests |
+| **7. Visualization** | `data/tiles/`, `web/config/` | Powers frontend map & timeline systems. | Map tiles, config JSON |
 
 ---
 
 ## ⚙️ ETL Pipeline Architecture
 
-The ETL subsystem is a **modular, deterministic pipeline** orchestrated by Makefiles
-and executed through Python scripts within `src/pipelines/`.
+| Domain | Pipeline Script | Output Directory | Description |
+| :-- | :-- | :-- | :-- |
+| **Terrain** | `terrain_pipeline.py` | `data/processed/terrain/` | Elevation models, hillshade, slope, aspect layers. |
+| **Hydrology** | `hydrology_pipeline.py` | `data/processed/hydrology/` | River networks, basins, flood risk polygons. |
+| **Landcover** | `landcover_pipeline.py` | `data/processed/landcover/` | NLCD, vegetation, cropland masks. |
+| **Climate** | `climate_pipeline.py` | `data/processed/climate/` | Precipitation, temperature, drought indices. |
+| **Hazards** | `hazards_pipeline.py` | `data/processed/hazards/` | Tornadoes, floods, wildfire, drought datasets. |
+| **Tabular** | `tabular_pipeline.py` | `data/processed/tabular/` | Census, agriculture, economy datasets. |
+| **Text** | `text_pipeline.py` | `data/processed/text/` | OCR and NLP results (treaties, newspapers). |
 
-### 🔧 Domain Pipelines
+Each ETL run:
 
-| Domain        | Pipeline Script         | Output Directory            | Description                                 |
-| :------------ | :---------------------- | :-------------------------- | :------------------------------------------ |
-| **Terrain**   | `terrain_pipeline.py`   | `data/processed/terrain/`   | DEMs, hillshades, slope/aspect layers       |
-| **Hydrology** | `hydrology_pipeline.py` | `data/processed/hydrology/` | Rivers, watersheds, flood polygons          |
-| **Landcover** | `landcover_pipeline.py` | `data/processed/landcover/` | Vegetation, land use, NLCD                  |
-| **Climate**   | `climate_pipeline.py`   | `data/processed/climate/`   | Precipitation, temperature, drought indices |
-| **Hazards**   | `hazards_pipeline.py`   | `data/processed/hazards/`   | Tornado, wildfire, flood events             |
-| **Tabular**   | `tabular_pipeline.py`   | `data/processed/tabular/`   | Census, agricultural, economic stats        |
-| **Text**      | `text_pipeline.py`      | `data/processed/text/`      | OCR and NLP outputs (treaties, newspapers)  |
-
-Each pipeline:
-
-* Pulls sources from `data/sources/`.
-* Logs transformations to `data/work/logs/`.
-* Writes intermediates to `data/work/tmp/`.
-* Generates checksums in `data/checksums/`.
-* Outputs metadata under `data/processed/metadata/`.
+- Pulls inputs from `data/sources/`.  
+- Logs actions to `data/work/logs/`.  
+- Generates temporary intermediates in `data/work/tmp/`.  
+- Produces checksums in `data/checksums/`.  
+- Publishes metadata to `data/stac/`.
 
 ---
 
-## 🧮 Validation & Integrity Architecture
+## 🧮 Validation & Integrity Layers
 
-| Component                  | Function                                                   | Tooling                            |
-| :------------------------- | :--------------------------------------------------------- | :--------------------------------- |
-| **Checksums**              | Verifies binary integrity via SHA-256.                     | `hashlib`, Make targets            |
-| **Schema Validation**      | Confirms JSON/STAC schema conformance.                     | `jsonschema`, `stac-validator`     |
-| **STAC Compliance**        | Ensures catalog consistency and references.                | GitHub Action: `stac-validate.yml` |
-| **Continuous Integration** | Runs validation on every push or PR.                       | GitHub Actions                     |
-| **Peer Review**            | Applies MCP’s scientific peer protocol for major datasets. | Manual review, change log          |
-
-All validation artifacts are versioned and archived in `data/checksums/`
-and `data/work/logs/` for audit reproducibility.
+| Component | Function | Tooling |
+| :-- | :-- | :-- |
+| **Checksums** | Verify integrity of all data artifacts. | `hashlib`, `make checksums` |
+| **Schema Validation** | Ensure JSON, STAC, and metadata compliance. | `jsonschema`, `stac-validator` |
+| **STAC Compliance** | Confirm catalog consistency and relative link integrity. | GitHub Actions: `stac-validate.yml` |
+| **Continuous Integration** | Validate with every commit and pull request. | `.github/workflows/ci.yml` |
+| **Peer Review** | Human MCP data peer verification. | Manual review, provenance log updates |
 
 ---
 
 ## 🧠 Provenance Tracking
 
-Provenance follows a **linear, inspectable chain**:
-
 `Source → Raw → Processed → Metadata → Visualization`
 
-| Artifact Type       | Example Path                              | Purpose                                         |
-| :------------------ | :---------------------------------------- | :---------------------------------------------- |
-| **Source Manifest** | `data/sources/usgs_dem.json`              | Defines original dataset endpoint & license.    |
-| **Checksum File**   | `data/checksums/terrain/ks_dem_1m.sha256` | Verifies output integrity.                      |
-| **STAC Item**       | `data/stac/terrain/ks_dem_1m.json`        | Describes dataset metadata and access links.    |
-| **Processing Log**  | `data/work/logs/terrain_2025-10.log`      | Records transformation and validation results.  |
-| **ETL Script**      | `src/pipelines/terrain_pipeline.py`       | Reconstructs transformations deterministically. |
-
-Each dataset’s lineage can be traced entirely from its source manifest to its published layer.
+| Artifact | Example Path | Purpose |
+| :-- | :-- | :-- |
+| **Source Manifest** | `data/sources/usgs_dem.json` | Defines origin and license for dataset. |
+| **Checksum File** | `data/checksums/terrain/ks_dem_1m.sha256` | Verifies post-process integrity. |
+| **STAC Item** | `data/stac/terrain/ks_dem_1m.json` | Records metadata and file references. |
+| **ETL Log** | `data/work/logs/terrain_2025-10.log` | Documents operations performed. |
+| **Pipeline Script** | `src/pipelines/terrain_pipeline.py` | Defines deterministic workflow. |
 
 ---
 
 ## 🔒 CI/CD Data Governance
 
-Automated **GitHub Actions** enforce the MCP data governance model.
-
-| Workflow            | Purpose                                           | Trigger             |
-| :------------------ | :------------------------------------------------ | :------------------ |
-| `fetch.yml`         | Fetch raw datasets defined in manifests.          | Manual or scheduled |
-| `stac-validate.yml` | Validate STAC schema and links.                   | Push / PR           |
-| `checksums.yml`     | Recompute and verify SHA-256 hashes.              | Data updates        |
-| `codeql.yml`        | Analyze ETL and validation code.                  | Push / PR           |
-| `site.yml`          | Build documentation and deploy site.              | Merge to `main`     |
-| `trivy.yml`         | Scan images and dependencies for vulnerabilities. | Nightly             |
-
-All workflows log results to `data/work/logs/` and surface status badges on project READMEs.
+| Workflow | Purpose | Trigger |
+| :-- | :-- | :-- |
+| `fetch.yml` | Ingest sources from manifest endpoints. | Manual / Scheduled |
+| `stac-validate.yml` | Validate STAC schema and relationships. | Push / PR |
+| `checksums.yml` | Generate and verify file integrity hashes. | Data updates |
+| `codeql.yml` | Static analysis for ETL security. | Push / PR |
+| `site.yml` | Build docs and web visualizations. | Merge to `main` |
+| `trivy.yml` | Scan containers and dependencies. | Nightly |
 
 ---
 
-## 🧩 Integration with the MCP Framework
+## 🧰 Example Artifacts
 
-| MCP Principle           | Implementation                                                         |
-| :---------------------- | :--------------------------------------------------------------------- |
-| **Documentation-First** | Every data folder includes a README and STAC example.                  |
-| **Reproducibility**     | Deterministic ETL with logs, hashes, and pinned dependencies.          |
-| **Open Standards**      | Uses STAC 1.0, GeoTIFF (COG), GeoJSON, Parquet, CSVW, NetCDF.          |
-| **Provenance**          | Chain of manifests, logs, checksums, and metadata ensure full lineage. |
-| **Auditability**        | Automated + human validation provide continuous assurance.             |
+### Source Manifest
+```json
+{
+  "id": "usgs_ks_1m_dem_2018_2020",
+  "title": "Kansas LiDAR DEM (1m, 2018–2020)",
+  "license": "Public Domain (USGS 3DEP)",
+  "type": "raster-dem",
+  "endpoints": ["https://example.usgs.gov/3dep/ks_dem_1m_2018_2020.tif"],
+  "spatial": { "bbox": [-102.05, 36.99, -94.59, 40.00], "crs": "EPSG:4326" },
+  "temporal": { "start": "2018-01-01", "end": "2020-12-31" },
+  "processing": { "reproject_to": "EPSG:4326", "cog": true }
+}
+```
+
+### Checksum
+```text
+b2f3a18e2c87decd0c91ab4e1d73ccdd  data/processed/terrain/ks_dem_1m_2018_2020.tif
+```
+
+### STAC Item
+```json
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "ks_dem_1m_2018_2020",
+  "properties": {
+    "title": "Kansas LiDAR DEM (1m, 2018–2020)",
+    "datetime": "2020-01-01T00:00:00Z",
+    "license": "Public Domain (USGS 3DEP)"
+  },
+  "assets": {
+    "data": {
+      "href": "../processed/terrain/ks_dem_1m_2018_2020.tif",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized"
+    }
+  },
+  "bbox": [-102.05, 36.99, -94.59, 40.00]
+}
+```
 
 ---
 
-## 🧱 Architectural Philosophy
+## 🧱 MCP Compliance Matrix
 
-1. **Transparency** — Every dataset has an explicit, inspectable lineage.
-2. **Reproducibility** — Every transformation is deterministic and scriptable.
-3. **Interoperability** — Every format and schema is open and standard-compliant.
-4. **Extensibility** — Pipelines and metadata schemas can evolve without breaking legacy data.
+| MCP Principle | Implementation |
+| :-- | :-- |
+| **Documentation-First** | YAML metadata + STAC examples in each data directory. |
+| **Reproducibility** | Deterministic ETL + Make targets + checksum verification. |
+| **Open Standards** | STAC 1.0, GeoTIFF (COG), GeoJSON, CSVW, NetCDF. |
+| **Provenance** | End-to-end lineage captured in manifests, logs, and metadata. |
+| **Auditability** | Automated and manual validation on every update. |
+
+---
+
+## 🧩 Data Philosophy
+
+1. **Transparency** — Every dataset has traceable lineage.  
+2. **Reproducibility** — Every transformation is scriptable and logged.  
+3. **Interoperability** — Every output uses open standards.  
+4. **Extensibility** — Modular design supports future schema evolution.
 
 ---
 
 ## 📎 Related Documentation
 
-| Path                     | Description                                  |
-| :----------------------- | :------------------------------------------- |
-| `data/README.md`         | High-level overview of all data directories. |
-| `data/sources/README.md` | Source manifests and provenance registry.    |
-| `data/stac/README.md`    | STAC catalog structure and validation rules. |
-| `docs/architecture/`     | Global system and integration architecture.  |
-| `src/pipelines/`         | Domain ETL modules and transformation logic. |
+| Path | Description |
+| :-- | :-- |
+| `data/README.md` | Overview of all data directories and conventions. |
+| `data/sources/README.md` | Source manifests and dataset registry. |
+| `data/stac/README.md` | STAC catalog design and validation guide. |
+| `docs/architecture/` | Broader system architecture documentation. |
+| `src/pipelines/` | ETL code and transformation logic. |
 
 ---
 
 ## 🧾 Version History
 
-| Version    | Date       | Summary                                                                                         |
-| :--------- | :--------- | :---------------------------------------------------------------------------------------------- |
-| **v1.0.0** | 2025-10-04 | Initial data architecture documentation (source → visualization flow).                          |
-| **v1.1.0** | 2025-10-10 | Upgraded per MCP Framework: added CodeQL/Trivy workflows, extended provenance + CI/CD sections. |
+| Version | Date | Summary |
+| :-- | :-- | :-- |
+| **v1.0.0** | 2025-10-04 | Initial draft — defined architecture flow and ETL. |
+| **v1.1.0** | 2025-10-10 | Added CI/CD integration and provenance schema. |
+| **v1.3.0** | 2025-10-16 | Upgraded alignment: STAC 1.0, MCP-DL v6.2, tables, examples. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Data Without Mystery: Every Byte Proven, Every Layer Reproducible.”*
+**Kansas Frontier Matrix** — *“Data Without Mystery: Every Byte Proven, Every Layer Reproducible.”*  
 📍 [`data/ARCHITECTURE.md`](.) · Blueprint for the Kansas Frontier Matrix data subsystem.
 
 </div>
