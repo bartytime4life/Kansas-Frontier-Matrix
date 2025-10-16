@@ -1,35 +1,57 @@
 <div align="center">
 
-# 🚧 Kansas Frontier Matrix — Staging Directory  
+# 🚧 Kansas Frontier Matrix — **Staging Directory**  
 `data/work/staging/`
 
-**Mission:** Provide a **controlled staging environment** for data artifacts awaiting validation,  
-integration, or transfer between ETL processing and finalized storage —  
-ensuring data integrity and traceability within the Kansas Frontier Matrix (KFM) workflows.
+**Mission:** Maintain a **controlled staging environment** for data artifacts pending validation,  
+integration, and transfer between ETL processing and finalized publication — ensuring **integrity**,  
+**reproducibility**, and **traceability** within the **Kansas Frontier Matrix (KFM)** data system.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../LICENSE)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-green)](../../docs/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Staging Directory (data/work/staging/)"
+version: "v1.2.0"
+last_updated: "2025-10-16"
+owners: ["@kfm-data", "@kfm-architecture"]
+tags: ["staging","etl","validation","qa","checksum","mcp","stac"]
+license: "CC-BY 4.0"
+semantic_alignment:
+  - MCP-DL v6.2 (Reproducibility & Provenance)
+  - STAC 1.0.0 (Spatiotemporal Asset Catalog)
+  - FAIR Principles (Data Curation & Transparency)
+---
+```
+
+---
+
 ## 📚 Overview
 
-The `data/work/staging/` directory functions as a **temporary holding zone**  
-for datasets that have been processed but not yet validated, cataloged, or published.  
+The `data/work/staging/` directory serves as a **transitional environment** for  
+datasets that have completed ETL processing but await **validation**, **checksum verification**,  
+and **STAC metadata linkage** before integration into `data/processed/`.
 
-Typical staged data includes:
-- Outputs pending **checksum validation** or **STAC metadata linkage**  
-- Datasets awaiting **manual QA/QC review** or **peer verification**  
-- Assets queued for **integration into `data/processed/`**  
-- Files transferring between ETL stages or local/remote storage  
+It ensures that all data undergo **structured QA/QC review** and lineage verification  
+before being promoted to permanent storage or publication.
 
-All contents are **transient**, **excluded from Git**, and **safe to remove** once promoted.
+### Typical staged artifacts include:
+
+- Datasets pending **checksum and validation verification**  
+- Outputs queued for **manual QA review** or **peer inspection**  
+- Files under **schema validation or metadata linkage testing**  
+- Temporary storage during **cross-domain data integration** (e.g., terrain → hydrology)
+
+All contents are **temporary**, **non-versioned**, and fully **regenerable** from upstream ETL pipelines.
 
 ---
 
@@ -39,89 +61,112 @@ All contents are **transient**, **excluded from Git**, and **safe to remove** on
 data/work/staging/
 ├── README.md
 ├── terrain/             # Elevation datasets awaiting validation
-├── hydrology/           # Streams, floods, aquifers awaiting checksums
-├── landcover/           # Land cover or vegetation outputs under review
-├── climate/             # Temperature & precipitation layers pending QA
-├── hazards/             # Storm, wildfire, drought data awaiting validation
+├── hydrology/           # Stream, aquifer, and flood models pending checksums
+├── landcover/           # Land cover or vegetation layers under review
+├── climate/             # Climate rasters and time-series awaiting QA
+├── hazards/             # Storm, fire, and drought datasets in validation
 ├── tabular/             # Tabular or statistical outputs under schema testing
-└── text/                # OCR and document assets pending metadata completion
-````
+└── text/                # OCR and document artifacts awaiting metadata review
+```
 
-> **Note:** This mirrors the `data/processed/` hierarchy,
-> simplifying final promotion once validation is complete.
+> **Note:** Folder hierarchy mirrors `data/processed/` for seamless promotion after validation.
 
 ---
 
 ## ⚙️ Usage Guidelines
 
-| Policy                  | Description                                                     |
-| :---------------------- | :-------------------------------------------------------------- |
-| **Temporary Storage**   | Files remain until QA and validation are complete.              |
-| **Controlled Transfer** | Only validated datasets move to `data/processed/`.              |
-| **No Direct Edits**     | Manual edits are prohibited; pipelines manage updates.          |
-| **Checksum Validation** | Run `make validate` or pipeline validation before moving files. |
-| **Version Control**     | `.gitignore` protects this folder from accidental commits.      |
+| Policy                  | Description                                                                 |
+| :---------------------- | :-------------------------------------------------------------------------- |
+| **Temporary Storage**   | Datasets remain here until validation and QA are completed.                 |
+| **Controlled Transfer** | Only validated and checksum-verified data move to `data/processed/`.        |
+| **Automated Governance**| All modifications are pipeline-driven; manual edits are prohibited.         |
+| **Checksum Verification** | Run `make validate` or equivalent before promotion to processed storage.  |
+| **Version Safety**      | `.gitignore` prevents staging files from being committed inadvertently.     |
 
 ---
 
-## ⚙️ Typical Use Cases
+## 🧩 Typical Use Cases
 
-| Task                        | Example                                                                   |
-| :-------------------------- | :------------------------------------------------------------------------ |
-| **Checksum Review**         | Compare SHA-256 hashes before dataset publication.                        |
-| **STAC Validation**         | Test metadata structure before catalog ingestion.                         |
-| **Schema Conformance**      | Validate JSON or CSV schema alignment for tabular files.                  |
-| **Raster QA**               | Inspect COG or GeoTIFF output for completeness and coordinate alignment.  |
-| **Cross-Pipeline Transfer** | Hold intermediate assets between ETL domains (e.g., terrain → hydrology). |
+| Task                        | Example Use Case                                                   |
+| :-------------------------- | :---------------------------------------------------------------- |
+| **Checksum Review**         | Verify SHA-256 integrity prior to publication.                    |
+| **STAC Validation**         | Confirm metadata alignment before adding to the global catalog.   |
+| **Schema Conformance**      | Run JSON or CSV schema validation before merging tables.          |
+| **Raster QA**               | Inspect GeoTIFF or COG alignment and completeness.                |
+| **Cross-Pipeline Exchange** | Hold outputs between ETL domains (e.g., terrain → hydrology).     |
 
 ---
 
-## 🧹 Cleanup Policy
+## 🧰 Workflow Integration
 
-Staged files are deleted or moved automatically after validation and integration.
+The staging directory is fully integrated into **KFM’s ETL pipelines and CI/CD workflows**.
 
-**Makefile target**
+| Linked Component                      | Function                                                     |
+| :------------------------------------ | :----------------------------------------------------------- |
+| `src/pipelines/*`                     | Writes intermediate validated data to `staging/`.            |
+| `data/checksums/`                     | Compares hashes before data promotion.                       |
+| `data/processed/`                     | Receives validated and cataloged datasets.                   |
+| `.github/workflows/stac-validate.yml` | Performs CI-based metadata and schema checks on staged data. |
 
-```bash
-make clean-staging
-```
-
-**Manual cleanup**
-
-```bash
-rm -rf data/work/staging/*
-```
-
-**Promotion Example**
+**Promotion Command Example**
 
 ```bash
 mv data/work/staging/terrain/ks_1m_dem_2020.tif data/processed/terrain/
 ```
 
-> **Tip:** Always run `make validate` to confirm checksums and STAC compliance before promotion.
+> ✅ Always validate before promotion using `make validate` or STAC validation workflows.
 
 ---
 
-## 🧩 Integration with Pipelines
+## 🧹 Cleanup Policy
 
-| Linked Component                      | Function                                                      |
-| :------------------------------------ | :------------------------------------------------------------ |
-| `src/pipelines/*`                     | Writes interim outputs to `staging/` for post-ETL validation. |
-| `data/checksums/`                     | Validation scripts compare hashes prior to promotion.         |
-| `data/processed/`                     | Destination for verified and cataloged datasets.              |
-| `.github/workflows/stac-validate.yml` | Tests STAC structure using staged files in CI/CD.             |
+The staging area is cleared automatically upon dataset promotion or via manual cleanup.
+
+**Automated Cleanup**
+
+```bash
+make clean-staging
+```
+
+**Manual Cleanup**
+
+```bash
+rm -rf data/work/staging/*
+```
+
+---
+
+## 🔒 Governance & Validation Rules
+
+| Rule                   | Implementation                                                                 |
+| :--------------------- | :------------------------------------------------------------------------------ |
+| **Access Control**     | Pipeline-managed only; restricted manual changes.                              |
+| **Retention Duration** | Files persist until checksums and QA tasks complete.                           |
+| **Audit Trail**        | Logs capture all dataset promotions and validation events.                      |
+| **Format Policy**      | Open standards enforced — GeoTIFF, GeoJSON, CSV, NetCDF, JSON.                 |
+| **Traceability**       | STAC metadata ensures reproducible lineage for every staged artifact.          |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                         |
-| :---------------------- | :--------------------------------------------------------------------- |
-| **Documentation-first** | README defines staging role, lifecycle, and promotion policies.        |
-| **Reproducibility**     | Staged data can be regenerated deterministically from ETL pipelines.   |
-| **Open Standards**      | Uses COG, GeoJSON, CSV, and JSON formats for compatibility.            |
-| **Provenance**          | Each staged dataset linked to ETL step logs and checksum records.      |
-| **Auditability**        | Promotion actions and validation logs maintain clear lineage tracking. |
+| MCP Principle           | Implementation                                                              |
+| :---------------------- | :-------------------------------------------------------------------------- |
+| **Documentation-first** | README defines staging purpose, hierarchy, and lifecycle.                   |
+| **Reproducibility**     | Staged artifacts regenerate deterministically via ETL workflows.            |
+| **Open Standards**      | Uses COG, GeoJSON, CSV, JSON, and NetCDF for compatibility.                 |
+| **Provenance**          | Checksum manifests and STAC records link back to pipeline origins.          |
+| **Auditability**        | Promotion and validation actions logged in CI/CD workflows.                 |
+
+---
+
+## 🧩 Maintenance Recommendations
+
+1. **Validate Before Promotion:** Always run `make validate` to confirm checksums and metadata.  
+2. **Enforce Automation:** Avoid manual moves; use pipeline automation for consistency.  
+3. **Track Provenance:** Ensure lineage links between `staging/` and `processed/` datasets.  
+4. **Monitor Disk Usage:** Limit staging capacity to active ETL cycles.  
+5. **Clean Frequently:** Run `make clean-staging` to prevent data drift or accumulation.  
 
 ---
 
@@ -130,24 +175,24 @@ mv data/work/staging/terrain/ks_1m_dem_2020.tif data/processed/terrain/
 | Path              | Description                                          |
 | :---------------- | :--------------------------------------------------- |
 | `data/work/tmp/`  | Temporary workspace for ETL intermediates.           |
-| `data/processed/` | Finalized datasets ready for catalog publication.    |
-| `data/checksums/` | Integrity verification and reproducibility tracking. |
-| `data/stac/`      | STAC 1.0.0 catalog for validated datasets.           |
+| `data/processed/` | Final validated datasets ready for publication.      |
+| `data/checksums/` | Integrity verification manifests for datasets.       |
+| `data/stac/`      | STAC catalog for globally discoverable assets.       |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                             |
-| :------ | :--------- | :------------------------------------------------------------------ |
-| v1.0    | 2025-10-04 | Initial staging directory documentation created.                    |
-| v1.0.1  | 2025-10-09 | Added metadata, JSON-LD schema, badges, and MCP compliance details. |
+| Version | Date       | Summary                                                            |
+| :------ | :--------- | :----------------------------------------------------------------- |
+| **v1.0.0** | 2025-10-04 | Initial staging directory documentation created.                 |
+| **v1.2.0** | 2025-10-16 | Aligned with MCP-DL v6.2, FAIR principles, and CI/CD governance. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Where Data Awaits Its Final Form.”*
+**Kansas Frontier Matrix** — *“Where Data Awaits Its Final Form.”*  
 📍 [`data/work/staging/`](.) · Controlled environment for dataset validation and integration.
 
 </div>
