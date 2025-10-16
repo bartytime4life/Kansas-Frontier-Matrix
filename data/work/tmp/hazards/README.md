@@ -1,37 +1,56 @@
 <div align="center">
 
-# ⚠️ Kansas Frontier Matrix — Temporary Hazards Workspace  
+# ⚠️ Kansas Frontier Matrix — **Temporary Hazards Workspace**  
 `data/work/tmp/hazards/`
 
-**Mission:** Serve as a **sandbox workspace** for intermediate and experimental hazard datasets —  
+**Mission:** Provide a **sandbox workspace** for intermediate and experimental hazard datasets —  
 including tornado tracks, floodplain models, wildfire perimeters, and drought zones —  
-used during ETL, validation, visualization, and QA/QC workflows within the Kansas Frontier Matrix (KFM).
+used during ETL, validation, visualization, and QA/QC workflows within the **Kansas Frontier Matrix (KFM)**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/badge/STAC-validate-blue)](../../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/badge/container-scan-informational)](../../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-green)](../../../../../docs/)
-[![License: Data](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../../.github/workflows/trivy.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-green)](../../../../../docs/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM • Temporary Hazards Workspace (data/work/tmp/hazards/)"
+version: "v1.2.0"
+last_updated: "2025-10-16"
+owners: ["@kfm-data", "@kfm-hazards"]
+tags: ["hazards","etl","validation","flood","tornado","wildfire","drought","mcp","stac"]
+license: "CC-BY 4.0"
+semantic_alignment:
+  - MCP-DL v6.2 (Reproducibility & Provenance)
+  - STAC 1.0.0 (Spatiotemporal Metadata)
+  - FAIR Principles (Findable, Accessible, Interoperable, Reusable)
+---
+```
+
+---
+
 ## 📚 Overview
 
-The `data/work/tmp/hazards/` directory is a **temporary workspace**  
-for handling, transforming, and validating hazard-related data during ETL and QA/QC runs.  
+The `data/work/tmp/hazards/` directory functions as a **transient, reproducible workspace**  
+for testing, validating, and transforming hazard datasets within the **KFM ETL pipelines**.  
+It provides an isolated environment for **disaster-related geospatial layers** under development,  
+supporting reproducibility, QA transparency, and open-data traceability.
 
-It contains **short-lived intermediate files** generated during:
-- Storm and flood boundary extraction  
-- Wildfire perimeter clipping and reprojection  
-- Tornado path QA alignment and buffer testing  
-- Drought index resampling or temporal interpolation  
-- Metadata and checksum validation diagnostics  
+Typical temporary contents include:
 
-All contents are **ephemeral**, **excluded from version control**, and **deterministically regenerable**  
-via `make hazards` or Python ETL commands.
+- Floodplain or inundation extent rasters (FEMA, USGS, NOAA)  
+- Tornado track and intensity GeoJSONs (EF scale validation)  
+- Wildfire perimeter shapefiles and rasterized masks  
+- Drought index (PDSI/SPI) grids for temporal QA  
+- Metadata, checksum, and validation diagnostics  
+
+All data are **short-lived**, **non-versioned**, and **regenerated automatically** on pipeline re-run.
 
 ---
 
@@ -45,108 +64,148 @@ data/work/tmp/hazards/
 ├── wildfire_perimeter_preview.geojson
 └── logs/
     └── hazards_etl_debug.log
-````
+```
 
-> **Note:** File names vary by dataset and ETL stage.
-> Artifacts are purged or replaced between runs.
+> Example files represent typical ETL artifacts — actual contents vary per hazard workflow.  
+> Files are purged and recreated at every pipeline execution.
 
 ---
 
 ## ⚙️ Usage Guidelines
 
-| Policy                  | Description                                                         |
-| :---------------------- | :------------------------------------------------------------------ |
-| **Ephemeral Storage**   | Files are temporary and safe to delete at any time.                 |
-| **Reproducibility**     | All artifacts can be regenerated using deterministic ETL pipelines. |
-| **CI/CD Exclusion**     | Ignored in builds except for debug review or manual QA.             |
-| **Open Standards**      | Uses GeoTIFF, GeoJSON, CSV, and JSON for full interoperability.     |
-| **Cleanup Enforcement** | Cleared automatically by `make clean-tmp` or scheduled maintenance. |
+| Policy                | Description                                                         |
+| :-------------------- | :------------------------------------------------------------------ |
+| **Ephemeral Storage** | Temporary use only; safe to delete at any time.                     |
+| **Reproducible Data** | All outputs can be regenerated deterministically via ETL scripts.   |
+| **CI/CD Exclusion**   | Ignored in build automation except for debug diagnostics.           |
+| **Open Standards**    | Supports GeoTIFF, GeoJSON, CSV, JSON; no proprietary formats.       |
+| **Cleanup Policy**    | Cleared automatically by `make clean-tmp` or scheduled maintenance. |
 
 ---
 
-## ⚙️ Typical Use Cases
+## 🧩 Typical Use Cases
 
-| Task                         | Example                                                            |
-| :--------------------------- | :----------------------------------------------------------------- |
-| **Flood Map QA**             | Generate temporary flood rasters for alignment testing.            |
-| **Tornado Path Debugging**   | Merge or clip GeoJSON segments for storm-track verification.       |
-| **Wildfire Boundary Checks** | Validate polygon accuracy and rasterize perimeters.                |
-| **Drought Index Testing**    | Evaluate PDSI or SPI time-series subsets for temporal consistency. |
-| **Checksum Comparison**      | Validate new hazard data against reference SHA-256 hashes.         |
+| Workflow Task             | Example Application                                                |
+| :------------------------- | :---------------------------------------------------------------- |
+| **Flood Map QA**           | Generate temporary flood rasters for spatial alignment tests.      |
+| **Tornado Path Debugging** | Merge GeoJSON segments to verify storm path continuity.            |
+| **Wildfire Validation**    | Rasterize and compare perimeters to MODIS/VIIRS data.              |
+| **Drought Analysis QA**    | Verify temporal PDSI or SPI datasets for interpolation accuracy.   |
+| **Checksum Verification**  | Compare transient datasets to baseline hash manifests.             |
+
+---
+
+## 🧰 Workflow Integration
+
+Hazard data in this workspace is produced and validated by the **Hazards ETL Pipeline**.
+
+**Makefile Target**
+
+```bash
+make hazards
+```
+
+**Python CLI**
+
+```bash
+python src/pipelines/hazards/hazards_pipeline.py --tmp data/work/tmp/hazards/
+```
+
+### Lifecycle
+
+1. Extract and transform raw hazard sources (tornado, flood, wildfire, drought).  
+2. Generate test composites and raster derivatives.  
+3. Validate classification accuracy, geometry alignment, and checksum consistency.  
+4. Write QA results to `logs/hazards_etl_debug.log`.  
+5. Purge workspace post-verification or via scheduled cleanup.
 
 ---
 
 ## 🧹 Cleanup Policy
 
-The hazards workspace is automatically cleared between pipeline runs to prevent clutter.
+The hazards workspace is **ephemeral** and cleared regularly to maintain system efficiency.
 
-**Makefile target:**
+**Automated Cleanup**
 
 ```bash
 make clean-tmp
 ```
 
-**Manual cleanup:**
+**Manual Cleanup**
 
 ```bash
 rm -rf data/work/tmp/hazards/*
 ```
 
-Permanent datasets are stored in:
+**Permanent Data Locations**
 
-* `data/processed/hazards/` — validated ETL outputs
-* `data/checksums/hazards/` — reproducibility hash validations
-* `data/processed/metadata/hazards/` — STAC metadata documentation
+| Directory | Description |
+| :--------- | :----------- |
+| `data/processed/hazards/` | Final validated hazard datasets (raster & vector). |
+| `data/checksums/hazards/` | SHA-256 manifests for reproducibility tracking. |
+| `data/processed/metadata/hazards/` | STAC metadata documenting hazard data lineage. |
 
 ---
 
-## 🧩 Integration with Pipelines
+## 🔒 Integration with CI/CD and Metadata Systems
 
-| Linked Component                            | Function                                               |
-| :------------------------------------------ | :----------------------------------------------------- |
-| `src/pipelines/hazards/hazards_pipeline.py` | Handles hazard ETL, QA, and validation log generation. |
-| `.github/workflows/stac-validate.yml`       | Consumes logs for checksum validation and diagnostics. |
-| `data/work/tmp/hazards/logs/`               | Temporary log outputs for QA and ETL debugging.        |
-| `data/processed/hazards/`                   | Destination for finalized hazard datasets.             |
+| Component                             | Function                                                   |
+| :------------------------------------ | :---------------------------------------------------------- |
+| `src/pipelines/hazards/hazards_pipeline.py` | Handles ETL, QA, and log generation for hazard datasets.   |
+| `.github/workflows/stac-validate.yml` | Validates STAC Items and checksum reproducibility.         |
+| `data/work/tmp/hazards/logs/`         | Hosts temporary logs for diagnostics and QA.               |
+| `data/checksums/hazards/`             | Maintains reproducibility manifests for final datasets.     |
+| `data/stac/hazards/`                  | Documents lineage for hazard data collections.              |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                 |
-| :---------------------- | :------------------------------------------------------------- |
-| **Documentation-first** | Defines structure, purpose, and lifecycle of hazard workspace. |
-| **Reproducibility**     | Files regenerated deterministically through ETL workflows.     |
-| **Open Standards**      | GeoTIFF, GeoJSON, and CSV ensure interoperability.             |
-| **Provenance**          | Each file tied to ETL stage and metadata lineage logs.         |
-| **Auditability**        | Logs under `/logs/` capture process details before cleanup.    |
+| MCP Principle           | Implementation                                                         |
+| :---------------------- | :--------------------------------------------------------------------- |
+| **Documentation-first** | README defines structure, lifecycle, and policy for hazard data testing.|
+| **Reproducibility**     | Deterministic ETL ensures identical regeneration for each dataset.     |
+| **Open Standards**      | GeoTIFF, GeoJSON, and CSV formats ensure open accessibility.           |
+| **Provenance**          | All temporary outputs linked to ETL logs and metadata lineage.         |
+| **Auditability**        | QA metrics and logs reviewed prior to deletion.                        |
+
+---
+
+## 🧩 Maintenance Recommendations
+
+1. **Automate Cleanup:** Integrate `make clean-tmp` in nightly CI/CD routines.  
+2. **Validate Pre-Deletion:** Run `make stac-validate` before workspace purge.  
+3. **Monitor Disk Usage:** Maintain workspace size ≤10 GB for large raster testing.  
+4. **Enforce Naming Standards:** Use consistent prefixes (`tornado_`, `flood_`, `wildfire_`).  
+5. **Log All QA Steps:** Capture metrics in `/logs/hazards_etl_debug.log` for traceability.  
 
 ---
 
 ## 📎 Related Directories
 
-| Path                               | Purpose                                                 |
-| :--------------------------------- | :------------------------------------------------------ |
-| `data/work/tmp/hazards/logs/`      | Temporary ETL and QA logging workspace.                 |
-| `data/processed/hazards/`          | Final validated hazard datasets.                        |
-| `data/checksums/hazards/`          | Integrity verification and reproducibility tracking.    |
-| `data/processed/metadata/hazards/` | STAC metadata and documentation for hazard data.        |
-| `data/work/tmp/`                   | Parent scratch directory for all temporary KFM outputs. |
+| Path                               | Description                                                |
+| :--------------------------------- | :--------------------------------------------------------- |
+| `data/work/tmp/hazards/logs/`      | Temporary ETL and QA logging workspace.                    |
+| `data/processed/hazards/`          | Finalized hazard datasets for public release.              |
+| `data/checksums/hazards/`          | SHA-256 reproducibility manifests.                         |
+| `data/processed/metadata/hazards/` | STAC metadata and provenance records for hazard layers.    |
+| `data/work/tmp/`                   | Root directory for all temporary ETL data domains.         |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Summary                                                    |
-| :------ | :--------- | :--------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial documentation for temporary hazard workspace.      |
-| v1.0.1  | 2025-10-09 | Added metadata, provenance, CI/CD badges, and MCP details. |
+| Version | Date       | Summary                                                              |
+| :------ | :--------- | :------------------------------------------------------------------- |
+| **v1.0.0** | 2025-10-04 | Initial hazards workspace documentation (ETL sandbox).              |
+| **v1.1.0** | 2025-10-10 | Added CI/CD integration, STAC validation hooks, and cleanup policy. |
+| **v1.2.0** | 2025-10-16 | Upgraded for MCP-DL v6.2 alignment and FAIR compliance.            |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Verifying Every Storm, Fire, and Flood — One Test at a Time.”*
-📍 [`data/work/tmp/hazards/`](.) · Temporary workspace for hazard ETL, QA, and validation.
+**Kansas Frontier Matrix** — *“Verifying Every Storm, Fire, and Flood — One Test at a Time.”*  
+📍 [`data/work/tmp/hazards/`](.) · Temporary sandbox for hazard ETL, validation, and QA testing.
 
 </div>
