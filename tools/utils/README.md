@@ -3,12 +3,14 @@
 # 🧰 Kansas Frontier Matrix — **Tools & Utilities**  
 `/tools/utils/`
 
-**Helper Scripts · DevOps Automation · Data ETL Utilities**
+**Automation · Integrity · Reproducibility**  
+*“Every Tool Leaves a Trace — Every Trace Ensures Reproducibility.”*
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 [![Build & Test](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/ci.yml?label=Build%20%26%20Test)](../../.github/workflows/ci.yml)
-[![Validated](https://img.shields.io/badge/STAC-Validated-blueviolet.svg)](../../.github/workflows/stac-validate.yml)
+[![STAC Validate](https://img.shields.io/badge/STAC-Validated-blueviolet.svg)](../../.github/workflows/stac-validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![Maturity: Production](https://img.shields.io/badge/Maturity-Production-orange)](../../docs/)
 
 </div>
 
@@ -16,142 +18,147 @@
 
 ## 🧭 Overview
 
-The `/tools/utils/` directory houses shared command-line utilities, helper scripts, and developer tools that automate core operations across the **Kansas Frontier Matrix (KFM)** monorepo.  
+The `/tools/utils/` directory contains **shared command-line utilities** and **automation scripts** used throughout the **Kansas Frontier Matrix (KFM)** project.  
 
-These scripts support the project’s **Master Coder Protocol (MCP)** principles — documentation-first, reproducibility, and open standards — by enabling repeatable data and environment tasks such as:
+These tools uphold the **Master Coder Protocol (MCP)** — emphasizing **documentation-first**, **reproducibility**, and **traceability** — by automating data validation, provenance logging, and pipeline reproducibility.
 
-- Fetching and verifying external data sources  
-- Running integrity checks and computing SHA-256 digests  
-- Converting GIS layers to open formats (GeoJSON, Cloud-Optimized GeoTIFF)  
-- Performing STAC validation and JSON Schema checks  
-- Automating builds, tests, and provenance logging  
-- Simplifying developer setup and environment synchronization  
+Key functions include:
 
-Every utility in this directory is fully documented, version-controlled, and designed to be reproducible across environments (Linux / macOS / Windows WSL).
+- 🔐 **Checksum validation** (SHA-256 integrity verification)  
+- 🌎 **Geospatial conversions** (Shapefile → GeoJSON / COG)  
+- 🧩 **STAC & JSON Schema validation**  
+- ⚙️ **Data fetching, cleaning, and transformation**  
+- 🧮 **Provenance logging and trace audits**  
+- 🧹 **Linting & documentation checks for CI/CD pipelines**
+
+Each utility script is self-contained, idempotent, and versioned — every action leaves an auditable trace in the project’s provenance log.
 
 ---
 
-## ⚙️ Structure
+## 🗂️ Directory Layout
 
 ```bash
 tools/
 ├── utils/
-│   ├── checksum.py           # Compute & verify SHA-256 hashes for data integrity
+│   ├── checksum.py           # Compute & verify SHA-256 hashes
 │   ├── convert_geojson.py    # Convert shapefiles or CSVs to GeoJSON
-│   ├── generate_stac.py      # Build STAC catalogs for processed assets
+│   ├── generate_stac.py      # Build & validate STAC catalogs
 │   ├── validate_json.py      # Validate JSON files against schemas
-│   ├── lint_markdown.sh      # Run markdown & link-checking linters
-│   ├── fetch_remote.py       # Generic URL / API fetcher with logging
-│   ├── summarize_logs.py     # Summarize CI or pipeline logs for review
+│   ├── lint_markdown.sh      # Run markdown linting & link checks
+│   ├── fetch_remote.py       # Download or fetch from APIs w/ logging
+│   ├── summarize_logs.py     # Summarize CI / pipeline logs
 │   ├── __init__.py
 │   └── README.md             # (this file)
 └── ...
 
-Each script follows a consistent pattern:
-	1.	CLI entrypoint (via argparse or click)
-	2.	Inline documentation (usage + examples)
-	3.	Configurable logging & error handling
-	4.	Integration hooks for CI/CD or Makefile targets
+Each script follows the MCP-DL protocol:
+	1.	🧾 Docstring header — author, version, date, purpose
+	2.	⚙️ CLI entrypoint using argparse or click
+	3.	🧱 Logging and error handling (logs → /logs/utils/)
+	4.	📜 Provenance entry (timestamp, commit ID, result)
+	5.	🧪 Unit tests in tests/tools/test_utils.py
 
 ⸻
 
-🧩 Usage
+⚙️ Usage Examples
 
-Run utilities directly or through the project’s make commands:
+Run utilities individually or through the Makefile:
 
-# Validate all JSON sources against schemas
+# ✅ Validate all source JSON manifests
 python tools/utils/validate_json.py data/sources/
 
-# Generate a STAC catalog for processed layers
+# 🌎 Generate STAC catalog from processed data
 python tools/utils/generate_stac.py --input data/processed/ --output data/stac/
 
-# Verify dataset integrity
+# 🔐 Verify data integrity
 python tools/utils/checksum.py verify --dir data/raw/
 
-# Lint documentation and check links
+# 🧹 Lint and check Markdown docs
 bash tools/utils/lint_markdown.sh
 
-These commands can also be invoked automatically in CI workflows or via scheduled pipelines (.github/workflows/ci.yml, Makefile).
+These scripts integrate with CI/CD workflows:
+	•	.github/workflows/ci.yml
+	•	.github/workflows/stac-validate.yml
+	•	Makefile → make validate, make checksums, make stac
 
 ⸻
 
-🧱 Dependencies
+🧮 Dependencies
 
 Category	Library / Tool	Purpose
-Python 3.11+	jsonschema	Validate JSON & STAC metadata
-	requests, urllib3	HTTP fetching & API integration
-	pystac, pystac-client	Build and validate STAC catalogs
-	hashlib, argparse	Core system modules for hashing & CLI
-CLI / System	make, bash, jq	Build automation & JSON parsing
-Linting	markdownlint, linkcheck	Documentation quality gates
+Python 3.11+	jsonschema	Validate metadata & STAC files
+	requests, urllib3	Fetch APIs / remote datasets
+	pystac, pystac-client	STAC indexing and validation
+	hashlib, argparse	Core CLI / hashing / logging
+System	make, jq, bash	Command automation & parsing
+Linting	markdownlint, linkcheck	CI documentation QA
 
-Install all Python dependencies with:
+Install dependencies via:
 
 pip install -r requirements.txt
 
 
 ⸻
 
-🧮 Integration with MCP Workflows
+🧱 Integration with MCP Workflows
 
-Each utility contributes to MCP verification chains:
-	•	Provenance Logging: Every operation appends an entry to /logs/provenance.log, capturing timestamp, user, commit ID, and hash.
-	•	Reproducibility: Output directories are deterministic; identical inputs yield identical hashes.
-	•	Validation: Utilities double-check schema conformance (STAC 1.0, DCAT 2.0, GeoJSON).
-	•	Automation Hooks: All utilities are callable from CI workflows (pre-commit, validate.yml, stac-validate.yml) ensuring the repo’s continuous auditability.
+All utilities contribute to MCP verification chains:
+	•	🪶 Provenance Logging → Every operation records [timestamp, user, commit, action]
+	•	🔄 Reproducibility → Deterministic outputs, verifiable hashes
+	•	🧩 Validation → STAC 1.0, DCAT 2.0, GeoJSON schema checks
+	•	🔔 Automation Hooks → Triggered via pre-commit, CI workflows, or scheduled jobs
+
+This ensures full auditability of all data operations — every fetch, hash, or conversion can be retraced through commit history and log archives.
 
 ⸻
 
 🧠 Best Practices
-	•	Write all new scripts as stateless, idempotent CLI tools.
-	•	Include a --help flag with examples.
-	•	Store configuration in config.yaml or environment variables — avoid hard-coding paths.
-	•	Log to stdout and /logs/utils/ using the MCP logging format:
-
-[YYYY-MM-DD HH:MM:SS] [user] [action] [target] [status]
-
-
-	•	Follow PEP 8 / Black style guidelines and include type hints.
-	•	Add a short usage example to each script’s docstring.
+	•	Keep utilities stateless and idempotent.
+	•	Include --help and example usage in every CLI.
+	•	Never hardcode paths — use relative or config variables.
+	•	Log all results to /logs/provenance.log.
+	•	Follow PEP 8 + Black formatting + type hints.
+	•	Document each new utility in this README under Directory Layout.
+	•	Add unit tests for every tool added or modified.
 
 ⸻
 
-🧾 Contributing
+🧾 Contribution Workflow
 
-When adding a new utility:
-	1.	Place it under /tools/utils/ with a descriptive name (verb_noun.py).
-	2.	Include an inline docstring (purpose, arguments, examples).
-	3.	Add an entry in this README under the Structure section.
-	4.	Create or update unit tests in tests/tools/test_utils.py.
-	5.	Update the Makefile and CI workflow if integration is needed.
-	6.	Document provenance & version in the script header:
+When adding a new tool:
+	1.	Create the script in /tools/utils/ (verb_noun.py convention).
+	2.	Add inline header:
 
 # Tool: fetch_remote.py
-# Version: 1.2.0  |  Last updated: 2025-10-16
+# Version: 1.3.0
 # Author: @kfm-architecture
 # License: MIT
+# Last Updated: 2025-10-16
 
 
-
-All contributions are reviewed for reproducibility, clarity, and MCP compliance before merge.
-
-⸻
-
-📚 References
-	•	KFM Architecture Overview
-	•	Data & File Architecture
-	•	MCP Documentation Guide
-	•	STAC Specification 1.0.0
-	•	DCAT 2.0 Recommendation (W3C)
+	3.	Write unit tests → tests/tools/test_utils.py.
+	4.	Update this README (under Layout).
+	5.	Add Makefile target or CI trigger if applicable.
+	6.	Ensure provenance logging works.
+	7.	Commit with Signed-off-by: and include Docs: Updated tools/utils/README.md.
 
 ⸻
 
 🧾 Version History
 
-Version	Date	Author	Notes
-v1.0.0	2025-10-16	@kfm-architecture	Initial release of Tools & Utilities README
-v1.0.1	—	—	—
+Version	Date	Author	Description
+v1.0.0	2025-10-16	@kfm-architecture	Initial release — baseline utilities doc
+v1.1.0	—	—	—
 
+
+⸻
+
+📚 References
+	•	🧭 Architecture Overview
+	•	🗂️ Data & File Architecture
+	•	📘 MCP Markdown Standards
+	•	🛰️ STAC Specification 1.0
+	•	📖 W3C DCAT 2.0 Recommendation
 
 ⸻
 
@@ -159,6 +166,8 @@ v1.0.1	—	—	—
 <div align="center">
 
 
-✅ “Every Tool Leaves a Trace — Every Trace Ensures Reproducibility.”
+🏗️ Kansas Frontier Matrix — A Living Atlas of Time · Terrain · History
+Maintained under the Master Coder Protocol v6.2
 
 </div>
+```
