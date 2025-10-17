@@ -20,7 +20,7 @@ _A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kan
 ```yaml
 ---
 title: "KFM • System Architecture"
-version: "v1.7.0"
+version: "v1.7.1"
 last_updated: "2025-10-17"
 created: "2024-12-12"
 owners: ["@kfm-architecture", "@kfm-engineering"]
@@ -128,16 +128,20 @@ sequenceDiagram
 
 ## 🎨 Layer Timeline Legend
 
-| Category               | Examples                      | Time Range   | Color Token | Notes                           |
-| :--------------------- | :---------------------------- | :----------- | :---------- | :------------------------------ |
-| 🏔 Terrain & DEMs      | LiDAR 1m DEM, Hillshade       | 2018–2020    | `#6C757D`   | Basemap + hillshade             |
-| 🗺 Historic Topos      | USGS 1894 Larned, 1930s Topos | 1890–1950s   | `#8D5524`   | Scanned topos (COGs)            |
-| 🧾 Treaties & Cessions | 1854 Treaty, Royce Polygons   | 1820–1870s   | `#0077B6`   | Polygons linked to treaty docs  |
-| 🌊 Hydrology           | 1951 Flood, Streamflow        | 1850–Present | `#0096C7`   | Floodplains, reservoirs         |
-| 🌾 Land Use & Soils    | 1937 Soil, NLCD               | 1850–Present | `#52B788`   | Cropland/prairie change         |
-| 🚂 Infrastructure      | Railroads, Trails             | 1850–1950s   | `#E63946`   | Trails/rails fade on disuse     |
-| 🌪 Hazards             | Tornado Tracks, Disasters     | 1950–Present | `#F77F00`   | Tornado lines/points, drought   |
-| 🏛 Cultural/Oral       | Oral Histories, Sites         | Any          | `#9D4EDD`   | Linked to documents & summaries |
+> Standardized categories & colors for `web/config/layers.json` and STAC-derived timelines. Colors comply with WCAG AA contrast and the design tokens used across the web UI. Temporal visibility is driven by `start_datetime` / `end_datetime` in STAC Items.
+
+| Category | Examples | Time Range | Color Token | Notes |
+| :-- | :-- | :-- | :-- | :-- |
+| 🏔 **Terrain & Elevation** | LiDAR 1m DEM · Hillshade · Contours | 2010–Present | `#6C757D` | Basemap context for relief/hydrology; derived from USGS 3DEP |
+| 🗺 **Historic Topographic Maps** | USGS 1894 Larned · 1930s County Sheets | 1890–1950s | `#8D5524` | Scanned topo COGs; default opacity 0.6–0.8 for overlay |
+| 🌾 **Land Use & Vegetation** | 1937 Soil Survey · NLCD | 1850–Present | `#52B788` | Land cover & vegetation change; NRCS/USGS sources |
+| 🌊 **Hydrology & Water Resources** | Kansas River · 1951 Flood · Reservoirs | 1850–Present | `#0096C7` | Rivers, floodplains, canals; drought index animations |
+| 🌪 **Hazards & Climate Events** | Tornado Tracks · Drought Index · Dust Bowl | 1850–Present | `#F77F00` | NOAA storms, USDM drought polygons, event heatmaps |
+| 🚂 **Infrastructure & Mobility** | Railroads · Trails · Roads | 1850–1950s | `#E63946` | Historical routes; fade after disuse; interactive vectors optional |
+| 🏛 **Cultural & Historical** | Oral Histories · Sites · Missions · Forts | Any | `#9D4EDD` | Linked to documents, NER entities, and AI dossiers |
+| 📜 **Treaties & Boundaries** | 1854 Treaty · Royce Polygons · County Formation | 1820–1870s | `#0077B6` | GeoJSON polygons; provenance to treaty texts |
+| 🔥 **Environmental Change** | Wildfire History · Dust Storm Footprints | 1900–Present | `#E85D04` | Vector/raster overlays from incident catalogs |
+| 🗺️ **Administrative & Reference** | County Boundaries · PLSS · Gauges | 1850–Present | `#ADB5BD` | Reference context (non-temporal or wide coverage) |
 
 **Canonical `layers.json` example**:
 
@@ -149,7 +153,8 @@ sequenceDiagram
   "source": { "url": "/data/processed/treaty_1854.geojson" },
   "time": { "start": "1854-01-01", "end": "1854-12-31" },
   "style": { "fillColor": "#0077B6", "fillOpacity": 0.35, "strokeColor": "#004C7F", "strokeWidth": 1 },
-  "legend": { "category": "Treaties & Cessions" },
+  "legend": { "category": "Treaties & Boundaries" },
+  "interactive": true,
   "visible": false
 }
 ```
@@ -162,7 +167,7 @@ sequenceDiagram
 - **Catalog:** **STAC 1.0.0** (Collections/Items/Assets) with JSON Schema CI checks  
 - **Ontologies:** **CIDOC CRM** (heritage/semantics), **OWL-Time** (temporality), **PeriodO** (period tags)  
 - **Catalog Interop:** **DCAT 2.0** mapping for machine indexing; optional JSON-LD export  
-- **UI Config:** `web/config/layers.json`, `app.config.json` — built deterministically from STAC and validated in CI
+- **UI Config:** `web/config/layers.json`, `app.config.json` — deterministically generated from STAC and validated in CI
 
 ---
 
@@ -215,8 +220,8 @@ KansasFrontierMatrix/
 
 | Field | Value |
 | :-- | :-- |
-| **Version** | `v1.7.0` |
-| **Codename** | *Atlas Engine Cohesion* |
+| **Version** | `v1.7.1` |
+| **Codename** | *Legend Alignment & Interop* |
 | **Last Updated** | 2025-10-17 |
 | **Maintainers** | @kfm-architecture · @kfm-engineering |
 | **License** | MIT (code) · CC-BY 4.0 (docs) |
@@ -230,9 +235,9 @@ KansasFrontierMatrix/
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| **v1.7.0** | 2025-10-17 | @kfm-architecture | Upgrade to MCP-DL v6.3; add DCAT mapping; clarify TOC anchors; strengthen CI gates |
+| **v1.7.1** | 2025-10-17 | @kfm-architecture | Updated Layer Timeline Legend; added Administrative & Environmental Change categories; clarified interop notes |
+| **v1.7.0** | 2025-10-17 | @kfm-architecture | MCP-DL v6.3 alignment; DCAT mapping; CI gates |
 | **v1.6.0** | 2025-10-14 | @kfm-engineering | Expanded swimlane; added Layer Timeline Legend; refined ETL notes |
-| **v1.5.0** | 2025-10-01 | @kfm-architecture | Unified ontology notes; API/Graph boundaries documented |
 
 ---
 
