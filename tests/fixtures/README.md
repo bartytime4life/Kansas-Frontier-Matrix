@@ -5,9 +5,9 @@
 
 **Deterministic · Minimal · Provenance-Tracked Sample Data**
 
-[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../.github/workflows/tests.yml)
-[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../docs/)
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../.github/workflows/tests.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
 
 </div>
@@ -17,23 +17,23 @@
 ```yaml
 ---
 title: "KFM • Test Fixtures (tests/fixtures/)"
-version: "v1.1.0"
-last_updated: "2025-10-14"
+version: "v1.3.0"
+last_updated: "2025-10-17"
 owners: ["@kfm-data", "@kfm-engineering"]
 tags: ["fixtures","testing","stac","geojson","reproducibility","mcp"]
 license: "MIT"
 semantic_alignment:
   - STAC 1.0
   - GeoJSON RFC 7946
-  - MCP-DL v6.2 Testing & Provenance Standards
+  - MCP-DL v6.3 Testing & Provenance Standards
 ---
-````
+```
 
 ---
 
 ## 🧭 Overview
 
-The `tests/fixtures/` directory provides **controlled, reproducible datasets** used to validate every layer of the Kansas Frontier Matrix (KFM) ecosystem —
+The `tests/fixtures/` directory provides **controlled, reproducible datasets** used to validate every layer of the Kansas Frontier Matrix (KFM) ecosystem —  
 from **ETL pipelines** and **STAC validation**, to **AI/NLP testing** and **frontend integration**.
 
 All fixture data are **tiny, deterministic, and traceable**, allowing CI pipelines to execute full validation coverage without large dependencies or network access.
@@ -62,14 +62,13 @@ flowchart TD
     class D c;
     class E,F done;
 ```
-
-> Fixtures begin as **synthetic test data** → feed **automated tests** → verified via **CI pipelines** → sustain **reproducible deployments**.
+<!-- END OF MERMAID -->
 
 ---
 
 ## 🧱 Directory Structure
 
-```text
+```
 tests/fixtures/
 ├── geo/                     # GeoJSON & raster samples
 │   ├── ks_county_sample.geojson
@@ -105,14 +104,14 @@ tests/fixtures/
 
 ## 🧪 Fixture Guidelines
 
-* Keep files **≤ 50 KB** each — optimized for CI and Git diffs.
-* Use **valid schemas** (GeoJSON, STAC 1.0, JSON Schema).
-* Favor **Kansas-specific geography and history** (“Larned”, “Ellsworth”, “Arkansas River”).
-* Encode in **UTF-8** with Unix line endings (`\n`).
-* Include **CRS metadata** (`EPSG:4326`) for spatial data.
-* Seed any randomness (`random.seed(42)`) for reproducibility.
-* Raster fixtures → ≤ 10×10 pixels, single band.
-* Include provenance notes inline or in `meta.json`.
+* Keep files **≤ 50 KB** each — optimized for CI and Git diffs.  
+* Use **valid schemas** (GeoJSON, STAC 1.0, JSON Schema).  
+* Favor **Kansas-specific geography and history** (“Larned”, “Ellsworth”, “Arkansas River”).  
+* Encode in **UTF-8** with Unix line endings (`\n`).  
+* Include **CRS metadata** (`EPSG:4326`) for spatial data.  
+* Seed any randomness (`random.seed(42)`) for reproducibility.  
+* Raster fixtures → ≤ 10×10 pixels, single band.  
+* Include provenance notes inline or in `meta.json`.  
 
 ---
 
@@ -184,18 +183,18 @@ test("GeoJSON loads", () => expect(geo.type).toBe("FeatureCollection"));
 | **Schema Updates**       | `tools/validate_stac.py` | Fixtures revalidated when STAC spec changes         |
 | **Public Data Sources**  | USGS, NOAA, NRCS         | Used only for open/public-domain samples            |
 
-* No private or sensitive data.
-* All fixture generation workflows use reproducible scripts with checksum tracking.
+* No private or sensitive data.  
+* All fixture generation workflows use reproducible scripts with checksum tracking.  
 
 ---
 
 ## 🧠 Best Practices for Contributors
 
-* Regenerate fixtures only through approved pipelines or notebooks.
-* Always document **why** a fixture changed in your PR description.
-* Do not include heavy external data; create micro-samples instead.
-* Run `pytest tests/fixtures` after any fixture modification to confirm schema validity.
-* Use `.gitignore` for large temporary or derivative files.
+* Regenerate fixtures only through approved pipelines or notebooks.  
+* Always document **why** a fixture changed in your PR description.  
+* Do not include heavy external data; create micro-samples instead.  
+* Run `pytest tests/fixtures` after any fixture modification to confirm schema validity.  
+* Use `.gitignore` for large temporary or derivative files.  
 
 ---
 
@@ -211,7 +210,7 @@ test("GeoJSON loads", () => expect(geo.type).toBe("FeatureCollection"));
 
 ---
 
-## 🧠 MCP Compliance Checklist
+## 🧠 MCP-DL v6.3 Compliance
 
 | MCP Principle       | Implementation                                        |
 | :------------------ | :---------------------------------------------------- |
@@ -226,8 +225,7 @@ test("GeoJSON loads", () => expect(geo.type).toBe("FeatureCollection"));
 
 <div align="center">
 
-🧩 **Small data → big confidence.**
+🧩 **Small data → big confidence.**  
 Fixtures are the **lab samples** that keep Kansas Frontier Matrix verifiable, reproducible, and transparent.
 
 </div>
-```
