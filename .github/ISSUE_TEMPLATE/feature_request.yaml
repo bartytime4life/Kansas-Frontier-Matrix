@@ -45,18 +45,7 @@ body:
   id: domain
   attributes:
   label: Domain / Area of Impact
-  options:
-  - Terrain
-  - Hydrology
-  - Climate
-  - Hazards
-  - Landcover
-  - Knowledge Graph
-  - Web UI
-  - API
-  - Text / AI / NLP
-  - Metadata / Governance
-  - CI/CD
+  options: ["Terrain","Hydrology","Climate","Hazards","Landcover","Knowledge Graph","Web UI","API","Text / AI / NLP","Metadata / Governance","CI/CD"]
   validations:
   required: true
 
@@ -141,11 +130,7 @@ body:
   id: impact_level
   attributes:
   label: Expected Impact Level
-  options:
-  - "🟩 Minor"
-  - "🟨 Moderate"
-  - "🟧 Major"
-  - "🔴 Critical"
+  options: ["🟩 Minor","🟨 Moderate","🟧 Major","🔴 Critical"]
   validations:
   required: true
 
@@ -212,3 +197,4 @@ body:
   placeholder: |
   - Diagrams, screenshots, mockups
   - Risk flags, review blockers, etc.
+
