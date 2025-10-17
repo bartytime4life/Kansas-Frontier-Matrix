@@ -1,175 +1,223 @@
 <div align="center">
 
-# ☑️ Kansas Frontier Matrix — Review & Validation Checklist Template  
+# ☑️ **Kansas Frontier Matrix — Review & Validation Checklist Template**  
 `docs/templates/checklist.md`
 
-**Mission:** Deliver a **comprehensive, MCP-aligned checklist** for validating datasets, pipelines, documentation, and workflows  
-prior to approval, deployment, or publication within the **Kansas Frontier Matrix (KFM)**.  
-This ensures every artifact — code, data, or document — is **auditable, reproducible, and standardized**.
+**Mission:** Deliver a **comprehensive, MCP-aligned checklist** for validating datasets, pipelines, documentation, models, and workflows  
+prior to approval, deployment, or publication within the **Kansas Frontier Matrix (KFM)** — ensuring every artifact is **auditable, reproducible, and standardized**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
-[![Validation](https://img.shields.io/badge/Checklist-Standardized-brightgreen)](README.md)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![Checklist](https://img.shields.io/badge/Checklist-Standardized-brightgreen)](README.md)
+[![Tracked](https://img.shields.io/badge/Tracked-Git%20%26%20Provenance-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — Review & Validation Checklist Template"
+version: "v1.2.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-security"]
+tags: ["checklist","validation","mcp","stac","ci","provenance","fair","slsa","governance"]
+status: "Template"
+license: "CC-BY 4.0"
+semantic_alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - JSON Schema
+  - DCAT 2.0
+  - W3C PROV-O
+  - ISO 8601 / EPSG
+supply_chain:
+  slsa_target: "Level 3"
+  sbom_format: "SPDX 2.3 (JSON)"
+ci_required_checks:
+  - docs-validate
+  - stac-validate
+  - checksums
+  - pre-commit
+  - codeql
+  - trivy
+---
+````
+
+---
+
 ## 🧭 Checklist Metadata
 
-| Field | Description |
-|:------|:-------------|
-| **Checklist ID** | Unique ID (e.g., `CHECK-2025-001-TERRAIN`) |
-| **Title** | Descriptive name for review |
-| **Reviewer(s)** | Name(s) of validators |
-| **Date Completed** | YYYY-MM-DD |
-| **Review Type** | Data / Pipeline / Documentation / Model / Workflow / Governance |
-| **Associated Artifacts** | Dataset, ADR, SOP, experiment, or workflow being reviewed |
-| **Status** | Draft / In Review / Approved / Revisions Required |
-| **Version** | v1.0, v1.1, etc. |
+| Field                    | Description                                                     |
+| :----------------------- | :-------------------------------------------------------------- |
+| **Checklist ID**         | Unique ID (e.g., `CHECK-2025-001-TERRAIN`)                      |
+| **Title**                | Descriptive name for review                                     |
+| **Reviewer(s)**          | Name(s) of validators                                           |
+| **Date Completed**       | YYYY-MM-DD                                                      |
+| **Review Type**          | Data / Pipeline / Documentation / Model / Workflow / Governance |
+| **Associated Artifacts** | Dataset / ADR / SOP / Experiment / Workflow IDs                 |
+| **Status**               | Draft / In Review / Approved / Revisions Required               |
+| **Version**              | vX.Y.Z                                                          |
 
 ---
 
 ## 🎯 Review Objective
 
-Summarize what the review aims to validate or verify.
+Summarize the **scope** of this review and expected **acceptance outcome**.
 
-> *Example:*  
-> Confirm that the `ks_1m_dem_2018_2020.tif` dataset meets STAC 1.0.0 metadata compliance, checksum verification, and reproducibility before web catalog integration.
+> *Example:* Confirm that `ks_1m_dem_2018_2020.tif` meets **STAC 1.0** metadata, checksum verification, and reproducibility prior to web catalog inclusion.
 
 ---
 
 ## 🧱 Section 1 — Documentation Completeness
 
-| Requirement | Description | Status | Notes |
-|:-------------|:-------------|:---------|:-------|
-| **README.md Present** | Directory includes clear user-facing documentation | ☐ / ✅ |  |
-| **Metadata File Present** | STAC or JSON metadata validated successfully | ☐ / ✅ |  |
-| **Version & Date Declared** | Dataset or document includes version history | ☐ / ✅ |  |
-| **Author & License Declared** | Proper attribution and license information provided | ☐ / ✅ |  |
-| **Cross-links Verified** | References to related data/docs function correctly | ☐ / ✅ |  |
+| Requirement                    | Description                                              | Status | Notes |
+| :----------------------------- | :------------------------------------------------------- | :----: | :---- |
+| **README Present**             | Clear, task-appropriate user documentation exists        |  ☐ / ✅ |       |
+| **Metadata Declared**          | YAML header: `version`, `owners`, `last_updated`, `tags` |  ☐ / ✅ |       |
+| **STAC/JSON Metadata Present** | Dataset or service has a validating metadata record      |  ☐ / ✅ |       |
+| **Version History Present**    | Change log or version table included                     |  ☐ / ✅ |       |
+| **License & Authors Declared** | Attribution and license stated                           |  ☐ / ✅ |       |
+| **Cross-Links Verified**       | Internal links to related docs/data function             |  ☐ / ✅ |       |
 
 ---
 
 ## ⚙️ Section 2 — Reproducibility & Workflow Validation
 
-| Requirement | Description | Status | Notes |
-|:-------------|:-------------|:---------|:-------|
-| **Makefile Target Defined** | Process can be re-run using a `make` command | ☐ / ✅ |  |
-| **Config File Versioned** | YAML/JSON configuration stored and linked | ☐ / ✅ |  |
-| **Pipeline Script Versioned** | ETL or transformation script tagged in Git | ☐ / ✅ |  |
-| **Checksum Verified** | SHA-256 checksum validated | ☐ / ✅ |  |
-| **Automation Tested** | CI/CD job executed successfully | ☐ / ✅ |  |
-| **Logs Generated** | Validation logs archived in `data/work/logs/` | ☐ / ✅ |  |
+| Requirement            | Description                                 | Status | Notes |
+| :--------------------- | :------------------------------------------ | :----: | :---- |
+| **Makefile Target**    | Process re-runnable via `make <target>`     |  ☐ / ✅ |       |
+| **Config Versioned**   | YAML/JSON conf stored and linked            |  ☐ / ✅ |       |
+| **Script Versioned**   | ETL/analysis script traceable to git commit |  ☐ / ✅ |       |
+| **Container Digest**   | OCI image + digest recorded (if used)       |  ☐ / ✅ |       |
+| **Checksums Verified** | SHA-256 manifests exist and match           |  ☐ / ✅ |       |
+| **Automation Passed**  | CI workflow(s) completed successfully       |  ☐ / ✅ |       |
+| **Logs Archived**      | Validation logs under `data/work/logs/`     |  ☐ / ✅ |       |
 
 ---
 
-## 🌐 Section 3 — Open Standards Compliance
+## 🌐 Section 3 — Open Standards & Accessibility
 
-| Requirement | Description | Status | Notes |
-|:-------------|:-------------|:---------|:-------|
-| **STAC Schema Valid** | Validates against STAC 1.0.0 schema | ☐ / ✅ |  |
-| **Open File Formats** | Data stored in non-proprietary formats (GeoTIFF, JSON, CSV) | ☐ / ✅ |  |
-| **CRS / EPSG Valid** | Geospatial datasets use standard EPSG codes | ☐ / ✅ |  |
-| **Metadata Schema Validated** | JSON Schema compliance confirmed | ☐ / ✅ |  |
-| **Web Accessibility Confirmed** | Accessible through web API or viewer | ☐ / ✅ |  |
+| Requirement               | Description                               | Status | Notes |
+| :------------------------ | :---------------------------------------- | :----: | :---- |
+| **STAC Valid**            | Conforms to STAC 1.0 schema               |  ☐ / ✅ |       |
+| **Open Formats**          | GeoTIFF (COG) / GeoJSON / CSV / JSON used |  ☐ / ✅ |       |
+| **CRS/EPSG Valid**        | Spatial data uses standard EPSG codes     |  ☐ / ✅ |       |
+| **JSON Schema Validated** | Custom schemas validated (if any)         |  ☐ / ✅ |       |
+| **Web/API Accessible**    | Available through web API or viewer       |  ☐ / ✅ |       |
+| **Accessibility Basics**  | Alt text, headings, link text appropriate |  ☐ / ✅ |       |
 
 ---
 
 ## 🧬 Section 4 — Provenance & Lineage Tracking
 
-| Requirement | Description | Status | Notes |
-|:-------------|:-------------|:---------|:-------|
-| **Source Manifest Linked** | Dataset has entry in `data/sources/` | ☐ / ✅ |  |
-| **Checksum Chain Complete** | Each step includes SHA-256 lineage | ☐ / ✅ |  |
-| **STAC Relationships Defined** | `derived_from`, `rel:source` present | ☐ / ✅ |  |
-| **Provenance Log Created** | Record completed using `provenance.md` template | ☐ / ✅ |  |
-| **Knowledge Graph Linked** | Entity represented in RDF / CIDOC / PROV-O | ☐ / ✅ |  |
+| Requirement                 | Description                           | Status | Notes |
+| :-------------------------- | :------------------------------------ | :----: | :---- |
+| **Source Manifest Linked**  | Entry exists in `data/sources/**`     |  ☐ / ✅ |       |
+| **Checksum Chain Complete** | SHA-256 lineage for each step         |  ☐ / ✅ |       |
+| **STAC Relations Present**  | `derived_from`, `rel:source` defined  |  ☐ / ✅ |       |
+| **Provenance Record**       | `provenance.md` completed and stored  |  ☐ / ✅ |       |
+| **Graph Integration**       | Entity linked via PROV-O / CIDOC / KG |  ☐ / ✅ |       |
 
 ---
 
-## 🔎 Section 5 — CI/CD & Audit Verification
+## 🔐 Section 5 — Security & Supply Chain
 
-| Requirement | Description | Status | Notes |
-|:-------------|:-------------|:---------|:-------|
-| **CI Logs Available** | Logs available in `data/work/logs/ci/` | ☐ / ✅ |  |
-| **Validation Report Generated** | Markdown/JSON validation summary present | ☐ / ✅ |  |
-| **Security Scan Passed** | CodeQL and Trivy scans successful | ☐ / ✅ |  |
-| **Approval Workflow Completed** | PR merged post-validation | ☐ / ✅ |  |
-| **Build Version Logged** | Build tagged for reproducibility | ☐ / ✅ |  |
+| Requirement               | Description                                      | Status | Notes |
+| :------------------------ | :----------------------------------------------- | :----: | :---- |
+| **CodeQL Scan Passed**    | Static analysis clean (critical issues resolved) |  ☐ / ✅ |       |
+| **Trivy Scan Passed**     | Container/dependency scan clean                  |  ☐ / ✅ |       |
+| **SBOM Generated**        | SPDX JSON available for build artifacts          |  ☐ / ✅ |       |
+| **Secrets Hygiene**       | No plaintext secrets; OIDC used for deploy       |  ☐ / ✅ |       |
+| **License Compatibility** | Mixed sources documented and compatible          |  ☐ / ✅ |       |
 
 ---
 
-## 🧩 Section 6 — Quality Assessment & Review Notes
+## 🔎 Section 6 — CI/CD & Audit Verification
 
-Document findings, anomalies, or recommendations.
+| Requirement              | Description                       | Status | Notes |
+| :----------------------- | :-------------------------------- | :----: | :---- |
+| **CI Logs Available**    | Stored under `data/work/logs/ci/` |  ☐ / ✅ |       |
+| **Validation Report**    | Markdown/JSON summary present     |  ☐ / ✅ |       |
+| **Approval Workflow**    | PR merged after required checks   |  ☐ / ✅ |       |
+| **Build Version Logged** | Release tag or commit recorded    |  ☐ / ✅ |       |
 
-> *Example:*  
-> - Missing `derived_from` attribute in STAC.  
-> - Re-run `make checksums` after data migration.  
-> - Metadata validated; CI/CD logs confirm success — approved.
+---
+
+## 📐 Section 7 — Quality Assessment & Findings
+
+Use this section to document findings, anomalies, risks, or remediation steps.
+
+> *Example Findings:*
+>
+> * Missing `derived_from` in STAC; add and re-validate.
+> * Re-run `make checksums` post-mosaic.
+> * CI logs confirm green; approved.
 
 ---
 
 ## 🧠 MCP Compliance Review
 
-| MCP Principle | Validation Status | Comments |
-|:---------------|:------------------|:-----------|
-| **Documentation-first** | ☐ / ✅ | Documentation written before implementation. |
-| **Reproducibility** | ☐ / ✅ | Deterministic build verified. |
-| **Open Standards** | ☐ / ✅ | JSON Schema, STAC 1.0.0, and open file types used. |
-| **Provenance** | ☐ / ✅ | Source-to-output lineage tracked. |
-| **Auditability** | ☐ / ✅ | CI/CD logs traceable to dataset release. |
+| MCP Principle           | Validation Status | Comments                               |
+| :---------------------- | :---------------- | :------------------------------------- |
+| **Documentation-first** | ☐ / ✅             | Authored prior to implementation       |
+| **Reproducibility**     | ☐ / ✅             | Deterministic build verified           |
+| **Open Standards**      | ☐ / ✅             | JSON Schema, STAC 1.0, open file types |
+| **Provenance**          | ☐ / ✅             | Full source→output lineage tracked     |
+| **Auditability**        | ☐ / ✅             | CI logs traceable to release           |
 
 ---
 
-## 🧾 Reviewer Sign-Off
+## ✍️ Reviewer Sign-Off
 
-| Role | Reviewer Name | Date | Decision | Signature |
-|:------|:---------------|:------|:-----------|:------------|
-| **Primary Reviewer** |  |  | ✅ Approved / ❌ Revisions Required |  |
-| **Data Governance Lead** |  |  | ✅ Approved / ❌ Revisions Required |  |
-| **Automation Engineer** |  |  | ✅ Approved / ❌ Revisions Required |  |
-| **Documentation Steward** |  |  | ✅ Approved / ❌ Revisions Required |  |
+| Role                      | Reviewer | Date | Decision                          | Signature |
+| :------------------------ | :------- | :--- | :-------------------------------- | :-------- |
+| **Primary Reviewer**      |          |      | ✅ Approved / ❌ Revisions Required |           |
+| **Data Governance Lead**  |          |      | ✅ / ❌                             |           |
+| **Automation Engineer**   |          |      | ✅ / ❌                             |           |
+| **Documentation Steward** |          |      | ✅ / ❌                             |           |
 
 ---
 
-## 🧩 Related Documentation
+## 🔗 Related Documentation
 
-| File | Description |
-|:------|:-------------|
-| `docs/templates/dataset.md` | Dataset descriptor template for metadata and schema tracking. |
-| `docs/templates/provenance.md` | Provenance record for lineage documentation. |
-| `docs/templates/sop.md` | SOP for validation workflows. |
-| `docs/architecture/ci-cd.md` | CI/CD and governance process overview. |
-| `.github/workflows/pre-commit.yml` | Automated linting and formatting validator. |
+| File                               | Description                          |
+| :--------------------------------- | :----------------------------------- |
+| `docs/templates/dataset.md`        | Dataset descriptor template          |
+| `docs/templates/provenance.md`     | Provenance record template           |
+| `docs/templates/sop.md`            | Validation/operational SOP           |
+| `docs/templates/adr.md`            | Architecture Decision Record         |
+| `docs/architecture/ci-cd.md`       | CI/CD architecture & required checks |
+| `.github/workflows/pre-commit.yml` | Automated linting & structure checks |
 
 ---
 
 ## 🧱 MCP Governance Summary
 
-| MCP Principle | Implementation |
-|:--------------|:----------------|
-| **Documentation-first** | Templates ensure artifacts are peer-reviewed before publishing. |
-| **Reproducibility** | All steps validated with deterministic Makefile & checksum workflows. |
-| **Open Standards** | Formats verified through schema validators (STAC, JSON). |
-| **Provenance** | Each artifact connected to source via lineage metadata. |
-| **Auditability** | Logs and sign-offs stored in repository for compliance. |
+| MCP Principle           | Implementation                                      |
+| :---------------------- | :-------------------------------------------------- |
+| **Documentation-first** | Templates ensure peer review before publishing      |
+| **Reproducibility**     | Deterministic Make + checksums + container digests  |
+| **Open Standards**      | STAC/JSON Schema/GeoTIFF/GeoJSON verified           |
+| **Provenance**          | Source manifests + lineage + KG links               |
+| **Auditability**        | CI logs, validation reports, and sign-offs archived |
 
 ---
 
-## 🕰️ Version History
+## 🗓️ Version History
 
-| Version | Date | Author | Summary |
-|:---------|:------|:----------|:----------|
-| **v1.1** | 2025-10-05 | Documentation Team | Expanded sections for governance, CI/CD, and quality tracking. |
-| **v1.0** | 2025-10-04 | KFM Docs Team | Initial MCP-compliant validation checklist template. |
+| Version    | Date       | Author             | Summary                                                                                        |
+| :--------- | :--------- | :----------------- | :--------------------------------------------------------------------------------------------- |
+| **v1.2.0** | 2025-10-17 | KFM Docs Team      | Added YAML meta, security & supply-chain checks, accessibility, CI gates, and ownership fields |
+| **v1.1.0** | 2025-10-05 | Documentation Team | Expanded governance, CI/CD, and quality tracking sections                                      |
+| **v1.0.0** | 2025-10-04 | KFM Docs Team      | Initial MCP-compliant validation checklist template                                            |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Review Documented. Every Validation Proven.”*  
-📍 [`docs/templates/checklist.md`](.) · Use this to standardize validation, governance, and review across all KFM modules.
+**Kansas Frontier Matrix © 2025**
+*“Every Review Documented. Every Validation Proven.”*
+📍 `docs/templates/checklist.md` — Standardized validation, governance, and review across all KFM modules.
 
 </div>
