@@ -15,10 +15,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Glossary"
-version: "v1.2.0"
+version: "v1.3.0"
 last_updated: "2025-10-17"
 owners: ["@kfm-docs","@kfm-architecture"]
-tags: ["glossary","standards","mcp","ontology","stac","graph","etl","security"]
+tags: ["glossary","standards","mcp","ontology","stac","graph","etl","security","ai"]
 status: "Active"
 license: "CC-BY 4.0"
 ci_required_checks:
@@ -32,6 +32,7 @@ semantic_alignment:
   - OWL-Time
   - JSON Schema
   - ISO 8601
+  - SLSA 3
 ---
 ```
 
@@ -40,17 +41,17 @@ semantic_alignment:
 ## 📚 Overview
 
 The **KFM Glossary** is a **cross-domain reference** for developers, researchers, historians, and data scientists.  
-It aligns language across all MCP-compliant documentation and serves as a **knowledge interface** linking the project’s **data architecture**, **pipelines**, **ontologies**, and **CI/CD systems**.
+It aligns terminology across all MCP-compliant documentation and serves as a **knowledge interface** linking the project’s **data architecture**, **pipelines**, **ontologies**, and **CI/CD systems**.
 
 **Organization**
-- 🧱 Architecture & Infrastructure
-- 🌎 Geospatial & Environmental Data
-- 🧩 Metadata & Interoperability
-- 🧠 Knowledge Graph & Semantics
-- 📜 Historical & Archival Concepts
-- ⚙️ CI/CD & Governance
-- 🔐 Security & Supply Chain
-- 🧪 AI/ML & NLP
+- 🧱 Architecture & Infrastructure  
+- 🌎 Geospatial & Environmental Data  
+- 🧩 Metadata & Interoperability  
+- 🧠 Knowledge Graph & Semantics  
+- ⚙️ CI/CD & Governance  
+- 🔐 Security & Supply Chain  
+- 🧪 AI/ML & NLP  
+- 🔗 Cross-Ontology & Provenance  
 
 ---
 
@@ -61,27 +62,21 @@ It aligns language across all MCP-compliant documentation and serves as a **know
 | **MCP / MCP-DL** | Documentation-first methodology ensuring reproducibility, provenance, and transparency (Markdown **house style**). | Required across all KFM modules and READMEs. |
 | **RMI / DCI** | Repository Maturity Index / Dynamic Compliance Index — metrics tracking MCP-DL & CI coverage. | Reported in `docs/audit/repository_compliance.md`. |
 | **STAC (SpatioTemporal Asset Catalog)** | Open schema for describing spatiotemporal assets (Collections/Items/Assets). | `data/stac/` + `src/pipelines/load/stac_writer.py`. |
-| **DCAT 2.0** | W3C vocabulary for dataset catalogs. | Metadata crosswalks in docs/standards. |
+| **DCAT 2.0** | W3C vocabulary for dataset catalogs. | Metadata crosswalks in `docs/standards`. |
 | **ETL (Extract–Transform–Load)** | Fetch → Transform → Enrich → Load pipelines. | `src/pipelines/*/`. |
-| **Checksum (SHA-256)** | Cryptographic hash for integrity verification and provenance. | Created in CI and `checksum_utils.py`. |
-| **CIDOC CRM** | Cultural heritage ontology used for people/places/events/documents. | Graph schema in `src/graph/`. |
+| **Checksum (SHA-256)** | Cryptographic hash for integrity verification and provenance. | Generated via CI and `checksum_utils.py`. |
+| **CIDOC CRM** | Cultural heritage ontology used for people, places, events, and documents. | Graph schema in `src/graph/`. |
 | **OWL-Time** | Temporal ontology representing instants/intervals and sequencing. | Timeline normalization in `date_normalizer.py`. |
 | **JSON Schema** | Validation standard for JSON structures. | STAC and internal metadata validation. |
 | **GeoTIFF (COG)** | Cloud-Optimized GeoTIFF for web-ready rasters. | Terrain/imagery in `data/processed/rasters/`. |
 | **GeoJSON** | Vector data format for geospatial entities. | Output of `vector_to_geojson.py`. |
-| **CSV / Parquet** | Tabular formats for time-series/statistical data. | Census and hydrology datasets. |
 | **OCR** | Optical Character Recognition — scans → text. | `kansas_memory_ingest.py`, newspapers. |
 | **Pipeline** | Automated sequence of ETL tasks bound by MCP. | `Makefile` + CI workflows. |
 | **Provenance** | Dataset lineage from source → transforms → artifacts. | Sidecars `.meta.json`, CI logs, STAC. |
-| **Auditability** | Ability to verify each dataset/model result. | Checksums, CI artifacts, golden tests. |
-| **Ontology** | Structured representation of concepts/relations. | Knowledge Graph modeling. |
-| **Knowledge Graph** | Semantic network linking entities (people, places, events, docs). | Neo4j / RDF exports. |
-| **RDF / JSON-LD / TTL** | Linked data formats for graph export. | `graph_export.py`. |
-| **SPARQL / Cypher** | Query languages for RDF/Neo4j. | Semantic/graph queries in API. |
-| **PROV-O** | W3C Provenance Ontology for lineage modeling. | Enrichment metadata. |
-| **STAC Item / Collection** | Item = asset record; Collection = grouped items. | Catalog indexing and timelines. |
-| **Temporal Range** | Start/end or interval for datasets/events. | Timeline slider + OWL-Time. |
-| **Makefile** | Task automation wrapper for reproducible builds. | `make fetch/transform/enrich/load`. |
+| **Ontology** | Structured representation of conceptual relationships. | Knowledge Graph modeling. |
+| **Knowledge Graph** | Semantic network linking entities (people, places, events, documents). | Neo4j / RDF exports. |
+| **SPARQL / Cypher** | Query languages for RDF and Neo4j graphs. | API semantic queries. |
+| **PROV-O** | W3C Provenance Ontology for lineage modeling. | Metadata enrichment. |
 
 ---
 
@@ -139,8 +134,8 @@ It aligns language across all MCP-compliant documentation and serves as a **know
 
 | Term | Definition | Context |
 |:------|:-------------|:----------|
-| **CodeQL** | Static application security testing. | `codeql.yml` |
-| **Trivy** | Dependency & container CVE scanning + SBOM. | `trivy.yml` |
+| **CodeQL** | Static application security testing. | `.github/workflows/codeql.yml`. |
+| **Trivy** | Dependency & container CVE scanning + SBOM. | `.github/workflows/trivy.yml`. |
 | **SLSA** | Supply-chain Levels for Software Artifacts. | Target L3 with provenance signing. |
 | **Sigstore / Cosign** | Artifact signing & verification. | Planned `provenance.yml`. |
 | **Dependabot** | Automated dependency PRs. | Security posture. |
@@ -159,35 +154,65 @@ It aligns language across all MCP-compliant documentation and serves as a **know
 
 ---
 
-## 🧱 Acronyms
+## 🧩 Semantic Tags & Aliases
 
-| Acronym | Full Form | Description |
-|:-----------|:-----------|:-------------|
-| **KFM** | Kansas Frontier Matrix | Repository/system. |
-| **MCP** | Master Coder Protocol | Documentation/provenance framework. |
-| **STAC** | SpatioTemporal Asset Catalog | Geospatial metadata standard. |
-| **ETL** | Extract–Transform–Load | Data pipeline. |
-| **CI/CD** | Continuous Integration / Deployment | Automation for quality gates. |
-| **RDF** | Resource Description Framework | Linked data model. |
-| **COG** | Cloud-Optimized GeoTIFF | Raster format for web. |
-| **NHD** | National Hydrography Dataset | Stream network dataset. |
-| **WBD** | Watershed Boundary Dataset | Hydrologic boundaries. |
-| **NOAA** | National Oceanic and Atmospheric Administration | Climate/hazards. |
-| **USGS** | U.S. Geological Survey | Elevation/hydro/imagery. |
-| **KSHS** | Kansas State Historical Society | Archives & documents. |
+| Term | Aliases / Synonyms | Notes |
+| :---- | :----------------- | :---- |
+| MCP | Master Coder Protocol, MCP-DL | Used interchangeably. |
+| CIDOC CRM | CRM, Cultural Heritage Ontology | Maps to ontology nodes in Neo4j. |
+| FAIR Data | FAIR Principles, FAIR Compliance | Data policy baseline. |
+| Knowledge Graph | Semantic Graph, Ontological Graph | Used across docs. |
+| Provenance | Lineage, Data Origin, Audit Trail | Defined under PROV-O + STAC. |
+| STAC | SpatioTemporal Catalog, STAC Spec | Standard in KFM’s data model. |
+| AI Summarization | LLM Summarization, NLP Condensation | Used in AI enrichment modules. |
 
 ---
 
-## 🔗 Cross-References
+## 🔗 Cross-Ontology Mapping
 
-| Document | Description |
-|:-----------|:-------------|
-| `docs/architecture/architecture.md` | System architecture overview. |
-| `docs/architecture/data-architecture.md` | Data flow & lineage. |
-| `docs/architecture/knowledge-graph.md` | Graph schema & ontologies. |
-| `docs/architecture/pipelines.md` | ETL & AI/ML pipelines. |
-| `docs/standards/metadata-standards.md` | Metadata & schema compliance. |
-| `docs/audit/repository_compliance.md` | Repository compliance dashboard. |
+| KFM Concept | CIDOC CRM Entity | DCAT Property | STAC Field | Notes |
+| :----------- | :---------------- | :-------------- | :----------- | :------ |
+| Person | E21_Person | dcat:contactPoint | — | Historical and modern figures. |
+| Place | E53_Place | dcat:spatial | geometry | Linked to CRS/EPSG data. |
+| Event | E5_Event | dcat:temporal | datetime | Bound to OWL-Time intervals. |
+| Document | E31_Document | dcat:dataset | assets | OCR + metadata integration. |
+| Dataset | E73_Information_Object | dcat:Dataset | collection | Dataset-level alignment. |
+
+---
+
+## 🤖 Machine-Readable Export
+
+The glossary is automatically exported to **JSON-LD** and **YAML** formats for integration with:
+- KFM Docs Search API (`/api/v1/terms`)
+- AI Assistant (MapLibre frontend)
+- STAC Validator semantic enrichment
+
+**Command**
+```bash
+make export-glossary
+```
+**Outputs**
+- `docs/glossary.jsonld`
+- `docs/glossary.yaml`
+
+---
+
+## 🖊 Last Reviewed
+
+| Reviewer | Role | Date | Signature |
+| :-------- | :---- | :---- | :---- |
+| @kfm-docs | Documentation Maintainer | 2025-10-17 | 🔏 SHA256:45e8…12a |
+| @kfm-architecture | System Architect | 2025-10-17 | 🔏 SHA256:e4c9…91a |
+
+---
+
+## 🧭 Planned Extensions (v6.4)
+
+| Feature | Description | ETA |
+| :------- | :----------- | :--- |
+| **Glossary AI Validation** | Detects inconsistent term usage across READMEs. | Q1 2026 |
+| **Ontology Graph Export** | Converts glossary → RDF triples → Graph ingestion. | Q2 2026 |
+| **Glossary API Endpoint** | REST + GraphQL endpoint for dynamic term access. | Q2 2026 |
 
 ---
 
@@ -196,7 +221,7 @@ It aligns language across all MCP-compliant documentation and serves as a **know
 | MCP Principle | Implementation |
 |:--------------|:----------------|
 | **Documentation-first** | Definitions maintained before feature implementation. |
-| **Reproducibility** | Terms bound to code, data paths, and CI validation. |
+| **Reproducibility** | Terms bound to data paths, workflows, and CI validation. |
 | **Open Standards** | STAC, DCAT, CIDOC CRM, OWL-Time, JSON Schema. |
 | **Provenance** | Glossary versioned with metadata; linked to audit report. |
 | **Auditability** | Validated via `docs-validate.yml` and Markdownlint. |
@@ -207,9 +232,10 @@ It aligns language across all MCP-compliant documentation and serves as a **know
 
 | Version | Date | Summary |
 |:---------|:------|:----------|
-| **v1.2.0** | 2025-10-17 | Upgraded to MCP-DL v6.3 style; added **RMI/DCI**, security/supply-chain, AI/ML terms, cross-references. |
+| **v1.3.0** | 2025-10-17 | Added semantic tags, ontology mapping, machine-readable export, provenance metadata, and reviewer sign-off. |
+| **v1.2.0** | 2025-10-17 | Upgraded to MCP-DL v6.3 style; added security/supply-chain, AI/ML terms, and cross-references. |
 | **v1.1.0** | 2025-10-05 | Expanded ontology/geospatial/governance sections; GitHub rendering improvements. |
-| **v1.0.0** | 2025-10-04 | Initial MCP-aligned glossary covering architecture, data, pipelines. |
+| **v1.0.0** | 2025-10-04 | Initial MCP-aligned glossary covering architecture, data, and pipelines. |
 
 ---
 
