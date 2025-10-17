@@ -15,37 +15,12 @@
 
 ---
 
-```yaml
----
-title: "KFM • DetailPanel Component (web/src/components/DetailPanel/)"
-version: "v1.5.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-knowledge"]
-tags: ["react","entity","details","knowledge-graph","ai","accessibility","timeline","mcp"]
-license: "MIT"
-semantic_alignment:
-  - CIDOC CRM (entity relationships)
-  - OWL-Time (temporal range representation)
-  - PROV-O (data provenance)
-  - WCAG 2.1 AA
----
-````
-
----
-
 ## 🧭 Overview
 
-The **DetailPanel** component presents comprehensive information about a **selected entity or event** in the Kansas Frontier Matrix.
-It bridges the **interactive map**, **timeline**, and **AI Assistant**, turning data from the knowledge graph into readable, contextual narratives.
+**DetailPanel** renders a **semantic dossier** for the currently selected **entity or event**, aligning **space (map)**, **time (timeline)**, and **narrative (AI summary + citations)**.  
+It consolidates data from `/api/entity/{id}` and optional AI summaries from `/api/ask?id={entityId}`, and projects temporal intervals and spatial context into a single, accessible panel.
 
-It integrates structured, AI-generated, and provenance-aware data to show:
-
-* Entity and event details from `/api/entity/{id}`
-* AI summaries via `/api/ask?id={entityId}`
-* Temporal intervals and map locations
-* Citations and linked relationships (people, places, documents, events)
-
-> **Purpose:** Transform Kansas’s datasets and archives into accessible, traceable stories — connecting geography, time, and knowledge.
+> *“Every document has a voice — the DetailPanel lets Kansas’s archives speak.”*
 
 ---
 
@@ -53,87 +28,112 @@ It integrates structured, AI-generated, and provenance-aware data to show:
 
 ```text
 web/src/components/DetailPanel/
-├── DetailPanel.tsx        # Root component: orchestrates data fetching & rendering
-├── DetailSection.tsx      # Section component for grouped info (summary, metadata)
-├── CitationList.tsx       # Displays source citations & provenance metadata
-├── RelatedEntities.tsx    # Shows linked entities/events from the knowledge graph
-├── styles.scss            # Theming, responsive layout, animations
-└── __tests__/             # Jest + RTL tests (rendering, API, accessibility)
+├── DetailPanel.tsx        # Root orchestrator: fetch, compose sections, a11y
+├── DetailSection.tsx      # Labeled content blocks (Summary, Data, Links)
+├── CitationList.tsx       # Provenance citations (title, source, license, excerpt)
+├── RelatedEntities.tsx    # Linked entities/events (graph relations)
+├── TimelineChips.tsx      # Start/end chips, interval badges, uncertainty hints
+├── MapContextChip.tsx     # Quick map focus/zoom-to for the entity
+├── styles.scss            # Theme-aware layout, sticky header, animations
+└── __tests__/             # RTL/Jest: API mocks, a11y, keyboard, snapshots
 ```
 
 ---
 
-## ⚙️ Component Architecture
+## 🗺️ Architecture
 
 ```mermaid
 flowchart TD
-  SEL["SelectionContext<br/>(selectedEntity)"] --> API["FastAPI<br/>GET /entity/{id}"]
-  API --> DP["DetailPanel<br/>summary · metadata · sources"]
-  DP --> AI["AIAssistant<br/>contextual Q&A"]
-  DP --> MAP["MapView<br/>highlight location"]
-  DP --> TL["TimelineView<br/>focus on time interval"]
-  DP --> CITE["CitationList<br/>source provenance"]
+  SEL["SelectionContext<br/>selectedEntity"] --> API["/entity/{id}<br/>graph data"]
+  API --> DP["DetailPanel<br/>sections · chips · actions"]
+  DP --> AI["/ask?id={entityId}<br/>AI summary + citations"]
+  DP --> MAP["MapView<br/>highlight · zoom-to"]
+  DP --> TL["TimelineView<br/>focus interval"]
+  DP --> CITE["CitationList<br/>provenance"]
 %% END OF MERMAID
 ```
 
-> The DetailPanel connects multiple application layers — acting as the semantic and visual link between entity data, temporal ranges, and spatial locations.
+*Deterministic contract:* Selection drives fetch; panel renders sections; actions affect **Map** and **Timeline** in lockstep.
 
 ---
 
 ## 🧩 Key Features
 
-| Feature                    | Description                                                    | Data Source                                     |
-| :------------------------- | :------------------------------------------------------------- | :---------------------------------------------- |
-| **Entity Overview**        | Displays name, type, and description                           | `/api/entity/{id}` (Neo4j Graph)                |
-| **AI Summary Integration** | Fetches short, medium, and long AI-generated summaries         | `/api/ask?id={entityId}`                        |
-| **Citations & Provenance** | Lists documents, treaties, or datasets that mention the entity | Graph relationships: `MENTIONS`, `DERIVED_FROM` |
-| **Linked Entities**        | Lists related people, places, and events                       | `PARTICIPATED_IN`, `OCCURRED_AT`                |
-| **Temporal Context**       | Highlights active time range on timeline                       | `TimelineContext`                               |
-| **Spatial Context**        | Zooms or highlights related map features                       | `MapContext`                                    |
-| **Accessibility**          | ARIA-compliant region with keyboard focus and live updates     | `AccessibilityContext`                          |
+| Feature                      | Description                                                                 | Source / Contract                                  |
+| :--------------------------- | :-------------------------------------------------------------------------- | :------------------------------------------------- |
+| **Entity Overview**          | Name, type (Person/Place/Event/Document), description                      | `GET /entity/{id}`                                 |
+| **AI Summaries**             | Short/medium/long synthesis with inline citation anchors                    | `GET /ask?id={entityId}`                           |
+| **Citations & Provenance**   | Document list with license, source URL, excerpt                             | Graph relations (`MENTIONS`, `DERIVED_FROM`)       |
+| **Linked Entities**          | People, places, events, documents (typed chips)                             | `PARTICIPATED_IN`, `OCCURRED_AT`, etc.             |
+| **Temporal Context**         | Interval badges (start/end), uncertainty/confidence hints                   | `startDate`/`endDate` (OWL-Time aligned)           |
+| **Spatial Context**          | Zoom-to focus, highlight feature on map                                     | `coordinates`/`bbox`                               |
+| **A11y-first Panel**         | Live region announcements, landmark semantics, keyboard close               | `AccessibilityContext`                             |
 
 ---
 
-## 💬 Example Usage
+## 💬 Reference Implementation (concise)
 
 ```tsx
+// DetailPanel.tsx (excerpt)
 import React from "react";
-import { useSelection } from "../../context/SelectionContext";
-import { DetailPanel } from "./DetailPanel";
+import { useFetch } from "../../hooks/useFetch";
+import { useTheme } from "../../context/ThemeContext";
+import { TimelineChips } from "./TimelineChips";
+import { CitationList } from "./CitationList";
+import { RelatedEntities } from "./RelatedEntities";
 
-export function RightSidebar() {
-  const { selected } = useSelection();
+export interface DetailPanelProps { entityId: string; }
+
+export function DetailPanel({ entityId }: DetailPanelProps) {
+  const { data: entity, loading, error } = useFetch(`/api/entity/${entityId}`);
+  const { data: ai } = useFetch(`/api/ask?id=${entityId}`);
+  const { theme } = useTheme();
+
+  if (loading) return <section role="region" aria-busy="true" aria-live="polite">Loading…</section>;
+  if (error || !entity) return <section role="region">Unable to load details.</section>;
+
   return (
-    <aside className="detail-sidebar" role="complementary" aria-label="Entity Detail Panel">
-      {selected ? (
-        <DetailPanel entityId={selected.id} />
-      ) : (
-        <p>Select an item to view details.</p>
+    <section
+      className={`kfm-detail ${theme}`}
+      role="complementary"
+      aria-label={`Details for ${entity.label}`}
+      data-testid="detail-panel"
+    >
+      <header className="kfm-detail__header">
+        <h2>{entity.label}</h2>
+        <span className="kfm-detail__type">{entity.type}</span>
+        <TimelineChips start={entity.startDate} end={entity.endDate} />
+      </header>
+
+      {ai?.answer && (
+        <article className="kfm-detail__summary" aria-label="AI Summary">
+          <p>{ai.answer}</p>
+        </article>
       )}
-    </aside>
+
+      <RelatedEntities items={entity.relatedEntities ?? []} />
+      <CitationList items={entity.citations ?? []} />
+    </section>
   );
 }
 ```
 
 ---
 
-## 🧠 TypeScript Interfaces
+## 🧠 TypeScript Contracts
 
 ```ts
-export interface DetailPanelProps {
-  entityId: string;
-}
-
 export interface EntityDetail {
   id: string;
   label: string;
   type: "Person" | "Place" | "Event" | "Document";
   description?: string;
-  summary?: string;
+  summary?: string; // backend-provided optional synopsis
   coordinates?: [number, number];
-  startDate?: string;
+  startDate?: string; // ISO-8601 (OWL-Time interval)
   endDate?: string;
-  relatedEntities?: { id: string; label: string; type: string }[];
+  confidence?: number; // 0..1 uncertainty hint
+  relatedEntities?: { id: string; label: string; type: "Person"|"Place"|"Event"|"Document" }[];
   citations?: Citation[];
 }
 
@@ -141,32 +141,28 @@ export interface Citation {
   id: string;
   title: string;
   sourceUrl?: string;
-  license?: string;
+  license?: string; // e.g., CC-BY 4.0
   excerpt?: string;
 }
 ```
 
-> All types are aligned with KFM’s **knowledge graph ontology** — mapping to CIDOC CRM entity types (e.g., `E21_Person`, `E5_Event`).
-
 ---
 
-## 🧩 Rendering Flow
+## 🧩 Rendering Flow (timeline + map)
 
 ```mermaid
 sequenceDiagram
   participant U as User
   participant S as SelectionContext
-  participant API as FastAPI / GraphQL
   participant D as DetailPanel
-  participant AI as AI Summarizer
+  participant M as MapView
+  participant T as TimelineView
 
-  U->>S: Select entity on map/timeline
-  S->>D: Pass entityId to DetailPanel
-  D->>API: GET /entity/{id}
-  API-->>D: Return metadata, relations, sources
-  D->>AI: Fetch AI summary (/api/ask?id)
-  AI-->>D: Return text + citations
-  D-->>U: Render panel with sections (Summary, Linked Entities, Citations)
+  U->>S: select entity/event
+  S->>D: entityId changes
+  D-->>M: highlight feature · zoomTo(bbox?)
+  D-->>T: focus interval [start,end]
+  D-->>U: AI summary + citations + relations
 %% END OF MERMAID
 ```
 
@@ -174,52 +170,58 @@ sequenceDiagram
 
 ## 🎨 Layout & Styling
 
-| Feature             | Implementation                                                     |
-| :------------------ | :----------------------------------------------------------------- |
-| **Width**           | 30–40% viewport (desktop) → collapsible drawer (mobile)            |
-| **Sections**        | Summary · Details · Linked Entities · Sources · Timeline           |
-| **Animation**       | `Framer Motion` slide-in/out transitions                           |
-| **Themes**          | Inherits `ThemeContext` (light/dark)                               |
-| **Typography**      | Semantic headings `<h2>` / `<h3>` · Markdown rendering for AI text |
-| **Scroll Behavior** | Sticky header · smooth scroll · overflow-y auto                    |
-
-Example:
+| Aspect           | Implementation                                                                 |
+| :--------------- | :------------------------------------------------------------------------------ |
+| **Shell**        | 30–40% viewport (desktop) · mobile drawer; sticky header & scroll sections     |
+| **Sections**     | Summary · Details · Linked Entities · Citations · Actions                       |
+| **Motion**       | Framer Motion slide-in/out (auto-disabled on reduced motion)                    |
+| **Tokens**       | Theme variables from `web/src/styles/variables.scss`                            |
+| **Markdown**     | AI text rendered safely (sanitized) with basic markdown support                 |
 
 ```scss
-.detail-sidebar {
+.kfm-detail {
   background: var(--kfm-color-bg);
   color: var(--kfm-color-text);
-  border-left: 1px solid var(--kfm-color-muted);
-  transition: transform 0.3s ease;
+  border-left: 1px solid color-mix(in oklab, var(--kfm-color-text), transparent 85%);
+  display: grid; grid-template-rows: auto 1fr;
 }
+.kfm-detail__header { position: sticky; top: 0; backdrop-filter: blur(6px); }
 ```
 
 ---
 
 ## ♿ Accessibility (WCAG 2.1 AA)
 
-* **Landmark Role:** `<aside role="complementary">`
-* **ARIA Live Region:** Announces new entity selections dynamically
-* **Keyboard Navigation:** `Esc` closes panel; `Tab` cycles within panel
-* **Headings:** Proper semantic levels ensure screen reader context
-* **Contrast:** All text and link colors tested for ≥ 4.5:1 ratio
-* **Motion Sensitivity:** Disables animations if `prefers-reduced-motion: reduce`
-
-Accessibility validated in CI via **axe-core** + **Lighthouse**.
+- Landmark: `<aside role="complementary">` with descriptive `aria-label`  
+- Live region: announces entity changes (`aria-live="polite"`)  
+- Keyboard: `Esc` closes panel; `Tab` remains within panel when focused  
+- Semantics: headings order (`h2` panel title → `h3` subsections)  
+- Contrast: tokens validated ≥ 4.5:1; focus ring always visible  
+- Motion: honors `prefers-reduced-motion: reduce` for transitions
 
 ---
 
 ## 🧪 Testing
 
-| Test Case               | Description                                                   | Tool                  |
-| :---------------------- | :------------------------------------------------------------ | :-------------------- |
-| **API Integration**     | Mocks `/api/entity/{id}` and `/api/ask` to validate rendering | Jest + MSW            |
-| **Section Rendering**   | Verifies Summary, Linked Entities, Citations sections appear  | React Testing Library |
-| **Keyboard Navigation** | Confirms tab order, focus trapping, and `Esc` close           | axe-core              |
-| **Error Handling**      | Displays fallback message on fetch failure                    | Jest Mocks            |
-| **Snapshot Testing**    | Validates visual consistency across themes                    | Jest Snapshots        |
+| Case                     | Expectation                                                     | Tooling                  |
+| :----------------------- | :-------------------------------------------------------------- | :----------------------- |
+| Entity fetch & render    | Calls `/entity/{id}`; renders fields/sections                   | Jest + MSW + RTL         |
+| AI summary + citations   | Calls `/ask?id=`; inline citation anchors render                | Jest + RTL               |
+| Keyboard & a11y          | Tab order + `Esc` close; no axe violations                      | RTL + axe-core           |
+| Timeline/map sync        | Dispatches focus interval + map highlight on selection          | Mocks for contexts       |
+| Error & loading states   | Graceful fallbacks with `aria-busy`, retry affordance           | Jest                     |
+| Snapshot                 | Stable visuals across themes & screen sizes                     | Jest Snapshots           |
 
-> **Coverage target:** ≥ **90%** lines and branches.
+**Coverage target:** ≥ **90%**.
+
+---
+
+## 🛠 Performance Notes
+
+- Cache entity payloads by `entityId` to minimize network churn  
+- Memoize derived sections (citations, related lists)  
+- Defer AI summary request until entity payload resolves  
+- Avoid forced reflows in long lists; virtualize if needed
 
 ---
 
@@ -227,40 +229,49 @@ Accessibility validated in CI via **axe-core** + **Lighthouse**.
 
 | Artifact         | Description                                                                  |
 | :--------------- | :--------------------------------------------------------------------------- |
-| **Inputs**       | `/api/entity/{id}` (graph data), `/api/ask` (AI summary), `SelectionContext` |
-| **Outputs**      | HTML panel with semantic sections, citations, and summaries                  |
-| **Dependencies** | React 18+, Axios, Markdown-it, Framer Motion                                 |
-| **Integrity**    | CI validates API mocks, markdown sanitization, a11y compliance               |
+| **Inputs**       | `/api/entity/{id}` (graph), `/api/ask` (AI), Selection/Timeline/Map contexts |
+| **Outputs**      | Panel sections (summary, relations, citations)                               |
+| **Dependencies** | React 18+, Fetch/Axios, Markdown renderer, Framer Motion                     |
+| **Integrity**    | CI: type-check, unit/integration, axe-core + Lighthouse, snapshot tests      |
 
 ---
 
 ## 🧠 MCP Compliance Checklist
 
-| MCP Principle             | Implementation                                   |
-| :------------------------ | :----------------------------------------------- |
-| Documentation-first       | README + inline TSDoc                            |
-| Reproducibility           | Deterministic API + UI rendering pipeline        |
-| Provenance                | Source citations + dataset lineage visible in UI |
-| Accessibility             | Full WCAG 2.1 AA + CI verification               |
-| Semantic Interoperability | CIDOC CRM + OWL-Time mapping for entities        |
+| Principle             | Implementation                                       |
+| :-------------------- | :--------------------------------------------------- |
+| Documentation-first   | README + TSDoc on props and sections                 |
+| Reproducibility       | Deterministic data→UI pipeline                       |
+| Provenance            | Explicit citation list with license/source            |
+| Accessibility         | WCAG 2.1 AA validated in CI                          |
+| Interoperability      | CIDOC CRM + OWL-Time + PROV-O alignment              |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Web Frontend Components Overview** — `web/src/components/README.md`
-* **AIAssistant Component** — `web/src/components/AIAssistant/README.md`
-* **Context — Selection & Timeline** — `web/src/context/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **Components Overview** — `web/src/components/README.md`  
+- **AIAssistant** — `web/src/components/AIAssistant/README.md`  
+- **Context (Selection/Timeline/Map)** — `web/src/context/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.6.0` |
+| **Codename** | *Provenance & Interval Sync Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-knowledge |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | CIDOC CRM · OWL-Time · PROV-O · WCAG 2.1 AA |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for traceable, semantic, and reproducible digital history.
-
-> *“Every document has a voice — the Detail Panel lets Kansas’s archives speak.”*
-
-```
-```
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — built under **MCP-DL v6.2** for traceable, semantic, and reproducible digital history.
