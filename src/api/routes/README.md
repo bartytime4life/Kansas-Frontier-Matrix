@@ -1,29 +1,55 @@
+
 <div align="center">
 
-# 🛠️ Kansas Frontier Matrix — API Route Handlers  
+# 🛠️ **Kansas Frontier Matrix — API Route Handlers**  
 `src/api/routes/README.md`
 
 **FastAPI Endpoints · REST & GraphQL Resolvers · Data Delivery Layer**
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
-[![License: Code](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy&logo=github&color=blue)](../../../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json&color=blue)](../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github&color=informational)](../../../../.github/workflows/codeql.yml)
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security&logo=security&color=green)](../../../../.github/workflows/trivy.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue?logo=markdown)](../../../../docs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../../LICENSE)
 
 </div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — API Route Handlers"
+version: "v1.5.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-architecture", "@kfm-data"]
+tags: ["api","routes","fastapi","graphql","rest","stac","neo4j","ai","mcp","ci","semver"]
+status: "Stable"
+license: "MIT"
+semver_policy: "MAJOR.MINOR.PATCH"
+ci_required_checks:
+  - pre-commit
+  - unit-tests
+  - codeql
+  - trivy
+  - docs-validate
+semantic_alignment:
+  - STAC 1.0
+  - DCAT 2.0
+  - CIDOC CRM
+  - OWL-Time
+  - ISO 8601
+---
+```
 
 ---
 
 ## 🎯 Purpose
 
 The **`src/api/routes/`** directory defines all **FastAPI endpoint routes** for the **Kansas Frontier Matrix (KFM)**.  
-Each route file contains REST and (optionally) GraphQL endpoint definitions that interface with the **Knowledge Graph**,  
-**STAC catalog**, and **AI/NLP enrichment layer** to provide interactive data to the frontend and external clients.
+Each route file contains REST and GraphQL endpoint definitions interfacing with the **Knowledge Graph**, **STAC Catalog**, and **AI/NLP enrichment layer** — powering the frontend timeline, map, and research APIs.
 
-Routes are modularized by data domain (events, places, people, etc.) and follow consistent patterns for  
-query parameters, pagination, and metadata enrichment.
+Routes are modularized by domain and standardized for **query parameters**, **pagination**, and **provenance enrichment**.
 
 ---
 
@@ -32,18 +58,11 @@ query parameters, pagination, and metadata enrichment.
 ```mermaid
 flowchart TD
     A["Frontend (React · MapLibre)"] --> B["FastAPI Routes<br/>/events · /places · /people · /stac · /ask"]
-    B --> C["Graph Layer<br/>Neo4j Queries / Cypher / GraphQL"]
+    B --> C["Knowledge Graph<br/>Neo4j / Cypher / GraphQL"]
     B --> D["STAC Catalog<br/>data/stac/*.json"]
     B --> E["AI Layer<br/>Summarization / Entity Search"]
-````
-
+```
 <!-- END OF MERMAID -->
-
-Each route acts as a **controller** between the backend data layers and user-facing clients:
-
-* REST endpoints return **structured JSON** or **GeoJSON**
-* GraphQL resolvers allow **flexible, nested queries**
-* All routes enforce **schema validation** (Pydantic) and **logging** per MCP protocol
 
 ---
 
@@ -52,12 +71,12 @@ Each route acts as a **controller** between the backend data layers and user-fac
 ```
 src/api/routes/
 ├── __init__.py
-├── events.py          # Historical event queries (timeline integration)
-├── places.py          # Geographic / geospatial entity routes
-├── people.py          # Person and organization endpoints
-├── stac.py            # STAC catalog and item retrieval endpoints
-├── search.py          # Keyword and semantic search endpoints
-├── ai.py              # AI-driven summarization and Q/A interface
+├── events.py          # Historical event queries (timeline)
+├── places.py          # Geographic and geospatial endpoints
+├── people.py          # Person / organization data
+├── stac.py            # STAC collections & items
+├── search.py          # Keyword + semantic search
+├── ai.py              # AI-driven summarization & Q/A
 └── README.md          # (this file)
 ```
 
@@ -67,16 +86,11 @@ src/api/routes/
 
 ### `/events` — Event & Timeline API
 
-**Purpose:** Returns all historical events within a temporal or spatial range.
-**Integrations:** Knowledge Graph (Neo4j), OWL-Time, CIDOC CRM.
-
-**Example Usage:**
+**Purpose:** Returns events within temporal/spatial filters using CIDOC CRM + OWL-Time.
 
 ```bash
 GET /events?start=1850&end=1900&type=treaty
 ```
-
-**Response:**
 
 ```json
 [
@@ -96,14 +110,11 @@ GET /events?start=1850&end=1900&type=treaty
 
 ### `/places` — Geographic & Spatial API
 
-**Purpose:** Retrieves spatial features (forts, towns, rivers, counties, etc.) as GeoJSON.
-**Example Usage:**
+**Purpose:** Returns spatial features (forts, towns, rivers, counties) as GeoJSON.
 
 ```bash
 GET /places?bbox=-102,36,-94,40
 ```
-
-**Response:**
 
 ```json
 {
@@ -120,16 +131,13 @@ GET /places?bbox=-102,36,-94,40
 
 ---
 
-### `/people` — People & Organizations API
+### `/people` — People & Organizations
 
-**Purpose:** Returns details about individuals, tribal nations, or institutions involved in Kansas history.
-**Example Usage:**
+**Purpose:** Provides biographical and relational data about individuals and organizations.
 
 ```bash
 GET /people?id=truman_1870
 ```
-
-**Response:**
 
 ```json
 {
@@ -146,12 +154,10 @@ GET /people?id=truman_1870
 ### `/stac` — Geospatial Catalog API
 
 **Purpose:** Exposes the **SpatioTemporal Asset Catalog (STAC)** for map layers and imagery.
-**Endpoints:**
 
-* `GET /stac/collections` → List all STAC collections
-* `GET /stac/items/{id}` → Retrieve a specific dataset’s metadata
-
-**Response Example:**
+```bash
+GET /stac/items/ks_1m_dem_2018_2020
+```
 
 ```json
 {
@@ -169,17 +175,13 @@ GET /people?id=truman_1870
 
 ---
 
-### `/search` — Semantic & Keyword Search
+### `/search` — Keyword & Semantic Search
 
-**Purpose:** Provides cross-entity search powered by Neo4j full-text index and NLP embedding vectors.
-
-**Example Usage:**
+**Purpose:** Provides cross-entity search via Neo4j fulltext + NLP embeddings.
 
 ```bash
 GET /search?q=cheyenne
 ```
-
-**Response:**
 
 ```json
 {
@@ -193,11 +195,9 @@ GET /search?q=cheyenne
 
 ---
 
-### `/ai` — AI Query & Summarization Endpoint
+### `/ai` — AI Query & Summarization
 
-**Purpose:** Provides AI-assisted question answering and contextual summaries using the project’s NLP models.
-
-**Example:**
+**Purpose:** Enables Q/A and summarization via NLP pipelines.
 
 ```bash
 POST /ask
@@ -206,16 +206,10 @@ POST /ask
 }
 ```
 
-**Response:**
-
 ```json
 {
-  "answer": "Western Kansas counties such as Finney, Ford, and Haskell experienced the most severe dust storms between 1933–1938.",
-  "sources": [
-    "noaa_storms_1933.csv",
-    "kansas_newspapers_1935.txt",
-    "fema_disasters_dustbowl.json"
-  ]
+  "answer": "Western Kansas counties such as Finney, Ford, and Haskell saw the worst storms (1933–1938).",
+  "sources": ["noaa_storms_1933.csv","kansas_newspapers_1935.txt","fema_dustbowl.json"]
 }
 ```
 
@@ -223,32 +217,28 @@ POST /ask
 
 ## ⚙️ Implementation Details
 
-Each route module:
+- All routes import shared helpers from `src/api/utils/`  
+- **Pydantic** schemas validate responses  
+- **Structured logs** written to `logs/api/access.log`  
+- **CORS**, caching, and error handling centralized via middleware  
 
-* Uses **Pydantic schemas** for response validation
-* Logs every query to `logs/api/access.log` with duration and status
-* Applies FastAPI dependency injection for database sessions
-* Returns consistent metadata headers (API version, timestamp, data license)
-
-**Example Boilerplate:**
-
+**Boilerplate Example**
 ```python
 from fastapi import APIRouter, Query
 from src.api.schemas.event_schema import Event
-from src.api.utils.db import get_graph_session
+from src.api.utils.db import get_session
 
 router = APIRouter(prefix="/events", tags=["Events"])
 
 @router.get("/", response_model=list[Event])
 def list_events(start: int = 1800, end: int = 2025):
-    """Return all historical events within a time range."""
-    session = get_graph_session()
-    query = f"""
+    with get_session("r") as s:
+        q = f"""
         MATCH (e:Event)
         WHERE e.start_year >= {start} AND e.start_year <= {end}
         RETURN e
-    """
-    return [dict(record["e"]) for record in session.run(query)]
+        """
+        return [dict(r["e"]) for r in s.run(q)]
 ```
 
 ---
@@ -256,48 +246,43 @@ def list_events(start: int = 1800, end: int = 2025):
 ## 🧰 Development Commands
 
 ```bash
-# Run only /events route for testing
+# Run one route for local test
 uvicorn src.api.routes.events:router --reload
 
-# Validate all endpoints with pytest
+# Run all route tests
 pytest tests/api/test_routes.py
 
-# Generate route documentation
+# View live API documentation
 curl http://localhost:8080/docs
 ```
 
 ---
 
-## 🔍 Best Practices
+## 🧷 CI Acceptance Checklist
 
-✅ **Consistency**
-All routes return JSON with predictable structures and `meta` fields for pagination and provenance.
-
-✅ **Documentation-First**
-Each route includes a descriptive docstring following **MCP format** (Problem → Method → Output → Provenance).
-
-✅ **Traceability**
-Every response includes source identifiers and timestamps (e.g., `data_source`, `last_updated`).
-
-✅ **Security**
-Sensitive endpoints (e.g., `/ai`) are rate-limited and protected by optional API keys.
+- [ ] Routes documented (Swagger/GraphQL)  
+- [ ] Schemas validated and response types enforced  
+- [ ] Pagination + caching working across endpoints  
+- [ ] `/search` and `/ai` rate-limited and logged  
+- [ ] Unit tests pass CI (CodeQL, Trivy clean)  
 
 ---
 
 ## 📚 References
 
-* [Kansas Frontier Matrix – API Layer](../../README.md)
-* [AI System Developer Documentation](../../../../docs/ai-system.md)
-* [Neo4j Graph Queries](../../../graph/graph_queries.py)
-* [STAC 1.0.0 Specification](https://stacspec.org/)
-* [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- API Layer — `../../README.md`  
+- Schemas — `../schemas/README.md`  
+- Utilities — `../utils/README.md`  
+- Graph Queries — `../../../graph/graph_queries.py`  
+- STAC Spec — https://stacspec.org/  
+- FastAPI Docs — https://fastapi.tiangolo.com/  
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**
+**Kansas Frontier Matrix © 2025**  
 *Open Knowledge · Transparent APIs · Reproducible Science*
 
 </div>
-
+```
