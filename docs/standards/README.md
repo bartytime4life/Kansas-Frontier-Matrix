@@ -1,12 +1,13 @@
 <div align="center">
 
-# 📐 Kansas Frontier Matrix — **Standards & Governance**  
+# 📐 Kansas Frontier Matrix — **Standards & Governance**
 `docs/standards/README.md`
 
 **Mission:** Define, enforce, and version **project-wide technical, scientific, and documentation standards** for  
 the **Kansas Frontier Matrix (KFM)** — ensuring **clarity**, **reproducibility**, **interoperability**, and **long-term integrity**  
-across every data, model, pipeline, and interface under the **Master Coder Protocol (MCP)**.
+across every dataset, model, pipeline, and interface under the **Master Coder Protocol (MCP)**.
 
+</div>
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
@@ -14,13 +15,13 @@ across every data, model, pipeline, and interface under the **Master Coder Proto
 [![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../.github/workflows/pre-commit.yml)
 [![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../docs/)
 [![FAIR Principles](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-2ea44f)](https://www.go-fair.org/fair-principles/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
+[![License CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
 
-</div>
 ---
+
 title: "📐 Kansas Frontier Matrix — Standards & Governance"
 document_type: "README"
-version: "v2.6.0"
+version: "v2.6.4"
 last_updated: "2025-10-17"
 created: "2024-11-02"
 owners: ["@kfm-architecture", "@kfm-data", "@kfm-security"]
@@ -38,20 +39,24 @@ semantic_alignment:
 provenance:
   workflow_pin_policy: "actions pinned by tag or SHA"
   artifact_retention_days: 90
+
 ---
+
+
+
 ---
 
 ## 🎯 Purpose
 
-This directory defines the **technical, semantic, and operational standards** that govern every layer of the  
-Kansas Frontier Matrix system — guaranteeing **auditability**, **reproducibility**, and **semantic interoperability**  
-across datasets, pipelines, code, and documents.
+The `/docs/standards/` directory defines the **technical, semantic, and operational standards** that guarantee  
+the Kansas Frontier Matrix ecosystem remains **auditable**, **reproducible**, and **semantically interoperable**  
+under the **FAIR Data Principles** and **MCP-DL v6.2** governance framework.
 
-**These standards ensure:**
+**These standards ensure that:**
 
-- Every dataset adheres to uniform structure, schema, and provenance.  
+- Every dataset adheres to a consistent schema and provenance model.  
 - Every workflow is deterministic, logged, and validated in CI/CD.  
-- Every contributor follows consistent code, metadata, and documentation rules.  
+- Every contributor follows unified code, metadata, and documentation practices.  
 - Every artifact — dataset, model, or document — is **traceable from source to publication**.
 
 ---
@@ -76,15 +81,15 @@ docs/standards/
 
 ### 🧮 Coding Standards
 
-- **Python:** PEP8 compliant, formatted with **Black**, linted with **Ruff**, tested with **pytest**  
-- **JavaScript/TypeScript:** ES6+, **Prettier** + **ESLint**, modular import/export, React 18+  
-- **CSS:** **BEM** naming + design tokens (`:root` vars)  
+- **Python:** PEP 8 compliant · formatted with **Black** · linted with **Ruff** · tested with **pytest**  
+- **JavaScript / TypeScript:** ES6+ · **Prettier** + **ESLint** · React 18+ modular components  
+- **CSS:** **BEM** naming · design tokens (`:root` variables)  
 - **Documentation in Code:**  
-  - Python → docstrings (Google or reST style)  
+  - Python → docstrings (Google / reST)  
   - JS → JSDoc format  
-  - YAML → inline comments in pipeline configs  
+  - YAML → inline comments for pipeline configuration  
 
-📄 Reference: [`docs/standards/coding.md`](coding.md)
+📄 Reference → [`coding.md`](coding.md)
 
 ---
 
@@ -92,106 +97,90 @@ docs/standards/
 
 | Type | Format | Specification | Notes |
 | :-- | :-- | :-- | :-- |
-| **Vector** | GeoJSON | RFC 7946 | UTF-8, WGS84 (EPSG:4326) |
-| **Raster** | COG (GeoTIFF) | GDAL ≥ 3.8 | Internal overviews, tiled, compressed |
-| **Tabular** | CSV + schema.json | RFC 4180 / CSVW | Units, datatypes, validation schema |
-| **Metadata** | JSON / YAML | JSON Schema Draft-07 | Validated automatically in CI |
+| **Vector** | GeoJSON | RFC 7946 | UTF-8 · WGS-84 (EPSG:4326) |
+| **Raster** | COG (GeoTIFF) | GDAL ≥ 3.8 | Internal overviews · tiled · compressed |
+| **Tabular** | CSV + schema.json | RFC 4180 / CSVW | Units and datatypes declared |
+| **Metadata** | JSON / YAML | JSON Schema Draft-07 | Auto-validated in CI |
 | **Checksums** | .sha256 | NIST SHA-256 | File integrity verification |
-| **Archive** | .zip / .tar.gz | Reproducible build | Used for dataset releases |
+| **Archive** | .zip / .tar.gz | Reproducible build | Versioned release packages |
 
-📘 Reference: [`data-formats.md`](data-formats.md)
+📘 Reference → [`data-formats.md`](data-formats.md)
 
 ---
 
 ### 🗂️ Metadata & Ontologies
 
-- **STAC 1.0.0** — spatiotemporal asset catalogs for geospatial layers  
-- **DCAT 3.0** — dataset metadata for discoverability  
-- **Schema.org** — web semantic interoperability  
-- **CIDOC CRM** — cultural heritage ontology (events, people, artifacts)  
-- **OWL-Time** — precise temporal relationships  
-- **PeriodO** — historical period alignment  
+- **STAC 1.0.0** — Spatiotemporal catalogs for geospatial layers  
+- **DCAT 3.0** — Dataset-level metadata for discoverability  
+- **Schema.org** — Semantic web indexing  
+- **CIDOC CRM** — Cultural-heritage ontology (events, actors, artifacts)  
+- **OWL-Time** — Temporal reasoning and interval logic  
+- **PeriodO** — Historical period alignment  
 
-📗 Reference: [`metadata.md`](metadata.md), [`ontologies.md`](ontologies.md)
+📗 Reference → [`metadata.md`](metadata.md), [`ontologies.md`](ontologies.md)
 
 ---
 
 ### 🧪 Testing & CI/CD Standards
 
-All pipelines, data, and code must pass **validation gates** before merge or release.
+All pipelines and code must pass **validation gates** before merge or release.
 
 | Stage | Validation | Workflow |
 | :-- | :-- | :-- |
 | **Code Quality** | Lint + Security | `pre-commit.yml`, CodeQL |
 | **Data Validation** | Schema + STAC | `stac-validate.yml` |
 | **Security Scans** | Vulnerabilities | Trivy · Dependabot |
-| **Checksums** | File integrity | `checksums.yml` |
+| **Checksums** | File Integrity | `checksums.yml` |
 | **Docs** | Completeness & Links | `docs-validator.yml` |
 
-📕 Reference: [`testing.md`](testing.md)
+📕 Reference → [`testing.md`](testing.md)
 
 ---
 
-### 🔒 Security & Governance
+### 🔒 Security & Compliance
 
 - Dependencies scanned with **Trivy** & **CodeQL**  
-- Containers include **SBOM (Software Bill of Materials)**  
-- Automated license validation for open-source compliance  
-- Secrets managed with **principle of least privilege**  
-- Workflows optionally signed via **Sigstore/SLSA**  
+- Containers include **SBOMs (Software Bill of Materials)**  
+- Licenses validated for open-source compliance  
+- Secrets managed with **least privilege**  
+- Workflows optionally signed via **Sigstore / SLSA**  
 
-📙 Reference: [`security.md`](security.md)
+📙 Reference → [`security.md`](security.md)
 
 ---
 
 ### 🧭 Documentation & Governance Rules
 
-Each directory **must include** a `README.md` specifying: purpose, usage, dependencies, and version tags.  
+Each directory **must include** a `README.md` defining purpose, usage, dependencies, and version metadata.  
 
 **Additional rules**
 
-- Templates: MCP-DL compliant (`experiment`, `model_card`, `sop`, `provenance`)  
-- Decisions: capture as ADRs in `/docs/adr/`  
-- Glossary: maintain `/docs/glossary.md`  
-- Licensing: Code = MIT, Data = CC-BY 4.0, Docs = CC-BY 4.0  
+- Templates → MCP-DL (`experiment`, `model_card`, `sop`, `provenance`)  
+- Design Decisions → record ADRs in `/docs/adr/`  
+- Glossary → maintain `/docs/glossary.md`  
+- Licensing → Code = MIT · Data = CC-BY 4.0 · Docs = CC-BY 4.0  
 
-📒 Reference: [`documentation.md`](documentation.md)
+📒 Reference → [`documentation.md`](documentation.md)
 
 ---
 
 ### 🧩 Governance & Quality Gates
 
-All PRs to `main` must pass:
+All merges to `main` must pass:  
 
-✅ STAC schema validation  
-✅ Checksum verification  
-✅ Lint + tests  
-✅ Security scans  
-✅ Docs completeness  
+✅ STAC Validation ✅ Checksum Verification ✅ Lint + Tests ✅ Security Scans ✅ Docs Validation  
 
-> **Governance Review:** Major releases must be approved by the Data Governance Committee for full MCP compliance.
+> **Governance Review:** Major releases approved by the **Data Governance Committee** for full MCP & FAIR compliance.
 
 ---
 
 ## 🧠 Usage Guidelines
 
-1. **Before coding** → follow `coding.md`  
-2. **Before adding data** → validate against `data-formats.md`, `metadata.md`  
+1. **Before coding** → review `coding.md`  
+2. **Before adding data** → check `data-formats.md`, `metadata.md`  
 3. **Before merging** → run schema + checksum + STAC checks  
 4. **Before publishing** → update provenance & experiment records  
-5. **For new contributors** → follow `documentation.md` for structure & style  
-
----
-
-## 🧩 Semantic & Temporal Standards
-
-| Category | Standard | Purpose |
-| :-- | :-- | :-- |
-| **Cultural** | CIDOC CRM | Cultural & event semantics |
-| **Temporal** | OWL-Time | Temporal interval logic |
-| **Historical Periods** | PeriodO | Standardized time ranges |
-| **Spatial Reference** | EPSG:4326 (WGS-84) | Global interoperability |
-| **Provenance** | W3C PROV-O | Machine-readable lineage |
+5. **For contributors** → follow `documentation.md` for style & structure  
 
 ---
 
@@ -199,11 +188,11 @@ All PRs to `main` must pass:
 
 | Framework | Alignment | Description |
 | :-- | :-- | :-- |
-| **FAIR Data Principles** | ✅ | All datasets Findable, Accessible, Interoperable, Reusable |
-| **STAC 1.0** | ✅ | Geospatial layer catalog compliance |
-| **DCAT 3.0** | ✅ | Dataset-level metadata interoperability |
-| **CIDOC CRM** | ✅ | Semantic integration of cultural heritage data |
-| **MCP-DL v6.2** | ✅ | Documentation-First · Reproducibility · Auditability |
+| **FAIR Principles** | ✅ | Findable · Accessible · Interoperable · Reusable |
+| **STAC 1.0** | ✅ | Geospatial asset catalog compliance |
+| **DCAT 3.0** | ✅ | Dataset-level metadata exchange |
+| **CIDOC CRM** | ✅ | Cultural heritage ontology |
+| **MCP-DL v6.2** | ✅ | Documentation-First · Reproducible · Auditable |
 
 ---
 
@@ -227,22 +216,13 @@ flowchart TD
 
 | Field | Value |
 | :-- | :-- |
-| **Version** | v2.6.0 |
+| **Version** | v2.6.4 |
 | **Last Updated** | 2025-10-17 |
 | **Maturity** | Production |
-| **Owners** | @kfm-architecture, @kfm-data, @kfm-security |
-| **Provenance Policy** | All workflows pinned by tag/SHA · 90-day artifact retention |
+| **Owners** | @kfm-architecture · @kfm-data · @kfm-security |
+| **Provenance Policy** | Pinned workflows · 90-day retention |
 | **License** | CC-BY 4.0 |
 | **Compliance** | FAIR · STAC · MCP-DL v6.2 |
-
----
-
-## 🔗 Related Documentation
-
-- [`docs/architecture/`](../architecture/) — System & data architecture  
-- [`docs/integration/`](../integration/) — ETL & data source integration  
-- [`docs/design/`](../design/) — UI/UX & visualization standards  
-- [`docs/glossary.md`](../glossary.md) — Canonical terminology index  
 
 ---
 
@@ -253,6 +233,6 @@ flowchart TD
 > **transparent, verifiable, and interoperable for decades to come.**
 
 **Kansas Frontier Matrix** — *Every Line Tested. Every Dataset Traceable.*  
-📍 [`docs/standards/README.md`](.) · Master repository for KFM-wide standards and governance  
+📍 [`docs/standards/README.md`](.) · Master repository for KFM-wide standards & governance  
 
 </div>
