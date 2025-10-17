@@ -1,4 +1,4 @@
-```markdown
+
 <div align="center">
 
 # 🗄️ **Kansas Frontier Matrix — Data Load & Integration Pipelines**  
@@ -12,37 +12,6 @@
 [![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security&logo=security&color=green)](../../../.github/workflows/trivy.yml)
 [![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue?logo=markdown)](../../../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../LICENSE)
-
-</div>
-
----
-
-```yaml
----
-title: "Kansas Frontier Matrix — Data Load & Integration Pipelines"
-version: "v1.8.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-data", "@kfm-architecture"]
-tags: ["etl","load","neo4j","graph","stac","provenance","checksums","mcp","ci","semver"]
-status: "Stable"
-license: "MIT"
-semver_policy: "MAJOR.MINOR.PATCH"
-ci_required_checks:
-  - pre-commit
-  - unit-tests
-  - stac-validate
-  - codeql
-  - trivy
-  - docs-validate
-semantic_alignment:
-  - CIDOC CRM
-  - OWL-Time
-  - STAC 1.0
-  - DCAT 2.0
-  - GeoJSON
-  - ISO 8601
----
-```
 
 ---
 
