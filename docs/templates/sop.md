@@ -1,13 +1,12 @@
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — **Standard Operating Procedure (SOP) Template**
-
+# 🧾 **Kansas Frontier Matrix — Standard Operating Procedure (SOP) Template**  
 `docs/templates/sop.md`
 
-**Purpose:** A **reproducible, MCP/FAIR-aligned** framework for documenting operational procedures in the
+**Purpose:** A **reproducible, MCP/FAIR-aligned** framework for documenting operational procedures in the  
 **Kansas Frontier Matrix (KFM)** — ensuring **documentation-first**, **deterministic**, **auditable** workflows using open standards.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
 [![FAIR](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-2ea44f)](https://www.go-fair.org/fair-principles/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
@@ -15,22 +14,46 @@
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — SOP Template"
+version: "v1.2.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-docs","@kfm-architecture","@kfm-data"]
+tags: ["sop","process","mcp","stac","validation","ci","provenance","security","fair"]
+status: "Template"
+license: "CC-BY 4.0"
+semantic_alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - JSON Schema
+  - FAIR Principles
+ci_required_checks:
+  - docs-validate
+  - pre-commit
+  - codeql
+  - trivy
+---
+````
+
+---
+
 ## 🧭 SOP Metadata
 
-| Field                      | Description                                                  |
-| :------------------------- | :----------------------------------------------------------- |
-| **SOP ID**                 | Unique identifier (e.g., `SOP-2025-001-STAC`)                |
-| **Title**                  | Short title describing the process                           |
-| **Author(s)**              | Individual(s) responsible for this procedure                 |
-| **Affiliation**            | Team / Org (e.g., “KFM Data Ops”)                            |
-| **Date Created / Updated** | YYYY-MM-DD / YYYY-MM-DD                                      |
-| **Version**                | v1.0, v1.1, etc.                                             |
-| **Status**                 | Draft / In Review / Approved / Deprecated                    |
-| **Domain**                 | Data / Pipelines / Web / CI-CD / Metadata / Documentation    |
-| **Associated Workflow(s)** | e.g., `.github/workflows/stac-validate.yml`, `checksums.yml` |
-| **Approval Authority**     | Governance lead or committee                                 |
-| **License**                | CC-BY 4.0 (Docs) / MIT (Code)                                |
-| **Change Control**         | PR # / ADR # / Issue link(s)                                 |
+| Field                      | Description                                               |
+| :------------------------- | :-------------------------------------------------------- |
+| **SOP ID**                 | Unique identifier (e.g., `SOP-2025-001-STAC`)             |
+| **Title**                  | Short title describing the process                        |
+| **Author(s)**              | Individual(s) responsible for this procedure              |
+| **Affiliation**            | Team / Org (e.g., “KFM Data Ops”)                         |
+| **Date Created / Updated** | YYYY-MM-DD / YYYY-MM-DD                                   |
+| **Version**                | v1.0, v1.1, etc. (SemVer)                                 |
+| **Status**                 | Draft / In Review / Approved / Deprecated                 |
+| **Domain**                 | Data / Pipelines / Web / CI-CD / Metadata / Documentation |
+| **Associated Workflow(s)** | `.github/workflows/*.yml` names and links                 |
+| **Approval Authority**     | Governance lead or committee                              |
+| **License**                | CC-BY 4.0 (Docs) / MIT (Code)                             |
+| **Change Control**         | PR # / ADR # / Issue link(s)                              |
 
 ---
 
@@ -45,16 +68,16 @@ Describe the **purpose**, **expected outcomes**, and why this SOP is needed in K
 
 ## 🧩 Scope
 
-| Parameter          | Definition                                       |
-| :----------------- | :----------------------------------------------- |
-| **Applies To**     | (Teams, systems, pipelines, data classes)        |
-| **Exclusions**     | (What is out-of-scope)                           |
-| **Dependencies**   | (Other SOPs, datasets, envs, CI jobs)            |
-| **Frequency**      | (Per commit / nightly / pre-release / quarterly) |
-| **Entry Criteria** | (Conditions to start)                            |
-| **Exit Criteria**  | (Acceptance gates to finish)                     |
+| Parameter          | Definition                                     |
+| :----------------- | :--------------------------------------------- |
+| **Applies To**     | Teams, systems, pipelines, data classes        |
+| **Exclusions**     | What is out-of-scope                           |
+| **Dependencies**   | Other SOPs, datasets, environments, CI jobs    |
+| **Frequency**      | Per commit / nightly / pre-release / quarterly |
+| **Entry Criteria** | Conditions to start                            |
+| **Exit Criteria**  | Acceptance gates to finish                     |
 
-> *Example:* Applies to all JSON metadata in `data/stac/**`. Runs automatically on every PR to `main`.
+> *Example:* Applies to all JSON metadata in `data/stac/**`. Runs automatically on PRs to `dev` and merges to `main`.
 
 ---
 
@@ -75,11 +98,11 @@ Describe the **purpose**, **expected outcomes**, and why this SOP is needed in K
 | Requirement       | Description                                                                          |
 | :---------------- | :----------------------------------------------------------------------------------- |
 | **Software**      | Python ≥3.11, `stac-validator ≥3.0`, `jsonschema`, GDAL (if spatial QA), `sha256sum` |
-| **Access**        | GitHub Actions runner, repo read/write for CI artifacts, package registry (if used)  |
+| **Access**        | GitHub Actions runner, repo read/write for CI artifacts                              |
 | **Dependencies**  | Make targets (`setup`, `checksums`, `stac-validate`, `qa-*`), scripts (paths)        |
 | **Data / Inputs** | `data/stac/**`, `data/processed/**`, `data/checksums/**`                             |
-| **Schemas**       | Link to STAC 1.0.0, local `schema.json` (if custom extensions)                       |
-| **Environment**   | `environment.yml` or `requirements.txt` pinned; optional container image & digest    |
+| **Schemas**       | STAC 1.0.0 + local `schema.json` (extensions), JSON Schema contracts                 |
+| **Environment**   | Pinned `requirements.txt` / `environment.yml`; optional container image & digest     |
 
 > *Tip:* Capture SBOM (`spdx.json`) and container digest for supply-chain visibility.
 
@@ -98,8 +121,7 @@ pip install --upgrade stac-validator jsonschema
 
 ```bash
 make stac-validate
-# or explicit:
-stac-validator --version
+# or:
 stac-validator data/stac/**/*.json --recursive --links
 ```
 
@@ -107,25 +129,23 @@ stac-validator data/stac/**/*.json --recursive --links
 
 ```bash
 make checksums
-# optionally diff manifests
 diff -u data/checksums/current.sha256 data/checksums/expected.sha256 || true
 ```
 
-### Step 4 — Spatial QA/QC (Optional but Recommended)
+### Step 4 — Spatial QA/QC (Optional)
 
 ```bash
-make qa-terrain  # example: runs gdalinfo / rio info sanity checks
+make qa-terrain  # runs GDAL/rio sanity checks
 ```
 
 ### Step 5 — Review Results & Gate
 
-* Confirm **all validations succeeded** (no blocking errors).
-* If any **errors/warnings**, triage per **Error Matrix** (below), fix, re-run.
+* Confirm **all validations succeeded**; triage per **Error Matrix** (below), fix, re-run.
 
 ### Step 6 — Approve / Reject
 
-* **Approve:** Merge PR (attach logs to run).
-* **Reject:** Comment with issues, assign owner, link fixes, re-run.
+* **Approve:** Merge PR, attach logs.
+* **Reject:** Comment issues, assign owners, re-run once fixed.
 
 ---
 
@@ -168,13 +188,13 @@ make qa-terrain  # example: runs gdalinfo / rio info sanity checks
 
 ## 🧪 Quality Assurance (QA) & Approvals
 
-| Reviewer                | Step            | Verification                                 |
-| :---------------------- | :-------------- | :------------------------------------------- |
-| **Data Manager**        | Post-validation | Confirms STAC & spatial QA                   |
-| **Metadata Curator**    | Docs check      | Ensures completeness & accuracy              |
-| **Automation Engineer** | CI review       | Verifies green workflows, artifacts retained |
+| Reviewer                | Step            | Verification                                  |
+| :---------------------- | :-------------- | :-------------------------------------------- |
+| **Data Manager**        | Post-validation | Confirms STAC + spatial QA                    |
+| **Metadata Curator**    | Docs check      | Ensures completeness & accuracy               |
+| **Automation Engineer** | CI review       | Verifies green workflows & artifact retention |
 
-**All QA actions** append to:
+Append all QA actions to:
 
 ```
 data/work/logs/qa/<SOP-ID>_review.log
@@ -190,27 +210,27 @@ data/work/logs/qa/<SOP-ID>_review.log
 | **Checksum failure post-merge** | Quarantine artifact, restore last good build; re-issue checksums  |
 | **COG invalid in production**   | Swap tile source to last healthy version; re-generate COG offline |
 
-> Keep previous artifacts versioned (e.g., tags, release assets, or object-store versions).
+> Keep previous artifacts versioned (tags/releases or object-store versions).
 
 ---
 
 ## 📈 Runbook: Observability & Metrics
 
-| Metric                   | Target              | Source             |
-| :----------------------- | :------------------ | :----------------- |
-| **Validation pass rate** | ≥ 99% rolling       | CI summaries       |
-| **Time to validate**     | ≤ 5 min per PR      | CI duration        |
-| **Rework rate**          | ≤ 5% of PRs         | Issue links/labels |
-| **Checksum drift**       | 0 drift in releases | Manifest diffs     |
+| Metric                   | Target         | Source             |
+| :----------------------- | :------------- | :----------------- |
+| **Validation pass rate** | ≥ 99% rolling  | CI summaries       |
+| **Time to validate**     | ≤ 5 min per PR | CI duration        |
+| **Rework rate**          | ≤ 5% of PRs    | Issue labels/links |
+| **Checksum drift**       | 0 in releases  | Manifest diffs     |
 
 ---
 
 ## 🤖 Automation Mapping (CI/CD)
 
-* **Workflows:** `.github/workflows/stac-validate.yml`, `checksums.yml`, `site.yml`
+* **Workflows:** `.github/workflows/stac-validate.yml`, `checksums.yml`, `site.yml`, `docs-validate.yml`
 * **Artifacts retention:** ≥ 14 days (logs, reports)
-* **Required checks:** `stac-validate`, `checksums`, `codeql` (optional security), custom `qa-*`
-* **Secrets:** Minimize; use OIDC where possible; no plaintext keys in logs
+* **Required checks:** `stac-validate`, `checksums`, `docs-validate`, optional `codeql`/`trivy`
+* **Secrets:** Use OIDC; no plaintext keys in logs
 
 ---
 
@@ -250,10 +270,11 @@ data/work/logs/qa/<SOP-ID>_review.log
 
 ## 🗂️ Revision & Control
 
-| Version | Date       | Author             | Reviewer             | Change Summary                                              |
-| :-----: | :--------- | :----------------- | :------------------- | :---------------------------------------------------------- |
-|   v1.0  | 2025-10-04 | Documentation Team | Data Governance Lead | Initial SOP template                                        |
-|   v1.1  | 2025-10-05 | KFM Engineering    | Governance Lead      | Added RACI, rollback, runbook metrics, supply-chain capture |
+| Version | Date       | Author             | Reviewer             | Change Summary                                                   |
+| :-----: | :--------- | :----------------- | :------------------- | :--------------------------------------------------------------- |
+|  v1.2.0 | 2025-10-17 | KFM Docs Team      | Governance Lead      | Added MCP-DL metadata, CI references, metrics, recovery guidance |
+|  v1.1.0 | 2025-10-05 | KFM Engineering    | Governance Lead      | Added RACI, rollback, runbook metrics, supply-chain capture      |
+|  v1.0.0 | 2025-10-04 | Documentation Team | Data Governance Lead | Initial SOP template                                             |
 
 ---
 
@@ -277,6 +298,7 @@ flowchart LR
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Procedure Documented. Every Operation Reproducible.”*
-📍 [`docs/templates/sop.md`](.) · MCP-compliant operational procedure template for KFM.
+📍 `docs/templates/sop.md` · MCP-compliant operational procedure template for KFM.
 
 </div>
+```
