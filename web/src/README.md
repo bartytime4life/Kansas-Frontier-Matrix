@@ -1,19 +1,3 @@
----
-title: "🧭 Kansas Frontier Matrix — Web Frontend"
-version: "v1.7.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-web", "@kfm-architecture"]
-maturity: "Production"
-tags: ["web","react","typescript","vite","maplibre","timeline","stac","mcp","knowledge-graph"]
-license: "MIT (code) | CC-BY 4.0 (docs)"
-semantic_alignment:
-  - STAC 1.0
-  - CIDOC CRM
-  - OWL-Time
-  - DCAT 2.0
-  - FAIR Principles
----
-
 <div align="center">
 
 # 🧭 Kansas Frontier Matrix — **Web Frontend**  
