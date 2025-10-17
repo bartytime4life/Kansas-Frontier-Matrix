@@ -1,18 +1,49 @@
 <div align="center">
 
-# 🧪 Kansas Frontier Matrix — Testing & Validation Standards
-
+# 🧪 Kansas Frontier Matrix — **Testing & Validation Standards**  
 `docs/standards/testing.md`
 
-**Purpose:** Establish unified **testing, validation, and quality assurance standards**
-for all code, data, metadata, and workflows in the **Kansas Frontier Matrix (KFM)** — ensuring
-that every function, dataset, and system component meets **MCP compliance** for reproducibility
-and provenance-based auditing.
+**Master Coder Protocol (MCP-DL v6.3+) · Determinism · Provenance · CI/CD · Auditability**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github)](../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
+[![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build)](../../.github/workflows/site.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../../LICENSE)
 
 </div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Testing & Validation Standards"
+version: "v1.3.0"
+last_updated: "2025-10-18"
+owners: ["@kfm-qa","@kfm-architecture","@kfm-data","@kfm-security","@kfm-web"]
+tags: ["testing","validation","quality","stac","jsonschema","shacl","e2e","coverage","ci/cd","mcp"]
+status: "Stable"
+scope: "Monorepo-Wide"
+license: "MIT"
+semver_policy: "MAJOR.MINOR.PATCH"
+audit_framework: "MCP-DL v6.3"
+ci_required_checks:
+  - docs-validate
+  - stac-validate
+  - codeql
+  - trivy
+  - checksums
+  - unit-integration
+  - e2e
+semantic_alignment:
+  - STAC 1.0
+  - JSON Schema (2020-12)
+  - SHACL (RDF constraints)
+  - ISO 8601 (time)
+  - WCAG 2.1 AA (a11y)
+---
+````
 
 ---
 
@@ -21,13 +52,13 @@ and provenance-based auditing.
 Testing and validation are the foundation of **KFM’s reproducible architecture**.
 All pipelines, datasets, and web systems undergo continuous verification to ensure:
 
-* ✅ Deterministic, reproducible outputs
-* 🧾 Provenance and integrity documentation
-* 🔍 Automated CI/CD validation across platforms
-* 🧠 Compliance with open data and metadata standards
-* 🧩 Full traceability from raw inputs to published results
+* ✅ **Deterministic, reproducible outputs**
+* 🧾 **Provenance and integrity** (checksums, logs, commit/runner fingerprints)
+* 🔍 **Automated CI/CD validation** across platforms and runtimes
+* 🧠 **Compliance with open data/metadata standards** (STAC, JSON Schema, SHACL)
+* 🧩 **Full traceability** from raw inputs to published results & site builds
 
-Testing operates at multiple levels — **unit, property-based, integration, data validation, system, performance, security, and governance QA** — enforced by automated workflows and peer review.
+Testing operates at multiple levels — **unit, property-based, integration, data contracts, system/E2E, performance, security, and governance QA** — enforced by workflows and peer review.
 
 ---
 
@@ -58,13 +89,13 @@ graph TD
 | :--------------------- | :----------------------------------------------------------- | :------------------------------------------------------- | :------- |
 | **Unit Tests**         | Validate functions/modules in isolation                      | `pytest`, `unittest`, `pytest-cov`, `tox`                | ✅        |
 | **Property-based**     | Probe invariants with generated inputs                       | `hypothesis` (Python)                                    | ✅        |
-| **Integration**        | Validate pipelines, ETL steps, API routes, CLI, Make targets | `pytest`, `requests`, `make test-pipeline`               | ✅        |
+| **Integration**        | Validate pipelines, ETL steps, API routes, CLI, Make targets | `pytest`, `requests`, Make targets                       | ✅        |
 | **Data Contracts**     | Assert schemas & linkages remain stable                      | `jsonschema`, `stac-validator`, `pyshacl`, link-checkers | ✅        |
-| **System / E2E**       | UI flows, map layers, timeline, API <> UI                    | `playwright` (headless), snapshot/visual diffs           | ✅        |
-| **Accessibility**      | WCAG checks on UI                                            | `axe-core` via Playwright                                | ✅        |
-| **Performance / Load** | Throughput, latency, regressions                             | `k6`/`locust`, custom timers, profiling                  | Optional |
-| **Security**           | SAST, dependency & image scans                               | `CodeQL`, `Bandit`, `Trivy`, `pip-audit`, `npm audit`    | ✅        |
-| **Governance QA**      | Manual checks for MCP & doc quality                          | Checklists + reviewer sign-off                           | ✅        |
+| **System / E2E**       | UI flows, map layers, timeline, API↔UI                       | `playwright` (headless), snapshot/visual diffs           | ✅        |
+| **Accessibility**      | WCAG compliance on UI                                        | `axe-core` via Playwright                                | ✅        |
+| **Performance / Load** | Throughput, latency, regressions                             | `k6`/`locust`, Lighthouse, profilers                     | Optional |
+| **Security**           | SAST, deps & image scans                                     | `CodeQL`, `Bandit`, `Trivy`, `pip-audit`, `npm audit`    | ✅        |
+| **Governance QA**      | Manual checks for MCP & doc quality                          | QA checklists + reviewer sign-off                        | ✅        |
 
 ---
 
@@ -72,21 +103,21 @@ graph TD
 
 | Requirement     | Description                                          | Policy / Example             |
 | :-------------- | :--------------------------------------------------- | :--------------------------- |
-| **Framework**   | Use `pytest` for all Python tests.                   | `pytest -q`                  |
-| **Naming**      | Files `test_*.py`; functions `test_*`.               | `test_terrain_pipeline.py`   |
-| **Coverage**    | **≥ 90%** lines; **≥ 80%** branches (CI gate).       | `--cov=src --cov-branch`     |
-| **Fixtures**    | Reusable temp dirs & sample data under `data/tests/` | `conftest.py`                |
-| **Determinism** | Freeze seeds, time, and env                          | `pytest-randomly`, seed=1337 |
-| **Property**    | Use `hypothesis` for core transforms/invariants      | see below                    |
+| **Framework**   | Use `pytest` for all Python tests                    | `pytest -q`                  |
+| **Naming**      | Files `test_*.py`; functions `test_*`                | `test_terrain_pipeline.py`   |
+| **Coverage**    | **≥ 90% lines**; **≥ 80% branches** (CI gate)        | `--cov=src --cov-branch`     |
+| **Fixtures**    | Temp dirs & sample data under `data/tests/`          | `conftest.py`                |
+| **Determinism** | Freeze seeds/time/env; eliminate time/race flakiness | `pytest-randomly`, seed=1337 |
+| **Property**    | Use `hypothesis` for invariants/normalization rules  | see example                  |
 
 **Unit example**
 
 ```python
 def test_checksum_integrity(tmp_path):
     from utils.checksum import sha256_file
-    file = tmp_path / "test.txt"
-    file.write_text("Kansas Frontier Matrix")
-    assert len(sha256_file(file)) == 64
+    p = tmp_path / "test.txt"
+    p.write_text("Kansas Frontier Matrix")
+    assert len(sha256_file(p)) == 64
 ```
 
 **Property-based example**
@@ -98,8 +129,8 @@ from utils.normalize import clamp_bbox
 @given(st.tuples(st.floats(-200,200), st.floats(-100,100), st.floats(-200,200), st.floats(-100,100)))
 def test_clamp_bbox_invariants(bbox):
     w, s, e, n = clamp_bbox(bbox)
-    assert -180 <= w <= 180 and -180 <= e <= 180
-    assert -90 <= s <= 90 and -90 <= n <= 90
+    assert -180 <= w <= 180 <= e
+    assert -90 <= s <= 90 <= n
     assert w <= e and s <= n
 ```
 
@@ -111,8 +142,8 @@ def test_clamp_bbox_invariants(bbox):
 | :-------------------- | :--------------------------------- | :----------------------------------------------------- |
 | **Pipeline Workflow** | End-to-end ETL with golden outputs | `make terrain && make stac-validate && make checksums` |
 | **API / Services**    | FastAPI endpoints + error paths    | `GET /api/events?start=1850&end=1900` → 200 + schema   |
-| **CLI / Make**        | Deterministic Make targets         | `make all` idempotent; re-run produces no diff         |
-| **File Layout**       | Stable directory structure + names | compare to `data/tests/expected_layout.json`           |
+| **CLI / Make**        | Deterministic Make targets         | `make all` idempotent; re-run → no diff                |
+| **File Layout**       | Stable directory structure & names | compare to `data/tests/expected_layout.json`           |
 
 **API test (FastAPI)**
 
@@ -139,14 +170,14 @@ make checksums
 sha256sum -c data/checksums/**/*.sha256
 ```
 
-### 2) STAC metadata (Items & Collections)
+### 2) STAC (Items & Collections)
 
 ```bash
 make stac-validate
 stac-validator data/stac/terrain/items/ks_1m_dem_2018_2020.json
 ```
 
-### 3) JSON Schema
+### 3) JSON Schema (tabular/config)
 
 ```bash
 python -m jsonschema \
@@ -161,16 +192,16 @@ python -m pyshacl -s docs/shapes/kfm-core.shapes.ttl -m -f human \
   data/knowledge_graph/kfm_export.ttl
 ```
 
-> Data-contract tests run on **every PR**. Violations block merges.
+> **Policy:** Data-contract tests run on **every PR**. Violations **block merges**.
 
 ---
 
 ## 🧠 System / E2E, Visual & Accessibility
 
-| Check            | Tool                    | What it ensures                            |
+| Check            | Tool                    | Ensures                                    |
 | :--------------- | :---------------------- | :----------------------------------------- |
 | **UI E2E flows** | Playwright              | Timeline ↔ map sync, layer toggles, popups |
-| **Visual diffs** | Playwright + pixel diff | No unintended style / map regressions      |
+| **Visual diffs** | Playwright + pixel diff | No unintended style/map regressions        |
 | **A11y (WCAG)**  | `axe-core`              | Color contrast, ARIA roles, keyboard nav   |
 
 **Playwright example (visual + a11y)**
@@ -193,11 +224,11 @@ test('map loads and layers toggle', async ({ page }) => {
 
 ## 🚀 Performance & Reliability Testing
 
-| Area                       | Tool                  | Targets                                       |
-| :------------------------- | :-------------------- | :-------------------------------------------- |
-| **API latency/throughput** | `k6`/`locust`         | p95 latency budgets, RPS                      |
-| **Data pipelines**         | timers + logs         | wall-clock & CPU track; regression thresholds |
-| **Browser perf**           | Lighthouse/Playwright | TTI, CLS, FPS on map pan/zoom                 |
+| Area          | Tool                  | Targets                                 |
+| :------------ | :-------------------- | :-------------------------------------- |
+| **API**       | `k6`/`locust`         | p95 latency budgets, RPS                |
+| **Pipelines** | timers + logs         | wall-clock & CPU; regression thresholds |
+| **Browser**   | Lighthouse/Playwright | TTI, CLS, FPS on map pan/zoom           |
 
 **k6 snippet**
 
@@ -206,35 +237,35 @@ import http from 'k6/http';
 import { sleep, check } from 'k6';
 export let options = { vus: 20, duration: '1m' };
 export default function () {
-  const res = http.get('https://localhost:8000/api/events?start=1850&end=1900');
-  check(res, { 'status is 200': r => r.status === 200 });
+  const r = http.get('https://localhost:8000/api/events?start=1850&end=1900');
+  check(r, { 'status is 200': (x) => x.status === 200 });
   sleep(1);
 }
 ```
 
-> Fail builds if SLAs exceeded (e.g., p95 > threshold).
+> **Gate:** Fail builds if SLAs exceeded (e.g., p95 > threshold); surface metrics in CI summary.
 
 ---
 
 ## 🧰 Flaky-Test Management & Determinism
 
-* **Seeds & time**: fix `random.seed`, `numpy.random.seed`, freeze clock for tests.
-* **Retries**: mark suspected flakies with `@pytest.mark.flaky` (max 2 retries), open issue, quarantine.
-* **Golden files**: snapshot outputs in `data/tests/golden/**`; diffs must be reviewed.
-* **CI retry**: re-run job once only for quarantined tests.
+* Seeds & time: fix `random.seed`, `numpy.random.seed`, freeze clock.
+* Retries: mark with `@pytest.mark.flaky` (max 2), open issue, quarantine file.
+* Golden files: snapshot outputs in `data/tests/golden/**`; diffs require review.
+* CI retry: re-run job once only for quarantined tests; remove quarantine to merge.
 
 ---
 
 ## 🧪 Make Targets (local DX)
 
 ```makefile
-test:               ## run unit + integration tests
+test:               ## unit + integration
 	pytest -q --maxfail=1 --disable-warnings --cov=src --cov-branch
 
-test-pipeline:      ## run ETL integration tests
+test-pipeline:      ## ETL integration
 	make terrain && make stac-validate && make checksums
 
-test-e2e:           ## run UI E2E and visual tests
+test-e2e:           ## UI E2E + visual
 	npx playwright test
 
 test-a11y:
@@ -248,13 +279,13 @@ test-perf:
 
 ## 🧵 CI/CD Testing Matrix (GitHub Actions)
 
-**Key principles**
+**Principles**
 
-* **Matrix**: `os: [ubuntu-latest, macos-latest]`, `py: [3.11, 3.12]`, `node: [20]`
-* **Caching**: pip/npm caches keyed by lockfiles
-* **Artifacts**: upload coverage, screenshots, logs to CI artifacts
-* **Permissions**: read-only by default; minimal elevation per job
-* **Action pinning**: use commit SHAs, not tags
+* Matrix: `os: [ubuntu-latest]`, `python: [3.11, 3.12]`, `node: [20]`
+* Cache: pip/npm keyed by lockfiles
+* Artifacts: coverage, screenshots, logs uploaded as CI artifacts
+* Permissions: read-only by default; minimal elevation per job
+* Actions: **pinned by commit SHA** (no tags)
 
 **Sample job (extract)**
 
@@ -287,17 +318,17 @@ jobs:
 
 ## 🧾 Governance & QA Testing
 
-Manual QA ensures MCP compliance and release readiness.
+Manual QA confirms MCP compliance and release readiness.
 
 | Area                     | Reviewer         | Evidence                                     |
 | :----------------------- | :--------------- | :------------------------------------------- |
 | **Data Provenance**      | Data Steward     | `docs/templates/provenance.md`, STAC `links` |
 | **Metadata Consistency** | Metadata Curator | `stac-validator` logs                        |
 | **ETL Accuracy**         | Data Engineer    | Pipeline run logs                            |
-| **Documentation**        | Technical Writer | Checklist: `docs/templates/checklist.md`     |
+| **Documentation**        | Docs Lead        | Checklist: `docs/templates/checklist.md`     |
 | **Web Visualization**    | UI/UX Reviewer   | Playwright E2E logs; screenshots             |
 
-Log all reviews:
+Log all reviews under:
 
 ```
 data/work/logs/qa/<dataset_or_release>_review.log
@@ -307,23 +338,24 @@ data/work/logs/qa/<dataset_or_release>_review.log
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                   |
-| :---------------------- | :--------------------------------------------------------------- |
-| **Documentation-first** | Test plans & expected results documented pre-merge.              |
-| **Reproducibility**     | Seeds/time freezing; golden files; deterministic Make + CI.      |
-| **Open Standards**      | STAC, JSON Schema, SHACL, open testing tools.                    |
-| **Provenance**          | Test logs include commit, workflow run ID, artifacts.            |
-| **Auditability**        | All reports retained under `data/work/logs/**` and CI artifacts. |
+| MCP Principle           | Implementation                                              |
+| :---------------------- | :---------------------------------------------------------- |
+| **Documentation-first** | Test plans & expected results documented pre-merge          |
+| **Reproducibility**     | Seeds/time freezing; golden files; deterministic Make + CI  |
+| **Open Standards**      | STAC, JSON Schema, SHACL, open testing tools                |
+| **Provenance**          | Test logs include commit, workflow run ID, artifacts        |
+| **Auditability**        | Reports retained under `data/work/logs/**` and CI artifacts |
 
 ---
 
-## 📎 Related Documentation
+## 🔗 Related Documentation
 
 | File                                  | Description                                  |
 | :------------------------------------ | :------------------------------------------- |
 | `docs/standards/coding.md`            | Coding patterns, linting & testability rules |
 | `docs/standards/security.md`          | Security testing & scans (CodeQL/Trivy)      |
 | `docs/standards/metadata.md`          | STAC validation & checksum policies          |
+| `docs/standards/data-formats.md`      | Approved data/file formats & CI checks       |
 | `docs/templates/checklist.md`         | QA/MCP review checklist                      |
 | `.github/workflows/stac-validate.yml` | Metadata & integrity validation              |
 | `.github/workflows/codeql.yml`        | Static analysis workflow                     |
@@ -332,16 +364,17 @@ data/work/logs/qa/<dataset_or_release>_review.log
 
 ## 📅 Version History
 
-| Version | Date       | Author                 | Summary                                                                                                            |
-| :------ | :--------- | :--------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| v1.1    | 2025-10-05 | KFM QA & Data Gov Team | Added property-based tests, SHACL, Playwright a11y/visual, perf/load, CI matrix & Make targets; flaky-test policy. |
-| v1.0    | 2025-10-04 | KFM QA & Data Gov Team | Initial comprehensive testing standards for MCP compliance.                                                        |
+| Version | Date       | Author  | Summary                                                                                              |
+| :------ | :--------- | :------ | :--------------------------------------------------------------------------------------------------- |
+| v1.3.0  | 2025-10-18 | @kfm-qa | Expanded with CI matrix, perf/load, a11y/visual, flaky policy, governance QA, and local Make targets |
+| v1.1.0  | 2025-10-05 | @kfm-qa | Added property-based tests, SHACL, Playwright & k6 samples                                           |
+| v1.0.0  | 2025-10-04 | @kfm-qa | Initial comprehensive testing standards for MCP compliance                                           |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Test Logged. Every Validation Proven.”*
-📍 [`docs/standards/testing.md`](.) · Official testing & validation standards under the Master Coder Protocol.
+📍 `docs/standards/testing.md` — Official testing & validation standards under the Master Coder Protocol.
 
 </div>
