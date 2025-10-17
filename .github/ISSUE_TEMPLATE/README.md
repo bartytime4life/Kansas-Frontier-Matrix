@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Issue Templates**
+# 🧹 **Kansas Frontier Matrix — Issue Templates**
 
-**Path:** `.github/ISSUE_TEMPLATE/`  
+**Path:** `.github/ISSUE_TEMPLATE/`
 **Mission:** Standardize **issue reporting, feature proposals, data requests, and governance topics** to keep KFM **reproducible, auditable, versioned, and MCP-compliant**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
@@ -14,15 +14,15 @@
 
 ## 📚 Overview
 
-`.github/ISSUE_TEMPLATE/` hosts **GitHub Issue Forms** enforcing **documentation-first**, **provenance-linked**, and **reproducibility-driven** reporting across code, data, docs, and research.  
+`.github/ISSUE_TEMPLATE/` hosts **GitHub Issue Forms** enforcing **documentation-first**, **provenance-linked**, and **reproducibility-driven** reporting across code, data, docs, and research.
 Forms capture the **who / what / where / when / how** so every issue stays traceable from **report → triage → resolution → validation**.
 
 All forms:
 
-- require **provenance** (paths, STAC item IDs, commit SHAs)  
-- ask for **repro steps** and **environment**  
-- include **SemVer impact** and **acceptance criteria** (when relevant)  
-- auto-label for routing (`area:*`, `priority:*`, `semver:*`)
+* require **provenance** (paths, STAC item IDs, commit SHAs)
+* ask for **repro steps** and **environment**
+* include **SemVer impact** and **acceptance criteria** (when relevant)
+* auto-label for routing (`area:*`, `priority:*`, `semver:*`)
 
 ---
 
@@ -40,7 +40,7 @@ All forms:
 ├── security_vuln.yml        # Vulnerability disclosure (redacted details)
 ├── governance_question.yml  # Governance/process clarification
 └── config.yml               # Issue Forms configuration + defaults
-````
+```
 
 > **Why YAML forms?** Required fields, labels, and metadata are captured **at creation time** in the GitHub UI — keeping issues consistent and audit-ready.
 
@@ -54,14 +54,14 @@ All forms:
 * 🧰 **Data Correction:** `…/issues/new?template=data_correction.yml`
 * 🧪 **Research Issue:** `…/issues/new?template=research_issue.yml`
 * ♿ **Accessibility Issue:** `…/issues/new?template=accessibility_issue.yml`
-* 🔒 **Security Vulnerability:** `…/issues/new?template=security_vuln.yml` (see `SECURITY.md`)
+* 🔐 **Security Vulnerability:** `…/issues/new?template=security_vuln.yml` (see `SECURITY.md`)
 * 🧭 **Governance Question:** `…/issues/new?template=governance_question.yml`
 
 > Replace `…` with `https://github.com/bartytime4life/Kansas-Frontier-Matrix`.
 
 ---
 
-## 🧾 Template Summaries
+## 🧓 Template Summaries
 
 ### 🐞 `bug_report.yml`
 
@@ -133,7 +133,7 @@ All forms:
 | **Repro Steps**    | Keyboard, reader, contrast evidence    |
 | **Fix Suggestion** | ARIA roles/labels, color tokens, focus |
 
-### 🔒 `security_vuln.yml`
+### 🔐 `security_vuln.yml`
 
 | Field                   | Purpose                                  |
 | ----------------------- | ---------------------------------------- |
@@ -159,7 +159,7 @@ All forms:
 ```yaml
 blank_issues_enabled: false
 contact_links:
-  - name: 🧠 KFM Discussions
+  - name: 🤠 KFM Discussions
     url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/discussions
     about: For open questions, ideation, and design dialogue.
   - name: 📬 Data Contribution Request
@@ -180,7 +180,7 @@ issue_template:
 
 ---
 
-## 🧠 MCP & Governance Alignment
+## 🤠 MCP & Governance Alignment
 
 | MCP Principle           | Implementation                                                               |
 | ----------------------- | ---------------------------------------------------------------------------- |
@@ -193,7 +193,7 @@ issue_template:
 
 ---
 
-## 🧱 Contributor Workflow
+## 🤵 Contributor Workflow
 
 1. **Choose Template** — Bug, Feature, Data Request, Data Correction, Research, Accessibility, Security, Governance.
 2. **Complete Required Fields** — Include reproducible steps and provenance.
@@ -203,7 +203,7 @@ issue_template:
 
 ---
 
-## 🏷️ Labels & Automation
+## 🌿 Labels & Automation
 
 **Suggested labels** (and auto-label rules via `actions/labeler`):
 
@@ -287,4 +287,3 @@ make sync-templates   # lints YAML forms, checks references, syncs defaults
 📍 [`.github/ISSUE_TEMPLATE/`](.) · Structured, auditable issue management for KFM.
 
 </div>
-```
