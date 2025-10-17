@@ -246,4 +246,3 @@ make export-glossary
 📍 `docs/glossary.md` — Canonical terminology reference for the Kansas Frontier Matrix documentation ecosystem.
 
 </div>
-```
