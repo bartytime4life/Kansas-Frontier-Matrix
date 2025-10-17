@@ -1,5 +1,5 @@
 name: "💡 Feature Request"
-description: "Propose a feature or enhancement — documented, versioned, and reproducible"
+description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
 title: "[Feature]: <feature name> — <component/domain>"
 labels:
   - enhancement
@@ -8,12 +8,17 @@ assignees:
   - kfm-architecture
   - kfm-data
 
+# KFM metadata
+# version: v2.3.1
+# last_updated: 2025-10-16
+# owners: @kfm-architecture @kfm-data
+
 body:
   - type: markdown
     attributes:
       value: |
         ## 💡 Feature Overview
-        *“Every Feature Builds the Future · Every Change is Reproducible.”*
+        *"Every Feature Builds the Future — Every Change is Reproducible."*
 
   - type: input
     id: feature_name
@@ -24,10 +29,10 @@ body:
       required: true
 
   - type: input
-    id: related_component
+    id: component
     attributes:
-      label: Primary Component / Module
-      placeholder: "terrain_pipeline.py | graph_ingest.py | stac-validate.yml | web/config/layers.json"
+      label: Target Module / Component
+      placeholder: "terrain_pipeline.py, graph_ingest.py, web/config/layers.json"
     validations:
       required: true
 
@@ -35,43 +40,155 @@ body:
     id: domain
     attributes:
       label: Domain / Area of Impact
-      options:
-        - Terrain
-        - Hydrology
-        - Climate
-        - Hazards
-        - Landcover
-        - Knowledge Graph
-        - Web UI
-        - API
-        - Text / AI / NLP
-        - Metadata / Governance
-        - CI/CD
-        - Other
+      options: ["Terrain","Hydrology","Climate","Hazards","Landcover","Knowledge Graph","Web UI","API","Text / AI / NLP","Metadata / Governance","CI/CD"]
     validations:
       required: true
 
   - type: input
-    id: owner_team
+    id: stakeholder
     attributes:
-      label: Primary Owner / Team
-      placeholder: "@kfm-architecture, @kfm-data, @kfm-web"
+      label: Feature Owner / Stakeholder
+      placeholder: "@kfm-data · @kfm-web · project-leads"
     validations:
       required: true
 
   - type: markdown
     attributes:
-      value: "## 🌐 Design Provenance"
+      value: "## 🔍 Problem & Rationale"
 
   - type: textarea
-    id: provenance
+    id: problem
     attributes:
-      label: Design References & Rationale
-      description: "Link ADRs/SOPs/specs, cite standards, include brief rationale with quotes/screens if applicable"
-      placeholder: |
-        - ADR: /docs/adr/0007-slope-classification.md (summary: why/alternatives/decision)
-        - SOP: /docs/sop/terrain_pipeline.md#slope
-        - Standards: STAC 1.0.x extension property, OWL-Time, CIDOC CRM tag(s)
-        - Rationale: why this change now, rejected options, alignment with roadmap
+      label: Current Limitation or Problem
+      placeholder: "Describe the current limitation or user need driving this feature."
     validations:
       required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Motivation & Rationale
+      placeholder: |
+        - Aligns with roadmap milestone
+        - Fills UI accessibility gap
+        - Enhances knowledge graph linking
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧠 Proposed Implementation"
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Implementation Details
+      description: Describe the logic, workflow changes, files affected, dependencies.
+      placeholder: |
+        - Add CLI flag to terrain_pipeline.py
+        - Modify layers.json with slope_class layer
+        - Update ADR + add unit test coverage
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: change_types
+    attributes:
+      label: Type of Change
+      options:
+        - label: New ETL pipeline/module
+        - label: Graph schema/API expansion
+        - label: Web/timeline interaction enhancement
+        - label: Visualization config/UI component
+        - label: Documentation/ADR/SOP update
+        - label: Other
+
+  - type: markdown
+    attributes:
+      value: "## 📐 Metrics / Expected Outcome"
+
+  - type: textarea
+    id: outcomes
+    attributes:
+      label: Expected Behavior / KPIs
+      placeholder: |
+        | Metric       | Target                       |
+        |--------------|------------------------------|
+        | Accuracy     | Entity linking precision >90%|
+        | Performance  | +<5% runtime overhead        |
+        | Usability    | Feature toggled in UI        |
+      render: markdown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact_level
+    attributes:
+      label: Expected Impact Level
+      options: ["🟩 Minor","🟨 Moderate","🟧 Major","🔴 Critical"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: downstream
+    attributes:
+      label: Downstream Effects
+      description: Describe expected effects on STAC, pipelines, UI, tests, etc.
+      placeholder: |
+        - Changes STAC schema version
+        - Requires new test fixtures
+        - Impacts performance gate
+
+  - type: markdown
+    attributes:
+      value: "## 📜 Governance / Compliance"
+
+  - type: textarea
+    id: versioning
+    attributes:
+      label: Versioning Summary
+      placeholder: |
+        | Component             | Current | Proposed | Reason         |
+        |------------------------|---------|----------|----------------|
+        | ETL Script             | v1.3.0  | v1.4.0   | logic addition |
+        | Graph/API Schema       | v1.0.0  | v1.1.0   | field added    |
+        | Web Config             | v1.2.1  | v1.2.2   | toggle added   |
+        | Repo Release (SemVer)  | v2.4.0  | v2.5.0   | feature bump   |
+      render: markdown
+
+  - type: checkboxes
+    id: mcp
+    attributes:
+      label: MCP Compliance
+      options:
+        - label: Documentation-first — described & linked to ADR/SOP
+          required: true
+        - label: Reproducible — deterministic steps + outputs
+          required: true
+        - label: Provenance — traceable files, config, commit hashes
+          required: true
+        - label: Versioned — STAC/schema/ETL or API updated
+          required: true
+        - label: Audit-ready — tests/metrics provided
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🔗 References & Notes"
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Links / Related PRs / Docs
+      placeholder: |
+        - Related Issue: #456
+        - Docs: docs/sop/terrain_pipeline.md
+        - PRs: #789
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      placeholder: |
+        - Diagrams, screenshots, mockups
+        - Risk flags, review blockers, etc.
