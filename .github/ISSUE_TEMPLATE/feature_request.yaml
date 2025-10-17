@@ -132,7 +132,7 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 🎯 Motivation & Current Limitation"
+      value: "## 🌟 Motivation & Current Limitation"
 
   - type: textarea
     id: motivation
@@ -199,7 +199,7 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 🧩 Intended Integration"
+      value: "## 🤩 Intended Integration"
 
   - type: input
     id: pipeline
@@ -261,7 +261,7 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 🧠 Interfaces & Config"
+      value: "## 🤠 Interfaces & Config"
 
   - type: textarea
     id: config_keys
@@ -295,7 +295,7 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 🧮 Validation Requirements"
+      value: "## 🤠 Validation Requirements"
 
   - type: checkboxes
     id: validation
@@ -374,7 +374,7 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 🧩 Related Issues / Attachments"
+      value: "## 🤩 Related Issues / Attachments"
 
   - type: textarea
     id: related
@@ -401,4 +401,3 @@ body:
     attributes:
       label: Additional Notes
       description: "Risks, rollout plan, comms, or follow-ups"
-```
