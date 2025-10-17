@@ -14,37 +14,19 @@
 
 ---
 
-```yaml
----
-title: "KFM • Image Thumbnails (web/public/assets/images/thumbnails/)"
-version: "v1.0.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-design", "@kfm-docs"]
-tags: ["thumbnails","documentation","ui-previews","images","mcp"]
-license: "MIT"
-semantic_alignment:
-  - WCAG 2.1 AA
-  - W3C Web Image Formats (PNG/JPG)
-  - MCP-DL v6.2 (Documentation Provenance)
----
-````
-
----
-
 ## 🧭 Overview
 
-The `web/public/assets/images/thumbnails/` directory contains **small-sized UI preview images**
-used throughout the **Kansas Frontier Matrix documentation**, **component showcases**, and **design reviews**.
-These thumbnails provide quick visual context for key components — enabling clear navigation across the documentation ecosystem.
+`web/public/assets/images/thumbnails/` contains **UI preview images** auto-generated from live KFM builds and design mockups.  
+They serve as **visual anchors** across component READMEs, docs, and design reviews—helping readers instantly identify interfaces.
 
-Each image follows strict MCP-DL v6.2 documentation standards:
+Each thumbnail adheres to **MCP-DL v6.2** reproducibility and documentation standards:
 
-* ✅ Consistent aspect ratios (16:9)
-* ✅ Accessible captions and alt text
-* ✅ Optimized file size and compression
-* ✅ Traceable provenance and checksum validation
+- ✅ Fixed aspect ratio (16:9)  
+- ✅ Accessible captions/alt text  
+- ✅ Optimized file size (<150 KB)  
+- ✅ Traceable JSON metadata and SHA-256 checksum  
 
-> **Purpose:** Thumbnails make documentation more visual, approachable, and reproducible — bridging design and development clarity.
+> *Thumbnails make documentation navigable, visual, and version-traceable.*
 
 ---
 
@@ -52,123 +34,140 @@ Each image follows strict MCP-DL v6.2 documentation standards:
 
 ```text
 web/public/assets/images/thumbnails/
-├── timeline-thumb.png        # Snapshot of TimelineView component
-├── mapview-thumb.png         # Snapshot of MapView rendering Kansas overlays
-├── aiassistant-thumb.png     # Chat interface preview for AI Assistant
-├── layercontrols-thumb.png   # Example LayerControls and legend UI
-└── README.md                 # This documentation file
+├── timeline-thumb.png        # TimelineView component preview
+├── mapview-thumb.png         # MapView with historical overlays
+├── aiassistant-thumb.png     # AI Assistant chat snapshot
+├── layercontrols-thumb.png   # Sidebar + STAC legend controls
+└── README.md
 ```
 
 ---
 
-## 🧩 Thumbnail Standards
+## 🧩 Thumbnail Specifications
 
-| Attribute              | Specification                                   |
-| :--------------------- | :---------------------------------------------- |
-| **Aspect Ratio**       | 16:9 (preferred) or 4:3 for compact layouts     |
-| **Dimensions**         | 640×360 px (desktop docs) / 320×180 px (mobile) |
-| **File Format**        | PNG (lossless) or WebP (quality 90)             |
-| **Color Mode**         | sRGB (no embedded profiles)                     |
-| **Compression Target** | ≤ 150 KB per image                              |
-| **Naming Convention**  | `{component-name}-thumb.{ext}`                  |
-
-All thumbnails are generated directly from live KFM builds or approved mockups within the design system.
+| Attribute          | Value / Constraint                             |
+| :----------------- | :--------------------------------------------- |
+| **Aspect Ratio**   | 16:9 preferred (4:3 fallback)                  |
+| **Dimensions**     | 640×360 px (desktop) · 320×180 px (mobile)     |
+| **Format**         | PNG (lossless) / WebP (quality 90)             |
+| **Color Space**    | sRGB (no embedded ICC profiles)                |
+| **File Size**      | ≤ 150 KB                                       |
+| **Naming Pattern** | `{component-name}-thumb.{ext}`                 |
 
 ---
 
-## 🎨 Design & Integration
+## 🎨 Origin & Integration
 
-| Thumbnail                 | Origin                                               | Usage                                         |
-| :------------------------ | :--------------------------------------------------- | :-------------------------------------------- |
-| `timeline-thumb.png`      | Screenshot of `TimelineView` rendering sample events | Docs/Architecture + Timeline component README |
-| `mapview-thumb.png`       | MapLibre render showing historic map overlays        | MapView docs + homepage                       |
-| `aiassistant-thumb.png`   | Chat session with citations and entity highlights    | AI Assistant documentation                    |
-| `layercontrols-thumb.png` | Sidebar showing STAC-driven layers and legends       | LayerControls README                          |
+| Thumbnail              | Origin                                        | Usage                                    |
+| :--------------------- | :-------------------------------------------- | :--------------------------------------- |
+| `timeline-thumb.png`   | Screenshot of **TimelineView** mock data      | Architecture + component README          |
+| `mapview-thumb.png`    | Live MapLibre render of Kansas map overlays   | MapView docs + site index                |
+| `aiassistant-thumb.png`| Conversation with citations & highlights      | AI Assistant docs                        |
+| `layercontrols-thumb.png`| STAC layer UI + legend panel               | LayerControls documentation              |
 
-Example inclusion in documentation:
-
+**Markdown inclusion example:**
 ```markdown
-![TimelineView Thumbnail](../../../../../web/public/assets/images/thumbnails/timeline-thumb.png "TimelineView Component – temporal navigation interface")
+![TimelineView Thumbnail](../../../../../web/public/assets/images/thumbnails/timeline-thumb.png "TimelineView – Temporal Navigation Interface")
 ```
 
 ---
 
-## 🧮 Optimization Workflow
+## 🧮 CI Thumbnail Workflow
 
-Thumbnails are generated and optimized via CI to ensure consistency and minimal size impact.
+| Step        | Tool / Action            | Description                                 |
+| :-----------| :------------------------| :------------------------------------------ |
+| **Capture** | Puppeteer / Playwright   | Auto-screenshots Storybook or live builds   |
+| **Resize**  | Sharp                    | Constrain to 16:9 ratio and target sizes    |
+| **Compress**| pngquant / cwebp         | Optimize without perceptible loss           |
+| **Verify**  | ImageMagick              | Check color mode, dimensions, headers       |
+| **Checksum**| SHA-256                  | Produce integrity hash for each image       |
 
-| Step     | Tool             | Function                                        |
-| :------- | :--------------- | :---------------------------------------------- |
-| Capture  | Puppeteer        | Auto-screenshot component previews during build |
-| Resize   | Sharp            | Convert to standard 16:9 ratio                  |
-| Compress | pngquant / cwebp | Optimize PNG/WebP size                          |
-| Verify   | ImageMagick      | Validate dimensions and color profiles          |
-| Checksum | SHA256           | Generate per-image hash for reproducibility     |
-
-Each thumbnail includes a `.json` metadata file under `/meta/` for source tracking and version integrity.
+Each file gains a companion `/meta/*.json` metadata record storing source, component, and build info.
 
 ---
 
-## ♿ Accessibility
+## ♿ Accessibility Standards
 
-* **Alt Text:** Each thumbnail includes meaningful alt text describing the UI state.
-* **Decorative Thumbnails:** Use `alt=""` for purely aesthetic documentation visuals.
-* **Contrast Compliance:** Thumbnails must maintain 4.5:1 contrast ratio for embedded text/UI.
-* **Scaling:** Responsive display at 1×–3× DPI; supports high-resolution displays.
-* **Keyboard Context:** Focusable when used in interactive documentation interfaces.
+- **Alt Text:** succinct, descriptive (e.g., `"Timeline panel with 1850–1900 events"`).  
+- **Decorative Images:** `alt=""` / `role="presentation"` if purely ornamental.  
+- **Contrast:** Verified ≥ 4.5 : 1 for any embedded UI.  
+- **Scalability:** Retina-ready; responsive display 1×–3× DPI.  
+- **Keyboard Context:** Focusable when used in interactive galleries.  
 
-Accessibility validation runs automatically using **axe-core** + **Lighthouse**.
+Accessibility testing automated in CI via **axe-core** + **Lighthouse**.
 
 ---
 
-## 🧾 Provenance & Metadata Example
+## 🧾 Metadata Example
 
 ```json
 {
-  "id": "timeline-thumb",
-  "component": "TimelineView",
-  "source": "Auto-screenshot from Storybook build",
-  "generated_by": "CI pipeline (Puppeteer)",
-  "created": "2025-10-14T12:00:00Z",
-  "checksum": "sha256:7e2a9d9f...",
+  "id": "mapview-thumb",
+  "component": "MapView",
+  "source": "Auto-screenshot from Storybook",
+  "build_hash": "commit:4c5e92b",
+  "generated_at": "2025-10-17T14:32:00Z",
+  "checksum": "sha256:edc0b1f...",
   "license": "MIT"
 }
 ```
 
-> Metadata files ensure each visual is traceable to the specific component state and build hash.
+> Metadata binds each image to a component, build, and checksum for complete traceability.
+
+---
+
+## 🧪 Validation & Reporting
+
+CI ensures:
+- Dimensions & ratio compliance  
+- Max size < 150 KB  
+- Valid MIME type (image/png | image/webp)  
+- Presence of JSON metadata + matching checksum  
+- a11y metadata (alt text present)  
+
+Validation logs stored in `ci/reports/thumbnails/`.
 
 ---
 
 ## 🧠 MCP Compliance Checklist
 
-| MCP Principle       | Implementation                                                |
-| :------------------ | :------------------------------------------------------------ |
-| Documentation-first | Each thumbnail embedded in docs & architecture overviews      |
-| Reproducibility     | CI-generated assets tied to component build ID                |
-| Provenance          | JSON metadata includes component name, author, checksum       |
-| Accessibility       | WCAG 2.1 AA validated via CI                                  |
-| Open Standards      | PNG/WebP formats + semantic alt text                          |
-| Traceability        | Design-to-code link through MCP registry & Storybook snapshot |
+| MCP Principle       | Implementation                                         |
+| :------------------ | :---------------------------------------------------- |
+| Documentation-first | Embedded thumbnails in component READMEs              |
+| Reproducibility     | CI auto-generation tied to component build hash       |
+| Provenance          | JSON metadata includes component, author, checksum    |
+| Accessibility       | WCAG 2.1 AA tested automatically                      |
+| Open Standards      | PNG / WebP formats + semantic alt text                |
+| Auditability        | Checksum manifests & CI reports archived              |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Public Images Overview** — `web/public/assets/images/README.md`
-* **Component Documentation Index** — `web/src/components/README.md`
-* **Design Mockups (UI Previews)** — `docs/design/mockups/previews/`
-* **Accessibility Reviews** — `docs/design/reviews/accessibility/`
+- **Public Images** — `web/public/assets/images/README.md`  
+- **Components Index** — `web/src/components/README.md`  
+- **Design Mockups** — `docs/design/mockups/previews/`  
+- **Accessibility Reviews** — `docs/design/reviews/accessibility/`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.1.0` |
+| **Codename** | *CI-Generated Documentation Preview Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-design · @kfm-docs |
+| **License** | MIT (custom) |
+| **Alignment** | WCAG 2.1 AA · PNG/WebP · MCP-DL v6.2 |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-All thumbnails are released under the **MIT License** and are regenerated in each major KFM release.
-Third-party imagery within thumbnails (if any) is under compatible open licenses (CC0, CC-BY, or Public Domain).
+All thumbnails © 2025 Kansas Frontier Matrix, released under **MIT License**.  
+Generated and maintained under **MCP-DL v6.2** for reproducible, accessible documentation assets.
 
-© 2025 Kansas Frontier Matrix — created under **MCP-DL v6.2** for **reproducible**, **accessible**, and **traceable documentation assets**.
-
-> *“A thumbnail is a glimpse — each captures Kansas’s evolving frontier of data, design, and discovery.”*
-
-```
-```
+> *“A thumbnail is a window into the interface — a visual handshake between design and documentation.”*
