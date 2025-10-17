@@ -1,4 +1,3 @@
-```markdown
 <div align="center">
 
 # 🔄 Kansas Frontier Matrix — Data Transformation Pipelines  
