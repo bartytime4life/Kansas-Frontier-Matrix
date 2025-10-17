@@ -8,11 +8,6 @@ assignees:
   - kfm-architecture
   - kfm-data
 
-# KFM metadata
-# version: v2.3.0
-# last_updated: 2025-10-15
-# owners: @kfm-architecture @kfm-data
-
 body:
   - type: markdown
     attributes:
@@ -60,7 +55,7 @@ body:
     id: owner_team
     attributes:
       label: Primary Owner / Team
-      placeholder: "@kfm-architecture · @kfm-data · @kfm-web"
+      placeholder: "@kfm-architecture, @kfm-data, @kfm-web"
     validations:
       required: true
 
