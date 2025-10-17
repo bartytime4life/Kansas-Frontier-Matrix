@@ -14,56 +14,17 @@
 
 ---
 
-```yaml
----
-title: "KFM • Web Frontend Utilities (web/src/utils/)"
-version: "v1.3.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-data"]
-tags: ["web","utils","api","maplibre","timeline","mcp","typescript","stac"]
-license: "MIT"
-semantic_alignment:
-  - CIDOC CRM
-  - OWL-Time
-  - STAC 1.0
-  - DCAT 2.0
----
-````
-
----
-
-## 📚 Table of Contents
-
-* [🧭 Overview](#🧭-overview)
-* [🧱 Directory Structure](#🧱-directory-structure)
-* [⚙️ Core Modules](#️-core-modules)
-* [🧩 Example Usage](#🧩-example-usage)
-* [🗺️ Map & Timeline Utility Relationships](#️-map--timeline-utility-relationships)
-* [🤖 AI Utilities Integration](#🤖-ai-utilities-integration)
-* [🧮 Coding Standards](#🧮-coding-standards)
-* [🧾 Provenance & Integrity](#🧾-provenance--integrity)
-* [🧠 MCP & Governance Alignment](#🧠-mcp--governance-alignment)
-* [🧰 Deterministic Formatter (Example)](#🧰-deterministic-formatter-example)
-* [🧪 Test Example](#🧪-test-example)
-* [🧭 Reproducibility Hooks](#🧭-reproducibility-hooks)
-* [🚀 Performance Considerations](#🚀-performance-considerations)
-* [🔗 Related Documentation](#🔗-related-documentation)
-* [📜 License & Credits](#📜-license--credits)
-
----
-
 ## 🧭 Overview
 
-`web/src/utils/` contains **pure, shared utility modules** that power the KFM Web UI across Map, Timeline, AI, and Data Layers.
-Utilities adhere to MCP-DL v6.2: **deterministic outputs**, **strict typing**, **clear provenance**, and **testability**.
+`web/src/utils/` houses **pure, reusable TypeScript utility modules** that serve as the backbone of the KFM Web Frontend — ensuring deterministic data transformation, clean API handling, and consistent formatting across the application.
 
-They enable:
+All modules follow **MCP-DL v6.2**, emphasizing:
+- Deterministic behavior  
+- Provenance tracking  
+- Testability and reproducibility  
+- Documentation-first engineering  
 
-* Consistent **parsing & formatting** for **STAC**, **GeoJSON**, and API responses
-* Reusable **transformations** and **temporal scaling**
-* Provenance-first patterns with **zero side effects**
-
-> **Quality bar:** JSDoc/TSDoc on public exports · coverage ≥ **85%** · linted & type-safe.
+> *“Every helper tells a story — reproducible, verifiable, and open.”*
 
 ---
 
@@ -71,40 +32,37 @@ They enable:
 
 ```text
 web/src/utils/
-├── apiClient.ts          # REST/GraphQL wrappers (retry, backoff, logging)
-├── mapUtils.ts           # MapLibre helpers (layers, markers, transforms)
-├── timelineUtils.ts      # Time parsing, scales, interpolation
-├── aiUtils.ts            # AI/LLM bridge (summaries, Q&A, citations)
-├── formatters.ts         # Locale-aware date/number/label formatting
-├── dataParser.ts         # Convert API payloads → internal app models
+├── apiClient.ts          # REST/GraphQL client (retry, backoff, logging)
+├── mapUtils.ts           # MapLibre helpers (layer management, transforms)
+├── timelineUtils.ts      # Temporal math and scaling functions
+├── aiUtils.ts            # AI bridge (summaries, citations)
+├── formatters.ts         # Date/number/text localization
+├── dataParser.ts         # STAC/API payload normalization
 ├── hooks.ts              # useFetch, useDebounce, useResizeObserver
-├── constants.ts          # API base URLs, STAC paths, layer constants
-└── __tests__/            # Jest unit tests for each module
+├── constants.ts          # Shared constants, URLs, version data
+└── __tests__/            # Unit tests for each module
 ```
 
 ---
 
 ## ⚙️ Core Modules
 
-| File               | Purpose                                                    | Example Function               |
-| :----------------- | :--------------------------------------------------------- | :----------------------------- |
-| `apiClient.ts`     | Standardized HTTP/GraphQL client with retry & logging      | `getEvents(start,end)`         |
-| `mapUtils.ts`      | MapLibre helpers: toggles, transitions, geometry utilities | `addLayer(map,id,url,opacity)` |
-| `timelineUtils.ts` | Normalize/map temporal data to pixels/time ranges          | `timeToPixel(date,scale)`      |
-| `aiUtils.ts`       | Interface to `/ask` and `/entity/{id}`                     | `fetchAISummary(entityId)`     |
-| `formatters.ts`    | i18n date/number/text formatting                           | `formatDateHuman(date)`        |
-| `dataParser.ts`    | Parse API JSON → Map/Timeline structures                   | `parseEventData(json)`         |
-| `hooks.ts`         | Async/UI hooks                                             | `useDebounce(fn,delay)`        |
-| `constants.ts`     | URLs & configuration constants                             | `API_BASE_URL`, `LAYER_CONFIG` |
-
-> **State policy:** All utilities are **pure**. No global mutation. Side-effects only in API client and are isolated.
+| File | Purpose | Example Function |
+|:-----|:---------|:----------------|
+| `apiClient.ts` | Unified REST/GraphQL client | `getEvents(start, end)` |
+| `mapUtils.ts` | MapLibre helpers (layers, markers, tiles) | `addLayer(map, id, url)` |
+| `timelineUtils.ts` | Time → pixel interpolation | `timeToPixel(date, scale)` |
+| `aiUtils.ts` | AI endpoint handlers | `fetchAISummary(entityId)` |
+| `formatters.ts` | Locale-aware date/number formatting | `formatDateHuman(date)` |
+| `dataParser.ts` | Normalize backend → frontend models | `parseEventData(json)` |
+| `hooks.ts` | Common hooks | `useDebounce(fn, delay)` |
+| `constants.ts` | Shared config, version, and endpoint constants | `API_BASE_URL`, `APP_VERSION` |
 
 ---
 
 ## 🧩 Example Usage
 
 ```ts
-// Load and parse timeline events (1850–1900)
 import { getEvents } from "./apiClient";
 import { parseEventData } from "./dataParser";
 import { formatDateHuman } from "./formatters";
@@ -112,9 +70,7 @@ import { formatDateHuman } from "./formatters";
 export async function loadTimeline(start: string, end: string) {
   const data = await getEvents(start, end);
   const events = parseEventData(data);
-  console.info(
-    `Loaded ${events.length} events from ${formatDateHuman(start)}–${formatDateHuman(end)}.`
-  );
+  console.info(`Loaded ${events.length} events from ${formatDateHuman(start)}–${formatDateHuman(end)}.`);
   return events;
 }
 ```
@@ -125,9 +81,9 @@ export async function loadTimeline(start: string, end: string) {
 
 ```mermaid
 flowchart TD
-  A["MapView<br/>MapLibre GL JS"] --> B["mapUtils.ts<br/>layers & markers"]
-  A --> C["formatters.ts<br/>popup & legend labels"]
-  D["TimelineView<br/>Canvas / D3"] --> E["timelineUtils.ts<br/>time → pixel"]
+  A["MapView<br/>MapLibre GL"] --> B["mapUtils.ts<br/>Layer Helpers"]
+  A --> C["formatters.ts<br/>Legend & Label Formatting"]
+  D["TimelineView<br/>Canvas/D3"] --> E["timelineUtils.ts<br/>Time → Pixel"]
   D --> C
 %% END OF MERMAID
 ```
@@ -136,19 +92,18 @@ flowchart TD
 
 ## 🤖 AI Utilities Integration
 
-`aiUtils.ts` bridges the UI and backend AI/NLP endpoints:
+`aiUtils.ts` handles the KFM AI service layer:
 
-* `POST /api/ask` — free-form **Q&A**
-* `GET /api/entity/{id}` — contextual **entity summaries**
+* **Endpoints:**  
+  - `POST /ask` → open-ended Q&A  
+  - `GET /entity/{id}` → entity summary + citations  
+* **Features:**  
+  - Streaming responses  
+  - Citation mapping to Neo4j entities  
+  - In-memory caching  
+  - Deterministic data shaping
 
-**Features**
-
-* Prompt submission, **streaming**/chunked responses, error fallbacks
-* **Caching/memoization** of previous prompts
-* Inline **citation extraction** linking to graph entities
-* Output shaping for **AIAssistant** rendering
-
-**Response shape**
+**Response Type**
 
 ```ts
 type AIResponse = {
@@ -161,45 +116,40 @@ type AIResponse = {
 
 ## 🧮 Coding Standards
 
-* **Style** — ESLint + Prettier (CI-enforced)
-* **Docs** — JSDoc/TSDoc for all public exports
-* **Testing** — Jest + RTL; `__tests__/` co-located; coverage ≥ **85%**
-* **Determinism** — pure functions; no hidden IO or globals
-* **Typing** — strict TypeScript; generics & discriminated unions where appropriate
+- 🧱 **Style:** ESLint + Prettier + CI enforcement  
+- 🧾 **Docs:** JSDoc/TSDoc on all public exports  
+- 🧪 **Tests:** Jest ≥ 85% coverage  
+- 🧩 **Determinism:** Pure functions; no global mutations  
+- 🔍 **Typing:** Strict TypeScript, generics preferred  
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact      | Description                                                                 |
-| :------------ | :-------------------------------------------------------------------------- |
-| **Inputs**    | STAC (`config/layers.json`), API payloads (`/events`, `/entity`, `/ask`)    |
-| **Outputs**   | Parsed objects (`Event`, `Entity`, `Layer`) used by Map/Timeline components |
-| **Deps**      | React, Axios/Fetch, MapLibre GL JS, D3                                      |
-| **Integrity** | Versioned via Git; CI runs checksums/lints/tests + CodeQL security scans    |
+| Artifact | Description |
+|:----------|:-------------|
+| **Inputs** | STAC catalogs, API payloads |
+| **Outputs** | Typed data models (Event, Entity, Layer) |
+| **Checks** | CI CodeQL, checksum validation, Jest |
+| **Retention** | Git-tracked commits, version-tagged releases |
 
 ---
 
 ## 🧠 MCP & Governance Alignment
 
-| MCP Principle       | Implementation                                                      |
-| :------------------ | :------------------------------------------------------------------ |
-| Documentation-first | TSDoc + per-file header comments                                    |
-| Reproducibility     | Deterministic utils; CI regression tests                            |
-| Open Standards      | GeoJSON, STAC, DCAT, ISO-8601 time                                  |
-| Provenance          | API/STAC sources captured in metadata                               |
-| Auditability        | Unit tests; CI logs capture inputs/outputs                          |
-| Versioning          | SemVer + conventional commits; utilities bump with web package.json |
+| MCP Pillar | Implementation |
+|:------------|:---------------|
+| **Documentation-first** | Inline TSDoc & per-file headers |
+| **Reproducibility** | Deterministic outputs + unit tests |
+| **Provenance** | Data lineage captured in metadata |
+| **Open Standards** | STAC, GeoJSON, ISO-8601 time |
+| **Auditability** | CI logs + versioned commits |
 
 ---
 
 ## 🧰 Deterministic Formatter (Example)
 
 ```ts
-/**
- * Format ISO date into human-friendly year/month.
- * Deterministic across locales by fixing the locale and options.
- */
 export function formatDateHuman(isoDate: string): string {
   const d = new Date(isoDate);
   return d.toLocaleDateString("en-US", { year: "numeric", month: "short" });
@@ -216,48 +166,43 @@ import { timeToPixel } from "../timelineUtils";
 describe("timelineUtils", () => {
   it("maps ISO date to correct pixel", () => {
     const scale = { start: 1800, end: 1900, width: 1000 };
-    const result = timeToPixel("1850-01-01", scale);
-    expect(result).toBe(500);
+    expect(timeToPixel("1850-01-01", scale)).toBe(500);
   });
 });
 ```
 
 ---
 
-## 🧭 Reproducibility Hooks
-
-* 🧱 **Deterministic builds** — Vite caching + `package-lock.json` pins
-* 🔒 **CodeQL / Trivy** — guard supply chain and container images
-* 🧪 **Pre-commit** — lint, typecheck, test before merge
-* 🧾 **Checksum log** — optional SHA-256 per built file in `dist/`
-* 📦 **Immutable imports** — import types-only where possible to avoid runtime pollution
-
----
-
 ## 🚀 Performance Considerations
 
-* Memoize parsed datasets; avoid re-parsing same payloads
-* Preprocess STAC collections at build-time (static caches)
-* Lazy-import heavy libs (e.g., specific D3 modules)
-* All network IO **async**; no blocking operations in utils
+- Memoize parsed datasets  
+- Preprocess STAC collections at build-time  
+- Lazy-load heavy dependencies (e.g., D3)  
+- Async-only network I/O  
+- Use ES modules for tree-shaking efficiency  
 
 ---
 
-## 🔗 Related Documentation
+## 🧾 Versioning & Metadata
 
-* **Web Frontend Overview** — `web/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
-* **API Layer Reference** — `../docs/architecture.md`
-* **Monorepo Design** — `../docs/monorepo.md`
+| Field | Value |
+|:------|:------|
+| **Version** | `v1.4.0` |
+| **Codename** | *Utility Harmonization Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-data |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | STAC 1.0 · CIDOC CRM · OWL-Time · DCAT 2.0 |
+| **Maturity** | Stable / Production |
 
 ---
 
-## 📜 License & Credits
+<div align="center">
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — Utilities follow the **Master Coder Protocol (MCP)** for transparency, reproducibility, and scientific integrity.
+**© Kansas Frontier Matrix — Web Frontend Utilities**  
+Built under the **Master Coder Protocol (MCP)**  
 
-> *“Utilities are the silent scaffolds — unseen, but holding the frontier together.”*
+[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
+[![Semantic Alignment](https://img.shields.io/badge/CIDOC%20CRM%20·%20OWL--Time%20·%20STAC%201.0-blue)]()
 
-```
-```
+</div>
