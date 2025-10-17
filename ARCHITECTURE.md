@@ -17,14 +17,15 @@
 ---
 
 ## 📚 Table of Contents
+
 * [🌾 Mission](#🌾-mission)
 * [🏛 Architectural Principles](#🏛-architectural-principles)
 * [🏗 System Diagram](#🏗-system-diagram)
 * [⚙️ Core Layers](#⚙️-core-layers)
 * [🧭 Data & File Architecture](#🧭-data--file-architecture)
-* [🧮 AI / ML Pipeline](#🧮-ai--ml-pipeline)
+* [🧪 AI / ML Pipeline](#🧪-ai--ml-pipeline)
 * [🌐 API & Integration](#🌐-api--integration)
-* [🗺 Web Frontend](#🗺-web-frontend)
+* [🗽 Web Frontend](#🗽-web-frontend)
 * [🔒 Security & Provenance](#🔒-security--provenance)
 * [🧾 Change Management](#🧾-change-management)
 * [📚 References](#📚-references)
@@ -33,28 +34,28 @@
 
 ## 🌾 Mission
 
-The **Kansas Frontier Matrix (KFM)** connects the *ecological, cultural, and historical record of Kansas*  
-through a reproducible, open-science platform. It integrates:
+The **Kansas Frontier Matrix (KFM)** connects the *ecological, cultural, and historical record of Kansas* through a reproducible, open-science platform. It integrates:
 
-- Environmental & climate datasets (NOAA, USGS, Daymet)  
-- Historical documents & maps (KHS, archives, treaties)  
-- Semantic knowledge graph (Neo4j + CIDOC CRM)  
-- Interactive frontend (React + MapLibre + D3 timeline)
+* Environmental & climate datasets (NOAA, USGS, Daymet)
+* Historical documents & maps (KHS, archives, treaties)
+* Semantic knowledge graph (Neo4j + CIDOC CRM)
+* Interactive frontend (React + MapLibre + D3 timeline)
 
 Each layer of the system is built under **Master Coder Protocol (MCP)** principles:
+
 > Documentation-first · Reproducible · Provenanced · Auditable · Versioned.
 
 ---
 
 ## 🏛 Architectural Principles
 
-| Principle | Description |
-| :-- | :-- |
-| **Documentation-First** | Every component change has an accompanying doc or SOP. |
-| **Reproducibility** | Deterministic ETL pipelines and checksums guarantee reproducible builds. |
-| **Open Standards** | Uses STAC, DCAT, CIDOC CRM, OWL-Time, GeoSPARQL for interoperability. |
-| **Version Control Everywhere** | Code (SemVer), Data (STAC), Docs (MCP-DL metadata). |
-| **Auditability** | All CI pipelines log checksums, signatures, and provenance events. |
+| Principle                      | Description                                                              |
+| :----------------------------- | :----------------------------------------------------------------------- |
+| **Documentation-First**        | Every component change has an accompanying doc or SOP.                   |
+| **Reproducibility**            | Deterministic ETL pipelines and checksums guarantee reproducible builds. |
+| **Open Standards**             | Uses STAC, DCAT, CIDOC CRM, OWL-Time, GeoSPARQL for interoperability.    |
+| **Version Control Everywhere** | Code (SemVer), Data (STAC), Docs (MCP-DL metadata).                      |
+| **Auditability**               | All CI pipelines log checksums, signatures, and provenance events.       |
 
 ---
 
@@ -72,170 +73,141 @@ flowchart TD
   H --> J["API Layer<br/>FastAPI · GraphQL · REST"]
   J --> F["Frontend (React + MapLibre GL)<br/>Timeline · Map · Search · AI Panels"]
   C --> K["Google Earth Exports<br/>KML / KMZ"]
-%% END OF MERMAID
-````
+```
 
 ---
 
 ## ⚙️ Core Layers
 
-### 🧩 1. ETL Pipeline
+### 🧬 1. ETL Pipeline
 
-* **Language:** Python (GDAL, Rasterio, Pandas)
-* **Stages:** Extract → Transform → Load
-* **Execution:** via `make fetch`, `make process`, `make stac`
-* **Output:** standardized GeoJSON / COG + STAC metadata
-* **Validation:** schema + checksum verification in CI
+* Python (GDAL, Rasterio, Pandas)
+* `make fetch`, `make process`, `make stac`
+* Outputs: GeoJSON / COGs + STAC metadata
+* CI validation: schema + checksum enforcement
 
 ### 🧠 2. AI / ML Enrichment
 
-* **OCR:** Tesseract, OpenCV for scanned docs
-* **NLP:** spaCy + Transformers for entity extraction
-* **Summarization:** BART / T5 for document abstracts
-* **Entity Linking:** custom matchers aligning text entities → graph nodes
-* **Outputs:** structured entities (`Person`, `Place`, `Event`, `Document`)
+* OCR: Tesseract, OpenCV
+* NLP: spaCy + Transformers
+* Summarization: BART / T5
+* Linking: entity matchers → graph nodes
+* Outputs: structured `Person`, `Place`, `Event`, `Document`
 
-### 🕸 3. Knowledge Graph
+### 🔸 3. Knowledge Graph
 
-* **Engine:** Neo4j
-* **Schema:** CIDOC CRM + OWL-Time + DCAT
-* **Relations:** `OCCURRED_AT`, `MENTIONS`, `LOCATED_IN`, `PARTICIPATED_IN`
-* **Spatial Index:** GeoSPARQL / WKT geometries
-* **Inference:** rule-based + confidence scoring
+* Neo4j + CIDOC CRM + OWL-Time + GeoSPARQL
+* Relations: `MENTIONS`, `LOCATED_IN`, `OCCURRED_AT`
+* Spatial: WKT + Geo indexing
+* Optional RDF/JSON-LD export
 
-### 🔌 4. API Layer
+### 🔗 4. API Layer
 
-* **Framework:** FastAPI + GraphQL
-* **Endpoints:** `/events`, `/entities/{id}`, `/timeline`, `/search`
-* **Formats:** JSON, GeoJSON, CSV, STAC, DCAT
-* **Auth:** JWT + audit logging
-* **OpenAPI Spec:** auto-generated `/docs` route
+* FastAPI + GraphQL
+* `/api/events`, `/api/search`, `/api/entities/{id}`
+* Output: JSON / GeoJSON / CSV / STAC
+* Auth: JWT + audit logs
 
-### 🖥 5. Web Frontend
+### 🖥️ 5. Web Frontend
 
-* **Stack:** React + MapLibre GL + D3 Timeline
-* **Features:**
-
-  * Interactive map + timeline linked to knowledge graph
-  * Search and AI-assistant sidebar
-  * Accessibility (WCAG 2.1 AA)
-* **Deployment:** GitHub Pages via `site.yml`
+* React + MapLibre + D3 Timeline
+* Timeline + Map view, linked with KG
+* WCAG 2.1 AA compliance
+* Hosted via GitHub Pages
 
 ---
 
 ## 🧭 Data & File Architecture
 
-| Directory         | Purpose                                            |
-| :---------------- | :------------------------------------------------- |
-| `data/sources/`   | JSON manifests (source configs + provenance)       |
-| `data/raw/`       | Large external datasets (fetched, LFS/DVC tracked) |
-| `data/processed/` | Normalized GeoJSON / COG outputs                   |
-| `data/stac/`      | STAC catalog (items, collections)                  |
-| `src/`            | Python ETL + AI pipelines                          |
-| `web/`            | React frontend (Map + Timeline)                    |
-| `docs/`           | Architecture, SOPs, standards                      |
-| `.github/`        | Workflows, issue templates                         |
+| Directory         | Purpose                                   |
+| :---------------- | :---------------------------------------- |
+| `data/sources/`   | Source manifests (license, coverage, URL) |
+| `data/raw/`       | Large datasets (fetched, pointer-tracked) |
+| `data/processed/` | GeoTIFFs, GeoJSONs, CSVs                  |
+| `data/stac/`      | STAC Items & Collections                  |
+| `src/`            | Python ETL & AI pipelines                 |
+| `web/`            | React-based frontend                      |
+| `docs/`           | Standards, SOPs, architecture docs        |
+| `.github/`        | CI/CD pipelines, PR templates             |
 
-Each dataset must include:
+Every dataset must include:
 
-* ✅ **Provenance metadata** (source URL, license)
-* ✅ **SHA-256 checksum** sidecar
-* ✅ **STAC JSON** with `properties.version`
-* ✅ **Linked SOP or experiment record**
+* Provenance metadata
+* SHA-256 checksum
+* STAC entry with version
+* SOP or experiment log
 
 ---
 
-## 🧮 AI / ML Pipeline
+## 🧪 AI / ML Pipeline
 
-| Component      | Role                                 | Tools / Libs                     |
-| :------------- | :----------------------------------- | :------------------------------- |
-| OCR            | Convert scanned images → text        | Tesseract, OpenCV                |
-| NLP            | Extract names, places, events        | spaCy, Hugging Face Transformers |
-| Geocoding      | Resolve locations → coordinates      | GeoPy, USGS GNIS                 |
-| Summarization  | Condense large texts                 | BART, T5                         |
-| Entity Linking | Connect text entities to graph nodes | Custom ML + Neo4j driver         |
+| Component      | Role                             | Tools                |
+| -------------- | -------------------------------- | -------------------- |
+| OCR            | Scan → text                      | Tesseract, OpenCV    |
+| NLP            | Entity extraction                | spaCy, Transformers  |
+| Geocoding      | Resolve places → coordinates     | GeoPy, GNIS          |
+| Summarization  | Abstract creation                | BART, T5             |
+| Entity Linking | Disambiguate + integrate into KG | Custom, Neo4j driver |
 
-> All models are documented via `docs/model_card.md`
-> Training datasets are versioned with DVC + checksum logs.
+> Models documented via `docs/model_card.md`
+> Training data tracked via DVC + hashes
 
 ---
 
 ## 🌐 API & Integration
 
-**Endpoints**
+| Endpoint             | Description                |
+| -------------------- | -------------------------- |
+| `/api/events`        | Events by time & location  |
+| `/api/entities/{id}` | Entity details             |
+| `/api/search?q=term` | Fulltext & semantic search |
+| `/api/timeline`      | Chronological filtering    |
+| `/api/tiles/{layer}` | Tile delivery              |
 
-| Route                               | Description                      |
-| :---------------------------------- | :------------------------------- |
-| `/api/events`                       | Query events by time & geography |
-| `/api/entities/{id}`                | Retrieve linked data entity      |
-| `/api/search?q=<term>`              | Text/semantic search             |
-| `/api/timeline?start=<y1>&end=<y2>` | Chronological range query        |
-| `/api/tiles/{layer}`                | Tile service (GeoJSON / raster)  |
-
-**Format Compliance:**
-
-* STAC 1.0.x
-* DCAT 2.0
-* JSON-LD contexts for semantic linking
-
-**Integration Points:**
-
-* Web frontend (MapLibre layers)
-* Google Earth KML/KMZ exports
-* Research APIs for AI queries
+**Standards**: STAC 1.0, DCAT 2.0, JSON-LD, CIDOC CRM
 
 ---
 
-## 🗺 Web Frontend
+## 🗽 Web Frontend
 
-| Layer             | Technology          | Purpose                             |
-| :---------------- | :------------------ | :---------------------------------- |
-| **UI Framework**  | React + Vite        | SPA structure                       |
-| **Map Engine**    | MapLibre GL JS      | render GIS layers & time data       |
-| **Timeline**      | D3 / Canvas         | spatio-temporal event visualization |
-| **Accessibility** | WAI-ARIA / WCAG 2.1 | inclusive design                    |
-| **Hosting**       | GitHub Pages        | static build deployment             |
-
-**Features**
-
-* Linked Map + Timeline views
-* Layer toggles (treaties, terrain, hydrology, etc.)
-* AI summary popups
-* Semantic highlighting of entities
+| Subsystem     | Stack          | Features                             |
+| ------------- | -------------- | ------------------------------------ |
+| UI Framework  | React + Vite   | SPA & state management               |
+| Map Engine    | MapLibre GL JS | Overlay rendering, fast zoom/pan     |
+| Timeline      | D3.js + Canvas | Scrollable/zoomable temporal display |
+| Accessibility | WAI-ARIA       | Keyboard + screen-reader support     |
+| Deployment    | GitHub Pages   | Static asset hosting                 |
 
 ---
 
 ## 🔒 Security & Provenance
 
-| Control                 | Mechanism                                        |
-| :---------------------- | :----------------------------------------------- |
-| **Authentication**      | JWT (FastAPI middleware)                         |
-| **Dependency Scanning** | Trivy CI workflow                                |
-| **Static Analysis**     | CodeQL                                           |
-| **Data Integrity**      | SHA-256 checksums per file                       |
-| **Access Control**      | Role-based permissions                           |
-| **Audit Logs**          | stored for ETL + API interactions                |
-| **CI/CD Governance**    | Signed actions, branch protection, version gates |
+| Area           | Strategy                       |
+| -------------- | ------------------------------ |
+| Auth           | JWT + RBAC                     |
+| CI/CD Scans    | CodeQL + Trivy                 |
+| Data Hashing   | SHA-256 on all processed files |
+| Provenance     | PROV-O metadata, logs          |
+| Workflow Audit | Signed commits, audit trails   |
 
 ---
 
 ## 🧾 Change Management
 
-**Versioning Policy**
+| Domain | Versioning                |
+| ------ | ------------------------- |
+| Code   | SemVer                    |
+| Data   | STAC `properties.version` |
+| Docs   | MCP-DL Metadata           |
+| Models | `model_card.md` log       |
 
-* **Code:** Semantic Versioning (SemVer)
-* **Data:** STAC `properties.version`
-* **Docs:** MCP-DL metadata header
-* **Models:** Model Card revisions
+Workflow:
 
-**Workflow**
-
-1. Create feature branch → `feature/<short-name>`
-2. Update documentation → `/docs/` + `/data/sources/`
+1. Branch → `feature/*`
+2. Doc update + data manifest
 3. Validate STAC → `make stac-validate`
-4. Open PR using Feature Request template
-5. CI checks (unit, schema, security)
-6. Merge → version bump → changelog update
+4. Open PR → run CI
+5. Review + merge + version bump
 
 ---
 
@@ -256,4 +228,3 @@ Each dataset must include:
 © 2025 Kansas Frontier Matrix — MIT (code) · CC-BY 4.0 (data)
 
 </div>
-```
