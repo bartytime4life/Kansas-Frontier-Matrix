@@ -14,34 +14,12 @@
 
 ---
 
-```yaml
----
-title: "KFM • Web Frontend Hooks (web/src/hooks/)"
-version: "v1.4.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-architecture"]
-tags: ["react","hooks","state-management","accessibility","lifecycle","mcp"]
-license: "MIT"
-semantic_alignment:
-  - CIDOC CRM (UI context entities)
-  - OWL-Time (timeline synchronization)
-  - WCAG 2.1 AA (keyboard focus management)
----
-````
-
----
-
 ## 🧭 Overview
 
-The `web/src/hooks/` directory defines **custom React Hooks** that encapsulate reusable logic for data fetching, state synchronization, event handling, theming, and responsiveness across the **Kansas Frontier Matrix (KFM)** web application.
+`web/src/hooks/` contains **custom React hooks** that encapsulate reusable logic for data fetching, timeline sync, map interaction, theming, responsiveness, and accessibility.  
+They enforce **deterministic behavior**, **strict typing**, and **clean lifecycles**, aligned with **MCP-DL v6.2**.
 
-These hooks maintain clean separation of concerns between **Map**, **Timeline**, and **AI Assistant** interfaces while adhering to **MCP-DL v6.2** principles:
-
-* 🧾 Fully documented via JSDoc/TSDoc
-* ⚙️ Deterministic and side-effect aware
-* 🧪 Unit tested with Jest & RTL
-* 🔒 Explicit dependencies (no globals)
-* ♿ Accessibility and lifecycle compliant
+> *“Hooks are the logic rails that keep time, terrain, and story in sync.”*
 
 ---
 
@@ -49,17 +27,15 @@ These hooks maintain clean separation of concerns between **Map**, **Timeline**,
 
 ```text
 web/src/hooks/
-├── useFetch.ts              # REST/GraphQL fetch wrapper (loading/error state)
-├── useDebounce.ts           # Debounces fast-changing inputs (search, sliders)
-├── useResizeObserver.ts     # Observes element size (MapView/Timeline responsiveness)
-├── useTimelineRange.ts      # Manages timeline state (start/end)
-├── useMapInteraction.ts     # Handles map click/hover and layer synchronization
-├── useKeyboardShortcuts.ts  # Accessibility keyboard navigation
-├── useTheme.ts              # Theme persistence + toggling (dark/light)
-└── index.ts                 # Barrel export for all hooks
+├── useFetch.ts              # REST/GraphQL fetch wrapper (loading/error/abort)
+├── useDebounce.ts           # Debounce values/callbacks for search & sliders
+├── useResizeObserver.ts     # Resize-aware layouts (MapView/Timeline)
+├── useTimelineRange.ts      # Central timeline state (start/end/zoom/brush)
+├── useMapInteraction.ts     # MapLibre hover/click/select + layer sync
+├── useKeyboardShortcuts.ts  # Accessible keyboard navigation & focus mgmt
+├── useTheme.ts              # Light/Dark + high-contrast + persistence
+└── index.ts                 # Barrel export (stable public surface)
 ```
-
-Each hook is modular, reusable, and directly supports high-level KFM UI components.
 
 ---
 
@@ -67,13 +43,13 @@ Each hook is modular, reusable, and directly supports high-level KFM UI componen
 
 | Hook                     | Purpose                                                         | Example Usage                                        |
 | :----------------------- | :-------------------------------------------------------------- | :--------------------------------------------------- |
-| **useFetch**             | Simplifies async API requests with built-in loading/error state | `const { data, loading } = useFetch('/api/events');` |
-| **useDebounce**          | Prevents rapid function calls (e.g. search throttling)          | `const query = useDebounce(inputValue, 300);`        |
-| **useResizeObserver**    | Monitors element resizing (responsive layouts)                  | `useResizeObserver(ref, onResize);`                  |
-| **useTimelineRange**     | Centralized timeline state manager (start/end, zoom)            | `const { range, setRange } = useTimelineRange();`    |
-| **useMapInteraction**    | Consolidates MapLibre map interactions                          | `useMapInteraction(mapRef, onSelectLayer);`          |
-| **useKeyboardShortcuts** | Adds accessibility navigation & focus management                | `useKeyboardShortcuts(shortcutMap);`                 |
-| **useTheme**             | Toggles dark/light theme & persists preference                  | `const { theme, toggleTheme } = useTheme();`         |
+| **useFetch**             | Async requests with abort, retry, and stable shapes             | `const { data, loading } = useFetch('/api/events')`  |
+| **useDebounce**          | Smooth UI by delaying rapid updates                             | `const q = useDebounce(input, 300)`                  |
+| **useResizeObserver**    | Element-aware responsive layouts                                | `useResizeObserver(ref, onResize)`                   |
+| **useTimelineRange**     | One source of truth for the visible time window                 | `const { range, setRange } = useTimelineRange()`     |
+| **useMapInteraction**    | Consolidated map gestures + feature selection                   | `useMapInteraction(mapRef, onSelect)`                |
+| **useKeyboardShortcuts** | App-wide shortcuts (timeline nav, search, panel focus)          | `useKeyboardShortcuts(shortcuts)`                    |
+| **useTheme**             | Theme toggle + persistence + reduced-motion & contrast modes    | `const { theme, toggleTheme } = useTheme()`          |
 
 ---
 
@@ -81,32 +57,57 @@ Each hook is modular, reusable, and directly supports high-level KFM UI componen
 
 ```ts
 // useFetch.ts
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 
-export function useFetch(url: string, options: any = {}) {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
+type FetchState<T> = { data: T | null; loading: boolean; error: Error | null };
+
+export function useFetch<T = unknown>(
+  url: string | null,
+  init?: RequestInit,
+  { retry = 0, retryDelay = 300 }: { retry?: number; retryDelay?: number } = {}
+): FetchState<T> {
+  const [state, setState] = useState<FetchState<T>>({ data: null, loading: !!url, error: null });
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!url) return;
     let active = true;
-    setLoading(true);
+    let attempts = 0;
 
-    axios(url, options)
-      .then(res => active && setData(res.data))
-      .catch(err => active && setError(err))
-      .finally(() => active && setLoading(false));
+    const fetchOnce = async () => {
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
 
-    return () => { active = false; };
-  }, [url]);
+      setState(s => ({ ...s, loading: true, error: null }));
+      try {
+        const res = await fetch(url, { ...init, signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = (await res.json()) as T;
+        if (active) setState({ data, loading: false, error: null });
+      } catch (err: any) {
+        if (!active || controller.signal.aborted) return;
+        if (attempts < retry) {
+          attempts += 1;
+          setTimeout(fetchOnce, retryDelay);
+        } else {
+          setState({ data: null, loading: false, error: err });
+        }
+      }
+    };
 
-  return { data, loading, error };
+    fetchOnce();
+    return () => {
+      active = false;
+      abortRef.current?.abort();
+    };
+  }, [url, JSON.stringify(init), retry, retryDelay]);
+
+  return state;
 }
 ```
 
-> This base hook pattern underpins nearly all data-fetching workflows across **Timeline**, **Map**, and **Entity Panels**.
+> This pattern is **abortable**, **retry-capable**, and returns a **stable shape** for components.
 
 ---
 
@@ -116,51 +117,49 @@ export function useFetch(url: string, options: any = {}) {
 flowchart TD
   A["useTimelineRange<br/>(time window)"] --> B["MapView<br/>(fetch layers/events)"]
   A --> C["TimelineView<br/>(draw events)"]
-  D["useFetch<br/>(API requests)"] --> C
-  D --> E["AI Assistant<br/>(entity data)"]
-  F["useTheme<br/>(user prefs)"] --> G["AppLayout<br/>(theme context)"]
+  D["useFetch<br/>(API)"] --> C
+  D --> E["AIAssistant<br/>(entity/context)"]
+  F["useTheme<br/>(prefs)"] --> G["AppLayout<br/>(context)"]
 %% END OF MERMAID
 ```
 
-Hooks ensure synchronized updates across the interface:
+**Sync rules**
 
-* Timeline range changes trigger **new data fetches**
-* Map selections propagate to **detail panels**
-* User preferences persist between sessions and reloads
+- Changing the **timeline** window triggers filtered fetches and re-render of **map & timeline**.  
+- **Map selections** update **DetailPanel** and announce via ARIA live regions.  
+- **Theme & motion** preferences persist and are honored across sessions.
 
 ---
 
 ## 🧩 Best Practices
 
-* 🧩 **Single Responsibility:** Each hook performs one focused task
-* 🔍 **Naming:** Hooks begin with `use` and return `{ data, loading, error }` or similar predictable shapes
-* 🧹 **Cleanup:** Manage all subscriptions, abort signals, or observers on unmount
-* 🧪 **Testing:** Simulate async/DOM behaviors with Jest mocks + `act()` wrappers
-* 📘 **Documentation:** Each hook includes usage examples in TSDoc/JSDoc
+- **Single responsibility:** each hook does one thing well.  
+- **Predictable returns:** prefer `{ value, setValue }` or `{ data, loading, error }`.  
+- **Cleanup:** always remove listeners/observers and cancel inflight requests.  
+- **Memoization:** expose memoized callbacks/values to minimize re-renders.  
+- **Testing:** simulate timers, network, and ResizeObserver in unit tests.  
+- **Docs:** include JSDoc with parameters, returns, and examples.
 
 ---
 
 ## ♿ Accessibility Integration
 
-Hooks such as `useKeyboardShortcuts` and `useResizeObserver` improve accessibility and responsive layout behavior.
-
-| Accessibility Feature   | Implementation                                                            |
-| :---------------------- | :------------------------------------------------------------------------ |
-| **Keyboard Navigation** | Arrow keys to move timeline, Esc to close panels, `Tab` order enforcement |
-| **Focus Management**    | React focus trap pattern via hook context                                 |
-| **Reduced Motion**      | `useTheme` & `useLayoutEffect` respect `prefers-reduced-motion`           |
-| **ARIA Event Sync**     | Hooks trigger announcements via `aria-live` regions for state changes     |
+| Feature               | Implementation                                                                 |
+| :-------------------- | :------------------------------------------------------------------------------ |
+| Keyboard Navigation   | Arrow keys for timeline, `Esc` to close panels, `/` to focus search            |
+| Focus Management      | Focus trap pattern; return focus to opener on dialog close                     |
+| Reduced Motion        | `useTheme` respects `prefers-reduced-motion`; disables animated transitions     |
+| ARIA Live Updates     | Hooks announce important state changes to `aria-live="polite"` regions          |
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                             |
-| :--------------- | :---------------------------------------------------------------------- |
-| **Inputs**       | REST/GraphQL data, MapLibre instances, user preferences                 |
-| **Outputs**      | Component-ready states (`data`, `range`, `theme`, `focus`)              |
-| **Dependencies** | React 18+, Axios, MapLibre GL, D3                                       |
-| **Integrity**    | CI enforces lint/type/test coverage ≥ **85%** with CodeQL + Trivy scans |
+| Artifact   | Description                                                                      |
+| :--------- | :------------------------------------------------------------------------------- |
+| **Inputs** | REST/GraphQL endpoints, MapLibre events, user preferences                        |
+| **Outputs**| Stable state for components (timeline range, theme, selection, data)             |
+| **Checks** | Lint, type-check, unit tests; CodeQL for security; CI coverage target ≥ **85%**  |
 
 ---
 
@@ -168,16 +167,15 @@ Hooks such as `useKeyboardShortcuts` and `useResizeObserver` improve accessibili
 
 | MCP Principle       | Implementation                                       |
 | :------------------ | :--------------------------------------------------- |
-| Documentation-first | JSDoc/TSDoc annotations + per-hook examples          |
-| Reproducibility     | Deterministic state transitions; regression tests    |
-| Open Standards      | WCAG 2.1 AA, WAI-ARIA roles, ISO time formats        |
-| Provenance          | Clear data lineage from API → state → component      |
-| Auditability        | Hook-level test suites & CI logs                     |
-| Versioning          | Semantic commits & release tracking via package.json |
+| Documentation-first | JSDoc/TSDoc + per-hook usage examples                |
+| Reproducibility     | Deterministic transitions, abortable fetch, tests    |
+| Open Standards      | WCAG 2.1 AA, WAI-ARIA, ISO 8601 time                 |
+| Provenance          | Clear lineage: API → hook → component                |
+| Auditability        | CI logs + coverage reports                           |
 
 ---
 
-## 🧩 Example — Keyboard Shortcut Hook
+## 🧩 Example — Keyboard Shortcuts Hook
 
 ```ts
 // useKeyboardShortcuts.ts
@@ -185,83 +183,81 @@ import { useEffect } from "react";
 
 export function useKeyboardShortcuts(shortcutMap: Record<string, () => void>) {
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
       if (shortcutMap[key]) {
         e.preventDefault();
         shortcutMap[key]();
       }
     };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [shortcutMap]);
 }
 ```
 
-> Example: arrow keys control timeline range, `f` focuses map, `s` opens search bar.
+> Example bindings: `ArrowLeft/Right` shift timeline, `f` focuses map, `s` opens search.
 
 ---
 
-## 🧩 Test Example
+## 🧪 Test Example
 
 ```ts
 import { renderHook, act } from "@testing-library/react";
 import { useDebounce } from "../useDebounce";
 
 describe("useDebounce", () => {
-  it("delays updates", () => {
+  it("delays updates by 300ms", () => {
     jest.useFakeTimers();
-    const { result, rerender } = renderHook(
-      ({ value }) => useDebounce(value, 300),
-      { initialProps: { value: "start" } }
-    );
-
-    rerender({ value: "next" });
-    act(() => jest.advanceTimersByTime(200));
-    expect(result.current).toBe("start");
-
-    act(() => jest.advanceTimersByTime(100));
-    expect(result.current).toBe("next");
+    const { result, rerender } = renderHook(({ v }) => useDebounce(v, 300), {
+      initialProps: { v: "a" },
+    });
+    rerender({ v: "b" });
+    act(() => jest.advanceTimersByTime(299));
+    expect(result.current).toBe("a");
+    act(() => jest.advanceTimersByTime(1));
+    expect(result.current).toBe("b");
   });
 });
 ```
 
 ---
 
-## 🧩 Reproducibility Hooks
-
-* 🧱 **Deterministic builds** — Vite + pinned deps (`package-lock.json`)
-* 🧪 **Pre-commit hooks** — run lint, test, typecheck before merge
-* 🔒 **CI Gatekeeping** — CodeQL + Jest coverage reports
-* 🧾 **Checksum Logs** — optional SHA-256 for built hook bundles
-
----
-
 ## 🚀 Performance Considerations
 
-* Cache stable fetch responses (with React Query or SWR pattern)
-* Use `useMemo` + `useCallback` to prevent re-renders
-* Throttle map event handlers (`useMapInteraction`)
-* Debounce resize observers to minimize layout thrash
-* Avoid synchronous loops inside hooks; defer heavy calculations
+- Prefer **SWR/React Query** patterns or cache inside hooks for idempotent requests.  
+- Throttle/ debounce heavy UI events (map move, resize).  
+- Use `useMemo`/`useCallback` to stabilize props.  
+- Avoid synchronous loops; push heavy work off the main thread if needed.
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Web Frontend Overview** — `web/README.md`
-* **Web Frontend Utilities** — `web/src/utils/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
-* **Accessibility Focus Review** — `docs/design/reviews/accessibility/`
+- **Web Frontend Overview** — `web/README.md`  
+- **Utilities** — `web/src/utils/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`  
+- **Accessibility Reviews** — `docs/design/reviews/accessibility/`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.5.0` |
+| **Codename** | *Lifecycle & Sync Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-architecture |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | WCAG 2.1 AA · OWL-Time (timeline sync) · CIDOC CRM (UI context) |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for modularity, reproducibility, and accessibility.
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — engineered under **MCP-DL v6.2** for modularity, reproducibility, and accessibility.
 
-> *“Custom hooks are the logic trail markers — guiding users through time, terrain, and story.”*
-
-```
-```
+> *“Custom hooks are the logic trail markers guiding users through Kansas across time.”*
