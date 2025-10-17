@@ -5,10 +5,11 @@
 
 **Unit · Integration · Schema Validation · Provenance Coverage**
 
-[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../.github/workflows/tests.yml)
-[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../docs/)
+[![Tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tests.yml/badge.svg)](../../.github/workflows/tests.yml)  
+[![Coverage](https://img.shields.io/codecov/c/github/bartytime4life/Kansas-Frontier-Matrix)](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix)  
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
 
 </div>
 
@@ -17,54 +18,54 @@
 ```yaml
 ---
 title: "KFM • Tools Test Index (tools/tests/)"
-version: "v1.1.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-data", "@kfm-engineering"]
-tags: ["testing","pytest","stac","integration","schema","mcp"]
+version: "v1.3.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-engineering", "@kfm-ci", "@kfm-data"]
+tags: ["testing","pytest","integration","stac","schema","mcp","ci"]
 license: "MIT"
 semantic_alignment:
-  - STAC 1.0
+  - STAC 1.0.0
   - JSON Schema Validation
-  - MCP-DL v6.2 Testing Compliance
+  - OWL-Time (Temporal Metadata in Fixtures)
+  - MCP-DL v6.3 Provenance Compliance
 ---
-````
+```
 
 ---
 
 ## 🧭 Overview
 
-The `tools/tests/` suite ensures **functional accuracy**, **schema compliance**, and **provenance reproducibility** for all utility scripts under `/tools/`.
-It provides a **unit + integration testing matrix** for every pipeline stage — from data fetching to Neo4j migration — using **pytest**, **pystac**, and **jsonschema** validators.
+The `tools/tests/` suite validates **functional accuracy**, **schema compliance**, and **reproducibility** across the KFM toolchain.  
+It covers **ETL utilities**, **schema validators**, and **graph integrations**, ensuring every component of the `/tools/` layer behaves deterministically and adheres to **MCP-DL v6.3** documentation-first standards.
 
-Each test enforces **MCP-DL v6.2** reproducibility principles:
+**Mission:** *Guard the infrastructure of reproducibility — because every helper script supports the frontier’s integrity.*
 
-* Deterministic I/O behavior
-* Portable fixtures
-* Validated schemas
-* Provenance logs and checksums
-
-> **Objective:** Test the glue code — because every helper supports the frontier’s integrity.
+**Core MCP-DL Pillars**
+- ✅ Deterministic I/O behavior  
+- ✅ Portable fixtures and isolated execution  
+- ✅ Validated schemas & STAC compliance  
+- ✅ Provenance logs and reproducible hashes  
 
 ---
 
-## 📦 Coverage Summary
+## 📦 Coverage Matrix
 
-| Tool               | Unit | Integration |       I/O Schema      | CLI | Notes                                           |
-| :----------------- | :--: | :---------: | :-------------------: | :-: | :---------------------------------------------- |
-| `fetch_data.py`    |   ✅  |      ✅      |      ✅ (manifest)     |  ✅  | Mocks HTTP/REST/ArcGIS downloads to `data/raw/` |
-| `convert_gis.py`   |   ✅  |      ✅      |           —           |  ✅  | Vector→GeoJSON, Raster→COG; reproject EPSG:4326 |
-| `validate_stac.py` |   ✅  |      ✅      |      ✅ (STAC 1.0)     |  ✅  | JSON Schema + STAC validation; CI logs          |
-| `checksum.py`      |   ✅  |      —      |           —           |  ✅  | SHA-256 create/verify; tamper detection         |
-| `migrate_graph.py` |   ✅  |      ✅      |           —           |  ✅  | Batched Cypher inserts; mocks Neo4j driver      |
-| `build_config.py`  |   ✅  |      ✅      | ✅ (layers/app config) |  ✅  | STAC→Web Config JSON; sync verification         |
+| Tool / Script        | Unit | Integration | Schema | CLI | Description |
+| :------------------- | :--: | :---------: | :----: | :-: | :----------- |
+| `fetch_data.py`      | ✅ | ✅ | ✅ (manifest) | ✅ | HTTP & ArcGIS mock fetch, `data/raw` downloads |
+| `convert_gis.py`     | ✅ | ✅ | — | ✅ | GeoJSON/COG conversion; EPSG:4326 reprojection |
+| `validate_stac.py`   | ✅ | ✅ | ✅ (STAC 1.0) | ✅ | JSONSchema + STAC validation |
+| `checksum.py`        | ✅ | — | — | ✅ | SHA-256 checksum creation & verify |
+| `migrate_graph.py`   | ✅ | ✅ | — | ✅ | Mocked Neo4j Cypher batch inserts |
+| `build_config.py`    | ✅ | ✅ | ✅ (layers.json) | ✅ | STAC → Web UI config builder |
 
-> All tests are deterministic, use lightweight fixtures, and output structured provenance logs.
+> All tests are **idempotent**, run with **minimal fixtures**, and log deterministic outputs.
 
 ---
 
 ## 🧱 Directory Layout
 
-```text
+```
 tools/tests/
 ├── test_fetch_data.py
 ├── test_convert_gis.py
@@ -72,68 +73,69 @@ tools/tests/
 ├── test_checksum.py
 ├── test_migrate_graph.py
 ├── test_build_config.py
-├── conftest.py              # Shared fixtures, env vars, monkeypatch setup
+├── conftest.py              # Shared fixtures and mocks
 └── fixtures/
-    ├── sources_min.json     # Minimal data/sources manifest
-    ├── tiny.geojson         # 2 features, WGS84
-    ├── tiny.shp/.dbf/.prj   # Micro shapefile set
-    ├── tiny_dem.tif         # 10×10 raster (generated dynamically)
-    ├── stac_item_min.json   # Minimal valid STAC item
-    └── layers_min.json      # Tiny valid web UI layers config
+    ├── sources_min.json
+    ├── tiny.geojson
+    ├── tiny_dem.tif
+    ├── stac_item_min.json
+    ├── layers_min.json
+    └── hashes.log
 ```
 
 ---
 
-## 🔁 Test Flow
+## 🔁 Test Pipeline
 
 ```mermaid
 flowchart TD
-  A([Unit: parsers & CLI I/O]) --> B([Integration: temp project & ETL paths])
-  B --> C([Schema: STAC · JSON Schema Validation])
-  C --> D([Graph mocks: Cypher batches + de-dup])
-  D --> E([Config build: layers/app JSON generation])
-  E --> F([Coverage · CI Reporting])
+  A["🧩 Unit Tests<br/>Core I/O & CLI Validation"] --> B["🔗 Integration<br/>ETL Mocks & Temp Paths"]
+  B --> C["🧾 Schema Validation<br/>STAC · JSON Schema"]
+  C --> D["🕸 Graph Migration<br/>Cypher Mocks & Dedup Check"]
+  D --> E["⚙ Config Build<br/>Layers/App JSON"]
+  E --> F["📊 CI Reporting<br/>Coverage & Artifacts"]
   classDef step fill:#e6f2ff,stroke:#005cc5,color:#111;
   class A,B,C,D,E,F step;
 ```
+<!-- END OF MERMAID -->
 
 ---
 
-## ▶️ Running Locally
+## ▶️ Running Tests
 
-```bash
-# Run all tools tests
+```
+# Run all tests
 pytest tools/tests -v --cov=tools --cov-report=term-missing
 
-# Run a specific test case
+# Run specific file or function
 pytest tools/tests/test_convert_gis.py::test_vector_to_geojson -q
 ```
 
-Optional environment variables:
+Environment overrides:
 
-```bash
+```
 export KFM_DATA_DIR="$(pwd)/.tmp-data"
 export KFM_STAC_DIR="$(pwd)/.tmp-stac"
 ```
 
-> Each test creates and cleans its own temp directory to avoid polluting `data/`.
+> Each test uses `tmp_path_factory` for sandboxed execution — nothing ever pollutes `/data`.
 
 ---
 
-## 🧩 Testing Techniques
+## 🧪 Techniques & Patterns
 
-* **Network Mocking:** `responses` and `monkeypatch` for HTTP and ArcGIS API calls
-* **File Isolation:** `tmp_path` and `pytest` fixtures for sandboxed read/write
-* **COG Verification:** Tiny rasters validated with `rasterio` overview inspection
-* **Neo4j Simulation:** Patches the driver/session; asserts Cypher statements only
-* **Schema Validation:** `jsonschema` + `pystac` ensure structural compliance
-* **CLI Contracts:** `--help` smoke tests, exit code checks, minimal I/O roundtrip
+| Category | Libraries | Purpose |
+| :-- | :-- | :-- |
+| **Network Mocking** | `responses`, `monkeypatch` | Simulates HTTP/ArcGIS requests |
+| **File Isolation** | `tmp_path`, `pytest` fixtures | Prevents persistent state |
+| **COG Verification** | `rasterio` | Checks CRS + internal overviews |
+| **Graph Simulation** | `pytest-mock`, `MagicMock` | Patches Neo4j driver/session |
+| **Schema Validation** | `jsonschema`, `pystac` | Verifies JSON + STAC compliance |
+| **CLI Contracts** | `subprocess`, `argparse` | Ensures CLI flags and exit codes |
 
 ---
 
-## 🧪 Example Test Patterns
-
-### 🧰 Mocking a Network Fetch
+### 🧰 Example — Mocking Fetch
 
 ```python
 import responses
@@ -147,23 +149,22 @@ def test_fetch_manifest(tmp_path):
     assert saved.exists() and saved.read_bytes() == b"FAKE"
 ```
 
-### 🗺️ Validating a COG Conversion
+### 🗺️ Example — Raster COG Verification
 
 ```python
 import rasterio
 from tools.convert_gis import convert_to_cog
 
 def test_raster_to_cog(tmp_path):
-    src = tmp_path / "tiny_dem.tif"
-    dst = tmp_path / "out.tif"
-    # helper to generate tiny raster fixture
+    src = tmp_path / "tiny.tif"
+    dst = tmp_path / "out_cog.tif"
     convert_to_cog(src, dst)
     with rasterio.open(dst) as ds:
         assert ds.crs.to_epsg() == 4326
-        assert ds.overviews(1)  # internal overviews exist
+        assert ds.overviews(1)
 ```
 
-### 📄 Checking STAC Schema Compliance
+### 📄 Example — Schema Validation
 
 ```python
 import json
@@ -177,61 +178,60 @@ def test_stac_item_min(fixtures_dir):
 
 ---
 
-## 🧠 Contributor Guidelines
+## 🧩 Contributor Guidelines
 
-* Keep fixtures **tiny** (≤ 10 KB) — generate dynamically where possible.
-* Always **seed random operations** for deterministic results.
-* Use **pytest marks**:
-
-  * `@pytest.mark.slow` → long-running tests
-  * `@pytest.mark.integration` → CI matrix jobs only
-* Log any unusual behavior to `../../docs/experiment.md`.
-* Maintain **consistent CLI UX**: `-h/--help`, exit codes, and error messaging.
-* Follow **MCP reproducibility rules**: clear inputs, outputs, and logs.
+- Keep fixtures ≤ **10 KB**, generate dynamically when feasible.  
+- Always **seed RNGs** → deterministic outputs.  
+- Use marks:  
+  - `@pytest.mark.slow` for nightly tests  
+  - `@pytest.mark.integration` for CI jobs  
+- Log anomalies to `../../docs/experiment.md`.  
+- Maintain consistent CLI UX (`--help`, exit codes).  
+- Follow **MCP-DL**: docs, code, and tests in the same commit.  
 
 ---
 
-## 🔄 CI Integration
+## 🧬 CI / CD Integration
 
-* **Workflow:** `tests.yml` executes tools tests in the CI build matrix
-* **Artifacts:** Validation logs and coverage reports uploaded on failure
-* **Coverage:** Included in **Codecov** report
-* **Security Checks:** CodeQL + Trivy scan run alongside functional tests
-* **Schema Verification:** STAC and JSON schema validation enforced automatically
+- Workflow: `.github/workflows/tests.yml`  
+- Code Coverage: via **Codecov**  
+- Security: **CodeQL** + **Trivy** scans  
+- Schema Enforcement: STAC & JSON validation required  
+- Nightly Matrix: network-bound & slow tests  
+- Artifacts: logs, hashes, coverage uploaded on failure  
 
-> Network-dependent tests are mocked or run in nightly CI to maintain reliability.
+> CI is reproducibility enforcement — every commit must pass tests before merge.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                          |
-| :--------------- | :--------------------------------------------------- |
-| **Inputs**       | Fixture datasets, sample manifests, tiny rasters     |
-| **Outputs**      | Logs, checksums, validation reports                  |
-| **Dependencies** | pytest, responses, rasterio, jsonschema, pystac      |
-| **Integrity**    | CI snapshot hashes confirm reproducibility           |
-| **Traceability** | Each test tagged to specific tool and schema version |
+| Artifact | Description |
+| :-- | :-- |
+| **Inputs** | Fixtures, minimal manifests, rasters |
+| **Outputs** | Logs, checksums, validation reports |
+| **Dependencies** | `pytest`, `responses`, `rasterio`, `jsonschema`, `pystac` |
+| **Integrity** | CI hash snapshots confirm determinism |
+| **Traceability** | Each test links to schema + tool version |
 
 ---
 
-## 🧠 MCP Compliance Checklist
+## 🧠 MCP-DL v6.3 Compliance
 
-| MCP Principle       | Implementation                                   |
-| :------------------ | :----------------------------------------------- |
-| Documentation-first | README & docstrings accompany all test files     |
-| Reproducibility     | Stable fixtures + deterministic outputs          |
-| Provenance          | Temp data logs and hashes captured per test      |
-| Accessibility       | Readable test naming + CI log summaries          |
-| Open Standards      | STAC 1.0 + JSON Schema validation                |
-| Auditability        | Full coverage reports + reproducibility metadata |
+| Principle | Implementation |
+| :-- | :-- |
+| Documentation-First | Each test documented + referenced |
+| Reproducibility | Deterministic fixtures + seeded RNG |
+| Provenance | Temp logs + checksum recording |
+| Accessibility | Readable naming, structured CI logs |
+| Open Standards | STAC 1.0, JSON Schema, OWL-Time |
+| Auditability | Codecov + reproducibility metadata |
 
 ---
 
 <div align="center">
 
-**Tools tests guard the infrastructure of reproducibility.**
-*When the helpers work flawlessly, the frontier’s data stands on solid ground.*
+**“When the helpers are flawless, the frontier stands unshakable.”**  
+*The tools testbed anchors the reproducibility of the Kansas Frontier Matrix.*
 
 </div>
-```
