@@ -15,29 +15,11 @@
 
 ---
 
-```yaml
----
-title: "KFM • LayerControls Component (web/src/components/LayerControls/)"
-version: "v1.5.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-gis"]
-tags: ["react","maplibre","stac","layers","legend","opacity","timeline","accessibility","mcp"]
-license: "MIT"
-semantic_alignment:
-  - STAC 1.0
-  - GeoJSON 1.0
-  - OWL-Time (temporal filtering semantics)
-  - WCAG 2.1 AA
----
-````
-
----
-
 ## 🧭 Overview
 
-The **LayerControls** component provides the **geospatial layer management UI** for the Kansas Frontier Matrix (KFM) map.
-Users can **toggle visibility**, **adjust opacity**, and view **dynamic legends** for raster/vector layers sourced from the **STAC catalog** (`data/stac/catalog.json`).
-LayerControls integrates directly with **LayerContext**, **TimelineContext**, and the **MapLibre** map instance to keep the map rendering synchronized with user choices and the current **time window**.
+**LayerControls** is the **geospatial layer management UI** for KFM.  
+It surfaces **STAC-indexed** raster (COG) and vector (GeoJSON) datasets as toggleable items with **opacity control**, **legends**, **metadata**, and **timeline-aware visibility**.  
+Changes propagate through **LayerContext** and **TimelineContext** to **MapView** for deterministic, reproducible rendering (MCP-DL v6.2).
 
 ---
 
@@ -45,49 +27,48 @@ LayerControls integrates directly with **LayerContext**, **TimelineContext**, an
 
 ```text
 web/src/components/LayerControls/
-├── LayerControls.tsx   # Main control panel (sections, search, groups)
-├── LayerItem.tsx       # Single layer row: toggle + opacity + metadata
-├── Legend.tsx          # STAC-driven color ramps, symbol sets, scales
-├── styles.scss         # Theming + responsive layout + focus styles
-└── __tests__/          # Jest + RTL tests (toggle, opacity, legends, a11y)
+├── LayerControls.tsx   # Panel shell: search, groups, persistence
+├── LayerItem.tsx       # Row: toggle · opacity · metadata badges
+├── Legend.tsx          # STAC-driven legends (ramps & symbols)
+├── styles.scss         # Tokens, focus states, responsive layout
+└── __tests__/          # Jest + RTL (toggle, opacity, legend, a11y)
 ```
 
 ---
 
-## ⚙️ Component Architecture
+## 🗺️ Architecture
 
 ```mermaid
 flowchart TD
-  LYR["LayerControls<br/>toggle · opacity · legend"] --> CTX["LayerContext<br/>active layers + state"]
-  LYR --> MAP["MapView<br/>(MapLibre GL JS)"]
-  LYR --> STAC["STAC Catalog<br/>(data/stac/catalog.json)"]
-  CTX --> MAP
-  CTX --> TL["TimelineContext<br/>visible time range"]
-  TL --> LYR
+  LYR["LayerControls<br/>toggle · opacity · legend"] --> LCTX["LayerContext<br/>active · opacity · order"]
+  LYR --> STAC["STAC Catalog<br/>collections · items · assets"]
+  LCTX --> MV["MapView<br/>MapLibre GL JS"]
+  LCTX --> TLX["TimelineContext<br/>start · end"]
+  TLX --> LYR
   STAC --> LYR
 %% END OF MERMAID
 ```
 
-> **Flow:** STAC metadata populates the control panel; user actions update **LayerContext**, which updates **MapView** and respects **TimelineContext** for temporal filtering.
+**Flow:** STAC metadata → UI list; user actions → LayerContext; MapView applies changes; TimelineContext gates visibility by time window.
 
 ---
 
 ## 🧩 Core Features
 
-| Feature               | Description                                                          | Data Source              |
-| :-------------------- | :------------------------------------------------------------------- | :----------------------- |
-| **Layer Toggling**    | Enable/disable raster/vector overlays                                | STAC Items               |
-| **Opacity Slider**    | Blend overlays (0–100%) for multi-layer analysis                     | MapLibre Layer API       |
-| **Dynamic Legends**   | Renders color ramps & symbols from STAC metadata                     | STAC `assets`/`links`    |
-| **Layer Metadata**    | Dataset title, description, time span, license                       | `data/stac/catalog.json` |
-| **Timeline Sync**     | Auto-hides layers outside active time window                         | `TimelineContext`        |
-| **Search & Grouping** | Filter layers by keyword and STAC tags (e.g., `treaty`, `hydrology`) | STAC `keywords`          |
-| **Persistence**       | Saves active/opacity to `localStorage` (namespaced)                  | `LayerContext`           |
-| **Accessibility**     | Keyboard focusable controls, ARIA labels, large click targets        | WCAG 2.1 AA              |
+| Feature               | Description                                                          | Data / API                |
+| :-------------------- | :------------------------------------------------------------------- | :------------------------ |
+| **Layer Toggling**    | Enable/disable raster & vector overlays                              | STAC items/assets         |
+| **Opacity Slider**    | 0–100% blending for comparative analysis                             | MapLibre paint properties |
+| **Dynamic Legends**   | Render color ramps/symbol sets from STAC metadata                    | STAC `assets.roles`       |
+| **Metadata Badges**   | Title · license · date range · keywords (theme tags)                 | STAC `properties`         |
+| **Timeline Sync**     | Auto-hides layers outside `{start,end}`                              | TimelineContext           |
+| **Search & Groups**   | Filter by keyword; group by `kfm:theme` (treaty, hydrology, hazards) | STAC keywords/properties  |
+| **Persistence**       | Namespaced `localStorage` for active list + opacity                  | LayerContext              |
+| **Accessibility**     | Keyboard operable; ARIA labels; visible focus ring                   | WCAG 2.1 AA               |
 
 ---
 
-## 💬 Example Usage
+## 💬 Reference Usage
 
 ```tsx
 import React from "react";
@@ -104,18 +85,18 @@ export function Sidebar() {
 }
 ```
 
-**Example Layer Item**
+**Layer row example**
 
 ```tsx
 <LayerItem
   id="usgs_topo_1894"
   title="USGS Historic Topographic Map (1894)"
   opacity={0.8}
-  active={true}
+  active
   year={1894}
   legend="/legends/usgs_topo_1894.png"
   onToggle={() => toggleLayer("usgs_topo_1894")}
-  onOpacityChange={(val) => setLayerOpacity("usgs_topo_1894", val)}
+  onOpacityChange={(v) => setLayerOpacity("usgs_topo_1894", v)}
 />
 ```
 
@@ -127,10 +108,10 @@ export function Sidebar() {
 export interface LayerItemProps {
   id: string;
   title: string;
-  opacity: number;          // 0.0 .. 1.0
+  opacity: number;                        // 0..1
   active: boolean;
-  year?: number | [number, number]; // single year or interval
-  legend?: string;          // URL/asset for ramp/symbols
+  year?: number | [number, number];       // single year or inclusive interval
+  legend?: string;                        // legend image or JSON ramp
   license?: string;
   onToggle: () => void;
   onOpacityChange: (opacity: number) => void;
@@ -140,12 +121,12 @@ export interface MapLayer {
   id: string;
   type: "raster" | "vector";
   title: string;
-  url: string;              // COG/GeoJSON endpoint or tile URL
+  url: string;                             // COG/GeoJSON/tiles
   opacity?: number;
-  time?: { start?: string; end?: string }; // ISO-8601, OWL-Time aligned
+  time?: { start?: string; end?: string }; // ISO-8601 (OWL-Time aligned)
   legend?: { href?: string; type?: string; title?: string };
   license?: string;
-  keywords?: string[];
+  keywords?: string[];                     // themes: treaty, hydrology, etc.
 }
 ```
 
@@ -153,116 +134,110 @@ export interface MapLayer {
 
 ## 🎨 UI / UX Design
 
-* **Layout:** Vertical accordion with collapsible legends; sections grouped by **theme** (`treaty`, `hydrology`, `hazards`, `topography`, etc.)
-* **Controls:**
-
-  * Toggle: `<input type="checkbox" role="switch" aria-label="Toggle layer">`
-  * Opacity: `<input type="range" min="0" max="100" step="1" aria-label="Opacity">`
-  * Legend: auto-rendered from STAC ramp or symbol assets
-* **Styling:** Tailwind + SCSS tokens (`styles.scss`) and **Framer Motion** for expand/collapse
-* **Themes:** Colors adapt via `ThemeContext` tokens (light/dark); accent = `--kfm-color-accent`
+- **Layout:** Accordion groups by theme; collapsible legends inline.  
+- **Controls:**
+  - Toggle: `<input type="checkbox" role="switch" aria-label="Toggle layer">`
+  - Opacity: `<input type="range" min="0" max="100" step="1" aria-label="Opacity">`
+- **Styling:** Tailwind + SCSS tokens; Framer Motion for expand/collapse.  
+- **Themes:** Light/Dark via ThemeContext (`--kfm-color-accent`, `--kfm-color-text`).
 
 ---
 
-## 🧠 Data Flow
+## 🧠 Data Flow (timeline-aware)
 
 ```mermaid
 sequenceDiagram
   participant U as User
   participant LC as LayerControls
   participant LCTX as LayerContext
-  participant MAP as MapView
-  participant STAC as STAC Catalog
   participant TL as TimelineContext
+  participant MV as MapView
+  participant STAC as STAC
 
   U->>LC: Toggle "Soil Survey (1967)"
-  LC->>LCTX: setLayerActive(id, true)
-  LCTX->>MAP: addLayer(id, sourceUrl)
-  TL-->>LC: visible range changed
-  LC->>LCTX: syncLayerVisibilityByTime(range)
-  LCTX->>MAP: update visibility/filters
-  LC->>STAC: fetch legend + metadata
-  STAC-->>LC: legend assets + properties
-  LC-->>U: show legend + summary
+  LC->>LCTX: setActive(id,true)
+  LCTX->>MV: addOrUpdateLayer(id, sourceUrl)
+  TL-->>LC: {start,end} changed
+  LC->>LCTX: reconcileByTime({start,end})
+  LCTX->>MV: setFilter(layerId, timeFilter)
+  LC->>STAC: fetch legend metadata
+  STAC-->>LC: ramp/symbols + attribution
+  LC-->>U: Legend & badges updated
 %% END OF MERMAID
 ```
 
 ---
 
-## 🧪 Testing
+## ♿ Accessibility (WCAG 2.1 AA)
 
-| Test Case               | Description                                             | Tool                  |
-| :---------------------- | :------------------------------------------------------ | :-------------------- |
-| **Layer Toggle**        | Enabling/disabling updates MapLibre sources & layers    | Jest + RTL            |
-| **Opacity Adjustment**  | Slider changes update layer paint properties            | Jest DOM              |
-| **Legend Rendering**    | Loads STAC legend assets and renders ramp/symbols       | MSW + Jest            |
-| **Timeline Sync**       | Hides layers outside `TimelineContext` range            | Mock TimelineContext  |
-| **Accessibility Audit** | Validates ARIA roles, focus order, and keyboard toggles | axe-core / Lighthouse |
-
-> **Coverage target:** ≥ **90%** lines & branches.
+- Keyboard **Tab/Shift+Tab**, **Space/Enter** toggle; sliders expose `aria-valuenow`.  
+- `role="switch"` with `aria-checked` for toggles; descriptive `aria-label` per row.  
+- Persistent **visible focus**; reduced motion honored (`prefers-reduced-motion: reduce`).  
+- CI runs **axe-core** & Lighthouse audits.
 
 ---
 
-## ♿ Accessibility (WCAG 2.1 AA)
+## 🧪 Testing
 
-* All controls are **keyboard operable** (Tab/Shift+Tab, Space/Enter)
-* **ARIA**:
+| Case                   | Expectation                                               | Tooling               |
+| :--------------------- | :-------------------------------------------------------- | :-------------------- |
+| Toggle on/off          | MapLibre layers add/remove in correct order               | Jest + RTL            |
+| Opacity changes        | Paint properties update smoothly (debounced)              | Jest DOM              |
+| Legend rendering       | STAC ramps/symbols load; labels & units present           | MSW + Jest            |
+| Timeline gating        | Layers hidden outside active range                        | RTL + mocked context  |
+| A11y audit             | No critical issues (roles/labels/contrast)                | axe-core              |
 
-  * `role="switch"` on toggles with `aria-checked`
-  * `aria-valuenow` on range sliders; descriptive `aria-label` per layer
-* **Focus**: High-contrast outline, persistent visible focus ring
-* **Reduced Motion**: Legend animations disable with `prefers-reduced-motion: reduce`
+**Coverage target:** ≥ **90%**.
 
 ---
 
 ## 🛠 Performance Notes
 
-* Batch MapLibre updates (e.g., group multiple opacity changes in one frame)
-* Debounce slider input (`requestAnimationFrame`) to reduce paint thrash
-* Lazy-load heavy legends (large PNG ramps) with intersection observers
-* Cache parsed STAC metadata in memory; persist user choices in `localStorage`
+- **Batch** MapLibre ops per frame: sources → layers → filters (avoid thrash).  
+- **Debounce** slider input with `requestAnimationFrame`.  
+- **Lazy-load** large legend assets via `IntersectionObserver`.  
+- **Cache** parsed STAC in memory; persist UI state in `localStorage`.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                                  |
-| :--------------- | :--------------------------------------------------------------------------- |
-| **Inputs**       | STAC catalog metadata, MapLibre instance, `LayerContext` & `TimelineContext` |
-| **Outputs**      | Declarative UI state → raster/vector overlays on the map                     |
-| **Dependencies** | React 18+, MapLibre GL JS, Framer Motion, TailwindCSS                        |
-| **Integrity**    | CI validates STAC schema, functional tests, a11y audits (axe-core)           |
-
----
-
-## 🧠 MCP Compliance Checklist
-
-| MCP Principle       | Implementation                                       |
-| :------------------ | :--------------------------------------------------- |
-| Documentation-first | README + TSDoc annotations                           |
-| Reproducibility     | STAC-driven configs → deterministic rendering        |
-| Open Standards      | STAC 1.0 · GeoJSON · CSS Custom Properties           |
-| Provenance          | Layer metadata (title, license, time) surfaced in UI |
-| Accessibility       | WCAG 2.1 AA validated in CI                          |
+| Artifact   | Description                                                                 |
+| :--------- | :-------------------------------------------------------------------------- |
+| Inputs     | STAC catalog, LayerContext/TimelineContext states, MapLibre instance       |
+| Outputs    | Declarative UI → synchronized map overlays (COG/GeoJSON)                   |
+| Dependencies | React 18+, MapLibre GL JS, TailwindCSS, (optional) Framer Motion        |
+| Integrity  | CI validates STAC schema, functional tests, and a11y audits (axe-core)     |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **MapView Component** — `web/src/components/MapView/README.md`
-* **TimelineView Component** — `web/src/components/TimelineView/README.md`
-* **Sidebar Component** — `web/src/components/Sidebar/README.md`
-* **Context — Layer & Timeline** — `web/src/context/README.md`
-* **STAC Catalog Overview** — `data/stac/README.md`
+- **MapView** — `web/src/components/MapView/README.md`  
+- **TimelineView** — `web/src/components/TimelineView/README.md`  
+- **Sidebar** — `web/src/components/Sidebar/README.md`  
+- **Contexts (Layer & Timeline)** — `web/src/context/README.md`  
+- **STAC Overview** — `data/stac/README.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.6.0` |
+| **Codename** | *Legend Sync & Timeline Gate Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-gis |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | STAC 1.0 · GeoJSON 1.0 · OWL-Time · WCAG 2.1 AA |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — designed and documented under **MCP-DL v6.2** for transparent, reproducible, and geospatially accurate visualization.
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — documented & delivered under **MCP-DL v6.2** for clarity, reproducibility, and accessible geospatial UX.
 
 > *“Every map layer is a chapter — LayerControls let users choose which stories to see.”*
-
-```
-```
