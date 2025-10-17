@@ -1,13 +1,13 @@
 <div align="center">
 
 # 📐 Kansas Frontier Matrix — **Standards & Governance**
+
 `docs/standards/README.md`
 
 **Mission:** Define, enforce, and version **project-wide technical, scientific, and documentation standards** for  
 the **Kansas Frontier Matrix (KFM)** — ensuring **clarity**, **reproducibility**, **interoperability**, and **long-term integrity**  
 across every dataset, model, pipeline, and interface under the **Master Coder Protocol (MCP)**.
 
-</div>
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
@@ -17,11 +17,12 @@ across every dataset, model, pipeline, and interface under the **Master Coder Pr
 [![FAIR Principles](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-2ea44f)](https://www.go-fair.org/fair-principles/)
 [![License CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
 
----
+</div>
 
+---
 title: "📐 Kansas Frontier Matrix — Standards & Governance"
 document_type: "README"
-version: "v2.6.4"
+version: "v2.6.6"
 last_updated: "2025-10-17"
 created: "2024-11-02"
 owners: ["@kfm-architecture", "@kfm-data", "@kfm-security"]
@@ -39,11 +40,6 @@ semantic_alignment:
 provenance:
   workflow_pin_policy: "actions pinned by tag or SHA"
   artifact_retention_days: 90
-
----
-
-
-
 ---
 
 ## 🎯 Purpose
@@ -216,7 +212,7 @@ flowchart TD
 
 | Field | Value |
 | :-- | :-- |
-| **Version** | v2.6.4 |
+| **Version** | v2.6.6 |
 | **Last Updated** | 2025-10-17 |
 | **Maturity** | Production |
 | **Owners** | @kfm-architecture · @kfm-data · @kfm-security |
