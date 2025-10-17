@@ -2,19 +2,19 @@
 
 # ⚙️ **Kansas Frontier Matrix — CI/CD Workflows**
 
-**Directory:** `.github/workflows/`  
-**Mission:** Orchestrate **validation, security, data governance, release/versioning, and deployment** for  
+**Directory:** `.github/workflows/`
+**Mission:** Orchestrate **validation, security, data governance, release/versioning, and deployment** for
 **Kansas Frontier Matrix (KFM)** — delivering a **reproducible**, **auditable**, **secure**, and **standards-compliant** automation framework.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)  
-[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-validation-workflows)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)  
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)  
-[![Dependency Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)  
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)  
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue.svg)](../../docs/)  
-[![SLSA Provenance](https://img.shields.io/badge/SLSA-provenance-purple)](./provenance.yml)  
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
+[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-validation-workflows)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)
+[![Dependency Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue.svg)](../../docs/)
+[![SLSA Provenance](https://img.shields.io/badge/SLSA-provenance-purple)](./provenance.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
 
 </div>
@@ -23,19 +23,19 @@
 
 ## 📚 Overview
 
-This directory defines all **GitHub Actions** that power the **KFM CI/CD** system.  
+This directory defines all **GitHub Actions** that power the **KFM CI/CD** system.
 Every workflow follows **MCP-DL v6.3** — ensuring runs are:
 
-🧾 **Documented** · 🔍 **Traceable** · 🔒 **Secure** · ♻️ **Reproducible** · 🧮 **Verifiable** · 🏷️ **Versioned**
+🧒 **Documented** · 🔍 **Traceable** · 🔐 **Secure** · ♻️ **Reproducible** · 🧮 **Verifiable** · 🍿️ **Versioned**
 
 **Automation Domains**
 
-- **Validation** — STAC catalog · JSON Schema · link checks · checksum integrity  
-- **Security** — CodeQL · Trivy · Dependency Review · SBOM (SPDX) · SARIF reports  
-- **Data Ingestion** — Scheduled fetch via `data/sources/*.json` + provenance  
-- **Build & Deploy** — Docs/site (GitHub Pages) · preview & prod  
-- **Provenance** — SLSA attestations · signing · retention policies  
-- **Governance** — Auto-merge · required checks · SemVer releases
+* **Validation** — STAC catalog · JSON Schema · link checks · checksum integrity
+* **Security** — CodeQL · Trivy · Dependency Review · SBOM (SPDX) · SARIF reports
+* **Data Ingestion** — Scheduled fetch via `data/sources/*.json` + provenance
+* **Build & Deploy** — Docs/site (GitHub Pages) · preview & prod
+* **Provenance** — SLSA attestations · signing · retention policies
+* **Governance** — Auto-merge · required checks · SemVer releases
 
 > **Pinning Policy:** All actions are **pinned by tag or commit SHA** for deterministic, reproducible builds.
 
@@ -57,7 +57,7 @@ Every workflow follows **MCP-DL v6.3** — ensuring runs are:
 ├── release.yml             # SemVer tagging, notes, artifact bundling
 ├── provenance.yml          # SLSA provenance attestations / signing
 └── auto-merge.yml          # Policy-gated auto-merge on green checks
-````
+```
 
 > ⚠️ If filenames change, update **badges**, **required checks**, and **docs references** accordingly.
 
@@ -92,14 +92,13 @@ flowchart TD
   E --> F["Maintainer Approval / Auto-Merge"]
   F --> G["Release (SemVer) + Notes + SBOM"]
   G --> H["SLSA Provenance + Signing + Retention"]
-%% END OF MERMAID
 ```
 
 ---
 
 ## ⚙️ Design Patterns
 
-### 🧩 Minimal Permissions (Least Privilege)
+### 🧱 Minimal Permissions (Least Privilege)
 
 ```yaml
 permissions:
@@ -117,7 +116,7 @@ permissions:
 # Cloud: trust GitHub OIDC issuer; map repo/env to deploy role
 ```
 
-### 🚦 Concurrency (Cancel Redundant Runs)
+### ⚡ Concurrency (Cancel Redundant Runs)
 
 ```yaml
 concurrency:
@@ -125,7 +124,7 @@ concurrency:
   cancel-in-progress: true
 ```
 
-### ⚡ Caching (pip + pre-commit)
+### 🥪 Caching (pip + pre-commit)
 
 ```yaml
 - uses: actions/cache@v4
@@ -156,7 +155,7 @@ on:
       - '.github/workflows/**'
 ```
 
-### 🏷️ Environments & Approvals
+### 🌿 Environments & Approvals
 
 ```yaml
 environment:
@@ -168,7 +167,7 @@ environment:
 
 ## 🔐 Secrets & Environment Variables
 
-| 🔑 Secret/Var            | 🧰 Used by       | 📝 Purpose             | 🔒 Notes                                          |
+| 🔑 Secret/Var            | 🛠️ Used by      | 📝 Purpose             | 🔒 Notes                                          |
 | ------------------------ | ---------------- | ---------------------- | ------------------------------------------------- |
 | `PAGES_TOKEN` / `GH_PAT` | `site.yml`       | Pages deploy           | Store in Actions → Secrets. Never commit creds.   |
 | `DATA_API_KEY_*`         | `fetch.yml`      | External data API auth | One per provider; least-privilege read-only.      |
@@ -177,9 +176,9 @@ environment:
 
 ---
 
-## 🧮 MCP Compliance Matrix
+## 🧱 MCP Compliance Matrix
 
-| 🧭 Principle        | 🧩 Implementation                                            |
+| 🧭 Principle        | 🧱 Implementation                                            |
 | ------------------- | ------------------------------------------------------------ |
 | Documentation-First | Header docs, `x-kfm-version` metadata, workflow annotations  |
 | Reproducibility     | Pinned actions, deterministic builds, checksum validation    |
@@ -202,7 +201,7 @@ environment:
 
 ---
 
-## 🧰 Common CLI (CI & Local)
+## 🛠️ Common CLI (CI & Local)
 
 ```bash
 # 🔧 Build documentation and site
@@ -241,7 +240,7 @@ gh run download --name "stac-report.json"
 
 ## 🕓 Version History
 
-| 🏷️ Version | 📅 Date    | ✍️ Summary                                                |
+| 🍿️ Version | 🗓️ Date   | ✍️ Summary                                                |
 | ----------- | ---------- | --------------------------------------------------------- |
 | v2.5.1      | 2025-10-15 | MCP-DL v6.3 alignment · fenced Mermaid · minor copy edits |
 | v2.5.0      | 2025-10-15 | Major upgrade for GFM fidelity · table rendering fixes    |
@@ -261,4 +260,3 @@ CI/CD under `.github/workflows/` ensures every dataset, model, and site build is
 🧭 Every run leaves a trail. Every artifact is proven.
 
 </div>
-```
