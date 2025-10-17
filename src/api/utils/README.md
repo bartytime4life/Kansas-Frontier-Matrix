@@ -20,7 +20,7 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — API Utilities"
-version: "v1.6.2"
+version: "v1.7.0"
 last_updated: "2025-10-17"
 owners: ["@kfm-architecture", "@kfm-data"]
 tags: ["api","utils","neo4j","cache","logging","auth","errors","metrics","pagination","mcp","semver","ci"]
@@ -143,7 +143,7 @@ def log_request(path: str, status: int, start: float, meta: dict | None = None):
     })
 ```
 
-Middleware:
+**FastAPI middleware:**
 ```python
 from fastapi import FastAPI, Request
 from src.api.utils.logger import log_request
@@ -172,7 +172,7 @@ def require_api_key(x_api_key: str | None = Header(default=None)):
         raise HTTPException(status_code=401, detail="Invalid API key")
 ```
 
-Usage:
+**Route usage:**
 ```python
 from fastapi import Depends
 @router.get("/secure")
@@ -198,7 +198,7 @@ async def api_error_handler(_: Request, exc: APIError):
     })
 ```
 
-Register in `main.py`:
+**Register:**
 ```python
 from src.api.utils.errors import APIError, api_error_handler
 app.add_exception_handler(APIError, api_error_handler)
@@ -253,6 +253,8 @@ def observe(route: str, method: str, code: int, seconds: float):
     LAT.labels(route, method).observe(seconds)
 ```
 
+Expose `/metrics` via `prometheus_client` ASGI if needed.
+
 ---
 
 ## 🧪 Example Route Using Utils
@@ -301,6 +303,7 @@ def list_events(request: Request, limit: int = 50, offset: int = 0):
 
 | Version | Date | Type | Notes |
 | :------ | :--- | :-- | :---- |
+| v1.7.0 | 2025-10-17 | Added | Versioning YAML, improved header/badges, clarified usage blocks, enhanced acceptance checklist. |
 | v1.6.2 | 2025-10-17 | Fixed | Clean markdown format; unified examples; single-block delivery. |
 | v1.6.1 | 2025-10-17 | Improved | Acceptance checklist + CI-ready sections. |
 | v1.6.0 | 2025-10-16 | Added | Metrics, pagination, structured logs, and caching improvements. |
