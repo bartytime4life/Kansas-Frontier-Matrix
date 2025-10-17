@@ -1,210 +1,392 @@
-name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
-title: "[Feature]: <feature name> — <component/domain>"
+name: "🗃️ Data Request"
+description: "Propose a new dataset/integration — documented, provenanced, and reproducible"
+title: "[Data]: <dataset name> — <domain>"
 labels:
-  - enhancement
+  - data-request
   - needs-triage
 assignees:
-  - kfm-architecture
   - kfm-data
+  - kfm-architecture
 
 # KFM metadata
-# version: v2.3.1
-# last_updated: 2025-10-16
-# owners: @kfm-architecture @kfm-data
+# version: v2.2.0
+# last_updated: 2025-10-13
+# owners: @kfm-data @kfm-architecture
 
 body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Feature Overview
-        *“Every Feature Builds the Future — Every Change is Reproducible.”*
+        ## 🧞 Dataset Overview
+        *“Every Dataset Documented. Every Source Proven. Every Integration Reproducible.”*
 
   - type: input
-    id: feature_name
+    id: dataset_name
     attributes:
-      label: Feature Name
-      placeholder: "Slope Classification Enhancement for Terrain Pipeline"
+      label: Dataset Name
+      placeholder: "USGS 3DEP LiDAR DEM (Kansas), NOAA Drought Monitor 1990–2024"
     validations:
       required: true
 
   - type: input
-    id: component
+    id: source_org
     attributes:
-      label: Target Module / Component
-      placeholder: "terrain_pipeline.py | web/config/layers.json | graph_ingest.py"
+      label: Primary Source / Organization
+      placeholder: "USGS, NOAA, NASA, USDA, KHS, FEMA, DASC"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data_type
+    attributes:
+      label: Data Type
+      options:
+        - Raster
+        - Vector
+        - Tabular
+        - Text
+        - NetCDF
+        - Mixed
+    validations:
+      required: true
+
+  - type: dropdown
+    id: license
+    attributes:
+      label: License
+      options:
+        - Public Domain
+        - CC-BY 4.0
+        - CC0
+        - Restricted
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: spatial_coverage
+    attributes:
+      label: Spatial Coverage
+      placeholder: "Statewide Kansas; Flint Hills; Kansas River Basin; Multi-State"
+    validations:
+      required: true
+
+  - type: input
+    id: temporal_range
+    attributes:
+      label: Temporal Range
+      placeholder: "1850–2025; 1991–2020 normals; daily (1980–present)"
+    validations:
+      required: true
+
+  - type: input
+    id: access_url
+    attributes:
+      label: Access URL / API Endpoint
+      placeholder: "Direct download, REST API, STAC catalog URL"
+    validations:
+      required: true
+
+  - type: input
+    id: citation
+    attributes:
+      label: Citation / DOI / Reference
+      placeholder: "DOI:10.5066/P9Z3D4AR or dataset page URL"
+
+  - type: input
+    id: steward
+    attributes:
+      label: Contact / Data Steward
+      placeholder: "Maintainer email or org contact (if applicable)"
+
+  - type: markdown
+    attributes:
+      value: "## 🌐 Data Source Provenance"
+
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Source Provenance
+      description: "Official source link(s), screenshots/quotes, reliability notes"
+      placeholder: |
+        - Official source URL(s)
+        - Why trustworthy (QA/QC, peer-review, agency standards)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: access_method
+    attributes:
+      label: Access Method
+      options:
+        - REST API
+        - HTTP/HTTPS
+        - FTP
+        - Open Data Portal
+        - Bulk Download
+        - STAC
+    validations:
+      required: true
+
+  - type: textarea
+    id: formats
+    attributes:
+      label: Data Format(s)
+      placeholder: "GeoTIFF, Shapefile, GeoJSON, CSV, NetCDF, Parquet"
+    validations:
+      required: true
+
+  - type: input
+    id: crs
+    attributes:
+      label: Coordinate System / Projection (CRS)
+      placeholder: "EPSG:4326 WGS84; EPSG:26914 NAD83 Kansas South; mixed → convert to 4326"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: update_frequency
+    attributes:
+      label: Update Frequency
+      options:
+        - Real-Time
+        - Daily
+        - Weekly
+        - Monthly
+        - Quarterly
+        - Annual
+        - Irregular/On-Demand
+        - Static/Historical
+    validations:
+      required: true
+
+  - type: textarea
+    id: quality
+    attributes:
+      label: Quality Assurance / QA References
+      placeholder: "NOAA QA/QC, USGS quality statement, peer-reviewed documentation"
+
+  - type: markdown
+    attributes:
+      value: "## 🤩 Intended Integration"
+
+  - type: input
+    id: pipeline
+    attributes:
+      label: Pipeline Target
+      placeholder: "hydrology_pipeline.py, climate_etl.py, src/pipelines/text/ocr_nlp.py"
     validations:
       required: true
 
   - type: dropdown
     id: domain
     attributes:
-      label: Domain / Area of Impact
+      label: Data Domain
       options:
         - Terrain
         - Hydrology
-        - Climate
         - Hazards
+        - Climate
         - Landcover
-        - Knowledge Graph
-        - Web UI
-        - API
-        - Text / AI / NLP
-        - Metadata / Governance
-        - CI/CD
-      multiple: true
-    validations:
-      required: true
-
-  - type: input
-    id: stakeholder
-    attributes:
-      label: Feature Owner / Stakeholder
-      placeholder: "@kfm-data · @kfm-web · project-leads"
-    validations:
-      required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🔍 Problem & Rationale"
-
-  - type: textarea
-    id: problem
-    attributes:
-      label: Current Limitation or Problem
-      placeholder: "Describe the current limitation or user need driving this feature."
-    validations:
-      required: true
-
-  - type: textarea
-    id: rationale
-    attributes:
-      label: Motivation & Rationale
-      placeholder: |
-        - Aligns with roadmap milestone
-        - Fills UI accessibility gap
-        - Enhances knowledge graph linking
-    validations:
-      required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🧠 Proposed Implementation"
-
-  - type: textarea
-    id: proposal
-    attributes:
-      label: Proposed Implementation Details
-      description: "Describe the logic, workflow changes, files affected, dependencies."
-      placeholder: |
-        - Add CLI flag to terrain_pipeline.py
-        - Modify layers.json with slope_class layer
-        - Update ADR + add unit test coverage
-    validations:
-      required: true
-
-  - type: checkboxes
-    id: change_types
-    attributes:
-      label: Type of Change
-      options:
-        - label: New ETL pipeline/module
-        - label: Graph schema/API expansion
-        - label: Web/timeline interaction enhancement
-        - label: Visualization config/UI component
-        - label: Documentation/ADR/SOP update
-        - label: Other
-
-  - type: markdown
-    attributes:
-      value: "## 📐 Metrics / Expected Outcome"
-
-  - type: textarea
-    id: outcomes
-    attributes:
-      label: Expected Behavior / KPIs
-      placeholder: |
-        | Metric       | Target                       |
-        |--------------|------------------------------|
-        | Accuracy     | Entity linking precision >90% |
-        | Performance  | +<5% runtime overhead        |
-        | Usability    | Feature toggled in UI        |
-      render: markdown
+        - Text
+        - Tabular
+        - Other
     validations:
       required: true
 
   - type: dropdown
-    id: impact_level
+    id: stac_linkage
     attributes:
-      label: Expected Impact Level
+      label: STAC Linkage
       options:
-        - "🟩 Minor"
-        - "🟨 Moderate"
-        - "🟧 Major"
-        - "🔴 Critical"
+        - "Yes — new Collection + Items"
+        - "Yes — Items in existing Collection"
+        - "No/Not applicable"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: visualization
+    attributes:
+      label: Visualization Layer
+      options:
+        - Web Map
+        - Timeline
+        - Story Map
+        - 3D Scene
+        - API only
+    validations:
+      required: true
+
+  - type: input
+    id: ontology
+    attributes:
+      label: Semantic Ontology Tag(s)
+      placeholder: "CIDOC CRM class (E73), OWL-Time interval, PeriodO ID"
+
+  - type: markdown
+    attributes:
+      value: "## 🤠 Metadata & Schema"
+
+  - type: textarea
+    id: attributes_cols
+    attributes:
+      label: Attributes / Columns
+      description: "List key attributes (e.g., elevation, slope, drought_index)"
     validations:
       required: true
 
   - type: textarea
-    id: downstream
+    id: units
     attributes:
-      label: Downstream Effects
-      description: "Describe expected effects on STAC, pipelines, UI, tests, etc."
-      placeholder: |
-        - Changes STAC schema version
-        - Requires new test fixtures
-        - Impacts performance gate
+      label: Units
+      placeholder: "m, °C, %, index, class code"
+    validations:
+      required: true
+
+  - type: input
+    id: schema_url
+    attributes:
+      label: Schema Source / URL
+      placeholder: "Link to metadata XML/JSON, or documentation"
+
+  - type: input
+    id: encoding
+    attributes:
+      label: Encoding / Format
+      placeholder: "UTF-8 / GeoTIFF / EPSG:4326"
+    validations:
+      required: true
+
+  - type: textarea
+    id: example_snippet
+    attributes:
+      label: Example Snippet
+      description: "Small CSV/JSON/GeoJSON feature example"
+      render: json
+
+  - type: dropdown
+    id: metadata_standard
+    attributes:
+      label: Metadata Standard
+      options:
+        - ISO 19115
+        - FGDC
+        - DCAT
+        - STAC 1.0.x
+        - Other/Unknown
+    validations:
+      required: true
 
   - type: markdown
     attributes:
-      value: "## 📜 Governance / Compliance"
+      value: "## 🧱 Validation Requirements"
+
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Pre-Integration Checklist
+      options:
+        - label: Verify license & usage rights
+          required: true
+        - label: Confirm accessibility (API reachable, files downloadable)
+          required: true
+        - label: Compute SHA-256 checksum(s) for all assets
+          required: true
+        - label: Validate CRS (convert to EPSG:4326 where needed)
+          required: true
+        - label: Inspect schema & attribute completeness
+          required: true
+        - label: Generate thumbnail/preview for docs
+          required: true
+        - label: Create STAC Item/Collection under `data/stac/`
+          required: true
+        - label: Validate STAC via `make stac-validate`
+          required: true
+        - label: Add/Update `data/sources/<domain>/<source>.json` manifest
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Implementation Plan (Optional)"
+
+  - type: textarea
+    id: impl_plan
+    attributes:
+      label: Steps & Owners
+      placeholder: |
+        1) Review license/provenance — Owner …
+        2) Fetch to data/raw/<domain>/ — Owner …
+        3) Manifest in data/sources/<domain>/ — Owner …
+        4) Checksums — Owner …
+        5) Integrate (make <domain>) — Owner …
+        6) STAC generation/validation — Owner …
+        7) Web/timeline config — Owner …
+
+  - type: markdown
+    attributes:
+      value: "## 🧭 Versioning & Governance"
 
   - type: textarea
     id: versioning
     attributes:
-      label: Versioning Summary
+      label: Versioning Summary (SemVer + STAC)
       placeholder: |
-        | Component             | Current | Proposed | Reason         |
-        |------------------------|---------|----------|----------------|
-        | ETL Script             | v1.3.0  | v1.4.0   | logic addition |
-        | Graph/API Schema       | v1.0.0  | v1.1.0   | field added    |
-        | Web Config             | v1.2.1  | v1.2.2   | toggle added   |
-        | Repo Release (SemVer)  | v2.4.0  | v2.5.0   | feature bump   |
+        | Scope                  | Current | Proposed | Reason / Trigger    |
+        | :---------------------- | :------ | :------- | :------------------ |
+        | Dataset (STAC)          | v1.0.0  | v1.1.0   | new layer added     |
+        | Domain Pipeline         | v2.1.0  | v2.2.0   | ETL updated         |
+        | Repo Release (SemVer)   | v1.4.0  | v1.5.0   | dataset integration |
+        | Data Source Manifest    | v1.0.0  | v1.0.1   | provenance update   |
       render: markdown
+
+  - type: markdown
+    attributes:
+      value: "## ✅ MCP Compliance"
 
   - type: checkboxes
     id: mcp
     attributes:
-      label: MCP Compliance
+      label: MCP Principles
       options:
-        - label: Documentation-first — described & linked to ADR/SOP
+        - label: Documentation-first — dataset fully described w/ provenance & metadata
           required: true
-        - label: Reproducible — deterministic steps + outputs
+        - label: Reproducibility — deterministic retrieval & checksum validation defined
           required: true
-        - label: Provenance — traceable files, config, commit hashes
+        - label: Open Standards — interoperable formats (COG/CSV/GeoJSON/NetCDF)
           required: true
-        - label: Versioned — STAC/schema/ETL or API updated
+        - label: Provenance — manifest, STAC, and log lineage maintained
           required: true
-        - label: Audit-ready — tests/metrics provided
+        - label: Auditability — CI validation steps reproducible & archived
+          required: true
+        - label: Versioning — STAC `properties.version` & repo SemVer updated
           required: true
 
   - type: markdown
     attributes:
-      value: "## 🔗 References & Notes"
+      value: "## 🤩 Related Datasets / Attachments"
 
   - type: textarea
-    id: references
+    id: related
     attributes:
-      label: Links / Related PRs / Docs
+      label: Related Datasets & References
       placeholder: |
-        - Related Issue: #456
-        - Docs: docs/sop/terrain_pipeline.md
-        - PRs: #789
+        - Linked Source: data/sources/hydro/usgs_nhd_flowlines.json
+        - Complementary Layers: NLCD Landcover, NHD Waterbodies
+        - Dependent Models: Flood Risk, Soil Erosion, Vegetation Index
+        - External References: (studies, portals)
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: "Small data samples, schema files, preview thumbnails"
+      placeholder: |
+        example.json — schema preview  (/data/sources/climate/example.json)
+        preview.png  — docs thumbnail   (/docs/media/previews/climate_dataset.png)
 
   - type: textarea
     id: notes
     attributes:
       label: Additional Notes
-      placeholder: |
-        - Diagrams, screenshots, mockups
-        - Risk flags, review blockers, etc.
+      description: "Visuals, sample maps, metadata screenshots, or priority rationale"
