@@ -15,37 +15,14 @@
 
 ---
 
-```yaml
----
-title: "KFM • AI Assistant Component (web/src/components/AIAssistant/)"
-version: "v1.5.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-ai", "@kfm-web"]
-tags: ["ai","assistant","nlp","knowledge-graph","q&a","react","mcp","accessibility"]
-license: "MIT"
-semantic_alignment:
-  - CIDOC CRM (entity linkage)
-  - PROV-O (source provenance)
-  - WCAG 2.1 AA
-  - OWL-Time (temporal context reasoning)
----
-````
-
----
-
 ## 🧭 Overview
 
-The **AI Assistant** component powers the **conversational exploration interface** of the Kansas Frontier Matrix (KFM) Web Application.
-It allows users to query the historical **knowledge graph** in plain English, generating **context-aware answers** with citations and interactive links to people, places, and events on the **map** and **timeline**.
+The **AI Assistant** enables **conversational exploration** of the KFM knowledge graph.  
+Users ask natural-language questions; the Assistant responds with **context-aware answers**, **citations**, and **entity links** that can highlight **MapView** features and focus **TimelineView** intervals.
 
-This module integrates with:
+**Principles (MCP-DL v6.2):** explainability, provenance, semantic alignment, and accessible conversational UX.
 
-* `/api/ask` — AI model inference and answer generation
-* `/api/entity/{id}` — entity metadata retrieval
-* `AIContext` — stores conversation history, streaming responses, and context state
-* `MapView` and `TimelineView` — for dynamic highlighting of entities mentioned in answers
-
-Built according to **MCP-DL v6.2**, it emphasizes **explainable AI**, **provenance transparency**, and **accessible conversational UX**.
+> *“Every answer tells a story — the Assistant turns Kansas’s data into dialogue.”*
 
 ---
 
@@ -53,94 +30,101 @@ Built according to **MCP-DL v6.2**, it emphasizes **explainable AI**, **provenan
 
 ```text
 web/src/components/AIAssistant/
-├── AIAssistant.tsx        # Main chat container + layout
-├── ChatInput.tsx          # Text input and submission handler
-├── ChatMessage.tsx        # Renders user and AI messages with animation
-├── AICitation.tsx         # Displays linked entities and sources
-├── styles.scss            # Theming, layout, animations, markdown rendering
-└── __tests__/             # Jest + RTL tests (message flow, entity linking, accessibility)
+├── AIAssistant.tsx        # Main chat container + layout & streaming glue
+├── ChatInput.tsx          # Text input, hotkeys, submit, IME-friendly
+├── ChatMessage.tsx        # Message bubbles (user/AI) with markdown render
+├── AICitation.tsx         # Source list (title · license · entity jump)
+├── styles.scss            # Tokens, layout, motion, markdown rules
+└── __tests__/             # Jest + RTL (streaming, linking, a11y)
 ```
 
 ---
 
-## ⚙️ Component Architecture
+## 🧩 Architecture
 
 ```mermaid
 flowchart TD
-  UI["ChatInput<br/>user query"] --> API["AI API<br/>POST /ask"]
-  API --> RES["AIResponse<br/>text · citations · entities"]
-  RES --> MSG["ChatMessage<br/>renders formatted text"]
-  MSG --> CITE["AICitation<br/>links to sources/entities"]
-  CITE --> MAP["MapView<br/>highlight related entities"]
-  CITE --> TL["TimelineView<br/>focus on linked events"]
-  RES --> HIST["AIContext<br/>preserves chat history"]
+  IN["ChatInput<br/>user query"] --> ASK["POST /api/ask"]
+  ASK --> RESP["AIResponse<br/>text · citations · entities · confidence"]
+  RESP --> MSG["ChatMessage<br/>markdown + streaming"]
+  MSG --> CITE["AICitation<br/>sources · licenses · open in panel"]
+  CITE --> MAP["MapView<br/>highlight linked entities"]
+  CITE --> TL["TimelineView<br/>focus linked intervals"]
+  RESP --> CTX["AIContext<br/>history · status · errors"]
 %% END OF MERMAID
 ```
 
-> The Assistant serves as the cognitive layer between human interaction and the KFM graph — turning data into dialogue and insights.
+---
+
+## 🔍 Core Features
+
+| Feature                  | Description                                                               | Backend / Contract      |
+| :----------------------- | :------------------------------------------------------------------------ | :---------------------- |
+| **Conversational Q&A**   | Natural language questions with grounded answers                          | `POST /api/ask`         |
+| **Entity Linking**       | Detects People/Places/Events/Documents and links to panels & map          | AIResponse.entities     |
+| **Citations Panel**      | Lists sources with license and direct entity/document jumps               | AIResponse.citations    |
+| **Streaming Output**     | Token/segment streaming for responsive UX                                 | FastAPI Streaming       |
+| **Confidence Signals**   | Displays confidence & evidence strength                                   | AIResponse.confidence   |
+| **Context Sync**         | Highlights map features; focuses timeline intervals                       | Map/Timeline contexts   |
+| **Accessibility**        | Keyboard-complete, screen-reader safe, reduced-motion aware               | WCAG 2.1 AA             |
 
 ---
 
-## 🧩 Key Features
-
-| Feature                  | Description                                                    | Backend Link        |
-| :----------------------- | :------------------------------------------------------------- | :------------------ |
-| **Conversational Input** | Accepts natural-language questions about Kansas history        | `/api/ask`          |
-| **Knowledge Summaries**  | Retrieves and formats entity-level summaries                   | `/api/entity/{id}`  |
-| **Entity Linking**       | Detects and links entities (people, places, events) in AI text | Neo4j Graph         |
-| **Citations Panel**      | Displays sources and provenance metadata                       | AIResponse metadata |
-| **AI Confidence**        | Shows model confidence levels and evidence strength            | Response metadata   |
-| **Streaming Support**    | Supports real-time text streaming from FastAPI backend         | `StreamingResponse` |
-| **Accessibility**        | Fully keyboard-accessible and screen reader compliant          | WCAG 2.1 AA         |
-
----
-
-## 💬 Example Usage
+## 💬 Reference Implementation (concise)
 
 ```tsx
-import React from "react";
-import { AIAssistant } from "./AIAssistant";
+import React, { useState } from "react";
+import { useFetch } from "../../hooks/useFetch";
+import "./styles.scss";
 
-export default function RightPanel() {
+export function AIAssistant() {
+  const [prompt, setPrompt] = useState("");
+  const { data, loading, error } = useFetch(
+    prompt ? `/api/ask?stream=1&prompt=${encodeURIComponent(prompt)}` : null
+  );
+
   return (
-    <aside className="ai-panel" role="complementary" aria-label="AI Assistant Panel">
-      <AIAssistant />
-    </aside>
+    <section className="ai-assistant" role="complementary" aria-label="AI Assistant">
+      <form
+        onSubmit={(e) => { e.preventDefault(); setPrompt((e.target as any).q.value); }}
+        className="ai-input"
+      >
+        <label htmlFor="q" className="sr-only">Ask a question</label>
+        <input id="q" name="q" placeholder="Ask about treaties, rivers, droughts…" />
+        <button type="submit">Ask</button>
+      </form>
+
+      <div className="ai-messages" aria-live="polite">
+        {loading && <div className="msg loading">Thinking…</div>}
+        {error && <div className="msg error">Unable to get an answer.</div>}
+        {data?.messages?.map((m: any, i: number) => (
+          <div key={i} className={`msg ${m.role}`}>{m.text}</div>
+        ))}
+      </div>
+    </section>
   );
 }
 ```
 
 ---
 
-## 🧠 Interaction Flow
-
-```mermaid
-sequenceDiagram
-  participant U as User
-  participant A as AIAssistant
-  participant S as Server (FastAPI)
-  participant G as Graph (Neo4j)
-
-  U->>A: "Show me droughts in western Kansas during the 1930s"
-  A->>S: POST /api/ask
-  S->>G: Query drought events (1930–1940, region='Kansas')
-  G-->>S: Return entities + sources
-  S-->>A: AIResponse { text, entities, citations }
-  A-->>U: "The Dust Bowl drought (1930–1939) devastated western Kansas..." + map highlights
-%% END OF MERMAID
-```
-
----
-
-## 🧩 Data Model (TypeScript)
+## 🧠 Data Model (TypeScript)
 
 ```ts
 export interface AIResponse {
-  text: string;                     // AI-generated answer
-  citations?: Citation[];           // Linked sources or datasets
-  entities?: EntityReference[];     // Map/timeline entities
-  confidence?: number;              // Model confidence score
-  timestamp: string;                // ISO 8601 UTC time
+  text: string;                          // final or partial text (stream segments supported)
+  citations?: Citation[];                // sources/datasets with titles & licenses
+  entities?: EntityReference[];          // linked graph entities for map/timeline
+  confidence?: number;                   // 0..1 model confidence
+  timestamp: string;                     // ISO 8601
+}
+
+export interface Citation {
+  id: string;
+  title: string;
+  sourceUrl?: string;
+  license?: string;                      // e.g., CC-BY 4.0
+  excerpt?: string;
 }
 
 export interface EntityReference {
@@ -148,113 +132,136 @@ export interface EntityReference {
   type: "Person" | "Place" | "Event" | "Document";
   label: string;
   coordinates?: [number, number];
+  bbox?: [number, number, number, number];
 }
 ```
 
-These interfaces (defined in `web/src/types/ai.d.ts`) ensure strict alignment between backend responses and frontend display logic.
+*Types live in `web/src/types/ai.d.ts` and align with KFM’s graph schema (CIDOC CRM · PROV-O · OWL-Time).*
+
+---
+
+## 🧭 Interaction Flow
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant C as ChatInput
+  participant S as Server (/api/ask)
+  participant G as Graph
+  participant P as AIAssistant
+
+  U->>C: Question
+  C->>S: POST /api/ask (stream=1)
+  S->>G: Resolve entities, docs, time context
+  G-->>S: Entities + sources
+  S-->>P: stream(text segments, entities, citations, confidence)
+  P-->>U: Renders streaming text, links, and source panel
+%% END OF MERMAID
+```
 
 ---
 
 ## 🎨 UI & Styling
 
-| Element              | Description                                                 |
-| :------------------- | :---------------------------------------------------------- |
-| **Layout**           | Two-column responsive chat panel (Messages · Citations)     |
-| **Animations**       | `Framer Motion` fade and slide transitions for message flow |
-| **Theme**            | Adaptive to `ThemeContext` (dark/light palette)             |
-| **Markdown Support** | `Markdown-it` renders rich text, lists, and links           |
-| **Scroll Behavior**  | Infinite scroll + auto-anchor to latest message             |
-| **Typography**       | Readable at 16px+ base, line height ≥ 1.6, contrast ≥ 4.5:1 |
-
-Example SCSS:
+| Aspect              | Notes                                                                 |
+| :------------------ | :-------------------------------------------------------------------- |
+| **Layout**          | Messages column + citations pane (stacks on mobile)                   |
+| **Markdown**        | Sanitized render; code/quote/list support                             |
+| **Theme**           | Adapts to light/dark tokens from `ThemeContext`                       |
+| **Motion**          | Framer Motion for enter/appear; auto-disabled on PRM                  |
+| **Scroll**          | Auto-scroll to latest; “jump to newest” affordance for long threads   |
 
 ```scss
-.ai-panel {
-  background: var(--kfm-color-surface);
-  color: var(--kfm-color-text);
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid var(--kfm-color-muted);
-}
-
-.message {
-  padding: 0.75rem 1rem;
-  animation: fadeInUp 0.3s ease;
-}
+.ai-assistant { display:flex; flex-direction:column; gap:.75rem; }
+.ai-messages { overflow:auto; max-height: calc(100vh - 260px); }
+.msg.ai { background: var(--kfm-color-surface); border-left: 3px solid var(--kfm-color-accent); }
 ```
 
 ---
 
 ## ♿ Accessibility (WCAG 2.1 AA)
 
-* **Keyboard Shortcuts:**
+- **Keyboard:** `Alt+A` focus panel; `Enter` submit; `Esc` clear.  
+- **Live Region:** `aria-live="polite"` for streamed segments; debounce to avoid AT spam.  
+- **Focus Order:** Input → latest message → citations; trap focus in modal citation view.  
+- **Motion/Contrast:** Honors `prefers-reduced-motion`; tokens meet ≥4.5:1.  
+- **Labels:** Inputs/buttons include clear `aria-label`/`aria-describedby`.
 
-  * `Alt+A` → Focus AI Assistant
-  * `Enter` → Send message
-  * `Esc` → Clear or close chat
-* **ARIA Live Region:** AI responses use `aria-live="polite"` to announce streaming text updates.
-* **Focus Order:** Logical progression (Input → Messages → Citations).
-* **Motion Sensitivity:** Framer Motion transitions disabled when `prefers-reduced-motion` is true.
-* **Color Contrast:** Tokens meet 4.5:1 ratio across themes.
-
-Accessibility verified with **axe-core**, **Lighthouse**, and manual screen reader testing (NVDA, VoiceOver).
+Audited with **axe-core** + **Lighthouse**.
 
 ---
 
 ## 🧪 Testing & Validation
 
-| Test                    | Description                                                      | Tool          |
-| :---------------------- | :--------------------------------------------------------------- | :------------ |
-| **Message Rendering**   | Validates correct rendering order and animation of chat messages | Jest + RTL    |
-| **API Integration**     | Mocks `/api/ask` responses, simulates streaming updates          | MSW           |
-| **Entity Linking**      | Ensures clicking entity links triggers Map/Timeline highlights   | Jest DOM      |
-| **Accessibility Audit** | Checks ARIA live region and focus order                          | axe-core      |
-| **Dark/Light Mode**     | Verifies style consistency across themes                         | Jest Snapshot |
+| Test                       | Purpose                                                | Tools                |
+| :------------------------- | :----------------------------------------------------- | :------------------- |
+| Streaming rendering        | Incremental segments append correctly                  | MSW + RTL            |
+| Entity linking → map/tl    | Click/link dispatches highlight & interval focus       | Jest DOM + mocks     |
+| Citations provenance       | Titles/licenses present; links open safely             | RTL                  |
+| Keyboard flow & live      | Skip-link, focus order, aria-live correctness          | axe-core + RTL       |
+| Theme & PRM                | Stable visuals across themes; motion disabled on PRM   | Jest Snapshot + RTL  |
 
-**Coverage target:** ≥ **90%** for all logic and rendering branches.
+**Coverage target:** ≥ **90%**.
+
+---
+
+## 🛠 Performance Notes
+
+- Start rendering **as soon as first stream chunk arrives**; append progressively.  
+- Use **idempotent** entity highlight calls to avoid churn.  
+- Memoize citation and entity lists; batch DOM updates with `requestAnimationFrame`.  
+- Avoid expensive re-renders by splitting `ChatMessage` into `React.memo` blocks.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                                    |
-| :--------------- | :----------------------------------------------------------------------------- |
-| **Inputs**       | AI API responses (`/ask`, `/entity/{id}`), Neo4j graph data, STAC metadata     |
-| **Outputs**      | Conversational UI with citations, linked entities, and highlights              |
-| **Dependencies** | React 18+, Axios, Markdown-it, Framer Motion, TailwindCSS                      |
-| **Integrity**    | CI validates AI provenance links, accessibility audits, and performance checks |
+| Artifact         | Description                                                                 |
+| :--------------- | :-------------------------------------------------------------------------- |
+| **Inputs**       | `/api/ask`, `/api/entity/{id}`, graph metadata, STAC-linked documents       |
+| **Outputs**      | Messages, citation panels, map/timeline highlights                          |
+| **Dependencies** | React 18+, Fetch/Axios, Markdown renderer, Framer Motion, TailwindCSS       |
+| **Integrity**    | CI gates: lint, type, unit/integration, a11y audits, performance budgets    |
 
 ---
 
 ## 🧠 MCP Compliance Checklist
 
-| MCP Principle       | Implementation                                                 |
-| :------------------ | :------------------------------------------------------------- |
-| Documentation-first | README + TSDoc for every subcomponent                          |
-| Reproducibility     | Deterministic message flow + logged AI provenance              |
-| Explainability      | All citations and confidence values visible to users           |
-| Accessibility       | WCAG 2.1 AA + ARIA live updates validated in CI                |
-| Open Standards      | JSON API, CIDOC CRM mappings, FAIR data compliance             |
-| Provenance          | All AI answers link back to source datasets via `/entity/{id}` |
+| Principle             | Implementation                                              |
+| :-------------------- | :---------------------------------------------------------- |
+| Documentation-first   | README + TSDoc on props and handlers                        |
+| Reproducibility       | Deterministic data→UI pipeline; logged AI provenance        |
+| Explainability        | Visible citations + confidence displayed with every answer  |
+| Accessibility         | WCAG 2.1 AA validated in CI                                 |
+| Interoperability      | CIDOC CRM · PROV-O · OWL-Time semantics respected           |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Web Frontend Components Overview** — `web/src/components/README.md`
-* **AIContext** — `web/src/context/README.md`
-* **Utilities: aiUtils.ts** — `web/src/utils/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
-* **AI System Overview** — `docs/ai/overview.md`
+- **Components Overview** — `web/src/components/README.md`  
+- **AIContext & Hooks** — `web/src/context/README.md`  
+- **Utilities (aiUtils.ts)** — `web/src/utils/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`  
+- **AI System Overview** — `docs/ai/overview.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.6.0` |
+| **Codename** | *Explainable Streaming & Entity Linking Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-ai · @kfm-web |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | CIDOC CRM · PROV-O · OWL-Time · WCAG 2.1 AA |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for explainable, auditable, and transparent AI-assisted exploration.
-
-> *“Every answer tells a story — the AI Assistant turns Kansas’s data into dialogue.”*
-
-```
-```
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — explainable, auditable, and accessible AI for spatiotemporal history.
