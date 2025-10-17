@@ -1,3 +1,4 @@
+```markdown
 <div align="center">
 
 # 🗄️ Kansas Frontier Matrix — Data Load & Integration Pipelines  
@@ -9,22 +10,46 @@
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../docs/)
 [![License: Code](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — Data Load & Integration Pipelines"
+version: "v1.7.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-data", "@kfm-architecture"]
+tags: ["etl","load","neo4j","graph","stac","provenance","checksums","mcp","ci","semver"]
+status: "Stable"
+license: "MIT"
+semver_policy: "MAJOR.MINOR.PATCH"
+ci_required_checks:
+  - pre-commit
+  - unit-tests
+  - stac-validate
+  - codeql
+  - trivy
+  - docs-validate
+semantic_alignment:
+  - CIDOC CRM
+  - OWL-Time
+  - STAC 1.0
+  - DCAT 2.0
+  - GeoJSON
+  - ISO 8601
+---
+```
+
+---
+
 ## 🎯 Purpose
 
-The **`src/pipelines/load/`** directory contains the **final integration layer** of the **Kansas Frontier Matrix (KFM)**  
-ETL system — responsible for loading processed and enriched data into the project’s  
-**Knowledge Graph (Neo4j)** and **SpatioTemporal Asset Catalog (STAC)**.  
-
-This layer transforms semantic data and geospatial outputs into a unified, queryable, and versioned structure.  
-It serves as the bridge between the data pipelines and the **web application API**, ensuring all assets  
-(map layers, events, entities, and relationships) are properly indexed, timestamped, and linked with provenance.
+The **`src/pipelines/load/`** layer is the **final integration stage** of the KFM ETL system — loading processed and enriched data into the **Knowledge Graph (Neo4j)** and the **SpatioTemporal Asset Catalog (STAC)**.  
+It consolidates semantics, geospatial outputs, and metadata into a **unified, queryable, versioned** structure powering the **API** and **web app**.
 
 ---
 
@@ -39,14 +64,12 @@ flowchart TD
     D --> F["API Layer (FastAPI/GraphQL)"]
     E --> F
     F --> G["Frontend Timeline + Map (React/MapLibre)"]
-````
-
+```
 <!-- END OF MERMAID -->
 
-This stage consolidates all processed data into **two master repositories of truth**:
-
-* 🧭 **Knowledge Graph** → links people, places, events, and documents semantically
-* 🗺 **STAC Catalog** → indexes geospatial and temporal assets for visualization
+**Two master repositories of truth:**
+- 🧭 **Knowledge Graph** — people, places, events, documents, and their relationships.  
+- 🗺 **STAC Catalog** — geospatial/temporal assets discoverable for visualization and download.
 
 ---
 
@@ -55,11 +78,11 @@ This stage consolidates all processed data into **two master repositories of tru
 ```
 src/pipelines/load/
 ├── __init__.py
-├── stac_writer.py        # Build and update STAC Collections & Items
-├── graph_loader.py       # Load entities and relationships into Neo4j
-├── checksum_utils.py     # Verify data integrity with SHA-256 hashes
-├── provenance_logger.py  # Create detailed provenance records
-├── data_register.py      # Update registry of datasets and schema mappings
+├── stac_writer.py        # Build/update STAC Collections & Items
+├── graph_loader.py       # Ingest entities/relationships into Neo4j
+├── checksum_utils.py     # SHA-256 integrity verification
+├── provenance_logger.py  # Provenance records (source, process, artifacts)
+├── data_register.py      # Registry of datasets + schema mappings
 └── README.md             # (this file)
 ```
 
@@ -69,60 +92,62 @@ src/pipelines/load/
 
 | Module                   | Function                                                                                                                                           | Key Tools                            |
 | :----------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
-| **graph_loader.py**      | Inserts nodes (People, Places, Events, Documents) and relationships (`OCCURRED_AT`, `MENTIONS`, `PARTICIPATED_IN`) into the Neo4j knowledge graph. | `neo4j-driver`, `pandas`, `networkx` |
-| **stac_writer.py**       | Generates STAC-compliant JSON for processed layers (COG, GeoJSON, CSV).                                                                            | `pystac`, `jsonschema`               |
-| **checksum_utils.py**    | Validates SHA-256 checksums for reproducibility and data lineage.                                                                                  | `hashlib`, `os`, `json`              |
-| **provenance_logger.py** | Appends data lineage info to a persistent provenance log.                                                                                          | `logging`, `datetime`                |
-| **data_register.py**     | Maintains registry of all data collections and schema mappings.                                                                                    | `pandas`, `yaml`                     |
+| **graph_loader.py**      | Inserts nodes (People, Places, Events, Documents) and relationships (`OCCURRED_AT`, `MENTIONS`, `PARTICIPATED_IN`, etc.) into Neo4j.              | `neo4j-driver`, `pandas`, `networkx` |
+| **stac_writer.py**       | Generates/updates STAC Collections & Items for COG/GeoJSON/CSV assets; validates against STAC JSON Schemas.                                       | `pystac`, `jsonschema`               |
+| **checksum_utils.py**    | Computes & verifies SHA-256 checksums for all outgoing assets and JSON metadata.                                                                  | `hashlib`, `pathlib`, `json`         |
+| **provenance_logger.py** | Appends lineage records (source, license, process, timestamps, outputs) to `logs/pipelines/load.log` and item sidecars.                            | `logging`, `datetime`                |
+| **data_register.py**     | Central registry of dataset collections, schema mappings, required fields, and business rules.                                                    | `pandas`, `yaml`                     |
 
 ---
 
 ## ⚙️ Graph Loading Workflow
 
-1. **Initialize Neo4j connection**
+1. **Initialize Neo4j session**
+   ```python
+   from neo4j import GraphDatabase
+   driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
+   ```
 
-```python
-from neo4j import GraphDatabase
-driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
-```
-
-2. **Create or update entity nodes**
-
-```python
-def create_place(tx, name, lat, lon):
-    tx.run("""
-        MERGE (p:Place {name: $name})
-        SET p.latitude = $lat, p.longitude = $lon
-    """, name=name, lat=lat, lon=lon)
-```
+2. **Create/update entities**
+   ```python
+   def create_place(tx, pid, name, lat, lon):
+       tx.run("""
+           MERGE (p:Place {id: $pid})
+           SET p.name=$name, p.latitude=$lat, p.longitude=$lon
+       """, pid=pid, name=name, lat=lat, lon=lon)
+   ```
 
 3. **Link relationships**
-
-```python
-def link_event_place(tx, event_id, place_id):
-    tx.run("""
-        MATCH (e:Event {id: $event_id}), (p:Place {id: $place_id})
-        MERGE (e)-[:OCCURRED_AT]->(p)
-    """, event_id=event_id, place_id=place_id)
-```
+   ```python
+   def link_event_place(tx, event_id, place_id):
+       tx.run("""
+           MATCH (e:Event {id: $event_id}), (p:Place {id: $place_id})
+           MERGE (e)-[:OCCURRED_AT]->(p)
+       """, event_id=event_id, place_id=place_id)
+   ```
 
 4. **Batch ingestion**
+   ```
+   python src/pipelines/load/graph_loader.py \
+     --input data/processed/enriched/entities.json \
+     --batch 500 --upsert
+   ```
 
-All graph insertions use **transaction batching** for efficiency.
-Example:
-
-```bash
-python src/pipelines/load/graph_loader.py --input data/processed/enriched/entities.json --batch 500
-```
+- **CIDOC CRM & OWL-Time mapping:**  
+  - `Event -> crm:E5_Event` with `crm:P4_has_time-span (owl:time:Interval)`  
+  - `Place -> crm:E53_Place` with `geo:lat/geo:long`  
+  - `Document -> crm:E31_Document` with `crm:P70_documents`  
 
 ---
 
 ## 🗺️ STAC Catalog Integration
 
-The **STAC (SpatioTemporal Asset Catalog)** structure enables standardized geospatial metadata indexing.
+### Auto-generation
+- Creates **Items** per dataset in `data/processed/**`.  
+- Updates/creates **Collections**, validates via `jsonschema`.  
+- Adds **provenance** (source URL, checksum, process timestamp) and **providers**.  
 
 ### Example STAC Item (`data/stac/items/ks_1m_dem_2018_2020.json`)
-
 ```json
 {
   "stac_version": "1.0.0",
@@ -130,6 +155,7 @@ The **STAC (SpatioTemporal Asset Catalog)** structure enables standardized geosp
   "id": "ks_1m_dem_2018_2020",
   "properties": {
     "title": "Kansas 1m Digital Elevation Model (2018–2020)",
+    "description": "Derived from USGS 3DEP LiDAR; preprocessed to COG.",
     "start_datetime": "2018-01-01T00:00:00Z",
     "end_datetime": "2020-12-31T23:59:59Z",
     "providers": [{"name": "USGS 3DEP", "roles": ["producer", "licensor"]}]
@@ -146,62 +172,45 @@ The **STAC (SpatioTemporal Asset Catalog)** structure enables standardized geosp
 }
 ```
 
-### Auto-generation
-
-The loader automatically:
-
-* Creates new **Items** for each dataset in `data/processed/`
-* Updates **Collections** when new datasets are added
-* Verifies compliance with `stac-spec` via `jsonschema`
-* Adds provenance (source URL, checksum, process timestamp)
-
-Run:
-
-```bash
+### CLI
+```
 python src/pipelines/load/stac_writer.py --input data/processed/ --output data/stac/
 ```
 
 ---
 
-## 🔒 Provenance & Checksum Tracking
+## 🔒 Provenance & Checksums
 
-To ensure reproducibility and scientific integrity:
-
-* Each asset and JSON file includes a `.sha256` checksum file
-* The **provenance log** (`logs/pipelines/load.log`) records:
-
-  * Source path and license
-  * Generation timestamp
-  * STAC item or Neo4j node ID
-  * Validation result
-
-Example:
-
-```
-[2025-10-05 13:50:44] graph_loader | Loaded 4,392 nodes | 12,871 relationships | OK
-[2025-10-05 13:55:21] stac_writer | 33 new STAC Items generated | OK
-```
+- **Sidecars:** each output asset emits `.meta.json` (provenance) and optional `.sha256`.  
+- **Provenance log:** `logs/pipelines/load.log`, e.g.  
+  ```
+  [2025-10-17 13:50:44] graph_loader | 4,392 nodes | 12,871 rels | OK
+  [2025-10-17 13:55:21] stac_writer  | 33 Items (3 Collections) | OK
+  ```
+- **Reproducibility:** hashes must match on CI before publication.
 
 ---
 
 ## 🔁 Integration Flow
 
-* **Upstream:** Consumes processed and enriched outputs from `transform/` and `enrich/`
-* **Downstream:** Feeds the **API layer (FastAPI/GraphQL)** and **frontend map/timeline**
-* **Automation:** `make load` runs the full integration workflow, validating graph integrity and STAC metadata
+| Stage        | Description                                                                                  |
+| :----------- | :------------------------------------------------------------------------------------------- |
+| **Upstream** | Consumes outputs from `transform/` and `enrich/` (entities, links, summaries, processed GIS) |
+| **Downstream** | Serves **API (FastAPI/GraphQL)** and **web app** (timeline + map via MapLibre)               |
+| **Automation** | `make load` runs full integration; CI blocks merge if validations fail                       |
 
 ---
 
 ## 🧾 Example Workflow
 
-```bash
+```
 # Run all load operations (graph + STAC)
 make load
 
 # Load enriched entities into Neo4j
 python src/pipelines/load/graph_loader.py --input data/processed/enriched/entities.json
 
-# Validate and regenerate STAC catalog
+# Validate + regenerate STAC catalog
 python src/pipelines/load/stac_writer.py --input data/processed/ --output data/stac/
 
 # Verify checksums
@@ -214,26 +223,108 @@ python src/pipelines/load/checksum_utils.py --verify data/processed/
 
 | Validation Type         | Description                                                           | Tool                   |
 | :---------------------- | :-------------------------------------------------------------------- | :--------------------- |
-| Graph Integrity         | Ensures valid node relationships (no orphaned or duplicate entities). | `Cypher`, `networkx`   |
-| STAC Schema             | Confirms all metadata matches STAC 1.0.0 specification.               | `jsonschema`           |
-| Checksums               | Validates all `.sha256` signatures before ingestion.                  | `hashlib`              |
-| Provenance Completeness | Verifies every record links to at least one source manifest.          | `provenance_logger.py` |
+| Graph Integrity         | No orphans/duplicates; relationship domain/range check.               | Cypher, `networkx`     |
+| STAC Schema             | All metadata conforms to STAC 1.0.0.                                  | `jsonschema`, `pystac` |
+| Checksums               | All `.sha256` signatures present & valid.                              | `hashlib`              |
+| Provenance Completeness | Every record links to at least one source manifest + process step.     | `provenance_logger.py` |
+
+---
+
+## 🧪 Testing & QA
+
+- **Unit tests:** `tests/pipelines/load/` (mock Neo4j + sample STAC fixtures).  
+- **Golden files:** stable item/collection JSON snapshots for regression diffs.  
+- **Pre-commit hooks:** lint, import order, large-file guard, JSON formatting.
+
+---
+
+## 🛠️ Makefile Targets (excerpt)
+
+| Target             | Description                                      |
+| :----------------- | :----------------------------------------------- |
+| `make load`        | Run graph and STAC load with validations         |
+| `make load-graph`  | Load only Neo4j entities/relationships           |
+| `make load-stac`   | Build/validate STAC (items + collections)        |
+| `make checksums`   | Generate/verify SHA-256 for `data/processed/**`  |
+| `make provenance`  | Emit provenance sidecars + append to load log    |
+
+---
+
+## 🔌 Interfaces & Contracts
+
+**CLI/ENV**  
+- Required args: `--input`, `--output` (where applicable).  
+- Optional: `--batch`, `--upsert`, `--dry-run`, `--validate-only`.  
+- ENV: `KFM_LOG_LEVEL`, `KFM_NEO4J_URI`, `KFM_NEO4J_USER`, `KFM_NEO4J_PASS`.
+
+**Directory Contracts**  
+- Inputs: `data/processed/**`, `data/processed/enriched/**`  
+- Outputs: `data/stac/**`, `logs/pipelines/load.log`  
+- Sidecars: `.meta.json`, `.sha256`
+
+**Exit Codes**  
+- `0=OK`, `1=usage`, `2=IO`, `3=schema/validation`, `4=unexpected`
+
+---
+
+## 🧷 Acceptance Checklist (CI-gated)
+
+- [ ] All STAC Items validate (schema + links + providers + bbox/geom).  
+- [ ] Graph passes relationship integrity checks.  
+- [ ] `.sha256` present and verified for all published assets.  
+- [ ] `.meta.json` includes `source`, `license`, `process`, `timestamp`, `artifact`.  
+- [ ] `data_register.py` updated for new/changed datasets.  
+- [ ] Unit tests updated; golden diffs reviewed/approved.
+
+---
+
+## 🛡️ Security & Compliance
+
+- Secrets via env/CI secrets; no hardcoded credentials.  
+- Principle of least privilege on Neo4j user.  
+- SBOM/dependency scans via **Trivy**; static analysis via **CodeQL**.  
+- License fields must propagate to STAC `providers`/`links`.
+
+---
+
+## 🧭 Troubleshooting
+
+- **Constraint violations:** ensure `MERGE` keys exist & are unique (`id`).  
+- **STAC validation fails:** run `pystac validate` and check missing fields/links.  
+- **Checksum mismatch:** re-run `make checksums`; confirm no CRLF/encoding drift.  
+- **Slow loads:** increase `--batch`, enable Neo4j `UNWIND` pattern, add indexes.
+
+---
+
+## 🧾 Version History
+
+| Version | Date       | Type     | Changes |
+| :------ | :--------- | :------- | :------ |
+| v1.7.0  | 2025-10-17 | Added    | Versioning/CI sections; Acceptance Checklist; Interfaces/Contracts; Security & QA; expanded STAC + Graph validation; provenance/checksum policy. |
+| v1.6.0  | 2025-10-17 | Improved | STAC writer auto-collections; Neo4j upsert batching; CIDOC CRM & OWL-Time notes; checksum utilities. |
+| v1.5.0  | 2025-10-16 | Added    | Initial load README; core modules; minimal examples; basic validation table. |
+
+> **SemVer Policy:**  
+> - **MAJOR** — breaking contracts (CLI flags, required fields, directories)  
+> - **MINOR** — new features/sections, backward compatible  
+> - **PATCH** — fixes/docs/tests; no behavior change
 
 ---
 
 ## 📚 References
 
-* [Kansas Frontier Matrix — File & Data Architecture](../../../docs/architecture.md)
-* [AI System Developer Documentation](../../../docs/ai-system.md)
-* [SpatioTemporal Asset Catalog (STAC) Spec 1.0.0](https://stacspec.org/)
-* [CIDOC CRM & OWL-Time Ontologies](https://cidoc-crm.org/)
-* [Scientific Method & MCP Templates](../../../docs/templates/experiment.md)
+- File & Data Architecture — `../../../docs/architecture.md`  
+- AI System Developer Docs — `../../../docs/ai-system.md`  
+- STAC Spec — https://stacspec.org/  
+- CIDOC CRM — https://www.cidoc-crm.org/  
+- MCP Templates — `../../../docs/templates/`  
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**
+**Kansas Frontier Matrix © 2025**  
 *Data Provenance · Knowledge Graphs · Open Reproducibility*
 
 </div>
+```
