@@ -23,7 +23,7 @@ body:
   attributes:
   value: |
   ## 💡 Feature Overview
-  *"Every Feature Builds the Future — Every Change is Reproducible."*
+  *“Every Feature Builds the Future — Every Change is Reproducible.”*
 
 * type: input
   id: feature_name
