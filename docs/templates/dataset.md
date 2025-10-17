@@ -1,55 +1,73 @@
 <div align="center">
 
-# 🗃️ Kansas Frontier Matrix — Dataset Documentation Template  
+# 🗃️ **Kansas Frontier Matrix — Dataset Documentation Template**  
 `docs/templates/dataset.md`
 
-**Mission:** Provide a **structured, reproducible template** for documenting datasets in the Kansas Frontier Matrix (KFM) —  
-ensuring **provenance, FAIR compliance, MCP alignment, and STAC-ready metadata** across the data lifecycle.
+**Mission:** Provide a **structured, reproducible template** for documenting datasets within the  
+**Kansas Frontier Matrix (KFM)** — ensuring **provenance, FAIR compliance, MCP alignment, and STAC-ready metadata** across the full data lifecycle.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
-[![FAIR](https://img.shields.io/badge/FAIR-F%20A%20I%20R-brightgreen)](#-fair--standards-mapping)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0.0-blue)](#-stac--catalog-entries)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![FAIR Principles](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-brightgreen)](https://www.go-fair.org/fair-principles/)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0.0-blue)](https://stacspec.org/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
 
 </div>
 
 ---
 
-> **How to use this file**
-> 1) **Copy** this template next to your dataset (e.g., `docs/data/terrain_ks_1m_dem_2018_2020.md`).  
-> 2) **Fill in** all sections.  
-> 3) **Link** to this record from the dataset’s STAC Item and source manifest.  
-> 4) **Commit** alongside data/metadata changes so this documentation tracks versions.
+```yaml
+---
+title: "Kansas Frontier Matrix — Dataset Documentation Template"
+version: "v1.3.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-data","@kfm-docs","@kfm-architecture"]
+tags: ["dataset","documentation","stac","fair","mcp","provenance","dcat","metadata","ci"]
+status: "Template"
+license: "CC-BY 4.0"
+semantic_alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - DCAT 2.0
+  - JSON Schema
+  - ISO 19115 / ISO 8601
+ci_required_checks:
+  - stac-validate
+  - checksums
+  - docs-validate
+  - pre-commit
+  - codeql
+  - trivy
+---
+```
 
 ---
 
 ## 🧭 Dataset Metadata (Front-Matter)
 
 ```yaml
-# --- Begin dataset front-matter (machine-readable) ---
+# --- Machine-readable metadata block ---
 dataset_id: DATASET-YYYY-NNN-<DOMAIN>-<NAME>
 title: "<Full Descriptive Title>"
-summary: "<One-sentence abstract for site/catalog cards.>"
+summary: "<Short abstract for site/catalog cards>"
 authors:
-  - name: "<Name, Role>"
-    email: "<optional>"
+  - name: "<Full Name>"
+    role: "<Author / Engineer / Curator>"
 curators:
-  - name: "<Team/Role>"
+  - name: "<Data Steward Team>"
 contacts:
   - name: "<Primary Contact>"
     email: "<contact@org>"
-doi: "<if available>"
+doi: "<optional DOI>"
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 version: "vX.Y.Z"
 domain: "<Terrain|Hydrology|Climate|Landcover|Hazards|Tabular|Text|Mixed>"
 data_type: "<Raster|Vector|Tabular|Text|Mixed>"
 license: "<CC-BY 4.0|Public Domain|MIT|Custom>"
-usage_constraints: "<Any restrictions or required attributions>"
-keywords: ["kansas", "dem", "hydrology", "example"]
+keywords: ["kansas","terrain","dem","example"]
 spatial:
   crs: "EPSG:4326"
-  bbox: [-102.05, 36.99, -94.61, 40.00]
+  bbox: [-102.05,36.99,-94.61,40.00]
 temporal:
   start: "YYYY-MM-DD"
   end: "YYYY-MM-DD"
@@ -64,199 +82,212 @@ distribution:
       href: "/api/stac/items/<dataset_id>"
     - type: "download"
       href: "https://<host>/<path>/<file>"
-# --- End dataset front-matter ---
-````
+sensitivity: "none|restricted|contains_sensitive_data"
+retention_policy: "retain_3_versions_archive_rest"
+# --- End metadata ---
+```
 
 ---
 
 ## 🧩 Abstract / Description
 
-> **Guidance:** Provide a clear description of what this dataset represents, why it exists, and how it fits into the KFM ecosystem.
-> Include intended uses, known limitations, and the expected audience.
+> **Purpose:** Describe what this dataset represents, its intended use, and relevance to KFM.  
+> Include **provenance**, **applications**, **limitations**, and **expected audience**.
 
-**Example:**
-This dataset contains a 1-meter resolution Digital Elevation Model (DEM) derived from USGS 3DEP LiDAR (2018–2020) for Kansas.
-It is the foundational layer for hydrology modeling (watersheds, flowlines), hazards analysis (flood exposure), and landcover derivatives.
+**Example:**  
+This dataset contains a 1m resolution Digital Elevation Model (DEM) derived from LiDAR (2018–2020) for Kansas.  
+It supports hydrologic modeling, hazard assessment, and ecological studies.
 
 ---
 
 ## 🌐 Data Provenance & Sources
 
-| Source Name   | Provider    | Access Method | License       | Link / API                                                             | Notes           |
-| :------------ | :---------- | :------------ | :------------ | :--------------------------------------------------------------------- | :-------------- |
-| USGS 3DEP DEM | USGS        | REST API      | Public Domain | [https://elevation.nationalmap.gov](https://elevation.nationalmap.gov) | 2018–2020 tiles |
-| KS DASC LiDAR | Kansas DASC | FTP/HTTP      | CC-BY 4.0     | [https://www.kansasgis.org/](https://www.kansasgis.org/)               | County mosaics  |
+| Source | Provider | Access Method | License | Link / API | Notes |
+| :------ | :-------- | :------------- | :-------- | :------------ | :------ |
+| USGS 3DEP DEM | USGS | REST / HTTPS | Public Domain | https://elevation.nationalmap.gov | Tiles 2018–2020 |
+| KS DASC LiDAR | Kansas DASC | FTP / HTTPS | CC-BY 4.0 | https://www.kansasgis.org | County mosaics |
 
-> **All sources must have entries in** `data/sources/<domain>/` **and be referenced in this section.**
+> All sources must have corresponding manifests in `data/sources/<domain>/`.
 
 ---
 
 ## ⚙️ Processing Workflow (ETL → Products)
 
-| Step             | Description                | Command / Script                                             | Output                          |
-| :--------------- | :------------------------- | :----------------------------------------------------------- | :------------------------------ |
-| 1. Ingest        | Fetch raw tiles            | `make fetch` or `python src/pipelines/fetch/usgs_ingest.py`  | `data/raw/terrain/...`          |
-| 2. Reproject     | Warp to EPSG:4326          | `gdalwarp -t_srs EPSG:4326 <in> <out>`                       | GeoTIFF                         |
-| 3. Mosaic        | Merge tiles                | `gdal_merge.py -o ks_dem.tif ...`                            | `ks_dem.tif`                    |
-| 4. Convert → COG | Cloud optimize             | `rio cogeo create ks_dem.tif ks_dem_cog.tif --web-optimized` | `ks_dem_cog.tif`                |
-| 5. Derivatives   | Hillshade / Slope / Aspect | `python src/pipelines/terrain/derive.py`                     | `hillshade.tif`, `slope.tif`    |
-| 6. STAC          | Generate Items             | `python src/pipelines/load/stac_writer.py`                   | `data/stac/terrain/<item>.json` |
+| Step | Description | Command / Script | Output |
+| :---- | :------------ | :---------------- | :------ |
+| 1 | Fetch raw data | `make fetch` | `data/raw/terrain/` |
+| 2 | Reproject to EPSG:4326 | `gdalwarp -t_srs EPSG:4326` | GeoTIFF |
+| 3 | Mosaic tiles | `gdal_merge.py -o ks_dem.tif ...` | `ks_dem.tif` |
+| 4 | Convert to COG | `rio cogeo create ks_dem.tif ks_dem_cog.tif` | `ks_dem_cog.tif` |
+| 5 | Derive hillshade/slope | `python src/pipelines/terrain/derive.py` | `hillshade.tif` |
+| 6 | Create STAC | `python src/pipelines/load/stac_writer.py` | `data/stac/terrain/*.json` |
 
 **Make targets**
-
 ```bash
-make fetch     # fetch raw sources
-make process   # run standard transforms
-make enrich    # optional (e.g., text or QA enrichment)
-make load      # write STAC + graph entries
-make checksums # compute/verify SHA-256 lineage
+make fetch && make process && make checksums && make stac-validate
 ```
 
 ---
 
 ## 🧮 Specifications & Schema
 
-| Attribute             | Description                 | Value / Example                         |
-| :-------------------- | :-------------------------- | :-------------------------------------- |
-| Spatial Resolution    | Ground sample distance      | 1 m                                     |
-| CRS                   | Coordinate Reference System | EPSG:4326 (WGS84)                       |
-| Spatial Extent (BBox) | minX, minY, maxX, maxY      | [-102.05, 36.99, -94.61, 40.00]         |
-| Temporal Coverage     | Start / End                 | 2018-01-01 — 2020-12-31                 |
-| Formats               | Primary / Aux               | GeoTIFF (COG), PNG (thumb), JSON (STAC) |
-| Size                  | Total                       | ~12 GB                                  |
-| Record Count          | N (if tabular)              | —                                       |
-| Encoding              | Text/CSV/Parquet            | UTF-8 / CSV / Parquet                   |
+| Attribute | Description | Value |
+| :---------- | :----------- | :----- |
+| **Resolution** | Ground sample distance | 1 m |
+| **CRS** | Coordinate Reference System | EPSG:4326 (WGS84) |
+| **Extent (BBox)** | Spatial bounding box | [-102.05, 36.99, -94.61, 40.00] |
+| **Coverage** | Temporal range | 2018-01-01 → 2020-12-31 |
+| **Format** | Primary / Aux | GeoTIFF (COG), JSON (STAC) |
+| **Size** | Approx total | 12 GB |
+| **Encoding** | File encoding | UTF-8 / CSV / GeoTIFF |
 
-**Data Dictionary (Tabular / Vector attributes)**
+**Data Dictionary (if applicable)**
 
-| Field       | Type    | Units   | Allowed Values / Range | Description                    |
-| :---------- | :------ | :------ | :--------------------- | :----------------------------- |
-| `elevation` | float32 | meters  | ≥ -500                 | Elevation above mean sea level |
-| `slope_deg` | float32 | degrees | 0–90                   | Derived slope angle            |
-| ...         | ...     | ...     | ...                    | ...                            |
+| Field | Type | Units | Allowed Range | Description |
+| :----- | :---- | :---- | :-------------- | :----------- |
+| `elevation` | float32 | meters | ≥ -500 | Elevation above MSL |
+| `slope_deg` | float32 | degrees | 0–90 | Derived slope |
 
 ---
 
 ## 🧾 Outputs & Distribution
 
-| Type        | Path / URL                                                           | Description              |
-| :---------- | :------------------------------------------------------------------- | :----------------------- |
-| Primary     | `data/processed/terrain/ks_1m_dem_2018_2020.tif`                     | Core processed raster    |
-| COG         | `data/processed/terrain/ks_1m_dem_2018_2020_cog.tif`                 | Cloud-Optimized GeoTIFF  |
-| Derivatives | `data/processed/terrain/hillshade.tif`                               | Visualization & analysis |
-| STAC Item   | `data/stac/terrain/ks_1m_dem_2018_2020.json`                         | Catalog metadata         |
-| Checksums   | `data/checksums/terrain/ks_1m_dem_2018_2020.manifest.json`           | Integrity lineage        |
-| Thumbnail   | `data/processed/metadata/terrain/thumbnails/ks_1m_dem_2018_2020.png` | Web preview              |
+| Type | Path / URL | Description |
+| :----- | :----------- | :------------ |
+| Primary | `data/processed/terrain/ks_1m_dem_2018_2020.tif` | Core raster |
+| COG | `data/processed/terrain/ks_1m_dem_2018_2020_cog.tif` | Web-optimized raster |
+| Derivatives | `data/processed/terrain/hillshade.tif` | Visualization layer |
+| STAC Item | `data/stac/terrain/ks_1m_dem_2018_2020.json` | Catalog entry |
+| Checksums | `data/checksums/terrain/ks_1m_dem_2018_2020.manifest.json` | Integrity report |
+| Thumbnail | `data/processed/metadata/thumbnails/ks_1m_dem_2018_2020.png` | Web preview |
 
 ---
 
 ## ✅ Validation & QA
 
-| Check       | Method / Tool                         | Evidence / Path                 | Result |
-| :---------- | :------------------------------------ | :------------------------------ | :----- |
-| Checksum    | `make checksums`                      | `data/checksums/...`            | ✅      |
-| STAC Schema | `stac-validator`                      | `_reports/stac/<dataset>.json`  | ✅      |
-| Spatial QA  | `gdalinfo`, bounds & CRS check        | `_reports/spatial/<dataset>.md` | ✅      |
-| CI/CD       | `.github/workflows/stac-validate.yml` | Actions run ID                  | ✅      |
+| Check | Tool / Method | Location | Result |
+| :------ | :-------------- | :----------- | :------ |
+| Checksum | `make checksums` | `data/checksums/` | ✅ |
+| STAC Schema | `stac-validator` | `_reports/stac/` | ✅ |
+| Spatial QA | `gdalinfo`, bounds check | `_reports/spatial/` | ✅ |
+| CI/CD | `.github/workflows/stac-validate.yml` | Actions Logs | ✅ |
 
-> **All QA logs** should be archived under `data/work/logs/<domain>/<dataset>/`.
+> Logs archived under `data/work/logs/<domain>/<dataset_id>/`.
 
 ---
 
 ## 🔗 Relationships & Dependencies
 
-| Relation      | Target                   | Type      | Path / Ref                                               |
-| :------------ | :----------------------- | :-------- | :------------------------------------------------------- |
-| Derived From  | `usgs_3dep_dem`          | Source    | `data/sources/terrain/usgs_3dep_dem.json`                |
-| Feeds         | `watersheds_huc12_2019`  | Dependent | `data/processed/hydrology/watersheds_huc12_2019.geojson` |
-| Referenced In | `ks_hillshade_2018_2020` | Derived   | `data/processed/terrain/ks_hillshade_2018_2020.tif`      |
+| Relation | Target | Type | Path / Reference |
+| :-------- | :------- | :------ | :---------------- |
+| Derived From | `usgs_3dep_dem` | Source | `data/sources/terrain/usgs_3dep_dem.json` |
+| Feeds | `watersheds_huc12_2019` | Dependent | `data/processed/hydrology/watersheds_huc12_2019.geojson` |
+| Referenced In | `ks_hillshade_2018_2020` | Derived | `data/processed/terrain/ks_hillshade_2018_2020.tif` |
 
 ---
 
 ## 🔐 Ethics, Legal & Licensing
 
-* Dataset license: **<insert>** (e.g., CC-BY 4.0).
-* Attribution statement to include in derivative works.
-* No PII or sensitive data included.
-* Compliance with **USGS / DASC** distribution policies.
-* If mixing licenses, document **compatibility** and **exceptions** here.
+- Dataset license: **CC-BY 4.0** (or specify).  
+- Attribution required in derivative products.  
+- No PII or sensitive data present.  
+- Compliance with **USGS / DASC** distribution terms.  
+- If licenses differ, describe **compatibility** and **exceptions**.
 
 ---
 
 ## 🧩 Integration with KFM Systems
 
-| Component           | Role                   | Integration Notes                     |
-| :------------------ | :--------------------- | :------------------------------------ |
-| **Pipelines**       | ETL → products         | `src/pipelines/<domain>/*`            |
-| **Metadata**        | STAC linkages          | `data/stac/<domain>/*`                |
-| **CI/CD**           | Validation & deploy    | `.github/workflows/stac-validate.yml` |
-| **Web Viewer**      | Map layer config       | `web/config/layers.json`              |
-| **Knowledge Graph** | Provenance & relations | `src/graph/graph_loader.py`           |
+| Component | Role | Integration Notes |
+| :----------- | :------ | :---------------- |
+| **Pipelines** | ETL & QA automation | `src/pipelines/<domain>/*` |
+| **Metadata** | STAC integration | `data/stac/<domain>/*` |
+| **CI/CD** | Validation, deploy, checksum | `.github/workflows/stac-validate.yml` |
+| **Web Viewer** | Map layer config | `web/config/layers.json` |
+| **Knowledge Graph** | Provenance relations | `src/graph/graph_loader.py` |
 
 ---
 
 ## 🔎 FAIR & Standards Mapping
 
-| FAIR              | Implementation                                                    |
-| :---------------- | :---------------------------------------------------------------- |
-| **Findable**      | STAC Items with rich keywords, DOIs/IDs, indexed in site/catalog. |
-| **Accessible**    | Public endpoints + docs links; consistent URLs.                   |
-| **Interoperable** | Open formats (COG, GeoJSON, CSV), EPSG codes, JSON Schema.        |
-| **Reusable**      | Clear license, citation, and complete metadata with lineage.      |
+| FAIR Principle | Implementation |
+| :--------------- | :---------------- |
+| **Findable** | STAC entries indexed and discoverable via search API |
+| **Accessible** | Persistent URLs, Git-tracked metadata, API access |
+| **Interoperable** | Open formats (COG, GeoJSON, CSV), EPSG codes, DCAT fields |
+| **Reusable** | Licensing + citation guidance; full provenance |
 
-**DCAT / JSON-LD (optional):** Provide a DCAT or JSON-LD snippet if publishing to external catalogs.
-
----
-
-## 🧾 Citation
-
-> **Suggested citation:**
-> *Author(s) (Year). Title (Version). Kansas Frontier Matrix. DOI/URL. License.*
-
-**Example:**
-Doe, J., & KFM Data Team (2025). *Kansas 1m DEM (2018–2020), v1.1*. Kansas Frontier Matrix. [https://example.org/doi/xx.xxxx/xxx](https://example.org/doi/xx.xxxx/xxx). CC-BY 4.0.
+**Optional DCAT/JSON-LD export:**  
+Generated under `data/stac/<domain>/<dataset>_dcat.json`.
 
 ---
 
 ## 📌 Known Issues & Risks
 
-* **Edge artifacts** at tile seams; mitigated by feathering during mosaic.
-* **Intermittent gaps** in LiDAR coverage for {counties}.
-* **Large size** may impact low-bandwidth users (alternatives: WMTS, XYZ tiles).
+- Tile seam artifacts (corrected via feathering).  
+- Sparse LiDAR coverage in `{counties}`.  
+- Large file sizes may limit low-bandwidth access.
 
 ---
 
 ## 🧯 Rollback & Retention
 
-* **Retention policy:** Keep last **N** versions; archive older in cold storage.
-* **Rollback plan:** Re-link web/catalog to previous STAC item; restore checksums and thumbnails.
-* **Deprecation:** Mark STAC `deprecated: true`; point to replacement via `rel:alternate`/`rel:latest-version`.
+| Policy | Description |
+| :------ | :------------- |
+| **Retention** | Maintain last 3 published versions; archive older. |
+| **Rollback** | Revert to prior STAC item + manifest. |
+| **Deprecation** | Flag in STAC (`deprecated: true`) and cross-link replacement. |
+
+---
+
+## ✅ Acceptance Checklist
+
+- [ ] STAC validation (schema + assets) ✅  
+- [ ] Checksums verified for all outputs ✅  
+- [ ] CRS, bbox, and QA passed ✅  
+- [ ] Documentation updated + glossary links ✅  
+- [ ] CI/CD workflows green ✅  
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle       | Implementation                                      |
-| :------------------ | :-------------------------------------------------- |
-| Documentation-first | This record authored before publication.            |
-| Reproducibility     | Make targets + checksums produce identical outputs. |
-| Open Standards      | STAC 1.0, GeoTIFF (COG), GeoJSON, JSON Schema.      |
-| Provenance          | Source manifests + checksum lineage + graph links.  |
-| Auditability        | CI/CD logs, validation reports, versioning.         |
+| MCP Principle | Implementation |
+| :--------------- | :--------------- |
+| **Documentation-first** | Authored prior to publication. |
+| **Reproducibility** | Deterministic pipelines with checksums. |
+| **Open Standards** | STAC 1.0, GeoTIFF (COG), GeoJSON, JSON Schema. |
+| **Provenance** | Linked source manifests, checksum lineage, graph nodes. |
+| **Auditability** | CI/CD logs, QA reports, version history. |
 
 ---
 
 ## 📎 Related Documentation
 
-* `docs/architecture/data-architecture.md` — Data model & lineage
-* `docs/templates/experiment.md` — For associated analyses
-* `docs/templates/sop.md` — Operational procedures
-* `.github/workflows/stac-validate.yml` — CI validation workflow
+| File | Description |
+| :---- | :------------ |
+| `docs/architecture/data-architecture.md` | Data model & lineage |
+| `docs/templates/experiment.md` | Analytical experiment records |
+| `docs/templates/sop.md` | Operational procedures |
+| `.github/workflows/stac-validate.yml` | CI validation workflow |
 
 ---
 
 ## 🗓️ Version History
 
-| Version | Date       | Author | Summary                   |
-| :------ | :--------- | :----- | :------------------------ |
-| vX.Y.Z  | YYYY-MM-DD | <Name> | Initial release / updates |
+| Version | Date | Author | Summary |
+| :------- | :----- | :-------- | :-------- |
+| v1.3.0 | 2025-10-17 | KFM Docs Team | Added metadata YAML header, FAIR mapping, acceptance checklist, DCAT integration |
+| v1.2.0 | 2025-10-10 | KFM Engineering | Improved schema table & integration sections |
+| v1.1.0 | 2025-10-05 | KFM Data Team | Added QA/Validation and lineage relationships |
+| v1.0.0 | 2025-10-04 | Documentation Team | Initial MCP-aligned dataset template |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix © 2025**  
+*"Every Dataset Accountable. Every Record Reproducible."*  
+📍 `docs/templates/dataset.md` — MCP-compliant dataset documentation template for the Kansas Frontier Matrix.
+
+</div>
