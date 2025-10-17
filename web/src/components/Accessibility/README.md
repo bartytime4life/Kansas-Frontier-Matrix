@@ -14,31 +14,13 @@
 
 ---
 
-```yaml
----
-title: "KFM • Accessibility Components (web/src/components/Accessibility/)"
-version: "v1.4.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-accessibility", "@kfm-ui"]
-tags: ["accessibility","focus","aria","reduced-motion","keyboard","screen-reader","mcp"]
-license: "MIT"
-semantic_alignment:
-  - WCAG 2.1 AA
-  - WAI-ARIA 1.2
-  - MCP-DL v6.2
----
-````
-
----
-
 ## 🧭 Overview
 
-The **Accessibility Components** embody the Kansas Frontier Matrix’s mission of **inclusive, universal design**, ensuring that users with assistive technologies experience the same interactive exploration of Kansas’s maps, timelines, and historical data.
+The **Accessibility Components** enforce **inclusive-by-default** behavior across KFM’s Web Frontend—ensuring keyboard users, screen-reader users, and motion/contrast-sensitive users can navigate maps, timelines, and narratives with parity.
 
-These components apply **WCAG 2.1 AA** and **MCP-DL v6.2** standards, integrating with `AccessibilityContext`, `ThemeContext`, and global keyboard hooks.
-Their purpose: to manage focus visibility, provide live ARIA announcements, and respect user preferences such as **reduced motion** and **high contrast modes**.
+They integrate **WCAG 2.1 AA**, **WAI-ARIA 1.2**, and **MCP-DL v6.2** practices via `AccessibilityContext`, theme tokens, and global hotkey hooks.
 
-> Accessibility is a **core design principle** in KFM — not an afterthought. It’s built into every motion, interaction, and dataset visualization.
+> Accessibility isn’t decorative; it’s **structural**.
 
 ---
 
@@ -46,33 +28,34 @@ Their purpose: to manage focus visibility, provide live ARIA announcements, and 
 
 ```text
 web/src/components/Accessibility/
-├── FocusRing.tsx              # Global visual focus outline for keyboard navigation
-├── SkipToContentLink.tsx      # "Skip to Content" link for keyboard/screen readers
-├── LiveRegion.tsx             # Announces updates (AI messages, timeline changes)
-├── ReducedMotionProvider.tsx  # Disables transitions for motion-sensitive users
-├── HotkeyHints.tsx            # Overlay panel listing available keyboard shortcuts
-├── styles.scss                # High-contrast color tokens and focus ring styles
-└── __tests__/                 # Unit and integration tests for focus/ARIA behavior
+├── FocusRing.tsx              # Global visible focus outline (keyboard-first)
+├── SkipToContentLink.tsx      # Landmark bypass to <main id="main">
+├── LiveRegion.tsx             # ARIA announcements (AI updates, timeline changes)
+├── ReducedMotionProvider.tsx  # Disables motion for PRM users
+├── HotkeyHints.tsx            # Overlay of supported shortcuts
+├── styles.scss                # High-contrast tokens + focus styles
+└── __tests__/                 # Focus, live region, PRM, overlay behavior tests
 ```
 
 ---
 
 ## ♿ Key Accessibility Features
 
-| Component                 | Purpose                                                  | WCAG Alignment                    |
-| :------------------------ | :------------------------------------------------------- | :-------------------------------- |
-| **FocusRing**             | Draws visible outlines around keyboard-focused elements  | 2.4.7 Focus Visible               |
-| **SkipToContentLink**     | Bypass repetitive navigation to reach main content       | 2.4.1 Bypass Blocks               |
-| **LiveRegion**            | Announces dynamic updates (AI, timeline, map events)     | 4.1.3 Status Messages             |
-| **ReducedMotionProvider** | Disables animations when `prefers-reduced-motion`        | 2.3.3 Animation from Interactions |
-| **HotkeyHints**           | Displays accessible overlay of active keyboard shortcuts | 2.1.1 Keyboard Operable           |
-| **styles.scss**           | Provides ≥4.5:1 contrast ratio, visible focus outlines   | 1.4.3 Contrast (Minimum)          |
+| Component                 | Purpose                                                  | WCAG / ARIA Mapping           |
+| :------------------------ | :------------------------------------------------------- | :---------------------------- |
+| **FocusRing**             | Always-visible focus ring for keyboard navigation        | 2.4.7 Focus Visible           |
+| **SkipToContentLink**     | Jump to main content, bypass repetitive regions          | 2.4.1 Bypass Blocks           |
+| **LiveRegion**            | Announces state changes (status messages)                | 4.1.3 Status Messages         |
+| **ReducedMotionProvider** | Honors `prefers-reduced-motion`, disables animations     | 2.3.3 Animation from Interact |
+| **HotkeyHints**           | Keyboard help overlay; fully keyboard operable           | 2.1.1 Keyboard Operable       |
+| **styles.scss**           | ≥4.5:1 contrast; visible focus outlines                  | 1.4.3 Contrast (Minimum)      |
 
 ---
 
 ## ⚙️ Implementation Example — FocusRing
 
 ```tsx
+// FocusRing.tsx
 import React from "react";
 
 export const FocusRing: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -84,15 +67,16 @@ export const FocusRing: React.FC<{ children: React.ReactNode }> = ({ children })
 ```
 
 ```scss
-// styles.scss
+/* styles.scss (excerpt) */
 .focus-outline {
   outline: 2px solid var(--kfm-color-accent);
   outline-offset: 3px;
-  transition: outline 0.1s ease;
+}
+:focus-visible {
+  outline: 2px solid var(--kfm-color-accent);
+  outline-offset: 3px;
 }
 ```
-
-> The `FocusRing` is globally applied to all interactive controls — buttons, timeline handles, map markers, and modals — ensuring that keyboard users have consistent, visible focus indicators across the interface.
 
 ---
 
@@ -100,11 +84,11 @@ export const FocusRing: React.FC<{ children: React.ReactNode }> = ({ children })
 
 ```mermaid
 flowchart TD
-  K["Keyboard Input"] --> F["FocusRing<br/>Visible Focus Outline"]
-  F --> SR["Screen Reader<br/>ARIA Live Region"]
-  SR --> ANN["Announcements<br/>(e.g. 'Event loaded: Flood of 1951')"]
-  PREF["User Prefs<br/>prefers-reduced-motion"] --> RM["ReducedMotionProvider"]
-  RM --> APP["AppShell<br/>Disables Framer Motion transitions"]
+  KB["Keyboard Input"] --> FR["FocusRing<br/>visible outline"]
+  FR --> LR["LiveRegion<br/>aria-live announcements"]
+  LR --> MSG["Announce: e.g., 'Event loaded: Flood of 1951'"]
+  PREF["prefers-reduced-motion"] --> RM["ReducedMotionProvider"]
+  RM --> APP["AppShell<br/>disable Framer Motion transitions"]
 %% END OF MERMAID
 ```
 
@@ -112,94 +96,95 @@ flowchart TD
 
 ## 🧠 Integration Notes
 
-* **Context Linkage:** All components subscribe to `AccessibilityContext` for motion preferences, focus mode, and screen reader activation flags.
-* **Hotkey Hooks:** `useKeyboardShortcuts()` manages all global shortcuts (map zoom, timeline navigation, AI toggle).
-* **Reduced Motion:** Disables Framer Motion animations and substitutes fade transitions with instant state updates.
-* **ARIA Roles:** Proper roles and labels used (`role="dialog"`, `role="status"`, `aria-live="polite"`).
-* **Announcement Management:** Debounced updates prevent “speech spam” and repeated screen reader triggers.
-* **Focus Behavior:** Maintains focus persistence after context updates (map panning, timeline scroll).
+- **Contexts:** Components subscribe to `AccessibilityContext` for focus mode, PRM, and high-contrast flags.  
+- **Hotkeys:** Global `useKeyboardShortcuts()` drives app-wide shortcuts (map pan/zoom, timeline scrub, help).  
+- **Motion:** When PRM is set, Framer Motion transitions are bypassed in favor of instant state changes.  
+- **ARIA:** Correct roles (`dialog`, `status`), labels, and `aria-live="polite"` for non-interruptive announcements.  
+- **Debounce Announce:** Batch timeline/map updates to avoid AT “announcement spam.”  
+- **Focus Persistence:** Maintain focus on actionable elements after layout/context changes.
 
 ---
 
 ## 🎨 Styling & Visual Design
 
-| Feature            | Description                                                               |
-| :----------------- | :------------------------------------------------------------------------ |
-| **Contrast Mode**  | Uses high-contrast color tokens validated for both light and dark themes  |
-| **Focus States**   | Outlined via accent token `--kfm-color-accent`; visible across all themes |
-| **Typography**     | Accessible text sizes (`1rem–1.25rem` base) and line spacing ≥ 1.5        |
-| **Reduced Motion** | All CSS transitions wrapped in `@media (prefers-reduced-motion)` guards   |
-| **Hotkey Overlay** | Animated using `Framer Motion` but auto-disables for reduced-motion users |
-
-Example SCSS:
+| Topic             | Guidance                                                                 |
+| :---------------- | :------------------------------------------------------------------------ |
+| Contrast          | High-contrast tokens for text/controls in light & dark themes            |
+| Focus             | Always-visible focus rings; large targets; no outline suppression         |
+| Typography        | Base 1.0–1.125rem; line-height ≥ 1.5; respect browser zoom ≥ 200%        |
+| Motion            | Wrap transitions with `@media (prefers-reduced-motion)` guards            |
+| Overlay           | Hotkey overlay uses motion if allowed; otherwise snaps open/closed        |
 
 ```scss
-:root {
-  --focus-outline-color: var(--kfm-color-accent);
-}
-
-:focus-visible {
-  outline: 2px solid var(--focus-outline-color);
-  outline-offset: 3px;
-}
+:root { --focus-outline-color: var(--kfm-color-accent); }
+:focus-visible { outline: 2px solid var(--focus-outline-color); outline-offset: 3px; }
 ```
 
 ---
 
 ## 🧪 Testing & Validation
 
-| Test Type                | Description                                                 | Tools                 |
-| :----------------------- | :---------------------------------------------------------- | :-------------------- |
-| **Keyboard Navigation**  | Ensures focus cycles correctly through interactive elements | Cypress + axe-core    |
-| **Screen Reader Output** | Verifies ARIA live regions announce updates properly        | NVDA / VoiceOver      |
-| **Color Contrast**       | Validates 4.5:1 ratio for text and controls                 | axe-core / Lighthouse |
-| **Reduced Motion**       | Confirms animations disable when preference set             | Puppeteer automation  |
-| **Hotkey Overlay**       | Tests `?` key triggers hint overlay                         | Jest + RTL            |
+| Test                     | Expectation                                              | Tools                    |
+| :----------------------- | :------------------------------------------------------- | :----------------------- |
+| Keyboard focus cycle     | Logical tab order across header → map → panels → timeline| Cypress + axe-core       |
+| Live region messaging    | Announces updates once per change                         | RTL + NVDA/VoiceOver     |
+| PRM behavior             | Animations fully disabled when PRM is active             | Jest (matchMedia mock)   |
+| Contrast checks          | All text/controls ≥ 4.5:1                                | Lighthouse + axe-core    |
+| Hotkey overlay           | `?` opens; fully operable by keyboard; focus trapped     | RTL + user-event         |
 
-> **Target Coverage:** ≥ **90%** for all accessibility hooks and components.
+**Target coverage:** ≥ **90%** for a11y components and hooks.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                                    |
-| :--------------- | :----------------------------------------------------------------------------- |
-| **Inputs**       | AccessibilityContext, user system settings, keyboard events                    |
-| **Outputs**      | Focus indicators, ARIA messages, hotkey overlays                               |
-| **Dependencies** | React 18+, Framer Motion, TailwindCSS, axe-core                                |
-| **Integrity**    | Verified via CI/CD: accessibility audits, Lighthouse scans, and full E2E tests |
+| Artifact   | Description                                                             |
+| :--------- | :---------------------------------------------------------------------- |
+| Inputs     | AccessibilityContext state; system preferences; keyboard events         |
+| Outputs    | Visible focus, ARIA announcements, reduced-motion handling, hotkey UI   |
+| Dependencies | React 18+, TailwindCSS/SCSS, Framer Motion (optional), axe-core      |
+| Integrity  | CI: lint/type, axe/Lighthouse audits, E2E keyboard flows               |
 
 ---
 
 ## 🧠 MCP Compliance Checklist
 
-| MCP Principle       | Implementation                                                 |
-| :------------------ | :------------------------------------------------------------- |
-| Documentation-first | README + per-component inline annotations                      |
-| Reproducibility     | Deterministic keyboard, motion, and ARIA behavior              |
-| Accessibility       | WCAG 2.1 AA + CI automation                                    |
-| Provenance          | Motion & color tokens versioned in `variables.scss`            |
-| Open Standards      | WAI-ARIA 1.2, CSS Custom Properties, Reduced-Motion API        |
-| Inclusivity         | Universal design embedded across map, timeline, and AI modules |
+| Principle           | Implementation                                              |
+| :------------------ | :---------------------------------------------------------- |
+| Documentation-first | README + TSDoc; linked to design reviews                   |
+| Reproducibility     | Deterministic a11y behavior via context & tokens           |
+| Accessibility       | WCAG 2.1 AA automated in CI                                |
+| Provenance          | Token/version reference in `styles/variables.scss`         |
+| Open Standards      | WAI-ARIA 1.2 · CSS Custom Properties · Reduced Motion API  |
+| Inclusivity         | Universal design spans map, timeline, and narrative views  |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Web Frontend Components Overview** — `web/src/components/README.md`
-* **Context — AccessibilityContext** — `web/src/context/README.md`
-* **Accessibility Design Reviews** — `docs/design/reviews/accessibility/`
-* **Keyboard Focus Audit** — `docs/testing/a11y/keyboard.md`
-* **Screen Reader Audit** — `docs/testing/a11y/screen-reader.md`
+- **Components Overview** — `web/src/components/README.md`  
+- **AccessibilityContext** — `web/src/context/README.md`  
+- **Design Reviews** — `docs/design/reviews/accessibility/`  
+- **Keyboard Focus Audit** — `docs/testing/a11y/keyboard.md`  
+- **Screen Reader Audit** — `docs/testing/a11y/screen-reader.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.6.0` |
+| **Codename** | *Inclusive Interaction & PRM Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-accessibility · @kfm-ui |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | WCAG 2.1 AA · WAI-ARIA 1.2 · MCP-DL v6.2 |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for transparency, inclusivity, and reproducible accessibility design.
-
-> *“Accessibility isn’t a feature — it’s the frontier every user deserves to cross.”*
-
-```
-```
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for transparent, inclusive, and reproducible accessibility design.
