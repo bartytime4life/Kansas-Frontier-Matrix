@@ -14,49 +14,16 @@
 
 ---
 
-```yaml
----
-title: "KFM • Web Frontend Context (web/src/context/)"
-version: "v1.3.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-ux"]
-tags: ["react","context","state","timeline","map","selection","theming","accessibility","mcp"]
-license: "MIT"
-semantic_alignment:
-  - OWL-Time (timeline range semantics)
-  - CIDOC CRM (UI context ↔ entity linkage)
-  - WCAG 2.1 AA (focus & motion preferences)
----
-````
-
----
-
-## 📚 Table of Contents
-
-* [🧭 Overview](#🧭-overview)
-* [🧱 Directory Structure](#🧱-directory-structure)
-* [🔗 Context Graph](#🔗-context-graph)
-* [🧩 Usage Example](#🧩-usage-example)
-* [⚙️ Patterns & Contracts](#️-patterns--contracts)
-* [🧪 Testing](#🧪-testing)
-* [🚀 Performance Notes](#🚀-performance-notes)
-* [♿ Accessibility](#♿-accessibility)
-* [🧾 Provenance & Integrity](#🧾-provenance--integrity)
-* [🔗 Related Documentation](#🔗-related-documentation)
-* [📜 License](#📜-license)
-
----
-
 ## 🧭 Overview
 
 `web/src/context/` provides **React Context providers** and **typed hooks** that coordinate global UI state—keeping **Map**, **Timeline**, **LayerControls**, **DetailPanel**, and **AI Assistant** synchronized.
 
 **Design goals**
 
-* **Single source of truth** for cross-cutting state (timeline range, selected entity, active layers)
-* **Deterministic updates** with minimal re-renders (memoized values & selectors)
-* **Type-safe contracts** via `web/src/types/`
-* **MCP-aligned**: documented behaviors, predictable effects, testable reducers
+- **Single source of truth** for cross-cutting state (timeline range, selected entity, active layers)  
+- **Deterministic updates** with minimal re-renders (memoized values & selectors)  
+- **Type-safe contracts** via `web/src/types/`  
+- **MCP-aligned**: documented behaviors, predictable effects, testable reducers  
 
 ---
 
@@ -68,17 +35,13 @@ web/src/context/
 ├── MapContext.tsx            # Map instance refs, viewport, interaction state
 ├── LayerContext.tsx          # Visible overlays, opacity, legends (STAC-driven)
 ├── SelectionContext.tsx      # Selected entity/event, multi-select, clipboard
-├── ThemeContext.tsx          # Light/Dark theme + persistence
+├── ThemeContext.tsx          # Light/Dark theme + persistence (+ reduced motion/contrast)
 ├── AIContext.tsx             # AI request state, responses, citations
 ├── AccessibilityContext.tsx  # Focus ring, reduced motion, keyboard hints
 └── index.ts                  # Re-exports all providers & typed hooks
 ```
 
-Each context exports:
-
-* **Provider** (wraps children)
-* **Typed hook** (e.g., `useTimeline()`)
-* **Actions / reducers** where appropriate
+Each context exports a **Provider**, a **typed hook** (e.g., `useTimeline()`), and **actions/reducers** where appropriate.
 
 ---
 
@@ -91,7 +54,7 @@ flowchart TD
   SEL["SelectionContext<br/>entityId,type"] --> DP["DetailPanel"]
   MAP --> DP
   LYR --> MAP
-  THEME["ThemeContext<br/>light|dark"] --> APP["AppShell"]
+  THEME["ThemeContext<br/>light|dark · contrast · motion"] --> APP["AppShell"]
   AI["AIContext<br/>request,status,answer"] --> AIP["AI Panel"]
   ACC["AccessibilityContext<br/>focus,reducedMotion"] --> APP
 %% END OF MERMAID
@@ -135,7 +98,7 @@ export function App() {
 ```
 
 ```tsx
-// Example component reading/writing context
+// TimelineToolbar.tsx
 import { useTimeline, useSelection } from "../context";
 
 export function TimelineToolbar() {
@@ -158,13 +121,13 @@ export function TimelineToolbar() {
 
 ## ⚙️ Patterns & Contracts
 
-* **Composition over collision** — keep state domains independent; cross-communicate via props/events
-* **Selectors & memoization** — export derived values with `useMemo` to avoid re-renders
-* **Reducer-first** for critical flows (e.g., Timeline/Layer reducers) with explicit, testable transitions
-* **Persistence** — theme & user prefs via `localStorage` (namespaced keys)
-* **Interop** — types (`Event`, `Layer`, `AIResponse`, `TimelineRange`) from `web/src/types/`
+- **Composition over collision** — keep state domains independent; cross-communicate via props/events  
+- **Selectors & memoization** — export derived values with `useMemo` to avoid re-renders  
+- **Reducer-first** for critical flows (e.g., Timeline/Layer reducers) with explicit, testable transitions  
+- **Persistence** — theme & user prefs via `localStorage` (namespaced keys)  
+- **Interop** — types (`Event`, `Layer`, `AIResponse`, `TimelineRange`) from `web/src/types/`  
 
-**Reducer shape example**
+**Reducer shape (example)**
 
 ```ts
 type Action =
@@ -186,14 +149,13 @@ function timelineReducer(state: State, action: Action): State {
 
 ## 🧪 Testing
 
-* Unit tests for each context **reducer** and **hook**: `web/src/context/__tests__/`
-* Use RTL + Jest: `render(<Provider>children</Provider>)`
-* Validate:
-
-  * Initial state contracts
-  * Action transitions (happy & edge cases)
-  * Memoized selectors (stable identity)
-  * A11y toggles (`reducedMotion`, focus ring)
+- Unit tests for each context **reducer** and **hook**: `web/src/context/__tests__/`  
+- Use RTL + Jest: `render(<Provider>children</Provider>)`  
+- Validate:
+  - Initial state contracts  
+  - Action transitions (happy & edge cases)  
+  - Memoized selectors (stable identity)  
+  - A11y toggles (`reducedMotion`, focus ring)  
 
 **Coverage target:** ≥ **85%**
 
@@ -201,10 +163,10 @@ function timelineReducer(state: State, action: Action): State {
 
 ## 🚀 Performance Notes
 
-* Co-locate heavy state with nearest component; lift to context **only** when shared
-* Memoize context values; provide **granular hooks** (e.g., `useLayerOpacity(id)`)
-* Immutable updates to avoid referential churn
-* Throttle dispatches for large map viewport sync (e.g., **60–120ms**)
+- Co-locate heavy state with nearest component; lift to context **only when shared**  
+- Memoize context values; provide **granular hooks** (e.g., `useLayerOpacity(id)`)  
+- Immutable updates to avoid referential churn  
+- Throttle dispatches for large map viewport sync (e.g., **60–120ms**)  
 
 ---
 
@@ -212,10 +174,10 @@ function timelineReducer(state: State, action: Action): State {
 
 `AccessibilityContext` centralizes:
 
-* `prefers-reduced-motion` handling
-* Focus outline mode (keyboard vs mouse)
-* Skip-to-content announcements
-* Hotkey hints (surfaced to help overlays)
+- `prefers-reduced-motion` handling  
+- Focus outline mode (keyboard vs mouse)  
+- Skip-to-content announcements  
+- Hotkey hints (surfaced to help overlays)  
 
 **Contract:** all contexts **must** respect these flags (e.g., disable animations with reduced motion).
 
@@ -223,30 +185,41 @@ function timelineReducer(state: State, action: Action): State {
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                                       |
-| :--------------- | :-------------------------------------------------------------------------------- |
-| **Inputs**       | Typed models from `../types/`, utilities from `../utils/`, hooks from `../hooks/` |
-| **Outputs**      | Context providers & typed hooks consumed by UI components                         |
-| **Dependencies** | React 18+, TypeScript                                                             |
-| **Integrity**    | ESLint, `tsc --noEmit`, unit tests with coverage gates in CI                      |
+| Artifact   | Description                                                                 |
+| :--------- | :-------------------------------------------------------------------------- |
+| **Inputs** | Typed models from `../types/`, utilities from `../utils/`, hooks from `../hooks/` |
+| **Outputs**| Context providers & typed hooks consumed by UI components                   |
+| **Deps**   | React 18+, TypeScript                                                       |
+| **Integrity** | ESLint, `tsc --noEmit`, unit tests with coverage gates in CI             |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Web Frontend Overview** — `web/README.md`
-* **Hooks** — `web/src/hooks/README.md`
-* **Types** — `web/src/types/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **Web Frontend Overview** — `web/README.md`  
+- **Hooks** — `web/src/hooks/README.md`  
+- **Types** — `web/src/types/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.5.0` |
+| **Codename** | *Global State & Sync Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-ux |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | OWL-Time (timeline range semantics) · CIDOC CRM (UI↔entity linkage) · WCAG 2.1 AA (focus/motion) |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
+Released under the **MIT License**.  
 © 2025 Kansas Frontier Matrix — built with **MCP-DL v6.2** for reliability, clarity, and accessibility.
 
 > *“Context is the campfire: every component gathers round to share the same light.”*
-
-```
-```
