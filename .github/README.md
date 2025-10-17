@@ -1,9 +1,10 @@
 <div align="center">
 
-# ⚙️ **Kansas Frontier Matrix — GitHub Automation & Governance**  
+# ⚙️ **Kansas Frontier Matrix — GitHub Automation & Governance**
+
 **Path:** `.github/`
 
-**Mission:** Central **automation + governance hub** for the Kansas Frontier Matrix (KFM) — enforcing  
+**Mission:** Central **automation + governance hub** for the Kansas Frontier Matrix (KFM) — enforcing
 **reproducibility**, **security**, **provenance**, **versioning**, and **MCP compliance** across all code, data, and docs.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./workflows/site.yml)
@@ -20,9 +21,9 @@
 
 ## 🧭 Overview
 
-`.github/` defines how KFM **automates, validates, governs, versions, and secures** its lifecycle using  
-GitHub Actions, branch protections, pre-commit, and MCP standards.  
-Automation guarantees the repo is **✅ Deterministic · 🔍 Traceable · 🔐 Secure · 🧾 Auditable · 🧮 MCP-Verified**.  
+`.github/` defines how KFM **automates, validates, governs, versions, and secures** its lifecycle using
+GitHub Actions, branch protections, pre-commit, and MCP standards.
+Automation guarantees the repo is **✅ Deterministic · 🔍 Traceable · 🔐 Secure · 🗞 Auditable · 🧮 MCP-Verified**.
 Every commit, workflow, dataset, and artifact participates in a **verifiable chain of reproducibility**.
 
 ---
@@ -55,7 +56,7 @@ Every commit, workflow, dataset, and artifact participates in a **verifiable cha
 ├── CODEOWNERS
 ├── GOVERNANCE.md
 └── SECURITY.md
-````
+```
 
 > **Note:** All Actions are pinned by tag or commit SHA for deterministic runs.
 
@@ -75,7 +76,7 @@ Every commit, workflow, dataset, and artifact participates in a **verifiable cha
 
 ---
 
-## 🧩 CI/CD Flow
+## 🧍 CI/CD Flow
 
 ```mermaid
 flowchart TD
@@ -86,7 +87,6 @@ flowchart TD
   E --> F["Build & Deploy Docs + Site"]
   F --> G["Auto-Merge + Provenance Log"]
   G --> H["Artifact Archival · MCP Verification"]
-%% END OF MERMAID
 ```
 
 ---
@@ -108,21 +108,19 @@ flowchart TD
 ## 🔒 Security & Permissions Hardening
 
 ```yaml
-# Minimal permissions for standard jobs
 permissions:
   contents: read
   actions: read
   security-events: write
 
-# OIDC deployments (no long-lived secrets)
 permissions:
   id-token: write
   contents: read
 
-# Concurrency & timeouts
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 timeout-minutes: 20
 ```
 
@@ -145,17 +143,17 @@ uses: actions/setup-node@v4
 * CodeQL/Trivy clean
 * Provenance & license metadata included
 
-**🧩 Issue Templates**
+**🧹 Issue Templates**
 
 | Template           | Purpose                              |
 | ------------------ | ------------------------------------ |
 | 🐞 Bug Report      | Repro steps with environment + logs  |
 | 💡 Feature Request | Enhancement proposal                 |
-| 🗃️ Data Request   | Dataset addition + STAC metadata     |
+| 💃️ Data Request   | Dataset addition + STAC metadata     |
 | 🧰 Data Correction | Fix current data/metadata + evidence |
 | 🧪 Research Issue  | Hypothesis / methods / ADR input     |
 | ♿ Accessibility    | WCAG/ARIA barriers                   |
-| 🔒 Security Vuln   | Responsible disclosure path          |
+| 🔐 Security Vuln   | Responsible disclosure path          |
 | 🧭 Governance Q    | Policy / roles / branch strategy     |
 
 ---
@@ -165,7 +163,7 @@ uses: actions/setup-node@v4
 ```
 feature/* → PR → main
              ↓
-           tag vX.Y.Z → GitHub Release → (optional) Zenodo DOI
+tag vX.Y.Z → GitHub Release → (optional) Zenodo DOI
 ```
 
 > **Note:** Backports allowed only with Security + Maintainer approval.
@@ -198,13 +196,13 @@ feature/* → PR → main
 
 ## 🧠 Maintainer Guidelines
 
-1. **Modular Workflows** — one purpose per YAML
-2. **Document Everything** — headers + links
-3. **Pin Versions** — never `@latest`
-4. **Fail Fast** — clear exit codes & messages
-5. **Test Locally** — `act` or `gh workflow run`
-6. **Cache Wisely** — prune monthly
-7. **Audit Regularly** — secrets · permissions · costs
+1. Modular Workflows — one purpose per YAML
+2. Document Everything — headers + links
+3. Pin Versions — never `@latest`
+4. Fail Fast — clear exit codes & messages
+5. Test Locally — `act` or `gh workflow run`
+6. Cache Wisely — prune monthly
+7. Audit Regularly — secrets · permissions · costs
 
 ---
 
@@ -219,7 +217,6 @@ graph LR
   E --> F["Auto-Merge + Provenance"]
   F --> G["Artifacts → MCP Verify"]
   G --> H["Audit Trail (SARIF + Logs)"]
-%% END OF MERMAID
 ```
 
 ---
@@ -292,4 +289,3 @@ gh run download --name "stac-report.json"
 Every workflow · Every commit · Every result → **Proven · Versioned · Reproducible.**
 
 </div>
-```
