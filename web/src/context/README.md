@@ -16,14 +16,13 @@
 
 ## 🧭 Overview
 
-`web/src/context/` provides **React Context providers** and **typed hooks** that coordinate global UI state—keeping **Map**, **Timeline**, **LayerControls**, **DetailPanel**, and **AI Assistant** synchronized.
+`web/src/context/` defines the **React Context providers** that maintain synchronized global state across the KFM Web Frontend — linking **Map**, **Timeline**, **Layer Controls**, **AI Assistant**, and **Detail Panels**.
 
-**Design goals**
-
-- **Single source of truth** for cross-cutting state (timeline range, selected entity, active layers)  
-- **Deterministic updates** with minimal re-renders (memoized values & selectors)  
-- **Type-safe contracts** via `web/src/types/`  
-- **MCP-aligned**: documented behaviors, predictable effects, testable reducers  
+**Design Principles**
+- 🧩 **Unified state:** one context layer per domain  
+- ⚙️ **Deterministic updates:** pure reducers & memoized selectors  
+- 🧠 **Type-safe contracts:** shared `types/` module for entities/events  
+- 🧾 **MCP Compliance:** traceable, documented, and testable  
 
 ---
 
@@ -31,17 +30,15 @@
 
 ```text
 web/src/context/
-├── TimelineContext.tsx       # Global time window (start/end/zoom) + reducer/actions
-├── MapContext.tsx            # Map instance refs, viewport, interaction state
-├── LayerContext.tsx          # Visible overlays, opacity, legends (STAC-driven)
-├── SelectionContext.tsx      # Selected entity/event, multi-select, clipboard
-├── ThemeContext.tsx          # Light/Dark theme + persistence (+ reduced motion/contrast)
-├── AIContext.tsx             # AI request state, responses, citations
-├── AccessibilityContext.tsx  # Focus ring, reduced motion, keyboard hints
-└── index.ts                  # Re-exports all providers & typed hooks
+├── TimelineContext.tsx       # Time window state & reducer (start/end/zoom)
+├── MapContext.tsx            # MapLibre instance, viewport & selection
+├── LayerContext.tsx          # Visible overlays, opacity, STAC linkage
+├── SelectionContext.tsx      # Entity/event selection & multi-select
+├── ThemeContext.tsx          # Theme, contrast, motion preference
+├── AIContext.tsx             # AI interaction states (loading, answer)
+├── AccessibilityContext.tsx  # Focus ring, keyboard hints, motion toggles
+└── index.ts                  # Export all contexts + typed hooks
 ```
-
-Each context exports a **Provider**, a **typed hook** (e.g., `useTimeline()`), and **actions/reducers** where appropriate.
 
 ---
 
@@ -97,37 +94,9 @@ export function App() {
 }
 ```
 
-```tsx
-// TimelineToolbar.tsx
-import { useTimeline, useSelection } from "../context";
-
-export function TimelineToolbar() {
-  const { start, end, setRange, zoomIn, zoomOut } = useTimeline();
-  const { selected, clearSelection } = useSelection();
-
-  return (
-    <div className="toolbar">
-      <button aria-label="Zoom out" onClick={zoomOut}>−</button>
-      <button aria-label="Zoom in" onClick={zoomIn}>+</button>
-      <button onClick={() => setRange("1850-01-01", "1900-12-31")}>1850–1900</button>
-      {selected && <button onClick={clearSelection}>Clear selection</button>}
-      <span>{start} — {end}</span>
-    </div>
-  );
-}
-```
-
 ---
 
-## ⚙️ Patterns & Contracts
-
-- **Composition over collision** — keep state domains independent; cross-communicate via props/events  
-- **Selectors & memoization** — export derived values with `useMemo` to avoid re-renders  
-- **Reducer-first** for critical flows (e.g., Timeline/Layer reducers) with explicit, testable transitions  
-- **Persistence** — theme & user prefs via `localStorage` (namespaced keys)  
-- **Interop** — types (`Event`, `Layer`, `AIResponse`, `TimelineRange`) from `web/src/types/`  
-
-**Reducer shape (example)**
+## ⚙️ Reducer Pattern Example
 
 ```ts
 type Action =
@@ -149,77 +118,80 @@ function timelineReducer(state: State, action: Action): State {
 
 ## 🧪 Testing
 
-- Unit tests for each context **reducer** and **hook**: `web/src/context/__tests__/`  
-- Use RTL + Jest: `render(<Provider>children</Provider>)`  
-- Validate:
-  - Initial state contracts  
-  - Action transitions (happy & edge cases)  
-  - Memoized selectors (stable identity)  
-  - A11y toggles (`reducedMotion`, focus ring)  
+- ✅ Unit tests for each context (reducers, hooks, and providers)  
+- 🧩 Jest + RTL (`@testing-library/react`) to simulate interactions  
+- 🎯 Validate:
+  - Initial contracts  
+  - State transitions  
+  - Selector stability  
+  - Accessibility toggle propagation  
 
 **Coverage target:** ≥ **85%**
 
 ---
 
-## 🚀 Performance Notes
+## 🚀 Performance & Optimization
 
-- Co-locate heavy state with nearest component; lift to context **only when shared**  
-- Memoize context values; provide **granular hooks** (e.g., `useLayerOpacity(id)`)  
-- Immutable updates to avoid referential churn  
-- Throttle dispatches for large map viewport sync (e.g., **60–120ms**)  
+- Memoized context values to prevent unnecessary re-renders  
+- Localize heavy state where possible; lift only when shared  
+- Immutable reducers for referential consistency  
+- Debounced updates for viewport & timeline events  
 
 ---
 
-## ♿ Accessibility
+## ♿ Accessibility Integration
 
-`AccessibilityContext` centralizes:
+Centralized under `AccessibilityContext`:
+- `prefers-reduced-motion` listener  
+- Focus ring vs pointer mode detection  
+- Skip-to-content behavior  
+- Global keyboard hint overlays  
 
-- `prefers-reduced-motion` handling  
-- Focus outline mode (keyboard vs mouse)  
-- Skip-to-content announcements  
-- Hotkey hints (surfaced to help overlays)  
-
-**Contract:** all contexts **must** respect these flags (e.g., disable animations with reduced motion).
+All contexts observe these flags to ensure **accessibility-first UI behavior**.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact   | Description                                                                 |
-| :--------- | :-------------------------------------------------------------------------- |
-| **Inputs** | Typed models from `../types/`, utilities from `../utils/`, hooks from `../hooks/` |
-| **Outputs**| Context providers & typed hooks consumed by UI components                   |
-| **Deps**   | React 18+, TypeScript                                                       |
-| **Integrity** | ESLint, `tsc --noEmit`, unit tests with coverage gates in CI             |
+| Field | Description |
+|:------|:-------------|
+| **Inputs** | Hooks, utils, and types modules |
+| **Outputs** | Context providers and typed hooks |
+| **Dependencies** | React 18+, TypeScript |
+| **Integrity** | CI runs ESLint, TypeScript checks, and Jest coverage |
+| **Audit Tools** | CodeQL + Trivy for dependency & security validation |
 
 ---
 
 ## 🔗 Related Documentation
 
 - **Web Frontend Overview** — `web/README.md`  
-- **Hooks** — `web/src/hooks/README.md`  
-- **Types** — `web/src/types/README.md`  
-- **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **Hooks Reference** — `web/src/hooks/README.md`  
+- **Types Reference** — `web/src/types/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`  
 
 ---
 
 ## 🧾 Versioning & Metadata
 
 | Field | Value |
-| :---- | :---- |
-| **Version** | `v1.5.0` |
-| **Codename** | *Global State & Sync Upgrade* |
+|:------|:------|
+| **Version** | `v1.6.0` |
+| **Codename** | *Unified Context Synchronization Upgrade* |
 | **Last Updated** | 2025-10-17 |
 | **Maintainers** | @kfm-web · @kfm-ux |
 | **License** | MIT (code) · CC-BY 4.0 (docs) |
-| **Alignment** | OWL-Time (timeline range semantics) · CIDOC CRM (UI↔entity linkage) · WCAG 2.1 AA (focus/motion) |
+| **Alignment** | OWL-Time · CIDOC CRM · WCAG 2.1 AA |
 | **Maturity** | Stable / Production |
 
 ---
 
-## 📜 License
+<div align="center">
 
-Released under the **MIT License**.  
-© 2025 Kansas Frontier Matrix — built with **MCP-DL v6.2** for reliability, clarity, and accessibility.
+**© Kansas Frontier Matrix — Web Frontend Context**  
+Built under the **Master Coder Protocol (MCP)** for reliability, transparency, and accessibility.
 
-> *“Context is the campfire: every component gathers round to share the same light.”*
+[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
+[![Semantic Alignment](https://img.shields.io/badge/CIDOC%20CRM%20·%20OWL--Time%20·%20WCAG%202.1%20AA-blue)]()
+
+</div>
