@@ -15,35 +15,15 @@
 
 ---
 
-```yaml
----
-title: "KFM • Header Component (web/src/components/Header/)"
-version: "v1.4.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-ui"]
-tags: ["react","navigation","header","search","theme","accessibility","mcp"]
-license: "MIT"
-semantic_alignment:
-  - WCAG 2.1 AA
-  - WAI-ARIA 1.2
-  - CIDOC CRM (UI hierarchy)
----
-````
-
----
-
 ## 🧭 Overview
 
-The **Header Component** defines the **global navigation and branding interface** of the Kansas Frontier Matrix web application.
-It acts as the user’s control hub — providing quick access to search, theme toggling, language selection, and modal menus (Help, About, Settings).
+The **Header** is KFM’s **global navigation and identity bar**. It provides fast access to **search**, **theme controls**, **language**, and **help/settings** modals—wired into global contexts for a deterministic, accessible experience.
 
-Built under **MCP-DL v6.2** principles, the Header embodies:
+**Design tenets (MCP-DL v6.2)**
 
-* **Unified State Management** via `ThemeContext` & `AccessibilityContext`
-* **Accessibility-First Design** (ARIA roles, keyboard shortcuts, focus order)
-* **Reproducibility & Documentation** through typed props and predictable UI contracts
-
-This component appears across all routes and ensures consistent behavior, responsiveness, and performance across screen sizes.
+- **Unified state:** `ThemeContext`, `AccessibilityContext`  
+- **A11y-first:** ARIA roles/labels, skip-links, keyboard shortcuts  
+- **Reproducible UI contracts:** typed props, predictable behavior, CI-validated
 
 ---
 
@@ -51,28 +31,28 @@ This component appears across all routes and ensures consistent behavior, respon
 
 ```text
 web/src/components/Header/
-├── Header.tsx             # Primary component and layout container
-├── SearchBar.tsx          # Entity search (autocomplete)
-├── ThemeToggle.tsx        # Dark/light mode toggle
-├── LanguageSwitcher.tsx   # Locale & i18n switcher
-├── HelpMenu.tsx           # Shortcut help + documentation links
-├── styles.scss            # Header styles and theme tokens
-└── __tests__/             # Jest + RTL tests for interaction, a11y, responsiveness
+├── Header.tsx             # Main layout (logo · search · controls)
+├── SearchBar.tsx          # Autocomplete across entities (debounced)
+├── ThemeToggle.tsx        # Light/Dark + reduced motion & contrast hints
+├── LanguageSwitcher.tsx   # Locale switch (dates, numbers)
+├── HelpMenu.tsx           # Keyboard shortcuts · docs · about
+├── styles.scss            # Tokens, layout, focus rings, responsive rules
+└── __tests__/             # RTL/Jest tests (a11y, responsive, persistence)
 ```
 
 ---
 
-## ⚙️ Component Architecture
+## 🧩 Architecture
 
 ```mermaid
 flowchart LR
-  H["Header<br/>(banner region)"] --> S["SearchBar<br/>(useDebounce + /search?q=)"]
-  H --> T["ThemeToggle<br/>dark|light via ThemeContext"]
-  H --> L["LanguageSwitcher<br/>locale select"]
+  H["Header<br/>(role=banner)"] --> S["SearchBar<br/>(/search?q=, useDebounce)"]
+  H --> T["ThemeToggle<br/>ThemeContext · localStorage"]
+  H --> L["LanguageSwitcher<br/>i18n provider"]
   H --> M["HelpMenu<br/>shortcuts · docs · about"]
-  H --> LOGO["Branding / Project Title"]
+  H --> LOGO["Branding · Project Title · Version"]
   S --> API["FastAPI<br/>GET /search?q="]
-  H --> ACC["AccessibilityContext<br/>focus, skip-link"]
+  H --> ACC["AccessibilityContext<br/>skip-link · focus mgmt"]
 %% END OF MERMAID
 ```
 
@@ -80,48 +60,52 @@ flowchart LR
 
 ## 🔍 Core Features
 
-| Feature               | Description                                          | Data / Context Source  |
-| :-------------------- | :--------------------------------------------------- | :--------------------- |
-| **Search Bar**        | Autocomplete for entities (people, places, events)   | `/api/search`          |
-| **Theme Toggle**      | Light/Dark mode persistence via `localStorage`       | `ThemeContext`         |
-| **Language Switcher** | Adjusts locale + date formatting                     | i18n library           |
-| **Help Menu**         | Lists keyboard shortcuts and documentation links     | Static Config          |
-| **Branding**          | Displays title, logo, and version                    | `package.json`         |
-| **Accessibility**     | `role="banner"` landmark + skip link + focus outline | `AccessibilityContext` |
+| Feature               | Description                                              | Source / Context          |
+| :-------------------- | :------------------------------------------------------- | :------------------------ |
+| **Global Search**     | Autocomplete entities (Person/Place/Event/Document)      | `GET /search?q=`          |
+| **Theme Toggle**      | Light/Dark persisted; honors reduced-motion & contrast   | `ThemeContext`            |
+| **Language Switcher** | Switches locale (dates, numbers, UI strings)             | i18n provider             |
+| **Help Menu**         | Keyboard shortcuts + docs/about links                    | Static config / routing   |
+| **Branding**          | KFM logo, title, semantic version                        | `package.json` metadata   |
+| **A11y Essentials**   | `role="banner"`, skip-link, robust focus order           | `AccessibilityContext`    |
 
 ---
 
-## 💬 Example Implementation
+## 💬 Reference Implementation (concise)
 
 ```tsx
 import React from "react";
-import { useTheme } from "../../context/ThemeContext";
 import { SearchBar } from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useTheme } from "../../context/ThemeContext";
 import "./styles.scss";
 
 export const Header: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <header role="banner" className={`kfm-header ${theme}`}>
+    <header role="banner" className={`kfm-header ${theme}`} data-testid="kfm-header">
       <a href="#main" className="skip-link">Skip to Content</a>
+
       <div className="logo">
         <img src="/assets/logo.svg" alt="Kansas Frontier Matrix logo" />
-        <h1>Kansas Frontier Matrix</h1>
+        <h1 className="title">Kansas Frontier Matrix</h1>
+        <span className="version" aria-label="Application version">v1</span>
       </div>
-      <SearchBar placeholder="Search events, places, or people..." />
-      <div className="controls">
+
+      <SearchBar placeholder="Search events, places, or people…" />
+
+      <nav aria-label="Global controls" className="controls">
         <LanguageSwitcher />
         <ThemeToggle />
-      </div>
+      </nav>
     </header>
   );
 };
 ```
 
-> The Header orchestrates navigation, state synchronization, and accessibility — ensuring a smooth, responsive UX.
+> The header guarantees **landmark semantics**, a **visible skip-link**, and **stable focus order**.
 
 ---
 
@@ -129,131 +113,130 @@ export const Header: React.FC = () => {
 
 ```mermaid
 flowchart TD
-  U["User Input"] --> SB["SearchBar<br/>(useDebounce + fetch)"]
+  U["User"] --> SB["SearchBar (debounced input)"]
   SB --> API["/api/search?q={term}"]
-  API --> RES["Entity Results<br/>JSON Response"]
-  RES --> DP["DetailPanel<br/>entity preview"]
-  T["ThemeToggle"] --> TC["ThemeContext<br/>persist preference"]
-  L["LanguageSwitcher"] --> I18N["i18n provider<br/>updates locale"]
+  API --> RES["Results (typed)"]
+  RES --> NAV["Navigate / open DetailPanel"]
+  TT["ThemeToggle"] --> TC["ThemeContext (persist to localStorage)"]
+  LS["LanguageSwitcher"] --> I18N["i18n provider (locale change)"]
 %% END OF MERMAID
 ```
 
 ---
 
-## ⚙️ Search Functionality
-
-The SearchBar integrates with the backend `/api/search` endpoint to query entities across the knowledge graph.
+## 🔎 Search Model (types)
 
 ```ts
-const { query, setQuery } = useState("");
-const results = useFetch(`/api/search?q=${query}`);
-```
-
-Returned entities conform to:
-
-```ts
-interface SearchResult {
+export interface SearchResult {
   id: string;
   label: string;
   type: "Person" | "Place" | "Event" | "Document";
   summary?: string;
+  bbox?: [number, number, number, number]; // optional map focus
 }
 ```
 
-Each result is rendered with an icon per type and links directly to the `DetailPanel`.
+Results render with type icons and route to the **DetailPanel**, optionally focusing the map to `bbox`.
 
 ---
 
 ## 🎨 Styling & Layout
 
-| Property                   | Description                                                            |
-| :------------------------- | :--------------------------------------------------------------------- |
-| **Layout**                 | Flexbox grid: logo → search → controls                                 |
-| **Theme Control**          | Colors from `--kfm-color-bg`, `--kfm-color-accent`, `--kfm-color-text` |
-| **Responsive Breakpoints** | `<768px`: hamburger menu · `<1024px`: text hides, icon persists        |
-| **Transitions**            | Framer Motion animations (fade-in toggle, slide-down search results)   |
-| **Focus Styling**          | Visible outlines via SCSS tokens (from `variables.scss`)               |
-
-Example:
+| Aspect                    | Notes                                                                 |
+| :------------------------ | :-------------------------------------------------------------------- |
+| **Layout**                | Flex grid: **logo → search → controls**                               |
+| **Tokens**                | `--kfm-color-bg/text/accent`, `--kfm-radius`, `--kfm-shadow`          |
+| **Breakpoints**           | `<768px` compacts search; `<1024px` trims title to icon-only          |
+| **Transitions**           | Subtle fades/slides; auto-disabled on reduced-motion                  |
+| **Focus**                 | High-contrast ring via tokens; skip-link visible on focus             |
 
 ```scss
 .kfm-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--kfm-color-bg);
-  color: var(--kfm-color-text);
-  padding: 0.5rem 1rem;
-  transition: background 0.3s ease;
+  display:flex; align-items:center; gap:1rem; padding:.5rem 1rem;
+  background:var(--kfm-color-bg); color:var(--kfm-color-text);
+  border-bottom:1px solid color-mix(in oklab, var(--kfm-color-text), transparent 85%);
 }
+.skip-link { position:absolute; left:-9999px; }
+.skip-link:focus { left:1rem; top:1rem; background:var(--kfm-color-accent); color:#000; padding:.25rem .5rem; }
 ```
 
 ---
 
 ## ♿ Accessibility (WCAG 2.1 AA)
 
-* **Landmark Role:** `<header role="banner">`
-* **Skip Navigation:** “Skip to Content” link visible on keyboard focus
-* **Keyboard Navigation:** `/` focuses search, `T` toggles theme, `Alt+H` opens Help
-* **ARIA Attributes:** `aria-label` for search input, `aria-pressed` for toggle buttons
-* **Responsive A11y:** Collapsible menus maintain focus cycle via focus trap
+- Landmark: `<header role="banner">` with skip-to-content link.  
+- Keyboard: `/` focuses search; `T` toggles theme; `Alt+H` opens Help.  
+- ARIA: `aria-label` on inputs; `aria-pressed` for toggle buttons.  
+- Motion: honors `prefers-reduced-motion`; disables animated search panel.  
+- Contrast: tokens validated for AA; focus rings are always visible.
 
-Accessibility verified via **axe-core** and **Lighthouse** (score ≥ 95).
+A11y audited in CI with **axe-core** and **Lighthouse**.
 
 ---
 
 ## 🧪 Testing
 
-| Test                  | Purpose                                | Tool        |
-| :-------------------- | :------------------------------------- | :---------- |
-| **Search API Mock**   | Validates debounce + request timing    | Jest + MSW  |
-| **Theme Persistence** | Confirms theme saved & restored        | RTL         |
-| **Focus Management**  | Tests Tab order, skip links, shortcuts | axe-core    |
-| **Responsive Layout** | Verifies render at breakpoints         | Cypress E2E |
-| **Help Menu Trigger** | Ensures keyboard opens modal           | RTL         |
+| Test                       | Purpose                                         | Tooling          |
+| :------------------------- | :---------------------------------------------- | :--------------- |
+| Debounced search           | Verifies correct request cadence & rendering    | Jest + MSW + RTL |
+| Theme persistence          | Saves/restores preference across reloads        | RTL + JSDOM      |
+| Skip-link & focus order    | Ensures landmark and tab sequence               | axe-core + RTL   |
+| Responsive breakpoints     | Layout at mobile/tablet/desktop                 | Cypress E2E      |
+| Help menu shortcut         | Keyboard opens menu and traps focus             | RTL + userEvent  |
 
-**Coverage Target:** ≥ **90%** lines / branches.
+**Coverage target:** ≥ **90%** lines/branches.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                               |
-| :--------------- | :-------------------------------------------------------- |
-| **Inputs**       | `/api/search`, `ThemeContext`, `AccessibilityContext`     |
-| **Outputs**      | Global navigation bar & modal controls                    |
-| **Dependencies** | React 18+, Framer Motion, TailwindCSS, Axios              |
-| **Integrity**    | CI enforces lint, type-check, a11y audits, snapshot tests |
+| Artifact         | Description                                        |
+| :--------------- | :------------------------------------------------- |
+| **Inputs**       | `/api/search`, Theme/Accessibility contexts        |
+| **Outputs**      | Global nav bar, search results, modal triggers     |
+| **Dependencies** | React 18+, Axios/Fetch, TailwindCSS, Framer Motion |
+| **Integrity**    | CI enforces lint, type-check, a11y & snapshot tests|
 
 ---
 
 ## 🧠 MCP Compliance Checklist
 
-| MCP Principle       | Implementation                                   |
-| :------------------ | :----------------------------------------------- |
-| Documentation-first | README + inline TSDoc before code merge          |
-| Reproducibility     | Deterministic layout & context states            |
-| Accessibility       | Full WCAG 2.1 AA compliance in CI                |
-| Provenance          | Context + API lineage documented                 |
-| Auditability        | Logs, coverage, and snapshots stored in pipeline |
+| Principle           | Implementation                                      |
+| :------------------ | :-------------------------------------------------- |
+| Documentation-first | README + TSDoc for props / handlers                 |
+| Reproducibility     | Deterministic contexts + debounced search pipeline  |
+| Accessibility       | WCAG 2.1 AA verified in CI                          |
+| Provenance          | API & context lineage documented                    |
+| Open Standards      | WAI-ARIA 1.2 · CSS Custom Properties                |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **AppShell Component** — `web/src/components/AppShell/README.md`
-* **Web Frontend Components** — `web/src/components/README.md`
-* **Context — Theme & Accessibility** — `web/src/context/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **AppShell** — `web/src/components/AppShell/README.md`  
+- **Components Overview** — `web/src/components/README.md`  
+- **Contexts (Theme/A11y)** — `web/src/context/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.5.0` |
+| **Codename** | *Compass & Search Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-ui |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | WCAG 2.1 AA · WAI-ARIA 1.2 · CIDOC CRM (UI hierarchy) |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — designed and documented under **MCP-DL v6.2** for accessible, reproducible, and human-centered interfaces.
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — documented and delivered under **MCP-DL v6.2** for accessible, reproducible, human-centered interfaces.
 
-> *“The Header is Kansas Frontier Matrix’s compass — orienting users in time, data, and discovery.”*
-
-```
-```
+> *“The Header is the compass—orienting users in time, data, and discovery.”*
