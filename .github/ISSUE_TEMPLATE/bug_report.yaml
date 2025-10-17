@@ -4,78 +4,93 @@ title: "[BUG] <short summary>"
 labels:
   - bug
   - needs-triage
+assignees:
+  - "@kfm-architecture"
 body:
   - type: markdown
     attributes:
       value: |
-        Please provide clear steps to reproduce the bug. Include provenance (paths, commit SHAs, STAC IDs), system info, and acceptance criteria.
+        Please provide **clear steps to reproduce**, include **provenance** (paths, commit SHAs, STAC IDs), **system context**, and expected vs actual behavior. All fields are structured for reproducibility and traceability under MCP-DL.
 
   - type: input
     id: summary
     attributes:
-      label: 🔢 Summary
-      placeholder: "E.g. STAC validator fails for NOAA catalog.json"
+      label: 🔢 Bug Summary
+      description: Short description of the issue.
+      placeholder: "STAC validator fails for NOAA catalog.json"
     validations:
       required: true
 
   - type: textarea
-    id: repro-steps
+    id: repro_steps
     attributes:
-      label: ✈️ Steps to Reproduce
+      label: 🔄 Steps to Reproduce
+      description: List all the steps needed to reproduce the issue.
       placeholder: |
         1. Run `make stac-validate`
-        2. Observe failure in `catalog.json`
-        3. See error message
+        2. See error on `catalog.json`
+        3. Output: "STAC item missing required field..."
     validations:
       required: true
 
   - type: textarea
-    id: expected-vs-actual
+    id: expected_actual
     attributes:
       label: 🚫 Expected vs Actual
-      placeholder: "Expected STAC validate to pass; it fails with ..."
-
-  - type: input
-    id: related-workflow
-    attributes:
-      label: 💼 Related CI Workflow or Path
-      placeholder: "e.g., stac-validate.yml, data/stac/catalog.json"
-
-  - type: textarea
-    id: logs
-    attributes:
-      label: 🔍 Logs / Screenshots
-      placeholder: "Attach log snippet, screenshot, traceback, or link to CI run"
-
-  - type: input
-    id: provenance
-    attributes:
-      label: 🌐 Provenance
-      placeholder: "Path, STAC item ID, dataset SHA, commit SHA, etc."
+      description: What should have happened vs what actually occurred.
+      placeholder: |
+        **Expected:** STAC validation to pass.
+        **Actual:** Fails on `missing links`.
     validations:
       required: true
-
-  - type: input
-    id: environment
-    attributes:
-      label: 🔧 System Context
-      placeholder: "Python 3.10, Ubuntu 22.04, actions/setup-node@v4"
 
   - type: dropdown
     id: semver
     attributes:
       label: 🔄 SemVer Impact
+      description: What's the impact of fixing this bug?
       options:
         - none
-        - patch
-        - minor
-        - major
-      default: 0
+        - patch (no breaking changes)
+        - minor (non-breaking, user-visible)
+        - major (breaking change or data migration)
+      default: 1
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 🔍 Logs / Evidence
+      description: Paste traceback, screenshots, or upload a file.
+      placeholder: "Paste relevant log output, error messages, or attach screenshots."
+
+  - type: input
+    id: system
+    attributes:
+      label: 🔧 System Context
+      description: OS, Python version, workflow or container image.
+      placeholder: "Ubuntu 22.04 · Python 3.10 · GitHub CI"
+
+  - type: input
+    id: provenance
+    attributes:
+      label: 🌐 Provenance (paths, IDs, SHAs)
+      description: Affected paths, STAC item IDs, dataset or commit SHA.
+      placeholder: "data/stac/catalog.json · commit abcd1234"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_fix
+    attributes:
+      label: ✅ Proposed Fix (optional)
+      description: Suggest a fix, mitigation, or patch location if known.
+      placeholder: "The link block is missing self-relation in STAC item."
 
   - type: textarea
     id: acceptance
     attributes:
       label: 📄 Acceptance Criteria
-      placeholder: "How will we know the bug is resolved? Include tests or output."
+      description: What does "fixed" look like? Include test or validation method.
+      placeholder: "`make stac-validate` returns 0 and passes all schema checks."
     validations:
       required: true
