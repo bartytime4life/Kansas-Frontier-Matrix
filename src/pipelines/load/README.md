@@ -1,7 +1,7 @@
 ```markdown
 <div align="center">
 
-# 🗄️ Kansas Frontier Matrix — Data Load & Integration Pipelines  
+## 🗄️ Kansas Frontier Matrix — Data Load & Integration Pipelines  
 `src/pipelines/load/README.md`
 
 **Graph Ingestion · STAC Indexing · Provenance Tracking**
