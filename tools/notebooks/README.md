@@ -5,7 +5,7 @@
 
 **Exploration · Prototyping · Analysis Workbench**
 
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Lab-orange)](https://jupyter.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../LICENSE)
@@ -14,32 +14,12 @@
 
 ---
 
-```yaml
----
-title: "KFM • Notebooks (tools/notebooks/)"
-version: "v1.0.0"
-last_updated: "2025-10-16"
-owners: ["@kfm-data", "@kfm-research"]
-tags: ["notebooks","jupyter","exploration","prototyping","analysis","mcp"]
-license: "MIT"
-semantic_alignment:
-  - FAIR Principles (Findable, Accessible, Interoperable, Reusable)
-  - PROV-O (Provenance Tracking)
-  - MCP-DL v6.2 Reproducible Experimentation
----
-```
-
----
-
 ## 🧭 Overview
 
-The `tools/notebooks/` directory provides a **sandbox environment** for data scientists, historians, and engineers
-working on the **Kansas Frontier Matrix (KFM)** project to explore, analyze, and prototype workflows.
+`tools/notebooks/` is the **sandbox lab** for KFM data scientists, historians, and engineers to **explore, prototype, and analyze** workflows.  
+Every notebook is an **executable experiment** that follows **MCP-DL v6.3**: documented intent, reproducible environment, and verifiable provenance.
 
-Each notebook serves as a **documented experiment** — following the **Master Coder Protocol (MCP-DL v6.2)** principles
-of transparency, provenance, and reproducibility.
-
-> Every notebook is a bridge between data and discovery — an executable document that explains not just *what* was done, but *why*.
+> *A notebook should explain not just **what** was done, but **why**—with enough detail to do it again.*
 
 ---
 
@@ -47,62 +27,53 @@ of transparency, provenance, and reproducibility.
 
 ```text
 tools/notebooks/
-├── data_exploration.ipynb     # Basic dataset inspection and summary statistics
-├── gis_processing.ipynb       # Geospatial transformation examples (GeoPandas, rasterio)
-├── stac_validation.ipynb      # STAC item creation and schema validation
-├── ai_entity_extraction.ipynb # NLP-based entity extraction from documents
-├── provenance_pipeline.ipynb  # Provenance capture and checksum verification
-├── visualization.ipynb        # Interactive map and timeline prototyping
-├── requirements.txt           # Notebook-specific dependencies
-└── README.md                  # This documentation file
+├── data_exploration.ipynb     # Dataset inspection & summary statistics
+├── gis_processing.ipynb       # Geo transforms (GeoPandas, rasterio)
+├── stac_validation.ipynb      # STAC build & schema validation
+├── ai_entity_extraction.ipynb # NLP entity extraction prototypes
+├── provenance_pipeline.ipynb  # Hashing & provenance capture demo
+├── visualization.ipynb        # Map & timeline prototyping
+├── requirements.txt           # Notebook-specific deps
+└── README.md
 ```
 
 ---
 
-## 🧩 Purpose & Use Cases
+## 🧩 Use Cases
 
-| Notebook                       | Focus                                                       | Tools / Libraries                  |
-| :----------------------------- | :---------------------------------------------------------- | :--------------------------------- |
-| **data_exploration.ipynb**     | Explore raw and processed datasets (CSV, GeoJSON, TIFF)     | `pandas`, `matplotlib`, `seaborn`  |
-| **gis_processing.ipynb**       | Coordinate reprojection, clipping, and conversion workflows | `geopandas`, `rasterio`, `shapely` |
-| **stac_validation.ipynb**      | Build and validate STAC Collections & Items                 | `pystac`, `jsonschema`             |
-| **ai_entity_extraction.ipynb** | Prototype entity extraction from text archives              | `spacy`, `transformers`, `openai`  |
-| **provenance_pipeline.ipynb**  | Demonstrate hash generation and provenance linking          | `hashlib`, `prov`, `json`          |
-| **visualization.ipynb**        | Map & timeline visualization experiments                    | `folium`, `plotly`, `ipyleaflet`   |
+| Notebook                       | Focus                                                     | Libraries                      |
+| :----------------------------- | :-------------------------------------------------------- | :----------------------------- |
+| **data_exploration.ipynb**     | Explore CSV/GeoJSON/TIFF; profiling & EDA                 | `pandas`, `seaborn`, `matplotlib` |
+| **gis_processing.ipynb**       | Reprojection, clipping, raster/vec conversions            | `geopandas`, `rasterio`, `shapely` |
+| **stac_validation.ipynb**      | Create/validate STAC Collections/Items                    | `pystac`, `jsonschema`         |
+| **ai_entity_extraction.ipynb** | Text OCR→NER→linking experiments                          | `spacy`, `transformers`        |
+| **provenance_pipeline.ipynb**  | SHA256 + PROV-O linking for artifacts                     | `hashlib`, `prov`              |
+| **visualization.ipynb**        | Maps/timelines, interactive exploration                   | `folium`, `plotly`, `ipyleaflet` |
 
-Each notebook documents **objectives**, **methods**, **data sources**, **results**, and **next steps**, serving as both
-a research artifact and an onboarding guide for future collaborators.
+Each notebook must capture **objectives → method → results → next steps**.
 
 ---
 
 ## ⚙️ Environment Setup
 
-KFM uses **JupyterLab** and **Conda** to manage reproducible notebook environments.
-
-### 🧩 Installation
-
 ```bash
-# Create environment
 conda create -n kfm-notebooks python=3.11 -y
 conda activate kfm-notebooks
-
-# Install dependencies
 pip install -r tools/notebooks/requirements.txt
-
-# Launch Jupyter
 jupyter lab
 ```
 
-**Example requirements.txt:**
-
+**Example `requirements.txt`:**
 ```txt
 jupyterlab
 pandas
 geopandas
 matplotlib
+seaborn
 rasterio
 folium
 pystac
+jsonschema
 spacy
 transformers
 prov
@@ -110,16 +81,14 @@ prov
 
 ---
 
-## 🧠 Notebook Standards
+## 🧠 Notebook Standards (MCP-DL)
 
-To ensure reproducibility and MCP compliance, every notebook must:
-
-1. Start with a **YAML front matter** block (`---`) describing purpose, inputs, and outputs.
-2. Contain **metadata cells** (author, date, dataset references, environment hash).
-3. Use **relative file paths** (e.g., `../../data/raw/filename.csv`) for portability.
-4. End with a **Summary / Conclusions** section describing insights and next steps.
-5. Export results (plots, tables, JSON, logs) to `/data/work/` or `/data/processed/`.
-6. Include a reproducibility badge or checksum (optional cell with `!sha256sum`).
+1. **YAML front matter** in the first cell with title, author, date, inputs, outputs.  
+2. **Metadata cell**: environment hash (e.g., `pip freeze | sha256sum`), commit SHA.  
+3. **Relative paths** only (e.g., `../../data/raw/...`).  
+4. **Summary section** at the end with findings & uncertainties.  
+5. **Outputs** saved to `data/work/` or `data/processed/` with checksums.  
+6. **Citations**: reference STAC IDs and sources in adjacent markdown.  
 
 Example YAML cell:
 
@@ -130,92 +99,89 @@ author: "A. Barta"
 date: "2025-10-16"
 inputs: ["data/processed/hydrology/floodplains.geojson"]
 outputs: ["data/work/floodplain_summary.csv"]
-description: "Analyzes historical floodplain expansion in Kansas River Basin."
+description: "Analyzes historical floodplain expansion in the Kansas River Basin."
 ---
 ```
 
 ---
 
-## 🧪 Validation & Provenance
+## 🧪 CI Validation & Provenance
 
-Each notebook is validated for **reproducibility** and **metadata completeness** using CI workflows:
+| Step                | Purpose                                      | Tooling                 |
+| :------------------ | :------------------------------------------- | :---------------------- |
+| Metadata check      | Ensure front matter & required fields exist  | `nbformat` parser       |
+| Dependency check    | Verify env meets `requirements.txt`          | `pip check`, `conda list` |
+| Repro run           | Execute notebooks for clean runs             | `pytest --nbval`        |
+| Output hashing      | Verify artifact hashes match expectations    | `sha256sum`             |
+| Style/lint          | Code/markdown quality gates                  | `nbqa black`, `ruff`, `markdownlint` |
 
-| Validation Step     | Description                                       | Tool                       |
-| :------------------ | :------------------------------------------------ | :------------------------- |
-| Metadata Extraction | Ensures all notebooks include front matter        | Python `nbformat` parser   |
-| Dependency Check    | Validates required libraries exist in environment | `pip check`, `conda list`  |
-| Output Tracking     | Confirms reproducible outputs (hash consistency)  | `sha256sum`, `prov`        |
-| Execution Test      | Executes notebook to verify clean runs            | `pytest --nbval`           |
-| Lint & Style        | Validates PEP8 + markdown cell formatting         | `black-nb`, `ruff`, `nbqa` |
-
-CI reports include execution logs, runtime duration, and hash comparison results.
+CI publishes execution logs, runtime stats, and checksum manifests.
 
 ---
 
-## 📊 Example Notebook Snippet
+## 📊 Example Snippet
 
 ```python
 import geopandas as gpd
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
-# Load and preview Kansas hydrology data
 rivers = gpd.read_file("../../data/processed/hydrology/river_network.geojson")
-rivers.plot(color="#00b3b3", figsize=(8, 6))
-plt.title("Kansas River Network — Processed from USGS NHD")
+ax = rivers.plot(color="#00b3b3", figsize=(8, 6))
+ax.set_title("Kansas River Network — USGS NHD (processed)")
+plt.tight_layout()
 plt.show()
 ```
 
-> Every visualization or result cell must cite its data source in an adjacent markdown cell.
+> Always cite data sources (STAC ID/URL) in a markdown cell next to plots.
 
 ---
 
 ## ♿ Accessibility & Documentation
 
-* All visual outputs include **alt-text descriptions** for screenshots or figures.
-* Notebooks include headings and logical structure for **screen reader navigation**.
-* Color palettes conform to **WCAG 2.1 AA** contrast guidelines.
-* Plots must use **colorblind-safe palettes** (e.g., `colorcet`, `cividis`).
-* All generated figures are saved in `/docs/figures/` with contextual captions.
+- Provide **alt-text** for saved figures and screenshots.  
+- Use **colorblind-safe** palettes (e.g., `cividis`, `ColorBrewer`).  
+- Structure headings for screen-reader navigation.  
+- Save figures to `docs/figures/` with captions & context.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                        |
-| :--------------- | :----------------------------------------------------------------- |
-| **Inputs**       | Datasets, configuration files, environment manifests               |
-| **Outputs**      | Derived data, charts, tables, provenance metadata                  |
-| **Dependencies** | JupyterLab, Python 3.11+, GeoPandas, PySTAC                        |
-| **Integrity**    | CI reproduces notebooks and validates SHA256 checksums for outputs |
-| **Traceability** | Each notebook linked to dataset STAC IDs and commit SHA            |
-
----
-
-## 🧠 MCP Compliance Checklist
-
-| MCP Principle       | Implementation                                        |
-| :------------------ | :---------------------------------------------------- |
-| Documentation-first | YAML metadata and in-notebook docstrings              |
-| Reproducibility     | Conda environment, deterministic results              |
-| Provenance          | Data lineage recorded in metadata and STAC references |
-| Accessibility       | WCAG 2.1 AA visual and structural compliance          |
-| Open Standards      | STAC, GeoJSON, FAIR-aligned metadata                  |
-| Auditability        | Notebooks validated via CI execution pipeline         |
+| Artifact      | Description                                         |
+| :------------ | :-------------------------------------------------- |
+| **Inputs**    | Datasets, manifests, STAC references                |
+| **Outputs**   | Derived CSV/GeoJSON, figures, logs, metadata        |
+| **Integrity** | SHA-256 sidecars; PROV-O relations per notebook     |
+| **Traceability** | Link outputs to STAC IDs and commit SHAs        |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Tools Overview** — `tools/README.md`
-* **Data Exploration Notebooks** — `docs/notebooks/overview.md`
-* **STAC Catalog Reference** — `data/stac/README.md`
-* **Design Mockups** — `docs/design/mockups/`
+- **Tools Overview** — `tools/README.md`  
+- **STAC Catalog** — `data/stac/README.md`  
+- **Architecture** — `docs/architecture/system-architecture-overview.md`  
+- **Design Mockups** — `docs/design/mockups/`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.1.0` |
+| **Codename** | *Executable Research Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-data · @kfm-research |
+| **License** | MIT |
+| **Alignment** | FAIR · PROV-O · MCP-DL v6.3 |
+| **Maturity** | Stable / Active Lab |
 
 ---
 
 ## 📜 License
 
-All notebooks and associated scripts are distributed under the **MIT License**.  
-© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for open, traceable, and reproducible research.
+All notebooks are distributed under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — *open, traceable, reproducible* research.
 
-> *“Every notebook is a lab in the frontier — where data becomes discovery, and discovery becomes documentation.”*
+> *“Every notebook is a lab on the frontier—where data becomes discovery.”*
