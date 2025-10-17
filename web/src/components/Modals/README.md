@@ -15,30 +15,18 @@
 
 ---
 
-```yaml
----
-title: "KFM • Modals Component (web/src/components/Modals/)"
-version: "v1.4.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-ux"]
-tags: ["react","modal","dialog","accessibility","framer-motion","a11y","mcp"]
-license: "MIT"
-semantic_alignment:
-  - WCAG 2.1 AA
-  - WAI-ARIA 1.2
-  - CIDOC CRM (UI narrative hierarchy)
----
-````
-
----
-
 ## 🧭 Overview
 
-The **Modals Component Suite** provides **accessible, reusable dialogs** and **popovers** for the Kansas Frontier Matrix web interface.
-They deliver **non-intrusive overlays** for actions like settings, keyboard shortcuts, help guides, and accessibility preferences — ensuring that every user interaction adheres to **WCAG 2.1 AA** and **MCP-DL v6.2** reproducibility and documentation standards.
+The **Modals Component Suite** provides **accessible, reusable dialogs & popovers** for the KFM Web UI.  
+It powers settings, keyboard-shortcut help, about/licensing, and accessibility preferences with **strict WCAG 2.1 AA** compliance and **MCP-DL v6.2** documentation discipline.
 
-All modals share a unified structure, governed by the **AccessibilityContext** (focus management) and **ThemeContext** (light/dark palettes).
-Built with **Framer Motion**, the suite prioritizes subtle animations, smooth transitions, and user-controlled motion preferences.
+All modals share a unified substrate:
+
+- **AccessibilityContext** → focus-trap, reduced-motion, high-contrast  
+- **ThemeContext** → tokenized theming (light/dark)  
+- **Portal mount** → `#modals` root to preserve stacking & reading order
+
+Subtle animation is implemented with **Framer Motion** and **auto-disabled** when users prefer reduced motion.
 
 ---
 
@@ -46,193 +34,225 @@ Built with **Framer Motion**, the suite prioritizes subtle animations, smooth tr
 
 ```text
 web/src/components/Modals/
-├── ModalContainer.tsx       # Base modal wrapper (open/close logic, focus trap)
-├── AboutModal.tsx           # Project information & license summary
-├── SettingsModal.tsx        # Preferences: theme, motion, language, AI visibility
-├── HelpModal.tsx            # Keyboard shortcuts, tooltips, and usage guide
-├── AccessibilityModal.tsx   # Accessibility options: text size, contrast, focus mode
-├── styles.scss              # Modal theming, transitions, responsive layout
-└── __tests__/               # Jest + RTL accessibility & behavior tests
+├── ModalContainer.tsx       # Base wrapper (open/close, focus trap, portal)
+├── AboutModal.tsx           # Project info, licensing, attribution
+├── SettingsModal.tsx        # Theme · motion · language · data/privacy prefs
+├── HelpModal.tsx            # Keyboard shortcuts & quick tips
+├── AccessibilityModal.tsx   # Text size · contrast · focus modes
+├── styles.scss              # Tokens, transitions, responsive layout
+└── __tests__/               # Jest + RTL + axe-core tests
 ```
 
-Each modal exports a standardized API with the following signature:
+**Public API (per modal)**
 
-* **Props:** `{ open, onClose, title, children }`
-* **ARIA Attributes:** `role="dialog" aria-modal="true"`
-* **Focus Management:** Trapped with restoration upon close
+- Props: `{ open, onClose, title?, ariaLabel?, initialFocusRef?, width? }`  
+- Roles: `role="dialog" aria-modal="true"`; labelled by `title` or `ariaLabel`  
+- Focus: trapped; **origin focus** restored on close
 
 ---
 
-## ⚙️ Component Architecture
+## ⚙️ Architecture
 
 ```mermaid
 flowchart TD
-  H["Header / Hotkey Trigger"] --> M["ModalContainer"]
-  M --> S1["AboutModal"]
-  M --> S2["SettingsModal"]
-  M --> S3["HelpModal"]
-  M --> S4["AccessibilityModal"]
-  M --> ACC["AccessibilityContext<br/>(focus trap · reduced motion)"]
+  TRG["Header / Hotkeys / Buttons"] --> MC["ModalContainer<br/>portal · trap · restore"]
+  MC --> M1["AboutModal"]
+  MC --> M2["SettingsModal"]
+  MC --> M3["HelpModal"]
+  MC --> M4["AccessibilityModal"]
+  MC --> ACC["AccessibilityContext<br/>reducedMotion · focus"]
+  MC --> THEME["ThemeContext<br/>light/dark tokens"]
 %% END OF MERMAID
 ```
-
-The `ModalContainer` orchestrates all modal rendering and accessibility logic, using React Portals for correct DOM layering.
 
 ---
 
 ## 🧩 Key Features
 
-| Feature                      | Description                                                       | Standard / Principle       |
-| :--------------------------- | :---------------------------------------------------------------- | :------------------------- |
-| **Accessible Dialogs**       | ARIA roles (`role="dialog"`, `aria-modal="true"`) + keyboard trap | WCAG 2.1 — 2.4.3, 4.1.2    |
-| **Framer Motion Animations** | Smooth fade & slide transitions; auto-disables on reduced-motion  | WCAG 2.1 — 2.3.3           |
-| **Focus Management**         | Focus trapped inside modal; restored on close                     | WCAG 2.1 — 2.1.1           |
-| **Keyboard Shortcuts**       | `?` → Help · `Ctrl+,` → Settings · `Shift+A` → Accessibility      | Custom Hook                |
-| **Dynamic Content**          | Responsive child rendering with auto-sizing                       | MCP UI Modularity          |
-| **Responsive Layout**        | Drawer mode (mobile) · Centered overlay (desktop)                 | WCAG 1.4.10                |
-| **Portal Rendering**         | React Portals for z-index safety and focus order integrity        | WAI-ARIA 1.2 Best Practice |
+| Feature                      | Description                                                                 | Standard |
+| :--------------------------- | :-------------------------------------------------------------------------- | :------- |
+| **Accessible Dialogs**       | `role="dialog"`, `aria-modal="true"`, labelled/ described via IDs          | WAI-ARIA 1.2 |
+| **Focus Management**         | Trap within modal; restore focus to trigger; inert background              | WCAG 2.1 2.4.3/2.1.1 |
+| **Keyboard Shortcuts**       | `?` Help · `Ctrl+,` Settings · `Shift+A` Accessibility · `Esc` Close       | House Rule |
+| **Framer Motion Animations** | Fade/slide/popup variants; auto-disable via `prefers-reduced-motion`       | WCAG 2.3.3 |
+| **Responsive Layout**        | Drawer mode on mobile; centered overlay desktop                            | WCAG 1.4.10 |
+| **Portal Rendering**         | Mounts in `#modals` to simplify z-index and reading order                  | ARIA BP |
 
 ---
 
-## 💬 Example Implementation
+## 💬 Reference Implementation
 
 ```tsx
-import React, { useState } from "react";
-import { ModalContainer } from "./ModalContainer";
+// ModalContainer.tsx (excerpt)
+import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
-export function AboutModal() {
-  const [open, setOpen] = useState(false);
+export interface ModalProps {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  ariaLabel?: string;
+  initialFocusRef?: React.RefObject<HTMLElement>;
+  width?: "sm" | "md" | "lg";
+}
 
-  return (
-    <>
-      <button onClick={() => setOpen(true)} aria-haspopup="dialog">
-        About
-      </button>
-      <ModalContainer
-        open={open}
-        onClose={() => setOpen(false)}
-        title="About Kansas Frontier Matrix"
+export function ModalContainer({
+  open,
+  onClose,
+  title,
+  ariaLabel,
+  initialFocusRef,
+  width = "md",
+  children,
+}: React.PropsWithChildren<ModalProps>) {
+  const portalRoot = document.getElementById("modals")!;
+  const restoreRef = useRef<HTMLElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Remember trigger element to restore focus
+  useEffect(() => {
+    if (open) restoreRef.current = (document.activeElement as HTMLElement) ?? null;
+  }, [open]);
+
+  // Trap focus & close on Esc
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    const root = document.getElementById("root");
+    root?.setAttribute("inert", ""); // prevent background interaction
+    window.addEventListener("keydown", handleKey);
+
+    // Initial focus
+    (initialFocusRef?.current ?? dialogRef.current)?.focus();
+
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      root?.removeAttribute("inert");
+      restoreRef.current?.focus?.();
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return createPortal(
+    <div className="modal-backdrop" aria-hidden="true">
+      <div
+        className={`modal modal--${width}`}
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={ariaLabel}
+        aria-labelledby={title ? "modal-title" : undefined}
+        tabIndex={-1}
       >
-        <p>
-          Kansas Frontier Matrix is an open-source, spatiotemporal knowledge
-          hub connecting people, places, and events through time.
-        </p>
-      </ModalContainer>
-    </>
+        {title && <h2 id="modal-title" className="modal__title">{title}</h2>}
+        <button className="modal__close" onClick={onClose} aria-label="Close dialog">×</button>
+        <div className="modal__content">{children}</div>
+      </div>
+    </div>,
+    portalRoot
   );
 }
 ```
 
-> The `ModalContainer` enforces ARIA compliance, traps focus within its boundary, and restores previous focus when closed.
+> Background is made **inert** while open; focus is restored to the trigger element on close.
 
 ---
 
 ## 🧠 TypeScript Interfaces
 
 ```ts
-export interface ModalProps {
-  open: boolean;
-  title?: string;
-  children: React.ReactNode;
-  onClose: () => void;
-  ariaLabel?: string;
-  width?: "sm" | "md" | "lg";
+export type ModalWidth = "sm" | "md" | "lg";
+
+export interface KeyboardShortcut {
+  combo: string;     // e.g., "Ctrl+,", "?"
+  action: () => void;
+  description: string;
+}
+
+export interface HotkeyMap {
+  [combo: string]: KeyboardShortcut;
 }
 ```
-
-All modal components extend `ModalProps` and may add custom options for animation or dynamic sizing.
 
 ---
 
 ## 🎨 Styling & Motion
 
-| Layer                | Description                                          |
-| :------------------- | :--------------------------------------------------- |
-| **Animation Engine** | Framer Motion (`fadeIn`, `slideUp`, `popScale`)      |
-| **Reduced Motion**   | Instant render when `prefers-reduced-motion: reduce` |
-| **Backdrop**         | `backdrop-filter: blur(4px)` · adaptive opacity      |
-| **Layout**           | CSS Grid centered overlay (mobile drawer fallback)   |
-| **Color System**     | Themed with `ThemeContext` (light/dark palettes)     |
+| Layer                | Description                                                     |
+| :------------------- | :-------------------------------------------------------------- |
+| **Backdrop**         | `rgba(0,0,0,.45)` + `backdrop-filter: blur(4px)`               |
+| **Container**        | CSS Grid center; drawer at `max-width < 768px`                 |
+| **Tokens**           | Theme via CSS variables `--kfm-color-*`, `--kfm-radius`, etc.  |
+| **Motion**           | `fadeIn`, `slideUp`, `popScale` variants; disabled on PRM      |
 
 ```scss
-.modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  transition: opacity 0.3s ease;
-}
+/* styles.scss (excerpt) */
+.modal-backdrop { background: rgba(0,0,0,.45); backdrop-filter: blur(4px); }
+.modal { width: min(92vw, 720px); border-radius: var(--kfm-radius); box-shadow: var(--kfm-shadow); }
+@media (max-width: 768px) { .modal { width: 100vw; height: 100dvh; border-radius: 0; } }
 ```
 
 ---
 
 ## ♿ Accessibility Implementation
 
-| Concern                | Implementation                                        |
-| :--------------------- | :---------------------------------------------------- |
-| **Focus Trap**         | Managed via `AccessibilityContext` + hidden sentinels |
-| **Screen Readers**     | Uses `aria-labelledby` + `aria-describedby`           |
-| **Escape Key**         | Global listener closes modal and restores focus       |
-| **Reduced Motion**     | Animation disabled for motion-sensitive users         |
-| **Keyboard Shortcuts** | `?`, `Ctrl+,`, `Shift+A` open modals contextually     |
-| **Skip to Content**    | `Alt+S` returns focus to main content post-close      |
+| Concern            | Implementation                                                                              |
+| :----------------- | :------------------------------------------------------------------------------------------ |
+| **Roles & Labels** | `role="dialog" aria-modal="true"`; labelled by heading or `aria-label`                     |
+| **Focus Trap**     | Sentinel elements + restoration to trigger; prevent background interaction with `inert`     |
+| **Esc to Close**   | Global keydown listener while open                                                          |
+| **Reduced Motion** | Honors `prefers-reduced-motion`; animation removed                                          |
+| **Hotkeys**        | `?` Help · `Ctrl+,` Settings · `Shift+A` Accessibility · `Esc` Close                        |
+| **SR Announce**    | Optional `aria-live="polite"` region for dialog open/close status                           |
 
-All accessibility features validated using **axe-core**, **Lighthouse**, and **React Testing Library**.
+Audited with **axe-core** and **Lighthouse** in CI.
 
 ---
 
 ## 🧪 Testing
 
-| Test Case              | Description                                       | Tools              |
-| :--------------------- | :------------------------------------------------ | :----------------- |
-| **Open/Close Logic**   | Opens/closes with button & `Esc` key              | Jest + RTL         |
-| **Focus Trap**         | Verifies tab key cycles within modal              | Cypress + axe-core |
-| **ARIA Compliance**    | Confirms roles, labels, and modal hierarchy       | axe-core           |
-| **Reduced Motion**     | Checks animation suppression for preference users | Jest Mocks         |
-| **Keyboard Shortcuts** | Validates hotkey-triggered modal open             | Jest DOM           |
-| **Snapshot Testing**   | Confirms visual consistency across themes         | Jest Snapshots     |
+| Case                    | Expectation                                              | Tools                  |
+| :---------------------- | :------------------------------------------------------- | :--------------------- |
+| **Open/Close**          | Button opens; `Esc` closes; focus restores               | Jest + RTL             |
+| **Trap & Restore**      | Tab cycles within dialog; trigger regains focus          | Cypress + RTL          |
+| **ARIA Compliance**     | Required roles/labels present                            | axe-core               |
+| **Reduced Motion**      | Animations are disabled when PRM is set                  | Jest (matchMedia mock) |
+| **Portal Mount**        | Renders into `#modals`; stacking order preserved         | Jest DOM               |
+| **Visual Snapshots**    | Stable across themes & widths                            | Jest Snapshots         |
 
-> **Coverage target:** ≥ 90% lines & branches.
-
----
-
-## 🧾 Provenance & Integrity
-
-| Artifact         | Description                                                      |
-| :--------------- | :--------------------------------------------------------------- |
-| **Inputs**       | AccessibilityContext, keyboard listeners, Framer Motion variants |
-| **Outputs**      | Accessible, theme-aware modals rendered via React Portal         |
-| **Dependencies** | React 18+, Framer Motion, TailwindCSS, axe-core                  |
-| **Integrity**    | CI validates accessibility, stylelint, and ARIA role compliance  |
-
----
-
-## 🧠 MCP Compliance Checklist
-
-| MCP Principle       | Implementation                                 |
-| :------------------ | :--------------------------------------------- |
-| Documentation-first | README & inline TSDoc required pre-merge       |
-| Reproducibility     | Deterministic modal state & motion validation  |
-| Accessibility       | Full WCAG 2.1 AA compliance validated in CI    |
-| Provenance          | Links to AccessibilityContext and ThemeContext |
-| Open Standards      | ARIA 1.2 · WAI practices · CSS Custom Props    |
-| Auditability        | axe-core and Lighthouse integrated in pipeline |
+**Coverage target:** ≥ **90%** (lines/branches/statements)
 
 ---
 
 ## 🔗 Related Documentation
 
-* **Web Frontend Components Overview** — `web/src/components/README.md`
-* **Accessibility Components** — `web/src/components/Accessibility/README.md`
-* **Context — AccessibilityContext** — `web/src/context/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **Components Overview** — `web/src/components/README.md`  
+- **Accessibility Utilities** — `web/src/components/Accessibility/README.md`  
+- **Context (Accessibility/Theme)** — `web/src/context/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.5.0` |
+| **Codename** | *Inclusive Dialogs & Motion Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-ux |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | WCAG 2.1 AA · WAI-ARIA 1.2 · CIDOC CRM (narrative hierarchy) |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — engineered under **MCP-DL v6.2** for inclusive, traceable, and reproducible user experiences.
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — engineered under **MCP-DL v6.2** for inclusive, traceable, and reproducible UX.
 
-> *“Every dialog opens a door — the Modals framework ensures every user can walk through it.”*
-
-```
-```
+> *“Every dialog opens a door — we make sure every user can walk through it.”*
