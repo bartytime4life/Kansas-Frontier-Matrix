@@ -18,7 +18,7 @@ body:
     attributes:
       value: |
         ## 💡 Feature Overview
-        *“Every Feature Builds the Future — Every Change is Reproducible.”*
+        *"Every Feature Builds the Future — Every Change is Reproducible."*
 
   - type: input
     id: feature_name
@@ -117,18 +117,23 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 📐 Metrics / Expected Outcome"
-
+      value: |
+        ## 📐 Metrics / Expected Outcome
+        Use this template (copy/paste into the field below):
+        ```
+        | Metric          | Target                                   |
+        |-----------------|-------------------------------------------|
+        | Data Quality    | slope_class attribute present; STAC updated |
+        | Reproducibility | Deterministic outputs; SOP updated        |
+        | Usability       | Map layer toggle + legend                 |
+        | Performance     | < +5% runtime impact                      |
+        ```
   - type: textarea
     id: outcomes
     attributes:
       label: Expected Behavior / KPIs
-      placeholder: |
-        | Metric       | Target                       |
-        |--------------|------------------------------|
-        | Accuracy     | Entity linking precision >90% |
-        | Performance  | +<5% runtime overhead        |
-        | Usability    | Feature toggled in UI        |
+      description: "Enter your KPI table or bullet list. Markdown is rendered."
+      placeholder: "Paste the KPI table template (see above) and adjust targets."
       render: markdown
     validations:
       required: true
@@ -157,19 +162,23 @@ body:
 
   - type: markdown
     attributes:
-      value: "## 📜 Governance / Compliance"
-
+      value: |
+        ## 📜 Governance / Compliance
+        Use this versioning table (copy/paste into the field below):
+        ```
+        | Component           | Current | Proposed | Reason         |
+        |---------------------|---------|----------|----------------|
+        | ETL Script          | v1.3.0  | v1.4.0   | logic addition |
+        | Graph/API Schema    | v1.0.0  | v1.1.0   | field added    |
+        | Web Config          | v1.2.1  | v1.2.2   | toggle added   |
+        | Repo Release (SemVer)| v2.4.0 | v2.5.0   | feature bump   |
+        ```
   - type: textarea
     id: versioning
     attributes:
       label: Versioning Summary
-      placeholder: |
-        | Component             | Current | Proposed | Reason         |
-        |------------------------|---------|----------|----------------|
-        | ETL Script             | v1.3.0  | v1.4.0   | logic addition |
-        | Graph/API Schema       | v1.0.0  | v1.1.0   | field added    |
-        | Web Config             | v1.2.1  | v1.2.2   | toggle added   |
-        | Repo Release (SemVer)  | v2.4.0  | v2.5.0   | feature bump   |
+      description: "Enter the table above with your proposed bumps. Markdown is rendered."
+      placeholder: "Paste the versioning table template (see above) and adjust versions."
       render: markdown
 
   - type: checkboxes
