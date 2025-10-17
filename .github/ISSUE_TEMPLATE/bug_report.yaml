@@ -1,6 +1,6 @@
 name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — MCP-compliant & reproducible"
-title: "[Feature]: <short summary>"
+description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
+title: "[Feature]: <feature name> — <component/domain>"
 labels:
   - enhancement
   - needs-triage
@@ -8,178 +8,135 @@ assignees:
   - kfm-architecture
   - kfm-data
 
-# KFM header metadata (for humans)
-# version: v2.3.0
-# last_updated: 2025-10-15
+# KFM metadata
+# version: v2.3.1
+# last_updated: 2025-10-16
 # owners: @kfm-architecture @kfm-data
 
 body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Summary
-        *"Every Feature Builds the Future — Every Change is Reproducible."*
-        Please provide a concise description of the requested feature or enhancement.
-        > Example: Add slope classification to terrain pipeline outputs and enable gradient visualization in MapLibre.
+        ## 💡 Feature Overview
+        *“Every Feature Builds the Future — Every Change is Reproducible.”*
 
-  - type: textarea
-    id: summary
+  - type: input
+    id: feature_name
     attributes:
-      label: Summary
-      description: What do you want to add or improve? Why?
-      placeholder: |
-        - Add slope classification to terrain ETL
-        - New MapLibre layer with gradient style and legend
+      label: Feature Name
+      placeholder: "Slope Classification Enhancement for Terrain Pipeline"
     validations:
       required: true
 
-  - type: markdown
-    attributes:
-      value: "## 🤠 Context"
-
   - type: input
-    id: module
+    id: component
     attributes:
-      label: Module / Workflow
-      description: File or workflow name
-      placeholder: terrain_pipeline.py | web/config/layers.json | src/graph/build_graph.py
+      label: Target Module / Component
+      placeholder: "terrain_pipeline.py | web/config/layers.json | graph_ingest.py"
     validations:
       required: true
 
   - type: dropdown
     id: domain
     attributes:
-      label: Data Domain
+      label: Domain / Area of Impact
       options:
         - Terrain
         - Hydrology
+        - Climate
         - Hazards
         - Landcover
-        - Climate
-        - Text / AI / NLP
-        - Web / UI
-        - API
-        - ETL
-        - CI/CD
         - Knowledge Graph
+        - Web UI
+        - API
+        - Text / AI / NLP
         - Metadata / Governance
+        - CI/CD
       multiple: true
     validations:
       required: true
 
   - type: input
-    id: branch_commit
+    id: stakeholder
     attributes:
-      label: Target Branch / Commit (if applicable)
-      placeholder: main | feature/terrain-upgrade | 4a8e91c
-
-  - type: input
-    id: environment
-    attributes:
-      label: Environment (optional)
-      description: OS, Python/Node versions, container image hash, runner type
-      placeholder: Ubuntu 22.04 · Python 3.11 · node 20.x · gh-runner=ubuntu-latest · image sha256:…
-
-  - type: markdown
-    attributes:
-      value: "## 🧩 Problem Statement"
-
-  - type: textarea
-    id: limitation
-    attributes:
-      label: Current Limitation
-      placeholder: "Describe the current limitation or gap this feature resolves."
+      label: Feature Owner / Stakeholder
+      placeholder: "@kfm-data · @kfm-web · project-leads"
     validations:
       required: true
 
   - type: markdown
     attributes:
-      value: "## 🚀 Proposed Solution"
+      value: "## 🔍 Problem & Rationale"
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Current Limitation or Problem
+      placeholder: "Describe the current limitation or user need driving this feature."
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Motivation & Rationale
+      placeholder: |
+        - Aligns with roadmap milestone
+        - Fills UI accessibility gap
+        - Enhances knowledge graph linking
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🧠 Proposed Implementation"
 
   - type: textarea
     id: proposal
     attributes:
-      label: Proposed Implementation
-      description: Include technical specifics, workflow changes, and architecture impacts.
+      label: Proposed Implementation Details
+      description: "Describe the logic, workflow changes, files affected, dependencies."
       placeholder: |
-        - Extend terrain_pipeline.py with --add-slope-classification
-        - Generate slope class COG and add STAC property slope_class_version
-        - Update layers.json with gradient style and legend
+        - Add CLI flag to terrain_pipeline.py
+        - Modify layers.json with slope_class layer
+        - Update ADR + add unit test coverage
     validations:
       required: true
 
   - type: checkboxes
     id: change_types
     attributes:
-      label: Change Type(s)
+      label: Type of Change
       options:
-        - label: Add new data transformation module
-        - label: Modify ETL pipeline step
-        - label: Extend STAC metadata/schema
-        - label: Create new visualization layer
-        - label: Update documentation / SOP
-        - label: Other (describe in Proposed Implementation)
+        - label: New ETL pipeline/module
+        - label: Graph schema/API expansion
+        - label: Web/timeline interaction enhancement
+        - label: Visualization config/UI component
+        - label: Documentation/ADR/SOP update
+        - label: Other
 
   - type: markdown
     attributes:
-      value: "## 📐 Expected Behavior"
+      value: "## 📐 Metrics / Expected Outcome"
 
   - type: textarea
-    id: expected
+    id: outcomes
     attributes:
-      label: Expected Result / Metrics
+      label: Expected Behavior / KPIs
       placeholder: |
-        | Metric              | Target                                   |
-        | :------------------ | :----------------------------------------|
-        | Data Quality        | slope_class attribute present; STAC fields updated |
-        | Reproducibility     | Deterministic outputs; SOP updated       |
-        | Usability           | Map layer toggle + legend                |
-        | Performance         | < +5% runtime impact                     |
+        | Metric       | Target                       |
+        |--------------|------------------------------|
+        | Accuracy     | Entity linking precision >90% |
+        | Performance  | +<5% runtime overhead        |
+        | Usability    | Feature toggled in UI        |
       render: markdown
     validations:
       required: true
 
-  - type: markdown
-    attributes:
-      value: "## ⚙️ Implementation Plan (Optional)"
-
-  - type: textarea
-    id: plan
-    attributes:
-      label: Steps & Owners
-      placeholder: |
-        1) Draft ADR (docs/adr/ADR-XXXX-feature.md) — Owner …
-        2) Implement code — Owner …
-        3) Add unit/integration tests — Owner …
-        4) Update STAC + documentation — Owner …
-        5) Review + merge — Owner …
-
-  - type: markdown
-    attributes:
-      value: "## 🧭 Versioning Impact (SemVer / STAC)"
-
-  - type: textarea
-    id: versioning
-    attributes:
-      label: Versioning Summary
-      description: Indicate scope and proposed bump(s)
-      placeholder: |
-        | Scope                 | Current | Proposed | Notes                |
-        | :-------------------- | :------ | :------- | :------------------- |
-        | Dataset / STAC Schema | v1.2.0  | v1.3.0   | Add slope metadata   |
-        | Pipeline / Script     | v2.0.0  | v2.1.0   | Terrain ETL refactor |
-        | Workflow (CI/CD)      | v1.2.0  | v1.2.0   | none                 |
-        | Repo Release (SemVer) | v1.4.0  | v1.5.0   | minor feature        |
-      render: markdown
-
-  - type: markdown
-    attributes:
-      value: "## 📒 Impact Assessment"
-
   - type: dropdown
-    id: severity
+    id: impact_level
     attributes:
-      label: Expected Impact
+      label: Expected Impact Level
       options:
         - "🟩 Minor"
         - "🟨 Moderate"
@@ -191,50 +148,63 @@ body:
   - type: textarea
     id: downstream
     attributes:
-      label: Affected Pipelines / Downstream Effects
-      description: Impact on ETL/web/graph/STAC, end users, or CI/CD
+      label: Downstream Effects
+      description: "Describe expected effects on STAC, pipelines, UI, tests, etc."
       placeholder: |
-        - Affected pipelines: make terrain
-        - Downstream: new layer config; STAC validate update
+        - Changes STAC schema version
+        - Requires new test fixtures
+        - Impacts performance gate
 
   - type: markdown
     attributes:
-      value: "## ✅ MCP Compliance Checklist"
-
-  - type: checkboxes
-    id: mcp_checklist
-    attributes:
-      label: MCP Principles
-      options:
-        - label: Documentation-first — Clear summary + structured context
-          required: true
-        - label: Reproducibility — Deterministic steps + versioning impact
-          required: true
-        - label: Open Standards — STAC/JSON Schema alignment
-          required: true
-        - label: Provenance — STAC metadata and ADR references included
-          required: true
-        - label: Auditability — PR/issue linkage with reproducible steps
-          required: true
-        - label: Versioning — SemVer / STAC updated with change
-          required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🔗 Related Issues / References"
+      value: "## 📜 Governance / Compliance"
 
   - type: textarea
-    id: related
+    id: versioning
     attributes:
-      label: Related Links
-      description: Link PRs, similar issues, affected STAC items, ADRs, SOPs
+      label: Versioning Summary
       placeholder: |
-        - PR: #123
-        - Similar: #456
-        - STAC: data/stac/items/terrain_ks_2020.json
+        | Component             | Current | Proposed | Reason         |
+        |------------------------|---------|----------|----------------|
+        | ETL Script             | v1.3.0  | v1.4.0   | logic addition |
+        | Graph/API Schema       | v1.0.0  | v1.1.0   | field added    |
+        | Web Config             | v1.2.1  | v1.2.2   | toggle added   |
+        | Repo Release (SemVer)  | v2.4.0  | v2.5.0   | feature bump   |
+      render: markdown
+
+  - type: checkboxes
+    id: mcp
+    attributes:
+      label: MCP Compliance
+      options:
+        - label: Documentation-first — described & linked to ADR/SOP
+          required: true
+        - label: Reproducible — deterministic steps + outputs
+          required: true
+        - label: Provenance — traceable files, config, commit hashes
+          required: true
+        - label: Versioned — STAC/schema/ETL or API updated
+          required: true
+        - label: Audit-ready — tests/metrics provided
+          required: true
+
+  - type: markdown
+    attributes:
+      value: "## 🔗 References & Notes"
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Links / Related PRs / Docs
+      placeholder: |
+        - Related Issue: #456
         - Docs: docs/sop/terrain_pipeline.md
+        - PRs: #789
 
   - type: textarea
     id: notes
     attributes:
       label: Additional Notes
+      placeholder: |
+        - Diagrams, screenshots, mockups
+        - Risk flags, review blockers, etc.
