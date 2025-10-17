@@ -141,12 +141,26 @@ VITE_MAP_STYLE_URL=/tiles/style.json
 
 ---
 
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+|:------|:------|
+| **Version** | `v1.7.0` |
+| **Codename** | *Interactivity & Provenance Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-architecture |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Semantic Alignment** | STAC 1.0 · CIDOC CRM · OWL-Time · DCAT 2.0 |
+| **Maturity** | Production |
+
+---
+
 <div align="center">
 
-**MIT License · © Kansas Frontier Matrix**  
+**© Kansas Frontier Matrix**  
 Built under the **Master Coder Protocol (MCP)**  
 
-[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256 Verified-success)]()  
-[![Semantic Alignment](https://img.shields.io/badge/CIDOC CRM · OWL--Time · STAC 1.0-blue)]()
+[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
+[![Semantic Alignment](https://img.shields.io/badge/CIDOC%20CRM%20·%20OWL--Time%20·%20STAC%201.0-blue)]()
 
 </div>
