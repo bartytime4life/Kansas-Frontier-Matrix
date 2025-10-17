@@ -1,219 +1,81 @@
-name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
-title: "[Feature]: <feature name> — <component/domain>"
+name: 🐞 Bug Report
+description: Report a reproducible defect in code, data, or metadata.
+title: "[BUG] <short summary>"
 labels:
-  - enhancement
+  - bug
   - needs-triage
-assignees:
-  - kfm-architecture
-  - kfm-data
-
-# KFM metadata
-# version: v2.3.1
-# last_updated: 2025-10-16
-# owners: @kfm-architecture @kfm-data
-
 body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Feature Overview
-        *"Every Feature Builds the Future — Every Change is Reproducible."*
+        Please provide clear steps to reproduce the bug. Include provenance (paths, commit SHAs, STAC IDs), system info, and acceptance criteria.
 
   - type: input
-    id: feature_name
+    id: summary
     attributes:
-      label: Feature Name
-      placeholder: "Slope Classification Enhancement for Terrain Pipeline"
+      label: 🔢 Summary
+      placeholder: "E.g. STAC validator fails for NOAA catalog.json"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: ✈️ Steps to Reproduce
+      placeholder: |
+        1. Run `make stac-validate`
+        2. Observe failure in `catalog.json`
+        3. See error message
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-vs-actual
+    attributes:
+      label: 🚫 Expected vs Actual
+      placeholder: "Expected STAC validate to pass; it fails with ..."
+
+  - type: input
+    id: related-workflow
+    attributes:
+      label: 💼 Related CI Workflow or Path
+      placeholder: "e.g., stac-validate.yml, data/stac/catalog.json"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 🔍 Logs / Screenshots
+      placeholder: "Attach log snippet, screenshot, traceback, or link to CI run"
+
+  - type: input
+    id: provenance
+    attributes:
+      label: 🌐 Provenance
+      placeholder: "Path, STAC item ID, dataset SHA, commit SHA, etc."
     validations:
       required: true
 
   - type: input
-    id: component
+    id: environment
     attributes:
-      label: Target Module / Component
-      placeholder: "terrain_pipeline.py | web/config/layers.json | graph_ingest.py"
-    validations:
-      required: true
+      label: 🔧 System Context
+      placeholder: "Python 3.10, Ubuntu 22.04, actions/setup-node@v4"
 
   - type: dropdown
-    id: domain
+    id: semver
     attributes:
-      label: Domain / Area of Impact
+      label: 🔄 SemVer Impact
       options:
-        - Terrain
-        - Hydrology
-        - Climate
-        - Hazards
-        - Landcover
-        - Knowledge Graph
-        - Web UI
-        - API
-        - Text / AI / NLP
-        - Metadata / Governance
-        - CI/CD
-      multiple: true
+        - none
+        - patch
+        - minor
+        - major
+      default: 0
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 📄 Acceptance Criteria
+      placeholder: "How will we know the bug is resolved? Include tests or output."
     validations:
       required: true
-
-  - type: input
-    id: stakeholder
-    attributes:
-      label: Feature Owner / Stakeholder
-      placeholder: "@kfm-data · @kfm-web · project-leads"
-    validations:
-      required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🔍 Problem & Rationale"
-
-  - type: textarea
-    id: problem
-    attributes:
-      label: Current Limitation or Problem
-      placeholder: "Describe the current limitation or user need driving this feature."
-    validations:
-      required: true
-
-  - type: textarea
-    id: rationale
-    attributes:
-      label: Motivation & Rationale
-      placeholder: |
-        - Aligns with roadmap milestone
-        - Fills UI accessibility gap
-        - Enhances knowledge graph linking
-    validations:
-      required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🧠 Proposed Implementation"
-
-  - type: textarea
-    id: proposal
-    attributes:
-      label: Proposed Implementation Details
-      description: "Describe the logic, workflow changes, files affected, dependencies."
-      placeholder: |
-        - Add CLI flag to terrain_pipeline.py
-        - Modify layers.json with slope_class layer
-        - Update ADR + add unit test coverage
-    validations:
-      required: true
-
-  - type: checkboxes
-    id: change_types
-    attributes:
-      label: Type of Change
-      options:
-        - label: New ETL pipeline/module
-        - label: Graph schema/API expansion
-        - label: Web/timeline interaction enhancement
-        - label: Visualization config/UI component
-        - label: Documentation/ADR/SOP update
-        - label: Other
-
-  - type: markdown
-    attributes:
-      value: |
-        ## 📐 Metrics / Expected Outcome
-        Use this template (copy/paste into the field below):
-        ```
-        | Metric          | Target                                   |
-        |-----------------|-------------------------------------------|
-        | Data Quality    | slope_class attribute present; STAC updated |
-        | Reproducibility | Deterministic outputs; SOP updated        |
-        | Usability       | Map layer toggle + legend                 |
-        | Performance     | < +5% runtime impact                      |
-        ```
-  - type: textarea
-    id: outcomes
-    attributes:
-      label: Expected Behavior / KPIs
-      description: "Enter your KPI table or bullet list. Markdown is rendered."
-      placeholder: "Paste the KPI table template (see above) and adjust targets."
-      render: markdown
-    validations:
-      required: true
-
-  - type: dropdown
-    id: impact_level
-    attributes:
-      label: Expected Impact Level
-      options:
-        - "🟩 Minor"
-        - "🟨 Moderate"
-        - "🟧 Major"
-        - "🔴 Critical"
-    validations:
-      required: true
-
-  - type: textarea
-    id: downstream
-    attributes:
-      label: Downstream Effects
-      description: "Describe expected effects on STAC, pipelines, UI, tests, etc."
-      placeholder: |
-        - Changes STAC schema version
-        - Requires new test fixtures
-        - Impacts performance gate
-
-  - type: markdown
-    attributes:
-      value: |
-        ## 📜 Governance / Compliance
-        Use this versioning table (copy/paste into the field below):
-        ```
-        | Component           | Current | Proposed | Reason         |
-        |---------------------|---------|----------|----------------|
-        | ETL Script          | v1.3.0  | v1.4.0   | logic addition |
-        | Graph/API Schema    | v1.0.0  | v1.1.0   | field added    |
-        | Web Config          | v1.2.1  | v1.2.2   | toggle added   |
-        | Repo Release (SemVer)| v2.4.0 | v2.5.0   | feature bump   |
-        ```
-  - type: textarea
-    id: versioning
-    attributes:
-      label: Versioning Summary
-      description: "Enter the table above with your proposed bumps. Markdown is rendered."
-      placeholder: "Paste the versioning table template (see above) and adjust versions."
-      render: markdown
-
-  - type: checkboxes
-    id: mcp
-    attributes:
-      label: MCP Compliance
-      options:
-        - label: Documentation-first — described & linked to ADR/SOP
-          required: true
-        - label: Reproducible — deterministic steps + outputs
-          required: true
-        - label: Provenance — traceable files, config, commit hashes
-          required: true
-        - label: Versioned — STAC/schema/ETL or API updated
-          required: true
-        - label: Audit-ready — tests/metrics provided
-          required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🔗 References & Notes"
-
-  - type: textarea
-    id: references
-    attributes:
-      label: Links / Related PRs / Docs
-      placeholder: |
-        - Related Issue: #456
-        - Docs: docs/sop/terrain_pipeline.md
-        - PRs: #789
-
-  - type: textarea
-    id: notes
-    attributes:
-      label: Additional Notes
-      placeholder: |
-        - Diagrams, screenshots, mockups
-        - Risk flags, review blockers, etc.
