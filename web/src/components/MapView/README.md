@@ -15,31 +15,12 @@
 
 ---
 
-```yaml
----
-title: "KFM • MapView Component (web/src/components/MapView/)"
-version: "v1.5.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-gis"]
-tags: ["react","maplibre","stac","geojson","timeline","mcp","accessibility"]
-license: "MIT"
-semantic_alignment:
-  - STAC 1.0
-  - CIDOC CRM
-  - OWL-Time
-  - WCAG 2.1 AA
----
-````
-
----
-
 ## 🧭 Overview
 
-The **MapView Component** powers the **geospatial visualization engine** of the Kansas Frontier Matrix.
-It renders **historical and modern datasets** from the project’s **STAC catalog**, synchronizing them with the **TimelineView** and **Knowledge Graph**.
-MapView anchors Kansas’s physical geography to its **cultural, temporal, and ecological stories** — visualizing treaties, hydrology, settlements, and events across time.
+The **MapView** is the geospatial heart of KFM. It renders **STAC-indexed** raster (COG) and vector (GeoJSON) layers, synchronized with the **Timeline** and **Knowledge Graph**.  
+Built on **MapLibre GL JS**, it supports temporal filters, legends, markers, and accessible interactions—all aligned with **MCP-DL v6.2** and **WCAG 2.1 AA**.
 
-Built with **MapLibre GL JS**, MapView supports dynamic overlays of **COGs (Cloud-Optimized GeoTIFFs)**, **GeoJSON features**, and **temporal filtering**, maintaining smooth performance and strict MCP-DL v6.2 documentation standards.
+> *“Where time meets terrain: treaties, rivers, settlements, and stories.”*
 
 ---
 
@@ -47,199 +28,198 @@ Built with **MapLibre GL JS**, MapView supports dynamic overlays of **COGs (Clou
 
 ```text
 web/src/components/MapView/
-├── MapView.tsx             # Main map renderer (MapLibre + Context integration)
-├── MapLayer.tsx            # Handles STAC-defined raster/vector layers
-├── MapLegend.tsx           # Displays active legends and metadata
-├── MapMarker.tsx           # Entity or event markers (interactive)
-├── PopupInfo.tsx           # Info popups for selected features
-├── styles.scss             # Theming, responsive sizing, overlay styles
-└── __tests__/              # Jest + RTL tests for rendering and interactions
+├── MapView.tsx             # Main renderer (MapLibre + Context integration)
+├── MapLayer.tsx            # Declarative STAC → map layer bridge (raster/vector)
+├── MapLegend.tsx           # Active legends & attribution
+├── MapMarker.tsx           # Entity/event markers with a11y popovers
+├── PopupInfo.tsx           # Selected feature info (narrative excerpts)
+├── styles.scss             # Theme, sizing, overlays
+└── __tests__/              # RTL + Jest: rendering/interaction/a11y tests
 ```
-
-Each submodule is typed, modular, and testable — reinforcing MCP reproducibility and maintainability.
 
 ---
 
-## ⚙️ Component Architecture
+## 🗺️ Architecture
 
 ```mermaid
 flowchart TD
-  M["MapView<br/>(MapLibre GL JS)"] --> C["LayerContext<br/>(visible layers, opacity)"]
-  M --> T["TimelineContext<br/>(temporal filtering)"]
-  M --> STAC["STAC Catalog<br/>(data/stac/catalog.json)"]
-  M --> ML["MapLayer Components<br/>(raster/vector loaders)"]
-  M --> POP["PopupInfo<br/>(entity details)"]
-  ML --> LEG["MapLegend<br/>active layer symbology"]
-  POP --> DP["DetailPanel<br/>selected entity/event"]
+  MV["MapView<br/>MapLibre GL JS"] --> LCTX["LayerContext<br/>visible · opacity · order"]
+  MV --> TLX["TimelineContext<br/>start · end · brush"]
+  MV --> STAC["STAC Catalog<br/>collections/items/assets"]
+  MV --> ML["MapLayer<br/>COG · GeoJSON · style filters"]
+  MV --> POP["PopupInfo<br/>entity/event details"]
+  ML --> LEG["MapLegend<br/>ramp · categories · attribution"]
+  POP --> DP["DetailPanel<br/>dossier + citations"]
 %% END OF MERMAID
 ```
 
-> The architecture ensures a one-directional, declarative flow of data — from STAC → Context → Map → UI.
+*One-way flow:* **STAC → Context → Map → UI** ensures deterministic, reproducible rendering.
 
 ---
 
 ## 🧩 Core Features
 
-| Feature                 | Description                                                | Data Source              |
-| :---------------------- | :--------------------------------------------------------- | :----------------------- |
-| **STAC-Driven Layers**  | Dynamically loads raster/vector datasets from STAC Items   | `data/stac/catalog.json` |
-| **Temporal Filtering**  | Filters visible features according to active timeline      | `TimelineContext`        |
-| **Interactive Markers** | Displays events, treaties, and places as clickable markers | Knowledge Graph          |
-| **Popup Information**   | Shows entity summaries linked to DetailPanel               | `/api/entity/{id}`       |
-| **Legends & Overlays**  | Renders color scales & categories from STAC metadata       | STAC                     |
-| **Basemap Controls**    | Switches between modern, terrain, and satellite maps       | MapLibre GL              |
-| **Accessibility**       | Keyboard navigation, ARIA roles, and focus rings           | WCAG 2.1 AA              |
+| Feature                  | What it does                                                    | Source |
+| :----------------------- | :-------------------------------------------------------------- | :----- |
+| **STAC-Driven Layers**   | Declaratively mount COG/GeoJSON with attribution & license      | STAC   |
+| **Temporal Filtering**   | Filters features by `start/end` from **TimelineContext**        | TLX    |
+| **Interactive Markers**  | Clickable events/places with keyboard navigation                | Graph  |
+| **Legends & Ramps**      | Auto-generated from STAC metadata (categorical/continuous)      | STAC   |
+| **Basemap Switcher**     | Voyager · Terrain · Satellite                                   | MapLibre |
+| **A11y Controls**        | Focus rings, ARIA labels, reduced motion                        | A11y/Theme |
 
 ---
 
-## 💬 Example Implementation
+## 💬 Reference Implementation (concise)
 
 ```tsx
 import React, { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useLayer } from "../../context/LayerContext";
 import { useTimeline } from "../../context/TimelineContext";
-import { loadSTACLayers } from "../../utils/mapUtils";
-import "maplibre-gl/dist/maplibre-gl.css";
+import { applyStacLayers } from "../../utils/mapUtils";
 import "./styles.scss";
 
 export const MapView: React.FC = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
   const { visibleLayers } = useLayer();
-  const { range } = useTimeline();
+  const { range } = useTimeline(); // { start, end }
 
   useEffect(() => {
-    const map = new maplibregl.Map({
-      container: mapContainer.current!,
+    if (mapRef.current) return; // singleton
+    mapRef.current = new maplibregl.Map({
+      container: containerRef.current!,
       style: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json",
-      center: [-98.3, 38.5],
-      zoom: 6,
-      attributionControl: true,
+      center: [-98.3, 38.5], zoom: 6, attributionControl: true,
     });
+    mapRef.current.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+  }, []);
 
-    loadSTACLayers(map, visibleLayers, range);
-    return () => map.remove();
+  useEffect(() => {
+    if (!mapRef.current) return;
+    applyStacLayers(mapRef.current, visibleLayers, range); // idempotent updates
   }, [visibleLayers, range]);
 
   return (
     <div
-      ref={mapContainer}
+      ref={containerRef}
       className="map-view"
       role="region"
       aria-label="Interactive Kansas Historical Map"
-    ></div>
+      data-testid="map-view"
+    />
   );
 };
 ```
 
-> **Purpose:** Displays spatiotemporal data layers (treaties, hydrology, DEMs) and links geographic interactions to the `SelectionContext`.
-
 ---
 
-## 🧮 Data Flow
+## 🧮 Temporal & Layer Logic
 
 ```mermaid
 sequenceDiagram
-  participant U as User
+  participant TL as TimelineContext
   participant MV as MapView
-  participant CTX as LayerContext
-  participant STAC as STAC Catalog
-  participant API as FastAPI
-  participant KG as Knowledge Graph
+  participant MU as mapUtils.applyStacLayers
+  participant ML as MapLibre
 
-  U->>MV: Toggles layer visibility
-  MV->>CTX: Updates visibleLayers state
-  CTX->>STAC: Load metadata for active layers
-  MV->>API: GET /events?bbox=&start=&end=
-  API->>KG: Query events by time and location
-  KG-->>API: Returns geo-tagged events
-  API-->>MV: Returns GeoJSON features
-  MV-->>U: Renders layers, markers, and legends
+  TL->>MV: {start,end} changed
+  MV->>MU: applyStacLayers(map, visibleLayers, {start,end})
+  MU->>ML: setFilter(layerId, ["all", [">=", "date", start], ["<=", "date", end]])
+  MU-->>MV: layers updated (idempotent)
 %% END OF MERMAID
 ```
 
 ---
 
-## 🎨 Styling & UI
+## 🎛 Basemap & Styling
 
-| UI Aspect          | Description                                                               |
-| :----------------- | :------------------------------------------------------------------------ |
-| **Layout**         | Central viewport inside AppShell; responsive with ResizeObserver          |
-| **Basemaps**       | Voyager (default), Terrain, Satellite                                     |
-| **Layer Styling**  | Categorical (boundaries, routes) + Continuous (raster elevation, climate) |
-| **Legend Display** | Auto-generates from STAC metadata (title, range, color ramp)              |
-| **Performance**    | Uses `requestAnimationFrame` for smooth transitions                       |
-| **Responsiveness** | Auto-centers on resize; throttled viewport sync                           |
+- **Basemaps:** `voyager` (default), `terrain`, `satellite` – exposed via a small toggle.  
+- **Layer styling:**
+  - **Categorical:** treaties, routes, boundaries (stroke/fill + filter).  
+  - **Continuous:** rasters (COG) with color ramps and hillshade (if available).  
+- **Legends:** read from STAC `assets.roles` + `properties` (title, colormap, units).
 
 ---
 
 ## ♿ Accessibility (WCAG 2.1 AA)
 
-| Feature                 | Implementation                                                |
-| :---------------------- | :------------------------------------------------------------ |
-| **Keyboard Navigation** | Arrow keys → pan, `+`/`−` → zoom, `Tab` cycles controls       |
-| **Screen Readers**      | `aria-label="Interactive Kansas Map"` on container            |
-| **Focus Indicators**    | High-contrast outlines managed by `AccessibilityContext`      |
-| **Reduced Motion**      | Disables map transitions when `prefers-reduced-motion` active |
-| **Tooltips**            | Accessible via `role="tooltip"` with clear text for markers   |
+| Concern               | Implementation                                                                 |
+| :-------------------- | :------------------------------------------------------------------------------ |
+| Keyboard navigation   | Arrow keys pan; `+`/`−` zoom; `Tab` cycles controls; `Esc` closes popups       |
+| Roles & labels        | Container `role="region"` + descriptive `aria-label`                            |
+| Focus management      | Visible high-contrast ring; map canvas not focus-stealing                      |
+| Reduced motion        | Disables smooth flyTo/animate on `prefers-reduced-motion: reduce`              |
+| Tooltips & popups     | `role="dialog"` for sticky popups; `aria-live="polite"` for announcements      |
 
-Accessibility checks are validated in CI using **axe-core** and **Lighthouse**.
+A11y checks enforced in CI (**axe-core**, Lighthouse).
 
 ---
 
 ## 🧪 Testing
 
-| Test Case               | Description                                       | Tool                 |
-| :---------------------- | :------------------------------------------------ | :------------------- |
-| **Layer Loading**       | Ensures STAC layers load and render correctly     | Jest + MSW           |
-| **Opacity Control**     | Confirms LayerControls modify opacity dynamically | Jest DOM             |
-| **Popup Rendering**     | Verifies popups show correct entity info          | RTL                  |
-| **Timeline Sync**       | Tests layer filtering by date range               | Mock TimelineContext |
-| **Accessibility Audit** | Validates ARIA, keyboard, and contrast            | axe-core             |
+| Case                    | Expectation                                                 | Tooling        |
+| :---------------------- | :---------------------------------------------------------- | :------------- |
+| STAC layer mount        | Layers add/remove with correct source/style                 | Jest + MSW     |
+| Temporal filtering      | Features respect `{start,end}` from TimelineContext         | RTL + mocks    |
+| Legend generation       | STAC metadata → legend entries with labels & units          | Jest           |
+| Marker interaction      | Keyboard/Mouse open `PopupInfo`; focus order preserved      | RTL + userEvent|
+| A11y audit              | No critical violations (roles/labels/contrast)              | axe-core       |
 
-**Target Coverage:** ≥ **90%** (rendering + interactions)
+**Coverage target:** ≥ **90%**.
+
+---
+
+## ⚡ Performance Notes
+
+- Prefer **COG** for rasters; set `raster-resampling: linear` and tile size 512.  
+- Simplify large vectors at build time; use filters over frequent `setData`.  
+- Throttle viewport sync to **60–120ms**; avoid expensive re-style churn.  
+- Batch style operations: add sources first, then layers, then filters.  
+- Use **idempotent** updates in `applyStacLayers` to prevent flicker.
 
 ---
 
 ## 🧾 Provenance & Integrity
 
-| Artifact         | Description                                                                      |
-| :--------------- | :------------------------------------------------------------------------------- |
-| **Inputs**       | STAC catalog (`data/stac/catalog.json`), API data (`/api/events`), `maplibre-gl` |
-| **Outputs**      | Rendered COG overlays, vector layers, markers, popups, and legends               |
-| **Dependencies** | React 18+, MapLibre GL JS, Framer Motion, TailwindCSS                            |
-| **Integrity**    | CI validates STAC schema, visual regression, and accessibility before merge      |
-
----
-
-## 🧠 MCP Compliance Checklist
-
-| MCP Principle       | Implementation                                   |
-| :------------------ | :----------------------------------------------- |
-| Documentation-first | README & JSDoc per component                     |
-| Reproducibility     | Deterministic layer rendering from STAC metadata |
-| Provenance          | STAC asset lineage + dataset citations           |
-| Accessibility       | WCAG 2.1 AA validation in CI                     |
-| Open Standards      | GeoJSON · COG · STAC 1.0 · OWL-Time alignment    |
+| Artifact         | Description                                                                       |
+| :--------------- | :-------------------------------------------------------------------------------- |
+| **Inputs**       | STAC catalog (`data/stac/*.json`), API (`/api/events`), context state             |
+| **Outputs**      | Rendered map layers (COG/GeoJSON), legends, markers, popups                       |
+| **Dependencies** | React 18+, MapLibre GL, TailwindCSS, (optional) Framer Motion for UI affordances  |
+| **Integrity**    | CI validates STAC schema, visual snapshots, and accessibility before merge        |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **LayerControls Component** — `web/src/components/LayerControls/README.md`
-* **TimelineView Component** — `web/src/components/TimelineView/README.md`
-* **DetailPanel Component** — `web/src/components/DetailPanel/README.md`
-* **Web Components Overview** — `web/src/components/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **LayerControls** — `web/src/components/LayerControls/README.md`  
+- **TimelineView** — `web/src/components/TimelineView/README.md`  
+- **DetailPanel** — `web/src/components/DetailPanel/README.md`  
+- **Components Overview** — `web/src/components/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`
+
+---
+
+## 🧾 Versioning & Metadata
+
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.6.0` |
+| **Codename** | *Temporal Filters & Legend Sync Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-gis |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | STAC 1.0 · CIDOC CRM · OWL-Time · WCAG 2.1 AA |
+| **Maturity** | Stable / Production |
 
 ---
 
 ## 📜 License
 
-Released under the **MIT License**.
-© 2025 Kansas Frontier Matrix — developed under **MCP-DL v6.2** for transparency, reproducibility, and accessible scientific visualization.
+Released under the **MIT License**.  
+© 2025 Kansas Frontier Matrix — built under **MCP-DL v6.2** for transparent, reproducible geovisualization.
 
-> *“The MapView is the living map of Kansas — where time, data, and history converge upon the land.”*
-
-```
-```
+> *“MapView is the living atlas—Kansas across centuries, rendered in motion.”*
