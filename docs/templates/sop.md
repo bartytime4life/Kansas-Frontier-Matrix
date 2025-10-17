@@ -301,4 +301,3 @@ flowchart LR
 📍 `docs/templates/sop.md` · MCP-compliant operational procedure template for KFM.
 
 </div>
-```
