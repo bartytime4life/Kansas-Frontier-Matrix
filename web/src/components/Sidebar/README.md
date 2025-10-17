@@ -15,35 +15,15 @@
 
 ---
 
-```yaml
----
-title: "KFM • Sidebar Component (web/src/components/Sidebar/)"
-version: "v1.4.0"
-last_updated: "2025-10-14"
-owners: ["@kfm-web", "@kfm-ui"]
-tags: ["react","sidebar","filters","layers","stac","accessibility","mcp"]
-license: "MIT"
-semantic_alignment:
-  - STAC 1.0
-  - CIDOC CRM
-  - WCAG 2.1 AA
----
-````
-
----
-
 ## 🧭 Overview
 
-The **Sidebar Component** acts as the **command and information hub** of the Kansas Frontier Matrix interface.
-It centralizes control of **Layer Management**, **Legends**, and **Filter Panels**, allowing users to customize geospatial and historical data visible on the interactive map.
+The **Sidebar** is the **command hub** of the KFM Web UI. It centralizes **Layer Management**, **Legends**, and **Filters**, synchronizing with **Timeline** and **Map** via typed contexts. All behavior follows **MCP-DL v6.2** and WCAG 2.1 AA.
 
-The Sidebar integrates with multiple application contexts:
+It integrates with:
 
-* 🗂 **LayerContext** — controls active overlays and opacity
-* 🕰 **TimelineContext** — filters layers by visible time range
-* 🧭 **STAC metadata** — drives legend and dataset descriptions dynamically
-
-It supports **collapsible panels**, **keyboard navigation**, and **theme awareness**, all conforming to **MCP-DL v6.2** reproducibility and accessibility guidelines.
+- 🗂 **LayerContext** — active overlays, opacity, order  
+- 🕰 **TimelineContext** — time-window filtering for datasets  
+- 🧭 **STAC metadata** — drives legends, titles, attributions, licenses  
 
 ---
 
@@ -51,12 +31,12 @@ It supports **collapsible panels**, **keyboard navigation**, and **theme awarene
 
 ```text
 web/src/components/Sidebar/
-├── Sidebar.tsx           # Main sidebar container + layout orchestration
-├── SidebarPanel.tsx      # Collapsible, reusable panel component
-├── FilterPanel.tsx       # Optional thematic filters (e.g., climate, treaty)
-├── LegendPanel.tsx       # Dynamic map legends generated from STAC metadata
-├── styles.scss           # Responsive styles + theme variables
-└── __tests__/            # Jest + RTL unit & integration tests
+├── Sidebar.tsx           # Main container (composition + layout)
+├── SidebarPanel.tsx      # Accessible, collapsible panel primitive
+├── FilterPanel.tsx       # Thematic filters (e.g., climate, treaty, hydrology)
+├── LegendPanel.tsx       # Legends derived from STAC assets/roles
+├── styles.scss           # Responsive + theme-aware styles
+└── __tests__/            # Jest + RTL unit/integration tests
 ```
 
 ---
@@ -65,36 +45,37 @@ web/src/components/Sidebar/
 
 ```mermaid
 flowchart TD
-  SB["Sidebar<br/>(Collapsible Panel)"] --> LC["LayerControls<br/>Visible + Opacity"]
-  SB --> LP["LegendPanel<br/>STAC Metadata"]
-  SB --> FP["FilterPanel<br/>Optional Filters"]
-  SB --> CTX["LayerContext & TimelineContext"]
+  SB["Sidebar<br/>(Collapsible Panels)"] --> LC["LayerControls<br/>visible · opacity · order"]
+  SB --> LP["LegendPanel<br/>STAC-derived legends"]
+  SB --> FP["FilterPanel<br/>themes · tags"]
+  SB --> CTX["Contexts<br/>Layer · Timeline · Accessibility"]
   LC --> MAP["MapView<br/>(MapLibre GL)"]
   LP --> MAP
   FP --> MAP
 %% END OF MERMAID
 ```
 
-The Sidebar listens for **context updates** and propagates UI changes back to **MapView** and **TimelineView** for synchronized visualization.
+**Sync contract:** Sidebar listens to context updates and dispatches actions; **MapView** and **TimelineView** update in lockstep.
 
 ---
 
 ## 🧩 Key Features
 
-| Feature                | Description                                          | Data Source             |
-| :--------------------- | :--------------------------------------------------- | :---------------------- |
-| **Layer Management**   | Toggle overlays, adjust opacity, fetch STAC metadata | `LayerContext` / STAC   |
-| **Legends**            | Auto-renders legends from STAC `catalog.json`        | `data/stac/`            |
-| **Timeline Filtering** | Filters visible datasets by timeline range           | `TimelineContext`       |
-| **Category Filters**   | Group data by theme (climate, treaty, hydrology)     | Local state / STAC tags |
-| **Responsive Design**  | Collapses to drawer on mobile, sidebar on desktop    | Tailwind + CSS Grid     |
-| **Accessibility**      | Full keyboard navigation + WCAG compliance           | `AccessibilityContext`  |
+| Feature                | Description                                                          | Data / Source          |
+| :--------------------- | :------------------------------------------------------------------- | :--------------------- |
+| **Layer Management**   | Toggle overlays, set opacity, reorder                                | `LayerContext`         |
+| **Legends**            | Auto-renders from STAC Items/roles (e.g., `data`, `overview`)        | `data/stac/`           |
+| **Timeline Filtering** | Shows only layers within current time window                         | `TimelineContext`      |
+| **Thematic Filters**   | Climate, treaty, hydrology, archaeology (via STAC tags)              | STAC `properties.*`    |
+| **Responsive**         | Drawer on mobile; fixed panel on desktop                             | CSS Grid + Tailwind    |
+| **Accessible**         | Keyboard nav, focus management, high-contrast tokens                 | `AccessibilityContext` |
 
 ---
 
-## 💬 Example Implementation
+## 💬 Reference Implementation
 
 ```tsx
+// Sidebar.tsx
 import React from "react";
 import { LayerControls } from "../LayerControls";
 import { LegendPanel } from "./LegendPanel";
@@ -106,21 +87,25 @@ export const Sidebar: React.FC = () => {
     <aside
       className="sidebar"
       role="complementary"
-      aria-label="Map Layers and Filters"
+      aria-label="Map layers, legends, and filters"
+      data-testid="sidebar"
     >
-      <header className="sidebar-header">
-        <h2>Map Controls</h2>
+      <header className="sidebar__header">
+        <h2 className="sidebar__title">Map Controls</h2>
       </header>
 
-      <section className="sidebar-section">
+      <section className="sidebar__section" aria-labelledby="layers-heading">
+        <h3 id="layers-heading" className="sr-only">Layers</h3>
         <LayerControls />
       </section>
 
-      <section className="sidebar-section">
+      <section className="sidebar__section" aria-labelledby="legend-heading">
+        <h3 id="legend-heading" className="sr-only">Legend</h3>
         <LegendPanel />
       </section>
 
-      <section className="sidebar-section">
+      <section className="sidebar__section" aria-labelledby="filters-heading">
+        <h3 id="filters-heading" className="sr-only">Filters</h3>
         <FilterPanel />
       </section>
     </aside>
@@ -128,36 +113,42 @@ export const Sidebar: React.FC = () => {
 };
 ```
 
-> The Sidebar binds directly to React Context values to propagate changes across **MapView**, **TimelineView**, and **DetailPanel** components.
+> Uses semantic landmarks and labelled sections for AT-friendly navigation.
 
 ---
 
 ## 🧠 TypeScript Interfaces
 
 ```ts
+// SidebarPanel.tsx
 export interface SidebarPanelProps {
   title: string;
-  isOpen?: boolean;
+  defaultOpen?: boolean;
   children: React.ReactNode;
-  onToggle?: () => void;
+  onToggle?: (open: boolean) => void;
+  id?: string; // used for aria-controls/labelledby
 }
+
+// FilterPanel.tsx
+export type FilterCategory =
+  | "climate"
+  | "geology"
+  | "treaty"
+  | "hydrology"
+  | "archaeology"
+  | "infrastructure";
 
 export interface FilterOption {
   id: string;
   label: string;
-  category:
-    | "climate"
-    | "geology"
-    | "treaty"
-    | "infrastructure"
-    | "archaeology";
+  category: FilterCategory;
   active: boolean;
 }
 ```
 
 ---
 
-## 🧮 Data Flow
+## 🧮 Interaction Flow
 
 ```mermaid
 sequenceDiagram
@@ -167,12 +158,12 @@ sequenceDiagram
   participant STAC as STAC Catalog
   participant MAP as MapView
 
-  U->>SB: Toggles "Soil Survey 1967"
-  SB->>CTX: updateLayerState(id, active)
-  CTX->>MAP: add/remove layer
-  SB->>STAC: fetch legend metadata
-  STAC-->>SB: Return legend assets + attributes
-  SB-->>U: Display legend + summary
+  U->>SB: Toggle "Soil Survey 1967"
+  SB->>CTX: updateLayerState(id, active, opacity?)
+  CTX->>MAP: add/remove/update layer
+  SB->>STAC: fetch legend assets & roles
+  STAC-->>SB: legend config, attribution, license
+  SB-->>U: Render legend + layer summary
 %% END OF MERMAID
 ```
 
@@ -180,53 +171,51 @@ sequenceDiagram
 
 ## 🎨 Styling & Layout
 
-| Property            | Description                                                                  |
-| :------------------ | :--------------------------------------------------------------------------- |
-| **Base Width**      | 320 px (desktop) / 100 vw (mobile drawer)                                    |
-| **Panel Behavior**  | Accordion-style expand/collapse (Framer Motion)                              |
-| **Transitions**     | Smooth open/close with easing curves                                         |
-| **Color System**    | Inherits tokens from `ThemeContext` (`--kfm-color-bg`, `--kfm-color-accent`) |
-| **Scroll Behavior** | Auto-scrolls to active section, fixed legend header                          |
-
-Example SCSS snippet:
+| Property            | Description                                                                 |
+| :------------------ | :-------------------------------------------------------------------------- |
+| **Base Width**      | `clamp(280px, 25vw, 360px)` on desktop / 100vw drawer on mobile            |
+| **Panels**          | Accordion expand/collapse (Framer Motion optional)                          |
+| **Tokens**          | Uses `--kfm-color-*`, `--kfm-radius`, `--kfm-shadow` from design system     |
+| **Scroll**          | Sticky legend header, scrollable sections                                   |
 
 ```scss
+/* styles.scss (excerpt) */
 .sidebar {
   background: var(--kfm-color-bg);
   color: var(--kfm-color-text);
   width: clamp(280px, 25vw, 360px);
-  transition: all 0.25s ease;
+  border-right: 1px solid color-mix(in oklab, var(--kfm-color-text), transparent 85%);
+  transition: background-color .24s ease, color .24s ease;
 }
+.sidebar__section + .sidebar__section { margin-top: var(--kfm-spacing-lg); }
 ```
 
 ---
 
 ## ♿ Accessibility (WCAG 2.1 AA)
 
-* `role="complementary"` assigned to `<aside>`
-* Each collapsible panel uses `aria-expanded` and keyboard focus management
-* Keyboard shortcuts:
-
-  * `L` → toggle Sidebar
-  * `F` → focus Filter panel
-* Icons use `role="img"` + `aria-label` for assistive clarity
-* Large click areas + high contrast tokens validated by **axe-core**
-
-Accessibility audits run automatically in CI/CD.
+- `<aside role="complementary">` landmark  
+- Collapsible panels expose `aria-expanded`, `aria-controls`, and keep focus in flow  
+- Keyboard shortcuts:  
+  - `l` → toggle Sidebar  
+  - `f` → focus Filter panel  
+- High-contrast tokens and reduced motion respected (`prefers-reduced-motion`)  
+- Icons provide `role="img"` + `aria-label` as needed  
+- CI runs **axe-core** audits
 
 ---
 
 ## 🧪 Testing
 
-| Test Case               | Description                              | Tool                     |
-| :---------------------- | :--------------------------------------- | :----------------------- |
-| **Layer Toggle Sync**   | Toggling layer updates map visibility    | Jest + RTL               |
-| **Legend Rendering**    | Verifies STAC metadata loads and renders | Mock STAC + Jest         |
-| **Accordion Behavior**  | Tests animation and focus state          | Framer Motion test suite |
-| **Accessibility Audit** | ARIA and contrast validation             | axe-core                 |
-| **Responsive Layout**   | Validates mobile drawer vs desktop panel | Cypress E2E              |
+| Case                    | Expectation                                           | Tooling          |
+| :---------------------- | :---------------------------------------------------- | :--------------- |
+| **Layer Toggle Sync**   | Toggling updates MapView immediately                  | Jest + RTL       |
+| **Legend Rendering**    | STAC metadata loads, roles map to legend entries      | Jest (mocks)     |
+| **Accordion Focus**     | Focus stays logical; `aria-expanded` toggles correctly| RTL + user-event |
+| **Responsive Drawer**   | Mobile drawer transitions & trap focus                | Cypress E2E      |
+| **A11y Audit**          | No critical violations                                | axe-core         |
 
-> **Coverage Goal:** ≥ 90 % (lines, branches, and statements)
+**Coverage target:** ≥ **90%** lines/branches/statements.
 
 ---
 
@@ -234,41 +223,43 @@ Accessibility audits run automatically in CI/CD.
 
 | Artifact         | Description                                                  |
 | :--------------- | :----------------------------------------------------------- |
-| **Inputs**       | STAC Catalog, `LayerContext`, `TimelineContext`              |
-| **Outputs**      | Active layers, dynamic legends, filtered overlays            |
-| **Dependencies** | React 18+, MapLibre GL, Framer Motion, TailwindCSS           |
-| **Integrity**    | CI validates STAC schema + accessibility + visual regression |
-
----
-
-## 🧠 MCP Compliance Checklist
-
-| MCP Principle       | Implementation                              |
-| :------------------ | :------------------------------------------ |
-| Documentation-first | README + per-component TSDoc                |
-| Reproducibility     | Deterministic layer updates + CI validation |
-| Provenance          | Linked STAC metadata for every legend asset |
-| Accessibility       | WCAG 2.1 AA validated via axe-core          |
-| Open Standards      | STAC 1.0 · GeoJSON · CSS Custom Properties  |
+| **Inputs**       | STAC Items/Collections, `LayerContext`, `TimelineContext`    |
+| **Outputs**      | Active layers, legends, filtered overlays                    |
+| **Dependencies** | React 18+, MapLibre GL, TailwindCSS, (optional) Framer Motion|
+| **Integrity**    | CI validates STAC schema, a11y checks, unit/integration/E2E  |
 
 ---
 
 ## 🔗 Related Documentation
 
-* **LayerControls Component** — `web/src/components/LayerControls/README.md`
-* **MapView Component** — `web/src/components/MapView/README.md`
-* **TimelineView Component** — `web/src/components/TimelineView/README.md`
-* **Context: Layer & Timeline** — `web/src/context/README.md`
-* **Web UI Architecture** — `web/ARCHITECTURE.md`
+- **LayerControls** — `web/src/components/LayerControls/README.md`  
+- **MapView** — `web/src/components/MapView/README.md`  
+- **TimelineView** — `web/src/components/TimelineView/README.md`  
+- **Contexts (Layer/Timeline)** — `web/src/context/README.md`  
+- **Web UI Architecture** — `web/ARCHITECTURE.md`
 
 ---
 
-## 📜 License
+## 🧾 Versioning & Metadata
 
-Released under the **MIT License**.
-© 2025 **Kansas Frontier Matrix** — engineered under **MCP-DL v6.2** for modularity, traceability, and accessibility.
+| Field | Value |
+| :---- | :---- |
+| **Version** | `v1.5.0` |
+| **Codename** | *Command Hub & Legends Upgrade* |
+| **Last Updated** | 2025-10-17 |
+| **Maintainers** | @kfm-web · @kfm-ui |
+| **License** | MIT (code) · CC-BY 4.0 (docs) |
+| **Alignment** | STAC 1.0 · CIDOC CRM · WCAG 2.1 AA |
+| **Maturity** | Stable / Production |
 
-> *“The Sidebar is the explorer’s toolkit — the command center for navigating Kansas across time and terrain.”*
+---
 
-```
-```
+<div align="center">
+
+**© Kansas Frontier Matrix — Sidebar Component**  
+Built under the **Master Coder Protocol (MCP)** for modular, accessible, and reproducible UI.
+
+[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
+[![Semantic Alignment](https://img.shields.io/badge/STAC%201.0%20·%20CIDOC%20CRM%20·%20WCAG%202.1%20AA-blue)]()
+
+</div>
