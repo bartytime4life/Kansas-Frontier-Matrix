@@ -1,34 +1,56 @@
 <div align="center">
 
-# 📘 Kansas Frontier Matrix — Glossary  
+# 📘 **Kansas Frontier Matrix — Glossary**  
 `docs/glossary.md`
 
-**Mission:** Provide a **canonical reference** for all technical, geospatial, historical, and procedural terms  
-used across the **Kansas Frontier Matrix (KFM)** project — ensuring cross-discipline clarity, transparency,  
-and interoperability in documentation, datasets, and pipelines.
+**Mission:** Provide a **canonical reference** for all technical, geospatial, historical, and procedural terms used across the **Kansas Frontier Matrix (KFM)** — ensuring cross-discipline clarity, transparency, and interoperability in documentation, datasets, and pipelines.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — Glossary"
+version: "v1.2.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-docs","@kfm-architecture"]
+tags: ["glossary","standards","mcp","ontology","stac","graph","etl","security"]
+status: "Active"
+license: "CC-BY 4.0"
+ci_required_checks:
+  - docs-validate
+  - markdownlint
+semantic_alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - DCAT 2.0
+  - CIDOC CRM
+  - OWL-Time
+  - JSON Schema
+  - ISO 8601
+---
+```
+
+---
+
 ## 📚 Overview
 
-The **Kansas Frontier Matrix Glossary** is a **cross-domain reference** for developers, researchers, historians,  
-and data scientists contributing to or using this repository.  
+The **KFM Glossary** is a **cross-domain reference** for developers, researchers, historians, and data scientists.  
+It aligns language across all MCP-compliant documentation and serves as a **knowledge interface** linking the project’s **data architecture**, **pipelines**, **ontologies**, and **CI/CD systems**.
 
-It aligns language across all MCP-compliant documentation and serves as a **knowledge interface**  
-linking the project’s data architecture, workflows, ontologies, and CI/CD systems.  
-
-This glossary is organized by category:
-- 🧱 **Architecture & Infrastructure**
-- 🌎 **Geospatial & Environmental Data**
-- 🧩 **Metadata & Interoperability**
-- 🧠 **Knowledge Graph & Semantics**
-- 📜 **Historical & Archival Concepts**
-- ⚙️ **CI/CD & Governance**
+**Organization**
+- 🧱 Architecture & Infrastructure
+- 🌎 Geospatial & Environmental Data
+- 🧩 Metadata & Interoperability
+- 🧠 Knowledge Graph & Semantics
+- 📜 Historical & Archival Concepts
+- ⚙️ CI/CD & Governance
+- 🔐 Security & Supply Chain
+- 🧪 AI/ML & NLP
 
 ---
 
@@ -36,42 +58,30 @@ This glossary is organized by category:
 
 | Term | Definition | Context |
 |:------|:-------------|:----------|
-| **MCP (Master Coder Protocol)** | Documentation-first methodology ensuring reproducibility, provenance, and transparency. | Foundational across all KFM workflows. |
-| **STAC (SpatioTemporal Asset Catalog)** | Open metadata schema for describing spatiotemporal assets and datasets. | `data/stac/` collections and items. |
-| **ETL (Extract–Transform–Load)** | A structured data workflow to ingest, normalize, and prepare datasets. | `src/pipelines/` directory. |
-| **Checksum** | Cryptographic hash (SHA-256) used for data integrity verification. | Generated in `data/checksums/`. |
-| **CIDOC CRM** | International ontology for cultural heritage and historical data relationships. | Knowledge Graph schema in `src/graph/`. |
-| **OWL-Time** | Temporal ontology representing intervals, durations, and sequencing. | Used for event timelines. |
-| **JSON Schema** | A schema standard for validating JSON structures. | Used in STAC and internal schema validation. |
-| **GeoTIFF (COG)** | Cloud-Optimized GeoTIFF, a raster format for web-ready imagery. | Terrain data in `data/processed/rasters/`. |
-| **GeoJSON** | JSON format encoding geographic vector data structures. | Boundaries, roads, hydrology layers. |
-| **CSV / Parquet** | Open tabular data formats for time-series and statistical data. | Census and agricultural datasets. |
-| **OCR (Optical Character Recognition)** | Conversion of scanned documents into machine-readable text. | Used in `data/processed/text/`. |
-| **Pipeline** | Automated sequence of data tasks — fetch, transform, enrich, and load. | `src/pipelines/<stage>/` scripts. |
-| **Provenance** | Tracked lineage of dataset origin, transformation, and verification. | Recorded in STAC metadata and logs. |
-| **Auditability** | Ability to verify every dataset, transformation, and model result. | Implemented through CI/CD and checksum tracking. |
-| **Documentation-first** | MCP principle requiring documentation before implementation. | Enforced across all new modules. |
-| **Reproducibility** | Guarantee that identical results can be regenerated from the same data and code. | CI/CD pipelines and Makefile tasks. |
-| **Ontology** | Structured representation of conceptual relationships. | Knowledge Graph modeling. |
-| **Knowledge Graph** | Semantic data network linking entities (people, places, events, documents). | Implemented via Neo4j / RDF. |
-| **RDF (Resource Description Framework)** | Standard model for representing information as triples. | Data export format for Knowledge Graph. |
-| **SPARQL** | Query language for RDF graphs. | Used for semantic data queries. |
-| **PROV-O** | W3C Provenance Ontology describing data lineage. | Used in metadata enrichment. |
-| **CIDOC Entity** | Node in the cultural ontology (e.g., Person, Event, Place, Object). | Graph schema design. |
-| **STAC Item** | Metadata record describing an individual spatiotemporal asset. | GeoTIFF or GeoJSON entry in catalog. |
-| **STAC Collection** | Aggregation of multiple related STAC items with shared metadata. | Used in catalog indexing. |
-| **Temporal Range** | Start and end times for dataset validity or event occurrence. | Displayed in timeline slider. |
-| **Timeline Slider** | Interactive UI component for temporal exploration. | Web app (`web/`). |
-| **Web Viewer** | MapLibre-based frontend for geospatial exploration. | `web/` directory. |
-| **Mermaid Diagram** | Markdown syntax for rendering system flowcharts. | `docs/architecture/*.md`. |
-| **CI/CD** | Continuous integration and deployment pipelines for automation and validation. | `.github/workflows/`. |
-| **CodeQL** | Static code analyzer used for vulnerability detection. | `.github/workflows/codeql.yml`. |
-| **Trivy** | Container and dependency vulnerability scanner. | `.github/workflows/trivy.yml`. |
-| **Pre-Commit Hooks** | Local checks ensuring code formatting and schema validation pre-push. | `.pre-commit-config.yaml`. |
-| **Open Standards** | Non-proprietary, interoperable formats (JSON, CSV, GeoTIFF). | Ensures FAIR-compliant data practices. |
-| **FAIR Data** | Findable, Accessible, Interoperable, Reusable data principles. | Underpins all KFM datasets. |
-| **Audit Trail** | Historical record of CI/CD runs and validation logs. | `data/work/logs/`. |
-| **Makefile** | Task automation framework for reproducible data builds. | Root of repository. |
+| **MCP / MCP-DL** | Documentation-first methodology ensuring reproducibility, provenance, and transparency (Markdown **house style**). | Required across all KFM modules and READMEs. |
+| **RMI / DCI** | Repository Maturity Index / Dynamic Compliance Index — metrics tracking MCP-DL & CI coverage. | Reported in `docs/audit/repository_compliance.md`. |
+| **STAC (SpatioTemporal Asset Catalog)** | Open schema for describing spatiotemporal assets (Collections/Items/Assets). | `data/stac/` + `src/pipelines/load/stac_writer.py`. |
+| **DCAT 2.0** | W3C vocabulary for dataset catalogs. | Metadata crosswalks in docs/standards. |
+| **ETL (Extract–Transform–Load)** | Fetch → Transform → Enrich → Load pipelines. | `src/pipelines/*/`. |
+| **Checksum (SHA-256)** | Cryptographic hash for integrity verification and provenance. | Created in CI and `checksum_utils.py`. |
+| **CIDOC CRM** | Cultural heritage ontology used for people/places/events/documents. | Graph schema in `src/graph/`. |
+| **OWL-Time** | Temporal ontology representing instants/intervals and sequencing. | Timeline normalization in `date_normalizer.py`. |
+| **JSON Schema** | Validation standard for JSON structures. | STAC and internal metadata validation. |
+| **GeoTIFF (COG)** | Cloud-Optimized GeoTIFF for web-ready rasters. | Terrain/imagery in `data/processed/rasters/`. |
+| **GeoJSON** | Vector data format for geospatial entities. | Output of `vector_to_geojson.py`. |
+| **CSV / Parquet** | Tabular formats for time-series/statistical data. | Census and hydrology datasets. |
+| **OCR** | Optical Character Recognition — scans → text. | `kansas_memory_ingest.py`, newspapers. |
+| **Pipeline** | Automated sequence of ETL tasks bound by MCP. | `Makefile` + CI workflows. |
+| **Provenance** | Dataset lineage from source → transforms → artifacts. | Sidecars `.meta.json`, CI logs, STAC. |
+| **Auditability** | Ability to verify each dataset/model result. | Checksums, CI artifacts, golden tests. |
+| **Ontology** | Structured representation of concepts/relations. | Knowledge Graph modeling. |
+| **Knowledge Graph** | Semantic network linking entities (people, places, events, docs). | Neo4j / RDF exports. |
+| **RDF / JSON-LD / TTL** | Linked data formats for graph export. | `graph_export.py`. |
+| **SPARQL / Cypher** | Query languages for RDF/Neo4j. | Semantic/graph queries in API. |
+| **PROV-O** | W3C Provenance Ontology for lineage modeling. | Enrichment metadata. |
+| **STAC Item / Collection** | Item = asset record; Collection = grouped items. | Catalog indexing and timelines. |
+| **Temporal Range** | Start/end or interval for datasets/events. | Timeline slider + OWL-Time. |
+| **Makefile** | Task automation wrapper for reproducible builds. | `make fetch/transform/enrich/load`. |
 
 ---
 
@@ -79,15 +89,14 @@ This glossary is organized by category:
 
 | Term | Definition | Context |
 |:------|:-------------|:----------|
-| **DEM (Digital Elevation Model)** | Raster dataset representing elevation values. | Derived from LiDAR or USGS 3DEP. |
-| **LiDAR (Light Detection and Ranging)** | Remote sensing method to capture terrain surfaces. | Source for Kansas elevation models. |
-| **Raster** | Pixel-based geospatial dataset. | DEMs, hillshades, landcover. |
-| **Vector** | Geometry-based geospatial dataset. | Roads, rivers, boundaries. |
-| **COG (Cloud-Optimized GeoTIFF)** | GeoTIFF variant optimized for HTTP range requests. | Used for terrain and imagery layers. |
-| **Map Tiles** | Tiled raster or vector images rendered for web maps. | MapLibre viewer. |
-| **EPSG:4326 (WGS84)** | Common geospatial coordinate system. | Global standard for latitude/longitude. |
-| **CRS (Coordinate Reference System)** | Defines how spatial data is projected. | Used in reprojecting datasets. |
-| **Bounding Box (BBox)** | Rectangular spatial extent defined by min/max coordinates. | Used for dataset spatial queries. |
+| **DEM** | Digital Elevation Model raster. | USGS 3DEP / Kansas 1m DEM. |
+| **LiDAR** | Laser-based elevation capture. | Source for DEMs/hillshades. |
+| **Raster / Vector** | Pixel/geometry-based geodata. | DEMs vs. roads/hydrology. |
+| **COG** | Cloud-Optimized GeoTIFF for HTTP-range streaming. | Web map performance. |
+| **EPSG:4326 (WGS84)** | Lat/Lon coordinate system. | Standardized output CRS. |
+| **CRS** | Spatial projection reference. | Reprojection step in transform. |
+| **BBox** | Bounding box for queries/metadata. | STAC `bbox` fields. |
+| **NHD / WBD** | Hydrography / Watershed boundaries. | Hydrologic modeling overlays. |
 
 ---
 
@@ -95,13 +104,22 @@ This glossary is organized by category:
 
 | Term | Definition | Context |
 |:------|:-------------|:----------|
-| **Entity** | Object in the graph (Person, Place, Event, Document). | Neo4j node type. |
-| **Relationship** | Directed link connecting entities (e.g., OCCURRED_AT). | Neo4j relationship. |
-| **Cypher** | Query language for Neo4j databases. | Used for event and place queries. |
-| **Inference (Reasoning)** | Automated deduction of new relationships from known ones. | Implemented in `src/graph/reasoner.py`. |
-| **JSON-LD** | JSON-based serialization for linked data. | Used for Knowledge Graph exports. |
-| **Graph Schema** | Structural definition of node labels and relationships. | `src/graph/graph_schema.py`. |
-| **Neo4j** | Graph database engine used for KFM semantic storage. | Backend of the knowledge layer. |
+| **Entity / Relationship** | Node (Person/Place/Event/Document) and edge (e.g., `OCCURRED_AT`). | Neo4j schema. |
+| **Graph Schema** | Definition of labels, properties, and relationships. | `src/graph/graph_schema.py`. |
+| **Inference** | Rule-based reasoning to derive relations. | `src/graph/reasoner.py`. |
+| **JSON-LD Export** | Graph export for semantic web consumption. | `graph_export.py --format jsonld`. |
+| **Similarity Edge** | `SIMILAR_TO` relation for AI/NLP similarity. | Enrichment → Graph linking. |
+
+---
+
+## 🧩 Metadata & Interoperability
+
+| Term | Definition | Context |
+|:------|:-------------|:----------|
+| **FAIR** | Findable, Accessible, Interoperable, Reusable. | Data strategy baseline. |
+| **Open Standards** | Non-proprietary formats and schemas. | JSON, CSV, GeoTIFF, STAC, JSON Schema. |
+| **STAC Extensions** | Additional fields beyond core spec (e.g., `processing:`, `proj:`). | Catalog enrichment. |
+| **DCAT** | W3C dataset catalog vocabulary. | Crosswalking with STAC for portals. |
 
 ---
 
@@ -109,12 +127,35 @@ This glossary is organized by category:
 
 | Term | Definition | Context |
 |:------|:-------------|:----------|
-| **GitHub Actions** | Workflow automation for build, test, and deploy. | `.github/workflows/`. |
-| **Pre-Commit** | Linting and validation hooks run before committing. | Ensures data & schema compliance. |
-| **Artifact** | Output produced by a build or validation pipeline. | `_site/`, `data/processed/`. |
-| **Containerization** | Packaging app dependencies for consistent runtime. | `Dockerfile` and `compose.yml`. |
-| **Trivy Scan** | Automated dependency and container vulnerability scan. | Security workflow. |
-| **STAC Validation** | Schema validation ensuring all collections conform to spec. | `make validate`. |
+| **GitHub Actions** | Build/Test/Deploy workflows. | `.github/workflows/`. |
+| **Golden Tests** | Expected outputs for regression checks. | ETL pipelines. |
+| **Artifact** | Build/validation output (logs, docs, SBOM). | CI retention policy. |
+| **OIDC** | OpenID Connect for cloud auth (no PATs). | Pages/deploy security. |
+| **Conventional Commits** | Semantic commit message format. | Release notes & changelogs. |
+
+---
+
+## 🔐 Security & Supply Chain
+
+| Term | Definition | Context |
+|:------|:-------------|:----------|
+| **CodeQL** | Static application security testing. | `codeql.yml` |
+| **Trivy** | Dependency & container CVE scanning + SBOM. | `trivy.yml` |
+| **SLSA** | Supply-chain Levels for Software Artifacts. | Target L3 with provenance signing. |
+| **Sigstore / Cosign** | Artifact signing & verification. | Planned `provenance.yml`. |
+| **Dependabot** | Automated dependency PRs. | Security posture. |
+
+---
+
+## 🧪 AI/ML & NLP
+
+| Term | Definition | Context |
+|:------|:-------------|:----------|
+| **NER** | Named Entity Recognition (people/places/events/dates). | `src/nlp/ner_model.py`. |
+| **Summarization** | LLM-based text condensation. | `src/nlp/summarizer.py`. |
+| **Entity Linking** | Mapping mentions to canonical nodes (graph-aware). | `src/nlp/entity_linker.py`. |
+| **Correlation Matrix** | Multi-source evidence score table. | `src/pipelines/enrich/correlate_sources.py`. |
+| **Embedding Similarity** | Vector-based semantic search. | API `/search`, optional module. |
 
 ---
 
@@ -122,19 +163,18 @@ This glossary is organized by category:
 
 | Acronym | Full Form | Description |
 |:-----------|:-----------|:-------------|
-| **KFM** | Kansas Frontier Matrix | The project repository and system. |
-| **MCP** | Master Coder Protocol | Project’s reproducibility and documentation framework. |
-| **STAC** | SpatioTemporal Asset Catalog | Open metadata standard for geospatial assets. |
-| **ETL** | Extract, Transform, Load | Data ingestion and processing pattern. |
-| **CI/CD** | Continuous Integration / Deployment | Automated testing and deployment. |
-| **RDF** | Resource Description Framework | Data model for linked semantic data. |
-| **COG** | Cloud-Optimized GeoTIFF | Raster format optimized for web delivery. |
-| **NHD** | National Hydrography Dataset | Hydrology data (streams, rivers). |
-| **WBD** | Watershed Boundary Dataset | Hydrologic boundary polygons. |
-| **NOAA** | National Oceanic and Atmospheric Administration | Climate and weather data provider. |
-| **USGS** | United States Geological Survey | Primary source of elevation and hydro data. |
-| **USDA** | United States Department of Agriculture | Source of soils and landcover datasets. |
-| **KSHS** | Kansas State Historical Society | Repository for archival historical materials. |
+| **KFM** | Kansas Frontier Matrix | Repository/system. |
+| **MCP** | Master Coder Protocol | Documentation/provenance framework. |
+| **STAC** | SpatioTemporal Asset Catalog | Geospatial metadata standard. |
+| **ETL** | Extract–Transform–Load | Data pipeline. |
+| **CI/CD** | Continuous Integration / Deployment | Automation for quality gates. |
+| **RDF** | Resource Description Framework | Linked data model. |
+| **COG** | Cloud-Optimized GeoTIFF | Raster format for web. |
+| **NHD** | National Hydrography Dataset | Stream network dataset. |
+| **WBD** | Watershed Boundary Dataset | Hydrologic boundaries. |
+| **NOAA** | National Oceanic and Atmospheric Administration | Climate/hazards. |
+| **USGS** | U.S. Geological Survey | Elevation/hydro/imagery. |
+| **KSHS** | Kansas State Historical Society | Archives & documents. |
 
 ---
 
@@ -142,11 +182,12 @@ This glossary is organized by category:
 
 | Document | Description |
 |:-----------|:-------------|
-| [`docs/architecture/architecture.md`](architecture/architecture.md) | High-level system architecture overview. |
-| [`docs/architecture/data-architecture.md`](architecture/data-architecture.md) | Data flow and lineage. |
-| [`docs/architecture/knowledge-graph.md`](architecture/knowledge-graph.md) | Semantic and ontology design. |
-| [`docs/architecture/pipelines.md`](architecture/pipelines.md) | ETL and AI pipeline documentation. |
-| [`docs/standards/metadata-standards.md`](standards/metadata-standards.md) | Metadata and schema compliance guide. |
+| `docs/architecture/architecture.md` | System architecture overview. |
+| `docs/architecture/data-architecture.md` | Data flow & lineage. |
+| `docs/architecture/knowledge-graph.md` | Graph schema & ontologies. |
+| `docs/architecture/pipelines.md` | ETL & AI/ML pipelines. |
+| `docs/standards/metadata-standards.md` | Metadata & schema compliance. |
+| `docs/audit/repository_compliance.md` | Repository compliance dashboard. |
 
 ---
 
@@ -154,11 +195,11 @@ This glossary is organized by category:
 
 | MCP Principle | Implementation |
 |:--------------|:----------------|
-| **Documentation-first** | All terms defined before implementation in code. |
-| **Reproducibility** | Each term directly references reproducible components. |
-| **Open Standards** | Terminology grounded in open data and schema standards. |
-| **Provenance** | Each definition references a dataset, ontology, or workflow. |
-| **Auditability** | Reviewed via CI/CD schema validation for consistency. |
+| **Documentation-first** | Definitions maintained before feature implementation. |
+| **Reproducibility** | Terms bound to code, data paths, and CI validation. |
+| **Open Standards** | STAC, DCAT, CIDOC CRM, OWL-Time, JSON Schema. |
+| **Provenance** | Glossary versioned with metadata; linked to audit report. |
+| **Auditability** | Validated via `docs-validate.yml` and Markdownlint. |
 
 ---
 
@@ -166,14 +207,18 @@ This glossary is organized by category:
 
 | Version | Date | Summary |
 |:---------|:------|:----------|
-| **v1.1** | 2025-10-05 | Expanded glossary with ontology, geospatial, and governance terms; improved formatting for GitHub rendering. |
-| **v1.0** | 2025-10-04 | Initial release: MCP-aligned glossary covering architecture, data, and reproducibility concepts. |
+| **v1.2.0** | 2025-10-17 | Upgraded to MCP-DL v6.3 style; added **RMI/DCI**, security/supply-chain, AI/ML terms, cross-references. |
+| **v1.1.0** | 2025-10-05 | Expanded ontology/geospatial/governance sections; GitHub rendering improvements. |
+| **v1.0.0** | 2025-10-04 | Initial MCP-aligned glossary covering architecture, data, pipelines. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *"Every Definition. Every Domain. Linked and Reproducible."*  
-📍 [`docs/glossary.md`](.) · Canonical terminology reference for the Kansas Frontier Matrix documentation ecosystem.
+**Kansas Frontier Matrix © 2025**  
+*"Every Definition. Every Domain. Linked and Reproducible."*  
+📍 `docs/glossary.md` — Canonical terminology reference for the Kansas Frontier Matrix documentation ecosystem.
 
 </div>
+```
+````
