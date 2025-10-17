@@ -247,4 +247,3 @@ make export-glossary
 
 </div>
 ```
-````
