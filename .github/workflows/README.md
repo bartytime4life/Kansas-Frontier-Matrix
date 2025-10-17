@@ -2,16 +2,16 @@
 
 # ⚙️ **Kansas Frontier Matrix — CI/CD Workflows**
 
-**Directory:** `.github/workflows/`
-**Mission:** Orchestrate **validation, security, data governance, release/versioning, and deployment** for
-**Kansas Frontier Matrix (KFM)** — delivering a **reproducible**, **auditable**, **secure**, and **standards-compliant** automation framework.
+`📁 .github/workflows/README.md`
+
+**Mission:** Orchestrate **validation, security, data governance, versioning, and deployment** for the Kansas Frontier Matrix (KFM) — delivering a **reproducible**, **auditable**, **secure**, and **MCP-compliant** automation framework.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
-[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-validation-workflows)
+[![STAC ✅ Validated](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
+[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-workflow-summary)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)
-[![Dependency Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)
+[![Dep Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)
 [![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue.svg)](../../docs/)
 [![SLSA Provenance](https://img.shields.io/badge/SLSA-provenance-purple)](./provenance.yml)
@@ -23,100 +23,90 @@
 
 ## 📚 Overview
 
-This directory defines all **GitHub Actions** that power the **KFM CI/CD** system.
-Every workflow follows **MCP-DL v6.3** — ensuring runs are:
+This directory defines all **GitHub Actions** used by **KFM’s CI/CD system** — aligned to **MCP-DL v6.3**:
 
-🧒 **Documented** · 🔍 **Traceable** · 🔐 **Secure** · ♻️ **Reproducible** · 🧮 **Verifiable** · 🍿️ **Versioned**
+🧒 **Documented** · 🔍 **Traceable** · 🔐 **Secure** · ♻️ **Reproducible** · 🧮 **Verifiable** · 🏷️ **Versioned**
 
-**Automation Domains**
+### Domains
 
-* **Validation** — STAC catalog · JSON Schema · link checks · checksum integrity
-* **Security** — CodeQL · Trivy · Dependency Review · SBOM (SPDX) · SARIF reports
-* **Data Ingestion** — Scheduled fetch via `data/sources/*.json` + provenance
-* **Build & Deploy** — Docs/site (GitHub Pages) · preview & prod
-* **Provenance** — SLSA attestations · signing · retention policies
-* **Governance** — Auto-merge · required checks · SemVer releases
-
-> **Pinning Policy:** All actions are **pinned by tag or commit SHA** for deterministic, reproducible builds.
+* 🧪 **Validation**: STAC, JSON Schema, link check, SHA-256 checksums
+* 🔒 **Security**: CodeQL, Trivy, Dependency Review, SBOM, SARIF
+* 🌊 **Data**: Ingestion via manifest + provenance
+* 🚀 **Deploy**: GitHub Pages (docs, site)
+* 🧾 **Provenance**: SLSA attestations, signing, retention
+* 🧭 **Governance**: Auto-merge, SemVer, required checks
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ Workflow Directory
 
 ```bash
 .github/workflows/
 ├── README.md               # (this file)
-├── site.yml                # Build & deploy docs/site (GitHub Pages)
-├── stac-validate.yml       # STAC + JSON Schema + link checks (PR gate)
-├── fetch.yml               # Manifest-driven data acquisition (cron/manual)
-├── checksums.yml           # Compute & verify SHA-256 integrity
-├── codeql.yml              # Static analysis for Python/JS
-├── trivy.yml               # Container/dep CVE scan + SBOM (SARIF/SPDX)
-├── pre-commit.yml          # Lint / format / unit tests / spellcheck
-├── dependency-review.yml   # Dependency vulnerability gate
-├── release.yml             # SemVer tagging, notes, artifact bundling
-├── provenance.yml          # SLSA provenance attestations / signing
-└── auto-merge.yml          # Policy-gated auto-merge on green checks
+├── site.yml                # Build & deploy site
+├── stac-validate.yml       # STAC, schema, link validation
+├── fetch.yml               # Manifest-driven dataset fetch
+├── checksums.yml           # SHA-256 computation
+├── codeql.yml              # Static analysis: SARIF
+├── trivy.yml               # CVE scanner + SBOM/SPDX
+├── pre-commit.yml          # Format, lint, spellcheck
+├── dependency-review.yml   # GitHub advisory scan
+├── release.yml             # Tag, notes, bundle
+├── provenance.yml          # SLSA attestations
+└── auto-merge.yml          # Green-check gated auto-merge
 ```
 
-> ⚠️ If filenames change, update **badges**, **required checks**, and **docs references** accordingly.
+> ⚠️ If renaming files, update: CI badges · status checks · documentation links.
 
 ---
 
 ## 🧩 Workflow Summary
 
-| 🧱 Workflow             | 🎯 Purpose                                | ⏰ Trigger(s)                       | 📦 Outputs                                      |
-| ----------------------- | ----------------------------------------- | ---------------------------------- | ----------------------------------------------- |
-| `site.yml`              | Build & deploy documentation + site       | `push→main`, `workflow_dispatch`   | `_site/ → GitHub Pages`                         |
-| `stac-validate.yml`     | STAC + JSON Schema + link checks          | `push`, `pull_request`             | `stac-report.json` (artifact)                   |
-| `fetch.yml`             | Fetch datasets from `data/sources/*.json` | `schedule`, `workflow_dispatch`    | `data/raw/` snapshots + provenance logs         |
-| `checksums.yml`         | Compute & verify SHA-256 integrity        | Data PR, `workflow_dispatch`       | `.sha256` files + validation logs               |
-| `codeql.yml`            | Static analysis (security audit)          | `schedule`, `push`, `pull_request` | CodeQL SARIF report                             |
-| `trivy.yml`             | Container/dep CVE scan + SBOM             | `schedule`, `pull_request`         | `trivy.sarif` + `sbom.spdx.json`                |
-| `pre-commit.yml`        | Lint / format / tests / spellcheck        | `pull_request`                     | PR annotations + summary                        |
-| `dependency-review.yml` | Dependency vulnerability gate             | `pull_request`                     | Inline PR annotations                           |
-| `release.yml`           | Semantic Version release + notes + assets | tag push, `workflow_dispatch`      | GitHub Release + site bundle, STAC, SARIF, SBOM |
-| `provenance.yml`        | SLSA provenance attestations              | `release`                          | in-toto / SLSA attestations                     |
-| `auto-merge.yml`        | Policy-gated automerge                    | Green checks + approvals           | Merged PR + audit log                           |
+| 🧱 Workflow             | 🎯 Purpose                      | ⏰ Trigger(s)       | 📦 Outputs                        |
+| ----------------------- | ------------------------------- | ------------------ | --------------------------------- |
+| `site.yml`              | Deploy GitHub Pages + site      | `main`, manual     | `_site/` folder → Pages           |
+| `stac-validate.yml`     | STAC + JSON Schema + link check | PR, push           | `stac-report.json`                |
+| `fetch.yml`             | Fetch external datasets         | CRON, manual       | `data/raw/` snapshot              |
+| `checksums.yml`         | SHA-256 validation              | data PR, manual    | `.sha256` files + logs            |
+| `codeql.yml`            | Static analysis                 | schedule, PR, push | `codeql.sarif`                    |
+| `trivy.yml`             | CVE scan, SBOM                  | weekly, PR         | `trivy.sarif`, `sbom.spdx.json`   |
+| `pre-commit.yml`        | Lint, format, spellcheck        | PR                 | PR annotations, CI pass           |
+| `dependency-review.yml` | Dep vulnerability annotations   | PR                 | Inline advisory alerts            |
+| `release.yml`           | Tag SemVer, build, bundle       | tag, manual        | GitHub release, changelog, assets |
+| `provenance.yml`        | SLSA provenance, signing        | post-release       | `slsa.intoto.jsonl` attestations  |
+| `auto-merge.yml`        | Green-check auto-merge          | CI pass + review   | Merged PR + audit log             |
 
 ---
 
-## 🧠 Governance Flow (MCP + SemVer)
+## 🧠 Governance & SemVer Flow
 
 ```mermaid
 flowchart TD
-  A["Pull Request / Push"] --> B["Pre-Commit Checks"]
-  B --> C["STAC + Checksum Validation"]
-  C --> D["Security Scans (CodeQL · Trivy · Dep Review)"]
-  D --> E["Build + Deploy Site (Preview/Pages)"]
-  E --> F["Maintainer Approval / Auto-Merge"]
-  F --> G["Release (SemVer) + Notes + SBOM"]
-  G --> H["SLSA Provenance + Signing + Retention"]
+  A["PR or Push"] --> B["Pre-Commit"]
+  B --> C["STAC + Checksums"]
+  C --> D["Security Scans"]
+  D --> E["Deploy Preview"]
+  E --> F["Auto-Merge / Approval"]
+  F --> G["SemVer Release"]
+  G --> H["SLSA Provenance"]
 ```
+
+<!-- END OF MERMAID -->
 
 ---
 
-## ⚙️ Design Patterns
+## ⚙️ Workflow Design Patterns
 
-### 🧱 Minimal Permissions (Least Privilege)
+### 🔐 OIDC + Least Privilege
 
 ```yaml
 permissions:
   contents: read
-  actions: read
-  security-events: write  # only when uploading SARIF
-```
-
-### 🔐 OIDC Deployments (No Long-Lived Secrets)
-
-```yaml
-permissions:
   id-token: write
-  contents: read
-# Cloud: trust GitHub OIDC issuer; map repo/env to deploy role
+  security-events: write
 ```
 
-### ⚡ Concurrency (Cancel Redundant Runs)
+### 🧹 Concurrency
 
 ```yaml
 concurrency:
@@ -124,7 +114,16 @@ concurrency:
   cancel-in-progress: true
 ```
 
-### 🥪 Caching (pip + pre-commit)
+### 🧱 Matrix Jobs (Python)
+
+```yaml
+strategy:
+  matrix:
+    python-version: ["3.10", "3.11"]
+    os: ["ubuntu-latest"]
+```
+
+### ⚡ Caching Pip & Pre-commit
 
 ```yaml
 - uses: actions/cache@v4
@@ -132,30 +131,10 @@ concurrency:
     path: |
       ~/.cache/pip
       ~/.cache/pre-commit
-    key: ${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+    key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
 ```
 
-### 🧪 Matrices (Example)
-
-```yaml
-strategy:
-  matrix:
-    python-version: ["3.10","3.11"]
-    os: ["ubuntu-latest"]
-```
-
-### 🧭 Triggers & Path Filters
-
-```yaml
-on:
-  pull_request:
-    paths:
-      - '**.py'
-      - 'data/stac/**'
-      - '.github/workflows/**'
-```
-
-### 🌿 Environments & Approvals
+### 🌿 Environment Guards
 
 ```yaml
 environment:
@@ -165,72 +144,57 @@ environment:
 
 ---
 
-## 🔐 Secrets & Environment Variables
+## 🔐 Secrets & Env Vars
 
-| 🔑 Secret/Var            | 🛠️ Used by      | 📝 Purpose             | 🔒 Notes                                          |
-| ------------------------ | ---------------- | ---------------------- | ------------------------------------------------- |
-| `PAGES_TOKEN` / `GH_PAT` | `site.yml`       | Pages deploy           | Store in Actions → Secrets. Never commit creds.   |
-| `DATA_API_KEY_*`         | `fetch.yml`      | External data API auth | One per provider; least-privilege read-only.      |
-| `GH_TOKEN`               | `auto-merge.yml` | PR merge automation    | Prefer repo `GITHUB_TOKEN`; PAT only if needed.   |
-| `SIGNING_KEY` (opt)      | `provenance.yml` | Artifact signing       | Prefer keyless OIDC; rotate hardware-backed keys. |
+| 🔑 Key           | 🧪 Used By     | Purpose                  | 🔒 Notes                      |
+| ---------------- | -------------- | ------------------------ | ----------------------------- |
+| `PAGES_TOKEN`    | site.yml       | GitHub Pages deploy      | Use Actions Secrets           |
+| `DATA_API_KEY_*` | fetch.yml      | External data API access | Rotate quarterly              |
+| `GH_TOKEN`       | auto-merge.yml | GitHub API merge trigger | Prefer default `GITHUB_TOKEN` |
+| `SIGNING_KEY`    | provenance.yml | Artifact signing (opt)   | Use keyless if possible       |
 
 ---
 
 ## 🧱 MCP Compliance Matrix
 
-| 🧭 Principle        | 🧱 Implementation                                            |
-| ------------------- | ------------------------------------------------------------ |
-| Documentation-First | Header docs, `x-kfm-version` metadata, workflow annotations  |
-| Reproducibility     | Pinned actions, deterministic builds, checksum validation    |
-| Open Standards      | YAML, STAC 1.0, JSON Schema, SPDX, SARIF                     |
-| Provenance          | STAC lineage, SLSA attestations, SHA-256, immutable releases |
-| Auditability        | SARIF logs, retention ≥ 90 days, environments & approvals    |
-| Security            | CodeQL, Trivy, Dependency Review, least-privilege actions    |
-| Versioning          | SemVer releases, release notes, immutable tags               |
+| ✅ Principle         | 🧪 Applied Through                                |
+| ------------------- | ------------------------------------------------- |
+| Documentation-First | README, inline workflow docs, `x-kfm-version` tag |
+| Reproducibility     | Pinned actions, checksums, container digests      |
+| Open Standards      | STAC, SARIF, SPDX, YAML, JSON Schema              |
+| Provenance          | SLSA, SHA-256, source lineage                     |
+| Auditability        | Logs, artifacts, ≥ 90d retention                  |
+| Security            | CodeQL, Trivy, review gates                       |
+| Versioning          | SemVer, tags, changelogs                          |
 
 ---
 
-## ♻️ Maintenance & Versioning Cadence
+## 🔄 Maintenance Cadence
 
-| 🗓️ Cadence | 🔧 Task                                         | ✅ Goal                         |
-| ----------- | ----------------------------------------------- | ------------------------------ |
-| Weekly      | Run CodeQL + Trivy scans                        | Early vuln detection           |
-| Monthly     | Refresh action pins; rotate caches; verify OIDC | Supply-chain hardening         |
-| Quarterly   | Re-validate STAC Schemas; update MCP docs       | Standards compliance           |
-| Per-Release | Tag SemVer; attach SBOM/SARIF/site bundle       | Immutable, attestable releases |
+| 📆 Frequency | Task                                       | Purpose                       |
+| ------------ | ------------------------------------------ | ----------------------------- |
+| Weekly       | CodeQL/Trivy runs                          | Early CVE detection           |
+| Monthly      | Pin refresh · Secrets check                | Supply-chain hygiene          |
+| Quarterly    | STAC schema audit · MCP docs check         | Governance review             |
+| Per-Release  | Version tag · SBOM · Site bundle + signoff | Immutable builds & provenance |
 
 ---
 
-## 🛠️ Common CLI (CI & Local)
+## 🛠️ CLI Tools
 
 ```bash
-# 🔧 Build documentation and site
-make site
-
-# 🔍 Validate STAC catalog and metadata
-make stac-validate
-stac-validator data/stac/catalog.json --recursive
-
-# 🧮 Compute / refresh checksums
-make checksums
-
-# 🌊 Fetch external datasets
-python src/utils/fetch_data.py --manifest data/sources/hydro/usgs_nhd_flowlines.json
-
-# 🧪 Run pre-commit locally
+make site             # Build & preview documentation
+make stac-validate    # Validate STAC + schema
+make checksums        # SHA-256 integrity
+python src/utils/fetch_data.py --manifest data/sources/foo.json
 pre-commit run --all-files
 ```
 
-<details><summary><b>gh CLI — Advanced Usage</b></summary>
+<details><summary><strong>gh CLI Examples</strong></summary>
 
 ```bash
-# Trigger a workflow manually
-gh workflow run stac-validate.yml
-
-# Inspect latest runs
+gh workflow run site.yml
 gh run list
-
-# Download validation artifact
 gh run download --name "stac-report.json"
 ```
 
@@ -240,23 +204,20 @@ gh run download --name "stac-report.json"
 
 ## 🕓 Version History
 
-| 🍿️ Version | 🗓️ Date   | ✍️ Summary                                                |
-| ----------- | ---------- | --------------------------------------------------------- |
-| v2.5.1      | 2025-10-15 | MCP-DL v6.3 alignment · fenced Mermaid · minor copy edits |
-| v2.5.0      | 2025-10-15 | Major upgrade for GFM fidelity · table rendering fixes    |
-| v2.4.4      | 2025-10-15 | Refactor to strict GFM formatting · verified in GitHub    |
-| v2.4.3      | 2025-10-15 | House-style finalization · badges & anchors verified      |
-| v2.4.2      | 2025-10-15 | YAML/Mermaid fencing; copy edits                          |
-| v2.4.1      | 2025-10-15 | GFM alignment cheatsheet; visual fixes                    |
-| v2.4.0      | 2025-10-15 | Clarified provenance/signing; improved cadence tables     |
+| Version | Date       | Notes                                       |
+| ------- | ---------- | ------------------------------------------- |
+| v2.6.0  | 2025-10-16 | CI badge links verified · layout upgrades   |
+| v2.5.1  | 2025-10-15 | MCP-DL v6.3 compliance · Mermaid formatting |
+| v2.5.0  | 2025-10-15 | Table + badge GFM compliance                |
+| v2.4.0  | 2025-10-14 | Cadence matrix + SLSA annotations           |
 
 ---
 
 <div align="center">
 
-### ⚙️ Kansas Frontier Matrix — Automation with Integrity
+### ⚙️ Kansas Frontier Matrix — CI/CD: Automation with Integrity
 
-CI/CD under `.github/workflows/` ensures every dataset, model, and site build is **verifiable**, **versioned**, **reproducible**, and **MCP-compliant**.
-🧭 Every run leaves a trail. Every artifact is proven.
+“.github/workflows/” governs the execution, security, and provenance of every pipeline.
+🧬 Every run is traceable. Every artifact is proven.
 
 </div>
