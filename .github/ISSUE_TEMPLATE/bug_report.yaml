@@ -1,22 +1,24 @@
-name: 🐞 Bug Report
-description: Report a reproducible defect in code, data, or metadata.
+name: "🐞 Bug Report"
+description: "Report a reproducible defect in code, data, or metadata."
 title: "[BUG] <short summary>"
 labels:
   - bug
   - needs-triage
 assignees:
-  - "@kfm-architecture"
+  - kfm-architecture
+
 body:
   - type: markdown
     attributes:
       value: |
-        Please provide **clear steps to reproduce**, include **provenance** (paths, commit SHAs, STAC IDs), **system context**, and expected vs actual behavior. All fields are structured for reproducibility and traceability under MCP-DL.
+        ## 🔢 MCP-DL Bug Report Template
+        Please provide **clear steps to reproduce**, **expected vs actual behavior**, and detailed **provenance** (paths, STAC IDs, commit SHAs, etc.). This ensures issues are **traceable**, **reproducible**, and **MCP-compliant**.
 
   - type: input
     id: summary
     attributes:
-      label: 🔢 Bug Summary
-      description: Short description of the issue.
+      label: 📅 Bug Summary
+      description: Short description of the problem
       placeholder: "STAC validator fails for NOAA catalog.json"
     validations:
       required: true
@@ -24,23 +26,23 @@ body:
   - type: textarea
     id: repro_steps
     attributes:
-      label: 🔄 Steps to Reproduce
-      description: List all the steps needed to reproduce the issue.
+      label: ✈️ Steps to Reproduce
+      description: Detailed reproducible steps
       placeholder: |
         1. Run `make stac-validate`
-        2. See error on `catalog.json`
-        3. Output: "STAC item missing required field..."
+        2. Observe failure on `catalog.json`
+        3. See: "Missing required field..."
     validations:
       required: true
 
   - type: textarea
     id: expected_actual
     attributes:
-      label: 🚫 Expected vs Actual
-      description: What should have happened vs what actually occurred.
+      label: 🚫 Expected vs Actual Behavior
+      description: Contrast expected vs observed behavior
       placeholder: |
-        **Expected:** STAC validation to pass.
-        **Actual:** Fails on `missing links`.
+        **Expected:** Valid STAC returns status 0
+        **Actual:** CLI exits with error `missing links`
     validations:
       required: true
 
@@ -48,34 +50,35 @@ body:
     id: semver
     attributes:
       label: 🔄 SemVer Impact
-      description: What's the impact of fixing this bug?
+      description: What version scope does this bug impact?
       options:
         - none
         - patch (no breaking changes)
-        - minor (non-breaking, user-visible)
-        - major (breaking change or data migration)
-      default: 1
+        - minor (non-breaking but visible)
+        - major (breaking or schema-level)
+    validations:
+      required: true
 
   - type: textarea
     id: logs
     attributes:
-      label: 🔍 Logs / Evidence
-      description: Paste traceback, screenshots, or upload a file.
-      placeholder: "Paste relevant log output, error messages, or attach screenshots."
+      label: 🔍 Logs or Evidence
+      description: Paste log excerpts, errors, screenshots, or links
+      placeholder: "Upload error trace, screenshots, or CI links"
 
   - type: input
     id: system
     attributes:
       label: 🔧 System Context
-      description: OS, Python version, workflow or container image.
-      placeholder: "Ubuntu 22.04 · Python 3.10 · GitHub CI"
+      description: Environment information (OS, container, runtime)
+      placeholder: "Ubuntu 22.04 · Python 3.10 · actions/setup-node@v4"
 
   - type: input
     id: provenance
     attributes:
-      label: 🌐 Provenance (paths, IDs, SHAs)
-      description: Affected paths, STAC item IDs, dataset or commit SHA.
-      placeholder: "data/stac/catalog.json · commit abcd1234"
+      label: 🌐 Provenance
+      description: Affected paths, commit SHAs, dataset IDs, STAC items
+      placeholder: "data/stac/catalog.json · commit abcd1234 · STAC: noaa_l4_sst.json"
     validations:
       required: true
 
@@ -83,14 +86,14 @@ body:
     id: proposed_fix
     attributes:
       label: ✅ Proposed Fix (optional)
-      description: Suggest a fix, mitigation, or patch location if known.
-      placeholder: "The link block is missing self-relation in STAC item."
+      description: Describe possible solution, workaround, or patch location
+      placeholder: "Missing 'self' link — add to STAC Item under 'links' block"
 
   - type: textarea
     id: acceptance
     attributes:
       label: 📄 Acceptance Criteria
-      description: What does "fixed" look like? Include test or validation method.
-      placeholder: "`make stac-validate` returns 0 and passes all schema checks."
+      description: Define what resolution looks like (test, output, command)
+      placeholder: "`make stac-validate` returns code 0 with no errors"
     validations:
       required: true
