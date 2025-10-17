@@ -1,109 +1,112 @@
+
 <div align="center">
 
-# 🧰 Kansas Frontier Matrix — API Utilities  
+# 🧰 **Kansas Frontier Matrix — API Utilities**  
 `src/api/utils/README.md`
 
 **DB Connections · Caching · Logging · Auth · Errors · Metrics**
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
-[![License: Code](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy&logo=github&color=blue)](../../../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json&color=blue)](../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github&color=informational)](../../../../.github/workflows/codeql.yml)
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security&logo=security&color=green)](../../../../.github/workflows/trivy.yml)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue?logo=markdown)](../../../../docs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — API Utilities"
+version: "v1.6.2"
+last_updated: "2025-10-17"
+owners: ["@kfm-architecture", "@kfm-data"]
+tags: ["api","utils","neo4j","cache","logging","auth","errors","metrics","pagination","mcp","semver","ci"]
+status: "Stable"
+license: "MIT"
+semver_policy: "MAJOR.MINOR.PATCH"
+ci_required_checks:
+  - pre-commit
+  - unit-tests
+  - codeql
+  - trivy
+  - docs-validate
+semantic_alignment:
+  - ISO 8601
+  - GeoJSON
+  - STAC 1.0 (passthrough responses)
+  - MCP-DL v6.2 (provenance/logging)
+---
+```
+
+---
+
 ## 🎯 Purpose
 
-The **`src/api/utils/`** package provides **shared infrastructure helpers** used by the API layer:
+The **`src/api/utils/`** package provides the **shared infrastructure foundation** for the KFM API layer — keeping routes lean, reproducible, and MCP-compliant.
 
-- **Database utilities** for Neo4j and file-backed STAC reads  
-- **Caching** for hot-path endpoints (in-memory / Redis)  
-- **Logging & request tracing** (MCP-compliant provenance)  
-- **Auth & rate-limiting** middleware (optional)  
-- **Error handling** and **pagination** helpers  
-- **Metrics** (Prometheus-friendly) and response helpers
-
-These utilities keep route handlers small, consistent, and reproducible.
+It includes:
+- **Database management** (Neo4j connection pooling)  
+- **Caching** (in-memory TTL / Redis backend)  
+- **Structured logging** & request tracing  
+- **Auth / rate limiting** (API key or JWT)  
+- **Error handling** & pagination helpers  
+- **Prometheus metrics** for monitoring  
 
 ---
 
 ## 📂 Directory Layout
 
 ```
-
 src/api/utils/
-├── **init**.py
+├── __init__.py
 ├── db.py           # Neo4j sessions, query helpers, health checks
-├── cache.py        # Simple TTL cache + optional Redis backend
+├── cache.py        # TTL cache + optional Redis backend
 ├── logger.py       # Structured logging, request IDs, timing
-├── auth.py         # API-key / bearer auth, rate limiting (optional)
-├── errors.py       # APIException classes + FastAPI handlers
-├── pagination.py   # limit/offset helpers and link headers
+├── auth.py         # API-key / bearer auth, rate limiting
+├── errors.py       # Custom API exceptions + FastAPI handlers
+├── pagination.py   # limit/offset helpers and Link headers
 ├── responses.py    # JSON/GeoJSON/STAC response builders
 ├── metrics.py      # Prometheus counters/histograms
 └── README.md       # (this file)
-
-````
+```
 
 ---
 
 ## 🔌 Database Utilities (`db.py`)
 
-- Centralizes **Neo4j** configuration and connection pooling.  
-- Exposes dependency-injected **read/write sessions** for FastAPI routes.  
-- Adds **retry** and **timeout** semantics for long-running queries.
-
 ```python
-# db.py
 import os
 from contextlib import contextmanager
 from neo4j import GraphDatabase, basic_auth
 
-URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
-AUTH = basic_auth(os.getenv("NEO4J_USER", "neo4j"), os.getenv("NEO4J_PASS", "password"))
-_driver = GraphDatabase.driver(URI, auth=AUTH, max_connection_lifetime=300)
+URI  = os.getenv("NEO4J_URI",  "bolt://localhost:7687")
+USER = os.getenv("NEO4J_USER", "neo4j")
+PASS = os.getenv("NEO4J_PASS", "password")
+
+_driver = GraphDatabase.driver(URI, auth=basic_auth(USER, PASS), max_connection_lifetime=300)
 
 @contextmanager
 def get_session(mode: str = "r"):
-    with _driver.session(default_access_mode=("WRITE" if mode == "w" else "READ")) as s:
+    access = "WRITE" if mode == "w" else "READ"
+    with _driver.session(default_access_mode=access) as s:
         yield s
 
 def healthcheck() -> bool:
     with get_session("r") as s:
         s.run("RETURN 1 AS ok")
     return True
-````
-
-**Usage in a route**:
-
-```python
-from fastapi import Depends, APIRouter
-from src.api.utils.db import get_session
-
-router = APIRouter()
-
-@router.get("/places")
-def list_places():
-    with get_session("r") as s:
-        res = s.run("MATCH (p:Place) RETURN p.name AS name, p.latitude AS lat, p.longitude AS lon")
-        return [{"name": r["name"], "latitude": r["lat"], "longitude": r["lon"]} for r in res]
 ```
 
 ---
 
 ## ⚡ Caching (`cache.py`)
 
-* Pluggable **in-memory TTL** cache (default) with an optional **Redis** backend.
-* Decorator for route-level caching with key builders and invalidation.
-
 ```python
-# cache.py
 import time, functools
-CACHE = {}
+CACHE: dict = {}
 
 def ttl_cache(seconds: int = 60):
     def wrap(fn):
@@ -124,11 +127,7 @@ def ttl_cache(seconds: int = 60):
 
 ## 📝 Logging & Tracing (`logger.py`)
 
-* **Structured logs** with ISO timestamps, request IDs, route, duration, and status.
-* Adds **MCP provenance**: dataset IDs, query parameters, and graph query hashes.
-
 ```python
-# logger.py
 import logging, time, uuid
 logger = logging.getLogger("kfm.api")
 logger.setLevel(logging.INFO)
@@ -144,11 +143,12 @@ def log_request(path: str, status: int, start: float, meta: dict | None = None):
     })
 ```
 
-**FastAPI middleware snippet**:
-
+Middleware:
 ```python
 from fastapi import FastAPI, Request
 from src.api.utils.logger import log_request
+import time
+
 app = FastAPI()
 
 @app.middleware("http")
@@ -163,11 +163,8 @@ async def access_log(request: Request, call_next):
 
 ## 🔐 Auth & Rate Limiting (`auth.py`)
 
-* Optional **API key** or **Bearer token** verification.
-* **IP / key based** rate limiting (sliding window).
-
 ```python
-# auth.py
+import os
 from fastapi import Header, HTTPException
 
 def require_api_key(x_api_key: str | None = Header(default=None)):
@@ -175,9 +172,9 @@ def require_api_key(x_api_key: str | None = Header(default=None)):
         raise HTTPException(status_code=401, detail="Invalid API key")
 ```
 
-Use in a route:
-
+Usage:
 ```python
+from fastapi import Depends
 @router.get("/secure")
 def secure_endpoint(_=Depends(require_api_key)):
     return {"ok": True}
@@ -185,12 +182,9 @@ def secure_endpoint(_=Depends(require_api_key)):
 
 ---
 
-## 🧯 Errors (`errors.py`)
-
-Centralized error shapes aligned with MCP provenance.
+## 🧯 Error Handling (`errors.py`)
 
 ```python
-# errors.py
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
@@ -205,8 +199,8 @@ async def api_error_handler(_: Request, exc: APIError):
 ```
 
 Register in `main.py`:
-
 ```python
+from src.api.utils.errors import APIError, api_error_handler
 app.add_exception_handler(APIError, api_error_handler)
 ```
 
@@ -214,11 +208,9 @@ app.add_exception_handler(APIError, api_error_handler)
 
 ## 📄 Pagination (`pagination.py`)
 
-Helpers to parse `limit`/`offset` and emit **RFC-5988 Link** headers.
-
 ```python
-# pagination.py
 from fastapi import Request
+
 def paginate(items, limit: int, offset: int):
     return items[offset: offset + limit]
 
@@ -235,10 +227,7 @@ def link_headers(req: Request, total: int, limit: int, offset: int) -> dict[str,
 
 ## 📦 Responses (`responses.py`)
 
-Consistent JSON/GeoJSON/STAC encoders with `meta` blocks (provenance, license, timestamp).
-
 ```python
-# responses.py
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
@@ -253,10 +242,7 @@ def json_ok(data, meta: dict | None = None):
 
 ## 📈 Metrics (`metrics.py`)
 
-Prometheus counters and histograms for request counts/latency.
-
 ```python
-# metrics.py
 from prometheus_client import Counter, Histogram
 
 REQS = Counter("kfm_api_requests_total", "API requests", ["route", "method", "code"])
@@ -267,14 +253,12 @@ def observe(route: str, method: str, code: int, seconds: float):
     LAT.labels(route, method).observe(seconds)
 ```
 
-Expose `/metrics` in `main.py` using `prometheus_client` ASGI app if needed.
-
 ---
 
 ## 🧪 Example Route Using Utils
 
 ```python
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request
 from src.api.utils.db import get_session
 from src.api.utils.pagination import paginate, link_headers
 from src.api.utils.responses import json_ok
@@ -293,28 +277,50 @@ def list_events(request: Request, limit: int = 50, offset: int = 0):
 
 ---
 
-## 🔁 Integration Flow
+## 🧷 CI Acceptance Checklist
 
-* **Upstream:** None (infrastructure package)
-* **Downstream:** Used by all route modules in `src/api/routes/`
-* **Automation:** `make api` runs server; CI executes **unit tests** for utils and routes
+- [ ] Secrets via env/CI (no hardcoded credentials)  
+- [ ] Logging with UUID request IDs  
+- [ ] Pagination emits RFC-5988 headers  
+- [ ] TTL cache respects expiry rules  
+- [ ] `/metrics` endpoint exports Prometheus data  
+- [ ] Unit tests validated by CI (CodeQL/Trivy clean)  
+
+---
+
+## 🛡️ Security & Compliance
+
+- Environment secrets & least-privilege roles  
+- Parameterized Cypher & sanitized logs (no PII)  
+- Strict CORS + rate limits in prod  
+- License + attribution included in metadata  
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Type | Notes |
+| :------ | :--- | :-- | :---- |
+| v1.6.2 | 2025-10-17 | Fixed | Clean markdown format; unified examples; single-block delivery. |
+| v1.6.1 | 2025-10-17 | Improved | Acceptance checklist + CI-ready sections. |
+| v1.6.0 | 2025-10-16 | Added | Metrics, pagination, structured logs, and caching improvements. |
 
 ---
 
 ## 📚 References
 
-* API Layer Overview → `src/api/README.md`
-* Routes Overview → `src/api/routes/README.md`
-* Schemas & Validation → `src/api/schemas/README.md`
-* Knowledge Graph Queries → `src/graph/graph_queries.py`
-* MCP Documentation & SOPs → `docs/`
+- API Layer — `src/api/README.md`  
+- Routes — `src/api/routes/README.md`  
+- Schemas — `src/api/schemas/README.md`  
+- Graph Queries — `src/graph/graph_queries.py`  
+- MCP Docs — `docs/`
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**
+**Kansas Frontier Matrix © 2025**  
 *Reliable Utilities · Clear Contracts · Reproducible APIs*
 
 </div>
-
+```
