@@ -1,18 +1,46 @@
 <div align="center">
 
-# 🔗 Kansas Frontier Matrix — **Provenance Record Template**
-
+# 🔗 **Kansas Frontier Matrix — Provenance Record Template**  
 `docs/templates/provenance.md`
 
-**Purpose:** A **structured, MCP- and FAIR-aligned** template to capture the **lineage and transformation history** of datasets, models, and derived products in the **Kansas Frontier Matrix (KFM)** — ensuring **traceability**, **accountability**, and **reproducibility** across the full data lifecycle.
+**Purpose:** A **structured, MCP- & FAIR-aligned** template to capture the **lineage and transformation history** of datasets, models, and derived products in the **Kansas Frontier Matrix (KFM)** — ensuring **traceability**, **accountability**, and **reproducibility** across the full data lifecycle.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
 [![FAIR](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-2ea44f)](https://www.go-fair.org/fair-principles/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![STAC](https://img.shields.io/badge/Metadata-STAC%201.0.0-blue)](https://stacspec.org/)
+[![STAC 1.0.0](https://img.shields.io/badge/Metadata-STAC%201.0.0-blue)](https://stacspec.org/)
 [![PROV-O](https://img.shields.io/badge/Ontology-W3C%20PROV--O-8a2be2)](https://www.w3.org/TR/prov-o/)
 
 </div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Provenance Record Template"
+version: "v1.2.0"
+last_updated: "2025-10-17"
+owners: ["@kfm-data","@kfm-docs","@kfm-security"]
+tags: ["provenance","stac","prov-o","reproducibility","mcp","fair","slsa","sbom"]
+status: "Template"
+license: "CC-BY 4.0"
+semantic_alignment:
+  - W3C PROV-O
+  - STAC 1.0
+  - ISO 19115 (metadata)
+  - JSON Schema
+  - FAIR Principles
+supply_chain:
+  slsa_target: "Level 3"
+  sbom_format: "SPDX 2.3 (JSON)"
+ci_required_checks:
+  - stac-validate
+  - checksums
+  - docs-validate
+  - codeql
+  - trivy
+---
+````
 
 ---
 
@@ -26,7 +54,7 @@
 | **Author(s)**              | Responsible curator / pipeline engineer                                     |
 | **Affiliation**            | Team or organization                                                        |
 | **Date Created / Updated** | YYYY-MM-DD / YYYY-MM-DD                                                     |
-| **Version**                | v1.0, v1.1, etc.                                                            |
+| **Version**                | v1.0, v1.1, etc. (SemVer)                                                   |
 | **Domain**                 | Terrain / Hydrology / Climate / Landcover / Hazards / Tabular / Text        |
 | **Status**                 | Active / Archived / Superseded / Deprecated                                 |
 | **PID / DOI (optional)**   | Persistent identifier if minted (e.g., Zenodo DOI)                          |
@@ -64,8 +92,8 @@ Provide a concise narrative of origins and transformations leading to current st
 * **Spatial extent (WGS84 bbox):** `[-102.05, 36.99, -94.59, 40.00]`
 * **Nodata policy:** `-9999` propagated; masked in derivatives
 * **Resampling:** bilinear (mosaic); cubic (hillshade)
-* **Tiling:** internal overviews built at {2,4,8,16}
-* **Compression:** COG / DEFLATE / overviews: JPEG
+* **Overviews:** internal overviews at {2,4,8,16}
+* **Compression:** COG / DEFLATE; overviews JPEG
 
 </details>
 
@@ -78,7 +106,7 @@ Provide a concise narrative of origins and transformations leading to current st
 | **USGS 3DEP DEM** | U.S. Geological Survey | REST / HTTPS  | Public Domain | `data/sources/terrain/usgs_3dep_dem.json` |
 | **KS DASC LiDAR** | Kansas DASC            | FTP / HTTPS   | CC-BY 4.0     | `data/sources/terrain/ks_dasc_lidar.json` |
 
-> Each **source file** must exist in the **Source Registry** and include retrieval time, original filename, size, and original checksum (if provided).
+> Each **source** must exist in the **Source Registry** and include retrieval time, original filename, size, and original checksum (when provided).
 
 ---
 
@@ -110,12 +138,12 @@ Provide a concise narrative of origins and transformations leading to current st
 
 ## 🗂️ Environment & Supply Chain Capture
 
-| Aspect                | Capture                                                                |
-| :-------------------- | :--------------------------------------------------------------------- |
-| **Container**         | Image + digest (e.g., `ghcr.io/org/kfm:terrain-1.0 @ sha256:<digest>`) |
-| **Env Lockfile**      | `environment.yml` / `requirements.txt` / `poetry.lock`                 |
-| **SBOM**              | `sbom-<provenance_id>.spdx.json` (SPDX)                                |
-| **SLSA Level (opt.)** | Build provenance attestation (if configured)                           |
+| Aspect           | Capture                                                              |
+| :--------------- | :------------------------------------------------------------------- |
+| **Container**    | Image + digest (e.g., `ghcr.io/org/kfm:terrain-1.0@sha256:<digest>`) |
+| **Env Lockfile** | `requirements.txt` / `environment.yml` / `poetry.lock` pinned        |
+| **SBOM**         | `sbom-<provenance_id>.spdx.json` (SPDX 2.3)                          |
+| **Provenance**   | Attestations (SLSA/Sigstore) if configured                           |
 
 > **Repro tip:** include `conda env export --from-history` or `pip freeze` snapshots in artifacts.
 
@@ -123,12 +151,12 @@ Provide a concise narrative of origins and transformations leading to current st
 
 ## 🔐 Access, Retention & Governance
 
-| Policy                  | Setting                                                                  |
-| :---------------------- | :----------------------------------------------------------------------- |
-| **Access Level**        | Public (read) / Restricted (explain constraints)                         |
-| **Embargo / Redaction** | If redacted, document fields & rationale                                 |
-| **Retention**           | Minimum N years; archival target (e.g., S3 Glacier / institutional repo) |
-| **Steward**             | Role/team responsible for ongoing maintenance                            |
+| Policy                  | Setting                                                               |
+| :---------------------- | :-------------------------------------------------------------------- |
+| **Access Level**        | Public (read) / Restricted (explain constraints)                      |
+| **Embargo / Redaction** | If redacted, document fields & rationale                              |
+| **Retention**           | Minimum N years; archival target (e.g., Glacier / institutional repo) |
+| **Steward**             | Role/team responsible for maintenance                                 |
 
 ---
 
@@ -155,12 +183,12 @@ graph LR
 
 ## 👥 Responsible Parties
 
-| Role                    | Name / Team | Responsibility          |
-| :---------------------- | :---------- | :---------------------- |
-| **Data Engineer**       | …           | Ingestion & transforms  |
-| **Metadata Curator**    | …           | STAC/PROV documentation |
-| **Quality Assurance**   | …           | QA/QC & CI validations  |
-| **Reviewer / Approver** | …           | Final sign-off          |
+| Role                  | Name / Team | Responsibility          |
+| :-------------------- | :---------- | :---------------------- |
+| **Data Engineer**     | …           | Ingestion & transforms  |
+| **Metadata Curator**  | …           | STAC/PROV documentation |
+| **Quality Assurance** | …           | QA/QC & CI validations  |
+| **Approver**          | …           | Final sign-off          |
 
 ---
 
@@ -180,7 +208,8 @@ make stac-validate && make qa-terrain
 make publish-terrain
 ```
 
-> **Containerized run:** `docker run --rm -v $PWD:/work -w /work ghcr.io/org/kfm:terrain-1.0 make terrain`
+> **Containerized run:**
+> `docker run --rm -v $PWD:/work -w /work ghcr.io/org/kfm:terrain-1.0 make terrain`
 
 ---
 
@@ -196,7 +225,7 @@ make publish-terrain
 
 ---
 
-## 📎 Related Documentation
+## 🔗 Related Documentation
 
 | File                                     | Description                           |
 | :--------------------------------------- | :------------------------------------ |
@@ -213,23 +242,24 @@ make publish-terrain
 1. **W3C PROV-O Ontology** — [https://www.w3.org/TR/prov-o/](https://www.w3.org/TR/prov-o/)
 2. **STAC Specification v1.0.0** — [https://stacspec.org](https://stacspec.org)
 3. **MCP Guidelines** — KFM Documentation Framework
-4. **FAIR Principles** — Wilkinson et al., 2016
+4. **FAIR Principles** — [https://www.go-fair.org/fair-principles/](https://www.go-fair.org/fair-principles/)
 5. **SPDX** — [https://spdx.dev](https://spdx.dev) (Software Bill of Materials)
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author                 | Summary                                        |
-| :-----: | :--------- | :--------------------- | :--------------------------------------------- |
-|   v1.0  | 2025-10-04 | KFM Documentation Team | Initial provenance record template             |
-|   v1.1  | 2025-10-05 | KFM Engineering        | Expanded PROV-O mapping + supply-chain section |
+| Version | Date       | Author                 | Summary                                                                   |
+| :-----: | :--------- | :--------------------- | :------------------------------------------------------------------------ |
+|  v1.2.0 | 2025-10-17 | KFM Docs Team          | Added MCP-DL metadata, SLSA/SBOM guidance, CI checks list, ISO references |
+|  v1.1.0 | 2025-10-05 | KFM Engineering        | Expanded PROV-O mapping + supply-chain section                            |
+|  v1.0.0 | 2025-10-04 | KFM Documentation Team | Initial provenance record template                                        |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Every Dataset Has a Story. Every Step Leaves a Trace.”*
-📍 [`docs/templates/provenance.md`](.) · MCP-compliant provenance template for KFM.
+📍 `docs/templates/provenance.md` — MCP-compliant provenance template for KFM.
 
 </div>
