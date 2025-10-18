@@ -4,11 +4,14 @@
 `docs/templates/experiment.md`
 
 **Purpose:** Provide a **structured, reproducible, MCP-compliant format** for documenting any analytical, computational, or scientific experiment within the  
-**Kansas Frontier Matrix (KFM)** — ensuring clarity, traceability, and transparency from hypothesis to result.
+**Kansas Frontier Matrix (KFM)** — ensuring clarity, traceability, security, and transparency from hypothesis to result.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
 [![Build & Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
-[![Reproducibility](https://img.shields.io/badge/Reproducible-Yes%20%E2%9C%85-blueviolet)](../../docs/standards/reproducibility.md)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy%20%7C%20Gitleaks-red)](../../.github/workflows/)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../.github/workflows/sbom.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
@@ -18,10 +21,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Experiment Template"
-version: "v1.2.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-data","@kfm-research","@kfm-architecture"]
-tags: ["experiment","reproducibility","mcp","stac","prov-o","etl","ci","fair"]
+version: "v1.3.0"
+last_updated: "2025-10-18"
+owners: ["@kfm-data","@kfm-research","@kfm-architecture","@kfm-security"]
+tags: ["experiment","reproducibility","mcp","stac","prov-o","etl","ci","fair","security","ethics","ai"]
 status: "Template"
 license: "CC-BY 4.0"
 semantic_alignment:
@@ -30,14 +33,21 @@ semantic_alignment:
   - W3C PROV-O
   - JSON Schema
   - FAIR Principles
+  - ISO 19115 / ISO 8601
+  - GeoSPARQL
 ci_required_checks:
   - docs-validate
   - stac-validate
   - pre-commit
   - codeql
   - trivy
+  - gitleaks
+  - policy-check
+supply_chain:
+  slsa_target: "Level 3"
+  sbom_format: "SPDX 2.3 (JSON)"
 ---
-````
+```
 
 ---
 
@@ -66,14 +76,14 @@ ci_required_checks:
 > **Define the goal and hypothesis.**
 > What question does this experiment address, and what outcome is expected?
 
-**Example:**
+**Example**  
 *Evaluate vertical consistency between USGS 3DEP 1m DEM and Kansas DASC LiDAR across Ellsworth County to validate hydrologic modeling accuracy.*
 
 ---
 
 ## 🧩 Background & Rationale
 
-Explain why this experiment is important in the KFM context.
+Explain why this experiment is important in the KFM context.  
 Provide relevant **historical/scientific/technical** basis, prior work, or validation gaps.
 
 ---
@@ -103,7 +113,7 @@ Provide relevant **historical/scientific/technical** basis, prior work, or valid
 | Docker/OCI     | —       | Reproducible containerized runtime |
 | GitHub Actions | —       | CI/CD validation (STAC, checksums) |
 
-**Record**: container image + digest, `environment.yml`/`requirements.txt`, Git commit SHA.
+**Record (required):** container image + digest, `environment.yml`/`requirements.txt`, Git commit SHA, **SBOM** path if applicable.
 
 ---
 
@@ -129,6 +139,7 @@ flowchart LR
   B --> C["Comparison & Metrics<br>RMSE · Bias · Correlation"]
   C --> D["Outputs<br>CSV Reports · PNG Maps · Logs"]
   D --> E["STAC Item<br>Indexed Metadata + Provenance"]
+%% END OF MERMAID
 ```
 
 </details>
@@ -145,6 +156,8 @@ Define **quantitative metrics** and formulas used to evaluate results.
 | **Mean Elevation Bias** | Average vertical offset                 | `np.mean(DEM1 - DEM2)`            |
 | **Coverage (%)**        | % of valid elevation pixels             | `mask_valid / total_pixels * 100` |
 | **Checksum Match**      | File integrity check                    | `sha256sum <filename>`            |
+
+> Include benchmark/thresholds when relevant and cite sources.
 
 ---
 
@@ -168,8 +181,19 @@ Explain what the results mean for KFM; identify **anomalies**, **uncertainties**
 
 ## 🧠 Conclusions
 
-Summarize findings and **impacts on future research/pipelines**.
+Summarize findings and **impacts on future research/pipelines**.  
 State next steps and any **recommended SOP updates**.
+
+---
+
+## 🔐 Risk, Ethics & Security
+
+| Concern            | Mitigation                                                |
+| :----------------- | :-------------------------------------------------------- |
+| **PII exposure**   | Use only public/aggregated data; redact at source         |
+| **Model bias**     | Compare metrics across regions/time; report uncertainty   |
+| **Data licensing** | Confirm STAC `license` & `providers`; include attribution |
+| **Security**       | Scan containers/deps (Trivy); secrets via OIDC            |
 
 ---
 
@@ -184,55 +208,45 @@ State next steps and any **recommended SOP updates**.
 | **Auditability**        | Logs stored under `data/work/logs/` |
 | **Containerization**    | Docker/OCI image + digest recorded  |
 
----
-
 <details>
 <summary><b>🧩 Extended MCP Integration (click to expand)</b></summary>
 
-* ✅ **SHA256 verification** before/after ETL steps
-* 🧱 **Data version control (DVC)** pointers in Git for large objects
-* 🔁 **CI/CD validation** via `.github/workflows/stac-validate.yml`
-* 📜 **Experiment lineage** written to `data/stac/` items
-* 📦 **Artifacts archived** with timestamps & configuration hashes
-
+* ✅ **SHA256 verification** before/after ETL steps  
+* 🧱 **Data version control (DVC)** pointers in Git for large objects (if used)  
+* 🔁 **CI/CD validation** via `.github/workflows/stac-validate.yml`  
+* 📜 **Experiment lineage** written to `data/stac/` Items (PROV-O fields)  
+* 📦 **Artifacts archived** with timestamps & configuration hashes  
+* 🧪 **Golden tests** for reproducible metrics where applicable  
+* 📑 **SBOM/SLSA artifacts** attached to releases (if experiment published)
 </details>
-
----
-
-## 🧩 Risk, Ethics & Security
-
-| Concern            | Mitigation                                                |
-| :----------------- | :-------------------------------------------------------- |
-| **PII exposure**   | Use only public/aggregated data; redact at source         |
-| **Model bias**     | Compare metrics across regions/time; report uncertainty   |
-| **Data licensing** | Confirm STAC `license` & `providers`; include attribution |
-| **Security**       | Scan containers/deps (Trivy); secrets via OIDC            |
 
 ---
 
 ## 📎 References
 
-1. USGS 3DEP — [https://www.usgs.gov/3dep](https://www.usgs.gov/3dep)
-2. Kansas DASC — [https://www.kansasgis.org/](https://www.kansasgis.org/)
-3. STAC 1.0.0 — [https://stacspec.org](https://stacspec.org)
-4. W3C PROV-O — [https://www.w3.org/TR/prov-o/](https://www.w3.org/TR/prov-o/)
-5. MCP Standards — `../../docs/standards/`
+1. USGS 3DEP — <https://www.usgs.gov/3dep>  
+2. Kansas DASC — <https://www.kansasgis.org/>  
+3. STAC 1.0.0 — <https://stacspec.org>  
+4. W3C PROV-O — <https://www.w3.org/TR/prov-o/>  
+5. FAIR Principles — <https://www.go-fair.org/fair-principles/>  
+6. KFM Standards — `../../docs/standards/`
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author             | Summary                                                     |
-| :------ | :--------- | :----------------- | :---------------------------------------------------------- |
-| v1.2.0  | 2025-10-17 | KFM Docs Team      | Added YAML header, risk/ethics, CI checks, containerization |
-| v1.1.0  | 2025-10-05 | KFM Engineering    | Enhanced structure & reproducibility schema                 |
-| v1.0.0  | 2025-10-04 | Documentation Team | Initial MCP experiment template release                     |
+| Version | Date       | Author             | Summary                                                        |
+| :------ | :--------- | :----------------- | :------------------------------------------------------------- |
+| **v1.3.0** | 2025-10-18 | KFM Docs Team      | Added policy gates, SBOM/SLSA notes, golden tests, expanded MCP section |
+| **v1.2.0** | 2025-10-17 | KFM Docs Team      | YAML header, risk/ethics, CI checks, containerization          |
+| **v1.1.0** | 2025-10-05 | KFM Engineering    | Enhanced structure & reproducibility schema                    |
+| **v1.0.0** | 2025-10-04 | Documentation Team | Initial MCP experiment template release                        |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Test Reproducible. Every Result Traceable.”*
+**Kansas Frontier Matrix** — *“Every Test Reproducible. Every Result Traceable.”*  
 📍 `docs/templates/experiment.md` — MCP-compliant scientific documentation template for the Kansas Frontier Matrix.
 
 </div>
