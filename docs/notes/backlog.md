@@ -7,6 +7,7 @@
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
@@ -19,19 +20,20 @@
 ---
 title: "Kansas Frontier Matrix — Project Backlog"
 document_type: "Backlog"
-version: "v1.5.0"
+version: "v1.6.0"
 last_updated: "2025-10-18"
 created: "2025-10-05"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-governance"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-governance","@kfm-ai"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["backlog","governance","provenance","mcp","audit","ci","workflow"]
+tags: ["backlog","governance","provenance","mcp","audit","ci","workflow","ai"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - site-build
   - pre-commit
   - stac-validate
@@ -45,6 +47,16 @@ semantic_alignment:
   - STAC 1.0
   - JSON Schema
   - ISO 8601
+automation:
+  - name: "Backlog Status Sync"
+    schedule: "0 6 * * MON"
+    action: "tools/sync_backlog_status.py"
+  - name: "Quarterly Summary"
+    schedule: "0 8 1 */3 *"
+    action: "tools/generate_backlog_summary.py"
+  - name: "AI Tag Suggest"
+    schedule: "0 7 * * TUE"
+    action: "tools/ai_suggest_tags.py"
 provenance:
   workflow_pin_policy: "actions pinned by tag or commit SHA"
   artifact_retention_days: 90
@@ -58,13 +70,6 @@ priority_scale:
 schema:
   file: "docs/schemas/backlog.schema.json"
   version: "1.0.0"
-automation:
-  - name: "Backlog Status Sync"
-    schedule: "0 6 * * MON"
-    action: "tools/sync_backlog_status.py"
-  - name: "Quarterly Summary"
-    schedule: "0 8 1 */3 *"
-    action: "tools/generate_backlog_summary.py"
 ---
 ```
 
@@ -95,10 +100,10 @@ The `/docs/notes/backlog.md` file serves as the **canonical, reproducible backlo
 
 It guarantees:
 
-* 🧩 Each task is versioned in Git and cross-linked to datasets, docs, or CI actions.  
-* 🔗 Every backlog entry maintains **traceable provenance**.  
-* 🧠 Completed work is promoted into **SOPs**, **architecture docs**, or **CI pipelines**.  
-* 🧾 Changes are logged for audits, sprint retrospectives, and MCP quarterly reviews.  
+- 🧩 Each task is versioned in Git and cross-linked to datasets, docs, or CI actions.  
+- 🔗 Every backlog entry maintains **traceable provenance**.  
+- 🧠 Completed work is promoted into **SOPs**, **architecture docs**, or **CI pipelines**.  
+- 🧾 Changes are logged for audits, sprint retrospectives, and MCP quarterly reviews.  
 
 > **MCP Principle:** *No work without record, no record without provenance.*
 
@@ -150,6 +155,8 @@ acceptance_criteria:
   - "Checksums generated automatically during ETL."
   - "CI publishes `.sha256` sidecars to `data/work/logs/`."
   - "Validation occurs via `docs-validate` workflow."
+risk_level: "medium"                 # low | medium | high
+due: 2025-11-01
 ---
 ```
 
@@ -158,10 +165,10 @@ acceptance_criteria:
 ## 🧮 Priority Matrix
 
 | Priority | Impact | Effort | Guidance |
-| :------- | :----- | :------ | :------- |
+| :------- | :----- | :----- | :------- |
 | 🔴 High  | High   | Low     | Execute immediately; mission-critical to MCP reproducibility. |
-| 🟠 Medium | Medium | Medium | Schedule within sprint; moderate complexity or dependency. |
-| 🟢 Low | Low | High | Defer or mark for community contribution. |
+| 🟠 Medium| Medium | Medium  | Schedule within sprint; moderate complexity or dependency.     |
+| 🟢 Low   | Low    | High    | Defer or mark for community contribution.                      |
 
 ---
 
@@ -213,6 +220,8 @@ acceptance_criteria:
 *Status:* open | in-progress | complete | archived  
 *Created:* YYYY-MM-DD  
 *Updated:* YYYY-MM-DD  
+*Due:* YYYY-MM-DD  
+*Risk:* low | medium | high
 
 ### Description
 Concise, reproducible explanation of task scope and impact.
@@ -253,38 +262,39 @@ kfm:activity/B-2025-001
 
 ## 📈 Metrics & KPI Dashboard
 
-| Metric | Current | Target | Notes |
-| :-- | :-- | :-- | :-- |
-| Open Tasks | 8 | ≤ 5 | Requires triage during next sprint. |
-| In Progress | 3 | ≤ 5 | Balanced load. |
-| Completed (Quarter) | 12 | 10 | Above expectations. |
-| Archived | 2 | — | Retention policy stable. |
+| Metric                 | Current | Target | Notes                               |
+| :--------------------- | :------ | :----- | :---------------------------------- |
+| Open Tasks             | 8       | ≤ 5    | Requires triage during next sprint. |
+| In Progress            | 3       | ≤ 5    | Balanced load.                      |
+| Completed (Quarter)    | 12      | 10     | Above expectations.                 |
+| Archived               | 2       | —      | Retention policy stable.            |
 
 ---
 
 ## 🧠 Maintenance & Governance
 
-| Task | Frequency | Responsible |
-| :-- | :-- | :-- |
-| Review backlog items | Biweekly | Docs Lead |
-| Cross-link GitHub Issues | Weekly | Maintainers |
-| Promote completed items | Each release | Governance Team |
-| Archive stale items | Quarterly | Docs Lead |
-| Validate YAML headers | On PR | CI/CD |
+| Task                   | Frequency | Responsible   |
+| :--------------------- | :-------- | :------------ |
+| Review backlog items   | Biweekly  | Docs Lead     |
+| Cross-link GH Issues   | Weekly    | Maintainers   |
+| Promote completed work | Each rel. | Governance    |
+| Archive stale items    | Quarterly | Docs Lead     |
+| Validate YAML headers  | On PR     | CI/CD         |
 
 ---
 
 ## 🤖 CI Validation Hooks
 
-| Validation | Tool | Purpose |
-| :-- | :-- | :-- |
-| **Front-matter** | `yamllint` | Ensures valid YAML metadata. |
-| **Schema** | `jsonschema` | Validates against backlog schema. |
-| **Status Check** | `scripts/check_backlog_status.py` | Ensures consistent workflow states. |
-| **Graph Sync** | `scripts/graph_ingest_backlog.py` | Syncs to Neo4j. |
-| **Link Check** | `remark-lint` | Validates internal and external links. |
+| Validation      | Tool                            | Purpose                         |
+| :-------------- | :------------------------------ | :------------------------------ |
+| **Front-matter**| `yamllint`                      | Ensures valid YAML metadata     |
+| **Schema**      | `jsonschema`                    | Validates against backlog schema|
+| **Status Check**| `scripts/check_backlog_status.py`| Ensures consistent states       |
+| **Graph Sync**  | `scripts/graph_ingest_backlog.py`| Syncs to Neo4j/RDF              |
+| **Link Check**  | `remark-lint`                   | Validates internal/external links|
 
-Run locally before PR submission:
+Local pre-PR run:
+
 ```bash
 make docs-validate && make docs-lint
 ```
@@ -293,44 +303,44 @@ make docs-validate && make docs-lint
 
 ## 🧾 Governance Notes
 
-* All backlog entries must link to a **dataset**, **commit**, or **issue**.  
-* Completed items require **reviewer approval** and CI confirmation.  
-* Reports are generated quarterly to:  
-  `data/work/logs/qa/backlog_summary_<YYYY_QN>.log`
+- Each backlog entry **must** link to a **dataset**, **commit**, **issue**, or **doc**.  
+- Completed items require **reviewer approval** and **green CI**.  
+- Quarterly report path: `data/work/logs/qa/backlog_summary_<YYYY_QN>.log`.
 
 ---
 
 ## 🧮 MCP Compliance Summary
 
-| MCP Principle | Implementation |
-| :-- | :-- |
-| **Documentation-first** | All tasks written before execution; YAML required. |
-| **Reproducibility** | YAML schema + Git metadata + CI logs. |
-| **Open Standards** | Markdown, YAML, STAC, JSON Schema, PROV-O. |
-| **Provenance** | Maps to `prov:Activity` with traceable lineage. |
-| **Auditability** | Quarterly reports & lineage maintained. |
+| MCP Principle         | Implementation                                  |
+| :-------------------- | :----------------------------------------------- |
+| **Documentation-first** | Tasks written before execution; YAML required. |
+| **Reproducibility**     | YAML schema + Git metadata + CI logs.          |
+| **Open Standards**      | Markdown, YAML, STAC, JSON Schema, PROV-O.     |
+| **Provenance**          | `prov:Activity` with traceable lineage.        |
+| **Auditability**        | Quarterly reports & lineage maintained.        |
 
 ---
 
 ## 📎 Related Documentation
 
-| File | Description |
-| :-- | :-- |
-| `docs/notes/README.md` | Notes workspace overview. |
-| `docs/notes/templates/README.md` | Templates for backlog & note entries. |
-| `docs/standards/documentation.md` | Monorepo documentation & governance rules. |
-| `docs/architecture/data-architecture.md` | File/data architecture & STAC workflow. |
-| `docs/standards/ontologies.md` | CIDOC-CRM, PROV-O, OWL-Time, SKOS mapping. |
+| File                                  | Description                                  |
+| :------------------------------------ | :------------------------------------------- |
+| `docs/notes/README.md`                | Notes workspace overview                      |
+| `docs/notes/templates/README.md`      | Templates for backlog & note entries          |
+| `../standards/documentation.md`       | Monorepo documentation & governance rules     |
+| `../architecture/data-architecture.md`| File/data architecture & STAC workflow        |
+| `../standards/ontologies.md`          | CIDOC-CRM, PROV-O, OWL-Time, SKOS mapping     |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.5.0 | 2025-10-18 | @kfm-docs | Added priority matrix, metrics dashboard, schema reference, automation metadata, and governance hooks. |
-| v1.2.0 | 2025-10-17 | @kfm-docs | Upgraded to MCP-DL v6.3; expanded CI validations & ontology linkage. |
-| v1.0.0 | 2025-10-05 | @kfm-docs | Initial backlog tracker with governance and provenance linkage. |
+| Version  | Date       | Author     | Summary                                                                                         |
+| :------- | :--------- | :--------- | :----------------------------------------------------------------------------------------------- |
+| **v1.6.0** | 2025-10-18 | @kfm-docs  | Added policy gate badge, AI tag suggestion automation, due/risk fields, and CI check clarifications. |
+| **v1.5.0** | 2025-10-18 | @kfm-docs  | Priority matrix, metrics dashboard, schema reference, automation metadata, governance hooks.     |
+| **v1.2.0** | 2025-10-17 | @kfm-docs  | MCP-DL v6.3 upgrade; expanded CI validations & ontology linkage.                                |
+| **v1.0.0** | 2025-10-05 | @kfm-docs  | Initial backlog tracker with governance and provenance linkage.                                  |
 
 ---
 
