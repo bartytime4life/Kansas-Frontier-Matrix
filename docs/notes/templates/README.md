@@ -6,7 +6,8 @@
 **Purpose:** Provide reusable **Markdown + YAML templates** for research notes, meeting records, brainstorming ideas, and backlog entries — ensuring every informal artifact in `/docs/notes/` is **structured, validated, searchable, MCP-DL v6.3–compliant**, and ready for ingestion into the **Kansas Frontier Matrix (KFM) Knowledge Graph**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
-[![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../../.github/workflows/docs-validate.yml)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../.github/workflows/codeql.yml)
@@ -19,20 +20,21 @@
 ---
 title: "Kansas Frontier Matrix — Notes Templates"
 document_type: "Templates"
-version: "v2.0.0"
+version: "v2.1.0"
 last_updated: "2025-10-18"
 created: "2025-10-05"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-research","@kfm-governance"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-research","@kfm-governance","@kfm-security"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes/Templates"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["templates","notes","meetings","research","ideas","backlog","archive","provenance","governance"]
+tags: ["templates","notes","meetings","research","ideas","backlog","archive","provenance","governance","policy","a11y"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
   - site-build
+  - policy-check
   - pre-commit
   - codeql
   - trivy
@@ -49,7 +51,7 @@ schema_index:
   backlog:     { file: "docs/schemas/backlog.schema.json",     version: "1.0.0" }
   meeting:     { file: "docs/schemas/meeting.schema.json",     version: "1.1.0" }
   research:    { file: "docs/schemas/research.schema.json",    version: "1.1.0" }
-  archive:     { file: "docs/schemas/archive.schema.json",     version: "1.0.0" }
+  archive:     { file: "docs/schemas/archive.schema.json",     version: "1.1.0" }
 automation:
   - name: "Template Lint"
     schedule: "on-push"
@@ -77,11 +79,11 @@ Each template ensures your content can be parsed by machines, queried by humans,
 
 Templates guarantee:
 
-* 🧱 **Consistency** across all note types  
-* 🔗 **Cross-linking** to datasets, code, and docs  
-* 🧩 **YAML metadata** for traceable, auditable provenance  
-* 🤖 **CI validation** & schema compliance  
-* 🧠 **Knowledge Graph ingestion** using **PROV-O** and **CIDOC-CRM**
+- 🧱 **Consistency** across all note types  
+- 🔗 **Cross-linking** to datasets, code, and docs  
+- 🧩 **YAML metadata** for traceable, auditable provenance  
+- 🤖 **CI validation** & schema compliance  
+- 🧠 **Knowledge Graph ingestion** using **PROV-O** and **CIDOC-CRM**
 
 ---
 
@@ -114,8 +116,8 @@ flowchart TD
     H -->|Yes| I["Use backlog_template.md"]
     H -->|No| J["Use note_template.md"]
     J --> K["Superseded? → archive_template.md"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -131,14 +133,14 @@ flowchart TD
 | `priority` | backlog | enum | Task priority | `high` |
 | `category` | research | enum | Research domain | `Ontology` |
 | `type` | meeting | enum | Meeting classification | `governance` |
-| `linked_docs` | all | array | Related documentation paths | `docs/standards/...` |
-| `linked_datasets` | research,note | array | Data sources or STAC items | `data/stac/...` |
-| `linked_commits` | all | array | Related Git commits | `["abc123"]` |
+| `linked_docs` | all | array | Related docs | `docs/standards/...` |
+| `linked_datasets` | research,note | array | STAC items / datasets | `data/stac/...` |
+| `linked_commits` | all | array | Git SHAs | `["abc123"]` |
 | `linked_ideas` | meeting,backlog | array | Ideas referenced | `I-2025-001` |
-| `linked_backlog` | meeting,idea | array | Associated backlog items | `B-2025-004` |
-| `linked_experiments` | research | array | Experimental notebooks | `docs/experiments/...` |
-| `summary` | all | string | Short abstract for Knowledge Graph indexing | ... |
-| `ai_assist` | all | map | Summarization/embedding control | `{ summarize: true }` |
+| `linked_backlog` | meeting,idea | array | Backlog items | `B-2025-004` |
+| `linked_experiments` | research | array | Notebooks/experiments | `docs/experiments/...` |
+| `summary` | all | string | Abstract for KG indexing | … |
+| `ai_assist` | all | map | Summarization/embedding flags | `{ summarize: true }` |
 
 ---
 
@@ -185,25 +187,14 @@ template_catalog:
 
 ## 📘 Available Templates
 
-Each of the following templates supports YAML schema validation, link checking, and graph ingestion.
+Each template supports YAML schema validation, link checking, and graph ingestion.
 
-### 🧩 1. `note_template.md` — General Notes & Hypotheses
-(see [note_template.md](note_template.md))
-
-### 🗓️ 2. `meeting_template.md` — Meetings & Decisions
-(see [meeting_template.md](meeting_template.md))
-
-### 🔬 3. `research_template.md` — Research Summaries & Reviews
-(see [research_template.md](research_template.md))
-
-### 🧱 4. `backlog_template.md` — Technical Tasks & Debt
-(see [backlog_template.md](backlog_template.md))
-
-### 💡 5. `idea_template.md` — Conceptual & Exploratory Entries
-(see [idea_template.md](idea_template.md))
-
-### 🗃️ 6. `archive_template.md` — Closing or Superseding Notes
-(see [archive_template.md](archive_template.md))
+- 🧩 **`note_template.md`** — General Notes & Hypotheses  
+- 🗓️ **`meeting_template.md`** — Meetings & Decisions  
+- 🔬 **`research_template.md`** — Research Summaries & Reviews  
+- 🧱 **`backlog_template.md`** — Technical Tasks & Debt  
+- 💡 **`idea_template.md`** — Conceptual & Exploratory Entries  
+- 🗃️ **`archive_template.md`** — Closing or Superseding Notes
 
 ---
 
@@ -234,19 +225,19 @@ erDiagram
     IDEA       ||--o{ NOTE     : inspires
     RESEARCH   ||--o{ DOCUMENT : cites
     ARCHIVE    ||--|| NOTE     : supersedes
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧮 Metrics & Analytics
 
-| Metric | Source | Target | Description |
-| :-- | :-- | :-- | :-- |
-| Template usage (PRs) | Git commits | 100% | Every informal doc uses correct template |
-| Schema compliance | CI results | 100% | Zero invalid YAML or missing fields |
-| Graph ingestion rate | Neo4j | ≥ 95% | Notes successfully synced into KG |
-| SKOS tag alignment | `data/vocabularies/tags.skos.ttl` | ≥ 98% | Controlled vocabulary coverage |
+| Metric                | Source       | Target | Description                                  |
+| :-------------------- | :----------- | :----- | :------------------------------------------- |
+| Template usage (PRs)  | Git commits  | 100%   | Every informal doc uses a template           |
+| Schema compliance     | CI results   | 100%   | Zero invalid YAML or missing fields          |
+| Graph ingestion rate  | Neo4j        | ≥ 95%  | Notes successfully synced to the KG          |
+| SKOS tag alignment    | Tag checker  | ≥ 98%  | Controlled vocabulary coverage (SKOS)        |
 
 ---
 
@@ -256,7 +247,8 @@ erDiagram
 pytest tools/tests/test_templates.py
 ```
 
-Tests include:
+**Tests include**
+
 - YAML loadability  
 - Schema conformance  
 - ISO 8601 date compliance  
@@ -267,16 +259,17 @@ Tests include:
 
 ## 🧩 Automation & CLI Scaffolding
 
-**CLI Tool:**
+**CLI Tool**
 ```bash
 python tools/new_note.py --type meeting --title "Ontology Sync" --author @kfm-docs
 ```
 
-Generates a new note file from the appropriate template, populates:
-- `id` auto-incremented per type  
-- `date` (UTC today)  
-- `author` (from Git config)  
-- Correct schema & linked_docs defaults  
+Generates a fully validated note with:
+
+- Auto-incremented `id`  
+- UTC `date`  
+- Author from Git config  
+- Correct schema + default links  
 
 **Sample Output**
 ```bash
@@ -291,14 +284,13 @@ Generates a new note file from the appropriate template, populates:
 
 > Templates must **never** store credentials, raw PII, or restricted datasets.  
 > Meeting recordings marked `internal` require ACL-managed links.  
-> Sensitive coordinates or cultural data must follow Indigenous data sovereignty guidelines (per *Archaeology MCP Module*).  
+> Sensitive coordinates or cultural data must follow Indigenous data sovereignty guidelines (see *Archaeology MCP Module*).  
 
 ---
 
 ## 🌐 Localization & Accessibility
 
-Templates are written in **plain technical English (WCAG 2.1 AA)**.  
-To support multilingual expansion:
+Templates follow **WCAG 2.1 AA** and use plain technical English. For translated variants:
 
 ```yaml
 language: en-US
@@ -306,7 +298,7 @@ alt_text: "Meeting notes template with accessible headings."
 translation_available: ["es-ES","fr-FR"]
 ```
 
-> Include this metadata for any translated templates in `docs/i18n/templates/`.
+> Add translated templates under `docs/i18n/templates/` and reference in PR.
 
 ---
 
@@ -320,35 +312,35 @@ timeline
     2026-04 : v1.5 CLI Scaffolding
     2026-07 : v1.8 Domain Extensions (Climate, AI, Archaeology)
     2026-10 : v2.0 Full AI-driven Template Assistant
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧠 Governance & Usage Guidelines
 
-| Guideline | Description |
-| :-- | :-- |
-| Template Consistency | All informal docs must start from the appropriate template. |
-| Metadata Completeness | Missing YAML fields cause CI failure. |
-| Link Validity | Internal links must resolve within the repo. |
-| Promotion & Archiving | Old notes archived; reproducible notes promoted to architecture. |
-| Provenance Enforcement | Every note links to at least one dataset, doc, or commit. |
+| Guideline             | Description                                         |
+| :-------------------- | :-------------------------------------------------- |
+| Template Consistency  | All informal docs must start from a template.       |
+| Metadata Completeness | Missing YAML fields cause CI failure.               |
+| Link Validity         | Internal links must resolve in-repo.                |
+| Promotion & Archiving | Superseded notes archived; reproducible promoted.   |
+| Provenance Enforcement| Each note links to a dataset, doc, or commit.       |
 
 ---
 
 ## 🤖 CI Validation Matrix
 
-| Validation | Tool / Path | Description |
-| :-- | :-- | :-- |
-| **YAML syntax** | `yamllint` | Front-matter correctness |
-| **Schema compliance** | `jsonschema` | Checks template-specific rules |
-| **Link validation** | `remark-lint` | Internal link health |
-| **Tag parsing** | `scripts/parse_tags.py` | SKOS vocabulary sync |
-| **Graph ingestion** | `tools/graph_ingest_notes.py` | Adds entries to Neo4j |
-| **Accessibility check** | `scripts/check_a11y_headers.py` | Validates headings/contrast |
+| Validation         | Tool / Path                    | Description                     |
+| :----------------- | :----------------------------- | :------------------------------ |
+| YAML syntax        | `yamllint`                     | Front-matter correctness        |
+| Schema compliance  | `jsonschema`                   | Template-specific rules         |
+| Link validation    | `remark-lint`                  | Internal link health            |
+| Tag parsing        | `scripts/parse_tags.py`        | SKOS vocabulary sync            |
+| Graph ingestion    | `tools/graph_ingest_notes.py`  | Adds entries to Neo4j           |
+| Accessibility check| `scripts/check_a11y_headers.py`| Validates headings/contrast     |
 
-**Run manually:**
+**Run manually**
 ```bash
 make docs-validate && make docs-lint
 ```
@@ -360,7 +352,7 @@ make docs-validate && make docs-lint
 | File                                   | Description                                   |
 | :------------------------------------- | :-------------------------------------------- |
 | `docs/notes/README.md`                 | Notes workspace overview                      |
-| `docs/notes/backlog.md`                | Operational backlog (tasks/actions)            |
+| `docs/notes/backlog.md`                | Operational backlog (tasks/actions)           |
 | `docs/notes/ideas.md`                  | Idea repository for innovation                 |
 | `docs/notes/research.md`               | Research ledger & findings                     |
 | `docs/notes/meetings.md`               | Meetings & decisions log                       |
@@ -372,22 +364,23 @@ make docs-validate && make docs-lint
 
 ## 🚀 Future Roadmap
 
-| Milestone | Target | Description |
-| :-- | :-- | :-- |
-| v2.1 | Q1 2026 | Interactive template editor in KFM web UI |
-| v2.2 | Q2 2026 | Automated documentation scaffolding via GitHub Action |
-| v2.3 | Q3 2026 | Domain-specific extensions (Climate, AI, Archaeology) |
-| v2.4 | Q4 2026 | Template analytics dashboard in Grafana/Bloom |
+| Milestone | Target | Description                                       |
+| :-------- | :----- | :------------------------------------------------ |
+| v2.1      | Q1 2026| Interactive template editor in KFM web UI         |
+| v2.2      | Q2 2026| Automated documentation scaffolding (GH Action)   |
+| v2.3      | Q3 2026| Domain-specific extensions (Climate, AI, Arch.)   |
+| v2.4      | Q4 2026| Template analytics dashboard (Grafana/Bloom)      |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v2.0.0 | 2025-10-18 | @kfm-docs | Added schema catalog, CLI scaffolding, metadata index, AI readiness, accessibility, and governance metrics. |
-| v1.5.0 | 2025-10-17 | @kfm-docs | Introduced ER/flow diagrams, unified schema integration, and validation framework. |
-| v1.0.0 | 2025-10-05 | @kfm-docs | Initial release of note templates with YAML metadata and CI integration. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v2.1.0** | 2025-10-18 | @kfm-docs  | Alignment with policy checks, added a11y script, expanded owners, and clarified testing. |
+| v2.0.0  | 2025-10-18 | @kfm-docs  | Added schema catalog, CLI scaffolding, metadata index, AI readiness, accessibility, metrics. |
+| v1.5.0  | 2025-10-17 | @kfm-docs  | ER/flow diagrams, unified schema integration, validation framework.     |
+| v1.0.0  | 2025-10-05 | @kfm-docs  | Initial release with YAML metadata + CI integration.                    |
 
 ---
 
