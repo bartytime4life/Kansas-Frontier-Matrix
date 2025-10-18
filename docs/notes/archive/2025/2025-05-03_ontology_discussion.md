@@ -9,6 +9,8 @@ This meeting formed the conceptual bridge between **geospatial data**, **histori
 [`docs/standards/ontologies.md`](../../../standards/ontologies.md).
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -20,6 +22,7 @@ This meeting formed the conceptual bridge between **geospatial data**, **histori
 id: A-2025-004
 title: "Ontology Discussion — Unified Semantic Alignment"
 author: ["@kfm-ontology","@kfm-architecture","@kfm-docs"]
+version: "v1.0.1"
 original_path: "docs/notes/meetings.md"
 status: archived
 archived_date: 2025-05-03
@@ -31,7 +34,7 @@ linked_successor:
 period_context:
   id: "perio.do/ontology-integration-2025"
   label: "Unified Ontology Development Period"
-tags: ["archive","ontology","CIDOC CRM","PROV-O","OWL-Time","SKOS","semantic-web"]
+tags: ["archive","ontology","CIDOC CRM","PROV-O","OWL-Time","SKOS","semantic-web","policy"]
 fair_alignment:
   findable: true
   accessible: true
@@ -45,6 +48,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "3b7e8e9fa3ad1ef2..."
+  bagit_package: "bags/kfm_archive_2025_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234789"
+  last_verified: "2025-10-18"
 summary: >
   Recorded discussion and design notes capturing the unification of CIDOC CRM, PROV-O,
   OWL-Time, and SKOS ontologies within KFM. Established mappings between temporal, spatial,
@@ -98,7 +106,7 @@ This session resolved inconsistencies between entity types, temporal models, and
 | Concept | CIDOC CRM Class | PROV-O Equivalent | Notes |
 | :-- | :-- | :-- | :-- |
 | Event | `E5_Event` | `prov:Activity` | Core temporal unit |
-| Actor | `E39_Actor` | `prov:Agent` | Supports individuals or groups |
+| Actor | `E39_Actor` | `prov:Agent` | Individuals or groups |
 | Place | `E53_Place` | `prov:Location` | Spatial reference node |
 | Document | `E31_Document` | `prov:Entity` | Data or text artifact |
 | Relationship | `P67_refers_to` | `prov:wasInfluencedBy` | Provenance linkage |
@@ -126,26 +134,13 @@ kfm:event/ontology_alignment_2025
 
 ---
 
-## 🧾 Preservation Metadata
-
-```yaml
-preservation:
-  archived_date: "2025-05-03"
-  checksum: "3b7e8e9fa3ad1ef2..."
-  bagit_package: "bags/kfm_archive_2025_bagit/"
-  zenodo_doi: "10.5281/zenodo.1234789"
-  last_verified: "2025-10-18"
-```
-
----
-
 ## 📈 Outcomes & Legacy
 
-* ✅ Established unified ontology schema published to `docs/standards/ontologies.md`.  
-* ✅ Integrated OWL-Time temporal reasoning into Knowledge Graph queries.  
-* ✅ Deployed SKOS vocabulary and tag parsing scripts for CI.  
-* ✅ Enabled hybrid provenance + semantic query capabilities in Neo4j.  
-* ✅ Formed the foundation for AI-assisted semantic tagging (MCP-DL v6.4 roadmap).  
+✅ Unified ontology schema published to `docs/standards/ontologies.md`.  
+✅ OWL-Time reasoning integrated into graph queries.  
+✅ SKOS vocabulary and CI tag parser deployed.  
+✅ Provenance + semantic queries hybridized in Neo4j.  
+✅ Basis for MCP-DL v6.4 AI-assisted ontology reasoning.
 
 ---
 
@@ -153,10 +148,10 @@ preservation:
 
 | Principle | Implementation |
 | :-- | :-- |
-| **Findable** | Linked via manifest & graph indexing. |
-| **Accessible** | Public under CC-BY 4.0. |
-| **Interoperable** | CRM, PROV, SKOS, and OWL-Time harmonized. |
-| **Reusable** | Schema documented under `ontologies.md`; metadata validated. |
+| **Findable** | Linked via manifest and Knowledge Graph. |
+| **Accessible** | Public (CC-BY 4.0). |
+| **Interoperable** | CRM + PROV + SKOS + OWL-Time harmonized. |
+| **Reusable** | Schema documented, versioned, and validated. |
 
 ---
 
@@ -164,7 +159,7 @@ preservation:
 
 | Validation | Result | Verified By |
 | :-- | :-- | :-- |
-| YAML Schema | ✅ | `yamllint` + `jsonschema` |
+| YAML Schema | ✅ | `yamllint`, `jsonschema` |
 | RDF/TTL Compliance | ✅ | `riot --validate` |
 | Graph Sync | ✅ | `tools/graph_ingest_notes.py` |
 | FAIR Validation | ✅ | `scripts/fair_validate.py` |
@@ -175,13 +170,12 @@ preservation:
 
 ## 🧠 Historical Significance
 
-> This discussion marked the point where **KFM became semantically unified** —  
-> transitioning from structural documentation to reasoning-based ontology governance.  
+> *"2025 was when KFM learned to reason — not just record."*
 
-It also defined:
-- The **triple store export standard (RDF/Turtle)** for archives.  
-- Ontology versioning policy in MCP (`ontology_v#.ttl`).  
-- The **AI indexing ontology vocabulary** for automated tagging.
+This meeting unified **semantic representation across domains**, establishing the standards for:
+- RDF/Turtle archival representation  
+- Ontology versioning conventions (`ontology_v#.ttl`)  
+- AI-driven vocabulary indexing
 
 ---
 
@@ -189,9 +183,9 @@ It also defined:
 
 | File | Description | Date Promoted |
 | :-- | :-- | :-- |
-| [`docs/standards/ontologies.md`](../../../standards/ontologies.md) | Final unified ontology reference document. | 2025-05-10 |
-| [`docs/architecture/knowledge-graph.md`](../../../architecture/knowledge-graph.md) | Updated graph ingestion schema using new ontological mapping. | 2025-05-15 |
-| [`data/vocabularies/tags.skos.ttl`](../../../data/vocabularies/tags.skos.ttl) | Controlled vocabulary for semantic tag alignment. | 2025-05-20 |
+| [`docs/standards/ontologies.md`](../../../standards/ontologies.md) | Final unified ontology reference. | 2025-05-10 |
+| [`docs/architecture/knowledge-graph.md`](../../../architecture/knowledge-graph.md) | Updated ingestion schema for ontology mappings. | 2025-05-15 |
+| [`data/vocabularies/tags.skos.ttl`](../../../data/vocabularies/tags.skos.ttl) | Controlled vocabulary index. | 2025-05-20 |
 
 ---
 
@@ -208,8 +202,8 @@ It also defined:
       "docs/standards/ontologies.md",
       "docs/architecture/knowledge-graph.md"
     ],
-    "graph_ingested": true,
     "checksum_verified": true,
+    "graph_ingested": true,
     "fair_compliant": true,
     "ai_indexed": true
   }
@@ -222,10 +216,10 @@ It also defined:
 
 | File | Description |
 | :-- | :-- |
-| `docs/standards/ontologies.md` | Unified ontology documentation (successor). |
-| `docs/architecture/knowledge-graph.md` | Graph schema implementing the unified ontology. |
-| `data/vocabularies/tags.skos.ttl` | Vocabulary used for tagging and AI embeddings. |
-| `docs/notes/archive/2025/README.md` | 2025 archive manifest and index. |
+| `../../../standards/ontologies.md` | Unified ontology documentation. |
+| `../../../architecture/knowledge-graph.md` | Graph schema implementation. |
+| `../../../data/vocabularies/tags.skos.ttl` | Vocabulary reference. |
+| `../README.md` | 2025 archive manifest & metadata. |
 
 ---
 
@@ -233,13 +227,14 @@ It also defined:
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Archival record of the 2025 Ontology Integration meeting — added RDF/OWL-Time example, FAIR compliance, AI indexing metadata, and checksum verification. |
+| **v1.0.1** | 2025-10-18 | @kfm-docs | Added policy badge, preservation metadata, and RDF lineage. |
+| v1.0.0 | 2025-10-18 | @kfm-docs | Archival record of ontology unification; FAIR + AI-indexing compliant. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Semantics Aligned. Knowledge Proven.”*  
-📍 `docs/notes/archive/2025/2025-05-03_ontology_discussion.md` · Immutable archival record maintained under MCP-DL v6.3, FAIR principles, and semantic data governance.
+📍 `docs/notes/archive/2025/2025-05-03_ontology_discussion.md` · Immutable archival record maintained under MCP-DL v6.3, FAIR, and semantic governance standards.
 
 </div>
