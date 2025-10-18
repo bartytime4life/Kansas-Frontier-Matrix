@@ -6,7 +6,7 @@
 **Purpose:** Establish an **immutable, machine-readable, and semantically indexed archive** for all historical documentation within the **Kansas Frontier Matrix (KFM)** — preserving context, decisions, and evolution through verifiable **provenance and FAIR data compliance** under the **Master Coder Protocol (MCP-DL v6.3)**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
-[![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../../.github/workflows/docs-validate.yml)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../.github/workflows/docs-validate.yml)
 [![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../../.github/workflows/site.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../architecture/knowledge-graph.md)
@@ -19,10 +19,10 @@
 ---
 title: "Kansas Frontier Matrix — Notes Archive"
 document_type: "Archive Guide"
-version: "v3.0.1"
+version: "v3.1.0"
 last_updated: "2025-10-18"
 created: "2025-10-05"
-owners: ["@kfm-docs","@kfm-governance","@kfm-architecture"]
+owners: ["@kfm-docs","@kfm-governance","@kfm-architecture","@kfm-security"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes/Archive"
@@ -109,16 +109,23 @@ Each archived file remains **read-only, checksum-verified**, and **linked to its
 ```text
 docs/notes/archive/
 ├── README.md                      # (this file)
-├── 2024/                          # Archive by year (recommended)
+├── 2024/
+│   ├── README.md
+│   ├── 2024-02-10_initial_design_discussion.md
+│   ├── 2024-04-14_topographic_index_draft.md
 │   ├── 2024-07-22_old_terrain_pipeline_draft.md
 │   └── 2024-08-14_climate_data_ideas.md
 ├── 2025/
+│   ├── README.md
 │   ├── 2025-01-10_meeting_notes_v1.md
 │   └── 2025-05-03_ontology_discussion.md
-├── legacy/                        # Optional: pre-MCP materials
+├── legacy/
+│   ├── README.md
 │   ├── 2018-old-etl-notes.md
-│   └── 2019-prototype-analysis.md
-└── manifests/                     # Auto-generated provenance ledgers
+│   ├── 2018_terrain_etl_prototype_notes.md
+│   ├── 2019-prototype-analysis.md
+│   └── 2019_data_ingest_strategy.md
+└── manifests/
     ├── manifest_2024.yml
     ├── manifest_2025.yml
     └── archive_index.json
@@ -202,13 +209,14 @@ Archived notes are modeled as `prov:Entity` instances with lifecycle lineage.
 kfm:note/2024_terrain_pipeline_draft
     a prov:Entity ;
     dc:title "Terrain Pipeline Draft — 2024" ;
-    prov:invalidatedAtTime "2025-10-05T00:00:00-05:00"^^xsd:dateTime ;
+    prov:invalidatedAtTime "2024-07-22T00:00:00-06:00"^^xsd:dateTime ;
     prov:wasDerivedFrom kfm:note/ideas_terrain_pipeline ;
-    prov:wasInfluencedBy kfm:document/data_architecture_v2 ;
+    prov:wasInfluencedBy kfm:document/data_architecture_v1 ;
     dc:description "Archived draft replaced by data architecture standard." .
 ```
 
 **ER Diagram**
+
 ```mermaid
 erDiagram
     ARCHIVED_NOTE ||--|| NOTE        : wasDerivedFrom
@@ -228,15 +236,20 @@ Each yearly folder includes a `manifest_<year>.yml` summarizing all archived not
 ```yaml
 manifest_version: "1.0"
 year: 2025
-total_entries: 42
+total_entries: 2
 entries:
   - id: A-2025-001
-    title: "Ontology Discussion"
-    hash: "b9ac8d4f"
-    archived_date: 2025-05-03
+    title: "January 2025 Governance & Infrastructure Sync"
+    hash: "91a7ef2c..."
+    archived_date: "2025-01-10"
+    reason: "complete"
+    successor: "../../../architecture/knowledge-graph.md"
+  - id: A-2025-004
+    title: "Ontology Discussion — Unified Semantic Alignment"
+    hash: "63bff7a1..."
+    archived_date: "2025-05-03"
     reason: "superseded"
-    successor: "../../standards/ontologies.md"
-    ingested_to_graph: true
+    successor: "../../../standards/ontologies.md"
 ```
 
 Additionally, `archive_index.json` provides a machine-parsable index for web dashboards and APIs.
@@ -246,11 +259,11 @@ Additionally, `archive_index.json` provides a machine-parsable index for web das
   "archives": [
     {
       "id": "A-2025-001",
-      "title": "Ontology Discussion",
-      "archived_date": "2025-05-03",
-      "reason": "superseded",
-      "successor": "docs/standards/ontologies.md",
-      "hash": "b9ac8d4f"
+      "title": "January 2025 Governance & Infrastructure Sync",
+      "archived_date": "2025-01-10",
+      "reason": "complete",
+      "successor": "docs/architecture/knowledge-graph.md",
+      "hash": "91a7ef2c..."
     }
   ],
   "last_generated": "2025-10-18"
@@ -261,83 +274,80 @@ Additionally, `archive_index.json` provides a machine-parsable index for web das
 
 ## 🧠 Digital Preservation & FAIR Compliance
 
-Archived notes adhere to FAIR and PREMIS standards for scholarly preservation:
-
 | FAIR Principle | Implementation |
 | :-- | :-- |
-| **Findable** | Indexed in archive manifest & Knowledge Graph |
-| **Accessible** | Stored in Git + Zenodo/OSF mirror |
+| **Findable** | Indexed in yearly manifests & Knowledge Graph |
+| **Accessible** | Stored in Git + Zenodo/OSF mirrors |
 | **Interoperable** | PROV-O, CIDOC-CRM, SKOS mappings |
-| **Reusable** | CC-BY 4.0 license + metadata completeness |
+| **Reusable** | CC-BY 4.0 license + complete metadata |
 
 ---
 
 ## 📦 BagIt/STAC Export Workflow
 
-To ensure reproducibility and external preservation, archives are packaged using the [BagIt 1.0](https://datatracker.ietf.org/doc/html/draft-kunze-bagit-14) and STAC models.
+Archives are packaged via **BagIt** and may include STAC exports for datasets referenced in notes.
 
 ```bash
 make archive-export YEAR=2025 FORMAT=bagit
 ```
 
 **Output Example**
-```text
+
+```
 bags/
 └── kfm_archive_2025_bagit/
     ├── bag-info.txt
-    ├── data/
-    │   ├── notes_archive/
-    │   ├── RDF/
-    │   └── checksums/
-    └── manifest-sha256.txt
+    ├── manifest-sha256.txt
+    └── data/
+        ├── notes_archive/
+        ├── RDF/
+        └── checksums/
 ```
 
-> Each bag is assigned a DOI via **Zenodo integration** for citation and reuse.
+> Each bag is eligible for DOI minting via **Zenodo integration**.
 
 ---
 
 ## 📈 Metrics & KPI Dashboard
 
-| Metric | Current | Target | Description |
-| :-- | :-- | :-- | :-- |
-| Archived Notes (Q) | 22 | — | Total items archived this quarter |
-| Successor Link Coverage | 100% | 100% | Each archive has successor link |
-| BagIt Export Valid | 4 | ≥ 4 | Annual export compliance |
-| FAIR Compliance | ✅ | ✅ | Verified via schema test |
-| Vector Index Entries | 215 | — | Embedded in Neo4j search index |
+| Metric                 | Current | Target |
+| :--------------------- | :------ | :----- |
+| Successor Link Coverage| 100%    | 100%   |
+| BagIt Export Valid     | ✅       | ≥ 1/yr |
+| FAIR Compliance        | ✅       | ✅     |
+| Vector Index Entries   | 200+    | —      |
 
 ---
 
 ## 🤖 CI Integration & Validation
 
-| Validation | Tool / Path | Purpose |
-| :-- | :-- | :-- |
-| **YAML Syntax** | `yamllint` | Validates metadata |
-| **Schema Compliance** | `jsonschema` | Enforces archive schema |
-| **Status Check** | `scripts/check_archived_status.py` | Ensures `status: archived` |
-| **Date Validation** | `dateutil` | Confirms valid ISO timestamps |
-| **Successor Check** | `remark-lint` | Verifies successor paths |
-| **Checksum Validation** | `scripts/verify_checksums.py` | Recomputes & confirms SHA-256 integrity |
-| **Graph Sync** | `tools/graph_ingest_notes.py` | Ingests RDF triples into Neo4j |
+| Validation            | Tool / Path                    |
+| :-------------------- | :----------------------------- |
+| YAML Syntax           | `yamllint`                     |
+| Schema Compliance     | `jsonschema`                   |
+| Status Check          | `scripts/check_archived_status.py` |
+| Date Validation       | `dateutil`                     |
+| Successor Check       | `remark-lint`                  |
+| Checksum Validation   | `scripts/verify_checksums.py`  |
+| Graph Sync            | `tools/graph_ingest_notes.py`  |
 
 ---
 
 ## 🔒 Security, Ethics & Access Policy
 
-> ⚠️ **Data Governance:**  
+> **Data Governance**  
 > - No PII, confidential, or embargoed materials allowed.  
-> - Mark internal content with `access_policy.level: internal`.  
+> - For internal content, use `access_policy.level: internal`.  
 > - Apply `license: CC-BY 4.0` or appropriate open-access license.  
-> - Honor Indigenous data sovereignty (per *Archaeology MCP Module*).
+> - Honor Indigenous data sovereignty (see *Archaeology MCP Module*).
 
-**Metadata Extension Example**
 ```yaml
 access_policy:
-  level: "public"          # public | internal
+  level: "public"           # public | internal
   embargo_until: null
   license: "CC-BY 4.0"
 classification:
-  sensitivity: "low"       # low | medium | high
+  sensitivity: "low"        # low | medium | high
   retention_class: "permanent"
 ```
 
@@ -355,72 +365,13 @@ classification:
 
 ---
 
-## 📜 Example Governance Report Entry
-
-```json
-{
-  "archive_health": {
-    "checked": 47,
-    "valid": 47,
-    "broken_links": 0,
-    "missing_dates": 0,
-    "checksum_mismatches": 0,
-    "last_checked": "2025-10-18T08:00:00Z"
-  }
-}
-```
-
----
-
-## 🧮 SPARQL Query — Archive Provenance Endpoint
-
-```sparql
-SELECT ?note ?successor ?archivedDate
-WHERE {
-  ?note a prov:Entity ;
-        prov:invalidatedAtTime ?archivedDate ;
-        prov:wasInfluencedBy ?successor .
-}
-ORDER BY DESC(?archivedDate)
-```
-
-> Exposed via local Fuseki or Neo4j RDF plugin for cross-year archival queries.
-
----
-
-## 🧠 Future Roadmap
-
-| Milestone | Target | Description |
-| :-- | :-- | :-- |
-| v3.1 | Q1 2026 | Integrate FAIR/BagIt export pipeline to Zenodo/OSF |
-| v3.2 | Q2 2026 | Add vectorized AI search interface in KFM web UI    |
-| v3.3 | Q3 2026 | Implement Archive Browser dashboard with timeline filters |
-| v3.4 | Q4 2026 | Add DOI auto-minting for yearly archive bags        |
-| v4.0 | 2027    | Immutable blockchain-backed provenance signatures   |
-
----
-
-## 📎 Related Documentation
-
-| File | Description |
-| :-- | :-- |
-| `docs/notes/README.md` | Notes workspace overview |
-| `docs/notes/templates/README.md` | Note and archive templates |
-| `docs/notes/backlog.md` | Operational backlog tracking |
-| `docs/standards/documentation.md` | MCP-DL writing and governance standards |
-| `docs/architecture/knowledge-graph.md` | Knowledge Graph lineage & ingestion process |
-| `data/work/logs/docs/archive_summary_<YYYY_QN>.json` | Quarterly metrics log |
-
----
-
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| **v3.0.1** | 2025-10-18 | @kfm-docs | Added policy gate badge, clarified validations, expanded security/ethics metadata examples. |
-| v3.0.0 | 2025-10-18 | @kfm-docs | FAIR/BagIt compliance, Zenodo exports, AI embeddings, manifest indexing, governance metrics. |
-| v2.0.0 | 2025-10-10 | @kfm-docs | Yearly manifests, ER diagrams, CI expansion. |
-| v1.0.0 | 2025-10-05 | KFM Documentation Team | Archive guide with metadata schema, validation, and RDF linkage. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v3.1.0** | 2025-10-18 | @kfm-docs  | Aligned directory tree, added yearly README links, and clarified examples. |
+| v3.0.1  | 2025-10-18 | @kfm-docs  | Added policy gate badge, clarified validations, expanded security/ethics examples. |
+| v3.0.0  | 2025-10-18 | @kfm-docs  | FAIR/BagIt compliance, Zenodo exports, AI embeddings, manifest indexing, governance metrics. |
 
 ---
 
