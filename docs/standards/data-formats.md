@@ -3,14 +3,17 @@
 # 🗂️ Kansas Frontier Matrix — **Data Format Standards**  
 `docs/standards/data-formats.md`
 
-**Master Coder Protocol (MCP-DL v6.3+) · Reproducibility · Interoperability · Provenance · Validation**
+**Master Coder Protocol (MCP-DL v6.3+) · Reproducibility · Interoperability · Provenance · Validation · Security**
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github)](../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy&logo=security)](../../.github/workflows/trivy.yml)
+[![Gitleaks](https://img.shields.io/badge/Secrets-Gitleaks-red)](../../.github/workflows/gitleaks.yml)
 [![Security: SLSA-3 (Target)](https://img.shields.io/badge/Security-SLSA--3%20(Target)-orange)](../standards/security.md)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20SPDX-green)](../../.github/workflows/sbom.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
@@ -20,10 +23,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Data Format Standards"
-version: "v1.3.0"
+version: "v1.3.1"
 last_updated: "2025-10-18"
-owners: ["@kfm-data","@kfm-architecture","@kfm-docs"]
-tags: ["standards","formats","stac","csvw","netcdf","geotiff","geojson","provenance","validation"]
+owners: ["@kfm-data","@kfm-architecture","@kfm-docs","@kfm-security"]
+tags: ["standards","formats","stac","csvw","netcdf","geotiff","geojson","provenance","validation","ethics","tiles"]
 status: "Stable"
 scope: "Monorepo-Wide"
 license: "CC-BY 4.0"
@@ -31,10 +34,13 @@ semver_policy: "MAJOR.MINOR.PATCH"
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - stac-validate
+  - checksums
   - pre-commit
   - codeql
   - trivy
+  - gitleaks
 semantic_alignment:
   - STAC 1.0
   - DCAT 2.0
@@ -43,9 +49,9 @@ semantic_alignment:
   - ISO 8601 (time)
   - NetCDF CF-1.8
   - FAIR Principles
-  - CIDOC CRM · OWL-Time (temporal semantics)
+  - CIDOC CRM · OWL-Time · GeoSPARQL
 ---
-````
+```
 
 ---
 
@@ -54,10 +60,10 @@ semantic_alignment:
 KFM uses **open, non-proprietary** formats that are **scriptable, validated, portable**, and enforceable in CI.
 This standard defines:
 
-* 📦 **Approved file formats** by domain (spatial, tabular, text, catalogs).
-* 🧾 **Metadata models** (**STAC**, **DCAT**) & **validation** (JSON Schema).
-* 🧱 **Encoding, naming, compression** conventions & lifecycle states.
-* 🔁 CI-enforced **integrity** (checksums/signatures) & **conformance** (schemas).
+* 📦 **Approved file formats** by domain (spatial, tabular, text, catalogs)
+* 🧾 **Metadata models** (**STAC**, **DCAT**) & **validation** (JSON Schema)
+* 🧱 **Encoding, naming, compression** conventions & lifecycle states
+* 🔁 CI-enforced **integrity** (checksums/signatures) & **conformance** (schemas, policy gates)
 
 > **MCP Principles:** Documentation-first · Reproducible · Open-standard · Provenance-tracked · Auditable
 
@@ -86,8 +92,8 @@ This standard defines:
 | Property        | Standard / Requirement                                                                                                                                       |
 | :-------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Format**      | **Cloud-Optimized GeoTIFF** (COG)                                                                                                                            |
-| **CRS**         | Default **EPSG:4326** (WGS84). Analysis CRS (e.g., EPSG:5070/2163) allowed **only with** documented rationale in STAC + README and companion WGS84 view/COG. |
-| **Compression** | **DEFLATE** or **LZW** (`PREDICTOR=2` for ints/`3` for floats where applicable).                                                                             |
+| **CRS**         | Default **EPSG:4326** (WGS84). Analysis CRS allowed **only with** rationale in STAC + README **and** a companion WGS84 COG.                                  |
+| **Compression** | **DEFLATE** or **LZW** (`PREDICTOR=2` for ints / `3` for floats).                                                                                            |
 | **Tiling**      | Internal tiles, **512×512** preferred.                                                                                                                       |
 | **Overviews**   | Internal pyramid {2,4,8,16} (or `--overview-level auto`).                                                                                                    |
 | **NoData**      | Explicit nodata; record in `raster:nodata`.                                                                                                                  |
@@ -106,7 +112,7 @@ rio cogeo create input.tif output_cog.tif \
   --compress DEFLATE --bigtiff IF_SAFER
 ```
 
-> **Projection exceptions** must include a WGS84 companion or overview, and document `proj:epsg`, `proj:wkt2`, and rationale in STAC + dataset README.
+> **Projection exceptions** must include a WGS84 companion/overview, and document `proj:epsg`, `proj:wkt2`, and rationale in STAC + dataset README.
 
 ---
 
@@ -132,7 +138,7 @@ rio cogeo create input.tif output_cog.tif \
     "date": "2024-01-01",
     "class": "river"
   },
-  "geometry": { "type": "LineString", "coordinates": [[-95.0,39.0], ...] }
+  "geometry": { "type": "LineString", "coordinates": [[-95.0,39.0], [ -94.8, 39.1 ]] }
 }
 ```
 
@@ -288,8 +294,8 @@ data/processed/tabular/population/year=2021/part-001.parquet
 
 ### Encoding
 
-* All text files **UTF-8** (no BOM).
-* Line endings **LF**.
+* All text files **UTF-8** (no BOM)
+* Line endings **LF**
 
 ### Packaging
 
@@ -304,10 +310,10 @@ data/processed/tabular/population/year=2021/part-001.parquet
 
 ## ⏱️ Temporal & Units Conventions
 
-* **Dates/times:** ISO-8601 (UTC).
-* **Ranges:** STAC `start_datetime`/`end_datetime`.
-* **Units:** SI preferred; record in CSVW/STAC (`unit`, `uom`).
-* **CF Conventions:** For NetCDF, include units, long_name, standard_name, and QC flags; chunking + zlib/shuffle recommended.
+* **Dates/times:** ISO-8601 (UTC)  
+* **Ranges:** STAC `start_datetime`/`end_datetime`  
+* **Units:** SI preferred; record in CSVW/STAC (`unit`, `uom`)  
+* **CF Conventions:** For NetCDF, include `units`, `long_name`, `standard_name`, QC flags; chunking + zlib/shuffle recommended.
 
 ---
 
@@ -322,7 +328,7 @@ data/processed/tabular/population/year=2021/part-001.parquet
 | **NetCDF CF**        | `ncdump` / custom CF checks           | `.nc`                  |
 | **CI Orchestration** | `.github/workflows/stac-validate.yml` | Continuous             |
 
-Example snippet:
+**Example GitHub Action**
 
 ```yaml
 name: STAC & Data Validate
@@ -367,6 +373,14 @@ jobs:
 
 ---
 
+## 🔐 Data Ethics & Cultural Safeguards
+
+- **`data_ethics` tagging:** set STAC `properties.data_ethics` to `open`, `restricted-derivatives`, or `no-public-artifacts` where applicable.  
+- **Public artifact scrubbing:** exclude restricted layers from public Pages builds; retain by policy.  
+- **Attribution & community guidelines:** document co-stewardship and acknowledgement requirements for cultural/Indigenous sources.
+
+---
+
 ## 🧾 Repository Data Layout (Alignment)
 
 | Directory         | Purpose                                                                      |
@@ -383,11 +397,11 @@ jobs:
 
 | MCP Principle       | Implementation                                                 |
 | :------------------ | :------------------------------------------------------------- |
-| Documentation-first | This standard governs formats & metadata before ingestion.     |
-| Reproducibility     | Deterministic formats; CI validation & checksums.              |
-| Open Standards      | COG, GeoJSON, NetCDF CF, CSV/Parquet, STAC, JSON Schema, DCAT. |
-| Provenance          | STAC + checksums + manifests + README lineage.                 |
-| Auditability        | CI workflows + logs + schema checks + lifecycle flags.         |
+| **Documentation-first** | This standard governs formats & metadata **before** ingestion.     |
+| **Reproducibility**     | Deterministic formats; CI validation & checksums.              |
+| **Open Standards**      | COG, GeoJSON, NetCDF CF, CSV/Parquet, STAC, JSON Schema, DCAT. |
+| **Provenance**          | STAC + checksums + manifests + README lineage.                 |
+| **Auditability**        | CI workflows + logs + schema checks + lifecycle flags.         |
 
 ---
 
@@ -408,15 +422,16 @@ jobs:
 
 | Version | Date       | Author           | Summary                                                                                                   |
 | :------ | :--------- | :--------------- | :-------------------------------------------------------------------------------------------------------- |
-| v1.3.0  | 2025-10-18 | @kfm-data        | Added FAIR/DCAT crosswalk, lifecycle states, tiles guidance, CI snippets, CF notes, repo layout alignment |
-| v1.1.0  | 2025-10-05 | @kfm-engineering | Added NetCDF CF, vector tiling, deprecation, CRS exceptions                                               |
-| v1.0.0  | 2025-10-04 | @kfm-data        | Initial approved data/metadata formats                                                                    |
+| **v1.3.1** | 2025-10-18 | @kfm-data        | Added policy gates, security/secrets scans, ethics section, SBOM references, and explicit CI examples.     |
+| **v1.3.0** | 2025-10-18 | @kfm-data        | FAIR/DCAT crosswalk, lifecycle states, tiles guidance, CI snippets, CF notes, repo layout alignment        |
+| **v1.1.0** | 2025-10-05 | @kfm-engineering | NetCDF CF, vector tiling, deprecation flags, CRS exceptions                                               |
+| **v1.0.0** | 2025-10-04 | @kfm-data        | Initial approved data/metadata formats                                                                    |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every File Open. Every Format Reproducible.”*
+**Kansas Frontier Matrix** — *“Every File Open. Every Format Reproducible.”*  
 📍 `docs/standards/data-formats.md` — Official MCP-aligned format standards for KFM
 
 </div>
