@@ -7,12 +7,36 @@
 working notes, research logs, and early drafts that evolve into formal  
 MCP documentation and structured knowledge graph entries.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../)
+[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../standards/markdown_guide.md)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../architecture/knowledge-graph.md)
 [![Versioned Notes](https://img.shields.io/badge/Notes-Versioned-orange)](README.md)
 [![Git Provenance](https://img.shields.io/badge/Provenance-Git%20Tracked-blueviolet)](../../data/work/logs/docs/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
 
 </div>
+
+---
+
+## 📚 Table of Contents
+
+- [🎯 Purpose](#-purpose)  
+- [🧩 MCP Note Lifecycle](#-mcp-note-lifecycle)  
+- [🧱 Directory Layout](#-directory-layout)  
+- [🗂️ Note Types](#️-note-types)  
+- [📋 Recommended Note Structure (YAML Front-Matter)](#-recommended-note-structure-yaml-front-matter)  
+- [🧭 Notes Metadata Rules](#-notes-metadata-rules)  
+- [🧾 Suggested Workflow](#-suggested-workflow)  
+- [🧠 Linking Notes to the Knowledge Graph](#-linking-notes-to-the-knowledge-graph)  
+- [📦 Example Note Templates](#-example-note-templates)  
+- [🏷️ Tagging & Discovery](#️-tagging--discovery)  
+- [🗄️ Archiving & Filenames](#️-archiving--filenames)  
+- [🤖 CI Integration & Validation](#-ci-integration--validation)  
+- [📎 Related Documentation](#-related-documentation)  
+- [📅 Version History](#-version-history)
 
 ---
 
@@ -68,6 +92,19 @@ docs/notes/
 
 ---
 
+## 🗂️ Note Types
+
+- **`research.md`** — scratchpad for links, datasets, papers, and preliminary findings.  
+- **`meetings.md`** — agenda, notes, decisions, and action items for ceremonies and ad-hoc syncs.  
+- **`ideas.md`** — hypotheses, experiments-to-try, component sketches, UX/UI roughs.  
+- **`backlog.md`** — prioritized worklist (tie items to issues/PRs); capture tech debt & blockers.  
+- **`templates/`** — copy-paste-ready snippets (front-matter, idea/meeting templates, checklists).  
+- **`archive/`** — immutable record of closed notes (organized by year).  
+
+> **Tip:** Keep your first draft tiny. If an idea grows, **promote** it to its own file (e.g., `note_lidar-dem-hypothesis.md`).
+
+---
+
 ## 📋 Recommended Note Structure (YAML Front-Matter)
 
 Every note should begin with lightweight metadata for search & linkage:
@@ -90,13 +127,16 @@ linked_docs:
 
 ### 🧭 Notes Metadata Rules
 
-| Field      | Description                          | Example                                 |
-| :--------- | :----------------------------------- | :-------------------------------------- |
-| `title`    | Concise subject line                 | “LiDAR DEM Pipeline – Draft Hypothesis” |
-| `status`   | Note maturity level                  | `draft`, `review`, `stable`, `archived` |
-| `tags`     | Search keywords or ontology concepts | `["terrain","LiDAR","ETL"]`             |
-| `linked_*` | Permalinks to related artifacts      | Datasets, commits, docs, or issues      |
-| `date`     | ISO 8601 date                        | `2025-10-05`                            |
+| Field          | Description                                             | Example                                        |
+| :------------- | :------------------------------------------------------ | :--------------------------------------------- |
+| `title`        | Concise subject line                                    | “LiDAR DEM Pipeline – Draft Hypothesis”        |
+| `author`       | Individual or team                                      | `"KFM Hydrology Team"`                         |
+| `date`         | ISO 8601 date                                           | `2025-10-05`                                   |
+| `status`       | Note maturity level                                     | `draft`, `review`, `stable`, `archived`        |
+| `tags`         | Keywords/ontology concepts                              | `["terrain","LiDAR","ETL"]`                    |
+| `linked_*`     | Datasets, commits, docs, or issues                      | `linked_datasets`, `linked_commits`, `linked_docs` |
+| `references`   | Optional bibliography pointers/URLs                     | `["doi:...","url:..."]`                        |
+| `area`         | Optional domain area (for filtering)                    | `hydrology`, `archaeology`, `climate`          |
 
 > All YAML headers are parsed by CI and the knowledge graph builder to index note provenance.
 
@@ -112,12 +152,16 @@ linked_docs:
 | **4️⃣ Promote**    | Move or copy to `/docs/architecture/`, `/docs/design/`, or `/docs/integration/`. | Once reproducible or approved.                 |
 | **5️⃣ Archive**    | Move older notes to `/docs/notes/archive/`.                                      | Nothing is deleted — preserve context.         |
 
+> **Do**: link to `data/sources/*.json`, `data/stac/*.json`, and relevant commits.  
+> **Don’t**: paste large datasets or screenshots—link to sources & artifacts.
+
 ---
 
 ## 🧠 Linking Notes to the Knowledge Graph
 
 Each finalized note becomes an entity in the **KFM Knowledge Graph** under  
-`kfm:note/<slug>` with `prov:wasDerivedFrom` and `prov:wasGeneratedBy` relationships.
+`kfm:note/<slug>` with `prov:wasDerivedFrom` and `prov:wasGeneratedBy` relationships.  
+Notes and their entities align to **CIDOC-CRM/PROV** for provenance and **OWL-Time** for temporal semantics.
 
 **Example RDF Triples:**
 
@@ -134,8 +178,6 @@ kfm:note/hydrology_crosswalk
     dc:creator "KFM Hydrology Team" ;
     dc:date "2025-10-05"^^xsd:date .
 ```
-
-This ensures every note, even informal, can be referenced in semantic queries or audit trails.
 
 ---
 
@@ -183,9 +225,11 @@ If X → then Y.
 - [ ] Owner — Task
 ```
 
+> **Template tip:** Keep templates in `docs/notes/templates/` and link to them from `research.md`.
+
 ---
 
-## 🧩 Tagging & Discovery
+## 🏷️ Tagging & Discovery
 
 All notes support **semantic tagging** via YAML `tags:` and inline `#tag` hashtags.  
 Tags are parsed into a SKOS vocabulary (`data/vocabularies/tags.skos.ttl`) and indexed into the knowledge graph.
@@ -199,48 +243,54 @@ Tags are parsed into a SKOS vocabulary (`data/vocabularies/tags.skos.ttl`) and i
 
 ---
 
-## 🔄 Versioning & Provenance
+## 🗄️ Archiving & Filenames
 
-* Notes evolve through commits; **never edit without version control**.  
-* Significant changes: append a changelog section (`### Change Log`).  
-* Each note inherits commit metadata → automatically added to MCP provenance.  
-* Archived notes are moved into `/archive/<year>/` with a prefix:  
-  `YYYY-MM-DD_<original_title>.md`.
+- **When to archive:** After promotion or when a note is stale/closed.  
+- **Where:** `docs/notes/archive/<year>/`  
+- **Filename pattern:** `YYYY-MM-DD_<kebab-title>.md`  
+  - Example: `2025-10-05_hydrology-dataset-crosswalk.md`  
+- **Header update:** Set `status: archived` and append a `### Change Log` with the archive action.
 
-> The note archive acts as a permanent knowledge record — no deletions, only evolution.
+> The archive is a **permanent knowledge record**—no deletions, only evolution.
 
 ---
 
-## 🧠 CI Integration & Validation
+## 🤖 CI Integration & Validation
 
 Notes are validated through **`make docs-validate`** and CI pipelines.
 
-| Validation             | Tool                            | Description                      |
-| :--------------------- | :------------------------------ | :------------------------------- |
-| **Front-matter check** | `yamllint`                      | Validates note metadata headers. |
-| **Link check**         | `remark-lint`                   | Detects broken internal links.   |
-| **Tag indexing**       | `scripts/parse_tags.py`         | Updates SKOS vocabularies.       |
-| **Graph ingestion**    | `scripts/graph_ingest_notes.py` | Adds notes to Neo4j RDF store.   |
+| Validation             | Tool/Path                         | Description                              |
+| :--------------------- | :-------------------------------- | :--------------------------------------- |
+| **Front-matter check** | `yamllint`                        | Validates note metadata headers.         |
+| **Link check**         | `remark-lint`                     | Detects broken internal links.           |
+| **Tag indexing**       | `scripts/parse_tags.py`           | Updates SKOS vocabularies.               |
+| **Graph ingestion**    | `scripts/graph_ingest_notes.py`   | Adds notes to Neo4j/RDF store.           |
+| **Style rules**        | `docs/standards/markdown_rules.md`| Ensures KFM Markdown conventions.        |
+
+> Run locally before PRs: `make docs-validate`
 
 ---
 
 ## 📎 Related Documentation
 
-| Path                                   | Description                                 |
-| :------------------------------------- | :------------------------------------------ |
-| `docs/architecture/knowledge-graph.md` | How notes link into RDF & Neo4j models.     |
-| `docs/templates/provenance.md`         | Provenance & lineage capture templates.     |
-| `docs/standards/documentation.md`      | Formal writing & versioning standards.      |
-| `docs/standards/ontologies.md`         | Ontology and semantic alignment references. |
+| Path                                   | Description                                       |
+| :------------------------------------- | :------------------------------------------------ |
+| `docs/architecture/knowledge-graph.md` | How notes map into RDF/Neo4j & query semantics.  |
+| `docs/templates/provenance.md`         | Provenance & lineage capture templates.           |
+| `docs/standards/markdown_guide.md`     | KFM Markdown styling & features guide.            |
+| `docs/standards/markdown_rules.md`     | Rules for structure, badges, and compliance.      |
+| `docs/standards/documentation.md`      | Formal writing & versioning standards.            |
+| `docs/standards/ontologies.md`         | CIDOC-CRM · OWL-Time · SKOS alignment.            |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author                 | Summary                                                                                        |
-| :------ | :--------- | :--------------------- | :--------------------------------------------------------------------------------------------- |
-| v1.1    | 2025-10-05 | KFM Documentation Team | Added YAML front-matter schema, tag vocabularies, knowledge-graph linkage, and CI integration. |
-| v1.0    | 2025-10-04 | KFM Documentation Team | Initial lightweight workspace for brainstorming & research notes.                              |
+| Version | Date       | Author                  | Summary                                                                                         |
+| :------ | :--------- | :---------------------- | :---------------------------------------------------------------------------------------------- |
+| v1.2    | 2025-10-17 | KFM Documentation Team  | Aligned with MCP-DL v6.2; added ToC, note types, archive rules, CI table, and style compliance. |
+| v1.1    | 2025-10-05 | KFM Documentation Team  | Added YAML front-matter schema, tag vocabularies, KG linkage, and CI integration.               |
+| v1.0    | 2025-10-04 | KFM Documentation Team  | Initial lightweight workspace for brainstorming & research notes.                               |
 
 ---
 
