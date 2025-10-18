@@ -3,11 +3,14 @@
 # 🧾 Kansas Frontier Matrix — **Metadata Standards**  
 `docs/standards/metadata.md`
 
-**Master Coder Protocol (MCP-DL v6.3+) · Discoverability · Validation · Provenance · Interoperability**
+**Master Coder Protocol (MCP-DL v6.3+) · Discoverability · Validation · Provenance · Interoperability · Security**
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy%20%7C%20Gitleaks-red)](../../.github/workflows/)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20SPDX-green)](../../.github/workflows/sbom.yml)
 [![Security: SLSA-3 (Target)](https://img.shields.io/badge/Security-SLSA--3%20(Target)-orange)](../standards/security.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
@@ -18,10 +21,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Metadata Standards"
-version: "v1.3.0"
+version: "v1.3.1"
 last_updated: "2025-10-18"
-owners: ["@kfm-data","@kfm-architecture","@kfm-docs"]
-tags: ["metadata","stac","jsonschema","dcat","prov","fair","validation","provenance"]
+owners: ["@kfm-data","@kfm-architecture","@kfm-docs","@kfm-security"]
+tags: ["metadata","stac","jsonschema","dcat","prov","fair","validation","provenance","ethics","tiles"]
 status: "Stable"
 scope: "Monorepo-Wide"
 license: "CC-BY 4.0"
@@ -29,10 +32,13 @@ semver_policy: "MAJOR.MINOR.PATCH"
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - stac-validate
+  - checksums
   - pre-commit
   - codeql
   - trivy
+  - gitleaks
 semantic_alignment:
   - STAC 1.0
   - JSON Schema (2020-12)
@@ -41,9 +47,10 @@ semantic_alignment:
   - ISO 19115/19139 (subset via STAC fields)
   - NetCDF CF-1.8
   - W3C PROV-O
+  - GeoSPARQL
   - FAIR Principles
 ---
-````
+```
 
 ---
 
@@ -51,19 +58,19 @@ semantic_alignment:
 
 Metadata is the **foundation of reproducibility and traceability** in KFM. Every dataset, model, or experiment **must** include a machine-readable record documenting:
 
-* **Origin & license** (provider, rights, citation)
-* **Coverage** (spatial bbox/CRS, temporal instant/interval, theme/keywords)
-* **Processing & lineage** (inputs, scripts, versions, commit hash)
-* **Integrity** (checksums/signatures)
-* **Relationships** (sources, derivatives, documentation, tiles, previews)
+- **Origin & license** (provider, rights, citation)  
+- **Coverage** (spatial bbox/CRS, temporal instant/interval, theme/keywords)  
+- **Processing & lineage** (inputs, scripts, versions, commit hash)  
+- **Integrity** (checksums/signatures)  
+- **Relationships** (sources, derivatives, documentation, tiles, previews)
 
 KFM adopts and crosswalks the following **open standards**:
 
-* 🧩 **STAC 1.0** — Items & Collections (+ official extensions)
-* 🧠 **JSON Schema** — schema validation & automation
-* 🧷 **DCAT 2.0** — catalog-level interoperability & harvesting
-* 🔗 **W3C PROV-O** (with MCP fields) — provenance & lineage
-* 🌐 **NetCDF CF-1.8** / **CSVW** — domain-specific tabular/time-series metadata
+- 🧩 **STAC 1.0** — Items & Collections (+ official extensions)  
+- 🧠 **JSON Schema** — schema validation & automation  
+- 🧷 **DCAT 2.0** — catalog-level interoperability & harvesting  
+- 🔗 **W3C PROV-O** (with MCP fields) — provenance & lineage  
+- 🌐 **NetCDF CF-1.8** / **CSVW** — domain-specific time-series & tabular metadata
 
 All records are validated by CI and `make` targets in this repo.
 
@@ -80,9 +87,8 @@ flowchart LR
   D --> F["Checksums<br/>data/checksums/<domain>/*.sha256"]
   D --> G["Docs / Provenance<br/>docs/templates/provenance.md"]
   D --> H["Tiles / Thumbnails<br/>data/processed/** (PNG/PMTiles)"]
+%% END OF MERMAID
 ```
-
-<!-- END OF MERMAID -->
 
 ---
 
@@ -108,7 +114,7 @@ flowchart LR
 | `stac_version`           | string    | STAC version                                 | `"1.0.0"`                                 |
 | `id`                     | string    | Stable unique dataset ID                     | `"ks_1m_dem_2018_2020"`                   |
 | `type`                   | string    | Always `"Feature"`                           | `"Feature"`                               |
-| `geometry`               | object    | GeoJSON geometry (optional for pure rasters) | `{"type":"Polygon","coordinates":[...]}`  |
+| `geometry`               | object    | GeoJSON geometry (optional for rasters)      | `{"type":"Polygon","coordinates":[...]}`  |
 | `bbox`                   | number[4] | `[W,S,E,N]`                                  | `[-102.05,36.99,-94.59,40.00]`            |
 | `properties.datetime`    | string    | ISO-8601 instant                             | `"2020-01-01T00:00:00Z"`                  |
 | `properties.license`     | string    | SPDX or text                                 | `"CC-BY-4.0"`                             |
@@ -120,7 +126,7 @@ flowchart LR
 
 | Field   | Type   | Description                                       | Example                                                      |
 | :------ | :----- | :------------------------------------------------ | :----------------------------------------------------------- |
-| `href`  | string | **Relative repo path** or URL                     | `"data/processed/terrain/ks_1m_dem_2018_2020.tif"`           |
+| `href`  | string | **Relative path** or URL                          | `"data/processed/terrain/ks_1m_dem_2018_2020.tif"`           |
 | `type`  | string | MIME type                                         | `"image/tiff; application=geotiff; profile=cloud-optimized"` |
 | `roles` | array  | `["data"]`, `["metadata"]`, `["thumbnail"]`, etc. | `["data"]`                                                   |
 | `title` | string | Friendly title                                    | `"Kansas DEM Raster"`                                        |
@@ -134,12 +140,12 @@ flowchart LR
 | Extension      | Prefix        | Use For                | Notes                                           |
 | :------------- | :------------ | :--------------------- | :---------------------------------------------- |
 | **Projection** | `proj:`       | CRS & transforms       | Include `proj:epsg`, `proj:wkt2`, `proj:shape`. |
-| **Raster**     | `raster:`     | Bands, nodata, stats   | `raster:bands[]` + histo/stats.                 |
-| **File**       | `file:`       | Checksums & size       | `file:checksum` (sha256) + `file:size`.         |
-| **Scientific** | `sci:`        | DOIs & citations       | `sci:doi`, `sci:citation`.                      |
-| **Processing** | `processing:` | Process info           | Pipeline name/version, parameters.              |
-| **Label**      | `label:`      | Vector labels/training | For labels/train/test splits if applicable.     |
-| **Tiles**      | `tiles:`      | Web tiles & recipes    | PMTiles/MVT endpoints + tippecanoe args.        |
+| **Raster**     | `raster:`     | Bands, nodata, stats   | `raster:bands[]` + stats                        |
+| **File**       | `file:`       | Checksums & size       | `file:checksum` (sha256) + `file:size`          |
+| **Scientific** | `sci:`        | DOIs & citations       | `sci:doi`, `sci:citation`                       |
+| **Processing** | `processing:` | Process info           | Pipeline name/version, parameters               |
+| **Label**      | `label:`      | Vector labels/training | Labels/train/test splits                        |
+| **Tiles**      | `tiles:`      | Web tiles & recipes    | PMTiles/MVT endpoints + tippecanoe args         |
 
 **Snippet**
 
@@ -188,25 +194,25 @@ Use `links[]` to express lineage and related resources:
 
 **Required**
 
-* `stac_version`, `type:"Collection"`, `id`, `description`
-* `extent.spatial.bbox[]`, `extent.temporal.interval[][]`
-* `license` (SPDX) **or** per-item license via `item_assets`
-* `links` (`self`, `root`, optional `child` items)
+- `stac_version`, `type:"Collection"`, `id`, `description`  
+- `extent.spatial.bbox[]`, `extent.temporal.interval[][]`  
+- `license` (SPDX) **or** per-item license via `item_assets`  
+- `links` (`self`, `root`, optional `child` items)
 
 **Recommended**
 
-* `keywords`, `providers`, `summaries` (common fields)
-* Summaries for extensions (e.g., `proj:epsg`, `raster:bands`, keywords, themes)
+- `keywords`, `providers`, `summaries` (common fields)  
+- Extension summaries (e.g., `proj:epsg`, `raster:bands`, themes)
 
 ---
 
 ## ⏱️ Temporal & Units Guidance
 
-* **Instant** datasets → `properties.datetime`.
-* **Intervals** → `properties.start_datetime` + `end_datetime` (omit `datetime`).
-* **Uncertain time** → best approximation + `properties["kfm:time_note"]`.
-* **Units**: Prefer SI; record in CSVW/STAC (e.g., `unit`, `uom`).
-* **NetCDF CF**: include `long_name`, `standard_name`, `units`, QC flags, chunking, compression notes.
+- **Instant** datasets → `properties.datetime`.  
+- **Intervals** → `properties.start_datetime` + `end_datetime` (omit `datetime`).  
+- **Uncertain time** → best approximation + `properties["kfm:time_note"]`.  
+- **Units** — Prefer SI; record in CSVW/STAC (e.g., `unit`, `uom`).  
+- **NetCDF CF** — include `long_name`, `standard_name`, `units`, QC flags, chunking, compression notes.
 
 ---
 
@@ -250,7 +256,7 @@ Add MCP reproducibility fields to STAC Items:
 | **Findable**      | STAC catalog in `data/stac/` with keywords, providers, and DOI links |
 | **Accessible**    | HTTP paths or LFS/DVC references; license & constraints in STAC      |
 | **Interoperable** | COG/GeoJSON/Parquet/NetCDF + JSON Schema; CF conventions             |
-| **Reusable**      | Clear citation, license, provenance, checksums, lifecycle flags      |
+| **Reusable**      | Citation, license, provenance, checksums, lifecycle flags            |
 
 **DCAT Mapping (indicative)**
 
@@ -451,17 +457,18 @@ Include a human-readable provenance snippet per dataset in `docs/templates/prove
 
 ## 📅 Version History
 
-| Version | Date       | Author    | Summary                                                                                                       |
-| :------ | :--------- | :-------- | :------------------------------------------------------------------------------------------------------------ |
-| v1.3.0  | 2025-10-18 | @kfm-data | Added DCAT/FAIR crosswalk, tiles ext, CI snippet, lifecycle/deprecation, NetCDF CF & CSVW notes, PROV-O table |
-| v1.1.0  | 2025-10-05 | @kfm-docs | Added extensions (proj/raster/file/sci/processing), Item & Collection templates, MCP JSON Schema              |
-| v1.0.0  | 2025-10-04 | @kfm-docs | Initial metadata standards for STAC + MCP compliance                                                          |
+| Version | Date       | Author    | Summary                                                                                                        |
+| :------ | :--------- | :-------- | :------------------------------------------------------------------------------------------------------------- |
+| **v1.3.1** | 2025-10-18 | @kfm-data | Added policy gates, security/secrets scans, extended badges, GeoSPARQL alignment, and clarified required checks. |
+| **v1.3.0** | 2025-10-18 | @kfm-data | DCAT/FAIR crosswalk, tiles ext, CI snippet, lifecycle/deprecation, NetCDF CF & CSVW notes, PROV-O table        |
+| **v1.1.0** | 2025-10-05 | @kfm-docs | Extensions (proj/raster/file/sci/processing), Item & Collection templates, MCP JSON Schema                    |
+| **v1.0.0** | 2025-10-04 | @kfm-docs | Initial metadata standards for STAC + MCP compliance                                                           |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Record Proven. Every Metadata Validated.”*
+**Kansas Frontier Matrix** — *“Every Record Proven. Every Metadata Validated.”*  
 📍 `docs/standards/metadata.md` — Official metadata standard for STAC + MCP compliance.
 
 </div>
