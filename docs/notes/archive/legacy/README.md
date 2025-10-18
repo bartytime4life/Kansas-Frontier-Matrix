@@ -8,9 +8,10 @@
 This directory serves as the **historical vault** of the KFM system — documenting the project’s evolution from fragmented, pre-standardized efforts to today’s unified, reproducible knowledge ecosystem.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](../README.md)
-[![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../../../.github/workflows/docs-validate.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
@@ -19,17 +20,24 @@ This directory serves as the **historical vault** of the KFM system — document
 ---
 title: "Kansas Frontier Matrix — Legacy Notes Archive"
 document_type: "Legacy Archive"
-version: "v1.2.0"
+version: "v1.2.1"
 last_updated: "2025-10-18"
 created: "2023-01-01"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-governance"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-governance","@kfm-security"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes/Archive/Legacy"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["legacy","archive","pre-MCP","history","provenance","governance","fair"]
+tags: ["legacy","archive","pre-MCP","history","provenance","governance","fair","policy"]
 audit_framework: "MCP-DL v6.3"
+ci_required_checks:
+  - docs-validate
+  - policy-check
+  - site-build
+  - pre-commit
+  - codeql
+  - trivy
 semantic_alignment:
   - PROV-O
   - CIDOC CRM
@@ -108,10 +116,10 @@ These records include concept drafts, early GIS integrations, ingestion prototyp
 
 While not conforming to modern schemas or FAIR principles at creation, these files are preserved for:
 
-* 🧠 **Historical traceability** — capturing the origins of MCP concepts.  
-* 🧾 **Provenance linking** — referencing early datasets, ETL prototypes, and GIS experiments.  
-* 🔗 **Continuity** — enabling modern documentation to reference design lineage.  
-* 🧱 **Education** — teaching how MCP and reproducible governance evolved.
+- 🧠 **Historical traceability** — capturing the origins of MCP concepts.  
+- 🧾 **Provenance linking** — referencing early datasets, ETL prototypes, and GIS experiments.  
+- 🔗 **Continuity** — enabling modern documentation to reference design lineage.  
+- 🧱 **Education** — teaching how MCP and reproducible governance evolved.
 
 ---
 
@@ -205,8 +213,8 @@ flowchart TD
     E --> F["2023 Architecture Briefing v0"]
     F --> G["2024 Initial Design Discussion (Archived)"]
     G --> H["2025 Operational Governance (MCP-DL v6.3)"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -283,13 +291,13 @@ kfm:legacy/digital_atlas_proposal_2021
 
 ## 🧮 Validation & Governance Metrics
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML + Schema | ✅ | `yamllint`, `jsonschema` |
-| Checksum Verification | ✅ | `verify_checksums.py` |
-| Graph Ingestion | ✅ | `tools/graph_ingest_notes.py` |
-| FAIR Retrofitting | ✅ | `scripts/fair_validate.py` |
-| Link Completeness | ✅ | `remark-lint` |
+| Validation           | Result | Verified By               |
+| :------------------- | :----- | :------------------------ |
+| YAML + Schema        | ✅     | `yamllint`, `jsonschema`  |
+| Checksum Verification| ✅     | `verify_checksums.py`     |
+| Graph Ingestion      | ✅     | `tools/graph_ingest_legacy.py` |
+| FAIR Retrofitting    | ✅     | `scripts/fair_validate.py`|
+| Link Completeness    | ✅     | `remark-lint`             |
 
 ---
 
@@ -310,9 +318,9 @@ These archives connect today’s reproducibility standards to KFM’s earliest c
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
 | v1.2 | Q2 2026 | Annotate legacy docs with MCP-DL ontology crosswalks. |
-| v1.3 | Q3 2026 | Add OCR + AI transcripts for scanned legacy media. |
-| v1.4 | Q4 2026 | Integrate “Legacy Viewer” into KFM Web UI. |
-| v2.0 | 2027 | Blockchain provenance for legacy checksums. |
+| v1.3 | Q3 2026 | Add OCR + AI transcripts for scanned legacy media.     |
+| v1.4 | Q4 2026 | Integrate “Legacy Viewer” into KFM Web UI.             |
+| v2.0 | 2027    | Blockchain provenance for legacy checksums.            |
 
 ---
 
@@ -320,21 +328,22 @@ These archives connect today’s reproducibility standards to KFM’s earliest c
 
 | File | Description |
 | :-- | :-- |
-| `docs/notes/archive/README.md` | Global archive governance & structure |
-| `docs/architecture/knowledge-graph.md` | Graph lineage & semantic ingestion |
-| `docs/standards/documentation.md` | MCP-DL documentation standards |
-| `docs/notes/templates/README.md` | Metadata and YAML template examples |
-| `data/work/graph/legacy_lineage.ttl` | RDF record of legacy-to-modern lineage |
+| `../README.md` | Global archive governance & structure |
+| `../../../architecture/knowledge-graph.md` | Graph lineage & semantic ingestion |
+| `../../../standards/documentation.md` | MCP-DL documentation standards |
+| `../../templates/README.md` | Metadata and YAML template examples |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF record of legacy-to-modern lineage |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.2.0 | 2025-10-18 | @kfm-docs | **Updated paths & inventory for 8 files;** added schema header, automation, AI index, and validation matrix. |
-| v1.1.0 | 2025-10-18 | @kfm-docs | Aligned links & paths; added schema reference, automation, AI index, and validation matrix. |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Established legacy archive under MCP-DL v6.3; added FAIR retrofitting, manifest, and RDF lineage. |
+| Version | Date       | Author        | Summary                                                                 |
+| :------ | :--------- | :------------ | :---------------------------------------------------------------------- |
+| **v1.2.1** | 2025-10-18 | @kfm-docs     | Added policy badge, CI gates section, and clarified preservation/FAIR guidance. |
+| v1.2.0 | 2025-10-18 | @kfm-docs     | Paths & inventory for 8 files; schema header, automation, AI index, validation matrix. |
+| v1.1.0 | 2025-10-18 | @kfm-docs     | Links & paths aligned; schema reference, automation, AI index, validation matrix. |
+| v1.0.0 | 2025-10-18 | @kfm-docs     | Legacy archive under MCP-DL v6.3; FAIR retrofitting, manifest, RDF lineage. |
 
 ---
 
