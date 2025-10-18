@@ -7,6 +7,7 @@
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
@@ -19,19 +20,20 @@
 ---
 title: "Kansas Frontier Matrix — Meeting Records & Collaboration Log"
 document_type: "Meetings"
-version: "v1.8.0"
+version: "v1.8.1"
 last_updated: "2025-10-18"
 created: "2025-10-04"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-governance","@kfm-security"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-governance","@kfm-security","@kfm-ai"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["meetings","governance","audit","provenance","ontology","ci","data","mcp"]
+tags: ["meetings","governance","audit","provenance","ontology","ci","data","mcp","a11y"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - site-build
   - pre-commit
   - stac-validate
@@ -111,10 +113,10 @@ This file acts as the **central, version-controlled governance record** for KFM 
 
 Meetings are:
 
-* 🧾 **Versioned** — every update is Git-tracked and auditable.  
-* 🔗 **Linked** — cross-referenced with backlog, ideas, and related datasets.  
-* 🧠 **Searchable** — YAML metadata supports knowledge graph ingestion.  
-* 🧩 **Automated** — validated, summarized, and archived by CI/CD workflows.  
+- 🧾 **Versioned** — every update is Git-tracked and auditable.  
+- 🔗 **Linked** — cross-referenced with backlog, ideas, and related datasets.  
+- 🧠 **Searchable** — YAML metadata supports knowledge graph ingestion.  
+- 🧩 **Automated** — validated, summarized, and archived by CI/CD workflows.  
 
 > **Principle:** *Every decision is data. Every discussion is provenance.*
 
@@ -145,7 +147,7 @@ id: M-2025-001
 title: "Q4 Planning & Ontology Integration Review"
 date: 2025-10-05
 time: "09:00-10:30 America/Chicago"
-type: governance
+type: governance          # governance | sprint | technical | design | research | outreach
 location: virtual
 attendees:
   - "Andy Barta"
@@ -173,13 +175,15 @@ linked_issues:
 calendar_event:
   id: "gcal-2025-10-05-ontology-sync"
   url: "https://calendar.google.com/event?eid=XYZ"
-status: finalized
+status: finalized          # draft | finalized | archived
+classification: public     # public | internal
 tags: ["ontology","timeline","ETL","MCP"]
 summary: >
   Adopt CIDOC CRM and OWL-Time into Neo4j schema; reviewed AI-extraction integration and data pipeline alignment.
 ai_assist:
   summarize: true
   embed_in_graph: true
+risk_level: low            # optional: low | medium | high
 ---
 ```
 
@@ -210,10 +214,10 @@ ai_assist:
 
 #### 🧠 Discussion Summary
 
-* Adopted **CIDOC CRM E5_Event** and **E53_Place** classes for temporal/spatial entities.  
-* Integrated **OWL-Time intervals** for queryable timelines.  
-* Finalized plan for **AI-extracted events** in graph ingestion.  
-* Confirmed continuous ingestion schedule for NOAA/USGS datasets.  
+- Adopted **CIDOC CRM E5_Event** and **E53_Place** classes for temporal/spatial entities.  
+- Integrated **OWL-Time intervals** for queryable timelines.  
+- Finalized plan for **AI-extracted events** in graph ingestion.  
+- Confirmed continuous ingestion schedule for NOAA/USGS datasets.  
 
 ---
 
@@ -255,11 +259,12 @@ decisions:
     assigned_to: "@ontology-team"
     due: 2025-10-20
     result: "Merged in v1.3 Ontology Layer"
+
 actions:
   - id: A-2025-011
     title: "Add OWL-Time CI validation"
     assigned_to: "@data-team"
-    status: "in-progress"
+    status: "in-progress"   # open | in-progress | done
     linked_pr: "https://github.com/.../pull/420"
 ```
 
@@ -273,8 +278,8 @@ flowchart LR
     B --> C["Decisions (formalized + assigned)"]
     C --> D["Actions (tracked in backlog)"]
     D --> E["Follow-up (archived with provenance)"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -286,6 +291,7 @@ Each meeting maps to `prov:Activity`, with sub-entities for decisions (`prov:Inf
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix kfm:  <https://kfm.org/id/> .
 @prefix dc:   <http://purl.org/dc/terms/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 kfm:meeting/M-2025-001
     a prov:Activity ;
@@ -378,9 +384,9 @@ make docs-validate && make docs-lint
 | `docs/notes/README.md` | Notes workspace overview. |
 | `docs/notes/backlog.md` | Tasks & operational backlog. |
 | `docs/notes/ideas.md` | Ideation & innovation log. |
-| `docs/standards/documentation.md` | MCP-DL governance & writing standards. |
-| `docs/standards/ontologies.md` | Ontology & temporal data standards. |
-| `docs/architecture/knowledge-graph.md` | Graph ingestion & semantics. |
+| `../standards/documentation.md` | MCP-DL governance & writing standards. |
+| `../standards/ontologies.md` | Ontology & temporal data standards. |
+| `../architecture/knowledge-graph.md` | Graph ingestion & semantics. |
 
 ---
 
@@ -388,7 +394,8 @@ make docs-validate && make docs-lint
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| v1.8.0 | 2025-10-18 | @kfm-docs | Added AI assist, schema, retention, automation, decision subschema, KPIs, and privacy controls. |
+| **v1.8.1** | 2025-10-18 | @kfm-docs | Added policy-as-code badge, classification & risk fields, and CI gate clarifications. |
+| v1.8.0 | 2025-10-18 | @kfm-docs | AI assist, schema, retention, automation, decision subschema, KPIs, and privacy controls. |
 | v1.0.0 | 2025-10-05 | @kfm-governance | Initial governance log with YAML metadata and RDF provenance. |
 
 ---
