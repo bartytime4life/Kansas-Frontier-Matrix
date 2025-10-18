@@ -47,6 +47,7 @@ flowchart TD
   D --> E
   E --> F["FastAPI / GraphQL API"]
   F --> G["Web Frontend<br/>React · MapLibre · Timeline · AI Assistant"]
+%% END OF MERMAID
 ```
 
 ---
@@ -126,12 +127,12 @@ Open **http://localhost:3000** to explore the timeline map.
 
 ## 🔒 Security & Provenance
 
-- CodeQL: static analysis  
-- Trivy: container & dependency scans  
-- SHA-256: data integrity  
-- PROV-O: dataset provenance graph  
-- Signed CI workflows  
-- Audit trails stored in build logs  
+- **CodeQL:** static analysis  
+- **Trivy:** container & dependency scans  
+- **SHA-256:** dataset integrity verification  
+- **PROV-O:** provenance tracking in graph metadata  
+- **Signed CI workflows**  
+- **Audit trails:** stored in CI logs and build artifacts  
 
 ---
 
@@ -142,21 +143,21 @@ Open **http://localhost:3000** to explore the timeline map.
 | **Code** | SemVer | MCP-DL v6.3 |
 | **Data** | STAC versioning | STAC 1.0 |
 | **Docs** | MCP metadata | CC-BY 4.0 |
-| **Models** | Model cards | FAIR/MCP |
+| **Models** | Model cards | FAIR / MCP |
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork & branch (`feature/*`)
-2. Add/update documentation (README or SOP)
-3. Validate STAC (`make stac-validate`)
-4. Run tests and lints
-5. Submit PR with summary of changes and provenance logs
+1. Fork & branch (`feature/*`)  
+2. Add/update documentation (README or SOP)  
+3. Validate STAC (`make stac-validate`)  
+4. Run tests and lints  
+5. Submit PR with summary of changes and provenance logs  
 
-**Templates:**
-- `docs/templates/sop.md`
-- `docs/templates/experiment.md`
+**Templates:**  
+- `docs/templates/sop.md`  
+- `docs/templates/experiment.md`  
 - `docs/templates/model_card.md`
 
 ---
@@ -164,8 +165,8 @@ Open **http://localhost:3000** to explore the timeline map.
 ## 🧠 Standards & Alignment
 
 - **MCP-DL v6.3** — Documentation Language & Provenance Framework  
-- **STAC 1.0 / DCAT 2.0** — Dataset metadata  
-- **CIDOC CRM / OWL-Time / GeoSPARQL** — Semantic interoperability  
+- **STAC 1.0 / DCAT 2.0** — Dataset metadata interoperability  
+- **CIDOC CRM / OWL-Time / GeoSPARQL** — Semantic integration  
 - **WCAG 2.1 AA** — Accessibility compliance  
 - **FAIR Principles** — Findable, Accessible, Interoperable, Reusable  
 
@@ -173,10 +174,10 @@ Open **http://localhost:3000** to explore the timeline map.
 
 ## 📚 References
 
-- [`docs/architecture/system-architecture-overview.md`](docs/architecture/system-architecture-overview.md)
-- [`docs/architecture/file-architecture.md`](docs/architecture/file-architecture.md)
-- [`docs/kansas-frontier-matrix-web-ui-design-document.pdf`](docs/kansas-frontier-matrix-web-ui-design-document.pdf)
-- [`data/stac/`](data/stac/)
+- [`docs/architecture/system-architecture-overview.md`](docs/architecture/system-architecture-overview.md)  
+- [`docs/architecture/file-architecture.md`](docs/architecture/file-architecture.md)  
+- [`docs/kansas-frontier-matrix-web-ui-design-document.pdf`](docs/kansas-frontier-matrix-web-ui-design-document.pdf)  
+- [`data/stac/`](data/stac/)  
 - [`tests/`](tests/)
 
 ---
