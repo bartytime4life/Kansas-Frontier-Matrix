@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📝 Kansas Frontier Matrix — Notes Workspace  
+# 📝 Kansas Frontier Matrix — **Notes Workspace**  
 `docs/notes/README.md`
 
 **Mission:** Maintain a **lightweight, versioned knowledge workspace** for  
@@ -9,6 +9,7 @@ MCP documentation and structured knowledge graph entries.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
@@ -21,19 +22,20 @@ MCP documentation and structured knowledge graph entries.
 ---
 title: "Kansas Frontier Matrix — Notes Workspace"
 document_type: "README"
-version: "v1.4.0"
+version: "v1.5.0"
 last_updated: "2025-10-18"
 created: "2025-10-04"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-security"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-security","@kfm-ai"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["docs","notes","mcp","provenance","knowledge-graph","search","markdown"]
+tags: ["docs","notes","mcp","provenance","knowledge-graph","search","markdown","ai"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - site-build
   - pre-commit
   - stac-validate
@@ -87,11 +89,11 @@ before formalization into architecture, design, or integration documents.
 
 Notes serve as:
 
-* 🧠 **Working drafts** — capture ideas fast before structure hardens.  
-* 🔍 **Research digests** — summaries of archives, datasets, and oral histories.  
-* 🗓️ **Meeting & sprint logs** — record decisions, blockers, and insights.  
-* ⚙️ **Technical backlogs** — track pending work or experimental prototypes.  
-* 🧾 **Idea provenance** — keep “why we thought this” context in Git forever.
+- 🧠 **Working drafts** — capture ideas fast before structure hardens.  
+- 🔍 **Research digests** — summaries of archives, datasets, and oral histories.  
+- 🗓️ **Meeting & sprint logs** — record decisions, blockers, and insights.  
+- ⚙️ **Technical backlogs** — track pending work or experimental prototypes.  
+- 🧾 **Idea provenance** — keep “why we thought this” context in Git forever.
 
 > **MCP Principle:** *Write fast. Preserve context. Promote when reproducible.*
 
@@ -111,8 +113,8 @@ flowchart LR
     style C fill:#f3fcf3,stroke:#33aa33
     style D fill:#fffbea,stroke:#e8a500
     style E fill:#f9f9f9,stroke:#888888
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -133,14 +135,14 @@ docs/notes/
 
 ## 🗂️ Note Types
 
-| File | Purpose |
-| :--- | :------- |
-| `research.md` | Scratchpad for datasets, literature, references. |
-| `meetings.md` | Agile retrospectives, agenda logs, team updates. |
-| `ideas.md` | Experimental ideas, hypotheses, technical sketches. |
-| `backlog.md` | Short-term tasks, tech debt tracking, feature backlog. |
-| `templates/` | Prebuilt YAML & Markdown templates for uniform structure. |
-| `archive/` | Long-term record of finalized or deprecated notes. |
+| File           | Purpose                                                     |
+| :------------- | :----------------------------------------------------------- |
+| `research.md`  | Scratchpad for datasets, literature, references.            |
+| `meetings.md`  | Agile retrospectives, agenda logs, team updates.            |
+| `ideas.md`     | Experimental ideas, hypotheses, technical sketches.         |
+| `backlog.md`   | Short-term tasks, tech debt tracking, feature backlog.      |
+| `templates/`   | Prebuilt YAML & Markdown templates for uniform structure.   |
+| `archive/`     | Long-term record of finalized or deprecated notes.          |
 
 > **Tip:** If a note becomes foundational, promote it to `/docs/architecture/` or `/docs/design/`.
 
@@ -177,31 +179,31 @@ references:
 
 ## 🧭 Metadata Schema
 
-| Field | Description | Example |
-| :-- | :-- | :-- |
-| `title` | Concise subject line | “LiDAR DEM Pipeline – Draft Hypothesis” |
-| `author` | Individual or team | `"KFM Hydrology Team"` |
-| `date` | ISO 8601 date | `2025-10-05` |
-| `status` | Lifecycle stage | `draft`, `review`, `stable`, `archived` |
-| `tags` | Keywords / ontology concepts | `["terrain","LiDAR","ETL"]` |
-| `linked_*` | Crosslinks to artifacts | Dataset paths, commits, docs |
-| `period` | Historical period (from PeriodO) | `"Dust Bowl Era"` |
-| `ai_assist` | AI workflow flags | Summarization / embedding |
-| `references` | Bibliography pointers | `["doi:10.123/abc","url:..."]` |
+| Field           | Description                        | Example                                 |
+| :-------------- | :--------------------------------- | :-------------------------------------- |
+| `title`         | Concise subject line               | “LiDAR DEM Pipeline – Draft Hypothesis” |
+| `author`        | Individual or team                 | `"KFM Hydrology Team"`                  |
+| `date`          | ISO 8601 date                      | `2025-10-05`                            |
+| `status`        | Lifecycle stage                    | `draft`, `review`, `stable`, `archived` |
+| `tags`          | Keywords / ontology concepts       | `["terrain","LiDAR","ETL"]`             |
+| `linked_*`      | Crosslinks to artifacts            | Dataset paths, commits, docs            |
+| `period`        | Historical period (PeriodO)        | `"Dust Bowl Era"`                       |
+| `ai_assist`     | AI workflow flags                  | Summarization / embedding               |
+| `references`    | Bibliography pointers              | `["doi:10.123/abc","url:..."]`          |
 
-> Schema defined at: `docs/schemas/note.schema.json` and validated by CI.
+> Schema at: `docs/schemas/note.schema.json` (validated in CI).
 
 ---
 
 ## 🧾 Suggested Workflow
 
-| Stage | Action | Description |
-| :-- | :-- | :-- |
-| **1️⃣ Capture** | Add note or section to `research.md`. | Minimal viable capture of ideas. |
-| **2️⃣ Link** | Cross-reference datasets, commits, or external docs. | Maintain provenance. |
-| **3️⃣ Review** | Open PR for comments. | Team discussion or validation. |
-| **4️⃣ Promote** | Move to `/architecture/`, `/design/`, or `/integration/`. | When reproducible/validated. |
-| **5️⃣ Archive** | Move into `archive/<year>/` & set `status: archived`. | Lock history. |
+| Stage       | Action                               | Description                    |
+| :---------- | :----------------------------------- | :----------------------------- |
+| **1️⃣ Capture** | Add a note/section to `research.md`. | Minimal viable capture.        |
+| **2️⃣ Link**   | Cross-reference datasets/commits.      | Maintain provenance.           |
+| **3️⃣ Review** | Open PR for comments.                  | Team discussion/validation.    |
+| **4️⃣ Promote**| Move to `/architecture/` or `/design/`. | When reproducible/validated.   |
+| **5️⃣ Archive**| `archive/<year>/`, set `status: archived` | Lock history.                  |
 
 > **Golden Rule:** *Nothing is deleted — preserve knowledge via Git + Archive.*
 
@@ -209,7 +211,7 @@ references:
 
 ## 🧠 Linking Notes to the Knowledge Graph
 
-Each note is ingested as an entity in the **Neo4j / RDF knowledge graph**, aligning with **CIDOC-CRM**, **PROV-O**, and **OWL-Time** ontologies.
+Each note is ingested as an entity in the **Neo4j/RDF knowledge graph**, aligned to **CIDOC-CRM**, **PROV-O**, and **OWL-Time**.
 
 ```turtle
 @prefix kfm: <https://kfm.org/id/> .
@@ -225,7 +227,7 @@ kfm:note/hydrology_crosswalk
     dc:date "2025-10-05"^^xsd:date .
 ```
 
-> Notes are vectorized for semantic search and queryable via the KFM web UI.
+> Notes are vectorized for semantic search and discoverable via the web UI.
 
 ---
 
@@ -278,14 +280,14 @@ If X → then Y.
 ## 🏷️ Tagging & Discovery
 
 Tags map into a **controlled SKOS vocabulary** in `data/vocabularies/tags.skos.ttl`.  
-Each note’s tags are converted into RDF triples and indexed for federated search.
+Notes’ tags are converted into RDF triples and indexed for federated search.
 
-| Tag Type | Example | Used For |
-| :-- | :-- | :-- |
-| **Domain** | `#climate`, `#archaeology` | Thematic grouping |
+| Tag Type  | Example                  | Used For           |
+| :-------- | :----------------------- | :----------------- |
+| **Domain**| `#climate`, `#archaeology` | Thematic grouping  |
 | **Phase** | `#draft`, `#review`, `#archived` | Workflow stage |
-| **Concept** | `#ontology`, `#timeline`, `#LiDAR` | Conceptual linkage |
-| **Process** | `#etl`, `#qa`, `#stac-validation` | Pipeline cross-references |
+| **Concept**| `#ontology`, `#timeline`, `#LiDAR` | Concept linkage |
+| **Process**| `#etl`, `#qa`, `#stac-validation`  | Pipeline refs   |
 
 ---
 
@@ -293,10 +295,9 @@ Each note’s tags are converted into RDF triples and indexed for federated sear
 
 - **When to archive:** After promotion or phase end.  
 - **Where:** `docs/notes/archive/<year>/`  
-- **Pattern:** `YYYY-MM-DD_<kebab-title>.md`  
-  Example → `2025-10-05_hydrology-dataset-crosswalk.md`
+- **Pattern:** `YYYY-MM-DD_<kebab-title>.md` → `2025-10-05_hydrology-dataset-crosswalk.md`
 
-**Archival Log Example**
+**Archival Log**
 
 ```markdown
 ### Change Log
@@ -319,8 +320,8 @@ flowchart TD
     B --> C["Knowledge Graph (Neo4j/RDF)"]
     C --> D["Vector DB (Embeddings)"]
     D --> E["Web UI / API Search"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -346,51 +347,51 @@ flowchart TD
 
 ## 🤖 CI Integration & Validation
 
-| Validation | Tool | Description |
-| :-- | :-- | :-- |
-| **Front-matter** | `yamllint` | Validates YAML structure. |
-| **Schema** | `jsonschema` | Enforces `docs/schemas/note.schema.json`. |
-| **Links** | `remark-lint` | Checks internal/relative links. |
-| **Tags → SKOS** | `scripts/parse_tags.py` | Updates SKOS vocabularies. |
-| **Graph ingest** | `scripts/graph_ingest_notes.py` | Loads notes to Neo4j/RDF. |
-| **Embeddings** | `scripts/vector_index_notes.py` | Builds semantic embeddings. |
+| Validation        | Tool                          | Description                         |
+| :---------------- | :---------------------------- | :---------------------------------- |
+| **Front-matter**  | `yamllint`                    | Validates YAML structure            |
+| **Schema**        | `jsonschema`                  | Enforces `docs/schemas/note.schema.json` |
+| **Links**         | `remark-lint`                 | Checks internal/relative links      |
+| **Tags → SKOS**   | `scripts/parse_tags.py`       | Updates SKOS vocabularies           |
+| **Graph ingest**  | `scripts/graph_ingest_notes.py` | Loads notes to Neo4j/RDF          |
+| **Embeddings**    | `scripts/vector_index_notes.py` | Builds semantic embeddings        |
 
-> Run locally before PR: `make docs-validate && make docs-lint`
+> Local: `make docs-validate && make docs-lint`
 
 ---
 
 ## 📎 Related Documentation
 
-| Path | Description |
-| :-- | :-- |
-| `docs/standards/documentation.md` | Monorepo-wide documentation & writing standards. |
-| `docs/standards/markdown_guide.md` | Markdown styling & components. |
-| `docs/standards/markdown_rules.md` | Official MCP-DL doc rules & header anatomy. |
-| `docs/architecture/knowledge-graph.md` | Notes → RDF/Neo4j mapping & queries. |
-| `docs/templates/provenance.md` | Provenance & lineage capture templates. |
-| `docs/standards/ontologies.md` | CIDOC-CRM · PROV-O · OWL-Time · SKOS alignment. |
+| Path                                   | Description                                   |
+| :------------------------------------- | :-------------------------------------------- |
+| `../standards/documentation.md`        | Monorepo-wide documentation & writing rules   |
+| `../standards/markdown_guide.md`       | Markdown styling & components                 |
+| `../standards/markdown_rules.md`       | Official MCP-DL doc rules & header anatomy    |
+| `../architecture/knowledge-graph.md`   | Notes → RDF/Neo4j mapping & queries           |
+| `../templates/provenance.md`           | Provenance & lineage capture templates        |
+| `../standards/ontologies.md`           | CIDOC-CRM · PROV-O · OWL-Time · SKOS alignment|
 
 ---
 
 ## 🚀 Roadmap
 
-| Milestone | Target | Description |
-| :-- | :-- | :-- |
-| v1.5 | Q1 2026 | Integrate vector search + AI summaries in web UI |
-| v1.6 | Q2 2026 | Auto-generate STAC/graph sync nightly |
-| v1.7 | Q3 2026 | Web-based note creation + promotion workflow |
+| Milestone | Target  | Description                                      |
+| :-------- | :------ | :----------------------------------------------- |
+| **v1.6**  | Q2 2026 | Auto-suggest tags via AI + SKOS reconciliation   |
+| **v1.7**  | Q3 2026 | Web-based note creation + promotion workflow     |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.4.0 | 2025-10-18 | @kfm-docs | **Added YAML metadata header under badges;** aligned with MCP-DL v6.3; expanded CI checks and ethics section. |
-| v1.3.1 | 2025-10-17 | @kfm-docs | Added AI assist, schema validation, contributor checklist, roadmap. |
-| v1.2.0 | 2025-10-16 | @kfm-docs | Updated tagging, ontology links, automation details. |
-| v1.1.0 | 2025-10-05 | @kfm-docs | Added YAML schema, tag vocabularies, graph linkage, CI validation. |
-| v1.0.0 | 2025-10-04 | @kfm-docs | Initial workspace for research and drafts. |
+| Version | Date       | Author     | Summary                                                                                           |
+| :------ | :--------- | :--------- | :------------------------------------------------------------------------------------------------ |
+| **v1.5.0** | 2025-10-18 | @kfm-docs  | Added policy gate & docs-validate badges; clarified schema, AI workflows, and archive patterns.   |
+| **v1.4.0** | 2025-10-18 | @kfm-docs  | YAML metadata header; aligned with MCP-DL v6.3; expanded CI checks and ethics section.            |
+| **v1.3.1** | 2025-10-17 | @kfm-docs  | AI assist, schema validation, contributor checklist, roadmap.                                     |
+| **v1.2.0** | 2025-10-16 | @kfm-docs  | Tagging, ontology links, automation details.                                                      |
+| **v1.1.0** | 2025-10-05 | @kfm-docs  | Added YAML schema, tag vocabularies, graph linkage, CI validation.                                |
+| **v1.0.0** | 2025-10-04 | @kfm-docs  | Initial workspace for research and drafts.                                                        |
 
 ---
 
