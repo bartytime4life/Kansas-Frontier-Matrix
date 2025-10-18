@@ -3,9 +3,11 @@
 # 🧪 Kansas Frontier Matrix — **Testing & Validation Standards**  
 `docs/standards/testing.md`
 
-**Master Coder Protocol (MCP-DL v6.3+) · Determinism · Provenance · CI/CD · Auditability**
+**Master Coder Protocol (MCP-DL v6.3+) · Determinism · Provenance · CI/CD · Auditability · Security**
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github)](../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
@@ -19,10 +21,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Testing & Validation Standards"
-version: "v1.3.0"
+version: "v1.3.1"
 last_updated: "2025-10-18"
 owners: ["@kfm-qa","@kfm-architecture","@kfm-data","@kfm-security","@kfm-web"]
-tags: ["testing","validation","quality","stac","jsonschema","shacl","e2e","coverage","ci/cd","mcp"]
+tags: ["testing","validation","quality","stac","jsonschema","shacl","e2e","coverage","ci/cd","mcp","a11y","perf"]
 status: "Stable"
 scope: "Monorepo-Wide"
 license: "MIT"
@@ -30,6 +32,7 @@ semver_policy: "MAJOR.MINOR.PATCH"
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - stac-validate
   - codeql
   - trivy
@@ -43,20 +46,20 @@ semantic_alignment:
   - ISO 8601 (time)
   - WCAG 2.1 AA (a11y)
 ---
-````
+```
 
 ---
 
 ## 📚 Overview
 
-Testing and validation are the foundation of **KFM’s reproducible architecture**.
+Testing and validation are the foundation of **KFM’s reproducible architecture**.  
 All pipelines, datasets, and web systems undergo continuous verification to ensure:
 
-* ✅ **Deterministic, reproducible outputs**
-* 🧾 **Provenance and integrity** (checksums, logs, commit/runner fingerprints)
-* 🔍 **Automated CI/CD validation** across platforms and runtimes
-* 🧠 **Compliance with open data/metadata standards** (STAC, JSON Schema, SHACL)
-* 🧩 **Full traceability** from raw inputs to published results & site builds
+- ✅ **Deterministic, reproducible outputs**  
+- 🧾 **Provenance and integrity** (checksums, logs, commit/runner fingerprints)  
+- 🔍 **Automated CI/CD validation** across platforms and runtimes  
+- 🧠 **Standards compliance** (STAC, JSON Schema, SHACL, WCAG)  
+- 🧩 **Traceability** from raw inputs to published results & site builds
 
 Testing operates at multiple levels — **unit, property-based, integration, data contracts, system/E2E, performance, security, and governance QA** — enforced by workflows and peer review.
 
@@ -77,9 +80,8 @@ graph TD
   style S fill:#fffbea,stroke:#e8a500
   style P fill:#f7eef9,stroke:#a000a0
   style G fill:#f0e8ff,stroke:#8844cc
+%% END OF MERMAID
 ```
-
-<!-- END OF MERMAID -->
 
 ---
 
@@ -105,7 +107,7 @@ graph TD
 | :-------------- | :--------------------------------------------------- | :--------------------------- |
 | **Framework**   | Use `pytest` for all Python tests                    | `pytest -q`                  |
 | **Naming**      | Files `test_*.py`; functions `test_*`                | `test_terrain_pipeline.py`   |
-| **Coverage**    | **≥ 90% lines**; **≥ 80% branches** (CI gate)        | `--cov=src --cov-branch`     |
+| **Coverage**    | **≥ 90% lines**, **≥ 80% branches** (CI gate)        | `--cov=src --cov-branch`     |
 | **Fixtures**    | Temp dirs & sample data under `data/tests/`          | `conftest.py`                |
 | **Determinism** | Freeze seeds/time/env; eliminate time/race flakiness | `pytest-randomly`, seed=1337 |
 | **Property**    | Use `hypothesis` for invariants/normalization rules  | see example                  |
@@ -249,10 +251,10 @@ export default function () {
 
 ## 🧰 Flaky-Test Management & Determinism
 
-* Seeds & time: fix `random.seed`, `numpy.random.seed`, freeze clock.
-* Retries: mark with `@pytest.mark.flaky` (max 2), open issue, quarantine file.
-* Golden files: snapshot outputs in `data/tests/golden/**`; diffs require review.
-* CI retry: re-run job once only for quarantined tests; remove quarantine to merge.
+- Seeds & time: fix `random.seed`, `numpy.random.seed`, freeze clock.  
+- Retries: mark with `@pytest.mark.flaky` (max 2), open issue, quarantine file.  
+- Golden files: snapshot outputs in `data/tests/golden/**`; diffs require review.  
+- CI retry: re-run job once only for quarantined tests; remove quarantine to merge.
 
 ---
 
@@ -281,11 +283,11 @@ test-perf:
 
 **Principles**
 
-* Matrix: `os: [ubuntu-latest]`, `python: [3.11, 3.12]`, `node: [20]`
-* Cache: pip/npm keyed by lockfiles
-* Artifacts: coverage, screenshots, logs uploaded as CI artifacts
-* Permissions: read-only by default; minimal elevation per job
-* Actions: **pinned by commit SHA** (no tags)
+- Matrix: `os: [ubuntu-latest]`, `python: [3.11, 3.12]`, `node: [20]`  
+- Cache: pip/npm keyed by lockfiles  
+- Artifacts: coverage, screenshots, logs uploaded as CI artifacts  
+- Permissions: read-only by default; minimal elevation per job  
+- Actions: **pinned by commit SHA** (no tags)
 
 **Sample job (extract)**
 
@@ -364,17 +366,18 @@ data/work/logs/qa/<dataset_or_release>_review.log
 
 ## 📅 Version History
 
-| Version | Date       | Author  | Summary                                                                                              |
-| :------ | :--------- | :------ | :--------------------------------------------------------------------------------------------------- |
-| v1.3.0  | 2025-10-18 | @kfm-qa | Expanded with CI matrix, perf/load, a11y/visual, flaky policy, governance QA, and local Make targets |
-| v1.1.0  | 2025-10-05 | @kfm-qa | Added property-based tests, SHACL, Playwright & k6 samples                                           |
-| v1.0.0  | 2025-10-04 | @kfm-qa | Initial comprehensive testing standards for MCP compliance                                           |
+| Version | Date       | Author  | Summary                                                                                                   |
+| :------ | :--------- | :------ | :-------------------------------------------------------------------------------------------------------- |
+| **v1.3.1** | 2025-10-18 | @kfm-qa | Added docs-validate/policy gates, clarified CI defaults, and expanded badges; tightened coverage gates. |
+| **v1.3.0** | 2025-10-18 | @kfm-qa | CI matrix, perf/load, a11y/visual, flaky policy, governance QA, local Make targets                      |
+| **v1.1.0** | 2025-10-05 | @kfm-qa | Property-based tests, SHACL, Playwright & k6 samples                                                     |
+| **v1.0.0** | 2025-10-04 | @kfm-qa | Initial comprehensive testing standards for MCP compliance                                               |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Test Logged. Every Validation Proven.”*
+**Kansas Frontier Matrix** — *“Every Test Logged. Every Validation Proven.”*  
 📍 `docs/standards/testing.md` — Official testing & validation standards under the Master Coder Protocol.
 
 </div>
