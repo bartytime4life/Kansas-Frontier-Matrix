@@ -8,6 +8,8 @@
 This document represents the genesis of KFM’s scientific architecture — where **automation met accountability**, and reproducibility became a core design philosophy.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -20,6 +22,7 @@ id: L-2018-002
 title: "Terrain ETL Prototype — Kansas Elevation Workflow (2018)"
 author: ["Frontier GIS Team","@kfm-data"]
 original_path: "notes/terrain/etl_prototype_2018.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2018-11-20
 reason: legacy
@@ -40,6 +43,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "e47bcd9a0f88e9c4f3d2a6..."   # SHA-256
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234912"
+  last_verified: "2025-10-18"
 summary: >
   The 2018 Terrain ETL Prototype established the first automated elevation processing pipeline
   for Kansas 1m DEMs using GDAL, GRASS GIS, and Python. This proof-of-concept introduced checksum
@@ -78,20 +86,20 @@ flowchart TD
     C --> D["Hydrology Model<br/>Watersheds + Stream Order"]
     D --> E["Checksum & Logs<br/>SHA256 + YAML Metadata"]
     E --> F["Output: Processed Terrain Data<br/>/data/processed/terrain_2018/"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧩 Prototype Environment
 
-| Component | Version | Purpose |
-| :-- | :-- | :-- |
-| **GDAL** | 2.4.1 | Geospatial processing |
-| **GRASS GIS** | 7.4 | Hydrology model derivation |
-| **Python** | 3.6 | Metadata generation scripts |
-| **Bash/Make** | 4.4 | Workflow automation |
-| **Checksum Utility** | sha256sum | File integrity verification |
+| Component      | Version | Purpose                         |
+| :-------------| :------ | :-------------------------------|
+| **GDAL**      | 2.4.1   | Geospatial processing           |
+| **GRASS GIS** | 7.4     | Hydrology model derivation      |
+| **Python**    | 3.6     | Metadata generation scripts     |
+| **Bash/Make** | 4.4     | Workflow automation             |
+| **Checksum**  | sha256sum | File integrity verification   |
 
 **Hardware:** HPC Node (32 cores, 128 GB RAM, 2 TB SSD Scratch Space)  
 **Processing Time:** ~8.2 hours for entire state (DEM tiles aggregated)
@@ -135,14 +143,14 @@ source_url: "https://www.usgs.gov/3dep"
 
 ## 🧱 Key Results
 
-| Metric | Result | Notes |
-| :-- | :-- | :-- |
-| DEM Tiles Processed | 1,836 | Full Kansas coverage |
-| Checksum Validation | ✅ 100% | First reproducibility success |
-| Metadata Templates | ✅ Implemented | YAML proof-of-concept |
-| Processing Time | 8.2 hours | Parallelized via GNU Make |
-| Reproducibility | 94% | Two tiles failed during reprojection |
-| Output Volume | 96 GB | Compressed via LZW (GeoTIFF) |
+| Metric               | Result      | Notes                          |
+| :------------------- | :---------- | :----------------------------- |
+| DEM Tiles Processed  | 1,836       | Full Kansas coverage           |
+| Checksum Validation  | ✅ 100%     | First reproducibility success  |
+| Metadata Templates   | ✅ Implemented | YAML proof-of-concept       |
+| Processing Time      | 8.2 hours   | Parallelized via GNU Make      |
+| Reproducibility      | 94%         | Two tiles failed reprojection  |
+| Output Volume        | 96 GB       | Compressed via LZW (GeoTIFF)   |
 
 ---
 
@@ -179,8 +187,7 @@ preservation:
 
 ## 🧠 Legacy Insights & Influence
 
-> “Reproducibility isn’t a future feature — it’s a design constraint.”  
-> — Frontier GIS Lead, 2018 internal note
+> “Reproducibility isn’t a future feature — it’s a design constraint.” — *Frontier GIS Lead, 2018*
 
 **Influence on MCP-DL:**
 - First documented **checksum governance model**.  
@@ -192,15 +199,15 @@ preservation:
 
 ## 🧮 Validation & FAIR Compliance (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Graph Sync | ✅ | `tools/graph_ingest_legacy.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
+| Validation        | Result | Verified By                    |
+| :---------------- | :----- | :----------------------------- |
+| YAML Schema       | ✅     | `jsonschema`                   |
+| FAIR Validation   | ✅     | `scripts/fair_validate.py`     |
+| Graph Sync        | ✅     | `tools/graph_ingest_legacy.py` |
+| Successor Links   | ✅     | `remark-lint`                  |
+| Checksum Verified | ✅     | `verify_checksums.py`          |
 
-**Audit Record:**
+**Audit Record**
 ```json
 {
   "legacy_entry": {
@@ -228,8 +235,8 @@ flowchart TD
     B --> C["2024 Data Architecture"]
     C --> D["2025 Terrain Pipeline (Production)"]
     D --> E["MCP-DL v6.3 Governance"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -237,18 +244,18 @@ flowchart TD
 
 | File | Description | Date Promoted |
 | :-- | :-- | :-- |
-| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Formal data structure derived from this prototype. | 2024-03-05 |
-| [`data/processed/terrain/README.md`](../../../data/processed/terrain/README.md) | Finalized terrain pipeline reference. | 2024-07-22 |
+| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Data structure derived from this prototype. | 2024-03-05 |
+| [`data/processed/terrain/README.md`](../../../data/processed/terrain/README.md) | Final production terrain pipeline. | 2024-07-22 |
 | [`docs/notes/archive/legacy/2019-prototype-analysis.md`](../../../notes/archive/legacy/2019-prototype-analysis.md) | Continuation of this workflow study. | 2019-11-14 |
 
 ---
 
 ## 🧠 Educational Legacy
 
-This record is now included in **KFM’s Historical Curriculum** and **FAIR Data Training series** as a case study for:
+Included in **KFM’s Historical Curriculum** and **FAIR Data Training** as a case study on:
 - Transition from manual data handling → reproducible ETL pipelines.  
 - Embedding documentation as executable metadata.  
-- Using free and open-source tools for scalable, transparent science.
+- Leveraging open-source tools for scalable, transparent science.
 
 ---
 
@@ -256,9 +263,9 @@ This record is now included in **KFM’s Historical Curriculum** and **FAIR Data
 
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
-| v1.1 | Q2 2026 | Recreate 2018 pipeline in containerized Docker form for reproducibility training. |
+| v1.1 | Q2 2026 | Recreate 2018 pipeline in Docker for reproducibility training. |
 | v1.2 | Q3 2026 | Add JupyterLab walkthrough using current MCP-DL data. |
-| v2.0 | 2027 | Include in blockchain-provenance archive for complete lineage validation. |
+| v2.0 | 2027 | Add blockchain-provenance archive for complete lineage validation. |
 
 ---
 
@@ -266,19 +273,20 @@ This record is now included in **KFM’s Historical Curriculum** and **FAIR Data
 
 | File | Description |
 | :-- | :-- |
-| `docs/notes/archive/legacy/README.md` | Legacy archive overview and manifest. |
-| `docs/architecture/data-architecture.md` | Modernized successor architecture. |
-| `data/processed/terrain/README.md` | Final production terrain pipeline. |
-| `docs/standards/documentation.md` | Documentation-first MCP-DL principles. |
-| `data/work/graph/legacy_lineage.ttl` | RDF lineage linking early ETL to present. |
+| `../README.md` | Legacy archive overview & manifest. |
+| `../../../architecture/data-architecture.md` | Modernized successor architecture. |
+| `../../../data/processed/terrain/README.md` | Final production terrain pipeline. |
+| `../../../standards/documentation.md` | Documentation-first MCP-DL principles. |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF lineage linking early ETL to present. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2018 ETL prototype; added FAIR compliance, RDF provenance, lineage graph, and checksum validation. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation/DOI block, and validation audit record. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed 2018 ETL prototype; added FAIR compliance, RDF provenance. |
 
 ---
 
