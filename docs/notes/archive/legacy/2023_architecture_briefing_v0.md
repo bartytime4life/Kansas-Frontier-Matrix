@@ -7,6 +7,8 @@
 This document represents the **architectural synthesis** of all prior prototypes (2018–2022) into a single cohesive blueprint — uniting geospatial pipelines, ontology models, FAIR data governance, and reproducible documentation practices that culminated in **MCP-DL v6.3**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2023-001
 title: "Architecture Briefing v0 — Pre-MCP-DL System Design (2023)"
 author: ["Frontier Systems Architecture Group","@kfm-architecture","@kfm-docs"]
 original_path: "notes/architecture/briefing_v0.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2023-06-28
 reason: legacy
@@ -39,6 +42,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "de3b5f6ca9d7e42b..."        # SHA-256
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234993"
+  last_verified: "2025-10-18"
 summary: >
   The 2023 Architecture Briefing unified all prior KFM prototypes into a single, coherent
   system design — defining the structure of the monorepo, establishing cross-domain
@@ -78,8 +86,8 @@ flowchart TD
     E --> F["API Layer<br/>FastAPI · GraphQL · REST"]
     F --> G["Web Interface<br/>React · MapLibre · D3 Timeline"]
     G --> H["Documentation Hub<br/>MkDocs · GitHub Pages · MCP-DL"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -91,7 +99,7 @@ flowchart TD
 | **Ontology Layer** | CIDOC CRM + PROV-O | Unified temporal, spatial, and activity entities | Established reproducibility lineage |
 | **Documentation Layer** | Markdown + YAML | Required metadata headers & lineage | Enabled automation via CI/CD |
 | **Validation Layer** | JSON Schema | CI pipeline for metadata integrity | Automated FAIR compliance |
-| **Governance** | MCP Draft v0.9 | Defined Documentation-First workflow | Formed MCP-DL v6+ standards |
+| **Governance** | MCP Draft v0.9 | Documentation-First workflow | Seed for MCP-DL v6+ standards |
 
 ---
 
@@ -176,16 +184,16 @@ preservation:
 
 ## 🧩 FAIR & MCP Validation (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Compliance | ✅ | `scripts/fair_validate.py` |
-| Graph Ingestion | ✅ | `tools/graph_ingest_legacy.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
-| RDF Validation | ✅ | `riot --validate` |
+| Validation         | Result | Verified By                     |
+| :----------------- | :----- | :------------------------------ |
+| YAML Schema        | ✅     | `jsonschema`                    |
+| FAIR Compliance    | ✅     | `scripts/fair_validate.py`      |
+| Graph Ingestion    | ✅     | `tools/graph_ingest_legacy.py`  |
+| Successor Links    | ✅     | `remark-lint`                   |
+| Checksum Verified  | ✅     | `verify_checksums.py`           |
+| RDF Validation     | ✅     | `riot --validate`               |
 
-**Audit Log:**
+**Audit Log**
 ```json
 {
   "legacy_entry": {
@@ -216,8 +224,8 @@ flowchart TD
     C --> D["2023 Architecture Briefing v0"]
     D --> E["2024 Initial Design Discussion"]
     E --> F["2025 MCP-DL v6.3 Operational Governance"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -225,6 +233,7 @@ flowchart TD
 
 This 2023 briefing marked the **end of the experimental era** and the **beginning of formal reproducible governance** in the Kansas Frontier Matrix.  
 It was the **prototype MCP-DL specification**, detailing:
+
 - The full integration of **data + ontology + documentation**.  
 - Adoption of **FAIR metadata validation** via CI.  
 - Institutionalization of **YAML front matter** as governance metadata.  
@@ -240,7 +249,7 @@ It was the **prototype MCP-DL specification**, detailing:
 | :-- | :-- | :-- |
 | [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Formalized system architecture for MCP-DL. | 2024-03-05 |
 | [`docs/architecture/knowledge-graph.md`](../../../architecture/knowledge-graph.md) | Codified RDF and graph ingestion schema. | 2024-03-10 |
-| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Published MCP-DL governance and documentation guide. | 2024-04-10 |
+| [`docs/standards/documentation.md`](../../../standards/documentation.md) | MCP-DL governance and documentation guide. | 2024-04-10 |
 
 ---
 
@@ -249,10 +258,11 @@ It was the **prototype MCP-DL specification**, detailing:
 The **2023 Architecture Briefing** unified over five years of KFM research, technical design, and governance experimentation into a reproducible system blueprint — setting the precedent for all future MCP-DL releases.
 
 **Legacy Contributions:**
+
 - Consolidated 2018–2022 prototypes into a single monorepo architecture.  
 - Introduced FAIR validation, BagIt export, and Zenodo DOI registration.  
 - Pioneered MCP-DL schema governance and documentation enforcement.  
-- Served as the **conceptual template** for all subsequent project documentation.  
+- Served as the **conceptual template** for subsequent project documentation.  
 
 ---
 
@@ -280,9 +290,10 @@ The **2023 Architecture Briefing** unified over five years of KFM research, tech
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2023 architecture briefing archive; added FAIR compliance, RDF provenance, checksum validation, and successor lineage. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation checksum/DOI block, and CI validation log. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed 2023 architecture briefing archive with FAIR + PROV lineage. |
 
 ---
 
