@@ -1,34 +1,84 @@
 <div align="center">
 
-# 🗣️ Kansas Frontier Matrix — Oral Histories Integration
-
+# 🗣️ Kansas Frontier Matrix — **Oral Histories Integration**  
 `docs/integration/oral-histories.md`
 
 **Purpose:** Document the reproducible integration of **Indigenous and community oral histories**
 into the **Kansas Frontier Matrix (KFM)** — preserving narrative context, ensuring
 ethical handling, and linking testimonies semantically to **places, events, and time periods**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![Provenance](https://img.shields.io/badge/Integrity-SHA256%20%7C%20PROV--O-green)](../../docs/standards/metadata.md)
 [![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20%7C%20PROV--O%20%7C%20OWL--Time-orange)](../../docs/standards/ontologies.md)
 [![Audio & Metadata](https://img.shields.io/badge/Data-Audio%20%7C%20Transcript%20%7C%20STAC%201.0-purple)](../../docs/standards/data-formats.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Oral Histories Integration"
+document_type: "Integration Guide"
+version: "v1.2.0"
+last_updated: "2025-10-18"
+created: "2025-10-03"
+owners: ["@kfm-cultural","@kfm-data","@kfm-ontology","@kfm-docs","@kfm-security"]
+status: "Stable"
+maturity: "Production"
+scope: "Docs/Integration/Oral-Histories"
+license: "CC-BY 4.0"
+semver_policy: "MAJOR.MINOR.PATCH"
+tags: ["oral-history","indigenous","ethics","audio","transcript","provenance","ontology","stac","fair"]
+audit_framework: "MCP-DL v6.3"
+ci_required_checks:
+  - docs-validate
+  - policy-check
+  - stac-validate
+  - site-build
+  - pre-commit
+  - codeql
+  - trivy
+semantic_alignment:
+  - STAC 1.0
+  - CIDOC CRM
+  - PROV-O
+  - OWL-Time
+  - SKOS
+  - JSON Schema
+  - ISO 8601
+preservation_policy:
+  format_standards: ["FLAC","UTF-8 TXT/VTT","WebP","STAC JSON","RDF/Turtle","Markdown (GFM)","BagIt 1.0"]
+  checksum_algorithm: "SHA-256"
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","Institutional Archive/OSF"]
+  metadata_standard: "PREMIS 3.0"
+  revalidation_cycle: "annually"
+ai_index:
+  embed_in_graph: true
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  store: "Neo4j Vector Index"
+  searchable_fields: ["title","summary","tags"]
+provenance:
+  workflow_pin_policy: "actions pinned by tag or commit SHA"
+  artifact_retention_days: 365
+---
+```
 
 ---
 
 ## 🎯 Integration Objective
 
-To integrate **recorded oral histories**—Indigenous narratives, community testimonies, and settler recollections—
+Integrate **recorded oral histories**—Indigenous narratives, community testimonies, and settler recollections—
 into KFM’s knowledge graph as verifiable, time-aware entities. Each record becomes both a digital artifact (audio, text, or video) and a structured semantic node linked to historical events, people, and locations.
 
 **Goals**
 
-* 🎧 Preserve voices as `crm:E73_Information_Object` with transcripts and metadata
-* 🌎 Link narratives to `crm:E53_Place` and `crm:E5_Event` nodes in Neo4j
-* 🧠 Represent temporal context (`time:Interval`, `prov:atTime`)
-* 🧩 Index audio and text under STAC 1.0 for discoverability
-* 🔐 Ensure ethical handling (permissions, cultural sensitivity tags)
+- 🎧 Preserve voices as `crm:E73_Information_Object` with transcripts and metadata  
+- 🌎 Link narratives to `crm:E53_Place` and `crm:E5_Event` nodes in Neo4j  
+- 🧠 Represent temporal context (`time:Interval`, `prov:atTime`)  
+- 🧩 Index audio and text under **STAC 1.0** for discoverability  
+- 🔐 Ensure ethical handling (permissions, cultural sensitivity tags)
 
 ---
 
@@ -36,9 +86,9 @@ into KFM’s knowledge graph as verifiable, time-aware entities. Each record bec
 
 | Partner / Archive                               | Format              | Coverage              | Access                                                 | License              |
 | :---------------------------------------------- | :------------------ | :-------------------- | :----------------------------------------------------- | :------------------- |
-| **Kansas Oral History Project (KOHP)**          | MP3, PDF Transcript | 1970–present          | [kansasoralhistory.org](https://kansasoralhistory.org) | CC BY-NC 4.0         |
+| **Kansas Oral History Project (KOHP)**          | MP3, PDF Transcript | 1970–present          | <https://kansasoralhistory.org>                        | CC BY-NC 4.0         |
 | **Tribal Historic Preservation Offices (THPO)** | WAV, TXT            | Pre-contact → present | Partnership / permission                               | Community agreements |
-| **Library of Congress — Voices of the Plains**  | MP3, JSON           | 1930s–1960s           | [loc.gov/audio](https://www.loc.gov/audio/)            | Public Domain        |
+| **Library of Congress — Voices of the Plains**  | MP3, JSON           | 1930s–1960s           | <https://www.loc.gov/audio/>                           | Public Domain        |
 | **Local Museums & Historical Societies**        | MP3, PDF            | 1880–2025             | Institutional exports                                  | Mixed (CC BY, PD)    |
 
 ---
@@ -47,12 +97,12 @@ into KFM’s knowledge graph as verifiable, time-aware entities. Each record bec
 
 | Type             | Native Input | Converted Format         | Tool                  |
 | :--------------- | :----------- | :----------------------- | :-------------------- |
-| Audio Recordings | MP3/WAV      | FLAC + SHA256 checksum   | `ffmpeg`, `sha256sum` |
-| Transcripts      | PDF/DOCX     | UTF-8 TXT + VTT segments | `pandoc`, `whisperx`  |
-| Metadata         | CSV/JSON     | STAC Item (JSON)         | `jq`, `python-stac`   |
-| Speaker photos   | JPEG         | WebP (optimized)         | `cwebp`               |
+| Audio Recordings | MP3/WAV      | **FLAC** + SHA256        | `ffmpeg`, `sha256sum` |
+| Transcripts      | PDF/DOCX     | **UTF-8 TXT + VTT**      | `pandoc`, `whisperx`  |
+| Metadata         | CSV/JSON     | **STAC Item (JSON)**     | `jq`, `python-stac`   |
+| Speaker photos   | JPEG         | **WebP** (optimized)     | `cwebp`               |
 
-Example conversion
+**Example**
 
 ```bash
 ffmpeg -i oral_history_01.mp3 -ar 44100 -ac 1 -c:a flac data/processed/oral/01.flac
@@ -68,18 +118,11 @@ sha256sum data/processed/oral/01.flac > data/checksums/oral/01.flac.sha256
 flowchart TD
   A["🎧 Collect Audio + Transcript"] --> B["🧮 Normalize + Transcribe<br/>to UTF-8 TXT + VTT"]
   B --> C["🧾 Generate STAC Metadata + SHA256"]
-  C --> D["🧠 Ingest → Neo4j as E73_Information_Object"]
+  C --> D["🧠 Graph Ingest → E73_Information_Object"]
   D --> E["🗺️ Link to Places (E53) and Events (E5)"]
   E --> F["🚀 Publish → Timeline + Map + AI Summaries"]
-  style A fill:#eef7ff,stroke:#0077cc
-  style B fill:#fff0f5,stroke:#cc0088
-  style C fill:#ecf9f0,stroke:#33aa33
-  style D fill:#fffbea,stroke:#e8a500
-  style E fill:#e8f0ff,stroke:#0066aa
-  style F fill:#f0e8ff,stroke:#8844cc
+%% END OF MERMAID
 ```
-
-<!-- END OF MERMAID -->
 
 ---
 
@@ -93,7 +136,7 @@ flowchart TD
   "properties": {
     "datetime": "1978-04-12T00:00:00Z",
     "description": "Interview with Sarah Brown of Cowley County on Dust Bowl life and farming migration.",
-    "license": "CC BY-NC 4.0",
+    "license": "cc-by-nc-4.0",
     "keywords": ["oral history","Dust Bowl","Kansas","migration"],
     "providers": [{"name":"Kansas Oral History Project","roles":["producer","licensor"]}]
   },
@@ -102,17 +145,13 @@ flowchart TD
       "href": "data/processed/oral/1978_sarah_brown.flac",
       "type": "audio/flac",
       "roles": ["data"],
-      "title": "Oral History Audio"
+      "title": "Oral History Audio",
+      "checksum:multihash": "1220<sha256-hex>"
     },
     "transcript": {
       "href": "data/processed/oral/1978_sarah_brown.txt",
       "type": "text/plain",
       "roles": ["metadata"]
-    },
-    "checksum": {
-      "href": "data/checksums/oral/1978_sarah_brown.flac.sha256",
-      "type": "text/plain",
-      "roles": ["checksum"]
     }
   },
   "bbox": [-97.02, 37.24, -97.02, 37.24],
@@ -123,10 +162,10 @@ flowchart TD
 }
 ```
 
-Validate via:
+Validate:
 
 ```bash
-stac-validator data/stac/oral/oral_history_sarah_brown_1978.json
+stac-validator data/stac/oral/oral_history_sarah_brown_1978.json --links
 ```
 
 ---
@@ -157,12 +196,12 @@ stac-validator data/stac/oral/oral_history_sarah_brown_1978.json
 
 ---
 
-## 🧮 Provenance Example (RDF PROV-O)
+## 🧮 Provenance (RDF/PROV-O)
 
 ```turtle
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
-@prefix kfm: <https://kfm.org/id/> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix kfm:  <https://kfm.org/id/> .
 
 kfm:oral/1978_sarah_brown
   a crm:E73_Information_Object ;
@@ -180,10 +219,10 @@ kfm:oral/1978_sarah_brown
 | Aspect                          | Policy                                                                  |
 | :------------------------------ | :---------------------------------------------------------------------- |
 | **Consent & Usage Rights**      | Verify license (CC BY-NC, PD, or community MOU) before distribution     |
-| **Sensitive Content**           | Tag entries with `mcp:sensitive = true`; restrict AI summaries          |
-| **Indigenous Data Sovereignty** | Follow Tribal NAGPRA and CARE Principles for Indigenous Data Governance |
+| **Sensitive Content**           | Tag entries with `mcp:sensitive: true`; restrict AI summaries           |
+| **Indigenous Data Sovereignty** | Follow Tribal NAGPRA & CARE Principles for Indigenous Data Governance   |
 | **Attribution**                 | Always credit speaker and source archive                                |
-| **Preservation**                | Audio stored lossless (FLAC) with checksum for fixity                   |
+| **Preservation**                | Audio stored lossless (FLAC) + checksum for fixity                      |
 
 ---
 
@@ -232,17 +271,17 @@ make docs-validate
 
 ## 📅 Version History
 
-| Version | Date       | Author                 | Summary                                                       |
-| :------ | :--------- | :--------------------- | :------------------------------------------------------------ |
-| v1.1    | 2025-10-05 | KFM Cultural Data Team | Added ethical framework, ontology table, and RDF examples     |
-| v1.0    | 2025-10-04 | KFM Documentation Team | Initial oral history integration guide (STAC + CRM alignment) |
+| Version  | Date       | Author                 | Summary                                                       |
+| :------- | :--------- | :--------------------- | :------------------------------------------------------------ |
+| **v1.2.0** | 2025-10-18 | KFM Cultural Data Team | Policy alignment, preservation policy, and stronger STAC example with checksums. |
+| v1.1.0  | 2025-10-05 | KFM Cultural Data Team | Added ethical framework, ontology table, and RDF examples.    |
+| v1.0.0  | 2025-10-04 | KFM Documentation Team | Initial oral history integration guide (STAC + CRM alignment). |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Voice Preserved. Every Story Proven.”*
-📍 [`docs/integration/oral-histories.md`](.) · Official MCP-compliant oral history integration guide for the Kansas Frontier Matrix.
+**Kansas Frontier Matrix** — *“Every Voice Preserved. Every Story Proven.”*  
+📍 `docs/integration/oral-histories.md` · Official MCP-compliant oral history integration guide for the Kansas Frontier Matrix.
 
 </div>
-
