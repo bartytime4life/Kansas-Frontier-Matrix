@@ -1,7 +1,6 @@
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — Land Deeds & Patents Integration
-
+# 🧾 Kansas Frontier Matrix — **Land Deeds & Patents Integration**  
 `docs/integration/deeds.md`
 
 **Purpose:** Define procedures for integrating **Kansas land deeds**,
@@ -10,30 +9,79 @@ into the **Kansas Frontier Matrix (KFM)** — establishing a
 traceable, semantic link between historical land ownership,
 legal documentation, and the evolving Kansas landscape.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![Data Provenance](https://img.shields.io/badge/Integrity-SHA256%20%7C%20PROV--O-green)](../../docs/standards/metadata.md)
-[![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20%7C%20OWL--Time-orange)](../../docs/standards/ontologies.md)
+[![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20%7C%20PROV--O%20%7C%20OWL--Time-orange)](../../docs/standards/ontologies.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Land Deeds & Patents Integration"
+document_type: "Integration Guide"
+version: "v1.2.0"
+last_updated: "2025-10-18"
+created: "2025-10-03"
+owners: ["@kfm-history","@kfm-data","@kfm-architecture","@kfm-docs","@kfm-security"]
+status: "Stable"
+maturity: "Production"
+scope: "Docs/Integration/Deeds"
+license: "CC-BY 4.0"
+semver_policy: "MAJOR.MINOR.PATCH"
+tags: ["deeds","homestead","GLO","PLSS","provenance","ontology","stac","fair"]
+audit_framework: "MCP-DL v6.3"
+ci_required_checks:
+  - docs-validate
+  - stac-validate
+  - policy-check
+  - site-build
+  - pre-commit
+  - codeql
+  - trivy
+semantic_alignment:
+  - STAC 1.0
+  - DCAT 2.0
+  - CIDOC CRM
+  - PROV-O
+  - OWL-Time
+  - SKOS
+  - JSON Schema
+  - ISO 8601
+preservation_policy:
+  format_standards: ["GeoJSON","COG GeoTIFF","CSV/Parquet","RDF/Turtle","Markdown (GFM)","BagIt 1.0"]
+  checksum_algorithm: "SHA-256"
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
+  metadata_standard: "PREMIS 3.0"
+  revalidation_cycle: "annually"
+ai_index:
+  embed_in_graph: true
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  store: "Neo4j Vector Index"
+  searchable_fields: ["title","summary","tags"]
+provenance:
+  workflow_pin_policy: "actions pinned by tag or commit SHA"
+  artifact_retention_days: 180
+---
+```
 
 ---
 
 ## 🎯 Integration Objective
 
-The goal of this integration is to connect **land ownership documents** —
-federal patents, county deeds, and homestead claims — to their
-spatial and historical context in Kansas. These sources document
-the **transfer of land from public to private hands** and reveal
-patterns of settlement, rail expansion, and indigenous land dispossession.
+Connect **land ownership documents** — federal patents, county deeds, and homestead claims — to their
+spatial and historical contexts in Kansas. These sources document the **transfer of land from public to private hands**
+and reveal patterns of settlement, rail expansion, and Indigenous land dispossession.
 
-This integration ensures:
+**This integration ensures**
 
-* 🗺️ **Geospatial alignment** between historical land tracts and modern coordinates.
-* 🧾 **Document provenance** linking deeds to legal records and archives.
-* 🔗 **Semantic enrichment** via CIDOC CRM (`E8_Acquisition`, `E53_Place`, `E39_Actor`).
-* 🧩 **Cross-domain linkage** with treaties, parcels, and homestead maps.
-* ✅ **Auditability** under the **Master Coder Protocol (MCP)** framework.
+- 🗺️ **Geospatial alignment** between historical tracts and modern coordinates  
+- 🧾 **Document provenance** linking deeds to legal records and archives  
+- 🔗 **Semantic enrichment** via CIDOC CRM (`E8_Acquisition`, `E53_Place`, `E39_Actor`)  
+- 🧩 **Cross-domain linkage** with treaties, parcels, homestead maps, climate, and oral histories  
+- ✅ **Auditability** under the **Master Coder Protocol (MCP)** framework
 
 ---
 
@@ -41,7 +89,7 @@ This integration ensures:
 
 | Source                                    | Description                                       | Format                 | Access                                           | License                         |
 | :---------------------------------------- | :------------------------------------------------ | :--------------------- | :----------------------------------------------- | :------------------------------ |
-| **BLM General Land Office (GLO)**         | Federal patents, plats, and township land records | Web API / CSV / PDF    | [glorecords.blm.gov](https://glorecords.blm.gov) | Public Domain                   |
+| **BLM General Land Office (GLO)**         | Federal patents, plats, and township land records | Web API / CSV / PDF    | <https://glorecords.blm.gov>                     | Public Domain                   |
 | **Kansas Register of Deeds**              | County-level deeds, transfers, plats              | Shapefile / TIFF / PDF | County GIS & ROD portals                         | Public Domain / County-specific |
 | **Homestead Act Records (NARA)**          | Land entry case files, patents, affidavits        | PDF / CSV              | NARA & FamilySearch                              | Public Domain                   |
 | **USGS PLSS (Public Land Survey System)** | Township-Range-Section grid for Kansas            | Shapefile / GeoJSON    | DASC GIS Hub                                     | Public Domain                   |
@@ -56,14 +104,8 @@ flowchart TD
     B --> C["📜 Generate Metadata<br/>STAC + YAML Provenance"]
     C --> D["🧮 Ingest & Link<br/>Neo4j → CIDOC CRM → Geo Layer"]
     D --> E["🚀 Publish<br/>Map + Timeline Layers"]
-    style A fill:#eef7ff,stroke:#0077cc
-    style B fill:#fff0f5,stroke:#cc0088
-    style C fill:#ecf9f0,stroke:#33aa33
-    style D fill:#fffbea,stroke:#e8a500
-    style E fill:#f0e8ff,stroke:#8844cc
+%% END OF MERMAID
 ```
-
-<!-- END OF MERMAID -->
 
 ---
 
@@ -71,29 +113,30 @@ flowchart TD
 
 ### 1️⃣ Download & Prepare Source Files
 
-* Retrieve CSV export from the [BLM GLO API](https://glorecords.blm.gov/search/default.aspx).
-* Convert scanned plats or PDFs using **OCR + regex parsing** to extract:
+- Retrieve CSV export from the **BLM GLO API**.  
+- OCR scanned plats/PDFs; parse with regex to extract:
 
-  * Patentee names
-  * Patent dates
-  * Legal description (T-R-S)
-  * Acreage and document number
-* Use **PLSS shapefiles** to spatially locate each claim.
+  - Patentee names  
+  - Patent dates  
+  - Legal description (T–R–S)  
+  - Acreage and document number  
+
+- Use **PLSS shapefiles** to spatially locate each claim.
 
 ### 2️⃣ Normalize & Convert
 
 ```bash
-# Example: join tabular GLO data with PLSS polygons
+# Join tabular GLO data with PLSS polygons
 ogr2ogr -f GeoJSON deeds_homestead_1862.json plss.shp -sql \
 "SELECT p.Township, p.Range, p.Section, g.Patentee, g.IssueDate, g.DocNum \
  FROM plss p JOIN glo g ON p.TRS_ID = g.TRS_ID"
 ```
 
-Reproject all outputs to `EPSG:4326` (WGS 84).
+Reproject outputs to **EPSG:4326** (WGS84).
 
 ### 3️⃣ Generate STAC Metadata
 
-Example: `data/stac/deeds/ks_homestead_1862.json`
+`data/stac/deeds/ks_homestead_1862.json`
 
 ```json
 {
@@ -103,38 +146,38 @@ Example: `data/stac/deeds/ks_homestead_1862.json`
   "properties": {
     "datetime": "1862-01-01T00:00:00Z",
     "description": "Homestead patents issued in Kansas under the 1862 Act.",
-    "license": "Public Domain",
+    "license": "public-domain",
     "keywords": ["homestead","land grant","Kansas","settlement"],
-    "providers": [{"name":"BLM GLO","roles":["producer"]}]
+    "providers": [{"name":"BLM GLO","roles":["producer","licensor"]}]
   },
   "assets": {
     "data": {
       "href": "data/processed/deeds/ks_homestead_1862.json",
       "type": "application/geo+json",
-      "roles": ["data"]
-    },
-    "checksum": {
-      "href": "data/checksums/deeds/ks_homestead_1862.json.sha256",
-      "type": "text/plain",
-      "roles": ["checksum"]
+      "roles": ["data"],
+      "title": "Kansas Homestead Patents",
+      "checksum:multihash": "1220<sha256-hex>"
     }
   },
-  "bbox": [-102.05,36.99,-94.59,40.00]
+  "bbox": [-102.05,36.99,-94.59,40.00],
+  "links": [
+    {"rel":"collection","href":"../collection.json"},
+    {"rel":"documentation","href":"../../../docs/integration/deeds.md"}
+  ]
 }
 ```
 
 Validate:
 
 ```bash
-stac-validator data/stac/deeds/ks_homestead_1862.json
+stac-validator data/stac/deeds/ks_homestead_1862.json --links
 ```
 
 ### 4️⃣ Link to Knowledge Graph (Neo4j)
 
-Each deed or patent becomes a **transaction event** (`crm:E8_Acquisition`)
-linking an **Actor** (patentee) to a **Place** (section polygon).
+Each deed/patent = **transaction event** (`crm:E8_Acquisition`) connecting an **Actor** (patentee) with a **Place** (section polygon) and a **Document**.
 
-**Cypher Example**
+**Cypher**
 
 ```cypher
 MERGE (a:Actor {name:$Patentee})
@@ -150,19 +193,17 @@ MERGE (e)-[:DOCUMENTED_BY]->(d);
 
 ## 🧾 Provenance & Validation
 
-Every integrated record includes:
+- **SHA-256** → `data/checksums/deeds/*.sha256`  
+- **Source manifest** → `data/sources/deeds_glo.json`  
+- **License** → STAC `properties.license`  
+- **Neo4j provenance** → `prov:wasDerivedFrom` links
 
-* **SHA-256 hash** → `data/checksums/deeds/*.sha256`
-* **Source manifest** → `data/sources/deeds_glo.json`
-* **Metadata license** → stored in STAC `properties.license`
-* **Neo4j Provenance** → linked via `prov:wasDerivedFrom`
-
-**RDF Example**
+**RDF**
 
 ```turtle
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
-@prefix kfm: <https://kfm.org/id/> .
+@prefix crm:  <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix kfm:  <https://kfm.org/id/> .
 
 kfm:deed/homestead_1862_001
     a crm:E8_Acquisition ;
@@ -202,11 +243,11 @@ kfm:deed/homestead_1862_001
 
 ## 🔍 Cross-Domain Linkages
 
-| Linked Dataset         | Relationship          | Integration Purpose                           |
+| Linked Dataset         | Relationship          | Purpose                                       |
 | :--------------------- | :-------------------- | :-------------------------------------------- |
-| **Treaties**           | `prov:wasDerivedFrom` | Links patents to former tribal lands          |
+| **Treaties**           | `prov:wasDerivedFrom` | Connect patents to former tribal lands        |
 | **GIS Archive / PLSS** | `geo:hasGeometry`     | Defines spatial grid reference                |
-| **Climate Hazards**    | `prov:influencedBy`   | Connects settlement patterns to drought/flood |
+| **Climate Hazards**    | `prov:influencedBy`   | Settlement patterns vs. drought/flood         |
 | **Oral Histories**     | `crm:P70_documents`   | Local narratives of settlement                |
 
 ---
@@ -215,8 +256,8 @@ kfm:deed/homestead_1862_001
 
 | Validation            | Tool                            | Description                          |
 | :-------------------- | :------------------------------ | :----------------------------------- |
-| **Schema Validation** | `stac-validator`                | Ensures metadata compliance          |
-| **Checksum Test**     | `sha256sum -c`                  | Verifies data integrity              |
+| **STAC Schema**       | `stac-validator`                | Ensures metadata compliance          |
+| **Checksums**         | `sha256sum -c`                  | Verifies data integrity              |
 | **Graph Ingestion**   | `scripts/graph_ingest_deeds.py` | Inserts records into Neo4j           |
 | **Ontology Audit**    | `scripts/check_cidoc_links.py`  | Confirms class/relationship accuracy |
 | **Metadata Links**    | `remark-lint`                   | Checks relative paths & references   |
@@ -227,11 +268,11 @@ kfm:deed/homestead_1862_001
 
 | MCP Principle           | Implementation                                              |
 | :---------------------- | :---------------------------------------------------------- |
-| **Documentation-first** | Integration documented prior to code ingestion.             |
-| **Reproducibility**     | Automated ETL and validation steps under Makefile targets.  |
-| **Open Standards**      | Uses STAC 1.0, GeoJSON, PROV-O, CIDOC CRM, OWL-Time.        |
-| **Provenance**          | Every document carries hash, license, and source chain.     |
-| **Auditability**        | Versioned artifacts and CI logs in `data/work/logs/deeds/`. |
+| **Documentation-first** | Integration documented before ingestion.                    |
+| **Reproducibility**     | ETL and validation scripted under Makefile targets.         |
+| **Open Standards**      | STAC 1.0, GeoJSON, PROV-O, CIDOC CRM, OWL-Time.             |
+| **Provenance**          | Hash + license + source chain for every record.             |
+| **Auditability**        | Versioned artifacts & CI logs in `data/work/logs/deeds/`.   |
 
 ---
 
@@ -239,27 +280,27 @@ kfm:deed/homestead_1862_001
 
 | File                                     | Description                                        |
 | :--------------------------------------- | :------------------------------------------------- |
-| `docs/integration/gis-archive.md`        | Integration of Kansas GIS and spatial datasets     |
-| `docs/integration/treaties.md`           | Land cession and treaty data relationships         |
-| `docs/standards/metadata.md`             | STAC + Provenance metadata schema                  |
-| `docs/architecture/data-architecture.md` | ETL pipeline and file structure                    |
-| `docs/notes/research.md`                 | Research on homesteading and land ownership trends |
+| `docs/integration/gis-archive.md`        | Kansas GIS & spatial datasets                      |
+| `docs/integration/treaties.md`           | Land cession and treaty relationships              |
+| `docs/standards/metadata.md`             | STAC + provenance schema                           |
+| `docs/architecture/data-architecture.md` | ETL pipeline & file structure                      |
+| `docs/notes/research.md`                 | Research on homesteading & land ownership trends   |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author                   | Summary                                                                  |
-| :------ | :--------- | :----------------------- | :----------------------------------------------------------------------- |
-| v1.1    | 2025-10-05 | KFM Historical Data Team | Added CIDOC CRM mappings, workflow diagram, and RDF provenance examples. |
-| v1.0    | 2025-10-04 | KFM Documentation Team   | Initial integration guide for deeds, homestead patents, and GLO records. |
+| Version  | Date       | Author                   | Summary                                                                  |
+| :------- | :--------- | :----------------------- | :----------------------------------------------------------------------- |
+| **v1.2.0** | 2025-10-18 | KFM Historical Data Team | Added preservation policy, updated STAC example with checksum, and policy alignment. |
+| v1.1.0  | 2025-10-05 | KFM Historical Data Team | CIDOC CRM mappings, workflow diagram, RDF provenance examples.           |
+| v1.0.0  | 2025-10-04 | KFM Documentation Team   | Initial integration guide for deeds, homestead patents, and GLO records. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Deed Recorded. Every Acre Proven.”*
-📍 [`docs/integration/deeds.md`](.) · Official MCP-compliant land deeds integration guide
-under the Kansas Frontier Matrix data governance framework.
+**Kansas Frontier Matrix** — *“Every Deed Recorded. Every Acre Proven.”*  
+📍 `docs/integration/deeds.md` · Official MCP-compliant land deeds integration guide under the Kansas Frontier Matrix data governance framework.
 
 </div>
