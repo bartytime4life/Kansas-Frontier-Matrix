@@ -6,9 +6,11 @@
 **Master Coder Protocol (MCP-DL v6.3+) · Secure-by-Design · Supply-Chain Integrity · Provenance · Validation**
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![Security Scans](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github)](../../.github/workflows/codeql.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
+[![Gitleaks](https://img.shields.io/badge/Secrets-Gitleaks-red)](../../.github/workflows/gitleaks.yml)
 [![SBOM](https://img.shields.io/badge/Workflow-sbom.yml-informational)](../../.github/workflows/sbom.yml)
 [![SLSA-3 (Target)](https://img.shields.io/badge/Security-SLSA--3%20(Target)-orange)](../standards/security.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../../LICENSE)
@@ -20,28 +22,32 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Security & Data Protection Standards"
-version: "v1.3.0"
+version: "v1.3.1"
 last_updated: "2025-10-18"
-owners: ["@kfm-security","@kfm-architecture","@kfm-docs"]
-tags: ["security","supply-chain","slsa","sbom","codeql","trivy","provenance","ci/cd","mcp"]
+owners: ["@kfm-security","@kfm-architecture","@kfm-docs","@kfm-data"]
+tags: ["security","supply-chain","slsa","sbom","codeql","trivy","gitleaks","provenance","ci/cd","mcp","policy"]
 status: "Stable"
 scope: "Monorepo-Wide"
 license: "MIT"
 semver_policy: "MAJOR.MINOR.PATCH"
+audit_framework: "MCP-DL v6.3"
 ci_required_checks:
+  - docs-validate
+  - policy-check
   - trivy
   - codeql
   - stac-validate
-  - docs-validate
   - checksums
-audit_framework: "MCP-DL v6.3"
+  - gitleaks
 semantic_alignment:
   - STAC 1.0 (provenance links)
   - SPDX/CycloneDX (SBOM)
   - SLSA (provenance attestations)
   - ISO 27001-inspired controls (lightweight)
+  - JSON Schema
+  - FAIR Principles (Reusability & provenance)
 ---
-````
+```
 
 ---
 
@@ -49,10 +55,10 @@ semantic_alignment:
 
 The KFM Security Standards guarantee that software, datasets, and automation are:
 
-* 🔐 **Secure by design** — protected from unauthorized access or tampering
-* 🧠 **Reproducible with integrity** — checksums & attestations for verifiable rebuilds
-* 🌍 **Open yet governed** — transparency without compromising policy & provenance
-* 🧾 **Auditable** — changes, validations, and scans are logged & reviewable
+- 🔐 **Secure by design** — protected from unauthorized access or tampering  
+- 🧠 **Reproducible with integrity** — checksums & attestations for verifiable rebuilds  
+- 🌍 **Open yet governed** — transparency without compromising policy & provenance  
+- 🧾 **Auditable** — changes, validations, and scans are logged & reviewable
 
 Layers of control cover **repository governance**, **CI/CD supply-chain**, **dependencies & images**, **data classification**, **access & secrets**, and **logging/IR**.
 
@@ -64,7 +70,7 @@ Layers of control cover **repository governance**, **CI/CD supply-chain**, **dep
 | :-------------------- | :------------------------------------------------- | :---------------------------------------------------------------------------------- |
 | **Supply chain**      | Malicious deps, unpinned actions, base image drift | SBOM + SHA pins; Trivy/CodeQL; digest-pinned images; SLSA attestations              |
 | **CI abuse**          | Token exfil, `pull_request_target` misuse          | Least-privilege tokens; read-only defaults; sandbox forks; no secrets in forked PRs |
-| **Secrets leakage**   | Keys in code/logs                                  | Pre-commit secret scans; GH masking; Gitleaks (optional)                            |
+| **Secrets leakage**   | Keys in code/logs                                  | Pre-commit secret scans; GH masking; **Gitleaks** gate                               |
 | **Data tampering**    | Silent STAC/raw edits                              | SHA-256 checks; STAC CI validators; signed releases                                 |
 | **Credential misuse** | Over-scoped PATs; shared accounts                  | Fine-grained PATs; role-based access; 2FA required                                  |
 | **Container risks**   | Root users, CAP_* perms, CVEs                      | Non-root; drop caps; read-only FS; Trivy; SBOM & policy                             |
@@ -93,7 +99,7 @@ Layers of control cover **repository governance**, **CI/CD supply-chain**, **dep
 | **Code review**        | ≥1 reviewer; CODEOWNERS auto-assign | Branch protection + `CODEOWNERS`      |
 | **Verified commits**   | GPG/SSH-signed commits              | Branch rule: “Require signed commits” |
 | **Version pinning**    | Pin deps & actions by digest/SHA    | PR checks; Dependabot/Renovate        |
-| **No secrets in code** | Secrets only in GHA/KMS             | Pre-commit & optional Gitleaks        |
+| **No secrets in code** | Secrets only in GHA/KMS             | Pre-commit & **Gitleaks**             |
 | **Secure defaults**    | Least privilege perms, file modes   | CI checks & hardening scripts         |
 
 **Sample `CODEOWNERS`**
@@ -108,11 +114,11 @@ Layers of control cover **repository governance**, **CI/CD supply-chain**, **dep
 
 ## 🔗 Supply-Chain Security (SBOM · SLSA · Attestation)
 
-* **SBOM**: Generate CycloneDX or SPDX for Python/Node; attach to releases.
-* **Actions pinned**: Use commit SHAs; deny unpinned steps in `make verify-actions`.
-* **GHA permissions**: Defaults to read-only; selectively elevate per job.
-* **SLSA**: Build attestations stored under `data/work/logs/security/attestations/`.
-* **Containers**: Digest-pinned base images, signed (optional via **cosign**).
+- **SBOM**: Generate CycloneDX or SPDX for Python/Node; attach to releases.  
+- **Actions pinned**: Use commit SHAs; deny unpinned steps in `make verify-actions`.  
+- **GHA permissions**: Defaults to read-only; selectively elevate per job.  
+- **SLSA**: Build attestations stored under `data/work/logs/security/attestations/`.  
+- **Containers**: Digest-pinned base images, signed (optional via **cosign**).
 
 **Make targets**
 
@@ -133,7 +139,7 @@ make verify-actions  # Lint workflows for unpinned actions
 | **CodeQL**                    | Static analysis (SAST)        | PR + weekly     |
 | **Bandit**                    | Python security linter        | Pre-commit + PR |
 | **`pip-audit` / `npm audit`** | Dependency CVEs               | PR              |
-| **Gitleaks** (optional)       | Secret detection              | Pre-commit + PR |
+| **Gitleaks**                  | Secret detection              | Pre-commit + PR |
 
 **Commands**
 
@@ -158,11 +164,11 @@ data/work/logs/security/
 
 ## 🧱 Container Hardening
 
-* Minimal **digest-pinned** base image (distroless/alpine).
-* **Non-root** user (`USER 10001:10001`); read-only FS; writable `/tmp` only.
-* **Capabilities**: `--cap-drop=ALL`; seccomp & AppArmor profiles where applicable.
-* **Network**: Minimal egress in CI; no inbound unless necessary.
-* **HEALTHCHECK** for services.
+- Minimal **digest-pinned** base image (distroless/alpine).  
+- **Non-root** user (`USER 10001:10001`); read-only FS; writable `/tmp` only.  
+- **Capabilities**: `--cap-drop=ALL`; seccomp & AppArmor profiles where applicable.  
+- **Network**: Minimal egress in CI; no inbound unless necessary.  
+- **HEALTHCHECK** for services.
 
 **Dockerfile**
 
@@ -193,15 +199,15 @@ CMD ["python","-m","src.cli"]
 
 ### Integrity & Provenance
 
-* **SHA-256** sidecars for all artifacts (`data/checksums/**`).
-* **STAC Items/Collections** must link to checksums & lineage.
-* Validation logs retain **commit hashes**.
+- **SHA-256** sidecars for all artifacts (`data/checksums/**`).  
+- **STAC Items/Collections** must link to checksums & lineage.  
+- Validation logs retain **commit hashes**.
 
 ### Encryption
 
-* **At rest**: AES-256 (KMS or GH Secrets).
-* **In transit**: TLS for downloads/APIs.
-* **Rotation**: Every 6 months; immediate on incident.
+- **At rest**: AES-256 (KMS or GH Secrets).  
+- **In transit**: TLS for downloads/APIs.  
+- **Rotation**: Every 6 months; immediate on incident.
 
 ---
 
@@ -216,9 +222,9 @@ CMD ["python","-m","src.cli"]
 
 **Policies**
 
-* Protected branches (`main`, `release/*`): **passing checks + code review** required.
-* Required statuses: CodeQL, Trivy, **checksums**, **STAC validate**, pre-commit.
-* **2FA required**; fine-grained PATs only; **no classic tokens**.
+- Protected branches (`main`, `release/*`): **passing checks + code review** required.  
+- Required statuses: CodeQL, Trivy, **checksums**, **STAC validate**, policy & pre-commit.  
+- **2FA required**; fine-grained PATs only; **no classic tokens**.
 
 ---
 
@@ -233,9 +239,9 @@ CMD ["python","-m","src.cli"]
 
 **Rules**
 
-* No secrets in code, STAC, or commits.
-* GH logs auto-mask secrets.
-* Access events reviewed quarterly.
+- No secrets in code, STAC, or commits.  
+- GH logs auto-mask secrets.  
+- Access events reviewed quarterly.
 
 ---
 
@@ -281,16 +287,16 @@ jobs:
 | :-------------- | :------------------------------ | :-------------- |
 | Static analysis | CodeQL, Bandit                  | PR required     |
 | Dependencies    | Trivy, `pip-audit`, `npm audit` | PR + weekly     |
-| Secrets         | Gitleaks (optional)             | PR              |
+| Secrets         | Gitleaks                        | PR              |
 | Checksums       | `make checksums`                | Dataset updates |
 | STAC            | `stac-validate.yml`             | PR              |
 | SBOM            | `sbom.yml`                      | Release         |
 
 Quarterly manual audit:
 
-* Review `data/work/logs/security/`
-* Check branch protections & secret access logs
-* Rotate keys as scheduled
+- Review `data/work/logs/security/`  
+- Check branch protections & secret access logs  
+- Rotate keys as scheduled
 
 ---
 
@@ -357,17 +363,18 @@ We follow coordinated disclosure. Credits provided upon request.
 
 ## 📅 Version History
 
-| Version | Date       | Author        | Summary                                                                                                                   |
-| :------ | :--------- | :------------ | :------------------------------------------------------------------------------------------------------------------------ |
-| v1.3.0  | 2025-10-18 | @kfm-security | Added SBOM/SLSA/attestations, container hardening, CI permission lockdown, incident playbook, CODEOWNERS, workflow matrix |
-| v1.1.0  | 2025-10-05 | @kfm-security | Expanded dependency policies, PR gates, and secrets guidance                                                              |
-| v1.0.0  | 2025-10-04 | @kfm-security | Initial security & vulnerability management standards                                                                     |
+| Version | Date       | Author        | Summary                                                                                                                    |
+| :------ | :--------- | :------------ | :------------------------------------------------------------------------------------------------------------------------- |
+| **v1.3.1** | 2025-10-18 | @kfm-security | Added docs-validate & policy gates, Gitleaks badge, SBOM references, and clarified CI defaults and quarterly audit steps. |
+| **v1.3.0** | 2025-10-18 | @kfm-security | SBOM/SLSA/attestations, container hardening, CI permission lockdown, incident playbook, CODEOWNERS, workflow matrix       |
+| **v1.1.0** | 2025-10-05 | @kfm-security | Expanded dependency policies, PR gates, and secrets guidance                                                               |
+| **v1.0.0** | 2025-10-04 | @kfm-security | Initial security & vulnerability management standards                                                                      |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every System Secure. Every Check Proven.”*
+**Kansas Frontier Matrix** — *“Every System Secure. Every Check Proven.”*  
 📍 `docs/standards/security.md` — Official security and access control standards under MCP governance.
 
 </div>
