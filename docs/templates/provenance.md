@@ -3,13 +3,17 @@
 # 🔗 **Kansas Frontier Matrix — Provenance Record Template**  
 `docs/templates/provenance.md`
 
-**Purpose:** A **structured, MCP- & FAIR-aligned** template to capture the **lineage and transformation history** of datasets, models, and derived products in the **Kansas Frontier Matrix (KFM)** — ensuring **traceability**, **accountability**, and **reproducibility** across the full data lifecycle.
+**Purpose:** A **structured, MCP- & FAIR-aligned** template to capture the **lineage and transformation history** of datasets, models, and derived products in the **Kansas Frontier Matrix (KFM)** — ensuring **traceability**, **accountability**, **security**, and **reproducibility** across the full data lifecycle.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
 [![FAIR](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-2ea44f)](https://www.go-fair.org/fair-principles/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![STAC 1.0.0](https://img.shields.io/badge/Metadata-STAC%201.0.0-blue)](https://stacspec.org/)
 [![PROV-O](https://img.shields.io/badge/Ontology-W3C%20PROV--O-8a2be2)](https://www.w3.org/TR/prov-o/)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy%20%7C%20Gitleaks-red)](../../.github/workflows/)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../.github/workflows/sbom.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
 
@@ -18,10 +22,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Provenance Record Template"
-version: "v1.2.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-data","@kfm-docs","@kfm-security"]
-tags: ["provenance","stac","prov-o","reproducibility","mcp","fair","slsa","sbom"]
+version: "v1.3.0"
+last_updated: "2025-10-18"
+owners: ["@kfm-data","@kfm-docs","@kfm-security","@kfm-architecture"]
+tags: ["provenance","stac","prov-o","reproducibility","mcp","fair","slsa","sbom","ethics","security"]
 status: "Template"
 license: "CC-BY 4.0"
 semantic_alignment:
@@ -29,7 +33,9 @@ semantic_alignment:
   - STAC 1.0
   - ISO 19115 (metadata)
   - JSON Schema
+  - ISO 8601 / EPSG
   - FAIR Principles
+  - GeoSPARQL
 supply_chain:
   slsa_target: "Level 3"
   sbom_format: "SPDX 2.3 (JSON)"
@@ -37,10 +43,12 @@ ci_required_checks:
   - stac-validate
   - checksums
   - docs-validate
+  - policy-check
   - codeql
   - trivy
+  - gitleaks
 ---
-````
+```
 
 ---
 
@@ -69,7 +77,7 @@ ci_required_checks:
 
 Provide a concise narrative of origins and transformations leading to current state.
 
-> **Example:**
+> **Example**  
 > Processed Kansas LiDAR-derived 1 m DEM (2018–2020) from USGS 3DEP + KS DASC sources. Steps: acquisition → QA → reprojection → mosaicking → void-fill → hillshade derivation → STAC/checksum → publication to `data/processed/terrain/`. Reproducible via `make terrain`.
 
 ---
@@ -77,23 +85,23 @@ Provide a concise narrative of origins and transformations leading to current st
 ## 🧩 Lineage Chain (Stepwise)
 
 | Step | Type      | Description                    | Input(s)          | Output(s)                                        | Tool / Script                    | PROV-O                     |
-| :--: | :-------- | :----------------------------- | :---------------- | :----------------------------------------------- | :------------------------------- | :------------------------- |
-|   1  | Source    | Raw tile acquisition           | `usgs_3dep_dem`   | `data/raw/terrain/ks_3dep_tiles.zip`             | `make fetch-raw`                 | *prov:wasDerivedFrom*      |
-|   2  | Transform | Reproject & mosaic (EPSG:4326) | Raw tiles         | `data/processed/terrain/ks_1m_dem_2018_2020.tif` | `terrain_pipeline.py`            | *prov:wasGeneratedBy*      |
-|   3  | Derive    | Hillshade / slope / aspect     | DEM GeoTIFF       | `ks_hillshade_2018_2020.tif`                     | `gdal_dem` / `gdaldem hillshade` | *prov:wasGeneratedBy*      |
-|   4  | Validate  | CRS, extent, nodata QA         | Processed rasters | QA report                                        | `gdalinfo`, custom checks        | *prov:used*                |
-|   5  | Verify    | SHA-256 checksums              | Outputs           | `.sha256` files                                  | `make checksums`                 | *prov:wasInfluencedBy*     |
-|   6  | Describe  | STAC item(s)                   | Outputs           | `data/stac/terrain/*.json`                       | `stac-generator.py`              | *prov:qualifiedGeneration* |
+|:---:|:----------|:-------------------------------|:------------------|:-------------------------------------------------|:---------------------------------|:---------------------------|
+| 1   | Source    | Raw tile acquisition           | `usgs_3dep_dem`   | `data/raw/terrain/ks_3dep_tiles.zip`             | `make fetch-raw`                 | *prov:wasDerivedFrom*      |
+| 2   | Transform | Reproject & mosaic (EPSG:4326) | Raw tiles         | `data/processed/terrain/ks_1m_dem_2018_2020.tif` | `terrain_pipeline.py`            | *prov:wasGeneratedBy*      |
+| 3   | Derive    | Hillshade / slope / aspect     | DEM GeoTIFF       | `ks_hillshade_2018_2020.tif`                     | `gdaldem`                        | *prov:wasGeneratedBy*      |
+| 4   | Validate  | CRS, extent, nodata QA         | Processed rasters | QA report                                        | `gdalinfo`, custom checks        | *prov:used*                |
+| 5   | Verify    | SHA-256 checksums              | Outputs           | `.sha256` files                                  | `make checksums`                 | *prov:wasInfluencedBy*     |
+| 6   | Describe  | STAC item(s)                   | Outputs           | `data/stac/terrain/*.json`                       | `stac-generator.py`              | *prov:qualifiedGeneration* |
 
 <details>
 <summary><b>📦 Extended lineage attributes (click to expand)</b></summary>
 
-* **Temporal extent:** 2018-01-01 → 2020-12-31
-* **Spatial extent (WGS84 bbox):** `[-102.05, 36.99, -94.59, 40.00]`
-* **Nodata policy:** `-9999` propagated; masked in derivatives
-* **Resampling:** bilinear (mosaic); cubic (hillshade)
-* **Overviews:** internal overviews at {2,4,8,16}
-* **Compression:** COG / DEFLATE; overviews JPEG
+- **Temporal extent:** 2018-01-01 → 2020-12-31  
+- **Spatial extent (WGS84 bbox):** `[-102.05, 36.99, -94.59, 40.00]`  
+- **Nodata policy:** `-9999` propagated; masked in derivatives  
+- **Resampling:** bilinear (mosaic); cubic (hillshade)  
+- **Overviews:** internal overviews at {2, 4, 8, 16}  
+- **Compression:** COG / DEFLATE; overview JPEG  
 
 </details>
 
@@ -106,7 +114,7 @@ Provide a concise narrative of origins and transformations leading to current st
 | **USGS 3DEP DEM** | U.S. Geological Survey | REST / HTTPS  | Public Domain | `data/sources/terrain/usgs_3dep_dem.json` |
 | **KS DASC LiDAR** | Kansas DASC            | FTP / HTTPS   | CC-BY 4.0     | `data/sources/terrain/ks_dasc_lidar.json` |
 
-> Each **source** must exist in the **Source Registry** and include retrieval time, original filename, size, and original checksum (when provided).
+> Each source must exist in the **Source Registry** and include retrieval time, original filename, size, and original checksum (when provided).
 
 ---
 
@@ -129,6 +137,7 @@ Provide a concise narrative of origins and transformations leading to current st
 | **STAC Validation** | Item/collection schema       | `.github/workflows/stac-validate.yml` | ✅ Passed   |
 | **Spatial QA/QC**   | CRS, bbox, nodata            | `gdalinfo`, `rio info`                | ✅ Passed   |
 | **COG Compliance**  | Internal tiling & overviews  | `cog_validate`                        | ✅ Passed   |
+| **Policy Gates**    | Front-matter/fields required | `.github/workflows/policy-check.yml`  | ✅ Passed   |
 | **CI/CD Audit**     | Build & artifact consistency | `site.yml`, `checksums.yml`           | ✅ Passed   |
 | **Manual Review**   | Curator sign-off             | Governance log / PR                   | ✅ Approved |
 
@@ -155,7 +164,7 @@ Provide a concise narrative of origins and transformations leading to current st
 | :---------------------- | :-------------------------------------------------------------------- |
 | **Access Level**        | Public (read) / Restricted (explain constraints)                      |
 | **Embargo / Redaction** | If redacted, document fields & rationale                              |
-| **Retention**           | Minimum N years; archival target (e.g., Glacier / institutional repo) |
+| **Retention**           | Maintain last 3 published versions; archival target defined           |
 | **Steward**             | Role/team responsible for maintenance                                 |
 
 ---
@@ -164,8 +173,10 @@ Provide a concise narrative of origins and transformations leading to current st
 
 | Version | Date       | Author                   | Summary                                           |
 | :-----: | :--------- | :----------------------- | :------------------------------------------------ |
-|   v1.0  | 2025-10-04 | KFM Data Governance Team | Initial provenance template                       |
-|   v1.1  | 2025-10-05 | (You)                    | Clarified QA steps; added SBOM/SLSA & env capture |
+| v1.3    | 2025-10-18 | KFM Data Governance Team | Added policy gates, SBOM/SLSA capture, CI audit   |
+| v1.2    | 2025-10-17 | KFM Docs Team            | MCP-DL metadata; ISO/GeoSPARQL references        |
+| v1.1    | 2025-10-05 | (You)                    | Clarified QA steps; added env capture             |
+| v1.0    | 2025-10-04 | KFM Documentation Team   | Initial provenance template                       |
 
 ---
 
@@ -177,6 +188,7 @@ graph LR
   B -->|prov:wasGeneratedBy| C["DEM (COG)"]
   C -->|prov:wasGeneratedBy| D["Derived Layers<br/>(hillshade, slope, aspect)"]
   C -->|prov:qualifiedDerivation| E["STAC + Checksums"]
+%% END OF MERMAID
 ```
 
 ---
@@ -208,7 +220,7 @@ make stac-validate && make qa-terrain
 make publish-terrain
 ```
 
-> **Containerized run:**
+> **Containerized run:**  
 > `docker run --rm -v $PWD:/work -w /work ghcr.io/org/kfm:terrain-1.0 make terrain`
 
 ---
@@ -219,7 +231,7 @@ make publish-terrain
 | :---------------------- | :------------------------------------------------- |
 | **Documentation-first** | Provenance authored & versioned with data/pipeline |
 | **Reproducibility**     | Deterministic steps + env & container capture      |
-| **Open Standards**      | STAC 1.0.0, PROV-O, COG, GeoJSON, SPDX             |
+| **Open Standards**      | STAC 1.0, PROV-O, COG, GeoJSON, SPDX               |
 | **Provenance**          | Full lineage chain from sources to products        |
 | **Auditability**        | CI logs, checksums, SBOM, build attestations       |
 
@@ -239,27 +251,17 @@ make publish-terrain
 
 ## 📚 References
 
-1. **W3C PROV-O Ontology** — [https://www.w3.org/TR/prov-o/](https://www.w3.org/TR/prov-o/)
-2. **STAC Specification v1.0.0** — [https://stacspec.org](https://stacspec.org)
-3. **MCP Guidelines** — KFM Documentation Framework
-4. **FAIR Principles** — [https://www.go-fair.org/fair-principles/](https://www.go-fair.org/fair-principles/)
-5. **SPDX** — [https://spdx.dev](https://spdx.dev) (Software Bill of Materials)
-
----
-
-## 📅 Version History
-
-| Version | Date       | Author                 | Summary                                                                   |
-| :-----: | :--------- | :--------------------- | :------------------------------------------------------------------------ |
-|  v1.2.0 | 2025-10-17 | KFM Docs Team          | Added MCP-DL metadata, SLSA/SBOM guidance, CI checks list, ISO references |
-|  v1.1.0 | 2025-10-05 | KFM Engineering        | Expanded PROV-O mapping + supply-chain section                            |
-|  v1.0.0 | 2025-10-04 | KFM Documentation Team | Initial provenance record template                                        |
+1. **W3C PROV-O Ontology** — <https://www.w3.org/TR/prov-o/>  
+2. **STAC Specification v1.0.0** — <https://stacspec.org>  
+3. **MCP Guidelines** — KFM Documentation Framework  
+4. **FAIR Principles** — <https://www.go-fair.org/fair-principles/>  
+5. **SPDX** — <https://spdx.dev> (Software Bill of Materials)
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Dataset Has a Story. Every Step Leaves a Trace.”*
+**Kansas Frontier Matrix** — *“Every Dataset Has a Story. Every Step Leaves a Trace.”*  
 📍 `docs/templates/provenance.md` — MCP-compliant provenance template for KFM.
 
 </div>
