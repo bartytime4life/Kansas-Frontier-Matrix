@@ -1,11 +1,10 @@
 <div align="center">
 
-# 📝 Kansas Frontier Matrix — Notes Workspace
-
+# 📝 Kansas Frontier Matrix — Notes Workspace  
 `docs/notes/README.md`
 
-**Mission:** Maintain a **lightweight, versioned knowledge workspace** for
-working notes, research logs, and early drafts that evolve into formal
+**Mission:** Maintain a **lightweight, versioned knowledge workspace** for  
+working notes, research logs, and early drafts that evolve into formal  
 MCP documentation and structured knowledge graph entries.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../)
@@ -19,16 +18,16 @@ MCP documentation and structured knowledge graph entries.
 
 ## 🎯 Purpose
 
-The `/docs/notes/` directory is a **sandbox for thinking in public** —
-an **idea incubator** where concepts, discussions, and discoveries are captured
+The `/docs/notes/` directory is a **sandbox for thinking in public** —  
+an **idea incubator** where concepts, discussions, and discoveries are captured  
 before formalization into architecture, design, or integration documents.
 
 Notes serve as:
 
-* 🧠 **Working drafts** — capture ideas fast before structure hardens.
-* 🔍 **Research digests** — summaries of archives, datasets, and oral histories.
-* 🗓️ **Meeting & sprint logs** — record decisions, blockers, and insights.
-* ⚙️ **Technical backlogs** — track pending work or experimental prototypes.
+* 🧠 **Working drafts** — capture ideas fast before structure hardens.  
+* 🔍 **Research digests** — summaries of archives, datasets, and oral histories.  
+* 🗓️ **Meeting & sprint logs** — record decisions, blockers, and insights.  
+* ⚙️ **Technical backlogs** — track pending work or experimental prototypes.  
 * 🧾 **Idea provenance** — keep “why we thought this” context in Git forever.
 
 > **MCP Principle:** *Write fast. Preserve context. Promote when reproducible.*
@@ -50,7 +49,6 @@ flowchart LR
     style D fill:#fffbea,stroke:#e8a500
     style E fill:#f9f9f9,stroke:#888888
 ```
-
 <!-- END OF MERMAID -->
 
 ---
@@ -118,7 +116,7 @@ linked_docs:
 
 ## 🧠 Linking Notes to the Knowledge Graph
 
-Each finalized note becomes an entity in the **KFM Knowledge Graph** under
+Each finalized note becomes an entity in the **KFM Knowledge Graph** under  
 `kfm:note/<slug>` with `prov:wasDerivedFrom` and `prov:wasGeneratedBy` relationships.
 
 **Example RDF Triples:**
@@ -143,7 +141,7 @@ This ensures every note, even informal, can be referenced in semantic queries or
 
 ## 📦 Example Note Templates
 
-**Quick Idea Template:**
+**Quick Idea Template**
 
 ```markdown
 # 💡 Idea: [Short Title]
@@ -167,7 +165,7 @@ If X → then Y.
 2. Add to backlog.md if actionable.
 ```
 
-**Meeting Log Template:**
+**Meeting Log Template**
 
 ```markdown
 # 🗓️ Meeting – [Topic]
@@ -189,7 +187,7 @@ If X → then Y.
 
 ## 🧩 Tagging & Discovery
 
-All notes support **semantic tagging** via YAML `tags:` and inline `#tag` hashtags.
+All notes support **semantic tagging** via YAML `tags:` and inline `#tag` hashtags.  
 Tags are parsed into a SKOS vocabulary (`data/vocabularies/tags.skos.ttl`) and indexed into the knowledge graph.
 
 | Tag Type    | Example                            | Used For                  |
@@ -203,10 +201,10 @@ Tags are parsed into a SKOS vocabulary (`data/vocabularies/tags.skos.ttl`) and i
 
 ## 🔄 Versioning & Provenance
 
-* Notes evolve through commits; **never edit without version control**.
-* Significant changes: append a changelog section (`### Change Log`).
-* Each note inherits commit metadata → automatically added to MCP provenance.
-* Archived notes are moved into `/archive/<year>/` with a prefix:
+* Notes evolve through commits; **never edit without version control**.  
+* Significant changes: append a changelog section (`### Change Log`).  
+* Each note inherits commit metadata → automatically added to MCP provenance.  
+* Archived notes are moved into `/archive/<year>/` with a prefix:  
   `YYYY-MM-DD_<original_title>.md`.
 
 > The note archive acts as a permanent knowledge record — no deletions, only evolution.
@@ -248,7 +246,7 @@ Notes are validated through **`make docs-validate`** and CI pipelines.
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Ideas Recorded. Knowledge Preserved. Insight Proven.”*
+**Kansas Frontier Matrix** — *“Ideas Recorded. Knowledge Preserved. Insight Proven.”*  
 📍 [`docs/notes/README.md`](.) · Official MCP-compliant workspace for versioned notes and early research.
 
 </div>
