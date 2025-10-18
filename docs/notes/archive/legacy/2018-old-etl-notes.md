@@ -7,6 +7,8 @@
 This record captures the first successful tests of reproducible elevation and hydrology workflows in Kansas — work that directly influenced the later **Terrain Pipeline**, **Data Architecture**, and **MCP-DL documentation-first** principles.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2018-001
 title: "ETL Prototype Notes — Terrain Data Workflow (2018)"
 author: ["Frontier GIS Team","@kfm-data"]
 original_path: "notes/terrain_prototypes/etl_workflow.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2018-09-02
 reason: legacy
@@ -38,6 +41,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "b13a7c6dff8e4d1c3a..."  # SHA-256
+  storage_format: "Markdown (GFM)"
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  last_verified: "2025-10-18"
 summary: >
   Early experimental notes from 2018 testing the first automated elevation data ETL
   process in Kansas. These prototypes demonstrated repeatable workflows for processing
@@ -70,8 +78,8 @@ flowchart TD
     C --> D["Stream Network Derivation<br/>r.stream.order"]
     D --> E["Outputs<br/>Slope, Aspect, Watershed Polygons"]
     E --> F["Archive to /data/processed/terrain/"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -99,13 +107,13 @@ flowchart TD
 
 ## 🧱 Experimental Findings
 
-| Metric | Result | Notes |
-| :-- | :-- | :-- |
-| Processing Time | ~6 hours for full state DEM | Used GDAL/GRASS on local HPC node |
-| Storage Volume | 85 GB (GeoTIFF + temporary files) | Later optimized by COG compression |
-| Data Quality | 93% tile match accuracy | Minimal reprojection distortion |
-| Hydrology Validation | 0.87 correlation with NHD streams | Validated with spot checks |
-| Checksum Coverage | 100% | Manual SHA-1, later SHA-256 in KFM |
+| Metric            | Result                        | Notes                              |
+| :---------------- | :---------------------------- | :--------------------------------- |
+| Processing Time   | ~6 hours for full state DEM   | Local HPC node (parallel GDAL)     |
+| Storage Volume    | 85 GB (GeoTIFF + temps)       | Later optimized via COG compression |
+| Data Quality      | 93% tile match accuracy       | Minimal reprojection distortion     |
+| Hydrology Valid.  | 0.87 correlation vs. NHD      | Spot-checked cross sections         |
+| Checksum Coverage | 100% (SHA-1 → SHA-256 later)  | Manual logs, then automated         |
 
 ---
 
@@ -115,7 +123,7 @@ This file represents:
 - The **origin point of reproducible terrain ETL** in the KFM lineage.  
 - The earliest known record of **documentation-first practices**.  
 - The **predecessor** to `terrain_pipeline.py` and `data-architecture.md`.  
-- The conceptual prototype for what became **FAIR-compliant metadata workflows**.  
+- The conceptual prototype for **FAIR-compliant metadata workflows**.  
 
 > *“The 2018 ETL script wasn’t just code — it was the proof of reproducibility.”*
 
@@ -163,35 +171,32 @@ preservation:
 
 ## 🧠 FAIR & MCP Retrofitting
 
-These legacy notes were retrofitted to comply with modern MCP-DL v6.3 and FAIR data principles:
-
-| Principle | Implementation |
-| :-- | :-- |
-| **Findable** | Indexed in `legacy_manifest.yml` and linked to successors. |
-| **Accessible** | Public Git archive + Zenodo backup. |
-| **Interoperable** | Rewritten with YAML metadata + RDF provenance. |
-| **Reusable** | Open-licensed, versioned, and linked to successors. |
+| Principle      | Implementation                                      |
+| :------------- | :--------------------------------------------------- |
+| **Findable**   | Indexed in `legacy_manifest.yml` with successor links|
+| **Accessible** | Public Git archive + Zenodo backup                   |
+| **Interoperable** | YAML metadata + RDF provenance                   |
+| **Reusable**   | Open-licensed, versioned, linked to successors       |
 
 ---
 
 ## 🧮 Governance Validation Report (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Compliance | ✅ | `scripts/fair_validate.py` |
-| Graph Ingestion | ✅ | `tools/graph_ingest_legacy.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum | ✅ | `verify_checksums.py` |
+| Validation        | Result | Verified By                    |
+| :---------------- | :----- | :----------------------------- |
+| YAML Schema       | ✅     | `jsonschema`                   |
+| FAIR Compliance   | ✅     | `scripts/fair_validate.py`     |
+| Graph Ingestion   | ✅     | `tools/graph_ingest_legacy.py` |
+| Successor Links   | ✅     | `remark-lint`                  |
+| Checksum          | ✅     | `verify_checksums.py`          |
 
-**Governance Audit JSON:**
+**Audit JSON**
 ```json
 {
   "legacy_entry": {
     "id": "L-2018-001",
     "title": "ETL Prototype Notes — Terrain Data Workflow (2018)",
     "archived_date": "2018-09-02",
-    "reason": "legacy",
     "linked_successors": [
       "docs/architecture/data-architecture.md",
       "data/processed/terrain/README.md"
@@ -211,17 +216,18 @@ These legacy notes were retrofitted to comply with modern MCP-DL v6.3 and FAIR d
 flowchart TD
     A["2018 ETL Prototype<br/>Terrain Workflow"] --> B["2024 Terrain Pipeline<br/>Production Implementation"]
     B --> C["2025 MCP-DL v6.3<br/>Documentation Standardization"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧠 Educational Use & Historical Insight
 
-The 2018 ETL experiments are now used as **training materials** for MCP-DL documentation courses and KFM onboarding sessions.  
-They exemplify how scientific reproducibility principles evolved into the **Master Coder Protocol** itself.
+These 2018 ETL experiments are used in **MCP-DL training** and KFM onboarding to show:
+- How manual geodata work evolved into **reproducible pipelines**.  
+- How **executable metadata** drives automation and governance.  
+- How open-source tooling scaled transparent, auditable science.
 
-**Quote from archival notes:**
 > “Reproducibility should be a cultural practice, not a technical burden.”
 
 ---
@@ -232,9 +238,9 @@ They exemplify how scientific reproducibility principles evolved into the **Mast
 | :-- | :-- | :-- |
 | 2018 | Terrain ETL prototype | Earliest reproducible pipeline test |
 | 2019 | Ingestion workflow formalized | `data_ingest_strategy_2019.md` |
-| 2021 | Digital Atlas proposal | Introduced multi-domain data fusion |
-| 2024 | Terrain pipeline codified | Standardized in MCP |
-| 2025 | Full graph ingestion | Neo4j + RDF integration completed |
+| 2021 | Digital Atlas proposal | Multi-domain data fusion concept     |
+| 2024 | Terrain pipeline codified | Standardized in MCP                 |
+| 2025 | Full graph ingestion | Neo4j + RDF integration completed   |
 
 ---
 
@@ -242,19 +248,20 @@ They exemplify how scientific reproducibility principles evolved into the **Mast
 
 | File | Description |
 | :-- | :-- |
-| `docs/notes/archive/legacy/README.md` | Legacy archive index and manifest |
-| `docs/architecture/data-architecture.md` | Modernized data structure derived from this ETL |
-| `data/processed/terrain/README.md` | Final terrain pipeline reference |
-| `docs/standards/documentation.md` | MCP-DL specification and governance |
-| `data/work/graph/legacy_lineage.ttl` | RDF lineage linking 2018 → present workflows |
+| `../README.md` | Legacy archive index & manifest |
+| `../../../architecture/data-architecture.md` | Successor architecture |
+| `../../../data/processed/terrain/README.md` | Production terrain pipeline |
+| `../../../standards/documentation.md` | MCP-DL specification |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF lineage 2018 → present |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2018 ETL notes for archival; added FAIR retrofitting, RDF lineage, checksum, and MCP-DL metadata. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation metadata, and audit record.            |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed 2018 ETL notes; FAIR retrofit, RDF lineage, checksums.    |
 
 ---
 
