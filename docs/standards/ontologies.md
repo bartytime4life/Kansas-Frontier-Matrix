@@ -3,11 +3,14 @@
 # 🧠 Kansas Frontier Matrix — **Ontology & Semantic Standards**  
 `docs/standards/ontologies.md`
 
-**Master Coder Protocol (MCP-DL v6.3+) · Interoperability · Provenance · Machine-Readability · Validation**
+**Master Coder Protocol (MCP-DL v6.3+) · Interoperability · Provenance · Machine-Readability · Validation · Security**
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
 [![Graph Validate](https://img.shields.io/badge/Workflow-graph--validate.yml-blueviolet)](../../.github/workflows/graph-validate.yml)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy%20%7C%20Gitleaks-red)](../../.github/workflows/)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20SPDX-green)](../../.github/workflows/sbom.yml)
 [![Security: SLSA-3 (Target)](https://img.shields.io/badge/Security-SLSA--3%20(Target)-orange)](../standards/security.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
@@ -18,19 +21,20 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Ontology & Semantic Standards"
-version: "v1.3.0"
+version: "v1.3.1"
 last_updated: "2025-10-18"
-owners: ["@kfm-architecture","@kfm-data","@kfm-docs"]
-tags: ["ontology","semantics","rdf","json-ld","prov","cidoc","geosparql","owl-time","skos","stac"]
+owners: ["@kfm-architecture","@kfm-data","@kfm-docs","@kfm-security"]
+tags: ["ontology","semantics","rdf","json-ld","prov","cidoc","geosparql","owl-time","skos","stac","dcat","periodo","shacl"]
 status: "Stable"
 scope: "Monorepo-Wide"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
+audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
   - graph-validate
   - stac-validate
-audit_framework: "MCP-DL v6.3"
+  - policy-check
 semantic_alignment:
   - CIDOC CRM 7.1
   - W3C PROV-O
@@ -42,7 +46,7 @@ semantic_alignment:
   - PeriodO
   - JSON-LD 1.1
 ---
-````
+```
 
 ---
 
@@ -50,9 +54,9 @@ semantic_alignment:
 
 KFM unifies **spatial**, **temporal**, and **provenance** semantics in a single knowledge ecosystem spanning:
 
-* **What exists**: *datasets, assets, collections, events, places, people, organizations, documents, models, processes*
-* **How they relate**: *derived_from, used, generated_by, took_place_at, authored_by, validated_by*
-* **How we define meaning**: *CIDOC CRM, PROV-O, STAC, OWL-Time, GeoSPARQL, SKOS, DCAT, PeriodO*, plus minimal KFM MCP predicates
+- **What exists**: *datasets, assets, collections, events, places, people, organizations, documents, models, processes*  
+- **How they relate**: *derived_from, used, generated_by, took_place_at, authored_by, validated_by*  
+- **How we define meaning**: *CIDOC CRM, PROV-O, STAC, OWL-Time, GeoSPARQL, SKOS, DCAT, PeriodO*, plus minimal **KFM MCP** predicates
 
 This standard guarantees that metadata, datasets, and knowledge-graph elements are **interoperable**, **machine-readable**, and **MCP-aligned** for transparent provenance and reproducible research.
 
@@ -62,14 +66,14 @@ This standard guarantees that metadata, datasets, and knowledge-graph elements a
 
 | Ontology / Standard | Prefix         | Purpose                                                                    | Canonical                                                                          |
 | :------------------ | :------------- | :------------------------------------------------------------------------- | :--------------------------------------------------------------------------------- |
-| CIDOC CRM (v7.1)    | `crm:`         | Event-centric cultural heritage modeling (actors, events, places, objects) | [https://www.cidoc-crm.org/](https://www.cidoc-crm.org/)                           |
-| W3C PROV-O          | `prov:`        | Provenance: Entities, Activities, Agents; derivation, attribution, usage   | [https://www.w3.org/TR/prov-o/](https://www.w3.org/TR/prov-o/)                     |
-| STAC (v1.0)         | `stac:`        | Geospatial catalog & assets (Items/Collections + relations)                | [https://stacspec.org](https://stacspec.org)                                       |
-| OWL-Time            | `time:`        | Temporal instants/intervals & relations                                    | [https://www.w3.org/TR/owl-time/](https://www.w3.org/TR/owl-time/)                 |
-| GeoSPARQL (OGC)     | `geo:`         | Spatial relationships & geometry literals (WKT/GeoJSON)                    | [https://www.ogc.org/standards/geosparql](https://www.ogc.org/standards/geosparql) |
-| SKOS                | `skos:`        | Controlled vocabularies (themes, concepts)                                 | [https://www.w3.org/TR/skos-reference/](https://www.w3.org/TR/skos-reference/)     |
-| DCAT 2.0            | `dcat:`/`dct:` | Catalog/distribution fields for harvesting & portals                       | [https://www.w3.org/TR/vocab-dcat-2/](https://www.w3.org/TR/vocab-dcat-2/)         |
-| PeriodO             | `periodo:`     | Scholarly definitions for named historical periods                         | [https://perio.do/](https://perio.do/)                                             |
+| CIDOC CRM (v7.1)    | `crm:`         | Event-centric cultural heritage modeling (actors, events, places, objects) | <https://www.cidoc-crm.org/>                                                       |
+| W3C PROV-O          | `prov:`        | Provenance: Entities, Activities, Agents; derivation, attribution, usage   | <https://www.w3.org/TR/prov-o/>                                                    |
+| STAC (v1.0)         | `stac:`        | Geospatial catalog & assets (Items/Collections + relations)                | <https://stacspec.org>                                                             |
+| OWL-Time            | `time:`        | Temporal instants/intervals & relations                                    | <https://www.w3.org/TR/owl-time/>                                                  |
+| GeoSPARQL (OGC)     | `geo:`         | Spatial relationships & geometry literals (WKT/GeoJSON)                    | <https://www.ogc.org/standards/geosparql>                                          |
+| SKOS                | `skos:`        | Controlled vocabularies (themes, concepts)                                 | <https://www.w3.org/TR/skos-reference/>                                            |
+| DCAT 2.0            | `dcat:`/`dct:` | Catalog/distribution fields for harvesting & portals                       | <https://www.w3.org/TR/vocab-dcat-2/>                                              |
+| PeriodO             | `periodo:`     | Scholarly definitions for named historical periods                          | <https://perio.do/>                                                                |
 | KFM MCP             | `mcp:`         | Reproducibility & audit fields (checksum_verified, build_commit, etc.)     | (KFM internal)                                                                     |
 
 ---
@@ -80,20 +84,20 @@ This standard guarantees that metadata, datasets, and knowledge-graph elements a
 
 **CURIE patterns**
 
-* Datasets: `kfm:dataset/<slug>` → `https://kfm.org/id/dataset/<slug>`
-* Assets: `kfm:asset/<slug>`
-* Collections: `kfm:collection/<slug>`
-* Events: `kfm:event/<slug>`
-* Places: `kfm:place/<authority>/<id>` (prefer GNIS/Wikidata)
-* Documents: `kfm:doc/<slug>`
-* Models: `kfm:model/<slug>`
-* Processes/Workflows: `kfm:process/<slug>`
-* Agents: `kfm:agent/<orcid|grid|local>/<id>`
+- Datasets: `kfm:dataset/<slug>` → `https://kfm.org/id/dataset/<slug>`  
+- Assets: `kfm:asset/<slug>`  
+- Collections: `kfm:collection/<slug>`  
+- Events: `kfm:event/<slug>`  
+- Places: `kfm:place/<authority>/<id>` (prefer GNIS/Wikidata)  
+- Documents: `kfm:doc/<slug>`  
+- Models: `kfm:model/<slug>`  
+- Processes/Workflows: `kfm:process/<slug>`  
+- Agents: `kfm:agent/<orcid|grid|local>/<id>`
 
 **ID rules**
 
-* Stable, kebab/snake case, ASCII, no spaces.
-* Prefer authoritative IDs with `owl:sameAs` (e.g., Wikidata QIDs, GNIS ids).
+- Stable, kebab/snake case, ASCII, no spaces.  
+- Prefer authoritative IDs with `owl:sameAs` (e.g., Wikidata QIDs, GNIS ids).
 
 ---
 
@@ -111,9 +115,10 @@ erDiagram
   DOCUMENT }o--o{ EVENT : "mentions"
   PROCESS ||--o{ DATASET : "generated"
   PROCESS }o--|| AGENT : "wasAssociatedWith"
+%% END OF MERMAID
 ```
 
-> **Note:** In RDF, prefer explicit CIDOC/PROV properties (`crm:P7_took_place_at`, `prov:wasGeneratedBy`, etc.); STAC relationships are mirrored with `prov` links and `dc:*` identifiers.
+> **RDF note:** Prefer explicit CIDOC/PROV properties (e.g., `crm:P7_took_place_at`, `prov:wasGeneratedBy`). Mirror STAC relations via `prov` links and `dct:*` identifiers.
 
 ---
 
@@ -123,10 +128,10 @@ erDiagram
 
 | STAC                      | RDF / Ontology                            | Note                                        |
 | :------------------------ | :---------------------------------------- | :------------------------------------------ |
-| Item                      | `crm:E73_Information_Object`, `stac:Item` | Treat Item as an information object/product |
+| Item                      | `crm:E73_Information_Object`, `stac:Item` | Treat Item as information object/product    |
 | Collection                | `crm:E78_Collection`, `stac:Collection`   | Logical grouping of Items                   |
 | `links[rel=derived_from]` | `prov:wasDerivedFrom`                     | Lineage                                     |
-| `assets.*`                | `prov:Entity` + `dc:identifier`           | Treat files as Entities                     |
+| `assets.*`                | `prov:Entity` + `dct:identifier`          | Treat files as Entities                     |
 | bbox/geometry             | `geo:hasGeometry`                         | WKT/GeoJSON literal                         |
 | `datetime`/interval       | `time:hasTime`                            | Instant/Interval modeling                   |
 
@@ -144,7 +149,7 @@ erDiagram
 | `(:Dataset)-[:OCCURRED_AT]->(:TimeBox)` | `time:hasTime`                        |
 | `(:Event)-[:TOOK_PLACE_AT]->(:Place)`   | `crm:P7_took_place_at`                |
 
-> **Export mappers:** `src/graph/exporters/{neo4j_to_rdf.py,rdf_to_neo4j.py}` maintain a 1:1 predicate mapping.
+> **Export mappers:** `src/graph/exporters/{neo4j_to_rdf.py,rdf_to_neo4j.py}` preserve a 1:1 predicate mapping.
 
 ---
 
@@ -182,6 +187,7 @@ kfm:process/terrain_pipeline
 
 ```turtle
 @prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix kfm:  <https://kfm.org/id/> .
 
 kfm:time/2018_2020 a time:Interval ;
@@ -204,8 +210,8 @@ kfm:geom/kansas_extent a sf:Polygon ;
 
 ## 🏷 Controlled Vocabularies (SKOS) & Periods (PeriodO)
 
-* Maintain SKOS concept schemes under `data/vocabularies/` and register them in the catalog.
-* Link events to PeriodO periods where appropriate for historical alignment.
+- Maintain SKOS concept schemes under `data/vocabularies/` and register them in the catalog.  
+- Link events to PeriodO periods where appropriate for historical alignment.
 
 ```turtle
 @prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
@@ -305,8 +311,8 @@ SELECT ?event WHERE {
 
 ## 🧭 Temporal & Spatial Guidance
 
-* **Temporal:** Prefer `time:Interval` with explicit begin/end instants; if only a year is known, use begin=Jan 1 00:00Z and note `kfm:timeNote` in description.
-* **Spatial:** Store canonical geometry as **GeoSPARQL WKT**; for rasters, keep a polygon footprint and link to STAC asset for full georeferencing.
+- **Temporal:** Prefer `time:Interval` with explicit begin/end instants; if only a year is known, use begin=Jan 1 00:00Z and note `kfm:timeNote`.  
+- **Spatial:** Store canonical geometry as **GeoSPARQL WKT**; for rasters, keep a polygon footprint and link to STAC asset for full georeferencing.
 
 ---
 
@@ -322,8 +328,8 @@ SELECT ?event WHERE {
 
 **CI Example** — `.github/workflows/graph-validate.yml`
 
-* `rapper -i turtle data/ontologies/*.ttl -c` (syntax)
-* `python -m pyshacl -s docs/shapes/kfm-core.shapes.ttl -m -f human data/knowledge_graph/*.ttl`
+- `rapper -i turtle data/ontologies/*.ttl -c` (syntax)  
+- `python -m pyshacl -s docs/shapes/kfm-core.shapes.ttl -m -f human data/knowledge_graph/*.ttl`
 
 Local helper:
 
@@ -337,9 +343,9 @@ python src/utils/validate_rdf.py data/ontologies/kfm.ttl
 
 | MCP Principle           | Implementation                                                          |
 | :---------------------- | :---------------------------------------------------------------------- |
-| **Documentation-first** | Ontology spec + JSON-LD context + SHACL shapes are shipped before data. |
+| **Documentation-first** | Ontology spec + JSON-LD context + SHACL shapes shipped before data.     |
 | **Reproducibility**     | Versioned ontologies; deterministic exporters; CI graph validation.     |
-| **Open Standards**      | CIDOC CRM, PROV-O, STAC, OWL-Time, GeoSPARQL, SKOS, JSON-LD.            |
+| **Open Standards**      | CIDOC CRM, PROV-O, STAC, OWL-Time, GeoSPARQL, SKOS, DCAT, JSON-LD.      |
 | **Provenance**          | Explicit PROV links; `mcp:*` audit fields; process/agent modeling.      |
 | **Auditability**        | RDF/SHACL logs in `data/work/logs/graph/`; CI badges required.          |
 
@@ -361,15 +367,16 @@ python src/utils/validate_rdf.py data/ontologies/kfm.ttl
 
 | Version | Date       | Author            | Summary                                                                                                          |
 | :------ | :--------- | :---------------- | :--------------------------------------------------------------------------------------------------------------- |
-| v1.3.0  | 2025-10-18 | @kfm-architecture | Added JSON-LD context, SHACL shapes, DCAT/PeriodO/SKOS guidance, Neo4j↔RDF mapping, SPARQL cookbook, CI workflow |
-| v1.1.0  | 2025-10-05 | @kfm-data         | Expanded STAC↔RDF mapping; provenance fields; file/dir policies                                                  |
-| v1.0.0  | 2025-10-04 | @kfm-architecture | Initial ontology & semantic standards                                                                            |
+| **v1.3.1** | 2025-10-18 | @kfm-architecture | Added policy/security badges & docs-validate; clarified ID policy; added CI instructions & SHACL example.         |
+| **v1.3.0** | 2025-10-18 | @kfm-architecture | JSON-LD context, SHACL shapes, DCAT/PeriodO/SKOS guidance, Neo4j↔RDF mapping, SPARQL cookbook, CI workflow       |
+| **v1.1.0** | 2025-10-05 | @kfm-data         | Expanded STAC↔RDF mapping; provenance fields; file/dir policies                                                  |
+| **v1.0.0** | 2025-10-04 | @kfm-architecture | Initial ontology & semantic standards                                                                            |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Connecting Knowledge Across Time, Space, and Data.”*
+**Kansas Frontier Matrix** — *“Connecting Knowledge Across Time, Space, and Data.”*  
 📍 `docs/standards/ontologies.md` — Official MCP-compliant ontology & semantic standards for KFM.
 
 </div>
