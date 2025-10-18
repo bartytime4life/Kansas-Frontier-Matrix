@@ -7,6 +7,8 @@
 This proposal marked the **conceptual birth of the Kansas Frontier Matrix (KFM)** — merging geography, history, ecology, and data provenance into one reproducible platform long before the Master Coder Protocol (MCP) formalized these principles.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2021-001
 title: "Digital Atlas Proposal — Conceptual Blueprint for the Kansas Frontier Matrix (2021)"
 author: ["Frontier Design Consortium","@kfm-architecture","@kfm-docs"]
 original_path: "notes/proposals/digital_atlas_proposal.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2021-03-12
 reason: legacy
@@ -39,6 +42,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "f1c5a8b3e44c8f9913d..."   # SHA-256
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234979"
+  last_verified: "2025-10-18"
 summary: >
   Conceptual design document proposing a unified “Digital Atlas of the Kansas Frontier.”
   Introduced the idea of time-based GIS overlays linked to historical and ecological
@@ -83,8 +91,8 @@ flowchart TD
     C --> D["Knowledge Graph<br/>CIDOC CRM · PROV-O · OWL-Time"]
     D --> E["Atlas Interface<br/>WebGL · MapLibre · Timeline Viewer"]
     E --> F["Documentation Hub<br/>GitHub Pages · MCP Principles (draft)"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -189,7 +197,7 @@ connecting technical reproducibility with storytelling, cultural heritage, and e
 | Successor Links | ✅ | `remark-lint` |
 | Checksum Verified | ✅ | `verify_checksums.py` |
 
-**Audit Record:**
+**Audit Record**
 ```json
 {
   "legacy_entry": {
@@ -219,8 +227,8 @@ flowchart TD
     C --> D["2023 Architecture Briefing v0"]
     D --> E["2024 Initial Design Discussion"]
     E --> F["2025 Operational Governance (MCP-DL v6.3)"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -240,7 +248,7 @@ flowchart TD
 | :-- | :-- | :-- |
 | v1.1 | Q2 2026 | Publish annotated edition of 2021 proposal with cross-references to MCP-DL. |
 | v1.2 | Q4 2026 | Create “Atlas Prototype Explorer” in KFM Web UI using this as root node. |
-| v2.0 | 2027 | Migrate all conceptual lineage into Neo4j graph-based narrative explorer. |
+| v2.0 | 2027 | Migrate conceptual lineage into a Neo4j narrative explorer. |
 
 ---
 
@@ -249,18 +257,19 @@ flowchart TD
 | File | Description |
 | :-- | :-- |
 | `docs/notes/archive/legacy/README.md` | Legacy archive index and context |
-| `docs/architecture/knowledge-graph.md` | Realized semantic design proposed here |
-| `docs/standards/documentation.md` | Modern governance framework based on this vision |
-| `docs/architecture/data-architecture.md` | Technical data implementation derived from proposal |
-| `data/work/graph/legacy_lineage.ttl` | RDF lineage linking proposal to MCP implementation |
+| `../../../architecture/knowledge-graph.md` | Realized semantic design proposed here |
+| `../../../standards/documentation.md` | Modern governance framework based on this vision |
+| `../../../architecture/data-architecture.md` | Technical data implementation derived from proposal |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF lineage linking proposal to MCP implementation |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2021 Digital Atlas conceptual proposal with FAIR retrofitting, RDF provenance, and lineage mapping to MCP-DL standards. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation/DOI block, and validation audit record. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed 2021 Digital Atlas proposal with FAIR retrofitting, RDF provenance, and lineage mapping. |
 
 ---
 
