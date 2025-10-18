@@ -8,6 +8,8 @@
 This directory acts as the **metadata backbone** for verifying, reproducing, and tracing historical document lineage across all project eras (Legacy → MCP-DL v6.3+).
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Manifests-orange)](../README.md)
 [![FAIR Validation](https://img.shields.io/badge/FAIR-Data%20Compliant-brightgreen)](../../../standards/documentation.md)
@@ -19,16 +21,16 @@ This directory acts as the **metadata backbone** for verifying, reproducing, and
 ---
 title: "Kansas Frontier Matrix — Archive Manifests & Provenance Index"
 document_type: "Archive Manifest Directory"
-version: "v1.2.0"
+version: "v1.3.0"
 last_updated: "2025-10-18"
 created: "2024-01-01"
-owners: ["@kfm-docs","@kfm-governance","@kfm-data"]
+owners: ["@kfm-docs","@kfm-governance","@kfm-data","@kfm-security"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes/Archive/Manifests"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["archive","manifest","checksum","provenance","governance","fair","mcp","bagit"]
+tags: ["archive","manifest","checksum","provenance","governance","fair","mcp","bagit","policy"]
 audit_framework: "MCP-DL v6.3"
 semantic_alignment:
   - PROV-O
@@ -74,10 +76,10 @@ and all subsequent **MCP-DL validated documentation exports**.
 
 These manifests ensure that every archived document, note, or dataset:
 
-* 🧩 Is **FAIR-compliant** and checksum-verified.  
-* 🧾 Retains **complete provenance** through PROV-O & CIDOC CRM lineage.  
-* 🔗 Connects to **graph ingestion scripts** for Neo4j + RDF indexing.  
-* 📦 Is packaged into **BagIt exports** for Zenodo or external repositories.  
+- 🧩 Is **FAIR-compliant** and checksum-verified.  
+- 🧾 Retains **complete provenance** through PROV-O & CIDOC CRM lineage.  
+- 🔗 Connects to **graph ingestion scripts** for Neo4j + RDF indexing.  
+- 📦 Is packaged into **BagIt exports** for Zenodo or external repositories.  
 
 ---
 
@@ -104,14 +106,14 @@ Each manifest YAML/JSON document follows the schema at `docs/schemas/archive_man
 
 **Schema Summary:**
 
-| Field | Type | Description | Example |
-| :-- | :-- | :-- | :-- |
-| `manifest_version` | string | Semantic version of manifest format | `"1.0"` |
-| `year_range` | string | Year or range covered | `"2017–2023"` |
-| `total_entries` | integer | Number of archived items | `8` |
-| `entries` | list | Object list of archive entries | see below |
+| Field              | Type    | Description                       | Example                                   |
+| :----------------- | :------ | :-------------------------------- | :---------------------------------------- |
+| `manifest_version` | string  | Semantic version of manifest fmt  | `"1.0"`                                   |
+| `year`/`year_range`| string  | Year or range covered             | `"2025"` or `"2017–2023"`                 |
+| `total_entries`    | integer | Number of archived items          | `8`                                       |
+| `entries`          | array   | Object list of archive entries    | see below                                 |
 
-**Example Entry:**
+**Example Entry**
 ```yaml
 - id: L-2023-001
   title: "Architecture Briefing v0 — Pre-MCP-DL System Design"
@@ -182,7 +184,6 @@ entries:
 
 A machine-parsable JSON catalog that merges all manifest data into a single graph-ready structure for AI search and lineage visualization.
 
-**Structure Example:**
 ```json
 {
   "archives": [
@@ -209,7 +210,6 @@ A machine-parsable JSON catalog that merges all manifest data into a single grap
 Each CI/CD cycle generates a FAIR + checksum compliance report under  
 `docs/notes/archive/manifests/fair_validation_report.json`.
 
-**Example Report:**
 ```json
 {
   "timestamp": "2025-10-18T08:00:00Z",
@@ -251,15 +251,15 @@ kfm:archive/A-2025-001
 
 ## ⚙️ Validation & CI/CD Integration
 
-| Validation | Tool / Workflow | Description |
-| :-- | :-- | :-- |
-| **Schema Validation** | `jsonschema` | Ensures manifest compliance. |
-| **Checksum Verification** | `tools/verify_checksums.py` | Confirms all files’ integrity. |
-| **FAIR Validation** | `scripts/fair_validate.py` | Confirms FAIR data principles. |
-| **Graph Sync** | `tools/graph_ingest_legacy.py` | Ingests provenance to Neo4j. |
-| **AI Embedding** | `scripts/vector_embed.py` | Adds to Neo4j Vector Index. |
+| Validation            | Tool / Workflow                 | Purpose                           |
+| :-------------------- | :------------------------------ | :-------------------------------- |
+| **Schema Validation** | `jsonschema`                    | Ensures manifest compliance       |
+| **Checksum Verify**   | `tools/verify_checksums.py`     | Confirms files’ integrity         |
+| **FAIR Validation**   | `scripts/fair_validate.py`      | Confirms FAIR data principles     |
+| **Graph Sync**        | `tools/graph_ingest_legacy.py`  | Ingests provenance to Neo4j       |
+| **AI Embedding**      | `scripts/vector_embed.py`       | Adds to Neo4j Vector Index        |
 
-> 🧩 Run locally:
+> **Local run**
 ```bash
 make docs-validate && make docs-lint
 ```
@@ -268,58 +268,59 @@ make docs-validate && make docs-lint
 
 ## 📈 Governance Dashboard Metrics
 
-| Metric | Current | Target | Notes |
-| :-- | :-- | :-- | :-- |
-| Manifest Coverage | 100% | 100% | All archives indexed |
-| FAIR Compliance | ✅ | 100% | Verified by CI |
-| Graph Ingestion | ✅ | 100% | All manifests synced |
-| Zenodo DOI Export | 5 | ≥ 5 | Annual release snapshots |
-| BagIt Validations | ✅ | Quarterly | Retention policy enforced |
+| Metric              | Current | Target | Notes                     |
+| :------------------ | :------ | :----- | :------------------------ |
+| Manifest Coverage   | 100%    | 100%   | All archives indexed      |
+| FAIR Compliance     | ✅       | 100%   | Verified by CI            |
+| Graph Ingestion     | ✅       | 100%   | All manifests synced      |
+| Zenodo DOI Export   | 5       | ≥ 5    | Annual release snapshots  |
+| BagIt Validations   | ✅       | Quarterly | Retention policy enforced |
 
 ---
 
 ## 🔗 External Integration
 
-| Service | Role | Status |
-| :-- | :-- | :-- |
-| **Zenodo** | Public preservation & DOI issuance | ✅ Active |
-| **OSF** | Mirror for institutional archive | 🟡 Pending 2026 |
-| **Neo4j Aura** | Knowledge graph storage & search | ✅ Synced |
-| **GitHub Pages** | Static hosting for manifests & reports | ✅ Published |
+| Service     | Role                                   | Status |
+| :---------- | :-------------------------------------- | :----- |
+| **Zenodo**  | Public preservation & DOI issuance      | ✅ Active |
+| **OSF**     | Mirror for institutional archive        | 🟡 Pending 2026 |
+| **Neo4j Aura** | Knowledge graph storage & search     | ✅ Synced |
+| **GitHub Pages** | Hosting of manifests & reports     | ✅ Published |
 
 ---
 
 ## 🧩 Future Roadmap
 
-| Milestone | Target | Description |
-| :-- | :-- | :-- |
-| v1.3 | Q2 2026 | Add blockchain-based manifest hashing for authenticity. |
-| v1.4 | Q3 2026 | Launch interactive “Archive Browser” dashboard in KFM Web UI. |
-| v2.0 | 2027 | Migrate manifest registry to federated FAIR repository service. |
-| v2.1 | 2028 | Add automatic ontology crosswalk export for SKOS vocabularies. |
+| Milestone | Target | Description                                                |
+| :-------- | :----- | :--------------------------------------------------------- |
+| v1.3      | Q2 2026| Blockchain-based manifest hashing for authenticity         |
+| v1.4      | Q3 2026| Interactive “Archive Browser” dashboard in KFM Web UI     |
+| v2.0      | 2027   | Federated FAIR registry for manifests                     |
+| v2.1      | 2028   | Automatic ontology crosswalk export for SKOS vocabularies |
 
 ---
 
 ## 📎 Related Documentation
 
-| File | Description |
-| :-- | :-- |
-| `docs/notes/archive/README.md` | Global archive governance |
-| `docs/architecture/knowledge-graph.md` | Provenance ingestion and ontology schema |
-| `docs/standards/documentation.md` | MCP-DL documentation governance |
-| `docs/schemas/archive_manifest.schema.json` | JSON schema for manifest validation |
-| `data/work/logs/docs/archive_summary_<YYYY_QN>.json` | Quarterly validation report |
-| `data/work/graph/archive_lineage.ttl` | RDF lineage export from manifests |
+| File                                           | Description                              |
+| :--------------------------------------------- | :--------------------------------------- |
+| `../README.md`                                 | Global archive governance                 |
+| `../../../architecture/knowledge-graph.md`     | Provenance ingestion and ontology schema  |
+| `../../../standards/documentation.md`          | MCP-DL documentation governance           |
+| `../../../schemas/archive_manifest.schema.json`| JSON schema for manifest validation       |
+| `../../../../data/work/logs/docs/archive_summary_<YYYY_QN>.json` | Quarterly validation report |
+| `../../../../data/work/graph/archive_lineage.ttl` | RDF lineage export from manifests      |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.2.0 | 2025-10-18 | @kfm-docs | Added FAIR validation reports, RDF export, and governance metrics; aligned with MCP-DL v6.3 automation. |
-| v1.1.0 | 2024-11-30 | @kfm-data | Integrated archive_index.json and Neo4j vector embeddings. |
-| v1.0.0 | 2024-01-01 | @kfm-docs | Initial manifest system for annual and legacy archives. |
+| Version | Date       | Author      | Summary                                                                                 |
+| :------ | :--------- | :---------- | :-------------------------------------------------------------------------------------- |
+| **v1.3.0** | 2025-10-18 | @kfm-docs   | Added policy badge, clarified CI gates, expanded FAIR/PROV exports and governance KPIs. |
+| v1.2.0  | 2025-10-18 | @kfm-docs   | FAIR reports, RDF export, governance metrics; aligned with MCP-DL automation.           |
+| v1.1.0  | 2024-11-30 | @kfm-data   | Integrated archive_index.json and Neo4j vector embeddings.                              |
+| v1.0.0  | 2024-01-01 | @kfm-docs   | Initial manifest system for annual and legacy archives.                                  |
 
 ---
 
