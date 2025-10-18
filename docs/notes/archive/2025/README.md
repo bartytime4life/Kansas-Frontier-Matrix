@@ -6,6 +6,8 @@
 **Purpose:** Maintain a verifiable, FAIR-compliant, and knowledge-graph-integrated archive of all **2025 notes, discussions, and design records** for the **Kansas Frontier Matrix (KFM)** — ensuring historical transparency, data provenance, and governance continuity under the **Master Coder Protocol – Documentation Language v6.3 (MCP-DL)**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](../README.md)
 [![FAIR Compliance](https://img.shields.io/badge/FAIR-Data%20Compliant-brightgreen)](../../../standards/documentation.md)
@@ -17,15 +19,15 @@
 ---
 title: "Kansas Frontier Matrix — 2025 Notes Archive"
 document_type: "Yearly Archive"
-version: "v1.0.0"
+version: "v1.0.1"
 year: 2025
 last_updated: "2025-10-18"
 created: "2025-01-01"
-owners: ["@kfm-docs","@kfm-governance","@kfm-architecture"]
+owners: ["@kfm-docs","@kfm-governance","@kfm-architecture","@kfm-security"]
 status: "Stable"
 scope: "Docs/Notes/Archive/2025"
 license: "CC-BY 4.0"
-tags: ["archive","2025","provenance","mcp","knowledge-graph","fair","ai"]
+tags: ["archive","2025","provenance","mcp","knowledge-graph","fair","ai","policy"]
 audit_framework: "MCP-DL v6.3"
 semantic_alignment:
   - PROV-O
@@ -62,15 +64,15 @@ ai_index:
 
 ## 📚 Overview
 
-The **2025 Archive** captures the Kansas Frontier Matrix’s transition from **early-stage infrastructure to fully operational governance** under MCP-DL v6.3.  
-This collection records governance meetings, ontology design workshops, and major system integrations that shaped the platform’s reproducibility and data governance standards.
+The **2025 Archive** captures KFM’s transition from **early-stage infrastructure to fully operational governance** under MCP-DL v6.3.  
+This collection records governance meetings, ontology design workshops, and major system integrations that shaped the platform’s reproducibility and data-governance standards.
 
-Archival purpose:
+**Archival Purpose**
 
-* 🔒 Preserve all documentation relevant to 2025 governance and development.  
-* 🧾 Maintain lineage from 2024 prototypes to production-ready KFM workflows.  
-* 🔗 Ensure FAIR data alignment, traceability, and AI discoverability.  
-* 🧱 Provide immutable provenance for all key technical and governance decisions.  
+- 🔒 Preserve all documentation relevant to 2025 governance and development.  
+- 🧾 Maintain lineage from 2024 prototypes to production-ready KFM workflows.  
+- 🔗 Ensure FAIR data alignment, traceability, and AI discoverability.  
+- 🧱 Provide immutable provenance for all key technical and governance decisions.  
 
 ---
 
@@ -88,12 +90,12 @@ docs/notes/archive/2025/
 
 ## 🧾 Archive Summary (2025)
 
-| ID | Title | Archived Date | Reason | Successor |
-| :-- | :-- | :-- | :-- | :-- |
-| A-2025-001 | January 2025 Governance & Infrastructure Sync | 2025-01-10 | complete | `docs/architecture/knowledge-graph.md` |
-| A-2025-004 | Ontology Discussion — Unified Semantic Alignment | 2025-05-03 | superseded | `docs/standards/ontologies.md` |
+| ID         | Title                                     | Archived Date | Reason      | Successor                                   |
+| :--------- | :---------------------------------------- | :------------ | :---------- | :------------------------------------------ |
+| A-2025-001 | January 2025 Governance & Infrastructure Sync | 2025-01-10    | complete    | `docs/architecture/knowledge-graph.md`      |
+| A-2025-004 | Ontology Discussion — Unified Semantic Alignment | 2025-05-03    | superseded  | `docs/standards/ontologies.md`              |
 
-> ✅ Both entries successfully validated for schema compliance, FAIR metadata, and Neo4j ingestion.
+> ✅ Both entries validated for schema, FAIR metadata, checksums, and Neo4j ingestion.
 
 ---
 
@@ -121,9 +123,8 @@ tags: ["archive","ontology","CRM","PROV-O","semantic-web"]
 
 ## 🧩 Provenance & Graph Representation
 
-Archived 2025 notes are stored as **PROV-O entities** with lineage to successors and datasets.
+Archived 2025 notes are stored as **PROV-O** entities with lineage to successors and datasets.
 
-**RDF Example**
 ```turtle
 @prefix kfm: <https://kfm.org/id/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -151,10 +152,10 @@ kfm:meeting/2025_05_03_ontology_discussion
 ## 🧠 Key Achievements (2025)
 
 1. **Operational Deployment Phase** began under MCP-DL v6.3.  
-2. **AI Vector Indexing** integrated into Knowledge Graph search workflows.  
-3. **Unified Ontology Model** finalized for CRM-PROV-SKOS alignment.  
-4. **FAIR & Zenodo Exports** automated for documentation and datasets.  
-5. **Quarterly Governance Reviews** launched via automated CI logs.  
+2. **AI Vector Indexing** integrated into Knowledge Graph search.  
+3. **Unified Ontology Model** finalized for CRM–PROV–SKOS alignment.  
+4. **FAIR & Zenodo Exports** automated for docs and datasets.  
+5. **Quarterly Governance Reviews** launched via CI.
 
 ---
 
@@ -183,34 +184,33 @@ entries:
 
 ## 🧮 Validation Summary
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `yamllint`, `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Graph Sync | ✅ | `tools/graph_ingest_notes.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verification | ✅ | `verify_checksums.py` |
-| AI Embedding | ✅ | Neo4j Vector Index |
+| Validation         | Result | Verified By                    |
+| :----------------- | :----- | :----------------------------- |
+| YAML + Schema      | ✅     | `yamllint`, `jsonschema`       |
+| FAIR Compliance    | ✅     | `scripts/fair_validate.py`     |
+| Graph Ingestion    | ✅     | `tools/graph_ingest_notes.py`  |
+| Successor Links    | ✅     | `remark-lint`                  |
+| Checksums          | ✅     | `verify_checksums.py`          |
+| AI Embedding       | ✅     | Neo4j Vector Index             |
 
 ---
 
 ## 📈 Metrics & KPIs (2025)
 
-| Metric | Current | Target | Notes |
-| :-- | :-- | :-- | :-- |
-| Archived Notes | 2 | — | Completed MCP-DL governance cycle |
-| FAIR Compliance | 100% | 100% | Confirmed by validation script |
-| Successor Link Coverage | 100% | 100% | Fully linked |
-| RDF Provenance Records | 2 | 2 | Ingested to graph |
-| Zenodo Exports | 1 | ≥ 1 | Annual preservation copy complete |
+| Metric                 | Current | Target | Notes                                   |
+| :--------------------- | :------ | :----- | :-------------------------------------- |
+| Archived Notes         | 2       | —      | Completed MCP-DL governance cycle       |
+| FAIR Compliance        | 100%    | 100%   | Confirmed by validation script          |
+| Successor Link Coverage| 100%    | 100%   | Fully linked                            |
+| RDF Provenance Records | 2       | 2      | Ingested to graph                       |
+| Zenodo Exports         | 1       | ≥ 1    | Annual preservation copy complete       |
 
 ---
 
 ## 🧩 Digital Preservation (BagIt / Zenodo Integration)
 
-Archives for 2025 are exported in **BagIt-compliant format** for long-term preservation and FAIR repository deposits.
+Archives for 2025 are exported in **BagIt** format for long-term preservation and FAIR repository deposit.
 
-**Command:**
 ```bash
 make archive-export YEAR=2025 FORMAT=bagit
 ```
@@ -226,42 +226,43 @@ bags/kfm_archive_2025_bagit/
     └── metadata/
 ```
 
-> 🧾 Uploaded to Zenodo under DOI: `10.5281/zenodo.1234655`.
+> DOI: `10.5281/zenodo.1234655`.
 
 ---
 
 ## 🧱 Governance & Review
 
-| Task | Frequency | Responsible |
-| :-- | :-- | :-- |
-| Archive Review | Quarterly | @kfm-governance |
-| FAIR Validation | Annual | @kfm-data |
-| Zenodo Sync | Annual | @kfm-docs |
-| Health Report | Monthly | CI/CD |
-| Graph Audit | Weekly | @kfm-ai |
+| Task            | Frequency | Responsible     |
+| :-------------- | :-------- | :-------------- |
+| Archive Review  | Quarterly | @kfm-governance |
+| FAIR Validation | Annual    | @kfm-data       |
+| Zenodo Sync     | Annual    | @kfm-docs       |
+| Health Report   | Monthly   | CI/CD           |
+| Graph Audit     | Weekly    | @kfm-ai         |
 
 ---
 
 ## 🧠 Historical Significance
 
-> The 2025 archive marks KFM’s **transition from foundational governance to active operational excellence**.
+> The 2025 archive marks KFM’s **transition from foundational governance to operational excellence**.
 
-**Highlights:**
-- Introduced **AI-driven search and vector indexing**.  
-- Established the **Ontology Integration Framework**.  
-- Automated quarterly reports for FAIR validation.  
-- Expanded archive manifesting to **BagIt and Zenodo** export models.  
+Highlights:
+
+- AI-driven search and vector indexing.  
+- Ontology Integration Framework finalized.  
+- Automated quarterly FAIR validation reports.  
+- Manifesting expanded to BagIt and Zenodo exports.
 
 ---
 
 ## 📜 FAIR Compliance & Standards Summary
 
-| Principle | Implementation |
-| :-- | :-- |
-| **Findable** | Indexed by Neo4j + `archive_index.json` |
-| **Accessible** | Open access in Git + Zenodo |
-| **Interoperable** | Uses PROV-O, DCAT, CIDOC-CRM |
-| **Reusable** | Licensed under CC-BY 4.0, checksum verified |
+| Principle | Implementation                                  |
+| :-------- | :-----------------------------------------------|
+| Findable  | Neo4j index + `archive_index.json`               |
+| Accessible| Open Git + Zenodo                                |
+| Interoperable | PROV-O · DCAT · CIDOC CRM                    |
+| Reusable  | CC-BY 4.0 · checksum-verified                    |
 
 ---
 
@@ -286,33 +287,34 @@ bags/kfm_archive_2025_bagit/
 
 ## 🔮 Future Roadmap
 
-| Milestone | Target | Description |
-| :-- | :-- | :-- |
-| v1.1 | Q1 2026 | Integrate auto-generated “Archive Browser” into web frontend |
-| v1.2 | Q2 2026 | Add vector similarity search across archives |
-| v1.3 | Q3 2026 | Implement blockchain checksum signing |
-| v2.0 | 2027 | Launch full AI-curated “KFM Knowledge Continuum” explorer |
+| Milestone | Target  | Description                                   |
+| :-------- | :------ | :-------------------------------------------- |
+| v1.1      | Q1 2026 | Web “Archive Browser” in frontend             |
+| v1.2      | Q2 2026 | Vector similarity search across archives      |
+| v1.3      | Q3 2026 | Blockchain checksum signing                   |
+| v2.0      | 2027    | AI-curated “KFM Knowledge Continuum” explorer |
 
 ---
 
 ## 📎 Related Documentation
 
-| File | Description |
-| :-- | :-- |
-| `docs/notes/archive/README.md` | Global archive governance reference |
-| `docs/notes/archive/2024/README.md` | Previous yearly archive index |
-| `docs/architecture/knowledge-graph.md` | Semantic and RDF ingestion schema |
-| `docs/standards/ontologies.md` | Unified ontology documentation (successor) |
-| `docs/standards/documentation.md` | MCP-DL documentation & style guide |
-| `data/work/logs/docs/archive_summary_2025.json` | CI-generated validation report |
+| File                                   | Description                          |
+| :------------------------------------- | :----------------------------------- |
+| `../README.md`                         | Global archive governance             |
+| `../2024/README.md`                    | Previous yearly archive index         |
+| `../../../architecture/knowledge-graph.md` | RDF ingestion schema               |
+| `../../../standards/ontologies.md`     | Unified ontology documentation        |
+| `../../../standards/documentation.md`  | MCP-DL governance & style             |
+| `../../../../data/work/logs/docs/archive_summary_2025.json` | CI validation report |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Initial 2025 archive index; added FAIR compliance, BagIt export integration, AI indexing, and Zenodo synchronization. |
+| Version | Date       | Author     | Summary                                                                                 |
+| :------ | :--------- | :--------- | :-------------------------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, expanded validation summary, and clarified preservation workflow.   |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Initial 2025 archive index with FAIR, BagIt export, AI indexing, Zenodo sync.          |
 
 ---
 
