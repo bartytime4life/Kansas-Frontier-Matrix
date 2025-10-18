@@ -7,43 +7,53 @@
 working notes, research logs, and early drafts that evolve into formal  
 MCP documentation and structured knowledge graph entries.
 
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue)](../standards/markdown_guide.md)
-[![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../architecture/knowledge-graph.md)
-[![Versioned Notes](https://img.shields.io/badge/Notes-Versioned-orange)](README.md)
-[![Git Provenance](https://img.shields.io/badge/Provenance-Git%20Tracked-blueviolet)](../../data/work/logs/docs/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
+[![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
 
+```yaml
 ---
 title: "Kansas Frontier Matrix — Notes Workspace"
 document_type: "README"
-version: "v1.3.1"
-last_updated: "2025-10-17"
+version: "v1.4.0"
+last_updated: "2025-10-18"
 created: "2025-10-04"
-owners: ["@kfm-documentation", "@kfm-architecture"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-security"]
 status: "Stable"
 maturity: "Production"
+scope: "Docs/Notes"
+license: "CC-BY 4.0"
+semver_policy: "MAJOR.MINOR.PATCH"
 tags: ["docs","notes","mcp","provenance","knowledge-graph","search","markdown"]
-license: "CC-BY-4.0"
-semantic_alignment:
-  - CIDOC-CRM
-  - PROV-O
-  - OWL-Time
-  - SKOS
-  - STAC 1.0
+audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - site-build
+  - pre-commit
   - stac-validate
   - codeql
   - trivy
+semantic_alignment:
+  - STAC 1.0
+  - DCAT 2.0
+  - JSON Schema
+  - ISO 8601
+  - CIDOC CRM
+  - PROV-O
+  - OWL-Time
+  - SKOS
 provenance:
   workflow_pin_policy: "actions pinned by tag or commit SHA"
   artifact_retention_days: 90
+---
+```
+
 ---
 
 ## 📚 Table of Contents
@@ -61,6 +71,7 @@ provenance:
 - [🗄️ Archiving & Filenames](#️-archiving--filenames)  
 - [🤖 AI Assistant & Automation](#-ai-assistant--automation)  
 - [✅ Contributor Checklist](#-contributor-checklist)  
+- [🔒 Ethics & Data Sensitivity](#-ethics--data-sensitivity)  
 - [🤖 CI Integration & Validation](#-ci-integration--validation)  
 - [📎 Related Documentation](#-related-documentation)  
 - [🚀 Roadmap](#-roadmap)  
@@ -157,6 +168,8 @@ ai_assist:
   summarize: true
   embed_in_graph: true
   vector_model: "sentence-transformers/all-MiniLM-L6-v2"
+references:
+  - "url:https://example.org/context"
 ---
 ```
 
@@ -173,8 +186,8 @@ ai_assist:
 | `tags` | Keywords / ontology concepts | `["terrain","LiDAR","ETL"]` |
 | `linked_*` | Crosslinks to artifacts | Dataset paths, commits, docs |
 | `period` | Historical period (from PeriodO) | `"Dust Bowl Era"` |
-| `ai_assist` | AI workflow flags | Summarization / embedding settings |
-| `references` | Optional bibliography | `["doi:10.123/abc","url:https://example.org"]` |
+| `ai_assist` | AI workflow flags | Summarization / embedding |
+| `references` | Bibliography pointers | `["doi:10.123/abc","url:..."]` |
 
 > Schema defined at: `docs/schemas/note.schema.json` and validated by CI.
 
@@ -187,10 +200,10 @@ ai_assist:
 | **1️⃣ Capture** | Add note or section to `research.md`. | Minimal viable capture of ideas. |
 | **2️⃣ Link** | Cross-reference datasets, commits, or external docs. | Maintain provenance. |
 | **3️⃣ Review** | Open PR for comments. | Team discussion or validation. |
-| **4️⃣ Promote** | Move to `/architecture/`, `/design/`, or `/integration/`. | When reproducible or validated. |
-| **5️⃣ Archive** | Move into `/archive/<year>/`. | Lock history, mark `status: archived`. |
+| **4️⃣ Promote** | Move to `/architecture/`, `/design/`, or `/integration/`. | When reproducible/validated. |
+| **5️⃣ Archive** | Move into `archive/<year>/` & set `status: archived`. | Lock history. |
 
-> **Golden Rule:** *Nothing is deleted — all knowledge is preserved through Git + Archive.*
+> **Golden Rule:** *Nothing is deleted — preserve knowledge via Git + Archive.*
 
 ---
 
@@ -212,7 +225,7 @@ kfm:note/hydrology_crosswalk
     dc:date "2025-10-05"^^xsd:date .
 ```
 
-> Notes are then vectorized for semantic search and queryable via the KFM web UI.
+> Notes are vectorized for semantic search and queryable via the KFM web UI.
 
 ---
 
@@ -278,31 +291,27 @@ Each note’s tags are converted into RDF triples and indexed for federated sear
 
 ## 🗄️ Archiving & Filenames
 
-- **When to archive:** After promotion or project phase end.  
+- **When to archive:** After promotion or phase end.  
 - **Where:** `docs/notes/archive/<year>/`  
 - **Pattern:** `YYYY-MM-DD_<kebab-title>.md`  
   Example → `2025-10-05_hydrology-dataset-crosswalk.md`
 
-### Archival Log Example
+**Archival Log Example**
 
 ```markdown
 ### Change Log
-- 2025-10-17: Promoted to `/docs/architecture/hydrology.md`
-- 2025-10-17: Archived original note (status: archived)
+- 2025-10-18: Promoted to `/docs/architecture/hydrology.md`
+- 2025-10-18: Archived original note (`status: archived`)
 ```
-
-> Archiving maintains full traceability for every decision or draft.
 
 ---
 
 ## 🤖 AI Assistant & Automation
 
-- **Summarization:** Each note can trigger summarization for AI dashboards.  
-- **Embedding:** Notes auto-embed via `vector_index_notes.py` for semantic retrieval.  
-- **Graph Sync:** Automated ingestion into Neo4j and Elastic/VectorDB nightly.  
-- **Web Search:** Accessible via KFM web frontend search bar.
-
-**Pipeline Summary**
+- **Summarization:** Notes may trigger AI summaries for dashboards.  
+- **Embedding:** Auto-embedding via `scripts/vector_index_notes.py`.  
+- **Graph Sync:** Nightly ingestion to Neo4j + VectorDB.  
+- **Web Search:** Discoverable via site search.
 
 ```mermaid
 flowchart TD
@@ -320,11 +329,18 @@ flowchart TD
 | ✅ Item | Description |
 | :-- | :-- |
 | [ ] Front-matter passes schema validation (`make docs-validate`) |
-| [ ] Tags follow controlled vocabulary |
-| [ ] Links to datasets, docs, or commits verified |
+| [ ] Tags follow controlled vocabulary (`data/vocabularies/tags.skos.ttl`) |
+| [ ] Links to datasets, docs, commits verified |
 | [ ] Markdown style passes lint (`remark-lint`) |
-| [ ] Added to `research.md` index or linked in related docs |
+| [ ] Added to `research.md` index or cross-linked |
 | [ ] Sensitive/PII-free content (open data only) |
+
+---
+
+## 🔒 Ethics & Data Sensitivity
+
+> ⚠ **Data Ethics:** Include only public-domain or CC-BY content.  
+> Do **not** commit PII or restricted datasets. Cite sources and license terms in `references:`.
 
 ---
 
@@ -332,12 +348,12 @@ flowchart TD
 
 | Validation | Tool | Description |
 | :-- | :-- | :-- |
-| **Front-matter check** | `yamllint` | Validates YAML structure. |
-| **Schema validation** | `jsonschema` | Enforces metadata schema. |
-| **Link integrity** | `remark-lint` | Detects broken/relative links. |
-| **Tag parsing** | `scripts/parse_tags.py` | Updates SKOS vocabularies. |
-| **Graph ingestion** | `scripts/graph_ingest_notes.py` | Loads notes into Neo4j RDF. |
-| **Embedding** | `scripts/vector_index_notes.py` | Builds semantic embeddings. |
+| **Front-matter** | `yamllint` | Validates YAML structure. |
+| **Schema** | `jsonschema` | Enforces `docs/schemas/note.schema.json`. |
+| **Links** | `remark-lint` | Checks internal/relative links. |
+| **Tags → SKOS** | `scripts/parse_tags.py` | Updates SKOS vocabularies. |
+| **Graph ingest** | `scripts/graph_ingest_notes.py` | Loads notes to Neo4j/RDF. |
+| **Embeddings** | `scripts/vector_index_notes.py` | Builds semantic embeddings. |
 
 > Run locally before PR: `make docs-validate && make docs-lint`
 
@@ -347,12 +363,12 @@ flowchart TD
 
 | Path | Description |
 | :-- | :-- |
-| `docs/architecture/knowledge-graph.md` | How notes map into Neo4j/RDF. |
-| `docs/templates/provenance.md` | Provenance & lineage capture. |
+| `docs/standards/documentation.md` | Monorepo-wide documentation & writing standards. |
 | `docs/standards/markdown_guide.md` | Markdown styling & components. |
-| `docs/standards/markdown_rules.md` | Official MCP-DL v6.2 doc rules. |
-| `docs/standards/documentation.md` | Writing & versioning standards. |
-| `docs/standards/ontologies.md` | CIDOC-CRM · OWL-Time · SKOS alignment. |
+| `docs/standards/markdown_rules.md` | Official MCP-DL doc rules & header anatomy. |
+| `docs/architecture/knowledge-graph.md` | Notes → RDF/Neo4j mapping & queries. |
+| `docs/templates/provenance.md` | Provenance & lineage capture templates. |
+| `docs/standards/ontologies.md` | CIDOC-CRM · PROV-O · OWL-Time · SKOS alignment. |
 
 ---
 
@@ -360,9 +376,9 @@ flowchart TD
 
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
-| v1.4 | Q1 2026 | Integrate vector search + AI summaries in web UI |
-| v1.5 | Q2 2026 | Auto-generate STAC/graph sync nightly |
-| v1.6 | Q3 2026 | Add web-based note creation + promotion workflow |
+| v1.5 | Q1 2026 | Integrate vector search + AI summaries in web UI |
+| v1.6 | Q2 2026 | Auto-generate STAC/graph sync nightly |
+| v1.7 | Q3 2026 | Web-based note creation + promotion workflow |
 
 ---
 
@@ -370,17 +386,17 @@ flowchart TD
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| v1.3.1 | 2025-10-17 | KFM Documentation Team | **Added YAML metadata header** under badges; aligned required CI checks. |
-| v1.3 | 2025-10-17 | KFM Documentation Team | Added AI assist, schema validation, contributor checklist, roadmap. |
-| v1.2 | 2025-10-16 | KFM Documentation Team | Updated tagging, ontology links, automation details. |
-| v1.1 | 2025-10-05 | KFM Documentation Team | Added YAML schema, tag vocabularies, graph linkage, CI validation. |
-| v1.0 | 2025-10-04 | KFM Documentation Team | Initial workspace for research and drafts. |
+| v1.4.0 | 2025-10-18 | @kfm-docs | **Added YAML metadata header under badges;** aligned with MCP-DL v6.3; expanded CI checks and ethics section. |
+| v1.3.1 | 2025-10-17 | @kfm-docs | Added AI assist, schema validation, contributor checklist, roadmap. |
+| v1.2.0 | 2025-10-16 | @kfm-docs | Updated tagging, ontology links, automation details. |
+| v1.1.0 | 2025-10-05 | @kfm-docs | Added YAML schema, tag vocabularies, graph linkage, CI validation. |
+| v1.0.0 | 2025-10-04 | @kfm-docs | Initial workspace for research and drafts. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** — *“Ideas Recorded. Knowledge Preserved. Insight Proven.”*  
-📍 [`docs/notes/README.md`](.) · Official MCP-compliant workspace for versioned notes and early research.
+📍 `docs/notes/README.md` · Maintained under MCP governance and CI validation.
 
 </div>
