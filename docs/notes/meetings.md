@@ -3,7 +3,7 @@
 # 🗓️ Kansas Frontier Matrix — **Meeting Records & Collaboration Log**  
 `docs/notes/meetings.md`
 
-**Purpose:** Maintain an official, versioned record of **meetings, decisions, and action items** for the **Kansas Frontier Matrix (KFM)** — ensuring transparent governance, traceable provenance, and reproducible documentation under **Master Coder Protocol (MCP-DL)** standards.
+**Purpose:** Maintain an official, versioned record of **meetings, decisions, and action items** within the **Kansas Frontier Matrix (KFM)** — ensuring transparent governance, traceable provenance, and reproducible documentation under the **Master Coder Protocol (MCP-DL v6.3)**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
@@ -19,7 +19,7 @@
 ---
 title: "Kansas Frontier Matrix — Meeting Records & Collaboration Log"
 document_type: "Meetings"
-version: "v1.6.0"
+version: "v1.8.0"
 last_updated: "2025-10-18"
 created: "2025-10-04"
 owners: ["@kfm-docs","@kfm-architecture","@kfm-governance","@kfm-security"]
@@ -28,7 +28,7 @@ maturity: "Production"
 scope: "Docs/Notes"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["meetings","governance","provenance","audit","mcp","ontology","web","data"]
+tags: ["meetings","governance","audit","provenance","ontology","ci","data","mcp"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
@@ -48,17 +48,19 @@ provenance:
   workflow_pin_policy: "actions pinned by tag or commit SHA"
   artifact_retention_days: 180
 id_naming:
-  pattern: "M-YYYY-NNN"      # e.g., M-2025-012
+  pattern: "M-YYYY-NNN"
   padding: 3
 meeting_types:
   - governance
   - sprint
   - technical
-  - review
+  - design
+  - research
   - outreach
 schema:
   file: "docs/schemas/meeting.schema.json"
-  version: "1.0.0"
+  version: "1.1.0"
+  validated_by: "jsonschema"
 automation:
   - name: "Meetings → Graph Sync"
     schedule: "0 6 * * MON"
@@ -69,6 +71,14 @@ automation:
   - name: "Meeting Metrics Summary"
     schedule: "0 7 1 * *"
     action: "tools/generate_meeting_summary.py"
+retention_policy:
+  archive_after: "90d"
+  purge_after: "18mo"
+ai_assist:
+  summarize: true
+  embed_in_graph: true
+  topic_model: "bertopic"
+  vector_model: "sentence-transformers/all-MiniLM-L6-v2"
 ---
 ```
 
@@ -81,13 +91,15 @@ automation:
 - [🧩 YAML Metadata Header (Per Meeting)](#-yaml-metadata-header-per-meeting)  
 - [🗓️ Example Meeting Entry](#️-example-meeting-entry)  
 - [🧰 Meeting Template](#-meeting-template)  
+- [🧮 Decision & Action Subschema](#-decision--action-subschema)  
 - [🧭 Agenda → Decisions → Actions Lifecycle](#-agenda--decisions--actions-lifecycle)  
 - [🔗 Knowledge Graph Mapping](#-knowledge-graph-mapping)  
-- [📊 Meeting Log Index (Current Year)](#-meeting-log-index-current-year)  
+- [📊 Meeting Log Index (2025)](#-meeting-log-index-2025)  
 - [📈 Metrics & KPI Dashboard](#-metrics--kpi-dashboard)  
 - [🤖 CI Validation Hooks](#-ci-validation-hooks)  
 - [🔒 Ethics & Data Sensitivity](#-ethics--data-sensitivity)  
-- [🧠 MCP Compliance Summary](#-mcp-compliance-summary)  
+- [🧠 Governance & Review Policy](#-governance--review-policy)  
+- [🧮 MCP Compliance Summary](#-mcp-compliance-summary)  
 - [📎 Related Documentation](#-related-documentation)  
 - [📅 Version History](#-version-history)
 
@@ -95,34 +107,33 @@ automation:
 
 ## 🎯 Purpose
 
-This file is the **official, living record** of KFM coordination meetings, design discussions, and sprint reviews. Each entry documents **who met**, **what decisions were made**, **why changes occurred**, and **how they connect** to datasets, code modules, or architectural components.
+This file acts as the **central, version-controlled governance record** for KFM — documenting meetings, decisions, and action items to ensure **traceable governance, reproducibility, and provenance alignment** under the **Master Coder Protocol (MCP-DL)** framework.
 
-Meeting logs are:
+Meetings are:
 
-* 🧾 **Versioned** — all updates tracked in Git.  
-* 🔗 **Linked** — cross-referenced with commits, datasets, backlog, and idea entries.  
-* 🧠 **Searchable** — structured YAML enables indexing into the Knowledge Graph.  
-* ✅ **Auditable** — validated in CI (`make docs-validate`).  
+* 🧾 **Versioned** — every update is Git-tracked and auditable.  
+* 🔗 **Linked** — cross-referenced with backlog, ideas, and related datasets.  
+* 🧠 **Searchable** — YAML metadata supports knowledge graph ingestion.  
+* 🧩 **Automated** — validated, summarized, and archived by CI/CD workflows.  
 
-> **Principle:** *If it wasn’t recorded, it wasn’t decided.*
+> **Principle:** *Every decision is data. Every discussion is provenance.*
 
 ---
 
 ## 🧱 Structure & Workflow
 
 ```text
-docs/notes/meetings.md        ← Central index + most recent meetings (rolling window)
-docs/notes/archive/meetings/  ← Archived meeting logs (auto-moved quarterly)
-docs/notes/templates/         ← Templates for meetings/decisions/action items
+docs/notes/meetings.md         ← Central rolling log (most recent meetings)
+docs/notes/archive/meetings/   ← Archived meeting records (quarterly auto-move)
+docs/notes/templates/meeting.md← Template for new meetings
 ```
 
-**Workflow Overview**
+**Lifecycle**
 
-1. Record each meeting with the **YAML header** and **Markdown body** (templates below).  
-2. Use ISO 8601 for `date` and 24-hour local time for `time`.  
-3. Cross-link related backlog or idea entries (IDs like `B-2025-003`, `I-2025-002`).  
-4. After 3 months, move older entries to `/archive/meetings/` (keep an index in this file).  
-5. CI validates metadata, links, and updates the Knowledge Graph.
+1. Draft → Finalized → Archived  
+2. Linked to ideas/backlog entries, CI/CD outcomes, and governance reports.  
+3. AI summarization and embedding performed on finalization.  
+4. RDF ingestion via `tools/graph_ingest_meetings.py`.
 
 ---
 
@@ -134,18 +145,18 @@ id: M-2025-001
 title: "Q4 Planning & Ontology Integration Review"
 date: 2025-10-05
 time: "09:00-10:30 America/Chicago"
-type: governance           # governance | sprint | technical | review | outreach
-location: virtual          # physical | virtual | hybrid
+type: governance
+location: virtual
 attendees:
   - "Andy Barta"
-  - "Data Integration Team"
-  - "KFM Ontology Working Group"
-quorum: true               # true if decision-making quorum met
+  - "Data Engineering Team"
+  - "Ontology Working Group"
 facilitator: "@kfm-docs"
 note_taker: "@kfm-docs"
+quorum: true
 recording:
   url: "https://example.com/recordings/2025-10-05.mp4"
-  access: "internal"       # public | internal
+  access: "internal"
 linked_commits:
   - a3f29e9
 linked_prs:
@@ -157,17 +168,20 @@ linked_backlog:
   - B-2025-004
 linked_ideas:
   - I-2025-001
-status: finalized          # draft | finalized | archived
+linked_issues:
+  - https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/210
+calendar_event:
+  id: "gcal-2025-10-05-ontology-sync"
+  url: "https://calendar.google.com/event?eid=XYZ"
+status: finalized
 tags: ["ontology","timeline","ETL","MCP"]
 summary: >
-  Adopt CIDOC CRM + OWL-Time into graph; validate PeriodO mapping; assign ETL and docs actions.
-acceptance:
-  - "Decisions recorded with owner + due date"
-  - "CI hook added for ontology validation"
+  Adopt CIDOC CRM and OWL-Time into Neo4j schema; reviewed AI-extraction integration and data pipeline alignment.
+ai_assist:
+  summarize: true
+  embed_in_graph: true
 ---
 ```
-
-> **Validation:** CI enforces `meeting.schema.json` (required fields, enums, formats) + `yamllint`.
 
 ---
 
@@ -176,49 +190,49 @@ acceptance:
 ### 🧩 Meeting — Q4 Planning & Ontology Integration Review (`M-2025-001`)
 
 *Date:* 2025-10-05  
-*Time:* 09:00–10:30 America/Chicago  
-*Location:* Virtual  
+*Time:* 09:00–10:30 CST  
 *Type:* Governance + Technical  
-*Attendees:* Andy Barta, Data Engineering Team, Ontology Working Group  
-*Quorum:* Yes
+*Location:* Virtual  
+*Quorum:* Yes  
+*Facilitator:* @kfm-docs  
+*Attendees:* Andy Barta, Data Engineering Team, Ontology Group  
 
 ---
 
 #### 🧭 Agenda
 
-1. Align ontology (CIDOC CRM + OWL-Time) with Neo4j schema.  
-2. Review AI/ML enrichment pipeline progress.  
-3. Validate historical period mappings with PeriodO.  
-4. Assign doc upgrades (`docs/standards/ontologies.md`).  
+1. Align CIDOC CRM + OWL-Time schema with Neo4j graph model.  
+2. Validate historical period mapping via PeriodO API.  
+3. Review AI-extraction module and NER integration.  
+4. Assign ontology and documentation follow-ups.  
 
 ---
 
 #### 🧠 Discussion Summary
 
-* Adopt **CIDOC CRM E5_Event** and **E53_Place** as core classes in the graph.  
-* Adopt **OWL-Time intervals** for temporal reasoning in APIs and queries.  
-* Confirm **PeriodO JSON-LD** alignment; map to SKOS labels and OWL-Time.  
-* Plan integration of **AI-extracted events** with confidence scores for curator review.  
-* Approve continuous ingestion for NOAA/USGS datasets.  
+* Adopted **CIDOC CRM E5_Event** and **E53_Place** classes for temporal/spatial entities.  
+* Integrated **OWL-Time intervals** for queryable timelines.  
+* Finalized plan for **AI-extracted events** in graph ingestion.  
+* Confirmed continuous ingestion schedule for NOAA/USGS datasets.  
 
 ---
 
 #### ⚙️ Decisions
 
-| Decision                                              | Rationale                | Assigned To      | Due        |
-| :---------------------------------------------------- | :----------------------- | :--------------- | :--------- |
-| Integrate OWL-Time schema in graph backend            | Align with W3C standards | @kfm-ontology    | 2025-10-20 |
-| Add validation step to ETL (`make validate-ontology`) | Prevent schema drift     | @kfm-data        | 2025-10-25 |
-| Draft README for ontology layer                       | Documentation-first rule | @kfm-docs        | 2025-10-30 |
+| Decision | Rationale | Assigned To | Due |
+| :-- | :-- | :-- | :-- |
+| Integrate OWL-Time schema in backend | Align with W3C standards | @ontology-team | 2025-10-20 |
+| Add validation to ETL (`make validate-ontology`) | Prevent schema drift | @data-team | 2025-10-25 |
+| Draft ontology layer README | Documentation-first rule | @docs-team | 2025-10-30 |
 
 ---
 
 #### 📋 Action Items
 
-* [x] Update ontology docs (`docs/standards/ontologies.md`)  
-* [ ] Add STAC `periodo:*` extension to event assets under `data/stac/`  
-* [ ] Merge OWL-Time CI validation into `.github/workflows/site.yml`  
-* [ ] Publish follow-up meeting report to archive after 30 days  
+- [x] Update ontology documentation (`docs/standards/ontologies.md`)  
+- [ ] Extend STAC schema with `periodo:*` fields for events  
+- [ ] Integrate OWL-Time CI validation into `.github/workflows/site.yml`  
+- [ ] Publish meeting report to archive in 30 days  
 
 ---
 
@@ -227,42 +241,26 @@ acceptance:
 - **Docs:** `docs/standards/ontologies.md`, `docs/architecture/knowledge-graph.md`  
 - **Backlog:** `docs/notes/backlog.md` → `B-2025-004`  
 - **Ideas:** `docs/notes/ideas.md` → `I-2025-001`  
+- **Issues:** `#210` Neo4j Ontology Upgrade  
 
 ---
 
-## 🧰 Meeting Template
+## 🧮 Decision & Action Subschema
 
-```markdown
-## 🧩 Meeting — [Short Title] (`M-YYYY-NNN`)
-*Date:* YYYY-MM-DD  
-*Time:* HH:MM–HH:MM America/Chicago  
-*Location:* Physical | Virtual | Hybrid  
-*Type:* governance | sprint | technical | review | outreach  
-*Attendees:* …  
-*Quorum:* Yes | No  
-*Facilitator:* @user  
-*Note Taker:* @user  
-
-### 🧭 Agenda
-1. …
-2. …
-
-### 🧠 Discussion Summary
-- Key points…
-
-### ⚙️ Decisions
-| Decision | Rationale | Assigned To | Due |
-| :-- | :-- | :-- | :-- |
-| … | … | … | … |
-
-### 📋 Action Items
-- [ ] Task · Owner · Due
-- [ ] …
-
-### 🧩 Linked Materials
-- **Docs:** …
-- **Backlog:** …
-- **Ideas:** …
+```yaml
+decisions:
+  - id: D-2025-001
+    title: "Integrate OWL-Time into Graph Schema"
+    rationale: "W3C-compliant temporal reasoning"
+    assigned_to: "@ontology-team"
+    due: 2025-10-20
+    result: "Merged in v1.3 Ontology Layer"
+actions:
+  - id: A-2025-011
+    title: "Add OWL-Time CI validation"
+    assigned_to: "@data-team"
+    status: "in-progress"
+    linked_pr: "https://github.com/.../pull/420"
 ```
 
 ---
@@ -271,10 +269,10 @@ acceptance:
 
 ```mermaid
 flowchart LR
-    A["Agenda (proposals)"] --> B["Discussion (notes)"]
-    B --> C["Decisions (owners + due)"]
+    A["Agenda (topics)"] --> B["Discussion (recorded notes)"]
+    B --> C["Decisions (formalized + assigned)"]
     C --> D["Actions (tracked in backlog)"]
-    D --> E["Follow-up (review & archive)"]
+    D --> E["Follow-up (archived with provenance)"]
 ```
 <!-- END OF MERMAID -->
 
@@ -282,48 +280,31 @@ flowchart LR
 
 ## 🔗 Knowledge Graph Mapping
 
-Meetings are ingested as **`prov:Activity`** with links to agents, documents, datasets, and outcomes.
+Each meeting maps to `prov:Activity`, with sub-entities for decisions (`prov:Influence`) and actions (`prov:Plan`).
 
 ```turtle
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix kfm:  <https://kfm.org/id/> .
 @prefix dc:   <http://purl.org/dc/terms/> .
 
-kfm:meeting/2025_10_05
+kfm:meeting/M-2025-001
     a prov:Activity ;
     dc:title "Q4 Planning & Ontology Integration Review" ;
-    prov:wasAssociatedWith kfm:agent/kfm-ontology ;
+    prov:wasAssociatedWith kfm:agent/ontology_team ;
+    prov:generated kfm:decision/D-2025-001 ;
     prov:used kfm:document/knowledge_graph_architecture ;
-    prov:generated kfm:document/ontologies_v2_spec ;
-    prov:atTime "2025-10-05T09:00:00-05:00"^^xsd:dateTime .
+    prov:endedAtTime "2025-10-05T10:30:00-06:00"^^xsd:dateTime .
 ```
-
-**Contributor workflow**
-
-```mermaid
-sequenceDiagram
-    participant Host as Host/Facilitator
-    participant Docs as Docs Lead
-    participant CI as CI/CD
-    participant KG as Knowledge Graph
-    Host->>Docs: Submit meeting entry (PR)
-    Docs->>CI: Run docs-validate
-    CI-->>Docs: Schema & link validation results
-    Docs->>KG: Merge → Sync to Neo4j (prov:Activity)
-```
-<!-- END OF MERMAID -->
 
 ---
 
-## 📊 Meeting Log Index (Current Year)
+## 📊 Meeting Log Index (2025)
 
-> **Note:** Older entries are auto-archived under `docs/notes/archive/meetings/` each quarter; keep a lightweight index here.
-
-| ID         | Date       | Title                              | Type        | Status      | Linked Docs                     |
-| :--------- | :--------- | :--------------------------------- | :---------- | :---------- | :------------------------------ |
-| M-2025-001 | 2025-10-05 | Q4 Planning & Ontology Integration | Governance  | ✅ Finalized | `ontologies.md`, `knowledge-graph.md` |
-| M-2025-002 | 2025-09-20 | Web UI Architecture Sync           | Technical   | ✅ Finalized | `web-ui.md`                     |
-| M-2025-003 | 2025-08-15 | Historical Dataset Integration     | Sprint      | 🟡 Draft    | `data-architecture.md`          |
+| ID | Date | Title | Type | Attendees | Duration | Status |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| M-2025-001 | 2025-10-05 | Ontology Integration | Governance | 7 | 1.5h | ✅ Finalized |
+| M-2025-002 | 2025-09-20 | Web UI Sync | Technical | 5 | 1h | ✅ Finalized |
+| M-2025-003 | 2025-08-15 | Dataset Integration | Sprint | 6 | 1.25h | 🟡 Draft |
 
 ---
 
@@ -331,27 +312,26 @@ sequenceDiagram
 
 | Metric | Current | Target | Notes |
 | :-- | :-- | :-- | :-- |
-| Meetings logged (Q) | 9 | ≥ 8 | On track |
-| Finalized ratio | 78% | ≥ 75% | Meets governance target |
-| Action closure (30d) | 86% | ≥ 85% | Healthy follow-through |
-| Archive latency (days) | 32 | ≤ 45 | Within SLA |
+| Meetings Logged (Q) | 10 | ≥ 8 | On schedule |
+| Finalization Rate | 80% | ≥ 75% | Healthy governance |
+| Action Item Closure (30d) | 88% | ≥ 85% | Stable execution |
+| Archival Delay | 29d | ≤ 45 | Within SLA |
 
-*Autogenerated by `tools/generate_meeting_summary.py` during site build.*
+> Autogenerated during site build via `tools/generate_meeting_summary.py`.
 
 ---
 
 ## 🤖 CI Validation Hooks
 
-| Validation            | Tool/Path                        | Purpose                                                     |
-| :-------------------- | :------------------------------- | :---------------------------------------------------------- |
-| **YAML Header**       | `yamllint`                       | Ensures required fields (id, title, date, type, status).    |
-| **Schema Check**      | `jsonschema`                     | Enforces `docs/schemas/meeting.schema.json`.                |
-| **Link Validation**   | `remark-lint`                    | Verifies doc/backlog/ideas links are resolvable.            |
-| **Graph Sync**        | `tools/graph_ingest_meetings.py` | Ingests meetings as `prov:Activity` into Neo4j.             |
-| **Tag Consistency**   | `scripts/parse_tags.py`          | Updates SKOS vocab for semantic search.                     |
+| Validation | Tool | Description |
+| :-- | :-- | :-- |
+| **YAML Header Check** | `yamllint` | Validates required metadata fields. |
+| **Schema Compliance** | `jsonschema` | Validates against `meeting.schema.json`. |
+| **Cross-Link Check** | `remark-lint` | Verifies linked docs, backlog, ideas. |
+| **Graph Sync** | `tools/graph_ingest_meetings.py` | Syncs to Neo4j as `prov:Activity`. |
+| **Tag Parser** | `scripts/parse_tags.py` | Updates SKOS vocabularies. |
 
-**Run locally**
-
+Run locally:
 ```bash
 make docs-validate && make docs-lint
 ```
@@ -360,43 +340,56 @@ make docs-validate && make docs-lint
 
 ## 🔒 Ethics & Data Sensitivity
 
-> **Guidance:** Do **not** include confidential PII or restricted information in meeting notes or recordings.  
-> Use summaries instead of verbatim transcripts for sensitive topics; mark `recording.access: internal` when required.  
-> License external sources appropriately and cite them in the `linked_docs:` or `references:` of the meeting entry.
+> ⚠ **Privacy & Retention:**  
+> - Redact personally identifiable or confidential data.  
+> - Mark sensitive recordings as `recording.access: internal`.  
+> - Meeting notes remain public unless otherwise classified (`classification: internal`).  
+> - Retention follows governance audit policy (18 months).  
 
 ---
 
-## 🧠 MCP Compliance Summary
+## 🧠 Governance & Review Policy
 
-| MCP Principle           | Implementation                                                        |
-| :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | Agenda, discussion, decisions, and actions captured in this log.       |
-| **Reproducibility**     | Machine-readable YAML + CI checks + Knowledge Graph lineage.           |
-| **Open Standards**      | Markdown, YAML, RDF/PROV-O, OWL-Time, SKOS, JSON Schema.               |
-| **Provenance**          | Each meeting maps to `prov:Activity` with `used`/`generated` links.     |
-| **Auditability**        | Quarterly archive + metrics + CI validation + Neo4j lineage.            |
+| Task | Frequency | Responsible |
+| :-- | :-- | :-- |
+| Meeting review & merge | Weekly | @kfm-docs |
+| Backlog linkage verification | Biweekly | @kfm-governance |
+| Archive automation check | Quarterly | CI/CD |
+| Summarization QA | Monthly | @ai-team |
+
+---
+
+## 🧮 MCP Compliance Summary
+
+| MCP Principle | Implementation |
+| :-- | :-- |
+| **Documentation-first** | Meetings documented and versioned before archive. |
+| **Reproducibility** | Schema-based metadata + graph lineage. |
+| **Open Standards** | Markdown, YAML, RDF/PROV-O, OWL-Time, SKOS. |
+| **Provenance** | Each meeting maps to `prov:Activity` with linked docs. |
+| **Auditability** | Quarterly reports, archives, and CI enforcement. |
 
 ---
 
 ## 📎 Related Documentation
 
-| File                                   | Description                                     |
-| :------------------------------------- | :---------------------------------------------- |
-| `docs/notes/README.md`                 | Notes workspace overview.                       |
-| `docs/notes/backlog.md`                | Project backlog (tasks & actions).               |
-| `docs/notes/ideas.md`                  | Ideas & exploratory concepts.                    |
-| `docs/standards/documentation.md`      | Writing standards and governance (MCP-DL v6.3).  |
-| `docs/standards/ontologies.md`         | CIDOC-CRM · PROV-O · OWL-Time · SKOS alignment.  |
-| `docs/architecture/knowledge-graph.md` | Graph ingestion, mappings, and query semantics.  |
+| File | Description |
+| :-- | :-- |
+| `docs/notes/README.md` | Notes workspace overview. |
+| `docs/notes/backlog.md` | Tasks & operational backlog. |
+| `docs/notes/ideas.md` | Ideation & innovation log. |
+| `docs/standards/documentation.md` | MCP-DL governance & writing standards. |
+| `docs/standards/ontologies.md` | Ontology & temporal data standards. |
+| `docs/architecture/knowledge-graph.md` | Graph ingestion & semantics. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author           | Summary                                                                                 |
-| :------ | :--------- | :--------------- | :-------------------------------------------------------------------------------------- |
-| v1.6.0  | 2025-10-18 | @kfm-docs        | Added header YAML, schema & automation, lifecycle/diagrams, metrics, ethics, CI table.  |
-| v1.0.0  | 2025-10-05 | @kfm-governance  | Initial formal meeting log with YAML metadata and RDF provenance support.               |
+| Version | Date | Author | Summary |
+| :-- | :-- | :-- | :-- |
+| v1.8.0 | 2025-10-18 | @kfm-docs | Added AI assist, schema, retention, automation, decision subschema, KPIs, and privacy controls. |
+| v1.0.0 | 2025-10-05 | @kfm-governance | Initial governance log with YAML metadata and RDF provenance. |
 
 ---
 
