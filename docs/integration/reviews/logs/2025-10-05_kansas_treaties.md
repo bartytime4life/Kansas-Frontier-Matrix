@@ -59,3 +59,103 @@ timestamp: 2025-10-05T17:30:00Z
 linked_templates:
   - ../templates/data_review_template.md
   - ../checklist.md
+---
+````
+
+---
+
+## 🧩 Reviewer Notes
+
+**Historian A:**
+Cross-verified treaties (Kansa 1825, Osage 1825, Cherokee 1835) with federal records.
+All dataset dates and treaty names match primary sources. No discrepancies found.
+
+**Geospatial B:**
+Confirmed CRS = EPSG:4326; no geometry errors detected (`ogrinfo` validation).
+Dataset boundaries overlay Kansas administrative layer accurately.
+One metadata fix: `SOURCE_URL` truncated in Royce No. 105 — updated to full USFS endpoint.
+
+### Actions
+
+* ✅ Update `SOURCE_URL` for Royce 105.
+* ✅ Append dataset version `v1.0.0` to `data/sources/treaties_royce_kansas.json`.
+* ✅ Update `docs/integration/treaties.md` with validation results.
+
+---
+
+## 📎 Supporting Artifacts
+
+| Artifact                   | Location                                          | Description                                              |
+| :------------------------- | :------------------------------------------------ | :------------------------------------------------------- |
+| **Map Overlay Screenshot** | `logs/map_overlay_kansas_treaties_2025-10-05.png` | Visual confirmation of spatial accuracy.                 |
+| **STAC Validation Report** | `logs/stac_validate_treaties_2025-10-05.json`     | JSON output from validator confirming schema compliance. |
+| **Checksum Manifest**      | `data/checksums/ks_treaties_sha256.txt`           | Recorded file hashes.                                    |
+| **ETL Output Log**         | `logs/etl_treaties_2025-10-05.txt`                | Full conversion and ingestion log.                       |
+
+---
+
+## ⚙️ Validation Summary
+
+| Validation Layer     | Tool / Method                 | Result                 |
+| :------------------- | :---------------------------- | :--------------------- |
+| STAC Schema          | `stac-validator` v3.1         | ✅ Pass                 |
+| CRS Check            | `ogrinfo` / GDAL 3.6          | ✅ Pass                 |
+| JSON Schema          | `jsonschema`                  | ✅ Valid                |
+| Metadata Audit       | Manual + YAML Lint            | ✅ Conforms             |
+| Visualization        | Frontend `make serve`         | ✅ Rendered correctly   |
+| Provenance Linkage   | CIDOC CRM / Neo4j ingest test | ✅ Linked               |
+| AI Entity Crosscheck | `frontier_ner_v3` model       | ✅ Accurate (F1 = 0.98) |
+
+---
+
+## 🧠 Provenance & Semantic Record
+
+| Ontology      | Class / Property             | Mapping                                |
+| :------------ | :--------------------------- | :------------------------------------- |
+| **CIDOC CRM** | E31 Document → Treaty Text   | Treaty transcription                   |
+|               | E53 Place → Boundary Polygon | Geospatial area                        |
+|               | E74 Group → Tribe            | “Osage Nation”, “Kaw Nation”           |
+|               | E5 Event → Cession Event     | Land transfer activity                 |
+| **OWL-Time**  | time:Interval                | `1820-01-01/1875-12-31`                |
+| **PROV-O**    | prov:wasDerivedFrom          | USFS → KFM ETL → Graph DB              |
+| **DCAT 2.0**  | dcat:Dataset                 | STAC item metadata                     |
+| **STAC 1.0**  | stac:item                    | `data/stac/treaties_royce_kansas.json` |
+
+---
+
+## 🔐 Compliance & Governance
+
+| Policy                     | Check                                              | Result |
+| :------------------------- | :------------------------------------------------- | :----- |
+| **MCP-DL v6.3 Compliance** | Documentation-first, reproducibility verified      | ✅      |
+| **Open License**           | CC-BY-4.0 & Public Domain acknowledged             | ✅      |
+| **Audit Record**           | Logged to `audit-index.json`                       | ✅      |
+| **Ethical Review**         | No restricted cultural data; public domain         | ✅      |
+| **Retention**              | Permanent, with Zenodo / OSF replication scheduled | ✅      |
+
+---
+
+## 🧮 Decision Summary
+
+☑ **Approved** — dataset validated, provenance confirmed, and compliant with all MCP-DL v6.3 standards.
+Integration into the knowledge graph and timeline visualization authorized.
+
+---
+
+## 📜 References
+
+* *Indian Land Cessions in the United States*, Royce 1902 (USFS / Smithsonian digitization).
+* *Kappler: Indian Affairs — Laws & Treaties*, Vol. II, 1904.
+* *U.S. Forest Service*, *Tribal Ceded Lands Feature Service*, 2018.
+* *Library of Congress Digital Collections*, Indian Land Cessions Maps.
+* *Kansas Historical Society Archives*, Treaty Records and Survey Maps (1850–1870).
+
+---
+
+<div align="center">
+
+### 🧾 “Logs are memory; provenance is proof — every review is a timestamp of trust.”
+
+**Kansas Frontier Matrix Review Council · MCP-DL v6.3**
+
+</div>
