@@ -24,9 +24,15 @@
 * [🔄 CI/CD Workflow Overview](#-cicd-workflow-overview)
 * [🗾 Validation Flow (CI Lifecycle)](#-validation-flow-ci-lifecycle)
 * [⚙️ Core Workflows](#-core-workflows)
+* [🤖 Pipeline Automation Hooks](#-pipeline-automation-hooks)
 * [🛡 Governance & Roles](#-governance--roles)
 * [🧲 MCP Compliance Matrix](#-mcp-compliance-matrix)
 * [🔒 Security & Provenance](#-security--provenance)
+* [📦 Advanced Hardening & Supply Chain](#-advanced-hardening--supply-chain)
+* [🔁 Dependency & Release Automation](#-dependency--release-automation)
+* [🧪 AI Model Governance (Quality & Ethics)](#-ai-model-governance-quality--ethics)
+* [🧾 Data Ethics & Cultural Safeguards](#-data-ethics--cultural-safeguards)
+* [🧯 Runbooks, Incidents & Retention](#-runbooks-incidents--retention)
 * [🤝 Contribution Notes](#-contribution-notes)
 * [🗳 Metadata & Provenance](#-metadata--provenance)
 * [📂 Related Documentation](#-related-documentation)
@@ -46,7 +52,8 @@ KFM’s `.github/` directory governs automated workflows, branch security, and c
 - **Reproducibility:** Makefile + pinned actions + container digests.  
 - **Security:** CodeQL, Trivy, and OIDC permissions.  
 - **Governance:** CODEOWNERS, PR templates, required reviews.  
-- **Auditability:** CI logs, versioned artifacts, changelogs.
+- **Auditability:** CI logs, versioned artifacts, changelogs.  
+- **Automation:** Integrated DVC/LFS sync, nightly AI model validation, and Markdown linting.
 
 All workflows run in **GitHub Actions** with logs publicly accessible.
 
@@ -57,11 +64,11 @@ All workflows run in **GitHub Actions** with logs publicly accessible.
 ```mermaid
 flowchart TD
   A["Commit / Pull Request"] --> B["Pre-Commit Hooks<br/>(lint, format)"]
-  B --> C["Validation<br/>(STAC, Checksums, Tests)"]
+  B --> C["Validation<br/>(STAC, Checksums, Docs)"]
   C --> D["Security Scans<br/>(CodeQL + Trivy)"]
-  D --> E["Build + Deploy<br/>(Site, Docs)"]
-  E --> F["Publish Artifacts<br/>(Pages, Logs, Metadata)"]
-  F --> G["Archive Logs<br/>(ETL history, CI reports)"]
+  D --> E["Build + Deploy<br/>(Site, Docs, Models)"]
+  E --> F["Publish Artifacts<br/>(Pages, Logs, Model Cards)"]
+  F --> G["Archive Logs<br/>(ETL history, CI reports, Provenance)"]
 %% END OF MERMAID
 ```
 
@@ -81,11 +88,12 @@ sequenceDiagram
   Dev->>GH: Push PR / Commit
   GH->>CI: Run pre-commit
   CI-->>Dev: Block if fail
-  CI->>CI: Run checksums + STAC
+  CI->>CI: Run checksums + STAC + docs-validate
   CI->>CI: Run CodeQL & Trivy
-  CI->>CD: Build & deploy site/docs
+  CI->>CI: Run AI model tests (NER, Summarization)
+  CI->>CD: Build & deploy site/docs/models
   CD->>GH: Upload logs & artifacts
-  GH->>Dev: Report status & links
+  GH->>Dev: Report status & provenance links
 %% END OF MERMAID
 ```
 
@@ -95,16 +103,33 @@ sequenceDiagram
 
 ## ⚙️ Core Workflows
 
-| **Workflow**        | **Trigger**         | **Role**                   | **Validation / Task**                    |
-|---------------------|---------------------|----------------------------|------------------------------------------|
-| `pre-commit.yml`    | PR                  | Lint, format, test         | Black, Ruff, Markdownlint, actionlint    |
-| `stac-validate.yml` | PR, Push            | STAC, JSON Schema          | `stac-validator`, JSON Schema checks     |
-| `checksums.yml`     | Data push           | Data integrity             | Compute & compare **SHA-256**            |
-| `fetch.yml`         | Schedule / Manual   | Data ingestion             | Load remote sources from manifests       |
-| `site.yml`          | Merge to `main`     | Build & deploy             | Build docs/site → GitHub Pages           |
-| `codeql.yml`        | PR, Schedule        | Static analysis (security) | CodeQL SARIF scan                        |
-| `trivy.yml`         | Weekly              | CVE scanner                | Trivy images/dependencies audit          |
-| `auto-merge.yml`    | Post-Checks         | PR merge automation        | Auto-merges PRs after required checks    |
+| **Workflow**           | **Trigger**         | **Role**                   | **Validation / Task**                    |
+|------------------------|---------------------|----------------------------|------------------------------------------|
+| `pre-commit.yml`       | PR                  | Lint, format, test         | Black, Ruff, Markdownlint, actionlint    |
+| `stac-validate.yml`    | PR, Push            | STAC, JSON Schema          | `stac-validator`, JSON Schema checks     |
+| `checksums.yml`        | Data push           | Data integrity             | Compute & compare **SHA-256**            |
+| `dvc-sync.yml`         | Data push / Manual  | Data version control       | Sync LFS/DVC pointers + verify checksums |
+| `docs-validate.yml`    | PR / Push           | Docs as Code validation    | Markdownlint + link checker + metadata   |
+| `ai-model.yml`         | Nightly / Manual    | AI pipeline automation     | Train/test models → update metrics/model cards |
+| `external-sync.yml`    | Weekly / Manual     | External API monitor       | Verify NOAA/USGS/FEMA API schema & status|
+| `fetch.yml`            | Schedule / Manual   | Data ingestion             | Load remote sources from manifests       |
+| `site.yml`             | Merge to `main`     | Build & deploy             | Build docs/site → GitHub Pages           |
+| `codeql.yml`           | PR, Schedule        | Static analysis (security) | CodeQL SARIF scan                        |
+| `trivy.yml`            | Weekly              | CVE scanner                | Trivy images/dependencies audit          |
+| `auto-merge.yml`       | Post-Checks         | PR merge automation        | Auto-merges PRs after required checks    |
+
+---
+
+## 🤖 Pipeline Automation Hooks
+
+Each ETL / AI / data workflow emits CI events to maintain system synchronization and provenance tracking:
+
+- **ETL completion** → triggers `stac-validate.yml`
+- **Checksum or DVC changes** → triggers `checksums.yml`
+- **AI model training completion** → triggers `ai-model.yml`
+- **External API heartbeat (NOAA/USGS/FEMA)** → triggers `external-sync.yml`
+
+All actions publish **provenance JSON** and **hash-stamped logs** to the `artifacts/` directory, archived per run for long-term reproducibility.
 
 ---
 
@@ -118,7 +143,7 @@ sequenceDiagram
 
 **Protections**
 
-- ✅ Required checks: pre-commit, STAC, tests, security  
+- ✅ Required checks: pre-commit, STAC, docs, tests, security  
 - ✅ At least 1 CODEOWNER review  
 - ✅ Signed commits  
 - ✅ Semantic commit messages (Conventional Commits)
@@ -131,6 +156,7 @@ sequenceDiagram
 | `@kfm-security`    | Review CI workflows, secrets, security configs|
 | `@kfm-docs`        | Validate all documentation changes            |
 | `@kfm-data`        | Approve data pipeline and ETL modifications   |
+| `@kfm-ai`          | Maintain AI/ML workflows & model reproducibility |
 | `@kfm-web`         | Frontend (MapLibre, timeline, React)          |
 
 > Governance Committee audits documentation quarterly and reviews backlog biweekly.
@@ -143,20 +169,78 @@ sequenceDiagram
 |-----------------------|-----------------------------------------------------------------------|
 | Documentation-First   | PR templates, code comments, updated READMEs before merge             |
 | Reproducibility       | Makefile, pinned versions, deterministic outputs, **SHA-256** logs    |
-| Provenance            | Git history, CODEOWNERS, changelogs, hash-stamped logs                |
-| Auditability          | Artifacts logged; STAC/checksum audits weekly; auto-check CI          |
-| Open Standards        | YAML, STAC, JSON Schema, Mermaid, Markdown                           |
+| Provenance            | Git history, CODEOWNERS, changelogs, DVC metadata, hash-stamped logs  |
+| Auditability          | Artifacts logged; STAC/checksum/AI audits weekly; auto-check CI        |
+| Open Standards        | YAML, STAC, JSON Schema, DCAT, Markdown, Mermaid                      |
+| Security              | CodeQL, Trivy, OIDC, branch protection                                |
 
 ---
 
 ## 🔒 Security & Provenance
 
 - **Permissions:** Minimal OIDC scopes, no long-lived secrets in workflows  
-- **CodeQL:** Static analysis for code vulnerabilities (SARIF artifacts)  
+- **CodeQL:** Static analysis for vulnerabilities (SARIF artifacts)  
 - **Trivy:** Image and dependency CVE scanning  
-- **Integrity:** **SHA-256** for datasets & build artifacts; checksum diffs in PRs  
-- **Provenance:** PROV-O annotations in metadata; CI logs retained per retention policy  
-- **Workflow Hygiene:** Pinned action versions (tags or SHAs), branch protection, required reviews
+- **Integrity:** **SHA-256** for datasets & artifacts; checksum diffs in PRs  
+- **API Audit Logs:** FastAPI endpoints log structured metadata to CI artifacts  
+- **Data Versioning:** DVC and LFS pointers validated via `dvc-sync.yml`  
+- **Model Lineage:** `ai-model.yml` publishes hashes & evaluation metrics to `docs/model_card.md`  
+- **Workflow Hygiene:** Pinned action versions, branch protection, required reviews
+
+---
+
+## 📦 Advanced Hardening & Supply Chain
+
+| Capability      | Tooling / Workflow                   | Outcome |
+|-----------------|--------------------------------------|---------|
+| SBOM            | `sbom.yml` (Syft) + upload artifact  | Software Bill of Materials attached to each run/release |
+| SBOM Scan       | Grype (re-uses Syft SBOM)            | CVE detection on dependency graph                       |
+| Provenance      | SLSA attestations (gha-provenance)   | Verifiable build provenance (OIDC signed)               |
+| Policy-as-Code  | `policy-check.yml` (OPA/Conftest)    | Block PRs that violate repo/org policies                |
+| Secret Scanning | `gitleaks.yml`                       | Prevent leaked secrets; audit trail in artifacts        |
+| Action Linting  | `actionlint` in `pre-commit.yml`     | Catch YAML/action misconfigs early                      |
+
+> **Note:** All new workflows must pin actions by version or SHA and run with least-privilege OIDC tokens.
+
+---
+
+## 🔁 Dependency & Release Automation
+
+| Workflow            | Trigger         | Task                                     |
+|---------------------|-----------------|------------------------------------------|
+| `dependabot.yml`    | Weekly          | Open grouped PRs for deps (code & GHAs)  |
+| `renovate` (opt)    | Weekly          | Alternative dependency updater            |
+| `release-please.yml`| Merge to `main` | Semantic releases + changelog generation  |
+
+---
+
+## 🧪 AI Model Governance (Quality & Ethics)
+
+| Control                | Enforcement                                      |
+|------------------------|--------------------------------------------------|
+| Training Data Hashes   | `ai-model.yml` records content hashes + sizes    |
+| Quality Gates          | Min F1/ROUGE thresholds before model publish     |
+| Bias Checks            | Curated benchmark set; fail gate on regression   |
+| Human-in-the-Loop      | `@kfm-ai` approval required to update model card |
+| Model Card Sync        | Auto-patch `docs/templates/model_card.md` with metrics & hashes |
+
+---
+
+## 🧾 Data Ethics & Cultural Safeguards
+
+- **Indigenous & sensitive datasets:** CI validates presence of source, scope, usage notes, and any redaction tags in STAC `properties` (e.g., `properties.data_ethics="restricted-derivatives"`).  
+- **Public artifact scrubbing:** Large artifacts with restricted layers are excluded from public Pages builds and stored with limited retention.  
+- **Ethics logs:** MCP-DL metadata extended with `ethics_review` fields for datasets requiring curation approval.
+
+---
+
+## 🧯 Runbooks, Incidents & Retention
+
+| Topic          | Location / Policy                                                       |
+|----------------|-------------------------------------------------------------------------|
+| CI Runbook     | `docs/standards/ci-runbook.md` (build, rollback, hotfix)                |
+| Incident Flow  | `docs/standards/incident-response.md` + `incident.yml` triage workflow  |
+| Retention      | Logs 90d, artifacts 30d, SBOM/provenance 365d (config in each workflow) |
 
 ---
 
@@ -170,12 +254,12 @@ sequenceDiagram
 
 ### ✅ PR Checklist
 
-- [ ] CI green (pre-commit, STAC, tests, security)  
+- [ ] CI green (pre-commit, STAC, docs, tests, security)  
 - [ ] Docs updated (README/SOP)  
 - [ ] Tests written/updated (if applicable)  
 - [ ] Reviewed by appropriate CODEOWNERs  
 - [ ] Semantic **and** signed commits  
-- [ ] Issue/backlog item referenced
+- [ ] Issue/backlog item referenced  
 
 ---
 
@@ -183,8 +267,9 @@ sequenceDiagram
 
 - **Document:** `.github/workflows/README.md`  
 - **License:** MIT (code), CC-BY 4.0 (docs)  
-- **Maintainers:** `@kfm-docs`, `@kfm-security`, `@kfm-architecture`  
-- **Standards:** MCP-DL v6.3
+- **Maintainers:** `@kfm-docs`, `@kfm-security`, `@kfm-architecture`, `@kfm-ai`  
+- **Standards:** MCP-DL v6.3, FAIR Principles  
+- **Provenance Files:** CI-produced `.prov.json` & `.sha256` under `/artifacts/`
 
 ---
 
@@ -192,8 +277,10 @@ sequenceDiagram
 
 | Path                          | Description                              |
 |-------------------------------|------------------------------------------|
-| `docs/architecture/ci-cd.md`  | Detailed CI/CD system design             |
+| `docs/architecture/ci-cd.md`  | Detailed CI/CD and pipeline design       |
+| `docs/architecture/ai-automation.md` | AI automation & model governance  |
 | `docs/standards/security.md`  | Security policy & permissions hardening  |
+| `docs/standards/markdown_rules.md` | Docs validation schema             |
 | `docs/notes/backlog.md`       | Governance-tracked issues & enhancements |
 | `.github/CODEOWNERS`          | Review team configuration                |
 | `.github/PULL_REQUEST_TEMPLATE.md` | Required PR structure             |
@@ -205,7 +292,9 @@ sequenceDiagram
 
 | Version | Date       | Summary                                                  |
 |---------|------------|----------------------------------------------------------|
-| v1.2    | 2025-10-18 | Align with MCP-DL v6.3 house style; add security section |
+| v1.4    | 2025-10-18 | Added SBOM, SLSA, Gitleaks, policy-as-code, and ethics  |
+| v1.3    | 2025-10-18 | Added AI/DVC/docs automation & API audit integration     |
+| v1.2    | 2025-10-18 | Aligned with MCP-DL v6.3; expanded security section      |
 | v1.1    | 2025-10-16 | Metadata, ToC, compliance matrix                         |
 | v1.0    | 2025-10-04 | Initial governance + CI/CD automation README             |
 
