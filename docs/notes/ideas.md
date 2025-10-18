@@ -7,6 +7,7 @@
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
@@ -19,19 +20,20 @@
 ---
 title: "Kansas Frontier Matrix — Ideas & Concepts"
 document_type: "Ideas"
-version: "v1.4.0"
+version: "v1.5.0"
 last_updated: "2025-10-18"
 created: "2025-10-05"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-ontology","@kfm-web"]
+owners: ["@kfm-docs","@kfm-architecture","@kfm-ontology","@kfm-web","@kfm-ai"]
 status: "Stable"
 maturity: "Production"
 scope: "Docs/Notes"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["ideas","innovation","experiments","ontology","ui","ai","provenance"]
+tags: ["ideas","innovation","experiments","ontology","ui","ai","provenance","search"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - site-build
   - pre-commit
   - stac-validate
@@ -99,10 +101,10 @@ automation:
 
 Ideas are:
 
-* 🧠 **Open-ended** — encourage creativity, exploration, and hypothesis testing.  
-* 🔗 **Interconnected** — link to datasets, code, meetings, and standards for context.  
-* 🧾 **Traceable** — each idea includes metadata, tags, and linked provenance.  
-* 🧩 **Promotable** — once reproducible, ideas graduate to `/docs/design/` or `/docs/architecture/`.
+- 🧠 **Open-ended** — encourage creativity, exploration, and hypothesis testing.  
+- 🔗 **Interconnected** — link to datasets, code, meetings, and standards for context.  
+- 🧾 **Traceable** — each idea includes metadata, tags, and linked provenance.  
+- 🧩 **Promotable** — once reproducible, ideas graduate to `/docs/design/` or `/docs/architecture/`.
 
 > **Principle:** *Capture curiosity. Prove with data. Promote when reproducible.*
 
@@ -152,6 +154,7 @@ acceptance_criteria:
   - "Periods mapped to OWL-Time intervals with PeriodO refs"
   - "UI toggle for historical context layers"
   - "STAC extension fields `periodo:*` documented"
+risk_level: "low"           # optional: low | medium | high
 ---
 ```
 
@@ -168,8 +171,8 @@ flowchart LR
     C --> D["🚀 Promote (design/architecture)"]
     D --> E["📦 Implement (artifact/entity)"]
     E --> F["🗃️ Archive (declined/superseded)"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -177,15 +180,19 @@ flowchart LR
 
 ### 💡 *Idea 001 — Integrating PeriodO Historical Periods into Timeline Slider* (`I-2025-001`)
 
-**Goal:** Enhance the timeline with scholarly historical periods (PeriodO).  
-**Motivation:** Context-aware storytelling (“Territorial Kansas”, “Dust Bowl”) for user comprehension.  
-**Approach:**
-- Pull PeriodO JSON-LD (`https://perio.do/api/periods/`) nightly.  
-- Map periods to **OWL-Time** intervals, annotate with **SKOS** labels.  
-- Extend STAC with `periodo:*` fields; toggle in MapLibre timeline for “Historical Context Layers”.
+**Goal**  
+Enhance the timeline with scholarly historical periods (PeriodO).
 
-**Dependencies:** `docs/standards/ontologies.md`, `docs/architecture/web-ui.md`  
-**Next Steps:**
+**Motivation**  
+Context-aware storytelling (“Territorial Kansas”, “Dust Bowl”) for user comprehension.
+
+**Approach**  
+- Pull PeriodO JSON-LD nightly.  
+- Map periods to **OWL-Time** intervals with **SKOS** labels.  
+- Extend STAC with `periodo:*` fields; add MapLibre toggle for “Historical Context”.
+
+**Dependencies**: `docs/standards/ontologies.md`, `docs/architecture/web-ui.md`  
+**Next Steps**  
 - [ ] Validate with mock period items & UI spike.  
 - [ ] Draft STAC extension and examples.  
 - [ ] Add KG ingestion mapping & tests.
@@ -194,37 +201,43 @@ flowchart LR
 
 ### 💡 *Idea 002 — Automated Provenance Graph Visualizer* (`I-2025-002`)
 
-**Goal:** Generate live, interactive provenance diagrams from the graph.  
-**Description:**  
-- Use `prov:` relations to build Mermaid or Graphviz DOT from Neo4j exports.  
+**Goal**  
+Generate live, interactive provenance diagrams from the graph.
+
+**Description**  
+- Use `prov:` relations to build Mermaid/DOT from Neo4j exports.  
 - Integrate outputs into docs site via `make site`.
 
-**Tools:** `rdflib`, `py2neo`, `graphviz`, Jinja2 → Mermaid.  
-**Linked Docs:** `docs/architecture/knowledge-graph.md`, `docs/standards/ontologies.md`  
-**Status:** draft · **Owner:** @graph-engineering-team
+**Tools**: `rdflib`, `py2neo`, `graphviz`, Jinja2 → Mermaid.  
+**Linked Docs**: `docs/architecture/knowledge-graph.md`, `docs/standards/ontologies.md`  
+**Status**: draft · **Owner**: @graph-engineering-team
 
 ---
 
 ### 💡 *Idea 003 — AI-Powered STAC Metadata Reviewer* (`I-2025-003`)
 
-**Concept:** AI-assisted review of STAC Items to flag missing fields and inconsistencies.  
-**Implementation Thoughts:**  
+**Concept**  
+AI-assisted review of STAC Items to flag missing fields and inconsistencies.
+
+**Implementation Thoughts**  
 - Fine-tune on valid `data/stac/**` samples.  
 - GitHub Action comment bot suggests improvements.  
 - Output `stac_ai_review_<item>.json` under `data/work/logs/qa/`.
 
-**Challenges:** Avoid hallucinations; enforce `jsonschema`; privacy for external calls.  
-**Linked Docs:** `docs/standards/metadata.md`, `.github/workflows/stac-validate.yml`  
-**Status:** draft · **Owner:** @kfm-data
+**Challenges**  
+Avoid hallucinations; enforce `jsonschema`; privacy for external calls.
+
+**Linked Docs**: `docs/standards/metadata.md`, `.github/workflows/stac-validate.yml`  
+**Status**: draft · **Owner**: @kfm-data
 
 ---
 
 ## 🧭 In Review
 
-| ID          | Title                          | Reviewer    | Status   |
-| :---------- | :----------------------------- | :---------- | :------- |
-| `I-2025-002`| Provenance Graph Visualizer    | @graph-team | 🟡 review |
-| `I-2025-003`| AI STAC Reviewer               | @data-team  | 🟡 review |
+| ID          | Title                        | Reviewer    | Status   |
+| :---------- | :--------------------------- | :---------- | :------- |
+| `I-2025-002`| Provenance Graph Visualizer  | @graph-team | 🟡 review |
+| `I-2025-003`| AI STAC Reviewer             | @data-team  | 🟡 review |
 
 ---
 
@@ -308,7 +321,7 @@ kfm:idea/periodo_integration
 | **Schema Check**      | `jsonschema`                     | Validates against `idea.schema.json`.    |
 | **Link Validation**   | `remark-lint`                    | Confirms internal/relative links.        |
 | **Tag Parser**        | `scripts/parse_tags.py`          | Updates SKOS vocabularies for topics.    |
-| **Graph Sync**        | `tools/graph_ingest_ideas.py`    | Inserts ideas into Neo4j RDF.            |
+| **Graph Sync**        | `tools/graph_ingest_ideas.py`    | Inserts ideas into Neo4j/RDF.            |
 
 **Run locally**
 ```bash
@@ -337,21 +350,21 @@ sequenceDiagram
     Docs->>CI: Trigger validation (docs-validate)
     CI-->>Docs: Validation report (schema/links/tags)
     Docs->>KG: Merge & sync to Neo4j (plan node)
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧮 Innovation Metrics (KPI)
 
-| Metric | Current | Target | Notes |
-| :-- | :-- | :-- | :-- |
-| Active Ideas | 6 | ≤ 8 | Healthy pipeline. |
-| In Review | 2 | ≤ 5 | Balanced. |
-| Promoted (Quarter) | 4 | ≥ 3 | On track. |
-| Archived (Quarter) | 1 | — | Captured learnings. |
+| Metric            | Current | Target | Notes                     |
+| :---------------- | :------ | :----- | :------------------------ |
+| Active Ideas      | 6       | ≤ 8    | Healthy pipeline.         |
+| In Review         | 2       | ≤ 5    | Balanced.                 |
+| Promoted (Quarter)| 4       | ≥ 3    | On track.                 |
+| Archived (Quarter)| 1       | —      | Captured learnings.       |
 
-*These can be autogenerated by `tools/generate_ideas_summary.py` and appended during site build.*
+*(Auto-generated by `tools/generate_ideas_summary.py` during site build.)*
 
 ---
 
@@ -374,9 +387,9 @@ sequenceDiagram
 | `docs/notes/README.md`                 | Notes workspace overview.                     |
 | `docs/notes/backlog.md`                | Project Backlog (tasks & actions).            |
 | `docs/notes/templates/README.md`       | Idea & backlog templates.                     |
-| `docs/architecture/knowledge-graph.md` | Semantic mapping (CIDOC-CRM · PROV-O).        |
-| `docs/standards/ontologies.md`         | Ontology & period alignment (PeriodO, OWL-Time). |
-| `docs/standards/documentation.md`      | Writing standards and governance.             |
+| `../architecture/knowledge-graph.md`   | Semantic mapping (CIDOC-CRM · PROV-O).        |
+| `../standards/ontologies.md`           | Ontology & period alignment (PeriodO, OWL-Time). |
+| `../standards/documentation.md`        | Writing standards and governance.             |
 
 ---
 
@@ -384,8 +397,9 @@ sequenceDiagram
 
 | Version | Date       | Author                | Summary                                                                 |
 | :------ | :--------- | :-------------------- | :---------------------------------------------------------------------- |
-| v1.4.0  | 2025-10-18 | @kfm-docs             | MCP-DL v6.3 alignment; YAML header; schema & automation; CI hooks; KPIs. |
-| v1.0.0  | 2025-10-05 | KFM Documentation Team| Initial ideas log with metadata, lifecycle, and governance workflow.     |
+| **v1.5.0** | 2025-10-18 | @kfm-docs             | Added policy gate & docs-validate badges; risk field; clarified schema & CI hooks; KPI note. |
+| **v1.4.0** | 2025-10-18 | @kfm-docs             | MCP-DL v6.3 alignment; YAML header; schema & automation; CI hooks; KPIs. |
+| **v1.0.0** | 2025-10-05 | KFM Documentation Team| Initial ideas log with metadata, lifecycle, and governance workflow.     |
 
 ---
 
