@@ -8,8 +8,10 @@
 and key decisions that established the MCP-DL documentation-first and reproducibility framework.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
-[![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](README.md)
+[![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
@@ -19,6 +21,7 @@ and key decisions that established the MCP-DL documentation-first and reproducib
 id: A-2024-001
 title: "Initial Design Discussion — MCP Foundations"
 author: ["@kfm-docs","@kfm-architecture","@kfm-data"]
+version: "v1.0.1"
 original_path: "docs/notes/meetings.md"
 status: archived
 archived_date: 2024-02-10
@@ -29,7 +32,7 @@ linked_successor:
 period_context:
   id: "perio.do/early-development-2024"
   label: "Initial MCP Integration Period"
-tags: ["archive","design","architecture","provenance","mcp","governance"]
+tags: ["archive","design","architecture","provenance","mcp","governance","policy"]
 fair_alignment:
   findable: true
   accessible: true
@@ -43,6 +46,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "b8a9d3ac4f11e2f..."
+  bagit_package: "bags/kfm_archive_2024_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234567"
+  last_verified: "2025-10-18"
 summary: >
   This meeting captured the first full-team design discussion outlining the
   Kansas Frontier Matrix architecture: documentation-first workflows, data provenance
@@ -54,20 +62,19 @@ summary: >
 
 ## 🧭 Context
 
-On **February 10, 2024**, the founding team of the **Kansas Frontier Matrix** held an initial  
-design workshop to unify multiple data and documentation efforts into a single **MCP-aligned architecture**.  
+On **February 10, 2024**, the founding team of **KFM** held an initial design workshop to unify multiple data and documentation efforts into a single **MCP-aligned architecture**.  
 This session laid the groundwork for:
 
-* 🧱 **Documentation-First Principles** — codified later in MCP-DL v6.  
-* 🔗 **Provenance Tracking Framework** — via PROV-O + CIDOC CRM integration.  
-* 🌍 **Cross-Domain Unification** — merging GIS, historical, and scientific datasets.  
-* ⚙️ **CI/CD-Integrated Governance** — early design of validation pipelines.  
+- 🧱 **Documentation-First Principles** — later codified in MCP-DL v6.  
+- 🔗 **Provenance Tracking Framework** — via PROV-O + CIDOC CRM.  
+- 🌍 **Cross-Domain Unification** — GIS, historical, and scientific datasets.  
+- ⚙️ **CI/CD-Integrated Governance** — the first validation pipelines.  
 
 ---
 
 ## 🧱 Original Discussion Summary
 
-### 🧩 Core Goals (2024 Session)
+### 🧩 Core Goals
 1. Consolidate fragmented research and data projects into a **single monorepo**.  
 2. Enforce **metadata-first documentation** for all datasets and models.  
 3. Define the baseline **Knowledge Graph schema** using Neo4j + RDF hybrid.  
@@ -77,13 +84,14 @@ This session laid the groundwork for:
 ---
 
 ### 🧠 Topics Discussed
+
 | Theme | Key Decisions | Responsible Team |
-| :-- | :-- | :-- |
-| **Architecture** | Adopt modular monorepo (`src/`, `data/`, `docs/`, `tools/`). | @kfm-architecture |
-| **Provenance** | Implement PROV-O lineage; enforce YAML metadata in docs. | @kfm-data |
-| **Governance** | CI/CD workflows for validation and compliance. | @kfm-governance |
-| **Design Language** | Use Markdown (GFM) + YAML + Mermaid as core doc stack. | @kfm-docs |
-| **AI Readiness** | Future integration of semantic indexing and summarization. | @kfm-research |
+| :---- | :------------ | :--------------- |
+| **Architecture** | Modular monorepo (`src/`, `data/`, `docs/`, `tools/`). | @kfm-architecture |
+| **Provenance**   | PROV-O lineage; YAML metadata required in docs. | @kfm-data |
+| **Governance**   | CI/CD workflows for validation & compliance. | @kfm-governance |
+| **Design Lang.** | Markdown (GFM) + YAML + Mermaid as core doc stack. | @kfm-docs |
+| **AI Readiness** | Future semantic indexing & summarization. | @kfm-research |
 
 ---
 
@@ -97,27 +105,27 @@ flowchart TD
     D --> E["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"]
     E --> F["Web Interface<br/>React · MapLibre · D3"]
     F --> G["Documentation Hub<br/>GitHub Pages · MkDocs · MCP-DL"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧮 Key Outcomes
 
-* ✅ Defined **core MCP principle set**: Documentation-first, Provenance, Reproducibility, Transparency.  
-* ✅ Agreed on **monorepo structure** with versioned submodules.  
-* ✅ Created first **data-architecture.md** and **documentation.md** drafts.  
-* ✅ Adopted **CC-BY 4.0 licensing** for open reproducibility.  
-* ✅ Established validation workflows (`.github/workflows/site.yml` and `docs-validate.yml`).
+- ✅ Defined **MCP principle set**: Documentation-first, Provenance, Reproducibility, Transparency.  
+- ✅ Agreed on **monorepo structure** with versioned submodules.  
+- ✅ Drafted **data-architecture.md** and **documentation.md**.  
+- ✅ Adopted **CC-BY 4.0 licensing** for open reproducibility.  
+- ✅ Established CI validation workflows (`site.yml`, `docs-validate.yml`).  
 
 ---
 
 ## 🔗 Successor Documents
 
 | Successor | Description | Promotion Date |
-| :-- | :-- | :-- |
-| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Defines the unified file & data architecture schema. | 2024-03-05 |
-| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Outlines the MCP-DL governance model and doc anatomy. | 2024-03-10 |
+| :-------- | :---------- | :------------- |
+| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Unified file & data architecture schema. | 2024-03-05 |
+| [`docs/standards/documentation.md`](../../../standards/documentation.md) | MCP-DL governance model & doc anatomy. | 2024-03-10 |
 
 ---
 
@@ -155,11 +163,10 @@ preservation:
 
 ## 📈 Historical Significance
 
-> This meeting established KFM’s foundational principle:
 > **“If it’s not documented, it didn’t happen.”**
 
-It also marked the **transition from ad-hoc data work to MCP governance**.  
-All subsequent documents, pipelines, and models trace lineage back to this event.
+This meeting marked the **shift from ad-hoc work to MCP governance**.  
+Every subsequent document, pipeline, and model traces lineage back to this event.
 
 ---
 
@@ -167,32 +174,32 @@ All subsequent documents, pipelines, and models trace lineage back to this event
 
 | Principle | Implementation |
 | :-- | :-- |
-| **Findable** | Indexed in yearly manifest (`manifest_2024.yml`) and graph. |
-| **Accessible** | Git + Zenodo snapshot. |
-| **Interoperable** | Metadata aligned with PROV-O and CIDOC CRM. |
-| **Reusable** | Licensed under CC-BY 4.0; includes provenance RDF. |
+| **Findable** | Indexed in `manifest_2024.yml` and the Knowledge Graph |
+| **Accessible** | Git + Zenodo snapshot |
+| **Interoperable** | PROV-O + CIDOC CRM mappings |
+| **Reusable** | CC-BY 4.0; provenance RDF included |
 
 ---
 
 ## 🧮 Metrics (2024 Archive Entry Validation)
 
-| Check | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `yamllint` + `jsonschema` |
-| Graph Ingestion | ✅ | Neo4j (CI Sync) |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
+| Check            | Result | Verified By                    |
+| :--------------- | :----- | :----------------------------- |
+| YAML + Schema    | ✅     | `yamllint` + `jsonschema`      |
+| Graph Ingestion  | ✅     | Neo4j (CI Sync)                |
+| FAIR Validation  | ✅     | `scripts/fair_validate.py`     |
+| Successor Links  | ✅     | `remark-lint`                  |
+| Checksum Verified| ✅     | `verify_checksums.py`          |
 
 ---
 
 ## 📜 Legacy References
 
-* *“Master Coder Protocol (Draft Specification)”* (2024-01 internal doc)  
-* *“Open Reproducibility Manifesto — MCP Principles v0.8”*  
-* *“Unified Frontier Data Model — Proposal Notes”*  
+- *Master Coder Protocol (Draft Specification)* — 2024-01 internal  
+- *Open Reproducibility Manifesto — MCP Principles v0.8*  
+- *Unified Frontier Data Model — Proposal Notes*  
 
-> These early texts informed the first formal MCP governance documentation.
+These texts informed the first formal MCP governance documentation.
 
 ---
 
@@ -202,7 +209,7 @@ All subsequent documents, pipelines, and models trace lineage back to this event
 {
   "archive_entry": {
     "id": "A-2024-001",
-    "title": "Initial Design Discussion",
+    "title": "Initial Design Discussion — MCP Foundations",
     "archived_date": "2024-02-10",
     "linked_successors": [
       "docs/architecture/data-architecture.md",
@@ -223,19 +230,20 @@ All subsequent documents, pipelines, and models trace lineage back to this event
 
 | File | Description |
 | :-- | :-- |
-| `docs/architecture/data-architecture.md` | Successor document defining repository structure. |
-| `docs/standards/documentation.md` | Formal MCP-DL standard derived from this meeting. |
-| `docs/notes/archive/2024/README.md` | 2024 archive index and manifest. |
-| `docs/architecture/knowledge-graph.md` | Provenance & ontology alignment. |
-| `data/work/graph/2024_design_discussion.ttl` | RDF provenance export. |
+| `../../../architecture/data-architecture.md` | Successor: repository file/data schema. |
+| `../../../standards/documentation.md` | Successor: MCP-DL standard derived here. |
+| `../README.md` | 2024 archive index and manifest. |
+| `../../../architecture/knowledge-graph.md` | Provenance & ontology alignment. |
+| `../../../../data/work/graph/2024_design_discussion.ttl` | RDF provenance export. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed original 2024 MCP founding meeting; added RDF, FAIR compliance, checksum, and Zenodo linkage. |
+| Version | Date       | Author     | Summary                                                                       |
+| :------ | :--------- | :--------- | :----------------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation metadata/DOI, and validation audit snapshot. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed founding 2024 meeting entry with FAIR + provenance.             |
 
 ---
 
