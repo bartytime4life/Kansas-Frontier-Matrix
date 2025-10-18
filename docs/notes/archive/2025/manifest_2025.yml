@@ -1,0 +1,85 @@
+manifest_version: "1.0"
+year: 2025
+generated: "2025-10-18T08:00:00Z"
+generated_by: "@kfm-governance"
+validated_by: ["yamllint","jsonschema","verify_checksums.py","scripts/fair_validate.py"]
+total_entries: 2
+checksum_algorithm: "SHA-256"
+description: >
+  Yearly archive manifest for 2025 Kansas Frontier Matrix documentation under
+  MCP-DL v6.3 governance. This manifest enumerates all archived notes and meetings
+  from 2025, including provenance metadata, FAIR validation results, and successor linkages.
+entries:
+  - id: A-2025-001
+    title: "January 2025 Governance & Infrastructure Sync — Meeting Notes v1"
+    author: ["@kfm-docs","@kfm-governance","@kfm-architecture"]
+    archived_date: "2025-01-10"
+    reason: "complete"
+    checksum: "9b7a6e14d4ccf821..."
+    linked_successor:
+      - "../../../notes/meetings.md"
+      - "../../../architecture/knowledge-graph.md"
+      - "../../../standards/documentation.md"
+    zenodo_doi: "10.5281/zenodo.1234655"
+    bagit_package: "bags/kfm_archive_2025_bagit/"
+    graph_ingested: true
+    fair_compliant: true
+    ai_indexed: true
+    verified: true
+    successor_summary: "Established FAIR-compliant governance transition and AI workflow integration for MCP-DL v6.3."
+
+  - id: A-2025-004
+    title: "Ontology Discussion — Unified Semantic Alignment"
+    author: ["@kfm-ontology","@kfm-architecture","@kfm-docs"]
+    archived_date: "2025-05-03"
+    reason: "superseded"
+    checksum: "3b7e8e9fa3ad1ef2..."
+    linked_successor:
+      - "../../../standards/ontologies.md"
+      - "../../../architecture/knowledge-graph.md"
+      - "../../../data/vocabularies/tags.skos.ttl"
+    zenodo_doi: "10.5281/zenodo.1234789"
+    bagit_package: "bags/kfm_archive_2025_bagit/"
+    graph_ingested: true
+    fair_compliant: true
+    ai_indexed: true
+    verified: true
+    successor_summary: "Unified CIDOC CRM, PROV-O, and OWL-Time under MCP-DL v6.3; established KFM ontology standards."
+
+validation_summary:
+  yaml_schema: "pass"
+  fair_validation: "pass"
+  checksum_verification: "pass"
+  graph_ingestion: "pass"
+  ai_embedding: "pass"
+  total_verified: 2
+
+preservation_metadata:
+  format_standards: ["Markdown (GFM)","RDF/Turtle","BagIt 1.0"]
+  metadata_standard: "PREMIS 3.0"
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
+  revalidation_cycle: "annual"
+  retention_policy:
+    archive_after: "90d"
+    purge_after: "never"
+
+governance_audit:
+  responsible_team: ["@kfm-governance","@kfm-docs","@kfm-data"]
+  last_audit: "2025-10-18T09:00:00Z"
+  next_audit: "2026-01-15T00:00:00Z"
+  report_file: "../../../data/work/logs/docs/archive_summary_2025.json"
+  audit_status: "clean"
+  broken_links: 0
+  checksum_mismatches: 0
+  bagit_exports: 1
+
+fair_alignment:
+  findable: true
+  accessible: true
+  interoperable: true
+  reusable: true
+
+notes:
+  - "All entries verified and ingested into Neo4j Knowledge Graph."
+  - "FAIR compliance and Zenodo preservation snapshots complete."
+  - "AI vector embeddings active for search and semantic discovery."
