@@ -20,6 +20,31 @@ MCP documentation and structured knowledge graph entries.
 </div>
 
 ---
+title: "Kansas Frontier Matrix — Notes Workspace"
+document_type: "README"
+version: "v1.3.1"
+last_updated: "2025-10-17"
+created: "2025-10-04"
+owners: ["@kfm-documentation", "@kfm-architecture"]
+status: "Stable"
+maturity: "Production"
+tags: ["docs","notes","mcp","provenance","knowledge-graph","search","markdown"]
+license: "CC-BY-4.0"
+semantic_alignment:
+  - CIDOC-CRM
+  - PROV-O
+  - OWL-Time
+  - SKOS
+  - STAC 1.0
+ci_required_checks:
+  - docs-validate
+  - stac-validate
+  - codeql
+  - trivy
+provenance:
+  workflow_pin_policy: "actions pinned by tag or commit SHA"
+  artifact_retention_days: 90
+---
 
 ## 📚 Table of Contents
 
@@ -335,9 +360,9 @@ flowchart TD
 
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
-| v1.3 | Q1 2026 | Integrate vector search + AI summaries in web UI |
-| v1.4 | Q2 2026 | Auto-generate STAC/graph sync nightly |
-| v1.5 | Q3 2026 | Add web-based note creation + promotion workflow |
+| v1.4 | Q1 2026 | Integrate vector search + AI summaries in web UI |
+| v1.5 | Q2 2026 | Auto-generate STAC/graph sync nightly |
+| v1.6 | Q3 2026 | Add web-based note creation + promotion workflow |
 
 ---
 
@@ -345,6 +370,7 @@ flowchart TD
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
+| v1.3.1 | 2025-10-17 | KFM Documentation Team | **Added YAML metadata header** under badges; aligned required CI checks. |
 | v1.3 | 2025-10-17 | KFM Documentation Team | Added AI assist, schema validation, contributor checklist, roadmap. |
 | v1.2 | 2025-10-16 | KFM Documentation Team | Updated tagging, ontology links, automation details. |
 | v1.1 | 2025-10-05 | KFM Documentation Team | Added YAML schema, tag vocabularies, graph linkage, CI validation. |
