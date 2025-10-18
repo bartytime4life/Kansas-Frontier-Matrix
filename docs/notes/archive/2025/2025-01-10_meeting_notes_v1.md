@@ -7,6 +7,8 @@
 This meeting marked the consolidation of documentation, automation, and AI integration efforts within KFM.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -18,6 +20,7 @@ This meeting marked the consolidation of documentation, automation, and AI integ
 id: A-2025-001
 title: "January 2025 Governance & Infrastructure Sync — Meeting Notes v1"
 author: ["@kfm-docs","@kfm-governance","@kfm-architecture"]
+version: "v1.0.1"
 original_path: "docs/notes/meetings.md"
 status: archived
 archived_date: 2025-01-10
@@ -29,7 +32,7 @@ linked_successor:
 period_context:
   id: "perio.do/kfm-operational-deployment-2025"
   label: "Operational Deployment Phase"
-tags: ["archive","meeting","governance","mcp","deployment","ai"]
+tags: ["archive","meeting","governance","mcp","deployment","ai","policy"]
 fair_alignment:
   findable: true
   accessible: true
@@ -43,6 +46,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "9b7a6e14d4ccf821..."
+  bagit_package: "bags/kfm_archive_2025_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234655"
+  last_verified: "2025-10-18"
 summary: >
   Official archived minutes of the January 2025 Governance & Infrastructure Meeting,
   establishing new workflows for documentation automation, AI-driven summarization,
@@ -58,7 +66,8 @@ summary: >
 The **January 10, 2025** governance meeting represented the first operational cycle under MCP-DL v6.3 standards.  
 This session unified infrastructure decisions for CI/CD, data pipelines, and AI-enhanced documentation.
 
-**Participants:**  
+**Participants**
+
 - Andy Barta — Project Lead  
 - @kfm-docs — Documentation Maintainer  
 - @kfm-data — Data Engineering Lead  
@@ -72,7 +81,7 @@ This session unified infrastructure decisions for CI/CD, data pipelines, and AI-
 
 1. Review 2024 archival completion and validation metrics.  
 2. Confirm transition from **design to operational** stage.  
-3. Discuss integration of **AI indexing** into MCP knowledge graph.  
+3. Discuss integration of **AI indexing** into MCP Knowledge Graph.  
 4. Approve **CI/CD enhancements** for documentation auto-generation.  
 5. Plan FAIR certification and Zenodo synchronization.
 
@@ -91,11 +100,11 @@ This session unified infrastructure decisions for CI/CD, data pipelines, and AI-
 
 ## 🧮 Discussion Summary
 
-- **CI/CD Enhancement:** Consolidated YAML validation, link-checking, and graph ingestion into one unified pipeline (`make docs-validate`).  
-- **AI Readiness:** Decided on embedding `sentence-transformers/all-MiniLM-L6-v2` for vector indexing of notes and research summaries.  
-- **FAIR Compliance:** Reconfirmed all metadata must adhere to **ISO 8601**, **DCAT 2.0**, and **PROV-O** models.  
-- **Governance Tracking:** Introduced quarterly reporting through `data/work/logs/docs/archive_summary_<YYYY_QN>.json`.  
-- **Next Milestone:** Deploy MCP-DL v6.4 experimental features for hybrid graph-search (RDF + vector).
+- **CI/CD Enhancement:** Unified YAML validation, link-checking, and graph ingestion in `make docs-validate`.  
+- **AI Readiness:** Standardized `sentence-transformers/all-MiniLM-L6-v2` embeddings for notes/research.  
+- **FAIR Compliance:** Enforcement of **ISO 8601**, **DCAT 2.0**, and **PROV-O** across all metadata.  
+- **Governance Tracking:** Quarterly reporting to `data/work/logs/docs/archive_summary_<YYYY_QN>.json`.  
+- **Next Milestone:** Pilot MCP-DL v6.4 features for hybrid RDF + vector search.
 
 ---
 
@@ -113,11 +122,11 @@ This session unified infrastructure decisions for CI/CD, data pipelines, and AI-
 
 ## 🧱 Technical Outcomes
 
-* Unified **multi-schema validation** for YAML, STAC, JSON Schema, and RDF metadata.  
-* Added **FAIR compliance section** to documentation templates.  
-* Integrated **Zenodo export workflows** for public research archive snapshots.  
-* Initiated design of the **KFM Archive Browser UI** (MapLibre + D3 + Neo4j).  
-* Began implementing **auto-summarization** of meeting transcripts for the knowledge graph.
+- Unified **multi-schema validation** for YAML, STAC, JSON Schema, and RDF metadata.  
+- Added **FAIR compliance** sections to documentation templates.  
+- Integrated **Zenodo export** workflows for public archive snapshots.  
+- Initiated design of the **KFM Archive Browser UI** (MapLibre + D3 + Neo4j).  
+- Began implementing **auto-summarization** of meeting transcripts for the Knowledge Graph.
 
 ---
 
@@ -155,12 +164,12 @@ preservation:
 
 ## 📜 FAIR Data Compliance
 
-| Principle | Implementation |
-| :-- | :-- |
-| **Findable** | Indexed via Knowledge Graph and FAIR manifest |
-| **Accessible** | Stored in Git + exported to Zenodo |
-| **Interoperable** | Metadata uses DCAT 2.0, JSON Schema, PROV-O |
-| **Reusable** | CC-BY 4.0 license, detailed provenance |
+| Principle     | Implementation                                   |
+| :------------ | :----------------------------------------------- |
+| **Findable**  | Knowledge Graph indexing + manifest reference     |
+| **Accessible**| Open Git + Zenodo                                |
+| **Interoperable** | DCAT 2.0, JSON Schema, PROV-O                |
+| **Reusable**  | CC-BY 4.0 license + detailed provenance          |
 
 ---
 
@@ -168,13 +177,15 @@ preservation:
 
 > *“From this meeting forward, MCP became the living architecture of KFM.”*
 
-**Legacy Contributions:**
-- Defined the operational **MCP-DL v6.3 governance structure**.  
-- Introduced the **AI indexing layer** to the Knowledge Graph.  
+**Legacy Contributions**
+
+- Defined operational **MCP-DL v6.3** governance structure.  
+- Introduced **AI indexing layer** to the Knowledge Graph.  
 - Consolidated governance reporting into CI/CD.  
 - Formalized quarterly archival and FAIR exports.  
 
-**Influenced Documents:**
+Influenced:
+
 - `docs/standards/documentation.md`  
 - `docs/architecture/knowledge-graph.md`  
 - `docs/notes/archive/README.md`  
@@ -183,13 +194,13 @@ preservation:
 
 ## 🧮 Validation Metrics
 
-| Check | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `yamllint` + `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Graph Sync | ✅ | `tools/graph_ingest_meetings.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Match | ✅ | `verify_checksums.py` |
+| Check            | Result | Verified By                    |
+| :--------------- | :----- | :----------------------------- |
+| YAML + Schema    | ✅     | `yamllint` + `jsonschema`      |
+| FAIR Validation  | ✅     | `scripts/fair_validate.py`     |
+| Graph Sync       | ✅     | `tools/graph_ingest_meetings.py` |
+| Successor Links  | ✅     | `remark-lint`                  |
+| Checksum Match   | ✅     | `verify_checksums.py`          |
 
 ---
 
@@ -218,19 +229,20 @@ preservation:
 
 | File | Description |
 | :-- | :-- |
-| `docs/notes/meetings.md` | Successor meeting log file. |
-| `docs/architecture/knowledge-graph.md` | Updated graph ingestion rules from this meeting. |
-| `docs/standards/documentation.md` | Standardization of MCP-DL governance model. |
-| `docs/notes/archive/2025/README.md` | Yearly 2025 archive manifest and index. |
-| `data/work/logs/docs/archive_summary_2025.json` | CI-generated validation report. |
+| `../../../notes/meetings.md` | Successor meeting log. |
+| `../../../architecture/knowledge-graph.md` | Updated ingestion rules from this meeting. |
+| `../../../standards/documentation.md` | MCP-DL governance model standardization. |
+| `../README.md` | 2025 archive manifest and index. |
+| `../../../../data/work/logs/docs/archive_summary_2025.json` | CI validation report. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Archival record for first 2025 governance meeting; added provenance, FAIR data compliance, AI indexing metadata, and Zenodo preservation reference. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation DOI, and validation audit records.      |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Archival record of first 2025 governance meeting with FAIR + provenance. |
 
 ---
 
