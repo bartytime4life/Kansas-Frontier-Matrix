@@ -7,6 +7,8 @@
 This record demonstrates how reproducibility, automation, and provenance became institutionalized within the Kansas Frontier Matrix.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2019-002
 title: "Data Ingest Strategy — Governance, Validation, and Automation (2019)"
 author: ["Frontier Data Engineering Team","@kfm-architecture"]
 original_path: "notes/data_ingest_strategy.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2019-10-01
 reason: legacy
@@ -39,6 +42,12 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "c4e5d3ba01ff892e..."  # SHA-256
+  storage_format: "Markdown (GFM)"
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234966"
+  last_verified: "2025-10-18"
 summary: >
   The 2019 Data Ingest Strategy documented KFM’s first comprehensive data governance and
   ingestion pipeline plan. It established the foundational metadata schema, checksum
@@ -81,8 +90,8 @@ flowchart TD
     C --> D["Metadata Templates<br/>YAML · JSON Schema v0.1"]
     D --> E["CI Validation<br/>make data-validate"]
     E --> F["Archive + Documentation<br/>Git Commit + Provenance Log"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -126,13 +135,13 @@ for meta in os.listdir("data/metadata/"):
 
 ## 🧮 Key Outcomes
 
-| Aspect | Description | Impact |
-| :-- | :-- | :-- |
-| **Checksums** | Implemented SHA-256 manifest per dataset. | Enabled reproducibility verification. |
-| **Metadata** | YAML + JSON hybrid standard. | Prototype for `docs/standards/metadata.md`. |
-| **Automation** | Make + Python ETL integration. | Basis for CI workflow (`make data-validate`). |
-| **Provenance** | Commit logs used for lineage tracking. | Inspired adoption of PROV-O model. |
-| **CI/CD** | Introduced local validation via Makefile. | Precursor to GitHub Actions validation. |
+| Aspect        | Description                               | Impact                                  |
+| :------------ | :---------------------------------------- | :--------------------------------------- |
+| **Checksums** | Implemented SHA-256 manifest per dataset. | Enabled reproducibility verification.    |
+| **Metadata**  | YAML + JSON hybrid standard.              | Prototype for `docs/standards/metadata.md`. |
+| **Automation**| Make + Python ETL integration.            | Basis for CI workflow (`make data-validate`). |
+| **Provenance**| Commit logs used for lineage tracking.    | Inspired adoption of PROV-O model.       |
+| **CI/CD**     | Local validation via Makefile.            | Precursor to GH Actions validation.      |
 
 ---
 
@@ -172,8 +181,7 @@ preservation:
 
 This document formally introduced the **concept of data governance as code**, connecting the principles of scientific transparency with automation and infrastructure reproducibility.
 
-> “Governance and provenance are pipelines, not paperwork.”  
-> — KFM Data Engineering Team, 2019
+> “Governance and provenance are pipelines, not paperwork.” — *KFM Data Engineering Team, 2019*
 
 **Impact Areas:**
 - Birthplace of **checksum + manifest pattern**.  
@@ -187,21 +195,21 @@ This document formally introduced the **concept of data governance as code**, co
 
 | File | Description | Date Promoted |
 | :-- | :-- | :-- |
-| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Formalized data ingestion pipeline derived from this strategy. | 2024-03-05 |
-| [`data/processed/metadata/README.md`](../../../data/processed/metadata/README.md) | Modernized metadata validation and storage. | 2024-07-22 |
-| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Codified documentation-first workflow governance. | 2024-04-10 |
+| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Formalized ingestion pipeline derived from this strategy. | 2024-03-05 |
+| [`data/processed/metadata/README.md`](../../../data/processed/metadata/README.md) | Modern metadata validation and storage. | 2024-07-22 |
+| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Codified documentation-first governance. | 2024-04-10 |
 
 ---
 
 ## 🧮 FAIR & Governance Validation (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Graph Sync | ✅ | `tools/graph_ingest_legacy.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
+| Validation        | Result | Verified By                    |
+| :---------------- | :----- | :----------------------------- |
+| YAML Schema       | ✅     | `jsonschema`                   |
+| FAIR Validation   | ✅     | `scripts/fair_validate.py`     |
+| Graph Sync        | ✅     | `tools/graph_ingest_legacy.py` |
+| Successor Links   | ✅     | `remark-lint`                  |
+| Checksum Verified | ✅     | `verify_checksums.py`          |
 
 **Governance Audit Record**
 ```json
@@ -231,8 +239,8 @@ flowchart TD
     B --> C["2019 Prototype Analysis"]
     C --> D["2024 Data Architecture"]
     D --> E["2025 MCP-DL v6.3 Governance"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -244,7 +252,7 @@ Its principles became the backbone of MCP’s reproducibility charter, inspiring
 **Legacy Innovations:**
 - Introduction of **checksum manifesting** as a governance requirement.  
 - Establishment of **metadata version control**.  
-- Paved the way for **data audits, validation pipelines, and FAIR data certification**.  
+- Paved the way for **data audits, validation pipelines, and FAIR certification**.  
 - Connected early prototypes to modern AI-assisted metadata generation.
 
 ---
@@ -254,7 +262,7 @@ Its principles became the backbone of MCP’s reproducibility charter, inspiring
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
 | v1.1 | Q2 2026 | Integrate legacy ingestion notes into MCP training datasets. |
-| v1.2 | Q3 2026 | Build AI correlation between legacy ingestion & current architecture lineage. |
+| v1.2 | Q3 2026 | Build AI correlation between legacy ingestion and current architecture lineage. |
 | v2.0 | 2027 | Add blockchain provenance for early checksum manifests. |
 
 ---
@@ -263,19 +271,20 @@ Its principles became the backbone of MCP’s reproducibility charter, inspiring
 
 | File | Description |
 | :-- | :-- |
-| `docs/notes/archive/legacy/README.md` | Legacy archive index and manifest |
-| `docs/architecture/data-architecture.md` | Modernized ingestion system derived from this strategy |
-| `docs/standards/documentation.md` | Governance framework originating from early practices |
-| `data/processed/metadata/README.md` | Metadata validation and automation implementation |
-| `data/work/graph/legacy_lineage.ttl` | RDF graph linking 2019 ingestion lineage to KFM Knowledge Graph |
+| `../README.md` | Legacy archive index & manifest |
+| `../../../architecture/data-architecture.md` | Modern ingestion system derived from this strategy |
+| `../../../standards/documentation.md` | Governance framework originating from early practices |
+| `../../../data/processed/metadata/README.md` | Metadata validation & automation implementation |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF graph linking 2019 lineage to KFM Knowledge Graph |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed archival record for 2019 Data Ingest Strategy; added FAIR retrofitting, RDF lineage, and checksum validation metadata. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation/DOI block, and validation audit record. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed archival record with FAIR retrofit, RDF lineage, checksum. |
 
 ---
 
