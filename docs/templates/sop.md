@@ -7,7 +7,11 @@
 **Kansas Frontier Matrix (KFM)** — ensuring **documentation-first**, **deterministic**, **auditable** workflows using open standards.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
 [![FAIR](https://img.shields.io/badge/FAIR-Findable·Accessible·Interoperable·Reusable-2ea44f)](https://www.go-fair.org/fair-principles/)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy%20%7C%20Gitleaks-red)](../../.github/workflows/)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../.github/workflows/sbom.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
@@ -17,10 +21,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — SOP Template"
-version: "v1.2.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-docs","@kfm-architecture","@kfm-data"]
-tags: ["sop","process","mcp","stac","validation","ci","provenance","security","fair"]
+version: "v1.3.0"
+last_updated: "2025-10-18"
+owners: ["@kfm-docs","@kfm-architecture","@kfm-data","@kfm-security"]
+tags: ["sop","process","mcp","stac","validation","ci","provenance","security","fair","slsa","accessibility"]
 status: "Template"
 license: "CC-BY 4.0"
 semantic_alignment:
@@ -28,13 +32,23 @@ semantic_alignment:
   - STAC 1.0
   - JSON Schema
   - FAIR Principles
+  - W3C PROV-O
+  - ISO 19115 / ISO 8601 / EPSG
+  - GeoSPARQL
 ci_required_checks:
   - docs-validate
+  - policy-check
   - pre-commit
+  - stac-validate
+  - checksums
   - codeql
   - trivy
+  - gitleaks
+supply_chain:
+  slsa_target: "Level 3"
+  sbom_format: "SPDX 2.3 (JSON)"
 ---
-````
+```
 
 ---
 
@@ -61,8 +75,7 @@ ci_required_checks:
 
 Describe the **purpose**, **expected outcomes**, and why this SOP is needed in KFM.
 
-> *Example:*
-> Standardize validation for **all STAC Items/Collections** ensuring STAC 1.0.0 compliance, deterministic builds, and traceable provenance per MCP.
+> *Example:* Standardize validation for **all STAC Items/Collections** ensuring STAC 1.0.0 compliance, deterministic builds, and traceable provenance per MCP.
 
 ---
 
@@ -95,16 +108,16 @@ Describe the **purpose**, **expected outcomes**, and why this SOP is needed in K
 
 ## 🧰 Prerequisites & Requirements
 
-| Requirement       | Description                                                                          |
-| :---------------- | :----------------------------------------------------------------------------------- |
-| **Software**      | Python ≥3.11, `stac-validator ≥3.0`, `jsonschema`, GDAL (if spatial QA), `sha256sum` |
-| **Access**        | GitHub Actions runner, repo read/write for CI artifacts                              |
-| **Dependencies**  | Make targets (`setup`, `checksums`, `stac-validate`, `qa-*`), scripts (paths)        |
-| **Data / Inputs** | `data/stac/**`, `data/processed/**`, `data/checksums/**`                             |
-| **Schemas**       | STAC 1.0.0 + local `schema.json` (extensions), JSON Schema contracts                 |
-| **Environment**   | Pinned `requirements.txt` / `environment.yml`; optional container image & digest     |
+| Requirement       | Description                                                                                 |
+| :---------------- | :------------------------------------------------------------------------------------------ |
+| **Software**      | Python ≥3.11, `stac-validator ≥3.0`, `jsonschema`, GDAL (if spatial QA), `sha256sum`        |
+| **Access**        | GitHub Actions runner, repo read/write for CI artifacts                                     |
+| **Dependencies**  | Make targets (`setup`, `checksums`, `stac-validate`, `qa-*`), scripts (paths)               |
+| **Data / Inputs** | `data/stac/**`, `data/processed/**`, `data/checksums/**`                                    |
+| **Schemas**       | STAC 1.0.0 + local `schema.json` (extensions), JSON Schema contracts                        |
+| **Environment**   | Pinned `requirements.txt` / `environment.yml`; optional container image & digest + SBOM     |
 
-> *Tip:* Capture SBOM (`spdx.json`) and container digest for supply-chain visibility.
+> *Tip:* Capture SBOM (`*.spdx.json`) and container digest for supply-chain visibility.
 
 ---
 
@@ -144,7 +157,7 @@ make qa-terrain  # runs GDAL/rio sanity checks
 
 ### Step 6 — Approve / Reject
 
-* **Approve:** Merge PR, attach logs.
+* **Approve:** Merge PR, attach logs.  
 * **Reject:** Comment issues, assign owners, re-run once fixed.
 
 ---
@@ -158,6 +171,7 @@ make qa-terrain  # runs GDAL/rio sanity checks
 | **Spatial QA**      | Correct CRS/bbox; nodata consistent; COG valid (if raster) |
 | **CI**              | All required workflows pass (green)                        |
 | **Docs**            | SOP/Provenance/README updated when needed                  |
+| **Policy**          | OPA/Conftest pass; required front-matter present           |
 
 ---
 
@@ -193,6 +207,7 @@ make qa-terrain  # runs GDAL/rio sanity checks
 | **Data Manager**        | Post-validation | Confirms STAC + spatial QA                    |
 | **Metadata Curator**    | Docs check      | Ensures completeness & accuracy               |
 | **Automation Engineer** | CI review       | Verifies green workflows & artifact retention |
+| **Security**            | Supply-chain    | SBOM present; scans clean; policy gates pass  |
 
 Append all QA actions to:
 
@@ -227,10 +242,10 @@ data/work/logs/qa/<SOP-ID>_review.log
 
 ## 🤖 Automation Mapping (CI/CD)
 
-* **Workflows:** `.github/workflows/stac-validate.yml`, `checksums.yml`, `site.yml`, `docs-validate.yml`
-* **Artifacts retention:** ≥ 14 days (logs, reports)
-* **Required checks:** `stac-validate`, `checksums`, `docs-validate`, optional `codeql`/`trivy`
-* **Secrets:** Use OIDC; no plaintext keys in logs
+* **Workflows:** `.github/workflows/stac-validate.yml`, `checksums.yml`, `docs-validate.yml`, `policy-check.yml`, `site.yml`  
+* **Artifacts retention:** ≥ 14 days (logs, reports)  
+* **Required checks:** `stac-validate`, `checksums`, `docs-validate`, `policy-check`, optional `codeql`/`trivy`  
+* **Secrets:** Use OIDC; no plaintext keys in logs  
 
 ---
 
@@ -261,10 +276,10 @@ data/work/logs/qa/<SOP-ID>_review.log
 
 ## 🧾 References
 
-1. **STAC v1.0.0** — [https://stacspec.org](https://stacspec.org)
-2. **OGC / Geo standards** — [https://ogc.org](https://ogc.org)
-3. **Master Coder Protocol (MCP)** — KFM Standards
-4. **FAIR Principles** — [https://www.go-fair.org/fair-principles/](https://www.go-fair.org/fair-principles/)
+1. **STAC v1.0.0** — <https://stacspec.org>  
+2. **OGC / Geo standards** — <https://ogc.org>  
+3. **Master Coder Protocol (MCP)** — KFM Standards  
+4. **FAIR Principles** — <https://www.go-fair.org/fair-principles/>
 
 ---
 
@@ -272,9 +287,10 @@ data/work/logs/qa/<SOP-ID>_review.log
 
 | Version | Date       | Author             | Reviewer             | Change Summary                                                   |
 | :-----: | :--------- | :----------------- | :------------------- | :--------------------------------------------------------------- |
-|  v1.2.0 | 2025-10-17 | KFM Docs Team      | Governance Lead      | Added MCP-DL metadata, CI references, metrics, recovery guidance |
-|  v1.1.0 | 2025-10-05 | KFM Engineering    | Governance Lead      | Added RACI, rollback, runbook metrics, supply-chain capture      |
-|  v1.0.0 | 2025-10-04 | Documentation Team | Data Governance Lead | Initial SOP template                                             |
+| **v1.3.0** | 2025-10-18 | KFM Docs Team      | Governance Lead      | Added policy gates, security scans, SBOM/SLSA, observability map |
+| **v1.2.0** | 2025-10-17 | KFM Docs Team      | Governance Lead      | MCP-DL metadata, CI refs, metrics, recovery guidance             |
+| **v1.1.0** | 2025-10-05 | KFM Engineering    | Governance Lead      | RACI, rollback, runbook metrics, supply-chain capture            |
+| **v1.0.0** | 2025-10-04 | Documentation Team | Data Governance Lead | Initial SOP template                                             |
 
 ---
 
@@ -289,6 +305,7 @@ flowchart LR
   D --> A
   C -- "Yes" --> E["QA Review & Approve"]
   E --> F["Merge PR<br/>publish reports to _site/reports/"]
+%% END OF MERMAID
 ```
 
 </details>
@@ -297,7 +314,7 @@ flowchart LR
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Procedure Documented. Every Operation Reproducible.”*
+**Kansas Frontier Matrix** — *“Every Procedure Documented. Every Operation Reproducible.”*  
 📍 `docs/templates/sop.md` · MCP-compliant operational procedure template for KFM.
 
 </div>
