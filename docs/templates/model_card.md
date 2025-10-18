@@ -7,8 +7,11 @@
 **Kansas Frontier Matrix (KFM)** — ensuring **traceability**, **accountability**, and **Master Coder Protocol (MCP)** alignment across all computational models.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
-[![Reproducibility ✓](https://img.shields.io/badge/Reproducible-Yes%20%E2%9C%85-blueviolet)](../../docs/standards/reproducibility.md)
-[![FAIR](https://img.shields.io/badge/FAIR-Findable%20·%20Accessible%20·%20Reusable-green)](https://www.go-fair.org/fair-principles/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
+[![Build & Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy%20%7C%20Gitleaks-red)](../../.github/workflows/)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../.github/workflows/sbom.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
@@ -18,10 +21,10 @@
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Model Card Template"
-version: "v1.2.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-data","@kfm-ml","@kfm-architecture"]
-tags: ["model-card","ml","ai","reproducibility","fair","mcp","stac","security","slsa"]
+version: "v1.3.0"
+last_updated: "2025-10-18"
+owners: ["@kfm-data","@kfm-ml","@kfm-architecture","@kfm-security"]
+tags: ["model-card","ml","ai","reproducibility","fair","mcp","stac","security","slsa","ethics","provenance"]
 status: "Template"
 license: "CC-BY 4.0 (docs) · MIT (code)"
 semantic_alignment:
@@ -31,17 +34,20 @@ semantic_alignment:
   - FAIR Principles
   - CIDOC CRM (provenance links)
   - DCAT 2.0 (dataset cataloging)
+  - PROV-O · GeoSPARQL
 supply_chain:
   slsa_target: "Level 3"
   sbom_format: "SPDX 2.3 (JSON)"
 ci_required_checks:
   - unit-tests
   - docs-validate
+  - policy-check
   - codeql
   - trivy
+  - gitleaks
   - stac-validate
 ---
-````
+```
 
 ---
 
@@ -80,10 +86,10 @@ State the **goal**, **application domain**, **intended audience**, and **decisio
 | **Algorithm / Framework** | Random Forest · XGBoost · LSTM · ARIMA · Prophet · CNN/GNN  |
 | **Language / Library**    | Python · Scikit-learn · TensorFlow · PyTorch · R            |
 | **Training Method**       | Supervised / Unsupervised / Self-Supervised / Reinforcement |
-| **Input Features**        | Variables / indices / engineered terms (list with units)    |
-| **Output Targets**        | Prediction target(s) and spatial/temporal resolution        |
+| **Input Features**        | Variables/indices/engineered terms (list with units)        |
+| **Output Targets**        | Prediction target(s) & spatial/temporal resolution          |
 | **Intended Use**          | Operational/Advisory/Research · UI/Service/API consumer     |
-| **Out-of-Scope Use**      | Known misuses or data regimes where reliability degrades    |
+| **Out-of-Scope Use**      | Known misuses or regimes where reliability degrades         |
 
 ---
 
@@ -97,9 +103,9 @@ State the **goal**, **application domain**, **intended audience**, and **decisio
 
 **Each dataset must include:**
 
-* `data/sources/<domain>/*.json` (source manifest)
-* `data/checksums/<domain>/*.sha256` (integrity)
-* `data/stac/<domain>/*.json` (metadata & lineage)
+- `data/sources/<domain>/*.json` (source manifest)  
+- `data/checksums/<domain>/*.sha256` (integrity)  
+- `data/stac/<domain>/*.json` (metadata & lineage)
 
 ---
 
@@ -111,6 +117,7 @@ graph TD
   B --> C["Model Core<br/>(e.g., Random Forest · 200 Trees)"]
   C --> D["Calibration & Post-Processing<br/>(Bias correction · Thresholding)"]
   D --> E["Outputs<br/>(Predictions · Uncertainty · Explanations)"]
+%% END OF MERMAID
 ```
 
 > Save source `.mmd` + exported `svg/png` to `docs/architecture/diagrams/`.
@@ -129,6 +136,8 @@ graph TD
 | **Software Env**      | Python 3.11 · Conda env `kfm_env`         | `environment.yml` pinned   |
 | **Container**         | `ghcr.io/org/kfm:models-1.0@sha256:…`     | Digest for SLSA provenance |
 
+> Record container **digest**, seeds, git **commit SHA**, and SBOM path in training manifest.
+
 ---
 
 ## 📊 Performance Metrics
@@ -137,25 +146,25 @@ graph TD
 | :--------------------- | :------------------------------- | :---- | :------------------------- |
 | **RMSE**               | Root Mean Square Error           | —     | K-fold CV                  |
 | **R²**                 | Coefficient of Determination     | —     | vs Observed                |
-| **Precision / Recall** | Classification accuracy metrics  | — / — | Confusion Matrix           |
+| **Precision / Recall** | Classification metrics           | — / — | Confusion Matrix           |
 | **AUC**                | Area under ROC Curve             | —     | Scikit-learn               |
 | **CRPS / NSE**         | Probabilistic / Hydrology metric | —     | Domain-specific evaluation |
 | **Checksum Match**     | Model artifact integrity         | ✅     | SHA-256 verified           |
 
-> Include uncertainty bounds and calibration curves when applicable.
+> Include uncertainty bands, calibration curves, and spatial/temporal stratification where appropriate.
 
 ---
 
 ## 🔍 Validation & Reproducibility
 
-| Validation Type         | Description                       | Method / Tool                 |
-| :---------------------- | :-------------------------------- | :---------------------------- |
-| **Checksum Validation** | Data & weights integrity          | `make checksums`              |
-| **Cross-Validation**    | Multi-fold statistical validation | Temporal/Spatial K-fold       |
-| **STAC Compliance**     | Metadata/schema validation        | `make stac-validate`          |
-| **CI/CD Automation**    | Continuous testing pipeline       | `.github/workflows/tests.yml` |
-| **Security Scans**      | Static/code & dependency scanning | CodeQL + Trivy                |
-| **Peer Review**         | Independent replication           | GitHub PR review & sign-off   |
+| Validation Type         | Description                         | Method / Tool                 |
+| :---------------------- | :---------------------------------- | :---------------------------- |
+| **Checksum Validation** | Data & weights integrity            | `make checksums`              |
+| **Cross-Validation**    | Multi-fold statistical validation   | Temporal/Spatial K-fold       |
+| **STAC Compliance**     | Metadata/schema validation          | `make stac-validate`          |
+| **CI/CD Automation**    | Continuous testing pipeline         | `.github/workflows/tests.yml` |
+| **Security Scans**      | Static & dependency scanning        | CodeQL + Trivy + Gitleaks     |
+| **Peer Review**         | Independent replication             | PR review & `@kfm-ai` sign-off|
 
 📁 Logs: `data/work/logs/models/<model_id>_validation.log`
 
@@ -171,7 +180,7 @@ graph TD
 
 **Training manifest** (`models/<model_id>/train_manifest.json`) must record:
 
-* data snapshot hashes, seeds, git commit, container digest, hardware profile, wall-clock time.
+- Data snapshot hashes, seeds, git commit, **container digest**, hardware profile, runtime, SBOM path.
 
 ---
 
@@ -184,16 +193,16 @@ graph TD
 | Temperature           | —              | Seasonal variability   |
 | Vegetation Index      | —              | Surface response proxy |
 
-> Provide SHAP/LIME plots; include saliency maps for deep models.
+> Provide SHAP/LIME plots; for deep models, include saliency/attention maps. Attach illustrative examples.
 
 ---
 
 ## ⚖️ Limitations & Assumptions
 
-* Accuracy decreases in regions with sparse observations.
-* Model assumes stationarity for climate covariates (state explicitly).
-* Excludes anthropogenic controls unless listed in features.
-* Resolution may mask local extremes; note spatial bias.
+- Accuracy may decrease in low-observation or non-stationary regimes.  
+- Document domain shift or extrapolation risks.  
+- List excluded covariates (and justification).  
+- Note spatial resolution/aggregation effects.
 
 ---
 
@@ -211,11 +220,11 @@ graph TD
 
 ## 🧑‍⚖️ Ethical, Risk & Licensing Considerations
 
-* ✅ Data under public domain or CC-BY 4.0; code under MIT (unless specified).
-* 🚫 No PII or sensitive attributes; if present, document minimization & consent.
-* 🧭 Evaluate bias/fairness (geographic, temporal, demographic where applicable).
-* 📝 Attribution required for derivative use per license.
-* 🧯 Risk controls: thresholds, abstention policy, uncertainty reporting.
+- ✅ Data under public domain or CC-BY 4.0; code under MIT (unless specified).  
+- 🚫 No PII or sensitive attributes; if present, document minimization & consent.  
+- 🧭 Evaluate bias/fairness (geographic, temporal, demographic where applicable).  
+- 📝 Attribution required for derivative use per license.  
+- 🧯 Risk controls: thresholds, abstention policy, uncertainty reporting.
 
 ---
 
@@ -227,8 +236,8 @@ graph TD
 | **Batch** | `make model-predict`          | CSV/GeoTIFF outputs              |
 | **Web**   | MapLibre overlay              | Tile endpoint / static layer     |
 
-**Monitoring**: latency, error rate, drift metrics (`population stability index`, residual trends).
-**Rollback**: pin previous weights; blue/green switch via config.
+**Monitoring:** latency, error rate, drift metrics (PSI, residual trends).  
+**Rollback:** pin previous weights; blue/green switch via config.
 
 ---
 
@@ -280,11 +289,11 @@ make package MODEL_ID=MODEL-2025-001-CLIMATE
 
 ## 📚 References
 
-1. **STAC v1.0.0** — [https://stacspec.org](https://stacspec.org)
-2. **Master Coder Protocol (MCP)** — KFM Documentation Framework
-3. **Model Cards for Model Reporting** — Mitchell et al., Google Research (2019)
-4. **FAIR Principles** — Wilkinson et al., 2016
-5. **SPDX** — [https://spdx.dev](https://spdx.dev) (SBOM format)
+1. **STAC v1.0.0** — <https://stacspec.org>  
+2. **Master Coder Protocol (MCP)** — KFM Documentation Framework  
+3. **Model Cards for Model Reporting** — Mitchell et al., Google Research (2019)  
+4. **FAIR Principles** — Wilkinson et al., 2016  
+5. **SPDX** — <https://spdx.dev> (SBOM format)
 
 ---
 
@@ -292,15 +301,16 @@ make package MODEL_ID=MODEL-2025-001-CLIMATE
 
 | Version | Date       | Author            | Summary                                                           |
 | :------ | :--------- | :---------------- | :---------------------------------------------------------------- |
-| v1.2.0  | 2025-10-17 | KFM Docs Team     | Added deployment/monitoring, SBOM/SLSA, bias/fairness, quickstart |
-| v1.1.0  | 2025-10-05 | KFM Engineering   | Enhanced FAIR/MCP alignment; expanded metrics                     |
-| v1.0.0  | 2025-10-04 | KFM Documentation | Initial template release                                          |
+| **v1.3.0** | 2025-10-18 | KFM Docs Team     | Added policy gates, SBOM/SLSA notes, security scans, quickstart   |
+| **v1.2.0** | 2025-10-17 | KFM Docs Team     | Deployment/monitoring, bias/fairness, expanded metrics            |
+| **v1.1.0** | 2025-10-05 | KFM Engineering   | Enhanced FAIR/MCP alignment; metrics & evaluation                 |
+| **v1.0.0** | 2025-10-04 | KFM Documentation | Initial template release                                          |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Model Transparent. Every Prediction Proven.”*
+**Kansas Frontier Matrix** — *“Every Model Transparent. Every Prediction Proven.”*  
 📍 `docs/templates/model_card.md` · Standardized model documentation template for KFM (MCP Compliant)
 
 </div>
