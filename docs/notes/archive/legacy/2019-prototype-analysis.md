@@ -7,6 +7,8 @@
 This archive marks the formalization of reproducibility, provenance, and integrated data governance practices that defined the Kansas Frontier Matrix (KFM).
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2019-001
 title: "Prototype Analysis — Pre-MCP Data Ingestion Evaluation (2019)"
 author: ["Frontier Data Engineering Team","@kfm-data"]
 original_path: "notes/data_ingest_strategy.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2019-11-14
 reason: legacy
@@ -39,6 +42,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "aa49b6e2ddc13f8b..."  # SHA-256
+  storage_format: "Markdown (GFM)"
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  last_verified: "2025-10-18"
 summary: >
   Early analysis of pre-MCP data ingestion pipelines and reproducibility protocols (2019).
   This document examined checksum validation, metadata structure, and pipeline automation
@@ -80,20 +88,20 @@ flowchart TD
     C --> D["Metadata Template Draft<br/>YAML + JSON Schema v0.1"]
     D --> E["Validation Tests<br/>Manual Verification + File Logs"]
     E --> F["Final Report<br/>Prototype Analysis — 2019"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## 🧮 Technical Components
 
-| Component | Tool | Function | Outcome |
-| :-- | :-- | :-- | :-- |
-| ETL | GDAL / OGR | Reprojection, merging, clipping | Consistent output tiles |
-| Metadata | YAML / JSON | Manual schema | Introduced machine-readable docs |
-| Checksum | `sha256sum` | Data integrity validation | 100% file coverage |
-| Validation | Python 3.7 | Automated ingestion test | 92% pipeline reproducibility |
-| Provenance | Manual log | Lineage documentation | Origin of PROV adoption |
+| Component | Tool         | Function                      | Outcome                    |
+| :-------- | :----------- | :---------------------------- | :------------------------- |
+| ETL       | GDAL / OGR   | Reprojection, merging, clipping | Consistent output tiles    |
+| Metadata  | YAML / JSON  | Manual schema                  | Machine-readable docs      |
+| Checksum  | `sha256sum`  | Data integrity validation      | 100% file coverage         |
+| Validation| Python 3.7   | Automated ingestion test       | 92% pipeline reproducible  |
+| Provenance| Manual log   | Lineage documentation          | Origin of PROV adoption    |
 
 ---
 
@@ -104,8 +112,7 @@ flowchart TD
 - Introduced **data lineage tagging** and **dataset version logging**.  
 - Outlined the first draft of **“MCP Principles”** for data reproducibility.  
 
-> *“Automation without accountability is chaos. Provenance must be the checksum of intent.”*  
-> — Frontier Data Engineering Team, 2019
+> *“Automation without accountability is chaos. Provenance must be the checksum of intent.”* — Frontier Data Engineering Team, 2019
 
 ---
 
@@ -163,33 +170,33 @@ preservation:
 | File | Description | Date Promoted |
 | :-- | :-- | :-- |
 | [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Modernized ingestion architecture derived from this analysis. | 2024-03-05 |
-| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Governance and documentation practices evolved from MCP draft notes. | 2024-04-10 |
+| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Governance & documentation practices evolved from MCP draft notes. | 2024-04-10 |
 | [`data/processed/metadata/README.md`](../../../data/processed/metadata/README.md) | Metadata pipeline that operationalized these prototypes. | 2024-07-15 |
 
 ---
 
 ## 🧩 FAIR & Preservation Compliance
 
-| Principle | Implementation |
-| :-- | :-- |
-| **Findable** | Indexed in `legacy_manifest.yml` and Knowledge Graph lineage. |
-| **Accessible** | Archived in public Git and Zenodo bag export. |
-| **Interoperable** | Rewritten with YAML metadata + RDF lineage. |
-| **Reusable** | Licensed CC-BY 4.0; metadata validated and linked. |
+| Principle      | Implementation                                           |
+| :------------- | :--------------------------------------------------------|
+| **Findable**   | Indexed in `legacy_manifest.yml` & Knowledge Graph       |
+| **Accessible** | Public Git + Zenodo bag export                           |
+| **Interoperable** | YAML metadata + RDF lineage                          |
+| **Reusable**   | CC-BY 4.0 + validated, linked metadata                   |
 
 ---
 
 ## 🧩 Governance Audit (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Graph Sync | ✅ | `tools/graph_ingest_legacy.py` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
-| Successor Links | ✅ | `remark-lint` |
+| Validation        | Result | Verified By                    |
+| :---------------- | :----- | :----------------------------- |
+| YAML Schema       | ✅     | `jsonschema`                   |
+| FAIR Validation   | ✅     | `scripts/fair_validate.py`     |
+| Graph Sync        | ✅     | `tools/graph_ingest_legacy.py` |
+| Checksum Verified | ✅     | `verify_checksums.py`          |
+| Successor Links   | ✅     | `remark-lint`                  |
 
-**Audit Record (JSON):**
+**Audit Record**
 ```json
 {
   "legacy_entry": {
@@ -218,8 +225,8 @@ flowchart TD
     B --> C["2020 Metadata Schema Tests"]
     C --> D["2022 MCP Draft Notes"]
     D --> E["2024 Data Architecture Standard"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -232,7 +239,7 @@ It was the first time data governance, validation, and metadata generation were 
 - Established reproducibility through code + metadata.  
 - Introduced checksum-based governance verification.  
 - Inspired the **data-architecture.md** document and **FAIR automation CI**.  
-- Demonstrated practical cross-domain provenance tracking (hydrology, terrain, climate).  
+- Demonstrated cross-domain provenance tracking (hydrology, terrain, climate).  
 
 ---
 
@@ -240,9 +247,9 @@ It was the first time data governance, validation, and metadata generation were 
 
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
-| v1.1 | Q2 2026 | Include this prototype as training material in MCP governance workshops. |
-| v1.2 | Q3 2026 | Add AI vector similarity for early pipeline–modern workflow correlation. |
-| v2.0 | 2027 | Include blockchain provenance of all legacy ETL → architecture transitions. |
+| v1.1 | Q2 2026 | Include this prototype in MCP governance training materials. |
+| v1.2 | Q3 2026 | Add vector similarity linking prototypes to modern workflows. |
+| v2.0 | 2027 | Add blockchain provenance for legacy ETL → architecture transitions. |
 
 ---
 
@@ -250,19 +257,20 @@ It was the first time data governance, validation, and metadata generation were 
 
 | File | Description |
 | :-- | :-- |
-| `docs/notes/archive/legacy/README.md` | Legacy archive index and context |
-| `docs/architecture/data-architecture.md` | Formalized version of 2019 ingestion prototype |
-| `docs/standards/documentation.md` | Governance and MCP framework derived from early practices |
-| `data/processed/metadata/README.md` | Finalized metadata structure from this analysis |
-| `data/work/graph/legacy_lineage.ttl` | RDF lineage linking 2019 prototypes to present-day workflows |
+| `../README.md` | Legacy archive index & context |
+| `../../../architecture/data-architecture.md` | Formalized version of 2019 ingestion prototype |
+| `../../../standards/documentation.md` | Governance & MCP framework derived from early practices |
+| `../../../data/processed/metadata/README.md` | Finalized metadata structure from this analysis |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF lineage linking 2019 prototypes to current workflows |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2019 ingestion analysis archive; added FAIR retrofitting, RDF provenance, and checksum verification metadata. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation metadata, and governance audit record. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed archival record with FAIR retrofit, RDF lineage, checksum. |
 
 ---
 
