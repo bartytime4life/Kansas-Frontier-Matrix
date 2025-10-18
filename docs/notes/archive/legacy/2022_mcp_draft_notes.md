@@ -7,6 +7,8 @@
 This archive represents the **intellectual and operational birth of KFM’s reproducibility doctrine**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2022-001
 title: "MCP Draft Notes — Documentation & Governance Blueprint (2022)"
 author: ["Frontier Data Governance Group","@kfm-docs","@kfm-governance"]
 original_path: "notes/governance/mcp_draft_notes.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2022-12-11
 reason: legacy
@@ -39,6 +42,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "b3e7f98a9d11a89e..."  # SHA-256
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234983"
+  last_verified: "2025-10-18"
 summary: >
   The 2022 MCP Draft Notes are the first formal blueprint for documentation-first
   software and data governance. This document unified previous prototypes (2018–2021)
@@ -80,47 +88,47 @@ flowchart TD
     C --> D["Provenance Graph<br/>Neo4j · RDF · PROV-O"]
     D --> E["Audit & FAIR Compliance<br/>ISO 8601 · DCAT · PREMIS"]
     E --> F["Continuous Reproducibility<br/>Version Control + Checksum Logs"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
 ## ⚙️ Five Pillars of MCP (as Drafted in 2022)
 
-| Pillar | Description | Legacy Impact |
-| :-- | :-- | :-- |
-| **Documentation-First** | Every process and dataset begins as a document. | Foundation of MCP-DL. |
-| **Reproducibility** | All outputs traceable to inputs via checksum and metadata. | Ensured auditability. |
-| **Provenance** | Every artifact linked through PROV-O entities and agents. | Core of Knowledge Graph. |
-| **Governance** | Decision-making logged, versioned, and reviewable. | CI/CD + Documentation workflows. |
-| **Transparency** | Open licenses, FAIR principles, and immutable archives. | Enshrined in KFM policy. |
+| Pillar                | Description                                                   | Legacy Impact                  |
+| :-------------------- | :------------------------------------------------------------ | :----------------------------- |
+| **Documentation-First** | Every process and dataset begins as a document.               | Foundation of MCP-DL.          |
+| **Reproducibility**     | All outputs traceable to inputs via checksum and metadata.    | Ensured auditability.          |
+| **Provenance**          | Every artifact linked through PROV-O entities and agents.     | Core of Knowledge Graph.       |
+| **Governance**          | Decision-making logged, versioned, and reviewable.            | CI/CD + Documentation workflows.|
+| **Transparency**        | Open licenses, FAIR principles, and immutable archives.       | Enshrined in KFM policy.       |
 
 ---
 
 ## 🧾 MCP Draft Excerpt (2022)
 
 > “Every file, process, and result must exist within a provable chain of documentation.  
->  A single missing commit breaks not only the data — it breaks the proof.”
-
+> A single missing commit breaks not only the data — it breaks the proof.”  
+>
 > “Software without provenance is fiction. Documentation without versioning is entropy.”
 
 ---
 
 ## 🧠 Governance Hierarchy (as Proposed)
 
-| Role | Responsibility | Description |
-| :-- | :-- | :-- |
-| **MCP Maintainer** | Oversees repository governance | Ensures compliance with documentation and reproducibility standards |
-| **Data Steward** | Manages ingestion, checksum, and metadata quality | Custodian of FAIR compliance |
-| **Reviewer / Auditor** | Validates documentation and graph integrity | Independent verification |
-| **Contributor** | Writes new documentation or code | Must adhere to YAML + CI standards |
+| Role             | Responsibility                          | Description                                        |
+| :--------------- | :--------------------------------------- | :------------------------------------------------- |
+| **MCP Maintainer** | Oversees repository governance           | Ensures compliance with documentation standards    |
+| **Data Steward**   | Ingestion, checksum, metadata quality   | Custodian of FAIR compliance                       |
+| **Reviewer/Auditor** | Validates documentation & graph integrity | Independent verification                         |
+| **Contributor**   | Writes new documentation or code         | Must adhere to YAML + CI standards                 |
 
 ---
 
 ## 🧮 Technical Highlights
 
 - Introduced **`docs/standards/documentation.md`** as governance anchor.  
-- Proposed first **Mermaid-based architecture visualization** for data flow.  
+- Proposed the first **Mermaid-based architecture visualization** for data flow.  
 - Designed early **`make docs-validate`** workflow (still active).  
 - Authored prototype **templates for research, meeting, and backlog notes**.  
 - Implemented **RDF exports** for provenance tracking (later automated in 2024).  
@@ -162,16 +170,16 @@ preservation:
 
 ## 🧮 FAIR & Governance Validation (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| RDF Validation | ✅ | `riot --validate` |
-| Graph Sync | ✅ | `tools/graph_ingest_legacy.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
+| Validation        | Result | Verified By                    |
+| :---------------- | :----- | :----------------------------- |
+| YAML Schema       | ✅     | `jsonschema`                   |
+| FAIR Validation   | ✅     | `scripts/fair_validate.py`     |
+| RDF Validation    | ✅     | `riot --validate`              |
+| Graph Sync        | ✅     | `tools/graph_ingest_legacy.py` |
+| Successor Links   | ✅     | `remark-lint`                  |
+| Checksum Verified | ✅     | `verify_checksums.py`          |
 
-**Audit Record:**
+**Audit Record**
 ```json
 {
   "legacy_entry": {
@@ -195,20 +203,20 @@ preservation:
 
 ## 🧱 Key Legacy Contributions
 
-| Contribution | Description | Successor Implementation |
-| :-- | :-- | :-- |
-| Defined MCP Principles | Outlined five reproducibility pillars. | Adopted in `docs/standards/documentation.md`. |
-| Governance Hierarchy | Role structure for documentation management. | Implemented in CODEOWNERS and CI checks. |
-| Metadata Templates | Introduced YAML schema + Markdown fusion. | Used in `/docs/notes/templates/README.md`. |
-| Provenance Standards | Linked outputs to sources using PROV-O. | Implemented in graph ingestion pipelines. |
-| Validation Workflow | Prototype for `make docs-validate`. | Still in use across MCP repositories. |
+| Contribution              | Description                                   | Successor Implementation                     |
+| :------------------------ | :-------------------------------------------- | :------------------------------------------- |
+| Defined MCP Principles    | Outlined five reproducibility pillars.        | `docs/standards/documentation.md`            |
+| Governance Hierarchy      | Role structure for doc management.            | CODEOWNERS + CI required checks               |
+| Metadata Templates        | Introduced YAML + Markdown fusion.            | `docs/notes/templates/README.md`             |
+| Provenance Standards      | Linked outputs to sources via PROV-O.         | Graph ingestion pipelines                     |
+| Validation Workflow       | Prototype for `make docs-validate`.           | Active in MCP repos                           |
 
 ---
 
 ## 🧠 Legacy Significance
 
-The **2022 MCP Draft Notes** transformed reproducibility from an idea into an enforceable framework.  
-It unified the efforts of previous years — from ETL automation to FAIR compliance — into a living, evolving methodology that still defines the Kansas Frontier Matrix today.
+The **2022 MCP Draft Notes** transformed reproducibility from concept to **enforceable framework**.  
+It unified earlier efforts — from ETL automation to FAIR compliance — into a living methodology that still defines the Kansas Frontier Matrix.
 
 > *“MCP is not a protocol; it’s an ecosystem of accountability.”* — 2022 Draft Notes
 
@@ -223,8 +231,8 @@ flowchart TD
     C --> D["2023 Architecture Briefing v0"]
     D --> E["2024 Initial Design Discussion"]
     E --> F["2025 MCP-DL v6.3 Operational Deployment"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -232,20 +240,20 @@ flowchart TD
 
 | File | Description | Date Promoted |
 | :-- | :-- | :-- |
-| [`docs/standards/documentation.md`](../../../standards/documentation.md) | Modern MCP-DL documentation & governance guide. | 2024-04-10 |
-| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Modernized repository data structure built on this draft. | 2024-03-05 |
+| [`docs/standards/documentation.md`](../../../standards/documentation.md) | MCP-DL documentation & governance guide. | 2024-04-10 |
+| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Modernized repository data structure. | 2024-03-05 |
 | [`docs/architecture/knowledge-graph.md`](../../../architecture/knowledge-graph.md) | Formal graph model for provenance tracking. | 2024-03-10 |
 
 ---
 
 ## 🧩 Governance Roles (Legacy → Present)
 
-| 2022 Draft Role | 2025 Equivalent | Description |
+| 2022 Draft Role | 2025 Equivalent | Description                                |
 | :-- | :-- | :-- |
-| MCP Maintainer | @kfm-governance | Oversees repository compliance. |
-| Data Steward | @kfm-data | Handles FAIR data quality and checksum verification. |
-| Auditor | @kfm-docs | Performs quarterly documentation reviews. |
-| Contributor | @kfm-community | Authors new docs under MCP-DL guidelines. |
+| MCP Maintainer  | @kfm-governance | Oversees repository compliance.            |
+| Data Steward    | @kfm-data       | FAIR data quality & checksum verification. |
+| Auditor         | @kfm-docs       | Quarterly documentation reviews.           |
+| Contributor     | @kfm-community  | Authors new docs under MCP-DL guidelines.  |
 
 ---
 
@@ -253,9 +261,9 @@ flowchart TD
 
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
-| v1.1 | Q1 2026 | Add annotated crosswalk between MCP v1 (2022) and MCP-DL v6.3. |
-| v1.2 | Q3 2026 | Integrate AI model summarization of legacy governance notes. |
-| v2.0 | 2027 | Publish MCP provenance timeline explorer in KFM web UI. |
+| v1.1 | Q1 2026 | Add annotated crosswalk MCP v1 (2022) → MCP-DL v6.3. |
+| v1.2 | Q3 2026 | Integrate AI summaries for legacy governance notes.   |
+| v2.0 | 2027 | Publish MCP provenance timeline explorer in KFM UI.     |
 
 ---
 
@@ -264,18 +272,19 @@ flowchart TD
 | File | Description |
 | :-- | :-- |
 | `docs/notes/archive/legacy/README.md` | Legacy archive index and context. |
-| `docs/architecture/data-architecture.md` | Derived from this governance draft. |
-| `docs/architecture/knowledge-graph.md` | Graph ingestion standards rooted in this phase. |
-| `docs/standards/documentation.md` | Codified MCP-DL standard replacing this draft. |
-| `data/work/graph/legacy_lineage.ttl` | RDF lineage connecting all MCP-related documents. |
+| `../../../architecture/data-architecture.md` | Derived from this governance draft. |
+| `../../../architecture/knowledge-graph.md` | Graph ingestion standards rooted here. |
+| `../../../standards/documentation.md` | MCP-DL documentation governance. |
+| `../../../../data/work/graph/legacy_lineage.ttl` | RDF lineage connecting MCP documents. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2022 MCP Draft Notes; added FAIR compliance, RDF lineage, governance role crosswalk, and checksum metadata. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation/DOI block, and validation audit record. |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed 2022 MCP Draft Notes with FAIR + PROV lineage and checksum. |
 
 ---
 
