@@ -7,8 +7,8 @@
 
 This directory serves as the **historical vault** of the KFM system — documenting the project’s evolution from fragmented, pre-standardized efforts to today’s unified, reproducible knowledge ecosystem.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
-[![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../architecture/knowledge-graph.md)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](../README.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../../../.github/workflows/docs-validate.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,7 +19,7 @@ This directory serves as the **historical vault** of the KFM system — document
 ---
 title: "Kansas Frontier Matrix — Legacy Notes Archive"
 document_type: "Legacy Archive"
-version: "v1.1.0"
+version: "v1.2.0"
 last_updated: "2025-10-18"
 created: "2023-01-01"
 owners: ["@kfm-docs","@kfm-architecture","@kfm-governance"]
@@ -85,6 +85,7 @@ ai_index:
 - [Overview](#-overview)  
 - [Directory Layout](#-directory-layout)  
 - [Legacy Document Classification](#-legacy-document-classification)  
+- [Legacy File Inventory (8 files)](#-legacy-file-inventory-8-files)  
 - [Example Legacy Metadata](#-example-legacy-metadata)  
 - [Historical Context (2017–2023)](#-historical-context-2017–2023)  
 - [Provenance Graph Overview](#-provenance-graph-overview)  
@@ -119,7 +120,8 @@ While not conforming to modern schemas or FAIR principles at creation, these fil
 ```text
 docs/notes/archive/legacy/
 ├── README.md                                # (this file)
-├── 2018_terrain_etl_prototype_notes.md      # Pre-MCP ETL concept
+├── 2018-old-etl-notes.md                    # Hand-written early ETL notes
+├── 2018_terrain_etl_prototype_notes.md      # Pre-MCP ETL concept (automated)
 ├── 2019_data_ingest_strategy.md             # Early ingestion workflows
 ├── 2019-prototype-analysis.md               # Prototype evaluation & governance
 ├── 2020_archaeological_map_sketches.md      # Field & cartography records
@@ -128,7 +130,7 @@ docs/notes/archive/legacy/
 └── 2023_architecture_briefing_v0.md         # Prototype system diagram
 ```
 
-> **Note:** Filenames reflect original sources; some hyphen/underscore normalization occurred during archival for consistency.
+> **Note:** Filenames reflect original sources; minor hyphen/underscore normalization occurred during archival.
 
 ---
 
@@ -136,13 +138,29 @@ docs/notes/archive/legacy/
 
 | File | Year | Domain | Status | Legacy Type | Successor |
 | :-- | :-- | :-- | :-- | :-- | :-- |
-| `2018_terrain_etl_prototype_notes.md` | 2018 | Geospatial | archived | Prototype | `data/processed/terrain/README.md` |
-| `2019_data_ingest_strategy.md` | 2019 | Data Engineering | archived | Strategy | `docs/architecture/data-architecture.md` |
-| `2019-prototype-analysis.md` | 2019 | Governance | archived | Analysis | `docs/architecture/data-architecture.md` |
-| `2020_archaeological_map_sketches.md` | 2020 | Archaeology | archived | Field Record | `docs/standards/ontologies.md` |
-| `2021_digital_atlas_proposal.md` | 2021 | Cartography | archived | Proposal | `docs/architecture/knowledge-graph.md` |
-| `2022_mcp_draft_notes.md` | 2022 | Governance | archived | Draft | `docs/standards/documentation.md` |
-| `2023_architecture_briefing_v0.md` | 2023 | Systems Design | archived | Concept Brief | `docs/architecture/data-architecture.md` |
+| `2018-old-etl-notes.md` | 2018 | Geospatial | archived | Notes | ../../../data/processed/terrain/README.md |
+| `2018_terrain_etl_prototype_notes.md` | 2018 | Geospatial | archived | Prototype | ../../../architecture/data-architecture.md |
+| `2019_data_ingest_strategy.md` | 2019 | Data Eng. | archived | Strategy | ../../../architecture/data-architecture.md |
+| `2019-prototype-analysis.md` | 2019 | Governance | archived | Analysis | ../../../architecture/data-architecture.md |
+| `2020_archaeological_map_sketches.md` | 2020 | Archaeology | archived | Field Record | ../../../standards/ontologies.md |
+| `2021_digital_atlas_proposal.md` | 2021 | Cartography | archived | Proposal | ../../../architecture/knowledge-graph.md |
+| `2022_mcp_draft_notes.md` | 2022 | Governance | archived | Draft | ../../../standards/documentation.md |
+| `2023_architecture_briefing_v0.md` | 2023 | Systems Design | archived | Concept Brief | ../../../architecture/data-architecture.md |
+
+---
+
+## 🧾 Legacy File Inventory (8 files)
+
+| ID | File | Year | Domain | Description | Successor |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| L-2018-001 | `2018-old-etl-notes.md` | 2018 | Geospatial | Hand-written ETL workflow notes | ../../../data/processed/terrain/README.md |
+| L-2018-002 | `2018_terrain_etl_prototype_notes.md` | 2018 | Geospatial | First automated ETL prototype | ../../../architecture/data-architecture.md |
+| L-2019-001 | `2019-prototype-analysis.md` | 2019 | Governance | Prototype evaluation & governance | ../../../architecture/data-architecture.md |
+| L-2019-002 | `2019_data_ingest_strategy.md` | 2019 | Data Eng. | Unified ingestion strategy + checksums | ../../../architecture/data-architecture.md |
+| L-2020-001 | `2020_archaeological_map_sketches.md` | 2020 | Archaeology | Early cultural GIS & ontology sketch | ../../../standards/ontologies.md |
+| L-2021-001 | `2021_digital_atlas_proposal.md` | 2021 | Cartography | Conceptual “Digital Atlas” blueprint | ../../../architecture/knowledge-graph.md |
+| L-2022-001 | `2022_mcp_draft_notes.md` | 2022 | Governance | MCP governance blueprint | ../../../standards/documentation.md |
+| L-2023-001 | `2023_architecture_briefing_v0.md` | 2023 | Systems Design | Pre-MCP-DL architecture synthesis | ../../../architecture/data-architecture.md |
 
 ---
 
@@ -157,7 +175,7 @@ status: archived
 archived_date: 2021-03-12
 reason: legacy
 linked_successor:
-  - ../../architecture/knowledge-graph.md
+  - ../../../architecture/knowledge-graph.md
 tags: ["legacy","proposal","cartography","atlas","archive"]
 ---
 ```
@@ -210,19 +228,19 @@ Pre-MCP docs are **retrofitted** with MCP-DL metadata and preserved in modern fo
 ```yaml
 manifest_version: "1.0"
 year_range: "2017–2023"
-total_entries: 7
+total_entries: 8
 entries:
   - id: L-2018-002
     title: "Terrain ETL Prototype — Kansas Elevation Workflow (2018)"
     archived_date: "2018-11-20"
     reason: "legacy"
-    successor: "../../architecture/data-architecture.md"
+    successor: "../../../architecture/data-architecture.md"
     hash: "e47bcd9..."
   - id: L-2021-001
     title: "Digital Atlas Proposal — Conceptual Blueprint (2021)"
     archived_date: "2021-03-12"
     reason: "legacy"
-    successor: "../../architecture/knowledge-graph.md"
+    successor: "../../../architecture/knowledge-graph.md"
     hash: "f1c5a8b..."
 ```
 
@@ -314,7 +332,8 @@ These archives connect today’s reproducibility standards to KFM’s earliest c
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| v1.1.0 | 2025-10-18 | @kfm-docs | **Aligned links & paths;** added schema reference, automation, AI index, and validation matrix. |
+| v1.2.0 | 2025-10-18 | @kfm-docs | **Updated paths & inventory for 8 files;** added schema header, automation, AI index, and validation matrix. |
+| v1.1.0 | 2025-10-18 | @kfm-docs | Aligned links & paths; added schema reference, automation, AI index, and validation matrix. |
 | v1.0.0 | 2025-10-18 | @kfm-docs | Established legacy archive under MCP-DL v6.3; added FAIR retrofitting, manifest, and RDF lineage. |
 
 ---
