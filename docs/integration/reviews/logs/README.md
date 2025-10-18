@@ -1,63 +1,96 @@
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — Review Logs & Provenance Records  
+# 🧾 Kansas Frontier Matrix — **Review Logs & Provenance Records**  
 `docs/integration/reviews/logs/README.md`
 
-**Mission:** Maintain a complete, auditable trail of all dataset, code, and document reviews  
-within the **Kansas Frontier Matrix (KFM)** — preserving validation evidence, provenance links,  
-and contributor accountability according to **Master Coder Protocol (MCP)** standards.
+**Mission:** Maintain a complete, immutable, and machine-readable trail of all **dataset, code, model, and documentation reviews**  
+conducted under the **Kansas Frontier Matrix (KFM)**. These logs form the **provenance ledger** of the project,  
+providing verifiable evidence of compliance, validation, and peer review according to **Master Coder Protocol (MCP-DL v6.3)**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../)
+[![Aligned · STAC · DCAT · CIDOC · OWL-Time](https://img.shields.io/badge/Aligned-STAC%201.0%20%7C%20DCAT%202.0%20%7C%20CIDOC%20CRM%20%7C%20OWL--Time-green)](../../../metadata-standards.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
 
+```yaml
 ---
-
-## 📜 Overview
-
-This directory holds **immutable review records** documenting how every integration  
-(datasets, code modules, AI models, or documentation) was validated and approved.
-
-Each record functions like a **scientific lab notebook entry** — detailing reviewers, validation results,  
-license compliance, checksums, and timestamps. These logs collectively form the **project’s provenance ledger**,  
-enabling full traceability for every artifact integrated into the Kansas Frontier Matrix.
-
+title: "Review Logs & Provenance Records"
+document_type: "Governance · Audit Ledger"
+version: "v2.0.0"
+last_updated: "2025-10-18"
+created: "2025-10-05"
+owners: ["@kfm-review-board","@kfm-security","@kfm-data","@kfm-architecture"]
+status: "Stable"
+maturity: "Production"
+scope: "Docs/Integration/Reviews/Logs"
+license: "CC-BY 4.0"
+tags: ["review","audit","provenance","logs","validation","mcp"]
+audit_framework: "MCP-DL v6.3"
+preservation_policy:
+  checksum_algorithm: "SHA-256"
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
+  metadata_standard: "PREMIS 3.0"
+  revalidation_cycle: "annually"
+semantic_alignment:
+  - PROV-O
+  - DCAT 2.0
+  - STAC 1.0
+  - CIDOC CRM
+  - OWL-Time
 ---
-
-## 🧭 Directory Structure
-
-```
-
-docs/integration/reviews/logs/
-├── 2025-10-05_kansas_treaties.md
-├── 2025-10-05_metadata-standards.md
-├── 2025-10-06_ai-model-validation.md
-├── audit-index.json
-└── README.md  ← (you are here)
-
 ````
 
-- **Individual Review Logs (`YYYY-MM-DD_name.md`)**  
-  Contain detailed verification reports for a single dataset, document, or feature.  
-- **`audit-index.json`**  
-  Machine-readable summary of all reviews (used in CI validation and for provenance exports).  
-- **`README.md`**  
-  This document — explains how logs are created, structured, and maintained.
+---
+
+## 📘 Purpose
+
+The `logs/` directory records the **lifespan of validation and approval events**
+across all domains — **data, code, models, and documentation** — in the Kansas Frontier Matrix.
+
+Each log is:
+
+* **Immutable**: Once created, never modified (new entries supersede old ones).
+* **Provenanced**: Linked to dataset IDs, review templates, and commit hashes.
+* **Machine-readable**: Parsed by CI/CD and audit tools.
+* **Reproducible**: Contains enough metadata to independently verify review results.
+
+> In essence, this directory serves as the **living memory** of the KFM peer review system.
+
+---
+
+## 🗂 Directory Layout
+
+```text
+docs/integration/reviews/logs/
+├── 2025-10-05_kansas_treaties.md        → Data integration review log
+├── 2025-10-06_ai-model-validation.md    → Model evaluation record
+├── 2025-10-06_terrain_pipeline.md       → Code integration review
+├── 2025-10-07_documentation_audit.md    → Documentation compliance log
+├── audit-index.json                     → Machine-readable summary of all review logs
+└── README.md                            → You are here
+```
+
+**Contents:**
+
+* **Individual Logs** — One Markdown file per reviewed component (`YYYY-MM-DD_<name>.md`).
+* **`audit-index.json`** — Aggregated metadata index consumed by CI/CD validation pipelines.
+* **`README.md`** — Governance file describing structure, policies, and schema.
 
 ---
 
 ## 🧩 Log Schema
 
-Each log follows a consistent YAML-front-matter structure for easy parsing.
+Every log follows a uniform **YAML front matter** schema for automated parsing and provenance tracing.
 
 ```yaml
 dataset: kansas_treaties
-review_type: data_integration
+review_type: data
 reviewers:
   - historian_a
   - geospatial_b
@@ -67,59 +100,58 @@ validation:
   checksum: verified
   schema: valid
   license: CC-BY-4.0
-notes: "Boundary geometries validated against USFS Royce dataset; metadata verified."
+notes: "Boundary geometries validated; metadata verified against USFS Royce dataset."
 timestamp: 2025-10-05T17:30:00Z
 commit: a1b2c3d
-````
+linked_templates:
+  - "../templates/data_review_template.md"
+  - "../checklist.md"
+```
 
-After the YAML header, reviewers can include optional commentary or linked artifacts
-(such as screenshots, JSON snippets, or console logs) in Markdown.
+> After the YAML section, reviewers may include contextual commentary, validation screenshots,
+> CLI output, or supporting attachments as Markdown.
 
 ---
 
-## ⚙️ Review Workflow Overview
+## 🧭 Logging Lifecycle
 
 ```mermaid
 flowchart TD
-    A["New Pull Request / Dataset"] --> B["Automated CI Checks\n(Lint · STAC · Schema)"]
-    B --> C["Peer Review\n(Domain + Technical Maintainers)"]
-    C --> D["Integration Review Board\nMCP Validation & Provenance"]
-    D --> E["Log Generation\n(templates/write_log.py)"]
-    E --> F["Commit to logs/\n+ Update audit-index.json"]
-    F --> G["Public Provenance Record\n(GitHub + Docs site)"]
+    A["Contributor PR / Dataset Submission"] --> B["Automated CI Checks<br/>(Lint · Schema · STAC · Policy)"]
+    B --> C["Peer Review<br/>(Domain & Technical Maintainers)"]
+    C --> D["Integration Review Board<br/>(MCP Compliance · Ethics · Provenance)"]
+    D --> E["Log Generation<br/>(write_log.py · Templates)"]
+    E --> F["Append to audit-index.json<br/>(machine record)"]
+    F --> G["Publish Provenance Ledger<br/>(GitHub Pages · Neo4j · Zenodo)"]
 ```
 
 <!-- END OF MERMAID -->
 
 ---
 
-## 🧮 Logging Process
+## 🧮 Logging & Automation Process
 
-1. **Trigger:**
-   When a PR is approved and merged, a post-merge GitHub Action runs the `write_log.py` script.
-2. **Template Fill:**
-   The action pulls PR metadata (title, authors, reviewers, commit hash, CI results).
-3. **Render Markdown:**
-   Generates a new `YYYY-MM-DD_<component>.md` file under `logs/`.
-4. **Append to Index:**
-   Adds a new entry in `audit-index.json`.
-5. **Validate:**
-   Ensures unique IDs and valid JSON syntax via CI.
-6. **Commit:**
-   Pushes the generated files back to the `main` branch with `[bot] MCP Review Logger`.
+| Step | Action                     | Tool / Location                                      |
+| :--- | :------------------------- | :--------------------------------------------------- |
+| 1️⃣  | **Trigger on Merge**       | GitHub Action executes `tools/write_log.py`.         |
+| 2️⃣  | **Pull PR Metadata**       | Extract reviewers, CI results, commit SHA.           |
+| 3️⃣  | **Render Markdown Log**    | `YYYY-MM-DD_<component>.md` generated under `logs/`. |
+| 4️⃣  | **Append Index Entry**     | Added to `audit-index.json` with unique ID.          |
+| 5️⃣  | **Schema Validation**      | Validated via `yamllint` and `jq`.                   |
+| 6️⃣  | **Publish to Main Branch** | `[bot] MCP Review Logger` commits validated log.     |
 
 ---
 
-## 🧰 Audit Index Format
+## 🧰 Audit Index Specification
 
-Example: `docs/integration/reviews/logs/audit-index.json`
+**File:** `docs/integration/reviews/logs/audit-index.json`
 
 ```json
 {
   "reviews": [
     {
       "id": "kansas_treaties_2025-10-05",
-      "type": "data_integration",
+      "type": "data",
       "dataset": "kansas_treaties",
       "reviewers": ["historian_a", "geospatial_b"],
       "status": "approved",
@@ -128,65 +160,76 @@ Example: `docs/integration/reviews/logs/audit-index.json`
       "path": "docs/integration/reviews/logs/2025-10-05_kansas_treaties.md"
     },
     {
-      "id": "metadata_standards_2025-10-05",
-      "type": "documentation",
-      "dataset": "metadata_standards",
-      "reviewers": ["dev_ops", "doc_team"],
+      "id": "terrain_pipeline_2025-10-06",
+      "type": "code",
+      "dataset": "terrain_pipeline",
+      "reviewers": ["dev_ops_a"],
       "status": "approved",
-      "timestamp": "2025-10-05T18:20:00Z",
-      "commit": "b4c5d6e",
-      "path": "docs/integration/reviews/logs/2025-10-05_metadata-standards.md"
+      "timestamp": "2025-10-06T10:00:00Z",
+      "commit": "c9d2e1f",
+      "path": "docs/integration/reviews/logs/2025-10-06_terrain_pipeline.md"
     }
   ]
 }
 ```
 
+**Key Features:**
+
+* Uses **ISO 8601** timestamps.
+* All paths are **relative** to repo root.
+* Validation schema enforces uniqueness of `id`.
+* Consumed by CI for provenance dashboards & Neo4j imports.
+
 ---
 
-## 🧾 Creating a Manual Review Log
+## 🧾 Manual Log Creation
 
-Contributors may also manually create or append reviews using the helper template.
+Manual entries can be created using the `write_log.py` helper:
 
 ```bash
-python tools/write_log.py --dataset ks_hydro --reviewers user1,user2 \
-  --status approved --notes "Validated against NWIS station data"
+python tools/write_log.py \
+  --dataset kansas_treaties \
+  --reviewers historian_a,geospatial_b \
+  --status approved \
+  --notes "Boundary polygons and metadata verified."
 ```
 
-This command automatically timestamps the log and updates the JSON index.
+This script generates a new Markdown log and updates the index automatically.
 
 ---
 
-## 🧮 Validation & CI Checks
+## 🧮 Validation & CI/CD Hooks
 
-| Layer                     | Tool                                    | Output                                  |
-| :------------------------ | :-------------------------------------- | :-------------------------------------- |
-| **YAML Header**           | `yamllint`                              | Syntax check                            |
-| **JSON Index**            | `jq`                                    | Valid JSON schema                       |
-| **Cross-reference**       | Python script                           | Confirms all logs listed in index exist |
-| **Checksum Verification** | `sha256sum`                             | Ensures no tampering with logs          |
-| **CI Workflow**           | `.github/workflows/review-validate.yml` | Automated validation before deployment  |
-
-Logs failing validation trigger a CI warning and block deployment until fixed.
+| Validation Layer      | Tool / Workflow                         | Purpose                                  |
+| :-------------------- | :-------------------------------------- | :--------------------------------------- |
+| **YAML Front Matter** | `yamllint`                              | Validate syntax and required fields.     |
+| **JSON Index**        | `jq` / `jsonschema`                     | Verify structure and uniqueness.         |
+| **Cross-Reference**   | `scripts/docs_index_check.py`           | Ensure all logs listed in index exist.   |
+| **Checksum**          | `sha256sum`                             | Validate file integrity.                 |
+| **CI Workflow**       | `.github/workflows/review-validate.yml` | Run all checks automatically pre-deploy. |
 
 ---
 
 ## 🧠 Best Practices
 
-* **Immutable:** Never modify old logs; append a new correction entry instead.
-* **Timestamped:** Always use UTC (`YYYY-MM-DDTHH:MM:SSZ`).
-* **Consistent naming:** `YYYY-MM-DD_<component>.md`.
-* **Cross-linked:** Reference related datasets or docs via relative paths.
-* **Transparent:** Include reviewer handles and automated tool results.
+| Principle            | Implementation                                                  |
+| :------------------- | :-------------------------------------------------------------- |
+| **Immutable**        | Old logs remain frozen; new corrections logged separately.      |
+| **Timestamped**      | Always UTC format (`YYYY-MM-DDTHH:MM:SSZ`).                     |
+| **Cross-Linked**     | Include relative links to review templates and source datasets. |
+| **Transparent**      | Document reviewer handles and CI results clearly.               |
+| **Machine-Readable** | Maintain proper YAML indentation and JSON validity.             |
+| **Auditable**        | Each entry linked to a PR, commit hash, or GitHub Actions run.  |
 
 ---
 
-## 🧭 Example Full Review Log
+## 🧩 Example Complete Review Log
 
-`2025-10-05_kansas_treaties.md`
+**File:** `2025-10-05_kansas_treaties.md`
 
 ```yaml
 dataset: kansas_treaties
-review_type: data_integration
+review_type: data
 reviewers:
   - historian_a
   - geospatial_b
@@ -197,29 +240,56 @@ validation:
   schema: valid
   license: CC-BY-4.0
 notes: |
-  Treaty layer polygons and metadata verified.
-  AI summaries reviewed for factual accuracy.
+  Treaty boundary geometries validated against the USFS Royce dataset.
+  STAC metadata conforms to v1.0.0; ontology mappings checked.
 timestamp: 2025-10-05T17:30:00Z
 commit: a1b2c3d
+linked_templates:
+  - "../templates/data_review_template.md"
+  - "../checklist.md"
 ```
 
 **Reviewer Notes:**
 
-> Verified against USFS *Indian Land Cessions* dataset.
-> STAC metadata conforms to v1.0.0.
-> Confidence score: **0.98** (cross-validated via AI correlation).
+> ✔ Validated via AI-assisted NLP for treaty name cross-references.
+> ✔ Confidence Score: **0.98** (AI correlation with source metadata).
+> ✔ GeoJSON coordinates verified within Kansas bounding box.
 
 ---
 
-## 🗂️ Governance & Retention
+## 🧮 Governance & Retention Policy
 
-| Policy               | Rule                                                    |
-| :------------------- | :------------------------------------------------------ |
-| **Retention Period** | Permanent (no deletion).                                |
-| **Versioning**       | Each file locked to commit hash.                        |
-| **Backup**           | Included in repository snapshot + GitHub Pages export.  |
-| **Access**           | Public read, contributor write (via review automation). |
-| **Audits**           | Annual MCP compliance check by the Integration Board.   |
+| Policy               | Description                                                |
+| :------------------- | :--------------------------------------------------------- |
+| **Retention Period** | Permanent (no deletion).                                   |
+| **Versioning**       | Each file tied to commit hash in Git history.              |
+| **Archival Targets** | GitHub, Zenodo, OSF, Neo4j (provenance graph).             |
+| **Access Control**   | Public read; write restricted to CI automation.            |
+| **Quarterly Audit**  | Integration Review Board revalidates 5% of logs quarterly. |
+
+---
+
+## 🔗 Related Documentation
+
+| File                                         | Description                                            |
+| :------------------------------------------- | :----------------------------------------------------- |
+| `../README.md`                               | Integration Reviews overview                           |
+| `../checklist.md`                            | Review Board checklist                                 |
+| `../templates/`                              | Review templates for data, code, model, docs, security |
+| `../../metadata-standards.md`                | STAC/DCAT/CIDOC/OWL-Time mappings                      |
+| `../../../architecture/data-architecture.md` | Data flow and repository structure                     |
+| `../../../standards/metadata.md`             | Metadata validation schema                             |
+
+---
+
+## 📅 Version History
+
+| Version    | Date       | Author                    | Summary                                                                                     |
+| :--------- | :--------- | :------------------------ | :------------------------------------------------------------------------------------------ |
+| **v2.0.0** | 2025-10-18 | KFM Review Council        | Upgraded to MCP-DL v6.3; added YAML header, schema, lifecycle diagram, and index structure. |
+| v1.2.0     | 2025-10-10 | KFM Governance Team       | Expanded CI/CD hooks and cross-reference validation.                                        |
+| v1.1.0     | 2025-10-06 | KFM Data Integration Team | Added example log schema and audit-index.json illustration.                                 |
+| v1.0.0     | 2025-10-05 | KFM Architecture Team     | Initial version — established log format and structure.                                     |
 
 ---
 
@@ -227,6 +297,6 @@ commit: a1b2c3d
 
 ### 🧩 “Logs are memory; provenance is proof — every review is a timestamp of trust.”
 
-**— Kansas Frontier Matrix Review Council**
+**Kansas Frontier Matrix Review Council · MCP-DL v6.3**
 
 </div>
