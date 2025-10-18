@@ -1,5 +1,5 @@
 name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — documented, versioned, and reproducible"
+description: "Propose a new feature or enhancement — documented, versioned, reproducible, and MCP-DL v6.3 compliant."
 title: "[Feature]: <feature name> — <component/domain>"
 labels:
   - enhancement
@@ -8,9 +8,13 @@ assignees:
   - kfm-architecture
   - kfm-data
 
-# KFM metadata
-# version: v2.3.1
-# last_updated: 2025-10-16
+# ⛳ Kansas Frontier Matrix · Feature Request Form (MCP-DL v6.3)
+# Captures all details to design, review, and integrate a feature:
+# problem, rationale, implementation, KPIs, governance, security, data ethics, and versioning.
+
+# KFM metadata (informational)
+# version: v2.4.0
+# last_updated: 2025-10-18
 # owners: @kfm-architecture @kfm-data
 
 body:
@@ -18,7 +22,7 @@ body:
     attributes:
       value: |
         ## 💡 Feature Overview
-        *"Every Feature Builds the Future — Every Change is Reproducible."*
+        *"Every feature builds the future — every change is reproducible."*
 
   - type: input
     id: feature_name
@@ -32,7 +36,7 @@ body:
     id: component
     attributes:
       label: Target Module / Component
-      placeholder: "terrain_pipeline.py | web/config/layers.json | graph_ingest.py"
+      placeholder: "terrain_pipeline.py | web/config/layers.json | src/graph/schema.cypher | src/api/routes.py"
     validations:
       required: true
 
@@ -64,6 +68,30 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: impact_level
+    attributes:
+      label: Expected Impact Level
+      options:
+        - "🟩 Minor"
+        - "🟨 Moderate"
+        - "🟧 Major"
+        - "🔴 Critical"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: semver
+    attributes:
+      label: SemVer Impact
+      options:
+        - patch (no breaking changes)
+        - minor (non-breaking but visible)
+        - major (breaking or schema-level)
+        - unknown
+    validations:
+      required: true
+
   - type: markdown
     attributes:
       value: "## 🔍 Problem & Rationale"
@@ -84,6 +112,7 @@ body:
         - Aligns with roadmap milestone
         - Fills UI accessibility gap
         - Enhances knowledge graph linking
+        - Supports Focus Mode / AI summaries
     validations:
       required: true
 
@@ -95,11 +124,12 @@ body:
     id: proposal
     attributes:
       label: Proposed Implementation Details
-      description: "Describe the logic, workflow changes, files affected, dependencies."
+      description: "Describe logic, workflow changes, files affected, dependencies."
       placeholder: |
         - Add CLI flag to terrain_pipeline.py
         - Modify layers.json with slope_class layer
-        - Update ADR + add unit test coverage
+        - Update ADR + add unit tests + e2e test fixture
+        - Adjust STAC properties + thumbnails
     validations:
       required: true
 
@@ -112,8 +142,21 @@ body:
         - label: Graph schema/API expansion
         - label: Web/timeline interaction enhancement
         - label: Visualization config/UI component
-        - label: Documentation/ADR/SOP update
+        - label: Docs/ADR/SOP updates
+        - label: CI/CD workflow change
+        - label: AI/Model pipeline change
         - label: Other
+
+  - type: textarea
+    id: toggles_rollout
+    attributes:
+      label: Rollout & Toggle Strategy
+      description: "How to deploy safely and roll back if needed."
+      placeholder: |
+        - Feature flag: `feature.slope_class`
+        - Canary / partial rollout
+        - Rollback plan: revert config + data migration
+        - Migration notes: cache rebuild, index refresh
 
   - type: markdown
     attributes:
@@ -121,32 +164,22 @@ body:
         ## 📐 Metrics / Expected Outcome
         Use this template (copy/paste into the field below):
         ```
-        | Metric          | Target                                   |
-        |-----------------|-------------------------------------------|
-        | Data Quality    | slope_class attribute present; STAC updated |
-        | Reproducibility | Deterministic outputs; SOP updated        |
-        | Usability       | Map layer toggle + legend                 |
-        | Performance     | < +5% runtime impact                      |
+        | Metric          | Target                                      |
+        |-----------------|----------------------------------------------|
+        | Data Quality    | `slope_class` populated; STAC updated        |
+        | Reproducibility | Deterministic outputs; SOP updated           |
+        | Usability       | Map layer toggle + legend + doc link         |
+        | Performance     | ≤ +5% runtime impact                         |
+        | Accessibility   | Meets WCAG 2.1 AA; keyboard-only operable    |
+        | Observability   | New logs/metrics in CI and runtime dashboards|
         ```
   - type: textarea
     id: outcomes
     attributes:
       label: Expected Behavior / KPIs
-      description: "Enter your KPI table or bullet list. Markdown is rendered."
+      description: "Enter the KPI table or bullet list. Markdown is rendered."
       placeholder: "Paste the KPI table template (see above) and adjust targets."
       render: markdown
-    validations:
-      required: true
-
-  - type: dropdown
-    id: impact_level
-    attributes:
-      label: Expected Impact Level
-      options:
-        - "🟩 Minor"
-        - "🟨 Moderate"
-        - "🟧 Major"
-        - "🔴 Critical"
     validations:
       required: true
 
@@ -154,48 +187,46 @@ body:
     id: downstream
     attributes:
       label: Downstream Effects
-      description: "Describe expected effects on STAC, pipelines, UI, tests, etc."
+      description: "Describe expected effects on STAC, pipelines, UI, tests, model cards, etc."
       placeholder: |
-        - Changes STAC schema version
-        - Requires new test fixtures
-        - Impacts performance gate
+        - STAC schema version bump (properties.version)
+        - New test fixtures + screenshots
+        - Update `docs/` usage & ADR
+        - Affect model card? (if AI surfaces/dossiers change)
 
   - type: markdown
     attributes:
-      value: |
-        ## 📜 Governance / Compliance
-        Use this versioning table (copy/paste into the field below):
-        ```
-        | Component           | Current | Proposed | Reason         |
-        |---------------------|---------|----------|----------------|
-        | ETL Script          | v1.3.0  | v1.4.0   | logic addition |
-        | Graph/API Schema    | v1.0.0  | v1.1.0   | field added    |
-        | Web Config          | v1.2.1  | v1.2.2   | toggle added   |
-        | Repo Release (SemVer)| v2.4.0 | v2.5.0   | feature bump   |
-        ```
-  - type: textarea
-    id: versioning
-    attributes:
-      label: Versioning Summary
-      description: "Enter the table above with your proposed bumps. Markdown is rendered."
-      placeholder: "Paste the versioning table template (see above) and adjust versions."
-      render: markdown
+      value: "## 🔒 Security, Supply Chain & Ethics"
 
   - type: checkboxes
-    id: mcp
+    id: security_ethics
     attributes:
-      label: MCP Compliance
+      label: Security & Data Ethics Checklist
       options:
-        - label: Documentation-first — described & linked to ADR/SOP
-          required: true
-        - label: Reproducible — deterministic steps + outputs
-          required: true
-        - label: Provenance — traceable files, config, commit hashes
-          required: true
-        - label: Versioned — STAC/schema/ETL or API updated
-          required: true
-        - label: Audit-ready — tests/metrics provided
-          required: true
+        - label: CodeQL/Trivy clean or mitigations documented
+        - label: Actions pinned (SHA/tag); least-privilege tokens
+        - label: SBOM re-generated (if deps changed)
+        - label: Policy-as-Code checks pass (OPA/Conftest)
+        - label: Data ethics reviewed; STAC `data_ethics` set if applicable
+
+  - type: markdown
+    attributes:
+      value: "## 📜 Governance / Versioning"
+
+  - type: textarea
+    id: versioning_summary
+    attributes:
+      label: Versioning Summary (SemVer + STAC)
+      description: "Enter a table of proposed version increments."
+      placeholder: |
+        | Component            | Current | Proposed | Reason             |
+        |----------------------|---------|----------|--------------------|
+        | ETL Script           | v1.3.0  | v1.4.0   | logic addition     |
+        | Graph/API Schema     | v1.0.0  | v1.1.0   | field added        |
+        | Web Config           | v1.2.1  | v1.2.2   | toggle added       |
+        | Repo Release (SemVer)| v2.4.0  | v2.5.0   | feature bump       |
+        | Dataset (STAC)       | v1.0.0  | v1.1.0   | collection update  |
+      render: markdown
 
   - type: markdown
     attributes:
@@ -207,7 +238,8 @@ body:
       label: Links / Related PRs / Docs
       placeholder: |
         - Related Issue: #456
-        - Docs: docs/sop/terrain_pipeline.md
+        - ADR: docs/adr/ADR-####.md
+        - SOP: docs/sop/terrain_pipeline.md
         - PRs: #789
 
   - type: textarea
@@ -217,3 +249,4 @@ body:
       placeholder: |
         - Diagrams, screenshots, mockups
         - Risk flags, review blockers, etc.
+```
