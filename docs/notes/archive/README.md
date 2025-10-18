@@ -7,6 +7,7 @@
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
 [![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../.github/workflows/policy-check.yml)
 [![Site Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Site%20Build&logo=github)](../../../.github/workflows/site.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](README.md)
@@ -18,7 +19,7 @@
 ---
 title: "Kansas Frontier Matrix — Notes Archive"
 document_type: "Archive Guide"
-version: "v3.0.0"
+version: "v3.0.1"
 last_updated: "2025-10-18"
 created: "2025-10-05"
 owners: ["@kfm-docs","@kfm-governance","@kfm-architecture"]
@@ -27,10 +28,11 @@ maturity: "Production"
 scope: "Docs/Notes/Archive"
 license: "CC-BY 4.0"
 semver_policy: "MAJOR.MINOR.PATCH"
-tags: ["archive","provenance","governance","preservation","mcp","knowledge-graph","fair","bagit","ai"]
+tags: ["archive","provenance","governance","preservation","mcp","knowledge-graph","fair","bagit","ai","policy"]
 audit_framework: "MCP-DL v6.3"
 ci_required_checks:
   - docs-validate
+  - policy-check
   - site-build
   - pre-commit
   - codeql
@@ -95,10 +97,10 @@ external_exports:
 The `/docs/notes/archive/` directory functions as a **digital preservation system** for retired, replaced, or superseded notes.  
 Each archived file remains **read-only, checksum-verified**, and **linked to its successor** in the MCP Knowledge Graph — preserving complete historical provenance.
 
-* 🔒 **Immutable:** Archived content is never deleted or overwritten.  
-* 🧾 **Versioned:** Commit history retained in Git.  
-* 🧠 **Indexed:** Ingested to Neo4j/RDF with full lineage.  
-* 🔗 **FAIR:** Findable, Accessible, Interoperable, Reusable metadata model.
+- 🔒 **Immutable:** Archived content is never deleted or overwritten.  
+- 🧾 **Versioned:** Commit history retained in Git.  
+- 🧠 **Indexed:** Ingested to Neo4j/RDF with full lineage.  
+- 🔗 **FAIR:** Findable, Accessible, Interoperable, Reusable metadata model.
 
 ---
 
@@ -137,8 +139,8 @@ flowchart TD
     D -->|No| F["Is it duplicate or merged?"]
     F -->|Yes| G["Archive (reason = 'duplicate' or 'merged')"]
     F -->|No| H["Keep active — update YAML status"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -165,7 +167,7 @@ author: "@kfm-data"
 original_path: "docs/notes/ideas.md"
 status: archived
 archived_date: 2025-10-05
-reason: superseded
+reason: superseded           # superseded | duplicate | merged | reference | complete
 linked_successor:
   - ../../architecture/data-architecture.md
   - ../../standards/metadata.md
@@ -195,6 +197,7 @@ Archived notes are modeled as `prov:Entity` instances with lifecycle lineage.
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix kfm: <https://kfm.org/id/> .
 @prefix dc:   <http://purl.org/dc/terms/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 kfm:note/2024_terrain_pipeline_draft
     a prov:Entity ;
@@ -213,8 +216,8 @@ erDiagram
     ARCHIVED_NOTE }o--|| DATASET     : used
     ARCHIVED_NOTE }o--|| MEETING     : discussedIn
     ARCHIVED_NOTE ||--o{ PERIOD      : contextualizedBy
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -327,14 +330,14 @@ bags/
 > - Apply `license: CC-BY 4.0` or appropriate open-access license.  
 > - Honor Indigenous data sovereignty (per *Archaeology MCP Module*).
 
-**Example Metadata Extension**
+**Metadata Extension Example**
 ```yaml
 access_policy:
-  level: "public"
+  level: "public"          # public | internal
   embargo_until: null
   license: "CC-BY 4.0"
 classification:
-  sensitivity: "low"
+  sensitivity: "low"       # low | medium | high
   retention_class: "permanent"
 ```
 
@@ -342,13 +345,13 @@ classification:
 
 ## 🧩 Governance Guidelines
 
-| Action | Frequency | Responsible |
-| :-- | :-- | :-- |
-| Archive Review | Quarterly | @kfm-governance |
-| Graph Lineage Verification | Weekly | CI/CD |
-| External Repository Sync | Quarterly | @kfm-docs |
-| Zenodo DOI Export | Annual | @kfm-data |
-| Health Check Report | Monthly | @kfm-audit |
+| Action                     | Frequency  | Responsible     |
+| :------------------------- | :--------- | :-------------- |
+| Archive Review             | Quarterly  | @kfm-governance |
+| Graph Lineage Verification | Weekly     | CI/CD           |
+| External Repository Sync   | Quarterly  | @kfm-docs       |
+| Zenodo DOI Export          | Annual     | @kfm-data       |
+| Health Check Report        | Monthly    | @kfm-audit      |
 
 ---
 
@@ -390,10 +393,10 @@ ORDER BY DESC(?archivedDate)
 | Milestone | Target | Description |
 | :-- | :-- | :-- |
 | v3.1 | Q1 2026 | Integrate FAIR/BagIt export pipeline to Zenodo/OSF |
-| v3.2 | Q2 2026 | Add vectorized AI search interface in KFM web UI |
+| v3.2 | Q2 2026 | Add vectorized AI search interface in KFM web UI    |
 | v3.3 | Q3 2026 | Implement Archive Browser dashboard with timeline filters |
-| v3.4 | Q4 2026 | Add DOI auto-minting for yearly archive bags |
-| v4.0 | 2027 | Immutable blockchain-backed provenance signatures |
+| v3.4 | Q4 2026 | Add DOI auto-minting for yearly archive bags        |
+| v4.0 | 2027    | Immutable blockchain-backed provenance signatures   |
 
 ---
 
@@ -414,9 +417,10 @@ ORDER BY DESC(?archivedDate)
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| v3.0.0 | 2025-10-18 | @kfm-docs | Added FAIR/BagIt compliance, Zenodo exports, AI embeddings, manifest indexing, and governance metrics. |
-| v2.0.0 | 2025-10-10 | @kfm-docs | Introduced yearly manifests, ER diagrams, and CI expansion. |
-| v1.0.0 | 2025-10-05 | KFM Documentation Team | Initial archive guide with metadata schema, validation, and RDF linkage. |
+| **v3.0.1** | 2025-10-18 | @kfm-docs | Added policy gate badge, clarified validations, expanded security/ethics metadata examples. |
+| v3.0.0 | 2025-10-18 | @kfm-docs | FAIR/BagIt compliance, Zenodo exports, AI embeddings, manifest indexing, governance metrics. |
+| v2.0.0 | 2025-10-10 | @kfm-docs | Yearly manifests, ER diagrams, CI expansion. |
+| v1.0.0 | 2025-10-05 | KFM Documentation Team | Archive guide with metadata schema, validation, and RDF linkage. |
 
 ---
 
