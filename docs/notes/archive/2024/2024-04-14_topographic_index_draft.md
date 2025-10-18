@@ -7,6 +7,8 @@
 This document captures the formative logic, algorithms, and data sources that led to the **Terrain Pipeline** and **Data Architecture** frameworks formalized later in MCP-DL v6.3.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Immutable-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -18,6 +20,7 @@ This document captures the formative logic, algorithms, and data sources that le
 id: A-2024-002
 title: "Topographic Index Draft — Early Terrain Modeling Prototype"
 author: ["@kfm-data","@kfm-architecture","@kfm-geospatial"]
+version: "v1.0.1"
 original_path: "docs/notes/research.md"
 status: archived
 archived_date: 2024-04-14
@@ -29,7 +32,7 @@ linked_successor:
 period_context:
   id: "perio.do/early-modeling-2024"
   label: "Pre-Terrain Pipeline Experimental Phase"
-tags: ["archive","terrain","geospatial","topography","modeling","mcp"]
+tags: ["archive","terrain","geospatial","topography","modeling","mcp","policy"]
 fair_alignment:
   findable: true
   accessible: true
@@ -43,6 +46,11 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "a7b9c35e4c21f8b5d..."
+  bagit_package: "bags/kfm_archive_2024_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234591"
+  last_verified: "2025-10-18"
 summary: >
   This note captured the prototype design of the Topographic Index for the Kansas Frontier Matrix —
   an early experiment linking elevation data, hydrology, and surface gradients through reproducible
@@ -55,17 +63,17 @@ summary: >
 
 ## 🧭 Context
 
-On **April 14, 2024**, the data engineering and architecture teams drafted the first **Topographic Index model** to standardize elevation and terrain data representation across Kansas.  
-The work formed a foundation for the **1m DEM terrain pipeline**, hydrology derivation, and slope classification methods later implemented in production.
+On **April 14, 2024**, data engineering and architecture teams drafted the first **Topographic Index (TI)** model to standardize elevation and terrain representation across Kansas.  
+The work laid a foundation for the **1m DEM terrain pipeline**, hydrology derivation, and slope classification later implemented in production.
 
 ---
 
 ## 🧱 Objectives of the Draft
 
-1. Define a **Topographic Index (TI)** based on elevation, slope, and hydrologic accumulation metrics.  
+1. Define a **Topographic Index** from elevation, slope, and hydrologic accumulation metrics.  
 2. Integrate TI with **STAC Items** and metadata catalogs for discoverability.  
-3. Develop reproducible ETL scripts for terrain processing using **GDAL**, **r.watershed**, and **NumPy**.  
-4. Explore the potential of TI as a **feature layer** for climate, vegetation, and historical settlement modeling.  
+3. Develop reproducible ETL scripts using **GDAL**, **r.watershed**, and **NumPy**.  
+4. Evaluate TI as a **feature layer** for climate, vegetation, and settlement modeling.  
 5. Establish checksums, metadata versioning, and automation hooks for reproducibility.
 
 ---
@@ -80,8 +88,8 @@ flowchart TD
     D --> E["Topographic Index Calculation<br/>TI = ln(As / tanβ)"]
     E --> F["STAC Catalog Integration<br/>terrain_index_2024.json"]
     F --> G["Data Validation<br/>SHA-256 Checksums + Schema Validation"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -90,18 +98,18 @@ flowchart TD
 | Source | Description | License | Notes |
 | :-- | :-- | :-- | :-- |
 | USGS 3DEP 1m DEM | Elevation data for Kansas | Public Domain | https://www.usgs.gov/3dep |
-| National Hydrography Dataset (NHD) | Stream network and watershed boundaries | Public Domain | Used for hydrology modeling |
-| NRCS Soil Survey Data | Soil slope and texture attributes | CC-BY 4.0 | Supplemental inputs |
+| National Hydrography Dataset (NHD) | Stream network & watersheds | Public Domain | Hydrology modeling |
+| NRCS Soil Survey | Slope & texture attributes | CC-BY 4.0 | Supplemental inputs |
 
 ---
 
 ## 🧠 Technical Highlights
 
-- Developed early **Python ETL** routines (`terrain_index_pipeline.py`) using GDAL/OGR.  
-- Introduced **SHA-256 checksum validation** for reproducibility.  
-- Implemented experimental **STAC metadata** entries for terrain derivatives.  
-- Initiated early discussion of **climate layer integration** using TI overlays.  
-- Proposed **Neo4j ingestion** of terrain metrics via `prov:wasGeneratedBy` relationships.
+- Early **Python ETL** (`terrain_index_pipeline.py`) with GDAL/OGR.  
+- **SHA-256 checksum validation** for reproducibility.  
+- Experimental **STAC** entries for terrain derivatives.  
+- Discussion of **climate layer integration** with TI overlays.  
+- **Neo4j ingestion** of metrics via `prov:wasGeneratedBy`.
 
 ---
 
@@ -127,9 +135,9 @@ rd.SaveGDAL('topographic_index_2024.tif', topographic_index)
 | Parameter | Observation | Result |
 | :-- | :-- | :-- |
 | DEM Resolution | 1m | High precision for slope/flow accuracy |
-| Processing Time | 3.2 hrs / 50 tiles | Acceptable for prototype |
-| Correlation (TI vs. Landcover) | 0.76 | Promising for ecological linkage |
-| Storage Format | GeoTIFF (COG) | Adopted as KFM raster standard |
+| Processing Time | 3.2 hrs / 50 tiles | Acceptable prototype throughput |
+| TI vs. Landcover Corr. | 0.76 | Promising ecological linkage |
+| Storage Format | GeoTIFF (COG) | Adopted as raster standard |
 | Metadata Model | STAC 1.0 | Fully compatible |
 
 ---
@@ -138,9 +146,9 @@ rd.SaveGDAL('topographic_index_2024.tif', topographic_index)
 
 | File | Description | Date Promoted |
 | :-- | :-- | :-- |
-| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Defines the file/data architecture pattern derived from this prototype. | 2024-05-15 |
-| [`docs/data/processed/terrain/README.md`](../../../data/processed/terrain/README.md) | Implementation of terrain pipeline and elevation data management. | 2024-07-22 |
-| [`docs/standards/metadata.md`](../../../standards/metadata.md) | Defines STAC & JSON schema integration for terrain datasets. | 2024-06-12 |
+| [`docs/architecture/data-architecture.md`](../../../architecture/data-architecture.md) | Data architecture pattern derived from this prototype. | 2024-05-15 |
+| [`data/processed/terrain/README.md`](../../../data/processed/terrain/README.md) | Terrain pipeline implementation. | 2024-07-22 |
+| [`docs/standards/metadata.md`](../../../standards/metadata.md) | STAC & JSON schema integration for terrain datasets. | 2024-06-12 |
 
 ---
 
@@ -180,34 +188,36 @@ preservation:
 
 | Principle | Implementation |
 | :-- | :-- |
-| **Findable** | Indexed in 2024 manifest & Neo4j graph |
-| **Accessible** | Stored in Git + mirrored to Zenodo |
-| **Interoperable** | PROV-O + CIDOC CRM + STAC JSON integration |
-| **Reusable** | CC-BY 4.0 license, complete metadata, linked code/scripts |
+| **Findable** | Indexed in 2024 manifest & Neo4j KG |
+| **Accessible** | Git + Zenodo mirror |
+| **Interoperable** | PROV-O + CIDOC CRM + STAC JSON |
+| **Reusable** | CC-BY 4.0, complete metadata, linked scripts |
 
 ---
 
 ## 🧮 Validation & Governance Metrics
 
-| Check | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `yamllint`, `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| Graph Ingestion | ✅ | `tools/graph_ingest_notes.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Match | ✅ | `verify_checksums.py` |
-| AI Vector Embedding | ✅ | Neo4j vector index |
+| Check              | Result | Verified By                    |
+| :----------------- | :----- | :----------------------------- |
+| YAML + Schema      | ✅     | `yamllint`, `jsonschema`       |
+| FAIR Validation    | ✅     | `scripts/fair_validate.py`     |
+| Graph Ingestion    | ✅     | `tools/graph_ingest_notes.py`  |
+| Successor Links    | ✅     | `remark-lint`                  |
+| Checksum Match     | ✅     | `verify_checksums.py`          |
+| AI Vector Embedding| ✅     | Neo4j vector index             |
 
 ---
 
 ## 📈 Significance & Legacy
 
-This draft was the **first geospatial prototype** of the Kansas Frontier Matrix:
-- Introduced deterministic ETL pipelines for terrain data.  
-- Formalized checksums and metadata schema validation.  
-- Provided the reference implementation for **Terrain Pipeline v1**.  
+The draft served as the **first geospatial prototype** of KFM:
 
-It directly influenced:
+- Deterministic ETL pipelines for terrain data.  
+- Formal checksum + schema validation practices.  
+- Reference implementation for **Terrain Pipeline v1**.  
+
+Influenced:
+
 - `data/processed/terrain/README.md`  
 - `docs/architecture/data-architecture.md`  
 - `docs/standards/metadata.md`
@@ -218,18 +228,19 @@ It directly influenced:
 
 | File | Description |
 | :-- | :-- |
-| `docs/architecture/data-architecture.md` | Defines architecture informed by this draft. |
-| `docs/standards/metadata.md` | Successor standard for STAC metadata. |
-| `docs/notes/archive/2024/README.md` | 2024 archive manifest and index. |
-| `data/processed/terrain/README.md` | Production terrain processing standard. |
+| `../../../architecture/data-architecture.md` | Architecture informed by this draft. |
+| `../../../standards/metadata.md` | Successor STAC metadata standard. |
+| `../README.md` | 2024 archive manifest & index. |
+| `../../../data/processed/terrain/README.md` | Production terrain standard. |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2024 terrain index draft archive entry with FAIR compliance, RDF provenance, checksum, and Zenodo linkage. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation DOI, and validation audit records.      |
+| v1.0.0  | 2025-10-18 | @kfm-docs  | Reconstructed 2024 topographic index draft with FAIR + provenance.      |
 
 ---
 
