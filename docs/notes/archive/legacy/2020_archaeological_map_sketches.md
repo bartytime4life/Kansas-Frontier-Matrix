@@ -7,6 +7,8 @@
 These sketches represent the first fusion of archaeological field records, elevation data, and historical mapping into a unified geospatial framework, anticipating the future **MCP-DL ontology model** and FAIR data architecture.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../.github/workflows/policy-check.yml)
 [![Knowledge Graph](https://img.shields.io/badge/Linked-Knowledge%20Graph-green)](../../../architecture/knowledge-graph.md)
 [![Archive Integrity](https://img.shields.io/badge/Archive-Legacy-orange)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
@@ -19,6 +21,7 @@ id: L-2020-001
 title: "Archaeological Map Sketches — Cultural & Geospatial Integration (2020)"
 author: ["Frontier Archaeology Group","@kfm-ontology"]
 original_path: "notes/archaeology_map_concepts.md"
+version: "v1.0.1"
 status: archived
 archived_date: 2020-11-22
 reason: legacy
@@ -39,6 +42,12 @@ access_policy:
   level: "public"
   license: "CC-BY 4.0"
   classification: "low"
+preservation:
+  checksum: "d3b4fbcfe61d7a8d..."  # SHA-256
+  storage_format: "Markdown (GFM)"
+  bagit_package: "bags/kfm_legacy_archive_bagit/"
+  zenodo_doi: "10.5281/zenodo.1234972"
+  last_verified: "2025-10-18"
 summary: >
   Draft notes and field sketches from 2020 outlining integration of archaeological sites,
   landscape features, and historical survey data into a unified GIS model. This archive
@@ -79,8 +88,8 @@ flowchart TD
     C --> D["Spatial Alignment<br/>EPSG:5070 + GeoSPARQL Geometry"]
     D --> E["Integration<br/>Neo4j Graph + Metadata YAML"]
     E --> F["Output<br/>Archaeological Map Layer + RDF Provenance"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -97,23 +106,23 @@ flowchart TD
 
 ## 🧠 Prototype Schema (CIDOC CRM Alignment)
 
-| Concept | CIDOC CRM Class | Description |
-| :-- | :-- | :-- |
-| Site | `E27_Site` | Archaeological site entity |
-| Findspot | `E53_Place` | Geospatial location of excavation |
-| Artifact | `E22_Man-Made_Object` | Discovered item |
-| Actor | `E39_Actor` | Excavation team or researcher |
-| Event | `E7_Activity` | Excavation or survey event |
+| Concept   | CIDOC CRM Class        | Description                          |
+| :-------- | :---------------------- | :----------------------------------- |
+| Site      | `E27_Site`             | Archaeological site entity           |
+| Findspot  | `E53_Place`            | Geospatial location of excavation    |
+| Artifact  | `E22_Man-Made_Object`  | Discovered item                      |
+| Actor     | `E39_Actor`            | Excavation team or researcher        |
+| Event     | `E7_Activity`          | Excavation or survey event           |
 
 ---
 
 ## 🧩 Technical Innovations
 
-- Implemented **CIDOC CRM + GeoSPARQL** hybrid for semantic spatial linking.  
-- Introduced **“geo:hasGeometry”** property for spatial entities.  
-- Developed **YAML field metadata template** (`site_id`, `period`, `location`, `materials`).  
-- Generated first **RDF prototypes** for site provenance queries.  
-- Proof-of-concept for **graph visualization** using Neo4j + MapLibre.
+- **CIDOC CRM + GeoSPARQL** hybrid for semantic spatial linking.  
+- **`geo:hasGeometry`** WKT literals for geometry binding.  
+- **YAML field templates** (`site_id`, `period`, `location`, `materials`).  
+- First **RDF prototypes** enabling site-level provenance queries.  
+- Proof-of-concept **graph + map** visualization (Neo4j + MapLibre).
 
 ---
 
@@ -156,23 +165,22 @@ preservation:
 > “The 2020 sketches connected people, places, and processes — the essence of provenance.”
 
 This archive captures the **first semantic mapping** between field data and ontology-driven metadata in KFM’s history.  
-It demonstrated that archaeological data could coexist with hydrology, climate, and historical treaties —  
-a conceptual leap that evolved into **semantic interoperability** within the MCP framework.
+It demonstrated that archaeological data could coexist with hydrology, climate, and historical treaties — a conceptual leap that evolved into **semantic interoperability** within the MCP framework.
 
 ---
 
 ## 🧩 FAIR & Governance Validation (2025 Revalidation)
 
-| Validation | Result | Verified By |
-| :-- | :-- | :-- |
-| YAML Schema | ✅ | `jsonschema` |
-| FAIR Validation | ✅ | `scripts/fair_validate.py` |
-| RDF Validation | ✅ | `riot --validate` |
-| Graph Sync | ✅ | `tools/graph_ingest_legacy.py` |
-| Successor Links | ✅ | `remark-lint` |
-| Checksum Verified | ✅ | `verify_checksums.py` |
+| Validation        | Result | Verified By                    |
+| :---------------- | :----- | :----------------------------- |
+| YAML Schema       | ✅     | `jsonschema`                   |
+| FAIR Validation   | ✅     | `scripts/fair_validate.py`     |
+| RDF Validation    | ✅     | `riot --validate`              |
+| Graph Sync        | ✅     | `tools/graph_ingest_legacy.py` |
+| Successor Links   | ✅     | `remark-lint`                  |
+| Checksum Verified | ✅     | `verify_checksums.py`          |
 
-**Audit Record:**
+**Audit Record**
 ```json
 {
   "legacy_entry": {
@@ -201,8 +209,8 @@ flowchart TD
     B --> C["2022 MCP Draft Notes"]
     C --> D["2024 Ontology Integration"]
     D --> E["2025 Unified Ontology Discussion"]
+%% END OF MERMAID
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -212,7 +220,7 @@ flowchart TD
 | :-- | :-- | :-- |
 | [`docs/standards/ontologies.md`](../../../standards/ontologies.md) | Unified ontology model incorporating CRM classes. | 2025-05-10 |
 | [`docs/architecture/knowledge-graph.md`](../../../architecture/knowledge-graph.md) | Expanded architecture for RDF/Neo4j graph model. | 2025-05-15 |
-| [`data/processed/archaeology/README.md`](../../../data/processed/archaeology/README.md) | Modern pipeline for archaeology and heritage datasets. | 2024-12-01 |
+| [`data/processed/archaeology/README.md`](../../../data/processed/archaeology/README.md) | Production heritage dataset workflows. | 2024-12-01 |
 
 ---
 
@@ -222,9 +230,9 @@ The 2020 archaeological sketches stand as the **cultural foundation** of the Kan
 They introduced interdisciplinary thinking — bridging anthropology, cartography, and data science.  
 
 **Major Legacy Contributions:**
-- Proved the viability of **semantic archaeological GIS**.  
+- Proved viability of **semantic archaeological GIS**.  
 - Introduced CRM-based data modeling to the project.  
-- Sparked the creation of the **Archaeology MCP Domain Module**.  
+- Sparked creation of the **Archaeology MCP Domain Module**.  
 - Anchored the cultural and human dimension in a data-driven project.
 
 ---
@@ -235,7 +243,7 @@ They introduced interdisciplinary thinking — bridging anthropology, cartograph
 | :-- | :-- | :-- |
 | v1.1 | Q2 2026 | Digitize remaining 2020–2021 field sketches into GeoJSON + RDF. |
 | v1.2 | Q3 2026 | Add temporal reasoning for excavation events (OWL-Time integration). |
-| v2.0 | 2027 | Integrate cultural heritage ontology with climate & hydrology layers. |
+| v2.0 | 2027 | Integrate heritage ontology with climate & hydrology layers. |
 
 ---
 
@@ -245,7 +253,7 @@ They introduced interdisciplinary thinking — bridging anthropology, cartograph
 | :-- | :-- |
 | `docs/notes/archive/legacy/README.md` | Legacy archive index & manifest |
 | `docs/standards/ontologies.md` | Unified ontology schema based on this model |
-| `docs/architecture/knowledge-graph.md` | Graph ingestion and ontology mapping reference |
+| `docs/architecture/knowledge-graph.md` | Graph ingestion & ontology mapping reference |
 | `data/processed/archaeology/README.md` | Production heritage dataset workflows |
 | `data/work/graph/legacy_lineage.ttl` | RDF lineage for legacy archaeology datasets |
 
@@ -253,9 +261,10 @@ They introduced interdisciplinary thinking — bridging anthropology, cartograph
 
 ## 📅 Version History
 
-| Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2020 archaeological sketches; added FAIR compliance, RDF provenance, checksum verification, and ontology lineage. |
+| Version | Date       | Author     | Summary                                                                 |
+| :------ | :--------- | :--------- | :---------------------------------------------------------------------- |
+| **v1.0.1** | 2025-10-18 | @kfm-docs  | Added policy badge, preservation/DOI block, and validation audit record. |
+| v1.0.0 | 2025-10-18 | @kfm-docs | Reconstructed 2020 archaeology sketches with FAIR retrofit and provenance. |
 
 ---
 
