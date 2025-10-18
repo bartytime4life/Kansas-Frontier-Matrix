@@ -1,5 +1,5 @@
 name: "🗃️ Data Request"
-description: "Propose a new dataset/integration — documented, provenanced, and reproducible"
+description: "Propose a new dataset/integration — documented, provenanced, reproducible, and MCP-DL v6.3 compliant."
 title: "[Data]: <dataset name> — <domain>"
 labels:
   - data-request
@@ -8,9 +8,13 @@ assignees:
   - kfm-data
   - kfm-architecture
 
-# KFM metadata
-# version: v2.2.0
-# last_updated: 2025-10-13
+# ⛳ Kansas Frontier Matrix · Data Request Form (MCP-DL v6.3)
+# This GitHub Issue Form captures everything needed to evaluate and integrate a new dataset:
+# provenance, licensing, schema, ethics, format, STAC linkage, ETL targets, and CI validation.
+
+# KFM metadata (informational)
+# version: v2.3.0
+# last_updated: 2025-10-18
 # owners: @kfm-data @kfm-architecture
 
 body:
@@ -32,9 +36,14 @@ body:
     id: source_org
     attributes:
       label: Primary Source / Organization
-      placeholder: "USGS, NOAA, NASA, USDA, KHS, FEMA, DASC"
     validations:
       required: true
+
+  - type: input
+    id: program
+    attributes:
+      label: Program / Product Line (if applicable)
+      placeholder: "USGS 3DEP; NOAA NCEI; Daymet v4; USDA SSURGO; FEMA FIRM; KGS DASC"
 
   - type: dropdown
     id: data_type
@@ -58,6 +67,8 @@ body:
         - Public Domain
         - CC-BY 4.0
         - CC0
+        - CC-BY-SA
+        - Government Works
         - Restricted
         - Other
     validations:
@@ -79,11 +90,27 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: update_frequency
+    attributes:
+      label: Update Frequency
+      options:
+        - Real-Time
+        - Daily
+        - Weekly
+        - Monthly
+        - Quarterly
+        - Annual
+        - Irregular/On-Demand
+        - Static/Historical
+    validations:
+      required: true
+
   - type: input
     id: access_url
     attributes:
-      label: Access URL / API Endpoint
-      placeholder: "Direct download, REST API, STAC catalog URL"
+      label: Access URL / API Endpoint / Catalog
+      placeholder: "Direct download, REST API base, STAC catalog URL"
     validations:
       required: true
 
@@ -107,10 +134,11 @@ body:
     id: provenance
     attributes:
       label: Source Provenance
-      description: "Official source link(s), screenshots/quotes, reliability notes"
+      description: "Official source link(s), screenshots/quotes, reliability and QA/QC notes"
       placeholder: |
         - Official source URL(s)
-        - Why trustworthy (QA/QC, peer-review, agency standards)
+        - Why trustworthy (QA/QC, peer review, agency standards)
+        - Mirror locations (if any) + checksum references
     validations:
       required: true
 
@@ -129,10 +157,21 @@ body:
       required: true
 
   - type: textarea
+    id: api_details
+    attributes:
+      label: API/Auth Details (if applicable)
+      description: "Headers, auth, rate limits, pagination, throttling"
+      placeholder: |
+        - Auth: none | token | key | OIDC
+        - Rate limits: 60 req/min
+        - Pagination: ?page= / ?limit=
+        - Example request/response
+
+  - type: textarea
     id: formats
     attributes:
       label: Data Format(s)
-      placeholder: "GeoTIFF, Shapefile, GeoJSON, CSV, NetCDF, Parquet"
+      placeholder: "GeoTIFF (COG), Shapefile, GeoJSON, CSV, NetCDF, Parquet, TIFF+worldfile"
     validations:
       required: true
 
@@ -144,27 +183,17 @@ body:
     validations:
       required: true
 
-  - type: dropdown
-    id: update_frequency
+  - type: input
+    id: resolution_scale
     attributes:
-      label: Update Frequency
-      options:
-        - Real-Time
-        - Daily
-        - Weekly
-        - Monthly
-        - Quarterly
-        - Annual
-        - Irregular/On-Demand
-        - Static/Historical
-    validations:
-      required: true
+      label: Resolution / Scale (if applicable)
+      placeholder: "10 m; 30 m; 1 km; 1:24,000"
 
   - type: textarea
     id: quality
     attributes:
       label: Quality Assurance / QA References
-      placeholder: "NOAA QA/QC, USGS quality statement, peer-reviewed documentation"
+      placeholder: "Agency QA/QC docs, accuracy statements, peer-reviewed references"
 
   - type: markdown
     attributes:
@@ -174,7 +203,7 @@ body:
     id: pipeline
     attributes:
       label: Pipeline Target
-      placeholder: "hydrology_pipeline.py, climate_etl.py, src/pipelines/text/ocr_nlp.py"
+      placeholder: "hydrology_pipeline.py; climate_etl.py; src/pipelines/text/ocr_nlp.py"
     validations:
       required: true
 
@@ -223,6 +252,28 @@ body:
     attributes:
       label: Semantic Ontology Tag(s)
       placeholder: "CIDOC CRM class (E73), OWL-Time interval, PeriodO ID"
+
+  - type: markdown
+    attributes:
+      value: "## 🤝 Ethics & Usage"
+
+  - type: dropdown
+    id: data_ethics
+    attributes:
+      label: Data Ethics Classification
+      description: "Sensitive/Indigenous/cultural usage constraints"
+      options:
+        - open
+        - restricted-derivatives
+        - no-public-artifacts
+    validations:
+      required: true
+
+  - type: textarea
+    id: usage_notes
+    attributes:
+      label: Usage Constraints / Fair Use Notes
+      placeholder: "Attribution, downstream license, embargo notes, community guidelines"
 
   - type: markdown
     attributes:
@@ -305,6 +356,10 @@ body:
           required: true
         - label: Add/Update `data/sources/<domain>/<source>.json` manifest
           required: true
+        - label: (If large) Track with LFS/DVC manifests and store pointers
+          required: false
+        - label: Include `license`, `providers`, `derived_from`, `created` STAC fields
+          required: true
 
   - type: markdown
     attributes:
@@ -361,6 +416,8 @@ body:
           required: true
         - label: Versioning — STAC `properties.version` & repo SemVer updated
           required: true
+        - label: Ethics — `data_ethics` tag set; restrictions documented
+          required: true
 
   - type: markdown
     attributes:
@@ -390,3 +447,4 @@ body:
     attributes:
       label: Additional Notes
       description: "Visuals, sample maps, metadata screenshots, or priority rationale"
+```
