@@ -1,35 +1,85 @@
 <div align="center">
 
-# 🗺️ Kansas Frontier Matrix — GIS Archive Integration
-
+# 🗺️ Kansas Frontier Matrix — **GIS Archive Integration**  
 `docs/integration/gis-archive.md`
 
 **Purpose:** Define how **Kansas GIS Archive Hub** and **DASC** datasets are
 discovered, processed, and ingested into the **Kansas Frontier Matrix (KFM)** system
 as reproducible, provenance-tracked spatial layers.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../)
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
+[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
 [![Geo Standards](https://img.shields.io/badge/Geo-COG%20%7C%20GeoJSON%20%7C%20STAC%201.0-green)](../../docs/standards/data-formats.md)
-[![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20%7C%20OWL--Time-orange)](../../docs/standards/ontologies.md)
+[![Ontology](https://img.shields.io/badge/Ontology-CIDOC%20CRM%20%7C%20PROV--O%20%7C%20OWL--Time-orange)](../../docs/standards/ontologies.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
+
+```yaml
+---
+title: "Kansas Frontier Matrix — GIS Archive Integration"
+document_type: "Integration Guide"
+version: "v1.2.0"
+last_updated: "2025-10-18"
+created: "2025-10-03"
+owners: ["@kfm-gis","@kfm-data","@kfm-architecture","@kfm-docs","@kfm-security"]
+status: "Stable"
+maturity: "Production"
+scope: "Docs/Integration/GIS-Archive"
+license: "CC-BY 4.0"
+semver_policy: "MAJOR.MINOR.PATCH"
+tags: ["gis","archive","dasc","provenance","stac","cog","geojson","ontology","fair"]
+audit_framework: "MCP-DL v6.3"
+ci_required_checks:
+  - docs-validate
+  - policy-check
+  - stac-validate
+  - site-build
+  - pre-commit
+  - codeql
+  - trivy
+semantic_alignment:
+  - STAC 1.0
+  - DCAT 2.0
+  - CIDOC CRM
+  - PROV-O
+  - OWL-Time
+  - SKOS
+  - JSON Schema
+  - ISO 8601
+preservation_policy:
+  format_standards: ["COG GeoTIFF","GeoJSON","CSV/Parquet","RDF/Turtle","Markdown (GFM)","BagIt 1.0"]
+  checksum_algorithm: "SHA-256"
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
+  metadata_standard: "PREMIS 3.0"
+  revalidation_cycle: "annually"
+ai_index:
+  embed_in_graph: true
+  model: "sentence-transformers/all-MiniLM-L6-v2"
+  store: "Neo4j Vector Index"
+  searchable_fields: ["title","summary","tags"]
+provenance:
+  workflow_pin_policy: "actions pinned by tag or commit SHA"
+  artifact_retention_days: 180
+---
+```
 
 ---
 
 ## 🎯 Integration Objective
 
 The **Kansas GIS Archive Hub** (ArcGIS Hub, maintained by the Kansas Data Access & Support Center — DASC)
-contains the **official historical geospatial archive** of Kansas:
-topographic maps, soils, hydrology, land parcels, and other legacy datasets.
+contains the **official historical geospatial archive** of Kansas: topographic maps, soils, hydrology, land parcels,
+PLSS, aerial imagery, and other legacy datasets.
 
-This document provides a **step-by-step, reproducible integration procedure** for ingesting archival
-raster and vector layers into KFM’s geospatial catalog, ensuring every dataset becomes:
+This guide documents a **step-by-step, reproducible procedure** for ingesting archival raster/vector layers into KFM’s catalog so that every dataset becomes:
 
-* 🌎 **Spatially interoperable** — standardized to WGS 84 / EPSG:4326.
-* 🧩 **Semantically aligned** — mapped to STAC 1.0.0 and CIDOC CRM concepts.
-* 🔐 **Provenance-tracked** — each file hashed and logged.
-* 🧾 **Discoverable** — indexed in `data/stac/` with metadata, temporal coverage, and license.
+- 🌎 **Spatially interoperable** — standardized to WGS 84 / EPSG:4326  
+- 🧩 **Semantically aligned** — mapped to STAC 1.0 and CIDOC CRM concepts  
+- 🔐 **Provenance-tracked** — each file hashed and logged with source manifests  
+- 🧾 **Discoverable** — indexed in `data/stac/` with metadata, temporal coverage, and license
 
 ---
 
@@ -41,11 +91,11 @@ raster and vector layers into KFM’s geospatial catalog, ensuring every dataset
 | **Kansas DASC (Data Access & Support Center)** | Official GIS clearinghouse: parcels, elevation, soils, PLSS, aerial imagery | HTTPS / FTP / REST        | Public domain          |
 | **USGS Historical Topographic Maps**           | Scanned topo quads and historical DEMs                                      | USGS Topo Viewer / API    | Public domain (US Gov) |
 
-Each dataset integrated from these sources must have:
+**Every integrated dataset MUST include:**
 
-* A **source manifest** (`data/sources/*.json`)
-* A **STAC item** (`data/stac/<domain>/<layer>.json`)
-* A **README cross-link** to this document
+- A **source manifest** → `data/sources/<domain>/<source>.json`  
+- A **STAC Item/Collection** → `data/stac/<domain>/<layer>.json`  
+- A README or cross-link back to this guide
 
 ---
 
@@ -55,20 +105,19 @@ Each dataset integrated from these sources must have:
 | :---------------------------- | :-------------- | :-------------------------------- | :---------------------- |
 | Raster (scanned maps, DEMs)   | GeoTIFF / MrSID | **COG (Cloud-Optimized GeoTIFF)** | `rio-cogeo`, `gdalwarp` |
 | Vector (parcels, PLSS, soils) | Shapefile / GDB | **GeoJSON** (EPSG:4326)           | `ogr2ogr`               |
-| Tabular / attribute           | CSV             | **CSV / Parquet**                 | `pandas`, `csvkit`      |
+| Tabular / attributes          | CSV             | **CSV / Parquet**                 | `pandas`, `csvkit`      |
 
-**Example conversions**
+**Examples**
 
 ```bash
-# Convert MrSID → COG GeoTIFF
+# MrSID → COG GeoTIFF
 rio cogeo create input.sid output.tif --web-optimized --overview-level=6
 
-# Reproject shapefile → GeoJSON
+# Reproject Shapefile → GeoJSON
 ogr2ogr -f GeoJSON -t_srs EPSG:4326 plss_1930s.json plss_1930s.shp
 ```
 
-All conversions preserve coordinate reference systems, and outputs are stored under
-`data/processed/<domain>/` with `.sha256` integrity sidecars.
+All conversions preserve CRS; outputs are stored under `data/processed/<domain>/` with `.sha256` integrity sidecars.
 
 ---
 
@@ -76,38 +125,29 @@ All conversions preserve coordinate reference systems, and outputs are stored un
 
 ```mermaid
 flowchart TD
-  A["🔍 Discover Dataset<br/>Kansas GIS Archive / DASC"] --> B["⬇️ Download<br/>GeoTIFF / Shapefile"]
+  A["🔍 Discover Dataset<br/>Kansas GIS Archive / DASC"] --> B["⬇️ Download<br/>GeoTIFF / Shapefile / CSV"]
   B --> C["⚙️ Convert & Reproject<br/>→ COG / GeoJSON (EPSG:4326)"]
-  C --> D["🧮 Generate Metadata<br/>STAC Item + .sha256 checksum"]
-  D --> E["🧩 Ingest to Graph<br/>Link to CIDOC CRM Place / Event nodes"]
+  C --> D["🧮 Generate Metadata<br/>STAC Item + checksum:multihash"]
+  D --> E["🧩 Graph Ingest<br/>CIDOC CRM Place/Event + provenance links"]
   E --> F["🚀 Publish<br/>Frontend Map + Timeline via layers.json"]
-  style A fill:#eef7ff,stroke:#0077cc
-  style B fill:#fff0f5,stroke:#cc0088
-  style C fill:#ecf9f0,stroke:#33aa33
-  style D fill:#fffbea,stroke:#e8a500
-  style E fill:#e8f0ff,stroke:#0066aa
-  style F fill:#f0e8ff,stroke:#8844cc
+%% END OF MERMAID
 ```
-
-<!-- END OF MERMAID -->
 
 ---
 
-## 🧩 Example Integration: Historical Topographic Maps
+## 🧩 Example Integration — Historical Topographic Maps
 
-### Dataset
+**Dataset** — *USGS Historical Topographic Maps — Kansas Series (1890–1975)*  
+**Source** — USGS Historical Topo Map Collection (via DASC Archive)  
+**Coverage** — Kansas statewide, multi-decadal  
+**Format** — GeoTIFF → COG
 
-**Title:** *USGS Historical Topographic Maps — Kansas Series (1890–1975)*
-**Source:** USGS Historical Topo Map Collection (via DASC Archive)
-**Coverage:** Kansas statewide; multi-decadal
-**Format:** GeoTIFF → COG
+### Steps
 
-### Integration Steps
-
-1. Download TIFF or MrSID images from ArcGIS Hub (`Historical Topographic Maps` group).
-2. Convert to Cloud-Optimized GeoTIFF using `rio cogeo`.
-3. Reproject to EPSG:4326 with `gdalwarp`.
-4. Create STAC item:
+1. Download TIFF or MrSID images from ArcGIS Hub (`Historical Topographic Maps` group).  
+2. Convert to Cloud-Optimized GeoTIFF with `rio cogeo`.  
+3. Reproject to EPSG:4326 using `gdalwarp`.  
+4. Create STAC Item:
 
 ```json
 {
@@ -116,53 +156,47 @@ flowchart TD
   "type": "Feature",
   "properties": {
     "datetime": "1894-01-01T00:00:00Z",
-    "license": "Public Domain",
+    "license": "public-domain",
     "description": "Scanned historical topo map of Kansas (Larned, 1894).",
-    "providers": [{"name": "USGS", "roles": ["producer", "licensor"]}],
-    "keywords": ["topographic", "historic", "map", "Kansas"]
+    "providers": [{"name": "USGS","roles": ["producer","licensor"]}],
+    "keywords": ["topographic","historic","map","Kansas"]
   },
   "assets": {
     "data": {
       "href": "data/processed/topo/ks_usgs_topo_1894.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
       "roles": ["data"],
-      "title": "USGS Larned 1894 Topographic Map"
-    },
-    "checksum": {
-      "href": "data/checksums/topo/ks_usgs_topo_1894.tif.sha256",
-      "type": "text/plain",
-      "roles": ["checksum"]
+      "title": "USGS Larned 1894 Topographic Map",
+      "checksum:multihash": "1220<sha256-hex>"
     }
   },
   "links": [
-    {"rel": "collection", "href": "../collection.json"},
-    {"rel": "documentation", "href": "../../../docs/integration/gis-archive.md"}
+    {"rel": "collection","href":"../collection.json"},
+    {"rel": "documentation","href":"../../../docs/integration/gis-archive.md"}
   ],
-  "bbox": [-102.05, 36.99, -94.59, 40.00]
+  "bbox": [-102.05,36.99,-94.59,40.00]
 }
 ```
 
-5. Validate with:
+5. Validate:
 
 ```bash
-stac-validator data/stac/topo/ks_usgs_topo_1894.json
+stac-validator data/stac/topo/ks_usgs_topo_1894.json --links
 ```
 
-6. Graph ingestion:
-   Link to ontology nodes `crm:E53_Place` (`Larned, KS`) and
-   `crm:E73_Information_Object` (Map artifact).
+6. Ingest to graph: link to `crm:E53_Place` (Larned, KS) and `crm:E73_Information_Object` (Map artifact).
 
 ---
 
 ## 🧮 Provenance Tracking
 
-Each file integrated includes:
+Each integrated file includes:
 
-* `*.sha256` hash (SHA-256 checksum)
-* Metadata manifest (`data/sources/*.json`)
-* Provenance entry in Neo4j (`prov:wasDerivedFrom` → ArcGIS URL)
+- **SHA-256** sidecar (`*.sha256`)  
+- **Source manifest** (`data/sources/**.json`)  
+- **RDF provenance** in Neo4j/RDF exports (`prov:wasDerivedFrom` original ArcGIS URL)
 
-**Example RDF Provenance**
+**RDF Example**
 
 ```turtle
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -195,17 +229,17 @@ kfm:dataset/ks_usgs_topo_1894
 
 ## 🔗 Knowledge-Graph Alignment
 
-Each integrated GIS dataset maps into the **CIDOC CRM ontology**:
+GIS datasets map into **CIDOC CRM** and **OWL-Time**:
 
 | KFM Entity         | CIDOC CRM Class              | Example                 |
 | :----------------- | :--------------------------- | :---------------------- |
-| Raster Map         | `crm:E73_Information_Object` | 1894 Larned Topo        |
-| Geographic Area    | `crm:E53_Place`              | Pawnee County polygon   |
-| Map Creation Event | `crm:E65_Creation`           | USGS mapping survey     |
-| Surveyor / Agency  | `crm:E39_Actor`              | USGS                    |
+| Raster Map         | `crm:E73_Information_Object` | USGS Larned 1894       |
+| Geographic Area    | `crm:E53_Place`              | Pawnee County polygon  |
+| Map Creation Event | `crm:E65_Creation`           | USGS mapping survey    |
+| Surveyor / Agency  | `crm:E39_Actor`              | USGS                   |
 | Time Span          | `time:Interval`              | 1894-01-01 → 1894-12-31 |
 
-These alignments allow linking GIS datasets to historical events, treaties, or environmental data through shared spatial and temporal references.
+These alignments link GIS layers to events, treaties, or environmental data through shared spatial/temporal references.
 
 ---
 
@@ -219,7 +253,7 @@ These alignments allow linking GIS datasets to historical events, treaties, or e
 | **Graph Sync**            | `scripts/graph_ingest_gis.py` | Insert into Neo4j with CIDOC mappings |
 | **Metadata Link Check**   | `remark-lint`                 | Confirm cross-references              |
 
-Run all:
+Run:
 
 ```bash
 make stac-validate
@@ -232,11 +266,11 @@ make docs-validate
 
 | MCP Principle           | Implementation                                                    |
 | :---------------------- | :---------------------------------------------------------------- |
-| **Documentation-first** | Each integration documented here prior to ingestion.              |
-| **Reproducibility**     | Makefile targets automate ETL steps and validations.              |
+| **Documentation-first** | Integration documented here before ingestion.                     |
+| **Reproducibility**     | Makefile targets automate conversions and validations.            |
 | **Open Standards**      | STAC, GeoTIFF, GeoJSON, CIDOC CRM, OWL-Time adopted.              |
-| **Provenance**          | All datasets traced to original URLs and SHA-256 logs.            |
-| **Auditability**        | Metadata + CI validation artifacts archived in `data/work/logs/`. |
+| **Provenance**          | All datasets traced to original URLs + SHA-256 logs.              |
+| **Auditability**        | Metadata + CI artifacts archived in `data/work/logs/gis/`.       |
 
 ---
 
@@ -244,27 +278,27 @@ make docs-validate
 
 | File                                     | Description                                   |
 | :--------------------------------------- | :-------------------------------------------- |
-| `docs/integration/deeds.md`              | Land deeds and Register of Deeds integration. |
-| `docs/integration/metadata-standards.md` | STAC ↔ CIDOC CRM mapping specification.       |
-| `docs/architecture/data-architecture.md` | Data processing and storage flow.             |
-| `docs/standards/metadata.md`             | STAC validation and schema reference.         |
-| `docs/notes/research.md`                 | Research notes on GIS provenance and mapping. |
+| `docs/integration/deeds.md`              | Land deeds & Register of Deeds integration    |
+| `docs/integration/metadata-standards.md` | STAC ↔ CIDOC CRM mapping specification        |
+| `docs/architecture/data-architecture.md` | Data processing and storage flow              |
+| `docs/standards/metadata.md`             | STAC validation & schema reference            |
+| `docs/notes/research.md`                 | GIS provenance & mapping research notes       |
 
 ---
 
 ## 📅 Version History
 
-| Version | Date       | Author                          | Summary                                                        |
-| :------ | :--------- | :------------------------------ | :------------------------------------------------------------- |
-| v1.1    | 2025-10-05 | KFM GIS & Data Integration Team | Added CIDOC mappings, workflow diagram, and RDF provenance.    |
-| v1.0    | 2025-10-04 | KFM Documentation Team          | Initial integration guide for Kansas GIS Archive Hub datasets. |
+| Version  | Date       | Author                          | Summary                                                        |
+| :------- | :--------- | :------------------------------ | :------------------------------------------------------------- |
+| **v1.2.0** | 2025-10-18 | KFM GIS & Data Integration Team | Preservation policy, stronger STAC example with checksum, and CI alignment. |
+| v1.1.0  | 2025-10-05 | KFM GIS & Data Integration Team | Added CIDOC mappings, workflow diagram, and RDF provenance.    |
+| v1.0.0  | 2025-10-04 | KFM Documentation Team          | Initial integration guide for Kansas GIS Archive Hub datasets. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Map Tells a Story. Every Layer is Proven.”*
-📍 [`docs/integration/gis-archive.md`](.) · Official GIS archive integration guide under MCP governance.
+**Kansas Frontier Matrix** — *“Every Map Tells a Story. Every Layer is Proven.”*  
+📍 `docs/integration/gis-archive.md` · Official GIS archive integration guide under MCP governance.
 
 </div>
-
