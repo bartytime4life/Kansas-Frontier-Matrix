@@ -1,25 +1,49 @@
 name: "🐞 Bug Report"
-description: "Report a reproducible defect in code, data, or metadata."
+description: "Report a reproducible defect in code, data, model, or metadata — validated under MCP-DL v6.3."
 title: "[BUG] <short summary>"
 labels:
   - bug
   - needs-triage
+  - semver:patch
 assignees:
   - kfm-architecture
+
+# 🧭 Kansas Frontier Matrix — MCP-DL v6.3 Bug Report Template
+# Ensures every issue is reproducible, traceable, and standards-aligned (STAC · FAIR · CIDOC CRM · OWL-Time).
 
 body:
   - type: markdown
     attributes:
       value: |
-        ## 🔢 MCP-DL Bug Report Template
-        Please provide **clear steps to reproduce**, **expected vs actual behavior**, and detailed **provenance** (paths, STAC IDs, commit SHAs, etc.). This ensures issues are **traceable**, **reproducible**, and **MCP-compliant**.
+        ## 🔢 MCP-DL Bug Report Form (v6.3)
+        Please provide **clear steps to reproduce**, **expected vs actual behavior**, and detailed **provenance** (paths, STAC IDs, commit SHAs, etc.).  
+        This ensures the issue is **traceable**, **reproducible**, **secure**, and compliant with **KFM Governance** and **Master Coder Protocol (MCP-DL v6.3)**.
+        > 🧩 Use this form for **code**, **data**, **model**, **AI**, or **metadata** defects.  
+        > For accessibility, security, or governance issues, select their dedicated templates.
 
   - type: input
     id: summary
     attributes:
       label: 📅 Bug Summary
-      description: Short description of the problem
+      description: Short summary of the issue
       placeholder: "STAC validator fails for NOAA catalog.json"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: 🧱 Affected Domain
+      description: Which area does the issue belong to?
+      options:
+        - "src/etl (data pipelines)"
+        - "src/ai (NLP, OCR, summarization)"
+        - "src/api (FastAPI/GraphQL)"
+        - "web/ (React + MapLibre)"
+        - "data/stac (catalog metadata)"
+        - "docs/ (Documentation)"
+        - ".github/ (CI/CD)"
+      default: "data/stac (catalog metadata)"
     validations:
       required: true
 
@@ -27,11 +51,11 @@ body:
     id: repro_steps
     attributes:
       label: ✈️ Steps to Reproduce
-      description: Detailed reproducible steps
+      description: Exact steps to replicate the problem
       placeholder: |
         1. Run `make stac-validate`
         2. Observe failure on `catalog.json`
-        3. See: "Missing required field..."
+        3. Error: "Missing required field 'self'"
     validations:
       required: true
 
@@ -39,9 +63,9 @@ body:
     id: expected_actual
     attributes:
       label: 🚫 Expected vs Actual Behavior
-      description: Contrast expected vs observed behavior
+      description: What should have happened vs. what did happen
       placeholder: |
-        **Expected:** Valid STAC returns status 0
+        **Expected:** STAC passes validation, status code 0  
         **Actual:** CLI exits with error `missing links`
     validations:
       required: true
@@ -50,50 +74,133 @@ body:
     id: semver
     attributes:
       label: 🔄 SemVer Impact
-      description: What version scope does this bug impact?
+      description: What release level does this bug affect?
       options:
         - none
         - patch (no breaking changes)
-        - minor (non-breaking but visible)
+        - minor (visible, non-breaking)
         - major (breaking or schema-level)
     validations:
       required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🧨 Severity Level
+      description: How critical is the issue?
+      options:
+        - Low — non-blocking
+        - Medium — affects feature output
+        - High — workflow/data failure
+        - Critical — stops CI/CD or release
+      default: Medium
+    validations:
+      required: true
+
+  - type: input
+    id: commit_sha
+    attributes:
+      label: 🧬 Commit SHA or PR #
+      description: Git hash or pull request linked to the defect
+      placeholder: "abcd123 · PR #104"
 
   - type: textarea
     id: logs
     attributes:
       label: 🔍 Logs or Evidence
-      description: Paste log excerpts, errors, screenshots, or links
-      placeholder: "Upload error trace, screenshots, or CI links"
+      description: Paste log excerpts, CI outputs, or screenshots
+      placeholder: |
+        - `stac-validator catalog.json` trace  
+        - CI run: https://github.com/.../actions/runs/1234567890  
+        - Screenshot attached
+    validations:
+      required: false
 
   - type: input
     id: system
     attributes:
-      label: 🔧 System Context
-      description: Environment information (OS, container, runtime)
-      placeholder: "Ubuntu 22.04 · Python 3.10 · actions/setup-node@v4"
+      label: 🔧 System / Environment
+      description: OS, container, runtime, and dependencies
+      placeholder: "Ubuntu 22.04 · Python 3.11 · Node 20 · GDAL 3.8"
 
   - type: input
     id: provenance
     attributes:
       label: 🌐 Provenance
-      description: Affected paths, commit SHAs, dataset IDs, STAC items
+      description: Affected paths, commit SHAs, dataset IDs, or STAC items
       placeholder: "data/stac/catalog.json · commit abcd1234 · STAC: noaa_l4_sst.json"
     validations:
       required: true
 
+  - type: input
+    id: stac_id
+    attributes:
+      label: 🗺️ STAC Item / Collection ID
+      description: Related dataset identifier (if applicable)
+      placeholder: "noaa_daymet_v4_2022.json"
+
+  - type: input
+    id: checksum
+    attributes:
+      label: 🧮 Checksum (SHA-256)
+      description: Optional integrity hash for data issue
+      placeholder: "d3b07384d113edec49eaa6238ad5ff00"
+
+  - type: textarea
+    id: ai_context
+    attributes:
+      label: 🤖 AI / ML Context (if relevant)
+      description: Describe if this affects AI models, pipelines, or summaries
+      placeholder: |
+        Model: NER (spaCy)  
+        Issue: misclassification of "Fort Larned" as "Person"  
+        Dataset: `training_v2.parquet`
+    validations:
+      required: false
+
   - type: textarea
     id: proposed_fix
     attributes:
-      label: ✅ Proposed Fix (optional)
-      description: Describe possible solution, workaround, or patch location
-      placeholder: "Missing 'self' link — add to STAC Item under 'links' block"
+      label: ✅ Proposed Fix or Workaround
+      description: Suggest possible fix, PR link, or patch location
+      placeholder: "Add missing `self` link in STAC Item under `links` block"
 
   - type: textarea
     id: acceptance
     attributes:
       label: 📄 Acceptance Criteria
-      description: Define what resolution looks like (test, output, command)
+      description: Define what "fixed" means (test, validation, or command output)
       placeholder: "`make stac-validate` returns code 0 with no errors"
     validations:
       required: true
+
+  - type: checkboxes
+    id: security_review
+    attributes:
+      label: 🔒 Security / Integrity Checklist
+      description: Confirm integrity & provenance validation
+      options:
+        - label: "☑ CodeQL & Trivy scans pass with no new alerts"
+        - label: "☑ STAC checksum verified"
+        - label: "☑ Data ethics tag validated (if applicable)"
+        - label: "☑ SBOM regenerated or unaffected"
+        - label: "☑ No secrets/log exposure in attachments"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### 🧾 MCP Compliance Matrix
+        | Principle | Verified via |
+        |------------|--------------|
+        | **Documentation-First** | Linked ADRs, README, and SOP updates |
+        | **Reproducibility** | Deterministic repro steps + checksums |
+        | **Provenance** | Commit, STAC, dataset lineage |
+        | **Auditability** | Logs + artifacts retained (≥90d) |
+        | **Versioning** | SemVer impact + labels applied |
+        | **Security** | CodeQL · Trivy · Policy checks passed |
+
+        **Version:** `v6.3.3` · **Maintainers:** @kfm-security · @kfm-architecture  
+        _Kansas Frontier Matrix — Verified under MCP-DL Governance Framework._
