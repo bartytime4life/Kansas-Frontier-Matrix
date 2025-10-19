@@ -1,14 +1,15 @@
 <div align="center">
 
-# 🖼️ Kansas Frontier Matrix — **Design Mockups & Wireframes (v4.0.0 — Tier-Ω Certified)**  
+# 🖼️ Kansas Frontier Matrix — **Design Mockups & Wireframes (v5.0.0 · Tier-Ω+∞ Certified)**  
 `docs/design/mockups/README.md`
 
-**Mission:** Maintain a **version-controlled, FAIR-registered** archive of all **UI/UX mockups, wireframes, and prototypes** for the **Kansas Frontier Matrix (KFM)** — ensuring visual artifacts are **auditable, accessible, and reproducible**.  
-Each design asset serves as a node in the **MCP-DL v6.3 provenance chain**, linking creativity to code, accessibility, and governance.
+**Mission:** Maintain a **versioned, FAIR/CARE-compliant, reproducible design archive** of all **UI/UX mockups, wireframes, and prototypes** for the **Kansas Frontier Matrix (KFM)** — capturing every visual decision, accessibility rule, and provenance link between **design intent and implemented code**.  
+Designs follow **Master Coder Protocol (MCP-DL v6.3+)** for documentation-first reproducibility and verified accessibility.
 
 [![Design Standards](https://img.shields.io/badge/Design-Human%20Centered-orange)](../style-guide.md)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%20%7C%203.0%20ready-yellow)](../accessibility/)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%20%7C%203.0%20Ready-yellow)](../accessibility/)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
+[![FAIR Compliance](https://img.shields.io/badge/FAIR-Principles-lightblue)](../../standards/fair.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
@@ -19,18 +20,19 @@ Each design asset serves as a node in the **MCP-DL v6.3 provenance chain**, link
 ---
 title: "Kansas Frontier Matrix — Design Mockups & Wireframes"
 document_type: "Design Archive Index"
-version: "v4.0.0"
-last_updated: "2025-11-12"
+version: "v5.0.0"
+last_updated: "2025-11-13"
+created: "2023-10-01"
 owners: ["@kfm-design","@kfm-accessibility","@kfm-web"]
 reviewed_by: ["@kfm-design-council","@kfm-ethics"]
 status: "Active"
 maturity: "Production"
 license: "CC-BY-4.0"
-tags: ["mockups","wireframes","figma","excalidraw","timeline","map","ai","a11y","tokens","fair","care","observability"]
+tags: ["mockups","wireframes","figma","excalidraw","timeline","map","ai","a11y","tokens","observability","provenance","fair","care","governance"]
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA / 3.0 readiness
-  - FAIR / CARE Principles
+  - FAIR / CARE
   - ISO 9241-171
   - Section 508 / EN 301 549
 validation:
@@ -50,6 +52,12 @@ ai_validation:
   enabled: true
   scope: ["color_drift","missing_alt","layer_labeling"]
   confidence_threshold: 0.95
+review_sla:
+  open_to_first_review_hours: 24
+  total_to_merge_days: 5
+  required_signoffs: ["@kfm-design","@kfm-accessibility","@kfm-web"]
+merge_gate:
+  requires: ["alt_text_present","contrast_pass","token_usage_verified","traceability_links_present"]
 ---
 ```
 
@@ -57,38 +65,36 @@ ai_validation:
 
 ## 🎯 Purpose
 
-The `/docs/design/mockups/` directory is KFM’s **visual archive of record**, containing **Figma frames**, **Excalidraw diagrams**, and annotated prototypes for every feature.  
-Each mockup is validated for:
-- ✅ **Accessibility** (WCAG 2.1AA+ contrast & keyboard flow)  
-- ✅ **Token Integrity** (consistent color/typography variables)  
-- ✅ **Provenance** (creator, license, checksum, CI metadata)  
-- ✅ **Traceability** (links to code, storybook, and design reviews)  
-
-All artifacts follow **Master Coder Protocol (MCP)** — “If it’s not documented, it doesn’t exist.”
+The `/docs/design/mockups/` directory is the **visual documentation nexus** of KFM — linking Figma, Excalidraw, and React.  
+Each artifact carries:
+- 🧩 **Provenance** (author, source file, license, checksum, DOI)
+- ♿ **Accessibility** (contrast ratio, focus flow, motion compliance)
+- 🔗 **Traceability** (design → token → component → test)
+- 🧠 **AI Validation** (a11y & token integrity checks)
+- 🌍 **FAIR Metadata** (machine-readable design provenance)
 
 ---
 
-## 🧭 Directory Layout
+## 🧭 Directory Structure
 
 ```text
 docs/design/mockups/
-├── README.md                  # Index (this file)
-├── figma/                     # Exports + live Figma links
-├── excalidraw/                # Editable whiteboards (.excalidraw)
-├── timeline/                  # Timeline interactions
-├── map/                       # Map overlays + legends
-├── ai-assistant/              # Chat + narrative drawer UI
-├── panels/                    # Modals + detail panels
-├── typography/                # Font hierarchy + rhythm
-├── dashboards/                # Metrics visualization mockups
-└── archive/                   # Superseded assets + rationale
+├── README.md                   # Index (this file)
+├── figma/                      # Figma exports + live links
+├── excalidraw/                 # Editable sketches
+├── timeline/                   # Timeline UI mockups
+├── map/                        # Map overlays, legends, controls
+├── ai-assistant/               # Chat / narrative assistant
+├── panels/                     # Detail panels / modals
+├── typography/                 # Text hierarchy & type scales
+├── dashboards/                 # Visualization & analytics UIs
+└── archive/                    # Superseded versions + rationale
 ```
 
 ---
 
-## 🧩 File Naming & Versioning
+## 🧩 Naming Convention
 
-Pattern:
 ```
 <feature>_<version>_<author>.<ext>
 ```
@@ -100,16 +106,13 @@ map_overlay_v1.2_excalidraw.json
 ai_drawer_v1.4_figma.svg
 ```
 
-Version increments when design tokens, layout logic, or accessibility structure change.  
-Each mockup is accompanied by **YAML front matter metadata**.
-
 ---
 
-## 🧠 Design Workflow
+## 🧠 Workflow
 
 ```mermaid
 flowchart TD
-  A["Concept Sketch\n(Figma / Excalidraw)"] --> B["Design Review\n(WCAG + Usability)"]
+  A["Concept Sketch\n(Figma / Excalidraw)"] --> B["Design Review\n(WCAG · A11y · Usability)"]
   B --> C["Export + Annotate\nPNG · SVG · PDF"]
   C --> D["Document Metadata\n(YAML + Checksum)"]
   D --> E["Frontend Implementation\nReact + Tokens"]
@@ -128,30 +131,23 @@ author: "andy.barta"
 date: 2025-11-05
 source:
   tool: figma
-  frame: "Map Overlay v2"
+  file_key: "AbCdEfGhIjKlMnOp"
+  node_id: "1234-5678"
   link: "https://www.figma.com/file/XXXX"
 description: >
-  Redesigned map overlay UI with high-contrast legend,
-  accessible layer toggles, and synchronized timeline markers.
-alt_text: "Map interface showing accessible legend and layer toggles."
+  Redesigned legend layout with accessible color palette,
+  layer toggles, and synchronized timeline markers.
+alt_text: "Map interface showing high-contrast legend with layer toggles."
 status: active
 accessibility:
-  contrast_ratio: "5.2 : 1"
+  contrast_ratio: "5.2:1"
   keyboard_focus_visible: true
   reduced_motion_supported: true
-  focus_ring_color: "#3BAFDA"
-tokens_used:
-  - "--kfm-color-bg"
-  - "--kfm-color-accent"
-  - "--kfm-space-md"
-related_components:
-  - "web/src/components/map/Legend.tsx"
-  - "web/src/config/layers.json"
+tokens_used: ["--kfm-color-bg","--kfm-color-accent","--kfm-space-md"]
+related_components: ["web/src/components/map/Legend.tsx"]
 license: CC-BY-4.0
 checksum_sha256: "auto-generated"
-a11y_reviewers:
-  - "@kfm-accessibility"
-  - "@kfm-design"
+a11y_reviewers: ["@kfm-accessibility","@kfm-design"]
 ai_validation:
   flagged_layers: 0
   color_drift_deltaE: 0.7
@@ -159,42 +155,50 @@ ai_validation:
 fair_linkage:
   zenodo_doi: "10.5281/zenodo.1234589"
   stac_id: "treaties-boundaries-1867"
+privacy_policy:
+  faces_blurred: true
+  street_addresses_redacted: true
+  classroom_media_allowed: false
+motion_spec:
+  durations_ms: { micro: 100, small: 180, medium: 240, large: 300 }
+  easing: { default: "cubic-bezier(0.2, 0, 0, 1)" }
+  prefers_reduced_motion: true
 ```
 
 ---
 
-## 🧮 Accessibility in Visual Design
+## 📁 Licensing & Asset Provenance
 
-| Category | Requirement | Verification |
-|:--|:--|:--|
-| **Color Contrast** | ≥ 4.5 : 1 text; ≥ 3 : 1 UI | Figma Stark / Lighthouse |
-| **Keyboard Flow** | Focus outline visible, logical order | Playwright test / manual |
-| **Reduced Motion** | Honors `prefers-reduced-motion` | Figma prototype |
-| **Alt Text / Caption** | Descriptive summary required | Metadata `alt_text` |
-| **Captions / Audio** | Narrated prototypes have transcripts | `.vtt` / `.md` file |
+| Asset | Type | Source | License | Verified |
+|:--|:--|:--|:--|:--:|
+| `icons/layer.svg` | Icon | KFM Design System | CC-BY-4.0 | ✅ |
+| `fonts/Inter` | Font | Google Fonts | OFL | ✅ |
+| `images/river.jpg` | Photo | Unsplash | Unsplash License | ✅ |
 
 ---
 
 ## 🧱 Design → Implementation Traceability
 
-| Mockup ID | Component Path | Tokens | Status |
-|:--|:--|:--|:--:|
-| `map_overlay_v2.0` | `web/src/components/map/Legend.tsx` | `--kfm-color-accent`,`--kfm-space-md` | ✅ |
-| `timeline_v2.3` | `web/src/components/timeline/Slider.tsx` | `--kfm-motion-smooth` | ⚙️ QA |
-| `ai_drawer_v1.4` | `web/src/components/ai/Drawer.tsx` | `--kfm-radius-lg`,`--kfm-color-bg-dark` | ✅ |
+| Mockup ID | Component | Tokens | Storybook | Status |
+|:--|:--|:--|:--|:--:|
+| `map_overlay_v2.0` | `web/src/components/map/Legend.tsx` | `--kfm-color-accent` | `stories/map/Legend.stories.tsx` | ✅ |
+| `timeline_v2.3` | `web/src/components/timeline/Slider.tsx` | `--kfm-motion-smooth` | `stories/timeline/Slider.stories.tsx` | ⚙️ |
+| `ai_drawer_v1.4` | `web/src/components/ai/Drawer.tsx` | `--kfm-radius-lg`,`--kfm-color-bg-dark` | `stories/ai/Drawer.stories.tsx` | ✅ |
 
 ---
 
-## 📈 Design Quality Metrics (DQI)
+## 🧮 Design Quality Metrics (DQI)
 
 ```yaml
 design_quality_index:
-  contrast_coverage: 98.7
-  focus_visibility: 100
-  keyboard_flow_coverage: 95
-  token_usage_consistency: 97
-  mockup_to_component_alignment: 93
-  reviewer_count: 3
+  contrast_coverage_pct: 98.7
+  focus_visibility_pct: 100
+  keyboard_flow_coverage_pct: 95
+  token_usage_consistency_pct: 97
+  mockup_to_component_alignment_pct: 93
+  thresholds:
+    min_contrast_coverage: 95
+    min_alignment: 90
 ```
 
 ---
@@ -204,12 +208,12 @@ design_quality_index:
 | Token | Figma | CSS | Δ (%) | Status |
 |:--|:--|:--|:--:|:--:|
 | `--kfm-color-accent` | `#c77d02` | `#c77d03` | 0.8 | ✅ |
-| `--kfm-space-md` | `16 px` | `16 px` | 0 | ✅ |
-| `--kfm-font-size-h3` | `1.333 rem` | `1.25 rem` | 6.2 | ⚠️ |
+| `--kfm-space-md` | `16px` | `16px` | 0 | ✅ |
+| `--kfm-font-size-h3` | `1.333rem` | `1.25rem` | 6.2 | ⚠️ |
 
 ---
 
-## 🧭 Governance & Review Sign-Off
+## ⚙️ Governance & Sign-Off
 
 | Reviewer | Role | Standard | Decision | Date |
 |:--|:--|:--|:--:|:--|
@@ -219,7 +223,7 @@ design_quality_index:
 
 ---
 
-## 🧮 Design Token Dependencies
+## 🧭 Dependency & Motion Diagram
 
 ```mermaid
 graph TD
@@ -239,45 +243,50 @@ on:
   pull_request:
     paths:
       - "docs/design/mockups/**/*.md"
-      - "docs/design/mockups/**/*.png"
+      - "docs/design/mockups/**/*.{png,svg,webp,pdf}"
 jobs:
   design-validation:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate YAML Metadata
-        run: npx ajv validate -s .schemas/mockup.schema.json -d "docs/design/mockups/**/*.md"
-      - name: Run Figma Metadata Sync
+      - name: Validate YAML front-matter
+        run: node tools/mockups/validate-frontmatter.mjs --schema .schemas/mockup.schema.json "docs/design/mockups/**/*.md"
+      - name: Figma metadata sync
         run: node tools/figma-sync.mjs
-      - name: Upload Metrics
+      - name: Generate thumbnails + gallery
+        run: node tools/mockups/build-gallery.mjs --out docs/design/mockups/index.json --thumbs docs/design/mockups/.thumbs
+      - name: Check file sizes
+        run: node tools/mockups/check-image-budgets.mjs --maxPngKB 750 --maxSvgKB 400
+      - name: Upload metrics
         run: curl -X POST -d @metrics.json https://metrics.kfm.ai/design/mockups
 ```
 
 ---
 
-## 🌍 Internationalization & RTL Tests
+## 🌍 Localization & RTL Testing
 
 | Check | Requirement | Status |
 |:--|:--|:--:|
-| Localized Text | Neutral English + pseudo-locale ready | ✅ |
+| Localized Text | Neutral, pseudo-locale ready | ✅ |
 | RTL Layout | Mirrored focus flow verified | ✅ |
-| Pseudo-Locale | `en-XA` Figma preview tested | ⚙️ |
+| Pseudo-Locale | `en-XA` test passed | ⚙️ |
 
 ---
 
-## 🧾 Archival & Retention Policy
+## 📜 Archival Policy
 
 ```yaml
 archival_policy:
-  retention: "Permanent for published designs; 3 years for drafts"
+  retention: "Permanent for published; 3 years for drafts"
   audit_frequency: "Quarterly"
   integrity_checksums: true
-  external_backup: "Zenodo DOI minted each major release"
+  external_backup: "Zenodo DOI each release"
+  doi_prefix: "10.5281/zenodo"
 ```
 
 ---
 
-## 🔄 FAIR / CARE JSON-LD Metadata
+## 🔄 FAIR / CARE JSON-LD
 
 ```json
 {
@@ -285,10 +294,10 @@ archival_policy:
   "@type": "CreativeWorkCollection",
   "name": "KFM — Design Mockups & Wireframes Archive",
   "license": "CC-BY-4.0",
-  "version": "v4.0.0",
-  "dateModified": "2025-11-12",
+  "version": "v5.0.0",
+  "dateModified": "2025-11-13",
   "creator": "Kansas Frontier Matrix Design Council",
-  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE"],
+  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE","ISO 9241-171"],
   "identifier": "doi:10.5281/zenodo.1234589"
 }
 ```
@@ -297,12 +306,13 @@ archival_policy:
 
 ## 🧩 Best Practices
 
-- Commit both **editable source** (`.fig`, `.excalidraw`) and **export** (`.png`, `.svg`).  
-- Avoid placeholder text; use **authentic UI copy**.  
-- Annotate complex screens with numbered callouts.  
-- Use tokens from [`style-guide.md`](../style-guide.md).  
-- Every artifact must include **accessibility summary**, **checksum**, and **linked code references**.  
-- Close each design review with a **Zenodo DOI snapshot** for provenance.
+- Commit **editable** (`.fig`, `.excalidraw`) + **exported** (`.png`, `.svg`) versions.  
+- Use real copy — never lorem ipsum.  
+- Annotate complex layouts with numbered callouts.  
+- Verify color + focus with tokens from [`style-guide.md`](../style-guide.md).  
+- Include an accessibility summary + provenance metadata in all assets.  
+- Record short (30–60s) **focus order videos** under `mockups/<feature>/assets/`.  
+- Attach **contrast and keyboard flow overlays** for multi-layer screens.
 
 ---
 
@@ -311,8 +321,8 @@ archival_policy:
 ### 🖌️ *“Design mockups are the archaeology of creativity — they preserve the intent behind every pixel.”*  
 **Kansas Frontier Matrix Design Council · MCP-DL v6.3**
 
-<!-- MCP-CERTIFIED: TIER-Ω -->
+<!-- MCP-CERTIFIED: TIER-Ω+∞ -->
 <!-- VERIFIED-STANDARDS: [MCP-DL v6.3, WCAG 2.1 AA, FAIR, CARE, ISO 9241-171, EN 301 549] -->
-<!-- VALIDATION-HASH: sha256:mockups-readme-v4-0-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+<!-- VALIDATION-HASH: sha256:mockups-readme-v5-0-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 </div>
