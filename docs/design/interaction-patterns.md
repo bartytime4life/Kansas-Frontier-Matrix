@@ -124,7 +124,7 @@ sequenceDiagram
     User->>Map: Click polygon
     Map->>DetailPanel: Load treaty summary + related entities
     DetailPanel->>AI: Request contextual narrative
-    AI->>User: "5 treaties active 1850-1870; Kaw and Osage nearby."
+    Note right of AI: 5 treaties active 1850-1870; Kaw and Osage nearby.
 ```
 
 <!-- END OF MERMAID -->
