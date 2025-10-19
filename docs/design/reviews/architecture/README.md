@@ -336,10 +336,10 @@ A --> D
 
 ## 📅 Version History
 | Version | Date | Author | Summary | Type |
-|:--|:--|:--|:--|:--|
+|:--------|:----------|:--------------------|:--------------------------------------------------------------|:--------|
 | **v4.0.0** | 2025-11-04 | @kfm-architecture | Tier-S⁺⁺⁺: Added SBOM, access control, SLOs, parity, DR drills, FAIR/CARE mapping, and risk register. | Major |
-| **v3.0.0** | 2025-11-03 | @kfm-architecture | Tier-S⁺⁺: AI governance, KPIs, threat model, KG provenance, and observability. | Major |
-| **v2.0.0** | 2025-11-02 | @kfm-architecture | Tier-S⁺: Incident policy, a11y validation, CI telemetry integration. | Major |
+| **v3.0.0** | 2025-11-03 | @kfm-architecture | Tier-S⁺⁺: Introduced AI governance, KPIs, threat model, KG provenance, and observability. | Major |
+| **v2.0.0** | 2025-11-02 | @kfm-architecture | Tier-S⁺: Added incident response policy, accessibility validation, and CI telemetry. | Major |
 | **v1.4.0** | 2025-06-20 | @kfm-data | Added provenance chain checklist; tightened STAC gates. | Minor |
 | **v1.0.0** | 2023-10-01 | Founding Team | Initial architecture review index and templates. | Major |
 
