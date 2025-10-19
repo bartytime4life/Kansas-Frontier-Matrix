@@ -70,7 +70,7 @@ flowchart TD
     A -->|Time Context| E["AI Assistant\n(Narrative Context Engine)"]
 ```
 
-<!-- END OF MERMAID -->
+%%!-- END OF MERMAID --%%
 
 **Cycle Summary**
 
