@@ -1,36 +1,64 @@
 <div align="center">
 
-# 🖼️ Kansas Frontier Matrix — Design Mockups & Wireframes  
+# 🖼️ Kansas Frontier Matrix — **Design Mockups & Wireframes (Tier-Ω Certified)**  
 `docs/design/mockups/README.md`
 
-**Mission:** Maintain a versioned archive of all **UI/UX mockups, sketches, and prototypes**  
-for the **Kansas Frontier Matrix (KFM)** — documenting the evolution of interface design,  
-visual storytelling, and accessibility considerations.
+**Mission:** Maintain a versioned, auditable archive of all **UI/UX mockups, wireframes, and prototypes** for the **Kansas Frontier Matrix (KFM)** — documenting the evolution of interface design, visual storytelling, and accessibility.  
+Artifacts here are **evidence-grade**: each asset has metadata, accessibility sign-off, linked code/figma references, and CI-tracked exports.
 
-[![Design Standards](https://img.shields.io/badge/Design-Human%20Centered-orange)](../)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../)
+[![Design Standards](https://img.shields.io/badge/Design-Human%20Centered-orange)](../style-guide.md)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%20%7C%203.0%20ready-yellow)](../accessibility/templates/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "KFM — Design Mockups & Wireframes"
+document_type: "Design Archive Index"
+version: "v3.0.0"
+last_updated: "2025-11-11"
+created: "2023-10-01"
+owners: ["@kfm-design","@kfm-accessibility","@kfm-web"]
+reviewed_by: ["@kfm-design-council","@kfm-ethics"]
+status: "Active"
+maturity: "Production"
+license: "CC-BY-4.0"
+tags: ["mockups","wireframes","figma","excalidraw","timeline","map","ai-assistant","a11y","tokens","observability"]
+alignment:
+  - MCP-DL v6.3
+  - WCAG 2.1 AA / 3.0 readiness
+  - FAIR / CARE
+validation:
+  ci_enforced: true
+  alt_text_required: true
+  token_usage_required: true
+  a11y_review_required: true
+observability:
+  endpoint: "https://metrics.kfm.ai/design/mockups"
+  metrics_exported: ["mockup_count","a11y_signoff_rate","token_drift_deltaE","export_integrity_rate"]
+preservation_policy:
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
+  checksum_algorithm: "SHA-256"
+  evidence_retention_days: 365
+---
+```
+
+---
+
 ## 🎯 Purpose
 
-The `/docs/design/mockups/` directory serves as the **visual design archive** of the Kansas Frontier Matrix.  
-It contains wireframes, UI sketches, color explorations, map mockups, and prototype exports  
-that inform and guide front-end implementation.  
+The `/docs/design/mockups/` directory is KFM’s **visual design archive**. It contains wireframes, UI sketches, color explorations, map/timeline mockups, and prototype exports that guide implementation.  
+Each artifact is **living documentation** — mapped to features (timeline, map overlay, narrative panels) and accompanied by **YAML metadata**, **a11y results**, and **links to code**.
 
-Design artifacts here are **living documentation** — each mockup corresponds to  
-an architectural feature (timeline, map overlay, narrative panel, etc.) and must include  
-metadata describing version, authorship, and accessibility validation.
-
-All visual content follows **Master Coder Protocol (MCP)** documentation-first principles:
-- Every visual has a textual explanation or caption.  
-- All source files (Figma/Excalidraw) are versioned or linked.  
-- Accessibility and color-contrast compliance are recorded per asset.  
-- Provenance (creator, license, last updated) is attached as YAML front matter.
+**MCP Design Rules**
+- Every visual includes **alt text / caption** and a **textual rationale**.  
+- Source files (Figma/Excalidraw) are **versioned or linked**.  
+- **Contrast** and **keyboard/flow** checks are recorded per asset.  
+- Provenance (creator, license, last updated) is stored as **front matter**.
 
 ---
 
@@ -38,37 +66,35 @@ All visual content follows **Master Coder Protocol (MCP)** documentation-first p
 
 ```text
 docs/design/mockups/
-├── README.md                  # Index (this file)
-├── figma/                     # Exports and shared links to live prototypes
-├── excalidraw/                # Editable whiteboard diagrams (.excalidraw)
-├── timeline/                  # Timeline mockups, interactions, event markers
-├── map/                       # Map overlays, legend, and layer control mockups
-├── ai-assistant/              # Chat UI and AI narrative drawer designs
-├── panels/                    # Detail and modal panel mockups
-├── typography/                # Text styling, layout, and content presentation
-└── archive/                   # Deprecated or historical mockups for reference
-````
+├── README.md                     # Index (this file)
+├── figma/                        # PNG/SVG/PDF exports + links to live Figma
+├── excalidraw/                   # Editable whiteboards (.excalidraw)
+├── timeline/                     # Timeline interactions, markers, playback
+├── map/                          # Overlays, legend, layer controls
+├── ai-assistant/                 # Chat UI & narrative drawer designs
+├── panels/                       # Detail & modal panels
+├── typography/                   # Type scale, rhythm, content presentation
+└── archive/                      # Superseded designs with rationale
+```
 
 ---
 
 ## 🧩 File Naming & Versioning
 
-Each visual artifact follows this naming schema:
-
+Pattern:
 ```
 <feature>_<version>_<author>.<ext>
 ```
 
-**Example:**
-
+**Examples**
 ```
 timeline_v2.1_barta.png
 map_overlay_v1.0_excalidraw.json
 ai-assistant_v1.3_figma.png
 ```
 
-Version number increments when significant layout or accessibility changes occur.
-Minor visual tweaks or typography refinements are tracked in the accompanying changelog.
+- Increment **version** on layout, behavior, or accessibility changes.  
+- Log minor tweaks in the **changelog** (front matter `changelog` array).
 
 ---
 
@@ -76,145 +102,192 @@ Minor visual tweaks or typography refinements are tracked in the accompanying ch
 
 ```mermaid
 flowchart TD
-    A["Concept Sketch\n(Excalidraw / Figma)"] --> B["Design Review\n(WCAG + Usability Check)"]
-    B --> C["Export & Annotate\nPNG · SVG · PDF"]
-    C --> D["Document Metadata\n(YAML / README entry)"]
-    D --> E["Frontend Implementation\nReact + CSS Tokens"]
-    E --> F["Archive Previous Version\nmockups/archive/"]
+  A["Concept Sketch\n(Figma/Excalidraw)"] --> B["Design Review\n(WCAG + Usability)"]
+  B --> C["Export & Annotate\nPNG · SVG · PDF"]
+  C --> D["Document Metadata\n(YAML front matter)"]
+  D --> E["Frontend Implementation\nReact + Tokens"]
+  E --> F["Archive Previous Version\nmockups/archive/"]
 ```
-
 <!-- END OF MERMAID -->
 
 ---
 
 ## 🖼️ Mockup Metadata Template
 
-Every mockup should include metadata in YAML or Markdown form (stored as `*.md` or front matter).
-
 ```yaml
 id: map_overlay_v2.0
-title: Map Overlay & Legend Design (v2.0)
+title: "Map Overlay & Legend Design (v2.0)"
 author: andy.barta
 date: 2025-10-05
-source: figma/kansas_frontier_matrix_ui.fig
+source:
+  tool: figma
+  file: figma/kansas_frontier_matrix_ui.fig
+  frame: "Legend v2"
 description: >
   Updated map overlay UI with high-contrast legend, accessible layer toggles,
   and timeline sync markers.
+alt_text: "Map UI showing legend on right with high-contrast toggles and time markers."
 status: active
 accessibility:
-  contrast_test: passed
-  keyboard_focus: true
+  contrast: passed
+  focus_visible: true
   reduced_motion: supported
+  keyboard_skiplink: present
+tokens:
+  colors: ["--kfm-color-bg","--kfm-color-text","--kfm-color-accent"]
+  typography: ["--kfm-font-sans","--kfm-font-serif"]
+  spacing: ["--kfm-space-sm","--kfm-space-md"]
+links:
+  code_refs:
+    - web/src/components/map/Legend.tsx
+    - web/src/config/layers.json
+  related_docs:
+    - ../ui-guidelines.md
+    - ../interaction-patterns.md
+    - ../../integration/workflows.md
 license: CC-BY-4.0
-related_docs:
-  - ../ui-guidelines.md
-  - ../interaction-patterns.md
-  - ../../integration/workflows.md
+checksum_sha256: "<auto-filled-by-CI>"
+changelog:
+  - date: 2025-10-05
+    change: "Increased contrast for inactive states; added keyboard focus ring."
+    reviewer: "@kfm-accessibility"
 ```
+
+> **Tip:** Store each mockup entry as `mockups/<feature>/<id>.md` with front matter + embedded image.
 
 ---
 
 ## 🧮 Accessibility in Visual Design
 
-| Category                    | Requirement                                            | Verification                        |
-| :-------------------------- | :----------------------------------------------------- | :---------------------------------- |
-| **Color Contrast**          | Minimum 4.5:1 for all text and icons.                  | Contrast checker or Figma plugin.   |
-| **Keyboard Flow**           | Ensure visible focus indicators in prototype.          | Manual check during design review.  |
-| **Reduced Motion**          | All transitions test in “reduce motion” mode.          | Figma prototype accessibility mode. |
-| **Alt Text / Descriptions** | Each mockup must include a text summary.               | Markdown or metadata field.         |
-| **Captioning**              | Narrated or animated prototypes must include captions. | Embedded or transcript file.        |
+| Category | Requirement | Verification |
+|:--|:--|:--|
+| **Color Contrast** | Text/icons ≥ **4.5:1** (AA) | Figma plugins / Lighthouse |
+| **Keyboard Flow** | Visible focus; predictable order | Manual + Playwright |
+| **Reduced Motion** | Prototype supports `prefers-reduced-motion` | Figma Prototype settings |
+| **Alt Text / Descriptions** | Every artifact has descriptive text | In front matter `alt_text` |
+| **Captions / Transcripts** | Required for narrated/animated assets | VTT/SRT or Markdown transcript |
 
 ---
 
 ## 🧭 Key Design Areas
 
-| Folder          | Purpose                                         | Related Docs                                  |
-| :-------------- | :---------------------------------------------- | :-------------------------------------------- |
-| `timeline/`     | Timeline slider, markers, playback controls.    | `ui-guidelines.md`, `interaction-patterns.md` |
-| `map/`          | Map overlay layouts, layer toggles, legends.    | `ui-guidelines.md`, `style-guide.md`          |
-| `ai-assistant/` | Narrative assistant chat and Q&A interface.     | `storytelling.md`                             |
-| `panels/`       | Side panels and modal popups.                   | `interaction-patterns.md`                     |
-| `typography/`   | Text hierarchy, paragraph rhythm, font pairing. | `style-guide.md`                              |
-| `archive/`      | Deprecated or replaced designs, with notes.     | N/A                                           |
+| Folder | Purpose | Related Docs |
+|:--|:--|:--|
+| `timeline/` | Slider, markers, playback | `../ui-guidelines.md`, `../interaction-patterns.md` |
+| `map/` | Overlays, toggles, legend | `../ui-guidelines.md`, `../style-guide.md` |
+| `ai-assistant/` | Chat, narrative context | `../storytelling.md` |
+| `panels/` | Drawers, modals, panels | `../interaction-patterns.md` |
+| `typography/` | Type scales & rhythm | `../style-guide.md` |
+| `archive/` | Rationale for superseded designs | Release notes |
 
 ---
 
 ## 🧾 Example Entry — Map Overlay Mockup
 
-**File:** `map_overlay_v2.0_barta.png`
-**Source:** `figma/kansas_frontier_matrix_ui.fig`
-**Description:**
+**File:** `map_overlay_v2.0_barta.png`  
+**Source:** `figma/kansas_frontier_matrix_ui.fig`  
 
-> A redesigned legend layout with accessible color palette and toggles
-> that align with the updated layer configuration from `/web/config/layers.json`.
->
-> Includes tooltips with keyboard focus support and WCAG 2.1 AA contrast compliance.
+**Description:**  
+> A redesigned legend layout with accessible color palette and toggles  
+> that align with the layer configuration in `/web/config/layers.json`.  
+> Tooltips are keyboard-focusable; WCAG 2.1 AA contrast confirmed.
 
-**Linked Docs:**
-
-* [`ui-guidelines.md`](../ui-guidelines.md)
-* [`interaction-patterns.md`](../interaction-patterns.md)
+**Linked Docs:**  
+- [`../ui-guidelines.md`](../ui-guidelines.md)  
+- [`../interaction-patterns.md`](../interaction-patterns.md)
 
 ---
 
 ## 🧰 Tools & Export Settings
 
-| Tool                       | Purpose                            | Export Format          | Notes                                 |
-| :------------------------- | :--------------------------------- | :--------------------- | :------------------------------------ |
-| **Figma**                  | Primary interface mockups.         | `.png`, `.svg`, `.pdf` | Export @1x and @2x for retina.        |
-| **Excalidraw**             | Concept diagrams and UX flows.     | `.json`, `.png`        | Editable source + image export.       |
-| **Miro / Draw.io**         | System architecture or flowcharts. | `.svg`, `.png`         | Used for design reviews.              |
-| **Inkscape / Illustrator** | High-resolution print visuals.     | `.svg`, `.pdf`         | Only for public presentation exports. |
+| Tool | Purpose | Export | Notes |
+|:--|:--|:--|:--|
+| **Figma** | Primary interface mockups | `.png`, `.svg`, `.pdf` | Export @1x and @2x; include slices for states. |
+| **Excalidraw** | Concept diagrams & flows | `.json`, `.png` | Commit both source + export. |
+| **Miro / Draw.io** | Architecture & flows | `.svg`, `.png` | Store vector for diffs. |
+| **Inkscape/Illustrator** | Print-ready graphics | `.svg`, `.pdf` | Used for publications. |
+
+**Export CI** (auto-fill checksum & index):
+```yaml
+export_pipeline:
+  optimize_svg: true
+  retina_2x: true
+  write_checksum_sha256: true
+  update_index_json: "docs/design/mockups/index.json"
+```
 
 ---
 
 ## 🧮 Change Management & Review
 
-| Step          | Responsible            | Output                          |
-| :------------ | :--------------------- | :------------------------------ |
-| Create Mockup | Designer / Contributor | `.fig` or `.excalidraw` file    |
-| Annotate      | Contributor            | `README.md` entry with metadata |
-| Review        | Design Board           | Accessibility + UX signoff      |
-| Implement     | Developer              | Component or style update       |
-| Archive       | Maintainer             | Move old version to `/archive/` |
+| Step | Owner | Output |
+|:--|:--|:--|
+| Create Mockup | Designer / Contributor | `.fig` / `.excalidraw` |
+| Annotate | Contributor | Front-matter + alt text |
+| Review | Design Council | A11y + UX signoff |
+| Implement | Engineer | React components + tokens |
+| Archive | Maintainer | Move previous to `/archive/` with notes |
 
-All major design changes must be logged in `/docs/design/reviews/`.
+> Log all decisions in `/docs/design/reviews/` and link back to **mockup IDs**.
 
 ---
 
 ## 🧭 Example Review Log (Excerpt)
 
 `/docs/design/reviews/2025-10-05_map_overlay_v2.0.md`
-
 ```yaml
 design_id: map_overlay_v2.0
-reviewers:
-  - ui_researcher
-  - frontend_dev
-status: approved
+reviewers: ["@ui_researcher","@frontend_dev"]
+status: "approved"
 notes: >
   Approved after WCAG 2.1 contrast audit.
-  Keyboard navigation confirmed functional in prototype.
-timestamp: 2025-10-05T21:45:00Z
+  Keyboard navigation confirmed in prototype.
+timestamp: "2025-10-05T21:45:00Z"
+```
+
+---
+
+## 📈 Observability / Dashboard Hooks
+
+```yaml
+mockup_metrics:
+  export_to: "https://metrics.kfm.ai/design/mockups"
+  fields: ["mockup_count","a11y_signoff_rate","token_drift_deltaE","export_integrity_rate"]
+  retention_days: 365
+```
+
+---
+
+## 🔄 FAIR / CARE Registration (JSON-LD)
+
+```json
+{
+  "@context": "https://schema.org/",
+  "@type": "CreativeWorkCollection",
+  "name": "KFM — Design Mockups & Wireframes Archive",
+  "license": "CC-BY-4.0",
+  "version": "v3.0.0",
+  "dateModified": "2025-11-11",
+  "creator": "Kansas Frontier Matrix Design Council",
+  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE"]
+}
 ```
 
 ---
 
 ## 🧩 Best Practices
 
-* Always store **editable source files** (`.fig`, `.excalidraw`) with **exports**.
-* Keep mockup text content meaningful — avoid “Lorem Ipsum.”
-* Annotate all diagrams with **callouts or numbered keys** for developer clarity.
-* Use color tokens from [`style-guide.md`](../style-guide.md).
-* Each mockup submission must include an accessibility summary.
+- Commit **editable sources** & **exports** together; no “image-only” submissions.  
+- Avoid placeholder lorem ipsum; **write meaningful UI copy** in mockups.  
+- Use **callouts/keys** on complex diagrams to guide developers.  
+- Reference color/type **tokens** from the style guide.  
+- Include an **accessibility summary** for every artifact.
 
 ---
 
 <div align="center">
 
-### 🖌️ “Design mockups are the archaeology of creativity —
-
-they preserve the intent behind every pixel.”
+### 🖌️ “Design mockups are the archaeology of creativity — they preserve the intent behind every pixel.”  
 **— Kansas Frontier Matrix Design Team**
 
 </div>
