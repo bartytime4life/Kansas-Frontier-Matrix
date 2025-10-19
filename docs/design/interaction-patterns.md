@@ -20,7 +20,7 @@ through every user action, on every device, for every audience.
 ---
 title: "Interaction Patterns"
 document_type: "Design · Interaction Spec"
-version: "v2.3.1"
+version: "v2.3.2"
 last_updated: "2025-10-18"
 created: "2023-09-14"
 owners: ["@kfm-design","@kfm-web","@kfm-accessibility"]
@@ -124,10 +124,10 @@ sequenceDiagram
     User->>Map: Click polygon
     Map->>DetailPanel: Load treaty summary + related entities
     DetailPanel->>AI: Request contextual narrative
-    AI->>User: “5 treaties active 1850–1870; Kaw & Osage nearby…”
+    AI->>User: "5 treaties active 1850–1870; Kaw & Osage nearby…"
 ```
 
-%% END OF MERMAID %%
+<!-- END OF MERMAID -->
 
 **Timeline Rules**
 
@@ -267,7 +267,8 @@ sequenceDiagram
 
 | Version    | Date       | Author             | Summary                                                                                                                   |
 | :--------- | :--------- | :----------------- | :------------------------------------------------------------------------------------------------------------------------ |
-| **v2.3.1** | 2025-10-18 | KFM Design Team    | **Fixed** Mermaid end marker and YAML fence; tightened tokens/ARIA guidance; clarified latency budgets and mobile hints.  |
+| **v2.3.2** | 2025-10-18 | KFM Design Team    | **Fix:** Corrected second Mermaid block end marker to `<!-- END OF MERMAID -->`; YAML fence closed properly.              |
+| v2.3.1     | 2025-10-18 | KFM Design Team    | Fixed first Mermaid marker; tightened tokens/ARIA guidance; clarified latency budgets and mobile hints.                   |
 | v2.3.0     | 2025-10-18 | KFM Design Team    | Added full keyboard map, error/empty states, tokenized durations, telemetry privacy, i18n/RTL, latency budgets, CI hooks. |
 | v2.2.0     | 2025-08-14 | KFM Design Council | Focus Mode interactions refined; blend modes & solo mode.                                                                 |
 | v2.0.0     | 2024-11-30 | KFM Web Team       | Core map/timeline interactions; accessibility baseline.                                                                   |
