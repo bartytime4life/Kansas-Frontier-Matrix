@@ -20,7 +20,7 @@ through every user action, on every device, for every audience.
 ---
 title: "Interaction Patterns"
 document_type: "Design · Interaction Spec"
-version: "v2.3.0"
+version: "v2.3.1"
 last_updated: "2025-10-18"
 created: "2023-09-14"
 owners: ["@kfm-design","@kfm-web","@kfm-accessibility"]
@@ -70,7 +70,7 @@ flowchart TD
     A -->|Time Context| E["AI Assistant\n(Narrative Context Engine)"]
 ```
 
-%%!-- END OF MERMAID --%%
+<!-- END OF MERMAID -->
 
 **Cycle Summary**
 
@@ -163,7 +163,7 @@ sequenceDiagram
 | **Hover Label**    | Show dataset metadata                | Tooltip (150 ms delay) with source, year, license.       |
 | **Shift + Click**  | Solo mode                            | All other layers off; “Solo: Treaties” ARIA update.      |
 | **Keyboard**       | Arrow keys navigate; `Enter` toggles | Visible focus outline; `aria-pressed` reflects state.    |
-| **Opacity Slider** | Adjust transparency                  | live `%` update; snap at 0/50/100%.                      |
+| **Opacity Slider** | Adjust transparency                  | Live `%` update; snap at 0/50/100%.                      |
 | **Blend Mode**     | Switch overlay blending              | Preview swatch + example tile; persistent per session.   |
 
 **Tokens**: layer colors from `--kfm-map-*` palette; ensure contrast with base map.
@@ -267,7 +267,8 @@ sequenceDiagram
 
 | Version    | Date       | Author             | Summary                                                                                                                   |
 | :--------- | :--------- | :----------------- | :------------------------------------------------------------------------------------------------------------------------ |
-| **v2.3.0** | 2025-10-18 | KFM Design Team    | Added full keyboard map, error/empty states, tokenized durations, telemetry privacy, i18n/RTL, latency budgets, CI hooks. |
+| **v2.3.1** | 2025-10-18 | KFM Design Team    | **Fixed** Mermaid end marker and YAML fence; tightened tokens/ARIA guidance; clarified latency budgets and mobile hints.  |
+| v2.3.0     | 2025-10-18 | KFM Design Team    | Added full keyboard map, error/empty states, tokenized durations, telemetry privacy, i18n/RTL, latency budgets, CI hooks. |
 | v2.2.0     | 2025-08-14 | KFM Design Council | Focus Mode interactions refined; blend modes & solo mode.                                                                 |
 | v2.0.0     | 2024-11-30 | KFM Web Team       | Core map/timeline interactions; accessibility baseline.                                                                   |
 | v1.0.0     | 2023-09-14 | Founding Team      | Initial interaction pattern set.                                                                                          |
