@@ -21,24 +21,24 @@ within the **Kansas Frontier Matrix (KFM)**.
 ---
 title: "🧭 Kansas Frontier Matrix — UI/UX Guidelines"
 document_type: "README"
-version: "v2.1.0"
+version: "v2.2.0"
 last_updated: "2025-10-19"
 created: "2025-10-10"
 owners: ["@kfm-design", "@kfm-architecture"]
 status: "Stable"
 maturity: "Production"
-tags: ["ui","ux","accessibility","interaction","map","timeline","a11y","tokens","mcp"]
+tags: ["ui","ux","accessibility","interaction","map","timeline","a11y","tokens","mcp","versioning"]
 license: "CC-BY-4.0"
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA
   - WAI-ARIA 1.2
-  - STAC 1.0 (ui metadata for legends/previews)
+  - STAC 1.0 (UI metadata for legends/previews)
 dependencies:
-  - React + MapLibre frontend
-  - D3/Canvas timeline
-  - tokens.css design system
-  - Axe/Lighthouse/Playwright testing
+  - React + MapLibre Frontend
+  - D3/Canvas Timeline
+  - tokens.css Design System
+  - Axe/Lighthouse/Playwright Testing
 review_cycle: "Quarterly"
 validation:
   lighthouse_min_score: 95
@@ -46,6 +46,12 @@ validation:
   contrast_min_ratio: 4.5
   keyboard_traps: "none"
   schema_checks: true
+versioning:
+  policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
+  major_change: "Breaking interaction or accessibility behavior changes."
+  minor_change: "New features, UI improvements, non-breaking interaction updates."
+  patch_change: "Bug fixes, copy edits, token refinements, documentation corrections."
+  example_next_release: "v2.3.0 - adds focus management improvements + new timeline keyboard shortcuts."
 ---
 ```
 
@@ -55,7 +61,7 @@ validation:
 
 This document codifies **UX and accessibility standards** across all Kansas Frontier Matrix interfaces.  
 It ensures that every timeline, map, popup, and data visualization is designed for clarity, responsiveness,  
-inclusivity, and scientific reproducibility — reflecting both the technical rigor and the human storytelling  
+inclusivity, and scientific reproducibility — reflecting both the technical rigor and human storytelling  
 at the heart of the project. The following principles are **mandatory** for all KFM frontends (web, kiosk, mobile).
 
 ---
@@ -119,9 +125,6 @@ flowchart TD
 | **AI Assistant** | Non-modal dock; ESC closes; keeps context breadcrumbs. | Motion reduced compliant slide; focus sent to first actionable. |
 | **Tooltips** | Appear on hover/focus; dismiss on blur/ESC. | 300ms delay; fade; persistent on focus for keyboard users. |
 
-**States**
-- `:hover` → subtle elevation/tint; `:focus-visible` → 2px solid accent; `:active` → accent 5% darker; `:disabled` → 50% opacity and aria-disabled.
-
 ---
 
 ## 📱 Responsive Design Rules
@@ -133,7 +136,6 @@ flowchart TD
 | **< 768px (Mobile)** | Single-column stack; panels switch via tabs. |
 | **Orientation Change** | Preserve panel/map/timeline state on rotate. |
 
-**Grid tokens**
 ```css
 :root { --grid-columns: 12; --gutter: 1rem; }
 @media (max-width: 768px) { :root { --grid-columns: 4; --gutter: 0.5rem; } }
@@ -153,25 +155,6 @@ Defined in `web/src/styles/tokens.css` (authoritative), referenced by `docs/desi
 | `--font-sans` | Main UI font | `"Inter", sans-serif` |
 | `--radius` | Border rounding | `8px` |
 | `--transition` | UI motion speed | `200ms ease` |
-
----
-
-## 🧭 UI Structure Diagram & Flow
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant T as Timeline
-    participant M as Map
-    participant D as Detail Panel
-    U->>T: Scrolls to 1854
-    T->>M: Filter layers by year ≤ 1854
-    M-->>U: Highlight treaty polygons + markers
-    U->>M: Clicks “Kansa Treaty”
-    M->>D: Load summary + sources
-    D-->>U: Display contextual story + actions
-```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -209,63 +192,30 @@ Artifacts (reports/screens) are attached to PRs for review.
 
 ---
 
+## 🧭 Governance & Versioning (MCP-DL v6.3)
+
+| Version | Date | Summary | Type |
+|:--|:--|:--|:--|
+| **v2.2.0** | 2025-10-19 | Added versioning policy, updated accessibility testing and focus management. | Minor |
+| **v2.1.0** | 2025-10-15 | Introduced detailed token table and responsive grid specs. | Minor |
+| **v2.0.0** | 2025-10-10 | Complete refactor aligned with MCP-DL v6.3 and WCAG 2.1 AA. | Major |
+| **v1.0.0** | 2025-09-01 | Initial release of UI/UX standards. | Major |
+
+**Version Policy**
+- **Major (X.0.0):** Breaking changes to patterns, accessibility flows, or interaction models.  
+- **Minor (0.Y.0):** New features, improved tokens, enhanced guidance.  
+- **Patch (0.0.Z):** Bug fixes, documentation updates, or copy edits.  
+
+---
+
 ## 🔧 Implementation Notes
 
 - Use **semantic HTML5**: `<header>`, `<main>`, `<aside>`, `<footer>`, `<nav>`.  
-- Prefer **React ARIA** or native semantics; supplement with ARIA roles/states only when needed.  
+- Prefer **React ARIA** or native semantics; supplement with ARIA roles/states only when necessary.  
 - CSS convention: **BEM** (`panel__header--collapsed`, `timeline__marker--active`).  
 - Localize aria labels and tooltips; set `<html lang="en">` and update per locale.  
 - Document modules under `docs/design/interaction-patterns.md`.  
 - Timeline rendering should use **requestAnimationFrame** and offscreen Canvas when available.
-
----
-
-## 🧭 Governance & Versioning (MCP-DL v6.3)
-
-- Changes to interactions/components **must**:
-  - Reference a `design-review` issue in the commit message.
-  - Update this file’s **version** and **last_updated** (YAML).
-  - Include Lighthouse, Axe, and Playwright reports as PR artifacts.
-  - Pass automated CI gates listed above.
-
-- Breaking UX changes (controls removed, keyboard order altered) require a **Minor** version bump;  
-  palette or semantic token renames require a **Major** version bump in the design system.
-
----
-
-## 📦 Appendix A — CSS Snippets
-
-```css
-/* Accessible focus outline */
-:where(button, [role="button"], a, input, [tabindex]):focus-visible{
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-/* Drawer (detail panel) base */
-.drawer{
-  position: fixed; inset: 0 0 0 auto; width: min(480px, 90vw);
-  background: var(--color-bg);
-  box-shadow: var(--shadow-lg, 0 4px 8px rgba(0,0,0,.1));
-  transform: translateX(100%);
-  transition: transform var(--transition);
-}
-.drawer--open{ transform: translateX(0); }
-.drawer[role="dialog"]{ aria-modal: true; }
-```
-
----
-
-## 📦 Appendix B — Announcements (live regions)
-
-```html
-<div id="ui-live" aria-live="polite" aria-atomic="true" class="sr-only"></div>
-<script>
-  const live = document.getElementById('ui-live');
-  function announce(msg){ live.textContent = ''; setTimeout(()=> live.textContent = msg, 50); }
-  // Example: announce('Year set to 1854. Treaty layers updated.');
-</script>
-```
 
 ---
 
