@@ -318,11 +318,6 @@ docs_integrity:
 
 ---
 
-Here’s the fully **cleaned, fixed, and GitHub-renderable** version of that whole section — the Mermaid diagram, its closing code fences, and the version history table now formatted properly.
-
-Copy this exactly as-is into your file:
-
-````markdown
 ## 🔄 Lifecycle Diagram
 ```mermaid
 flowchart LR
