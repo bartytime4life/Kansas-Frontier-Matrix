@@ -3,8 +3,8 @@
 # 🧭 Kansas Frontier Matrix — **Navigation Component Design Review**  
 `docs/design/reviews/ui_components/navigation.md`
 
-**Mission:** Evaluate, document, and maintain the **Navigation System** — header, menus, search, language toggle, and skip-links — ensuring that the **Kansas Frontier Matrix (KFM)** interface remains accessible, high-performing, and semantically unified across every device.  
-Navigation in KFM is not just a UI pattern — it is a **temporal-spatial interface**, allowing users to traverse Kansas’s geography and history with reproducibility, accessibility, and contextual integrity.
+**Mission:** Evaluate, document, and maintain the **Navigation System** — header, menus, search, language toggle, accessibility skip-links, and accessibility tools — ensuring the **Kansas Frontier Matrix (KFM)** remains accessible, high-performing, inclusive, and semantically unified across all experiences.  
+Navigation serves as the user’s **temporal–spatial compass**, connecting **map**, **timeline**, and **story modules** through reproducible and ethically governed design.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
 [![Design System](https://img.shields.io/badge/Design-System-green)](../../style-guide.md)
@@ -20,33 +20,32 @@ Navigation in KFM is not just a UI pattern — it is a **temporal-spatial interf
 ---
 title: "🧭 Kansas Frontier Matrix — Navigation Component Design Review"
 document_type: "Component Review"
-version: "v2.5.0"
-last_updated: "2025-10-21"
+version: "v3.0.0"
+last_updated: "2025-10-22"
 created: "2023-10-10"
 component: "Navigation"
 design_ref: "Figma Frame #NAV-2025"
 implementation_ref: "web/src/components/navigation/"
-owners: ["@kfm-design","@kfm-web","@kfm-accessibility"]
-reviewed_by: ["@kfm-frontend","@kfm-accessibility","@kfm-editorial","@kfm-i18n"]
+owners: ["@kfm-design","@kfm-web","@kfm-accessibility","@kfm-i18n"]
+reviewed_by: ["@kfm-accessibility","@kfm-frontend","@kfm-editorial","@kfm-design-council"]
 status: "Stable"
 maturity: "Production"
 license: "CC-BY-4.0"
-tags: ["design-review","navigation","header","menu","search","language","skip-link","tokens","accessibility","ux","mcp","fair"]
+tags: ["design-review","navigation","header","menu","search","language","skip-link","accessibility","tokens","fair","mcp"]
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA
   - WAI-ARIA 1.2
   - CIDOC CRM (UI Provenance)
-  - OWL-Time (Temporal UI State)
-  - PROV-O (Review Traceability)
+  - OWL-Time (Temporal State)
+  - PROV-O (Traceability)
+  - DCAT 3.0
   - FAIR Principles
-  - DCAT 3.0 (UI dataset metadata)
 dependencies:
   - React + MapLibre Frontend
   - Figma Design System Frame
   - tokens.css Design Tokens
   - Lighthouse / Axe / Playwright / Pa11y
-  - GitHub Actions CI (component-review.yml)
 review_cycle: "Quarterly + per release"
 governance_board: ["@kfm-design-council","@kfm-accessibility-lead"]
 validation:
@@ -54,7 +53,6 @@ validation:
   axe_blocking_violations: 0
   contrast_min_ratio: 4.5
   keyboard_traps: "none"
-  schema_checks: true
   i18n_validation: true
   mobile_responsiveness: true
 provenance:
@@ -63,23 +61,34 @@ provenance:
   sha256_integrity: verified
 versioning:
   policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
-  major_change: "Structural redesign (header/menu architecture)"
-  minor_change: "Localization or accessibility feature added"
-  patch_change: "Minor documentation or style correction"
+  major_change: "Architecture or IA redesign"
+  minor_change: "Feature enhancement or localization addition"
+  patch_change: "Token or documentation fix"
 telemetry:
   metrics_collected:
     - "WCAG Compliance %"
-    - "Keyboard Reachability"
-    - "Menu Open Latency (ms)"
+    - "Keyboard Reachability %"
+    - "Menu Latency (ms)"
     - "Search Query Accuracy"
     - "Language Toggle Success"
     - "Focus Order Integrity"
-    - "Touch Interaction Success (mobile)"
-  privacy_policy: "Aggregate anonymous data only; FAIR + W3C Privacy alignment; retained ≤ 90 days."
+    - "Touch Interaction Success (Mobile)"
+  privacy_policy: "Aggregated, anonymized metrics only; retained ≤ 90 days; FAIR + W3C Privacy compliance."
 preservation_policy:
   replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
   checksum_algorithm: "SHA-256"
   revalidation_cycle: "quarterly"
+governance_links:
+  - "../../README.md"
+  - "../README.md"
+  - "../../../standards/accessibility.md"
+  - "../../style-guide.md"
+related_components:
+  - timeline
+  - map_controls
+  - ai_assistant
+  - detail_panel
+  - accessibility_menu
 ---
 ```
 
@@ -87,23 +96,23 @@ preservation_policy:
 
 ## 🎯 Objective
 
-The **Navigation System** acts as the central cognitive and spatial interface for the Kansas Frontier Matrix.  
-It unifies **timeline**, **map**, **data**, and **story views**, while maintaining **temporal context**, **search precision**, and **universal accessibility**.  
-Every interaction must feel **instant, meaningful, and reversible**, embodying the core MCP principle of *reproducibility through clarity*.
+The **Navigation Component** provides the structural and cognitive framework for orientation across KFM.  
+It anchors the interface’s **temporal and spatial continuity**, ensuring that no interaction interrupts narrative flow or accessibility.  
+This review documents and validates design, accessibility, localization, and ethical compliance — ensuring every update is **reproducible, traceable, and FAIR-aligned**.
 
 ---
 
-## 🧩 Component Architecture Overview
+## 🧩 Component Structure
 
-| Subcomponent | Description | File Path |
+| Subcomponent | Description | File |
 |:--|:--|:--|
-| **Header Bar** | Global container for title, menus, and search. | `Header.tsx` |
-| **Global Search** | Autocomplete query bar for datasets and entities. | `SearchBar.tsx` |
+| **Header Bar** | Global navigation with title, menus, and search. | `Header.tsx` |
+| **Global Search** | Query interface for entities and datasets. | `SearchBar.tsx` |
 | **Dropdown Menus** | Explore, Stories, Data Layers, About. | `NavMenu.tsx` |
-| **Language Toggle** | Switches language (EN/ES/OS). | `LangToggle.tsx` |
-| **Skip-Link** | First focus element; jumps to main content. | `SkipToContent.tsx` |
-| **Mobile Drawer** | Responsive navigation drawer (≤768px). | `MobileNav.tsx` |
-| **Accessibility Tools Menu** | Toggles high contrast, text size, and reduced motion. | `A11yMenu.tsx` |
+| **Language Toggle** | Switch between supported languages. | `LangToggle.tsx` |
+| **Skip-Link** | Keyboard-accessible jump to main content. | `SkipToContent.tsx` |
+| **Accessibility Tools** | High-contrast toggle, font-size control, motion preference. | `A11yMenu.tsx` |
+| **Mobile Drawer** | Responsive collapsible menu. | `MobileNav.tsx` |
 
 ---
 
@@ -121,7 +130,24 @@ flowchart TD
   A --> I["Accessibility Tools"]
   A --> J["Skip-Link"]
   A --> K["Mobile Drawer"]
-  G --> L["Search Results"]
+  G --> L["Search Results Dropdown"]
+```
+<!-- END OF MERMAID -->
+
+---
+
+## 🧩 Component Interaction Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Focused : Tab or Alt+N
+    Focused --> Expanded : Enter or Space
+    Expanded --> Action : Select menu item
+    Action --> Collapsed : Esc or click outside
+    Collapsed --> Idle : Focus returns to trigger
+    Expanded --> Error : Missing label or delay >200ms
+    Error --> Collapsed : Auto-correct + log event
 ```
 <!-- END OF MERMAID -->
 
@@ -131,27 +157,38 @@ flowchart TD
 
 | Category | Requirement | Validation |
 |:--|:--|:--|
-| **Visual Consistency** | Follows design tokens and theme palette. | ✅ Figma-to-React diff |
-| **Accessibility** | WCAG 2.1 AA / ARIA 1.2 compliance. | ✅ Axe + NVDA |
-| **Keyboard Navigation** | Full traversal via `Tab`, `Arrow`, `Esc`. | ✅ Manual audit |
-| **Localization** | Multilingual ready; RTL mirrored. | ✅ JSON audit |
-| **Responsiveness** | Works across ≥3 breakpoints. | ✅ Mobile & tablet test |
-| **Performance** | Load latency ≤ 200 ms; open ≤ 100 ms. | ✅ Lighthouse |
-| **Motion Control** | Honors `prefers-reduced-motion`. | ✅ CSS audit |
-| **Documentation** | Version metadata in README. | ✅ Reviewer confirmation |
+| **Visual Consistency** | Matches design tokens (`--kfm-color-*`, `--kfm-font-sans`). | ✅ Figma parity check |
+| **Accessibility** | WCAG 2.1 AA + ARIA compliance. | ✅ Axe, Pa11y |
+| **Keyboard Navigation** | Tab, arrow, and Esc keys functional. | ✅ Manual test |
+| **Localization** | i18n & RTL verified. | ✅ JSON audit |
+| **Responsiveness** | Adapts to ≥ 3 breakpoints. | ✅ DevTools simulation |
+| **Performance** | Load ≤ 200 ms, menu ≤ 100 ms. | ✅ Lighthouse |
+| **Reduced Motion** | Disabled transitions when preferred. | ✅ CSS audit |
+| **Documentation** | Version metadata verified. | ✅ Reviewer confirmation |
 
 ---
 
-## ♿ Accessibility Validation Matrix
+## 🧠 User Journeys & Personas
+
+| Persona | Goal | Interaction Path | Success Criteria |
+|:--|:--|:--|:--|
+| **Historian** | Locate treaties by date | Header → Search → Timeline → Story | ≤ 3 interactions |
+| **Educator** | Access classroom materials | Menu → Explore → Lessons | No accessibility barriers |
+| **Community Member** | Read stories in Osage | Language Toggle → Stories | Fully localized UI |
+| **Researcher** | Export dataset | About → Documentation | Provenance + export successful |
+
+---
+
+## ♿ Accessibility Audit Matrix
 
 | Metric | Target | Verified |
 |:--|:--|:--:|
-| **Contrast** | ≥ 4.5 : 1 | ✅ |
-| **Focus Outline** | 2px solid accent color | ✅ |
-| **Keyboard Reachability** | 100 % | ✅ |
-| **Screen Reader Output** | Announces menu context | ✅ |
-| **Skip-Link Visibility** | Always visible on focus | ✅ |
-| **Reduced Motion** | Fully supported | ✅ |
+| **Contrast** | ≥ 4.5:1 text / 3:1 icons | ✅ |
+| **Focus Visibility** | 2px accent outline | ✅ |
+| **Keyboard Reachability** | 100% | ✅ |
+| **Screen Reader** | Announces state and context | ✅ |
+| **Skip-Link** | Visible + functional | ✅ |
+| **Motion Control** | Prefers-reduced-motion honored | ✅ |
 
 ---
 
@@ -159,60 +196,92 @@ flowchart TD
 
 | Action | Key / Gesture | Behavior |
 |:--|:--|:--|
-| Focus navigation | `Alt + N` | Moves focus to header bar |
-| Open menu | `Enter / Space` | Expands dropdown menu |
+| Focus navigation | `Alt + N` | Moves focus to header |
+| Open menu | `Enter / Space` | Expands dropdown |
 | Navigate menu | `↓ / ↑` | Moves through items |
-| Close dropdown | `Esc` | Collapses and restores focus |
+| Close menu | `Esc` | Restores focus |
 | Jump to search | `/` | Focuses search input |
-| Toggle language | `Ctrl + L` | Cycles between languages |
-| Skip to content | `Tab` (first focus) | Activates skip-link |
-| Touch open menu (mobile) | Tap | Expands mobile drawer |
+| Toggle language | `Ctrl + L` | Switches locale |
+| Skip to content | `Tab` (first press) | Activates skip-link |
+| Mobile toggle | Tap (hamburger) | Opens drawer |
 
 ---
 
-## 🧮 Figma → React Parity Metrics
+## 🧮 UI State Tokens
 
-| Element | Target | Observed | Pass |
-|:--|:--|:--|:--:|
-| **Color Tokens** | 100 % | Matched | ✅ |
-| **Typography** | 1rem–2rem hierarchy | Matched | ✅ |
-| **Spacing Grid** | 8 px baseline | ±2 px | ✅ |
-| **Iconography** | 1.5 px stroke width | Matched | ✅ |
-| **Motion Timing** | 200 ms fade-in | Matched | ✅ |
-| **Hover States** | Tokenized focus ring visible | Confirmed | ✅ |
+| State | Token | Description |
+|:--|:--|:--|
+| **Idle** | `--kfm-color-bg` | Default base color. |
+| **Hover** | `--kfm-color-accent-light` | Subtle emphasis. |
+| **Focus** | `--kfm-color-accent` + 2px outline | Keyboard focus. |
+| **Active** | `--kfm-color-accent-dark` | Clicked/active item. |
+| **Disabled** | `--kfm-color-border` (50%) | Inactive element. |
 
 ---
 
-## 🧠 UX Writing & Cognitive Guidelines
+## 🧮 Quantitative Performance Metrics
 
-- Use **short, direct, and predictable** labels (e.g., “Explore,” “Stories,” “Data Layers”).  
-- Keep menu labels ≤ 3 words; avoid technical jargon.  
-- Maintain **sentence case** and avoid ALL CAPS.  
-- Tooltips use **verb + noun** construction (“Open Stories”).  
-- Skip-link and accessibility menu must be visible on keyboard focus.  
-- Announce **page context changes** with `aria-live="polite"`.  
-- All strings must pass **i18n readability checks** (≤ 8th-grade level).
+| Metric | Target | Tool | Frequency |
+|:--|:--|:--|:--|
+| **Navigation Load** | ≤ 250 ms | Lighthouse | Each PR |
+| **Menu Open Latency** | ≤ 100 ms | Chrome Profiler | CI run |
+| **Search Debounce** | ≤ 120 ms | React Profiler | Dev test |
+| **Focus Loss Error Rate** | ≤ 0.5 % | Playwright | Quarterly |
+
+---
+
+## 🧠 UX Writing & Cognitive Rules
+
+- Keep menu labels ≤ 3 words; avoid abbreviations.  
+- Use **verb + noun** for tooltips (“Open Stories”).  
+- Skip-link text must clearly state target area.  
+- Provide **feedback** for menu state changes via `aria-live`.  
+- Avoid redundant icons or hierarchical noise.  
+- Use consistent capitalization and directionality.  
 
 ---
 
 ## 🧠 Ethical & Cultural Standards
 
-- Menu taxonomy must represent **Indigenous, ecological, and archival sources** equally.  
-- Language translations validated by **community linguists** when applicable.  
-- Avoid colonial phrasing; prefer neutral geographic/historical terminology.  
-- All linked datasets must include **attribution and provenance citations**.  
-- Cultural terms and tribal names must be **verified and capitalized respectfully**.  
+- Represent Indigenous, ecological, and settler perspectives equitably.  
+- Validate translations via **community review**.  
+- Avoid colonial phrasing; contextualize historical terms.  
+- Cite archival sources for story and treaty data.  
+- Include content notes for sensitive materials.  
 
 ---
 
-## 🧩 Accessibility & Performance Validation Workflow
+## 🧩 Error & Recovery States
 
-1. Run **Axe**, **Pa11y**, and **Lighthouse** on navigation bundle.  
-2. Perform **manual keyboard traversal** and **screen reader validation**.  
-3. Verify **ARIA attributes** (`role="menu"`, `aria-expanded`, `aria-controls`).  
-4. Confirm **focus persistence** on close and context change.  
-5. Benchmark **menu latency** and **search debounce times**.  
-6. Log and archive results in `/data/work/logs/design/ui_components/navigation/`.
+| State | Condition | UI Behavior | User Feedback |
+|:--|:--|:--|:--|
+| **No Results** | Search query empty | Message displayed; retains focus | “No results found.” |
+| **Network Delay** | Response >2s | Spinner + retry button | Auto-retry w/ countdown |
+| **Focus Trap Detected** | Loop fails | Announces fix via `aria-live="assertive"` | “Focus restored.” |
+| **Missing Translation** | i18n key error | Default English fallback | “Translation unavailable.” |
+
+---
+
+## 🧩 Automated Test References
+
+| Test | Framework | File | Description |
+|:--|:--|:--|:--|
+| **A11y Flow Test** | Playwright | `tests/accessibility/navigation.spec.ts` | Keyboard and skip-link traversal |
+| **Search Test** | Jest + RTL | `tests/navigation/SearchBar.test.tsx` | Input debounce & response time |
+| **ARIA Audit** | Pa11y | `tests/a11y/menu-audit.yml` | Role and state verification |
+| **Localization Check** | Cypress | `tests/i18n/lang-toggle.cy.ts` | Language switching validation |
+
+---
+
+## 🧠 Human Factors & Cognitive Load Testing
+
+| Condition | Evaluation | Expected Behavior |
+|:--|:--|:--|
+| **Zoom (200%)** | Layout reflows without clipping | ✅ |
+| **Screen Magnifier** | Skip-link visible on focus | ✅ |
+| **Voice Control** | “Open Explore” triggers action | ✅ |
+| **Color Blind Mode** | All items distinguishable | ✅ |
+| **Reduced Motion** | No parallax or fade scaling | ✅ |
 
 ---
 
@@ -220,52 +289,61 @@ flowchart TD
 
 | Change Type | Review Required | Example | Template |
 |:--|:--|:--|:--|
-| **Visual Update** | Yes | Updated brand color palette | `component_review_template.md` |
-| **Accessibility Fix** | Yes | Added ARIA label to search | `accessibility_component_audit.md` |
-| **Localization Update** | Yes | Added Spanish/Osage translations | `figma_to_react_checklist.md` |
-| **Functional Refactor** | Yes | Rebuilt dropdown logic | `component_review_template.md` |
+| **Visual Update** | Yes | Adjusted accent color token | `component_review_template.md` |
+| **Accessibility Fix** | Yes | Added `aria-expanded` | `accessibility_component_audit.md` |
+| **Localization** | Yes | Added Osage language option | `figma_to_react_checklist.md` |
+| **Functional Refactor** | Yes | Rebuilt mobile drawer logic | `component_review_template.md` |
 
 ---
 
-## 📊 Review Telemetry Dashboard
+## 🧠 Cultural Accessibility Checklist
 
-| Metric | Goal | Description |
-|:--|:--|:--|
-| **Accessibility Pass Rate** | ≥ 95 % | WCAG compliance |
-| **Keyboard Coverage** | 100 % | Focusable elements audited |
-| **Menu Open Latency** | ≤ 100 ms | Measured via Lighthouse |
-| **Search Accuracy** | ≥ 90 % | Result return precision |
-| **Localization Coverage** | 100 % | Languages tested (EN/ES/OS) |
-| **Review Duration** | ≤ 5 days | PR submission → merge |
-
----
-
-## 🧠 Cognitive Load & Interaction Design
-
-- **Reduce clutter**: ≤ 6 visible menu items.  
-- **Progressive disclosure**: reveal submenus only on intent.  
-- **Sticky header behavior**: must not obscure content.  
-- **Focus retention**: restore previous active element after close.  
-- **Magnification test**: navigation remains usable at 200 %.  
-- **Gestural parity**: touch actions mirror mouse/keyboard events.  
+| Check | Description | Status |
+|:--|:--|:--:|
+| **Language Neutrality** | Avoids biased phrasing | ✅ |
+| **Indigenous Representation** | Menu content verified | ✅ |
+| **Translation Integrity** | Reviewed by native speakers | ☐ |
+| **Alt Text Context** | Culturally descriptive | ✅ |
+| **Terminology Consistency** | Matches KFM glossary | ✅ |
 
 ---
 
-## 🗄️ Archival & Provenance Policy
+## 🧩 Provenance JSON Schema (MCP Alignment)
 
-- All approved reviews archived under `/archive/navigation/YYYY/`.  
-- Metadata includes commit SHA, reviewers, checksums, and accessibility logs.  
-- Immutable post-approval; changes require new semver entry.  
-- Annual design digest summarizes nav updates under `/data/digests/design/`.
+```json
+{
+  "@context": ["https://schema.org", {"kfm":"https://kfm.ai/schema#"}],
+  "@type": "UIComponentReview",
+  "component": "Navigation",
+  "version": "v3.0.0",
+  "reviewedBy": ["@kfm-design","@kfm-accessibility"],
+  "source": "Figma Frame #NAV-2025",
+  "implementation": "web/src/components/navigation/",
+  "temporalCoverage": "2025-10-21T00:00:00Z",
+  "provenance": {
+    "workflow": ".github/workflows/component-review.yml",
+    "sha256": "auto-generated"
+  }
+}
+```
+
+---
+
+## 🗄️ Archival & Governance Policy
+
+- Navigation reviews stored under `/archive/navigation/YYYY/`.  
+- Immutable post-approval; metadata + checksums verified quarterly.  
+- Annual digest stored under `/data/digests/design/`.  
+- Linked to STAC for provenance and asset traceability.  
 
 ---
 
 ## 🔒 Privacy & Data Security
 
-- **Telemetry anonymized**: no user-specific identifiers.  
-- **Search data aggregated** for performance and error tracking only.  
-- **Access logs retained ≤ 90 days**; purged automatically.  
-- **Checksum validation** ensures review integrity in repository history.  
+- Telemetry anonymized; no PII collected.  
+- Analytics retained for 90 days; purged automatically.  
+- All reviews validated with SHA-256 integrity checks.  
+- Access restricted to governance-approved maintainers.  
 
 ---
 
@@ -273,11 +351,11 @@ flowchart TD
 
 **Workflow:** `.github/workflows/component-review.yml`
 
-- Lints Markdown, YAML, and semantic version headers.  
-- Runs automated accessibility audits (Axe, Pa11y).  
-- Checks Figma→React parity for tokens, spacing, and color.  
-- Posts CI summary in PR comments.  
-- Fails builds on missing metadata or accessibility regressions.
+- Runs Axe + Pa11y + Lighthouse audits.  
+- Validates Figma→React token parity.  
+- Enforces ARIA roles and accessibility schema.  
+- Lints markdown and YAML structure.  
+- Posts results in PR summary; fails build on accessibility regression.
 
 ---
 
@@ -285,13 +363,13 @@ flowchart TD
 
 | Standard | Description | Verified |
 |:--|:--|:--:|
-| **MCP-DL v6.3** | Documentation and reproducibility standard | ✅ |
-| **WCAG 2.1 AA** | Accessibility compliance baseline | ✅ |
-| **CIDOC CRM** | Provenance and entity alignment | ✅ |
-| **OWL-Time** | Temporal metadata mapping | ✅ |
-| **PROV-O** | Traceability ontology compliance | ✅ |
-| **FAIR Principles** | Open, ethical, reusable metadata | ✅ |
-| **DCAT 3.0** | Dataset descriptor for UI metadata | ✅ |
+| **MCP-DL v6.3** | Documentation-first reproducibility | ✅ |
+| **WCAG 2.1 AA** | Accessibility compliance | ✅ |
+| **CIDOC CRM** | Provenance schema | ✅ |
+| **OWL-Time** | Temporal state tracking | ✅ |
+| **PROV-O** | Review trace ontology | ✅ |
+| **FAIR Principles** | Open + reusable metadata | ✅ |
+| **DCAT 3.0** | Dataset linkage for UI assets | ✅ |
 
 ---
 
@@ -301,7 +379,7 @@ flowchart TD
 - [🧭 UI/UX Guidelines](../../ui-guidelines.md)  
 - [🧩 Interaction Patterns](../../interaction-patterns.md)  
 - [📘 Design Reviews Index](../README.md)  
-- [⚙️ Accessibility Standards](../../standards/accessibility.md)  
+- [⚙️ Accessibility Standards](../../standards/accessibility.md)
 
 ---
 
@@ -309,17 +387,17 @@ flowchart TD
 
 | Version | Date | Author | Summary | Type |
 |:--|:--|:--|:--|:--|
-| **v2.5.0** | 2025-10-21 | @kfm-design | Rebuilt to include telemetry, ethical review, interaction design, and full cultural validation. | Major |
-| **v2.4.0** | 2025-10-20 | @kfm-web | Added accessibility workflow, telemetry metrics, and reduced-motion validation. | Minor |
-| **v2.3.0** | 2025-10-19 | @kfm-accessibility | Introduced cognitive load rules and localization audit. | Minor |
-| **v2.0.0** | 2024-11-10 | @kfm-core | Migrated to MCP-DL v6.3 with provenance metadata. | Major |
-| **v1.0.0** | 2023-10-10 | Founding Team | Initial navigation component review document. | Major |
+| **v3.0.0** | 2025-10-22 | @kfm-design | Complete rebuild with lifecycle diagrams, personas, telemetry, and provenance schema. | Major |
+| **v2.5.0** | 2025-10-21 | @kfm-web | Added human factors, governance links, and JSON provenance. | Minor |
+| **v2.4.0** | 2025-10-20 | @kfm-accessibility | Introduced error handling and metrics tables. | Minor |
+| **v2.0.0** | 2024-11-10 | @kfm-core | Migrated to MCP-DL v6.3 structure. | Major |
+| **v1.0.0** | 2023-10-10 | Founding Team | Initial navigation component review. | Major |
 
 ---
 
 <div align="center">
 
 ### 🧭 Kansas Frontier Matrix — Navigation Review Governance  
-**Accessible · Inclusive · Provenanced · Reproducible**
+**Accessible · Ethical · Culturally Inclusive · Provenanced · Reproducible**
 
 </div>
