@@ -288,11 +288,11 @@ stateDiagram-v2
 
 ```mermaid
 flowchart LR
-  D[Design Mockup (Figma)] --> A[Accessibility Audit]
-  A --> E[Implementation (React + MapLibre)]
-  E --> P[Peer Review / PR Approval]
-  P --> C[CI/CD Validation]
-  C --> G[Governance Sign-off & Archive]
+  D["Design mockup / Figma"] --> A["Accessibility review"]
+  A --> E["Implementation · React + MapLibre"]
+  E --> P["Peer review · PR approval"]
+  P --> C["CI/CD validation"]
+  C --> G["Governance sign-off & archive"]
 ```
 <!-- END OF MERMAID -->
 
