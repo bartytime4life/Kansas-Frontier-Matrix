@@ -147,17 +147,19 @@ sequenceDiagram
     participant U as User
     participant T as Timeline
     participant M as Map
-    participant P as DetailPanel
-    participant A as AI
+    participant D as DetailPanel
+    participant X as AI
+
     U->>T: Scroll to 1867
-    T->>M: Filter layers where year <= 1867
+    T->>M: Apply filter year <= 1867
     M-->>U: Highlight Medicine Lodge Treaty
-    U->>M: Click polygon feature
-    M->>P: Load summary and linked entities
-    P->>A: Request contextual narrative
-    A-->>U: Insight - 5 treaties active 1850-1870; Kaw and Osage nearby
+    U->>M: Click polygon
+    M->>D: Load summary and entities
+    D->>X: Request narrative context
+    Note over X,U: Five treaties 1850-1870; Kaw and Osage nearby
+
 ```
-%% END OF MERMAID %%
+<!-- END OF MERMAID -->
 
 ### Timeline Interaction Rules
 
@@ -167,7 +169,6 @@ sequenceDiagram
 * **Reduced Motion:** Disables easing and long transitions; updates occur instantly.  
 * **Live Regions:** Announce current visible range and active selection for screen readers.  
 * **Performance Budget:** Timeline render ≤ **16 ms** per frame; event focus update ≤ **50 ms**.
-
 
 ---
 
