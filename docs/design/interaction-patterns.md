@@ -119,12 +119,12 @@ sequenceDiagram
     participant DetailPanel
     participant AI
     User->>Timeline: Scrolls to 1867
-    Timeline->>Map: Filter layers where feature.year ≤ 1867
+    Timeline->>Map: Filter layers where feature.year <= 1867
     Map->>User: Highlights Medicine Lodge Treaty polygon
     User->>Map: Click polygon
     Map->>DetailPanel: Load treaty summary + related entities
     DetailPanel->>AI: Request contextual narrative
-    AI->>User: "5 treaties active 1850–1870; Kaw & Osage nearby…"
+    AI->>User: "5 treaties active 1850-1870; Kaw and Osage nearby."
 ```
 
 <!-- END OF MERMAID -->
