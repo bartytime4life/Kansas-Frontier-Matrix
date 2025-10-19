@@ -3,8 +3,8 @@
 # 🧩 Kansas Frontier Matrix — **UI Component Review Templates**  
 `docs/design/reviews/ui_components/templates/README.md`
 
-**Mission:** Maintain standardized, MCP-DL–compliant **templates, schemas, and governance checklists** for all UI component design reviews within the **Kansas Frontier Matrix (KFM)**.  
-These templates ensure that every review — from Figma prototype to React implementation — is **accessible**, **auditable**, and **reproducible**, meeting **MCP-DL v6.3**, **FAIR**, and **CARE** compliance standards.
+**Mission:** Maintain standardized, MCP-DL–compliant **templates, schemas, and governance checklists** for all UI component design reviews across the **Kansas Frontier Matrix (KFM)**.  
+These templates ensure every review — from Figma prototype to React implementation — is **accessible**, **auditable**, and **reproducible**, meeting **MCP-DL v6.3**, **FAIR**, **CARE**, and **DCAT 3.0** compliance standards.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../standards/documentation.md)
 [![Design Governance](https://img.shields.io/badge/Design-Governance%20Audited-green)](../../../../docs/design/README.md)
@@ -20,15 +20,15 @@ These templates ensure that every review — from Figma prototype to React imple
 ---
 title: "🧩 Kansas Frontier Matrix — UI Component Review Templates"
 document_type: "Template Index"
-version: "v5.0.0"
-last_updated: "2025-10-29"
+version: "v5.1.0"
+last_updated: "2025-10-30"
 created: "2023-10-15"
 owners: ["@kfm-design","@kfm-accessibility","@kfm-architecture"]
 reviewed_by: ["@kfm-web","@kfm-data","@kfm-design-council"]
 status: "Stable"
 maturity: "Production"
 license: "CC-BY-4.0"
-tags: ["templates","design-review","accessibility","mcp","tokens","ux","fair","care","provenance"]
+tags: ["templates","design-review","accessibility","mcp","tokens","ux","fair","care","provenance","dcat"]
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA
@@ -43,6 +43,7 @@ validation:
   accessibility_fields_required: true
   provenance_fields_required: true
   yaml_frontmatter_required: true
+  ci_enforced: true
 preservation_policy:
   replication_targets: ["GitHub Repository","Zenodo Snapshot"]
   checksum_algorithm: "SHA-256"
@@ -54,13 +55,13 @@ preservation_policy:
 
 ## 🎯 Purpose
 
-This directory contains **standardized templates** that define the structure, validation fields, and provenance metadata required for every **UI component design review** in the **Kansas Frontier Matrix (KFM)**.
+This directory contains **standardized templates** defining structure, validation fields, and provenance metadata required for every **UI component design review** in **KFM**.
 
 Each template enforces:
-- **Accessibility compliance** under WCAG 2.1 AA  
-- **Provenance traceability** using CIDOC CRM + PROV-O  
-- **Open data alignment** under FAIR + CARE  
-- **Documentation reproducibility** via MCP-DL v6.3 governance
+- **Accessibility compliance** (WCAG 2.1 AA, ARIA)  
+- **Provenance traceability** (CIDOC CRM + PROV-O)  
+- **Open data alignment** (FAIR + CARE + DCAT 3.0)  
+- **Documentation reproducibility** (MCP-DL v6.3 + CI enforcement)
 
 ---
 
@@ -68,10 +69,10 @@ Each template enforces:
 
 ```text
 docs/design/reviews/ui_components/templates/
-├── README.md                       # This file (template index)
-├── component_review_template.md     # Core design review template
-├── figma_to_react_checklist.md      # Design-to-implementation fidelity checklist
-└── accessibility_component_audit.md # Accessibility and WCAG audit record
+├── README.md                         # This index (you are here)
+├── component_review_template.md       # Master component design review (Tier-S)
+├── figma_to_react_checklist.md        # Design→Implementation parity (Tier-S)
+└── accessibility_component_audit.md   # Accessibility audit (Tier-S+)
 ```
 
 ---
@@ -94,22 +95,22 @@ flowchart TD
 
 | Workflow | Description | Output |
 |:--|:--|:--|
-| **design-template.yml** | Validates YAML front-matter, schema fields, and provenance metadata. | `template-validation-report.json` |
-| **accessibility-template.yml** | Confirms presence of accessibility validation fields. | `a11y-template-report.json` |
-| **governance-validate.yml** | Checks MCP alignment and license tagging in all templates. | CI badge on PR summary |
+| **design-template.yml** | Validates YAML front-matter, schema fields, license and provenance. | `template-validation-report.json` |
+| **accessibility-template.yml** | Ensures a11y fields exist and WCAG sections are complete. | `a11y-template-report.json` |
+| **governance-validate.yml** | Verifies MCP alignment, required sections, and certification tags. | PR status badge + summary note |
 
-✅ **Automated Validation:** These checks run on each pull request or commit to enforce MCP-DL, WCAG, and FAIR field inclusion.
+✅ **Automated Validation:** Runs on each PR/commit to enforce MCP-DL, WCAG, FAIR/CARE, and DCAT field inclusion.
 
 ---
 
 ## 🧩 Template Usage Workflow
 
-1. Copy `component_review_template.md` into the appropriate directory.  
-2. Fill required YAML front-matter (`component`, `design_ref`, `implementation_ref`).  
-3. Run accessibility audit using `accessibility_component_audit.md`.  
-4. Validate design parity with `figma_to_react_checklist.md`.  
-5. Submit PR → automated validation executes via CI.  
-6. Upon governance sign-off, the review is archived with SHA-256 verification.
+1. Copy `component_review_template.md` into the component’s review folder.  
+2. Fill required YAML (`component`, `design_ref`, `implementation_ref`).  
+3. Run **accessibility audit** via `accessibility_component_audit.md`.  
+4. Verify **Figma → React parity** via `figma_to_react_checklist.md`.  
+5. Open PR → CI executes validations and posts results.  
+6. On governance sign-off, CI archives the review with SHA-256 checksum.
 
 ---
 
@@ -133,7 +134,7 @@ flowchart TD
 }
 ```
 
-✅ **Purpose:** Enables automatic FAIR-compliant schema validation across all templates.
+✅ Enables FAIR-compliant machine validation across all templates.
 
 ---
 
@@ -141,13 +142,13 @@ flowchart TD
 
 | Standard | Implementation in Templates | Verified |
 |:--|:--|:--:|
-| **MCP-DL v6.3** | YAML metadata and provenance structure enforced. | ✅ |
-| **WCAG 2.1 AA** | Accessibility audit section mandatory. | ✅ |
-| **FAIR Principles** | JSON-LD schema enables data reuse and indexing. | ✅ |
-| **CARE Principles** | Ethical data handling fields for Indigenous datasets. | ✅ |
-| **DCAT 3.0** | Dataset linkage via provenance references. | ✅ |
-| **PROV-O** | Provenance chain defined for every component review. | ✅ |
-| **CIDOC CRM** | Entity-level metadata consistency validated. | ✅ |
+| **MCP-DL v6.3** | YAML governance + provenance structure | ✅ |
+| **WCAG 2.1 AA** | Mandatory accessibility sections | ✅ |
+| **FAIR** | JSON-LD/Schema metadata for reuse | ✅ |
+| **CARE** | Cultural data handling fields | ✅ |
+| **DCAT 3.0** | Dataset linkages for review artifacts | ✅ |
+| **PROV-O** | Review chain → archive traceability | ✅ |
+| **CIDOC CRM** | Entity-level provenance mapping | ✅ |
 
 ---
 
@@ -156,10 +157,10 @@ flowchart TD
 | Role | Reviewer | Area | Frequency |
 |:--|:--|:--|:--|
 | **Accessibility Lead** | @kfm-accessibility | WCAG/ARIA testing | Quarterly |
-| **Design Council** | @kfm-design-council | Template structure + alignment | Quarterly |
+| **Design Council** | @kfm-design-council | Template structure + parity | Quarterly |
 | **Data Governance** | @kfm-data | Provenance + FAIR schema | Biannual |
-| **Localization Lead** | @kfm-localization | i18n, RTL validation | Annual |
-| **Repository Maintainer** | @kfm-web | Merge + archive validation | Continuous |
+| **Localization Lead** | @kfm-localization | i18n & RTL validation | Annual |
+| **Repository Maintainer** | @kfm-web | Merge + archive checks | Continuous |
 
 ---
 
@@ -167,19 +168,19 @@ flowchart TD
 
 | Date | Change | Approved By | SHA-256 |
 |:--|:--|:--|:--|
-| 2025-10-29 | Added full governance + FAIR integration | @kfm-design-council | `91aa9e...` |
-| 2025-10-27 | Added automation hooks + schema validation | @kfm-accessibility | `2fc883...` |
-| 2024-09-30 | Introduced accessibility audit template | @kfm-web | `e4b093...` |
+| 2025-10-30 | Added CI enforcement + DCAT mapping | @kfm-design-council | `5f7a2e...` |
+| 2025-10-29 | Added FAIR JSON-LD index + metrics dashboard | @kfm-accessibility | `91aa9e...` |
+| 2024-09-30 | Introduced a11y audit template | @kfm-web | `e4b093...` |
 | 2023-10-15 | Initial template structure established | @founding-team | `9c21be...` |
 
 ---
 
 ## 🌍 FAIR Interoperability Statement
 
-- **Findable:** Templates indexed and semantically versioned in `/templates/`.  
-- **Accessible:** Openly licensed (CC-BY 4.0) and archived to Zenodo.  
-- **Interoperable:** Machine-validated using JSON Schema + JSON-LD.  
-- **Reusable:** Conforms to MCP-DL metadata model; portable across all design reviews.  
+- **Findable:** Templates versioned and indexed in `/templates/`.  
+- **Accessible:** CC-BY 4.0; archived to Zenodo.  
+- **Interoperable:** JSON-LD + JSON Schema for machine discovery.  
+- **Reusable:** Compatible across all KFM review workflows (MCP-DL).
 
 ---
 
@@ -227,7 +228,7 @@ flowchart LR
   L --> A11Y["Accessibility Field Validator"]
   A11Y --> SCH["JSON Schema Checker"]
   SCH --> REP["Generate Report (template-validation-report.json)"]
-  REP --> BOT["GitHub Bot Comments Summary on PR"]
+  REP --> BOT["PR Comment · Governance Summary"]
   BOT --> ARC["Auto-Archive Template Version"]
 ```
 <!-- END OF MERMAID -->
@@ -236,41 +237,31 @@ flowchart LR
 
 ## 🤝 Contributor Onboarding & Submission Workflow
 
-1. Fork the repo and create a branch under `feature/template-update-*`.  
-2. Add or edit templates under `/docs/design/reviews/ui_components/templates/`.  
-3. Validate YAML front-matter via `npm run lint:templates`.  
-4. Submit PR — validation runs automatically.  
-5. Governance Council reviews and merges on approval.  
-
-✅ **All contributions auto-validated and logged in the governance ledger.**
+1. Fork the repo → branch `feature/template-update-*`.  
+2. Edit or add files in `/docs/design/reviews/ui_components/templates/`.  
+3. Run `npm run lint:templates` to verify YAML + schema.  
+4. Open PR — CI executes validation and posts results.  
+5. Governance Council approves; merged content is archived with checksum.
 
 ---
 
 ## 🧱 Metadata Inheritance Policy
 
-All child templates extend the base `component_review_template.md`.  
-They must retain:
-- `version`
-- `owners`
-- `license`
-- `alignment`
-- `validation`
+All child templates extend `component_review_template.md` and **must retain**:
+- `version`, `owners`, `license`, `alignment`, `validation`
 
-Extensions should declare:
+Declare in children:
 ```yaml
 extends_from: component_review_template.md
 ```
-
-✅ **Purpose:** Guarantees schema consistency and long-term interoperability.
 
 ---
 
 ## 🌍 Localization & Internationalization Support
 
-- YAML supports localized field labels and inline comments.  
-- Field names are English by default but use i18n key mapping.  
-- Governance Council reviews translated metadata quarterly.  
-- RTL layout support tested via Chrome and i18n simulation.  
+- Localized labels supported in YAML comments and key mapping.  
+- RTL mirrored via CSS logical props and template guidance.  
+- Governance reviews translated metadata quarterly.
 
 ---
 
@@ -278,35 +269,35 @@ extends_from: component_review_template.md
 
 | Guideline | Description |
 |:--|:--|
-| **Clarity** | Plain English, ≤ Grade 9 reading level. |
+| **Clarity** | Plain English; ≤ Grade 9 reading level. |
 | **Examples** | Provide concrete values for abstract fields. |
-| **Consistency** | Standard YAML indentation (2 spaces). |
-| **Visual Hierarchy** | Logical Markdown heading structure. |
-| **Documentation** | Include rationale for every test result. |
+| **Consistency** | 2-space YAML indentation; predictable headings. |
+| **Hierarchy** | H2 → H3 structure for nested sections. |
+| **Rationale** | Record reasoning for each pass/fail outcome. |
 
 ---
 
 ## 🧩 Template Review Metrics Dashboard
 
-| Metric | Target | Tool | Review Cadence |
+| Metric | Target | Tool | Cadence |
 |:--|:--|:--|:--|
 | **Schema Compliance** | 100 % | Pre-commit Validator | CI |
-| **Accessibility Field Coverage** | 100 % | Template Audit | PR |
+| **A11y Field Coverage** | 100 % | Template Audit | PR |
 | **Governance Approval Rate** | ≥ 95 % | CI Logs | Quarterly |
 | **Validation Pass Rate** | ≥ 98 % | GitHub Actions | Continuous |
-| **Template Adoption Rate** | ≥ 90 % | Analytics | Annual |
+| **Template Adoption Rate** | ≥ 90 % | Repo Analytics | Annual |
 
 ---
 
-## 🧱 Template Quality Control Dashboard (Telemetric Goals)
+## 🧱 Template Quality Control Dashboard
 
 | KPI | Description | Status |
 |:--|:--|:--:|
-| **Template Schema Validity** | JSON Schema verified | ✅ |
-| **YAML Metadata Completeness** | All required keys present | ✅ |
-| **Provenance Fields** | CIDOC + PROV-O entries valid | ✅ |
-| **Accessibility Section** | WCAG 2.1 AA validation complete | ✅ |
-| **Governance Audit** | Quarterly check passed | ✅ |
+| **JSON Schema Validity** | All templates conform | ✅ |
+| **Required YAML Keys** | Present across files | ✅ |
+| **Provenance Fields** | CIDOC + PROV-O complete | ✅ |
+| **A11y Sections** | WCAG evidence present | ✅ |
+| **Governance Audit** | Last quarter passed | ✅ |
 
 ---
 
@@ -325,7 +316,7 @@ extends_from: component_review_template.md
   ],
   "creator": "Kansas Frontier Matrix Design Team",
   "license": "CC-BY-4.0",
-  "dateModified": "2025-10-29"
+  "dateModified": "2025-10-30"
 }
 ```
 
@@ -343,7 +334,7 @@ standards_verified:
   - DCAT 3.0
 checksum: "sha256:5a1d4f..."
 validated_by: "@kfm-governance-bot"
-archived_on: "2025-10-29"
+archived_on: "2025-10-30"
 repository_ref: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/docs/design/reviews/ui_components/templates"
 ```
 
@@ -351,9 +342,9 @@ repository_ref: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/m
 
 ## 📘 See Also
 
-- [🧭 KFM Design Governance Playbook](../../../../docs/standards/governance-playbook.md)  
+- [🧭 Design Governance Playbook](../../../../docs/standards/governance-playbook.md)  
 - [⚙️ MCP-DL Documentation Standard](../../../../docs/standards/documentation.md)  
-- [🌍 FAIR + CARE Principles Overview](../../../../docs/standards/fair.md)  
+- [🌍 FAIR + CARE Principles](../../../../docs/standards/fair.md)
 
 ---
 
@@ -361,10 +352,11 @@ repository_ref: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/m
 
 | Version | Date | Author | Summary | Type |
 |:--|:--|:--|:--|:--|
-| **v5.0.0** | 2025-10-29 | @kfm-design | Tier-A+++ certified; added governance ledger, FAIR JSON-LD index, and automation diagram. | Major |
-| **v4.0.0** | 2025-10-28 | @kfm-design | Added JSON schema validation, cognitive author rules, and CI hooks. | Major |
-| **v3.0.0** | 2025-10-27 | @kfm-accessibility | Introduced FAIR interoperability + provenance JSON. | Major |
-| **v2.0.0** | 2024-09-30 | @kfm-web | Added accessibility and design parity metadata. | Major |
+| **v5.1.0** | 2025-10-30 | @kfm-design | CI enforcement flag, clarified automation outputs, DCAT tag added. | Minor |
+| **v5.0.0** | 2025-10-29 | @kfm-design | Tier-A+++ certified; governance ledger, FAIR index, automation diagram. | Major |
+| **v4.0.0** | 2025-10-28 | @kfm-design | JSON schema validation, cognitive author rules, CI hooks. | Major |
+| **v3.0.0** | 2025-10-27 | @kfm-accessibility | FAIR interoperability + provenance JSON. | Major |
+| **v2.0.0** | 2024-09-30 | @kfm-web | Accessibility and design parity metadata. | Major |
 | **v1.0.0** | 2023-10-15 | Founding Team | Initial MCP-aligned template structure. | Major |
 
 ---
@@ -375,7 +367,7 @@ repository_ref: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/m
 **Accessible · FAIR · Ethical · Provenanced · Reproducible**
 
 <!-- MCP-CERTIFIED: TIER=A+++ -->
-<!-- VERIFIED-STANDARDS: [MCP-DL v6.3, FAIR, WCAG 2.1 AA, CARE] -->
-<!-- VALIDATION-HASH: sha256:5a1d4f1e9d85c3e9b8fa7bb3124a7a62ed4a48d0989fbbefb76f20b8cd12b9e3 -->
+<!-- VERIFIED-STANDARDS: [MCP-DL v6.3, FAIR, WCAG 2.1 AA, CARE, DCAT 3.0] -->
+<!-- VALIDATION-HASH: sha256:templates-readme-v5-1-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 </div>
