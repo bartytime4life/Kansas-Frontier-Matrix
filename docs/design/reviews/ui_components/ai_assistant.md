@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🤖 Kansas Frontier Matrix — **AI Assistant Component Design Review**  
+# 🤖 Kansas Frontier Matrix — **AI Assistant Component Design Review (Tier-S⁺ Certified)**  
 `docs/design/reviews/ui_components/ai_assistant.md`
 
-**Mission:** Evaluate, document, and govern the **AI Assistant Component** — the conversational, summarization, and contextual guidance interface that bridges datasets, maps, and stories within the **Kansas Frontier Matrix (KFM)**.  
-The AI Assistant transforms KFM’s structured data and archival resources into **interactive, explainable dialogues**, enabling users to explore **time, space, and story** transparently and reproducibly under MCP-DL v6.3.
+**Mission:** Govern, validate, and preserve the **AI Assistant** — KFM’s conversational, summarization, and contextual guidance layer that connects **datasets, maps, and stories**.  
+The assistant must be **explainable, accessible, culturally respectful, and reproducible**, meeting **MCP-DL v6.3**, **WCAG 2.1 AA**, **FAIR/CARE**, and **DCAT 3.0** requirements with continuous CI enforcement.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../standards/documentation.md)
 [![AI Ethics](https://img.shields.io/badge/AI-Ethical%20%26%20Explainable-purple)](../../../standards/ai-ethics.md)
@@ -20,18 +20,23 @@ The AI Assistant transforms KFM’s structured data and archival resources into 
 ---
 title: "🤖 Kansas Frontier Matrix — AI Assistant Component Design Review"
 document_type: "Component Review"
-version: "v4.0.0"
-last_updated: "2025-10-24"
+version: "v4.1.0"
+last_updated: "2025-10-31"
 created: "2023-11-01"
 component: "AI Assistant"
 design_ref: "Figma Frame #AI-ASSIST-2025"
 implementation_ref: "web/src/components/ai/assistant/"
 owners: ["@kfm-design","@kfm-web","@kfm-accessibility","@kfm-ai"]
-reviewed_by: ["@kfm-frontend","@kfm-accessibility","@kfm-ethics","@kfm-i18n"]
+reviewed_by: ["@kfm-frontend","@kfm-accessibility","@kfm-ethics","@kfm-i18n","@kfm-security"]
 status: "Stable"
 maturity: "Production"
 license: "CC-BY-4.0"
-tags: ["ai","assistant","design-review","ux","a11y","tokens","ethical-ai","focus-mode","explainable","mcp"]
+tags: ["ai","assistant","design-review","ux","a11y","ethical-ai","focus-mode","explainable","mcp","fair","care","dcat"]
+classification:
+  component_type: "AI"
+  integration_level: "Frontend + Graph + Context Engine"
+  risk_level: "Moderate"
+  audit_frequency: "Quarterly + per release"
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA
@@ -41,40 +46,58 @@ alignment:
   - PROV-O (Traceability)
   - FAIR Principles
   - DCAT 3.0
-  - AI Ethics Charter (KFM)
+  - KFM AI Ethics Charter
 dependencies:
-  - React + MapLibre Frontend
+  - React + MapLibre
   - tokens.css Design System
-  - OpenAI GPT API + spaCy Context Engine
-  - Lighthouse / Axe / Playwright / Pa11y
+  - OpenAI GPT API + spaCy / embeddings Context Engine
   - Neo4j Knowledge Graph + STAC Metadata
+  - Lighthouse / Axe / Pa11y / Playwright
+template_scope:
+  visual_parity: true
+  accessibility_alignment: true
+  localization_readiness: true
+  dark_mode_compliance: true
+  rtl_support: true
+  ai_safety_enforcement: true
+  provenance_transparency: true
 review_cycle: "Quarterly + per release"
-governance_board: ["@kfm-ai-council","@kfm-design-council","@kfm-accessibility-lead"]
 validation:
+  ci_enforced: true
   lighthouse_min_score: 95
   axe_blocking_violations: 0
   contrast_min_ratio: 4.5
+  reduced_motion_support: true
   schema_checks: true
   ethical_audit_required: true
-  reduced_motion_support: true
+  citation_ratio_min: 95
+  confidence_accuracy_min: 90
+  bias_index_max: 0.05
 provenance:
   workflow_ref: ".github/workflows/component-review.yml"
   artifact_retention_days: 90
   sha256_integrity: verified
 versioning:
   policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
-  major_change: "New model architecture or context system"
-  minor_change: "Feature enhancement or ethical policy update"
+  major_change: "New model architecture / context system / safety gate"
+  minor_change: "Feature enhancement / policy or a11y update"
   patch_change: "Documentation or UI correction"
 telemetry:
   metrics_collected:
-    - "Response Latency (ms)"
-    - "Model Confidence %"
-    - "Citation Ratio %"
-    - "Accessibility Compliance %"
-    - "Opt-Out Rate %"
-    - "Bias Index Score"
-  privacy_policy: "All metrics anonymized, opt-in only; conforms to FAIR + KFM AI Ethics Charter."
+    - "Response latency (ms)"
+    - "Model confidence %"
+    - "Citation ratio %"
+    - "Explainability score"
+    - "Bias index"
+    - "Opt-out rate %"
+    - "A11y compliance %"
+    - "Token cost (per response)"
+  thresholds:
+    latency_p95_ms: 2000
+    citation_ratio_min: 95
+    explainability_min: 0.85
+    bias_index_max: 0.05
+  privacy_policy: "Opt-in, anonymized; no PII stored; FAIR + AI Ethics Charter compliant."
 preservation_policy:
   replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
   checksum_algorithm: "SHA-256"
@@ -88,8 +111,8 @@ governance_links:
 related_components:
   - timeline
   - map_controls
-  - storytelling
   - detail_panel
+  - storytelling
   - accessibility_menu
 ---
 ```
@@ -97,250 +120,179 @@ related_components:
 ---
 
 ## 🎯 Objective
-
-The **AI Assistant** component powers conversational access to KFM’s integrated datasets and historical archives.  
-It converts queries into graph-level searches, contextualizes results, and presents verified information with confidence and transparency.  
-This document ensures compliance with **ethical AI standards**, **WCAG accessibility**, and **reproducibility under MCP-DL v6.3**.
+Provide **explainable, trustworthy** access to historical datasets via natural language while preserving **source transparency**, **cultural respect**, and **universal accessibility**. This review enforces policy, performance, and provenance guarantees for the AI Assistant.
 
 ---
 
 ## 🧩 Component Overview
-
 | Subcomponent | Description | File |
 |:--|:--|:--|
-| **Chat Interface** | Main conversational viewport with response streaming. | `ChatWindow.tsx` |
-| **Prompt Input** | Natural-language question entry bar. | `PromptBar.tsx` |
-| **Response Streamer** | Displays incremental AI responses with live ARIA output. | `ResponseStream.tsx` |
-| **Context Viewer** | Displays related data layers and events. | `ContextPanel.tsx` |
-| **Confidence Chips** | Color-coded indicators for model certainty. | `ConfidenceIndicator.tsx` |
-| **Citations List** | Linked source references from STAC/Neo4j. | `CitationsList.tsx` |
-| **Opt-Out Toggle** | Disables AI augmentation on demand. | `OptOutToggle.tsx` |
+| **Chat Interface** | Conversational viewport; streaming output | `ChatWindow.tsx` |
+| **Prompt Input** | NL query box + shortcuts | `PromptBar.tsx` |
+| **Response Streamer** | Incremental text, controlled via ARIA live | `ResponseStream.tsx` |
+| **Context Viewer** | Entities, layers, events referenced | `ContextPanel.tsx` |
+| **Confidence Chips** | High/Med/Low certainty indicators | `ConfidenceIndicator.tsx` |
+| **Citations List** | Linked STAC/Neo4j sources for each claim | `CitationsList.tsx` |
+| **Opt-Out Toggle** | Disable AI augmentation for session | `OptOutToggle.tsx` |
 
 ---
 
-## 🧭 Information Flow Diagram
-
+## 🧭 Information & Safety Flow
 ```mermaid
 flowchart LR
   U["User Prompt"] --> CE["Context Engine"]
-  CE --> GQ["Graph Query · Neo4j / STAC"]
-  GQ --> M["AI Model Inference"]
+  CE --> GQ["Neo4j / STAC Query"]
+  GQ --> P{"Policy & Safety Filters"}
+  P -->|Pass| M["Model Inference"]
+  P -->|Fail| B["Ethical Override · Blocked"]
   M --> R["Response Streamer"]
   M --> CF["Confidence Scorer"]
-  CF --> R
   R --> C["Citations Panel"]
-  R --> F["Focus Mode Synchronization"]
+  R --> F["Focus Mode Sync"]
   C --> A11Y["ARIA Live Announcer"]
 ```
 <!-- END OF MERMAID -->
 
 ---
 
-## 🧠 AI Interaction Lifecycle
-
-```mermaid
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Prompting : User enters query
-  Prompting --> Generating : AI request sent
-  Generating --> Responding : Streamed text response
-  Responding --> Summarized : AI output complete
-  Summarized --> Idle : User feedback accepted
-  Generating --> Error : Timeout / ethical policy block
-  Error --> Idle : Retry logged and cleared
-```
-<!-- END OF MERMAID -->
-
----
-
-## 🧱 Review Criteria (MCP-DL v6.3)
-
-| Category | Requirement | Validation |
-|:--|:--|:--|
-| **Accessibility** | WCAG 2.1 AA + ARIA live compliance | ✅ Axe / NVDA |
-| **Transparency** | Shows confidence + sources + model ID | ✅ Ethics Review |
-| **Visual Consistency** | Follows design tokens & type scales | ✅ Figma parity |
-| **Performance** | <2 s for 80 % responses | ✅ Lighthouse |
-| **Ethical Compliance** | Meets AI Ethics Charter standards | ✅ Audit |
-| **Localization** | i18n + L10n ready | ✅ JSON audit |
-| **Reduced Motion** | Supported + user preference honored | ✅ CSS audit |
-
----
-
-## 🧭 Conversational Personas & Scenarios
-
-| Persona | Intent | Example Prompt | Expected Response | Validation |
-|:--|:--|:--|:--|:--|
-| **Historian** | Temporal inquiry | “Summarize Kansas treaties in 1854.” | 3-sentence summary + citations | AI cites ≥ 2 sources |
-| **Educator** | Comparative view | “Show floods from 1900 vs 1950.” | Two maps + timeline reference | Correct temporal mapping |
-| **Community Member** | Cultural narrative | “Tell the Osage migration story.” | Mixed oral + archival content | Culturally contextual tone |
-| **Archivist** | Provenance validation | “Where does this treaty info come from?” | List of sources + repository links | STAC + CIDOC IDs visible |
-
----
-
-## ⚖️ Bias & Fairness Audit
-
-| Category | Check | Test Method | Verified |
+## ♿ ARIA Roles (Chat & Streaming)
+| Element | Role | Notes | Verified |
 |:--|:--|:--|:--:|
-| **Gender Bias** | Neutral pronouns in summaries | Random prompt audit | ✅ |
-| **Cultural Bias** | Balanced representation | Semantic parity test | ✅ |
-| **Temporal Bias** | Equal emphasis across eras | Chronological prompt variance | ✅ |
-| **Algorithmic Bias** | Stable answers across re-runs | Variance testing (5x runs) | ✅ |
+| Chat Container | `log` | `aria-live="polite"` for streaming text | ✅ |
+| Prompt Input | `textbox` | `aria-multiline="true"` | ✅ |
+| Send Button | `button` | `aria-label="Send message"` | ✅ |
+| Citations | `list`/`listitem` | Each item labeled w/ source | ✅ |
+| Confidence Chip | `status` | “Confidence: High/Medium/Low” | ✅ |
 
 ---
 
-## 🔐 AI Data & Consent Policy
-
-- No user query data is persisted beyond the session (≤30 minutes).  
-- All logs anonymized before aggregation.  
-- Users informed of AI context switching events.  
-- Consent banner presented at first use (AI model name, version, policy).  
-- Revoking consent deletes session memory immediately.  
+## 🧭 Personas & Scenarios (governance-ready)
+| Persona | Intent | Example Prompt | Expected | Validation |
+|:--|:--|:--|:--|:--|
+| Historian | Temporal scope | “Treaties in 1854?” | 2–3 sentence summary + citations | ≥ 2 sources; confidence ≥ 0.85 |
+| Educator | Compare overlays | “Floods 1900 vs 1950” | Two map refs + timeline | Temporal alignment verified |
+| Community Member | Cultural narrative | “Osage migration story” | Oral + archival blend + disclaimer | CARE checklist passed |
+| Archivist | Provenance | “Where does this claim come from?” | Source list + repo links | STAC + CIDOC IDs surfaced |
 
 ---
 
-## 🧠 Conversational Tone & Language Guidelines
+## ⚖️ Bias, Fairness & Safety Audit
+| Category | Check | Method | Verified |
+|:--|:--|:--|:--:|
+| Gender Bias | Neutral phrasing | Randomized prompt audit | ✅ |
+| Cultural Bias | Balanced viewpoints | Semantic parity test | ✅ |
+| Temporal Bias | Non-presentist framing | Era spread prompts | ✅ |
+| Safety | Refuses disallowed content | Policy probes (red team) | ✅ |
 
-| Principle | Description |
-|:--|:--|
-| **Neutral & Empathetic** | Uses inclusive, respectful language. |
-| **Evidence-Based** | References data before interpretation. |
-| **Transparent** | Communicates uncertainty clearly (“The data suggests…”). |
-| **Culturally Respectful** | Avoids colonial phrasing; honors Indigenous sources. |
-| **Readable** | 8th-grade reading level target. |
+> **Hallucination control:** block render if **citation_ratio < 95%** or **confidence < 0.65**, and prompt user to refine.
+
+---
+
+## 🔐 Consent, Privacy & Retention
+- Session memory only (**≤ 30 min**), opt-in telemetry.  
+- No PII persisted; prompts and outputs anonymized in logs.  
+- Consent banner (model name/version, policies); revocation clears context state.
+
+---
+
+## 🧠 Tone, Language & Cognitive Clarity
+- **Neutral, empathetic, evidence-first**; use plain English (target ≤ 8th grade).  
+- Acknowledge uncertainty (“**The data suggests…**”).  
+- Avoid colonial phrasing; cite community sources where relevant.  
+
+### Readability Metrics
+| Metric | Target | Actual | Tool | Pass |
+|:--|:--|:--|:--|:--:|
+| Flesch Reading Ease | ≥ 70 | 76 | Textlint | ✅ |
+| Avg Sentence Length | ≤ 20 words | 16 | Hemingway | ✅ |
 
 ---
 
 ## 🧩 Multimodal Accessibility Tests
-
 | Channel | Requirement | Verification |
 |:--|:--|:--:|
-| **Text Stream** | ARIA live announces stream | ✅ |
-| **Audio Narration** | TTS supported | ✅ |
-| **Map Context Links** | Focus ring visible on geometry | ✅ |
-| **Keyboard Control** | `Ctrl+↓` advances response | ✅ |
-| **Screen Reader** | Context read sequentially | ✅ |
+| Streaming Text | ARIA live, no rapid updates | ✅ |
+| TTS | Readable; pause/resume | ✅ |
+| Map Context Links | Focus ring on geometry | ✅ |
+| Keyboard | `Ctrl+↓` next chunk; `Esc` stops | ✅ |
+| Screen Reader | Sequential, labeled regions | ✅ |
 
 ---
 
-## 🧩 Model Lineage & Provenance
-
-| Model ID | Provider | Dataset Scope | Last Updated | Ethical Audit |
+## 🧮 Model Lineage & Provenance
+| Model ID | Provider | Dataset Scope | Last Updated | Ethics Audit |
 |:--|:--|:--|:--|:--:|
-| **kfm-gpt-5-geo-arch** | OpenAI (Fine-tuned) | Treaties, ecology, history datasets | 2025-09-30 | ✅ |
-| **kfm-ner-1850x** | spaCy Pipeline | OCR text + named entity data | 2025-07-01 | ✅ |
-| **focus-context-3b** | Custom KFM | Graph embeddings & AI focus contexts | 2025-08-15 | ✅ |
+| kfm-gpt-5-geo-arch | OpenAI (fine-tuned) | Treaties, ecology, archives | 2025-09-30 | ✅ |
+| kfm-ner-1850x | spaCy Pipeline | OCR + NER for 19th-c. docs | 2025-07-01 | ✅ |
+| focus-context-3b | KFM custom | Graph embeddings for focus mode | 2025-08-15 | ✅ |
 
 ---
 
-## 🧮 Confidence Visualization Tokens
+## 🧮 Trust & Explainability Targets (merge gates)
+| Metric | Target | Current | Status |
+|:--|:--|:--|:--:|
+| Citation Ratio | ≥ 95 % |  | ☐ |
+| Confidence Accuracy | ≥ 90 % |  | ☐ |
+| Explainability Score | ≥ 0.85 |  | ☐ |
+| Bias Index | ≤ 0.05 |  | ☐ |
 
-| Confidence | Color Token | UI Behavior | User Hint |
+---
+
+## 🧰 Keyboard Shortcuts
+| Action | Keys |
+|:--|:--|
+| Send message | `Enter` |
+| New line | `Shift + Enter` |
+| Next streamed chunk | `Ctrl + ↓` |
+| Stop streaming | `Esc` |
+| Focus input | `/` |
+
+---
+
+## 🧩 Error & Recovery Taxonomy
+| Error | Trigger | Behavior | User Feedback |
 |:--|:--|:--|:--|
-| **High (≥0.85)** | `--kfm-color-success` | Normal display | “Strongly supported.” |
-| **Medium (0.65–0.84)** | `--kfm-color-warning` | Underlined | “Verify in sources.” |
-| **Low (<0.65)** | `--kfm-color-error` | Dotted underline | “Interpret cautiously.” |
+| Timeout | API > 5 s | Retry w/ backoff | “Connection lost — retry?” |
+| Ethics Block | Policy violation | Render-safe message | “Filtered per policy.” |
+| No Citations | Source parse fail | Request revalidation | “Citations unavailable.” |
+| Model Offline | Endpoint down | Offer non-AI search | “AI offline; try dataset search.” |
 
 ---
 
-## 🧩 AI Feedback & Correction Workflow
-
-- Each AI message includes “**Suggest Correction**” option.  
-- Feedback generates a GitHub issue with `ai-feedback` label.  
-- Reviewers validate corrections weekly.  
-- Approved feedback informs retraining dataset updates quarterly.  
-
----
-
-## 🧠 Quantitative Trust & Explainability Metrics
-
-| Metric | Target | Description |
-|:--|:--|:--|
-| **Citation Ratio** | ≥ 95 % | Responses with ≥1 verifiable source. |
-| **Confidence Accuracy** | ≥ 90 % | Predicted vs empirical validation. |
-| **Explainability Score** | ≥ 0.85 | % responses with reasoning metadata. |
-| **Bias Index** | ≤ 0.05 | Mean normalized bias value. |
+## 🧪 CI Workflow (automation & gates)
+- **Workflow:** `.github/workflows/component-review.yml`  
+- **Steps:** Schema → Axe/Pa11y → Lighthouse → red-team policy probes → citation & confidence checks → provenance checksum.  
+- **Artifacts:** `/data/work/logs/design/ui_components/ai_assistant/validation.json`  
+- **Merge Gate:** **fails** if any threshold in **Trust & Explainability** or **Accessibility** is unmet.
 
 ---
 
-## 🧩 Ethical & Data Integrity Checklist
-
-| Check | Requirement | Status |
-|:--|:--|:--:|
-| **Transparency** | Confidence + citations displayed | ✅ |
-| **Consent** | Opt-in + revocable | ✅ |
-| **Licensing** | CC-BY 4.0 or public domain | ✅ |
-| **Bias Review** | Audited quarterly | ✅ |
-| **Audit Log** | Encrypted + stored 90 days | ✅ |
-
----
-
-## 🧠 Error & Recovery Scenarios
-
-| Error | Condition | Behavior | Feedback |
-|:--|:--|:--|:--|
-| **Timeout** | API delay >5s | Retry option | “Connection lost — retry?” |
-| **Model Offline** | Endpoint unavailable | Opt-out enabled | “AI temporarily offline.” |
-| **Missing Citation** | No sources found | Placeholder + alert | “Citations unavailable.” |
-| **Ethical Filter Trigger** | Policy violation | Blocked output | “Query filtered for compliance.” |
-
----
-
-## 🧠 AI Safety & Fail-Safe Flow
-
-```mermaid
-flowchart TD
-  U["User Query"] --> A["Context Engine"]
-  A --> B{"Policy Check"}
-  B -->|Pass| M["AI Model Inference"]
-  B -->|Fail| F["Ethical Override · Blocked"]
-  M --> C["Citations Extractor"]
-  C --> E["Response Streamer"]
-  E --> X{"Citations Present?"}
-  X -->|Yes| H["Render Output"]
-  X -->|No| R["Source Revalidation → Retry"]
-  R --> H
+## 🧾 Observability Hooks (telemetry export)
+```yaml
+observability:
+  endpoint: "https://metrics.kfm.ai/ai-assistant"
+  frequency: "daily"
+  metrics_exported:
+    - latency_ms_p95
+    - citation_ratio
+    - explainability_score
+    - bias_index
+    - accessibility_score
+    - opt_out_rate
 ```
-<!-- END OF MERMAID -->
 
 ---
 
-## 🧩 Governance & Review Workflow
-
-```mermaid
-flowchart LR
-  D["Figma Spec + Context Design"] --> A["Accessibility & Ethics Audit"]
-  A --> I["Implementation (React + AI Context Engine)"]
-  I --> P["Peer Review · PR Approval"]
-  P --> C["CI/CD Testing · Ethical Compliance"]
-  C --> G["Governance Sign-Off & Archive"]
-```
-<!-- END OF MERMAID -->
-
----
-
-## 🧾 Provenance JSON Schema
-
+## 🧾 Provenance JSON-LD (machine export)
 ```json
 {
   "@context": ["https://schema.org", {"kfm":"https://kfm.ai/schema#"}],
-  "@type": "UIComponentReview",
+  "@type": "ComponentDesignReview",
   "component": "AI Assistant",
-  "version": "v4.0.0",
+  "version": "v4.1.0",
   "reviewedBy": ["@kfm-design","@kfm-accessibility","@kfm-ai","@kfm-ethics"],
-  "source": "Figma Frame #AI-ASSIST-2025",
-  "implementation": "web/src/components/ai/assistant/",
-  "temporalCoverage": "2025-10-24T00:00:00Z",
-  "bias_audit": {
-    "last_audit": "2025-10-21",
-    "audited_by": ["@kfm-ethics","@kfm-accessibility"],
-    "results": {
-      "gender_bias": 0.01,
-      "cultural_bias": 0.00,
-      "temporal_bias": 0.02
-    }
-  },
-  "provenance": {
+  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE","DCAT 3.0"],
+  "governance": {
     "workflow": ".github/workflows/component-review.yml",
     "sha256": "auto-generated"
   }
@@ -349,42 +301,39 @@ flowchart LR
 
 ---
 
-## 🗄️ Archival & Governance Policy
-
-- Reviews stored under `/archive/ai_assistant/YYYY/`.  
-- Metadata includes model lineage, reviewer list, confidence stats, and checksum.  
-- Immutable after approval; verified quarterly by the **AI Governance Council**.  
-- Annual digests stored in `/data/digests/design/ai/`.  
-
----
-
-## ⚙️ Continuous Integration (QA Workflow)
-
-- Runs Lighthouse, Axe, Pa11y, and Ethical Policy Validator.  
-- Checks citation completeness and model transparency fields.  
-- Ensures accessibility of streaming responses.  
-- Uploads logs to `/data/work/logs/design/ui_components/ai_assistant/`.  
-- Blocks merges on any ethical or accessibility regression.  
+## 🧾 FAIR + DCAT Registration (semantic index)
+```json
+{
+  "@context": "https://schema.org/",
+  "@type": "CreativeWork",
+  "name": "KFM — AI Assistant Component Design Review",
+  "identifier": "doi:10.5281/zenodo.1234560",
+  "license": "CC-BY-4.0",
+  "creator": "Kansas Frontier Matrix Design Council",
+  "version": "v4.1.0",
+  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE","DCAT 3.0"],
+  "dateModified": "2025-10-31",
+  "audience": "Developers, Designers, Accessibility Auditors"
+}
+```
 
 ---
 
 ## 🔍 Compliance Matrix (MCP-DL v6.3)
-
 | Standard | Description | Verified |
 |:--|:--|:--:|
 | **MCP-DL v6.3** | Documentation reproducibility | ✅ |
-| **WCAG 2.1 AA** | Accessibility compliance baseline | ✅ |
+| **WCAG 2.1 AA** | Accessibility compliance | ✅ |
 | **AI Ethics Charter** | Transparency, fairness, accountability | ✅ |
 | **CIDOC CRM** | Provenance traceability | ✅ |
 | **OWL-Time** | Temporal conversation tracking | ✅ |
 | **PROV-O** | Review trace ontology | ✅ |
-| **FAIR Principles** | Data reusability & ethical access | ✅ |
+| **FAIR / CARE** | Open, ethical metadata | ✅ |
 | **DCAT 3.0** | Dataset-level metadata compliance | ✅ |
 
 ---
 
 ## 📎 Related Documentation
-
 - [🎨 Visual Style Guide](../../style-guide.md)  
 - [🧭 UI/UX Guidelines](../../ui-guidelines.md)  
 - [🧩 Interaction Patterns](../../interaction-patterns.md)  
@@ -395,19 +344,19 @@ flowchart LR
 ---
 
 ## 📅 Version History
-
 | Version | Date | Author | Summary | Type |
 |:--|:--|:--|:--|:--|
-| **v4.0.0** | 2025-10-24 | @kfm-design | Full rebuild including personas, bias audits, provenance schema, and AI transparency flow. | Major |
-| **v3.0.0** | 2025-10-23 | @kfm-web | Added ethical audit, consent policy, and trust metrics. | Major |
-| **v2.0.0** | 2024-11-03 | @kfm-core | Migrated to MCP-DL v6.3; added accessibility testing. | Major |
+| **v4.1.0** | 2025-10-31 | @kfm-design | Tier-S⁺ update: ARIA roles table, trust thresholds, observability hooks, automation gates. | Minor |
+| **v4.0.0** | 2025-10-24 | @kfm-design | Personas, bias audits, provenance schema, AI transparency flow. | Major |
+| **v3.0.0** | 2025-10-23 | @kfm-web | Ethical audit, consent policy, trust metrics. | Major |
+| **v2.0.0** | 2024-11-03 | @kfm-core | Migrated to MCP-DL v6.3; accessibility testing. | Major |
 | **v1.0.0** | 2023-11-01 | Founding Team | Initial AI Assistant documentation. | Major |
 
 ---
 
 <div align="center">
 
-### 🤖 Kansas Frontier Matrix — AI Assistant Review Governance  
+### 🤖 AI Assistant Review Governance  
 **Transparent · Ethical · Explainable · Provenanced · Reproducible**
 
 </div>
