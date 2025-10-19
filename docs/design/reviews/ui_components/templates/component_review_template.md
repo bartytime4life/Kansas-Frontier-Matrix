@@ -1,15 +1,16 @@
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — **Component Review Template**  
+# 🧾 Kansas Frontier Matrix — **Component Review Master Template (Tier-S Certified)**  
 `docs/design/reviews/ui_components/templates/component_review_template.md`
 
-**Mission:** Standardize how **UI component design reviews** are created, documented, and validated within the **Kansas Frontier Matrix (KFM)**.  
-This template enforces **MCP-DL v6.3**, **FAIR**, **CARE**, and **WCAG 2.1 AA** compliance, capturing **design provenance**, **accessibility metrics**, **AI governance**, and **CI validation data** for every interface component.
+**Mission:** Define the **master template** for all UI component design reviews within the **Kansas Frontier Matrix (KFM)**.  
+This document establishes the **governance, accessibility, AI ethics, and reproducibility baseline** for every interface component.  
+It complies with **MCP-DL v6.3**, **FAIR + CARE Principles**, **WCAG 2.1 AA**, and **DCAT 3.0**, supporting full automation, provenance, and archival certification.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../standards/documentation.md)
 [![Design Governance](https://img.shields.io/badge/Governance-Audited-green)](../../../../../docs/design/README.md)
 [![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../../accessibility/)
-[![FAIR](https://img.shields.io/badge/FAIR-Interoperable-lightblue)](../../../../../standards/fair.md)
+[![FAIR + CARE](https://img.shields.io/badge/FAIR%20%7C%20CARE-Interoperable%20%26%20Ethical-lightblue)](../../../../../standards/fair.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../../../../LICENSE)
 
 </div>
@@ -31,7 +32,12 @@ reviewed_by: ["@kfm-web","@kfm-data","@kfm-ethics"]
 status: "In Review"
 maturity: "Pre-Release"
 license: "CC-BY-4.0"
-tags: ["ui","component","review","accessibility","mcp","tokens","design-system","ai","fair"]
+tags: ["ui","component","review","accessibility","mcp","tokens","design-system","ai","fair","care","provenance"]
+classification:
+  component_type: "UI"
+  integration_level: "Frontend / Map / AI"
+  risk_level: "Low"
+  audit_frequency: "Quarterly"
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA
@@ -57,6 +63,10 @@ governance:
   accessibility_review: "Pending"
   ethics_review: "Pending"
   governance_signoff: "Pending"
+hierarchy:
+  parent_review: "docs/design/reviews/ui_components/README.md"
+  child_reviews: []
+  related_reviews: []
 preservation_policy:
   replication_targets: ["GitHub Repository","Zenodo Snapshot"]
   checksum_algorithm: "SHA-256"
@@ -70,12 +80,12 @@ preservation_policy:
 
 | Field | Description |
 |:--|:--|
-| **Component Name** | Name of the UI element (e.g., Navigation Bar, Legend, AI Assistant). |
-| **Purpose** | Short, plain-language summary of the component’s mission. |
-| **Owner** | Responsible person/team for maintenance. |
-| **Dependencies** | Core technologies and linked data systems. |
-| **Design Reference** | Figma URL or frame ID. |
-| **Implementation Path** | Source code directory in repo. |
+| **Component Name** | UI element under review (e.g., Navigation Bar, Timeline, AI Assistant). |
+| **Purpose** | Clear, non-technical summary of function and context. |
+| **Owner** | Responsible maintainer. |
+| **Dependencies** | Libraries / data / pipelines required. |
+| **Design Reference** | Figma URL or Frame ID. |
+| **Implementation Path** | Repo path to source code. |
 
 ---
 
@@ -83,61 +93,62 @@ preservation_policy:
 
 | Standard | Implementation Area | Verified |
 |:--|:--|:--:|
-| **MCP-DL v6.3** | YAML metadata and governance structure | ✅ |
-| **WCAG 2.1 AA** | Accessibility audit section and scores | ✅ |
-| **FAIR Principles** | JSON-LD schema for metadata reuse | ✅ |
-| **CARE Principles** | Ethical data & Indigenous sovereignty compliance | ✅ |
-| **CIDOC CRM** | Provenance ontology structure for entities | ✅ |
-| **PROV-O** | Traceability chain linking audit → approval | ✅ |
-| **DCAT 3.0** | Dataset linkage metadata fields | ✅ |
+| **MCP-DL v6.3** | YAML metadata + provenance structure | ✅ |
+| **WCAG 2.1 AA** | Accessibility audit fields + metrics | ✅ |
+| **FAIR Principles** | JSON-LD schema + open metadata | ✅ |
+| **CARE Principles** | Cultural data fields + ethical review | ✅ |
+| **CIDOC CRM** | Provenance ontology alignment | ✅ |
+| **PROV-O** | Traceable governance records | ✅ |
+| **DCAT 3.0** | Dataset linkage + distribution metadata | ✅ |
 
 ---
 
 ## 🧠 Purpose & Context
 
-Describe the purpose of the component in relation to **time**, **space**, and **narrative**.  
-Include context on:
-- Its role in the **map/timeline ecosystem**  
-- Which datasets or stories it supports  
-- Accessibility and AI integration details  
+Describe how this component supports **time**, **space**, and **story** within KFM.  
+Reference linked datasets, ethical scope, and accessibility rationale.
 
 ---
 
-## 🧩 Design Provenance
+## 🧩 Design Provenance Matrix
 
-| Design Source | Implementation Source | Verified | SHA-256 Checksum |
+| Design Source | Implementation File | Verified | SHA-256 |
 |:--|:--|:--:|:--|
-| Figma Frame | React Component | ☐ | `sha256:...` |
-| Screenshot / Prototype | Web Preview | ☐ | `sha256:...` |
-| Token Reference | CSS Variables | ☐ | `sha256:...` |
-
-✅ **Goal:** Ensure design and implementation are visually and semantically identical.
+| Figma Frame | `DetailPanel.tsx` | ☐ | `sha256:...` |
+| Screenshot / Prototype | `/assets/reviews/ui/<component>.png` | ☐ | `sha256:...` |
+| Token Reference | `/web/src/styles/tokens.css` | ☐ | `sha256:...` |
 
 ---
 
 ## 🧮 Design Token Drift Tracker
 
-| Token | Expected Value | Actual Value | Drift % | Pass |
+| Token | Expected | Actual | Drift % | Pass |
 |:--|:--|:--|:--|:--:|
-| `--kfm-color-accent` | #c77d02 | #c77d02 | 0% | ✅ |
-| `--kfm-spacing-md` | 16px | 15.8px | 1.25% | ✅ |
-| `--kfm-font-size-body` | 1rem | 1rem | 0% | ✅ |
-
-✅ **Purpose:** Detects and logs drift between design tokens and production implementation.
+| `--kfm-color-accent` | #c77d02 | #c77d02 | 0 % | ✅ |
+| `--kfm-font-size-body` | 1rem | 1rem | 0 % | ✅ |
 
 ---
 
-## ♿ Accessibility Validation Summary
+## ♿ Accessibility Targets
 
 | Metric | Target | Measured | Tool | Status |
 |:--|:--|:--|:--|:--:|
-| **Axe Violations (Critical)** | 0 | 0 | Axe-core | ✅ |
-| **Lighthouse Accessibility Score** | ≥95 | 98 | Lighthouse | ✅ |
-| **Contrast Ratio** | ≥4.5:1 | 4.8:1 | Pa11y | ✅ |
-| **Keyboard Reachability** | 100 % | 100 % | Playwright | ✅ |
-| **Screen Reader Coverage** | 100 % | 100 % | NVDA / VoiceOver | ✅ |
+| Axe Violations (Critical) | 0 | 0 | Axe-core | ✅ |
+| Lighthouse Score | ≥95 | 97 | Lighthouse | ✅ |
+| Contrast Ratio | ≥4.5 : 1 | 4.8 : 1 | Pa11y | ✅ |
+| Keyboard Reachability | 100 % | 100 % | Playwright | ✅ |
+| Screen Reader Coverage | 100 % | 100 % | NVDA | ✅ |
 
-✅ Attach reports from automated test suites.
+---
+
+## 🧭 UX Acceptance Criteria
+
+| Scenario | Expected Behavior | Verified | Evidence |
+|:--|:--|:--:|:--|
+| Keyboard Navigation | Tab order logical + cyclic | ✅ | `a11y_report.log` |
+| Screen Reader Output | ARIA labels read names/roles | ✅ | NVDA Transcript |
+| Error Recovery | Retry available on failure | ✅ | Screen record |
+| Responsiveness | Scales 320–1920 px | ✅ | BrowserStack Report |
 
 ---
 
@@ -145,11 +156,20 @@ Include context on:
 
 | Category | Figma Reference | Implementation Result | Verified |
 |:--|:--|:--|:--:|
-| **Color Tokens** | `--kfm-color-accent` | Matches React | ✅ |
-| **Typography Scale** | H1 2.0rem / Body 1.0rem | Matches | ✅ |
-| **Grid System** | 8px | Consistent | ✅ |
-| **Icons** | Lucide / Heroicons | Accurate | ✅ |
-| **Motion / Transitions** | ≤200ms fade | Matched | ✅ |
+| Color Tokens | `--kfm-color-accent` | Matches React CSS | ✅ |
+| Typography Scale | H1 2.0 rem / Body 1.0 rem | Matches | ✅ |
+| Grid System | 8 px base grid | Consistent | ✅ |
+| Icons / SVGs | Lucide set | Accurate | ✅ |
+
+---
+
+## 🖼️ Visual & Documentation Artifacts
+
+| Artifact | Description | Path / URL | SHA-256 |
+|:--|:--|:--|:--|
+| Figma Screenshot | Design export | `/assets/reviews/ui/<component>/figma.png` | `sha256:...` |
+| A11y Report | Axe / Pa11y output | `/data/reports/ui/<component>_a11y.json` | `sha256:...` |
+| Performance Report | Lighthouse output | `/data/reports/ui/<component>_perf.json` | `sha256:...` |
 
 ---
 
@@ -159,64 +179,56 @@ Include context on:
 stateDiagram-v2
   [*] --> Idle
   Idle --> Focused : Hover / Tab
-  Focused --> Active : Click / Press
+  Focused --> Active : Click / Tap
   Active --> Disabled : Error / Loading
   Disabled --> Idle : Reset / Close
 ```
 <!-- END OF MERMAID -->
 
-✅ Attach or link behavior/state diagrams if available.
+---
+
+## ⚙️ Pre-Commit Hooks & Linting
+
+- `pre-commit-config.yaml` runs:
+  - YAML syntax + key validation  
+  - Markdown heading order (H1 → H3)  
+  - Bans placeholders like “TBD”  
+- `npm run lint:docs` enforces schema + accessibility fields.  
 
 ---
 
 ## 🧠 Cognitive & Ethical Considerations
 
-| Category | Description | Verified |
+| Aspect | Description | Verified |
 |:--|:--|:--:|
-| **Cognitive Load** | Minimal steps to reach content. | ☐ |
-| **Language Clarity** | Plain language used for labels. | ☐ |
-| **Cultural Representation** | Neutral and respectful content. | ☐ |
-| **Reduced Motion Mode** | Supported. | ☐ |
-| **AI Transparency** | Confidence and model version displayed. | ☐ |
+| Cognitive Load | Minimized hierarchy / distraction | ☐ |
+| Language Clarity | Plain English ≤ Grade 9 | ☐ |
+| Cultural Representation | Reviewed by Ethics Council | ☐ |
+| Reduced Motion | CSS respects prefers-reduced-motion | ☐ |
+| AI Transparency | Confidence + model metadata shown | ☐ |
 
 ---
 
 ## ⚙️ CI Validation Flow
 
-- **Workflow File:** `.github/workflows/component-review.yml`
-- **Checks Executed:**
-  - YAML front-matter validation (`title`, `version`, `license`)
-  - Accessibility audits (Axe + Lighthouse)
-  - JSON-LD provenance validation
-  - Performance benchmarking  
-- **CI Outputs:**
-  - `component-validation-report.json`
-  - `.sha256` integrity log  
-- **Merge Policy:** CI must pass before governance sign-off.
+- Runs `.github/workflows/component-review.yml`  
+- Steps: YAML schema → Accessibility tests → Performance → Provenance  
+- Outputs: `component-validation-report.json` + `.sha256`  
+- CI badge attached to PR on success.
 
 ---
 
-## 🧩 AI Context Integration Checklist (if applicable)
+## 🧩 AI Context Integration Metadata
 
-| Requirement | Description | Verified |
-|:--|:--|:--:|
-| **Model Disclosure** | AI model name + version displayed. | ☐ |
-| **Confidence Display** | Probability chip visible. | ☐ |
-| **Opt-Out Control** | User can disable AI summary. | ☐ |
-| **Bias Audit Log** | Logged quarterly. | ☐ |
-
----
-
-## 🧮 Performance Benchmarks
-
-| Metric | Target | Measured | Tool |
-|:--|:--|:--|:--|
-| **Load Time** | <200 ms |  | Lighthouse |
-| **Interaction Latency** | <100 ms |  | DevTools |
-| **Memory Footprint** | <10 MB |  | Chrome Profiler |
-| **Accessibility Score** | ≥95 |  | Lighthouse |
-
-✅ Include performance output summary from CI logs.
+```yaml
+ai_validation:
+  model_name: "kfm-gpt-5-geo-arch"
+  model_version: "2025.10"
+  confidence_average: 0.91
+  last_retrain_date: "2025-09-30"
+  audit_dataset: "kfm-graph-v3.2"
+  bias_audit_score: 0.02
+```
 
 ---
 
@@ -224,34 +236,97 @@ stateDiagram-v2
 
 | Policy | Requirement | Verified |
 |:--|:--|:--:|
-| **PII Handling** | No personal data stored. | ✅ |
-| **HTTPS Enforcement** | All data transfers secure. | ✅ |
-| **Checksum Validation** | SHA-256 integrity test passed. | ✅ |
-| **Session Expiry** | Cached data ≤24 hours. | ✅ |
+| No PII Stored | Session data ephemeral | ✅ |
+| HTTPS Only | All API calls secure | ✅ |
+| Checksum Validation | SHA-256 pass | ✅ |
+| Cache Expiry | ≤ 24 hours | ✅ |
 
 ---
 
-## 🧱 Cross-Component Dependencies
+## 📱 Device & Environment Testing Grid
+
+| Platform | Browser | Resolution | Tested | Notes |
+|:--|:--|:--|:--:|:--|
+| Windows 11 | Chrome / Edge | 1920×1080 | ✅ | Full suite |
+| macOS | Safari / Chrome | 2560×1440 | ✅ | Font & ARIA test |
+| Linux | Firefox | 1920×1080 | ✅ | Keyboard flow |
+| iOS | Safari | 1170×2532 | ✅ | Touch accessibility |
+| Android | Chrome | 1080×2400 | ✅ | Reduced motion mode |
+
+---
+
+## 🧮 Version Drift & Impact Report
+
+| Field | Previous | Current | Change | Impact |
+|:--|:--|:--|:--|:--|
+| Color Palette | v4.2 | v5.0 | Accent tone adjusted | Low |
+| ARIA Roles | `button` | `switch` | Semantic update | Medium |
+| AI Confidence Tag | Hidden | Visible | Transparency added | High |
+
+---
+
+## 🧩 Cross-Component Dependencies
 
 | Dependency | Relation | Impact |
 |:--|:--|:--|
-| `map_controls` | Provides map layer states | Medium |
-| `ai_assistant` | Supplies context data | High |
-| `timeline` | Controls temporal scope | Medium |
-| `accessibility_menu` | Controls global ARIA states | Low |
+| map_controls | Provides layer state | Medium |
+| ai_assistant | Feeds context data | High |
+| timeline | Temporal controller | Medium |
+| accessibility_menu | Global ARIA states | Low |
 
 ---
 
-## 🧾 Provenance Metadata (JSON Example)
+## 🧾 Governance Ledger
+
+| Date | Change | Approved By | SHA-256 |
+|:--|:--|:--|:--|
+| YYYY-MM-DD | Initial submission | @kfm-design | `sha256:...` |
+| YYYY-MM-DD | Accessibility audit | @kfm-accessibility | `sha256:...` |
+| YYYY-MM-DD | Governance approval | @kfm-design-council | `sha256:...` |
+
+---
+
+## 🧠 Reviewer Accountability Matrix
+
+| Domain | Reviewer | Role | Verified |
+|:--|:--|:--|:--:|
+| Accessibility | @kfm-accessibility | QA Lead | ✅ |
+| Design | @kfm-design | Owner | ✅ |
+| Data Provenance | @kfm-data | Auditor | ✅ |
+| Ethics | @kfm-ethics | Cultural Governance | ✅ |
+| Performance | @kfm-web | Engineer | ✅ |
+
+---
+
+## 🗣️ User Feedback Loop
+
+- Feedback via GitHub Discussions (labeled `ui-feedback`).  
+- Triaged weekly; validated issues logged in `/data/governance/issues.json`.  
+- Summarized in quarterly MCP governance report.  
+
+---
+
+## 🧩 End-of-Life Policy
+
+```yaml
+deprecated: false
+superseded_by: ""
+removal_date: ""
+```
+> If deprecated = true, Governance Council approval + archival required.
+
+---
+
+## 🧾 Provenance Metadata (JSON-LD)
 
 ```json
 {
-  "@context": ["https://schema.org", {"kfm": "https://kfm.ai/schema#"}],
+  "@context": ["https://schema.org", {"kfm":"https://kfm.ai/schema#"}],
   "@type": "UIComponentReview",
   "component": "<component_name>",
   "version": "vX.X.X",
   "reviewedBy": ["@kfm-accessibility","@kfm-web"],
-  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR"],
+  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE"],
   "provenance": {
     "workflow": ".github/workflows/component-review.yml",
     "sha256": "auto-generated"
@@ -261,79 +336,25 @@ stateDiagram-v2
 
 ---
 
-## 🧩 Governance Ledger
-
-| Date | Change | Approved By | SHA-256 |
-|:--|:--|:--|:--|
-| YYYY-MM-DD | Initial review created | @kfm-design | `sha256:...` |
-| YYYY-MM-DD | Accessibility audit completed | @kfm-accessibility | `sha256:...` |
-| YYYY-MM-DD | Governance sign-off granted | @kfm-design-council | `sha256:...` |
-
----
-
-## 🧠 Reviewer Accountability Matrix
-
-| Domain | Reviewer | Role | Verified |
-|:--|:--|:--|:--:|
-| Accessibility | @kfm-accessibility | QA Lead | ✅ |
-| Design | @kfm-design | Visual Owner | ✅ |
-| Data Provenance | @kfm-data | Metadata Auditor | ✅ |
-| Ethics | @kfm-ethics | Cultural Governance | ✅ |
-| Performance | @kfm-web | Frontend Engineer | ✅ |
-
----
-
-## 🧩 Governance Sign-Off
-
-| Review Type | Reviewer | Date | Status | Notes |
-|:--|:--|:--|:--:|:--|
-| **Accessibility Review** | @kfm-accessibility |  | ☐ |  |
-| **Design Validation** | @kfm-design |  | ☐ |  |
-| **Ethics Review** | @kfm-ethics |  | ☐ |  |
-| **Provenance Audit** | @kfm-data |  | ☐ |  |
-| **Governance Council** | @kfm-design-council |  | ☐ |  |
-
-✅ All sections must be completed before merging review documentation.
-
----
-
-## 🗄️ Archival & Provenance Summary
-
-- All component reviews stored under `/docs/design/reviews/ui_components/archive/<component_name>/`.  
-- CI auto-generates `.sha256` checksums and stores them in `/data/checksums/ui_components/`.  
-- Immutable post-merge; archived in Zenodo with DOI snapshot.  
-- Linked to provenance registry via `/data/digests/design/`.
-
----
-
-## 🧾 Final Provenance JSON Block
+## 🧾 FAIR + DCAT Metadata Block
 
 ```json
 {
-  "mcp_certification": "Tier-A+++",
-  "component": "<component_name>",
-  "validated_by": "@kfm-governance-bot",
-  "archived_on": "YYYY-MM-DD",
-  "checksum": "sha256:<auto>",
-  "standards_verified": [
-    "MCP-DL v6.3",
-    "WCAG 2.1 AA",
-    "FAIR",
-    "CARE",
-    "PROV-O"
-  ]
+  "@context": "https://schema.org/",
+  "@type": "CreativeWork",
+  "name": "Kansas Frontier Matrix — Component Review",
+  "identifier": "doi:10.5281/zenodo.1234567",
+  "license": "CC-BY-4.0",
+  "keywords": ["UI","accessibility","governance","FAIR","MCP"],
+  "creator": "Kansas Frontier Matrix Design Team",
+  "version": "v5.0.0",
+  "alignment": ["MCP-DL v6.3","WCAG 2.1 AA","FAIR","CARE"],
+  "audience": "Developers, Auditors, Accessibility Reviewers"
 }
 ```
 
 ---
 
-<div align="center">
+## 🧩 Governance Sign-Off
 
-### 🧾 Kansas Frontier Matrix — Component Review Template  
-**Reproducible · Accessible · FAIR · Ethical · Provenanced**
-
-<!-- MCP-CERTIFIED: TIER=A+++ -->
-<!-- VERIFIED-STANDARDS: [MCP-DL v6.3, FAIR, WCAG 2.1 AA, CARE] -->
-<!-- VALIDATION-HASH: sha256:componentreviewtemplatexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
-
-</div>
+| Review Type | Reviewer | Date | 
