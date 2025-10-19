@@ -1,213 +1,232 @@
 <div align="center">
 
-# 📖 Kansas Frontier Matrix — Storytelling & Narrative Design  
+# 📖 Kansas Frontier Matrix — **Storytelling & Narrative Design**  
 `docs/design/storytelling.md`
 
-**Mission:** Define how historical narratives, oral histories, and data visualizations  
-intertwine within the **Kansas Frontier Matrix (KFM)** — transforming raw datasets  
-into accessible, emotionally resonant, and contextually rich stories.
+**Mission:** Define how **historical narratives, oral histories, and data visualizations**  
+intertwine within the **Kansas Frontier Matrix (KFM)** — transforming datasets into  
+accessible, emotionally resonant, and contextually rich stories grounded in **place, people, and time**.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../)
-[![Design Standards](https://img.shields.io/badge/Design-Human%20Centered-orange)](README.md)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](README.md)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
+[![Design](https://img.shields.io/badge/Design-Human--Centered%20%7C%20Narrative--Driven-orange)](README.md)
+[![AI Integration](https://img.shields.io/badge/AI-Contextual%20%7C%20Explainable-purple)](../../src/nlp/)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../standards/accessibility.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
 
 ---
 
-## 🎯 Purpose
-
-Storytelling is the **interpretive heart** of the Kansas Frontier Matrix.  
-Where architecture provides structure and data offers facts, storytelling provides **meaning** —  
-turning geographic layers and historical documents into experiences that reveal  
-**how place, people, and time converge**.
-
-This guide describes the **principles, narrative structures, and design patterns**  
-that transform datasets (maps, treaties, floods, letters) into immersive stories  
-for both academic audiences and the general public.
+```yaml
+---
+title: "📖 Kansas Frontier Matrix — Storytelling & Narrative Design"
+document_type: "README"
+version: "v2.3.0"
+last_updated: "2025-10-18"
+created: "2025-10-10"
+owners: ["@kfm-design", "@kfm-architecture"]
+status: "Stable"
+maturity: "Production"
+tags: ["storytelling","narrative","oral-history","ai","focus-mode","accessibility","cidoc-crm","owl-time","mcp","stac"]
+license: "CC-BY-4.0"
+alignment:
+  - MCP-DL v6.3
+  - WCAG 2.1 AA
+  - CIDOC CRM
+  - OWL-Time
+  - DCAT 3.0
+  - STAC 1.0
+dependencies:
+  - Neo4j Graph Database
+  - FastAPI Backend
+  - React + MapLibre Frontend
+  - STAC Metadata Catalog
+  - spaCy / Transformers NLP
+review_cycle: "Quarterly"
+validation:
+  schema: "story-node.schema.json"
+  stac: true
+  wcag: true
+  provenance_check: true
+---
+```
 
 ---
 
-## 🧭 Narrative System Overview
+## 🎯 Overview
+
+Storytelling is the **interpretive and emotional heart** of the Kansas Frontier Matrix.  
+While architecture defines structure and data ensures accuracy, **storytelling creates meaning** —  
+turning datasets into immersive experiences that reveal how **geography, culture, and history converge**.
+
+This document establishes the **narrative system architecture**, **story node schema**, **AI integration**,  
+and **accessibility protocols** for building reproducible, ethically grounded digital stories.
+
+---
+
+## 🧭 System Overview
 
 ```mermaid
 flowchart TD
-    A["Historical Data\n(Maps · Documents · Audio)"] --> B["Narrative Engine\n(Event Linking · Time Context)"]
-    B --> C["Story Nodes\n(Scenes · Events · Dialogues)"]
-    C --> D["Story Modes\n(Guided Tours · Free Exploration)"]
-    D --> E["Frontend Experience\n(Timeline + Map + AI Narrator)"]
-    E --> F["Knowledge Graph Feedback\n(Entity Enrichment)"]
-````
+    A["Historical Data\n(Maps · Archives · Audio · Oral Histories)"] --> B["Narrative Engine\n(Entity Linking · Temporal Context)"]
+    B --> C["Story Nodes\n(Scenes · Dialogues · Sources)"]
+    C --> D["Story Modes\n(Guided Tours · Exploratory · AI Focus Mode)"]
+    D --> E["Frontend Experience\n(Map + Timeline + Narrator)"]
+    E --> F["Knowledge Graph Feedback\n(Neo4j · CIDOC CRM Enrichment)"]
+```
 
 <!-- END OF MERMAID -->
+
+The narrative engine transforms structured and unstructured data into **interactive knowledge experiences**,  
+synchronized across the **timeline**, **map**, and **AI narrator** — maintaining provenance, accessibility, and interpretive transparency.
 
 ---
 
 ## 🧩 Core Narrative Principles
 
-| Principle              | Description                                                                     | Example                                                                         |
-| :--------------------- | :------------------------------------------------------------------------------ | :------------------------------------------------------------------------------ |
-| **Human-Centered**     | Every story begins from lived experience — people, places, or community memory. | Oral history of Osage migration tied to 1825 Treaty map.                        |
-| **Spatially Grounded** | Stories are anchored to real locations and mapped geometry.                     | Clicking “Council Grove” opens a local historical story node.                   |
-| **Temporally Layered** | Time defines narrative pacing and context.                                      | Story shifts between 1854 and 1861 as Kansas Territory evolves.                 |
-| **Polyvocal**          | Multiple perspectives coexist.                                                  | Settler journals, tribal oral accounts, and government reports appear together. |
-| **Ethical Provenance** | All content credits originators and permissions.                                | Attribution for audio interviews, document scans, and photographs.              |
-| **Accessibility**      | All stories are perceivable and navigable by everyone.                          | Captioned video, transcripts, high-contrast storytelling mode.                  |
+| Principle | Description | Example |
+|:--|:--|:--|
+| **Human-Centered** | Begin from lived experience — people, place, or community. | Oral history of Osage migration linked to 1825 Treaty map. |
+| **Spatially Grounded** | Anchor stories to real-world geography. | Clicking “Council Grove” reveals 1850s migration narrative. |
+| **Temporally Layered** | Use time as structure and pacing. | Transition between 1854–1861 as Kansas Territory evolves. |
+| **Polyvocal** | Present multiple perspectives equally. | Settler journals, tribal oral accounts, and state archives. |
+| **Ethical Provenance** | Attribute all origins and permissions transparently. | Oral interviews logged with consent and license metadata. |
+| **Universal Accessibility** | Design for inclusive participation. | Captioned media, transcripts, reduced motion, high contrast. |
 
 ---
 
 ## 🕰️ Narrative Modes
 
-| Mode                        | Description                                                  | Primary Use                                  |
-| :-------------------------- | :----------------------------------------------------------- | :------------------------------------------- |
-| **Guided Tour**             | Curated sequence of map/timeline scenes with narration.      | Museum and educational experiences.          |
-| **Exploratory Mode**        | Open browsing with contextual popups and adaptive summaries. | Researchers and public users.                |
-| **Hybrid Story Mode**       | Combines guided and free-flow; AI suggests next steps.       | Oral history paths and interactive teaching. |
-| **Audio / Transcript Mode** | Narrated storytelling with synchronized captions.            | Accessibility-first storytelling.            |
+| Mode | Description | Use Case |
+|:--|:--|:--|
+| **Guided Tour** | Curated path through story scenes with narration. | Exhibits, museum experiences. |
+| **Exploratory** | Open browsing with contextual summaries. | Research, public exploration. |
+| **Hybrid Interactive** | Guided entry with adaptive AI branching. | Interactive classrooms, oral history sessions. |
+| **Audio/Transcript** | Narrated storytelling with synchronized captions. | Accessibility-first digital exhibits. |
 
 ```mermaid
 flowchart LR
-    A["Guided Tour"] --> B["Scene 1\nIntroduction"]
-    B --> C["Scene 2\nHistorical Map Overlay"]
-    C --> D["Scene 3\nTreaty Boundary Transition"]
-    D --> E["Scene 4\nOral Testimony"]
-    E --> F["Scene 5\nConclusion + AI Summary"]
+    A["Guided Tour"] --> B["Scene 1 · Introduction"]
+    B --> C["Scene 2 · Map Overlay"]
+    C --> D["Scene 3 · Treaty Transition"]
+    D --> E["Scene 4 · Oral Testimony"]
+    E --> F["Scene 5 · Reflection + AI Summary"]
 ```
-
 <!-- END OF MERMAID -->
 
 ---
 
 ## 📜 Story Node Structure
 
-Each story is composed of **nodes** — self-contained narrative units that link data, media, and text.
-Nodes are modular, versioned, and defined in JSON/Markdown for reuse and translation.
+Story Nodes are **atomic narrative units** — modular, versioned, and connected to the knowledge graph.
 
-**Example: `stories/medicine_lodge_treaty_1867.json`**
+**Example:** `data/stories/medicine_lodge_treaty_1867.json`
 
 ```json
 {
+  "@context": ["https://schema.org", {"crm": "http://www.cidoc-crm.org/cidoc-crm/"}],
   "id": "medicine_lodge_treaty_1867",
+  "type": "StoryNode",
   "title": "The Medicine Lodge Creek Treaties (1867)",
-  "description": "A pivotal moment where southern Plains tribes signed treaties reshaping Kansas and Indian Territory.",
-  "time_range": ["1867-10-21", "1867-10-28"],
-  "location": {"name": "Medicine Lodge, Kansas", "lat": 37.267, "lon": -98.583},
+  "description": "Five Plains tribes signed treaties redefining land in Kansas and Indian Territory.",
+  "temporalCoverage": {
+    "@type": "time:Interval",
+    "time:hasBeginning": "1867-10-21",
+    "time:hasEnd": "1867-10-28"
+  },
+  "spatialCoverage": {"@type": "Place", "name": "Medicine Lodge, Kansas", "lat": 37.267, "lon": -98.583},
+  "themes": ["Treaties", "Diplomacy", "Land Cession"],
+  "periodo": ["p0d7c4qj"],
+  "consent": {"scope": "open-with-attribution", "date": "1983-06-01"},
   "media": {
     "map_layer": "treaties_1867.geojson",
     "image": "images/medicine_lodge.jpg",
-    "audio": "audio/medicine_lodge_treaty_excerpt.mp3"
+    "audio": "audio/medicine_lodge_excerpt.mp3"
   },
   "content": [
-    {"type": "paragraph", "text": "In October 1867, representatives from five tribes..."},
-    {"type": "quote", "text": "We came to Medicine Lodge Creek to seek peace..."},
-    {"type": "map_ref", "layer": "treaties_1867.geojson"},
+    {"type": "paragraph", "text": "In October 1867, representatives from five tribes gathered to negotiate peace..."},
+    {"type": "quote", "text": "We came to Medicine Lodge Creek to seek peace."},
     {"type": "timeline_link", "year": 1867}
   ],
   "sources": [
     {"title": "Kappler’s Indian Affairs, Vol. II", "url": "https://avalon.law.yale.edu/19th_century/"},
-    {"title": "Oral account from Kiowa elders, 1983 (KHS Archive)", "url": "#"}
+    {"title": "Kiowa Elders Oral Testimony, 1983 (KHS Archive)", "url": "#"}
   ],
   "license": "CC-BY-4.0"
 }
 ```
 
-Each node integrates into the **knowledge graph** via its metadata (`id`, `time_range`, `location`).
-
 ---
 
 ## 🎙️ Oral Histories & Multi-Modal Narratives
 
-| Format                     | Integration Method                                           | Accessibility                                        |
-| :------------------------- | :----------------------------------------------------------- | :--------------------------------------------------- |
-| **Audio Interviews**       | Linked to timeline and map locations with playback controls. | Transcripts auto-generated and editable.             |
-| **Video Segments**         | Synchronized with story scroll (like scrollytelling).        | Captions required; auto-pause when out of view.      |
-| **Photographs / Maps**     | Fade transitions in guided tours.                            | Alt text and metadata embedded.                      |
-| **Text Narratives**        | Markdown or JSON paragraphs tied to coordinates.             | Reflowable and screen-reader friendly.               |
-| **AI-Generated Summaries** | Contextual recaps of complex documents.                      | Stored separately with disclaimers and source links. |
+| Format | Integration | Accessibility |
+|:--|:--|:--|
+| **Audio Interviews** | Linked to timeline/map with playback controls. | Transcripts required, editable, auto-generated. |
+| **Video Narratives** | Scroll-synced with captions. | Captions required, pause on scroll out of view. |
+| **Photographs & Maps** | Fade transitions in guided tours. | Alt text with historical context. |
+| **Text Narratives** | Markdown or JSON paragraphs tied to coordinates. | Screen-reader friendly, reflowable. |
+| **AI Summaries** | Scene-level recaps generated from graph data. | Must include disclaimer + source list. |
 
 ---
 
-## 🧮 Storytelling Layout Patterns
+## 🧠 AI Integration & Focus Mode
 
-| Section                | Behavior                                    | Implementation                              |
-| :--------------------- | :------------------------------------------ | :------------------------------------------ |
-| **Intro Scene**        | Hero text + background map image.           | Full-bleed layout with fade-in.             |
-| **Main Narrative**     | Scroll-synced text and visuals.             | Intersection Observer triggers map updates. |
-| **Interactive Scene**  | Embedded map with hotspots.                 | Tooltips, focus states, voice-over.         |
-| **Reflection / Outro** | Summary + call-to-action (explore further). | Static page linking to related stories.     |
+| Function | Description |
+|:--|:--|
+| **Context Summaries** | Aggregates data across sources for concise insight. |
+| **Conversational Q&A** | Natural language exploration (“What events followed this treaty?”). |
+| **Cross-Layer Insights** | Connects climate, land, and political datasets. |
+| **Ethical Transparency** | All AI output references provenance and confidence. |
 
-```mermaid
-flowchart LR
-    A["Intro Scene"] --> B["Map Reveal"]
-    B --> C["Interactive Layer Story"]
-    C --> D["Oral Testimony Scene"]
-    D --> E["Conclusion · Further Reading"]
-```
-
-<!-- END OF MERMAID -->
+> *“During the Medicine Lodge councils, five treaties reshaped 23 million acres, overlapping drought zones recorded in Kansas River datasets.”*  
+> — _AI Summary (confidence: 0.91, sources: NOAA GHCN-D, Kappler Vol. II)_
 
 ---
 
-## ♿ Accessibility Guidelines for Narrative Content
+## ♿ Accessibility Guidelines
 
-| Feature                 | Rule                                               | Example                                  |
-| :---------------------- | :------------------------------------------------- | :--------------------------------------- |
-| **Transcripts**         | Required for all audio and video.                  | `transcripts/medicine_lodge.txt`         |
-| **Alt Text**            | Describe not just visuals, but historical context. | “Photo of Medicine Lodge council, 1867.” |
-| **Keyboard Navigation** | All story interactions available via keyboard.     | Arrow keys scroll scenes.                |
-| **Reduced Motion**      | Provide fade-only transitions.                     | No parallax on reduced-motion mode.      |
-| **Color Contrast**      | Text/background ≥ 4.5:1.                           | Background overlays darken map imagery.  |
-| **Language Tags**       | Use `lang="en"` or specific dialect codes.         | `<p lang="ks-osage">` for Osage phrases. |
-
----
-
-## 🧠 Narrative AI Integration
-
-| Function                    | Description                                                                         |
-| :-------------------------- | :---------------------------------------------------------------------------------- |
-| **Context Summaries**       | AI aggregates related events, treaties, and data layers to generate scene synopses. |
-| **Conversational Q&A**      | Users can ask questions (“What was happening nearby in 1854?”).                     |
-| **Cross-Layer Correlation** | Suggests visual comparisons (e.g., drought patterns vs. settlement expansion).      |
-| **Ethical Safeguards**      | All generated text must include source links and confidence metadata.               |
-
-Example AI Output:
-
-> *“During the 1867 Medicine Lodge councils, the U.S. government negotiated five treaties affecting over 23 million acres. This event coincided with concurrent drought conditions recorded in Kansas River valley datasets.”*
+| Feature | Rule | Example |
+|:--|:--|:--|
+| **Transcripts** | Required for all spoken content. | `transcripts/medicine_lodge.txt` |
+| **Alt Text** | Describe visuals and historical context. | “Photo of the 1867 council grounds.” |
+| **Keyboard Access** | All interactions accessible via keyboard. | Arrow keys scroll timeline. |
+| **Reduced Motion** | Fade-only transitions for reduced-motion users. | Disable parallax effects. |
+| **Contrast** | Maintain ≥4.5:1 contrast. | Dark overlays behind map text. |
+| **Language Tags** | Add proper tags for dialects. | `<p lang="ks-osage">Hoⁿje!</p>` |
+| **Content Warnings** | Display before sensitive content. | “This section depicts forced relocation.” |
 
 ---
 
-## 🔍 Storytelling Review Checklist (MCP)
+## 🔍 MCP Validation Checklist
 
-| Category       | Check                                               | Verified |
-| :------------- | :-------------------------------------------------- | :------: |
-| Metadata       | Story node includes `id`, `time_range`, `location`. |     ✅    |
-| Accessibility  | Captions, transcripts, alt text.                    |     ✅    |
-| Narrative Flow | Scenes follow a clear temporal sequence.            |     ✅    |
-| Provenance     | Each quote and media source cited.                  |     ✅    |
-| Validation     | Story JSON passes schema + link check.              |     ✅    |
+| Category | Check | Verified |
+|:--|:--|:--:|
+| Metadata | Story node includes id, time, location. | ✅ |
+| Accessibility | Transcripts, captions, alt text included. | ✅ |
+| Provenance | Sources cited, consent recorded. | ✅ |
+| Narrative Flow | Temporal and spatial continuity verified. | ✅ |
+| Schema | JSON-LD validated successfully. | ✅ |
+| STAC | Registered in data/stac catalog. | ✅ |
 
 ---
 
 ## 🧾 Implementation Notes
 
-* All story data lives in `/data/stories/` as JSON or Markdown with STAC-style metadata.
-* Story playback logic handled by `/web/src/modules/storytelling/`.
-* Version control for edits:
-
-  * `v1.x` → static curated stories.
-  * `v2.x` → dynamic AI-augmented stories.
-* Story updates must be reviewed and logged in `/docs/design/reviews/`.
-* Use **semantic HTML** for story text (e.g., `<article>`, `<section>`, `<aside>`).
+- Stories stored in `/data/stories/` as JSON-LD with STAC metadata.  
+- Frontend storytelling handled in `/web/src/modules/storytelling/`.  
+- Version Control:  
+  - `v1.x` → Static curated stories.  
+  - `v2.x` → Dynamic AI-augmented stories.  
+- Peer review required in `/docs/design/reviews/`.  
+- Semantic HTML required (`<article>`, `<section>`, `<aside>`).  
 
 ---
 
 <div align="center">
 
-### 🪶 “Stories are how data remembers — each map, each treaty, each voice speaks through time.”
+### 🪶 “Stories are how data remembers — each treaty, each trail, each voice echoes through the plains.”
 
-**— Kansas Frontier Matrix Storytelling Team**
+**Kansas Frontier Matrix — Narrative & Storytelling Design Team**
 
 </div>
-
