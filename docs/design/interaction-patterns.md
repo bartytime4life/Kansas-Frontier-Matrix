@@ -158,7 +158,7 @@ sequenceDiagram
     A-->>U: Insight - 5 treaties active 1850-1870; Kaw and Osage nearby
     %% diagram end
 ```
-<!-- END OF MERMAID -->
+%% END OF MERMAID %%
 
 ### Timeline Interaction Rules
 
