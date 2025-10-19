@@ -154,9 +154,9 @@ sequenceDiagram
     T->>M: Apply filter year <= 1867
     M-->>U: Highlight Medicine Lodge Treaty
     U->>M: Click polygon
-    M->>D: Load summary and entities
+    M->>D: Load summary and linked entities
     D->>X: Request narrative context
-    Note over X,U: Five treaties 1850-1870; Kaw and Osage nearby
+    Note over X,U: Five treaties 1850–1870; Kaw and Osage nearby:
 
 ```
 <!-- END OF MERMAID -->
