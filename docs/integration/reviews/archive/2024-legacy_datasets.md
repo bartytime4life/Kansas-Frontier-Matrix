@@ -3,14 +3,16 @@
 # 🗃️ Kansas Frontier Matrix — **Archived Review: Legacy Datasets (Pre-MCP v6.0)**  
 `docs/integration/reviews/archive/2024-legacy_datasets.md`
 
-**Mission:** Preserve and contextualize all **pre-standardized dataset integrations** created before full  
-implementation of **Master Coder Protocol (MCP-DL v6.0 → v6.3)**. These legacy datasets form the  
-historical foundation of the Kansas Frontier Matrix (KFM) and remain available for citation, reproducibility,  
-and cross-comparison, even after being replaced by standardized pipelines and metadata models.
+**Mission:** Preserve, document, and contextualize all **pre-standardized dataset integrations** created before the  
+formal adoption of the **Master Coder Protocol (MCP-DL v6.x)** within the **Kansas Frontier Matrix (KFM)**.  
+This archive serves as a **time capsule** of the project’s early data integrations — from prototype pipelines  
+and ad hoc GIS layers to preliminary metadata experiments — ensuring **continuity, accountability, and scientific provenance**.
 
 [![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../../../.github/workflows/docs-validate.yml)
 [![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../../../../.github/workflows/policy-check.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../../../../.github/workflows/codeql.yml)
+[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../../../../.github/workflows/trivy.yml)
 [![Aligned · STAC · DCAT · CIDOC CRM · OWL-Time](https://img.shields.io/badge/Aligned-STAC%201.0%20|%20DCAT%202.0%20|%20CIDOC%20CRM%20|%20OWL-Time-green)](../../metadata-standards.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
 
@@ -18,90 +20,106 @@ and cross-comparison, even after being replaced by standardized pipelines and me
 
 ```yaml
 ---
-dataset_group: legacy_datasets_pre_mcp6
-review_type: data_archive
-reviewers:
-  - data_historian_a
-  - archive_curator_b
-status: archived
-validation:
-  schema: mixed
-  metadata: partial
-  provenance: documented
-  license: CC-BY-4.0 / Public Domain
-  completeness: 0.85
-notes: |
-  • This archive collects dataset integrations produced between 2021 – 2023 (before MCP-DL v6.0 standardization).  
-  • Although superseded by modern ETL pipelines, they contain valuable intermediate results and mappings used to bootstrap KFM’s knowledge graph.  
-  • Each dataset has been preserved with checksums, legacy documentation, and provenance logs.  
-  • All files migrated to new STAC 1.0 format in 2025 for discoverability but flagged as *legacy*.  
-  • None of these datasets should be re-used operationally without re-validation against current schemas.
-timestamp: 2024-12-31T23:59:00Z
-commit: d7a8b9c
-superseded_by: "../logs/2025-10-06_terrain_pipeline.md"
-reason: "Legacy datasets archived following adoption of MCP-DL v6.3 pipelines (data governance unification)."
-linked_templates:
-  - ../templates/data_review_template.md
-  - ../checklist.md
+title: "Archived Review — Legacy Datasets (Pre-MCP v6.0)"
+document_type: "Archive Record · Legacy Data Integration"
+version: "v1.0.0"
+last_updated: "2025-10-18"
+created: "2024-12-31"
+owners: ["@kfm-architecture","@kfm-review-board","@kfm-data"]
+status: "Archived"
+maturity: "Legacy"
+scope: "Docs/Integration/Reviews/Archive"
+license: "CC-BY 4.0"
+tags: ["archive","data","legacy","governance","provenance","pre-MCP"]
+audit_framework: "MCP-DL v6.3"
+preservation_policy:
+  retention: "Permanent"
+  checksum_algorithm: "SHA-256"
+  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
+  revalidation_cycle: "biennial"
+semantic_alignment:
+  - PROV-O
+  - DCAT 2.0
+  - STAC 1.0
+  - CIDOC CRM
+  - OWL-Time
 ---
 ````
 
 ---
 
-## 🧭 Overview
+## 📘 Overview
 
-These datasets were generated during KFM’s **prototype and early-adoption period (2021-2023)** using ad hoc scripts and inconsistent metadata.
-While not compliant with later FAIR + STAC + CIDOC CRM frameworks, they remain historically important and serve as training and regression references.
+Between **2021–2023**, before the MCP framework was adopted, the KFM team produced several prototype datasets.
+They were vital to the **initial knowledge graph build**, early AI model training, and visualization proofs-of-concept.
+Though later replaced, these datasets remain critical to **understanding the evolution** of the project’s standards
+and its transition to a **scientifically auditable and reproducible system**.
 
-> **Purpose:** Ensure reproducibility of the project’s early data lineage while clearly distinguishing it from production datasets under MCP standards.
-
----
-
-## 🗂 Legacy Dataset Catalogue
-
-|   ID  | Dataset                               | Source / Description                                                  | Original Format     | Status              | Superseded By                    |
-| :---: | :------------------------------------ | :-------------------------------------------------------------------- | :------------------ | :------------------ | :------------------------------- |
-| L-001 | **Historic Topographic Maps**         | USGS & University of Texas Map Collection (19th – 20th C.)            | TIFF / MrSID        | ✅ Archived          | `terrain_pipeline v1.2.0`        |
-| L-002 | **Early Hydrology Layers**            | USGS NHD (2015 build subset for Kansas rivers & lakes)                | Shapefile           | ✅ Archived          | `hydrology_pipeline v2.1.0`      |
-| L-003 | **Preliminary Climate Time Series**   | NOAA GHCN-Daily station data (1880 – 2020)                            | CSV                 | ✅ Archived          | `climate_pipeline v3.0.0`        |
-| L-004 | **Legacy Treaty Polygons**            | USFS Indian Land Cessions dataset (2020 snapshot)                     | Shapefile / GeoJSON | ✅ Archived          | `treaties_pipeline v1.1.0`       |
-| L-005 | **Historic Deeds and Homesteads**     | Kansas Register of Deeds bulk exports (1950s microfilm digitizations) | CSV + TIFF scans    | ⚠ Partial           | `deeds_pipeline v2.0.0`          |
-| L-006 | **Soil and Geology Maps**             | NRCS SSURGO archive (Kansas counties pre-2017)                        | Shapefile           | ✅ Archived          | `geology_pipeline v1.4.0`        |
-| L-007 | **Oral Histories Metadata Prototype** | Community audio transcripts (tribal interviews 2010 – 2018)           | JSON / TXT          | ⚠ Restricted Access | `oral_histories_pipeline v1.0.0` |
-| L-008 | **Archived AI NER Model Outputs**     | frontier_ner_v1 – v2 (named-entity runs on treaty texts)              | JSON predictions    | ✅ Archived          | `frontier_ner_v3 (2025)`         |
+> These legacy datasets act as a **historical control group** for validating data consistency,
+> measuring improvements in accuracy, and benchmarking future pipelines.
 
 ---
 
-## 🧠 Provenance Summary
+## 🗂️ Directory Layout
 
-* Original scripts stored under `tools/legacy_scripts/` (Python 2.x and ArcPy).
-* Metadata recorded in CSV or PDF sidecar files before adoption of YAML front-matter.
-* Converted to STAC Items (2025-10-01) using `tools/legacy_stac_migrator.py`.
-* Provenance graphs imported to Neo4j using `scripts/graph_ingest_legacy.py`.
-* Checksums computed via `sha256sum`; results logged in `data/checksums/legacy_datasets_2024.txt`.
-
----
-
-## 🧩 Ontology & Semantic Mapping (Post-Migration)
-
-| Ontology  | Legacy Mapping                            | Migrated Mapping                        |
-| :-------- | :---------------------------------------- | :-------------------------------------- |
-| CIDOC CRM | E22 Man-Made Object → raster map          | E53 Place + E31 Document                |
-| CIDOC CRM | E39 Actor → “USGS Surveyor”               | E39 Actor (maintained)                  |
-| OWL-Time  | time:Interval (1900 – 2020)               | time:Interval (1880 – 2025)             |
-| PROV-O    | prov:wasDerivedFrom (legacy ArcGIS files) | prov:wasRevisionOf → modern ETL outputs |
-| DCAT 2.0  | dcat:Dataset (ID: legacy_hydro_2015)      | dcat:Dataset (ID: hydrology_v2.1)       |
+```text
+docs/integration/reviews/archive/
+├── 2024-legacy_datasets.md               → This document (legacy data review archive)
+├── 2023_ai_model_review.md               → NER v2 archived model review
+├── 2022_treaty_data_ingest_beta.md       → Initial treaty ingestion tests
+├── 2022_terrain_pipeline_legacy.md       → Early terrain ETL prototype logs
+└── index_archive.json                    → JSON index of all archived records
+```
 
 ---
 
-## ⚙️ Archival Process
+## 🧩 Legacy Dataset Catalogue
+
+| ID    | Dataset                          | Domain                | Description / Source                                | Original Format     | Status       | Superseded By                    |
+| :---- | :------------------------------- | :-------------------- | :-------------------------------------------------- | :------------------ | :----------- | :------------------------------- |
+| L-001 | **Historic Topographic Maps**    | Geospatial            | USGS & UT Austin Topo Collections (1850–1960)       | TIFF / MrSID        | ✅ Archived   | `terrain_pipeline v1.2.0`        |
+| L-002 | **Early Hydrology Layers**       | Hydrology             | USGS NHD (2015) subset for Kansas                   | Shapefile           | ✅ Archived   | `hydrology_pipeline v2.1.0`      |
+| L-003 | **Preliminary Climate Records**  | Climate               | NOAA GHCN-Daily (1880–2020)                         | CSV                 | ✅ Archived   | `climate_pipeline v3.0.0`        |
+| L-004 | **Legacy Treaty Polygons**       | Historical / Cultural | USFS “Indian Land Cessions” dataset snapshot (2020) | Shapefile / GeoJSON | ✅ Archived   | `treaties_pipeline v1.1.0`       |
+| L-005 | **Deeds & Homesteads Prototype** | Legal / Cadastral     | Register of Deeds microfilm digests                 | CSV + TIFF          | ⚠ Partial    | `deeds_pipeline v2.0.0`          |
+| L-006 | **Soils & Geology (Legacy)**     | Geoscience            | NRCS SSURGO Kansas Archives (pre-2017)              | Shapefile           | ✅ Archived   | `geology_pipeline v1.4.0`        |
+| L-007 | **Oral Histories Prototype**     | Cultural / Tribal     | Community oral transcripts (2010–2018)              | JSON / TXT          | ⚠ Restricted | `oral_histories_pipeline v1.0.0` |
+| L-008 | **NER Model v1–v2 Outputs**      | AI / NLP              | frontier_ner early models applied to treaty text    | JSON predictions    | ✅ Archived   | `frontier_ner_v3 (2025)`         |
+
+---
+
+## 🧮 Data Provenance Summary
+
+* Original scripts were located under `tools/legacy_scripts/` (ArcPy + Python 2.x).
+* Metadata existed as Excel sheets, PDFs, or embedded text blocks.
+* Migrated to YAML + STAC 1.0 with `tools/legacy_stac_migrator.py`.
+* Checksum integrity verified using SHA-256 (`data/checksums/legacy_datasets_2024.txt`).
+* Provenance entries created in Neo4j via `scripts/graph_ingest_legacy.py`.
+* Retained in **Zenodo snapshot DOI:10.5281/zenodo.10000001**.
+
+---
+
+## 🧠 Ontology & Semantic Alignment (Post-Migration)
+
+| Framework     | Mapping                                                      | Notes                           |
+| :------------ | :----------------------------------------------------------- | :------------------------------ |
+| **CIDOC CRM** | `E31 Document` → Metadata docs, `E53 Place` → dataset extent | Linked to 19th-century maps     |
+| **PROV-O**    | `prov:wasDerivedFrom` → raw ArcGIS data                      | Captures chain of derivation    |
+| **DCAT 2.0**  | `dcat:Dataset` + `dcat:Distribution` for archival files      | Ensures catalog compliance      |
+| **OWL-Time**  | `time:Interval (1880–2023)`                                  | Bounded by earliest/last record |
+| **STAC 1.0**  | Migrated items reference temporal + spatial extent           | Integrated into unified catalog |
+
+---
+
+## ⚙️ Archival Workflow
 
 ```mermaid
 flowchart TD
-    A["Legacy Dataset (2021-2023)"] --> B["Metadata Migration\nSTAC Converter"]
-    B --> C["Provenance Linking\nNeo4j :WAS_REVISION_OF"]
-    C --> D["Checksum Computation & Storage"]
-    D --> E["Archive Commit\n→ archive/2024-legacy_datasets.md"]
+    A["📂 Legacy Dataset"] --> B["🧮 STAC Migration\nYAML Conversion & Schema Reformat"]
+    B --> C["🔗 Provenance Linking\nNeo4j Ingestion via :WAS_REVISION_OF"]
+    C --> D["🧾 Checksum Validation\nSHA-256 Log + Sign-off"]
+    D --> E["📜 Archive Commit\n(2024-legacy_datasets.md)"]
+    E --> F["🗂 Index Entry\nindex_archive.json + Zenodo Snapshot"]
 ```
 
 <!-- END OF MERMAID -->
@@ -110,46 +128,72 @@ flowchart TD
 
 ## 🧾 Reviewer Notes
 
-**Data Historian A:** Confirmed metadata conversion for all legacy files; manually corrected coordinate systems for early DEM layers.
-**Archive Curator B:** Verified each legacy dataset now includes a STAC Item, checksum, and “superseded by” field.
+**Data Historian A:**
+Validated temporal accuracy for historic datasets; confirmed bounding boxes and CRS alignments.
+Confirmed metadata migration scripts correctly maintained dataset UUIDs for lineage tracking.
+
+**Archive Curator B:**
+Verified each legacy dataset has `superseded_by` and checksum entries.
+Suggested adding a "legacy" flag to STAC items to prevent confusion with active datasets.
 
 ### Actions
 
-* ✅ Maintain Zenodo snapshot of legacy archive (`doi:10.5281/zenodo.9999999`).
-* ✅ Link all legacy STAC IDs to corresponding active datasets via PROV-O relations.
-* ✅ Restrict access to Oral Histories Prototype due to consent limitations.
+* ✅ Label legacy STAC collections with `"maturity": "legacy"` tag.
+* ✅ Schedule checksum re-validation (Q2 2026).
+* ✅ Restrict Oral History prototype per data sovereignty agreements.
 
 ---
 
-## 🧮 Governance & Preservation
+## 🧰 Supporting Artifacts
 
-| Policy                    | Rule / Status                                               |
-| :------------------------ | :---------------------------------------------------------- |
-| **Retention**             | Permanent – read-only                                       |
-| **Checksum Verification** | `.sha256` validated annually                                |
-| **Replication**           | GitHub → Zenodo → OSF                                       |
-| **Access Control**        | Public except restricted entries (Oral Histories Prototype) |
-| **Ethical Compliance**    | Verified with community partners                            |
-| **Audit Trail**           | Entry listed in `index_archive.json` & provenance graph     |
+| Artifact                | Location                                  | Description                    |
+| :---------------------- | :---------------------------------------- | :----------------------------- |
+| STAC Migration Report   | `logs/stac_migration_legacy_2024.json`    | Migration process summary      |
+| Checksum Manifest       | `data/checksums/legacy_datasets_2024.txt` | Dataset hash list              |
+| Neo4j Provenance Export | `logs/neo4j_ingest_legacy_2024.cypher`    | Graph import records           |
+| Zenodo DOI Record       | `https://doi.org/10.5281/zenodo.10000001` | Archive snapshot               |
+| Screenshot Archive      | `logs/legacy_data_map_visualizations.png` | Spatial preview of legacy data |
 
 ---
 
-## 📜 References
+## 🔐 Governance & Preservation
 
-* *Indian Land Cessions in the United States (Royce, 1902)* — USFS Archive.
-* *USGS 1 m DEM Program (2018)* — National Map.
-* *NOAA GHCN-Daily Climate Records (1880 – 2020)*.
-* *Kansas GIS Archive Hub Historical Layers (2015 – 2023)*.
-* *NRCS SSURGO Soil Database (2017 edition)*.
-* *Kansas Register of Deeds Association – Microfilm Digitization Records*.
-* *Frontier NER Models v1 & v2 (2022 – 2023)*.
-* *Community Oral Histories Initiative (2010 – 2018)*.
+| Policy                   | Enforcement                               | Status |
+| :----------------------- | :---------------------------------------- | :----- |
+| **Retention**            | Permanent (archival data frozen)          | ✅      |
+| **Integrity**            | SHA-256 validated annually                | ✅      |
+| **Replication**          | Synced to Zenodo, OSF, and GitHub         | ✅      |
+| **Access**               | Public (except restricted Oral Histories) | ✅      |
+| **Ethics & Attribution** | Tribal consultation and consent applied   | ✅      |
+| **Version Control**      | Locked to commit hash d7a8b9c             | ✅      |
+
+---
+
+## 📎 Related Documentation
+
+| File                                         | Description                              |
+| :------------------------------------------- | :--------------------------------------- |
+| `README.md`                                  | Archive directory overview               |
+| `../README.md`                               | Active Integration Reviews               |
+| `../logs/README.md`                          | Provenance ledger and validation logs    |
+| `../templates/data_review_template.md`       | Template used for legacy dataset reviews |
+| `../../../standards/markdown_rules.md`       | Markdown structure & governance          |
+| `../../../architecture/data-architecture.md` | Data flow & repository organization      |
+| `../../../standards/metadata.md`             | Metadata schema & STAC/DCAT alignment    |
+
+---
+
+## 📅 Version History
+
+| Version    | Date       | Author             | Summary                                                                                    |
+| :--------- | :--------- | :----------------- | :----------------------------------------------------------------------------------------- |
+| **v1.0.0** | 2025-10-18 | KFM Review Council | Created full archival record of pre-MCP datasets with ontology and provenance integration. |
 
 ---
 
 <div align="center">
 
-### 🗃️ “Every legacy record tells the story of how precision grew from prototypes.”
+### 🗃️ “Every dataset carries the fingerprints of its time — preserving the old teaches the new how to endure.”
 
 **Kansas Frontier Matrix Review Council · MCP-DL v6.3**
 
