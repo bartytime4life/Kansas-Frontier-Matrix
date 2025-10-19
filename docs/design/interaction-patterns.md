@@ -134,13 +134,13 @@ flowchart TD
 
 ## 🕰️ Timeline Interactions
 
-| Action                          | Description                                     | Visual Response                                 |
+| Action | Description | Visual Response |
 |:--|:--|:--|
-| **Scroll / Drag**               | Horizontal time navigation                      | Smooth scroll; eased momentum (off if reduced-motion). |
-| **Zoom (Ctrl+wheel / pinch)**   | Adjust granularity                              | Tick density reflows; era bands update.         |
-| **Click Event Marker**          | Select year/event                               | Marker expands; map filters; AI summary loads.  |
-| **Keyboard**                    | `←/→` year, `Shift+←/→` decade, `Home/End`      | Focus ring + live region announce active year.  |
-| **Hover Tooltip**               | Event title/date                                | Fade-in (200 ms); pinned on keyboard focus.     |
+| **Scroll / Drag** | Horizontal navigation through time. | Smooth scroll with eased momentum (disabled when `prefers-reduced-motion` is set). |
+| **Zoom (Ctrl+wheel / pinch)** | Adjusts the temporal granularity of the timeline. | Tick density and labeled eras recalibrate in real time. |
+| **Click Event Marker** | Selects a specific year or historical event. | Marker expands and highlights; linked map layers and AI summaries update. |
+| **Keyboard** | `←/→` move by year, `Shift+←/→` move by decade, `Home/End` jump to min/max. | Focus ring highlights active marker; `aria-live="polite"` announces year/event. |
+| **Hover Tooltip** | Reveals event name and date on hover/focus. | Tooltip fades in within 200 ms and remains pinned for keyboard users. |
 
 ```mermaid
 sequenceDiagram
@@ -149,20 +149,27 @@ sequenceDiagram
     participant Map
     participant DetailPanel
     participant AI
+
     User->>Timeline: Scrolls to 1867
-    Timeline->>Map: Filter features (year ≤ 1867)
-    Map-->>User: Highlights Medicine Lodge polygon
-    User->>Map: Click polygon
-    Map->>DetailPanel: Load treaty summary + related entities
-    DetailPanel->>AI: Request contextual narrative
-    AI-->>User: “5 treaties 1850–1870; Kaw & Osage nearby”
+    Timeline->>Map: Filters visible layers where year ≤ 1867
+    Map-->>User: Highlights "Medicine Lodge Treaty" polygon
+    User->>Map: Clicks polygon feature
+    Map->>DetailPanel: Loads treaty summary and linked entities
+    DetailPanel->>AI: Requests contextual narrative summary
+    AI-->>User: Returns insight — "Five treaties active 1850–1870; Kaw & Osage nearby."
 ```
 <!-- END OF MERMAID -->
 
-**Timeline Rules**
-- **Snap-to-significant** years (treaties, hazards) with tokenized markers.  
-- **Era bands** (e.g., “Territorial Kansas”, “Dust Bowl”) use AA-compliant fills.  
-- **Latency**: scrub→layer update < **120 ms**; event click→panel < **200 ms**.
+### Timeline Interaction Rules
+
+* **Snap-to-significant markers:** Treaties, ecological events, and historical hazards receive priority ticks.  
+* **Era bands:** Represent broad historical periods (e.g., *Territorial Kansas*, *Dust Bowl*). Colors meet WCAG AA contrast.  
+* **Latency targets:**  
+  - Scroll/zoom → layer update:  < 120 ms  
+  - Event click → panel load:  < 200 ms  
+* **Reduced Motion:** When enabled, disables easing and long transitions; all updates occur instantly.  
+* **Live Regions:** Announce current visible time range and active selection for screen readers.  
+* **Performance Budget:** Timeline render ≤ 16 ms per frame; event focus update ≤ 50 ms.
 
 ---
 
