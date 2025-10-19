@@ -104,7 +104,7 @@ flowchart TD
     D -->|Update · Sync| A
     A -->|Time Context| E["AI Assistant\n(Narrative Context Engine)"]
 ```
-<!-- END OF MERMAID -->
+%% END OF MERMAID %%
 
 **Cycle Summary**  
 1) Timeline scrub/zoom updates **visible layers** → 2) Map click selects a feature → 3) Detail Panel opens →  
