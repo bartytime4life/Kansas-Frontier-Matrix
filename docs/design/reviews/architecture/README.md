@@ -318,6 +318,11 @@ docs_integrity:
 
 ---
 
+Here’s the fully **cleaned, fixed, and GitHub-renderable** version of that whole section — the Mermaid diagram, its closing code fences, and the version history table now formatted properly.
+
+Copy this exactly as-is into your file:
+
+````markdown
 ## 🔄 Lifecycle Diagram
 ```mermaid
 flowchart LR
@@ -325,33 +330,35 @@ flowchart LR
   R --> C["CI Validation (STAC · CodeQL · API Diff)"]
   C --> G["Governance Sign-off"]
   G --> A["Archive + FAIR/DCAT Publish"]
+  A --> D
 ````
 
-
-A --> D
-
-```
+<!-- END OF MERMAID -->
 
 ---
 
 ## 📅 Version History
-| Version | Date | Author | Summary | Type |
-|:--------|:----------|:--------------------|:--------------------------------------------------------------|:--------|
+
+| Version    | Date       | Author            | Summary                                                                                               | Type  |
+| :--------- | :--------- | :---------------- | :---------------------------------------------------------------------------------------------------- | :---- |
 | **v4.0.0** | 2025-11-04 | @kfm-architecture | Tier-S⁺⁺⁺: Added SBOM, access control, SLOs, parity, DR drills, FAIR/CARE mapping, and risk register. | Major |
-| **v3.0.0** | 2025-11-03 | @kfm-architecture | Tier-S⁺⁺: Introduced AI governance, KPIs, threat model, KG provenance, and observability. | Major |
-| **v2.0.0** | 2025-11-02 | @kfm-architecture | Tier-S⁺: Added incident response policy, accessibility validation, and CI telemetry. | Major |
-| **v1.4.0** | 2025-06-20 | @kfm-data | Added provenance chain checklist; tightened STAC gates. | Minor |
-| **v1.0.0** | 2023-10-01 | Founding Team | Initial architecture review index and templates. | Major |
+| **v3.0.0** | 2025-11-03 | @kfm-architecture | Tier-S⁺⁺: Introduced AI governance, KPIs, threat model, KG provenance, and observability.             | Major |
+| **v2.0.0** | 2025-11-02 | @kfm-architecture | Tier-S⁺: Added incident response policy, accessibility validation, and CI telemetry integration.      | Major |
+| **v1.4.0** | 2025-06-20 | @kfm-data         | Added provenance chain checklist; tightened STAC gates.                                               | Minor |
+| **v1.0.0** | 2023-10-01 | Founding Team     | Initial architecture review index and templates.                                                      | Major |
 
 ---
 
 <div align="center">
 
-### 🧱 Kansas Frontier Matrix — Architecture Governance  
+### 🧱 Kansas Frontier Matrix — Architecture Governance
+
 **Modular · Reproducible · Secure · FAIR · Accessible · Observed · Ethical**
 
 <!-- MCP-CERTIFIED: TIER=S⁺⁺⁺ -->
+
 <!-- VERIFIED-STANDARDS: [MCP-DL v6.3, FAIR, CARE, DCAT 3.0, STAC 1.0, CIDOC CRM, OWL-Time] -->
+
 <!-- VALIDATION-HASH: sha256:architecture-reviews-v4-0-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 </div>
