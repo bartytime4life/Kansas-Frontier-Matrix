@@ -127,7 +127,7 @@ sequenceDiagram
     AI->>User: “5 treaties active 1850–1870; Kaw & Osage nearby…”
 ```
 
-<!-- END OF MERMAID -->
+%% END OF MERMAID %%
 
 **Timeline Rules**
 
