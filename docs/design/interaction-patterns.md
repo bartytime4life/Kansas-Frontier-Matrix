@@ -155,7 +155,7 @@ sequenceDiagram
     User->>Map: Click polygon feature
     Map->>Panel: Load summary and linked entities
     Panel->>AI: Request contextual narrative
-    AI-->>User: 5 treaties active 1850-1870; Kaw and Osage nearby.
+    Note over AI,User: Five treaties active 1850 to 1870; Kaw and Osage nearby
 ```
 %% END OF MERMAID %%
 
