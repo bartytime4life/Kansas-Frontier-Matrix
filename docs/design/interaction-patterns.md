@@ -149,14 +149,13 @@ sequenceDiagram
     participant Map
     participant DetailPanel
     participant AI
-
     User->>Timeline: Scrolls to 1867
-    Timeline->>Map: Filters visible layers where year ≤ 1867
-    Map-->>User: Highlights "Medicine Lodge Treaty" polygon
+    Timeline->>Map: Filter visible layers where year ≤ 1867
+    Map-->>User: Highlights Medicine Lodge Treaty polygon
     User->>Map: Clicks polygon feature
     Map->>DetailPanel: Loads treaty summary and linked entities
     DetailPanel->>AI: Requests contextual narrative summary
-    AI-->>User: Returns insight — "Five treaties active 1850–1870; Kaw & Osage nearby."
+    AI-->>User: Returns insight — Five treaties active 1850–1870; Kaw & Osage nearby
 ```
 <!-- END OF MERMAID -->
 
@@ -172,6 +171,7 @@ sequenceDiagram
 * **Performance Budget:** Timeline render ≤ 16 ms per frame; event focus update ≤ 50 ms.
 
 ---
+
 
 ## 🤖 AI Assistant Interactions (Focus Mode Aware)
 
