@@ -136,39 +136,37 @@ flowchart TD
 
 | Action | Description | Visual Response |
 |:--|:--|:--|
-| **Scroll / Drag** | Horizontal navigation through time. | Smooth scroll with eased momentum (disabled when `prefers-reduced-motion` is set). |
-| **Zoom (Ctrl+wheel / pinch)** | Adjusts the temporal granularity of the timeline. | Tick density and labeled eras recalibrate in real time. |
-| **Click Event Marker** | Selects a specific year or historical event. | Marker expands and highlights; linked map layers and AI summaries update. |
-| **Keyboard** | `←/→` move by year, `Shift+←/→` move by decade, `Home/End` jump to min/max. | Focus ring highlights active marker; `aria-live="polite"` announces year/event. |
-| **Hover Tooltip** | Reveals event name and date on hover/focus. | Tooltip fades in within 200 ms and remains pinned for keyboard users. |
+| **Scroll / Drag** | Horizontal navigation through time. | Smooth scroll; momentum disabled when `prefers-reduced-motion` is set. |
+| **Zoom (Ctrl+wheel / pinch)** | Adjusts temporal granularity. | Tick density and era bands recalibrate in real time. |
+| **Click Event Marker** | Selects a specific year or event. | Marker expands; linked map layers and AI summaries update. |
+| **Keyboard** | `←/→` year, `Shift+←/→` decade, `Home/End` min/max. | Focus ring on active marker; `aria-live="polite"` announces year/event. |
+| **Hover Tooltip** | Reveals event title/date on hover/focus. | Tooltip fades in within 200 ms; pinned for keyboard focus. |
 
 ```mermaid
 sequenceDiagram
     participant User
     participant Timeline
     participant Map
-    participant DetailPanel
+    participant Panel as DetailPanel
     participant AI
-    User->>Timeline: Scrolls to 1867
-    Timeline->>Map: Filters visible layers where year ≤ 1867
-    Map-->>User: Highlights Medicine Lodge Treaty polygon
-    User->>Map: Clicks polygon feature
-    Map->>DetailPanel: Loads treaty summary and linked entities
-    DetailPanel->>AI: Requests contextual narrative summary
-    AI-->>User: Returns insight — Five treaties active 1850–1870; Kaw & Osage nearby
-    %% END
+    User->>Timeline: Scroll to 1867
+    Timeline->>Map: Filter layers where year <= 1867
+    Map-->>User: Highlight "Medicine Lodge Treaty"
+    User->>Map: Click polygon feature
+    Map->>Panel: Load summary and linked entities
+    Panel->>AI: Request contextual narrative
+    AI-->>User: 5 treaties active 1850-1870; Kaw and Osage nearby.
+```
 <!-- END OF MERMAID -->
 
 ### Timeline Interaction Rules
 
 * **Snap-to-significant markers:** Treaties, ecological events, and historical hazards receive priority ticks.  
-* **Era bands:** Represent broad historical periods (e.g., *Territorial Kansas*, *Dust Bowl*). Colors meet WCAG AA contrast.  
-* **Latency targets:**  
-  - Scroll/zoom → layer update:  < 120 ms  
-  - Event click → panel load:  < 200 ms  
-* **Reduced Motion:** When enabled, disables easing and long transitions; all updates occur instantly.  
-* **Live Regions:** Announce current visible time range and active selection for screen readers.  
-* **Performance Budget:** Timeline render ≤ 16 ms per frame; event focus update ≤ 50 ms.
+* **Era bands:** Represent periods (e.g., *Territorial Kansas*, *Dust Bowl*) with AA-compliant fills.  
+* **Latency targets:** scroll/zoom → layer update < **120 ms**; event click → panel load < **200 ms**.  
+* **Reduced Motion:** Disables easing and long transitions; updates occur instantly.  
+* **Live Regions:** Announce current visible range and active selection for screen readers.  
+* **Performance Budget:** Timeline render ≤ **16 ms** per frame; event focus update ≤ **50 ms**.
 
 ---
 
