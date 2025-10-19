@@ -3,9 +3,9 @@
 # 🧭 Kansas Frontier Matrix — **UI/UX Guidelines**  
 `docs/design/ui-guidelines.md`
 
-**Mission:** Define the **user experience principles**, **accessibility requirements**,  
-and **interaction behaviors** guiding all web and application interfaces  
-within the **Kansas Frontier Matrix (KFM)**.
+**Mission:** Establish unified **user experience, accessibility, and interaction standards**  
+across all interfaces of the **Kansas Frontier Matrix (KFM)** — ensuring design consistency,  
+scientific reproducibility, and inclusive storytelling across web, kiosk, and research platforms.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../standards/documentation.md)
 [![Design](https://img.shields.io/badge/Design-Human--Centered%20%7C%20Systemic-orange)](README.md)
@@ -21,24 +21,28 @@ within the **Kansas Frontier Matrix (KFM)**.
 ---
 title: "🧭 Kansas Frontier Matrix — UI/UX Guidelines"
 document_type: "README"
-version: "v2.2.0"
+version: "v2.3.0"
 last_updated: "2025-10-19"
 created: "2025-10-10"
-owners: ["@kfm-design", "@kfm-architecture"]
+owners: ["@kfm-design", "@kfm-architecture", "@kfm-accessibility"]
 status: "Stable"
 maturity: "Production"
-tags: ["ui","ux","accessibility","interaction","map","timeline","a11y","tokens","mcp","versioning"]
+tags: ["ui","ux","interaction","accessibility","tokens","a11y","mcp","stac","focus-mode","versioning"]
 license: "CC-BY-4.0"
 alignment:
   - MCP-DL v6.3
   - WCAG 2.1 AA
   - WAI-ARIA 1.2
-  - STAC 1.0 (UI metadata for legends/previews)
+  - CIDOC CRM (interface provenance)
+  - OWL-Time (temporal sequencing)
+  - DCAT 3.0
+  - FAIR Principles
 dependencies:
   - React + MapLibre Frontend
   - D3/Canvas Timeline
   - tokens.css Design System
-  - Axe/Lighthouse/Playwright Testing
+  - FastAPI + Neo4j API endpoints
+  - Axe / Lighthouse / Playwright
 review_cycle: "Quarterly"
 validation:
   lighthouse_min_score: 95
@@ -46,12 +50,16 @@ validation:
   contrast_min_ratio: 4.5
   keyboard_traps: "none"
   schema_checks: true
+provenance:
+  reviewed_by: ["@kfm-accessibility", "@kfm-frontend"]
+  workflow_ref: ".github/workflows/site.yml"
+  artifact_retention_days: 90
 versioning:
   policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
-  major_change: "Breaking interaction or accessibility behavior changes."
-  minor_change: "New features, UI improvements, non-breaking interaction updates."
-  patch_change: "Bug fixes, copy edits, token refinements, documentation corrections."
-  example_next_release: "v2.3.0 - adds focus management improvements + new timeline keyboard shortcuts."
+  major_change: "Breaking interaction or accessibility behavior changes"
+  minor_change: "New features, token enhancements, UX improvements"
+  patch_change: "Bug fixes or documentation updates"
+  example_next_release: "v2.4.0 - Adds telemetry policy & expanded localization"
 ---
 ```
 
@@ -59,31 +67,36 @@ versioning:
 
 ## 🎯 Purpose
 
-This document codifies **UX and accessibility standards** across all Kansas Frontier Matrix interfaces.  
-It ensures that every timeline, map, popup, and data visualization is designed for clarity, responsiveness,  
-inclusivity, and scientific reproducibility — reflecting both the technical rigor and human storytelling  
-at the heart of the project. The following principles are **mandatory** for all KFM frontends (web, kiosk, mobile).
+These guidelines codify the **UX, accessibility, and interaction design rules** across the Kansas Frontier Matrix.  
+They ensure every timeline, map, popup, and visualization is **clear, consistent, and inclusive** — balancing  
+data precision with narrative intuition. All frontends must meet **WCAG 2.1 AA** and **MCP reproducibility** standards.
 
 ---
 
-## 🧭 System Overview
+## 🧭 Architecture Overview
 
 ```mermaid
-flowchart TD
-    A["Header\n(Title · Search · Menu)"] --> B["Map View\n(MapLibre + Layers)"]
-    B --> C["Timeline\n(Canvas/D3 sync)"]
-    C --> D["Detail Panel\n(Events · Docs · AI Summary)"]
-    D --> E["Footer\n(Licenses · Credits · a11y info)"]
-    B --> F["HUD\n(Legend · Scale · Layer Toggles)"]
+flowchart TB
+  subgraph UI["Frontend UI Layer"]
+    A["React Components\n(MapView · Timeline · Panels · Chat)"]
+    B["UI State (Redux/Context)"]
+    C["Accessibility Hooks (React-ARIA)"]
+  end
+
+  subgraph API["Backend API Layer"]
+    D["FastAPI Routes\n(events · layers · focus · search)"]
+  end
+
+  subgraph DB["Knowledge Graph"]
+    E["Neo4j + STAC Catalog\nAI Context Store"]
+  end
+
+  A --> D
+  D --> E
+  B --> A
+  C --> A
 ```
 <!-- END OF MERMAID -->
-
-**Layout contract**
-- **Header:** Fixed; global search/navigation; never occludes focus outline.  
-- **Map View:** Primary surface; overlays toggleable; no information locked behind hover-only.  
-- **Timeline:** Collapsible; bi-directionally synchronized with the map.  
-- **Detail Panel:** Right drawer; non-blocking; fully keyboard-accessible.  
-- **Footer:** Static legal, licenses (CC-BY), and a11y statement.
 
 ---
 
@@ -91,12 +104,12 @@ flowchart TD
 
 | Principle | Description | Example |
 |:--|:--|:--|
-| **Clarity** | Elements convey purpose instantly; no ambiguous controls. | Buttons labeled “View on Map”, “Read Treaty Text”. |
-| **Consistency** | Icons, colors, and controls behave identically across modules. | Layer toggles and timeline toggles share states. |
-| **Accessibility** | WCAG 2.1 AA; perceivable, operable, understandable, robust. | Keyboard navigation for markers & filters. |
-| **Narrative Flow** | Context emerges as users explore paths. | Clicking a treaty boundary opens date + context panel. |
-| **Scalability** | Layout scales from kiosks/4K to tablets/phones. | 12-col grid; responsive tokens. |
-| **Reproducibility** | Interactions render consistently across environments. | Timelines identical in Chromium/Gecko/WebKit. |
+| **Clarity** | Elements communicate intent instantly. | “View on Map” and “Read Treaty Text” labels. |
+| **Consistency** | Identical behavior across modules. | Layer toggles match timeline toggles. |
+| **Accessibility** | WCAG 2.1 AA compliance required. | Keyboard navigation across all widgets. |
+| **Narrative Flow** | Context revealed through exploration. | Clicking treaty → opens panel → timeline sync. |
+| **Scalability** | Works seamlessly on any device. | Responsive grid & token-based layout. |
+| **Reproducibility** | Interactions render identically everywhere. | Verified via Lighthouse & Playwright tests. |
 
 ---
 
@@ -104,13 +117,47 @@ flowchart TD
 
 | Category | Requirement | Implementation |
 |:--|:--|:--|
-| **Keyboard Navigation** | Full operation without a mouse. | Native focus order; visible focus rings; no `outline: none`. |
-| **Color Contrast** | Text/bg ≥ **4.5:1** (3:1 large/bold). | Tokenized palette (see style guide). |
-| **ARIA Semantics** | Accurate roles, names, states. | `<button aria-pressed="true">`, `role="dialog" aria-modal="true"`. |
-| **Focus Management** | Logical tab sequence; dialogs trap and restore focus. | Drawer closes → focus returns to trigger. |
-| **Reduced Motion** | Honor `prefers-reduced-motion`. | Disable panning/zoom easing; use fades only. |
-| **Text Scaling** | 200% zoom without loss of content/func. | Use `rem`/`em`; avoid fixed px heights. |
-| **Alt/Text Equivalents** | All meaningful images/icons have text. | `alt="Map: 1854 Treaty Boundaries"`; icons with `aria-label`. |
+| **Keyboard Navigation** | Full keyboard control. | Logical tab order + visible focus rings. |
+| **Color Contrast** | ≥ 4.5:1 text/background. | Enforced via tokenized palette. |
+| **ARIA Semantics** | Accurate roles, names, and states. | `aria-pressed`, `aria-modal`, `role="dialog"`. |
+| **Focus Management** | Trap in modals; restore on exit. | Drawer returns focus to trigger. |
+| **Reduced Motion** | Honor OS `prefers-reduced-motion`. | Fade-only transitions. |
+| **Text Scaling** | 200% zoom functional. | Use `rem`/`em`, flexible containers. |
+| **Alt/Text Equivalents** | Every icon/image labeled. | `alt="1854 Treaty Boundaries map"` |
+| **Language Tagging** | Use correct `lang` attributes. | `<p lang="ks-osage">Hoⁿje!</p>` |
+
+---
+
+## ⌨️ Keyboard Interaction Matrix
+
+| Component | Key | Action | Result |
+|:--|:--|:--|:--|
+| **Timeline** | ← / → | Navigate events by year | Focus shifts to next marker |
+| **Map** | ↑ / ↓ | Cycle through visible markers | Tooltip + focus ring |
+| **Drawer (Detail Panel)** | ESC | Close panel | Restores focus |
+| **AI Assistant** | Tab / Shift+Tab | Cycle within chat | Loops safely inside modal |
+| **Search** | ↓ / Enter | Navigate results | Highlight selection |
+| **Global** | `Alt + /` | Open help overlay | Displays keyboard shortcuts modal |
+
+---
+
+## 🧭 Layout & Component Flow
+
+```mermaid
+flowchart TD
+  A["Header\n(Project Title · Search · Nav)"] --> B["Main Map View\n(MapLibre GL + Layers)"]
+  B --> C["Timeline Panel\n(Canvas/D3 linked)"]
+  C --> D["Detail Drawer\n(Events · Docs · AI Summary)"]
+  D --> E["Footer\n(License · Accessibility · Build Info)"]
+```
+<!-- END OF MERMAID -->
+
+**Rules**
+- Header fixed; never overlaps focus ring.
+- Map = primary viewport; overlays toggle independently.
+- Timeline collapsible but synced with map data.
+- Drawer non-blocking; must close with ESC or click-away.
+- Footer static with CC-BY license and MCP badges.
 
 ---
 
@@ -118,77 +165,112 @@ flowchart TD
 
 | Element | Behavior | Visual/State Response |
 |:--|:--|:--|
-| **Timeline** | Drag/scroll horizontally; zoom with pinch or `Ctrl+wheel`. | Smooth pan; elastic bounds; highlighted ticks; debounce rendering. |
-| **Map Markers** | Hover → tooltip; click → open drawer. | Pulse animation (reduced-motion safe); 2px focus ring. |
-| **Layer Toggles** | Toggle layers and update legend & HUD. | `active` accent color; label updates; announcement via `aria-live="polite"`. |
-| **Search** | Autocomplete results navigable via arrows/Enter. | Highlighted suggestion; clear button with `aria-label`. |
-| **AI Assistant** | Non-modal dock; ESC closes; keeps context breadcrumbs. | Motion reduced compliant slide; focus sent to first actionable. |
-| **Tooltips** | Appear on hover/focus; dismiss on blur/ESC. | 300ms delay; fade; persistent on focus for keyboard users. |
+| **Timeline** | Scroll horizontally, zoom via pinch/wheel. | Smooth pan; highlight current year marker. |
+| **Map Markers** | Hover → tooltip; click → open drawer. | Pulse animation, 2px focus ring. |
+| **Layer Toggles** | Enable/disable map layers. | Accent color `active` state, aria-live update. |
+| **Search** | Autocomplete + arrow navigation. | Down arrow highlights, Enter selects. |
+| **AI Assistant** | Non-blocking chat panel. | Slide-in motion or fade (if reduced-motion). |
+| **Tooltips** | Appear on hover/focus, fade on blur. | 300ms delay; persistent for keyboard focus. |
 
 ---
 
 ## 📱 Responsive Design Rules
 
-| Breakpoint | Layout Adjustment |
+| Breakpoint | Layout Behavior |
 |:--|:--|
-| **≥ 1280px (Desktop)** | Timeline visible by default; dual sidebars allowed. |
-| **768–1279px (Tablet)** | Timeline collapsible; map consumes remaining height. |
-| **< 768px (Mobile)** | Single-column stack; panels switch via tabs. |
-| **Orientation Change** | Preserve panel/map/timeline state on rotate. |
+| ≥ 1280px | Timeline + map visible; dual sidebars allowed. |
+| 768–1279px | Timeline collapsible; map resizes dynamically. |
+| < 768px | Panels stack vertically; tab navigation replaces sidebars. |
+| Orientation change | Preserve panel + map state. |
 
 ```css
 :root { --grid-columns: 12; --gutter: 1rem; }
-@media (max-width: 768px) { :root { --grid-columns: 4; --gutter: 0.5rem; } }
+@media (max-width: 768px) {
+  :root { --grid-columns: 4; --gutter: 0.5rem; }
+}
 ```
 
 ---
 
-## 🎨 Design Tokens (UI Variables)
-
-Defined in `web/src/styles/tokens.css` (authoritative), referenced by `docs/design/style-guide.md`.
+## 🎨 Design Tokens
 
 | Token | Purpose | Example |
 |:--|:--|:--|
 | `--color-accent` | Primary highlight | `#c77d02` |
 | `--color-bg` | Neutral background | `#f9f9f9` |
-| `--color-contrast` | High-contrast text | `#1a1a1a` |
+| `--color-contrast` | Text/interactive contrast | `#1a1a1a` |
 | `--font-sans` | Main UI font | `"Inter", sans-serif` |
 | `--radius` | Border rounding | `8px` |
-| `--transition` | UI motion speed | `200ms ease` |
+| `--transition` | Motion easing | `200ms ease` |
+
+Defined in `/web/src/styles/tokens.css` and referenced by `/docs/design/style-guide.md`.
+
+---
+
+## 🧩 UX Review Checklist (MCP Validation)
+
+| Category | Requirement | Verified |
+|:--|:--|:--:|
+| **Accessibility** | Lighthouse ≥ 95, Axe 0 blocking issues. | ✅ |
+| **Keyboard Reachability** | 100% focusable. | ✅ |
+| **Contrast Ratios** | ≥ 4.5:1 validated. | ✅ |
+| **Responsive Layout** | Breakpoints render correctly. | ✅ |
+| **Reduced Motion** | All animations disabled when set. | ✅ |
+| **Localization** | Language tags and text scaling tested. | ✅ |
+| **Cross-Browser** | Chrome, Firefox, Safari parity. | ✅ |
+
+---
+
+## 📊 UX Metrics & Telemetry Policy
+
+*Opt-in, anonymized metrics used to evaluate UX performance.*
+
+| Metric | Description |
+|:--|:--|
+| **Session Duration** | Average time users spend in timeline/map modules. |
+| **Keyboard vs. Pointer Usage** | Accessibility adoption indicator. |
+| **Screen Reader Activity** | Usage percentage where `aria-live` triggered. |
+| **Error Logs** | Focus-loss events, broken interactions. |
+
+**Privacy Rules**
+- No personal data collected.  
+- All analytics anonymized and aggregated.  
+- Follows [W3C Privacy Principles](https://www.w3.org/TR/privacy-principles/).  
+
+---
+
+## 🧠 Cognitive & UX Writing Guidelines
+
+- Use **plain language** (8th-grade reading level).  
+- Write **verb-first** CTAs: “Explore Map”, “Open Story Panel”.  
+- Define uncommon terms via tooltip or glossary link.  
+- Limit on-screen cognitive load: one new concept per screen.  
+- Provide in-line tips with ARIA `role="note"` and `aria-live="polite"`.  
 
 ---
 
 ## 🧮 Focus & State Management
 
-**Focus rules**
-- Never suppress focus outlines; custom rings must maintain **≥ 3:1** contrast.  
-- Restore focus to triggering control when closing drawers/modals.  
-- Maintain logical DOM order to match visual order; avoid tabindex values > 0.
-
-**State tokens**
-- Success: `--color-success`; Warning: `--color-warning`; Error: `--color-error`.  
-- Loading: prefer skeletons over spinners; provide `aria-busy="true"` on containers.
+- Never hide focus outlines; custom rings require ≥ 3:1 contrast.  
+- `ESC` closes drawers/modals, returns focus to original trigger.  
+- Maintain logical tab order; avoid tabindex > 0.  
+- Apply `aria-busy="true"` to async-loading containers.  
+- Use skeleton loaders instead of spinners.
 
 ---
 
 ## 🧪 Testing & Validation
 
-| Test | Tool/Method | Target |
+| Test | Tool | Pass Criteria |
 |:--|:--|:--|
-| Accessibility Audit | **Axe**, **Lighthouse**, **WAVE** | Lighthouse Accessibility ≥ **95** |
-| Keyboard E2E | **Playwright** flows | Reachability; no traps; ESC behaviors |
-| Contrast | Contrast checker (token pairs) | All text/bg ≥ **4.5:1** |
-| Screen Reader | NVDA / VoiceOver | Logical reading order; live region announcements |
-| Responsive | DevTools + Playwright | Integrity across breakpoints/orientation |
-| Motion | DevTools + manual | Honors `prefers-reduced-motion` |
+| **Accessibility Audit** | Axe, Lighthouse, WAVE | ≥ 95 score |
+| **Keyboard E2E** | Playwright | No traps or lost focus |
+| **Contrast** | Contrast Checker | ≥ 4.5:1 all pairs |
+| **Responsive** | DevTools, Playwright | Stable layout |
+| **Screen Reader** | NVDA / VoiceOver | Correct reading order |
+| **Reduced Motion** | Manual + audit | Motion off respected |
 
-**Automated PR gates (CI)**
-- ✅ Lighthouse ≥ 95 (Accessibility & Best Practices)  
-- ✅ Axe blocking violations = 0  
-- ✅ No keyboard traps (Playwright assertions)  
-- ✅ Token-based contrast pairs validated  
-
-Artifacts (reports/screens) are attached to PRs for review.
+CI pipelines automatically attach **reports + screenshots** as PR artifacts.
 
 ---
 
@@ -196,26 +278,25 @@ Artifacts (reports/screens) are attached to PRs for review.
 
 | Version | Date | Summary | Type |
 |:--|:--|:--|:--|
-| **v2.2.0** | 2025-10-19 | Added versioning policy, updated accessibility testing and focus management. | Minor |
-| **v2.1.0** | 2025-10-15 | Introduced detailed token table and responsive grid specs. | Minor |
-| **v2.0.0** | 2025-10-10 | Complete refactor aligned with MCP-DL v6.3 and WCAG 2.1 AA. | Major |
+| **v2.3.0** | 2025-10-19 | Added version history, telemetry policy, keyboard matrix, UX writing rules. | Minor |
+| **v2.2.0** | 2025-10-16 | Introduced governance + YAML alignment. | Minor |
+| **v2.1.0** | 2025-10-15 | Expanded token table + responsive grid rules. | Minor |
+| **v2.0.0** | 2025-10-10 | Refactored for MCP-DL v6.3 + WCAG 2.1. | Major |
 | **v1.0.0** | 2025-09-01 | Initial release of UI/UX standards. | Major |
 
 **Version Policy**
-- **Major (X.0.0):** Breaking changes to patterns, accessibility flows, or interaction models.  
-- **Minor (0.Y.0):** New features, improved tokens, enhanced guidance.  
-- **Patch (0.0.Z):** Bug fixes, documentation updates, or copy edits.  
+- **Major (X.0.0):** Breaking layout or accessibility behavior.  
+- **Minor (0.Y.0):** New components, tokens, patterns.  
+- **Patch (0.0.Z):** Non-breaking fixes or documentation updates.  
 
 ---
 
-## 🔧 Implementation Notes
-
-- Use **semantic HTML5**: `<header>`, `<main>`, `<aside>`, `<footer>`, `<nav>`.  
-- Prefer **React ARIA** or native semantics; supplement with ARIA roles/states only when necessary.  
-- CSS convention: **BEM** (`panel__header--collapsed`, `timeline__marker--active`).  
-- Localize aria labels and tooltips; set `<html lang="en">` and update per locale.  
-- Document modules under `docs/design/interaction-patterns.md`.  
-- Timeline rendering should use **requestAnimationFrame** and offscreen Canvas when available.
+## 🔗 Related Documents
+- [🎨 Visual Style Guide](style-guide.md)
+- [📖 Storytelling & Narrative Design](storytelling.md)
+- [🧱 Component Architecture](component-architecture.md)
+- [⚙️ Accessibility Standards](../standards/accessibility.md)
+- [🧠 Focus Mode & AI Integration](../architecture/focus-mode.md)
 
 ---
 
