@@ -156,10 +156,10 @@ sequenceDiagram
     U->>M: Click polygon
     M->>D: Load summary and linked entities
     D->>X: Request narrative context
-    Note over X,U: Five treaties 1850–1870; Kaw and Osage nearby:
+    X-->>U: Returns insight (5 treaties active 1850–1870; Kaw and Osage nearby)
 
 ```
-<!-- END OF MERMAID -->
+%% END OF MERMAID %%
 
 ### Timeline Interaction Rules
 
