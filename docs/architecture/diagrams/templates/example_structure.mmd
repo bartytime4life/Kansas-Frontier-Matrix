@@ -1,34 +1,47 @@
+%%----------------------------------------------------------
+%% Kansas Frontier Matrix — Example Structure Template (Enhanced)
+%% File: docs/architecture/diagrams/templates/example_structure.mmd
+%% Purpose: Display repository hierarchy or component relationships
+%% Author: KFM Documentation Team
+%% Version: 2.0.0
+%% Date: 2025-11-16
+%% License: CC-BY 4.0
+%% Commit: <auto-filled-on-export>
+%%----------------------------------------------------------
+%% Usage Notes:
+%% - Use quotes for labels, \n for new lines.
+%% - Keep node IDs short and consistent.
+%% - End block with <!-- END OF MERMAID --> (required for CI/CD validation).
+%%----------------------------------------------------------
+
 flowchart TD
-  %% Example Structure Template — Kansas Frontier Matrix
-  %% Purpose: show directory or component hierarchy.
-  %% GitHub-safe: use quotes for labels; \n for new lines; end with <!-- END OF MERMAID -->
 
   %% ----- Root Node -----
-  ROOT["Project Root\nKansas-Frontier-Matrix/"]
+  ROOT["🌾 Project Root\nKansas-Frontier-Matrix/"]
 
   %% ----- Primary Directories -----
-  SRC["src/\nPython ETL · AI/ML · Graph"]
-  WEB["web/\nReact · MapLibre · Timeline UI"]
-  DATA["data/\nsources · raw · processed · stac"]
-  DOCS["docs/\narchitecture · SOPs · experiments"]
-  TESTS["tests/\nunit · integration"]
-  TOOLS["tools/\nutility scripts · build/deploy"]
-  GHA[".github/\nworkflows · issue/PR templates"]
+  SRC["📜 src/\nPython ETL · AI/ML · Graph"]
+  WEB["🌐 web/\nReact · MapLibre · Timeline UI"]
+  DATA["🗂️ data/\nsources · raw · processed · stac"]
+  DOCS["📘 docs/\narchitecture · SOPs · experiments"]
+  TESTS["🧪 tests/\nunit · integration"]
+  TOOLS["🧰 tools/\nutility scripts · build/deploy"]
+  GHA["🤖 .github/\nworkflows · issue/PR templates"]
 
   %% ----- data/ Substructure -----
-  subgraph DATA_TREE["data/"]
-    SRCF["sources/\nJSON manifests · metadata"]
-    RAW["raw/\nexternal downloads (DVC/LFS pointers)"]
-    PROC["processed/\nGeoJSON · COG · CSV"]
-    STAC["stac/\nSTAC catalog · items · collections"]
+  subgraph DATA_TREE["📂 data/"]
+    SRCF["📑 sources/\nJSON manifests · metadata"]
+    RAW["📦 raw/\nexternal downloads (DVC/LFS pointers)"]
+    PROC["✅ processed/\nGeoJSON · COG · CSV"]
+    STAC["🧩 stac/\nSTAC catalog · items · collections"]
   end
 
   %% ----- docs/ Substructure -----
-  subgraph DOC_TREE["docs/"]
-    ARCH["architecture/\nMermaid diagrams · READMEs"]
-    SOP["sop.md\nstandard procedures"]
-    EXP["experiment.md\nhypothesis logs"]
-    MODEL["model_card.md\nAI model documentation"]
+  subgraph DOC_TREE["📂 docs/"]
+    ARCH["🏗 architecture/\nMermaid diagrams · READMEs"]
+    SOP["📄 sop.md\nstandard operating procedures"]
+    EXP["🧬 experiment.md\nhypothesis logs"]
+    MODEL["🧠 model_card.md\nAI model documentation"]
   end
 
   %% ----- Connections (hierarchical) -----
@@ -43,17 +56,38 @@ flowchart TD
   DATA --> DATA_TREE
   DOCS --> DOC_TREE
 
-  %% ----- Styling -----
-  classDef root fill:#d9edf7,stroke:#31708f,stroke-width:1px;
-  classDef sub fill:#f9f9f9,stroke:#999,stroke-width:1px;
-  classDef leaf fill:#fff3cd,stroke:#8a6d3b,stroke-width:1px;
+  %% ----- Optional: Highlight Data Provenance Links -----
+  STAC -. "references" .-> PROC
+  PROC -. "derived_from" .-> RAW
+  RAW -. "manifest" .-> SRCF
 
+  %% ----- Styling (Accessible Palette, WCAG 2.1 AA) -----
+  classDef root fill:#d9edf7,stroke:#31708f,stroke-width:1.2px,color:#111;
+  classDef sub fill:#f5f9ff,stroke:#999,stroke-width:1px,color:#111;
+  classDef leaf fill:#fff8e1,stroke:#8a6d3b,stroke-width:1px,color:#111;
+  classDef accent fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px,color:#111;
+  classDef ci fill:#f3e5f5,stroke:#6a1b9a,stroke-width:1px,color:#111;
+
+  %% Apply Classes
   class ROOT root;
   class SRC,WEB,DATA,DOCS,TESTS,TOOLS,GHA sub;
   class DATA_TREE,DOC_TREE,SRCF,RAW,PROC,STAC,ARCH,SOP,EXP,MODEL leaf;
 
-  %% ----- Notes -----
-  %% Use this as a template to illustrate folder hierarchies, code architecture, or dependency trees.
-  %% Replace node labels and connections as needed for component-specific diagrams.
+  %% Example of CI/CD accent:
+  %% class GHA ci;
+  %% Example of Highlight:
+  %% class STAC accent;
+
+  %% ----- Accessibility Guidance -----
+  %% ✅ Keep text concise (≤ 3 lines per node)
+  %% ✅ Ensure icons are optional, not required for meaning
+  %% ✅ Provide alt-text captions when embedding in Markdown
+  %% ✅ Maintain color contrast ≥ 4.5:1 for text and ≥ 3:1 for edges
+
+  %% ----- Tips for Extension -----
+  %% - Add subgraphs for `src/graph/`, `src/api/`, or `web/config/` as needed.
+  %% - Use dashed connectors (e.g., -.->) to show references or optional dependencies.
+  %% - Integrate provenance markers (manifest → checksum → metadata) in domain diagrams.
+  %% - For deep hierarchies, consider vertical flow (TD) to maintain readability.
 
 <!-- END OF MERMAID -->
