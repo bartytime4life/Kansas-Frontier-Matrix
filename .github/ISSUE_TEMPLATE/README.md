@@ -1,20 +1,31 @@
 ---
 title: "🧹 Kansas Frontier Matrix — Issue Templates"
 document_type: "Repository Operations · Issue Forms Index"
-version: "v3.0.0"
+version: "v3.1.0"
 last_updated: "2025-10-20"
-status: "Tier-Ω+∞ Certified · Stable"
+status: "Tier-Ω+∞ Certified · Production"
+maturity: "Production"
 license: ["MIT (code)", "CC-BY 4.0 (docs)"]
 owners: ["@kfm-docs","@kfm-architecture","@kfm-security","@kfm-data","@kfm-web","@kfm-ai"]
 template_version: "MCP-DL v6.3.2"
+alignment:
+  - MCP-DL v6.3.2
+  - STAC 1.0 / DCAT 2.0
+  - WCAG 2.1 AA
+ci_required_checks:
+  - docs-validate
+  - policy-check
+  - gitleaks
+  - actionlint
 ---
 
 <div align="center">
 
-# 🧹 **Kansas Frontier Matrix — Issue Templates**  
+# 🧹 **Kansas Frontier Matrix — Issue Templates (v3.1.0 · Tier-Ω+∞ Certified)**  
 `📁 .github/ISSUE_TEMPLATE/README.md`
 
-**Mission:** Standardize issue triage across **code, data, AI/ML, UX, and governance** — ensuring **traceable**, **reproducible**, **secure**, and **MCP-compliant** communication.
+**Mission:** Standardize issue triage across **code, data, AI/ML, UX, and governance** — ensuring every report is **traceable**, **reproducible**, **secure**, and **MCP-compliant**.  
+All forms are validated via **docs-validate**, **OPA policy gates**, and **security scans**.
 
 [![Docs · MCP-DL v6.3.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-blue)](../../docs/)
 [![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen)](../workflows/docs-validate.yml)
@@ -29,16 +40,21 @@ template_version: "MCP-DL v6.3.2"
 
 <details><summary>📚 <strong>Table of Contents</strong></summary>
 
-- [📘 Overview](#-overview)
+- [📘 Context & Scope](#-context--scope)
 - [🗂️ Directory Layout](#️-directory-layout)
 - [⚡ Create a New Issue (Quick Links)](#-create-a-new-issue-quick-links)
 - [✅ Core Form Fields (by Template)](#-core-form-fields-by-template)
 - [🏷 Auto-Labeling & Routing](#-auto-labeling--routing)
 - [⚙️ Configuration: `config.yml`](#️-configuration-configyml)
-- [🧩 Reusable Snippets (Drop-ins)](#-reusable-snippets-dropins)
+- [🧩 Reusable Snippets (Drop-ins)](#-reusable-snippets-drop-ins)
 - [🔐 Policy-as-Code & Quality Gates](#-policy-as-code--quality-gates)
+- [📦 Artifacts & Evidence Registry](#-artifacts--evidence-registry)
+- [📊 Governance Telemetry Snapshot](#-governance-telemetry-snapshot)
+- [📜 Linked ADRs & SOPs](#-linked-adrs--sops)
 - [♻️ Maintenance Cadence](#️-maintenance-cadence)
 - [📓 MCP Compliance Matrix](#-mcp-compliance-matrix)
+- [🧾 Change-Control Register](#-change-control-register)
+- [📣 Contributor Quick-Links](#-contributor-quick-links)
 - [🗳 Metadata & Provenance](#-metadata--provenance)
 - [🕓 Version History](#-version-history)
 
@@ -46,14 +62,14 @@ template_version: "MCP-DL v6.3.2"
 
 ---
 
-## 📘 Overview
-KFM uses **GitHub Issue Forms** (YAML) to collect **complete, machine-parseable** reports and requests.  
-Forms enforce **provenance**, **reproducibility**, **SemVer impact**, and **ethics/security** details, and are checked by:
-- **docs-validate** (format, links, metadata)  
-- **OPA/Conftest** (required fields, policy)  
-- **Gitleaks** (no secrets)  
+## 📘 Context & Scope
+This directory contains all **GitHub Issue Forms** used by the **Kansas Frontier Matrix (KFM)** project.  
+Every form must:
+- Capture **SemVer impact**, **provenance**, and **data ethics**.
+- Automatically label and route issues to the correct domain owners.
+- Validate through `docs-validate.yml`, `policy-check.yml`, and `gitleaks.yml`.  
 
-> **Rule of thumb:** If an action can be automated or validated, the form *asks for it*.
+This README is the **canonical manifest** linking templates, config, and automation for reproducible triage.
 
 ---
 
@@ -71,7 +87,6 @@ Forms enforce **provenance**, **reproducibility**, **SemVer impact**, and **ethi
 ├── governance_question.yml      # Policy/SOP/ADR queries
 └── config.yml                   # Global options & contact links
 ```
-> When adding templates: **update `config.yml`**, ensure **labels/milestones exist**, and run `make validate`.
 
 ---
 
@@ -92,36 +107,33 @@ Forms enforce **provenance**, **reproducibility**, **SemVer impact**, and **ethi
 ---
 
 ## ✅ Core Form Fields (by Template)
-
-| Template | Essential Fields (excerpt) |
+| Template | Essential Fields |
 |:--|:--|
-| `bug_report` | repro steps; environment; logs; **Commit SHA**; **CI run link**; **SemVer impact**; screenshots |
-| `feature_request` | user story; acceptance criteria; dependencies; migration risk; **SemVer impact** |
-| `data_request` | source URL; **license**; spatial/temporal bounds; **STAC target**; **data_ethics**; ETL/validation plan |
-| `data_correction` | error summary; evidence; **derived_from** updates; checksum re-gen plan; validation steps |
-| `research_issue` | hypothesis; datasets; methods; success metrics; risks |
-| `accessibility_issue` | barrier; **WCAG** reference; keyboard repro; assistive tech; fix proposal |
-| `security_vuln` | summary (redacted); CVSS; affected versions/hashes; safe repro; mitigation; **coordinated disclosure** |
-| `governance_question` | topic/policy; background; proposed change; affected SOPs/ADRs |
+| `bug_report` | repro steps, env, logs, **Commit SHA**, **CI run link**, **SemVer impact** |
+| `feature_request` | story, acceptance criteria, migration risk, **SemVer impact** |
+| `data_request` | source link, **license**, bounds, **STAC target**, **data_ethics**, ETL plan |
+| `data_correction` | evidence, **derived_from**, checksum plan, validation steps |
+| `research_issue` | hypothesis, dataset, metrics |
+| `accessibility_issue` | barrier, **WCAG**, repro, assistive tech, fix |
+| `security_vuln` | summary (redacted), CVSS, hashes, repro (safe), mitigation |
+| `governance_question` | topic, policy background, SOPs/ADRs affected |
 
 ---
 
 ## 🏷 Auto-Labeling & Routing
-
-**Canonical labels**
-
+**Standard labels**
 | Label | Purpose |
 |:--|:--|
-| `bug` | Code/data/metadata defect |
-| `enhancement` | Feature or flow improvement |
-| `data-request` | Propose new external dataset |
-| `documentation` | Docs, SOPs, metadata |
-| `security` | Vulnerabilities & fixes |
-| `accessibility` | WCAG & usability |
-| `semver:patch` / `semver:minor` / `semver:major` | Impact classification |
-| `area:ci` / `area:data` / `area:web` / `area:etl` | Routing to SMEs |
+| `bug` | Code/data defect |
+| `enhancement` | Feature request |
+| `data-request` | New dataset |
+| `documentation` | Docs or SOP edits |
+| `security` | Vulnerability |
+| `accessibility` | A11y issue |
+| `semver:*` | Impact classification |
+| `area:*` | SME domain route |
 
-**Example `.github/labeler.yml`**
+**Labeler snippet**
 ```yaml
 area:data:
   - 'data/**'
@@ -133,21 +145,6 @@ area:ci:
   - '.github/**'
 ```
 
-**Example auto-label workflow**
-```yaml
-name: Auto Label
-on:
-  pull_request_target:
-    types: [opened, synchronize]
-jobs:
-  label:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/labeler@v5
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-```
-
 ---
 
 ## ⚙️ Configuration: `config.yml`
@@ -156,58 +153,50 @@ blank_issues_enabled: false
 contact_links:
   - name: 🤠 KFM Discussions
     url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/discussions
-    about: Ask questions, share ideas, and get help from the community.
-  - name: 🗃️ Propose a New Dataset
+    about: Ask questions, share ideas, or request support.
+  - name: 🗃️ New Dataset Proposal
     url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_request.yml
-    about: Request adding a new open dataset (include license & provenance).
-  - name: 🔐 Report a Security Issue (Private)
+    about: Propose a new dataset for inclusion in KFM.
+  - name: 🔐 Private Security Report
     url: https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/advisories/new
-    about: Create a private advisory to coordinate responsible disclosure.
+    about: Create a private advisory for responsible disclosure.
 ```
 
 ---
 
 ## 🧩 Reusable Snippets (Drop-ins)
-
-**SemVer Impact (all templates)**
+**SemVer Impact**
 ```yaml
 - type: dropdown
   id: semver
-  attributes:
-    label: SemVer Impact
-    options: ["patch", "minor", "major", "unknown"]
+  attributes: { label: SemVer Impact, options: ["patch","minor","major","unknown"] }
   validations: { required: true }
 ```
 
-**Provenance & Repro (bugs/data)**
+**Provenance & Repro**
 ```yaml
 - type: input
   id: commit_sha
-  attributes: { label: Commit SHA (7–40), description: Commit reproducing the issue }
+  attributes: { label: Commit SHA (7–40) }
   validations: { required: true }
-- type: input
-  id: stac_id
-  attributes: { label: STAC Item/Collection ID (if applicable) }
 - type: textarea
   id: repro
   attributes:
     label: Steps to Reproduce
-    description: Include exact commands, inputs, and environment details.
-  validations: { required: true }
+    description: Include exact commands, inputs, and environment.
 ```
 
-**Data Ethics (data_request / data_correction)**
+**Data Ethics**
 ```yaml
 - type: dropdown
   id: data_ethics
   attributes:
     label: Data Ethics Policy
-    description: Ethical handling for sensitive/Indigenous data.
     options: ["open","restricted-derivatives","no-public-artifacts"]
   validations: { required: true }
 ```
 
-**Accessibility (UI issues)**
+**Accessibility**
 ```yaml
 - type: checkboxes
   id: a11y_checks
@@ -219,56 +208,81 @@ contact_links:
       - { label: Contrast inspected (≥4.5:1) }
 ```
 
-**Security (security_vuln)**
-```yaml
-- type: input
-  id: cvss
-  attributes: { label: CVSS (optional) }
-- type: textarea
-  id: safe_repro
-  attributes:
-    label: Safe Repro Steps
-    description: Do not post secrets or active exploit details.
-```
-
 ---
 
 ## 🔐 Policy-as-Code & Quality Gates
-- **docs-validate.yml** — lint, links, metadata, and GFM checks on all templates.  
-- **policy-check.yml** (OPA/Conftest) — blocks missing: SemVer impact, provenance (commit SHA), license/ethics for data.  
-- **gitleaks.yml** — prevents secrets in forms.  
-- **actionlint** — validates workflow changes under `.github/**`.  
-- **Retention** — CI enforces logs/artifacts retention ≥ 90 days for audit.
+- **docs-validate.yml** → Markdown lint, metadata, and GFM schema validation.  
+- **policy-check.yml** → OPA/Conftest rules enforcing SemVer + provenance + ethics fields.  
+- **gitleaks.yml** → Secret scanning for YAML/Markdown changes.  
+- **actionlint** → Ensures valid YAML under `.github/**`.  
+- **Retention** → All validation artifacts/logs retained ≥ 90 days for audit.
+
+---
+
+## 📦 Artifacts & Evidence Registry
+| Artifact | Source | Purpose | Retention |
+|:--|:--|:--|:--|
+| `docs-validate-report.json` | `docs-validate.yml` | Form validation report | 90d |
+| `policy-check.log` | `policy-check.yml` | OPA/Conftest audit results | 90d |
+| `.prov.json` | sbom/slsa workflows | Provenance of template edits | Permanent |
+| `labels-report.json` | optional | Label coverage metrics | 30d |
+
+---
+
+## 📊 Governance Telemetry Snapshot
+> ![Governance Dashboard](https://metrics.kfm.ai/img/issues-dashboard-snapshot.png)  
+> _Live metrics of issue form validation and label routing health._
+
+---
+
+## 📜 Linked ADRs & SOPs
+| Document | Purpose | Status |
+|:--|:--|:--|
+| `docs/adr/ADR-015-issue-template-governance.md` | Defines template structure & required fields | ✅ |
+| `docs/sop/issue-triage.md` | Issue triage & routing workflow | ✅ |
+| `docs/sop/data-request-process.md` | Dataset submission procedure | ✅ |
 
 ---
 
 ## ♻️ Maintenance Cadence
-
 | Cadence | Task |
 |:--|:--|
-| Weekly | Run `docs-validate` & `actionlint` on `.github/**` |
-| Monthly | Sync labeler rules; audit auto-label coverage |
-| Quarterly | Review templates scope & fields vs SOP/ADR updates |
-| Release | Align forms with updated MCP-DL/standards; bump template version |
-
-```bash
-# Utilities (optional)
-make sync-templates
-```
+| Weekly | Run `docs-validate` & `actionlint` |
+| Monthly | Sync labeler rules; verify auto-label coverage |
+| Quarterly | Review template fields vs SOP/ADR updates |
+| Release | Align with new MCP version; bump template revision |
 
 ---
 
 ## 📓 MCP Compliance Matrix
-
-| Principle | Verified via… |
+| Principle | Verified via |
 |:--|:--|
-| Documentation-First | Required form sections; ADR/README links |
-| Reproducibility | Repro steps, env, expected vs. actual |
-| Provenance | Commit SHA, STAC IDs, `derived_from` |
-| Open Standards | YAML Issue Forms, STAC, CSV/JSON |
-| Auditability | Labels, lifecycle, PR cross-linking |
-| Versioning | SemVer impact field on each form |
-| Security | OPA gates, Gitleaks, private advisories |
+| Documentation-First | ADR links + required sections |
+| Reproducibility | Steps, env, expected vs actual |
+| Provenance | Commit SHA + STAC IDs |
+| Open Standards | YAML + STAC + JSON Schema |
+| Auditability | Labels + PR linking |
+| Versioning | SemVer field |
+| Security | Policy gates + secret scan |
+
+---
+
+## 🧾 Change-Control Register
+```yaml
+changes:
+  - date: "2025-10-20"
+    change: "Rebuilt Issue Template index — added context, telemetry, ADR links, evidence registry"
+    reviewed_by: "@kfm-docs"
+    pr: "#416"
+```
+
+---
+
+## 📣 Contributor Quick-Links
+- 🗂 [Open Issues](../../issues)
+- 🧩 [New Issue Templates](../../issues/new/choose)
+- 🚀 [Project Board](../../projects)
+- 📘 [Contributing Guide](../../CONTRIBUTING.md)
 
 ---
 
@@ -276,9 +290,10 @@ make sync-templates
 ```yaml
 metadata:
   file: ".github/ISSUE_TEMPLATE/README.md"
-  version: "v3.0.0"
-  owners: ["@kfm-docs","@kfm-architecture","@kfm-security","@kfm-data","@kfm-web","@kfm-ai"]
-  ci_required_checks: ["docs-validate","policy-check","gitleaks"]
+  version: "v3.1.0"
+  maintainers: ["@kfm-docs","@kfm-architecture","@kfm-security"]
+  maturity: "Production"
+  ci_required_checks: ["docs-validate","policy-check","gitleaks","actionlint"]
   references:
     - "../workflows/docs-validate.yml"
     - "../workflows/policy-check.yml"
@@ -288,22 +303,21 @@ metadata:
 ---
 
 ## 🕓 Version History
-
 | Version | Date | Author | Summary |
 |:--|:--|:--|:--|
-| **v3.0.0** | 2025-10-20 | @kfm-docs | Full rebuild: dropdown ToC, quick links, snippets, policy gates, MCP matrix |
-| v2.6.0 | 2025-10-18 | @kfm-docs | Added data_ethics field; security links |
-| v2.5.0 | 2025-10-16 | @kfm-docs | Reformat; GFM tables; CLI examples |
-| v2.4.0 | 2025-10-16 | @kfm-docs | docs-validate integration; labeler docs |
-| v2.3.0 | 2025-10-13 | @kfm-docs | Acceptance criteria & provenance fields |
-| v2.0.0 | 2025-10-10 | @kfm-docs | Versioned YAML forms; STAC-aware templates |
-| v1.0.0 | 2025-10-04 | Founding Team | Initial Issue Forms index |
+| **v3.1.0** | 2025-10-20 | @kfm-docs | Added context, evidence registry, telemetry, ADR linkage, and change log |
+| v3.0.0 | 2025-10-20 | @kfm-docs | Full rebuild with dropdown ToC and policy gates |
+| v2.6.0 | 2025-10-18 | @kfm-docs | Added `data_ethics` field & security links |
+| v2.5.0 | 2025-10-16 | @kfm-docs | Reformatted to GFM; added CLI helpers |
+| v2.4.0 | 2025-10-16 | @kfm-docs | Added docs-validate integration |
+| v2.0.0 | 2025-10-10 | @kfm-docs | Versioned YAML forms + STAC support |
+| v1.0.0 | 2025-10-04 | Founding Team | Initial issue template README |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — “Clarity in every report. Collaboration in every request.”**
+**Kansas Frontier Matrix — “Clarity in Every Report · Collaboration in Every Request.”**
 
 </div>
 
@@ -311,8 +325,9 @@ metadata:
 MCP-VERSION: v6.3.2
 MCP-TIER: Ω+∞
 DOC-PATH: .github/ISSUE_TEMPLATE/README.md
-DOC-HASH: sha256:issue-templates-readme-v3-0-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DOC-HASH: sha256:issue-templates-readme-v3-1-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 MCP-CERTIFIED: true
+AUTO-DOC: true
 VALIDATION-HASH: {auto.hash}
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: {build.date}
