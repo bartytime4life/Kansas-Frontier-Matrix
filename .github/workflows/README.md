@@ -58,16 +58,34 @@ Every run is **traceable**, every artifact **provenanced**, every change **docum
 
 ---
 
-## 📚 Table of Contents
-- [Overview](#-overview) · [Context & Scope](#-context--scope) · [Environments Matrix](#-environments-matrix) · [Workflow DAG](#-workflow-dag)  
-- [Workflow Directory](#-workflow-directory) · [Workflow Summary](#-workflow-summary)  
-- [Design Patterns](#-design-patterns) · [Secrets & Env](#-secrets--env) · [Selective/Monorepo Runs](#-selective--monorepo-runs)  
-- [Policy-as-Code](#-policy-as-code) · [Observability](#-observability) · [Cost & Concurrency](#-cost--concurrency-guardrails)  
-- [AI Governance](#-ai-governance) · [Data Governance & STAC](#-data-governance--stac)  
-- [Maintenance Cadence](#-maintenance-cadence) · [Threat Model](#-threat-model-mitre-attck-map) · [Risk Register](#-risk-register)  
-- [Disaster Recovery](#-disaster-recovery--drills) · [Versioning & Releases](#-versioning--releases)  
-- [Health Matrix](#-health-matrix) · [Artifacts & Evidence Registry](#-artifacts--evidence-registry) · [Metadata & Provenance](#-metadata--provenance)  
-- [Related Docs](#-related-docs) · [Version History](#-version-history)
+<details><summary>📚 <strong>Table of Contents</strong></summary>
+
+- [📚 Overview](#-overview)
+- [🧭 Context & Scope](#-context--scope)
+- [🧪 Environments Matrix](#-environments-matrix)
+- [🔗 Workflow DAG](#-workflow-dag)
+- [🗂️ Workflow Directory](#-workflow-directory)
+- [🧩 Workflow Summary](#-workflow-summary)
+- [🧱 Design Patterns](#-design-patterns)
+- [🔒 Secrets & Env](#-secrets--env)
+- [🧭 Selective / Monorepo Runs](#-selective--monorepo-runs)
+- [🧑‍⚖️ Policy-as-Code](#-policy-as-code)
+- [📡 Observability](#-observability)
+- [🔧 Cost & Concurrency Guardrails](#-cost--concurrency-guardrails)
+- [🤖 AI Governance](#-ai-governance)
+- [🌊 Data Governance & STAC](#-data-governance--stac)
+- [🗓 Maintenance Cadence](#-maintenance-cadence)
+- [🛡 Threat Model (MITRE ATT&CK Map)](#-threat-model-mitre-attck-map)
+- [🧨 Risk Register](#-risk-register)
+- [🧯 Disaster Recovery & Drills](#-disaster-recovery--drills)
+- [🗓 Versioning & Releases](#-versioning--releases)
+- [🩺 Health Matrix](#-health-matrix)
+- [📦 Artifacts & Evidence Registry](#-artifacts--evidence-registry)
+- [🗳 Metadata & Provenance](#-metadata--provenance)
+- [🔗 Related Docs](#-related-docs)
+- [🕓 Version History](#-version-history)
+
+</details>
 
 ---
 
