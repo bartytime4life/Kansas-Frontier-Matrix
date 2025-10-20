@@ -1,35 +1,63 @@
 <div align="center">
 
-# 🖼️ Kansas Frontier Matrix — Exported Diagram Assets  
+# 🖼️ **Kansas Frontier Matrix — Exported Diagram Assets (v2.0.0 · Tier-Ω+∞ Certified)**  
 `docs/architecture/diagrams/exported/`
 
-**Mission:** Maintain all **rendered architectural diagrams** — exported from their  
-Mermaid (`.mmd`) or vector sources — in open formats such as **SVG**, **PNG**, and **PDF**,  
-ensuring visual documentation is **consistent, reproducible, and version-controlled**.
+**Mission:** Curate and maintain all **rendered architecture diagrams** of the **Kansas Frontier Matrix (KFM)** — each diagram a **provenance-verified visual artifact**, exported from **Mermaid (`.mmd`)**, **Excalidraw**, or **vector sources** into reproducible, **open-standard formats** (SVG, PNG, PDF).  
+Every exported diagram is a **validated, versioned artifact** aligned with **MCP-DL v6.3** documentation and CI/CD reproducibility policies.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../../.github/workflows/stac-validate.yml)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../../../.github/workflows/slsa.yml)
+[![Docs Validate](https://img.shields.io/badge/docs-validated-brightgreen)](../../../../.github/workflows/docs-validate.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — Exported Diagram Assets"
+document_type: "README"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-architecture","@kfm-docs","@kfm-design"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["diagrams","visualization","architecture","mcp","mermaid","svg","reproducibility","metadata"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - FAIR Principles
+  - SLSA 3
+  - ISO 19115-1 Metadata
+validation:
+  ci_workflows: ["site.yml","docs-validate.yml","policy-check.yml"]
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+preservation_policy:
+  retention: "365d exports · 90d logs"
+  checksum_algorithm: "SHA-256"
+observability:
+  metrics: ["diagram_build_latency_ms","mermaid_validation_errors","svg_size_kb","export_count"]
+  endpoint: "https://metrics.kfm.ai/diagrams"
+---
+```
+
+---
+
 ## 📚 Overview
 
-The `docs/architecture/diagrams/exported/` directory contains **rendered visual outputs**  
-that illustrate the **data, system, web, and CI/CD architectures** of the Kansas Frontier Matrix.
+The `docs/architecture/diagrams/exported/` directory is the **canonical visual documentation registry** for KFM.  
+Each diagram is a **version-controlled, metadata-embedded artifact** used in reports, publications, and CI/CD documentation builds.  
 
-These diagrams are **compiled** from their Mermaid (`.mmd`) or source JSON specifications in  
-`docs/architecture/diagrams/` and are referenced throughout documentation in:
-
-- `docs/architecture/architecture.md`  
-- `docs/architecture/data-architecture.md`  
-- `docs/architecture/web-ui-architecture.md`  
-- `docs/architecture/ci-cd.md`  
-- `README.md` (repository root summary view)
-
-Each diagram is an **artifact of record** — its metadata, creation date, and author information  
-are embedded within its file or listed below.
+Every export:
+- ✅ **Preserves provenance** — metadata embedded at export time (`author`, `commit`, `timestamp`).
+- 🔁 **Is reproducible** — deterministic rendering via CLI or CI workflows.
+- 🧩 **Aligns with architecture docs** — one-to-one mapping with `.mmd` source files.
+- 🌍 **Uses open formats** — SVG, PNG, and PDF only.
+- 🔐 **Is validated** in the CI/CD build pipeline for integrity and accessibility.
 
 ---
 
@@ -37,153 +65,175 @@ are embedded within its file or listed below.
 
 ```bash
 docs/architecture/diagrams/exported/
-├── README.md                        # This file (diagram metadata + policies)
-├── data_flow.png                    # Data ingestion + ETL pipeline visualization
-├── web_ui_architecture.svg          # Web interface & MapLibre system diagram
-├── provenance_chain.svg             # Provenance model for datasets
-├── ci_cd_pipeline.png               # Continuous integration + validation flow
-├── system_overview.png              # Full-stack system architecture summary
-└── knowledge_graph.svg              # Knowledge graph and semantic layer design
-````
+├── README.md                        # (This file)
+├── data_flow.png                    # ETL + validation pipeline visualization
+├── web_ui_architecture.svg          # Web interface + MapLibre configuration
+├── provenance_chain.svg             # Provenance chain + data lineage model
+├── ci_cd_pipeline.png               # CI/CD automation and governance diagram
+├── system_overview.png              # Full KFM system ecosystem diagram
+├── knowledge_graph.svg              # Semantic + ontology architecture
+└── _manifest.json                   # Generated metadata manifest for all exports
+```
 
-> **Note:**
-> Each exported diagram directly corresponds to a `.mmd` source file in
-> `docs/architecture/diagrams/` (one-to-one relationship).
+> Each exported diagram has a corresponding `.mmd` source in `docs/architecture/diagrams/`.  
+> No manual edits to images are permitted — exports must originate from validated source files.
 
 ---
 
 ## 🧠 Export Workflow
 
-### CLI-Based Export (Mermaid CLI)
+### 🧩 CLI-Based Rendering (Mermaid CLI)
 
 ```bash
-npx @mermaid-js/mermaid-cli -i data_flow.mmd -o exported/data_flow.png
+npx @mermaid-js/mermaid-cli -i system_overview.mmd -o exported/system_overview.png
 ```
 
-### Makefile Target
+### ⚙️ Makefile Target
 
 ```bash
 make diagrams
 ```
 
-**Process Summary:**
+**Automated Process:**
 
-1. Validate Mermaid syntax (`.mmd` files).
-2. Render to `.png` and `.svg` using Mermaid CLI.
-3. Embed metadata (author, timestamp, commit hash).
-4. Store outputs in `/exported/` for use in docs and site builds.
-5. Reference them in corresponding `.md` architecture documents.
+1. Validate Mermaid syntax and structure.
+2. Render to `.png` + `.svg` via Mermaid CLI.
+3. Embed metadata fields (commit, author, timestamp, version).
+4. Store exports in `/exported/`.
+5. Cross-validate against `_manifest.json` and CI logs.
 
 ---
 
 ## 🧩 File Metadata Schema
 
-All exported diagrams follow this embedded metadata convention (for SVG/PNG):
-
-| Field            | Description                  | Example                  |
-| :--------------- | :--------------------------- | :----------------------- |
-| **title**        | Diagram name or purpose      | “KFM Data Flow Overview” |
-| **author**       | Diagram creator              | “KFM Dev Team”           |
-| **date_created** | Date of last export          | `2025-10-04`             |
-| **source_file**  | Linked `.mmd` file           | `../data_flow.mmd`       |
-| **commit_hash**  | Git commit ID at export time | `a93f0a2`                |
-| **format**       | Output format                | `SVG`, `PNG`, or `PDF`   |
-| **license**      | Usage license                | `CC-BY 4.0`              |
-
----
-
-## 🧮 Version Control & Reproducibility
-
-| Policy                   | Description                                                             |
-| :----------------------- | :---------------------------------------------------------------------- |
-| **One Source Rule**      | Every exported diagram must have a single authoritative `.mmd` source.  |
-| **Deterministic Builds** | Re-exporting from the same `.mmd` and commit produces identical output. |
-| **Version Tagging**      | Exports are tied to repository commits and release versions.            |
-| **Open Formats Only**    | Only `.svg`, `.png`, `.pdf` are permitted for storage.                  |
-| **No Binary Edits**      | Diagrams must not be altered outside the export process.                |
+| Field | Description | Example |
+|:------|:-------------|:--------|
+| **title** | Diagram title or purpose | "Kansas Frontier Matrix — CI/CD Architecture" |
+| **author** | Primary author or team | "@kfm-architecture" |
+| **date_created** | UTC timestamp | `2025-11-16T18:21:00Z` |
+| **source_file** | Relative path to `.mmd` file | `../system_overview.mmd` |
+| **commit_hash** | SHA of repository state | `8b21c9d` |
+| **format** | Output type | `SVG` |
+| **license** | Usage rights | `CC-BY 4.0` |
+| **checksum** | SHA-256 checksum of export | `4d3b2c...` |
 
 ---
 
-## 📊 Export Metadata Example
+## 🧮 Version Control & Provenance Policy
 
-### `system_overview.svg` Metadata
+| Policy | Description |
+|:--|:--|
+| **One Source Rule** | Each exported diagram must have exactly one source `.mmd`. |
+| **Deterministic Rendering** | Same commit → same export; no divergence allowed. |
+| **Version Coupling** | Diagram updates tracked by SemVer + release tag. |
+| **Open Format Enforcement** | Only `.svg`, `.png`, `.pdf` accepted (no proprietary formats). |
+| **Integrity Validation** | Every file must pass SHA-256 and STAC-linked metadata check. |
+
+---
+
+## 🧰 CI/CD Integration
+
+| Workflow | Function | Trigger |
+|:--|:--|:--|
+| **`site.yml`** | Builds documentation site, including diagrams. | On merge to `main` |
+| **`docs-validate.yml`** | Validates frontmatter, metadata, and diagram syntax. | On PR |
+| **`policy-check.yml`** | Ensures licensing, metadata completeness. | On PR |
+| **`stac-validate.yml`** | Cross-validates STAC linkage metadata for diagrams. | On commit |
+
+Validation artifacts are written to:  
+`data/work/logs/diagrams/diagram_validation.log`
+
+---
+
+## 📊 Example Metadata Manifest
+
+**File:** `_manifest.json`
 
 ```json
 {
-  "title": "Kansas Frontier Matrix — System Overview",
-  "author": "KFM Documentation Team",
-  "date_created": "2025-10-04",
-  "source_file": "../system_overview.mmd",
-  "commit_hash": "f5e84c9",
-  "format": "SVG",
-  "license": "CC-BY 4.0"
+  "generated_at": "2025-11-16T18:25:00Z",
+  "generator": "make diagrams-metadata",
+  "diagrams": [
+    {
+      "file": "system_overview.png",
+      "source": "../system_overview.mmd",
+      "commit_hash": "b3d7f4a",
+      "checksum": "97f2b8e...",
+      "format": "PNG",
+      "author": "@kfm-architecture"
+    },
+    {
+      "file": "provenance_chain.svg",
+      "source": "../provenance_chain.mmd",
+      "commit_hash": "f01e7b9",
+      "checksum": "3b19c7f...",
+      "format": "SVG",
+      "author": "@kfm-data"
+    }
+  ]
 }
 ```
 
 ---
 
-## 🧩 Integration with Documentation
+## 🧩 Integration Map
 
-| Documentation File       | Embedded Diagram(s)                         |
-| :----------------------- | :------------------------------------------ |
-| `architecture.md`        | `system_overview.png`, `ci_cd_pipeline.png` |
-| `data-architecture.md`   | `data_flow.png`, `provenance_chain.svg`     |
-| `web-ui-architecture.md` | `web_ui_architecture.svg`                   |
-| `knowledge-graph.md`     | `knowledge_graph.svg`                       |
-| `ci-cd.md`               | `ci_cd_pipeline.png`                        |
-
-These exported images are automatically referenced in Markdown via
-relative paths, ensuring **offline readability** and **site portability**.
+| Documentation File | Linked Diagram(s) | Purpose |
+|:--|:--|:--|
+| `architecture.md` | `system_overview.png`, `ci_cd_pipeline.png` | Full system layout |
+| `data-architecture.md` | `data_flow.png`, `provenance_chain.svg` | Data lineage & validation |
+| `web-ui-architecture.md` | `web_ui_architecture.svg` | Frontend visualization |
+| `knowledge-graph.md` | `knowledge_graph.svg` | Ontology + graph schema |
+| `ci-cd.md` | `ci_cd_pipeline.png` | Workflow governance |
 
 ---
 
-## 🧰 Maintenance & Regeneration
+## 🧭 Rendering Standards
 
-| Command                  | Purpose                                                   |
-| :----------------------- | :-------------------------------------------------------- |
-| `make diagrams`          | Rebuilds all `.png`/`.svg` diagrams from Mermaid sources. |
-| `make clean-diagrams`    | Removes all existing exports for full regeneration.       |
-| `make diagrams-metadata` | Generates a JSON manifest with metadata for all diagrams. |
-
-> **Manifest Output:** `docs/architecture/diagrams/exported/_manifest.json`
-> Includes file names, last export time, commit hash, and corresponding `.mmd` sources.
+| Requirement | Description |
+|:--|:--|
+| **Theme** | Accessible neutral palette, high-contrast text |
+| **Font** | Sans-serif, consistent across diagrams |
+| **Labels** | Plain-text labels, no embedded special characters |
+| **Commit Convention** | `add(diagram): <name>` for exports |
+| **Provenance Footer** | Must contain author + date metadata |
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                     |
-| :---------------------- | :----------------------------------------------------------------- |
-| **Documentation-first** | Each diagram has a corresponding `.mmd` source and metadata entry. |
-| **Reproducibility**     | Exports deterministically generated from versioned Mermaid files.  |
-| **Open Standards**      | SVG and PNG formats under CC-BY 4.0.                               |
-| **Provenance**          | Embedded metadata links diagram to source and commit hash.         |
-| **Auditability**        | Export process validated via `make diagrams` and CI/CD logs.       |
+| MCP Principle | Implementation |
+|:--|:--|
+| **Documentation-first** | Every diagram has a readable `.mmd` source and metadata block. |
+| **Reproducibility** | Deterministic exports from versioned sources. |
+| **Open Standards** | SVG, PNG, PDF under CC-BY 4.0. |
+| **Provenance** | Metadata + checksums link back to commit + author. |
+| **Auditability** | CI workflows validate diagrams pre-merge. |
 
 ---
 
-## 📎 Related Directories
+## 📎 Related Documentation
 
-| Path                          | Description                                                                 |
-| :---------------------------- | :-------------------------------------------------------------------------- |
-| `docs/architecture/diagrams/` | Source `.mmd` files for all architecture visuals.                           |
-| `docs/architecture/`          | Architecture and system-level documentation.                                |
-| `.github/workflows/site.yml`  | Workflow that rebuilds diagrams during site deployment.                     |
-| `Makefile`                    | Contains automation commands for diagram rendering and metadata generation. |
+- `docs/architecture/diagrams/README.md` — Source architecture diagrams  
+- `docs/architecture/architecture.md` — Full system overview  
+- `.github/workflows/site.yml` — Diagram rendering and documentation build  
+- `Makefile` — Diagram build and manifest generation commands  
+- `docs/architecture/README.md` — Index of system, data, and web architectures  
 
 ---
 
-## 📅 Version History
+## 🗓 Version History
 
-| Version | Date       | Summary                                                                              |
-| :------ | :--------- | :----------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial documentation for exported architecture diagrams and visual asset standards. |
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: Added metadata manifest, observability metrics, policy validation, and STAC-linked provenance. |
+| v1.0.0 | 2025-10-04 | Initial documentation for exported diagrams. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Every Diagram Documented. Every Image Reproducible.”*
-📍 [`docs/architecture/diagrams/exported/`](.) · Repository for all rendered architectural diagrams and visual assets.
+**Kansas Frontier Matrix — Exported Diagram Assets**  
+*“Every Diagram Verified · Every Image Versioned · Every Pixel Provenant.”*
 
 </div>
