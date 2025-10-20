@@ -1,241 +1,268 @@
 <div align="center">
 
-# 🧭 Kansas Frontier Matrix — System Architecture  
+# 🧭 **Kansas Frontier Matrix — System Architecture (v2.0.0 · Tier-Ω+∞ Certified)**  
 `docs/architecture/architecture.md`
 
-**Mission:** Define the full-stack architecture of the **Kansas Frontier Matrix (KFM)** —  
-connecting data ingestion, transformation, validation, documentation, and visualization  
-into a reproducible, transparent, and interoperable knowledge system.
+**Mission:** Specify the **full-stack architecture** of the **Kansas Frontier Matrix (KFM)** — connecting data ingestion, transformation, validation, documentation, AI enrichment, and visualization into a **reproducible**, **auditable**, and **interoperable** knowledge system.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
+[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../.github/workflows/slsa.yml)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
-
-The **Kansas Frontier Matrix (KFM)** is a **modular, reproducible data architecture** that unifies  
-Kansas’s fragmented historical, environmental, and scientific records into a coherent, traceable  
-**spatiotemporal knowledge system**.
-
-The architecture integrates:
-- 🗺️ **Geospatial data pipelines** — terrain, hydrology, land cover, climate, hazards  
-- 📊 **Structured datasets** — census, agriculture, economy  
-- 📜 **Textual archives** — oral histories, treaties, newspapers, transcripts  
-- 🧩 **Metadata systems** — STAC 1.0.0, JSON Schema, and MCP documentation  
-- 🌐 **Web visualization** — MapLibre + static documentation site
-
-Every layer adheres to **Master Coder Protocol (MCP)** principles:  
-🧠 documentation-first, 🔁 reproducible, 🧾 auditable, 🌍 open-standard, and 🧬 provenance-tracked.
+```yaml
+---
+title: "Kansas Frontier Matrix — System Architecture"
+document_type: "Architecture Specification"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+owners: ["@kfm-architecture","@kfm-data","@kfm-ai","@kfm-web","@kfm-security","@kfm-accessibility"]
+status: "Stable"
+maturity: "Production"
+license: "MIT"
+tags: ["architecture","etl","stac","neo4j","react","maplibre","api","provenance","ai","ci","slsa","sbom","fair","care"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0 / DCAT 2.0
+  - CIDOC CRM / OWL-Time / GeoSPARQL
+  - WCAG 2.1 AA / 3.0 readiness
+  - FAIR / CARE
+  - SLSA Level ≥2
+validation:
+  docs_ci_required: true
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+observability:
+  endpoint: "https://metrics.kfm.ai/architecture/system"
+  metrics: ["stac_pass_rate","api_latency_p95_ms","graph_latency_ms","a11y_gai_score","artifact_verification_pct"]
+preservation_policy:
+  retention: "docs logs 90d · sbom/slsa 365d · releases permanent"
+  checksum_algorithm: "SHA-256"
+---
+```
 
 ---
 
-## 🏗️ High-Level System Architecture
+## 📚 Overview
+
+**KFM** unifies Kansas’s historical, ecological, and cultural datasets into a **spatiotemporal knowledge system**.  
+Architecture layers:
+
+- 🗺️ **Geospatial ETL** — terrain, hydrology, hazards, land cover, climate  
+- 📊 **Structured data** — census, agriculture, economics  
+- 📰 **Text/OCR** — treaties, oral histories, newspapers  
+- 🧩 **Metadata** — STAC 1.0 + JSON Schema (DCAT crosswalk)  
+- 🌐 **APIs & Web** — FastAPI + GraphQL + MapLibre timeline map  
+- 🤖 **AI/ML** — OCR/NER/summaries/linking with model governance  
+- 🧪 **CI/CD** — validation, supply chain (SBOM/SLSA), and governance
+
+---
+
+## 🏗 High-Level System Diagram
 
 ```mermaid
 flowchart TD
-  A["🌐 External Data Sources\n(data/sources/)"] --> B["📦 Raw Data Storage\n(data/raw/)"]
-  B --> C["⚙️ ETL Pipelines\n(src/pipelines/)"]
-  C --> D["✅ Processed Data\n(data/processed/)"]
-  D --> E["🧩 Metadata & STAC Catalog\n(data/stac/, data/processed/metadata/)"]
-  E --> F["🔐 Checksums & Validation\n(data/checksums/)"]
-  F --> G["🌎 Web Visualization & Docs\n(web/, docs/, data/tiles/)"]
-  G --> H["🤖 CI/CD & Governance\n(.github/workflows/)"]
-
-  style A fill:#fafafa,stroke:#888
-  style B fill:#eef7ff,stroke:#0088cc
-  style C fill:#fff0f5,stroke:#cc0088
-  style D fill:#ecf9f0,stroke:#33aa33
-  style E fill:#fffbea,stroke:#e8a500
-  style F fill:#f0e8ff,stroke:#8844cc
-  style G fill:#f9f9f9,stroke:#555
-  style H fill:#f7f7f7,stroke:#222
-````
-
+  A["🌐 Sources<br/>NOAA · USGS · FEMA · KHS · Archives · Census"] --> B["📦 Raw Storage<br/>data/raw/ (LFS/DVC)"]
+  B --> C["⚙️ ETL Pipelines<br/>src/etl/ · Makefile · Checksums"]
+  C --> D["✅ Processed Outputs<br/>data/processed/ (COG · GeoJSON · CSV)"]
+  D --> E["🧩 STAC & Metadata<br/>data/stac/ · JSON Schema"]
+  C --> I["🧠 AI Enrichment<br/>OCR · NER · Summaries · Linking"]
+  E --> H["🕸 Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL"]
+  I --> H
+  H --> J["🔌 API Layer<br/>FastAPI · GraphQL · JSON-LD · STAC API"]
+  J --> F["🗺 Web Frontend<br/>React · MapLibre · Timeline · Focus Mode"]
+  F --> G["♿ A11y & i18n<br/>WCAG 2.1 AA · RTL-ready"]
+  D --> K["🧱 Tiles/Exports<br/>data/tiles/ · KML/KMZ (optional)"]
+```
 <!-- END OF MERMAID -->
 
 ---
 
 ## 🧩 Core Architectural Components
 
-| Layer                   | Directory                                | Description                                                                         |
-| :---------------------- | :--------------------------------------- | :---------------------------------------------------------------------------------- |
-| **Source Registry**     | `data/sources/`                          | JSON manifests defining data origins, licensing, and access endpoints.              |
-| **Raw Data**            | `data/raw/`                              | Immutable snapshots of original datasets for provenance preservation.               |
-| **ETL Processing**      | `src/pipelines/`                         | Python-based modular workflows that clean, transform, and standardize data.         |
-| **Processed Data**      | `data/processed/`                        | Final validated and standardized outputs ready for analysis and publication.        |
-| **Metadata & STAC**     | `data/stac/`, `data/processed/metadata/` | STAC 1.0.0-compliant metadata describing each dataset’s temporal and spatial scope. |
-| **Checksums**           | `data/checksums/`                        | SHA-256 hash validation ensuring reproducibility and immutability.                  |
-| **Web & Visualization** | `web/`, `data/tiles/`                    | MapLibre and static site integration for public interaction.                        |
-| **Governance & CI/CD**  | `.github/`                               | GitHub workflows managing validation, deployment, and automation.                   |
+| Layer | Directory | Description |
+|:--|:--|:--|
+| **Source Registry** | `data/sources/` | Manifests for origin/license/coverage/URLs |
+| **Raw Data** | `data/raw/` | Immutable snapshots (LFS/DVC) |
+| **ETL** | `src/etl/` | Modular Python/GDAL/Rasterio pipelines |
+| **Processed** | `data/processed/` | Validated outputs (COG/GeoJSON/CSV) |
+| **Metadata** | `data/stac/` | STAC Items/Collections + JSON Schema |
+| **Graph** | `src/graph/` | Neo4j schema + loaders + JSON-LD export |
+| **API** | `src/api/` | FastAPI + GraphQL + STAC API endpoints |
+| **Web** | `web/` | React + MapLibre + timeline interactions |
+| **Governance** | `.github/` | CI/CD, SBOM, SLSA, policy-as-code |
 
 ---
 
 ## ⚙️ ETL Pipeline Architecture
 
-The KFM ETL pipelines are domain-driven and **declarative**, ensuring every dataset
-can be reproduced and validated through Makefile and Python-based orchestration.
+**Declarative, deterministic, domain-driven** pipelines:
 
-| Domain    | Pipeline                | Input             | Output                            | Purpose                |
-| :-------- | :---------------------- | :---------------- | :-------------------------------- | :--------------------- |
-| Terrain   | `terrain_pipeline.py`   | LiDAR / DEMs      | Processed DEMs, slope, hillshade  | Surface modeling       |
-| Hydrology | `hydrology_pipeline.py` | NHD, WBD, NFHL    | River networks, flood layers      | Water systems          |
-| Landcover | `landcover_pipeline.py` | NLCD, USDA CDL    | Land use, vegetation, crop maps   | Ecological mapping     |
-| Climate   | `climate_pipeline.py`   | NOAA, Daymet      | Temperature, precipitation grids  | Climate trends         |
-| Hazards   | `hazards_pipeline.py`   | FEMA, NOAA        | Tornado, flood, wildfire datasets | Natural hazards        |
-| Tabular   | `tabular_pipeline.py`   | Census, BEA, USDA | Normalized CSV/Parquet tables     | Statistical analysis   |
-| Text      | `text_pipeline.py`      | OCR & transcripts | Cleaned JSONL + metadata          | Historical text corpus |
+| Domain    | Pipeline                | Input                 | Output                          | Purpose |
+|:--|:--|:--|:--|:--|
+| Terrain   | `terrain_pipeline.py`   | LiDAR/DEMs            | DEM/slope/hillshade (COG)       | Surface modeling |
+| Hydrology | `hydrology_pipeline.py` | NHD/WBD/NFHL          | Flowlines/watersheds (GeoJSON)  | Water systems |
+| Landcover | `landcover_pipeline.py` | NLCD/USDA CDL         | Land use/veg maps (GeoTIFF/CSV) | Ecology |
+| Climate   | `climate_pipeline.py`   | Daymet/NOAA           | Temp/precip grids (COG/CSV)     | Climate trends |
+| Hazards   | `hazards_pipeline.py`   | FEMA/NOAA             | Tornado/flood/wildfire layers   | Risk |
+| Tabular   | `tabular_pipeline.py`   | Census/BEA/USDA       | Normalized CSV/Parquet          | Stats |
+| Text      | `text_pipeline.py`      | OCR/Transcripts       | JSONL + entities                | Historical text |
 
-Each pipeline:
-
-* Logs ETL progress in `data/work/logs/`
-* Generates STAC Items and `.sha256` validation hashes
-* Writes thumbnails and provenance under `data/processed/metadata/`
+**Pipeline guarantees**
+- Logs under `data/work/logs/`  
+- STAC Items + `.sha256` per asset  
+- Thumbnails & provenance in `data/processed/metadata/`
 
 ---
 
-## 🧮 Metadata & Validation Architecture
+## 🧮 Metadata & Validation
 
-Metadata validation follows **STAC 1.0.0 + JSON Schema** and is enforced via
-CI/CD and pre-commit hooks.
-
-| Validation Step           | Description                                              | Tools                                 |
-| :------------------------ | :------------------------------------------------------- | :------------------------------------ |
-| **Schema Validation**     | JSON Schema validation for metadata files.               | `jsonschema`                          |
-| **STAC Validation**       | Ensures STAC Items and Collections comply with spec.     | `stac-validator`                      |
-| **Checksum Verification** | Confirms SHA-256 hashes match between raw and processed. | `make checksums`                      |
-| **CI/CD Enforcement**     | Auto-runs validation via GitHub Actions.                 | `.github/workflows/stac-validate.yml` |
+| Step | Description | Tools |
+|:--|:--|:--|
+| **JSON Schema** | Validate metadata fields | `jsonschema` |
+| **STAC Validate** | Conform to STAC spec | `stac-validator` |
+| **Checksums** | SHA-256 parity raw→processed | `make checksums` |
+| **CI Gates** | Auto-run on PR/commit | `.github/workflows/stac-validate.yml` |
 
 ---
 
-## 🔐 Data Provenance Model
+## 🔐 Provenance & Supply Chain
 
-Each dataset follows a **traceable provenance chain**:
+- **Lineage**: STAC `derived_from`, PROV-O annotations; **DOI** snapshots on major releases  
+- **Integrity**: checksums per asset; parity enforced in CI  
+- **SBOM**: Syft CycloneDX (`sbom.cdx.json`); **Grype** CVE scans  
+- **SLSA**: release attestations (`slsa.intoto.jsonl`) for build provenance  
+- **Workflow Hygiene**: pinned GH Actions, OIDC least-privilege, signed tags
+
+---
+
+## 🤖 AI/ML Enrichment & Governance
+
+- OCR (Tesseract/OpenCV), NER (spaCy/Transformers), summarization (BART/T5), entity linking  
+- **Model Cards** with hashes/metrics/bias notes in `docs/templates/model_card.md`  
+- **Quality gates** (min F1/ROUGE) + **bias benchmarks** (regression blocks CI)  
+- **Human-in-the-loop**: `@kfm-ai` approves model updates
+
+---
+
+## 🌐 API & Web
+
+- **API**: FastAPI + GraphQL, JSON/GeoJSON/JSON-LD; STAC API `/api/v1/stac/*`  
+- **Web**: React + MapLibre; single time window across map & timeline; **Focus Mode** AI with sources and confidence  
+- **Accessibility**: A11y budgets (route scores ≥ 95), keyboard/SR support, high-contrast tokens
+
+---
+
+## 🧭 Data & File Architecture
 
 ```text
-Source Manifest (data/sources/*.json)
-     ↓
-Raw Data (data/raw/)
-     ↓
-Processed Data (data/processed/)
-     ↓
-Checksum (data/checksums/)
-     ↓
-STAC Metadata (data/stac/)
-     ↓
-Visualization Layer (data/tiles/, web/)
+data/
+  sources/      # Source manifests
+  raw/          # LFS/DVC snapshots
+  processed/    # COG, GeoJSON, CSV
+  stac/         # STAC Items/Collections
+  tiles/        # (optional) generated tiles
 ```
 
-Every step includes:
-
-* Versioned metadata
-* Deterministic ETL scripts
-* CI-verified integrity
-* Cross-linked documentation
+**Every dataset** ships with provenance, STAC item, checksum, and a doc link.
 
 ---
 
-## 🧠 MCP Integration & Principles
+## 📊 Observability & Health
 
-| MCP Principle           | Implementation in KFM                                                  |
-| :---------------------- | :--------------------------------------------------------------------- |
-| **Documentation-first** | Every directory includes a README.md and schema definition.            |
-| **Reproducibility**     | Deterministic Makefile + pipeline workflows produce identical outputs. |
-| **Open Standards**      | STAC 1.0.0, GeoTIFF (COG), GeoJSON, CSV, JSON Schema, NetCDF.          |
-| **Provenance**          | Full lineage tracked from source manifest to visualization layer.      |
-| **Auditability**        | All transformations logged; CI/CD validation is public and traceable.  |
+- Dashboard: **https://metrics.kfm.ai/architecture/system**  
+- Metrics: STAC pass rate, API p95 latency, graph query latency, a11y route score, action pinning, artifact verification  
+- Alerts: CI sends anomalies to Slack `#ci-alerts`
 
 ---
 
-## 🧰 CI/CD Data Governance (Automation Stack)
+## 🧠 MCP Integration
 
-| Workflow                       | Purpose                                                    | Frequency          |
-| :----------------------------- | :--------------------------------------------------------- | :----------------- |
-| **`fetch.yml`**                | Downloads and validates new data sources.                  | Scheduled / manual |
-| **`checksums.yml`**            | Recomputes and verifies SHA-256 integrity checks.          | On data change     |
-| **`stac-validate.yml`**        | Validates STAC structure and schema compliance.            | On PR / commit     |
-| **`site.yml`**                 | Builds and deploys static documentation and maps.          | On merge to `main` |
-| **`codeql.yml` / `trivy.yml`** | Scans for security vulnerabilities in code and containers. | Weekly             |
-
-Logs for all runs are stored in `data/work/logs/`.
+| MCP Pillar | Implementation |
+|:--|:--|
+| Documentation-first | READMEs & ADRs pre-implementation; CI enforces |
+| Reproducibility | Deterministic ETL; pinned SHAs; checksums |
+| Open Standards | STAC, DCAT, CIDOC CRM, OWL-Time, GeoSPARQL |
+| Provenance | STAC lineage + PROV/O · SBOM + SLSA |
+| Auditability | CI logs/artifacts public; policy gates on PRs |
 
 ---
 
-## 🌐 Web Architecture (Visualization Layer)
+## 🧩 Risk Register (Architecture)
 
-The KFM web interface integrates:
+| ID | Risk | Likelihood | Impact | Mitigation | Owner |
+|:--|:--|:--:|:--:|:--|:--|
+| ARCH-001 | STAC schema drift | M | M | schema gates | @kfm-data |
+| ARCH-002 | API breaking change | L | H | OpenAPI diff in CI | @kfm-web |
+| ARCH-003 | AI bias regression | M | M | bias suite + block | @kfm-ai |
+| ARCH-004 | Unpinned action | L | H | OPA policy + audit | @kfm-security |
 
-* **MapLibre GL JS** for interactive mapping
-* **Timeline filters** for spatiotemporal navigation
-* **Dynamic layer toggles** defined in `web/config/layers.json`
-* **Thumbnails & metadata pop-ups** linked via STAC items
-* **GitHub Pages deployment** via `site.yml`
+---
 
-Visualization hierarchy:
+## 🧭 Environment & Quickstart
 
-```mermaid
-graph LR
-  A["📦 Processed Data"] --> B["🧩 STAC Metadata"]
-  B --> C["🗺️ Map Tiles (data/tiles/)"]
-  C --> D["🌐 Web Viewer (web/index.html)"]
-  D --> E["🧠 Public Users / Researchers"]
+**Env vars**
+```bash
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASS=neo4j
+VITE_API_URL=http://localhost:8000
+VITE_MAP_STYLE_URL=/tiles/style.json
 ```
 
-<!-- END OF MERMAID -->
+**Run locally**
+```bash
+make fetch && make process && make stac
+make serve
+```
+
+Open **http://localhost:3000** (web) · **http://localhost:7474** (Neo4j).
 
 ---
 
-## 🧩 Security & Integrity Layer
+## 🔗 Cross-References
 
-| Component              | Role                            | Enforcement                      |
-| :--------------------- | :------------------------------ | :------------------------------- |
-| **Checksums**          | Detect tampering or corruption. | SHA-256 validation               |
-| **Immutable Raw Data** | Preserve source truth.          | Stored in `data/raw/`            |
-| **CI/CD Validation**   | Automated integrity checks.     | GitHub Actions                   |
-| **STAC Provenance**    | Dataset-to-metadata linkage.    | `rel:source`, `rel:derived_from` |
-| **Access Control**     | Repository-level permissioning. | GitHub Teams & Branch Protection |
-
----
-
-## 🧩 Extension & Scalability
-
-KFM supports modular expansion via:
-
-* 🧱 **New domains:** Add new `data/processed/<domain>/` + pipeline module.
-* 🌐 **External integrations:** Link to remote STAC catalogs (NASA, NOAA, USGS).
-* 🧩 **API exposure:** Build JSON or STAC-compliant endpoints from catalog metadata.
-* ⚙️ **Versioned rebuilds:** Each ETL pipeline is fully deterministic, logged, and reproducible.
+- `docs/architecture/system-architecture-overview.md`  
+- `docs/architecture/data-architecture.md`  
+- `docs/architecture/knowledge-graph.md`  
+- `docs/architecture/web-ui-architecture.md`  
+- `docs/architecture/api-architecture.md`  
+- `.github/workflows/README.md`
 
 ---
 
-## 📎 Related Architecture Files
+## 🧾 Versioning & Lifecycle
 
-| Path                                   | Description                                             |
-| :------------------------------------- | :------------------------------------------------------ |
-| `data/ARCHITECTURE.md`                 | Detailed data architecture and lifecycle documentation. |
-| `docs/architecture/system_overview.md` | Optional visual overview of software and CI/CD layers.  |
-| `.github/workflows/README.md`          | Automation and governance workflow documentation.       |
-| `web/config/`                          | Layer configuration and visualization schema.           |
+```yaml
+versioning:
+  policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
+  tag_pattern: "architecture-core-v*"
+  doi_on_major: true
+  provenance_bundle: ["architecture_core.prov.json","architecture_core.sha256","sbom.cdx.json","slsa.intoto.jsonl"]
+```
 
 ---
 
-## 📅 Version History
+## 🕰 Version History
 
-| Version | Date       | Summary                                                           |
-| :------ | :--------- | :---------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial Kansas Frontier Matrix system architecture documentation. |
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞ rewrite: supply-chain & provenance, AI governance, a11y route budgets, observability dashboard, risk register, versioning policy. |
+| v1.0.0 | 2025-10-04 | Initial system architecture documentation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Building a Reproducible Future for the Past.”*
-📍 [`docs/architecture/architecture.md`](.) · The definitive guide to the architecture and design of the Kansas Frontier Matrix.
+**Kansas Frontier Matrix — System Architecture**  
+*“Build once, reproduce forever. Cite everything.”*
 
 </div>
