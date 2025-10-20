@@ -1,1 +1,213 @@
+<div align="center">
 
+# 🌐 **Kansas Frontier Matrix — Web UI Architecture Diagram (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/web_ui_architecture.mmd`
+
+**Mission:** Visualize the **frontend architecture** of the **Kansas Frontier Matrix (KFM)** — how **STAC metadata**, **tiles**, and **JSON configs** drive **MapLibre + Timeline** rendering, with **provenance**, **accessibility**, **performance**, and **observability** baked in.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Web UI Architecture Diagram"
+document_type: "Mermaid Diagram"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-web","@kfm-design","@kfm-accessibility","@kfm-architecture"]
+status: "Stable"
+maturity: "Production"
+license: "MIT"
+tags: ["web","maplibre","timeline","stac","json","a11y","i18n","caching","pwa","observability"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0 / STAC API
+  - WCAG 2.1 AA / 3.0 readiness
+  - JSON / JSON-LD / MVT / COG
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_required_checks: ["stac-validate.yml","docs-validate.yml","site.yml"]
+observability:
+  endpoint: "https://metrics.kfm.ai/web"
+  metrics: ["route_a11y_score","first_contentful_paint_ms","tile_load_p95_ms","timeline_fps","error_rate_pct"]
+preservation_policy:
+  retention: "exports 365d · logs 90d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 🧭 Overview
+
+This diagram shows how **STAC items** and **JSON configs** generate **MapLibre layers** and **timeline state**, how **provenance** appears in **popups/panels**, and how **performance**, **security**, and **observability** are enforced in the app shell.
+
+---
+
+## 🧩 Web UI Architecture (Mermaid Source)
+
+```mermaid
+flowchart TD
+  %% Web UI Architecture — Kansas Frontier Matrix
+  %% GitHub-safe: quoted labels; \n for line breaks
+
+  %% ===== DATA & CONFIG INPUTS =====
+  subgraph DATA["🧩 Data & Metadata\nSTAC · Tiles · JSON Configs"]
+    STAC["STAC Catalog\n(data/stac/)"]
+    TILES["Tiles & Assets\n(data/tiles/ · COG/MVT)"]
+    LAYERS["Layer Config\n(web/config/layers.json)"]
+    LEGEND["Legend Config\n(web/config/legend.json)"]
+    TIME["Timeline Config\n(web/config/time_config.json)"]
+    VIEW["Viewer Config\n(web/config/viewer.json)"]
+  end
+
+  %% ===== APP SHELL =====
+  subgraph APP["🌐 App Shell\nweb/index.html · app.js · style.css"]
+    INIT["Boot & Mount\n(index.html · CSP · SRI)"]
+    STATE["App State\nstore · URL params · feature flags"]
+    THEME["Theme/Tokens\nlight/dark/HC · CSS vars"]
+  end
+
+  %% ===== CORE COMPONENTS =====
+  subgraph CORE["🧭 Core UI Components\nMapLibre + Timeline"]
+    MAP["MapView (MapLibre)\nbase + overlays + popups"]
+    TL["TimelineView (Canvas)\nzoom · pan · scrub · snap"]
+    LC["Layer Controls\nfilters · legends · toggles"]
+    SRCH["Search/Navigation\nfind place · dataset · entity"]
+    PANEL["Detail Panel\nprovenance · citations · checksum"]
+    AIU["AI Assistant\ncontext · sources · confidence"]
+  end
+
+  %% ===== A11Y & I18N =====
+  subgraph A11Y["♿ Accessibility & i18n\nWCAG 2.1 AA · BCP-47"]
+    FOCUS["Focus & Keyboard\n:focus-visible · tab order"]
+    CONTR["Contrast & Tokens\n≥ 4.5:1 text · ≥ 3:1 icons"]
+    LANG["Localization\ni18n labels · en/…/pseudo-locale"]
+    RTL["Layout RTL (optional)\nlogical props"]
+  end
+
+  %% ===== PERFORMANCE & CACHING =====
+  subgraph PERF["⚡ Performance & Caching\nimmutable · ETag · PWA (opt)"]
+    CACHE["ETag / Cache-Control\nimmutable assets"]
+    PWA["Service Worker (opt)\napp shell cache"]
+    SLO["SLOs\nFCP ≤ 1200ms · tiles p95 ≤ 400ms"]
+  end
+
+  %% ===== SECURITY & OBSERVABILITY =====
+  subgraph SECOPS["🔐 Security & Observability\nCSP · OTel · Error reporting"]
+    CSP["Content Security Policy\nself · data: · strict connect-src"]
+    SRI["Subresource Integrity\nfor external (discouraged)"]
+    OTL["OpenTelemetry\nlogs · metrics · traces"]
+    ERR["Error Correlation IDs\nuser-safe messages"]
+  end
+
+  %% ===== FLOWS =====
+  %% Data/config → app
+  STAC --> LAYERS
+  LAYERS --> INIT
+  LEGEND --> INIT
+  TIME --> INIT
+  VIEW --> INIT
+
+  INIT --> STATE
+  STATE --> MAP
+  STATE --> TL
+  STATE --> LC
+
+  %% Tiles & STAC into views
+  TILES --> MAP
+  STAC --> MAP
+  STAC --> PANEL
+  LAYERS --> MAP
+  LEGEND --> MAP
+
+  %% Timeline sync
+  TL <-- "time window" --> MAP
+  LC --> MAP
+  LC --> TL
+
+  %% Search and entity display
+  SRCH --> MAP
+  SRCH --> PANEL
+
+  %% AI / Provenance
+  STAC --> AIU
+  AIU --> PANEL
+
+  %% A11y/i18n hooks
+  THEME --> CONTR
+  INIT --> FOCUS
+  VIEW --> LANG
+  VIEW --> RTL
+
+  %% Performance & caching
+  MAP --> CACHE
+  INIT --> PWA
+  MAP --> SLO
+  TL --> SLO
+
+  %% Security & observability
+  INIT --> CSP
+  INIT --> SRI
+  MAP --> OTL
+  TL --> OTL
+  PANEL --> ERR
+  AIU --> OTL
+
+  %% ===== STYLES =====
+  classDef block fill:#ffffff,stroke:#888,stroke-width:1px,color:#111;
+  classDef shell fill:#ecf9f0,stroke:#22aa44,stroke-width:1.2px;
+  classDef comp fill:#e8f0ff,stroke:#0066aa,stroke-width:1.2px;
+  classDef conf fill:#fffbea,stroke:#e8a500,stroke-width:1.2px;
+  classDef perf fill:#f5fff5,stroke:#2e7d32,stroke-width:1.2px;
+  classDef sec fill:#f0e8ff,stroke:#8844cc,stroke-width:1.2px;
+  classDef a11y fill:#f9f9f9,stroke:#444,stroke-dasharray: 4 2;
+
+  class DATA block
+  class APP shell
+  class CORE comp
+  class A11Y a11y
+  class PERF perf
+  class SECOPS sec
+```
+<!-- END OF MERMAID -->
+
+---
+
+## 🧭 Diagram Summary
+
+**What this shows:** A **config- and STAC-driven** app shell that renders MapLibre layers and a synchronized timeline, with **provenance-first popups**, **AI context panels**, **WCAG/i18n compliance**, **CDN caching/PWA options**, and **security + observability** baked in.
+
+| Layer | Focus | Standards |
+|:--|:--|:--|
+| Data & Config | STAC items + JSON configs drive the UI | STAC 1.0 / JSON Schema |
+| App Shell | Secure bootstrap + state + tokens | CSP/SRI · MCP docs |
+| Core UI | Map ↔ Timeline sync; provenance panel; assistant | MapLibre · WCAG |
+| A11y & i18n | Keyboard/contrast/lang/RTL | WCAG 2.1 AA |
+| Performance | Caching + PWA + SLOs | HTTP caching · Lighthouse |
+| Security/Obs | CSP + OTel + error corr IDs | OpenTelemetry |
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added A11y/i18n, performance budgets, CSP/SRI, OTel hooks, AI/Provenance panels, and STAC-driven configs. |
+| v1.0.0 | 2025-10-04 | Initial Web UI architecture diagram (MapLibre + STAC configs). |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — Web UI Architecture Diagram**  
+*“Data-Driven UI · Provenance by Design · Accessible for All.”*
+
+</div>
