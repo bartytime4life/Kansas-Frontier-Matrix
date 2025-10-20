@@ -1,19 +1,19 @@
 <div align="center">
 
-# 🏛️ **Kansas Frontier Matrix — Architecture Documentation Hub (v2.0.0 · Tier-Ω+∞ Certified)**  
+# 🏛️ **Kansas Frontier Matrix — Architecture Documentation Hub (v2.1.0 · Tier-Ω+∞ Certified)**  
 `docs/architecture/README.md`
 
-**Mission:** Provide the **blueprint of blueprints** — a reproducible, version-controlled, FAIR/CARE-aligned  
-overview of the **Kansas Frontier Matrix (KFM)** system architecture, covering **ETL**, **AI/ML**,  
-**Knowledge Graph**, **API**, **Web Frontend**, **Security**, and **CI/CD governance**.
+**Mission:** Define, govern, and preserve the **complete architectural blueprint** of the  
+**Kansas Frontier Matrix (KFM)** — uniting ETL pipelines, AI enrichment, knowledge graphs, APIs, web interfaces,  
+and CI/CD automation under **Master Coder Protocol (MCP-DL v6.3)** for full reproducibility, provenance, and FAIR/CARE alignment.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json)](../../.github/workflows/stac-validate.yml)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP-DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
-[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../.github/workflows/sbom.yml)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM %7C SLSA-green)](../../.github/workflows/sbom.yml)
 [![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
-[![License: MIT \| CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-blue)](../../LICENSE)
+[![License: MIT \| CC-BY 4.0](https://img.shields.io/badge/License-MIT %7C CC-BY 4.0-blue)](../../LICENSE)
 
 </div>
 
@@ -22,13 +22,13 @@ overview of the **Kansas Frontier Matrix (KFM)** system architecture, covering *
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Architecture Documentation Hub"
-version: "v2.0.0"
-last_updated: "2025-11-15"
-owners: ["@kfm-architecture","@kfm-data","@kfm-ai","@kfm-security","@kfm-web"]
+version: "v2.1.0"
+last_updated: "2025-11-16"
+owners: ["@kfm-architecture","@kfm-data","@kfm-ai","@kfm-security","@kfm-docs"]
 status: "Stable"
 maturity: "Production"
 license: "MIT (code) · CC-BY 4.0 (docs)"
-tags: ["architecture","etl","ai","api","web","graph","ci-cd","governance","security","standards","fair","care"]
+tags: ["architecture","etl","ai","graph","api","web","ci-cd","security","governance","standards","fair","care","adr"]
 alignment:
   - MCP-DL v6.3
   - STAC 1.0 / DCAT 2.0
@@ -37,11 +37,11 @@ alignment:
   - SLSA 3
   - SBOM / SPDX
 validation:
-  docs_ci_required: true
-  frontmatter_required: ["title","version","last_updated","owners","license"]
+  frontmatter_required: ["title","version","owners","last_updated","license"]
   mermaid_end_marker: "<!-- END OF MERMAID -->"
+  docs_ci_required: true
 preservation_policy:
-  retention: "docs logs 90d · SBOM/SLSA 365d"
+  retention: "docs logs 90 d · SBOM/SLSA 365 d"
   checksum_algorithm: "SHA-256"
 ---
 ```
@@ -50,12 +50,15 @@ preservation_policy:
 
 ## 🧭 Overview
 
-The `docs/architecture/` directory defines how **Kansas Frontier Matrix (KFM)** fits together —  
-from **raw datasets to reproducible knowledge graphs** and from **ETL pipelines** to  
-**interactive web frontends**, governed by **MCP-DL v6.3**.
+`docs/architecture/` describes **how the entire KFM ecosystem fits together** —  
+from raw data to AI-driven insights — through modular, reproducible components.  
+Every architectural decision is versioned, validated in CI, and linked to provenance artifacts.
 
-Architecture documentation in KFM is **living infrastructure**: every change to code or data  
-requires an update here, validated via `docs-validate.yml` and `policy-check.yml`.
+Each document under this directory passes:
+- ✅ `docs-validate.yml` (lint, link, metadata)  
+- ✅ `policy-check.yml` (required fields & ownership)  
+- ✅ `mermaid` render test for diagrams  
+- ✅ `sbom.yml` for supply-chain completeness  
 
 ---
 
@@ -63,138 +66,204 @@ requires an update here, validated via `docs-validate.yml` and `policy-check.yml
 
 ```bash
 docs/architecture/
-├── README.md                        # This file — architecture index
-├── system-architecture-overview.md  # Root overview of the full stack
-├── data-architecture.md             # Data lineage, STAC, and provenance
-├── file-architecture.md             # Directory and storage organization
+├── README.md                        # This index
+├── system-architecture-overview.md  # Full-stack blueprint
+├── data-architecture.md             # STAC lineage & data flow
+├── file-architecture.md             # Directory / storage map
 ├── web-ui-architecture.md           # React + MapLibre frontend
 ├── api-architecture.md              # FastAPI + GraphQL backend
-├── knowledge-graph.md               # Neo4j CIDOC CRM + OWL-Time schema
+├── knowledge-graph.md               # Neo4j CIDOC CRM + OWL-Time
 ├── pipelines.md                     # ETL + AI/ML orchestration
-├── ci-cd.md                         # CI/CD pipelines, automation & governance
-├── ai-automation.md                 # AI/ML pipeline governance
-├── security.md                      # Security posture & threat model
+├── ci-cd.md                         # Automation & governance
+├── ai-automation.md                 # AI pipeline integration
+├── security.md                      # Threat & policy model
+├── adr/                             # Architecture Decision Records
+│   ├── ADR-0001-data-storage.md
+│   └── ADR-0002-ontology-mapping.md
 └── diagrams/
-    ├── README.md
     ├── exported/
     └── templates/
 ```
 
-> Each sub-file includes YAML front-matter for traceability and passes  
-> `make docs-validate` (lint + front-matter + link + mermaid syntax check).
-
 ---
 
-## 🏗 System Architecture Overview
+## 🧮 Architecture + CI/CD Integration Map
 
 ```mermaid
 flowchart TD
-  A["Data Sources<br/>NOAA · USGS · FEMA · KHS · Archives"] --> B["ETL Pipeline<br/>Python · GDAL · Makefile · Checksums"]
-  B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
-  B --> I["AI / ML Enrichment<br/>NER · OCR · Geocoding · Summaries"]
-  C --> D["STAC Catalog<br/>Collections · Items · Assets"]
-  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL"]
-  I --> H
-  H --> J["API Layer<br/>FastAPI · GraphQL · REST · JSON-LD"]
-  J --> F["Web Frontend<br/>React · MapLibre · Timeline · AI Assistant"]
-  F --> G["Accessibility & Localization<br/>WCAG 2.1 AA · i18n"]
+  subgraph Docs["Docs-as-Code (MCP-DL v6.3)"]
+    D1["Architecture Docs"] --> D2["CI Metadata + Provenance JSON"]
+  end
+  subgraph Pipelines["ETL + AI/ML"]
+    P1["Fetch / Process / STAC"] --> P2["NER / Summaries / Linking"]
+  end
+  subgraph Infra["CI/CD & Security"]
+    C1["Pre-Commit · Docs-Validate · Policy-Check"] --> C2["CodeQL · Trivy · SLSA · SBOM"]
+  end
+  Docs --> Pipelines
+  Pipelines --> Infra
+  Infra --> Docs
 ```
 <!-- END OF MERMAID -->
 
 ---
 
-## 🧱 Core Architectural Domains
+## 🧱 Core Domains
 
-| Domain | Focus | Primary File |
+| Domain | Purpose | Key Doc |
 |:--|:--|:--|
-| **System Architecture** | High-level overview of full stack | `system-architecture-overview.md` |
-| **Data Architecture** | STAC catalog design & lineage tracking | `data-architecture.md` |
-| **File Architecture** | Directory hierarchy, naming conventions | `file-architecture.md` |
-| **Knowledge Graph** | Ontology (CIDOC CRM, OWL-Time) | `knowledge-graph.md` |
-| **API Architecture** | FastAPI + GraphQL schema & routes | `api-architecture.md` |
-| **Web UI** | React + MapLibre frontend interactions | `web-ui-architecture.md` |
-| **Pipelines** | ETL, AI/ML, CI integration | `pipelines.md` |
-| **CI/CD Governance** | Security, validation, deploy automation | `ci-cd.md` |
-| **Security** | Threat model, policy gates, OIDC auth | `security.md` |
+| **System** | End-to-end structure overview | `system-architecture-overview.md` |
+| **Data** | STAC lineage, metadata, and storage | `data-architecture.md` |
+| **Graph** | Knowledge graph schema & reasoning | `knowledge-graph.md` |
+| **API** | FastAPI + GraphQL schema & endpoints | `api-architecture.md` |
+| **Web UI** | MapLibre + Timeline + AI Assistant | `web-ui-architecture.md` |
+| **AI Automation** | Model governance, bias gates | `ai-automation.md` |
+| **Security** | Threats, roles, policy enforcement | `security.md` |
+| **CI/CD** | Build, validate, deploy pipelines | `ci-cd.md` |
 
 ---
 
-## 🧩 Architectural Principles
+## 🧩 Cross-Component Dependencies
 
-| Principle | Description | Enforcement |
-|:--|:--|:--|
-| **Documentation-First** | Diagrams precede code; each subsystem documented before build. | MCP-DL + CI gates |
-| **Reproducibility** | Deterministic ETL, pinned containers, checksums, and CI validation. | Makefile + SHA-256 |
-| **Modularity** | ETL ↔ Graph ↔ API ↔ Web boundaries with typed contracts. | Directory structure |
-| **Security by Design** | CodeQL, Trivy, SBOM, SLSA, signed releases. | `.github/workflows/*` |
-| **Open Standards** | STAC, DCAT, CIDOC CRM, GeoSPARQL, JSON Schema. | Data + docs alignment |
-| **Accessibility & FAIR** | WCAG 2.1 AA + FAIR metadata. | Frontend + metadata schemas |
+| From | To | Dependency Type | CI Check |
+|:--|:--|:--|:--:|
+| ETL (`src/etl/`) | STAC (`data/stac/`) | Output schema | ✅ |
+| STAC | Graph (`src/graph/`) | Derived-from links | ✅ |
+| Graph | API (`src/api/`) | Query contract (Cypher/GraphQL) | ✅ |
+| API | Web (`web/src/`) | Typed endpoint interfaces | ✅ |
+| Docs | CI (`.github/`) | Policy-check metadata | ✅ |
 
 ---
 
-## 🧮 Architecture Validation Workflow
+## ⚙️ AI Hooks & Automation
+
+| Workflow | Trigger | Artifact | Purpose |
+|:--|:--|:--|:--|
+| `ai-model.yml` | Nightly | `metrics.json` · `model_card.md` | Train/evaluate models |
+| `fetch.yml` | CRON weekly | `data/raw/` | Sync datasets |
+| `stac-validate.yml` | PR / push | `stac-report.json` | Validate metadata |
+| `policy-check.yml` | PR / docs | `policy-results.json` | Enforce doc compliance |
+
+---
+
+## 🧠 Risk & Observability Framework
+
+| Category | Risk | Mitigation | Metric |
+|:--|:--|:--|:--|
+| **Data Lineage** | Broken `derived_from` links | CI STAC validation | lineage_pass ≥ 99 % |
+| **Reproducibility** | Non-deterministic ETL outputs | container + hash locks | checksum_drift = 0 |
+| **Performance** | Graph query latency | GraphQL profiling + cache | p95 ≤ 250 ms |
+| **Provenance Drift** | Unverified commits | Signed releases (SLSA) | verified_tags = 100 % |
+| **AI Bias** | Model regression | Bias benchmark suite | bias_score ≤ 0.05 |
+
+---
+
+## ⚖️ FAIR + CARE Integration
+
+| Principle | Implementation | Evidence |
+|:--|:--|:--|
+| **Findable** | STAC + DCAT crosswalk + docs indexing | `data/stac/catalog.json` |
+| **Accessible** | Public metadata; limited sensitive assets | Pages / Zenodo snapshot |
+| **Interoperable** | JSON-LD + RDF exports (CIDOC, OWL-Time) | Graph exports |
+| **Reusable** | CC-BY 4.0 license; reproducible Makefile | LICENSE · Makefile |
+| **Collective Benefit (CARE)** | Indigenous data stewardship notes | `data/stac/*properties.data_ethics` |
+
+---
+
+## 🧾 Front-Matter Policy
+
+Every architecture file **must** declare:
+
+```yaml
+---
+title: "Component Name"
+version: "vX.Y.Z"
+last_updated: "YYYY-MM-DD"
+owners: ["@kfm-architecture"]
+license: "CC-BY 4.0"
+---
+```
+
+Missing fields **block merges** via `policy-check.yml`.
+
+---
+
+## 🧩 Governance Workflow
 
 ```mermaid
 flowchart LR
-  A["Update Doc or Diagram"] --> B["Run make docs-validate"]
-  B --> C["Check Front-matter / Metadata"]
-  C --> D["Lint Mermaid / Markdown / Links"]
-  D --> E["Generate Provenance JSON + SHA-256"]
-  E --> F["Commit + CI Uploads Artifact"]
-  F --> G["Review & Merge → Release"]
+  A["Author Drafts Doc/Diagram"] --> B["Pre-Commit + Docs-Validate"]
+  B --> C["Peer Review (@kfm-architecture)"]
+  C --> D["Governance Board Sign-off"]
+  D --> E["CI → SBOM/SHA256 Provenance"]
+  E --> F["Archive + Publish (Release)"]
 ```
 <!-- END OF MERMAID -->
 
-**Validation Tools**
-- `markdownlint-cli2` — heading, list, and link validation  
-- `@mermaid-js/mermaid-cli` — diagram rendering check  
-- `jq` — front-matter field completeness  
-- GitHub **policy-check.yml** — required metadata enforcement  
-
 ---
 
-## 🧾 Governance & Compliance Matrix
+## 🔗 ADR & SOP Integration
 
-| Standard | Implementation |
-|:--|:--|
-| **MCP-DL v6.3** | Docs-first reproducibility; CI enforced |
-| **STAC / DCAT** | Metadata alignment + dataset lineage |
-| **CIDOC CRM / OWL-Time** | Knowledge Graph semantics |
-| **FAIR / CARE** | Ethical and interoperable data principles |
-| **SLSA / SBOM** | Provenance + supply-chain security |
-
----
-
-## 🧠 Editing & Contribution Guidelines
-
-1. Create or modify documentation under `docs/architecture/`.  
-2. Add/update front-matter metadata:
-   ```yaml
-   title: "System Architecture Overview"
-   version: "vX.Y.Z"
-   last_updated: "YYYY-MM-DD"
-   owners: ["@kfm-architecture"]
-   ```
-3. Validate locally:
-   ```bash
-   make docs-validate
-   ```
-4. Commit using semantic prefix:
-   ```bash
-   git commit -m "docs(architecture): refine system diagram and metadata"
-   ```
-5. Submit PR → CI runs validation → governance sign-off by `@kfm-architecture`.
-
----
-
-## 🧩 Observability & Provenance
-
-| Metric | Target | Tool |
+| Document | Purpose | Stored In |
 |:--|:--|:--|
-| Diagram parse rate | 100% | Mermaid CLI |
-| Broken link count | 0 | Markdownlint |
-| Metadata completeness | 100% | policy-check.yml |
-| Provenance logs | 100% retained | `artifacts/docs/provenance.json` |
+| **ADR-####** | Record architecture decisions (context, rationale, consequences) | `docs/architecture/adr/` |
+| **SOPs** | Repeatable system or pipeline procedures | `docs/templates/sop.md` |
+| **Experiments** | Data or model experiment logs | `docs/templates/experiment.md` |
+
+> Each ADR is version-linked to the relevant architecture file and validated via `adr_validate.yml`.
+
+---
+
+## 🧩 Automated Provenance Export
+
+```bash
+make export-architecture
+```
+
+Creates:
+
+```
+artifacts/docs/architecture_provenance.json
+artifacts/docs/architecture_checksums.sha256
+```
+
+These are attached to releases and stored 1 year (minimum) for traceability.
+
+---
+
+## 🧮 Observability Metrics Dashboard
+
+| Metric | Source | Target | Tool |
+|:--|:--|:--|:--|
+| diagram_validity | docs-validate | 100 % | Mermaid CLI |
+| metadata_completeness | policy-check | 100 % | OPA / Conftest |
+| ci_pass_rate | GitHub Actions | 99 %+ | GH API |
+| sbom_provenance | sbom.yml | 100 % signed | Syft + Grype |
+| ai_bias_score | ai-model.yml | ≤ 0.05 | Bias benchmark |
+
+---
+
+## 🧩 Architecture → CI/CD → Docs Feedback Loop
+
+```mermaid
+flowchart TD
+  Docs["Architecture Docs"] --> CI["CI/CD Validation"]
+  CI --> Provenance["Provenance Artifacts (SHA256,SLSA)"]
+  Provenance --> Release["GitHub Release + Pages Deploy"]
+  Release --> Docs
+```
+<!-- END OF MERMAID -->
+
+---
+
+## 🧠 Contribution Checklist
+
+- [ ] Front-matter validated (`make docs-validate`)  
+- [ ] Diagram renders (no syntax errors)  
+- [ ] STAC/DCAT cross-refs accurate  
+- [ ] Provenance JSON export runs successfully  
+- [ ] PR uses semantic commit (`docs(architecture): …`)  
+- [ ] Reviewed by `@kfm-architecture` and `@kfm-docs`  
 
 ---
 
@@ -204,14 +273,11 @@ flowchart LR
 versioning:
   policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
   tag_pattern: "architecture-v*"
-  release_doi: true
-  provenance_bundle: ["architecture_readme.json","architecture_readme.sha256"]
+  doi_on_major: true
+  provenance_bundle:
+    - "architecture_provenance.json"
+    - "architecture_checksums.sha256"
 ```
-
-**When to bump**
-- **Major:** architectural paradigm shift (e.g., data model refactor)
-- **Minor:** new diagrams, sections, or CI integrations
-- **Patch:** typos, metadata, or small formatting corrections
 
 ---
 
@@ -219,10 +285,10 @@ versioning:
 
 | Version | Date | Summary |
 |:--|:--|:--|
-| **v2.0.0** | 2025-11-15 | Tier-Ω+∞: refactored for new structure, added diagrams validation, observability metrics, policy enforcement, and CI provenance. |
-| v1.3.0 | 2025-10-20 | Added CI/CD, AI automation, and threat model references. |
-| v1.2.0 | 2025-10-17 | Expanded FAIR/CARE & accessibility standards; added provenance tracking. |
-| v1.0.0 | 2025-10-04 | Initial architecture index & directory definition. |
+| **v2.1.0** | 2025-11-16 | Added risk & observability framework, ADR/SOP integration, governance diagram, cross-component matrix, FAIR/CARE expansion, AI validation hooks, and automated provenance exports. |
+| v2.0.0 | 2025-11-15 | Refactored structure · added CI integration and metrics tracking. |
+| v1.3.0 | 2025-10-20 | Introduced AI automation & security governance references. |
+| v1.0.0 | 2025-10-04 | Initial architecture index · baseline structure. |
 
 ---
 
@@ -230,6 +296,6 @@ versioning:
 
 **Kansas Frontier Matrix © 2025**  
 *“Every System has a Story — Every Story has a Provenance.”*  
-📍 `docs/architecture/README.md` — Central architectural index for the Kansas Frontier Matrix.
+📍 `docs/architecture/README.md` — Central architectural governance hub for the Kansas Frontier Matrix.
 
 </div>
