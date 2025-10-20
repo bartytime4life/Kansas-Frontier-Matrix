@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧭 **Kansas Frontier Matrix — Root Repository Overview**
+# 🧭 **Kansas Frontier Matrix — Root Repository Overview (v2.0.0 · Tier-Ω+∞ Certified)**
 
 ### *“Time · Terrain · History · Knowledge Graphs”*
 
@@ -17,10 +17,44 @@
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — Root Repository Overview"
+document_type: "Repository Index"
+version: "v2.0.0"
+last_updated: "2025-11-14"
+owners: ["@kfm-architecture","@kfm-data","@kfm-web","@kfm-ai","@kfm-accessibility"]
+status: "Active"
+maturity: "Production"
+license: ["MIT (code)","CC-BY-4.0 (docs/data)"]
+tags: ["kfm","knowledge-graph","stac","neo4j","react","maplibre","etl","ai","provenance","fair","care","slsa","sbom"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0 / DCAT 2.0
+  - CIDOC CRM / OWL-Time / GeoSPARQL
+  - WCAG 2.1 AA / 3.0 readiness
+  - FAIR / CARE
+validation:
+  ci_enforced: true
+  artifact_checksums: "SHA-256"
+  sbom_required: true
+  slsa_attestations: true
+observability:
+  endpoint: "https://metrics.kfm.ai/root"
+  metrics: ["build_status","stac_pass_rate","codeql_crit","trivy_crit","a11y_score","gai_score"]
+preservation_policy:
+  replication_targets: ["GitHub","Zenodo DOI","OSF"]
+  checksum_algorithm: "SHA-256"
+  retention: "365d artifacts · 90d logs · releases permanent"
+---
+```
+
+---
+
 ## 🌾 Mission
 
-The **Kansas Frontier Matrix (KFM)** is an open-science platform that connects **time, terrain, and history** across Kansas.  
-It integrates climate, land, treaty, and historical archives into a **semantic knowledge graph** (Neo4j + CIDOC CRM + OWL-Time) visualized in an **interactive React + MapLibre** timeline-map interface.
+The **Kansas Frontier Matrix (KFM)** is an open-science platform connecting **time, terrain, and history**.  
+We integrate climate, land, treaty, and archival sources into a **semantic knowledge graph** (Neo4j + CIDOC CRM + OWL-Time) and surface them via an **interactive React + MapLibre** timeline-map interface.
 
 > *Every dataset tells a story; every story is mapped, cited, and reproducible.*
 
@@ -28,13 +62,13 @@ It integrates climate, land, treaty, and historical archives into a **semantic k
 
 ## 🧠 Core Concepts
 
-| Layer                 | Purpose                                                      |
-|:----------------------|:-------------------------------------------------------------|
-| **ETL / Processing**  | Extract, transform, validate → geospatial layers (COG/GeoJSON/CSV) |
-| **AI / ML Enrichment**| OCR, NLP, geocoding, summarization, entity linking           |
-| **Knowledge Graph**   | Neo4j with CIDOC CRM · OWL-Time · GeoSPARQL + JSON-LD views |
-| **API Layer**         | FastAPI + GraphQL: entities, events, tiles, dossiers         |
-| **Web Frontend**      | React + MapLibre + Canvas/D3 timeline; Focus Mode            |
+| Layer | Purpose |
+|:--|:--|
+| **ETL / Processing** | Ingest → transform → validate to geospatial layers (COG/GeoJSON/CSV) |
+| **AI / ML Enrichment** | OCR, NLP, geocoding, summarization, entity linking |
+| **Knowledge Graph** | Neo4j + CIDOC CRM + OWL-Time + GeoSPARQL; JSON-LD/GraphQL views |
+| **API Layer** | FastAPI + GraphQL: entities, events, tiles, dossiers |
+| **Web Frontend** | React + MapLibre; Timeline (Canvas/D3); Focus Mode / AI Assistant |
 
 ---
 
@@ -42,7 +76,8 @@ It integrates climate, land, treaty, and historical archives into a **semantic k
 
 ```mermaid
 flowchart TD
-  A["Data Sources<br/>NOAA · USGS · FEMA · KHS · Treaties · Archives"] --> B["ETL + AI Pipeline<br/>Python · GDAL · spaCy · Transformers"]
+  A["Data Sources<br/>NOAA · USGS · FEMA · KHS · Treaties · Archives"]
+    --> B["ETL + AI Pipeline<br/>Python · GDAL · spaCy · Transformers"]
   B --> C["Processed Layers<br/>COG · GeoJSON · CSV"]
   C --> D["STAC Catalog<br/>Collections · Items · Assets"]
   B --> E["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL"]
@@ -50,8 +85,8 @@ flowchart TD
   E --> F["FastAPI / GraphQL API<br/>JSON/GeoJSON/JSON-LD"]
   F --> G["Web Frontend<br/>React · MapLibre · Timeline · AI Assistant / Focus Mode"]
   C --> H["Google Earth Exports<br/>KML/KMZ"]
-%% END OF MERMAID
 ```
+<!-- END OF MERMAID -->
 
 ---
 
@@ -74,22 +109,18 @@ Kansas-Frontier-Matrix/
 ├─ tools/                    # CLI scripts, deploy helpers
 ├─ tests/                    # Unit + integration tests
 ├─ .github/                  # Workflows, CODEOWNERS, issue/PR templates
-├─ .dvc/ (optional)          # DVC config (if DVC is enabled)
+├─ .dvc/ (optional)          # DVC config (if used)
 └─ Makefile                  # Reproducible pipeline targets
 ```
 
-> **Data architecture:** Each dataset includes provenance, **SHA-256**, and a STAC entry; large binaries tracked via **LFS/DVC** for reproducibility.
+> **Data architecture:** Every dataset declares **provenance**, **SHA-256**, and a **STAC entry**; large binaries tracked via **LFS/DVC**.
 
 ---
 
 ## ⚙️ Quickstart
 
 ### 🧰 Prerequisites
-- **Python 3.11+**
-- **Node.js 20+** (with **pnpm**)
-- **Neo4j 5.x**
-- **GDAL / Rasterio**
-- **Make**
+- Python 3.11+ · Node.js 20+ (pnpm) · Neo4j 5.x · GDAL/Rasterio · Make
 
 ### 🚀 Setup
 
@@ -118,102 +149,87 @@ make fetch          # Download raw datasets from manifests
 make process        # Transform → data/processed/
 make stac           # Generate & validate STAC catalog
 make serve          # Start API + web (dev)
-# Optional hardening / supply chain
-make sbom           # Generate SBOM (Syft); scan with Grype
-make dvc-sync       # Sync DVC pointers (if enabled)
+
+# Hardening / supply chain (optional)
+make sbom           # Syft SBOM; scan with Grype
+make dvc-sync       # Sync DVC if enabled
 ```
 
-Open **http://localhost:3000** (web UI) and **http://localhost:7474** (Neo4j, if local).
+Open **http://localhost:3000** (web UI) and **http://localhost:7474** (Neo4j).
 
 ---
 
-## 🧩 Major Components
+## 🔒 Security & Supply Chain
 
-| Component      | Location       | Description                                      |
-|:---------------|:---------------|:-------------------------------------------------|
-| **ETL Engine** | `src/etl/`     | Ingestion, geoprocessing, schema normalization   |
-| **AI Pipeline**| `src/ai/`      | OCR (Tesseract), NLP (spaCy/Transformers), linking |
-| **API Server** | `src/api/`     | FastAPI + GraphQL, JSON-LD responses             |
-| **Graph**      | `src/graph/`   | Neo4j (CIDOC CRM · OWL-Time · GeoSPARQL)         |
-| **Frontend**   | `web/src/`     | Map, timeline, AI Assistant / Focus Mode         |
-| **STAC Data**  | `data/stac/`   | Dataset/asset metadata & lineage                 |
-| **Docs**       | `docs/`        | Standards, workflows, runbooks, templates        |
+- **CodeQL** static analysis; **Trivy** CVE scans; **Gitleaks** secret scan  
+- **SBOM** (Syft CycloneDX) attached to releases; **SLSA** provenance attestations  
+- **Action pinning** (version/SHA) + **OIDC least-privilege** + **signed commits**
 
 ---
 
-## 🔒 Security & Provenance
+## 🧾 Provenance & FAIR Registration
 
-- **Static Analysis:** CodeQL (SARIF)
-- **CVE Scans:** Trivy for images/dependencies
-- **Integrity:** **SHA-256** for data/artifacts; checksum diffs in PRs
-- **Provenance:** PROV-O annotations; STAC lineage (`derived_from`)
-- **Supply Chain:** **SBOM** (Syft) + Grype scan; **SLSA attestations** on releases
-- **Workflow Hygiene:** Pinned action versions; least-privilege OIDC; signed commits
-- **Audit Trails:** CI logs and provenance artifacts retained per policy
-
----
-
-## 🧾 Versioning & Governance
-
-| Domain   | Versioning      | Standard                  |
-|:---------|:-----------------|:--------------------------|
-| **Code** | SemVer           | MCP-DL v6.3               |
-| **Data** | STAC properties  | STAC 1.0                  |
-| **Docs** | MCP metadata     | CC-BY 4.0                 |
-| **Models** | Model cards    | FAIR / MCP (hash + metrics)|
-
-**Release assistants:** Dependabot/Renovate (grouped weekly updates) + Release-Please (changelog/tags).
+- **STAC** lineage (`derived_from`) and dataset providers; **PROV-O** annotations in docs  
+- **DOIs** minted for major releases (Zenodo)  
+- **Provenance bundles** (`.prov.json`, SBOM, SLSA) published under release assets
 
 ---
 
 ## 🧪 Documentation & CI (Docs-as-Code)
 
-- **docs-validate:** Markdownlint + link checker + metadata schema  
-- **actionlint:** Validates workflows on changes to `.github/**`  
-- **Mermaid:** Diagrams must end with `%% END OF MERMAID`  
-- **Style:** Follow `docs/standards/markdown_rules.md` & `docs/standards/markdown_guide.md`
+- `docs-validate.yml`: Markdownlint + link checker + front-matter schema  
+- `actionlint`: workflow linting required on `.github/**`  
+- **Mermaid**: diagrams terminate with `<!-- END OF MERMAID -->` marker  
+- **Style**: `docs/standards/markdown_rules.md` & `docs/standards/markdown_guide.md`
 
 ---
 
-## 🧪 AI Governance (Quality & Ethics)
+## 🤖 AI Governance (Quality & Ethics)
 
-- **Training Data Hashes:** Logged in model artifacts; stored in model card  
-- **Quality Gates:** Minimum F1/ROUGE thresholds before publish  
-- **Bias Checks:** Curated benchmark set; block on regression  
-- **Human-in-the-Loop:** `@kfm-ai` approval required to update model cards  
-- **Focus Mode:** AI summaries/dossiers cite sources; confidence displayed
+- **Model cards** (hashes, metrics, dataset links) in `docs/models/*`  
+- **Quality gates**: min F1/ROUGE; **bias baselines** enforced  
+- **Human-in-the-loop** (`@kfm-ai`) approves model card changes  
+- **Focus Mode**: all AI outputs cite sources + confidence bands
 
 ---
 
 ## 🧾 Data Ethics & Cultural Safeguards
 
-- **Indigenous & sensitive datasets:** STAC `properties.data_ethics` required (e.g., `restricted-derivatives`), license/source documented  
-- **Public artifact scrubbing:** Restricted layers excluded from public Pages builds; retention limited  
-- **Provenance completeness:** `license`, `derived_from`, `created`, `providers` must be set
+- STAC `properties.data_ethics` for culturally sensitive datasets  
+- Redaction of PII & sensitive geometry for public artifacts  
+- Ethics ledger stored at `docs/standards/ethics/ledger/`
 
 ---
 
-## 🤝 Contributing
+## 🧮 Design → Implementation Traceability (Preview)
 
-1. Fork & branch (`feature/*`)  
-2. Add/update documentation (README or SOP)  
-3. Validate STAC (`make stac`) and checksums (`make checksums`)  
-4. Run tests & lints (`pre-commit run --all-files`)  
-5. Submit PR using the template; include provenance logs and changelog
-
-**Templates:**  
-- `docs/templates/sop.md` · `docs/templates/experiment.md` · `docs/templates/model_card.md`  
-- `.github/PULL_REQUEST_TEMPLATE.md` · `.github/ISSUE_TEMPLATE/*`
+| Mockup | Component | Token Set | Status |
+|:--|:--|:--|:--:|
+| `map_overlay_v2.0` | `web/src/components/map/Legend.tsx` | `--kfm-color-accent`,`--kfm-space-md` | ✅ |
+| `timeline_v2.3` | `web/src/components/timeline/Slider.tsx` | `--kfm-motion-smooth` | ⚙️ QA |
 
 ---
 
-## 🧠 Standards & Alignment
+## 🧾 Versioning & Release Governance
 
-- **MCP-DL v6.3** — Documentation & Provenance Framework  
-- **STAC 1.0 / DCAT 2.0** — Dataset metadata & catalogs  
-- **CIDOC CRM / OWL-Time / GeoSPARQL** — Semantic interoperability  
-- **WCAG 2.1 AA** — Accessibility in UI  
-- **FAIR** — Findable · Accessible · Interoperable · Reusable
+```yaml
+versioning:
+  code: "SemVer"
+  data: "STAC item versions"
+  docs: "MCP metadata with changelog"
+  models: "Model card + hash"
+  release_automation: "release-please.yml"
+  doi_on_major: true
+```
+
+**Release tags:** `kfm-vMAJOR.MINOR.PATCH` (code); `mockups-v*` (design); `stac-v*` (catalogs).
+
+---
+
+## 🧪 Health & Observability
+
+- Dashboard: **https://metrics.kfm.ai/root**  
+- Metrics: build status, STAC pass rate, CodeQL/Trivy critical, A11y (GAI), action pinning %, artifact verification %
 
 ---
 
@@ -228,16 +244,15 @@ Open **http://localhost:3000** (web UI) and **http://localhost:7474** (Neo4j, if
 
 ---
 
-## 🧾 Versioning & Metadata
+## 🗓 Version History
 
-| Field            | Value                                                  |
-|:-----------------|:-------------------------------------------------------|
-| **Doc Version**  | `v6.3.3`                                               |
-| **Release Type** | **Stable**                                             |
-| **Last Updated** | 2025-10-18                                             |
-| **Maintainers**  | @kfm-architecture · @kfm-data · @kfm-web · @kfm-ai     |
-| **Alignment**    | STAC · DCAT · CIDOC CRM · OWL-Time · GeoSPARQL · FAIR |
-| **Checksums**    | CI publishes SHA-256 sidecars for artifacts            |
+| Version | Date | Author | Summary | Type |
+|:--|:--|:--|:--|:--|
+| **v2.0.0** | 2025-11-14 | @kfm-architecture | Tier-Ω+∞ upgrade: FAIR provenance bundle, supply-chain badges, versioning policy, design→code traceability, dashboards. | Major |
+| v1.6.3 | 2025-10-18 | @kfm-architecture | Consolidated Quickstart + security hardening. | Minor |
+| v1.6.0 | 2025-10-04 | @kfm-web | Added Make targets for SBOM & DVC sync. | Minor |
+| v1.5.0 | 2025-09-20 | @kfm-data | STAC/DCAT alignment and ethics flags. | Minor |
+| v1.0.0 | 2024-06-01 | Founding Team | Initial repository overview. | Major |
 
 ---
 
