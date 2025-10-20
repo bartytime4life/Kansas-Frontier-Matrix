@@ -1,0 +1,223 @@
+<div align="center">
+
+# 🧠 **Kansas Frontier Matrix — Knowledge Graph Diagram (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/knowledge_graph.mmd`
+
+**Mission:** Visualize the **semantic knowledge graph layer** of the **Kansas Frontier Matrix (KFM)** — how **STAC metadata, ETL outputs, and AI enrichment** become **CIDOC CRM/OWL-Time/PROV-O–aligned entities and relations**, exposed via **SPARQL/GraphQL**, and audited for **provenance and integrity**.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Knowledge Graph Diagram"
+document_type: "Mermaid Diagram"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-architecture","@kfm-data","@kfm-ai"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["knowledge-graph","neo4j","rdf","cidoc-crm","owl-time","prov-o","stac","json-ld","sparql","graphql"]
+alignment:
+  - MCP-DL v6.3
+  - CIDOC CRM v7.x
+  - OWL-Time
+  - PROV-O
+  - GeoSPARQL
+  - STAC 1.0 / DCAT 3.0
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_required_checks: ["graph-validate.yml","stac-validate.yml","checksums.yml","docs-validate.yml"]
+observability:
+  endpoint: "https://metrics.kfm.ai/graph"
+  metrics: ["graph_nodes","graph_edges","shacl_violations","ingest_latency_s","query_p95_ms"]
+preservation_policy:
+  retention: "rdf dumps 1y · logs 90d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 🧭 Overview
+
+This diagram shows how **processed data + STAC metadata + AI enrichment** are normalized into a **semantic knowledge graph**, validated by **SHACL**, exposed via **SPARQL/GraphQL**, and rendered in the UI with **provenance and confidence**.
+
+---
+
+## 🧩 Knowledge Graph (Mermaid Source)
+
+```mermaid
+%%----------------------------------------------------------
+%% Kansas Frontier Matrix — Knowledge Graph Architecture Diagram
+%% File: docs/architecture/diagrams/knowledge_graph.mmd
+%% Purpose: Show ingestion → normalization → ontology mapping → validation → query → UI
+%% Author: KFM Documentation Team
+%% Version: 2.0.0
+%% Date: 2025-11-16
+%% License: CC-BY 4.0
+%% Commit: <auto-filled-on-export>
+%% Notes:
+%%   - Use quoted labels; \n for line breaks.
+%%   - Keep IDs simple (letters/numbers/underscores).
+%%   - End with <!-- END OF MERMAID --> (CI-enforced).
+%%----------------------------------------------------------
+
+flowchart TD
+
+  %% ===== Sources & Inputs =====
+  subgraph SRC["Inputs\nprocessed datasets · STAC · AI enrichment"]
+    STAC["STAC Items/Collections\n(data/stac/)"]
+    PROC["Processed Assets\nCOG · GeoJSON · CSV/Parquet · JSONL"]
+    AIENR["AI Enrichment\nOCR · NER · Linking · Summaries"]
+  end
+
+  %% ===== Ingestion / Normalization =====
+  subgraph ING["Ingestion & Normalization\nparsers · mappers · cleaners"]
+    MAPSTAC["Map STAC → graph terms\nid · bbox · datetime · asset refs"]
+    MAPTXT["Normalize text entities\nnames · dates · places"]
+    GEONORM["Geodesy\nCRS normalization · WKT/WGS84"]
+  end
+
+  %% ===== Ontologies =====
+  subgraph ONT["Ontology Context\nCIDOC CRM · OWL-Time · PROV-O · GeoSPARQL"]
+    CRM["crm: classes\nE21 Person · E53 Place · E5 Event · E31 Document · E73 Dataset"]
+    TIME["time:\nInstant · Interval"]
+    PROV["prov:\nwasDerivedFrom · used · wasGeneratedBy"]
+    GEO["geo:\nFeature · Geometry (WKT)"]
+  end
+
+  %% ===== Graph Core =====
+  subgraph KG["Knowledge Graph Core\nNeo4j (n10s) · RDF Store"]
+    PERS["Person\ncrm:E21_Person"]
+    PLACE["Place\ncrm:E53_Place"]
+    EVENT["Event\ncrm:E5_Event"]
+    DOC["Document\ncrm:E31_Document"]
+    DSET["Dataset\ncrm:E73_Information_Object"]
+    RELS["Relations\nP7_took_place_at · P11_had_participant · P129_is_about"]
+  end
+
+  %% ===== Validation & Dumps =====
+  subgraph VAL["Validation & Dumps\nSHACL · JSON Schema · RDF dumps"]
+    SHACL["SHACL Shapes\ncardinality · domain/range"]
+    JSCH["JSON Schema\naux configs/records"]
+    DUMP["RDF/TTL + JSON-LD dumps\nartifacts/graph/*.ttl.gz"]
+    CHK["Checksums (SHA-256)\nartifact integrity"]
+  end
+
+  %% ===== Query Layer =====
+  subgraph API["Query Layer\nSPARQL · GraphQL · Cypher"]
+    SPARQL["SPARQL 1.1\nsemantic queries"]
+    GQL["GraphQL\nentity dossiers · typed fields"]
+    CYPHER["Cypher\nanalytics in Neo4j"]
+  end
+
+  %% ===== UI & Focus Mode =====
+  subgraph UI["UI & Focus Mode\nReact · MapLibre · Panels"]
+    PANEL["Detail Panel\nprovenance · citations · checksum"]
+    AIUI["AI Assistant\ncontext · sources · confidence"]
+    MAP["Map View\nentity highlight · spatial filters"]
+  end
+
+  %% ===== Observability =====
+  subgraph OBS["Observability\nOpenTelemetry · dashboards"]
+    MET["Metrics\nnodes · edges · p95 query ms"]
+    LOG["Logs/Traces\ningest · errors · query paths"]
+  end
+
+  %% ----- Flows -----
+  STAC --> MAPSTAC
+  PROC --> MAPSTAC
+  AIENR --> MAPTXT
+  PROC --> GEONORM
+
+  MAPSTAC --> CRM
+  MAPTXT --> CRM
+  GEONORM --> GEO
+
+  CRM --> PERS
+  CRM --> PLACE
+  CRM --> EVENT
+  CRM --> DOC
+  CRM --> DSET
+  TIME --> EVENT
+  PROV --> DSET
+  GEO --> PLACE
+
+  %% Build relations
+  PERS --> RELS
+  PLACE --> RELS
+  EVENT --> RELS
+  DOC --> RELS
+  DSET --> RELS
+
+  %% Validation + dumps
+  PERS & PLACE & EVENT & DOC & DSET --> SHACL
+  SHACL --> DUMP --> CHK
+  JSCH -. aux checks .-> SHACL
+
+  %% Query layer
+  PERS & PLACE & EVENT & DOC & DSET --> SPARQL
+  PERS & PLACE & EVENT & DOC & DSET --> GQL
+  PERS & PLACE & EVENT & DOC & DSET --> CYPHER
+
+  %% UI consumers
+  SPARQL --> PANEL
+  GQL --> PANEL
+  GQL --> AIUI
+  SPARQL --> MAP
+
+  %% Observability
+  SPARQL --> MET
+  GQL --> MET
+  CYPHER --> MET
+  SHACL --> LOG
+  MAPSTAC --> LOG
+  PANEL --> LOG
+
+  %% ===== Styling =====
+  classDef layer fill:#ffffff,stroke:#777,stroke-width:1px,color:#111;
+  classDef src fill:#f8f8f8,stroke:#666,stroke-width:1px,color:#111;
+  classDef ing fill:#e6f2ff,stroke:#31708f,stroke-width:1.2px,color:#111;
+  classDef ont fill:#fff8e1,stroke:#8a6d3b,stroke-width:1.2px,color:#111;
+  classDef core fill:#f9e6ff,stroke:#6b3c76,stroke-width:1.2px,color:#111;
+  classDef val fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.2px,color:#111;
+  classDef api fill:#e3f2fd,stroke:#1565c0,stroke-width:1.2px,color:#111;
+  classDef ui fill:#f5f5f5,stroke:#444,stroke-width:1px,color:#111;
+  classDef obs fill:#ede7f6,stroke:#4527a0,stroke-width:1.2px,color:#111;
+
+  class SRC src;
+  class ING ing;
+  class ONT ont;
+  class KG core;
+  class VAL val;
+  class API api;
+  class UI ui;
+  class OBS obs;
+```
+<!-- END OF MERMAID -->
+
+---
+
+## 🧭 Diagram Notes
+
+- **CIDOC CRM/OWL-Time/PROV-O** provide interoperable semantics; **GeoSPARQL** carries geometries.  
+- **SHACL** is the contract layer; dumps are hashed (SHA-256) and attached to releases.  
+- Queries may be federated or cached; UI **Focus Mode** surfaces **confidence + citations**.
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | First full KG diagram: ingestion/normalization, ontology mapping, SHACL validation, RDF dumps, SPARQL/GraphQL/Cypher, UI/OTel integration. |
+```
