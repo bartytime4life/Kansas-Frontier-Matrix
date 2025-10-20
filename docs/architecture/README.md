@@ -1,19 +1,20 @@
 <div align="center">
 
-# 🏛️ **Kansas Frontier Matrix — Architecture Documentation Hub (v2.1.0 · Tier-Ω+∞ Certified)**  
+# 🏛️ **Kansas Frontier Matrix — Architecture Documentation Hub (v2.1.1 · Tier-Ω+∞ Certified)**  
 `docs/architecture/README.md`
 
 **Mission:** Define, govern, and preserve the **complete architectural blueprint** of the  
 **Kansas Frontier Matrix (KFM)** — uniting ETL pipelines, AI enrichment, knowledge graphs, APIs, web interfaces,  
 and CI/CD automation under **Master Coder Protocol (MCP-DL v6.3)** for full reproducibility, provenance, and FAIR/CARE alignment.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP-DL%20v6.3-blue?logo=markdown)](../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../../docs/)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
 [![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
-[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM %7C SLSA-green)](../../.github/workflows/sbom.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../.github/workflows/slsa.yml)
 [![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
-[![License: MIT \| CC-BY 4.0](https://img.shields.io/badge/License-MIT %7C CC-BY 4.0-blue)](../../LICENSE)
+[![License: MIT \| CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-blue)](../../LICENSE)
 
 </div>
 
@@ -22,7 +23,7 @@ and CI/CD automation under **Master Coder Protocol (MCP-DL v6.3)** for full repr
 ```yaml
 ---
 title: "Kansas Frontier Matrix — Architecture Documentation Hub"
-version: "v2.1.0"
+version: "v2.1.1"
 last_updated: "2025-11-16"
 owners: ["@kfm-architecture","@kfm-data","@kfm-ai","@kfm-security","@kfm-docs"]
 status: "Stable"
@@ -285,7 +286,8 @@ versioning:
 
 | Version | Date | Summary |
 |:--|:--|:--|
-| **v2.1.0** | 2025-11-16 | Added risk & observability framework, ADR/SOP integration, governance diagram, cross-component matrix, FAIR/CARE expansion, AI validation hooks, and automated provenance exports. |
+| **v2.1.1** | 2025-11-16 | **Badge fix:** corrected Shields.io labels/encoding; split SBOM/SLSA badges; normalized URLs. |
+| v2.1.0 | 2025-11-16 | Added risk & observability framework, ADR/SOP integration, governance diagram, cross-component matrix, FAIR/CARE expansion, AI validation hooks, and automated provenance exports. |
 | v2.0.0 | 2025-11-15 | Refactored structure · added CI integration and metrics tracking. |
 | v1.3.0 | 2025-10-20 | Introduced AI automation & security governance references. |
 | v1.0.0 | 2025-10-04 | Initial architecture index · baseline structure. |
