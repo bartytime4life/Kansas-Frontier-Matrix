@@ -1,54 +1,87 @@
 <div align="center">
 
-# 🌐 Kansas Frontier Matrix — Web UI Architecture  
+# 🌐 **Kansas Frontier Matrix — Web UI Architecture (v2.0.0 · Tier-Ω+∞ Certified)**  
 `docs/architecture/web-ui-architecture.md`
 
-**Mission:** Define the **frontend and visualization architecture** of the Kansas Frontier Matrix (KFM) —  
-explaining how map layers, timelines, datasets, and metadata integrate within the  
-web interface to deliver an interactive, provenance-aware exploration of Kansas history, science, and geography.
+**Mission:** Define the **frontend & visualization architecture** for the **Kansas Frontier Matrix (KFM)** — showing how **MapLibre layers, timelines, STAC metadata, and AI context** integrate to deliver an **interactive, provenance-aware, and accessible** exploration of Kansas history, science, and geography.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../docs/)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../.github/workflows/slsa.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
-
-The **Kansas Frontier Matrix Web UI** is a **MapLibre-based, STAC-powered visualization layer**  
-that connects processed data, metadata, and temporal filters into an interactive public interface.
-
-It combines:
-- 🗺️ **MapLibre GL JS** for rendering raster/vector tiles  
-- 🧭 **STAC JSON metadata** for dynamic layer configuration  
-- 📆 **Timeline + temporal filtering** for time-aware visualization  
-- 🧠 **Semantic metadata integration** for provenance-aware pop-ups  
-- ⚙️ **Static site generation (SSG)** via GitHub Actions  
-
-Every element in the UI adheres to **MCP documentation-first principles** and references datasets via **STAC Items** and **data/tiles/** assets.
+```yaml
+---
+title: "Kansas Frontier Matrix — Web UI Architecture"
+document_type: "Architecture Spec"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+owners: ["@kfm-web","@kfm-design","@kfm-accessibility","@kfm-architecture"]
+status: "Stable"
+maturity: "Production"
+license: "MIT"
+tags: ["web","maplibre","timeline","stac","json","accessibility","i18n","caching","pwa","security","analytics"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0 / STAC API
+  - WCAG 2.1 AA / 3.0 readiness
+  - JSON / JSON-LD / MVT / COG
+validation:
+  docs_ci_required: true
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+observability:
+  endpoint: "https://metrics.kfm.ai/web"
+  metrics: ["route_a11y_score","first_contentful_paint_ms","tile_load_p95_ms","timeline_fps","error_rate_pct"]
+preservation_policy:
+  retention: "build logs 90d · release assets 365d"
+  checksum_algorithm: "SHA-256"
+---
+```
 
 ---
 
-## 🏗️ High-Level Web UI Architecture
+## 📚 Overview
+
+The **KFM Web UI** is a **MapLibre + Timeline** application driven by **STAC metadata** and **JSON configs**.  
+Layers, legends, and timeslices are **not hardcoded** — they’re rendered from **`data/stac/`** and **`web/config/*.json`**, validated in CI, and deployed via **GitHub Pages**.
+
+**Key tenets**
+- **Data-driven UI** (STAC + JSON configs)  
+- **Provenance by design** (checksum/source surfaced in the UI)  
+- **Accessible & keyboard-first** (WCAG AA budgets)  
+- **Fast & cacheable** (COG/MVT + ETag/immutable caching)  
+- **Secure & observable** (CSP, SRI, metrics, error correlation IDs)
+
+---
+
+## 🏗 High-Level Web UI Architecture
 
 ```mermaid
 graph TD
-  A["🧩 STAC Metadata\n(data/stac/)"] --> B["🗺️ Tile Layers\n(data/tiles/)"]
-  B --> C["🌐 Web Configs\n(web/config/layers.json)"]
-  C --> D["🧭 MapLibre GL Viewer\n(web/index.html, app.js)"]
-  D --> E["🧠 User Interaction\n(Map, Timeline, Search)"]
-  E --> F["📈 Visual Analytics & Provenance Pop-ups"]
+  A["🧩 STAC Metadata\n(data/stac/)"] --> B["🗺️ Tiles & Assets\n(data/tiles/ · COG/MVT)"]
+  B --> C["⚙️ Web Configs\n(web/config/*.json)"]
+  C --> D["🌐 App Shell (Vite/Vanilla)\nweb/index.html · app.js · style.css"]
+  D --> E["🧭 MapLibre Viewer\nLayers · Legends · Popups · Search"]
+  D --> F["📆 Timeline Engine\nPlayhead · Animation · Time Filters"]
+  D --> G["🤖 Focus Mode (AI)\nContext · Sources · Confidence"]
+  E --> H["📈 Provenance Popups\nChecksums · Sources · STAC Links"]
 
   style A fill:#fffbea,stroke:#e8a500
   style B fill:#eef8ff,stroke:#0077cc
   style C fill:#f5f5f5,stroke:#888
   style D fill:#ecf9f0,stroke:#22aa44
-  style E fill:#f0e8ff,stroke:#8844cc
-  style F fill:#f7f7f7,stroke:#555
-````
-
+  style E fill:#e8f0ff,stroke:#0066aa
+  style F fill:#e8f0ff,stroke:#0066aa
+  style G fill:#f0e8ff,stroke:#8844cc
+  style H fill:#f7f7f7,stroke:#555
+```
 <!-- END OF MERMAID -->
 
 ---
@@ -57,45 +90,40 @@ graph TD
 
 ```bash
 web/
-├── index.html                # Root HTML file for the MapLibre web viewer
-├── app.js                    # Main application logic for UI interactivity
-├── style.css                 # Base UI styling and theme tokens
+├── index.html                # App shell (CSP, meta, app mount)
+├── app.js                    # Core logic (map/timeline/events/state)
+├── style.css                 # Base styles + tokens (dark/light/HC)
 ├── config/
-│   ├── layers.json           # Layer definitions and display order
-│   ├── categories.json       # Domain grouping (terrain, hydrology, etc.)
-│   ├── time_config.json      # Timeline and animation settings
-│   ├── legend.json           # Color ramps, layer symbology, and labels
-│   └── viewer.json           # Global app configuration and theme
+│   ├── layers.json           # Layers (id/type/source/paint/metadata)
+│   ├── categories.json       # Domain grouping (terrain, hydrology, ...)
+│   ├── time_config.json      # Timeline bounds, fps, playback
+│   ├── legend.json           # Ramps, symbols, thresholds
+│   └── viewer.json           # Theme, feature flags, a11y tokens
 └── assets/
-    ├── icons/                # UI and map icons
-    ├── images/               # Thumbnails and reference images
-    └── logos/                # Branding and institutional logos
+    ├── icons/                # UI + map icons (SVG, ARIA-labeled)
+    ├── images/               # Thumbnails + previews
+    └── logos/                # Branding
 ```
 
-> Each configuration file is JSON-based and **STAC-compatible**,
-> ensuring synchronization with `data/stac/` metadata and CI/CD validation.
+> CI validates JSON structure and **STAC references** used by `layers.json`.
 
 ---
 
-## ⚙️ Key Components
+## ⚙️ Core Components
 
-| Component        | Path                          | Description                                               |
-| :--------------- | :---------------------------- | :-------------------------------------------------------- |
-| **Map Viewer**   | `web/index.html`              | Core entry point loading MapLibre GL JS and UI assets.    |
-| **App Logic**    | `web/app.js`                  | Manages layer toggles, time slider, pop-ups, and events.  |
-| **Layer Config** | `web/config/layers.json`      | Defines visible datasets, categories, and default styles. |
-| **Timeline**     | `web/config/time_config.json` | Controls animation speed, timeline bounds, and FPS.       |
-| **Legend**       | `web/config/legend.json`      | Defines color ramps, symbols, and classification labels.  |
-| **Theme**        | `web/style.css`               | Implements global UI theme (dark/light modes).            |
+| Component | Path | Description |
+|:--|:--|:--|
+| **Map Viewer** | `web/index.html` + `app.js` | Initializes MapLibre, loads config & STAC-driven layers |
+| **Layer Config** | `web/config/layers.json` | Describes visible datasets, sources, styles, STAC link |
+| **Timeline** | `web/config/time_config.json` | Animation (fps), bounds, snapping, step sizes |
+| **Legend** | `web/config/legend.json` | Ramps, symbols, class breaks, labels |
+| **Theme/Tokens** | `web/style.css` + `viewer.json` | Dark/Light/High-Contrast palettes, focus rings |
 
 ---
 
-## 🧱 Layer Configuration Model
+## 🧱 Layer Configuration Contract
 
-Each dataset visible in the UI is defined as a **layer object** in `web/config/layers.json`
-and linked directly to a **STAC Item** under `data/stac/`.
-
-### Example Layer Definition
+Each **layer object** (in `layers.json`) references **tiles** and its **STAC Item**:
 
 ```json
 {
@@ -106,117 +134,188 @@ and linked directly to a **STAC Item** under `data/stac/`.
   "source": {
     "type": "raster",
     "tiles": ["data/tiles/terrain/ks_hillshade/{z}/{x}/{y}.png"],
-    "tileSize": 256
+    "tileSize": 256,
+    "minzoom": 4,
+    "maxzoom": 14
   },
-  "paint": {"raster-opacity": 0.8},
+  "paint": { "raster-opacity": 0.8 },
   "metadata": "data/stac/terrain/ks_hillshade_2018_2020.json",
-  "legend": "web/config/legend.json"
+  "legend": "web/config/legend.json",
+  "visible": true
 }
 ```
 
-> **Note:**
-> This architecture allows **dynamic UI updates** whenever datasets or metadata are updated in STAC —
-> no hardcoded map layers are required.
+**Contract checks (CI)**: schema validation, STAC path existence, tile URL smoke test.
 
 ---
 
-## 🧭 Timeline Architecture
+## 📆 Timeline Architecture
 
-The KFM timeline system links temporal metadata in STAC Items to
-time-aware visualization filters in the web UI.
+| Element | File | Responsibility |
+|:--|:--|:--|
+| **Time Config** | `web/config/time_config.json` | Playback modes, bounds, snap strategy, fps |
+| **STAC Temporal** | `data/stac/*/*.json` | `datetime` or `interval` for each dataset |
+| **UI** | `app.js` | Binds slider → layer filters; renders time bands |
+| **CI** | `stac-validate.yml` | Ensures valid temporal fields & formats |
 
-| Element                   | File                             | Description                                            |
-| :------------------------ | :------------------------------- | :----------------------------------------------------- |
-| **Time Config**           | `web/config/time_config.json`    | Sets animation speed, playback modes, and time bounds. |
-| **STAC `datetime` Field** | `data/stac/<domain>/<item>.json` | Defines dataset temporal extent.                       |
-| **UI Slider**             | `web/app.js`                     | Syncs map layer visibility with selected timestamp.    |
-| **CI Validation**         | `stac-validate.yml`              | Ensures correct `datetime` metadata values.            |
-
-The system enables animation or stepping through datasets across historical periods (e.g., landcover change, flood events).
+Supports animation, step, and scrub. Map + Timeline share a **single, synced time window**.
 
 ---
 
-## 🧾 Provenance Integration
+## 🧾 Provenance in the UI
 
-Each pop-up and info panel within the UI draws its metadata from the linked STAC item.
-
-### Example Pop-Up Template
+**Popup template** (data-driven from STAC Item):
 
 ```html
 <h3>{{title}}</h3>
-<p><strong>Source:</strong> {{provider}}</p>
+<p><strong>Source:</strong> {{providers[0].name}}</p>
 <p><strong>Date:</strong> {{datetime}}</p>
-<p><strong>Description:</strong> {{description}}</p>
-<a href="{{stac_href}}" target="_blank">View Full Metadata</a>
+<p><strong>Checksum:</strong> <code>{{checksum_sha256}}</code></p>
+<a href="{{stac_href}}" target="_blank" rel="noopener">Full Metadata</a>
 ```
 
-Pop-ups render dynamically using data fields defined in STAC Items (`title`, `description`, `providers`, etc.),
-ensuring metadata provenance is preserved throughout the visualization layer.
+Popups must include: **title**, **provider**, **date**, **checksum**, **metadata link**.
 
 ---
 
-## 🧠 CI/CD Integration
+## 🔒 Security & Privacy
 
-Web architecture validation and deployment are automated via GitHub Actions:
-
-| Workflow                | Function                                                        | Trigger             |
-| :---------------------- | :-------------------------------------------------------------- | :------------------ |
-| **`site.yml`**          | Builds and deploys static web app to GitHub Pages.              | On `push` to `main` |
-| **`stac-validate.yml`** | Validates all STAC references used in `web/config/layers.json`. | On PR or commit     |
-| **`checksums.yml`**     | Verifies integrity of map tiles and assets.                     | On tile generation  |
-| **`pre-commit.yml`**    | Lints and validates JSON config files.                          | On every PR         |
-
-Validation artifacts are stored in `data/work/logs/web_build.log`.
+- **CSP**: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src 'self' (and data host if needed)  
+- **SRI**: subresource integrity for any external scripts (discouraged)  
+- **No PII**: analytics are **anonymous + opt-in**; no cookies or tracking by default  
+- **CORS**: allow GET for static assets; deny non-essential methods
 
 ---
 
-## 🧩 Accessibility & Theming
+## 🚀 Performance & Caching
 
-| Feature                  | Implementation                                          |
-| :----------------------- | :------------------------------------------------------ |
-| **Light/Dark Mode**      | Implemented in `web/style.css` using CSS media queries. |
-| **High Contrast Tokens** | Applied to base color palette in `viewer.json`.         |
-| **Keyboard Navigation**  | Enabled via `tabindex` and accessible HTML roles.       |
-| **Responsive Design**    | Viewport-flexible layout adapting to all screen sizes.  |
-
-Accessibility compliance follows **WCAG 2.1 Level AA** standards.
+- **Tiles**: COG/MVT streamed; CDN caching; `Cache-Control: immutable` for versioned assets  
+- **ETag / Last-Modified**: responses use conditional GET  
+- **SLOs**: FCP ≤ **1200 ms**, tile p95 ≤ **400 ms**, timeline target ≥ **55 fps**
 
 ---
 
-## 🧠 MCP Compliance Summary
+## ♿ Accessibility & i18n
 
-| MCP Principle           | Implementation                                                                       |
-| :---------------------- | :----------------------------------------------------------------------------------- |
-| **Documentation-first** | All configs and UI layers include human-readable and machine-readable documentation. |
-| **Reproducibility**     | UI dynamically regenerates from STAC and config JSONs.                               |
-| **Open Standards**      | Uses MapLibre GL JS, STAC 1.0.0, and JSON-based configs.                             |
-| **Provenance**          | Every visible layer links back to a STAC metadata item.                              |
-| **Auditability**        | CI/CD validation and build logs trace all published assets.                          |
+| Area | Rule | Implementation |
+|:--|:--|:--|
+| **Keyboard** | Full navigation with visible focus | `:focus-visible` tokens; tabindex; ARIA roles |
+| **Contrast** | AA text ≥ 4.5:1; icons ≥ 3:1 | Theme tokens + CI a11y budgets |
+| **Live Regions** | Status/alerts are announced politely | `role="status"` where needed |
+| **Skip Link** | First Tab → “Skip to main content” | `index.html` anchored |
+| **Localization** | BCP-47 `lang`; pseudo-locale `en-XA` tested | labels sourced via `viewer.json` |
+| **RTL** | Mirrored flow when enabled | logical CSS properties |
 
----
-
-## 📎 Related Documentation
-
-| Path                                     | Description                                               |
-| :--------------------------------------- | :-------------------------------------------------------- |
-| `docs/architecture/architecture.md`      | Full system architecture overview (ETL + CI/CD + Web).    |
-| `docs/architecture/data-architecture.md` | Data subsystem and metadata lineage.                      |
-| `web/config/README.md`                   | Configuration reference for map layers and UI components. |
-| `.github/workflows/site.yml`             | Automated web build and deployment workflow.              |
+**A11y budgets (CI):** route average ≥ **95** (Lighthouse/Axe).
 
 ---
 
-## 📅 Version History
+## 🧪 Testing & CI
 
-| Version | Date       | Summary                                                                  |
-| :------ | :--------- | :----------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial Web UI architecture documentation (MapLibre + STAC integration). |
+| Check | Tool/Workflow | What it verifies |
+|:--|:--|:--|
+| Config schema | `docs-validate.yml` | JSON structure, required fields |
+| STAC linkage | `stac-validate.yml` | `metadata` hrefs exist & pass STAC |
+| Tile smoke | `make web-validate` | Random `{z/x/y}` tile returns 200 |
+| A11y audit | `a11y-validate.yml` | Contrast, focus, ARIA, keyboard |
+| Build & deploy | `site.yml` | Pages app + checksum/SBOM bundle |
+
+Build logs: `data/work/logs/web_build.log` (hash-stamped, retained per policy).
+
+---
+
+## 🧩 Progressive Web App (optional)
+
+- Installable app shell; offline cache for **config** + **UI** assets  
+- **Network-first** strategy for tiles/metadata; **cache-first** for app shell  
+- Service worker registration is feature-flagged in `viewer.json`.
+
+---
+
+## 🧠 Focus Mode (AI) Integration
+
+- Context panels summarize **entities/events** with **sources + confidence**  
+- Never hides provenance: citations are explicit; **no token-by-token speech** (buffered summaries)  
+- A11y: summaries piped through `role="status"` with **polite** updates
+
+---
+
+## 📈 Observability
+
+```yaml
+web_metrics:
+  export_to: "https://metrics.kfm.ai/web"
+  fields:
+    - route_a11y_score
+    - first_contentful_paint_ms
+    - tile_load_p95_ms
+    - timeline_fps
+    - error_rate_pct
+  budgets:
+    route_a11y_score: 95
+    tile_load_p95_ms: 400
+    timeline_fps: 55
+```
+
+---
+
+## 🧩 Example: Minimal App Boot
+
+```html
+<!-- index.html -->
+<main id="app" role="main" aria-label="Kansas Frontier Matrix Viewer"></main>
+<script type="module" src="./app.js"></script>
+```
+
+```js
+// app.js
+import layers from './config/layers.json' assert { type: 'json' };
+import timeCfg from './config/time_config.json' assert { type: 'json' };
+import legend from './config/legend.json' assert { type: 'json' };
+
+initMap(layers, legend);
+initTimeline(timeCfg);
+wireAccessibility();
+```
+
+---
+
+## 🔗 Related Documentation
+
+- `docs/architecture/architecture.md` — System overview  
+- `docs/architecture/api-architecture.md` — STAC/GraphQL endpoints  
+- `docs/architecture/data-architecture.md` — Data lineage feeding tiles  
+- `design/mockups/README.md` — UI design provenance  
+- `.github/workflows/site.yml` — Build & deploy
+
+---
+
+## 🧾 Versioning & Lifecycle
+
+```yaml
+versioning:
+  policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
+  tag_pattern: "web-arch-v*"
+  doi_on_major: true
+  provenance_bundle:
+    - "web_architecture.prov.json"
+    - "web_architecture.sha256"
+```
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added security/CSP, PWA caching, a11y/i18n budgets, performance SLOs, config schema checks, Focus Mode conventions, and observability metrics. |
+| v1.0.0 | 2025-10-04 | Initial Web UI architecture (MapLibre + STAC-driven configs + timeline). |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Visualizing Time, Terrain, and Truth — Provenance in Every Pixel.”*
-📍 [`docs/architecture/web-ui-architecture.md`](.) · Web visualization and user interface architecture documentation.
+**Kansas Frontier Matrix — Web UI Architecture**  
+*“Visualizing Time, Terrain, and Truth — with Provenance in Every Pixel.”*
 
 </div>
