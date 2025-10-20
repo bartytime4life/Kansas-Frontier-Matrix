@@ -1,0 +1,202 @@
+<div align="center">
+
+# 🔄 **Kansas Frontier Matrix — CI/CD Pipeline Diagram (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/ci_cd_pipeline.mmd`
+
+**Mission:** Visualize the **Continuous Integration / Continuous Deployment** system of the **Kansas Frontier Matrix (KFM)** — from **triggers → validation gates → security scans → build artifacts → deployments → attestations** — ensuring **reproducibility, provenance, and governance** under **MCP-DL v6.3**.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — CI/CD Pipeline Diagram"
+document_type: "Mermaid Diagram"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-architecture","@kfm-security","@kfm-devops"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["ci","cd","github-actions","stac","checksums","codeql","trivy","sbom","slsa","observability","policy"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0 Validation
+  - SLSA Level ≥ 2
+  - SPDX/CycloneDX SBOM
+  - OpenTelemetry
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_gates: ["pre-commit","lint","unit","integration","stac-validate","codeql","trivy","sbom"]
+observability:
+  endpoint: "https://metrics.kfm.ai/ci"
+  metrics: ["workflow_success_rate","build_latency_s","artifact_integrity_pass_pct","action_pinning_pct"]
+preservation_policy:
+  retention: "artifacts 30d · logs 90d · provenance 365d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 📚 Overview
+
+This diagram shows how **GitHub Actions** orchestrate KFM’s **pre-commit checks**, **testing**, **STAC validation**, **security scanning**, **builds**, **deployments**, and **attestation publishing**.  
+Each stage is a **governed gate** that enforces **reproducibility, provenance, and supply-chain security**.
+
+---
+
+## 🧩 CI/CD Pipeline (Mermaid Source)
+
+```mermaid
+%%----------------------------------------------------------
+%% Kansas Frontier Matrix — CI/CD Pipeline (Mermaid source)
+%% File: docs/architecture/diagrams/ci_cd_pipeline.mmd
+%% Purpose: Triggers → CI gates → Build artifacts → Environments → Observability/Policy
+%% Author: KFM Documentation Team
+%% Version: 2.0.0
+%% Date: 2025-11-16
+%% License: CC-BY 4.0
+%% Commit: <auto-filled-on-export>
+%% Notes:
+%%  - Use quoted labels; \n for line breaks.
+%%  - Keep IDs simple (A-Z,0-9,_).
+%%  - End with <!-- END OF MERMAID --> to pass CI rendering.
+%%----------------------------------------------------------
+
+flowchart TD
+  %% ---------- Triggers ----------
+  subgraph TRG["Triggers\npush · pull_request · schedule (cron) · tag/release"]
+    BR_MAIN["Branch: main\nprotected"]
+    BR_FEAT["Feature Branches\nfeat/* · fix/*"]
+    PR["Pull Request\nreview · required checks"]
+    TAG["Tag/Release\nvX.Y.Z"]
+  end
+
+  %% ---------- CI Stages ----------
+  subgraph CI["CI Stages\nGitHub Actions"]
+    PRE["Pre-commit\nformat · lint · spell"]
+    LINT["Static Lint\nruff · eslint · markdownlint"]
+    UNIT["Unit Tests\npytest · jest"]
+    INT["Integration Tests\nAPI · Graph · ETL smoke"]
+    STACV["STAC Validation\nschema · links · dates"]
+    CODEQL["CodeQL\nSAST (SARIF)"]
+    TRIVY["Trivy\nbase images · deps · CVEs"]
+    SBOM["SBOM/Deps\nSyft(CycloneDX) · npm audit"]
+  end
+
+  %% ---------- Build & Artifacts ----------
+  subgraph ART["Build & Artifacts"]
+    PKG["Build Artifacts\nPython wheels · web bundle"]
+    IMG["Container Images\napi:sha · web:sha · jobs:sha"]
+    META["Provenance & Metadata\n.gitinfo · checksums · SBOM"]
+    CACHE["Caches\npip/uv · node · docker layers"]
+  end
+
+  %% ---------- Environments / CD ----------
+  subgraph CD["CD Environments\nGitHub Envs · approvals"]
+    DEV["Deploy: Dev\npreview URLs (TTL 24h)"]
+    STAGE["Deploy: Stage\nsmoke · E2E"]
+    PROD["Deploy: Prod\nblue/green · canary"]
+  end
+
+  %% ---------- Observability & Policy ----------
+  subgraph OBS["Observability & Compliance"]
+    LOGS["OpenTelemetry\nlogs · metrics · traces"]
+    POL["Policy-as-Code\nOPA/Conftest · branch protection"]
+    NOTI["Notifications\nSlack/Email · PR status"]
+  end
+
+  %% ---------- Trigger → CI ----------
+  BR_FEAT --> PR
+  BR_MAIN --> CI
+  PR --> CI
+  TAG --> CI
+
+  %% ---------- CI flow ----------
+  CI --> PRE --> LINT --> UNIT --> INT --> STACV
+  LINT --> CODEQL
+  IMG -. "scan" .-> TRIVY
+  LINT --> SBOM
+
+  %% ---------- Build when gates pass ----------
+  STACV --> PKG
+  STACV --> IMG
+  CODEQL --> META
+  TRIVY --> META
+  SBOM --> META
+  PRE --> CACHE
+  LINT --> CACHE
+
+  %% ---------- CD gating ----------
+  PKG --> DEV
+  IMG --> DEV
+  DEV --> STAGE
+  STAGE --> PROD
+
+  %% ---------- Feedback & Observability ----------
+  CI --> NOTI
+  CD --> NOTI
+  PROD --> LOGS
+  CI --> POL
+  CD --> POL
+
+  %% ---------- Styling ----------
+  classDef block fill:#f7f7f7,stroke:#333,stroke-width:1px,color:#111;
+  classDef gate fill:#e6f2ff,stroke:#31708f,stroke-width:1px,color:#111;
+  classDef risk fill:#fff3cd,stroke:#8a6d3b,stroke-width:1px,color:#111;
+  class TRG,CI,ART,CD,OBS block;
+  class PRE,LINT,UNIT,INT,STACV gate;
+  class CODEQL,TRIVY,SBOM risk;
+```
+<!-- END OF MERMAID -->
+
+---
+
+## 🗺 Legend
+
+- **Gate (blue)** = validation stage (lint, tests, STAC)  
+- **Risk (amber)** = security controls (CodeQL, Trivy, SBOM)  
+- **Block (gray)** = orchestration groups (Triggers/Artifacts/CD/Obs)
+
+---
+
+## 📈 Metrics & Targets
+
+```yaml
+ci_budgets:
+  workflow_success_rate: 100
+  build_latency_s: 1200
+  artifact_integrity_pass_pct: 100
+  action_pinning_pct: 100
+```
+
+Artifacts per release:
+- `.prov.json` (attestation index)  
+- `slsa.intoto.jsonl` (SLSA provenance)  
+- `sbom.cdx.json` (CycloneDX)  
+- `*.sha256` (checksum bundle)
+
+---
+
+## 🔗 Related Documents
+
+- `docs/architecture/ci-cd.md` — CI/CD architecture spec  
+- `.github/workflows/README.md` — Governance & workflow catalog  
+- `docs/architecture/diagrams/README.md` — Diagram library index  
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: Added metadata header, risk gates, preview TTL, cache hints, budgets, and provenance bundle outputs. |
+| v1.0.0 | 2025-10-04 | Initial CI/CD pipeline diagram. |
