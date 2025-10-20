@@ -1,5 +1,13 @@
+# ────────────────────────────────────────────────────────────────
+#  Kansas Frontier Matrix — Bug Report Form
+#  Context: GitHub Issue Form for reproducible defects (code, data, AI)
+#  Version: v6.3.3 · Tier-Ω+∞ Certified
+#  Validated by: docs-validate.yml · policy-check.yml · gitleaks.yml
+#  Alignment: MCP-DL v6.3.3 · FAIR · CARE · STAC 1.0 · CIDOC-CRM · OWL-Time
+# ────────────────────────────────────────────────────────────────
+
 name: "🐞 Bug Report"
-description: "Report a reproducible defect in code, data, model, or metadata — validated under MCP-DL v6.3."
+description: "Report a reproducible defect in code, data, AI model, or metadata — validated under Master Coder Protocol (MCP-DL v6.3.3)."
 title: "[BUG] <short summary>"
 labels:
   - bug
@@ -8,25 +16,22 @@ labels:
 assignees:
   - kfm-architecture
 
-# 🧭 Kansas Frontier Matrix — MCP-DL v6.3 Bug Report Template
-# Ensures every issue is reproducible, traceable, and standards-aligned (STAC · FAIR · CIDOC CRM · OWL-Time).
-
 body:
   - type: markdown
     attributes:
       value: |
-        ## 🔢 MCP-DL Bug Report Form (v6.3)
-        Please provide **clear steps to reproduce**, **expected vs actual behavior**, and detailed **provenance** (paths, STAC IDs, commit SHAs, etc.).  
-        This ensures the issue is **traceable**, **reproducible**, **secure**, and compliant with **KFM Governance** and **Master Coder Protocol (MCP-DL v6.3)**.
-        > 🧩 Use this form for **code**, **data**, **model**, **AI**, or **metadata** defects.  
-        > For accessibility, security, or governance issues, select their dedicated templates.
+        ## 🧭 Kansas Frontier Matrix — MCP-DL Bug Report (v6.3.3)
+        Please fill in **all required fields** to maintain reproducibility and provenance.  
+        This form enforces compliance with **Master Coder Protocol (MCP-DL v6.3.3)** and **KFM Governance Standards**.  
+        > Use for defects in **code**, **data**, **AI models**, **metadata**, or **documentation**.  
+        > For accessibility, security, or governance issues, use their dedicated templates.
 
   - type: input
     id: summary
     attributes:
-      label: 📅 Bug Summary
-      description: Short summary of the issue
-      placeholder: "STAC validator fails for NOAA catalog.json"
+      label: 🧾 Summary
+      description: Short, clear description of the defect
+      placeholder: "STAC validation fails for NOAA catalog.json"
     validations:
       required: true
 
@@ -34,27 +39,27 @@ body:
     id: domain
     attributes:
       label: 🧱 Affected Domain
-      description: Which area does the issue belong to?
+      description: Which system component does this bug affect?
       options:
-        - "src/etl (data pipelines)"
-        - "src/ai (NLP, OCR, summarization)"
-        - "src/api (FastAPI/GraphQL)"
+        - "src/etl (Data Pipelines)"
+        - "src/ai (NLP / OCR / Summarization)"
+        - "src/api (FastAPI / GraphQL)"
         - "web/ (React + MapLibre)"
-        - "data/stac (catalog metadata)"
+        - "data/stac (Catalog Metadata)"
         - "docs/ (Documentation)"
         - ".github/ (CI/CD)"
-      default: "data/stac (catalog metadata)"
+      default: "data/stac (Catalog Metadata)"
     validations:
       required: true
 
   - type: textarea
     id: repro_steps
     attributes:
-      label: ✈️ Steps to Reproduce
-      description: Exact steps to replicate the problem
+      label: 🔁 Steps to Reproduce
+      description: Exact commands or workflow steps to trigger the bug
       placeholder: |
         1. Run `make stac-validate`
-        2. Observe failure on `catalog.json`
+        2. Observe error in `catalog.json`
         3. Error: "Missing required field 'self'"
     validations:
       required: true
@@ -62,10 +67,10 @@ body:
   - type: textarea
     id: expected_actual
     attributes:
-      label: 🚫 Expected vs Actual Behavior
-      description: What should have happened vs. what did happen
+      label: ⚖️ Expected vs Actual
+      description: What should happen vs what actually occurred
       placeholder: |
-        **Expected:** STAC passes validation, status code 0  
+        **Expected:** STAC passes validation  
         **Actual:** CLI exits with error `missing links`
     validations:
       required: true
@@ -73,134 +78,205 @@ body:
   - type: dropdown
     id: semver
     attributes:
-      label: 🔄 SemVer Impact
-      description: What release level does this bug affect?
+      label: 🔢 SemVer Impact
+      description: Versioning significance of this defect
       options:
         - none
         - patch (no breaking changes)
-        - minor (visible, non-breaking)
+        - minor (visible but non-breaking)
         - major (breaking or schema-level)
+      default: patch
     validations:
       required: true
 
   - type: dropdown
     id: severity
     attributes:
-      label: 🧨 Severity Level
-      description: How critical is the issue?
+      label: 🚨 Severity
+      description: Criticality level
       options:
-        - Low — non-blocking
-        - Medium — affects feature output
-        - High — workflow/data failure
+        - Low — minor inconvenience
+        - Medium — partial feature failure
+        - High — blocks key workflow
         - Critical — stops CI/CD or release
       default: Medium
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🎯 Priority
+      description: Suggested triage level
+      options:
+        - P1 — Critical (Immediate)
+        - P2 — High
+        - P3 — Normal
+        - P4 — Low
+      default: P3 — Normal
     validations:
       required: true
 
   - type: input
     id: commit_sha
     attributes:
-      label: 🧬 Commit SHA or PR #
-      description: Git hash or pull request linked to the defect
-      placeholder: "abcd123 · PR #104"
-
-  - type: textarea
-    id: logs
-    attributes:
-      label: 🔍 Logs or Evidence
-      description: Paste log excerpts, CI outputs, or screenshots
-      placeholder: |
-        - `stac-validator catalog.json` trace  
-        - CI run: https://github.com/.../actions/runs/1234567890  
-        - Screenshot attached
+      label: 🧬 Commit SHA / PR #
+      description: Git hash or pull request reference
+      placeholder: "abcd123 (PR #108)"
     validations:
-      required: false
-
-  - type: input
-    id: system
-    attributes:
-      label: 🔧 System / Environment
-      description: OS, container, runtime, and dependencies
-      placeholder: "Ubuntu 22.04 · Python 3.11 · Node 20 · GDAL 3.8"
+      required: true
 
   - type: input
     id: provenance
     attributes:
       label: 🌐 Provenance
-      description: Affected paths, commit SHAs, dataset IDs, or STAC items
-      placeholder: "data/stac/catalog.json · commit abcd1234 · STAC: noaa_l4_sst.json"
+      description: File paths, dataset IDs, or STAC items affected
+      placeholder: "data/stac/catalog.json · commit abcd1234 · STAC: noaa_daymet_2023.json"
     validations:
       required: true
+
+  - type: input
+    id: related_docs
+    attributes:
+      label: 📚 Related Docs / ADRs / SOPs
+      description: List relevant documentation or decisions
+      placeholder: "docs/adr/ADR-012-stac-schema.md"
+
+  - type: input
+    id: system
+    attributes:
+      label: 🧰 Environment
+      description: OS, container, runtime, and dependency details
+      placeholder: "Ubuntu 22.04 · Python 3.11 · Node 20 · GDAL 3.8"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 🔍 Logs / Evidence
+      description: Include relevant logs, CI links, or screenshots
+      placeholder: |
+        - Error trace from `stac-validator`
+        - CI Run: https://github.com/.../actions/runs/123456789
+        - Screenshot attached
+    validations:
+      required: false
 
   - type: input
     id: stac_id
     attributes:
       label: 🗺️ STAC Item / Collection ID
-      description: Related dataset identifier (if applicable)
-      placeholder: "noaa_daymet_v4_2022.json"
+      description: Associated STAC file (if applicable)
+      placeholder: "noaa_l4_sst_v4.json"
 
   - type: input
     id: checksum
     attributes:
       label: 🧮 Checksum (SHA-256)
-      description: Optional integrity hash for data issue
+      description: Integrity hash for affected data
       placeholder: "d3b07384d113edec49eaa6238ad5ff00"
 
   - type: textarea
     id: ai_context
     attributes:
-      label: 🤖 AI / ML Context (if relevant)
-      description: Describe if this affects AI models, pipelines, or summaries
+      label: 🤖 AI / ML Context
+      description: If applicable, describe AI impact or model issue
       placeholder: |
-        Model: NER (spaCy)  
-        Issue: misclassification of "Fort Larned" as "Person"  
-        Dataset: `training_v2.parquet`
+        Model: NER (spaCy)
+        Issue: "Fort Larned" misclassified as Person.
+        Dataset: training_v2.parquet
     validations:
       required: false
 
   - type: textarea
     id: proposed_fix
     attributes:
-      label: ✅ Proposed Fix or Workaround
-      description: Suggest possible fix, PR link, or patch location
-      placeholder: "Add missing `self` link in STAC Item under `links` block"
+      label: ✅ Proposed Fix / Workaround
+      description: Suggest a potential fix or PR reference
+      placeholder: "Add missing `self` link in STAC Item under `links` block."
 
   - type: textarea
     id: acceptance
     attributes:
       label: 📄 Acceptance Criteria
-      description: Define what "fixed" means (test, validation, or command output)
-      placeholder: "`make stac-validate` returns code 0 with no errors"
+      description: Define how the fix will be validated
+      placeholder: "`make stac-validate` returns exit code 0 with no errors"
     validations:
       required: true
 
   - type: checkboxes
     id: security_review
     attributes:
-      label: 🔒 Security / Integrity Checklist
-      description: Confirm integrity & provenance validation
+      label: 🔒 Security & Integrity Checks
+      description: Confirm validation of integrity gates
       options:
-        - label: "☑ CodeQL & Trivy scans pass with no new alerts"
-        - label: "☑ STAC checksum verified"
-        - label: "☑ Data ethics tag validated (if applicable)"
-        - label: "☑ SBOM regenerated or unaffected"
-        - label: "☑ No secrets/log exposure in attachments"
+        - label: "CodeQL & Trivy scans pass"
+        - label: "STAC checksum verified"
+        - label: "Data ethics tag validated"
+        - label: "SBOM regenerated or verified"
+        - label: "No secret/log exposure in attachments"
     validations:
       required: false
+
+  - type: checkboxes
+    id: reporter_check
+    attributes:
+      label: 🧭 Reporter Checklist
+      description: Confirm these before submission
+      options:
+        - label: "All required fields completed"
+        - label: "Repro steps confirmed on latest main"
+        - label: "Logs reviewed for sensitive data"
+        - label: "Existing issues searched"
+        - label: "I acknowledge this report is public"
+    validations:
+      required: true
 
   - type: markdown
     attributes:
       value: |
         ---
-        ### 🧾 MCP Compliance Matrix
-        | Principle | Verified via |
-        |------------|--------------|
-        | **Documentation-First** | Linked ADRs, README, and SOP updates |
-        | **Reproducibility** | Deterministic repro steps + checksums |
-        | **Provenance** | Commit, STAC, dataset lineage |
-        | **Auditability** | Logs + artifacts retained (≥90d) |
-        | **Versioning** | SemVer impact + labels applied |
-        | **Security** | CodeQL · Trivy · Policy checks passed |
+        ### 🧾 MCP-DL v6.3.3 Compliance Summary
+        | Principle | Verification Source |
+        |------------|--------------------|
+        | **Documentation-First** | ADRs, SOPs, README links |
+        | **Reproducibility** | Deterministic repro steps & hashes |
+        | **Provenance** | Commit · STAC · dataset lineage |
+        | **Auditability** | Logs & evidence retained (≥90d) |
+        | **Versioning** | SemVer labels & changelog entries |
+        | **Security** | CodeQL · Trivy · Policy checks |
+        | **Ethics** | Data consent & tribal review verified |
+        | **Accessibility** | WCAG 2.1 AA conformance maintained |
 
-        **Version:** `v6.3.3` · **Maintainers:** @kfm-security · @kfm-architecture  
-        _Kansas Frontier Matrix — Verified under MCP-DL Governance Framework._
+        **Version:** v6.3.3  
+        **Maintainers:** @kfm-security · @kfm-architecture  
+        _Kansas Frontier Matrix — Certified under Master Coder Protocol (MCP-DL v6.3.3)._
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Disclosure & License Notice**  
+        Submissions are governed by the MIT + CC-BY 4.0 license.  
+        Do not include confidential or proprietary data in attachments.
+
+# hidden metadata
+mcp_metadata:
+  version: "v6.3.3"
+  tier: "Ω+∞"
+  template_type: "bug_report"
+  validation_checks:
+    - docs-validate
+    - policy-check
+    - gitleaks
+  generated_by: "KFM-Automation/DocsBot"
+
+# MCP-FOOTER-BEGIN
+# MCP-VERSION: v6.3.3
+# MCP-TIER: Ω+∞
+# DOC-PATH: .github/ISSUE_TEMPLATE/bug_report.yml
+# DOC-HASH: sha256:bug-report-template-v6-3-3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# MCP-CERTIFIED: true
+# VALIDATION-HASH: {auto.hash}
+# GENERATED-BY: KFM-Automation/DocsBot
+# LAST-VALIDATED: {build.date}
+# MCP-FOOTER-END
