@@ -1,11 +1,11 @@
 ---
-title: "🤖 Kansas Frontier Matrix — Automation & Governance"
-document_type: "Operational Standards · CI/CD · AI/DataOps Governance"
-version: "v1.7.1"
+title: "🏛 Kansas Frontier Matrix — GitHub Meta & Governance"
+document_type: "Repository Operations · .github Overview"
+version: "v1.0.1"
 last_updated: "2025-10-20"
 status: "Tier-Ω+∞ Certified · Stable"
 license: ["MIT (code)", "CC-BY 4.0 (docs)"]
-owners: ["@kfm-architecture", "@kfm-ai", "@kfm-security"]
+owners: ["@kfm-architecture", "@kfm-security", "@kfm-docs"]
 ci_required_checks:
   - pre-commit
   - stac-validate
@@ -18,20 +18,15 @@ template_version: "MCP-DL v6.3.2"
 
 <div align="center">
 
-# 🤖 **Kansas Frontier Matrix — Automation & Governance (v1.7.1 · Tier-Ω+∞ Certified)**  
-`📁 .github/workflows/README.md`
+# 🏛 **Kansas Frontier Matrix — GitHub Meta & Governance (v1.0.1 · Tier-Ω+∞ Certified)**  
+`📁 .github/README.md`
 
-**Mission:** Operate, document, and govern the **automated CI/CD + AI/DataOps orchestration layer** of the **Kansas Frontier Matrix (KFM)**.  
-All automations are **reproducible**, **secure**, and **ethically governed**, aligning with **Master Coder Protocol (MCP-DL v6.3.2)**, **FAIR**, and **CARE** principles.
+**Purpose:** Central, human-readable index for all **repository-level configuration** under `.github/` — including **workflows, issue/PR templates, CODEOWNERS, labels, policies, and automation**.  
+All content aligns with **MCP-DL v6.3.2**, **FAIR/CARE**, and **KFM governance standards**.
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](./site.yml)
-[![STAC ✅ Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20%E2%9C%85%20Validated)](./stac-validate.yml)
-[![CodeQL Passed](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL%20Passed)](./codeql.yml)
-[![Trivy 🛡 Passed](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20%E2%9B%A1%20Passed)](./trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen.svg)](https://pre-commit.com/)
-[![SBOM · SLSA](https://img.shields.io/badge/SBOM%20%26%20SLSA-Verified-blue)](./sbom.yml)
-[![Docs · MCP-DL v6.3.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-blue)](../../docs/)
-[![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC-BY%204.0-blue)](../../LICENSE)
+[![Docs · MCP-DL v6.3.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-blue)](../docs/)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-blueviolet)](../SECURITY.md)
+[![License: MIT · CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-blue)](../LICENSE)
 
 </div>
 
@@ -39,352 +34,251 @@ All automations are **reproducible**, **secure**, and **ethically governed**, al
 
 <details><summary>📚 Table of Contents</summary>
 
-- [🧰 Overview](#-overview)
-- [📘 Context & Scope](#-context--scope)
-- [🌐 Multi-Environment Provenance Grid](#-multi-environment-provenance-grid)
-- [🔄 CI/CD Workflow Overview](#-cicd-workflow-overview)
-- [🗾 Validation Flow (CI Lifecycle)](#-validation-flow-ci-lifecycle)
-- [⚙️ Core Workflows](#-core-workflows)
-- [🧮 Workflow Dependency Graph](#-workflow-dependency-graph)
-- [📈 Workflow Observability & Telemetry](#-workflow-observability--telemetry)
-- [🤖 AI Drift & Governance Automation](#-ai-drift--governance-automation)
-- [🛡 Security Threat Model & Hardening Grid](#-security-threat-model--hardening-grid)
-- [📋 Change-Control Register](#-change-control-register)
-- [⚙️ Workflow Versioning Policy](#-workflow-versioning-policy)
-- [📦 Artifacts Manifest](#-artifacts-manifest)
-- [🧲 MCP Compliance Matrix](#-mcp-compliance-matrix)
-- [🔒 Security & Provenance](#-security--provenance)
-- [📦 Supply Chain & SLSA Verification](#-supply-chain--slsa-verification)
-- [📄 Compliance & Audit Reference Table](#-compliance--audit-reference-table)
-- [📡 Automation Interfaces & APIs](#-automation-interfaces--apis)
-- [📊 Telemetry Dashboard Snapshots](#-telemetry-dashboard-snapshots)
-- [📜 Linked ADRs & SOPs](#-linked-adrs--sops)
-- [🧾 Data Ethics & Cultural Safeguards](#-data-ethics--cultural-safeguards)
-- [🧯 Runbooks & Incident SLAs](#-runbooks--incident-slas)
-- [🗄 Versioning & Governance Certification](#-versioning--governance-certification)
-- [📊 CI/CD Health Matrix](#-cicd-health-matrix)
+- [🧰 What lives in `.github/`](#-what-lives-in-github)
+- [📘 Roles, Ownership, and Guardrails](#-roles-ownership-and-guardrails)
+- [⚙️ CI/CD & Governance Workflows](#️-cicd--governance-workflows)
+- [📝 Issue & PR Templates](#-issue--pr-templates)
+- [🏷 Labels & Automation Conventions](#-labels--automation-conventions)
+- [🧭 Branch, Merge, and Release Policy](#-branch-merge-and-release-policy)
+- [🔐 Security, Ethics, and Compliance](#-security-ethics-and-compliance)
+- [📦 Artifacts & Evidence Registry](#-artifacts--evidence-registry)
+- [📜 Linked Policies & Governance Docs](#-linked-policies--governance-docs)
+- [📊 Governance Telemetry Snapshot](#-governance-telemetry-snapshot)
+- [🚀 Maintainer Quick Start](#-maintainer-quick-start)
+- [📣 Contributor Quick-Links](#-contributor-quick-links)
+- [🔗 Related Docs](#-related-docs)
+- [🧾 Change-Control Register](#-change-control-register)
 - [🗳 Metadata & Provenance Ledger](#-metadata--provenance-ledger)
-- [📂 Related Documentation](#-related-documentation)
 - [🗓 Version History](#-version-history)
 
 </details>
 
 ---
 
-## 🧰 Overview
-`.github/workflows/` is the **automation core** of KFM — orchestrating reproducible CI/CD pipelines,  
-data integrity checks, AI governance, and STAC validation.  
-Every commit is verified through a chain of **cryptographic provenance**, **policy enforcement**, and **automated documentation updates**.
+## 🧰 What lives in `.github/`
 
----
-
-## 📘 Context & Scope
-This document governs every automation defined under `.github/workflows/`.  
-It serves as the **single source of truth** for CI/CD and AI/DataOps governance.  
-Cross-referenced by:  
-- `docs/architecture/repo-focus.md` (overall system design)  
-- `docs/standards/security.md` (security & compliance policy)  
-- `docs/standards/ci-telemetry.md` (observability)  
-- `docs/standards/ai-ethics.md` (AI automation & ethics)  
-All workflows must declare their schema version and reference this README’s hash for provenance.
-
----
-
-## 🌐 Multi-Environment Provenance Grid
-```yaml
-environments:
-  ci:
-    runners: ubuntu-latest
-    logs_retention: 14d
-    observability: enabled
-  cd:
-    runners: ubuntu-latest
-    artifacts: [site, docs]
-    retention: 365d
-  ai:
-    workflows: [ai-model.yml, ai-ethics.yml, ai-bias.yml]
-    model_lineage: tracked
-  dataops:
-    workflows: [stac-validate.yml, dvc-sync.yml, checksums.yml]
-    checksum_integrity: enforced
-  infraops:
-    workflows: [sbom.yml, trivy.yml, gitleaks.yml]
-    slsa_provenance: verified
-```
-
----
-
-## 🔄 CI/CD Workflow Overview
-```mermaid
-flowchart TD
-  A["Commit / PR"] --> B["Pre-Commit Hooks (Lint · Test · Docs)"]
-  B --> C["Validation (STAC · Checksums · Docs)"]
-  C --> D["Security Scans (CodeQL · Trivy · Gitleaks)"]
-  D --> E["AI Model Audits (NER · Bias · Fairness)"]
-  E --> F["Build & Deploy (Docs · Pages · Containers)"]
-  F --> G["Archive Logs (SBOM · SLSA · Provenance)"]
-```
-
----
-
-## 🗾 Validation Flow (CI Lifecycle)
-```mermaid
-sequenceDiagram
-  participant Dev as Developer
-  participant GH as GitHub Actions
-  participant CI as Validator
-  participant CD as Deployer
-  Dev->>GH: Push / PR
-  GH->>CI: Run lint + pre-commit
-  CI->>CI: Validate STAC + checksum + docs
-  CI->>CI: Run CodeQL + Trivy + Gitleaks
-  CI->>CI: Audit AI outputs + bias tests
-  CI->>CD: Deploy docs/models
-  CD->>GH: Upload artifacts + attestations
-  GH->>Dev: Report compliance status
-```
-
----
-
-## ⚙️ Core Workflows
-| Workflow | Trigger | Purpose |
+| Path | Purpose | Notes |
 |:--|:--|:--|
-| `pre-commit.yml` | PR | Linting, formatting, testing |
-| `stac-validate.yml` | PR / Push | STAC schema + checksum validation |
-| `checksums.yml` | Data push | SHA-256 integrity verification |
-| `docs-validate.yml` | PR / Push | Metadata, links, and WCAG validation |
-| `ai-model.yml` | Nightly | Train/test validation + metrics card |
-| `ai-ethics.yml` | Weekly | AI bias, fairness, explainability audits |
-| `external-sync.yml` | Weekly | NOAA/USGS/FEMA schema heartbeat |
-| `codeql.yml` | PR / Schedule | Code security scanning |
-| `trivy.yml` | Weekly | CVE + dependency scanning |
-| `sbom.yml` | Release | SBOM + CycloneDX attestations |
-| `policy-check.yml` | PR | Policy-as-Code compliance |
-| `auto-merge.yml` | Post-Checks | Merge automation |
-| `docs-drift.yml` | Weekly | Detect drift between CI docs and workflows |
+| `.github/workflows/` | CI/CD & governance automations | See [`workflows/README.md`](./workflows/README.md) |
+| `.github/ISSUE_TEMPLATE/` | Issue forms (bug, feature, data) | Auto-labels + triage routing |
+| `.github/PULL_REQUEST_TEMPLATE.md` | PR checklist & MCP metadata | Enforces documentation and testing |
+| `.github/CODEOWNERS` | Review routing matrix | Path → owner enforcement |
+| `.github/labeler.yml` | PR auto-labeling | Optional |
+| `.github/dependabot.yml` | Dependency automation | Optional |
+| `.github/stale.yml` | Stale issue cleanup | Optional |
+
+> **Tip:** This README is authoritative if any optional files are absent.
 
 ---
 
-## 🧮 Workflow Dependency Graph
-```mermaid
-graph TD
-  A["pre-commit"] --> B["stac-validate"]
-  B --> C["checksums"]
-  B --> D["codeql"]
-  D --> E["trivy"]
-  C --> F["ai-model"]
-  F --> G["ai-ethics"]
-  G --> H["site"]
-  H --> I["release-please"]
-  I --> J["sbom"]
-```
+## 📘 Roles, Ownership, and Guardrails
 
----
-
-## 📈 Workflow Observability & Telemetry
-```yaml
-telemetry:
-  exporter: "OpenTelemetry (OTLP v1.1) + Prometheus"
-  metrics:
-    - ci_runtime_seconds
-    - artifact_upload_latency
-    - ai_model_eval_time
-    - trivy_critical_count
-    - stac_validation_rate
-    - doc_lint_errors
-  dashboards: "https://metrics.kfm.ai/observability"
-  alerts: anomaly_detection: enabled
-```
-**Example Prometheus metric**
-```json
-{"metric":"ci_runtime_seconds","labels":{"workflow":"stac-validate"},"value":42.3}
-```
-
----
-
-## 🤖 AI Drift & Governance Automation
-- **Workflow Drift Detector:** scans for unpinned actions and metadata drift.  
-- **Bias Benchmarks:** automated corpus test across historical + cultural data.  
-- **Ethical Impact Eval:** outputs `ai_ethics_report.json` with transparency metadata.  
-- **LLM Audit Hooks:** automated factual grounding interrogation for AI output validation.
-
----
-
-## 🛡 Security Threat Model & Hardening Grid
-| Threat | Mitigation | Workflow |
+| Domain | Owner(s) | Guardrail |
 |:--|:--|:--|
-| Supply chain injection | Pin GH Actions by SHA | all |
-| Data poisoning | Validate STAC lineage | stac-validate |
-| Secrets exposure | OIDC short-lived tokens | all |
-| Model tampering | Model hash diff + lineage verify | ai-model |
-| Log forgery | Signed `.prov.json` + SARIF | codeql |
-| Bias propagation | Regression benchmark tests | ai-ethics |
-| Docs tamper | MCP schema validation | docs-validate |
+| CI/CD + Provenance | `@kfm-architecture`, `@kfm-security` | Pinned actions + SLSA attestations |
+| AI Ethics | `@kfm-ai`, `@kfm-ethics` | Bias & consent gating |
+| Docs & Markdown | `@kfm-docs` | `docs-validate.yml` (metadata + WCAG) |
+| Security | `@kfm-security` | CodeQL + Trivy + Gitleaks |
+| Data/STAC | `@kfm-data` | STAC + checksum integrity |
+
+> **CODEOWNERS** ensures at least one SME review; protected branches enforce passing checks.
 
 ---
 
-## 📋 Change-Control Register
+## ⚙️ CI/CD & Governance Workflows
+
+**Index:** [`workflows/README.md`](./workflows/README.md)
+
+| Category | Key Workflows |
+|:--|:--|
+| Validation | `pre-commit.yml`, `stac-validate.yml`, `docs-validate.yml` |
+| Security | `codeql.yml`, `trivy.yml`, `sbom.yml`, `gitleaks.yml` |
+| AI/DataOps | `ai-model.yml`, `ai-ethics.yml`, `checksums.yml`, `external-sync.yml` |
+| Governance | `policy-check.yml`, `auto-merge.yml`, `docs-drift.yml`, `site.yml` |
+
+> All workflows must include MCP metadata headers referencing this README.
+
+---
+
+## 📝 Issue & PR Templates
+
+### Issue Forms
+| Template | Use | Auto-Labels |
+|:--|:--|:--|
+| `bug_report.yml` | Code/data/docs bug | `bug`, `needs-triage` |
+| `feature_request.yml` | New feature | `enhancement`, `needs-triage` |
+| `data_request.yml` | Dataset integration | `data-request`, `needs-triage` |
+| `governance_issue.yml` | Policy/standard change | `governance`, `needs-triage` |
+
+### PR Template
+Must include:
+- Scope, rationale, linked Issue/ADR/SOP  
+- MCP metadata block (doc path, version, owners)  
+- Checklist (tests, docs, STAC, security)  
+- Preview links (site/docs artifacts)
+
+---
+
+## 🏷 Labels & Automation Conventions
+
+**Pattern:** lowercase-kebab, domain-prefixed.
+
+| Label | Meaning |
+|:--|:--|
+| `needs-triage` | Awaiting routing |
+| `good-first-issue` | Contributor entry point |
+| `area:docs` · `area:web` · `area:etl` · `area:graph` | Domain scope |
+| `priority:high` / `priority:low` | Scheduling |
+| `governance` · `security` · `data-request` | Policy flags |
+
+---
+
+## 🧭 Branch, Merge, and Release Policy
+
+- Default branch: **main** (protected)  
+- Merge: **squash** with linear history; require all **ci_required_checks**  
+- Commits: follow *Conventional Commits*  
+- Releases: via `release-please`, attach **SBOM + SLSA + .prov.json**  
+- Versioning: **SemVer** for code/workflows; data via STAC versioning  
+- Blocking: any critical CVE, checksum fail, or docs metadata error halts merge
+
+---
+
+## 🔐 Security, Ethics, and Compliance
+
+- `SECURITY.md`: disclosure + SLA  
+- `CODE_OF_CONDUCT.md`: community standards  
+- `ai-ethics.yml`: bias, consent, explainability gates  
+- `sbom.yml` + `.prov.json`: verified provenance  
+- OIDC ephemeral tokens; minimal permissions in workflows  
+
+---
+
+## 📦 Artifacts & Evidence Registry
+
+| Artifact | Produced By | Retention | Purpose |
+|:--|:--|:--|:--|
+| `.prov.json` | All workflows | Permanent | Provenance + attestation |
+| `sbom.cdx.json` | `sbom.yml` | 1 yr | Dependency inventory |
+| `sarif.json` | `codeql.yml` | 90 d | Static analysis report |
+| `mcp_audit.yaml` | `policy-check.yml` | Permanent | Compliance ledger |
+
+---
+
+## 📜 Linked Policies & Governance Docs
+
+| Policy | Path | Function |
+|:--|:--|:--|
+| Repository Security Policy | `SECURITY.md` | Vulnerability disclosure & triage |
+| Code of Conduct | `CODE_OF_CONDUCT.md` | Contributor behavior |
+| Governance Charter | `docs/standards/governance.md` | Decision hierarchy |
+| Data Ethics Charter | `docs/standards/ai-ethics.md` | Oversight of data & AI usage |
+
+---
+
+## 📊 Governance Telemetry Snapshot
+> ![Governance Dashboard](https://metrics.kfm.ai/img/github-governance-snapshot.png)  
+> _Live metrics of repository activity, workflow uptime, and policy compliance._
+
+---
+
+## 🚀 Maintainer Quick Start
+
+1️⃣ Create new workflow  
+```bash
+mkdir -p .github/workflows && $EDITOR .github/workflows/new.yml
+```
+Include: `name`, `purpose`, `on:`, `permissions:`, `jobs:`, MCP schema version.
+
+2️⃣ Register ownership  
+Add to `CODEOWNERS` and `labeler.yml` as needed.
+
+3️⃣ Validate locally  
+```bash
+make validate   # runs lint + docs + STAC + checksum checks
+```
+
+4️⃣ Open PR using template; all checks must pass.
+
+---
+
+## 📣 Contributor Quick-Links
+- 🗂 [Open Issues](../../issues)  
+- 🚀 [New Pull Request](../../compare)  
+- 🧩 [Project Board](../../projects)  
+- 📘 [Contributing Guide](../CONTRIBUTING.md)  
+
+---
+
+## 🔗 Related Docs
+
+| Path | Description |
+|:--|:--|
+| `.github/workflows/README.md` | CI/CD + Governance spec |
+| `docs/standards/markdown_rules.md` | Markdown rules |
+| `docs/standards/markdown_guide.md` | Styling guide |
+| `docs/architecture/repo-focus.md` | Monorepo & execution |
+| `docs/standards/security.md` | Security controls |
+| `docs/standards/ci-telemetry.md` | CI observability |
+| `docs/standards/ai-ethics.md` | AI ethics & fairness |
+| `docs/sop/incident-response.md` | Incident response SOP |
+
+---
+
+## 🧾 Change-Control Register
 ```yaml
 changes:
-  - {date: "2025-10-20", file: "ai-model.yml", change: "Refined evaluation metrics schema", reviewer: "@kfm-ai", pr: "#412"}
-  - {date: "2025-10-19", file: "docs-validate.yml", change: "Added WCAG checker to link scan", reviewer: "@kfm-docs", pr: "#409"}
+  - date: "2025-10-20"
+    change: "Added Artifacts Registry, Governance Links, Telemetry Snapshot, and Quick-Links"
+    reviewed_by: "@kfm-architecture"
+    pr: "#414"
 ```
-
----
-
-## ⚙️ Workflow Versioning Policy
-```yaml
-versioning:
-  policy: "Workflow SemVer (vX.Y.Z)"
-  registry: ".github/workflows/workflow_versions.yml"
-  changelog_dir: ".github/workflows/changelog/"
-  auto_update: true
-  release_tag: "ci-governance-v*"
-```
-
----
-
-## 📦 Artifacts Manifest
-| Artifact | Format | Retention | Verified By |
-|:--|:--|:--|:--|
-| `sbom.cdx.json` | CycloneDX JSON | 365 d | Syft |
-| `vuln-report.json` | JSON | 90 d | Trivy |
-| `.prov.json` | JSON | Permanent | gha-provenance |
-| `slsa.attestation.json` | JSON | Permanent | gha-provenance |
-| `secret-report.json` | JSON | 30 d | Gitleaks |
-
----
-
-## 🧲 MCP Compliance Matrix
-| MCP Pillar | Implementation | Verified |
-|:--|:--|:--:|
-| Documentation-First | Updated READMEs + ADRs | ✅ |
-| Reproducibility | Makefile + pinned SHAs | ✅ |
-| Provenance | `.prov.json` + SLSA | ✅ |
-| Auditability | Artifacts + SBOM | ✅ |
-| FAIR/CARE | Metadata + Ethics Ledger | ✅ |
-
----
-
-## 🔒 Security & Provenance
-```json
-{
- "run_id":"wf_987654321",
- "workflow":"stac-validate.yml",
- "commit":"{{GIT_COMMIT}}",
- "sha256":"{{HASH}}",
- "env":"ci",
- "slsa_attestation":true,
- "timestamp":"{build.date}"
-}
-```
-
----
-
-## 📦 Supply Chain & SLSA Verification
-| Capability | Tool | Output |
-|:--|:--|:--|
-| SBOM | Syft | `sbom.cdx.json` |
-| CVE Scan | Trivy | `vuln-report.json` |
-| Provenance | gha-provenance | `slsa.attestation.json` |
-| Secrets Scan | Gitleaks | `secret-report.json` |
-| Policy Check | OPA / Conftest | PR gate |
-
----
-
-## 📄 Compliance & Audit Reference Table
-| Domain | Evidence File | Validation Workflow |
-|:--|:--|:--|
-| STAC Integrity | `stac-validation.log` | stac-validate.yml |
-| FAIR Metadata | `metadata_audit.json` | docs-validate.yml |
-| AI Ethics | `ai_ethics_report.json` | ai-ethics.yml |
-| Security | `vuln-report.json` + `sbom.cdx.json` | trivy.yml / sbom.yml |
-| SLSA Attestation | `slsa.attestation.json` | sbom.yml |
-| MCP Alignment | `mcp_audit.yaml` | policy-check.yml |
-
----
-
-## 📡 Automation Interfaces & APIs
-| Interface | Method | Purpose |
-|:--|:--|:--|
-| `/api/ci/status` | GET | Returns latest CI run metrics |
-| `.github/actions/mcp-validate` | Composite Action | Validates MCP metadata + docs |
-| `.github/actions/prov-sign` | Composite Action | GPG-signs `.prov.json` for provenance integrity |
-
----
-
-## 📊 Telemetry Dashboard Snapshots
-> ![Observability Dashboard](https://metrics.kfm.ai/img/ci-dashboard-snapshot.png)  
-> _Figure 1: Real-time workflow metrics exported via Prometheus → Grafana._
-
----
-
-## 📜 Linked ADRs & SOPs
-| Document | Purpose | Status |
-|:--|:--|:--|
-| `docs/adr/ADR-012-ci-versioning.md` | Defines workflow semantic versioning policy | ✅ |
-| `docs/adr/ADR-017-ai-ethics-gates.md` | Establishes bias & consent checks | ✅ |
-| `docs/sop/incident-response.md` | Response procedure for build/security incidents | ✅ |
-
----
-
-## 🧾 Data Ethics & Cultural Safeguards
-- STAC `properties.data_ethics` required for protected datasets.  
-- Cultural/tribal datasets reviewed by `@kfm-ethics`.  
-- `ai-ethics.yml` validates dataset consent metadata pre-publish.  
-- Ethics ledger stored in `docs/standards/ethics/ledger/`.
-
----
-
-## 🧯 Runbooks & Incident SLAs
-| Type | SLA | Description |
-|:--|:--|:--|
-| Build failure | ≤ 30 min triage | `make validate` + assign maintainer |
-| Security incident | ≤ 4 h triage / 24 h fix | follow `incident-response.md` |
-| AI regression | ≤ 72 h RCA | retrain + log fix |
-| Docs drift | ≤ 48 h correction | auto-sync via `docs-drift.yml` |
-
----
-
-## 🗄 Versioning & Governance Certification
-| Tier | Description | Met |
-|:--|:--|:--:|
-| Tier-A | Basic CI/CD + checksums | ✅ |
-| Tier-S | STAC + DVC + FAIR validation | ✅ |
-| Tier-Ω | SBOM + SLSA + Policy checks | ✅ |
-| Tier-Ω+∞ | AI ethics + telemetry + governance | ✅ |
-
----
-
-## 📊 CI/CD Health Matrix
-| Metric | Target | Actual | Status |
-|:--|:--|:--|:--:|
-| Workflow success rate | 100% | 99.8% | ⚙️ |
-| Artifact verification | 100% | 100% | ✅ |
-| A11y coverage | ≥ 95% | 97% | ✅ |
-| Action pinning | 100% | 100% | ✅ |
-| CVE (critical) | 0 | 0 | ✅ |
 
 ---
 
 ## 🗳 Metadata & Provenance Ledger
 ```yaml
 metadata:
-  file: ".github/workflows/README.md"
-  version: "v1.7.1"
-  maintainers: ["@kfm-security","@kfm-architecture","@kfm-ai"]
-  license: ["MIT (code)", "CC-BY-4.0 (docs)"]
+  file: ".github/README.md"
+  version: "v1.0.1"
+  maintainers: ["@kfm-architecture","@kfm-security","@kfm-docs"]
+  license: ["MIT (code)","CC-BY 4.0 (docs)"]
   audit_date: "{build.date}"
   provenance_files:
     - ".prov.json"
     - "sbom.cdx.json"
     - "slsa.attestation.json"
-  dashboard: "https://metrics.kfm.ai/ci-governance"
+  references:
+    - "docs/standards/markdown_rules.md"
+    - "docs/standards/ci-telemetry.md"
+    - "docs/standards/ai-ethics.md"
+  ci_required_checks:
+    - pre-commit
+    - stac-validate
+    - codeql
+    - trivy
+    - sbom
+    - docs-validate
 ```
 
 ---
 
-## 📂 Related Documentation
-| Path | Description |
-|:--|:--|
-|
+## 🗓 Version History
+
+| Version | Date | Author | Summary | Type |
+|:--|:--|:--|:--|:--|
+| **v1.0.1** | 2025-10-20 | @kfm-architecture | Added audit registry, policy links, telemetry, change log, Tier-Ω+∞ footer | Minor |
+| v1.0.0 | 2025-10-20 | @kfm-architecture | Initial `.github` meta README | Major |
+
+---
+
+<!-- MCP-FOOTER-BEGIN
+MCP-VERSION: v6.3.2
+MCP-TIER: Ω+∞
+DOC-PATH: .github/README.md
+DOC-HASH: sha256:github-readme-v1-0-1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+MCP-CERTIFIED: true
+VALIDATION-HASH: {auto.hash}
+GENERATED-BY: KFM-Automation/DocsBot
+LAST-VALIDATED: {build.date}
+MCP-FOOTER-END -->
