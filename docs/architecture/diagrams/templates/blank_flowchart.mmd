@@ -1,47 +1,90 @@
+%%----------------------------------------------------------
+%% Kansas Frontier Matrix — Blank Flowchart Template (Enhanced)
+%% File: docs/architecture/diagrams/templates/blank_flowchart.mmd
+%% Purpose: Starter template for KFM diagrams with a11y palette, status classes,
+%%          and common patterns (groups, decisions, dashed/labeled edges).
+%% Author: KFM Documentation Team
+%% Version: 2.0.0
+%% Date: 2025-11-16
+%% License: CC-BY 4.0
+%% Commit: <auto-filled-on-export>
+%% Notes:
+%%   - Edit labels **inside quotes only**; use \n for line breaks.
+%%   - Keep IDs simple (letters/numbers/underscores).
+%%   - End with <!-- END OF MERMAID --> to pass CI rendering checks.
+%%----------------------------------------------------------
+
+%% Direction: TD (top→down), LR (left→right), BT (bottom→top), RL (right→left)
+%% Change here if needed:
 flowchart TD
-  %% Blank Flowchart Template — Kansas Frontier Matrix
-  %% Usage:
-  %% - Edit labels inside quotes only.
-  %% - Use \n for line breaks in node labels.
-  %% - Keep IDs simple (letters/numbers/underscores).
-  %% - End the block with <!-- END OF MERMAID --> for GitHub.
 
-  %% Direction: TD (top→down), LR (left→right), BT (bottom→top), RL (right→left)
-  %% Change here if needed:
-  %% flowchart LR
+%% ===== Optional: theme variables (GitHub may ignore, kept for CLI exports) =====
+%%{init: {'theme':'base','themeVariables':{
+%%  'primaryColor':'#e8f1fa','primaryBorderColor':'#31708f','primaryTextColor':'#111'
+%%}}}%%
 
-  %% ----- Subgraph placeholders (optional) -----
-  subgraph GROUP1["Group 1 Title\n(short description)"]
-    A["Node A\n(one-liner)"]
-    B["Node B\n(one-liner)"]
-  end
+%% ----- Subgraph placeholders (duplicate as needed) -----
+subgraph GROUP1["Group 1 Title\n(short description)"]
+  A["Node A\n(one-liner)"]
+  B["Node B\n(one-liner)"]
+end
 
-  subgraph GROUP2["Group 2 Title\n(short description)"]
-    C["Node C\n(one-liner)"]
-    D["Node D\n(one-liner)"]
-  end
+subgraph GROUP2["Group 2 Title\n(short description)"]
+  C["Node C\n(one-liner)"]
+  %% Example of a decision node (diamond) using { }
+  D{"Decision D?\n(yes/no)"}
+end
 
-  %% ----- Edges (connect your nodes) -----
-  A --> B
-  B --> C
-  C -. "dashed / annotation" .-> D
-  D -- "labeled edge" --> A
+%% (Optional) Third group example
+%% subgraph GROUP3["Group 3 Title\n(optional)"]
+%%   E["Node E"]
+%% end
 
-  %% ----- Styling (optional) -----
-  %% Define reusable classes:
-  classDef group fill:#f7f7f7,stroke:#333,stroke-width:1px;
-  classDef node fill:#e8f1fa,stroke:#31708f,stroke-width:1px;
-  classDef accent fill:#fff3cd,stroke:#8a6d3b,stroke-width:1px;
+%% ----- Edges (connect your nodes) -----
+A --> B
+B --> C
+C -. "dashed / annotation" .-> D
+D -- "labeled edge: yes" --> A
+D -- "no" --> C
 
-  %% Apply classes:
-  class GROUP1,GROUP2 group;
-  class A,B,C,D node;
-  %% Example accent:
-  %% class B accent;
+%% Example bi-directional relation:
+%% A <--> C
 
-  %% Notes:
-  %% - To add more nodes: X["Label"] then connect: A --> X
-  %% - To add a third group, copy a subgraph block and rename IDs/titles.
-  %% - Keep labels concise; use \n for multi-line.
+%% ----- Legend (optional, remove if not needed) -----
+subgraph LEGEND["Legend (remove if not needed)"]
+  LG_OK["Status: OK"]:::ok
+  LG_WARN["Status: Warning"]:::warn
+  LG_ERR["Status: Error"]:::err
+  LG_NOTE["Accent / Note"]:::accent
+  LG_DEC{"Decision Node"}:::decision
+end
+
+%% ----- Styling (accessible palette) -----
+%% Reusable classes (WCAG-friendly colors)
+classDef group     fill:#f7f7f7,stroke:#333,stroke-width:1px,color:#111;
+classDef node      fill:#e8f1fa,stroke:#31708f,stroke-width:1px,color:#111;
+classDef accent    fill:#fff3cd,stroke:#8a6d3b,stroke-width:1px,color:#111;
+classDef ok        fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px,color:#111;     %% green
+classDef warn      fill:#fff8e1,stroke:#f9a825,stroke-width:1px,color:#111;     %% amber
+classDef err       fill:#ffebee,stroke:#d32f2f,stroke-width:1px,color:#111;     %% red
+classDef decision  fill:#f0e8ff,stroke:#6a4fb3,stroke-width:1px,color:#111;     %% violet
+
+%% Apply classes
+class GROUP1,GROUP2 group;
+class A,B,C node;
+class D decision;
+
+%% Example accents / statuses (uncomment to apply)
+%% class B accent;
+%% class C ok;
+%% class D warn;
+
+%% ----- Tips for authors -----
+%% - Add nodes:   X["Label"]  then connect:  A --> X
+%% - Decision:    Y{"Question?"}  with labeled edges   Yes/No
+%% - Notes:       Use dashed edges for annotations:  A -. "note" .-> B
+%% - Layout:      Insert dummy nodes (e.g., _spacer_) to improve routing if needed
+%% - i18n:        Use plain, concise labels; avoid heavy emoji; prefer ASCII
+%% - A11y:        Keep text brief; line-break long phrases with \n; ensure contrast
 
 <!-- END OF MERMAID -->
