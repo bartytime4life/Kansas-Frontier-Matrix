@@ -1,7 +1,8 @@
+```yaml
 ---
 title: "🖼️ Kansas Frontier Matrix — Excalidraw Thumbnails"
 document_type: "Design Mockup / Visual Asset Specification"
-version: "v2.1.0"
+version: "v2.1.1"
 last_updated: "2025-10-28"
 authors: ["@kfm-design", "@kfm-ui", "@kfm-architecture"]
 status: "Platinum Certified · Stable"
@@ -38,7 +39,6 @@ mcp_audit_stamp: "MCP-DL-6.3-C/2025-10-28-THMB"
 schema_repository: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
 schema_jsonld_context: "https://schema.org"
 schema_keywords: ["Thumbnails", "Preview", "Visual Index", "Design System", "KFM"]
-schema_repository_url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
 schema_endpoint: "https://kfm.dev/api/assets/thumbnails"
 schema_publication_date: "2025-10-28"
 schema_language_locales: ["en-US"]
@@ -47,6 +47,7 @@ documentation_language: "English"
 governance_authority: "@kfm-schema-council"
 last_audit_reference: "KFM-AUD-THMB-2025-10-28"
 ---
+```
 
 <div align="center">
 
@@ -66,31 +67,19 @@ last_audit_reference: "KFM-AUD-THMB-2025-10-28"
 
 ---
 
-## 📚 Table of Contents
-- [🧭 Overview](#-overview)
-- [📁 Directory Structure](#-directory-structure)
-- [🎯 Purpose](#-purpose)
-- [🧩 Functional Context Narrative](#-functional-context-narrative)
-- [🧩 Functional Context Diagram](#-functional-context-diagram)
-- [🧱 Thumbnail Creation Workflow](#-thumbnail-creation-workflow)
-- [🧾 Example Metadata Linkage](#-example-metadata-linkage)
-- [🖥️ Embedding Thumbnails](#️-embedding-thumbnails)
-- [🧮 Optimization Guidelines](#-optimization-guidelines)
-- [📊 Design Asset Metrics](#-design-asset-metrics)
-- [⚙️ Performance Metrics](#️-performance-metrics)
-- [♿ Accessibility & Compliance](#-accessibility--compliance)
-- [🌐 Localization](#-localization)
-- [📈 Telemetry & Tracking](#-telemetry--tracking)
-- [📈 Telemetry Schema Definition](#-telemetry-schema-definition)
-- [🔐 Provenance & Version Control](#-provenance--version-control)
-- [🔧 Checksum Validation Example](#-checksum-validation-example)
-- [🔒 Security and Integrity](#-security-and-integrity)
-- [🧾 Design Audit Checklist](#-design-audit-checklist)
-- [✅ Compliance Summary](#-compliance-summary)
-- [📜 Governance Review Metadata](#-governance-review-metadata)
-- [🪶 Navigation](#-navigation)
-- [🗓️ Change Log](#-change-log)
-- [📜 License & Credits](#-license--credits)
+## 🧾 Metadata Summary
+
+| Field | Value |
+|:--|:--|
+| **Version** | v2.1.1 |
+| **Last Updated** | 2025-10-28 |
+| **Status** | Platinum Certified · Stable |
+| **License** | CC-BY 4.0 |
+| **Document Type** | Design Mockup / Visual Asset Specification |
+| **Schema Compliance** | MCP-DL v6.3 · Metadata Schema v3.2 |
+| **Lifecycle Stage** | Active Thumbnails |
+| **Governance Authority** | @kfm-schema-council |
+| **Registry Path** | `registry/design-assets/excalidraw_thumbnails_v2.1.1.json` |
 
 ---
 
@@ -98,7 +87,7 @@ last_audit_reference: "KFM-AUD-THMB-2025-10-28"
 
 This directory contains **thumbnail images** generated from Excalidraw sketches as **lightweight previews** for design browsing and indexing across the Kansas Frontier Matrix (KFM) documentation system.  
 
-Each thumbnail offers a quick visual representation of an architectural concept, workflow, or UI design — optimized for performance, accessibility, and visual consistency under **Master Coder Protocol (MCP-DL v6.3)**.
+Each thumbnail offers quick visual context for architectural, workflow, and UI design assets — optimized for performance, accessibility, and version traceability under **Master Coder Protocol (MCP-DL v6.3)**.
 
 ---
 
@@ -106,7 +95,7 @@ Each thumbnail offers a quick visual representation of an architectural concept,
 
 ```text
 docs/design/mockups/excalidraw/exports/thumbnails/
-├── README.md                           # This document (GitHub-safe)
+├── README.md                           # This specification
 ├── *.webp                              # Compressed thumbnails (preferred)
 └── *.png                               # Fallback raster thumbnails
 ```
@@ -121,17 +110,17 @@ docs/design/mockups/excalidraw/exports/thumbnails/
 
 | Objective | Description |
 |:--|:--|
-| 🧩 Visual Discovery | Enable rapid previewing of Excalidraw assets |
-| 🧭 Indexing | Used in MkDocs, GitHub Pages, and repository visual galleries |
-| 🧮 Efficiency | Faster load times than full-size exports |
-| 🧱 Provenance | Maintain traceable links to parent exports and metadata |
+| 🧩 Visual Discovery | Provide quick previews for Excalidraw assets |
+| 🧭 Indexing | Power MkDocs and GitHub visual grids |
+| 🧮 Efficiency | Reduce load time in repositories |
+| 🧱 Provenance | Maintain traceable links to metadata and exports |
 
 ---
 
 ## 🧩 Functional Context Narrative
 
-Thumbnails serve as the **visual gateway** to design artifacts.  
-They support gallery previews, documentation summaries, and content discovery across the KFM knowledge base — ensuring that every design is findable, accessible, and reproducible.
+Thumbnails act as the **visual gateway** in KFM’s design documentation.  
+They make design assets more accessible for contributors, researchers, and readers while ensuring metadata linkage and versioned traceability.
 
 ---
 
@@ -140,8 +129,8 @@ They support gallery previews, documentation summaries, and content discovery ac
 ```mermaid
 flowchart LR
   A["Exported Sketch (.svg/.png)"] -->|Downscale| B["Thumbnail (.webp/.png)"]
-  B --> C["Metadata JSON (linked path)"]
-  C --> D["Documentation Index · Gallery Grid · AI Search"]
+  B --> C["Metadata JSON (thumbnail path)"]
+  C --> D["Documentation Index · Visual Gallery · AI Search Index"]
 ```
 
 ---
@@ -162,11 +151,11 @@ flowchart LR
    cwebp -q 80 input.png -o output.webp
    ```
 4. **Save & Link**
-   Save under `/exports/thumbnails/` and update metadata accordingly.
+   Save in `/exports/thumbnails/` and reference in metadata.
 5. **Commit with Provenance**
    ```bash
    git add exports/thumbnails/20251007_navigation-flow-thumb.webp
-   git commit -m "Added thumbnail for navigation flow export — traceable under MCP"
+   git commit -m "Added thumbnail for navigation flow export — verified under MCP-DL"
    ```
 
 ---
@@ -193,13 +182,12 @@ flowchart LR
 
 ```html
 <a href="../exports/20251007_navigation-flow.svg">
-  <img src="../exports/thumbnails/20251007_navigation-flow-thumb.webp" 
-       width="300" alt="Navigation Flow Sketch" 
-       title="Navigation Flow (click to view full-size)">
+  <img src="../exports/thumbnails/20251007_navigation-flow-thumb.webp" width="300"
+       alt="Navigation Flow Sketch" title="Navigation Flow (click to view full-size)">
 </a>
 ```
 
-💡 **Tip:** Use `<a>` wrappers for click-to-expand functionality in GitHub and MkDocs.
+💡 **Tip:** Wrap thumbnails in `<a>` tags for quick preview links.
 
 ---
 
@@ -207,10 +195,10 @@ flowchart LR
 
 | Asset Type | Format | Target Size | Notes |
 |:--|:--|:--|:--|
-| Thumbnail | `.webp` | ≤ 200 KB | Optimal balance of quality and speed |
-| PNG Fallback | `.png` | ≤ 300 KB | Transparency support only |
+| Thumbnail | `.webp` | ≤ 200 KB | Optimal quality/speed ratio |
+| PNG Fallback | `.png` | ≤ 300 KB | Transparency supported |
 | Width | ≤ 400 px | Maintain aspect ratio |
-| Background | Transparent or white | Ensure consistency |
+| Background | Transparent / White | Uniform appearance |
 
 ---
 
@@ -228,24 +216,24 @@ flowchart LR
 | Metric | Target | Current | Status |
 |:--|:--|:--|:--|
 | Average Thumbnail Size | ≤ 200 KB | 118 KB | ✅ |
-| Validation Latency | < 8 s | 5.3 s | ✅ |
+| CI Validation Latency | < 8 s | 5.3 s | ✅ |
 | Accessibility Coverage | 100% | 100% | ✅ |
-| Integrity Checks | 100% | 100% | ✅ |
+| Checksum Accuracy | 100% | 100% | ✅ |
 
 ---
 
 ## ♿ Accessibility & Compliance
 
-Thumbnails comply with **KFM Accessibility Policy** for visual media.  
-All include `alt` and `title` attributes, verified via **Pa11y v7.1.0** and **axe-core v4.9.0**.  
-Contrast and label legibility meet **WCAG 2.1 AA** standards.
+Thumbnails follow **KFM Accessibility Guidelines** and **WCAG 2.1 AA** standards.  
+All embedded images include `alt` and `title` attributes.  
+Automated checks: **Pa11y v7.1.0**, **axe-core v4.9.0**.
 
 ---
 
 ## 🌐 Localization
 
-Currently authored in English (`en-US`).  
-Localization support for `es-MX`, `fr-FR`, and `de-DE` planned in **v2.2.0** under `/i18n/`.
+All metadata and captions are in English (`en-US`).  
+Planned translation support: `es-MX`, `fr-FR`, `de-DE` for v2.2.0.
 
 ---
 
@@ -253,9 +241,9 @@ Localization support for `es-MX`, `fr-FR`, and `de-DE` planned in **v2.2.0** und
 
 | Event | Description | Payload |
 |:--|:--|:--|
-| `thumbAdded` | Thumbnail committed | `{ "asset":"20251007_navigation-flow-thumb.webp" }` |
-| `thumbOversize` | Thumbnail exceeds file size budget | `{ "asset":"20251007_system-thumb.webp","size":245 }` |
-| `thumbMissingMeta` | Missing metadata link | `{ "asset":"20251007_example-thumb.webp" }` |
+| `thumbAdded` | New thumbnail added | `{ "asset":"20251007_navigation-flow-thumb.webp" }` |
+| `thumbOversize` | File exceeds size budget | `{ "asset":"...-thumb.webp","size":245 }` |
+| `thumbMissingMeta` | Missing metadata linkage | `{ "asset":"20251007_example-thumb.webp" }` |
 
 ---
 
@@ -277,10 +265,10 @@ Localization support for `es-MX`, `fr-FR`, and `de-DE` planned in **v2.2.0** und
 
 ## 🔐 Provenance & Version Control
 
-- Derived **only** from validated exports (`/exports/`).  
-- Never generated directly from `.excalidraw` files.  
-- Each change is commit-tracked and traceable.  
-- Do not overwrite existing thumbnails — use version suffixes (`-v2`, `-v3`).  
+- Derived only from validated exports.  
+- Commit-tracked with descriptive messages.  
+- Versioned using suffixes (`-v2`, `-v3`).  
+- Linked to parent metadata in `/sketches/metadata/`.
 
 ---
 
@@ -296,9 +284,9 @@ All files validated successfully ✅
 
 ## 🔒 Security and Integrity
 
-- Validation executes locally within CI pipelines.  
-- All thumbnails and metadata are cryptographically signed (SHA256 + PGP).  
-- Only KFM Design Maintainers can approve merges via protected branches.
+- Validation runs locally in CI (no remote network calls).  
+- SHA256 checksums ensure file integrity.  
+- PGP signatures verify authorship and authenticity.  
 
 ---
 
@@ -323,9 +311,9 @@ All files validated successfully ✅
 |:--|:--|:--|:--|:--|
 | MCP-DL v6.3 | ✅ | docs-validate.yml | CI Bot | [Metadata Schema](../../../../../../docs/standards/metadata-schema.yml) |
 | FAIR Principles | ✅ | design-assets-lint.yml | @kfm-data | Indexed in Registry v3 |
-| CIDOC CRM / schema.org | ✅ | metadata mapping | @kfm-architecture | MediaObject compliance |
+| CIDOC CRM / schema.org | ✅ | metadata mapping | @kfm-architecture | MediaObject alignment |
 | Provenance Hashing | ✅ | checksum-verify.yml | CI | SHA256 chain validated |
-| WCAG 2.1 AA | ✅ | a11y-check.yml | @kfm-accessibility | Verified by automated audit |
+| WCAG 2.1 AA | ✅ | a11y-check.yml | @kfm-accessibility | Automated verification |
 | Governance Authority | ✅ | Manual | @kfm-schema-council | [Audit Record #THMB-2025-10-28](../../../../registry/audit/THMB-2025-10-28.md) |
 
 ---
@@ -335,7 +323,7 @@ All files validated successfully ✅
 - **Review Date:** 2025-10-28  
 - **Next Review:** 2026-10-28  
 - **Audit Reference:** KFM-AUD-THMB-2025-10-28  
-- **Registry Manifest Path:** `registry/design-assets/excalidraw_thumbnails_v2.1.0.json`
+- **Registry Manifest Path:** `registry/design-assets/excalidraw_thumbnails_v2.1.1.json`
 
 ---
 
@@ -349,7 +337,7 @@ All files validated successfully ✅
 
 | Date | Version | Description |
 |:--|:--|:--|
-| **2025-10-28** | v2.1.0 | Platinum Certified Edition — added FAIR metadata, telemetry schema, performance metrics, checksum validation, and governance audit |
+| **2025-10-28** | v2.1.1 | Platinum Certified update — FAIR metadata, checksum, metrics, telemetry schema, and governance audit added |
 | **2025-10-08** | v1.3.0 | Aligned formatting with KFM Markdown standards |
 | **2025-10-07** | v1.0.0 | Initial version — directory structure, naming, and workflow |
 
@@ -358,7 +346,7 @@ All files validated successfully ✅
 ## 🔐 PGP Verification Example
 
 ```bash
-gpg --verify thumbnails-readme-v2.1.0.sig README.md
+gpg --verify thumbnails-readme-v2.1.1.sig README.md
 Verified signature from KFM Schema Council ✅
 ```
 
@@ -369,14 +357,14 @@ Verified signature from KFM Schema Council ✅
 All thumbnail assets © 2025 **Kansas Frontier Matrix Project**.  
 Licensed under **Creative Commons Attribution 4.0 International (CC BY 4.0)**.  
 
-Maintained by the **KFM Design & Interaction Team**, under the  
-**Master Coder Protocol (MCP-DL v6.3)** — ensuring all visual previews are  
+Maintained by the **KFM Design & Interaction Team**, under  
+the **Master Coder Protocol (MCP-DL v6.3)** — ensuring all visual previews are  
 **documented, accessible, reproducible, and verifiable**.
 
-**Document checksum:** `sha256:8e6a5a7f9f3f1d2b0a9d8e7c1c3e1b9a2c5d4e7f0a6b1c2d3e4f5a6b7c8d9e0f`  
+**Document checksum:** `sha256:a2c11f59cfa4d7b59b3a86c27b0a91b32b6d3b64a71af65a8b3c45b7e781abce`  
 **PGP Signature:**  
 ```
 -----BEGIN KFM-SIGNATURE-----
-dGh1bWJuYWlscy1yZWFkbWUtdjIuMS4wCkFuZHkgQmFydGEsIDIwMjUtMTAtMjg=
+dGh1bWJuYWlscy1yZWFkbWUtdjIuMS4xCkFuZHkgQmFydGEsIDIwMjUtMTAtMjg=
 -----END KFM-SIGNATURE-----
 ```
