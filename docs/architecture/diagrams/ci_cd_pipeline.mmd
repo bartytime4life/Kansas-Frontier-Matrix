@@ -1,3 +1,72 @@
+<div align="center">
+
+# 🔄 **Kansas Frontier Matrix — CI/CD Pipeline Diagram (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/ci_cd_pipeline.mmd`
+
+**Mission:** Visualize the **end-to-end Continuous Integration and Continuous Deployment (CI/CD)** system  
+of the **Kansas Frontier Matrix (KFM)** — detailing **workflow triggers, validation gates, build artifacts,  
+environments, observability, and compliance controls** under the **Master Coder Protocol (MCP-DL v6.3)**.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — CI/CD Pipeline Diagram"
+document_type: "Mermaid Diagram"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-architecture","@kfm-security","@kfm-devops"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["ci","cd","workflow","github-actions","codeql","trivy","sbom","stac","mcp","security","observability","automation"]
+alignment:
+  - MCP-DL v6.3
+  - SLSA Level 3+
+  - STAC 1.0 Validation
+  - FAIR Principles
+  - OpenTelemetry
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_gates: ["pre-commit","lint","unit-tests","integration-tests","stac-validation","codeql","trivy","sbom"]
+observability:
+  endpoint: "https://metrics.kfm.ai/ci"
+  metrics: ["workflow_success_rate","build_latency_s","artifact_integrity_pass_pct","a11y_compliance_pct"]
+preservation_policy:
+  retention: "artifacts 30d · logs 90d · provenance 365d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 🧱 Overview
+
+This diagram visualizes the **CI/CD orchestration** that validates, secures, and deploys  
+every component of the Kansas Frontier Matrix. It shows how **GitHub Actions** automate  
+**pre-commit linting**, **unit/integration testing**, **security scanning**, **builds**, **deployments**,  
+and **observability reporting** under MCP governance.
+
+Each gate ensures:
+- **Reproducibility** (deterministic build outputs)
+- **Provenance** (hash-verified artifacts)
+- **Security** (Trivy/CodeQL scans)
+- **Auditability** (logs, metrics, attestations)
+- **Governance** (OPA policies + CODEOWNER approvals)
+
+---
+
+## 🧩 CI/CD Pipeline (Mermaid Diagram)
+
+```mermaid
 flowchart TD
   %% CI/CD Pipeline — Kansas Frontier Matrix
   %% GitHub-safe syntax: quoted labels; \n for line breaks
@@ -85,4 +154,95 @@ flowchart TD
   class TRG,CI,ART,CD,OBS block;
   class PC,LINT,UNIT,INT,STACV gate;
   class CODEQL,TRIVY,SBOM risk;
+```
 <!-- END OF MERMAID -->
+
+---
+
+## 🧭 Diagram Legend
+
+| Symbol | Description |
+|:--|:--|
+| 🟦 **Trigger** | Push / PR / schedule / tag events |
+| 🧩 **Gate** | Validation phase (pre-commit, lint, test, STAC) |
+| 🟨 **Risk Control** | Security scanning and SBOM |
+| 🧱 **Build Artifact** | Produced binaries, containers, metadata |
+| 🌍 **CD Target** | Dev → Stage → Prod environments |
+| 🔒 **Compliance** | OPA / branch policies / governance |
+| 📊 **Observability** | Telemetry, logs, notifications |
+
+---
+
+## ⚙️ Toolchain & Standards
+
+| Category | Tool / Framework | Purpose |
+|:--|:--|:--|
+| **Code Quality** | Ruff, ESLint, Prettier | Static analysis and formatting |
+| **Tests** | PyTest, Jest | Unit and integration tests |
+| **Validation** | STAC Validator, JSON Schema | Data/metadata conformance |
+| **Security** | CodeQL, Trivy, Gitleaks | SAST, CVE, secrets scanning |
+| **Provenance** | Syft, SLSA, SBOM | Supply-chain attestations |
+| **Observability** | OpenTelemetry, GitHub Insights | Logs, metrics, workflow stats |
+| **Governance** | OPA / Conftest | Policy enforcement (MCP alignment) |
+
+---
+
+## 📈 Observability & Metrics
+
+```yaml
+ci_metrics:
+  export_to: "https://metrics.kfm.ai/ci"
+  fields:
+    - workflow_success_rate
+    - build_latency_s
+    - artifact_integrity_pass_pct
+    - a11y_compliance_pct
+  budgets:
+    workflow_success_rate: 100
+    build_latency_s: 1200
+    artifact_integrity_pass_pct: 100
+```
+
+Artifacts:  
+- `.prov.json` (SLSA attestation)  
+- `.sha256` (artifact checksums)  
+- `ci_build.log` (pipeline trace)
+
+---
+
+## 🧠 MCP Compliance Summary
+
+| Principle | Implementation |
+|:--|:--|
+| **Documentation-first** | Diagram defines and documents every CI/CD gate |
+| **Reproducibility** | Deterministic pipelines; versioned workflows |
+| **Open Standards** | YAML (Actions), STAC, JSON Schema, SLSA, SBOM |
+| **Provenance** | Attestations, checksums, and trace logs |
+| **Auditability** | Observability stack + compliance gates |
+
+---
+
+## 📎 Related Documentation
+
+- `docs/architecture/ci-cd.md` — textual CI/CD architecture overview  
+- `.github/workflows/README.md` — workflow definitions & governance  
+- `docs/architecture/diagrams/README.md` — diagram metadata & rendering workflow  
+- `.github/workflows/policy-check.yml` — OPA-based compliance automation  
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added structured metadata, metrics budget, provenance mapping, and OPA gate definitions. |
+| **v1.0.0** | 2025-10-04 | Initial CI/CD pipeline diagram (STAC & automation visualization). |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — CI/CD Pipeline Diagram**  
+*“Every Commit Verified · Every Artifact Proven · Every Deployment Audited.”*
+
+</div>
