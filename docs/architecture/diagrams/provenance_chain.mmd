@@ -1,3 +1,65 @@
+<div align="center">
+
+# 🧩 **Kansas Frontier Matrix — Provenance & Reproducibility Chain (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/provenance_chain.mmd`
+
+**Mission:** Visualize the **provenance and reproducibility chain** across the entire **Kansas Frontier Matrix (KFM)** system — tracing every dataset, transformation, metadata record, and user-facing artifact through verifiable, auditable lineage links under **Master Coder Protocol (MCP-DL v6.3)**.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Provenance & Reproducibility Chain"
+document_type: "Mermaid Diagram"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-architecture","@kfm-data","@kfm-knowledge"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["provenance","reproducibility","stac","etl","api","ui","knowledge-graph","checksums","traceability"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - PROV-O (W3C)
+  - CIDOC CRM
+  - OWL-Time
+  - FAIR Principles
+  - SLSA Level 3
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_workflows: ["stac-validate.yml","checksums.yml","policy-check.yml"]
+observability:
+  endpoint: "https://metrics.kfm.ai/provenance"
+  metrics: ["checksum_match_rate","stac_item_lineage_depth","feedback_audit_events","graph_link_integrity"]
+preservation_policy:
+  retention: "provenance 365d · logs 90d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 📚 Overview
+
+The **Provenance Chain Diagram** illustrates the **KFM reproducibility fabric** — how raw data, transformations, metadata, knowledge graph entities, and user interactions form a **closed-loop audit trail**.  
+It unites **data integrity**, **metadata validation**, **semantic provenance**, and **feedback-driven improvement**.
+
+Each dataset’s lineage connects from **source → ETL → STAC → Knowledge Graph → API → UI**, forming a continuous chain of reproducibility and accountability.
+
+---
+
+## 🧩 Provenance & Reproducibility Chain (Mermaid Source)
+
+```mermaid
 flowchart TD
   %% Provenance & Reproducibility Chain — Kansas Frontier Matrix
   %% GitHub-safe syntax: quoted labels; \n for line breaks
@@ -58,4 +120,109 @@ flowchart TD
   classDef data fill:#d9edf7,stroke:#31708f,stroke-width:1px;
   class SRC,ETL,STAC,KG,API,UI proc;
   class EXT1,EXT2,EXT3,STCOLL,STITEM,CHECK,NODES,RELS,CONF,ENDPTS,LOGS data;
+```
 <!-- END OF MERMAID -->
+
+---
+
+## 🧱 Diagram Summary
+
+**Purpose:** Show how KFM enforces **traceability, reproducibility, and feedback loops** across all system layers.
+
+| Layer | Description | Primary Standards |
+|:--|:--|:--|
+| 🌐 **Source & Acquisition** | Trusted data inputs and archival imports. | FAIR / ISO 19115 |
+| ⚙️ **ETL Pipeline** | Deterministic transformations validated by checksums. | MCP / Makefile / JSON Schema |
+| 🧩 **STAC Catalog** | Metadata structure linking data to provenance & validation. | STAC 1.0 / DCAT 3.0 |
+| 🧠 **Knowledge Graph** | Semantic relationships modeled via CIDOC CRM + OWL-Time. | RDF / PROV-O |
+| ⚙️ **API Layer** | REST + GraphQL endpoints exposing traceable results. | OpenAPI / JSON-LD |
+| 🌍 **UI & Feedback** | User interactions feed back into provenance audits. | WCAG 2.1 / MCP-DL |
+
+---
+
+## 🧠 Provenance Design Highlights
+
+- **Closed provenance loop:** All data can trace back to its manifest (`data/sources/`)  
+- **Semantic lineage:** CIDOC CRM and PROV-O enrich graph-level reasoning  
+- **Feedback capture:** UI-level reports link back to API logs and checksum validation  
+- **Immutable integrity:** Every processed asset has a SHA-256 sidecar  
+- **Continuous validation:** GitHub Actions enforce schema and checksum compliance  
+
+---
+
+## 🔐 Governance Integration
+
+**CI/CD Workflows Involved:**
+
+| Workflow | Function | Scope |
+|:--|:--|:--|
+| `fetch.yml` | Acquires source datasets | Source registry |
+| `checksums.yml` | Computes and verifies SHA-256 hashes | All processed assets |
+| `stac-validate.yml` | Validates metadata and schemas | STAC & JSON |
+| `policy-check.yml` | Ensures provenance metadata required | Docs + metadata |
+| `ai-model.yml` | Verifies ethical and contextual integrity | AI-driven panels |
+
+**OPA Compliance Policies:**
+- Each STAC Item must include `derived_from` + `providers`  
+- Every checksum must match an artifact in CI  
+- All feedback endpoints log provenance metadata  
+
+---
+
+## 📈 Observability Metrics
+
+```yaml
+provenance_metrics:
+  export_to: "https://metrics.kfm.ai/provenance"
+  fields:
+    - checksum_match_rate
+    - stac_item_lineage_depth
+    - feedback_audit_events
+    - graph_link_integrity
+  budgets:
+    checksum_match_rate: 100
+    graph_link_integrity: 100
+    feedback_audit_events: ">= 1 weekly"
+```
+
+All metrics are exported as JSON via the **KFM Observability Gateway** and versioned as provenance evidence.
+
+---
+
+## 🧠 MCP Compliance Summary
+
+| Principle | Implementation |
+|:--|:--|
+| **Documentation-first** | Diagram documents every provenance stage |
+| **Reproducibility** | ETL → STAC → Graph → API → UI flow deterministic |
+| **Open Standards** | STAC, JSON Schema, CIDOC CRM, PROV-O |
+| **Provenance** | Bidirectional traceability between data, metadata, and UI |
+| **Auditability** | CI/CD + observability metrics ensure full reproducibility |
+
+---
+
+## 📎 Related Documentation
+
+- `docs/architecture/data-architecture.md` — Data lifecycle & lineage  
+- `docs/architecture/knowledge-graph.md` — Semantic graph integration  
+- `docs/architecture/api-architecture.md` — Provenance-aware API endpoints  
+- `docs/architecture/diagrams/data_flow.mmd` — ETL and STAC data flow  
+- `.github/workflows/stac-validate.yml` — Metadata validation pipeline  
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added bidirectional feedback loops, observability metrics, PROV-O integration, and OPA provenance validation. |
+| v1.0.0 | 2025-10-04 | Initial provenance chain diagram linking STAC → Graph → API → UI. |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — Provenance & Reproducibility Chain**  
+*“Every Step Logged · Every Source Cited · Every Output Verified.”*
+
+</div>
