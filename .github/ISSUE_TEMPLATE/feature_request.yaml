@@ -1,5 +1,13 @@
+# ────────────────────────────────────────────────────────────────
+#  Kansas Frontier Matrix — Feature Request Form
+#  Context: GitHub Issue Form to propose NEW features/enhancements
+#  Version: v6.3.3 · Tier-Ω+∞ Certified
+#  Validated by: docs-validate.yml · policy-check.yml · gitleaks.yml
+#  Alignment: MCP-DL v6.3.3 · FAIR · CARE · STAC 1.0 · DCAT 2.0 · CIDOC-CRM · OWL-Time
+# ────────────────────────────────────────────────────────────────
+
 name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — documented, versioned, reproducible, and MCP-DL v6.3 compliant."
+description: "Propose a new feature or enhancement — documented, versioned, reproducible, and MCP-DL v6.3.3 compliant."
 title: "[Feature]: <feature name> — <component/domain>"
 labels:
   - enhancement
@@ -8,26 +16,19 @@ assignees:
   - kfm-architecture
   - kfm-data
 
-# ⛳ Kansas Frontier Matrix · Feature Request Form (MCP-DL v6.3)
-# Captures all details to design, review, and integrate a feature:
-# problem, rationale, implementation, KPIs, governance, security, data ethics, and versioning.
-
-# KFM metadata (informational)
-# version: v2.4.0
-# last_updated: 2025-10-18
-# owners: @kfm-architecture @kfm-data
-
 body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Feature Overview
-        *"Every feature builds the future — every change is reproducible."*
+        ## 💡 Feature Overview (MCP-DL v6.3.3)
+        *“Every feature builds the future — every change is reproducible.”*  
+        Provide a clear **problem statement**, **motivation**, **implementation sketch**, **versioning**, **security/ethics**, and **KPIs**.
 
+  # ——— Feature Meta ————————————————————————————————————————————————
   - type: input
     id: feature_name
     attributes:
-      label: Feature Name
+      label: 📛 Feature Name
       placeholder: "Slope Classification Enhancement for Terrain Pipeline"
     validations:
       required: true
@@ -35,7 +36,7 @@ body:
   - type: input
     id: component
     attributes:
-      label: Target Module / Component
+      label: 🧩 Target Module / Component
       placeholder: "terrain_pipeline.py | web/config/layers.json | src/graph/schema.cypher | src/api/routes.py"
     validations:
       required: true
@@ -43,7 +44,8 @@ body:
   - type: dropdown
     id: domain
     attributes:
-      label: Domain / Area of Impact
+      label: 🧭 Domain / Area of Impact
+      multiple: true
       options:
         - Terrain
         - Hydrology
@@ -56,14 +58,13 @@ body:
         - Text / AI / NLP
         - Metadata / Governance
         - CI/CD
-      multiple: true
     validations:
       required: true
 
   - type: input
     id: stakeholder
     attributes:
-      label: Feature Owner / Stakeholder
+      label: 👤 Feature Owner / Stakeholder
       placeholder: "@kfm-data · @kfm-web · project-leads"
     validations:
       required: true
@@ -71,7 +72,7 @@ body:
   - type: dropdown
     id: impact_level
     attributes:
-      label: Expected Impact Level
+      label: 🎯 Expected Impact Level
       options:
         - "🟩 Minor"
         - "🟨 Moderate"
@@ -83,7 +84,7 @@ body:
   - type: dropdown
     id: semver
     attributes:
-      label: SemVer Impact
+      label: 🔢 SemVer Impact
       options:
         - patch (no breaking changes)
         - minor (non-breaking but visible)
@@ -92,6 +93,27 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🚦 Priority (Triage Suggestion)
+      options:
+        - P1 — Critical (Immediate)
+        - P2 — High
+        - P3 — Normal
+        - P4 — Low
+      default: P3 — Normal
+    validations:
+      required: true
+
+  - type: input
+    id: related_docs
+    attributes:
+      label: 📚 Related Docs / ADRs / SOPs
+      description: Link any relevant architecture decisions or SOPs
+      placeholder: "docs/adr/ADR-0xx-<topic>.md · docs/sop/<area>.md"
+
+  # ——— Problem & Rationale ————————————————————————————————————————
   - type: markdown
     attributes:
       value: "## 🔍 Problem & Rationale"
@@ -99,7 +121,7 @@ body:
   - type: textarea
     id: problem
     attributes:
-      label: Current Limitation or Problem
+      label: ❗ Current Limitation / Problem
       placeholder: "Describe the current limitation or user need driving this feature."
     validations:
       required: true
@@ -107,7 +129,7 @@ body:
   - type: textarea
     id: rationale
     attributes:
-      label: Motivation & Rationale
+      label: 💡 Motivation & Rationale
       placeholder: |
         - Aligns with roadmap milestone
         - Fills UI accessibility gap
@@ -116,6 +138,7 @@ body:
     validations:
       required: true
 
+  # ——— Proposed Implementation ————————————————————————————————————
   - type: markdown
     attributes:
       value: "## 🧠 Proposed Implementation"
@@ -123,8 +146,8 @@ body:
   - type: textarea
     id: proposal
     attributes:
-      label: Proposed Implementation Details
-      description: "Describe logic, workflow changes, files affected, dependencies."
+      label: 🛠 Implementation Details
+      description: Logic, workflow changes, files affected, dependencies
       placeholder: |
         - Add CLI flag to terrain_pipeline.py
         - Modify layers.json with slope_class layer
@@ -136,7 +159,7 @@ body:
   - type: checkboxes
     id: change_types
     attributes:
-      label: Type of Change
+      label: 🧱 Type of Change
       options:
         - label: New ETL pipeline/module
         - label: Graph schema/API expansion
@@ -148,16 +171,27 @@ body:
         - label: Other
 
   - type: textarea
+    id: dependencies
+    attributes:
+      label: 🔗 Dependencies / Compatibility
+      description: Upstream/downstream dependencies, migrations, or compat notes
+      placeholder: |
+        - Requires GDAL ≥3.8; pin in requirements
+        - Dependent on NHD flowlines update
+        - Breaks old schema field `slope_bin` (migration needed)
+
+  - type: textarea
     id: toggles_rollout
     attributes:
-      label: Rollout & Toggle Strategy
-      description: "How to deploy safely and roll back if needed."
+      label: 🚀 Rollout & Toggle Strategy
+      description: Safe release & rollback plan
       placeholder: |
         - Feature flag: `feature.slope_class`
         - Canary / partial rollout
-        - Rollback plan: revert config + data migration
-        - Migration notes: cache rebuild, index refresh
+        - Rollback: revert config + data migration
+        - Post-deploy checks: cache rebuild, index refresh
 
+  # ——— Metrics / KPIs ————————————————————————————————————————————————
   - type: markdown
     attributes:
       value: |
@@ -171,14 +205,15 @@ body:
         | Usability       | Map layer toggle + legend + doc link         |
         | Performance     | ≤ +5% runtime impact                         |
         | Accessibility   | Meets WCAG 2.1 AA; keyboard-only operable    |
-        | Observability   | New logs/metrics in CI and runtime dashboards|
+        | Observability   | New logs/metrics in CI and dashboards        |
         ```
+
   - type: textarea
     id: outcomes
     attributes:
-      label: Expected Behavior / KPIs
-      description: "Enter the KPI table or bullet list. Markdown is rendered."
-      placeholder: "Paste the KPI table template (see above) and adjust targets."
+      label: 📏 Expected Behavior / KPIs
+      description: Enter KPI table or bullet list (Markdown rendered)
+      placeholder: "Paste KPI table template and adjust targets."
       render: markdown
     validations:
       required: true
@@ -186,14 +221,15 @@ body:
   - type: textarea
     id: downstream
     attributes:
-      label: Downstream Effects
-      description: "Describe expected effects on STAC, pipelines, UI, tests, model cards, etc."
+      label: 🌊 Downstream Effects
+      description: Impact on STAC, pipelines, UI, tests, model cards, etc.
       placeholder: |
-        - STAC schema version bump (properties.version)
+        - STAC schema version bump (`properties.version`)
         - New test fixtures + screenshots
         - Update `docs/` usage & ADR
         - Affect model card? (if AI surfaces/dossiers change)
 
+  # ——— Security, Supply Chain & Ethics ———————————————————————————————
   - type: markdown
     attributes:
       value: "## 🔒 Security, Supply Chain & Ethics"
@@ -201,14 +237,15 @@ body:
   - type: checkboxes
     id: security_ethics
     attributes:
-      label: Security & Data Ethics Checklist
+      label: ✅ Security & Data Ethics Checklist
       options:
         - label: CodeQL/Trivy clean or mitigations documented
         - label: Actions pinned (SHA/tag); least-privilege tokens
-        - label: SBOM re-generated (if deps changed)
+        - label: SBOM re-generated (if dependencies changed)
         - label: Policy-as-Code checks pass (OPA/Conftest)
         - label: Data ethics reviewed; STAC `data_ethics` set if applicable
 
+  # ——— Governance / Versioning ——————————————————————————————————————
   - type: markdown
     attributes:
       value: "## 📜 Governance / Versioning"
@@ -216,8 +253,8 @@ body:
   - type: textarea
     id: versioning_summary
     attributes:
-      label: Versioning Summary (SemVer + STAC)
-      description: "Enter a table of proposed version increments."
+      label: 🧭 Versioning Summary (SemVer + STAC)
+      description: Provide proposed version increments
       placeholder: |
         | Component            | Current | Proposed | Reason             |
         |----------------------|---------|----------|--------------------|
@@ -228,6 +265,22 @@ body:
         | Dataset (STAC)       | v1.0.0  | v1.1.0   | collection update  |
       render: markdown
 
+  # ——— Reporter Checklist ————————————————————————————————————————————
+  - type: checkboxes
+    id: reporter_check
+    attributes:
+      label: 🧭 Reporter Checklist
+      description: Confirm before submitting
+      options:
+        - label: "All required fields completed"
+        - label: "Design considers security & ethics"
+        - label: "No secrets or restricted data included"
+        - label: "Existing issues searched"
+        - label: "I acknowledge this request is public"
+    validations:
+      required: true
+
+  # ——— References & Notes ——————————————————————————————————————————
   - type: markdown
     attributes:
       value: "## 🔗 References & Notes"
@@ -235,18 +288,48 @@ body:
   - type: textarea
     id: references
     attributes:
-      label: Links / Related PRs / Docs
+      label: 🔗 Links / Related PRs / Docs
       placeholder: |
         - Related Issue: #456
-        - ADR: docs/adr/ADR-####.md
+        - ADR: docs/adr/ADR-0xx-<topic>.md
         - SOP: docs/sop/terrain_pipeline.md
         - PRs: #789
 
   - type: textarea
     id: notes
     attributes:
-      label: Additional Notes
+      label: 🗒 Additional Notes
       placeholder: |
         - Diagrams, screenshots, mockups
         - Risk flags, review blockers, etc.
-```
+
+  # ——— Disclosure ————————————————————————————————————————————————
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        **Disclosure & License Notice**  
+        Submissions are governed by the MIT + CC-BY 4.0 license.  
+        Do not include confidential or proprietary data in attachments.
+
+# hidden metadata
+mcp_metadata:
+  version: "v6.3.3"
+  tier: "Ω+∞"
+  template_type: "feature_request"
+  validation_checks:
+    - docs-validate
+    - policy-check
+    - gitleaks
+  generated_by: "KFM-Automation/DocsBot"
+
+# MCP-FOOTER-BEGIN
+# MCP-VERSION: v6.3.3
+# MCP-TIER: Ω+∞
+# DOC-PATH: .github/ISSUE_TEMPLATE/feature_request.yml
+# DOC-HASH: sha256:feature-request-template-v6-3-3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# MCP-CERTIFIED: true
+# VALIDATION-HASH: {auto.hash}
+# GENERATED-BY: KFM-Automation/DocsBot
+# LAST-VALIDATED: {build.date}
+# MCP-FOOTER-END
