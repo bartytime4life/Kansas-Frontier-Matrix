@@ -1,3 +1,65 @@
+<div align="center">
+
+# 🏛️ **Kansas Frontier Matrix — System Overview Diagram (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/system_overview.mmd`
+
+**Mission:** Provide a **comprehensive systems view** of the **Kansas Frontier Matrix (KFM)** — connecting external sources, ETL pipelines, metadata systems, AI enrichment, knowledge graphs, APIs, and the frontend visualization layer into a **single reproducible, traceable ecosystem**.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../.github/workflows/codeql.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — System Overview Diagram"
+document_type: "Mermaid Diagram"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-architecture","@kfm-web","@kfm-ai","@kfm-data"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["system","architecture","etl","stac","api","ai","graph","frontend","maplibre","ci","observability"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0
+  - CIDOC CRM
+  - OWL-Time
+  - FAIR Principles
+  - ISO 19115 / DCAT 3.0
+  - SLSA Level 3
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_required_checks: ["stac-validate.yml","codeql.yml","trivy.yml","policy-check.yml"]
+observability:
+  endpoint: "https://metrics.kfm.ai/system-overview"
+  metrics: ["pipeline_success_rate","build_latency","api_uptime_pct","data_validation_pass_rate"]
+preservation_policy:
+  retention: "diagrams 365d · logs 90d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 📚 Overview
+
+This **system-level diagram** visualizes the **entire Kansas Frontier Matrix stack** — from raw data ingestion and metadata validation through AI enrichment, semantic graph linking, API exposure, and frontend delivery.
+
+It captures the **flow of data, metadata, models, and interactions** that underpin KFM’s reproducibility and governance framework.
+
+---
+
+## 🧩 System Overview (Mermaid Source)
+
+```mermaid
 flowchart TD
   %% System Overview — Kansas Frontier Matrix
   %% GitHub-safe syntax: quoted labels; \n for line breaks
@@ -128,4 +190,89 @@ flowchart TD
   REST --> LOGS
   UI --> LOGS
   OBS --- POL
+```
 <!-- END OF MERMAID -->
+
+---
+
+## 🧭 Diagram Summary
+
+**Purpose:** Display the integrated KFM ecosystem — every dataset, metadata element, and visualization layer tied together through reproducible and observable data lineage.
+
+| Layer | Description | Key Standards |
+|:--|:--|:--|
+| 🌐 **Sources** | Raw inputs from scientific and archival providers | FAIR / ISO 19115 |
+| ⚙️ **ETL** | Data extraction, transformation, validation | MCP / STAC / JSON Schema |
+| 🧩 **Catalog (STAC)** | Metadata cataloging and asset indexing | STAC 1.0 / DCAT 3.0 |
+| 🤖 **AI/ML** | Entity extraction, summarization, geocoding | spaCy / Transformers / FAIR AI |
+| 🧠 **Knowledge Graph** | Semantic linkage of data and narratives | CIDOC CRM / OWL-Time / PROV-O |
+| 🔗 **API Layer** | REST + GraphQL endpoints for data delivery | OpenAPI / JSON-LD |
+| 🗺️ **Frontend** | Interactive visualization and exploration | MapLibre / React / WCAG 2.1 |
+| 🧰 **Observability** | CI/CD + metrics + logging for traceability | GitHub Actions / OpenTelemetry |
+
+---
+
+## 🧩 Key System Integrations
+
+- **STAC + Neo4j Integration:** Metadata and ontology links unify spatial + temporal entities  
+- **AI Summarization Pipeline:** Contextual summaries power the frontend’s AI Assistant  
+- **CI/CD Automation:** GitHub Actions ensures deterministic builds and validation  
+- **OpenTelemetry Logging:** Each API call and UI event emits traceable metrics  
+- **Provenance Consistency:** Every data file, API response, and visual element linked to checksums
+
+---
+
+## 🧠 Governance & Observability
+
+**Core Workflows:**
+- `stac-validate.yml` — Schema and metadata validation  
+- `checksums.yml` — Data integrity verification  
+- `codeql.yml / trivy.yml` — Static and dependency security scans  
+- `policy-check.yml` — Governance and compliance enforcement  
+- `site.yml` — Automated documentation and frontend deployment  
+
+**Metrics:**
+- Build success rate  
+- Data validation coverage  
+- API uptime  
+- STAC link integrity  
+
+---
+
+## 🧠 MCP Compliance Summary
+
+| MCP Principle | Implementation |
+|:--|:--|
+| **Documentation-first** | Diagram defines end-to-end data, AI, and visualization pipelines |
+| **Reproducibility** | Deterministic ETL → STAC → Graph → API → Web layers |
+| **Open Standards** | STAC, CIDOC CRM, OWL-Time, DCAT 3.0, JSON Schema |
+| **Provenance** | SHA-256 validation, lineage references, audit trails |
+| **Auditability** | Observability stack ensures complete pipeline visibility |
+
+---
+
+## 📎 Related Documentation
+
+- `docs/architecture/architecture.md` — Core system documentation  
+- `docs/architecture/data-architecture.md` — Data subsystem and validation pipeline  
+- `docs/architecture/web-ui-architecture.md` — Frontend visualization overview  
+- `docs/architecture/knowledge-graph.md` — Semantic graph integration  
+- `.github/workflows/README.md` — CI/CD governance and validation  
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: Added AI/ML and observability subgraphs, metrics integration, and CIDOC CRM linkage. |
+| v1.0.0 | 2025-10-04 | Initial system overview diagram for full KFM stack. |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — System Overview Diagram**  
+*“Every Layer Connected · Every Process Proven · Every Result Reproducible.”*
+
+</div>
