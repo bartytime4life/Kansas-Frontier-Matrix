@@ -1,34 +1,54 @@
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — Architecture Diagrams  
+# 🧩 **Kansas Frontier Matrix — Architecture Diagrams (v2.0.0 · Tier-Ω+∞ Certified)**  
 `docs/architecture/diagrams/`
 
-**Mission:** Provide a centralized visual documentation library for the **Kansas Frontier Matrix (KFM)** —  
-illustrating system workflows, data pipelines, CI/CD automation, and provenance chains  
-through reproducible and version-controlled diagrams.
+**Mission:** Provide a centralized, version-controlled **visual documentation library** for the **Kansas Frontier Matrix (KFM)** — illustrating **system workflows**, **data pipelines**, **CI/CD automation**, **knowledge-graph semantics**, and **provenance chains** using **reproducible** and **auditable** diagrams.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../docs/)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../../.github/workflows/stac-validate.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../../.github/workflows/sbom.yml)
+[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../../.github/workflows/slsa.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
 ---
 
+```yaml
+---
+title: "Kansas Frontier Matrix — Architecture Diagrams"
+document_type: "Diagram Library Index"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+owners: ["@kfm-architecture","@kfm-docs","@kfm-security"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["architecture","diagrams","mermaid","svg","png","provenance","ci","observability"]
+alignment:
+  - MCP-DL v6.3
+  - FAIR / CARE
+  - WCAG 2.1 AA (docs)
+validation:
+  docs_ci_required: true
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+observability:
+  endpoint: "https://metrics.kfm.ai/docs/diagrams"
+  metrics: ["diagram_parse_rate_pct","export_success_pct","broken_link_count","frontmatter_coverage_pct"]
+preservation_policy:
+  retention: "exports 365d · logs 90d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
 ## 📚 Overview
 
-The `docs/architecture/diagrams/` directory contains **visual documentation assets**  
-that complement the text-based architecture files in `docs/architecture/`.
-
-Each diagram helps contributors and users understand how **data flows**,  
-**pipelines execute**, **web systems render**, and **metadata connects**  
-within the Kansas Frontier Matrix ecosystem.
-
-All diagrams are:
-- 🧠 **Reproducible** (version-controlled source code)  
-- 🌍 **Open-standard** (SVG, PNG, or Mermaid)  
-- 🧾 **Documented** with captions and file metadata  
-- 🧩 **Linked** directly from the architecture documents  
+`docs/architecture/diagrams/` stores **Mermaid sources (`.mmd`)** and **exports (`.svg`/`.png`)** that accompany the architecture docs.  
+Every diagram is: **open-standard**, **renderable in CI**, **captioned**, and **linked** from its parent document. Exports include **provenance metadata** (author, date, version, checksum) in their footer.
 
 ---
 
@@ -36,80 +56,97 @@ All diagrams are:
 
 ```bash
 docs/architecture/diagrams/
-├── README.md                        # This file
-├── data_flow.mmd                    # Mermaid diagram of ETL + validation pipeline
-├── web_ui_architecture.mmd          # Web UI + MapLibre + STAC integration
-├── provenance_chain.mmd             # End-to-end data lineage diagram
-├── ci_cd_pipeline.mmd               # GitHub Actions automation and validation flow
-├── system_overview.mmd              # Full KFM system visual summary
-├── exported/                        # Folder for rendered diagrams (PNG/SVG)
-│   ├── data_flow.png
+├── README.md                        # This index (you are here)
+├── data_flow.mmd                    # ETL + validation pipeline
+├── web_ui_architecture.mmd          # MapLibre + STAC + UI integration
+├── provenance_chain.mmd             # End-to-end lineage + checksums
+├── ci_cd_pipeline.mmd               # Actions & policy gates overview
+├── system_overview.mmd              # Full KFM system snapshot
+├── knowledge_graph.mmd              # CIDOC/PROV/Time schema overview
+├── exported/                        # Rendered diagrams (CI produced)
+│   ├── data_flow.svg
 │   ├── web_ui_architecture.png
 │   ├── provenance_chain.svg
-│   └── ci_cd_pipeline.png
-└── templates/                       # Optional templates for future diagrams
+│   ├── ci_cd_pipeline.png
+│   └── system_overview.svg
+└── templates/
     ├── blank_flowchart.mmd
-    └── example_structure.mmd
-````
+    ├── swimlane_template.mmd
+    └── er_template.mmd
+```
 
-> All `.mmd` diagrams are rendered using **GitHub-native Mermaid syntax**,
-> and corresponding `.png`/`.svg` exports are generated for external embedding (docs, presentations, reports).
+> **Rule:** Every `.mmd` must render in GitHub and end with `<!-- END OF MERMAID -->`. CI will fail otherwise.
 
 ---
 
 ## 🧠 Diagram Categories
 
-| Category             | File(s)                                 | Description                                                           |
-| :------------------- | :-------------------------------------- | :-------------------------------------------------------------------- |
-| **Data Flow & ETL**  | `data_flow.mmd`, `provenance_chain.mmd` | Shows how raw data moves through ETL, validation, and STAC pipelines. |
-| **Web Architecture** | `web_ui_architecture.mmd`               | Displays how STAC metadata, map tiles, and UI components connect.     |
-| **System Overview**  | `system_overview.mmd`                   | Provides a high-level snapshot of the entire project ecosystem.       |
-| **CI/CD Pipeline**   | `ci_cd_pipeline.mmd`                    | Illustrates GitHub Actions workflows and data validation triggers.    |
-| **Templates**        | `templates/*.mmd`                       | Starter templates for new diagrams under MCP documentation.           |
+| Category             | File(s)                                  | Purpose |
+|:--|:--|:--|
+| **Data Flow & ETL**  | `data_flow.mmd`, `provenance_chain.mmd`  | Source→raw→processed→STAC→checksums→publication |
+| **Web Architecture** | `web_ui_architecture.mmd`                | STAC-driven layers, timeline sync, popups |
+| **System Overview**  | `system_overview.mmd`                    | Unified view of ETL/AI/KG/API/Web/CI |
+| **CI/CD Pipeline**   | `ci_cd_pipeline.mmd`                     | Pre-commit → validation → security → deploy → attest |
+| **Knowledge Graph**  | `knowledge_graph.mmd`                    | CIDOC CRM / PROV-O / OWL-Time / GeoSPARQL alignment |
 
 ---
 
-## 🧩 Rendering Diagrams
+## 🧩 Standards for Diagram Creation
 
-### 1️⃣ View in GitHub
+| Standard | Requirement | Description |
+|:--|:--|:--|
+| **Format** | `.mmd` + `.svg`/`.png` | Source and export must co-exist in repo |
+| **Color & Contrast** | WCAG AA | Use accessible palette tokens (see below) |
+| **Font/Theme** | Minimal, neutral | Avoid proprietary fonts/colors |
+| **Labels** | Plain text | ASCII; disambiguate acronyms |
+| **Commit** | `add(diagram): <name>` | Semantic commits for adds/changes |
+| **Provenance** | Footer metadata | Embed author/date/version/checksum in exports |
 
-GitHub natively renders `.mmd` (Mermaid) code blocks in Markdown.
-Diagrams appear automatically in all `.md` files.
+**Accessible palette tokens (suggested):**
 
-### 2️⃣ Export Locally
-
-To generate `.png` or `.svg` exports for use in reports or web assets:
-
-**Using Mermaid CLI:**
-
-```bash
-npx @mermaid-js/mermaid-cli -i data_flow.mmd -o exported/data_flow.png
+```yaml
+diagram_palette:
+  accent: "#3BAFDA"
+  ok: "#2E7D32"
+  warn: "#F9A825"
+  error: "#D32F2F"
+  neutral: "#1A1A1A"
 ```
 
-**Using Makefile target:**
+---
 
+## 🧪 Rendering & Export
+
+### 1) View in GitHub  
+Mermaid code is rendered natively inside `.md` files.
+
+### 2) Export Locally (CLI)
 ```bash
+# Single export
+npx @mermaid-js/mermaid-cli -i data_flow.mmd -o exported/data_flow.svg
+
+# Build all exports + validate syntax
 make diagrams
 ```
 
-This command:
-
-* Validates `.mmd` syntax
-* Generates `.svg` and `.png` in `/exported/`
-* Updates references in architecture documentation automatically
+**What `make diagrams` does**
+- Validates Mermaid syntax  
+- Exports `.svg/.png` to `exported/`  
+- Writes `exported/exports.sha256` (checksums)  
+- Updates doc references where needed
 
 ---
 
-## 🧩 Example: Data Flow Diagram (Mermaid)
+## 🧭 Example: Data Flow (Mermaid)
 
 ```mermaid
 flowchart TD
-  A["🌐 Sources\n(data/sources/)"] --> B["📦 Raw Data\n(data/raw/)"]
-  B --> C["⚙️ ETL Pipelines\n(src/pipelines/)"]
-  C --> D["✅ Processed Data\n(data/processed/)"]
-  D --> E["🧩 Metadata & STAC\n(data/stac/)"]
-  E --> F["🧾 Checksums\n(data/checksums/)"]
-  F --> G["🌍 Web Visualization\n(web/, data/tiles/)"]
+  A["🌐 Sources\n(data/sources/)"] --> B["📦 Raw\n(data/raw/)"]
+  B --> C["⚙️ ETL Pipelines\n(src/etl/)"]
+  C --> D["✅ Processed\n(data/processed/)"]
+  D --> E["🧩 STAC\n(data/stac/)"]
+  E --> F["🔐 Checksums\n(data/checksums/)"]
+  F --> G["🌍 Publication\n(web/ · data/tiles/)"]
 
   style A fill:#fafafa,stroke:#999
   style B fill:#eef7ff,stroke:#0099cc
@@ -119,75 +156,147 @@ flowchart TD
   style F fill:#f0e8ff,stroke:#8855cc
   style G fill:#f7f7f7,stroke:#555
 ```
-
 <!-- END OF MERMAID -->
 
-> This diagram represents the **canonical data flow** of KFM and is reused in `data-architecture.md` and `data/ARCHITECTURE.md`.
+---
+
+## 🔗 Embedding & Cross-References
+
+| Document | Diagram(s) | Embed Syntax |
+|:--|:--|:--|
+| `architecture/architecture.md` | `system_overview.mmd`, `ci_cd_pipeline.mmd` | Inline Mermaid or exported `.svg` |
+| `architecture/data-architecture.md` | `data_flow.mmd`, `provenance_chain.mmd` | `![Caption](diagrams/exported/data_flow.svg)` |
+| `architecture/web-ui-architecture.md` | `web_ui_architecture.mmd` | Same |
+| `data/ARCHITECTURE.md` | `data_flow.mmd` | Same |
 
 ---
 
-## 🧱 Standards for Diagram Creation
+## 🧷 File Naming & Paths
 
-| Standard              | Requirement                          | Description                                                 |
-| :-------------------- | :----------------------------------- | :---------------------------------------------------------- |
-| **Format**            | `.mmd` + `.png` / `.svg`             | Source and export formats must coexist for version control. |
-| **Font / Theme**      | Minimal, neutral, accessible         | Avoid brand-dependent or non-standard color palettes.       |
-| **Labels**            | Plain text (no special characters)   | Ensure readability in CLI and web contexts.                 |
-| **Commit Convention** | `add(diagram): <diagram_name>`       | Use semantic commit messages for diagram additions.         |
-| **Provenance Tag**    | Footer with creation date and author | Required in exported diagrams for traceability.             |
+- **Sources**: `kebab-case.mmd` (e.g., `knowledge_graph.mmd`)  
+- **Exports**: same basename in `exported/` with `.svg` or `.png`  
+- **Relative paths** only in markdown (`diagrams/exported/<file>.svg`)
 
 ---
 
-## ⚙️ Integration with Documentation
+## 🔐 CI Integration
 
-| File                                       | Linked Diagram(s)                           |
-| :----------------------------------------- | :------------------------------------------ |
-| `docs/architecture/architecture.md`        | `system_overview.mmd`, `ci_cd_pipeline.mmd` |
-| `docs/architecture/data-architecture.md`   | `data_flow.mmd`, `provenance_chain.mmd`     |
-| `docs/architecture/web-ui-architecture.md` | `web_ui_architecture.mmd`                   |
-| `data/ARCHITECTURE.md`                     | `data_flow.mmd`                             |
-| `README.md` (root)                         | `system_overview.mmd` (thumbnail)           |
+**Workflow snippet** (`docs-validate.yml` excerpt):
 
-Diagrams are embedded using GitHub’s Markdown + Mermaid integration,
-ensuring visual documentation is version-controlled and reproducible.
+```yaml
+- name: Validate Mermaid syntax
+  run: npx @mermaid-js/mermaid-cli -i docs/architecture/diagrams/system_overview.mmd -o /tmp/test.svg
+
+- name: Build all diagram exports
+  run: make diagrams
+
+- name: Check export checksums
+  run: sha256sum -c docs/architecture/diagrams/exported/exports.sha256
+```
+
+**Policy-as-Code (OPA) gates**  
+- Diagrams must end with `<!-- END OF MERMAID -->`  
+- Exports must exist for changed `.mmd` sources  
+- README must reference new diagrams
+
+---
+
+## ♿ Accessibility & Localization
+
+- Use **plain labels**, avoid color-only meaning; add icons/shape variations when implying status.  
+- Ensure **contrast ≥ 4.5:1** for text; ≥ 3:1 for icons/lines.  
+- Keep **font sizes** legible when exported (`≥ 12–14 px` at 100%).  
+- If diagram includes language strings for UI, provide **BCP-47 `lang` hints** in captions.
+
+---
+
+## 📈 Observability
+
+```yaml
+diagram_metrics:
+  export_to: "https://metrics.kfm.ai/docs/diagrams"
+  fields:
+    - diagram_parse_rate_pct
+    - export_success_pct
+    - broken_link_count
+    - frontmatter_coverage_pct
+  budgets:
+    diagram_parse_rate_pct: 100
+    export_success_pct: 100
+    broken_link_count: 0
+```
+
+---
+
+## 🧪 Provenance & Checksums
+
+On export, CI writes **checksums** and a **provenance JSON**:
+
+```json
+{
+  "diagram": "data_flow.svg",
+  "sha256": "f1b7…",
+  "source": "data_flow.mmd",
+  "generated_by": "mermaid-cli@<ver>",
+  "timestamp": "2025-11-16T09:15:00Z",
+  "author": "@kfm-architecture",
+  "version": "v2.0.0"
+}
+```
+
+---
+
+## 🧰 Templates (Start Here)
+
+- `templates/blank_flowchart.mmd` — minimal flow skeleton  
+- `templates/swimlane_template.mmd` — roles & handoffs  
+- `templates/er_template.mmd` — entity–relationship layout
+
+---
+
+## 🧭 Gallery (Auto-Generated)
+
+> CI injects a thumbnail grid based on `exported/` contents.
+
+<!-- gallery:start -->
+<!-- gallery:end -->
 
 ---
 
 ## 🧠 MCP Compliance Summary
 
-| MCP Principle           | Implementation                                                    |
-| :---------------------- | :---------------------------------------------------------------- |
-| **Documentation-first** | All diagrams have human-readable `.mmd` sources and descriptions. |
-| **Reproducibility**     | Diagrams generated deterministically from source code using CLI.  |
-| **Open Standards**      | Uses Mermaid + SVG (open specifications).                         |
-| **Provenance**          | Each exported diagram contains version metadata and author tag.   |
-| **Auditability**        | Visual lineage directly reflects ETL and CI/CD architecture.      |
+| Pillar | Implementation |
+|:--|:--|
+| Documentation-first | Each diagram has `.mmd` source, caption, and cross-links |
+| Reproducibility | Deterministic CLI export + SHA-256 checks |
+| Open Standards | Mermaid + SVG/PNG (open specs) |
+| Provenance | Footer tags in exports + `.prov.json` |
+| Auditability | CI gates & metrics with public artifacts |
 
 ---
 
 ## 📎 Related Documentation
 
-| Path                                       | Description                                   |
-| :----------------------------------------- | :-------------------------------------------- |
-| `docs/architecture/architecture.md`        | Full system architecture overview.            |
-| `docs/architecture/data-architecture.md`   | Data subsystem and provenance diagrams.       |
-| `docs/architecture/web-ui-architecture.md` | Frontend visualization flow diagrams.         |
-| `.github/workflows/README.md`              | CI/CD pipeline architecture visual reference. |
+- `docs/architecture/architecture.md` — System overview  
+- `docs/architecture/data-architecture.md` — Data flow & lineage  
+- `docs/architecture/web-ui-architecture.md` — UI integration  
+- `.github/workflows/README.md` — CI/CD diagram workflow details
 
 ---
 
-## 📅 Version History
+## 🗓 Version History
 
-| Version | Date       | Summary                                                                           |
-| :------ | :--------- | :-------------------------------------------------------------------------------- |
-| v1.0    | 2025-10-04 | Initial architecture diagram directory documentation (Mermaid + exported assets). |
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added CI export pipeline, accessibility palette, provenance JSON, auto gallery, OPA gates, metrics & budgets, and strict end-marker policy. |
+| v1.0.0 | 2025-10-04 | Initial diagram directory with Mermaid sources and exported assets. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — *“Visualizing Systems for a Transparent, Reproducible Future.”*
-📍 [`docs/architecture/diagrams/`](.) · Repository for visual architecture and system flow diagrams.
+**Kansas Frontier Matrix — Architecture Diagrams**  
+*“Visualizing Systems for a Transparent, Reproducible Future.”*  
+📍 `docs/architecture/diagrams/` — Source-of-truth for KFM visual documentation.
 
 </div>
-
