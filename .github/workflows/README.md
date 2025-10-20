@@ -1,41 +1,16 @@
-<div align="center">
-
-# ⚙️ **Kansas Frontier Matrix — CI/CD Workflows (v3.3.0 · Tier-Ω+∞ Certified)**  
-`📁 .github/workflows/README.md`
-
-**Mission:** Run **validation, security, data governance, versioning, and deployment** for **KFM** with **reproducibility**, **auditability**, and **MCP-DL v6.3** compliance.  
-Every run is **traceable**, every artifact **provenanced**, every change **documented** — across **Dev · Stage · Prod**.
-
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
-[![STAC ✅](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
-[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-workflow-summary)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
-[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)
-[![Dep Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)
-[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%2B%20Grype-blue.svg)](./sbom.yml)
-[![SLSA](https://img.shields.io/badge/SLSA-provenance-purple)](./slsa.yml)
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue.svg)](../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
-
-</div>
-
 ---
-
-```yaml
----
-title: "KFM — CI/CD Workflows"
+title: "⚙️ Kansas Frontier Matrix — CI/CD Workflows"
 document_type: "Automation & Governance Index"
 version: "v3.3.0"
 last_updated: "2025-11-15"
+status: "Tier-Ω+∞ Certified · Production"
+license: ["MIT (code)", "CC-BY 4.0 (docs)"]
 owners: ["@kfm-security","@kfm-architecture","@kfm-ai","@kfm-data","@kfm-web","@kfm-docs"]
-status: "Active"
-maturity: "Production"
-license: "MIT"
 tags: ["ci","cd","security","stac","checksums","slsa","sbom","opa","gitleaks","observability","ai-governance","fair","care","dr","attck"]
 alignment:
-  - MCP-DL v6.3
+  - MCP-DL v6.3.2
   - STAC 1.0 / DCAT 2.0
-  - SBOM (SPDX/CycloneDX)
+  - SBOM (CycloneDX/SPDX)
   - SLSA Level ≥2 Attestations
   - WCAG 2.1 AA (Docs-as-Code)
 validation:
@@ -45,7 +20,7 @@ validation:
   sbom_required: true
   slsa_required: true
 observability:
-  endpoint: "https://metrics.kfm.ai/ci"
+  dashboard: "https://metrics.kfm.ai/ci"
   metrics:
     - workflow_success_rate
     - stac_pass_rate
@@ -59,25 +34,52 @@ preservation_policy:
   checksum_algorithm: "SHA-256"
   replication_targets: ["GitHub Releases","Zenodo DOI (major)"]
 ---
-```
+
+<div align="center">
+
+# ⚙️ **Kansas Frontier Matrix — CI/CD Workflows (v3.3.0 · Tier-Ω+∞ Certified)**  
+`📁 .github/workflows/README.md`
+
+**Mission:** Run **validation, security, data governance, versioning, and deployment** for **KFM** with **reproducibility**, **auditability**, and **MCP-DL v6.3.2** compliance.  
+Every run is **traceable**, every artifact **provenanced**, every change **documented** — across **Dev · Stage · Prod**.
+
+[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./site.yml)
+[![STAC ✅](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./stac-validate.yml)
+[![Checksums](https://img.shields.io/badge/Checksums-SHA256-informational)](#-workflow-summary)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./codeql.yml)
+[![Trivy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./trivy.yml)
+[![Dep Review](https://img.shields.io/badge/DepReview-enabled-brightgreen)](./dependency-review.yml)
+[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%2B%20Grype-blue.svg)](./sbom.yml)
+[![SLSA](https://img.shields.io/badge/SLSA-provenance-purple)](./slsa.yml)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-blue.svg)](../../docs/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+
+</div>
 
 ---
 
 ## 📚 Table of Contents
-- [Overview](#-overview) · [Environments Matrix](#-environments-matrix) · [Workflow DAG](#-workflow-dag)  
+- [Overview](#-overview) · [Context & Scope](#-context--scope) · [Environments Matrix](#-environments-matrix) · [Workflow DAG](#-workflow-dag)  
 - [Workflow Directory](#-workflow-directory) · [Workflow Summary](#-workflow-summary)  
 - [Design Patterns](#-design-patterns) · [Secrets & Env](#-secrets--env) · [Selective/Monorepo Runs](#-selective--monorepo-runs)  
 - [Policy-as-Code](#-policy-as-code) · [Observability](#-observability) · [Cost & Concurrency](#-cost--concurrency-guardrails)  
 - [AI Governance](#-ai-governance) · [Data Governance & STAC](#-data-governance--stac)  
 - [Maintenance Cadence](#-maintenance-cadence) · [Threat Model](#-threat-model-mitre-attck-map) · [Risk Register](#-risk-register)  
 - [Disaster Recovery](#-disaster-recovery--drills) · [Versioning & Releases](#-versioning--releases)  
-- [Health Matrix](#-health-matrix) · [Metadata & Provenance](#-metadata--provenance) · [Related Docs](#-related-docs) · [Version History](#-version-history)
+- [Health Matrix](#-health-matrix) · [Artifacts & Evidence Registry](#-artifacts--evidence-registry) · [Metadata & Provenance](#-metadata--provenance)  
+- [Related Docs](#-related-docs) · [Version History](#-version-history)
 
 ---
 
 ## 📚 Overview
 KFM’s Actions automate **pre-commit → validate (STAC/docs/checksums) → security (CodeQL/Trivy/Gitleaks) → build/deploy → attest (SBOM/SLSA)**.  
 Artifacts include **hash-stamped logs**, **SBOMs**, **SLSA**, and a **provenance ledger**.
+
+---
+
+## 🧭 Context & Scope
+This index is the *single source of truth* for CI/CD and governance automation under `.github/workflows/`.  
+All workflows **must** pin actions, declare minimal `permissions:`, and link back here in the header.
 
 ---
 
@@ -108,7 +110,6 @@ graph TD
   J --> L["slsa.yml"]
   I --> M["preview.yml (PR)"]
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -179,7 +180,7 @@ concurrency:
   cancel-in-progress: true
 ```
 
-**Reusable flows** (DRY)
+**Reusable flows (DRY)**
 ```yaml
 jobs:
   py:
@@ -266,6 +267,18 @@ observability:
 
 ---
 
+## 🔧 Cost & Concurrency Guardrails
+```yaml
+cost_controls:
+  max_parallel_jobs: 8
+  preview_ttl_hours: 24
+  cancel_redundant_builds: true
+```
+- Heavy jobs (CodeQL/Trivy) run on schedules or when relevant paths change.  
+- PR previews auto-expire after **24h**.
+
+---
+
 ## 🤖 AI Governance
 - **ai-model.yml**: train/eval, publish hashes/metrics, gate on **min F1/ROUGE**.  
 - **ai-ethics.yml**: bias/fairness/explainability; publish `ai_ethics_report.json`; **block** regression.  
@@ -277,18 +290,6 @@ observability:
 - STAC validation **required**; links & licenses checked.  
 - Checksum diffs in PR; DVC/LFS pointers verified.  
 - STAC items must include **license**, **providers**, **derived_from**, **created**.
-
----
-
-## 🔧 Cost & Concurrency Guardrails
-```yaml
-cost_controls:
-  max_parallel_jobs: 8
-  preview_ttl_hours: 24
-  cancel_redundant_builds: true
-```
-- Heavy jobs (CodeQL/Trivy) run on schedules or when relevant paths change.  
-- PR previews auto-expire after **24h**.
 
 ---
 
@@ -362,6 +363,18 @@ Flow: PR → green checks → CODEOWNER review → auto-merge → semantic tag �
 
 ---
 
+## 📦 Artifacts & Evidence Registry
+| Artifact | Produced By | Retention | Purpose |
+|:--|:--|:--|:--|
+| `.prov.json` | All workflows | Permanent | Provenance + attestation |
+| `sbom.cdx.json` | `sbom.yml` | 1 yr | Supply-chain inventory |
+| `slsa.intoto.jsonl` | `slsa.yml` | 1 yr | Build provenance (in-toto) |
+| `codeql.sarif` | `codeql.yml` | 90 d | Static analysis report |
+| `trivy.sarif` | `trivy.yml` | 90 d | Vulnerability report |
+| `stac-report.json` | `stac-validate.yml` | 90 d | Dataset integrity & licensing |
+
+---
+
 ## 🗳 Metadata & Provenance
 ```yaml
 metadata:
@@ -369,7 +382,10 @@ metadata:
   version: "v3.3.0"
   maintainers: ["@kfm-security","@kfm-architecture","@kfm-ai","@kfm-data","@kfm-docs"]
   dashboard: "https://metrics.kfm.ai/ci"
-  provenance_files: [".prov.json","sbom.cdx.json","slsa.intoto.jsonl"]
+  provenance_files:
+    - ".prov.json"
+    - "sbom.cdx.json"
+    - "slsa.intoto.jsonl"
 ```
 
 ---
@@ -403,3 +419,14 @@ metadata:
 **Every run traceable · Every artifact verifiable · Every release ethically governed.**
 
 </div>
+
+<!-- MCP-FOOTER-BEGIN
+MCP-VERSION: v6.3.2
+MCP-TIER: Ω+∞
+DOC-PATH: .github/workflows/README.md
+DOC-HASH: sha256:cicd-readme-v3-3-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+MCP-CERTIFIED: true
+VALIDATION-HASH: {auto.hash}
+GENERATED-BY: KFM-Automation/DocsBot
+LAST-VALIDATED: {build.date}
+MCP-FOOTER-END -->
