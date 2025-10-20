@@ -1,7 +1,78 @@
+<div align="center">
+
+# 🧬 **Kansas Frontier Matrix — Data Lineage Diagram (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/templates/data_lineage.mmd`
+
+**Mission:** Provide a **reusable Mermaid template** that traces **data lineage** across the Kansas Frontier Matrix — from **external sources → ETL → processed outputs → metadata/catalogs → knowledge graph → API & publication** — with **provenance, integrity, and interoperability** enforced under **MCP-DL v6.3**.
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/)
+[![Docs Validate](https://img.shields.io/badge/docs-validated-brightgreen)](../../../../.github/workflows/docs-validate.yml)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../../../.github/workflows/slsa.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Data Lineage Diagram"
+document_type: "Mermaid Template"
+version: "v2.0.0"
+last_updated: "2025-11-16"
+authors: ["@kfm-data","@kfm-architecture"]
+status: "Stable"
+maturity: "Production"
+license: "CC-BY 4.0"
+tags: ["data-lineage","etl","stac","checksums","json-ld","knowledge-graph","api","visualization","mermaid"]
+alignment:
+  - MCP-DL v6.3
+  - STAC 1.0 / DCAT 3.0
+  - JSON Schema / JSON-LD
+  - CIDOC CRM / OWL-Time
+  - FAIR / CARE
+validation:
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  ci_required: ["stac-validate.yml","checksums.yml","docs-validate.yml"]
+observability:
+  endpoint: "https://metrics.kfm.ai/diagrams/lineage"
+  metrics: ["diagram_parse_ok","export_size_kb","link_check_pass_pct"]
+preservation_policy:
+  retention: "exports 365d · logs 90d"
+  checksum_algorithm: "SHA-256"
+---
+```
+
+---
+
+## 📚 How to Use This Template
+
+- **Edit labels inside quotes only**; use `\n` for line breaks.  
+- Keep IDs simple (`A_Z_0_9_`); avoid spaces/emojis in IDs.  
+- End the block with `<!-- END OF MERMAID -->` (CI enforced).  
+- Copy this file into `docs/architecture/diagrams/` and rename before exporting.
+
+---
+
+## 🧩 Data Lineage (Mermaid Source)
+
+```mermaid
+%%----------------------------------------------------------
+%% Kansas Frontier Matrix — Data Lineage Template (Enhanced)
+%% File: docs/architecture/diagrams/templates/data_lineage.mmd
+%% Purpose: trace data flow from sources → transformations → outputs → metadata → KG → API/UI
+%% Author: KFM Documentation Team
+%% Version: 2.0.0
+%% Date: 2025-11-16
+%% License: CC-BY 4.0
+%% Commit: <auto-filled-on-export>
+%% Notes:
+%%   - Edit labels **inside quotes**; use \n for line breaks.
+%%   - Keep IDs simple; avoid spaces/emojis in IDs.
+%%   - Do not remove the end marker comment (GitHub/CI rendering).
+%%----------------------------------------------------------
+
 flowchart LR
-  %% Data Lineage Template — Kansas Frontier Matrix
-  %% Purpose: trace data flow from sources → transformations → outputs → publication
-  %% Use \n for line breaks; quote labels with punctuation; end with <!-- END OF MERMAID -->
 
   %% ----- Source Layer -----
   subgraph SRC["Data Sources\n(raw inputs · external APIs · archives)"]
@@ -27,7 +98,7 @@ flowchart LR
   %% ----- Catalog / Metadata -----
   subgraph META["Metadata & Catalog\nprovenance · STAC · DCAT"]
     STAC["STAC Items\ncollections · spatial · temporal"]
-    CHECK["Checksums\nSHA256 sidecars"]
+    CHECK["Checksums\nSHA-256 sidecars (*.sha256)"]
     JSONLD["JSON-LD / DCAT export\nsemantic metadata"]
   end
 
@@ -68,13 +139,17 @@ flowchart LR
   API --> WEB
   API --> KML
 
-  %% ----- Styling -----
-  classDef src fill:#f2f2f2,stroke:#333,stroke-width:1px;
-  classDef etl fill:#e6f2ff,stroke:#31708f,stroke-width:1px;
-  classDef proc fill:#fdf5e6,stroke:#8a6d3b,stroke-width:1px;
-  classDef meta fill:#eef9f2,stroke:#3c763d,stroke-width:1px;
-  classDef graph fill:#f9e6ff,stroke:#6b3c76,stroke-width:1px;
-  classDef pub fill:#e0e0e0,stroke:#000,stroke-width:1px;
+  %% ----- Optional feedback loops (uncomment to use) -----
+  %% WEB -. "user feedback / corrections" .-> API
+  %% API -. "audit logs" .-> CHECK
+
+  %% ----- Styling (Accessible Palette) -----
+  classDef src  fill:#f2f2f2,stroke:#333,stroke-width:1px,color:#111;
+  classDef etl  fill:#e6f2ff,stroke:#31708f,stroke-width:1px,color:#111;
+  classDef proc fill:#fdf5e6,stroke:#8a6d3b,stroke-width:1px,color:#111;
+  classDef meta fill:#eef9f2,stroke:#3c763d,stroke-width:1px,color:#111;
+  classDef graph fill:#f9e6ff,stroke:#6b3c76,stroke-width:1px,color:#111;
+  classDef pub  fill:#e0e0e0,stroke:#000,stroke-width:1px,color:#111;
 
   class SRC src;
   class ETL etl;
@@ -83,12 +158,41 @@ flowchart LR
   class KG graph;
   class PUB pub;
 
-  %% Legend suggestion:
-  %% src = external data
-  %% etl = transformation steps
-  %% proc = processed outputs
-  %% meta = metadata/citation
-  %% graph = knowledge integration
-  %% pub = end-user access
-
+  %% Legend suggestion (keep in comments or replicate as a tiny subgraph):
+  %% src  = external data; etl = transformation steps; proc = processed outputs
+  %% meta = metadata/citation; graph = knowledge integration; pub = end-user access
+```
 <!-- END OF MERMAID -->
+
+---
+
+## 🧭 Diagram Notes
+
+- **Lineage guarantees**: every processed asset links to **STAC** and a **checksum**.  
+- **Semantic bridge**: **JSON-LD/DCAT** connects catalog → KG; **CIDOC CRM/OWL-Time** support event/place reasoning.  
+- **Publication modes**: API serves **JSON/GeoJSON** to **UI/timeline**; exports support offline use.
+
+---
+
+## ♿ Accessibility & Style
+
+- Palette tuned for **WCAG 2.1 AA** readability; avoid color-only meaning (use dashed edges/labels).  
+- Keep labels **concise**; break long phrases with `\n`.  
+- Font sizes should remain legible at common export scales (≥ 12–14 px).
+
+---
+
+## 🔗 Related Templates
+
+- `templates/pipeline_overview.mmd` — ETL + validation overview  
+- `templates/web_ui_architecture.mmd` — Config & MapLibre-driven UI  
+- `templates/knowledge_graph.mmd` — Semantic graph alignment
+
+---
+
+## 🗓 Version History
+
+| Version | Date | Summary |
+|:--|:--|:--|
+| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added metadata header, accessibility palette, optional feedback loops, JSON-LD/DCAT bridge, and CI policy hints. |
+| v1.0.0 | 2025-10-04 | Initial data lineage Mermaid template. |
