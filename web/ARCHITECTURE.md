@@ -259,9 +259,9 @@ export async function fetchEvents(start: string, end: string) {
 ```mermaid
 graph LR
   A[STAC Collections] --> B[API / GraphQL]
-  B --> C[useStac/useQuery Hooks]
-  C --> D[React Components (Map, Timeline, Panels)]
-  D --> E[Telemetry + A11y Reports]
+  B --> C["useStac / useQuery Hooks"]
+  C --> D["React Components (Map · Timeline · Panels)"]
+  D --> E["Telemetry + A11y Reports"]
 ```
 <!-- END OF MERMAID -->
 
