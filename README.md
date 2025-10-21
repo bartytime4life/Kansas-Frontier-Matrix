@@ -390,4 +390,3 @@ PERFORMANCE-BUDGET-P95: 2.5 s
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: {build.date}
 MCP-FOOTER-END -->
-````
