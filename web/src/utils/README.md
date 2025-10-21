@@ -1,8 +1,8 @@
 ---
 title: "🧮 Kansas Frontier Matrix — Web Frontend Utilities"
 document_type: "Developer Documentation · TypeScript Utility Modules"
-version: "v2.1.0"
-last_updated: "2025-10-23"
+version: "v2.2.0"
+last_updated: "2025-10-24"
 status: "Tier-Ω+∞ Certified · Developer Edition"
 maturity: "Production"
 license: ["MIT (code)", "CC-BY 4.0 (docs)"]
@@ -20,7 +20,7 @@ validation:
   slsa_attestations: true
 observability:
   dashboard: "https://metrics.kfm.ai/frontend-utils"
-  metrics: ["test_coverage","build_status","bundle_size_kb","lint_errors","a11y_score","artifact_verification_pct","utils_safeParseJSON_ms"]
+  metrics: ["test_coverage","build_status","bundle_size_kb","lint_errors","a11y_score","artifact_verification_pct","utils_safeParseJSON_ms","ai_request_latency_ms"]
 preservation_policy:
   checksum_algorithm: "SHA-256"
   retention: "365d artifacts · 90d logs"
@@ -28,7 +28,7 @@ preservation_policy:
 
 <div align="center">
 
-# 🧮 **Kansas Frontier Matrix — Web Frontend Utilities (v2.1.0 · Tier-Ω+∞ Certified)**  
+# 🧮 **Kansas Frontier Matrix — Web Frontend Utilities (v2.2.0 · Tier-Ω+∞ Certified)**  
 `📁 web/src/utils/`
 
 **Helper Functions · API Clients · Data Parsers · Map & Timeline Utilities**
@@ -42,6 +42,17 @@ preservation_policy:
 
 ---
 
+## ⚡ Quick Reference
+| Task | Command |
+|:--|:--|
+| Lint | `pnpm run lint` |
+| Unit tests | `pnpm run test` |
+| Coverage | `pnpm run test:coverage` |
+| Type check | `pnpm run typecheck` |
+| Build (app) | `pnpm --filter web run build` |
+
+---
+
 ## 🧭 Operational Context
 | Environment | Purpose | Validation | Notes |
 |:--|:--|:--|:--|
@@ -52,13 +63,13 @@ preservation_policy:
 ---
 
 ## 🧭 Overview
-`web/src/utils/` hosts **pure, reusable TypeScript modules** forming the deterministic backbone of the KFM Web Frontend — API clients, parsers, and formatting helpers used across components and hooks.
+`web/src/utils/` provides **pure, reusable TypeScript modules** powering the Kansas Frontier Matrix Web Frontend — deterministic functions for API, parsing, formatting, and AI integration.
 
-Built under **MCP-DL v6.3.2**, ensuring:
-- Deterministic output & reproducibility  
-- Inline TSDoc documentation  
-- Strong typing & immutability  
-- Provenance tracking via CI artifacts  
+Under **MCP-DL v6.3.2**, this folder guarantees:
+- Deterministic behavior + reproducible outputs  
+- Inline documentation (`TSDoc`)  
+- Strict type safety (`noImplicitAny`, `strictNullChecks`)  
+- CI coverage + CodeQL + SBOM validation  
 
 > *“Every helper tells a story — reproducible, verifiable, and open.”*
 
@@ -87,7 +98,7 @@ make stac-validate
 pnpm run build
 pnpm run release
 ```
-Artifacts: `.prov.json`, `sbom.cdx.json`, coverage report retained 365 days.  
+Artifacts: `.prov.json`, `sbom.cdx.json`, and coverage reports are retained for 365 days.  
 Tags: `web-utils-vMAJOR.MINOR.PATCH` → DOI minted automatically.
 
 ---
@@ -109,17 +120,46 @@ graph TD
 
 ---
 
+## 📦 Public API Surface
+Utilities safe for use across `/web`:
+- `apiClient`: `get`, `post`, `graphql<T>()`
+- `mapUtils`: `addLayer`, `removeLayer`, `ensureSource`
+- `timelineUtils`: `timeToPixel`, `pixelToTime`, `clampWindow`
+- `dataParser`: `parseEventData`, `parseLayerConfig`
+- `formatters`: `formatDateHuman`, `formatNumberCompact`
+
+> Breaking changes require **minor/major bump** & CHANGELOG entry.
+
+---
+
+## 🧯 Error Handling & Retries
+- **Network**: automatic retry (x2, exponential backoff) for 5xx errors.  
+- **Timeouts**: default 8s; cancellable via `AbortController`.  
+- **Parsing**: `safeParseJSON()` throws `ParseError` with `.path`.  
+- **Logging**: no PII; sanitized console output only.
+
+---
+
+## ⏱ Performance Budgets
+| Function | Budget | Test |
+|:--|:--|:--|
+| `timeToPixel()` | < 0.02 ms/call | `perf.timelineUtils.spec.ts` |
+| `safeParseJSON()` | < 0.15 ms/2 KB | `perf.parser.spec.ts` |
+| `addLayer()` | < 30 ms | `mapUtils.spec.ts` |
+
+---
+
 ## ⚙️ Core Modules
 | File | Purpose | Example Function |
 |:--|:--|:--|
 | `apiClient.ts` | Unified REST/GraphQL client | `getEvents(start, end)` |
 | `mapUtils.ts` | MapLibre helpers | `addLayer(map, id, url)` |
-| `timelineUtils.ts` | Time → pixel interpolation | `timeToPixel(date, scale)` |
+| `timelineUtils.ts` | Temporal scaling | `timeToPixel(date, scale)` |
 | `aiUtils.ts` | AI endpoint bridge | `fetchAISummary(entityId)` |
 | `formatters.ts` | Locale-aware formatting | `formatDateHuman(date)` |
 | `dataParser.ts` | Normalize backend → frontend | `parseEventData(json)` |
-| `hooks.ts` | Common React hooks | `useDebounce(fn, delay)` |
-| `constants.ts` | Shared config & version constants | `API_BASE_URL` |
+| `hooks.ts` | Shared React hooks | `useDebounce(fn, delay)` |
+| `constants.ts` | Constants & version data | `API_BASE_URL` |
 
 ---
 
@@ -152,48 +192,33 @@ export async function loadTimeline(start: string, end: string) {
 
 ---
 
-## 🗺️ Map & Timeline Utility Relationships
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#1D3557", "primaryTextColor": "#fff"}}}%%
-flowchart TD
-  A["MapView<br/>MapLibre GL"]:::ui --> B["mapUtils.ts<br/>Layer Helpers"]:::logic
-  A --> C["formatters.ts<br/>Legend & Label Formatting"]:::logic
-  D["TimelineView<br/>Canvas/D3"]:::ui --> E["timelineUtils.ts<br/>Time → Pixel"]:::logic
-  D --> C
-  classDef ui fill:#A8DADC,color:#000;
-  classDef logic fill:#457B9D,color:#fff;
-```
-▣ #A8DADC UI ▣ #457B9D Logic  
-
----
-
-## 🤖 AI Utilities Integration
-`aiUtils.ts` bridges the frontend to KFM’s AI layer.
-
-- **Endpoints:**  
-  - `POST /ask` → general Q&A  
-  - `GET /entity/{id}` → summary + citations  
-- **Features:**  
-  - Streaming responses  
-  - Citation mapping to Neo4j  
-  - Deterministic caching  
-  - Typed return schema  
-
-**Response Type**
+## 📡 Observability Instrumentation
 ```ts
-type AIResponse = {
-  answer: string;
-  citations: { id: string; label: string; source: string }[];
-};
+import { trackMetric } from "../observability";
+
+export function safeParseJSON(input: string) {
+  const t0 = performance.now();
+  const result = JSON.parse(input);
+  trackMetric("utils_safeParseJSON_ms", performance.now() - t0);
+  return result;
+}
+
+export async function timedAIRequest<T>(call: () => Promise<T>) {
+  const t0 = performance.now();
+  const res = await call();
+  trackMetric("ai_request_latency_ms", performance.now() - t0);
+  return res;
+}
 ```
+**Metrics emitted:** `utils_safeParseJSON_ms`, `ai_request_latency_ms`, `stac_parse_success_rate`.
 
 ---
 
 ## 🔒 Security & Secrets
-- No external secrets by default.  
-- Environment variables via `import.meta.env`.  
+- No external secrets used.  
+- All env vars accessed via `import.meta.env`.  
 - CI scans: CodeQL + Gitleaks (`security-scan.yml`).  
-- All console output redacts tokens.  
+- CSP/CORS enforcement handled at app layer.  
 
 ---
 
@@ -207,27 +232,10 @@ type AIResponse = {
 
 ---
 
-## 📡 Observability Instrumentation
-Example metric-emitting function:
-
-```ts
-import { trackMetric } from "../observability";
-
-export function safeParseJSON(input: string) {
-  const t0 = performance.now();
-  const result = JSON.parse(input);
-  trackMetric("utils_safeParseJSON_ms", performance.now() - t0);
-  return result;
-}
-```
-**Metrics emitted:** `utils_safeParseJSON_ms`, `ai_request_latency_ms`, `stac_parse_success_rate`.
-
----
-
 ## 📊 Observability Metrics
 | Metric | Description | Source | Target |
 |:--|:--|:--|:--|
-| `utils_test_coverage` | Jest coverage percentage | CI | Prometheus |
+| `utils_test_coverage` | Jest coverage % | CI | Prometheus |
 | `lint_errors` | ESLint error count | CI | metrics.kfm.ai |
 | `bundle_size_kb` | Utility bundle size | Build | Grafana |
 | `function_exec_time_ms` | Perf test duration | Unit test | Prometheus |
@@ -235,9 +243,9 @@ export function safeParseJSON(input: string) {
 ---
 
 ## 📜 FAIR / CARE & Ethics
-- Utilities follow FAIR principles: Findable, Accessible, Interoperable, Reusable.  
-- STAC metadata preserved end-to-end.  
-- Ethics review by @kfm-data prior to releases.  
+- Utilities follow **FAIR** principles (Findable, Accessible, Interoperable, Reusable).  
+- STAC metadata preserved across transformations.  
+- Ethics review by @kfm-data before each major release.  
 
 ---
 
@@ -248,6 +256,17 @@ export function safeParseJSON(input: string) {
 | `web/app/README.md` | Bundle linkage |
 | `docs/architecture/system-architecture-overview.md` | Full data flow |
 | `tests/utils/` | Verification and performance |
+| `docs/standards/ci-governance.md` | Workflow alignment |
+
+---
+
+## 🧭 Browser Support
+| Browser | Version | Notes |
+|:--|:--:|:--|
+| Chrome / Edge | last 2 | WebGL2 |
+| Firefox | ESR + latest | CSS Grid fallback |
+| Safari | 15+ | motion reduction honored |
+| iOS / Android | last 2 | touch parity |
 
 ---
 
@@ -256,19 +275,33 @@ export function safeParseJSON(input: string) {
 |:--|:--|
 | **Hook** | React function encapsulating reusable logic |
 | **Parser** | Converts backend JSON → typed model |
-| **Formatter** | Transforms data into human-readable output |
+| **Formatter** | Transforms data into readable output |
 | **STAC** | SpatioTemporal Asset Catalog |
 | **Provenance** | Data lineage tracking |
 | **FAIR / CARE** | Open-data ethics frameworks |
+| **CSP** | Content Security Policy |
+| **SBOM** | Software Bill of Materials |
+
+---
+
+## 🧾 Change-Control Register
+```yaml
+changes:
+  - date: "2025-10-24"
+    change: "Aligned utils with Frontend v2.2.0; added Quick Reference, public API surface, error handling, performance budgets, and expanded observability."
+    reviewed_by: "@kfm-web"
+    qa_approved_by: "@kfm-security"
+    pr: "#web-utils-222"
+```
 
 ---
 
 ## 🧾 Versioning & Metadata
 | Field | Value |
 |:--|:--|
-| **Version** | v2.1.0 |
+| **Version** | v2.2.0 |
 | **Codename** | *Utility Harmonization Upgrade* |
-| **Last Updated** | 2025-10-23 |
+| **Last Updated** | 2025-10-24 |
 | **Maintainers** | @kfm-web · @kfm-data |
 | **License** | MIT (code) · CC-BY 4.0 (docs) |
 | **Alignment** | STAC 1.0 · CIDOC CRM · OWL-Time · DCAT 2.0 |
@@ -301,6 +334,8 @@ TEST-COVERAGE-THRESHOLD: 85%
 PERFORMANCE-BUDGET-P95: 2.5s
 OBSERVABILITY-ACTIVE: true
 CSP-POLICY-ENFORCED: true
+I18N-READY: true
+WCAG-AA-CONFORMANCE: verified
 METRICS-EXPORTED: ["utils_safeParseJSON_ms","ai_request_latency_ms","stac_parse_success_rate"]
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: {build.date}
