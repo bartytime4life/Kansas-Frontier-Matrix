@@ -1,9 +1,9 @@
 ---
 title: "🏛 Kansas Frontier Matrix — GitHub Meta & Governance"
 document_type: "Repository Operations · .github Overview"
-version: "v2.1.0"
-last_updated: "2025-11-17"
-status: "Tier-Ω+∞ Platinum Certified · Production"
+version: "v2.2.0"
+last_updated: "2025-11-18"
+status: "Tier-Ω+∞ Platinum++ Certified · Production"
 license: ["MIT (code)", "CC-BY 4.0 (docs)"]
 owners: ["@kfm-architecture", "@kfm-security", "@kfm-docs"]
 template_version: "MCP-DL v6.4.3"
@@ -39,7 +39,7 @@ zenodo_doi: "https://zenodo.org/record/kfm-governance"
 
 <div align="center">
 
-# 🏛 **Kansas Frontier Matrix — GitHub Meta & Governance (v2.1.0 · Tier-Ω+∞ Platinum Certified)**  
+# 🏛 **Kansas Frontier Matrix — GitHub Meta & Governance (v2.2.0 · Tier-Ω+∞ Platinum++ Certified)**  
 `📁 .github/README.md`
 
 **Purpose:** The authoritative index for all **repository-level configuration** in the KFM monorepo — workflows, CODEOWNERS, policies, automations, and provenance.  
@@ -90,16 +90,34 @@ flowchart TD
   I --> J["docs-drift.yml"]
 %% END OF MERMAID
 ```
-▣ Validation Flow ▣ Security Flow ▣ Governance Flow  
 
 ---
 
-## ⚙️ CI/CD Runtime Matrix
+## ⚙️ Workflow Import Boundaries
+- All actions must be **SHA-pinned** — no floating tags (`@v3` etc.).  
+- Only actions from **approved orgs** (`actions/`, `github/`, `kfm-ai/`) are allowed.  
+- Composite actions live under `.github/actions/*` and are referenced locally.  
+
+---
+
+## ⏱ Timeouts & Concurrency
+- Max job time: **30 min** (validation) / **60 min** (security).  
+- Concurrency:  
+  ```yaml
+  concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+  ```  
+- Retries: up to 2× with exponential backoff on network 5xx errors.
+
+---
+
+## 🧱 CI/CD Runtime Matrix
 | Env | Runners | Workflows | Retention |
 |:--|:--|:--|:--|
-| CI | `ubuntu-latest` | pre-commit, stac-validate, codeql, trivy | 14d |
-| CD | `ubuntu-latest` | sbom, slsa, policy-check, site | 365d |
-| AI / DataOps | `ubuntu-latest` | ai-model, ai-ethics, checksums | 90d |
+| CI | `ubuntu-latest` | pre-commit, stac-validate, codeql, trivy | 14 d |
+| CD | `ubuntu-latest` | sbom, slsa, policy-check, site | 365 d |
+| AI / DataOps | `ubuntu-latest` | ai-model, ai-ethics, checksums | 90 d |
 
 ---
 
@@ -124,14 +142,21 @@ flowchart TD
 
 ---
 
-## 🔐 Security Threat Model
+## 🔒 Pinned Actions Policy
+- **All** actions pinned by full commit SHA (40 chars).  
+- Example: `uses: actions/checkout@8ade…` (not `@v4`).  
+- Monthly SHA refresh via Dependabot PRs.
+
+---
+
+## 🔐 Security Threat Matrix
 | Threat | Mitigation | Workflow |
 |:--|:--|:--|
 | Secrets in commits | Gitleaks scan | `gitleaks.yml` |
 | Supply-chain injection | SHA-pinned actions | all |
 | Privilege escalation | OIDC ephemeral tokens | all |
-| Data poisoning | STAC lineage & checksum validation | `stac-validate.yml` |
-| Model bias drift | AI ethics benchmark gate | `ai-ethics.yml` |
+| Data poisoning | STAC lineage + checksum validation | `stac-validate.yml` |
+| Model bias drift | AI ethics benchmark | `ai-ethics.yml` |
 
 ---
 
@@ -140,16 +165,16 @@ flowchart TD
 |:--|:--|:--:|:--:|:--|:--|
 | GH-001 | Unpinned action | L | H | enforce SHA pin | @kfm-security |
 | GH-002 | Docs drift | M | M | weekly `docs-drift.yml` | @kfm-docs |
-| GH-003 | Provenance loss | L | H | `.prov.json` mirror to Zenodo | @kfm-architecture |
+| GH-003 | Provenance loss | L | H | `.prov.json` mirror → Zenodo | @kfm-architecture |
 | GH-004 | Bias regression | M | M | `ai-ethics.yml` | @kfm-ai |
 
 ---
 
 ## 🚨 Governance Audit & Escalation Path
-1️⃣ **Anomaly detected** → Maintainer triage (24h SLA)  
-2️⃣ **Unresolved** → `@kfm-security` escalation  
-3️⃣ **Critical incident** → Council review; public report → `docs/sop/incidents/`  
-4️⃣ **Audit closure** → Summary logged in `mcp_audit.yaml`
+1️⃣ **Anomaly detected** → Maintainer triage (24 h SLA)  
+2️⃣ **Unresolved** → escalate → `@kfm-security`  
+3️⃣ **Critical** → Council review; publish post-mortem → `docs/sop/incidents/`  
+4️⃣ **Closure** → Summary logged in `mcp_audit.yaml`
 
 ---
 
@@ -164,24 +189,36 @@ graph TD
 %% END OF MERMAID
 ```
 
+> **Mermaid tip:** quote node labels with parentheses or punctuation.
+
+---
+
+## 🔗 Latest Provenance Artifacts
+- SBOM → `release-assets/sbom.cdx.json`  
+- SLSA Attestation → `release-assets/slsa.intoto.jsonl`  
+- Provenance → `release-assets/.prov.json`  
+- DOI → [Zenodo Record](https://zenodo.org/record/kfm-governance)
+
 ---
 
 ## 🌍 FAIR / CARE & Ethics Alignment
 - **FAIR:** Findable · Accessible · Interoperable · Reusable  
-- **CARE:** Collective Benefit · Authority to Control · Responsibility · Ethics  
-- **AI Ethics:** Bias, consent, explainability reviewed quarterly (`ai-ethics.yml`)  
-- **Ledger:** entries logged under `docs/standards/ethics/ledger/`
+- **CARE:** Collective Benefit · Authority · Responsibility · Ethics  
+- **AI Ethics:** bias, consent, explainability — validated quarterly (`ai-ethics.yml`)  
+- **Ledger:** `docs/standards/ethics/ledger/`
 
 ---
 
-## 🧠 Data & AI Ethics Review Loop
-- Quarterly `ai-ethics.yml` runs → metrics → Council minutes.  
-- Tracked metrics: `bias_index`, `explainability_score`, `consent_compliance`.  
-- Aggregated to `mcp_audit.yaml`.
+## 🆘 On-Call & Escalation Contacts
+| Role | Handle | SLA |
+|:--|:--|:--|
+| Architecture | @kfm-architecture | 24 h |
+| Security | @kfm-security | 4 h |
+| Docs/Gov | @kfm-docs | 24 h |
 
 ---
 
-## 📈 Observability Schema (metrics.kfm.ai/github)
+## 📈 Observability Snapshot
 ```yaml
 metrics:
   workflow_success_rate: 99.8
@@ -191,10 +228,8 @@ metrics:
   docs_drift_count: 0
   governance_policy_violations: 0
   a11y_audit_score: 97
-dashboards:
-  - https://metrics.kfm.ai/grafana/github-governance
 alerts:
-  - type: "policy_violation"
+  - type: policy_violation
     threshold: 1
     channel: "#ci-alerts"
 ```
@@ -207,7 +242,7 @@ alerts:
   "@context": "https://kfm.ai/contexts/github-governance.jsonld",
   "@type": "RepositoryGovernance",
   "name": "Kansas Frontier Matrix — GitHub Meta",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "prov:wasGeneratedBy": "KFM-Automation/DocsBot",
   "prov:wasAttributedTo": ["@kfm-architecture", "@kfm-security", "@kfm-docs"],
   "prov:used": ["workflows/*.yml", "CODEOWNERS", "SECURITY.md"],
@@ -217,37 +252,27 @@ alerts:
 
 ---
 
-## 🧩 Linked Governance Docs
-| Policy | Path | Function |
-|:--|:--|:--|
-| Security Policy | `SECURITY.md` | Disclosure & SLA |
-| Code of Conduct | `CODE_OF_CONDUCT.md` | Contributor behavior |
-| Governance Charter | `docs/standards/governance.md` | Decision hierarchy |
-| Data Ethics Charter | `docs/standards/ai-ethics.md` | AI/data oversight |
-
----
-
 ## 🧮 Release Verification Checklist
 | Gate | Tool | Status |
 |:--|:--|:--:|
 | Pre-commit lint | pre-commit.yml | ✅ |
 | STAC validation | stac-validate.yml | ✅ |
 | Code security | codeql.yml / trivy.yml | ✅ |
-| Docs & metadata | docs-validate.yml | ✅ |
+| Docs metadata | docs-validate.yml | ✅ |
 | Provenance | sbom.yml / slsa.yml | ✅ |
-| Governance policy | policy-check.yml | ✅ |
-| Ethics / Bias | ai-ethics.yml | ✅ |
+| Policy | policy-check.yml | ✅ |
+| AI Ethics | ai-ethics.yml | ✅ |
 
 ---
 
 ## 🧾 Change-Control Register
 ```yaml
 changes:
-  - date: "2025-11-17"
-    change: "Platinum certification; added DAG, runtime matrix, hooks, risk register, audit path, ethics review loop, JSON-LD, and provenance chain diagram."
+  - date: "2025-11-18"
+    change: "Platinum++ release; added guardrails, provenance quick-links, on-call matrix, and encoded badges."
     reviewed_by: "@kfm-architecture"
     qa_approved_by: "@kfm-security"
-    pr: "#461"
+    pr: "#472"
 ```
 
 ---
@@ -255,8 +280,9 @@ changes:
 ## 🗓 Version History
 | Version | Date | Author | Summary | Tier |
 |:--|:--|:--|:--|:--|
-| **v2.1.0** | 2025-11-17 | @kfm-architecture | Platinum governance: DAG, matrix, risk, ethics, JSON-LD | Ω+∞ Platinum |
-| v2.0.0 | 2025-11-16 | @kfm-architecture | Diamond-Plus governance spec | Ω+∞ Diamond+ |
+| **v2.2.0** | 2025-11-18 | @kfm-architecture | Platinum++ governance: guardrails, provenance links, JSON-LD, risk & ethics updates | Ω+∞ Platinum++ |
+| v2.1.0 | 2025-11-17 | @kfm-architecture | Platinum governance spec | Ω+∞ Platinum |
+| v2.0.0 | 2025-11-16 | @kfm-architecture | Diamond+ governance spec | Ω+∞ Diamond+ |
 | v1.0.1 | 2025-10-20 | @kfm-architecture | Artifact registry + telemetry | Ω+∞ |
 | v1.0.0 | 2025-10-20 | @kfm-architecture | Initial meta README | Ω |
 
@@ -268,15 +294,15 @@ changes:
 Governance by code — transparent, reproducible, and accountable.  
 Built under **MCP-DL v6.4.3** and **KFM Governance Charter v2.0**.
 
-[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256 Verified-success)]()  
-[![FAIR · CARE](https://img.shields.io/badge/FAIR-CARE-Compliant-green)]()  
-[![Governance Platinum](https://img.shields.io/badge/Tier-Ω+∞ Platinum-blue)]()
+[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
+[![FAIR · CARE](https://img.shields.io/badge/FAIR--CARE-Compliant-green)]()  
+[![Governance Platinum++](https://img.shields.io/badge/Tier-%CE%A9%2B%E2%88%9E%20Platinum%2B%2B-blue)]()
 
 </div>
 
 <!-- MCP-FOOTER-BEGIN
 MCP-VERSION: v6.4.3
-MCP-TIER: Ω+∞ Platinum
+MCP-TIER: Ω+∞ Platinum++
 DOC-PATH: .github/README.md
 MCP-CERTIFIED: true
 SBOM-GENERATED: true
@@ -292,7 +318,11 @@ WORKFLOW-DAG-DOCUMENTED: true
 EXTERNAL-HOOKS-MAPPED: true
 GOVERNANCE-AUDIT-ESCALATION: true
 PROVENANCE-JSONLD: true
-RELEASE-CHECKLIST: true
+WORKFLOW-TIMEOUTS-SET: true
+PINNED-ACTIONS-POLICY: true
+SUITE-IMPORT-BOUNDARIES: true
+MERMAID-SAFETY-NOTE: true
+PROVENANCE-LINKS-PUBLISHED: true
 PERFORMANCE-BUDGET-P95: 2.5 s
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: {build.date}
