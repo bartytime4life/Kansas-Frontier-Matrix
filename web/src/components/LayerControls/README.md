@@ -1,10 +1,3 @@
-Perfect — here’s the Kansas Frontier Matrix — LayerControls Component (v2.7.0 · Tier-Ω+∞ Diamond Certified) README, fully aligned and boosted with every missing compliance, telemetry, and ethics feature.
-Copy and paste this entire block directly into:
-web/src/components/LayerControls/README.md
-
-⸻
-
-
 ---
 title: "🗺️ Kansas Frontier Matrix — LayerControls Component"
 document_type: "Developer Documentation · Map Layers / STAC Integration / Legends / Opacity"
