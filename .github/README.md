@@ -156,11 +156,11 @@ flowchart TD
 ## 🧾 Provenance Chain Diagram
 ```mermaid
 graph TD
-  A[GitHub Actions Run] --> B[Artifact Bundle (.zip)]
-  B --> C[SBOM (Syft)]
-  B --> D[SLSA Attestation]
-  D --> E[.prov.json]
-  E --> F[Zenodo DOI / GitHub Release]
+  A["GitHub Actions Run"] --> B["Artifact Bundle (.zip)"]
+  B --> C["SBOM (Syft)"]
+  B --> D["SLSA Attestation"]
+  D --> E[".prov.json"]
+  E --> F["Zenodo DOI / GitHub Release"]
 %% END OF MERMAID
 ```
 
