@@ -1,13 +1,13 @@
 ---
 title: "🧭 Kansas Frontier Matrix — Web Frontend"
 document_type: "Developer Documentation · React / MapLibre Interface"
-version: "v2.1.0"
+version: "v2.2.0"
 last_updated: "2025-10-23"
 status: "Tier-Ω+∞ Certified · Developer Edition"
 maturity: "Production"
 license: ["MIT (code)","CC-BY 4.0 (docs)"]
 owners: ["@kfm-web","@kfm-architecture","@kfm-accessibility","@kfm-ai","@kfm-security"]
-tags: ["web","frontend","react","typescript","vite","maplibre","timeline","stac","graphql","a11y","fair","care","mcp","provenance","developer"]
+tags: ["web","frontend","react","typescript","vite","maplibre","timeline","stac","graphql","a11y","fair","care","mcp","provenance","developer","observability","security","pwa","i18n"]
 alignment:
   - MCP-DL v6.3.2
   - STAC 1.0 / DCAT 2.0
@@ -20,7 +20,7 @@ validation:
   slsa_attestations: true
 observability:
   dashboard: "https://metrics.kfm.ai/frontend"
-  metrics: ["build_status","bundle_size_kb","a11y_score","artifact_verification_pct","stac_latency_ms"]
+  metrics: ["build_status","bundle_size_kb","a11y_score","artifact_verification_pct","stac_latency_ms","frontend_build_seconds","frontend_error_rate"]
 preservation_policy:
   checksum_algorithm: "SHA-256"
   retention: "365 d artifacts · 90 d logs"
@@ -28,7 +28,7 @@ preservation_policy:
 
 <div align="center">
 
-# 🧭 **Kansas Frontier Matrix — Web Frontend (v2.1.0 · Tier-Ω+∞ Certified)**  
+# 🧭 **Kansas Frontier Matrix — Web Frontend (v2.2.0 · Tier-Ω+∞ Certified · Developer Edition)**  
 `📁 /web/src/`
 
 ### *“Time · Terrain · Story — United through Data.”*
@@ -94,7 +94,7 @@ flowchart TD
   classDef logic fill:#457B9D,color:#fff;
   classDef ui fill:#A8DADC,color:#000;
 ```
-▣ #1D3557 Data / Architecture ▣ #457B9D Logic / API ▣ #A8DADC UI / Visualization
+▣ `#1D3557` Data / Architecture ▣ `#457B9D` Logic / API ▣ `#A8DADC` UI / Visualization
 
 ---
 
@@ -110,7 +110,7 @@ flowchart LR
   classDef ui fill:#A8DADC,color:#000;
   classDef output fill:#E63946,color:#fff;
 ```
-▣ #457B9D Logic ▣ #A8DADC UI ▣ #E63946 Output  
+▣ `#457B9D` Logic ▣ `#A8DADC` UI ▣ `#E63946` Output  
 
 ---
 
@@ -168,7 +168,7 @@ flowchart LR
   classDef ui fill:#A8DADC,color:#000;
   classDef output fill:#E63946,color:#fff;
 ```
-▣ #1D3557 Data ▣ #457B9D Logic ▣ #A8DADC UI ▣ #E63946 Telemetry  
+▣ `#1D3557` Data ▣ `#457B9D` Logic ▣ `#A8DADC` UI ▣ `#E63946` Telemetry  
 
 ---
 
@@ -211,6 +211,7 @@ Reports → `coverage/lcov-report/`
 | `frontend_a11y_score` | Accessibility score | axe-core | metrics.kfm.ai |
 | `frontend_stac_latency_ms` | STAC fetch latency | Frontend | Prometheus |
 | `frontend_error_rate` | JS exceptions | Sentry | Grafana |
+| `artifact_verification_pct` | Release artifact integrity | CI | metrics.kfm.ai |
 
 ---
 
@@ -258,7 +259,7 @@ Reports → `coverage/lcov-report/`
 ## 🧾 Metadata & Versioning
 | Field | Value |
 |:--|:--|
-| **Version** | v2.1.0 |
+| **Version** | v2.2.0 |
 | **Codename** | *Interactivity & Provenance Upgrade* |
 | **Last Updated** | 2025-10-23 |
 | **Maintainers** | @kfm-web · @kfm-architecture |
