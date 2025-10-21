@@ -123,9 +123,10 @@ web/src/
 flowchart LR
   A[STAC Catalog]:::data --> B[FastAPI Backend]:::logic
   B --> C[Neo4j Graph]:::data
-  C --> D[React Hooks (useStac / useTimeline)]:::logic
-  D --> E["UI Components (Map · Timeline · Panels)"]:::ui
+  C --> D["React Hooks &#40;useStac / useTimeline&#41;"]:::logic
+  D --> E["UI Components &#40;Map · Timeline · Panels&#41;"]:::ui
   E --> F[Telemetry / Provenance Reports]:::output
+
   classDef data fill:#1D3557,color:#fff;
   classDef logic fill:#457B9D,color:#fff;
   classDef ui fill:#A8DADC,color:#000;
