@@ -1,3 +1,4 @@
+---
 title: "🏛 Kansas Frontier Matrix — GitHub Meta & Governance"
 document_type: "Repository Operations · .github Overview"
 version: "v2.1.0"
