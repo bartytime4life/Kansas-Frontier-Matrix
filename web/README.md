@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "🧩 Kansas Frontier Matrix — Web Frontend"
 document_type: "Frontend Application · React / MapLibre Interface"
