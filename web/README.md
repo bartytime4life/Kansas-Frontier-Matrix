@@ -171,7 +171,7 @@ flowchart LR
   A[STAC Data 🗺]:::data --> B[MapContext 🌍]:::logic
   B --> C[TimelineContext 🕰]:::logic
   C --> D[FocusContext 🤖]:::logic
-  D --> E[UI Components 🖥 (Map · Timeline · Panels)]:::ui
+  D --> E["UI Components 🖥 &#40;Map · Timeline · Panels&#41;"]:::ui
   E --> F[Telemetry / A11y Outputs 📊]:::output
   classDef data fill:#28536C,color:#fff;
   classDef logic fill:#B7CECE,color:#000;
