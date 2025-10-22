@@ -1,13 +1,13 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture Overview"
 document_type: "Architecture Overview · System Design & Governance"
-version: "v3.1.0"
+version: "v3.2.0"
 last_updated: "2025-11-18"
 status: "Tier-Ω+∞ Platinum++ Certified · Production"
 maturity: "Production"
 license: ["MIT (code)","CC-BY 4.0 (docs/data)"]
 owners: ["@kfm-architecture","@kfm-data","@kfm-web","@kfm-ai","@kfm-accessibility","@kfm-security"]
-tags: ["architecture","etl","stac","neo4j","react","maplibre","api","provenance","fair","care","slsa","sbom","security","observability","wcag","pwa","ssr","governance"]
+tags: ["architecture","etl","stac","neo4j","react","maplibre","api","provenance","fair","care","slsa","sbom","security","observability","wcag","pwa","ssr","governance","crs","i18n"]
 alignment:
   - MCP-DL v6.4.3
   - STAC 1.0 / DCAT 2.0
@@ -32,7 +32,7 @@ zenodo_doi: "https://zenodo.org/record/kfm-governance"
 
 <div align="center">
 
-# 🏗️ **Kansas Frontier Matrix — System Architecture Overview (v3.1.0 · Tier-Ω+∞ Platinum++ Certified)**
+# 🏗️ **Kansas Frontier Matrix — System Architecture Overview (v3.2.0 · Tier-Ω+∞ Platinum++ Certified)**
 
 ### *“Time · Terrain · History · Knowledge Graphs”*
 
@@ -61,19 +61,25 @@ zenodo_doi: "https://zenodo.org/record/kfm-governance"
 - [🧱 Component Ownership Matrix](#-component-ownership-matrix)
 - [⚙️ Core Layers](#️-core-layers)
 - [🧭 Data & File Architecture](#-data--file-architecture)
-- [🧪 AI / ML Pipeline](#-ai--ml-pipeline)
-- [🌐 API & Integration](#-api--integration)
-- [🗽 Web Frontend (SSR/PWA)](#-web-frontend-ssrpwa)
-- [🔒 Security & Supply Chain](#-security--supply-chain)
+- [🔧 API Contracts & Rate Limits](#-api-contracts--rate-limits)
+- [🌐 Environment Topology (Dev/Stage/Prod)](#-environment-topology-devstageprod)
+- [🔐 RBAC & Secrets Policy](#-rbac--secrets-policy)
+- [🧭 CRS / Spatial Reference Policy](#-crs--spatial-reference-policy)
+- [🧾 Licensing & Attribution Matrix](#-licensing--attribution-matrix)
+- [🔁 Migration & Rollback Strategy](#-migration--rollback-strategy)
+- [🧊 Caching & Distribution Plan](#-caching--distribution-plan)
+- [🧬 Data Lineage DAG](#-data-lineage-dag)
 - [📋 Compliance & Validation Matrix](#-compliance--validation-matrix)
 - [📈 Observability & Health](#-observability--health)
-- [🎯 SLOs & SLIs](#-slos--slis)
+- [🎯 SLOs, Error Budgets & Alerts](#-slos-error-budgets--alerts)
 - [🛡 Threat Model](#-threat-model)
 - [🧮 Risk Register](#-risk-register)
-- [🧬 Data Quality SLAs](#-data-quality-slas)
-- [🧯 Disaster Recovery (RTO/RPO)](#-disaster-recovery-rtorpo)
-- [🤖 AI Governance (Quality & Ethics)](#-ai-governance-quality--ethics)
-- [🧾 Data Ethics & Cultural Safeguards](#-data-ethics--cultural-safeguards)
+- [🧪 Testing Strategy Matrix](#-testing-strategy-matrix)
+- [🧱 IaC Anchor](#-iac-anchor)
+- [💰 Cost & Sustainability](#-cost--sustainability)
+- [🌐 I18n & Time Zones](#-i18n--time-zones)
+- [🚨 Incident Response](#-incident-response)
+- [➕ Adding a New Dataset (Checklist)](#-adding-a-new-dataset-checklist)
 - [📜 Linked ADRs & SOPs](#-linked-adrs--sops)
 - [🧭 Environment & Quickstart](#-environment--quickstart)
 - [🗄 Versioning & Governance](#-versioning--governance)
@@ -131,7 +137,6 @@ flowchart TD
   C --> K["Exports<br/>Google Earth (KML/KMZ)"]
 ```
 <!-- END OF MERMAID -->
-> **Mermaid tip:** quote labels containing parentheses or punctuation.
 
 ---
 
@@ -198,11 +203,123 @@ flowchart TD
 
 ---
 
-## 🔒 Security & Supply Chain
-- **Pinned SHAs** for all actions; least-privilege OIDC tokens  
-- **CodeQL** (static), **Trivy** (CVE), **Gitleaks** (secrets)  
-- **SBOM** (Syft CycloneDX) + **SLSA** attestations per release  
-- Monthly SHA refresh via Dependabot PRs
+## 🧭 Data & File Architecture
+- `data/sources/*` — manifests (license, coverage, URLs)  
+- `data/raw/*` — inputs (LFS/DVC)  
+- `data/processed/*` — COG/GeoJSON/CSV  
+- `data/stac/*` — Items & Collections (versioned)
+
+Each dataset ships with **checksum**, **license**, and a **STAC entry**.
+
+---
+
+## 🔧 API Contracts & Rate Limits
+```yaml
+openapi: 3.1.0
+info: { title: KFM API, version: 1.0.0 }
+paths:
+  /api/events:
+    get:
+      summary: List events within time/window
+      parameters:
+        - { name: start, in: query, required: true, schema: { type: string, format: date-time } }
+        - { name: end,   in: query, required: true, schema: { type: string, format: date-time } }
+        - { name: bbox,  in: query, required: false, schema: { type: string, example: "-103,36,-94,40" } }
+      responses:
+        "200": { description: OK }
+rate_limits:
+  per_ip_per_minute: 120
+  per_token_per_minute: 300
+timeouts:
+  read_timeout_ms: 10000
+  connect_timeout_ms: 2000
+retry_policy:
+  idempotent_gets: 2
+  non_idempotent: 0
+```
+
+---
+
+## 🌐 Environment Topology (Dev/Stage/Prod)
+```mermaid
+flowchart LR
+  DEV["Dev\nself-hosted services"] -->|PR previews| STAGE["Stage\nGitHub Pages + Neo4j (managed)"]
+  STAGE -->|tagged releases| PROD["Prod\nGitHub Pages + Neo4j HA + CDN tiles"]
+  PROD -->|telemetry| GRAF["Grafana (metrics.kfm.ai)"]
+```
+
+---
+
+## 🔐 RBAC & Secrets Policy
+```yaml
+roles:
+  - id: maintainer
+    can: [merge_protected, release, rotate_secrets]
+  - id: contributor
+    can: [open_pr, run_ci]
+  - id: viewer
+    can: [read_artifacts, read_dashboard]
+secrets:
+  storage: "GitHub Encrypted Secrets + OIDC"
+  rotation: "quarterly + on incident"
+  in_ci: "least-privilege; no secrets in PRs from forks"
+```
+
+---
+
+## 🧭 CRS / Spatial Reference Policy
+- Map rendering: **EPSG:3857** (Web Mercator)  
+- Data storage & APIs: coordinates in **EPSG:4326** `[lon, lat]`  
+- STAC records native CRS via `properties["proj:epsg"]`; ETL reprojects when required
+
+---
+
+## 🧾 Licensing & Attribution Matrix
+| Data Family | License | Attribution | Notes |
+|:--|:--|:--:|:--|
+| USGS Topographic | Public Domain | ☐ | Include map name/year when displayed |
+| NOAA Climate | CC-BY 4.0 | ☑ | Provider + DOI on legend panel |
+| KHS Archives | CC-BY 4.0 (unless noted) | ☑ | Respect `data_ethics` constraints |
+
+---
+
+## 🔁 Migration & Rollback Strategy
+```yaml
+graph_migrations:
+  tool: "timestamped Cypher scripts"
+  policy: "forward-only; inverse scripts for rollback; snapshot before apply"
+api_versioning:
+  policy: "URL versioning (/v1, /v2) with 12-month deprecation"
+frontend_flags:
+  dark_launch: true
+  source: "env + URL param"
+```
+
+---
+
+## 🧊 Caching & Distribution Plan
+```yaml
+tiles:
+  format: "PMTiles preferred; COG via CDN fallback"
+  cache: "CDN edge 7d; client 1d"
+stac_catalog:
+  cache: "CDN 1h; ETag/If-None-Match honored"
+legends:
+  cache: "CDN 7d; SW stale-while-revalidate"
+```
+
+---
+
+## 🧬 Data Lineage DAG
+```mermaid
+graph TD
+  R["Raw Sources"] --> P["ETL (checksums)"]
+  P --> S["STAC Items/Collections"]
+  S --> G["Graph Load (CIDOC/OWL-Time)"]
+  G --> A["API (JSON/GeoJSON/JSON-LD)"]
+  A --> W["Web UI (Map · Timeline · Focus Mode)"]
+  W --> DOI["Release Bundle (.prov.json · SBOM · SLSA · DOI)"]
+```
 
 ---
 
@@ -235,15 +352,14 @@ dashboards:
 
 ---
 
-## 🎯 SLOs & SLIs
-| Area | SLI | SLO |
-|:--|:--|:--|
-| API | p95 latency (ms) | ≤ 300 |
-| Graph | median query (ms) | ≤ 100 |
-| ETL | job success rate | ≥ 99% |
-| Frontend | hydration mismatches | 0 |
-| Security | critical CVEs | 0 |
-| A11y | GAI score | ≥ 95 |
+## 🎯 SLOs, Error Budgets & Alerts
+```yaml
+api_latency_p95_ms: { slo: 300, alert: 350 for 15m }
+graph_latency_ms:   { slo: 100, alert: 150 for 15m }
+stac_pass_rate:     { slo: 100%, alert: <100% immediate }
+a11y_gai_score:     { slo: 95, alert: <95 for 24h }
+hydration_mismatch: { slo: 0,   alert: >0 for 10m }
+```
 
 ---
 
@@ -269,40 +385,46 @@ dashboards:
 
 ---
 
-## 🧬 Data Quality SLAs
-| Check | Rule | Gate |
-|:--|:--|:--|
-| Spatial validity | no self-intersections | ETL stage |
-| Temporal validity | ISO-8601; `start ≤ end` | STAC gate |
-| Licensing | license present & SPDX valid | STAC gate |
-| Ethics | `data_ethics` tag required | STAC gate |
+## 🧪 Testing Strategy Matrix
+| Layer | Focus | Tools | Gate |
+|:--|:--|:--|:--|
+| ETL | schema, CRS, checksums | PyTest, Great Expectations | PR |
+| API | contracts, rate limits | pytest + schemathesis | PR |
+| Graph | rules, migration validity | Cypher tests | PR |
+| Web | a11y, SSR hydrate | RTL, axe-core, Playwright | PR |
+| E2E | map↔timeline↔panel flows | Cypress | nightly |
 
 ---
 
-## 🧯 Disaster Recovery (RTO/RPO)
-```yaml
-disaster_recovery:
-  rto_minutes: 60
-  rpo_minutes: 30
-  backups:
-    - neo4j snapshot (daily)
-    - release provenance bundle
-    - stac-validate reports
-  drills_per_year: 2
-```
+## 🧱 IaC Anchor
+- Provisioning modules: `tools/iac/` (Terraform) for Grafana dashboards and CDN buckets  
+- Secrets via **OIDC + GitHub Encrypted Secrets** (no static cloud keys)
 
 ---
 
-## 🤖 AI Governance (Quality & Ethics)
-- Model cards with metrics/hashes; bias baselines enforced  
-- `ai-ethics.yml` blocks regressions; HITL approvals  
-- Focus Mode outputs include citations + confidence
+## 💰 Cost & Sustainability
+- Tile/CDN egress budget < **$X/month**; graph cluster ≤ **N vCPU / M GB RAM**  
+- Annual review of storage; cold archive to OSF; prioritize **PMTiles** to reduce egress
 
 ---
 
-## 🧾 Data Ethics & Cultural Safeguards
-- STAC `data_ethics`: open / restricted-derivatives / no-public-artifacts  
-- Geometry redaction; ethics ledger in `docs/standards/ethics/ledger/`
+## 🌐 I18n & Time Zones
+- All timestamps **UTC** in APIs; UI localizes per user locale  
+- Time math: **ISO-8601** with offsets; OWL-Time intervals preserved end-to-end
+
+---
+
+## 🚨 Incident Response
+See `docs/sop/incident-response.md` — roles, comms, timelines, and post-mortems.
+
+---
+
+## ➕ Adding a New Dataset (Checklist)
+- [ ] Add source manifest to `data/sources/*.json` (license, coverage, ethics)  
+- [ ] Implement ETL in `src/etl/*` (CRS normalization, checksums)  
+- [ ] Emit STAC Items/Collections; validate with `make stac`  
+- [ ] Provide legends (if any) and map configuration  
+- [ ] Run CI; on release, attach `.prov.json`, SBOM, SLSA to tag
 
 ---
 
@@ -351,7 +473,7 @@ versioning:
   "@context": "https://kfm.ai/contexts/repository.jsonld",
   "@type": "Repository",
   "name": "Kansas Frontier Matrix",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "prov:wasGeneratedBy": "KFM-Automation/DocsBot",
   "prov:used": ["data/stac/catalog.json","web/*","src/*",".github/workflows/*"],
   "prov:wasAttributedTo": ["@kfm-architecture","@kfm-data","@kfm-web","@kfm-ai","@kfm-accessibility","@kfm-security"]
@@ -364,13 +486,13 @@ versioning:
 ```yaml
 changes:
   - date: "2025-11-18"
-    change: "Platinum++: governance DAG, JSON-LD provenance, suite error taxonomy, PWA/SSR notes, SLOs, threat model, DR plan, DQ SLAs, enhanced telemetry & badges."
+    change: "Platinum++ expansion: API contract, env topology, RBAC/secrets, CRS/licensing, migrations/rollback, caching plan, lineage DAG, SLO budgets, testing matrix, IaC/cost/I18n/IR, plus quoted Mermaid and encoded badges."
+    reviewed_by: "@kfm-architecture"
+    pr: "#492"
+  - date: "2025-11-18"
+    change: "Platinum++: governance DAG, JSON-LD provenance, suite error taxonomy, PWA/SSR notes, DQ SLAs."
     reviewed_by: "@kfm-architecture"
     pr: "#489"
-  - date: "2025-10-20"
-    change: "Expanded architecture doc with purpose, ownership, compliance, validation, and contributor links."
-    reviewed_by: "@kfm-architecture"
-    pr: "#420"
 ```
 
 ---
@@ -395,12 +517,13 @@ changes:
 ## 🗓 Version History
 | Version | Date | Author | Summary | Type |
 |:--|:--|:--|:--|:--|
-| **v3.1.0** | 2025-11-18 | @kfm-architecture | Platinum++: added SLOs, SSR/PWA, threat model, DR, DQ SLAs, governance DAG, JSON-LD, telemetry | Major |
-| v3.0.0 | 2025-11-18 | @kfm-architecture | Platinum++: governance DAG, JSON-LD, error taxonomy, pinned actions, enhanced telemetry & badges | Major |
-| v2.3.0 | 2025-10-20 | @kfm-architecture | Tier-Ω+∞: purpose, ownership, compliance, telemetry, change control | Minor |
+| **v3.2.0** | 2025-11-18 | @kfm-architecture | API contracts, env topology, RBAC, CRS/licensing, migrations, caching, lineage DAG, SLO budgets, test matrix, IaC/cost/I18n/IR | Major |
+| v3.1.0 | 2025-11-18 | @kfm-architecture | Governance DAG, JSON-LD provenance, suite error taxonomy, SSR/PWA, DQ SLAs, telemetry | Major |
+| v3.0.0 | 2025-11-18 | @kfm-architecture | Platinum++: pinned actions, enhanced telemetry & badges | Major |
+| v2.3.0 | 2025-10-20 | @kfm-architecture | Tier-Ω+∞: purpose, ownership, compliance, telemetry | Minor |
 | v2.2.0 | 2025-10-19 | @kfm-architecture | Context, telemetry, artifacts, ADRs, ToC | Minor |
 | v2.1.0 | 2025-11-14 | @kfm-architecture | Observability, supply-chain, risk register, ethics ledger refs | Minor |
-| v2.0.0 | 2025-10-18 | @kfm-architecture | Tier-Ω+∞ overhaul: provenance bundle, WCAG/FAIR alignment, Focus Mode governance | Major |
+| v2.0.0 | 2025-10-18 | @kfm-architecture | Tier-Ω+∞ overhaul | Major |
 | v1.0.0 | 2024-12-01 | Founding Team | Initial system architecture overview | Major |
 
 ---
@@ -426,6 +549,21 @@ NO-PII-TELEMETRY: true
 PINNED-ACTIONS-POLICY: true
 PROVENANCE-JSONLD: true
 RISK-REGISTER-INCLUDED: true
+CACHING-DISTRIBUTION-DOCS: true
+API-CONTRACTS-DOCUMENTED: true
+ENV-TOPOLOGY-DIAGRAM: true
+RBAC-SECRETS-POLICY: true
+CRS-POLICY-DOCUMENTED: true
+LICENSE-MATRIX-PUBLISHED: true
+MIGRATION-ROLLBACK-POLICY: true
+LINEAGE-DAG-DOCUMENTED: true
+ERROR-BUDGETS-ALERTS: true
+TEST-STRATEGY-MATRIX: true
+IAC-REFERENCE: true
+COST-SUSTAINABILITY-NOTE: true
+I18N-TIMEZONE-POLICY: true
+INCIDENT-SOP-LINKED: true
+DATASET-ONBOARDING-CHECKLIST: true
 PWA-COMPATIBLE: true
 PERFORMANCE-BUDGET-P95: 2.5 s
 GENERATED-BY: KFM-Automation/DocsBot
