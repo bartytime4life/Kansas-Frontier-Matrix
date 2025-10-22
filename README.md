@@ -38,11 +38,11 @@ zenodo_doi: "https://zenodo.org/record/kfm-governance"
 ### *“Time · Terrain · History · Knowledge Graphs”*
 
 [![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-0078ff?style=flat-square)](./docs/)
-[![FAIR + CARE](https://img.shields.io/badge/FAIR %2B CARE-Compliant-2ecc71?style=flat-square)]()
-[![AI Explainability](https://img.shields.io/badge/AI Explainability-Audited-8e44ad?style=flat-square)]()
-[![ISO 50001 · 14064](https://img.shields.io/badge/ISO 50001 · 14064-Sustainable Ops-228B22?style=flat-square)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP %2B Blockchain-008b8b?style=flat-square)]()
-[![Governance Ledger](https://img.shields.io/badge/Governance-Immutable Ledger-d4af37?style=flat-square)]()
+[![FAIR + CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Compliant-2ecc71?style=flat-square)]()
+[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Audited-8e44ad?style=flat-square)]()
+[![ISO 50001 · 14064](https://img.shields.io/badge/ISO%2050001%20%C2%B7%2014064-Sustainable%20Ops-228B22?style=flat-square)]()
+[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-008b8b?style=flat-square)]()
+[![Governance Ledger](https://img.shields.io/badge/Governance-Immutable%20Ledger-d4af37?style=flat-square)]()
 
 </div>
 
@@ -190,11 +190,11 @@ alerts:
 <div align="center">
 
 [![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-0078ff?style=flat-square)]()
-[![FAIR + CARE](https://img.shields.io/badge/FAIR %2B CARE-Compliant-2ecc71?style=flat-square)]()
-[![AI Explainability](https://img.shields.io/badge/AI Explainability-Audited-8e44ad?style=flat-square)]()
-[![ISO 50001 · 14064](https://img.shields.io/badge/ISO 50001 · 14064-Sustainable Ops-228B22?style=flat-square)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP %2B Blockchain-008b8b?style=flat-square)]()
-[![Governance Ledger](https://img.shields.io/badge/Governance-Immutable Ledger-d4af37?style=flat-square)]()
+[![FAIR + CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Compliant-2ecc71?style=flat-square)]()
+[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Audited-8e44ad?style=flat-square)]()
+[![ISO 50001 · 14064](https://img.shields.io/badge/ISO%2050001%20%C2%B7%2014064-Sustainable%20Ops-228B22?style=flat-square)]()
+[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-008b8b?style=flat-square)]()
+[![Governance Ledger](https://img.shields.io/badge/Governance-Immutable%20Ledger-d4af37?style=flat-square)]()
 
 </div>
 
