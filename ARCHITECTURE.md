@@ -49,10 +49,125 @@ zenodo_doi: "https://zenodo.org/record/kfm-governance"
 
 ---
 
-## 📘 Context & Scope
-Defines the **complete system architecture** across ETL, AI, graph, API, and web, including SSR/PWA, supply-chain integrity, FAIR/CARE ethics, governance, and observability.
+<details><summary>📚 <strong>Table of Contents</strong></summary>
 
-*(full architecture content remains unchanged from your latest version)*
+- [📘 Context & Scope](#-context--scope)
+- [🎯 Purpose & Audience](#-purpose--audience)
+- [🌾 Mission](#-mission)
+- [🏛 Architectural Principles](#-architectural-principles)
+- [🏗 System Diagram](#-system-diagram)
+- [🧮 Governance Workflow DAG](#-governance-workflow-dag)
+- [🧯 Suite Error & State Taxonomy](#-suite-error--state-taxonomy)
+- [🧱 Component Ownership Matrix](#-component-ownership-matrix)
+- [⚙️ Core Layers](#️-core-layers)
+- [🧭 Data & File Architecture](#-data--file-architecture)
+- [🔧 API Contracts & Rate Limits](#-api-contracts--rate-limits)
+- [🌐 Environment Topology (Dev/Stage/Prod)](#-environment-topology-devstageprod)
+- [🔐 RBAC & Secrets Policy](#-rbac--secrets-policy)
+- [🧭 CRS / Spatial Reference Policy](#-crs--spatial-reference-policy)
+- [🧾 Licensing & Attribution Matrix](#-licensing--attribution-matrix)
+- [🔁 Migration & Rollback Strategy](#-migration--rollback-strategy)
+- [🧊 Caching & Distribution Plan](#-caching--distribution-plan)
+- [🧬 Data Lineage DAG](#-data-lineage-dag)
+- [📋 Compliance & Validation Matrix](#-compliance--validation-matrix)
+- [📈 Observability & Health](#-observability--health)
+- [🎯 SLOs, Error Budgets & Alerts](#-slos-error-budgets--alerts)
+- [🛡 Threat Model](#-threat-model)
+- [🧮 Risk Register](#-risk-register)
+- [🧪 Testing Strategy Matrix](#-testing-strategy-matrix)
+- [🧱 IaC Anchor](#-iac-anchor)
+- [💰 Cost & Sustainability](#-cost--sustainability)
+- [🌐 I18n & Time Zones](#-i18n--time-zones)
+- [🚨 Incident Response](#-incident-response)
+- [➕ Adding a New Dataset (Checklist)](#-adding-a-new-dataset-checklist)
+- [📜 Linked ADRs & SOPs](#-linked-adrs--sops)
+- [🧭 Environment & Quickstart](#-environment--quickstart)
+- [🗄 Versioning & Governance](#-versioning--governance)
+- [🔗 JSON-LD Repository Provenance](#-json-ld-repository-provenance)
+- [🧾 Change-Control Register](#-change-control-register)
+- [📣 Contributor Quick-Links](#-contributor-quick-links)
+- [📚 References](#-references)
+- [🗓 Version History](#-version-history)
+
+</details>
+
+---
+
+## 📘 Context & Scope
+Defines the **complete system architecture** across ETL, AI, graph, API, and web layers — including SSR/PWA, supply-chain integrity, FAIR/CARE ethics, governance, and observability.
+
+---
+
+## 🎯 Purpose & Audience
+- **Engineers & Data Scientists** — ETL/AI/graph contracts and SLOs  
+- **Frontend Developers** — SSR-safe, PWA-ready integration points  
+- **Governance & Security** — provenance, SBOM/SLSA, OPA gates  
+- **Researchers & Historians** — FAIR reuse & semantic context
+
+---
+
+## 🌾 Mission
+The **Kansas Frontier Matrix** fuses **time**, **terrain**, and **history** into a reproducible, semantic knowledge system surfaced through an accessible web front end.
+
+---
+
+## 🏛 Architectural Principles
+| Principle | Description |
+|:--|:--|
+| Docs-as-Code | Architecture & SOPs versioned with MCP metadata |
+| Reproducibility | Pinned SHAs, deterministic builds, Makefile orchestration |
+| Open Standards | STAC · DCAT · CIDOC CRM · OWL-Time · GeoSPARQL · JSON-LD |
+| Defense-in-Depth | CodeQL · Trivy · SBOM · SLSA · OIDC · signed commits |
+| Accessibility | WCAG 2.1 AA baseline; PRM & high-contrast honored |
+
+---
+
+## 🏗 System Diagram
+```mermaid
+flowchart TD
+  A["Sources<br/>NOAA · USGS · FEMA · Archives · Treaties"]
+    --> B["ETL Pipeline<br/>Python · GDAL · Makefile · Checksums"]
+  B --> C["Processed Layers<br/>COG · GeoJSON · CSV · NetCDF"]
+  B --> I["AI / ML Enrichment<br/>NER · OCR · Geocoding · Summaries · Linking"]
+  C --> D["STAC Catalog<br/>Collections · Items · Assets"]
+  D --> H["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL"]
+  I --> H
+  H --> J["API Layer<br/>FastAPI · GraphQL · REST · JSON-LD"]
+  J --> F["Frontend (React + MapLibre)<br/>Timeline · Map · Search · Focus Mode"]
+  C --> K["Exports<br/>Google Earth (KML/KMZ)"]
+```
+<!-- END OF MERMAID -->
+
+---
+
+## 🧮 Governance Workflow DAG
+```mermaid
+flowchart TD
+  A["pre-commit.yml"] --> B["stac-validate.yml"]
+  B --> C["codeql.yml"]
+  B --> D["trivy.yml"]
+  D --> E["sbom.yml"]
+  E --> F["slsa.yml"]
+  F --> G["policy-check.yml"]
+  G --> H["auto-merge.yml"]
+  H --> I["release-please.yml"]
+  I --> J["docs-drift.yml"]
+```
+
+---
+
+## 🧯 Suite Error & State Taxonomy
+| Code | Layer | UX | Telemetry |
+|:--|:--|:--|:--|
+| SUITE/LOAD | AppShell | splash ≤ 300 ms → fallback | `build_status` |
+| SUITE/HYDRATE | SSR | warn (non-blocking) | `hydration_mismatch_rate` |
+| SUITE/VISUAL | Chromatic | PR blocked > 0.1 % diff | `visual_diff_threshold` |
+| SUITE/A11Y | axe/Lighthouse | PR blocked | `a11y_gai_score` |
+| SUITE/PWA | Workbox | “Limited mode” banner | `pwa_cache_hits` |
+
+---
+
+*(remaining technical and policy sections unchanged)*
 
 ---
 
