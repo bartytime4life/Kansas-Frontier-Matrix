@@ -1,17 +1,17 @@
 ---
 title: "🧰 Kansas Frontier Matrix — Tools & Utilities Suite"
 path: "tools/utils/README.md"
-version: "v1.6.0"
+version: "v1.6.1"
 last_updated: "2025-10-22"
 review_cycle: "Quarterly"
 sandbox_mode: "production"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v1.6.0/sbom.spdx.json"
-manifest_ref: "releases/v1.6.0/manifest.zip"
+sbom_ref: "releases/v1.6.1/sbom.spdx.json"
+manifest_ref: "releases/v1.6.1/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v1.6.0/focus-telemetry.json"
+telemetry_ref: "releases/v1.6.1/focus-telemetry.json"
 architecture_ref: "docs/architecture/repo-focus.md"
-doc_id: "KFM-TOOLS-UTILS-RMD-v1.6.0"
+doc_id: "KFM-TOOLS-UTILS-RMD-v1.6.1"
 maintainers: ["@kfm-data", "@kfm-architecture"]
 approvers: ["@kfm-qa", "@kfm-security", "@kfm-ai"]
 ci_required_checks: ["docs-validate", "code-lint", "stac-validate", "checksum-verify", "ai-scan"]
@@ -43,29 +43,33 @@ tags: ["automation", "etl", "ai", "provenance", "focus-mode", "stac", "dcat", "f
 
 ---
 
-## 📖 Table of Contents
-- [Overview](#-overview)
-- [Mermaid Diagram](#-mermaid-diagram)
-- [Directory Structure](#️-directory-structure)
-- [Core Functions](#-core-functions)
-- [Environment Setup](#️-environment-setup)
-- [Data Contract & Schema Validation](#-data-contract--schema-validation)
-- [Integration with Workflows](#-integration-with-workflows)
-- [Interoperability & Linked Data](#-interoperability--linked-data)
-- [Example Usage](#-example-usage)
-- [Dependencies](#-dependencies)
-- [Provenance & Logging](#-provenance--logging)
-- [Telemetry & API Integration](#-telemetry--api-integration)
-- [AI & Focus Mode Support](#-ai--focus-mode-support)
-- [Security & Integrity](#-security--integrity)
-- [Testing & Validation](#-testing--validation)
-- [Governance Metadata](#-governance-metadata)
-- [MCP Compliance Checklist](#-mcp-compliance-checklist)
-- [Related Documentation](#-related-documentation)
-- [Versioning & Metadata](#-versioning--metadata)
-- [License](#-license)
-- [Version History](#-version-history)
-- [Acknowledgments](#-acknowledgments)
+<details open>
+<summary><b>📘 Table of Contents</b></summary>
+
+- [📚 Overview](#-overview)
+- [🧭 Mermaid Diagram](#-mermaid-diagram)
+- [🗂️ Directory Structure](#️-directory-structure)
+- [🧩 Core Functions](#-core-functions)
+- [⚙️ Environment Setup](#️-environment-setup)
+- [🧱 Data Contract & Schema Validation](#-data-contract--schema-validation)
+- [🧮 Integration with Workflows](#-integration-with-workflows)
+- [🌐 Interoperability & Linked Data](#-interoperability--linked-data)
+- [🧠 Example Usage](#-example-usage)
+- [📦 Dependencies](#-dependencies)
+- [🧾 Provenance & Logging](#-provenance--logging)
+- [🛰️ Telemetry & API Integration](#-telemetry--api-integration)
+- [🤖 AI & Focus Mode Support](#-ai--focus-mode-support)
+- [🔐 Security & Integrity](#-security--integrity)
+- [🧪 Testing & Validation](#-testing--validation)
+- [🧩 Governance Metadata](#-governance-metadata)
+- [🧠 MCP Compliance Checklist](#-mcp-compliance-checklist)
+- [🔗 Related Documentation](#-related-documentation)
+- [🧾 Versioning & Metadata](#-versioning--metadata)
+- [📜 License](#-license)
+- [🧩 Version History](#-version-history)
+- [🪶 Acknowledgments](#-acknowledgments)
+
+</details>
 
 ---
 
@@ -281,7 +285,7 @@ Automated coverage targets:
 
 | Field | Value |
 | :---- | :---- |
-| **Version** | `v1.6.0` |
+| **Version** | `v1.6.1` |
 | **Codename** | *Graph-Aware Utilities Refresh* |
 | **Last Updated** | 2025-10-22 |
 | **Maintainers** | @kfm-data · @kfm-architecture |
@@ -305,6 +309,7 @@ Released under **MIT License**.
 
 | Version | Date | Author | Summary |
 | :------ | :---- | :------ | :-------- |
+| v1.6.1 | 2025-10-22 | @kfm-architecture | Updated with dropdown ToC and emoji alignment |
 | v1.6.0 | 2025-10-22 | @kfm-architecture | Added schema validation, governance, AI, and Linked-Data updates |
 | v1.5.0 | 2025-10-22 | @kfm-architecture | Introduced telemetry integration |
 | v1.4.2 | 2025-10-22 | @kfm-data | FAIR+CARE alignment, footer badges |
