@@ -234,8 +234,8 @@ graph TD
 _Automation for reproducibility · Provenance by design · Ethics through transparency._
 
 [![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
-[![FAIR · CARE](https://img.shields.io/badge/FAIR-CARE-Compliant-green)]()  
-[![Governance Platinum++](https://img.shields.io/badge/Tier-Ω+∞%20Platinum++-blue)]()
+[![FAIR–CARE](https://img.shields.io/badge/FAIR--CARE-Compliant-green)]()  
+[![Governance Platinum++](https://img.shields.io/badge/Tier-%CE%A9%2B%E2%88%9E%20Platinum%2B%2B-blue)]()
 
 </div>
 
