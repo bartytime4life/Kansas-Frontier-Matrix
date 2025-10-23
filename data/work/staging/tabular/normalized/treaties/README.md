@@ -62,14 +62,15 @@ and **AI-audited reproducibility** under the **Kansas Frontier Matrix (KFM)** sy
 
 ```mermaid
 flowchart TD
-A[data/raw/treaties/*.csv|*.pdf|*.json] --> B[data/work/staging/tabular/normalized/treaties/]
-B --> C[data/work/staging/tabular/normalized/treaties/validation/]
-C --> D[data/work/staging/tabular/normalized/treaties/reports/]
-D --> E[data/checksums/treaties/]
-E --> F[data/processed/treaties/]
-F --> G[data/stac/treaties/]
-G --> H[Blockchain Ledger / FAIR+CARE Governance Council]
+    A["data/raw/treaties/*.csv, *.pdf, *.json"] --> B["data/work/staging/tabular/normalized/treaties/"]
+    B --> C["data/work/staging/tabular/normalized/treaties/validation/"]
+    C --> D["data/work/staging/tabular/normalized/treaties/reports/"]
+    D --> E["data/checksums/treaties/"]
+    E --> F["data/processed/treaties/"]
+    F --> G["data/stac/treaties/"]
+    G --> H["Blockchain Ledger / FAIR+CARE Governance Council"]
 ```
+
 
 ---
 
