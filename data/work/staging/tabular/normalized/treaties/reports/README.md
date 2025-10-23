@@ -62,14 +62,12 @@ and **blockchain-anchored reproducibility** within the **Kansas Frontier Matrix 
 
 ```mermaid
 flowchart TD
-A[data/raw/treaties/*.csv|*.pdf] --> B[data/work/staging/tabular/normalized/treaties/]
+A[data/raw/treaties/*.csv, *.pdf] --> B[data/work/staging/tabular/normalized/treaties/]
 B --> C[data/work/staging/tabular/normalized/treaties/reports/]
 C --> D[data/work/staging/tabular/normalized/treaties/checksums/]
 D --> E[data/processed/treaties/]
 E --> F[data/stac/treaties/]
 F --> G[Blockchain Ledger / FAIR+CARE Governance Council]
-```
-
 ---
 
 ## 🧭 Overview
