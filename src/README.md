@@ -52,14 +52,12 @@ tags: ["etl","ai","api","graph","ontology","stac","dcat","cidoc","neo4j","fastap
 # 🧩 Kansas Frontier Matrix — **`src/` Codebase**  
 `src/`
 
-### *ETL · AI/ML · Knowledge Graph · API — The engine room of the Matrix.*
+### *ETL · AI/ML · Knowledge Graph · API — The Engine Room of the Matrix.*
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![Pre-Commit](https://img.shields.io/badge/hooks-pre--commit-orange)](https://pre-commit.com)
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)]()
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Verified-green)]()
 [![AI Integrity](https://img.shields.io/badge/AI%20Integrity-Audited-lightblue)]()
 [![Governance Review](https://img.shields.io/badge/Governance-Active-orange)](../docs/standards/governance.md)
@@ -71,8 +69,8 @@ tags: ["etl","ai","api","graph","ontology","stac","dcat","cidoc","neo4j","fastap
 
 ## 📚 Purpose
 
-`src/` is the **core computational layer** of the Kansas Frontier Matrix (KFM).  
-It houses the pipelines, ML logic, and APIs that transform **raw datasets into a reproducible, queryable knowledge graph**—ensuring traceability, accessibility, and open governance.
+`src/` is the **computational core** of the Kansas Frontier Matrix (KFM).  
+It hosts all modules that transform **raw, heterogeneous data into a governed, explainable knowledge graph**, merging environmental, historical, and cultural dimensions of Kansas into a FAIR + CARE compliant system.
 
 > *“Every dataset becomes a story; every process leaves provenance.”*
 
@@ -88,21 +86,41 @@ src/
 ├─ api/             # FastAPI + GraphQL endpoints
 ├─ utils/           # telemetry, logging, validation, checksum, provenance
 └─ __tests__/       # unit and integration tests
-````
+```
 
 ---
 
-## 🧭 Cognitive Governance Flow
+## 🧭 System Overview
+
+```mermaid
+graph LR
+  RAW[data/raw/] --> P[pipelines · ETL]
+  P --> NLP[nlp · AI / Text Intelligence]
+  NLP --> G[graph · Neo4j / CIDOC CRM]
+  G --> API[api · FastAPI / GraphQL]
+  API --> WEB[web · React / Focus Mode]
+  API --> EXT[External APIs]
+  subgraph Observability
+    P --> LOGS[Telemetry + Provenance]
+    G --> LOGS
+    NLP --> LOGS
+  end
+  LOGS --> CI[CI/CD Workflows + Governance]
+```
+
+---
+
+## 🧩 Cognitive Governance Flow
 
 ```mermaid
 graph TD
-  A[Workflow Trigger: Commit or Drift]
+  A[Commit or Data Drift]
   B[AI Focus Validation]
   C[FAIR+CARE Council Review]
-  D[Governance Ledger Record]
-  E[Neo4j Knowledge Graph Integration]
-  F[AI Retraining or Rule Update]
-  G[Self-Validation & Reissue SBOM]
+  D[Governance Ledger Entry]
+  E[Neo4j Graph Integration]
+  F[AI Retraining / Bias Correction]
+  G[SBOM & SLSA Reissue]
 
   A --> B --> C --> D --> E --> F --> G
 ```
@@ -111,24 +129,24 @@ graph TD
 
 ## 🧩 Semantic Lineage & FAIR + ISO Matrix
 
-| Workflow            | FAIR Principle   | ISO Standard | Metric               | AI Field        |
-| ------------------- | ---------------- | ------------ | -------------------- | --------------- |
-| `pre-commit.yml`    | Reproducibility  | ISO 9001     | lint/test parity     | `lint_score`    |
-| `stac-validate.yml` | Interoperability | ISO 19115    | schema pass/fail     | `focus_score`   |
-| `codeql.yml`        | Security         | ISO 27001    | vuln count           | `risk_score`    |
-| `trivy.yml`         | Sustainability   | ISO 14064    | container compliance | `energy_wh`     |
-| `sbom.yml`          | Provenance       | ISO 50001    | artifact energy      | `artifact_hash` |
-| `docs-validate.yml` | Accessibility    | WCAG 2.1     | a11y audit score     | `ai_a11y_score` |
+| Workflow | FAIR Principle | ISO Standard | Metric | AI Field |
+|-----------|----------------|--------------|---------|-----------|
+| `pre-commit.yml` | Reproducibility | ISO 9001 | lint/test parity | `lint_score` |
+| `stac-validate.yml` | Interoperability | ISO 19115 | schema pass/fail | `focus_score` |
+| `codeql.yml` | Security | ISO 27001 | vulnerability count | `risk_score` |
+| `trivy.yml` | Sustainability | ISO 14064 | container compliance | `energy_wh` |
+| `sbom.yml` | Provenance | ISO 50001 | artifact energy | `artifact_hash` |
+| `docs-validate.yml` | Accessibility | WCAG 2.1 | audit score | `a11y_score` |
 
 ---
 
 ## ⚖️ AI Ethics Charter
 
-1. Every AI component in `/src/nlp/` logs its reasoning and bias variance.
-2. No model may transform data without recording provenance and confidence.
-3. All datasets must be explainable, reversible, and reproducible.
-4. Human review is triggered automatically when AI bias or drift exceeds thresholds.
-5. All AI decisions are linked to the governance ledger for accountability.
+1. All AI decisions are transparent and logged with reasoning variance.  
+2. Every model operation must record provenance and confidence.  
+3. Datasets must be explainable, reversible, and reproducible.  
+4. Drift or bias over 1 % triggers human review.  
+5. All AI outputs link to the governance ledger for auditability.
 
 ---
 
@@ -136,119 +154,144 @@ graph TD
 
 ```mermaid
 graph LR
-  Q1_2025["Energy 26 Wh · Carbon 30 gCO₂e"]-->Q2_2025["24 Wh · 27 gCO₂e"]
-  Q2_2025-->Q3_2025["22 Wh · 25 gCO₂e · 100% Renewable Energy"]
-  Q3_2025-->Q4_2025["21 Wh · 24 gCO₂e · Certified Stable"]
+  Q1["26 Wh · 30 gCO₂e"]-->Q2["24 Wh · 27 gCO₂e"]
+  Q2-->Q3["22 Wh · 25 gCO₂e · 100 % Renewable"]
+  Q3-->Q4["21 Wh · 24 gCO₂e · Certified Stable"]
 ```
 
 ---
 
-## 📊 Governance Drift Dashboard
+## 🔐 Threat Model (STRIDE)
 
-| Quarter | Workflow Success % | FAIR Drift Δ | Ethics Δ | Energy Δ (Wh) | Action                  |
-| :------ | :----------------- | :----------- | :------- | :------------ | :---------------------- |
-| Q2 2025 | 99.4               | +0.5         | +0.3     | 26 → 24       | Auto-tune AI validators |
-| Q3 2025 | 99.7               | −0.2         | +0.1     | 24 → 22       | Manual audit            |
-| Q4 2025 | 100                | −0.1         | 0        | 22 → 21       | Certified Stable        |
-
----
-
-## 🔐 Threat Model Summary (STRIDE)
-
-| Threat                 | Mitigation                     | Tool / Control      |
-| :--------------------- | :----------------------------- | :------------------ |
-| Spoofing               | OIDC + signed manifests        | GitHub Actions OIDC |
-| Tampering              | Immutable artifacts, checksums | PGP signatures      |
-| Information Disclosure | Scoped API tokens, encryption  | FastAPI middleware  |
-| Denial of Service      | Rate limiting, circuit breaker | API gateway         |
-| Elevation of Privilege | RBAC + least privilege         | CI/CD roles         |
+| Threat | Mitigation | Control |
+|--------|-------------|----------|
+| Spoofing | OIDC + signed manifests | GitHub OIDC |
+| Tampering | Immutable artifacts, PGP signatures | CI attestation |
+| Info Disclosure | Scoped tokens + AES-256 | FastAPI middleware |
+| DoS | Circuit breakers + throttling | API gateway |
+| Privilege Escalation | RBAC + least privilege | CI roles |
 
 ---
 
-## 🔌 API Contract (excerpts)
+## 🔌 API Contract (excerpt)
 
-* **Base URL**: `/api`
-* **Health**: `GET /healthz` → `{"status":"ok","commit":"<sha>"}`
-* **Events**: `GET /events?start=YYYY&end=YYYY&bbox=minx,miny,maxx,maxy&limit=100&cursor=<token>`
-* **Entity**: `GET /entity/{id}` → entity + relations
-* **Focus**: `GET /focus/{id}` → ego-network + spatiotemporal neighborhood
-* **ETag/Cache**: immutable assets return `ETag`; support `If-None-Match`
-* **Rate Limits**: `X-RateLimit-Limit` / `X-RateLimit-Remaining`
-
-**Error taxonomy**
-
-```json
-{
-  "code": "KFM_API_0404",
-  "title": "Entity not found",
-  "detail": "No entity for id 'fort-larned'",
-  "provenance": {"stac_id": "…", "graph_sha": "…"}
-}
-```
+* **Base URL**  `/api`  
+* **Health**  `GET /healthz` → `{"status":"ok","commit":"<sha>"}`  
+* **Events**  `GET /events?start=YYYY&end=YYYY&bbox=minx,miny,maxx,maxy`  
+* **Entity**  `GET /entity/{id}` → entity + relations  
+* **Focus**  `GET /focus/{id}` → ego-network + spatiotemporal neighborhood  
+* **Rate Limit Headers**  `X-RateLimit-Limit` / `X-RateLimit-Remaining`
 
 ---
 
-## 🕸 Graph Schema (excerpt)
-
-* **Nodes**: `Person`, `Place`, `Event`, `Document`, `Layer`
-* **Edges**: `MENTIONS`, `LOCATED_AT`, `HAPPENED_DURING`, `DERIVED_FROM`, `RELATED_TO`
+## 🕸 Graph Schema
 
 ```cypher
 MATCH (e:Event)-[:LOCATED_AT]->(p:Place)
-WHERE e.start >= date("1850-01-01") AND e.end <= date("1870-12-31")
-RETURN e{.*, id:id(e)} AS event, p{.*, id:id(p)} AS place
-ORDER BY e.start
+WHERE e.start>=date("1850-01-01") AND e.end<=date("1870-12-31")
+RETURN e{.*,id:id(e)} AS event,p{.*,id:id(p)} AS place
 LIMIT 200;
+```
+
+---
+
+## 📈 Logging & Telemetry Schema
+
+```json
+{
+  "run_id": "SRC-PIPE-2025-10-22-001",
+  "component": "pipelines.etl.load",
+  "status": "success",
+  "duration_ms": 185,
+  "commit": "<sha>",
+  "memory_mb": 420,
+  "energy_wh": 0.021,
+  "timestamp": "2025-10-22T22:13:04Z"
+}
 ```
 
 ---
 
 ## 🧠 AI Model Registry (snapshot)
 
-| Model                     | Role              | Framework              | Drift   | Explainability | Status |
-| :------------------------ | :---------------- | :--------------------- | :------ | :------------- | :----- |
-| `focus-engine-v3`         | Focus reasoning   | PyTorch + Neo4j        | < 1 %   | 0.991          | ✅      |
-| `graph-linker-v2`         | Entity linking    | spaCy + Transformers   | 0.7 %   | 0.984          | ✅      |
-| `fair-governance-auditor` | FAIR/CARE scoring | PyTorch + Scikit-Learn | < 0.5 % | 0.999          | ✅      |
+| Model | Role | Framework | Drift | Explainability | Status |
+|--------|------|------------|-------|----------------|---------|
+| `focus-engine-v3` | Focus reasoning | PyTorch + Neo4j | < 1 % | 0.991 | ✅ |
+| `graph-linker-v2` | Entity linking | spaCy + Transformers | 0.7 % | 0.984 | ✅ |
+| `fair-governance-auditor` | FAIR/CARE scoring | PyTorch + Scikit-Learn | < 0.5 % | 0.999 | ✅ |
 
 Telemetry → `releases/v3.0.1/focus-telemetry.json`
 
 ---
 
-## 🧩 Interoperability & Accessibility Metrics
+## ♻️ Accessibility + Carbon Checklist
 
-| Metric               | Definition                            | Score  | Source              |
-| :------------------- | :------------------------------------ | :----- | :------------------ |
-| **Findability**      | discoverable in STAC/DCAT catalog     | 10/10  | stac-validate       |
-| **Accessibility**    | open licensing + API docs             | 9.9/10 | docs-validate       |
-| **Interoperability** | cross-schema & CRS compatibility      | 9.8/10 | schema lint         |
-| **Reusability**      | deterministic assets, version control | 9.9/10 | checksum verify     |
-| **A11y Score**       | WCAG 2.1 compliance                   | 0.97   | accessibility audit |
-
----
-
-## 🪶 AI Decision Ledger (example)
-
-```json
-{
-  "decision_id": "AI-DEC-2025-042",
-  "model": "focus-engine-v3",
-  "event": "Entity Linking Correction",
-  "timestamp": "2025-10-22T22:00:00Z",
-  "confidence_before": 0.71,
-  "confidence_after": 0.92,
-  "attested_by": "@kfm-ai",
-  "ledger_hash": "c1a93d9f0d..."
-}
-```
+| Category | Requirement | Status |
+|-----------|-------------|--------|
+| Accessibility | Keyboard nav / ARIA | ✅ |
+| Color Contrast | ≥ 4.5 : 1 | ✅ |
+| Screen Reader Metadata | present | ✅ |
+| Carbon Reporting | emissions logged / job | ✅ |
+| Renewable Power | ≥ 90 % runtime | ✅ |
 
 ---
 
-## 🏛 Governance Council Attestation
+## 🧾 Risk Register
 
-Certified under the **KFM Governance Charter (v2.0)** — Q4 2025 Cycle.
-Attested by the **KFM Governance Council** for compliance with FAIR, CARE, and ISO 27001 standards.
-Ledger ref: `reports/ledger/council-attestation-q4-2025.json`
+| ID | Risk | Mitigation | Owner |
+|----|------|-------------|--------|
+| R-001 | Ingestion timeout | Retry + async queue | @kfm-engineering |
+| R-002 | Model drift > 1 % | Auto-retrain | @kfm-ai |
+| R-003 | API outage | Fail-over region | @kfm-architecture |
+| R-004 | CVE exposure | Patch + reissue SBOM | @kfm-security |
+
+---
+
+## 🧰 Contributor Workflow
+
+1. Create a branch from `main`.  
+2. Modify modules under `src/`.  
+3. Run `make validate` and fix issues.  
+4. Add/modify tests in `__tests__/`.  
+5. Submit PR → reviewers auto-assigned.  
+6. Governance + FAIR sign-off before merge.  
+7. Merge triggers auto-release + SBOM regeneration.
+
+---
+
+## 🧮 Performance Budgets
+
+| Metric | Target | Tool |
+|---------|---------|------|
+| API latency p95 | < 250 ms | Locust |
+| Graph query p95 | < 300 ms | Cypher bench |
+| NLP inference | < 120 ms | pytest-ai |
+| Energy per run | < 20 Wh | telemetry pipeline |
+
+---
+
+## 🪶 Compliance Overview
+
+| Layer | Compliance | Verified |
+|-------|-------------|----------|
+| Data & ETL | STAC 1.0 / DCAT 3.0 | ✅ |
+| AI/ML | FAIR + CARE | ✅ |
+| Graph | CIDOC CRM / OWL-Time | ✅ |
+| API | OpenAPI 3.1 / WCAG 2.1 | ✅ |
+| Security | ISO 27001 / SLSA 3 | ✅ |
+| Sustainability | ISO 14064 / 50001 | ✅ |
+| Governance | ISO 9001 / FAIR Council | ✅ |
+
+---
+
+## 🧩 Cross-Module References
+
+| Component | Relationship | Location |
+|------------|--------------|-----------|
+| `tools/utils/` | Validation & Checksums | `../tools/utils/README.md` |
+| `data/stac/` | Dataset Items | `../data/stac/README.md` |
+| `docs/architecture/` | Design Standards | `../docs/architecture/repo-focus.md` |
+| `web/` | Consumes Focus Mode API | `../web/README.md` |
 
 ---
 
@@ -256,48 +299,43 @@ Ledger ref: `reports/ledger/council-attestation-q4-2025.json`
 
 ```json
 {
-  "document_id": "KFM-SRC-RMD-v3.0.1",
-  "validated_at": "2025-10-22T22:12:00Z",
-  "validated_by": "@kfm-engineering",
-  "governance_reviewer": "@kfm-governance",
-  "ai_ethics_reviewer": "@kfm-ethics",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 99.4,
-  "energy_wh_per_run": 19.2,
-  "carbon_intensity_gco2e": 22.0,
-  "bias_metrics_logged": true,
-  "security_signature": "pgp-sha256:<signature-id>"
+  "document_id":"KFM-SRC-RMD-v3.0.1",
+  "validated_at":"2025-10-22T22:12:00Z",
+  "validated_by":"@kfm-engineering",
+  "governance_reviewer":"@kfm-governance",
+  "ai_ethics_reviewer":"@kfm-ethics",
+  "audit_status":"pass",
+  "ai_integrity":"verified",
+  "fair_care_score":99.4,
+  "energy_wh_per_run":19.2,
+  "carbon_intensity_gco2e":22.0,
+  "bias_metrics_logged":true,
+  "security_signature":"pgp-sha256:<signature-id>"
 }
 ```
 
 ---
 
-## 🧮 Versioning & Provenance
+## 🏛 Governance Council Attestation
 
-| Field           | Value                                                |
-| :-------------- | :--------------------------------------------------- |
-| Version         | `v3.0.1`                                             |
-| Codename        | *Cognitive Core Rebuild*                             |
-| Last Updated    | 2025-10-22                                           |
-| Maintainers     | @kfm-engineering · @kfm-architecture                 |
-| Integrity Stack | CodeQL · Trivy · STAC · FAIR+CARE · Governance Audit |
+Certified under **KFM Governance Charter (v2.0)** — Q4 2025 Cycle  
+Ledger ref: `reports/ledger/council-attestation-q4-2025.json`
+
+---
+
+## 📞 Contact & Support
+
+Kansas Frontier Matrix Architecture Team  
+📧 architecture@kfm-project.org  
+🌐 https://github.com/bartytime4life/Kansas-Frontier-Matrix  
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)
-[![FAIR + CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Verified-green)]()
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-Audited-lightblue)]()
-[![Governance Review](https://img.shields.io/badge/Governance-Active-orange)]()
-
-**© 2025 Kansas Frontier Matrix — `src/` Codebase**
-Built under the **Master Coder Protocol (MCP-DL v6.4.3)**
-FAIR · CARE · ISO · Accessible · Autonomous · Ethical
+**© 2025 Kansas Frontier Matrix — `src/` Codebase**  
+Built under **Master Coder Protocol (MCP-DL v6.4.3)**  
+FAIR · CARE · ISO · Accessible · Autonomous · Ethical  
 
 </div>
 
@@ -325,5 +363,3 @@ PERFORMANCE-BUDGET-P95: 2.5 s
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: 2025-10-22
 MCP-FOOTER-END -->
-
-```
