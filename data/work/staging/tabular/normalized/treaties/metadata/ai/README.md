@@ -32,7 +32,6 @@ flowchart TD
     F --> G[data/stac/treaties/]
     G --> H[Blockchain Ledger / FAIR+CARE Governance Council]
 ```
-%% END OF MERMAID
 
 ---
 
