@@ -163,7 +163,7 @@ flowchart LR
   M --> O
   M --> P
   M --> Q
-````
+```
 
 ---
 
@@ -212,8 +212,8 @@ flowchart LR
 * `Document(kind, source, text)`
 * `Layer(type, stac_id)`
 
-**Temporal relations (OWL-Time)**: `hasBeginning`, `hasEnd`, `before`, `overlaps`, `during`.
-**Provenance (PROV-O)**: `Entity → wasDerivedFrom → Entity`, `Activity → used → Entity`.
+**Temporal relations (OWL-Time)**: `hasBeginning`, `hasEnd`, `before`, `overlaps`, `during`.  
+**Provenance (PROV-O)**: `Entity → wasDerivedFrom → Entity`, `Activity → used → Entity`.  
 **Heritage (CIDOC-CRM)**: events/actors/places mapped for interoperability.
 
 ---
@@ -235,7 +235,7 @@ Kansas-Frontier-Matrix/
 └── .github/             # workflows, CODEOWNERS, issue forms
 ```
 
-**Makefile (canonical)**
+**Makefile (canonical)**  
 `make setup · make data · make stac-validate · make graph-migrate · make serve · make test · make build-web · make build-app · make release`
 
 ---
@@ -429,5 +429,4 @@ GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: 2025-10-22
 MCP-FOOTER-END -->
 
-```
-```
+````
