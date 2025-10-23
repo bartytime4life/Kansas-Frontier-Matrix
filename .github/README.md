@@ -91,56 +91,40 @@ The **Kansas Frontier Matrix (KFM)** is a dual-deployment, open-source, geospati
 
 ```mermaid
 flowchart LR
-  %% ========================
-  %% Sources
-  %% ========================
-  subgraph SOURCES[Sources]
-    A["Historical Maps<br/>(COG/GeoTIFF)"]
-    B["GIS Layers<br/>(Shapefile/GeoJSON)"]
-    C["Text Archives<br/>(PDF/OCR/TXT)"]
-    D["Time-Series<br/>(NOAA/USGS/FEMA)"]
+  %% Parser-safe: quoted subgraph titles, no <br/> tags, single-line labels
+
+  subgraph SOURCES["Sources"]
+    A["Historical Maps (COG/GeoTIFF)"]
+    B["GIS Layers (Shapefile/GeoJSON)"]
+    C["Text Archives (PDF/OCR/TXT)"]
+    D["Time-Series (NOAA/USGS/FEMA)"]
   end
 
-  %% ========================
-  %% ETL & AI/ML
-  %% ========================
-  subgraph ETL_AI[ETL & AI/ML (Python)]
-    E["Ingest<br/>(fetch · checksums · manifests)"]
-    F["Transform<br/>(georef · normalize · COG/GeoJSON)"]
-    G["NLP/NER/Geocode<br/>(spaCy · Transformers)"]
+  subgraph ETL_AI["ETL & AI/ML (Python)"]
+    E["Ingest (fetch · checksums · manifests)"]
+    F["Transform (georef · normalize · COG/GeoJSON)"]
+    G["NLP/NER/Geocode (spaCy · Transformers)"]
     H["Entity Linking & Scoring"]
-    I["Catalog Build<br/>(STAC/DCAT)"]
+    I["Catalog Build (STAC/DCAT)"]
   end
 
-  %% ========================
-  %% Storage
-  %% ========================
-  subgraph STORAGE[Storage]
-    J["Neo4j Graph<br/>(People · Places · Events · Docs)"]
-    K["Asset Store<br/>(COGs · GeoJSON · PMTiles)"]
-    L["Catalog<br/>(STAC/DCAT JSON)"]
+  subgraph STORAGE["Storage"]
+    J["Neo4j Graph (People · Places · Events · Docs)"]
+    K["Asset Store (COGs · GeoJSON · PMTiles)"]
+    L["Catalog (STAC/DCAT JSON)"]
   end
 
-  %% ========================
-  %% API
-  %% ========================
   subgraph API["API Layer"]
-    M["FastAPI/GraphQL<br/>(ETag · pagination · field selects)"]
+    M["FastAPI/GraphQL (ETag · pagination · field selects)"]
   end
 
-  %% ========================
-  %% Web UI
-  %% ========================
   subgraph WEBUI["Web UI"]
-    N["MapLibre GL<br/>(layers/tiles)"]
-    O["Canvas Timeline<br/>(60fps)"]
-    P["Focus Mode<br/>(entity-centric)"]
-    Q["Detail Panels<br/>(AI summaries)"]
+    N["MapLibre GL (layers/tiles)"]
+    O["Canvas Timeline (60fps)"]
+    P["Focus Mode (entity-centric)"]
+    Q["Detail Panels (AI summaries)"]
   end
 
-  %% ========================
-  %% Edges
-  %% ========================
   A --> E
   B --> E
   C --> E
