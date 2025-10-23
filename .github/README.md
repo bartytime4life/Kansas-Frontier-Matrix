@@ -91,43 +91,78 @@ The **Kansas Frontier Matrix (KFM)** is a dual-deployment, open-source, geospati
 
 ```mermaid
 flowchart LR
-  subgraph Sources
-    A[Historical Maps (COG/GeoTIFF)]
-    B[GIS Layers (Shapefile/GeoJSON)]
-    C[Text Archives (PDF/OCR/TXT)]
-    D[Time-Series (NOAA/USGS/FEMA)]
+  %% ========================
+  %% Sources
+  %% ========================
+  subgraph SOURCES[Sources]
+    A["Historical Maps<br/>(COG/GeoTIFF)"]
+    B["GIS Layers<br/>(Shapefile/GeoJSON)"]
+    C["Text Archives<br/>(PDF/OCR/TXT)"]
+    D["Time-Series<br/>(NOAA/USGS/FEMA)"]
   end
 
+  %% ========================
+  %% ETL & AI/ML
+  %% ========================
   subgraph ETL_AI[ETL & AI/ML (Python)]
-    E[Ingest\n(fetch, checksums, manifests)]
-    F[Transform\n(georef, normalize, COG/GeoJSON)]
-    G[NLP/NER/Geocode\n(spaCy/Transformers)]
-    H[Entity Linking & Scoring]
-    I[Catalog Build\nSTAC/DCAT]
+    E["Ingest<br/>(fetch · checksums · manifests)"]
+    F["Transform<br/>(georef · normalize · COG/GeoJSON)"]
+    G["NLP/NER/Geocode<br/>(spaCy · Transformers)"]
+    H["Entity Linking & Scoring"]
+    I["Catalog Build<br/>(STAC/DCAT)"]
   end
 
-  subgraph Storage
-    J[(Neo4j)\nPeople, Places, Events, Docs]
-    K[(Assets)\nCOGs/GeoJSON/PMTiles]
-    L[(Catalog)\nSTAC/DCAT JSON]
+  %% ========================
+  %% Storage
+  %% ========================
+  subgraph STORAGE[Storage]
+    J["Neo4j Graph<br/>(People · Places · Events · Docs)"]
+    K["Asset Store<br/>(COGs · GeoJSON · PMTiles)"]
+    L["Catalog<br/>(STAC/DCAT JSON)"]
   end
 
-  subgraph API[API Layer]
-    M[FastAPI/GraphQL\nETag, pagination, fields]
+  %% ========================
+  %% API
+  %% ========================
+  subgraph API["API Layer"]
+    M["FastAPI/GraphQL<br/>(ETag · pagination · field selects)"]
   end
 
-  subgraph WebUI[Web UI]
-    N[MapLibre GL\nlayers/tiles]
-    O[Canvas Timeline\n60fps]
-    P[Focus Mode\nentity-centric]
-    Q[Detail Panels\nAI summaries]
+  %% ========================
+  %% Web UI
+  %% ========================
+  subgraph WEBUI["Web UI"]
+    N["MapLibre GL<br/>(layers/tiles)"]
+    O["Canvas Timeline<br/>(60fps)"]
+    P["Focus Mode<br/>(entity-centric)"]
+    Q["Detail Panels<br/>(AI summaries)"]
   end
 
-  A & B & C & D --> E --> F --> G --> H --> I
+  %% ========================
+  %% Edges
+  %% ========================
+  A --> E
+  B --> E
+  C --> E
+  D --> E
+
+  E --> F
+  F --> G
+  G --> H
+  H --> I
+
   F --> K
   H --> J
   I --> L
-  J & K & L --> M --> N & O & P & Q
+
+  J --> M
+  K --> M
+  L --> M
+
+  M --> N
+  M --> O
+  M --> P
+  M --> Q
 ````
 
 ---
