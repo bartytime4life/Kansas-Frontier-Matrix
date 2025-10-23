@@ -70,6 +70,8 @@ E --> F[data/stac/treaties/]
 F --> G[Blockchain Ledger / FAIR+CARE Governance Council]
 ---
 
+---
+
 ## 🧭 Overview
 
 The **Treaty Validation & Reports Layer** documents every quality, ethics, and reproducibility assessment  
