@@ -1,4 +1,3 @@
-````
 <div align="center">
 
 # 💎 Kansas Frontier Matrix — **`src/` Codebase (Diamond⁶·Ω Engine-Core / Crown∞ Certified)**  
