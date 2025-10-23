@@ -68,6 +68,7 @@ C --> D[data/work/staging/tabular/normalized/treaties/checksums/]
 D --> E[data/processed/treaties/]
 E --> F[data/stac/treaties/]
 F --> G[Blockchain Ledger / FAIR+CARE Governance Council]
+
 ---
 
 ---
