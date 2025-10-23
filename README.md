@@ -1,4 +1,3 @@
-````
 ---
 title: "🤖 Kansas Frontier Matrix — AI Processing for Treaty Metadata"
 document_type: "Pipeline Spec · AI/NLP · Treaties"
