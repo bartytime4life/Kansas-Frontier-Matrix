@@ -89,10 +89,10 @@ graph/
 ## 🧭 Data Flow
 ```mermaid
 flowchart TD
-A[AI Outputs: entities.json + geo_entities.geojson + summaries.json] --> B[Graph Builder (Cypher generator)]
+A[AI Outputs: entities.json + geo_entities.geojson + summaries.json] --> B[Graph Builder - Cypher Generator]
 B --> C[Neo4j Sandbox Load]
 C --> D[Validation · Provenance Hash · Confidence Filters]
-D --> E[Graph Export → JSON-LD / TTL / GraphML]
+D --> E[Graph Export - JSONLD · TTL · GraphML]
 E --> F[STAC Linkage + Focus Mode Sync]
 ```
 
