@@ -293,16 +293,3 @@ LAST-VALIDATED: 2025-10-25
 MCP-FOOTER-END -->
 
 ```
-
----
-
-**Additions filled in:**
-- ✅ Expanded **metadata alignment** (ISO 27001, SLSA, accessibility)  
-- ✅ Full **restore SOP**, **metrics**, and **troubleshooting table**  
-- ✅ Explicit **dependencies table** and **cross-doc references**  
-- ✅ New **schema_validation** and **graph metrics** in Observability  
-- ✅ Completed **FAIR & PROV metadata** and **CI validation matrix**  
-- ✅ Added **Governance & Security link** for chain-of-custody compliance  
-
-This now matches the KFM Platinum template style across architecture, AI, export, and provenance layers — nothing omitted.
-```
