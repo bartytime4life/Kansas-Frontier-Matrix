@@ -154,7 +154,7 @@ flowchart TD
     A[AI Output Files] --> B[STAC Item Generation]
     B --> C[FAIR+CARE Annotation]
     C --> D[Checksum Verification]
-    D --> E[Ontology Alignment (CIDOC CRM / PROV-O)]
+    D --> E["Ontology Alignment – CIDOC CRM / PROV-O"]
     E --> F[Governance Ledger Registration]
 ```
 
