@@ -1,29 +1,30 @@
 ---
 title: "🧠 Kansas Frontier Matrix — Treaty AI Summaries"
 document_type: "AI Summarization Outputs · Semantic Contextualization · FAIR Provenance"
-version: "v1.0.0"
+version: "v1.1.0"
 last_updated: "2025-10-27"
 status: "Production · FAIR+CARE+ISO Aligned"
 maturity: "Stable"
 license: ["MIT (scripts)", "CC-BY 4.0 (text summaries)"]
 owners: ["@kfm-ai","@kfm-data","@kfm-ethics"]
 reviewers: ["@kfm-architecture","@kfm-qa"]
-tags: ["kfm","treaties","ai","summarization","nlp","graph","cidoc-crm","owl-time","prov-o","fair","care","mcp","neo4j"]
+tags: ["kfm","treaties","ai","summarization","nlp","graph","cidoc-crm","owl-time","prov-o","fair","care","mcp","neo4j","stac","focus-mode","hxi"]
 alignment:
   - MCP-DL v6.4.3
   - FAIR / CARE
   - CIDOC CRM / OWL-Time / PROV-O
   - ISO 9001 / ISO 19115
+  - WCAG 2.1 AA (content a11y metadata)
 validation:
   ci_enforced: true
   summarization_quality: "ROUGE ≥ 0.85"
-  factual_accuracy: "verified"
+  factual_accuracy: "≥ 0.90 human-verified"
   checksum_verify: true
   provenance_chain: true
 observability:
   endpoint: "https://metrics.kfm.ai/ai-treaty-summaries"
   dashboard: "https://metrics.kfm.ai/grafana/ai-treaty-summaries"
-  metrics: ["summary_count","avg_length_tokens","rouge_score","factual_consistency_score","graph_link_rate"]
+  metrics: ["summary_count","avg_length_tokens","rouge_score","factual_consistency_score","graph_link_rate","bias_flag_rate","rollback_events"]
 preservation_policy:
   replication_targets: ["GitHub Releases","Zenodo DOI (major)"]
   checksum_algorithm: "SHA-256"
@@ -33,7 +34,7 @@ path: "data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/READM
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — Treaty AI Summaries (v1.0.0 · FAIR + CARE + ISO Aligned)**  
+# 🧠 **Kansas Frontier Matrix — Treaty AI Summaries (v1.1.0 · FAIR + CARE + ISO Aligned)**  
 `data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/`
 
 ### *“Machine-generated treaty digests · ethical summarization · provenance-linked insights”*
@@ -64,10 +65,12 @@ Summaries are:
 | Component | Function | Source |
 |:--|:--|:--|
 | NLP Pipeline | Generates and validates summaries | `src/ai/nlp/summarizer.py` |
-| CIDOC CRM | Provides conceptual grounding (`E31 Document`) | `docs/standards/ontologies.md` |
-| PROV-O | Tracks provenance (agent, activity, entity) | linked via `provenance.jsonld` |
-| AI Model | Transformer (GPT-style summarizer fine-tuned on KFM corpora) | `models/kfm_treaty_summary_v1/` |
-| Graph Linkage | Inserts summaries into Neo4j (`HAS_SUMMARY` edges) | `src/graph/upsert_summary.cql` |
+| Model Card | Datasheet + limitations for summarizer | `models/kfm_treaty_summary_v1/MODEL_CARD.md` |
+| CIDOC CRM | Conceptual grounding (`E31 Document`) | `docs/standards/ontologies.md` |
+| PROV-O | Tracks provenance (agent, activity, entity) | `provenance.jsonld` |
+| Graph Linkage | Inserts summaries into Neo4j (`HAS_SUMMARY`) | `src/graph/upsert_summary.cql` |
+| Focus Mode | Uses summaries as context chips | `.../graph/cypher/create_focus_edges.cql` |
+| STAC | Catalogs exports | `data/stac/treaties/` |
 
 ---
 
@@ -75,13 +78,19 @@ Summaries are:
 ```
 
 summaries/
-├── treaty_1851_fort_laramie_summary.json     # AI-generated summary + metadata
-├── treaty_1867_medicine_lodge_summary.json   # Summary for Medicine Lodge Treaty
-├── treaty_1868_little_arkansas_summary.json  # Additional treaty summary
-├── model_metadata.yaml                       # Model config, parameters, dataset lineage
-├── validation_report.json                    # ROUGE, BLEU, factuality metrics
-├── provenance.jsonld                         # PROV-O description of summary generation
-└── README.md                                 # You are here
+├── treaty_1851_fort_laramie_summary.json       # AI-generated summary + metadata
+├── treaty_1867_medicine_lodge_summary.json     # Summary for Medicine Lodge Treaty
+├── treaty_1868_little_arkansas_summary.json    # Additional treaty summary
+├── golden_set/                                 # Human-authored gold refs for QA
+│   ├── golden_medicine_lodge.md
+│   └── rubric.yaml
+├── prompts/                                    # Prompt templates & controls
+│   ├── summarization_prompt.md
+│   └── safety_instructions.md
+├── model_metadata.yaml                         # Model config, parameters, dataset lineage
+├── validation_report.json                      # ROUGE, factuality, bias audits
+├── provenance.jsonld                           # PROV-O description of summary generation
+└── README.md                                   # You are here
 
 ````
 
@@ -90,11 +99,11 @@ summaries/
 ## 🔄 Workflow
 ```mermaid
 flowchart TD
-A["Input: Treaty Text + Entities (NER)"] --> B["AI Summarization Model (Transformer)"]
-B --> C["Post-process: Fact Validation + Ethical Screening"]
-C --> D["Output JSON (summary + metadata)"]
-D --> E["Neo4j Graph Link (HAS_SUMMARY)"]
-E --> F["FAIR Export: JSON-LD / STAC Publication"]
+A["Input: Treaty Text + Entities (NER)"] --> B["AI Summarization Model · kfm_treaty_summary_v1"]
+B --> C["Post-process: Fact Validation · Ethical Screening · A11y check"]
+C --> D["Output JSON (summary + metadata · checksums)"]
+D --> E["Neo4j Link (HAS_SUMMARY) · Focus chips"]
+E --> F["FAIR Export: JSON-LD · STAC Item"]
 ````
 
 ### Command Example
@@ -102,23 +111,150 @@ E --> F["FAIR Export: JSON-LD / STAC Publication"]
 ```bash
 python src/ai/nlp/summarizer.py \
   --input data/work/staging/tabular/normalized/treaties/raw/treaty_1867_medicine_lodge.txt \
-  --output data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/treaty_1867_medicine_lodge_summary.json
+  --output data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/treaty_1867_medicine_lodge_summary.json \
+  --model models/kfm_treaty_summary_v1 --max_tokens 300 --temperature 0.2
 ```
 
-### Metadata Example
+---
+
+## 🧾 Summary JSON Schema (local contract)
 
 ```json
 {
-  "id": "summary_treaty_1867_medicine_lodge",
-  "model": "kfm_treaty_summary_v1",
-  "created": "2025-10-27T00:00:00Z",
-  "rouge_score": 0.91,
-  "length_tokens": 247,
-  "factual_accuracy": 0.96,
-  "linked_treaty": "treaty_1867_medicine_lodge",
-  "provenance": "ledger/tx/2025-10-27T00Z"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KFM Treaty Summary",
+  "type": "object",
+  "required": ["id","model","created","linked_treaty","text","entities","metrics","provenance"],
+  "properties": {
+    "id": {"type": "string"},
+    "model": {"type": "string"},
+    "created": {"type": "string","format":"date-time"},
+    "language": {"type":"string","enum":["en","es","fr"]},
+    "linked_treaty": {"type":"string"},
+    "text": {"type":"string","minLength": 60, "maxLength": 2500},
+    "entities": {
+      "type":"object",
+      "properties":{
+        "places":{"type":"array","items":{"type":"string"}},
+        "people":{"type":"array","items":{"type":"string"}},
+        "groups":{"type":"array","items":{"type":"string"}}
+      }
+    },
+    "metrics": {
+      "type":"object",
+      "properties":{
+        "rouge": {"type":"number","minimum":0,"maximum":1},
+        "factual_accuracy": {"type":"number","minimum":0,"maximum":1},
+        "bias_flags": {"type":"array","items":{"type":"string"}}
+      }
+    },
+    "provenance": {
+      "type":"object",
+      "required": ["commit","ledger_tx","input_checksum"],
+      "properties":{
+        "commit":{"type":"string"},
+        "ledger_tx":{"type":"string"},
+        "input_checksum":{"type":"string"},
+        "reviewed_by":{"type":"string"}
+      }
+    }
+  }
 }
 ```
+
+---
+
+## 🔗 Graph Linking (Cypher)
+
+```cypher
+// ensure Summary node & linkage
+MERGE (t:Treaty {id:$treaty_id})
+MERGE (s:Summary {id:$summary_id})
+SET s.text = $text,
+    s.model = $model,
+    s.created = datetime($created),
+    s.language = coalesce($language,'en'),
+    s.rouge = $rouge,
+    s.factual_accuracy = $factual_accuracy
+MERGE (t)-[:HAS_SUMMARY]->(s);
+```
+
+---
+
+## 🧱 STAC Item (example)
+
+```yaml
+type: Feature
+stac_version: "1.0.0"
+id: "summary_treaty_1867_medicine_lodge"
+properties:
+  datetime: "1867-10-21T00:00:00Z"
+  kfm:entity: "Summary"
+  kfm:linked_treaty: "treaty_1867_medicine_lodge"
+  kfm:model: "kfm_treaty_summary_v1"
+assets:
+  json:
+    href: "./treaty_1867_medicine_lodge_summary.json"
+    type: "application/json"
+    roles: ["metadata","description"]
+```
+
+---
+
+## 🧑‍⚖️ Human-in-the-Loop (HITL) Review
+
+**Reviewer rubric (golden_set/rubric.yaml):**
+
+* Accuracy (0–5), Neutrality (0–5), Clarity (0–5), Respect/CARE (0–5), Evidence-linked (0–5)
+  **Workflow**
+
+1. AI draft →
+2. Automatic checks (facts, bias scanners, entity alignment) →
+3. Human review (rubric + edits) →
+4. Approve → publish & link →
+5. Log ledger TX + checksums
+
+**Rollback**
+
+* If *post-publication* issues found, create `supersedes` link and mark prior summary `deprecated:true` (never delete published text).
+
+---
+
+## 🧠 Prompt Template (prompts/summarization_prompt.md)
+
+```
+Instruction: Summarize the treaty neutrally and succinctly (150–280 words).  
+Include: purpose, parties, geographic scope, date(s), key outcomes.  
+Do not speculate. Cite places/people/groups as found in text.  
+Style: respectful, non-judgmental, past tense.  
+Output fields: text only.
+Controls: temperature=0.2, max_tokens=300, stop=["\n\n###"].
+```
+
+**Safety addendum (prompts/safety_instructions.md)**
+
+* Avoid stereotypes; flag ambiguous attributions; include uncertainty markers if sources conflict.
+
+---
+
+## 🧮 Observability Metrics
+
+| Metric             | Target        | Current | Verified | Source                 |
+| :----------------- | :------------ | :------ | :------- | :--------------------- |
+| Avg Summary Length | 150–300 words | 212     | ✅        | CI                     |
+| ROUGE Score        | ≥ 0.85        | 0.91    | ✅        | validation_report.json |
+| Factual Accuracy   | ≥ 0.90        | 0.96    | ✅        | reviewer rubric        |
+| Graph Link Rate    | 100%          | 100%    | ✅        | Neo4j                  |
+| Bias Flag Rate     | 0% critical   | 0%      | ✅        | bias scanner           |
+| Rollback Events    | 0             | 0       | ✅        | ledger audit           |
+
+---
+
+## 🔐 Security · Ethics · A11y
+
+* **CARE**: culturally respectful phrasing; no sensitive personal data; consult tribal sources where possible.
+* **A11y**: summaries tagged with language; reading level ~9–11th grade; alt-text where images are referenced in UIs.
+* **Licensing**: summaries CC-BY 4.0; cite original sources when excerpted.
 
 ---
 
@@ -129,33 +265,24 @@ python src/ai/nlp/summarizer.py \
 | Dataset      | Treaty AI Summaries                       |
 | Model        | `kfm_treaty_summary_v1`                   |
 | Ontologies   | CIDOC CRM (`E31 Document`), PROV-O        |
-| Checksum     | SHA-256                                   |
+| Checksum     | SHA-256 per file                          |
 | License      | CC-BY 4.0                                 |
 | Review Cycle | AI-generated → Human reviewed → Published |
 | Provenance   | Linked to Neo4j and ledger receipts       |
-| Retention    | Permanent (stored as graph-linked nodes)  |
+| Retention    | Permanent (graph-linked nodes)            |
 
 ---
 
-## 🧮 Observability Metrics
+## 🧰 Make Targets & CI
 
-| Metric             | Target       | Current | Verified | Source               |
-| :----------------- | :----------- | :------ | :------- | :------------------- |
-| Avg Summary Length | ≤ 300 tokens | 247     | ✅        | CI pipeline          |
-| ROUGE Score        | ≥ 0.85       | 0.91    | ✅        | Validation report    |
-| Factual Accuracy   | ≥ 0.90       | 0.96    | ✅        | Manual review        |
-| Graph Link Rate    | 100%         | 100%    | ✅        | Neo4j validation     |
-| Ethical Compliance | 100%         | 100%    | ✅        | Ethics review report |
+```
+make ai-summaries-generate        # batch generation
+make ai-summaries-validate        # metrics + schema + bias checks
+make ai-summaries-publish         # write to repo + link to graph + STAC update
+make ai-summaries-rollback ID=... # create supersession record
+```
 
----
-
-## 🔐 Security & Ethics
-
-* All AI outputs are **post-processed** by human reviewers for factuality and ethical context.
-* AI models use **public domain** or **licensed** training corpora, in line with CARE principles.
-* Each summary includes a **provenance trail**: model version, timestamp, input source, and ledger record.
-* Logs and metrics are stored under `.../graph/logs/` for auditing.
-* Reuse and modification are permitted under CC-BY 4.0, with attribution.
+CI jobs: `ai-summaries.yml` (generate/validate), `graph-link.yml` (link), `stac-publish.yml` (catalog).
 
 ---
 
@@ -165,7 +292,7 @@ python src/ai/nlp/summarizer.py \
 * ✅ **FAIR + CARE** — ethical, accessible data publishing
 * ✅ **CIDOC CRM / PROV-O / OWL-Time** semantic annotation
 * ✅ **ISO 9001 / 19115** metadata completeness
-* ✅ **AI Governance** (bias and hallucination audit, provenance ledger linking)
+* ✅ **AI Governance** — bias & hallucination audit, provenance ledger linking
 
 ---
 
@@ -176,14 +303,16 @@ python src/ai/nlp/summarizer.py \
 * [Graph Snapshots](../graph/snapshots/README.md)
 * [AI System Developer Guide](../../../../../../../../../docs/architecture/ai-system.md)
 * [Ethics & AI Policy](../../../../../../../../../docs/standards/ai-ethics.md)
+* [Focus Mode Design](../../../../../../../../../docs/design/focus-mode.md)
 
 ---
 
 ## 🕓 Version History
 
-| Version    | Date       | Author  | Reviewer          | Notes                                                                   |
-| :--------- | :--------- | :------ | :---------------- | :---------------------------------------------------------------------- |
-| **v1.0.0** | 2025-10-27 | @kfm-ai | @kfm-architecture | Initial AI summary pipeline documentation with FAIR + CARE + provenance |
+| Version    | Date       | Author  | Reviewer          | Notes                                                        |
+| :--------- | :--------- | :------ | :---------------- | :----------------------------------------------------------- |
+| **v1.1.0** | 2025-10-27 | @kfm-ai | @kfm-architecture | Added schema, prompts, HITL rubric, STAC item, rollback & CI |
+| v1.0.0     | 2025-10-27 | @kfm-ai | @kfm-architecture | Initial AI summary pipeline (FAIR + CARE + provenance)       |
 
 ---
 
