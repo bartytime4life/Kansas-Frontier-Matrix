@@ -68,13 +68,13 @@ data/work/staging/tabular/normalized/treaties/reports/ai/logs/
 
 ```mermaid
 flowchart TD
-    A[AI Generation (summarizer.py)] --> B[Logging Agent]
-    B --> C[Validation Logs (semantic + schema)]
-    B --> D[Performance Metrics (latency, token usage)]
-    B --> E[Error Handlers (stack traces)]
-    D --> F[Telemetry Module]
-    C --> G[Audit Integration]
-    F --> H[Governance Ledger Linkage]
+    A["AI Generation (summarizer.py)"] --> B["Logging Agent"]
+    B --> C["Validation Logs – semantic + schema"]
+    B --> D["Performance Metrics – latency, token usage"]
+    B --> E["Error Handlers – stack traces"]
+    D --> F["Telemetry Module"]
+    C --> G["Audit Integration"]
+    F --> H["Governance Ledger Linkage"]
 ```
 
 ---
