@@ -67,26 +67,26 @@ Every record supports **AI explainability**, **blockchain-backed provenance**, a
 
 ```mermaid
 graph TD
-A[Staging ETL & Validation Logs] --> B[Focus Mode AI · Explainability + Drift Detection]
-B --> C[FAIR+CARE Council]
-B --> D[AI Ethics Board]
-C --> E[Governance Ledger + Blockchain Verification]
-E --> F[Human Oversight Council]
-F --> G[Neo4j Knowledge Graph Integration]
-G --> H[AI Retraining · Quality Drift Correction]
-```
+A["Staging ETL & Validation Logs"] --> B["Focus Mode AI · Explainability · Drift Detection"]
+B --> C["FAIR + CARE Council"]
+B --> D["AI Ethics Board"]
+C --> E["Governance Ledger · Blockchain Verification"]
+E --> F["Human Oversight Council"]
+F --> G["Neo4j Knowledge Graph Integration"]
+G --> H["AI Retraining · Quality Drift Correction"]
+````
 
 ---
 
 ## 🧩 Semantic Lineage Matrix
 
-| Field | FAIR Dimension | STAC Property | ISO Reference | Purpose |
-|:--|:--|:--|:--|:--|
-| `dataset_id` | Findable | `id` | ISO 19115 | Dataset identifier |
-| `stage` | Accessible | `properties.status` | ISO 19157 | Validation state |
-| `focus_score` | Provenance | `properties.quality` | MCP-DL | AI explainability confidence |
-| `checksum` | Provenance | `asset.hash` | FAIR/MCP | Integrity verification |
-| `carbon_gco2e` | CARE | `properties.carbon` | ISO 14064 | Sustainability measure |
+| Field          | FAIR Dimension | STAC Property        | ISO Reference | Purpose                      |
+| :------------- | :------------- | :------------------- | :------------ | :--------------------------- |
+| `dataset_id`   | Findable       | `id`                 | ISO 19115     | Dataset identifier           |
+| `stage`        | Accessible     | `properties.status`  | ISO 19157     | Validation state             |
+| `focus_score`  | Provenance     | `properties.quality` | MCP-DL        | AI explainability confidence |
+| `checksum`     | Provenance     | `asset.hash`         | FAIR/MCP      | Integrity verification       |
+| `carbon_gco2e` | CARE           | `properties.carbon`  | ISO 14064     | Sustainability measure       |
 
 ---
 
@@ -127,33 +127,33 @@ G --> H[AI Retraining · Quality Drift Correction]
 
 ## 🌱 Sustainability & ISO Metrics
 
-| Metric | Standard | Value | Verified By |
-|:--|:--|:--|:--|
-| **Energy Use (Wh/run)** | ISO 50001 | 20.6 | @kfm-security |
-| **Carbon Output (gCO₂e/run)** | ISO 14064 | 25.4 | @kfm-fair |
-| **Renewable Offset** | RE100 | 100% | @kfm-governance |
-| **Ethical Compliance** | MCP Ethics Charter | 100% | @kfm-ethics |
+| Metric                        | Standard           | Value | Verified By     |
+| :---------------------------- | :----------------- | :---- | :-------------- |
+| **Energy Use (Wh/run)**       | ISO 50001          | 20.6  | @kfm-security   |
+| **Carbon Output (gCO₂e/run)** | ISO 14064          | 25.4  | @kfm-fair       |
+| **Renewable Offset**          | RE100              | 100%  | @kfm-governance |
+| **Ethical Compliance**        | MCP Ethics Charter | 100%  | @kfm-ethics     |
 
 ---
 
 ## 🧬 Governance Ledger Chain
 
-| Ledger | Maintainer | Verification | Output | Frequency |
-|:--|:--|:--|:--|:--|
-| **Data Ledger** | @kfm-security | Checksum validation | `/data/checksums/staging_logs.json` | Continuous |
-| **AI Ledger** | @kfm-ai | Explainability + drift audit | `/reports/audit/ai_staging_ledger.json` | Per run |
-| **Ethics Ledger** | @kfm-ethics | Bias + sustainability compliance | `/reports/audit/staging_ethics.json` | Biweekly |
-| **Governance Ledger** | @kfm-governance | FAIR+CARE certification | `/reports/fair/staging_summary.json` | Quarterly |
+| Ledger                | Maintainer      | Verification                     | Output                                  | Frequency  |
+| :-------------------- | :-------------- | :------------------------------- | :-------------------------------------- | :--------- |
+| **Data Ledger**       | @kfm-security   | Checksum validation              | `/data/checksums/staging_logs.json`     | Continuous |
+| **AI Ledger**         | @kfm-ai         | Explainability + drift audit     | `/reports/audit/ai_staging_ledger.json` | Per run    |
+| **Ethics Ledger**     | @kfm-ethics     | Bias + sustainability compliance | `/reports/audit/staging_ethics.json`    | Biweekly   |
+| **Governance Ledger** | @kfm-governance | FAIR+CARE certification          | `/reports/fair/staging_summary.json`    | Quarterly  |
 
 ---
 
 ## 🧮 Governance Drift Dashboard
 
-| Quarter | AI Integrity | FAIR Drift Δ | Ethics Δ | Governance Action |
-|:--|:--|:--|:--|:--|
-| Q2 2025 | 98.7 | +0.4 | +0.2 | Retrain validator |
-| Q3 2025 | 99.5 | -0.3 | +0.1 | Manual FAIR review |
-| Q4 2025 | 100 | -0.1 | 0.0 | Certified Stable |
+| Quarter | AI Integrity | FAIR Drift Δ | Ethics Δ | Governance Action  |
+| :------ | :----------- | :----------- | :------- | :----------------- |
+| Q2 2025 | 98.7         | +0.4         | +0.2     | Retrain validator  |
+| Q3 2025 | 99.5         | -0.3         | +0.1     | Manual FAIR review |
+| Q4 2025 | 100          | -0.1         | 0.0      | Certified Stable   |
 
 ---
 
@@ -205,19 +205,19 @@ Q3_2025 --> Q4_2025["20.6 Wh · 25 gCO₂e · 100% Renewable Energy"]
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Summary |
-|:--|:--|:--|:--|:--|:--|:--|:--|
-| v9.0.0 | 2025-10-23 | @kfm-data | @kfm-governance | ✅ | 100% | Blockchain ✓ | Crown∞Ω Ultimate: AI explainability + ISO sustainability |
-| v8.0.0 | 2025-10-20 | @kfm-validation | @kfm-fair | ✅ | 99% | ✓ | FAIR+CARE validation integration |
-| v7.0.0 | 2025-10-16 | @kfm-data | @kfm-security | ✅ | 98% | ✓ | FAIR baseline + governance alignment |
+| Version | Date       | Author          | Reviewer        | AI Audit | FAIR/CARE | Security     | Summary                                                  |
+| :------ | :--------- | :-------------- | :-------------- | :------- | :-------- | :----------- | :------------------------------------------------------- |
+| v9.0.0  | 2025-10-23 | @kfm-data       | @kfm-governance | ✅        | 100%      | Blockchain ✓ | Crown∞Ω Ultimate: AI explainability + ISO sustainability |
+| v8.0.0  | 2025-10-20 | @kfm-validation | @kfm-fair       | ✅        | 99%       | ✓            | FAIR+CARE validation integration                         |
+| v7.0.0  | 2025-10-16 | @kfm-data       | @kfm-security   | ✅        | 98%       | ✓            | FAIR baseline + governance alignment                     |
 
 ---
 
 ### 🪶 Acknowledgments
 
-Maintained by **@kfm-data**, **@kfm-validation**, and **@kfm-fair**,  
-with oversight from **@kfm-ai**, **@kfm-ethics**, and **@kfm-governance**.  
-Acknowledgment to **FAIR Data Alliance**, **STAC Council**, **ISO Standards Group**,  
+Maintained by **@kfm-data**, **@kfm-validation**, and **@kfm-fair**,
+with oversight from **@kfm-ai**, **@kfm-ethics**, and **@kfm-governance**.
+Acknowledgment to **FAIR Data Alliance**, **STAC Council**, **ISO Standards Group**,
 and the **MCP Governance Council** for advancing auditable and ethical data governance systems.
 
 ---
@@ -233,4 +233,6 @@ and the **MCP Governance Council** for advancing auditable and ethical data gove
 [![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../docs/standards/ai-integrity.md)
 [![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
 [![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+
 </div>
+```
