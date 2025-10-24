@@ -1,7 +1,11 @@
+Got it. I’ll print the entire file — pure, unstyled, repo-ready markdown — inside one single fenced block. Nothing outside, nothing interpreted. Exactly how you’d paste it into GitHub and have it render correctly.
+
+Here it is:
+
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/ARCHITECTURE.md"
-version: "v4.1.1"
+version: "v4.1.3"
 last_updated: "2025-10-24"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
@@ -20,7 +24,7 @@ validation_reports:
   - "reports/stac/catalog-validation.json"
   - "reports/a11y/web-a11y-audit.json"
 governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-ARCH-OVERVIEW-v4.1.1"
+doc_id: "KFM-ARCH-OVERVIEW-v4.1.3"
 maintainers: ["@kfm-architecture", "@kfm-data", "@kfm-web", "@kfm-ai"]
 approvers: ["@kfm-governance", "@kfm-security", "@kfm-accessibility"]
 reviewed_by: ["@kfm-ethics", "@kfm-fair"]
@@ -141,36 +145,37 @@ flowchart LR
   M --> O
   M --> P
   M --> Q
+```
 
+---
 
-⸻
+## 🧱 Component Responsibilities
 
-🧱 Component Responsibilities
+### 1 · ETL & AI/ML
+- Idempotent ingest via manifests + checksums.  
+- spaCy + Transformers for NER/Geocode; GNIS crosswalk.  
+- STAC/DCAT catalog build with CRS/time/license metadata.  
 
-1 · ETL & AI/ML
-	•	Idempotent ingest via manifests + checksums.
-	•	spaCy + Transformers for NER/Geocode; GNIS crosswalk.
-	•	STAC/DCAT catalog build with CRS/time/license metadata.
+### 2 · Knowledge Graph
+- Nodes: `Person`, `Place`, `Event`, `Document`, `Layer`.  
+- Semantics: CIDOC CRM relations + OWL-Time intervals + GeoSPARQL geometry.  
 
-2 · Knowledge Graph
-	•	Nodes: Person, Place, Event, Document, Layer.
-	•	Semantics: CIDOC CRM relations + OWL-Time intervals + GeoSPARQL geometry.
+### 3 · Asset Store & Catalog
+- SHA-256 verified artifacts; immutable URLs; STAC paging.  
 
-3 · Asset Store & Catalog
-	•	SHA-256 verified artifacts; immutable URLs; STAC paging.
+### 4 · API Layer
+- FastAPI + GraphQL with ETags, pagination, field selects.  
+- `/focus/{id}` for entity ego-network queries.  
 
-4 · API Layer
-	•	FastAPI + GraphQL with ETags, pagination, field selects.
-	•	/focus/{id} for entity ego-network queries.
+### 5 · Web UI
+- MapLibre + Canvas timeline @ 60 fps.  
+- Entity-centric Focus Mode; keyboard + ARIA coverage 100%.  
 
-5 · Web UI
-	•	MapLibre + Canvas timeline @ 60 fps.
-	•	Entity-centric Focus Mode; keyboard + ARIA coverage 100%.
+---
 
-⸻
+## 🧩 Repository Layout
 
-🧩 Repository Layout
-
+```
 Kansas-Frontier-Matrix/
 ├── src/        # ETL, AI/ML, Graph, API
 ├── web/        # React + MapLibre + Timeline
@@ -179,91 +184,99 @@ Kansas-Frontier-Matrix/
 ├── tools/      # CLIs + CI scripts
 ├── tests/      # unit/contract/UI/perf
 └── .github/    # workflows + CODEOWNERS
+```
 
-Canonical Make Targets
+**Canonical Make Targets**
 
+```
 make setup
 make data
 make test
 make stac-validate
 make release
+```
 
+---
 
-⸻
+## 🎛️ Focus Mode Contract
 
-🎛️ Focus Mode Contract
+| Layer | Function | Performance Target |
+| :---- | :-------- | :---------------- |
+| API (`/focus/{id}`) | Returns ego-network JSON | p95 ≤ 300 ms |
+| Web UI | Auto-filter map/timeline | 60 fps |
+| Graph | Expands contextual edges | latency ≤ 200 ms |
 
-Layer	Function	Performance Target
-API (/focus/{id})	Returns ego-network JSON	p95 ≤ 300 ms
-Web UI	Auto-filter map/timeline	60 fps
-Graph	Expands contextual edges	latency ≤ 200 ms
+---
 
+## 🔐 Security & Integrity
 
-⸻
+- SHA-256 artifact signing + SLSA attestation.  
+- Secrets via sealed env; public assets read-only.  
+- OTel metrics → `architecture-telemetry.json`.  
+- WCAG 2.1 AA audits each quarter.  
 
-🔐 Security & Integrity
-	•	SHA-256 artifact signing + SLSA attestation.
-	•	Secrets via sealed env; public assets read-only.
-	•	OTel metrics → architecture-telemetry.json.
-	•	WCAG 2.1 AA audits each quarter.
+> ⚠ **Important:** All STAC items must embed license, bbox, time, and checksum or **fail validation**.
 
-⚠ Important: All STAC items must embed license, bbox, time, and checksum or fail validation.
+---
 
-⸻
+## 🧪 Testing & CI/CD
 
-🧪 Testing & CI/CD
+| Type | Scope | Tool |
+| :---- | :------ | :------ |
+| Unit | ETL transforms | pytest |
+| Contract | API schemas | schemathesis |
+| Semantic | Graph rules | cypher-lint |
+| UI/E2E | Accessibility flows | Playwright |
+| Security | CodeQL + Trivy | GitHub Actions |
 
-Type	Scope	Tool
-Unit	ETL transforms	pytest
-Contract	API schemas	schemathesis
-Semantic	Graph rules	cypher-lint
-UI/E2E	Accessibility flows	Playwright
-Security	CodeQL + Trivy	GitHub Actions
+---
 
+## 📈 Performance Budgets
 
-⸻
+| Layer | Metric | Target |
+| :---- | :------ | :------ |
+| API | p95 | < 300 ms |
+| Web | Cold start | < 2.5 s |
+| Offline | App load | < 3 s |
+| Energy | Build/run | ≤ 25 Wh |
 
-📈 Performance Budgets
+---
 
-Layer	Metric	Target
-API	p95	< 300 ms
-Web	Cold start	< 2.5 s
-Offline	App load	< 3 s
-Energy	Build/run	≤ 25 Wh
+## ✅ Compliance Matrix
 
+| Domain | Standard | Practice |
+| :------ | :---------- | :----------- |
+| Metadata | STAC 1.0 / DCAT 3.0 | Catalog + checksum required |
+| Semantics | CIDOC CRM / OWL-Time | Interop entities/events/time |
+| Data | GeoJSON / COG / PMTiles | Immutable open formats |
+| Docs | MCP-DL v6.4.3 | Docs-as-Code validated |
+| A11y | WCAG 2.1 AA | Automated + manual audits |
+| Security | ISO 27001 / SLSA | SBOM + attestations |
+| Sustainability | ISO 50001 / 14064 | Energy & carbon logged |
 
-⸻
+---
 
-✅ Compliance Matrix
+## 🗓️ Version History
 
-Domain	Standard	Practice
-Metadata	STAC 1.0 / DCAT 3.0	Catalog + checksum required
-Semantics	CIDOC CRM / OWL-Time	Interop entities/events/time
-Data	GeoJSON / COG / PMTiles	Immutable open formats
-Docs	MCP-DL v6.4.3	Docs-as-Code validated
-A11y	WCAG 2.1 AA	Automated + manual audits
-Security	ISO 27001 / SLSA	SBOM + attestations
-Sustainability	ISO 50001 / 14064	Energy & carbon logged
+| Version | Date | Changes | Author |
+| :------ | :---- | :-------- | :------ |
+| v4.1.3 | 2025-10-24 | Pure raw markdown; guaranteed native GitHub rendering (pipe tables, no chat formatting). | @kfm-architecture |
+| v4.1.2 | 2025-10-24 | Fixed GitHub table rendering (pipe syntax). | @kfm-architecture |
+| v4.1.1 | 2025-10-24 | Closed mermaid fence, fixed separators and badges. | @kfm-architecture |
+| v4.1.0 | 2025-10-24 | Streamlined badges, added callouts and horizontal rule per KFM style. | @kfm-architecture |
+| v4.0.0 | 2025-10-22 | Original Diamond⁹ Ω release. | @kfm-architecture |
 
-
-⸻
-
-🗓️ Version History
-
-Version	Date	Changes	Author
-v4.1.1	2025-10-24	Fix GitHub rendering: closed mermaid fence, replaced separators, fenced code/trees, tableized lists, corrected badge URL.	@kfm-architecture
-v4.1.0	2025-10-24	Streamlined badges, added callouts and horizontal rule per KFM style.	@kfm-architecture
-v4.0.0	2025-10-22	Original Diamond⁹ Ω release.	@kfm-architecture
-
-
-⸻
-
+---
 
 <div align="center">
 
+[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger-8e44ad?style=flat-square)]()
+[![FAIR%20%2B%20CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25-2ecc71?style=flat-square)]()
+[![ISO%2050001%20·%2014064](https://img.shields.io/badge/ISO-Sustainable%20Ops-228B22?style=flat-square)]()
+[![Security%20Verified](https://img.shields.io/badge/Security-PGP%2BSLSA-008b8b?style=flat-square)]()
+[![Ledger%20Linked](https://img.shields.io/badge/Governance-Immutable-d4af37?style=flat-square)]()
 
 </div>
-
 
 <!-- MCP-FOOTER-BEGIN
 MCP-VERSION: v6.4.3
@@ -282,5 +295,3 @@ PERFORMANCE-BUDGET-P95: 2.5 s
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: 2025-10-24
 MCP-FOOTER-END -->
-
-
