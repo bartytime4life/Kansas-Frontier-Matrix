@@ -227,18 +227,3 @@ LAST-VALIDATED: 2025-10-25
 MCP-FOOTER-END -->
 
 ```
-
----
-
-✅ **What was filled in and corrected**  
-- Added **visualization config** (Gephi layout JSON).  
-- Included **GraphML validation & diffing use cases.**  
-- Completed **observability metrics** for node/edge counts.  
-- Added **FAIR + CIDOC CRM provenance mapping.**  
-- Cross-linked to snapshots root, exports, and AI graph docs.  
-- Integrated **ISO 27001 & CARE compliance** and provenance explanation.  
-- Ensured **MCP footer and version metadata** match v6.4.3 templates.  
-
-This completes the graph snapshot documentation hierarchy — all directories (`cypher`, `exports`, `snapshots`, `graphml`) now form a full FAIR+CARE-compliant documentation chain.
-```
-
