@@ -84,11 +84,11 @@ cypher/
 ## 🧭 Data Flow
 ```mermaid
 flowchart TD
-A[AI Entity Extraction (spaCy + NLP)] --> B[Generate Cypher Templates]
-B --> C[Neo4j Staging Graph]
-C --> D[Validation · Confidence Filter · Provenance Check]
-D --> E[Graph Publish + Focus Edge Build]
-E --> F[Ledger Commit + STAC Export]
+A["AI Entity Extraction · spaCy + NLP"] --> B["Generate Cypher Templates"]
+B --> C["Neo4j Staging Graph"]
+C --> D["Validation · Confidence Filter · Provenance Check"]
+D --> E["Graph Publish + Focus Edge Build"]
+E --> F["Ledger Commit + STAC Export"]
 ````
 
 ---
