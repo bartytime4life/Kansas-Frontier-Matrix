@@ -156,7 +156,7 @@ This report summarizes the treaty’s provisions, impacts on territorial governa
 flowchart TD
     A[Normalized Treaty Data] --> B[AI Summarization Engine]
     B --> C[NER / Entity Linking]
-    C --> D[Output Formatter (MD / JSON / JSON-LD)]
+    C --> D["Output Formatter – MD / JSON / JSON-LD"]
     D --> E[Validation Module]
     E --> F[Governance Ledger + Archive]
 ```
