@@ -1,6 +1,3 @@
-Got it. I’ll print the entire file — pure, unstyled, repo-ready markdown — inside one single fenced block. Nothing outside, nothing interpreted. Exactly how you’d paste it into GitHub and have it render correctly.
-
-Here it is:
 
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
