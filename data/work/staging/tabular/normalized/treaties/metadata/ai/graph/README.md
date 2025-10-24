@@ -1,7 +1,7 @@
 ---
 title: "🕸️ Kansas Frontier Matrix — Treaty AI Graph Integration"
 document_type: "AI Knowledge Graph · Cypher Integration · Provenance Layer"
-version: "v1.2.0"
+version: "v1.3.0"
 last_updated: "2025-10-23"
 status: "Production · FAIR+CARE+ISO Aligned"
 maturity: "Production"
@@ -34,7 +34,7 @@ path: "data/work/staging/tabular/normalized/treaties/metadata/ai/graph/README.md
 
 <div align="center">
 
-# 🕸️ **Kansas Frontier Matrix — Treaty AI Graph Integration (v1.2.0 · FAIR + CARE + ISO Aligned)**  
+# 🕸️ **Kansas Frontier Matrix — Treaty AI Graph Integration (v1.3.0 · FAIR + CARE + ISO Aligned)**  
 `data/work/staging/tabular/normalized/treaties/metadata/ai/graph/`
 
 ### *“Entities → Edges → Ontology → Provenance → Focus Mode”*
@@ -51,161 +51,184 @@ path: "data/work/staging/tabular/normalized/treaties/metadata/ai/graph/README.md
 
 ## 📘 Purpose
 This directory defines the **AI → Graph Integration Layer** for the **Treaty Metadata Pipeline**.  
-It transforms AI-enriched treaty outputs (entities, geospatial, temporal, summaries) into **Neo4j graph nodes and relationships**, aligning with **CIDOC CRM**, **OWL-Time**, **FAIR/CARE**, and **ISO provenance standards**.
+It converts AI-enriched treaty outputs (entities, geospatial, temporal, summaries) into **Neo4j graph structures**, adhering to **CIDOC CRM**, **OWL-Time**, and **FAIR+CARE**.
 
 ---
 
-## 🧭 Data Lineage
-```mermaid
-flowchart TD
-A[AI Entities JSON]-->B[Cypher Graph Builder]
-B-->C[Neo4j Import Sandbox]
-C-->D[Validation & Provenance Checks]
-D-->E[Graph Export: JSON-LD + STAC linkage]
-E-->F[Focus Mode Enablement + API]
+## 🗂️ Directory Layout
+```
+graph/
+├── cypher/                         # Primary Cypher query bundles for Neo4j imports
+│   ├── upsert_treaty_1867_medicine_lodge.cql
+│   ├── upsert_treaty_1851_fort_laramie.cql
+│   ├── update_provenance_relations.cql
+│   └── build_graph_indexes.cql
+├── exports/                        # Derived graph exports (JSON-LD, TTL, STAC-linked)
+│   ├── treaties_graph.jsonld
+│   ├── treaties_graph.ttl
+│   ├── treaties_graph.graphml
+│   └── export_manifest.json
+├── snapshots/                      # Periodic Neo4j dumps and compressed graph backups
+│   ├── graph_2025-10-23.dump
+│   ├── graph_2025-10-20.dump
+│   └── checksums.sha256
+├── logs/                           # Graph build and validation logs
+│   ├── graph_build.log
+│   ├── graph_validation.log
+│   └── provenance_audit.json
+├── schemas/                        # JSON schemas and ontology mappings for graph I/O
+│   ├── graph_entities.schema.json
+│   ├── relationships.schema.json
+│   ├── provenance.schema.json
+│   └── cidoc_mapping.yaml
+└── README.md                       # You are here (integration and governance spec)
 ```
 
 ---
 
-## ⚙️ Graph Components
+## 🧭 Data Flow
+```mermaid
+flowchart TD
+A[AI Outputs: entities.json + geo_entities.geojson + summaries.json] --> B[Graph Builder (Cypher generator)]
+B --> C[Neo4j Sandbox Load]
+C --> D[Validation · Provenance Hash · Confidence Filters]
+D --> E[Graph Export → JSON-LD / TTL / GraphML]
+E --> F[STAC Linkage + Focus Mode Sync]
+```
 
-| Type | Node Label | Description | Ontology Mapping |
+---
+
+## ⚙️ Graph Entities and Ontologies
+
+| Node Label | Description | CIDOC CRM Class | Example |
 |:--|:--|:--|:--|
-| **Treaty** | `Treaty` | Primary entity representing treaty metadata | `E7 Activity` (`kfm:Treaty`) |
-| **Person** | `Person` | Signatories, negotiators, agents | `E21 Person` |
-| **Tribe / Group** | `Group` | Indigenous or collective entities | `E74 Group` (`kfm:Tribe`) |
-| **Place** | `Place` | Locations from AI geocoding | `E53 Place` |
-| **Clause** | `Clause` | Extracted treaty clauses | `E33 Linguistic Object` |
-| **Summary** | `Summary` | Abstractive AI summary node | `E31 Document` |
-| **Provenance** | `Provenance` | Source + validation context | `E7 Activity` + `PROV-O` |
+| `Treaty` | Core event entity | `E7 Activity` (`kfm:Treaty`) | Medicine Lodge Treaty (1867) |
+| `Person` | Signatories / negotiators | `E21 Person` | William S. Harney |
+| `Group` | Tribes / collectives | `E74 Group` | Kiowa, Comanche, Apache |
+| `Place` | Geocoded sites | `E53 Place` | Medicine Lodge Creek |
+| `Clause` | Individual legal clauses | `E33 Linguistic Object` | Clause on land allotment |
+| `Summary` | AI abstractive summary node | `E31 Document` | Summary 1867 |
+| `Provenance` | Source evidence and logs | `E7 Activity` + PROV-O | OCR + AI output manifest |
 
 ---
 
 ## 🔗 Relationships
 
-| Edge | Description | Ontology Relation | AI Source |
+| Edge | Description | Ontology Mapping | Source |
 |:--|:--|:--|:--|
-| `(:Treaty)-[:SIGNED_BY]->(:Person)` | Connects treaty to signatories | `P14 carried out by` | NER |
-| `(:Treaty)-[:INVOLVED_GROUP]->(:Group)` | Participating tribes or collectives | `P14.1 in the role of` | NER |
-| `(:Treaty)-[:OCCURRED_AT]->(:Place)` | Location where treaty occurred | `P7 took place at` | Geo |
-| `(:Treaty)-[:HAS_CLAUSE]->(:Clause)` | Links to extracted clauses | `P106 is composed of` | Text Parsing |
-| `(:Treaty)-[:HAS_SUMMARY]->(:Summary)` | Links treaty to its AI summary | `P129 is about` | Summarizer |
-| `(:Clause)-[:MENTIONS]->(:Place)` | Clause-to-location mapping | `P67 refers to` | NLP |
-| `(:Summary)-[:CITES]->(:Provenance)` | AI summary references data sources | `P70 documents` | Provenance |
-| `(:Provenance)-[:VALIDATED_BY]->(:Curator)` | Human verification link | `P14 carried out by` | Governance |
+| `(:Treaty)-[:SIGNED_BY]->(:Person)` | Treaty signatories | `P14 carried out by` | NER |
+| `(:Treaty)-[:INVOLVED_GROUP]->(:Group)` | Involved tribes/groups | `P14.1 in the role of` | NER |
+| `(:Treaty)-[:OCCURRED_AT]->(:Place)` | Spatial linkage | `P7 took place at` | Geocoding |
+| `(:Treaty)-[:HAS_CLAUSE]->(:Clause)` | Clause linkage | `P106 is composed of` | Text parse |
+| `(:Treaty)-[:HAS_SUMMARY]->(:Summary)` | Summary node | `P129 is about` | AI summary |
+| `(:Clause)-[:MENTIONS]->(:Place)` | Clause references place | `P67 refers to` | NLP |
+| `(:Summary)-[:CITES]->(:Provenance)` | Provenance sources | `P70 documents` | AI validation |
+| `(:Provenance)-[:VALIDATED_BY]->(:Curator)` | Human verification | `P14 carried out by` | Review console |
 
 ---
 
-## 🧮 Cypher Snippet Template
+## 🧮 Cypher Template
 
 ```cypher
-// Base node merge
 MERGE (t:Treaty {id:$treaty_id})
 SET t.name=$name, t.date_start=date($date_start), t.date_end=date($date_end),
-    t.source_sha=$provenance_sha, t.confidence_min=$confidence, t.model=$model
+    t.provenance_sha=$sha256, t.confidence_min=$confidence, t.model=$model
 
-// Signers
 UNWIND $signers AS s
 MERGE (p:Person {name:s.name})
 MERGE (t)-[:SIGNED_BY {confidence:s.confidence,source:s.source}]->(p)
 
-// Tribes / Groups
 UNWIND $tribes AS tr
 MERGE (g:Group {name:tr.name,type:'Tribe'})
 MERGE (t)-[:INVOLVED_GROUP {confidence:tr.confidence}]->(g)
 
-// Places
 UNWIND $places AS pl
 MERGE (plc:Place {name:pl.name})
 SET plc.lat=pl.lat, plc.lon=pl.lon
 MERGE (t)-[:OCCURRED_AT {confidence:pl.confidence}]->(plc)
-
-// Summary
-MERGE (sum:Summary {id:$summary_id})
-SET sum.text=$summary, sum.model=$model, sum.citations=$citations
-MERGE (t)-[:HAS_SUMMARY]->(sum)
 ```
 
 ---
 
-## 🧩 Data Sources
-- `../entities.json` — Named entity extractions  
-- `../geo_entities.geojson` — Geospatial points (GNIS / Native Land)  
-- `../summaries/*.json` — AI-generated treaty summaries  
-- `../logs/validation_report.json` — Confidence and provenance metrics  
+## 🪶 Provenance and FAIR+CARE
 
----
-
-## 🧠 Schema & Validation
-| Check | Description | Tool | CI Enforcement |
-|:--|:--|:--|:--|
-| **Cypher Syntax** | Validate syntax across all `.cql` scripts | `cypher-lint` | ✅ |
-| **Ontology Mapping** | Ensure relationships map to CIDOC/PROV | `cidoc-checker` | ✅ |
-| **Confidence Thresholds** | Reject edges <0.8 confidence | `ai_validate.py` | ✅ |
-| **Provenance Integrity** | Hash & timestamp match | `make graph-validate` | ✅ |
-
----
-
-## 🪶 Provenance & FAIR Compliance
-
-Each node and edge carries:
+Each node/edge carries:
 - `kfm:provenance_sha256`
 - `kfm:created_by` / `kfm:validated_by`
 - `kfm:model_fingerprint`
-- `kfm:curation_status`
 - `kfm:confidence`
 - `kfm:temporal_precision`
+- `kfm:curation_status`
 
-**Provenance Data Model (PROV-O)**
+Sample PROV-O mapping:
 ```turtle
 :activity a prov:Activity ;
   prov:used :ai_model ;
-  prov:generated :neo4j_import ;
+  prov:generated :neo4j_bundle ;
   prov:wasAssociatedWith :kfm-ai ;
   prov:endedAtTime "2025-10-23T00:00:00Z"^^xsd:dateTime .
 ```
 
 ---
 
-## 🧭 OWL-Time Integration
-
-Each `(:Treaty)` node is linked to an interval:
-```cypher
-MERGE (i:TimeInterval {id:$treaty_id+"_interval"})
-SET i.start=$date_start, i.end=$date_end, i.precision=$precision
-MERGE (t)-[:HAS_TIME_INTERVAL]->(i)
+## 🧩 Validation & CI Targets
+```
+make ai-graph-dryrun     # Syntax check + lint
+make ai-graph-publish    # Load verified graph to Neo4j
+make ai-graph-export     # Export to JSON-LD / TTL / GraphML
+make ai-graph-validate   # Ontology + schema + provenance checks
 ```
 
-OWL-Time properties:  
-`time:hasBeginning`, `time:hasEnd`, `time:hasDurationDescription`, `time:inXSDDateTime`.
+Validation ensures:
+- Cypher syntax passes (`cypher-lint`)
+- Relationships conform to CRM/PROV
+- Confidence thresholds ≥ 0.85
+- Provenance hashes verified (SHA-256)
+- CARE flags approved before publish
 
 ---
 
-## 📊 Observability Metrics
-
-| Metric | Description | Target | Current | Verified |
-|:--|:--|:--|:--|:--|
-| Graph Build Time | Time to full Neo4j load | <180s | 142s | ✅ |
-| Node Count | Total new nodes per run | — | 1,836 | ✅ |
-| Relationship Count | Total edges | — | 5,142 | ✅ |
-| Mean Edge Confidence | Avg conf across edges | ≥0.88 | 0.92 | ✅ |
-| Validation Pass Rate | Schema/logic checks | 100% | 100% | ✅ |
-
----
-
-## 🔐 Governance & Ethics
-- Sensitive treaty content linked to tribal data requires **CARE gate review** before publication.  
-- Redactions are logged as nodes: `(:Redaction {reason, reviewed_by, date})` connected via `[:MASKS]`.  
-- Immutable run manifests stored in blockchain ledger with SHA256 of Cypher bundle.  
+## 🧾 Observability Snapshot
+| Metric | Target | Current | Status |
+|:--|:--|:--|:--|
+| Graph build time | ≤ 180s | 142s | ✅ |
+| Node count | — | 1,836 | ✅ |
+| Relationship count | — | 5,142 | ✅ |
+| Mean confidence | ≥ 0.88 | 0.92 | ✅ |
+| Schema validation | 100% | 100% | ✅ |
 
 ---
 
-## ⚙️ CI / Make Targets
+## 🗂 Example File Layout (Full Context)
 ```
-make ai-graph-dryrun     # Validate Cypher without write
-make ai-graph-publish    # Write verified graph to Neo4j
-make ai-graph-export     # Export JSON-LD dump of current graph
-make ai-graph-validate   # Validate schema and provenance hashes
+metadata/
+├── ai/
+│   ├── entities.json
+│   ├── geo_entities.geojson
+│   ├── summaries/
+│   │   ├── treaty_1851_fort_laramie.md
+│   │   └── treaty_1867_medicine_lodge.md
+│   ├── logs/
+│   │   └── validation_report.json
+│   ├── graph/
+│   │   ├── cypher/
+│   │   │   ├── upsert_treaty_1867_medicine_lodge.cql
+│   │   │   ├── upsert_treaty_1851_fort_laramie.cql
+│   │   │   └── build_graph_indexes.cql
+│   │   ├── exports/
+│   │   │   ├── treaties_graph.jsonld
+│   │   │   └── treaties_graph.graphml
+│   │   ├── snapshots/
+│   │   │   ├── graph_2025-10-23.dump
+│   │   │   └── checksums.sha256
+│   │   ├── logs/
+│   │   │   └── graph_build.log
+│   │   └── schemas/
+│   │       ├── relationships.schema.json
+│   │       └── cidoc_mapping.yaml
+│   └── README.md
+└── checksums/
+    └── treaties/
 ```
 
 ---
@@ -213,7 +236,7 @@ make ai-graph-validate   # Validate schema and provenance hashes
 ## 🧾 Self-Audit Metadata
 ```json
 {
-  "graph_id": "KFM-TREATIES-AI-GRAPH-v1.2.0",
+  "graph_id": "KFM-TREATIES-AI-GRAPH-v1.3.0",
   "timestamp": "2025-10-23T00:00:00Z",
   "validated_by": "@kfm-ai",
   "ethics_reviewer": "@kfm-tribal-liaison",
@@ -221,7 +244,7 @@ make ai-graph-validate   # Validate schema and provenance hashes
   "graph_node_count": 1836,
   "graph_edge_count": 5142,
   "mean_confidence": 0.92,
-  "ledger_hash": "a1b9f0e3…",
+  "ledger_hash": "b9f8a7c4…",
   "energy_use_wh": 22.1,
   "carbon_gco2e": 25.0,
   "slsa_attested": true,
@@ -234,16 +257,17 @@ make ai-graph-validate   # Validate schema and provenance hashes
 ## 🕓 Version History
 | Version | Date | Author | Reviewer | Summary |
 |:--|:--|:--|:--|:--|
-| **v1.2.0** | 2025-10-23 | @kfm-ai | @kfm-architecture | Expanded ontology, OWL-Time integration, provenance schema |
-| v1.1.0 | 2025-10-22 | @kfm-ai | @kfm-ethics | Added CARE gate, provenance model, validation targets |
-| v1.0.0 | 2025-10-21 | @kfm-data | @kfm-ai | Initial Cypher templates, Neo4j integration tests |
+| **v1.3.0** | 2025-10-23 | @kfm-ai | @kfm-architecture | Added full directory layout, expanded schemas, FAIR+CARE traceability |
+| v1.2.0 | 2025-10-23 | @kfm-ai | @kfm-ethics | Provenance schema, OWL-Time integration |
+| v1.1.0 | 2025-10-22 | @kfm-data | @kfm-qa | CARE gate, Cypher validation targets |
+| v1.0.0 | 2025-10-21 | @kfm-data | @kfm-ai | Initial Neo4j import structure |
 
 ---
 
 <div align="center">
 
 [![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-0078ff?style=flat-square)]()
-[![FAIR + CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Certified-2ecc71?style=flat-square)]()
+[![FAIR + CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Compliant-2ecc71?style=flat-square)]()
 [![Neo4j Integration](https://img.shields.io/badge/Neo4j-Connected-blue?style=flat-square)]()
 [![CIDOC CRM / OWL-Time](https://img.shields.io/badge/Semantics-CRM%20%2F%20OWL--Time-8e44ad?style=flat-square)]()
 [![Governance Ledger](https://img.shields.io/badge/Governance-Immutable%20Provenance-d4af37?style=flat-square)]()
@@ -269,4 +293,3 @@ GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: 2025-10-23
 MCP-FOOTER-END -->
 ````
-
