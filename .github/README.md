@@ -1,7 +1,7 @@
-
+---
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/ARCHITECTURE.md"
-version: "v4.1.0"
+version: "v4.1.1"
 last_updated: "2025-10-24"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
@@ -20,7 +20,7 @@ validation_reports:
   - "reports/stac/catalog-validation.json"
   - "reports/a11y/web-a11y-audit.json"
 governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-ARCH-OVERVIEW-v4.1.0"
+doc_id: "KFM-ARCH-OVERVIEW-v4.1.1"
 maintainers: ["@kfm-architecture", "@kfm-data", "@kfm-web", "@kfm-ai"]
 approvers: ["@kfm-governance", "@kfm-security", "@kfm-accessibility"]
 reviewed_by: ["@kfm-ethics", "@kfm-fair"]
@@ -84,7 +84,6 @@ The **Kansas Frontier Matrix (KFM)** unifies historical, environmental, and cult
 ---
 
 ## 🗺️ High-Level Architecture
-*(kept identical to v4.0 for continuity; parser-safe syntax)*
 
 ```mermaid
 flowchart LR
@@ -120,11 +119,28 @@ flowchart LR
     Q["AI Summaries"]
   end
 
-  A-->E;B-->E;C-->E;D-->E
-  E-->F-->G-->H-->I
-  F-->K;H-->J;I-->L
-  J-->M;K-->M;L-->M
-  M-->N;M-->O;M-->P;M-->Q
+  A --> E
+  B --> E
+  C --> E
+  D --> E
+
+  E --> F
+  F --> G
+  G --> H
+  H --> I
+
+  F --> K
+  H --> J
+  I --> L
+
+  J --> M
+  K --> M
+  L --> M
+
+  M --> N
+  M --> O
+  M --> P
+  M --> Q
 
 
 ⸻
@@ -137,8 +153,8 @@ flowchart LR
 	•	STAC/DCAT catalog build with CRS/time/license metadata.
 
 2 · Knowledge Graph
-	•	Person, Place, Event, Document, Layer nodes.
-	•	CIDOC CRM relations + OWL-Time intervals + GeoSPARQL geometry.
+	•	Nodes: Person, Place, Event, Document, Layer.
+	•	Semantics: CIDOC CRM relations + OWL-Time intervals + GeoSPARQL geometry.
 
 3 · Asset Store & Catalog
 	•	SHA-256 verified artifacts; immutable URLs; STAC paging.
@@ -164,8 +180,14 @@ Kansas-Frontier-Matrix/
 ├── tests/      # unit/contract/UI/perf
 └── .github/    # workflows + CODEOWNERS
 
-Canonical Make Targets:
-make setup · make data · make test · make stac-validate · make release
+Canonical Make Targets
+
+make setup
+make data
+make test
+make stac-validate
+make release
+
 
 ⸻
 
@@ -204,10 +226,10 @@ Security	CodeQL + Trivy	GitHub Actions
 📈 Performance Budgets
 
 Layer	Metric	Target
-API	p95 < 300 ms	✅
-Web	Cold start < 2.5 s	✅
-Offline	Load < 3 s	✅
-Energy	≤ 25 Wh/run	✅
+API	p95	< 300 ms
+Web	Cold start	< 2.5 s
+Offline	App load	< 3 s
+Energy	Build/run	≤ 25 Wh
 
 
 ⸻
@@ -229,6 +251,7 @@ Sustainability	ISO 50001 / 14064	Energy & carbon logged
 🗓️ Version History
 
 Version	Date	Changes	Author
+v4.1.1	2025-10-24	Fix GitHub rendering: closed mermaid fence, replaced separators, fenced code/trees, tableized lists, corrected badge URL.	@kfm-architecture
 v4.1.0	2025-10-24	Streamlined badges, added callouts and horizontal rule per KFM style.	@kfm-architecture
 v4.0.0	2025-10-22	Original Diamond⁹ Ω release.	@kfm-architecture
 
@@ -238,8 +261,6 @@ v4.0.0	2025-10-22	Original Diamond⁹ Ω release.	@kfm-architecture
 
 <div align="center">
 
-
-![Security Verified](https://img.shields.io/badge/Security-PGP %2B SLSA-008b8b)
 
 </div>
 
@@ -263,4 +284,3 @@ LAST-VALIDATED: 2025-10-24
 MCP-FOOTER-END -->
 
 
----
