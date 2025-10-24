@@ -1,5 +1,4 @@
 
----
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/ARCHITECTURE.md"
 version: "v4.1.0"
