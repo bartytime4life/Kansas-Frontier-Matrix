@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "🧩 Kansas Frontier Matrix — Staging TMP Layer (Temporary Normalized Workspace)"
 path: "data/work/staging/tabular/normalized/tmp/README.md"
