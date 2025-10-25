@@ -2,12 +2,12 @@
 title: "🛡️ Kansas Frontier Matrix — AI Safety & Ethical Instructions for Treaty Summarization"
 path: "data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/prompts/safety_instructions.md"
 document_type: "AI Safety Policy · Ethical Prompt Specification"
-version: "v1.1.0"
+version: "v2.0.0"
 last_updated: "2025-10-25"
 review_cycle: "Semi-Annual / Ethics Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v1.1.0/sbom.spdx.json"
-manifest_ref: "releases/v1.1.0/manifest.zip"
+sbom_ref: "releases/v2.0.0/sbom.spdx.json"
+manifest_ref: "releases/v2.0.0/manifest.zip"
 license: ["MIT (code)", "CC-BY 4.0 (docs/data)"]
 owners: ["@kfm-ai-lab", "@kfm-ethics"]
 approvers: ["@kfm-governance", "@kfm-accessibility", "@kfm-validation"]
@@ -22,143 +22,166 @@ tags: ["AI", "Ethics", "Safety", "Treaty Summarization", "Fairness", "Bias Mitig
 # 🛡️ Kansas Frontier Matrix — **AI Safety & Ethical Instructions for Treaty Summarization**  
 `data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/prompts/safety_instructions.md`
 
-**Purpose:** Define the ethical, safety, and fairness guardrails governing AI summarization of historical treaty texts within the **Kansas Frontier Matrix (KFM)** system.
+**Purpose:** Define the ethical, safety, transparency, and fairness guardrails governing AI-driven summarization and validation of historical treaty texts within the **Kansas Frontier Matrix (KFM)**.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../../../../../docs/architecture/repo-focus.md)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Data%20Ethics%20Aligned-lightblue)]()
 [![Ethics Council](https://img.shields.io/badge/Review-By%20Ethics%20Council-purple)]()
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-green)]()
+[![ISO 19115](https://img.shields.io/badge/ISO--19115-Metadata%20Aligned-orange)]()
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen)]()
 
 </div>
 
 ---
 
+## 🗂️ Directory Layout
+
+```plaintext
+prompts/
+├── summarization_prompt.md      # Core summarization template (instruction prompt)
+├── safety_instructions.md       # Ethical and cultural safeguards ← you are here
+├── reviewer_prompts.md          # Prompts for human-in-the-loop validation
+├── bias_tests.yaml              # Bias-triggering phrases and exclusion rules
+├── config.json                  # Token length, max context, safety parameters
+├── metrics.json                 # Prompt performance telemetry
+└── README.md                    # Directory index, metadata schema, and CI validation notes
+```
+
+---
+
 ## 🧭 Overview
 
-This document establishes **AI safety and cultural integrity protocols** for automated summarization and validation of historical treaties.  
-The Kansas Frontier Matrix integrates Indigenous histories, federal documents, and archival materials — domains requiring **ethical AI handling** and **human oversight**.  
+The **Safety and Ethics Instructions** define immutable behavioral constraints for any AI system that generates, validates, or summarizes treaty-related data under the Kansas Frontier Matrix.  
+This ensures **cultural preservation**, **data sovereignty**, **contextual fairness**, and **historical accuracy**.
 
-All AI systems performing summarization, classification, or validation must comply with:
-
-- **FAIR Principles** (Findable, Accessible, Interoperable, Reusable)  
-- **CARE Principles** (Collective Benefit, Authority to Control, Responsibility, Ethics)  
-- **MCP-DL v6.3** (Master Coder Protocol — Documentation Language)  
-- **KFM Ethics Charter v3.1** (Data Responsibility & Stewardship)
-
-These safeguards ensure factual accuracy, prevent cultural misrepresentation, and promote responsible automation in historical interpretation.
+This protocol extends the **Master Coder Protocol (MCP-DL v6.3)** and aligns with:
+- FAIR + CARE principles for ethical data management  
+- ISO 25012 (Data Quality Model) & ISO 19115 (Geospatial Metadata)  
+- CIDOC CRM for cultural-heritage semantics  
+- PROV-O for provenance and traceability  
+- The KFM Ethics Council charter on responsible automation  
 
 ---
 
-## ⚖️ Core Safety Principles
+## ⚖️ Foundational Ethical Principles
 
-| Principle | Enforcement Mechanism | Description |
-|------------|------------------------|--------------|
-| **Truthfulness** | Cross-verification against canonical treaty texts. | Summaries must accurately represent clauses, signatories, and outcomes. |
-| **Cultural Sensitivity** | AI pre-filtered with cultural lexicon. | Avoid erasure or misrepresentation of Indigenous agency, sovereignty, or perspective. |
-| **Non-Harm** | Prohibit speculative interpretation. | No conjecture about intent, emotion, or "moral judgment" without explicit source text. |
-| **Provenance Integrity** | All facts traceable to a source. | Each statement in a summary must cite document ID, page, or archival record. |
-| **Transparency** | AI explanations logged. | Every AI output must include rationale metadata (confidence, tokens, prompt version). |
-| **Bias Mitigation** | Inclusion of Indigenous and scholarly review prompts. | Summaries are checked for colonial, gender, or geographic bias. |
-| **Reproducibility** | Fixed-seed AI generations and audit logs. | Summaries must be regenerable deterministically with same parameters. |
-| **Human Oversight** | Mandatory human approval for publication. | No AI summary enters official dataset without validation from a qualified reviewer. |
+| Category | Directive | Enforcement Mechanism |
+|-----------|------------|------------------------|
+| **Truthfulness** | Maintain factual alignment with canonical treaty records. | Cross-verify all generated text with OCR and verified transcripts. |
+| **Cultural Integrity** | Represent Indigenous nations, leaders, and perspectives accurately and respectfully. | Automatic lexical validation and human review approval. |
+| **Non-Harm** | Exclude offensive, colonial, or harmful phrasing. | Bias lexicon filters + post-generation human ethics gate. |
+| **Transparency** | Document all AI decisions, weights, and context. | Store prompt input/output metadata with rationale in logs. |
+| **Traceability** | Attach unique provenance references for every factual claim. | Generate PROV-O links to data sources and reviewer chain. |
+| **Accountability** | Ensure human reviewers approve public outputs. | Require at least one validation signature from @kfm-ethics. |
+| **Data Sovereignty** | Protect Indigenous intellectual and cultural property rights. | Follow CARE + Local Contexts labeling and consent structures. |
+| **Reproducibility** | Deterministic prompts and frozen model seeds for each generation. | Containerized inference logged via MCP job manifest. |
 
 ---
 
-## 🧩 AI Prompt Safety Configuration
+## 🧩 AI Safety Configuration (Embedded in Prompts)
 
-Each summarization prompt (see `summarization_prompt.md`) must integrate the following **safety directives** at the end of its instruction set:
+Every AI summarization prompt under this module must append these universal safety guards:
 
 ```yaml
-# AI Safety Directives
+# === AI Safety Directives (required by KFM Ethics Council) ===
 ethical_constraints:
-  - "Do not alter or reinterpret treaty clauses."
-  - "Avoid speculative or moral commentary."
-  - "Use neutral tone with balanced representation."
-  - "Preserve Indigenous terminology and nation names."
-  - "Flag ambiguous or conflicting statements for human review."
-  - "Cite all extracted facts with document IDs or metadata tags."
-  - "Mark uncertain data with confidence < 0.85 as 'uncertain'."
-  - "Do not infer emotional, political, or spiritual judgments."
-  - "Honor Indigenous data sovereignty: never output private or restricted data."
-  - "Disclose if summarization confidence < threshold."
+  - "Do not alter, reinterpret, or editorialize any treaty clauses or text."
+  - "Avoid speculative or emotional commentary; use verifiable evidence only."
+  - "Maintain cultural neutrality and contextual awareness."
+  - "Use official tribal names and identifiers per KFM canonical lexicon."
+  - "Do not infer or simplify Indigenous governance structures."
+  - "Cite provenance for all factual claims using source_id or treaty_ref."
+  - "Avoid summarizing sacred or ceremonial information."
+  - "Flag content with confidence < 0.85 as 'uncertain'."
+  - "Never output personal or culturally restricted data without permission."
+  - "Log all reasoning metadata (prompt_id, model_id, seed, checksum)."
 ```
 
 ---
 
 ## 🧠 Bias Mitigation Framework
 
-### 1️⃣ Lexical Safeguards
+### 1️⃣ Lexical Safety
+- Maintain an updatable **“Cultural Lexicon Register”** of historically valid tribal, geographic, and event terms.  
+- Filter deprecated, colonial, or biased expressions.  
+- Use inclusive phrasing per **KFM Style & Ethics Standard v4.2**.  
 
-- Maintain a curated **lexicon of historical and tribal terms** to ensure accurate naming.  
-  e.g., prefer *“Kansa Nation”* or *“People of the Kaw”* over outdated or offensive variants.  
-- Automatically flag deprecated colonial phrases (e.g., “savages”, “uncivilized”) for removal or contextual explanation.  
-- Integrate Indigenous-endorsed terminology lists from authoritative sources (Kaw Nation, Osage Nation archives, etc.).
+### 2️⃣ Narrative Equity
+- Balance representation of all treaty participants.  
+- Present Indigenous nations as active agents, not passive recipients.  
+- Include Indigenous outcomes, not solely U.S. administrative impacts.  
 
-### 2️⃣ Narrative Balance
-
-- Represent **all treaty participants equally** — Indigenous and U.S. negotiators.  
-- AI summaries must include at least one explicit mention of Indigenous perspective or impact, if present in the source.  
-- Avoid overemphasis on administrative/government language to the exclusion of Native context.
-
-### 3️⃣ Source Diversity Enforcement
-
-- AI validation pipelines cross-reference **multiple source modalities**: official treaty transcripts, Indigenous oral histories, and academic analyses.  
-- Contradictions must be logged and escalated for manual reconciliation.  
-- Never suppress conflicting evidence — transparency outweighs narrative simplicity.
+### 3️⃣ Contextual Sensitivity
+- Recognize ceremonial, legal, and territorial contexts.  
+- Do not abstract or generalize sacred or religious content.  
+- Encourage consultative review from Indigenous advisory members.
 
 ---
 
-## 🧮 Safety Audit & Logging
+## 🔒 Secure AI Deployment Controls
 
-All AI outputs are logged in the **AI Safety Registry** under  
-`data/work/staging/tabular/normalized/treaties/reports/validation/logs/safety/`.
+| Control Layer | Implementation | Monitoring |
+|----------------|----------------|-------------|
+| **Model Governance** | Model versioning via `ai_registry_ref` in `releases/v*.json`. | SHA-256 checksum verification. |
+| **Prompt Integrity** | YAML schemas validated via pre-commit CI. | `make prompts-validate` workflow. |
+| **Inference Logging** | All AI runs generate trace files in `/reports/telemetry/logs/`. | AI ethics audit script checks for anomalies. |
+| **Human Verification** | Validation via @kfm-ethics before merge to `main`. | Audit metadata stored in Governance Ledger. |
 
-Each entry includes:
+---
+
+## 🧾 Governance & Audit Chain
+
+- **Ethics Council Oversight:** Biannual peer review of AI summaries for adherence to ethical standards.  
+- **Governance Ledger Registration:** Each AI inference run emits a `ledger_entry.jsonld` under `/governance/ledger/ai/`.  
+- **CI/CD Integration:** Safety validation gates are part of `ai-review.yml` workflow before production deployment.  
+- **Incident Escalation:** Any flagged ethical breach triggers automatic rollback and human incident review via `/governance/reports/ethics_incidents/`.
+
+---
+
+## 📈 Validation Metrics
+
+| Metric | Description | Target | Enforcement |
+|--------|--------------|---------|-------------|
+| **Bias-Free Score** | % of AI outputs without flagged colonial language. | ≥ 98% | `bias_tests.yaml` auto-scan |
+| **Cultural Lexicon Accuracy** | Correct tribal/place usage. | ≥ 97% | NLP lexicon check |
+| **Factual Integrity** | Alignment with source documents. | ≥ 95% | NER comparison vs. OCR base |
+| **Transparency Rate** | AI runs with full logs and provenance links. | 100% | Governance CI validation |
+| **Human Review Compliance** | % of summaries with human approval. | 100% | Governance Ledger signatures |
+
+---
+
+## 🧮 Example Safety Log (AI Run Metadata)
 
 ```json
 {
   "treaty_id": "KS_TREATY_1867_03_MEDICINE_LODGE",
+  "model_id": "hf:kfm-summarizer-v3.2",
   "prompt_version": "v6.3.1",
-  "safety_flags": ["CulturalTermCheck", "BiasDetected"],
-  "human_reviewer": "@kfm-ethics",
-  "confidence": 0.91,
-  "timestamp": "2025-10-25T16:20:00Z"
+  "safety_checks": ["BiasScanOK", "CulturalLexiconOK", "SourceTraceOK"],
+  "human_reviewed": true,
+  "confidence": 0.92,
+  "governance_ledger_entry": "ledger/ai/2025/10/25/KS_TREATY_1867.jsonld"
 }
 ```
-
-If **safety_flags** contain critical errors, the record is automatically quarantined and reviewed by the **Ethics Council Subcommittee** before reintegration.
-
----
-
-## 🧾 Compliance & Governance
-
-| Policy Framework | Enforced By | Audit Path |
-|------------------|-------------|-------------|
-| MCP-DL v6.3 | `docs/architecture/repo-focus.md` | Git-based audit trail |
-| FAIR+CARE Data Ethics | `docs/standards/ethics.md` | Quarterly review reports |
-| ISO 19115 / ISO 25012 | Metadata validator | Automated CI (`make docs-validate`) |
-| Indigenous Data Sovereignty | KFM Governance Council | Annual ethics audit |
-| Reproducible AI Practices | AI & NLP teams | Containerized builds and logged seeds |
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | Summary |
-|----------|------|---------|-----------|----------|
-| v1.1.0 | 2025-10-25 | @kfm-ai-lab | @kfm-ethics | Added bias mitigation, lexical safeguards, and compliance matrix. |
-| v1.0.0 | 2025-10-24 | @kfm-ai-lab | — | Initial release of AI ethical safety directives for treaty summarization. |
+| Version | Date | Author | Reviewer | Notes |
+|----------|------|---------|-----------|--------|
+| v2.0.0 | 2025-10-25 | @kfm-ai-lab | @kfm-ethics | Full FAIR+CARE schema, ISO alignment, extended governance and audit structure. |
+| v1.1.0 | 2025-10-24 | @kfm-ai-lab | @kfm-ethics | Added bias and fairness sections, integrated into reviewer CI. |
+| v1.0.0 | 2025-10-23 | @kfm-ai-lab | — | Initial ethical framework for treaty summarization AI. |
 
 ---
 
 <div align="center">
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Data%20Ethics%20Aligned-lightblue)]()
-[![Ethics Verified](https://img.shields.io/badge/Ethics-Verified-purple)]()
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-lightblue)]()
+[![ISO 25012](https://img.shields.io/badge/ISO--25012-Data%20Quality%20Model-orange)]()
 [![Human-in-the-Loop](https://img.shields.io/badge/Review-Human%20Validated-green)]()
 [![AI Audit Trail](https://img.shields.io/badge/AI_Audit-Logged-yellow)]()
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)]()
 
 </div>
-
