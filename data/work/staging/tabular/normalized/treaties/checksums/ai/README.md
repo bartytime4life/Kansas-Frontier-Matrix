@@ -78,7 +78,7 @@ flowchart TD
     C --> D["AI Integrity Logger"]
     D --> E["Governance Ledger Entry"]
     E --> F["Cross-Link to PROV-O Entity Graph"]
----
+```
 
 ## 🧩 File Schema & Examples
 
