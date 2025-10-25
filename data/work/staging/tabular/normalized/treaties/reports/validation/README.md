@@ -67,12 +67,12 @@ data/work/staging/tabular/normalized/treaties/reports/validation/
 
 ```mermaid
 flowchart TD
-    A[AI Treaty Reports] --> B[Schema Validation (STAC/DCAT)]
-    B --> C[Semantic Validation (CIDOC CRM / OWL-Time)]
-    C --> D[Provenance Validation (PROV-O)]
-    D --> E[Quality Scoring + FAIR Metrics]
-    E --> F[Validation Report + Summary Output]
-    F --> G[data/work/staging/tabular/normalized/treaties/reports/archive/]
+    A["AI Treaty Reports"] --> B["Schema Validation – STAC/DCAT"]
+    B --> C["Semantic Validation – CIDOC CRM / OWL-Time"]
+    C --> D["Provenance Validation – PROV-O"]
+    D --> E["Quality Scoring + FAIR Metrics"]
+    E --> F["Validation Report + Summary Output"]
+    F --> G["data/work/staging/tabular/normalized/treaties/reports/archive/"]
 ```
 
 ---
