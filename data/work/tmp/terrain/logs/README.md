@@ -69,13 +69,13 @@ Each entry is explainable, reproducible, and ledger-anchored in the governance b
 
 ```mermaid
 graph TD
-A[Terrain ETL Logs] --> B[Focus Mode AI (Explainability + Drift Detection)]
-B --> C[AI Ethics Model (Self-Audit Learning)]
-C --> D[Governance Council + FAIR Board]
-D --> E[Human Reviewers · MCP Ethics Committee]
-E --> F[Immutable Blockchain Ledger]
-F --> G[AI Model Retraining + Regeneration Feedback]
-G --> B
+    A["Terrain ETL Logs"] --> B["Focus Mode AI – Explainability + Drift Detection"]
+    B --> C["AI Ethics Model – Self-Audit Learning"]
+    C --> D["Governance Council + FAIR Board"]
+    D --> E["Human Reviewers · MCP Ethics Committee"]
+    E --> F["Immutable Blockchain Ledger"]
+    F --> G["AI Model Retraining + Regeneration Feedback"]
+    G --> B
 ```
 
 ---
