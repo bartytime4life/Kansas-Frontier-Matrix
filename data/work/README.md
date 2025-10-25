@@ -66,13 +66,13 @@ data drift, fairness, and compliance with the **Master Coder Protocol (MCP-DL v6
 
 ```mermaid
 graph TD
-A[Data Sources] --> B[ETL Pipelines (/src/pipelines)]
-B --> C[Work Directory (Temporary Sandbox)]
-C --> D[Processed Data (/data/processed)]
-D --> E[STAC Catalog + Provenance (/data/stac)]
-E --> F[Checksums & FAIR+CARE Reports (/data/checksums)]
-C --> G[AI Focus Mode (Validation + Drift Detection)]
-G --> H[Governance Dashboards + Autonomous Audit Trails]
+    A["Data Sources"] --> B["ETL Pipelines – /src/pipelines"]
+    B --> C["Work Directory – Temporary Sandbox"]
+    C --> D["Processed Data – /data/processed"]
+    D --> E["STAC Catalog + Provenance – /data/stac"]
+    E --> F["Checksums & FAIR+CARE Reports – /data/checksums"]
+    C --> G["AI Focus Mode – Validation + Drift Detection"]
+    G --> H["Governance Dashboards + Autonomous Audit Trails"]
 ```
 
 ---
