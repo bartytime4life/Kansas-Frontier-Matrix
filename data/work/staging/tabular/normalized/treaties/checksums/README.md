@@ -63,11 +63,11 @@ for every Kansas treaty dataset — ensuring that historical documents remain
 
 ```mermaid
 flowchart TD
-A[data/raw/treaties/*.csv|*.pdf] --> B[data/work/staging/tabular/normalized/treaties/]
-B --> C[data/work/staging/tabular/normalized/treaties/checksums/]
-C --> D[data/processed/treaties/]
-D --> E[data/stac/treaties/]
-E --> F[Blockchain Ledger / FAIR+CARE Governance]
+    A["data/raw/treaties/*.csv · *.pdf"] --> B["data/work/staging/tabular/normalized/treaties/"]
+    B --> C["data/work/staging/tabular/normalized/treaties/checksums/"]
+    C --> D["data/processed/treaties/"]
+    D --> E["data/stac/treaties/"]
+    E --> F["Blockchain Ledger · FAIR+CARE Governance"]
 ```
 
 ---
