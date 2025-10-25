@@ -69,15 +69,15 @@ data/work/staging/tabular/normalized/treaties/reports/audit/
 
 ```mermaid
 flowchart TD
-    A[AI Reports] --> B[Audit Engine]
-    B --> C[Schema Validation (STAC/DCAT)]
-    B --> D[Provenance Crosscheck (PROV-O)]
-    B --> E[Semantic Consistency (CIDOC CRM / OWL-Time)]
-    C --> F[Checksum + Metadata Verification]
+    A["AI Reports"] --> B["Audit Engine"]
+    B --> C["Schema Validation – STAC/DCAT"]
+    B --> D["Provenance Crosscheck – PROV-O"]
+    B --> E["Semantic Consistency – CIDOC CRM / OWL-Time"]
+    C --> F["Checksum + Metadata Verification"]
     D --> F
     E --> F
-    F --> G[Governance Ledger Update]
-    G --> H[Archive Approval]
+    F --> G["Governance Ledger Update"]
+    G --> H["Archive Approval"]
 ```
 
 ---
