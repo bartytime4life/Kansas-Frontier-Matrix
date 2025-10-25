@@ -66,13 +66,13 @@ Focus Mode AI observes, learns, and optimizes every temporary data operation.
 
 ```mermaid
 graph TD
-A[Data Sources] --> B[ETL Pipelines (/src/pipelines)]
-B --> C[Temporary Workspace (data/work/tmp)]
-C --> D[Processed Datasets (/data/processed)]
-D --> E[STAC Metadata & Provenance (/data/stac)]
-C --> F[AI Focus Mode (Drift Detection + Feedback)]
-F --> G[Governance Dashboard · FAIR+CARE+Ethics Reports]
-G --> H[Autonomous Feedback Loop · Regeneration + Oversight]
+    A[Data Sources] --> B[ETL Pipelines · src/pipelines]
+    B --> C[Temporary Workspace · data/work/tmp]
+    C --> D[Processed Datasets · data/processed]
+    D --> E[STAC Metadata & Provenance · data/stac]
+    C --> F[AI Focus Mode · Drift Detection + Feedback]
+    F --> G[Governance Dashboard · FAIR+CARE+Ethics Reports]
+    G --> H[Autonomous Feedback Loop · Regeneration + Oversight]
 ```
 
 The **Temporary Workspace** acts as KFM’s *short-term memory* —  
