@@ -68,16 +68,13 @@ Temporary data stored here are:
 
 ```mermaid
 flowchart TD
-    A[Raw Source Data] --> B[ETL Pipeline (src/pipelines/normalize.py)]
-    B --> C[Staging TMP Layer (data/work/staging/tabular/normalized/tmp)]
-    C --> D[Schema Validation + Provenance Audit]
-    D --> E[Commit to Normalized Tabular Dataset]
-    E --> F[Checksums + Governance Ledger Update]
-    F --> G[Archive TMP Logs & Cleanup (make clean-tmp)]
+    A["Raw Source Data"] --> B["ETL Pipeline – src/pipelines/normalize.py"]
+    B --> C["Staging TMP Layer – data/work/staging/tabular/normalized/tmp"]
+    C --> D["Schema Validation + Provenance Audit"]
+    D --> E["Commit to Normalized Tabular Dataset"]
+    E --> F["Checksums + Governance Ledger Update"]
+    F --> G["Archive TMP Logs & Cleanup – make clean-tmp"]
 ```
-%% END OF MERMAID %%
-
----
 
 ## 🧩 Workflow Integration
 
