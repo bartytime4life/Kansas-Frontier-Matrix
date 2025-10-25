@@ -73,13 +73,13 @@ The checksum manifests are used in:
 
 ```mermaid
 flowchart TD
-    A[Raw Treaty / Summary Data] --> B[Checksum Generator (sha256sum)]
-    B --> C[Manifest Consolidation → treaties_YYYY_QN.sha256]
-    C --> D[Integrity Validator CI Job]
-    D --> E[Governance Ledger Signature]
-    E --> F[Immutable Archive Storage]
+    A["Raw Treaty / Summary Data"] --> B["Checksum Generator – sha256sum"]
+    B --> C["Manifest Consolidation → treaties_YYYY_QN.sha256"]
+    C --> D["Integrity Validator CI Job"]
+    D --> E["Governance Ledger Signature"]
+    E --> F["Immutable Archive Storage"]
 ```
-%% END OF MERMAID %%
+
 
 ---
 
