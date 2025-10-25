@@ -198,11 +198,11 @@ data/work/staging/tabular/normalized/treaties/reports/validation/stac/
 
 ```mermaid
 flowchart TD
-    A[STAC Datasets] --> B[Schema Validation (STAC 1.0 / DCAT 3.0)]
-    B --> C[GeoJSON + ISO 19115 Checks]
-    C --> D[FAIR+CARE + Provenance Verification]
-    D --> E[Governance Ledger Sync]
-    E --> F[STAC Validation Report Publication]
+    A["STAC Datasets"] --> B["Schema Validation – STAC 1.0 / DCAT 3.0"]
+    B --> C["GeoJSON + ISO 19115 Checks"]
+    C --> D["FAIR+CARE + Provenance Verification"]
+    D --> E["Governance Ledger Sync"]
+    E --> F["STAC Validation Report Publication"]
 ```
 
 ---
