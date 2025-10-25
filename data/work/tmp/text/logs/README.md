@@ -70,13 +70,13 @@ in the Knowledge Graph and Blockchain Ledger for eternal reproducibility.
 
 ```mermaid
 graph LR
-A[Text ETL Logs] --> B[Focus Mode AI (Explainability + Drift Detection)]
-B --> C[FAIR+CARE Dashboard]
-B --> D[Ethics Review Board (Human Oversight)]
-C --> E[Governance Council]
-E --> F[Neo4j Knowledge Graph]
-F --> G[Immutable Ledger & Blockchain Layer]
-G --> H[Autonomous Audit Feedback Loop]
+    A["Text ETL Logs"] --> B["Focus Mode AI – Explainability + Drift Detection"]
+    B --> C["FAIR+CARE Dashboard"]
+    B --> D["Ethics Review Board – Human Oversight"]
+    C --> E["Governance Council"]
+    E --> F["Neo4j Knowledge Graph"]
+    F --> G["Immutable Ledger & Blockchain Layer"]
+    G --> H["Autonomous Audit Feedback Loop"]
 ```
 
 ---
