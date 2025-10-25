@@ -69,12 +69,12 @@ without impacting production data or published artifacts.
 
 ```mermaid
 graph TD
-A[OCR Inputs + Raw Text Sources] --> B[Text ETL Pipelines (/src/pipelines/text_pipeline.py)]
-B --> C[Temporary Text Workspace (data/work/tmp/text)]
-C --> D[AI Focus Mode (Explainability + Drift Analysis)]
-D --> E[Governance Dashboard (FAIR+CARE+Ethics Reporting)]
-C --> F[Processed Text Outputs (/data/processed/text)]
-F --> G[STAC Metadata + Provenance (/data/stac/text)]
+    A["OCR Inputs + Raw Text Sources"] --> B["Text ETL Pipelines – /src/pipelines/text_pipeline.py"]
+    B --> C["Temporary Text Workspace – data/work/tmp/text"]
+    C --> D["AI Focus Mode – Explainability + Drift Analysis"]
+    D --> E["Governance Dashboard – FAIR+CARE+Ethics Reporting"]
+    C --> F["Processed Text Outputs – /data/processed/text"]
+    F --> G["STAC Metadata + Provenance – /data/stac/text"]
 ```
 
 ---
