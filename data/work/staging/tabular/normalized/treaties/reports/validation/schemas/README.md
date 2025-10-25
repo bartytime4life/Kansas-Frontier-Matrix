@@ -234,11 +234,11 @@ prov:ValidationRecordShape a sh:NodeShape ;
 
 ```mermaid
 flowchart TD
-    A[Schema Drafting] --> B[JSON Schema Definition]
-    B --> C[FAIR+CARE Validation Integration]
-    C --> D[Ontology (CIDOC CRM / PROV-O) Mapping]
-    D --> E[ISO Compliance Validation]
-    E --> F[Governance Ledger Registration]
+    A["Schema Drafting"] --> B["JSON Schema Definition"]
+    B --> C["FAIR+CARE Validation Integration"]
+    C --> D["Ontology – CIDOC CRM / PROV-O Mapping"]
+    D --> E["ISO Compliance Validation"]
+    E --> F["Governance Ledger Registration"]
 ```
 
 ---
