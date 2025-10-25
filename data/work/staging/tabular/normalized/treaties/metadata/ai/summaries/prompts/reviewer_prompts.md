@@ -65,9 +65,7 @@ flowchart TD
     D --> E["Human Validator Cross-Check"]
     E --> F["Reports → data/work/staging/tabular/normalized/treaties/reports/validation/reports/"]
     F --> G["Governance Ledger / FAIR+CARE Council"]
-
-%% END OF MERMAID %%
----
+```
 
 ## 🧠 Reviewer Prompts
 
