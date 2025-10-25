@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "✅ Kansas Frontier Matrix — AI Treaty Validation Logs · Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
 path: "data/work/staging/tabular/normalized/treaties/logs/ai/validation/README.md"
