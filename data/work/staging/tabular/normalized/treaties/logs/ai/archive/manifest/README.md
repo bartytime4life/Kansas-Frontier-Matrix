@@ -66,15 +66,13 @@ Each manifest component—`ai_archive_manifest.json`, `provenance_chain.json`, a
 
 ```mermaid
 flowchart LR
-    A[AI Run Log (raw/validation)] --> B[ai_archive_manifest.json]
-    B --> C[provenance_chain.json]
-    C --> D[STAC_collection.json]
-    D --> E[DCAT_dataset_catalog.json]
-    E --> F[Governance Ledger (ledger/ai/YYYY/MM/)]
-    F --> G[Immutable Archive Records]
+    A["AI Run Log – raw/validation"] --> B["ai_archive_manifest.json"]
+    B --> C["provenance_chain.json"]
+    C --> D["STAC_collection.json"]
+    D --> E["DCAT_dataset_catalog.json"]
+    E --> F["Governance Ledger – ledger/ai/YYYY/MM/"]
+    F --> G["Immutable Archive Records"]
 ```
-%% END OF MERMAID %%
-
 ---
 
 ## 🧩 Manifest Specifications
