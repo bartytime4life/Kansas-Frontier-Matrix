@@ -69,13 +69,13 @@ All transformations are tracked, explainable, and cryptographically verified in 
 
 ```mermaid
 graph TD
-A[Temporary Terrain Workspace] --> B[AI Focus Mode (Validation + Drift Detection)]
-B --> C[FAIR+CARE Dashboard]
-B --> D[AI Explainability Engine (SHAP/LIME)]
-C --> E[Governance Council + Ethics Board]
-E --> F[Neo4j Knowledge Graph]
-F --> G[Immutable Ledger & Sustainability Index]
-G --> H[Autonomous Feedback Loop · Terrain Model Regeneration]
+    A["Temporary Terrain Workspace"] --> B["AI Focus Mode – Validation + Drift Detection"]
+    B --> C["FAIR+CARE Dashboard"]
+    B --> D["AI Explainability Engine – SHAP/LIME"]
+    C --> E["Governance Council + Ethics Board"]
+    E --> F["Neo4j Knowledge Graph"]
+    F --> G["Immutable Ledger & Sustainability Index"]
+    G --> H["Autonomous Feedback Loop · Terrain Model Regeneration"]
 ```
 
 ---
