@@ -138,11 +138,11 @@ data/work/staging/tabular/normalized/treaties/reports/archive/1860s/validation/
 
 ```mermaid
 flowchart TD
-    A[Historical Archive Entries] --> B[Schema Validation]
-    B --> C[Provenance Verification (CIDOC CRM / PROV-O)]
-    C --> D[FAIR+CARE Ethical Audit]
-    D --> E[Governance Ledger Sync]
-    E --> F[Validation Report Publication]
+    A["Historical Archive Entries"] --> B["Schema Validation"]
+    B --> C["Provenance Verification – CIDOC CRM / PROV-O"]
+    C --> D["FAIR+CARE Ethical Audit"]
+    D --> E["Governance Ledger Sync"]
+    E --> F["Validation Report Publication"]
 ```
 
 ---
