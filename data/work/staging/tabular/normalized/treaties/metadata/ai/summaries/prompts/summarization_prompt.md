@@ -201,14 +201,13 @@ Summarize the following treaty text faithfully:
 
 ```mermaid
 flowchart TD
-    A[Raw Treaty Text (OCR/Transcribed)] --> B[Summarization Prompt Template]
-    B --> C[AI Summarizer Engine (src/nlp/summary_generator.py)]
-    C --> D[Safety + Ethics Validator (safety_instructions.md)]
-    D --> E[Reviewer Validation Layer (reviewer_prompts.md)]
-    E --> F[Storage → data/work/staging/tabular/normalized/treaties/summaries/]
-    F --> G[Graph Loader → Neo4j / FAIR+CARE Ledger]
+    A["Raw Treaty Text – OCR/Transcribed"] --> B["Summarization Prompt Template"]
+    B --> C["AI Summarizer Engine – src/nlp/summary_generator.py"]
+    C --> D["Safety + Ethics Validator – safety_instructions.md"]
+    D --> E["Reviewer Validation Layer – reviewer_prompts.md"]
+    E --> F["Storage → data/work/staging/tabular/normalized/treaties/summaries/"]
+    F --> G["Graph Loader → Neo4j / FAIR+CARE Ledger"]
 ```
-%% END OF MERMAID %%
 
 ---
 
