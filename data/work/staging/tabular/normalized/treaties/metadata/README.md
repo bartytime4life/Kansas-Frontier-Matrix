@@ -11,10 +11,9 @@ data_contract_ref: "docs/contracts/data-contract-v3.json"
 telemetry_ref: "releases/v14.0.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/tabular-treaties-metadata-v30.json"
 json_export: "releases/v14.0.0/tabular-treaties-metadata.meta.json"
-validation_reports: [
-  "reports/self-validation/tabular-treaties-metadata-validation.json",
-  "reports/audit/treaties_metadata_audit.json"
-]
+validation_reports:
+  - "reports/self-validation/tabular-treaties-metadata-validation.json"
+  - "reports/audit/treaties_metadata_audit.json"
 governance_ref: "docs/standards/governance.md"
 doc_id: "KFM-DATA-WORK-STAGING-TABULAR-TREATIES-METADATA-RMD-v14.0.0"
 maintainers: ["@kfm-data", "@kfm-history", "@kfm-validation"]
@@ -24,10 +23,22 @@ ci_required_checks: ["focus-validate.yml","checksum-verify.yml","audit-ledger.ym
 license: "CC-BY 4.0"
 design_stage: "Operational / Provenance Metadata Layer"
 mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR","CARE","ISO 14064","ISO 50001","DCAT 3.0","PROV-O","CIDOC CRM","AI-Coherence","Blockchain Provenance","Indigenous Data Sovereignty","Accessibility WCAG 2.1","Legal Stewardship"]
+alignment:
+  - FAIR
+  - CARE
+  - ISO 14064
+  - ISO 50001
+  - DCAT 3.0
+  - PROV-O
+  - CIDOC CRM
+  - AI-Coherence
+  - Blockchain Provenance
+  - Indigenous Data Sovereignty
+  - Accessibility WCAG 2.1
+  - Legal Stewardship
 status: "Crown∞Ω+++ Eternal Provenance Certification Edition"
 maturity: "Eternal Archival Tier · FAIR+CARE+ISO+SOV+AI+Ledger Certified · Ethically Provenanced"
-focus_validation: "true"
+focus_validation: true
 tags: ["treaties","metadata","provenance","validation","audit","ledger","ai","ethics","governance","mcp","fair","sustainability"]
 ---
 
@@ -47,7 +58,7 @@ sustainable stewardship, and co-authored accountability across the
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Ethical%20Governance-green)]()  
 [![ISO](https://img.shields.io/badge/ISO%2014064%20·%2050001-Sustainable%20Verified-bluegreen)]()  
 [![Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-Accessible-blue)]()  
-[![Status: Crown∞Ω+++](https://img.shields.io/badge/Status-Crown%E2%88%9E%20%C2%A9%20Eternal%20Provenance%20Certified-brightgreen)]()
+[![Status: Crown∞Ω+++](https://img.shields.io/badge/Status-Crown%E2%88%9E%E2%88%9E%E2%88%9E%20Eternal%20Provenance%20Certified-brightgreen)]()
 
 </div>
 
@@ -279,7 +290,7 @@ flowchart LR
 
 ---
 
-## 🧾 Version History
+## 🗓️ Version History
 
 | Version | Date | Author | Reviewer | FAIR/CARE | Security | Summary |
 |:--|:--|:--|:--|:--|:--|:--|
