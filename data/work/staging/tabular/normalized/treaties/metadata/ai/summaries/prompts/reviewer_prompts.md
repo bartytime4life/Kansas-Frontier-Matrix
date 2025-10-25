@@ -1,13 +1,13 @@
 ---
 title: "🤖 Kansas Frontier Matrix — AI Reviewer Prompts for Treaty Summaries"
 path: "data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/prompts/reviewer_prompts.md"
-document_type: "AI Prompt Definition · Validation Workflow"
-version: "v1.0.1"
+document_type: "AI Validation · Reviewer Prompt Specification"
+version: "v1.1.0"
 last_updated: "2025-10-25"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v1.0.1/sbom.spdx.json"
-manifest_ref: "releases/v1.0.1/manifest.zip"
+sbom_ref: "releases/v1.1.0/sbom.spdx.json"
+manifest_ref: "releases/v1.1.0/manifest.zip"
 license: ["MIT (code)", "CC-BY 4.0 (data/docs)"]
 owners: ["@kfm-ai-lab", "@kfm-architecture"]
 approvers: ["@kfm-validation", "@kfm-governance"]
@@ -22,12 +22,12 @@ tags: ["AI", "Treaties", "Reviewer Prompts", "Validation", "MCP-DL", "NLP", "Kno
 # 🤖 Kansas Frontier Matrix — **AI Reviewer Prompts for Treaty Summaries**  
 `data/work/staging/tabular/normalized/treaties/metadata/ai/summaries/prompts/reviewer_prompts.md`
 
-**Purpose:** Define, version, and maintain the official **AI Reviewer Prompt Set** used to validate machine-generated treaty summaries within the *Kansas Frontier Matrix (KFM)* knowledge ecosystem.
+**Purpose:** Define and govern the official **AI Reviewer Prompt Set** used to validate treaty summaries within the *Kansas Frontier Matrix (KFM)* knowledge graph system.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../../../../../docs/architecture/repo-focus.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../../../../../../LICENSE)
-[![Status: Production](https://img.shields.io/badge/Status-Production-brightgreen)]()
-[![AI Validation](https://img.shields.io/badge/AI_Validation-Enabled-orange)]()
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)]()
+[![Validation: Active](https://img.shields.io/badge/AI_Validation-Active-orange)]()
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Data%20Ethics%20Aligned-lightblue)]()
 
 </div>
@@ -36,194 +36,184 @@ tags: ["AI", "Treaties", "Reviewer Prompts", "Validation", "MCP-DL", "NLP", "Kno
 
 ## 🧭 Overview
 
-The **AI Reviewer Prompt Framework** defines all *automated and human-assisted validation instructions* for treaty summary assessment.  
-It ensures summaries meet high scientific and ethical standards of **accuracy, interpretive neutrality, and provenance traceability**, consistent with MCP-DL v6.3.  
-Prompts are applied in both *automated batch validation* and *manual human review* to guarantee robust audit trails.
+This document defines **review prompts** that both AI agents and human historians use to evaluate the integrity and interpretive quality of treaty summaries in KFM.  
+Each prompt targets a distinct *validation dimension*—accuracy, clarity, entity linkage, chronology, and bias neutrality—ensuring reproducible, ethical validation within the MCP-DL framework.
 
 ---
 
-## 🧱 Directory Layout
+## 🗂 Directory Layout
 
-```plaintext
-data/
- └── work/
-     └── staging/
-         └── tabular/
-             └── normalized/
-                 └── treaties/
-                     └── metadata/
-                         └── ai/
-                             └── summaries/
-                                 └── prompts/
-                                     ├── reviewer_prompts.md      ← this file
-                                     ├── generator_prompts.md      ← generation guidance
-                                     └── scoring_schema.json       ← structured evaluation weights
-```
+| Directory | Description |
+|------------|-------------|
+| `metadata/ai/summaries/prompts/` | Houses prompt specifications and schemas. |
+| ├── `reviewer_prompts.md` | ← This document, defines validation prompt logic. |
+| ├── `generator_prompts.md` | Template set for summary generation. |
+| └── `scoring_schema.json` | Defines weights and thresholds for evaluation metrics. |
+| `reports/validation/reports/` | Stores AI review JSON results and human audit logs. |
+| `metadata/ai/` | Base directory for machine learning metadata and provenance. |
 
 ---
 
-## 🧩 Purpose and Scope
+## 🎯 Purpose & Scope
 
-| Category | Description |
-|-----------|-------------|
-| **Objective** | Define the structure and semantics of prompts guiding AI models and human reviewers to assess treaty summaries. |
-| **Scope** | All normalized treaty metadata under `data/work/staging/tabular/normalized/treaties/` generated via AI summarization pipelines. |
-| **Primary Users** | AI validators, human historians, MCP compliance reviewers, and continuous integration bots (`stac-validate.yml`, `ai-review.yml`). |
-| **Output Target** | `data/work/staging/tabular/normalized/treaties/reports/validation/reports/summary_reviews/*.json` |
-| **Dependencies** | CIDOC CRM ontology, OWL-Time alignment, Neo4j graph schema (`src/graph/schema.cql`) |
-| **Review Frequency** | Every 90 days or post-model-update. |
+| Parameter | Description |
+|------------|-------------|
+| **Objective** | Standardize and document prompts that guide evaluation of AI-generated treaty summaries. |
+| **Coverage** | Treaties under `data/work/staging/tabular/normalized/treaties/`. |
+| **Consumers** | AI reviewer agents, human validators, governance council auditors. |
+| **Dependencies** | Neo4j Knowledge Graph, CIDOC CRM + OWL-Time ontologies, FAIR+CARE compliance scripts. |
+| **Outputs** | Structured JSON reviews stored under `reports/validation/reports/summary_reviews/`. |
 
 ---
 
-## ⚙️ AI Reviewer Workflow Integration
+## ⚙️ AI Reviewer Workflow
 
 ```mermaid
 flowchart TD
-    A[Generate Treaty Summary (NLP)] --> B[Apply Reviewer Prompts]
-    B --> C[AI Validation Engine (src/nlp/reviewer_agent.py)]
-    C --> D[Generate JSON Review Artifacts]
-    D --> E[Human Validator Cross-Check]
-    E --> F[Reports → data/work/staging/tabular/normalized/treaties/reports/validation/reports/]
-    F --> G[Governance Ledger Registration]
+    A[Generate Treaty Summary] --> B[Apply Reviewer Prompts]
+    B --> C[AI Validation Engine]
+    C --> D[Produce JSON Reviews]
+    D --> E[Human Audit & Cross-Check]
+    E --> F[Final Verdict → Governance Ledger]
 ```
 %% END OF MERMAID %%
 
 ---
 
-## 🧠 Core Reviewer Prompt Set
+## 🧠 Reviewer Prompts
 
-### 1️⃣ Factual Accuracy Review
+### 1️⃣ Factual Accuracy
 ```text
-Compare the AI-generated treaty summary to canonical text and metadata.
+Compare the AI-generated summary to the canonical treaty text.
 
-Check:
-- Major facts (date, signatories, parties) are preserved.
+Checklist:
+- Dates, signatories, and clauses match original records.
 - No fabricated or omitted content.
-- Chronology is accurate and consistent.
+- Chronological order aligns with historical metadata.
 
 Output: reasoning, verdict {PASS|FAIL|PARTIAL}, confidence score.
 ```
 
-### 2️⃣ Semantic Clarity Review
+### 2️⃣ Semantic Clarity
 ```text
-Assess clarity, readability, and logical flow of the summary.
+Assess readability and flow.
 
-Ask:
-- Is the text coherent and accessible to a general academic audience?
-- Are clauses and cause–effect relationships logically ordered?
-- Rate clarity on 1–5 scale and provide one improvement note.
+- Language is clear, concise, and neutral.
+- Logical progression from context → event → impact.
+- Rate clarity (1–5) and suggest improvement in one line.
 ```
 
-### 3️⃣ Entity Linking Validation
+### 3️⃣ Entity Linking
 ```text
-Verify named entities correspond to canonical graph nodes.
+Validate named entity consistency with graph nodes.
 
-- Each PERSON, PLACE, or TRIBE entity must link to a Neo4j node ID.
-- Identify missing or mislinked entities.
-- Return verdict {PASS|PARTIAL|FAIL}.
+- Confirm each PERSON, PLACE, and GROUP maps to Neo4j node IDs.
+- Identify alias errors or missing entities.
+- Verdict {PASS|PARTIAL|FAIL} with missing list.
 ```
 
 ### 4️⃣ Historical Alignment
 ```text
-Validate the temporal and geographic alignment.
+Check temporal/geographic consistency.
 
-- Check that described events fall within verified OWL-Time intervals.
-- No anachronisms or geographical inconsistencies.
-- Ensure CIDOC CRM alignment for Event → Place → Time relationships.
+- Event fits within validated OWL-Time interval.
+- Geography matches historical map layers.
+- Detect anachronisms or misplaced entities.
 ```
 
 ### 5️⃣ Bias and Representation
 ```text
-Evaluate tone and representation for historical neutrality.
+Evaluate neutrality and representation.
 
-- Does the summary treat all parties equitably?
-- Detect colonial bias, omission of Indigenous agency, or loaded phrasing.
+- Balanced portrayal of all parties.
+- Detect colonial or ethnocentric bias.
 - Verdict: "Balanced" | "Skewed" | "Inadequate".
 ```
 
 ---
 
-## 🧾 Example JSON Output
+## 📊 Example Output
 
 ```json
 {
   "treaty_id": "KS_TREATY_1867_03_MEDICINE_LODGE",
   "review": {
-    "accuracy": {"verdict": "PASS", "confidence": 0.95},
-    "clarity": {"score": 4.8},
+    "accuracy": {"verdict": "PASS", "confidence": 0.94},
+    "clarity": {"score": 4.6},
     "linkage": {"verdict": "PARTIAL", "missing_entities": ["Osage Nation"]},
     "historicity": {"verdict": "PASS"},
     "bias": {"verdict": "Balanced"}
   },
   "reviewed_by": "AI + Human Validator",
-  "timestamp": "2025-10-25T12:30:00Z"
+  "timestamp": "2025-10-25T15:30:00Z"
 }
 ```
 
 ---
 
-## 📈 Validation Metrics & Thresholds
+## 📈 Validation Metrics
 
-| Metric | Description | Target |
-|--------|--------------|---------|
-| **Accuracy Agreement Rate** | % of summaries validated as factually correct | ≥ 95% |
-| **Entity Linking Precision** | Correctly linked entities / total | ≥ 0.90 |
-| **Temporal Alignment Score** | Agreement with OWL-Time chronology | ≥ 0.92 |
-| **Bias Detection Recall** | Biased samples correctly flagged | ≥ 0.85 |
-| **Clarity Rating Mean** | Avg. human readability score | ≥ 4.5 / 5 |
-
----
-
-## 🧩 Data Provenance & Governance
-
-All reviewer prompts, results, and verdicts are logged under the **Governance Ledger** with SHA-256 checksums and contributor attribution.  
-This supports **traceable AI validation**, in line with MCP-DL’s **Scientific Method Chain**:
-
-| Step | Artifact | Format | Location |
-|------|-----------|---------|----------|
-| Prompt Definition | `reviewer_prompts.md` | Markdown | `/metadata/ai/summaries/prompts/` |
-| Model Output | `summary.json` | JSON | `/summaries/output/` |
-| Validation Result | `review.json` | JSON | `/reports/validation/reports/` |
-| Audit Record | `ledger.json` | JSON-LD | `/governance/ledger/` |
+| Metric | Definition | Target |
+|--------|-------------|---------|
+| **Accuracy Agreement** | % of factual matches confirmed by reviewers | ≥ 95% |
+| **Entity Linking Precision** | Correctly resolved entities / total mentions | ≥ 0.90 |
+| **Temporal Consistency** | Event-time conformity to OWL-Time | ≥ 0.92 |
+| **Bias Detection Recall** | Detected biased samples / total biased samples | ≥ 0.85 |
+| **Readability Score (avg)** | Mean clarity rating by reviewers | ≥ 4.5 |
 
 ---
 
-## 🔍 FAIR+CARE Alignment
+## 🧾 Governance & Provenance
+
+| Artifact | Format | Location |
+|-----------|---------|----------|
+| Reviewer Prompts | Markdown | `/metadata/ai/summaries/prompts/` |
+| Summary Outputs | JSON | `/metadata/ai/summaries/output/` |
+| Review Logs | JSON | `/reports/validation/reports/` |
+| Audit Trail | JSON-LD | `/governance/ledger/` |
+
+All outputs are registered with the **Governance Ledger** and verified via SHA-256 hashes.  
+This ensures MCP-DL audit compliance and FAIR+CARE traceability for each reviewed artifact.
+
+---
+
+## 🔍 FAIR+CARE Compliance
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | All prompts indexed in STAC metadata and searchable via MCP API. |
-| **Accessible** | Public under CC-BY 4.0; linked to treaty metadata catalog. |
-| **Interoperable** | Structured YAML/JSON schema aligns with DCAT and schema.org/CreativeWork. |
-| **Reusable** | Prompts parameterized for reuse in other datasets. |
-| **Collective Benefit (CARE)** | Ensures Indigenous representation is ethically reviewed. |
+| **Findable** | Indexed via STAC + DCAT metadata. |
+| **Accessible** | Openly available under CC-BY 4.0. |
+| **Interoperable** | Uses standardized JSON/YAML schemas. |
+| **Reusable** | Parameterized prompts reusable in other domains. |
+| **Collective Benefit (CARE)** | Includes fairness evaluation to preserve Indigenous representation. |
 
 ---
 
 ## 📚 References
 
-- **CIDOC CRM & OWL-Time** — Temporal ontology and event alignment standards:contentReference[oaicite:0]{index=0}  
-- **MCP-DL v6.3** — Documentation-first scientific workflow standard:contentReference[oaicite:1]{index=1}  
-- **AI Validation Pipeline** — `src/nlp/reviewer_agent.py` & `stac-validate.yml`  
-- **Ethical AI & CARE Guidelines** — `docs/standards/ethics.md`  
-- **STAC/DCAT Schema** — Metadata standard for FAIR dataset indexing.
+- CIDOC CRM & OWL-Time Temporal Ontologies  
+- FAIR+CARE Data Ethics Framework  
+- MCP-DL v6.3 Master Coder Protocol  
+- KFM AI System Developer Documentation (`src/nlp/reviewer_agent.py`)  
+- Treaty Metadata Catalog (`data/work/staging/tabular/normalized/treaties/metadata/`)  
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | Description |
-|----------|------|---------|-----------|--------------|
-| v1.0.1 | 2025-10-25 | @kfm-ai-lab | @kfm-validation | Added architecture, governance, FAIR+CARE, and directory layout. |
-| v1.0.0 | 2025-10-24 | @kfm-ai-lab | — | Initial creation of reviewer prompt templates for treaty summary validation. |
+| Version | Date | Author | Reviewer | Notes |
+|----------|------|---------|-----------|-------|
+| v1.1.0 | 2025-10-25 | @kfm-ai-lab | @kfm-validation | Refined directory layout, added governance and compliance tables, appended footer badges. |
+| v1.0.0 | 2025-10-24 | @kfm-ai-lab | — | Initial version of reviewer prompt templates. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Master Coder Protocol Certified**  
-📘 *All AI documentation follows MCP-DL v6.3 and FAIR+CARE compliance rules.*  
-💾 *Validated via CI: `ai-review.yml` + `docs-validate.yml`.*
+[![Docs · MCP-DL](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../../../../../docs/architecture/repo-focus.md)
+[![STAC Validated](https://img.shields.io/badge/STAC-Validated-success)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-lightblue)]()
+[![ISO 19115](https://img.shields.io/badge/ISO--19115-Geospatial%20Metadata%20Aligned-purple)]()
+[![AI Review Logs](https://img.shields.io/badge/AI_Review-Logged-yellow)]()
 
 </div>
-
