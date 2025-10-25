@@ -62,13 +62,13 @@ from ingestion to ledger anchoring — ensuring full **traceability**, **ethical
 
 ```mermaid
 flowchart TD
-A[data/raw/treaties/*.csv|*.pdf] --> B[data/work/staging/tabular/normalized/treaties/]
-B --> C[data/work/staging/tabular/normalized/treaties/logs/]
-C --> D[data/work/staging/tabular/normalized/treaties/validation/]
-D --> E[data/checksums/treaties/]
-E --> F[data/processed/treaties/]
-F --> G[data/stac/treaties/]
-G --> H[Blockchain Ledger / FAIR+CARE Governance Council]
+    A["data/raw/treaties/*.csv, *.pdf"] --> B["data/work/staging/tabular/normalized/treaties/"]
+    B --> C["data/work/staging/tabular/normalized/treaties/logs/"]
+    C --> D["data/work/staging/tabular/normalized/treaties/validation/"]
+    D --> E["data/checksums/treaties/"]
+    E --> F["data/processed/treaties/"]
+    F --> G["data/stac/treaties/"]
+    G --> H["Blockchain Ledger / FAIR+CARE Governance Council"]
 ```
 
 ---
