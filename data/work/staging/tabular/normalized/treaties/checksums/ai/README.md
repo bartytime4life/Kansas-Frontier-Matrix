@@ -73,14 +73,11 @@ This ensures end-to-end accountability and forensic reproducibility.
 
 ```mermaid
 flowchart TD
-    A[AI Summary Generation] --> B[Output Saved (.json)]
-    B --> C[Checksum Generator (SHA-256)]
-    C --> D[AI Integrity Logger]
-    D --> E[Governance Ledger Entry]
-    E --> F[Cross-Link to PROV-O Entity Graph]
-```
-%% END OF MERMAID %%
-
+    A["AI Summary Generation"] --> B["Output Saved – .json"]
+    B --> C["Checksum Generator – SHA-256"]
+    C --> D["AI Integrity Logger"]
+    D --> E["Governance Ledger Entry"]
+    E --> F["Cross-Link to PROV-O Entity Graph"]
 ---
 
 ## 🧩 File Schema & Examples
