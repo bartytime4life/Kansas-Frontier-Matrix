@@ -59,15 +59,14 @@ These prompts govern **automated batch validation**, **human review sessions**, 
 
 ```mermaid
 flowchart TD
-    A[Generate Treaty Summary (NLP)] --> B[Apply Reviewer Prompts]
-    B --> C[AI Validation Engine (src/nlp/reviewer_agent.py)]
-    C --> D[Structured JSON Review Output]
-    D --> E[Human Validator Cross-Check]
-    E --> F[Reports → data/work/staging/tabular/normalized/treaties/reports/validation/reports/]
-    F --> G[Governance Ledger / FAIR+CARE Council]
-```
-%% END OF MERMAID %%
+    A["Generate Treaty Summary – NLP"] --> B["Apply Reviewer Prompts"]
+    B --> C["AI Validation Engine – src/nlp/reviewer_agent.py"]
+    C --> D["Structured JSON Review Output"]
+    D --> E["Human Validator Cross-Check"]
+    E --> F["Reports → data/work/staging/tabular/normalized/treaties/reports/validation/reports/"]
+    F --> G["Governance Ledger / FAIR+CARE Council"]
 
+%% END OF MERMAID %%
 ---
 
 ## 🧠 Reviewer Prompts
