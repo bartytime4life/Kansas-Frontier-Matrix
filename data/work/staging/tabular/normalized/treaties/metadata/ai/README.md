@@ -1,8 +1,8 @@
 ---
 title: "🤖 Kansas Frontier Matrix — AI Processing for Treaty Metadata"
 document_type: "Pipeline Spec · AI/NLP · Treaties"
-version: "v1.3.0"
-last_updated: "2025-10-23"
+version: "v1.3.1"
+last_updated: "2025-10-24"
 status: "Production · FAIR+CARE+ISO Aligned"
 maturity: "Production"
 license: ["MIT (code)", "CC-BY 4.0 (docs/data)"]
@@ -36,7 +36,7 @@ path: "data/work/staging/tabular/normalized/treaties/metadata/ai/README.md"
 
 <div align="center">
 
-# 🤖 **Kansas Frontier Matrix — AI Processing for Treaty Metadata (v1.3.0 · FAIR + CARE + ISO Aligned)**  
+# 🤖 **Kansas Frontier Matrix — AI Processing for Treaty Metadata (v1.3.1 · FAIR + CARE + ISO Aligned)**  
 `data/work/staging/tabular/normalized/treaties/metadata/ai/README.md`
 
 ### *“OCR → NER → Geocoding → Temporal → Graph Linking → Summaries → Validation → Governance”*
@@ -67,21 +67,21 @@ D-->E[data checksums treaties]
 E-->F[data processed treaties]
 F-->G[data stac treaties]
 G-->H[governance sign off fair care]
-````
+```
 
 ---
 
 ## 🧠 Core Pipeline
 
-|  # | Stage         | Script                   | Key Ops                                                           | Outputs                       |        |
-| -: | ------------- | ------------------------ | ----------------------------------------------------------------- | ----------------------------- | ------ |
-|  1 | OCR           | `ocr_extract.py`         | OCR (layout-aware), dehyphenation, language detect                | `ocr/*.txt`                   |        |
-|  2 | NER           | `ner_treaties.py`        | spaCy-trf legal/historical; `TRIBE`,`TREATY_NAME`,`CLAUSE`,`FORT` | `entities/raw/*.json`         |        |
-|  3 | Geocoding     | `geo_linker.py`          | GNIS + Native Land + alias cache; fuzzy/context disambig          | `entities/geo/*.geojson`      |        |
-|  4 | Temporal      | `temporal_normalizer.py` | OWL-Time intervals; precision & uncertainty                       | normalized dates              |        |
-|  5 | Graph Linking | `graph_linker.py`        | Confidence-upserts; dry-run; batched tx                           | `graph/cypher/*.cql`          |        |
-|  6 | Summaries     | `summarizer_treaty.py`   | T5-based abstractive, citations & policy guards                   | `summaries/*.md               | .json` |
-|  7 | Validation    | `ai_validate.py`         | JSON/GeoJSON schema, ethics, checksum, STAC link                  | `logs/validation_report.json` |        |
+|  # | Stage         | Script                   | Key Ops                                                           | Outputs                             |
+|---:|---------------|--------------------------|-------------------------------------------------------------------|-------------------------------------|
+|  1 | OCR           | `ocr_extract.py`         | OCR (layout-aware), dehyphenation, language detect                | `ocr/*.txt`                         |
+|  2 | NER           | `ner_treaties.py`        | spaCy-trf legal/historical; `TRIBE`,`TREATY_NAME`,`CLAUSE`,`FORT` | `entities/raw/*.json`               |
+|  3 | Geocoding     | `geo_linker.py`          | GNIS + Native Land + alias cache; fuzzy/context disambig          | `entities/geo/*.geojson`            |
+|  4 | Temporal      | `temporal_normalizer.py` | OWL-Time intervals; precision & uncertainty                       | normalized dates                    |
+|  5 | Graph Linking | `graph_linker.py`        | Confidence-upserts; dry-run; batched tx                           | `graph/cypher/*.cql`                |
+|  6 | Summaries     | `summarizer_treaty.py`   | T5-based abstractive, citations & policy guards                   | `summaries/*.md` and `summaries/*.json` |
+|  7 | Validation    | `ai_validate.py`         | JSON/GeoJSON schema, ethics, checksum, STAC link                  | `logs/validation_report.json`       |
 
 **Reproducibility:** Seeds & params pinned in `configs/ai/treaty_ai_config.yaml`.
 
@@ -116,7 +116,7 @@ metadata/ai/
 ## 🧰 Models & Runtime
 
 | Component | Library/Model                   | Notes                                               |
-| --------- | ------------------------------- | --------------------------------------------------- |
+|-----------|---------------------------------|-----------------------------------------------------|
 | OCR       | Tesseract (layout)              | Regioning; archaic dictionary                       |
 | NER       | spaCy Transformers (fine-tuned) | Custom labels `TRIBE`,`TREATY_NAME`,`CLAUSE`,`FORT` |
 | Geocode   | GeoPy + GNIS + Native Land      | Alias/time-aware place disambiguation               |
@@ -191,7 +191,7 @@ WITH t UNWIND $signers AS p
 ### DCAT Mapping (selected)
 
 | KFM Field           | DCAT                | Notes         |
-| ------------------- | ------------------- | ------------- |
+|---------------------|---------------------|---------------|
 | `id`                | `dct:identifier`    | Canonical ID  |
 | `name`              | `dct:title`         | Treaty title  |
 | `summary_md`        | `dct:description`   | Markdown OK   |
@@ -210,16 +210,16 @@ WITH t UNWIND $signers AS p
 
 ## 📑 Field Dictionary (excerpt)
 
-| Field                | Type     | Description                                                   |       |      |         |
-| -------------------- | -------- | ------------------------------------------------------------- | ----- | ---- | ------- |
-| `treaty_id`          | string   | `treaty_YYYY_slug`                                            |       |      |         |
-| `spans[].label`      | enum     | `PERSON`,`TRIBE`,`PLACE`,`DATE`,`TREATY_NAME`,`CLAUSE`,`FORT` |       |      |         |
-| `dates[].normalized` | date     | ISO-8601                                                      |       |      |         |
-| `dates[].precision`  | enum     | `day                                                          | month | year | decade` |
-| `place_name`         | string   | Gazetteer-normalized                                          |       |      |         |
-| `confidence`         | float    | 0..1                                                          |       |      |         |
-| `alias_match`        | bool     | Alias rule hit                                                |       |      |         |
-| `summary_md`         | markdown | With citations e.g., `[doc p4]`                               |       |      |         |
+| Field                | Type     | Description                                                   |
+|----------------------|----------|---------------------------------------------------------------|
+| `treaty_id`          | string   | `treaty_YYYY_slug`                                            |
+| `spans[].label`      | enum     | `PERSON`,`TRIBE`,`PLACE`,`DATE`,`TREATY_NAME`,`CLAUSE`,`FORT` |
+| `dates[].normalized` | date     | ISO-8601                                                      |
+| `dates[].precision`  | enum     | `day` \| `month` \| `year` \| `decade`                        |
+| `place_name`         | string   | Gazetteer-normalized                                          |
+| `confidence`         | float    | 0..1                                                          |
+| `alias_match`        | bool     | Alias rule hit                                                |
+| `summary_md`         | markdown | With citations e.g., `[doc p4]`                               |
 
 ---
 
@@ -227,9 +227,9 @@ WITH t UNWIND $signers AS p
 
 **Auto-publish** only if:
 
-* NER agg conf ≥ **0.90** per entity
-* Geocode conf ≥ **0.85** with single candidate or unanimous alias match
-* Temporal precision ≥ **month** and conf ≥ **0.90**
+* NER agg conf ≥ **0.90** per entity  
+* Geocode conf ≥ **0.85** with single candidate or unanimous alias match  
+* Temporal precision ≥ **month** and conf ≥ **0.90**  
 * **No ethics flags**
 
 Else → **AI Review Console**; curators approve/decline; accepted records carry curator ID, timestamp, and diff.
@@ -238,9 +238,9 @@ Else → **AI Review Console**; curators approve/decline; accepted records carry
 
 ## 🪶 CARE & Ethics Gates
 
-* Indigenous/tribal references require reviewer trained in CARE.
-* Sensitive sites masked to centroid/bbox; caution text shown.
-* Conflicting sources → summary language qualified; confidence + corroboration count emitted.
+* Indigenous/tribal references require reviewer trained in CARE.  
+* Sensitive sites masked to centroid/bbox; caution text shown.  
+* Conflicting sources → summary language qualified; confidence + corroboration count emitted.  
 * Community redaction/takedown honored; ledger entry recorded.
 
 ---
@@ -249,9 +249,9 @@ Else → **AI Review Console**; curators approve/decline; accepted records carry
 
 **Schemas**:
 
-* `entities.json` → `schemas/ai_entities.schema.json`
-* `geo_entities.geojson` → RFC7946 + KFM props
-* `summaries/*.md|.json` → policy (min citations, max length, disallowed phrases)
+* `entities.json` → `schemas/ai_entities.schema.json`  
+* `geo_entities.geojson` → RFC7946 + KFM props  
+* `summaries/*.md|.json` → policy (min citations, max length, disallowed phrases)  
 * `graph/*.cql` → lint + dry-run on staging Neo4j
 
 **Make**
@@ -290,7 +290,7 @@ F-->G[Focus Mode Enablement]
 ## 🧩 Semantic Lineage Matrix
 
 | Stage      | FAIR Dimension  | ISO Ref   | Metric Logged    | AI Field          |
-| :--------- | :-------------- | :-------- | :--------------- | :---------------- |
+|------------|------------------|----------:|------------------|-------------------|
 | OCR→NER    | Reproducibility | ISO 9001  | checksum parity  | `checksum_valid`  |
 | STAC Build | Interop         | ISO 19115 | schema pass %    | `stac_pass`       |
 | Inference  | Ethics          | ISO 26000 | bias score       | `ai_ethics_score` |
@@ -301,11 +301,11 @@ F-->G[Focus Mode Enablement]
 
 ## 🌱 Sustainability Metrics
 
-| Metric             | Standard  | Target | Current | Verified By     |
-| :----------------- | :-------- | :----- | :------ | :-------------- |
-| Energy (Wh/run)    | ISO 50001 | ≤ 24   | 22      | @kfm-security   |
-| Carbon (gCO₂e/run) | ISO 14064 | ≤ 28   | 25      | @kfm-fair       |
-| Renewable Offset   | RE100     | 100%   | 100%    | @kfm-governance |
+| Metric             | Standard  | Target | Current | Verified By   |
+|--------------------|-----------|-------:|--------:|---------------|
+| Energy (Wh/run)    | ISO 50001 |     ≤ 24 |     22 | @kfm-security |
+| Carbon (gCO₂e/run) | ISO 14064 |     ≤ 28 |     25 | @kfm-fair     |
+| Renewable Offset   | RE100     |    100% |   100% | @kfm-governance |
 
 ---
 
@@ -352,10 +352,10 @@ ethics: { sensitive_place_masks: true }
 
 Edges created:
 
-* `(:Treaty)-[:SIGNED_BY]->(:Person)`
-* `(:Treaty)-[:INVOLVED_GROUP]->(:Group {type:'Tribe'})`
-* `(:Treaty)-[:OCCURRED_AT]->(:Place)`
-* `(:Treaty)-[:HAS_CLAUSE]->(:Clause {id})`
+* `(:Treaty)-[:SIGNED_BY]->(:Person)`  
+* `(:Treaty)-[:INVOLVED_GROUP]->(:Group {type:'Tribe'})`  
+* `(:Treaty)-[:OCCURRED_AT]->(:Place)`  
+* `(:Treaty)-[:HAS_CLAUSE]->(:Clause {id})`  
 * `(:Treaty)-[:HAS_SUMMARY]->(:Summary)`
 
 Focus Mode centers timeline window & map extent, loads related entities, and displays AI summary with citations.
@@ -388,40 +388,40 @@ specified; later amendments changed land terms. [doc p4] [map 1870 topo]
 
 ## 🛠 Troubleshooting
 
-* Mermaid parse errors → avoid `|` and special chars in labels.
-* Ambiguous geocodes → extend `aliases.csv` (`name,year_start,year_end,modern_name`).
-* Fuzzy dates → set `precision: "year"` (month/day null).
-* Neo4j auth → `NEO4J_AUTH` and flip `graph.dry_run=false` post-CI.
+* Mermaid parse errors → avoid `|` and special chars in labels.  
+* Ambiguous geocodes → extend `aliases.csv` (`name,year_start,year_end,modern_name`).  
+* Fuzzy dates → set `precision: "year"` (month/day null).  
+* Neo4j auth → `NEO4J_AUTH` and flip `graph.dry_run=false` post-CI.  
 * CARE gate → see `logs/validation_report.json > ethics`; request tribal review.
 
 ---
 
 ## ✅ Acceptance Criteria (Definition of Done)
 
-* All CI checks **green** (`ai-*`, STAC, docs); SBOM present; SLSA attested.
-* Each published record has **provenance SHA-256**, **model fingerprints**, **config hash**.
-* Confidence thresholds satisfied **or** curator approval recorded.
-* STAC Item emitted with `entities`, `geo`, `summary`.
-* CARE review applied where required; masking enforced.
+* All CI checks **green** (`ai-*`, STAC, docs); SBOM present; SLSA attested.  
+* Each published record has **provenance SHA-256**, **model fingerprints**, **config hash**.  
+* Confidence thresholds satisfied **or** curator approval recorded.  
+* STAC Item emitted with `entities`, `geo`, `summary`.  
+* CARE review applied where required; masking enforced.  
 * Repro steps & manifest saved in `logs/`.
 
 ---
 
 ## 🚦 Performance & Error Budgets
 
-* NER throughput ≥ **50 pages/min**; p95 doc latency ≤ **6 min**.
-* Summary p95 latency ≤ **3 s** per ~250 words.
-* Geocode transient errors ≤ **1%** (retry×3, then review).
+* NER throughput ≥ **50 pages/min**; p95 doc latency ≤ **6 min**.  
+* Summary p95 latency ≤ **3 s** per ~250 words.  
+* Geocode transient errors ≤ **1%** (retry×3, then review).  
 * Budget breach gates publish; alerts to `#ai-ci-alerts`.
 
 ---
 
 ## 👥 Roles & RACI
 
-* **AI Eng (@kfm-ai)** — R: pipeline & models · A: versions · C: ethics · I: architecture
-* **Data Eng (@kfm-data)** — R: I/O & STAC · C: AI · I: governance
-* **Ethics/Tribal Liaison (@kfm-tribal-liaison)** — A: CARE · R: masking · C: AI
-* **QA (@kfm-qa)** — R: CI/validation · A: readiness · C: owners
+* **AI Eng (@kfm-ai)** — R: pipeline & models · A: versions · C: ethics · I: architecture  
+* **Data Eng (@kfm-data)** — R: I/O & STAC · C: AI · I: governance  
+* **Ethics/Tribal Liaison (@kfm-tribal-liaison)** — A: CARE · R: masking · C: AI  
+* **QA (@kfm-qa)** — R: CI/validation · A: readiness · C: owners  
 * **Architecture (@kfm-architecture)** — C: standards · I: all
 
 ---
@@ -430,8 +430,8 @@ specified; later amendments changed land terms. [doc p4] [map 1870 topo]
 
 ```json
 {
-  "spec_id": "KFM-TREATIES-AI-RMD-v1.3.0",
-  "validation_timestamp": "2025-10-23T00:00:00Z",
+  "spec_id": "KFM-TREATIES-AI-RMD-v1.3.1",
+  "validation_timestamp": "2025-10-24T00:00:00Z",
   "validated_by": "@kfm-qa",
   "ai_reviewer": "@kfm-ai",
   "governance_reviewer": "@kfm-ethics",
@@ -453,12 +453,13 @@ specified; later amendments changed land terms. [doc p4] [map 1870 topo]
 
 ## 🕓 Version History
 
-| Version    | Date       | Author  | Reviewer          | Summary                                                                                  |
-| :--------- | :--------- | :------ | :---------------- | :--------------------------------------------------------------------------------------- |
-| **v1.3.0** | 2025-10-23 | @kfm-ai | @kfm-ethics       | Aligned with root doc style; added governance, sustainability, observability, self-audit |
-| v1.2.0     | 2025-10-23 | @kfm-ai | @kfm-qa           | Field dictionary, RACI, perf/error budgets, acceptance criteria                          |
-| v1.1.0     | 2025-10-23 | @kfm-ai | @kfm-architecture | Schemas (STAC/DCAT), confidence policy, ethics gates, examples                           |
-| v1.0.0     | 2025-10-23 | @kfm-ai | @kfm-data         | Initial pipeline spec (OCR→NER→Geo→Temporal→Graph→Summaries→Validation)                  |
+| Version  | Date       | Author  | Reviewer          | Summary                                                                                  |
+|:---------|:-----------|:--------|:------------------|:-----------------------------------------------------------------------------------------|
+| **v1.3.1** | 2025-10-24 | @kfm-ai | @kfm-ethics       | Alignment pass: fixed fences, field table, outputs table; badges & metadata refreshed    |
+| v1.3.0  | 2025-10-23 | @kfm-ai | @kfm-ethics       | Aligned with root doc style; added governance, sustainability, observability, self-audit |
+| v1.2.0  | 2025-10-23 | @kfm-ai | @kfm-qa           | Field dictionary, RACI, perf/error budgets, acceptance criteria                          |
+| v1.1.0  | 2025-10-23 | @kfm-architecture | @kfm-architecture | Schemas (STAC/DCAT), confidence policy, ethics gates, examples                           |
+| v1.0.0  | 2025-10-23 | @kfm-data | @kfm-data         | Initial pipeline spec (OCR→NER→Geo→Temporal→Graph→Summaries→Validation)                  |
 
 ---
 
@@ -488,7 +489,5 @@ PROVENANCE-JSONLD: true
 PINNED-ACTIONS-POLICY: true
 PERFORMANCE-BUDGET-P95: 2.5 s
 GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: 2025-10-23
+LAST-VALIDATED: 2025-10-24
 MCP-FOOTER-END -->
-
-```
