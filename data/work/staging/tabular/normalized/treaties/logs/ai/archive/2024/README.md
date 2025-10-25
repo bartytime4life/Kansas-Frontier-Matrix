@@ -1,6 +1,5 @@
-```markdown
 ---
-title: "🧾 Kansas Frontier Matrix — AI Treaty Log Archive (2024) · Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
+title: "🧾 Kansas Frontier Matrix — AI Treaty Log Archive (2024) · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/normalized/treaties/logs/ai/archive/2024/README.md"
 version: "v1.1.0"
 last_updated: "2025-10-25"
@@ -42,7 +41,7 @@ tags: ["archive","ai-logs","treaties","provenance","stac","dcat","prov-o","cidoc
 # 🧾 Kansas Frontier Matrix — **AI Treaty Log Archive (2024)**  
 `data/work/staging/tabular/normalized/treaties/logs/ai/archive/2024/`
 
-**Purpose:** Immutable **FAIR+CARE** archive of all **AI treaty-processing** logs, provenance chains, validation outputs, and governance linkages for **calendar year 2024**.  
+**Purpose:** Immutable FAIR+CARE archive of all AI treaty-processing logs, provenance chains, validation outputs, and governance linkages for calendar year 2024.  
 **Scope:** AI summaries, reviewer prompts, model metadata, performance & drift metrics, PROV-O graphs, STAC/DCAT items, and ledger records.
 
 [![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-0078ff)]()  
@@ -57,10 +56,11 @@ tags: ["archive","ai-logs","treaties","provenance","stac","dcat","prov-o","cidoc
 
 ## 📚 Overview
 
-This directory seals the **final, read-only** artifacts produced by KFM’s treaty **normalization → summarization → validation → governance** pipeline across **2024**.  
-All entries are **deterministically named**, **checksumed (SHA-256)**, and **ledger-linked**, enabling full **reproducibility** and **third-party audit**.
+The **2024 AI Treaty Log Archive** preserves verified AI and human validation records generated during treaty ingestion, summarization, and verification cycles.  
+All logs are frozen post-archival with checksums, STAC/DCAT metadata, and ledger linkage for reproducibility and independent audit.  
+Artifacts follow the MCP-DL v6.4.3 specification for determinism, ethical compliance, and traceable machine intelligence behavior.
 
-> **Tip:** All files here are immutable; corrections are appended via `redaction_notice-*.json` with approval metadata and ledger signatures.
+> **Tip:** Each archived log includes a provenance link and ledger signature—no file may be altered once archived.
 
 ---
 
@@ -69,19 +69,19 @@ All entries are **deterministically named**, **checksumed (SHA-256)**, and **led
 ```
 
 data/work/staging/tabular/normalized/treaties/logs/ai/archive/2024/
-├── run-YYYY-MM-DD-HHMMSS.json                  # Primary AI pipeline run log (inputs, params, outputs)
-├── provenance_chain-YYYY-MM-DD-HHMMSS.json     # PROV-O (with optional CIDOC CRM mappings)
-├── performance_metrics-YYYY-MM-DD-HHMMSS.csv   # Latency, token usage, drift, errors
+├── run-YYYY-MM-DD-HHMMSS.json                  # AI pipeline execution trace (inputs / outputs)
+├── provenance_chain-YYYY-MM-DD-HHMMSS.json     # PROV-O + CIDOC CRM provenance graph
+├── performance_metrics-YYYY-MM-DD-HHMMSS.csv   # Latency · drift · token usage · error rates
 ├── validation_report-YYYY-MM-DD.json            # Human + AI validation summary
-├── redaction_notice-YYYY-MM-DD.json             # Optional corrections/redactions w/ approvals
-├── ai_archive_manifest.json                     # Index of runs, hashes, ledger IDs
-└── README.md                                   # This document
+├── redaction_notice-YYYY-MM-DD.json             # Optional correction/redaction notice + approval
+├── ai_archive_manifest.json                     # Manifest – hashes · ledger · SBOM refs
+└── README.md                                   # This file
 
 ````
 
 ---
 
-## 🧭 Process at a Glance
+## 🧭 Pipeline Overview
 
 ```mermaid
 flowchart TD
@@ -90,56 +90,62 @@ flowchart TD
     C --> D["AI Validation Engine · src/nlp/reviewer_agent.py"]
     D --> E["Structured Outputs · validation_report.json"]
     E --> F["Governance Ledger · FAIR+CARE Council"]
-    F --> G["Archive Storage · .../logs/ai/archive/2024/"]
+    F --> G["Archive Storage · data/work/staging/tabular/normalized/treaties/logs/ai/archive/2024/"]
 %% END OF MERMAID %%
 ````
 
 ---
 
-## 🧩 Goals & Guarantees
+## 🧱 Objectives & Guarantees
 
-* **Reproducibility:** All runs include parameter captures, model IDs, environment hashes, and checksums.
-* **Traceability:** **PROV-O** graphs link sources → models → outputs; optional **CIDOC CRM** edges contextualize cultural entities.
-* **Governance:** Each run has a **ledger entry** and appears in the **archive manifest**.
-* **Accessibility:** Artifacts are described via **STAC/DCAT**, discoverable by time, source, and treaty metadata.
+**Core Objectives**
+
+* Deterministic capture of each AI pipeline run with full parameterization.
+* Immutable ledger-linked records for FAIR + CARE governance.
+* Human + AI validation integration with PROV-O traceability.
+* Full STAC/DCAT metadata for discovery and reuse.
+
+**Assurance Guarantees**
+
+* Reproducibility · Traceability · Auditability · Ethical Compliance · Transparency.
 
 ---
 
-## 🧱 Standards & Compliance
+## ⚙️ Standards & Compliance
 
-|        Domain | Standard                    | Practice                                   |
-| ------------: | :-------------------------- | :----------------------------------------- |
-| Documentation | **MCP-DL v6.4.3**           | Docs-as-code, self-validation reports      |
-|      Metadata | **STAC 1.0 / DCAT 3.0**     | Catalog items for each artifact            |
-|    Provenance | **PROV-O / CIDOC CRM**      | End-to-end derivation & cultural context   |
-|          Time | **OWL-Time**                | Instants/intervals in validation runs      |
-|           Geo | **GeoJSON / ISO 19115**     | Geospatial metadata for map-linked outputs |
-|        Ethics | **FAIR + CARE**             | Stewardship, consent, benefit sharing      |
-|      Security | **SLSA / SBOM / ISO 27001** | Attested builds, SPDX SBOM                 |
+| Domain        | Standard                | Practice                            |
+| :------------ | :---------------------- | :---------------------------------- |
+| Documentation | MCP-DL v6.4.3           | Docs-as-Code + self-validation JSON |
+| Metadata      | STAC 1.0 / DCAT 3.0     | Dataset catalog & checksum required |
+| Provenance    | PROV-O / CIDOC CRM      | Machine + cultural linkage records  |
+| Temporal      | OWL-Time                | Instants and intervals for events   |
+| Spatial       | ISO 19115 / GeoJSON     | CRS + bbox for mapped records       |
+| Ethics        | FAIR + CARE             | Stewardship / equity framework      |
+| Security      | SLSA / ISO 27001 / SBOM | Attested builds + verified hashes   |
 
-> ⚠ **Important:** STAC items **must** include license, bbox/time (when applicable), and checksum — or fail `stac-validate`.
+> ⚠ **Important:** Any STAC item lacking license, bbox, time, or checksum fails `stac-validate`.
 
 ---
 
 ## 🔍 How to Use This Archive
 
-### For Developers
+### 🧑‍💻 Developers
 
-1. Query `ai_archive_manifest.json` to list runs and hashes.
-2. Open `run-*.json` for parameters, inputs, and outputs.
-3. Inspect `provenance_chain-*.json` to reconstruct derivations.
-4. Analyze drift/latency in `performance_metrics-*.csv` to guide retraining.
+1. Query `ai_archive_manifest.json` for runs + hashes.
+2. Inspect `run-*.json` for inputs, outputs, and metadata.
+3. Review `provenance_chain-*.json` for lineage and model context.
+4. Analyze drift or latency from `performance_metrics-*.csv`.
 
-### For Auditors / FAIR+CARE Council
+### 🧑‍⚖️ Auditors / FAIR + CARE Council
 
-* Compare `validation_report-*.json` with `provenance_chain-*.json`.
-* Verify ledger references and reviewer approvals match governance policy.
-* Confirm thresholds for **drift**, **token usage**, **latency**, and **safety** gates.
+* Compare `validation_report` to `provenance_chain` entries.
+* Validate ledger entries and ethical approvals.
+* Verify no unapproved model was used per governance policy.
 
-### For Researchers
+### 🧑‍🔬 Researchers
 
-* Use metrics to study longitudinal AI behavior on treaty corpora.
-* Employ provenance graphs to interpret model outputs in historical context.
+* Use metrics for trend analysis and model behavior tracking.
+* Link AI outputs to historical datasets for cross-domain study.
 
 ---
 
@@ -147,55 +153,55 @@ flowchart TD
 
 ```json
 {
-  "run_id": "2024-11-07-094210",
-  "pipeline_version": "2024.2.5",
+  "run_id": "2024-09-19-214957",
+  "pipeline_version": "2024.2.1",
   "model": "gpt-5-treaty-summarizer-v1.2",
-  "inputs": ["Treaty_Kansas_Pawnee_1857.txt"],
-  "outputs": ["Treaty_Kansas_Pawnee_1857_summary.json"],
+  "inputs": ["Treaty_Pawnee_1857.txt"],
+  "outputs": ["Treaty_Pawnee_1857_summary.json"],
   "review_agent": "src/nlp/reviewer_agent.py",
   "safety_check": "passed",
   "metrics": {
-    "latency_s": 46.3,
-    "token_usage": 12791,
-    "validation_score": 0.96,
+    "latency_s": 42.8,
+    "token_usage": 13041,
+    "validation_score": 0.97,
     "drift_detected": false
   },
   "governance_ledger": {
-    "ledger_entry_id": "AI-LOG-2024-11-07-094210",
-    "fair_care_compliance": true,
-    "review_status": "verified"
+    "ledger_entry_id": "AI-LOG-2024-09-19-214957",
+    "review_status": "verified",
+    "fair_care_compliance": true
   },
-  "checksum_sha256": "b1e9a3d2d44a1c7a11b9df1135a2c94f",
-  "archived_at": "2024-11-07T09:45:12Z"
+  "checksum_sha256": "f47ac10b58cc4372a5670e02b2c3d479",
+  "archived_at": "2024-09-19T21:50:00Z"
 }
 ```
 
 ---
 
-## 🔐 Governance & Integrity Policy
+## 🔐 Governance & Integrity
 
-All files in this archive are **immutable**. To correct or redact:
+All files are **immutable** once archived. If corrections are required:
 
 1. Create `redaction_notice-YYYY-MM-DD.json`.
-2. Include: affected files, rationale, approver credentials, and signatures.
-3. Append to governance ledger (do not overwrite or delete artifacts).
+2. Include affected files, reason, approver credentials, and signatures.
+3. Append to ledger (never overwrite existing records).
 
-This ensures **transparent, auditable** historical records.
+> **All redactions must retain original hash references for chain-of-custody continuity.**
 
 ---
 
 ## 🧪 Validation & Automation
 
-|         Validation Type | Tool / Schema                      | Frequency      |
-| ----------------------: | :--------------------------------- | :------------- |
-|             JSON Schema | `/schemas/logs/ai_run.schema.json` | On each commit |
-|         STAC Validation | `/tools/stac-validate.yml`         | Nightly        |
-|        PROV Consistency | `/tools/prov-check.py`             | Weekly         |
-|         FAIR+CARE Audit | `/tools/faircare-audit.py`         | Quarterly      |
-| Security (CodeQL/Trivy) | GitHub Actions                     | On PR          |
-|             SBOM + SLSA | CI pipeline                        | On release     |
+| Validation Type           | Tool / Schema                      | Frequency   |
+| :------------------------ | :--------------------------------- | :---------- |
+| JSON Schema               | `/schemas/logs/ai_run.schema.json` | Each commit |
+| STAC Catalog Validation   | `/tools/stac-validate.yml`         | Nightly     |
+| Provenance Check          | `/tools/prov-check.py`             | Weekly      |
+| FAIR + CARE Audit         | `/tools/faircare-audit.py`         | Quarterly   |
+| Security (CodeQL + Trivy) | GitHub Actions                     | On PR       |
+| SBOM / SLSA               | CI Pipeline                        | On Release  |
 
-**Make targets**
+**Make Targets**
 
 ```
 make validate-logs
@@ -207,21 +213,21 @@ make prov-check
 
 ## 🔗 Cross-Linkage
 
-|      Layer | Path                                                                                       | Description                        |
-| ---------: | :----------------------------------------------------------------------------------------- | :--------------------------------- |
-|  Summaries | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/summaries/2024/`         | Treaty summaries for the same runs |
-| Validation | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/validation/2024/`        | AI/Human validation outputs        |
-| Provenance | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/provenance/2024/`        | PROV-O graphs                      |
-|     Ledger | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/provenance/ledger/2024/` | Immutable governance ledger chain  |
+| Layer      | Path                                                                                       | Description                |
+| :--------- | :----------------------------------------------------------------------------------------- | :------------------------- |
+| Summaries  | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/summaries/2024/`         | Generated treaty summaries |
+| Validation | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/validation/2024/`        | Validation reports         |
+| Provenance | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/provenance/2024/`        | Provenance graphs          |
+| Ledger     | `data/work/staging/tabular/normalized/treaties/reports/ai/outputs/provenance/ledger/2024/` | Governance ledger records  |
 
 ---
 
 ## 🗓️ Version History
 
-| Version |    Date    | Author    | Change                                                                                       |
-| :-----: | :--------: | :-------- | :------------------------------------------------------------------------------------------- |
-|  v1.1.0 | 2025-10-25 | @kfm-data | Aligned formatting/content to Diamond⁹ Ω guidance; expanded compliance & automation sections |
-|  v1.0.0 | 2025-10-25 | @kfm-data | Initial release of 2024 AI Treaty Log Archive                                                |
+| Version | Date       | Author    | Change                                                                    |
+| :------ | :--------- | :-------- | :------------------------------------------------------------------------ |
+| v1.1.0  | 2025-10-25 | @kfm-data | Realigned to Diamond⁹ Ω format; expanded automation & compliance sections |
+| v1.0.0  | 2025-10-25 | @kfm-data | Initial release of 2024 AI Treaty Log Archive                             |
 
 ---
 
@@ -254,5 +260,4 @@ LAST-VALIDATED: 2025-10-25
 MCP-FOOTER-END -->
 
 ```
-::contentReference[oaicite:0]{index=0}
 ```
