@@ -73,12 +73,12 @@ data/work/staging/tabular/normalized/treaties/reports/archive/
 
 ```mermaid
 flowchart TD
-    A[AI Reports (data/.../reports/ai/)] --> B[Human Review & Validation]
-    B --> C[Checksum Generation · SHA256]
-    C --> D[Archive Transfer (Immutable Copy)]
-    D --> E[Provenance Link Creation (PROV-O)]
-    E --> F[Governance Ledger Record + Timestamp]
-    F --> G[data/work/staging/tabular/normalized/treaties/reports/archive/]
+    A["AI Reports – data/.../reports/ai/"] --> B["Human Review & Validation"]
+    B --> C["Checksum Generation · SHA256"]
+    C --> D["Archive Transfer – Immutable Copy"]
+    D --> E["Provenance Link Creation – PROV-O"]
+    E --> F["Governance Ledger Record + Timestamp"]
+    F --> G["data/work/staging/tabular/normalized/treaties/reports/archive/"]
 ```
 
 ---
