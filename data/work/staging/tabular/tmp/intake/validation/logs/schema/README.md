@@ -94,13 +94,13 @@ data/work/staging/tabular/tmp/intake/validation/logs/schema/
 
 ```mermaid
 flowchart TD
-    A[Incoming Tabular Dataset (.csv / .json)] --> B[Schema Discovery & Metadata Inference]
-    B --> C[STAC / DCAT Crosswalk Generation]
-    C --> D[JSON Schema Validation Engine]
-    D --> E[FAIR Compliance Audit (FAIR-CARE Framework)]
-    E --> F[AI Schema Anomaly Detection (LLM/Regex Hybrid)]
-    F --> G[Validation Reports + Checksums]
-    G --> H[Governance Ledger Registration + Schema Provenance Log]
+    A["Incoming Tabular Dataset (CSV or JSON)"] --> B["Schema Discovery & Metadata Inference"]
+    B --> C["STAC / DCAT Crosswalk Generation"]
+    C --> D["JSON Schema Validation Engine"]
+    D --> E["FAIR Compliance Audit (FAIR+CARE Framework)"]
+    E --> F["AI Schema Anomaly Detection (LLM + Regex Hybrid)"]
+    F --> G["Validation Reports + Checksums"]
+    G --> H["Governance Ledger Registration + Schema Provenance Log"]
 ````
 
 ---
