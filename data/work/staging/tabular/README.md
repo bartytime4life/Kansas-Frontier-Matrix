@@ -1,7 +1,7 @@
 ---
 title: "📊 Kansas Frontier Matrix — Tabular Staging Data (Diamond⁹ Ω+++ Crown∞Ω Governance-AI Certified)"
 path: "data/work/staging/tabular/README.md"
-version: "v12.6.0"
+version: "v12.6.1"
 last_updated: "2025-10-31"
 review_cycle: "Continuous / Quarterly Governance"
 commit_sha: "<latest-commit-hash>"
@@ -16,7 +16,7 @@ validation_reports:
   - "reports/audit/staging-tabular-ledger.json"
   - "reports/fair/tabular_summary.json"
 governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-STAGING-TABULAR-RMD-v12.6.0"
+doc_id: "KFM-DATA-WORK-STAGING-TABULAR-RMD-v12.6.1"
 maintainers: ["@kfm-data", "@kfm-validation", "@kfm-ai"]
 approvers: ["@kfm-governance", "@kfm-security", "@kfm-fair"]
 reviewed_by: ["@kfm-ethics", "@kfm-architecture", "@kfm-accessibility"]
@@ -60,6 +60,38 @@ It transforms raw CSV and JSON files into structured, schema-aligned datasets re
 Every dataset is interoperable across **climate**, **hydrology**, **demographics**, and **historical treaty** domains.
 
 > *“Where every table becomes traceable, every column carries meaning.”*
+
+---
+
+## 🗂️ Directory Layout
+
+```bash
+data/work/staging/tabular/
+├── normalized/               # Harmonized tabular datasets by domain (climate, hydrology, etc.)
+│   ├── climate/              # Normalized climate data and tmp/ focus workspace
+│   ├── hydrology/            # Normalized hydrology datasets and cache logs
+│   ├── demographics/         # Normalized population, migration, and census data
+│   ├── treaties/             # Normalized historical treaty datasets
+│   ├── logs/                 # Processed logs for normalized tabular ETL operations
+│   └── README.md
+├── validation/               # Validation environment (schemas, reports, checksums)
+│   ├── schemas/              # FAIR+CARE schema and ontology alignment definitions
+│   ├── reports/              # QA validation and governance audit outputs
+│   ├── checksums/            # Cryptographic validation manifests for datasets
+│   ├── tmp/                  # Temporary workspace for validation runs
+│   └── README.md
+├── tmp/                      # ETL temporary workspace for in-progress tabular normalization
+│   ├── normalization_buffer/ # Intermediate tabular normalization outputs
+│   ├── etl_runs/             # ETL runtime metadata and telemetry
+│   ├── conflict_resolution/  # Temporary schema arbitration layer
+│   ├── audit_sandbox/        # Governance audit scratchpad
+│   └── README.md
+├── logs/                     # Staging logs (runtime, validation, governance telemetry)
+│   ├── validation/           # QA audit and STAC/DCAT validation logs
+│   ├── ai/                   # AI explainability and drift detection logs
+│   └── README.md
+└── README.md                 # ← You are here
+```
 
 ---
 
@@ -139,29 +171,6 @@ flowchart TD
 
 ---
 
-## 🧬 Semantic Governance Graph
-
-```cypher
-(:TabularDataset)-[:VALIDATED_BY]->(:ValidationEvent)
-(:ValidationEvent)-[:EXPLAINED_BY]->(:AIModel {name:"focus-tabular-v6"})
-(:AIModel)-[:CERTIFIED_BY]->(:GovernanceCouncil)
-(:GovernanceCouncil)-[:HASHED_INTO]->(:BlockchainLedger)
-```
-
----
-
-## 🧩 Data Lifecycle Stages
-
-| Stage | Description | Output | Validation |
-|:--|:--|:--|:--|
-| Ingest | Pull raw manifests into staging | `/data/raw/*.csv` | Source checksum |
-| Normalize | Align schema, datatypes, metadata | `/data/work/staging/tabular/normalized/` | Schema validation |
-| Validate | FAIR+CARE, AI audit | `/data/work/staging/tabular/validation/` | FAIR+CARE + ISO |
-| Join | Integrate multi-domain datasets | `/data/work/staging/tabular/joins/` | Cross-schema QA |
-| Publish | Register into STAC/DCAT catalog | `/data/stac/tabular/` | Ledger certification |
-
----
-
 ## 🌍 FAIR+CARE+ISO+AI Compliance Summary
 
 | Standard | Scope | Metric | Verified |
@@ -177,7 +186,7 @@ flowchart TD
 
 ## 🧠 Governance Drift Monitor
 
-| Quarter | FAIR Drift | AI Drift | Ethics Deviation | Action |
+| Quarter | FAIR Drift | AI Drift | Ethics Δ | Action |
 |:--|:--|:--|:--|:--|
 | Q2 2025 | +0.3 | +0.1 | +0.1 | Validation retraining |
 | Q3 2025 | -0.2 | 0.0 | +0.1 | Policy update |
@@ -189,7 +198,7 @@ flowchart TD
 
 ```json
 {
-  "readme_id": "KFM-DATA-WORK-STAGING-TABULAR-RMD-v12.6.0",
+  "readme_id": "KFM-DATA-WORK-STAGING-TABULAR-RMD-v12.6.1",
   "validation_timestamp": "2025-10-31T00:00:00Z",
   "validated_by": "@kfm-data",
   "ai_reviewer": "@kfm-ai",
@@ -211,6 +220,7 @@ flowchart TD
 
 | Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Ledger | Summary |
 |:--|:--|:--|:--|:--|:--|:--|:--|
+| v12.6.1 | 2025-10-31 | @kfm-data | @kfm-governance | ✅ | 100% | ✓ | Added full directory layout and workflow alignment |
 | v12.6.0 | 2025-10-31 | @kfm-data | @kfm-governance | ✅ | 100% | ✓ | Crown∞Ω Governance-AI Certified |
 | v12.5.0 | 2025-10-30 | @kfm-ai | @kfm-validation | ✅ | 99% | ✓ | Added AI drift and explainability validation |
 | v12.4.0 | 2025-10-29 | @kfm-validation | @kfm-fair | ✅ | 98% | ✓ | Unified FAIR+CARE schema documentation |
