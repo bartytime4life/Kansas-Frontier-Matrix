@@ -78,13 +78,13 @@ data/work/staging/tabular/tmp/intake/
 
 ```mermaid
 flowchart TD
-    A[📤 External Source<br>(CSV / XLSX / JSON)] --> B[📥 Intake TMP Layer]
-    B --> C[🧾 Schema Validation<br>(STAC/DCAT/CIDOC Rules)]
-    C --> D[🔒 Checksum & Provenance Registration]
-    D --> E[🤖 AI-Assisted Integrity Scan<br>(Anomaly Detection + NER Summary)]
-    E --> F[📜 FAIR+CARE & MCP Validation Reports]
-    F --> G[✅ Promotion to Normalized Dataset<br>data/work/staging/tabular/normalized/]
-    G --> H[🏛 Governance Ledger / FAIR+CARE Council]
+    A["📤 External Source\n(CSV / XLSX / JSON)"] --> B["📥 Intake TMP Layer"]
+    B --> C["🧾 Schema Validation\n(STAC/DCAT/CIDOC Rules)"]
+    C --> D["🔒 Checksum & Provenance Registration"]
+    D --> E["🤖 AI-Assisted Integrity Scan\n(Anomaly Detection + NER Summary)"]
+    E --> F["📜 FAIR+CARE & MCP Validation Reports"]
+    F --> G["✅ Promotion to Normalized Dataset\n(data/work/staging/tabular/normalized/)"]
+    G --> H["🏛 Governance Ledger / FAIR+CARE Council"]
 ```
 
 ---
