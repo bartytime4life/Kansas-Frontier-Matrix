@@ -83,7 +83,6 @@ flowchart TD
     D --> E["Submit for Governance Review"]
     E --> F["Ledger Registration and Archival"]
 ```
-%% END OF MERMAID %%
 
 ---
 
