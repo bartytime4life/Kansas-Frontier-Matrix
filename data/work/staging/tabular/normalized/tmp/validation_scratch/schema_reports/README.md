@@ -74,15 +74,14 @@ Reports stored here enable the governance and QA teams to **track data maturity*
 
 ```mermaid
 flowchart TD
-    A[ETL Normalization Output] --> B[Schema Validator Engine]
-    B --> C[STAC Validation Module]
-    B --> D[DCAT Compliance Module]
-    C --> E[Schema Reports (stac_validation_reports/)]
-    D --> F[Schema Reports (dcat_validation_reports/)]
-    E & F --> G[qa_summary.json + validation_manifest.json]
-    G --> H[Governance Review + Ledger Registration]
+    A["ETL Normalization Output"] --> B["Schema Validator Engine"]
+    B --> C["STAC Validation Module"]
+    B --> D["DCAT Compliance Module"]
+    C --> E["Schema Reports – stac_validation_reports/"]
+    D --> F["Schema Reports – dcat_validation_reports/"]
+    E & F --> G["qa_summary.json + validation_manifest.json"]
+    G --> H["Governance Review + Ledger Registration"]
 ```
-%% END OF MERMAID %%
 
 ---
 
