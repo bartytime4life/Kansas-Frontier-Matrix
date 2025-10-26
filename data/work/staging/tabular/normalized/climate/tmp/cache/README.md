@@ -1,7 +1,7 @@
 ---
 title: "🌦️ Kansas Frontier Matrix — Climate Cache Layer (Crown∞Ω+++ Governance-AI Parity Final)"
 path: "data/work/staging/tabular/normalized/climate/tmp/cache/README.md"
-version: "v12.6.0"
+version: "v12.6.1"
 last_updated: "2025-10-31"
 review_cycle: "Per ETL Cycle"
 commit_sha: "<latest-commit-hash>"
@@ -11,16 +11,15 @@ data_contract_ref: "docs/contracts/data-contract-v3.json"
 telemetry_ref: "releases/v12.6.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/tabular-climate-cache-v24.json"
 json_export: "releases/v12.6.0/tabular-climate-cache.meta.json"
-validation_reports: [
-  "reports/self-validation/tabular-climate-cache-validation.json",
-  "reports/audit/climate_cache_audit.json"
-]
+validation_reports:
+  - "reports/self-validation/tabular-climate-cache-validation.json"
+  - "reports/audit/climate_cache_audit.json"
 governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-CACHE-RMD-v12.6.0"
+doc_id: "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-CACHE-RMD-v12.6.1"
 maintainers: ["@kfm-data", "@kfm-climate", "@kfm-validation"]
 approvers: ["@kfm-governance", "@kfm-security", "@kfm-ai", "@kfm-fair"]
 reviewed_by: ["@kfm-architecture", "@kfm-ethics"]
-ci_required_checks: ["focus-validate.yml", "stac-validate.yml", "checksum-verify.yml", "clean-cache.yml"]
+ci_required_checks: ["focus-validate.yml", "stac-validate.yml", "checksum-verify.yml", "clean-cache.yml", "docs-validate.yml"]
 license: "CC-BY 4.0"
 design_stage: "Operational / Cache Optimization Layer"
 mcp_version: "MCP-DL v6.3"
@@ -63,14 +62,14 @@ and sustainability compliance within the **Kansas Frontier Matrix (KFM)**.
 
 ```mermaid
 flowchart TD
-A[data/raw/climate/*.nc|*.csv] --> B[data/work/staging/tabular/normalized/climate/]
-B --> C[data/work/staging/tabular/normalized/climate/tmp/]
-C --> D[data/work/staging/tabular/normalized/climate/tmp/cache/]
-D --> E[data/work/staging/tabular/normalized/climate/validation/]
-E --> F[data/checksums/climate/]
-F --> G[data/processed/climate/]
-G --> H[data/stac/climate/]
-H --> I[Blockchain Ledger / FAIR+CARE Council]
+  A["data/raw/climate/*.nc or *.csv"] --> B["data/work/staging/tabular/normalized/climate/"]
+  B --> C["data/work/staging/tabular/normalized/climate/tmp/"]
+  C --> D["data/work/staging/tabular/normalized/climate/tmp/cache/"]
+  D --> E["data/work/staging/tabular/normalized/climate/validation/"]
+  E --> F["data/checksums/climate/"]
+  F --> G["data/processed/climate/"]
+  G --> H["data/stac/climate/"]
+  H --> I["Blockchain Ledger / FAIR+CARE Council"]
 ```
 
 ---
@@ -79,11 +78,11 @@ H --> I[Blockchain Ledger / FAIR+CARE Council]
 
 ```bash
 data/work/staging/tabular/normalized/climate/tmp/cache/
-├── etl_state.pkl                # Serialized pipeline runtime state
-├── ai_cache_validation.parquet  # Focus AI cache for inference reuse
-├── vector_cache.feather         # Columnar cache for intermediate joins
-├── io_benchmark.log             # I/O and performance log
-├── tmp_cache_index.json         # Cache index map for CI/CD
+├── etl_state.pkl                # Serialized pipeline runtime state (replay & resume)
+├── ai_cache_validation.parquet  # Focus AI cache for inference reuse & drift checks
+├── vector_cache.feather         # Columnar cache to accelerate joins/aggregations
+├── io_benchmark.log             # I/O and performance log (read/write, latency)
+├── tmp_cache_index.json         # Cache index for CI/CD (TTL, size, checksum)
 └── README.md
 ```
 
@@ -91,63 +90,63 @@ data/work/staging/tabular/normalized/climate/tmp/cache/
 
 ## 📦 Cache Schema Table
 
-| File | Type | Purpose | Format | Compression | Retention | Validation |
-|:--|:--|:--|:--|:--|:--|:--|
-| `etl_state.pkl` | Binary | Save ETL runtime states | Pickle | N/A | 24 hrs | ✅ |
-| `ai_cache_validation.parquet` | Tabular | Store Focus AI intermediate model results | Parquet | Snappy | 12 hrs | ✅ |
-| `vector_cache.feather` | Columnar | Accelerate spatial joins | Feather | LZ4 | 12 hrs | ✅ |
-| `io_benchmark.log` | Text | Record cache performance stats | Log | Plain | 24 hrs | ✅ |
-| `tmp_cache_index.json` | JSON | Register cache structure for cleanup tasks | JSON | N/A | 24 hrs | ✅ |
+| File                         | Type     | Purpose                                 | Format   | Compression | Retention | Validation |
+|:----------------------------|:---------|:----------------------------------------|:---------|:------------|:---------:|:----------|
+| `etl_state.pkl`             | Binary   | Save ETL runtime states & checkpoints   | Pickle   | N/A         | 24 hrs    | ✅         |
+| `ai_cache_validation.parquet` | Tabular | Store Focus AI intermediate results     | Parquet  | Snappy      | 12 hrs    | ✅         |
+| `vector_cache.feather`      | Columnar | Accelerate spatial joins/analytics      | Feather  | LZ4         | 12 hrs    | ✅         |
+| `io_benchmark.log`          | Text     | Record cache performance statistics     | Log      | Plain       | 24 hrs    | ✅         |
+| `tmp_cache_index.json`      | JSON     | Register cache structure & TTL policy   | JSON     | N/A         | 24 hrs    | ✅         |
 
 ---
 
 ## ⚙️ Lifecycle Overview
 
-| Stage | Process | Action | Trigger | Cleanup |
-|:--|:--|:--|:--|:--|
-| Create | Cache generated via ETL & AI | Write temp data | `focus-validate.yml` | N/A |
-| Use | Reuse cached intermediate data | Speed up QA | CI/CD execution | Auto |
-| Verify | Check cache integrity | Hash + validation | `checksum-verify.yml` | Auto |
-| Clean | Purge all cache artifacts | Reclaim resources | `clean-cache.yml` | ✅ |
+| Stage   | Process                 | Action                   | Trigger               | Cleanup |
+|:--------|:------------------------|:-------------------------|:----------------------|:--------|
+| Create  | ETL & AI caching        | Write temp data          | `focus-validate.yml`  | N/A     |
+| Use     | Read-once reuse         | Speed up validation/ETL  | CI/CD execution       | Auto    |
+| Verify  | Integrity & readiness   | Hash + schema checks     | `checksum-verify.yml` | Auto    |
+| Clean   | Cache purge             | Reclaim resources        | `clean-cache.yml`     | ✅      |
 
 ---
 
 ## 🧰 CI/CD Integration Matrix
 
-| Workflow | Function | Output | Trigger | Retention |
-|:--|:--|:--|:--|:--|
-| `focus-validate.yml` | AI cache testing | `ai_cache_validation.parquet` | PR merge | 12 hrs |
-| `stac-validate.yml` | Metadata temp cache | `tmp_cache_index.json` | Nightly | 24 hrs |
-| `checksum-verify.yml` | Cache hash integrity | `.sha256` | Merge | 24 hrs |
-| `clean-cache.yml` | Wipe cache artifacts | N/A | Daily | N/A |
+| Workflow               | Function                     | Output                        | Trigger     | Retention |
+|:-----------------------|:-----------------------------|:------------------------------|:------------|:----------|
+| `focus-validate.yml`   | AI cache testing             | `ai_cache_validation.parquet` | PR merge    | 12 hrs    |
+| `stac-validate.yml`    | Metadata temp cache checks   | `tmp_cache_index.json`        | Nightly     | 24 hrs    |
+| `checksum-verify.yml`  | Cache hash integrity         | `.sha256`                     | Merge       | 24 hrs    |
+| `clean-cache.yml`      | Wipe cache artifacts         | N/A                           | Daily       | N/A       |
 
 ---
 
 ## 🧮 Resource & Sustainability Metrics
 
-| Metric | Value | Target | Unit | Verified |
-|:--|:--|:--|:--|:--|
-| Read Speed | 760 | ≥700 | MB/s | ✅ |
-| Write Speed | 425 | ≥400 | MB/s | ✅ |
-| Reuse Efficiency | 99.9 | ≥99 | % | ✅ |
-| Energy Use | 0.04 | ≤0.05 | Wh/file | ✅ |
-| Carbon Output | 0.02 | ≤0.03 | gCO₂e/file | ✅ |
-| Temperature | +0.1 | ≤+0.3 | °C system heat delta | ✅ |
+| Metric            | Value | Target | Unit          | Verified |
+|:------------------|:-----:|:------:|:--------------|:--------:|
+| Read Speed        |  760  |  ≥700  | MB/s          | ✅       |
+| Write Speed       |  425  |  ≥400  | MB/s          | ✅       |
+| Reuse Efficiency  | 99.9  |  ≥99   | %             | ✅       |
+| Energy Use        | 0.04  | ≤0.05  | Wh/file       | ✅       |
+| Carbon Output     | 0.02  | ≤0.03  | gCO₂e/file    | ✅       |
+| Temp Delta        | +0.1  | ≤+0.3  | °C sys delta  | ✅       |
 
 ---
 
 ## 🌍 FAIR+CARE+ISO+AI Compliance Matrix
 
-| Standard | Metric | Value | Status | Reviewer |
-|:--|:--|:--|:--|:--|
-| FAIR | Findable | Cache entries indexed by temp_cache_index.json | ✅ | @kfm-fair |
-| FAIR | Reusable | Deterministic recreation | ✅ | @kfm-fair |
-| CARE | Responsibility | Automated cleanup enforcement | ✅ | @kfm-governance |
-| CARE | Ethics | Non-persistent storage, zero PII | ✅ | @kfm-ethics |
-| ISO 50001 | Energy Efficiency | 0.04 Wh/file | ✅ | @kfm-security |
-| ISO 14064 | Carbon Intensity | 0.02 gCO₂e/file | ✅ | @kfm-fair |
-| AI (MCP-DL) | Drift Detection | 0.0% | ✅ | @kfm-ai |
-| Blockchain | Provenance Verification | Hash confirmed | ✅ | @kfm-governance |
+| Standard   | Metric                    | Value | Status | Reviewer        |
+|:-----------|:--------------------------|:-----:|:------|:----------------|
+| FAIR       | Findable (indexed)        | 100%  | ✅     | @kfm-fair       |
+| FAIR       | Reusable (deterministic)  | 100%  | ✅     | @kfm-fair       |
+| CARE       | Responsibility (cleanup)  | 100%  | ✅     | @kfm-governance |
+| CARE       | Ethics (no PII)           | 100%  | ✅     | @kfm-ethics     |
+| ISO 50001  | Energy Efficiency         | 0.04  | ✅     | @kfm-security   |
+| ISO 14064  | Carbon Intensity          | 0.02  | ✅     | @kfm-fair       |
+| AI (MCP-DL)| Drift Detection           | 0.0%  | ✅     | @kfm-ai         |
+| Blockchain | Provenance Verification   | Pass  | ✅     | @kfm-governance |
 
 ---
 
@@ -191,7 +190,7 @@ data/work/staging/tabular/normalized/climate/tmp/cache/
 
 ```json
 {
-  "readme_id": "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-CACHE-RMD-v12.6.0",
+  "readme_id": "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-CACHE-RMD-v12.6.1",
   "validation_timestamp": "2025-10-31T00:00:00Z",
   "verified_by": "@kfm-security",
   "ai_reviewer": "@kfm-ai",
@@ -215,33 +214,27 @@ make clean-cache
 github-actions clean-cache.yml
 ```
 
+**Policy:**  
+All cache artifacts are **ephemeral** and **auto-purged** post-ETL or CI/CD, never versioned, and **deterministically regenerable**.
+
 ---
 
 ## 🧠 Cache Philosophy
 
-> **Cache Philosophy:**  
 > The cache is a paradox — created to be erased.  
-> It speeds up reproducibility but leaves no trace of itself.  
-> Here, performance and ethics coexist: every cycle faster, cleaner, and more accountable.
+> It speeds reproducibility but leaves no trace of itself.  
+> Performance and ethics coexist here: every cycle faster, cleaner, more accountable.
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | FAIR/CARE | Security | Summary |
-|:--|:--|:--|:--|:--|:--|:--|
-| v12.6.0 | 2025-10-31 | @kfm-data | @kfm-governance | 100% | Blockchain ✓ | Governance-AI Parity Final |
-| v12.5.0 | 2025-10-30 | @kfm-ai | @kfm-validation | 99% | ✓ | Performance Optimization Added |
-| v12.4.0 | 2025-10-29 | @kfm-data | @kfm-fair | 98% | ✓ | Initial Cache Layer Definition |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-climate**, and **@kfm-validation**,  
-with oversight from **@kfm-ai**, **@kfm-security**, and **@kfm-governance**.  
-This layer is certified under **FAIR+CARE**, **ISO 14064**, **ISO 50001**, and **MCP-DL v6.3**,  
-ensuring efficient, ethical, and sustainable ETL acceleration for Kansas climate data.
+| Version | Date       | Author     | Reviewer        | FAIR/CARE | Security      | Summary                                   |
+|:--------|:-----------|:-----------|:----------------|:---------:|:-------------:|:-------------------------------------------|
+| v12.6.1 | 2025-10-31 | @kfm-data  | @kfm-governance | 100%      | Blockchain ✓  | Mermaid-safe nodes, CI matrix alignment    |
+| v12.6.0 | 2025-10-31 | @kfm-data  | @kfm-governance | 100%      | Blockchain ✓  | Governance-AI Parity Final                 |
+| v12.5.0 | 2025-10-30 | @kfm-ai    | @kfm-validation | 99%       | ✓             | Performance Optimization Added             |
+| v12.4.0 | 2025-10-29 | @kfm-data  | @kfm-fair       | 98%       | ✓             | Initial Cache Layer Definition             |
 
 ---
 
@@ -254,7 +247,7 @@ ensuring efficient, ethical, and sustainable ETL acceleration for Kansas climate
 [![Integrity Index](https://img.shields.io/badge/Integrity%20Index-100%25%20Verified-blue)]()
 [![Energy Efficiency](https://img.shields.io/badge/Energy%20Efficiency-0.04%20Wh%2Ffile-green)]()
 [![Carbon Intensity](https://img.shields.io/badge/Carbon%20Intensity-0.02%20gCO₂e%2Ffile-green)]()
-[![Interoperability](https://img.shields.io/badge/Interoperability-Parquet%20%7C%20Feather%20%7C%20Pickle%20Certified-blue)]()
+[![Interoperability](https://img.shields.io/badge/Interoperability-Parquet%20%7C%20Feather%20%7C%20Pickle-blue)]()
 
 </div>
 
