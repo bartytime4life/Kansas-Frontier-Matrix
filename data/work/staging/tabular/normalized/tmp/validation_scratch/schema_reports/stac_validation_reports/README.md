@@ -70,13 +70,12 @@ Each report is versioned, cryptographically signed, and cross-referenced with a 
 
 ```mermaid
 flowchart TD
-    A[Normalized TMP Dataset (.geojson / .json)] --> B[STAC Validator Engine]
-    B --> C[Schema Validation (stac-validate)]
-    C --> D[Report Generation (.json)]
-    D --> E[Batch QA Summary (batch_validation_summary.json)]
-    E --> F[Governance Ledger Registration + Checksum Archive]
+    A["Normalized TMP Dataset – .geojson / .json"] --> B["STAC Validator Engine"]
+    B --> C["Schema Validation – stac-validate"]
+    C --> D["Report Generation – .json"]
+    D --> E["Batch QA Summary – batch_validation_summary.json"]
+    E --> F["Governance Ledger Registration + Checksum Archive"]
 ```
-%% END OF MERMAID %%
 
 ---
 
