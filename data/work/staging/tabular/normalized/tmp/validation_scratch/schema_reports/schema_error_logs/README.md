@@ -73,13 +73,12 @@ All log artifacts are checksum-verified and cross-linked with the validation man
 
 ```mermaid
 flowchart TD
-    A[Schema Validation Run] --> B[Validation Engine (STAC/DCAT/CIDOC)]
+    A[Schema Validation Run] --> B["Validation Engine (STAC/DCAT/CIDOC)"]
     B --> C[Detected Errors & Warnings]
-    C --> D[Error Log Generation (.log, .csv, .json)]
-    D --> E[Provenance Entry Creation (PROV-O JSON-LD)]
+    C --> D["Error Log Generation (.log, .csv, .json)"]
+    D --> E["Provenance Entry Creation (PROV-O JSON-LD)"]
     E --> F[Governance Ledger Registration]
 ```
-%% END OF MERMAID %%
 
 ---
 
