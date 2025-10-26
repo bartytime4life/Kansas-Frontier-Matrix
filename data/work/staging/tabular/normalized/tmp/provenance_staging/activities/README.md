@@ -70,7 +70,6 @@ flowchart TD
     A --> E["prov:qualifiedAssociation — Human or AI Agent"]
     D --> F["prov:wasDerivedFrom — Source Archive Reference"]
 ```
-%% END OF MERMAID %%
 
 ---
 
