@@ -77,10 +77,10 @@ data/work/staging/tabular/normalized/hydrology/checksums/
 
 ```mermaid
 flowchart LR
-A[data/work/staging/tabular/normalized/hydrology/] --> B[checksums/ (SHA-256 Hash Generation)]
-B --> C[data/work/staging/tabular/validation/ (Checksum Verification)]
-C --> D[data/checksums/hydrology/ (Permanent Archive)]
-D --> E[Blockchain Ledger / FAIR+CARE Validation]
+    A["data/work/staging/tabular/normalized/hydrology/"] --> B["checksums/ (SHA-256 Hash Generation)"]
+    B --> C["data/work/staging/tabular/validation/ (Checksum Verification)"]
+    C --> D["data/checksums/hydrology/ (Permanent Archive)"]
+    D --> E["Blockchain Ledger / FAIR+CARE Validation"]
 ```
 
 ---
