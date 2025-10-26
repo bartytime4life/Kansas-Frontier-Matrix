@@ -68,12 +68,11 @@ This validation layer ensures that all KFM datasets:
 ```mermaid
 flowchart TD
     A[Normalized Dataset Metadata] --> B[DCAT Validator Engine]
-    B --> C[Schema Verification (DCAT 3.0 JSON-LD)]
+    B --> C["Schema Verification (DCAT 3.0 JSON-LD)"]
     C --> D[Generate Validation Reports (.json)]
     D --> E[Batch Aggregation (batch_dcat_summary.json)]
     E --> F[Governance Ledger Registration]
 ```
-%% END OF MERMAID %%
 
 ---
 
