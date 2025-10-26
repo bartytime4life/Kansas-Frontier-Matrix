@@ -1,7 +1,7 @@
 ---
 title: "🌦️ Kansas Frontier Matrix — Climate Temporary Workspace (Crown∞Ω+++ Governance-AI Operational Parity Final)"
 path: "data/work/staging/tabular/normalized/climate/tmp/README.md"
-version: "v12.4.0"
+version: "v12.4.1"
 last_updated: "2025-10-30"
 review_cycle: "Per ETL Cycle"
 commit_sha: "<latest-commit-hash>"
@@ -11,12 +11,11 @@ data_contract_ref: "docs/contracts/data-contract-v3.json"
 telemetry_ref: "releases/v12.4.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/tabular-climate-tmp-v22.json"
 json_export: "releases/v12.4.0/tabular-climate-tmp.meta.json"
-validation_reports: [
-  "reports/self-validation/tabular-climate-tmp-validation.json",
-  "reports/audit/climate_tmp_audit.json"
-]
+validation_reports:
+  - "reports/self-validation/tabular-climate-tmp-validation.json"
+  - "reports/audit/climate_tmp_audit.json"
 governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-TMP-RMD-v12.4.0"
+doc_id: "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-TMP-RMD-v12.4.1"
 maintainers: ["@kfm-data", "@kfm-climate", "@kfm-validation"]
 approvers: ["@kfm-governance", "@kfm-security", "@kfm-fair"]
 reviewed_by: ["@kfm-ai", "@kfm-ethics", "@kfm-architecture"]
@@ -62,13 +61,13 @@ and **AI-audited reproducibility** within the **Kansas Frontier Matrix (KFM)**.
 
 ```mermaid
 flowchart TD
-A[data/raw/climate/*.nc|*.csv] --> B[data/work/staging/tabular/normalized/climate/]
-B --> C[data/work/staging/tabular/normalized/climate/tmp/]
-C --> D[data/work/staging/tabular/normalized/climate/reports/]
-D --> E[data/checksums/climate/]
-E --> F[data/processed/climate/]
-F --> G[data/stac/climate/]
-G --> H[Blockchain Ledger / FAIR+CARE Governance Council]
+  A["data/raw/climate/*.nc or *.csv"] --> B["data/work/staging/tabular/normalized/climate/"]
+  B --> C["data/work/staging/tabular/normalized/climate/tmp/"]
+  C --> D["data/work/staging/tabular/normalized/climate/reports/"]
+  D --> E["data/checksums/climate/"]
+  E --> F["data/processed/climate/"]
+  F --> G["data/stac/climate/"]
+  G --> H["Blockchain Ledger / FAIR+CARE Governance Council"]
 ```
 
 ---
@@ -90,62 +89,62 @@ data/work/staging/tabular/normalized/climate/tmp/
 
 ## 📁 File Lifecycle Table
 
-| File | Origin | Transformation | Validation | Retention | Cleanup |
-|:--|:--|:--|:--|:--|:--|
-| `temp_precip_subset.csv` | NOAA API | CSV merge + filter | Schema + checksum | Per ETL | Auto |
-| `temp_temp_anomalies.json` | Daymet | JSON normalization | FAIR check | Per validation | Auto |
-| `temp_drought_tile.tif` | PRISM | Raster reprojection | GeoTIFF validation | Per ETL | Auto |
-| `focus_ai_test.parquet` | Focus AI | AI explainability validation | AI drift check | 7 days | Auto |
-| `cache/` | Internal | I/O caching | N/A | 24 hrs | Auto |
+| File                      | Origin     | Transformation               | Validation                | Retention   | Cleanup |
+|:--------------------------|:-----------|:-----------------------------|:--------------------------|:------------|:--------|
+| `temp_precip_subset.csv`  | NOAA API   | CSV merge + filter           | Schema + checksum         | Per ETL     | Auto    |
+| `temp_temp_anomalies.json`| Daymet     | JSON normalization           | FAIR check                | Per run     | Auto    |
+| `temp_drought_tile.tif`   | PRISM      | Raster reprojection          | GeoTIFF validation        | Per ETL     | Auto    |
+| `focus_ai_test.parquet`   | Focus AI   | Feature build + sampling     | AI drift & explainability | 7 days      | Auto    |
+| `cache/`                  | Internal   | I/O caching                  | N/A                       | 24 hrs      | Auto    |
 
 ---
 
 ## ⚙️ CI/CD Workflow Integration
 
-| Workflow | Function | Trigger | Output | Cleanup |
-|:--|:--|:--|:--|:--|
-| `focus-validate.yml` | Create AI validation data | PR merge | `focus_ai_test.parquet` | ✅ |
-| `stac-validate.yml` | Validate temporary spatial metadata | Nightly | `schema_drift.json` | ✅ |
-| `checksum-verify.yml` | Validate data integrity | On merge | `*.sha256` | ✅ |
-| `clean-tmp.yml` | Clear tmp folder | Daily | N/A | ✅ |
-| `site.yml` | Publish docs | Weekly | Updated README | N/A |
+| Workflow               | Function                         | Trigger     | Output                        | Cleanup |
+|:-----------------------|:----------------------------------|:------------|:------------------------------|:--------|
+| `focus-validate.yml`   | Create AI validation data         | PR merge    | `focus_ai_test.parquet`       | ✅      |
+| `stac-validate.yml`    | Validate temporary spatial meta   | Nightly     | `schema_drift.json`           | ✅      |
+| `checksum-verify.yml`  | Validate data integrity           | On merge    | `*.sha256`                    | ✅      |
+| `clean-tmp.yml`        | Clear tmp folder                  | Daily       | N/A                           | ✅      |
+| `site.yml`             | Publish docs                      | Weekly      | Updated README                | N/A     |
 
 ---
 
 ## 🔗 Cross-Link Reference Table
 
-| Temp File | Destination | Validation Source | Checksum | STAC Reference |
-|:--|:--|:--|:--|:--|
-| `temp_precip_subset.csv` | `normalized/` | `validation_summary.json` | `checksums/precip.sha256` | `stac/climate/precipitation.json` |
-| `temp_temp_anomalies.json` | `processed/` | `ai_explainability.json` | `checksums/temperature.sha256` | `stac/climate/temperature.json` |
-| `temp_drought_tile.tif` | `reports/` | `schema_drift.json` | `checksums/drought.sha256` | `stac/climate/drought.json` |
+| Temp File                   | Destination                  | Validation Source            | Checksum                     | STAC Reference                       |
+|:----------------------------|:-----------------------------|:-----------------------------|:-----------------------------|:--------------------------------------|
+| `temp_precip_subset.csv`    | `normalized/`                | `validation_summary.json`    | `checksums/precip.sha256`    | `stac/climate/precipitation.json`     |
+| `temp_temp_anomalies.json`  | `processed/`                 | `ai_explainability.json`     | `checksums/temperature.sha256`| `stac/climate/temperature.json`       |
+| `temp_drought_tile.tif`     | `reports/`                   | `schema_drift.json`          | `checksums/drought.sha256`   | `stac/climate/drought.json`           |
 
 ---
 
 ## 🧮 Performance & Sustainability Metrics
 
-| Metric | Value | Target | Unit | Status |
-|:--|:--|:--|:--|:--|
-| Throughput | 48 | ≥40 | MB/s | ✅ |
-| Cleanup Latency | 0.8 | ≤1 | s | ✅ |
-| Reproducibility | 99.9 | ≥99.5 | % | ✅ |
-| Energy Use | 0.05 | ≤0.1 | Wh/file | ✅ |
-| Carbon Output | 0.02 | ≤0.03 | gCO₂e/file | ✅ |
+| Metric             | Value | Target | Unit   | Status |
+|:-------------------|:-----:|:------:|:------:|:------:|
+| Throughput         |  48   |  ≥ 40  | MB/s   | ✅     |
+| Cleanup Latency    |  0.8  |  ≤ 1   | s      | ✅     |
+| Reproducibility    | 99.9  | ≥ 99.5 | %      | ✅     |
+| Energy Use         | 0.05  | ≤ 0.1  | Wh/file| ✅     |
+| Carbon Output      | 0.02  | ≤ 0.03 | gCO₂e/file | ✅  |
 
 ---
 
 ## 🌍 FAIR+CARE+ISO+AI Compliance Matrix
 
-| Standard | Dimension | Metric | Value | Verified |
-|:--|:--|:--|:--|:--|
-| FAIR | Findable | Linked metadata references | 100% | ✅ |
-| FAIR | Interoperable | Open formats (CSV, TIF, JSON, Parquet) | 100% | ✅ |
-| CARE | Ethics | Temporary + privacy-preserving design | ✅ | ✅ |
-| CARE | Collective Benefit | Efficient re-use pipeline | ✅ | ✅ |
-| ISO 50001 | Power Efficiency | ≤0.05 Wh/file | ✅ | ✅ |
-| ISO 14064 | Carbon Intensity | ≤0.02 gCO₂e/file | ✅ | ✅ |
-| AI (MCP-DL) | Drift Control | 0.0% | ✅ | ✅ |
-| Blockchain | Provenance Ledger | Hash validation passed | ✅ | ✅ |
+| Standard   | Dimension        | Metric                         | Value | Verified |
+|:-----------|:-----------------|:-------------------------------|:-----:|:--------:|
+| FAIR       | Findable         | Linked metadata references     | 100%  | ✅       |
+| FAIR       | Interoperable    | Open formats (CSV, TIF, JSON, Parquet) | 100% | ✅ |
+| CARE       | Ethics           | Temporary & privacy-preserving |  ✅   | ✅       |
+| CARE       | Collective Benefit| Efficient re-use pipeline      |  ✅   | ✅       |
+| ISO 50001  | Power Efficiency | ≤ 0.05 Wh/file                 |  ✅   | ✅       |
+| ISO 14064  | Carbon Intensity | ≤ 0.02 gCO₂e/file              |  ✅   | ✅       |
+| AI (MCP-DL)| Drift Control    | 0.0%                           |  ✅   | ✅       |
+| Blockchain | Provenance Ledger| Hash validation passed         |  ✅   | ✅       |
 
 ---
 
@@ -191,7 +190,7 @@ data/work/staging/tabular/normalized/climate/tmp/
 
 ```json
 {
-  "readme_id": "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-TMP-RMD-v12.4.0",
+  "readme_id": "KFM-DATA-WORK-STAGING-TABULAR-CLIMATE-TMP-RMD-v12.4.1",
   "validation_timestamp": "2025-10-30T00:00:00Z",
   "verified_by": "@kfm-security",
   "ai_reviewer": "@kfm-ai",
@@ -223,7 +222,6 @@ Temporary files are never versioned and can always be regenerated deterministica
 
 ## 🧠 Operational Philosophy
 
-> **Philosophy:**  
 > The climate tmp workspace is the pause between creation and verification.  
 > Here, data changes form but never loses traceability — each file fleeting,  
 > yet its lineage eternal in the Kansas Frontier Matrix ledger.
@@ -232,19 +230,12 @@ Temporary files are never versioned and can always be regenerated deterministica
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | FAIR/CARE | Security | Summary |
-|:--|:--|:--|:--|:--|:--|:--|
-| v12.4.0 | 2025-10-30 | @kfm-data | @kfm-governance | 100% | Blockchain ✓ | Governance-AI Operational Parity Final |
-| v12.3.0 | 2025-10-29 | @kfm-ai | @kfm-validation | 99% | ✓ | Added sustainability metrics |
-| v12.2.0 | 2025-10-28 | @kfm-data | @kfm-fair | 98% | ✓ | Initial climate tmp workspace |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-climate**, and **@kfm-validation**,  
-with oversight from **@kfm-ai**, **@kfm-security**, and **@kfm-governance**.  
-Governed under **FAIR+CARE**, **ISO 14064**, **ISO 50001**, and **MCP-DL v6.3** for transparent reproducibility.
+| Version | Date       | Author       | Reviewer         | FAIR/CARE | Security      | Summary                                         |
+|:--------|:-----------|:-------------|:-----------------|:---------:|:-------------:|:-----------------------------------------------|
+| v12.4.1 | 2025-10-30 | @kfm-data    | @kfm-governance  | 100%      | Blockchain ✓  | Mermaid-safe nodes, alignment pass, minor fixes |
+| v12.4.0 | 2025-10-30 | @kfm-data    | @kfm-governance  | 100%      | Blockchain ✓  | Governance-AI Operational Parity Final          |
+| v12.3.0 | 2025-10-29 | @kfm-ai      | @kfm-validation  | 99%       | ✓             | Added sustainability metrics                     |
+| v12.2.0 | 2025-10-28 | @kfm-data    | @kfm-fair        | 98%       | ✓             | Initial climate tmp workspace                    |
 
 ---
 
