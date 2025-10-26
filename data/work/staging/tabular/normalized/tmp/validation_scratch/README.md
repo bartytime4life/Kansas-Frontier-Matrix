@@ -74,14 +74,13 @@ The validation_scratch layer enforces **four core testing principles**:
 
 ```mermaid
 flowchart TD
-    A[ETL Process Initiates TMP Normalization] --> B[Temporary Files Stored in TMP]
-    B --> C[Schema Validator (stac-validate, jsonschema-cli)]
-    C --> D[Ontology Check (CIDOC CRM / OWL-Time Mapping)]
-    D --> E[Provenance JSON-LD Auto-Generation]
-    E --> F[Audit Summary + QA Metrics]
-    F --> G[Promotion to Normalized Layer or Flag for Review]
+    A["ETL Process Initiates TMP Normalization"] --> B["Temporary Files Stored in TMP"]
+    B --> C["Schema Validator – stac-validate, jsonschema-cli"]
+    C --> D["Ontology Check – CIDOC CRM / OWL-Time Mapping"]
+    D --> E["Provenance JSON-LD Auto-Generation"]
+    E --> F["Audit Summary + QA Metrics"]
+    F --> G["Promotion to Normalized Layer or Flag for Review"]
 ```
-%% END OF MERMAID %%
 
 ---
 
