@@ -37,24 +37,27 @@ license: "MIT"
 
 ---
 
-## 🧭 Table of Contents
+<details>
+<summary><b>📚 Table of Contents (click to expand)</b></summary>
 
-- [Overview](#-overview)
-- [Directory Layout](#-directory-layout)
-- [Workflow · Schema Validation Process](#-workflow--schema-validation-process)
-- [Runbook · Commands](#-runbook--commands)
-- [Inputs & Contracts](#-inputs--contracts)
-- [Validation Components](#-validation-components)
-- [Governance Rules](#-governance-rules)
-- [Provenance & FAIR Metadata](#-provenance--fair-metadata)
-- [Quality Gates & Acceptance Criteria](#-quality-gates--acceptance-criteria)
-- [CI/CD Integration](#-cicd-integration)
-- [Logging, Telemetry & Retention](#-logging-telemetry--retention)
-- [Security & PII](#-security--pii)
-- [Troubleshooting](#-troubleshooting)
-- [Related Docs](#-related-docs)
-- [Version History](#-version-history)
-- [Footer & Badges](#-footer--badges)
+- [📘 Overview](#-overview)
+- [🧾 Directory Layout](#-directory-layout)
+- [⚙️ Workflow · Schema Validation Process](#️-workflow--schema-validation-process)
+- [🧪 Runbook · Commands](#-runbook--commands)
+- [📜 Inputs & Contracts](#-inputs--contracts)
+- [🧠 Validation Components](#-validation-components)
+- [🧷 Governance Rules](#-governance-rules)
+- [🧾 Provenance & FAIR Metadata](#-provenance--fair-metadata)
+- [✅ Quality Gates & Acceptance Criteria](#-quality-gates--acceptance-criteria)
+- [🛠 CI/CD Integration](#-cicd-integration)
+- [📡 Logging, Telemetry & Retention](#-logging-telemetry--retention)
+- [🔐 Security & PII](#-security--pii)
+- [🧯 Troubleshooting](#-troubleshooting)
+- [🔗 Related Docs](#-related-docs)
+- [🗂 Version History](#-version-history)
+- [🏁 Footer & Badges](#-footer--badges)
+
+</details>
 
 ---
 
@@ -109,76 +112,62 @@ flowchart TD
 
 > All commands run from the repo root (monorepo). These align with standard KFM Make targets.
 
-* **Validate current intake batch**
+```bash
+# Validate current intake batch
+make tabular-validate
 
-  ```bash
-  make tabular-validate
-  ```
-* **Generate STAC/DCAT crosswalk + validate**
+# Generate STAC/DCAT crosswalk + validate
+make stac-validate dcat-validate
 
-  ```bash
-  make stac-validate dcat-validate
-  ```
-* **Run FAIR+CARE scoring**
+# Run FAIR+CARE scoring
+make faircare
 
-  ```bash
-  make faircare
-  ```
-* **AI anomaly sweep (schema semantics)**
+# AI anomaly sweep (schema semantics)
+make ai-schema-audit
 
-  ```bash
-  make ai-schema-audit
-  ```
-* **Roll-up & checksums**
+# Roll-up & checksums
+make schema-logs
+```
 
-  ```bash
-  make schema-logs
-  ```
-
-*Outputs are written to this directory’s `reports/`, `history/`, and `checksums/`.*
+Outputs are written to this directory’s `reports/`, `history/`, and `checksums/`.
 
 ---
 
 ## 📜 Inputs & Contracts
 
-**Required inputs (per dataset):**
+* **Data file:** `.csv` or `.json` with header row / keys.
+* **Metadata sidecar:** `.meta.yaml` or `.meta.json` describing field types, units, spatial/temporal coverage.
+* **Contract:** Must conform to `docs/contracts/data-contract-v3.json`.
+* **Spatial or temporal attributes:** At least one of:
 
-* **Data file**: `.csv` or `.json` with header row / keys.
-* **Sidecar metadata**: `.meta.yaml` or `.meta.json` (types, units, temporal coverage, spatial CRS if applicable).
-* **Contract**: Conforms to `docs/contracts/data-contract-v3.json` (referenced in front-matter).
-* **Spatial/Temporal**: ≥1 of:
+  * `datetime` or `start_datetime` / `end_datetime`
+  * Spatial geometry (`lat/lon`, `geometry`, or `place_id`)
 
-  * Temporal column(s): `date`, `datetime`, `year`, `time_start/time_end`
-  * Spatial column(s): `lat/lon` or `geometry` (WKT/GeoJSON) or administrative keys with a known join
-
-**Crosswalk expectations:**
-
-* STAC **Item/Collection** fields hydrated for tabular assets (asset roles, `type`, `description`, `created`, `updated`, `datetime` or `start_datetime`/`end_datetime`).
-* DCAT JSON-LD nodes for dataset & distribution (download URL, media type, license, spatial/temporal coverage).
+Crosswalks must generate **STAC Item** and **DCAT Dataset** entries referencing these fields.
 
 ---
 
 ## 🧠 Validation Components
 
-|               Stage | Tool / Standard                    | Output                           | Description                                                         |
-| ------------------: | ---------------------------------- | -------------------------------- | ------------------------------------------------------------------- |
-| 1. Schema Discovery | `frictionless`, `pandas-profiling` | `schema-detect.json`             | Infers structure & types; detects missing headers & mixed types.    |
-|      2. JSON Schema | `jsonschema` (tabular-v13)         | `tabular-schema-validation.json` | Enforces field types, enums, formats, nullability, required fields. |
-|             3. STAC | `stac-validator` + KFM crosswalk   | `stac-validation.json`           | Validates STAC 1.0 Item/Collection for tabular assets.              |
-|             4. DCAT | JSON-LD + SHACL rules              | `dcat-validation.json`           | Checks dataset/distribution nodes for DCAT 3.0 semantics.           |
-|        5. FAIR+CARE | FAIR scoring module                | `faircare-summary.json`          | Computes F, A, I, R and CARE context; flags gaps.                   |
-|         6. AI Audit | `ai_tabular_audit.py`              | `ai-schema-anomalies.json`       | Detects semantic drifts, undocumented columns, unit mismatches.     |
-|        7. Integrity | `sha256sum`                        | `validation_checksums.sha256`    | Hashes for **all** reports; immutability check.                     |
+|                Stage | Tool / Standard                    | Output                           | Description                                                         |
+| -------------------: | ---------------------------------- | -------------------------------- | ------------------------------------------------------------------- |
+| 1️⃣ Schema Discovery | `frictionless`, `pandas-profiling` | `schema-detect.json`             | Infers structure & types; detects missing headers & mixed types.    |
+|      2️⃣ JSON Schema | `jsonschema` (tabular-v13)         | `tabular-schema-validation.json` | Enforces field types, enums, formats, nullability, required fields. |
+|             3️⃣ STAC | `stac-validator` + KFM crosswalk   | `stac-validation.json`           | Validates STAC 1.0 Item/Collection for tabular assets.              |
+|             4️⃣ DCAT | JSON-LD + SHACL rules              | `dcat-validation.json`           | Checks dataset/distribution nodes for DCAT 3.0 semantics.           |
+|        5️⃣ FAIR+CARE | FAIR scoring module                | `faircare-summary.json`          | Computes FAIR & CARE metrics; flags gaps.                           |
+|         6️⃣ AI Audit | `ai_tabular_audit.py`              | `ai-schema-anomalies.json`       | Detects semantic drifts, undocumented columns, unit mismatches.     |
+|        7️⃣ Integrity | `sha256sum`                        | `validation_checksums.sha256`    | Hashes for **all** reports; immutability check.                     |
 
 ---
 
 ## 🧷 Governance Rules
 
-* **Must-pass** stages: JSON Schema, STAC, DCAT, Integrity.
-* **FAIR+CARE**: Minimum score threshold defined below; exceptions require `@kfm-schema-council` sign-off.
-* **Sidecar metadata** mandatory; files without sidecars are **rejected**.
-* **PII** strictly forbidden; any detected PII halts pipeline and opens a security incident.
-* **Quarterly** review: Schema version bump, DCAT/STAC rule updates, FAIR thresholds, anomaly ruleset refresh.
+* **Mandatory Pass:** JSON Schema, STAC, DCAT, and Integrity.
+* **FAIR+CARE Threshold:** ≥ 0.95 or exception approved by `@kfm-schema-council`.
+* **Sidecar metadata:** Required for all datasets; missing sidecar = rejection.
+* **PII:** Forbidden. Detection triggers automatic pipeline halt.
+* **Quarterly Reviews:** Schema version updates, FAIR rule changes, anomaly tuning.
 
 ---
 
@@ -197,80 +186,77 @@ provenance:
 license: "MIT"
 ```
 
-> **Note:** The STAC collection is the public index for intake assets; DCAT feed is generated nightly by CI.
-
 ---
 
 ## ✅ Quality Gates & Acceptance Criteria
 
-| Gate                  | Threshold                        | Source                           |
-| --------------------- | -------------------------------- | -------------------------------- |
-| JSON Schema pass rate | **100%**                         | `tabular-schema-validation.json` |
-| STAC validity         | **No errors** (warnings allowed) | `stac-validation.json`           |
-| DCAT validity         | **No errors**                    | `dcat-validation.json`           |
-| FAIR score            | **≥ 0.95**                       | `faircare-summary.json`          |
-| AI audit              | **0 critical** anomalies         | `ai-schema-anomalies.json`       |
-| Checksums             | **Verified**                     | `validation_checksums.sha256`    |
-
-**Promotion rule:** Only datasets meeting all gates are eligible for move to `data/work/staging/tabular/normalized/`.
+| Gate                  | Target                      | Source                           |
+| --------------------- | --------------------------- | -------------------------------- |
+| JSON Schema pass rate | **100%**                    | `tabular-schema-validation.json` |
+| STAC validity         | **No errors** (warnings ok) | `stac-validation.json`           |
+| DCAT validity         | **No errors**               | `dcat-validation.json`           |
+| FAIR+CARE score       | **≥ 0.95**                  | `faircare-summary.json`          |
+| AI audit              | **0 critical** anomalies    | `ai-schema-anomalies.json`       |
+| Checksums             | **Verified**                | `validation_checksums.sha256`    |
 
 ---
 
 ## 🛠 CI/CD Integration
 
-* **PR Gate**: Running in `validate-schema.yml` on every PR touching `data/work/staging/tabular/tmp/intake/**`.
-* **Nightly**: Re-run validations on changed sources; publish STAC/DCAT and FAIR dashboards.
-* **Artifacts**: All reports uploaded as CI artifacts + committed to this directory on merge.
-* **Badges**: “Build & Validate · Passing” shows the last default-branch status.
+* **PR Gate:** Executes `validate-schema.yml` for any modified intake dataset.
+* **Nightly Jobs:** Re-run full schema validations, regenerate FAIR dashboards.
+* **Artifacts:** Logs, metrics, and JSONs uploaded to CI artifacts.
+* **Badges:** Validation status reflected in repo shields.
 
 ---
 
 ## 📡 Logging, Telemetry & Retention
 
-* **Logs**: `history/*.log` retained **indefinitely** (text, small footprint).
-* **Reports**: Retain last **8 quarters**; older archived to `releases/v*/validation/`.
-* **Metrics**: FAIR score, pass rates, anomaly counts emitted to `telemetry_schema` and aggregated in `releases/v9.0.0/focus-telemetry.json`.
+* **Retention:** 8 quarters for reports, indefinite for logs.
+* **Telemetry:** Schema, FAIR score, anomalies emitted to telemetry JSON.
+* **Metrics Dashboard:** Generated via `focus-telemetry.json` and visualized in Focus Mode analytics.
 
 ---
 
 ## 🔐 Security & PII
 
-* Classification: **Public (Open Data)**; **no PII** permitted.
-* PII detection hooks in AI audit (regex + model); any hit = **hard fail** and security ticket.
-* Only whitelisted MIME types: `text/csv`, `application/json`.
-* License must be machine-readable; license conflicts block promotion.
+* **Classification:** Public (Open Data) · **PII:** None permitted.
+* **AI Scans:** All tabular data scanned for PII signatures pre-ingest.
+* **Encryption:** Not required for this dataset class.
 
 ---
 
 ## 🧯 Troubleshooting
 
-* **“Unknown field”** in schema: Add to sidecar metadata or map to known alias; re-run `make tabular-validate`.
-* **STAC time errors**: Ensure `datetime` or `start/end_datetime` present and ISO-8601.
-* **FAIR score < threshold**: Fill missing `license`, `description`, `keywords`, `spatial/temporal` coverage.
-* **AI anomaly ‘units mismatch’**: Normalize units in sidecar and/or transform step; document conversion.
-* **Checksum mismatch**: Rebuild reports; confirm no manual edits to `reports/*.json`.
+| Issue                       | Resolution                                                          |
+| --------------------------- | ------------------------------------------------------------------- |
+| Unknown field               | Update sidecar metadata & re-run validation.                        |
+| STAC time errors            | Ensure ISO-8601 dates & valid intervals.                            |
+| FAIR score < threshold      | Add missing metadata: license, keywords, spatial/temporal coverage. |
+| AI anomaly “units mismatch” | Normalize units or fix schema enum; rerun `make ai-schema-audit`.   |
+| Checksum mismatch           | Recompute `sha256` & ensure no manual JSON edits.                   |
 
 ---
 
 ## 🔗 Related Docs
 
-* **Data Contract** — `docs/contracts/data-contract-v3.json`
-* **Repo Focus / Architecture** — `docs/architecture/repo-focus.md`
-* **Monorepo & Data Layout** — `docs/architecture/file-data-architecture.md`
-* **STAC Catalog (Intake)** — `data/stac/tabular/intake/collection.json`
-* **TMP Intake Overview** — `data/work/staging/tabular/tmp/intake/README.md`
-* **Validation (TMP root)** — `data/work/staging/tabular/tmp/intake/validation/README.md`
+* `docs/contracts/data-contract-v3.json`
+* `docs/architecture/repo-focus.md`
+* `docs/architecture/file-data-architecture.md`
+* `data/stac/tabular/intake/collection.json`
+* `data/work/staging/tabular/tmp/intake/README.md`
+* `data/work/staging/tabular/tmp/intake/validation/README.md`
 
 ---
 
 ## 🗂 Version History
 
-| Version | Date       | Description                                                                 | Commit                 |
-| ------: | ---------- | --------------------------------------------------------------------------- | ---------------------- |
-|  v9.0.1 | 2025-10-26 | Expanded runbook, CI, security, acceptance criteria, related links & badges | `<latest-commit-hash>` |
-|  v9.0.0 | 2025-10-26 | Initial schema validation record for TMP intake data                        | `<latest-commit-hash>` |
-|  v8.9.0 | 2025-07-12 | Added AI anomaly detection for schema validation                            | `b21aefc`              |
-|  v8.8.0 | 2025-04-09 | Integrated FAIR+CARE compliance scoring                                     | `d61a72b`              |
+| Version | Date       | Description                                                    | Commit                 |
+| ------: | ---------- | -------------------------------------------------------------- | ---------------------- |
+|  v9.0.1 | 2025-10-26 | Added dropdown TOC, emojis, enhanced CI/CD and troubleshooting | `<latest-commit-hash>` |
+|  v9.0.0 | 2025-10-26 | Initial schema validation record for TMP intake data           | `<latest-commit-hash>` |
+|  v8.9.0 | 2025-07-12 | Added AI anomaly detection for schema validation               | `b21aefc`              |
+|  v8.8.0 | 2025-04-09 | Integrated FAIR+CARE compliance scoring                        | `d61a72b`              |
 
 ---
 
