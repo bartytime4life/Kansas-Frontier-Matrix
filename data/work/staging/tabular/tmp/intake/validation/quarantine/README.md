@@ -178,5 +178,4 @@ make quarantine-revalidate
 <br><br> <a href="#-kansas-frontier-matrix--tabular-quarantine-zone-diamond⁹-Ω--crown∞Ω-certified">⬆ Back to Top</a>
 
 </div>
-```
 
