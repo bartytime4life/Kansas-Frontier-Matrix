@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "💎📥 Kansas Frontier Matrix — Tabular Intake TMP Layer (Diamond⁹ Ω / Crown∞Ω Certified)"
 path: "data/work/staging/tabular/tmp/intake/README.md"
