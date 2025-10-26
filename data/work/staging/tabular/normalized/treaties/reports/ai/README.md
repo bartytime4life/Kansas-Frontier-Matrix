@@ -77,14 +77,14 @@ data/work/staging/tabular/normalized/treaties/reports/ai/
 
 ```mermaid
 flowchart TD
-    A[data/work/staging/tabular/normalized/treaties/*.csv] --> B[AI Inference Engine]
-    B --> C[NER Extraction · spaCy / Transformers]
-    B --> D[Summarization · LLM Pipeline]
-    C --> E[Semantic Linking (Neo4j CIDOC Graph)]
-    D --> F[Report Composer (Markdown + JSON)]
+    A["data/work/staging/tabular/normalized/treaties/*.csv"] --> B["AI Inference Engine"]
+    B --> C["NER Extraction · spaCy / Transformers"]
+    B --> D["Summarization · LLM Pipeline"]
+    C --> E["Semantic Linking – Neo4j CIDOC Graph"]
+    D --> F["Report Composer – Markdown + JSON"]
     E --> F
-    F --> G[Validation & Provenance Records]
-    G --> H[data/work/staging/tabular/normalized/treaties/reports/ai/outputs/]
+    F --> G["Validation & Provenance Records"]
+    G --> H["data/work/staging/tabular/normalized/treaties/reports/ai/outputs/"]
 ```
 
 ---
