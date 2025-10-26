@@ -69,12 +69,12 @@ The **ontology_checks** workspace verifies that all TMP-stage transformations, p
 
 ```mermaid
 flowchart TD
-    A[Normalized TMP Dataset (GeoJSON / JSON-LD)] --> B[Ontology Validator Engine]
-    B --> C[CIDOC CRM Alignment Check]
-    B --> D[OWL-Time Temporal Reasoning]
-    B --> E[PROV-O Provenance Cross-Validation]
-    C & D & E --> F[Ontology QA Metrics + Anomaly Report]
-    F --> G[Governance Ledger Registration + Ethics Review]
+    A["Normalized TMP Dataset — GeoJSON or JSON-LD"] --> B["Ontology Validator Engine"]
+    B --> C["CIDOC CRM Alignment Check"]
+    B --> D["OWL-Time Temporal Reasoning"]
+    B --> E["PROV-O Provenance Cross-Validation"]
+    C & D & E --> F["Ontology QA Metrics and Anomaly Report"]
+    F --> G["Governance Ledger Registration + Ethics Review"]
 ```
 
 ---
