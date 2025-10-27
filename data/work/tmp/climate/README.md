@@ -1,4 +1,4 @@
-add logs to the workspace directory layout.  ---
+---
 title: "🌦️ Kansas Frontier Matrix — Temporary Climate Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/climate/README.md"
 version: "v9.2.0"
