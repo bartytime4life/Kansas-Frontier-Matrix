@@ -80,7 +80,14 @@ data/work/tmp/climate/
 │   ├── stac_items/               # STAC Items/Collections for tiles
 │   └── parquet/                  # Columnar tables for analytics
 ├── logs/
-│   │── 
+│   ├── etl_pipeline.log                 # End-to-end ETL activity trace
+│   ├── validation_engine.log            # Schema + FAIR+CARE validator runs
+│   ├── normalization_trace.log          # CF harmonization & reprojection events
+│   ├── ai_processing.log                # AI inference + explainability traces
+│   ├── governance_sync.log              # Ledger registrations & signatures
+│   ├── integrity_verification.log       # SHA-256 checks & diff results
+│   ├── climate_logs_manifest.json       # Manifest of all log artifacts + hashes
+│   └── README.md
 └── README.md
 ```
 
