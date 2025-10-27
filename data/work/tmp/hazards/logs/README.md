@@ -68,7 +68,7 @@ and sustainability performance under the unified **FAIR+CARE+ISO+AI-Ledger gover
 
 ```mermaid
 graph TD
-A[Hazards ETL Logs] --> B[Focus Mode AI (Drift Detection + Explainability)]
+A[Hazards ETL Logs] --> B[Focus Mode AI \(Drift Detection + Explainability\)]
 B --> C[FAIR+CARE Council]
 B --> D[Ethics Board]
 C --> E[Governance Ledger + Blockchain]
