@@ -129,7 +129,7 @@ make hazards-ai-explainability-ledger    # Register explainability artifacts int
 
 ```mermaid
 flowchart TD
-A[Train or Evaluate Model] --> B[Compute Feature Attributions (SHAP, LIME)]
+A[Train or Evaluate Model] --> B[Compute Feature Attributions \(SHAP, LIME\)]
 B --> C[Aggregate Explainability Scores]
 C --> D[Trend Analysis + FAIR+CARE Validation]
 D --> E[Governance Ledger Registration]
