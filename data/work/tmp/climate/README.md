@@ -79,6 +79,8 @@ data/work/tmp/climate/
 ├── exports/                      # Normalized climate outputs for downstream
 │   ├── stac_items/               # STAC Items/Collections for tiles
 │   └── parquet/                  # Columnar tables for analytics
+├── logs/
+│   │── 
 └── README.md
 ```
 
