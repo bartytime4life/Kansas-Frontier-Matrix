@@ -1,235 +1,182 @@
 ---
-title: "⚙️ Kansas Frontier Matrix — Hazards ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧩 Kansas Frontier Matrix — Hazards ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/etl/README.md"
-version: "v9.4.1"
+version: "v9.3.2"
 last_updated: "2025-10-28"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.4.1/sbom.spdx.json"
-manifest_ref: "releases/v9.4.1/manifest.zip"
+sbom_ref: "releases/v9.3.2/sbom.spdx.json"
+manifest_ref: "releases/v9.3.2/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.4.1/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-hazards-etl-logs-v15.json"
-json_export: "releases/v9.4.1/work-hazards-etl-logs.meta.json"
+telemetry_ref: "releases/v9.3.2/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/work-hazards-etl-v14.json"
+json_export: "releases/v9.3.2/work-hazards-etl.meta.json"
 validation_reports:
-  - "reports/self-validation/work-hazards-etl-logs-validation.json"
-  - "reports/fair/hazards_summary.json"
-  - "reports/audit/ai_hazards_ledger.json"
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-HAZARDS-LOGS-ETL-RMD-v9.4.1"
-maintainers: ["@kfm-data", "@kfm-hazards", "@kfm-security"]
-approvers: ["@kfm-governance", "@kfm-fair", "@kfm-architecture"]
-reviewed_by: ["@kfm-ai", "@kfm-accessibility", "@kfm-ethics"]
-ci_required_checks: ["docs-validate.yml", "checksum-verify.yml", "focus-validate.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Hazards ETL Logging & Workflow Governance Layer"
-mcp_version: "MCP-DL v6.4.3"
-alignment:
-  - FAIR / CARE
-  - STAC 1.0 / DCAT 3.0
-  - ISO 19115 / ISO 19157 / ISO 27001
-  - Blockchain Provenance / MCP-DL Compliance
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Auditable · Deterministic"
-focus_validation: true
-tags: ["hazards","etl","logs","workflow","provenance","governance","ledger","fair","validation","sustainability","checksum"]
+  - "reports/audit/etl_hazards_audit.json"
+  - "reports/fair/etl_hazards_summary.json"
+  - "reports/qa/etl_data_integrity.json"
+ontology_alignment: "ontologies/CIDOC_CRM-HazardExt.owl"
 ---
 
 <div align="center">
 
-# ⚙️ Kansas Frontier Matrix — **Hazards ETL Logs**  
-`data/work/tmp/hazards/logs/etl/`
+# 🧩 Kansas Frontier Matrix — **Hazards ETL Logs**
+`data/work/tmp/hazards/logs/etl/README.md`
 
-**Mission:** Maintain an **immutable, auditable log framework** for all Extract-Transform-Load (ETL) processes within the Hazards pipeline — covering ingestion, transformation, and schema validation stages under FAIR+CARE and ISO governance.
+**Purpose:** Central repository for Extract–Transform–Load (ETL) logs associated with hazard datasets,  
+including ingestion reports, geospatial conversions, schema conformance, and temporal alignment metadata.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../../reports/fair/hazards_summary.json)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata-lightgreen)]()
-[![ISO 27001](https://img.shields.io/badge/ISO-27001%20Security%20Validated-teal)]()
-[![Ledger Linked](https://img.shields.io/badge/Governance-Blockchain%20Audited-gold)]()
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)
+[![Status: ETL Layer](https://img.shields.io/badge/Status-ETL%20Layer-cyan)](../../../../../data/work/tmp/hazards/)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../../.github/workflows/stac-validate.yml)
+[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../../../.github/workflows/pre-commit.yml)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The **Hazards ETL Logging Layer** documents every event in the ETL lifecycle — from initial data ingestion to schema validation, checksum verification, and harmonized output generation.  
-These logs serve as a **verifiable audit trail** for FAIR+CARE compliance, enabling reproducible data lineage and governance transparency.
+This directory maintains logs generated during **data ingestion and transformation** for the hazards domain.  
+Each ETL process extracts raw hazard datasets, performs transformations (e.g. reprojection, cleaning, standardization),  
+and loads outputs into the **STAC-indexed** temporary workspace for validation and AI analysis.
 
-**Scope:**
-- Tracks ETL job initiation, transformation parameters, and completion events.  
-- Logs checksum verifications, schema conformity, and error traces.  
-- Integrates directly with the **Governance Ledger** and STAC/DCAT validation pipelines.  
-- Enables observability for sustainability, reproducibility, and provenance.
+Data Sources include:
+- NOAA Storm Events (1950–present)
+- FEMA Disaster Declarations
+- USGS Earthquake & Flood Records
+- Kansas DASC Historical GIS Layers
+- Energy & Infrastructure Overlays
 
-> *“Every dataset’s truth begins at the moment it is transformed.”*
+Each ETL run generates detailed **JSON + Markdown reports** containing metadata on runtime, errors,  
+schema compliance, and lineage tracking to ensure reproducibility and governance audit readiness.
 
 ---
 
-## 🗂️ Directory Layout
+## ⚙️ ETL Workflow
 
-```text
+```mermaid
+flowchart TD
+A[Raw Hazard Data Sources] --> B[Extract: Fetch from APIs, URLs, or Archives]
+B --> C[Transform: Reproject · Normalize · QA]
+C --> D[Load: Write Processed GeoJSON/GeoTIFF to TMP Layer]
+D --> E[Validate: Schema + FAIR Checks]
+E --> F[STAC Catalog Update + Provenance Commit]
+F --> G[Archive + AI Inference Trigger]
+G --> H[Logs Stored Here (.json / .md / .csv)]
+```
+
+> **Tip:** All ETL jobs are orchestrated via the project Makefile using targets like  
+> `make hazards-etl`, `make hazards-validate`, or `make hazards-refresh`.  
+> See `tools/etl_pipeline.py` for code execution order and parameter mappings.
+
+---
+
+## 🗂 Directory Layout
+
+```plaintext
 data/work/tmp/hazards/logs/etl/
-├── sources/                     # Source-specific ETL ingestion logs
-│   ├── flood_sources.log
-│   ├── tornado_sources.log
-│   ├── wildfire_sources.log
-│   └── drought_sources.log
-├── loads/                       # Data loading and persistence traces
-│   ├── flood_load.log
-│   ├── tornado_load.log
-│   ├── wildfire_load.log
-│   └── drought_load.log
-├── transforms/                  # CF harmonization and reprojection logs
-│   ├── flood_transform.log
-│   ├── tornado_transform.log
-│   ├── wildfire_transform.log
-│   └── drought_transform.log
-├── manifests/                   # Transformation lineage manifests
-│   ├── flood_manifest.json
-│   ├── tornado_manifest.json
-│   ├── wildfire_manifest.json
-│   └── drought_manifest.json
-├── checksums.json               # SHA-256 checksum verification file
-├── etl_pipeline.log             # Global pipeline orchestration record
-├── validation_engine.log        # Validation + schema integrity logs
-├── governance_sync.log          # Governance Ledger registration trace
-└── README.md
+├── README.md
+├── extract/
+│   ├── noaa_storm_fetch_2025-10.log
+│   ├── fema_disaster_pull_2025-10.json
+│   └── usgs_flood_ingest_2025-09.csv
+├── transform/
+│   ├── hazard_normalization_report.json
+│   ├── reprojection_warnings.txt
+│   └── feature_cleaning_summary.md
+├── load/
+│   ├── hazards_stac_registration.json
+│   ├── data_quality_metrics.csv
+│   └── load_validation_report.json
+├── lineage/
+│   ├── hazards_provenance_chain.json
+│   └── checksum_verification.sha256
+└── summaries/
+    ├── etl_overview_report.md
+    └── pipeline_runtime_stats.json
 ```
 
----
-
-## ⚙️ Make Targets (ETL Log Ops)
-
-```text
-make hazards-etl-run              # Execute ETL and create logging artifacts
-make hazards-etl-verify           # Validate checksum, schema, and lineage
-make hazards-etl-register         # Register ETL manifest to Governance Ledger
-make hazards-etl-clean            # Archive and rotate logs per governance retention
-```
+> **Note:** Log entries and summaries here are automatically generated and versioned.  
+> Manual edits should only occur when annotating anomaly reviews or schema updates.
 
 ---
 
-## 🧩 ETL Log Example
+## 🧠 ETL Components & Scripts
 
-```json
-{
-  "pipeline_id": "hazards-etl-2025Q4",
-  "source": "NOAA/USGS/FEMA",
-  "steps": [
-    {"stage": "extract", "timestamp": "2025-10-28T00:01:00Z", "status": "success"},
-    {"stage": "transform", "timestamp": "2025-10-28T00:12:00Z", "status": "success"},
-    {"stage": "validate", "timestamp": "2025-10-28T00:18:00Z", "status": "success"},
-    {"stage": "load", "timestamp": "2025-10-28T00:20:00Z", "status": "success"}
-  ],
-  "checksums_verified": true,
-  "records_processed": 84210,
-  "fair_care_compliant": true,
-  "governance_registration": "governance/ledger/hazards-etl-ledger-2025Q4.json",
-  "validated_by": "@kfm-data"
-}
-```
+| Component | Script / Module | Description |
+|------------|-----------------|--------------|
+| Extract | `src/pipelines/etl/extract_hazards.py` | Fetches raw datasets from public sources and APIs. |
+| Transform | `src/pipelines/etl/transform_hazards.py` | Performs reprojection, normalization, and cleaning. |
+| Load | `src/pipelines/etl/load_hazards.py` | Pushes standardized datasets into the TMP layer. |
+| Validation | `src/pipelines/etl/validate_hazards.py` | Checks schema conformance and field integrity. |
+| Logging | `src/utils/logging_hazards.py` | Generates JSON + Markdown ETL summaries. |
+
+All modules adhere to the **Master Coder Protocol (MCP)**, ensuring consistency in structure and error handling.
 
 ---
 
-## 🧮 FAIR+CARE ETL Validation Matrix
+## 🧩 Schema & Metadata Compliance
 
-| Process | FAIR Dim. | CARE Dim. | Validation File | Verified By |
-|:--|:--|:--|:--|:--|
-| Extraction | Findable | Collective Benefit | `sources/*.log` | @kfm-data |
-| Transformation | Interoperable | Ethics | `transforms/*.log` | @kfm-fair |
-| Validation | Reusable | Responsibility | `validation_engine.log` | @kfm-security |
-| Loading | Accessible | Equity | `loads/*.log` | @kfm-governance |
+Each ETL cycle aligns to:
+- **Telemetry Schema:** `schemas/telemetry/work-hazards-etl-v14.json`
+- **Data Contract:** `docs/contracts/data-contract-v3.json`
+- **Ontology:** `ontologies/CIDOC_CRM-HazardExt.owl`
 
----
-
-## 🧠 Observability Metrics (Q4 2025)
-
-| Metric | Source | Target | Verified |
-|:--|:--|:--|:--|
-| Pipeline latency (s) | ETL orchestration | ≤ 60 | ✅ |
-| Schema validation (%) | STAC/DCAT compliance | 100 | ✅ |
-| Checksum verification (%) | Hash integrity | 100 | ✅ |
-| FAIR+CARE audit score | Governance validation | ≥ 95 | ✅ |
+All processed datasets are recorded in the **STAC catalog** with:
+- Spatial Extent (bounding boxes)
+- Temporal Extent (valid time range)
+- Provenance Chain (upstream sources)
+- FAIR & QA validation results
 
 ---
 
-## ⛓️ Blockchain Provenance Record
+## 🔍 Focus Mode Integration
 
-```json
-{
-  "ledger_id": "hazards-etl-ledger-2025-10-28",
-  "etl_jobs_registered": [
-    "flood_etl",
-    "tornado_etl",
-    "wildfire_etl",
-    "drought_etl"
-  ],
-  "checksum_verified": true,
-  "fair_care_validated": true,
-  "pgp_signature": "pgp-sha256:<signature-id>",
-  "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-28T00:00:00Z"
-}
-```
+The **Focus Mode AI engine** references ETL logs to trace data origins and quality indicators for:
+- Flood and Tornado Event Clusters  
+- Drought and Heatwave Forecasts  
+- Energy Infrastructure Stress Models  
+- Climate Anomaly Correlations  
+
+Each ETL run updates the Focus Mode’s Neo4j knowledge graph nodes with metadata tags like:
+- `etl_source_id`
+- `data_quality_score`
+- `hazard_type`
+- `temporal_span`
 
 ---
 
-## 🧾 Self-Audit Metadata
+## 🧩 FAIR+CARE Alignment
 
-```json
-{
-  "readme_id": "KFM-DATA-WORK-HAZARDS-LOGS-ETL-RMD-v9.4.1",
-  "validated_by": "@kfm-data",
-  "audit_status": "pass",
-  "etl_pipelines_logged": 4,
-  "checksum_integrity": "verified",
-  "fair_care_score": 100.0,
-  "ledger_registered": true,
-  "ledger_hash": "b7f9a612ae14f9...",
-  "governance_cycle": "Q4 2025"
-}
-```
+FAIR:
+- **Findable:** ETL logs indexed in STAC metadata and searchable by timestamp or hazard type.  
+- **Accessible:** Stored in open JSON, CSV, and Markdown formats under MIT License.  
+- **Interoperable:** GeoJSON + ISO-compliant schemas ensure global reusability.  
+- **Reusable:** Full lineage, versioning, and environment details enable replication.
+
+CARE:
+- **Collective Benefit:** Data pipelines enhance disaster preparedness.  
+- **Authority to Control:** Source attribution maintained; sensitive layers anonymized.  
+- **Responsibility:** Data validation and governance logged for every run.  
+- **Ethics:** Pipelines reviewed by FAIR+CARE council before deployment.
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | FAIR/CARE | Ledger | Summary |
-|:--:|:--|:--|:--|:--:|:--:|:--|
-| **v9.4.1** | 2025-10-28 | @kfm-data | @kfm-governance | ✅ | Ledger ✓ | Expanded pipeline metrics, observability tracking, and manifest traceability |
-| v9.4.0 | 2025-10-27 | @kfm-security | @kfm-fair | ✅ | ✓ | Introduced ETL manifest lineage chain and SHA-256 registry |
-| v9.3.0 | 2025-10-23 | @kfm-hazards | @kfm-architecture | ✅ | ✓ | Established ETL orchestration logs and FAIR+CARE validation mapping |
+| Version | Date       | Author           | Summary                                   |
+|----------|------------|------------------|-------------------------------------------|
+| v9.3.2   | 2025-10-28 | @kfm-etl-ops     | Initial build of Hazards ETL log directory. |
+| v9.3.1   | 2025-10-27 | @bartytime4life  | Added checksum lineage tracking.           |
+| v9.3.0   | 2025-10-26 | @kfm-data-lab    | Integrated NOAA and FEMA ingestion logic.  |
 
 ---
 
 <div align="center">
 
-### ⚙️ Kansas Frontier Matrix — *Integrity · Observability · Provenance*  
-**“Every extract, every transform, every load — a verifiable step toward reproducible truth.”**
-
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../../reports/fair/hazards_summary.json)  
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()  
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata-lightgreen)]()  
-[![Ledger Linked](https://img.shields.io/badge/Ledger-Immutable%20Blockchain-gold)]()
+**Kansas Frontier Matrix** · *ETL Precision × Data Provenance × Open Science*  
+[🔗 Project Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/)
 
 </div>
-
----
-
-<!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.4.3
-MCP-TIER: Diamond⁹ Ω
-DOC-PATH: data/work/tmp/hazards/logs/etl/README.md
-MCP-CERTIFIED: true
-SBOM-GENERATED: true
-SLSA-ATTESTED: true
-STAC-VALIDATED: true
-FAIR-CARE-COMPLIANT: true
-ETL-AUDIT-VERIFIED: true
-PERFORMANCE-BUDGET-P95: 2.5 s
-GOVERNANCE-LEDGER-LINKED: true
-GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: 2025-10-28
-MCP-FOOTER-END -->
