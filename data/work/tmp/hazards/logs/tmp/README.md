@@ -54,7 +54,7 @@ These logs enable **deterministic reproducibility** of hazard analyses by tracki
 ---
 
 ## 🗂️ Directory Layout
-```text
+
 data/work/tmp/hazards/logs/tmp/
 │
 ├── ai/              → AI explainability, drift detection, and confidence scoring logs
