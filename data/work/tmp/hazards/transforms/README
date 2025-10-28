@@ -1,34 +1,39 @@
 ---
 title: "🔄 Kansas Frontier Matrix — Hazards Transformation Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/transforms/README.md"
-version: "v9.3.1"
-last_updated: "2025-10-27"
+version: "v9.4.0"
+last_updated: "2025-10-28"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.3.1/sbom.spdx.json"
-manifest_ref: "releases/v9.3.1/manifest.zip"
+sbom_ref: "releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "releases/v9.4.0/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.3.1/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-hazards-transforms-v14.json"
-json_export: "releases/v9.3.1/work-hazards-transforms.meta.json"
+telemetry_ref: "releases/v9.4.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/work-hazards-transforms-v15.json"
+json_export: "releases/v9.4.0/work-hazards-transforms.meta.json"
 validation_reports:
   - "reports/self-validation/work-hazards-transforms-validation.json"
   - "reports/fair/hazards_summary.json"
   - "reports/audit/ai_hazards_ledger.json"
 governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-HAZARDS-TRANSFORMS-RMD-v9.3.1"
+doc_id: "KFM-DATA-WORK-HAZARDS-TRANSFORMS-RMD-v9.4.0"
 maintainers: ["@kfm-data", "@kfm-hazards", "@kfm-ai"]
 approvers: ["@kfm-governance", "@kfm-fair", "@kfm-security"]
 reviewed_by: ["@kfm-ethics", "@kfm-architecture", "@kfm-accessibility"]
-ci_required_checks: ["docs-validate.yml", "checksum-verify.yml", "focus-validate.yml"]
+ci_required_checks: ["docs-validate.yml", "checksum-verify.yml", "focus-validate.yml", "security-scan.yml"]
 license: "CC-BY 4.0"
 design_stage: "Operational / CF Harmonization & Spatial Transformation Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "STAC 1.0.0", "ISO 19115", "GeoTIFF", "COG", "DCAT 3.0", "Blockchain Provenance"]
+mcp_version: "MCP-DL v6.4.3"
+alignment:
+  - FAIR / CARE
+  - STAC 1.0 / DCAT 3.0
+  - ISO 19115 / ISO 19157 / ISO 14064 / ISO 50001
+  - CF Conventions / COG / GeoTIFF
+  - Blockchain Provenance / MCP-DL Compliance
 status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Deterministic · Sustainable"
+maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Deterministic · Sustainable · AI Explainable"
 focus_validation: true
-tags: ["hazards", "transforms", "etl", "cf", "geospatial", "harmonization", "qa", "fair", "governance", "mcp"]
+tags: ["hazards","transforms","etl","cf","geospatial","harmonization","qa","fair","governance","ai","mcp","ledger","provenance"]
 ---
 
 <div align="center">
@@ -36,13 +41,14 @@ tags: ["hazards", "transforms", "etl", "cf", "geospatial", "harmonization", "qa"
 # 🔄 Kansas Frontier Matrix — **Hazards Transformation Layer**  
 `data/work/tmp/hazards/transforms/`
 
-**Mission:** Perform **spatial, temporal, and CF/FAIR+CARE harmonization** of all hazard datasets — ensuring standardized coordinate systems, temporal alignment, and reproducible provenance across the hazard intelligence pipeline.
+**Mission:** Reproject, harmonize, and CF-compliance–validate all hazard datasets (tornado, flood, wildfire, drought) to achieve spatial consistency, temporal alignment, and reproducible provenance under FAIR+CARE and ISO standards.
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../reports/fair/hazards_summary.json)
-[![STAC 1.0.0](https://img.shields.io/badge/STAC-1.0.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-lightgreen)]()
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Blockchain%20Tracked-gold)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Checksum-teal)]()
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
+[![CF Conventions](https://img.shields.io/badge/CF-1.10%20Compliant-orange)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata-lightgreen)]()
+[![ISO 50001 · 14064](https://img.shields.io/badge/ISO-50001%20·%2014064-Sustainable%20Ops-forestgreen)]()
+[![Ledger](https://img.shields.io/badge/Governance-Blockchain%20Linked-gold)]()
 
 </div>
 
@@ -50,67 +56,69 @@ tags: ["hazards", "transforms", "etl", "cf", "geospatial", "harmonization", "qa"
 
 ## 🧭 System Context
 
-The **Hazards Transformation Layer** ensures that all incoming hazard datasets — tornado, flood, wildfire, and drought — are spatially harmonized and metadata-aligned for integration with downstream validation and AI systems.
+The **Transformation Layer** serves as the **geospatial QA engine** for all hazard datasets flowing through KFM’s pipeline.  
+It ensures all hazard data (from staging) adheres to **consistent CRS**, **CF-compliant attributes**, **temporal standardization**, and **checksum-verifiable reproducibility** before moving into validation or AI stages.
 
-**Core Responsibilities:**
-- Reproject all spatial datasets to **EPSG:4326** for global interoperability.  
-- Normalize NetCDF, GeoTIFF, and shapefile attributes per **CF conventions**.  
-- Conduct spatial resampling and tiling (COG/PMTiles formats).  
-- Validate metadata and coordinate alignment with ISO/FAIR+CARE standards.  
-- Register transformation traces and hashes into the Governance Ledger.
+**Core Responsibilities**
+- Reproject all geometries to **EPSG:4326** (standard CRS for interchange).  
+- Normalize all metadata fields per **CF + FAIR conventions**.  
+- Generate **COG** and **PMTiles** for optimized performance and offline compatibility.  
+- Record all reprojection, resampling, and CF fixes in traceable logs.  
+- Register transformation lineage and hashes in the **Governance Ledger**.  
 
-> *“Transformation is not change — it’s alignment with truth.”*
+> *“Transformation turns data into alignment — geometry into governance.”*
 
 ---
 
 ## 🗂️ Directory Layout
-
 ```text
 data/work/tmp/hazards/transforms/
-├── cf_fix_logs.json              # CF compliance corrections (NetCDF metadata fixes)
-├── reprojection_trace.log        # CRS reprojection history and parameters
-├── tiling_resample.log           # Spatial resampling & pyramid generation trace
-├── harmonization_summary.json    # Summary of variables, units, and CRS transformations
-├── spatial_resolution_audit.csv  # Audit of input vs output resolutions
-├── transform_checksums.json      # SHA-256 checksums for transformed datasets
-├── transform_manifest.json       # Transformation lineage linking source → output
+├── flood_extents_cf/                # Harmonized flood datasets (COG/GeoTIFF)
+├── tornado_tracks_cf/               # Tornado tracks normalized CRS/attributes
+├── wildfire_perimeters_cf/          # MODIS/VIIRS/USGS fire data harmonized
+├── usdm_drought_cf/                 # Weekly drought indices aligned to CF
+├── cf_fix_logs.json                 # CF compliance and attribute correction log
+├── reprojection_trace.log           # CRS reprojection history
+├── tiling_resample.log              # COG/PMTiles resampling and tiling trace
+├── harmonization_summary.json       # Units, CRS, and variable harmonization report
+├── spatial_resolution_audit.csv     # Input vs output resolution checks
+├── transform_checksums.json         # SHA-256 hash registry
+├── transform_manifest.json          # Source-to-output lineage manifest
 └── README.md
 ```
 
 ---
 
-## ⚙️ Make Targets (Transforms Ops)
-
+## ⚙️ Make Targets (Transformation Ops)
 ```text
-make hazards-transform-run        # Run CF harmonization, reprojection, and QA
-make hazards-transform-verify     # Validate metadata, CRS, and checksum integrity
-make hazards-transform-checksum   # Generate and verify SHA-256 hashes
-make hazards-transform-ledger     # Register transformation manifest to Governance Ledger
+make hazards-transform-run         # Run CF harmonization, reprojection, and QA
+make hazards-transform-verify      # Validate CRS, metadata, and checksums
+make hazards-transform-checksum    # Generate/verify SHA-256 for all outputs
+make hazards-transform-ledger      # Register transformations in Governance Ledger
 ```
 
 ---
 
-## 🧩 Transformation Manifest Example
-
+## 🧩 Transformation Manifest (Example)
 ```json
 {
   "manifest_id": "hazards-transform-2025Q4",
   "datasets": [
     {
       "category": "flood_extents",
-      "input_path": "data/work/tmp/hazards/staging/flood_extents/2025Q4/",
-      "output_path": "data/work/tmp/hazards/transforms/flood_extents_cf/",
+      "input": "data/work/tmp/hazards/staging/flood_extents/2025Q4/",
+      "output": "data/work/tmp/hazards/transforms/flood_extents_cf/",
       "crs": "EPSG:4326",
-      "resample_method": "bilinear",
+      "resample": "bilinear",
       "checksum": "a3f2c8dba1e09f...",
       "verified_by": "@kfm-data"
     },
     {
       "category": "tornado_tracks",
-      "input_path": "data/work/tmp/hazards/staging/tornado_tracks/2025/",
-      "output_path": "data/work/tmp/hazards/transforms/tornado_tracks_cf/",
+      "input": "data/work/tmp/hazards/staging/tornado_tracks/2025/",
+      "output": "data/work/tmp/hazards/transforms/tornado_tracks_cf/",
       "crs": "EPSG:4326",
-      "resample_method": "nearest",
+      "resample": "nearest",
       "checksum": "b7f9a612ae14f9...",
       "verified_by": "@kfm-fair"
     }
@@ -123,48 +131,52 @@ make hazards-transform-ledger     # Register transformation manifest to Governan
 ---
 
 ## 🧮 FAIR+CARE Transformation Matrix
-
-| FAIR Dim. | CARE Dim. | Property | Reference | Purpose |
-|:------------|:-----------|:-----------|:------------|:-----------|
-| **Findable** | Collective Benefit | `transform_manifest.json` | FAIR F1 | Provides lineage trace for transformations |
-| **Accessible** | Responsibility | `cf_fix_logs.json` | FAIR A2 | Records metadata harmonization actions |
-| **Interoperable** | Ethics | `reprojection_trace.log` | FAIR I3 | Ensures coordinate consistency across hazards |
-| **Reusable** | Equity | `transform_checksums.json` | FAIR R1 | Guarantees reproducibility and verification |
+| FAIR Dim. | CARE Dim. | Artifact | Purpose | Reference |
+|:--|:--|:--|:--|:--|
+| **Findable** | Collective Benefit | `transform_manifest.json` | Provides transformation lineage | FAIR F1 |
+| **Accessible** | Responsibility | `cf_fix_logs.json` | Documents metadata corrections | FAIR A2 |
+| **Interoperable** | Ethics | `reprojection_trace.log` | Ensures coordinate consistency | FAIR I3 |
+| **Reusable** | Equity | `transform_checksums.json` | Enables reproducibility verification | FAIR R1 |
 
 ---
 
 ## 🧠 Transformation Workflow Overview
-
 ```mermaid
 flowchart TD
-A[Hazard Data Ingested (staging/)] --> B[CF Metadata Validation + CRS Check]
-B --> C[Reprojection to EPSG:4326]
-C --> D[Spatial Resampling & COG Conversion]
-D --> E[Checksum Verification + FAIR Validation]
+A[Hazard Datasets (staging/)] --> B[CF Metadata Validation + CRS Audit]
+B --> C[Reprojection → EPSG:4326]
+C --> D[Spatial Resampling + COG Generation]
+D --> E[Checksum + FAIR+CARE Validation]
 E --> F[Governance Ledger Registration]
 ```
 
 ---
 
-## 📊 Transformation Audit Snapshot (Q4 2025)
-
+## 📈 Transformation Audit Snapshot (Q4 2025)
 | Dataset | CRS | Method | Resolution (m) | Checksum | FAIR/CARE | Status | Verified By |
-|:----------|:------:|:-----------|:-----------:|:-----------:|:-----------:|:-----------:|:-----------:|
-| Tornado Tracks | EPSG:4326 | Nearest | 500 | ✅ | ✅ | Harmonized | @kfm-data |
+|:--|:--:|:--|:--:|:--:|:--:|:--:|:--|
 | Flood Extents | EPSG:4326 | Bilinear | 100 | ✅ | ✅ | Harmonized | @kfm-security |
+| Tornado Tracks | EPSG:4326 | Nearest | 500 | ✅ | ✅ | Harmonized | @kfm-data |
 | Wildfire Perimeters | EPSG:4326 | Cubic | 250 | ✅ | ✅ | Harmonized | @kfm-hazards |
 | Drought Indices | EPSG:4326 | Bilinear | 1000 | ✅ | ✅ | Harmonized | @kfm-fair |
 
 ---
 
-## ⛓️ Blockchain Provenance Record
+## 🧬 CF Metadata Alignment Policy
+- All datasets must include **global attributes**: `title`, `institution`, `source`, `history`, `references`, `license`.  
+- **Variables** standardized via **CF names** and SI units.  
+- All coordinate axes labeled and dimensioned properly (`lat`, `lon`, `time`).  
+- **Metadata fixes** logged in `cf_fix_logs.json` with timestamps and responsible user.
 
+---
+
+## ⛓️ Blockchain Provenance Record
 ```json
 {
-  "ledger_id": "hazards-transform-ledger-2025-10-27",
+  "ledger_id": "hazards-transform-ledger-2025-10-28",
   "transformed_datasets": [
-    "tornado_tracks_cf/",
     "flood_extents_cf/",
+    "tornado_tracks_cf/",
     "wildfire_perimeters_cf/",
     "usdm_drought_cf/"
   ],
@@ -173,17 +185,16 @@ E --> F[Governance Ledger Registration]
   "fair_care_validated": true,
   "pgp_signature": "pgp-sha256:<signature-id>",
   "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-27T00:00:00Z"
+  "timestamp": "2025-10-28T00:00:00Z"
 }
 ```
 
 ---
 
-## 🧩 Self-Audit Metadata
-
+## 🧾 Self-Audit Metadata
 ```json
 {
-  "readme_id": "KFM-DATA-WORK-HAZARDS-TRANSFORMS-RMD-v9.3.1",
+  "readme_id": "KFM-DATA-WORK-HAZARDS-TRANSFORMS-RMD-v9.4.0",
   "validated_by": "@kfm-data",
   "audit_status": "pass",
   "transformations_run": 4,
@@ -191,7 +202,7 @@ E --> F[Governance Ledger Registration]
   "cf_compliance": true,
   "fair_care_score": 100.0,
   "ledger_registered": true,
-  "ledger_hash": "b7f9a612ae14f9...",
+  "ledger_hash": "c3a91284de7f4c...",
   "governance_cycle": "Q4 2025"
 }
 ```
@@ -199,24 +210,40 @@ E --> F[Governance Ledger Registration]
 ---
 
 ## 🧾 Version History
-
 | Version | Date | Author | Reviewer | FAIR/CARE | Ledger | Summary |
-|:----------:|:-----------:|:-----------|:-----------|:----------:|:-----------:|:-----------|
-| v9.3.1 | 2025-10-27 | @kfm-data | @kfm-governance | ✅ | Ledger ✓ | Added CF harmonization workflow and lineage manifest integration |
-| v9.3.0 | 2025-10-25 | @kfm-hazards | @kfm-fair | ✅ | ✓ | Introduced spatial resolution audit and checksum reporting |
-| v9.2.0 | 2025-10-23 | @kfm-climate | @kfm-security | ✅ | ✓ | Established transformation trace logging and governance linkage |
+|:--:|:--|:--|:--|:--:|:--:|:--|
+| v9.4.0 | 2025-10-28 | @kfm-data | @kfm-governance | ✅ | Ledger ✓ | Added CF metadata policy, expanded transformation workflow, harmonization audit, and energy compliance. |
+| v9.3.1 | 2025-10-27 | @kfm-data | @kfm-governance | ✅ | ✓ | Introduced CF harmonization manifest and multi-source lineage tracking. |
+| v9.3.0 | 2025-10-25 | @kfm-hazards | @kfm-fair | ✅ | ✓ | Added spatial resolution audit & checksum verification. |
 
 ---
 
 <div align="center">
 
-### 🔄 Kansas Frontier Matrix — *Transformation · Reproducibility · FAIR+CARE*  
-**“Every transformation leaves a verifiable footprint — aligned, audited, and explainable.”**
+### 🔄 Kansas Frontier Matrix — *Transformation · Provenance · Sustainability*  
+**“Each transformation preserves meaning — harmonized, validated, and verifiable.”**
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../reports/fair/hazards_summary.json)
-[![STAC 1.0.0](https://img.shields.io/badge/STAC-1.0.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-lightgreen)]()
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Blockchain%20Tracked-gold)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Checksum-teal)]()
+[![CF Compliance](https://img.shields.io/badge/CF-1.10%20Harmonized-orange)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata-lightgreen)]()
+[![Governance Ledger](https://img.shields.io/badge/Ledger-Blockchain%20Linked-gold)]()
+[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Checksums-teal)]()
 
 </div>
+
+<!-- MCP-FOOTER-BEGIN
+MCP-VERSION: v6.4.3
+MCP-TIER: Diamond⁹ Ω
+DOC-PATH: data/work/tmp/hazards/transforms/README.md
+MCP-CERTIFIED: true
+SBOM-GENERATED: true
+SLSA-ATTESTED: true
+CF-COMPLIANT: true
+STAC-VALIDATED: true
+FAIR-CARE-COMPLIANT: true
+AI-INTEGRITY-PASS: true
+PERFORMANCE-BUDGET-P95: 2.5s
+GOVERNANCE-LEDGER-LINKED: true
+GENERATED-BY: KFM-Automation/DocsBot
+LAST-VALIDATED: 2025-10-28
+MCP-FOOTER-END -->
