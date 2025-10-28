@@ -1,466 +1,143 @@
-# ────────────────────────────────────────────────────────────────
-#  Kansas Frontier Matrix — Data Request Form
-#  Context: GitHub Issue Form to propose NEW datasets/integrations
-#  Version: v6.3.3 · Tier-Ω+∞ Certified
-#  Validated by: docs-validate.yml · policy-check.yml · gitleaks.yml
-#  Alignment: MCP-DL v6.3.3 · FAIR · CARE · STAC 1.0 · DCAT 2.0 · CIDOC-CRM · OWL-Time
-# ────────────────────────────────────────────────────────────────
+---
+name: "🧭 Data Request"
+about: "Request new datasets, sources, or geospatial layers for integration into the Kansas Frontier Matrix (KFM)."
+title: "[DATA] <brief description of dataset request>"
+labels: ["data", "enhancement", "governance-review"]
+assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
+---
 
-name: "🗃️ Data Request"
-description: "Propose a new dataset/integration — documented, provenanced, reproducible, and MCP-DL v6.3.3 compliant."
-title: "[Data]: <dataset name> — <domain>"
-labels:
-  - data-request
-  - needs-triage
-assignees:
-  - kfm-data
-  - kfm-architecture
+## 🧭 Summary
 
-body:
-  - type: markdown
-    attributes:
-      value: |
-        ## 🧭 Kansas Frontier Matrix — Data Request (MCP-DL v6.3.3)
-        Provide **complete provenance**, **license**, **schema**, **ethics**, **format**, **STAC linkage**, and **ETL targets**.  
-        This form enables **deterministic ingestion**, **CI validation**, and **auditable governance**.
+> _Provide a concise overview of the dataset or data source you are requesting._  
+> _Example: “Request integration of Kansas River discharge dataset from USGS NWIS API.”_
 
-  # ——— Dataset Overview ————————————————————————————————————————————
-  - type: input
-    id: dataset_name
-    attributes:
-      label: 📛 Dataset Name
-      placeholder: "USGS 3DEP LiDAR DEM (Kansas) · NOAA Drought Monitor 1990–2024"
-    validations:
-      required: true
+**Category:**
+- [ ] 🌦️ Environmental / Climate
+- [ ] 🗺️ Geospatial / Map Layer
+- [ ] 📜 Historical / Archival
+- [ ] ⚡ Energy / Infrastructure
+- [ ] 🧠 AI Training Dataset
+- [ ] Other (specify below)
 
-  - type: input
-    id: source_org
-    attributes:
-      label: 🏢 Primary Source / Organization
-      placeholder: "USGS · NOAA NCEI · USDA NRCS · KGS · FEMA · DASC"
-    validations:
-      required: true
+**Purpose of Integration:**  
+> _Explain why this dataset is relevant or valuable to the Kansas Frontier Matrix project._
 
-  - type: input
-    id: program
-    attributes:
-      label: 🏷 Program / Product Line (if applicable)
-      placeholder: "USGS 3DEP · Daymet v4 · SSURGO · FIRM · KGS Wells"
+---
 
-  - type: dropdown
-    id: data_type
-    attributes:
-      label: 🧱 Data Type
-      options: [Raster, Vector, Tabular, Text, NetCDF, Mixed]
-    validations:
-      required: true
+## 🧩 Source Information
 
-  - type: dropdown
-    id: license
-    attributes:
-      label: 🪪 License
-      options:
-        - Public Domain
-        - Government Works
-        - CC0
-        - CC-BY 4.0
-        - CC-BY-SA
-        - Restricted
-        - Other
-    validations:
-      required: true
+| Field | Description |
+|--------|-------------|
+| **Dataset Name** | `<official name or identifier>` |
+| **Source Organization** | `<e.g., NOAA, USGS, FEMA, KHS, DASC>` |
+| **Access URL / API Endpoint** | `<direct download or API link>` |
+| **License / Terms of Use** | `<e.g., Public Domain, CC-BY 4.0, etc.>` |
+| **Data Format(s)** | `<e.g., GeoJSON, GeoTIFF, CSV, NetCDF>` |
+| **Temporal Coverage** | `<start-end dates>` |
+| **Spatial Coverage** | `<statewide, county, watershed, etc.>` |
+| **Update Frequency** | `<static / annual / monthly / real-time>` |
+| **Data Volume (approx.)** | `<e.g., 1GB / 500MB>` |
 
-  - type: input
-    id: spatial_coverage
-    attributes:
-      label: 🌍 Spatial Coverage
-      placeholder: "Statewide Kansas · Flint Hills · Kansas River Basin · Multi-State AOI"
-    validations:
-      required: true
+---
 
-  - type: input
-    id: temporal_range
-    attributes:
-      label: 🕰 Temporal Range
-      placeholder: "1850–2025 · 1991–2020 normals · daily (1980–present)"
-    validations:
-      required: true
+## 🔍 FAIR Metadata (if available)
 
-  - type: dropdown
-    id: update_frequency
-    attributes:
-      label: 🔄 Update Frequency
-      options: [Real-Time, Daily, Weekly, Monthly, Quarterly, Annual, Irregular/On-Demand, Static/Historical]
-    validations:
-      required: true
+| Field | Description |
+|--------|-------------|
+| **DOI / Identifier** | `<if available>` |
+| **Metadata File / Record** | `<link or upload>` |
+| **Provenance / Citation** | `<reference to official documentation>` |
+| **Data Steward / Contact** | `<organization or individual>` |
 
-  - type: input
-    id: access_url
-    attributes:
-      label: 🔗 Access URL / API Endpoint / Catalog
-      placeholder: "Direct download, REST API base, STAC catalog URL"
-    validations:
-      required: true
+> _If metadata is missing, indicate whether it can be derived from the source._  
 
-  - type: input
-    id: citation
-    attributes:
-      label: 📚 Citation / DOI / Reference
-      placeholder: "DOI:10.5066/P9Z3D4AR or dataset page URL"
+---
 
-  - type: input
-    id: steward
-    attributes:
-      label: 👤 Contact / Data Steward
-      placeholder: "Maintainer email or org contact"
+## ⚙️ Integration Requirements
 
-  # ——— Provenance & Access ——————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🌐 Data Source Provenance"
+> _Describe how you envision this dataset being used or displayed within KFM._  
+> _Example: “To overlay flood hazard layers with county boundaries on the Focus Mode map.”_
 
-  - type: textarea
-    id: provenance
-    attributes:
-      label: 🧬 Source Provenance
-      description: Official URLs, reliability (QA/QC), mirrors, checksums
-      placeholder: |
-        - Official source URL(s)
-        - Reliability: agency QA/QC or peer review
-        - Mirror locations + checksum refs
-    validations:
-      required: true
+**Preferred Integration Path:**
+- [ ] ETL Pipeline (`/src/pipelines/etl/`)
+- [ ] AI Model Input (`/src/pipelines/ai/`)
+- [ ] Web Visualization (`/web/src/layers/`)
+- [ ] Knowledge Graph / Neo4j Entity
+- [ ] Documentation or Archive Only
 
-  - type: dropdown
-    id: access_method
-    attributes:
-      label: 🚪 Access Method
-      options: [REST API, HTTP/HTTPS, FTP, Open Data Portal, Bulk Download, STAC]
-    validations:
-      required: true
+---
 
-  - type: textarea
-    id: api_details
-    attributes:
-      label: 🔐 API/Auth Details (if applicable)
-      description: Headers, auth, rate limits, pagination, throttling
-      placeholder: |
-        - Auth: none | token | key | OIDC
-        - Rate limits: 60 req/min
-        - Pagination: ?page= / ?limit=
-        - Example request/response
+## 🧠 FAIR+CARE Evaluation
 
-  # ——— Format & Quality ————————————————————————————————————————————
-  - type: textarea
-    id: formats
-    attributes:
-      label: 🧾 Data Format(s)
-      placeholder: "GeoTIFF (COG), Shapefile, GeoJSON, CSV, NetCDF, Parquet, TIFF+worldfile"
-    validations:
-      required: true
+| Category | Compliance | Notes |
+|-----------|-------------|-------|
+| **Findable** | ☐ Yes ☐ No | _Has clear metadata and identifiers?_ |
+| **Accessible** | ☐ Yes ☐ No | _Freely available and machine-readable?_ |
+| **Interoperable** | ☐ Yes ☐ No | _Uses open, standard formats?_ |
+| **Reusable** | ☐ Yes ☐ No | _Includes clear license and provenance?_ |
+| **Collective Benefit** | ☐ Yes ☐ No | _Provides social/scientific value?_ |
+| **Authority to Control** | ☐ Yes ☐ No | _Respects ownership or community governance?_ |
+| **Responsibility** | ☐ Yes ☐ No | _Handled ethically and securely?_ |
+| **Ethics** | ☐ Yes ☐ No | _No harmful or biased data usage?_ |
 
-  - type: input
-    id: crs
-    attributes:
-      label: 🗺 Coordinate System / Projection (CRS)
-      placeholder: "EPSG:4326 WGS84; EPSG:26914; mixed → convert to 4326"
-    validations:
-      required: true
+---
 
-  - type: input
-    id: resolution_scale
-    attributes:
-      label: 🔎 Resolution / Scale (if applicable)
-      placeholder: "10 m · 30 m · 1 km · 1:24,000"
+## 🧾 Governance Metadata
 
-  - type: textarea
-    id: quality
-    attributes:
-      label: ✅ Quality Assurance / QA References
-      placeholder: "Agency QA/QC docs, accuracy statements, peer-reviewed references"
+| Field | Reference |
+|--------|------------|
+| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
+| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Data Contract** | `docs/contracts/data-contract-v3.json` |
+| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
 
-  # ——— Intended Integration ————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🤩 Intended Integration"
+> _Ensure all linked governance and metadata references correspond to the current repository release._
 
-  - type: input
-    id: pipeline
-    attributes:
-      label: 🧰 Pipeline Target
-      placeholder: "hydrology_pipeline.py · climate_etl.py · src/pipelines/text/ocr_nlp.py"
-    validations:
-      required: true
+---
 
-  - type: dropdown
-    id: domain
-    attributes:
-      label: 🧭 Data Domain
-      options: [Terrain, Hydrology, Hazards, Climate, Landcover, Text, Tabular, Other]
-    validations:
-      required: true
+## 📊 Suggested Output Layers or Products
 
-  - type: dropdown
-    id: stac_linkage
-    attributes:
-      label: 🧷 STAC Linkage
-      options:
-        - "Yes — new Collection + Items"
-        - "Yes — Items in existing Collection"
-        - "No / Not applicable"
-    validations:
-      required: true
+> _Describe any derived datasets or visualizations expected after integration._  
+> _Example: “Produce historical drought intensity maps per county (1900–present).”_
 
-  - type: dropdown
-    id: visualization
-    attributes:
-      label: 🖼 Visualization Layer
-      options: [Web Map, Timeline, Story Map, 3D Scene, API only]
-    validations:
-      required: true
+| Output Type | Description | Format |
+|--------------|-------------|--------|
+| ETL Output |  | GeoJSON / CSV |
+| Visualization |  | MapLibre Tile Layer |
+| AI Training Data |  | JSON / NetCDF |
+| Validation Logs |  | JSON / Markdown |
 
-  - type: input
-    id: ontology
-    attributes:
-      label: 🧠 Semantic Ontology Tag(s)
-      placeholder: "CIDOC CRM class (E73), OWL-Time interval, PeriodO ID"
+---
 
-  # ——— Ethics & Usage ————————————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🤝 Ethics & Usage"
+## 🧩 Review Routing
 
-  - type: dropdown
-    id: data_ethics
-    attributes:
-      label: 🫱🏻‍🫲🏽 Data Ethics Classification
-      description: Sensitive/Indigenous/cultural constraints
-      options: [open, restricted-derivatives, no-public-artifacts]
-    validations:
-      required: true
+| Role | Reviewer | Required Action |
+|------|-----------|-----------------|
+| **Data Engineering** | @kfm-etl-ops | Evaluate ingestion feasibility |
+| **Metadata / FAIR Review** | @kfm-data-lab | Validate schema and metadata |
+| **AI Governance** | @kfm-ai-lab | Assess ethical and technical use |
+| **Architecture / Maintainer** | @bartytime4life | Approve inclusion in main branch |
 
-  - type: textarea
-    id: usage_notes
-    attributes:
-      label: 📜 Usage Constraints / Fair Use Notes
-      placeholder: "Attribution, downstream license, embargo notes, community guidelines"
+---
 
-  # ——— Metadata & Schema ————————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🧩 Metadata & Schema"
+## ✅ Submission Checklist
 
-  - type: textarea
-    id: attributes_cols
-    attributes:
-      label: 🧱 Attributes / Columns
-      description: List key attributes (e.g., elevation, slope, drought_index)
-    validations:
-      required: true
+- [ ] Source license verified (Open Data / FAIR-compliant)
+- [ ] Metadata file provided or retrievable
+- [ ] FAIR+CARE compliance reviewed
+- [ ] Governance metadata references included
+- [ ] Notified maintainers for review and integration
 
-  - type: textarea
-    id: units
-    attributes:
-      label: 📐 Units
-      placeholder: "m, °C, %, index, class code"
-    validations:
-      required: true
+---
 
-  - type: input
-    id: schema_url
-    attributes:
-      label: 🔗 Schema Source / URL
-      placeholder: "Link to metadata XML/JSON, or documentation"
+> ⚠️ **Note:**  
+> Submitting this data request automatically triggers:  
+> - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
+> - STAC ingestion test (`.github/workflows/stac-validate.yml`)  
+> - Governance record entry (`reports/audit/hazards_archive_provenance.json`)  
 
-  - type: input
-    id: encoding
-    attributes:
-      label: 🔤 Encoding / Format
-      placeholder: "UTF-8 / GeoTIFF / EPSG:4326"
-    validations:
-      required: true
+---
 
-  - type: textarea
-    id: example_snippet
-    attributes:
-      label: 🧪 Example Snippet
-      description: Small CSV/JSON/GeoJSON feature preview
-      render: json
-
-  - type: dropdown
-    id: metadata_standard
-    attributes:
-      label: 🧭 Metadata Standard
-      options: [ISO 19115, FGDC, DCAT, STAC 1.0.x, Other/Unknown]
-    validations:
-      required: true
-
-  # ——— Validation Requirements ————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🧱 Validation Requirements"
-
-  - type: checkboxes
-    id: validation
-    attributes:
-      label: Pre-Integration Checklist
-      options:
-        - label: Verify license & usage rights
-          required: true
-        - label: Confirm accessibility (API reachable / files downloadable)
-          required: true
-        - label: Compute SHA-256 checksum(s) for all assets
-          required: true
-        - label: Validate CRS (convert to EPSG:4326 where needed)
-          required: true
-        - label: Inspect schema & attribute completeness
-          required: true
-        - label: Generate thumbnail/preview for docs
-          required: true
-        - label: Create STAC Item/Collection under `data/stac/`
-          required: true
-        - label: Validate STAC via `make stac-validate`
-          required: true
-        - label: Add/Update `data/sources/<domain>/<source>.json` manifest
-          required: true
-        - label: (If large) Track with LFS/DVC and store pointers
-          required: false
-        - label: Include STAC `license`, `providers`, `derived_from`, `created`
-          required: true
-
-  # ——— Implementation Plan ————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🛠 Implementation Plan (Optional)"
-
-  - type: textarea
-    id: impl_plan
-    attributes:
-      label: Steps & Owners
-      placeholder: |
-        1) Review license/provenance — Owner …
-        2) Fetch to data/raw/<domain>/ — Owner …
-        3) Manifest in data/sources/<domain>/ — Owner …
-        4) Checksums — Owner …
-        5) Integrate (make <domain>) — Owner …
-        6) STAC generation/validation — Owner …
-        7) Web/timeline config — Owner …
-
-  # ——— Versioning & Governance ———————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🧭 Versioning & Governance"
-
-  - type: textarea
-    id: versioning
-    attributes:
-      label: Versioning Summary (SemVer + STAC)
-      placeholder: |
-        | Scope                  | Current | Proposed | Reason / Trigger    |
-        | :--------------------- | :------ | :------- | :------------------ |
-        | Dataset (STAC)         | v1.0.0  | v1.1.0   | new layer added     |
-        | Domain Pipeline        | v2.1.0  | v2.2.0   | ETL updated         |
-        | Repo Release (SemVer)  | v1.4.0  | v1.5.0   | dataset integration |
-        | Source Manifest        | v1.0.0  | v1.0.1   | provenance update   |
-      render: markdown
-
-  # ——— MCP Compliance ————————————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## ✅ MCP Compliance"
-
-  - type: checkboxes
-    id: mcp
-    attributes:
-      label: MCP Principles
-      options:
-        - label: Documentation-first — dataset fully described with provenance & metadata
-          required: true
-        - label: Reproducibility — deterministic retrieval & checksum validation defined
-          required: true
-        - label: Open Standards — interoperable formats (COG/CSV/GeoJSON/NetCDF)
-          required: true
-        - label: Provenance — manifest, STAC, and log lineage maintained
-          required: true
-        - label: Auditability — CI validation steps reproducible & archived
-          required: true
-        - label: Versioning — STAC `properties.version` & repo SemVer updated
-          required: true
-        - label: Ethics — `data_ethics` tag set; restrictions documented
-          required: true
-
-  # ——— Reporter Checklist ————————————————————————————————————————————
-  - type: checkboxes
-    id: reporter_check
-    attributes:
-      label: 🧭 Reporter Checklist
-      description: Confirm before submitting
-      options:
-        - label: "All required fields completed"
-        - label: "License and provenance verified"
-        - label: "No secrets or restricted data included"
-        - label: "I searched existing issues to avoid duplicates"
-        - label: "I acknowledge this request is public"
-    validations:
-      required: true
-
-  # ——— Related / Attachments ————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🤩 Related Datasets / Attachments"
-
-  - type: textarea
-    id: related
-    attributes:
-      label: Related Datasets & References
-      placeholder: |
-        - Linked Source: data/sources/hydro/usgs_nhd_flowlines.json
-        - Complementary Layers: NLCD Landcover, NHD Waterbodies
-        - Dependent Models: Flood Risk, Soil Erosion, Vegetation Index
-        - External References: (studies, portals)
-
-  - type: textarea
-    id: attachments
-    attributes:
-      label: Attachments
-      description: Small data samples, schema files, preview thumbnails
-      placeholder: |
-        example.json — schema preview (/data/sources/climate/example.json)
-        preview.png  — docs thumbnail   (/docs/media/previews/climate_dataset.png)
-
-  - type: textarea
-    id: notes
-    attributes:
-      label: Additional Notes
-      description: Visuals, sample maps, metadata screenshots, or priority rationale
-
-  # ——— Disclosure ————————————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        **Disclosure & License Notice**  
-        Submissions are governed by the MIT + CC-BY 4.0 license.  
-        Do not include confidential or proprietary data in attachments.
-
-# hidden metadata
-mcp_metadata:
-  version: "v6.3.3"
-  tier: "Ω+∞"
-  template_type: "data_request"
-  validation_checks:
-    - docs-validate
-    - policy-check
-    - gitleaks
-  generated_by: "KFM-Automation/DocsBot"
-
-# MCP-FOOTER-BEGIN
-# MCP-VERSION: v6.3.3
-# MCP-TIER: Ω+∞
-# DOC-PATH: .github/ISSUE_TEMPLATE/data_request.yml
-# DOC-HASH: sha256:data-request-template-v6-3-3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# MCP-CERTIFIED: true
-# VALIDATION-HASH: {auto.hash}
-# GENERATED-BY: KFM-Automation/DocsBot
-# LAST-VALIDATED: {build.date}
-# MCP-FOOTER-END
+**Kansas Frontier Matrix** · *Open Data × FAIR+CARE Ethics × Reproducible Science*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
