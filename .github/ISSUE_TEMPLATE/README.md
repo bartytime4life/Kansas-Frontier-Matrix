@@ -37,7 +37,8 @@ Templates include:
 - 🐛 **Bug Report** — For technical, validation, or data pipeline issues.  
 - 💡 **Feature Request** — For proposing enhancements or new integrations.  
 - ⚖️ **Governance Review** — For ethical, FAIR+CARE, or documentation reviews.  
-- 🧭 **Data Submission** — For submitting new datasets, ETL sources, or schema updates.  
+- 🧭 **Data Request** — For requesting integration of new external datasets or APIs.  
+- 📦 **Data Submission** — For submitting new datasets, ETL sources, or schema updates.  
 
 All issues automatically integrate into GitHub Actions workflows (`.github/workflows/`) for validation, tagging, and provenance logging.
 
@@ -52,6 +53,7 @@ All issues automatically integrate into GitHub Actions workflows (`.github/workf
 ├── bug_report.yml                # Template for reporting technical issues or broken workflows
 ├── feature_request.yml           # Template for suggesting new enhancements or functionality
 ├── governance_review.yml         # Template for FAIR+CARE compliance and ethical reviews
+├── data_request.yaml             # Template for requesting new data sources or layers
 └── data_submission.yml           # Template for new dataset ingestion or metadata registration
 ```
 
@@ -83,6 +85,7 @@ Each issue type initiates an **automated CI/CD validation chain**, guaranteeing 
 | `bug_report.yml` | Report bugs in ETL, AI, or UI workflows | Steps to reproduce, environment info, logs | `.github/workflows/codeql.yml` |
 | `feature_request.yml` | Propose new features, data layers, or visualization tools | Rationale, implementation plan, dependencies | `.github/workflows/site.yml` |
 | `governance_review.yml` | Request ethical or FAIR+CARE board reviews | FAIR+CARE metadata, risk assessment | `.github/workflows/faircare-validate.yml` |
+| `data_request.yaml` | Request new external data sources or integrations | Source, license, metadata, purpose | `.github/workflows/stac-validate.yml` |
 | `data_submission.yml` | Submit new datasets or schema changes | Source, license, spatial coverage, metadata links | `.github/workflows/stac-validate.yml` |
 
 ---
@@ -139,6 +142,7 @@ CARE Principles:
 
 | Version | Date       | Author             | Summary |
 |----------|------------|--------------------|----------|
+| v9.3.3   | 2025-10-28 | @kfm-architecture  | Added `data_request.yaml` to directory layout and summary. |
 | v9.3.2   | 2025-10-28 | @kfm-architecture  | Added full governance metadata and workflow mapping. |
 | v9.3.1   | 2025-10-27 | @bartytime4life    | Integrated FAIR+CARE compliance fields and automation triggers. |
 | v9.3.0   | 2025-10-26 | @kfm-etl-ops       | Established standardized issue templates for KFM monorepo. |
