@@ -1,225 +1,168 @@
 ---
-title: "🗄️ Kansas Frontier Matrix — Hazards Log Archive (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗃️ Kansas Frontier Matrix — Hazards Archive Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/archive/README.md"
-version: "v9.4.1"
+version: "v9.3.2"
 last_updated: "2025-10-28"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.4.1/sbom.spdx.json"
-manifest_ref: "releases/v9.4.1/manifest.zip"
+sbom_ref: "releases/v9.3.2/sbom.spdx.json"
+manifest_ref: "releases/v9.3.2/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.4.1/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-hazards-log-archive-v15.json"
-json_export: "releases/v9.4.1/work-hazards-log-archive.meta.json"
+telemetry_ref: "releases/v9.3.2/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/work-hazards-archive-v14.json"
+json_export: "releases/v9.3.2/work-hazards-archive.meta.json"
 validation_reports:
-  - "reports/self-validation/work-hazards-log-archive-validation.json"
-  - "reports/fair/hazards_summary.json"
-  - "reports/audit/ai_hazards_ledger.json"
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-HAZARDS-LOGS-ARCHIVE-RMD-v9.4.1"
-maintainers: ["@kfm-data", "@kfm-hazards", "@kfm-security"]
-approvers: ["@kfm-governance", "@kfm-architecture", "@kfm-fair"]
-reviewed_by: ["@kfm-ai", "@kfm-ethics", "@kfm-accessibility"]
-ci_required_checks: ["docs-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Immutable Log Archival Layer"
-mcp_version: "MCP-DL v6.4.3"
-alignment:
-  - FAIR / CARE
-  - ISO 14721 (OAIS) / ISO 27001 / ISO 50001
-  - STAC 1.0 / DCAT 3.0
-  - Blockchain Provenance / MCP-DL Compliance
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Immutable · Auditable"
-focus_validation: true
-tags: ["hazards","logs","archive","immutability","ledger","governance","fair","provenance","security","sustainability"]
+  - "reports/audit/hazards_archive_audit.json"
+  - "reports/fair/hazards_archive_summary.json"
+  - "reports/ledger/hazards_archive_provenance.json"
+ontology_alignment: "ontologies/CIDOC_CRM-HazardExt.owl"
 ---
 
 <div align="center">
 
-# 🗄️ Kansas Frontier Matrix — **Hazards Log Archive**  
-`data/work/tmp/hazards/logs/archive/`
+# 🗃️ Kansas Frontier Matrix — **Hazards Archive Logs**
+`data/work/tmp/hazards/logs/archive/README.md`
 
-**Mission:** Preserve and secure **immutable archives of all hazard-related logs** (AI, ETL, validation, system) under FAIR+CARE, ISO, and blockchain-governed retention policies.
+**Purpose:** Central archival space for historic hazard data, legacy logs, deprecated AI runs, and frozen validation artifacts.  
+Supports long-term provenance, reproducibility, and transparent version retention of the Hazards TMP layer.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../../reports/fair/hazards_summary.json)
-[![ISO 14721](https://img.shields.io/badge/ISO-14721%20(OAIS)%20Archive%20Model-lightblue)]()
-[![ISO 27001](https://img.shields.io/badge/ISO-27001%20Information%20Security-teal)]()
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Blockchain%20Integrity-gold)]()
-
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)
+[![Status: Archived Data](https://img.shields.io/badge/Status-Archived%20Data-grey)](../../../../../data/work/tmp/hazards/)
+[![Governance Ledger](https://img.shields.io/badge/Governance-Verified-blueviolet)](../../../../../docs/standards/governance/)
+[![STAC Indexed](https://img.shields.io/badge/STAC-Indexed%20v1.0-orange)](../../../../../data/stac/)
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The **Hazards Log Archive** functions as the **long-term preservation and governance repository** for all logs generated within the hazards domain — including ETL, validation, AI, energy, and FAIR+CARE audits.  
-Archives are cryptographically sealed, checksum-verified, and indexed by governance cycles.
+The **Hazards Archive Logs** directory is the long-term repository for validated, superseded, and deprecated logs from prior ETL, AI, and validation cycles.  
+All materials here are retained under version control to meet **FAIR** and **MCP** reproducibility mandates, enabling backtrace of historical hazard analysis states.
 
-**Purpose**
-- Preserve audit and governance logs for regulatory compliance.  
-- Enable reproducibility by linking archived logs to their transformation manifests.  
-- Ensure energy-efficient storage and renewable-powered lifecycle under ISO 50001.  
-- Guarantee immutability via **PGP signing and blockchain registration**.
+It functions as both:
+- **Cold Storage:** Immutable copies of legacy logs and derived products.
+- **Provenance Registry:** Chronological index of hazard pipeline transformations across releases.
+- **Governance Record:** Cryptographically signed references for audit and integrity validation.
 
-> *“Integrity is not what we keep — it’s what we never alter.”*
+Archived data includes historical reports of:
+- Tornadoes, floods, droughts, wildfires, and earthquakes (preprocessed by ETL pipelines).
+- Validation and QA outputs from previous schema versions.
+- AI drift reports and explainability records prior to major model updates.
+- FAIR/CARE governance audits and ethics board certifications.
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂 Directory Layout
 
-```text
+```plaintext
 data/work/tmp/hazards/logs/archive/
-├── 2025-10-27/
-│   ├── etl.tar.zst                    # ETL & staging logs archive
-│   ├── ai.tar.zst                     # AI explainability + drift logs
-│   ├── validation.tar.zst             # Validation + checksum reports
-│   ├── energy.tar.zst                 # Energy + ISO 50001 metrics
-│   ├── manifest.json                  # Manifest of archived files + hashes
-│   ├── provenance_trace.json          # Provenance chain for the archived cycle
-│   └── ledger_registration.json       # Blockchain ledger registration metadata
-├── 2025-07-15/                        # Previous quarter archives
-│   ├── etl.tar.zst
-│   ├── validation.tar.zst
-│   └── manifest.json
-├── index.json                         # Master index of all archival records
-└── README.md
+├── README.md
+├── etl_logs/
+│   ├── hazards_etl_2025-09.json
+│   └── hazards_etl_2025-06.json
+├── ai_models/
+│   ├── model_registry_legacy_v8.9.json
+│   ├── ai_drift_archive_v8.8.json
+│   └── shap_explainability_archive/
+│       └── shap_summary_v8.7.png
+├── validation/
+│   ├── stac_validation_2025-Q2.json
+│   └── schema_validation_v13.json
+├── fair_audits/
+│   ├── fair_metrics_2024-Q4.json
+│   ├── fair_metrics_2025-Q1.json
+│   └── care_governance_ledger.json
+└── metadata/
+    ├── hazards_archive_index.json
+    ├── manifest_checksums.sha256
+    └── archive_manifest.yaml
 ```
 
+> **Note:** Only finalized and signed outputs are stored here.  
+> Temporary drafts and pending validation results remain in `data/work/tmp/hazards/logs/tmp/`.
+
 ---
 
-## ⚙️ Make Targets (Archive Ops)
+## 🧩 Archival Workflow
 
-```text
-make hazards-logs-archive-run        # Package logs into WORM archives (.tar.zst)
-make hazards-logs-archive-verify     # Verify SHA-256 checksums and PGP signatures
-make hazards-logs-archive-register   # Register archive metadata in Governance Ledger
-make hazards-logs-archive-clean      # Rotate and remove expired archives (per retention)
+```mermaid
+flowchart TD
+A[Hazards ETL & AI Logs (Current)] --> B[Validation + FAIR/CARE Certification]
+B --> C[Audit + Provenance Verification]
+C --> D[Version Tagging + Hash Generation]
+D --> E[Archive Ledger Commit · Governance Sign-Off]
+E --> F[STAC Catalog Indexing (data/stac/)]
+F --> G[Hazards Archive Storage (.json/.zip/.sha256)]
+G --> H[Accessible via Docs Portal + Focus Mode Provenance]
 ```
 
----
-
-## 🧩 Archive Manifest Example
-
-```json
-{
-  "archive_id": "hazards-logs-2025-10-27",
-  "files": [
-    {"name": "etl.tar.zst", "checksum": "a3f2c8dba1e09f..."},
-    {"name": "ai.tar.zst", "checksum": "b7f9a612ae14f9..."},
-    {"name": "validation.tar.zst", "checksum": "d8a3c91f22e97d..."},
-    {"name": "energy.tar.zst", "checksum": "e17f4a12bfc67a..."}
-  ],
-  "verified_by": "@kfm-security",
-  "retention": "90 days (logs), permanent (releases)",
-  "registered_ledger": "governance/ledger/hazards-log-archive-2025Q4.json",
-  "timestamp": "2025-10-27T00:00:00Z"
-}
-```
+This process ensures **immutability, traceability, and public verifiability** of all hazard-related data products.  
+Each archived object has:
+- A **SHA-256 checksum**
+- A **semantic version tag**
+- A **CIDOC CRM provenance relationship** recorded in the graph database
 
 ---
 
-## 🧮 FAIR+CARE Archival Matrix
+## 🧠 Data Retention Policy
 
-| FAIR Dim. | CARE Dim. | Artifact | Purpose | Verification |
-|:--|:--|:--|:--|:--|
-| **Findable** | Collective Benefit | `index.json` | Central catalog for archives | FAIR F1 |
-| **Accessible** | Responsibility | `manifest.json` | Access control + retention metadata | FAIR A1 |
-| **Interoperable** | Ethics | `provenance_trace.json` | Maintains chain-of-custody | FAIR I3 |
-| **Reusable** | Equity | `ledger_registration.json` | Verifies provenance via blockchain | FAIR R1 |
+| Data Type | Retention Period | Policy | Notes |
+|------------|-----------------|---------|-------|
+| ETL & Schema Logs | Permanent | Full retention | Required for provenance trace |
+| AI Drift Reports | 3 major releases | Summarized thereafter | Kept as deltas beyond lifespan |
+| Validation Reports | 2 years | Compress older sets | STAC metadata remains |
+| FAIR/CARE Audits | Permanent | Immutable | Required for ethics documentation |
+| Model Checkpoints | 1 year | Reproducible subset retained | Replaced by signed manifests |
 
----
-
-## 🧠 Archive Retention & Immutability Policy
-
-- Retention: **90 days for logs**, **permanent for releases**.  
-- Immutability: Achieved through **WORM compression (.tar.zst)** + **PGP signature**.  
-- Verification: SHA-256 + governance ledger registration.  
-- Deletion: Only via signed governance action, logged to ledger.  
-
-**Powered by:**
-- Renewable energy (ISO 50001)
-- Carbon-offset verified (ISO 14064)
-- FAIR+CARE sustainability model
+> ⚠️ **Important:** Archival entries are immutable once signed.  
+> Only new append-only versions are permitted under MCP governance controls.
 
 ---
 
-## ⛓️ Blockchain Provenance Record
+## 🔍 Provenance & Governance Integration
 
-```json
-{
-  "ledger_id": "hazards-log-archive-ledger-2025-10-28",
-  "archives_registered": [
-    "etl.tar.zst",
-    "ai.tar.zst",
-    "validation.tar.zst",
-    "energy.tar.zst"
-  ],
-  "checksum_verified": true,
-  "pgp_signature": "pgp-sha256:<signature-id>",
-  "immutability_verified": true,
-  "fair_care_validated": true,
-  "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-28T00:00:00Z"
-}
-```
+Archived materials are indexed in:
+- `reports/ledger/hazards_archive_provenance.json`
+- `data/stac/hazards_archive_catalog.json`
+- `docs/standards/faircare-validation.md`
+
+These records provide:
+- **Chain-of-custody verification:** cryptographic signatures of every archived artifact.  
+- **Ontology crosswalks:** mapping archived data to `CIDOC_CRM-HazardExt.owl`.  
+- **Focus Mode provenance tracing:** ensuring any AI insight links back to a specific archived version.
 
 ---
 
-## 🧾 Self-Audit Metadata
+## 🧩 FAIR+CARE Compliance
 
-```json
-{
-  "readme_id": "KFM-DATA-WORK-HAZARDS-LOGS-ARCHIVE-RMD-v9.4.1",
-  "validated_by": "@kfm-security",
-  "audit_status": "pass",
-  "archives_created": 4,
-  "checksum_integrity": "verified",
-  "immutability_compliance": true,
-  "fair_care_score": 100.0,
-  "ledger_registered": true,
-  "ledger_hash": "b7f9a612ae14f9...",
-  "governance_cycle": "Q4 2025"
-}
-```
+FAIR:
+- **Findable:** Indexed in STAC and searchable via metadata.  
+- **Accessible:** Released under open license (CC-BY 4.0 or MIT metadata).  
+- **Interoperable:** JSON-LD structure supports linked-data crosswalks.  
+- **Reusable:** Provenance, schema, and validation logs ensure reproducibility.
+
+CARE:
+- **Collective Benefit:** Historical hazard data aids future research.  
+- **Authority to Control:** Sensitive local data anonymized before archival.  
+- **Responsibility:** Retention ensures accountability for past analyses.  
+- **Ethics:** Archive entries reviewed by FAIR+CARE Ethics Board prior to release.
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date | Author | Reviewer | FAIR/CARE | Ledger | Summary |
-|:--:|:--|:--|:--|:--:|:--:|:--|
-| **v9.4.1** | 2025-10-28 | @kfm-data | @kfm-governance | ✅ | Ledger ✓ | Added quarterly rotation + immutable WORM archive traceability |
-| v9.4.0 | 2025-10-27 | @kfm-security | @kfm-fair | ✅ | ✓ | Introduced SHA-256 + PGP verification workflow |
-| v9.3.0 | 2025-10-23 | @kfm-hazards | @kfm-architecture | ✅ | ✓ | Established base archive schema and FAIR+CARE policy |
+| Version | Date       | Author           | Summary                                      |
+|----------|------------|------------------|----------------------------------------------|
+| v9.3.2   | 2025-10-28 | @kfm-archive-lab | Initial release for hazards archive directory. |
+| v9.3.1   | 2025-10-27 | @bartytime4life  | Added governance checksum validation process. |
+| v9.3.0   | 2025-10-26 | @kfm-etl-ops     | Migrated legacy logs to archive format.       |
 
 ---
 
 <div align="center">
 
-### 🗄️ Kansas Frontier Matrix — *Integrity · Immutability · Provenance*  
-**“Archives are not memories — they are promises kept.”**
-
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../../reports/fair/hazards_summary.json)  
-[![ISO 14721](https://img.shields.io/badge/ISO-14721%20(OAIS)%20Archive%20Model-lightblue)]()  
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Blockchain%20Record-gold)]()  
-[![ISO 27001](https://img.shields.io/badge/ISO-27001%20Security%20Validated-teal)]()
+**Kansas Frontier Matrix** · *Data Integrity × Provenance × Ethical Archival*  
+[🔗 Project Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/)
 
 </div>
-
----
-
-<!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.4.3
-MCP-TIER: Diamond⁹ Ω
-DOC-PATH: data/work/tmp/hazards/logs/archive/README.md
-MCP-CERTIFIED: true
-SBOM-GENERATED: true
-SLSA-ATTESTED: true
-FAIR-CARE-COMPLIANT: true
-ARCHIVE-IMMUTABLE: true
-LEDGER-LINKED: true
-PERFORMANCE-BUDGET-P95: 2.5 s
-GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: 2025-10-28
-MCP-FOOTER-END -->
