@@ -54,17 +54,19 @@ These logs enable **deterministic reproducibility** of hazard analyses by tracki
 ---
 
 ## 🗂️ Directory Layout
-data/work/tmp/hazards/logs/tmp/  
-├── ai/                 # AI explainability, drift detection, and confidence scoring logs  
-├── archive/            # Temporary signed archives before checksum sealing  
-├── energy/             # Critical infrastructure hazard, outage, and grid risk logs  
-├── etl/                # Extract-Transform-Load logs from hazard ingestion  
-├── faircare/           # FAIR+CARE compliance and bias monitoring logs  
-├── sessions/           # User or AI model session logs (runtime trace)  
-├── manifests/          # Temporary SBOM, metadata, and checksum manifests  
-├── system/             # OS/runtime-level logs (performance, telemetry, health checks)  
-├── tmp/                # Volatile buffer for transient process output  
-└── validation/         # Internal schema checks and validation reports  
+```text
+data/work/tmp/hazards/logs/tmp/
+│
+├── ai/              → AI explainability, drift detection, and confidence scoring logs
+├── archive/         → Temporary signed archives before checksum sealing
+├── energy/          → Critical infrastructure hazard, outage, and grid risk logs
+├── etl/             → Extract-Transform-Load logs from hazard ingestion
+├── faircare/        → FAIR+CARE compliance and bias monitoring logs
+├── sessions/        → User or AI model session logs (runtime trace)
+├── manifests/       → Temporary SBOM, metadata, and checksum manifests
+├── system/          → OS/runtime-level logs (performance, telemetry, health checks)
+├── tmp/             → Volatile buffer for transient process output
+└── validation/      → Internal schema checks and validation reports 
 
 All log directories are automatically rotated based on retention policy and sealed via checksum manifest generation. On each cycle, temporary logs are summarized, exported, and purged through CI/CD-controlled retention workflows.
 
