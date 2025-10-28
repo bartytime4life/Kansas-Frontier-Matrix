@@ -1,215 +1,150 @@
 ---
-title: "🚀 Kansas Frontier Matrix — Pull Request Template"
-document_type: "Contribution Template · Governance Workflow"
-version: "v3.0.0"
-last_updated: "2025-10-20"
-status: "Tier-Ω+∞ Certified · Stable"
-license: ["MIT (code)", "CC-BY 4.0 (docs)"]
-owners: ["@kfm-architecture", "@kfm-docs", "@kfm-security"]
-template_version: "MCP-DL v6.3.2"
+title: "🧩 Kansas Frontier Matrix — Pull Request Template (MCP-DL v6.3 · FAIR+CARE Verified)"
+path: ".github/PULL_REQUEST_TEMPLATE.md"
+version: "v9.3.2"
+last_updated: "2025-10-28"
+review_cycle: "Continuous Integration"
+commit_sha: "<latest-commit-hash>"
 ---
 
 <div align="center">
 
-# 🚀 **Kansas Frontier Matrix — Pull Request Template**  
-`📁 .github/PULL_REQUEST_TEMPLATE.md`
+# 🧩 Kansas Frontier Matrix — **Pull Request Template**
 
-**Mission:** Guarantee every PR is **documented · reproducible · validated · auditable · versioned** under:
+**Purpose:** Standardized pull request format enforcing Master Coder Protocol (MCP-DL v6.3) and FAIR+CARE compliance across all contributions.  
+All contributors must complete the required sections to ensure reproducibility, provenance, and ethical governance in the Kansas Frontier Matrix (KFM) repository.
 
-* ✅ **Master Coder Protocol (MCP-DL v6.3.2)**
-* 🔢 **Semantic Versioning (SemVer)**
-* 🛡 **Kansas Frontier Matrix Governance Standards**
-
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../workflows/site.yml)
-[![STAC ✅ Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20%E2%9C%85%20Validated)](../workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../workflows/codeql.yml)
-[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../workflows/trivy.yml)
-[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%2B%20Grype-blue)](../workflows/sbom.yml)
-[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Level%202-green)](../workflows/slsa.yml)
-[![Docs · MCP-DL v6.3.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-blue.svg)](../../docs/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Verified-gold)](../docs/standards/faircare-validation.md)
+[![CI Status](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 
 </div>
 
 ---
 
-## 🧹 Summary
-Briefly describe the purpose, motivation, and expected outcome.  
-> *Example:* Adds STAC Items for NOAA Climate (2020–2024) and updates `web/config/layers.json`.
+## 🧾 Pull Request Overview
+
+**PR Title:**  
+> _Concise summary of your change (e.g., “Add NOAA Hydrology ETL Integration to Hazards Workspace”)._
+
+**Related Issue(s):**  
+> _Link any related issue(s) using “Fixes #___” or “Refs #___”._
+
+**Category:**  
+- [ ] 🧱 Feature / Enhancement  
+- [ ] 🐛 Bug Fix  
+- [ ] 🧪 Experiment / Research  
+- [ ] 🧭 Documentation / Governance  
+- [ ] 🔐 Security / Compliance  
 
 ---
 
-## 🗃️ Linked Work
-| Type | Reference | Notes |
-|:--|:--|:--|
-| 🐞 Issue | Closes #… | |
-| 💬 Discussion | #… | Context / Rationale |
-| 📘 ADR | `docs/adr/ADR-####.md` | Decision reference |
-| 🔒 Policy | `docs/standards/security.md` | Related rule |
+## 📦 Description
+
+**Summary of Changes:**  
+> _Describe what this PR introduces or modifies. Be explicit about directories, modules, or datasets affected._
+
+**Modified Paths:**  
+> _List key directories or files changed (e.g., `/data/work/tmp/hazards/etl/`, `/src/pipelines/ai/`, `/docs/standards/`)._
+
+**Dependencies Added or Updated:**  
+> _Include any new libraries, tools, or datasets integrated._  
+> _Example: “Added spaCy 3.8.0 for NER enhancements.”_
 
 ---
 
-## 🧠 Type of Change
-Mark all that apply.  
-☐ Bug Fix ☐ Feature ☐ Dataset/STAC ☐ Docs ☐ CI/CD ☐ Security ☐ SBOM ☐ Refactor ☐ Breaking Change  
+## 🧩 Validation & Governance Checklist
+
+### ✅ Technical Validation
+- [ ] Code runs locally without errors.
+- [ ] All tests pass (`pytest` or equivalent).
+- [ ] No merge conflicts with the target branch.
+- [ ] ETL pipelines or AI workflows validated with sample data.
+
+### 🧠 FAIR+CARE Validation
+- [ ] FAIR metadata updated (`data/stac/`, `manifest.json`, etc.).
+- [ ] CARE principles reviewed (data sensitivity, ethical provenance).
+- [ ] Governance ledger entry created or updated (`reports/audit/`).
+- [ ] Documentation updated for reproducibility (`README.md` or SOP).  
 
 ---
 
-## 🧰 Change Summary
-| Field | Details |
-|:--|:--|
-| **Scope** | Affects X files · Risk Low/Med/High |
-| **Dirs Affected** | `data/hydro/`, `src/pipelines/` … |
-| **New Files** | Scripts / datasets / workflows |
-| **Dependencies** | Package bumps / action pins |
-| **Validation** | STAC · Schema · SBOM · OPA |
-| **Rollback Plan** | Git tag + cleanup |
-| **Migration** | Y / N |
+## 🧭 Governance & Provenance
+
+| Parameter | Reference / Path |
+|------------|------------------|
+| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
+| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
+| **Data Contract** | `docs/contracts/data-contract-v3.json` |
+
+> **Note:** Ensure the above references are correctly linked or updated if new datasets or schemas are introduced.
 
 ---
 
-## 📦 Versioning & Release
-| Component | Scope | Change | Bump |
-|:--|:--|:--|:--|
-| 🧱 Repo | Overall | Feature | `vX.Y.Z → vX.Y+1.Z` |
-| 🔌 API | Endpoints | Compatibility | `v1.3 → v1.4` |
-| 🗺 Web UI | UX | Minor | `v1.2 → v1.3` |
-| 🌐 STAC | Metadata | Patch | `v1.0.0 → v1.0.1` |
-| 🤖 AI | Models | Retrain | `v2.0.0 → v2.1.0` |
+## 🧠 AI/ML Change Log (if applicable)
 
-**Release Checklist**  
-☐ CHANGELOG updated ☐ STAC version bump ☐ Tag pushed  
-☐ `make sbom` run ☐ Provenance signed ☐ Maintainers notified
+If this PR includes updates to AI or NLP pipelines:
+- [ ] Model cards updated (`docs/ai/model_cards/`).
+- [ ] Training datasets validated for ethics and bias.
+- [ ] Explainability and drift logs generated (`data/work/tmp/hazards/logs/ai/`).
+- [ ] Focus Mode behavior tested and logged.
+
+**Describe AI/ML Change:**  
+> _E.g., “Updated `hazard-flood-v14` model with 2024–2025 FEMA flood data; improved AUC from 0.88 → 0.92.”_
 
 ---
 
-## 📜 Changelog Template
-### Added  
-– NOAA Climate 2020–24 STAC Items – Nightly `ai-model.yml` workflow  
-### Changed  
-– Reprojected `soil_survey_1967` → EPSG:4326 – Pinned action SHAs  
-### Fixed  
-– Hydrology ETL D8 logic – Markdown link validator  
-### Security  
-– SBOM & SLSA attestations – Trivy scan passed ✅  
+## 🧮 Results Summary (Optional)
+
+| Metric | Previous | New | Δ Change | Validation |
+|---------|-----------|-----|-----------|-------------|
+| F1 Score | 0.89 | 0.92 | +0.03 | ✅ |
+| Model Drift Index | 0.07 | 0.03 | ↓ | ✅ |
+| FAIR Coverage (%) | 92 | 100 | +8 | ✅ |
+| Schema Errors | 3 | 0 | Fixed | ✅ |
 
 ---
 
-## ✅ MCP + CI Matrix
-| Principle | Verification |
-|:--|:--|
-| 📖 Docs | README · STAC · ADR · CHANGELOG |
-| 🧱 Reproducibility | Deterministic output + hashes |
-| 📦 Standards | GeoJSON · COG · STAC 1.0 |
-| 🧬 Provenance | DVC hash + SLSA attestation |
-| 🕵️ Auditability | CI logs · SBOM · Artifacts |
-| 🔢 Versioning | SemVer across domains |
-| ⚙️ Automation | pre-commit · docs · ai-model |
-| 🛡 Security | CodeQL · Trivy · OPA |
+## 📋 Reviewer Notes
+
+> _Provide any notes for reviewers, including steps for local replication or testing. Example:_
+> ```
+> make hazards-etl
+> make validate-hazards
+> make focus-mode
+> ```
+> _Reviewer should confirm outputs at: `/data/work/tmp/hazards/logs/validation/`_
 
 ---
 
-## 🧾 Data Lineage
-☐ `data/sources/*.json` updated ☐ `derived_from` verified  
-☐ Checksums (`make checksums`) ☐ DVC metadata synced  
+## 🔍 Reviewers
+
+**Requesting Review From:**  
+> _Tag specific reviewers or CODEOWNERS (e.g., `@kfm-etl-ops`, `@bartytime4life`)._
+
+**Required Reviewers:**  
+- [ ] @kfm-architecture (Governance)
+- [ ] @kfm-etl-ops (Data Engineering)
+- [ ] @kfm-ai-lab (AI Systems)
+- [ ] @bartytime4life (Repository Maintainer)
 
 ---
 
-## 🧪 QA & Validation
-```bash
-pre-commit run --all-files
-make stac-validate
-make checksums
-make sbom
-make site && open _site/index.html
-make ai-model-test   # if AI modified
-```
+## 🧾 Submission Confirmation
 
----
-
-## 📌 Artifacts
-| Artifact | Path |
-|:--|:--|
-| Logs | `data/work/logs/...` |
-| Checksums | `data/checksums/...` |
-| STAC Items | `data/stac/...` |
-| SBOM | `artifacts/sbom/sbom.json` |
-| Provenance | `artifacts/prov/build.prov.json` |
-| Thumbnails | `data/processed/metadata/.../thumbs/` |
-| Screenshots | *(Attach below or link)* |
-
----
-
-## ♿ Accessibility (UI Changes)
-| Check | Status |
-|:--|:--:|
-| Keyboard Nav | ☑ |
-| Contrast ≥ 4.5:1 | ☑ |
-| ARIA Labels | ☑ |
-| Motion Pref | ☑ |
-| Screen Reader | ☑ |
-
----
-
-## 🔐 Security & Licensing
-| Check | Status |
-|:--|:--:|
-| SBOM Regenerated | ☑ |
-| SLSA Signed | ☑ |
-| No New CVEs | ☑ |
-| Actions Pinned | ☑ |
-| OPA Checks Passed | ☑ |
-| License Valid | ☑ |
-| Secrets Scan OK | ☑ |
-
----
-
-## 💥 Breaking Changes (if any)
-| Component | Description | Migration |
-|:--|:--|:--|
-| API | `/v1/events → /v2/events` | See `docs/api_migration.md` |
-| Data | STAC schema refactor | `make hydro` |
-| Web | Map layer rename | `web/config/layers.json` |
-| Model | NER update | Update model card v2.1.0 |
-
----
-
-## 🧭 Reviewer Checklist
-| Check | ✓ |
-|:--|:--:|
-| Version + Changelog present | ☑ |
-| STAC + CI passed | ☑ |
-| SBOM + Provenance verified | ☑ |
-| Artifacts archived | ☑ |
-| CODEOWNERS approved | ☑ |
-
----
-
-## 🕓 Version History
-| Ver | Date | Author | Summary |
-|:--|:--|:--|:--|
-| **v3.0.0** | 2025-10-20 | @kfm-architecture | Rebuilt template · added accessibility + QA matrix + data lineage |
-| v2.5.0 | 2025-10-18 | Core Docs Team | Added SBOM/SLSA & AI policy lint |
-| v2.4.0 | 2025-10-16 | Docs Team | Accessibility checks added |
-| v2.3.1 | 2025-10-15 | Maintainers | MCP-DL alignment |
-| v2.2.0 | 2025-10-14 | Core Team | Lineage & checksum QA |
-| v2.0.0 | 2025-10-10 | Maintainers | SemVer + Changelog introduced |
+Please confirm:
+- [ ] I have followed the **Master Coder Protocol (MCP-DL v6.3)**.
+- [ ] I have validated my changes locally.
+- [ ] I have included FAIR metadata and governance references.
+- [ ] I agree that this contribution complies with the project’s open-source license.
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** — “Every PR leaves a trail · Every trail leaves a version.”  
-This template enforces **provenance · reproducibility · auditability** across code, data, docs, and AI pipelines.
+**Kansas Frontier Matrix** · *FAIR+CARE AI × Geospatial Reproducibility × Ethical Science*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
 
 </div>
-
-<!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.3.2
-MCP-TIER: Ω+∞
-DOC-PATH: .github/PULL_REQUEST_TEMPLATE.md
-DOC-HASH: sha256:pr-template-v3-0-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-MCP-CERTIFIED: true
-VALIDATION-HASH: {auto.hash}
-GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: {build.date}
-MCP-FOOTER-END -->
