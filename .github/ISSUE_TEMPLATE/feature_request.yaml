@@ -1,335 +1,139 @@
-# ────────────────────────────────────────────────────────────────
-#  Kansas Frontier Matrix — Feature Request Form
-#  Context: GitHub Issue Form to propose NEW features/enhancements
-#  Version: v6.3.3 · Tier-Ω+∞ Certified
-#  Validated by: docs-validate.yml · policy-check.yml · gitleaks.yml
-#  Alignment: MCP-DL v6.3.3 · FAIR · CARE · STAC 1.0 · DCAT 2.0 · CIDOC-CRM · OWL-Time
-# ────────────────────────────────────────────────────────────────
-
+---
 name: "💡 Feature Request"
-description: "Propose a new feature or enhancement — documented, versioned, reproducible, and MCP-DL v6.3.3 compliant."
-title: "[Feature]: <feature name> — <component/domain>"
-labels:
-  - enhancement
-  - needs-triage
-assignees:
-  - kfm-architecture
-  - kfm-data
+about: "Suggest a new capability, enhancement, or module for the Kansas Frontier Matrix (KFM)."
+title: "[FEATURE] <short description of requested feature>"
+labels: ["enhancement", "proposal", "governance-review"]
+assignees: ["@kfm-architecture", "@bartytime4life", "@kfm-etl-ops"]
+---
 
-body:
-  - type: markdown
-    attributes:
-      value: |
-        ## 💡 Feature Overview (MCP-DL v6.3.3)
-        *“Every feature builds the future — every change is reproducible.”*  
-        Provide a clear **problem statement**, **motivation**, **implementation sketch**, **versioning**, **security/ethics**, and **KPIs**.
+## 💡 Summary
 
-  # ——— Feature Meta ————————————————————————————————————————————————
-  - type: input
-    id: feature_name
-    attributes:
-      label: 📛 Feature Name
-      placeholder: "Slope Classification Enhancement for Terrain Pipeline"
-    validations:
-      required: true
+> _Provide a concise explanation of your requested feature or improvement._  
+> _Example: “Add AI-driven drift monitoring to Focus Mode for climate hazard layers.”_
 
-  - type: input
-    id: component
-    attributes:
-      label: 🧩 Target Module / Component
-      placeholder: "terrain_pipeline.py | web/config/layers.json | src/graph/schema.cypher | src/api/routes.py"
-    validations:
-      required: true
+**Feature Category:**
+- [ ] 🧱 Data Pipeline (ETL / AI / Graph)
+- [ ] 🌍 Frontend (React / MapLibre UI)
+- [ ] 📖 Documentation / Standards
+- [ ] 🧠 AI / Focus Mode
+- [ ] ⚙️ Infrastructure / CI/CD
+- [ ] 🧩 Governance / FAIR+CARE
 
-  - type: dropdown
-    id: domain
-    attributes:
-      label: 🧭 Domain / Area of Impact
-      multiple: true
-      options:
-        - Terrain
-        - Hydrology
-        - Climate
-        - Hazards
-        - Landcover
-        - Knowledge Graph
-        - Web UI
-        - API
-        - Text / AI / NLP
-        - Metadata / Governance
-        - CI/CD
-    validations:
-      required: true
+---
 
-  - type: input
-    id: stakeholder
-    attributes:
-      label: 👤 Feature Owner / Stakeholder
-      placeholder: "@kfm-data · @kfm-web · project-leads"
-    validations:
-      required: true
+## 🧭 Purpose & Rationale
 
-  - type: dropdown
-    id: impact_level
-    attributes:
-      label: 🎯 Expected Impact Level
-      options:
-        - "🟩 Minor"
-        - "🟨 Moderate"
-        - "🟧 Major"
-        - "🔴 Critical"
-    validations:
-      required: true
+> _Why should this feature exist? What problem or limitation does it address?_  
+> _Explain how it advances reproducibility, ethical AI, or user experience._
 
-  - type: dropdown
-    id: semver
-    attributes:
-      label: 🔢 SemVer Impact
-      options:
-        - patch (no breaking changes)
-        - minor (non-breaking but visible)
-        - major (breaking or schema-level)
-        - unknown
-    validations:
-      required: true
+**Problem Statement:**  
+> _Briefly describe the issue or gap this feature resolves._
 
-  - type: dropdown
-    id: priority
-    attributes:
-      label: 🚦 Priority (Triage Suggestion)
-      options:
-        - P1 — Critical (Immediate)
-        - P2 — High
-        - P3 — Normal
-        - P4 — Low
-      default: P3 — Normal
-    validations:
-      required: true
+**Expected Benefits:**  
+- Improves __reproducibility__  
+- Strengthens __FAIR+CARE compliance__  
+- Enhances __Focus Mode functionality__  
+- Optimizes __system performance or usability__  
 
-  - type: input
-    id: related_docs
-    attributes:
-      label: 📚 Related Docs / ADRs / SOPs
-      description: Link any relevant architecture decisions or SOPs
-      placeholder: "docs/adr/ADR-0xx-<topic>.md · docs/sop/<area>.md"
+---
 
-  # ——— Problem & Rationale ————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🔍 Problem & Rationale"
+## 🧩 Technical Details
 
-  - type: textarea
-    id: problem
-    attributes:
-      label: ❗ Current Limitation / Problem
-      placeholder: "Describe the current limitation or user need driving this feature."
-    validations:
-      required: true
+| Aspect | Description |
+|---------|-------------|
+| **Module / Location** | `<directory or file impacted>` |
+| **Dependencies / APIs** | `<list libraries, APIs, or datasets required>` |
+| **Proposed Implementation** | `<summary of architecture or logic>` |
+| **Estimated Complexity** | ☐ Low ☐ Medium ☐ High |
+| **Backward Compatibility** | ☐ Yes ☐ No (explain below) |
 
-  - type: textarea
-    id: rationale
-    attributes:
-      label: 💡 Motivation & Rationale
-      placeholder: |
-        - Aligns with roadmap milestone
-        - Fills UI accessibility gap
-        - Enhances knowledge graph linking
-        - Supports Focus Mode / AI summaries
-    validations:
-      required: true
+> _Attach diagrams or pseudocode if applicable._  
+> _Use Mermaid or code fences for architecture sketches._
 
-  # ——— Proposed Implementation ————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🧠 Proposed Implementation"
+```mermaid
+flowchart TD
+A[User Interaction] --> B[AI Inference Module]
+B --> C[Telemetry Capture + Governance Update]
+C --> D[Map + Timeline Integration]
+```
 
-  - type: textarea
-    id: proposal
-    attributes:
-      label: 🛠 Implementation Details
-      description: Logic, workflow changes, files affected, dependencies
-      placeholder: |
-        - Add CLI flag to terrain_pipeline.py
-        - Modify layers.json with slope_class layer
-        - Update ADR + add unit tests + e2e test fixture
-        - Adjust STAC properties + thumbnails
-    validations:
-      required: true
+---
 
-  - type: checkboxes
-    id: change_types
-    attributes:
-      label: 🧱 Type of Change
-      options:
-        - label: New ETL pipeline/module
-        - label: Graph schema/API expansion
-        - label: Web/timeline interaction enhancement
-        - label: Visualization config/UI component
-        - label: Docs/ADR/SOP updates
-        - label: CI/CD workflow change
-        - label: AI/Model pipeline change
-        - label: Other
+## 🧠 FAIR+CARE Evaluation
 
-  - type: textarea
-    id: dependencies
-    attributes:
-      label: 🔗 Dependencies / Compatibility
-      description: Upstream/downstream dependencies, migrations, or compat notes
-      placeholder: |
-        - Requires GDAL ≥3.8; pin in requirements
-        - Dependent on NHD flowlines update
-        - Breaks old schema field `slope_bin` (migration needed)
+| Principle | Compliance | Notes |
+|------------|-------------|-------|
+| **Findable** | ☐ Yes ☐ No | _Improves data discoverability?_ |
+| **Accessible** | ☐ Yes ☐ No | _Enhances open data or API access?_ |
+| **Interoperable** | ☐ Yes ☐ No | _Aligns with open standards or schemas?_ |
+| **Reusable** | ☐ Yes ☐ No | _Produces reproducible or documented results?_ |
+| **Collective Benefit** | ☐ Yes ☐ No | _Supports shared ethical outcomes?_ |
+| **Authority to Control** | ☐ Yes ☐ No | _Respects data and community governance?_ |
+| **Responsibility** | ☐ Yes ☐ No | _Incorporates bias checks or ethical validation?_ |
+| **Ethics** | ☐ Yes ☐ No | _Does not produce harm or misleading insights?_ |
 
-  - type: textarea
-    id: toggles_rollout
-    attributes:
-      label: 🚀 Rollout & Toggle Strategy
-      description: Safe release & rollback plan
-      placeholder: |
-        - Feature flag: `feature.slope_class`
-        - Canary / partial rollout
-        - Rollback: revert config + data migration
-        - Post-deploy checks: cache rebuild, index refresh
+---
 
-  # ——— Metrics / KPIs ————————————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: |
-        ## 📐 Metrics / Expected Outcome
-        Use this template (copy/paste into the field below):
-        ```
-        | Metric          | Target                                      |
-        |-----------------|----------------------------------------------|
-        | Data Quality    | `slope_class` populated; STAC updated        |
-        | Reproducibility | Deterministic outputs; SOP updated           |
-        | Usability       | Map layer toggle + legend + doc link         |
-        | Performance     | ≤ +5% runtime impact                         |
-        | Accessibility   | Meets WCAG 2.1 AA; keyboard-only operable    |
-        | Observability   | New logs/metrics in CI and dashboards        |
-        ```
+## ⚙️ Governance Metadata
 
-  - type: textarea
-    id: outcomes
-    attributes:
-      label: 📏 Expected Behavior / KPIs
-      description: Enter KPI table or bullet list (Markdown rendered)
-      placeholder: "Paste KPI table template and adjust targets."
-      render: markdown
-    validations:
-      required: true
+| Field | Reference |
+|--------|------------|
+| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
+| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Data Contract** | `docs/contracts/data-contract-v3.json` |
+| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
 
-  - type: textarea
-    id: downstream
-    attributes:
-      label: 🌊 Downstream Effects
-      description: Impact on STAC, pipelines, UI, tests, model cards, etc.
-      placeholder: |
-        - STAC schema version bump (`properties.version`)
-        - New test fixtures + screenshots
-        - Update `docs/` usage & ADR
-        - Affect model card? (if AI surfaces/dossiers change)
+> _Ensure all governance references are valid and consistent with the current repository version._
 
-  # ——— Security, Supply Chain & Ethics ———————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🔒 Security, Supply Chain & Ethics"
+---
 
-  - type: checkboxes
-    id: security_ethics
-    attributes:
-      label: ✅ Security & Data Ethics Checklist
-      options:
-        - label: CodeQL/Trivy clean or mitigations documented
-        - label: Actions pinned (SHA/tag); least-privilege tokens
-        - label: SBOM re-generated (if dependencies changed)
-        - label: Policy-as-Code checks pass (OPA/Conftest)
-        - label: Data ethics reviewed; STAC `data_ethics` set if applicable
+## 🧾 Implementation Milestones
 
-  # ——— Governance / Versioning ——————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 📜 Governance / Versioning"
+| Phase | Task | Owner | Due Date | Status |
+|--------|------|--------|----------|--------|
+| 1 | Design + Governance Review | @kfm-architecture | | ☐ |
+| 2 | Implementation + Testing | @kfm-etl-ops | | ☐ |
+| 3 | Documentation + FAIR+CARE Validation | @kfm-data-lab | | ☐ |
+| 4 | Merge + Deploy | @bartytime4life | | ☐ |
 
-  - type: textarea
-    id: versioning_summary
-    attributes:
-      label: 🧭 Versioning Summary (SemVer + STAC)
-      description: Provide proposed version increments
-      placeholder: |
-        | Component            | Current | Proposed | Reason             |
-        |----------------------|---------|----------|--------------------|
-        | ETL Script           | v1.3.0  | v1.4.0   | logic addition     |
-        | Graph/API Schema     | v1.0.0  | v1.1.0   | field added        |
-        | Web Config           | v1.2.1  | v1.2.2   | toggle added       |
-        | Repo Release (SemVer)| v2.4.0  | v2.5.0   | feature bump       |
-        | Dataset (STAC)       | v1.0.0  | v1.1.0   | collection update  |
-      render: markdown
+---
 
-  # ——— Reporter Checklist ————————————————————————————————————————————
-  - type: checkboxes
-    id: reporter_check
-    attributes:
-      label: 🧭 Reporter Checklist
-      description: Confirm before submitting
-      options:
-        - label: "All required fields completed"
-        - label: "Design considers security & ethics"
-        - label: "No secrets or restricted data included"
-        - label: "Existing issues searched"
-        - label: "I acknowledge this request is public"
-    validations:
-      required: true
+## 🔍 Dependencies / Linked Issues
 
-  # ——— References & Notes ——————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: "## 🔗 References & Notes"
+> _List related issues or pull requests (e.g., “Depends on #115 — AI module refactor”)._  
+> _Mention any external blockers or dataset dependencies._
 
-  - type: textarea
-    id: references
-    attributes:
-      label: 🔗 Links / Related PRs / Docs
-      placeholder: |
-        - Related Issue: #456
-        - ADR: docs/adr/ADR-0xx-<topic>.md
-        - SOP: docs/sop/terrain_pipeline.md
-        - PRs: #789
+---
 
-  - type: textarea
-    id: notes
-    attributes:
-      label: 🗒 Additional Notes
-      placeholder: |
-        - Diagrams, screenshots, mockups
-        - Risk flags, review blockers, etc.
+## 🧩 Review Routing
 
-  # ——— Disclosure ————————————————————————————————————————————————
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        **Disclosure & License Notice**  
-        Submissions are governed by the MIT + CC-BY 4.0 license.  
-        Do not include confidential or proprietary data in attachments.
+| Role | Reviewer | Required Action |
+|------|-----------|-----------------|
+| **Architecture** | @kfm-architecture | Review scope and integration feasibility |
+| **Data / ETL** | @kfm-etl-ops | Assess backend or pipeline impact |
+| **AI / Ethics** | @kfm-ai-lab | Validate bias and governance implications |
+| **Maintainer** | @bartytime4life | Approve merge and release |
 
-# hidden metadata
-mcp_metadata:
-  version: "v6.3.3"
-  tier: "Ω+∞"
-  template_type: "feature_request"
-  validation_checks:
-    - docs-validate
-    - policy-check
-    - gitleaks
-  generated_by: "KFM-Automation/DocsBot"
+---
 
-# MCP-FOOTER-BEGIN
-# MCP-VERSION: v6.3.3
-# MCP-TIER: Ω+∞
-# DOC-PATH: .github/ISSUE_TEMPLATE/feature_request.yml
-# DOC-HASH: sha256:feature-request-template-v6-3-3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# MCP-CERTIFIED: true
-# VALIDATION-HASH: {auto.hash}
-# GENERATED-BY: KFM-Automation/DocsBot
-# LAST-VALIDATED: {build.date}
-# MCP-FOOTER-END
+## ✅ Submission Checklist
+
+- [ ] Governance and metadata references verified  
+- [ ] FAIR+CARE impact reviewed  
+- [ ] Diagrams or workflow sketches attached (if applicable)  
+- [ ] Documentation updated (`docs/architecture/` or `README.md`)  
+- [ ] Test plan defined (`tests/` or pipeline validation script)  
+
+---
+
+> ⚠️ **Note:**  
+> Submitting a feature request will automatically trigger:
+> - FAIR+CARE validation workflow (`.github/workflows/faircare-validate.yml`)  
+> - Governance ledger update (`.github/workflows/governance-ledger.yml`)  
+> - Architecture linting check (`.github/workflows/pre-commit.yml`)  
+
+---
+
+**Kansas Frontier Matrix** · *Open Architecture × FAIR+CARE Compliance × Reproducible Science*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
