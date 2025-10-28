@@ -1,1 +1,142 @@
-y
+---
+name: "📦 Data Submission"
+about: "Submit a new dataset, metadata file, or update for integration into the Kansas Frontier Matrix (KFM)."
+title: "[DATA SUBMISSION] <dataset title or identifier>"
+labels: ["data-submission", "governance-review", "FAIR+CARE"]
+assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
+---
+
+## 📦 Dataset Overview
+
+> _Provide a concise summary of the dataset being submitted._  
+> _Example: “Submitting 2025 Kansas drought severity index data from NOAA CPC.”_
+
+**Dataset Type:**
+- [ ] 🌍 Geospatial / Environmental
+- [ ] 🧭 Historical / Archival
+- [ ] 🧠 AI Training or Model Input
+- [ ] ⚡ Infrastructure / Energy
+- [ ] 📊 Tabular / Statistical
+- [ ] Other (specify)
+
+**Purpose of Submission:**  
+> _Explain how this dataset contributes to KFM goals (e.g., climate resilience, historical reconstruction)._  
+
+---
+
+## 🧩 Source Information
+
+| Field | Description |
+|--------|-------------|
+| **Dataset Name** | `<official title or name>` |
+| **Source Organization** | `<e.g., NOAA, USGS, FEMA, Kansas Geological Survey>` |
+| **Access URL / API Endpoint** | `<direct link or data portal>` |
+| **License / Usage Terms** | `<Public Domain, CC-BY, etc.>` |
+| **Data Format(s)** | `<GeoTIFF, CSV, NetCDF, GeoJSON, etc.>` |
+| **Temporal Coverage** | `<YYYY–YYYY>` |
+| **Spatial Coverage** | `<Statewide / County / Regional>` |
+| **Update Frequency** | `<Static / Annual / Real-time>` |
+| **Estimated File Size** | `<e.g., 250MB>` |
+
+> _Include the official source citation and link to documentation if available._
+
+---
+
+## 🧠 FAIR Metadata
+
+| Field | Description |
+|--------|-------------|
+| **Metadata File** | `<link or upload STAC/ISO metadata>` |
+| **DOI or Identifier** | `<if applicable>` |
+| **Provenance / Citation** | `<reference to official source>` |
+| **Contact / Data Steward** | `<organization or person responsible>` |
+
+> _If metadata is not provided, note whether you can create it using KFM’s schema templates._  
+
+---
+
+## ⚙️ Integration Path
+
+| Pipeline | Description | Responsible Team |
+|-----------|-------------|------------------|
+| **ETL** | Load and normalize data into `/data/work/tmp/` | @kfm-etl-ops |
+| **Validation** | Run schema and STAC conformance checks | @kfm-data-lab |
+| **AI / Focus Mode** | Optional integration for prediction or visualization | @kfm-ai-lab |
+| **Archival** | Permanent storage under `/data/archive/` | @kfm-architecture |
+
+---
+
+## 🧠 FAIR+CARE Evaluation
+
+| Principle | Compliant? | Notes |
+|------------|-------------|-------|
+| **Findable** | ☐ Yes ☐ No | _Indexed with persistent metadata and identifiers?_ |
+| **Accessible** | ☐ Yes ☐ No | _Freely available under open license?_ |
+| **Interoperable** | ☐ Yes ☐ No | _Uses open, machine-readable formats?_ |
+| **Reusable** | ☐ Yes ☐ No | _Includes license and documentation for reuse?_ |
+| **Collective Benefit** | ☐ Yes ☐ No | _Contributes positively to community or science?_ |
+| **Authority to Control** | ☐ Yes ☐ No | _Respects contributor and community rights?_ |
+| **Responsibility** | ☐ Yes ☐ No | _Handles sensitive data responsibly?_ |
+| **Ethics** | ☐ Yes ☐ No | _Complies with FAIR+CARE ethical data use policies?_ |
+
+---
+
+## 🔍 Governance Metadata
+
+| Field | Reference |
+|--------|------------|
+| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
+| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Data Contract** | `docs/contracts/data-contract-v3.json` |
+| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
+
+> _Ensure dataset metadata aligns with current governance, telemetry, and ontology specifications._
+
+---
+
+## 📊 Submission Attachments
+
+- [ ] Metadata JSON or STAC record uploaded  
+- [ ] License document attached or linked  
+- [ ] Schema file (if custom) provided  
+- [ ] Sample data file uploaded  
+- [ ] FAIR+CARE self-assessment included  
+
+> _Upload files directly to this issue or link from a public data repository._
+
+---
+
+## 🧾 Review Routing
+
+| Role | Reviewer | Required Action |
+|------|-----------|-----------------|
+| **Data Engineering** | @kfm-etl-ops | Verify ETL and data ingestion format |
+| **Metadata / FAIR Review** | @kfm-data-lab | Validate metadata completeness and STAC alignment |
+| **AI Governance** | @kfm-ai-lab | Assess ethical or model integration implications |
+| **Repository Maintainer** | @bartytime4life | Approve for merge and release inclusion |
+
+---
+
+## ✅ Submission Checklist
+
+- [ ] Dataset license confirmed (open and valid)  
+- [ ] Metadata record completed (STAC/ISO/DCAT)  
+- [ ] FAIR+CARE fields evaluated  
+- [ ] Governance metadata referenced  
+- [ ] ETL path and responsible owner assigned  
+- [ ] Validation test results attached  
+
+---
+
+> ⚠️ **Note:**  
+> Submitting this issue automatically triggers:
+> - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
+> - STAC ingestion validation (`.github/workflows/stac-validate.yml`)  
+> - Provenance logging to `reports/audit/hazards_archive_provenance.json`  
+> - Manifest update and checksum regeneration (`.github/workflows/governance-ledger.yml`)  
+
+---
+
+**Kansas Frontier Matrix** · *Data Stewardship × FAIR+CARE Governance × Reproducibility*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
