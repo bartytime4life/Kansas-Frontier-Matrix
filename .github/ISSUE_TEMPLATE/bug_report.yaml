@@ -1,282 +1,119 @@
-# ────────────────────────────────────────────────────────────────
-#  Kansas Frontier Matrix — Bug Report Form
-#  Context: GitHub Issue Form for reproducible defects (code, data, AI)
-#  Version: v6.3.3 · Tier-Ω+∞ Certified
-#  Validated by: docs-validate.yml · policy-check.yml · gitleaks.yml
-#  Alignment: MCP-DL v6.3.3 · FAIR · CARE · STAC 1.0 · CIDOC-CRM · OWL-Time
-# ────────────────────────────────────────────────────────────────
+---
+name: "🐛 Bug Report"
+about: "Report an error, failure, or unexpected behavior within the Kansas Frontier Matrix system."
+title: "[BUG] <describe issue>"
+labels: ["bug", "validation", "investigation-needed"]
+assignees: ["@kfm-etl-ops", "@bartytime4life"]
+---
 
-name: "🐞 Bug Report"
-description: "Report a reproducible defect in code, data, AI model, or metadata — validated under Master Coder Protocol (MCP-DL v6.3.3)."
-title: "[BUG] <short summary>"
-labels:
-  - bug
-  - needs-triage
-  - semver:patch
-assignees:
-  - kfm-architecture
+## 🐛 Description
 
-body:
-  - type: markdown
-    attributes:
-      value: |
-        ## 🧭 Kansas Frontier Matrix — MCP-DL Bug Report (v6.3.3)
-        Please fill in **all required fields** to maintain reproducibility and provenance.  
-        This form enforces compliance with **Master Coder Protocol (MCP-DL v6.3.3)** and **KFM Governance Standards**.  
-        > Use for defects in **code**, **data**, **AI models**, **metadata**, or **documentation**.  
-        > For accessibility, security, or governance issues, use their dedicated templates.
+> _Provide a clear and concise description of the issue._  
+> _Example: “Hazards ETL pipeline fails STAC validation for flood dataset (v9.3.2).”_
 
-  - type: input
-    id: summary
-    attributes:
-      label: 🧾 Summary
-      description: Short, clear description of the defect
-      placeholder: "STAC validation fails for NOAA catalog.json"
-    validations:
-      required: true
+**Affected Component(s):**
+- [ ] ETL / Data Pipeline  
+- [ ] AI / Focus Mode  
+- [ ] Frontend / MapLibre UI  
+- [ ] Documentation / Metadata  
+- [ ] Other  
 
-  - type: dropdown
-    id: domain
-    attributes:
-      label: 🧱 Affected Domain
-      description: Which system component does this bug affect?
-      options:
-        - "src/etl (Data Pipelines)"
-        - "src/ai (NLP / OCR / Summarization)"
-        - "src/api (FastAPI / GraphQL)"
-        - "web/ (React + MapLibre)"
-        - "data/stac (Catalog Metadata)"
-        - "docs/ (Documentation)"
-        - ".github/ (CI/CD)"
-      default: "data/stac (Catalog Metadata)"
-    validations:
-      required: true
+---
 
-  - type: textarea
-    id: repro_steps
-    attributes:
-      label: 🔁 Steps to Reproduce
-      description: Exact commands or workflow steps to trigger the bug
-      placeholder: |
-        1. Run `make stac-validate`
-        2. Observe error in `catalog.json`
-        3. Error: "Missing required field 'self'"
-    validations:
-      required: true
+## 🔍 Steps to Reproduce
 
-  - type: textarea
-    id: expected_actual
-    attributes:
-      label: ⚖️ Expected vs Actual
-      description: What should happen vs what actually occurred
-      placeholder: |
-        **Expected:** STAC passes validation  
-        **Actual:** CLI exits with error `missing links`
-    validations:
-      required: true
+1. Step one — _e.g., run `make hazards-etl`_  
+2. Step two — _observe console output or validation error_  
+3. Step three — _attach any error logs or screenshots below_
 
-  - type: dropdown
-    id: semver
-    attributes:
-      label: 🔢 SemVer Impact
-      description: Versioning significance of this defect
-      options:
-        - none
-        - patch (no breaking changes)
-        - minor (visible but non-breaking)
-        - major (breaking or schema-level)
-      default: patch
-    validations:
-      required: true
+**Expected Behavior:**  
+> _Describe what should happen when functioning correctly._
 
-  - type: dropdown
-    id: severity
-    attributes:
-      label: 🚨 Severity
-      description: Criticality level
-      options:
-        - Low — minor inconvenience
-        - Medium — partial feature failure
-        - High — blocks key workflow
-        - Critical — stops CI/CD or release
-      default: Medium
-    validations:
-      required: true
+**Actual Behavior:**  
+> _Describe what is happening instead (include logs or errors)._  
 
-  - type: dropdown
-    id: priority
-    attributes:
-      label: 🎯 Priority
-      description: Suggested triage level
-      options:
-        - P1 — Critical (Immediate)
-        - P2 — High
-        - P3 — Normal
-        - P4 — Low
-      default: P3 — Normal
-    validations:
-      required: true
+---
 
-  - type: input
-    id: commit_sha
-    attributes:
-      label: 🧬 Commit SHA / PR #
-      description: Git hash or pull request reference
-      placeholder: "abcd123 (PR #108)"
-    validations:
-      required: true
+## 🧩 Environment
 
-  - type: input
-    id: provenance
-    attributes:
-      label: 🌐 Provenance
-      description: File paths, dataset IDs, or STAC items affected
-      placeholder: "data/stac/catalog.json · commit abcd1234 · STAC: noaa_daymet_2023.json"
-    validations:
-      required: true
+| Parameter | Value |
+|------------|--------|
+| **Version / Branch** | `<e.g., v9.3.2 / main>` |
+| **OS / Platform** | `<e.g., Ubuntu 22.04 / macOS>` |
+| **Python / Node Version** | `<e.g., Python 3.10 / Node 18>` |
+| **Docker / Compose Version** | `<if applicable>` |
+| **Workflow Affected** | `<e.g., .github/workflows/stac-validate.yml>` |
 
-  - type: input
-    id: related_docs
-    attributes:
-      label: 📚 Related Docs / ADRs / SOPs
-      description: List relevant documentation or decisions
-      placeholder: "docs/adr/ADR-012-stac-schema.md"
+---
 
-  - type: input
-    id: system
-    attributes:
-      label: 🧰 Environment
-      description: OS, container, runtime, and dependency details
-      placeholder: "Ubuntu 22.04 · Python 3.11 · Node 20 · GDAL 3.8"
+## 📂 Logs & Evidence
 
-  - type: textarea
-    id: logs
-    attributes:
-      label: 🔍 Logs / Evidence
-      description: Include relevant logs, CI links, or screenshots
-      placeholder: |
-        - Error trace from `stac-validator`
-        - CI Run: https://github.com/.../actions/runs/123456789
-        - Screenshot attached
-    validations:
-      required: false
+> _Attach logs, screenshots, or JSON snippets illustrating the issue._  
+> _If logs exceed 50 lines, please upload as a file or GitHub Gist link._
 
-  - type: input
-    id: stac_id
-    attributes:
-      label: 🗺️ STAC Item / Collection ID
-      description: Associated STAC file (if applicable)
-      placeholder: "noaa_l4_sst_v4.json"
+```bash
+# Example log snippet
+Error: stac_validator.exceptions.STACValidationError: Missing 'license' field in item properties
+```
 
-  - type: input
-    id: checksum
-    attributes:
-      label: 🧮 Checksum (SHA-256)
-      description: Integrity hash for affected data
-      placeholder: "d3b07384d113edec49eaa6238ad5ff00"
+---
 
-  - type: textarea
-    id: ai_context
-    attributes:
-      label: 🤖 AI / ML Context
-      description: If applicable, describe AI impact or model issue
-      placeholder: |
-        Model: NER (spaCy)
-        Issue: "Fort Larned" misclassified as Person.
-        Dataset: training_v2.parquet
-    validations:
-      required: false
+## 🧠 FAIR+CARE Impact Assessment
 
-  - type: textarea
-    id: proposed_fix
-    attributes:
-      label: ✅ Proposed Fix / Workaround
-      description: Suggest a potential fix or PR reference
-      placeholder: "Add missing `self` link in STAC Item under `links` block."
+| FAIR/CARE Category | Impact | Notes |
+|--------------------|---------|-------|
+| **Findable** | ☐ None ☐ Moderate ☐ High | _Does this issue affect metadata indexing or STAC discoverability?_ |
+| **Accessible** | ☐ None ☐ Moderate ☐ High | _Does it limit data/API accessibility?_ |
+| **Interoperable** | ☐ None ☐ Moderate ☐ High | _Does it break schema compatibility?_ |
+| **Reusable** | ☐ None ☐ Moderate ☐ High | _Does it reduce dataset or model reusability?_ |
+| **Collective Benefit** | ☐ None ☐ Moderate ☐ High | _Does this bug risk community utility or fairness?_ |
 
-  - type: textarea
-    id: acceptance
-    attributes:
-      label: 📄 Acceptance Criteria
-      description: Define how the fix will be validated
-      placeholder: "`make stac-validate` returns exit code 0 with no errors"
-    validations:
-      required: true
+---
 
-  - type: checkboxes
-    id: security_review
-    attributes:
-      label: 🔒 Security & Integrity Checks
-      description: Confirm validation of integrity gates
-      options:
-        - label: "CodeQL & Trivy scans pass"
-        - label: "STAC checksum verified"
-        - label: "Data ethics tag validated"
-        - label: "SBOM regenerated or verified"
-        - label: "No secret/log exposure in attachments"
-    validations:
-      required: false
+## ⚙️ Governance Metadata
 
-  - type: checkboxes
-    id: reporter_check
-    attributes:
-      label: 🧭 Reporter Checklist
-      description: Confirm these before submission
-      options:
-        - label: "All required fields completed"
-        - label: "Repro steps confirmed on latest main"
-        - label: "Logs reviewed for sensitive data"
-        - label: "Existing issues searched"
-        - label: "I acknowledge this report is public"
-    validations:
-      required: true
+| Field | Reference |
+|--------|------------|
+| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
+| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Data Contract** | `docs/contracts/data-contract-v3.json` |
+| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
 
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        ### 🧾 MCP-DL v6.3.3 Compliance Summary
-        | Principle | Verification Source |
-        |------------|--------------------|
-        | **Documentation-First** | ADRs, SOPs, README links |
-        | **Reproducibility** | Deterministic repro steps & hashes |
-        | **Provenance** | Commit · STAC · dataset lineage |
-        | **Auditability** | Logs & evidence retained (≥90d) |
-        | **Versioning** | SemVer labels & changelog entries |
-        | **Security** | CodeQL · Trivy · Policy checks |
-        | **Ethics** | Data consent & tribal review verified |
-        | **Accessibility** | WCAG 2.1 AA conformance maintained |
+> _Ensure all referenced documents are up to date with the version that triggered the issue._
 
-        **Version:** v6.3.3  
-        **Maintainers:** @kfm-security · @kfm-architecture  
-        _Kansas Frontier Matrix — Certified under Master Coder Protocol (MCP-DL v6.3.3)._
+---
 
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        **Disclosure & License Notice**  
-        Submissions are governed by the MIT + CC-BY 4.0 license.  
-        Do not include confidential or proprietary data in attachments.
+## 🧾 Proposed Resolution / Next Steps
 
-# hidden metadata
-mcp_metadata:
-  version: "v6.3.3"
-  tier: "Ω+∞"
-  template_type: "bug_report"
-  validation_checks:
-    - docs-validate
-    - policy-check
-    - gitleaks
-  generated_by: "KFM-Automation/DocsBot"
+> _Provide suggestions, hypotheses, or steps that may resolve the issue._  
+> _Example: “Re-run STAC validator after updating schema property fields.”_
 
-# MCP-FOOTER-BEGIN
-# MCP-VERSION: v6.3.3
-# MCP-TIER: Ω+∞
-# DOC-PATH: .github/ISSUE_TEMPLATE/bug_report.yml
-# DOC-HASH: sha256:bug-report-template-v6-3-3-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-# MCP-CERTIFIED: true
-# VALIDATION-HASH: {auto.hash}
-# GENERATED-BY: KFM-Automation/DocsBot
-# LAST-VALIDATED: {build.date}
-# MCP-FOOTER-END
+- [ ] Reproducible test case included  
+- [ ] FAIR+CARE impact assessed  
+- [ ] Governance metadata verified  
+- [ ] Maintainers notified  
+
+---
+
+## 🧭 Maintainer Routing
+
+| Role | Reviewer | Required Action |
+|------|-----------|-----------------|
+| **Data Engineering Lead** | @kfm-etl-ops | Reproduce ETL behavior |
+| **Architecture Lead** | @kfm-architecture | Review workflow impact |
+| **AI/ML Governance** | @kfm-ai-lab | Validate AI pipeline consistency |
+| **Repository Maintainer** | @bartytime4life | Approve fix and merge PR |
+
+---
+
+> ⚠️ **Note:**  
+> Filing this bug report automatically triggers:  
+> - FAIR+CARE validation workflow (`.github/workflows/faircare-validate.yml`)  
+> - STAC and schema re-validation pipeline (`.github/workflows/stac-validate.yml`)  
+> - Provenance entry in `reports/audit/ai_hazards_ledger.json`  
+
+---
+
+**Kansas Frontier Matrix** · *Reproducibility × Transparency × Ethical AI*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
