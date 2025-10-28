@@ -1,5 +1,5 @@
 ---
-title: "🧪 Kansas Frontier Matrix — Hazards Validation Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "⚠️ Kansas Frontier Matrix — Hazards TMP Validation Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/validation/README.md"
 version: "v9.3.2"
 last_updated: "2025-10-28"
@@ -13,145 +13,128 @@ telemetry_schema: "schemas/telemetry/work-hazards-validation-v14.json"
 json_export: "releases/v9.3.2/work-hazards-validation.meta.json"
 validation_reports:
   - "reports/self-validation/work-hazards-validation.json"
-  - "reports/fair/hazards_validation_summary.json"
-  - "reports/audit/ai_hazards_validation_ledger.json"
-governance_ref: "docs/standards/governance/hazards-validation-governance.md"
+  - "reports/fair/hazards_summary.json"
+  - "reports/audit/ai_hazards_ledger.json"
+governance_ref: "docs/standards/governance/hazards-governance.md"
+ontology_alignment: "ontologies/CIDOC_CRM-HazardExt.owl"
 ---
 
 <div align="center">
 
-# 🧪 Kansas Frontier Matrix — **Temporary Hazards Validation Logs**  
-`data/work/tmp/hazards/logs/validation/`
+# ⚙️ Kansas Frontier Matrix — **Hazards Validation Logs**
+`data/work/tmp/hazards/logs/validation/README.md`
 
-**Purpose:** Workspace for FAIR and MCP-compliant validation outputs generated during hazards transformation, schema checks, and AI verification cycles.
+**Purpose:** Temporary workspace for validation reports, schema checks, FAIR audits, and AI-drift monitoring for the Hazards domain.  
+Integrates QA/QC validation data from the ETL pipeline, environmental hazards analytics, and automated STAC and schema conformance logs.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../docs/architecture/repo-focus.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-orange)](../../../../../../../README.md)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)
+[![Status: Validation TMP](https://img.shields.io/badge/Status-Validation%20TMP-orange)](../../../../../data/work/tmp/hazards/)
+[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../../../.github/workflows/stac-validate.yml)
+[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](../../../../../.github/workflows/pre-commit.yml)
 
 </div>
 
 ---
 
-## 📂 Directory Layout
+## 📚 Overview
 
-data/work/tmp/hazards/logs/validation/  
-├── reports/         → Validation outputs generated from schema, AI, and FAIR processes  
-│   ├── schema/      → STAC / JSON Schema validation results  
-│   ├── ai/          → AI model drift, explainability, and bias validation logs  
-│   ├── faircare/    → FAIR+CARE metric computation and compliance reports  
-│   ├── telemetry/   → Operational telemetry from validation runs  
-│   └── audit/       → Governance and reproducibility audit trails  
-├── manifests/       → Version-controlled manifests, checksums, and run metadata  
-├── summaries/       → Aggregated FAIR validation summaries and AI-ledger snapshots  
-└── README.md        → Current documentation file  
+This directory houses **validation logs** generated during automated and manual QA cycles for hazard-related datasets (floods, tornadoes, droughts, fires, earthquakes).  
+Files here document every validation run in the ETL and AI processing pipelines, ensuring data integrity, STAC compliance, and reproducibility per **Master Coder Protocol (MCP-DL v6.3)**.
 
----
-
-## 🧭 Overview
-
-This directory houses **validation artifacts** created during hazards data transformation and quality verification.  
-Each file supports **MCP-DL v6.3** reproducibility by providing traceable evidence of data integrity, schema compliance, and AI fairness.
-
-Core validation types:
-
-- **Schema Validation:** STAC / JSON Schema conformance for all hazard layers (floods, tornadoes, wildfires).  
-- **AI Validation:** Bias, drift, and explainability logs for hazard prediction or classification models.  
-- **FAIR+CARE Metrics:** Evaluates dataset accessibility, interoperability, and ethical handling.  
-- **Governance Records:** Immutable audit logs confirming checksums and provenance trails.  
-
-All outputs are checksum-verified and reviewed via CI/CD before promotion to `/data/work/staging/hazards/validation/`.
+Validation logs are created automatically after each ETL batch, capturing:
+- **Schema conformance:** Checks against `schemas/telemetry/work-hazards-validation-v14.json`.
+- **Spatial integrity:** Bounding box and CRS verification for GeoTIFF/GeoJSON artifacts.
+- **FAIR compliance:** Metadata completeness, provenance, and accessibility tests.
+- **AI drift metrics:** Comparison of model outputs vs. baselines (Focus Mode stability tests).
+- **Checksum integrity:** Verifies consistency of raw and processed assets across runs.
 
 ---
 
-## ⚙️ Validation Workflow
+## 🗂 Directory Layout
 
+```plaintext
+data/work/tmp/hazards/logs/validation/
+├── README.md
+├── stac_validation_reports/
+│   ├── hazards_validation_*.json
+│   └── batch_validation_summary.json
+├── schema_reports/
+│   ├── hazards_schema_validation.json
+│   └── anomalies/
+│       └── missing_fields_report.json
+├── ai_drift_reports/
+│   ├── model_drift_summary.json
+│   └── focus_mode_eval.json
+├── faircare/
+│   ├── hazards_fair_metrics.json
+│   └── audit/
+│       └── ai_hazards_ledger.json
+└── archive/
+    └── previous_versions/
+```
+
+Each subdirectory contains structured validation outputs in JSON or YAML form, designed for ingestion into dashboards or automated CI/CD checks.
+
+---
+
+## 🧩 Workflow
+
+```mermaid
 flowchart TD
-    A[Hazards ETL Outputs (.geojson / .json)] --> B[Schema Validators (STAC / JSON Schema)]
-    B --> C[FAIR+CARE Auditors (faircare-cli)]
-    C --> D[AI Drift & Ethics Validator]
-    D --> E[Governance Ledger Registration]
-    E --> F[Checksum Archive + Provenance Update]
-%% END OF MERMAID %%
+A[Hazards ETL Output (.geojson, .tif)] --> B[Schema Validator (stac-validate)]
+B --> C[FAIR+CARE Audit Engine]
+C --> D[AI Drift Detector · Focus Mode Δ-Monitor]
+D --> E[Governance Ledger Commit + Checksum Verification]
+E --> F[Neo4j Knowledge Graph Update]
+F --> G[Public Validation Summary Reports (.json/.md)]
+G --> H[README + Metadata Update]
+H --> A
+```
 
-### Validation Sequence
-
-1. **Schema Conformance** — Executes `stac-validate` and `jsonschema-cli` against all hazard outputs.  
-2. **FAIR+CARE Metrics** — Runs `faircare-cli` to verify metadata completeness and accessibility.  
-3. **AI Validation** — Uses `ai-drift-audit` for explainability, reproducibility, and fairness validation.  
-4. **Governance Update** — Commits new manifests and checksums to audit ledger for traceability.
-
----
-
-## 🧰 Tools & Utilities
-
-| Tool | Purpose | Version |
-|------|----------|----------|
-| `stac-validate` | STAC schema validation engine | v1.5 |
-| `jsonschema-cli` | JSON Schema compliance checker | v0.7 |
-| `faircare-cli` | FAIR+CARE metric validator | v2.1 |
-| `ai-drift-audit` | AI drift and explainability validator | v3.4 |
-| `provenance-log` | Governance and checksum tracking utility | v1.8 |
-
-All tools are invoked via the Makefile target `make hazards-validate`.  
-Outputs are automatically written to `reports/` and summarized under `summaries/`.
+This cyclical process ensures continuous improvement and traceability of hazard datasets.  
+Every ETL iteration closes the loop between **data quality**, **AI transparency**, and **scientific reproducibility**.
 
 ---
 
-## 🔒 Governance & Provenance
+## 🧠 Focus Mode & AI Validation
 
-- **Immutable Run IDs (UUIDv4)** for every validation cycle.  
-- **Checksums (SHA-256)** recorded in `/manifests/`.  
-- **AI Ledger Entries** stored under `/reports/audit/ai_hazards_validation_ledger.json`.  
-- **Version Linkage** ensures all outputs are mapped to commit SHA for traceability.  
+The **AI-Powered Focus Mode** uses these validation logs to monitor model performance across hazard layers (e.g., flood prediction accuracy, tornado track clustering).  
+Key metrics:
+- **Temporal Drift Index (TDI):** Measures deviation of model predictions over sequential time windows.
+- **Spatial Coherence (SC):** Correlation of predicted hazard zones vs. verified historical data.
+- **Confidence Integrity (CI):** Average confidence score consistency per feature.
 
-Provenance integrity is enforced through MCP governance pipelines and verified against project SBOM.
-
----
-
-## 🧾 Compliance Summary
-
-| Standard | Verified by | Report Reference |
-|-----------|-------------|------------------|
-| MCP-DL v6.3 | CI/CD validation suite | self-validation logs |
-| STAC 1.0 | stac-validate | schema reports |
-| FAIR+CARE | faircare-cli | FAIR+CARE summaries |
-| CIDOC CRM / OWL-Time | semantic linter | audit reports |
-| WCAG 2.1 AA | accessibility tests | frontend validation reports |
+These logs feed back into the **Focus Mode dashboard**, supporting explainability, retraining triggers, and governance oversight.
 
 ---
 
-## 📦 Release Artifacts
+## 🧾 Governance & FAIR+CARE Compliance
 
-Validated outputs from this layer are exported to:  
-`releases/v9.3.2/work-hazards-validation.meta.json`  
-and synchronized with corresponding transformation layer releases.  
-Each validation artifact includes SBOM, checksum, and provenance metadata.
+All validation outputs are versioned and referenced in the governance ledger:
+- **FAIR:** Findable (STAC catalogued), Accessible (public reports), Interoperable (JSON-LD aligned), Reusable (CC-BY metadata).
+- **CARE:** Collective benefit, Authority to control, Responsibility, Ethics — applied to all community-sourced hazard data.
 
----
-
-## 🧩 Integration Points
-
-- `/data/work/tmp/hazards/transforms/` → provides source datasets for validation  
-- `/data/work/staging/hazards/validation/` → destination for finalized validation reports  
-- `/docs/standards/governance/` → reference standards and SOPs for FAIR+CARE compliance  
+Audits reference:
+- `reports/audit/ai_hazards_ledger.json`
+- `docs/standards/faircare-validation.md`
+- `ontologies/CIDOC_CRM-HazardExt.owl`
 
 ---
 
-## 🧱 Related Documents
+## 🧩 Version History
 
-- `data/work/tmp/hazards/transforms/README.md`  
-- `data/work/tmp/hazards/logs/etl/README.md`  
-- `data/work/tmp/hazards/logs/ai/README.md`  
-- `docs/standards/faircare_validation.md`  
-- `docs/contracts/data-contract-v3.json`
+| Version | Date       | Author        | Summary                                  |
+|----------|------------|----------------|------------------------------------------|
+| v9.3.2   | 2025-10-28 | @kfm-architecture | Initial build for TMP Validation Logs. |
+| v9.3.1   | 2025-10-27 | @kfm-etl-ops      | Added AI drift metrics validation.       |
+| v9.3.0   | 2025-10-26 | @bartytime4life   | Migrated hazard ETL into unified schema. |
 
 ---
 
-## 🧭 Version History
+<div align="center">
 
-| Version | Date | Description | Author |
-|----------|------|--------------|---------|
-| v9.3.2 | 2025-10-28 | Initial alignment with Diamond⁹ Ω certification and validation architecture | @kfm-architecture |
-| v9.3.1 | 2025-10-27 | Added FAIR+CARE and AI audit linkage | @kfm-data |
-| v9.2.0 | 2025-10-25 | Established TMP-level hazards validation structure | @kfm-ci |
+**Kansas Frontier Matrix** · *Data Provenance × AI Integrity × Open Science*  
+[🔗 Project Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/)
+
+</div>
