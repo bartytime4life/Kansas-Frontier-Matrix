@@ -1,76 +1,76 @@
 
----
-title: "📜 Kansas Frontier Matrix — Hazards ETL Manifests (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "data/work/tmp/hazards/logs/manifests/README.md"
-version: "v9.4.1"
-last_updated: "2025-10-28"
-review_cycle: "Quarterly / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.4.1/sbom.spdx.json"
-manifest_ref: "releases/v9.4.1/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.4.1/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-hazards-manifests-v15.json"
-json_export: "releases/v9.4.1/work-hazards-manifests.meta.json"
+⸻
+
+title: “📜 Kansas Frontier Matrix — Hazards ETL Manifests (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)”
+path: “data/work/tmp/hazards/logs/manifests/README.md”
+version: “v9.4.1”
+last_updated: “2025-10-28”
+review_cycle: “Quarterly / Autonomous”
+commit_sha: “”
+sbom_ref: “releases/v9.4.1/sbom.spdx.json”
+manifest_ref: “releases/v9.4.1/manifest.zip”
+data_contract_ref: “docs/contracts/data-contract-v3.json”
+telemetry_ref: “releases/v9.4.1/focus-telemetry.json”
+telemetry_schema: “schemas/telemetry/work-hazards-manifests-v15.json”
+json_export: “releases/v9.4.1/work-hazards-manifests.meta.json”
 validation_reports:
-  - "reports/self-validation/work-hazards-manifests-validation.json"
-  - "reports/fair/hazards_summary.json"
-  - "reports/audit/ai_hazards_manifest_ledger.json"
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-HAZARDS-LOGS-MANIFESTS-RMD-v9.4.1"
-maintainers: ["@kfm-data", "@kfm-hazards", "@kfm-governance"]
-approvers: ["@kfm-architecture", "@kfm-fair", "@kfm-ledger"]
-reviewed_by: ["@kfm-ai", "@kfm-validation", "@kfm-ethics"]
-ci_required_checks: ["manifest-validate.yml", "checksum-verify.yml", "focus-validate.yml", "ledger-sync.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Hazards Manifest Provenance & Ledger Integration Layer"
-mcp_version: "MCP-DL v6.4.3"
+	•	“reports/self-validation/work-hazards-manifests-validation.json”
+	•	“reports/fair/hazards_summary.json”
+	•	“reports/audit/ai_hazards_manifest_ledger.json”
+governance_ref: “docs/standards/governance.md”
+doc_id: “KFM-DATA-WORK-HAZARDS-LOGS-MANIFESTS-RMD-v9.4.1”
+maintainers: [”@kfm-data”, “@kfm-hazards”, “@kfm-governance”]
+approvers: [”@kfm-architecture”, “@kfm-fair”, “@kfm-ledger”]
+reviewed_by: [”@kfm-ai”, “@kfm-validation”, “@kfm-ethics”]
+ci_required_checks: [“manifest-validate.yml”, “checksum-verify.yml”, “focus-validate.yml”, “ledger-sync.yml”]
+license: “CC-BY 4.0”
+design_stage: “Operational / Hazards Manifest Provenance & Ledger Integration Layer”
+mcp_version: “MCP-DL v6.4.3”
 alignment:
-  - FAIR / CARE
-  - STAC 1.0 / DCAT 3.0
-  - ISO 19115 / ISO 19157 / ISO 27001
-  - Blockchain Provenance / MCP-DL Compliance
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Auditable · Deterministic"
+	•	FAIR / CARE
+	•	STAC 1.0 / DCAT 3.0
+	•	ISO 19115 / ISO 19157 / ISO 27001
+	•	Blockchain Provenance / MCP-DL Compliance
+status: “Diamond⁹ Ω / Crown∞Ω Ultimate Certified”
+maturity: “Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Auditable · Deterministic”
 focus_validation: true
-tags: ["hazards","etl","manifests","provenance","governance","ledger","fair","checksum","validation"]
----
+tags: [“hazards”,“etl”,“manifests”,“provenance”,“governance”,“ledger”,“fair”,“checksum”,“validation”]
+
+⸻
+
 
 <div align="center">
 
-# 📜 Kansas Frontier Matrix — **Hazards ETL Manifests**  
-`data/work/tmp/hazards/logs/manifests/`
 
-**Mission:** Serve as the **canonical provenance index** for all hazard-related ETL operations — capturing lineage, checksum, and ledger metadata to maintain deterministic reproducibility and blockchain-verifiable auditability.
+📜 Kansas Frontier Matrix — Hazards ETL Manifests
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Validated-green)](../../../../../../reports/fair/hazards_summary.json)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata-lightgreen)]()
-[![Blockchain Ledger](https://img.shields.io/badge/Governance-Blockchain%20Linked-gold)]()
-[![Provenance](https://img.shields.io/badge/Provenance-Immutable%20Manifest-teal)]()
+data/work/tmp/hazards/logs/manifests/
+
+Mission: Serve as the canonical provenance index for all hazard-related ETL operations — capturing lineage, checksum, and ledger metadata to maintain deterministic reproducibility and blockchain-verifiable auditability.
 
 </div>
 
----
 
-## 🧭 Overview
 
-The **Hazards ETL Manifests Layer** functions as a **provenance nexus**—aggregating every ETL cycle’s lineage, schema, and verification metadata into immutable JSON manifest artifacts.  
+⸻
+
+🧭 Overview
+
+The Hazards ETL Manifests Layer functions as a provenance nexus—aggregating every ETL cycle’s lineage, schema, and verification metadata into immutable JSON manifest artifacts.
 Each manifest records:
-- Input sources, checksums, and metadata fingerprints  
-- Transformation and harmonization parameters  
-- Schema validation summaries and FAIR+CARE results  
-- Blockchain ledger linkage for governance validation  
+	•	Input sources, checksums, and metadata fingerprints
+	•	Transformation and harmonization parameters
+	•	Schema validation summaries and FAIR+CARE results
+	•	Blockchain ledger linkage for governance validation
 
-These manifests establish **trust, traceability, and reproducibility** across all hazard data products.
+These manifests establish trust, traceability, and reproducibility across all hazard data products.
 
-> *“Every checksum verified, every transform immortalized.”*
+“Every checksum verified, every transform immortalized.”
 
----
+⸻
 
-## 🗂️ Directory Layout
+🗂️ Directory Layout
 
-```text
 data/work/tmp/hazards/logs/manifests/
 ├── flood_manifest.json
 ├── tornado_manifest.json
@@ -216,5 +216,3 @@ GOVERNANCE-LEDGER-LINKED: true
 GENERATED-BY: KFM-Automation/DocsBot
 LAST-VALIDATED: 2025-10-28
 MCP-FOOTER-END -->
-
-
