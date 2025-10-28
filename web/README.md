@@ -1,20 +1,20 @@
 ---
 title: "🧩 Kansas Frontier Matrix — Web Frontend"
 document_type: "Developer Documentation · React / MapLibre Interface"
-version: "v2.1.0"
-last_updated: "2025-10-21"
-status: "Tier-Ω+∞ Certified · Developer Edition"
+version: "v2.2.0"
+last_updated: "2025-10-27"
+status: "Diamond⁹ Ω · Production · Developer Edition"
 maturity: "Production"
 license: ["MIT (code)", "CC-BY 4.0 (docs)"]
 owners: ["@kfm-web", "@kfm-architecture", "@kfm-accessibility", "@kfm-ai", "@kfm-security"]
-tags: ["web","frontend","react","typescript","vite","maplibre","timeline","stac","hooks","ai","a11y","fair","care","mcp","provenance","observability","focus-mode","developer"]
+tags: ["web","frontend","react","typescript","vite","maplibre","timeline","stac","hooks","ai","a11y","fair","care","mcp","provenance","observability","focus-mode","developer","pwa","ssr","pmtiles","graphql"]
 alignment:
-  - MCP-DL v6.3.2
-  - STAC 1.0 / DCAT 2.0
-  - CIDOC CRM / OWL-Time
+  - MCP-DL v6.4.3
+  - STAC 1.0 / DCAT 3.0
+  - CIDOC CRM / OWL-Time / GeoSPARQL / PROV-O
   - FAIR / CARE
   - WCAG 2.1 AA (3.0 ready)
-  - SLSA Level 2
+  - ISO 27001 (appsec policy) / SLSA (supply chain)
 validation:
   ci_enforced: true
   artifact_checksums: "SHA-256"
@@ -22,116 +22,167 @@ validation:
   slsa_attestations: true
 observability:
   dashboard: "https://metrics.kfm.ai/web"
-  metrics: ["build_status","stac_load_time_ms","bundle_size_kb","a11y_score","action_pinning_pct","artifact_verification_pct"]
+  metrics: ["build_status","frontend_stac_latency_ms","bundle_size_kb","a11y_score","perf_p95_navigation_ms","tile_cache_hit_pct","action_pinning_pct","artifact_verification_pct","focus_mode_p95_ms"]
 preservation_policy:
   checksum_algorithm: "SHA-256"
-  replication_targets: ["GitHub Pages","Zenodo DOI (major)","OSF"]
+  replication_targets: ["GitHub Pages","Zenodo DOI (major)","OSF","IA InternetArchive"]
   retention: "365d artifacts · 90d logs · releases permanent"
+path: "web/README.md"
 ---
 
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Web Frontend (v2.1.0 · Tier-Ω+∞ Certified · Developer Edition)**
-`📁 web/README.md`
+# 🧩 **Kansas Frontier Matrix — Web Frontend (v2.2.0 · Diamond⁹ Ω Developer Edition)**  
+`📁 web/`
 
-### *“Time · Terrain · History · Knowledge Graphs”*
+### *“Time · Terrain · History · Knowledge · Focus Mode.”*
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy)](../../.github/workflows/trivy.yml)
-[![Docs · MCP-DL v6.3.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-blue)](../../docs/)
-[![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-blue)](../../LICENSE)
+[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy&style=flat-square)](../../.github/workflows/site.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&style=flat-square)](../../.github/workflows/stac-validate.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&style=flat-square)](../../.github/workflows/codeql.yml)
+[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy&style=flat-square)](../../.github/workflows/trivy.yml)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-0078ff?style=flat-square)](../../docs/)
+[![License: MIT | CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-008b8b?style=flat-square)](../../LICENSE)
 
 </div>
+
+---
+
+<details><summary>📚 <strong>Table of Contents</strong></summary>
+
+- [⚡ Quick Reference](#-quick-reference)
+- [📘 Context & Scope](#-context--scope)
+- [🧭 Environments](#-environments)
+- [🗂 Directory Layout](#-directory-layout)
+- [🧱 Architecture Fit (System Integration)](#-architecture-fit-system-integration)
+- [🧠 Focus Mode (Contract)](#-focus-mode-contract)
+- [🧩 Core Hooks — Examples](#-core-hooks--examples)
+- [🧪 Testing & Coverage](#-testing--coverage)
+- [♿ Accessibility & WCAG](#-accessibility--wcag)
+- [🔒 Security & CSP](#-security--csp)
+- [🧱 Caching & Performance](#-caching--performance)
+- [📡 Telemetry & Metrics](#-telemetry--metrics)
+- [🚀 Build & Release Workflow](#-build--release-workflow)
+- [🧭 Contribution Checklist](#-contribution-checklist)
+- [📘 Glossary](#-glossary)
+- [🗓 Version History](#-version-history)
+
+</details>
 
 ---
 
 ## ⚡ Quick Reference
 | Task | Command | Description |
 |:--|:--|:--|
-| 🚀 Start Dev Server | `pnpm run dev` | Launch Vite with hot-reload |
-| 🧱 Build Production | `pnpm run build` | Outputs `dist/` bundle |
-| 🧪 Run Tests | `pnpm run test` | Jest + RTL unit/integration |
-| 🧭 Validate STAC | `make stac-validate` | Ensures schema & checksum integrity |
-| 🔍 Lint All Files | `pnpm run lint` | ESLint + Prettier + Markdownlint |
+| 🚀 Start Dev | `pnpm dev` | Vite dev server + hot reload |
+| 🧱 Prod Build | `pnpm build` | Outputs hashed `dist/` bundle |
+| 🔍 Lint | `pnpm lint` | ESLint + Prettier + Markdownlint |
+| 🧪 Unit/RTL | `pnpm test` | Jest + React Testing Library |
+| 🧪 E2E | `pnpm e2e` | Playwright a11y/e2e flows |
+| 📦 Analyze | `pnpm bundle:analyze` | Bundle visualizer |
+| 🧭 STAC Validate | `make stac-validate` | STAC/DCAT metadata check |
 
 ---
 
 ## 📘 Context & Scope
-Defines the **developer implementation** of the KFM Web Frontend — a reproducible React + MapLibre GL interface binding **spatial, temporal, and semantic** data to the Neo4j / FastAPI backend.
+This is the **developer implementation** of the KFM Web Frontend — a reproducible **React + MapLibre GL** interface binding **spatial, temporal, and semantic** data to **FastAPI/GraphQL** and **Neo4j**. It is **PWA/SSR-ready**, offline-capable via **PMTiles**, and governed by **FAIR/CARE** plus **supply-chain integrity** (SBOM/SLSA).
 
 ---
 
-## 🧭 Operational Context
+## 🧭 Environments
 | Environment | URL / Target | Deployment | Notes |
 |:--|:--|:--|:--|
-| **Dev** | http://localhost:3000 | Vite Dev Server | mock API + hot reload |
-| **Stage** | https://staging.kfm.ai | GitHub Pages (staging branch) | nightly build + telemetry |
-| **Prod** | https://kfm.ai | GitHub Pages (tagged release) | signed provenance bundle |
+| **Dev** | http://localhost:5173 | Vite Dev Server | Mock API + hot reload |
+| **Stage** | https://staging.kfm.ai | GitHub Pages (staging) | Nightly build + telemetry |
+| **Prod** | https://kfm.ai | GitHub Pages (tagged) | Signed provenance bundle + PMTiles |
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂 Directory Layout
 ```text
 web/
 ├─ src/
-│  ├─ components/   # Map · Timeline · Panels · Search · AIAssistant
-│  ├─ hooks/       # useMap · useTimeline · useStac · useSearch
-│  ├─ context/     # timeline window · focus mode · layer toggles
-│  ├─ utils/       # api.ts · geo.ts · formatter.ts
-│  ├─ styles/      # Tailwind tokens · themes · z-index
-│  └─ types/       # TypeScript interfaces (API/graph/config)
-├─ public/         # static assets (icons, manifest)
-├─ config/         # layers.json · app.config.json
-└─ vite.config.ts   # Vite build configuration
+│  ├─ app/                 # App root, routes (if using RRD), SSR entry
+│  ├─ components/          # Map · Timeline · Panels · AIAssistant · Legends
+│  ├─ hooks/               # useMap · useTimeline · useStac · useSearch · useFocus
+│  ├─ context/             # TimelineContext · FocusContext · LayerContext
+│  ├─ services/            # api.ts · graphql.ts · stac-client.ts
+│  ├─ utils/               # geo.ts · formatter.ts · pmtiles.ts · a11y.ts
+│  ├─ styles/              # Tailwind tokens · themes · typography
+│  ├─ types/               # API/Graph/Config interfaces (zod/ts)
+│  ├─ workers/             # service worker · workbox manifest
+│  └─ __tests__/           # unit/rtl tests
+├─ public/                 # static assets (icons, manifest.json)
+├─ config/                 # layers.json · app.config.json · focus.config.json
+├─ e2e/                    # Playwright scenarios (a11y + flows)
+├─ storybook/              # UI stories & visual regression config
+├─ vite.config.ts          # Vite build config (SSR friendly)
+└─ package.json
 ```
 
 ---
 
-## ⚙️ Technology Stack
-| Layer | Tech | Purpose |
-|:--|:--|:--|
-| Core | React 18 + TypeScript | Modular SPA foundation |
-| Mapping | MapLibre GL JS | Vector/raster rendering |
-| Timeline | D3 + Canvas | Chronological visualization |
-| API | Fetch + GraphQL | Data integration layer |
-| Tooling | Vite · ESLint · Prettier | Build · lint · format |
-| Testing | Jest + RTL | Unit + integration |
-| UI | Tailwind + shadcn-ui | Accessible component system |
-| A11y | axe-core + Lighthouse | Compliance validation |
+## 🧱 Architecture Fit (System Integration)
+```mermaid
+flowchart TD
+  A["STAC Catalog 📁"] --> B["stac-client.ts"]
+  B --> C["Layer Registry (config/layers.json)"]
+  C --> D["Map Component (MapLibre GL)"]
+  A --> E["Timeline Data ⏱ (Canvas)"]
+  E --> F["Timeline Component"]
+  D --> G["Focus Mode Panel 🤖"]
+  G --> H["/api/focus/{id} → FastAPI"]
+  H --> I["Neo4j (CIDOC/Time/Geo)"]
+```
 
 ---
 
-## 🧩 Core Hooks — Usage Examples
-> <!-- Short inline comments explain why each hook matters -->
+## 🧠 Focus Mode (Contract)
+**Endpoint:** `/api/focus/{id}` → returns:
+```json
+{
+  "node": {...},
+  "neighbors": [...],
+  "edges": [...],
+  "evidence": [{"source":"stac","path":"...","confidence":0.98}],
+  "metrics": {"ai_explainability":0.987,"degree":14}
+}
+```
+**Frontend guarantees**
+- p95 response render ≤ **300 ms** (after API)  
+- payload ≤ **250 KB**  
+- panel includes **citations, confidence, model hash**  
+
+---
+
+## 🧩 Core Hooks — Examples
 
 ### 🗺 `useMap.ts`
 ```ts
 import { useEffect } from "react";
 import maplibregl from "maplibre-gl";
+import { PMTiles } from "pmtiles";
 
-export function useMap(containerId: string, style: string) {
-  // Initializes a MapLibre instance and tears down cleanly
+export function useMap(containerId: string, style: string, pmtilesUrl?: string) {
   useEffect(() => {
-    const map = new maplibregl.Map({
-      container: containerId,
-      style,
-      center: [-98, 38.5],
-      zoom: 5,
-    });
+    const map = new maplibregl.Map({ container: containerId, style, center: [-98,38.5], zoom: 5 });
+    // Optional PMTiles source
+    if (pmtilesUrl) {
+      const protocol = new PMTiles(pmtilesUrl);
+      (maplibregl as any).addProtocol("pmtiles", protocol.tile);
+      map.addSource("pmtiles", { type: "vector", url: `pmtiles://${pmtilesUrl}` });
+    }
     return () => map.remove();
-  }, [containerId, style]);
+  }, [containerId, style, pmtilesUrl]);
 }
 ```
 
 ### 🕰 `useTimeline.ts`
 ```ts
-import { useState } from "react";
-
-export function useTimeline(initialRange = [1850, 2025]) {
-  const [range, setRange] = useState(initialRange);
-  const scrub = (start: number, end: number) => setRange([start, end]);
+import { useState, useCallback } from "react";
+export function useTimeline(initial=[1850,2025]) {
+  const [range, setRange] = useState<[number,number]>(initial);
+  const scrub = useCallback((a:number,b:number)=>setRange([a,b]),[]);
   return { range, scrub };
 }
 ```
@@ -139,286 +190,142 @@ export function useTimeline(initialRange = [1850, 2025]) {
 ### 🌐 `useStac.ts`
 ```ts
 import { useEffect, useState } from "react";
-
 export function useStac(url: string) {
-  const [items, setItems] = useState([]);
-  useEffect(() => {
-    fetch(url)
-      .then(r => r.json())
-      .then(d => setItems(d.features || []));
-  }, [url]);
+  const [items, setItems] = useState<any[]>([]);
+  useEffect(() => { fetch(url).then(r => r.json()).then(d => setItems(d.features||[])); }, [url]);
   return items;
 }
 ```
 
-### 🔍 `useSearch.ts`
+### 🎯 `useFocus.ts`
 ```ts
-// Simple STAC/Graph search hook; returns JSON response
-export async function useSearch(query: string) {
-  const r = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-  return r.json();
+export async function fetchFocus(id: string) {
+  const r = await fetch(`/api/focus/${encodeURIComponent(id)}`, { headers: { "Accept": "application/json" } });
+  if (!r.ok) throw new Error(`Focus API ${r.status}`);
+  return r.json(); // { node, neighbors, edges, evidence, metrics }
 }
 ```
-
----
-
-## 🧠 State Management & Data Flow
-The frontend uses React Context for shared state management.
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": { "primaryColor": "#28536C", "primaryTextColor": "#fff", "edgeLabelBackground":"#E8F1F2", "tertiaryColor": "#B7CECE"}}}%%
-flowchart LR
-  A[STAC Data 🗺]:::data --> B[MapContext 🌍]:::logic
-  B --> C[TimelineContext 🕰]:::logic
-  C --> D[FocusContext 🤖]:::logic
-  D --> E["UI Components 🖥 &#40;Map · Timeline · Panels&#41;"]:::ui
-  E --> F[Telemetry / A11y Outputs 📊]:::output
-  classDef data fill:#28536C,color:#fff;
-  classDef logic fill:#B7CECE,color:#000;
-  classDef ui fill:#E8F1F2,color:#000,stroke:#28536C;
-  classDef output fill:#6B9080,color:#fff;
-```
-
-▣ #28536C Data/Architecture ▣ #B7CECE Logic/State ▣ #E8F1F2 UI/Visualization ▣ #6B9080 Output/Telemetry  
-
-All contexts initialized in `src/context/GlobalProvider.tsx`.
-
----
-
-## 🏗 Architecture Overview
-```mermaid
-%%{init: {"theme": "base", "themeVariables": { "primaryColor": "#28536C", "primaryTextColor": "#fff"}}}%%
-flowchart TD
-  A["Data Sources 📚<br/>maps · rasters · text archives"]:::data
-    --> B["ETL Pipeline ⚙️<br/>Python · GDAL · spaCy"]:::logic
-  B --> C["Processed Layers 🗺<br/>COG · GeoJSON · CSV"]:::data
-  C --> D["STAC Catalog 📁<br/>Collections · Items · Assets"]:::data
-  D --> E["API Layer 🔗<br/>FastAPI · GraphQL"]:::logic
-  E --> F["Web Frontend 💻<br/>React · MapLibre · Timeline · Focus Mode"]:::ui
-  F --> G["Telemetry + A11y Reports 📊"]:::output
-  classDef data fill:#28536C,color:#fff;
-  classDef logic fill:#B7CECE,color:#000;
-  classDef ui fill:#E8F1F2,color:#000,stroke:#28536C;
-  classDef output fill:#6B9080,color:#fff;
-```
-
-▣ #28536C Data/Architecture ▣ #B7CECE Logic/State ▣ #E8F1F2 UI/Visualization ▣ #6B9080 Output/Telemetry  
-
-<!-- Developer Note: Diagram shows how the frontend fits within the system architecture, from raw data to telemetry outputs. -->
-
----
-
-## ⚙️ Build & Deployment Workflow
-```bash
-# Pre-Commit
-pre-commit run --all-files
-# CI Pipeline
-make stac-validate
-pnpm run build
-pnpm run test
-# Release Automation
-pnpm run release-please
-```
-
-1️⃣ Pre-commit: lint · test · markdown validate  
-2️⃣ CI Jobs: site.yml (build & deploy), stac-validate.yml (schema check), sbom.yml (SBOM + SLSA)  
-3️⃣ Artifacts: `.prov.json` + `sbom.cdx.json` stored in releases/  
-4️⃣ Tags: `web-frontend-vMAJOR.MINOR.PATCH` → auto DOI minting
-
----
-
-## 🤖 Focus Mode & AI Integration
-Focus Mode powers contextual AI summaries, citations, and entity insight overlays.  
-
-%%{init: {"theme": "base","themeVariables":{"primaryColor":"#28536C","primaryTextColor":"#fff"}}}%%
-sequenceDiagram
-  participant U as 🧑 User
-  participant F as Frontend (React)
-  participant A as API / FastAPI
-  participant N as Neo4j Graph
-  participant M as AI Model (spaCy + Transformer)
-  U->>F: Select entity/event
-  F->>A: GET /api/focus/{id}
-  A->>N: Query linked nodes + metadata
-  A->>M: Generate summary + confidence
-  M-->>A: JSON summary w/ citations
-  A-->>F: Response (AI summary)
-  F-->>U: Display Focus Mode panel
-```
-▣ #28536C Data/API ▣ #B7CECE Logic/AI ▣ #E8F1F2 UI Display  
-
-**Integration Notes**
-- Endpoint: `/api/focus/{id}` — cached summaries by entity ID  
-- Provenance: linked via `:DERIVED_FROM` edges in Neo4j  
-- Model card: `docs/models/focus_mode.json` (hash + metrics)  
-- Nightly job rebuilds cache → `focus_cache.json`  
-
----
-
-## 🧬 STAC Lineage Integration
-The frontend consumes validated STAC catalogs dynamically.
-
-| Dataset | STAC ID | Manifest | Output | License |
-|:--|:--|:--|:--|:--|
-| `usgs_topo_1894` | `stac:topo1894` | `data/sources/usgs_topo.json` | `data/processed/maps/usgs_topo_1894.tif` | Public Domain |
-| `noaa_daymet_2020` | `stac:daymet2020` | `data/sources/noaa_daymet.json` | `data/processed/climate/daymet_2020.tif` | CC-BY 4.0 |
-
-Frontend → fetches `/data/stac/catalog.json` on build to generate layer registry (`config/layers.json`).  
 
 ---
 
 ## 🧪 Testing & Coverage
 ```bash
-pnpm run test:coverage
+pnpm test:coverage    # lcov report -> coverage/
+pnpm e2e              # Playwright E2E & a11y flows
+pnpm storybook        # UI stories; visual snapshots
 ```
 
-| Suite | Coverage Goal | Status |
+| Suite | Goal | Status |
 |:--|:--:|:--:|
-| Core Hooks | ≥ 85 % | ✅ |
-| Components | ≥ 80 % | ⚙️ |
-| Accessibility | ≥ 95 % | ✅ |
-| GraphQL Schema | 100 % types validated | ✅ |
-
-Reports → `coverage/lcov-report/` · uploaded to Codecov → ![Codecov Badge](https://codecov.io/gh/bartytime4life/Kansas-Frontier-Matrix/branch/main/graph/badge.svg)
+| Hooks/Utils | ≥ 85% | ✅ |
+| Components | ≥ 80% | ⚙️ |
+| A11y | ≥ 95% | ✅ |
+| E2E flows | pass | ✅ |
 
 ---
 
-## ♿ Accessibility & WCAG Validation
-| WCAG Criterion | Verified By | Tools | Status |
-|:--|:--|:--|:--:|
-| 1.4.3 Contrast | `a11y-tests.yml` | axe-core · Lighthouse | ✅ |
-| 2.1.1 Keyboard | RTL · Cypress | Jest | ✅ |
-| 2.4.1 Skip Links | Jest | axe-core | ✅ |
-| 3.3.2 Labels | Storybook | axe-core | ✅ |
-| 4.1.2 Name/Role | Storybook | axe-core | ⚙️ |
-**Target:** ≥ 95 % Accessibility score (monitored in CI telemetry).
-
----
-
-## 🔒 Security & DevOps Policy
-- **CSP:** `default-src 'self' https://api.kfm.ai; object-src 'none'; base-uri 'self'`.  
-- **CORS:** allowed origins `kfm.ai`, `staging.kfm.ai`.  
-- **Secrets:** stored in GitHub encrypted secrets; never checked in.  
-- **Static Analysis:** CodeQL & Trivy run per PR.  
-- **Vulnerability Disclosure:** see `SECURITY.md`.  
-- **Provenance:** every release ships `sbom.cdx.json` + `.prov.json`.  
-
----
-
-## 🧱 Caching & Performance Strategy
-| Layer | Cache | TTL | Tool |
-|:--|:--|:--|:--|
-| STAC API | Workbox runtime | 24 h | Service Worker |
-| GraphQL | Apollo client | 10 min | In-memory |
-| Static Bundles | Hash versioned | ∞ | Vite |
-| Telemetry | Prometheus push gateway | 60 s | OpenTelemetry |
-
----
-
-## 📡 Telemetry & Instrumentation Map
-```mermaid
-%%{init: {"theme": "base","themeVariables":{"primaryColor":"#28536C","primaryTextColor":"#fff"}}}%%
-flowchart LR
-  A[Map Load Event]:::data --> B[Telemetry Collector]:::logic
-  B --> C[Prometheus Exporter]:::output
-  A --> D[A11y Scan]:::ui
-  D --> C
-  classDef data fill:#28536C,color:#fff;
-  classDef logic fill:#B7CECE,color:#000;
-  classDef ui fill:#E8F1F2,color:#000,stroke:#28536C;
-  classDef output fill:#6B9080,color:#fff;
-```
-▣ #28536C Data Event ▣ #B7CECE Collector Logic ▣ #E8F1F2 UI Scan ▣ #6B9080 Telemetry Export  
-
-| Event | Payload | Sink | Frequency |
-|:--|:--|:--|:--|
-| `layerLoad` | layer_id, load_ms | metrics.kfm.ai | per layer |
-| `timelineScrub` | timestamp | metrics.kfm.ai | user action |
-| `a11yViolation` | rule_id | a11y-report.json | CI run |
-| `buildComplete` | sha, size_kb | provenance ledger | per build |
-
----
-
-## 🧮 Observability Metrics
-| Metric | Description | Source | Target |
-|:--|:--|:--|:--|
-| frontend_build_seconds | Total build time | CI | Prometheus |
-| frontend_stac_latency_ms | STAC fetch latency | Client | Prometheus |
-| frontend_a11y_score | Accessibility score | axe-core | metrics.kfm.ai |
-| frontend_focus_mode_count | Focus Mode activations | AI panel | metrics.kfm.ai |
-| frontend_error_rate | JS error frequency | Sentry | Grafana |
-
----
-
-## 📜 FAIR / CARE & Ethics Commitment
-- All datasets adhere to **FAIR** principles (Findable, Accessible, Interoperable, Reusable).  
-- Sensitive or tribal data marked with `data_ethics: restricted-derivatives`.  
-- Reviews by @kfm-ethics before publication.  
-- Citations and provenance embedded in STAC metadata (`derived_from`).  
-
----
-
-## 🔗 Cross-Document Provenance
-| Module | File | Purpose |
+## ♿ Accessibility & WCAG
+| Criterion | Tooling | CI Gate |
 |:--|:--|:--|
-| System Architecture | `docs/architecture/system-architecture-overview.md` | Backend lineage |
-| Web Application | `web/app/README.md` | Deployment + governance |
-| Focus Mode AI | `docs/ai/AI-System-Developer-Guide.md` | AI model integration |
-| STAC Catalog | `data/stac/catalog.json` | Dataset registry |
-| Ethics Ledger | `docs/standards/ethics/ledger/` | Cultural review |
+| 1.4.3 Contrast | Tailwind tokens · axe | required |
+| 2.1.1 Keyboard | RTL/Playwright | required |
+| 2.4.1 Landmarks | axe/Lighthouse | required |
+| 4.1.2 Name/Role | Storybook + axe | required |
+**A11y Budget:** score ≥ **95**; violations = **0** block.
+
+---
+
+## 🔒 Security & CSP
+- **CSP (strict):**
+  ```
+  default-src 'self';
+  script-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data:;
+  connect-src 'self' https://api.kfm.ai https://metrics.kfm.ai;
+  object-src 'none'; base-uri 'self';
+  ```
+- CORS: allow `kfm.ai`, `staging.kfm.ai`.  
+- Integrity: SBOM (SPDX) + SLSA attestations on every release.  
+- Secrets: never committed; use GitHub encrypted secrets + OIDC.  
+
+---
+
+## 🧱 Caching & Performance
+| Layer | Cache | TTL | Target |
+|:--|:--|:--|:--|
+| STAC fetch | SW runtime cache | 24h | `frontend_stac_latency_ms` p95 < 250 |
+| Tiles (PMTiles) | SW + HTTP cache | ∞ (immutable) | `tile_cache_hit_pct` ≥ 85% |
+| GraphQL | Apollo cache | 10m | p95 query < 300 ms |
+| Navigation | SPA + SSR | — | p95 route < 2.5 s (cold) |
+
+---
+
+## 📡 Telemetry & Metrics
+```mermaid
+flowchart LR
+  A[Map Load] --> B[OTel Collector]
+  A --> C[a11y Scan]
+  B --> D[Prometheus/Grafana]
+  C --> D
+```
+
+**Tracked (examples):** `frontend_build_seconds`, `frontend_stac_latency_ms`, `frontend_a11y_score`, `frontend_focus_mode_count`, `frontend_error_rate`.
+
+---
+
+## 🚀 Build & Release Workflow
+```bash
+pre-commit run --all-files
+make stac-validate
+pnpm build && pnpm test && pnpm e2e
+pnpm release-please
+```
+Artifacts: hashed `dist/`, `sbom.cdx.json`, `.prov.json`.  
+Tags: `web-frontend-vMAJOR.MINOR.PATCH` → DOI mint for major.
+
+---
+
+## 🧭 Contribution Checklist
+- [ ] Update **config/layers.json** and **focus.config.json** if layers/entities changed  
+- [ ] Add/adjust **stories** & **Playwright** tests for UI states  
+- [ ] Ensure **a11y score ≥ 95** and **perf budgets** green  
+- [ ] Update **STAC** references and run `make stac-validate`  
+- [ ] Regenerate **SBOM/SLSA** and attach to release
 
 ---
 
 ## 📘 Glossary
 | Term | Meaning |
 |:--|:--|
-| **MCP-DL** | *Master Coder Protocol — Documentation Language* |
-| **STAC** | *SpatioTemporal Asset Catalog* |
-| **SLSA** | *Supply-chain Levels for Software Artifacts* |
-| **FAIR** | *Findable · Accessible · Interoperable · Reusable* |
-| **CARE** | *Collective Benefit · Authority to Control · Responsibility · Ethics* |
-| **WCAG** | *Web Content Accessibility Guidelines (2.1 AA / 3.0 ready)* |
-| **A11y** | *Accessibility (abbreviation for a-11-y)* |
-| **PWA** | *Progressive Web App* |
-| **SBOM** | *Software Bill of Materials* |
-| **SOP / ADR** | *Standard Operating Procedure / Architecture Decision Record* |
-
----
-
-## 🧾 Change-Control Register
-```yaml
-changes:
-  - date: "2025-10-21"
-    change: "Integrated diagrams, AI lineage, caching strategy, FAIR/CARE ethics, Prometheus metrics, glossary, and full MCP footer."
-    reviewed_by: "@kfm-web"
-    qa_approved_by: "@kfm-accessibility"
-    pr: "#445"
-```
+| **Focus Mode** | Entity-centered view binding graph + STAC evidence |
+| **PMTiles** | Portable, signed tile bundles for offline use |
+| **MCP-DL** | Master Coder Protocol — Documentation Language |
+| **FAIR/CARE** | Openness & ethics principles for data reuse |
 
 ---
 
 ## 🗓 Version History
 | Version | Date | Author | Summary | Type |
 |:--|:--|:--|:--|:--|
-| **v2.1.0** | 2025-10-21 | @kfm-web | Developer-focused, color-coded, hybrid README with hooks and observability. | Major |
-| v2.0.0 | 2025-10-20 | @kfm-web | Added telemetry, PWA & security audits. | Minor |
-| v1.9.0 | 2025-10-19 | @kfm-web | Compliance and a11y validation. | Minor |
-| v1.0.0 | 2025-06-01 | Founding Team | Initial frontend implementation. | Major |
+| **v2.2.0** | 2025-10-27 | @kfm-web | Parity with system architecture: Focus contract, PWA/SSR/PMTiles caching, a11y/security budgets, CI matrix, telemetry. | Major |
+| v2.1.0 | 2025-10-21 | @kfm-web | Developer-focused README with hooks, quickstart, observability. | Major |
+| v2.0.0 | 2025-10-20 | @kfm-web | Telemetry, PWA & security audits. | Minor |
 
 ---
 
 <div align="center">
 
-### 💫 *Kansas Frontier Matrix — “Exploring Time, Terrain, and History through Code and Cartography.”*  
-© 2025 Kansas Frontier Matrix — MIT (code) · CC-BY 4.0 (data/docs)
+**Kansas Frontier Matrix — Web Frontend** · MIT (code) · CC-BY 4.0 (docs)  
+*“Exploring Kansas through time & terrain — ethically and reproducibly.”*
 
 </div>
 
 <!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.3.2
-MCP-TIER: Ω+∞
+MCP-VERSION: v6.4.3
+MCP-TIER: Diamond⁹ Ω
 DOC-PATH: web/README.md
-DOC-HASH: sha256:web-frontend-readme-v2-1-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DOC-HASH: sha256:web-frontend-readme-v2-2-0-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 MCP-CERTIFIED: true
 VALIDATION-HASH: {auto.hash}
 AUDIT-TRAIL: enabled
