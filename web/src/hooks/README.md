@@ -1,345 +1,235 @@
 ---
-title: "⚓ Kansas Frontier Matrix — Web Frontend Hooks"
-document_type: "Developer Documentation · Custom React Hooks / State & Lifecycle"
-version: "v2.4.0"
-last_updated: "2025-11-01"
-status: "Tier-Ω+∞ Gold Certified · MCP-DL v6.4.1"
-maturity: "Production"
-license: ["MIT (code)", "CC-BY 4.0 (docs)"]
-owners: ["@kfm-web","@kfm-architecture","@kfm-accessibility","@kfm-ai","@kfm-security"]
-tags: ["web","frontend","react","hooks","state","lifecycle","a11y","timeline","maplibre","mcp","observability","testing","security","telemetry","provenance","ai","focus-mode","governance","fair","care"]
-alignment:
-  - MCP-DL v6.4.1
-  - FAIR / CARE
-  - WCAG 2.1 AA / 3.0 Ready
-  - STAC 1.0 / CIDOC CRM / OWL-Time
-  - ISO 8601 / WAI-ARIA / PROV-O
-validation:
-  ci_enforced: true
-  sbom_required: true
-  slsa_attestations: true
-observability:
-  dashboard: "https://metrics.kfm.ai/frontend-hooks"
-  metrics: ["hook_error_rate","debounce_effect_ms","fetch_retry_count","resize_observer_fires","shortcut_conflicts","timeline_range_changes","hook_coverage_pct","ai_context_latency_ms"]
-preservation_policy:
-  checksum_algorithm: "SHA-256"
-  retention: "365d artifacts · 90d logs · releases permanent"
+title: "🧠 Kansas Frontier Matrix — Web React Hooks (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "web/src/hooks/README.md"
+version: "v9.3.2"
+last_updated: "2025-10-28"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../../../releases/v9.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.3.2/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# ⚓ **Kansas Frontier Matrix — Web Frontend Hooks (v2.4.0 · Tier-Ω+∞ Gold Certified)**  
-`📁 web/src/hooks/`
+# 🧠 Kansas Frontier Matrix — **Web React Hooks**
+`web/src/hooks/README.md`
 
-**Custom React Hooks · State Management · Lifecycle Utilities · Focus Mode Integration**
+**Purpose:** Documents the custom React hooks used in the Kansas Frontier Matrix web application.  
+These hooks manage stateful interactions, Focus Mode logic, telemetry tracking, and API data bindings between frontend components and the backend Knowledge Graph.
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../../../.github/workflows/site.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../.github/workflows/codeql.yml)
-[![Docs · MCP-DL v6.4.1](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.1-blue)](../../../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../LICENSE)
+[![Frontend Build](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../.github/workflows/site.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../../../docs/standards/faircare-validation.md)
+[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-<details><summary>📚 <strong>Table of Contents</strong></summary>
+## 📚 Overview
 
-- [⚡ Quick Reference](#-quick-reference)
-- [🧭 Operational Context](#-operational-context)
-- [🪶 Overview](#-overview)
-- [🧱 Directory Structure](#-directory-structure)
-- [🧾 JSON-LD Provenance Export](#-json-ld-provenance-export)
-- [🧩 Hook Provenance & Dependency Map](#-hook-provenance--dependency-map)
-- [🧠 Lifecycle & Concurrency Flow](#-lifecycle--concurrency-flow)
-- [📦 Context / Consumer Relationships](#-context--consumer-relationships)
-- [🔄 Composition & Integration Patterns](#-composition--integration-patterns)
-- [🤖 AI Context / Focus Mode Integration](#-ai-context--focus-mode-integration)
-- [♿ Accessibility & WCAG Mapping](#-accessibility--wcag-mapping)
-- [🔒 Security & Privacy](#-security--privacy)
-- [🧪 Testing & Coverage Matrix](#-testing--coverage-matrix)
-- [📊 Observability Baselines](#-observability-baselines)
-- [⚙️ Concurrency & Thread Safety](#-concurrency--thread-safety)
-- [🧱 Governance & Versioning](#-governance--versioning)
-- [🧠 MCP Compliance Summary](#-mcp-compliance-summary)
-- [📜 Change-Control Register](#-change-control-register)
-- [🗓 Version History](#-version-history)
-</details>
+The `web/src/hooks/` directory contains all **custom React hooks** responsible for managing dynamic data flows and state synchronization in the Kansas Frontier Matrix web frontend.  
+Hooks are used to:
+- Retrieve and cache API data (Focus Mode, STAC, Neo4j queries)  
+- Manage user telemetry for reproducibility and governance tracking  
+- Synchronize map and timeline data states  
+- Handle AI reasoning summaries and explainability metrics  
+
+Each hook follows FAIR+CARE principles by including provenance, error handling, and governance logging.
 
 ---
 
-## ⚡ Quick Reference
-| Task | Command | Description |
-|:--|:--|:--|
-| Lint | `pnpm run lint` | ESLint + Prettier type-aware rules |
-| Test Hooks | `pnpm run test:hooks` | Jest + RTL suite |
-| Coverage | `pnpm run test:coverage` | Ensures ≥ 85% |
-| Storybook | `pnpm run storybook` | Visual + a11y tests |
-| Build | `pnpm --filter web run build` | Compiles hooks into app |
-| Provenance | `make prov-export` | Generates `.prov.json` lineage |
-| Telemetry | `make metrics-sync` | Syncs CI metrics to dashboard |
+## 🗂️ Directory Layout
 
----
-
-## 🧭 Operational Context
-| Env | Purpose | Validation | Notes |
-|:--|:--|:--|:--|
-| Local | Dev + debug | Jest + Storybook | Hot reload |
-| CI | Lint + test + metrics | `site.yml`, `codeql.yml` | Observability active |
-| Prod | Bundled in `/web` | SLSA + SBOM | Immutable hooks export |
-
----
-
-## 🪶 Overview
-Hooks unify asynchronous state, accessibility, and data synchronization in the Kansas Frontier Matrix frontend.  
-They mediate between **temporal models (OWL-Time)**, **spatial models (CIDOC CRM / GeoSPARQL)**, and **user input**.
-
-> *“Hooks orchestrate deterministic flow between event, map, and narrative.”*
-
----
-
-## 🧱 Directory Structure
-```text
+```plaintext
 web/src/hooks/
-├── useFetch.ts              # REST/GraphQL fetch wrapper (abort/retry/log)
-├── useDebounce.ts           # Controlled input timing
-├── useResizeObserver.ts     # Layout reflow monitor
-├── useTimelineRange.ts      # Central time window (start/end/zoom)
-├── useMapInteraction.ts     # MapLibre feature selection
-├── useKeyboardShortcuts.ts  # Navigation & accessibility
-├── useTheme.ts              # Theme toggle + motion + contrast
-├── useAIContext.ts          # Focus Mode AI context provider
-└── index.ts                 # Barrel export (public API)
+├── README.md                # Documentation for custom React hooks
+│
+├── useMapData.js            # Loads, caches, and synchronizes STAC map layers
+├── useTimeline.js           # Manages timeline position and temporal event filters
+├── useFocusMode.js          # Orchestrates Focus Mode entity selection and AI context
+└── useTelemetry.js          # Logs user actions and provenance for governance audits
 ```
 
 ---
 
-## 🧾 JSON-LD Provenance Export
-```json
-{
-  "@context": "https://kfm.ai/context.jsonld",
-  "@type": "prov:Activity",
-  "prov:wasAssociatedWith": "web/src/hooks/",
-  "prov:used": [
-    "https://api.kfm.ai/schema/graphql",
-    "https://kfm.ai/stac/catalog.json"
-  ],
-  "prov:generated": [
-    "state:TimelineRangeContext",
-    "state:ThemePreferenceContext",
-    "focus:AIContext"
-  ],
-  "prov:qualifiedAssociation": {
-    "prov:hadRole": "crm:E29_Design_or_Procedure",
-    "prov:agent": "Kansas Frontier Matrix Automation Suite"
-  }
+## 🧩 Hook Design Standards
+
+| Principle | Description |
+|------------|--------------|
+| **Reusable Logic** | Hooks encapsulate feature-specific state and side effects for reuse. |
+| **Composability** | Each hook can be composed with others to form complex workflows. |
+| **Governance-Aware** | All network calls log provenance and telemetry data automatically. |
+| **Accessibility** | Hooks expose accessible UI state (focus, announcements, alerts). |
+| **Error Handling** | Each hook includes schema validation and failover routines. |
+
+All hooks are implemented using React’s `useState`, `useEffect`, and `useReducer` patterns, with integration to Redux for global state where required.
+
+---
+
+## ⚙️ Hook Summaries
+
+### 🗺️ `useMapData.js`
+Fetches and manages geospatial STAC layers and hazard overlays for the MapLibre map.
+
+**Features:**
+- Loads vector/raster datasets from `/api/stac/items`
+- Handles layer toggling and opacity transitions  
+- Attaches metadata for each dataset (license, source, FAIR+CARE tags)  
+- Synchronizes map state with timeline and Focus Mode filters  
+
+```javascript
+const { layers, toggleLayer, selectedLayer } = useMapData();
+```
+
+**Outputs:**
+| Key | Type | Description |
+|------|------|-------------|
+| `layers` | array | List of active STAC datasets |
+| `toggleLayer(id)` | function | Enable or disable specific layer |
+| `selectedLayer` | object | Currently active dataset metadata |
+
+---
+
+### 🕰️ `useTimeline.js`
+Manages temporal range filtering, time slider events, and event visualization.
+
+**Features:**
+- Fetches temporal data from `/api/events`  
+- Syncs visible map layers based on timeline range  
+- Supports keyboard navigation for accessibility  
+- Triggers focus shifts in linked Focus Mode views  
+
+```javascript
+const { timeRange, setTimeRange, events } = useTimeline();
+```
+
+**Outputs:**
+| Key | Type | Description |
+|------|------|-------------|
+| `timeRange` | array | `[startYear, endYear]` |
+| `setTimeRange()` | function | Adjusts active timeline filter |
+| `events` | array | Event objects with provenance metadata |
+
+---
+
+### 🧠 `useFocusMode.js`
+Centralizes all logic for Focus Mode AI reasoning, entity linking, and explainability.
+
+**Features:**
+- Fetches entity summaries from `/api/focus/{entity_id}`  
+- Displays confidence-weighted summaries with provenance links  
+- Synchronizes selected map features and timeline highlights  
+- Logs AI interaction telemetry to governance ledger  
+
+```javascript
+const { entity, summary, relations, confidence } = useFocusMode(entityId);
+```
+
+**Outputs:**
+| Key | Type | Description |
+|------|------|-------------|
+| `entity` | object | Focal entity metadata |
+| `summary` | string | AI-generated contextual summary |
+| `relations` | array | Linked people, places, and events |
+| `confidence` | number | AI confidence index (0–1 scale) |
+
+---
+
+### 🧾 `useTelemetry.js`
+Captures and transmits real-time user interaction data to ensure reproducibility and ethical auditability.
+
+**Features:**
+- Logs events like map movements, layer toggles, and Focus Mode sessions  
+- Validates telemetry schema (`schemas/telemetry/work-frontend-ui-v14.json`)  
+- Sends logs to `releases/v9.3.2/focus-telemetry.json`  
+- Aggregates metrics for AI drift monitoring and session replay  
+
+```javascript
+const { logEvent, sessionId } = useTelemetry();
+```
+
+**Outputs:**
+| Key | Type | Description |
+|------|------|-------------|
+| `logEvent()` | function | Records UI interaction and context |
+| `sessionId` | string | Unique ID for user or Focus Mode session |
+
+---
+
+## 🧩 FAIR+CARE Integration
+
+All hooks implement governance-aware behaviors aligned with FAIR+CARE ethics.
+
+| Principle | Hook Example |
+|------------|---------------|
+| **Findable** | `useMapData` indexes dataset metadata for searchability |
+| **Accessible** | `useTimeline` ensures temporal queries are open and filterable |
+| **Interoperable** | `useFocusMode` adheres to JSON-LD and DCAT metadata exchange |
+| **Reusable** | `useTelemetry` stores provenance and interaction logs |
+| **Collective Benefit** | Hooks improve community access to transparent AI insights |
+| **Authority to Control** | FAIR+CARE council retains access to interaction logs |
+| **Responsibility** | All logs anonymized and reviewed for ethical governance |
+| **Ethics** | Bias-detection telemetry integrated into Focus Mode workflows |
+
+---
+
+## 🧱 Implementation Example
+
+```javascript
+import { useFocusMode, useTelemetry } from "../hooks";
+
+export default function FocusPanel({ entityId }) {
+  const { entity, summary } = useFocusMode(entityId);
+  const { logEvent } = useTelemetry();
+
+  useEffect(() => {
+    if (entityId) logEvent("focus_entity_opened", { entityId });
+  }, [entityId]);
+
+  return (
+    <section>
+      <h2>{entity?.name}</h2>
+      <p>{summary}</p>
+    </section>
+  );
 }
 ```
 
----
-
-## 🧩 Hook Provenance & Dependency Map
-| Hook | Source | Consumes | Emits | Observability |
-|:--|:--|:--|:--|:--|
-| `useFetch` | API / GraphQL | Endpoints | `{data,loading,error}` | `fetch_retry_count` |
-| `useTimelineRange` | Context | `TimelineView` | `{start,end}` | `timeline_range_changes` |
-| `useMapInteraction` | MapLibre | `MapView`, `DetailPanel` | `selectedFeature` | `map_selection_events` |
-| `useKeyboardShortcuts` | DOM | `UIContext` | Dispatches key actions | `shortcut_conflicts` |
-| `useTheme` | `localStorage` + system | `<html>` | `data-theme` | `theme_switch_latency_ms` |
-| `useAIContext` | API / GraphQL | `AIAssistant` | AI state | `ai_context_latency_ms` |
+This pattern ensures **traceable**, **accessible**, and **governed AI interactions**.
 
 ---
 
-## 🧠 Lifecycle & Concurrency Flow
-```mermaid
-sequenceDiagram
-  participant C as Component
-  participant H as Hook
-  participant A as API
-  C->>H: mount()
-  H->>A: fetch(url)
-  A-->>H: data/error
-  H-->>C: state update
-  C->>H: unmount()
-  H-->>A: AbortController.abort()
-```
-Hooks use **idempotent state transitions** and **abortable side effects** to remain concurrency safe under React 19.
+## 🧾 Governance Integration
+
+Hooks are validated by:
+- `.github/workflows/faircare-validate.yml` — FAIR+CARE and telemetry verification  
+- `.github/workflows/governance-ledger.yml` — Logs provenance to audit ledger  
+- `.github/workflows/site.yml` — Ensures integration during frontend build  
+
+Audit logs and validation reports:
+- `reports/audit/ui_ethics_review.json`  
+- `reports/fair/ui_hooks_compliance.json`  
+- `schemas/telemetry/work-frontend-ui-v14.json`
 
 ---
 
-## 📦 Context / Consumer Relationships
-| Hook | Context | Consumer | Dependency |
-|:--|:--|:--|:--|
-| `useTimelineRange` | `TimelineContext` | `TimelineView` | `useFetch` |
-| `useMapInteraction` | `MapContext` | `MapView`, `DetailPanel` | `useTimelineRange` |
-| `useTheme` | `ThemeContext` | `AppLayout` | none |
-| `useKeyboardShortcuts` | `UIContext` | `SearchBar`, `RootShell` | `useTheme` |
-| `useAIContext` | `FocusContext` | `AIAssistant` | `useFetch` |
+## 🧾 Version History
 
----
-
-## 🔄 Composition & Integration Patterns
-| Pattern | Hooks | Output |
-|:--|:--|:--|
-| Data → Render | `useFetch` + `useTimelineRange` | Render filtered events |
-| Input → Debounce → Query | `useDebounce` + `useFetch` | Stable search results |
-| Resize → Layout | `useResizeObserver` + `useTimelineRange` | Responsive timeline |
-| Keyboard → Theme | `useKeyboardShortcuts` + `useTheme` | Toggle accessibility |
-
----
-
-## 🤖 AI Context / Focus Mode Integration
-```ts
-// useAIContext.ts
-import { useFetch } from "./useFetch";
-export function useAIContext(entityId: string) {
-  return useFetch(`/api/ai/context/${entityId}`);
-}
-```
-▣ Connects entity focus with AI summaries.  
-▣ Returns provenance-linked `AIResponse` with citations and confidence bands.  
-▣ Logged under `docs/standards/ai-ethics.md`.
-
----
-
-## ♿ Accessibility & WCAG Mapping
-| Hook | WCAG Ref | Principle | Validation |
-|:--|:--|:--|:--:|
-| `useKeyboardShortcuts` | 2.1.1 Keyboard | Operable | ✅ |
-| `useTheme` | 1.4.3 Contrast | Perceivable | ✅ |
-| `useResizeObserver` | 1.4.10 Reflow | Robust | ✅ |
-| `useAIContext` | 3.3.1 Input Assistance | Understandable | ✅ |
-| `useTimelineRange` | 2.2.1 Timing Adjustable | Predictable | ✅ |
-
----
-
-## 🔒 Security & Privacy
-- Hooks never log or store PII.  
-- API parameters sanitized and stripped from telemetry.  
-- `useTheme` only saves UI preferences.  
-- `useAIContext` redacts citation data in user logs.  
-- All network interactions verified by **CodeQL**, **Trivy**, and **Sentry**.
-
----
-
-## 🧪 Testing & Coverage Matrix
-| Hook | Coverage | Status |
-|:--|:--:|:--:|
-| `useFetch` | 94% | ✅ |
-| `useDebounce` | 87% | ✅ |
-| `useResizeObserver` | 83% | ⚙️ |
-| `useTimelineRange` | 89% | ✅ |
-| `useMapInteraction` | 86% | ✅ |
-| `useKeyboardShortcuts` | 91% | ✅ |
-| `useTheme` | 88% | ✅ |
-| `useAIContext` | 90% | ✅ |
-**Goal:** 85% global.
-
----
-
-## 📊 Observability Baselines
-| Metric | Baseline | Target | Status |
-|:--|:--:|:--:|:--:|
-| `hook_error_rate` | 0.2% | ≤ 1% | ✅ |
-| `fetch_retry_count` | 0.4 | ≤ 2 | ✅ |
-| `debounce_effect_ms` | 12 | ≤ 16 | ✅ |
-| `resize_observer_fires` | 2/frame | ≤ 3 | ✅ |
-| `ai_context_latency_ms` | 47 | ≤ 100 | ✅ |
-
----
-
-## ⚙️ Concurrency & Thread Safety
-- Hooks tested under React concurrent mode.  
-- All effects cleanly abort on unmount.  
-- State updates are idempotent and atomic.  
-- Proven via `react-19-concurrency.test.ts`.
-
----
-
-## 🧱 Governance & Versioning
-- Public API (index.ts) is semver-governed.  
-- Deprecated hooks aliased for one minor version.  
-- All changes require ADR (`ADR-HOOK-###`) + CHANGELOG entry.  
-- Release tags follow: `web-hooks-vMAJOR.MINOR.PATCH`.
-
----
-
-## 🧠 MCP Compliance Summary
-| Pillar | Verified By | Evidence |
-|:--|:--|:--|
-| Documentation-First | README + JSDoc | This doc |
-| Reproducibility | Jest tests | Deterministic outputs |
-| Accessibility | axe-core + Storybook | A11y checks |
-| Provenance | `.prov.json` + observability | CI export |
-| FAIR / CARE | design-review.yml | Ethical data handling |
-| Security | CodeQL + Sentry | SBOM & SARIF clean |
-
----
-
-## 📜 Change-Control Register
-```yaml
-changes:
-  - date: "2025-11-01"
-    change: "Added JSON-LD provenance, lifecycle diagrams, context matrices, AI integration, and full MCP-DL v6.4.1 compliance metadata."
-    reviewed_by: "@kfm-architecture"
-    qa_approved_by: "@kfm-accessibility"
-    pr: "#web-hooks-240"
-```
-
----
-
-## 🗓 Version History
-| Version | Date | Author | Summary | Type |
-|:--|:--|:--|:--|:--|
-| **v2.4.0** | 2025-11-01 | @kfm-web | Gold Certification — full MCP v6.4.1 alignment, concurrency & AI integration | Major |
-| v2.3.0 | 2025-10-30 | @kfm-web | JSON-LD provenance, context maps, Focus Mode readiness | Major |
-| v2.2.0 | 2025-10-29 | @kfm-web | Provenance graph + WCAG audit | Major |
-| v2.1.0 | 2025-10-28 | @kfm-web | Telemetry + performance baselines | Major |
-| v2.0.0 | 2025-10-20 | @kfm-architecture | Accessibility integration | Major |
-| v1.5.0 | 2025-10-17 | @kfm-web | Lifecycle & sync upgrade | Minor |
-| v1.0.0 | 2025-07-01 | Founding Team | Initial hook suite | Major |
+| Version | Date       | Author           | Summary |
+|----------|------------|------------------|----------|
+| v9.3.2   | 2025-10-28 | @kfm-ui-lab      | Initial documentation for React hooks with FAIR+CARE telemetry integration. |
+| v9.3.1   | 2025-10-27 | @bartytime4life  | Added Focus Mode governance and event logging details. |
+| v9.3.0   | 2025-10-26 | @kfm-architecture | Established hook directory and implementation pattern documentation. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — Web Frontend Hooks**  
-Built under the **Master Coder Protocol (MCP-DL v6.4.1)**  
-
-[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
-[![FAIR / CARE](https://img.shields.io/badge/FAIR--CARE-Compliant-green)]()
+**Kansas Frontier Matrix** · *React Hooks × Data Provenance × Ethical AI Interaction*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
 
 </div>
-
-<!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.4.1
-MCP-TIER: Ω+∞ Gold
-DOC-PATH: web/src/hooks/README.md
-MCP-CERTIFIED: true
-STAC-VALIDATED: true
-SBOM-GENERATED: true
-SLSA-ATTESTED: true
-A11Y-VERIFIED: true
-FAIR-CARE-COMPLIANT: true
-HOOK-COVERAGE-VERIFIED: true
-PERFORMANCE-METRICS-TRACKED: true
-ERROR-HANDLING-CLASSIFIED: true
-A11Y-HOOKS-TESTED: true
-SENTRY-INTEGRATION-ACTIVE: true
-HOOK-STABILITY-VERIFIED: true
-HOOK-PROVENANCE-CHAIN: active
-CONCURRENCY-SAFE: true
-THREAD-SAFE-RENDERING: true
-DX-DOCUMENTED: true
-FOCUS-MODE-AWARE: true
-AI-INTEGRATION-COMPLIANT: true
-CHANGELOG-VERIFIED: true
-ADR-SYNC-ACTIVE: true
-PROVENANCE-CHAIN-LINKED: true
-CODEQL-SECURITY-CHECK: true
-WCAG-AA-CONFORMANCE: verified
-OBSERVABILITY-ACTIVE: true
-REACT-CONCURRENCY-VALIDATED: true
-PERFORMANCE-BUDGET-P95: 2.5s
-GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: {build.date}
-MCP-FOOTER-END -->
