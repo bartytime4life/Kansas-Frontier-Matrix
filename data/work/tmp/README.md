@@ -16,10 +16,10 @@ governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 # 🧮 Kansas Frontier Matrix — **Temporary Work Environment**
 `data/work/tmp/README.md`
 
-**Purpose:** Provides a transient, FAIR+CARE-governed workspace for intermediate ETL processes, AI/ML workflows, and pre-validation data preparation within the Kansas Frontier Matrix (KFM).  
-All datasets and logs in this layer are temporary — facilitating reproducible computation while maintaining provenance, governance, and ethical integrity.
+**Purpose:** Ephemeral FAIR+CARE-governed workspace for intermediate ETL transformations, model outputs, and validation checkpoints across multiple data domains in the Kansas Frontier Matrix (KFM).  
+All datasets and logs within this layer are temporary — enabling reproducibility and transparent data flow while maintaining strict ethical and provenance standards.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Transient%20Validated-gold)](../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Transient%20Governed-gold)](../../../docs/standards/faircare-validation.md)
 [![License: Internal Workspace](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey)](../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
@@ -29,16 +29,16 @@ All datasets and logs in this layer are temporary — facilitating reproducible 
 
 ## 📚 Overview
 
-The `data/work/tmp/` directory acts as the **ephemeral workspace** for all intermediate operations in KFM’s processing stack.  
-It bridges raw data ingestion, validation, and processed outputs through FAIR+CARE-aligned temporary caching, staging, and governance-aware pipelines.
+The `data/work/tmp/` directory functions as a **multi-domain, transient workspace** for intermediate processing across KFM’s major scientific and archival modules.  
+It temporarily hosts normalized data fragments, validation reports, and AI model artifacts used during ETL, analytics, and quality assurance.  
 
-### Core Purposes:
-- Store short-lived data artifacts generated during ETL, AI, and validation workflows.  
-- Support intermediate QA, checksum verification, and FAIR+CARE ethics pre-validation.  
-- Log temporary governance activities, metadata enrichments, and automation outputs.  
-- Provide reproducibility for all transient computation within ETL pipelines.  
+### Key Responsibilities:
+- Provide an isolated sandbox for **domain-specific ETL pipelines** (e.g., hydrology, hazards, terrain).  
+- Support **pre-validation** and **checksum audits** for FAIR+CARE compliance.  
+- Store **AI/ML intermediate artifacts**, model predictions, and logs.  
+- Maintain **provenance continuity** while ensuring non-persistent data lifecycles.  
 
-Each subdirectory represents a specialized component within the temporary work environment.
+All contents are regenerated automatically by KFM’s pipelines and removed after successful staging or validation.
 
 ---
 
@@ -46,32 +46,15 @@ Each subdirectory represents a specialized component within the temporary work e
 
 ```plaintext
 data/work/tmp/
-├── README.md                             # This file — overview of temporary work environment
+├── README.md                            # This file — overview of temporary work environment
 │
-├── hazards/                              # Temporary hazard model and validation workspace
-│   ├── logs/                             # ETL, AI, and system logs for hazard data
-│   └── validation/                       # Schema and FAIR+CARE checks
-│
-├── climate/                              # Climate and weather-related intermediate datasets
-│   ├── models/                           # Model training cache and outputs
-│   └── validation/                       # FAIR+CARE pre-audits and schema reports
-│
-├── cache/                                # ETL, AI, and query caching system
-│   ├── ai_cache/                         # Focus Mode embeddings and inference summaries
-│   ├── etl_cache/                        # Transformation-level cache
-│   ├── query_cache/                      # Cached SQL and graph queries
-│   └── metadata.json                     # Cache governance metadata
-│
-├── logs/                                 # High-level workflow logs
-│   ├── ai/                               # AI model and inference logs
-│   ├── etl/                              # Transformation execution logs
-│   ├── validation/                       # Validation outcome reports
-│   └── system/                           # Pipeline, runtime, and governance event logs
-│
-└── staging/                              # Temporary staging layer for ETL transformations
-    ├── tabular/                          # Tabular intake, normalization, and validation workspace
-    ├── spatial/                          # Spatial reprojection, clipping, and validation workspace
-    └── metadata/                         # Metadata harmonization and audit workspace
+├── climate/                             # Temporary workspace for climate data ingestion, reanalysis, and ETL validation
+├── hazards/                             # Intermediate hazard datasets (tornado, flood, drought) under QA transformation
+├── hydrology/                           # Temporary hydrologic data (streamflow, aquifers, drainage basins)
+├── landcover/                           # Transient workspace for raster classification and vegetation coverage processing
+├── tabular/                             # Tabular ingestion and schema-normalization sandbox for ETL
+├── terrain/                             # Temporary digital elevation model (DEM) and slope derivation workspace
+└── text/                                # Temporary text and document-processing layer for OCR, transcripts, and NLP
 ```
 
 ---
@@ -80,33 +63,33 @@ data/work/tmp/
 
 ```mermaid
 flowchart TD
-    A["Raw Data (data/raw/*)"] --> B["ETL and AI/ML Processing (data/work/tmp/*)"]
-    B --> C["Validation and FAIR+CARE Pre-Audit (data/work/tmp/logs/validation/)"]
-    C --> D["Promotion to Staging Workspace (data/work/staging/*)"]
+    A["Raw Data (data/raw/*)"] --> B["Temporary ETL Processing (data/work/tmp/*)"]
+    B --> C["Validation and FAIR+CARE Auditing (domain-specific tmp layers)"]
+    C --> D["Promotion to Staging Layer (data/work/staging/*)"]
     D --> E["Governance Ledger Registration (data/reports/audit/data_provenance_ledger.json)"]
 ```
 
 ### Workflow Description:
-1. **Ingestion:** Data imported from raw sources for temporary preprocessing.  
-2. **Processing:** Transformations, feature extraction, and AI inference cached here.  
-3. **Validation:** Temporary checks executed for schema, ethics, and provenance.  
-4. **Governance:** Metadata and checksums recorded to audit ledger.  
-5. **Cleanup:** TMP files automatically deleted or archived after staging promotion.
+1. **Ingestion:** Raw data pulled into the corresponding domain-specific TMP folder.  
+2. **Transformation:** Schema normalization, feature engineering, and pre-validation occur.  
+3. **FAIR+CARE Audit:** Each dataset undergoes automated ethical and reproducibility checks.  
+4. **Promotion:** Once validated, files move to the appropriate staging layer.  
+5. **Governance:** Metadata, lineage, and checksum results logged to governance records.
 
 ---
 
-## 🧩 Example Metadata Record
+## 🧩 Example TMP Metadata Record
 
 ```json
 {
-  "id": "tmp_workspace_hazards_v9.3.2",
-  "task": "ETL_Transformation_and_Validation",
-  "pipeline": "src/pipelines/hazards_pipeline.py",
-  "records_processed": 21563,
-  "created": "2025-10-28T15:15:00Z",
-  "validator": "@kfm-etl-ops",
-  "checksum": "sha256:7d9b5a0f00e82a22f2a7acdc0b60f34843c08de2...",
-  "fairstatus": "in_review",
+  "id": "tmp_hazards_etl_v9.3.2",
+  "domain": "hazards",
+  "records_processed": 12842,
+  "created": "2025-10-28T15:30:00Z",
+  "pipeline": "src/pipelines/etl/hazards_tmp_pipeline.py",
+  "validation_status": "in_review",
+  "fairstatus": "compliant",
+  "checksum": "sha256:c8f9d9c6b16f5b15c3e46a9e5a24a019f15d24a9...",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -117,18 +100,17 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | TMP assets tagged with dataset ID, timestamp, and checksum. |
-| **Accessible** | Accessible only to pipeline operators and governance reviewers. |
-| **Interoperable** | Data stored in open interoperable formats (CSV, JSON, GeoJSON, Parquet). |
-| **Reusable** | Metadata and logs provide full reproducibility of TMP operations. |
-| **Collective Benefit** | Facilitates efficient data workflows for open-science integrity. |
-| **Authority to Control** | FAIR+CARE Council oversees TMP lifecycle management. |
-| **Responsibility** | Logs ensure every temporary action is accountable and ethical. |
-| **Ethics** | TMP processing excludes sensitive or personal data. |
+| **Findable** | TMP data indexed by domain, pipeline, and checksum metadata. |
+| **Accessible** | Stored in open interoperable formats for internal access only. |
+| **Interoperable** | Conforms to KFM’s JSON schema and FAIR+CARE metadata framework. |
+| **Reusable** | Fully traceable via governance ledger and manifest registry. |
+| **Collective Benefit** | Enables safe, reproducible data processing without polluting raw or staging layers. |
+| **Authority to Control** | FAIR+CARE Council manages domain-specific retention and purging rules. |
+| **Responsibility** | All transformations and logs linked to validator identity and runtime context. |
+| **Ethics** | Excludes sensitive or personally identifiable information. |
 
-Governance and audit data recorded in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and `data/reports/fair/data_care_assessment.json`.
+Governance integration is logged automatically to:  
+`data/reports/audit/data_provenance_ledger.json` and `data/reports/fair/data_care_assessment.json`.
 
 ---
 
@@ -136,12 +118,12 @@ and `data/reports/fair/data_care_assessment.json`.
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Tracks TMP workflow context and checksum for reproducibility. |
-| `data/reports/audit/data_provenance_ledger.json` | Logs transient workflow events and validation results. |
-| `data/reports/validation/schema_validation_summary.json` | Captures temporary schema validation outcomes. |
-| `releases/v9.3.2/manifest.zip` | Includes TMP file hashes for validation traceability. |
+| `metadata.json` | Captures temporary workflow metadata and validation status. |
+| `data/reports/audit/data_provenance_ledger.json` | Records lineage for all TMP events. |
+| `data/reports/validation/schema_validation_summary.json` | Captures schema testing and pre-validation results. |
+| `releases/v9.3.2/manifest.zip` | Contains TMP checksum hashes and integrity records. |
 
-TMP synchronization and cleanup automated via `tmp_cleanup.yml`.
+TMP synchronization and cleanup tasks managed via `tmp_sync.yml`.
 
 ---
 
@@ -149,12 +131,12 @@ TMP synchronization and cleanup automated via `tmp_cleanup.yml`.
 
 | Category | Retention Duration | Policy |
 |-----------|--------------------|--------|
-| TMP Data | 7 days | Automatically purged after successful promotion. |
-| Cache Files | 30 days | Retained for reproducibility of AI and ETL operations. |
-| Logs | 90 days | Archived in `data/work/logs/system/`. |
-| Metadata | 365 days | Retained permanently for provenance and governance traceability. |
+| Domain TMP Data | 7 days | Purged automatically post-validation or staging promotion. |
+| AI/ML Intermediate Outputs | 14 days | Retained for reproducibility testing. |
+| Logs and Validation Reports | 30 days | Archived to `data/work/logs/system/`. |
+| Metadata Records | 365 days | Retained permanently for provenance auditing. |
 
-All retention and purge actions managed by `tmp_retention_sync.yml`.
+Retention and cleanup automation handled by `tmp_retention_cleanup.yml`.
 
 ---
 
@@ -162,8 +144,8 @@ All retention and purge actions managed by `tmp_retention_sync.yml`.
 
 ```text
 Kansas Frontier Matrix (2025). Temporary Work Environment (v9.3.2).
-Ephemeral FAIR+CARE-governed workspace supporting ETL, AI, and validation processes for reproducible open science and ethical data transformation.
-Restricted to internal data pipelines and governance systems.
+Ephemeral FAIR+CARE-aligned workspace supporting ETL, AI, and validation workflows across environmental, spatial, and archival domains.
+Restricted to internal data processing and governance validation.
 ```
 
 ---
@@ -172,15 +154,15 @@ Restricted to internal data pipelines and governance systems.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Updated directory layout, added AI cache integration, and FAIR+CARE lifecycle compliance. |
-| v9.2.0 | 2024-07-15 | Added unified log system and validation synchronization. |
-| v9.0.0 | 2023-01-10 | Established temporary work environment under MCP-DL v6.3 framework. |
+| v9.3.2 | 2025-10-28 | Added multi-domain structure and harmonized FAIR+CARE compliance framework. |
+| v9.2.0 | 2024-07-15 | Introduced terrain and text TMP layers for new ETL workflows. |
+| v9.0.0 | 2023-01-10 | Established transient TMP environment for reproducible intermediate data. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Ephemeral Data × FAIR+CARE Governance × Reproducible Science*  
+**Kansas Frontier Matrix** · *Transient Data × FAIR+CARE Governance × Provenance Integrity*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
 
 </div>
