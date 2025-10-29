@@ -1,256 +1,186 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Temporary Workspace (Diamond⁶∞ Crown∞ Certified)"
+title: "🧮 Kansas Frontier Matrix — Temporary Work Environment (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/README.md"
-version: "v6.0.0"
-last_updated: "2025-10-22"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.3.2"
+last_updated: "2025-10-28"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v6.0.0/sbom.spdx.json"
-manifest_ref: "releases/v6.0.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v6.0.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-tmp-v8.json"
-json_export: "releases/v6.0.0/work-tmp.meta.json"
-validation_reports: [
-  "reports/self-validation/work-tmp-validation.json",
-  "reports/focus-telemetry/drift.json",
-  "reports/fair/summary.json",
-  "reports/audit/tmp-cleanup-trail.log"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-TMP-RMD-v6.0.0"
-maintainers: ["@kfm-data", "@kfm-architecture", "@kfm-fair"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-ai"]
-reviewed_by: ["@kfm-ethics", "@kfm-accessibility", "@kfm-qa"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / AI-Governed Sandbox Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "STAC 1.0.0", "AI-Coherence", "Autonomous Governance", "Explainability"]
-status: "Diamond⁶∞ / Crown∞ Certified"
-maturity: "Diamond⁶∞ Certified · AI-Learning · FAIR+CARE+Ethics Verified · Self-Governing"
-focus_validation: "true"
-tags: ["tmp", "sandbox", "ai", "etl", "validation", "drift", "fair", "governance", "autonomous", "mcp"]
+sbom_ref: "../../../releases/v9.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.3.2/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — **Temporary Workspace (Diamond⁶∞ Crown∞ Certified)**  
-`data/work/tmp/`
+# 🧮 Kansas Frontier Matrix — **Temporary Work Environment**
+`data/work/tmp/README.md`
 
-**Mission:** Serve as KFM’s **cognitive sandbox** — a self-learning, AI-supervised,  
-ephemeral workspace for ETL experimentation, validation, and AI explainability testing,  
-ensuring **zero data waste**, **total reproducibility**, and **ethical automation**.
+**Purpose:** Provides a transient, FAIR+CARE-governed workspace for intermediate ETL processes, AI/ML workflows, and pre-validation data preparation within the Kansas Frontier Matrix (KFM).  
+All datasets and logs in this layer are temporary — facilitating reproducible computation while maintaining provenance, governance, and ethical integrity.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Verified%20%7C%20SHAP%20%2F%20LIME-blueviolet)]()
-[![Governance Review](https://img.shields.io/badge/Governance-Autonomous%20Audit-orange)](../../../../docs/standards/governance.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Transient%20Validated-gold)](../../../docs/standards/faircare-validation.md)
+[![License: Internal Workspace](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey)](../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-`data/work/tmp/` is KFM’s **short-term AI reasoning layer**,  
-bridging raw computation, validation, and governance.  
-Focus Mode AI observes, learns, and optimizes every temporary data operation.
+The `data/work/tmp/` directory acts as the **ephemeral workspace** for all intermediate operations in KFM’s processing stack.  
+It bridges raw data ingestion, validation, and processed outputs through FAIR+CARE-aligned temporary caching, staging, and governance-aware pipelines.
 
-> *“Temporary by design — intelligent by evolution.”*
+### Core Purposes:
+- Store short-lived data artifacts generated during ETL, AI, and validation workflows.  
+- Support intermediate QA, checksum verification, and FAIR+CARE ethics pre-validation.  
+- Log temporary governance activities, metadata enrichments, and automation outputs.  
+- Provide reproducibility for all transient computation within ETL pipelines.  
 
----
-
-## 🌍 System-of-Systems Integration Map
-
-```mermaid
-graph TD
-    A[Data Sources] --> B[ETL Pipelines · src/pipelines]
-    B --> C[Temporary Workspace · data/work/tmp]
-    C --> D[Processed Datasets · data/processed]
-    D --> E[STAC Metadata & Provenance · data/stac]
-    C --> F[AI Focus Mode · Drift Detection + Feedback]
-    F --> G[Governance Dashboard · FAIR+CARE+Ethics Reports]
-    G --> H[Autonomous Feedback Loop · Regeneration + Oversight]
-```
-
-The **Temporary Workspace** acts as KFM’s *short-term memory* —  
-a live sandbox where data learning occurs before permanent storage.
+Each subdirectory represents a specialized component within the temporary work environment.
 
 ---
 
-## 🧠 AI Awareness & Contextual Learning
+## 🗂️ Directory Layout
 
-Focus Mode AI continuously refines KFM’s reproducibility intelligence by:
-- Learning from transformation patterns and error recovery.
-- Measuring resource efficiency and FAIR compliance.
-- Detecting ethical or environmental impact anomalies.
-- Improving model explainability through self-validation cycles.
-
-> *The workspace itself teaches the system how to improve reproducibility.*
-
----
-
-## 🗂 Directory Layout
-
-```bash
+```plaintext
 data/work/tmp/
-├── terrain/       # Temporary DEM, slope, hillshade intermediates
-├── hydrology/     # Watershed, flood polygon staging
-├── landcover/     # Vegetation classification intermediates
-├── climate/       # Weather + drought test data
-├── hazards/       # Tornado/wildfire overlays
-├── tabular/       # CSV or Parquet validation slices
-└── text/          # OCR/NLP intermediate corpora
+├── README.md                             # This file — overview of temporary work environment
+│
+├── hazards/                              # Temporary hazard model and validation workspace
+│   ├── logs/                             # ETL, AI, and system logs for hazard data
+│   └── validation/                       # Schema and FAIR+CARE checks
+│
+├── climate/                              # Climate and weather-related intermediate datasets
+│   ├── models/                           # Model training cache and outputs
+│   └── validation/                       # FAIR+CARE pre-audits and schema reports
+│
+├── cache/                                # ETL, AI, and query caching system
+│   ├── ai_cache/                         # Focus Mode embeddings and inference summaries
+│   ├── etl_cache/                        # Transformation-level cache
+│   ├── query_cache/                      # Cached SQL and graph queries
+│   └── metadata.json                     # Cache governance metadata
+│
+├── logs/                                 # High-level workflow logs
+│   ├── ai/                               # AI model and inference logs
+│   ├── etl/                              # Transformation execution logs
+│   ├── validation/                       # Validation outcome reports
+│   └── system/                           # Pipeline, runtime, and governance event logs
+│
+└── staging/                              # Temporary staging layer for ETL transformations
+    ├── tabular/                          # Tabular intake, normalization, and validation workspace
+    ├── spatial/                          # Spatial reprojection, clipping, and validation workspace
+    └── metadata/                         # Metadata harmonization and audit workspace
 ```
 
-Each subfolder mirrors `data/processed/` structure,  
-preserving schema compatibility across workflows.
-
 ---
 
-## 🧮 FAIR+CARE Evidence Table
-
-| Principle | Evidence | Validation Source | Verified Score |
-|------------|-----------|-------------------|----------------|
-| **Findable** | AI-indexed logs by ETL session ID | `focus-validate.yml` | 100% |
-| **Accessible** | Open, non-sensitive data only | LICENSE | 99% |
-| **Interoperable** | Schema parity with STAC 1.0 | `stac-validate.yml` | 98% |
-| **Reusable** | Deterministic regeneration workflows | `Makefile` | 99% |
-| **CARE: Benefit** | Supports FAIR data ethics | FAIR dashboard | 99% |
-| **CARE: Responsibility** | AI deletion traceability | Governance audit | 100% |
-
----
-
-## 🔒 Security & Data Policy Matrix
-
-| Control Area | Policy | Reviewer | Audit Source |
-|---------------|---------|-----------|---------------|
-| **Data Access** | Restricted to CI & ETL roles | @kfm-security | trivy.yml |
-| **Cleanup Approval** | AI cleanup under ethics review | @kfm-ethics | cleanup-ai.json |
-| **Checksum Validation** | Pre-deletion hash check required | @kfm-data | checksum-verify.yml |
-| **License Enforcement** | Public-domain datasets only | @kfm-governance | fair/summary.json |
-
----
-
-## ♻️ Autonomous Lifecycle Flow
+## ⚙️ TMP Workflow
 
 ```mermaid
 flowchart TD
-A[Temporary File Created] --> B[Logged in AI Telemetry]
-B --> C[Checksum Validation]
-C --> D[FAIR+CARE Scoring + Drift Analysis]
-D --> E[Governance Audit Logged]
-E --> F[AI-Approved Cleanup or Archive]
-F --> G[Focus Model Learns Efficiency Metrics]
+    A["Raw Data (data/raw/*)"] --> B["ETL and AI/ML Processing (data/work/tmp/*)"]
+    B --> C["Validation and FAIR+CARE Pre-Audit (data/work/tmp/logs/validation/)"]
+    C --> D["Promotion to Staging Workspace (data/work/staging/*)"]
+    D --> E["Governance Ledger Registration (data/reports/audit/data_provenance_ledger.json)"]
 ```
 
----
-
-## 🧩 AI Model Provenance & Explainability
-
-| Model | Purpose | Framework | Explainability | Version | Validation |
-|:------|:----------|:-----------|:----------------|:----------|:-------------|
-| `focus-work-tmp-v3` | Drift tracking + reproducibility | PyTorch | SHAP + Neo4j linkage | 3.1 | `/reports/ai/focus-work-tmp.json` |
-| `cleanup-agent` | Predictive cleanup & energy optimization | Python | LIME | 1.4 | `/reports/ai/tmp-cleanup.json` |
-| `fair-telemetry-agent` | CARE metric scoring & transparency | Custom | Rule-based | 1.0 | `/reports/fair/tmp-summary.json` |
+### Workflow Description:
+1. **Ingestion:** Data imported from raw sources for temporary preprocessing.  
+2. **Processing:** Transformations, feature extraction, and AI inference cached here.  
+3. **Validation:** Temporary checks executed for schema, ethics, and provenance.  
+4. **Governance:** Metadata and checksums recorded to audit ledger.  
+5. **Cleanup:** TMP files automatically deleted or archived after staging promotion.
 
 ---
 
-## 🧩 Telemetry Schema & Live Example
+## 🧩 Example Metadata Record
 
 ```json
 {
-  "tmp_session_id": "tmp_2025-10-22T19:30Z",
-  "focus_score": 0.97,
-  "checksum_drift": 0.002,
-  "runtime_seconds": 21.5,
-  "fair_score": 0.99,
-  "a11y_score": 0.98,
-  "energy_usage_watts": 12.4,
-  "retention_hours": 48,
-  "status": "validated"
+  "id": "tmp_workspace_hazards_v9.3.2",
+  "task": "ETL_Transformation_and_Validation",
+  "pipeline": "src/pipelines/hazards_pipeline.py",
+  "records_processed": 21563,
+  "created": "2025-10-28T15:15:00Z",
+  "validator": "@kfm-etl-ops",
+  "checksum": "sha256:7d9b5a0f00e82a22f2a7acdc0b60f34843c08de2...",
+  "fairstatus": "in_review",
+  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## 🔁 AI Cleanup & Regeneration Workflow
+## 🧠 FAIR+CARE Governance Alignment
 
-```mermaid
-graph LR
-A[AI Monitors Workspace] --> B[Checksum Drift Detected]
-B --> C[Cleanup Triggered · Manifest Signed]
-C --> D[Governance Review · AI Ethics Approval]
-D --> E[Makefile Regeneration · STAC Validation]
-E --> F[Telemetry Updated · FAIR+CARE Report Published]
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | TMP assets tagged with dataset ID, timestamp, and checksum. |
+| **Accessible** | Accessible only to pipeline operators and governance reviewers. |
+| **Interoperable** | Data stored in open interoperable formats (CSV, JSON, GeoJSON, Parquet). |
+| **Reusable** | Metadata and logs provide full reproducibility of TMP operations. |
+| **Collective Benefit** | Facilitates efficient data workflows for open-science integrity. |
+| **Authority to Control** | FAIR+CARE Council oversees TMP lifecycle management. |
+| **Responsibility** | Logs ensure every temporary action is accountable and ethical. |
+| **Ethics** | TMP processing excludes sensitive or personal data. |
+
+Governance and audit data recorded in:  
+`data/reports/audit/data_provenance_ledger.json`  
+and `data/reports/fair/data_care_assessment.json`.
+
+---
+
+## ⚖️ Governance & Provenance Integration
+
+| Record | Description |
+|---------|-------------|
+| `metadata.json` | Tracks TMP workflow context and checksum for reproducibility. |
+| `data/reports/audit/data_provenance_ledger.json` | Logs transient workflow events and validation results. |
+| `data/reports/validation/schema_validation_summary.json` | Captures temporary schema validation outcomes. |
+| `releases/v9.3.2/manifest.zip` | Includes TMP file hashes for validation traceability. |
+
+TMP synchronization and cleanup automated via `tmp_cleanup.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| Category | Retention Duration | Policy |
+|-----------|--------------------|--------|
+| TMP Data | 7 days | Automatically purged after successful promotion. |
+| Cache Files | 30 days | Retained for reproducibility of AI and ETL operations. |
+| Logs | 90 days | Archived in `data/work/logs/system/`. |
+| Metadata | 365 days | Retained permanently for provenance and governance traceability. |
+
+All retention and purge actions managed by `tmp_retention_sync.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Temporary Work Environment (v9.3.2).
+Ephemeral FAIR+CARE-governed workspace supporting ETL, AI, and validation processes for reproducible open science and ethical data transformation.
+Restricted to internal data pipelines and governance systems.
 ```
 
 ---
 
-## 🧩 Governance & Oversight Roles
+## 🧾 Version Notes
 
-| Role | Responsibility | Owner | Frequency | Scope |
-|------|----------------|--------|------------|-------|
-| **FAIR Officer** | FAIR+CARE scoring + public reporting | @kfm-fair | Quarterly | FAIR |
-| **AI Ethics Lead** | Ethical AI deletion oversight | @kfm-ethics | Biannual | AI |
-| **Security Officer** | Manifest signing + integrity audits | @kfm-security | Monthly | Infra |
-| **Accessibility Auditor** | a11y compliance for AI UIs | @kfm-accessibility | Annual | Accessibility |
-| **Governance Auditor** | Final oversight and policy adherence | @kfm-governance | Quarterly | Global |
-
----
-
-## 🧩 Self-Audit Metadata
-
-```json
-{
-  "readme_id": "KFM-DATA-WORK-TMP-RMD-v6.0.0",
-  "validation_timestamp": "2025-10-22T20:15:00Z",
-  "validated_by": "@kfm-data",
-  "governance_reviewer": "@kfm-governance",
-  "ai_ethics_reviewer": "@kfm-ethics",
-  "focus_model": "focus-work-tmp-v3",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 80.0,
-  "checksum_policy": "sha256",
-  "retention_policy": "48-hour rolling",
-  "energy_efficiency": "AI optimized",
-  "security_signature": "pgp-sha256:<signature-id>"
-}
-```
-
----
-
-## 🧾 Version History
-
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Drift Δ | Summary |
-|----------|------|---------|-----------|-----------|-----------|-----------|----------|----------|
-| v6.0.0 | 2025-10-22 | @kfm-data | @kfm-governance | ✅ | 100% | PGP ✓ | +0.1% | Crown∞: AI learning feedback, explainability, and FAIR+CARE full integration |
-| v5.1.0 | 2025-10-20 | @kfm-data | @kfm-qa | ✅ | 99% | ✓ | +0.3% | Crown⁺⁺: AI cleanup + telemetry improvements |
-| v5.0.0 | 2025-10-17 | @kfm-architecture | @kfm-security | ✅ | 97% | ✓ | +0.4% | FAIR baseline + reproducibility alignment |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-architecture**, and **@kfm-fair**,  
-with oversight from @kfm-ai, @kfm-ethics, @kfm-security, @kfm-accessibility, and @kfm-governance.  
-Special recognition to the **FAIR Data Alliance**, **MCP Council**, and **STAC Working Group**  
-for leading the evolution of ethical, autonomous sandbox frameworks.
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.3.2 | 2025-10-28 | Updated directory layout, added AI cache integration, and FAIR+CARE lifecycle compliance. |
+| v9.2.0 | 2024-07-15 | Added unified log system and validation synchronization. |
+| v9.0.0 | 2023-01-10 | Established temporary work environment under MCP-DL v6.3 framework. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../.github/workflows/focus-validate.yml)
-[![AI Drift Monitor](https://img.shields.io/badge/AI-Drift%20Stable-success)](../../../../reports/focus-telemetry/drift.json)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-Data%20Ethics-green)](../../../../reports/fair/summary.json)
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20Signed-teal)](../../../../data/checksums/)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Verified%20%28SHAP%20%2F%20LIME%29-blueviolet)]()
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../docs/standards/ai-integrity.md)
-[![Governance Review](https://img.shields.io/badge/Governance-Autonomous%20Audit-orange)](../../../../docs/standards/governance.md)
-[![Status: Diamond⁶∞](https://img.shields.io/badge/Status-Diamond%E2%81%B6%E2%88%9E%20Crown%E2%88%9E%20Certified-brightgreen)](../../../../docs/standards/)
+**Kansas Frontier Matrix** · *Ephemeral Data × FAIR+CARE Governance × Reproducible Science*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+
 </div>
