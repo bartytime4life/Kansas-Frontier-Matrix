@@ -193,12 +193,12 @@ It is both a visualization layer and an AI reasoning interface.
 
 ```mermaid
 flowchart LR
-A[Source Data (NOAA, USGS, FEMA)] --> B[ETL Transformation (GeoTIFF/GeoJSON)]
-B --> C[Schema Validation + FAIR Audit]
-C --> D[AI/ML Inference & Focus Summaries]
-D --> E[Graph Integration (Neo4j)]
-E --> F[STAC Registration + Manifest Generation]
-F --> G[Governance Ledger + Archive]
+A[Source Data – NOAA · USGS · FEMA] --> B[ETL Transformation · GeoTIFF · GeoJSON]
+B --> C[Schema Validation and FAIR Audit]
+C --> D[AI and ML Inference · Focus Summaries]
+D --> E[Graph Integration · Neo4j]
+E --> F[STAC Registration and Manifest Generation]
+F --> G[Governance Ledger and Archive]
 ```
 
 Each stage produces machine-verifiable metadata, aligning with MCP principles of **Reproducibility, Integrity, and Transparency.**
