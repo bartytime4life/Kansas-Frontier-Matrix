@@ -105,12 +105,12 @@ data/
 
 ```mermaid
 flowchart TD
-A[Raw Data Sources] --> B[ETL Processing (Extract · Transform · Load)]
-B --> C[Validation & FAIR+CARE Compliance]
-C --> D[Processed Workspace (data/work/processed)]
-D --> E[STAC Catalog Registration]
-E --> F[AI/Focus Mode Integration]
-F --> G[Governance & Archival Storage]
+    A["Raw Data Sources"] --> B["ETL Processing (Extract - Transform - Load)"]
+    B --> C["Validation and FAIR and CARE Compliance"]
+    C --> D["Processed Workspace (data/work/processed)"]
+    D --> E["STAC Catalog Registration"]
+    E --> F["AI / Focus Mode Integration"]
+    F --> G["Governance and Archival Storage"]
 ```
 
 Each dataset’s journey is **fully documented** with versioning, schema validation, and cryptographic checksums to ensure reproducibility and accountability.
