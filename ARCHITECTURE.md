@@ -47,15 +47,15 @@ The architecture aligns with:
 
 ```mermaid
 flowchart TD
-A[Data Sources (NOAA, USGS, KHS, DASC, Archives)] --> B[ETL Pipeline · Python / GDAL]
-B --> C[Data Normalization · GeoJSON / GeoTIFF / CSV]
-C --> D[Knowledge Graph · Neo4j + CIDOC CRM / OWL-Time]
-D --> E[AI/ML Layer · NLP + GeoAI (spaCy, Transformers)]
-E --> F[API Layer · FastAPI / GraphQL]
-F --> G[Frontend · React + MapLibre Timeline Interface]
-G --> H[Focus Mode AI · Contextual Analysis & Insights]
-H --> I[Governance + FAIR+CARE Ledger]
-I --> J[Releases · STAC Catalog / Manifests / Audit Reports]
+A[Data Sources – NOAA · USGS · KHS · DASC · Archives] --> B[ETL Pipeline · Python · GDAL]
+B --> C[Data Normalization · GeoJSON · GeoTIFF · CSV]
+C --> D[Knowledge Graph · Neo4j · CIDOC CRM · OWL-Time]
+D --> E[AI and ML Layer · NLP · GeoAI · spaCy · Transformers]
+E --> F[API Layer · FastAPI · GraphQL]
+F --> G[Frontend · React · MapLibre Timeline Interface]
+G --> H[Focus Mode AI · Contextual Analysis and Insights]
+H --> I[Governance · FAIR and CARE Ledger]
+I --> J[Releases · STAC Catalog · Manifests · Audit Reports]
 ```
 
 Each subsystem is modular, containerized, and integrated through reproducible workflows orchestrated by Makefile targets and CI/CD pipelines.
