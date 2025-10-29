@@ -70,13 +70,13 @@ Kansas-Frontier-Matrix/
 
 ```mermaid
 flowchart TD
-A[Raw Data Sources (NOAA, USGS, KHS, DASC)] --> B[ETL Pipelines (Python / GDAL / spaCy)]
-B --> C[AI/ML Modules (NER · Summarization · GeoReasoning)]
-C --> D[Knowledge Graph (Neo4j + CIDOC CRM Ontology)]
+A[Raw Data Sources – NOAA · USGS · KHS · DASC] --> B[ETL Pipelines – Python · GDAL · spaCy]
+B --> C[AI and ML Modules – NER · Summarization · GeoReasoning]
+C --> D[Knowledge Graph – Neo4j · CIDOC CRM Ontology]
 D --> E[Focus Mode AI · Temporal-Spatial Correlation Engine]
-E --> F[React + MapLibre Frontend (Timeline + Map Explorer)]
-F --> G[Governance & FAIR+CARE Ledger · Audit Trails]
-G --> H[STAC Catalog + Open Data APIs]
+E --> F[React + MapLibre Frontend – Timeline and Map Explorer]
+F --> G[Governance and FAIR+CARE Ledger · Audit Trails]
+G --> H[STAC Catalog and Open Data APIs]
 ```
 
 - **ETL Pipelines:** Extract, transform, and load data into normalized geospatial formats (GeoTIFF, GeoJSON, CSV).  
