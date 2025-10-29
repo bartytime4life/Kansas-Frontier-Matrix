@@ -1,28 +1,28 @@
 ---
-title: "📦 Kansas Frontier Matrix — Raw Data Repository (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "data/raw/README.md"
+title: "🗻 Kansas Frontier Matrix — USGS Raw Data Repository (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "data/raw/usgs/README.md"
 version: "v9.3.2"
 last_updated: "2025-10-28"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../releases/v9.3.2/manifest.zip"
-data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "../../../releases/v9.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.3.2/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 📦 Kansas Frontier Matrix — **Raw Data Repository**
-`data/raw/README.md`
+# 🗻 Kansas Frontier Matrix — **USGS Raw Data Repository**
+`data/raw/usgs/README.md`
 
-**Purpose:** Contains unaltered source datasets ingested from verified scientific, governmental, and archival repositories.  
-All files within this directory serve as the immutable foundation for ETL pipelines, validation workflows, and FAIR+CARE governance processes in Kansas Frontier Matrix (KFM).
+**Purpose:** Hosts original, unaltered datasets sourced from the **U.S. Geological Survey (USGS)**.  
+Includes elevation, groundwater, and geological datasets that serve as foundational inputs for KFM’s ETL, hydrology, and hazard modeling pipelines.
 
-[![License: Varies by Source](https://img.shields.io/badge/License-Source--Specific-blue)](../../docs/contracts/data-contract-v3.json)
-[![STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Monitored-gold)](../../docs/standards/faircare-validation.md)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/architecture/repo-focus.md)
+[![USGS](https://img.shields.io/badge/Source-USGS%20Open%20Data-blue)](https://www.usgs.gov/products/data-and-tools/open-data)
+[![License: Public Domain](https://img.shields.io/badge/License-Public%20Domain-green)](../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Monitored-gold)](../../../docs/standards/faircare-validation.md)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -30,144 +30,142 @@ All files within this directory serve as the immutable foundation for ETL pipeli
 
 ## 📚 Overview
 
-The `data/raw/` directory stores **immutable copies** of all datasets used in KFM ETL pipelines.  
-Each dataset is stored exactly as received from its original source and is accompanied by metadata describing its provenance, license, and access history.  
+The `data/raw/usgs/` directory is a structured repository of **raw U.S. Geological Survey (USGS) datasets**, acquired through open data programs such as:
+- The **National Map (TNM)**  
+- **National Water Information System (NWIS)**  
+- **ScienceBase Catalog**  
 
-Raw data is never modified directly — all transformations occur within the `data/work/` layer under governed ETL and validation procedures.  
-This directory supports **data reproducibility, lineage tracking, and source transparency** under FAIR+CARE governance.
+Each dataset:
+- Is unmodified from its source.  
+- Includes metadata and checksum verification.  
+- Retains provenance for full traceability in ETL pipelines.  
+- Adheres to FAIR+CARE ethical and reproducibility standards.
+
+These files form the baseline for all USGS-derived layers in `data/work/tmp/` and `data/archive/`.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```plaintext
-data/raw/
-├── README.md                        # This file — overview of raw data storage
+data/raw/usgs/
+├── README.md                          # This file — documentation of all USGS raw datasets
 │
-├── usgs/                            # U.S. Geological Survey data
-│   ├── elevation_models/            # DEM and LiDAR datasets
-│   ├── groundwater_levels/          # Aquifer observation wells
+├── elevation_models/                  # DEMs and LiDAR elevation data (terrain analysis)
+│   ├── kansas_dem_10m.tif
+│   ├── kansas_dem_30m.tif
 │   ├── metadata.json
 │   └── license.txt
 │
-├── fema/                            # FEMA National Flood Hazard Layer and disaster declarations
-│   ├── flood_zones/
-│   ├── disaster_declarations/
+├── groundwater_levels/                # Observation well data and aquifer extents
+│   ├── observation_wells.csv
+│   ├── aquifer_extent.geojson
 │   ├── metadata.json
 │   └── license.txt
 │
-├── noaa/                            # NOAA and NCEI datasets for weather and climate
-│   ├── storm_events/
-│   ├── drought_monitor/
-│   ├── temperature_anomalies/
+├── geology/                           # Lithology, formations, and faults
+│   ├── formations_ks.geojson
+│   ├── faults_ks.geojson
 │   ├── metadata.json
 │   └── license.txt
 │
-└── kgs/                             # Kansas Geological Survey and state-level geodata
-    ├── hydrology/
-    ├── wells/
-    ├── lithologic_logs/
-    ├── metadata.json
-    └── license.txt
+└── metadata.json                      # Root metadata summarizing all USGS sources
 ```
 
 ---
 
-## ⚙️ Data Governance Workflow
+## ⚙️ USGS Data Lifecycle
 
 ```mermaid
 flowchart TD
-    A["Raw Data Source (NOAA, USGS, FEMA, KGS)"] --> B["Ingestion to data/raw/"]
-    B --> C["Metadata and License Registration"]
-    C --> D["ETL Processing (data/work/tmp/)"]
-    D --> E["Validation and FAIR and CARE Review"]
-    E --> F["Archival Storage and Governance Ledger Update"]
+    A["USGS Open Data Portal (TNM, NWIS, ScienceBase)"] --> B["Automated Ingestion Pipeline"]
+    B --> C["Checksum Validation + Metadata Registration"]
+    C --> D["Storage in data/raw/usgs/"]
+    D --> E["Transformation (data/work/tmp/usgs/)"]
+    E --> F["Validation and FAIR and CARE Certification"]
 ```
 
-### Process Summary:
-1. **Ingestion:** Datasets fetched directly from verified APIs or FTP endpoints.  
-2. **Registration:** Metadata, checksum, and source license recorded in `metadata.json`.  
-3. **ETL Transformation:** Processing conducted under reproducible scripts in `/src/pipelines/etl/`.  
-4. **Validation:** Schema and FAIR+CARE conformance validated automatically.  
-5. **Governance Logging:** Provenance recorded in `data/reports/audit/data_provenance_ledger.json`.
+### Summary:
+1. **Ingestion:** Datasets retrieved via official USGS APIs, S3 buckets, or FTP.  
+2. **Metadata Registration:** Each dataset includes `metadata.json` capturing provenance and license.  
+3. **Checksum Validation:** All files hashed via SHA-256 for immutability assurance.  
+4. **Storage:** Raw files preserved under `data/raw/usgs/` with no alteration.  
+5. **Transformation:** Reprocessed into KFM schemas and stored in `data/work/tmp/usgs/`.
 
 ---
 
-## 🧩 Metadata Standards
+## 🧩 Example Root Metadata Record
 
-All raw datasets include a companion metadata file conforming to **STAC 1.0** and **DCAT 3.0** specifications.
-
-### Example `metadata.json`
 ```json
 {
-  "id": "noaa_storm_events_2025",
-  "title": "NOAA Storm Events Database (Kansas)",
-  "description": "Official NOAA dataset of severe weather events affecting Kansas counties.",
-  "source_url": "https://www.ncdc.noaa.gov/stormevents/",
-  "provider": "NOAA National Centers for Environmental Information",
+  "id": "usgs_repository_kansas",
+  "title": "USGS Open Data for Kansas Frontier Matrix",
+  "description": "Comprehensive collection of unmodified U.S. Geological Survey datasets (elevation, groundwater, geology) integrated into the Kansas Frontier Matrix system.",
+  "provider": "U.S. Geological Survey (USGS)",
   "license": "Public Domain",
-  "checksum": "sha256:a2d5efc392b5c65d9b0eab8a55e334e13e456b0d...",
-  "spatial_extent": [-102.05, 36.99, -94.61, 40.00],
-  "temporal_extent": ["1950-01-01", "2025-12-31"]
+  "datasets": [
+    {"id": "usgs_kansas_dem_10m", "path": "elevation_models/kansas_dem_10m.tif"},
+    {"id": "usgs_groundwater_levels_2025", "path": "groundwater_levels/observation_wells.csv"},
+    {"id": "usgs_formations_ks", "path": "geology/formations_ks.geojson"}
+  ],
+  "checksum_manifest": "releases/v9.3.2/manifest.zip",
+  "governance_record": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## ⚖️ Licensing Overview
+## ⚖️ License and Attribution
 
-| Source | License | Usage Notes |
-|---------|----------|-------------|
-| **NOAA** | Public Domain (U.S. Government Works) | Free for all research and educational use. |
-| **USGS** | Public Domain / USGS Data Policy | Attribution required for derivative works. |
-| **FEMA** | Open Data (Creative Commons 0 / Public Domain) | Use permitted with citation. |
-| **KGS** | CC-BY 4.0 | Attribution required to Kansas Geological Survey. |
+| Dataset Category | License | Source URL | Attribution |
+|------------------|----------|-------------|-------------|
+| Elevation Models | Public Domain | [USGS National Map](https://www.usgs.gov/the-national-map) | U.S. Geological Survey |
+| Groundwater Data | Public Domain | [NWIS Database](https://waterdata.usgs.gov/nwis) | U.S. Geological Survey |
+| Geology | Public Domain | [USGS ScienceBase Catalog](https://www.sciencebase.gov/catalog/) | U.S. Geological Survey |
 
-Each subdirectory includes a `license.txt` specifying applicable usage restrictions.
-
----
-
-## 🔍 Data Provenance & Integrity
-
-- **Checksum Verification:** SHA-256 hashes generated at ingestion and logged in `releases/v9.3.2/manifest.zip`.  
-- **Provenance Ledger:** Each file linked to governance record in `data/reports/audit/data_provenance_ledger.json`.  
-- **Version Control:** Data sources versioned via tag references (e.g., `noaa_2025Q3`, `usgs_2024H2`).  
-- **Access Logs:** Ingestion logs retained under `data/reports/lineage/etl_job_history.json`.
+> All data in this directory are U.S. Government works and are in the **public domain** unless otherwise stated.
 
 ---
 
-## 🧠 FAIR+CARE Compliance for Raw Data
+## 🧠 FAIR+CARE Governance
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Each dataset indexed with unique ID in STAC catalog. |
-| **Accessible** | Stored in open, non-proprietary formats. |
-| **Interoperable** | Metadata adheres to STAC/DCAT standards. |
-| **Reusable** | Includes license, checksum, and provenance metadata. |
-| **Collective Benefit** | Promotes transparent access to foundational datasets. |
-| **Authority to Control** | Source organizations acknowledged and preserved. |
-| **Responsibility** | Ingestion validated under ethical and technical governance. |
-| **Ethics** | No sensitive or restricted data stored without permission. |
+| **Findable** | Indexed in STAC with globally unique identifiers. |
+| **Accessible** | Stored in open GeoJSON, CSV, and GeoTIFF formats. |
+| **Interoperable** | Metadata schema aligns with STAC 1.0 and DCAT 3.0. |
+| **Reusable** | Includes provenance, checksum, and licensing. |
+| **Collective Benefit** | Supports open environmental and scientific research. |
+| **Authority to Control** | Attribution to USGS as authoritative source. |
+| **Responsibility** | Verified accuracy and validation through governance workflows. |
+| **Ethics** | Publicly accessible; no sensitive or restricted content. |
+
+Governance reports linked to:
+- `data/reports/audit/data_provenance_ledger.json`  
+- `data/reports/fair/data_fair_summary.json`  
+- `data/reports/validation/stac_validation_report.json`
 
 ---
 
-## ⚙️ Related Workflows
+## 🔍 Governance and Validation Integration
 
-| Workflow | Function | Output |
-|-----------|-----------|---------|
-| `.github/workflows/etl-ingest.yml` | Automates raw data ingestion | `data/raw/*/metadata.json` |
-| `.github/workflows/stac-validate.yml` | Validates STAC and schema metadata | `data/reports/validation/stac_validation_report.json` |
-| `.github/workflows/governance-ledger.yml` | Logs ingestion provenance and checksum | `data/reports/audit/data_provenance_ledger.json` |
+| File | Function |
+|------|-----------|
+| `metadata.json` | Summarizes datasets and provenance. |
+| `license.txt` | Specifies U.S. Public Domain policy for USGS datasets. |
+| `data/reports/audit/data_provenance_ledger.json` | Logs ingestion, validation, and checksums. |
+| `data/reports/fair/data_care_assessment.json` | Records FAIR+CARE audit results. |
+| `releases/v9.3.2/manifest.zip` | Contains checksum records for all raw USGS datasets. |
 
 ---
 
-## 🧾 Citation Example
+## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Kansas Raw Data Repository (v9.3.2).
-Unaltered foundational datasets ingested from NOAA, USGS, FEMA, and KGS under FAIR+CARE governance.
-Available at: https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/data/raw
-License: Source-specific (see metadata and license files).
+Kansas Frontier Matrix (2025). USGS Raw Data Repository (v9.3.2).
+Collection of unaltered datasets from the U.S. Geological Survey, including elevation, groundwater, and geology data.
+Available at: https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/data/raw/usgs
+License: Public Domain (USGS Open Data Policy)
 ```
 
 ---
@@ -176,15 +174,15 @@ License: Source-specific (see metadata and license files).
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Added new NOAA and FEMA datasets; validated checksum and metadata schema. |
-| v9.2.0 | 2024-07-15 | Introduced KGS lithologic and hydrology datasets. |
-| v9.0.0 | 2023-01-10 | Established base raw data structure for ETL pipelines. |
+| v9.3.2 | 2025-10-28 | Added updated LiDAR DEM and aquifer datasets; metadata harmonized with STAC 1.0. |
+| v9.2.0 | 2024-07-15 | Introduced USGS lithologic and groundwater layers. |
+| v9.0.0 | 2023-01-10 | Established initial USGS raw data repository with governance integration. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Raw Data × Provenance × FAIR+CARE Transparency*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../docs/) • [⚖️ Governance Ledger](../../docs/standards/governance/)
+**Kansas Frontier Matrix** · *Geoscience × FAIR+CARE × Open Data Integrity*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
 
 </div>
