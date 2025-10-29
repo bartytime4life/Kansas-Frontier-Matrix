@@ -1,236 +1,177 @@
 ---
-title: "🚧 Kansas Frontier Matrix — Staging Directory (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📦 Kansas Frontier Matrix — Staging Data Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/README.md"
-version: "v9.0.0"
-last_updated: "2025-10-23"
+version: "v9.3.2"
+last_updated: "2025-10-28"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.0.0/sbom.spdx.json"
-manifest_ref: "releases/v9.0.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.0.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-staging-v13.json"
-json_export: "releases/v9.0.0/work-staging.meta.json"
-validation_reports: [
-  "reports/self-validation/work-staging-validation.json",
-  "reports/fair/staging_summary.json",
-  "reports/audit/ai_staging_ledger.json"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-STAGING-RMD-v9.0.0"
-maintainers: ["@kfm-data", "@kfm-architecture", "@kfm-ai"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-fair"]
-reviewed_by: ["@kfm-ethics", "@kfm-accessibility", "@kfm-architecture"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Data Validation & Governance Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "STAC 1.0.0", "COG", "NetCDF CF", "AI-Coherence", "Blockchain Provenance", "ISO 50001", "ISO 14064"]
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · AI Explainable · Sustainable · Autonomous"
-focus_validation: "true"
-tags: ["staging", "etl", "validation", "qa", "checksum", "ai", "ledger", "fair", "sustainability"]
+sbom_ref: "../../../releases/v9.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.3.2/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🚧 Kansas Frontier Matrix — **Staging Directory (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)**  
-`data/work/staging/`
+# 📦 Kansas Frontier Matrix — **Staging Data Workspace**
+`data/work/staging/README.md`
 
-**Mission:** Act as the **central data governance bridge** between ETL processing and final publication —  
-ensuring reproducibility, explainability, and FAIR+CARE+ISO-verified validation for every dataset within the **Kansas Frontier Matrix (KFM)**.
+**Purpose:** Serves as the controlled workspace for intermediate, pre-publication datasets awaiting validation, normalization, and FAIR+CARE certification.  
+This layer bridges raw data ingestion and fully processed outputs, ensuring ethical, reproducible, and schema-compliant data flow within Kansas Frontier Matrix (KFM).
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Certified-green)](../../reports/fair/staging_summary.json)
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Sustainable%20Data%20Ops-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)](../../data/checksums/)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Staging%20Governance%20Compliant-gold)](../../../docs/standards/faircare-validation.md)
+[![License: Internal Workspace](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey)](../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The staging directory is the **governed transition zone** between ETL and production data —  
-a cognitive checkpoint where checksum verification, metadata audits, and AI explainability metrics  
-ensure that no dataset proceeds to publication without verifiable lineage and ethical validation.
+The `data/work/staging/` directory is the **intermediate workspace** where all datasets pass through structured transformation and validation processes before being promoted to `data/work/processed/`.  
 
-> *“Every dataset’s final breath before permanence is a moment of reflection — and audit.”*
+This workspace supports:
+- Schema normalization and data harmonization across domains.  
+- FAIR+CARE metadata injection and ethical review pre-certification.  
+- Validation of STAC/DCAT compatibility and checksum consistency.  
+- Manual quality assurance and cross-referencing against external sources.  
+
+Datasets in this layer are versioned, timestamped, and linked to both the **ETL logs** (`data/work/logs/etl/`) and the **governance ledger** (`data/reports/audit/data_provenance_ledger.json`).
 
 ---
 
-## 🧩 Cognitive Governance Flow
+## 🗂️ Directory Layout
+
+```plaintext
+data/work/staging/
+├── README.md                           # This file — overview of staging workspace
+│
+├── tabular/                            # Intermediate tabular datasets (CSV, Parquet)
+│   ├── tmp/                            # Temporary working directory for tabular ETL
+│   │   ├── intake/                     # Intake pipeline temporary workspace
+│   │   ├── validation/                 # Validation reports and metadata checks
+│   │   └── logs/                       # Pipeline execution and governance logs
+│   └── normalized/                     # Harmonized tabular data ready for validation
+│
+├── spatial/                            # Geospatial datasets pre-validation (GeoJSON, GeoParquet)
+│   ├── tmp/                            # Temporary staging for spatial data transformation
+│   ├── validation/                     # STAC and schema conformance testing
+│   └── logs/                           # ETL and schema audit logs
+│
+└── metadata/                           # Metadata harmonization workspace
+    ├── tmp/                            # Transient metadata conversion artifacts
+    ├── validation/                     # FAIR+CARE and schema validation reports
+    └── logs/                           # Metadata governance and audit trail
+```
+
+---
+
+## ⚙️ Staging Workflow
 
 ```mermaid
-graph TD
-A[Staging Directory] --> B[AI Focus Mode · Explainability Validation]
-B --> C[FAIR+CARE Council]
-B --> D[AI Ethics & Energy Review Board]
-C --> E[Governance Ledger + Blockchain Verification]
-E --> F[Human Oversight Council]
-F --> G[Neo4j Knowledge Graph Integration]
-G --> H[AI Model Retraining · QA Enhancement]
+flowchart TD
+    A["Raw Data (data/raw/*)"] --> B["ETL Transformation (src/pipelines/etl/*)"]
+    B --> C["Normalization and Validation (data/work/staging/)"]
+    C --> D["FAIR+CARE Certification (data/work/logs/validation/)"]
+    D --> E["Processed Data (data/work/processed/)"]
+    E --> F["STAC Catalog and Governance Ledger Update"]
 ```
 
----
-
-## 🧮 Semantic Lineage Matrix
-
-| Field | FAIR Dimension | STAC Property | ISO Reference | Purpose |
-|:--|:--|:--|:--|:--|
-| `staged_id` | Findable | `id` | ISO 19115 | Unique artifact identifier |
-| `validation_status` | Accessible | `properties.status` | ISO 19157 | Quality assurance state |
-| `focus_score` | Provenance | `properties.quality` | MCP-DL | AI explainability metric |
-| `checksum` | Provenance | `asset.hash` | FAIR/MCP | Integrity validation |
-| `carbon_gco2e` | CARE | `properties.carbon` | ISO 14064 | Sustainability audit metric |
+### Workflow Description:
+1. **Ingestion:** Data retrieved from `data/raw/` for transformation.  
+2. **Normalization:** Structural alignment and metadata harmonization.  
+3. **Validation:** Schema, FAIR+CARE, and checksum verification.  
+4. **Promotion:** Certified datasets moved to `data/work/processed/`.  
+5. **Governance:** Provenance logs updated with checksum and version metadata.  
 
 ---
 
-## 🧠 AI Explainability Snapshot
+## 🧩 Example Staging Metadata Record
 
 ```json
 {
-  "model": "focus-staging-v3",
-  "method": "SHAP",
-  "key_features": [
-    {"parameter": "checksum_valid", "influence": 0.27},
-    {"parameter": "schema_alignment", "influence": 0.18},
-    {"parameter": "metadata_completeness", "influence": 0.15}
-  ],
-  "explanation_score": 0.987
-}
-```
-
-> Logged to `/reports/ai/staging_explainability.json` and anchored to the AI Ledger blockchain.
-
----
-
-## 🧾 Blockchain Provenance Record
-
-```json
-{
-  "ledger_id": "staging-ledger-2025-10-23",
-  "stac_ref": "stac/staging/validation_2025_10_23.json",
-  "checksum_sha256": "b8f12cae3f...",
-  "ai_model": "focus-staging-v3",
-  "ai_score": 0.987,
-  "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-23T00:00:00Z"
+  "id": "staging_tabular_hazards_v9.3.2",
+  "dataset_type": "tabular",
+  "source": "data/raw/fema/disaster_declarations/disaster_declarations_2025.csv",
+  "pipeline": "src/pipelines/etl/hazards_pipeline.py",
+  "created": "2025-10-28T15:00:00Z",
+  "records_processed": 54321,
+  "validation_status": "pending",
+  "checksum": "sha256:0a87c2fbbfa9e23b8bcb3d2a9f045fd4225b731f...",
+  "fairstatus": "in_review",
+  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## 🌱 Sustainability & ISO Metrics
+## 🧠 FAIR+CARE Governance
 
-| Metric | Standard | Value | Verified By |
-|:--|:--|:--|:--|
-| **Energy Use (Wh/run)** | ISO 50001 | 20.6 | @kfm-security |
-| **Carbon Output (gCO₂e/run)** | ISO 14064 | 25.4 | @kfm-fair |
-| **Renewable Offset** | RE100 | 100% | @kfm-governance |
-| **Ethical Compliance** | MCP Ethics Charter | 100% | @kfm-ethics |
+| Principle | Implementation in Staging Layer |
+|------------|--------------------------------|
+| **Findable** | Datasets indexed with version, checksum, and dataset type. |
+| **Accessible** | Internal-only access for validators and maintainers. |
+| **Interoperable** | Open formats (CSV, JSON, GeoJSON, Parquet) and standardized schema. |
+| **Reusable** | Rich metadata and validation history ensure reproducibility. |
+| **Collective Benefit** | Ensures ethical, high-quality data publication. |
+| **Authority to Control** | FAIR+CARE Council oversees data movement approvals. |
+| **Responsibility** | Staging metadata automatically logged to governance ledger. |
+| **Ethics** | No sensitive data retained; all data subject to FAIR+CARE review. |
 
----
-
-## 🧬 Governance Ledger Chain
-
-| Ledger | Maintainer | Verification | Output | Frequency |
-|:--|:--|:--|:--|:--|
-| **Data Ledger** | @kfm-security | Checksum validation | `/data/checksums/staging_logs.json` | Continuous |
-| **AI Ledger** | @kfm-ai | Explainability + drift audit | `/reports/audit/ai_staging_ledger.json` | Per run |
-| **Ethics Ledger** | @kfm-ethics | Bias + sustainability review | `/reports/audit/staging_ethics.json` | Biweekly |
-| **Governance Ledger** | @kfm-governance | FAIR+CARE certification | `/reports/fair/staging_summary.json` | Quarterly |
+Compliance reports stored in:  
+- `data/reports/fair/data_care_assessment.json`  
+- `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## 🧩 Governance Drift Dashboard
+## ⚖️ Governance Integration
 
-| Quarter | AI Integrity | FAIR Drift Δ | Ethics Δ | Governance Action |
-|:--|:--|:--|:--|:--|
-| Q2 2025 | 98.7 | +0.4 | +0.2 | Retrain AI validator |
-| Q3 2025 | 99.5 | -0.3 | +0.1 | Manual FAIR recheck |
-| Q4 2025 | 100 | -0.1 | 0.0 | Certified Stable |
+| Record | Purpose |
+|---------|----------|
+| `data/reports/audit/data_provenance_ledger.json` | Logs staging activity and dataset promotion approvals. |
+| `data/reports/fair/data_care_assessment.json` | FAIR+CARE validation metrics. |
+| `data/reports/validation/schema_validation_summary.json` | Schema conformance validation reports. |
+| `releases/v9.3.2/manifest.zip` | Global checksum registry of staged datasets. |
 
 ---
 
-## 🧩 Neo4j Governance Ontology
+## 🧾 Data Retention & Promotion Policy
 
-```cypher
-(:StagedDataset)-[:VALIDATED_BY]->(:ValidationEvent)
-(:ValidationEvent)-[:EVALUATED_BY]->(:AIModel {name:'focus-staging-v3'})
-(:AIModel)-[:CERTIFIED_BY]->(:GovernanceCouncil)
-(:GovernanceCouncil)-[:LOGGED_INTO]->(:BlockchainLedger)
+| Staging Category | Retention Duration | Promotion Policy |
+|-------------------|--------------------|------------------|
+| Tabular TMP | 14 days | Promoted upon validation success. |
+| Spatial TMP | 30 days | Retained until STAC validation passes. |
+| Metadata TMP | 7 days | Rebuilt during schema updates. |
+| Validation Reports | 180 days | Retained for FAIR+CARE audit. |
+
+Automation workflows (`staging_cleanup.yml` and `validation_sync.yml`) handle purge and promotion tasks.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Staging Data Workspace (v9.3.2).
+Intermediate transformation and validation workspace supporting FAIR+CARE certification and reproducible data flow.
+Restricted to internal ETL, QA, and governance operations.
 ```
 
 ---
 
-## 📈 Energy & QA Trend Visualization
+## 🧾 Version Notes
 
-```mermaid
-graph LR
-Q2_2025["Energy 23.1 Wh · Carbon 28 gCO₂e"] --> Q3_2025["21.4 Wh · 26 gCO₂e"]
-Q3_2025 --> Q4_2025["20.6 Wh · 25 gCO₂e · 100% Renewable Energy"]
-```
-
----
-
-## 🧩 Self-Audit Metadata
-
-```json
-{
-  "readme_id": "KFM-DATA-WORK-STAGING-RMD-v9.0.0",
-  "validation_timestamp": "2025-10-23T00:00:00Z",
-  "validated_by": "@kfm-data",
-  "ai_reviewer": "@kfm-ai",
-  "governance_reviewer": "@kfm-governance",
-  "focus_model": "focus-staging-v3",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 100.0,
-  "explainability_score": 0.987,
-  "energy_efficiency": "20.6 Wh/run (ISO 50001)",
-  "carbon_intensity": "25.4 gCO₂e/run (ISO 14064)",
-  "ethics_compliance": "FAIR+CARE aligned",
-  "ledger_hash": "b8f12cae3f...",
-  "governance_cycle": "Q4 2025",
-  "security_signature": "pgp-sha256:<signature-id>"
-}
-```
-
----
-
-## 🧾 Version History
-
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Summary |
-|:--|:--|:--|:--|:--|:--|:--|:--|
-| v9.0.0 | 2025-10-23 | @kfm-data | @kfm-governance | ✅ | 100% | Blockchain ✓ | Crown∞Ω Ultimate: AI explainability + ISO alignment |
-| v8.0.0 | 2025-10-20 | @kfm-architecture | @kfm-fair | ✅ | 99% | ✓ | FAIR+CARE integration |
-| v7.0.0 | 2025-10-16 | @kfm-data | @kfm-security | ✅ | 98% | ✓ | FAIR baseline compliance |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-architecture**, and **@kfm-fair**,  
-with oversight from **@kfm-ai**, **@kfm-ethics**, and **@kfm-governance**.  
-Special thanks to **FAIR Data Alliance**, **STAC Council**, **MCP Council**, and **ISO Standards Group**  
-for enabling reproducible, transparent, and AI-verified data governance.
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.3.2 | 2025-10-28 | Unified staging structure for tabular, spatial, and metadata workflows under FAIR+CARE governance. |
+| v9.2.0 | 2024-07-15 | Added metadata harmonization submodule and checksum verification. |
+| v9.0.0 | 2023-01-10 | Established staging workspace for intermediate ETL and validation steps. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Certified-green)](../../reports/fair/staging_summary.json)
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Sustainable%20Data%20Ops-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)](../../data/checksums/)
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../docs/standards/ai-integrity.md)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+**Kansas Frontier Matrix** · *Data Quality × FAIR+CARE Ethics × Reproducible Staging Pipelines*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+
 </div>
