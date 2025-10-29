@@ -169,13 +169,13 @@ GET /api/ai/summary?topic=floods
 
 ```mermaid
 flowchart TD
-A[Entity Selected (Person / Event / Place)] --> B[Graph Query · Neo4j]
+A[Entity Selected – Person · Event · Place] --> B[Graph Query · Neo4j]
 B --> C[AI Context Summarization · Transformers]
 C --> D[Spatial Contextualization · GeoJSON Mapping]
 D --> E[Temporal Alignment · Timeline Range]
-E --> F[UI Rendering · Map + Timeline Synchronization]
+E --> F[UI Rendering · Map and Timeline Synchronization]
 F --> G[Focus Mode Insights Dashboard]
-G --> H[Feedback Loop · Drift Detection + Retraining]
+G --> H[Feedback Loop · Drift Detection and Retraining]
 ```
 
 **Purpose:**  
