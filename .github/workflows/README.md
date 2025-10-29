@@ -81,14 +81,14 @@ All actions are executed through GitHub Actions and produce logs under the `/rep
 
 ```mermaid
 flowchart TD
-A[Commit / PR / Scheduled Task] --> B[Pre-Commit Validation]
-B --> C[Build & Site Deploy (site.yml)]
-B --> D[STAC Validation (stac-validate.yml)]
-C --> E[FAIR+CARE Audit (faircare-validate.yml)]
-D --> F[Governance Ledger (governance-ledger.yml)]
-E --> G[Security Scans (codeql.yml / trivy.yml)]
-F --> H[Artifact + Telemetry Upload]
-H --> I[Focus Mode Dashboard + Governance Ledger]
+A[Commit · PR · Scheduled Task] --> B[Pre-Commit Validation]
+B --> C[Build and Site Deploy – site.yml]
+B --> D[STAC Validation – stac-validate.yml]
+C --> E[FAIR and CARE Audit – faircare-validate.yml]
+D --> F[Governance Ledger – governance-ledger.yml]
+E --> G[Security Scans – codeql.yml · trivy.yml]
+F --> H[Artifact and Telemetry Upload]
+H --> I[Focus Mode Dashboard and Governance Ledger]
 ```
 
 Each workflow feeds its results into the **FAIR+CARE governance pipeline**, linking artifacts to the Focus Mode telemetry system for traceability and auditability.
