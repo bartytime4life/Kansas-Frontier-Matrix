@@ -1,7 +1,7 @@
 ---
 title: "🧩 Kansas Frontier Matrix — GitHub Configuration & CI/CD Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
-version: "v9.3.2"
+version: "v9.3.3"
 last_updated: "2025-10-28"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
@@ -127,9 +127,10 @@ Defines structured GitHub issue forms for consistency and traceability:
 - `bug_report.yml` — For technical or validation-related bugs  
 - `feature_request.yml` — For enhancements or new data integrations  
 - `governance_review.yml` — For ethical or FAIR+CARE-related discussions  
-- `data_submission.yml` — For new dataset ingestion requests  
+- `data_request.yaml` — For requesting integration of new datasets or APIs  
+- `data_submission.yml` — For submitting new datasets or ingestion requests  
 
-Each template includes **metadata fields** for dataset provenance, FAIR tags, and validation checklists.
+Each template includes **metadata fields** for dataset provenance, FAIR+CARE tags, and governance linkage.
 
 ---
 
@@ -167,6 +168,7 @@ All contributions are **automatically validated** via pre-commit hooks before me
 │   ├── bug_report.yml
 │   ├── feature_request.yml
 │   ├── governance_review.yml
+│   ├── data_request.yaml
 │   └── data_submission.yml
 ├── PULL_REQUEST_TEMPLATE/
 │   └── default.md
@@ -201,6 +203,7 @@ Each workflow produces verifiable metadata for:
 
 | Version | Date       | Author              | Summary                                           |
 |----------|------------|--------------------|---------------------------------------------------|
+| v9.3.3   | 2025-10-28 | @kfm-architecture  | Added `data_request.yaml` to issue templates listing and directory layout. |
 | v9.3.2   | 2025-10-28 | @kfm-architecture  | Unified CI/CD and FAIR+CARE automation under MCP. |
 | v9.3.1   | 2025-10-27 | @bartytime4life    | Added governance-ledger and faircare-validation.  |
 | v9.3.0   | 2025-10-26 | @kfm-etl-ops       | Initialized GitHub configuration documentation.   |
@@ -210,6 +213,6 @@ Each workflow produces verifiable metadata for:
 <div align="center">
 
 **Kansas Frontier Matrix** · *Automation × Governance × Reproducibility*  
-[🔗 Project Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [🛰️ Governance Ledger](../docs/standards/governance/)
+[🔗 Project Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
 
 </div>
