@@ -20,7 +20,7 @@ body:
     id: description
     attributes:
       label: Issue Description
-      description: "Explain what is wrong. Example: “Hazards ETL pipeline fails STAC validation for flood dataset (v9.5.0).”"
+      description: "Explain what is wrong. Example: 'Hazards ETL pipeline fails STAC validation for flood dataset (v9.5.0).' "
       placeholder: "What happened?"
     validations:
       required: true
@@ -149,7 +149,10 @@ body:
     attributes:
       label: Findable
       description: "Impacts metadata indexing or STAC discoverability?"
-      options: ["None", "Moderate", "High"]
+      options:
+        - "No Impact"
+        - "Moderate"
+        - "High"
     validations:
       required: true
 
@@ -158,7 +161,10 @@ body:
     attributes:
       label: Accessible
       description: "Reduces data/API accessibility or service availability?"
-      options: ["None", "Moderate", "High"]
+      options:
+        - "No Impact"
+        - "Moderate"
+        - "High"
     validations:
       required: true
 
@@ -167,7 +173,10 @@ body:
     attributes:
       label: Interoperable
       description: "Breaks schema or ontology compatibility?"
-      options: ["None", "Moderate", "High"]
+      options:
+        - "No Impact"
+        - "Moderate"
+        - "High"
     validations:
       required: true
 
@@ -176,7 +185,10 @@ body:
     attributes:
       label: Reusable
       description: "Affects dataset, model, or workflow reusability?"
-      options: ["None", "Moderate", "High"]
+      options:
+        - "No Impact"
+        - "Moderate"
+        - "High"
     validations:
       required: true
 
@@ -185,7 +197,10 @@ body:
     attributes:
       label: Collective Benefit
       description: "Limits openness or public utility?"
-      options: ["None", "Moderate", "High"]
+      options:
+        - "No Impact"
+        - "Moderate"
+        - "High"
     validations:
       required: true
 
@@ -194,7 +209,10 @@ body:
     attributes:
       label: Ethical Oversight
       description: "Introduces governance or CARE concerns?"
-      options: ["None", "Moderate", "High"]
+      options:
+        - "No Impact"
+        - "Moderate"
+        - "High"
     validations:
       required: true
 
@@ -217,16 +235,12 @@ body:
     validations:
       required: false
 
-  - type: markdown
-    attributes:
-      value: "## 🧾 Proposed Resolution / Next Steps"
-
   - type: textarea
     id: resolution
     attributes:
-      label: Proposed Resolution
+      label: Proposed Resolution / Next Steps
       description: "Provide suggestions, hypotheses, or immediate fixes."
-      placeholder: "e.g., Update STAC `license` property in all flood dataset items and re-run validator."
+      placeholder: "e.g., Update STAC 'license' field in all items and re-run validator."
     validations:
       required: false
 
@@ -249,9 +263,6 @@ body:
         - **AI/ML Governance:** @kfm-ai-lab — Validate AI/Focus Mode integrity  
         - **Repository Maintainer:** @bartytime4life — Approve and merge PR  
 
-  - type: markdown
-    attributes:
-      value: |
         > ⚠️ **Automation Notice**  
         > Submitting this bug will trigger:
         > - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)
