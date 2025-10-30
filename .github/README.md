@@ -1,29 +1,31 @@
 ---
 title: "🧩 Kansas Frontier Matrix — GitHub Configuration & CI/CD Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
-version: "v9.3.3"
-last_updated: "2025-10-28"
+version: "v9.5.0"
+last_updated: "2025-10-30"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../releases/v9.3.2/manifest.zip"
+sbom_ref: "../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — **GitHub Configuration & CI/CD Overview**
+# 🧩 Kansas Frontier Matrix — **GitHub Configuration & CI/CD Overview**  
 `.github/README.md`
 
-**Purpose:** Provides documentation for GitHub Actions, community standards, and repository automation within the Kansas Frontier Matrix monorepo.  
-Ensures continuous integration, FAIR+CARE compliance validation, automated documentation generation, and ethical AI governance enforcement per **MCP-DL v6.3**.
+**Purpose:** Documentation for GitHub Actions, community standards, and automation in the KFM monorepo.  
+Guarantees continuous integration, **FAIR+CARE** validation, automated docs checks, and ethical AI governance per **MCP-DL v6.4.3 Diamond⁹ Ω**.
 
 [![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./workflows/site.yml)
 [![STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./workflows/stac-validate.yml)
+[![DCAT Export](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/dcat-export.yml/badge.svg)](./workflows/dcat-export.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./workflows/codeql.yml)
-[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](./workflows/pre-commit.yml)
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./workflows/trivy.yml)
+[![Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](./workflows/pre-commit.yml)
+[![Docs Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs-validate.yml/badge.svg)](./workflows/docs-validate.yml)
 [![FAIR+CARE Ledger](https://img.shields.io/badge/FAIR%2BCARE-Ledger%20Verified-gold)](../docs/standards/faircare-validation.md)
 
 </div>
@@ -32,122 +34,131 @@ Ensures continuous integration, FAIR+CARE compliance validation, automated docum
 
 ## 📚 Overview
 
-The `.github/` directory defines **automation, governance, and community configuration** for the Kansas Frontier Matrix repository.  
-It integrates CI/CD pipelines, automated FAIR+CARE validation, and contributor experience management under the **Master Coder Protocol (MCP-DL)**.
+The `.github/` directory defines **automation, governance, and community configuration** for KFM.
 
-This directory governs:
-- GitHub Actions workflows (CI/CD, build, validation, AI governance)
-- Issue and pull request templates  
-- Community health files (CODEOWNERS, CONTRIBUTING, SECURITY, SUPPORT)
-- FAIR+CARE audit integration  
-- Automated STAC and schema validation
+It governs:
+- **GitHub Actions** (CI/CD, build, validation, governance)
+- **Issue & Pull Request templates**, **CODEOWNERS**, **CONTRIBUTING**, **SECURITY**, **SUPPORT**
+- **FAIR+CARE audits**, **STAC/DCAT** validation, **docs style** and **link checks**
+- **Provenance** (checksums, SBOM) and **telemetry** publication for Focus Mode
 
-All configurations are YAML-based, following MCP and Open Reproducible Science (WORCS) principles for transparency and traceability.
+All settings are YAML-based for transparent, reproducible operations under **MCP-DL**.
 
 ---
 
 ## 🧠 Key Workflows
 
-### 🧱 1. Build & Deployment — `site.yml`
-Automates frontend build and deployment of the MapLibre + React web app and documentation portal.
+### 🧱 1) Build & Deployment — `site.yml`
+Automates front-end build (React + MapLibre), docs site generation, and deployment (gh-pages or Netlify).
 
-**Includes:**
-- Node and Python dependency setup  
-- React web build pipeline  
-- Static site deployment (GitHub Pages or Netlify)  
-- Artifact retention for validation reports  
-
+**Pipeline**
 ```mermaid
 flowchart TD
-A[Commit to main branch] --> B[Run Tests + Lint]
-B --> C[Build Frontend + Docs]
-C --> D[Run FAIR+CARE Validation]
-D --> E[Deploy to gh-pages + Trigger Webhooks]
+  A[Commit / PR] --> B[Install · Lint · Test]
+  B --> C[Build Frontend + Docs]
+  C --> D[FAIR+CARE & Schema Validation]
+  D --> E[Publish Artifacts + Deploy gh-pages]
 ```
 
----
-
-### 🧪 2. STAC Validation — `stac-validate.yml`
-Ensures every geospatial dataset adheres to the **SpatioTemporal Asset Catalog (STAC 1.0)** and internal metadata schema.
-
-**Checks:**
-- STAC item syntax and schema versioning  
-- Temporal and spatial metadata completeness  
-- JSON schema validation via `stac-validator`  
-- Governance linkage confirmation  
-
-> **Output:** Logs stored at `reports/self-validation/` and referenced in the FAIR+CARE audit trail.
+Artifacts retained: `reports/**`, `coverage/**`, `dist/**`.
 
 ---
 
-### 🔍 3. Code Quality & Security — `codeql.yml` and `trivy.yml`
-Performs automated scanning for vulnerabilities and dependency issues.
+### 🧪 2) STAC Validation — `stac-validate.yml`
+Validates **STAC 1.0** Items/Collections and internal JSON Schemas.
 
-| Workflow | Tool | Function |
-|-----------|------|-----------|
-| `codeql.yml` | GitHub CodeQL | Static analysis for Python, JS, YAML vulnerabilities |
-| `trivy.yml` | Aqua Security Trivy | Container, SBOM, and dependency CVE scanning |
-| `pre-commit.yml` | Pre-Commit Hooks | Enforces linting, formatting, and doc compliance |
+**Checks**
+- STAC core schema & extension versions  
+- Spatial/temporal coverage presence  
+- Asset roles/media types & checksums  
+- Governance linkage (manifest + ledger entry)
 
-Outputs are stored in:
-- `reports/security/codeql_analysis.json`
-- `reports/security/trivy_scan_results.json`
+Outputs → `reports/self-validation/` (referenced by FAIR+CARE audit).
 
 ---
 
-### 🧩 4. FAIR+CARE Validation — `faircare-validate.yml`
-Runs FAIR+CARE compliance checks for datasets, code, and governance documentation.
+### 🗂️ 3) DCAT Export — `dcat-export.yml`
+Generates **DCAT 3.0 JSON-LD** feeds aligned with STAC entries for data portal interoperability.
 
-**Validation Areas:**
-- FAIR metadata completeness  
-- CARE ethical handling verification  
-- Provenance linkage in STAC & manifest files  
-- Audit logging to `reports/fair/` and `reports/audit/`  
-
-**Triggered By:**
-- Pull Requests to `main` or `release/*` branches  
-- New data or documentation submissions  
+**Steps**
+- Transform STAC → DCAT using metadata bridge  
+- Validate JSON-LD contexts  
+- Publish to `data/meta/` and attach to release assets
 
 ---
 
-### 🧠 5. Governance & Audit — `governance-ledger.yml`
-Synchronizes provenance, checksum, and ethical validation with the FAIR+CARE ledger.
+### 🔍 4) Code Quality & Security — `codeql.yml` · `trivy.yml` · `pre-commit.yml`
+| Workflow | Tool | Function | Output |
+|---|---|---|---|
+| `codeql.yml` | GitHub CodeQL | Static analysis for Python/JS/YAML | `reports/security/codeql_analysis.json` |
+| `trivy.yml` | Trivy | Container/SBOM/CVE scanning | `reports/security/trivy_scan_results.json` |
+| `pre-commit.yml` | Pre-Commit | Lint/format/secret-scan/md rules | Inline annotations + job summary |
 
-**Functions:**
-- Generates SHA256 hashes for all datasets and manifests  
-- Appends signed ledger entries to `reports/audit/ai_hazards_ledger.json`  
-- Publishes `focus-telemetry.json` for Focus Mode synchronization  
+---
+
+### 🧩 5) FAIR+CARE Validation — `faircare-validate.yml`
+Automates **FAIR** metadata checks and **CARE** ethical review hooks.
+
+**Validations**
+- FAIR fields in STAC/DCAT/README front-matter  
+- CARE flags for sensitive layers (masking/consent/notice)  
+- Provenance chains in `manifest.zip` and STAC links
+
+Logs → `reports/fair/` and `reports/audit/`.
+
+---
+
+### 🧾 6) Governance & Audit — `governance-ledger.yml`
+Maintains the immutable governance chain.
+
+**Functions**
+- SHA-256 checksum generation for datasets/manifests  
+- Append signed entries to `reports/audit/ai_hazards_ledger.json`  
+- Publish Focus Mode telemetry → `../releases/v9.5.0/focus-telemetry.json`  
+- SBOM attach → `../releases/v9.5.0/sbom.spdx.json`
+
+---
+
+### 📚 7) Docs Validation — `docs-validate.yml`
+Ensures documentation quality/compliance.
+
+**Tasks**
+- Markdown linting (style, headings, lists)  
+- **Link checker** (internal/HTTP) with retries & allowlist  
+- Front-matter metadata presence (title/path/version/refs)  
+- Mermaid syntax quick-parse (guard against render errors)
 
 ---
 
 ## 🧩 Community Configuration
 
 ### 🧰 Issue Templates — `.github/ISSUE_TEMPLATE/`
-Defines structured GitHub issue forms for consistency and traceability:
-- `bug_report.yml` — For technical or validation-related bugs  
-- `feature_request.yml` — For enhancements or new data integrations  
-- `governance_review.yml` — For ethical or FAIR+CARE-related discussions  
-- `data_request.yaml` — For requesting integration of new datasets or APIs  
-- `data_submission.yml` — For submitting new datasets or ingestion requests  
+- `bug_report.yml` — Technical defects / validation failures  
+- `feature_request.yml` — Enhancements / new features  
+- `governance_review.yml` — Ethics / FAIR+CARE questions  
+- `data_request.yaml` — Request new dataset/API integration  
+- `data_submission.yml` — Submit dataset + provenance/licensing
 
-Each template includes **metadata fields** for dataset provenance, FAIR+CARE tags, and governance linkage.
+Each form requires **provenance**, **license**, **FAIR+CARE flags**, and **owner**.
 
 ---
 
 ### 💬 Pull Request Templates — `.github/PULL_REQUEST_TEMPLATE/`
-Pull requests are structured with FAIR+CARE and MCP metadata requirements:
-- Description of purpose and context  
-- Schema and license verification fields  
-- Audit linkage (`governance_ref`, `manifest_ref`)  
-- Required checks for STAC, FAIR, and MCP compliance  
+PRs must include:
+- Purpose & scope  
+- Schema & license confirmations  
+- Links: `governance_ref`, `manifest_ref`, `sbom_ref`  
+- Required checks: STAC, DCAT, FAIR+CARE, docs-validate, security scans
 
 ---
 
-### 🧩 CODEOWNERS & CONTRIBUTING
-- **CODEOWNERS** defines maintainers for each directory (e.g., `@kfm-etl-ops` for `/data/work/`, `@kfm-architecture` for `/docs/`).  
-- **CONTRIBUTING.md** outlines MCP documentation standards, commit conventions, and FAIR+CARE expectations.  
+### 👥 CODEOWNERS & CONTRIBUTING
+- **CODEOWNERS** maps reviewers per path (e.g., `/data/**` → `@kfm-etl-ops`, `/docs/**` → `@kfm-architecture`).  
+- **CONTRIBUTING.md** codifies MCP docs-as-code, commit style, schema/versioning, and review SLAs.  
+- **SECURITY.md** details vuln reporting, embargo, and patch timelines.  
+- **SUPPORT.md** points to discussions, labels, and triage windows.
 
-All contributions are **automatically validated** via pre-commit hooks before merging.
+All contributions pass **pre-commit** and **required status checks** before merge.
 
 ---
 
@@ -159,10 +170,12 @@ All contributions are **automatically validated** via pre-commit hooks before me
 ├── workflows/
 │   ├── site.yml
 │   ├── stac-validate.yml
+│   ├── dcat-export.yml
 │   ├── codeql.yml
 │   ├── trivy.yml
 │   ├── pre-commit.yml
 │   ├── faircare-validate.yml
+│   ├── docs-validate.yml
 │   └── governance-ledger.yml
 ├── ISSUE_TEMPLATE/
 │   ├── bug_report.yml
@@ -184,29 +197,32 @@ All contributions are **automatically validated** via pre-commit hooks before me
 
 ```mermaid
 flowchart TD
-A[Pull Request / Commit] --> B[FAIR+CARE Validation]
-B --> C[Governance Ledger Update]
-C --> D[STAC + Manifest Regeneration]
-D --> E[Automated Ethics Audit]
-E --> F[CI/CD Deployment Trigger]
+  A[PR / Commit] --> B[Docs · STAC · DCAT · FAIR+CARE · Security Checks]
+  B --> C[Governance Ledger Update + Checksums + SBOM]
+  C --> D[Regenerate Catalogs & Manifests]
+  D --> E[Ethics Audit Log + Telemetry Publish]
+  E --> F[Deploy / Release]
 ```
 
-Each workflow produces verifiable metadata for:
-- FAIR+CARE compliance (`reports/fair/`)  
-- Ethics audit (`reports/audit/`)  
-- STAC and schema integrity (`data/stac/`)  
-- Focus Mode telemetry (`releases/v9.3.2/focus-telemetry.json`)
+**Emitted Metadata**
+- FAIR+CARE: `reports/fair/**`  
+- Ethics & provenance: `reports/audit/**`  
+- STAC integrity: `data/stac/**`  
+- DCAT feeds: `data/meta/**`  
+- Focus telemetry: `../releases/v9.5.0/focus-telemetry.json`  
+- Release bundle: `../releases/v9.5.0/manifest.zip`
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date       | Author              | Summary                                           |
-|----------|------------|--------------------|---------------------------------------------------|
-| v9.3.3   | 2025-10-28 | @kfm-architecture  | Added `data_request.yaml` to issue templates listing and directory layout. |
-| v9.3.2   | 2025-10-28 | @kfm-architecture  | Unified CI/CD and FAIR+CARE automation under MCP. |
-| v9.3.1   | 2025-10-27 | @bartytime4life    | Added governance-ledger and faircare-validation.  |
-| v9.3.0   | 2025-10-26 | @kfm-etl-ops       | Initialized GitHub configuration documentation.   |
+| Version | Date       | Author              | Summary |
+|---|---|---|---|
+| v9.5.0 | 2025-10-30 | @kfm-architecture | Added DCAT export & docs-validate workflows; upgraded refs to v9.5.0; tightened governance telemetry. |
+| v9.3.3 | 2025-10-28 | @kfm-architecture | Added `data_request.yaml` to templates and directory layout. |
+| v9.3.2 | 2025-10-28 | @kfm-architecture | Unified CI/CD and FAIR+CARE automation under MCP. |
+| v9.3.1 | 2025-10-27 | @bartytime4life    | Introduced governance-ledger and faircare-validation. |
+| v9.3.0 | 2025-10-26 | @kfm-etl-ops       | Initialized GitHub configuration documentation. |
 
 ---
 
