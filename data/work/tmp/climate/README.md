@@ -16,10 +16,10 @@ governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 # 🌦️ Kansas Frontier Matrix — **Climate TMP Workspace**
 `data/work/tmp/climate/README.md`
 
-**Purpose:** Temporary workspace for ingesting, processing, and validating climate datasets in the Kansas Frontier Matrix (KFM).  
-This layer supports ETL workflows for temperature anomalies, drought indices, precipitation patterns, and climate reanalysis data under FAIR+CARE governance.
+**Purpose:** Temporary FAIR+CARE-governed workspace for ingesting, transforming, validating, and exporting climate-related datasets in the Kansas Frontier Matrix (KFM).  
+Supports ETL, reanalysis, and AI-driven workflows for temperature, drought, and precipitation datasets from NOAA, NIDIS, and affiliated open data providers.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Climate%20Data%20Audited-gold)](../../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Climate%20Integrity%20Audited-gold)](../../../../docs/standards/faircare-validation.md)
 [![License: Internal Workspace](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey)](../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)
 
@@ -29,16 +29,16 @@ This layer supports ETL workflows for temperature anomalies, drought indices, pr
 
 ## 📚 Overview
 
-The `data/work/tmp/climate/` directory functions as a **transient ETL environment** for all climate and meteorological data processed within the Kansas Frontier Matrix (KFM).  
-It hosts intermediate datasets, model outputs, and validation reports for NOAA, NIDIS, and other open climate data sources prior to integration into the staging and processed layers.
+The `data/work/tmp/climate/` directory functions as the **transient processing layer** for climate data in the KFM ecosystem.  
+It is the first step after data ingestion, handling cleaning, transformation, FAIR+CARE pre-validation, and export preparation before datasets are promoted to the staging layer.
 
-### Key Responsibilities:
-- Ingest raw climate and weather datasets (temperature, drought, precipitation).  
-- Perform normalization, aggregation, and FAIR+CARE ethics pre-audits.  
-- Store intermediate ETL artifacts and validation reports for schema alignment.  
-- Support AI-driven reanalysis and anomaly detection models.  
+This workspace manages short-lived files for:
+- Schema-normalized climate data (e.g., temperature anomalies, drought indices).  
+- FAIR+CARE audits and pre-validation reports.  
+- Model training or AI-driven anomaly detection outputs.  
+- Intermediate and governance-tracked transformation artifacts.  
 
-All contents in this layer are **temporary** and automatically purged after successful validation and governance registration.
+All artifacts are **temporary** and automatically purged following successful validation and governance ledger registration.
 
 ---
 
@@ -46,50 +46,57 @@ All contents in this layer are **temporary** and automatically purged after succ
 
 ```plaintext
 data/work/tmp/climate/
-├── README.md                               # This file — overview of climate TMP workspace
+├── README.md                               # This file — overview of Climate TMP workspace
 │
-├── etl/                                   # Temporary ETL scripts, schema alignment, and preprocessing
-│   ├── noaa_climate_ingest.csv
-│   ├── drought_monitor_normalized.csv
+├── exports/                                # Temporary export files for testing STAC and DCAT interoperability
+│   ├── climate_summary_2025.csv
+│   ├── noaa_precipitation_daily.parquet
 │   └── metadata.json
 │
-├── models/                                # AI/ML and reanalysis model outputs
-│   ├── temp_anomaly_forecast.parquet
-│   ├── climate_trend_model.pkl
+├── logs/                                   # Runtime logs and governance synchronization reports
+│   ├── etl_run.log
+│   ├── ai_model_execution.log
+│   ├── governance_sync.log
 │   └── metadata.json
 │
-├── validation/                            # Schema and FAIR+CARE audit results
-│   ├── schema_validation_summary.json
-│   ├── faircare_audit_report.json
-│   ├── checksums.json
+├── staging/                                # Temporary, validated datasets ready for promotion to staging layer
+│   ├── drought_indices_staged.csv
+│   ├── temperature_anomalies_staged.parquet
 │   └── metadata.json
 │
-└── logs/                                  # Runtime logs, governance synchronization, and system traces
-    ├── etl_run.log
-    ├── ai_model_validation.log
-    ├── governance_sync.log
+├── transforms/                             # ETL transformations, harmonization, and feature generation
+│   ├── drought_normalization.csv
+│   ├── temp_anomaly_reanalysis.parquet
+│   └── metadata.json
+│
+└── validation/                             # FAIR+CARE and schema pre-validation reports
+    ├── schema_validation_summary.json
+    ├── faircare_audit_report.json
+    ├── checksum_registry.json
     └── metadata.json
 ```
 
 ---
 
-## ⚙️ Climate ETL Workflow
+## ⚙️ Climate TMP Workflow
 
 ```mermaid
 flowchart TD
-    A["Raw NOAA / NIDIS Climate Data"] --> B["ETL Transformation (data/work/tmp/climate/etl/)"]
-    B --> C["Validation (schema + FAIR+CARE pre-audit)"]
-    C --> D["Model Integration and Trend Forecasting (data/work/tmp/climate/models/)"]
-    D --> E["Governance Ledger Update"]
-    E --> F["Promotion to Staging Workspace (data/work/staging/climate/)"]
+    A["Raw NOAA / NIDIS / USDM Climate Data"] --> B["Transformations (data/work/tmp/climate/transforms/)"]
+    B --> C["FAIR and CARE Pre-Audit Validation (validation/)"]
+    C --> D["Staging Preparation (data/work/tmp/climate/staging/)"]
+    D --> E["Export Testing (data/work/tmp/climate/exports/)"]
+    E --> F["Governance Ledger Synchronization"]
+    F --> G["Promotion to Staging Workspace (data/work/staging/climate/)"]
 ```
 
 ### Workflow Steps:
-1. **Ingestion:** Acquire open datasets (NOAA, USDM, NIDIS) for Kansas coverage.  
-2. **Transformation:** Apply schema normalization and metadata alignment.  
-3. **Validation:** Check schema integrity, checksum accuracy, and FAIR+CARE compliance.  
-4. **Modeling:** Generate intermediate reanalysis or anomaly forecasts.  
-5. **Governance:** Log results and checksum hashes in provenance ledger.  
+1. **Ingest:** Retrieve raw NOAA, USDM, and NIDIS datasets for Kansas.  
+2. **Transform:** Normalize schema, harmonize units, and aggregate temporal records.  
+3. **Validate:** Perform FAIR+CARE pre-validation and checksum verification.  
+4. **Stage:** Store pre-approved datasets for promotion.  
+5. **Export:** Test interoperability and catalog metadata alignment.  
+6. **Govern:** Record validation outcomes and lineage in provenance ledger.
 
 ---
 
@@ -97,18 +104,18 @@ flowchart TD
 
 ```json
 {
-  "id": "climate_tmp_drought_monitor_v9.3.2",
-  "pipeline": "src/pipelines/etl/climate_drought_pipeline.py",
+  "id": "climate_tmp_drought_indices_v9.3.2",
   "source_files": [
     "data/raw/noaa/drought_monitor/drought_monitor_2025.csv",
     "data/raw/noaa/temperature_anomalies/kansas_temp_anomalies_2025.csv"
   ],
   "records_processed": 54012,
-  "models_generated": ["temp_anomaly_forecast.parquet"],
-  "created": "2025-10-28T15:10:00Z",
+  "schema_version": "v3.0.1",
+  "created": "2025-10-28T15:12:00Z",
   "validator": "@kfm-climate-lab",
   "checksum": "sha256:f09c19ea245b62e98f99105b32b8223819c3b6a2...",
-  "fairstatus": "in_review",
+  "validation_status": "passed",
+  "fairstatus": "compliant",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -119,31 +126,31 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Climate datasets indexed with temporal and spatial identifiers. |
-| **Accessible** | Stored in open formats (CSV, Parquet, JSON). |
-| **Interoperable** | Schema aligned with NOAA, NIDIS, and KFM contracts. |
-| **Reusable** | Provenance and checksum tracking ensure reproducibility. |
-| **Collective Benefit** | Supports open climate science and environmental transparency. |
-| **Authority to Control** | FAIR+CARE Council oversees model usage and ethics validation. |
-| **Responsibility** | Climate lab validators ensure dataset quality and ethical handling. |
-| **Ethics** | Excludes restricted, private, or regionally sensitive data. |
+| **Findable** | All TMP datasets indexed by temporal range and spatial extent (Kansas-wide). |
+| **Accessible** | Open and machine-readable formats (CSV, JSON, Parquet). |
+| **Interoperable** | Schema aligns with NOAA and NIDIS metadata standards. |
+| **Reusable** | Includes provenance records and checksum validation. |
+| **Collective Benefit** | Supports reproducible climate research and environmental equity. |
+| **Authority to Control** | FAIR+CARE Council governs data ethics and usage compliance. |
+| **Responsibility** | All ETL operations logged for accountability. |
+| **Ethics** | No sensitive or restricted data retained; fully public domain sources. |
 
-Governance logs stored in:  
+Audit logs stored in:  
 `data/reports/audit/data_provenance_ledger.json` and `data/reports/fair/data_care_assessment.json`.
 
 ---
 
-## ⚙️ Validation & QA Components
+## ⚙️ Validation & QA Reports
 
 | Report | Description | Output |
 |---------|-------------|---------|
-| `schema_validation_summary.json` | Confirms field-level schema integrity. | JSON |
-| `faircare_audit_report.json` | FAIR+CARE ethical audit report for climate datasets. | JSON |
-| `checksums.json` | Validation and checksum registry. | JSON |
-| `etl_run.log` | Runtime logs for ETL operations. | Text |
-| `ai_model_validation.log` | Model training and inference QA report. | Text |
+| `schema_validation_summary.json` | Confirms schema alignment and column mapping accuracy. | JSON |
+| `faircare_audit_report.json` | FAIR+CARE ethical audit for data accessibility and transparency. | JSON |
+| `checksum_registry.json` | Stores file checksums for governance verification. | JSON |
+| `etl_run.log` | Detailed runtime trace of ETL pipeline execution. | Text |
+| `ai_model_execution.log` | AI/ML climate forecasting model run log. | Text |
 
-All validation tasks automated via `climate_tmp_sync.yml`.
+All reports automatically generated by `climate_tmp_validation.yml`.
 
 ---
 
@@ -151,10 +158,12 @@ All validation tasks automated via `climate_tmp_sync.yml`.
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Captures pipeline context, runtime, and FAIR+CARE status. |
-| `data/reports/audit/data_provenance_ledger.json` | Tracks ETL lineage, model creation, and ethics reviews. |
-| `data/reports/validation/schema_validation_summary.json` | Stores QA results and schema conformance reports. |
-| `releases/v9.3.2/manifest.zip` | Holds all TMP climate checksum records for reproducibility. |
+| `metadata.json` | Captures context for ETL run, schema version, and FAIR+CARE audit. |
+| `data/reports/audit/data_provenance_ledger.json` | Central ledger for lineage, checksum, and ethics tracking. |
+| `data/reports/validation/schema_validation_summary.json` | Schema compliance verification report. |
+| `releases/v9.3.2/manifest.zip` | Global checksum registry for TMP artifacts. |
+
+Governance synchronization automated via `climate_tmp_sync.yml`.
 
 ---
 
@@ -162,12 +171,12 @@ All validation tasks automated via `climate_tmp_sync.yml`.
 
 | File Type | Retention Duration | Policy |
 |------------|--------------------|--------|
-| TMP Climate Data | 7 days | Purged after validation or staging promotion. |
-| Model Outputs | 30 days | Retained for reanalysis reproducibility. |
-| Logs | 90 days | Archived for governance traceability. |
-| Metadata | 365 days | Retained permanently in provenance logs. |
+| TMP Data | 7 days | Purged after validation or staging promotion. |
+| Logs | 30 days | Archived for governance review. |
+| Model Outputs | 14 days | Retained for reproducibility and audit. |
+| Metadata | 365 days | Preserved for provenance and lineage continuity. |
 
-Cleanup and archival automated by `climate_tmp_cleanup.yml`.
+Cleanup handled by `climate_tmp_cleanup.yml`.
 
 ---
 
@@ -175,8 +184,9 @@ Cleanup and archival automated by `climate_tmp_cleanup.yml`.
 
 ```text
 Kansas Frontier Matrix (2025). Climate TMP Workspace (v9.3.2).
-Temporary FAIR+CARE-governed workspace for processing and validating climate datasets including drought, precipitation, and temperature anomalies.
-Restricted to internal ETL, validation, and model governance workflows.
+Temporary FAIR+CARE-compliant workspace for ingesting, transforming, validating, and exporting climate datasets.
+Supports NOAA and NIDIS data normalization, AI model validation, and provenance governance.
+Restricted to internal workflows and audit review.
 ```
 
 ---
@@ -185,15 +195,15 @@ Restricted to internal ETL, validation, and model governance workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Integrated FAIR+CARE validation and NOAA–NIDIS harmonization. |
-| v9.2.0 | 2024-07-15 | Added AI model logging and checksum governance. |
-| v9.0.0 | 2023-01-10 | Established climate TMP workspace for transient ETL data. |
+| v9.3.2 | 2025-10-28 | Updated directory structure (exports, transforms, staging, validation) and FAIR+CARE pre-validation workflow. |
+| v9.2.0 | 2024-07-15 | Added checksum registry and AI/ML model governance integration. |
+| v9.0.0 | 2023-01-10 | Established climate TMP workspace for transient ETL data processing. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Climate Science × FAIR+CARE Governance × Provenance Traceability*  
+**Kansas Frontier Matrix** · *Climate Science × FAIR+CARE Governance × Provenance Integrity*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
 
 </div>
