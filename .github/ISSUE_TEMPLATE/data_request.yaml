@@ -9,18 +9,18 @@ assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
 ## 🧭 Summary
 
 > _Provide a concise overview of the dataset or data source you are requesting._  
-> _Example: “Request integration of Kansas River discharge dataset from USGS NWIS API.”_
+> _Example:_ “Request integration of Kansas River discharge dataset from USGS NWIS API.”
 
 **Category:**
-- [ ] 🌦️ Environmental / Climate
-- [ ] 🗺️ Geospatial / Map Layer
-- [ ] 📜 Historical / Archival
-- [ ] ⚡ Energy / Infrastructure
-- [ ] 🧠 AI Training Dataset
+- [ ] 🌦️ Environmental / Climate  
+- [ ] 🗺️ Geospatial / Map Layer  
+- [ ] 📜 Historical / Archival  
+- [ ] ⚡ Energy / Infrastructure  
+- [ ] 🧠 AI / ML Training Dataset  
 - [ ] Other (specify below)
 
 **Purpose of Integration:**  
-> _Explain why this dataset is relevant or valuable to the Kansas Frontier Matrix project._
+> _Explain why this dataset benefits the Kansas Frontier Matrix (KFM), and how it advances FAIR+CARE-aligned open science._
 
 ---
 
@@ -28,15 +28,15 @@ assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
 
 | Field | Description |
 |--------|-------------|
-| **Dataset Name** | `<official name or identifier>` |
+| **Dataset Name** | `<official dataset title or ID>` |
 | **Source Organization** | `<e.g., NOAA, USGS, FEMA, KHS, DASC>` |
-| **Access URL / API Endpoint** | `<direct download or API link>` |
-| **License / Terms of Use** | `<e.g., Public Domain, CC-BY 4.0, etc.>` |
+| **Access URL / API Endpoint** | `<download or API endpoint>` |
+| **License / Terms of Use** | `<e.g., Public Domain, CC-BY 4.0, CC0 1.0>` |
 | **Data Format(s)** | `<e.g., GeoJSON, GeoTIFF, CSV, NetCDF>` |
-| **Temporal Coverage** | `<start-end dates>` |
-| **Spatial Coverage** | `<statewide, county, watershed, etc.>` |
+| **Temporal Coverage** | `<start–end years or continuous>` |
+| **Spatial Coverage** | `<statewide, county-level, watershed, etc.>` |
 | **Update Frequency** | `<static / annual / monthly / real-time>` |
-| **Data Volume (approx.)** | `<e.g., 1GB / 500MB>` |
+| **Approx. Data Volume** | `<e.g., 1.2 GB / 500 MB>` |
 
 ---
 
@@ -44,26 +44,29 @@ assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
 
 | Field | Description |
 |--------|-------------|
-| **DOI / Identifier** | `<if available>` |
-| **Metadata File / Record** | `<link or upload>` |
-| **Provenance / Citation** | `<reference to official documentation>` |
-| **Data Steward / Contact** | `<organization or individual>` |
+| **DOI / Persistent ID** | `<if registered>` |
+| **Metadata Record / File** | `<link to STAC/DCAT metadata or upload>` |
+| **Provenance / Citation** | `<source citation or agency reference>` |
+| **Data Steward / Contact** | `<responsible organization or individual>` |
 
-> _If metadata is missing, indicate whether it can be derived from the source._  
+> _If metadata is incomplete, indicate if it can be derived from the source API or documentation._
 
 ---
 
 ## ⚙️ Integration Requirements
 
-> _Describe how you envision this dataset being used or displayed within KFM._  
-> _Example: “To overlay flood hazard layers with county boundaries on the Focus Mode map.”_
+> _Describe the intended technical integration for this dataset._  
+> _Example:_ “Overlay county-level drought severity data with historical flood maps in Focus Mode.”
 
 **Preferred Integration Path:**
-- [ ] ETL Pipeline (`/src/pipelines/etl/`)
-- [ ] AI Model Input (`/src/pipelines/ai/`)
-- [ ] Web Visualization (`/web/src/layers/`)
-- [ ] Knowledge Graph / Neo4j Entity
-- [ ] Documentation or Archive Only
+- [ ] ETL Pipeline (`/src/pipelines/etl/`)  
+- [ ] AI Model Input (`/src/pipelines/ai/`)  
+- [ ] Web Visualization (`/web/src/layers/`)  
+- [ ] Knowledge Graph / Neo4j Entity  
+- [ ] Documentation / Reference Archive Only  
+
+**Additional Requirements:**  
+> _List any needed preprocessing, coordinate transformation (e.g., EPSG:4326), or reformatting tasks._
 
 ---
 
@@ -71,14 +74,14 @@ assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
 
 | Category | Compliance | Notes |
 |-----------|-------------|-------|
-| **Findable** | ☐ Yes ☐ No | _Has clear metadata and identifiers?_ |
-| **Accessible** | ☐ Yes ☐ No | _Freely available and machine-readable?_ |
-| **Interoperable** | ☐ Yes ☐ No | _Uses open, standard formats?_ |
-| **Reusable** | ☐ Yes ☐ No | _Includes clear license and provenance?_ |
-| **Collective Benefit** | ☐ Yes ☐ No | _Provides social/scientific value?_ |
-| **Authority to Control** | ☐ Yes ☐ No | _Respects ownership or community governance?_ |
-| **Responsibility** | ☐ Yes ☐ No | _Handled ethically and securely?_ |
-| **Ethics** | ☐ Yes ☐ No | _No harmful or biased data usage?_ |
+| **Findable** | ☐ Yes ☐ No | _Dataset has searchable metadata or DOI?_ |
+| **Accessible** | ☐ Yes ☐ No | _Freely accessible and machine-readable?_ |
+| **Interoperable** | ☐ Yes ☐ No | _Uses open, non-proprietary formats?_ |
+| **Reusable** | ☐ Yes ☐ No | _Has license and citation for reuse?_ |
+| **Collective Benefit** | ☐ Yes ☐ No | _Supports research or public interest?_ |
+| **Authority to Control** | ☐ Yes ☐ No | _Respects community and data sovereignty?_ |
+| **Responsibility** | ☐ Yes ☐ No | _Used ethically and stored securely?_ |
+| **Ethics** | ☐ Yes ☐ No | _Contains no biased or harmful content?_ |
 
 ---
 
@@ -87,26 +90,27 @@ assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
 | Field | Reference |
 |--------|------------|
 | **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
-| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
-| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Manifest Ref** | `releases/v9.5.0/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.5.0/focus-telemetry.json` |
+| **SBOM Ref** | `releases/v9.5.0/sbom.spdx.json` |
 | **Data Contract** | `docs/contracts/data-contract-v3.json` |
 | **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
 
-> _Ensure all linked governance and metadata references correspond to the current repository release._
+> _Verify that all references correspond to the latest release version before submission._
 
 ---
 
 ## 📊 Suggested Output Layers or Products
 
-> _Describe any derived datasets or visualizations expected after integration._  
-> _Example: “Produce historical drought intensity maps per county (1900–present).”_
+> _Describe the expected output(s) after ingestion and processing._  
+> _Example:_ “Generate annual precipitation anomalies for Kansas (1900–present).”
 
 | Output Type | Description | Format |
 |--------------|-------------|--------|
-| ETL Output |  | GeoJSON / CSV |
-| Visualization |  | MapLibre Tile Layer |
-| AI Training Data |  | JSON / NetCDF |
-| Validation Logs |  | JSON / Markdown |
+| **ETL Output** |  | GeoJSON / CSV |
+| **Visualization** |  | MapLibre Tile Layer / WebGL Overlay |
+| **AI Training Data** |  | JSON / NetCDF |
+| **Validation Logs** |  | JSON / Markdown |
 
 ---
 
@@ -114,28 +118,29 @@ assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
 
 | Role | Reviewer | Required Action |
 |------|-----------|-----------------|
-| **Data Engineering** | @kfm-etl-ops | Evaluate ingestion feasibility |
-| **Metadata / FAIR Review** | @kfm-data-lab | Validate schema and metadata |
-| **AI Governance** | @kfm-ai-lab | Assess ethical and technical use |
-| **Architecture / Maintainer** | @bartytime4life | Approve inclusion in main branch |
+| **Data Engineering** | @kfm-etl-ops | Evaluate ingestion feasibility & format compatibility |
+| **Metadata / FAIR Review** | @kfm-data-lab | Validate metadata schema & FAIR compliance |
+| **AI Governance** | @kfm-ai-lab | Review ethical alignment & potential AI use |
+| **Architecture / Maintainer** | @bartytime4life | Approve inclusion & merge to main branch |
 
 ---
 
 ## ✅ Submission Checklist
 
-- [ ] Source license verified (Open Data / FAIR-compliant)
-- [ ] Metadata file provided or retrievable
-- [ ] FAIR+CARE compliance reviewed
-- [ ] Governance metadata references included
-- [ ] Notified maintainers for review and integration
+- [ ] License verified (Open Data / FAIR-compliant)  
+- [ ] Metadata provided or derivable from source  
+- [ ] FAIR+CARE self-assessment completed  
+- [ ] Governance metadata references validated  
+- [ ] Maintainers tagged for review & integration  
 
 ---
 
-> ⚠️ **Note:**  
-> Submitting this data request automatically triggers:  
+> ⚠️ **Automation Notice:**  
+> Submitting this issue triggers:  
 > - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
-> - STAC ingestion test (`.github/workflows/stac-validate.yml`)  
-> - Governance record entry (`reports/audit/hazards_archive_provenance.json`)  
+> - STAC/DCAT schema testing (`.github/workflows/stac-validate.yml`, `dcat-export.yml`)  
+> - Governance ledger update (`reports/audit/ai_hazards_ledger.json`)  
+> - Telemetry update (`releases/v9.5.0/focus-telemetry.json`)
 
 ---
 
