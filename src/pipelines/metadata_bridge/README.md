@@ -1,5 +1,5 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — STAC ↔ DCAT 3.0 Translation Layer Design Spec"
+title: "🗺️ Kansas Frontier Matrix — STAC ↔ DCAT 3.0 Translation Layer Design Spec (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/metadata_bridge/README.md"
 version: "v9.5.0"
 last_updated: "2025-10-30"
@@ -21,12 +21,12 @@ license: "MIT"
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — STAC ↔ DCAT 3.0 Translation Layer**
-_“Bridging geospatial FAIR metadata between JSON and RDF worlds”_
+# 🗺️ Kansas Frontier Matrix — **STAC ↔ DCAT 3.0 Translation Layer**
+_“Bridging geospatial FAIR metadata between JSON and RDF worlds.”_
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)  
-[![Build · CI](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/bridge-e2e.yml?label=Bridge%20CI)](../../../../.github/workflows/bridge-e2e.yml)  
+[![Build · Bridge CI](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/bridge-e2e.yml?label=Bridge%20CI)](../../../../.github/workflows/bridge-e2e.yml)  
 [![STAC 1.0.0](https://img.shields.io/badge/STAC-1.0.0-orange)](https://stacspec.org)  
 [![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0-purple)](https://www.w3.org/TR/vocab-dcat-3/)
 
@@ -36,19 +36,20 @@ _“Bridging geospatial FAIR metadata between JSON and RDF worlds”_
 
 ## 🧭 Overview
 
-The **STAC ↔ DCAT 3.0 Translation Layer** enables **bidirectional semantic interoperability** between STAC (SpatioTemporal Asset Catalog) JSON metadata and W3C DCAT 3.0 RDF graphs. It provides the metadata bridge used by the KFM governance and knowledge graph ingestion system.
+The **STAC ↔ DCAT 3.0 Translation Layer** enables **bidirectional semantic interoperability** between STAC (SpatioTemporal Asset Catalog) JSON metadata and W3C DCAT 3.0 RDF graphs. It powers KFM’s governance and knowledge-graph ingestion, ensuring **FAIR+CARE** alignment and **machine-readable provenance**.
 
-- Converts **STAC → DCAT (JSON → RDF/Turtle/JSON-LD)** for ingestion into the CIDOC CRM + OWL-Time knowledge graph.
-- Converts **DCAT → STAC (RDF → JSON)** for publishing interoperable FAIR catalogs.
-- Enforces validation through **JSON Schema**, **SHACL**, and **FAIR+CARE audits**.
-- Built to support **KFM’s autonomous pipelines** and **machine-readable provenance**.
+- STAC → DCAT (JSON → RDF/Turtle/JSON-LD) for **CIDOC CRM + OWL-Time** knowledge graph ingestion.  
+- DCAT → STAC (RDF → JSON) for **FAIR catalog publication**.  
+- Validation via **JSON Schema**, **SHACL**, and **FAIR+CARE audits**.  
+- Designed for **autonomous pipelines** with **deterministic round-trip tests**.
 
 ---
 
-## 🧩 Directory Layout
+## 🗂️ Directory Layout
 
-```text
+```plaintext
 src/pipelines/metadata_bridge/
+├── README.md
 ├── bridge.py
 ├── stac_to_dcat.py
 ├── dcat_to_stac.py
@@ -64,42 +65,41 @@ src/pipelines/metadata_bridge/
 │   └── dcat/
 │       └── dcat-shapes.ttl
 ├── cli.py
-├── tests/
-│   ├── test_stac_to_dcat.py
-│   ├── test_dcat_to_stac.py
-│   ├── test_roundtrip.py
-│   └── fixtures/
-│       ├── stac_collection.json
-│       ├── dcat_dataset.ttl
-│       └── expected_roundtrip.json
-└── README.md
+└── tests/
+    ├── test_stac_to_dcat.py
+    ├── test_dcat_to_stac.py
+    ├── test_roundtrip.py
+    └── fixtures/
+        ├── stac_collection.json
+        ├── dcat_dataset.ttl
+        └── expected_roundtrip.json
 ```
 
 ---
 
-## 🧮 Mapping Reference Table
+## 🔎 STAC ↔ DCAT Mapping Reference
 
-| STAC Field | DCAT Property | Notes / Transformation |
-|-------------|----------------|------------------------|
-| `id` | `dcterms:identifier` | Preserve globally unique |
-| `title` | `dcterms:title` | 1:1 mapping |
-| `description` | `dcterms:description` | 1:1 mapping |
-| `license` | `dcterms:license` | Map SPDX → URI |
-| `keywords[]` | `dcat:keyword` | Simple array flatten |
-| `providers[*].name` | `dcterms:publisher` | First provider as main publisher |
-| `extent.spatial.bbox` | `dcterms:spatial` | Convert GeoJSON → WKT |
-| `extent.temporal.interval` | `dcterms:temporal` + `time:Interval` | Start/end datetimes |
-| `assets[*].href` | `dcat:accessURL` or `dcat:downloadURL` | Determined by role/type |
-| `assets[*].type` | `dcterms:format` | MIME types preferred |
-| `assets[*].roles` | `dcat:mediaType` | Extended |
-| `stac_extensions[]` | `owl:imports` | Linked to schema IRI |
-| `created` / `updated` | `prov:generatedAtTime` | Provenance alignment |
+| STAC Field | DCAT / Related Property | Notes / Transformation |
+|---|---|---|
+| `id` | `dcterms:identifier` | Preserve global ID |
+| `title` | `dcterms:title` | 1:1 |
+| `description` | `dcterms:description` | 1:1 |
+| `license` | `dcterms:license` | Map SPDX → canonical URI |
+| `keywords[]` | `dcat:keyword` | Array flatten |
+| `providers[*].name` | `dcterms:publisher` | First provider as primary |
+| `extent.spatial.bbox` | `dcterms:spatial` | GeoJSON → WKT polygon |
+| `extent.temporal.interval` | `dcterms:temporal` + `time:Interval` | Start/End instants |
+| `assets[*].href` | `dcat:accessURL` / `dcat:downloadURL` | Role/MIME-aware |
+| `assets[*].type` | `dcterms:format` | Prefer IANA MIME |
+| `assets[*].roles` | `dcat:mediaType` | If available |
+| `stac_extensions[]` | `owl:imports` | Link to schema IRI |
+| `created` / `updated` | `prov:generatedAtTime` | Governance alignment |
 
 ---
 
-## 🧠 Example 1 — STAC → DCAT JSON-LD Output
+## 🧠 Example — STAC → DCAT (JSON-LD/Turtle)
 
-**Input: `collection.json`**
+**Input — `collection.json`**
 
 ```json
 {
@@ -118,13 +118,14 @@ src/pipelines/metadata_bridge/
 }
 ```
 
-**Output: `dataset.ttl`**
+**Output — `dataset.ttl` (excerpt)**
 
 ```turtle
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
-@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dct:  <http://purl.org/dc/terms/> .
 @prefix time: <http://www.w3.org/2006/time#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <https://data.kfm.org/dataset/kfm-climate-2020> a dcat:Dataset ;
   dct:identifier "kfm-climate-2020" ;
@@ -134,17 +135,16 @@ src/pipelines/metadata_bridge/
   dct:publisher "NOAA" ;
   dct:spatial "POLYGON((-102.05 36.99, -102.05 40.00, -94.62 40.00, -94.62 36.99, -102.05 36.99))" ;
   dct:temporal [ a time:Interval ;
-                 time:hasBeginning [ time:inXSDDateTime "2020-01-01T00:00:00Z"^^xsd:dateTime ] ;
-                 time:hasEnd [ time:inXSDDateTime "2020-12-31T23:59:59Z"^^xsd:dateTime ] ] ;
+    time:hasBeginning [ time:inXSDDateTime "2020-01-01T00:00:00Z"^^xsd:dateTime ] ;
+    time:hasEnd      [ time:inXSDDateTime "2020-12-31T23:59:59Z"^^xsd:dateTime ] ] ;
   prov:generatedAtTime "2025-10-30T00:00:00Z"^^xsd:dateTime .
 ```
 
 ---
 
-## 🔁 Example 2 — DCAT → STAC Reconstruction
+## 🔁 Example — DCAT → STAC Reconstruction
 
-**Input: `dataset.ttl` (same as above)**  
-**Output: `collection.json`**
+**Input — `dataset.ttl`** → **Output — `collection.json`** (excerpt)
 
 ```json
 {
@@ -164,7 +164,7 @@ src/pipelines/metadata_bridge/
 
 ---
 
-## 🧰 CLI & Pipeline Usage
+## 🛠️ CLI & Pipeline Usage
 
 ```bash
 # Convert STAC → DCAT
@@ -180,12 +180,10 @@ python cli.py validate --type dcat data/dcat/climate.ttl
 
 ---
 
-## 🧪 Validation Workflows
+## 🧪 Validation Workflows (GitHub Actions)
 
-**GitHub Actions:**
-
-| Workflow | Purpose | Validation Type |
-|-----------|----------|-----------------|
+| Workflow | Purpose | Validation |
+|---|---|---|
 | `stac-validate.yml` | JSON Schema conformance | STAC 1.0 validator |
 | `dcat-shacl.yml` | RDF graph validation | SHACL shapes |
 | `bridge-e2e.yml` | Bidirectional tests | Round-trip regression |
@@ -197,38 +195,37 @@ python cli.py validate --type dcat data/dcat/climate.ttl
 
 ```mermaid
 flowchart TD
-A["STAC Collection / Item (JSON)"] --> B["STAC → DCAT Translator (stac_to_dcat.py)"]
-B --> C["RDF Graph (TTL/JSON-LD)"]
-C --> D["CIDOC CRM / OWL-Time Knowledge Graph (Neo4j)"]
-D --> E["Governance Ledger + FAIR+CARE Validation"]
-E --> F["DCAT → STAC Translator (dcat_to_stac.py)"]
-F --> G["Published FAIR Catalog (JSON)"]
+  A["STAC Collection / Item (JSON)"] --> B["STAC → DCAT Translator (stac_to_dcat.py)"]
+  B --> C["RDF Graph (TTL / JSON-LD)"]
+  C --> D["CIDOC CRM / OWL-Time Knowledge Graph (Neo4j)"]
+  D --> E["Governance Ledger + FAIR+CARE Validation"]
+  E --> F["DCAT → STAC Translator (dcat_to_stac.py)"]
+  F --> G["Published FAIR Catalog (JSON)"]
 ```
 
 ---
 
-## 🧬 Provenance & FAIR Alignment
+## 🔐 Provenance & FAIR Alignment
 
-- **Provenance**: Managed via PROV-O and governance-ledger workflows.  
-- **Identifiers**: Persistent URIs based on `https://data.kfm.org/dataset/{id}`.  
-- **Temporal Extents**: ISO8601 normalized; OWL-Time representation enforced.  
-- **FAIR+CARE Checks**: Executed in CI/CD (`faircare-validate.yml`).  
+- **Provenance:** PROV-O + governance-ledger workflows.  
+- **Identifiers:** `https://data.kfm.org/dataset/{id}` URIs.  
+- **Temporal Extents:** ISO-8601; OWL-Time intervals.  
+- **FAIR+CARE Checks:** Executed in CI/CD (`faircare-validate.yml`).  
 
 ---
 
 ## 🧩 Implementation Notes
 
-- Written in **Python 3.11+** using `rdflib`, `pyshacl`, and `jsonschema`.
-- Supports **GeoDCAT-AP** and **DCAT-AP 3.0** profiles as modular plugins.
-- Configurable via YAML profiles (`profiles/*.py`).
-- Tested with fixtures under `tests/fixtures/` using `pytest`.
+- Python **3.11+**; libs: `rdflib`, `pyshacl`, `jsonschema`.  
+- Modular profiles: **GeoDCAT-AP**, **DCAT-AP 3.0** under `profiles/`.  
+- YAML-driven config; fixtures + **pytest** round-trip tests.  
 
 ---
 
-## 🧭 Governance Metadata
+## 🗺️ Governance & References
 
 | Attribute | Reference |
-|------------|------------|
+|---|---|
 | Governance Ledger | `docs/standards/governance-ledger.md` |
 | FAIR/CARE Protocol | `docs/standards/faircare-protocol.md` |
 | Security Policy | `SECURITY.md` |
@@ -237,7 +234,7 @@ F --> G["Published FAIR Catalog (JSON)"]
 
 ---
 
-## 🪶 Example Bridge Schema Registration
+## 🧪 Example Bridge Schema Registration
 
 **`schemas/bridge-schema.json`**
 
@@ -260,63 +257,73 @@ F --> G["Published FAIR Catalog (JSON)"]
 
 ---
 
-## 🧾 Example SHACL Shape for DCAT Validation
+## ✅ Example SHACL Shape for DCAT Validation
 
 ```turtle
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
 @prefix dct: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 dcat:DatasetShape a sh:NodeShape ;
   sh:targetClass dcat:Dataset ;
   sh:property [
     sh:path dct:title ;
     sh:datatype xsd:string ;
-    sh:minCount 1 ;
+    sh:minCount 1
   ] ;
   sh:property [
     sh:path dct:identifier ;
-    sh:minCount 1 ;
+    sh:minCount 1
   ] ;
   sh:property [
     sh:path dct:license ;
-    sh:minCount 1 ;
+    sh:minCount 1
   ] .
 ```
 
 ---
 
-## 🧮 Example Round-Trip Test
+## 🔁 Example Round-Trip Test
 
-**File:** `tests/test_roundtrip.py`
+**`tests/test_roundtrip.py`**
 
 ```python
-from kfm_bridge import stac_to_dcat, dcat_to_stac
 import json
+from stac_to_dcat import convert as to_dcat
+from dcat_to_stac import convert as to_stac
 
 def test_roundtrip_equivalence():
     stac = json.load(open("tests/fixtures/stac_collection.json"))
-    ttl = stac_to_dcat.convert(stac)
-    reconstructed = dcat_to_stac.convert(ttl)
-    assert stac["id"] == reconstructed["id"]
-    assert stac["title"] == reconstructed["title"]
+    ttl  = to_dcat(stac)
+    back = to_stac(ttl)
+    assert stac["id"] == back["id"]
+    assert stac["title"] == back["title"]
 ```
 
 ---
 
 ## 🧭 Next Steps
 
-1. Expand mapping coverage for **eo, sat, proj, raster extensions**.
-2. Integrate **FAIR+CARE metrics** via governance ledger hooks.
-3. Enable **dataset versioning** through PROV-O and SLSA attestations.
-4. Automate **metadata enrichment** from AI extraction layer.
-5. Register bridge outputs to **KFM Knowledge Graph (Neo4j CIDOC)**.
+1. Extend mappings for **eo**, **sat**, **proj**, **raster** extensions.  
+2. Add FAIR+CARE score hooks to governance ledger.  
+3. Enable PROV-O/SLSA-based **dataset versioning**.  
+4. Enrich metadata via AI extraction pipelines.  
+5. Register outputs to **Neo4j (CIDOC CRM)** knowledge graph.
+
+---
+
+## 🧾 Version Notes
+
+| Version | Date | Author | Highlights |
+|---|---|---|---|
+| v9.5.0 | 2025-10-30 | @kfm-architecture | Initial design spec refresh; CI hooks; SHACL profiles; round-trip tests. |
 
 ---
 
 <div align="center">
 
-🧱 **Kansas Frontier Matrix**  
-Built under **MCP-DL v6.3** · FAIR · CARE · CIDOC CRM · Open Science Alliance  
+**Kansas Frontier Matrix** · *FAIR + CARE × MCP-DL v6.3 × STAC 1.0 × DCAT 3.0*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance-ledger.md)
 
 </div>
