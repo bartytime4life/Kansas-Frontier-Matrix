@@ -1,7 +1,7 @@
 ---
 name: "🐛 Bug Report"
-about: "Report an error, failure, or unexpected behavior within the Kansas Frontier Matrix system."
-title: "[BUG] <describe issue>"
+about: "Report an error, failure, or unexpected behavior in the Kansas Frontier Matrix system."
+title: "[BUG] <brief description>"
 labels: ["bug", "validation", "investigation-needed"]
 assignees: ["@kfm-etl-ops", "@bartytime4life"]
 ---
@@ -9,28 +9,29 @@ assignees: ["@kfm-etl-ops", "@bartytime4life"]
 ## 🐛 Description
 
 > _Provide a clear and concise description of the issue._  
-> _Example: “Hazards ETL pipeline fails STAC validation for flood dataset (v9.3.2).”_
+> _Example:_ “Hazards ETL pipeline fails STAC validation for flood dataset (v9.5.0).”
 
 **Affected Component(s):**
 - [ ] ETL / Data Pipeline  
 - [ ] AI / Focus Mode  
 - [ ] Frontend / MapLibre UI  
 - [ ] Documentation / Metadata  
+- [ ] Governance / FAIR+CARE  
 - [ ] Other  
 
 ---
 
 ## 🔍 Steps to Reproduce
 
-1. Step one — _e.g., run `make hazards-etl`_  
-2. Step two — _observe console output or validation error_  
-3. Step three — _attach any error logs or screenshots below_
+1. Step one — _e.g., run `make etl-hazards`_  
+2. Step two — _observe console output or CI validation error_  
+3. Step three — _attach any error logs, artifacts, or screenshots below_
 
 **Expected Behavior:**  
-> _Describe what should happen when functioning correctly._
+> _Describe what should happen when the process runs successfully._
 
 **Actual Behavior:**  
-> _Describe what is happening instead (include logs or errors)._  
+> _Describe what is happening instead (include error text, tracebacks, or failed job links)._  
 
 ---
 
@@ -38,21 +39,22 @@ assignees: ["@kfm-etl-ops", "@bartytime4life"]
 
 | Parameter | Value |
 |------------|--------|
-| **Version / Branch** | `<e.g., v9.3.2 / main>` |
-| **OS / Platform** | `<e.g., Ubuntu 22.04 / macOS>` |
-| **Python / Node Version** | `<e.g., Python 3.10 / Node 18>` |
-| **Docker / Compose Version** | `<if applicable>` |
+| **Version / Branch** | `<e.g., v9.5.0 / main>` |
+| **OS / Platform** | `<e.g., Ubuntu 22.04 / macOS 14>` |
+| **Python / Node Version** | `<e.g., Python 3.11 / Node 20>` |
+| **Docker / Compose Version** | `<e.g., Docker 24.0.7>` |
 | **Workflow Affected** | `<e.g., .github/workflows/stac-validate.yml>` |
+| **Run Context** | `<Local / CI / Containerized>` |
 
 ---
 
 ## 📂 Logs & Evidence
 
-> _Attach logs, screenshots, or JSON snippets illustrating the issue._  
-> _If logs exceed 50 lines, please upload as a file or GitHub Gist link._
+> _Attach relevant logs, screenshots, or JSON snippets illustrating the issue._  
+> _If logs exceed 50 lines, upload as a `.txt` file or link a GitHub Gist._
 
 ```bash
-# Example log snippet
+# Example error snippet
 Error: stac_validator.exceptions.STACValidationError: Missing 'license' field in item properties
 ```
 
@@ -60,13 +62,14 @@ Error: stac_validator.exceptions.STACValidationError: Missing 'license' field in
 
 ## 🧠 FAIR+CARE Impact Assessment
 
-| FAIR/CARE Category | Impact | Notes |
-|--------------------|---------|-------|
-| **Findable** | ☐ None ☐ Moderate ☐ High | _Does this issue affect metadata indexing or STAC discoverability?_ |
-| **Accessible** | ☐ None ☐ Moderate ☐ High | _Does it limit data/API accessibility?_ |
-| **Interoperable** | ☐ None ☐ Moderate ☐ High | _Does it break schema compatibility?_ |
-| **Reusable** | ☐ None ☐ Moderate ☐ High | _Does it reduce dataset or model reusability?_ |
-| **Collective Benefit** | ☐ None ☐ Moderate ☐ High | _Does this bug risk community utility or fairness?_ |
+| FAIR/CARE Category | Impact Level | Notes |
+|--------------------|--------------|-------|
+| **Findable** | ☐ None ☐ Moderate ☐ High | _Impacts metadata indexing or STAC discoverability?_ |
+| **Accessible** | ☐ None ☐ Moderate ☐ High | _Reduces data/API accessibility or service availability?_ |
+| **Interoperable** | ☐ None ☐ Moderate ☐ High | _Breaks schema or ontology compatibility?_ |
+| **Reusable** | ☐ None ☐ Moderate ☐ High | _Affects dataset, model, or workflow reusability?_ |
+| **Collective Benefit** | ☐ None ☐ Moderate ☐ High | _Limits openness or public utility?_ |
+| **Ethical Oversight** | ☐ None ☐ Moderate ☐ High | _Introduces potential governance or CARE concerns?_ |
 
 ---
 
@@ -75,23 +78,25 @@ Error: stac_validator.exceptions.STACValidationError: Missing 'license' field in
 | Field | Reference |
 |--------|------------|
 | **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
-| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
-| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Manifest Ref** | `releases/v9.5.0/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.5.0/focus-telemetry.json` |
 | **Data Contract** | `docs/contracts/data-contract-v3.json` |
 | **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
+| **SBOM Ref** | `releases/v9.5.0/sbom.spdx.json` |
 
-> _Ensure all referenced documents are up to date with the version that triggered the issue._
+> _Ensure all references correspond to the version where the issue occurred._  
+> _If new data or workflows are introduced, update the manifest and ledger accordingly._
 
 ---
 
 ## 🧾 Proposed Resolution / Next Steps
 
-> _Provide suggestions, hypotheses, or steps that may resolve the issue._  
-> _Example: “Re-run STAC validator after updating schema property fields.”_
+> _Provide suggestions, hypotheses, or immediate fixes._  
+> _Example:_ “Update STAC `license` property in all flood dataset items and re-run validator.”
 
-- [ ] Reproducible test case included  
-- [ ] FAIR+CARE impact assessed  
-- [ ] Governance metadata verified  
+- [ ] Reproducible test case attached  
+- [ ] FAIR+CARE impact documented  
+- [ ] Governance references verified  
 - [ ] Maintainers notified  
 
 ---
@@ -100,18 +105,19 @@ Error: stac_validator.exceptions.STACValidationError: Missing 'license' field in
 
 | Role | Reviewer | Required Action |
 |------|-----------|-----------------|
-| **Data Engineering Lead** | @kfm-etl-ops | Reproduce ETL behavior |
-| **Architecture Lead** | @kfm-architecture | Review workflow impact |
-| **AI/ML Governance** | @kfm-ai-lab | Validate AI pipeline consistency |
-| **Repository Maintainer** | @bartytime4life | Approve fix and merge PR |
+| **Data Engineering Lead** | @kfm-etl-ops | Reproduce and verify ETL pipeline behavior |
+| **Architecture Lead** | @kfm-architecture | Evaluate workflow and CI/CD impact |
+| **AI/ML Governance** | @kfm-ai-lab | Validate AI/Focus Mode integrity |
+| **Repository Maintainer** | @bartytime4life | Approve and merge resolution PR |
 
 ---
 
-> ⚠️ **Note:**  
-> Filing this bug report automatically triggers:  
-> - FAIR+CARE validation workflow (`.github/workflows/faircare-validate.yml`)  
-> - STAC and schema re-validation pipeline (`.github/workflows/stac-validate.yml`)  
-> - Provenance entry in `reports/audit/ai_hazards_ledger.json`  
+> ⚠️ **Automation Notice:**  
+> Submitting this bug report will automatically trigger:
+> - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
+> - STAC/DCAT metadata re-validation (`.github/workflows/stac-validate.yml`, `dcat-export.yml`)  
+> - Provenance & hash updates in `reports/audit/ai_hazards_ledger.json`  
+> - Telemetry sync to `releases/v9.5.0/focus-telemetry.json`  
 
 ---
 
