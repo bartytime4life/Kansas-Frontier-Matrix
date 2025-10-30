@@ -1,8 +1,8 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Pull Request Template (MCP-DL v6.3 · FAIR+CARE Verified)"
+title: "🧩 Kansas Frontier Matrix — Pull Request Template (MCP-DL v6.4.3 · FAIR+CARE Diamond⁹ Ω Verified)"
 path: ".github/PULL_REQUEST_TEMPLATE.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.5.0"
+last_updated: "2025-10-30"
 review_cycle: "Continuous Integration"
 commit_sha: "<latest-commit-hash>"
 ---
@@ -11,12 +11,12 @@ commit_sha: "<latest-commit-hash>"
 
 # 🧩 Kansas Frontier Matrix — **Pull Request Template**
 
-**Purpose:** Standardized pull request format enforcing Master Coder Protocol (MCP-DL v6.3) and FAIR+CARE compliance across all contributions.  
-All contributors must complete the required sections to ensure reproducibility, provenance, and ethical governance in the Kansas Frontier Matrix (KFM) repository.
+**Purpose:** Standardized pull request structure ensuring **MCP-DL v6.4.3 Diamond⁹ Ω** compliance with FAIR+CARE, provenance, and reproducibility mandates.  
+All contributors must complete this form to uphold KFM’s open governance, data integrity, and ethical AI principles.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Verified-gold)](../docs/standards/faircare-validation.md)
-[![CI Status](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../docs/architecture/repo-focus.md)
+[![FAIR+CARE · Diamond⁹ Ω](https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%E2%84%AA-gold)](../docs/standards/faircare-validation.md)
+[![CI · site.yml](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
 
 </div>
 
@@ -25,47 +25,49 @@ All contributors must complete the required sections to ensure reproducibility, 
 ## 🧾 Pull Request Overview
 
 **PR Title:**  
-> _Concise summary of your change (e.g., “Add NOAA Hydrology ETL Integration to Hazards Workspace”)._
+> _Short, descriptive summary (e.g., “Integrate DCAT Export Workflow & Focus Mode Telemetry”)._
 
 **Related Issue(s):**  
-> _Link any related issue(s) using “Fixes #___” or “Refs #___”._
+> _Link related issues using “Fixes #___” or “Refs #___”._
 
 **Category:**  
 - [ ] 🧱 Feature / Enhancement  
 - [ ] 🐛 Bug Fix  
-- [ ] 🧪 Experiment / Research  
+- [ ] 🧪 Research / Experimentation  
 - [ ] 🧭 Documentation / Governance  
 - [ ] 🔐 Security / Compliance  
+- [ ] 🧬 AI / ML Model Update  
 
 ---
 
 ## 📦 Description
 
 **Summary of Changes:**  
-> _Describe what this PR introduces or modifies. Be explicit about directories, modules, or datasets affected._
+> _Describe what this PR introduces or modifies. Include rationale and affected components._
 
 **Modified Paths:**  
-> _List key directories or files changed (e.g., `/data/work/tmp/hazards/etl/`, `/src/pipelines/ai/`, `/docs/standards/`)._
+> _List primary directories or files changed (e.g., `/data/work/`, `/src/pipelines/`, `/docs/standards/`)._
 
-**Dependencies Added or Updated:**  
-> _Include any new libraries, tools, or datasets integrated._  
-> _Example: “Added spaCy 3.8.0 for NER enhancements.”_
+**Dependencies Added/Updated:**  
+> _State any library, dataset, or tool updates._  
+> _Example: “Upgraded PySTAC 1.9.0 for STAC–DCAT translation.”_
 
 ---
 
 ## 🧩 Validation & Governance Checklist
 
 ### ✅ Technical Validation
-- [ ] Code runs locally without errors.
-- [ ] All tests pass (`pytest` or equivalent).
-- [ ] No merge conflicts with the target branch.
+- [ ] All tests pass (`pytest`, `npm test`, etc.)
+- [ ] No merge conflicts with target branch.
 - [ ] ETL pipelines or AI workflows validated with sample data.
+- [ ] Pre-commit hooks and linting passed.
 
 ### 🧠 FAIR+CARE Validation
-- [ ] FAIR metadata updated (`data/stac/`, `manifest.json`, etc.).
-- [ ] CARE principles reviewed (data sensitivity, ethical provenance).
-- [ ] Governance ledger entry created or updated (`reports/audit/`).
-- [ ] Documentation updated for reproducibility (`README.md` or SOP).  
+- [ ] FAIR metadata updated (`data/stac/`, `data/meta/`, manifests).  
+- [ ] CARE ethical checks completed (sensitive data, consent, visibility).  
+- [ ] Provenance ledger entry created (`reports/audit/ai_hazards_ledger.json`).  
+- [ ] Documentation updated for reproducibility (`README.md`, SOP, or docs).  
+- [ ] Schema validation and STAC/DCAT compliance confirmed.  
 
 ---
 
@@ -74,25 +76,28 @@ All contributors must complete the required sections to ensure reproducibility, 
 | Parameter | Reference / Path |
 |------------|------------------|
 | **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
-| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
-| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
+| **Manifest Ref** | `releases/v9.5.0/manifest.zip` |
+| **Telemetry Ref** | `releases/v9.5.0/focus-telemetry.json` |
 | **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
 | **Data Contract** | `docs/contracts/data-contract-v3.json` |
+| **SBOM Ref** | `releases/v9.5.0/sbom.spdx.json` |
 
-> **Note:** Ensure the above references are correctly linked or updated if new datasets or schemas are introduced.
+> **Note:** Verify these paths are correct and referenced when introducing or modifying data, models, or workflows.
 
 ---
 
-## 🧠 AI/ML Change Log (if applicable)
+## 🧠 AI / ML Change Log (if applicable)
 
-If this PR includes updates to AI or NLP pipelines:
-- [ ] Model cards updated (`docs/ai/model_cards/`).
-- [ ] Training datasets validated for ethics and bias.
-- [ ] Explainability and drift logs generated (`data/work/tmp/hazards/logs/ai/`).
-- [ ] Focus Mode behavior tested and logged.
+If this PR includes AI, ML, or NLP model updates:
 
-**Describe AI/ML Change:**  
-> _E.g., “Updated `hazard-flood-v14` model with 2024–2025 FEMA flood data; improved AUC from 0.88 → 0.92.”_
+- [ ] Model card(s) updated (`docs/ai/model_cards/`)  
+- [ ] Training data audited for bias and consent  
+- [ ] Explainability + drift reports generated (`data/work/tmp/hazards/logs/ai/`)  
+- [ ] Focus Mode reasoning revalidated (`make focus-ai`)  
+- [ ] Metrics logged to `focus-telemetry.json`  
+
+**AI/ML Change Summary:**  
+> _E.g., “Updated `focus-reasoner-v9` using 2025 NOAA drought dataset; improved F1 from 0.91 → 0.94.”_
 
 ---
 
@@ -100,51 +105,52 @@ If this PR includes updates to AI or NLP pipelines:
 
 | Metric | Previous | New | Δ Change | Validation |
 |---------|-----------|-----|-----------|-------------|
-| F1 Score | 0.89 | 0.92 | +0.03 | ✅ |
-| Model Drift Index | 0.07 | 0.03 | ↓ | ✅ |
-| FAIR Coverage (%) | 92 | 100 | +8 | ✅ |
-| Schema Errors | 3 | 0 | Fixed | ✅ |
+| Accuracy | 0.91 | 0.94 | +0.03 | ✅ |
+| Model Drift Index | 0.05 | 0.02 | ↓ | ✅ |
+| FAIR Coverage (%) | 95 | 100 | +5 | ✅ |
+| Schema Errors | 2 | 0 | Fixed | ✅ |
 
 ---
 
 ## 📋 Reviewer Notes
 
-> _Provide any notes for reviewers, including steps for local replication or testing. Example:_
+> _Provide reviewer context or test steps. Example:_  
 > ```
-> make hazards-etl
-> make validate-hazards
-> make focus-mode
-> ```
-> _Reviewer should confirm outputs at: `/data/work/tmp/hazards/logs/validation/`_
+> make etl-all
+> make validate-all
+> make focus-ai
+> ```  
+> _Reviewers validate output at: `/data/work/tmp/hazards/logs/validation/`._
 
 ---
 
 ## 🔍 Reviewers
 
-**Requesting Review From:**  
-> _Tag specific reviewers or CODEOWNERS (e.g., `@kfm-etl-ops`, `@bartytime4life`)._
+**Suggested Reviewers:**  
+> _Tag reviewers or CODEOWNERS (e.g., `@kfm-etl-ops`, `@bartytime4life`)._
 
 **Required Reviewers:**  
-- [ ] @kfm-architecture (Governance)
-- [ ] @kfm-etl-ops (Data Engineering)
-- [ ] @kfm-ai-lab (AI Systems)
-- [ ] @bartytime4life (Repository Maintainer)
+- [ ] @kfm-architecture (Governance & FAIR)  
+- [ ] @kfm-etl-ops (ETL / Data Engineering)  
+- [ ] @kfm-ai-lab (AI Systems)  
+- [ ] @bartytime4life (Maintainer)
 
 ---
 
 ## 🧾 Submission Confirmation
 
 Please confirm:
-- [ ] I have followed the **Master Coder Protocol (MCP-DL v6.3)**.
-- [ ] I have validated my changes locally.
-- [ ] I have included FAIR metadata and governance references.
-- [ ] I agree that this contribution complies with the project’s open-source license.
+- [ ] I have followed **Master Coder Protocol (MCP-DL v6.4.3)** standards.  
+- [ ] I have validated changes locally and through CI.  
+- [ ] I have included FAIR+CARE metadata and governance references.  
+- [ ] I agree this contribution complies with KFM’s open license (MIT / CC-BY 4.0).  
+- [ ] I have updated relevant documentation and changelogs.  
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** · *FAIR+CARE AI × Geospatial Reproducibility × Ethical Science*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [📖 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
 
 </div>
