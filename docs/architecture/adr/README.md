@@ -3,7 +3,7 @@ title: "📜 Kansas Frontier Matrix — Architecture Decision Records (ADR) Inde
 path: "docs/architecture/adr/README.md"
 version: "v2.1.1"
 last_updated: "2025-11-16"
-review_cycle: "Continuous / Governance Board"
+review_cycle: "Quarterly / Governance Board"
 commit_sha: "<latest-commit-hash>"
 license: "CC-BY 4.0"
 owners: ["@kfm-architecture","@kfm-docs","@kfm-governance"]
@@ -16,7 +16,7 @@ data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 alignment:
   - MCP-DL v6.4.3
-  - Architecture Decision Record (ADR) Standard v3.0
+  - MADR 3.0 / ADR Standard v3.0
   - FAIR / CARE
   - SLSA / SPDX
 validation:
@@ -33,8 +33,8 @@ preservation_policy:
 # 📜 **Kansas Frontier Matrix — Architecture Decision Records (ADR) Index (v2.1.1 · Tier-Ω+∞ Certified)**  
 `docs/architecture/adr/README.md`
 
-**Mission:** Record and preserve the **architectural reasoning, trade-offs, and technical decisions** that shape the Kansas Frontier Matrix (KFM).  
-Each ADR is a **governance artifact** under **MCP-DL v6.4.3**, ensuring provenance, FAIR+CARE alignment, and traceability between decisions, implementations, and documentation.
+**Mission:** Record, govern, and preserve the **architectural reasoning, trade-offs, and design decisions** that shape the Kansas Frontier Matrix (KFM).  
+Each ADR is a **permanent governance artifact** validated under **Master Coder Protocol (MCP-DL)** ensuring provenance, reproducibility, and FAIR+CARE ethical traceability.
 
 [![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../../docs/)
 [![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../../.github/workflows/docs-validate.yml)
@@ -45,17 +45,17 @@ Each ADR is a **governance artifact** under **MCP-DL v6.4.3**, ensuring provenan
 
 ---
 
-## 🧭 Overview
+## 📚 Overview
 
-Architecture Decision Records (ADRs) document **why** and **how** KFM’s architectural choices were made.  
-They provide **historical context**, **rationale**, and **traceability** to implementation, ensuring that design intent and governance alignment remain verifiable.
+**Architecture Decision Records (ADRs)** document **why** and **how** technical and design decisions were made.  
+They capture the context, rationale, consequences, and governance metadata ensuring long-term reproducibility and institutional memory.
 
 Each ADR includes:
-- **Context:** Problem background and alternatives considered  
-- **Decision:** Final resolution and justification  
-- **Consequences:** Technical, ethical, and operational impacts  
-- **Status:** Proposed · Accepted · Deprecated  
-- **Cross-links:** Related ADRs, issues, and commits  
+- **Context:** The problem, constraints, and alternative approaches considered  
+- **Decision:** The final resolution and reasoning  
+- **Consequences:** Technical and governance implications  
+- **Status:** Proposed · Accepted · Superseded · Deprecated  
+- **Cross-links:** Related ADRs, issues, PRs, or architecture files  
 
 ---
 
@@ -63,27 +63,27 @@ Each ADR includes:
 
 ```bash
 docs/architecture/adr/
-├── README.md                          # This file — ADR index and policy
+├── README.md                          # This file — ADR index & governance guide
 │
-├── ADR-0001-data-storage.md           # Decision: data storage hierarchy and STAC integration
-├── ADR-0002-ontology-mapping.md       # Decision: Neo4j CIDOC CRM + OWL-Time ontology alignment
-├── ADR-0003-ai-governance-framework.md# Decision: FAIR+CARE compliance and model audit pipeline
+├── ADR-0001-data-storage.md           # Defines data storage hierarchy & STAC integration
+├── ADR-0002-ontology-mapping.md       # Aligns Neo4j schema to CIDOC CRM / OWL-Time
+├── ADR-0003-ai-governance-framework.md# Establishes FAIR+CARE AI compliance workflow
 └── templates/
-    ├── adr-template.md                # Reusable ADR front-matter + structure
-    └── adr-decision-guide.md          # Guidelines for authoring & reviewing ADRs
+    ├── adr-template.md                # ADR front-matter + section structure
+    └── adr-decision-guide.md          # Authoring & review guidelines
 ```
 
 ---
 
-## 🧩 ADR Structure Template
+## 🧩 ADR Schema Template
 
-Every ADR follows the **KFM-ADR Standard v3.0**, derived from the MADR 3.0 and MCP-DL 6.4.3 specifications.
+Every ADR follows the **KFM-ADR Standard v3.0**, harmonized with **MADR 3.0** and **MCP-DL 6.4.3**.
 
 ```yaml
 ---
 adr_id: "ADR-####"
 title: "Concise Decision Title"
-authors: ["@username1","@username2"]
+authors: ["@author"]
 reviewers: ["@kfm-architecture","@kfm-docs"]
 status: "Proposed|Accepted|Superseded|Deprecated"
 decision_date: "YYYY-MM-DD"
@@ -95,78 +95,81 @@ license: "CC-BY 4.0"
 ```
 
 ### Section Layout
+
 ```md
 # Context
-Explain the problem, alternatives, and rationale.
+Explain the problem, goals, and alternatives evaluated.
 
 # Decision
-Describe what was chosen and why.
+State the final decision and rationale.
 
 # Consequences
-List positive and negative effects.
+List trade-offs, implications, and technical or ethical impacts.
 
 # Status
-Current state (Proposed, Accepted, Superseded, Deprecated).
+Proposed · Accepted · Superseded · Deprecated.
 
 # References
-Links to issues, PRs, standards, or external documentation.
+Include related ADRs, PRs, tickets, or external standards.
 ```
 
 ---
 
-## 🧮 ADR Lifecycle
+## 🧭 ADR Lifecycle
 
 ```mermaid
 flowchart LR
-  A["Propose ADR (Draft PR)"] --> B["Review by Architecture Council"]
-  B --> C["Governance Board Sign-off"]
-  C --> D["ADR Published with Version & Provenance"]
-  D --> E["Linked to Code, Docs, and Graph Schema"]
+  A["Propose ADR (Draft PR)"] --> B["Architecture Review Board Evaluation"]
+  B --> C["Governance Council Sign-off"]
+  C --> D["ADR Published + Versioned"]
+  D --> E["Linked to Code, Docs, and Provenance Ledger"]
 ```
 <!-- END OF MERMAID -->
 
-| State | Description | CI Enforcement |
+| State | Description | Validation |
 |:--|:--|:--|
-| **Proposed** | Submitted via PR for Council review. | Policy-check ensures metadata completeness. |
-| **Accepted** | Officially approved and implemented. | ADR validated + versioned in manifest. |
-| **Superseded** | Replaced by a new ADR. | Linked via `related_adrs`. |
-| **Deprecated** | No longer relevant but kept for history. | Flagged in governance ledger. |
+| **Proposed** | Drafted ADR submitted for review. | Checked for front-matter + metadata. |
+| **Accepted** | Officially approved by the Architecture Council. | Added to governance ledger. |
+| **Superseded** | Replaced by a newer ADR. | Linked via `related_adrs`. |
+| **Deprecated** | Retained for historical record. | Archived and version-locked. |
 
 ---
 
 ## ⚙️ Governance Integration
 
-| Artifact | Purpose | Location |
+| Artifact | Function | Location |
 |:--|:--|:--|
-| **Governance Ledger** | Records ADR approvals and authorship signatures. | `data/reports/audit/data_provenance_ledger.json` |
-| **Policy-Check.yml** | Validates ADR front-matter and status fields. | `.github/workflows/policy-check.yml` |
-| **ADR Validation** | Confirms required sections and Markdown structure. | `adr_validate.yml` |
-| **Release Manifest** | Includes ADR checksums for provenance. | `releases/v2.1.1/manifest.zip` |
+| **Governance Ledger** | Stores ADR approvals & reviewer signatures | `data/reports/audit/data_provenance_ledger.json` |
+| **Policy-Check.yml** | Validates ADR front-matter + status fields | `.github/workflows/policy-check.yml` |
+| **ADR Validator** | Ensures required sections & completeness | `adr_validate.yml` |
+| **Release Manifest** | Publishes ADR checksums for provenance | `releases/v2.1.1/manifest.zip` |
 
 ---
 
 ## 🔗 ADR Cross-References
 
-| Related ADRs | Description | Relationship |
+| ADR ID | Title | Relationship |
 |:--|:--|:--|
-| `ADR-0001-data-storage.md` | Defines the data hierarchy and STAC integration policy. | Precedent |
-| `ADR-0002-ontology-mapping.md` | Defines semantic alignment between Neo4j schema and CIDOC CRM. | Parallel |
-| `ADR-0003-ai-governance-framework.md` | Establishes ethical AI governance framework. | Complementary |
+| `ADR-0001` | Adopt STAC 1.0 for Dataset Metadata | Precedent |
+| `ADR-0002` | Align Graph Ontology to CIDOC CRM + OWL-Time | Parallel |
+| `ADR-0003` | Define FAIR+CARE AI Governance Framework | Complementary |
+
+> Use `related_adrs:` to link dependent decisions or updates.
 
 ---
 
-## 🧠 Best Practices for ADR Authors
+## 🧠 Best Practices for Authors
 
-- Keep **titles concise** and avoid jargon.  
-- Write **decisions, not discussions** — focus on outcome and reasoning.  
-- Link to supporting **PRs, diagrams, or documents**.  
-- Ensure **cross-references** to dependent ADRs and related governance docs.  
-- Maintain **consistent numbering**: increment sequentially (no reuse).  
-- Review all ADRs at least once per year for currency.  
+- Keep **titles concise** (≤ 10 words).  
+- Write **decisions**, not debates. Focus on outcome.  
+- Reference **implementation links** (PRs, diagrams, tickets).  
+- Maintain **consistent numbering** (`ADR-####`).  
+- Cross-reference **related ADRs** to maintain lineage.  
+- Review annually for relevance and archival status.  
 
 ---
 
-## 🧾 Example ADR Entry
+## 🧾 Example ADR
 
 ```yaml
 ---
@@ -185,12 +188,12 @@ license: "CC-BY 4.0"
 KFM required a consistent metadata framework for spatial and temporal datasets.
 
 ### Decision
-Adopt the **SpatioTemporal Asset Catalog (STAC 1.0)** specification to ensure interoperability, discoverability, and FAIR compliance.
+Adopt the **SpatioTemporal Asset Catalog (STAC 1.0)** as the canonical metadata schema for discoverability and FAIR compliance.
 
 ### Consequences
-- ✅ Increased metadata interoperability.  
-- ✅ Simplified FAIR+CARE alignment.  
-- ⚠️ Requires validator maintenance with future STAC releases.
+- ✅ Interoperability with OGC and DCAT ecosystems.  
+- ✅ Alignment with FAIR+CARE.  
+- ⚠️ Ongoing validator maintenance required for future STAC releases.
 
 ---
 
@@ -200,17 +203,28 @@ Adopt the **SpatioTemporal Asset Catalog (STAC 1.0)** specification to ensure in
 |:--|:--|:--|:--|
 | @kfm-architecture | Lead Architect | 2025-11-16 | ✅ Approved |
 | @kfm-docs | Documentation Steward | 2025-11-16 | ✅ Published |
-| @kfm-governance | FAIR+CARE Board | 2025-11-16 | ✅ Certified |
+| @kfm-governance | FAIR+CARE Council | 2025-11-16 | ✅ Certified |
 
 ---
 
-## 🕰️ Version History
+## 🧩 Observability Metrics
+
+| Metric | Description | Threshold | Source |
+|:--|:--|:--|:--|
+| `adr_frontmatter_coverage` | ADRs containing required metadata | 100% | Policy-Check |
+| `adr_review_frequency` | ADRs reviewed within 12 months | ≥ 95% | Governance Dashboard |
+| `adr_crossref_integrity` | Valid links between related ADRs | 100% | ADR Validator |
+| `adr_retention_compliance` | ADRs retained per policy | 100% | Audit Logs |
+
+---
+
+## 🕰 Version History
 
 | Version | Date | Author | Summary |
 |:--|:--|:--|:--|
-| **v2.1.1** | 2025-11-16 | @kfm-architecture | Added ADR index, templates, governance integration, and lifecycle diagram. |
-| v2.0.0 | 2025-10-25 | @kfm-data-lab | Introduced ADR cross-references and version tracking. |
-| v1.0.0 | 2025-10-05 | @kfm-architecture | Initial ADR structure and governance workflow. |
+| **v2.1.1** | 2025-11-16 | @kfm-architecture | Standardized ADR index, schema, governance links, and CI policy alignment. |
+| v2.0.0 | 2025-10-25 | @kfm-data-lab | Added cross-references and annual review policy. |
+| v1.0.0 | 2025-10-05 | @kfm-architecture | Initial ADR framework under MCP-DL governance. |
 
 ---
 
@@ -218,6 +232,6 @@ Adopt the **SpatioTemporal Asset Catalog (STAC 1.0)** specification to ensure in
 
 **Kansas Frontier Matrix © 2025**  
 *“Decisions Made Transparent — Knowledge Made Permanent.”*  
-📍 `docs/architecture/adr/README.md` — Central ADR registry for Kansas Frontier Matrix.
+📍 `docs/architecture/adr/README.md` — Central ADR Registry for the Kansas Frontier Matrix.
 
 </div>
