@@ -1,1 +1,62 @@
-y
+%%---
+%% title: "System Overview — KFM Full-Stack Architecture"
+%% version: "v2.1.1"
+%% author: "@kfm-architecture"
+%% description: "High-level view of Kansas Frontier Matrix subsystems: data, AI, graph, API, web, and CI/CD governance."
+%% license: "CC-BY 4.0"
+%% source: "docs/architecture/diagrams/templates/system_overview.mmd"
+%%---
+
+flowchart TD
+
+  %% Subsystems
+  subgraph DATA["Data Platform"]
+    D1["Raw Data (NOAA · USGS · FEMA · KGS · Archives)"]
+    D2["ETL Workspaces (tmp · processed · validation)"]
+    D3["STAC / DCAT Catalogs"]
+    D4["Archive + Manifests"]
+  end
+
+  subgraph AI["AI & Analytics"]
+    A1["NER · Summarization · Geocoding"]
+    A2["Focus Mode Reasoner"]
+    A3["Bias / Drift / Explainability"]
+  end
+
+  subgraph GRAPH["Knowledge Graph"]
+    G1["Neo4j (CIDOC CRM · OWL Time · GeoSPARQL)"]
+    G2["Entity Linking · Inference Rules"]
+  end
+
+  subgraph API["APIs"]
+    P1["FastAPI (REST)"]
+    P2["GraphQL Gateway"]
+    P3["STAC / DCAT Endpoints"]
+  end
+
+  subgraph WEB["Web Experience"]
+    W1["React + MapLibre"]
+    W2["Timeline · Dossier Panels"]
+    W3["Accessibility (WCAG 2.1 AA)"]
+  end
+
+  subgraph CI["CI/CD & Governance"]
+    C1["Pre-Commit · Docs-Validate"]
+    C2["STAC Validate · Policy Check"]
+    C3["CodeQL · Trivy · SBOM · SLSA"]
+    C4["Governance Ledger · Telemetry"]
+  end
+
+  %% Data flows
+  D1 --> D2 --> D3 --> D4
+  D2 --> A1 --> A2 --> A3 --> G1
+  D3 --> G1 --> G2
+  G1 --> P2 --> WEB
+  D3 --> P3 --> WEB
+  G1 --> P1 --> WEB
+
+  %% Feedback loops
+  WEB --> C1 --> C2 --> C3 --> C4 --> D4
+  C4 --> D3
+
+<!-- END OF MERMAID -->
