@@ -14,6 +14,37 @@ sbom_ref: "../releases/v2.0.0/sbom.spdx.json"
 manifest_ref: "../releases/v2.0.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+---
+
+<div align="center">
+
+# 📘 **Kansas Frontier Matrix — Glossary (v2.0.0 · Tier-Ω+∞ Certified)**  
+`docs/glossary.md`
+
+**Mission:** Provide a **canonical, machine-readable, and audit-ready** reference for all technical, geospatial, historical, and procedural terms used across the **Kansas Frontier Matrix (KFM)** — ensuring cross-discipline clarity, interoperability, and **MCP-DL** reproducibility in documentation, datasets, pipelines, knowledge-graph schema, and AI systems.
+
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../docs/)
+[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../.github/workflows/docs-validate.yml)
+[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json)](../.github/workflows/stac-validate.yml)
+[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy-red?logo=github)](../.github/workflows/)
+[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../.github/workflows/sbom.yml)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
+
+</div>
+
+---
+
+```yaml
+---
+title: "Kansas Frontier Matrix — Glossary"
+document_type: "Glossary Index"
+version: "v2.0.0"
+last_updated: "2025-11-15"
+owners: ["@kfm-docs","@kfm-architecture","@kfm-accessibility"]
+maturity: "Production"
+status: "Active"
+license: "CC-BY 4.0"
+tags: ["glossary","standards","mcp","ontology","stac","graph","etl","security","ai","ethics","ci","fair","care","i18n"]
 ci_required_checks:
   - docs-validate
   - markdownlint
@@ -33,29 +64,14 @@ preservation_policy:
   retention: "glossary exports 365d · logs 90d"
   checksum_algorithm: "SHA-256"
 ---
-
-<div align="center">
-
-# 📘 **Kansas Frontier Matrix — Glossary**  
-`docs/glossary.md`
-
-**Mission:** Canonical, machine-readable, and audit-ready reference for all technical, geospatial, historical, and procedural terms used across **KFM** — ensuring cross-discipline clarity, interoperability, and **MCP-DL** reproducibility in documentation, datasets, pipelines, graph schema, and AI systems.
-
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../docs/)
-[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../.github/workflows/docs-validate.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json)](../.github/workflows/stac-validate.yml)
-[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy-red?logo=github)](../.github/workflows/)
-[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../.github/workflows/sbom.yml)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
-
-</div>
+```
 
 ---
 
 ## 📚 Overview
 
 The **KFM Glossary** is a **cross-domain authority** for terms used by developers, curators, historians, and data scientists.  
-It harmonizes vocabulary across **documentation**, **ETL pipelines**, **STAC/DCAT metadata**, **knowledge-graph ontology**, **security posture**, and **CI/CD**.
+It aligns vocabulary across **documentation**, **ETL pipelines**, **STAC/DCAT metadata**, **knowledge-graph ontology**, **security posture**, and **CI/CD**.
 
 **Organization**
 - 🧱 Architecture & Infrastructure  
@@ -98,17 +114,17 @@ term_schema:
   last_reviewed: "YYYY-MM-DD"
 ```
 
-> **Alias policy:** Prefer singular; add plurals to `aliases`. Avoid abbreviations unless ubiquitous (e.g., **ETL**, **OCR**).
+> **Alias policy:** Prefer singular. Add plural(s) to `aliases`. Avoid abbreviations unless ubiquitous (e.g., **ETL**, **OCR**).
 
 ---
 
 ## 🧭 Editorial & Curation Policy
 
-- **Plain language** ≤ Grade 9; define jargon when used.  
-- **Accessibility**: pronounceable labels; add pronunciation for Indigenous terms when helpful.  
-- **Neutral & respectful**; add cultural context where relevant.  
+- **Plain language** ≤ Grade 9; avoid jargon or define it.  
+- **Accessibility**: pronounceable labels; add pronunciation hints for Indigenous terms where helpful.  
+- **Neutral & respectful**; include cultural context when terms intersect with Indigenous data.  
 - **Versioned**: changes recorded in **Version History** with reviewer sign-off.  
-- **Deprecation**: mark `status: deprecated`, add `see_also` pointer to the successor term, retain record for history.
+- **Deprecation**: mark `status: deprecated`, add `see_also` pointer to successor term, and retain record.
 
 ---
 
@@ -118,7 +134,7 @@ term_schema:
 |:--|:--|:--|
 | **MCP / MCP-DL** | Documentation-first methodology ensuring reproducibility, provenance, and accessibility across code, data, and docs. | governance, docs |
 | **RMI / DCI** | Repository Maturity Index / Dynamic Compliance Index — CI-tracked metrics for MCP and validation coverage. | audit, ci |
-| **STAC (SpatioTemporal Asset Catalog)** | Schema for describing spatio-temporal assets (Collections, Items, Assets) with standardized metadata. | data, stac |
+| **STAC (SpatioTemporal Asset Catalog)** | Schema for describing spatiotemporal assets (Collections, Items, Assets) with standardized metadata. | data, stac |
 | **DCAT** | W3C vocabulary for dataset catalogs and distributions; used for crosswalks and publishing. | metadata, portals |
 | **ETL** | Extract → Transform → (Enrich) → Load stages for data pipelines. | etl |
 | **Checksum (SHA-256)** | Cryptographic hash used for integrity verification and provenance audit. | ci, data |
@@ -154,7 +170,7 @@ term_schema:
 | **Entity / Relationship** | Node (Person/Place/Event/Document) and edge (e.g., `OCCURRED_AT`, `DERIVED_FROM`). | graph |
 | **Graph Schema** | Labels, properties, and constraints forming the data model. | graph |
 | **Inference / Rules** | Derive implicit facts from explicit triples/paths. | reasoning |
-| **JSON-LD Export** | Structured export for semantic web & data portals. | integration |
+| **JSON-LD Export** | Structured export for the semantic web & data portals. | integration |
 | **Similarity Edge** | `SIMILAR_TO` edges based on embeddings or textual similarity. | ai, graph |
 | **PeriodO** | Gazetteer of named historical time periods used for temporal tags. | time |
 
@@ -190,7 +206,7 @@ term_schema:
 |:--|:--|:--|
 | **CodeQL** | Static security analysis producing SARIF reports. | security |
 | **Trivy** | CVE scanning for containers/dependencies; SBOM verification. | security |
-| **SBOM** | Software Bill of Materials (Syft; SPDX/CycloneDX). | supply-chain |
+| **SBOM** | Software Bill of Materials (SPDX/CycloneDX). | supply-chain |
 | **SLSA** | Supply-chain Levels for Software Artifacts; provenance attestations. | releases |
 | **Gitleaks** | Secret scanning with SARIF results. | security |
 | **Dependabot/Renovate** | Automated dependency update tooling. | hygiene |
@@ -205,7 +221,7 @@ term_schema:
 | **Summarization** | Abstractive/extractive reduction of text. | ai |
 | **Entity Linking** | Resolve mentions to canonical graph nodes with confidence. | ai, graph |
 | **Embedding Similarity** | Vector-space search for semantically close items. | ai, search |
-| **Model Card** | Metadata about a model (purpose,data,metrics,ethics). | docs |
+| **Model Card** | Metadata about a model (purpose, data, metrics, ethics). | docs |
 | **Bias/Quality Gates** | Minimum metrics + fairness checks required by CI prior to publish. | governance |
 
 ---
@@ -242,7 +258,7 @@ i18n_policy:
   transliteration_notes: "include pronunciation or diacritics when clarifying"
 ```
 
-> Prefer **community-approved labels** for Indigenous terms; include community context and citations.
+> When Indigenous terms exist, prefer **community-approved labels**; include community context and citations.
 
 ---
 
@@ -250,27 +266,28 @@ i18n_policy:
 
 **Commands**
 ```bash
-make export-glossary         # builds docs/glossary.jsonld + docs/glossary.yaml
-make glossary-validate       # schema + crossref + link checks
+make export-glossary         # build docs/glossary.jsonld + docs/glossary.yaml
+make glossary-validate       # schema + broken crossref check
 ```
 
 **CI (`docs-validate.yml`)**
 - Validates **front-matter**, **term schema**, **cross-references**, **links**  
-- Publishes **`glossary.jsonld`** and **`glossary.yaml`** as artifacts  
-- Posts metrics to **`https://metrics.kfm.ai/docs/glossary`**
+- Publishes **glossary.jsonld** and **glossary.yaml** as artifacts  
+- Posts metrics to **https://metrics.kfm.ai/docs/glossary**
 
 ---
 
 ## 🤖 AI Assistant & API Consumption
 
-- The AI Assistant indexes **`glossary.jsonld`** to provide authoritative, preferred terms.  
-- Planned REST/GraphQL endpoints:
+Planned REST/GraphQL endpoints:
 
 ```http
 GET /api/v1/terms?query=etl
 GET /api/v1/terms/{id}          # returns JSON-LD record
 GET /api/v1/terms?alias=COG
 ```
+
+The AI Assistant indexes **glossary.jsonld** to provide authoritative definitions and preferred terms.
 
 ---
 
@@ -280,11 +297,10 @@ GET /api/v1/terms?alias=COG
 flowchart LR
   A["Propose Term (PR Template)"] --> B["Editorial Review (@kfm-docs)"]
   B --> C["Ontology / Crossref Check (CIDOC · DCAT · STAC)"]
-  C --> D["Approve & Merge (front-matter + entry)"]
+  C --> D["Approve and Merge (front-matter + entry)"]
   D --> E["Export JSON-LD / YAML (glossary-export)"]
   E --> F["Index in Search / API / AI"]
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -319,10 +335,9 @@ flowchart LR
 
 ## 🧪 Style Guidance for Definitions
 
-- One concise, **single-paragraph** definition (≤ ~60 words).  
-- Prefer **present tense**; avoid speculative language.  
-- Keep tone **neutral**; cite sources for non-obvious claims.  
-- Provide **one short example** when useful.
+- Single, concise paragraph (≤ ~60 words).  
+- **Present tense**, neutral tone; cite sources for non-obvious claims.  
+- Include **one short example** when helpful.
 
 ---
 
@@ -365,6 +380,10 @@ versioning:
 
 ---
 
+<div align="center">
+
 **Kansas Frontier Matrix © 2025**  
 *“Every Definition. Every Domain. Linked, Verified, and Reusable.”*  
 📍 `docs/glossary.md` — Authoritative terminology for KFM documentation, data, and AI systems.
+
+</div>
