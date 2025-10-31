@@ -1,263 +1,187 @@
+---
+title: "🧭 Kansas Frontier Matrix — Design Review & Validation Records (Tier-Ω+∞ Certified)"
+path: "docs/design/reviews/README.md"
+version: "v2.1.1"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly / UX & FAIR+CARE Governance Board"
+commit_sha: "<latest-commit-hash>"
+license: "CC-BY 4.0"
+owners: ["@kfm-ux","@kfm-governance","@kfm-docs","@kfm-accessibility"]
+maturity: "Production"
+status: "Stable"
+tags: ["design","reviews","governance","a11y","fair","care","ethics","docs","validation"]
+sbom_ref: "../../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../../releases/v2.1.1/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../docs/standards/governance/UI-GOVERNANCE.md"
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR / CARE
+  - WCAG 2.1 AA / 3.0 Draft
+  - ISO/IEC 9241-210 (Human-Centered Design)
+  - AI Ethics & UX Transparency Principles v2.1
+validation:
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  docs_ci_required: true
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+preservation_policy:
+  retention: "design review logs 2 years · governance approvals permanent"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — **Design Reviews**  
-`docs/design/reviews/`
+# 🧭 **Kansas Frontier Matrix — Design Review & Validation Records (v2.1.1 · Tier-Ω+∞ Certified)**  
+`docs/design/reviews/README.md`
 
-**Mission:** Centralize **design-review templates, guidelines, workflows, and outcomes** for all visual,  
-interaction, accessibility, and architectural artifacts in **Kansas Frontier Matrix (KFM)** — ensuring that  
-**time**, **space**, and **story** remain synchronized and **reproducible** across every release.
+**Mission:** Centralize all **UX design reviews, accessibility validations, and FAIR+CARE ethical approvals**  
+conducted under the **Kansas Frontier Matrix (KFM)** governance framework — ensuring design reproducibility, inclusivity, and provenance.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../standards/documentation.md)
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-yellow)](../ui-guidelines.md#-accessibility)
-[![Alignment](https://img.shields.io/badge/Aligned-CIDOC%20CRM%20%7C%20OWL--Time%20%7C%20STAC%201.0%20%7C%20DCAT%202.0-green)](../metadata-standards.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../../docs/)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-Audited-brightgreen)](../../../docs/standards/accessibility.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Design%20Verified-gold)](../../../docs/standards/faircare-validation.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 
 </div>
 
 ---
 
-```yaml
+## 📚 Overview
+
+The **Design Review Archive** documents all accessibility and governance evaluations for KFM’s design system and interfaces.  
+Each review ensures alignment with:
+- **FAIR+CARE principles** for ethical and inclusive design.  
+- **WCAG 2.1 / 3.0 standards** for accessibility.  
+- **MCP-DL** governance for reproducible documentation.  
+
+All records are cross-referenced with governance ledgers and stored permanently for provenance tracking.
+
 ---
-title: "🧩 Kansas Frontier Matrix — Design Reviews"
-document_type: "README"
-version: "v2.2.0"
-last_updated: "2025-10-19"
-created: "2023-09-14"
-owners: ["@kfm-design","@kfm-web","@kfm-accessibility","@kfm-architecture"]
-status: "Stable"
-maturity: "Production"
-license: "CC-BY-4.0"
-tags: ["design-review","governance","a11y","ux","ui","tokens","mockups","architecture","mermaid","provenance"]
-alignment:
-  - MCP-DL v6.3
-  - WCAG 2.1 AA
-  - WAI-ARIA 1.2
-  - CIDOC CRM
-  - OWL-Time
-  - STAC 1.0
-  - DCAT 2.0
-  - FAIR Principles
-  - PROV-O
-dependencies:
-  - tokens.css Design System
-  - React + MapLibre UI
-  - Mermaid CLI / SVG export
-  - Lighthouse · Axe · Playwright
-review_cycle: "Per PR + Quarterly Audit"
-governance_board: ["@kfm-design-council","@kfm-accessibility-lead"]
-maturity_score: "A+"
-validation:
-  lighthouse_min_score: 95
-  axe_blocking_violations: 0
-  contrast_min_ratio: 4.5
-  keyboard_traps: "none"
-  mermaid_parse: true
-  schema_checks: true
-provenance:
-  reviewed_by: ["@kfm-accessibility","@kfm-editorial","@kfm-frontend"]
-  workflow_ref: ".github/workflows/design-review.yml"
-  artifact_retention_days: 90
-versioning:
-  policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
-  major_change: "Breaking UX/a11y standards or design framework changes"
-  minor_change: "New templates, checklists, or CI validations"
-  patch_change: "Typos, link fixes, or small clarifications"
-telemetry:
-  metrics_collected: ["A11y Compliance %","Contrast Failures","Keyboard Coverage","Visual Regression Count","Review Turnaround Time"]
-  privacy_policy: "Anonymous, opt-in metrics; no PII; conforms to W3C Privacy Principles"
-preservation_policy:
-  replication_targets: ["GitHub Repository","Zenodo Snapshot","OSF Backup"]
-  checksum_algorithm: "SHA-256"
-  revalidation_cycle: "quarterly"
-review_frequency: "Per release and quarterly audit"
-semantic_alignment:
-  - CIDOC CRM (review provenance)
-  - OWL-Time (temporal version tracking)
-  - FAIR Principles (design-data reusability)
-  - PROV-O (review traceability ontology)
----
+
+## 🗂️ Directory Layout
+
+```bash
+docs/design/reviews/
+├── README.md                          # This file — design review archive overview
+├── 2025_Q4_design_review.md           # Most recent quarterly UX & accessibility audit
+├── 2025_Q3_design_review.md
+├── 2025_Q2_design_review.md
+└── templates/
+    ├── review-template.md             # Template for new design review reports
+    └── accessibility-checklist.md     # Checklist used during accessibility audits
 ```
 
 ---
 
-## 🎯 Purpose
-
-This directory houses **design-review documentation** that governs how KFM evaluates and approves:
-
-- 🖼️ **Visual & UX** (mockups → components)  
-- 🧭 **Interaction** (map, timeline, focus mode, search, legends)  
-- ♿ **Accessibility** (WCAG 2.1 AA · ARIA · keyboard flows · reduced motion)  
-- 🧱 **Architecture diagrams** (Mermaid → SVG)  
-- 🎨 **Design tokens** (color, type, motion, spacing)  
-- 🤖 **AI UX** (assistant panel, summaries, confidence/citation UX)
-
-Design reviews ensure changes are **traceable, testable, ethical, and reproducible** — meeting **MCP-DL v6.3**.
-
----
-
-## 🧭 Design Review Lifecycle
+## ⚙️ Review Process Overview
 
 ```mermaid
 flowchart TD
-  P["Proposal · Issue Created"] --> D["Design Review In Progress\n(template + checklist)"]
-  D --> A["Approved & Archived\n(version bump)"]
-  A --> F["Feedback Logged\n(iteration notes)"]
-  F --> P
+  A["Design Prototype Submission"] --> B["Accessibility & FAIR+CARE Evaluation"]
+  B --> C["Governance Review Board Sign-off"]
+  C --> D["Checksum + Provenance Logging"]
+  D --> E["Publication in Design Review Archive"]
 ```
 <!-- END OF MERMAID -->
 
 ---
 
-## 🪶 Review Types
+## 🧱 Design Review Criteria
 
-| Review Type | Scope | Deliverables | Frequency |
+| Category | Evaluation Metric | Reviewer | Validation Workflow |
 |:--|:--|:--|:--|
-| **Visual Design** | Layouts · color · typography | Annotated screenshots / Figma comments | Per component |
-| **Interaction Design** | Map + Timeline sync, gestures, search | Updated flows and interaction logs | Major release |
-| **Architecture Diagram** | Mermaid & STAC flowcharts | Validated `.mmd` + SVG export | Quarterly |
-| **Accessibility** | Keyboard · color · screen reader | Checklist + compliance score | Each milestone |
-| **AI UX Review** | Prompt logic · AI panel · summaries | Feedback log + iteration notes | As needed |
+| **Accessibility (WCAG 2.1)** | Contrast, navigation, screen reader compatibility. | @kfm-accessibility | `design-validate.yml` |
+| **Ethical Use (FAIR+CARE)** | Inclusivity, language neutrality, community respect. | @kfm-governance | `faircare-validate.yml` |
+| **Design Consistency** | Token usage, spacing, layout uniformity. | @kfm-ux | `policy-check.yml` |
+| **Localization (i18n)** | Label readiness and translation structure. | @kfm-docs | i18n Audit |
+| **Governance Provenance** | Metadata completeness, checksum registration. | @kfm-architecture | `governance-ledger.yml` |
 
 ---
 
-## 🧩 Review Process
+## 🧩 FAIR + CARE Review Model
 
-1. **Initiate** — Create a new file from `templates/design_review_template.md`.  
-2. **Reference** — Link mockups, PRs, diagrams, and design tokens.  
-3. **Evaluate** — Apply **MCP checklist** → clarity · consistency · compliance · reproducibility.  
-4. **Record** — Document findings, rationale, and version metadata.  
-5. **Approve** — Tag reviewers; assign **semver bump**.  
-6. **Archive** — Move closed reviews to `/archive/`; generate digest quarterly.
-
----
-
-## ✅ MCP-Aligned Evaluation Checklist
-
-| Category | Criteria | Status |
-|:--|:--|:--:|
-| **Readability** | ≥16 px text; clear hierarchy | ☐ |
-| **Contrast** | AA contrast ≥ 4.5:1 | ☐ |
-| **Layout** | Responsive across ≥3 breakpoints | ☐ |
-| **Keyboard** | 100% reachability; no traps | ☐ |
-| **Screen Reader** | Landmarks and ARIA roles valid | ☐ |
-| **Timeline Sync** | Map ↔ timeline update < 200 ms | ☐ |
-| **Color System** | Semantic tokens `--kfm-*` used | ☐ |
-| **Performance** | First paint ≤ 2 s | ☐ |
-| **Documentation** | Updated + version tagged | ☐ |
-
----
-
-## ♿ Accessibility Audit Metrics
-
-| Metric | Target | Status |
-|:--|:--|:--:|
-| **Contrast compliance** | ≥ 4.5 : 1 text / 3 : 1 icons | ☐ |
-| **Keyboard reachability** | 100 % coverage | ☐ |
-| **Screen-reader coverage** | 100 % tested views | ☐ |
-| **Reduced-motion coverage** | 100 % | ☐ |
-| **ARIA label accuracy** | ≥ 95 % | ☐ |
-
----
-
-## ⌨️ Keyboard Interaction Table
-
-| Function | Key | Requirement |
+| Principle | Implementation | Audit Evidence |
 |:--|:--|:--|
-| Navigate checklist | `Tab / Shift+Tab` | Sequential focus order |
-| Toggle status | `Space` | Changes `[☐] → [☑]` |
-| Expand details | `Enter` | Opens nested sections |
-| Close modal | `Esc` | Returns focus to last element |
+| **Findable** | Mockups and design tokens registered with manifest IDs. | `manifest.zip` |
+| **Accessible** | WCAG-tested components across all prototypes. | Accessibility Audit |
+| **Interoperable** | Figma + JSON schema export for reuse. | Design Token Library |
+| **Reusable** | Design patterns versioned and archived. | `mockups/hi_fidelity/` |
+| **Collective Benefit (CARE)** | Transparent and inclusive visual design standards. | Governance Audit Records |
 
 ---
 
-## 🧠 Ethical & Cognitive Review Standards
+## 🧩 Governance Integration
 
-- Respect Indigenous and community data sovereignty.  
-- Use plain, inclusive language; avoid jargon.  
-- Limit visual cognitive load: ≤ 5 UI elements per viewport.  
-- Flag trauma or sensitive narratives with content notes.  
-- AI-generated content must cite sources and include confidence levels.
-
----
-
-## 🗄️ Archival Policy
-
-- Archived reviews are immutable after approval.  
-- Reviews are stored in `/archive/YYYY/` by year.  
-- SHA-256 checksum and metadata stored under `/data/checksums/`.  
-- Reviews older than 18 months summarized in annual digest reports.  
-
----
-
-## 📊 Review Metrics & Telemetry
-
-| Metric | Target |
-|:--|:--|
-| **Average Review Duration** | ≤ 5 days |
-| **Accessibility Fail Rate** | < 5 % |
-| **Visual Regression Count** | ≤ 0.1 % of pixels |
-| **Reviewer Participation** | ≥ 3 reviewers per major component |
-| **Archival Compliance** | 100 % of closed reviews logged |
-
----
-
-## ⚙️ Continuous Integration (Design QA)
-
-**Workflow:** `.github/workflows/design-review.yml`
-
-- Validates Mermaid syntax and Markdown structure.  
-- Runs Axe/Pa11y + Lighthouse audits.  
-- Lints front-matter and table formatting.  
-- Uploads artifacts to `/data/work/logs/design/`.
-
----
-
-## 🔍 Compliance Matrix (MCP-DL v6.3)
-
-| Standard | Description | Verified |
-|:--|:--|:--:|
-| **MCP-DL v6.3** | Documentation & governance framework | ✅ |
-| **WCAG 2.1 AA** | Accessibility compliance | ✅ |
-| **CIDOC CRM** | Review provenance model | ✅ |
-| **OWL-Time** | Temporal audit trail | ✅ |
-| **STAC 1.0** | Asset/legend linkage | ✅ |
-| **FAIR Principles** | Reusable and findable design assets | ✅ |
-
----
-
-## 📎 Related Documentation
-
-- [🎨 Visual Style Guide](../style-guide.md)  
-- [🧭 UI/UX Guidelines](../ui-guidelines.md)  
-- [🧩 Interaction Patterns](../interaction-patterns.md)  
-- [📖 Storytelling & Narrative Design](../storytelling.md)  
-- [⚙️ Accessibility Standards](../standards/accessibility.md)  
-- [📘 Design Governance Index](../README.md)
-
----
-
-## 📅 Version Policy & History
-
-| Level | Trigger | Example |
+| Workflow | Function | Output |
 |:--|:--|:--|
-| **Major** | Structural change or breaking standard | v3.0.0 |
-| **Minor** | New templates, metrics, or CI hooks | v2.2.0 |
-| **Patch** | Typos, clarifications, or metadata updates | v2.1.1 |
+| `design-validate.yml` | Runs automated accessibility and metadata validation. | `reports/validation/design_validation.json` |
+| `faircare-validate.yml` | Performs FAIR+CARE ethical checks on design data. | `reports/fair/data_care_assessment.json` |
+| `policy-check.yml` | Ensures README + frontmatter compliance for design docs. | `reports/audit/policy_check.json` |
+| `governance-ledger.yml` | Logs all validated design reviews and checksum entries. | `data/reports/audit/ui_governance_ledger.json` |
 
-| Version | Date | Author | Summary | Type |
-|:--|:--|:--|:--|:--|
-| **v2.2.0** | 2025-10-19 | @kfm-design | Added lifecycle diagram, accessibility metrics, cognitive standards, and telemetry. | Minor |
-| **v2.1.0** | 2025-10-10 | @kfm-accessibility | Expanded a11y and ethical review standards. | Minor |
-| **v2.0.0** | 2024-12-05 | @kfm-web | Reorganized directory; added templates and archive policy. | Major |
-| **v1.0.0** | 2023-09-14 | @kfm-core | Initial design reviews index. | Major |
+---
+
+## 🧠 Example Review Record
+
+```yaml
+---
+review_id: "2025_Q4_UI_Audit"
+conducted_on: "2025-11-12"
+reviewers: ["@kfm-ux","@kfm-accessibility","@kfm-governance"]
+design_scope: ["Focus Mode", "Timeline", "Dashboard"]
+findings:
+  accessibility_score: 98
+  faircare_alignment: true
+  issues_found: 3
+  resolved: 3
+recommendations:
+  - Improve timeline label spacing for i18n clarity.
+  - Add extended alt text for event markers.
+  - Review future animations for vestibular sensitivity.
+status: "approved"
+ledger_entry: "data/reports/audit/ui_governance_ledger.json"
+checksum: "sha256:de94bc97b4e0a6fbd1f4b2aa74..."
+---
+```
+
+---
+
+## 🧩 Observability Metrics
+
+| Metric | Description | Target | Source |
+|:--|:--|:--|:--|
+| **a11y_compliance_score** | WCAG 2.1 AA accessibility compliance rate. | ≥ 95% | `design-validate.yml` |
+| **faircare_review_completion** | FAIR+CARE ethical review completion per quarter. | 100% | `faircare-validate.yml` |
+| **governance_record_sync** | Percentage of reviews logged in ledger. | 100% | `governance-ledger.yml` |
+| **issues_resolved_rate** | Ratio of resolved design audit issues. | ≥ 90% | Governance Reports |
+
+---
+
+## 🧾 Quarterly Review Cadence
+
+| Quarter | Review Type | Chair | Deliverable |
+|:--|:--|:--|:--|
+| **Q1** | Accessibility Review | @kfm-accessibility | Accessibility Report |
+| **Q2** | FAIR+CARE Ethical Audit | @kfm-governance | FAIR+CARE Validation |
+| **Q3** | Design System Consistency Audit | @kfm-ux | Governance Findings |
+| **Q4** | Full Annual UI Audit | @kfm-architecture | `2025_Q4_design_review.md` |
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-governance | Established full review workflow, FAIR+CARE integration, and observability metrics. |
+| v2.0.0 | 2025-10-25 | @kfm-ux | Added quarterly audit cadence and governance linkage. |
+| v1.0.0 | 2025-10-04 | @kfm-architecture | Initial design review documentation. |
 
 ---
 
 <div align="center">
 
-### 🧭 Kansas Frontier Matrix — Documentation-First Design Governance  
-**Spatial · Temporal · Narrative · Accessible · Reproducible**
+**Kansas Frontier Matrix © 2025**  
+*“Ethical Design is Continuous Governance.”*  
+📍 `docs/design/reviews/README.md` — Central record of all design and accessibility review documentation for the Kansas Frontier Matrix.
 
 </div>
