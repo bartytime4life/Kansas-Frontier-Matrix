@@ -1,12 +1,12 @@
 ---
 title: "🌦️ Kansas Frontier Matrix — NOAA Raw Data Repository (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/noaa/README.md"
-version: "v9.5.0"
+version: "v9.5.1"
 last_updated: "2025-10-30"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.5.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.5.0/manifest.zip"
+sbom_ref: "../../../releases/v9.5.1/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.5.1/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
@@ -81,7 +81,7 @@ flowchart TD
 **Lifecycle Steps**
 1. **Ingestion:** Data retrieved through NOAA APIs, FTP endpoints, or direct bulk downloads.  
 2. **Metadata Creation:** JSON metadata built per FAIR+CARE schema (license, provider, temporal coverage).  
-3. **Checksum Logging:** SHA-256 digests added to manifest (`releases/v9.5.0/manifest.zip`).  
+3. **Checksum Logging:** SHA-256 digests added to manifest (`releases/v9.5.1/manifest.zip`).  
 4. **Validation:** Schema conformance verified using STAC/DCAT validators.  
 5. **Governance:** Logged to provenance ledger and FAIR+CARE audit trail.
 
@@ -159,7 +159,7 @@ FAIR+CARE audit reports located at:
 |------|----------|
 | `metadata.json` | Dataset-level metadata (STAC/DCAT aligned). |
 | `license.txt` | NOAA public domain declaration. |
-| `../../../releases/v9.5.0/manifest.zip` | SHA-256 checksum registry. |
+| `../../../releases/v9.5.1/manifest.zip` | SHA-256 checksum registry. |
 | `../../../reports/audit/data_provenance_ledger.json` | Provenance and ethics log. |
 | `../../../reports/validation/stac_validation_report.json` | Metadata validation results. |
 
@@ -168,7 +168,7 @@ FAIR+CARE audit reports located at:
 ## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). NOAA Raw Data Repository (v9.5.0).
+Kansas Frontier Matrix (2025). NOAA Raw Data Repository (v9.5.1).
 Unaltered NOAA datasets including storm events, drought monitor data, and temperature anomalies for Kansas.
 Retrieved under FAIR+CARE governance.  
 Available at: https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/data/raw/noaa  
@@ -181,6 +181,7 @@ License: Public Domain (U.S. Government Works)
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v9.5.1 | 2025-10-30 | @kfm-data-lab | Clarified governance artifacts; bumped manifest/SBOM references to v9.5.1. |
 | v9.5.0 | 2025-10-30 | @kfm-data-lab | Upgraded to MCP-DL v6.4.3; added DCAT 3.0 crosswalk and telemetry integration. |
 | v9.3.2 | 2025-10-28 | @bartytime4life | Added 2025 updates to storm and drought datasets; verified checksum and governance compliance. |
 | v9.2.0 | 2024-07-10 | @kfm-etl-ops | Integrated CPC SPI and NIDIS drought data ingestion pipeline. |
