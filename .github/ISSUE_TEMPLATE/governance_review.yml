@@ -1,134 +1,189 @@
----
 name: "⚖️ Governance Review"
-about: "Request an ethical, FAIR+CARE, or documentation governance review for Kansas Frontier Matrix (KFM)."
+description: "Request an ethical, FAIR+CARE, or documentation governance review for Kansas Frontier Matrix (KFM)."
 title: "[GOVERNANCE] <brief description of the review request>"
-labels: ["governance", "faircare", "review-needed"]
-assignees: ["@kfm-architecture", "@bartytime4life", "@kfm-ai-lab"]
----
+labels:
+  - governance
+  - faircare
+  - review-needed
+assignees:
+  - "@kfm-architecture"
+  - "@bartytime4life"
+  - "@kfm-ai-lab"
 
-## ⚖️ Governance Review Summary
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚖️ Governance Review Summary
+        Provide a short summary of what this governance review covers.
+        Example: “Requesting FAIR+CARE ethics review for new NOAA flood dataset ingestion.”
 
-> _Provide a short summary of what this governance review covers._  
-> _Example: “Requesting FAIR+CARE ethics review for new NOAA flood dataset ingestion.”_
+  - type: dropdown
+    id: review_category
+    attributes:
+      label: Review Category
+      description: "Select the governance review type."
+      options:
+        - "🧠 AI/ML Governance (Bias, Drift, Explainability)"
+        - "🌍 Data Ethics / FAIR+CARE Compliance"
+        - "📜 Documentation & Provenance"
+        - "🧩 Ontology / Knowledge Graph Alignment"
+        - "⚙️ Infrastructure / Security / Policy"
+        - "Other (specify below)"
+    validations:
+      required: true
 
-**Review Category:**
-- [ ] 🧠 AI/ML Governance (Bias, Drift, Explainability)
-- [ ] 🌍 Data Ethics / FAIR+CARE Compliance
-- [ ] 📜 Documentation & Provenance
-- [ ] 🧩 Ontology / Knowledge Graph Alignment
-- [ ] ⚙️ Infrastructure / Security / Policy
-- [ ] Other (specify below)
+  - type: textarea
+    id: summary
+    attributes:
+      label: Review Summary
+      description: "Briefly describe the governance topic and context."
+      placeholder: "What is being reviewed and why?"
+    validations:
+      required: true
 
----
+  - type: markdown
+    attributes:
+      value: "## 🧩 Review Scope"
 
-## 🧩 Review Scope
+  - type: checkboxes
+    id: components
+    attributes:
+      label: Primary Component(s)
+      description: "Select all areas affected by this governance review."
+      options:
+        - label: "/data/ — Source or processed datasets"
+        - label: "/src/ — AI or ETL pipelines"
+        - label: "/docs/ — Governance or FAIR+CARE documentation"
+        - label: "/web/ — UI and user data presentation"
+        - label: "/releases/ — Telemetry, manifest, or audit files"
+    validations:
+      required: true
 
-> _Explain what needs to be reviewed and why._  
-> _Include references to datasets, code modules, or documentation affected._
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose of Review
+      description: "Explain the intent and necessity of this review."
+      placeholder: "e.g., Validate ethical use of model outputs in public Focus Mode dashboard."
+    validations:
+      required: true
 
-**Primary Component(s):**
-- [ ] `/data/` — Source or processed datasets
-- [ ] `/src/` — AI/ETL pipelines
-- [ ] `/docs/` — Governance or FAIR+CARE documentation
-- [ ] `/web/` — UI and user data presentation
-- [ ] `/releases/` — Telemetry, manifest, or audit files
+  - type: markdown
+    attributes:
+      value: "## 🧠 FAIR+CARE Compliance Evaluation"
 
-**Purpose of Review:**  
-> _Example: “Validate ethical use of tornado risk model outputs in public Focus Mode dashboard.”_
+  - type: checkboxes
+    id: faircare_assessment
+    attributes:
+      label: FAIR+CARE Review
+      description: "Select principles requiring review or confirmation."
+      options:
+        - label: "Findable — Metadata indexed in STAC/DCAT"
+        - label: "Accessible — Data open and retrievable under license"
+        - label: "Interoperable — Aligns with ISO/STAC/CIDOC schemas"
+        - label: "Reusable — Properly licensed, cited, and versioned"
+        - label: "Collective Benefit — Supports equitable outcomes"
+        - label: "Authority to Control — Respects contributor/community rights"
+        - label: "Responsibility — Risks documented and mitigated"
+        - label: "Ethics — Transparent, fair, and explainable workflows"
 
----
+  - type: markdown
+    attributes:
+      value: "## 🔍 Governance Metadata References"
 
-## 🧠 FAIR+CARE Compliance Evaluation
+  - type: textarea
+    id: governance_refs
+    attributes:
+      label: Metadata References
+      description: "Confirm relevant governance documents and ledger files."
+      value: |
+        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md  
+        Manifest Ref: releases/v9.5.0/manifest.zip  
+        Telemetry Ref: releases/v9.5.0/focus-telemetry.json  
+        FAIR+CARE Validation: docs/standards/faircare-validation.md  
+        AI Ledger / Audit: reports/audit/ai_hazards_ledger.json  
+        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl
+    validations:
+      required: false
 
-| Principle | Status | Notes |
-|------------|---------|-------|
-| **Findable** | ☐ Compliant ☐ Needs Review | _Is metadata indexed and discoverable in STAC/DCAT?_ |
-| **Accessible** | ☐ Compliant ☐ Needs Review | _Is data open and retrievable under license?_ |
-| **Interoperable** | ☐ Compliant ☐ Needs Review | _Does data align with ISO/STAC/CIDOC schemas?_ |
-| **Reusable** | ☐ Compliant ☐ Needs Review | _Is data properly licensed, cited, and versioned?_ |
-| **Collective Benefit** | ☐ Compliant ☐ Needs Review | _Does this serve equitable and beneficial outcomes?_ |
-| **Authority to Control** | ☐ Compliant ☐ Needs Review | _Are community and contributor rights respected?_ |
-| **Responsibility** | ☐ Compliant ☐ Needs Review | _Are risks documented and mitigated?_ |
-| **Ethics** | ☐ Compliant ☐ Needs Review | _Is the workflow transparent, fair, and explainable?_ |
+  - type: markdown
+    attributes:
+      value: "## 🧾 Review Questions"
 
----
+  - type: textarea
+    id: review_questions
+    attributes:
+      label: Governance Questions
+      description: "Answer or address key governance questions below."
+      value: |
+        **Provenance**
+        - Are all data and AI outputs linked to verifiable sources?
+        - Are STAC items properly versioned and signed?
 
-## 🔍 Governance Metadata References
+        **Transparency**
+        - Is documentation clear about methods and limitations?
+        - Are AI reasoning chains explainable?
 
-| Field | Reference |
-|--------|------------|
-| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
-| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
-| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
-| **FAIR+CARE Validation** | `docs/standards/faircare-validation.md` |
-| **AI Ledger / Audit** | `reports/audit/ai_hazards_ledger.json` |
-| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
+        **Bias & Risk Mitigation**
+        - Are there identified model or dataset biases?
+        - Is there a retraining or monitoring plan?
 
-> _All reviews must cross-check these documents for currency and completeness._
+        **Ethics & Governance**
+        - Has FAIR+CARE council approval been obtained?
+        - Are community or cultural impacts considered?
+    validations:
+      required: false
 
----
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Actions & Recommendations"
 
-## 🧾 Review Questions
+  - type: textarea
+    id: recommendations
+    attributes:
+      label: Recommended Actions
+      description: "Provide governance recommendations or next steps."
+      value: |
+        | Task | Assigned To | Due Date | Status |
+        |------|--------------|----------|--------|
+        | Address metadata inconsistencies | @kfm-data-lab | | ☐ |
+        | Update governance documentation | @kfm-architecture | | ☐ |
+        | Conduct AI bias audit | @kfm-ai-lab | | ☐ |
+        | Final sign-off | @bartytime4life | | ☐ |
+    validations:
+      required: false
 
-1. **Provenance:**  
-   - Are all data and AI outputs linked to verifiable sources?  
-   - Are STAC items properly versioned and signed?
+  - type: markdown
+    attributes:
+      value: "## 🧭 Routing & Reviewers"
 
-2. **Transparency:**  
-   - Is documentation clear about methods and limitations?  
-   - Are AI reasoning chains explainable to users?
+  - type: markdown
+    attributes:
+      value: |
+        | Role | Reviewer | Review Type |
+        |------|-----------|-------------|
+        | **Governance / Ethics Lead** | @kfm-architecture | FAIR+CARE review |
+        | **AI & ML Governance** | @kfm-ai-lab | Bias, explainability validation |
+        | **Repository Maintainer** | @bartytime4life | Merge, ledger signing |
+        | **Data Provenance / STAC** | @kfm-etl-ops | Validation & schema linkage |
 
-3. **Bias & Risk Mitigation:**  
-   - Are there identified model or dataset biases?  
-   - Is there a documented plan to monitor and retrain models?
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Review Completion Checklist
+      options:
+        - label: "FAIR+CARE assessment completed"
+        - label: "Governance documentation updated"
+        - label: "Provenance metadata verified"
+        - label: "Risks documented and mitigated"
+        - label: "Council sign-off recorded in ledger"
 
-4. **Ethics & Governance:**  
-   - Has FAIR+CARE council approval been obtained?  
-   - Are community impacts (environmental, cultural) considered?
-
----
-
-## ⚙️ Actions & Recommendations
-
-> _Provide governance recommendations, required fixes, or additional actions._
-
-| Task | Assigned To | Due Date | Status |
-|------|--------------|----------|--------|
-| Address metadata inconsistencies | @kfm-data-lab |  | ☐ |
-| Update governance documentation | @kfm-architecture |  | ☐ |
-| Conduct AI bias audit | @kfm-ai-lab |  | ☐ |
-| Final sign-off | @bartytime4life |  | ☐ |
-
----
-
-## 🧭 Routing & Reviewers
-
-| Role | Reviewer | Review Type |
-|------|-----------|-------------|
-| **Governance / Ethics Lead** | @kfm-architecture | FAIR+CARE review |
-| **AI & ML Governance** | @kfm-ai-lab | Bias, explainability validation |
-| **Repository Maintainer** | @bartytime4life | Merge, ledger signing |
-| **Data Provenance / STAC** | @kfm-etl-ops | Validation & schema linkage |
-
----
-
-## ✅ Review Completion Checklist
-
-- [ ] FAIR+CARE assessment completed  
-- [ ] Governance documentation updated  
-- [ ] Provenance metadata verified  
-- [ ] Risks documented and mitigated  
-- [ ] Council sign-off recorded in ledger  
-
----
-
-> ⚠️ **Note:**  
-> Submitting a governance review request automatically triggers:  
-> - FAIR+CARE compliance validation (`.github/workflows/faircare-validate.yml`)  
-> - Governance ledger synchronization (`.github/workflows/governance-ledger.yml`)  
-> - STAC and metadata schema checks (`.github/workflows/stac-validate.yml`)  
-
----
-
-**Kansas Frontier Matrix** · *Governance × Provenance × Ethical AI*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+  - type: markdown
+    attributes:
+      value: |
+        > ⚠️ **Automation Notice:**  
+        > Submitting this governance review will trigger:  
+        > - FAIR+CARE compliance validation (`.github/workflows/faircare-validate.yml`)  
+        > - Governance ledger synchronization (`.github/workflows/governance-ledger.yml`)  
+        > - STAC and metadata schema checks (`.github/workflows/stac-validate.yml`)
