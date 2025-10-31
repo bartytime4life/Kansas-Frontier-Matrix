@@ -163,4 +163,3 @@ These integrations are declared in the unified `index_dcat_catalog.jsonld`.
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../docs/) • [⚖️ Governance Ledger](../../docs/standards/governance/)
 
 </div>
-
