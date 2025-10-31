@@ -1,1 +1,73 @@
-y
+%%---
+%% title: "AI Lifecycle — Training, Validation, Deployment, Governance"
+%% version: "v2.1.1"
+%% author: "@kfm-architecture"
+%% description: "Standard KFM AI model lifecycle under FAIR and CARE governance with provenance and monitoring."
+%% license: "CC-BY 4.0"
+%% source: "docs/architecture/diagrams/templates/ai_lifecycle.mmd"
+%%---
+
+flowchart TD
+
+  %% Subgraphs for readability
+  subgraph D["Data and Prep"]
+    D1["Raw Data Ingest"]
+    D2["Data Curation and Labeling"]
+    D3["Feature Engineering"]
+  end
+
+  subgraph T["Training and Evaluation"]
+    T1["Model Training"]
+    T2["Evaluation Metrics"]
+    T3["Bias and Fairness Checks"]
+    T4["Explainability Report"]
+  end
+
+  subgraph G["Governance and Registration"]
+    G1["FAIR and CARE Validation"]
+    G2["Model Card Generation"]
+    G3["SBOM and Checksums"]
+    G4["Provenance Ledger Update"]
+    G5["Model Registry Update"]
+  end
+
+  subgraph P["Packaging and Release"]
+    P1["Package Artifact"]
+    P2["Sign and Attest"]
+    P3["Publish Release Artifact"]
+  end
+
+  subgraph R["Runtime and Monitoring"]
+    R1["Deploy to Focus Mode and API"]
+    R2["Telemetry Collection"]
+    R3["Drift Detection"]
+    R4["Periodic Bias Audit"]
+  end
+
+  subgraph L["Lifecycle Loop"]
+    L1["Retraining Trigger"]
+    L2["Issue and ADR Review"]
+  end
+
+  %% Data flow
+  D1 --> D2 --> D3 --> T1
+  T1 --> T2 --> T3 --> T4 --> G1
+  G1 --> G2 --> G3 --> G4 --> G5 --> P1
+  P1 --> P2 --> P3 --> R1
+  R1 --> R2 --> R3 --> R4 --> L1
+  L1 --> D2
+  L2 --> G4
+
+  %% Cross links for transparency
+  T2 -. "metrics.json" .-> G2
+  T3 -. "bias_report.csv" .-> G2
+  T4 -. "explainability.md" .-> G2
+  G3 -. "sbom.spdx.json" .-> P2
+  G4 -. "ledger.json" .-> P3
+  R2 -. "focus_telemetry.json" .-> G4
+
+  %% Notes
+  classDef accent fill:#eef7ff,stroke:#2a7fff,stroke-width:1px,color:#0b2e6b;
+  class D,T,G,P,R,L accent;
+
+%% END OF MERMAID
