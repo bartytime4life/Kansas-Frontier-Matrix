@@ -1,148 +1,192 @@
----
 name: "🧭 Data Request"
-about: "Request new datasets, sources, or geospatial layers for integration into the Kansas Frontier Matrix (KFM)."
+description: "Request new datasets, sources, or geospatial layers for integration into the Kansas Frontier Matrix (KFM)."
 title: "[DATA] <brief description of dataset request>"
-labels: ["data", "enhancement", "governance-review"]
-assignees: ["@kfm-data-lab", "@kfm-etl-ops", "@bartytime4life"]
----
+labels:
+  - data
+  - enhancement
+  - governance-review
+assignees:
+  - "@kfm-data-lab"
+  - "@kfm-etl-ops"
+  - "@bartytime4life"
 
-## 🧭 Summary
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧭 Summary
+        Provide a concise overview of the dataset or data source you are requesting.
+        Example: “Request integration of Kansas River discharge dataset from USGS NWIS API.”
 
-> _Provide a concise overview of the dataset or data source you are requesting._  
-> _Example:_ “Request integration of Kansas River discharge dataset from USGS NWIS API.”
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: "Select the appropriate category for this dataset."
+      options:
+        - "🌦️ Environmental / Climate"
+        - "🗺️ Geospatial / Map Layer"
+        - "📜 Historical / Archival"
+        - "⚡ Energy / Infrastructure"
+        - "🧠 AI / ML Training Dataset"
+        - "Other (specify below)"
+    validations:
+      required: true
 
-**Category:**
-- [ ] 🌦️ Environmental / Climate  
-- [ ] 🗺️ Geospatial / Map Layer  
-- [ ] 📜 Historical / Archival  
-- [ ] ⚡ Energy / Infrastructure  
-- [ ] 🧠 AI / ML Training Dataset  
-- [ ] Other (specify below)
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose of Integration
+      description: "Explain why this dataset benefits KFM and supports FAIR+CARE-aligned open science."
+      placeholder: "Describe how this data contributes to the KFM mission."
+    validations:
+      required: true
 
-**Purpose of Integration:**  
-> _Explain why this dataset benefits the Kansas Frontier Matrix (KFM), and how it advances FAIR+CARE-aligned open science._
+  - type: markdown
+    attributes:
+      value: "## 🧩 Source Information"
 
----
+  - type: textarea
+    id: source_info
+    attributes:
+      label: Source Information
+      description: "Provide dataset name, organization, URL, license, formats, temporal and spatial coverage."
+      value: |
+        Dataset Name:  
+        Source Organization:  
+        Access URL / API Endpoint:  
+        License / Terms of Use:  
+        Data Format(s):  
+        Temporal Coverage:  
+        Spatial Coverage:  
+        Update Frequency:  
+        Approx. Data Volume:  
+    validations:
+      required: true
 
-## 🧩 Source Information
+  - type: markdown
+    attributes:
+      value: "## 🔍 FAIR Metadata (if available)"
 
-| Field | Description |
-|--------|-------------|
-| **Dataset Name** | `<official dataset title or ID>` |
-| **Source Organization** | `<e.g., NOAA, USGS, FEMA, KHS, DASC>` |
-| **Access URL / API Endpoint** | `<download or API endpoint>` |
-| **License / Terms of Use** | `<e.g., Public Domain, CC-BY 4.0, CC0 1.0>` |
-| **Data Format(s)** | `<e.g., GeoJSON, GeoTIFF, CSV, NetCDF>` |
-| **Temporal Coverage** | `<start–end years or continuous>` |
-| **Spatial Coverage** | `<statewide, county-level, watershed, etc.>` |
-| **Update Frequency** | `<static / annual / monthly / real-time>` |
-| **Approx. Data Volume** | `<e.g., 1.2 GB / 500 MB>` |
+  - type: textarea
+    id: metadata
+    attributes:
+      label: FAIR Metadata
+      description: "Provide DOI, metadata record links, provenance, or data steward contact info if available."
+      value: |
+        DOI / Persistent ID:  
+        Metadata Record / File:  
+        Provenance / Citation:  
+        Data Steward / Contact:  
+    validations:
+      required: false
 
----
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Integration Requirements"
 
-## 🔍 FAIR Metadata (if available)
+  - type: textarea
+    id: integration
+    attributes:
+      label: Integration Requirements
+      description: "Describe technical requirements, pipelines, or transformations needed (e.g., EPSG:4326 reprojection)."
+      placeholder: "Describe how this dataset should be integrated or displayed in KFM."
+    validations:
+      required: false
 
-| Field | Description |
-|--------|-------------|
-| **DOI / Persistent ID** | `<if registered>` |
-| **Metadata Record / File** | `<link to STAC/DCAT metadata or upload>` |
-| **Provenance / Citation** | `<source citation or agency reference>` |
-| **Data Steward / Contact** | `<responsible organization or individual>` |
+  - type: checkboxes
+    id: integration_path
+    attributes:
+      label: Preferred Integration Path
+      options:
+        - label: "ETL Pipeline (/src/pipelines/etl/)"
+        - label: "AI Model Input (/src/pipelines/ai/)"
+        - label: "Web Visualization (/web/src/layers/)"
+        - label: "Knowledge Graph / Neo4j Entity"
+        - label: "Documentation / Reference Archive Only"
 
-> _If metadata is incomplete, indicate if it can be derived from the source API or documentation._
+  - type: markdown
+    attributes:
+      value: "## 🧠 FAIR+CARE Evaluation"
 
----
+  - type: checkboxes
+    id: faircare
+    attributes:
+      label: FAIR+CARE Compliance Self-Assessment
+      description: "Mark applicable compliance categories."
+      options:
+        - label: "Findable — Metadata or DOI present"
+        - label: "Accessible — Open license and machine-readable format"
+        - label: "Interoperable — Uses open standards (e.g., GeoJSON, CSV)"
+        - label: "Reusable — Clear citation and documentation"
+        - label: "Collective Benefit — Serves community or research purpose"
+        - label: "Authority to Control — Respects community rights"
+        - label: "Responsibility — Data handled ethically"
+        - label: "Ethics — No harmful or biased use"
 
-## ⚙️ Integration Requirements
+  - type: markdown
+    attributes:
+      value: "## 🧾 Governance Metadata"
 
-> _Describe the intended technical integration for this dataset._  
-> _Example:_ “Overlay county-level drought severity data with historical flood maps in Focus Mode.”
+  - type: textarea
+    id: governance_refs
+    attributes:
+      label: Governance References
+      description: "Confirm or update governance metadata for the dataset."
+      value: |
+        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md  
+        Manifest Ref: releases/v9.5.0/manifest.zip  
+        Telemetry Ref: releases/v9.5.0/focus-telemetry.json  
+        SBOM Ref: releases/v9.5.0/sbom.spdx.json  
+        Data Contract: docs/contracts/data-contract-v3.json  
+        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl  
 
-**Preferred Integration Path:**
-- [ ] ETL Pipeline (`/src/pipelines/etl/`)  
-- [ ] AI Model Input (`/src/pipelines/ai/`)  
-- [ ] Web Visualization (`/web/src/layers/`)  
-- [ ] Knowledge Graph / Neo4j Entity  
-- [ ] Documentation / Reference Archive Only  
+  - type: markdown
+    attributes:
+      value: "## 📊 Suggested Output Layers or Products"
 
-**Additional Requirements:**  
-> _List any needed preprocessing, coordinate transformation (e.g., EPSG:4326), or reformatting tasks._
+  - type: textarea
+    id: output
+    attributes:
+      label: Expected Outputs
+      description: "List expected outputs or derived visualizations after integration."
+      value: |
+        ETL Output:  
+        Visualization:  
+        AI Training Data:  
+        Validation Logs:  
 
----
+  - type: markdown
+    attributes:
+      value: "## 🧩 Review Routing"
 
-## 🧠 FAIR+CARE Evaluation
+  - type: markdown
+    attributes:
+      value: |
+        | Role | Reviewer | Required Action |
+        |------|-----------|-----------------|
+        | **Data Engineering** | @kfm-etl-ops | Evaluate ingestion feasibility & format compatibility |
+        | **Metadata / FAIR Review** | @kfm-data-lab | Validate metadata schema & FAIR compliance |
+        | **AI Governance** | @kfm-ai-lab | Assess ethical alignment & potential AI use |
+        | **Architecture / Maintainer** | @bartytime4life | Approve inclusion & merge to main branch |
 
-| Category | Compliance | Notes |
-|-----------|-------------|-------|
-| **Findable** | ☐ Yes ☐ No | _Dataset has searchable metadata or DOI?_ |
-| **Accessible** | ☐ Yes ☐ No | _Freely accessible and machine-readable?_ |
-| **Interoperable** | ☐ Yes ☐ No | _Uses open, non-proprietary formats?_ |
-| **Reusable** | ☐ Yes ☐ No | _Has license and citation for reuse?_ |
-| **Collective Benefit** | ☐ Yes ☐ No | _Supports research or public interest?_ |
-| **Authority to Control** | ☐ Yes ☐ No | _Respects community and data sovereignty?_ |
-| **Responsibility** | ☐ Yes ☐ No | _Used ethically and stored securely?_ |
-| **Ethics** | ☐ Yes ☐ No | _Contains no biased or harmful content?_ |
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission Checklist
+      options:
+        - label: "License verified (Open / FAIR-compliant)"
+        - label: "Metadata provided or retrievable"
+        - label: "FAIR+CARE self-assessment completed"
+        - label: "Governance metadata validated"
+        - label: "Maintainers notified for review"
 
----
-
-## 🧾 Governance Metadata
-
-| Field | Reference |
-|--------|------------|
-| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
-| **Manifest Ref** | `releases/v9.5.0/manifest.zip` |
-| **Telemetry Ref** | `releases/v9.5.0/focus-telemetry.json` |
-| **SBOM Ref** | `releases/v9.5.0/sbom.spdx.json` |
-| **Data Contract** | `docs/contracts/data-contract-v3.json` |
-| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
-
-> _Verify that all references correspond to the latest release version before submission._
-
----
-
-## 📊 Suggested Output Layers or Products
-
-> _Describe the expected output(s) after ingestion and processing._  
-> _Example:_ “Generate annual precipitation anomalies for Kansas (1900–present).”
-
-| Output Type | Description | Format |
-|--------------|-------------|--------|
-| **ETL Output** |  | GeoJSON / CSV |
-| **Visualization** |  | MapLibre Tile Layer / WebGL Overlay |
-| **AI Training Data** |  | JSON / NetCDF |
-| **Validation Logs** |  | JSON / Markdown |
-
----
-
-## 🧩 Review Routing
-
-| Role | Reviewer | Required Action |
-|------|-----------|-----------------|
-| **Data Engineering** | @kfm-etl-ops | Evaluate ingestion feasibility & format compatibility |
-| **Metadata / FAIR Review** | @kfm-data-lab | Validate metadata schema & FAIR compliance |
-| **AI Governance** | @kfm-ai-lab | Review ethical alignment & potential AI use |
-| **Architecture / Maintainer** | @bartytime4life | Approve inclusion & merge to main branch |
-
----
-
-## ✅ Submission Checklist
-
-- [ ] License verified (Open Data / FAIR-compliant)  
-- [ ] Metadata provided or derivable from source  
-- [ ] FAIR+CARE self-assessment completed  
-- [ ] Governance metadata references validated  
-- [ ] Maintainers tagged for review & integration  
-
----
-
-> ⚠️ **Automation Notice:**  
-> Submitting this issue triggers:  
-> - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
-> - STAC/DCAT schema testing (`.github/workflows/stac-validate.yml`, `dcat-export.yml`)  
-> - Governance ledger update (`reports/audit/ai_hazards_ledger.json`)  
-> - Telemetry update (`releases/v9.5.0/focus-telemetry.json`)
-
----
-
-**Kansas Frontier Matrix** · *Open Data × FAIR+CARE Ethics × Reproducible Science*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+  - type: markdown
+    attributes:
+      value: |
+        > ⚠️ **Automation Notice:**  
+        > Submitting this issue triggers:  
+        > - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
+        > - STAC/DCAT schema testing (`.github/workflows/stac-validate.yml`, `dcat-export.yml`)  
+        > - Governance ledger update (`reports/audit/ai_hazards_ledger.json`)  
+        > - Telemetry update (`releases/v9.5.0/focus-telemetry.json`)
