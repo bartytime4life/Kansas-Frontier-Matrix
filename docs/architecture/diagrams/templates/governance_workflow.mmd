@@ -1,1 +1,22 @@
-y
+%%---
+%% title: "Governance Workflow — FAIR+CARE, Validation, Provenance"
+%% version: "v2.1.1"
+%% author: "@kfm-architecture"
+%% description: "End-to-end governance workflow for data, docs, and AI: validation, FAIR+CARE audit, ledger registration, and release."
+%% license: "CC-BY 4.0"
+%% source: "docs/architecture/diagrams/templates/governance_workflow.mmd"
+%%---
+
+flowchart TD
+
+  subgraph SUB["Governance Workflow"]
+    A["Author / Ingest / Train"] --> B["Validate (Schema · STAC/DCAT · Diagrams)"]
+    B --> C["FAIR+CARE Audit"]
+    C --> D["Generate Checksums · SBOM · Attestations"]
+    D --> E["Governance Review and Sign-off"]
+    E --> F["Ledger Update — data/reports/audit"]
+    F --> G["Release Manifest and Telemetry Sync"]
+    F --> H["STAC / DCAT Back Reference"]
+  end
+
+<!-- END OF MERMAID -->
