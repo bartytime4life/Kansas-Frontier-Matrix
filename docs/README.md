@@ -1,11 +1,29 @@
+---
+title: "📘 Kansas Frontier Matrix — Documentation System (Tier-Ω+∞ Certified)"
+path: "docs/README.md"
+version: "v2.0.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly / Editorial Board"
+commit_sha: "<latest-commit-hash>"
+license: "CC-BY 4.0"
+owners: ["@kfm-docs","@kfm-architecture","@kfm-accessibility"]
+maturity: "Production"
+status: "Stable"
+tags: ["documentation","mcp","standards","architecture","ci","cd","governance","ai","ethics","fair","care"]
+sbom_ref: "../releases/v2.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v2.0.0/manifest.zip"
+data_contract_ref: "../docs/contracts/data-contract-v3.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+---
+
 <div align="center">
 
-# 📚 **Kansas Frontier Matrix — Documentation System (v2.0.0 · Tier-Ω+∞ Certified)**  
+# 📘 **Kansas Frontier Matrix — Documentation System (v2.0.0 · Tier-Ω+∞ Certified)**  
 `docs/README.md`
 
 **Mission:** Be the **single source of truth** for the **Kansas Frontier Matrix (KFM)** — connecting technical, architectural, design, data, and governance docs under a **reproducible, auditable, FAIR/CARE-aligned** framework.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../docs/)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../docs/)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json)](../.github/workflows/stac-validate.yml)
 [![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy&logo=github)](../.github/workflows/site.yml)
 [![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../.github/workflows/docs-validate.yml)
@@ -29,9 +47,9 @@ status: "Stable"
 license: "CC-BY 4.0"
 tags: ["documentation","mcp","standards","architecture","ci","cd","governance","ai","ethics","fair","care"]
 alignment:
-  - MCP-DL v6.3
+  - MCP-DL v6.4.3
   - STAC 1.0
-  - DCAT 2.0
+  - DCAT 3.0
   - CIDOC CRM
   - OWL-Time
   - GeoSPARQL
@@ -54,7 +72,7 @@ preservation_policy:
 
 ## 📖 Overview
 
-`docs/` is the **canonical knowledge base** for KFM. Every change to code, data, models, or UI **must** be reflected here and verified by CI (**docs-validate.yml**). We treat docs as **executable specifications**: diagrams, schemas, SOPs, and ADRs drive implementation and governance.
+`docs/` is the **canonical knowledge base** for KFM. Every change to code, data, models, or UI **must** be reflected here and verified by CI (`docs-validate.yml`). We treat docs as **executable specifications**: diagrams, schemas, SOPs, and ADRs drive implementation and governance.
 
 ### MCP Principles Applied
 
@@ -211,10 +229,10 @@ license: "CC-BY 4.0"
 
 ## 🔐 Security, Supply Chain & Provenance (Docs)
 
-- **SBOM & SLSA:** Documentation build artifacts attach SBOM + provenance in releases.  
+- **SBOM & SLSA:** Documentation builds attach SBOM + provenance in release artifacts.  
 - **Policy-as-Code:** `policy-check.yml` blocks docs missing `title|version|last_updated|owners|license`.  
 - **Retention:** Build logs ≥ 90d; provenance JSON under `artifacts/`.  
-- **Action Pinning:** Any docs workflows use pinned versions or SHAs.
+- **Action Pinning:** Docs workflows use pinned versions or SHAs.
 
 ---
 
@@ -255,8 +273,8 @@ ai_validation:
 
 - Use neutral English and **plain language** (≤ Grade 9).  
 - Provide **alt text** for all images/figures.  
-- RTL & pseudo-locale (`en-XA`) examples should be noted when doc content includes UI text.  
-- **WCAG** docs style: adequate contrast in figure callouts, no color-only meaning in diagrams.
+- RTL & pseudo-locale (`en-XA`) considerations when docs include UI strings.  
+- **WCAG**: ensure color contrast and no color-only meaning in diagrams.
 
 ---
 
@@ -289,23 +307,23 @@ Every ADR uses the template with **status**, **decision_date**, **reviewed_by**,
 
 ## 🧾 Contributor Workflow
 
-1. Create or update docs under `docs/`.  
+1. Create or update docs in `docs/`.  
 2. Validate locally:
 
 ```bash
 make docs-validate
 ```
 
-3. Commit using semantic conventions:
+3. Commit with semantic message:
 
 ```bash
 git commit -m "docs(architecture): clarify ETL lineage & update system diagram"
 ```
 
-4. Open a PR and ensure CI is green.  
+4. Open a PR and ensure CI is ✅ green.  
 5. Merge → CI deploys to GitHub Pages.
 
-> Describe **scope**, **inputs**, **outputs**, **dependencies**, **failure modes**, and **test strategy** for new systems.
+> Describe **scope**, **inputs**, **outputs**, **dependencies**, **failure modes**, and **test strategy** for new or modified systems.
 
 ---
 
@@ -321,60 +339,22 @@ versioning:
   auto_changelog_from_commits: true
 ```
 
-**When to bump:**
+**When to bump**
 - **Major:** Information architecture or standards overhaul  
 - **Minor:** New sections/templates/diagrams  
-- **Patch:** Typos, small clarifications, link fixes
+- **Patch:** Typos, clarifications, link fixes
 
-### 📘 Version History (Docs)
+---
+
+## 📘 Version History (Docs)
 
 | Version | Date | Summary |
 |:--|:--|:--|
-| **v2.0.0** | 2025-11-15 | Tier-Ω+∞ upgrade: added ADR index, AI docs lint, DQI metrics, localization guidance, governance/versioning section. |
-| v1.3.0 | 2025-10-18 | Added docs-validate, policy-as-code, supply-chain badges, FAIR/GeoSPARQL alignment. |
+| **v2.0.0** | 2025-11-15 | Tier-Ω+∞ upgrade: term schema, DQI metrics, ADR index, AI docs lint, localization guidance, governance/versioning. |
+| v1.3.0 | 2025-10-18 | Added docs-validate, policy-as-code, supply-chain badges, FAIR & GeoSPARQL alignment. |
 | v1.2.0 | 2025-10-17 | Added diagrams workflow, audit links, MCP front-matter validation. |
 | v1.1.0 | 2025-10-05 | Added governance & local preview steps. |
 | v1.0.0 | 2025-10-04 | Initial documentation hub. |
-
----
-
-## 🔗 Related Documents & Indices
-
-- `architecture/system-architecture-overview.md`  
-- `architecture/ci-cd.md`  
-- `design/mockups/README.md`  
-- `standards/metadata-standards.md`  
-- `audit/repository_compliance.md`  
-- `adr/` (decision registry)  
-- `glossary.md`
-
----
-
-## 🧱 Documentation Provenance Metadata (auto-injected)
-
-```yaml
-provenance:
-  generated_by: "docs-validate.yml"
-  reviewers: ["@kfm-docs","@kfm-architecture"]
-  last_audit: "2025-11-15"
-  artifacts:
-    - "artifacts/docs/provenance.json"
-  checksums:
-    - "artifacts/docs/readme.sha256"
-  dashboards:
-    - "https://metrics.kfm.ai/docs"
-```
-
----
-
-## 🧷 Appendix — Doc Status Badges
-
-| Badge                                                                        | Meaning                        |
-|:-----------------------------------------------------------------------------|:-------------------------------|
-| ![Status: Draft](https://img.shields.io/badge/Status-Draft-yellow)           | Early-stage or pending review  |
-| ![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)    | Published and CI-validated     |
-| ![Scope: Architecture](https://img.shields.io/badge/Scope-Architecture-blue) | Applies to system architecture |
-| ![Scope: Pipelines](https://img.shields.io/badge/Scope-Pipelines-purple)     | Applies to ETL / ML pipelines  |
 
 ---
 
