@@ -1,231 +1,166 @@
+---
+title: "📏 Kansas Frontier Matrix — Documentation & Governance Standards (Tier-Ω+∞ Certified)"
+path: "docs/standards/README.md"
+version: "v2.1.1"
+last_updated: "2025-11-16"
+review_cycle: "Biannual / Governance & Documentation Council"
+commit_sha: "<latest-commit-hash>"
+license: "CC-BY 4.0"
+owners: ["@kfm-docs","@kfm-architecture","@kfm-governance","@kfm-security"]
+maturity: "Production"
+status: "Stable"
+tags: ["standards","governance","docs","validation","fair","care","mcp","accessibility","ethics"]
+sbom_ref: "../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../releases/v2.1.1/manifest.zip"
+data_contract_ref: "../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR / CARE
+  - ISO 9001 / 27001 Documentation Management
+  - WCAG 2.1 AA Accessibility
+  - Open Standards Consortium (ODCS)
+validation:
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  docs_ci_required: true
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+preservation_policy:
+  retention: "standards permanent · audits 5 years"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# 📐 **Kansas Frontier Matrix — Standards & Governance**  
+# 📏 **Kansas Frontier Matrix — Documentation & Governance Standards (v2.1.1 · Tier-Ω+∞ Certified)**  
 `docs/standards/README.md`
 
-**Master Coder Protocol (MCP-DL v6.3+) · Governance · Provenance · Validation · Security**
+**Mission:** Define, maintain, and govern the **documentation, validation, and compliance standards**  
+for the **Kansas Frontier Matrix (KFM)** — ensuring reproducibility, accessibility, and ethical alignment  
+under the FAIR+CARE and Master Coder Protocol (MCP-DL v6.4.3).
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
-[![Docs Validated](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/docs-validate.yml?label=Docs%20Validated&color=blue)](../../.github/workflows/docs-validate.yml)
-[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&color=green)](../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github)](../../.github/workflows/codeql.yml)
-[![Trivy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy&logo=security)](../../.github/workflows/trivy.yml)
-[![Gitleaks](https://img.shields.io/badge/Secrets-Gitleaks-red)](../../.github/workflows/gitleaks.yml)
-[![Security: SLSA-3](https://img.shields.io/badge/Security-SLSA--3-orange)](../standards/security.md)
-[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20SPDX-green)](../../.github/workflows/sbom.yml)
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../docs/)
-[![License: MIT · CC-BY 4.0](https://img.shields.io/badge/License-MIT%20·%20CC--BY%204.0-blue)](../../LICENSE)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../docs/)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../docs/standards/faircare-validation.md)
+[![Governance Ledger](https://img.shields.io/badge/Governance-Ledger%20Synced-green)](../../data/reports/audit/data_provenance_ledger.json)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
 
 ---
 
-```yaml
+## 📚 Overview
+
+The **Documentation & Governance Standards** define how all text, metadata, and architecture records in KFM  
+are created, reviewed, and validated. These standards ensure that every file — from markdown to metadata JSON —  
+remains transparent, FAIR+CARE aligned, and machine-verifiable.
+
+All standards adhere to **MCP-DL reproducibility** and are enforced via CI/CD workflows and the governance ledger.
+
 ---
-title: "Kansas Frontier Matrix — Standards & Governance"
-version: "v6.3.1"
-last_updated: "2025-10-18"
-owners: ["@kfm-architecture","@kfm-security","@kfm-docs","@kfm-data","@kfm-ai"]
-tags: ["standards","governance","validation","mcp","docs","stac","security","slsa","policy","provenance","fair"]
-status: "Stable"
-scope: "Monorepo-Wide"
-license: "MIT (code) · CC-BY 4.0 (docs)"
-semver_policy: "MAJOR.MINOR.PATCH"
-audit_framework: "MCP-DL v6.3"
-ci_required_checks:
-  - docs-validate
-  - policy-check
-  - stac-validate
-  - checksums
-  - codeql
-  - trivy
-  - gitleaks
-semantic_alignment:
-  - STAC 1.0
-  - DCAT 2.0
-  - CIDOC CRM
-  - OWL-Time
-  - JSON Schema
-  - ISO 8601 / EPSG
-  - GeoSPARQL
-  - SLSA Level 3
-  - FAIR Principles
----
+
+## 🗂️ Directory Layout
+
+```bash
+docs/standards/
+├── README.md                             # This file — standards and governance overview
+├── markdown_rules.md                     # Formatting and syntax standards for documentation
+├── markdown_guide.md                     # Writing and accessibility guidelines
+├── metadata-standards.md                 # JSON / STAC / DCAT schema conventions
+├── naming-conventions.md                 # File and dataset naming guidelines
+├── validation-protocols.md               # Documentation and CI/CD validation pipelines
+└── governance/                           # Governance and ethics documentation
+    ├── ROOT-GOVERNANCE.md
+    ├── FAIRCARE-GOVERNANCE.md
+    └── SECURITY-GOVERNANCE.md
 ```
 
 ---
 
-## 📊 Overview
-
-This **Standards & Governance** document codifies the **authoritative rules, processes, and templates**
-governing the **Kansas Frontier Matrix (KFM)** under **MCP-DL v6.3**.
-It establishes the framework that ensures **reproducibility, provenance, and open-science compliance** across
-all repositories, workflows, and datasets — guaranteeing a unified and auditable development ecosystem.
-
-* ✅ **Reproducibility** — deterministic pipelines, pinned workflows, reproducible builds  
-* ✅ **Provenance** — STAC lineage, PROV-O, checksum logging, signed artifacts  
-* ✅ **Security** — CodeQL + Trivy + Gitleaks, SBOMs, SLSA Level 3 readiness  
-* ✅ **Auditability** — CI validation logs, change tracking, dataset metadata integrity  
-* ✅ **Policy-as-Code** — OPA/Conftest blocks non-compliant changes before merge  
-
----
-
-## 🧭 Repository Scope & Architecture
+## ⚙️ Documentation Governance Model
 
 ```mermaid
 flowchart TD
-    A["docs/standards/"] --> B["Markdown Governance<br/>Rules · Guide"]
-    A --> C["Templates<br/>SOP · Experiment · Model Card · ADR · Dataset · Provenance"]
-    A --> D["CI/CD Workflows<br/>.github/workflows/"]
-    A --> E["Security & Supply Chain<br/>SLSA · SBOM · OIDC"]
-    D --> F["Validation<br/>docs-validate · policy-check · stac-validate · codeql · trivy · gitleaks"]
-    F --> G["Audit Reports<br/>docs/audit/repository_compliance.md"]
-%% END OF MERMAID
+  A["Document Authoring (Markdown / JSON)"] --> B["Pre-Commit Validation (Lint / Policy)"]
+  B --> C["FAIR+CARE Compliance Audit"]
+  C --> D["Governance Review (MCP-DL Council)"]
+  D --> E["Checksum Registration + Ledger Sync"]
+  E --> F["Publication & Repository Integration"]
 ```
+<!-- END OF MERMAID -->
 
 ---
 
-## 🧩 Governance Framework
+## 🧱 Core Standards Overview
 
-| **Domain**     | **Standard**             | **Policy Enforcement**        | **Validation**            |
-| :------------- | :----------------------- | :---------------------------- | :------------------------ |
-| **Docs**       | Markdown + MCP-DL v6.3   | Pre-commit + OPA/Conftest     | ✅ `docs-validate.yml`     |
-| **Data**       | STAC 1.0 · DCAT 2.0      | JSON Schema + policy gates     | ✅ `stac-validate.yml`     |
-| **Security**   | SLSA-3 · Sigstore        | Trivy + Gitleaks + Cosign (plan)| ⚠️ `slsa.yml` (attestation)|
-| **Code**       | Black · ESLint           | Pre-commit · CodeQL            | ✅ `codeql.yml`            |
-| **Provenance** | PROV-O · CIDOC · OWL-Time| Metadata + SHA-256 + SBOM      | ✅ `checksums.yml` · `sbom.yml` |
-| **Release**    | SemVer + OIDC            | Auto tag + changelog + sign    | ✅ `release.yml` + `slsa.yml` |
-
-> **Non-negotiables:** pin all actions (tag/SHA), least-privilege tokens, no plaintext secrets in logs.
+| Standard | Description | Maintained By | Validation Workflow |
+|:--|:--|:--|:--|
+| **Markdown Rules** | Consistent structure, metadata, and frontmatter. | @kfm-docs | `docs-validate.yml` |
+| **Metadata Standards** | JSON-LD / STAC / DCAT schema validation. | @kfm-data | `stac-validate.yml` |
+| **Naming Conventions** | File and dataset naming policies. | @kfm-architecture | `policy-check.yml` |
+| **Validation Protocols** | CI/CD enforcement for FAIR+CARE alignment. | @kfm-governance | `governance-ledger.yml` |
+| **Accessibility (WCAG)** | Ensures readable and inclusive documentation. | @kfm-accessibility | `docs-validate.yml` |
 
 ---
 
-## 🧱 MCP-DL Governance Pillars
+## 🧩 FAIR + CARE in Documentation
 
-1. **Documentation-First:** Every modification accompanies an updated doc/metadata entry.  
-2. **Reproducibility:** All code, datasets, and docs regenerate using committed workflows.  
-3. **Open Standards:** Prefer open formats (GeoJSON, STAC, DCAT, JSON Schema, ISO 8601, EPSG).  
-4. **Provenance:** Every artifact includes checksums, STAC lineage, and PROV-O relations.  
-5. **Security by Design:** SBOMs, SLSA attestations, pinned actions, OIDC auth, and policy gates.  
-6. **Auditability:** Each change traceable via CI logs and metadata hashes; artifacts retained by policy.
-
----
-
-## 🧮 Governance Compliance Dashboard
-
-| **Category**             | **Status** | **Coverage** | **Next Action**                 |
-| :----------------------- | :--------- | :----------- | :------------------------------ |
-| Documentation Validation | ✅          | 100%         | Maintain MCP-DL v6.3 compliance |
-| STAC Provenance          | ✅          | 96%          | Add dataset-level lineage       |
-| Security Automation      | ⚠️         | 90%          | Integrate Cosign signing        |
-| CI/CD Workflows          | ✅          | 100%         | Attach SLSA badge per release   |
-| Data FAIR Compliance     | ✅          | 98%          | Strengthen DCAT crosswalks      |
-| Governance Reports       | ✅          | 95%          | Quarterly audit updates         |
+| Principle | Implementation | Validation |
+|:--|:--|:--|
+| **Findable** | All docs indexed in manifest and governance ledger. | `releases/v*/manifest.zip` |
+| **Accessible** | Markdown follows accessibility best practices (WCAG 2.1). | CI Accessibility Audit |
+| **Interoperable** | Uses open schemas and standardized metadata. | JSON Schema Validation |
+| **Reusable** | Version-controlled documentation with license metadata. | Policy Check Workflow |
+| **Collective Benefit (CARE)** | Promotes transparency and equitable governance. | FAIR+CARE Audit Reports |
 
 ---
 
-## 🧠 Compliance & Security Framework
+## 🔍 Documentation Validation Workflows
 
-| **Control Area**     | **Tool / Workflow**   | **Status** | **Evidence**                   |
-| :------------------- | :-------------------- | :--------- | :----------------------------- |
-| Dependency Scanning  | Trivy + Dependabot    | ✅          | `.github/workflows/trivy.yml`  |
-| Static Analysis      | CodeQL                | ✅          | `.github/workflows/codeql.yml` |
-| Secrets Scanning     | Gitleaks              | ✅          | `.github/workflows/gitleaks.yml`|
-| Artifact Integrity   | SHA-256 Checksums     | ✅          | `data/checksums/**.sha256`     |
-| SBOM Reporting       | Syft → SPDX JSON      | ✅          | `sbom.yml` artifact            |
-| Release Signing      | Cosign/Sigstore       | ⚠️         | Planned `provenance.yml`       |
-| Identity/Auth        | OIDC Federation       | ✅          | GitHub OIDC workflows          |
-| Compliance Framework | SLSA Level 3 (target) | ⚠️         | SLSA attestation on releases   |
+| Workflow | Function | Output |
+|:--|:--|:--|
+| `docs-validate.yml` | Validates markdown syntax, links, and frontmatter. | `reports/validation/docs_validation.json` |
+| `policy-check.yml` | Ensures license and compliance metadata completeness. | `reports/audit/policy_check.json` |
+| `faircare-validate.yml` | Runs FAIR+CARE alignment and ethics review. | `reports/fair/data_care_assessment.json` |
+| `governance-ledger.yml` | Logs documentation checksums and provenance data. | `data/reports/audit/data_provenance_ledger.json` |
 
 ---
 
-## 🧩 Interlink with Audit & Governance Reports
+## 🧠 Documentation Quality Index (DQI)
 
-| **Report**                  | **Path**                              | **Purpose**                                                    |
-| :-------------------------- | :------------------------------------ | :------------------------------------------------------------- |
-| Repository Compliance Audit | `docs/audit/repository_compliance.md` | Tracks repository maturity (RMI/DCI), CI status, and sign-offs |
-| Security & SLSA Standards   | `docs/standards/security.md`          | Defines Trivy, CodeQL, SBOM, and SLSA policies                 |
-| Provenance Templates        | `docs/templates/provenance.md`        | Standardizes lineage and integrity records                     |
-| Governance Action Plan      | `docs/audit/governance_plan.md`       | Quarterly objectives and program tracking                      |
-
----
-
-## 🧷 Required Templates & Contracts
-
-- `docs/templates/adr.md` — **Architecture Decision Record**  
-- `docs/templates/sop.md` — **Operational SOP**  
-- `docs/templates/experiment.md` — **Reproducible Experiment**  
-- `docs/templates/model_card.md` — **Transparent Model Reporting**  
-- `docs/templates/dataset.md` — **Dataset Descriptor (STAC/DCAT)**  
-- `docs/templates/provenance.md` — **Provenance Record (PROV-O)**
-
-> All templates require YAML front-matter and pass **docs-validate** + **policy-check**.
+| Metric | Description | Target | Monitored By |
+|:--|:--|:--:|:--|
+| **frontmatter_coverage** | % of docs with valid metadata. | 100% | `docs-validate.yml` |
+| **link_integrity** | % of working internal/external links. | 100% | `policy-check.yml` |
+| **diagram_parse_rate** | % of valid Mermaid diagrams. | 100% | `docs-validate.yml` |
+| **a11y_compliance_score** | WCAG 2.1 AA accessibility score. | ≥ 95 | @kfm-accessibility |
+| **faircare_score** | FAIR+CARE governance compliance score. | ≥ 95 | @kfm-governance |
 
 ---
 
-## 🧪 Docs-as-Code Validation
+## 🧾 Governance & Provenance Integration
 
-| Workflow             | Function                                       | Trigger          |
-| :------------------- | :--------------------------------------------- | :--------------- |
-| `docs-validate.yml`  | Lint Markdown, check links & metadata           | PR / Push        |
-| `policy-check.yml`   | Enforce required front matter / fields          | PR               |
-| `stac-validate.yml`  | Validate STAC schemas and links                 | PR / Commit      |
-| `pre-commit.yml`     | Local lint/style checks                         | Each PR          |
-| `site.yml`           | Build and publish documentation site            | Merge to `main`  |
-
----
-
-## 🔐 Data Ethics & Cultural Safeguards
-
-- **`data_ethics` tagging:** use STAC `properties.data_ethics` (`open`, `restricted-derivatives`, `no-public-artifacts`) where applicable.  
-- **Public artifact scrubbing:** exclude restricted layers from public Pages builds; retain by policy.  
-- **Co-stewardship:** follow community guidelines when handling Indigenous or sensitive sources.
-
----
-
-## 🗓 Quarterly Governance Plan (Q4 2025)
-
-| **Action**                       | **Owner**        | **Deadline** | **Goal**                            |
-| :------------------------------- | :--------------- | :----------- | :---------------------------------- |
-| Sign artifacts via Cosign        | @kfm-security    | 2025-11-15   | Signed provenance chain             |
-| Add docs validation workflow     | @kfm-docs        | 2025-11-01   | Automated markdown compliance       |
-| Complete STAC index revalidation | @kfm-data        | 2025-12-01   | 100% provenance verification        |
-| Full SLSA-3 compliance milestone | @kfm-maintainers | 2025-12-31   | Verified, signed, reproducible repo |
-
----
-
-## 🧾 Metadata & Provenance (This Document)
-
-| Field                  | Description                                                         |
-| :--------------------- | :------------------------------------------------------------------ |
-| **Document ID**        | `STD-2025-001-GOVERNANCE`                                           |
-| **Version**            | v6.3.1                                                              |
-| **Audit Framework**    | MCP-DL v6.3                                                         |
-| **License**            | MIT (code) · CC-BY 4.0 (docs)                                       |
-| **Semantic Alignment** | STAC 1.0 · DCAT 2.0 · CIDOC CRM · OWL-Time · JSON Schema · ISO 8601 |
-| **Status**             | Stable                                                              |
-| **Maintainers**        | `@kfm-architecture`, `@kfm-data`, `@kfm-security`, `@kfm-docs`      |
-| **Next Review**        | Q1 2026                                                             |
+| Artifact | Purpose | Repository Path |
+|:--|:--|:--|
+| **Governance Ledger** | Registers documentation checksums and authorship. | `data/reports/audit/data_provenance_ledger.json` |
+| **FAIR+CARE Audit Reports** | Documents ethical compliance for all docs. | `data/reports/fair/data_care_assessment.json` |
+| **Manifest.zip** | Versioned registry of all documentation and data assets. | `releases/v*/manifest.zip` |
+| **Security Governance** | Enforces documentation access control and privacy. | `docs/standards/governance/SECURITY-GOVERNANCE.md` |
 
 ---
 
 ## 🧾 Version History
 
-| **Version** | **Date**   | **Changes**                                                                          | **Author**        |
-| :---------- | :--------- | :----------------------------------------------------------------------------------- | :---------------- |
-| v6.3.1      | 2025-10-18 | Added docs-validate & policy gates, SBOM/SLSA badges, secrets scan, ethics guidance  | @kfm-architecture |
-| v6.3.0      | 2025-10-17 | MCP-DL v6.3 alignment; audit interlinks; YAML metadata; SLSA references             | @kfm-architecture |
-| v6.2.2      | 2025-10-12 | Updated diagrams, badges, and compliance schema                                      | @kfm-data         |
-| v6.2.0      | 2025-09-10 | Migrated governance to MCP-DL 6.2 standard                                           | @kfm-security     |
-| v6.1.0      | 2025-08-01 | Introduced CI/CD validation workflows                                                | Core Team         |
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-docs | Standardized standards directory; added FAIR+CARE mapping and documentation quality metrics. |
+| v2.0.0 | 2025-10-25 | @kfm-governance | Added accessibility integration and CI validation tables. |
+| v1.0.0 | 2025-10-04 | @kfm-architecture | Initial documentation standards and governance definitions. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix © 2025**  
-🧭 *Governance through Provenance · Automation with Integrity · Compliance through Documentation*  
-`docs/standards/README.md` — The living charter of reproducibility and open governance for KFM.
+*“Standards Preserve Integrity — Documentation Preserves Provenance.”*  
+📍 `docs/standards/README.md` — Central documentation standards and governance reference for the Kansas Frontier Matrix.
 
 </div>
