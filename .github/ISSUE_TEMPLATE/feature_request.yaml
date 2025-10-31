@@ -1,139 +1,193 @@
----
 name: "💡 Feature Request"
-about: "Suggest a new capability, enhancement, or module for the Kansas Frontier Matrix (KFM)."
+description: "Suggest a new capability, enhancement, or module for the Kansas Frontier Matrix (KFM)."
 title: "[FEATURE] <short description of requested feature>"
-labels: ["enhancement", "proposal", "governance-review"]
-assignees: ["@kfm-architecture", "@bartytime4life", "@kfm-etl-ops"]
----
+labels:
+  - enhancement
+  - proposal
+  - governance-review
+assignees:
+  - "@kfm-architecture"
+  - "@bartytime4life"
+  - "@kfm-etl-ops"
 
-## 💡 Summary
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 💡 Summary
+        Provide a concise explanation of your requested feature or improvement.
+        Example: “Add AI-driven drift monitoring to Focus Mode for climate hazard layers.”
 
-> _Provide a concise explanation of your requested feature or improvement._  
-> _Example: “Add AI-driven drift monitoring to Focus Mode for climate hazard layers.”_
+  - type: dropdown
+    id: feature_category
+    attributes:
+      label: Feature Category
+      description: "Select the area of the system this feature affects."
+      options:
+        - "🧱 Data Pipeline (ETL / AI / Graph)"
+        - "🌍 Frontend (React / MapLibre UI)"
+        - "📖 Documentation / Standards"
+        - "🧠 AI / Focus Mode"
+        - "⚙️ Infrastructure / CI/CD"
+        - "🧩 Governance / FAIR+CARE"
+    validations:
+      required: true
 
-**Feature Category:**
-- [ ] 🧱 Data Pipeline (ETL / AI / Graph)
-- [ ] 🌍 Frontend (React / MapLibre UI)
-- [ ] 📖 Documentation / Standards
-- [ ] 🧠 AI / Focus Mode
-- [ ] ⚙️ Infrastructure / CI/CD
-- [ ] 🧩 Governance / FAIR+CARE
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose & Rationale
+      description: "Explain why this feature should exist and how it addresses a current gap."
+      placeholder: "Why is this enhancement needed?"
+    validations:
+      required: true
 
----
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem Statement
+      description: "Briefly describe the issue or limitation this feature resolves."
+      placeholder: "What is the current limitation or issue?"
+    validations:
+      required: false
 
-## 🧭 Purpose & Rationale
+  - type: textarea
+    id: expected_benefits
+    attributes:
+      label: Expected Benefits
+      description: "Explain what outcomes or improvements this feature will bring."
+      value: |
+        - Improves reproducibility  
+        - Strengthens FAIR+CARE compliance  
+        - Enhances Focus Mode functionality  
+        - Optimizes performance or user experience
+    validations:
+      required: false
 
-> _Why should this feature exist? What problem or limitation does it address?_  
-> _Explain how it advances reproducibility, ethical AI, or user experience._
+  - type: markdown
+    attributes:
+      value: "## 🧩 Technical Details"
 
-**Problem Statement:**  
-> _Briefly describe the issue or gap this feature resolves._
+  - type: textarea
+    id: technical_details
+    attributes:
+      label: Technical Details
+      description: "Provide relevant implementation details such as affected modules, dependencies, or logic."
+      value: |
+        Module / Location:  
+        Dependencies / APIs:  
+        Proposed Implementation:  
+        Estimated Complexity: Low / Medium / High  
+        Backward Compatibility: Yes / No (explain)
+    validations:
+      required: false
 
-**Expected Benefits:**  
-- Improves __reproducibility__  
-- Strengthens __FAIR+CARE compliance__  
-- Enhances __Focus Mode functionality__  
-- Optimizes __system performance or usability__  
+  - type: markdown
+    attributes:
+      value: |
+        ```mermaid
+        flowchart TD
+          A[User Interaction] --> B[AI Inference Module]
+          B --> C[Telemetry Capture + Governance Update]
+          C --> D[Map + Timeline Integration]
+        ```
+        _Attach architecture diagrams or pseudocode as needed._
 
----
+  - type: markdown
+    attributes:
+      value: "## 🧠 FAIR+CARE Evaluation"
 
-## 🧩 Technical Details
+  - type: checkboxes
+    id: faircare
+    attributes:
+      label: FAIR+CARE Compliance Self-Assessment
+      description: "Mark all applicable principles this feature enhances or supports."
+      options:
+        - label: "Findable — Improves data discoverability"
+        - label: "Accessible — Enhances open data or API access"
+        - label: "Interoperable — Aligns with open standards or schemas"
+        - label: "Reusable — Produces documented or reproducible outputs"
+        - label: "Collective Benefit — Supports shared ethical outcomes"
+        - label: "Authority to Control — Respects governance or community data rights"
+        - label: "Responsibility — Incorporates bias checks and ethical review"
+        - label: "Ethics — Avoids harm or misleading inferences"
 
-| Aspect | Description |
-|---------|-------------|
-| **Module / Location** | `<directory or file impacted>` |
-| **Dependencies / APIs** | `<list libraries, APIs, or datasets required>` |
-| **Proposed Implementation** | `<summary of architecture or logic>` |
-| **Estimated Complexity** | ☐ Low ☐ Medium ☐ High |
-| **Backward Compatibility** | ☐ Yes ☐ No (explain below) |
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Governance Metadata"
 
-> _Attach diagrams or pseudocode if applicable._  
-> _Use Mermaid or code fences for architecture sketches._
+  - type: textarea
+    id: governance_refs
+    attributes:
+      label: Governance References
+      description: "Confirm governance and release metadata references."
+      value: |
+        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md  
+        Manifest Ref: releases/v9.5.0/manifest.zip  
+        Telemetry Ref: releases/v9.5.0/focus-telemetry.json  
+        Data Contract: docs/contracts/data-contract-v3.json  
+        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl  
+    validations:
+      required: false
 
-```mermaid
-flowchart TD
-A[User Interaction] --> B[AI Inference Module]
-B --> C[Telemetry Capture + Governance Update]
-C --> D[Map + Timeline Integration]
-```
+  - type: markdown
+    attributes:
+      value: "## 🧾 Implementation Milestones"
 
----
+  - type: textarea
+    id: milestones
+    attributes:
+      label: Implementation Plan
+      description: "Outline milestones, tasks, owners, and due dates."
+      value: |
+        | Phase | Task | Owner | Due Date | Status |
+        |--------|------|--------|----------|--------|
+        | 1 | Design + Governance Review | @kfm-architecture | | ☐ |
+        | 2 | Implementation + Testing | @kfm-etl-ops | | ☐ |
+        | 3 | Documentation + FAIR+CARE Validation | @kfm-data-lab | | ☐ |
+        | 4 | Merge + Deploy | @bartytime4life | | ☐ |
+    validations:
+      required: false
 
-## 🧠 FAIR+CARE Evaluation
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / Linked Issues
+      description: "List related issues, PRs, or external blockers."
+      placeholder: "e.g., Depends on #115 — AI module refactor"
+    validations:
+      required: false
 
-| Principle | Compliance | Notes |
-|------------|-------------|-------|
-| **Findable** | ☐ Yes ☐ No | _Improves data discoverability?_ |
-| **Accessible** | ☐ Yes ☐ No | _Enhances open data or API access?_ |
-| **Interoperable** | ☐ Yes ☐ No | _Aligns with open standards or schemas?_ |
-| **Reusable** | ☐ Yes ☐ No | _Produces reproducible or documented results?_ |
-| **Collective Benefit** | ☐ Yes ☐ No | _Supports shared ethical outcomes?_ |
-| **Authority to Control** | ☐ Yes ☐ No | _Respects data and community governance?_ |
-| **Responsibility** | ☐ Yes ☐ No | _Incorporates bias checks or ethical validation?_ |
-| **Ethics** | ☐ Yes ☐ No | _Does not produce harm or misleading insights?_ |
+  - type: markdown
+    attributes:
+      value: "## 🧩 Review Routing"
 
----
+  - type: markdown
+    attributes:
+      value: |
+        | Role | Reviewer | Required Action |
+        |------|-----------|-----------------|
+        | **Architecture** | @kfm-architecture | Review scope and integration feasibility |
+        | **Data / ETL** | @kfm-etl-ops | Assess backend or pipeline impact |
+        | **AI / Ethics** | @kfm-ai-lab | Validate bias and governance implications |
+        | **Maintainer** | @bartytime4life | Approve merge and release |
 
-## ⚙️ Governance Metadata
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission Checklist
+      options:
+        - label: "Governance and metadata references verified"
+        - label: "FAIR+CARE impact reviewed"
+        - label: "Diagrams or workflow sketches attached (if applicable)"
+        - label: "Documentation updated (docs/architecture or README.md)"
+        - label: "Test plan defined (tests/ or validation script)"
 
-| Field | Reference |
-|--------|------------|
-| **Governance Ref** | `docs/standards/governance/ROOT-GOVERNANCE.md` |
-| **Manifest Ref** | `releases/v9.3.2/manifest.zip` |
-| **Telemetry Ref** | `releases/v9.3.2/focus-telemetry.json` |
-| **Data Contract** | `docs/contracts/data-contract-v3.json` |
-| **Ontology Alignment** | `ontologies/CIDOC_CRM-KFM.owl` |
-
-> _Ensure all governance references are valid and consistent with the current repository version._
-
----
-
-## 🧾 Implementation Milestones
-
-| Phase | Task | Owner | Due Date | Status |
-|--------|------|--------|----------|--------|
-| 1 | Design + Governance Review | @kfm-architecture | | ☐ |
-| 2 | Implementation + Testing | @kfm-etl-ops | | ☐ |
-| 3 | Documentation + FAIR+CARE Validation | @kfm-data-lab | | ☐ |
-| 4 | Merge + Deploy | @bartytime4life | | ☐ |
-
----
-
-## 🔍 Dependencies / Linked Issues
-
-> _List related issues or pull requests (e.g., “Depends on #115 — AI module refactor”)._  
-> _Mention any external blockers or dataset dependencies._
-
----
-
-## 🧩 Review Routing
-
-| Role | Reviewer | Required Action |
-|------|-----------|-----------------|
-| **Architecture** | @kfm-architecture | Review scope and integration feasibility |
-| **Data / ETL** | @kfm-etl-ops | Assess backend or pipeline impact |
-| **AI / Ethics** | @kfm-ai-lab | Validate bias and governance implications |
-| **Maintainer** | @bartytime4life | Approve merge and release |
-
----
-
-## ✅ Submission Checklist
-
-- [ ] Governance and metadata references verified  
-- [ ] FAIR+CARE impact reviewed  
-- [ ] Diagrams or workflow sketches attached (if applicable)  
-- [ ] Documentation updated (`docs/architecture/` or `README.md`)  
-- [ ] Test plan defined (`tests/` or pipeline validation script)  
-
----
-
-> ⚠️ **Note:**  
-> Submitting a feature request will automatically trigger:
-> - FAIR+CARE validation workflow (`.github/workflows/faircare-validate.yml`)  
-> - Governance ledger update (`.github/workflows/governance-ledger.yml`)  
-> - Architecture linting check (`.github/workflows/pre-commit.yml`)  
-
----
-
-**Kansas Frontier Matrix** · *Open Architecture × FAIR+CARE Compliance × Reproducible Science*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+  - type: markdown
+    attributes:
+      value: |
+        > ⚠️ **Automation Notice:**  
+        > Submitting this feature request triggers:  
+        > - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
+        > - Governance ledger update (`.github/workflows/governance-ledger.yml`)  
+        > - Architecture linting check (`.github/workflows/pre-commit.yml`)
