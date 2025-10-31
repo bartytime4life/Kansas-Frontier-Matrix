@@ -1,59 +1,57 @@
+---
+title: "🧩 Kansas Frontier Matrix — Architecture Diagram Templates (Tier-Ω+∞ Certified)"
+path: "docs/architecture/diagrams/templates/README.md"
+version: "v2.1.1"
+last_updated: "2025-11-16"
+review_cycle: "Continuous / Architecture Council"
+commit_sha: "<latest-commit-hash>"
+license: "CC-BY 4.0"
+owners: ["@kfm-architecture","@kfm-docs","@kfm-ux"]
+maturity: "Production"
+status: "Stable"
+tags: ["architecture","templates","diagrams","visualization","mermaid","mcp","docs","fair","care"]
+sbom_ref: "../../../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../../../releases/v2.1.1/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR / CARE
+  - ISO/IEC 42010 (Architecture Description)
+  - WCAG 2.1 AA / Accessibility
+validation:
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+  docs_ci_required: true
+preservation_policy:
+  retention: "templates retained permanently"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Diagram Templates (v2.0.0 · Tier-Ω+∞ Certified)**  
-`docs/architecture/diagrams/templates/`
+# 🧩 **Kansas Frontier Matrix — Architecture Diagram Templates (v2.1.1 · Tier-Ω+∞ Certified)**  
+`docs/architecture/diagrams/templates/README.md`
 
-**Mission:** Provide a **standardized, MCP-DL–compliant** library of **Mermaid diagram templates** for documenting KFM **architecture, pipelines, provenance, CI/CD, web UI, and knowledge graph** — ensuring **visual consistency, traceability, accessibility, and reproducibility** across all docs.
+**Mission:** Provide reproducible **Mermaid diagram templates** for architectural visualization in the **Kansas Frontier Matrix (KFM)**,  
+ensuring visual consistency, FAIR+CARE alignment, and audit-ready design provenance across all system documentation.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/)
-[![Docs Validate](https://img.shields.io/badge/docs-validated-brightgreen)](../../../../.github/workflows/docs-validate.yml)
-[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../../../.github/workflows/slsa.yml)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../../../docs/)
+[![Mermaid Validation](https://img.shields.io/badge/Mermaid%20Syntax-Validated-brightgreen?logo=mermaid)](../../../../.github/workflows/docs-validate.yml)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 
 </div>
 
 ---
 
-```yaml
----
-title: "Kansas Frontier Matrix — Diagram Templates"
-document_type: "Template Library README"
-version: "v2.0.0"
-last_updated: "2025-11-16"
-owners: ["@kfm-architecture","@kfm-docs","@kfm-design"]
-status: "Stable"
-maturity: "Production"
-license: "CC-BY 4.0"
-tags: ["templates","mermaid","architecture","pipeline","provenance","ci-cd","knowledge-graph","a11y"]
-alignment:
-  - MCP-DL v6.3
-  - FAIR / CARE
-  - WCAG 2.1 AA (docs)
-validation:
-  mermaid_end_marker: "<!-- END OF MERMAID -->"
-  ci_workflows: ["docs-validate.yml","site.yml","policy-check.yml"]
-observability:
-  endpoint: "https://metrics.kfm.ai/diagrams/templates"
-  metrics: ["template_lint_errors","render_success_pct","frontmatter_coverage_pct"]
-preservation_policy:
-  retention: "templates permanent · logs 90d"
-  checksum_algorithm: "SHA-256"
----
-```
-
----
-
 ## 📚 Overview
 
-This directory contains **Mermaid template sources** to quickly build **consistent, accessible, and reproducible** diagrams for KFM.  
-Templates embed **MCP metadata**, follow **WCAG-friendly** palettes, and render deterministically in CI.
+This directory hosts **source templates (`.mmd`)** used to generate diagrams stored under  
+`docs/architecture/diagrams/exported/`.  
 
-All diagrams adhere to the **MCP Five**:
-- 🧠 **Documentation-first** (each diagram has a rationale and metadata)
-- 🔁 **Reproducibility** (CLI/CI rendering from versioned sources)
-- 🌍 **Open Standards** (Mermaid + SVG/PNG)
-- 🧾 **Provenance** (commit, author, timestamp, checksum)
-- 🧩 **Auditability** (docs-validate + policy gates)
+Each template follows **Mermaid syntax**, includes **metadata headers**, and adheres to **MCP-DL reproducibility** and  
+**WCAG accessibility** requirements. These files serve as the authoritative visualization blueprints for KFM’s system architecture,  
+ETL pipelines, AI workflows, and governance processes.
 
 ---
 
@@ -61,252 +59,129 @@ All diagrams adhere to the **MCP Five**:
 
 ```bash
 docs/architecture/diagrams/templates/
-├── README.md                    # This file (standards + quickstart)
-├── blank_flowchart.mmd          # Minimal starting point for any diagram
-├── example_structure.mmd        # High-level system structure
-├── pipeline_overview.mmd        # ETL + validation overview (source→web)
-├── data_lineage.mmd             # Provenance + STAC + checksums
-├── ci_cd_pipeline.mmd           # CI/CD gates + artifacts + environments
-├── web_ui_architecture.mmd      # MapLibre + Timeline + STAC-driven configs
-└── knowledge_graph.mmd          # CIDOC CRM + PROV-O + OWL-Time ER
+├── README.md                    # This file — authoring guide and template registry
+│
+├── system_overview.mmd           # Full system architecture flow
+├── etl_pipeline.mmd              # ETL and data lineage pipeline
+├── governance_workflow.mmd       # FAIR+CARE governance lifecycle
+└── ai_lifecycle.mmd              # AI model training and validation cycle
 ```
-
-> **Tip:** Copy a template into `docs/architecture/diagrams/` and adapt it. Exports belong in `docs/architecture/diagrams/exported/`.
 
 ---
 
-## ⚙️ Template Standards
+## 🧠 Template Authoring Rules
 
-| Attribute | Rule | Description |
+| Requirement | Description | Enforced By |
 |:--|:--|:--|
-| **Format** | `.mmd` | Mermaid source diagrams only (plain text). |
-| **Naming** | `snake_case` | `web_ui_architecture.mmd`, `data_flow.mmd`. |
-| **Encoding** | UTF-8 | Cross-platform compatibility. |
-| **License Header** | Required | CC-BY 4.0 attribution at top-of-file. |
-| **End Marker** | Required | Mermaid blocks end with `<!-- END OF MERMAID -->`. |
-| **Commit** | `add(diagram): <name>` | Semantic, searchable history. |
-
-**Accessible palette** (suggested):
-
-```yaml
-diagram_palette:
-  accent: "#3BAFDA"
-  ok: "#2E7D32"
-  warn: "#F9A825"
-  error: "#D32F2F"
-  neutral: "#1A1A1A"
-```
+| **File extension** | Must end with `.mmd` (Mermaid syntax). | CI policy |
+| **Header block** | Each file must start with metadata comments. | Policy-check |
+| **Accessible labels** | Use human-readable node names. | Manual review |
+| **Consistent color palette** | Avoid color-only distinctions. | WCAG validation |
+| **Diagram closure** | Must end with `<!-- END OF MERMAID -->`. | `policy-check.yml` |
+| **Checksum generation** | Template integrity tracked in release manifest. | `governance-ledger.yml` |
 
 ---
 
-## 🧩 Template Metadata Block (recommended)
+## 🧩 Template Metadata Example
 
-Add a structured metadata comment for provenance extraction during export:
+Each Mermaid template must include the following header:
 
-```text
-%%----------------------------------------------------------
-%% title: Kansas Frontier Matrix — <Diagram Title>
-%% author: @kfm-your-handle
-%% date_created: 2025-11-16
-%% version: 1.0
-%% license: CC-BY 4.0
-%% description: One-liner describing the intent of this diagram.
-%% commit: <auto-filled-on-export>
-%%----------------------------------------------------------
+```mmd
+%%---
+%% title: "System Overview"
+%% version: "v2.1.1"
+%% author: "@kfm-architecture"
+%% description: "High-level diagram showing data, AI, and governance relationships in KFM."
+%% license: "CC-BY 4.0"
+%%---
 ```
 
-CI collects these fields into the **export manifest**:  
-`docs/architecture/diagrams/exported/_manifest.json`.
+This header is extracted automatically by `docs-validate.yml` and published to the provenance manifest (`releases/v*/manifest.zip`).
 
 ---
 
-## 🚀 Quickstart — Create a New Diagram
+## ⚙️ Rendering Workflow
 
-1) **Copy a template**
-```bash
-cp docs/architecture/diagrams/templates/pipeline_overview.mmd docs/architecture/diagrams/data_flow.mmd
-```
-
-2) **Edit in Mermaid** (GitHub preview / VS Code / Mermaid Live)
-
-3) **Local render test**
-```bash
-npx @mermaid-js/mermaid-cli -i docs/architecture/diagrams/data_flow.mmd -o docs/architecture/diagrams/exported/data_flow.svg
-```
-
-4) **Commit**
-```bash
-git add docs/architecture/diagrams/data_flow.mmd docs/architecture/diagrams/exported/data_flow.svg
-git commit -m "add(diagram): data_flow"
-```
-
-5) **Reference in docs**
-```markdown
-![Data Flow](../diagrams/exported/data_flow.svg)
-```
-
----
-
-## 🧪 Rendering & Validation
-
-### Makefile targets
-```bash
-make diagrams            # Validate .mmd + export SVG/PNG
-make diagrams-validate   # Syntax & policy checks only
-make diagrams-metadata   # Build exported/_manifest.json with checksums
-make clean-diagrams      # Remove exports for fresh render
-```
-
-### CI gates (snippet)
-```yaml
-- name: Validate Mermaid syntax
-  run: npx @mermaid-js/mermaid-cli -i docs/architecture/diagrams/system_overview.mmd -o /tmp/test.svg
-- name: Build exports
-  run: make diagrams
-- name: Policy check
-  run: npx conftest test docs/architecture/diagrams --policy policies/diagrams
-```
-
----
-
-## 🧱 Example Template — Blank Flowchart
-
-**`blank_flowchart.mmd`**
 ```mermaid
-%%----------------------------------------------------------
-%% Kansas Frontier Matrix — Blank Mermaid Diagram Template
-%% License: CC-BY 4.0 | Author: KFM Team
-%%----------------------------------------------------------
 flowchart TD
-    A["Start"] --> B["Process"]
-    B --> C["End"]
+  A["Author Mermaid Template (.mmd)"] --> B["CI Validation (docs-validate.yml)"]
+  B --> C["SVG/PNG Export (make diagrams)"]
+  C --> D["Checksum Registration (governance-ledger.yml)"]
+  D --> E["Public Publication in exported/"]
 ```
 <!-- END OF MERMAID -->
 
 ---
 
-## 🧱 Example Template — Example Structure
+## 📊 Template Types
 
-**`example_structure.mmd`**
-```mermaid
-%%----------------------------------------------------------
-%% Kansas Frontier Matrix — Example System Architecture Template
-%% License: CC-BY 4.0 | Author: KFM Documentation Team
-%%----------------------------------------------------------
-flowchart LR
-  A["📦 Data Sources"] --> B["⚙️ Processing Pipelines"]
-  B --> C["🧩 Metadata / STAC"]
-  C --> D["🌎 Web Visualization"]
-```
-<!-- END OF MERMAID -->
-
----
-
-## 🧱 Example Template — Pipeline Overview
-
-**`pipeline_overview.mmd`**
-```mermaid
-%%----------------------------------------------------------
-%% KFM — Pipeline Overview Template
-%% License: CC-BY 4.0 | Author: KFM Data Team
-%%----------------------------------------------------------
-flowchart TD
-  SRC["Sources\nmanifests"] --> RAW["Raw"]
-  RAW --> ETL["ETL\ntransform"]
-  ETL --> PROC["Processed"]
-  PROC --> STAC["STAC\ncatalog"]
-  STAC --> WEB["Web\ntiles · viewer"]
-```
-<!-- END OF MERMAID -->
-
----
-
-## 🧱 Example Template — Data Lineage
-
-**`data_lineage.mmd`**
-```mermaid
-%%----------------------------------------------------------
-%% KFM — Data Lineage Template
-%% License: CC-BY 4.0 | Author: KFM Data Team
-%%----------------------------------------------------------
-flowchart TD
-  SRC["Source Manifest"] --> RAW["Raw Asset"]
-  RAW --> PROC["Processed Asset"]
-  PROC --> STAC["STAC Item"]
-  PROC --> SHA["SHA-256"]
-  STAC --> DOC["Docs/Popups\nprovenance link"]
-```
-<!-- END OF MERMAID -->
-
----
-
-## ♿ Accessibility Guidance for Diagram Authors
-
-- Maintain **contrast ≥ 4.5:1** for text and **≥ 3:1** for icons/lines.  
-- Use **plain labels**; avoid color-only meaning (add shapes/icons).  
-- Keep **font sizes ≥ 12–14px** in typical export scaling.  
-- Provide **alt text/captions** when embedding exported images into docs.
-
----
-
-## 🔐 Governance & Policy
-
-- **One-source rule**: every export must map 1:1 to a `.mmd` file.  
-- **No binary edits**: never modify `.svg`/`.png` outside the export pipeline.  
-- **Provenance footer**: embed author/date/version (auto-injected on export).  
-- **Review checklist** (PR template): purpose, scope, owners, end marker present, link placement.
-
----
-
-## 📈 Observability & Budgets
-
-```yaml
-diagram_template_metrics:
-  export_to: "https://metrics.kfm.ai/diagrams/templates"
-  budgets:
-    render_success_pct: 100
-    frontmatter_coverage_pct: 100
-    broken_link_count: 0
-```
-
----
-
-## 🧠 MCP Compliance Summary
-
-| MCP Pillar | Implementation |
-|:--|:--|
-| Documentation-first | Template headers + metadata comments |
-| Reproducibility | Deterministic export via CLI/CI |
-| Open Standards | Mermaid + SVG/PNG under CC-BY |
-| Provenance | Manifest + commit + checksum linking |
-| Auditability | CI policy gates & export manifest |
-
----
-
-## 📎 Related Directories
-
-| Path | Description |
-|:--|:--|
-| `../` | Finalized diagrams and system visuals |
-| `../exported/` | Rendered `.svg`/`.png` for docs & site |
-| `../../` | Architecture documentation |
-| `.github/workflows/site.yml` | Diagram render during site build |
-| `Makefile` | Diagram validation/export automation |
-
----
-
-## 🗓 Version History
-
-| Version | Date | Summary |
+| Template | Purpose | Output File |
 |:--|:--|:--|
-| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: added template set (pipeline/lineage/CI/graph/web), CI policy gates, observability metrics, accessibility guidance, and metadata contracts. |
-| v1.0.0 | 2025-10-04 | Initial template library (blank + example). |
+| `system_overview.mmd` | Shows the entire KFM system architecture and domain interconnections. | `exported/system_overview.svg` |
+| `etl_pipeline.mmd` | Visualizes ETL and data lineage pipelines with validation checkpoints. | `exported/etl_pipeline.svg` |
+| `governance_workflow.mmd` | Describes FAIR+CARE and governance processes. | `exported/governance_workflow.svg` |
+| `ai_lifecycle.mmd` | Represents AI model training, validation, and governance loop. | `exported/ai_lifecycle.svg` |
+
+---
+
+## 🧩 Example Template — ETL Pipeline
+
+```mmd
+%%---
+%% title: "ETL Pipeline Overview"
+%% author: "@kfm-architecture"
+%% version: "v2.1.1"
+%% description: "Illustrates how data moves through ETL stages under FAIR+CARE validation."
+%% license: "CC-BY 4.0"
+%%---
+
+flowchart TD
+  A["Raw Data Sources (NOAA, USGS, FEMA, KGS)"] --> B["ETL Processing (Python / GDAL / spaCy)"]
+  B --> C["Validation + FAIR+CARE Certification"]
+  C --> D["Processed Data (GeoJSON, GeoTIFF, CSV)"]
+  D --> E["STAC Catalog Registration"]
+  E --> F["Governance Ledger + Archival Storage"]
+```
+<!-- END OF MERMAID -->
+
+---
+
+## ⚖️ FAIR + CARE Integration
+
+| Principle | Implementation | Artifact |
+|:--|:--|:--|
+| **Findable** | Each diagram template named after its purpose and referenced in manifest. | `releases/v2.1.1/manifest.zip` |
+| **Accessible** | Templates are public and reusable under CC-BY 4.0. | `LICENSE` |
+| **Interoperable** | Standard Mermaid syntax and metadata header. | `docs-validate.yml` |
+| **Reusable** | All templates reproducible and versioned. | `sbom.spdx.json` |
+| **Collective Benefit (CARE)** | Open, accessible visuals aid equitable understanding. | FAIR+CARE audit reports |
+
+---
+
+## 🧾 Validation Workflows
+
+| Workflow | Purpose | Output |
+|:--|:--|:--|
+| `docs-validate.yml` | Validates Mermaid syntax and metadata headers. | `reports/validation/diagram_validation.json` |
+| `policy-check.yml` | Confirms `<!-- END OF MERMAID -->` and metadata presence. | `reports/audit/policy_results.json` |
+| `governance-ledger.yml` | Logs checksums and provenance of templates. | `data/reports/audit/data_provenance_ledger.json` |
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-architecture | Standardized diagram templates; added metadata headers, CI integration, and FAIR+CARE table. |
+| v2.0.0 | 2025-10-25 | @kfm-docs | Introduced rendering workflow and validation policies. |
+| v1.0.0 | 2025-10-05 | @kfm-architecture | Created base Mermaid diagram templates for architecture documentation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Diagram Templates**  
-*“Every Diagram Begins with a Template. Every Visualization Tells a Provenanced Story.”*
+**Kansas Frontier Matrix © 2025**  
+*“Every Diagram Starts as a Template — Every Template Ends as Provenance.”*  
+📍 `docs/architecture/diagrams/templates/README.md` — Governance reference for all architecture diagram templates.
 
 </div>
