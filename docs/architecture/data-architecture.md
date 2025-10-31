@@ -1,322 +1,202 @@
+---
+title: "🗃️ Kansas Frontier Matrix — Data Architecture & Lineage (Tier-Ω+∞ Certified)"
+path: "docs/architecture/data-architecture.md"
+version: "v2.1.1"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly / Data Governance Council"
+commit_sha: "<latest-commit-hash>"
+license: "MIT (code) · CC-BY 4.0 (docs)"
+owners: ["@kfm-data","@kfm-architecture","@kfm-governance"]
+maturity: "Production"
+status: "Stable"
+tags: ["data","architecture","stac","dcat","etl","lineage","provenance","governance","fair","care"]
+sbom_ref: "../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../releases/v2.1.1/manifest.zip"
+data_contract_ref: "../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
+alignment:
+  - MCP-DL v6.4.3
+  - STAC 1.0 / DCAT 3.0
+  - FAIR / CARE
+  - ISO 19115 / OGC Standards
+validation:
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  docs_ci_required: true
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+preservation_policy:
+  retention: "data architecture permanent · reports 1 year"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# 🧱 **Kansas Frontier Matrix — Data Architecture (v2.0.0 · Tier-Ω+∞ Certified)**  
+# 🗃️ **Kansas Frontier Matrix — Data Architecture & Lineage (v2.1.1 · Tier-Ω+∞ Certified)**  
 `docs/architecture/data-architecture.md`
 
-**Mission:** Specify the **full data subsystem** of the **Kansas Frontier Matrix (KFM)** — how datasets move through **acquisition → transformation → validation → cataloging → publication**, with **lineage, integrity, and interoperability** guaranteed under **MCP-DL v6.3** and **FAIR/CARE**.
+**Mission:** Define, document, and govern the **data architecture** of the **Kansas Frontier Matrix (KFM)** —  
+ensuring reproducible pipelines, traceable provenance, and FAIR+CARE-aligned data lifecycle management under **MCP-DL v6.4.3**.
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy)](../../.github/workflows/site.yml)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../docs/)
 [![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate)](../../.github/workflows/stac-validate.yml)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/)
-[![SBOM](https://img.shields.io/badge/SBOM-Syft%20%7C%20Grype-blue)](../../.github/workflows/sbom.yml)
-[![SLSA Provenance](https://img.shields.io/badge/Supply--Chain-SLSA%20Attestations-green)](../../.github/workflows/slsa.yml)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../docs/standards/faircare-validation.md)
+[![License: MIT · CC-BY 4.0](https://img.shields.io/badge/License-MIT%20%7C%20CC--BY%204.0-green)](../../LICENSE)
 
 </div>
 
 ---
 
-```yaml
----
-title: "Kansas Frontier Matrix — Data Architecture"
-document_type: "Architecture Spec"
-version: "v2.0.0"
-last_updated: "2025-11-16"
-owners: ["@kfm-data","@kfm-architecture","@kfm-ai","@kfm-security","@kfm-accessibility"]
-status: "Stable"
-maturity: "Production"
-license: "CC-BY 4.0"
-tags: ["data-architecture","stac","etl","checksums","provenance","tiles","crs","parquet","cog","jsonl","fair","care","dq"]
-alignment:
-  - MCP-DL v6.3
-  - STAC 1.0 / STAC API
-  - DCAT 2.0
-  - JSON Schema / ISO 19115
-  - CIDOC CRM / OWL-Time / GeoSPARQL
-  - COG / MVT / NetCDF / Parquet
-validation:
-  docs_ci_required: true
-  frontmatter_required: ["title","version","owners","last_updated","license"]
-  mermaid_end_marker: "<!-- END OF MERMAID -->"
-observability:
-  endpoint: "https://metrics.kfm.ai/data"
-  metrics: ["stac_pass_rate","checksum_drift_pct","dq_rule_pass_pct","tile_build_latency_s","storage_growth_gb"]
-preservation_policy:
-  retention: "raw permanent · processed 5y · logs 90d · tiles 2y"
-  checksum_algorithm: "SHA-256"
-  replication_targets: ["GitHub","Zenodo DOI","OSF"]
----
-```
-
----
-
 ## 📚 Overview
 
-KFM’s **data architecture** turns **heterogeneous historical, ecological, and textual sources** into **clean, indexed, and documented** spatiotemporal assets.  
-The system is **declarative and deterministic**: any contributor can **rebuild identical outputs** with **verifiable provenance**.
+The **KFM Data Architecture** establishes a governed, transparent framework for managing data through all stages of its lifecycle —  
+from raw ingestion to processed, validated, enriched, and archived datasets.  
+
+It ensures interoperability through **STAC**, **DCAT**, and **CIDOC CRM** linkages, backed by FAIR+CARE principles and automated CI/CD validation.
 
 ---
 
-## 🧩 Data System Layers
+## 🧩 Architecture Overview
 
 ```mermaid
 flowchart TD
-  A["🌐 External Sources\n(data/sources/)"] --> B["📦 Raw Archive\n(data/raw/ · LFS/DVC)"]
-  B --> C["⚙️ ETL & Enrichment\n(src/etl/ · Makefile)"]
-  C --> D["✅ Processed Datasets\n(data/processed/)"]
-  D --> E["🧩 STAC & Metadata\n(data/stac/ · processed/metadata/)"]
-  E --> F["🔐 Checksums & QA\n(data/checksums/ · DQ reports)"]
-  F --> G["🗺 Tiles & Exports\n(data/tiles/ · KML/KMZ)"]
-  G --> H["🌎 Publication & UI\n(web/ · Pages · API / STAC API)"]
+  subgraph RAW["Raw Layer"]
+    R1["External Data (NOAA · USGS · FEMA · KGS)"]
+    R2["Immutable Storage · metadata.json"]
+  end
+
+  subgraph WORK["Work Layer"]
+    W1["ETL Processing (Extract · Transform · Load)"]
+    W2["FAIR+CARE Validation"]
+    W3["Temporary Staging (tmp · processed · validation)"]
+  end
+
+  subgraph STAC["Metadata Layer"]
+    S1["STAC Catalog · DCAT Dataset"]
+    S2["Collection + Item JSON Files"]
+  end
+
+  subgraph ARCH["Archive Layer"]
+    A1["Checksummed Artifacts"]
+    A2["Manifest + SBOM + Ledger"]
+  end
+
+  subgraph GOV["Governance Layer"]
+    G1["FAIR+CARE Council Review"]
+    G2["Governance Ledger Entry"]
+  end
+
+  R1 --> R2 --> W1 --> W2 --> W3 --> S1 --> S2 --> A1 --> A2 --> G1 --> G2
 ```
 <!-- END OF MERMAID -->
 
 ---
 
-## 🧱 Components & Standards
+## 🧱 Data Layer Definitions
 
-| Layer | Directory | Description | Standards |
+| Layer | Purpose | Key Directory | Examples |
 |:--|:--|:--|:--|
-| **Source Registry** | `data/sources/` | JSON manifests (origin, license, coverage, access) | JSON Schema |
-| **Raw Archive** | `data/raw/` | Immutable snapshots (optionally DVC) | Source formats |
-| **ETL Pipelines** | `src/etl/` | Python/GDAL/Rasterio/Pandas + Makefile orchestration | MCP workflows |
-| **Processed Store** | `data/processed/` | Validated outputs | COG, GeoJSON, CSV, Parquet, JSONL |
-| **Metadata & Catalogs** | `data/stac/` · `data/processed/metadata/` | STAC Items/Collections + thumbnails, previews | STAC 1.0, JSON Schema |
-| **Checksums & QA** | `data/checksums/` | SHA-256 hashes + Data Quality (DQ) reports | FIPS 180-4 |
-| **Tiles** | `data/tiles/` | MVT/COG pyramids for web | MVT, EPSG:3857 |
+| **Raw Layer** | Immutable, original source data. | `data/raw/` | NOAA, USGS, FEMA datasets. |
+| **Work Layer** | Temporary and processed workspace for ETL operations. | `data/work/` | Normalized `.geojson`, `.csv`, `.tif`. |
+| **Metadata Layer** | Machine-readable dataset catalogs and FAIR+CARE metadata. | `data/stac/`, `data/meta/` | STAC items, DCAT datasets. |
+| **Archive Layer** | Permanently preserved, versioned releases. | `data/archive/` | `manifest.zip`, `sbom.spdx.json`. |
+| **Governance Layer** | Provenance tracking and ethical data oversight. | `data/reports/` | FAIR+CARE, validation, audit ledgers. |
 
 ---
 
-## 🧭 Data Contracts & Conventions
-
-### File naming
-```
-<domain>_<dataset>_v<MAJOR>.<MINOR>_<year>.<ext>
-# e.g. terrain_ks_1m_dem_v2.0_2020.tif
-```
-
-### CRS & projection policy
-- **Authoritative** CRS: **EPSG:4326** for catalog coordinates.  
-- Tiles in **EPSG:3857**; rasters in native projection allowed, published as **COG**; reprojected views provided when needed.
-
-### Compression & formats
-- **COG**: `DEFLATE`, overviews, internal tiling.  
-- **GeoJSON**: UTF-8, `bbox` present, feature count logged.  
-- **Parquet**: columnar for large tabulars; **gzip/snappy** as appropriate.  
-- **JSONL** for OCR/text corpora.
-
-### Partitioning
-- Temporal partitioning by **year/quarter** for large rasters; spatial partitioning by **HUC/County** for vectors where helpful.
-
----
-
-## 🧮 Data Quality (DQ) Framework
-
-| Rule | Description | Target |
-|:--|:--|:--|
-| **Schema completeness** | Required STAC + custom fields present | 100% |
-| **Geometry validity** | No self-intersections / empty geom | 100% |
-| **CRS declared** | CRS in metadata and files | 100% |
-| **Checksum parity** | SHA-256 match raw→processed | 100% |
-| **Temporal plausibility** | Dates within expected intervals | ≥ 99% |
-| **Value ranges** | Domain-specific numeric bounds | per domain |
-
-**Reports**: `data/processed/metadata/<domain>/dq_report.json` (CI artifact and Pages report).
-
----
-
-## ⚙️ ETL Orchestration
-
-**Makefile targets**
-```bash
-make fetch           # pull sources by manifest
-make process         # run all ETL pipelines
-make stac            # write & validate STAC items/collections
-make checksums       # compute and diff SHA-256
-make tiles           # build raster/vector tiles
-make validate        # run full DQ suite
-```
-
-**Pipeline guarantees**
-- Logs to `data/work/logs/`  
-- Thumbnails to `data/processed/metadata/<domain>/thumbnails/`  
-- Per-asset `.sha256` and STAC item emitted atomically
-
----
-
-## 🧾 STAC & Metadata Linkage
-
-**1↔1 relationships** for each dataset:
-
-1) **Source** → `data/sources/<domain>/<dataset>.json`  
-2) **Processed** → `data/processed/<domain>/<dataset>.<ext>`  
-3) **Checksum** → `data/checksums/<domain>/<dataset>.<ext>.sha256`  
-4) **STAC Item** → `data/stac/<domain>/<dataset>.json`  
-5) **Preview** → `data/processed/metadata/<domain>/thumbnails/<dataset>.png`
-
-**Required STAC fields**
-- `license`, `providers`, `created`, `links`, `datetime`/`interval`, `bbox`, `assets.data`, `assets.thumbnail`  
-- **Lineage**: use `rel:source` and `rel:derived_from` (or `scientific:lineage` if extension enabled)
-
----
-
-## 🔐 Integrity, Provenance & Supply Chain
-
-| Mechanism | Purpose | Enforcement |
-|:--|:--|:--|
-| **Checksums (SHA-256)** | Asset integrity | `checksums.yml` |
-| **STAC Validation** | Catalog consistency | `stac-validate.yml` |
-| **Provenance bundles** | Release evidence (SBOM/SLSA/`.prov.json`) | Release pipelines |
-| **Action pinning + OIDC** | Workflow hygiene | OPA/Conftest policy |
-| **Ethics flags (CARE)** | Sensitive data publishing rules | STAC `properties.data_ethics` + CI gate |
-
----
-
-## 🌐 Publication & Visualization
+## ⚙️ Data Lifecycle Process
 
 ```mermaid
-graph LR
-  DP["data/processed/"] --> S["data/stac/"]
-  S --> T["data/tiles/"]
-  T --> W["web/config/layers.json"]
-  W --> UI["MapLibre UI · Docs"]
+flowchart TD
+  A["Ingest Data (NOAA / USGS / FEMA / KGS)"] --> B["ETL Processing (Python / GDAL / Pandas)"]
+  B --> C["Schema Validation (STAC / DCAT)"]
+  C --> D["FAIR+CARE Ethics Validation"]
+  D --> E["Governance Ledger Update (SHA-256 + Signatures)"]
+  E --> F["STAC / DCAT Catalog Publication"]
+  F --> G["Archival Storage (Checksums / SBOM / Manifest)"]
 ```
 <!-- END OF MERMAID -->
 
-- Web toggles are backed by STAC Items; every visible layer links to **metadata**, **preview**, and **checksum**.  
-- Optional **STAC API** provides `/stac/search` for bbox/time queries.
-
 ---
 
-## 🧠 Domains & Collections (Authoritative)
+## 🧮 Metadata Standards
 
-| Domain | Primary Datasets | Format | Temporal | Spatial |
-|:--|:--|:--|:--:|:--|
-| **Terrain** | DEM, slope, hillshade | COG | 2018-2020 | KS |
-| **Hydrology** | NHD flowlines, HUC, flood | GeoJSON | 1900-2025 | Basins |
-| **Landcover** | NLCD, veg, crops | COG/CSV | 1992-2021 | KS |
-| **Climate** | Temp/precip/drought | NetCDF/COG | 1980-2025 | KS |
-| **Hazards** | Tornado/flood/wildfire | GeoJSON/COG | 1950-2025 | KS/region |
-| **Tabular** | Census/economy/ag | Parquet/CSV | 1860-2025 | County/State |
-| **Text** | OCR/oral/treaties | JSONL/TXT | 1800-present | Archives |
-
----
-
-## 🧩 Data Governance & CI
-
-| Workflow | Role | Trigger | Outputs |
-|:--|:--|:--|:--|
-| `fetch.yml` | Acquire sources from manifests | schedule/manual | `data/raw/` |
-| `checksums.yml` | Integrity verification | data PR | `.sha256` + diffs |
-| `stac-validate.yml` | STAC schema & links | PR/push | `stac-report.json` |
-| `docs-validate.yml` | Docs-as-code enforcement | PR/push | lint + meta reports |
-| `ai-ethics.yml` | Bias checks for model outputs tied to data | weekly | `ai_ethics_report.json` |
-
-**Policy-as-Code (OPA)**: block merges if required STAC/metadata fields missing or if restricted datasets are targeted for public Pages.
-
----
-
-## 📈 Observability & Health
-
-```yaml
-data_metrics:
-  export_to: "https://metrics.kfm.ai/data"
-  fields:
-    - stac_pass_rate
-    - checksum_drift_pct
-    - dq_rule_pass_pct
-    - tile_build_latency_s
-    - storage_growth_gb
-  alerts:
-    slack: "#ci-alerts"
-    thresholds:
-      checksum_drift_pct: 0
-      stac_pass_rate: 1.0
-      dq_rule_pass_pct: 0.98
-```
-
----
-
-## 🧭 Privacy, Licensing & CARE
-
-- **Licensing** preserved in STAC Items; public artifacts **CC-BY 4.0** unless otherwise stated.  
-- **Indigenous/culturally sensitive** datasets carry `properties.data_ethics` and may be **aggregated or excluded** from public Pages.  
-- **PII redaction** policy documented in `docs/standards/ethics/`.
-
----
-
-## 🧪 Local Reproducibility
-
-```bash
-# 1) fetch sources by manifest
-make fetch
-
-# 2) run ETL pipelines
-make process
-
-# 3) write & validate STAC
-make stac
-
-# 4) compute checksums
-make checksums
-
-# 5) (optional) build tiles
-make tiles
-```
-
-All steps log to `data/work/logs/` and attach SHA-256 to outputs.
-
----
-
-## 🧩 Risk Register (Data)
-
-| ID | Risk | Likelihood | Impact | Mitigation | Owner |
-|:--|:--|:--:|:--:|:--|:--|
-| DATA-001 | STAC schema drift | M | M | strict CI gates | @kfm-data |
-| DATA-002 | Checksum mismatch | L | H | recompute + block PR | @kfm-data |
-| DATA-003 | CRS mislabeling | M | M | CRS policy + DQ rules | @kfm-data |
-| DATA-004 | Sensitive layer leak | L | H | CARE flags + policy gate | @kfm-security |
-| DATA-005 | Tile build regressions | M | M | perf budgets + retry | @kfm-web |
-
----
-
-## 🔗 Related Documentation
-
-- `docs/architecture/architecture.md` — System overview  
-- `docs/architecture/api-architecture.md` — API contracts & STAC API  
-- `docs/architecture/pipelines.md` — ETL orchestration  
-- `data/ARCHITECTURE.md` — Per-dataset details and SOPs  
-- `.github/workflows/stac-validate.yml` — CI gate for metadata
-
----
-
-## 🧾 Versioning & Lifecycle
-
-```yaml
-versioning:
-  policy: "Semantic Versioning (MAJOR.MINOR.PATCH)"
-  dataset_version_field: "properties.version"
-  stac_tag_pattern: "stac-v*"
-  doi_on_major: true
-  provenance_bundle:
-    - "data_provenance.prov.json"
-    - "data_provenance.sha256"
-```
-
----
-
-## 🕰 Version History
-
-| Version | Date | Summary |
+| Standard | Domain | Application |
 |:--|:--|:--|
-| **v2.0.0** | 2025-11-16 | Tier-Ω+∞: Added DQ framework, CRS/compression policies, partitioning, CARE licensing rules, observability metrics, CI governance, provenance bundles, and versioning policy. |
-| v1.0.0 | 2025-10-04 | Initial data architecture specification and lineage model. |
+| **STAC 1.0** | Geospatial data cataloging | `data/stac/catalog.json`, `items/` |
+| **DCAT 3.0** | Dataset metadata interoperability | `data/meta/*.jsonld` |
+| **CIDOC CRM** | Cultural heritage entity linkage | `data/graph/entities/` |
+| **OWL-Time** | Temporal data semantics | Event timelines |
+| **GeoSPARQL** | Geospatial relationships | Bounding box, geometry fields |
+| **FAIR / CARE** | Data ethics and governance | `data/reports/fair/`, `data/reports/audit/` |
+
+---
+
+## ⚖️ FAIR + CARE Alignment
+
+| Principle | Implementation | Artifact |
+|:--|:--|:--|
+| **Findable** | Unique STAC item IDs and catalog search. | `data/stac/catalog.json` |
+| **Accessible** | Open datasets under MIT / CC-BY 4.0 licenses. | `LICENSE` |
+| **Interoperable** | STAC/DCAT metadata with JSON-LD. | `data/meta/*.jsonld` |
+| **Reusable** | Versioned datasets with manifest checksums. | `releases/v*/manifest.zip` |
+| **Collective Benefit (CARE)** | Governance council reviews for cultural sensitivity. | `data/reports/audit/data_provenance_ledger.json` |
+
+---
+
+## 🔍 Governance Integration
+
+| Workflow | Function | Output |
+|:--|:--|:--|
+| `stac-validate.yml` | Validates STAC/DCAT metadata schema. | `reports/validation/stac_validation_report.json` |
+| `faircare-validate.yml` | Runs FAIR+CARE compliance checks. | `reports/fair/data_care_assessment.json` |
+| `governance-ledger.yml` | Updates provenance and checksum logs. | `data/reports/audit/data_provenance_ledger.json` |
+| `policy-check.yml` | Verifies data contract adherence. | `reports/audit/policy_check.json` |
+
+---
+
+## 🧩 Data Provenance Model
+
+```mermaid
+flowchart LR
+  R["Raw Dataset (NOAA Floods)"] --> T["ETL Transform (Python)"]
+  T --> V["Validation (STAC/DCAT + FAIR)"]
+  V --> A["Archival (Checksum + Ledger)"]
+  A --> G["Governance Review + Public Release"]
+```
+<!-- END OF MERMAID -->
+
+Each dataset is cryptographically signed and recorded in:
+- `data/reports/audit/data_provenance_ledger.json`
+- `releases/v*/manifest.zip`
+- `releases/v*/sbom.spdx.json`
+
+---
+
+## 🧠 Tools & Validation Frameworks
+
+| Tool | Role | Validation Layer |
+|:--|:--|:--|
+| **GDAL / Rasterio / Fiona** | Geospatial transformations. | Work layer |
+| **stac-validator** | STAC schema validation. | Metadata layer |
+| **pySHACL / rdflib** | RDF and ontology validation. | Graph layer |
+| **spaCy / GeoPy** | NLP + geocoding enrichment. | Enrichment layer |
+| **OPA / Conftest** | Governance and compliance rules. | Policy layer |
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-architecture | Added FAIR+CARE governance, DCAT integration, and CI validation mapping. |
+| v2.0.0 | 2025-10-25 | @kfm-data-lab | Introduced ontology integration and provenance model diagram. |
+| v1.0.0 | 2025-10-04 | @kfm-architecture | Initial data architecture and lifecycle documentation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Data Architecture**  
-*“Every Dataset Proven. Every Process Reproducible. Every Publication Interoperable.”*
+**Kansas Frontier Matrix © 2025**  
+*“Every Dataset Has a Lineage — Every Lineage Has Governance.”*  
+📍 `docs/architecture/data-architecture.md` — Data lifecycle and governance architecture of the Kansas Frontier Matrix.
 
 </div>
