@@ -61,13 +61,13 @@ data/reports/audit/
 
 ```mermaid
 flowchart TD
-  A[Ingest/Train/Update] --> B[Schema & STAC/DCAT Validation]
-  B --> C[FAIR+CARE Audit]
-  C --> D[Checksum + SBOM]
-  D --> E[Governance Review & Sign-off]
-  E --> F[Ledger Update (data/reports/audit/**)]
-  F --> G[Release Manifest + Telemetry Sync]
-  F --> H[STAC/DCAT Back-Reference]
+  A["Ingest / Train / Update"] --> B["Schema and STAC–DCAT Validation"]
+  B --> C["FAIR+CARE Audit"]
+  C --> D["Checksum and SBOM Generation"]
+  D --> E["Governance Review and Sign-off"]
+  E --> F["Ledger Update — data/reports/audit"]
+  F --> G["Release Manifest and Telemetry Sync"]
+  F --> H["STAC / DCAT Back-Reference"]
 ```
 
 ### Description
