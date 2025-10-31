@@ -1,28 +1,29 @@
 ---
 title: "📦 Kansas Frontier Matrix — Raw Data Repository (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.5.0"
+last_updated: "2025-10-30"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 📦 Kansas Frontier Matrix — **Raw Data Repository**
+# 📦 Kansas Frontier Matrix — **Raw Data Repository**  
 `data/raw/README.md`
 
-**Purpose:** Contains unaltered source datasets ingested from verified scientific, governmental, and archival repositories.  
-All files within this directory serve as the immutable foundation for ETL pipelines, validation workflows, and FAIR+CARE governance processes in Kansas Frontier Matrix (KFM).
+**Purpose:** Houses unmodified source datasets from authoritative scientific, governmental, and archival repositories.  
+This directory represents the immutable foundation for all KFM ETL, validation, and governance workflows under **MCP-DL v6.4.3 Diamond⁹ Ω**.
 
-[![License: Varies by Source](https://img.shields.io/badge/License-Source--Specific-blue)](../../docs/contracts/data-contract-v3.json)
 [![STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Monitored-gold)](../../docs/standards/faircare-validation.md)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/architecture/repo-focus.md)
+[![DCAT Export](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/dcat-export.yml/badge.svg)](../../.github/workflows/dcat-export.yml)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%E2%84%AA-gold)](../../docs/standards/faircare-validation.md)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../docs/architecture/repo-focus.md)
+[![License: Source-Specific](https://img.shields.io/badge/License-Varies%20by%20Source-blue)](../../docs/contracts/data-contract-v3.json)
 
 </div>
 
@@ -30,11 +31,15 @@ All files within this directory serve as the immutable foundation for ETL pipeli
 
 ## 📚 Overview
 
-The `data/raw/` directory stores **immutable copies** of all datasets used in KFM ETL pipelines.  
-Each dataset is stored exactly as received from its original source and is accompanied by metadata describing its provenance, license, and access history.  
+The `data/raw/` directory contains **immutable copies** of original datasets ingested into the Kansas Frontier Matrix system.  
+Each dataset is accompanied by detailed **STAC/DCAT metadata**, **checksum validation**, and **license documentation**.  
+Data here is **read-only** — all transformations occur downstream under governed ETL workflows (`data/work/`).
 
-Raw data is never modified directly — all transformations occur within the `data/work/` layer under governed ETL and validation procedures.  
-This directory supports **data reproducibility, lineage tracking, and source transparency** under FAIR+CARE governance.
+**Core Principles:**
+- Preserve the integrity of external source data (NOAA, USGS, FEMA, KGS).  
+- Guarantee reproducibility and verifiable provenance.  
+- Ensure FAIR+CARE alignment at the ingestion level.  
+- Enable automated governance tracking via the provenance ledger.
 
 ---
 
@@ -42,28 +47,28 @@ This directory supports **data reproducibility, lineage tracking, and source tra
 
 ```plaintext
 data/raw/
-├── README.md                        # This file — overview of raw data storage
+├── README.md                       # This file — raw data architecture
 │
-├── usgs/                            # U.S. Geological Survey data
-│   ├── elevation_models/            # DEM and LiDAR datasets
-│   ├── groundwater_levels/          # Aquifer observation wells
-│   ├── metadata.json
-│   └── license.txt
-│
-├── fema/                            # FEMA National Flood Hazard Layer and disaster declarations
-│   ├── flood_zones/
-│   ├── disaster_declarations/
-│   ├── metadata.json
-│   └── license.txt
-│
-├── noaa/                            # NOAA and NCEI datasets for weather and climate
+├── noaa/                           # NOAA and NCEI datasets (climate, storms, drought)
 │   ├── storm_events/
 │   ├── drought_monitor/
 │   ├── temperature_anomalies/
 │   ├── metadata.json
 │   └── license.txt
 │
-└── kgs/                             # Kansas Geological Survey and state-level geodata
+├── usgs/                           # U.S. Geological Survey datasets (geology, hydrology)
+│   ├── elevation_models/
+│   ├── groundwater_levels/
+│   ├── metadata.json
+│   └── license.txt
+│
+├── fema/                           # FEMA flood and disaster declarations
+│   ├── flood_zones/
+│   ├── disaster_declarations/
+│   ├── metadata.json
+│   └── license.txt
+│
+└── kgs/                            # Kansas Geological Survey datasets
     ├── hydrology/
     ├── wells/
     ├── lithologic_logs/
@@ -71,120 +76,129 @@ data/raw/
     └── license.txt
 ```
 
+Each subdirectory represents a **data provider namespace**, containing original data and standardized metadata.
+
 ---
 
-## ⚙️ Data Governance Workflow
+## ⚙️ Data Ingestion Workflow
 
 ```mermaid
 flowchart TD
-    A["Raw Data Source (NOAA, USGS, FEMA, KGS)"] --> B["Ingestion to data/raw/"]
-    B --> C["Metadata and License Registration"]
-    C --> D["ETL Processing (data/work/tmp/)"]
-    D --> E["Validation and FAIR and CARE Review"]
-    E --> F["Archival Storage and Governance Ledger Update"]
+  A["External Sources (NOAA · USGS · FEMA · KGS)"] --> B["Automated Ingestion (data/raw/)"]
+  B --> C["Metadata + License Registration (metadata.json)"]
+  C --> D["ETL Transformation (data/work/tmp/)"]
+  D --> E["FAIR+CARE Validation (Governance Workflow)"]
+  E --> F["Archival + Provenance Ledger Update"]
 ```
 
-### Process Summary:
-1. **Ingestion:** Datasets fetched directly from verified APIs or FTP endpoints.  
-2. **Registration:** Metadata, checksum, and source license recorded in `metadata.json`.  
-3. **ETL Transformation:** Processing conducted under reproducible scripts in `/src/pipelines/etl/`.  
-4. **Validation:** Schema and FAIR+CARE conformance validated automatically.  
-5. **Governance Logging:** Provenance recorded in `data/reports/audit/data_provenance_ledger.json`.
+### Process Stages
+1. **Ingestion:** Datasets retrieved via API/FTP endpoints or bulk downloads (scheduled via `etl-ingest.yml`).  
+2. **Registration:** Metadata file generated and stored with license and checksum.  
+3. **Transformation:** Performed under `/src/pipelines/etl/` using reproducible Python workflows.  
+4. **Validation:** JSON schema + FAIR+CARE audits applied pre-archive.  
+5. **Governance:** Provenance logged in `reports/audit/data_provenance_ledger.json`.
 
 ---
 
-## 🧩 Metadata Standards
+## 🧩 Metadata Schema (STAC + DCAT)
 
-All raw datasets include a companion metadata file conforming to **STAC 1.0** and **DCAT 3.0** specifications.
+All raw datasets include companion metadata files that conform to **STAC 1.0** and **DCAT 3.0 JSON-LD**.
 
 ### Example `metadata.json`
 ```json
 {
   "id": "noaa_storm_events_2025",
   "title": "NOAA Storm Events Database (Kansas)",
-  "description": "Official NOAA dataset of severe weather events affecting Kansas counties.",
+  "description": "Severe weather event records for Kansas from NOAA NCEI.",
   "source_url": "https://www.ncdc.noaa.gov/stormevents/",
   "provider": "NOAA National Centers for Environmental Information",
   "license": "Public Domain",
   "checksum": "sha256:a2d5efc392b5c65d9b0eab8a55e334e13e456b0d...",
   "spatial_extent": [-102.05, 36.99, -94.61, 40.00],
-  "temporal_extent": ["1950-01-01", "2025-12-31"]
+  "temporal_extent": ["1950-01-01", "2025-12-31"],
+  "format": "CSV",
+  "governance_ref": "docs/standards/governance/DATA-GOVERNANCE.md"
 }
 ```
 
 ---
 
-## ⚖️ Licensing Overview
+## ⚖️ Licensing Summary
 
-| Source | License | Usage Notes |
+| Source | License | Usage Terms |
 |---------|----------|-------------|
-| **NOAA** | Public Domain (U.S. Government Works) | Free for all research and educational use. |
-| **USGS** | Public Domain / USGS Data Policy | Attribution required for derivative works. |
-| **FEMA** | Open Data (Creative Commons 0 / Public Domain) | Use permitted with citation. |
-| **KGS** | CC-BY 4.0 | Attribution required to Kansas Geological Survey. |
+| **NOAA** | Public Domain (U.S. Government Works) | Free for research and education. |
+| **USGS** | Public Domain / USGS Data Policy | Attribution required for derived works. |
+| **FEMA** | Open Data / CC0 | Citation encouraged. |
+| **KGS** | CC-BY 4.0 | Attribution to Kansas Geological Survey required. |
 
-Each subdirectory includes a `license.txt` specifying applicable usage restrictions.
-
----
-
-## 🔍 Data Provenance & Integrity
-
-- **Checksum Verification:** SHA-256 hashes generated at ingestion and logged in `releases/v9.3.2/manifest.zip`.  
-- **Provenance Ledger:** Each file linked to governance record in `data/reports/audit/data_provenance_ledger.json`.  
-- **Version Control:** Data sources versioned via tag references (e.g., `noaa_2025Q3`, `usgs_2024H2`).  
-- **Access Logs:** Ingestion logs retained under `data/reports/lineage/etl_job_history.json`.
+Each dataset directory contains a `license.txt` detailing applicable legal terms.
 
 ---
 
-## 🧠 FAIR+CARE Compliance for Raw Data
+## 🔍 Provenance & Integrity Controls
+
+| Validation Type | Description | Output |
+|------------------|--------------|--------|
+| **Checksum Validation** | SHA-256 hashes computed during ingestion. | Logged in `releases/v9.5.0/manifest.zip`. |
+| **Metadata Traceability** | Source metadata linked to `data/sources/*.json`. | Maintained in STAC/DCAT records. |
+| **Ledger Verification** | Each file registered in governance ledger. | `reports/audit/data_provenance_ledger.json`. |
+| **Version Tracking** | Dataset batches tagged (e.g., `noaa_2025Q3`). | STAC Item `version` attribute. |
+| **Telemetry Recording** | Operational status logged in telemetry schema. | `releases/v9.5.0/focus-telemetry.json`. |
+
+---
+
+## 🧠 FAIR+CARE Compliance
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Each dataset indexed with unique ID in STAC catalog. |
+| **Findable** | Indexed in STAC/DCAT catalogs and discoverable through Focus Mode. |
 | **Accessible** | Stored in open, non-proprietary formats. |
-| **Interoperable** | Metadata adheres to STAC/DCAT standards. |
-| **Reusable** | Includes license, checksum, and provenance metadata. |
-| **Collective Benefit** | Promotes transparent access to foundational datasets. |
-| **Authority to Control** | Source organizations acknowledged and preserved. |
-| **Responsibility** | Ingestion validated under ethical and technical governance. |
-| **Ethics** | No sensitive or restricted data stored without permission. |
+| **Interoperable** | Metadata adheres to W3C DCAT and OGC STAC standards. |
+| **Reusable** | Includes license, provenance, and checksum metadata. |
+| **Collective Benefit** | Enables open historical and climate research. |
+| **Authority to Control** | Respects original source governance and data rights. |
+| **Responsibility** | Validated under automated FAIR+CARE governance. |
+| **Ethics** | Restricted or sensitive data flagged and reviewed pre-ingestion. |
 
 ---
 
-## ⚙️ Related Workflows
+## ⚙️ Related CI/CD Workflows
 
-| Workflow | Function | Output |
-|-----------|-----------|---------|
-| `.github/workflows/etl-ingest.yml` | Automates raw data ingestion | `data/raw/*/metadata.json` |
-| `.github/workflows/stac-validate.yml` | Validates STAC and schema metadata | `data/reports/validation/stac_validation_report.json` |
-| `.github/workflows/governance-ledger.yml` | Logs ingestion provenance and checksum | `data/reports/audit/data_provenance_ledger.json` |
+| Workflow | Purpose | Output |
+|-----------|----------|--------|
+| `etl-ingest.yml` | Automates raw data ingestion. | `data/raw/*/metadata.json` |
+| `stac-validate.yml` | Ensures metadata schema compliance. | `reports/validation/stac_validation_report.json` |
+| `dcat-export.yml` | Exports metadata for data portals. | `data/meta/*_dcat.jsonld` |
+| `governance-ledger.yml` | Appends provenance entry to ledger. | `reports/audit/data_provenance_ledger.json` |
 
 ---
 
-## 🧾 Citation Example
+## 🧾 Citation Format
 
 ```text
-Kansas Frontier Matrix (2025). Kansas Raw Data Repository (v9.3.2).
-Unaltered foundational datasets ingested from NOAA, USGS, FEMA, and KGS under FAIR+CARE governance.
+Kansas Frontier Matrix (2025). Kansas Raw Data Repository (v9.5.0).
+Immutable datasets ingested from NOAA, USGS, FEMA, and KGS under FAIR+CARE governance.
 Available at: https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/main/data/raw
-License: Source-specific (see metadata and license files).
+License: Source-specific (see individual license files).
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🧾 Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.3.2 | 2025-10-28 | Added new NOAA and FEMA datasets; validated checksum and metadata schema. |
-| v9.2.0 | 2024-07-15 | Introduced KGS lithologic and hydrology datasets. |
-| v9.0.0 | 2023-01-10 | Established base raw data structure for ETL pipelines. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.5.0 | 2025-10-30 | @kfm-data-lab | Updated metadata schema to DCAT 3.0; enhanced governance tracking with telemetry integration. |
+| v9.3.2 | 2025-10-28 | @kfm-architecture | Added new NOAA and FEMA datasets; checksum validation improvements. |
+| v9.2.0 | 2024-07-15 | @bartytime4life | Integrated KGS lithologic and hydrology datasets. |
+| v9.0.0 | 2023-01-10 | @kfm-etl-ops | Established base raw data structure for ETL reproducibility. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Raw Data × Provenance × FAIR+CARE Transparency*  
+**Kansas Frontier Matrix** · *Raw Data × Provenance × FAIR+CARE Integrity*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../docs/) • [⚖️ Governance Ledger](../../docs/standards/governance/)
 
 </div>
