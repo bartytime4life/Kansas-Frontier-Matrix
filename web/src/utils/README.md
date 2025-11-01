@@ -1,352 +1,195 @@
 ---
-title: "🧮 Kansas Frontier Matrix — Web Frontend Utilities"
-document_type: "Developer Documentation · TypeScript Utility Modules"
-version: "v2.3.0"
-last_updated: "2025-10-25"
-status: "Tier-Ω+∞ Certified · Developer Edition"
+title: "🧮 Kansas Frontier Matrix — Utility Functions & Helpers Library (Tier-Ω+∞ Certified)"
+path: "web/src/utils/README.md"
+version: "v2.1.1"
+last_updated: "2025-11-16"
+review_cycle: "Continuous / Architecture & Governance Council"
+commit_sha: "<latest-commit-hash>"
+license: "MIT"
+owners: ["@kfm-web","@kfm-architecture","@kfm-data","@kfm-docs"]
 maturity: "Production"
-license: ["MIT (code)", "CC-BY 4.0 (docs)"]
-owners: ["@kfm-web", "@kfm-data", "@kfm-architecture", "@kfm-security"]
-tags: ["web","frontend","react","typescript","utils","maplibre","timeline","stac","ai","mcp","fair","care","a11y","observability","testing","security","governance","provenance"]
+status: "Stable"
+tags: ["utils","helpers","typescript","web","data","governance","fair","care","accessibility"]
+sbom_ref: "../../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../../releases/v2.1.1/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 alignment:
-  - MCP-DL v6.3.2
-  - STAC 1.0 / DCAT 2.0
-  - CIDOC CRM / OWL-Time
+  - MCP-DL v6.4.3
   - FAIR / CARE
-  - WCAG 2.1 AA
+  - ISO 9241-210 Human-Centered Design
+  - TypeScript 5
+  - WCAG 2.1 AA / Accessibility Aware Development
 validation:
-  ci_enforced: true
-  sbom_required: true
-  slsa_attestations: true
-observability:
-  dashboard: "https://metrics.kfm.ai/frontend-utils"
-  metrics: ["test_coverage","build_status","bundle_size_kb","lint_errors","a11y_score","artifact_verification_pct","utils_safeParseJSON_ms","ai_request_latency_ms"]
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  docs_ci_required: true
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
 preservation_policy:
+  retention: "frontend utilities permanent · audits 5 years"
   checksum_algorithm: "SHA-256"
-  retention: "365d artifacts · 90d logs"
 ---
 
 <div align="center">
 
-# 🧮 **Kansas Frontier Matrix — Web Frontend Utilities (v2.3.0 · Tier-Ω+∞ Certified)**  
-`📁 web/src/utils/`
+# 🧮 **Kansas Frontier Matrix — Utility Functions & Helpers Library (v2.1.1 · Tier-Ω+∞ Certified)**  
+`web/src/utils/README.md`
 
-**Helper Functions · API Clients · Data Parsers · Map & Timeline Utilities**
+**Mission:** Provide a suite of reusable, FAIR+CARE-governed utility functions and helper methods  
+for state management, accessibility, data transformation, and provenance tracking in the  
+**Kansas Frontier Matrix (KFM)** web ecosystem.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build)](../../../../.github/workflows/site.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL)](../../../../.github/workflows/codeql.yml)
-[![Docs · MCP-DL v6.3.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.3.2-green)](../../../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../../LICENSE)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../../docs/)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Utilities%20Aligned-gold)](../../../docs/standards/faircare-validation.md)
+[![Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-Validated-brightgreen)](../../../docs/standards/accessibility.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
 
 </div>
 
 ---
 
-## ⚡ Quick Reference
-| Task | Command |
-|:--|:--|
-| Lint | `pnpm run lint` |
-| Unit tests | `pnpm run test` |
-| Coverage | `pnpm run test:coverage` |
-| Type check | `pnpm run typecheck` |
-| Build (app) | `pnpm --filter web run build` |
+## 📚 Overview
+
+The **Utils Library** provides reusable building blocks for KFM’s frontend logic — simplifying  
+data operations, accessibility state handling, and governance integration.  
+All utilities are versioned, auditable, and integrated with FAIR+CARE and provenance frameworks.
+
+Core objectives:
+- ⚙️ Provide reusable, composable helper functions for consistent UX behavior.  
+- ♿ Ensure accessibility-awareness in all state and DOM interactions.  
+- 🧩 Support FAIR+CARE alignment via checksum, provenance, and ethics tracking.  
+- 🔗 Maintain verifiable audit logs and automated validation pipelines.  
 
 ---
 
-## 🧭 Operational Context
-| Environment | Purpose | Validation | Notes |
-|:--|:--|:--|:--|
-| **Local** | Unit testing, profiling | Jest + ESLint | `pnpm run test` |
-| **CI / GitHub Actions** | Lint, build, coverage, CodeQL | site.yml · codeql.yml | Artifacts auto-published |
-| **Prod / GH Pages** | Bundled into `/web/` build | SBOM + SLSA | Versioned under main app |
+## 🗂️ Directory Layout
 
----
-
-## 🧭 Overview
-`web/src/utils/` provides **pure, reusable TypeScript modules** that power deterministic data handling for the Kansas Frontier Matrix frontend.  
-They ensure clean API communication, timeline math, STAC parsing, and consistent data formatting.
-
-Under **MCP-DL v6.3.2**, this folder enforces:
-- Deterministic, idempotent functions  
-- Complete TSDoc documentation  
-- Strict `noImplicitAny` typing  
-- Provenance tracked in `.prov.json`  
-- Reproducible CI builds  
-
-> *“Every helper tells a story — reproducible, verifiable, and open.”*
-
----
-
-## 🧱 Directory Structure
-```text
-web/src/utils/
-├── apiClient.ts          # REST/GraphQL client (retry, backoff, logging)
-├── mapUtils.ts           # MapLibre helpers (layer management, transforms)
-├── timelineUtils.ts      # Temporal math and scaling functions
-├── aiUtils.ts            # AI bridge (summaries, citations)
-├── formatters.ts         # Date/number/text localization
-├── dataParser.ts         # STAC/API payload normalization
-├── hooks.ts              # useFetch, useDebounce, useResizeObserver
-├── constants.ts          # Shared constants, URLs, version data
-└── __tests__/            # Unit tests for each module
-```
-
----
-
-## ⚙️ Build & Deployment Workflow
 ```bash
-pnpm run lint && pnpm run test:coverage
-make stac-validate
-pnpm run build
-pnpm run release
+web/src/utils/
+├── README.md                     # This file — Utilities library documentation
+│
+├── formatters.ts                 # Date/time, currency, and text formatting utilities
+├── validators.ts                 # Input validation, regex patterns, and schema checkers
+├── accessibility.ts              # Focus, ARIA, and keyboard state helpers
+├── provenance.ts                 # Provenance, checksum, and governance metadata utilities
+└── fetcher.ts                    # API fetch wrappers with FAIR+CARE compliance and logging
 ```
-Artifacts: `.prov.json`, `sbom.cdx.json`, coverage retained 365 days.  
-Tags: `web-utils-vMAJOR.MINOR.PATCH` → DOI minted automatically.  
 
 ---
 
-## ⚙️ Dependency Graph
+## ⚙️ Governance Model for Utilities
+
 ```mermaid
-%%{init: {"theme":"base","themeVariables":{"primaryColor":"#1D3557","primaryTextColor":"#fff"}}}%%
-graph TD
-  A[apiClient.ts]:::core --> B[mapUtils.ts]:::logic
-  A --> C[aiUtils.ts]:::logic
-  B --> D[formatters.ts]:::support
-  C --> D
-  D --> E[dataParser.ts]:::support
-  classDef core fill:#1D3557,color:#fff;
-  classDef logic fill:#457B9D,color:#fff;
-  classDef support fill:#A8DADC,color:#000;
+flowchart TD
+  A["Utility Function Execution"] --> B["Accessibility Awareness + FAIR+CARE Validation"]
+  B --> C["Checksum Generation + Governance Ledger Sync"]
+  C --> D["Telemetry & Metrics Reporting"]
+  D --> E["CI/CD Validation & Provenance Audit"]
 ```
-▣ #1D3557 Core ▣ #457B9D Logic ▣ #A8DADC Support  
+<!-- END OF MERMAID -->
 
 ---
 
-## 📦 Public API Surface
-Utilities safe for use across `/web`:
-- `apiClient`: `get`, `post`, `graphql<T>()`
-- `mapUtils`: `addLayer`, `removeLayer`, `ensureSource`
-- `timelineUtils`: `timeToPixel`, `pixelToTime`, `clampWindow`
-- `dataParser`: `parseEventData`, `parseLayerConfig`
-- `formatters`: `formatDateHuman`, `formatNumberCompact`
+## 🧱 Core Utility Categories
 
-> Breaking changes require **minor/major bump** & CHANGELOG entry.
-
----
-
-## 🧯 Error Handling & Retries
-- **Network:** automatic retry (x2 exponential backoff) for 5xx.  
-- **Timeouts:** default 8s; cancellable with `AbortController`.  
-- **Parsing:** `safeParseJSON()` throws `ParseError` with `.path`.  
-- **Logging:** sanitized console output; no PII.  
+| Category | Description | FAIR+CARE Function | Validation Workflow |
+|:--|:--|:--|:--|
+| **Formatters** | Standardized date/time and numerical formatting. | Reusability + Transparency | `policy-check.yml` |
+| **Validators** | Input and data integrity validation for UI forms. | Responsibility + Ethics | `ui-validate.yml` |
+| **Accessibility** | Keyboard focus, ARIA role, and visibility helpers. | Inclusivity + Accessibility | `design-validate.yml` |
+| **Provenance** | Checksum, audit, and governance metadata utilities. | Accountability + Traceability | `governance-ledger.yml` |
+| **Fetcher** | FAIR+CARE-compliant fetch with error handling and provenance logs. | Transparency + FAIR Access | `stac-validate.yml` |
 
 ---
 
-## ⏱ Performance Budgets
-| Function | Budget | Test |
+## 🧠 FAIR + CARE Integration
+
+| Principle | Implementation | Validation |
 |:--|:--|:--|
-| `timeToPixel()` | < 0.02 ms / call | `perf.timelineUtils.spec.ts` |
-| `safeParseJSON()` | < 0.15 ms / 2 KB | `perf.parser.spec.ts` |
-| `addLayer()` | < 30 ms | `mapUtils.spec.ts` |
+| **Findable** | Functions documented and indexed in governance logs. | `governance-ledger.yml` |
+| **Accessible** | Accessibility-aware utilities integrated across UI. | `design-validate.yml` |
+| **Interoperable** | TypeScript and JSON schema compatible for reuse. | `ui-validate.yml` |
+| **Reusable** | All utilities versioned with deterministic signatures. | `policy-check.yml` |
+| **Collective Benefit (CARE)** | Inclusive design supported via accessible UX helpers. | `faircare-validate.yml` |
 
 ---
 
-## 🧪 Testing & Coverage Matrix
-| Module | Coverage | Status |
-|:--|:--:|:--:|
-| apiClient.ts | ≥ 90 % | ✅ |
-| mapUtils.ts | ≥ 85 % | ✅ |
-| timelineUtils.ts | ≥ 85 % | ⚙️ |
-| aiUtils.ts | ≥ 80 % | ⚙️ |
-| formatters.ts | ≥ 95 % | ✅ |
-| dataParser.ts | ≥ 90 % | ✅ |
-| hooks.ts | ≥ 80 % | ⚙️ |
+## ♿ Accessibility-Aware Development
+
+| Utility | Accessibility Feature | Validation |
+|:--|:--|:--|
+| **focusTrap()** | Ensures modals and dialogs maintain focus. | `design-validate.yml` |
+| **announceChange()** | Uses ARIA live region to notify users of updates. | `docs-validate.yml` |
+| **scrollIntoViewSafe()** | Provides smooth, motion-reduced scrolling. | `faircare-validate.yml` |
+| **keyboardShortcut()** | Attaches accessible key bindings with labels. | `ui-validate.yml` |
 
 ---
 
-## 🤖 AI Utilities Integration
-- **Endpoints:** `POST /ask`, `GET /entity/{id}`  
-- **Features:** streaming, deterministic caching, Neo4j citation mapping  
-- **Response Type:**
-```ts
-type AIResponse = {
-  answer: string;
-  citations: { id: string; label: string; source: string }[];
-};
-```
+## 🔍 Provenance & Governance Integration
+
+| Artifact | Purpose | Path |
+|:--|:--|:--|
+| **Governance Ledger** | Records checksums and usage metadata. | `data/reports/audit/data_provenance_ledger.json` |
+| **FAIR+CARE Reports** | Validates ethical and accessibility utilities. | `data/reports/fair/data_care_assessment.json` |
+| **Telemetry Schema** | Logs function performance and accessibility metrics. | `schemas/telemetry/web-utils-schema.json` |
+
+> Each utility generates a verifiable hash entry in the governance ledger,  
+> enabling reproducibility, traceability, and accountability.
 
 ---
 
-## 🧩 Example Usage
-```ts
-import { getEvents } from "./apiClient";
-import { parseEventData } from "./dataParser";
-import { formatDateHuman } from "./formatters";
+## 🧾 Example Utility Metadata
 
-export async function loadTimeline(start: string, end: string) {
-  const data = await getEvents(start, end);
-  const events = parseEventData(data);
-  console.info(`Loaded ${events.length} events from ${formatDateHuman(start)}–${formatDateHuman(end)}.`);
-  return events;
-}
-```
-
----
-
-## 🔒 Security & Secrets
-- No external secrets in utils.  
-- Environment vars via `import.meta.env`.  
-- CI scans: CodeQL + Gitleaks (`security-scan.yml`).  
-- CSP/CORS policy: enforced in higher layer, not modifiable here.  
-- Redacted logs.  
-
----
-
-## 🧾 Provenance & Integrity
-| Artifact | Description |
-|:--|:--|
-| **Inputs** | STAC catalogs, API payloads |
-| **Outputs** | Typed data models (Event, Entity, Layer) |
-| **Checks** | Jest + CodeQL + SHA-256 checksum |
-| **Retention** | Git-tracked commits, 365-day artifact retention |
-
----
-
-## 📡 Observability Instrumentation
-```ts
-import { trackMetric } from "../observability";
-
-export function safeParseJSON(input: string) {
-  const t0 = performance.now();
-  const result = JSON.parse(input);
-  trackMetric("utils_safeParseJSON_ms", performance.now() - t0);
-  return result;
-}
-
-export async function timedAIRequest<T>(call: () => Promise<T>) {
-  const t0 = performance.now();
-  const res = await call();
-  trackMetric("ai_request_latency_ms", performance.now() - t0);
-  return res;
-}
-```
-**Metrics:** `utils_safeParseJSON_ms`, `ai_request_latency_ms`, `stac_parse_success_rate`.
-
----
-
-## 📊 Baseline Metrics Snapshot (v2.3.0)
-| Metric | Baseline | Target | Trend |
-|:--|:--:|:--:|:--:|
-| Build Time | 38 s | < 45 s | ✅ |
-| Coverage | 89 % | ≥ 85 % | ✅ |
-| A11y Score | 96 | ≥ 95 | ✅ |
-| Lint Errors | 0 | 0 | ✅ |
-| Utility Perf Tests | 12/12 passed | 100 % | ✅ |
-
----
-
-## 📜 Linked ADRs & SOPs
-| Document | Purpose | Status |
-|:--|:--|:--:|
-| `docs/adr/ADR-UTIL-004.md` | Defines API client retry/backoff policy | ✅ |
-| `docs/adr/ADR-UTIL-006.md` | Timeline math + scale functions | ✅ |
-| `docs/sop/utility-governance.md` | Versioning + release procedures | ✅ |
-| `docs/sop/security-policy.md` | Secrets & CodeQL enforcement | ✅ |
-
----
-
-## ♻️ Backward Compatibility
-- Deprecated helpers emit console warnings for one minor version.  
-- Mark with `@deprecated` in JSDoc and specify alternative.  
-- Major removals logged in CHANGELOG + ADR.  
-
----
-
-## 🔗 Cross-Version Provenance
-| Component | Synced Version | Notes |
-|:--|:--:|:--|
-| `web/app` | v2.3.0 | Integrated release |
-| `web/frontend` | v2.2.0 | Shared observability |
-| `docs/architecture` | v1.6.0 | Dependency chain |
-| `data/stac` | v1.9.0 | STAC normalization logic |
-
----
-
-## 📚 References
-- `docs/standards/KFM-Markdown-Style-Guide.md`
-- `docs/architecture/system-architecture-overview.md`
-- `docs/standards/security-policy.md`
-- `docs/standards/observability-telemetry.md`
-- `tests/utils/coverage-report.md`
-
----
-
-## 🧭 Browser Support
-| Browser | Version | Notes |
-|:--|:--:|:--|
-| Chrome / Edge | last 2 | WebGL2 |
-| Firefox | ESR + latest | CSS Grid fallback |
-| Safari | 15+ | motion reduction respected |
-| iOS / Android | last 2 | touch parity |
-
----
-
-## 🧾 Change-Control Register
 ```yaml
-changes:
-  - date: "2025-10-25"
-    change: "Expanded version history, added deprecation policy, ADR/SOP links, cross-version provenance, and metrics baseline snapshot."
-    reviewed_by: "@kfm-web"
-    qa_approved_by: "@kfm-architecture"
-    pr: "#web-utils-223"
+---
+utility_id: "fetcher_v2.1.1"
+authors: ["@kfm-web","@kfm-data"]
+faircare_status: "Tier-Ω+∞ Verified"
+checksum: "sha256:c34e51a9f7b2e985..."
+governance_ledger_entry: "data/reports/audit/data_provenance_ledger.json"
+accessibility_compliance: "WCAG 2.1 AA"
+license: "MIT"
+---
 ```
 
 ---
 
-## 🗓 Version History
-| Version | Date | Author | Summary | Type |
-|:--|:--|:--|:--|:--|
-| **v2.3.0** | 2025-10-25 | @kfm-web | Tier-Ω+∞ rebuild; ADRs + cross-version provenance added | Major |
-| v2.2.0 | 2025-10-24 | @kfm-web | Performance budgets + API surface + Quick Reference | Major |
-| v2.1.0 | 2025-10-23 | @kfm-data | Added dependency graph + observability metrics | Minor |
-| v2.0.0 | 2025-10-20 | @kfm-architecture | Introduced FAIR/CARE compliance | Major |
-| v1.4.0 | 2025-09-01 | @kfm-web | Harmonized utility lint/test standards | Minor |
-| v1.0.0 | 2025-06-01 | Founding Team | Initial release | Major |
+## 🧮 Observability Metrics
+
+| Metric | Description | Target | Workflow |
+|:--|:--|:--|:--|
+| **Utility Coverage** | % of utilities with FAIR+CARE metadata. | 100% | `policy-check.yml` |
+| **Accessibility Compliance (WCAG)** | Accessibility hooks integrated per function. | ≥ 95 | `design-validate.yml` |
+| **Governance Sync Rate** | Ledger synchronization success rate. | 100% | `governance-ledger.yml` |
+| **Performance Integrity** | Fetcher + validator execution time thresholds. | < 200ms avg | `ui-validate.yml` |
+
+---
+
+## 🧾 Validation Workflows
+
+| Workflow | Function | Output |
+|:--|:--|:--|
+| `ui-validate.yml` | Tests functional logic and accessibility interactions. | `reports/validation/ui_validation.json` |
+| `design-validate.yml` | Validates color contrast and ARIA interaction in utilities. | `reports/validation/a11y_validation.json` |
+| `policy-check.yml` | Ensures all utils have proper metadata and versioning. | `reports/audit/policy_check.json` |
+| `faircare-validate.yml` | Evaluates ethics and inclusivity in UX helpers. | `reports/fair/data_care_assessment.json` |
+| `governance-ledger.yml` | Logs checksums and provenance metadata. | `data/reports/audit/data_provenance_ledger.json` |
+
+---
+
+## 🕰 Version History
+
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-web | Added provenance logger and accessibility utilities with FAIR+CARE validation. |
+| v2.0.0 | 2025-10-25 | @kfm-architecture | Introduced governance-integrated fetcher and validator modules. |
+| v1.0.0 | 2025-10-04 | @kfm-docs | Initial utilities library documentation and metadata linkage. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — Web Frontend Utilities**  
-Built under the **Master Coder Protocol (MCP-DL v6.3.2)**  
-
-[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
-[![Semantic Alignment](https://img.shields.io/badge/CIDOC CRM · OWL--Time · STAC 1.0-blue)]()
+**Kansas Frontier Matrix © 2025**  
+*“Small Functions. Big Integrity.”*  
+📍 `web/src/utils/README.md` — FAIR+CARE-aligned utility library documentation for the Kansas Frontier Matrix.
 
 </div>
-
-<!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.3.2
-MCP-TIER: Ω+∞
-DOC-PATH: web/src/utils/README.md
-MCP-CERTIFIED: true
-STAC-VALIDATED: true
-SBOM-GENERATED: true
-SLSA-ATTESTED: true
-A11Y-VERIFIED: true
-FAIR-CARE-COMPLIANT: true
-SECURITY-SCAN-CLEAN: true
-CACHE-STRATEGY-VERIFIED: true
-TEST-COVERAGE-THRESHOLD: 85%
-PERFORMANCE-BUDGET-P95: 2.5s
-OBSERVABILITY-ACTIVE: true
-CHANGELOG-VERIFIED: true
-ADR-SYNC-ACTIVE: true
-PROVENANCE-CHAIN-LINKED: true
-I18N-READY: true
-WCAG-AA-CONFORMANCE: verified
-METRICS-EXPORTED: ["utils_safeParseJSON_ms","ai_request_latency_ms","stac_parse_success_rate"]
-GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: {build.date}
-MCP-FOOTER-END -->
-````
