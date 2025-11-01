@@ -1,28 +1,43 @@
 ---
-title: "🌐 Kansas Frontier Matrix — Web Public Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌐 Kansas Frontier Matrix — Web Public Assets (Tier-Ω+∞ Certified)"
 path: "web/public/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v2.1.1"
+last_updated: "2025-11-16"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../releases/v2.1.1/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
 governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+owners: ["@kfm-web","@kfm-design","@kfm-accessibility","@kfm-docs"]
+maturity: "Production"
+status: "Stable"
+tags: ["public-assets","web","pwa","seo","accessibility","fair","care","governance"]
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR / CARE
+  - WCAG 2.1 AA / HTML5
+  - PWA / SEO / Open Graph
+  - ISO 9241-210 Human-Centered Design
+preservation_policy:
+  retention: "public assets permanent · accessibility audits 5 years"
+  checksum_algorithm: "SHA-256"
 ---
 
 <div align="center">
 
-# 🌐 Kansas Frontier Matrix — **Web Public Assets**
+# 🌐 **Kansas Frontier Matrix — Web Public Assets (v2.1.1 · Tier-Ω+∞ Certified)**  
 `web/public/README.md`
 
-**Purpose:** Provides documentation for the public-facing static assets used by the Kansas Frontier Matrix web application.  
-Ensures all assets meet accessibility, licensing, and FAIR+CARE governance standards and are deployed under transparent open-source compliance.
+**Mission:** Document and govern all **public-facing static assets** used by the Kansas Frontier Matrix web application —  
+ensuring open licensing, accessibility, and FAIR+CARE-aligned ethical governance for all published web resources.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../../docs/standards/faircare-validation.md)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/architecture/repo-focus.md)
+[![📦 Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)
+[![♿ Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-Validated-brightgreen)](../../docs/standards/accessibility.md)
+[![🌍 FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../../docs/standards/faircare-validation.md)
+[![📄 License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -30,43 +45,41 @@ Ensures all assets meet accessibility, licensing, and FAIR+CARE governance stand
 
 ## 📚 Overview
 
-The `web/public/` directory contains all **publicly accessible static files** served directly by the KFM web app during runtime and deployment.  
-These assets support **frontend rendering**, **branding**, **metadata configuration**, and **Progressive Web App (PWA)** functionality.  
-Every file here is included in the production build output and must comply with **FAIR+CARE** accessibility and governance standards.
+The `web/public/` directory contains all **publicly accessible static files** served by the KFM web app.  
+These include metadata, icons, banners, manifest files, SEO metadata, and legal/ethical notices.
 
-**Key Features:**
-- Public entry points for the web interface (`index.html`, `manifest.webmanifest`)  
-- Metadata files for SEO and accessibility compliance  
-- Icons, favicons, and open-license images  
-- Attribution pages for external datasets and graphics  
-- Legal and ethical disclaimers required by FAIR+CARE Council
+Every file here is part of the **production deployment** and must:
+- Be open-licensed and attributed properly.  
+- Pass FAIR+CARE governance and accessibility audits.  
+- Comply with **WCAG 2.1 AA** and **PWA** standards.  
+- Support long-term reproducibility and discoverability under **MCP-DL governance**.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```bash
 web/public/
-├── README.md                  # Documentation for all public assets
+├── README.md                     # This file — documentation for all public assets
 │
-├── index.html                 # Main HTML entry point rendered by Vite
-├── favicon.ico                # Application favicon (open license)
-├── manifest.webmanifest       # PWA manifest for browser and mobile metadata
-├── robots.txt                 # Search engine and crawler directives
-├── sitemap.xml                # Sitemap for SEO and archival crawlers
+├── index.html                    # Main entry point rendered by Vite
+├── favicon.ico                   # Open-licensed favicon
+├── manifest.webmanifest           # PWA manifest defining KFM’s identity
+├── robots.txt                    # Crawler directives (ethical web indexing)
+├── sitemap.xml                   # Sitemap for SEO and archival tools
 │
-├── icons/                     # Application and OS icon set
+├── icons/                        # App & OS icon set
 │   ├── icon-192.png
 │   ├── icon-512.png
 │   └── apple-touch-icon.png
 │
-├── images/                    # Static images (logos, banners, illustrations)
+├── images/                       # Public images, logos, and banners
 │   ├── kfm_logo.svg
 │   ├── kansas_frontier_banner.webp
-│   ├── open_data_badge.png
-│   └── faircare_logo.svg
+│   ├── faircare_logo.svg
+│   └── open_data_badge.png
 │
-└── meta/                      # Metadata and configuration
+└── meta/                         # Metadata and legal information
     ├── license.txt
     ├── attribution.md
     └── open_graph.json
@@ -76,51 +89,48 @@ web/public/
 
 ## ⚙️ Asset Governance
 
-Every file within this directory must declare or reference:
-1. **License:** All visual assets and metadata files must be open-licensed (MIT, CC-BY 4.0, or Public Domain).  
-2. **Attribution:** Visuals or icons sourced from external repositories must be cited in `meta/attribution.md`.  
-3. **Provenance:** The creation or modification history of each asset is recorded in the MCP Git log.  
-4. **Accessibility:** Images must include alternative text and conform to WCAG 2.1 AA standards.  
-5. **Ethics:** Content displayed in the public interface must meet FAIR+CARE ethical use criteria.
+Every file must include:
+1. **License** — Declared in file header or `meta/license.txt` (MIT, CC-BY 4.0, or Public Domain).  
+2. **Attribution** — Documented in `meta/attribution.md` for all reused assets.  
+3. **Provenance** — Changes tracked via Git history and governance ledger.  
+4. **Accessibility** — Alt text, captions, and semantics verified in CI.  
+5. **Ethics** — Images and media must pass FAIR+CARE cultural sensitivity review.
 
 ---
 
-## 🧠 FAIR+CARE Compliance
+## 🧠 FAIR + CARE Integration
 
-| Principle | Implementation |
-|------------|----------------|
-| **Findable** | Metadata, sitemap, and robots directives improve discovery. |
-| **Accessible** | WCAG 2.1 AA accessibility and PWA compatibility. |
-| **Interoperable** | Open formats (`.svg`, `.webp`, `.json`, `.md`) used for all files. |
-| **Reusable** | Clearly licensed, attributed, and reproducible assets. |
-| **Collective Benefit** | Open educational and civic data for Kansas history and science. |
-| **Authority to Control** | Proper attribution and licensing retained for all assets. |
-| **Responsibility** | Content verified for ethical representation and inclusivity. |
-| **Ethics** | Logos and banners reviewed to ensure cultural sensitivity and inclusivity. |
+| Principle | Implementation | Validation |
+|:--|:--|:--|
+| **Findable** | SEO metadata (`sitemap.xml`, `open_graph.json`). | `policy-check.yml` |
+| **Accessible** | WCAG 2.1 AA and PWA compatibility. | `design-validate.yml` |
+| **Interoperable** | Open file formats (.svg, .json, .webp). | `ui-validate.yml` |
+| **Reusable** | CC-BY 4.0 licensing and clear attribution. | `faircare-validate.yml` |
+| **Collective Benefit (CARE)** | Ethical open data and educational media. | `governance-ledger.yml` |
 
 ---
 
-## 🧩 Accessibility & SEO Standards
+## ♿ Accessibility & SEO Standards
 
-To guarantee universal access and machine readability, all public files adhere to:
-- **WCAG 2.1 AA Accessibility Guidelines**  
-- **HTML5 Validation** for semantic tags  
-- **WAI-ARIA** roles and attributes  
-- **SEO Best Practices**, including metadata and Open Graph tags  
+To ensure global accessibility:
+- **WCAG 2.1 AA** compliance verified for alt text, colors, and contrast.  
+- **HTML5 Validation** required for all pages.  
+- **WAI-ARIA Roles** included in `index.html`.  
+- **SEO Metadata** managed via `sitemap.xml` and `open_graph.json`.  
 
-Accessibility validation occurs automatically in the build process (`npm run lint:a11y`).
+Accessibility scans run in CI via `npm run lint:a11y` → `reports/ui-accessibility.json`.
 
 ---
 
 ## 🧱 Progressive Web App (PWA) Manifest
 
-The `manifest.webmanifest` defines KFM’s identity for browsers and devices:
+Defines KFM identity across browsers and devices.
 
 ```json
 {
   "name": "Kansas Frontier Matrix",
   "short_name": "KFM",
-  "description": "An open, interactive atlas of Kansas—linking history, science, and AI insights.",
+  "description": "An open, interactive atlas of Kansas linking history, science, and AI insights.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f9fafb",
@@ -132,45 +142,47 @@ The `manifest.webmanifest` defines KFM’s identity for browsers and devices:
 }
 ```
 
-> 🧭 **Note:** The PWA manifest ensures consistent branding, accessibility, and offline readiness, with all icons validated against open-source license metadata.
-
 ---
 
 ## 🧾 Licensing & Attribution
 
-- All assets are licensed under **MIT (code)** or **CC-BY 4.0 (data/media)**.  
-- Attribution for reused graphics or datasets is listed in `meta/attribution.md`.  
-- Ethical approval for imagery depicting historical or Indigenous material is logged in `reports/audit/ui_ethics_review.json`.  
+- All assets: **MIT (code)**, **CC-BY 4.0 (media/docs)**.  
+- Attribution: listed in `meta/attribution.md`.  
+- Historical/Indigenous imagery reviewed by FAIR+CARE Ethics Council.  
+- Audit results: `reports/audit/ui_ethics_review.json`.
 
 ---
 
 ## 🧩 Governance Integration
 
-**Related Workflows:**
-- `.github/workflows/site.yml` — Builds and deploys the public-facing site.  
-- `.github/workflows/faircare-validate.yml` — Validates licensing, accessibility, and attribution metadata.  
-- `.github/workflows/governance-ledger.yml` — Registers new or modified assets in provenance logs.
+| Workflow | Function | Output |
+|:--|:--|:--|
+| `site.yml` | Builds and deploys frontend site. | `dist/` + release assets |
+| `faircare-validate.yml` | Validates licensing, accessibility, and attribution. | `reports/fair/data_care_assessment.json` |
+| `governance-ledger.yml` | Logs public assets checksums to ledger. | `data/reports/audit/data_provenance_ledger.json` |
 
-Artifacts generated:
-- `reports/ui-accessibility.json` — Accessibility validation report  
-- `reports/audit/ui_license_check.json` — License validation record  
-- `releases/v9.3.2/manifest.zip` — Includes checksum of all public assets  
+Artifacts produced:
+- `reports/ui-accessibility.json` — Accessibility validation  
+- `reports/audit/ui_license_check.json` — License/attribution report  
+- `releases/v2.1.1/manifest.zip` — Asset checksum manifest  
 
 ---
 
-## 🧾 Version History
+## 🕰 Version History
 
-| Version | Date       | Author             | Summary |
-|----------|------------|--------------------|----------|
-| v9.3.2   | 2025-10-28 | @kfm-ui-lab        | Initial documentation of public asset governance and FAIR+CARE compliance. |
-| v9.3.1   | 2025-10-27 | @bartytime4life    | Added attribution, accessibility, and license tracking schema. |
-| v9.3.0   | 2025-10-26 | @kfm-architecture  | Established public directory and PWA manifest integration. |
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-web | Updated to Tier-Ω+∞; added FAIR+CARE governance and PWA validation schema. |
+| v9.3.2 | 2025-10-28 | @kfm-ui-lab | Documented public asset FAIR+CARE compliance. |
+| v9.3.1 | 2025-10-27 | @bartytime4life | Added attribution, accessibility, and license validation schema. |
+| v9.3.0 | 2025-10-26 | @kfm-architecture | Created PWA manifest and public metadata integration. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Design × Accessibility × Ethical Transparency*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../docs/) • [⚖️ Governance Ledger](../../docs/standards/governance/)
+**Kansas Frontier Matrix © 2025**  
+*“Public by Design — Ethical by Default.”*  
+📍 `web/public/README.md` — FAIR+CARE-aligned public assets documentation for the Kansas Frontier Matrix.
 
 </div>
