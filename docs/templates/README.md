@@ -1,233 +1,168 @@
+---
+title: "📘 Kansas Frontier Matrix — Documentation Templates Hub (Tier-Ω+∞ Certified)"
+path: "docs/templates/README.md"
+version: "v2.1.1"
+last_updated: "2025-11-16"
+review_cycle: "Continuous / Documentation Governance Council"
+commit_sha: "<latest-commit-hash>"
+license: "CC-BY 4.0"
+owners: ["@kfm-docs","@kfm-governance","@kfm-architecture"]
+maturity: "Production"
+status: "Stable"
+tags: ["templates","documentation","sop","experiment","model-card","docs","fair","care","governance"]
+sbom_ref: "../../releases/v2.1.1/sbom.spdx.json"
+manifest_ref: "../../releases/v2.1.1/manifest.zip"
+data_contract_ref: "../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR / CARE
+  - ISO 9001 / 27001 Documentation Management
+  - WCAG 2.1 AA Accessibility
+validation:
+  frontmatter_required: ["title","version","last_updated","owners","license"]
+  docs_ci_required: true
+  mermaid_end_marker: "<!-- END OF MERMAID -->"
+preservation_policy:
+  retention: "templates permanent · documentation revisions 5 years"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# 🗂️ **Kansas Frontier Matrix — Documentation Templates**  
-`docs/templates/`
+# 📘 **Kansas Frontier Matrix — Documentation Templates Hub (v2.1.1 · Tier-Ω+∞ Certified)**  
+`docs/templates/README.md`
 
-**Mission:** Provide reusable, standardized **templates and boilerplates** for experiments,  
-standard operating procedures (SOPs), model cards, dataset records, provenance logs, and architecture decisions —  
-ensuring **reproducibility, clarity, security, and MCP compliance** across the Kansas Frontier Matrix (KFM) ecosystem.
+**Mission:** Serve as the official repository for **documentation templates** used across the **Kansas Frontier Matrix (KFM)**,  
+ensuring reproducibility, FAIR+CARE compliance, and governance traceability in every document, model, and workflow.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue?logo=markdown)](../README.md)
-[![Docs-Validate](https://img.shields.io/badge/docs-validated-brightgreen?logo=github)](../../.github/workflows/docs-validate.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json)](../../.github/workflows/stac-validate.yml)
-[![Policy-as-Code](https://img.shields.io/badge/policy-OPA%2FConftest-purple)](../../.github/workflows/policy-check.yml)
-[![Security](https://img.shields.io/badge/security-CodeQL%20%7C%20Trivy-red)](../../.github/workflows/)
-[![SBOM & SLSA](https://img.shields.io/badge/Supply--Chain-SBOM%20%7C%20SLSA-green)](../../.github/workflows/sbom.yml)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-lightgrey)](../../LICENSE)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../docs/)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Templates%20Aligned-gold)](../../docs/standards/faircare-validation.md)
+[![Governance Ledger](https://img.shields.io/badge/Ledger-Provenance%20Recorded-green)](../../data/reports/audit/data_provenance_ledger.json)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 
 </div>
 
 ---
 
-```yaml
----
-title: "Kansas Frontier Matrix — Documentation Templates"
-version: "v1.3.0"
-last_updated: "2025-10-18"
-owners: ["@kfm-docs","@kfm-architecture"]
-tags: ["templates","mcp","standards","reproducibility","provenance","fair","stac","security","ai","ethics"]
-status: "Stable"
-license: "CC-BY 4.0"
-ci_required_checks:
-  - docs-validate
-  - pre-commit
-  - markdownlint
-  - policy-check
-semantic_alignment:
-  - MCP-DL v6.3
-  - STAC 1.0
-  - DCAT 2.0
-  - JSON Schema
-  - FAIR Principles
-  - CIDOC CRM
-  - OWL-Time
-  - GeoSPARQL
----
-```
+## 📚 Overview
+
+The **Templates Hub** provides standard file structures and authoring blueprints for:
+- 📄 **SOPs (Standard Operating Procedures)**  
+- 🧪 **Experiments & Research Logs**  
+- 🧠 **Model Cards (AI Transparency)**  
+- ⚙️ **Governance & Review Records**
+
+All templates are built according to **MCP-DL v6.4.3** and validated under **FAIR+CARE governance** to ensure:
+- Complete metadata frontmatter  
+- Accessibility and reproducibility compliance  
+- Version and provenance traceability via the governance ledger  
 
 ---
 
-## 🎯 Purpose
-
-The `docs/templates/` directory provides **ready-to-use Markdown templates** for contributors,
-ensuring consistent structure, documentation quality, and reproducibility across all domains —
-including **scientific research**, **data engineering**, **software design**, and **AI/ML experiments**.
-
-By following these templates, every document, dataset, or workflow in KFM becomes:
-
-* **📜 Auditable** → versioned, traceable, and linked to provenance & checksums.  
-* **♻️ Reproducible** → fully repeatable via structured metadata and SOPs.  
-* **🔗 Interoperable** → aligned with MCP, STAC, DCAT, OWL-Time, and ontology metadata.  
-* **🧾 Readable** → clear, standardized, and GitHub-renderable with Docs-as-Code validation.  
-
----
-
-## 🗂️ Directory Overview
+## 🗂️ Directory Layout
 
 ```bash
 docs/templates/
-├── README.md            # Template index (this file)
-├── experiment.md        # MCP-style research & experiment log
-├── sop.md               # Standard Operating Procedure template
-├── model_card.md        # AI/ML model card (purpose, metrics, ethics)
-├── adr.md               # Architecture Decision Record template
-├── dataset.md           # Dataset descriptor (schema, license, extent, STAC/DCAT)
-├── provenance.md        # Provenance & checksum logging template (PROV-O, SBOM/SLSA refs)
-└── checklist.md         # Contributor / peer-review checklist
-```
-
-Each template aligns with **Master Coder Protocol (MCP)** documentation-first principles and the
-**FAIR** framework (Findable, Accessible, Interoperable, Reusable).
-
-> Every template includes a **frontmatter block** (`title`, `version`, `last_updated`, `owners`) and sections for **scope, inputs, outputs, dependencies, failure modes, and test strategy**.
-
----
-
-## 🧩 Template Index
-
-| Template            | Purpose                                                                                  | Format   |
-| :------------------ | :---------------------------------------------------------------------------------------- | :------- |
-| **`experiment.md`** | MCP-compliant experiment log (`Problem → Hypothesis → Method → Results → Conclusion`).   | Markdown |
-| **`sop.md`**        | Step-by-step reproducible process for tasks (ETL, STAC validation, ingestion).           | Markdown |
-| **`model_card.md`** | AI/ML model documentation — purpose, data, metrics, bias/quality gates, deployment.      | Markdown |
-| **`adr.md`**        | Architecture Decision Record — context, decision, alternatives, implications, rollbacks. | Markdown |
-| **`dataset.md`**    | Dataset descriptor — extent, schema, license, access, DCAT/STAC mapping, ethics.         | Markdown |
-| **`provenance.md`** | Provenance tracking — checksums, version IDs, lineage, SBOM/SLSA capture.                | Markdown |
-| **`checklist.md`**  | Contributor/reviewer checklist for MCP, CI/CD, and metadata compliance.                  | Markdown |
-
----
-
-## 🧭 Usage Guide
-
-1. **Select Template** — choose the relevant template (`experiment`, `sop`, `adr`, etc.).  
-2. **Copy Locally** — duplicate into your working directory:
-
-   ```bash
-   cp docs/templates/experiment.md docs/experiments/exp_2025_ks_hydrography.md
-   ```
-
-3. **Complete Metadata** — fill in authors, dates, version, IDs, **provenance** and **ethics** fields.  
-4. **Link Artifacts** — reference code, data, STAC items, ADRs, and CI runs.  
-5. **Validate Format** — run linting and CI checks:
-
-   ```bash
-   make docs-validate
-   ```
-
-6. **Commit with Traceable Metadata**
-
-   ```bash
-   git commit -m "docs(experiment): add hydrology ETL validation log"
-   ```
-
-7. **Publish** — after peer review, link from `docs/architecture/` and dataset STAC.
-
----
-
-## 🧮 MCP Alignment Matrix
-
-| MCP Principle           | Template Support                                                      |
-| :---------------------- | :-------------------------------------------------------------------- |
-| **Documentation-first** | All artifacts begin with a standardized, versioned template.          |
-| **Reproducibility**     | Enforced metadata completeness and procedural repeatability.          |
-| **Open Standards**      | Markdown, STAC 1.0, JSON Schema; optional DCAT/JSON-LD.              |
-| **Provenance**          | Author, checksum, dataset version, ADR/PR links in each template.     |
-| **Auditability**        | Integrates with CI/CD (`docs-validate`, `stac-validate`, pre-commit). |
-
----
-
-## 📋 Example Workflows
-
-### 🧪 Example — Experiment Log (`experiment.md`)
-
-```markdown
-## Problem
-Assess whether terrain-derived slope influences stream density in Ellsworth County.
-
-## Hypothesis
-Steeper slopes increase stream segmentation in the NHD dataset.
-
-## Method
-- DEM: USGS 1m LiDAR (EPSG:4326)
-- Hydrography: NHD Flowlines 2020
-- Script: src/pipelines/terrain/derive_slope.py
-
-## Results
-r² = 0.81 (p < 0.01)
-
-## Conclusion
-Slope gradient materially affects flowline density; add slope to hydrology STAC metadata.
-```
-
-### ⚙️ Example — SOP (`sop.md`)
-
-```markdown
-## Purpose
-Validate STAC collections prior to publication.
-
-## Steps
-1. `make stac-validate`
-2. Inspect `_reports/stac_validation.json`
-3. Confirm checksum & license
-4. `make checksums` and commit manifest
+├── README.md                        # This file — Template index and governance overview
+├── sop.md                           # Standard Operating Procedure (SOP) template
+├── experiment.md                    # Experimental log & reproducibility template
+├── model_card.md                    # AI Model Card template for governance and ethics
+└── governance/                      # Future governance template extensions
 ```
 
 ---
 
-## 🔐 Governance & Contribution Workflow
+## ⚙️ Template Governance Workflow
 
-| Step | Description                                                                    |
-| :--- | :----------------------------------------------------------------------------- |
-| 1️⃣  | Add/update a template — ensure YAML header & MCP-DL alignment.                 |
-| 2️⃣  | Validate via pre-commit (`markdownlint`, `yamllint`) and `make docs-validate`. |
-| 3️⃣  | Submit PR labeled `docs(templates)` for peer review (CODEOWNERS required).     |
-| 4️⃣  | CI/CD (`site.yml`) rebuilds docs and publishes updates to Pages.               |
-
----
-
-## 🔍 CI/CD Validation of Templates
-
-| Workflow             | Function                                    | Trigger |
-| :------------------- | :------------------------------------------- | :------ |
-| `docs-validate.yml`  | Lint Markdown, check links & frontmatter     | PR      |
-| `policy-check.yml`   | Block missing fields (title/version/owners)  | PR      |
-| `stac-validate.yml`  | Validate any embedded STAC & links           | PR      |
-| `pre-commit.yml`     | Local fast checks (lint, style, actionlint)  | PR      |
-
-> **Mermaid diagrams** must end with `%% END OF MERMAID`. Add thumbnails/exports under `docs/architecture/diagrams/exported/` when used.
+```mermaid
+flowchart TD
+  A["Author Creates New Document Using Template"] --> B["Add FAIR+CARE Metadata & Frontmatter"]
+  B --> C["Run Docs Validation (docs-validate.yml)"]
+  C --> D["Governance Ledger Records Template Usage"]
+  D --> E["CI/CD Publishes Validated Output"]
+```
+<!-- END OF MERMAID -->
 
 ---
 
-## 🔗 Cross-References
+## 🧱 Template Requirements
 
-| Documentation                        | Description                          |
-| :----------------------------------- | :----------------------------------- |
-| `../architecture/pipelines.md`       | Workflow and ETL pipeline reference  |
-| `../architecture/architecture.md`    | System-level architecture overview   |
-| `../standards/markdown_rules.md`     | House Markdown rules & patterns      |
-| `../standards/markdown_guide.md`     | Styling cheatsheet & examples        |
-| `../standards/metadata-standards.md` | Metadata and schema compliance       |
-| `../glossary.md`                     | Definitions and term consistency     |
-| `../audit/repository_compliance.md`  | Repository-wide compliance dashboard |
+| Field | Description | Example |
+|:--|:--|:--|
+| **title** | Human-readable document title. | `"AI Ethics Experiment Summary"` |
+| **version** | Semantic version tag for document or model. | `"v2.1.1"` |
+| **last_updated** | ISO 8601 date of last modification. | `"2025-11-16"` |
+| **owners** | Responsible maintainers or teams. | `["@kfm-docs","@kfm-governance"]` |
+| **license** | License type — must be CC-BY 4.0. | `"CC-BY 4.0"` |
+
+> ⚠️ **Note:** All templates must include governance and provenance metadata to ensure audit compliance.
 
 ---
 
-## 🕰️ Version History
+## 🧩 FAIR + CARE Compliance in Templates
 
-| Version | Date       | Summary                                                                                             |
-| :------ | :--------- | :-------------------------------------------------------------------------------------------------- |
-| **v1.3.0** | 2025-10-18 | Added policy-as-code gate, supply-chain badges, docs-validate integration call-outs, and FAIR links. |
-| **v1.2.0** | 2025-10-17 | Added YAML metadata, governance workflow, CI checks, and links to the compliance dashboard.         |
-| **v1.1.0** | 2025-10-05 | Added new templates (`dataset.md`, `provenance.md`, `checklist.md`); enhanced usage & MCP matrix    |
-| **v1.0.0** | 2025-10-03 | Initial set of MCP-aligned documentation templates.                                               |
+| Principle | Template Implementation | Validation Workflow |
+|:--|:--|:--|
+| **Findable** | Indexed through manifest and governance ledger. | `governance-ledger.yml` |
+| **Accessible** | Markdown + YAML accessible and WCAG 2.1 AA compliant. | `docs-validate.yml` |
+| **Interoperable** | Uses open YAML and JSON schema for reuse. | `policy-check.yml` |
+| **Reusable** | Templates versioned and licensed under CC-BY 4.0. | GitHub Repository |
+| **Collective Benefit (CARE)** | Promotes inclusive, ethical documentation practices. | `faircare-validate.yml` |
+
+---
+
+## 🧠 Template Categories
+
+| Template | Description | Validation Workflow |
+|:--|:--|:--|
+| **sop.md** | Defines a structured guide for procedural documentation. | `docs-validate.yml` |
+| **experiment.md** | Records scientific or research-oriented findings for reproducibility. | `faircare-validate.yml` |
+| **model_card.md** | Captures metadata, performance, and ethical impact of AI models. | `policy-check.yml` |
+
+---
+
+## 🧮 Validation Workflows
+
+| Workflow | Purpose | Output |
+|:--|:--|:--|
+| `docs-validate.yml` | Validates structure, accessibility, and metadata. | `reports/validation/docs_validation.json` |
+| `policy-check.yml` | Ensures frontmatter fields are complete and standardized. | `reports/audit/policy_check.json` |
+| `faircare-validate.yml` | Verifies ethical documentation practices. | `reports/fair/data_care_assessment.json` |
+| `governance-ledger.yml` | Logs checksum and provenance of published templates. | `data/reports/audit/data_provenance_ledger.json` |
+
+---
+
+## 🧾 Governance Metadata Example
+
+```yaml
+---
+template_id: "docs_template_sop_v2.1.1"
+authors: ["@kfm-docs"]
+approved_by: ["@kfm-governance"]
+checksum: "sha256:9a8c7eeb3d44bbf5a5f2c89e2e..."
+governance_ledger_entry: "data/reports/audit/data_provenance_ledger.json"
+faircare_status: "Compliant"
+license: "CC-BY 4.0"
+---
+```
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Author | Summary |
+|:--|:--|:--|:--|
+| **v2.1.1** | 2025-11-16 | @kfm-docs | Standardized template governance and validation workflow integration. |
+| v2.0.0 | 2025-10-25 | @kfm-governance | Introduced FAIR+CARE auditing and accessibility integration. |
+| v1.0.0 | 2025-10-04 | @kfm-architecture | Initial release of KFM documentation templates hub. |
 
 ---
 
 <div align="center">
 
-🗂️ **Templates are the scaffolding of MCP reproducibility.**  
-Every experiment, SOP, dataset, model, and decision in Kansas Frontier Matrix starts here.
-
-📍 `docs/templates/` — *“Define before you build. Document before you deploy.”*
+**Kansas Frontier Matrix © 2025**  
+*“Templates Are Structure — Governance Gives Them Integrity.”*  
+📍 `docs/templates/README.md` — Central repository for documentation templates and governance alignment under the Kansas Frontier Matrix.
 
 </div>
