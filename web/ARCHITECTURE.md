@@ -143,11 +143,11 @@ The frontend communicates with backend APIs defined in **FastAPI**.
 
 ```mermaid
 flowchart TD
-A[Frontend Data Request] --> B[API Response w/ STAC Metadata]
-B --> C[Provenance Layer (Checksum + Source Attribution)]
-C --> D[Focus Mode AI Context + Ethical Tags]
-D --> E[Telemetry Log → Governance Ledger]
-E --> F[FAIR+CARE Dashboard Updates]
+    A["Frontend Data Request"] --> B["API Response with STAC Metadata"]
+    B --> C["Provenance Layer (Checksum and Source Attribution)"]
+    C --> D["Focus Mode AI Context and Ethical Tags"]
+    D --> E["Telemetry Log to Governance Ledger"]
+    E --> F["FAIR+CARE Dashboard Updates"]
 ```
 
 **Data Provenance Fields:**
