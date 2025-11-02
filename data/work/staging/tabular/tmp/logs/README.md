@@ -1,13 +1,19 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Tabular TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/tmp/logs/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.4.0"
+last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v9.4.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../../releases/v9.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/data-staging-tabular-tmp-logs-v1.json"
+validation_reports:
+  - "data/reports/validation/schema_validation_summary.json"
+  - "data/reports/fair/data_care_assessment.json"
+  - "data/reports/audit/data_provenance_ledger.json"
 governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
@@ -16,8 +22,8 @@ governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 # 🧾 Kansas Frontier Matrix — **Tabular TMP Logs**
 `data/work/staging/tabular/tmp/logs/README.md`
 
-**Purpose:** Centralized log directory for all tabular ingestion, normalization, and FAIR+CARE pre-validation events in the Kansas Frontier Matrix (KFM) ETL pipeline.  
-These logs ensure traceability, transparency, and reproducibility across all temporary tabular processing tasks performed during staging.
+**Purpose:** Centralized log directory for all tabular ingestion, normalization, and FAIR+CARE pre-validation events within the Kansas Frontier Matrix (KFM) ETL pipeline.  
+Ensures traceability, transparency, and reproducibility across all temporary tabular processing activities under MCP-DL v6.3 and FAIR+CARE governance.
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Tabular%20Governance%20Audited-gold)](../../../../../../docs/standards/faircare-validation.md)
 [![License: Internal Governance Data](https://img.shields.io/badge/License-Internal%20Logs-grey)](../../../../../../LICENSE)
@@ -29,16 +35,16 @@ These logs ensure traceability, transparency, and reproducibility across all tem
 
 ## 📚 Overview
 
-The `data/work/staging/tabular/tmp/logs/` directory captures **runtime activity logs, validation results, and governance synchronization traces** for temporary tabular ETL operations.  
-It documents ingestion, schema alignment, pre-validation, and FAIR+CARE ethical review activities prior to dataset normalization.
+The `data/work/staging/tabular/tmp/logs/` directory captures **runtime activity logs, validation outputs, and governance synchronization traces** generated during tabular TMP operations.  
+It provides a full record of schema normalization, FAIR+CARE audits, and checksum verification for all temporary tabular transformations.
 
-### Primary Functions:
-- Record ETL execution metadata for each TMP operation.  
-- Capture schema validation and field normalization diagnostics.  
-- Log FAIR+CARE ethical checks and audit communications.  
-- Maintain provenance synchronization logs for checksum verification.  
+### Core Functions
+- Record ETL runtime events for traceability and validation.  
+- Capture schema validation, data contract checks, and FAIR+CARE audit traces.  
+- Maintain governance synchronization logs linking ETL outcomes to provenance ledgers.  
+- Emit **telemetry** data for system performance and governance analytics dashboards.  
 
-All logs comply with FAIR+CARE governance standards and are retained for audit reproducibility.
+All logs follow FAIR+CARE governance standards and are retained per data lifecycle policy for reproducibility.
 
 ---
 
@@ -46,13 +52,13 @@ All logs comply with FAIR+CARE governance standards and are retained for audit r
 
 ```plaintext
 data/work/staging/tabular/tmp/logs/
-├── README.md                           # This file — overview of tabular TMP logs
+├── README.md
 │
-├── etl_tmp_run.log                     # Execution trace for tabular TMP ETL pipeline
-├── data_contract_check.log             # Field-level schema conformance verification
-├── faircare_pre_audit.log              # Ethical audit and FAIR+CARE validation trace
-├── governance_sync.log                 # Governance ledger synchronization log
-└── metadata.json                       # Log-level provenance and checksum records
+├── etl_tmp_run.log                     # Execution trace for TMP ingestion and normalization
+├── data_contract_check.log             # Schema contract conformance and field mapping report
+├── faircare_pre_audit.log              # FAIR+CARE pre-validation and ethics trace
+├── governance_sync.log                 # Provenance ledger synchronization record
+└── metadata.json                       # Log-level checksum, telemetry, and runtime metadata
 ```
 
 ---
@@ -62,17 +68,17 @@ data/work/staging/tabular/tmp/logs/
 ```mermaid
 flowchart TD
     A["Raw Tabular Data (data/raw/*)"] --> B["ETL Intake & Schema Mapping"]
-    B --> C["Validation & FAIR+CARE Pre-Audit"]
-    C --> D["Write Logs to data/work/staging/tabular/tmp/logs/"]
-    D --> E["Sync Governance Ledger and Checksum Manifest"]
+    B --> C["Validation + FAIR+CARE Pre-Audit"]
+    C --> D["Write TMP Logs (data/work/staging/tabular/tmp/logs/)"]
+    D --> E["Sync Governance Ledger + Telemetry Metrics"]
 ```
 
-### Workflow Description:
-1. **ETL Intake:** Logs created during ingestion and schema normalization.  
-2. **Validation:** Field-level QA, encoding, and data type checks recorded.  
-3. **Ethics Review:** FAIR+CARE pre-audit results appended to log metadata.  
-4. **Governance:** Checksum and provenance entries written to audit ledger.  
-5. **Synchronization:** Log hashes added to `releases/v9.3.2/manifest.zip`.
+### Workflow Summary
+1. **ETL Intake:** Logs capture all ingestion and schema normalization operations.  
+2. **Validation:** Field-level QA, encoding checks, and schema enforcement recorded.  
+3. **FAIR+CARE Audit:** Pre-validation ethics checks logged for audit traceability.  
+4. **Governance:** Checksum hashes synced with provenance ledger.  
+5. **Telemetry:** Execution statistics emitted for focus dashboards and observability.
 
 ---
 
@@ -80,14 +86,15 @@ flowchart TD
 
 ```json
 {
-  "id": "tabular_tmp_log_climate_indices_v9.3.2",
+  "id": "tabular_tmp_log_climate_indices_v9.4.0",
   "component": "etl_tmp_pipeline",
-  "created": "2025-10-28T15:40:00Z",
-  "records_processed": 54012,
+  "created": "2025-11-02T15:50:00Z",
+  "records_processed": 56321,
   "schema_errors": 0,
   "validation_warnings": 2,
   "faircare_status": "compliant",
   "checksum": "sha256:9c10c2fa09cb8bb4d9e0432f1faef733fb93ad12...",
+  "telemetry_link": "releases/v9.4.0/focus-telemetry.json",
   "governance_ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -98,17 +105,17 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Each TMP log indexed by dataset, ETL pipeline, and checksum ID. |
-| **Accessible** | Logs stored in open text or JSON formats for governance access. |
-| **Interoperable** | Schema aligned with FAIR+CARE and MCP-DL logging standards. |
-| **Reusable** | Logs include provenance and checksum references for reproducibility. |
-| **Collective Benefit** | Promotes ethical transparency in staging pipelines. |
-| **Authority to Control** | FAIR+CARE Council monitors pre-validation audit results. |
-| **Responsibility** | Validators and engineers must document all TMP transformations. |
-| **Ethics** | Logs redact sensitive or personal identifiers before archival. |
+| **Findable** | Logs indexed by dataset ID, ETL pipeline, and checksum. |
+| **Accessible** | Stored in open text/JSON formats accessible for audit. |
+| **Interoperable** | Logging schemas conform to FAIR+CARE and MCP-DL v6.3 standards. |
+| **Reusable** | Includes provenance, telemetry, and checksum for reproducibility. |
+| **Collective Benefit** | Promotes transparent data processing and ethical auditability. |
+| **Authority to Control** | FAIR+CARE Council reviews pre-validation log summaries. |
+| **Responsibility** | Validators document all TMP pipeline and schema operations. |
+| **Ethics** | Sensitive or identifying data redacted before archival. |
 
-FAIR+CARE compliance results synchronized to:  
-`data/reports/fair/data_care_assessment.json` and `data/reports/audit/data_provenance_ledger.json`.
+Compliance results synchronized to:  
+`data/reports/fair/data_care_assessment.json` • `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
@@ -116,11 +123,11 @@ FAIR+CARE compliance results synchronized to:
 
 | Log File | Description | Format |
 |-----------|--------------|--------|
-| `etl_tmp_run.log` | Execution trace of tabular ETL TMP pipelines. | Text |
-| `data_contract_check.log` | Field-level and schema compliance trace. | Text |
-| `faircare_pre_audit.log` | FAIR+CARE ethical pre-validation results. | Text |
-| `governance_sync.log` | Governance ledger and manifest synchronization record. | Text |
-| `metadata.json` | Contextual metadata and checksum validation. | JSON |
+| `etl_tmp_run.log` | End-to-end trace of ETL ingestion and TMP normalization. | Text |
+| `data_contract_check.log` | Reports schema contract alignment and discrepancies. | Text |
+| `faircare_pre_audit.log` | Records FAIR+CARE audit events and outcomes. | Text |
+| `governance_sync.log` | Tracks synchronization with the governance ledger. | Text |
+| `metadata.json` | Stores context, checksums, telemetry references, and runtime info. | JSON |
 
 ---
 
@@ -128,12 +135,12 @@ FAIR+CARE compliance results synchronized to:
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Captures TMP run identifiers, provenance linkage, and checksums. |
-| `data/reports/audit/data_provenance_ledger.json` | Logs TMP lineage, ETL run status, and audit trace. |
-| `data/reports/validation/schema_validation_summary.json` | Contains validation conformance outcomes. |
-| `releases/v9.3.2/manifest.zip` | Tracks log integrity through SHA-256 checksum records. |
+| `metadata.json` | Contains TMP run metadata, validator ID, and telemetry pointer. |
+| `data/reports/audit/data_provenance_ledger.json` | Logs lineage, FAIR+CARE audit results, and governance trace. |
+| `data/reports/validation/schema_validation_summary.json` | Tracks schema QA outcomes linked to TMP logs. |
+| `releases/v9.4.0/manifest.zip` | Archives log checksums for reproducibility validation. |
 
-Governance synchronization automated by `tabular_tmp_log_sync.yml`.
+Governance and telemetry sync automated by **`tabular_tmp_log_sync.yml`**.
 
 ---
 
@@ -141,21 +148,21 @@ Governance synchronization automated by `tabular_tmp_log_sync.yml`.
 
 | Log Type | Retention Duration | Policy |
 |-----------|--------------------|--------|
-| ETL TMP Logs | 30 days | Purged after dataset normalization approval. |
-| Schema Validation Logs | 14 days | Retained for review, then archived to system logs. |
-| FAIR+CARE Pre-Audit Logs | 90 days | Maintained for ethics re-audit verification. |
-| Governance Sync Logs | 365 days | Archived for governance continuity. |
+| ETL TMP Logs | 30 days | Purged post dataset normalization approval. |
+| Schema Validation Logs | 14 days | Retained until FAIR+CARE review complete. |
+| FAIR+CARE Pre-Audit Logs | 90 days | Archived for ethics verification. |
+| Governance Sync Logs | 365 days | Maintained permanently for provenance continuity. |
 
-Automated cleanup handled by `tabular_tmp_cleanup.yml`.
+Cleanup managed by **`tabular_tmp_cleanup.yml`**.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Tabular TMP Logs (v9.3.2).
-Centralized log repository for ETL, schema validation, and FAIR+CARE pre-validation in temporary tabular staging workflows.
-Restricted to internal reproducibility, QA, and governance audit operations.
+Kansas Frontier Matrix (2025). Tabular TMP Logs (v9.4.0).
+Centralized log repository for tabular ETL, schema validation, and FAIR+CARE pre-validation operations.
+Restricted to internal reproducibility, governance, and ethical audit processes.
 ```
 
 ---
@@ -164,15 +171,16 @@ Restricted to internal reproducibility, QA, and governance audit operations.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Added FAIR+CARE pre-audit log support and checksum governance linkage. |
-| v9.2.0 | 2024-07-15 | Introduced schema conformance trace and validation reporting. |
-| v9.0.0 | 2023-01-10 | Established TMP logging structure for tabular ETL pipelines. |
+| v9.4.0 | 2025-11-02 | Added telemetry integration, expanded schema diagnostics, and improved governance trace. |
+| v9.3.2 | 2025-10-28 | Introduced FAIR+CARE pre-audit log capture and checksum synchronization. |
+| v9.2.0 | 2024-07-15 | Added schema contract validation and QA reporting. |
+| v9.0.0 | 2023-01-10 | Established TMP log workspace for tabular ETL pipelines. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Provenance × FAIR+CARE Accountability × Reproducible Tabular Governance*  
+**Kansas Frontier Matrix** · *Data Provenance × FAIR+CARE Accountability × Reproducible Tabular Governance × Telemetry Traceability*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/)
 
 </div>
