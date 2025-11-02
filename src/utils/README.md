@@ -1,386 +1,226 @@
+---
+title: "🧮 Kansas Frontier Matrix — Core Utilities & Governance Toolset (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "src/utils/README.md"
+version: "v9.4.0"
+last_updated: "2025-11-02"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.4.0/manifest.zip"
+data_contract_ref: "../../docs/contracts/data-contract-v3.json"
+telemetry_schema_ref: "../../schemas/telemetry/system-telemetry-v1.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+owners: ["@kfm-architecture", "@kfm-devops", "@kfm-governance", "@kfm-data"]
+status: "Stable"
+maturity: "Production"
+tags: ["utilities", "governance", "telemetry", "checksum", "config", "faircare", "etl"]
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR+CARE
+  - ISO 19115 Data Provenance
+  - ISO 23894 AI Lifecycle Integrity
+  - JSON-LD / DCAT Metadata Interoperability
+preservation_policy:
+  retention: "utility scripts permanent · audit and telemetry logs retained 10 years"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# ⚙️ Kansas Frontier Matrix — **Core Utilities**  
+# 🧮 Kansas Frontier Matrix — **Core Utilities & Governance Toolset**
 `src/utils/README.md`
 
-**Shared Tools · Helpers · Configuration · Reproducibility**
+**Purpose:** Provides foundational utilities for configuration management, checksum validation, file handling, and telemetry synchronization across the **Kansas Frontier Matrix**.  
+Implements FAIR+CARE-aligned reproducibility, data integrity, and governance observability standards for all system components.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../.github/workflows/site.yml)  
-[![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../.github/workflows/stac-validate.yml)  
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../../.github/workflows/codeql.yml)  
-[![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../../.github/workflows/trivy.yml)  
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-green)](../../docs/)  
-[![License: Code](https://img.shields.io/badge/License-MIT-success)](../../LICENSE)
+[![🧮 Utility Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/utils-validate.yml/badge.svg)](../../.github/workflows/utils-validate.yml)  
+[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Utility%20Certified-gold)](../../docs/standards/faircare-validation.md)  
+[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-```yaml
+## 📚 Overview
+
+The **Core Utilities Module** provides reusable helper scripts used across KFM pipelines, APIs, and graph integrations.  
+It centralizes FAIR+CARE validation, checksum verification, telemetry publishing, and configuration management to ensure unified governance and reproducibility standards throughout the ecosystem.
+
+**Core Objectives:**
+- ⚙️ Provide reusable core functions for file, checksum, and configuration management  
+- ⚖️ Enforce FAIR+CARE governance integration across all layers  
+- 🧠 Automate telemetry collection and ethics reporting  
+- 🧾 Ensure checksum-based data integrity for all workflows  
+- 🔍 Synchronize configuration and governance metadata between modules  
+
 ---
-title: "KFM • Core Utilities (src/utils)"
-version: "v1.8.0"
-last_updated: "2025-10-17"
-created: "2024-11-05"
-owners: ["@kfm-engineering", "@kfm-data", "@kfm-architecture"]
-status: "Stable"
-maturity: "Production"
-tags: ["utilities","config","checksum","json","geo","time","logging","validation","stac","schema","mcp"]
-license: "MIT"
-semantic_alignment:
-  - STAC 1.0.0
-  - JSON Schema Draft-07
-  - CIDOC CRM (provenance fields)
-  - OWL-Time (temporal parsing)
-  - DCAT 2.0 (catalog interop)
-  - MCP-DL v6.3 (Reproducibility & Provenance)
----
+
+## 🗂️ Directory Layout
+
+```plaintext
+src/utils/
+├── README.md                   # This file — documentation for utility functions and governance usage
+│
+├── file_utils.py               # Safe file handling, checksum creation, and data integrity tools
+├── config_loader.py            # Configuration manager for YAML/JSON-based workflows
+├── telemetry_logger.py         # Centralized telemetry and audit event publisher
+└── governance_helpers.py       # Governance synchronization, ethics validation, and provenance utilities
 ```
 
-## 📚 Table of Contents
+**File Descriptions:**
 
-1. [🎯 Purpose](#-purpose)  
-2. [🏗 Role in the System](#-role-in-the-system)  
-3. [📂 Directory Layout](#-directory-layout)  
-4. [⚙️ Configuration (`config.py`)](#️-configuration-configpy)  
-5. [🔒 Checksums (`checksum.py`)](#-checksums-checksumpy)  
-6. [🧮 JSON Tools (`json_tools.py`)](#-json-tools-json_toolspy)  
-7. [🌍 Geospatial (`geo_utils.py`)](#-geospatial-geo_utilspy)  
-8. [⏱️ Temporal (`time_utils.py`)](#️-temporal-time_utilspy)  
-9. [🧾 Logger (`logger.py`)](#-logger-loggerpy)  
-10. [✅ Validators (`validators.py`)](#-validators-validatorspy)  
-11. [🧷 STAC Helpers (`stac_tools.py`)](#-stac-helpers-stac_toolspy)  
-12. [🚀 Quickstart & Examples](#-quickstart--examples)  
-13. [🧪 Testing](#-testing)  
-14. [🛡 Quality & Security](#-quality--security)  
-15. [📈 Performance Notes](#-performance-notes)  
-16. [🧮 Versioning & Metadata](#-versioning--metadata)  
-17. [🧾 Changelog](#-changelog)  
-18. [🔗 Related Documentation](#-related-documentation)
+- **`file_utils.py`** — Handles file I/O with automatic checksum generation and validation.  
+- **`config_loader.py`** — Loads, validates, and merges configuration files with schema enforcement.  
+- **`telemetry_logger.py`** — Logs all operational events and telemetry metrics to Immutable Governance Ledger.  
+- **`governance_helpers.py`** — Provides FAIR+CARE alignment checks, ethics audits, and provenance export utilities.
 
 ---
 
-## 🎯 Purpose
+## ⚙️ Example Workflows
 
-The **`src/utils/`** package provides **deterministic, dependency-light building blocks** shared by ETL pipelines, AI/NLP modules, the graph loader, and API services.  
-Utilities encode **single-responsibility** primitives (config, I/O, hashing, schema checks, temporal & spatial helpers, logging, STAC aids) to uphold **MCP-DL** reproducibility and provenance.
+### 🧮 Verify File Integrity
+```python
+from src.utils.file_utils import verify_checksum
+
+is_valid = verify_checksum("data/processed/entities.csv", "a3b4f97b...")
+print("Checksum valid:", is_valid)
+```
 
 ---
 
-## 🏗 Role in the System
+### ⚙️ Load Configuration File
+```python
+from src.utils.config_loader import load_config
+
+config = load_config("configs/data_pipeline.yml")
+print(config["data"]["source"])
+```
+
+---
+
+### 📡 Emit Telemetry Event
+```python
+from src.utils.telemetry_logger import log_event
+
+log_event(
+    action="pipeline_complete",
+    context="etl_transform",
+    status="success",
+    records_processed=5234,
+    ethics_score=0.97
+)
+```
+
+**Example Telemetry Output:**
+```json
+{
+  "action": "pipeline_complete",
+  "context": "etl_transform",
+  "status": "success",
+  "records_processed": 5234,
+  "ethics_score": 0.97,
+  "governance_hash": "d8b12b7eabf482a1e71dcb95f483ff2c98a7e12a61a6fb05dc74c9b8a118fa44",
+  "timestamp": "2025-11-02T00:00:00Z"
+}
+```
+
+---
+
+### ⚖️ Sync Governance Metadata
+```python
+from src.utils.governance_helpers import sync_governance
+
+sync_governance(
+    input_manifest="releases/v9.4.0/manifest.zip",
+    output_ledger="reports/audit/governance-ledger.json"
+)
+```
+
+---
+
+## 🧩 FAIR+CARE Integration
+
+| Utility | FAIR Principle | CARE Principle | Output |
+|----------|----------------|----------------|---------|
+| **file_utils.py** | Findable / Reproducible | Responsibility | Checksum validation report |
+| **config_loader.py** | Accessible / Interoperable | Ethics | Configuration manifest |
+| **telemetry_logger.py** | Transparent / Accountable | Collective Benefit | Telemetry event log |
+| **governance_helpers.py** | Traceable / Explainable | Authority to Control | Governance ledger update |
+
+Governance Outputs:
+```
+reports/audit/governance-ledger.json
+releases/v9.4.0/focus-telemetry.json
+```
+
+---
+
+## 🔗 Governance & Observability Workflow
 
 ```mermaid
 flowchart TD
-  A["ETL / Enrichment / Load"] --> U["src/utils<br/>config · checksum · json · geo · time · logger · validators · stac"]
-  U --> G["Graph Layer<br/>Neo4j · CIDOC CRM · lineage"]
-  U --> API["API Layer<br/>FastAPI · GraphQL"]
-  U --> CI["CI/CD<br/>jsonschema · integrity checks · coverage"]
+    A["Workflow Execution (ETL / AI / Graph)"] --> B["File Utils (Checksum + Integrity Validation)"]
+    B --> C["Telemetry Logger (Event Emission + FAIR+CARE Metadata)"]
+    C --> D["Governance Helpers (Ledger + Provenance Sync)"]
+    D --> E["Immutable Governance Ledger (Transparency Chain)"]
 ```
-<!-- END OF MERMAID -->
 
-**Patterns implemented**
-
-- Env & file **configuration** with explicit **precedence** (file → env)  
-- **Atomic** file I/O, secure temp dirs, path hygiene  
-- **SHA-256** hashing & `.sha256` sidecars (verify on read)  
-- JSON I/O + **JSON Schema** validation  
-- **Geo** helpers (bbox ops, haversine, unions/intersections)  
-- **Time** helpers (ISO-8601 parsing, intervals, UTC stamps)  
-- **Structured logging** (text/JSON) with `run_id`  
-- **STAC utilities** (media types, datetimes, bbox checks, small normalizers)
+**Workflow Summary:**
+1. Data pipelines or AI models trigger utility functions for checksum and telemetry.  
+2. FAIR+CARE metadata automatically appended to telemetry events.  
+3. Governance helpers register validation and audit results.  
+4. Immutable Governance Ledger updated to ensure full traceability.  
 
 ---
 
-## 📂 Directory Layout
+## 🛡️ Security, Integrity & Provenance
 
-```text
-src/utils/
-├── __init__.py
-├── config.py          # YAML/.env/envvars loader + precedence
-├── fileio.py          # Atomic R/W, temp dirs, safe path ops
-├── checksum.py        # SHA-256 + sidecar write/verify
-├── json_tools.py      # JSON I/O + JSON Schema validate
-├── geo_utils.py       # bbox ops, haversine, union/intersect
-├── time_utils.py      # ISO-8601 parse, intervals, UTC stamps
-├── logger.py          # structured logger (text/JSON), run_id
-├── validators.py      # required fields, coordinate checks
-├── stac_tools.py      # STAC helpers (media, time, bbox normalizers)
-└── README.md          # (this file)
+- **Integrity:** All utility operations checksum-verified and logged.  
+- **Provenance:** Telemetry includes dataset references, FAIR+CARE fields, and audit timestamps.  
+- **Reproducibility:** Configs and manifests fully version-controlled for deterministic re-runs.  
+- **Governance:** All activities contribute to the Immutable Ledger for long-term accountability.  
+
+Telemetry Schema:  
+`schemas/telemetry/system-telemetry-v1.json`
+
+Telemetry Outputs:
+```
+reports/utils/events.json
+reports/audit/governance-ledger.json
+releases/v9.4.0/focus-telemetry.json
 ```
 
 ---
 
-## ⚙️ Configuration (`config.py`)
+## 🧩 Standards & Compliance Mapping
 
-Centralized config with precedence and environment scoping.
-
-```python
-from __future__ import annotations
-import os, yaml
-from dotenv import load_dotenv
-
-load_dotenv()
-
-def _load_yaml(path: str) -> dict:
-    if path and os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    return {}
-
-def get_config(file: str | None = "config.yml") -> dict:
-    file_cfg = _load_yaml(file) if file else {}
-    env_cfg = {k: v for k, v in os.environ.items() if k.startswith("KFM_")}
-    return {**env_cfg, **file_cfg}  # file wins on key overlap
-```
+| Standard | Domain | Implementation |
+|-----------|----------|----------------|
+| **MCP-DL v6.4.3** | Documentation-first utility governance | This README + utility scripts |
+| **FAIR+CARE** | Ethical and transparent data handling | FAIR+CARE compliance in utilities |
+| **ISO 19115** | Provenance and metadata standards | File integrity and lineage logging |
+| **ISO 23894** | Lifecycle accountability for AI & ETL | Telemetry event tracking |
+| **DCAT / JSON-LD** | Interoperable metadata governance | Governance helpers and exports |
 
 ---
 
-## 🔒 Checksums (`checksum.py`)
-
-Integrity via SHA-256 and sidecar verification.
-
-```python
-import hashlib, pathlib
-
-def sha256sum(path: str) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(32768), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-def write_sidecar(path: str) -> str:
-    d = sha256sum(path)
-    pathlib.Path(path + ".sha256").write_text(d + "\n", encoding="utf-8")
-    return d
-
-def verify(path: str) -> bool:
-    sc = pathlib.Path(path + ".sha256")
-    return sc.exists() and sc.read_text().strip() == sha256sum(path)
-```
-
----
-
-## 🧮 JSON Tools (`json_tools.py`)
-
-```python
-import json, jsonschema
-from pathlib import Path
-
-def read_json(path: str | Path) -> dict:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
-
-def write_json(obj: dict, path: str | Path, indent: int = 2) -> None:
-    Path(path).write_text(json.dumps(obj, indent=indent), encoding="utf-8")
-
-def validate_json(data: dict, schema_path: str | Path) -> None:
-    schema = read_json(schema_path)
-    jsonschema.validate(instance=data, schema=schema)
-```
-
----
-
-## 🌍 Geospatial (`geo_utils.py`)
-
-```python
-import math
-from typing import List, Optional
-
-def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    R = 6371.0
-    dlat, dlon = math.radians(lat2-lat1), math.radians(lon2-lon1)
-    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
-    return 2 * R * math.asin(math.sqrt(a))
-
-def bbox_union(a: List[float], b: List[float]) -> List[float]:
-    return [min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3])]
-
-def bbox_intersection(a: List[float], b: List[float]) -> Optional[List[float]]:
-    x0, y0 = max(a[0], b[0]), max(a[1], b[1])
-    x1, y1 = min(a[2], b[2]), min(a[3], b[3])
-    return [x0, y0, x1, y1] if (x0 < x1 and y0 < y1) else None
-```
-
----
-
-## ⏱️ Temporal (`time_utils.py`)
-
-```python
-from __future__ import annotations
-from datetime import datetime
-from typing import Optional, Tuple
-
-def parse_date(s: str) -> Optional[str]:
-    try:
-        return datetime.fromisoformat(s.replace("Z","")).date().isoformat()
-    except Exception:
-        return None
-
-def parse_interval(start: str | None, end: str | None) -> Optional[Tuple[str, str]]:
-    s, e = parse_date(start) if start else None, parse_date(end) if end else None
-    return (s, e) if s and e and s <= e else None
-
-def now_iso() -> str:
-    return datetime.utcnow().isoformat(timespec="seconds") + "Z"
-```
-
----
-
-## 🧾 Logger (`logger.py`)
-
-```python
-import json, logging, sys, uuid
-from contextvars import ContextVar
-
-_run_id: ContextVar[str] = ContextVar("_run_id", default=str(uuid.uuid4()))
-_log = logging.getLogger("kfm")
-_hdl = logging.StreamHandler(sys.stdout)
-_hdl.setFormatter(logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s"))
-_log.addHandler(_hdl)
-_log.setLevel(logging.INFO)
-
-def set_run_id(run_id: str | None = None) -> str:
-    rid = run_id or str(uuid.uuid4()); _run_id.set(rid); return rid
-
-def log(msg: str, level: str = "info", json_mode: bool = False, **fields):
-    rid = _run_id.get()
-    if json_mode:
-        print(json.dumps({"run_id": rid, "level": level.upper(), "msg": msg, **fields}, ensure_ascii=False))
-    else:
-        getattr(_log, level)(f"[run_id={rid}] {msg} {fields if fields else ''}")
-```
-
----
-
-## ✅ Validators (`validators.py`)
-
-```python
-def ensure_fields(data: dict, required: list[str]) -> None:
-    missing = [k for k in required if k not in data]
-    if missing:
-        raise KeyError(f"Missing required fields: {', '.join(missing)}")
-
-def is_valid_coordinate(lat: float, lon: float) -> bool:
-    return -90 <= lat <= 90 and -180 <= lon <= 180
-```
-
----
-
-## 🧷 STAC Helpers (`stac_tools.py`)
-
-```python
-MEDIA = {
-  "cog": "image/tiff; application=geotiff; profile=cloud-optimized",
-  "geojson": "application/geo+json"
-}
-
-def normalize_asset_media(ext: str) -> str:
-    return MEDIA.get(ext.lower(), "application/octet-stream")
-
-def ensure_temporal(props: dict) -> dict:
-    if "start_datetime" in props and "end_datetime" in props:
-        return props
-    if "datetime" in props:
-        props["start_datetime"] = props["end_datetime"] = props["datetime"]
-    return props
-
-def ensure_bbox(item: dict) -> dict:
-    if "bbox" not in item and "geometry" in item:
-        coords = item["geometry"]["coordinates"][0]
-        xs, ys = zip(*coords)
-        item["bbox"] = [min(xs), min(ys), max(xs), max(ys)]
-    return item
-```
-
----
-
-## 🚀 Quickstart & Examples
-
-```bash
-# Install deps for utils usage (usually installed at repo root)
-pip install -r requirements.txt
-
-# Example: emit checksum + metadata sidecar
-python - <<'PY'
-from src.utils import checksum, json_tools, time_utils
-path = "data/processed/ks_1m_dem.tif"
-sha  = checksum.write_sidecar(path)
-json_tools.write_json({"path": path, "sha256": sha, "at": time_utils.now_iso()}, path + ".meta.json")
-print("OK", sha)
-PY
-```
-
----
-
-## 🧪 Testing
-
-```bash
-pytest tests/utils -v --cov=src/utils --cov-report=term-missing
-```
-
-- **Pre-commit:** `ruff` · `black` · `mypy`  
-- **Schema checks:** JSON Schemas for configs and STAC snippets  
-- **Reproducibility:** checksum verification in CI
-
----
-
-## 🛡 Quality & Security
-
-- Do **not** log secrets; redact values matching `*_TOKEN` / `*_KEY` patterns  
-- Validate external JSON via **JSON Schema** before use  
-- Use **atomic writes** and temp dirs; guard against path traversal  
-- Prefer read-only operations in notebooks; confine mutations to temp dirs  
-- Containers scanned via **Trivy**; code analyzed via **CodeQL**
-
----
-
-## 📈 Performance Notes
-
-- Stream file reads in **32 KiB** chunks when hashing  
-- Keep `geo_utils` math-only (no GDAL dependency)  
-- Cache config in-process; set `KFM_RELOAD_CONFIG=1` to force reload
-
----
-
-## 🧮 Versioning & Metadata
-
-| Field | Value |
-| :-- | :-- |
-| **Version** | `v1.8.0` |
-| **Codename** | *Complete Utilities Parity* |
-| **Last Updated** | 2025-10-17 |
-| **Maintainers** | @kfm-engineering · @kfm-data |
-| **License** | MIT (code) |
-| **Semantic Alignment** | STAC 1.0 · JSON Schema · OWL-Time · DCAT 2.0 · MCP-DL v6.3 |
-| **Maturity** | Production |
-| **Integrity** | CI verifies schema + checksums + coverage |
-
----
-
-## 🧾 Changelog
+## 🧾 Version History
 
 | Version | Date | Author | Summary |
-| :-- | :-- | :-- | :-- |
-| **v1.8.0** | 2025-10-17 | @kfm-engineering | Added ToC, Quickstart, Security & Performance sections; expanded examples; aligned with MCP-DL v6.3 |
-| **v1.7.1** | 2025-10-17 | @kfm-engineering | Added changelog; integrated DCAT fields; small API examples |
-| **v1.7.0** | 2025-10-17 | @kfm-engineering | Introduced `stac_tools.py`; unified logging schema; MCP-DL v6.3 compliance |
-| **v1.6.0** | 2025-10-14 | @kfm-data | Structured logger, ISO-8601 parser, checksum refinements |
-| **v1.5.0** | 2025-09-25 | @kfm-architecture | Modularized file I/O & config loading; initial testing utilities |
-
----
-
-## 🔗 Related Documentation
-
-- **System Architecture** — `../ARCHITECTURE.md`  
-- **ETL & STAC Pipelines** — `../../tools/README.md` · `../../data/stac/README.md`  
-- **API Services** — `../api/README.md`  
-- **Graph Schema** — `../graph/README.md`
+|----------|------|---------|----------|
+| v9.4.0 | 2025-11-02 | @kfm-architecture | Added FAIR+CARE telemetry integration and governance helper suite. |
+| v9.3.3 | 2025-11-01 | @kfm-devops | Enhanced file utility checksum verification and config loader logic. |
+| v9.3.2 | 2025-10-29 | @bartytime4life | Integrated telemetry schema and ethical metrics in event logs. |
+| v9.3.1 | 2025-10-27 | @kfm-governance | Added Immutable Ledger synchronization for governance_helpers. |
+| v9.3.0 | 2025-10-25 | @kfm-data | Established core utility framework under MCP-DL v6.4.3. |
 
 ---
 
 <div align="center">
 
-**© Kansas Frontier Matrix 2025**  
-*Efficient Utilities · Transparent Workflows · Provenance by Design*
+**Kansas Frontier Matrix — Ethical Utility Framework for Transparent Systems**  
+*“Every file validated. Every event recorded. Every system governed.”* 🔗  
+📍 `src/utils/README.md` — FAIR+CARE-certified documentation for core utilities, telemetry, and governance synchronization in the Kansas Frontier Matrix.
 
 </div>
