@@ -182,11 +182,11 @@ Frontend deployment is handled automatically via **GitHub Actions** → `.github
 
 ```mermaid
 flowchart LR
-A[User Selects Entity on Map/Timeline] --> B[API Query to Neo4j Graph]
-B --> C[AI Summarization Engine (Transformers)]
-C --> D[Explanation Layer (SHAP/LIME)]
-D --> E[UI Rendering: FocusPanel + Summary + Provenance Links]
-E --> F[Telemetry + Governance Ledger Update]
+    A["User Selects Entity on Map or Timeline"] --> B["API Query to Neo4j Graph"]
+    B --> C["AI Summarization Engine using Transformers"]
+    C --> D["Explanation Layer with SHAP and LIME"]
+    D --> E["UI Rendering — Focus Panel, Summary, and Provenance Links"]
+    E --> F["Telemetry and Governance Ledger Update"]
 ```
 
 Focus Mode operates as a **contextual reasoning engine**, displaying:
