@@ -1,13 +1,19 @@
 ---
 title: "🧩 Kansas Frontier Matrix — Metadata TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/metadata/tmp/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.4.0"
+last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.4.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-staging-metadata-tmp-v1.json"
+validation_reports:
+  - "data/reports/validation/schema_validation_summary.json"
+  - "data/reports/fair/data_care_assessment.json"
+  - "data/reports/audit/data_provenance_ledger.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
@@ -16,8 +22,8 @@ governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 # 🧩 Kansas Frontier Matrix — **Metadata TMP Workspace**
 `data/work/staging/metadata/tmp/README.md`
 
-**Purpose:** Temporary workspace for harmonizing, transforming, and cross-validating metadata structures prior to formal validation and governance ledger integration.  
-This layer supports FAIR+CARE metadata workflows and ensures all KFM datasets achieve schema interoperability between STAC, DCAT, and PROV-O before certification.
+**Purpose:** Temporary workspace for harmonizing, transforming, and cross-validating metadata before governance certification.  
+Supports FAIR+CARE metadata interoperability and schema alignment between STAC, DCAT, and PROV-O, ensuring readiness for full validation and catalog integration.
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Preparation%20Compliant-gold)](../../../../../docs/standards/faircare-validation.md)
 [![License: Internal Processing Layer](https://img.shields.io/badge/License-Internal%20Temporary%20Data-grey)](../../../../../LICENSE)
@@ -29,16 +35,16 @@ This layer supports FAIR+CARE metadata workflows and ensures all KFM datasets ac
 
 ## 📚 Overview
 
-The `data/work/staging/metadata/tmp/` directory acts as a **metadata sandbox** for crosswalking, merging, and testing dataset descriptors before promotion to the validated staging layer.  
-It provides a controlled, ephemeral environment for metadata analysts and governance automation tools to reconcile schema mismatches, repair records, and generate unified metadata outputs.
+The `data/work/staging/metadata/tmp/` directory serves as a **metadata sandbox** for temporary schema crosswalks and FAIR+CARE pre-validation.  
+It enables controlled harmonization across metadata standards—aligning descriptors, generating lineage records, and preparing unified metadata artifacts for validation and governance ingestion.
 
-This workspace supports:
-- Conversion between STAC 1.0, DCAT 3.0, and schema.org metadata formats.  
-- PROV-O lineage augmentation for dataset traceability.  
-- FAIR+CARE ethical metadata pre-validation.  
-- Preparation of records for ingestion into governance and STAC systems.  
+### Key Responsibilities
+- Harmonize and align fields across **STAC 1.0**, **DCAT 3.0**, and **PROV-O** schemas.  
+- Conduct pre-validation and FAIR+CARE ethics audits prior to governance certification.  
+- Generate preview metadata for testing before ledger registration.  
+- Track lineage and checksum integrity for temporary metadata artifacts.  
 
-All files here are **temporary** and are automatically deleted upon successful validation or at the end of each staging session.
+All files in this workspace are ephemeral and automatically purged after successful validation or the end of each certification session.
 
 ---
 
@@ -48,11 +54,11 @@ All files here are **temporary** and are automatically deleted upon successful v
 data/work/staging/metadata/tmp/
 ├── README.md                            # This file — documentation for TMP workspace
 │
-├── stac_to_dcat_crosswalk.json          # Field mapping between STAC and DCAT schemas
-├── provenance_mapping.json              # Metadata lineage and PROV-O relations
-├── metadata_merge_preview.json          # Combined STAC/DCAT unified preview record
-├── metadata_patch_queue.json            # Pending metadata corrections before validation
-└── metadata.json                        # Session metadata and governance traceability
+├── stac_to_dcat_crosswalk.json          # Mapping between STAC and DCAT field definitions
+├── provenance_mapping.json              # Metadata lineage and PROV-O relationship mappings
+├── metadata_merge_preview.json          # Unified metadata preview combining STAC/DCAT/PROV-O
+├── metadata_patch_queue.json            # Temporary patch queue for field and value corrections
+└── metadata.json                        # Session-level metadata and governance trace record
 ```
 
 ---
@@ -61,19 +67,19 @@ data/work/staging/metadata/tmp/
 
 ```mermaid
 flowchart TD
-    A["Incoming Metadata from data/raw/*"] --> B["Crosswalk: STAC ↔ DCAT ↔ PROV-O"]
-    B --> C["Field Harmonization & Schema Merge"]
-    C --> D["FAIR and CARE Metadata Audit (Pre-Validation)"]
-    D --> E["Validation Reports in data/work/staging/metadata/validation/"]
-    E --> F["Promotion to data/work/staging/metadata/"]
+    A["Incoming Metadata (data/raw/*)"] --> B["Crosswalk: STAC ↔ DCAT ↔ PROV-O"]
+    B --> C["Schema Harmonization & Merge"]
+    C --> D["FAIR+CARE Pre-Audit"]
+    D --> E["Validation Output (data/work/staging/metadata/validation/)"]
+    E --> F["Promotion → data/work/staging/metadata/"]
 ```
 
-### Workflow Description:
-1. **Crosswalk:** Align field names and ontology relationships across metadata schemas.  
-2. **Merge:** Combine schema fields into standardized unified records.  
-3. **Audit:** Pre-validate FAIR+CARE ethical metadata requirements (accessibility, provenance, licensing).  
-4. **Validate:** Pass results to the formal validation stage (`validation/`).  
-5. **Promote:** Certified metadata promoted for governance and STAC integration.
+### Workflow Description
+1. **Crosswalk:** Identify and align corresponding fields and semantics between metadata schemas.  
+2. **Harmonization:** Merge compatible fields into unified descriptors, maintaining schema fidelity.  
+3. **Pre-Audit:** Perform FAIR+CARE pre-validation on licensing, attribution, and provenance elements.  
+4. **Validation:** Generate JSON outputs for formal validation in the next staging layer.  
+5. **Promotion:** Approved metadata is promoted for governance registration and STAC/DCAT indexing.
 
 ---
 
@@ -81,15 +87,16 @@ flowchart TD
 
 ```json
 {
-  "id": "metadata_tmp_climate_v9.3.2",
+  "id": "metadata_tmp_climate_v9.4.0",
   "stac_fields": ["id", "title", "description", "extent"],
   "dcat_fields": ["identifier", "distribution", "theme"],
   "prov_fields": ["wasGeneratedBy", "wasDerivedFrom"],
   "merged_record": "metadata_merge_preview.json",
-  "created": "2025-10-28T14:45:00Z",
+  "created": "2025-11-02T14:40:00Z",
   "validator": "@kfm-metadata-lab",
   "checksum": "sha256:ff0a65bcd87cc13f6f4ef93ab7284b0ff9247d12...",
   "governance_status": "pending",
+  "telemetry_link": "releases/v9.4.0/focus-telemetry.json",
   "governance_ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -98,19 +105,20 @@ flowchart TD
 
 ## 🧠 FAIR+CARE Metadata Preparation Alignment
 
-| Principle | Implementation in TMP Workspace |
-|------------|--------------------------------|
-| **Findable** | Metadata enriched with unique IDs and STAC/DCAT field mapping. |
-| **Accessible** | Stored in open JSON format, accessible to validation workflows. |
-| **Interoperable** | Cross-schema harmonization ensures multi-standard compatibility. |
-| **Reusable** | Outputs structured for STAC publication and governance reuse. |
-| **Collective Benefit** | Supports ethical, discoverable metadata across disciplines. |
-| **Authority to Control** | FAIR+CARE Council validates harmonization outcomes. |
-| **Responsibility** | Metadata maintainers document schema merges and corrections. |
-| **Ethics** | Records reviewed for proper attribution and cultural sensitivity. |
+| Principle | Implementation in TMP Layer |
+|------------|-----------------------------|
+| **Findable** | Unique IDs and cross-schema identifiers logged for each metadata record. |
+| **Accessible** | JSON files accessible to staging and governance automation. |
+| **Interoperable** | Crosswalked metadata aligns STAC, DCAT, and PROV-O semantics. |
+| **Reusable** | Outputs designed for catalog ingestion and reproducibility. |
+| **Collective Benefit** | Promotes transparency and ethical metadata governance. |
+| **Authority to Control** | FAIR+CARE Council reviews harmonization rules and mappings. |
+| **Responsibility** | Analysts document corrections and schema reconciliation actions. |
+| **Ethics** | Ensures proper attribution and removal of culturally sensitive terms. |
 
 Compliance and audit records integrated with:  
-`data/reports/fair/data_care_assessment.json` and `data/reports/audit/data_provenance_ledger.json`.
+`data/reports/fair/data_care_assessment.json`  
+and `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
@@ -118,11 +126,11 @@ Compliance and audit records integrated with:
 
 | File | Purpose | Format |
 |------|----------|--------|
-| `stac_to_dcat_crosswalk.json` | Defines mapping between STAC and DCAT fields. | JSON |
-| `provenance_mapping.json` | Records dataset lineage relationships (PROV-O). | JSON |
-| `metadata_merge_preview.json` | Preview of unified metadata after crosswalk. | JSON |
-| `metadata_patch_queue.json` | Holds temporary metadata fix queue before validation. | JSON |
-| `metadata.json` | Captures TMP session metadata, validator info, and checksum. | JSON |
+| `stac_to_dcat_crosswalk.json` | Field-level mapping between STAC and DCAT schemas. | JSON |
+| `provenance_mapping.json` | Records dataset lineage and PROV-O relationships. | JSON |
+| `metadata_merge_preview.json` | Unified metadata record preview for verification. | JSON |
+| `metadata_patch_queue.json` | Pending metadata updates prior to validation. | JSON |
+| `metadata.json` | Captures TMP session context, checksum, and harmonization status. | JSON |
 
 ---
 
@@ -130,12 +138,12 @@ Compliance and audit records integrated with:
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Contains session context, checksums, and harmonization status. |
-| `data/reports/audit/data_provenance_ledger.json` | Master governance ledger linking all TMP metadata operations. |
-| `data/reports/validation/schema_validation_summary.json` | Schema pre-validation results. |
-| `releases/v9.3.2/manifest.zip` | Tracks checksum hashes for TMP session outputs. |
+| `metadata.json` | Contains session metadata, validation details, and checksum registry. |
+| `data/reports/audit/data_provenance_ledger.json` | Tracks TMP activity, harmonization, and governance synchronization. |
+| `data/reports/validation/schema_validation_summary.json` | Records schema pre-validation and FAIR+CARE pre-audit results. |
+| `releases/v9.4.0/manifest.zip` | Global manifest of TMP hashes and provenance. |
 
-All temporary metadata lifecycle events logged through `metadata_tmp_sync.yml`.
+Lifecycle events managed via **`metadata_tmp_sync.yml`** for CI/CD consistency.
 
 ---
 
@@ -143,21 +151,21 @@ All temporary metadata lifecycle events logged through `metadata_tmp_sync.yml`.
 
 | File Category | Retention Duration | Policy |
 |----------------|--------------------|--------|
-| TMP Files (`*.json`) | 7 days | Purged after validation or session completion. |
-| Metadata Merge Previews | 48 hours | Deleted after validation review. |
-| Crosswalk and Provenance Mappings | 30 days | Retained for schema evolution tracking. |
-| Metadata Session Logs | 365 days | Archived for governance traceability. |
+| TMP Files (`*.json`) | 7 days | Purged after validation or promotion. |
+| Metadata Merge Previews | 48 hours | Deleted post-validation review. |
+| Crosswalk & Provenance Mappings | 30 days | Retained for schema version comparison. |
+| Metadata Session Logs | 365 days | Archived for reproducibility and governance traceability. |
 
-Automation governed by `metadata_tmp_cleanup.yml`.
+Automated cleanup managed by **`metadata_tmp_cleanup.yml`**.
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Metadata TMP Workspace (v9.3.2).
-Temporary environment for metadata harmonization and FAIR+CARE pre-validation, bridging STAC, DCAT, and PROV-O standards.
-Restricted to internal schema alignment and governance workflows.
+Kansas Frontier Matrix (2025). Metadata TMP Workspace (v9.4.0).
+Temporary environment for metadata harmonization, cross-schema validation, and FAIR+CARE pre-auditing.
+Supports STAC, DCAT, and PROV-O interoperability under ethical metadata governance.
 ```
 
 ---
@@ -166,6 +174,7 @@ Restricted to internal schema alignment and governance workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
+| v9.4.0 | 2025-11-02 | Added telemetry integration, enhanced PROV-O linkage, and automated FAIR+CARE pre-audit reporting. |
 | v9.3.2 | 2025-10-28 | Introduced PROV-O lineage mapping and FAIR+CARE crosswalk automation. |
 | v9.2.0 | 2024-07-15 | Added metadata merge preview and validation pre-checks. |
 | v9.0.0 | 2023-01-10 | Established TMP directory for metadata schema harmonization. |
@@ -174,7 +183,7 @@ Restricted to internal schema alignment and governance workflows.
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Metadata Interoperability × FAIR+CARE Ethics × Provenance Validation*  
+**Kansas Frontier Matrix** · *Metadata Interoperability × FAIR+CARE Ethics × Provenance Validation × Telemetry Traceability*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/)
 
 </div>
