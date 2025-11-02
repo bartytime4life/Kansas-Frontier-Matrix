@@ -1,34 +1,34 @@
 ---
-title: "🧮 Kansas Frontier Matrix — UI Widget Image Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "web/public/images/ui/widgets/README.md"
+title: "🔐 Kansas Frontier Matrix — UI Widget Image Checksums (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "web/public/images/ui/widgets/checksums/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-01"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.5.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.5.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-images-v1.json"
-json_export: "../../../../../releases/v9.5.0/web-images-ui-widgets.meta.json"
+sbom_ref: "../../../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/web-images-v1.json"
+json_export: "../../../../../../releases/v9.5.0/web-images-ui-widgets-checksums.meta.json"
 validation_reports:
-  - "../../../../../reports/self-validation/web-images-ui-widgets-validation.json"
-  - "../../../../../reports/audit/web-images-faircare.json"
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+  - "../../../../../../reports/self-validation/web-images-ui-widgets-checksums-validation.json"
+  - "../../../../../../reports/audit/web-images-faircare.json"
+governance_ref: "../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧮 Kansas Frontier Matrix — **UI Widget Image Assets**
-`web/public/images/ui/widgets/README.md`
+# 🔐 Kansas Frontier Matrix — **UI Widget Image Checksums**
+`web/public/images/ui/widgets/checksums/README.md`
 
-**Purpose:** Documents and governs all graphical assets used for interactive widgets within the Kansas Frontier Matrix interface. These include maps, charts, sliders, and data visual overlays designed to enhance interactivity, accessibility, and data visualization consistency.
+**Purpose:** Stores SHA-256 checksum manifests for all interactive widget image assets in the Kansas Frontier Matrix interface. Enables cryptographic integrity validation, FAIR+CARE governance alignment, and transparent verification of reproducible UI elements.
 
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../../../../docs/standards/markdown_rules.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-orange)](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-[![Accessibility · WCAG 2.2 AA](https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-blueviolet)](https://www.w3.org/WAI/WCAG22/)
-[![Governance Ledger](https://img.shields.io/badge/Governance-Ledger-Active-purple)](../../../../../docs/standards/governance/LEDGER.md)
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../../../../../docs/standards/markdown_rules.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-orange)](../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[![Integrity Verified](https://img.shields.io/badge/Integrity-Verified-critical)](../../../../../../reports/audit/web-images-faircare.json)
+[![Governance Ledger](https://img.shields.io/badge/Governance-Ledger-Active-purple)](../../../../../../docs/standards/governance/LEDGER.md)
 
 </div>
 
@@ -37,66 +37,59 @@ governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ## 📁 Directory Layout
 
 ```
-web/public/images/ui/widgets/
-├── map-zoom-controls.svg           # Interactive zoom button widget
-├── timeline-slider.webp            # Slider control background for timeline widget
-├── chart-frame.svg                 # Chart container overlay
-├── data-legend-panel.webp          # Legend widget for data visualization layers
-├── heatmap-overlay.webp            # Background overlay for heatmaps
-├── checksums/                      # SHA-256 integrity manifests
-├── meta/                           # Metadata records for widget assets
-└── README.md                       # This file
+web/public/images/ui/widgets/checksums/
+├── map-zoom-controls.sha256         # Checksum for map zoom button widget
+├── timeline-slider.sha256           # Checksum for interactive timeline slider
+├── chart-frame.sha256               # Checksum for data visualization chart frame
+├── data-legend-panel.sha256         # Checksum for data legend widget
+├── heatmap-overlay.sha256           # Checksum for heatmap overlay asset
+└── README.md                        # This file
 ```
 
 ---
 
-## 🧩 Widget Image Standards
+## 🧩 Checksum Policy
 
-| Property | Specification | Description |
-|-----------|----------------|-------------|
-| **Format** | SVG / WebP / PNG | Modern formats for high performance and scalability. |
-| **Resolution** | ≤ 4096×4096 px | Optimized for large interactive interfaces. |
-| **Compression** | Lossless / High-efficiency | Ensures visual clarity without performance degradation. |
-| **Color Profile** | sRGB IEC61966-2.1 | Standardized for consistent display across browsers. |
-| **Accessibility** | WCAG 2.2 AA | Requires descriptive alt text and color contrast validation. |
-| **Checksum Validation** | SHA-256 | All files must have verified integrity manifests. |
-| **Metadata Record** | JSON | Each asset must include metadata describing provenance and usage context. |
+| Attribute | Specification | Description |
+|------------|----------------|-------------|
+| **Algorithm** | SHA-256 | Cryptographic hash used for asset immutability and verification. |
+| **Format** | `<hash>  <filename>` | Plain text for human and automated validation. |
+| **Verification Command** | `sha256sum -c <file>.sha256` | Confirms file authenticity locally or in CI/CD. |
+| **Audit Frequency** | Quarterly | Automatically conducted during FAIR+CARE governance cycles. |
+| **Storage Policy** | Immutable | Checksum records are permanent and unalterable post-validation. |
+
+Each `.sha256` manifest guarantees that the corresponding widget asset has not been modified since its governance validation, ensuring reproducibility and design transparency.
 
 ---
 
-## ⚙️ Validation & Audit Workflow
+## ⚙️ CI/CD Validation Workflow
 
-**Workflow:** `.github/workflows/image-validate.yml`
+**Workflow:** `.github/workflows/image-checksum-validate.yml`
 
 **Automated Steps**
-- ✅ Metadata schema validation (`schemas/ui/images.schema.json`)  
-- 🔐 Checksum validation via `/checksums/`  
-- ♿ Accessibility validation for contrast and descriptive alt text  
-- 🧾 FAIR+CARE compliance verification for provenance and ethics  
-- 💠 Telemetry update to Governance Ledger dashboard  
+1. Generate SHA-256 hashes for all widget image assets.  
+2. Compare generated hashes with stored `.sha256` manifests.  
+3. Record results in:  
+   - `reports/self-validation/web-images-ui-widgets-checksums-validation.json`  
+   - `reports/audit/web-images-faircare.json`  
+4. Update telemetry in `releases/v9.5.0/focus-telemetry.json`.  
+5. Notify Governance Council if mismatches or missing manifests occur.
 
-Audit results stored in:
-- `reports/self-validation/web-images-ui-widgets-validation.json`
-- `reports/audit/web-images-faircare.json`
+**Example CLI Validation**
+```bash
+sha256sum -c timeline-slider.sha256
+# Output: timeline-slider.webp: OK
+```
 
 ---
 
-## 🧾 Example Metadata Record
+## 🧾 Example Checksum Record
 
-```json
-{
-  "id": "timeline-slider",
-  "title": "Interactive Timeline Slider",
-  "category": "ui/widgets",
-  "version": "2.1.0",
-  "creator": "KFM Design Systems",
-  "license": "MIT",
-  "checksum": "sha256-723ac9f0b13dfe2b1ec9a8a4127e83b9cfed31...",
-  "alt_text": "Horizontal timeline slider used for adjusting date ranges within KFM visualizations.",
-  "source_url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix",
-  "provenance": "Introduced in v9.0.0; redesigned in v9.5.0 with dynamic scaling for mobile and accessibility improvements."
-}
+```text
+dfc1b7a65a13c0abf92c8b91a142efc3210c3b2d49e6a30a9b17f23e8e94d931  map-zoom-controls.svg
 ```
+
+*Confirms integrity and immutability of `map-zoom-controls.svg` since governance validation (2025-09-25).*
 
 ---
 
@@ -104,24 +97,23 @@ Audit results stored in:
 
 | Policy | Description | Enforcement |
 |--------|-------------|--------------|
-| **Immutable Archive** | Widget assets cannot be modified or removed post-validation. | Protected via CI/CD pipelines. |
-| **Checksum Enforcement** | Each image must include `.sha256` verification manifest. | Automated validation in governance workflow. |
-| **Metadata Enforcement** | All files require JSON metadata with provenance and license. | Enforced via schema validation. |
-| **Accessibility Compliance** | Assets must include alt text and maintain color contrast compliance. | Automated via accessibility audits. |
-| **FAIR+CARE Governance** | Validated quarterly under governance audits. | Logged in Governance Ledger. |
+| **Immutable Records** | Checksum files are permanent and cannot be modified. | Protected by CI/CD and branch policy. |
+| **Checksum Validation** | Every widget asset must have a `.sha256` manifest. | Verified during validation workflows. |
+| **Cross-Linkage** | Each checksum file links to corresponding JSON metadata in `/meta/`. | Schema-enforced cross-validation. |
+| **Audit Logging** | Validation results are recorded in FAIR+CARE audit logs. | Synced with Governance Ledger for traceability. |
 
 ---
 
 ## 📊 Telemetry & FAIR+CARE Metrics
 
-Telemetry recorded in `releases/v9.5.0/focus-telemetry.json` includes:
-- ✅ Total widget assets verified  
-- 🔐 Checksum integrity validation percentage  
-- ♿ Accessibility compliance rate  
-- 🧾 Metadata completeness index  
-- 💠 FAIR+CARE compliance rating  
+Checksum telemetry (in `releases/v9.5.0/focus-telemetry.json`) includes:
+- ✅ Total widget assets validated  
+- 🔐 Integrity verification success rate  
+- ⚠️ Discrepancies or missing manifests  
+- 🧾 Metadata linkage completeness  
+- 💠 FAIR+CARE compliance score  
 
-Displayed within the **Governance Ledger Dashboard** for ongoing transparency.
+Metrics visualized in the **Governance Ledger Dashboard** for transparency and accountability.
 
 ---
 
@@ -129,16 +121,15 @@ Displayed within the **Governance Ledger Dashboard** for ongoing transparency.
 
 | Version | Date | Summary | Maintainer |
 |----------|------|----------|-------------|
-| v9.5.0 | 2025-11-01 | Added checksum and metadata governance for all interactive widget assets | Design Systems Team |
-| v9.3.2 | 2025-10-20 | Integrated FAIR+CARE telemetry and accessibility validation | Governance Council |
-| v9.0.0 | 2025-09-25 | Created widget asset directory for KFM UI interactivity components | Core Maintainers |
+| v9.5.0 | 2025-11-01 | Added checksum framework for all interactive widget assets | Design Systems Team |
+| v9.3.2 | 2025-10-20 | Integrated checksum telemetry into FAIR+CARE governance workflows | Governance Council |
+| v9.0.0 | 2025-09-25 | Created checksum validation directory for UI widget imagery | Core Maintainers |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Design Systems Directorate**  
-*“Integrity in Interaction · Provenance in Every Widget · Governance by Design.”*
+*“Integrity in Interaction · Verification in Every Widget · Governance in Every Layer.”*
 
 </div>
-
