@@ -1,288 +1,253 @@
+---
+title: "🧩 Kansas Frontier Matrix — API Routes & Endpoint Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "src/api/routes/README.md"
+version: "v9.4.0"
+last_updated: "2025-11-02"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../../../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.4.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_schema_ref: "../../../../schemas/telemetry/api-telemetry-v1.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+owners: ["@kfm-api", "@kfm-architecture", "@kfm-data", "@kfm-governance"]
+status: "Stable"
+maturity: "Production"
+tags: ["api", "routes", "fastapi", "graphql", "governance", "faircare", "telemetry"]
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR+CARE
+  - ISO 23894 API Lifecycle Transparency
+  - DCAT / STAC / JSON-LD Interoperability
+  - ISO 19115 Metadata Access
+preservation_policy:
+  retention: "API route definitions permanent · telemetry logs retained 10 years"
+  checksum_algorithm: "SHA-256"
+---
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — API Route Handlers**  
+# 🧩 Kansas Frontier Matrix — **API Routes & Endpoint Architecture**
 `src/api/routes/README.md`
 
-**FastAPI Endpoints · REST & GraphQL Resolvers · Data Delivery Layer**
+**Purpose:** Defines and documents the modular REST and GraphQL endpoint structure of the Kansas Frontier Matrix API layer.  
+Each route is FAIR+CARE-aligned, ethically governed, and fully traceable through the Immutable Governance Ledger, ensuring transparency and reproducibility in all data and AI interactions.
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy&logo=github&color=blue)](../../../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json&color=blue)](../../../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github&color=informational)](../../../../.github/workflows/codeql.yml)
-[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security&logo=security&color=green)](../../../../.github/workflows/trivy.yml)
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue?logo=markdown)](../../../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../../LICENSE)
+[![🌐 API Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/api-validate.yml/badge.svg)](../../../../.github/workflows/api-validate.yml)  
+[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Endpoint%20Certified-gold)](../../../../docs/standards/faircare-validation.md)  
+[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-```yaml
+## 📚 Overview
+
+The **API Routes Module** provides the structured definition of all REST and GraphQL endpoints used by the Kansas Frontier Matrix.  
+These endpoints connect the web frontend, Neo4j Knowledge Graph, and AI pipelines while enforcing FAIR+CARE governance for metadata provenance and access ethics.
+
+**Core Objectives:**
+- 🌍 Offer secure, discoverable REST and GraphQL routes for data and AI queries  
+- ⚖️ Enforce FAIR+CARE compliance across all endpoint responses  
+- 🧠 Integrate Focus Mode AI contextual outputs with explainability metadata  
+- 🔍 Register all endpoint interactions with telemetry and governance systems  
+- 🧾 Enable STAC/DCAT metadata retrieval and semantic interoperability  
+
 ---
-title: "Kansas Frontier Matrix — API Route Handlers"
-version: "v1.5.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-architecture", "@kfm-data"]
-tags: ["api","routes","fastapi","graphql","rest","stac","neo4j","ai","mcp","ci","semver"]
-status: "Stable"
-license: "MIT"
-semver_policy: "MAJOR.MINOR.PATCH"
-ci_required_checks:
-  - pre-commit
-  - unit-tests
-  - codeql
-  - trivy
-  - docs-validate
-semantic_alignment:
-  - STAC 1.0
-  - DCAT 2.0
-  - CIDOC CRM
-  - OWL-Time
-  - ISO 8601
----
+
+## 🗂️ Directory Layout
+
+```plaintext
+src/api/routes/
+├── README.md                     # This file — route documentation and governance summary
+│
+├── entities.py                   # Entity-level API for people, places, events
+├── datasets.py                   # Access to STAC/DCAT datasets and metadata
+├── focusmode.py                  # Contextual reasoning endpoints for Focus Mode AI
+├── governance.py                 # FAIR+CARE governance, provenance, and telemetry endpoints
+└── healthcheck.py                # Service status and operational health endpoint
 ```
 
 ---
 
-## 🎯 Purpose
+## ⚙️ Route Summaries
 
-The **`src/api/routes/`** directory defines all **FastAPI endpoint routes** for the **Kansas Frontier Matrix (KFM)**.  
-Each route file contains REST and GraphQL endpoint definitions interfacing with the **Knowledge Graph**, **STAC Catalog**, and **AI/NLP enrichment layer** — powering the frontend timeline, map, and research APIs.
-
-Routes are modularized by domain and standardized for **query parameters**, **pagination**, and **provenance enrichment**.
+| File | Route Prefix | Description | Governance Role |
+|------|---------------|--------------|------------------|
+| **`entities.py`** | `/api/entities` | Retrieves people, places, and events from Neo4j graph | FAIR metadata enrichment |
+| **`datasets.py`** | `/api/datasets` | Serves dataset catalogs (STAC, DCAT) | Provenance access |
+| **`focusmode.py`** | `/api/focus` | Executes contextual Focus Mode AI reasoning | Explainability and ethics |
+| **`governance.py`** | `/api/governance` | Exposes governance ledger and telemetry logs | Immutable governance linkage |
+| **`healthcheck.py`** | `/api/health` | Monitors API service uptime and dependencies | Observability telemetry |
 
 ---
 
-## 🏗️ System Role
+## 🧠 Example Endpoints
+
+### 📍 Entity Metadata
+```bash
+GET /api/entities/{entity_id}
+```
+**Response Example:**
+```json
+{
+  "id": "fort_larned",
+  "name": "Fort Larned",
+  "type": "Historical Site",
+  "related_entities": ["Santa Fe Trail", "U.S. Army"],
+  "metadata": {
+    "license": "CC-BY 4.0",
+    "faircare_alignment": ["Findable", "Accessible"]
+  }
+}
+```
+
+---
+
+### 🧭 Focus Mode Reasoning
+```bash
+POST /api/focus
+```
+**Request Example:**
+```json
+{
+  "entity": "Treaty of Fort Laramie (1851)",
+  "context": "Plains diplomacy and U.S. expansion",
+  "explainability": true
+}
+```
+
+**Response Example:**
+```json
+{
+  "summary": "The 1851 Treaty of Fort Laramie established boundaries for Plains tribes and influenced westward expansion.",
+  "confidence": 0.91,
+  "related_entities": ["Sioux Nation", "Cheyenne", "U.S. Government"],
+  "explainability_ref": "reports/focusmode/explainability_treaty_1851.json"
+}
+```
+
+---
+
+### 🧾 Governance Ledger Access
+```bash
+GET /api/governance/ledger
+```
+**Response Example:**
+```json
+{
+  "entries": [
+    {
+      "event": "AI summary generated",
+      "entity": "treaty_1851",
+      "checksum": "a5b8c7d2e91f23d3cfe2a412b6d1a8f932b14f3feda9349d772e9b8df781ac1a",
+      "timestamp": "2025-11-02T00:00:00Z"
+    }
+  ],
+  "total_entries": 12540
+}
+```
+
+---
+
+### 📦 Dataset Metadata (STAC/DCAT)
+```bash
+GET /api/datasets/stac/items
+```
+**Response Example:**
+```json
+{
+  "id": "kansas_topo_v3",
+  "type": "FeatureCollection",
+  "description": "Topographic dataset for central Kansas, 1885–1950.",
+  "license": "CC-BY 4.0",
+  "links": [
+    {"rel": "self", "href": "https://kfm.ai/api/datasets/stac/items/kansas_topo_v3"}
+  ]
+}
+```
+
+---
+
+## 🧩 FAIR+CARE Integration
+
+| Endpoint | FAIR Principle | CARE Principle | Validation |
+|-----------|----------------|----------------|-------------|
+| `/api/entities` | Findable / Accessible | Collective Benefit | `faircare-validate.yml` |
+| `/api/datasets` | Interoperable / Reusable | Responsibility | `data-contract-v3.json` |
+| `/api/focus` | Transparent / Explainable | Ethics | `reports/fair/ai-bias-validation.json` |
+| `/api/governance` | Accountability / Stewardship | Authority to Control | `reports/audit/governance-ledger.json` |
+
+---
+
+## 🔗 Governance & Telemetry Workflow
 
 ```mermaid
 flowchart TD
-    A["Frontend (React · MapLibre)"] --> B["FastAPI Routes<br/>/events · /places · /people · /stac · /ask"]
-    B --> C["Knowledge Graph<br/>Neo4j / Cypher / GraphQL"]
-    B --> D["STAC Catalog<br/>data/stac/*.json"]
-    B --> E["AI Layer<br/>Summarization / Entity Search"]
+    A["Frontend Request (User Interaction)"] --> B["FastAPI Router (REST/GraphQL)"]
+    B --> C["Route Handler (e.g. entities.py, focusmode.py)"]
+    C --> D["Telemetry Middleware (Audit Logging)"]
+    D --> E["Governance API (Ledger Sync + FAIR+CARE)"]
+    E --> F["Immutable Governance Ledger"]
 ```
-<!-- END OF MERMAID -->
+
+**Workflow Summary:**
+1. Frontend requests data or reasoning context through REST or GraphQL.  
+2. Router forwards request to appropriate handler (e.g., Focus Mode).  
+3. Middleware logs event metadata for telemetry and ethics audits.  
+4. Governance API updates immutable ledger with action metadata.  
 
 ---
 
-## 📂 Directory Layout
+## 🛡️ Security, Ethics & Provenance
 
+- **Authentication:** Token-based auth for restricted endpoints.  
+- **Ethics Checks:** All `/api/focus` requests validated under FAIR+CARE.  
+- **Integrity:** Checksum verification for provenance-linked responses.  
+- **Governance:** Every endpoint response recorded in governance ledger.  
+- **Observability:** Telemetry logs for latency, query ethics, and access control.  
+
+Telemetry Schema:  
+`schemas/telemetry/api-telemetry-v1.json`
+
+Telemetry Outputs:
 ```
-src/api/routes/
-├── __init__.py
-├── events.py          # Historical event queries (timeline)
-├── places.py          # Geographic and geospatial endpoints
-├── people.py          # Person / organization data
-├── stac.py            # STAC collections & items
-├── search.py          # Keyword + semantic search
-├── ai.py              # AI-driven summarization & Q/A
-└── README.md          # (this file)
-```
-
----
-
-## 🌎 Core Route Modules
-
-### `/events` — Event & Timeline API
-
-**Purpose:** Returns events within temporal/spatial filters using CIDOC CRM + OWL-Time.
-
-```bash
-GET /events?start=1850&end=1900&type=treaty
-```
-
-```json
-[
-  {
-    "id": "event_1857_battle_solomon_fork",
-    "title": "Battle of Solomon Fork",
-    "start_date": "1857-07-29",
-    "end_date": "1857-07-30",
-    "places": [{"name": "Solomon River", "lat": 39.36, "lon": -98.92}],
-    "participants": ["John Smith", "U.S. Army Cavalry"],
-    "summary": "Conflict between U.S. forces and Cheyenne near Solomon River, Kansas."
-  }
-]
+reports/api/route-events.json
+reports/audit/governance-ledger.json
+releases/v9.4.0/focus-telemetry.json
 ```
 
 ---
 
-### `/places` — Geographic & Spatial API
+## 🧩 Standards & Compliance
 
-**Purpose:** Returns spatial features (forts, towns, rivers, counties) as GeoJSON.
-
-```bash
-GET /places?bbox=-102,36,-94,40
-```
-
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {"name": "Fort Larned", "category": "Fort"},
-      "geometry": {"type": "Point", "coordinates": [-99.13, 38.19]}
-    }
-  ]
-}
-```
+| Standard | Purpose | Implementation |
+|-----------|----------|----------------|
+| **MCP-DL v6.4.3** | Documentation-first endpoint definition | This README + route files |
+| **FAIR+CARE** | Open, ethical, traceable API design | Metadata validation + governance logging |
+| **ISO 23894** | AI and API lifecycle risk management | FAIR+CARE and ethics monitoring |
+| **DCAT / STAC** | Dataset and metadata interoperability | `/api/datasets` route |
+| **JSON-LD** | Provenance and semantic linkage | `/api/governance` route outputs |
 
 ---
 
-### `/people` — People & Organizations
+## 🧾 Version History
 
-**Purpose:** Provides biographical and relational data about individuals and organizations.
-
-```bash
-GET /people?id=truman_1870
-```
-
-```json
-{
-  "id": "truman_1870",
-  "name": "Harry S. Truman",
-  "roles": ["Senator", "President"],
-  "associated_places": ["Independence, MO"],
-  "events": ["Kansas City Flood 1951"]
-}
-```
-
----
-
-### `/stac` — Geospatial Catalog API
-
-**Purpose:** Exposes the **SpatioTemporal Asset Catalog (STAC)** for map layers and imagery.
-
-```bash
-GET /stac/items/ks_1m_dem_2018_2020
-```
-
-```json
-{
-  "stac_version": "1.0.0",
-  "id": "ks_1m_dem_2018_2020",
-  "type": "Feature",
-  "assets": {
-    "cog": {
-      "href": "https://data.kansas.gov/dem/ks_1m_2018_2020.tif",
-      "type": "image/tiff; application=geotiff; profile=cloud-optimized"
-    }
-  }
-}
-```
-
----
-
-### `/search` — Keyword & Semantic Search
-
-**Purpose:** Provides cross-entity search via Neo4j fulltext + NLP embeddings.
-
-```bash
-GET /search?q=cheyenne
-```
-
-```json
-{
-  "results": [
-    {"type": "TribalEntity", "name": "Cheyenne", "mentions": 132},
-    {"type": "Event", "title": "Medicine Lodge Treaty (1867)"},
-    {"type": "Place", "name": "Cheyenne Bottoms Wetlands"}
-  ]
-}
-```
-
----
-
-### `/ai` — AI Query & Summarization
-
-**Purpose:** Enables Q/A and summarization via NLP pipelines.
-
-```bash
-POST /ask
-{
-  "question": "Which Kansas counties were most affected by the Dust Bowl?"
-}
-```
-
-```json
-{
-  "answer": "Western Kansas counties such as Finney, Ford, and Haskell saw the worst storms (1933–1938).",
-  "sources": ["noaa_storms_1933.csv","kansas_newspapers_1935.txt","fema_dustbowl.json"]
-}
-```
-
----
-
-## ⚙️ Implementation Details
-
-- All routes import shared helpers from `src/api/utils/`  
-- **Pydantic** schemas validate responses  
-- **Structured logs** written to `logs/api/access.log`  
-- **CORS**, caching, and error handling centralized via middleware  
-
-**Boilerplate Example**
-```python
-from fastapi import APIRouter, Query
-from src.api.schemas.event_schema import Event
-from src.api.utils.db import get_session
-
-router = APIRouter(prefix="/events", tags=["Events"])
-
-@router.get("/", response_model=list[Event])
-def list_events(start: int = 1800, end: int = 2025):
-    with get_session("r") as s:
-        q = f"""
-        MATCH (e:Event)
-        WHERE e.start_year >= {start} AND e.start_year <= {end}
-        RETURN e
-        """
-        return [dict(r["e"]) for r in s.run(q)]
-```
-
----
-
-## 🧰 Development Commands
-
-```bash
-# Run one route for local test
-uvicorn src.api.routes.events:router --reload
-
-# Run all route tests
-pytest tests/api/test_routes.py
-
-# View live API documentation
-curl http://localhost:8080/docs
-```
-
----
-
-## 🧷 CI Acceptance Checklist
-
-- [ ] Routes documented (Swagger/GraphQL)  
-- [ ] Schemas validated and response types enforced  
-- [ ] Pagination + caching working across endpoints  
-- [ ] `/search` and `/ai` rate-limited and logged  
-- [ ] Unit tests pass CI (CodeQL, Trivy clean)  
-
----
-
-## 📚 References
-
-- API Layer — `../../README.md`  
-- Schemas — `../schemas/README.md`  
-- Utilities — `../utils/README.md`  
-- Graph Queries — `../../../graph/graph_queries.py`  
-- STAC Spec — https://stacspec.org/  
-- FastAPI Docs — https://fastapi.tiangolo.com/  
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.4.0 | 2025-11-02 | @kfm-api | Added detailed route documentation, governance linkage, and telemetry schema. |
+| v9.3.3 | 2025-11-01 | @kfm-architecture | Enhanced Focus Mode reasoning and explainability endpoints. |
+| v9.3.2 | 2025-10-29 | @bartytime4life | Improved FAIR+CARE validation in entity and dataset routes. |
+| v9.3.1 | 2025-10-27 | @kfm-ethics | Integrated governance ledger synchronization for REST endpoints. |
+| v9.3.0 | 2025-10-25 | @kfm-devops | Established API routes structure under MCP-DL v6.4.3. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**  
-*Open Knowledge · Transparent APIs · Reproducible Science*
+**Kansas Frontier Matrix — Ethical & Transparent API Architecture**  
+*“Every route verifiable. Every query accountable. Every dataset governed.”* 🔗  
+📍 `src/api/routes/README.md` — FAIR+CARE-certified documentation for API routes and endpoint structure in the Kansas Frontier Matrix.
 
 </div>
-```
