@@ -1,20 +1,21 @@
 ---
 title: "💻 Kansas Frontier Matrix — Source Code & Pipeline Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/README.md"
-version: "v9.4.0"
+version: "v9.4.1"
 last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.4.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.4.0/manifest.zip"
+sbom_ref: "../releases/v9.4.1/sbom.spdx.json"
+manifest_ref: "../releases/v9.4.1/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-ai_registry_ref: "../releases/v9.4.0/models.json"
+ai_registry_ref: "../releases/v9.4.1/models.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+observability_ref: "../docs/telemetry/observability-matrix.md"
 license: "MIT"
 owners: ["@kfm-architecture", "@kfm-etl", "@kfm-ai", "@kfm-devops"]
 status: "Stable"
 maturity: "Production"
-tags: ["source", "etl", "ai", "governance", "neo4j", "data-pipelines", "faircare"]
+tags: ["source", "etl", "ai", "governance", "neo4j", "data-pipelines", "faircare", "telemetry"]
 alignment:
   - MCP-DL v6.4.3
   - FAIR+CARE
@@ -180,7 +181,7 @@ Reports generated:
 ```
 reports/fair/data-validation.json
 reports/audit/governance-ledger.json
-releases/v9.4.0/focus-telemetry.json
+releases/v9.4.1/focus-telemetry.json
 ```
 
 ---
@@ -200,7 +201,7 @@ Telemetry outputs include:
 
 Stored in:
 ```
-releases/v9.4.0/focus-telemetry.json
+releases/v9.4.1/focus-telemetry.json
 reports/audit/pipeline-telemetry.json
 ```
 
@@ -210,6 +211,7 @@ reports/audit/pipeline-telemetry.json
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v9.4.1 | 2025-11-02 | @kfm-architecture | Upgraded telemetry alignment, added observability reference, synchronized release artifacts. |
 | v9.4.0 | 2025-11-02 | @kfm-architecture | Enhanced AI, ETL, and governance integration; updated data lineage telemetry schema. |
 | v9.3.3 | 2025-11-01 | @kfm-devops | Added automated validation and FAIR+CARE enrichment to ETL pipelines. |
 | v9.3.2 | 2025-10-29 | @kfm-ai | Integrated explainability and model drift detection tools. |
