@@ -1,26 +1,33 @@
 ---
-title: "📊 Kansas Frontier Matrix — Tabular Normalized Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📊 Kansas Frontier Matrix — Tabular Normalized Staging Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/normalized/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.5.0"
+last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-staging-tabular-normalized-v2.json"
+validation_reports:
+  - "data/reports/validation/schema_validation_summary.json"
+  - "data/reports/fair/data_care_assessment.json"
+  - "data/reports/audit/data_provenance_ledger.json"
+  - "data/reports/ai/quality_metrics.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 📊 Kansas Frontier Matrix — **Tabular Normalized Workspace**
+# 📊 Kansas Frontier Matrix — **Tabular Normalized Staging Layer**
 `data/work/staging/tabular/normalized/README.md`
 
-**Purpose:** Repository for schema-aligned, FAIR+CARE-audited tabular datasets that have passed intake and validation in the Kansas Frontier Matrix (KFM) ETL pipeline.  
-This layer contains cleaned, deduplicated, and governance-certified data ready for promotion to processed layers or public release.
+**Purpose:** Hosts schema-validated, FAIR+CARE-audited tabular datasets that have completed ETL ingestion, pre-certification, and governance QA under the Kansas Frontier Matrix (KFM).  
+This is the **final normalized staging layer** for structured tabular data, preparing datasets for promotion to `data/work/processed/tabular/` and inclusion in open-access KFM catalogs.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Data%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
-[![License: Open Data (Certified)](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Normalized%20Validated-gold)](../../../../../docs/standards/faircare-validation.md)
+[![License: Internal Staging Data](https://img.shields.io/badge/License-Internal%20Governed%20Data-grey)](../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
 </div>
@@ -29,16 +36,17 @@ This layer contains cleaned, deduplicated, and governance-certified data ready f
 
 ## 📚 Overview
 
-The `data/work/staging/tabular/normalized/` directory stores **normalized and schema-conformant tabular datasets** produced by KFM’s data pipelines.  
-These files represent datasets that have passed intake, preliminary validation, and FAIR+CARE ethics audits — fully harmonized for interoperability and reuse.
+The `data/work/staging/tabular/normalized/` directory serves as the **governed data workspace** for finalizing, auditing, and certifying tabular datasets within the KFM pipeline.  
+Every dataset here has passed schema validation, FAIR+CARE pre-certification, checksum verification, and ethical review.  
+It represents the final structured layer before archival or distribution in processed repositories.
 
-### Key Functions:
-- Store FAIR+CARE-compliant, schema-aligned tabular data outputs.  
-- Ensure each file matches the latest data contract and schema version.  
-- Maintain provenance and checksum traceability for reproducibility.  
-- Serve as the input for processed, archival, and analytic data layers.  
+### Core Functions
+- Store normalized, schema-aligned CSV and Parquet tabular datasets.  
+- Integrate FAIR+CARE-certified governance metadata and audit reports.  
+- Ensure complete lineage, provenance, and reproducibility traceability.  
+- Emit telemetry for quality metrics, schema drift detection, and ETL runtime statistics.  
 
-All normalized datasets include embedded metadata and governance logs for open-science verification.
+All datasets here are immutable, checksum-verified, and logged in the KFM Governance Ledger.
 
 ---
 
@@ -46,82 +54,84 @@ All normalized datasets include embedded metadata and governance logs for open-s
 
 ```plaintext
 data/work/staging/tabular/normalized/
-├── README.md                               # This file — overview of normalized tabular workspace
+├── README.md
 │
-├── hazards_normalized.csv                  # Cleaned and validated hazard incident records
-├── climate_indices_normalized.parquet      # Harmonized climate index table
-├── treaties_metadata_normalized.csv        # Historical treaty metadata aligned with schema
-└── metadata.json                           # Provenance and schema compliance metadata
+├── hazards_normalized.csv                 # Validated hazard data (FEMA + NOAA harmonized)
+├── climate_indices_normalized.parquet     # Climate datasets ready for certification
+├── treaties_metadata_normalized.csv       # Structured archival treaty metadata
+└── metadata.json                          # Provenance, FAIR+CARE certification, and telemetry linkage
 ```
 
 ---
 
-## ⚙️ Tabular Normalization Workflow
+## ⚙️ Normalization Workflow
 
 ```mermaid
 flowchart TD
-    A["Validated Intake Data (data/work/staging/tabular/tmp/validation/)"] --> B["Schema Harmonization and Field Mapping"]
-    B --> C["Normalization of Encodings, Types, and Naming Conventions"]
-    C --> D["FAIR+CARE Certification and Ethics Verification"]
-    D --> E["Export Normalized Tables to CSV / Parquet"]
-    E --> F["Register Metadata and Checksum in Governance Ledger"]
+    A["Validated Tabular TMP (data/work/staging/tabular/tmp/validation/)"] --> B["Schema Enforcement & Data Contract QA"]
+    B --> C["FAIR+CARE Pre-Certification Ethics Review"]
+    C --> D["Checksum, Provenance & Telemetry Sync"]
+    D --> E["Promotion → Processed Layer (data/work/processed/tabular/)"]
 ```
 
-### Workflow Description:
-1. **Schema Harmonization:** Fields renamed and reordered according to data contract.  
-2. **Normalization:** Encoding, null values, and categorical standardization enforced.  
-3. **Ethics Audit:** FAIR+CARE Council verification of accessible and ethical data handling.  
-4. **Output Generation:** Datasets stored in open formats with governance metadata.  
-5. **Governance:** Lineage entries recorded in `data/reports/audit/data_provenance_ledger.json`.
+### Workflow Description
+1. **Schema Enforcement:** Final alignment of data structures to `data_contract_ref`.  
+2. **Ethics Review:** FAIR+CARE pre-certification audit ensures data is ethically curated.  
+3. **Governance & Telemetry Sync:** Checksum hashes, schema metrics, and audit results logged.  
+4. **Promotion:** Once verified, datasets are marked for release to the processed layer.  
 
 ---
 
-## 🧩 Example Metadata Record
+## 🧩 Example Normalized Metadata Record
 
 ```json
 {
-  "id": "tabular_normalized_climate_indices_v9.3.2",
-  "schema_version": "v3.0.1",
-  "records_total": 54012,
-  "fields_normalized": 34,
-  "validation_status": "passed",
+  "id": "tabular_normalized_climate_indices_v9.5.0",
+  "source_pipeline": "src/pipelines/etl/climate_indices_pipeline.py",
+  "records_total": 56321,
+  "fields": 24,
+  "schema_version": "v3.2.0",
   "fairstatus": "certified",
-  "checksum": "sha256:7b5f8d42a00b32c3428a2b85caa8f46c12b1ff8f...",
-  "created": "2025-10-28T15:42:00Z",
-  "pipeline": "src/pipelines/etl/climate_indices_pipeline.py",
+  "checksum": "sha256:a8124b5ce5e1f7b2f03ef4ccf5f3c06db1128d94...",
+  "created": "2025-11-02T16:25:00Z",
+  "telemetry_link": "releases/v9.5.0/focus-telemetry.json",
   "validator": "@kfm-data-lab",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
+  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
+  "quality_score": 99.3,
+  "drift_detected": false
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Compliance Summary
+## 🧠 FAIR+CARE Governance in Normalized Data
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Indexed in STAC/DCAT catalog with schema metadata and checksum. |
-| **Accessible** | Stored as open CSV/Parquet under permissive CC-BY 4.0 license. |
-| **Interoperable** | Schema harmonized across all KFM data layers (STAC/DCAT alignment). |
-| **Reusable** | Includes complete provenance, data contract, and version metadata. |
-| **Collective Benefit** | Ensures ethical use and open accessibility for research communities. |
-| **Authority to Control** | FAIR+CARE Council certifies normalization outputs. |
-| **Responsibility** | Maintainers document schema mappings and transformation steps. |
-| **Ethics** | No personally identifiable or restricted content included. |
+| **Findable** | Indexed by schema ID, checksum, version, and telemetry reference. |
+| **Accessible** | Distributed in open CSV/Parquet formats with FAIR+CARE metadata. |
+| **Interoperable** | Schema fully aligned with DCAT/DCAT-AP and JSON Schema standards. |
+| **Reusable** | Provenance, audit trails, and checksum validation ensure reuse integrity. |
+| **Collective Benefit** | Promotes ethical open science through transparent governance. |
+| **Authority to Control** | FAIR+CARE Council reviews schema before final promotion. |
+| **Responsibility** | Validators document audit, QA, and checksum verification. |
+| **Ethics** | Curated under FAIR+CARE ethics, ensuring no sensitive or private data. |
 
-Audit outcomes available in:  
-`data/reports/fair/data_care_assessment.json` and `data/reports/audit/data_provenance_ledger.json`.
+Compliance and certification metadata stored in:  
+`data/reports/fair/data_care_assessment.json` • `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## ⚙️ File Specifications
+## ⚙️ Validation & QA Reports
 
-| File | Format | Description |
-|------|---------|--------------|
-| `hazards_normalized.csv` | CSV | Harmonized hazard incidents with unified attributes. |
-| `climate_indices_normalized.parquet` | Parquet | Long-term storage of climate anomaly metrics. |
-| `treaties_metadata_normalized.csv` | CSV | Cleaned treaty metadata aligned to FAIR+CARE schema. |
-| `metadata.json` | JSON | Schema version, checksum, and governance record for all normalized tables. |
+| Report | Description | Format |
+|---------|-------------|--------|
+| `schema_validation_summary.json` | Detailed schema conformance and data type QA. | JSON |
+| `faircare_audit_report.json` | FAIR+CARE ethics certification and validation metrics. | JSON |
+| `quality_metrics.json` | AI-assisted data quality and schema drift metrics. | JSON |
+| `qa_summary.md` | Human-readable summary of data quality results. | Markdown |
+
+All reports synchronized via **`tabular_normalized_sync.yml`** and recorded in telemetry.
 
 ---
 
@@ -129,34 +139,34 @@ Audit outcomes available in:
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Captures runtime context, schema version, and FAIR+CARE certification. |
-| `data/reports/audit/data_provenance_ledger.json` | Logs normalization lineage and checksum records. |
-| `data/reports/validation/schema_validation_summary.json` | Contains schema validation summaries for normalized datasets. |
-| `releases/v9.3.2/manifest.zip` | Includes file hashes for integrity verification. |
+| `metadata.json` | Captures checksum, schema version, validator ID, and telemetry reference. |
+| `data/reports/audit/data_provenance_ledger.json` | Stores lineage and FAIR+CARE governance certification. |
+| `data/reports/validation/schema_validation_summary.json` | QA summary for each normalized dataset. |
+| `releases/v9.5.0/manifest.zip` | Global checksum registry for reproducibility verification. |
 
-All normalization events tracked automatically via `tabular_normalized_sync.yml`.
+Governance and telemetry synchronization handled via **`tabular_normalized_sync.yml`**.
 
 ---
 
-## 🧾 Retention & Publication Policy
+## 🧾 Retention Policy
 
-| File Type | Retention Duration | Policy |
+| Data Type | Retention Duration | Policy |
 |------------|--------------------|--------|
-| Normalized Tables | Permanent | Promoted to processed or archived layers. |
-| Metadata | Permanent | Stored for provenance and schema tracking. |
-| Validation Logs | 180 days | Archived for FAIR+CARE audit review. |
-| FAIR+CARE Reports | 365 days | Retained for ethics revalidation cycles. |
+| Normalized Datasets | 180 days | Retained until processed promotion. |
+| Validation Reports | 90 days | Archived with governance metadata. |
+| Metadata | Permanent | Stored in governance ledger for certification history. |
+| QA Logs | 60 days | Archived for reproducibility and drift analysis. |
 
-Automation managed by `tabular_normalized_cleanup.yml` and `governance_sync.yml`.
+Cleanup and archival managed by **`tabular_normalized_cleanup.yml`**.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Tabular Normalized Workspace (v9.3.2).
-Schema-aligned, FAIR+CARE-certified workspace for normalized tabular datasets, ensuring provenance integrity and reproducible open data transformation.
-Available under CC-BY 4.0 License.
+Kansas Frontier Matrix (2025). Tabular Normalized Staging Layer (v9.5.0).
+Certified schema-aligned tabular datasets ready for processing and FAIR+CARE publication under full governance traceability.
+Maintained as part of the Kansas Frontier Matrix open-data ethics and provenance framework.
 ```
 
 ---
@@ -165,15 +175,17 @@ Available under CC-BY 4.0 License.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Added checksum governance integration and FAIR+CARE metadata certification. |
-| v9.2.0 | 2024-07-15 | Introduced Parquet schema alignment and cross-contract normalization. |
-| v9.0.0 | 2023-01-10 | Established tabular normalized workspace under FAIR+CARE governance. |
+| v9.5.0 | 2025-11-02 | Added AI quality telemetry, drift detection, and enhanced schema versioning. |
+| v9.4.0 | 2025-11-02 | Introduced telemetry tracking and expanded FAIR+CARE pre-certification checks. |
+| v9.3.2 | 2025-10-28 | Finalized FAIR+CARE audit workflow for normalized tabular data. |
+| v9.2.0 | 2024-07-15 | Integrated improved checksum tracking and manifest synchronization. |
+| v9.0.0 | 2023-01-10 | Established normalized staging workspace for certified tabular datasets. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Standardization × FAIR+CARE Certification × Provenance Trust*  
+**Kansas Frontier Matrix** · *Data Quality × FAIR+CARE Certification × Provenance Governance × Telemetry Intelligence*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/)
 
 </div>
