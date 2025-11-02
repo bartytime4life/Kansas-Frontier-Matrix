@@ -1,13 +1,19 @@
 ---
 title: "📊 Kansas Frontier Matrix — Tabular Staging Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.4.0"
+last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.4.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-staging-tabular-v1.json"
+validation_reports:
+  - "data/reports/validation/schema_validation_summary.json"
+  - "data/reports/fair/data_care_assessment.json"
+  - "data/reports/audit/data_provenance_ledger.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
@@ -32,7 +38,7 @@ Ensures all CSV, Parquet, and database-derived tables conform to data contracts,
 The `data/work/staging/tabular/` directory is the **transitional data layer** where tabular datasets are ingested, standardized, and validated before publication or archival.  
 This workspace integrates quality assurance, data contract validation, and FAIR+CARE ethics checks for all non-spatial KFM data sources.
 
-### Functions:
+### Functions
 - Normalize field names, data types, and schema alignment with JSON contracts.  
 - Validate CSV and Parquet integrity using automated schema checkers.  
 - Perform FAIR+CARE audits to ensure ethical handling and accessibility.  
@@ -46,12 +52,12 @@ All transformations here are tracked in the **governance ledger** and cross-link
 
 ```plaintext
 data/work/staging/tabular/
-├── README.md                             # This file — documentation of tabular staging workspace
+├── README.md
 │
 ├── tmp/                                  # Temporary data normalization and validation workspace
 │   ├── intake/                           # Raw-to-staging tabular ETL workflows
 │   ├── validation/                       # Schema compliance and FAIR+CARE audits
-│   └── logs/                             # ETL trace and governance logs
+│   └── logs/                             # ETL traces and governance logs
 │
 ├── normalized/                           # Harmonized tabular data ready for validation
 │   ├── hazards_normalized.csv
@@ -73,17 +79,17 @@ data/work/staging/tabular/
 flowchart TD
     A["Raw Data (data/raw/*.csv, *.json)"] --> B["Schema Normalization (data/work/staging/tabular/tmp/intake/)"]
     B --> C["Validation (data/work/staging/tabular/tmp/validation/)"]
-    C --> D["FAIR and CARE Ethics Audit"]
+    C --> D["FAIR+CARE Ethics Audit"]
     D --> E["Promotion to Normalized Datasets"]
-    E --> F["Governance Ledger and Manifest Update"]
+    E --> F["Governance Ledger & Manifest Update + Telemetry"]
 ```
 
-### Workflow Steps:
-1. **Schema Alignment:** Normalize all field names, data types, and encodings.  
-2. **Validation:** Run data contract and JSON schema checks.  
-3. **FAIR+CARE Audit:** Verify compliance with accessibility, ethics, and governance standards.  
-4. **Normalization:** Export validated data to open, structured formats (CSV, Parquet).  
-5. **Governance:** Register dataset checksum and schema in provenance ledger.
+### Workflow Steps
+1. **Schema Alignment:** Normalize field names, data types, encodings, and controlled vocabularies.  
+2. **Validation:** Run data contract and JSON Schema checks; verify CSV/Parquet integrity.  
+3. **FAIR+CARE Audit:** Confirm accessibility, ethics, and licensing compliance.  
+4. **Normalization:** Export validated data to open formats (CSV, Parquet) with metadata.  
+5. **Governance:** Register checksum, schema version, and telemetry metrics to the provenance ledger.
 
 ---
 
@@ -91,19 +97,20 @@ flowchart TD
 
 ```json
 {
-  "id": "staging_tabular_climate_indices_v9.3.2",
+  "id": "staging_tabular_climate_indices_v9.4.0",
   "dataset_type": "tabular",
   "source_files": [
     "data/raw/noaa/temperature_anomalies/kansas_temp_anomalies_2025.csv",
     "data/raw/noaa/drought_monitor/drought_monitor_2025.csv"
   ],
   "pipeline": "src/pipelines/etl/climate_indices_pipeline.py",
-  "records_processed": 54012,
-  "schema_version": "v3.0.1",
-  "created": "2025-10-28T15:35:00Z",
+  "records_processed": 56310,
+  "schema_version": "v3.1.0",
+  "created": "2025-11-02T15:40:00Z",
   "validation_status": "passed",
   "checksum": "sha256:72f6b3cb2179cc83042e41ed9e55dbff97db9ffb...",
   "fairstatus": "compliant",
+  "telemetry_link": "releases/v9.4.0/focus-telemetry.json",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -114,17 +121,17 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Each dataset indexed with checksum and schema in governance ledger. |
-| **Accessible** | Data stored in open, documented CSV or Parquet formats. |
-| **Interoperable** | Schema validation ensures DCAT/DCAT-AP and JSON Schema compatibility. |
-| **Reusable** | Metadata includes provenance, version, and license information. |
-| **Collective Benefit** | Promotes ethical and transparent use of tabular data. |
-| **Authority to Control** | Governance Council approves schema changes and updates. |
-| **Responsibility** | Validators log schema compliance reports to ledger. |
-| **Ethics** | No personal or sensitive data; all attributes anonymized if required. |
+| **Findable** | Each dataset indexed with checksum, schema, and telemetry in the governance ledger. |
+| **Accessible** | Data stored in open, documented CSV/Parquet formats with README metadata. |
+| **Interoperable** | DCAT/DCAT-AP mapped fields; JSON Schema enforcement. |
+| **Reusable** | Versioned provenance metadata and explicit licensing for reuse. |
+| **Collective Benefit** | Ethical, transparent tabular data published for public research. |
+| **Authority to Control** | Governance Council approves schema changes and data promotions. |
+| **Responsibility** | Validators attach QA reports and ethics outcomes to the ledger. |
+| **Ethics** | No PII; sensitive attributes anonymized or removed by policy. |
 
-FAIR+CARE audit outcomes stored in:  
-`data/reports/fair/data_care_assessment.json` and `data/reports/audit/data_provenance_ledger.json`.
+Audit outcomes:  
+`data/reports/fair/data_care_assessment.json` • `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
@@ -132,12 +139,12 @@ FAIR+CARE audit outcomes stored in:
 
 | Report | Description | Output |
 |---------|-------------|---------|
-| `schema_validation_summary.json` | Results of schema field and type checks. | JSON |
-| `faircare_tabular_audit.json` | FAIR+CARE compliance audit for tabular data. | JSON |
-| `stac_dcat_mapping.log` | STAC/DCAT schema field crosswalk trace. | Text |
-| `qa_summary.md` | Human-readable quality assurance overview. | Markdown |
+| `schema_validation_summary.json` | Field and type conformance results. | JSON |
+| `faircare_tabular_audit.json` | FAIR+CARE ethics compliance audit. | JSON |
+| `stac_dcat_mapping.log` | STAC/DCAT field crosswalk trace. | Text |
+| `qa_summary.md` | Human-readable QA overview. | Markdown |
 
-Validation workflows automatically triggered by `tabular_validation_sync.yml`.
+Validation workflows automated via **`tabular_validation_sync.yml`**.
 
 ---
 
@@ -145,32 +152,32 @@ Validation workflows automatically triggered by `tabular_validation_sync.yml`.
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Captures dataset-level provenance, checksum, and schema status. |
-| `data/reports/audit/data_provenance_ledger.json` | Logs ETL lineage and validation results. |
-| `data/reports/validation/schema_validation_summary.json` | Field-level QA report. |
-| `releases/v9.3.2/manifest.zip` | Checksum and validation registry for reproducibility. |
+| `metadata.json` | Dataset-level provenance, checksum, and schema status. |
+| `data/reports/audit/data_provenance_ledger.json` | ETL lineage and validation outcomes. |
+| `data/reports/validation/schema_validation_summary.json` | QA results for review. |
+| `releases/v9.4.0/manifest.zip` | Checksum registry for reproducibility. |
 
-Governance synchronization handled by `staging_tabular_sync.yml`.
+Governance sync performed by **`staging_tabular_sync.yml`**.
 
 ---
 
 ## 🧾 Retention Policy
 
-| File Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| Temporary Files (TMP) | 7 days | Auto-deleted after successful validation. |
+| File Type | Retention | Policy |
+|------------|-----------|--------|
+| Temporary Files (TMP) | 7 days | Auto-deleted after validation success. |
 | Normalized Datasets | 90 days | Promoted to processed layer after QA approval. |
 | Validation Reports | 180 days | Archived for FAIR+CARE and QA audits. |
 | Governance Metadata | Permanent | Retained for lineage and certification tracking. |
 
-Cleanup performed by `staging_tabular_cleanup.yml`.
+Cleanup handled by **`staging_tabular_cleanup.yml`**.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Tabular Staging Workspace (v9.3.2).
+Kansas Frontier Matrix (2025). Tabular Staging Workspace (v9.4.0).
 Intermediate processing and validation workspace for tabular datasets under FAIR+CARE governance.
 Restricted to internal ETL, QA, and provenance validation workflows.
 ```
@@ -181,6 +188,7 @@ Restricted to internal ETL, QA, and provenance validation workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
+| v9.4.0 | 2025-11-02 | Added telemetry integration, enhanced data contract enforcement, and automated governance sync. |
 | v9.3.2 | 2025-10-28 | Added FAIR+CARE ethics validation and unified schema QA automation. |
 | v9.2.0 | 2024-07-15 | Integrated Parquet normalization and checksum verification. |
 | v9.0.0 | 2023-01-10 | Established tabular staging workspace for schema compliance. |
@@ -189,7 +197,7 @@ Restricted to internal ETL, QA, and provenance validation workflows.
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Tabular Data Quality × FAIR+CARE Ethics × Provenance Integrity*  
+**Kansas Frontier Matrix** · *Tabular Data Quality × FAIR+CARE Ethics × Provenance Integrity × Telemetry Traceability*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
 
 </div>
