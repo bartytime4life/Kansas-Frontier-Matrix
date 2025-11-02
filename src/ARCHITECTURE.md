@@ -1,3 +1,34 @@
+---
+title: "🏛 Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "src/ARCHITECTURE.md"
+version: "v1.8.0"
+last_updated: "2025-11-02"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../releases/v1.8.0/sbom.spdx.json"
+manifest_ref: "../releases/v1.8.0/manifest.zip"
+data_contract_ref: "../docs/contracts/data-contract-v3.json"
+ai_registry_ref: "../releases/v1.8.0/models.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+observability_ref: "../docs/telemetry/observability-matrix.md"
+license: "MIT | CC-BY 4.0"
+owners: ["@kfm-architecture", "@kfm-engineering"]
+status: "Stable"
+maturity: "Production"
+tags: ["architecture","etl","stac","nlp","knowledge-graph","api","web","mcp","observability","faircare"]
+alignment:
+  - STAC 1.0.0
+  - CIDOC CRM
+  - OWL-Time
+  - DCAT 3.0
+  - PeriodO
+  - FAIR Principles
+  - MCP-DL v6.4.3 (Reproducibility · Provenance · Accessibility)
+preservation_policy:
+  retention: "architecture docs permanent · audit logs 10 years"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
 # 🏛 Kansas Frontier Matrix — **System Architecture**  
@@ -10,7 +41,7 @@ _A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kan
 [![STAC Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../.github/workflows/stac-validate.yml)  
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](../.github/workflows/codeql.yml)  
 [![Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](../.github/workflows/trivy.yml)  
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/docs-MCP--DL%20v6.3-green.svg)](../docs/)  
+[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/docs-MCP--DL%20v6.4.3-green.svg)](../docs/)  
 [![License: MIT/CC-BY](https://img.shields.io/badge/license-MIT%20%7C%20CC--BY-green)](../LICENSE)
 
 </div>
@@ -18,25 +49,23 @@ _A mission-grade, open-source, reproducible spatiotemporal knowledge hub for Kan
 ---
 
 ```yaml
----
 title: "KFM • System Architecture"
-version: "v1.7.1"
-last_updated: "2025-10-17"
+version: "v1.8.0"
+last_updated: "2025-11-02"
 created: "2024-12-12"
 owners: ["@kfm-architecture", "@kfm-engineering"]
 status: "Stable"
 maturity: "Production"
-tags: ["architecture","etl","stac","nlp","knowledge-graph","api","web","mcp","observability"]
+tags: ["architecture","etl","stac","nlp","knowledge-graph","api","web","mcp","observability","faircare"]
 license: "MIT | CC-BY 4.0"
 semantic_alignment:
   - STAC 1.0.0
   - CIDOC CRM
   - OWL-Time
-  - DCAT 2.0
+  - DCAT 3.0
   - PeriodO
   - FAIR Principles
-  - MCP-DL v6.3 (Reproducibility · Provenance · Accessibility)
----
+  - MCP-DL v6.4.3 (Reproducibility · Provenance · Accessibility)
 ```
 
 ## 📚 Table of Contents
@@ -59,7 +88,7 @@ semantic_alignment:
 ## 🔭 Overview
 
 **Kansas Frontier Matrix (KFM)** is a **spatiotemporal knowledge platform** that unites **geography, climate, archaeology, treaties, disasters, and oral histories** into a single **map + timeline + knowledge graph**.  
-Built for **reproducibility**, **provenance**, and **auditability** under **MCP-DL v6.3**, KFM couples **open standards** (STAC, CIDOC, OWL-Time, DCAT, PeriodO) with **deterministic ETL/AI** to produce a transparent, queryable “living atlas” of Kansas.
+Built for **reproducibility**, **provenance**, and **auditability** under **MCP-DL v6.4.3**, KFM couples **open standards** (STAC, CIDOC, OWL-Time, DCAT, PeriodO) with **deterministic ETL/AI** to produce a transparent, queryable “living atlas” of Kansas.
 
 ---
 
@@ -68,8 +97,8 @@ Built for **reproducibility**, **provenance**, and **auditability** under **MCP-
 - **ETL / Ingestion** — normalize inputs (COG / GeoJSON / Parquet), compute checksums, emit **STAC Items**  
 - **AI/ML Enrichment** — NER, geoparsing, entity linking, summarization, confidence scoring  
 - **Knowledge Graph** — **Neo4j** schema mapped to **CIDOC CRM** + **OWL-Time** with PeriodO period tags  
-- **API Layer** — **FastAPI / GraphQL**: time/space search, dossiers, exports (KML/KMZ)  
-- **Frontend** — React + MapLibre: timeline, layers, legends, **AI Assistant**, a11y-first UI
+- **API Layer** — **FastAPI / GraphQL**: time/space search, dossiers, exports (KML/KMZ/JSON-LD)  
+- **Frontend** — React + MapLibre: timeline, layers, legends, **Focus Mode**, a11y-first UI
 
 ---
 
@@ -88,13 +117,12 @@ flowchart TD
     stacA --> apiA["API Layer<br/>FastAPI · GraphQL"]
     kgA --> apiA
 
-    apiA --> webA["Frontend<br/>React + MapLibreGL<br/>Timeline · Search · Filters · AI"]
+    apiA --> webA["Frontend<br/>React + MapLibreGL<br/>Timeline · Search · Filters · Focus Mode"]
     stacA --> webA
 
     cfgA["Config Build<br/>app.config.json · layers.json"] --> webA
-    cfgA --> exportA["Google Earth Exports<br/>KML · KMZ"]
+    cfgA --> exportA["Exports<br/>KML · KMZ · JSON-LD"]
 ```
-<!-- END OF MERMAID -->
 
 > **Design Tenets:** documentation-first, deterministic dataflow, explicit schema contracts, and total provenance from source to screen.
 
@@ -122,7 +150,6 @@ sequenceDiagram
     UI->>STAC: Fetch COG/GeoJSON for map layers
     UI-->>User: Interactive map · timeline · AI dossiers
 ```
-<!-- END OF MERMAID -->
 
 ---
 
@@ -132,16 +159,16 @@ sequenceDiagram
 
 | Category | Examples | Time Range | Color Token | Notes |
 | :-- | :-- | :-- | :-- | :-- |
-| 🏔 **Terrain & Elevation** | LiDAR 1m DEM · Hillshade · Contours | 2010–Present | `#6C757D` | Basemap context for relief/hydrology; derived from USGS 3DEP |
-| 🗺 **Historic Topographic Maps** | USGS 1894 Larned · 1930s County Sheets | 1890–1950s | `#8D5524` | Scanned topo COGs; default opacity 0.6–0.8 for overlay |
-| 🌾 **Land Use & Vegetation** | 1937 Soil Survey · NLCD | 1850–Present | `#52B788` | Land cover & vegetation change; NRCS/USGS sources |
-| 🌊 **Hydrology & Water Resources** | Kansas River · 1951 Flood · Reservoirs | 1850–Present | `#0096C7` | Rivers, floodplains, canals; drought index animations |
-| 🌪 **Hazards & Climate Events** | Tornado Tracks · Drought Index · Dust Bowl | 1850–Present | `#F77F00` | NOAA storms, USDM drought polygons, event heatmaps |
-| 🚂 **Infrastructure & Mobility** | Railroads · Trails · Roads | 1850–1950s | `#E63946` | Historical routes; fade after disuse; interactive vectors optional |
-| 🏛 **Cultural & Historical** | Oral Histories · Sites · Missions · Forts | Any | `#9D4EDD` | Linked to documents, NER entities, and AI dossiers |
-| 📜 **Treaties & Boundaries** | 1854 Treaty · Royce Polygons · County Formation | 1820–1870s | `#0077B6` | GeoJSON polygons; provenance to treaty texts |
-| 🔥 **Environmental Change** | Wildfire History · Dust Storm Footprints | 1900–Present | `#E85D04` | Vector/raster overlays from incident catalogs |
-| 🗺️ **Administrative & Reference** | County Boundaries · PLSS · Gauges | 1850–Present | `#ADB5BD` | Reference context (non-temporal or wide coverage) |
+| 🏔 **Terrain & Elevation** | LiDAR 1m DEM · Hillshade · Contours | 2010–Present | `#6C757D` | Basemap context; USGS 3DEP |
+| 🗺 **Historic Topographic Maps** | USGS 1894 Larned · 1930s County Sheets | 1890–1950s | `#8D5524` | Scanned topo COGs; opacity 0.6–0.8 |
+| 🌾 **Land Use & Vegetation** | 1937 Soil Survey · NLCD | 1850–Present | `#52B788` | Land cover & vegetation change |
+| 🌊 **Hydrology & Water** | Kansas River · 1951 Flood · Reservoirs | 1850–Present | `#0096C7` | Rivers, floodplains, drought |
+| 🌪 **Hazards & Climate** | Tornado Tracks · Drought Index · Dust Bowl | 1850–Present | `#F77F00` | NOAA, USDM, events |
+| 🚂 **Infrastructure** | Railroads · Trails · Roads | 1850–1950s | `#E63946` | Historical routes |
+| 🏛 **Cultural & Historical** | Oral Histories · Sites · Missions · Forts | Any | `#9D4EDD` | Linked to documents & NER |
+| 📜 **Treaties & Boundaries** | 1854 Treaty · Royce Polygons · Counties | 1820–1870s | `#0077B6` | GeoJSON polygons; provenance |
+| 🔥 **Environmental Change** | Wildfire History · Dust Footprints | 1900–Present | `#E85D04` | Raster/vector overlays |
+| 🗺️ **Reference** | Counties · PLSS · Gauges | 1850–Present | `#ADB5BD` | Non-temporal reference |
 
 **Canonical `layers.json` example**:
 
@@ -166,7 +193,7 @@ sequenceDiagram
 - **Formats:** GeoJSON, COG GeoTIFF, CSVW, Parquet  
 - **Catalog:** **STAC 1.0.0** (Collections/Items/Assets) with JSON Schema CI checks  
 - **Ontologies:** **CIDOC CRM** (heritage/semantics), **OWL-Time** (temporality), **PeriodO** (period tags)  
-- **Catalog Interop:** **DCAT 2.0** mapping for machine indexing; optional JSON-LD export  
+- **Catalog Interop:** **DCAT 3.0** mapping for machine indexing; JSON-LD export available  
 - **UI Config:** `web/config/layers.json`, `app.config.json` — deterministically generated from STAC and validated in CI
 
 ---
@@ -185,13 +212,12 @@ sequenceDiagram
 
 1. **Create manifest** → `data/sources/{id}.json`  
 2. **Run ETL**
-
    ```bash
    make fetch convert stac
    ```
-3. **Graph upsert** → `src/graph/schema.py` & pipeline inserts  
+3. **Graph upsert** → `src/graph/schema/` + ingestion scripts  
 4. **Web layer** → add in `web/config/layers.json` (time · style · legend)  
-5. **Docs/Tests** → update `docs/sop.md`; add tests in `tests/pipelines/`
+5. **Docs/Tests** → update SOPs; add tests in `tests/*`
 
 > Each step emits logs + checksums and is validated in CI.
 
@@ -201,7 +227,7 @@ sequenceDiagram
 
 ```text
 KansasFrontierMatrix/
-├─ src/               # Python ETL + AI/ML + API code
+├─ src/               # Python ETL + AI/ML + API + Graph code
 ├─ web/               # React frontend (MapLibre + Canvas)
 ├─ data/
 │  ├─ sources/        # dataset manifests
@@ -220,12 +246,12 @@ KansasFrontierMatrix/
 
 | Field | Value |
 | :-- | :-- |
-| **Version** | `v1.7.1` |
-| **Codename** | *Legend Alignment & Interop* |
-| **Last Updated** | 2025-10-17 |
+| **Version** | `v1.8.0` |
+| **Codename** | *Legend Alignment & Interop — II* |
+| **Last Updated** | 2025-11-02 |
 | **Maintainers** | @kfm-architecture · @kfm-engineering |
 | **License** | MIT (code) · CC-BY 4.0 (docs) |
-| **Semantic Alignment** | STAC 1.0 · CIDOC CRM · OWL-Time · DCAT 2.0 · PeriodO · FAIR |
+| **Semantic Alignment** | STAC 1.0 · CIDOC CRM · OWL-Time · DCAT 3.0 · PeriodO · FAIR |
 | **Maturity** | Production |
 | **Integrity** | CI: CodeQL · Trivy · STAC validate · Reproducible builds |
 
@@ -235,15 +261,16 @@ KansasFrontierMatrix/
 
 | Version | Date | Author | Summary |
 | :-- | :-- | :-- | :-- |
-| **v1.7.1** | 2025-10-17 | @kfm-architecture | Updated Layer Timeline Legend; added Administrative & Environmental Change categories; clarified interop notes |
-| **v1.7.0** | 2025-10-17 | @kfm-architecture | MCP-DL v6.3 alignment; DCAT mapping; CI gates |
-| **v1.6.0** | 2025-10-14 | @kfm-engineering | Expanded swimlane; added Layer Timeline Legend; refined ETL notes |
+| **v1.8.0** | 2025-11-02 | @kfm-architecture | Upgraded to MCP-DL v6.4.3; added JSON-LD exports and Observability Matrix link; clarified exports section. |
+| **v1.7.1** | 2025-10-17 | @kfm-architecture | Updated Layer Timeline Legend; added Administrative & Environmental Change categories; clarified interop notes. |
+| **v1.7.0** | 2025-10-17 | @kfm-architecture | MCP-DL v6.3 alignment; DCAT mapping; CI gates. |
+| **v1.6.0** | 2025-10-14 | @kfm-engineering | Expanded swimlane; added legend; refined ETL notes. |
 
 ---
 
 ## 📖 References
 
-- **Standards:** STAC 1.0.0 · CIDOC CRM · OWL-Time · DCAT 2.0 · PeriodO · FAIR  
+- **Standards:** STAC 1.0.0 · CIDOC CRM · OWL-Time · DCAT 3.0 · PeriodO · FAIR  
 - **System Docs:** Architecture · AI/ML Developer Guide · Web UI Design · File/Data Architecture · Monorepo Design  
 - **Primary Data Hubs:** USGS 3DEP · NOAA NCEI · FEMA OpenFEMA · Kansas GIS Hub · Kansas Historical Society Archives
 
