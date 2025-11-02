@@ -15,7 +15,7 @@ license: "MIT"
 owners: ["@kfm-ai", "@kfm-focus", "@kfm-ethics", "@kfm-governance"]
 status: "Stable"
 maturity: "Production"
-tags: ["ai", "focus-transformer", "nlp", "explainability", "governance", "faircare"]
+tags: ["ai", "focus-transformer", "nlp", "explainability", "governance", "faircare", "model-card", "registry"]
 alignment:
   - MCP-DL v6.4.3
   - FAIR+CARE
@@ -23,7 +23,7 @@ alignment:
   - IEEE 7007 Ontological Transparency
   - JSON-LD / DCAT / SPDX
 preservation_policy:
-  retention: "model weights and explainability logs retained 10 years · registry permanent"
+  retention: "Model weights, metadata, and explainability artifacts retained for 10 years · audit trails permanent"
   checksum_algorithm: "SHA-256"
 ---
 
@@ -32,11 +32,12 @@ preservation_policy:
 # 🧩 Kansas Frontier Matrix — **Focus Transformer v1**
 `src/ai/models/focus_transformer_v1/README.md`
 
-**Purpose:** Provides architecture, metadata, and governance documentation for the Focus Transformer v1 — the primary AI model enabling Focus Mode contextual summarization and reasoning in the Kansas Frontier Matrix.  
-Implements FAIR+CARE ethical transparency, explainability (SHAP/LIME), and reproducible lineage via the Immutable Governance Ledger.
+**Purpose:** Defines the complete architecture, configuration, data lineage, and governance compliance details for the **Focus Transformer v1**, the foundational model enabling contextual reasoning and Focus Mode in the Kansas Frontier Matrix.  
+Implements explainable, ethical, and reproducible AI through the **FAIR+CARE framework**, integrated with governance-led telemetry and immutable provenance logging.
 
 [![🤖 Model Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ai-validate.yml/badge.svg)](../../../../../.github/workflows/ai-validate.yml)  
-[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Model%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)  
+[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../../../../docs/standards/faircare-validation.md)  
+[![🔍 Explainability](https://img.shields.io/badge/Explainability-SHAP%20%26%20LIME-blue)](../../../../../docs/ai/explainability.md)  
 [![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
 </div>
@@ -45,69 +46,98 @@ Implements FAIR+CARE ethical transparency, explainability (SHAP/LIME), and repro
 
 ## 📚 Overview
 
-**Focus Transformer v1** is a transformer-based language model fine-tuned on curated Kansas historical and environmental corpora.  
-It powers the **Focus Mode** AI subsystem, generating explainable contextual summaries that connect events, locations, and people through time.
+**Focus Transformer v1** is a fine-tuned **encoder-decoder transformer** optimized for contextual summarization, entity linking, and reasoning over historical datasets.  
+It connects structured knowledge (Neo4j entities) and unstructured text (archival sources) to generate interpretive narratives that align with FAIR+CARE governance and ethical transparency.
 
-**Core Objectives:**
-- 🧠 Provide interpretable and fact-grounded AI summaries  
-- 🧩 Integrate seamlessly with Neo4j Knowledge Graph and Focus Mode pipeline  
-- ⚖️ Guarantee transparency and ethical alignment under FAIR+CARE  
-- 🔍 Generate explainability outputs for model behavior (SHAP/LIME)  
-- 🧾 Register model metadata, checksum, and lineage in the governance ledger  
+**Key Capabilities:**
+- 🧠 Summarizes complex historical events with explainable AI reasoning.  
+- 🌐 Connects map and timeline data through Focus Mode contextual AI.  
+- ⚖️ Ensures ethical accountability and transparency through governance logging.  
+- 🧮 Uses explainability frameworks (SHAP, LIME) for interpretability.  
+- 🔍 Embeds provenance and dataset lineage metadata within outputs.
 
 ---
 
-## 🧱 Model Architecture
+## 🗂️ Directory Layout
 
-| Component | Description |
-|------------|--------------|
-| **Base Architecture** | Transformer encoder-decoder (6 layers, 12 attention heads) |
+```plaintext
+src/ai/models/focus_transformer_v1/
+├── README.md                 # This file — full documentation and governance card
+│
+├── config.json               # Model configuration (architecture, hyperparameters)
+├── weights.bin               # Serialized model weights (checksum-verified)
+├── tokenizer.json            # Tokenizer and vocabulary
+├── metadata.json             # FAIR+CARE model metadata and provenance
+│
+├── explainability/            # Explainability and interpretability assets
+│   ├── shap_values.json      # SHAP feature importance (global interpretability)
+│   ├── lime_explanations/    # LIME local explanations for single-instance predictions
+│   └── report_focus_v1.json  # Consolidated explainability report (SHAP + LIME)
+│
+├── training/                 # Model training artifacts and metrics
+│   ├── focus_corpus.json     # Fine-tuning dataset (curated Kansas corpora)
+│   ├── training_log.txt      # Training log and performance summary
+│   ├── metrics.json          # Evaluation metrics (loss, accuracy, bias)
+│   └── dataset_manifest.json # Input dataset lineage and provenance records
+│
+└── governance/               # Ethics, provenance, and compliance metadata
+    ├── bias_audit.json       # CARE-aligned bias and fairness audit results
+    ├── checksum_record.json  # SHA-256 signatures for model artifacts
+    ├── lineage_ref.json      # Provenance linkages to Immutable Governance Ledger
+    └── license.txt           # SPDX-aligned license information (MIT)
+```
+
+---
+
+## 🧱 Model Architecture & Configuration
+
+| Parameter | Value |
+|------------|--------|
+| **Architecture** | Transformer (Encoder-Decoder) |
+| **Layers / Heads** | 6 Layers / 12 Attention Heads |
 | **Hidden Size** | 768 |
 | **Tokenizer** | Byte Pair Encoding (32k vocabulary) |
-| **Training Framework** | PyTorch + HuggingFace Transformers |
-| **Optimizer** | AdamW with learning rate scheduling |
-| **Dataset** | `data/processed/focus_corpus.json` (Kansas historical texts, treaties, journals) |
-| **Loss Function** | Cross-Entropy + Semantic Similarity Loss |
-| **Explainability Tools** | SHAP (global feature attribution), LIME (local interpretability) |
-
-Model File Summary:
-```
-config.json              # Model configuration and hyperparameters
-weights.bin              # Serialized model weights
-tokenizer.json           # Tokenizer and vocabulary file
-metadata.json            # FAIR+CARE model metadata and provenance
-```
+| **Optimizer** | AdamW (lr = 3e-5, warmup = 0.1) |
+| **Framework** | PyTorch + HuggingFace Transformers |
+| **Dataset** | `data/processed/focus_corpus.json` |
+| **Loss Functions** | Cross-Entropy + Semantic Similarity |
+| **Explainability** | SHAP (global) + LIME (local) |
+| **Governance Hooks** | FAIR+CARE telemetry, checksum registry, immutable ledger update |
 
 ---
 
-## ⚙️ Example Usage
+## ⚙️ Model Usage Examples
 
-### 🧠 Run Model Inference
+### 🧠 Inference
 ```python
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 model = AutoModelForSeq2SeqLM.from_pretrained("src/ai/models/focus_transformer_v1")
 tokenizer = AutoTokenizer.from_pretrained("src/ai/models/focus_transformer_v1")
 
-input_text = "Treaty of Fort Laramie, 1851 — describe historical significance."
-inputs = tokenizer(input_text, return_tensors="pt")
+query = "Describe the cultural significance of the Treaty of Fort Laramie (1851)."
+inputs = tokenizer(query, return_tensors="pt")
 outputs = model.generate(**inputs, max_length=150)
 print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 ```
 
 ### 🔍 Generate Explainability Report
 ```bash
-python src/ai/explainability/report_generator.py --model focus_transformer_v1 --output reports/ai/explainability/focus_v1.json
+python src/ai/explainability/report_generator.py \
+  --model focus_transformer_v1 \
+  --output reports/ai/explainability/focus_v1.json
 ```
 
-### ⚖️ Log Model Telemetry
+### ⚖️ FAIR+CARE Bias Validation
 ```bash
-python src/ai/focus/telemetry_logger.py --model focus_transformer_v1 --entity treaty_1851 --confidence 0.94
+python src/governance/validators/faircare_validate.py \
+  --input src/ai/models/focus_transformer_v1/metadata.json \
+  --output reports/fair/ai-bias-validation.json
 ```
 
 ---
 
-## 🧩 FAIR+CARE Metadata (metadata.json)
+## 🧩 FAIR+CARE Metadata Summary
 
 ```json
 {
@@ -115,58 +145,51 @@ python src/ai/focus/telemetry_logger.py --model focus_transformer_v1 --entity tr
   "version": "1.0.3",
   "license": "MIT",
   "trained_on": "data/processed/focus_corpus.json",
-  "explainability_ref": "reports/ai/explainability/focus_v1.json",
-  "bias_audit_ref": "reports/fair/ai-bias-validation.json",
+  "description": "Transformer model fine-tuned for contextual historical summarization in Focus Mode.",
+  "alignment": ["FAIR+CARE", "ISO 23894", "IEEE 7007"],
   "checksum_sha256": "9c2f8b1e4a31b63e0f438fb73f8c55e123c7b6d8886ea71b11f8f391be0a1ef9",
-  "created_at": "2025-11-02T00:00:00Z",
+  "bias_audit_ref": "reports/fair/ai-bias-validation.json",
+  "explainability_ref": "reports/ai/explainability/focus_v1.json",
+  "telemetry_ref": "releases/v9.4.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/governance-ledger.json",
   "validated_by": "faircare-validate.yml",
-  "status": "active",
-  "alignment": ["FAIR+CARE", "ISO 23894", "IEEE 7007"]
+  "created_at": "2025-11-02T00:00:00Z",
+  "status": "active"
 }
 ```
 
 ---
 
-## 🧠 Governance Integration
-
-| Workflow | Description | Output |
-|-----------|--------------|---------|
-| **Model Training Validation** | Confirms model registry inclusion and dataset provenance | `releases/v9.4.0/models.json` |
-| **Explainability Generation** | Produces SHAP/LIME metadata for governance records | `reports/ai/explainability/focus_v1.json` |
-| **Bias and Ethics Audit** | Assesses CARE Principle alignment and bias mitigation | `reports/fair/ai-bias-validation.json` |
-| **Telemetry Logging** | Registers model inference activity in Immutable Ledger | `releases/v9.4.0/focus-telemetry.json` |
-
-Governance artifacts recorded in:
-```
-reports/audit/governance-ledger.json
-releases/v9.4.0/manifest.zip
-```
-
----
-
-## 🧩 Model Provenance Workflow
+## 🔗 Provenance & Governance Workflow
 
 ```mermaid
 flowchart TD
-    A["Model Training (focus_transformer_v1)"] --> B["Explainability Generation (SHAP/LIME)"]
-    B --> C["FAIR+CARE Validation (Bias Audit)"]
-    C --> D["Model Registry Sync (models.json)"]
-    D --> E["Governance Ledger Update (Immutable)"]
+    A["Dataset (focus_corpus.json)"] --> B["Model Training (PyTorch/HF)"]
+    B --> C["Explainability (SHAP/LIME)"]
+    C --> D["Bias Audit (FAIR+CARE)"]
+    D --> E["Registry & Checksum Logging"]
+    E --> F["Immutable Governance Ledger (governance-ledger.json)"]
 ```
+
+**Workflow Summary:**
+1. Model trained using FAIR-sourced, ethically screened datasets.  
+2. Explainability layer produces SHAP and LIME visualizations.  
+3. CARE bias audit ensures balanced data representation.  
+4. Registry entry and checksum logged in `models.json`.  
+5. Immutable governance ledger updated with provenance metadata.
 
 ---
 
-## 🔍 Explainability & Ethics
+## 🧠 Ethics & Transparency Controls
 
-**Focus Transformer v1** provides interpretable, context-aware explanations for its predictions.  
-- **SHAP:** Global feature attribution showing which input features influenced model outputs.  
-- **LIME:** Local interpretability for individual predictions.  
-- **Ethical Safeguards:** FAIR+CARE validation ensures balanced dataset representation and non-harmful inference outcomes.  
-- **Transparency:** All summaries traceable to their historical source through CIDOC CRM event linkage.
+- **Explainability:** Every prediction includes interpretable SHAP and LIME justifications.  
+- **Ethical Governance:** CARE audits confirm representational fairness and collective benefit.  
+- **Provenance:** Each model artifact linked to a reproducible data lineage chain.  
+- **Reproducibility:** All configurations versioned and hashed for deterministic regeneration.
 
-Explainability outputs stored in:
+All ethical reviews conducted under:
 ```
-reports/ai/explainability/
+docs/standards/governance/FAIR-CARE.md
 reports/fair/ai-bias-validation.json
 ```
 
@@ -174,28 +197,29 @@ reports/fair/ai-bias-validation.json
 
 ## 🛡️ Security, Provenance & Reproducibility
 
-- **Checksum Verification:** All files (`weights.bin`, `config.json`, `tokenizer.json`) registered via SHA-256.  
-- **Immutable Lineage:** Provenance linked in `reports/audit/data-lineage.json`.  
-- **Reproducibility:** Model version and dataset hash preserved in the registry.  
-- **Governance Oversight:** Metadata cross-referenced with `ROOT-GOVERNANCE.md`.
+- ✅ **Integrity:** All model artifacts (weights, config, tokenizer) checksum-verified (SHA-256).  
+- 📜 **Provenance:** Recorded in `reports/audit/data-lineage.json`.  
+- 🔐 **Immutable Ledger:** Governance synchronization ensures transparency.  
+- 🧾 **Reproducibility:** Dataset and model metadata recorded in registry and manifests.
 
-All model files validated via:
+Validated through:
 ```
 tools/ai/model_sync.py
 src/governance/lineage/checksum_register.py
+src/governance/audit/report_builder.py
 ```
 
 ---
 
 ## 🧩 Standards Alignment
 
-| Standard | Application | Implementation |
-|-----------|--------------|----------------|
-| **MCP-DL v6.4.3** | Documentation-first AI lifecycle governance | This README + metadata.json |
-| **FAIR+CARE** | Ethical and transparent model governance | Bias audits and telemetry reporting |
-| **ISO 23894** | AI risk and lifecycle management | Drift detection and explainability checks |
-| **IEEE 7007** | Ontological transparency | SHAP/LIME explainability integration |
-| **SPDX 2.3** | License traceability | Model registry and license headers |
+| Standard | Function | Implementation |
+|-----------|-----------|----------------|
+| **MCP-DL v6.4.3** | Documentation-driven AI lifecycle governance | This README + metadata.json |
+| **FAIR+CARE** | Ethical transparency and stewardship validation | Bias audit and explainability |
+| **ISO 23894** | Risk management and explainability | Drift detection and governance logging |
+| **IEEE 7007** | Ontological transparency | SHAP/LIME interpretability |
+| **SPDX 2.3** | License provenance tracking | License in `governance/license.txt` |
 
 ---
 
@@ -203,17 +227,17 @@ src/governance/lineage/checksum_register.py
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v1.0.3 | 2025-11-02 | @kfm-ai | Enhanced explainability reports and FAIR+CARE bias audit integration. |
-| v1.0.2 | 2025-10-30 | @kfm-ethics | Added SHAP and LIME interpretability layers. |
-| v1.0.1 | 2025-10-28 | @bartytime4life | Integrated Neo4j entity linking and governance telemetry. |
-| v1.0.0 | 2025-10-25 | @kfm-focus | Initial model release and governance registration under MCP-DL v6.4.3. |
+| v1.0.3 | 2025-11-02 | @kfm-ai | Added directory layout, expanded ethics validation, and telemetry integration. |
+| v1.0.2 | 2025-10-30 | @kfm-ethics | Implemented dual SHAP/LIME interpretability reports for transparency. |
+| v1.0.1 | 2025-10-28 | @bartytime4life | Linked Neo4j entity references and governance telemetry updates. |
+| v1.0.0 | 2025-10-25 | @kfm-focus | Initial release registered in AI model governance ledger. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Ethical AI for Transparent Historical Reasoning**  
-*“Every summary explainable. Every model governed. Every decision accountable.”* 🔗  
-📍 `src/ai/models/focus_transformer_v1/README.md` — FAIR+CARE-aligned documentation for the Focus Transformer v1 model in the Kansas Frontier Matrix AI subsystem.
+*“Every model documented. Every output explainable. Every ledger immutable.”* 🔗  
+📍 `src/ai/models/focus_transformer_v1/README.md` — FAIR+CARE-certified model card and documentation for Focus Transformer v1 in the Kansas Frontier Matrix.
 
 </div>
