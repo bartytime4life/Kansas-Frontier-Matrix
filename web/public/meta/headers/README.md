@@ -16,6 +16,10 @@ validation_reports:
   - "../../../../reports/audit/web-public-meta-headers-lineage.json"
   - "../../../../reports/fair/web-public-meta-headers-summary.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+security_ref: "../../../../docs/standards/security/web-metadata-security.md"
+observability_ref: "../../../../docs/telemetry/observability-matrix.md"
+sbom_audit_ref: "../../../../reports/audit/sbom-web-meta-headers.json"
+release_notes_ref: "../../../../releases/v9.3.2/CHANGELOG.md"
 ---
 
 <div align="center">
@@ -23,16 +27,30 @@ governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 # 🧭 Kansas Frontier Matrix — **Web Public Meta Headers**
 `web/public/meta/headers/README.md`
 
-**Purpose:** Documents metadata, provenance, and validation records for all header-related UI components within the Kansas Frontier Matrix web interface.  
-Ensures every public-facing header asset (navigation bars, banner graphics, title components) is fully versioned, checksum-verified, and FAIR+CARE certified.
+**Purpose:** Defines and documents all header-level metadata assets used by the Kansas Frontier Matrix web application.  
+Ensures versioning, integrity, FAIR+CARE governance, and audit traceability for each header component within the UI and deployment chain.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)  
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../docs/standards/governance/FAIR-CARE.md)  
+[![Security Audit](https://img.shields.io/badge/Security-Audited%20(SBOM)-blueviolet)](../../../../reports/audit/sbom-web-meta-headers.json)  
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)](../../../../.github/workflows/site.yml)  
-[![Data Integrity](https://img.shields.io/badge/Data-Integrity%20Verified-purple)](../../../../reports/audit/web-public-meta-headers-lineage.json)
+[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-purple)](../../../../reports/audit/web-public-meta-headers-lineage.json)  
 
 </div>
+
+---
+
+## 📚 Overview
+
+The **Web Public Meta Headers directory** defines metadata, provenance, and validation documentation for all site header components (banners, navbars, and top-level UI sections).  
+This directory forms part of the **immutable governance and telemetry layer**, ensuring that every header file embedded in `web/public/headers/` is versioned, validated, and traceable through the KFM audit ecosystem.
+
+All files within this directory follow:
+- **Master Coder Protocol (MCP-DL v6.3)** for documentation-first reproducibility  
+- **FAIR+CARE** open data stewardship guidelines  
+- **ISO 19115**, **DCAT 3.0**, and **OGC STAC v1.0.0** alignment for metadata export  
+- **Immutable Governance Ledger** traceability for provenance and change tracking  
 
 ---
 
@@ -42,26 +60,30 @@ Ensures every public-facing header asset (navigation bars, banner graphics, titl
 web/public/meta/headers/
 ├── header-main.json
 ├── header-secondary.json
+├── header-accessibility.json
 ├── header-mobile.json
 └── README.md   ← (this file)
 ```
 
-Each JSON metadata file in this directory defines the origin, license, and audit traceability for header components used in the KFM web UI.  
-These records provide immutable provenance, version tracking, and license validation across deployment cycles.
+Each JSON record describes a specific header component and its:
+- **Version & Checksum**
+- **License Attribution**
+- **Creation & Validation Dates**
+- **STAC/DCAT Mapping**
+- **Audit & FAIR+CARE Certification References**
 
 ---
 
-## ⚙️ Metadata Specification
+## ⚙️ Metadata Schema
 
-Header metadata follows the **Web Public Meta Schema (v1.4)** — interoperable with **DCAT 3.0**, **schema.org**, and **OGC STAC 1.0.0**.  
-Example entry:
+Each metadata file adheres to the **Web Meta Schema v1.4**, ensuring cross-compatibility with the broader KFM dataset ontology.
 
 ```yaml
-id: "web-meta-header-main-v1"
+id: "web-meta-header-accessibility-v1"
 type: "asset-meta"
-title: "Primary Header Component Metadata"
-description: "Defines provenance, checksum, and license for the main site navigation and branding header."
-source_url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/web/public/meta/headers/header-main.json"
+title: "Accessibility Header Component Metadata"
+description: "Metadata record for the accessibility banner and ARIA compliance scripts."
+source_url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/web/public/meta/headers/header-accessibility.json"
 license: "MIT"
 version: "1.0.1"
 checksum_sha256: "<sha256-hash>"
@@ -70,65 +92,72 @@ validated_by: "faircare-validate.yml"
 status: "active"
 tags:
   - "web"
-  - "header"
-  - "ui-component"
+  - "headers"
+  - "accessibility"
 alignment:
   - "STAC v1.0.0"
-  - "schema.org/Dataset"
   - "DCAT 3.0"
+  - "schema.org/Dataset"
 ```
 
-Each metadata record must include:
-- Unique **`id`**, **version**, and **checksum** fields  
-- Valid open license (MIT for code or CC-BY for graphical content)  
-- **Provenance and audit chain** linking to validation reports  
-- Conformance with FAIR+CARE, STAC, and MCP-DL v6.3 documentation standards  
+All metadata entries must:
+- Contain a **globally unique identifier (`id`)**
+- Provide **semantic versioning** and **checksum validation**
+- Include **license** and **source URL**
+- Pass all **FAIR+CARE** and **STAC/DCAT** validation workflows  
+- Include **telemetry hooks** for CI/CD observability  
 
 ---
 
-## 🧪 Validation and Telemetry
+## 🧪 Validation & Observability
 
-Automated CI/CD workflows ensure every header metadata record remains compliant and validated across releases.
+Automated validation runs on each commit to ensure metadata integrity and ethical compliance.
 
 | Validation Type | Workflow | Output Report |
-|-----------------|------------|----------------|
+|-----------------|-----------|----------------|
 | FAIR+CARE Certification | `faircare-validate.yml` | `reports/fair/web-public-meta-headers-summary.json` |
-| Structural Validation | `stac-validate.yml` | `reports/self-validation/web-public-meta-headers-validation.json` |
-| Lineage Integrity | `data-lineage.yml` | `reports/audit/web-public-meta-headers-lineage.json` |
-| Telemetry Logging | `focus-telemetry.yml` | `releases/v9.3.2/focus-telemetry.json` |
+| Schema Validation | `stac-validate.yml` | `reports/self-validation/web-public-meta-headers-validation.json` |
+| Lineage Verification | `data-lineage.yml` | `reports/audit/web-public-meta-headers-lineage.json` |
+| Telemetry Capture | `focus-telemetry.yml` | `releases/v9.3.2/focus-telemetry.json` |
 
-Telemetry records adhere to the schema defined in `schemas/telemetry/web-public-meta-headers-v1.json`.  
-These datasets ensure reproducibility and complete traceability of all header-related metadata.
+**Telemetry Streams:**  
+- Compliance Metrics (`telemetry_schema`)  
+- Data Integrity Events (`focus-telemetry.json`)  
+- Runtime Observability via `observability-matrix.md`
+
+All reports are referenced in CI/CD artifact storage for downstream audits.
 
 ---
 
-## 🧠 Governance & Provenance
+## 🧠 Governance, Security, and FAIR+CARE Compliance
 
-All metadata files in this directory are logged under the **Immutable Governance Chain**, recording:
-- Source and author attribution  
-- Version lineage and validation output  
-- Cross-referenced FAIR+CARE certification and checksum reports  
-- Integration status in the KFM governance ledger  
+Each metadata record contributes to the **KFM Immutable Governance Chain**.  
+Governance enforcement ensures:
+- **Security & SBOM integrity checks** before deployment  
+- **FAIR Principle adherence** (Findable, Accessible, Interoperable, Reusable)  
+- **CARE Principle alignment** (Collective Benefit, Authority, Responsibility, Ethics)  
+- Immutable linkage through `governance_ref` and `sbom_audit_ref`
 
-Quarterly audits consolidate these records under:
+Security verification workflows validate that:
+- No closed or proprietary data enters public assets  
+- All JavaScript or CSS headers adhere to security baselines in `web-metadata-security.md`
+
+Governance results are logged to:
 ```
 reports/audit/governance-ledger.json
 reports/audit/web-meta-headers-integrity.json
 ```
 
-Governance documentation reference:  
-`docs/standards/governance/ROOT-GOVERNANCE.md`
-
 ---
 
-## 🧩 System Integration Role
+## 🧩 Integration Role in System Architecture
 
-Header metadata ensures alignment between the **frontend React application** and compliance layers by:
-- Enabling automatic documentation of UI changes in header structure and style  
-- Supporting AI-driven Focus Mode context display (license and version transparency)  
-- Providing reproducible audit evidence for public branding assets  
+Header metadata enables:
+- Automated inclusion of version and license headers in HTML/React build outputs  
+- AI-driven Focus Mode transparency for users viewing metadata context in UI panels  
+- Direct linkage between visual web assets and audit-tracked JSON entries  
 
-The metadata system provides the **semantic bridge** between frontend deployment and governance verification.
+This directory serves as a **semantic contract** between the UI layer and data governance framework, guaranteeing deterministic provenance for every public element.
 
 ---
 
@@ -136,15 +165,15 @@ The metadata system provides the **semantic bridge** between frontend deployment
 
 | Version | Date | Author | Notes |
 |----------|------|---------|-------|
-| v9.3.2 | 2025-11-02 | Frontier Matrix Maintainers | Initial creation under Diamond⁹ Ω / FAIR+CARE standards |
-| v9.3.1 | 2025-10-28 | Frontier Matrix Maintainers | Schema alignment and validation integration |
-| v9.3.0 | 2025-10-20 | System Init | Directory registered under Platinum README Template v7.1 |
+| v9.3.2 | 2025-11-02 | Frontier Matrix Maintainers | Expanded metadata to include telemetry, SBOM, and security references |
+| v9.3.1 | 2025-10-28 | Frontier Matrix Maintainers | Added lineage validation and governance cross-links |
+| v9.3.0 | 2025-10-20 | System Init | Directory registered under Platinum README Template v7.1 and MCP-DL v6.3 |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Immutable Documentation Chain**  
-*“Every header defined, every byte accountable.”* 🔗
+*“Every header defined, every bit accountable, every validation transparent.”* 🔗
 
 </div>
