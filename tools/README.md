@@ -1,272 +1,166 @@
 ---
-title: "🛠️ Kansas Frontier Matrix — Tools"
-document_type: "Operations Suite · Automation / ETL / Validation / Deployment"
-version: "v2.5.1"
-last_updated: "2025-11-18"
-status: "Tier-Ω+∞ Platinum++ Certified · Production"
+title: "🧰 Kansas Frontier Matrix — Tools & Utilities Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "tools/README.md"
+version: "v9.3.3"
+last_updated: "2025-11-02"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../releases/v9.3.3/sbom.spdx.json"
+manifest_ref: "../releases/v9.3.3/manifest.zip"
+data_contract_ref: "../docs/contracts/data-contract-v3.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+owners: ["@kfm-devops", "@kfm-data", "@kfm-ai", "@kfm-governance"]
+status: "Stable"
 maturity: "Production"
-license: ["MIT (code)","CC-BY 4.0 (docs)"]
-owners: ["@kfm-data","@kfm-architecture","@kfm-web","@kfm-security"]
-tags: ["tools","etl","stac","neo4j","gis","provenance","fair","care","mcp","slsa","sbom","ci","observability","dvc","lfs","pwa","ssr"]
+tags: ["cli", "automation", "data-tools", "validation", "scripts", "governance"]
 alignment:
   - MCP-DL v6.4.3
-  - STAC 1.0 / DCAT 2.0
-  - CIDOC CRM / OWL-Time / PROV-O
-  - FAIR / CARE
-validation:
-  ci_enforced: true
-  artifact_checksums: "SHA-256"
-  sbom_required: true
-  slsa_attestations: true
-observability:
-  endpoint: "https://metrics.kfm.ai/tools"
-  dashboard: "https://metrics.kfm.ai/grafana/tools"
-  metrics: ["tool_runtime_ms","records_processed","stac_items_valid","checksum_mismatches","graph_txn_rate","errors_count","retry_count","sbom_regeneration_ms","governance_policy_violations"]
+  - FAIR+CARE
+  - ISO 9241-210 / DevSecOps
+  - STAC / DCAT Integration
 preservation_policy:
+  retention: "tooling maintained with each release · validation logs preserved 5 years"
   checksum_algorithm: "SHA-256"
-  retention: "365d artifacts · 90d logs · permanent provenance"
 ---
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — Tools (v2.5.1 · Tier-Ω+∞ Platinum++ Certified)**  
-`/tools/`
+# 🧰 Kansas Frontier Matrix — **Tools & Utilities Overview**
+`tools/README.md`
 
-**Automation Utilities · Data Pipelines · Validation & Deployment Helpers**
+**Purpose:** Documents and governs the command-line tools, automation scripts, and validation utilities supporting the Kansas Frontier Matrix.  
+Ensures reproducibility, FAIR+CARE alignment, and seamless integration between data pipelines, governance workflows, and AI validation routines.
 
-[![Build & Deploy](https://img.shields.io/badge/CI%2FCD-site.yml-blue)](../.github/workflows/site.yml)
-[![Tests](https://img.shields.io/badge/Tests-tests.yml-blue)](../.github/workflows/tests.yml)
-[![Security · CodeQL](https://img.shields.io/badge/Security-codeql.yml-blueviolet)](../.github/workflows/codeql.yml)
-[![CVE · Trivy](https://img.shields.io/badge/CVE-trivy.yml-orange)](../.github/workflows/trivy.yml)
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../docs/)
+[![🧩 CI Toolchain](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tools-validate.yml/badge.svg)](../.github/workflows/tools-validate.yml)  
+[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../docs/standards/faircare-validation.md)  
+[![🧾 License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
+[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🎯 Purpose
-`/tools/` provides **deterministic automation** for all KFM operational pipelines — from **data ingestion to provenance bundling**.  
-Each utility is **observable**, **auditable**, and **aligned** with the FAIR/CARE and MCP-DL frameworks.
+## 📚 Overview
 
-> *Every transformation leaves a trail — reproducibility is built, not assumed.*
+The `tools/` directory contains all **command-line and automation utilities** used across the Kansas Frontier Matrix monorepo.  
+Each script is version-controlled, documented under **MCP-DL v6.4.3**, and validated through FAIR+CARE governance checks to ensure consistency, provenance, and transparency.
 
----
-
-## 🧭 Governance & Ethical Framework
-These tools enforce FAIR/CARE compliance at the automation layer:
-
-| Principle | Enforcement |
-|:-----------|:-------------|
-| **FAIR** | Metadata completeness (STAC 1.0 validation, checksums) |
-| **CARE** | Explicit `data_ethics` field validation |
-| **Transparency** | `.prov.json` generation for every tool run |
-| **Equity** | Default license = CC-BY 4.0 unless otherwise specified |
-
-All logs and provenance artifacts feed into the **Ethics Ledger** (`docs/standards/ethics/ledger/`).
+**Core Functions:**
+- 🔍 **Data Validation:** Schema, metadata, and checksum verification.  
+- 🧱 **ETL Automation:** Command-line utilities for data ingestion and normalization.  
+- ⚙️ **Governance Operations:** Tools for audits, lineage, and FAIR+CARE certification workflows.  
+- 🧠 **AI Integration:** Tools for Focus Mode model registry synchronization and telemetry export.  
+- 📦 **DevOps Automation:** CI/CD validation, documentation builds, and manifest generation.
 
 ---
 
-## 🧱 Directory Layout
-```text
+## 🗂️ Directory Layout
+
+```plaintext
 tools/
-├── fetch_data.py          # Pull raw datasets from manifests (HTTP/STAC/API)
-├── convert_gis.py         # Reproject/convert → GeoJSON / COG (EPSG:4326)
-├── validate_stac.py       # Validate Items/Collections (+ links/licenses/ethics)
-├── checksum.py            # SHA-256 generate/verify + sidecars (*.sha256)
-├── migrate_graph.py       # Batch Cypher loads → Neo4j (CIDOC/OWL-Time)
-├── build_config.py        # Generate web/config (layers.json, app.config.json)
-├── export_bundle.py       # Release bundle: .prov.json + SBOM + SLSA
-├── utils/                 # logging, config, http, stac helpers
-└── config/                # default *.toml / *.yaml config examples
+├── README.md                      # This file — documentation and governance overview
+│
+├── data/                          # Data-related utilities (validation, ingestion, transformation)
+│   ├── validate_stac.py           # Validates STAC JSON structures and schema compliance
+│   ├── checksum_verify.py         # Performs SHA-256 checksum validation on datasets
+│   ├── etl_runner.py              # ETL orchestration script for ingesting new datasets
+│   └── transform_normalize.py     # Normalizes data formats into KFM-compatible schemas
+│
+├── governance/                    # Governance and FAIR+CARE alignment tools
+│   ├── ledger_sync.py             # Synchronizes governance ledger and audit trail updates
+│   ├── faircare_validate.py       # Validates data and documentation against FAIR+CARE standards
+│   ├── license_audit.py           # Scans repository for license declarations and compliance
+│   └── provenance_export.py       # Generates provenance chains in JSON-LD/DCAT-compatible form
+│
+├── ai/                            # AI and Focus Mode integration utilities
+│   ├── model_sync.py              # Syncs local AI model registry with `releases/models.json`
+│   ├── explainability_export.py   # Exports SHAP/LIME explainability metadata
+│   └── telemetry_update.py        # Updates focus-telemetry.json with new observations
+│
+├── ci/                            # Continuous integration and automation helpers
+│   ├── pre_commit_validate.sh     # Linting and code standard enforcement
+│   ├── docs_build.py              # Builds and validates project documentation
+│   ├── manifest_generate.py       # Generates manifest.zip for releases
+│   └── sbom_generate.py           # Builds SPDX-compliant SBOM for dependency tracking
+│
+└── utils/                         # General-purpose helper functions
+    ├── file_utils.py              # Safe file I/O and environment utilities
+    ├── log_formatter.py           # Standardized JSON logging for all CLI tools
+    └── config_loader.py           # Loads YAML/JSON configuration files securely
 ```
 
 ---
 
-## 🧩 Toolchain Lineage Diagram
-```mermaid
-flowchart TD
-  A["fetch_data.py"] --> B["convert_gis.py"]
-  B --> C["validate_stac.py"]
-  C --> D["checksum.py"]
-  D --> E["migrate_graph.py"]
-  E --> F["build_config.py"]
-  F --> G["export_bundle.py"]
-  G --> H["Release Assets<br/>(.prov.json · sbom.cdx.json · slsa.intoto.jsonl)"]
+## ⚙️ Usage Examples
+
+### ✅ Validate FAIR+CARE Compliance
+```bash
+python tools/governance/faircare_validate.py --input data/processed/ --report reports/fair/validation_summary.json
 ```
-▣ Data Flow → Validation → Graph → Config → Provenance Bundle
 
----
+### 🔄 Generate Governance Ledger
+```bash
+python tools/governance/ledger_sync.py --output reports/audit/governance-ledger.json
+```
 
-## ⚙️ Core Utilities
+### 🧠 Sync AI Model Registry
+```bash
+python tools/ai/model_sync.py --source ai/models/ --registry releases/v9.3.3/models.json
+```
 
-| Tool | Function | Dependencies |
-|:--|:--|:--|
-| `fetch_data.py` | Reads source manifests → downloads → provenance & checksums | requests · PROV-O |
-| `convert_gis.py` | Converts GIS formats → GeoJSON/COG (EPSG:4326) | GDAL · Rasterio |
-| `validate_stac.py` | STAC schema & metadata compliance | pystac · JSONSchema |
-| `checksum.py` | Generate / verify SHA-256 sidecars | hashlib |
-| `migrate_graph.py` | Load into Neo4j with CIDOC CRM alignment | neo4j-driver |
-| `build_config.py` | Assemble web config from STAC | Python stdlib |
-| `export_bundle.py` | Generate provenance + SBOM + SLSA bundle | Syft · Grype |
+### 🧩 Verify STAC Metadata
+```bash
+python tools/data/validate_stac.py --input data/stac/catalog.json --schema schemas/stac/item-spec.json
+```
 
----
-
-## 🧠 SBOM & SLSA Integration
-Each major workflow executes:
-- **SBOM (Syft)** → `sbom.cdx.json` attached to each release  
-- **SLSA** → provenance attestation (`slsa.intoto.jsonl`)  
-- **.prov.json** → linked to run metadata and Zenodo DOI
-
-All assets signed and checksum-verified in CI.
-
----
-
-## 🧾 Provenance Chain Diagram
-```mermaid
-graph TD
-  A["fetch_data.py"] --> B["convert_gis.py"]
-  B --> C["validate_stac.py"]
-  C --> D["checksum.py"]
-  D --> E["migrate_graph.py"]
-  E --> F["build_config.py"]
-  F --> G["export_bundle.py"]
-  G --> H[".prov.json + sbom.cdx.json + slsa.intoto.jsonl"]
-  H --> I["Zenodo DOI / GitHub Release"]
+### 🧾 Generate SBOM and Manifest
+```bash
+python tools/ci/sbom_generate.py
+python tools/ci/manifest_generate.py
 ```
 
 ---
 
-## 🧾 Structured Logging Schema
-```json
-{"ts":"2025-11-18T19:22:05Z","tool":"fetch_data","level":"INFO","msg":"start","run_id":"kfmr_20251118_192205_4392"}
-{"ts":"2025-11-18T19:22:10Z","tool":"fetch_data","level":"INFO","msg":"end","duration_ms":48321,"errors":0}
-```
+## 🧠 FAIR+CARE Governance Integration
 
-**Fields:** `ts`, `tool`, `level`, `msg`, `run_id`, plus custom keys (`files`, `bytes`, `duration_ms`, `errors`).
+| Workflow | Tool | Output |
+|-----------|------|---------|
+| FAIR+CARE Validation | `faircare_validate.py` | `reports/fair/validation_summary.json` |
+| License Auditing | `license_audit.py` | `reports/audit/license_compliance.json` |
+| Provenance Chain | `provenance_export.py` | `reports/audit/provenance_chain.json` |
+| Ledger Sync | `ledger_sync.py` | `reports/audit/governance-ledger.json` |
+| SBOM Generation | `sbom_generate.py` | `releases/v9.3.3/sbom.spdx.json` |
 
----
-
-## 🧪 Error Codes & Exit Policy
-| Exit | Meaning | Behavior |
-|:--|:--|:--|
-| 0 | Success | continue |
-| 1 | Validation fail | halt pipeline |
-| 2 | Runtime error | retry allowed |
-| 3 | Config error | stop immediately |
+All outputs are logged and referenced in the Immutable Governance Chain.  
+Each execution appends event telemetry to `releases/v9.3.3/focus-telemetry.json` for cross-audit visibility.
 
 ---
 
-## ⏱ Performance Budgets
-| Tool | Metric | SLO | Alert |
-|:--|:--|:--|:--|
-| fetch_data.py | runtime per GB | ≤ 6 min/GB | >8m |
-| convert_gis.py | throughput | ≥120 MB/min | <80 |
-| validate_stac.py | items/sec | ≥60 | <30 |
-| migrate_graph.py | txn/min | ≥600 | <300 |
-| build_config.py | runtime (ms) | ≤1500 | >2500 |
-| export_bundle.py | runtime (ms) | ≤3000 | >5000 |
+## 🛡️ Security & Provenance
 
----
-
-## 📈 Governance Telemetry Snapshot
-> ![Tools Dashboard](https://metrics.kfm.ai/img/tools-dashboard-snapshot.png)  
-> _CI/CD health, runtime stats, validation errors, and checksum verification rates (auto-refresh every 2h)._
-
----
-
-## 🔒 Security & Compliance
-- **No secrets on CLI**; OIDC short-lived tokens only.  
-- **Pinned dependencies** in `requirements.lock`.  
-- **`pip-audit` / `safety`** enforce zero critical CVEs.  
-- **Gitleaks + Trivy + CodeQL** guard pre-merge.
-
----
-
-## 🧾 Provenance JSON-LD
-```json
-{
-  "@context":"https://kfm.ai/contexts/tools.jsonld",
-  "@type":"SoftwareSuite",
-  "name":"KFM Tools",
-  "prov:generated":["COG","GeoJSON","STAC","checksums","Neo4j loads","config","sbom","slsa"],
-  "prov:used":["data/sources/*","data/raw/*","data/processed/*"]
-}
-```
-
----
-
-## ♿ Accessibility (CLI)
-- Every tool supports `--help` output and color-safe logging.  
-- Logs are plain-text + JSON for screen-reader readability.  
-- Config paths and errors are printed with clear text (no color-only cues).
-
----
-
-## 🧱 Infrastructure & Containers
-- IaC modules in `tools/iac/` (Terraform) provision telemetry + bucket infra.  
-- Docker builds scanned by Trivy; SBOMs embedded in image metadata.  
-- CI mirrors `.prov.json` and SBOM to Zenodo & OSF for redundancy.
-
----
-
-## 🧩 Legacy / Deprecated
-| Tool | Status | Replaced By |
-|:--|:--|:--|
-| `fetch_gis.py` | Deprecated | `convert_gis.py` (merged) |
-| `validate_manifest.py` | Deprecated | `validate_stac.py` |
+- All tools run in **isolated containers** (Docker or CI runner environments).  
+- Code undergoes **Trivy CVE scanning** and **pre-commit validation**.  
+- Governance-critical outputs (SBOM, provenance logs) are digitally signed and checksum-verified.  
+- Logs follow **JSON-LD FAIR+CARE** structure for consistent interoperability.
 
 ---
 
 ## 🧾 Version History
-| Version | Date | Author | Summary | Tier |
-|:--|:--|:--|:--|:--|
-| **v2.5.1** | 2025-11-18 | @kfm-architecture | Added SBOM/SLSA context, telemetry snapshot, ethics link, full version lineage | Ω+∞ Platinum++ |
-| v2.5.0 | 2025-11-18 | @kfm-architecture | Introduced run-level provenance, SLOs, structured logging, concurrency & DQ gates | Ω+∞ Platinum++ |
-| v2.4.0 | 2025-11-17 | @kfm-architecture | Initial Tier-Ω+∞ automation refactor with telemetry schema | Ω+∞ |
-| v2.0.0 | 2025-10-01 | @kfm-data | Unified CLI suite, CI integration, FAIR/CARE linkage | Diamond |
-| v1.0.0 | 2024-08-01 | Founding Team | Initial release of automation tools | Gold |
+
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.3.3 | 2025-11-02 | @kfm-devops | Added AI telemetry utilities and FAIR+CARE validation enhancements. |
+| v9.3.2 | 2025-10-29 | @kfm-architecture | Improved documentation and standardized logging format. |
+| v9.3.1 | 2025-10-27 | @kfm-data | Added checksum, STAC, and governance ledger tools. |
+| v9.3.0 | 2025-10-25 | @bartytime4life | Established tools directory and baseline utilities under MCP-DL v6.4.3. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — Tools Suite**  
-_Automation for reproducibility · Provenance by design · Ethics through transparency._
-
-[![Checksum Verified](https://img.shields.io/badge/Checksum-SHA256%20Verified-success)]()  
-[![FAIR–CARE](https://img.shields.io/badge/FAIR--CARE-Compliant-green)]()  
-[![Governance Platinum++](https://img.shields.io/badge/Tier-%CE%A9%2B%E2%88%9E%20Platinum%2B%2B-blue)]()
+**Kansas Frontier Matrix — Immutable Toolchain for Ethical Open Science**  
+*“Every process validated. Every action auditable. Every dataset accountable.”* 🔗  
+📍 `tools/README.md` — FAIR+CARE-aligned command-line utilities for data, AI, and governance operations.
 
 </div>
-
-<!-- MCP-FOOTER-BEGIN
-MCP-VERSION: v6.4.3
-MCP-TIER: Ω+∞ Platinum++
-DOC-PATH: tools/README.md
-MCP-CERTIFIED: true
-OBSERVABILITY-ACTIVE: true
-LOG-SCHEMA-DOCUMENTED: true
-EXIT-CODES-STANDARDIZED: true
-PER-TOOL-SLOS: true
-RUN-PROVENANCE-JSONLD: true
-CHECKSUM-SIDECAR-SPEC: true
-CONCURRENCY-SAFETY-DOCS: true
-DQ-GATES-INTEGRATED: true
-CROSS-PLATFORM-SUPPORT: true
-CONTAINERIZED-RUNS: true
-PYTHON-SCA-ENFORCED: true
-STAC-POLICY-SPECIFIED: true
-GEOMETRY-REPAIR-POLICY: true
-NEW-TOOL-TEMPLATE: true
-MAKE-TARGETS-PARITY: true
-TELEMETRY-FIELD-DEFS: true
-GOVERNANCE-TELEMETRY-SNAPSHOT: true
-SBOM-SLSA-INTEGRATION: true
-FAIR-CARE-LINKAGE: true
-ETHICS-LEDGER-CONNECTED: true
-LEGACY-DEPRECATION-MAP: true
-VERSION-HISTORY-DOCUMENTED: true
-PERFORMANCE-BUDGET-P95: 2.5 s
-GENERATED-BY: KFM-Automation/DocsBot
-LAST-VALIDATED: {build.date}
-MCP-FOOTER-END -->
