@@ -27,8 +27,8 @@ release_notes_ref: "../../../../releases/v9.3.3/CHANGELOG.md"
 # 🦶 Kansas Frontier Matrix — **Web Public Meta Footers**
 `web/public/meta/footers/README.md`
 
-**Purpose:** Documents metadata, lineage, and FAIR+CARE compliance for all footer components within the KFM public web interface.  
-Ensures that every footer element—visual, textual, or script-based—has complete provenance, version control, and audit integration.
+**Purpose:** Documents provenance, lineage, versioning, and FAIR+CARE compliance for all footer-related UI metadata within the Kansas Frontier Matrix web ecosystem.  
+Ensures that every footer component—structural, textual, and legal—is version-controlled, checksum-verified, and traceable within the Immutable Governance Chain.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)  
@@ -43,14 +43,14 @@ Ensures that every footer element—visual, textual, or script-based—has compl
 
 ## 📚 Overview
 
-The **Web Public Meta Footers directory** maintains provenance metadata for all footer sections across the Kansas Frontier Matrix web platform.  
-Each footer (site info, governance footer, contact panels, etc.) is cataloged and validated under FAIR+CARE, MCP-DL, and DCAT 3.0 standards to guarantee open, auditable, and interoperable documentation.
+This directory defines metadata standards, validation reports, and governance linkages for all **footer elements** in the Kansas Frontier Matrix web platform.  
+Footer components include navigation links, licensing information, contact info, and legal notices — each of which must maintain transparent lineage and license compliance.
 
-All metadata in this directory ensures:
-- **Accountability:** Each footer’s code, text, or asset reference includes license and checksum data.  
-- **Governance Traceability:** Every record is tied to audit and validation workflows.  
-- **Reproducibility:** Versioning and telemetry enable re-creation of the verified state.  
-- **Open Compliance:** Fully aligns with STAC, DCAT, CIDOC CRM, and FAIR+CARE frameworks.  
+Metadata here supports:
+- **Immutable traceability** for each footer sub-component.  
+- **Automated license regeneration** in build pipelines.  
+- **Checksum verification** for static HTML and JavaScript content.  
+- **FAIR+CARE-aligned open documentation** across versions and deployments.  
 
 ---
 
@@ -58,28 +58,37 @@ All metadata in this directory ensures:
 
 ```
 web/public/meta/footers/
-├── footer-main.json
-├── footer-legal.json
-├── footer-contact.json
-└── README.md   ← (this file)
+├── footer-main.json        # Primary footer metadata (site-wide footer with links and dynamic credits)
+├── footer-legal.json       # Legal information footer (disclaimers, copyright, and attribution notices)
+├── footer-contact.json     # Contact information and support links (contact forms, helpdesk references)
+└── README.md               # Documentation for footer metadata schema, lineage, and governance integration
 ```
 
-Each metadata file corresponds to a distinct footer element.  
-Files define attributes such as version, license, origin, creation date, and validation records.
+**File Descriptions:**
+
+- **`footer-main.json`** — The central footer definition that appears across all KFM public pages.  
+  It includes the main structure, build references, copyright, and a license footer section dynamically generated during web deployment.
+
+- **`footer-legal.json`** — Defines legal text, disclaimers, license statements, and attribution requirements for public datasets and external APIs.  
+  This ensures full compliance with open-source and public-data use regulations (MIT, CC-BY, and governmental datasets).
+
+- **`footer-contact.json`** — Contains metadata and routing for contact panels or help links.  
+  The configuration supports integration with feedback systems and Focus Mode user reporting.
+
+- **`README.md`** — This file (governance-level README) provides detailed schema alignment, audit instructions, validation workflows, and cross-references to MCP-DL, FAIR+CARE, and governance documentation.
 
 ---
 
 ## ⚙️ Metadata Specification
 
-Each footer metadata entry follows **KFM Web Meta Schema v1.4**, harmonized with **STAC 1.0.0**, **DCAT 3.0**, and **schema.org/Dataset**.  
-Example metadata template:
+Each footer metadata entry adheres to **KFM Web Meta Schema v1.4**, aligned with **STAC 1.0.0**, **DCAT 3.0**, and **schema.org/Dataset** standards.
 
 ```yaml
-id: "web-meta-footer-main-v1"
+id: "web-meta-footer-legal-v1"
 type: "asset-meta"
-title: "Main Footer Metadata"
-description: "Defines provenance, checksum, and license for the Kansas Frontier Matrix main site footer."
-source_url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/web/public/meta/footers/footer-main.json"
+title: "Legal Footer Metadata"
+description: "Defines provenance, checksum, and license validation for legal disclaimers in the web footer."
+source_url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/web/public/meta/footers/footer-legal.json"
 license: "MIT"
 version: "1.0.2"
 checksum_sha256: "<sha256-hash>"
@@ -89,68 +98,62 @@ status: "active"
 tags:
   - "web"
   - "footer"
-  - "ui-component"
+  - "compliance"
 alignment:
   - "STAC v1.0.0"
   - "DCAT 3.0"
   - "schema.org/Dataset"
 ```
 
-Each entry must include:
-- Unique **`id`** and **semantic version**  
-- **Checksum and license verification**  
-- Linkage to **validation reports** and **audit results**  
-- Compliance with **FAIR+CARE** and **MCP-DL v6.3** documentation  
+Each entry must:
+- Include **checksum**, **version**, and **license** attributes.  
+- Pass FAIR+CARE validation and be recorded in CI/CD telemetry.  
+- Be traceable in governance and lineage audits.  
+- Follow open metadata structure for STAC/DCAT export.
 
 ---
 
 ## 🧪 Validation & Observability
 
-Validation workflows continuously ensure data and documentation integrity.
+Continuous validation ensures compliance with FAIR+CARE, security, and governance policies.
 
 | Validation Type | Workflow | Output Report |
 |-----------------|------------|----------------|
 | FAIR+CARE Certification | `faircare-validate.yml` | `reports/fair/web-public-meta-footers-summary.json` |
-| Schema Validation | `stac-validate.yml` | `reports/self-validation/web-public-meta-footers-validation.json` |
-| Lineage Audit | `data-lineage.yml` | `reports/audit/web-public-meta-footers-lineage.json` |
-| Telemetry & Logs | `focus-telemetry.yml` | `releases/v9.3.3/focus-telemetry.json` |
+| Metadata Schema Validation | `stac-validate.yml` | `reports/self-validation/web-public-meta-footers-validation.json` |
+| Provenance Lineage | `data-lineage.yml` | `reports/audit/web-public-meta-footers-lineage.json` |
+| Telemetry Capture | `focus-telemetry.yml` | `releases/v9.3.3/focus-telemetry.json` |
 
-**Telemetry Schemas:** Defined under `schemas/telemetry/web-public-meta-footers-v1.json`.  
-All validations are recorded through the **Observability Matrix** to ensure transparency and reproducibility.
+All telemetry and observability metrics are defined in `schemas/telemetry/web-public-meta-footers-v1.json`.  
+Logs are integrated into the **Observability Matrix** for compliance visualization.
 
 ---
 
 ## 🧠 Governance & Security Integration
 
-Metadata under this directory participates in the **Immutable Governance Chain** and **SBOM Security Framework**.
+This directory operates under the **Immutable Governance Chain**, linking metadata to validation and audit outputs.
 
-Governance ensures:
-- Quarterly validation and FAIR+CARE certification  
-- Integrity linkage to `ROOT-GOVERNANCE.md`  
-- Ledger synchronization via `governance-ledger.yml`  
+Governance integration ensures:
+- Each footer metadata file is version-tracked and checksum-certified.  
+- License and data provenance are auditable via governance ledger.  
+- Reports are logged to `reports/audit/governance-ledger.json`.  
 
-Security ensures:
-- No unlicensed or proprietary content in footer assets  
-- SPDX-based validation via `sbom-web-public-meta-footers.json`  
-- Real-time monitoring via the Observability Matrix  
-
-Audit reports generated:
-```
-reports/audit/governance-ledger.json
-reports/audit/web-meta-footers-integrity.json
-```
+Security validation includes:
+- SBOM attestation via `sbom-web-public-meta-footers.json`.  
+- Verification against `web-metadata-security.md`.  
+- Assurance that only public, open-access content is deployed.
 
 ---
 
-## 🧩 Role in System Architecture
+## 🧩 System Role & Focus Mode Integration
 
-Footer metadata integrates with both **frontend build automation** and **Focus Mode AI**:
-- Provides traceable information for footer rendering (version, license, timestamp).  
-- Enables Focus Mode to summarize footer provenance in context panels.  
-- Links each footer element to corresponding audit and telemetry reports.  
-- Supports automated regeneration of credits and license info in the site footer dynamically.  
+Footer metadata supports:
+- **Automated UI documentation** and license rendering during build-time.  
+- **AI-driven Focus Mode summaries** for attribution and contact transparency.  
+- **Governance dashboards** that visualize lineage and compliance scores.  
+- **Telemetry hooks** for user interaction reporting with footer components.
 
-This directory acts as a **compliance micro-registry** linking UI elements to open data and audit structures.
+This ensures every footer serves as a verifiable compliance endpoint within the user interface.
 
 ---
 
@@ -158,16 +161,16 @@ This directory acts as a **compliance micro-registry** linking UI elements to op
 
 | Version | Date | Author | Notes |
 |----------|------|---------|-------|
-| v9.3.3 | 2025-11-02 | Frontier Matrix Maintainers | Added SBOM, observability, and telemetry integration |
-| v9.3.2 | 2025-11-01 | Frontier Matrix Maintainers | Integrated FAIR+CARE validation workflows |
-| v9.3.1 | 2025-10-28 | Frontier Matrix Maintainers | Created metadata schema structure for footer components |
-| v9.3.0 | 2025-10-20 | System Init | Registered under Platinum README Template v7.1 and MCP-DL v6.3 |
+| v9.3.3 | 2025-11-02 | Frontier Matrix Maintainers | Added file descriptions, security mapping, and telemetry observability |
+| v9.3.2 | 2025-11-01 | Frontier Matrix Maintainers | Added FAIR+CARE workflow references and lineage reports |
+| v9.3.1 | 2025-10-28 | Frontier Matrix Maintainers | Created metadata schema for footer components |
+| v9.3.0 | 2025-10-20 | System Init | Directory established under Platinum README Template v7.1 |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Immutable Documentation Chain**  
-*“Every footer certified, every lineage immutable, every audit transparent.”* 🔗
+*“Every footer defined, every license honored, every lineage verified.”* 🔗
 
 </div>
