@@ -1,297 +1,232 @@
+---
+title: "🌐 Kansas Frontier Matrix — API & Knowledge Graph Interface (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "src/api/README.md"
+version: "v9.4.0"
+last_updated: "2025-11-02"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.4.0/manifest.zip"
+data_contract_ref: "../../docs/contracts/data-contract-v3.json"
+telemetry_schema_ref: "../../schemas/telemetry/api-telemetry-v1.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+owners: ["@kfm-architecture", "@kfm-api", "@kfm-data", "@kfm-governance"]
+status: "Stable"
+maturity: "Production"
+tags: ["api", "graphql", "fastapi", "neo4j", "governance", "faircare", "telemetry"]
+alignment:
+  - MCP-DL v6.4.3
+  - FAIR+CARE
+  - ISO 19115 Metadata Interoperability
+  - DCAT / STAC / JSON-LD Provenance
+  - ISO 23894 AI Transparency & API Lifecycle
+preservation_policy:
+  retention: "API telemetry retained 10 years · endpoint lineage permanent"
+  checksum_algorithm: "SHA-256"
+---
+
 <div align="center">
 
-# 🔌 **Kansas Frontier Matrix — API Layer**  
+# 🌐 Kansas Frontier Matrix — **API & Knowledge Graph Interface**
 `src/api/README.md`
 
-**FastAPI · GraphQL · Knowledge Graph Access · Timeline & Map Queries**
+**Purpose:** Documents the structure, endpoints, and governance-compliant data flows for the Kansas Frontier Matrix API layer.  
+Implements a FAIR+CARE-aligned **FastAPI + GraphQL** system that connects the frontend, AI pipelines, and Neo4j Knowledge Graph under transparent data and model governance.
 
-[![Build & Deploy](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/site.yml?label=Build%20%26%20Deploy&logo=github&color=blue)](../../.github/workflows/site.yml)
-[![STAC Validate](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/stac-validate.yml?label=STAC%20Validate&logo=json&color=blue)](../../.github/workflows/stac-validate.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/codeql.yml?label=CodeQL&logo=github&color=informational)](../../.github/workflows/codeql.yml)
-[![Trivy Security](https://img.shields.io/github/actions/workflow/status/bartytime4life/Kansas-Frontier-Matrix/trivy.yml?label=Trivy%20Security&logo=security&color=green)](../../.github/workflows/trivy.yml)
-[![Docs · MCP-DL v6.2](https://img.shields.io/badge/Docs-MCP--DL%20v6.2-blue?logo=markdown)](../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![🌐 API Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/api-validate.yml/badge.svg)](../../.github/workflows/api-validate.yml)  
+[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-API%20Certified-gold)](../../docs/standards/faircare-validation.md)  
+[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-```yaml
----
-title: "Kansas Frontier Matrix — API Layer"
-version: "v1.7.0"
-last_updated: "2025-10-17"
-owners: ["@kfm-architecture", "@kfm-data"]
-tags: ["api","fastapi","graphql","neo4j","stac","search","timeline","map","mcp","ci","semver"]
-status: "Stable"
-license: "MIT"
-semver_policy: "MAJOR.MINOR.PATCH"
-ci_required_checks:
-  - pre-commit
-  - unit-tests
-  - codeql
-  - trivy
-  - docs-validate
-semantic_alignment:
-  - CIDOC CRM
-  - OWL-Time
-  - STAC 1.0
-  - DCAT 2.0
-  - GeoJSON
-  - ISO 8601
----
-```
+## 📚 Overview
+
+The **Kansas Frontier Matrix API** serves as the central interface for all interactions between the frontend, AI models, and the Neo4j Knowledge Graph.  
+It provides REST and GraphQL endpoints for querying data, submitting Focus Mode reasoning requests, managing FAIR+CARE metadata, and exporting provenance records.
+
+**Core Objectives:**
+- 🧠 Facilitate structured access to Neo4j Knowledge Graph and AI contextual data  
+- ⚖️ Enforce FAIR+CARE-aligned metadata and ethical query governance  
+- 🌍 Support REST, GraphQL, and JSON-LD endpoints for interoperability  
+- 🧾 Provide telemetry for all requests, responses, and audit events  
+- 🔍 Integrate tightly with governance-led provenance and checksum validation  
 
 ---
 
-## 🎯 Purpose
+## 🗂️ Directory Layout
 
-The **`src/api/`** directory exposes the **Knowledge Graph** and **STAC Catalog** through REST and GraphQL endpoints.  
-This API powers the KFM **web app**, **timeline**, **map**, and **AI query systems**, providing open, reproducible access to Kansas historical data and semantic insights.
-
----
-
-## 🏗️ System Role
-
-```mermaid
-flowchart TD
-    A["Knowledge Graph<br/>Neo4j · CIDOC CRM · OWL-Time"] --> B["API Layer<br/>FastAPI / GraphQL"]
-    C["data/stac/*.json<br/>STAC Catalogs"] --> B
-    B --> D["Frontend Web App<br/>React · MapLibre"]
-    B --> E["External Clients<br/>Jupyter · cURL · QGIS"]
-    B --> F["OpenAPI / GraphQL Endpoints"]
-```
-<!-- END OF MERMAID -->
-
-The API is the **bridge** between graph, catalog, and user experience — enforcing schema consistency and provenance-aware query responses.
-
----
-
-## 📂 Directory Layout
-
-```
+```plaintext
 src/api/
-├── __init__.py
-├── main.py                 # FastAPI entrypoint
-├── routes/
-│   ├── events.py           # /events
-│   ├── places.py           # /places
-│   ├── people.py           # /people
-│   ├── stac.py             # /stac endpoints
-│   ├── search.py           # /search?q=
-│   └── ai.py               # /ask — AI Q/A endpoint
-├── schemas/
-│   ├── base.py             # shared Pydantic validators
-│   ├── event_schema.py     # Event model
-│   ├── place_schema.py     # Place model
-│   └── stac_schema.py      # STAC schema pass-through
-├── graphql/
-│   └── schema.graphql      # optional GraphQL schema
-├── utils/
-│   ├── db.py               # Neo4j helpers
-│   ├── cache.py            # Redis/local cache
-│   ├── auth.py             # JWT/API key middleware
-│   └── logger.py           # logging + tracing
-└── README.md
+├── README.md                     # This file — API governance and documentation
+│
+├── fastapi_app.py                # FastAPI app entry point (REST + GraphQL hybrid)
+├── routes/                       # Modular endpoint definitions
+│   ├── entities.py               # Entity-level API (people, places, events)
+│   ├── datasets.py               # Dataset and STAC metadata retrieval
+│   ├── focusmode.py              # AI Focus Mode contextual query endpoints
+│   ├── governance.py             # Governance, telemetry, and provenance API routes
+│   └── healthcheck.py            # System and service status verification
+│
+├── models/                       # Pydantic data models and schema definitions
+│   ├── base.py                   # Core API data structures
+│   ├── ai.py                     # AI model response schemas and explainability metadata
+│   ├── governance.py             # FAIR+CARE governance and ledger schema
+│   └── telemetry.py              # Telemetry event schema for API-level observability
+│
+├── auth/                         # Authentication and API key management
+│   ├── security.py               # Token-based and role-based authentication logic
+│   └── permissions.py            # Role and access control policies
+│
+└── services/                     # Business logic and backend integrations
+    ├── neo4j_client.py           # Handles Neo4j Knowledge Graph queries and mutations
+    ├── stac_client.py            # STAC catalog ingestion and metadata access
+    ├── ai_gateway.py             # Proxy for AI summarization and explainability endpoints
+    └── telemetry_client.py       # Telemetry publisher for governance and FAIR+CARE metrics
 ```
 
 ---
 
-## ⚙️ FastAPI Overview
+## ⚙️ Example Workflows
 
-Start server:
+### 🧩 Run Local API Server
 ```bash
-uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8080
+uvicorn src.api.fastapi_app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-**Features**
-- REST + GraphQL interfaces  
-- Swagger (`/docs`) + ReDoc (`/redoc`)  
-- Redis caching (optional)  
-- Role-based access control  
-- Prometheus metrics `/metrics`
+### 🌍 Example REST Endpoints
+| Endpoint | Method | Description |
+|-----------|--------|-------------|
+| `/api/entities/{id}` | `GET` | Retrieve entity details from Neo4j |
+| `/api/focus/{entity_id}` | `POST` | Run Focus Mode reasoning for a given entity |
+| `/api/stac/items` | `GET` | Query available STAC metadata and geospatial layers |
+| `/api/governance/ledger` | `GET` | Fetch immutable governance ledger state |
+| `/api/telemetry` | `POST` | Submit telemetry or governance event payload |
 
----
-
-## 🧭 REST Endpoints
-
-| Endpoint | Description | Type |
-| :-------- | :----------- | :-- |
-| `/events?start=1850&end=1900` | Filter events by time | JSON/GeoJSON |
-| `/events/{id}` | Detailed event data | JSON |
-| `/places?bbox=-102,36,-94,40` | Places within region | GeoJSON |
-| `/people/{id}` | Person details | JSON |
-| `/stac/collections` | STAC collections | STAC JSON |
-| `/stac/items/{id}` | Individual STAC items | STAC JSON |
-| `/search?q=railroad` | Keyword/semantic search | JSON |
-| `/ask` | AI/summary Q&A endpoint | JSON |
-
----
-
-## 🧱 GraphQL API
-
+### 🧠 Example GraphQL Query
 ```graphql
-{
-  event(id: "battle_solomon_fork") {
-    title
-    date
-    places { name latitude longitude }
-    participants { name role }
+query {
+  entity(id: "treaty_1851") {
+    name
+    description
+    relatedEntities {
+      id
+      name
+    }
+    aiSummary {
+      text
+      confidence
+      explainabilityRef
+    }
   }
 }
 ```
 
-Query:
+### ⚖️ Example Governance Submission
 ```bash
-curl -X POST http://localhost:8080/graphql \
--H "Content-Type: application/json" \
--d '{"query": "{ allEvents { id title } }"}'
+curl -X POST "http://localhost:8000/api/governance/ledger" \
+  -H "Content-Type: application/json" \
+  -d '{"event": "checksum_verification", "entity": "treaty_1851", "status": "verified"}'
 ```
 
 ---
 
-## 🧩 Data Models (Pydantic)
+## 🧠 FAIR+CARE Governance Integration
 
-```python
-from pydantic import BaseModel
-from typing import List, Optional
-
-class PlaceRef(BaseModel):
-    name: str
-    latitude: float
-    longitude: float
-
-class Event(BaseModel):
-    id: str
-    title: str
-    start_date: str
-    end_date: Optional[str]
-    places: List[PlaceRef]
-    summary: Optional[str]
-```
-
-All API responses are validated and serialized according to these models.
+| Function | Description | Output |
+|-----------|--------------|---------|
+| **Entity Metadata Retrieval** | Returns FAIR+CARE-compliant entity metadata | `reports/fair/entity-summary.json` |
+| **Focus Mode Query** | Contextual AI reasoning pipeline | `reports/focusmode/summary_*.json` |
+| **Governance Ledger Access** | Public API for governance chain synchronization | `reports/audit/governance-ledger.json` |
+| **Telemetry Capture** | Logs API activity into Immutable Ledger | `releases/v9.4.0/focus-telemetry.json` |
 
 ---
 
-## 🔎 Search & Query
+## 🧩 API → Governance Data Flow
 
-The `/search` endpoint unifies:
-- Neo4j fulltext indexes  
-- STAC titles/descriptions  
-- Optional AI embeddings for similarity  
-
-```bash
-curl http://localhost:8080/search?q=cheyenne
+```mermaid
+flowchart TD
+    A["Frontend / Focus Mode Request"] --> B["FastAPI Gateway (REST + GraphQL)"]
+    B --> C["Neo4j Query Engine (Knowledge Graph)"]
+    B --> D["AI Gateway (Focus Transformer / Explainability)"]
+    C --> E["Telemetry Client (FAIR+CARE Hooks)"]
+    D --> E
+    E --> F["Governance Ledger Sync + Immutable Storage"]
 ```
 
-Response:
-```json
-{
-  "results": [
-    {"type": "TribalEntity", "name": "Cheyenne", "mentions": 132},
-    {"type": "Event", "title": "Medicine Lodge Treaty (1867)"},
-    {"type": "Place", "name": "Cheyenne Bottoms Wetlands"}
-  ]
-}
-```
+**Workflow Summary:**
+1. User sends a Focus Mode or metadata query.  
+2. API routes the request to Neo4j and AI Gateway simultaneously.  
+3. Results enriched with explainability and provenance metadata.  
+4. All responses and actions logged into the Immutable Governance Ledger.  
 
 ---
 
-## 🧠 AI Query Endpoint
+## 🧩 Security & Access Control
 
-The `/ask` route interfaces with `src/nlp/` modules for semantic Q/A.
+- **Authentication:** API tokens verified using HMAC + JWT.  
+- **Authorization:** Role-based access (admin, researcher, public).  
+- **Integrity:** All API payloads checksum-signed (SHA-256).  
+- **Rate Limiting:** Configured for public endpoints to prevent misuse.  
+- **Audit Logging:** Every request and response logged with provenance metadata.  
 
-```bash
-curl -X POST http://localhost:8080/ask \
--H "Content-Type: application/json" \
--d '{"question": "Which Kansas counties were hit hardest by the Dust Bowl?"}'
+Governance policies defined in:
 ```
-
-Returns:
-```json
-{
-  "answer": "Western Kansas counties such as Finney, Ford, and Haskell saw the most severe dust storms between 1933–1938.",
-  "sources": [
-    "noaa_storms_1933.csv",
-    "kansas_newspapers_1935.txt",
-    "fema_disasters_dustbowl.json"
-  ]
-}
+src/api/auth/permissions.py
+docs/standards/governance/API-SECURITY.md
 ```
 
 ---
 
-## 🔐 Authentication & Authorization
+## 🧩 Standards & Compliance
 
-- **API Key**: `x-api-key` header  
-- **JWT Bearer Tokens** for multi-role auth (`viewer`, `curator`, `admin`)  
-- Configurable middleware enforces access level per route  
+| Standard | Purpose | Implementation |
+|-----------|----------|----------------|
+| **MCP-DL v6.4.3** | Documentation-first API and data contract design | This README + Pydantic models |
+| **FAIR+CARE** | Ethical access, transparency, and governance | API-level FAIR metadata validation |
+| **ISO 23894** | AI lifecycle and API transparency | Audit telemetry and drift detection hooks |
+| **DCAT 3.0 / STAC 1.0.0** | Metadata and dataset catalog interoperability | STAC metadata endpoints |
+| **JSON-LD / CIDOC CRM** | Provenance and semantic linkage | GraphQL output schemas |
 
 ---
 
-## 📈 Logging & Monitoring
+## 🛡️ Observability & Telemetry
 
-| Component | Description |
-| :--------- | :----------- |
-| **Logs** | `logs/api/access.log` with request duration, size, status |
-| **Metrics** | `/metrics` endpoint (Prometheus-compatible) |
-| **Health** | `/healthz` and `/readyz` endpoints |
-| **Cache** | Optional Redis or in-memory cache layer |
+- **Telemetry Logs:** All API requests and AI responses recorded to governance telemetry.  
+- **Metrics Collection:** Prometheus-compatible monitoring of latency, throughput, and ethics audit ratio.  
+- **Provenance Tracking:** Endpoints export metadata lineage via JSON-LD.  
+- **Governance Ledger Sync:** All API telemetry appended to immutable ledger for transparency.  
 
-Example:
+Telemetry Schema:  
+`schemas/telemetry/api-telemetry-v1.json`
+
+Telemetry Outputs:
 ```
-[2025-10-17 09:20:13] GET /events?start=1850&end=1900 | 245ms | 124 results
-[2025-10-17 09:21:44] POST /ask | 1.8s | OK
+reports/api/request-events.json
+reports/audit/governance-ledger.json
+releases/v9.4.0/focus-telemetry.json
 ```
-
----
-
-## 🧷 Acceptance Checklist
-
-- [ ] Endpoints documented and validated (OpenAPI/GraphQL)  
-- [ ] Neo4j credentials loaded from env, not hardcoded  
-- [ ] STAC responses conform to spec  
-- [ ] API auth active in prod  
-- [ ] Rate limits/logging enabled  
-- [ ] All tests (unit/integration/security) pass CI  
-
----
-
-## 🛡️ Security
-
-- Env-based secrets; no credentials in repo  
-- Cypher queries parameterized  
-- Trivy + CodeQL CI scanning  
-- PII stripped from responses  
-- Strict CORS policies  
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date | Type | Notes |
-| :-- | :-- | :-- | :-- |
-| v1.7.0 | 2025-10-17 | Added | Auth, caching, Prometheus metrics, AI query endpoint |
-| v1.6.0 | 2025-10-16 | Improved | GraphQL + Pydantic refactor, search optimizations |
-| v1.5.0 | 2025-10-15 | Added | Initial API README and FastAPI integration |
-
----
-
-## 📚 References
-
-- AI System Developer Docs — `../../docs/ai-system.md`  
-- File & Data Architecture — `../../docs/architecture.md`  
-- FastAPI — https://fastapi.tiangolo.com/  
-- Neo4j — https://neo4j.com/  
-- STAC — https://stacspec.org/  
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.4.0 | 2025-11-02 | @kfm-api | Added detailed governance integration, telemetry schema, and GraphQL reasoning pipeline. |
+| v9.3.3 | 2025-11-01 | @kfm-architecture | Enhanced Neo4j and AI Gateway interoperability. |
+| v9.3.2 | 2025-10-29 | @bartytime4life | Improved telemetry validation and FAIR+CARE metadata APIs. |
+| v9.3.1 | 2025-10-27 | @kfm-ethics | Embedded ethical access control and API transparency logging. |
+| v9.3.0 | 2025-10-25 | @kfm-devops | Established API structure and governance pipeline under MCP-DL v6.4.3. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**  
-*Open Science · Open Data · Interactive History*
+**Kansas Frontier Matrix — Interoperable Knowledge Graph Interface**  
+*“Every endpoint transparent. Every query ethical. Every response accountable.”* 🔗  
+📍 `src/api/README.md` — FAIR+CARE-certified documentation for the API and Knowledge Graph layer of the Kansas Frontier Matrix.
 
 </div>
-```
