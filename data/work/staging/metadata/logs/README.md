@@ -1,13 +1,19 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Metadata Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/metadata/logs/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.4.0"
+last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.4.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-staging-metadata-logs-v1.json"
+validation_reports:
+  - "data/reports/validation/schema_validation_summary.json"
+  - "data/reports/fair/data_care_assessment.json"
+  - "data/reports/audit/data_provenance_ledger.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
@@ -16,8 +22,8 @@ governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 # 🧾 Kansas Frontier Matrix — **Metadata Logs**
 `data/work/staging/metadata/logs/README.md`
 
-**Purpose:** Centralized log repository for all metadata validation, harmonization, and FAIR+CARE audit activities conducted within the Kansas Frontier Matrix (KFM).  
-Ensures full traceability of metadata crosswalks, schema updates, and provenance synchronization under MCP-DL v6.3 governance.
+**Purpose:** Centralized log repository for metadata validation, harmonization, and FAIR+CARE audit activities across the Kansas Frontier Matrix (KFM).  
+Delivers full traceability for schema crosswalks, updates, and provenance synchronization under MCP-DL v6.3 governance.
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Audited-gold)](../../../../../docs/standards/faircare-validation.md)
 [![License: Internal Logs](https://img.shields.io/badge/License-Internal%20Governance%20Data-grey)](../../../../../LICENSE)
@@ -29,16 +35,14 @@ Ensures full traceability of metadata crosswalks, schema updates, and provenance
 
 ## 📚 Overview
 
-The `data/work/staging/metadata/logs/` directory records all **metadata-related processing and validation events**, including schema harmonization, STAC–DCAT crosswalk verification, and FAIR+CARE compliance reports.  
-These logs provide a complete audit trail for metadata governance, ensuring reproducibility, interoperability, and ethical accountability.
+The `data/work/staging/metadata/logs/` directory records all **metadata-related processing and validation events**, including STAC–DCAT crosswalks, PROV-O lineage updates, schema changes, and FAIR+CARE compliance reports.  
+Logs are machine-readable (JSON, NDJSON, or text) and retained per governance policy to support reproducibility, interoperability, and ethics accountability.
 
-### Primary Functions:
-- Record metadata schema transformation events (STAC → DCAT → PROV-O).  
-- Capture FAIR+CARE audit summaries for metadata ethics compliance.  
-- Maintain governance synchronization logs with provenance ledger.  
-- Track metadata validation, errors, and schema corrections.  
-
-All logs are machine-readable (JSON or NDJSON) and stored for long-term FAIR+CARE compliance audits.
+### Primary Functions
+- Capture schema transformation events and crosswalks (STAC ↔ DCAT ↔ PROV-O).  
+- Record FAIR+CARE audit outputs for metadata ethics compliance.  
+- Synchronize metadata log hashes and references to the governance ledger.  
+- Track validation outcomes, issue remediation, and schema version diffs.
 
 ---
 
@@ -48,10 +52,10 @@ All logs are machine-readable (JSON or NDJSON) and stored for long-term FAIR+CAR
 data/work/staging/metadata/logs/
 ├── README.md                           # This file — documentation of metadata logs
 │
-├── metadata_validation.log              # Schema validation and structural consistency trace
-├── governance_sync.log                  # Synchronization log for governance ledger updates
-├── metadata_harmonization_trace.json    # Crosswalk events between metadata standards
-└── metadata.json                        # Log-level runtime and governance metadata
+├── metadata_validation.log              # Schema validation and structural consistency trace (text/ndjson)
+├── governance_sync.log                  # Synchronization log for governance ledger updates (text)
+├── metadata_harmonization_trace.json    # Crosswalk events across STAC/DCAT/PROV-O (JSON)
+└── metadata.json                        # Log-level runtime, checksum, and governance metadata (JSON)
 ```
 
 ---
@@ -60,18 +64,18 @@ data/work/staging/metadata/logs/
 
 ```mermaid
 flowchart TD
-    A["Metadata Ingestion (STAC / DCAT / PROV-O)"] --> B["Schema Validation and Harmonization"]
-    B --> C["Record Metadata Validation Logs"]
-    C --> D["Perform FAIR and CARE Metadata Audit"]
-    D --> E["Governance Ledger Sync (Audit and Provenance)"]
+    A["Metadata Ingestion (STAC / DCAT / PROV-O)"] --> B["Schema Validation & Harmonization"]
+    B --> C["Record Validation & Harmonization Logs"]
+    C --> D["FAIR+CARE Metadata Audit"]
+    D --> E["Governance Ledger Sync (Provenance & Checksums)"]
 ```
 
-### Description:
-1. **Ingestion:** Metadata records pulled from `data/work/staging/metadata/tmp/` and harmonized.  
-2. **Validation:** Each record validated for schema and semantic alignment.  
-3. **Logging:** Validation events recorded with timestamps, checksum, and validator ID.  
-4. **FAIR+CARE Audit:** Reports ethical compliance and metadata transparency.  
-5. **Governance Sync:** Provenance and log hashes appended to audit ledger.
+### Description
+1. **Ingestion:** Pull and prepare inputs from `data/work/staging/metadata/tmp/`.  
+2. **Validation:** Enforce schema and semantic alignment across standards.  
+3. **Logging:** Persist validation and crosswalk events (with timestamps, checksums, validator IDs).  
+4. **FAIR+CARE Audit:** Record ethics and accessibility assurance outcomes.  
+5. **Governance Sync:** Append log hashes and references to the provenance ledger.
 
 ---
 
@@ -81,12 +85,13 @@ flowchart TD
 {
   "id": "metadata_hazards_sync_2025Q4",
   "source_schemas": ["STAC 1.0.0", "DCAT 3.0", "PROV-O"],
-  "created": "2025-10-28T15:50:00Z",
+  "created": "2025-11-02T15:12:00Z",
   "validator": "@kfm-metadata-lab",
   "records_processed": 18,
   "issues_detected": 0,
   "checksum": "sha256:09a4e5bbf37e98ab45b39f7cd682e47230a90a4e...",
   "fairstatus": "compliant",
+  "telemetry_link": "releases/v9.4.0/focus-telemetry.json",
   "governance_ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -97,14 +102,14 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Log entries indexed by schema type, dataset, and validation timestamp. |
-| **Accessible** | Machine-readable JSON logs accessible to governance reviewers. |
-| **Interoperable** | Logs structured per DCAT metadata model for analytics. |
-| **Reusable** | Includes provenance references and validator attribution. |
-| **Collective Benefit** | Promotes transparency and interoperability in metadata workflows. |
-| **Authority to Control** | FAIR+CARE Council validates schema updates before publication. |
-| **Responsibility** | Metadata maintainers must record harmonization steps in logs. |
-| **Ethics** | Sensitive identifiers redacted before log publication. |
+| **Findable** | Log entries indexed by schema type, dataset, validator, and timestamp. |
+| **Accessible** | Machine-readable JSON/NDJSON logs available to governance reviewers. |
+| **Interoperable** | Log structures align with DCAT facets for downstream analytics. |
+| **Reusable** | Each log references provenance and includes validator attribution and checksums. |
+| **Collective Benefit** | Transparent metadata workflows improve public trust and reuse. |
+| **Authority to Control** | FAIR+CARE Council validates schema updates prior to catalog promotion. |
+| **Responsibility** | Maintainers must record harmonization steps and remediations in logs. |
+| **Ethics** | Sensitive identifiers are redacted before log archival or publication. |
 
 Audit and validation results integrated with:  
 - `data/reports/audit/data_provenance_ledger.json`  
@@ -116,10 +121,10 @@ Audit and validation results integrated with:
 
 | File | Purpose | Format |
 |------|----------|--------|
-| `metadata_validation.log` | Tracks schema-level validation and error details. | Text |
-| `governance_sync.log` | Records metadata synchronization to governance ledger. | Text |
-| `metadata_harmonization_trace.json` | Captures STAC–DCAT–PROV-O harmonization mapping. | JSON |
-| `metadata.json` | Runtime metadata, log checksum, and governance references. | JSON |
+| `metadata_validation.log` | Tracks schema validation, issues, and resolutions. | Text/NDJSON |
+| `governance_sync.log` | Records synchronization with governance ledger and outcomes. | Text |
+| `metadata_harmonization_trace.json` | Documents crosswalk mappings and changes across standards. | JSON |
+| `metadata.json` | Captures runtime, checksum, validator info, and governance pointers. | JSON |
 
 ---
 
@@ -127,12 +132,12 @@ Audit and validation results integrated with:
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Captures validator ID, schema types, and log checksums. |
-| `data/reports/audit/data_provenance_ledger.json` | Primary ledger for metadata validation lineage. |
-| `data/reports/validation/schema_validation_summary.json` | Documents schema validation results. |
-| `releases/v9.3.2/manifest.zip` | Contains log checksums and manifest entries. |
+| `metadata.json` | Validator ID, schema types processed, log checksums, and runtime info. |
+| `data/reports/audit/data_provenance_ledger.json` | Immutable ledger for validation lineage and log registration. |
+| `data/reports/validation/schema_validation_summary.json` | Aggregated schema validation results. |
+| `releases/v9.4.0/manifest.zip` | Manifest of log hashes and release artifacts. |
 
-All logging activities are synchronized using the `metadata_log_sync.yml` workflow.
+All logging activities are synchronized via **`metadata_log_sync.yml`**.
 
 ---
 
@@ -140,20 +145,20 @@ All logging activities are synchronized using the `metadata_log_sync.yml` workfl
 
 | Log Type | Retention Duration | Policy |
 |-----------|--------------------|--------|
-| Validation Logs | 180 days | Archived after schema version update. |
-| Governance Sync Logs | 365 days | Permanent under governance audit. |
-| Harmonization Traces | 90 days | Retained for FAIR+CARE schema audits. |
-| Runtime Metadata | Permanent | Stored for reproducibility and version tracking. |
+| Validation Logs | 180 days | Archived when superseded by new schema versions. |
+| Governance Sync Logs | 365 days | Retained for audit; key entries mirrored in ledger permanently. |
+| Harmonization Traces | 90 days | Retained for FAIR+CARE schema audits and crosswalk reviews. |
+| Runtime Metadata | Permanent | Stored for reproducibility and release traceability. |
 
-Cleanup automation handled by `metadata_logs_cleanup.yml`.
+Cleanup automation handled by **`metadata_logs_cleanup.yml`**.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Metadata Logs (v9.3.2).
-Centralized logging system for schema harmonization, metadata validation, and FAIR+CARE audit activities under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Metadata Logs (v9.4.0).
+Centralized logging for schema harmonization, metadata validation, and FAIR+CARE audit activities under MCP-DL v6.3 governance.
 Restricted to internal reproducibility and governance verification.
 ```
 
@@ -163,15 +168,16 @@ Restricted to internal reproducibility and governance verification.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Added metadata harmonization trace and governance sync integration. |
-| v9.2.0 | 2024-07-15 | Introduced FAIR+CARE metadata validation tracking. |
+| v9.4.0 | 2025-11-02 | Added telemetry integration, validation report registry, and enhanced crosswalk traceability. |
+| v9.3.2 | 2025-10-28 | Introduced harmonization trace and governance sync integration. |
+| v9.2.0 | 2024-07-15 | Added FAIR+CARE metadata validation tracking. |
 | v9.0.0 | 2023-01-10 | Established metadata logging structure under FAIR+CARE governance. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Metadata Transparency × FAIR+CARE Accountability × Provenance Governance*  
+**Kansas Frontier Matrix** · *Metadata Transparency × FAIR+CARE Accountability × Provenance Governance × Telemetry Traceability*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/)
 
 </div>
