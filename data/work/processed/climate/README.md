@@ -1,13 +1,19 @@
 ---
 title: "🌎 Kansas Frontier Matrix — Processed Climate Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/processed/climate/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.4.0"
+last_updated: "2025-11-02"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../releases/v9.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.4.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-processed-climate-v1.json"
+validation_reports:
+  - "data/reports/validation/schema_validation_summary.json"
+  - "data/reports/fair/data_care_assessment.json"
+  - "data/reports/audit/data_provenance_ledger.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 ---
 
@@ -29,16 +35,16 @@ These datasets represent harmonized, validated, and governance-registered climat
 
 ## 📚 Overview
 
-The `data/work/processed/climate/` directory contains **final climate datasets** that have passed all FAIR+CARE governance, schema validation, and checksum verification steps.  
-Each dataset in this workspace is considered a canonical data product—ready for catalog publication, analytical modeling, and external data reuse.
+The `data/work/processed/climate/` directory contains **finalized climate datasets** that have passed all FAIR+CARE governance, schema validation, and checksum verification steps.  
+Each dataset is a **canonical data product**—suitable for publication, integration into analytical models, and inclusion in open data catalogs.
 
-### Core Responsibilities:
-- Store production-grade climate datasets for distribution and archival.  
-- Maintain provenance, lineage, and FAIR+CARE certification metadata.  
-- Ensure interoperability with STAC, DCAT, and schema.org catalogs.  
-- Provide transparent data access for climate, drought, and temperature analyses.  
+### Core Responsibilities
+- Maintain production-grade, reproducible climate datasets.  
+- Preserve provenance, FAIR+CARE ethics certification, and data integrity.  
+- Ensure interoperability with STAC 1.0, DCAT 3.0, and schema.org.  
+- Provide open-access data for climate modeling and historical trend analysis.  
 
-All contents are open-access under a CC-BY 4.0 license, fully traceable through KFM’s provenance and ethics governance system.
+All contents are released under **CC-BY 4.0** and recorded in the **KFM Governance Ledger** for full traceability.
 
 ---
 
@@ -46,12 +52,12 @@ All contents are open-access under a CC-BY 4.0 license, fully traceable through 
 
 ```plaintext
 data/work/processed/climate/
-├── README.md                               # This file — overview of processed climate data layer
+├── README.md
 │
-├── climate_summary_v9.3.2.parquet          # Aggregated climate summary (statewide multi-source composite)
-├── drought_monitor_annual.csv              # Historical drought indices (USDM + NOAA harmonized)
-├── temperature_anomalies_1900_2025.csv     # Century-scale temperature anomaly dataset for Kansas
-└── metadata.json                           # Provenance and FAIR+CARE certification record
+├── climate_summary_v9.4.0.parquet        # Aggregated statewide climate summary
+├── drought_monitor_annual.csv            # Harmonized drought index composites
+├── temperature_anomalies_1900_2025.csv   # Long-term temperature anomaly dataset
+└── metadata.json                         # Provenance and FAIR+CARE certification record
 ```
 
 ---
@@ -66,12 +72,12 @@ flowchart TD
     D --> E["Catalog Synchronization (STAC/DCAT)"]
 ```
 
-### Workflow Steps:
-1. **Harmonization:** Merge and aggregate staging datasets into consistent temporal and spatial structures.  
-2. **Validation:** Run schema and FAIR+CARE audits for completeness and integrity.  
-3. **Certification:** Assign checksum, ethics score, and governance ledger registration.  
-4. **Publication:** Export as open data products under CC-BY 4.0 license.  
-5. **Synchronization:** Register datasets in KFM’s STAC/DCAT catalog for discoverability.
+### Workflow Description
+1. **Harmonization:** Integrate multi-source climate data into unified spatiotemporal frames.  
+2. **Validation:** Conduct schema compliance and FAIR+CARE governance audits.  
+3. **Certification:** Register checksums, ethics, and provenance into ledger records.  
+4. **Publication:** Export validated data products under open licenses.  
+5. **Catalog Integration:** Synchronize assets with KFM’s STAC/DCAT catalog for discoverability.
 
 ---
 
@@ -79,8 +85,8 @@ flowchart TD
 
 ```json
 {
-  "id": "processed_climate_summary_v9.3.2",
-  "schema_version": "v3.0.1",
+  "id": "processed_climate_summary_v9.4.0",
+  "schema_version": "v3.1.0",
   "source_stage": "data/work/staging/climate/",
   "records_total": 120540,
   "spatial_extent": [-102.05, 36.99, -94.61, 40.00],
@@ -89,28 +95,29 @@ flowchart TD
   "fairstatus": "certified",
   "validator": "@kfm-climate-lab",
   "license": "CC-BY 4.0",
+  "telemetry_link": "releases/v9.4.0/focus-telemetry.json",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Compliance Summary
+## 🧠 FAIR+CARE Compliance Framework
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Indexed with unique dataset IDs and catalog metadata (STAC/DCAT). |
-| **Accessible** | Published in open, machine-readable formats (CSV, Parquet). |
-| **Interoperable** | Schema compliant with NOAA, USDM, and KFM metadata standards. |
-| **Reusable** | Metadata includes provenance, schema, and license information. |
-| **Collective Benefit** | Supports open environmental science and public climate literacy. |
-| **Authority to Control** | FAIR+CARE Council verifies ethical compliance before publication. |
-| **Responsibility** | Validators maintain audit and lineage metadata for all products. |
-| **Ethics** | Verified public-domain datasets with equitable, transparent coverage. |
+| **Findable** | Indexed in STAC/DCAT catalogs with globally unique identifiers. |
+| **Accessible** | Distributed in open formats (CSV, Parquet, GeoJSON). |
+| **Interoperable** | Schema aligned with NOAA, NIDIS, and KFM standards. |
+| **Reusable** | Metadata includes provenance, schema, and licensing information. |
+| **Collective Benefit** | Promotes equitable access to environmental insights. |
+| **Authority to Control** | Reviewed and certified by FAIR+CARE Governance Council. |
+| **Responsibility** | Validators ensure data quality and ethical compliance. |
+| **Ethics** | All datasets are public-domain or open-licensed with transparent provenance. |
 
-FAIR+CARE certification results recorded in:  
-`data/reports/fair/data_care_assessment.json`  
-and `data/reports/audit/data_provenance_ledger.json`.
+Certification logs are stored in:  
+`data/reports/fair/data_care_assessment.json` and  
+`data/reports/audit/data_provenance_ledger.json`.
 
 ---
 
@@ -118,12 +125,12 @@ and `data/reports/audit/data_provenance_ledger.json`.
 
 | Report | Description | Output |
 |---------|-------------|---------|
-| `schema_validation_summary.json` | Validates final schema conformity and integrity. | JSON |
-| `faircare_certification_report.json` | FAIR+CARE ethics certification summary. | JSON |
-| `checksums.json` | Records SHA-256 checksums for all processed files. | JSON |
-| `catalog_sync.log` | Logs catalog publication events and status. | Text |
+| `schema_validation_summary.json` | Confirms schema alignment and validation integrity. | JSON |
+| `faircare_certification_report.json` | Records final FAIR+CARE certification audit results. | JSON |
+| `checksums.json` | Dataset-level SHA-256 integrity registry. | JSON |
+| `catalog_sync.log` | STAC/DCAT publication synchronization report. | Text |
 
-Automated QA handled by `processed_climate_sync.yml`.
+All QA tasks automated via `processed_climate_sync.yml`.
 
 ---
 
@@ -131,34 +138,34 @@ Automated QA handled by `processed_climate_sync.yml`.
 
 | Record | Description |
 |---------|-------------|
-| `metadata.json` | Captures schema, checksum, and certification metadata for each dataset. |
-| `data/reports/audit/data_provenance_ledger.json` | Global ledger linking raw → staging → processed lineage. |
-| `data/reports/fair/data_care_assessment.json` | FAIR+CARE ethics audit history. |
-| `releases/v9.3.2/manifest.zip` | Central checksum registry for reproducibility verification. |
+| `metadata.json` | Embedded provenance and schema metadata. |
+| `data/reports/audit/data_provenance_ledger.json` | Tracks full lineage from raw to processed layers. |
+| `data/reports/fair/data_care_assessment.json` | FAIR+CARE ethics and compliance summary. |
+| `releases/v9.4.0/manifest.zip` | Global checksum archive for reproducibility verification. |
 
-Governance synchronization occurs automatically post-certification cycle.
+Governance synchronization is automated through CI/CD ledger integration.
 
 ---
 
 ## 🧾 Retention & Publication Policy
 
-| Data Type | Retention | Policy |
-|------------|------------|--------|
-| Processed Climate Data | Permanent | Stored as canonical public datasets under CC-BY 4.0. |
-| Validation Reports | 365 days | Archived for reproducibility and FAIR+CARE verification. |
-| Governance Metadata | Permanent | Retained in provenance and catalog records. |
-| Catalog Sync Logs | 90 days | Archived for audit and monitoring. |
+| Data Class | Retention Duration | Policy |
+|-------------|--------------------|--------|
+| Processed Climate Data | Permanent | Retained as canonical public datasets. |
+| Validation Reports | 1 year | Retained for audit and reproducibility. |
+| Governance Metadata | Permanent | Stored in provenance and certification catalogs. |
+| Catalog Sync Logs | 90 days | Retained for monitoring and compliance. |
 
-All lifecycle management operations handled by `processed_data_retention.yml`.
+Lifecycle management handled via `processed_data_retention.yml`.
 
 ---
 
 ## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Processed Climate Data (v9.3.2).
-Final FAIR+CARE-certified climate datasets derived from NOAA and NIDIS sources for Kansas statewide analysis.
-Available under CC-BY 4.0 via the Kansas Frontier Matrix data catalog.
+Kansas Frontier Matrix (2025). Processed Climate Data (v9.4.0).
+FAIR+CARE-certified climate datasets harmonized from NOAA and NIDIS archives for Kansas statewide analysis.
+Licensed under CC-BY 4.0 and traceable through the Kansas Frontier Matrix Governance Ledger.
 ```
 
 ---
@@ -167,15 +174,16 @@ Available under CC-BY 4.0 via the Kansas Frontier Matrix data catalog.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Integrated final FAIR+CARE certification and catalog synchronization. |
-| v9.2.0 | 2024-07-15 | Added drought and temperature anomaly composites. |
-| v9.0.0 | 2023-01-10 | Established processed climate workspace for final open data products. |
+| v9.4.0 | 2025-11-02 | Added telemetry integration, validation report registry, and checksum automation. |
+| v9.3.2 | 2025-10-28 | Completed FAIR+CARE certification and catalog synchronization. |
+| v9.2.0 | 2024-07-15 | Introduced drought and temperature anomaly composites. |
+| v9.0.0 | 2023-01-10 | Established climate workspace for open-data publication. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Climate Science × FAIR+CARE Ethics × Provenance Integrity*  
+**Kansas Frontier Matrix** · *Open Climate Science × FAIR+CARE Ethics × Provenance Integrity × Telemetry Traceability*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
 
 </div>
