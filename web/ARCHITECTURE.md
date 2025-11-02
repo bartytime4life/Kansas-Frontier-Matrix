@@ -73,11 +73,13 @@ G --> H[GitHub Pages Deployment + Focus Telemetry Sync]
 | **Map Module** | `src/features/map/` | Renders MapLibre layers, STAC tiles, and geospatial overlays. |
 | **Timeline Module** | `src/features/timeline/` | Handles time slider interactions and temporal queries. |
 | **Focus Mode Module** | `src/features/focus/` | Integrates AI summaries, entity linkage, and explainability. |
-| **GraphQL Client** | `src/utils/api/` | Connects frontend to FastAPI/Neo4j GraphQL endpoints. |
+| **API / GraphQL Client** | `src/api/` | Typed clients for REST/GraphQL (FastAPI ↔ Neo4j) and request hooks. |
 | **Global Store** | `src/store/` | Redux-based global state and event synchronization. |
 | **UI Components** | `src/components/` | Reusable and accessible interface elements. |
 | **Styling / Design System** | `src/styles/` | TailwindCSS and ShadCN UI for consistent theming. |
 | **Telemetry Layer** | `src/utils/telemetry.js` | Captures user interactions and focus analytics for governance. |
+
+> **Fix:** Standardized the API client path to `src/api/` across this document.
 
 ---
 
@@ -122,7 +124,7 @@ App.jsx
 
 ## 🔗 Backend API Integration
 
-The frontend communicates with backend APIs defined in the **FastAPI layer** (`src/api/`).
+The frontend communicates with backend APIs defined in **FastAPI**.
 
 | Endpoint | Description | Response |
 |-----------|--------------|-----------|
@@ -130,6 +132,8 @@ The frontend communicates with backend APIs defined in the **FastAPI layer** (`s
 | `/api/focus/{entity_id}` | Returns entity-linked AI summaries and relationships. | JSON-LD + provenance |
 | `/api/events?start=1850&end=1900` | Retrieves historical events for timeline. | Array of event objects |
 | `/api/graph/query` | Runs Neo4j graph queries via GraphQL. | GraphQL JSON response |
+
+**Client Location:** Query helpers, schema types, and hooks live in `src/api/` (e.g., `src/api/client.ts`, `src/api/hooks.ts`).
 
 ---
 
@@ -147,12 +151,12 @@ E --> F[FAIR+CARE Dashboard Updates]
 ```
 
 **Data Provenance Fields:**
-- `source` — Data origin (organization, API, file)
-- `checksum` — Hash of dataset or tile
-- `license` — Data usage license
-- `governance_ref` — Reference to ethics approval or FAIR+CARE review
-- `confidence` — AI reasoning confidence value
-- `timestamp` — Processing or inference time
+- `source` — Data origin (organization, API, file)  
+- `checksum` — Hash of dataset or tile  
+- `license` — Data usage license  
+- `governance_ref` — Reference to ethics approval or FAIR+CARE review  
+- `confidence` — AI reasoning confidence value  
+- `timestamp` — Processing or inference time  
 
 ---
 
@@ -161,13 +165,13 @@ E --> F[FAIR+CARE Dashboard Updates]
 Frontend deployment is handled automatically via **GitHub Actions** → `.github/workflows/site.yml`.
 
 **Process Steps:**
-1. Lint & Pre-commit validation (Markdown, JS, accessibility).  
+1. Lint & pre-commit validation (Markdown, JS, accessibility).  
 2. Run frontend build (`npm run build`) with Vite.  
 3. Validate generated assets against FAIR+CARE accessibility standards.  
-4. Deploy `/dist` to GitHub Pages or Netlify.  
+4. Deploy `/dist` to **GitHub Pages** (default) or **Netlify** (optional).  
 5. Push telemetry results to `releases/v9.3.2/focus-telemetry.json`.  
 
-Deployment artifacts:
+**Artifacts:**
 - `/dist` → Production build  
 - `/releases/v9.3.2/manifest.zip` → Version metadata  
 - `/reports/ui-accessibility.json` → Accessibility validation results  
@@ -193,7 +197,7 @@ Focus Mode operates as a **contextual reasoning engine**, displaying:
 
 ---
 
-## 🧠 Accessibility & UI Governance
+## ♿ Accessibility & UI Governance
 
 Accessibility is enforced through:
 - WCAG 2.1 AA standards  
@@ -208,7 +212,7 @@ Governance alignment:
 
 ---
 
-## 🧩 Security & Validation
+## 🛡️ Security & Validation
 
 | Layer | Mechanism | Tool |
 |--------|------------|------|
@@ -223,7 +227,7 @@ Governance alignment:
 
 | Version | Date       | Author             | Summary |
 |----------|------------|--------------------|----------|
-| v9.3.2   | 2025-10-28 | @kfm-architecture  | Added full frontend system and Focus Mode architecture documentation. |
+| v9.3.2   | 2025-10-28 | @kfm-architecture  | Standardized API client path, clarified build outputs, and aligned deployment notes. |
 | v9.3.1   | 2025-10-27 | @bartytime4life    | Integrated accessibility and provenance governance schema. |
 | v9.3.0   | 2025-10-26 | @kfm-ui-lab        | Established modular React architecture and CI/CD pipeline linkages. |
 
