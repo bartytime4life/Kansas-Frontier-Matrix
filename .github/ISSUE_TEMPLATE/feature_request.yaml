@@ -1,193 +1,181 @@
-name: "💡 Feature Request"
-description: "Suggest a new capability, enhancement, or module for the Kansas Frontier Matrix (KFM)."
-title: "[FEATURE] <short description of requested feature>"
-labels:
-  - enhancement
-  - proposal
-  - governance-review
+---
+name: "🚀 Feature Request"
+description: "Propose a new feature, enhancement, or improvement to the Kansas Frontier Matrix (FAIR+CARE · MCP-DL v6.3 Compliant)"
+title: "[FEATURE] <brief description>"
+labels: ["feature", "enhancement", "faircare:review"]
 assignees:
   - "@kfm-architecture"
-  - "@bartytime4life"
-  - "@kfm-etl-ops"
-
+  - "@kfm-fair"
+  - "@kfm-governance"
 body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Summary
-        Provide a concise explanation of your requested feature or improvement.
-        Example: “Add AI-driven drift monitoring to Focus Mode for climate hazard layers.”
+        ## 🚀 Kansas Frontier Matrix — Feature Request (FAIR+CARE Certified)
+        Use this form to suggest new features or enhancements that improve reproducibility, ethics, or automation in KFM.
+        All requests undergo FAIR+CARE, governance, and technical feasibility review.
+
+  - type: input
+    id: feature_title
+    attributes:
+      label: "🧩 Feature Title"
+      description: "Provide a concise, descriptive title for your proposed feature."
+      placeholder: "Example: Add FAIR+CARE-integrated telemetry for energy reporting"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📚 Feature Description"
+      description: "Describe the feature in detail, including its purpose and scope."
+      placeholder: "Explain what the feature will do and how it enhances KFM’s FAIR+CARE or technical capabilities."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "💡 Problem or Motivation"
+      description: "Explain the problem this feature will solve or what opportunity it enables."
+      placeholder: "Why is this change important? What use cases or workflows will benefit?"
+    validations:
+      required: true
 
   - type: dropdown
-    id: feature_category
+    id: component
     attributes:
-      label: Feature Category
-      description: "Select the area of the system this feature affects."
+      label: "🏗️ Component Affected"
+      description: "Select the KFM subsystem this feature applies to."
       options:
-        - "🧱 Data Pipeline (ETL / AI / Graph)"
-        - "🌍 Frontend (React / MapLibre UI)"
-        - "📖 Documentation / Standards"
-        - "🧠 AI / Focus Mode"
-        - "⚙️ Infrastructure / CI/CD"
-        - "🧩 Governance / FAIR+CARE"
+        - Data (data/)
+        - Source (src/)
+        - Tools (tools/)
+        - Web Application (web/)
+        - Governance / Ledger (releases/, reports/)
+        - Documentation (docs/)
+        - Testing / CI-CD (.github/, tests/)
     validations:
       required: true
 
-  - type: textarea
-    id: purpose
+  - type: dropdown
+    id: feature_type
     attributes:
-      label: Purpose & Rationale
-      description: "Explain why this feature should exist and how it addresses a current gap."
-      placeholder: "Why is this enhancement needed?"
+      label: "🧱 Feature Category"
+      description: "Select the nature of this proposed feature."
+      options:
+        - New ETL Pipeline
+        - AI / Focus Mode Enhancement
+        - FAIR+CARE or Ethics Governance Feature
+        - Sustainability / Telemetry Upgrade
+        - Validation or Compliance Tool
+        - Documentation or Accessibility Improvement
+        - Web UI or Visualization Enhancement
+        - Other
     validations:
       required: true
-
-  - type: textarea
-    id: problem_statement
-    attributes:
-      label: Problem Statement
-      description: "Briefly describe the issue or limitation this feature resolves."
-      placeholder: "What is the current limitation or issue?"
-    validations:
-      required: false
-
-  - type: textarea
-    id: expected_benefits
-    attributes:
-      label: Expected Benefits
-      description: "Explain what outcomes or improvements this feature will bring."
-      value: |
-        - Improves reproducibility  
-        - Strengthens FAIR+CARE compliance  
-        - Enhances Focus Mode functionality  
-        - Optimizes performance or user experience
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: "## 🧩 Technical Details"
 
   - type: textarea
     id: technical_details
     attributes:
-      label: Technical Details
-      description: "Provide relevant implementation details such as affected modules, dependencies, or logic."
-      value: |
-        Module / Location:  
-        Dependencies / APIs:  
-        Proposed Implementation:  
-        Estimated Complexity: Low / Medium / High  
-        Backward Compatibility: Yes / No (explain)
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        ```mermaid
-        flowchart TD
-          A[User Interaction] --> B[AI Inference Module]
-          B --> C[Telemetry Capture + Governance Update]
-          C --> D[Map + Timeline Integration]
-        ```
-        _Attach architecture diagrams or pseudocode as needed._
-
-  - type: markdown
-    attributes:
-      value: "## 🧠 FAIR+CARE Evaluation"
-
-  - type: checkboxes
-    id: faircare
-    attributes:
-      label: FAIR+CARE Compliance Self-Assessment
-      description: "Mark all applicable principles this feature enhances or supports."
-      options:
-        - label: "Findable — Improves data discoverability"
-        - label: "Accessible — Enhances open data or API access"
-        - label: "Interoperable — Aligns with open standards or schemas"
-        - label: "Reusable — Produces documented or reproducible outputs"
-        - label: "Collective Benefit — Supports shared ethical outcomes"
-        - label: "Authority to Control — Respects governance or community data rights"
-        - label: "Responsibility — Incorporates bias checks and ethical review"
-        - label: "Ethics — Avoids harm or misleading inferences"
-
-  - type: markdown
-    attributes:
-      value: "## ⚙️ Governance Metadata"
-
-  - type: textarea
-    id: governance_refs
-    attributes:
-      label: Governance References
-      description: "Confirm governance and release metadata references."
-      value: |
-        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md  
-        Manifest Ref: releases/v9.5.0/manifest.zip  
-        Telemetry Ref: releases/v9.5.0/focus-telemetry.json  
-        Data Contract: docs/contracts/data-contract-v3.json  
-        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl  
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: "## 🧾 Implementation Milestones"
-
-  - type: textarea
-    id: milestones
-    attributes:
-      label: Implementation Plan
-      description: "Outline milestones, tasks, owners, and due dates."
-      value: |
-        | Phase | Task | Owner | Due Date | Status |
-        |--------|------|--------|----------|--------|
-        | 1 | Design + Governance Review | @kfm-architecture | | ☐ |
-        | 2 | Implementation + Testing | @kfm-etl-ops | | ☐ |
-        | 3 | Documentation + FAIR+CARE Validation | @kfm-data-lab | | ☐ |
-        | 4 | Merge + Deploy | @bartytime4life | | ☐ |
+      label: "⚙️ Technical Details"
+      description: "Describe the technical approach, dependencies, and design considerations."
+      placeholder: "Example: Extend src/pipelines/telemetry with ISO 50001 telemetry integration."
     validations:
       required: false
 
   - type: textarea
     id: dependencies
     attributes:
-      label: Dependencies / Linked Issues
-      description: "List related issues, PRs, or external blockers."
-      placeholder: "e.g., Depends on #115 — AI module refactor"
+      label: "🔗 Dependencies or Related Work"
+      description: "List related issues, repositories, or external standards this feature depends on."
+      placeholder: "Example: Depends on schema update in data-contract-v3.json or FAIR+CARE validation workflow."
     validations:
       required: false
 
   - type: markdown
     attributes:
-      value: "## 🧩 Review Routing"
-
-  - type: markdown
-    attributes:
       value: |
-        | Role | Reviewer | Required Action |
-        |------|-----------|-----------------|
-        | **Architecture** | @kfm-architecture | Review scope and integration feasibility |
-        | **Data / ETL** | @kfm-etl-ops | Assess backend or pipeline impact |
-        | **AI / Ethics** | @kfm-ai-lab | Validate bias and governance implications |
-        | **Maintainer** | @bartytime4life | Approve merge and release |
+        ---
+        ## 🧠 FAIR+CARE Governance Impact
+        Evaluate how this feature aligns with FAIR+CARE principles.
 
   - type: checkboxes
-    id: checklist
+    id: faircare_alignment
     attributes:
-      label: Submission Checklist
+      label: "FAIR+CARE Compliance Checklist"
       options:
-        - label: "Governance and metadata references verified"
-        - label: "FAIR+CARE impact reviewed"
-        - label: "Diagrams or workflow sketches attached (if applicable)"
-        - label: "Documentation updated (docs/architecture or README.md)"
-        - label: "Test plan defined (tests/ or validation script)"
+        - label: "Findable — Enhances discoverability and metadata integrity"
+        - label: "Accessible — Improves openness, licensing, or accessibility"
+        - label: "Interoperable — Strengthens schema and standards compliance"
+        - label: "Reusable — Increases reproducibility and provenance traceability"
+        - label: "Collective Benefit — Benefits public, ethical, and environmental goals"
+        - label: "Ethics — Designed for transparency, inclusion, and fairness"
+    validations:
+      required: true
+
+  - type: textarea
+    id: governance_links
+    attributes:
+      label: "⚖️ Governance or Provenance References"
+      description: "Provide links or file paths to relevant governance records or ethics documentation."
+      placeholder: "Example: reports/audit/system_ledger.json#record_4823 or docs/standards/faircare-validation.md"
+    validations:
+      required: false
 
   - type: markdown
     attributes:
       value: |
-        > ⚠️ **Automation Notice:**  
-        > Submitting this feature request triggers:  
-        > - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)  
-        > - Governance ledger update (`.github/workflows/governance-ledger.yml`)  
-        > - Architecture linting check (`.github/workflows/pre-commit.yml`)
+        ---
+        ## 🔍 Acceptance Criteria
+        Define measurable success indicators for this feature.
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: "✅ Acceptance Criteria"
+      description: "List specific conditions that must be met for this feature to be considered complete."
+      placeholder: |
+        - [ ] Automated FAIR+CARE validation passes
+        - [ ] Documentation added to MCP-DL compliance section
+        - [ ] Provenance registered in governance ledger
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🧾 Sign-Off
+        Confirm contributor identity and FAIR+CARE compliance.
+
+  - type: input
+    id: contributor
+    attributes:
+      label: "👤 Contributor"
+      description: "Your GitHub handle."
+      placeholder: "@username"
+    validations:
+      required: true
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: "🏢 Affiliation"
+      description: "Your organization, institution, or project affiliation."
+      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
+    validations:
+      required: true
+
+  - type: textarea
+    id: certification
+    attributes:
+      label: "🪶 FAIR+CARE Certification Statement"
+      description: "By submitting this request, you certify that the proposed feature aligns with FAIR+CARE governance and open ethical standards."
+      value: |
+        I confirm that this feature request:
+        - Supports the FAIR+CARE and MCP-DL v6.3 ethical framework.
+        - Contains no private, sensitive, or proprietary data.
+        - Promotes transparency, sustainability, and inclusive development.
+    validations:
+      required: true
