@@ -1,247 +1,208 @@
 ---
-title: "💧 Kansas Frontier Matrix — Temporary Hydrology Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "💧 Kansas Frontier Matrix — Hydrology TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hydrology/README.md"
-version: "v9.0.0"
-last_updated: "2025-10-23"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.5.0"
+last_updated: "2025-11-02"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.0.0/sbom.spdx.json"
-manifest_ref: "releases/v9.0.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.0.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-hydrology-v12.json"
-json_export: "releases/v9.0.0/work-hydrology.meta.json"
-validation_reports: [
-  "reports/self-validation/work-hydrology-validation.json",
-  "reports/fair/hydrology_summary.json",
-  "reports/audit/ai_hydrology_ledger.json"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-HYDROLOGY-RMD-v9.0.0"
-maintainers: ["@kfm-data", "@kfm-hydro", "@kfm-ai"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-fair"]
-reviewed_by: ["@kfm-ethics", "@kfm-accessibility", "@kfm-architecture"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Cognitive Hydrologic Validation Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "STAC 1.0.0", "COG", "GeoTIFF", "AI-Coherence", "Blockchain Provenance", "ISO 50001", "ISO 14064"]
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · FAIR+CARE+ISO+Ledger Verified · Explainable · Self-Governing"
-focus_validation: "true"
-tags: ["hydrology", "etl", "validation", "watershed", "floodplain", "aquifer", "checksum", "ai", "ledger", "sustainability", "mcp"]
+sbom_ref: "../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/work-hydrology-v14.json"
+json_export: "../../../../releases/v9.5.0/work-hydrology.meta.json"
+validation_reports:
+  - "../../../../reports/self-validation/work-hydrology-validation.json"
+  - "../../../../reports/fair/hydrology_summary.json"
+  - "../../../../reports/audit/ai_hydrology_ledger.json"
+governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+ontology_alignment: "../../../../ontologies/CIDOC_CRM-HydrologyExt.owl"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 💧 Kansas Frontier Matrix — **Temporary Hydrology Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)**  
-`data/work/tmp/hydrology/`
+# 💧 Kansas Frontier Matrix — **Hydrology TMP Workspace**
+`data/work/tmp/hydrology/README.md`
 
-**Mission:** Provide a **cognitive hydrologic sandbox** for intermediate and experimental water datasets —  
-including rivers, watersheds, aquifers, and floodplain QA models — to ensure reproducibility,  
-traceability, and sustainability across **Kansas Frontier Matrix (KFM)** data workflows.
+**Purpose:**  
+Temporary FAIR+CARE-certified workspace for hydrological data ingestion, transformation, validation, and AI analysis within the Kansas Frontier Matrix (KFM).  
+This workspace manages transient datasets covering watersheds, streamflow, groundwater, soil moisture, and hydrologic modeling pipelines under strict governance alignment.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Certified-green)](../../../../../reports/fair/hydrology_summary.json)
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Sustainable%20Data%20Ops-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)](../../../../../data/checksums/)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Hydrology%20Certified-gold)](../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The hydrology workspace is the **audit and testing core** for all water-related ETL operations —  
-linking rivers, watersheds, aquifers, and flood zones under FAIR+CARE+ISO-certified reproducibility and AI explainability.
+The `data/work/tmp/hydrology/` directory serves as the **temporary processing and validation hub** for all hydrologic datasets within the KFM data ecosystem.  
+It supports data integration from USGS, NOAA, NIDIS, and the Kansas Water Office (KWO), ensuring every dataset is schema-compliant, FAIR+CARE-audited, and provenance-linked prior to promotion to staging or processed layers.
 
-> *“Every flow leaves a record; every basin tells its story.”*
+### Core Responsibilities
+- Ingest and normalize hydrologic datasets for ETL and FAIR+CARE workflows.  
+- Perform schema validation, checksum verification, and provenance registration.  
+- Support AI-based streamflow modeling and water-balance analysis.  
+- Maintain ethical data handling under open governance principles.  
 
 ---
 
-## 🌊 Cognitive Hydrologic Feedback Loop
+## 🗂️ Directory Layout
 
-```mermaid
-graph TD
-A[Hydrology Workspace] --> B[AI Focus Mode · Model Validation]
-B --> C[FAIR+CARE Dashboard]
-B --> D[Ethics & Energy Council]
-C --> E[Governance Ledger + Blockchain Verification]
-E --> F[Human Review Council]
-F --> G[Neo4j Knowledge Graph]
-G --> H[AI Model Retraining · Flow Drift Correction]
-H --> A
+```plaintext
+data/work/tmp/hydrology/
+├── README.md                              # This file — overview of the Hydrology TMP workspace
+│
+├── datasets/                              # Temporary raw and normalized hydrologic datasets
+│   ├── streamflow_observations.csv
+│   ├── groundwater_levels.parquet
+│   ├── soil_moisture_anomalies.parquet
+│   ├── watershed_boundaries.geojson
+│   └── metadata.json
+│
+├── transforms/                            # ETL transformations and hydrologic model preprocessing
+│   ├── hydrology_normalized.parquet
+│   ├── flow_direction_grid.tif
+│   ├── water_balance_summary.csv
+│   └── metadata.json
+│
+├── validation/                            # FAIR+CARE schema validation and checksum audits
+│   ├── schema_validation_summary.json
+│   ├── faircare_audit_report.json
+│   ├── checksum_registry.json
+│   └── metadata.json
+│
+├── logs/                                  # ETL, validation, and AI processing logs
+│   ├── etl_run.log
+│   ├── ai_model_run.log
+│   ├── governance_sync.log
+│   └── metadata.json
+│
+└── exports/                               # Temporary export files for testing and governance review
+    ├── hydrology_summary_2025.csv
+    ├── hydrology_tileset_2025.tif
+    └── metadata.json
 ```
 
 ---
 
-## 🧬 Semantic Lineage Matrix
+## ⚙️ Hydrology TMP Workflow
 
-| Field | FAIR Dimension | STAC Property | ISO Reference | Purpose |
-|:--|:--|:--|:--|:--|
-| `watershed_id` | Findable | `id` | ISO 19115 | Unique hydrologic unit |
-| `projection` | Interoperable | `properties.crs` | ISO 19111 | Coordinate system |
-| `flow_accumulation` | Reusable | `properties.flow` | ISO 19115-2 | Flow modeling variable |
-| `focus_score` | Provenance | `properties.quality` | MCP-DL | AI QA metric |
-| `carbon_gco2e` | CARE | `properties.carbon` | ISO 14064 | Sustainability trace |
+```mermaid
+flowchart TD
+    A["Raw Hydrologic Data (USGS / NOAA / KWO)"] --> B["ETL Transformation & Normalization"]
+    B --> C["Validation & FAIR+CARE Ethics Audit"]
+    C --> D["AI Modeling & Predictive Analysis"]
+    D --> E["Checksum Registration & Provenance Governance"]
+    E --> F["Promotion to Staging (data/work/staging/hydrology/)"]
+```
 
----
-
-## 🌧️ Governance Drift Dashboard
-
-| Quarter | AI Integrity | FAIR Drift Δ | Ethics Δ | Governance Action |
-|:--|:--|:--|:--|:--|
-| Q2 2025 | 98.8 | +0.5 | +0.3 | Retrain model |
-| Q3 2025 | 99.3 | -0.3 | +0.1 | Manual FAIR audit |
-| Q4 2025 | 100 | -0.1 | 0.0 | Stable — Certified |
+### Workflow Description
+1. **Extraction:** Retrieve hydrologic datasets from authoritative sources (USGS, NOAA, KWO).  
+2. **Transformation:** Harmonize schema, reproject spatial layers, and compute derived metrics.  
+3. **Validation:** Conduct FAIR+CARE audits, checksum verification, and schema compliance checks.  
+4. **AI Modeling:** Perform water-balance and streamflow predictions with Focus Mode.  
+5. **Governance:** Register lineage, metadata, and certification in governance ledgers.  
 
 ---
 
-## 🧠 AI Explainability Snapshot
+## 🧩 Example Metadata Record
 
 ```json
 {
-  "model": "focus-hydro-v3",
-  "method": "SHAP",
-  "important_features": [
-    {"parameter": "elevation_gradient", "influence": 0.27},
-    {"parameter": "flow_accumulation", "influence": 0.19},
-    {"parameter": "slope_variance", "influence": 0.13}
+  "id": "hydrology_tmp_v9.5.0_2025Q4",
+  "datasets": [
+    "streamflow_observations.csv",
+    "groundwater_levels.parquet",
+    "soil_moisture_anomalies.parquet"
   ],
-  "explanation_score": 0.986
-}
-```
-
-> Logged under `/reports/ai/hydrology_explainability.json` and appended to the AI Ledger for audit.
-
----
-
-## 🌱 Sustainability & ISO Metrics
-
-| Metric | Standard | Value | Verified By |
-|:--|:--|:--|:--|
-| **Energy Use (Wh/run)** | ISO 50001 | 23.1 | @kfm-security |
-| **Carbon Output (gCO₂e/run)** | ISO 14064 | 29.5 | @kfm-fair |
-| **Renewable Offset** | RE100 | 100% | @kfm-governance |
-| **Ethical Compliance** | MCP Charter | 100% | @kfm-ethics |
-
----
-
-## 🧾 Blockchain Provenance Record
-
-```json
-{
-  "ledger_id": "hydrology-etl-ledger-2025-10-23",
-  "stac_ref": "stac/hydrology/etl_2025_10_23.json",
-  "checksum_sha256": "d5f92a48bf...",
-  "ai_model": "focus-hydro-v3",
-  "ai_score": 0.986,
-  "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-23T00:00:00Z"
+  "records_processed": 241836,
+  "schema_version": "v3.0.1",
+  "validation_status": "passed",
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "ai_model_used": "focus-hydro-v3",
+  "ai_explainability_score": 0.984,
+  "governance_ref": "reports/audit/ai_hydrology_ledger.json",
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "created": "2025-11-02T20:45:00Z",
+  "validator": "@kfm-hydrology"
 }
 ```
 
 ---
 
-## 🌍 Cross-Domain FAIR Correlation Matrix
+## 🧠 FAIR+CARE Governance Integration
 
-| Domain | Correlation | Impact | Linked Report |
-|:--|:--|:--|:--|
-| **Terrain** | +0.84 | Flow accuracy from elevation correlation | `reports/fair/terrain_hydro.json` |
-| **Climate** | +0.79 | Precipitation runoff model validation | `reports/fair/climate_hydro.json` |
-| **Landcover** | +0.72 | Vegetation-hydrology buffer analysis | `reports/fair/landcover_hydro.json` |
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Indexed under governance ledger with schema metadata and checksums. |
+| **Accessible** | Stored in FAIR-compliant open formats (CSV, Parquet, GeoJSON). |
+| **Interoperable** | Follows ISO 19115, STAC 1.0, and DCAT 3.0 metadata standards. |
+| **Reusable** | Maintains provenance and checksum registries for reproducibility. |
+| **Collective Benefit** | Supports sustainable water governance and open environmental data. |
+| **Authority to Control** | FAIR+CARE Council oversees hydrologic data release and review. |
+| **Responsibility** | Validators document schema and ethics reviews per dataset. |
+| **Ethics** | Removes sensitive private well and property data during preprocessing. |
 
----
-
-## 🔐 Governance Ledger Chain
-
-| Ledger | Maintainer | Verification | Output | Frequency |
-|:--|:--|:--|:--|:--|
-| **Data Ledger** | @kfm-security | Checksum validation | `/data/checksums/hydrology_logs.json` | Continuous |
-| **AI Ledger** | @kfm-ai | Drift + explainability audits | `/reports/audit/ai_hydrology_ledger.json` | Per run |
-| **Ethics Ledger** | @kfm-ethics | Environmental compliance | `/reports/audit/hydrology_ethics.json` | Biweekly |
-| **Governance Ledger** | @kfm-governance | FAIR+CARE Certification | `/reports/fair/hydrology_summary.json` | Quarterly |
+Governance and audit logs maintained in:  
+`reports/audit/ai_hydrology_ledger.json` • `reports/fair/hydrology_summary.json`
 
 ---
 
-## 🧬 Neo4j Governance Ontology
+## ⚙️ QA & Validation Artifacts
 
-```cypher
-(:RiverNetwork)-[:VALIDATED_BY]->(:ValidationEvent)
-(:ValidationEvent)-[:EVALUATED_BY]->(:AIModel {name:'focus-hydro-v3'})
-(:AIModel)-[:CERTIFIED_BY]->(:GovernanceCouncil)
-(:GovernanceCouncil)-[:LOGGED_INTO]->(:BlockchainLedger)
+| File | Description | Format |
+|------|--------------|--------|
+| `schema_validation_summary.json` | Schema validation and completeness report. | JSON |
+| `faircare_audit_report.json` | FAIR+CARE ethical compliance report. | JSON |
+| `checksum_registry.json` | File integrity and governance tracking registry. | JSON |
+| `etl_run.log` | ETL process execution log. | Text |
+| `governance_sync.log` | Ledger synchronization record. | Text |
+
+Validation automated by `hydrology_tmp_validation.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| Data Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP Datasets | 14 days | Purged after staging or governance certification. |
+| Logs | 90 days | Archived for FAIR+CARE audit cycles. |
+| Metadata | 365 days | Retained for provenance and reproducibility. |
+| Governance Records | Permanent | Maintained indefinitely for lineage continuity. |
+
+Retention and cleanup automated via `hydrology_tmp_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Hydrology TMP Workspace (v9.5.0).
+Temporary FAIR+CARE-certified workspace for hydrological data ETL, validation, and governance.
+Supports water-balance modeling, AI explainability, and ethical open-science data stewardship.
 ```
 
 ---
 
-## 📈 Energy & Flow Trend Visualization
+## 🧾 Version Notes
 
-```mermaid
-graph LR
-Q2_2025["Energy 25.4 Wh · Carbon 31 gCO₂e"] --> Q3_2025["23.8 Wh · 29 gCO₂e"]
-Q3_2025 --> Q4_2025["23.1 Wh · 29 gCO₂e · 100% Renewable Energy"]
-```
-
----
-
-## 🧩 Self-Audit Metadata
-
-```json
-{
-  "readme_id": "KFM-DATA-WORK-HYDROLOGY-RMD-v9.0.0",
-  "validation_timestamp": "2025-10-23T00:00:00Z",
-  "validated_by": "@kfm-data",
-  "ai_reviewer": "@kfm-ai",
-  "governance_reviewer": "@kfm-governance",
-  "focus_model": "focus-hydro-v3",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 100.0,
-  "explainability_score": 0.986,
-  "energy_efficiency": "23.1 Wh/run (ISO 50001)",
-  "carbon_intensity": "29.5 gCO₂e/run (ISO 14064)",
-  "ethics_compliance": "FAIR+CARE aligned",
-  "ledger_hash": "d5f92a48bf...",
-  "governance_cycle": "Q4 2025",
-  "security_signature": "pgp-sha256:<signature-id>"
-}
-```
-
----
-
-## 🧾 Version History
-
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Summary |
-|:--|:--|:--|:--|:--|:--|:--|:--|
-| v9.0.0 | 2025-10-23 | @kfm-data | @kfm-governance | ✅ | 100% | Blockchain ✓ | Crown∞Ω Ultimate: FAIR+CARE+ISO + AI explainability |
-| v8.0.0 | 2025-10-20 | @kfm-hydro | @kfm-fair | ✅ | 99% | ✓ | ISO + sustainability |
-| v7.0.0 | 2025-10-16 | @kfm-data | @kfm-security | ✅ | 98% | ✓ | Baseline compliance and FAIR alignment |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-hydro**, and **@kfm-fair**,  
-with oversight from **@kfm-ai**, **@kfm-ethics**, and **@kfm-governance**.  
-Special recognition to **USGS**, **FAIR Data Alliance**, **NOAA**, and **MCP Council**  
-for advancing transparent, sustainable, and ethical hydrologic analytics.
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Expanded hydrologic modeling integration and telemetry schema v14 support. |
+| v9.3.2 | 2025-10-28 | Added checksum governance and FAIR+CARE pre-validation automation. |
+| v9.3.0 | 2025-10-26 | Established hydrology TMP workspace under FAIR+CARE governance. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Certified-green)](../../../../../reports/fair/hydrology_summary.json)
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Sustainable%20Data%20Ops-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)](../../../../../data/checksums/)
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../../docs/standards/ai-integrity.md)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+**Kansas Frontier Matrix** · *Water Intelligence × FAIR+CARE Ethics × Provenance Accountability*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
+
 </div>
