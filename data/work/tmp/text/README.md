@@ -1,242 +1,201 @@
 ---
-title: "📜 Kansas Frontier Matrix — Temporary Text Workspace (Diamond⁶∞⁺ Crown∞⁺ Certified)"
+title: "📜 Kansas Frontier Matrix — Text TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/text/README.md"
-version: "v6.1.0"
-last_updated: "2025-10-22"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.5.0"
+last_updated: "2025-11-02"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v6.1.0/sbom.spdx.json"
-manifest_ref: "releases/v6.1.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v6.1.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/text-tmp-v9.json"
-json_export: "releases/v6.1.0/text-tmp.meta.json"
-validation_reports: [
-  "reports/self-validation/text-tmp-validation.json",
-  "reports/focus-telemetry/drift.json",
-  "reports/fair/summary.json",
-  "reports/audit/text-cleanup-trail.log"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-TXT-RMD-v6.1.0"
-maintainers: ["@kfm-data", "@kfm-nlp", "@kfm-ai"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-ethics"]
-reviewed_by: ["@kfm-fair", "@kfm-accessibility", "@kfm-architecture"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / AI-Governed Text Sandbox"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "UTF-8", "JSON", "JSONL", "AI-Coherence", "Environmental Sustainability", "Explainability"]
-status: "Diamond⁶∞⁺ / Crown∞⁺ Certified"
-maturity: "Diamond⁶∞⁺ Certified · AI-Learning · FAIR+CARE+Ethics+Environmental Verified · Self-Governing"
-focus_validation: "true"
-tags: ["text", "tmp", "nlp", "ocr", "summarization", "ai", "fair", "mcp", "autonomous", "ethics", "sustainability"]
+sbom_ref: "../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/work-text-v2.json"
+validation_reports:
+  - "../../../../reports/fair/text_tmp_summary.json"
+  - "../../../../reports/audit/ai_text_ledger.json"
+  - "../../../../reports/self-validation/work-text-validation.json"
+governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 📜 Kansas Frontier Matrix — **Temporary Text Workspace (Diamond⁶∞⁺ Crown∞⁺ Certified)**  
-`data/work/tmp/text/`
+# 📜 Kansas Frontier Matrix — **Text TMP Workspace**
+`data/work/tmp/text/README.md`
 
-**Mission:** Act as KFM’s **AI-supervised textual sandbox**,  
-enabling experimentation, debugging, and validation of temporary text artifacts —  
-including OCR, NLP, and summarization — under FAIR+CARE+Ethics compliance.
+**Purpose:**  
+Governed FAIR+CARE-certified workspace for **text data ingestion, OCR processing, NLP enrichment, and AI explainability audits** in the Kansas Frontier Matrix (KFM).  
+Supports ethical digitization, metadata extraction, and semantic modeling of historical and archival texts under open governance.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Verified%20%28SHAP%20%2F%20LIME%29-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Compliance-green)](../../../../../reports/fair/summary.json)
-[![Sustainability](https://img.shields.io/badge/AI%20Energy-Efficient%20%26%20Carbon%20Aware-forestgreen)]()
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../../docs/standards/ai-integrity.md)
-[![Governance Review](https://img.shields.io/badge/Governance-Autonomous%20Audit-orange)](../../../../../docs/standards/governance.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Text%20Governed-gold)](../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The `data/work/tmp/text/` workspace acts as the **short-term memory** of KFM’s NLP pipeline —  
-enabling ethical experimentation, rapid validation, and AI-guided explainability  
-without impacting production data or published artifacts.
+The `data/work/tmp/text/` directory provides a **temporary FAIR+CARE-compliant environment** for managing text-based data processing, including OCR transcription, language modeling, and content validation.  
+This workspace serves as a reproducible ETL layer for textual assets such as archival documents, historical treaties, diaries, and field reports.
 
-> *“Temporary by design, intelligent by oversight.”*
+### Core Responsibilities
+- Perform OCR and text extraction from scanned or digitized sources.  
+- Normalize text encoding (UTF-8) and perform NLP-based metadata tagging.  
+- Validate textual datasets through FAIR+CARE ethical governance.  
+- Register provenance, schema, and checksum data in governance ledgers.  
 
 ---
 
-## 🌍 System Integration Diagram
+## 🗂️ Directory Layout
+
+```plaintext
+data/work/tmp/text/
+├── README.md                              # This file — documentation for Text TMP workspace
+│
+├── ocr/                                   # Optical Character Recognition outputs (raw text and JSON transcripts)
+│   ├── treaty_ocr_output_2025.txt
+│   ├── report_transcript.json
+│   └── metadata.json
+│
+├── nlp/                                   # NLP enrichment and named-entity recognition (NER) results
+│   ├── entities_extracted.json
+│   ├── topic_classification.json
+│   ├── sentiment_analysis.json
+│   └── metadata.json
+│
+├── validation/                            # Schema and FAIR+CARE validation reports
+│   ├── schema_validation_summary.json
+│   ├── faircare_audit_report.json
+│   ├── checksum_registry.json
+│   └── metadata.json
+│
+├── logs/                                  # Runtime and governance synchronization logs
+│   ├── etl_tmp_run.log
+│   ├── ocr_process_trace.log
+│   ├── governance_sync.log
+│   └── metadata.json
+│
+└── metadata.json                          # TMP-level provenance and checksum record
+```
+
+---
+
+## ⚙️ TMP Workflow
 
 ```mermaid
-graph TD
-    A["OCR Inputs + Raw Text Sources"] --> B["Text ETL Pipelines – /src/pipelines/text_pipeline.py"]
-    B --> C["Temporary Text Workspace – data/work/tmp/text"]
-    C --> D["AI Focus Mode – Explainability + Drift Analysis"]
-    D --> E["Governance Dashboard – FAIR+CARE+Ethics Reporting"]
-    C --> F["Processed Text Outputs – /data/processed/text"]
-    F --> G["STAC Metadata + Provenance – /data/stac/text"]
+flowchart TD
+    A["Scanned or Raw Text Data (PDF / TIFF / DOCX)"] --> B["OCR Extraction and Text Normalization"]
+    B --> C["NLP Enrichment (Entities, Topics, Sentiment)"]
+    C --> D["FAIR+CARE Validation and Ethics Audit"]
+    D --> E["Checksum Verification and Governance Ledger Sync"]
+    E --> F["Promotion to Staging Workspace (data/work/staging/text/)"]
 ```
 
----
-
-## 🧩 Cross-Domain Integration Matrix
-
-| Domain | Interaction | Data Flow | Validation |
-|:-------|:-------------|:----------|:------------|
-| **Geo** | Spatial references in text annotations | Geo ↔ NLP spatial linkage | `focus-validate.yml` |
-| **Tabular** | Entity normalization with structured data | NLP ↔ Census joins | `tests.yml` |
-| **Audio** | OCR + STT transcript fusion | STT ↔ OCR merges | `focus-ai-audit.json` |
-| **Visual** | OCR from images + IIIF sources | Image ↔ Text | `stac-validate.yml` |
+### Workflow Description
+1. **OCR Extraction:** Convert scanned or image-based documents into machine-readable text.  
+2. **NLP Enrichment:** Perform entity recognition, topic modeling, and summarization.  
+3. **Validation:** Run FAIR+CARE audits and schema checks for accessibility and ethics.  
+4. **Checksum Verification:** Register file integrity and governance records.  
+5. **Promotion:** Move verified text datasets into staging for archival or research use.  
 
 ---
 
-## 🧩 Knowledge Graph Linkage Schema
-
-Temporary text outputs are automatically linked to KFM’s **Neo4j Knowledge Graph**:
-
-- **:Document** → OCR or transcript sources  
-- **:Entity** → Named people, places, and events  
-- **:TextChunk** → Paragraph or sentence-level records  
-- **:Annotation** → Keywords, topics, or summaries  
-
-Relationships are expressed as:
-`(:TextChunk)-[:MENTIONS]->(:Entity)` and logged to `/reports/graph/text-linkage.json`.
-
----
-
-## 🧮 AI Performance Telemetry
-
-| Metric | Description | Source | Target | Status |
-|:--------|:-------------|:--------|:--------|:--------|
-| **Model Drift (%)** | NLP variation vs prior runs | AI telemetry | ≤ 0.5 | ✅ |
-| **Latency (s)** | Avg summarization runtime | focus-telemetry | ≤ 5.0 | ✅ |
-| **Precision / Recall** | Entity tagging accuracy | NER logs | ≥ 0.95 | ✅ |
-| **Explainability Score** | SHAP fidelity | focus-ai-report | ≥ 0.98 | ✅ |
-
----
-
-## 🔒 Data Retention & Redaction Policy
-
-- Temporary files older than 48 hours auto-deleted unless FAIR-critical.  
-- PII or restricted data detected → redacted instantly by AI ethics module.  
-- All deletions logged to `/reports/audit/text-redaction.json`.  
-- Signed cleanup manifests archived under `/data/checksums/`.
-
----
-
-## 🧠 Explainability Evidence (SHAP Example)
+## 🧩 Example TMP Metadata Record
 
 ```json
 {
-  "explainability_report": {
-    "model": "summarizer-v2",
-    "method": "SHAP",
-    "key_features": [
-      {"token": "Kansas", "influence": 0.23},
-      {"token": "frontier", "influence": 0.18},
-      {"token": "matrix", "influence": 0.15}
-    ],
-    "explanation_score": 0.984
-  }
+  "id": "text_tmp_v9.5.0_2025Q4",
+  "source_files": [
+    "data/raw/archives/treaty_scan_1875.pdf",
+    "data/raw/reports/environmental_survey_1902.tif"
+  ],
+  "records_processed": 853,
+  "ocr_engine": "Tesseract v6.0",
+  "nlp_pipeline": "spaCy v3.8 (custom KFM model)",
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "ai_explainability_score": 0.986,
+  "governance_registered": true,
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_text_ledger.json",
+  "created": "2025-11-02T23:45:00Z",
+  "validator": "@kfm-text-etl"
 }
 ```
 
 ---
 
-## 📈 FAIR+CARE Evolution Timeline
+## 🧠 FAIR+CARE Governance Matrix
 
-| Version | FAIR+CARE | Improvement | Audit Date |
-|----------|------------|--------------|--------------|
-| v5.0.0 | 97% | — | 2025-10-17 |
-| v5.1.0 | 99% | +2% | 2025-10-20 |
-| v6.0.0 | 100% | +1% | 2025-10-22 |
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Text data indexed by checksum and provenance metadata. |
+| **Accessible** | Stored in open UTF-8 plain text and JSON formats. |
+| **Interoperable** | Metadata aligned with DCAT 3.0 and NLP schema standards. |
+| **Reusable** | Provenance, schema, and checksum details recorded in governance. |
+| **Collective Benefit** | Enables ethical, equitable reuse of digitized historical content. |
+| **Authority to Control** | FAIR+CARE Council validates OCR/NLP pipelines and ethics review. |
+| **Responsibility** | Validators log text normalization, OCR accuracy, and ethics audits. |
+| **Ethics** | All textual data reviewed for cultural sensitivity and transparency. |
 
----
-
-## 🌱 Environmental & Energy Metrics
-
-| Metric | Unit | Target | Measured | Compliance |
-|:--------|:------|:--------|:-----------|:------------|
-| **Energy per NLP run** | Wh | ≤ 15 | 12.4 | ✅ |
-| **Carbon Intensity** | gCO₂e/run | ≤ 25 | 19.8 | ✅ |
-| **AI Efficiency Index** | % | ≥ 95 | 96.7 | ✅ |
+Audit records stored in:  
+`reports/audit/ai_text_ledger.json` • `reports/fair/text_tmp_summary.json`
 
 ---
 
-## 🧩 Accessibility & Localization Matrix
+## ⚙️ QA & Validation Artifacts
 
-| Locale | Description | Coverage | A11y |
-|:--------|:-------------|:----------|:------|
-| `en` | Default English OCR/NLP | 100% | ✅ |
-| `es` | Spanish corpora (LatAm) | 95% | ✅ |
-| `fr` | French archival transcriptions | 92% | ✅ |
-| `de` | Historical German newspapers | 88% | 🟡 Pending |
+| File | Description | Format |
+|------|--------------|--------|
+| `treaty_ocr_output_2025.txt` | OCR-generated text file from historical treaty scan. | TXT |
+| `entities_extracted.json` | NLP-identified entities (locations, persons, organizations). | JSON |
+| `schema_validation_summary.json` | Schema and encoding validation report. | JSON |
+| `faircare_audit_report.json` | FAIR+CARE compliance and ethics validation summary. | JSON |
+| `checksum_registry.json` | Integrity verification for OCR and NLP outputs. | JSON |
+| `metadata.json` | Provenance and governance metadata record. | JSON |
 
----
-
-## 🧩 Governance Audit Chain
-
-| Step | Auditor | Verification | Output |
-|:------|:----------|:--------------|:---------|
-| AI Review | @kfm-ai | FAIR+CARE drift & explainability | focus-validate.yml |
-| Ethics Audit | @kfm-ethics | Bias & redaction verification | reports/audit/text-ethics.json |
-| Security Review | @kfm-security | PGP manifest check | data/checksums/ |
-| Governance Signoff | @kfm-governance | Quarterly dashboard | reports/fair/summary.json |
+Synchronization handled via `text_tmp_sync.yml`.
 
 ---
 
-## 🧩 Self-Audit Metadata
+## 🧾 Retention Policy
 
-```json
-{
-  "readme_id": "KFM-DATA-WORK-TXT-RMD-v6.1.0",
-  "validation_timestamp": "2025-10-22T21:00:00Z",
-  "validated_by": "@kfm-data",
-  "governance_reviewer": "@kfm-governance",
-  "ai_ethics_reviewer": "@kfm-ethics",
-  "focus_model": "focus-text-governance-v3",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 100.0,
-  "explainability_score": 0.984,
-  "energy_efficiency": "AI optimized (12.4Wh/run)",
-  "carbon_intensity": "19.8 gCO₂e/run",
-  "checksum_policy": "sha256",
-  "retention_policy": "48-hour rolling",
-  "security_signature": "pgp-sha256:<signature-id>"
-}
+| File Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP OCR/NLP Files | 14 days | Deleted after validation or promotion to staging. |
+| Logs | 30 days | Archived for audit and QA reviews. |
+| FAIR+CARE Reports | Permanent | Retained for ethics and governance certification. |
+| Metadata | Permanent | Stored for provenance continuity. |
+
+Cleanup automated via `text_tmp_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Text TMP Workspace (v9.5.0).
+FAIR+CARE-certified workspace for OCR, NLP enrichment, and ethical governance validation of textual datasets.
+Supports transparent, explainable AI and reproducible archival workflows under MCP-DL v6.3 compliance.
 ```
 
 ---
 
-## 🧾 Version History
+## 🧾 Version Notes
 
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Drift Δ | Summary |
-|----------|------|---------|-----------|-----------|-----------|-----------|----------|----------|
-| v6.1.0 | 2025-10-22 | @kfm-data | @kfm-governance | ✅ | 100% | PGP ✓ | +0.1% | Crown∞⁺: Cross-domain integration, energy tracking, and explainability evidence |
-| v6.0.0 | 2025-10-20 | @kfm-nlp | @kfm-fair | ✅ | 99% | ✓ | +0.3% | Crown∞: AI ethics and FAIR+CARE integration |
-| v5.1.0 | 2025-10-17 | @kfm-architecture | @kfm-security | ✅ | 97% | ✓ | +0.5% | Initial AI-driven validation and ethics baseline |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-nlp**, and **@kfm-fair**,  
-with oversight from @kfm-ethics, @kfm-ai, @kfm-security, @kfm-accessibility, and @kfm-governance.  
-Thanks to **FAIR Data Alliance**, **MCP Council**, **STAC Working Group**, and **OpenAI Transparency Labs**  
-for enabling transparent, ethical, and AI-explainable text sandbox practices.
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Added NLP enrichment and AI explainability validation under FAIR+CARE governance. |
+| v9.3.2 | 2025-10-28 | Enhanced OCR checksum verification and metadata governance linkage. |
+| v9.3.0 | 2025-10-26 | Established text TMP workspace for OCR and archival digitization governance. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Verified%20%28SHAP%20%2F%20LIME%29-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Compliance-green)](../../../../../reports/fair/summary.json)
-[![Sustainability](https://img.shields.io/badge/AI%20Energy-Efficient%20%26%20Carbon%20Aware-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20Signed-teal)](../../../../../data/checksums/)
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../../docs/standards/ai-integrity.md)
-[![Governance Review](https://img.shields.io/badge/Governance-Autonomous%20Audit-orange)](../../../../../docs/standards/governance.md)
-[![Status: Diamond⁶∞⁺](https://img.shields.io/badge/Status-Diamond%E2%81%B6%E2%88%9E%2B%20Crown%E2%88%9E%2B%20Certified-brightgreen)](../../../../../docs/standards/)
+**Kansas Frontier Matrix** · *Textual Intelligence × FAIR+CARE Ethics × Provenance Transparency*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
+
 </div>
