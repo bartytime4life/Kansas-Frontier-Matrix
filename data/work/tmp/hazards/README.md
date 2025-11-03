@@ -85,13 +85,13 @@ data/work/tmp/hazards/
 
 ```mermaid
 flowchart TD
-A[Raw Hazard Data (NOAA / FEMA / USGS / KGS)] --> B[ETL (Transform + Normalize)]
-B --> C[Validation (Schema + FAIR+CARE Checks)]
-C --> D[AI Analysis (Focus Mode Reasoning + Drift Detection)]
-D --> E[Governance & Audit (Checksums + Ethics Review)]
-E --> F[STAC Registration (Catalog Stubs)]
-F --> G[Archive + Manifest Logs]
-G --> H[Focus Mode Dashboard Visualization]
+    A["Raw Hazard Data - NOAA, FEMA, USGS, KGS"] --> B["ETL Transform and Normalize"]
+    B --> C["Validation - Schema and FAIR+CARE Checks"]
+    C --> D["AI Analysis - Focus Mode Reasoning and Drift Detection"]
+    D --> E["Governance and Audit - Checksums and Ethics Review"]
+    E --> F["STAC Registration - Catalog Stubs"]
+    F --> G["Archive and Manifest Logs"]
+    G --> H["Focus Mode Dashboard Visualization"]
 ```
 
 The TMP workspace handles iterative processing steps across **data extraction, model evaluation, and AI explainability**, all fully logged under `logs/`.
