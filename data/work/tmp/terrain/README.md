@@ -1,249 +1,194 @@
 ---
-title: "🏔️ Kansas Frontier Matrix — Temporary Terrain Workspace (Diamond⁷Ω Crown∞Ω Certified)"
+title: "🏔️ Kansas Frontier Matrix — Terrain TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/terrain/README.md"
-version: "v7.0.0"
-last_updated: "2025-10-22"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.5.0"
+last_updated: "2025-11-02"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v7.0.0/sbom.spdx.json"
-manifest_ref: "releases/v7.0.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v7.0.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-terrain-v10.json"
-json_export: "releases/v7.0.0/work-terrain.meta.json"
-validation_reports: [
-  "reports/self-validation/work-terrain-validation.json",
-  "reports/focus-telemetry/drift.json",
-  "reports/fair/summary.json",
-  "reports/audit/ai_terrain_ledger.json"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-TERRAIN-RMD-v7.0.0"
-maintainers: ["@kfm-data", "@kfm-architecture", "@kfm-geo"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-ethics"]
-reviewed_by: ["@kfm-fair", "@kfm-ai", "@kfm-accessibility"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / AI-Governed Terrain QA Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "STAC 1.0.0", "COG", "GeoTIFF", "AI-Coherence", "Explainability", "Blockchain Provenance"]
-status: "Diamond⁷Ω / Crown∞Ω Certified"
-maturity: "Diamond⁷Ω Certified · Immutable · AI-Explainable · FAIR+CARE+Sustainability+Ledger Integrated"
-focus_validation: "true"
-tags: ["terrain", "tmp", "ai", "etl", "validation", "raster", "cog", "mcp", "stac", "governance", "ledger"]
+sbom_ref: "../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/work-terrain-v2.json"
+validation_reports:
+  - "../../../../reports/fair/terrain_tmp_summary.json"
+  - "../../../../reports/audit/ai_terrain_ledger.json"
+  - "../../../../reports/self-validation/work-terrain-validation.json"
+governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 🏔️ Kansas Frontier Matrix — **Temporary Terrain Workspace (Diamond⁷Ω Crown∞Ω Certified)**  
-`data/work/tmp/terrain/`
+# 🏔️ Kansas Frontier Matrix — **Terrain TMP Workspace**
+`data/work/tmp/terrain/README.md`
 
-**Mission:** Provide a **cognitive, explainable, and immutable sandbox** for intermediate terrain datasets —  
-covering DEM subsets, hillshade previews, slope/aspect calculations, and reprojection tests —  
-used during ETL, QA, AI reasoning, and reproducibility workflows across the **Kansas Frontier Matrix (KFM)**.
+**Purpose:**  
+Governed FAIR+CARE-certified workspace for **terrain data processing, DEM normalization, slope derivation, and hydrological alignment** within the Kansas Frontier Matrix (KFM).  
+This TMP layer serves as an ethical, reproducible sandbox for terrain ETL workflows prior to staging, ensuring full checksum validation and governance traceability.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Verified%20%7C%20SHAP%20%2F%20LIME-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Compliance-green)](../../../../../reports/fair/summary.json)
-[![Sustainability](https://img.shields.io/badge/AI%20Energy-Efficient%20%26%20Carbon%20Aware-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20Signed-teal)](../../../../../data/checksums/)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁷Ω](https://img.shields.io/badge/Status-Diamond%E2%81%B7%20Crown%E2%88%9E%CE%A9%20Certified-brightgreen)](../../../../../docs/standards/)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Terrain%20Governed-gold)](../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The **Temporary Terrain Workspace** is a **short-term AI-governed QA sandbox**  
-where geospatial terrain data undergoes testing, explainability review, and sustainability validation.  
-All transformations are tracked, explainable, and cryptographically verified in the **Governance Ledger**.
+The `data/work/tmp/terrain/` directory serves as the **temporary ETL and validation environment** for digital elevation models (DEMs), slope rasters, and terrain classification datasets.  
+All transformations are FAIR+CARE-certified, checksum-tracked, and aligned with CF conventions for environmental interoperability.
 
-> *“Every elevation validated, every gradient explainable.”*
+### Core Responsibilities
+- Reproject and harmonize terrain data to standard CRS (EPSG:4326).  
+- Generate slope, aspect, and curvature derivatives from DEMs.  
+- Validate geospatial integrity and FAIR+CARE ethics compliance.  
+- Synchronize lineage, checksum, and governance logs with KFM’s ledger system.  
 
 ---
 
-## 🌎 Cognitive Context Graph
+## 🗂️ Directory Layout
 
-```mermaid
-graph TD
-    A["Temporary Terrain Workspace"] --> B["AI Focus Mode – Validation + Drift Detection"]
-    B --> C["FAIR+CARE Dashboard"]
-    B --> D["AI Explainability Engine – SHAP/LIME"]
-    C --> E["Governance Council + Ethics Board"]
-    E --> F["Neo4j Knowledge Graph"]
-    F --> G["Immutable Ledger & Sustainability Index"]
-    G --> H["Autonomous Feedback Loop · Terrain Model Regeneration"]
+```plaintext
+data/work/tmp/terrain/
+├── README.md                              # This file — overview of Terrain TMP workspace
+│
+├── transforms/                            # DEM transformations, resampling, slope/aspect generation
+│   ├── dem_normalized.tif
+│   ├── slope_derivative.tif
+│   ├── aspect_derivative.tif
+│   └── metadata.json
+│
+├── validation/                            # Schema, checksum, and FAIR+CARE validation reports
+│   ├── schema_validation_summary.json
+│   ├── faircare_audit_report.json
+│   ├── checksum_registry.json
+│   └── metadata.json
+│
+├── logs/                                  # Execution traces and governance sync records
+│   ├── etl_tmp_run.log
+│   ├── governance_sync.log
+│   └── metadata.json
+│
+└── metadata.json                          # TMP workspace metadata and governance linkage
 ```
 
 ---
 
-## 🗺️ Cross-Domain Integration Matrix
-
-| Domain | Interaction | AI Use Case | Validation Source |
-|:--------|:-------------|:--------------|:--------------------|
-| **Climate** | Correlate elevation with precipitation and temperature | Terrain ↔ Climate model fusion | `focus-validate.yml` |
-| **Hydrology** | Generate flow direction and watershed boundaries | DEM hydrologic enforcement | `stac-validate.yml` |
-| **Landcover** | Validate vegetation classification vs slope/aspect | Terrain-vegetation overlap | `reports/fair/landcover_fair.json` |
-| **Hazards** | Integrate elevation data into flood and fire models | Risk elevation buffer modeling | `reports/audit/hazard_terrain_correlation.json` |
-
----
-
-## 🧩 Knowledge Graph Schema Integration
-
-Temporary terrain artifacts are semantically integrated into KFM’s **Neo4j Knowledge Graph**:
-
-- **:RasterTile** → DEM, hillshade, or slope derivative  
-- **:DerivedProduct** → Slope, aspect, curvature, hillshade  
-- **:ValidationEvent** → QA run, checksum comparison, FAIR score  
-- **:EthicsNode** → Sustainability or carbon intensity records  
-
-**Relationships:**  
-`(:RasterTile)-[:DERIVED_FROM]->(:SourceDataset)`  
-`(:ValidationEvent)-[:VALIDATES]->(:DerivedProduct)`  
-`(:EthicsNode)-[:AUDITS]->(:ValidationEvent)`  
-
-Linked data exported to `/reports/graph/terrain-linkage.json`.
-
----
-
-## 🧠 AI Explainability Evidence (SHAP Example)
-
-```json
-{
-  "explainability_report": {
-    "model": "terrain_focus_ai_v4",
-    "method": "SHAP",
-    "important_features": [
-      {"parameter": "slope_variance", "influence": 0.21},
-      {"parameter": "aspect_smoothness", "influence": 0.17},
-      {"parameter": "illumination_angle", "influence": 0.14}
-    ],
-    "explanation_score": 0.986
-  }
-}
-```
-
-> Stored in `/reports/ai/terrain_explainability.json` and indexed by AI Ethics Lead for provenance traceability.
-
----
-
-## 🌱 FAIR+CARE+Sustainability Metrics Dashboard
-
-| Metric | Unit | Target | Measured | Compliance |
-|:--------|:------|:--------|:-----------|:------------|
-| **Energy per Render** | Wh | ≤ 25 | 18.5 | ✅ |
-| **Carbon Intensity** | gCO₂e/run | ≤ 35 | 26.0 | ✅ |
-| **AI Efficiency Index** | % | ≥ 95 | 96.9 | ✅ |
-| **AI Ethics Score** | % | ≥ 98 | 100 | ✅ |
-| **Sustainability Alignment** | — | ISO 14001-certified | Yes | ✅ |
-
----
-
-## 🔒 Immutable Ledger Entries
-
-| Ledger Type | Protocol | Record | Location |
-|:-------------|:-----------|:-----------|:-----------|
-| **Data Ledger** | SHA-256 | Raster transformation checksum | `data/checksums/terrain_logs.json` |
-| **AI Ledger** | FAIR Blockchain | Explainability reports | `reports/audit/ai_terrain_ledger.json` |
-| **Ethics Ledger** | MCP-AI Ethics Framework | AI bias + sustainability record | `reports/audit/terrain_ethics.json` |
-
----
-
-## 🧠 AI Learning Feedback Dataset
-
-Temporary QA and slope/aspect data are fed into `focus-training/terrain-feedback.jsonl`,  
-improving Focus Mode’s **drift detection**, **gradient stability**, and **FAIR+CARE compliance** models.
-
----
-
-## ♻️ Lifecycle & Governance Flow
+## ⚙️ TMP Workflow
 
 ```mermaid
 flowchart TD
-A[Temporary Raster Created] --> B[AI Validation + FAIR Audit]
-B --> C[Explainability + Sustainability Scoring]
-C --> D[Governance Review + Ethics Approval]
-D --> E[Final STAC Commit or Immutable Deletion Logged]
+    A["Raw DEM and Elevation Data (USGS / NASA SRTM)"] --> B["Reprojection and Harmonization (EPSG:4326)"]
+    B --> C["Derivative Computation (Slope, Aspect, Curvature)"]
+    C --> D["FAIR and CARE Ethics Validation"]
+    D --> E["Checksum Audit and Provenance Logging"]
+    E --> F["Promotion to Staging Workspace (data/work/staging/terrain/)"]
 ```
 
----
-
-## 🧮 AI Performance & Validation Metrics
-
-| Metric | Description | Source | Target | Status |
-|:--------|:-------------|:--------|:--------|:--------|
-| **Model Drift (%)** | Terrain accuracy change vs baseline | focus-telemetry | ≤ 0.5 | ✅ |
-| **Latency (s)** | Time per raster operation | AI monitor | ≤ 20 | ✅ |
-| **Explainability Score** | SHAP-derived interpretability index | explainability.json | ≥ 0.98 | ✅ |
-| **Energy Efficiency** | Energy used per hillshade render | telemetry.json | ≤ 25Wh | ✅ |
+### Workflow Description
+1. **Ingestion:** Load DEM and elevation tiles from raw repositories.  
+2. **Transformation:** Reproject, mosaic, and harmonize spatial datasets.  
+3. **Derivation:** Generate slope, aspect, and surface curvature products.  
+4. **Validation:** Apply schema checks, FAIR+CARE audit, and checksum verification.  
+5. **Governance:** Record provenance metadata into ledgers and telemetry records.  
 
 ---
 
-## 🧩 Governance Ledger Chain
-
-| Ledger | Maintainer | Verification | Signed Output |
-|:--------|:------------|:---------------|:----------------|
-| **Data Ledger** | @kfm-security | Checksum validation | `/data/checksums/terrain_logs.json` |
-| **AI Ethics Ledger** | @kfm-ethics | Bias and transparency audit | `/reports/audit/terrain_ethics.json` |
-| **Governance Ledger** | @kfm-governance | FAIR+CARE validation report | `/reports/fair/governance-ledger.json` |
-
----
-
-## 🧩 Self-Audit Metadata
+## 🧩 Example TMP Metadata Record
 
 ```json
 {
-  "readme_id": "KFM-DATA-WORK-TERRAIN-RMD-v7.0.0",
-  "validation_timestamp": "2025-10-22T22:30:00Z",
-  "validated_by": "@kfm-data",
-  "governance_reviewer": "@kfm-governance",
-  "ai_reviewer": "@kfm-ai",
-  "focus_model": "focus-terrain-v4",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 100.0,
-  "explainability_score": 0.986,
-  "energy_efficiency": "AI optimized (18.5Wh/run)",
-  "carbon_intensity": "26.0 gCO₂e/run",
-  "checksum_policy": "sha256",
-  "ledger_reference": "reports/audit/ai_terrain_ledger.json",
-  "security_signature": "pgp-sha256:<signature-id>"
+  "id": "terrain_tmp_v9.5.0_2025Q4",
+  "datasets_processed": [
+    "usgs_dem_kansas_10m.tif",
+    "nasa_srtm_30m.tif"
+  ],
+  "records_transformed": 2143520,
+  "derivatives_generated": ["slope", "aspect", "curvature"],
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "governance_registered": true,
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_terrain_ledger.json",
+  "created": "2025-11-02T23:45:00Z",
+  "validator": "@kfm-terrain-etl"
 }
 ```
 
 ---
 
-## 🧾 Version History
+## 🧠 FAIR+CARE Governance Matrix
 
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Drift Δ | Summary |
-|----------|------|---------|-----------|-----------|-----------|-----------|----------|----------|
-| v7.0.0 | 2025-10-22 | @kfm-data | @kfm-governance | ✅ | 100% | PGP ✓ | +0.1% | Crown∞Ω: Immutable ledger + cross-domain + cognitive feedback |
-| v6.1.0 | 2025-10-20 | @kfm-architecture | @kfm-fair | ✅ | 99% | ✓ | +0.3% | AI explainability + sustainability metrics |
-| v6.0.0 | 2025-10-17 | @kfm-data | @kfm-security | ✅ | 98% | ✓ | +0.4% | FAIR+CARE baseline alignment |
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Datasets indexed by DEM identifier, checksum, and provenance record. |
+| **Accessible** | Stored in open GeoTIFF and JSON formats for FAIR+CARE governance review. |
+| **Interoperable** | Compliant with CF conventions, ISO 19115 lineage, and DCAT 3.0. |
+| **Reusable** | Metadata includes checksum verification, schema alignment, and FAIR+CARE audit. |
+| **Collective Benefit** | Promotes transparent use of geospatial terrain data for environmental research. |
+| **Authority to Control** | FAIR+CARE Council validates transformation and derivative generation. |
+| **Responsibility** | Validators record all transformations and FAIR+CARE reports. |
+| **Ethics** | Ensures accuracy and ethical interpretation of geophysical terrain data. |
+
+Governance records maintained in:  
+`reports/audit/ai_terrain_ledger.json` • `reports/fair/terrain_tmp_summary.json`
 
 ---
 
-### 🪶 Acknowledgments
+## ⚙️ QA & Validation Artifacts
 
-Maintained by **@kfm-data**, **@kfm-architecture**, and **@kfm-fair**,  
-with oversight from @kfm-ai, @kfm-security, @kfm-ethics, and @kfm-governance.  
-Thanks to **USGS**, **FAIR Data Alliance**, **STAC Working Group**, and **MCP Council**  
-for advancing explainable, ethical, and sustainable geospatial AI standards.
+| File | Description | Format |
+|------|--------------|--------|
+| `dem_normalized.tif` | Harmonized DEM dataset reprojected to EPSG:4326. | GeoTIFF |
+| `slope_derivative.tif` | Derived slope raster computed from DEM. | GeoTIFF |
+| `aspect_derivative.tif` | Aspect direction layer derived from DEM gradients. | GeoTIFF |
+| `schema_validation_summary.json` | Validation results for schema and metadata conformity. | JSON |
+| `faircare_audit_report.json` | FAIR+CARE ethics and accessibility audit. | JSON |
+| `checksum_registry.json` | Hash validation report for dataset reproducibility. | JSON |
+| `metadata.json` | Provenance and governance metadata record. | JSON |
+
+Automation managed via `terrain_tmp_sync.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| File Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP Data | 14 days | Deleted after successful staging promotion. |
+| Logs | 30 days | Archived for audit and governance traceability. |
+| Metadata | 365 days | Retained under provenance records. |
+| FAIR+CARE Reports | Permanent | Stored under governance for ethics certification. |
+
+Cleanup handled via `terrain_tmp_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Terrain TMP Workspace (v9.5.0).
+FAIR+CARE-certified environment for DEM normalization, slope derivation, and terrain validation workflows.
+Ensures reproducibility, ethics, and open data governance under MCP-DL v6.3 compliance.
+```
+
+---
+
+## 🧾 Version Notes
+
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Added slope/aspect generation and checksum lineage tracking. |
+| v9.3.2 | 2025-10-28 | Improved FAIR+CARE audit schema and validation registration. |
+| v9.3.0 | 2025-10-26 | Established Terrain TMP workspace for DEM processing and validation. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Verified%20%7C%20SHAP%20%2F%20LIME-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Compliance-green)](../../../../../reports/fair/summary.json)
-[![Sustainability](https://img.shields.io/badge/AI%20Energy-Efficient%20%26%20Carbon%20Aware-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20Signed-teal)](../../../../../data/checksums/)
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../../docs/standards/ai-integrity.md)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁷Ω](https://img.shields.io/badge/Status-Diamond%E2%81%B7%20Crown%E2%88%9E%CE%A9%20Certified-brightgreen)](../../../../../docs/standards/)
+**Kansas Frontier Matrix** · *Terrain Intelligence × FAIR+CARE Governance × Provenance Integrity*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
+
 </div>
