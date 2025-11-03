@@ -24,10 +24,10 @@ license: "MIT"
 `data/work/tmp/hazards/logs/validation/README.md`
 
 **Purpose:**  
-Centralized FAIR+CARE-certified repository for all **schema, checksum, and ethical validation logs** generated during temporary hazard data processing in the Kansas Frontier Matrix (KFM).  
-Documents validation performance, FAIR+CARE governance scoring, and lineage integrity for every TMP dataset prior to staging or archival.
+Central FAIR+CARE-certified repository for all **validation, audit, and ethics logs** produced during temporary hazard data processing within the Kansas Frontier Matrix (KFM).  
+These logs ensure full transparency, reproducibility, and compliance across every hazard TMP pipeline under MCP-DL v6.3 governance.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Validation%20Audited-gold)](../../../../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Validation%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../docs/architecture/repo-focus.md)
 
@@ -37,14 +37,14 @@ Documents validation performance, FAIR+CARE governance scoring, and lineage inte
 
 ## 📚 Overview
 
-The `data/work/tmp/hazards/logs/validation/` directory provides a structured audit trail for all validation, QA, and ethics assessments applied to TMP hazard datasets.  
-This includes FAIR+CARE audits, checksum comparisons, and AI explainability tests ensuring reproducibility and ethical governance across KFM workflows.
+The `data/work/tmp/hazards/logs/validation/` directory captures all **validation and QA reports** for hazard TMP operations, documenting schema compliance, FAIR+CARE scoring, checksum integrity, and governance synchronization events.  
+It also includes AI explainability and model drift detection reports tied to the Focus Mode reasoning framework.
 
 ### Core Functions
-- Store validation results for hazard ETL outputs (schema, checksums, FAIR+CARE).  
-- Record ethics, accessibility, and governance audit metrics.  
-- Maintain reproducible, timestamped validation logs for each TMP cycle.  
-- Register results into the Governance Ledger and Telemetry system for oversight.  
+- Validate hazard datasets against data contract and schema definitions.  
+- Record checksum and provenance verification events.  
+- Perform FAIR+CARE and AI explainability audits.  
+- Log validation results and governance registration confirmations.  
 
 ---
 
@@ -52,13 +52,13 @@ This includes FAIR+CARE audits, checksum comparisons, and AI explainability test
 
 ```plaintext
 data/work/tmp/hazards/logs/validation/
-├── README.md                               # This file — documentation for hazard validation logs
+├── README.md                               # This file — documentation of hazard TMP validation logs
 │
-├── faircare_validation_report_2025Q4.json  # FAIR+CARE audit summary for TMP hazard datasets
-├── schema_validation_summary_2025Q4.json   # Schema and field-level validation results
-├── checksum_verification_2025Q4.json       # File-level integrity validation results
-├── stac_validation_output_2025Q4.json      # STAC/DCAT metadata validation results
-├── ai_explainability_audit_2025Q4.json     # AI explainability and bias detection log
+├── faircare_audit_report_2025Q4.json       # FAIR+CARE ethics validation and governance audit results
+├── schema_validation_summary_2025Q4.json   # Schema compliance validation output
+├── checksum_verification_2025Q4.json       # File integrity and hash registry logs
+├── ai_explainability_audit_2025Q4.json     # Focus Mode AI interpretability and bias audit
+├── stac_dcat_compliance_2025Q4.json        # Validation of metadata against STAC/DCAT standards
 └── metadata.json                           # Provenance and governance linkage record
 ```
 
@@ -68,19 +68,19 @@ data/work/tmp/hazards/logs/validation/
 
 ```mermaid
 flowchart TD
-    A["Transformed Hazard Data (data/work/tmp/hazards/transforms/)"] --> B["Schema Validation"]
-    B --> C["Checksum & FAIR+CARE Integrity Audit"]
-    C --> D["AI Explainability & Bias Detection"]
-    D --> E["STAC/DCAT Metadata Review"]
-    E --> F["Governance Ledger & Telemetry Update"]
+    A["Hazard TMP Datasets (data/work/tmp/hazards/datasets/*)"] --> B["Schema Validation"]
+    B --> C["Checksum and FAIR+CARE Verification"]
+    C --> D["AI Explainability and Drift Analysis"]
+    D --> E["STAC/DCAT Metadata Validation"]
+    E --> F["Governance Ledger and Telemetry Registration"]
 ```
 
 ### Workflow Description
-1. **Schema Validation:** Validate datasets against KFM schema definitions.  
-2. **Checksum Audit:** Verify integrity and reproducibility via SHA-256 validation.  
-3. **FAIR+CARE Audit:** Evaluate ethics, accessibility, and governance conformance.  
-4. **AI Explainability:** Ensure model outputs are transparent and interpretable.  
-5. **Governance Registration:** Log results to `ai_hazards_ledger.json` and telemetry.  
+1. **Schema Validation:** Confirms dataset adherence to FAIR+CARE-aligned data contracts.  
+2. **Checksum Audit:** Validates SHA-256 hashes and digital signatures for integrity.  
+3. **AI Explainability:** Assesses Focus Mode model reasoning, drift, and interpretability.  
+4. **FAIR+CARE Governance:** Ethics compliance validated before promotion to staging.  
+5. **Ledger Sync:** Results recorded in the AI Hazards Governance Ledger and telemetry.
 
 ---
 
@@ -88,55 +88,59 @@ flowchart TD
 
 ```json
 {
-  "id": "hazards_validation_log_v9.5.0_2025Q4",
-  "datasets_validated": ["tornado_tracks_cf.geojson", "flood_extents_cf.geojson"],
-  "records_checked": 87234,
+  "id": "hazards_validation_logs_v9.5.0_2025Q4",
+  "datasets_validated": [
+    "tornado_tracks_cf.geojson",
+    "flood_extents_cf.geojson",
+    "wildfire_perimeters_2025.geojson"
+  ],
+  "records_checked": 276543,
   "schema_issues_found": 0,
   "checksum_verified": true,
   "fair_care_compliance": 99.8,
   "ai_explainability_verified": true,
-  "stac_dcat_alignment": "passed",
+  "metadata_compliance": "passed",
   "fairstatus": "certified",
   "governance_synced": true,
   "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "timestamp": "2025-11-02T19:10:00Z",
+  "created": "2025-11-02T19:50:00Z",
   "validator": "@kfm-validation"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance in Validation
+## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Validation logs indexed by dataset, checksum, and governance ID. |
-| **Accessible** | Open JSON logs accessible via internal FAIR+CARE dashboard. |
-| **Interoperable** | Aligned with STAC 1.0, DCAT 3.0, and ISO 19115 metadata structures. |
-| **Reusable** | Validation reports retain provenance and reproducibility metadata. |
-| **Collective Benefit** | Enables transparent governance oversight for hazard QA. |
-| **Authority to Control** | FAIR+CARE Council certifies ethics and validation reports. |
-| **Responsibility** | Validators document all schema and audit outcomes. |
-| **Ethics** | Validation confirms absence of bias, inaccuracy, or ethical non-compliance. |
+| **Findable** | Validation logs indexed by dataset and checksum in governance ledger. |
+| **Accessible** | All reports stored in open JSON formats for internal FAIR+CARE review. |
+| **Interoperable** | STAC 1.0, DCAT 3.0, and ISO 19115 compliance enforced. |
+| **Reusable** | Logs maintain provenance, versioning, and ethics traceability. |
+| **Collective Benefit** | Promotes transparency across all hazard QA activities. |
+| **Authority to Control** | FAIR+CARE Council certifies validation logs post-review. |
+| **Responsibility** | Validators document schema compliance and audit lineage. |
+| **Ethics** | Ensures unbiased validation, transparency, and open reproducibility. |
 
-All governance outputs stored in:  
+Audit and lineage references stored in:  
 `reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_validation_logs_summary.json`
 
 ---
 
-## ⚙️ Validation & QA Artifacts
+## ⚙️ Validation Artifacts & QA Outputs
 
 | File | Description | Format |
 |------|--------------|--------|
-| `faircare_validation_report_*.json` | FAIR+CARE audit report for hazard datasets. | JSON |
-| `schema_validation_summary_*.json` | Field-by-field schema compliance report. | JSON |
-| `checksum_verification_*.json` | File integrity verification via hash comparison. | JSON |
-| `stac_validation_output_*.json` | STAC/DCAT compliance validation report. | JSON |
-| `ai_explainability_audit_*.json` | AI reasoning transparency and bias evaluation. | JSON |
-| `metadata.json` | Provenance and governance metadata linkage. | JSON |
+| `faircare_audit_report_*.json` | FAIR+CARE governance ethics validation report. | JSON |
+| `schema_validation_summary_*.json` | Schema compliance audit results. | JSON |
+| `checksum_verification_*.json` | File integrity and hash registry report. | JSON |
+| `ai_explainability_audit_*.json` | AI model interpretability and drift check results. | JSON |
+| `stac_dcat_compliance_*.json` | Metadata validation output. | JSON |
+| `metadata.json` | Provenance linkage and FAIR+CARE certification record. | JSON |
 
-Automated through `hazards_validation_sync.yml`.
+Automation managed by `hazards_validation_logs_sync.yml`.
 
 ---
 
@@ -144,12 +148,12 @@ Automated through `hazards_validation_sync.yml`.
 
 | Log Type | Retention Duration | Policy |
 |-----------|--------------------|--------|
-| FAIR+CARE Validation Logs | 365 days | Archived for governance review. |
-| Schema Validation Reports | 180 days | Retained for reproducibility checks. |
-| AI Explainability Audits | 90 days | Stored for ethics and governance re-evaluation. |
-| Metadata | Permanent | Preserved under provenance ledger for continuity. |
+| FAIR+CARE Validation Logs | 365 days | Archived for governance and audit traceability. |
+| AI Explainability Logs | 180 days | Retained for ethics re-certification review. |
+| Checksum Logs | 365 days | Maintained for reproducibility validation. |
+| Metadata | Permanent | Stored indefinitely under provenance ledger. |
 
-Cleanup governed by `hazards_validation_cleanup.yml`.
+Retention governed by `hazards_validation_logs_cleanup.yml`.
 
 ---
 
@@ -157,9 +161,8 @@ Cleanup governed by `hazards_validation_cleanup.yml`.
 
 ```text
 Kansas Frontier Matrix (2025). Hazard TMP Validation Logs (v9.5.0).
-Comprehensive validation and FAIR+CARE governance logging workspace for hazard data QA.
-Captures schema, checksum, and ethical validation reports for reproducible TMP workflows.
-Restricted to internal governance and audit teams under MCP-DL v6.3 compliance.
+Comprehensive validation and audit log environment supporting FAIR+CARE ethics, AI explainability, and schema compliance.
+Ensures hazard dataset integrity, provenance, and reproducibility across all TMP workflows.
 ```
 
 ---
@@ -168,15 +171,15 @@ Restricted to internal governance and audit teams under MCP-DL v6.3 compliance.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Added telemetry v2 schema integration, AI explainability audit linkage, and checksum governance sync. |
-| v9.3.2 | 2025-10-28 | Expanded FAIR+CARE validation reports and schema summaries. |
-| v9.3.0 | 2025-10-26 | Established TMP validation logs for hazard datasets. |
+| v9.5.0 | 2025-11-02 | Added telemetry schema v2, expanded FAIR+CARE validation, and Focus Mode explainability integration. |
+| v9.3.2 | 2025-10-28 | Introduced automated STAC/DCAT metadata validation workflow. |
+| v9.3.0 | 2025-10-26 | Established TMP validation logs workspace for hazard datasets. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Hazard Validation × FAIR+CARE Ethics × Provenance Integrity*  
+**Kansas Frontier Matrix** · *Validation Accuracy × FAIR+CARE Ethics × Provenance Accountability*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/)
 
 </div>
