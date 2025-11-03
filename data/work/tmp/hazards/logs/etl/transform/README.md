@@ -1,35 +1,35 @@
 ---
-title: "🔄 Kansas Frontier Matrix — Hazards ETL Transform Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔄 Kansas Frontier Matrix — Hazard ETL Transform Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/etl/transform/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
-review_cycle: "Continuous / Automated"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../releases/v9.5.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../releases/v9.5.0/manifest.zip"
-data_contract_ref: "../../../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../schemas/telemetry/work-hazards-etl-transform-v2.json"
+sbom_ref: "../../../../../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../schemas/telemetry/work-hazards-etl-transform-v2.json"
 validation_reports:
-  - "../../../../../../../reports/fair/hazards_etl_transform_summary.json"
-  - "../../../../../../../reports/audit/ai_hazards_ledger.json"
-  - "../../../../../../../reports/self-validation/work-hazards-validation.json"
-governance_ref: "../../../../../../../docs/standards/governance/hazards-governance.md"
+  - "../../../../../../../../reports/fair/hazards_etl_transform_summary.json"
+  - "../../../../../../../../reports/audit/ai_hazards_ledger.json"
+  - "../../../../../../../../reports/self-validation/work-hazards-validation.json"
+governance_ref: "../../../../../../../../docs/standards/governance/hazards-governance.md"
 license: "MIT"
 ---
 
 <div align="center">
 
-# 🔄 Kansas Frontier Matrix — **Hazards ETL Transform Logs**
+# 🔄 Kansas Frontier Matrix — **Hazard ETL Transform Logs**
 `data/work/tmp/hazards/logs/etl/transform/README.md`
 
 **Purpose:**  
-Detailed logging environment for **hazard dataset transformation processes** within the ETL pipeline.  
-Captures schema harmonization, reprojection, normalization, and checksum operations for all hazard domains in the Kansas Frontier Matrix (KFM).
+Central FAIR+CARE-governed workspace for **transformation and harmonization logs** within hazard ETL workflows.  
+Documents schema normalization, reprojection, CF compliance, and AI-governed data harmonization under MCP-DL v6.3 standards.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-ETL%20Transformation%20Audited-gold)](../../../../../../../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Transformation%20Certified-gold)](../../../../../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -37,14 +37,14 @@ Captures schema harmonization, reprojection, normalization, and checksum operati
 
 ## 📚 Overview
 
-The `data/work/tmp/hazards/logs/etl/transform/` directory records all activities involved in **transforming hazard datasets** across KFM’s temporary workspace.  
-Each transformation step is **checksum-verified, FAIR+CARE-audited, and blockchain-registered** to maintain complete provenance of data harmonization.
+The `data/work/tmp/hazards/logs/etl/transform/` directory contains **all logs and reports from ETL transformation stages**, ensuring full documentation of schema updates, reprojection processes, and metadata normalization.  
+Each transformation log aligns with FAIR+CARE ethics and ISO metadata principles to ensure transparency, reproducibility, and compliance.
 
-### Core Functions
-- Log reprojection, resampling, and field normalization events.  
-- Record schema alignment to CF/ISO metadata standards.  
-- Capture checksum and integrity verification of outputs.  
-- Synchronize transformation metadata with AI governance and FAIR+CARE ledgers.
+### Core Responsibilities
+- Record hazard dataset transformations and reprojection operations.  
+- Log schema harmonization, CF/ISO compliance, and unit normalization.  
+- Validate transformations through checksum and AI audit verification.  
+- Provide traceable provenance for governance and validation review.  
 
 ---
 
@@ -52,35 +52,35 @@ Each transformation step is **checksum-verified, FAIR+CARE-audited, and blockcha
 
 ```plaintext
 data/work/tmp/hazards/logs/etl/transform/
-├── README.md                                # This file — ETL transformation logs documentation
+├── README.md                                 # This file — documentation of hazard ETL transformation logs
 │
-├── reprojection_log.txt                     # Log of coordinate transformations and CRS normalization
-├── harmonization_trace.log                  # Field and schema alignment operations
-├── transformation_audit.json                # Summary of normalization and metadata enrichment
-├── checksum_verification.json               # Integrity hashes for all transformed outputs
-├── cf_compliance_report.json                # CF convention compliance results
-└── metadata.json                            # Provenance and FAIR+CARE audit metadata
+├── transform_run_log_2025Q4.log              # Execution log of ETL transformations for Q4 2025
+├── schema_harmonization_report_2025Q4.json   # Field-level schema transformation summary
+├── reprojection_trace_2025Q4.json            # CRS and spatial transformation details
+├── cf_compliance_audit_2025Q4.json           # Climate and Forecast (CF) metadata compliance audit
+├── ai_transform_explainability_2025Q4.json   # AI-assisted transformation reasoning and drift analysis
+└── metadata.json                             # Provenance metadata and governance linkage
 ```
 
 ---
 
-## ⚙️ Transformation Logging Workflow
+## ⚙️ Transformation Workflow
 
 ```mermaid
 flowchart TD
-    A["Extracted Hazard Data (from datasets/)"] --> B["Schema Harmonization"]
-    B --> C["Reprojection and CRS Normalization (EPSG:4326)"]
-    C --> D["FAIR+CARE and CF Compliance Audit"]
-    D --> E["Checksum Generation and Provenance Logging"]
-    E --> F["Governance Ledger and Telemetry Sync"]
+    A["Extracted Hazard Data (Raw Sources)"] --> B["Schema Normalization and CF Harmonization"]
+    B --> C["Reprojection and Spatial Integrity Validation"]
+    C --> D["Checksum and FAIR+CARE Verification"]
+    D --> E["AI Explainability + Drift Monitoring"]
+    E --> F["Governance Ledger Registration"]
 ```
 
 ### Workflow Description
-1. **Harmonization:** Align hazard dataset fields to common schema and KFM data contracts.  
-2. **Reprojection:** Normalize all datasets to EPSG:4326 (WGS84).  
-3. **Validation:** Perform CF convention and FAIR+CARE governance checks.  
-4. **Checksum:** Register hashes to ensure reproducibility and tamper detection.  
-5. **Governance:** Record all transformations in AI Hazards Ledger and telemetry reports.
+1. **Normalization:** Align field names, units, and data structures to KFM schema definitions.  
+2. **Reprojection:** Convert datasets to EPSG:4326 and verify geometry integrity.  
+3. **Compliance:** Apply CF/ISO and FAIR+CARE metadata validation standards.  
+4. **AI Validation:** Audit transformation logic using AI-driven explainability.  
+5. **Governance:** Record all transformation results in governance ledger and manifest.
 
 ---
 
@@ -88,55 +88,58 @@ flowchart TD
 
 ```json
 {
-  "id": "hazards_etl_transform_v9.5.0",
-  "input_file": "fema_flood_zones_2025.geojson",
-  "output_file": "fema_flood_zones_cf.geojson",
-  "process_type": "reprojection + schema_harmonization",
-  "crs_source": "EPSG:3857",
-  "crs_target": "EPSG:4326",
-  "fields_modified": 12,
-  "checksum": "sha256:b74a83c82e7a1c2d3e2a7c64f212de93a1f03b7d...",
-  "cf_compliance": true,
-  "ai_audit_score": 0.986,
-  "validator": "@kfm-etl-ops",
+  "id": "hazards_etl_transform_v9.5.0_2025Q4",
+  "etl_stage": "transform",
+  "datasets_transformed": [
+    "tornado_tracks_raw.geojson",
+    "flood_extents_raw.geojson"
+  ],
+  "transformations": ["Reprojection (EPSG:5070 → EPSG:4326)", "CF Harmonization", "Attribute Normalization"],
+  "records_processed": 843210,
+  "checksum_verified": true,
+  "cf_compliance_passed": true,
+  "fairstatus": "certified",
+  "ai_explainability_score": 0.986,
+  "governance_synced": true,
   "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "timestamp": "2025-11-02T18:30:00Z"
+  "created": "2025-11-02T20:40:00Z",
+  "validator": "@kfm-transform"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE & CF Governance Integration
+## 🧠 FAIR+CARE Transformation Governance
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Transformation logs are indexed with dataset IDs and process timestamps. |
-| **Accessible** | Stored as open text and JSON with FAIR licensing. |
-| **Interoperable** | CF conventions and ISO 19115 metadata applied across datasets. |
-| **Reusable** | Provenance, checksums, and schema mappings archived for reuse. |
-| **Collective Benefit** | Promotes transparent, ethical transformation workflows. |
-| **Authority to Control** | FAIR+CARE Council validates compliance and audit reports. |
-| **Responsibility** | Validators log every normalization and reprojection event. |
-| **Ethics** | Ensures accuracy of transformations, removing data bias. |
+| **Findable** | Transform logs indexed by dataset ID, CRS, and checksum registry. |
+| **Accessible** | Stored as open text/JSON records for FAIR+CARE governance review. |
+| **Interoperable** | Conforms to ISO 19115, CF conventions, and DCAT schema standards. |
+| **Reusable** | Includes provenance metadata and checksum lineage for reproducibility. |
+| **Collective Benefit** | Promotes ethical, auditable data harmonization for hazard modeling. |
+| **Authority to Control** | FAIR+CARE Council validates schema and reprojection compliance. |
+| **Responsibility** | ETL engineers document all transformations and validation outcomes. |
+| **Ethics** | Verifies data integrity, prevents distortion, and ensures ethical data use. |
 
-Governance audits stored under:  
+Audit reports logged in:  
 `reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_etl_transform_summary.json`
 
 ---
 
-## ⚙️ QA & Provenance Artifacts
+## ⚙️ Transformation Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `reprojection_log.txt` | Coordinate reprojection and CRS change record. | Text |
-| `harmonization_trace.log` | Field-level harmonization and normalization trace. | Text |
-| `transformation_audit.json` | Summary of all ETL transformations. | JSON |
-| `checksum_verification.json` | Integrity verification of transformation outputs. | JSON |
-| `cf_compliance_report.json` | CF convention compliance results and metrics. | JSON |
-| `metadata.json` | Provenance and FAIR+CARE metadata linkage. | JSON |
+| `transform_run_log_*.log` | Transformation workflow execution log. | Text |
+| `schema_harmonization_report_*.json` | Records schema updates and harmonization operations. | JSON |
+| `reprojection_trace_*.json` | Tracks CRS changes and spatial reprojection events. | JSON |
+| `cf_compliance_audit_*.json` | Validates CF/ISO metadata consistency. | JSON |
+| `ai_transform_explainability_*.json` | AI interpretability audit for transformation logic. | JSON |
+| `metadata.json` | Provenance and FAIR+CARE linkage metadata. | JSON |
 
-Automation managed by `hazards_etl_transform_sync.yml`.
+Automation managed via `hazards_etl_transform_sync.yml`.
 
 ---
 
@@ -144,22 +147,21 @@ Automation managed by `hazards_etl_transform_sync.yml`.
 
 | Log Type | Retention Duration | Policy |
 |-----------|--------------------|--------|
-| Transformation Logs | 30 days | Archived post-validation. |
-| Checksum & CF Reports | 90 days | Retained for compliance audits. |
-| Harmonization Traces | 180 days | Stored for provenance verification. |
-| Metadata | 365 days | Retained permanently for reproducibility. |
+| Transformation Logs | 180 days | Retained for FAIR+CARE and audit review. |
+| Reprojection & Schema Reports | 365 days | Archived for reproducibility tracking. |
+| AI Explainability Reports | 180 days | Retained for ethical AI audit review. |
+| Metadata | Permanent | Maintained for provenance and ledger traceability. |
 
-Cleanup handled by `hazards_etl_transform_cleanup.yml`.
+Cleanup automated via `hazards_etl_transform_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hazards ETL Transform Logs (v9.5.0).
-Detailed FAIR+CARE-governed logging workspace for all hazard data transformations.
-Documents reprojection, harmonization, checksum validation, and CF compliance under KFM governance.
-Restricted to internal ETL, QA, and provenance workflows.
+Kansas Frontier Matrix (2025). Hazard ETL Transform Logs (v9.5.0).
+Central FAIR+CARE-compliant repository for hazard data transformations, schema harmonization, and reprojection validation.
+Ensures transparency, ethics, and reproducibility across all ETL operations.
 ```
 
 ---
@@ -168,15 +170,15 @@ Restricted to internal ETL, QA, and provenance workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Introduced CF convention compliance tracking, AI audit integration, and telemetry v2 schema. |
-| v9.3.2 | 2025-10-28 | Added harmonization tracing and governance ledger synchronization. |
-| v9.3.0 | 2025-10-26 | Established ETL transform log directory for hazard reprojection. |
+| v9.5.0 | 2025-11-02 | Added CF compliance and AI explainability tracking to transformation logs. |
+| v9.3.2 | 2025-10-28 | Enhanced schema normalization and provenance validation integration. |
+| v9.3.0 | 2025-10-26 | Established transformation log workspace under FAIR+CARE governance. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Hazard Transformation × FAIR+CARE Governance × Provenance Integrity*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../../docs/standards/governance/)
+**Kansas Frontier Matrix** · *Transformation Integrity × FAIR+CARE Ethics × Provenance Transparency*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../../../docs/standards/governance/)
 
 </div>
