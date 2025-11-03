@@ -1,19 +1,19 @@
 ---
-title: "🔥 Kansas Frontier Matrix — Wildfire & Energy Hazards TMP Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔥 Kansas Frontier Matrix — Wildfire & Energy Hazard Datasets TMP Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/datasets/wildfire_energy/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
-review_cycle: "Continuous / Automated"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../../../releases/v9.5.0/sbom.spdx.json"
 manifest_ref: "../../../../../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
 telemetry_ref: "../../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-wildfire-energy-v2.json"
+telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-datasets-wildfire-energy-v2.json"
 validation_reports:
-  - "../../../../reports/fair/wildfire_energy_hazards_summary.json"
-  - "../../../../reports/audit/ai_hazards_ledger.json"
-  - "../../../../reports/self-validation/work-hazards-validation.json"
+  - "../../../../../../reports/fair/hazards_wildfire_energy_summary.json"
+  - "../../../../../../reports/audit/ai_hazards_ledger.json"
+  - "../../../../../../reports/self-validation/work-hazards-validation.json"
 governance_ref: "../../../../../../docs/standards/governance/hazards-governance.md"
 ontology_alignment: "../../../../../../ontologies/CIDOC_CRM-HazardExt.owl"
 license: "MIT"
@@ -21,14 +21,14 @@ license: "MIT"
 
 <div align="center">
 
-# 🔥 Kansas Frontier Matrix — **Wildfire & Energy Hazards TMP Datasets**
+# 🔥 Kansas Frontier Matrix — **Wildfire & Energy Hazard Datasets TMP Layer**
 `data/work/tmp/hazards/datasets/wildfire_energy/README.md`
 
 **Purpose:**  
-Temporary ingestion and harmonization workspace for **wildfire risk, energy grid vulnerability, and infrastructure resilience datasets** in the Kansas Frontier Matrix (KFM).  
-Supports **AI-driven fire modeling, FAIR+CARE validation, and governance-linked provenance** for sustainable energy and hazard management.
+Temporary FAIR+CARE-certified repository for **wildfire risk, energy infrastructure exposure, and grid resilience datasets** within the Kansas Frontier Matrix (KFM).  
+Supports ETL ingestion, schema harmonization, and AI-assisted hazard correlation for sustainable energy and wildfire risk mitigation analysis.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Energy%20Integrity%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Wildfire%20Energy%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../docs/architecture/repo-focus.md)
 
@@ -38,14 +38,16 @@ Supports **AI-driven fire modeling, FAIR+CARE validation, and governance-linked 
 
 ## 📚 Overview
 
-The `wildfire_energy/` TMP directory contains all **temporary datasets related to wildfire occurrence, energy distribution infrastructure, and power grid hazards**.  
-These data serve as the foundation for **AI-based fire susceptibility mapping**, **grid stress modeling**, and **climate-energy hazard interaction studies** in KFM.
+The `data/work/tmp/hazards/datasets/wildfire_energy/` directory acts as a **temporary integration layer** for wildfire hazard and energy infrastructure datasets.  
+It merges open geospatial data from **NOAA, USFS, DOE, and Kansas Forest Service (KFS)** to support FAIR+CARE-governed analytics on fire risk, energy grid exposure, and environmental resilience.
 
-### Core Dataset Domains
-- **Wildfire Risk:** Fire perimeters, burn probability maps, vegetation indices.  
-- **Energy Infrastructure:** Electric grid, substations, transmission corridors, outage logs.  
-- **Climate-Energy Coupling:** Heatwave correlations, wind energy datasets, drought-fire synergy models.  
-- **AI & Simulation Outputs:** Derived hazard correlation rasters and SHAP-explained energy-risk models.  
+### Core Responsibilities
+- Host wildfire and energy grid exposure datasets for ETL workflows.  
+- Harmonize schema attributes for consistent hazard-energy correlation.  
+- Maintain FAIR+CARE-compliant metadata, provenance, and checksum logs.  
+- Enable Focus Mode AI reasoning for wildfire risk forecasting and grid resilience assessment.  
+
+All datasets stored here are ephemeral and automatically promoted or purged upon validation.
 
 ---
 
@@ -53,35 +55,33 @@ These data serve as the foundation for **AI-based fire susceptibility mapping**,
 
 ```plaintext
 data/work/tmp/hazards/datasets/wildfire_energy/
-├── README.md                                 # This file — wildfire & energy hazards overview
+├── README.md                              # This file — documentation for wildfire & energy hazard TMP layer
 │
-├── fire_risk_zones_2025.geojson              # Wildfire susceptibility zones (MODIS + LANDFIRE)
-├── power_grid_vulnerability.csv              # Energy infrastructure exposure and sensitivity analysis
-├── burn_probability_annual_2025.tif          # Raster layer of annual burn probability
-├── wind_energy_anomalies_2025.csv            # Wind field deviations and power density variations
-├── drought_fire_synergy_2025.parquet         # AI-modeled drought-fire compound hazard dataset
-└── metadata.json                             # FAIR+CARE provenance and governance metadata
+├── wildfire_perimeters_2025.geojson       # Wildfire incident boundaries and intensity data (NOAA/USFS)
+├── grid_exposure_zones_2025.parquet       # Energy grid exposure and infrastructure vulnerability dataset
+├── powerline_wildfire_overlap_2025.csv    # Spatial intersections of grid infrastructure and fire perimeters
+└── metadata.json                          # FAIR+CARE, checksum, and provenance metadata record
 ```
 
 ---
 
-## ⚙️ Ingestion & Processing Workflow
+## ⚙️ Wildfire & Energy Data Workflow
 
 ```mermaid
 flowchart TD
-    A["Source Data - LANDFIRE, MODIS, DOE, NREL, NOAA"] --> B["ETL Ingestion and Schema Harmonization"]
-    B --> C["FAIR+CARE Validation and Ontology Alignment"]
-    C --> D["Checksum Verification and Governance Metadata Logging"]
-    D --> E["AI Modeling (Fire + Energy Risk Correlation)"]
-    E --> F["Promotion → Transforms Layer (data/work/tmp/hazards/transforms/)"]
+    A["Raw Wildfire & Energy Data (NOAA, USFS, DOE, KFS)"] --> B["ETL Extraction (data/work/tmp/hazards/logs/etl/extract/)"]
+    B --> C["Schema Harmonization (Hazard + Infrastructure Layers)"]
+    C --> D["FAIR and CARE Validation (Governance & Ethics Check)"]
+    D --> E["Checksum and Provenance Verification"]
+    E --> F["Promotion to Staging Layer (data/work/staging/hazards/)"]
 ```
 
 ### Workflow Description
-1. **Extract:** Gather fire and energy datasets from LANDFIRE, DOE, and NREL portals.  
-2. **Transform:** Standardize geospatial formats and ensure CRS uniformity (EPSG:4326).  
-3. **Validate:** Perform FAIR+CARE compliance checks on metadata and ethics scope.  
-4. **AI Modeling:** Correlate climate and energy hazard indicators through Explainable AI.  
-5. **Promote:** Send processed and validated files to transformation layer for integration.
+1. **Extraction:** Collect wildfire perimeters, energy infrastructure data, and power grid layers.  
+2. **Harmonization:** Align geometries, schema fields, and spatial CRS (EPSG:4326).  
+3. **Validation:** Apply FAIR+CARE ethical and accessibility audits.  
+4. **Checksum:** Record file integrity and lineage in provenance ledger.  
+5. **Promotion:** Publish validated data for analysis and dashboard integration.
 
 ---
 
@@ -89,74 +89,76 @@ flowchart TD
 
 ```json
 {
-  "id": "wildfire_energy_hazards_risk_zones_v9.5.0",
-  "source": ["LANDFIRE 2025", "MODIS Active Fire", "DOE Grid Infrastructure"],
+  "id": "wildfire_energy_hazards_dataset_v9.5.0_2025Q4",
   "domain": "wildfire_energy",
-  "records": 4860,
-  "variables": ["burn_probability", "grid_vulnerability", "vegetation_index", "powerline_density"],
-  "crs": "EPSG:4326",
-  "schema_contract": "docs/contracts/data-contract-v3.json",
-  "checksum": "sha256:e2b16a59afedc8e09a3e2e88c2a8df004e4294de...",
-  "validated": true,
-  "fairstatus": "compliant",
+  "datasets": [
+    "wildfire_perimeters_2025.geojson",
+    "grid_exposure_zones_2025.parquet",
+    "powerline_wildfire_overlap_2025.csv"
+  ],
+  "records_processed": 94216,
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "schema_version": "v3.0.1",
+  "validator": "@kfm-wildfire",
+  "checksum": "sha256:6c12bf43c7f18a6ed4a4d521b012c8892a9e94c3...",
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "created": "2025-11-02T17:35:00Z"
+  "created": "2025-11-02T19:35:00Z"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE & ISO Governance Alignment
+## 🧠 FAIR+CARE Governance Integration
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Indexed under wildfire-energy hazards in the governance ledger. |
-| **Accessible** | Open data formats (GeoJSON, CSV, GeoTIFF, Parquet). |
-| **Interoperable** | Schema harmonized with ISO 19115, CIDOC CRM HazardExt ontology, and DCAT 3.0. |
-| **Reusable** | Provenance metadata, checksums, and FAIR+CARE audits included. |
-| **Collective Benefit** | Promotes energy resilience, hazard awareness, and climate justice. |
-| **Authority to Control** | FAIR+CARE Council approves dissemination of energy-related data. |
-| **Responsibility** | AI and ETL validators maintain audit traceability and explainability. |
-| **Ethics** | Sensitive energy infrastructure anonymized; ethical review logged. |
+| **Findable** | Indexed by dataset ID, domain, and checksum in governance ledger. |
+| **Accessible** | Stored in open, machine-readable formats (GeoJSON, CSV, Parquet). |
+| **Interoperable** | Schema harmonized under ISO 19115, DCAT, and CIDOC CRM-HazardExt. |
+| **Reusable** | Full provenance, schema, and checksum metadata retained. |
+| **Collective Benefit** | Enables ethical wildfire-energy resilience research. |
+| **Authority to Control** | FAIR+CARE Council approves public release and staging. |
+| **Responsibility** | Dataset maintainers record all field mappings and ethics audits. |
+| **Ethics** | Protects sensitive energy infrastructure data while maintaining transparency. |
 
-FAIR+CARE and audit results stored in:  
-`reports/fair/wildfire_energy_hazards_summary.json` • `reports/audit/ai_hazards_ledger.json`
+All audit and lineage records stored in:  
+`reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_wildfire_energy_summary.json`
 
 ---
 
-## ⚙️ QA & Provenance Artifacts
+## ⚙️ Dataset QA & Provenance Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `metadata.json` | Captures provenance, schema, and audit metadata. | JSON |
-| `checksum_registry.json` | Dataset-level checksum validation record. | JSON |
-| `ontology_mapping.json` | Maps fire and energy datasets to CIDOC CRM HazardExt classes. | JSON |
-| `etl_log.txt` | ETL, validation, and AI workflow trace log. | Text |
+| `wildfire_perimeters_2025.geojson` | Wildfire perimeters and burn intensity zones. | GeoJSON |
+| `grid_exposure_zones_2025.parquet` | Grid vulnerability and exposure mapping dataset. | Parquet |
+| `powerline_wildfire_overlap_2025.csv` | Infrastructure hazard intersection analysis. | CSV |
+| `metadata.json` | FAIR+CARE and checksum provenance metadata. | JSON |
 
-Governance synchronization automated via `wildfire_energy_dataset_sync.yml`.
+Synchronization and QA managed via `hazards_wildfire_energy_sync.yml`.
 
 ---
 
 ## 🧾 Retention Policy
 
-| Dataset Type | Retention Duration | Policy |
-|---------------|--------------------|--------|
-| Fire & Climate Layers | 14 days | Promoted post-FAIR+CARE validation. |
-| Energy Infrastructure | 30 days | Retained for security-audited governance review. |
-| AI Modeled Outputs | 7 days | Purged after model explainability sign-off. |
-| Metadata & Logs | 365 days | Archived permanently for provenance governance. |
+| Data Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP Wildfire/Energy Datasets | 14 days | Cleared after validation or staging promotion. |
+| Metadata | 365 days | Archived for audit and FAIR+CARE compliance. |
+| Provenance & Governance Records | Permanent | Stored indefinitely for traceability. |
 
-Automated cleanup managed by `wildfire_energy_dataset_cleanup.yml`.
+Cleanup managed by `hazards_wildfire_energy_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Wildfire & Energy Hazards TMP Datasets (v9.5.0).
-Temporary ingestion workspace for wildfire, drought-energy synergy, and grid vulnerability datasets.
-Aligned with FAIR+CARE governance, ISO 19115/14064, and CIDOC CRM Hazard Extension ontology.
-Restricted to internal ETL, AI validation, and provenance management workflows.
+Kansas Frontier Matrix (2025). Wildfire & Energy Hazard Datasets TMP Layer (v9.5.0).
+Temporary FAIR+CARE-compliant workspace for wildfire and energy infrastructure hazard data integration.
+Maintains ethical provenance, checksum verification, and governance traceability for open hazard intelligence.
 ```
 
 ---
@@ -165,16 +167,15 @@ Restricted to internal ETL, AI validation, and provenance management workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Added NREL & DOE data integration, AI synergy model, and telemetry v2 schema. |
-| v9.3.2 | 2025-10-28 | Integrated FAIR+CARE validation and provenance synchronization. |
-| v9.3.0 | 2025-10-26 | Established wildfire-energy hazard TMP dataset ingestion layer. |
+| v9.5.0 | 2025-11-02 | Added grid-energy overlap dataset, FAIR+CARE schema v2, and AI telemetry linkage. |
+| v9.3.2 | 2025-10-28 | Integrated energy resilience datasets and provenance audit workflows. |
+| v9.3.0 | 2025-10-26 | Established wildfire & energy TMP dataset layer under FAIR+CARE governance. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Wildfire Science × Energy Resilience × FAIR+CARE Governance × AI Explainability*  
+**Kansas Frontier Matrix** · *Resilience Intelligence × FAIR+CARE Ethics × Provenance Assurance*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/)
 
 </div>
-
