@@ -1,23 +1,23 @@
 ---
 title: "🔄 Kansas Frontier Matrix — Climate Transforms (Reprojection & CF Harmonization Layer · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/climate/transforms/README.md"
-version: "v9.1.0"
-last_updated: "2025-10-27"
+version: "v9.5.0"
+last_updated: "2025-11-02"
 status: "Active · FAIR+CARE+ISO+MCP-DL Aligned"
 review_cycle: "Continuous / Automated ETL QA"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.1.0/sbom.spdx.json"
-manifest_ref: "releases/v9.1.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.1.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/work-climate-transforms-v13.json"
-json_export: "releases/v9.1.0/work-climate-transforms.meta.json"
+sbom_ref: "../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/work-climate-transforms-v14.json"
+json_export: "../../../../releases/v9.5.0/work-climate-transforms.meta.json"
 validation_reports:
-  - "reports/self-validation/work-climate-transforms-validation.json"
-  - "reports/fair/climate_transforms_summary.json"
-  - "reports/audit/ai_climate_transform_ledger.json"
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-CLIMATE-TRANSFORMS-RMD-v9.1.0"
+  - "../../../../reports/self-validation/work-climate-transforms-validation.json"
+  - "../../../../reports/fair/climate_transforms_summary.json"
+  - "../../../../reports/audit/ai_climate_transform_ledger.json"
+governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+doc_id: "KFM-DATA-WORK-CLIMATE-TRANSFORMS-RMD-v9.5.0"
 maintainers: ["@kfm-data", "@kfm-climate"]
 approvers: ["@kfm-fair", "@kfm-governance"]
 reviewed_by: ["@kfm-ai", "@kfm-architecture", "@kfm-security"]
@@ -36,8 +36,8 @@ tags: ["climate", "transforms", "cf", "etl", "reprojection", "fair", "ai", "chec
 `data/work/tmp/climate/transforms/`
 
 **Purpose:**  
-To document, verify, and govern **all reprojection, resampling, CF compliance, and transformation events** within the Kansas Frontier Matrix’s climate data ETL pipeline.  
-This layer ensures that every modification is **checksum-verified, FAIR+CARE-aligned, and blockchain-tracked** for full reproducibility.
+Document, verify, and govern **all reprojection, resampling, CF compliance, and transformation events** within KFM’s climate ETL pipeline.  
+Every modification is **checksum-verified, FAIR+CARE-aligned, AI-explained, and ledger-tracked** for full reproducibility.
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-100%25%20Aligned-green)]()
 [![ISO CF](https://img.shields.io/badge/ISO%20%7C%20CF-Conventions%20Compliant-forestgreen)]()
@@ -51,13 +51,14 @@ This layer ensures that every modification is **checksum-verified, FAIR+CARE-ali
 
 ## 🧭 Overview
 
-The **Climate Transforms Layer** acts as the **intermediate QA & harmonization hub** for converting raw input data (NOAA normals, Daymet grids, USDM drought indices) into standardized CF/NetCDF, GeoTIFF, or Parquet outputs.  
+The **Climate Transforms Layer** acts as the **intermediate QA & harmonization hub** for converting raw inputs (NOAA normals, Daymet grids, USDM drought indices, CPC precipitation) into standardized CF/NetCDF, GeoTIFF, or Parquet outputs.  
 Transform operations recorded here are:
+
 - CF Convention–compliant and ISO 19115 traceable  
-- Logged with SHA-256 integrity validation  
-- AI-monitored for bias, drift, and interpolation errors  
-- FAIR+CARE evaluated for ethical metadata handling  
-- Recorded in blockchain provenance ledgers  
+- Logged with SHA-256 integrity validation and PGP signatures (optional)  
+- AI-monitored for bias, drift, interpolation, and warp errors  
+- FAIR+CARE evaluated for ethical metadata and license handling  
+- Registered in an immutable provenance ledger with manifest references  
 
 > *“Every reprojection is reversible, every transformation accountable.”*
 
@@ -95,18 +96,18 @@ flowchart TD
 ## 🧩 Transform Manifest Schema
 
 | Field | Description | Example |
-|-------|--------------|----------|
-| `transform_id` | Unique transformation ID | `transform_2025_10_27_001` |
+|-------|------------|---------|
+| `transform_id` | Unique transformation ID | `transform_2025_11_02_001` |
 | `input_file` | Source data file | `noaa_daymet_2025_raw.tif` |
 | `output_file` | Transformed product | `climate_daymet_cf_2025.tif` |
-| `process_type` | Transformation type | `Reprojection / CF Harmonization` |
-| `crs_source` | Source coordinate system | `EPSG:5070` |
-| `crs_target` | Target coordinate system | `EPSG:4326` |
-| `checksum` | SHA-256 hash | `b1a8d3c9e71f2b...` |
-| `ai_audit_score` | AI explainability or drift score | `0.987` |
-| `status` | Transformation outcome | `Validated` |
-| `timestamp` | UTC time of operation | `2025-10-27T00:00:00Z` |
-| `ledger_ref` | Provenance ledger reference | `reports/audit/ai_climate_transform_ledger.json#transform_2025_10_27_001` |
+| `process_type` | Transformation category | `Reprojection / CF Harmonization` |
+| `crs_source` | Source CRS | `EPSG:5070` |
+| `crs_target` | Target CRS | `EPSG:4326` |
+| `checksum` | SHA-256 output hash | `b1a8d3c9e71f2b...` |
+| `ai_audit_score` | AI drift/explainability score | `0.987` |
+| `status` | Outcome | `Validated` |
+| `timestamp` | UTC time | `2025-11-02T16:58:00Z` |
+| `ledger_ref` | Provenance pointer | `reports/audit/ai_climate_transform_ledger.json#transform_2025_11_02_001` |
 
 ---
 
@@ -126,14 +127,14 @@ flowchart TD
 
 ```json
 {
-  "ledger_id": "climate-transform-ledger-2025-10-27",
+  "ledger_id": "climate-transform-ledger-2025-11-02",
   "input_file": "noaa_daymet_2025_raw.tif",
   "output_file": "climate_daymet_cf_2025.tif",
   "checksum_sha256": "b1a8d3c9e71f2b...",
-  "ai_model": "focus-climate-v4",
+  "ai_model": "focus-climate-v5",
   "audit_score": 0.987,
   "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-27T00:00:00Z"
+  "timestamp": "2025-11-02T16:58:00Z"
 }
 ```
 
@@ -143,7 +144,7 @@ flowchart TD
 
 ```json
 {
-  "model": "focus-climate-v4",
+  "model": "focus-climate-v5",
   "task": "Transformation Drift Detection",
   "method": "LIME",
   "drift_detected": false,
@@ -156,7 +157,7 @@ flowchart TD
 }
 ```
 
-> Audited via `/reports/audit/ai_climate_transform_ledger.json`.
+> Audited via `../../../../reports/audit/ai_climate_transform_ledger.json`.
 
 ---
 
@@ -175,15 +176,16 @@ flowchart TD
 
 | Version | Date | Author | Reviewer | FAIR+CARE | ISO | Ledger | Notes |
 |:--|:--|:--|:--|:--|:--|:--|:--|
-| v9.1.0 | 2025-10-27 | @kfm-data | @kfm-governance | 100% | ✓ | ✓ | Added interpolation_audit.json and checksum drift detection |
-| v9.0.0 | 2025-10-23 | @kfm-climate | @kfm-fair | 99% | ✓ | ✓ | Initial CF and reprojection compliance |
+| v9.5.0 | 2025-11-02 | @kfm-data | @kfm-governance | 100% | ✓ | ✓ | Upgraded telemetry schema v14; added CPC precipitation support |
+| v9.1.0 | 2025-10-27 | @kfm-data | @kfm-governance | 100% | ✓ | ✓ | Added `interpolation_audit.json` and checksum drift detection |
+| v9.0.0 | 2025-10-23 | @kfm-climate | @kfm-fair | 99% | ✓ | ✓ | Initial CF + reprojection compliance layer |
 
 ---
 
 <div align="center">
 
 ### 🜂 Kansas Frontier Matrix — *Transformation · Integrity · Provenance*  
-**“Each transformation should explain itself — this layer makes sure it can.”**
+**“Each transformation should explain itself — this layer ensures it can.”**
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-100%25%20Aligned-green)]()
 [![CF/ISO Compliance](https://img.shields.io/badge/CF%20%7C%20ISO-Compliant-forestgreen)]()
