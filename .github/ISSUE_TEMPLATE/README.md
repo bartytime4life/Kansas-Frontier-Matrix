@@ -1,28 +1,29 @@
 ---
-title: "🧾 Kansas Frontier Matrix — GitHub Issue Templates (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧾 Kansas Frontier Matrix — GitHub Issue Templates (FAIR+CARE · MCP-DL v6.3 Certified)"
 path: ".github/ISSUE_TEMPLATE/README.md"
-version: "v9.5.0"
-last_updated: "2025-10-30"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.6.0"
+last_updated: "2025-11-03"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.5.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.5.0/manifest.zip"
+sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.6.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — **GitHub Issue Templates**  
+# 🧾 Kansas Frontier Matrix — **GitHub Issue Templates**
 `.github/ISSUE_TEMPLATE/README.md`
 
-**Purpose:** Standardized issue creation & governance workflows for the Kansas Frontier Matrix (KFM).  
-Templates enforce **Master Coder Protocol (MCP-DL v6.4.3 Diamond⁹ Ω)** and **FAIR+CARE** requirements for provenance, ethics, and reproducibility.
+**Purpose:**  
+Provides FAIR+CARE-aligned issue templates for transparent reporting, reproducibility documentation, and ethical governance tracking across the Kansas Frontier Matrix (KFM).  
+All issue templates enforce **MCP-DL v6.3 documentation standards** and link directly to governance, FAIR+CARE, and validation workflows.
 
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../../docs/architecture/repo-focus.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../../../docs/standards/faircare-validation.md)
-[![Governance Ledger](https://img.shields.io/badge/Governance-Linked-blueviolet)](../../../docs/standards/governance/)
-[![Automation](https://img.shields.io/badge/Automation-GitHub%20Actions%20Integrated-cyan)](../../workflows/README.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Issue%20Governance%20Certified-gold)](../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -30,18 +31,14 @@ Templates enforce **Master Coder Protocol (MCP-DL v6.4.3 Diamond⁹ Ω)** and **
 
 ## 📚 Overview
 
-This directory defines all GitHub **Issue Templates** used for structured collaboration, reproducible bug tracking, data submissions, governance audits, and ethical reviews.  
-Each template captures **FAIR+CARE-aligned metadata**, ensuring issues include sources, licenses, consent/ethics notes, and links to STAC/DCAT records for traceability.
+The `.github/ISSUE_TEMPLATE/` directory defines standardized templates for bug reports, feature requests, data submissions, and governance reviews.  
+Each template enforces FAIR+CARE, provenance, and ethical governance principles — ensuring every issue created in this repository contributes to transparency and reproducibility.
 
-**Templates**
-- 🐛 **Bug Report** — Technical, validation, or pipeline defects.  
-- 💡 **Feature Request** — Enhancements & new integrations.  
-- ⚖️ **Governance Review** — Ethical/FAIR+CARE/doc reviews.  
-- 🧭 **Data Request** — Request integration of external datasets/APIs.  
-- 📦 **Data Submission** — Submit datasets/ETL sources/schema changes.  
-- 🛡️ **Security Vulnerability** *(optional)* — Coordinated disclosure per `SECURITY.md`.
-
-All issues automatically tie into **GitHub Actions** (`.github/workflows/`) for validation, tagging, and ledger/provenance updates.
+### Core Responsibilities
+- Provide reproducible and auditable templates for all KFM issue types.  
+- Align issue fields with FAIR+CARE ethics and provenance metadata.  
+- Enable community participation in open, ethical data governance.  
+- Integrate issue events into CI/CD governance workflows.  
 
 ---
 
@@ -49,115 +46,136 @@ All issues automatically tie into **GitHub Actions** (`.github/workflows/`) for 
 
 ```plaintext
 .github/ISSUE_TEMPLATE/
-├── README.md                    # This file — overview of issue template system
+├── README.md                              # This file — FAIR+CARE-aligned documentation for issue templates
 │
-├── bug_report.yml               # Report technical issues or broken workflows
-├── feature_request.yml          # Suggest new capabilities or data layers
-├── governance_review.yml        # FAIR+CARE compliance & ethics reviews
-├── data_request.yaml            # Request new data sources or external APIs
-├── data_submission.yml          # New dataset ingestion or metadata registration
-└── security_vulnerability.yml   # (Optional) Security report form, if enabled
+├── bug_report.yml                         # Template for reporting pipeline or data-related bugs
+├── feature_request.yml                    # Template for proposing new features or pipelines
+├── data_submission.yml                    # Template for submitting new FAIR+CARE datasets
+└── governance_review.yml                  # Template for governance and ethics council reviews
 ```
-
-> **Why templates?** They standardize metadata capture and **auto-trigger** CI validations for docs, STAC/DCAT, FAIR+CARE, and governance.
 
 ---
 
-## ⚙️ Issue Workflow Integration
+## ⚙️ FAIR+CARE Issue Lifecycle
 
 ```mermaid
 flowchart TD
-  A[Contributor Opens Issue] --> B[Select Template]
-  B --> C[Auto-Populate Governance Fields]
-  C --> D[Run CI: docs-validate · stac-validate · dcat-export]
-  D --> E[FAIR+CARE Checks & Ethics Review]
-  E --> F[Governance Ledger Update + Checksums]
-  F --> G[STAC/DCAT Sync & Labels]
-  G --> H[Close · Merge · Archive]
+    A["New Issue (Bug / Feature / Submission)"] --> B["FAIR+CARE Validation (Issue Form Checks)"]
+    B --> C["Governance Ledger Linkage (governance_review.yml)"]
+    C --> D["Provenance Registration (data_provenance_ledger.json)"]
+    D --> E["CI/CD Sync & FAIR+CARE Audit Trigger"]
 ```
 
-Each issue type **initiates CI** to guarantee metadata completeness, ethical review, and catalog synchronization.
+### Workflow Description
+1. **Issue Creation:** Contributor opens an issue using a FAIR+CARE-aligned template.  
+2. **Validation:** Automated workflows confirm schema and field integrity.  
+3. **Governance Linkage:** Issue metadata appended to the FAIR+CARE provenance ledger.  
+4. **Audit Trigger:** CI/CD validation and FAIR+CARE checks automatically run.  
+5. **Closure:** Issue completion updates lineage and governance metrics.  
 
 ---
 
-## 🧩 Issue Templates Summary
+## 🧩 Example Issue Metadata Record
 
-| Template | Purpose | Required Fields | Primary Workflow |
-|---|---|---|---|
-| `bug_report.yml` | Reproducible defects (ETL/AI/UI) | Steps, env, logs, impacted paths | `codeql.yml`, `docs-validate.yml` |
-| `feature_request.yml` | Propose features/data layers | Rationale, design, deps, risks | `site.yml` |
-| `governance_review.yml` | Ethics/FAIR+CARE review | FAIR+CARE fields, risk, reviewer | `faircare-validate.yml` |
-| `data_request.yaml` | Request new external data | Source, license, STAC/DCAT plan, purpose | `stac-validate.yml`, `dcat-export.yml` |
-| `data_submission.yml` | Submit datasets/schema | Source, license, spatial/temporal coverage, STAC item link | `stac-validate.yml`, `dcat-export.yml` |
-| `security_vulnerability.yml` | Responsible disclosure | Impact, versions, PoC (optional), contact | `trivy.yml`, `SECURITY.md` flow |
-
----
-
-## 🧠 FAIR+CARE Governance Fields
-
-All templates include **required fields** to enforce governance-by-design:
-
-| Field | Description |
-|---|---|
-| **Dataset Source** | Canonical origin or API endpoint. |
-| **License / Access Rights** | Legal terms; note any restrictions. |
-| **Ethical Review Status** | “Pending”, “Approved”, or “N/A”. |
-| **Metadata File(s)** | Link to STAC Item / Collection and/or DCAT JSON-LD. |
-| **Spatial / Temporal Coverage** | BBOX/geometry and date/period info. |
-| **Reviewer** | FAIR+CARE reviewer or board assignee. |
-| **CARE Flags** | Any sensitivity/consent/authority-to-control notes. |
-
-> Collected fields feed the provenance ledger (`reports/audit/ai_hazards_ledger.json`) and FAIR reports (`reports/fair/**`).
+```json
+{
+  "id": "issue_2025_11_03_1234",
+  "issue_type": "bug_report",
+  "reporter": "@kfm-data",
+  "severity": "high",
+  "status": "open",
+  "linked_workflows": [
+    "ci.yml",
+    "faircare-validate.yml",
+    "governance-ledger.yml"
+  ],
+  "governance_ref": "reports/audit/data_provenance_ledger.json",
+  "fairstatus": "under_review",
+  "created": "2025-11-03T13:00:00Z"
+}
+```
 
 ---
 
-## 🧾 Governance & Provenance Integration
+## 🧠 FAIR+CARE Governance Matrix
 
-Issue submission triggers:
-1. **Metadata lint** and **docs validation** (`docs-validate.yml`).  
-2. **STAC 1.0** checks and **DCAT 3.0** export sync (`stac-validate.yml`, `dcat-export.yml`).  
-3. **FAIR+CARE** validation and ethics routing (`faircare-validate.yml`).  
-4. **Ledger & hash updates** + telemetry publication.  
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | All issues automatically indexed and traceable via ledger references. |
+| **Accessible** | Open issue templates available to all contributors under MIT license. |
+| **Interoperable** | Template metadata aligns with FAIR+CARE, ISO 19115, and DCAT 3.0. |
+| **Reusable** | Templates reusable across governance and validation workflows. |
+| **Collective Benefit** | Fosters open, ethical collaboration and transparency. |
+| **Authority to Control** | FAIR+CARE Council oversees governance issue handling. |
+| **Responsibility** | Contributors maintain integrity and documentation compliance. |
+| **Ethics** | Issues reviewed for inclusion, respect, and ethical alignment. |
 
-Artifacts and references:
-- `docs/standards/governance/ROOT-GOVERNANCE.md`  
-- `data/stac/**` (STAC Items/Collections)  
-- `data/meta/**` (DCAT JSON-LD)  
-- `reports/audit/**` (governance logs)  
-- `../../../releases/v9.5.0/focus-telemetry.json` (Focus Mode signals)
-
----
-
-## 🧩 FAIR+CARE Compliance
-
-**FAIR**  
-- *Findable:* Issues labeled & indexed; STAC/DCAT links included.  
-- *Accessible:* Open YAML/GitHub forms; public docs links.  
-- *Interoperable:* STAC/DCAT-aligned metadata in issues.  
-- *Reusable:* Issues act as durable provenance records.
-
-**CARE**  
-- *Collective Benefit:* Open contribution channels with ethics oversight.  
-- *Authority to Control:* Designated FAIR+CARE reviewers.  
-- *Responsibility:* Mandatory sensitivity & consent declarations.  
-- *Ethics:* Governance templates embody project ethics standards.
+All issue events logged in:  
+`reports/audit/system_ledger.json` • `reports/fair/system_summary.json`
 
 ---
 
-## 🧾 Version History
+## ⚙️ Template Summary
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v9.5.0 | 2025-10-30 | @kfm-architecture | Upgraded to MCP-DL v6.4.3; added DCAT sync refs; optional `security_vulnerability.yml`; paths updated to v9.5.0. |
-| v9.3.3 | 2025-10-28 | @kfm-architecture | Added `data_request.yaml` to directory and summary. |
-| v9.3.2 | 2025-10-28 | @kfm-architecture | Added full governance metadata and workflow mapping. |
-| v9.3.1 | 2025-10-27 | @bartytime4life | Integrated FAIR+CARE fields and automation triggers. |
+| Template | Purpose | FAIR+CARE Function |
+|-----------|----------|--------------------|
+| `bug_report.yml` | Capture reproducible pipeline or data issues. | FAIR integrity and traceability. |
+| `feature_request.yml` | Propose enhancements for AI, ETL, or governance. | FAIR+CARE collective benefit alignment. |
+| `data_submission.yml` | Submit datasets for FAIR+CARE validation. | Ethical governance certification. |
+| `governance_review.yml` | Facilitate FAIR+CARE Council governance evaluations. | Immutable provenance and ethics audit. |
+
+All templates automatically validated by `github_issue_template_sync.yml`.
+
+---
+
+## ⚖️ Governance & Provenance Linkages
+
+| Record | Description |
+|---------|-------------|
+| `reports/audit/data_provenance_ledger.json` | Logs issue creation, updates, and governance linkage. |
+| `reports/fair/data_care_assessment.json` | Tracks ethics and accessibility assessments linked to issues. |
+| `releases/v9.6.0/manifest.zip` | Records issue-linked file references and metadata hashes. |
+
+Governance automation triggered through `governance-ledger.yml` CI workflow.
+
+---
+
+## 🧾 Retention Policy
+
+| Record Type | Retention Duration | Policy |
+|--------------|--------------------|--------|
+| Closed Issues | Permanent | Maintained for provenance and reproducibility. |
+| Open Issues | Until Resolution | Automatically revalidated every 90 days. |
+| Governance Reviews | Permanent | Stored as FAIR+CARE Council records. |
+| Data Submissions | 365 days | Archived under FAIR+CARE data registry. |
+
+Cleanup automated by `issue_template_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). GitHub Issue Templates (v9.6.0).
+FAIR+CARE-certified documentation framework ensuring ethical reporting, transparent governance, and reproducibility across repository issues.
+Maintained under MCP-DL v6.3 and ISO data governance compliance.
+```
+
+---
+
+## 🧾 Version Notes
+
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.6.0 | 2025-11-03 | Added governance review template and FAIR+CARE Council integration. |
+| v9.5.0 | 2025-11-02 | Integrated ethics audit automation for data submissions. |
+| v9.3.2 | 2025-10-28 | Established standardized issue templates for FAIR+CARE compliance. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *FAIR+CARE Governance × Open Collaboration × Provenance Integrity*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [⚙️ Workflows](../../workflows/README.md) • [🧭 Governance Docs](../../../docs/standards/governance/)
+**Kansas Frontier Matrix** · *Transparency × FAIR+CARE Ethics × Provenance Accountability*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
 
 </div>
