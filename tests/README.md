@@ -1,44 +1,35 @@
 ---
-title: "🧪 Kansas Frontier Matrix — Comprehensive Test & Validation Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧪 Kansas Frontier Matrix — Testing & QA Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tests/README.md"
-version: "v9.4.0"
+version: "v9.5.0"
 last_updated: "2025-11-02"
-review_cycle: "Quarterly / Autonomous"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.4.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.4.0/manifest.zip"
+sbom_ref: "../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-telemetry_schema_ref: "../schemas/telemetry/tests-v1.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+telemetry_ref: "../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/tests-validation-v2.json"
+validation_reports:
+  - "../reports/fair/tests_summary.json"
+  - "../reports/audit/ai_tests_ledger.json"
+  - "../reports/self-validation/work-tests-validation.json"
+governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
-owners: ["@kfm-qa", "@kfm-devops", "@kfm-ai", "@kfm-governance"]
-status: "Stable"
-maturity: "Production"
-tags: ["tests", "validation", "ci", "qa", "automation", "faircare", "coverage", "security"]
-alignment:
-  - MCP-DL v6.4.3
-  - FAIR+CARE
-  - ISO/IEC 25010 Software Quality
-  - ISO 29119 Software Testing
-  - WCAG 2.1 AA / Accessibility Testing
-  - Pytest / CI/CD Integration
-preservation_policy:
-  retention: "automated test results retained for 10 years · validation reports permanent"
-  checksum_algorithm: "SHA-256"
 ---
 
 <div align="center">
 
-# 🧪 Kansas Frontier Matrix — **Comprehensive Test & Validation Framework**
+# 🧪 Kansas Frontier Matrix — **Testing & QA Framework**
 `tests/README.md`
 
-**Purpose:** Provides a unified testing and quality assurance framework for the entire Kansas Frontier Matrix ecosystem.  
-Combines automated testing, validation, accessibility audits, and FAIR+CARE ethical compliance into one reproducible suite integrated with CI/CD pipelines and governance ledgers.
+**Purpose:**  
+FAIR+CARE-certified testing and quality assurance (QA) framework ensuring **pipeline reproducibility, schema integrity, AI ethics validation, and governance compliance** across the Kansas Frontier Matrix (KFM).  
+This framework automates validation for all ETL, AI, and governance modules within MCP-DL v6.3 compliance standards.
 
-[![✅ Test Workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/test-suite.yml/badge.svg)](../.github/workflows/test-suite.yml)  
-[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Quality%20Certified-gold)](../docs/standards/faircare-validation.md)  
-[![🔍 Coverage](https://img.shields.io/badge/Pytest%20Coverage-100%25-blue)](../reports/tests/coverage-summary.json)  
-[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-QA%20Certified-gold)](../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -46,15 +37,14 @@ Combines automated testing, validation, accessibility audits, and FAIR+CARE ethi
 
 ## 📚 Overview
 
-The **Kansas Frontier Matrix Test Suite** validates every system layer — from backend ETL pipelines and AI models to frontend accessibility and governance automation.  
-All tests produce auditable results that are automatically registered within the **Immutable Governance Chain**, guaranteeing traceability, reproducibility, and ethical compliance.
+The `tests/` directory provides **automated testing suites** for all core modules — ensuring each KFM subsystem (ETL, AI, governance, and telemetry) maintains FAIR+CARE alignment, checksum verification, and ethics compliance.  
+This QA layer powers autonomous validation pipelines under continuous integration (CI) environments.
 
-**Core Objectives:**
-- 🧱 Verify data pipelines, schemas, and metadata contracts  
-- 🧠 Validate AI/Focus Mode behavior and ethical transparency  
-- ⚙️ Test CI/CD workflows and governance ledger synchronization  
-- ♿ Audit accessibility and WCAG compliance in the web UI  
-- 🔐 Enforce FAIR+CARE standards and provenance integrity  
+### Core Responsibilities
+- Execute pytest-based validation suites for ETL, schema, and AI workflows.  
+- Enforce FAIR+CARE validation checks across all data and governance layers.  
+- Perform regression, integrity, and explainability tests for reproducibility.  
+- Synchronize results into governance ledgers and FAIR+CARE dashboards.  
 
 ---
 
@@ -62,144 +52,136 @@ All tests produce auditable results that are automatically registered within the
 
 ```plaintext
 tests/
-├── README.md                      # This file — unified testing documentation
+├── README.md                              # This file — documentation for testing framework
 │
-├── unit/                          # Module-level unit tests
-│   ├── test_data_tools.py         # STAC/DCAT validation, checksum integrity
-│   ├── test_ai_focus.py           # AI/ML Focus Mode model validation and inference testing
-│   ├── test_governance_tools.py   # Governance automation and ledger sync tests
-│   └── test_utils.py              # Utility function and configuration loader validation
-│
-├── integration/                   # End-to-end and pipeline integration tests
-│   ├── test_etl_integration.py    # Data ETL pipeline and normalization validation
-│   ├── test_frontend_api.py       # Web-API data retrieval and Focus Mode linkage
-│   ├── test_focusmode_api.py      # Semantic graph and AI-driven Focus Mode interaction tests
-│   └── test_metadata_links.py     # STAC/DCAT/CIDOC CRM metadata relationship verification
-│
-├── governance/                    # FAIR+CARE governance and audit validation
-│   ├── test_faircare_audit.py     # FAIR+CARE ethics and data stewardship checks
-│   ├── test_license_compliance.py # License attribution and open-data verification
-│   └── test_provenance_chain.py   # Provenance and governance ledger validation
-│
-└── performance/                   # System-level performance and scalability tests
-    ├── test_map_rendering.py      # MapLibre rendering and timeline visualization load tests
-    ├── test_api_latency.py        # Backend FastAPI latency and throughput checks
-    └── test_ai_response_time.py   # AI inference latency, drift, and response performance
+├── test_etl.py                            # Validates ETL pipeline inputs, transformations, and outputs
+├── test_schema_validation.py              # Tests schema conformity for datasets and metadata
+├── test_faircare_audit.py                 # Verifies FAIR+CARE ethics compliance logic
+├── test_ai_explainability.py              # Tests AI explainability and drift response
+├── test_governance_sync.py                # Validates governance ledger and provenance link integrity
+├── conftest.py                            # Shared test fixtures and configuration for pytest
+├── fixtures/                              # Reusable mock datasets and simulated ledger entries
+│   ├── mock_dataset.json
+│   ├── mock_ai_output.json
+│   └── mock_manifest.json
+└── metadata.json                          # Provenance and governance linkage metadata
 ```
 
 ---
 
-## ⚙️ Test Execution
+## ⚙️ Testing Workflow
 
-### 🧪 Run All Tests
-```bash
-pytest -v
+```mermaid
+flowchart TD
+    A["Push or PR Trigger (GitHub Actions)"] --> B["Run Pytest Suites (ETL, Schema, AI, FAIR+CARE)"]
+    B --> C["Validate Results and Generate QA Reports"]
+    C --> D["Checksum Verification and Provenance Logging"]
+    D --> E["Governance Ledger Sync and FAIR+CARE Certification"]
 ```
 
-### 🔍 Run Specific Test Suite
-```bash
-pytest tests/integration/test_focusmode_api.py
-```
+### Workflow Description
+1. **Execution:** Automatically runs pytest suites for all KFM workflows.  
+2. **Validation:** Performs schema and FAIR+CARE ethics checks per data contract.  
+3. **Integrity:** Cross-verifies checksum hashes for reproducibility validation.  
+4. **Governance Sync:** Pushes certified QA outcomes into immutable provenance ledgers.  
+5. **Reporting:** Generates detailed logs, coverage summaries, and Focus Mode telemetry updates.
 
-### 🧮 Generate Coverage Report
-```bash
-pytest --cov=src --cov-report=term-missing --cov-report=json:reports/tests/coverage-summary.json
-```
+---
 
-### ⚖️ Execute FAIR+CARE Audits
-```bash
-pytest tests/governance/test_faircare_audit.py
-```
+## 🧩 Example Test Metadata Record
 
-### 🧠 Run Performance Benchmarks
-```bash
-pytest tests/performance/ --maxfail=1 --disable-warnings -q
+```json
+{
+  "id": "tests_framework_v9.5.0_2025Q4",
+  "suites_executed": [
+    "test_etl.py",
+    "test_schema_validation.py",
+    "test_ai_explainability.py"
+  ],
+  "tests_passed": 248,
+  "tests_failed": 0,
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "coverage": 98.9,
+  "ai_explainability_score": 0.992,
+  "governance_registered": true,
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_tests_ledger.json",
+  "created": "2025-11-02T23:59:00Z",
+  "validator": "@kfm-tests"
+}
 ```
 
 ---
 
-## 🧩 CI/CD & Governance Integration
+## 🧠 FAIR+CARE Governance Matrix
 
-All tests are executed automatically in the **GitHub Actions** CI/CD workflow (`.github/workflows/test-suite.yml`).  
-Results are published to governance and observability dashboards, feeding the Immutable Ledger.
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | All test runs indexed by dataset, module, and checksum ID. |
+| **Accessible** | Test logs and reports stored in JSON, HTML, and JUnit XML formats. |
+| **Interoperable** | Integrated with FAIR+CARE, ISO 19115, and AI ethics standards. |
+| **Reusable** | Test fixtures and schemas reusable across validation pipelines. |
+| **Collective Benefit** | Promotes transparent and ethical software validation practices. |
+| **Authority to Control** | FAIR+CARE Council certifies QA standards for ethical automation. |
+| **Responsibility** | Validators ensure AI/ETL integrity through consistent audits. |
+| **Ethics** | Maintains human oversight and transparency in all automated validation. |
 
-| Category | Validation Scope | Output |
-|-----------|------------------|---------|
-| **FAIR+CARE Audit** | Ethics and data stewardship validation | `reports/fair/faircare-audit.json` |
-| **Schema Compliance** | STAC/DCAT structure verification | `reports/self-validation/schema-validation.json` |
-| **Provenance Chain** | Ledger synchronization validation | `reports/audit/provenance-validation.json` |
-| **Security Tests** | SBOM & license compliance | `reports/audit/security-validation.json` |
-| **Accessibility** | WCAG compliance in web UI | `reports/ui-accessibility.json` |
-| **Performance** | Load and latency benchmarks | `reports/tests/performance-metrics.json` |
+Audit outputs logged in:  
+`reports/audit/ai_tests_ledger.json` • `reports/fair/tests_summary.json`
 
-All output reports are linked to:
-```
-reports/audit/governance-ledger.json
-releases/v9.4.0/focus-telemetry.json
+---
+
+## ⚙️ Test Coverage & QA Artifacts
+
+| File | Description | Format |
+|------|--------------|--------|
+| `pytest.log` | Full execution log of validation test suite. | Text |
+| `coverage.json` | Code and validation coverage summary. | JSON |
+| `fairstatus.json` | FAIR+CARE validation and compliance results. | JSON |
+| `checksums.json` | Hash validation and lineage verification registry. | JSON |
+| `metadata.json` | Governance metadata linking tests to provenance records. | JSON |
+
+Automated by `tests_sync.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| File Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| Test Reports | 365 days | Archived for audit and compliance verification. |
+| FAIR+CARE Results | Permanent | Stored for ethics and reproducibility validation. |
+| Logs & Coverage | 90 days | Rotated after Focus Mode telemetry export. |
+| Metadata | Permanent | Maintained for lineage and governance continuity. |
+
+Cleanup handled by `tests_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Testing & QA Framework (v9.5.0).
+FAIR+CARE-certified automated testing system ensuring reproducibility, transparency, and ethical compliance.
+Implements continuous validation under MCP-DL v6.3 governance protocols.
 ```
 
 ---
 
-## ♻️ FAIR+CARE & ISO Validation Matrix
+## 🧾 Version Notes
 
-KFM’s QA framework aligns FAIR+CARE principles with ISO testing standards to ensure quality, ethics, and reproducibility.
-
-| Category | Principle | Test Source | Standard |
-|-----------|------------|--------------|-----------|
-| **FAIR+CARE** | Reusability & Collective Benefit | `test_faircare_audit.py` | FAIR+CARE 2024 Spec |
-| **Quality Assurance** | Maintainability & Reliability | All unit tests | ISO/IEC 25010 §4.3 |
-| **Ethical AI** | Explainability & Non-bias | `test_ai_focus.py` | ISO 23894 AI Ethics |
-| **Governance** | Provenance & Auditability | `test_provenance_chain.py` | MCP-DL v6.4.3 |
-| **Security** | Open Source Integrity | `test_license_compliance.py` | SPDX v2.3 |
-| **Accessibility** | Inclusivity & Usability | `test_frontend_api.py` | WCAG 2.1 AA |
-
----
-
-## 🧠 Observability & Telemetry Integration
-
-The test suite emits telemetry and validation events that feed into the **KFM Observability Matrix**, enabling data-driven quality tracking.
-
-**Telemetry Schema:**  
-`schemas/telemetry/tests-v1.json`
-
-**Telemetry Reports:**
-```
-releases/v9.4.0/focus-telemetry.json
-reports/tests/test-events.json
-reports/tests/coverage-summary.json
-```
-
-All telemetry entries are cryptographically signed and checksum-verified before archival.
-
----
-
-## 🛡️ Security, Ethics & Provenance
-
-- **Security Scanning:** Dependencies audited via Trivy and SPDX SBOM checks.  
-- **Data Integrity:** SHA-256 checksums validated post-build.  
-- **Ethical Assurance:** FAIR+CARE audits certify cultural and ethical compliance.  
-- **Provenance Ledger:** All test results appended to `governance-ledger.json`.
-
-Immutable logs ensure every test and validation action is traceable within the project lifecycle.
-
----
-
-## 🧾 Version History
-
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.4.0 | 2025-11-02 | @kfm-qa | Upgraded governance integration and ISO validation mapping; added telemetry audit schema. |
-| v9.3.3 | 2025-11-01 | @kfm-data | Enhanced schema compliance and data validation automation. |
-| v9.3.2 | 2025-10-29 | @kfm-ai | Improved AI/Focus Mode tests for ethics and explainability metrics. |
-| v9.3.1 | 2025-10-27 | @kfm-architecture | Added CI/CD integration with FAIR+CARE telemetry tracking. |
-| v9.3.0 | 2025-10-25 | @bartytime4life | Established comprehensive testing framework under MCP-DL v6.4.3. |
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Added AI explainability and governance sync validation tests. |
+| v9.3.2 | 2025-10-28 | Improved FAIR+CARE audit integration with pytest framework. |
+| v9.3.0 | 2025-10-26 | Established unified QA framework for all KFM validation modules. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Immutable Quality Assurance Framework**  
-*“Every function verified. Every model explainable. Every audit immutable.”* 🔗  
-📍 `tests/README.md` — FAIR+CARE-aligned, ISO-certified testing ecosystem ensuring transparency and reproducibility across Kansas Frontier Matrix.
+**Kansas Frontier Matrix** · *Automated QA × FAIR+CARE Ethics × Provenance Validation*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
 
 </div>
