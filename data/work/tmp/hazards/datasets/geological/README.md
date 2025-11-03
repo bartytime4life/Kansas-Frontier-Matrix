@@ -1,19 +1,19 @@
 ---
-title: "🌎 Kansas Frontier Matrix — Geological Hazards TMP Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌋 Kansas Frontier Matrix — Geological Hazard Datasets TMP Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/datasets/geological/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
-review_cycle: "Continuous / Automated"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../../../releases/v9.5.0/sbom.spdx.json"
 manifest_ref: "../../../../../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
 telemetry_ref: "../../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-geological-v2.json"
+telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-datasets-geological-v2.json"
 validation_reports:
-  - "../../../../reports/fair/geological_hazards_summary.json"
-  - "../../../../reports/audit/ai_hazards_ledger.json"
-  - "../../../../reports/self-validation/work-hazards-validation.json"
+  - "../../../../../../reports/fair/hazards_geological_summary.json"
+  - "../../../../../../reports/audit/ai_hazards_ledger.json"
+  - "../../../../../../reports/self-validation/work-hazards-validation.json"
 governance_ref: "../../../../../../docs/standards/governance/hazards-governance.md"
 ontology_alignment: "../../../../../../ontologies/CIDOC_CRM-HazardExt.owl"
 license: "MIT"
@@ -21,12 +21,12 @@ license: "MIT"
 
 <div align="center">
 
-# 🌎 Kansas Frontier Matrix — **Geological Hazards TMP Datasets**
+# 🌋 Kansas Frontier Matrix — **Geological Hazard Datasets TMP Layer**
 `data/work/tmp/hazards/datasets/geological/README.md`
 
 **Purpose:**  
-Transient ingestion and harmonization workspace for **earthquake, landslide, and subsidence datasets** utilized in the Kansas Frontier Matrix (KFM).  
-Supports **ETL, FAIR+CARE validation, and AI-driven seismic risk analysis** while ensuring full provenance and ontology alignment.
+Temporary FAIR+CARE-compliant repository for **geological hazard datasets**, including earthquakes, landslides, and subsidence monitoring, within the Kansas Frontier Matrix (KFM).  
+This layer provides schema-normalized, checksum-verified, and ethically governed data to support geohazard modeling, validation, and archival workflows.
 
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geological%20Integrity%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../LICENSE)
@@ -38,14 +38,14 @@ Supports **ETL, FAIR+CARE validation, and AI-driven seismic risk analysis** whil
 
 ## 📚 Overview
 
-The `geological/` TMP directory stores all **geophysical hazard datasets** for Kansas, with an emphasis on **earthquakes, fault systems, karst features, and ground subsidence**.  
-These datasets are used in Focus Mode analytics, hazard correlation mapping, and AI-driven geospatial inference modeling.
+The `data/work/tmp/hazards/datasets/geological/` directory serves as a **transient workspace** for pre-validation, schema harmonization, and FAIR+CARE auditing of geological hazard data.  
+Datasets include earthquake catalogs, subsidence monitoring data, and landslide inventories sourced from **USGS, Kansas Geological Survey (KGS), and NGDC** repositories.
 
-### Core Dataset Domains
-- **Seismicity:** Earthquake events, magnitudes, and focal depths.  
-- **Geotechnical:** Fault zones, lithology, and shear stress data.  
-- **Subsidence:** Karst collapse zones, oil and gas extraction regions, and land deformation grids.  
-- **Landslides:** USGS national landslide inventory intersected with Kansas DEM derivatives.  
+### Core Responsibilities
+- Host geological hazard datasets extracted from authoritative public sources.  
+- Harmonize schemas, formats, and coordinate systems for ETL compatibility.  
+- Provide metadata, checksum validation, and FAIR+CARE audit readiness.  
+- Support downstream AI modeling and hazard risk analysis workflows.  
 
 ---
 
@@ -53,35 +53,33 @@ These datasets are used in Focus Mode analytics, hazard correlation mapping, and
 
 ```plaintext
 data/work/tmp/hazards/datasets/geological/
-├── README.md                                 # This file — geological hazard dataset overview
+├── README.md                             # This file — documentation for geological hazard datasets TMP layer
 │
-├── kansas_earthquakes_1977_2025.csv          # Historical earthquake records (magnitude, depth, location)
-├── usgs_landslides.geojson                   # Mapped landslide polygons and susceptibility scores
-├── subsidence_zones_2025.geojson             # Ground subsidence data (KGS & InSAR-derived)
-├── fault_lines_kansas.geojson                # Mapped fault traces and structural geology layers
-├── karst_collapse_points.geojson             # Sinkholes and karst collapse features
-└── metadata.json                             # Provenance, FAIR+CARE, and validation metadata
+├── earthquakes_2025.csv                  # USGS earthquake event catalog for Kansas
+├── landslides_inventory.geojson          # Kansas statewide landslide inventory dataset
+├── subsidence_zones_2025.parquet         # Identified and predicted ground subsidence regions
+└── metadata.json                         # Provenance, checksum, and FAIR+CARE audit metadata
 ```
 
 ---
 
-## ⚙️ Ingestion & Processing Workflow
+## ⚙️ Geological Data Workflow
 
 ```mermaid
 flowchart TD
-    A["Source Data - USGS, KGS, DASC, InSAR"] --> B["ETL Ingestion and Schema Mapping"]
-    B --> C["FAIR+CARE Validation and Ethics Audit"]
-    C --> D["Checksum Verification and Metadata Logging"]
-    D --> E["Ontology Alignment - CIDOC CRM Hazard Extension"]
-    E --> F["Promotion → Transforms Layer (data/work/tmp/hazards/transforms/)"]
+    A["Raw Geological Data (USGS / KGS / NGDC)"] --> B["ETL Extraction (data/work/tmp/hazards/logs/etl/extract/)"]
+    B --> C["Schema Harmonization (Coordinate, Attributes, CF Compliance)"]
+    C --> D["FAIR and CARE Validation (Ethics and Accessibility Review)"]
+    D --> E["Checksum Verification and Provenance Registration"]
+    E --> F["Promotion to Staging Layer (data/work/staging/hazards/)"]
 ```
 
 ### Workflow Description
-1. **Extract:** Gather seismic, landslide, and subsidence data from USGS, KGS, and InSAR portals.  
-2. **Normalize:** Align coordinates (EPSG:4326) and standardize field definitions.  
-3. **Validate:** Run schema and FAIR+CARE compliance checks for completeness and ethics.  
-4. **Map Ontology:** Associate hazards with CIDOC CRM classes (`E5_Event`, `E18_Physical_Thing`, etc.).  
-5. **Promote:** Export validated data to transforms layer for reprojection or modeling workflows.
+1. **Extraction:** Import data from USGS Earthquake Hazards Program, KGS, and related sources.  
+2. **Transformation:** Normalize attributes (magnitude, depth, intensity, location) for schema consistency.  
+3. **Validation:** Apply FAIR+CARE audits and ethical data sourcing verification.  
+4. **Checksum Registration:** Compute SHA-256 integrity hashes and log to governance ledger.  
+5. **Promotion:** Datasets certified for staging layer ingestion and AI analysis.
 
 ---
 
@@ -89,18 +87,18 @@ flowchart TD
 
 ```json
 {
-  "id": "geological_hazards_earthquakes_v9.5.0",
-  "source": "USGS Earthquake Catalog + Kansas Geological Survey",
+  "id": "geological_hazards_dataset_v9.5.0_2025Q4",
   "domain": "geological",
-  "records": 3124,
-  "variables": ["magnitude", "depth_km", "event_date", "latitude", "longitude"],
-  "crs": "EPSG:4326",
-  "schema_contract": "docs/contracts/data-contract-v3.json",
-  "checksum": "sha256:c71b99f4a6a57b4d71ab7fa439d622cb8d1749fa...",
-  "validated": true,
+  "datasets": ["earthquakes_2025.csv", "landslides_inventory.geojson", "subsidence_zones_2025.parquet"],
+  "records_processed": 102341,
+  "checksum_verified": true,
   "fairstatus": "compliant",
+  "schema_version": "v3.0.1",
+  "validator": "@kfm-geohazards",
+  "checksum": "sha256:91cdaf4374f6e7a019ae8e3f22a4129f9a7c02e7...",
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "created": "2025-11-02T17:30:00Z"
+  "created": "2025-11-02T19:20:00Z"
 }
 ```
 
@@ -110,54 +108,51 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Indexed in KFM’s ledger by dataset ID and source origin. |
-| **Accessible** | Open formats (CSV, GeoJSON) following FAIR licensing practices. |
-| **Interoperable** | Aligned with ISO 19115, CIDOC CRM, and DCAT schemas. |
-| **Reusable** | Versioned, checksum-verified, and ontology-linked. |
-| **Collective Benefit** | Supports seismic resilience planning and geotechnical monitoring. |
-| **Authority to Control** | FAIR+CARE Council validates publication and retention policy. |
-| **Responsibility** | Validators record transformations and governance approval logs. |
-| **Ethics** | Data screened for security-sensitive geological sites and anonymized. |
+| **Findable** | Indexed by dataset, schema version, and checksum in ledger. |
+| **Accessible** | Stored as open formats (CSV, GeoJSON, Parquet). |
+| **Interoperable** | Aligns with ISO 19115, STAC 1.0, and CIDOC CRM-HazardExt ontology. |
+| **Reusable** | Provides detailed provenance, schema, and checksum metadata. |
+| **Collective Benefit** | Enhances open geoscience collaboration and hazard awareness. |
+| **Authority to Control** | FAIR+CARE Council approves schema and dataset promotion. |
+| **Responsibility** | Geohazard maintainers document schema updates and QA logs. |
+| **Ethics** | Sensitive location data generalized to preserve safety and privacy. |
 
-Governance audits and FAIR+CARE results documented in:  
-`reports/audit/ai_hazards_ledger.json` • `reports/fair/geological_hazards_summary.json`
+Audit and lineage results stored in:  
+`reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_geological_summary.json`
 
 ---
 
-## ⚙️ Validation & Provenance Artifacts
+## ⚙️ Dataset QA & Provenance Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `metadata.json` | Provenance metadata and FAIR+CARE compliance record. | JSON |
-| `checksum_registry.json` | Dataset integrity hash tracking for governance. | JSON |
-| `ontology_mapping.json` | Mappings between geology datasets and HazardExt ontology. | JSON |
-| `etl_trace.log` | Detailed ETL and ingestion event trace. | Text |
+| `earthquakes_2025.csv` | Earthquake event catalog with metadata and magnitudes. | CSV |
+| `landslides_inventory.geojson` | Spatial records of landslides and slope instability zones. | GeoJSON |
+| `subsidence_zones_2025.parquet` | Gridded model output for predicted ground subsidence. | Parquet |
+| `metadata.json` | FAIR+CARE, checksum, and provenance tracking record. | JSON |
 
-ETL and validation automation managed via `geological_dataset_sync.yml`.
+QA and synchronization automated through `hazards_geological_sync.yml`.
 
 ---
 
 ## 🧾 Retention Policy
 
-| Dataset Type | Retention Duration | Policy |
-|---------------|--------------------|--------|
-| Seismic Events | 30 days | Promoted to transforms post-validation. |
-| Landslide Data | 30 days | Retained for AI terrain model explainability. |
-| Subsidence Data | 14 days | Cleared post-Governance verification. |
-| Karst Features | 14 days | Retained until schema harmonization complete. |
-| Metadata & Logs | 365 days | Archived permanently for provenance traceability. |
+| Data Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP Geological Datasets | 14 days | Purged after validation and staging transfer. |
+| Metadata | 365 days | Archived for FAIR+CARE audit reference. |
+| Provenance & Ledger Records | Permanent | Retained for reproducibility and governance. |
 
-Cleanup controlled by `geological_dataset_cleanup.yml`.
+Retention governed by `hazards_geological_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Geological Hazards TMP Datasets (v9.5.0).
-Temporary repository for geological hazard datasets (earthquakes, faults, landslides, and subsidence) from USGS, KGS, and DASC.
-FAIR+CARE-compliant, ISO 19115 aligned, and ontology-mapped to CIDOC CRM Hazard Extension.
-Restricted to internal ETL, AI QA, and governance operations.
+Kansas Frontier Matrix (2025). Geological Hazard Datasets TMP Layer (v9.5.0).
+Temporary FAIR+CARE-certified dataset repository for earthquakes, landslides, and subsidence data in Kansas.
+Aligned with ISO 19115, STAC 1.0, and CIDOC CRM for ethical and transparent hazard data processing.
 ```
 
 ---
@@ -166,16 +161,15 @@ Restricted to internal ETL, AI QA, and governance operations.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Added InSAR subsidence integration, ontology mapping, and telemetry schema v2. |
-| v9.3.2 | 2025-10-28 | Introduced FAIR+CARE validation for landslides and seismic datasets. |
-| v9.3.0 | 2025-10-26 | Established geological hazard TMP dataset ingestion structure. |
+| v9.5.0 | 2025-11-02 | Added subsidence dataset integration, FAIR+CARE metadata schema v2, and ledger linkage. |
+| v9.3.2 | 2025-10-28 | Expanded landslide coverage and governance audit traceability. |
+| v9.3.0 | 2025-10-26 | Established geological dataset TMP structure for hazard processing. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Geoscience Intelligence × FAIR+CARE Governance × Provenance Transparency*  
+**Kansas Frontier Matrix** · *Geological Integrity × FAIR+CARE Ethics × Provenance Transparency*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/)
 
 </div>
-
