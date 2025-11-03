@@ -1,271 +1,165 @@
-name: "🐛 Bug Report"
-description: "Report an error, failure, or unexpected behavior in the Kansas Frontier Matrix (KFM)."
+---
+name: "🐞 Bug Report"
+description: "Report a bug or reproducibility issue within the Kansas Frontier Matrix (FAIR+CARE · MCP-DL v6.3 Compliant)"
 title: "[BUG] <brief description>"
-labels:
-  - bug
-  - validation
-  - investigation-needed
+labels: ["bug", "governance:review-required", "faircare:validation"]
 assignees:
-  - "@kfm-etl-ops"
-  - "@bartytime4life"
-
+  - "@kfm-data"
+  - "@kfm-validation"
+  - "@kfm-governance"
 body:
   - type: markdown
     attributes:
       value: |
-        ## 🐛 Description
-        Provide a clear and concise description of the issue.
+        ## 🐞 Kansas Frontier Matrix — Bug Report (FAIR+CARE Certified)
+        Please complete this FAIR+CARE-aligned form to report a reproducible issue or data governance error.
+        Each bug submission triggers automatic schema validation, checksum verification, and ethics review.
 
-  - type: textarea
-    id: description
+  - type: input
+    id: summary
     attributes:
-      label: Issue Description
-      description: "Explain what is wrong. Example: 'Hazards ETL pipeline fails STAC validation for flood dataset (v9.5.0).' "
-      placeholder: "What happened?"
+      label: "🧾 Summary"
+      description: "Briefly describe the issue or malfunction encountered."
+      placeholder: "Example: Validation pipeline fails during checksum verification."
     validations:
       required: true
 
-  - type: checkboxes
-    id: components
+  - type: dropdown
+    id: severity
     attributes:
-      label: Affected Component(s)
-      description: "Select all that apply."
+      label: "⚙️ Severity Level"
+      description: "Select the impact level of this issue."
       options:
-        - label: "ETL / Data Pipeline"
-        - label: "AI / Focus Mode"
-        - label: "Frontend / MapLibre UI"
-        - label: "Documentation / Metadata"
-        - label: "Governance / FAIR+CARE"
-        - label: "Other"
+        - Critical — Blocks core ETL or governance pipelines
+        - High — Major workflow impact but temporary workaround possible
+        - Medium — Minor issue, no impact on production
+        - Low — Cosmetic or documentation-related
     validations:
       required: true
 
   - type: textarea
-    id: steps
+    id: reproduction
     attributes:
-      label: Steps to Reproduce
-      description: "List exact steps to reproduce the issue."
-      placeholder: |
-        1. run `make etl-hazards`
-        2. observe console output or CI validation error
-        3. attach logs or screenshots
+      label: "🔁 Steps to Reproduce"
+      description: "Provide step-by-step instructions for reproducing this issue."
+      placeholder: "1. Run make validate-schema\n2. Observe missing FAIR+CARE tag error..."
     validations:
       required: true
 
   - type: textarea
     id: expected
     attributes:
-      label: Expected Behavior
-      description: "Describe what should happen when the process runs successfully."
-      placeholder: "What should have happened?"
+      label: "✅ Expected Behavior"
+      description: "Describe what you expected to happen."
+      placeholder: "Checksum verification should pass under correct schema configuration."
     validations:
       required: true
 
   - type: textarea
     id: actual
     attributes:
-      label: Actual Behavior
-      description: "Describe what happened instead (include error text, tracebacks, or failed job links)."
-      placeholder: "What actually happened?"
+      label: "❌ Actual Behavior"
+      description: "Describe what actually happened."
+      placeholder: "Checksum failed unexpectedly with key error: FAIR metadata missing."
     validations:
       required: true
 
-  - type: markdown
+  - type: textarea
+    id: environment
     attributes:
-      value: "## 🧩 Environment"
-
-  - type: input
-    id: version_branch
-    attributes:
-      label: Version / Branch
-      placeholder: "e.g., v9.5.0 / main"
+      label: "💻 Environment Details"
+      description: "Provide version, OS, and workflow context."
+      placeholder: "OS: Ubuntu 24.04\nKFM Version: v9.6.0\nWorkflow: .github/workflows/ci.yml"
     validations:
       required: true
-
-  - type: input
-    id: os_platform
-    attributes:
-      label: OS / Platform
-      placeholder: "e.g., Ubuntu 22.04 / macOS 14"
-    validations:
-      required: true
-
-  - type: input
-    id: runtimes
-    attributes:
-      label: Python / Node Version
-      placeholder: "e.g., Python 3.11 / Node 20"
-    validations:
-      required: false
-
-  - type: input
-    id: docker
-    attributes:
-      label: Docker / Compose Version
-      placeholder: "e.g., Docker 24.0.7"
-    validations:
-      required: false
-
-  - type: input
-    id: workflow
-    attributes:
-      label: Workflow Affected
-      placeholder: ".github/workflows/stac-validate.yml"
-    validations:
-      required: false
 
   - type: dropdown
-    id: run_context
+    id: affected_area
     attributes:
-      label: Run Context
+      label: "📦 Affected System Component"
+      description: "Select which part of the Kansas Frontier Matrix is affected."
       options:
-        - Local
-        - CI
-        - Containerized
+        - Data (data/)
+        - Source (src/)
+        - Tools (tools/)
+        - Web Application (web/)
+        - Governance or Ledger (releases/ or reports/)
+        - Documentation (docs/)
     validations:
       required: true
-
-  - type: markdown
-    attributes:
-      value: "## 📂 Logs & Evidence"
 
   - type: textarea
     id: logs
     attributes:
-      label: Logs / Evidence
-      description: "Paste relevant logs, errors, or JSON snippets. If logs exceed ~50 lines, attach a file or Gist."
-      placeholder: |
-        Example:
-        Error: stac_validator.exceptions.STACValidationError: Missing 'license' field in item properties
+      label: "🧠 Relevant Logs or Evidence"
+      description: "Attach logs, screenshots, or tracebacks that demonstrate the issue."
+      placeholder: "Attach error output or CI workflow log..."
     validations:
       required: false
 
   - type: markdown
     attributes:
-      value: "## 🧠 FAIR+CARE Impact Assessment"
-
-  - type: dropdown
-    id: fair_findable
-    attributes:
-      label: Findable
-      description: "Impacts metadata indexing or STAC discoverability?"
-      options:
-        - "No Impact"
-        - "Moderate"
-        - "High"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: fair_accessible
-    attributes:
-      label: Accessible
-      description: "Reduces data/API accessibility or service availability?"
-      options:
-        - "No Impact"
-        - "Moderate"
-        - "High"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: fair_interoperable
-    attributes:
-      label: Interoperable
-      description: "Breaks schema or ontology compatibility?"
-      options:
-        - "No Impact"
-        - "Moderate"
-        - "High"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: fair_reusable
-    attributes:
-      label: Reusable
-      description: "Affects dataset, model, or workflow reusability?"
-      options:
-        - "No Impact"
-        - "Moderate"
-        - "High"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: care_benefit
-    attributes:
-      label: Collective Benefit
-      description: "Limits openness or public utility?"
-      options:
-        - "No Impact"
-        - "Moderate"
-        - "High"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: care_ethics
-    attributes:
-      label: Ethical Oversight
-      description: "Introduces governance or CARE concerns?"
-      options:
-        - "No Impact"
-        - "Moderate"
-        - "High"
-    validations:
-      required: true
-
-  - type: markdown
-    attributes:
-      value: "## ⚙️ Governance Metadata"
-
-  - type: textarea
-    id: governance_refs
-    attributes:
-      label: Governance References
-      description: "Confirm or update references relevant to the failing version."
       value: |
-        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md
-        Manifest Ref: releases/v9.5.0/manifest.zip
-        Telemetry Ref: releases/v9.5.0/focus-telemetry.json
-        Data Contract: docs/contracts/data-contract-v3.json
-        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl
-        SBOM Ref: releases/v9.5.0/sbom.spdx.json
-    validations:
-      required: false
-
-  - type: textarea
-    id: resolution
-    attributes:
-      label: Proposed Resolution / Next Steps
-      description: "Provide suggestions, hypotheses, or immediate fixes."
-      placeholder: "e.g., Update STAC 'license' field in all items and re-run validator."
-    validations:
-      required: false
+        ---
+        ## 🧩 FAIR+CARE Compliance Verification
+        Confirm that this bug report maintains FAIR+CARE ethical standards.
 
   - type: checkboxes
-    id: checklist
+    id: faircare_compliance
     attributes:
-      label: Submission Checklist
+      label: "FAIR+CARE Compliance Checklist"
       options:
-        - label: "Reproducible test case attached"
-        - label: "FAIR+CARE impact documented"
-        - label: "Governance references verified"
-        - label: "Maintainers notified"
+        - label: "Findable — Issue linked to dataset, pipeline, or ledger reference"
+        - label: "Accessible — Reproducible context and data path provided"
+        - label: "Interoperable — Schema or system compatibility validated"
+        - label: "Reusable — Information sufficient for repair and documentation update"
+        - label: "Ethical — No personal, sensitive, or restricted data included"
+    validations:
+      required: true
+
+  - type: textarea
+    id: governance_links
+    attributes:
+      label: "⚖️ Governance References"
+      description: "Provide any relevant governance or provenance references."
+      placeholder: "Example: reports/audit/data_provenance_ledger.json#record_4211"
+    validations:
+      required: false
 
   - type: markdown
     attributes:
       value: |
-        ## 🧭 Maintainer Routing
-        - **Data Engineering Lead:** @kfm-etl-ops — Reproduce and verify ETL behavior  
-        - **Architecture Lead:** @kfm-architecture — Evaluate workflow and CI/CD impact  
-        - **AI/ML Governance:** @kfm-ai-lab — Validate AI/Focus Mode integrity  
-        - **Repository Maintainer:** @bartytime4life — Approve and merge PR  
+        ---
+        ## 🧾 Sign-Off
+        Please confirm your submission complies with KFM’s FAIR+CARE and MCP-DL v6.3 governance framework.
 
-        > ⚠️ **Automation Notice**  
-        > Submitting this bug will trigger:
-        > - FAIR+CARE validation (`.github/workflows/faircare-validate.yml`)
-        > - STAC/DCAT metadata re-validation (`.github/workflows/stac-validate.yml`, `dcat-export.yml`)
-        > - Provenance & hash updates in `reports/audit/ai_hazards_ledger.json`
-        > - Telemetry sync to `releases/v9.5.0/focus-telemetry.json`
+  - type: input
+    id: contributor
+    attributes:
+      label: "👤 Contributor"
+      description: "Enter your GitHub handle."
+      placeholder: "@username"
+    validations:
+      required: true
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: "🏢 Affiliation"
+      description: "Organization, institution, or project affiliation."
+      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
+    validations:
+      required: true
+
+  - type: textarea
+    id: certification
+    attributes:
+      label: "🪶 FAIR+CARE Certification Statement"
+      description: "By submitting this issue, you certify that it complies with FAIR+CARE and open governance standards."
+      value: |
+        I confirm that this submission:
+        - Adheres to the FAIR+CARE ethical framework.
+        - Contains no private or proprietary data.
+        - Supports transparency, reproducibility, and open collaboration.
+    validations:
+      required: true
