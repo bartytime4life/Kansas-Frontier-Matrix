@@ -1,255 +1,182 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Landcover ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧾 Kansas Frontier Matrix — Landcover TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/landcover/logs/README.md"
-version: "v9.0.0"
-last_updated: "2025-10-23"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.5.0"
+last_updated: "2025-11-02"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.0.0/sbom.spdx.json"
-manifest_ref: "releases/v9.0.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.0.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/landcover-etl-logs-v12.json"
-json_export: "releases/v9.0.0/landcover-etl-logs.meta.json"
-validation_reports: [
-  "reports/self-validation/landcover-etl-logs-validation.json",
-  "reports/fair/landcover_summary.json",
-  "reports/audit/ai_landcover_ledger.json"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-LANDCOVER-LOGS-RMD-v9.0.0"
-maintainers: ["@kfm-data", "@kfm-environment", "@kfm-ai"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-fair"]
-reviewed_by: ["@kfm-ethics", "@kfm-accessibility", "@kfm-architecture"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Geospatial Governance Logging Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "STAC 1.0.0", "COG", "GeoTIFF", "AI-Coherence", "Blockchain Provenance", "ISO 50001", "ISO 14064"]
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · Autonomous · FAIR+CARE+ISO+Ledger Verified · Explainable & Sustainable"
-focus_validation: "true"
-tags: ["landcover", "etl", "logs", "validation", "ai", "nlcd", "mcp", "fair", "ledger", "sustainability", "governance"]
+sbom_ref: "../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/work-landcover-logs-v2.json"
+validation_reports:
+  - "../../../../reports/fair/landcover_logs_summary.json"
+  - "../../../../reports/audit/ai_landcover_ledger.json"
+  - "../../../../reports/self-validation/work-landcover-validation.json"
+governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — **Landcover ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)**  
-`data/work/tmp/landcover/logs/`
+# 🧾 Kansas Frontier Matrix — **Landcover TMP Logs**
+`data/work/tmp/landcover/logs/README.md`
 
-**Mission:** Maintain **AI-audited, explainable logs** for landcover ETL, classification QA, and validation —  
-enabling transparent, reproducible, and sustainable geospatial governance  
-within the **Kansas Frontier Matrix (KFM)**.
+**Purpose:**  
+Central FAIR+CARE-certified logging environment for landcover ETL, AI analysis, and governance operations within the Kansas Frontier Matrix (KFM).  
+Logs in this workspace ensure full lineage visibility, checksum verification, and ethical compliance for every transformation and validation event in the TMP layer.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Verified-green)](../../../../../../reports/fair/landcover_summary.json)
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Continuous%20Improvement-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)](../../../../../../data/checksums/)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Landcover%20Logs%20Certified-gold)](../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-This directory serves as the **living audit trail** of all landcover-related ETL activities:  
-classification QA, change detection, reprojection, and checksum validation.  
-Each log entry is explainable, reproducible, and blockchain-signed under **FAIR+CARE+ISO** standards.
+The `data/work/tmp/landcover/logs/` directory records **all operational traces, ETL records, validation results, and AI explainability events** generated during temporary landcover data processing.  
+Each log ensures reproducibility and governance synchronization under FAIR+CARE and MCP-DL standards.
 
-> *“Every pixel’s journey is witnessed, explained, and remembered.”*
+### Core Responsibilities
+- Track ETL extract, transform, and validation operations for landcover data.  
+- Record checksum verification and schema audit outcomes.  
+- Capture AI explainability results and model drift reports.  
+- Synchronize governance events and Focus Mode telemetry updates.  
 
 ---
 
-## 🧠 Cognitive Governance Feedback Loop
+## 🗂️ Directory Layout
+
+```plaintext
+data/work/tmp/landcover/logs/
+├── README.md                               # This file — documentation of landcover TMP logs
+│
+├── etl/                                    # ETL pipeline logs and summaries
+│   ├── extract/                            # Landcover source ingestion logs
+│   ├── transform/                          # Schema and reprojection logs
+│   ├── load/                               # Data publication and staging logs
+│   ├── lineage/                            # Provenance and dependency flow traces
+│   └── summaries/                          # Aggregated ETL metrics and audits
+│
+├── validation/                             # FAIR+CARE validation and schema QA logs
+├── ai/                                     # Focus Mode AI explainability and drift detection logs
+├── manifests/                              # Checksum and telemetry manifest linkage
+├── system/                                 # Internal process and automation system logs
+└── metadata.json                           # Provenance and governance linkage metadata
+```
+
+---
+
+## ⚙️ Logging Workflow
 
 ```mermaid
-graph TD
-A[Landcover ETL Logs] --> B[AI Focus Mode (Explainability + Drift Detection)]
-B --> C[FAIR+CARE Council]
-B --> D[AI Ethics Engine]
-C --> E[Governance Ledger + Blockchain]
-E --> F[Human Oversight Council]
-F --> G[Neo4j Knowledge Graph]
-G --> H[AI Model Retraining · Schema Refinement]
-H --> A
+flowchart TD
+    A["Landcover TMP Operations (ETL + AI + Validation)"] --> B["Log Generation (data/work/tmp/landcover/logs/)"]
+    B --> C["Checksum Verification and FAIR+CARE Validation"]
+    C --> D["Governance Ledger Synchronization"]
+    D --> E["Telemetry Update and Audit Registration"]
 ```
 
----
-
-## 🧮 Semantic Lineage Matrix
-
-| Log Field | FAIR Dimension | STAC Property | ISO Reference | Purpose |
-|:--|:--|:--|:--|:--|
-| `dataset` | Findable | `id` | ISO 19115 | Dataset identifier |
-| `projection` | Interoperable | `properties.crs` | ISO 19111 | Spatial reference |
-| `focus_score` | Reusable | `properties.quality` | ISO 19115-2 | AI validation confidence |
-| `checksum` | Provenance | `asset.hash` | MCP-DL | Reproducibility trace |
-| `carbon_gco2e` | CARE | `properties.carbon` | ISO 14064 | Environmental accounting |
+### Workflow Description
+1. **Event Logging:** Records runtime activity across ETL and AI pipelines.  
+2. **Checksum Validation:** Ensures log file and data integrity consistency.  
+3. **Governance Sync:** Updates provenance metadata in FAIR+CARE governance ledgers.  
+4. **Telemetry Registration:** Links log events to Focus Mode AI performance metrics.  
 
 ---
 
-## 🧩 Governance Drift Dashboard
-
-| Quarter | AI Integrity | FAIR Drift Δ | Ethics Δ | Action |
-|:--|:--|:--|:--|:--|
-| Q2 2025 | 98.5 | +0.5 | +0.2 | Retrain Focus Mode |
-| Q3 2025 | 99.2 | -0.3 | +0.1 | Manual validation |
-| Q4 2025 | 100 | -0.1 | 0.0 | Stable — Certified |
-
----
-
-## 🧾 AI Explainability Snapshot
+## 🧩 Example Log Metadata Record
 
 ```json
 {
-  "model": "focus-landcover-v3",
-  "method": "SHAP",
-  "key_features": [
-    {"band": "NDVI", "importance": 0.26},
-    {"band": "NIR", "importance": 0.18},
-    {"band": "SWIR", "importance": 0.15}
-  ],
-  "explanation_score": 0.987
+  "id": "landcover_tmp_logs_v9.5.0_2025Q4",
+  "log_categories": ["etl", "validation", "ai", "system"],
+  "records_logged": 17420,
+  "checksum_verified": true,
+  "fairstatus": "compliant",
+  "governance_synced": true,
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_landcover_ledger.json",
+  "created": "2025-11-02T22:00:00Z",
+  "validator": "@kfm-landcover"
 }
 ```
 
 ---
 
-## 🔗 Blockchain Provenance Record
+## 🧠 FAIR+CARE Governance Matrix
 
-```json
-{
-  "ledger_id": "landcover-etl-ledger-2025-10-23",
-  "stac_ref": "stac/landcover/etl_2025_10_23.json",
-  "checksum_sha256": "4b6f12b3e9c...",
-  "ai_model": "focus-landcover-v3",
-  "ai_score": 0.987,
-  "verified_by": "@kfm-governance",
-  "timestamp": "2025-10-23T00:00:00Z"
-}
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | All logs indexed by ETL stage, checksum, and governance reference. |
+| **Accessible** | Stored in open JSON and text formats for reproducibility. |
+| **Interoperable** | Schema follows ISO 19115 lineage, STAC 1.0, and MCP-DL governance standards. |
+| **Reusable** | Maintains provenance metadata and checksum validation records. |
+| **Collective Benefit** | Ensures transparent monitoring of environmental transformations. |
+| **Authority to Control** | FAIR+CARE Council verifies log audit and ethics results. |
+| **Responsibility** | ETL maintainers document pipeline outputs and AI reasoning integrity. |
+| **Ethics** | Logs redact sensitive land ownership or identifiable environmental data. |
+
+Governance synchronization recorded in:  
+`reports/audit/ai_landcover_ledger.json` • `reports/fair/landcover_logs_summary.json`
+
+---
+
+## ⚙️ Validation & QA Artifacts
+
+| File / Folder | Description | Format |
+|----------------|--------------|--------|
+| `etl/` | ETL process logs (extract, transform, load, lineage). | Text / JSON |
+| `validation/` | FAIR+CARE validation and checksum verification logs. | JSON |
+| `ai/` | AI model performance and explainability reports. | JSON |
+| `manifests/` | Checksum manifests and telemetry linkage metadata. | JSON |
+| `system/` | Internal automation and runtime system logs. | Text |
+| `metadata.json` | Provenance metadata linking all log files. | JSON |
+
+Automated synchronization handled by `landcover_logs_sync.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| Log Type | Retention Duration | Policy |
+|-----------|--------------------|--------|
+| ETL Logs | 90 days | Archived following staging validation. |
+| AI Logs | 180 days | Retained for drift and explainability verification. |
+| Validation Logs | 365 days | Archived under FAIR+CARE audit workflows. |
+| System Logs | 30 days | Purged after automated pipeline completion. |
+| Metadata | Permanent | Maintained under provenance and checksum registry. |
+
+Cleanup managed by `landcover_logs_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Landcover TMP Logs (v9.5.0).
+Central FAIR+CARE-certified logging system for landcover ETL, validation, and AI analysis.
+Ensures transparent, ethical, and reproducible data processing under MCP-DL v6.3 governance compliance.
 ```
 
 ---
 
-## 🧩 FAIR+CARE Evolution Timeline
+## 🧾 Version Notes
 
-| Version | FAIR+CARE | Improvement | Description |
-|:--|:--|:--|:--|
-| v8.0.0 | 100% | +1% | AI explainability and FAIR+CARE certification |
-| v9.0.0 | 100% | +1% | Cross-domain and sustainability integration |
-
----
-
-## 🧠 Cross-Domain FAIR Synergy Matrix
-
-| Domain | Correlation | Description | FAIR Report |
-|:--|:--|:--|:--|
-| **Hydrology** | +0.77 | Landcover–watershed boundary validation | `reports/fair/hydro_landcover.json` |
-| **Climate** | +0.82 | Vegetation-climate model feedback | `reports/fair/climate_vegetation.json` |
-| **Hazards** | -0.65 | Fire/burn-scar reclassification | `reports/fair/hazard_regrowth.json` |
-
----
-
-## 🌱 Sustainability & ISO Compliance
-
-| Metric | Standard | Value | Verified By |
-|:--|:--|:--|:--|
-| **Energy Use (Wh/run)** | ISO 50001 | 21.8 | @kfm-security |
-| **Carbon Output (gCO₂e/run)** | ISO 14064 | 28.3 | @kfm-fair |
-| **Renewable Offset** | RE100 | 100% | @kfm-governance |
-| **AI Ethics Compliance** | MCP Ethics Charter | 100% | @kfm-ethics |
-
----
-
-## 🔐 Governance Ledger Chain
-
-| Ledger | Maintainer | Verification | Output | Frequency |
-|:--|:--|:--|:--|:--|
-| **Data Ledger** | @kfm-security | Checksum validation | `/data/checksums/landcover_logs.json` | Continuous |
-| **AI Ledger** | @kfm-ai | Explainability + drift audit | `/reports/audit/ai_landcover_ledger.json` | Per run |
-| **Ethics Ledger** | @kfm-ethics | Sustainability and bias audit | `/reports/audit/landcover_ethics.json` | Biweekly |
-| **Governance Ledger** | @kfm-governance | FAIR+CARE certification | `/reports/fair/landcover_summary.json` | Quarterly |
-
----
-
-## 🧬 Neo4j Governance Ontology
-
-```cypher
-(:RasterTile)-[:VALIDATED_BY]->(:ValidationEvent)
-(:ValidationEvent)-[:ANALYZED_BY]->(:AIModel {name:"focus-landcover-v3"})
-(:AIModel)-[:CERTIFIED_BY]->(:GovernanceCouncil)
-(:GovernanceCouncil)-[:LOGGED_INTO]->(:BlockchainLedger)
-```
-
----
-
-## 📈 Energy & Ethics Trend Visualization
-
-```mermaid
-graph LR
-Q2_2025["Energy 24.6 Wh · Carbon 30 gCO₂e"] --> Q3_2025["22.3 Wh · 28 gCO₂e"]
-Q3_2025 --> Q4_2025["21.8 Wh · 28 gCO₂e · 100% Renewable"]
-```
-
----
-
-## 🧩 Self-Audit Metadata
-
-```json
-{
-  "readme_id": "KFM-DATA-WORK-LANDCOVER-LOGS-RMD-v9.0.0",
-  "validation_timestamp": "2025-10-23T00:00:00Z",
-  "validated_by": "@kfm-data",
-  "ai_reviewer": "@kfm-ai",
-  "governance_reviewer": "@kfm-governance",
-  "focus_model": "focus-landcover-v3",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 100.0,
-  "explainability_score": 0.987,
-  "energy_efficiency": "21.8 Wh/run (ISO 50001)",
-  "carbon_intensity": "28.3 gCO₂e/run (ISO 14064)",
-  "ethics_compliance": "FAIR+CARE aligned",
-  "ledger_hash": "4b6f12b3e9c...",
-  "governance_cycle": "Q4 2025",
-  "security_signature": "pgp-sha256:<signature-id>"
-}
-```
-
----
-
-## 🧾 Version History
-
-| Version | Date | Author | Reviewer | AI Audit | FAIR/CARE | Security | Summary |
-|:--|:--|:--|:--|:--|:--|:--|:--|
-| v9.0.0 | 2025-10-23 | @kfm-data | @kfm-governance | ✅ | 100% | Blockchain ✓ | Crown∞Ω Ultimate: cross-domain, AI ethics, sustainability alignment |
-| v8.0.0 | 2025-10-20 | @kfm-environment | @kfm-fair | ✅ | 99% | ✓ | FAIR+CARE + explainability |
-| v7.0.0 | 2025-10-16 | @kfm-data | @kfm-security | ✅ | 98% | ✓ | Baseline compliance and drift model added |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-environment**, and **@kfm-fair**,  
-with governance oversight from **@kfm-ai**, **@kfm-ethics**, and **@kfm-governance**.  
-Thanks to **USGS**, **FAIR Data Alliance**, **NLCD Program**, and **MCP Council**  
-for driving sustainable, ethical, and explainable landcover analysis across Kansas.
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Integrated telemetry linkage schema v2 and expanded governance synchronization. |
+| v9.3.2 | 2025-10-28 | Added checksum verification and FAIR+CARE validation linkage. |
+| v9.3.0 | 2025-10-26 | Established landcover TMP logging workspace under FAIR+CARE governance. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Verified-green)](../../../../../../reports/fair/landcover_summary.json)
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Continuous%20Improvement-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)](../../../../../../data/checksums/)
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)](../../../../../../docs/standards/ai-integrity.md)
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Ultimate-brightgreen)]()
+**Kansas Frontier Matrix** · *Landcover Intelligence × FAIR+CARE Ethics × Provenance Integrity*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/)
+
 </div>
