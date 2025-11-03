@@ -1,14 +1,21 @@
 ---
 title: "📥 Kansas Frontier Matrix — Hazard ETL Extract Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/etl/extract/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
-review_cycle: "Continuous / Autonomous"
+version: "v9.5.0"
+last_updated: "2025-11-02"
+review_cycle: "Continuous / Automated"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../../../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+telemetry_ref: "../../../../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/work-hazards-etl-extract-v2.json"
+validation_reports:
+  - "../../../../../../../reports/fair/hazards_etl_extract_summary.json"
+  - "../../../../../../../reports/audit/ai_hazards_ledger.json"
+  - "../../../../../../../reports/self-validation/work-hazards-validation.json"
+governance_ref: "../../../../../../../docs/standards/governance/hazards-governance.md"
+license: "MIT"
 ---
 
 <div align="center">
@@ -16,11 +23,12 @@ governance_ref: "../../../../../../../docs/standards/governance/DATA-GOVERNANCE.
 # 📥 Kansas Frontier Matrix — **Hazard ETL Extract Logs**
 `data/work/tmp/hazards/logs/etl/extract/README.md`
 
-**Purpose:** Repository for extract-phase ETL logs documenting data sourcing, ingestion, and pre-transformation operations for hazard datasets in the Kansas Frontier Matrix (KFM).  
-These logs capture data provenance, schema discovery, and FAIR+CARE pre-audits during the extract stage of KFM’s hazard data pipelines.
+**Purpose:**  
+Comprehensive logging workspace for **hazard dataset extraction, ingestion, and raw data verification events** across meteorological, hydrological, geological, and wildfire-energy domains within the Kansas Frontier Matrix (KFM).  
+All extraction operations are recorded with **checksum validation, FAIR+CARE governance metadata, and provenance registration** to ensure transparent and reproducible data acquisition.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Extraction%20Governed-gold)](../../../../../../../docs/standards/faircare-validation.md)
-[![License: Internal System Logs](https://img.shields.io/badge/License-Internal%20Governance%20Data-grey)](../../../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Extraction%20Audited-gold)](../../../../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../docs/architecture/repo-focus.md)
 
 </div>
@@ -29,16 +37,14 @@ These logs capture data provenance, schema discovery, and FAIR+CARE pre-audits d
 
 ## 📚 Overview
 
-The `data/work/tmp/hazards/logs/etl/extract/` directory contains **extraction-stage logs** for all raw hazard data sources ingested into KFM’s ETL pipelines.  
-Each log provides evidence of dataset provenance, extraction timing, schema identification, and source compliance under FAIR+CARE governance.
+The `data/work/tmp/hazards/logs/etl/extract/` directory captures all extraction and ingestion logs from raw hazard data sources.  
+These include NOAA, FEMA, USGS, DOE, and state-level datasets that form the foundation of KFM’s hazard intelligence workflows.
 
-### Core Functions:
-- Document hazard dataset extractions from raw sources (NOAA, FEMA, USGS, NIDIS).  
-- Record dataset origin metadata, file types, and integrity checksums.  
-- Validate FAIR+CARE accessibility and licensing during ingestion.  
-- Maintain traceability for all extract operations across hazard data workflows.  
-
-All extraction records are immutable and versioned for governance audit reproducibility.
+### Core Functions
+- Record ingestion events for all raw hazard data acquisitions.  
+- Log schema mapping, encoding detection, and conversion metadata.  
+- Store checksum verifications and FAIR+CARE compliance summaries.  
+- Register provenance for all extraction operations in the AI Hazards Governance Ledger.  
 
 ---
 
@@ -46,13 +52,14 @@ All extraction records are immutable and versioned for governance audit reproduc
 
 ```plaintext
 data/work/tmp/hazards/logs/etl/extract/
-├── README.md                               # This file — overview of hazard ETL extract logs
+├── README.md                                 # This file — overview of hazard ETL extract logs
 │
-├── extract_run_log_2024Q4.log              # Extraction process log (Q4 2024)
-├── data_source_registry_2024Q4.json        # Registry of hazard data sources and metadata
-├── checksum_verification_report_2024Q4.json # Integrity verification for all extracted datasets
-├── schema_discovery_summary_2024Q4.csv     # Field-level schema discovery results
-└── metadata.json                           # Provenance, checksums, and governance linkage
+├── extract_run_log_2025Q4.log                # ETL extraction runtime trace for hazard datasets
+├── source_metadata_mapping.json              # Mapping of input schema to KFM data contract structure
+├── checksum_registry_extract_2025Q4.json     # SHA-256 checksum validation for all raw source files
+├── ingestion_audit_report_2025Q4.json        # FAIR+CARE ingestion audit and governance validation
+├── raw_source_catalog_2025Q4.csv             # Tabular summary of all extracted raw datasets
+└── metadata.json                             # Provenance metadata, checksum, and governance references
 ```
 
 ---
@@ -61,111 +68,96 @@ data/work/tmp/hazards/logs/etl/extract/
 
 ```mermaid
 flowchart TD
-    A["Raw Data Sources (NOAA, FEMA, USGS, NIDIS)"] --> B["Extraction Engine (ETL: Extract Phase)"]
-    B --> C["Schema Detection and Integrity Checks"]
-    C --> D["FAIR+CARE Audit for Accessibility and Ethics"]
-    D --> E["Governance Ledger Registration"]
+    A["External Data Providers (NOAA, FEMA, USGS, DOE, KGS)"] --> B["Data Ingestion (ETL Extract Stage)"]
+    B --> C["Schema Mapping & Data Type Normalization"]
+    C --> D["Checksum & FAIR+CARE Validation"]
+    D --> E["Provenance Logging & Telemetry Update"]
+    E --> F["Transfer to Transformation Layer (data/work/tmp/hazards/transforms/)"]
 ```
 
-### Workflow Description:
-1. **Data Retrieval:** Raw hazard datasets downloaded or accessed via API connectors.  
-2. **Schema Identification:** Extracted fields analyzed for structural and metadata alignment.  
-3. **Integrity Validation:** Checksums calculated and compared to source manifests.  
-4. **FAIR+CARE Pre-Audit:** Confirm dataset licensing, ethical use, and accessibility compliance.  
-5. **Governance Registration:** Extraction event recorded in provenance ledger.
+### Workflow Description
+1. **Ingestion:** Download, decompress, and preprocess raw hazard files.  
+2. **Schema Mapping:** Align input columns and attributes with the KFM data contract.  
+3. **Checksum Validation:** Compute hashes for all inputs to ensure integrity.  
+4. **FAIR+CARE Audit:** Record ethical and accessibility metadata during extraction.  
+5. **Governance Logging:** Register operations in `ai_hazards_ledger.json`.  
 
 ---
 
-## 🧩 Example Metadata Record
+## 🧩 Example Extraction Log Record
 
 ```json
 {
-  "id": "etl_extract_hazards_v9.3.2_2024Q4",
-  "etl_cycle": "Q4 2024",
-  "source_endpoints": [
-    "https://www.noaa.gov/storm-events",
-    "https://www.fema.gov/flood-maps",
-    "https://waterdata.usgs.gov/ks/nwis"
-  ],
-  "records_ingested": 543210,
-  "schema_fields_detected": 186,
-  "checksums_verified": true,
-  "fairstatus": "pre-certified",
-  "archived": false,
-  "validator": "@kfm-etl-ops",
-  "created": "2025-10-28T16:50:00Z",
-  "checksum": "sha256:12e7e6f9a3b95f6d4fa89a97e3c91d38f24d41e7...",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
+  "id": "etl_extract_hazards_v9.5.0_2025Q4",
+  "source_providers": ["NOAA", "FEMA", "USGS"],
+  "records_extracted": 912340,
+  "files_ingested": 26,
+  "schema_mappings": 8,
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "governance_synced": true,
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_hazards_ledger.json",
+  "created": "2025-11-02T18:42:00Z",
+  "validator": "@kfm-etl-ops"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Alignment
+## 🧠 FAIR+CARE Compliance in Extraction Logs
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Extraction events indexed by source endpoint and ETL cycle. |
-| **Accessible** | Extraction metadata available under open FAIR+CARE schema. |
-| **Interoperable** | Schema harmonized with DCAT and KFM metadata contracts. |
-| **Reusable** | Metadata includes provenance, schema mappings, and licensing. |
-| **Collective Benefit** | Promotes open data transparency and hazard research collaboration. |
-| **Authority to Control** | FAIR+CARE Council validates all extraction sources. |
-| **Responsibility** | ETL teams document extraction parameters and validation checks. |
-| **Ethics** | Ensures all datasets respect ethical, legal, and accessibility standards. |
+| **Findable** | Raw source logs indexed by provider, dataset ID, and checksum in governance ledger. |
+| **Accessible** | Logs stored in open formats (JSON, CSV) under FAIR+CARE standards. |
+| **Interoperable** | Aligned with ISO 19115 and DCAT metadata interoperability frameworks. |
+| **Reusable** | Provenance data enables complete reconstruction of extraction workflow. |
+| **Collective Benefit** | Supports open science and public access to validated hazard sources. |
+| **Authority to Control** | FAIR+CARE Council oversees raw data ingestion and ethics checks. |
+| **Responsibility** | ETL validators record ingestion results and schema conversions. |
+| **Ethics** | Raw data reviewed for ethical sourcing and privacy constraints. |
 
-Governance and audit entries recorded in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and `data/reports/fair/data_care_assessment.json`.
+Audit and provenance reports stored in:  
+`reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_etl_extract_summary.json`
 
 ---
 
-## ⚙️ Extraction Artifacts
+## ⚙️ QA & Provenance Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `extract_run_log_*.log` | Raw log of extraction processes, sources, and results. | Text |
-| `data_source_registry_*.json` | Details extracted data origins and FAIR+CARE validation. | JSON |
-| `checksum_verification_report_*.json` | Records hash integrity validation for all raw files. | JSON |
-| `schema_discovery_summary_*.csv` | Field and schema-level structure summaries. | CSV |
-| `metadata.json` | Stores governance linkage, checksums, and provenance chain. | JSON |
+| `extract_run_log_*.log` | Runtime execution log for all ETL extraction jobs. | Text |
+| `source_metadata_mapping.json` | Field-level schema alignment to KFM data contracts. | JSON |
+| `checksum_registry_extract_*.json` | Hash verification and checksum registry for input data. | JSON |
+| `ingestion_audit_report_*.json` | FAIR+CARE ingestion audit report. | JSON |
+| `raw_source_catalog_*.csv` | Catalog of all raw data sources ingested in current cycle. | CSV |
+| `metadata.json` | Governance metadata for lineage and certification tracking. | JSON |
 
-All extraction tasks managed by automated ETL workflows (`etl_extract_sync.yml`).
-
----
-
-## ⚖️ Governance & Provenance Integration
-
-| Record | Description |
-|---------|-------------|
-| `metadata.json` | Tracks extraction provenance, checksum, and FAIR+CARE linkage. |
-| `data/reports/audit/data_provenance_ledger.json` | Logs extraction lineage and governance synchronization. |
-| `data/reports/fair/data_care_assessment.json` | FAIR+CARE accessibility and ethics audit records. |
-| `releases/v9.3.2/manifest.zip` | Contains checksum registry for extracted datasets. |
-
-Governance synchronization and audit validation automated through KFM CI/CD processes.
+Automation managed via `etl_extract_sync.yml`.
 
 ---
 
-## 🧾 Retention & Audit Policy
+## 🧾 Retention Policy
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Extraction Logs | 365 days | Archived after governance certification. |
-| Source Registries | Permanent | Retained for provenance and FAIR+CARE traceability. |
-| Schema Discovery Reports | 180 days | Archived for reference and schema updates. |
-| Metadata | Permanent | Stored in ledger for provenance verification. |
+| Log Type | Retention Duration | Policy |
+|-----------|--------------------|--------|
+| Extraction Logs | 90 days | Archived post-ingestion audit. |
+| Checksum Registries | 365 days | Retained for provenance integrity. |
+| Ingestion Reports | 180 days | Stored for FAIR+CARE revalidation. |
+| Metadata | Permanent | Preserved for lineage and governance certification. |
 
-Cleanup and archival automated by `etl_extract_cleanup.yml`.
+Cleanup managed through `etl_extract_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hazard ETL Extract Logs (v9.3.2).
-Extraction-stage documentation and governance-certified provenance records for hazard data ingestion workflows.
-Maintained under FAIR+CARE and MCP-DL v6.3 governance for reproducibility and ethical transparency.
+Kansas Frontier Matrix (2025). Hazard ETL Extract Logs (v9.5.0).
+FAIR+CARE-certified logging workspace for hazard data ingestion and extraction governance.
+Tracks raw data source acquisition, checksum verification, and schema mapping for all hazard domains.
+Restricted to internal ETL, QA, and provenance workflows.
 ```
 
 ---
@@ -174,15 +166,15 @@ Maintained under FAIR+CARE and MCP-DL v6.3 governance for reproducibility and et
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.3.2 | 2025-10-28 | Added checksum verification and FAIR+CARE governance linkage. |
-| v9.2.0 | 2024-07-15 | Introduced automated schema discovery and source registry validation. |
-| v9.0.0 | 2023-01-10 | Established extraction log workspace for hazard ETL pipelines. |
+| v9.5.0 | 2025-11-02 | Introduced multi-source lineage integration, telemetry v2, and FAIR+CARE ingestion validation. |
+| v9.3.2 | 2025-10-28 | Added governance synchronization and raw source catalog generation. |
+| v9.3.0 | 2025-10-26 | Established ETL extract log directory for hazard ingestion. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Extraction × FAIR+CARE Ethics × Provenance Integrity*  
+**Kansas Frontier Matrix** · *Hazard Data Ingestion × FAIR+CARE Governance × Provenance Transparency*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../../docs/standards/governance/)
 
 </div>
