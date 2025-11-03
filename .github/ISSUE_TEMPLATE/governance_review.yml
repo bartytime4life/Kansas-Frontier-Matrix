@@ -1,189 +1,171 @@
-name: "⚖️ Governance Review"
-description: "Request an ethical, FAIR+CARE, or documentation governance review for Kansas Frontier Matrix (KFM)."
-title: "[GOVERNANCE] <brief description of the review request>"
-labels:
-  - governance
-  - faircare
-  - review-needed
+---
+name: "⚖️ Governance Review Request"
+description: "Request a FAIR+CARE governance or ethics review for a dataset, pipeline, or documentation change (MCP-DL v6.3 Certified)"
+title: "[GOVERNANCE REVIEW] <brief description>"
+labels: ["governance:review", "faircare:review", "ethics:audit"]
 assignees:
-  - "@kfm-architecture"
-  - "@bartytime4life"
-  - "@kfm-ai-lab"
-
+  - "@kfm-governance"
+  - "@kfm-fair"
+  - "@kfm-ethics"
 body:
   - type: markdown
     attributes:
       value: |
-        ## ⚖️ Governance Review Summary
-        Provide a short summary of what this governance review covers.
-        Example: “Requesting FAIR+CARE ethics review for new NOAA flood dataset ingestion.”
+        ## ⚖️ Kansas Frontier Matrix — Governance Review Form (FAIR+CARE Certified)
+        Use this form to request a governance, ethics, or FAIR+CARE compliance review.  
+        Reviews ensure transparency, ethical oversight, and MCP-DL documentation completeness before publication or release.
+
+  - type: input
+    id: review_subject
+    attributes:
+      label: "🧾 Subject of Review"
+      description: "Provide the dataset, workflow, or documentation that requires governance or ethics evaluation."
+      placeholder: "Example: data/work/processed/hazards/flood_extents.geojson"
+    validations:
+      required: true
 
   - type: dropdown
-    id: review_category
+    id: review_type
     attributes:
-      label: Review Category
-      description: "Select the governance review type."
+      label: "🏷️ Type of Governance Review"
+      description: "Select the type of governance review required."
       options:
-        - "🧠 AI/ML Governance (Bias, Drift, Explainability)"
-        - "🌍 Data Ethics / FAIR+CARE Compliance"
-        - "📜 Documentation & Provenance"
-        - "🧩 Ontology / Knowledge Graph Alignment"
-        - "⚙️ Infrastructure / Security / Policy"
-        - "Other (specify below)"
+        - FAIR+CARE Certification
+        - Ethical Data Use Review
+        - Provenance or Ledger Audit
+        - Release or Publication Approval
+        - Policy or Documentation Update
+        - Other
     validations:
       required: true
 
   - type: textarea
-    id: summary
+    id: description
     attributes:
-      label: Review Summary
-      description: "Briefly describe the governance topic and context."
-      placeholder: "What is being reviewed and why?"
+      label: "📚 Description and Context"
+      description: "Explain why this review is needed and summarize the context."
+      placeholder: "Example: This dataset involves public hazard information and needs FAIR+CARE recertification before publication."
     validations:
       required: true
 
-  - type: markdown
+  - type: dropdown
+    id: urgency
     attributes:
-      value: "## 🧩 Review Scope"
-
-  - type: checkboxes
-    id: components
-    attributes:
-      label: Primary Component(s)
-      description: "Select all areas affected by this governance review."
+      label: "⏱️ Review Priority"
+      description: "Select the urgency level for this review."
       options:
-        - label: "/data/ — Source or processed datasets"
-        - label: "/src/ — AI or ETL pipelines"
-        - label: "/docs/ — Governance or FAIR+CARE documentation"
-        - label: "/web/ — UI and user data presentation"
-        - label: "/releases/ — Telemetry, manifest, or audit files"
+        - Critical (Immediate release or compliance impact)
+        - High (Release planned this week)
+        - Normal (Next scheduled review cycle)
+        - Low (Documentation or minor update)
     validations:
       required: true
 
   - type: textarea
-    id: purpose
+    id: governance_references
     attributes:
-      label: Purpose of Review
-      description: "Explain the intent and necessity of this review."
-      placeholder: "e.g., Validate ethical use of model outputs in public Focus Mode dashboard."
-    validations:
-      required: true
-
-  - type: markdown
-    attributes:
-      value: "## 🧠 FAIR+CARE Compliance Evaluation"
-
-  - type: checkboxes
-    id: faircare_assessment
-    attributes:
-      label: FAIR+CARE Review
-      description: "Select principles requiring review or confirmation."
-      options:
-        - label: "Findable — Metadata indexed in STAC/DCAT"
-        - label: "Accessible — Data open and retrievable under license"
-        - label: "Interoperable — Aligns with ISO/STAC/CIDOC schemas"
-        - label: "Reusable — Properly licensed, cited, and versioned"
-        - label: "Collective Benefit — Supports equitable outcomes"
-        - label: "Authority to Control — Respects contributor/community rights"
-        - label: "Responsibility — Risks documented and mitigated"
-        - label: "Ethics — Transparent, fair, and explainable workflows"
-
-  - type: markdown
-    attributes:
-      value: "## 🔍 Governance Metadata References"
-
-  - type: textarea
-    id: governance_refs
-    attributes:
-      label: Metadata References
-      description: "Confirm relevant governance documents and ledger files."
-      value: |
-        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md  
-        Manifest Ref: releases/v9.5.0/manifest.zip  
-        Telemetry Ref: releases/v9.5.0/focus-telemetry.json  
-        FAIR+CARE Validation: docs/standards/faircare-validation.md  
-        AI Ledger / Audit: reports/audit/ai_hazards_ledger.json  
-        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl
+      label: "🔗 Relevant Governance Records or Ledger Entries"
+      description: "Provide any references to governance, FAIR+CARE, or ethics documentation."
+      placeholder: "Example: reports/audit/data_provenance_ledger.json#record_1345 or releases/v9.6.0/manifest.zip"
     validations:
       required: false
 
   - type: markdown
     attributes:
-      value: "## 🧾 Review Questions"
-
-  - type: textarea
-    id: review_questions
-    attributes:
-      label: Governance Questions
-      description: "Answer or address key governance questions below."
       value: |
-        **Provenance**
-        - Are all data and AI outputs linked to verifiable sources?
-        - Are STAC items properly versioned and signed?
-
-        **Transparency**
-        - Is documentation clear about methods and limitations?
-        - Are AI reasoning chains explainable?
-
-        **Bias & Risk Mitigation**
-        - Are there identified model or dataset biases?
-        - Is there a retraining or monitoring plan?
-
-        **Ethics & Governance**
-        - Has FAIR+CARE council approval been obtained?
-        - Are community or cultural impacts considered?
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: "## ⚙️ Actions & Recommendations"
-
-  - type: textarea
-    id: recommendations
-    attributes:
-      label: Recommended Actions
-      description: "Provide governance recommendations or next steps."
-      value: |
-        | Task | Assigned To | Due Date | Status |
-        |------|--------------|----------|--------|
-        | Address metadata inconsistencies | @kfm-data-lab | | ☐ |
-        | Update governance documentation | @kfm-architecture | | ☐ |
-        | Conduct AI bias audit | @kfm-ai-lab | | ☐ |
-        | Final sign-off | @bartytime4life | | ☐ |
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: "## 🧭 Routing & Reviewers"
-
-  - type: markdown
-    attributes:
-      value: |
-        | Role | Reviewer | Review Type |
-        |------|-----------|-------------|
-        | **Governance / Ethics Lead** | @kfm-architecture | FAIR+CARE review |
-        | **AI & ML Governance** | @kfm-ai-lab | Bias, explainability validation |
-        | **Repository Maintainer** | @bartytime4life | Merge, ledger signing |
-        | **Data Provenance / STAC** | @kfm-etl-ops | Validation & schema linkage |
+        ---
+        ## 🧠 FAIR+CARE Governance Review — Ethical Considerations
+        Please confirm compliance across all eight FAIR+CARE principles.
 
   - type: checkboxes
-    id: checklist
+    id: faircare_checklist
     attributes:
-      label: Review Completion Checklist
+      label: "FAIR+CARE Principles Checklist"
       options:
-        - label: "FAIR+CARE assessment completed"
-        - label: "Governance documentation updated"
-        - label: "Provenance metadata verified"
-        - label: "Risks documented and mitigated"
-        - label: "Council sign-off recorded in ledger"
+        - label: "Findable — Records traceable with identifiers and metadata references"
+        - label: "Accessible — Data and documentation open under appropriate licensing"
+        - label: "Interoperable — Metadata aligns with STAC/DCAT/ISO standards"
+        - label: "Reusable — Content properly versioned and reproducible"
+        - label: "Collective Benefit — Promotes equitable, public, or environmental good"
+        - label: "Authority to Control — FAIR+CARE Council approval required for release"
+        - label: "Responsibility — Proper stewardship and ethics documentation provided"
+        - label: "Ethics — Reviewed for inclusion, transparency, and sustainability"
+    validations:
+      required: true
+
+  - type: textarea
+    id: potential_risks
+    attributes:
+      label: "⚠️ Ethical, Legal, or Cultural Risks"
+      description: "Identify any potential privacy, sensitivity, or ethical issues related to this material."
+      placeholder: "Example: Contains Indigenous territorial data — requires cultural sensitivity review."
+    validations:
+      required: false
 
   - type: markdown
     attributes:
       value: |
-        > ⚠️ **Automation Notice:**  
-        > Submitting this governance review will trigger:  
-        > - FAIR+CARE compliance validation (`.github/workflows/faircare-validate.yml`)  
-        > - Governance ledger synchronization (`.github/workflows/governance-ledger.yml`)  
-        > - STAC and metadata schema checks (`.github/workflows/stac-validate.yml`)
+        ---
+        ## 🔍 Review Outcomes & Certification (To be completed by Governance Council)
+        The FAIR+CARE Governance Council will review and document decisions in ledger records.
+        Certification results are automatically linked to `reports/audit/data_provenance_ledger.json`.
+
+  - type: dropdown
+    id: expected_outcome
+    attributes:
+      label: "🧾 Expected Review Outcome"
+      description: "Select the anticipated governance result."
+      options:
+        - Certification Approval
+        - Conditional Approval (pending revision)
+        - Rejection (non-compliance)
+        - Further Review Required
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: "🗒️ Additional Notes or Comments"
+      description: "Provide any context or background relevant to the review."
+      placeholder: "Optional additional remarks for Council consideration."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🧾 Sign-Off
+        Confirm the integrity of this governance review request and your compliance with KFM's ethical and MCP-DL v6.3 documentation framework.
+
+  - type: input
+    id: requester
+    attributes:
+      label: "👤 Requester"
+      description: "Your GitHub username or full name."
+      placeholder: "@username"
+    validations:
+      required: true
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: "🏢 Affiliation"
+      description: "Your organization or institutional affiliation."
+      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
+    validations:
+      required: true
+
+  - type: textarea
+    id: certification
+    attributes:
+      label: "🪶 FAIR+CARE Certification Statement"
+      description: "By submitting this review request, you affirm compliance with KFM’s ethical governance framework."
+      value: |
+        I confirm that this request:
+        - Adheres to FAIR+CARE and MCP-DL v6.3 governance protocols.
+        - Contains no sensitive or restricted private information.
+        - Seeks transparent, ethical, and reproducible certification review.
+    validations:
+      required: true
