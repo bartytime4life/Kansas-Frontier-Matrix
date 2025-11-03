@@ -1,19 +1,19 @@
 ---
-title: "💧 Kansas Frontier Matrix — Hydrological Hazards TMP Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "💧 Kansas Frontier Matrix — Hydrological Hazard Datasets TMP Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/datasets/hydrological/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
-review_cycle: "Continuous / Automated"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../../../releases/v9.5.0/sbom.spdx.json"
 manifest_ref: "../../../../../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
 telemetry_ref: "../../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-hydrological-v2.json"
+telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-datasets-hydrological-v2.json"
 validation_reports:
-  - "../../../../reports/fair/hydrological_hazards_summary.json"
-  - "../../../../reports/audit/ai_hazards_ledger.json"
-  - "../../../../reports/self-validation/work-hazards-validation.json"
+  - "../../../../../../reports/fair/hazards_hydrological_summary.json"
+  - "../../../../../../reports/audit/ai_hazards_ledger.json"
+  - "../../../../../../reports/self-validation/work-hazards-validation.json"
 governance_ref: "../../../../../../docs/standards/governance/hazards-governance.md"
 ontology_alignment: "../../../../../../ontologies/CIDOC_CRM-HazardExt.owl"
 license: "MIT"
@@ -21,14 +21,14 @@ license: "MIT"
 
 <div align="center">
 
-# 💧 Kansas Frontier Matrix — **Hydrological Hazards TMP Datasets**
+# 💧 Kansas Frontier Matrix — **Hydrological Hazard Datasets TMP Layer**
 `data/work/tmp/hazards/datasets/hydrological/README.md`
 
 **Purpose:**  
-Temporary ingestion and harmonization workspace for **floods, droughts, groundwater, and hydrological hazard datasets** within the Kansas Frontier Matrix (KFM).  
-Supports **ETL, FAIR+CARE validation, AI flood modeling, and provenance governance** across Kansas watersheds.
+Temporary FAIR+CARE-compliant workspace for **floods, droughts, surface water, and groundwater datasets** within the Kansas Frontier Matrix (KFM).  
+Provides harmonized, validated, and ethically governed hydrological hazard data supporting flood-risk modeling, drought monitoring, and water management analytics.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Hydrological%20Integrity%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Hydrology%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../docs/architecture/repo-focus.md)
 
@@ -38,14 +38,16 @@ Supports **ETL, FAIR+CARE validation, AI flood modeling, and provenance governan
 
 ## 📚 Overview
 
-The `hydrological/` TMP directory stores **hydrologically significant datasets** sourced from USGS, FEMA, NOAA, and Kansas DASC.  
-These datasets underpin **floodplain mapping, drought indexing, aquifer analysis,** and **Focus Mode water resilience studies** in the KFM.
+The `data/work/tmp/hazards/datasets/hydrological/` directory acts as a **temporary staging and QA environment for hydrological hazard data**.  
+Datasets include flood extents, drought indices, soil moisture, streamflow, and groundwater levels sourced from **NOAA, FEMA, USGS, and Kansas Water Office (KWO)** repositories.
 
-### Core Data Categories
-- **Flooding:** FEMA Flood Insurance Rate Maps (FIRMs), NWS flood records, and NIDIS flood risk indices.  
-- **Drought:** NOAA USDM drought monitor and soil moisture anomalies.  
-- **Groundwater:** USGS well depth, aquifer recharge, and groundwater trend datasets.  
-- **Watersheds:** Kansas HUC delineations, streamflow networks, and catchment basins.  
+### Core Functions
+- Host and normalize hydrological datasets for ETL ingestion.  
+- Maintain FAIR+CARE metadata, provenance, and checksum registries.  
+- Harmonize data under KFM’s ISO 19115 and DCAT schema standards.  
+- Facilitate AI modeling for flood, drought, and hydrologic hazard prediction.  
+
+All files here are ephemeral and promoted to staging once validation is complete.
 
 ---
 
@@ -53,35 +55,34 @@ These datasets underpin **floodplain mapping, drought indexing, aquifer analysis
 
 ```plaintext
 data/work/tmp/hazards/datasets/hydrological/
-├── README.md                                # This file — hydrological hazard datasets overview
+├── README.md                            # This file — documentation for hydrological hazard TMP datasets
 │
-├── fema_flood_zones_2025.geojson            # FEMA FIRM boundaries and flood hazard areas
-├── usgs_streamflow_observations.parquet     # Streamflow records (discharge, gauge ID, date)
-├── nidis_drought_monitor_2025.csv           # Weekly USDM drought monitor indices
-├── kansas_aquifer_levels_2025.csv           # Groundwater observation well data
-├── soil_moisture_anomalies_2025.tif         # Rasterized soil moisture deviation grid
-└── metadata.json                            # Provenance and FAIR+CARE metadata
+├── flood_extents_2025.geojson           # FEMA and USGS floodplain and inundation zones
+├── drought_monitor_2025.csv             # NOAA/NIDIS drought indices for Kansas
+├── groundwater_trends_2025.parquet      # USGS groundwater observation trends
+├── soil_moisture_anomalies_2025.parquet # Soil moisture deficit and anomaly records
+└── metadata.json                        # FAIR+CARE, checksum, and provenance record
 ```
 
 ---
 
-## ⚙️ Ingestion & Processing Workflow
+## ⚙️ Hydrological Data Workflow
 
 ```mermaid
 flowchart TD
-    A["Source Data - USGS, FEMA, NIDIS, NOAA, DASC"] --> B["ETL Ingestion and Harmonization"]
-    B --> C["FAIR+CARE Schema and Ethics Validation"]
-    C --> D["Checksum Verification and Provenance Tracking"]
-    D --> E["Ontology Alignment - CIDOC CRM HazardExt"]
-    E --> F["Promotion → Transforms Layer (data/work/tmp/hazards/transforms/)"]
+    A["Raw Hydrological Data (NOAA, FEMA, USGS, KWO)"] --> B["ETL Extraction and Normalization"]
+    B --> C["Schema Harmonization and FAIR+CARE Validation"]
+    C --> D["Checksum Verification and Provenance Registration"]
+    D --> E["AI/ML Hydrological Modeling and QA"]
+    E --> F["Promotion to Staging Layer (data/work/staging/hazards/)"]
 ```
 
 ### Workflow Description
-1. **Extract:** Acquire flood, drought, and groundwater data for Kansas from authoritative sources.  
-2. **Transform:** Normalize CRS to EPSG:4326 and harmonize field naming conventions.  
-3. **Validate:** Perform schema and FAIR+CARE compliance audits.  
-4. **Verify:** Log checksums, metadata, and provenance details for reproducibility.  
-5. **Promote:** Pass cleaned datasets to transformation layer for model integration.
+1. **Extraction:** Collect data from NOAA, FEMA NFHL, and USGS water monitoring systems.  
+2. **Harmonization:** Reproject and align data fields under standardized schema.  
+3. **Validation:** Conduct FAIR+CARE audits and checksum verification.  
+4. **AI/ML Modeling:** Generate predictive hydrologic outputs for hazard forecasting.  
+5. **Promotion:** Publish validated outputs to staging for certification and archival.
 
 ---
 
@@ -89,75 +90,77 @@ flowchart TD
 
 ```json
 {
-  "id": "hydrological_hazards_flood_zones_v9.5.0",
-  "source": "FEMA Flood Insurance Rate Maps (FIRMs)",
+  "id": "hydrological_hazards_dataset_v9.5.0_2025Q4",
   "domain": "hydrological",
-  "records": 2487,
-  "variables": ["flood_zone", "base_flood_elevation", "floodway", "geometry"],
-  "crs": "EPSG:4326",
-  "schema_contract": "docs/contracts/data-contract-v3.json",
-  "checksum": "sha256:e82b3ac512c493f189c1c9eeac172b88294b764e...",
-  "validated": true,
-  "fairstatus": "compliant",
+  "datasets": [
+    "flood_extents_2025.geojson",
+    "drought_monitor_2025.csv",
+    "groundwater_trends_2025.parquet"
+  ],
+  "records_processed": 158276,
+  "checksum_verified": true,
+  "fairstatus": "certified",
+  "schema_version": "v3.0.1",
+  "validator": "@kfm-hydrohazards",
+  "checksum": "sha256:0f7a27ad19f6c09a91c84cdbd4f31fba03b88f94...",
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "created": "2025-11-02T17:25:00Z"
+  "created": "2025-11-02T19:25:00Z"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE & ISO Governance Integration
+## 🧠 FAIR+CARE Governance Integration
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Indexed under hydrological domain with versioned manifest entries. |
-| **Accessible** | Stored in open, machine-readable formats (GeoJSON, Parquet, CSV). |
-| **Interoperable** | Harmonized to ISO 19115 + CIDOC CRM HazardExt ontology. |
-| **Reusable** | Includes checksum validation and FAIR+CARE metadata. |
-| **Collective Benefit** | Supports sustainable water management and disaster readiness. |
-| **Authority to Control** | FAIR+CARE Council authorizes data publication. |
-| **Responsibility** | Validators document audit lineage and hydrology schema adjustments. |
-| **Ethics** | Removes well-specific identifiers; ensures data is non-sensitive. |
+| **Findable** | Datasets indexed by source, domain, and checksum in governance ledger. |
+| **Accessible** | Stored as open CSV, GeoJSON, and Parquet under FAIR+CARE licensing. |
+| **Interoperable** | Schema aligned with STAC 1.0, ISO 19115, and CIDOC CRM-HazardExt. |
+| **Reusable** | Includes provenance metadata and checksum integrity verification. |
+| **Collective Benefit** | Supports transparency in water and flood risk data governance. |
+| **Authority to Control** | FAIR+CARE Council validates hydrological dataset ethics and publication. |
+| **Responsibility** | Validators document all normalization and governance checks. |
+| **Ethics** | Sensitive hydrological data anonymized to protect private well information. |
 
-All governance activities recorded in:  
-`reports/audit/ai_hazards_ledger.json` • `reports/fair/hydrological_hazards_summary.json`
+Governance and lineage results recorded in:  
+`reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_hydrological_summary.json`
 
 ---
 
-## ⚙️ QA & Validation Artifacts
+## ⚙️ Dataset QA & Provenance Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `metadata.json` | Dataset provenance, version, and audit metadata. | JSON |
-| `checksum_registry.json` | Integrity verification across data types. | JSON |
-| `ontology_mapping.json` | Hydrological feature mappings to HazardExt. | JSON |
-| `etl_log.txt` | ETL and ingestion trace logs. | Text |
+| `flood_extents_2025.geojson` | FEMA/USGS floodplain and inundation boundaries. | GeoJSON |
+| `drought_monitor_2025.csv` | NIDIS drought severity and persistence index data. | CSV |
+| `groundwater_trends_2025.parquet` | Groundwater observation and trend datasets. | Parquet |
+| `soil_moisture_anomalies_2025.parquet` | Soil moisture deficit data from NOAA/SMAP models. | Parquet |
+| `metadata.json` | FAIR+CARE audit and provenance record for TMP datasets. | JSON |
 
-All validation and ingestion actions automated via `hydrological_dataset_sync.yml`.
+Synchronization and QA handled by `hazards_hydrological_sync.yml`.
 
 ---
 
 ## 🧾 Retention Policy
 
-| Dataset Type | Retention Duration | Policy |
-|---------------|--------------------|--------|
-| Flood Data | 14 days | Promoted after FAIR+CARE and schema QA. |
-| Drought Data | 14 days | Retained for AI drought model calibration. |
-| Groundwater Data | 30 days | Retained for review and audit continuity. |
-| Raster & Derived Data | 7 days | Purged after explainability validation. |
-| Metadata & Logs | 365 days | Retained for provenance governance. |
+| Data Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP Hydrological Datasets | 14 days | Purged after staging validation. |
+| Metadata | 365 days | Archived for governance and FAIR+CARE compliance. |
+| Provenance Records | Permanent | Retained for audit and reproducibility. |
 
-Automated cleanup handled by `hydrological_dataset_cleanup.yml`.
+Cleanup governed by `hazards_hydrological_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hydrological Hazards TMP Datasets (v9.5.0).
-Temporary workspace for ingesting, validating, and harmonizing hydrological hazard data (USGS, FEMA, NOAA, NIDIS, DASC).
-FAIR+CARE-certified and aligned with ISO 19115, ISO 14064, and CIDOC CRM HazardExt ontology.
-Restricted to internal ETL, AI analysis, and governance workflows.
+Kansas Frontier Matrix (2025). Hydrological Hazard Datasets TMP Layer (v9.5.0).
+Temporary FAIR+CARE-certified repository for floods, droughts, and groundwater datasets in Kansas.
+Maintains ethical governance, checksum traceability, and ISO-aligned metadata for reproducible hydrological hazard analysis.
 ```
 
 ---
@@ -166,16 +169,15 @@ Restricted to internal ETL, AI analysis, and governance workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Added aquifer and soil moisture datasets; enhanced ontology alignment; telemetry schema v2 integration. |
-| v9.3.2 | 2025-10-28 | Updated FAIR+CARE validation reports and flood hazard schema integration. |
-| v9.3.0 | 2025-10-26 | Established hydrological TMP dataset ingestion workspace. |
+| v9.5.0 | 2025-11-02 | Added soil moisture datasets, telemetry schema v2, and provenance linkage improvements. |
+| v9.3.2 | 2025-10-28 | Expanded FAIR+CARE compliance tracking and checksum registry integration. |
+| v9.3.0 | 2025-10-26 | Established TMP structure for hydrological hazard data pipelines. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Water Resilience × FAIR+CARE Governance × Provenance Integrity*  
+**Kansas Frontier Matrix** · *Water Intelligence × FAIR+CARE Ethics × Provenance Continuity*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/)
 
 </div>
-
