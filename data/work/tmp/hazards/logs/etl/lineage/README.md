@@ -1,35 +1,35 @@
 ---
-title: "🧬 Kansas Frontier Matrix — Hazard ETL Lineage Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔗 Kansas Frontier Matrix — Hazard ETL Lineage Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/etl/lineage/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../releases/v9.5.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../releases/v9.5.0/manifest.zip"
-data_contract_ref: "../../../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../schemas/telemetry/work-hazards-etl-lineage-v2.json"
+sbom_ref: "../../../../../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../schemas/telemetry/work-hazards-etl-lineage-v2.json"
 validation_reports:
-  - "../../../../../../../reports/fair/hazards_etl_lineage_summary.json"
-  - "../../../../../../../reports/audit/ai_hazards_ledger.json"
-  - "../../../../../../../reports/self-validation/work-hazards-validation.json"
-governance_ref: "../../../../../../../docs/standards/governance/hazards-governance.md"
+  - "../../../../../../../../reports/fair/hazards_etl_lineage_summary.json"
+  - "../../../../../../../../reports/audit/ai_hazards_ledger.json"
+  - "../../../../../../../../reports/self-validation/work-hazards-validation.json"
+governance_ref: "../../../../../../../../docs/standards/governance/hazards-governance.md"
 license: "MIT"
 ---
 
 <div align="center">
 
-# 🧬 Kansas Frontier Matrix — **Hazard ETL Lineage Logs**
+# 🔗 Kansas Frontier Matrix — **Hazard ETL Lineage Logs**
 `data/work/tmp/hazards/logs/etl/lineage/README.md`
 
 **Purpose:**  
-Dedicated workspace for recording **dataset lineage, dependency tracking, and transformation ancestry logs** throughout the hazard ETL pipeline within the Kansas Frontier Matrix (KFM).  
-Provides cryptographically verifiable data provenance ensuring **full lifecycle traceability, FAIR+CARE alignment, and governance accountability.**
+Dedicated FAIR+CARE-governed workspace for **tracking dataset dependencies, data flows, and provenance lineage** across hazard ETL pipelines in the Kansas Frontier Matrix (KFM).  
+These logs enable end-to-end transparency from data extraction to publication under blockchain-registered governance integrity.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Lineage%20Audited-gold)](../../../../../../../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Lineage%20Certified-gold)](../../../../../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -37,14 +37,14 @@ Provides cryptographically verifiable data provenance ensuring **full lifecycle 
 
 ## 📚 Overview
 
-The `data/work/tmp/hazards/logs/etl/lineage/` directory maintains **complete ETL lineage records**, documenting relationships between **raw inputs, transformed outputs, and published datasets** across hazard domains (meteorological, hydrological, geological, wildfire-energy).  
-This lineage ensures reproducibility, ethical transparency, and audit readiness across all data governance workflows.
+The `data/work/tmp/hazards/logs/etl/lineage/` directory serves as the **provenance and dependency tracking layer** for hazard ETL workflows.  
+It ensures every transformation, validation, and publication step maintains a verifiable record of **data lineage** that links inputs to outputs under FAIR+CARE governance.
 
-### Core Functions
-- Log dataset dependencies and transformation ancestry.  
-- Trace lineage from source ingestion through staging, processing, and catalog.  
-- Maintain FAIR+CARE-compliant provenance chains with checksum references.  
-- Synchronize lineage with **AI Hazards Governance Ledger** and telemetry systems.  
+### Core Responsibilities
+- Document lineage relationships across all ETL pipeline stages.  
+- Maintain checksum integrity and provenance graph records.  
+- Register lineage updates with governance and AI audit ledgers.  
+- Enable AI explainability and ethical traceability of hazard datasets.  
 
 ---
 
@@ -52,35 +52,33 @@ This lineage ensures reproducibility, ethical transparency, and audit readiness 
 
 ```plaintext
 data/work/tmp/hazards/logs/etl/lineage/
-├── README.md                                 # This file — ETL lineage documentation
+├── README.md                                # This file — overview of hazard ETL lineage logs
 │
-├── lineage_trace_2025Q4.json                 # Dataset-level dependency graph and ancestry mapping
-├── transformation_ancestry_2025Q4.json       # Linked metadata of transformations and intermediate files
-├── provenance_chain_2025Q4.json              # Provenance record linking raw → staging → processed → catalog
-├── ledger_hash_registry_2025Q4.json          # Blockchain-anchored lineage verification hashes
-├── governance_crosswalk_2025Q4.json          # Mapping between lineage, governance, and FAIR+CARE reports
-└── metadata.json                             # Lineage provenance metadata and FAIR+CARE linkage
+├── etl_lineage_graph_2025Q4.json            # Graph representation of ETL data dependencies and flows
+├── dependency_trace_matrix_2025Q4.csv       # Tabular lineage mapping (inputs → transformations → outputs)
+├── governance_lineage_audit_2025Q4.json     # FAIR+CARE lineage certification audit log
+├── ai_lineage_explainability_2025Q4.json    # AI reasoning trace and model dependency explanation
+└── metadata.json                            # Provenance and governance linkage metadata
 ```
 
 ---
 
-## ⚙️ ETL Lineage Workflow
+## ⚙️ Lineage Tracking Workflow
 
 ```mermaid
 flowchart TD
-    A["Raw Hazard Data (NOAA, FEMA, USGS, DOE)"] --> B["Transformation and Validation (ETL Transforms)"]
-    B --> C["Checksum and FAIR+CARE Governance Logging"]
-    C --> D["Lineage Mapping (Dependency + Provenance Tracking)"]
-    D --> E["Ledger Registration + Telemetry Update"]
-    E --> F["Archival for Audit and Ethics Review"]
+    A["ETL Extracted Data (Raw Sources)"] --> B["Transformations (Schema + Harmonization)"]
+    B --> C["Validation and FAIR+CARE Audits"]
+    C --> D["Lineage Graph Construction (Provenance Mapping)"]
+    D --> E["Governance Ledger Sync + Telemetry Update"]
 ```
 
 ### Workflow Description
-1. **Extraction:** Log dataset source details (origin, schema, and acquisition date).  
-2. **Transformation Tracking:** Record each modification, reprojection, or harmonization event.  
-3. **Checksum + FAIR+CARE:** Register ethics validation and digital fingerprint for traceability.  
-4. **Lineage Mapping:** Establish relationships across data lifecycle (raw → staging → processed).  
-5. **Governance:** Commit lineage hash chains to blockchain-anchored provenance ledger.
+1. **Capture Dependencies:** Map relationships between raw datasets, transformations, and outputs.  
+2. **Schema Tracking:** Record schema versions and metadata inheritance paths.  
+3. **Provenance Graphing:** Construct data flow networks (inputs → outputs → derived layers).  
+4. **Governance Registration:** Sync lineage graphs with blockchain-based AI audit ledger.  
+5. **Explainability Analysis:** Support Focus Mode AI validation for interpretability and accountability.
 
 ---
 
@@ -88,61 +86,57 @@ flowchart TD
 
 ```json
 {
-  "lineage_id": "hazards_etl_lineage_v9.5.0_2025Q4",
-  "raw_sources": [
-    "data/raw/noaa/tornado_reports_2025.csv",
-    "data/raw/fema/flood_zones_2025.geojson"
+  "id": "hazards_etl_lineage_v9.5.0_2025Q4",
+  "etl_cycle": "Q4 2025",
+  "domains": ["meteorological", "hydrological", "geological", "wildfire_energy"],
+  "datasets_in": [
+    "data/work/tmp/hazards/datasets/meteorological/tornado_tracks_2025.geojson",
+    "data/work/tmp/hazards/datasets/hydrological/flood_extents_2025.geojson"
   ],
-  "intermediate_products": [
-    "data/work/tmp/hazards/transforms/tornado_tracks_cf.geojson",
-    "data/work/tmp/hazards/transforms/flood_extents_cf.geojson"
+  "datasets_out": [
+    "data/work/staging/hazards/combined_hazard_index_2025.parquet"
   ],
-  "final_outputs": [
-    "data/work/processed/hazards/tornado_tracks.geojson",
-    "data/work/processed/hazards/flood_extents.geojson"
-  ],
+  "transformations_applied": ["Reprojection", "Schema Harmonization", "CF Compliance"],
   "checksum_verified": true,
-  "fairstatus": "compliant",
-  "governance_synced": true,
-  "ledger_hash": "sha256:8bde27b91a45e6a24f51f8d8f38eafcd2a91a6b9...",
-  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "ai_explainability_linked": true,
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "created": "2025-11-02T18:55:00Z",
-  "validator": "@kfm-etl-lineage"
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "created": "2025-11-02T20:20:00Z",
+  "validator": "@kfm-lineage"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Integration
+## 🧠 FAIR+CARE Lineage Governance
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Lineage indexed by dataset ID and checksum within provenance ledger. |
-| **Accessible** | Lineage stored as open JSON under FAIR+CARE license. |
-| **Interoperable** | Conforms to ISO 19115, PROV-O, and CIDOC CRM lineage standards. |
-| **Reusable** | Enables complete dataset recreation from provenance metadata. |
-| **Collective Benefit** | Promotes open, ethical data reuse and environmental resilience. |
-| **Authority to Control** | FAIR+CARE Council reviews lineage records before certification. |
-| **Responsibility** | Validators document all transformation ancestry chains. |
-| **Ethics** | Ensures no alteration of sensitive data or misrepresentation of provenance. |
+| **Findable** | Lineage graphs indexed by ETL cycle, domain, and dataset ID. |
+| **Accessible** | Stored in open JSON/CSV formats with checksum validation. |
+| **Interoperable** | Follows ISO 19115 lineage schema and DCAT provenance extensions. |
+| **Reusable** | Maintains dependency links and metadata inheritance across datasets. |
+| **Collective Benefit** | Ensures transparent and ethical tracking of data flows. |
+| **Authority to Control** | FAIR+CARE Council reviews lineage certification and audit logs. |
+| **Responsibility** | Validators document data dependencies and schema evolution. |
+| **Ethics** | Protects privacy and avoids exposing sensitive dependency information. |
 
-Governance and audit outputs stored in:  
+All governance results recorded in:  
 `reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_etl_lineage_summary.json`
 
 ---
 
-## ⚙️ Provenance & Audit Artifacts
+## ⚙️ Lineage QA & Provenance Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `lineage_trace_*.json` | Dependency mapping between datasets and transformations. | JSON |
-| `transformation_ancestry_*.json` | Detailed logs of intermediate processing steps. | JSON |
-| `provenance_chain_*.json` | Hash-linked chain of dataset evolution. | JSON |
-| `ledger_hash_registry_*.json` | Blockchain-backed record of lineage signatures. | JSON |
-| `metadata.json` | Governance and FAIR+CARE lineage metadata. | JSON |
+| `etl_lineage_graph_*.json` | Full ETL data dependency and flow graph. | JSON |
+| `dependency_trace_matrix_*.csv` | Tabular mapping of dataset relationships. | CSV |
+| `governance_lineage_audit_*.json` | FAIR+CARE governance and lineage certification log. | JSON |
+| `ai_lineage_explainability_*.json` | AI explainability trace and dependency explanation. | JSON |
+| `metadata.json` | Provenance and governance linkage metadata. | JSON |
 
-Automation handled by `etl_lineage_sync.yml`.
+Lineage tracking automated via `hazards_etl_lineage_sync.yml`.
 
 ---
 
@@ -150,12 +144,12 @@ Automation handled by `etl_lineage_sync.yml`.
 
 | Log Type | Retention Duration | Policy |
 |-----------|--------------------|--------|
-| Lineage Logs | Permanent | Retained for reproducibility and audit integrity. |
-| Transformation Ancestry | 365 days | Archived for governance validation. |
-| Checksum & Hash Records | Permanent | Maintained indefinitely under governance ledger. |
-| Metadata | Permanent | Preserved for provenance and certification. |
+| Lineage Graphs | 365 days | Retained for governance and audit reproducibility. |
+| Dependency Traces | 180 days | Archived after validation and staging approval. |
+| Governance Audits | Permanent | Stored indefinitely for ethics and lineage certification. |
+| Metadata | Permanent | Preserved under FAIR+CARE ledger. |
 
-Cleanup governed by `etl_lineage_cleanup.yml`.
+Cleanup governed by `hazards_etl_lineage_cleanup.yml`.
 
 ---
 
@@ -163,8 +157,8 @@ Cleanup governed by `etl_lineage_cleanup.yml`.
 
 ```text
 Kansas Frontier Matrix (2025). Hazard ETL Lineage Logs (v9.5.0).
-Comprehensive lineage tracking system recording dependencies, ancestry, and provenance of all hazard datasets across ETL workflows.
-Maintained under FAIR+CARE, ISO 19115, and CIDOC CRM lineage governance for transparent reproducibility.
+FAIR+CARE-certified provenance and lineage logging environment for hazard ETL pipelines.
+Maintains transparent dependency tracking, checksum validation, and governance certification.
 ```
 
 ---
@@ -173,15 +167,15 @@ Maintained under FAIR+CARE, ISO 19115, and CIDOC CRM lineage governance for tran
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Added blockchain lineage registry, telemetry v2 schema, and PROV-O alignment. |
-| v9.3.2 | 2025-10-28 | Expanded FAIR+CARE lineage validation and hash integrity reporting. |
-| v9.3.0 | 2025-10-26 | Established ETL lineage log directory for multi-domain hazard provenance. |
+| v9.5.0 | 2025-11-02 | Added AI explainability lineage tracing and FAIR+CARE audit integration. |
+| v9.3.2 | 2025-10-28 | Expanded schema inheritance tracking and governance synchronization. |
+| v9.3.0 | 2025-10-26 | Established ETL lineage log workspace under FAIR+CARE provenance standards. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Provenance × FAIR+CARE Governance × Immutable Lineage*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../../docs/standards/governance/)
+**Kansas Frontier Matrix** · *Provenance Transparency × FAIR+CARE Ethics × Data Lineage Integrity*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../../../docs/standards/governance/)
 
 </div>
