@@ -1,5 +1,5 @@
 ---
-title: "🌋 Kansas Frontier Matrix — Hazards TMP Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌍 Kansas Frontier Matrix — Hazard Datasets TMP Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/datasets/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
@@ -11,8 +11,8 @@ data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
 telemetry_ref: "../../../../../releases/v9.5.0/focus-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/work-hazards-datasets-v2.json"
 validation_reports:
-  - "../../../../../reports/validation/work-hazards-validation.json"
-  - "../../../../../reports/fair/hazards_datasets_summary.json"
+  - "../../../../../reports/self-validation/work-hazards-validation.json"
+  - "../../../../../reports/fair/hazards_summary.json"
   - "../../../../../reports/audit/ai_hazards_ledger.json"
 governance_ref: "../../../../../docs/standards/governance/hazards-governance.md"
 ontology_alignment: "../../../../../ontologies/CIDOC_CRM-HazardExt.owl"
@@ -21,14 +21,14 @@ license: "MIT"
 
 <div align="center">
 
-# 🌋 Kansas Frontier Matrix — **Hazards TMP Datasets**
+# 🌍 Kansas Frontier Matrix — **Hazard Datasets TMP Layer**
 `data/work/tmp/hazards/datasets/README.md`
 
 **Purpose:**  
-Repository for **temporary hazard-related input datasets** used in ETL, AI reasoning, and FAIR+CARE validation within the Kansas Frontier Matrix (KFM).  
-This workspace contains **raw-to-transformed data derivatives** across meteorological, hydrological, geological, and infrastructure hazard domains.
+Temporary repository for **hazard dataset ingestion, preprocessing, and normalization** across meteorological, hydrological, geological, and wildfire-energy domains within the Kansas Frontier Matrix (KFM).  
+Provides FAIR+CARE-aligned, schema-validated, and AI-audited datasets used during ETL and validation cycles in the TMP workspace.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Integrity%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Dataset%20Governed-gold)](../../../../../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
@@ -38,14 +38,16 @@ This workspace contains **raw-to-transformed data derivatives** across meteorolo
 
 ## 📚 Overview
 
-The `data/work/tmp/hazards/datasets/` directory hosts all **temporary hazard-related source data** imported from NOAA, FEMA, USGS, KGS, and related open repositories.  
-These datasets are cleaned, validated, and prepared for harmonization in `data/work/tmp/hazards/transforms/`.
+The `data/work/tmp/hazards/datasets/` directory serves as a **temporary collection hub for all raw and preprocessed hazard datasets** used within KFM's ETL pipelines.  
+These datasets are extracted, validated, and harmonized before transformation and staging, maintaining full provenance and FAIR+CARE governance compliance.
 
-### Key Functions
-- Store short-lived hazard data inputs prior to normalization and AI processing.  
-- Manage spatial and tabular hazard records under FAIR+CARE metadata contracts.  
-- Validate schema alignment with ISO 19115 and CIDOC-CRM Hazard Extension ontology.  
-- Maintain provenance, versioning, and checksum verification for reproducibility.  
+### Core Responsibilities
+- Host all hazard input datasets (NOAA, FEMA, USGS, DOE, and KGS).  
+- Maintain temporary but traceable versions of hazard-related data files.  
+- Provide consistent structure and metadata for validation workflows.  
+- Integrate checksum, provenance, and FAIR+CARE validation records.  
+
+All datasets here are ephemeral and automatically purged once validated and promoted to staging or processed layers.
 
 ---
 
@@ -53,50 +55,46 @@ These datasets are cleaned, validated, and prepared for harmonization in `data/w
 
 ```plaintext
 data/work/tmp/hazards/datasets/
-├── README.md                              # This file — overview of hazards TMP datasets
+├── README.md                              # This file — documentation of hazard datasets TMP layer
 │
-├── meteorological/                        # Tornado, hail, and storm event datasets
-│   ├── noaa_storm_events_2025.csv
-│   ├── spc_tornado_paths_2025.geojson
+├── meteorological/                        # Tornadoes, storms, hail, and severe weather datasets
+│   ├── tornado_tracks_2025.geojson
+│   ├── hail_reports_2025.csv
 │   └── metadata.json
 │
-├── hydrological/                          # Flood, drought, and groundwater stress data
-│   ├── fema_flood_zones_2025.geojson
-│   ├── usgs_streamflow_observations.parquet
+├── hydrological/                          # Flood, drought, and hydrologic monitoring datasets
+│   ├── flood_zones_2025.geojson
+│   ├── drought_monitor_2025.csv
 │   └── metadata.json
 │
-├── geological/                            # Earthquake, landslide, and subsidence datasets
-│   ├── kansas_earthquakes_1977_2025.csv
-│   ├── usgs_landslides.geojson
+├── geological/                            # Earthquakes, landslides, subsidence hazard datasets
+│   ├── earthquakes_2025.csv
+│   ├── landslides_inventory.geojson
 │   └── metadata.json
 │
-├── wildfire_energy/                       # Wildfire and grid vulnerability datasets
-│   ├── fire_risk_zones_2025.geojson
-│   ├── energy_grid_vulnerability.csv
-│   └── metadata.json
-│
-└── metadata.json                          # Master provenance and dataset-level metadata
+└── wildfire_energy/                       # Wildfire risk, energy grid exposure, and resilience datasets
+    ├── wildfire_perimeters_2025.geojson
+    ├── grid_exposure_zones.parquet
+    └── metadata.json
 ```
 
 ---
 
-## ⚙️ Ingestion & Validation Workflow
+## ⚙️ Dataset Processing Workflow
 
 ```mermaid
 flowchart TD
-    A["Source Repositories - NOAA, FEMA, USGS, KGS, DASC"] --> B["ETL Ingestion (Extract & Harmonize Fields)"]
-    B --> C["Schema Validation - ISO 19115 & FAIR+CARE Audit"]
-    C --> D["Ontology Mapping - CIDOC CRM Hazard Extension"]
-    D --> E["Checksum Verification & Metadata Logging"]
-    E --> F["Promotion → Transforms Layer (data/work/tmp/hazards/transforms/)"]
+    A["Raw Hazard Data Sources (NOAA, FEMA, USGS, DOE, KGS)"] --> B["ETL Ingestion (data/work/tmp/hazards/logs/etl/extract/)"]
+    B --> C["Schema Harmonization (data/work/tmp/hazards/transforms/)"]
+    C --> D["Validation (FAIR+CARE, Checksum, AI Audit)"]
+    D --> E["Promotion to Staging Layer (data/work/staging/hazards/)"]
 ```
 
 ### Workflow Description
-1. **Extraction:** Data retrieved from authoritative open datasets (NOAA, FEMA, USGS, etc.).  
-2. **Normalization:** Harmonize schemas and geospatial projections (EPSG:4326).  
-3. **Validation:** Apply FAIR+CARE audits and checksum consistency checks.  
-4. **Ontology Mapping:** Align hazard types with CIDOC CRM extensions.  
-5. **Promotion:** Export cleaned data to the transformation layer for reprojection and AI analysis.
+1. **Ingestion:** Raw data downloaded from verified public sources and cataloged.  
+2. **Schema Harmonization:** Standardized under KFM data contract and ISO schema alignment.  
+3. **Validation:** FAIR+CARE audit ensures ethical transparency and interoperability.  
+4. **Promotion:** Datasets that pass validation move to staging for certification.
 
 ---
 
@@ -104,74 +102,72 @@ flowchart TD
 
 ```json
 {
-  "id": "hazards_dataset_noaa_storm_events_v9.5.0",
-  "source": "NOAA NCEI Storm Events Database",
-  "domain": "meteorological",
-  "records": 12560,
-  "crs": "EPSG:4326",
-  "schema_contract": "docs/contracts/data-contract-v3.json",
-  "checksum": "sha256:4e38b22f1b6a112d409fbbb29e5aadc234be0c90...",
-  "validated": true,
+  "id": "hazards_dataset_tmp_flood_zones_2025_v9.5.0",
+  "domain": "hydrological",
+  "source": "FEMA NFHL Flood Zones",
+  "records": 28476,
+  "format": "GeoJSON",
+  "schema_version": "v3.0.1",
+  "checksum": "sha256:b12f47ea3fba47f52a9f19d9a12b7c948f7dcb64...",
   "fairstatus": "compliant",
+  "validated_by": "@kfm-hazards",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "created": "2025-11-02T17:10:00Z"
+  "created": "2025-11-02T19:05:00Z"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Compliance & Governance Integration
+## 🧠 FAIR+CARE Compliance Matrix
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Indexed by dataset ID, schema, and domain in governance ledger. |
-| **Accessible** | Stored in open CSV, GeoJSON, and Parquet formats. |
-| **Interoperable** | Schema aligned with ISO 19115 and CIDOC-CRM HazardExt ontology. |
-| **Reusable** | Provenance, checksum, and metadata documented in FAIR+CARE registry. |
-| **Collective Benefit** | Enables transparent disaster awareness and preparedness research. |
-| **Authority to Control** | FAIR+CARE Council governs data updates and retention. |
-| **Responsibility** | Validators maintain metadata logs for all ETL imports. |
-| **Ethics** | No PII; culturally sensitive data reviewed for ethical representation. |
+| **Findable** | Datasets indexed by domain, source, and checksum ID. |
+| **Accessible** | Stored in open formats (CSV, GeoJSON, Parquet). |
+| **Interoperable** | Aligned with STAC, DCAT, ISO 19115, and CIDOC CRM. |
+| **Reusable** | Each dataset includes metadata, provenance, and checksum data. |
+| **Collective Benefit** | Supports research on climate resilience and public safety. |
+| **Authority to Control** | FAIR+CARE Council manages ethical dataset approval. |
+| **Responsibility** | Dataset maintainers ensure accuracy and schema compliance. |
+| **Ethics** | All datasets reviewed for public-domain and ethical data sourcing. |
 
-Audit and validation results logged in:  
-`reports/fair/hazards_datasets_summary.json` • `reports/audit/ai_hazards_ledger.json`
+All governance audits logged in:  
+`reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_summary.json`
 
 ---
 
-## ⚙️ QA & Provenance Artifacts
+## ⚙️ Dataset QA & Provenance Artifacts
 
 | File | Description | Format |
 |------|--------------|--------|
-| `metadata.json` | Global provenance and dataset descriptors. | JSON |
-| `faircare_report.json` | FAIR+CARE validation outcome per dataset. | JSON |
-| `checksums.json` | SHA-256 hash registry of all datasets. | JSON |
-| `governance_sync.log` | Governance and audit linkage report. | Text |
+| `*_2025.geojson` | Spatial hazard boundaries (storms, floods, fire zones). | GeoJSON |
+| `*_2025.csv` | Tabular event datasets (hail, droughts, earthquakes). | CSV |
+| `*_2025.parquet` | Grid or energy exposure datasets. | Parquet |
+| `metadata.json` | Provenance and FAIR+CARE audit metadata for each dataset. | JSON |
 
-All dataset validation and ingestion actions are automated via `hazards_dataset_sync.yml`.
+Dataset synchronization managed via `hazards_datasets_sync.yml`.
 
 ---
 
 ## 🧾 Retention Policy
 
-| Dataset Category | Retention Duration | Policy |
-|------------------|--------------------|--------|
-| Meteorological | 14 days | Promoted post-validation to transforms. |
-| Hydrological | 14 days | Retained for staging after QA. |
-| Geological | 30 days | Archived under controlled retention cycle. |
-| Wildfire & Energy | 14 days | Retained until AI explainability pass. |
-| Metadata & Logs | 365 days | Archived for provenance continuity. |
+| Data Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| TMP Datasets | 14 days | Purged after successful staging promotion. |
+| Metadata | 365 days | Retained for governance audit review. |
+| FAIR+CARE Logs | 180 days | Archived for ethics and reproducibility checks. |
+| Provenance | Permanent | Stored in governance ledger for continuity. |
 
-Cleanup managed by `hazards_datasets_cleanup.yml`.
+Cleanup handled by `hazards_datasets_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hazards TMP Datasets (v9.5.0).
-Temporary ingestion layer for hazard datasets from NOAA, FEMA, USGS, and KGS.
-Provides FAIR+CARE-compliant schema validation, ontology alignment, and provenance logging.
-Restricted to internal ETL and governance workflows.
+Kansas Frontier Matrix (2025). Hazard Datasets TMP Layer (v9.5.0).
+Temporary FAIR+CARE-compliant dataset repository for hazard ETL workflows, integrating NOAA, FEMA, USGS, DOE, and KGS sources.
+Maintained under ISO 19115, STAC, and MCP-DL v6.3 governance for reproducible data science.
 ```
 
 ---
@@ -180,16 +176,15 @@ Restricted to internal ETL and governance workflows.
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Integrated CIDOC CRM ontology alignment, telemetry schema v2, and expanded dataset validation coverage. |
-| v9.3.2 | 2025-10-28 | Added NOAA, FEMA, and USGS ingestion schemas; updated FAIR+CARE audit workflow. |
-| v9.3.0 | 2025-10-26 | Established TMP hazards dataset structure and checksum registry. |
+| v9.5.0 | 2025-11-02 | Added telemetry schema v2, ontology alignment, and full FAIR+CARE dataset tracking. |
+| v9.3.2 | 2025-10-28 | Integrated energy resilience and wildfire dataset submodules. |
+| v9.3.0 | 2025-10-26 | Established hazard dataset TMP structure across all domains. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Hazard Intelligence × FAIR+CARE Ethics × Provenance Traceability*  
+**Kansas Frontier Matrix** · *Hazard Data Integrity × FAIR+CARE Governance × Provenance Assurance*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/)
 
 </div>
-
