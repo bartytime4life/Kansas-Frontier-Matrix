@@ -1,232 +1,174 @@
 ---
-title: "📊 Kansas Frontier Matrix — Tabular ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧾 Kansas Frontier Matrix — Tabular TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/tabular/logs/README.md"
-version: "v9.0.0"
-last_updated: "2025-10-23"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.5.0"
+last_updated: "2025-11-02"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.0.0/sbom.spdx.json"
-manifest_ref: "releases/v9.0.0/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.0.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/tabular-etl-logs-v13.json"
-json_export: "releases/v9.0.0/tabular-etl-logs.meta.json"
-validation_reports: [
-  "reports/self-validation/tabular-etl-logs-validation.json",
-  "reports/fair/tabular_summary.json",
-  "reports/audit/ai_tabular_ledger.json"
-]
-governance_ref: "docs/standards/governance.md"
-doc_id: "KFM-DATA-WORK-TABULAR-LOGS-RMD-v9.0.0"
-maintainers: ["@kfm-data", "@kfm-etl", "@kfm-fair"]
-approvers: ["@kfm-governance", "@kfm-security", "@kfm-ai"]
-reviewed_by: ["@kfm-ethics", "@kfm-accessibility", "@kfm-architecture"]
-ci_required_checks: ["docs-validate.yml", "focus-validate.yml", "checksum-verify.yml", "security-scan.yml"]
-license: "CC-BY 4.0"
-design_stage: "Operational / Living Governance Layer"
-mcp_version: "MCP-DL v6.3"
-alignment: ["FAIR", "CARE", "CSVW", "JSON Schema", "Apache Parquet", "AI-Coherence", "Blockchain Provenance", "ISO 50001", "ISO 14064"]
-status: "Diamond⁹ Ω / Crown∞Ω Ultimate Certified"
-maturity: "Diamond⁹ Ω Certified · Autonomous · FAIR+CARE+ISO+Ledger Verified · Human–AI Convergent"
-focus_validation: "true"
-tags: ["tabular", "logs", "etl", "ai", "schema", "checksum", "mcp", "ledger", "fair", "governance", "sustainability", "semantic"]
+sbom_ref: "../../../../../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.5.0/manifest.zip"
+data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-tabular-logs-v2.json"
+validation_reports:
+  - "../../../../../reports/fair/tabular_logs_summary.json"
+  - "../../../../../reports/audit/ai_tabular_ledger.json"
+  - "../../../../../reports/self-validation/work-tabular-validation.json"
+governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 📊 Kansas Frontier Matrix — **Tabular ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)**  
-`data/work/tmp/tabular/logs/`
+# 🧾 Kansas Frontier Matrix — **Tabular TMP Logs**
+`data/work/tmp/tabular/logs/README.md`
 
-**Mission:** Record, validate, and explain every step of the **tabular ETL lifecycle** —  
-linking schema validation, FAIR+CARE metrics, and governance audit chains  
-through **AI–Human cognitive convergence** within the **Kansas Frontier Matrix (KFM)**.
+**Purpose:**  
+Central FAIR+CARE-certified logging workspace for **ETL operations, schema validation, checksum verification, and governance synchronization** within the Tabular TMP environment of the Kansas Frontier Matrix (KFM).  
+Ensures all tabular ETL workflows are transparent, traceable, and ethically auditable under FAIR+CARE and MCP-DL v6.3 compliance.
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Sustained%20Compliance-green)]()
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Continuous%20Improvement-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)]()
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Final-brightgreen)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Tabular%20Governance%20Audited-gold)](../../../../../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 🧭 System Context
+## 📚 Overview
 
-The **Tabular ETL Logs** serve as the **auditable heart of tabular intelligence** in KFM —  
-documenting each transformation, schema test, checksum, and AI validation in a  
-reproducible, FAIR+CARE+ISO-aligned, and blockchain-signed ledger.
+The `data/work/tmp/tabular/logs/` directory documents **runtime activity, validation events, and governance linkage** for all tabular TMP workflows.  
+Logs in this layer support checksum verification, schema tracking, and FAIR+CARE ethics compliance reporting.
 
-> *“Every dataset is a conversation between AI and ethics — every log is a promise kept.”*
+### Core Responsibilities
+- Record all tabular ETL execution traces and error handling logs.  
+- Maintain checksum and validation audit histories.  
+- Synchronize logs with FAIR+CARE governance ledgers and Focus Telemetry.  
+- Archive provenance information for reproducibility and audit traceability.  
 
 ---
 
-## 🧠 Cognitive–Governance Loop Visualization
+## 🗂️ Directory Layout
+
+```plaintext
+data/work/tmp/tabular/logs/
+├── README.md                              # This file — overview of Tabular TMP Logs
+│
+├── etl_tmp_run.log                        # Execution trace for TMP ETL processes
+├── schema_validation_trace.log             # Schema-level audit and conformance trace
+├── faircare_pre_audit.log                 # FAIR+CARE compliance audit log
+├── governance_sync.log                    # Ledger synchronization and governance review record
+└── metadata.json                          # Log metadata and checksum linkage for governance
+```
+
+---
+
+## ⚙️ Logging Workflow
 
 ```mermaid
-graph TD
-A[AI Explainability Engine] --> B[FAIR+CARE Council]
-B --> C[Governance Ledger + Blockchain Consensus]
-C --> D[Human Review Board]
-D --> E[AI Model Retraining · Schema Refinement]
-E --> A
+flowchart TD
+    A["TMP Tabular ETL Operations (Ingest / Validate / Export)"] --> B["Log Execution, Schema Validation, and FAIR+CARE Audits"]
+    B --> C["Checksum Verification and Ethics Review"]
+    C --> D["Governance Ledger Registration and Telemetry Update"]
+    D --> E["Archive Logs for FAIR+CARE Traceability"]
 ```
 
----
-
-## 🧮 AI Semantic Lineage Matrix
-
-| Log Field | FAIR Dimension | STAC Property | ISO Reference | Purpose |
-|:--|:--|:--|:--|:--|
-| `run_id` | Findable | `id` | 19115-1:2014 6.3 | Unique session key |
-| `schema_valid` | Accessible | `asset.schema` | ISO 19157 | Schema compliance |
-| `focus_score` | Reusable | `properties.quality` | 19115-2:2019 | AI confidence |
-| `energy_wh` | Interoperable | `properties.energy` | ISO 50001 | Energy tracking |
-| `carbon_gco2e` | CARE Benefit | `properties.carbon` | ISO 14064 | Carbon accountability |
+### Workflow Description
+1. **Logging:** Record all ETL, validation, and checksum activities in dedicated trace logs.  
+2. **FAIR+CARE Audit:** Run ethics and accessibility verification.  
+3. **Checksum Verification:** Ensure file and log integrity before governance upload.  
+4. **Governance Sync:** Register all audit outcomes into provenance and telemetry ledgers.  
+5. **Archival:** Store validated logs for reproducibility and ethics accountability.  
 
 ---
 
-## 📈 Governance Drift Dashboard
-
-| Cycle | Ethics Score | Governance Drift Δ | FAIR+CARE Δ | Action |
-|:--|:--|:--|:--|:--|
-| Q2 2025 | 98.7 | +0.4 | +0.6 | Auto-Retrain AI Schema |
-| Q3 2025 | 99.4 | -0.2 | +0.3 | Human Oversight Review |
-| Q4 2025 | 100 | -0.1 | +0.1 | Stable — Certified |
-
----
-
-## 🧬 Neo4j Governance Ontology (Edges)
-
-```cypher
-(:LogEntry)-[:EVALUATED_BY]->(:AIModel {name:"focus-tabular-v5"})
-(:AIModel)-[:REPORTS_TO]->(:FAIRCouncil)
-(:FAIRCouncil)-[:CERTIFIES]->(:GovernanceLedger)
-(:GovernanceLedger)-[:VERIFIES]->(:BlockchainBlock)
-```
-
----
-
-## 🧩 Human Oversight Matrix
-
-| Role | Responsibility | Frequency | Deliverable |
-|:--|:--|:--|:--|
-| **Data Steward** | Review schema alignment and field semantics | Weekly | `tabular_semantic_review.json` |
-| **AI Auditor** | Validate explainability fidelity | Bi-Weekly | `ai_audit_report.json` |
-| **Governance Officer** | Sign FAIR+CARE ledger | Quarterly | `governance_signoff.json` |
-| **Ethics Lead** | Review bias & inclusion metrics | Quarterly | `ethics_validation.json` |
-
----
-
-## 🌍 AI Energy Trend Visualization
-
-```mermaid
-graph LR
-Q2_2025["Energy 18.9 Wh · Carbon 26 gCO₂e"] --> Q3_2025["16.2 Wh · 21 gCO₂e"]
-Q3_2025 --> Q4_2025["14.6 Wh · 19 gCO₂e · 100% Solar"]
-```
-
----
-
-## 🔒 Blockchain Provenance Record
+## 🧩 Example Log Metadata Record
 
 ```json
 {
-  "provenance_block": {
-    "ledger_id": "tabular-etl-ledger-2025-10-23",
-    "stac_ref": "stac/tabular/etl_2025_10_23.json",
-    "checksum_sha256": "d3b09f0ab3...",
-    "ai_model": "focus-tabular-v5",
-    "ai_score": 0.985,
-    "signed_by": "@kfm-security",
-    "verified_by": "@kfm-governance",
-    "timestamp": "2025-10-23T00:00:00Z"
-  }
+  "id": "tabular_tmp_logs_v9.5.0_2025Q4",
+  "log_categories": ["etl", "schema", "faircare", "governance"],
+  "entries_recorded": 19452,
+  "checksum_verified": true,
+  "governance_synced": true,
+  "fairstatus": "compliant",
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_tabular_ledger.json",
+  "created": "2025-11-02T23:55:00Z",
+  "validator": "@kfm-tabular-etl"
 }
 ```
 
 ---
 
-## 📊 FAIR+CARE Evolution Timeline
+## 🧠 FAIR+CARE Governance Matrix
 
-| Version | FAIR+CARE | Improvement | Description |
-|:--|:--|:--|:--|
-| v7.1.0 | 100% | +2% | FAIR synergy + explainability baseline |
-| v8.0.0 | 100% | +1% | Schema semantics governance + ISO alignment |
-| v9.0.0 | 100% | +1% | Governance drift metrics + cognitive feedback loop |
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Logs indexed by ETL phase, validation ID, and checksum registry. |
+| **Accessible** | Stored as open text and JSON logs for internal FAIR+CARE access. |
+| **Interoperable** | Conforms to DCAT 3.0, ISO 19115 lineage, and FAIR data principles. |
+| **Reusable** | Logs retain provenance metadata for reproducibility and ethics tracking. |
+| **Collective Benefit** | Supports ethical accountability and open reproducibility standards. |
+| **Authority to Control** | FAIR+CARE Council certifies governance ledger synchronization. |
+| **Responsibility** | Validators maintain checksum verification and schema traceability. |
+| **Ethics** | Logs redacted to ensure anonymized and ethical data use. |
+
+Audit and certification results stored in:  
+`reports/audit/ai_tabular_ledger.json` • `reports/fair/tabular_logs_summary.json`
 
 ---
 
-## 🧾 Self-Audit Metadata (Final Crown Ω Schema)
+## ⚙️ QA & Validation Artifacts
 
-```json
-{
-  "readme_id": "KFM-DATA-WORK-TABULAR-LOGS-RMD-v9.0.0",
-  "validation_timestamp": "2025-10-23T00:00:00Z",
-  "validated_by": "@kfm-data",
-  "ai_reviewer": "@kfm-ai",
-  "governance_reviewer": "@kfm-governance",
-  "ethics_lead": "@kfm-ethics",
-  "focus_model": "focus-tabular-v5",
-  "audit_status": "pass",
-  "ai_integrity": "verified",
-  "fair_care_score": 100.0,
-  "explainability_score": 0.985,
-  "schema_drift": 0.3,
-  "null_ratio": 0.6,
-  "energy_efficiency": "14.6 Wh/run (-22% QoQ)",
-  "carbon_intensity": "19.8 gCO₂e (-24% YoY)",
-  "ethics_drift": "-0.1%",
-  "governance_cycle": "Q4 2025",
-  "ledger_hash": "0000d9a3e421fdce...",
-  "security_signature": "pgp-sha256:<signature-id>"
-}
+| File | Description | Format |
+|------|--------------|--------|
+| `etl_tmp_run.log` | Full ETL execution trace including ingestion and transformation details. | Text |
+| `schema_validation_trace.log` | Records schema validation checks and type conformity. | Text |
+| `faircare_pre_audit.log` | FAIR+CARE ethics and accessibility pre-validation trace. | Text |
+| `governance_sync.log` | Records synchronization events with governance ledgers. | Text |
+| `metadata.json` | Provenance and checksum linkage metadata for TMP operations. | JSON |
+
+Automation handled via `tabular_logs_sync.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| Log Type | Retention Duration | Policy |
+|-----------|--------------------|--------|
+| ETL and Validation Logs | 90 days | Archived following staging verification. |
+| FAIR+CARE Audits | 365 days | Retained for ethics and provenance review. |
+| Governance Logs | Permanent | Maintained indefinitely for certification traceability. |
+| Metadata | Permanent | Stored in provenance registry for checksum continuity. |
+
+Cleanup managed by `tabular_logs_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Tabular TMP Logs (v9.5.0).
+Central FAIR+CARE-certified logging workspace for ETL, validation, and governance synchronization in tabular data workflows.
+Ensures traceability, ethics compliance, and reproducibility under MCP-DL v6.3 governance standards.
 ```
 
 ---
 
-## 🧩 Governance Ledger Chain
+## 🧾 Version Notes
 
-| Ledger | Maintainer | Verification | Output | Frequency |
-|:--|:--|:--|:--|:--|
-| **Data Ledger** | @kfm-security | Checksum validation | `/data/checksums/tabular_logs.json` | Continuous |
-| **AI Ledger** | @kfm-ai | Explainability + drift audit | `/reports/audit/ai_tabular_ledger.json` | Per run |
-| **Ethics Ledger** | @kfm-ethics | Bias and fairness metrics | `/reports/audit/tabular_ethics.json` | Weekly |
-| **Governance Ledger** | @kfm-governance | FAIR+CARE certification | `/reports/fair/tabular_summary.json` | Quarterly |
-
----
-
-## 🧩 Governance Impact Matrix
-
-| Subsystem | FAIR Impact | Description | Linked Report |
-|:--|:--|:--|:--|
-| **Climate** | +0.7% | Harmonized schema improves predictive alignment | `reports/fair/climate_correlation.json` |
-| **Economy** | -0.4% | Normalization decreases variance in aggregates | `reports/fair/economic_summary.json` |
-| **Agriculture** | +1.1% | Enhanced yield forecasting from data cleaning | `reports/fair/agriculture_metrics.json` |
-
----
-
-### 🪶 Acknowledgments
-
-Maintained by **@kfm-data**, **@kfm-etl**, and **@kfm-fair**,  
-with oversight from @kfm-ai, @kfm-security, @kfm-ethics, and @kfm-governance.  
-Gratitude to **FAIR Data Alliance**, **ISO Standards Group**, **STAC Council**, and **MCP Architecture Board**  
-for advancing reproducible, ethical, and AI-audited tabular governance.
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Added FAIR+CARE pre-audit and governance synchronization automation. |
+| v9.3.2 | 2025-10-28 | Enhanced checksum traceability and schema conformance tracking. |
+| v9.3.0 | 2025-10-26 | Established TMP Logs directory for tabular data FAIR+CARE validation. |
 
 ---
 
 <div align="center">
 
-[![Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../../../../../../.github/workflows/site.yml)
-[![Focus Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/focus-validate.yml/badge.svg)](../../../../../../.github/workflows/focus-validate.yml)
-[![AI Explainability](https://img.shields.io/badge/AI%20Explainability-Semantic%20Ledger%20Audited-blueviolet)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-100%25%20Sustained%20Compliance-green)]()
-[![ISO Alignment](https://img.shields.io/badge/ISO%2050001%20·%2014064-Continuous%20Improvement-forestgreen)]()
-[![Security Verified](https://img.shields.io/badge/Security-PGP%20%2B%20Blockchain-teal)]()
-[![AI Integrity](https://img.shields.io/badge/AI%20Integrity-MCP%20Audited-lightblue)]()
-[![Governance Ledger](https://img.shields.io/badge/Ledger-Immutable%20Governance%20Chain-gold)]()
-[![Status: Diamond⁹ Ω Certified](https://img.shields.io/badge/Status-Diamond%E2%81%B9%20Crown%E2%88%9E%20Ω%20Final-brightgreen)]()
+**Kansas Frontier Matrix** · *Data Transparency × FAIR+CARE Ethics × Provenance Assurance*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/)
+
 </div>
