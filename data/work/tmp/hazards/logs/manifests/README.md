@@ -1,5 +1,5 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Hazard TMP Manifests (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📜 Kansas Frontier Matrix — Hazard TMP Manifest Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/manifests/README.md"
 version: "v9.5.0"
 last_updated: "2025-11-02"
@@ -9,9 +9,9 @@ sbom_ref: "../../../../../../releases/v9.5.0/sbom.spdx.json"
 manifest_ref: "../../../../../../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
 telemetry_ref: "../../../../../../releases/v9.5.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-manifests-v2.json"
+telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-manifests-logs-v2.json"
 validation_reports:
-  - "../../../../../../reports/fair/hazards_manifests_summary.json"
+  - "../../../../../../reports/fair/hazards_manifests_logs_summary.json"
   - "../../../../../../reports/audit/ai_hazards_ledger.json"
   - "../../../../../../reports/self-validation/work-hazards-validation.json"
 governance_ref: "../../../../../../docs/standards/governance/hazards-governance.md"
@@ -20,14 +20,14 @@ license: "MIT"
 
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — **Hazard TMP Manifests**
+# 📜 Kansas Frontier Matrix — **Hazard TMP Manifest Logs**
 `data/work/tmp/hazards/logs/manifests/README.md`
 
 **Purpose:**  
-Centralized manifest repository tracking **hazard ETL cycles, AI model runs, validation checkpoints, and governance synchronization events**.  
-Ensures complete traceability and checksum-verified reporting for every TMP workflow under FAIR+CARE governance and MCP-DL v6.3 compliance.
+Central recordkeeping hub for **hazard TMP manifests, validation summaries, and governance lineage registrations** in the Kansas Frontier Matrix (KFM).  
+Ensures each TMP workflow (ETL, AI, Validation) maintains a verifiable audit trail with checksum integrity, FAIR+CARE certification, and provenance traceability.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Manifest%20Governed-gold)](../../../../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Manifest%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../docs/architecture/repo-focus.md)
 
@@ -37,14 +37,14 @@ Ensures complete traceability and checksum-verified reporting for every TMP work
 
 ## 📚 Overview
 
-The `data/work/tmp/hazards/logs/manifests/` directory holds **comprehensive operational manifests** that summarize all ongoing and completed ETL and AI processes for the Hazard TMP environment.  
-Each manifest entry documents workflow metadata, runtime telemetry, validation outcomes, and checksum integrity details to ensure **reproducibility, accountability, and audit alignment**.
+The `data/work/tmp/hazards/logs/manifests/` directory serves as the **governance validation checkpoint** for all TMP hazard operations.  
+It captures lifecycle manifests that summarize ETL processes, validation outcomes, and AI audit chains across multiple hazard domains.
 
 ### Core Functions
-- Track all TMP hazard pipeline executions (ETL, AI, Validation).  
-- Log runtime metrics, schema versioning, and checksum linkage.  
-- Integrate FAIR+CARE certification and governance registration data.  
-- Provide consolidated manifests for provenance and dashboard integration.  
+- Consolidate all TMP hazard lifecycle manifests for governance oversight.  
+- Validate checksum consistency and schema conformity across manifests.  
+- Record FAIR+CARE certification events, telemetry updates, and ledger entries.  
+- Provide provenance chain verification for reproducibility and ethical compliance.  
 
 ---
 
@@ -52,52 +52,52 @@ Each manifest entry documents workflow metadata, runtime telemetry, validation o
 
 ```plaintext
 data/work/tmp/hazards/logs/manifests/
-├── README.md                               # This file — overview of hazard TMP manifests
+├── README.md                              # This file — overview of hazard TMP manifest logs
 │
-├── tmp_manifest_cycle_2025Q4.json          # Manifest of TMP hazard pipelines executed during Q4 2025
-├── ai_audit_manifest_2025Q4.json           # AI model audit manifest for Focus Mode hazard reasoning
-├── governance_manifest_2025Q4.json         # FAIR+CARE governance certification and ledger linkage manifest
-├── checksum_registry_2025Q4.json           # Hash verification summary for TMP artifacts
-└── metadata.json                           # Provenance and governance metadata for manifest lifecycle
+├── tmp_manifest_log_2025Q4.json           # Combined record of TMP ETL, AI, and validation cycles
+├── governance_manifest_log_2025Q4.json    # FAIR+CARE and ledger synchronization audit manifest
+├── telemetry_manifest_log_2025Q4.json     # System telemetry summary of TMP operations
+├── checksum_manifest_log_2025Q4.json      # SHA-256 registry of TMP artifact integrity
+└── metadata.json                          # Provenance metadata and governance linkage
 ```
 
 ---
 
-## ⚙️ Manifest Lifecycle Workflow
+## ⚙️ Manifest Logging Workflow
 
 ```mermaid
 flowchart TD
-    A["TMP Process Logs (ETL, AI, Validation)"] --> B["Checksum and Metadata Consolidation"]
-    B --> C["FAIR+CARE and Governance Certification Embedding"]
-    C --> D["Manifest Compilation (JSON Registry Creation)"]
-    D --> E["Telemetry & Governance Ledger Synchronization"]
-    E --> F["Archive for Provenance and Audit Records"]
+    A["TMP Operational Events (ETL, AI, Validation)"] --> B["Generate Checksum & Schema Validation"]
+    B --> C["Assemble Manifest Records (ETL, Governance, Telemetry)"]
+    C --> D["Perform FAIR+CARE and Ledger Certification"]
+    D --> E["Publish Manifest Logs to data/work/tmp/hazards/logs/manifests/"]
+    E --> F["Archive and Register in Provenance Ledger"]
 ```
 
 ### Workflow Description
-1. **Collection:** Aggregate all operational logs across ETL, AI, and validation.  
-2. **Checksum Validation:** Confirm file integrity and provenance consistency.  
-3. **Governance Audit:** Include FAIR+CARE and ledger verification events.  
-4. **Compilation:** Generate manifest JSON files linking all TMP outputs.  
-5. **Ledger Sync:** Register manifest references in `ai_hazards_ledger.json` and telemetry systems.  
+1. **Event Capture:** Logs from ETL, AI, and validation layers consolidated into manifest summaries.  
+2. **Checksum Generation:** Integrity hashes computed and validated.  
+3. **FAIR+CARE Audit:** Ethics and accessibility compliance checks executed.  
+4. **Ledger Sync:** Governance registration with `ai_hazards_ledger.json`.  
+5. **Archival:** Manifest logs preserved for audit and future reproducibility reviews.
 
 ---
 
-## 🧩 Example Manifest Record
+## 🧩 Example Manifest Log Record
 
 ```json
 {
-  "manifest_id": "hazards_tmp_manifest_v9.5.0_2025Q4",
-  "etl_runs": 12,
-  "ai_models_evaluated": 4,
-  "validation_reports_linked": 5,
-  "checksum_integrity_verified": true,
-  "fairstatus": "certified",
+  "manifest_log_id": "hazards_tmp_manifest_log_v9.5.0_2025Q4",
+  "etl_runs_recorded": 14,
+  "ai_audits_registered": 6,
+  "validation_reports_linked": 9,
+  "checksum_verified": true,
   "governance_registered": true,
-  "records_processed": 285000,
+  "fairstatus": "certified",
+  "records_processed": 421398,
   "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
   "governance_ref": "reports/audit/ai_hazards_ledger.json",
-  "timestamp": "2025-11-02T19:00:00Z",
+  "created": "2025-11-02T19:45:00Z",
   "validator": "@kfm-governance"
 }
 ```
@@ -108,17 +108,17 @@ flowchart TD
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Manifests indexed by cycle, pipeline ID, and checksum reference. |
-| **Accessible** | Stored as JSON and accessible through internal FAIR+CARE APIs. |
-| **Interoperable** | Aligns with STAC/DCAT metadata and ISO 19115 provenance structures. |
-| **Reusable** | Includes detailed lineage, validation, and checksum metadata. |
-| **Collective Benefit** | Promotes transparent tracking of TMP lifecycle events. |
-| **Authority to Control** | FAIR+CARE Council authorizes manifest certification. |
-| **Responsibility** | Validators maintain manifest accuracy and integrity. |
-| **Ethics** | Provides open documentation of data processes for ethical accountability. |
+| **Findable** | Manifest logs indexed by ETL cycle, dataset, and checksum. |
+| **Accessible** | JSON-based manifests accessible to governance and validation systems. |
+| **Interoperable** | Conforms to DCAT 3.0, STAC 1.0, and ISO 19115 schema standards. |
+| **Reusable** | Manifests retain provenance, checksum, and audit lineage metadata. |
+| **Collective Benefit** | Enables reproducible hazard science and ethical AI oversight. |
+| **Authority to Control** | FAIR+CARE Council reviews manifest certification events. |
+| **Responsibility** | ETL and governance maintainers ensure checksum and ethics alignment. |
+| **Ethics** | Prevents omission of lineage or manipulation of provenance records. |
 
-FAIR+CARE audit results recorded in:  
-`reports/fair/hazards_manifests_summary.json` • `reports/audit/ai_hazards_ledger.json`
+Governance summaries stored in:  
+`reports/audit/ai_hazards_ledger.json` • `reports/fair/hazards_manifests_logs_summary.json`
 
 ---
 
@@ -126,13 +126,13 @@ FAIR+CARE audit results recorded in:
 
 | File | Description | Format |
 |------|--------------|--------|
-| `tmp_manifest_cycle_*.json` | Comprehensive TMP process manifest (ETL, AI, Validation). | JSON |
-| `ai_audit_manifest_*.json` | AI reasoning and bias audit summary manifest. | JSON |
-| `governance_manifest_*.json` | FAIR+CARE governance and ledger registration record. | JSON |
-| `checksum_registry_*.json` | Integrity verification report for TMP outputs. | JSON |
-| `metadata.json` | Provenance and governance linkage metadata. | JSON |
+| `tmp_manifest_log_*.json` | Master manifest of all TMP operational activities. | JSON |
+| `governance_manifest_log_*.json` | Governance certification and ethics record. | JSON |
+| `telemetry_manifest_log_*.json` | TMP telemetry synchronization metadata. | JSON |
+| `checksum_manifest_log_*.json` | Cryptographic hash registry for TMP assets. | JSON |
+| `metadata.json` | Provenance and governance linkage record. | JSON |
 
-All manifest creation tasks managed by `hazards_manifest_sync.yml`.
+All manifest logs synchronized automatically by `hazards_manifest_log_sync.yml`.
 
 ---
 
@@ -140,21 +140,21 @@ All manifest creation tasks managed by `hazards_manifest_sync.yml`.
 
 | Manifest Type | Retention Duration | Policy |
 |----------------|--------------------|--------|
-| TMP Manifests | 365 days | Archived for provenance and reproducibility. |
-| AI Audit Manifests | 180 days | Retained for ethics revalidation. |
-| Governance Manifests | Permanent | Stored indefinitely under ledger certification. |
-| Metadata Records | Permanent | Preserved for lineage and audit continuity. |
+| TMP Manifest Logs | 365 days | Retained for governance and QA tracking. |
+| Governance Manifests | Permanent | Archived for ethics and compliance review. |
+| Telemetry Logs | 180 days | Maintained for system reproducibility. |
+| Metadata | Permanent | Stored indefinitely for lineage verification. |
 
-Retention automation governed by `hazards_manifest_cleanup.yml`.
+Retention governed by `hazards_manifest_log_cleanup.yml`.
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hazard TMP Manifests (v9.5.0).
-Consolidated operational manifests summarizing ETL, AI, and validation cycles for hazard data pipelines.
-FAIR+CARE-certified and blockchain-registered under MCP-DL v6.3 governance protocols for transparency and reproducibility.
+Kansas Frontier Matrix (2025). Hazard TMP Manifest Logs (v9.5.0).
+FAIR+CARE-certified manifest registry documenting TMP ETL, AI, and validation activities.
+Maintained for governance synchronization, checksum validation, and reproducible audit assurance.
 ```
 
 ---
@@ -163,15 +163,15 @@ FAIR+CARE-certified and blockchain-registered under MCP-DL v6.3 governance proto
 
 | Version | Date | Notes |
 |----------|------|--------|
-| v9.5.0 | 2025-11-02 | Added telemetry v2 integration, governance manifest automation, and checksum registry enhancements. |
-| v9.3.2 | 2025-10-28 | Integrated FAIR+CARE dashboard linkage and ledger synchronization. |
-| v9.3.0 | 2025-10-26 | Established manifest directory for TMP hazard lifecycle tracking. |
+| v9.5.0 | 2025-11-02 | Added telemetry v2 integration, checksum manifest logging, and governance synchronization. |
+| v9.3.2 | 2025-10-28 | Introduced consolidated governance manifest and checksum verification module. |
+| v9.3.0 | 2025-10-26 | Established TMP manifest log workspace for hazard provenance tracking. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Provenance Tracking × FAIR+CARE Ethics × Governance Integrity*  
+**Kansas Frontier Matrix** · *Governance Integrity × FAIR+CARE Ethics × Provenance Transparency*  
 [🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/)
 
 </div>
