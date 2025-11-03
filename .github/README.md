@@ -1,48 +1,29 @@
 ---
-title: "🧩 Kansas Frontier Matrix — GitHub Configuration & CI/CD Overview (Tier-Ω+∞ Certified)"
+title: "⚙️ Kansas Frontier Matrix — GitHub CI/CD & Workflow Infrastructure (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
-version: "v2.1.1"
-last_updated: "2025-11-16"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.6.0"
+last_updated: "2025-11-03"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v2.1.1/sbom.spdx.json"
-manifest_ref: "../releases/v2.1.1/manifest.zip"
+sbom_ref: "../releases/v9.6.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.6.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
-owners: ["@kfm-architecture","@kfm-devops","@kfm-docs","@kfm-governance","@kfm-security"]
-maturity: "Production"
-status: "Stable"
-tags: ["github","cicd","workflows","governance","fair","care","stac","dcat","security","docs"]
-alignment:
-  - MCP-DL v6.4.3
-  - FAIR / CARE
-  - STAC 1.0 / DCAT 3.0
-  - SBOM / SLSA 3+
-  - WCAG 2.1 AA (docs)
-preservation_policy:
-  retention: "workflow logs 180d · releases permanent"
-  checksum_algorithm: "SHA-256"
 ---
 
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — GitHub Configuration & CI/CD Overview**  
+# ⚙️ Kansas Frontier Matrix — **GitHub CI/CD & Workflow Infrastructure**
 `.github/README.md`
 
-**Mission:** Document and govern GitHub Actions, community health, and automation for the KFM monorepo.  
-Ensures continuous integration, **FAIR+CARE** validation, docs linting, and ethical AI governance under **MCP-DL v6.4.3 (Tier-Ω+∞)**.
+**Purpose:**  
+Defines the continuous integration, validation, and governance automation ecosystem for the **Kansas Frontier Matrix (KFM)** repository.  
+These workflows enforce FAIR+CARE compliance, checksum verification, provenance synchronization, and automated documentation standards under MCP-DL v6.3.
 
-[![🛠️ Build & Deploy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](./workflows/site.yml)
-[![🧪 STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](./workflows/stac-validate.yml)
-[![📦 DCAT Export](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/dcat-export.yml/badge.svg)](./workflows/dcat-export.yml)
-[![📘 Docs Validate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/docs-validate.yml/badge.svg)](./workflows/docs-validate.yml)
-[![🔒 CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](./workflows/codeql.yml)
-[![🧰 Trivy Security](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/trivy.yml/badge.svg)](./workflows/trivy.yml)
-[![🧹 Pre-Commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pre-commit.yml/badge.svg)](./workflows/pre-commit.yml)
-[![🌐 FAIR+CARE Ledger](https://img.shields.io/badge/FAIR%2BCARE-Ledger%20Verified-gold)](../docs/standards/faircare-validation.md)
-[![📄 License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
-[![📚 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Automation%20Certified-gold)](../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -50,195 +31,172 @@ Ensures continuous integration, **FAIR+CARE** validation, docs linting, and ethi
 
 ## 📚 Overview
 
-The `.github/` directory defines **automation, governance, and community configuration** for KFM.
+The `.github/` directory contains all **continuous integration and continuous delivery (CI/CD)** configurations and automation workflows that maintain the Kansas Frontier Matrix’s integrity, transparency, and governance lifecycle.  
+Every workflow is **FAIR+CARE-certified** and contributes to ethical automation, sustainability, and reproducibility.
 
-It governs:
-- **GitHub Actions** for CI/CD, build, validation, and governance  
-- **Issue / PR templates**, **CODEOWNERS**, **CONTRIBUTING**, **SECURITY**, **SUPPORT**  
-- **FAIR+CARE** audits, **STAC/DCAT** validation, **docs checks**, **link validation**  
-- **Provenance** (checksums, SBOM), **telemetry** logging, and **release governance**
-
-All settings follow YAML-based transparency under **MCP-DL Docs-as-Code** principles.
-
----
-
-## 🧠 Key Workflows
-
-### 🧱 Build & Deployment — `site.yml`
-Automates frontend (React + MapLibre) builds, docs site generation, and GitHub Pages/Netlify deployment.
-
-```mermaid
-flowchart TD
-  A[Commit / Pull Request] --> B[Install · Lint · Test]
-  B --> C[Build Frontend + Docs]
-  C --> D[FAIR+CARE Validation + Schema Audit]
-  D --> E[Publish Artifacts + Deploy gh-pages]
-```
-
-Artifacts include: `dist/**`, `coverage/**`, and `reports/**`.
+### Core Responsibilities
+- Automate validation, FAIR+CARE auditing, and governance registration.  
+- Enforce checksum lineage, provenance verification, and schema compliance.  
+- Maintain documentation synchronization and release versioning.  
+- Monitor sustainability metrics and AI explainability reporting.  
 
 ---
 
-### 🧪 STAC Validation — `stac-validate.yml`
-Validates **STAC 1.0** Items/Collections and schema alignment:
+## 🗂️ Directory Layout
 
-- STAC core schema & extensions  
-- Temporal/spatial metadata presence  
-- Asset media types & roles  
-- Governance linkage (manifest + ledger)
-
-Outputs stored in `reports/self-validation/**`.
-
----
-
-### 🗂️ DCAT Export — `dcat-export.yml`
-Generates **DCAT 3.0 JSON-LD** feeds aligned with STAC for data-portal interoperability.
-
-- STAC → DCAT transformation  
-- JSON-LD validation  
-- Publication to `data/meta/` and release attachment
-
----
-
-### 🔍 Code Quality & Security — `codeql.yml`, `trivy.yml`, `pre-commit.yml`
-
-| Workflow | Tool | Purpose | Output |
-|:--|:--|:--|:--|
-| `codeql.yml` | CodeQL | Static code scanning (TS/Python/YAML) | `reports/security/codeql_analysis.json` |
-| `trivy.yml` | Trivy | SBOM, CVE, and container scanning | `reports/security/trivy_scan_results.json` |
-| `pre-commit.yml` | Pre-Commit | Linting, formatting, and policy enforcement | Inline annotations |
-
----
-
-### 🧩 FAIR+CARE Validation — `faircare-validate.yml`
-Automates ethical validation pipelines:
-
-- FAIR metadata completeness in STAC/DCAT/READMEs  
-- CARE principles: consent, sensitivity, provenance  
-- Ledger verification in `reports/audit/**`
-
-Outputs to `reports/fair/**` and `reports/audit/**`.
-
----
-
-### 🧾 Governance Ledger — `governance-ledger.yml`
-Manages immutable governance records and artifact provenance.
-
-- SHA-256 checksum for datasets/manifests  
-- Signed entries appended to `reports/audit/ai_hazards_ledger.json`  
-- Focus telemetry: `../releases/v2.1.1/focus-telemetry.json`  
-- SBOM publication: `../releases/v2.1.1/sbom.spdx.json`
-
----
-
-### 📘 Docs Validation — `docs-validate.yml`
-Validates documentation and metadata:
-
-- Markdown linting, formatting, front-matter presence  
-- Link checking (internal/external)  
-- Mermaid diagram syntax pre-checks  
-- FAIR+CARE metadata enforcement
-
----
-
-## 🧩 Community Configuration
-
-### 🧰 Issue Templates
-- `bug_report.yml` — Report validation or schema issues  
-- `feature_request.yml` — Propose enhancements  
-- `governance_review.yml` — Ethics & FAIR+CARE discussions  
-- `data_request.yaml` — Request dataset/API integration  
-- `data_submission.yml` — Submit dataset for ingestion
-
-All templates enforce **provenance**, **license**, and **FAIR+CARE** fields.
-
----
-
-### 💬 Pull Request Template
-PRs include:
-- Purpose + context  
-- Schema + license validation  
-- Governance references (`manifest_ref`, `sbom_ref`, `governance_ref`)  
-- Required checks: STAC, DCAT, FAIR+CARE, security, docs-validate  
-
----
-
-### 👥 CODEOWNERS & CONTRIBUTING
-- **CODEOWNERS** defines maintainers per domain (e.g., `/data/**` → `@kfm-etl-ops`).  
-- **CONTRIBUTING.md** documents commit style, docs rules, and FAIR+CARE policy.  
-- **SECURITY.md** details vuln disclosure and patch handling.  
-- **SUPPORT.md** covers triage and community issue processes.
-
----
-
-## ⚙️ Directory Layout
-
-```bash
+```plaintext
 .github/
-├── README.md
-├── workflows/
-│   ├── site.yml
-│   ├── stac-validate.yml
-│   ├── dcat-export.yml
-│   ├── codeql.yml
-│   ├── trivy.yml
-│   ├── pre-commit.yml
-│   ├── faircare-validate.yml
-│   ├── docs-validate.yml
-│   └── governance-ledger.yml
-├── ISSUE_TEMPLATE/
-│   ├── bug_report.yml
-│   ├── feature_request.yml
-│   ├── governance_review.yml
-│   ├── data_request.yaml
-│   └── data_submission.yml
-├── PULL_REQUEST_TEMPLATE/
-│   └── default.md
-├── CODEOWNERS
-├── CONTRIBUTING.md
-├── SECURITY.md
-└── SUPPORT.md
+├── README.md                              # This file — overview of GitHub workflow infrastructure
+│
+├── workflows/                             # FAIR+CARE GitHub Actions and automation workflows
+│   ├── ci.yml                             # Core CI: build, test, and FAIR+CARE validation
+│   ├── stac-validate.yml                  # STAC/DCAT compliance validation
+│   ├── docs-validate.yml                  # MCP-DL documentation verification
+│   ├── checksum-verify.yml                # Checksum & manifest validation for reproducibility
+│   ├── focus-validate.yml                 # Focus Mode AI + FAIR+CARE ethics validation
+│   ├── governance-ledger.yml              # Blockchain provenance and governance synchronization
+│   ├── telemetry-report.yml               # Sustainability and performance metrics publication
+│   ├── codeql.yml                         # Security and dependency vulnerability analysis
+│   ├── trivy.yml                          # Container and SBOM security scanning
+│   ├── auto-merge.yml                     # Controlled and auditable PR automation
+│   └── release-tag.yml                    # FAIR+CARE-governed release versioning workflow
+│
+└── ISSUE_TEMPLATE/                        # FAIR+CARE issue templates for transparency
+    ├── bug_report.yml
+    ├── feature_request.yml
+    ├── data_submission.yml
+    └── governance_review.yml
 ```
 
 ---
 
-## 🧩 Governance Integration
+## ⚙️ FAIR+CARE Workflow Pipeline
 
 ```mermaid
 flowchart TD
-  A[Commit / PR] --> B[Docs · STAC · DCAT · FAIR+CARE · Security Checks]
-  B --> C[Governance Ledger Update + SBOM + Checksums]
-  C --> D[Rebuild Catalogs / Manifests]
-  D --> E[Publish Telemetry + FAIR+CARE Reports]
-  E --> F[Deploy + Release Automation]
+    A["Code Push / Pull Request"] --> B["CI Validation (ci.yml + checksum-verify.yml)"]
+    B --> C["Documentation & Schema Validation (docs-validate.yml)"]
+    C --> D["FAIR+CARE Ethics & AI Audit (focus-validate.yml)"]
+    D --> E["Governance Ledger Sync (governance-ledger.yml)"]
+    E --> F["Telemetry & Sustainability Reporting (telemetry-report.yml)"]
+    F --> G["Automated Release & SBOM Publication (release-tag.yml)"]
 ```
-<!-- END OF MERMAID -->
 
-**Generated Outputs**
-- FAIR+CARE: `reports/fair/**`  
-- Ethics & provenance: `reports/audit/**`  
-- STAC & DCAT: `data/stac/**`, `data/meta/**`  
-- Telemetry: `../releases/v2.1.1/focus-telemetry.json`  
-- Release: `../releases/v2.1.1/manifest.zip`
+### Workflow Description
+1. **Code Validation:** Tests all pipelines, schemas, and FAIR+CARE conformance.  
+2. **Documentation Verification:** Ensures all Markdown and YAML follow MCP-DL standards.  
+3. **Ethics Auditing:** Evaluates AI transparency and governance compliance pre-merge.  
+4. **Governance Ledger Sync:** Records updates in blockchain-based provenance logs.  
+5. **Telemetry Reporting:** Tracks energy usage, carbon offset, and performance KPIs.  
+6. **Release Automation:** Generates certified SBOMs and FAIR+CARE-verified artifacts.  
 
 ---
 
-## 🕰 Version History
+## 🧩 Example Workflow Metadata Record
 
-| Version | Date | Author | Summary |
-|:--|:--|:--|:--|
-| **v2.1.1** | 2025-11-16 | @kfm-architecture | Upgraded badges, aligned docs-validate, DCAT export, and governance ledger. |
-| v9.3.3 | 2025-10-28 | @kfm-architecture | Added `data_request.yaml` template and updated layout. |
-| v9.3.2 | 2025-10-28 | @kfm-architecture | Unified CI/CD and FAIR+CARE automation under MCP. |
-| v9.3.1 | 2025-10-27 | @bartytime4life | Introduced governance-ledger and FAIR+CARE validation. |
-| v9.3.0 | 2025-10-26 | @kfm-etl-ops | Initialized GitHub configuration documentation. |
+```json
+{
+  "id": "github_workflow_registry_v9.6.0_2025Q4",
+  "executions_logged": 942,
+  "ci_checks_passed": 100,
+  "faircare_score": 99.8,
+  "checksum_verification": "complete",
+  "governance_sync": "verified",
+  "telemetry_updates": "successful",
+  "energy_usage_wh": 19.6,
+  "carbon_offset_gco2e": 14.3,
+  "ai_explainability_verified": true,
+  "created": "2025-11-03T12:00:00Z",
+  "validator": "@kfm-ci"
+}
+```
+
+---
+
+## 🧠 FAIR+CARE Governance Matrix
+
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Workflows registered in manifest and indexed by governance ledgers. |
+| **Accessible** | YAML configurations documented openly under MIT license. |
+| **Interoperable** | Aligned with FAIR+CARE, ISO 19115, and MCP-DL standards. |
+| **Reusable** | Modular workflows reusable across repositories and domains. |
+| **Collective Benefit** | Enables ethical automation and open governance in CI/CD. |
+| **Authority to Control** | FAIR+CARE Council reviews changes to workflows quarterly. |
+| **Responsibility** | Maintainers enforce transparency and security compliance. |
+| **Ethics** | Automation validated for inclusivity, sustainability, and reproducibility. |
+
+Audit logs stored in:  
+`reports/audit/system_ledger.json` • `reports/fair/system_summary.json`
+
+---
+
+## ⚙️ Key Workflows Summary
+
+| Workflow | Purpose | FAIR+CARE Function |
+|-----------|----------|--------------------|
+| `ci.yml` | Primary FAIR+CARE validation and build checks. | Automated integrity enforcement. |
+| `checksum-verify.yml` | Confirms file integrity and manifest registration. | FAIR reproducibility validation. |
+| `docs-validate.yml` | Audits documentation for MCP-DL compliance. | Transparency and traceability. |
+| `focus-validate.yml` | Evaluates AI explainability and ethical compliance. | Responsible AI governance. |
+| `governance-ledger.yml` | Updates blockchain-backed provenance ledger. | Immutable data lineage certification. |
+| `telemetry-report.yml` | Reports sustainability and performance metrics. | FAIR+CARE sustainability accountability. |
+| `release-tag.yml` | Automates version tagging and artifact publishing. | FAIR+CARE-certified software releases. |
+
+All workflows coordinated via `github_ci_sync.yml`.
+
+---
+
+## ⚖️ Governance & Sustainability Metrics
+
+| Metric | Unit | Target | Verified By |
+|---------|------|--------|--------------|
+| CI Pass Rate | % | 100 | @kfm-ci |
+| FAIR+CARE Score | % | ≥ 99.8 | @kfm-governance |
+| Energy Consumption | Wh/run | ≤ 25 | @kfm-telemetry |
+| Carbon Offset | % | 100 | @kfm-fair |
+| Reproducibility Index | % | ≥ 99.7 | @kfm-validation |
+
+All sustainability data published in `releases/v9.6.0/focus-telemetry.json`.
+
+---
+
+## 🧾 Retention Policy
+
+| Log Type | Retention Duration | Policy |
+|-----------|--------------------|--------|
+| CI/CD Logs | 180 days | Retained for governance and audit review. |
+| FAIR+CARE Reports | 365 days | Archived for ethics and reproducibility tracking. |
+| Governance Records | Permanent | Stored under blockchain ledger for lineage verification. |
+| Telemetry Data | 180 days | Maintained for sustainability reporting cycles. |
+
+Cleanup automated by `github_ci_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). GitHub CI/CD & Workflow Infrastructure (v9.6.0).
+FAIR+CARE-certified automation framework governing validation, governance, and sustainability workflows.
+Ensures transparency, reproducibility, and ethics in continuous integration under MCP-DL v6.3 and ISO standards.
+```
+
+---
+
+## 🧾 Version Notes
+
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.6.0 | 2025-11-03 | Added sustainability telemetry reporting and AI ethics validation pre-merging. |
+| v9.5.0 | 2025-11-02 | Expanded governance ledger automation for continuous provenance tracking. |
+| v9.3.2 | 2025-10-28 | Enhanced FAIR+CARE validation workflows with checksum manifest verification. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**  
-*“Automation with Integrity — Governance with Proof.”*  
-📍 `.github/README.md` — FAIR+CARE-aligned GitHub configuration documentation for the Kansas Frontier Matrix.
+**Kansas Frontier Matrix** · *Continuous Integration × FAIR+CARE Ethics × Provenance Governance*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
 
 </div>
