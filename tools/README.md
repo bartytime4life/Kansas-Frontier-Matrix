@@ -1,41 +1,35 @@
 ---
-title: "🧰 Kansas Frontier Matrix — Tools & Utilities Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧰 Kansas Frontier Matrix — Tools & Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/README.md"
-version: "v9.3.3"
+version: "v9.5.0"
 last_updated: "2025-11-02"
-review_cycle: "Quarterly / Autonomous"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.3.3/sbom.spdx.json"
-manifest_ref: "../releases/v9.3.3/manifest.zip"
+sbom_ref: "../releases/v9.5.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.5.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+telemetry_ref: "../releases/v9.5.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/tools-operations-v2.json"
+validation_reports:
+  - "../reports/fair/tools_summary.json"
+  - "../reports/audit/ai_tools_ledger.json"
+  - "../reports/self-validation/work-tools-validation.json"
+governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
-owners: ["@kfm-devops", "@kfm-data", "@kfm-ai", "@kfm-governance"]
-status: "Stable"
-maturity: "Production"
-tags: ["cli", "automation", "data-tools", "validation", "scripts", "governance"]
-alignment:
-  - MCP-DL v6.4.3
-  - FAIR+CARE
-  - ISO 9241-210 / DevSecOps
-  - STAC / DCAT Integration
-preservation_policy:
-  retention: "tooling maintained with each release · validation logs preserved 5 years"
-  checksum_algorithm: "SHA-256"
 ---
 
 <div align="center">
 
-# 🧰 Kansas Frontier Matrix — **Tools & Utilities Overview**
+# 🧰 Kansas Frontier Matrix — **Tools & Utilities**
 `tools/README.md`
 
-**Purpose:** Documents and governs the command-line tools, automation scripts, and validation utilities supporting the Kansas Frontier Matrix.  
-Ensures reproducibility, FAIR+CARE alignment, and seamless integration between data pipelines, governance workflows, and AI validation routines.
+**Purpose:**  
+Centralized suite of **command-line, AI-assisted, and data governance utilities** used across the Kansas Frontier Matrix (KFM) to support ETL pipelines, validation, FAIR+CARE governance, and reproducibility assurance.  
+These tools enforce traceability, ethics, and transparency in all automated KFM workflows.
 
-[![🧩 CI Toolchain](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/tools-validate.yml/badge.svg)](../.github/workflows/tools-validate.yml)  
-[![⚖️ FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../docs/standards/faircare-validation.md)  
-[![🧾 License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
-[![📘 Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Tools%20Governed-gold)](../docs/standards/faircare-validation.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
 
 </div>
 
@@ -43,15 +37,14 @@ Ensures reproducibility, FAIR+CARE alignment, and seamless integration between d
 
 ## 📚 Overview
 
-The `tools/` directory contains all **command-line and automation utilities** used across the Kansas Frontier Matrix monorepo.  
-Each script is version-controlled, documented under **MCP-DL v6.4.3**, and validated through FAIR+CARE governance checks to ensure consistency, provenance, and transparency.
+The `tools/` directory hosts reusable **scripts, command-line utilities, AI pipelines, and validation frameworks** supporting every KFM data operation — from ingestion to provenance registration.  
+All tools conform to FAIR+CARE and MCP-DL v6.3 documentation-first design standards and are registered within the governance ledger.
 
-**Core Functions:**
-- 🔍 **Data Validation:** Schema, metadata, and checksum verification.  
-- 🧱 **ETL Automation:** Command-line utilities for data ingestion and normalization.  
-- ⚙️ **Governance Operations:** Tools for audits, lineage, and FAIR+CARE certification workflows.  
-- 🧠 **AI Integration:** Tools for Focus Mode model registry synchronization and telemetry export.  
-- 📦 **DevOps Automation:** CI/CD validation, documentation builds, and manifest generation.
+### Core Responsibilities
+- Manage data extraction, transformation, and validation pipelines (ETL).  
+- Automate FAIR+CARE ethics and checksum verification routines.  
+- Support schema auditing, metadata harmonization, and AI model explainability.  
+- Provide governance synchronization between system components.  
 
 ---
 
@@ -59,108 +52,141 @@ Each script is version-controlled, documented under **MCP-DL v6.4.3**, and valid
 
 ```plaintext
 tools/
-├── README.md                      # This file — documentation and governance overview
+├── README.md                               # This file — documentation for all KFM tools
 │
-├── data/                          # Data-related utilities (validation, ingestion, transformation)
-│   ├── validate_stac.py           # Validates STAC JSON structures and schema compliance
-│   ├── checksum_verify.py         # Performs SHA-256 checksum validation on datasets
-│   ├── etl_runner.py              # ETL orchestration script for ingesting new datasets
-│   └── transform_normalize.py     # Normalizes data formats into KFM-compatible schemas
+├── cli/                                   # Command-line tools for data governance and ETL
+│   ├── kfm_etl.py
+│   ├── kfm_validate.py
+│   └── kfm_sync.py
 │
-├── governance/                    # Governance and FAIR+CARE alignment tools
-│   ├── ledger_sync.py             # Synchronizes governance ledger and audit trail updates
-│   ├── faircare_validate.py       # Validates data and documentation against FAIR+CARE standards
-│   ├── license_audit.py           # Scans repository for license declarations and compliance
-│   └── provenance_export.py       # Generates provenance chains in JSON-LD/DCAT-compatible form
+├── ai/                                    # AI/ML governance tools (explainability, bias testing)
+│   ├── ai_bias_audit.py
+│   ├── ai_drift_detection.py
+│   └── ai_focus_explain.py
 │
-├── ai/                            # AI and Focus Mode integration utilities
-│   ├── model_sync.py              # Syncs local AI model registry with `releases/models.json`
-│   ├── explainability_export.py   # Exports SHAP/LIME explainability metadata
-│   └── telemetry_update.py        # Updates focus-telemetry.json with new observations
+├── governance/                            # FAIR+CARE and ledger synchronization utilities
+│   ├── governance_sync.py
+│   ├── checksum_registry.py
+│   └── ledger_update.py
 │
-├── ci/                            # Continuous integration and automation helpers
-│   ├── pre_commit_validate.sh     # Linting and code standard enforcement
-│   ├── docs_build.py              # Builds and validates project documentation
-│   ├── manifest_generate.py       # Generates manifest.zip for releases
-│   └── sbom_generate.py           # Builds SPDX-compliant SBOM for dependency tracking
+├── validation/                            # Schema, FAIR+CARE, and ISO compliance validators
+│   ├── schema_validator.py
+│   ├── faircare_audit.py
+│   └── iso_cf_checker.py
 │
-└── utils/                         # General-purpose helper functions
-    ├── file_utils.py              # Safe file I/O and environment utilities
-    ├── log_formatter.py           # Standardized JSON logging for all CLI tools
-    └── config_loader.py           # Loads YAML/JSON configuration files securely
+└── telemetry/                             # Focus Mode telemetry and metrics aggregation tools
+    ├── focus_metrics_collector.py
+    ├── telemetry_reporter.py
+    └── metadata_linker.py
 ```
 
 ---
 
-## ⚙️ Usage Examples
+## ⚙️ Toolchain Categories
 
-### ✅ Validate FAIR+CARE Compliance
-```bash
-python tools/governance/faircare_validate.py --input data/processed/ --report reports/fair/validation_summary.json
-```
+| Category | Description | FAIR+CARE Role | Example Tools |
+|-----------|--------------|----------------|----------------|
+| **ETL Automation** | Handles ingestion, transformation, and export tasks. | Ensures reproducible and auditable data flows. | `kfm_etl.py`, `kfm_sync.py` |
+| **Validation** | Performs schema checks, FAIR+CARE ethics audits, and checksum verification. | Certifies transparency and ethics. | `schema_validator.py`, `faircare_audit.py` |
+| **AI Governance** | AI explainability, bias audits, and drift detection. | Guarantees responsible and accountable AI. | `ai_bias_audit.py`, `ai_focus_explain.py` |
+| **Governance Sync** | Maintains provenance records and blockchain ledger consistency. | Anchors KFM datasets in immutable audit trails. | `ledger_update.py`, `checksum_registry.py` |
+| **Telemetry & Metrics** | Collects operational analytics for Focus Mode dashboards. | Supports real-time monitoring and accountability. | `telemetry_reporter.py`, `focus_metrics_collector.py` |
 
-### 🔄 Generate Governance Ledger
-```bash
-python tools/governance/ledger_sync.py --output reports/audit/governance-ledger.json
-```
+---
 
-### 🧠 Sync AI Model Registry
-```bash
-python tools/ai/model_sync.py --source ai/models/ --registry releases/v9.3.3/models.json
-```
+## 🧩 Example Governance Tool Record
 
-### 🧩 Verify STAC Metadata
-```bash
-python tools/data/validate_stac.py --input data/stac/catalog.json --schema schemas/stac/item-spec.json
-```
-
-### 🧾 Generate SBOM and Manifest
-```bash
-python tools/ci/sbom_generate.py
-python tools/ci/manifest_generate.py
+```json
+{
+  "id": "kfm_tool_registry_v9.5.0",
+  "tools_registered": [
+    "schema_validator.py",
+    "faircare_audit.py",
+    "governance_sync.py",
+    "ai_drift_detection.py"
+  ],
+  "tools_verified": true,
+  "fairstatus": "certified",
+  "ai_explainability_score": 0.991,
+  "checksum_verified": true,
+  "governance_registered": true,
+  "telemetry_ref": "releases/v9.5.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_tools_ledger.json",
+  "created": "2025-11-02T23:59:00Z",
+  "validator": "@kfm-toolchain"
+}
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Integration
+## 🧠 FAIR+CARE Governance Matrix
 
-| Workflow | Tool | Output |
-|-----------|------|---------|
-| FAIR+CARE Validation | `faircare_validate.py` | `reports/fair/validation_summary.json` |
-| License Auditing | `license_audit.py` | `reports/audit/license_compliance.json` |
-| Provenance Chain | `provenance_export.py` | `reports/audit/provenance_chain.json` |
-| Ledger Sync | `ledger_sync.py` | `reports/audit/governance-ledger.json` |
-| SBOM Generation | `sbom_generate.py` | `releases/v9.3.3/sbom.spdx.json` |
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Tools indexed by version, checksum, and provenance record in governance ledger. |
+| **Accessible** | Open-source Python utilities under MIT license. |
+| **Interoperable** | Compatible with FAIR+CARE, STAC/DCAT, and ISO governance schemas. |
+| **Reusable** | Fully documented and auditable under MCP-DL v6.3 compliance. |
+| **Collective Benefit** | Enables open and equitable access to transparent data pipelines. |
+| **Authority to Control** | FAIR+CARE Council validates governance and ethics compliance of toolchain. |
+| **Responsibility** | Maintainers verify ethical, transparent, and reproducible automation logic. |
+| **Ethics** | Tools enforce data integrity and ethical AI auditing standards. |
 
-All outputs are logged and referenced in the Immutable Governance Chain.  
-Each execution appends event telemetry to `releases/v9.3.3/focus-telemetry.json` for cross-audit visibility.
-
----
-
-## 🛡️ Security & Provenance
-
-- All tools run in **isolated containers** (Docker or CI runner environments).  
-- Code undergoes **Trivy CVE scanning** and **pre-commit validation**.  
-- Governance-critical outputs (SBOM, provenance logs) are digitally signed and checksum-verified.  
-- Logs follow **JSON-LD FAIR+CARE** structure for consistent interoperability.
+Audit reports recorded in:  
+`reports/audit/ai_tools_ledger.json` • `reports/fair/tools_summary.json`
 
 ---
 
-## 🧾 Version History
+## ⚙️ Tool QA & Validation Artifacts
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.3.3 | 2025-11-02 | @kfm-devops | Added AI telemetry utilities and FAIR+CARE validation enhancements. |
-| v9.3.2 | 2025-10-29 | @kfm-architecture | Improved documentation and standardized logging format. |
-| v9.3.1 | 2025-10-27 | @kfm-data | Added checksum, STAC, and governance ledger tools. |
-| v9.3.0 | 2025-10-25 | @bartytime4life | Established tools directory and baseline utilities under MCP-DL v6.4.3. |
+| File | Description | Format |
+|------|--------------|--------|
+| `sbom.spdx.json` | Software Bill of Materials for dependency transparency. | JSON |
+| `manifest.zip` | Tool manifest and deployment metadata. | ZIP |
+| `focus-telemetry.json` | Tool telemetry logs and performance metrics. | JSON |
+| `ai_tools_ledger.json` | AI and FAIR+CARE certification ledger. | JSON |
+| `checksum_registry.py` | Generates and verifies cryptographic checksums for reproducibility. | Python |
+
+All validation workflows automated via `tools_sync.yml`.
+
+---
+
+## 🧾 Retention Policy
+
+| Tool Type | Retention Duration | Policy |
+|------------|--------------------|--------|
+| Active Tools | Permanent | Retained under versioned FAIR+CARE governance. |
+| Deprecated Tools | 2 years | Archived for audit traceability. |
+| Validation Artifacts | 365 days | Stored for reproducibility and certification. |
+| Logs & Telemetry | 90 days | Archived in `data/work/logs/system/`. |
+
+Cleanup managed by `tools_cleanup.yml`.
+
+---
+
+## 🧾 Internal Use Citation
+
+```text
+Kansas Frontier Matrix (2025). Tools & Utilities (v9.5.0).
+Central FAIR+CARE-certified suite of governance, validation, and automation utilities.
+Ensures transparency, reproducibility, and ethical accountability under MCP-DL v6.3 compliance.
+```
+
+---
+
+## 🧾 Version Notes
+
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.5.0 | 2025-11-02 | Added AI drift detection and Focus Mode telemetry integration. |
+| v9.3.2 | 2025-10-28 | Enhanced checksum registry and governance synchronization utilities. |
+| v9.3.0 | 2025-10-26 | Established tools workspace for FAIR+CARE data governance and validation pipelines. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Immutable Toolchain for Ethical Open Science**  
-*“Every process validated. Every action auditable. Every dataset accountable.”* 🔗  
-📍 `tools/README.md` — FAIR+CARE-aligned command-line utilities for data, AI, and governance operations.
+**Kansas Frontier Matrix** · *Automation × FAIR+CARE Ethics × Provenance Integrity*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
 
 </div>
