@@ -1,82 +1,192 @@
-name: "📦 Data Submission"
-description: "Submit a new dataset, metadata file, or update for integration into the Kansas Frontier Matrix (KFM)."
-title: "[DATA SUBMISSION] <dataset title or identifier>"
-labels: ["data-submission", "governance-review", "FAIR+CARE"]
+---
+name: "📥 Data Submission"
+description: "Submit a new dataset for inclusion in the Kansas Frontier Matrix (FAIR+CARE · MCP-DL v6.3 Certified)"
+title: "[DATA SUBMISSION] <dataset name>"
+labels: ["data-submission", "faircare:review", "governance:pending"]
 assignees:
-  - "@kfm-data-lab"
-  - "@kfm-etl-ops"
-  - "@bartytime4life"
-
+  - "@kfm-data"
+  - "@kfm-fair"
+  - "@kfm-governance"
 body:
   - type: markdown
     attributes:
       value: |
-        ## 📦 Dataset Overview
-        Provide a concise summary of the dataset being submitted.
-        Example: “Submitting 2025 Kansas drought severity index data from NOAA CPC.”
+        ## 📥 Kansas Frontier Matrix — Data Submission Form (FAIR+CARE Certified)
+        Submit your dataset for FAIR+CARE validation and integration into the Kansas Frontier Matrix (KFM).
+        All submissions undergo schema validation, checksum verification, and governance review for ethical and reproducible integration.
 
   - type: input
     id: dataset_name
     attributes:
-      label: Dataset Name
-      description: "Official dataset title or identifier"
-      placeholder: "Kansas Hydrology Survey 2025"
-    validations:
-      required: true
-
-  - type: textarea
-    id: purpose
-    attributes:
-      label: Purpose of Submission
-      description: "Explain how this dataset contributes to KFM goals or FAIR+CARE ethics."
+      label: "🧾 Dataset Name"
+      description: "Provide the full title of the dataset being submitted."
+      placeholder: "Example: Kansas Drought Monitor — 2025 Update"
     validations:
       required: true
 
   - type: input
-    id: source_url
+    id: dataset_source
     attributes:
-      label: Access URL or API Endpoint
-      description: "Provide a direct link or endpoint if available."
-      placeholder: "https://data.noaa.gov/dataset/XXXX"
+      label: "🌍 Data Source or Origin"
+      description: "List the source, provider, or institution responsible for this dataset."
+      placeholder: "Example: NOAA National Centers for Environmental Information (NCEI)"
     validations:
-      required: false
+      required: true
 
   - type: textarea
-    id: license
+    id: description
     attributes:
-      label: License / Usage Terms
-      description: "Specify the license or data usage restrictions (e.g., CC-BY 4.0, Public Domain)."
+      label: "📚 Dataset Description"
+      description: "Provide a clear summary of what this dataset represents and its purpose."
+      placeholder: "Include spatial and temporal scope, format, and collection methods."
     validations:
       required: true
 
   - type: dropdown
-    id: category
+    id: domain
     attributes:
-      label: Dataset Type
+      label: "🏷️ KFM Domain Category"
+      description: "Select the primary domain relevant to this dataset."
       options:
-        - 🌍 Geospatial / Environmental
-        - 🧭 Historical / Archival
-        - 🧠 AI Training or Model Input
-        - ⚡ Infrastructure / Energy
-        - 📊 Tabular / Statistical
-        - Other
+        - Climate
+        - Hydrology
+        - Hazards
+        - Landcover
+        - Terrain
+        - Tabular / Statistical
+        - Text / Archival
+        - Metadata / Governance
     validations:
       required: true
 
   - type: textarea
-    id: governance
+    id: format
     attributes:
-      label: Governance Metadata
-      description: "Include manifest, governance, and ontology references."
-      value: |
-        Governance Ref: docs/standards/governance/ROOT-GOVERNANCE.md  
-        Manifest Ref: releases/v9.5.0/manifest.zip  
-        Telemetry Ref: releases/v9.5.0/focus-telemetry.json  
-        Data Contract: docs/contracts/data-contract-v3.json  
-        Ontology Alignment: ontologies/CIDOC_CRM-KFM.owl
+      label: "🧩 File Formats and Structure"
+      description: "List the dataset formats and structures (e.g., CSV, GeoJSON, Parquet, GeoTIFF)."
+      placeholder: "Example: CSV with schema v3.1 fields; includes GeoJSON for spatial reference."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: licenses
+    attributes:
+      label: "📜 License Type"
+      description: "Select the applicable license for this dataset."
+      options:
+        - label: "CC-BY 4.0 (Attribution Required)"
+        - label: "CC0 (Public Domain)"
+        - label: "Open Government License"
+        - label: "MIT / BSD Open Data License"
+        - label: "Other (Specify Below)"
+    validations:
+      required: true
+
+  - type: input
+    id: other_license
+    attributes:
+      label: "🔖 Other License or Access Terms"
+      description: "If the dataset is licensed differently, describe the terms here."
+      placeholder: "Example: Data available under a university MOU or non-commercial clause."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: sensitivity
+    attributes:
+      label: "⚠️ Data Sensitivity"
+      description: "Select the access or ethical sensitivity level of this dataset."
+      options:
+        - Open Access (public, unrestricted)
+        - Limited Access (requires attribution or controlled use)
+        - Restricted (requires review by FAIR+CARE Council)
+    validations:
+      required: true
 
   - type: textarea
-    id: additional_info
+    id: provenance
     attributes:
-      label: Additional Notes or Attachments
-      description: "Upload metadata, sample files, or other supporting info."
+      label: "⚖️ Provenance and Lineage"
+      description: "Provide dataset provenance — include origin, versioning, and processing steps."
+      placeholder: "Example: Derived from NOAA drought monitor data (v9.5.0), harmonized with KFM schema."
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: "🧠 Validation or QA/QC Details"
+      description: "List validation or quality assurance checks already completed."
+      placeholder: "Example: Schema validation passed; checksum verified; metadata compliant with DCAT 3.0."
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🧠 FAIR+CARE Compliance Review
+        Confirm that this dataset meets FAIR+CARE principles before governance review.
+
+  - type: checkboxes
+    id: faircare_alignment
+    attributes:
+      label: "FAIR+CARE Compliance Checklist"
+      options:
+        - label: "Findable — Metadata, schema, and provenance properly indexed"
+        - label: "Accessible — Dataset openly available and properly licensed"
+        - label: "Interoperable — Schema aligns with FAIR+CARE, DCAT, or STAC"
+        - label: "Reusable — Versioned, documented, and verifiable"
+        - label: "Ethical — Reviewed for cultural, environmental, and data sensitivity"
+    validations:
+      required: true
+
+  - type: textarea
+    id: governance_links
+    attributes:
+      label: "📘 Governance References"
+      description: "Include governance, metadata, or data policy documentation links."
+      placeholder: "Example: https://data.noaa.gov/documents/governance-policy or docs/standards/faircare-validation.md"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## 🔍 Review and Approval Workflow
+        After submission, this dataset will:
+        1. Be validated against FAIR+CARE, schema, and checksum rules.
+        2. Undergo governance council ethics review.
+        3. Receive a certification ID and be registered in the data provenance ledger.
+
+  - type: input
+    id: contributor
+    attributes:
+      label: "👤 Contributor"
+      description: "Your GitHub handle or full name."
+      placeholder: "@username"
+    validations:
+      required: true
+
+  - type: input
+    id: affiliation
+    attributes:
+      label: "🏢 Affiliation"
+      description: "Your institution, organization, or project affiliation."
+      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
+    validations:
+      required: true
+
+  - type: textarea
+    id: certification
+    attributes:
+      label: "🪶 FAIR+CARE Certification Statement"
+      description: "By submitting, you affirm that this dataset complies with FAIR+CARE and open data governance standards."
+      value: |
+        I confirm that this dataset:
+        - Aligns with FAIR+CARE principles and MCP-DL v6.3 governance.
+        - Contains no private, proprietary, or restricted personal information.
+        - Supports transparency, reproducibility, and equitable data access.
+    validations:
+      required: true
