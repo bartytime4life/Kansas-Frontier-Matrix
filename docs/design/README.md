@@ -1,46 +1,31 @@
 ---
-title: "🎨 Kansas Frontier Matrix — Design System & UX Governance (Tier-Ω+∞ Certified)"
+title: "🎨 Kansas Frontier Matrix — Design System & User Experience Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/design/README.md"
-version: "v2.1.1"
-last_updated: "2025-11-16"
-review_cycle: "Quarterly / UX & Accessibility Council"
+version: "v9.6.0"
+last_updated: "2025-11-03"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-license: "CC-BY 4.0"
-owners: ["@kfm-ux","@kfm-architecture","@kfm-docs","@kfm-accessibility"]
-maturity: "Production"
-status: "Stable"
-tags: ["design","ux","ui","a11y","governance","standards","visual","mockups","mcp","fair","care"]
-sbom_ref: "../../releases/v2.1.1/sbom.spdx.json"
-manifest_ref: "../../releases/v2.1.1/manifest.zip"
+sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.6.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../docs/standards/governance/UI-GOVERNANCE.md"
-alignment:
-  - MCP-DL v6.4.3
-  - FAIR / CARE
-  - WCAG 2.1 AA / 3.0 Draft
-  - ISO/IEC 9241-210 (Human-Centered Design)
-  - Open Design Token Standard (ODTS)
-validation:
-  frontmatter_required: ["title","version","last_updated","owners","license"]
-  docs_ci_required: true
-  mermaid_end_marker: "<!-- END OF MERMAID -->"
-preservation_policy:
-  retention: "mockups 365d · standards permanent"
-  checksum_algorithm: "SHA-256"
+telemetry_ref: "../../releases/v9.6.0/focus-telemetry.json"
+governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
 ---
 
 <div align="center">
 
-# 🎨 **Kansas Frontier Matrix — Design System & UX Governance (v2.1.1 · Tier-Ω+∞ Certified)**  
+# 🎨 Kansas Frontier Matrix — **Design System & User Experience Framework**
 `docs/design/README.md`
 
-**Mission:** Define the **user experience (UX) and design governance framework** for the **Kansas Frontier Matrix (KFM)** —  
-ensuring accessible, inclusive, and ethically aligned design through the FAIR+CARE and MCP-DL reproducibility principles.
+**Purpose:**  
+This directory defines the **visual, interaction, and accessibility standards** that power the Kansas Frontier Matrix (KFM) web application, Focus Mode interface, and storytelling environments.  
+It ensures that all visual components, layouts, and interactive experiences are **FAIR+CARE-aligned, inclusive, and scientifically grounded**.
 
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue?logo=markdown)](../../docs/)
-[![Accessibility](https://img.shields.io/badge/WCAG%202.1%20AA-Compliant-brightgreen)](../../docs/standards/accessibility.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Design%20Aligned-gold)](../../docs/standards/faircare-validation.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-UX%20Certified-gold)](../../docs/standards/faircare-validation.md)
+[![Accessibility](https://img.shields.io/badge/WCAG-2.2%20AA%20Compliant-blue)]()
+[![ISO 9241-210](https://img.shields.io/badge/ISO-9241--210%20Human--Centered%20Design-green)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen)](../../LICENSE)
 
 </div>
 
@@ -48,160 +33,154 @@ ensuring accessible, inclusive, and ethically aligned design through the FAIR+CA
 
 ## 📚 Overview
 
-The **Design System** is the foundation for consistent, accessible, and ethical user experiences across the Kansas Frontier Matrix.  
-It integrates design tokens, Figma component libraries, color systems, and accessibility audits directly into the CI/CD pipeline.  
+The **Design System Framework** ensures the Kansas Frontier Matrix maintains a unified and accessible interface across all digital surfaces — including its Focus Mode web dashboard, map viewer, and storytelling experiences.  
+It integrates **accessibility (WCAG 2.2 AA), human-centered design (ISO 9241-210), and FAIR+CARE ethics**, providing users with clarity, inclusivity, and context awareness.
 
-This documentation governs:
-- User interface (UI) consistency  
-- Accessibility & localization standards  
-- FAIR+CARE ethical visual design  
-- Component tokenization & versioning  
-- AI-assisted UX validation  
+### Core Design Principles
+- **Clarity:** Data visualizations and interactions must communicate meaning without ambiguity.  
+- **Transparency:** UI components display data provenance and FAIR+CARE certifications openly.  
+- **Equity:** Interfaces and interactions must be accessible to all users, regardless of background.  
+- **Consistency:** Visual tokens and UI patterns remain standardized across all products.  
+- **Sustainability:** Digital design aligned with low-energy, green UI principles.  
 
 ---
 
-## 🧩 Directory Layout
+## 🗂️ Directory Layout
 
-```bash
+```plaintext
 docs/design/
-├── README.md                    # This file — design system and governance guide
-├── mockups/                     # Figma exports, screenshots, annotated prototypes
-│   ├── README.md
-│   └── ux_components_v2.fig
-├── reviews/                     # Design review records and validation reports
-│   ├── README.md
-│   └── 2025_Q4_design_review.md
-└── standards/                   # Style guidelines and accessibility rules
-    ├── typography.md
-    ├── color-palette.md
-    ├── accessibility.md
-    └── motion-guidelines.md
+├── README.md                              # This file — overview of design and UX standards
+│
+├── tokens/                                # Design tokens for color, typography, and layout
+│   ├── color-palette.md
+│   ├── typography-system.md
+│   ├── spacing-grid.md
+│   └── accessibility-tokens.md
+│
+├── components/                            # UI component library documentation
+│   ├── navigation.md
+│   ├── buttons.md
+│   ├── charts.md
+│   └── forms.md
+│
+├── patterns/                              # Interaction and storytelling patterns
+│   ├── map-visualization.md
+│   ├── focus-mode-interface.md
+│   ├── storytelling-flows.md
+│   └── accessibility-patterns.md
+│
+└── figma/                                 # Links and exports from the primary design system
+    ├── Figma-Tokens.md
+    └── Figma-System-Link.md
 ```
 
 ---
 
-## 🧱 Design Governance Model
+## ⚙️ Design System Architecture
 
 ```mermaid
 flowchart TD
-  subgraph GOV["UX Governance Board"]
-    G1["Accessibility Audit (WCAG)"]
-    G2["FAIR+CARE Review"]
-    G3["Design Token Validation"]
-  end
-
-  subgraph SYS["Design System Layers"]
-    D1["Core Tokens (color, spacing, typography)"]
-    D2["Components (buttons, modals, panels)"]
-    D3["Patterns (layout, navigation, timeline)"]
-  end
-
-  subgraph CI["Automation & QA"]
-    C1["Lighthouse & axe-core Tests"]
-    C2["Policy-Check (Metadata & Provenance)"]
-    C3["Governance Ledger Sync"]
-  end
-
-  GOV --> SYS --> CI
+    A["Design Tokens (Color / Type / Spacing)"] --> B["Component Library (UI / Charts / Forms)"]
+    B --> C["Patterns & Templates (Focus Mode / Maps / Storytelling)"]
+    C --> D["UX Guidelines (Accessibility / Responsiveness / Theming)"]
+    D --> E["Implementation (React + Tailwind + MapLibre)"]
 ```
-<!-- END OF MERMAID -->
+
+### System Layers
+1. **Tokens:** Foundational layer defining color, type, grid, and spacing scales.  
+2. **Components:** Reusable UI elements — modular and responsive.  
+3. **Patterns:** Complex structures combining multiple components and data types.  
+4. **UX Guidelines:** Defines accessibility, inclusivity, and interaction best practices.  
+5. **Implementation:** Frontend frameworks integrate design tokens into `web/`.  
 
 ---
 
-## ⚙️ Core Components
+## 🧠 FAIR+CARE & Accessibility Integration
 
-| Category | Component | Description | Governance Rule |
-|:--|:--|:--|:--|
-| **Navigation** | Header, Timeline Bar | Spatial and temporal navigation components. | Requires ARIA roles and keyboard support. |
-| **Mapping** | Layer Switcher, Tooltip, Legend | Interactive MapLibre components. | Must include text equivalents and color-safe palettes. |
-| **Forms** | Filter, Search, Feedback | Used across AI and metadata input screens. | Validated via WCAG + cognitive load review. |
-| **Modals** | Dossier View, Focus Mode Insights | Contextual data displays. | Requires focus trapping and escape support. |
-| **Typography** | Tokenized fonts | Variable font system with contrast ratios. | Enforced via design-tokens.json. |
+| Principle | Implementation |
+|------------|----------------|
+| **Findable** | Consistent labeling, alt text, and metadata embedded in components. |
+| **Accessible** | WCAG 2.2 AA-compliant color contrast and keyboard navigation. |
+| **Interoperable** | Figma → React/Tailwind design parity for open integration. |
+| **Reusable** | Modular components maintained under FAIR+CARE open license. |
+| **Collective Benefit** | Design promotes accessibility and ethical storytelling. |
+| **Authority to Control** | FAIR+CARE Council validates accessibility audits. |
+| **Responsibility** | Designers log usability testing and accessibility conformance. |
+| **Ethics** | All visuals reviewed for inclusivity, non-bias, and accessibility. |
 
----
-
-## 🧠 FAIR + CARE in Design
-
-| Principle | Implementation | Verification |
-|:--|:--|:--|
-| **Findable** | Consistent iconography, labeled navigation, semantic structure. | Lighthouse audits |
-| **Accessible** | WCAG-compliant color and keyboard patterns. | axe-core CI |
-| **Interoperable** | Tokenized design assets in JSON schema. | Design Tokens API |
-| **Reusable** | Modular Figma components reused across UI layers. | Versioned figma-export.yml |
-| **Collective Benefit (CARE)** | Ethical use of imagery, inclusive language, cultural respect. | FAIR+CARE Board review |
+Accessibility results validated via `focus-ui-audit.yml` CI workflow.
 
 ---
 
-## 🔍 Accessibility & Localization
+## 🧩 Focus Mode Interface Flow
 
-| Feature | Standard | Status |
-|:--|:--|:--:|
-| **Contrast Ratio** | WCAG 2.1 AA (4.5:1 minimum) | ✅ |
-| **Keyboard Navigation** | Full tab order + focus management | ✅ |
-| **Screen Reader Labels** | ARIA + alt text coverage | ✅ |
-| **Localization Support** | English (en), Spanish (es), Osage (osa) | ✅ |
-| **Color-Blind Safe Palettes** | Tested with TPGI simulator | ✅ |
+```mermaid
+flowchart LR
+    A["Data (FAIR+CARE Certified)"] --> B["Focus Mode API (src/pipelines/telemetry/)"]
+    B --> C["Focus Mode Dashboard (web/public/)"]
+    C --> D["User Interaction Layer (Map / Timeline / Story Panels)"]
+    D --> E["Governance Ledger Transparency Overlay"]
+```
 
----
-
-## 🧩 Design Token System
-
-| Token Type | Description | Format | Validation |
-|:--|:--|:--|:--|
-| **Color Tokens** | Semantic palette ensuring WCAG compliance. | `tokens/color.json` | `design-validate.yml` |
-| **Typography Tokens** | Font sizes, weights, and line heights. | `tokens/typography.json` | `design-validate.yml` |
-| **Spacing Tokens** | Margins, paddings, and grid units. | `tokens/spacing.json` | `design-validate.yml` |
-| **Component Tokens** | Button, modal, and card design references. | `tokens/components.json` | `policy-check.yml` |
+### Interface Highlights
+- **Map Visualization:** MapLibre integration for spatial-temporal data overlays.  
+- **Timeline:** React/D3 hybrid component for scrubbing historical data.  
+- **Story Panels:** AI-driven summaries based on FAIR+CARE narratives.  
+- **Ledger Overlay:** Provenance visualization linked to governance ledger entries.  
 
 ---
 
-## ⚙️ Design Validation Workflows
+## 🎨 Design Tokens & Theming
 
-| Workflow | Function | Output |
-|:--|:--|:--|
-| `design-validate.yml` | Validates design tokens, accessibility, and color contrast. | `reports/validation/design_validation.json` |
-| `policy-check.yml` | Confirms metadata completeness and licensing. | `reports/audit/policy_check.json` |
-| `governance-ledger.yml` | Logs design token hashes and review sign-offs. | `data/reports/audit/ui_governance_ledger.json` |
+| Token Group | Description | Standard |
+|--------------|-------------|-----------|
+| **Color** | Semantic color system with high contrast ratios. | WCAG 2.2 AA |
+| **Typography** | Scalable typographic hierarchy (rem-based). | ISO 9241-210 |
+| **Spacing / Layout** | 8pt modular grid for consistency. | MCP-DL v6.3 |
+| **Elevation / Shadows** | Minimal depth for energy-efficient rendering. | ISO 50001 |
+| **Motion** | Reduced motion preferences respected by default. | WCAG 2.2 |
 
----
-
-## 🧩 Observability Metrics
-
-| Metric | Description | Target | Source |
-|:--|:--|:--|:--|
-| **design_token_coverage** | % of UI components using standardized tokens. | 100% | Design Lint Reports |
-| **a11y_compliance_score** | WCAG 2.1 AA compliance rate. | ≥ 95% | axe-core CI |
-| **color_contrast_compliance** | Ratio of compliant color tokens. | 100% | `design-validate.yml` |
-| **i18n_coverage** | % of components with translation tags. | 100% | i18n Validation Report |
+Figma tokens exported and synced via `figma_sync.yml`.
 
 ---
 
-## 🧾 Governance Integration
+## 📊 UX Validation & Audit Process
 
-| Artifact | Description | Responsible Team |
-|:--|:--|:--|
-| `design-tokens.json` | Canonical registry of reusable UI tokens. | @kfm-ux |
-| `ui_governance_ledger.json` | Ledger of audits and ethical design reviews. | @kfm-governance |
-| `color-palette.md` | Accessible color system documentation. | @kfm-accessibility |
-| `motion-guidelines.md` | Animation and timing standards. | @kfm-ux |
-| `mockups/README.md` | Figma and design references. | @kfm-docs |
+| Validation Type | Description | Tool / Workflow | Frequency |
+|------------------|-------------|------------------|------------|
+| **Accessibility Audit** | WCAG 2.2 AA compliance scan. | `axe-core`, `focus-ui-audit.yml` | Continuous |
+| **Usability Review** | Fairness and inclusivity testing. | FAIR+CARE UX Team | Quarterly |
+| **Governance Integration** | Ledger-linked transparency layer validation. | `focus-validate.yml` | Continuous |
+| **Sustainability Review** | Carbon cost of rendering and UI performance. | ISO 50001 / Telemetry | Quarterly |
+
+Audit results logged in:  
+`releases/v9.6.0/focus-telemetry.json`
 
 ---
 
-## 🕰 Version History
+## 🧾 Internal Use Citation
 
-| Version | Date | Author | Summary |
-|:--|:--|:--|:--|
-| **v2.1.1** | 2025-11-16 | @kfm-ux | Standardized design system architecture; added governance integration and design token validation. |
-| v2.0.0 | 2025-10-25 | @kfm-docs | Introduced FAIR+CARE visual compliance mapping. |
-| v1.0.0 | 2025-10-04 | @kfm-architecture | Initial design system governance documentation. |
+```text
+Kansas Frontier Matrix (2025). Design System & User Experience Framework (v9.6.0).
+Unified FAIR+CARE and ISO-compliant design ecosystem ensuring accessibility, sustainability, and equity across all KFM user interfaces.
+Defines the design tokens, patterns, and UX standards governing the Focus Mode platform and map storytelling experience.
+```
+
+---
+
+## 🧾 Version Notes
+
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.6.0 | 2025-11-03 | Added WCAG 2.2 AA compliance and sustainability theming. |
+| v9.5.0 | 2025-11-02 | Integrated Figma tokens with React + Tailwind parity. |
+| v9.3.2 | 2025-10-28 | Established FAIR+CARE-aligned design system baseline. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix © 2025**  
-*“Design with Integrity — Govern with Accessibility.”*  
-📍 `docs/design/README.md` — Design system and UX governance documentation for the Kansas Frontier Matrix.
+**Kansas Frontier Matrix** · *Accessible Design × FAIR+CARE Ethics × Sustainable UX*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Design Hub](./) • [⚖️ Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
