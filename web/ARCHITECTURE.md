@@ -1,47 +1,88 @@
 ---
-title: "🏗️ Kansas Frontier Matrix — Web Application Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌐 Kansas Frontier Matrix — Web Application Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/ARCHITECTURE.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
-review_cycle: "Quarterly / Autonomous"
+version: "v9.6.0"
+last_updated: "2025-11-03"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../releases/v9.3.2/manifest.zip"
+sbom_ref: "../releases/v9.6.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.6.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-ai_registry_ref: "../releases/v9.3.2/models.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🏗️ Kansas Frontier Matrix — **Web Application Architecture**
+# 🌐 Kansas Frontier Matrix — **Web Application Architecture**
 `web/ARCHITECTURE.md`
 
-**Purpose:** Describes the technical design, modular architecture, and integration points for the Kansas Frontier Matrix web interface.  
-Defines frontend–backend communication layers, component hierarchy, and governance integration per **MCP-DL v6.3** and **FAIR+CARE** standards.
+**Purpose:**  
+Defines the FAIR+CARE-aligned technical architecture of the Kansas Frontier Matrix (KFM) web interface — a modular, responsive, and AI-driven application for exploring historical, geospatial, and environmental data.  
+This architecture ensures transparency, accessibility, and provenance continuity through open web technologies and ethical AI integrations.
 
-[![Frontend Build](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/site.yml/badge.svg)](../.github/workflows/site.yml)
-[![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-blue)](https://www.w3.org/WAI/WCAG21/quickref/)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Web%20Certified-gold)](../docs/standards/faircare-validation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)](../docs/standards/faircare-validation.md)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
+[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../docs/architecture/repo-focus.md)
+[![ISO 9241-210](https://img.shields.io/badge/ISO-9241--210-Accessible%20Design-teal)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 🧭 Overview
 
-The **Kansas Frontier Matrix Web Application** is a modular, open-source React + MapLibre frontend.  
-It provides **temporal, spatial, and semantic navigation** through Kansas’s historical, cultural, and environmental datasets.  
-The web layer connects to the backend API (FastAPI + Neo4j) and integrates directly with the AI **Focus Mode** engine for contextual insights.
+The **KFM Web Application** provides an interactive visualization environment for exploring linked data, AI-driven insights, and FAIR+CARE-certified historical datasets.  
+It integrates the Focus Mode AI assistant, geospatial visualization (MapLibre + Deck.gl), and time-based storytelling (ChronoView) under a modular monorepo design.
 
-**Architectural Principles:**
-- Documentation-first development (MCP-DL)  
-- FAIR+CARE-aligned transparency and ethics  
-- Accessibility-first design (WCAG 2.1 AA)  
-- Modular, scalable, and reproducible build system  
-- Strong provenance integration between UI and data governance
+### Core Principles:
+- **FAIR+CARE-first:** Web modules inherit metadata, accessibility, and ethics constraints.  
+- **Accessibility & Openness:** WCAG 2.1 AA and ISO 9241-210 compliant UI.  
+- **AI Transparency:** Integrated Focus Mode provides explainable, ethical AI insights.  
+- **Reproducibility:** Frontend builds are version-controlled and SBOM-verified.  
+
+---
+
+## 🗂️ Directory Overview
+
+```plaintext
+web/
+├── README.md                             # High-level documentation of web directory
+├── ARCHITECTURE.md                       # This file — system design documentation
+│
+├── public/                               # Static assets (images, icons, UI tokens)
+│   ├── images/
+│   ├── icons/
+│   └── manifest.json
+│
+├── src/                                  # Core application source (React + TypeScript)
+│   ├── components/                       # UI components (FAIR+CARE accessible patterns)
+│   ├── pages/                            # Route-based pages (Home, Explorer, Governance)
+│   ├── hooks/                            # Shared state management & custom hooks
+│   ├── context/                          # Global app context (telemetry, ethics state)
+│   ├── utils/                            # Helper functions (API, metadata, telemetry)
+│   └── services/                         # API & data fetching services (STAC/DCAT)
+│
+├── package.json                          # Web dependencies and build metadata
+├── next.config.js                        # Next.js / Vite configuration for frontend
+└── telemetry.json                        # Focus Mode and environmental telemetry data
+```
+
+---
+
+## ⚙️ Frontend Technology Stack
+
+| Layer | Technology | Purpose |
+|-------|-------------|----------|
+| **Framework** | React 18 + Next.js | Declarative, component-based UI architecture |
+| **Styling** | Tailwind CSS + CSS Modules | Modular, responsive, and accessible UI styling |
+| **Data Visualization** | MapLibre GL + Deck.gl + Recharts | Interactive geospatial and analytical charts |
+| **AI Integration** | OpenAI GPT + Focus Mode SDK | Context-aware ethical AI interaction |
+| **Data Access** | STAC, DCAT 3.0, GraphQL | FAIR+CARE-compliant data layer abstraction |
+| **State Management** | Zustand + React Context | Lightweight global state and governance sync |
+| **Accessibility** | Headless UI + ARIA + WCAG 2.1 | Inclusive, standards-aligned components |
+| **Telemetry** | Web Vitals + Sustainability.js | Performance, energy, and accessibility monitoring |
 
 ---
 
@@ -49,193 +90,99 @@ The web layer connects to the backend API (FastAPI + Neo4j) and integrates direc
 
 ```mermaid
 flowchart TD
-A[User Interface · React + MapLibre] --> B[State Management · Redux Toolkit]
-B --> C[Data Services · GraphQL + REST APIs]
-C --> D[Backend · FastAPI + Neo4j Graph Database]
-D --> E[AI/ML Focus Mode · Python Transformers]
-E --> F[STAC & FAIR Metadata · JSON-LD / DCAT / CIDOC CRM]
-F --> G[Governance Ledger + Telemetry]
-G --> H[GitHub Pages Deployment + Focus Telemetry Sync]
+    A["User Interaction (Web UI)"] --> B["Focus Mode AI Layer"]
+    B --> C["Governance & FAIR+CARE Middleware"]
+    C --> D["Data Services (STAC / DCAT / GraphQL)"]
+    D --> E["KFM Backend (ETL Pipelines & Neo4j Graph)"]
+    E --> F["Provenance Ledger + Telemetry Logging"]
+    F --> G["Governance Dashboard & Audit Reports"]
 ```
 
-**End-to-End Flow:**
-1. UI components trigger API calls to retrieve geospatial, temporal, and graph-based data.  
-2. Responses include FAIR metadata and governance identifiers.  
-3. Focus Mode AI summaries render dynamically, with ethical disclaimers and provenance visible to users.  
-4. Logs and telemetry feed back into the FAIR+CARE ledger for accountability.
+### Architecture Summary:
+1. **Frontend (A):** Responsive UI built on accessible FAIR+CARE design tokens.  
+2. **Focus Mode (B):** AI reasoning layer interprets user queries with ethical constraints.  
+3. **Governance Middleware (C):** Validates every request for provenance integrity.  
+4. **Data Services (D):** Fetches harmonized metadata from FAIR+CARE-compliant APIs.  
+5. **Backend Integration (E–F):** Syncs validated data and telemetry with ledger systems.  
 
 ---
 
-## 🧠 Core Modules
+## 🧠 FAIR+CARE + Accessibility Governance Matrix
 
-| Module | Directory | Purpose |
-|---------|------------|----------|
-| **Map Module** | `src/features/map/` | Renders MapLibre layers, STAC tiles, and geospatial overlays. |
-| **Timeline Module** | `src/features/timeline/` | Handles time slider interactions and temporal queries. |
-| **Focus Mode Module** | `src/features/focus/` | Integrates AI summaries, entity linkage, and explainability. |
-| **API / GraphQL Client** | `src/api/` | Typed clients for REST/GraphQL (FastAPI ↔ Neo4j) and request hooks. |
-| **Global Store** | `src/store/` | Redux-based global state and event synchronization. |
-| **UI Components** | `src/components/` | Reusable and accessible interface elements. |
-| **Styling / Design System** | `src/styles/` | TailwindCSS and ShadCN UI for consistent theming. |
-| **Telemetry Layer** | `src/utils/telemetry.js` | Captures user interactions and focus analytics for governance. |
+| Principle | Implementation | Oversight |
+|------------|----------------|------------|
+| **Findable** | URLs map to dataset and ledger entities. | @kfm-data |
+| **Accessible** | WCAG 2.1 AA + ISO 9241-210 compliance validated each release. | @kfm-accessibility |
+| **Interoperable** | Follows DCAT, STAC, and FAIR metadata exchange standards. | @kfm-architecture |
+| **Reusable** | Open APIs and UI components licensed under MIT. | @kfm-design |
+| **Collective Benefit** | Ensures open access to Kansas’s cultural and scientific history. | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council governs ethical AI & accessibility settings. | @kfm-governance |
+| **Responsibility** | Frontend logs environmental and ethical metrics to telemetry. | @kfm-sustainability |
+| **Ethics** | Bias-tested Focus Mode responses and inclusive UX validated per release. | @kfm-ethics |
 
-> **Fix:** Standardized the API client path to `src/api/` across this document.
+Audit and validation results stored in:  
+`data/reports/audit/data_provenance_ledger.json`  
+and  
+`data/reports/fair/data_care_assessment.json`
 
 ---
 
-## ⚙️ Component Hierarchy
+## ⚙️ Governance & Telemetry Integration
 
-```plaintext
-App.jsx
-├── Layout/
-│   ├── Header.jsx
-│   ├── Sidebar.jsx
-│   ├── Footer.jsx
-│   └── ThemeProvider.jsx
-│
-├── Features/
-│   ├── Map/
-│   │   ├── MapView.jsx
-│   │   ├── LayerControls.jsx
-│   │   └── LegendPanel.jsx
-│   ├── Timeline/
-│   │   ├── TimelineView.jsx
-│   │   ├── TimeSlider.jsx
-│   │   └── EventMarkers.jsx
-│   ├── Focus/
-│   │   ├── FocusPanel.jsx
-│   │   ├── EntitySummary.jsx
-│   │   └── ExplainabilityWidget.jsx
-│
-├── Components/
-│   ├── Button.jsx
-│   ├── Modal.jsx
-│   ├── Tooltip.jsx
-│   └── Accordion.jsx
-│
-└── Hooks/
-    ├── useMapData.js
-    ├── useTimeline.js
-    ├── useFocusMode.js
-    └── useTelemetry.js
+- All UI interactions and API calls are monitored through **Focus Mode Telemetry**.  
+- Sustainability metrics (energy use, performance impact) logged in `focus-telemetry.json`.  
+- Accessibility audits automatically triggered in `web_vitals_audit.yml`.  
+- Provenance chain updates registered via `governance_sync.yml`.  
+
+Example Telemetry Record:
+```json
+{
+  "component": "MapView",
+  "average_runtime_ms": 142,
+  "energy_use_wh": 0.42,
+  "fairstatus": "certified",
+  "accessibility_score": 98.7,
+  "ai_explainability": true
+}
 ```
 
 ---
 
-## 🔗 Backend API Integration
+## 🧩 Deployment & CI/CD Summary
 
-The frontend communicates with backend APIs defined in **FastAPI**.
-
-| Endpoint | Description | Response |
-|-----------|--------------|-----------|
-| `/api/stac/items` | Returns available STAC items with metadata. | JSON (GeoJSON / STAC) |
-| `/api/focus/{entity_id}` | Returns entity-linked AI summaries and relationships. | JSON-LD + provenance |
-| `/api/events?start=1850&end=1900` | Retrieves historical events for timeline. | Array of event objects |
-| `/api/graph/query` | Runs Neo4j graph queries via GraphQL. | GraphQL JSON response |
-
-**Client Location:** Query helpers, schema types, and hooks live in `src/api/` (e.g., `src/api/client.ts`, `src/api/hooks.ts`).
+| Pipeline | Tool | Purpose |
+|-----------|------|----------|
+| `docs_validate.yml` | GitHub Actions | Validates documentation consistency |
+| `web_build.yml` | Next.js + Vercel | Builds and deploys FAIR+CARE-certified frontend |
+| `telemetry_report.yml` | Sustainability.js | Monitors web sustainability performance |
+| `accessibility_scan.yml` | Lighthouse CI | Ensures WCAG 2.1 and ISO 9241-210 compliance |
+| `governance_sync.yml` | FAIR+CARE Governance | Registers audit and provenance metrics |
 
 ---
 
-## 🧩 Data & Governance Integration
+## 🧾 Internal Use Citation
 
-### FAIR+CARE Metadata Pipeline
-
-```mermaid
-flowchart TD
-    A["Frontend Data Request"] --> B["API Response with STAC Metadata"]
-    B --> C["Provenance Layer (Checksum and Source Attribution)"]
-    C --> D["Focus Mode AI Context and Ethical Tags"]
-    D --> E["Telemetry Log to Governance Ledger"]
-    E --> F["FAIR+CARE Dashboard Updates"]
+```text
+Kansas Frontier Matrix (2025). Web Application Architecture (v9.6.0).
+Defines the ethical, accessible, and FAIR+CARE-aligned frontend architecture for the Kansas Frontier Matrix web ecosystem.
+Integrates governance, telemetry, and Focus Mode AI for transparent open-data exploration.
 ```
 
-**Data Provenance Fields:**
-- `source` — Data origin (organization, API, file)  
-- `checksum` — Hash of dataset or tile  
-- `license` — Data usage license  
-- `governance_ref` — Reference to ethics approval or FAIR+CARE review  
-- `confidence` — AI reasoning confidence value  
-- `timestamp` — Processing or inference time  
-
 ---
 
-## 🧱 Build & Deployment Workflow
+## 🧾 Version Notes
 
-Frontend deployment is handled automatically via **GitHub Actions** → `.github/workflows/site.yml`.
-
-**Process Steps:**
-1. Lint & pre-commit validation (Markdown, JS, accessibility).  
-2. Run frontend build (`npm run build`) with Vite.  
-3. Validate generated assets against FAIR+CARE accessibility standards.  
-4. Deploy `/dist` to **GitHub Pages** (default) or **Netlify** (optional).  
-5. Push telemetry results to `releases/v9.3.2/focus-telemetry.json`.  
-
-**Artifacts:**
-- `/dist` → Production build  
-- `/releases/v9.3.2/manifest.zip` → Version metadata  
-- `/reports/ui-accessibility.json` → Accessibility validation results  
-
----
-
-## 🧠 Focus Mode Architecture
-
-```mermaid
-flowchart LR
-    A["User Selects Entity on Map or Timeline"] --> B["API Query to Neo4j Graph"]
-    B --> C["AI Summarization Engine using Transformers"]
-    C --> D["Explanation Layer with SHAP and LIME"]
-    D --> E["UI Rendering — Focus Panel, Summary, and Provenance Links"]
-    E --> F["Telemetry and Governance Ledger Update"]
-```
-
-Focus Mode operates as a **contextual reasoning engine**, displaying:
-- Historical context via Neo4j queries  
-- Environmental overlays via MapLibre  
-- AI summaries with confidence and ethical metadata  
-- Explainability visualizations for user transparency  
-
----
-
-## ♿ Accessibility & UI Governance
-
-Accessibility is enforced through:
-- WCAG 2.1 AA standards  
-- ARIA-compliant navigation  
-- Keyboard focus states and skip-links  
-- Contrast-checked color tokens in Tailwind theme  
-
-Governance alignment:
-- Ethical use statements displayed in Focus Mode panels  
-- “Why this data?” metadata button for each dataset  
-- Public provenance visualizations for transparency  
-
----
-
-## 🛡️ Security & Validation
-
-| Layer | Mechanism | Tool |
-|--------|------------|------|
-| **Dependency Scanning** | Automated CVE checks | Trivy |
-| **Code Quality** | ESLint, Prettier | Pre-commit hooks |
-| **Accessibility Testing** | Pa11y / Axe | CI validation |
-| **Governance Logging** | Checksum + JSON-LD provenance | FAIR+CARE pipeline |
-
----
-
-## 🧾 Version History
-
-| Version | Date       | Author             | Summary |
-|----------|------------|--------------------|----------|
-| v9.3.2   | 2025-10-28 | @kfm-architecture  | Standardized API client path, clarified build outputs, and aligned deployment notes. |
-| v9.3.1   | 2025-10-27 | @bartytime4life    | Integrated accessibility and provenance governance schema. |
-| v9.3.0   | 2025-10-26 | @kfm-ui-lab        | Established modular React architecture and CI/CD pipeline linkages. |
+| Version | Date | Notes |
+|----------|------|--------|
+| v9.6.0 | 2025-11-03 | Added sustainability telemetry and AI accessibility audits. |
+| v9.5.0 | 2025-11-02 | Integrated Focus Mode explainability and ethics middleware. |
+| v9.3.2 | 2025-10-28 | Established baseline FAIR+CARE web architecture. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Web Architecture × Semantic Visualization × FAIR+CARE Integrity*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
+**Kansas Frontier Matrix** · *Accessible Web Design × FAIR+CARE Governance × Ethical AI Visualization*  
+[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
