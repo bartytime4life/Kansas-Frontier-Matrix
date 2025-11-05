@@ -1,4 +1,3 @@
-
 ---
 title: "🔤 Kansas Frontier Matrix — Inter Typeface Family (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/fonts/Inter/README.md"
