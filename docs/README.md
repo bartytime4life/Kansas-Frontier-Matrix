@@ -17,8 +17,7 @@ governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
 # 📚 **Kansas Frontier Matrix — Documentation Index**
 `docs/README.md`
 
-**Purpose:** Serve as the central navigation index for all documentation within the Kansas Frontier Matrix (KFM) monorepo — covering standards, governance, pipelines, AI systems, datasets, and developer references.  
-All documents comply with **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** principles for transparency, ethics, and reproducibility.
+**Purpose:** Provide the central navigation hub for all Kansas Frontier Matrix (KFM) documentation — standards, governance, pipelines, AI systems, datasets, and developer references — validated under **MCP v6.3** and **FAIR+CARE**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
@@ -29,84 +28,62 @@ All documents comply with **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE**
 
 ---
 
-## 📖 Table of Contents
+## 📘 Overview
 
-- [Overview](#-overview)
-- [Directory Layout](#-directory-layout)
-- [Documentation Standards](#-documentation-standards)
-- [Core Categories](#-core-categories)
-  - [Architecture & Systems](#architecture--systems)
-  - [Governance & Ethics](#governance--ethics)
-  - [Pipelines & Data Workflows](#pipelines--data-workflows)
-  - [AI & Focus Mode](#ai--focus-mode)
-  - [Design & Web Interface](#design--web-interface)
-- [Writing Rules & Style Guide](#-writing-rules--style-guide)
-- [Validation & Compliance](#-validation--compliance)
-- [Version History](#-version-history)
+The **Kansas Frontier Matrix (KFM)** documentation is a **living, interlinked knowledge base**.  
+Each Markdown file is both **human-readable** and **machine-parseable** — carrying front-matter metadata used by validation and governance systems.
 
----
-
-## 🌍 Overview
-
-The **Kansas Frontier Matrix (KFM)** documentation is designed as a **living, interlinked knowledge base**.  
-Every Markdown file functions both as a **human-readable document** and a **machine-parseable metadata source** for automated validation and graph integration.
-
-All documentation follows:
-- **MCP Documentation-First Protocol**
-- **FAIR+CARE Data Governance**
-- **Platinum README Template v7.1**
-- **ISO 19115 & DCAT 3.0 metadata alignment**
+Aligned frameworks:
+- **Master Coder Protocol (MCP v6.3)**  
+- **FAIR+CARE** Data Governance  
+- **Platinum README v7.1**  
+- **ISO 19115** & **DCAT 3.0** metadata alignment
 
 ---
 
 ## 🗂️ Directory Layout
 
-The `docs/` directory contains all governance, architecture, and development documentation aligned with MCP and FAIR+CARE protocols.
-
 ```
 docs/
-├── README.md                        # Central documentation index (this file)
+├── README.md                        # Central index (this file)
 ├── glossary.md                      # Glossary of technical and ethical terms
 │
-├── architecture/                    # System and UI design documentation
-│   ├── data-architecture.md         # Data modeling, STAC/DCAT schemas
-│   ├── web-ui.md                    # Frontend design and interaction model
-│   └── github-architecture.md       # CI/CD automation overview
+├── architecture/                    # System and UI design documents
+│   ├── data-architecture.md         # Data modeling + STAC/DCAT schemas
+│   ├── web-ui.md                    # Frontend architecture & UX
+│   └── github-architecture.md       # CI/CD & governance automation
 │
-├── standards/                       # FAIR+CARE, governance, and documentation standards
-│   ├── faircare.md                  # FAIR+CARE ethical framework
-│   ├── markdown_rules.md            # Markdown structural rules
-│   ├── markdown_guide.md            # Markdown stylistic guide
-│   ├── ui_accessibility.md          # Accessibility compliance (WCAG 2.1 AA)
-│   ├── licensing.md                 # SPDX and CC license reference
-│   ├── data-contracts.md            # FAIR data contract schemas
+├── standards/                       # FAIR+CARE, governance, style, licensing
+│   ├── faircare.md                  # Ethical data governance
+│   ├── markdown_rules.md            # Structural rules
+│   ├── markdown_guide.md            # Style guide
+│   ├── ui_accessibility.md          # WCAG 2.1 AA accessibility
+│   ├── licensing.md                 # SPDX / CC licensing reference
+│   ├── data-contracts.md            # Dataset contracts & schemas
 │   └── governance/
-│       └── ROOT-GOVERNANCE.md       # Root governance charter and policy
+│       └── ROOT-GOVERNANCE.md       # Root governance charter
 │
-├── templates/                       # MCP-compliant contribution and review templates
-│   ├── model_card.md                # AI model documentation template
-│   ├── sop.md                       # Standard Operating Procedure template
-│   └── experiment.md                # Experiment documentation template
+├── templates/                       # Reusable authoring templates
+│   ├── model_card.md                # AI model card template
+│   ├── sop.md                       # SOP template
+│   └── experiment.md                # Experiment template
 │
-└── reports/                         # Validation and audit documentation
-    ├── faircare_summary.json        # FAIR+CARE validation output
-    ├── stac_validation.json         # STAC validation reports
+└── reports/                         # Validation & audit documentation
+    ├── faircare_summary.json        # FAIR+CARE validation snapshot
+    ├── stac_validation.json         # STAC/DCAT validation summary
     └── telemetry/                   # Telemetry and governance metrics
 ```
 
-Each subdirectory is versioned, schema-validated, and referenced in telemetry under:
-```
-releases/v9.7.0/focus-telemetry.json
-```
+> All documentation references appear in the telemetry snapshot:  
+> `../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧱 Documentation Standards
 
-KFM uses **GitHub-Flavored Markdown (GFM)** with standardized YAML front-matter metadata for every document.  
-This ensures version traceability, rendering consistency, and automated indexing across the knowledge graph.
+Every doc uses **GitHub-Flavored Markdown (GFM)** and includes YAML front-matter for provenance and validation.
 
-**Front-Matter Schema Example:**
+**Front-Matter Example**
 ```yaml
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture"
@@ -117,10 +94,13 @@ review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "releases/v9.7.0/sbom.spdx.json"
 manifest_ref: "releases/v9.7.0/manifest.zip"
+telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 ```
 
-See [📑 Markdown Rules](standards/markdown_rules.md) and [🎨 Markdown Style Guide](standards/markdown_guide.md) for formatting best practices.
+See **[markdown_rules.md](standards/markdown_rules.md)** and **[markdown_guide.md](standards/markdown_guide.md)** for alignment details (badges order, emoji headers, table rules, mermaid limits).
 
 ---
 
@@ -130,10 +110,10 @@ See [📑 Markdown Rules](standards/markdown_rules.md) and [🎨 Markdown Style 
 
 | Document | Description |
 |-----------|-------------|
-| [`src/ARCHITECTURE.md`](../src/ARCHITECTURE.md) | Technical blueprint for KFM’s architecture layers. |
-| [`docs/architecture/data-architecture.md`](architecture/data-architecture.md) | Overview of data modeling, STAC/DCAT schema, and file structure. |
-| [`docs/architecture/web-ui.md`](architecture/web-ui.md) | Frontend (React + MapLibre) interface and component design. |
-| [`docs/architecture/github-architecture.md`](../.github/ARCHITECTURE.md) | CI/CD, automation, and governance pipeline documentation. |
+| [`src/ARCHITECTURE.md`](../src/ARCHITECTURE.md) | High-level system architecture. |
+| [`architecture/data-architecture.md`](architecture/data-architecture.md) | Data model overview + STAC/DCAT mappings. |
+| [`architecture/web-ui.md`](architecture/web-ui.md) | Web app components, a11y, and interactions. |
+| [`.github/ARCHITECTURE.md`](../.github/ARCHITECTURE.md) | CI/CD automation and governance architecture. |
 
 ---
 
@@ -141,10 +121,10 @@ See [📑 Markdown Rules](standards/markdown_rules.md) and [🎨 Markdown Style 
 
 | Document | Description |
 |-----------|-------------|
-| [`docs/standards/faircare.md`](standards/faircare.md) | FAIR+CARE data governance framework. |
-| [`docs/standards/governance/ROOT-GOVERNANCE.md`](standards/governance/ROOT-GOVERNANCE.md) | Root governance charter for ethical review and decision processes. |
-| [`docs/standards/data-contracts.md`](standards/data-contracts.md) | Schema of FAIR-compliant data contracts for all datasets. |
-| [`docs/standards/licensing.md`](standards/licensing.md) | License guidelines and SPDX references. |
+| [`standards/faircare.md`](standards/faircare.md) | FAIR+CARE governance framework. |
+| [`standards/governance/ROOT-GOVERNANCE.md`](standards/governance/ROOT-GOVERNANCE.md) | Root charter and council processes. |
+| [`standards/data-contracts.md`](standards/data-contracts.md) | Dataset contracts and schema references. |
+| [`standards/licensing.md`](standards/licensing.md) | SPDX/CC license guidance. |
 
 ---
 
@@ -152,10 +132,10 @@ See [📑 Markdown Rules](standards/markdown_rules.md) and [🎨 Markdown Style 
 
 | Document | Description |
 |-----------|-------------|
-| [`src/pipelines/README.md`](../src/pipelines/README.md) | Overview of ETL, AI, and validation pipelines. |
-| [`src/pipelines/etl/README.md`](../src/pipelines/etl/README.md) | Extract–Transform–Load process documentation. |
-| [`src/pipelines/validation/README.md`](../src/pipelines/validation/README.md) | FAIR+CARE validation module. |
-| [`data/processed/README.md`](../data/processed/README.md) | Processed dataset directory reference. |
+| [`../src/pipelines/README.md`](../src/pipelines/README.md) | ETL/AI/validation pipeline index. |
+| [`../src/pipelines/etl/README.md`](../src/pipelines/etl/README.md) | ETL process and configs. |
+| [`../src/pipelines/validation/README.md`](../src/pipelines/validation/README.md) | FAIR+CARE and STAC validation flows. |
+| [`../data/processed/README.md`](../data/processed/README.md) | Processed data directory reference. |
 
 ---
 
@@ -163,10 +143,10 @@ See [📑 Markdown Rules](standards/markdown_rules.md) and [🎨 Markdown Style 
 
 | Document | Description |
 |-----------|-------------|
-| [`src/ai/README.md`](../src/ai/README.md) | Overview of AI/ML components in KFM. |
-| [`src/ai/models/focus_transformer_v1/README.md`](../src/ai/models/focus_transformer_v1/README.md) | AI-powered Focus Mode engine and model documentation. |
-| [`src/ai/explainability/README.md`](../src/ai/explainability/README.md) | SHAP/LIME explainability module reference. |
-| [`src/ai/training/README.md`](../src/ai/training/README.md) | Model training configuration and evaluation methods. |
+| [`../src/ai/README.md`](../src/ai/README.md) | AI modules and orchestration. |
+| [`../src/ai/models/focus_transformer_v1/README.md`](../src/ai/models/focus_transformer_v1/README.md) | Focus Mode model card. |
+| [`../src/ai/explainability/README.md`](../src/ai/explainability/README.md) | SHAP/LIME and drift analysis. |
+| [`../src/ai/training/README.md`](../src/ai/training/README.md) | Training configs and evaluation. |
 
 ---
 
@@ -174,44 +154,27 @@ See [📑 Markdown Rules](standards/markdown_rules.md) and [🎨 Markdown Style 
 
 | Document | Description |
 |-----------|-------------|
-| [`web/README.md`](../web/README.md) | Overview of KFM’s web frontend design principles. |
-| [`web/public/icons/README.md`](../web/public/icons/README.md) | Iconography and accessibility guidelines. |
-| [`docs/standards/ui_accessibility.md`](standards/ui_accessibility.md) | Accessibility compliance (WCAG 2.1 AA). |
-| [`docs/architecture/web-ui.md`](architecture/web-ui.md) | Web interface design & interaction models. |
+| [`../web/README.md`](../web/README.md) | Frontend architecture and patterns. |
+| [`../web/public/icons/README.md`](../web/public/icons/README.md) | Iconography and a11y guidance. |
+| [`standards/ui_accessibility.md`](standards/ui_accessibility.md) | WCAG 2.1 AA standards. |
+| [`architecture/web-ui.md`](architecture/web-ui.md) | UI/UX diagrams and flows. |
 
 ---
 
-## ✏️ Writing Rules & Style Guide
+## ✏️ Writing Rules & Style
 
-All KFM documentation follows the **Markdown Styling & Rules** guides:
-
-- [🧾 `docs/standards/markdown_rules.md`](standards/markdown_rules.md) — structural, front-matter, and layout rules  
-- [🎨 `docs/standards/markdown_guide.md`](standards/markdown_guide.md) — stylistic conventions for headers, emojis, and badges  
-
-**Formatting Highlights:**
-- Use emojis in headers for visual indexing.
-- Always include YAML front-matter.
-- Write short paragraphs for readability.
-- Include directory trees and Mermaid diagrams where applicable.
-- End each document with a version history table and © footer.
+- Emoji-prefixed headers (📘, 🗂️, 🧾, ⚙️, 🧩, ⚖️, 🕰️).  
+- Include a Directory Layout tree in each README.  
+- Mermaid: `flowchart TD|LR`, quoted labels, ≤1 diagram/section.  
+- Tables: ≥3 columns, `—` for N/A, ≤100 chars width.  
+- End with **Version History** and a **centered footer**.
 
 ---
 
 ## 🧮 Validation & Compliance
 
-Documentation is automatically validated by **CI/CD workflows** under `.github/workflows/`:
-
-| Workflow | Purpose |
-|-----------|----------|
-| `docs-lint.yml` | Ensures Markdown consistency and schema validity. |
-| `stac-validate.yml` | Validates dataset catalogs referenced in docs. |
-| `faircare-validate.yml` | Verifies ethical data governance references. |
-| `telemetry-export.yml` | Logs doc validation telemetry to `focus-telemetry.json`. |
-
-Validation reports are stored in:
-```
-reports/self-validation/docs/
-```
+**Workflows:** `docs-lint.yml`, `stac-validate.yml`, `faircare-validate.yml`, `telemetry-export.yml`  
+**Reports:** stored under `reports/self-validation/docs/` and summarized in telemetry.
 
 ---
 
@@ -219,10 +182,10 @@ reports/self-validation/docs/
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added directory layout and documentation index improvements. |
-| v9.5.0 | 2025-10-20 | A. Barta | Introduced markdown compliance section and telemetry links. |
-| v9.3.0 | 2025-08-12 | KFM Core Team | Expanded architecture and FAIR+CARE reference sections. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial documentation structure created. |
+| v9.7.0 | 2025-11-05 | A. Barta | Added Directory Layout, standards refs, and telemetry linkages. |
+| v9.5.0 | 2025-10-20 | A. Barta | Introduced markdown compliance and governance sections. |
+| v9.3.0 | 2025-08-12 | KFM Core Team | Expanded architecture and FAIR+CARE references. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Initial documentation index created. |
 
 ---
 
