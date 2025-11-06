@@ -17,7 +17,7 @@ governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 # 📊 **Kansas Frontier Matrix — Reports & Validation Artifacts Index**
 `docs/reports/README.md`
 
-**Purpose:** Provide an overview and directory map for all generated reports, validation outputs, governance audits, and telemetry logs within the Kansas Frontier Matrix (KFM) monorepo.  
+**Purpose:** Provide a centralized map for all generated reports, validation outputs, governance audits, and telemetry logs within the Kansas Frontier Matrix (KFM) monorepo.  
 All artifacts documented here are **automatically produced**, **digitally signed**, and **FAIR+CARE** certified under the **Master Coder Protocol (MCP v6.3)**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
@@ -31,13 +31,13 @@ All artifacts documented here are **automatically produced**, **digitally signed
 
 ## 📘 Overview
 
-The `docs/reports/` directory and its corresponding `/reports/` root directory contain **automatically generated validation outputs** from CI/CD workflows, FAIR+CARE audits, and governance activities.  
-These artifacts serve as permanent, machine-readable evidence of compliance, reproducibility, and operational performance for each KFM release.
+The `docs/reports/` directory (and corresponding `/reports/` root) contains **machine-generated validation artifacts** from CI/CD workflows, FAIR+CARE audits, and governance activities.  
+These files provide permanent, auditable evidence for **compliance**, **reproducibility**, and **operational performance** for each KFM release.
 
-Every report:
-- Is generated automatically by a GitHub Action workflow.
-- Includes a SHA-256 checksum and version reference.
-- Contributes to the **Governance Ledger** and **Telemetry Dashboard**.
+All reports:
+- Are produced by GitHub Actions workflows.  
+- Include SHA-256 checksums and version references.  
+- Contribute to the **Governance Ledger** and **Telemetry Dashboard**.
 
 ---
 
@@ -45,35 +45,36 @@ Every report:
 
 ```
 docs/reports/
-├── README.md                       # This documentation index
+├── README.md                         # This documentation index (you are here)
 │
-├── faircare_summary.json            # Summary of FAIR+CARE validation reports
-├── stac_validation.json             # STAC and DCAT compliance output
-├── telemetry/                       # Derived system telemetry and performance metrics
-│   ├── build_metrics.json           # Build performance and validation runtime stats
-│   ├── governance_scorecard.json    # Aggregated FAIR+CARE compliance metrics
-│   └── focus_telemetry_snapshot.json # Exported snapshot for AI governance dashboard
+├── faircare_summary.json             # Aggregated FAIR+CARE validation results
+├── stac_validation.json              # STAC / DCAT compliance output (release snapshot)
 │
-├── audit/                           # Immutable logs and governance evidence
-│   ├── github-workflows-ledger.json # CI/CD event and workflow history
-│   ├── governance-ledger.json       # FAIR+CARE Council review records
-│   ├── experiments-ledger.json      # Experiment metadata & validation history
-│   ├── ai_models.json               # Registered model governance cards
-│   └── release-manifest-log.json    # Log of release SBOMs and artifact hashes
+├── telemetry/                        # Derived telemetry & performance metrics
+│   ├── build_metrics.json            # Build/run times, cache stats, artifact counts
+│   ├── governance_scorecard.json     # FAIR+CARE compliance metrics (dashboard feed)
+│   └── focus_telemetry_snapshot.json # Latest telemetry snapshot for governance UI
 │
-└── self-validation/                 # Reports from local or automated checks
-    ├── stac/                        # STAC validation results (per dataset)
-    ├── fair/                        # FAIR+CARE validation summaries
-    ├── docs/                        # Documentation linting and compliance logs
-    ├── experiments/                 # Reproducibility and experiment outcomes
-    └── sop/                         # SOP validation confirmations
+├── audit/                            # Immutable governance & workflow ledgers
+│   ├── github-workflows-ledger.json  # CI/CD run history (per workflow execution)
+│   ├── governance-ledger.json        # FAIR+CARE council decisions & reviews
+│   ├── experiments-ledger.json       # Experiment metadata & validation entries
+│   ├── ai_models.json                # Registered AI model cards & audit results
+│   └── release-manifest-log.json     # Release checksums, SBOM & artifact traceability
+│
+└── self-validation/                  # Per-workflow validation outputs (JSON/NDJSON)
+    ├── stac/                         # STAC validation (_summary, pystac, CLI logs)
+    ├── fair/                         # FAIR+CARE validation (ndjson + summary)
+    ├── docs/                         # Docs linting & accessibility logs
+    ├── experiments/                  # Experiment reproducibility outcomes
+    └── sop/                          # SOP validation summaries & logs
 ```
 
 ---
 
 ## 🧾 Report Categories
 
-### 1. 🧠 FAIR+CARE Reports
+### 1. 🧠 FAIR+CARE Validation
 Stored in:
 ```
 reports/fair/
@@ -82,17 +83,17 @@ docs/reports/faircare_summary.json
 
 | Field | Description |
 |--------|-------------|
-| `datasets_validated` | Total number of data manifests reviewed. |
-| `passed` | Count of FAIR+CARE-compliant entries. |
-| `failed` | Count of validation failures. |
-| `timestamp` | UTC timestamp of last audit run. |
-| `governance_review` | Links to governance or CARE assessments. |
+| `datasets_validated` | Number of manifests reviewed |
+| `passed` | Count of FAIR+CARE-compliant entries |
+| `failed` | Count of validation failures |
+| `timestamp` | UTC time of the audit run |
+| `governance_review` | Links to governance or CARE assessments |
 
 **Generated by:** `.github/workflows/faircare-validate.yml`
 
 ---
 
-### 2. 🗺️ STAC/DCAT Validation Reports
+### 2. 🗺️ STAC / DCAT Validation
 Stored in:
 ```
 reports/self-validation/stac/
@@ -101,17 +102,17 @@ docs/reports/stac_validation.json
 
 | Field | Description |
 |--------|-------------|
-| `valid_items` | Count of compliant STAC Items. |
-| `invalid_items` | Count of failed validations. |
-| `collections_validated` | Count of validated STAC Collections. |
-| `validator_version` | STAC Validator release version. |
-| `schema_version` | STAC schema version used. |
+| `valid_items` | Compliant STAC Items |
+| `invalid_items` | Items failing validation |
+| `collections_validated` | Count of validated Collections |
+| `validator_version` | STAC Validator release version |
+| `schema_version` | STAC schema version used |
 
 **Generated by:** `.github/workflows/stac-validate.yml`
 
 ---
 
-### 3. ⚙️ CI/CD Workflow Logs
+### 3. ⚙️ CI/CD Workflow Ledger
 Stored in:
 ```
 reports/audit/github-workflows-ledger.json
@@ -119,13 +120,13 @@ reports/audit/github-workflows-ledger.json
 
 | Field | Description |
 |--------|-------------|
-| `workflow_name` | Name of executed workflow. |
-| `run_id` | Unique GitHub Actions run identifier. |
-| `sha` | Commit hash that triggered the workflow. |
-| `outcome` | Success, failure, or skipped. |
-| `timestamp` | UTC timestamp of completion. |
+| `workflow_name` | Executed workflow name |
+| `run_id` | GitHub Actions run identifier |
+| `sha` | Commit hash |
+| `outcome` | success / failure / skipped |
+| `timestamp` | UTC completion time |
 
-**Generated by:** All workflows in `.github/workflows/`
+**Generated by:** All `.github/workflows/**` pipelines
 
 ---
 
@@ -137,9 +138,9 @@ docs/reports/telemetry/
 
 | File | Description |
 |-------|-------------|
-| `build_metrics.json` | Build performance, runtimes, and cache stats. |
-| `governance_scorecard.json` | Aggregate FAIR+CARE performance indicators. |
-| `focus_telemetry_snapshot.json` | Snapshot of latest telemetry for AI Focus Mode dashboard. |
+| `build_metrics.json` | Build performance, runtimes, cache utilization |
+| `governance_scorecard.json` | FAIR+CARE compliance, license coverage, review rates |
+| `focus_telemetry_snapshot.json` | Latest merged telemetry for dashboards |
 
 **Generated by:** `.github/workflows/telemetry-export.yml`
 
@@ -154,17 +155,17 @@ docs/reports/audit/experiments-ledger.json
 
 | Field | Description |
 |--------|-------------|
-| `experiment_id` | Unique identifier for each documented experiment. |
-| `author` | Contributor who executed the experiment. |
-| `validated` | Boolean indicating if experiment passed checks. |
-| `artifacts` | Paths to outputs and logs. |
-| `telemetry_ref` | Link to related telemetry metrics. |
+| `experiment_id` | Documented experiment identifier |
+| `author` | Contributor who executed experiment |
+| `validated` | Boolean outcome |
+| `artifacts` | Output/data paths |
+| `telemetry_ref` | Link to telemetry JSON |
 
-**Generated by:** `docs/templates/experiment.md` and pipeline execution logs.
+**Generated by:** `docs/templates/experiment.md` + pipelines
 
 ---
 
-### 6. 🤖 AI Model Governance Records
+### 6. 🤖 AI Model Governance
 Stored in:
 ```
 reports/audit/ai_models.json
@@ -172,13 +173,13 @@ reports/audit/ai_models.json
 
 | Field | Description |
 |--------|-------------|
-| `model_id` | Model name/version. |
-| `author` | Developer or maintainer. |
-| `training_data` | Source datasets and licenses. |
-| `evaluation_metrics` | Recorded accuracy, F1, precision, recall. |
-| `care_reviewed` | Boolean confirming ethical audit. |
+| `model_id` | Model name/version |
+| `author` | Developer / maintainer |
+| `training_data` | Dataset references & licenses |
+| `evaluation_metrics` | Accuracy, precision, recall, F1, etc. |
+| `care_reviewed` | CARE review status |
 
-**Generated by:** `docs/templates/model_card.md` and AI governance integration scripts.
+**Generated by:** `docs/templates/model_card.md` + governance scripts
 
 ---
 
@@ -188,14 +189,15 @@ Stored in:
 reports/audit/governance-ledger.json
 ```
 
-Contains immutable JSON entries of governance and FAIR+CARE decisions:
+Immutable log of governance decisions:
+
 ```json
 {
   "event": "governance_review",
-  "timestamp": "2025-11-05T21:00:00Z",
   "dataset_id": "noaa_storms_1950_2025",
-  "reviewer": "FAIR+CARE Council",
   "decision": "Approved",
+  "reviewer": "FAIR+CARE Council",
+  "timestamp": "2025-11-05T21:00:00Z",
   "notes": "Dataset meets FAIR+CARE criteria with documented provenance."
 }
 ```
@@ -204,29 +206,29 @@ Contains immutable JSON entries of governance and FAIR+CARE decisions:
 
 ---
 
-## 🧮 Validation Workflows Integration
+## 🧮 Workflow Integration Map
 
 | Workflow | Artifact Generated | Storage Path |
 |-----------|--------------------|---------------|
-| `stac-validate.yml` | STAC Validation Reports | `reports/self-validation/stac/` |
-| `faircare-validate.yml` | FAIR+CARE Audit Reports | `reports/fair/` |
-| `docs-lint.yml` | Documentation Compliance Logs | `reports/self-validation/docs/` |
-| `telemetry-export.yml` | Governance & Performance Telemetry | `releases/v9.7.0/focus-telemetry.json` |
-| `build-and-deploy.yml` | Deployment Metrics | `docs/reports/telemetry/build_metrics.json` |
+| `stac-validate.yml` | STAC validation bundles | `reports/self-validation/stac/` |
+| `faircare-validate.yml` | FAIR+CARE audit results | `reports/fair/` |
+| `docs-lint.yml` | Documentation lint logs | `reports/self-validation/docs/` |
+| `telemetry-export.yml` | Telemetry JSON snapshot | `releases/v9.7.0/focus-telemetry.json` |
+| `build-and-deploy.yml` | Frontend build metrics | `docs/reports/telemetry/build_metrics.json` |
 
 ---
 
-## ⚖️ FAIR+CARE Integration
+## ⚖️ FAIR+CARE Alignment
 
 Each report contributes to transparent, traceable governance compliance:
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Reports indexed by unique dataset, model, or workflow ID. |
-| **Accessible** | Open under CC-BY 4.0 and public repository access. |
-| **Interoperable** | JSON-LD schema compatible with DCAT 3.0 and STAC 1.0. |
-| **Reusable** | Audit-ready and timestamped artifacts available for replication. |
-| **CARE** | Governance-reviewed ethical data handling confirmation included. |
+| **Findable** | Reports indexed by unique dataset/model/workflow IDs |
+| **Accessible** | CC-BY 4.0; public GitHub artifacts |
+| **Interoperable** | JSON-LD compatible with DCAT 3.0 / STAC 1.0 |
+| **Reusable** | Timestamped, checksum-verified, and version-tracked |
+| **CARE** | Ethical review evidence and council approvals recorded |
 
 ---
 
@@ -234,17 +236,17 @@ Each report contributes to transparent, traceable governance compliance:
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Created complete reports and validation index; added telemetry, AI, and experiment sections. |
-| v9.5.0 | 2025-10-20 | A. Barta | Integrated FAIR+CARE report linkage and governance scorecard. |
-| v9.3.0 | 2025-08-12 | KFM Core Team | Added CI/CD ledger and audit references. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial documentation structure established. |
+| v9.7.0 | 2025-11-05 | A. Barta | Aligned reports index with FAIR+CARE, telemetry, and governance schema; added directory map and tables. |
+| v9.5.0 | 2025-10-20 | A. Barta | Integrated governance scorecard and audit ledgers. |
+| v9.3.0 | 2025-08-12 | KFM Core Team | Added CI/CD ledger references and telemetry links. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Established reports and validation documentation. |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Generated and maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Generated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [Back to Documentation Index](../README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
