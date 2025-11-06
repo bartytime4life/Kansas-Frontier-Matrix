@@ -1,190 +1,221 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — Governance Standards & Council Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🏛️ Kansas Frontier Matrix — Governance & Ethical Oversight Framework"
 path: "docs/standards/governance/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v9.6.0/focus-telemetry.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/docs-governance-index-v1.json"
+governance_ref: "ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# ⚖️ Kansas Frontier Matrix — **Governance Standards & Council Framework**
+# 🏛️ **Kansas Frontier Matrix — Governance & Ethical Oversight Framework**
 `docs/standards/governance/README.md`
 
-**Purpose:**  
-Defines the **organizational and procedural framework** for governance within the Kansas Frontier Matrix (KFM), integrating FAIR+CARE ethics, ISO certification, and blockchain-based provenance tracking.  
-This system ensures transparency, sustainability, and accountability for all datasets, AI models, and validation processes.
+**Purpose:** Provide an overview of the ethical, procedural, and administrative governance systems that guide the Kansas Frontier Matrix (KFM).  
+Governance ensures that all operations, datasets, and technologies align with **FAIR+CARE principles**, **Master Coder Protocol (MCP v6.3)**, and the KFM **Root Governance Charter**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Certified-gold)](../../../docs/standards/faircare-validation.md)
-[![ISO Compliance](https://img.shields.io/badge/ISO-19115%20%7C%2050001%20%7C%2014064%20%7C%2042001-forestgreen)]()
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../../docs/architecture/README.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../faircare.md)
+[![Status: Active](https://img.shields.io/badge/Status-Governed-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **KFM Governance Standards & Council Framework** establishes how ethical, technical, and sustainability policies are maintained and verified within the Kansas Frontier Matrix ecosystem.  
-It operationalizes FAIR+CARE principles and ISO-compliant auditing across all modules and lifecycle stages — from ingestion to AI inference.
+The **Kansas Frontier Matrix (KFM)** operates under a **documented governance system** designed to balance open science, ethical responsibility, and community inclusion.  
+Governance functions as a **distributed accountability network**, combining automation (via CI/CD validation) with human oversight (via the FAIR+CARE Council).
 
-### Core Responsibilities
-- Define multi-council governance structure and review protocols.  
-- Standardize audit synchronization through blockchain-backed ledgers.  
-- Ensure equitable participation and transparency in decision-making.  
-- Uphold sustainability, data ethics, and AI explainability as governance pillars.  
+This directory defines:
+- The governance structure and councils
+- Ethical review and approval workflows
+- Integration with automated telemetry and audit systems
+- Roles, responsibilities, and review cadence
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 docs/standards/governance/
-├── README.md                              # This file — overview of governance standards & council framework
-│
-├── DATA-GOVERNANCE.md                     # Core governance charter and provenance policy
-├── ETHICS-GOVERNANCE.md                   # FAIR+CARE ethics, inclusivity, and access framework
-├── AUDIT-GOVERNANCE.md                    # Audit traceability, verification, and blockchain linkage
-└── governance-diagram.md                  # Governance architecture & decision flow visualization
+├── README.md                 # This index file
+└── ROOT-GOVERNANCE.md        # The complete governance charter (authoritative version)
 ```
 
 ---
 
-## ⚙️ Governance Structure Overview
+## ⚖️ Governance Structure Overview
+
+KFM’s governance model combines **technical automation** and **human ethical review** to maintain transparent and reproducible data operations.
+
+| Body | Function | Composition | Frequency |
+|------|-----------|-------------|------------|
+| **FAIR+CARE Council** | Oversees ethical, cultural, and Indigenous data governance. | 7 members (2 Indigenous reps, 2 data stewards, 3 technical leads) | Quarterly |
+| **Technical Standards Committee** | Manages MCP, data schema, and validation workflows. | 5 developers, 1 auditor | Monthly |
+| **AI Governance Subcommittee** | Reviews AI model bias, transparency, and ethical risk. | 3 AI engineers, 2 ethicists | Biannual |
+| **Open Science Board** | Ensures licensing, accessibility, and reproducibility. | 4 data curators, 2 accessibility advisors | Quarterly |
+
+Each committee’s responsibilities are defined in [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md).
+
+---
+
+## 🧩 Roles & Responsibilities
+
+| Role | Responsibility | Reports To |
+|------|----------------|-------------|
+| **Governance Chair** | Oversees FAIR+CARE Council and signs off on ethical approvals. | FAIR+CARE Council |
+| **Technical Maintainer** | Implements validation workflows and schema updates. | Technical Standards Committee |
+| **AI Steward** | Ensures responsible model training and explainability. | AI Governance Subcommittee |
+| **Data Curator** | Reviews dataset metadata for completeness and provenance. | Open Science Board |
+| **Accessibility Auditor** | Evaluates documentation and UI compliance with WCAG 2.1 AA. | Open Science Board |
+
+---
+
+## 🧠 Ethical Governance Workflow
+
+### End-to-End Process
 
 ```mermaid
 flowchart TD
-    A["FAIR+CARE Council"] --> B["AI Ethics Council"]
-    A --> C["Data Governance Council"]
-    A --> D["Sustainability Council"]
-    B --> E["Security & Audit Council"]
-    D --> F["Public Oversight + Open Transparency Portal"]
+A["Dataset or Feature Submitted"] --> B["Automated FAIR+CARE Validation"]
+B --> C["Governance Council Review (if CARE required)"]
+C --> D["Council Decision Logged in Governance Ledger"]
+D --> E["Approval Published to Telemetry Dashboard"]
 ```
 
-### Description
-- **FAIR+CARE Council:** Oversees all data ethics, inclusivity, and equitable access.  
-- **AI Ethics Council:** Reviews explainability, bias, and responsible automation.  
-- **Data Governance Council:** Maintains provenance, metadata, and checksum compliance.  
-- **Sustainability Council:** Monitors ISO 14064/50001 environmental commitments.  
-- **Security & Audit Council:** Verifies blockchain integrity and audit reproducibility.  
-- **Public Oversight:** Publishes transparent governance summaries for every release.  
+### Workflow Outputs
+- FAIR+CARE validation: `reports/fair/faircare_summary.json`
+- Governance review: `reports/audit/governance-ledger.json`
+- Telemetry record: `releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧩 Governance Review Workflow
+## 🧮 Decision Types & Status Codes
 
-```mermaid
-flowchart TD
-    A["Validation Output (Data / AI / FAIR+CARE)"] --> B["Ethics Review (FAIR+CARE Council)"]
-    B --> C["Technical Governance (Data + Audit Councils)"]
-    C --> D["ISO Validation (19115 / 14064 / 42001 / 50001)"]
-    D --> E["Governance Ledger Registration"]
-    E --> F["Certification + Public Transparency Report"]
+| Status | Definition | Action |
+|---------|-------------|--------|
+| ✅ **Approved** | Fully compliant with FAIR+CARE and MCP requirements. | Dataset published and visible in dashboards. |
+| ⚙️ **Approved with Conditions** | Requires updates (license, provenance, or CARE clarification). | Dataset temporarily flagged. |
+| 🕓 **Pending Review** | Awaiting Council decision. | Auto-reminder sent to reviewers. |
+| ❌ **Rejected** | Fails ethical or technical compliance checks. | Dataset withheld from public release. |
+
+**Status changes** are recorded in `reports/audit/governance-ledger.json`.
+
+---
+
+## 🧾 Governance Review Template Integration
+
+All governance actions are tracked through a structured issue form:
+```
+.github/ISSUE_TEMPLATE/governance_form.yml
 ```
 
-### Key Processes
-1. **Ethics Review:** Evaluates data and model integrity for bias and accessibility.  
-2. **Technical Governance:** Confirms data schema, checksum, and metadata lineage.  
-3. **ISO Validation:** Conducted quarterly by sustainability and security councils.  
-4. **Ledger Registration:** Immutable blockchain snapshot created for each review cycle.  
-5. **Certification:** Council approval recorded and published in `ledger_snapshot_2025Q4.json`.  
+**Form Includes:**
+- Reviewer identity and affiliation  
+- Dataset references (STAC/DCAT ID)  
+- CARE evaluation notes  
+- Decision outcome and timestamp  
+- Telemetry integration reference  
 
 ---
 
-## ⚖️ Governance Council Roles
+## 🧩 Automation & Audit Integration
 
-| Council | Function | Verification Standard | Frequency |
-|----------|-----------|------------------------|------------|
-| **FAIR+CARE Council** | Oversees ethical governance & inclusivity. | FAIR+CARE / ISO 19115 | Continuous |
-| **AI Ethics Council** | Reviews explainability, fairness, and accountability. | ISO 42001 | Quarterly |
-| **Data Governance Council** | Maintains data lineage and checksum records. | MCP-DL v6.3 / ISO 19115 | Continuous |
-| **Sustainability Council** | Validates energy and carbon metrics. | ISO 14064 / 50001 | Quarterly |
-| **Security Council** | Conducts audit and blockchain integrity validation. | ISO 42001 | Continuous |
-| **Public Oversight Committee** | Ensures transparency and governance access. | FAIR+CARE | Continuous |
-
-Governance records verified and published in:  
-`releases/v9.6.0/governance/ledger_snapshot_2025Q4.json`
+| System | Function | Output |
+|---------|-----------|---------|
+| **CI/CD Pipelines** | Automatically validate and tag new datasets or models. | `reports/self-validation/**` |
+| **Governance Ledger** | Immutable record of decisions and ethical reviews. | `reports/audit/governance-ledger.json` |
+| **Telemetry Dashboard** | Real-time visualization of governance metrics. | `docs/reports/telemetry/governance_scorecard.json` |
+| **AI Governance Module** | Evaluates model explainability and bias metrics. | `reports/audit/ai_models.json` |
 
 ---
 
-## 🧠 FAIR+CARE Governance Principles Applied
+## ⚖️ FAIR+CARE in Governance
 
-| Principle | Implementation |
-|------------|----------------|
-| **Findable** | Governance records and datasets indexed by checksum and manifest ID. |
-| **Accessible** | Documentation published openly under MIT license and FAIR+CARE ethics. |
-| **Interoperable** | Standards-aligned governance integrated with ISO, DCAT, and MCP-DL schemas. |
-| **Reusable** | Each governance file version-controlled, auditable, and checksum-verified. |
-| **Collective Benefit** | Ensures equitable participation in governance and decision-making. |
-| **Authority to Control** | FAIR+CARE Council governs validation and certification approvals. |
-| **Responsibility** | All councils document decisions and audit trails per cycle. |
-| **Ethics** | Inclusive, equitable, and transparent governance for all stakeholders. |
+| Principle | Implementation | Governance Reference |
+|------------|----------------|----------------------|
+| **Findable** | Governance decisions indexed by dataset ID and version. | Governance Ledger |
+| **Accessible** | Public governance summaries available via dashboard. | Telemetry JSON |
+| **Interoperable** | JSON-LD schema aligns with PROV-O and DCAT. | Release Manifests |
+| **Reusable** | All reviews archived per release. | Manifest + Ledger |
+| **CARE** | Indigenous partners included in all cultural data reviews. | FAIR+CARE Council |
 
 ---
 
-## 🔐 Blockchain & Audit Governance Chain
+## 🧮 Quarterly Governance Audit
 
-```mermaid
-flowchart LR
-    A["Governance Review Reports"] --> B["Checksum Manifest Generation"]
-    B --> C["Blockchain Ledger Snapshot (ledger_snapshot_2025Q4.json)"]
-    C --> D["Council Sign-Off + FAIR+CARE Certification"]
-    D --> E["Public Transparency Archive (releases/governance/)"]
+Every quarter, a governance audit is executed to assess:
+- Dataset licensing coverage  
+- CARE compliance status  
+- Pending review queue  
+- Governance ledger integrity  
+
+**Outputs:**
+```
+reports/audit/governance-ledger.json
+docs/reports/telemetry/governance_scorecard.json
 ```
 
-### Blockchain Governance Summary
-- Immutable SHA-256 ledger signatures ensure record permanence.  
-- Council PGP signatures added for each ledger approval cycle.  
-- Open ledger snapshots published under FAIR+CARE certification.  
-
----
-
-## 🌱 Sustainability & Transparency Metrics
-
-| Metric | Target | Result (v9.6.0) | Verified By |
-|---------|--------|------------------|--------------|
-| FAIR+CARE Certification Coverage | 100% | ✅ | @kfm-fair |
-| AI Ethics Review Completion | 100% | ✅ | @kfm-ai |
-| Renewable Power Use | 100% | ✅ | @kfm-telemetry |
-| Carbon Offset Compliance | 100% | ✅ | @kfm-sustainability |
-| Blockchain Integrity | 100% | ✅ | @kfm-security |
-| Governance Reproducibility | ≥ 99.8% | 99.9% | @kfm-validation |
-
-Metrics published in `releases/v9.6.0/focus-telemetry.json`.
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). Governance Standards & Council Framework (v9.6.0).
-Defines the FAIR+CARE and ISO-aligned governance model that guides all ethical, technical, and sustainability operations in the Kansas Frontier Matrix.
-Incorporates blockchain audit chains and council-based validation for transparent, equitable data stewardship.
+**Governance Audit Example:**
+```json
+{
+  "event": "quarterly_audit",
+  "datasets_reviewed": 243,
+  "approvals": 238,
+  "pending": 3,
+  "rejections": 2,
+  "timestamp": "2025-11-05T20:15:00Z"
+}
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🧠 Governance Metrics Dashboard
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added AI ethics council role and ISO 42001 audit alignment. |
-| v9.5.0 | 2025-11-02 | Introduced blockchain synchronization and sustainability telemetry linkage. |
-| v9.3.2 | 2025-10-28 | Established FAIR+CARE governance baseline and council framework. |
+Metrics visualized in Governance Dashboard (`web/src/components/DashboardView/`):
+
+| Metric | Description | Source |
+|---------|-------------|--------|
+| **Compliance Rate (%)** | Percentage of datasets passing FAIR+CARE validation. | `governance_scorecard.json` |
+| **CARE Review Volume** | Count of Indigenous or cultural dataset reviews. | `governance-ledger.json` |
+| **Governance Turnaround Time** | Average duration between submission and decision. | CI/CD Telemetry |
+| **Audit Log Integrity** | Number of validated governance ledger entries. | Ledger checksum reports |
+
+---
+
+## 🧾 Governance Policy Links
+
+| Document | Description |
+|-----------|-------------|
+| [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md) | Authoritative governance charter and bylaws. |
+| [`docs/standards/faircare.md`](../faircare.md) | FAIR+CARE governance principles. |
+| [`docs/standards/licensing.md`](../licensing.md) | Licensing and IP governance. |
+| [`docs/reports/telemetry/governance_scorecard.json`](../../reports/telemetry/README.md) | Live governance metrics. |
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | A. Barta | Added complete governance framework index linking to FAIR+CARE Council and automated audit systems. |
+| v9.5.0 | 2025-10-20 | A. Barta | Expanded council roles and telemetry linkage. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Created governance documentation foundation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Ethical Governance × FAIR+CARE Compliance × Sustainable Provenance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Standards Index](../README.md) • [⚖️ Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Standards Index](../README.md) · [Root Governance Charter](ROOT-GOVERNANCE.md)
 
 </div>
