@@ -1,1 +1,148 @@
+# 🧩 Kansas Frontier Matrix — Dependabot Configuration
+# .github/dependabot.yml
+# Purpose: Automate dependency updates, security alerts, and ecosystem version checks
+# Aligned with Master Coder Protocol (MCP v6.3) and FAIR+CARE governance.
 
+version: 2
+updates:
+  # ---------------------------
+  # 🐍 Python Dependencies
+  # ---------------------------
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Chicago"
+    labels:
+      - "dependencies"
+      - "python"
+      - "security"
+    reviewers:
+      - "bartytime4life"
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    commit-message:
+      prefix: "deps(python)"
+      include: "scope"
+
+  # ---------------------------
+  # 🧱 Node.js Frontend
+  # ---------------------------
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "America/Chicago"
+    labels:
+      - "dependencies"
+      - "frontend"
+      - "security"
+    reviewers:
+      - "bartytime4life"
+    ignore:
+      - dependency-name: "react"
+        versions: ["<18.0.0"]
+      - dependency-name: "maplibre-gl"
+        versions: ["<3.0.0"]
+    commit-message:
+      prefix: "deps(frontend)"
+      include: "scope"
+
+  # ---------------------------
+  # 🐳 Docker Container Images
+  # ---------------------------
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "10:00"
+      timezone: "America/Chicago"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "security"
+    reviewers:
+      - "bartytime4life"
+    commit-message:
+      prefix: "deps(docker)"
+      include: "scope"
+
+  # ---------------------------
+  # 🧩 GitHub Actions
+  # ---------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "10:00"
+      timezone: "America/Chicago"
+    labels:
+      - "dependencies"
+      - "ci-cd"
+      - "security"
+    reviewers:
+      - "bartytime4life"
+    commit-message:
+      prefix: "deps(ci)"
+      include: "scope"
+
+  # ---------------------------
+  # 🧠 Neo4j / Graph Schema Dependencies
+  # ---------------------------
+  - package-ecosystem: "pip"
+    directory: "/src/graph"
+    schedule:
+      interval: "monthly"
+      day: "friday"
+      time: "08:00"
+      timezone: "America/Chicago"
+    labels:
+      - "dependencies"
+      - "graph"
+      - "maintenance"
+    reviewers:
+      - "bartytime4life"
+    commit-message:
+      prefix: "deps(graph)"
+      include: "scope"
+
+  # ---------------------------
+  # 📦 Data Validation Tools
+  # ---------------------------
+  - package-ecosystem: "pip"
+    directory: "/src/pipelines/validation"
+    schedule:
+      interval: "monthly"
+      day: "friday"
+      time: "09:30"
+      timezone: "America/Chicago"
+    labels:
+      - "dependencies"
+      - "data"
+      - "validation"
+    reviewers:
+      - "bartytime4life"
+    commit-message:
+      prefix: "deps(validation)"
+      include: "scope"
+
+# ---------------------------
+# 🔒 Global Settings
+# ---------------------------
+# Dependabot will automatically rebase open PRs when conflicts are resolved,
+# and use GitHub’s built-in security alerts for vulnerable dependencies.
+
+# Notifications and Security Alerts
+# ---------------------------------
+# - Alerts sent to repository maintainers and security team.
+# - All dependency PRs must pass CI/CD (codeql.yml + trivy.yml).
+# - SBOM (Software Bill of Materials) updated with each successful merge.
+
+# Governance: Managed under Master Coder Protocol v6.3 / FAIR+CARE Certified
+# SPDX-License-Identifier: MIT
