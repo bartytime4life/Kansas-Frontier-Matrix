@@ -18,7 +18,7 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 # 🌾 **Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub**
 `README.md`
 
-**Purpose:** Provide an overview of the Kansas Frontier Matrix (KFM), its mission, architecture, data standards, and contribution guidelines — serving as the project’s entry point for developers, researchers, and collaborators.
+**Purpose:** Provide an overview of the Kansas Frontier Matrix (KFM), its mission, architecture, directory structure, and contribution framework — serving as the entry point for developers, researchers, and collaborators.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -35,6 +35,7 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 - [Mission](#-mission)
 - [Key Features](#-key-features)
 - [System Architecture](#-system-architecture)
+- [Directory Layout](#-directory-layout)
 - [Data Standards](#-data-standards)
 - [Focus Mode](#-focus-mode)
 - [Installation & Usage](#-installation--usage)
@@ -46,10 +47,10 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 
 ## 🌍 Overview
 
-**Kansas Frontier Matrix (KFM)** is an **open-source, multi-disciplinary knowledge system** designed to integrate Kansas’s environmental, cultural, and historical data into a cohesive, interactive digital atlas.  
-It merges **maps, documents, and data** from diverse sources — USGS, NOAA, Kansas Historical Society, tribal archives, and more — into a semantic knowledge graph viewable through a timeline-map interface.
+**Kansas Frontier Matrix (KFM)** is an **open-source, multi-disciplinary knowledge system** that unifies Kansas’s environmental, cultural, and historical data into a cohesive digital atlas.  
+It merges **maps, documents, and datasets** from sources like NOAA, USGS, Kansas Historical Society, and tribal archives into a semantic knowledge graph with a map–timeline interface.
 
-The project is built for **reproducibility, interoperability, and open collaboration**, aligning with the **Master Coder Protocol (MCP)** and **FAIR+CARE** principles.
+Built under the **Master Coder Protocol (MCP)** and **FAIR+CARE** principles, KFM ensures all research artifacts are transparent, reproducible, and openly licensed for community collaboration.
 
 ---
 
@@ -57,10 +58,10 @@ The project is built for **reproducibility, interoperability, and open collabora
 
 > *“To weave Kansas’s past into a living digital landscape where history, geography, and ecology converge.”*
 
-KFM’s mission is to **connect historical narratives with geospatial and environmental context**, empowering:
-- **Researchers** to analyze historical and ecological change.
-- **Educators** to visualize Kansas’s development through interactive storytelling.
-- **Communities** to preserve and share local heritage data.
+KFM’s mission is to **connect historical narratives with geospatial and environmental context**, enabling:
+- Researchers to analyze historical and ecological change.
+- Educators to visualize Kansas’s transformation through time.
+- Communities to preserve and share local heritage and oral histories.
 
 ---
 
@@ -68,117 +69,175 @@ KFM’s mission is to **connect historical narratives with geospatial and enviro
 
 | Feature | Description |
 |----------|-------------|
-| 🗺️ **Interactive Map & Timeline** | Explore events, places, and people through a synchronized temporal-spatial interface using MapLibre GL. |
-| 🧠 **AI-Powered Focus Mode** | Center the system on any entity (e.g., person, treaty, place) and dynamically filter all related data and insights. |
-| 🔍 **Knowledge Graph** | Neo4j-based graph connecting entities like people, places, events, and documents, aligned with CIDOC CRM and OWL-Time. |
-| ⚙️ **ETL & AI Pipelines** | Automated data ingestion, OCR, NLP, and geospatial transformation for reproducible dataset processing. |
-| 📚 **FAIR+CARE Compliance** | Ensures data are Findable, Accessible, Interoperable, and Reusable, with CARE applied to Indigenous data. |
-| 🧩 **STAC/DCAT Metadata** | All geospatial and tabular datasets use SpatioTemporal Asset Catalog (STAC 1.0.0) and DCAT 3.0 standards for open discovery. |
-| 🌐 **Open-Source Governance** | Entire system runs on open standards, with transparent documentation and community-based versioning. |
+| 🗺️ **Interactive Map & Timeline** | Explore historical events and layers through a synchronized temporal–spatial interface built with MapLibre GL. |
+| 🧠 **AI-Powered Focus Mode** | Center analysis on an entity (person, place, event) and dynamically filter related graph data. |
+| 🧩 **Knowledge Graph** | Neo4j graph linking entities via CIDOC CRM and OWL-Time ontologies. |
+| ⚙️ **ETL & AI Pipelines** | Automated ingestion, OCR, NLP, and geospatial standardization for reproducible data processing. |
+| 📚 **FAIR+CARE Compliance** | Implements Findable, Accessible, Interoperable, Reusable principles and ethical governance for Indigenous data. |
+| 🌐 **STAC/DCAT Metadata** | Each dataset follows open catalog standards for global interoperability. |
+| 🧮 **Governed Open Source** | All workflows are validated through CI/CD, SPDX SBOMs, and reproducible logs. |
 
 ---
 
 ## 🏗️ System Architecture
 
-KFM’s modular architecture integrates **AI, ETL, and visualization pipelines** in a single reproducible monorepo:
+KFM’s architecture links data processing, AI reasoning, and visualization:
 
 ```mermaid
-flowchart LR
-A["Raw Data Sources (NOAA, USGS, KHS, DASC)"] --> B["ETL + AI Pipelines (OCR, NER, GeoJSON)"]
-B --> C["Knowledge Graph (Neo4j + CIDOC CRM)"]
-C --> D["FastAPI (REST/GraphQL)"]
-D --> E["Web UI (React + MapLibre Timeline Map)"]
+flowchart TD
+A["External Data Sources (NOAA, USGS, KHS, DASC)"]
+B["ETL + AI Pipelines (OCR, NER, GeoTIFF, GeoJSON)"]
+C["Knowledge Graph (Neo4j + CIDOC CRM)"]
+D["FastAPI / GraphQL Layer"]
+E["React + MapLibre Web Client"]
+A --> B --> C --> D --> E
 ```
 
-**Core Layers**
-1. **Data Source Layer:** External open datasets and archives.  
-2. **ETL/AI Layer:** NLP, OCR, geocoding, summarization.  
-3. **Graph Layer:** Semantic data relationships via Neo4j.  
-4. **API Layer:** REST/GraphQL endpoints for map/timeline data.  
-5. **Frontend Layer:** Interactive React-based map and timeline.
+Each layer communicates through open formats — GeoJSON, STAC, DCAT, and JSON-LD — ensuring seamless data interoperability and transparency.
 
-Refer to [`src/ARCHITECTURE.md`](src/ARCHITECTURE.md) for detailed diagrams and workflows.
+---
+
+## 🗂️ Directory Layout
+
+The **monorepo** structure follows **MCP v6.3** and **Platinum README v7.1** principles for clarity and modularity:
+
+```
+KansasFrontierMatrix/
+├── src/                     # Core application source
+│   ├── ai/                  # AI/ML modules (NLP, summarization, explainability)
+│   │   ├── focus/           # AI Focus Mode implementation
+│   │   ├── models/          # Trained NLP/ML models
+│   │   └── training/        # Model fine-tuning & governance
+│   ├── api/                 # FastAPI/GraphQL API backend
+│   │   ├── routes/          # Endpoint definitions
+│   │   ├── services/        # Graph/DB access logic
+│   │   └── models/          # Pydantic schemas
+│   ├── graph/               # Knowledge graph & ontology integration
+│   │   ├── schema/          # CIDOC CRM & OWL-Time mapping
+│   │   ├── queries/         # Cypher templates
+│   │   └── ingest/          # Graph data loaders
+│   └── pipelines/           # ETL & AI data workflows
+│       ├── etl/             # Extract/Transform/Load processes
+│       ├── validation/      # FAIR+CARE and data-quality checks
+│       ├── ai/              # AI enrichment modules
+│       └── utils/           # Shared pipeline utilities
+│
+├── web/                     # React + MapLibre web frontend
+│   ├── src/                 # Components and views
+│   │   ├── MapView/         # Interactive map
+│   │   ├── TimelineView/    # Temporal visualization
+│   │   ├── FocusPanel/      # AI-powered detail interface
+│   │   └── LayerControls/   # Overlay toggles & settings
+│   ├── public/              # Static assets (icons, images, fonts)
+│   └── package.json         # Frontend dependencies
+│
+├── data/                    # All datasets and metadata
+│   ├── sources/             # JSON manifests for external sources
+│   ├── raw/                 # Unprocessed downloads (DVC/LFS-tracked)
+│   ├── processed/           # GeoJSON, CSV, GeoTIFF outputs
+│   └── stac/                # STAC catalog JSON files
+│
+├── docs/                    # Documentation (MCP-compliant)
+│   ├── standards/           # FAIR+CARE, governance, style guides
+│   ├── templates/           # Issue forms, SOPs, model cards
+│   └── architecture.md      # Detailed architecture diagrams
+│
+├── tools/                   # CLI utilities & build scripts
+│   ├── ingest_data.py       # Fetch external datasets
+│   ├── generate_stac.py     # Build SpatioTemporal Asset Catalog
+│   └── validate_data.py     # FAIR+CARE checks
+│
+├── tests/                   # Unit & integration tests
+│   ├── api/                 # Backend tests
+│   ├── ai/                  # Model validation tests
+│   └── pipelines/           # ETL test suites
+│
+├── .github/                 # CI/CD workflows & issue templates
+│   ├── workflows/           # Automated build, validation, deploy pipelines
+│   └── ISSUE_TEMPLATE/      # Contribution and governance forms
+│
+├── LICENSE                  # MIT license for code; CC-BY 4.0 for docs/data
+├── CONTRIBUTING.md           # Contribution guidelines
+├── Makefile                  # Orchestrates builds, validation, and deployment
+└── README.md                 # This file
+```
+
+This layout enables **transparent traceability** and **reproducible execution**. Every module is documented and validated within the CI/CD pipeline.
 
 ---
 
 ## 🧱 Data Standards
 
-KFM uses **open, machine-actionable metadata standards** to ensure data interoperability:
-
-| Standard | Role |
-|-----------|------|
-| **STAC 1.0.0** | SpatioTemporal Asset Catalog for geospatial data indexing. |
-| **DCAT 3.0** | Dataset metadata catalog for FAIR+CARE discoverability. |
-| **CIDOC CRM** | Cultural heritage ontology linking entities and events. |
-| **OWL-Time** | Temporal ontology for precise date and interval representation. |
-| **GeoJSON / GeoTIFF** | Core open geospatial formats for data exchange. |
-| **JSON-LD / RDF** | Semantic layer for knowledge graph export and SPARQL queries. |
-
-Each dataset and pipeline output is versioned, checksum-verified, and validated through CI/CD (`stac-validate.yml` and `faircare-validate.yml`).
+| Standard | Function |
+|-----------|-----------|
+| **STAC 1.0.0** | Geospatial asset indexing and time-series linkage |
+| **DCAT 3.0** | Dataset catalog for discovery and metadata interoperability |
+| **CIDOC CRM** | Cultural heritage and provenance relationships |
+| **OWL-Time** | Temporal modeling of events and intervals |
+| **GeoJSON / GeoTIFF** | Open geospatial data formats for maps and layers |
+| **JSON-LD / RDF** | Semantic interoperability with linked data ecosystems |
 
 ---
 
 ## 🧠 Focus Mode
 
-**Focus Mode** is the AI-driven feature that enables users to “zoom in” semantically on an entity.  
-Selecting an entity (e.g., *Medicine Lodge Treaty, 1867*) triggers contextual filtering:
+AI-assisted context engine for narrative and data exploration.
 
-1. **Neo4j Query**: Retrieve linked events, people, and documents.  
-2. **Map View**: Zooms to relevant places; highlights correlated regions.  
-3. **Timeline**: Filters to relevant time spans and related events.  
-4. **AI Summary**: Generates contextual insights (trends, relationships, and impact).  
+- Highlights entities and events linked through Neo4j relationships.  
+- Dynamically filters map and timeline content.  
+- Generates summaries and patterns via `focus_transformer_v1`.  
+- Uses **semantic linking** to navigate between people, places, and documents.
 
-See [`src/ai/models/focus_transformer_v1/README.md`](src/ai/models/focus_transformer_v1/README.md) for model documentation.
+Example query:
+```bash
+GET /api/focus/Fort_Larned
+```
+Returns a subgraph of related treaties, events, and entities for visualization.
 
 ---
 
 ## ⚙️ Installation & Usage
 
-### Prerequisites
-- Python 3.10+  
-- Node.js 18+  
-- Docker / Docker Compose  
-- GDAL & rasterio for geospatial processing  
-
-### Installation
 ```bash
+# Clone repo
 git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
 cd Kansas-Frontier-Matrix
+
+# Build and start with Docker
+docker-compose up --build
+
+# OR run locally
 make setup
+npm start        # launch web app
+python main.py   # start FastAPI backend
 ```
 
-### Running the Stack
-```bash
-docker-compose up
-```
-This launches:
-- FastAPI backend  
-- Neo4j database  
-- React web client  
-
-Visit `http://localhost:8000` for API docs and `http://localhost:3000` for the web app.
+The application runs on:
+- 🌐 **Frontend:** `http://localhost:3000`
+- 🧠 **Backend API:** `http://localhost:8000/docs`
 
 ---
 
 ## 🤝 Contributing
 
-Kansas Frontier Matrix is open for contributions under **MCP v6.3 documentation-first principles.**
+We follow the **Master Coder Protocol v6.3** — “Documentation First, Code Second.”
 
-### Guidelines
-1. Fork and clone the repository.  
-2. Create a feature branch (`git checkout -b feature/add-layer`).  
-3. Add or modify code/data under proper directories (`src/`, `data/`, `docs/`).  
-4. Document all changes before pushing (README, architecture, or dataset manifest).  
-5. Submit a pull request using the [Issue Templates](.github/ISSUE_TEMPLATE).  
-
-All contributions must pass **FAIR+CARE validation** and **CI checks** before merging.
+1. Document your change under `docs/` or `data/sources/`.  
+2. Ensure metadata includes license, checksum, and version.  
+3. Run:
+   ```bash
+   make validate
+   ```
+   to execute all FAIR+CARE and STAC schema checks.
+4. Submit a PR with clear commit messages and updated READMEs.
 
 ---
 
 ## ⚖️ License
 
-This project is released under the **MIT License** for code and **CC-BY 4.0** for documentation and data.  
-See [LICENSE](LICENSE) for full terms.
+- **Code:** MIT License  
+- **Documentation & Data:** CC-BY 4.0  
+- SPDX-compliant SBOMs provided under `releases/v9.7.0/`
 
 ---
 
@@ -186,17 +245,17 @@ See [LICENSE](LICENSE) for full terms.
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added AI Focus Mode, FAIR+CARE validation, and STAC/DCAT compliance updates. |
-| v9.5.0 | 2025-10-20 | A. Barta | Enhanced data ingestion workflows and metadata governance. |
-| v9.3.0 | 2025-08-15 | KFM Core Team | Implemented telemetry and explainability dashboards. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial project release and documentation baseline. |
+| v9.7.0 | 2025-11-05 | A. Barta | Added full directory layout, STAC/DCAT mapping, and governance automation. |
+| v9.5.0 | 2025-10-20 | A. Barta | FAIR+CARE verification, AI explainability integration. |
+| v9.3.2 | 2025-08-12 | KFM Core Team | Enhanced ETL and Focus Mode pipelines. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Initial public release. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix**  
-Built under the **Master Coder Protocol v6.3** · FAIR+CARE Compliant · “Diamond⁹ Ω / Crown∞Ω Certified”  
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Built under **Master Coder Protocol v6.3** · FAIR+CARE Certified · “Diamond⁹ Ω / Crown∞Ω Ultimate Certified”  
 [Website](https://github.com/bartytime4life/Kansas-Frontier-Matrix) · [Documentation](docs/README.md)
 
 </div>
