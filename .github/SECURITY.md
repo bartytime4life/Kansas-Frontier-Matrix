@@ -1,15 +1,15 @@
 ---
-title: "🛡️ Kansas Frontier Matrix — Security Policy and Vulnerability Disclosure"
+title: "🛡️ Kansas Frontier Matrix — Security Policy & Vulnerability Disclosure"
 path: ".github/SECURITY.md"
 version: "v9.7.0"
 last_updated: "2025-11-05"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 sbom_ref: "../releases/v9.7.0/sbom.spdx.json"
 manifest_ref: "../releases/v9.7.0/manifest.zip"
 telemetry_ref: "../releases/v9.7.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/github-security-v1.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
@@ -17,8 +17,7 @@ telemetry_schema: "../schemas/telemetry/github-security-v1.json"
 # 🛡️ **Kansas Frontier Matrix — Security Policy**
 `.github/SECURITY.md`
 
-**Purpose:** Define the coordinated vulnerability disclosure, dependency management, and security response process for the Kansas Frontier Matrix (KFM) platform.  
-All practices align with the **Master Coder Protocol (MCP v6.3)**, **FAIR+CARE governance**, and **Diamond⁹ Ω / Crown∞Ω Ultimate Certification** standards.
+**Purpose:** Define KFM’s coordinated vulnerability disclosure (CVD), secure development lifecycle, CI security controls, and provenance requirements so that software and datasets remain **safe, auditable, and ethical** under **MCP v6.3** and **FAIR+CARE**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
@@ -29,155 +28,161 @@ All practices align with the **Master Coder Protocol (MCP v6.3)**, **FAIR+CARE g
 
 ---
 
-## 🔐 Overview
+## 📘 Overview
 
-Security within Kansas Frontier Matrix is based on **transparency, reproducibility, and prevention**.  
-All contributors, maintainers, and automated workflows share responsibility for ensuring that data, code, and deployment pipelines remain safe, ethical, and auditable.
+Security in KFM is built on **transparency, prevention, and reproducibility**.  
+All contributors and automated pipelines share responsibility for safeguarding code, data, and infrastructure.
 
-The project’s open-source ecosystem runs on **containerized, dependency-scanned infrastructure** and adheres to security best practices from:
-- **OWASP Top 10**
-- **NIST SP 800-218 Secure Software Development Framework (SSDF)**
-- **GitHub Advanced Security** and **SLSA 1.0** provenance standards
+KFM applies best practices from **OWASP Top 10**, **NIST SSDF (SP 800-218)**, **SLSA 1.0** supply-chain provenance, and **GitHub Advanced Security** — with results exported to a single telemetry snapshot:
+
+```
+releases/v9.7.0/focus-telemetry.json
+```
 
 ---
 
 ## 🧩 Scope
 
-This policy applies to:
-- The **monorepo** (`KansasFrontierMatrix`) including all code under `/src`, `/web`, `/tools`, and `/data`.
-- All **workflows** in `.github/workflows/**`.
-- Any **containers or services** deployed via Docker, Kubernetes, or GitHub Pages.
-- The **Neo4j**, **FastAPI**, and **React/MapLibre** systems used in production and testing.
+This policy covers:
+
+- The **monorepo** (`src/`, `web/`, `data/`, `tools/`, `.github/`)  
+- **Workflows** in `.github/workflows/**`  
+- **Runtime artifacts** (Docker images, static site, API services)  
+- **Stacks:** Neo4j (graph), FastAPI/GraphQL (API), React/MapLibre (web)
 
 ---
 
-## 🚨 Reporting a Vulnerability
+## 🚨 Reporting a Vulnerability (CVD)
 
-If you discover a security issue, please **report it responsibly** and **do not create a public GitHub issue**.
+**Do not file a public issue.** Report privately:
 
-### 📬 Report via Email
-Send your report to:
-```
+```text
 security@kansasfrontiermatrix.org
 ```
 
 Include:
-- A clear, descriptive summary of the issue.  
-- Steps to reproduce (if applicable).  
-- Potential impact and affected files or modules.  
-- Your contact information for follow-up.
+- Clear summary and impact  
+- Reproduction steps and affected files/modules  
+- Environment details and logs (if available)  
+- Contact info for follow-up
 
-You will receive acknowledgment **within 72 hours**, and a response or resolution plan **within 10 business days**.
-
----
-
-## 🔒 Responsible Disclosure Policy
-
-We adhere to **Coordinated Vulnerability Disclosure (CVD)** guidelines.  
-To protect users and research contributors:
-
-1. **Do not disclose** vulnerabilities publicly until an official patch is released.  
-2. We may credit security researchers in release notes (with consent).  
-3. All fixes are validated against test and telemetry environments prior to public deployment.  
-4. Affected users are notified through the **CHANGELOG** and **releases/v*/sbom.spdx.json**.  
+**SLA:** Acknowledge within **72 hours**; response/plan within **10 business days**.
 
 ---
 
-## 🧮 Automated Security Workflows
+## 🔒 Responsible Disclosure
 
-KFM uses continuous scanning and dependency validation via GitHub Actions.  
-
-| Workflow | Function | Schedule |
-|-----------|-----------|-----------|
-| `codeql.yml` | Static code analysis for Python, JavaScript, and TypeScript. | Weekly |
-| `trivy.yml` | Scans Docker images and dependencies for vulnerabilities. | Weekly + on push |
-| `dependabot.yml` | Automatic dependency version checks and security alerts. | Daily |
-| `faircare-validate.yml` | Verifies data governance (ethical & licensing compliance). | On PR |
-| `audit-logs.yml` | Generates build audit trail and hashes. | On release |
-
-All reports are logged in:
-```
-reports/security/{codeql|trivy|dependabot}/
-```
-
-Results feed into the system-wide telemetry at:
-`releases/v9.7.0/focus-telemetry.json`
+- No public disclosure until a **patch is released**.  
+- Researchers may be credited in release notes (with consent).  
+- Fixes are validated in CI and **staged with telemetry** before deployment.  
+- Notices appear in the CHANGELOG and the SBOM (`sbom.spdx.json`).
 
 ---
 
-## 🧰 Secure Development Practices
+## ⚙️ Workflow → Security Artifact Mapping
+
+| Workflow | Purpose | Primary Artifacts |
+|----------|---------|-------------------|
+| `codeql.yml` | Static code analysis (Python, JS/TS) | `reports/security/codeql/*.sarif` |
+| `trivy.yml` | Image & dependency CVE scanning | `reports/security/trivy/*.json` |
+| `faircare-validate.yml` | Ethical governance for datasets | `reports/fair/faircare_summary.json` |
+| `docs-lint.yml` | Policy/doc conformance & metadata checks | `reports/self-validation/docs/lint_summary.json` |
+| `telemetry-export.yml` | Consolidated security & build metrics | `releases/v9.7.0/focus-telemetry.json` |
+
+> All artifacts are referenced by **SBOM/manifest**:  
+> `../releases/v9.7.0/manifest.zip` · `../releases/v9.7.0/sbom.spdx.json`
+
+---
+
+## 🛡️ Secure Development Practices
 
 ### ✅ General Rules
-- All commits must be **signed (`--signoff`)** and verified.  
-- Only **FAIR+CARE-validated datasets** are allowed in `data/sources/`.  
-- Sensitive data (e.g., API keys) must never be committed; use **GitHub Secrets**.  
-- Dependencies are reviewed quarterly and locked in **requirements.txt** and **package-lock.json**.  
-- Code reviews require **two approvals** for any security-sensitive changes.  
+
+- **Signed commits** (`--signoff`) and verified authorship  
+- **No secrets in Git** — use **GitHub Encrypted Secrets**  
+- **Dependency locks** kept current (Dependabot + quarterly review)  
+- **Two approvals** for security-sensitive changes  
+- **Reproducible builds** with provenance and checksums
 
 ### 🐳 Containers
-- Each Docker image is scanned with **Trivy** before merge or release.  
-- Base images must be minimal and verified (`debian:bookworm-slim` or `python:3.10-slim`).  
-- No `root` containers are permitted; non-root users are enforced via Dockerfiles.  
+
+- Minimal non-root images (e.g., `python:3.10-slim`, `debian:bookworm-slim`)  
+- Trivy scan must pass (fail build on **CRITICAL** CVEs)  
+- Immutable tags referenced in CI (no `latest`)
 
 ### 🔑 Secrets Management
-- Environment secrets (`API_KEYS`, `DEPLOY_TOKEN`, `NEO4J_PASS`) are stored in GitHub Encrypted Secrets.  
-- Secrets are rotated every 90 days and access is restricted to approved maintainers.  
+
+- Secrets: `API_KEYS`, `DEPLOY_TOKEN`, `NEO4J_PASS` → **GitHub Secrets**  
+- **Rotation every 90 days**; scoped to least privilege  
+- All secret access audited via workflow logs
 
 ---
 
-## 🧾 Security Architecture Diagram
+## 🧮 Security Architecture (CI-First)
 
 ```mermaid
 flowchart TD
-A["Developer / Contributor Commit"] --> B["Pre-Commit Hooks"]
-B --> C["CI/CD Workflows"]
-C --> D["Static Analysis (CodeQL)"]
-C --> E["Container Scan (Trivy)"]
-C --> F["FAIR+CARE Validation"]
-D --> G["Security Reports"]
-E --> G
-F --> H["Governance Ledger"]
-G --> I["SBOM & Telemetry Export"]
+A["Developer Commit / PR"] --> B["Pre-Commit Hooks"]
+B --> C["CI: Validate (STAC/FAIR+CARE/Docs)"]
+C --> D["CI: Security (CodeQL/Trivy)"]
+D --> E["CI: Build & Deploy"]
+E --> F["Telemetry Export & SBOM Attestation"]
+D --> G["Security Reports (SARIF/CVE)"]
+C --> H["Governance Ledgers"]
 ```
+
+**Ledgers:**  
+`docs/reports/audit/{github-workflows-ledger.json, governance-ledger.json, release-manifest-log.json}`
 
 ---
 
 ## 🧱 Provenance, Auditing & SBOMs
 
-Each release generates an **SPDX Software Bill of Materials** and provenance attestation.
-
 | File | Description |
-|------|--------------|
-| `releases/v9.7.0/sbom.spdx.json` | Lists all components and their licenses. |
-| `releases/v9.7.0/focus-telemetry.json` | Aggregates build metrics and validation status. |
-| `reports/audit/github-security-ledger.json` | Chronological log of vulnerability scans and resolutions. |
+|------|-------------|
+| `../releases/v9.7.0/sbom.spdx.json` | SPDX inventory (licenses, packages, checksums) |
+| `../releases/v9.7.0/manifest.zip` | Release manifest (artifacts + hashes) |
+| `../releases/v9.7.0/focus-telemetry.json` | Build, validation, and security metrics |
+| `docs/reports/audit/release-manifest-log.json` | Immutable release proofs |
 
-These files are immutable, timestamped, and referenced by the governance ledger under `docs/standards/governance/`.
+SBOM entries link to security outputs so verification is **one-hop** from a release tag.
 
 ---
 
 ## ⚖️ FAIR+CARE Security Governance
 
-KFM applies **FAIR+CARE** not only to data, but also to software security:
+KFM applies FAIR+CARE principles to **software and data security**:
 
 | Principle | Application |
-|------------|--------------|
-| **Findable** | Vulnerability reports tracked via internal issue codes and changelogs. |
-| **Accessible** | Public summaries shared after patch deployment. |
-| **Interoperable** | SBOMs use SPDX + CycloneDX formats for cross-platform compatibility. |
-| **Reusable** | Reproducible builds validated through SLSA provenance. |
-| **CARE** | Ensures no exploit or data practice harms communities or stakeholders. |
+|----------|-------------|
+| **Findable** | Vulnerabilities tracked via IDs and ledger entries |
+| **Accessible** | Public summary post-patch; artifacts in repo |
+| **Interoperable** | SPDX + CycloneDX supported for SBOM export |
+| **Reusable** | Reproducible builds with SLSA-style attestations |
+| **CARE** | No exploit or process should harm communities or contributors |
 
 ---
 
-## 🧩 Reporting Channels
+## 🔁 Branch Protection & Access Controls
 
-| Contact Type | Channel | Response SLA |
-|---------------|----------|---------------|
-| Security Vulnerabilities | `security@kansasfrontiermatrix.org` | 72 hours |
-| Governance or Ethical Concerns | `governance@kansasfrontiermatrix.org` | 5 business days |
-| Data Breach or Privacy Issue | Internal KFM Ethics Council | 48 hours (triage) |
-| General Questions | [GitHub Discussions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/discussions) | Ongoing |
+| Control | Policy |
+|--------|--------|
+| Reviews | ≥ 2 approving reviews required |
+| Status Checks | All CI workflows green before merge |
+| Force Push | Disabled on `main` |
+| Allowed Actors | Least-privilege teams and fine-grained PATs |
+| Audit Trail | Workflow and ledger entries for every release |
+
+---
+
+## 📮 Security Contacts
+
+| Topic | Channel | SLA |
+|------|---------|-----|
+| Vulnerabilities | `security@kansasfrontiermatrix.org` | 72 hours |
+| Ethics/Governance | `governance@kansasfrontiermatrix.org` | 5 business days |
+| Data Breach | FAIR+CARE Council (internal) | 48 hours triage |
+| General Support | GitHub Discussions | Ongoing |
 
 ---
 
@@ -185,10 +190,10 @@ KFM applies **FAIR+CARE** not only to data, but also to software security:
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Created unified SECURITY policy with FAIR+CARE integration and CI automation. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added Trivy and SBOM attestation workflows. |
-| v9.3.1 | 2025-09-02 | KFM Core Team | Refined disclosure timelines and automated alerting. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial security and governance policy. |
+| v9.7.0 | 2025-11-05 | A. Barta | Unified SECURITY policy with FAIR+CARE and CI automation; added workflow→artifact map. |
+| v9.5.0 | 2025-10-20 | A. Barta | Introduced Trivy scanning and SBOM attestation. |
+| v9.3.1 | 2025-09-02 | KFM Core Team | Refined disclosure timelines and Dependabot cadence. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Initial security policy and governance integration. |
 
 ---
 
@@ -196,6 +201,6 @@ KFM applies **FAIR+CARE** not only to data, but also to software security:
 
 **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
 Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-For urgent vulnerabilities: [security@kansasfrontiermatrix.org](mailto:security@kansasfrontiermatrix.org)
+[Back to Automation Overview](README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
