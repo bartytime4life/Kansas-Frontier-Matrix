@@ -1,200 +1,187 @@
 ---
 title: "🌐 Kansas Frontier Matrix — Web Application Pages (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pages/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-pages-v1.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🌐 Kansas Frontier Matrix — **Web Application Pages**
+# 🌐 **Kansas Frontier Matrix — Web Application Pages**
 `web/src/pages/README.md`
 
-**Purpose:**  
-Contains all top-level, FAIR+CARE-certified page views for the Kansas Frontier Matrix (KFM) web platform.  
-Each page integrates ethical AI, provenance, accessibility, and sustainability components to provide a unified open data experience for users and researchers.
+**Purpose:** Describe all top-level, FAIR+CARE-certified page views for the KFM web platform — combining accessibility, AI explainability, provenance, and sustainability under **MCP v6.3** and **WCAG 2.1 AA**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Pages%20Certified-gold)](../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **KFM Web Pages** directory defines the accessible and ethically governed user-facing sections of the Kansas Frontier Matrix web app.  
-Each page includes context synchronization with Focus Mode AI, telemetry tracking for energy efficiency, and FAIR+CARE-aligned provenance hooks to ensure transparency and reproducibility.
-
-### Core Responsibilities:
-- Display geospatial, tabular, and historical datasets under FAIR+CARE governance.  
-- Integrate Focus Mode AI reasoning with explainable UI components.  
-- Link all user interactions to provenance, ethics, and sustainability telemetry.  
-- Comply fully with WCAG 2.1 AA and ISO 9241-210 accessibility standards.  
+The **Web Pages layer** defines the user-facing routes for the Kansas Frontier Matrix (KFM) application.  
+Each page integrates FAIR+CARE governance, AI Focus Mode explainability, and accessibility validation.  
+Pages are built in **React (TypeScript)** and validated for sustainability, provenance, and ethical interaction.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/src/pages/
-├── README.md                               # This file — documentation for KFM Web Pages
-│
-├── index.tsx                               # Landing page — overview of KFM datasets and mission
-├── map.tsx                                 # Map interface displaying FAIR+CARE geospatial layers
-├── timeline.tsx                            # Interactive timeline visualization of Kansas datasets
-├── governance.tsx                          # Governance dashboard showing FAIR+CARE and provenance data
-├── datasets.tsx                            # Data portal listing STAC/DCAT-registered resources
-├── focus.tsx                               # Focus Mode AI conversational interface
-└── metadata.json                           # Page-level provenance, checksum, and accessibility metadata
+├── README.md              # This file
+├── index.tsx              # Landing overview of KFM datasets and mission
+├── map.tsx                # Map interface (MapLibre + FAIR+CARE datasets)
+├── timeline.tsx           # Temporal storytelling and data change visualization
+├── focus.tsx              # AI Focus Mode conversational view
+├── governance.tsx         # Governance dashboard (FAIR+CARE & provenance)
+├── datasets.tsx           # Dataset catalog portal (STAC/DCAT)
+└── metadata.json          # Provenance + a11y metadata for all pages
 ```
 
 ---
 
-## ⚙️ Page Architecture Workflow
+## 🧩 Page Flow & Architecture
 
 ```mermaid
 flowchart TD
-    A["User Visit (Web Browser)"] --> B["index.tsx (Landing Page)"]
-    B --> C["map.tsx (Geospatial Visualization)"]
-    C --> D["timeline.tsx (Historical Temporal Exploration)"]
-    D --> E["focus.tsx (AI Explainable Insights)"]
-    E --> F["governance.tsx (Provenance and FAIR+CARE Ledger View)"]
-    F --> G["datasets.tsx (Open Data Access Portal)"]
-    G --> H["Telemetry + Governance Context Sync"]
+A["index.tsx (Home)"] --> B["map.tsx (Spatial Layers)"]
+B --> C["timeline.tsx (Historical Visualization)"]
+C --> D["focus.tsx (AI Explainability Interface)"]
+D --> E["governance.tsx (Ledger / Ethics Review)"]
+E --> F["datasets.tsx (Catalog Portal)"]
+F --> G["Telemetry + FAIR+CARE Sync"]
 ```
 
-### Workflow Description:
-1. **Landing Page:** Introduces KFM’s mission, governance principles, and data catalog.  
-2. **Map View:** Displays Kansas geospatial datasets (hazards, hydrology, landcover).  
-3. **Timeline View:** Allows chronological storytelling with provenance traceability.  
-4. **Focus Mode:** Enables explainable AI exploration with ethical metadata context.  
-5. **Governance Dashboard:** Summarizes audit, validation, and certification states.  
-6. **Dataset Portal:** Offers FAIR+CARE-aligned, searchable catalog access for users.  
+### Page Workflow Summary
+1. **Landing (index.tsx):** Introduces KFM and highlights mission + datasets.  
+2. **Map (map.tsx):** Displays Kansas spatial datasets (hydrology, hazards, landcover).  
+3. **Timeline (timeline.tsx):** Time-series visualization with provenance overlays.  
+4. **Focus Mode (focus.tsx):** Conversational explainability with CARE safeguards.  
+5. **Governance (governance.tsx):** Displays validation ledgers and audits.  
+6. **Datasets (datasets.tsx):** Central STAC/DCAT data catalog access.
 
 ---
 
-## 🧩 Example Page Metadata Record
+## ⚙️ FAIR+CARE Governance Matrix
+
+| Principle | Implementation | Oversight |
+|------------|----------------|------------|
+| **Findable** | All pages indexed with semantic metadata and links. | @kfm-data |
+| **Accessible** | WCAG 2.1 AA keyboard, ARIA, and screen-reader support. | @kfm-accessibility |
+| **Interoperable** | Uses DCAT, STAC, FAIR+CARE, and ISO 19115 metadata. | @kfm-architecture |
+| **Reusable** | Pages modular and composable across other KFM tools. | @kfm-design |
+| **Collective Benefit** | Publicly shares Kansas data ethically and inclusively. | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council reviews Focus Mode and content. | @kfm-governance |
+| **Responsibility** | Developers maintain a11y, telemetry, and low-carbon optimization. | @kfm-sustainability |
+| **Ethics** | All content validated under CARE and inclusivity audits. | @kfm-ethics |
+
+Ledgers and telemetry reports stored in:  
+`docs/reports/audit/data_provenance_ledger.json`  
+and  
+`docs/reports/fair/data_care_assessment.json`
+
+---
+
+## 🧾 Example Metadata Record
 
 ```json
 {
-  "id": "web_pages_registry_v9.6.0_2025Q4",
-  "pages_registered": [
+  "id": "web_pages_v9.7.0",
+  "pages": [
     "index.tsx",
     "map.tsx",
     "timeline.tsx",
-    "governance.tsx",
     "focus.tsx",
+    "governance.tsx",
     "datasets.tsx"
   ],
-  "accessibility_score": 99.5,
+  "accessibility_score": 99.3,
   "fairstatus": "certified",
-  "ai_explainability_integrated": true,
-  "telemetry_logged": true,
+  "explainability_enabled": true,
+  "telemetry_synced": true,
   "governance_registered": true,
-  "validator": "@kfm-web-pages",
-  "created": "2025-11-03T23:59:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
+  "timestamp": "2025-11-05T18:15:00Z"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | All pages linked via semantic routing and metadata schema. | @kfm-data |
-| **Accessible** | WCAG 2.1 AA standards enforced; full keyboard and ARIA support. | @kfm-accessibility |
-| **Interoperable** | Conforms to FAIR+CARE, DCAT 3.0, and ISO 19115 metadata. | @kfm-architecture |
-| **Reusable** | Modular Next.js pages designed for reuse across projects. | @kfm-design |
-| **Collective Benefit** | Promotes open science and public environmental literacy. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council oversees content updates and validation. | @kfm-governance |
-| **Responsibility** | Developers maintain ethical design, accessibility, and sustainability. | @kfm-security |
-| **Ethics** | Pages reviewed for inclusivity, non-bias, and ethical storytelling. | @kfm-ethics |
-
-Audit and telemetry reports logged in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
-
----
-
-## ⚙️ Page Summaries
+## 🧩 Page Summaries
 
 | Page | Description | Role |
-|------|--------------|------|
-| `index.tsx` | Landing page introducing KFM’s purpose and open data mission. | Overview |
-| `map.tsx` | Interactive geospatial visualization of Kansas datasets. | Spatial View |
-| `timeline.tsx` | Chronological storytelling view with provenance context. | Temporal View |
-| `focus.tsx` | AI-powered conversational and explainable interface. | Reasoning Layer |
-| `governance.tsx` | FAIR+CARE and audit visualization dashboard. | Oversight |
-| `datasets.tsx` | Central catalog for data access and downloads. | Open Science Access |
-
-All pages integrated and verified via `web_pages_sync.yml`.
+|------|-------------|------|
+| `index.tsx` | Landing overview, mission, and dataset intro. | Entry Point |
+| `map.tsx` | Interactive geospatial explorer for Kansas data. | Spatial Interface |
+| `timeline.tsx` | Time-aware storytelling for environmental change. | Historical Context |
+| `focus.tsx` | AI-assisted explainability + CARE-validated reasoning. | AI Narrative |
+| `governance.tsx` | FAIR+CARE compliance dashboards and ledgers. | Governance View |
+| `datasets.tsx` | Catalog access and STAC/DCAT registry viewer. | Data Discovery |
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ⚙️ Validation & CI/CD Workflows
 
-| Asset | Retention Duration | Policy |
-|--------|--------------------|--------|
-| Page Accessibility Reports | 365 Days | Archived for compliance audits. |
-| Governance Metadata | Permanent | Retained in provenance ledger. |
-| AI Interaction Logs | 90 Days | Retained for ethics reproducibility. |
-| Sustainability Telemetry | 180 Days | Rotated with reporting cycle. |
+| Workflow | Function | Output |
+|----------|----------|--------|
+| `accessibility_scan.yml` | Runs axe/Lighthouse for all pages. | `reports/self-validation/web-pages/a11y.json` |
+| `telemetry-export.yml` | Aggregates per-page metrics. | `releases/v9.7.0/focus-telemetry.json` |
+| `build-and-deploy.yml` | Validates routing and provenance. | `docs/reports/telemetry/build_metrics.json` |
 
-Cleanup managed by `web_pages_cleanup.yml`.
+All outputs versioned and linked through `manifest_ref` + `sbom_ref`.
+
+---
+
+## ♿ Accessibility Highlights
+
+- **Keyboard navigation**: skip links, focus rings, and modal traps.  
+- **Alt text**: required for all icons and visual assets.  
+- **Reduced motion**: respects OS preference and disables parallax by default.  
+- **Contrast testing**: color pairs pass WCAG 2.1 thresholds.  
+- **Lighthouse audits**: run in CI/CD, results stored in telemetry.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Average Page Load Energy | 1.05 Wh | @kfm-sustainability |
-| Carbon Output | 1.2 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+| Metric | Target | Verified By |
+|---------|---------|-------------|
+| Avg. Page Load Energy | ≤ 1.0 Wh | @kfm-sustainability |
+| Carbon Output | ≤ 1.2 gCO₂e | @kfm-security |
+| Lighthouse A11y Score | ≥ 95 | CI pipeline |
+| Renewable Hosting | 100% RE100 | @kfm-infrastructure |
 
-Telemetry data logged in:  
-`releases/v9.6.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). Web Application Pages (v9.6.0).
-FAIR+CARE-certified, ethically governed web pages for data visualization, storytelling, and AI explainability.
-Designed under MCP-DL v6.3 and WCAG 2.1 AA accessibility standards for open science transparency.
-```
+Tracked in:  
+`releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added full FAIR+CARE governance integration and Focus Mode telemetry tracking. |
-| v9.5.0 | 2025-11-02 | Improved accessibility and performance optimization. |
-| v9.3.2 | 2025-10-28 | Established base page architecture with provenance context sync. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded and aligned with MCP v6.3, improved CI mapping, added a11y/CARE audits. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Integrated Focus Mode telemetry and governance dashboards. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Improved accessibility tokens and sustainable performance. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established baseline page structure and provenance context. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Ethical Design × FAIR+CARE Governance × Open Science Accessibility*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Web Source](../README.md) · [Docs Index](../../../docs/README.md)
 
 </div>
