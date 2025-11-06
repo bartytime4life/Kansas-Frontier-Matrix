@@ -1,101 +1,86 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — System Utility Icons (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/icons/system/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-public-icons-system-v1.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# ⚙️ Kansas Frontier Matrix — **System Utility Icons**
+# ⚙️ **Kansas Frontier Matrix — System Utility Icons**
 `web/public/icons/system/README.md`
 
 **Purpose:**  
-Central repository for **system-level utility icons** used in configuration, control panels, telemetry dashboards, and administrative interfaces of the Kansas Frontier Matrix (KFM).  
-Each icon is designed, validated, and FAIR+CARE-certified to meet accessibility, sustainability, and governance documentation requirements.
+Provide an accessible, FAIR+CARE-certified library of **system-level icons** for configuration, validation, telemetry, and governance utilities used across KFM administrative interfaces, dashboards, and tooling.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-System%20Certified-gold)](../../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../docs/standards/faircare.md)
+[![Status: Active](https://img.shields.io/badge/Status-Validated-brightgreen)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **System Utility Icons** library contains standardized visual assets that represent system controls, status states, governance utilities, and telemetry tools used within KFM’s internal and administrative user interfaces.  
-Each icon supports FAIR+CARE-compliant visual communication, sustainability tracking, and ethical representation.
-
-### Core Responsibilities:
-- Provide accessible and uniform system iconography for governance dashboards.  
-- Ensure compliance with FAIR+CARE, WCAG 2.1, and ISO 19115 metadata standards.  
-- Record provenance, checksum integrity, and energy footprint data.  
-- Maintain lifecycle transparency for each system-related UI element.  
+This library standardizes **settings, sync, power, governance, validation, and telemetry** iconography for KFM’s internal UIs.  
+All assets are vector-first (SVG), contrast-verified, checksum-logged, and linked to provenance ledgers under **ISO 19115** and **MCP v6.3**.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/public/icons/system/
-├── README.md                               # This file — documentation for system utility icons
-│
-├── settings.svg                            # General system settings or configuration icon
-├── sync.svg                                # Synchronization and data refresh control
-├── power.svg                               # System power and activation control
-├── governance.svg                          # Governance or certification indicator
-├── validation.svg                          # Validation process or QA status icon
-├── telemetry.svg                           # Monitoring and metrics dashboard icon
-└── metadata.json                           # FAIR+CARE metadata and checksum registry
+├── README.md
+├── settings.svg
+├── sync.svg
+├── power.svg
+├── governance.svg
+├── validation.svg
+├── telemetry.svg
+└── metadata.json
 ```
 
 ---
 
-## ⚙️ Workflow & Certification
+## 🧩 Governance Workflow
 
 ```mermaid
 flowchart TD
-    A["System Icon Design"] --> B["Accessibility and Ethics Review (WCAG + FAIR+CARE)"]
-    B --> C["Checksum & Provenance Registration"]
-    C --> D["Governance Ledger Sync"]
-    D --> E["Integration into KFM Admin and Telemetry Interfaces"]
+A["Icon Design (Figma + Tokens)"] --> B["WCAG + FAIR+CARE Audit"]
+B --> C["Checksum + SPDX Metadata Update"]
+C --> D["Provenance Ledger Sync"]
+D --> E["Deployment to Admin & Telemetry UIs"]
 ```
 
-### Workflow Summary:
-1. **Design:** Icons created under FAIR+CARE-aligned aesthetic and ethical standards.  
-2. **Audit:** Accessibility, color contrast, and semantic intent validated.  
-3. **Verification:** SHA-256 checksums computed and added to manifest.  
-4. **Governance:** Entries logged in provenance ledger for transparency.  
+1. **Design:** Icons built with tokenized color geometry and ethical guidelines.  
+2. **Audit:** WCAG 2.1 AA checks plus inclusivity review.  
+3. **Register:** SHA-256 checksum and license stored in `metadata.json`.  
+4. **Publish:** Manifests, SBOM, and telemetry updated in CI/CD.
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Validation Contracts
 
-```json
-{
-  "id": "system_icons_registry_v9.6.0",
-  "approved_for_use": ["governance.svg", "validation.svg", "telemetry.svg"],
-  "fairstatus": "certified",
-  "checksum_sha256": "e19c8f72fcd53c2782c0b2edb6cc7360d7a8cb23a1f4c7cf98146e6e89937a8e",
-  "created": "2025-11-04T00:00:00Z",
-  "carbon_output_gco2e": 0.05,
-  "energy_efficiency_score": 98.9,
-  "wcag_compliance": "2.1 AA",
-  "validator": "@kfm-system-ui",
-  "governance_registered": true,
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| Accessibility | Contrast + ARIA labeling rules | `accessibility_scan.yml` |
+| FAIR+CARE | Ethical and governance metadata verification | `faircare-validate.yml` |
+| Metadata | ISO 19115 + SPDX schema validation | `docs-lint.yml` |
+| Telemetry | File size + energy/carbon footprint | `telemetry-export.yml` |
+
+Artifacts recorded in:
+- `../../../../releases/v9.7.0/focus-telemetry.json`
+- `../../../../docs/reports/audit/data_provenance_ledger.json`
 
 ---
 
@@ -103,86 +88,70 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed in metadata registry with checksum lineage. | @kfm-data |
-| **Accessible** | Provided in open SVG format under CC-BY 4.0. | @kfm-accessibility |
-| **Interoperable** | Metadata aligned with FAIR+CARE, ISO 19115, and MCP schemas. | @kfm-architecture |
-| **Reusable** | Distributed across all governance dashboards and admin panels. | @kfm-design |
-| **Collective Benefit** | Promotes consistent and ethical system communication. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council certifies icon updates and replacements. | @kfm-governance |
-| **Responsibility** | Designers maintain provenance, checksums, and version lineage. | @kfm-sustainability |
-| **Ethics** | Icons reviewed for inclusive and neutral representation. | @kfm-ethics |
-
-Audit results maintained in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+| **Findable** | Indexed by checksum and purpose in registry. | @kfm-data |
+| **Accessible** | CC-BY SVGs, keyboard focusable when interactive. | @kfm-accessibility |
+| **Interoperable** | Conforms to FAIR+CARE + ISO metadata. | @kfm-architecture |
+| **Reusable** | Approved across governance/admin modules. | @kfm-design |
+| **Collective Benefit** | Improves clarity of system states and actions. | @faircare-council |
+| **Authority to Control** | Governance council validates new and updated icons. | @kfm-governance |
+| **Responsibility** | Maintainers track lineage and sustainability metrics. | @kfm-sustainability |
+| **Ethics** | Neutral visual language; avoids bias in system symbolism. | @kfm-ethics |
 
 ---
 
-## ⚙️ System Icon Classifications
+## 🧾 Example Metadata Record
 
-| Icon | Description | Category | Status |
-|------|--------------|-----------|--------|
-| `settings.svg` | Configuration and preferences control. | Administration | Active |
-| `sync.svg` | Data synchronization or refresh symbol. | Telemetry | Active |
-| `power.svg` | Power toggle or activation control. | System | Active |
-| `governance.svg` | FAIR+CARE governance status indicator. | Governance | Certified |
-| `validation.svg` | QA validation or testing indicator. | Validation | Certified |
-| `telemetry.svg` | Performance and analytics dashboard icon. | Monitoring | Certified |
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Active Icons | Continuous | Retained for live use and performance tracking. |
-| FAIR+CARE Reports | 365 Days | Renewed annually for governance verification. |
-| Metadata | Permanent | Stored under blockchain-backed provenance ledger. |
-| Energy Logs | 180 Days | Reviewed quarterly under sustainability audit. |
-
-Governance synchronization automated via `system_icon_sync.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 4.2 KB | @kfm-design |
-| Render Energy | 0.02 Wh | @kfm-sustainability |
-| Carbon Output | 0.03 gCO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry data recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). System Utility Icons (v9.6.0).
-Standardized FAIR+CARE-certified system and governance iconography used across administrative dashboards and telemetry interfaces.
-Compliant with MCP-DL v6.3, WCAG 2.1 AA, and ISO 19115 open metadata standards.
+```json
+{
+  "id": "system_icons_v9.7.0",
+  "file": "validation.svg",
+  "purpose": "QA validation status",
+  "wcag": "2.1 AA",
+  "license": "CC-BY 4.0",
+  "checksum_sha256": "e19c8f72fcd53c2782c0b2edb6cc7360d7a8cb23a1f4c7cf98146e6e89937a8e",
+  "fairstatus": "certified",
+  "timestamp": "2025-11-05T22:15:00Z"
+}
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🔧 System Icon Classifications
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Introduced system-level governance and telemetry icon registry with checksum lineage. |
-| v9.5.0 | 2025-11-02 | Enhanced sustainability tracking and FAIR+CARE automation. |
-| v9.3.2 | 2025-10-28 | Established baseline set of system icons for governance UI. |
+| Icon | Description | Category | Status |
+|------|-------------|----------|--------|
+| `settings.svg` | Configuration and preferences control. | Administration | Active |
+| `sync.svg` | Synchronization / refresh. | Telemetry | Active |
+| `power.svg` | Power toggle or activation. | System | Active |
+| `governance.svg` | FAIR+CARE governance status indicator. | Governance | Certified |
+| `validation.svg` | QA validation / test status. | Validation | Certified |
+| `telemetry.svg` | Metrics and monitoring dashboard. | Monitoring | Certified |
+
+---
+
+## ♿ Accessibility & Sustainability
+
+- SVGs include `<title>` and follow ARIA guidance when interactive.  
+- Primary icons meet **≥ 4.5:1** contrast; secondary icons **≥ 3:1**.  
+- Average file size **≤ 6 KB**; energy ≤ **0.02 Wh** per render.  
+- Telemetry logged per release for sustainability audit.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded: telemetry schema v1, ISO/SPDX metadata alignment, governance mapping. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Introduced registry + checksum lineage for system icons. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Enhanced FAIR+CARE automation and accessibility validation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *System Design × FAIR+CARE Governance × Sustainable UI Engineering*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Iconography Index](../README.md) · [Docs Portal](../../../../docs/README.md)
 
 </div>
