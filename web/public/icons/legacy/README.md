@@ -1,103 +1,85 @@
 ---
 title: "🕰️ Kansas Frontier Matrix — Legacy Icon Archive (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/icons/legacy/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Annual / Archival Preservation"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-public-icons-legacy-v1.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🕰️ Kansas Frontier Matrix — **Legacy Icon Archive**
+# 🕰️ **Kansas Frontier Matrix — Legacy Icon Archive**
 `web/public/icons/legacy/README.md`
 
-**Purpose:**  
-Maintains the **archived, FAIR+CARE-certified legacy icon sets** that have been retired from the Kansas Frontier Matrix (KFM) active design system.  
-This archive preserves historical UI assets for governance audits, design evolution documentation, and ethical preservation of the platform’s visual history.
+**Purpose:** Preserve **retired and superseded** icon sets under FAIR+CARE archival governance — maintaining accessibility lineage, checksum provenance, and sustainability records for historical UI assets of the KFM platform.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Archive%20Certified-gold)](../../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Compliant-blue)]()
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../docs/standards/faircare.md)
+[![Status: Archived](https://img.shields.io/badge/Status-Archived-blue)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Legacy Icon Archive** safeguards all deprecated KFM iconography — preserving design heritage, metadata, and accessibility documentation from previous versions.  
-It enables historical traceability, design lineage mapping, and FAIR+CARE governance audits across KFM’s multi-decade design evolution.
-
-### Core Responsibilities:
-- Store deprecated icons under FAIR+CARE-certified archival preservation.  
-- Maintain metadata lineage for accessibility, sustainability, and provenance.  
-- Provide transparent access to prior design assets for research and ethics review.  
-- Ensure ISO 19115-compliant metadata and checksum linkage for each archived icon.  
+The **Legacy Icon Archive** safeguards deprecated iconography for governance audits, research, and design evolution.  
+All assets are archived with **ISO 19115** metadata, WCAG lineage, and immutable checksum references to ensure transparent digital preservation.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/public/icons/legacy/
-├── README.md                               # This file — documentation for the legacy icon archive
-│
-├── app/                                    # Archived app-level icons (forms, panels, timeline, etc.)
-├── badges/                                 # Historical badge and certification icons
-├── data/                                   # Legacy data visualization and FAIR+CARE icons
-├── flags/                                  # Deprecated flag/status indicators
-├── governance/                             # Governance and ledger-related legacy icons
-├── accessibility/                          # Historical accessibility and ARIA compliance icons
-└── metadata.json                           # FAIR+CARE archival metadata registry
+├── README.md
+├── app/            # Archived app UI icons (forms, panels, timeline)
+├── badges/         # Historical certification marks
+├── data/           # Legacy data & FAIR+CARE symbols
+├── flags/          # Deprecated status indicators
+├── governance/     # Past governance & ledger visuals
+├── accessibility/  # Historical a11y-related icons
+└── metadata.json   # Archival registry (license + checksum + provenance + retire reason)
 ```
 
 ---
 
-## ⚙️ Legacy Icon Workflow
+## 🧩 Archival Workflow
 
 ```mermaid
 flowchart TD
-    A["Legacy Icon (Deprecated or Replaced)"] --> B["Accessibility & Metadata Preservation"]
-    B --> C["FAIR+CARE Ethics Review"]
-    C --> D["Checksum & Provenance Registration"]
-    D --> E["Archival Storage in web/public/icons/legacy/"]
-    E --> F["Governance Ledger Reference Update"]
+A["Icon Deprecated / Replaced"] --> B["Capture A11y + FAIR+CARE Metadata"]
+B --> C["Compute SHA-256 + Update metadata.json"]
+C --> D["Ledger Sync (Provenance + Retire Reason)"]
+D --> E["Move to Legacy Archive + Mark as Archived"]
 ```
 
-### Workflow Summary:
-1. **Deprecation:** When an icon is replaced, its version and checksum are logged.  
-2. **Preservation:** Accessibility metadata and FAIR+CARE certification archived.  
-3. **Validation:** AI and manual ethics audit confirm compliance and neutrality.  
-4. **Ledger Sync:** Registered to provenance ledger for transparency.  
+1. **Deprecation:** Version and retire reason captured (e.g., contrast fail, new token).  
+2. **Preservation:** A11y lineage and FAIR+CARE notes appended to registry.  
+3. **Provenance:** Checksums and replacement links stored in governance ledgers.  
+4. **Archival:** Files moved to `legacy/` and flagged as **Archived**.
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Validation Contracts
 
-```json
-{
-  "id": "legacy_icon_archive_v9.6.0",
-  "icon_file": "legacy_flag_warning_v8.2.svg",
-  "version_retired": "v9.0.0",
-  "replacement_icon": "flag-warning.svg",
-  "fairstatus": "certified",
-  "checksum_sha256": "cb45d5a90ef1b32a7f68d21ea5c8429a81eb543eabf2c38e24a2dfd33eac9c12",
-  "carbon_output_gco2e": 0.04,
-  "sustainability_status": "archived",
-  "governance_registered": true,
-  "validator": "@kfm-archive",
-  "created": "2025-11-04T00:00:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| A11y Lineage | Preserve WCAG history and audit notes | `accessibility_scan.yml` |
+| FAIR+CARE Archive | Confirm ethical retention context | `faircare-validate.yml` |
+| Metadata | ISO 19115 + SPDX archival schema | `docs-lint.yml` |
+| Telemetry | Archive energy + carbon provenance | `telemetry-export.yml` |
+
+Artifacts recorded in:
+- `../../../../docs/reports/audit/data_provenance_ledger.json`
+- `../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -105,85 +87,70 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed under metadata registry with checksum and version lineage. | @kfm-data |
-| **Accessible** | Available for research and design audit review. | @kfm-accessibility |
-| **Interoperable** | Metadata compliant with ISO 19115 and MCP-DL v6.3. | @kfm-architecture |
-| **Reusable** | Openly licensed under CC-BY 4.0 for educational reuse. | @kfm-design |
-| **Collective Benefit** | Preserves open digital design heritage. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council oversees ethical archival policies. | @kfm-governance |
-| **Responsibility** | Archivists maintain checksum lineage and ethical audit records. | @kfm-sustainability |
-| **Ethics** | Icons preserved with contextual documentation and cultural sensitivity. | @kfm-ethics |
-
-All records referenced in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+| **Findable** | Indexed by checksum, category, and retired version. | @kfm-data |
+| **Accessible** | Publicly viewable for research & design audits. | @kfm-accessibility |
+| **Interoperable** | ISO 19115 archival metadata across systems. | @kfm-architecture |
+| **Reusable** | CC-BY 4.0 reuse permitted with attribution. | @kfm-design |
+| **Collective Benefit** | Preserves design heritage and transparency. | @faircare-council |
+| **Authority to Control** | Council authorizes archival + unarchive actions. | @kfm-governance |
+| **Responsibility** | Archivists maintain lineage and checksum integrity. | @kfm-sustainability |
+| **Ethics** | Contextual notes prevent misinterpretation of legacy symbols. | @kfm-ethics |
 
 ---
 
-## ⚙️ Archival Classifications
+## 🧾 Example Archival Record
 
-| Category | Description | Example | FAIR+CARE Status |
-|-----------|-------------|----------|------------------|
-| **UI Icons** | Outdated buttons, controls, or panels. | `legacy_panel_expand_v8.svg` | Certified |
-| **Badges** | Old certification or version insignia. | `legacy_badge_fair_v7.svg` | Certified |
-| **Data Symbols** | Early FAIR+CARE data visualization icons. | `legacy_data_icon_v6.svg` | Certified |
-| **Flags** | Deprecated status or warning indicators. | `legacy_flag_error_v8.svg` | Certified |
-| **Governance** | Previous ledger and audit visuals. | `legacy_governance_icon_v7.svg` | Certified |
+```json
+{
+  "id": "legacy_flag_warning_v8.2",
+  "file": "flags/legacy_flag_warning_v8.2.svg",
+  "retired_in": "v9.0.0",
+  "replacement": "flags/flag-warning.svg",
+  "retire_reason": "Contrast below AA; replaced with tokenized palette",
+  "checksum_sha256": "cb45d5a90ef1b32a7f68d21ea5c8429a81eb543eabf2c38e24a2dfd33eac9c12",
+  "a11y_lineage": ["AA (v8.0)", "AA fail (v8.2)"],
+  "fairstatus": "certified",
+  "timestamp": "2025-11-05T20:25:00Z"
+}
+```
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♿ Accessibility & Sustainability Standards
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Archived Icons | Permanent | Immutable and checksum-verified. |
-| Accessibility Reports | 365 Days | Updated annually to maintain WCAG lineage. |
-| Metadata | Permanent | Stored in blockchain-backed provenance ledger. |
-| Sustainability Records | 180 Days | Renewed during quarterly FAIR+CARE audit cycles. |
-
-Archival automation managed by `legacy_archive_sync.yml`.
+- Historic assets retain their **original contrast and label metadata**.  
+- Archival SVGs are **non-interactive** and marked as **deprecated**.  
+- Energy + carbon provenance maintained for research comparatives.  
+- Replacement links guide users to compliant, modern assets.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 4.9 KB | @kfm-design |
-| Avg. Render Energy | 0.03 Wh | @kfm-sustainability |
-| Carbon Output | 0.04 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+| Metric | Target | Verified By |
+|-------|--------|-------------|
+| Avg. File Size | ≤ 6 KB | Design audit |
+| Archive Energy | ≤ 0.01 Wh | Telemetry |
+| Carbon Output | ≤ 0.02 gCO₂e | CI telemetry |
+| Renewable Hosting | 100% RE100 | Infrastructure |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Legacy Icon Archive (v9.6.0).
-FAIR+CARE-certified preservation layer for deprecated icons and metadata, maintaining full accessibility and governance lineage.
-Compliant with MCP-DL v6.3, ISO 19115, and WCAG 2.1 AA standards for ethical archival stewardship.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Expanded legacy icon preservation under FAIR+CARE archival governance. |
-| v9.5.0 | 2025-11-02 | Integrated sustainability and provenance registry. |
-| v9.3.2 | 2025-10-28 | Established baseline legacy archive framework for UI and design systems. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded & aligned: archival contracts, telemetry schema v1, retire-reason fields. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Added checksum lineage and FAIR+CARE archival notes. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Expanded categories and ISO archival metadata. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established legacy icon preservation framework. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Digital Preservation × FAIR+CARE Ethics × Sustainable Design Heritage*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Iconography System](../README.md) · [Docs Index](../../../../docs/README.md)
 
 </div>
