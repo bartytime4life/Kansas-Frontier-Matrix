@@ -1,134 +1,174 @@
 ---
-title: "🔀 Kansas Frontier Matrix — Pull Request Template (FAIR+CARE / MCP-DL v6.3 Compliant)"
+title: "🧾 Kansas Frontier Matrix — Pull Request Template"
 path: ".github/PULL_REQUEST_TEMPLATE.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
-governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
+commit_sha: "<latest-commit-hash>"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
-# 🔀 Kansas Frontier Matrix — **Pull Request Template**
-This PR template enforces FAIR+CARE ethics, governance traceability, and reproducibility in all changes submitted to the Kansas Frontier Matrix (KFM) repository.  
-Please complete each section carefully. Every PR undergoes automated FAIR+CARE validation, checksum verification, and provenance ledger registration.
+<div align="center">
 
----
+# 🧾 **Kansas Frontier Matrix — Pull Request Template**
+`.github/PULL_REQUEST_TEMPLATE.md`
 
-## 🧾 Summary
-**Describe the purpose of this pull request.**  
-Explain what functionality, data, or documentation this update introduces or modifies.
+**Purpose:** Standardize contributions to ensure that every pull request includes documentation, FAIR+CARE metadata, validation results, and adherence to the Master Coder Protocol (MCP v6.3).
 
-> _Example: Adds new climate ETL transformation logic and FAIR+CARE schema validation pipeline._
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-Automated-success)]()
 
----
-
-## 🧩 Type of Change
-Select all that apply (mark with `x`):
-
-- [ ] 🧠 Feature (new pipeline, tool, or dataset)
-- [ ] 🧰 Refactor (non-breaking code improvements)
-- [ ] 🧪 Validation (schema, FAIR+CARE, or checksum)
-- [ ] ⚙️ Governance (provenance, ledger, or SBOM update)
-- [ ] 🧾 Documentation (MCP-DL or Markdown updates)
-- [ ] ♻️ Sustainability / Telemetry (ISO or carbon tracking)
-- [ ] 🧱 Infrastructure / CI-CD (workflow or GitHub Actions)
+</div>
 
 ---
 
-## ⚙️ Related Issues / References
-_Link to existing issues, data contracts, or documentation affected._
+## 🪶 Summary
 
-- Related Issue(s): `#<issue-number>`
-- Affected Data Contracts:  
-  - [ ] `docs/contracts/data-contract-v3.json`
-  - [ ] `schemas/telemetry/*`
-- Associated Governance Records:  
-  - [ ] `reports/audit/*`
-  - [ ] `reports/fair/*`
+> Provide a concise description of the change. Include what, why, and how it improves the project.
 
----
+**Type of Change:**
+- [ ] ✨ Feature / Enhancement  
+- [ ] 🐛 Bug Fix  
+- [ ] 🧠 AI / Model Update  
+- [ ] 🗺 Data Layer Addition  
+- [ ] 📚 Documentation Update  
+- [ ] 🔧 Refactor / Maintenance  
+- [ ] ⚙️ CI/CD or Workflow Update  
 
-## 🧠 FAIR+CARE Compliance
-**Confirm this contribution upholds the FAIR+CARE ethical standards.**  
-For details, see [FAIR+CARE Validation Guide](../docs/standards/faircare-validation.md).
-
-| Principle | Compliance | Notes |
-|------------|-------------|-------|
-| **Findable** | ✅ / ⚠️ / ❌ | _Indexed and documented properly?_ |
-| **Accessible** | ✅ / ⚠️ / ❌ | _Open format and license alignment?_ |
-| **Interoperable** | ✅ / ⚠️ / ❌ | _Schema and metadata compliant?_ |
-| **Reusable** | ✅ / ⚠️ / ❌ | _Versioned, reproducible, and documented?_ |
-| **Collective Benefit** | ✅ / ⚠️ / ❌ | _Ethical use and community impact verified?_ |
-| **Authority to Control** | ✅ / ⚠️ / ❌ | _FAIR+CARE Council approval or review needed?_ |
-| **Responsibility** | ✅ / ⚠️ / ❌ | _Transparent and traceable workflow?_ |
-| **Ethics** | ✅ / ⚠️ / ❌ | _Non-bias, inclusion, and consent maintained?_ |
+**Short Description:**  
+<!-- Write 2–4 sentences summarizing your pull request -->
 
 ---
 
-## 🔍 Validation Checklist
-Ensure all required validation and governance checks are complete before requesting review.
+## 🧩 Related Issues / Links
 
-- [ ] ✅ **Pre-commit validation:** `make pre-commit`
-- [ ] ✅ **Schema validation:** `make validate-schema`
-- [ ] ✅ **Checksum verification:** `make checksum-verify`
-- [ ] ✅ **FAIR+CARE audit:** `make faircare-validate`
-- [ ] ✅ **Governance sync:** `make governance-ledger`
-- [ ] ✅ **Telemetry update:** `make telemetry-report`
-- [ ] ✅ **Documentation review:** `make docs-validate`
+> Reference related issues or documents that this PR addresses.
+
+- Related Issue(s): Closes #`<issue_number>`  
+- Associated Docs: `[docs/...path...]`  
+- Dataset Manifest(s): `[data/sources/...json]`  
 
 ---
 
-## ⚖️ Governance & Provenance
-Provide references for provenance and governance registration related to this update.
+## 📂 Changes Introduced
 
-| Record Type | Reference Path |
-|--------------|----------------|
-| Provenance Ledger | `reports/audit/data_provenance_ledger.json` |
-| FAIR+CARE Audit | `reports/fair/data_care_assessment.json` |
-| Manifest / SBOM | `releases/v9.6.0/manifest.zip` |
-| Telemetry Metrics | `releases/v9.6.0/focus-telemetry.json` |
+> List key modifications made in this PR.
 
----
+**Code or Data Added:**
+- [ ] `src/` (ETL, AI, or API code changes)  
+- [ ] `web/` (UI, React, or timeline updates)  
+- [ ] `data/` (new or updated datasets)  
+- [ ] `docs/` (documentation updates)  
+- [ ] `.github/` (workflow or governance changes)  
 
-## 🧩 Reviewer Assignments
-| Reviewer | Area | Role |
-|-----------|------|------|
-| @kfm-data | Data Pipelines | Technical Review |
-| @kfm-fair | FAIR+CARE Council | Ethics Review |
-| @kfm-governance | Provenance & Ledger | Governance Validation |
-| @kfm-security | CI/CD & Security | Security Compliance |
-| @kfm-architecture | Docs & Design | MCP-DL Conformance |
+**Description of Major Changes:**
+```text
+- Added NOAA drought dataset and STAC manifest
+- Implemented AI focus transformer v2.0 summarization
+- Updated FAIR+CARE validation reports
+```
 
 ---
 
-## 🧾 Post-Merge Actions
-After approval and merge, ensure the following tasks are completed:
+## 🧮 Validation Checklist
 
-- [ ] Update provenance and manifest (`make governance-ledger`)
-- [ ] Publish SBOM and checksum manifest (`make checksum-publish`)
-- [ ] Update telemetry metrics (`make telemetry-report`)
-- [ ] Notify FAIR+CARE Council if new ethics review required
-- [ ] Announce in project changelog (`CHANGELOG.md`)
+> Confirm that your changes meet the required quality, compliance, and reproducibility standards.
+
+**Code & Data Validation:**
+- [ ] 🧪 `make lint` passes locally  
+- [ ] ✅ `make validate` passes (STAC/DCAT, FAIR+CARE)  
+- [ ] 🧾 Unit tests (`make test`) all pass  
+- [ ] 🧠 AI models documented via `docs/templates/model_card.md`  
+- [ ] 🔐 No secrets or credentials included  
+- [ ] 🧱 Updated SBOM (`releases/v9.7.0/sbom.spdx.json`) if new dependencies added  
+
+**Documentation:**
+- [ ] 📘 Added or updated `README.md` in modified directories  
+- [ ] 🗺 Updated dataset manifests (`data/sources/`) with license and checksum  
+- [ ] 🧩 Added references in `docs/architecture.md` or relevant module READMEs  
 
 ---
 
-### 🪶 Sign-Off
+## ⚖️ FAIR+CARE & Governance Acknowledgment
 
-By submitting this pull request, I certify that:
-- All code and data align with FAIR+CARE governance and MCP-DL v6.3 standards.
-- No private, sensitive, or proprietary data are included.
-- All changes are documented, traceable, and ethically validated.
+All contributors must acknowledge and comply with KFM’s ethical and governance principles.
 
-**Contributor:**  
-`@<github-username>`  
-**Date:** `<YYYY-MM-DD>`  
-**Affiliation:** `Kansas Frontier Matrix / Open FAIR+CARE Network`
+- [ ] I confirm that all contributed data complies with **FAIR+CARE** (Findable, Accessible, Interoperable, Reusable + Collective Benefit, Authority to Control, Responsibility, Ethics).  
+- [ ] I confirm that my contribution does not contain proprietary, private, or unethical data.  
+- [ ] I have reviewed and agree to the **Master Coder Protocol (MCP v6.3)** and **KFM Governance Charter**.  
+
+---
+
+## 🧠 Testing and Results
+
+> Provide a summary of any local or pipeline tests performed.
+
+| Test Type | Status | Notes |
+|------------|---------|-------|
+| ETL / Pipeline Run | ✅ Pass | `data/work/tmp/etl/logs/validation.json` updated |
+| AI Model Training | ✅ Pass | F1=0.91 (focus_transformer_v1) |
+| Frontend Build | ✅ Pass | Verified via `npm run build` |
+| FAIR+CARE Validation | ✅ Pass | Ethics tag added to dataset manifest |
+| Docs Validation | ✅ Pass | `docs-lint.yml` successful |
+
+Attach relevant logs or screenshots if applicable.
+
+---
+
+## 🧾 Release / Deployment Notes
+
+> Describe any implications for deployment or releases.
+
+- [ ] Requires rebuild of Docker image  
+- [ ] Requires reindexing of Neo4j graph database  
+- [ ] Requires revalidation of STAC or FAIR+CARE datasets  
+- [ ] Includes breaking changes (documented below)
+
+**Breaking Changes (if any):**
+```text
+Describe any backward-incompatible changes or migrations.
+```
+
+---
+
+## 🧭 Reviewer Checklist (for Maintainers Only)
+
+| Check | Status | Comments |
+|--------|---------|-----------|
+| CI/CD All Workflows Passed | ☐ |  |
+| FAIR+CARE Report Reviewed | ☐ |  |
+| SBOM Updated | ☐ |  |
+| Docs Alignment Verified | ☐ |  |
+| Governance Ledger Entry Added | ☐ |  |
+
+---
+
+## 🕰️ Versioning & Provenance
+
+**Semantic Version Update:**  
+- [ ] Major (breaking)  
+- [ ] Minor (new feature)  
+- [ ] Patch (fix or update)  
+
+**Affected Release:**  
+`releases/v9.7.0/manifest.zip`  
+
+**Checksum Validation:**  
+All added files verified with SHA-256:
+```bash
+sha256sum <file>
+```
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Science × Ethical AI × Provenance Governance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/)
+**Thank you for contributing to the Kansas Frontier Matrix!**  
+Every pull request moves us closer to a fully FAIR+CARE-certified, reproducible open-science platform.
+
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 </div>
