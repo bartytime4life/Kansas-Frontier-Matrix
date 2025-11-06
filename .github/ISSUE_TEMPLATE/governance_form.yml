@@ -1,1 +1,182 @@
+# 🧾 Kansas Frontier Matrix — Governance Review Form
+# File: .github/ISSUE_TEMPLATE/governance_form.yml
+# Purpose: Enable FAIR+CARE and ethical governance review submissions.
+# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω
+# SPDX-License-Identifier: CC-BY-4.0
 
+name: "⚖️ Governance or FAIR+CARE Review"
+description: "Submit a governance, ethics, or FAIR+CARE compliance review for datasets or workflows."
+title: "Governance Review: [Dataset or Layer Name]"
+labels:
+  - "governance"
+  - "faircare"
+  - "ethics"
+assignees:
+  - "bartytime4life"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚖️ Governance & Ethical Review Form
+        Thank you for contributing to the ethical oversight and governance of the **Kansas Frontier Matrix (KFM)**.
+        This form ensures all data and workflows uphold **FAIR+CARE** principles (Findable, Accessible, Interoperable, Reusable + Collective Benefit, Authority to Control, Responsibility, Ethics).
+
+        Please provide thorough details. The FAIR+CARE Council will review your submission as part of KFM’s governance process.
+
+  - type: input
+    id: reviewer_name
+    attributes:
+      label: "Reviewer Name(s)"
+      description: "Enter the full name(s) of reviewer(s)."
+      placeholder: "e.g. Dr. Jane Doe"
+    validations:
+      required: true
+
+  - type: input
+    id: reviewer_affiliation
+    attributes:
+      label: "Affiliation / Organization"
+      description: "Institution, tribal council, organization, or working group associated with the review."
+      placeholder: "e.g. University of Kansas, FAIR+CARE Council"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: review_type
+    attributes:
+      label: "Review Type"
+      description: "Select the category that best describes this governance review."
+      options:
+        - "FAIR+CARE Compliance Review"
+        - "Ethical or Cultural Review"
+        - "Data Governance Audit"
+        - "Indigenous Data Sovereignty Review"
+        - "General Policy Feedback"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: dataset_reference
+    attributes:
+      label: "Dataset(s) or Workflow(s) Reviewed"
+      description: "Provide dataset IDs, file paths, or STAC/DCAT identifiers."
+      placeholder: "e.g. data/sources/usgs_hydro_1890.json, data/processed/flood_1903.geojson"
+    validations:
+      required: true
+
+  - type: textarea
+    id: care_analysis
+    attributes:
+      label: "CARE Evaluation"
+      description: |
+        Assess compliance with CARE principles:
+        - **Collective Benefit** — Does the dataset serve affected communities?
+        - **Authority to Control** — Are communities empowered to define use and access?
+        - **Responsibility** — Are ethical and legal safeguards observed?
+        - **Ethics** — Are cultural sensitivities respected?
+      placeholder: |
+        Example:
+        - Collective Benefit: Supports educational access to public archival data.
+        - Authority: Reviewed with consent from tribal partners.
+        - Responsibility: Contains proper attribution and context.
+        - Ethics: No sensitive cultural materials included.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: fair_compliance
+    attributes:
+      label: "FAIR Compliance Assessment"
+      description: "Rate the dataset or process according to FAIR data principles."
+      options:
+        - "Fully Compliant"
+        - "Partially Compliant"
+        - "Non-Compliant"
+        - "Requires Further Review"
+      default: 1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: care_compliance
+    attributes:
+      label: "CARE Compliance Assessment"
+      description: "Rate the dataset or process according to CARE principles."
+      options:
+        - "Fully Compliant"
+        - "Partially Compliant"
+        - "Non-Compliant"
+        - "Requires Further Review"
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: reviewer_notes
+    attributes:
+      label: "Reviewer Notes & Recommendations"
+      description: "Summarize findings, recommendations, or required remediations."
+      placeholder: |
+        Example:
+        - Recommend additional attribution for Indigenous data sources.
+        - Ensure licensing text aligns with CC-BY 4.0.
+        - Add provenance and contact metadata fields.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: governance_decision
+    attributes:
+      label: "Governance Council Decision"
+      description: "Proposed status for the reviewed dataset or process."
+      options:
+        - "Approved"
+        - "Approved with Conditions"
+        - "Needs Revision"
+        - "Rejected"
+        - "Escalate to FAIR+CARE Council"
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: supporting_evidence
+    attributes:
+      label: "Supporting Files or Evidence"
+      description: "Links to FAIR+CARE reports, logs, or external reviews."
+      placeholder: |
+        e.g. reports/fair/faircare_summary.json  
+        e.g. https://doi.org/10.xxxx/kfm.review.2025-001
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: "Contributor Acknowledgements"
+      description: "Confirm adherence to governance and ethical protocols."
+      options:
+        - label: "I confirm this review aligns with Master Coder Protocol v6.3."
+          required: true
+        - label: "I verify all data sources are legally and ethically shareable."
+          required: true
+        - label: "I understand this review will be logged in the governance ledger."
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### 🧾 Governance Ledger & Audit Trail
+        Upon submission, this review will automatically be recorded in:
+        ```
+        reports/audit/governance-ledger.json
+        ```
+        It will also be referenced in:
+        - `releases/v9.7.0/focus-telemetry.json`
+        - `docs/standards/governance/ROOT-GOVERNANCE.md`
+
+        **Thank you for ensuring the Kansas Frontier Matrix remains transparent, ethical, and reproducible.**
+
+        **© 2025 Kansas Frontier Matrix — FAIR+CARE Certified · Master Coder Protocol v6.3**
