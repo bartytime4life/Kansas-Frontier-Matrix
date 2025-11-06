@@ -1,216 +1,181 @@
 ---
 title: "🧱 Kansas Frontier Matrix — Web Components Library (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-components-v1.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧱 Kansas Frontier Matrix — **Web Components Library**
+# 🧱 **Kansas Frontier Matrix — Web Components Library**
 `web/src/components/README.md`
 
-**Purpose:**  
-Provides the FAIR+CARE-compliant user interface components that form the visual and interactive foundation of the Kansas Frontier Matrix (KFM) web application.  
-Every component follows accessibility, ethics, and sustainability principles under ISO 9241-210, WCAG 2.1 AA, and MCP-DL v6.3 compliance.
+**Purpose:** Provide an accessible, FAIR+CARE-certified set of React components that form the KFM web application’s visual and interaction foundation — aligned with **MCP v6.3**, **WCAG 2.1 AA**, and **ISO 9241-210**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-UI%20Certified-gold)](../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 9241-210](https://img.shields.io/badge/ISO-9241--210%20Human--Centered%20Design-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **KFM Web Components Library** provides modular, reusable, and FAIR+CARE-aligned building blocks for the frontend interface.  
-Each component is built with ethical design considerations — ensuring accessibility, interpretability, and sustainability across all user experiences.
-
-### Core Responsibilities:
-- Deliver inclusive UI components that comply with FAIR+CARE and WCAG standards.  
-- Support Focus Mode AI explainability and governance integration.  
-- Harmonize visual patterns through accessible design tokens.  
-- Log energy efficiency and interaction metrics to the telemetry system.  
+The **Components Library** offers modular, token-driven UI building blocks.  
+Components implement inclusive patterns, Focus Mode explainability surfaces, and provenance chips, while minimizing energy use and re-renders.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/src/components/
-├── README.md                            # This file — overview of KFM Web Components
+├── README.md
 │
-├── Layout/                              # Page layouts and containers (grid, responsive)
+├── Layout/
 │   ├── MainLayout.tsx
 │   ├── SidebarLayout.tsx
 │   └── FooterLayout.tsx
 │
-├── MapView/                             # Geospatial visualization components
+├── MapView/
 │   ├── MapCanvas.tsx
 │   ├── LayerControls.tsx
 │   ├── Legend.tsx
 │   └── TimelineSlider.tsx
 │
-├── Timeline/                            # Chronological storytelling and event visualization
+├── Timeline/
 │   ├── ChronoView.tsx
 │   ├── TimeMarker.tsx
 │   └── EventTrack.tsx
 │
-├── FocusMode/                           # Focus Mode AI explainability and chat UI
+├── FocusMode/
 │   ├── FocusConsole.tsx
 │   ├── InsightCard.tsx
 │   └── ExplainabilityPanel.tsx
 │
-├── DataCards/                           # Modular cards for data summaries and FAIR+CARE info
+├── DataCards/
 │   ├── ClimateCard.tsx
 │   ├── HazardsCard.tsx
 │   ├── HydrologyCard.tsx
 │   └── ProvenanceCard.tsx
 │
-├── Governance/                          # FAIR+CARE and provenance dashboards
+├── Governance/
 │   ├── GovernanceDashboard.tsx
 │   ├── ValidationPanel.tsx
 │   └── EthicsSummary.tsx
 │
-└── metadata.json                        # Component-level governance, checksum, and accessibility metadata
+└── metadata.json
 ```
 
 ---
 
-## ⚙️ Component Architecture Workflow
+## 🧩 Component Architecture
 
 ```mermaid
 flowchart TD
-    A["User Interaction (Keyboard / Mouse / Screen Reader)"] --> B["Accessible UI Components"]
-    B --> C["Focus Mode AI Integration (Explainability Layer)"]
-    C --> D["Governance Context (Ethics + Provenance Sync)"]
-    D --> E["Telemetry System (Performance + Sustainability Metrics)"]
+A["User Input (Keyboard/Pointer/Screen Reader)"] --> B["Accessible Components (ARIA + Tokens)"]
+B --> C["Focus Mode Hooks (Explainability UI)"]
+C --> D["Governance Chips (Provenance + CARE)"]
+D --> E["Telemetry Hooks (Perf/Energy)"]
 ```
 
-### Workflow Summary:
-1. **Interaction Layer:** Each component supports keyboard navigation, ARIA labeling, and screen readers.  
-2. **Focus Mode AI Integration:** Components relay interpretability queries and ethical metadata to AI explainability layers.  
-3. **Governance Context:** Provenance and FAIR+CARE data synced in real time with user actions.  
-4. **Telemetry System:** Interaction and rendering metrics sent to sustainability dashboard.  
+1. **Accessible Components:** tokenized, ARIA-labelled, keyboard-first.  
+2. **Explainability UI:** Focus Mode bindings render summaries and traces.  
+3. **Governance Chips:** show dataset license, provenance, and CARE flags.  
+4. **Telemetry Hooks:** log energy, latency, and a11y results to release telemetry.
 
 ---
 
-## 🧩 Example Component Metadata Record
+## ⚙️ Design Guidelines
 
-```json
-{
-  "id": "web_components_registry_v9.6.0_2025Q4",
-  "components_registered": [
-    "MapCanvas.tsx",
-    "FocusConsole.tsx",
-    "GovernanceDashboard.tsx"
-  ],
-  "accessibility_score": 99.3,
-  "energy_use_wh": 0.9,
-  "fairstatus": "certified",
-  "checksum_verified": true,
-  "ai_explainability_integration": true,
-  "governance_linked": true,
-  "created": "2025-11-03T23:59:00Z",
-  "validator": "@kfm-ui-audit",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Category | Standard | Notes |
+|----------|----------|------|
+| Color | WCAG 2.1 AA | 4.5:1 text contrast (3:1 large) |
+| Typography | ISO 9241-210 | Scalable, legible, language-aware |
+| Interaction | WAI-ARIA | Focus rings, roles, labels, and landmarks |
+| Tokens | Central registry | `web/src/styles/tokens.css` |
+| Performance | ISO 50001 | Lazy-load, memoize, limit re-renders |
 
 ---
 
-## 🧠 FAIR+CARE + Accessibility Governance Matrix
+## 🧠 FAIR+CARE + Accessibility Matrix
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Components and metadata indexed in FAIR+CARE design registry. | @kfm-data |
-| **Accessible** | All elements tested for WCAG 2.1 AA + ISO 9241-210 compliance. | @kfm-accessibility |
-| **Interoperable** | Reusable design tokens and UI APIs for interoperability. | @kfm-architecture |
-| **Reusable** | Modular React components shared across web modules. | @kfm-design |
-| **Collective Benefit** | Promotes open, ethical access to Kansas’s environmental history. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council validates accessibility and ethics reviews. | @kfm-governance |
-| **Responsibility** | Designers maintain energy-efficient and inclusive components. | @kfm-sustainability |
-| **Ethics** | UI patterns audited for fairness, inclusivity, and transparency. | @kfm-ethics |
+| **Findable** | Components cataloged with metadata and examples. | @kfm-design |
+| **Accessible** | Axe/Lighthouse audits per release; keyboard-first UX. | @kfm-accessibility |
+| **Interoperable** | Token-driven API; TypeScript props and slots. | @kfm-architecture |
+| **Reusable** | Modular, documented patterns shared app-wide. | @kfm-design |
+| **Collective Benefit** | Transparent data visuals and provenance. | @faircare-council |
+| **Authority to Control** | CARE flags surface sensitive content rules. | @kfm-governance |
+| **Responsibility** | Components tuned for low-power rendering. | @kfm-sustainability |
+| **Ethics** | Explainability UI ensures non-opaque AI interactions. | @kfm-ethics |
 
-All audits and logs stored in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
-
----
-
-## ⚙️ Component Design Guidelines
-
-| Category | Standard | Description |
-|-----------|-----------|-------------|
-| **Color** | WCAG 2.1 AA | Minimum 4.5:1 contrast enforced via tokens. |
-| **Typography** | ISO 9241-210 | Legible font families with scalable sizing. |
-| **Interaction** | WAI-ARIA | Full keyboard navigation and assistive support. |
-| **AI Explainability** | FAIR+CARE | Focus Mode components validated for transparency. |
-| **Energy Efficiency** | ISO 50001 | Optimized re-renders and lazy-loading by default. |
+**Audit Paths**
+- FAIR+CARE: `../../../docs/reports/fair/data_care_assessment.json`  
+- Provenance: `../../../docs/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## ⚖️ Retention & Governance Policy
+## 🧩 Component Summaries
 
-| Component Data | Retention Duration | Policy |
-|----------------|--------------------|--------|
-| Accessibility Reports | 365 Days | Archived for FAIR+CARE certification. |
-| Performance Logs | 90 Days | Rotated with telemetry updates. |
-| Metadata | Permanent | Immutable provenance stored in ledger. |
-| UI Assets | Permanent | Retained under version control. |
+| Component | Description | Role |
+|-----------|-------------|------|
+| `MapCanvas.tsx` | MapLibre map with vector layers and keyboard ops. | Spatial View |
+| `LayerControls.tsx` | Toggles STAC/DCAT layers & styles. | Layer Control |
+| `Legend.tsx` | Symbol and color key with a11y. | Guidance |
+| `TimelineSlider.tsx` | Time brushing and range selection. | Temporal Nav |
+| `ChronoView.tsx` | Time-series density and markers. | Temporal Viz |
+| `FocusConsole.tsx` | Conversational Focus Mode panel. | AI Narrative |
+| `ExplainabilityPanel.tsx` | SHAP/LIME links and summaries. | Transparency |
+| `ProvenanceCard.tsx` | License + checksum + source chips. | Governance |
 
-Automation handled via `ui_component_audit.yml`.
+---
+
+## ⚙️ CI/CD & Contracts
+
+| Workflow | Verification | Artifact |
+|----------|--------------|----------|
+| `docs-lint.yml` | README structure & front-matter | `reports/self-validation/docs/lint_summary.json` |
+| `build-and-deploy.yml` | Component build & bundle size | `docs/reports/telemetry/build_metrics.json` |
+| `telemetry-export.yml` | Merge per-release metrics | `../../../releases/v9.7.0/focus-telemetry.json` |
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. Component Render Energy | 0.9 Wh | @kfm-sustainability |
-| Carbon Output | 1.1 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+| Metric | Target | Verified By |
+|-------|--------|-------------|
+| Render Energy / Interaction | ≤ 0.9 Wh | Telemetry |
+| Lighthouse A11y Score | ≥ 95 | CI pipeline |
+| Bundle Size (components) | ≤ 250 KB | Build metrics |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Web Components Library (v9.6.0).
-Accessible, FAIR+CARE-certified UI component system enabling ethical, transparent, and energy-efficient user interaction across the Kansas Frontier Matrix web application.
-Complies with ISO 9241-210 and WCAG 2.1 under MCP-DL v6.3 governance.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added energy efficiency metrics and enhanced AI explainability integration. |
-| v9.5.0 | 2025-11-02 | Improved governance linkage and accessibility validation reporting. |
-| v9.3.2 | 2025-10-28 | Established FAIR+CARE-compliant web component framework. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded & aligned: contracts, governance chips, Focus Mode bindings, telemetry schema. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Added explainability surfaces + a11y audits. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Improved token integration and energy efficiency. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established modular component library. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Accessible Design × FAIR+CARE Ethics × Transparent UI Engineering*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Web Source](../README.md) · [Docs Index](../../../docs/README.md)
 
 </div>
