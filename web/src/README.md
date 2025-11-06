@@ -1,228 +1,187 @@
 ---
 title: "💻 Kansas Frontier Matrix — Web Application Source Code (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/web-src-readme-v1.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 💻 Kansas Frontier Matrix — **Web Application Source Code**
+# 💻 **Kansas Frontier Matrix — Web Application Source Code**
 `web/src/README.md`
 
-**Purpose:**  
-Core React and TypeScript source for the FAIR+CARE-certified Kansas Frontier Matrix (KFM) web interface.  
-Implements ethical AI-driven visualization, governance dashboards, and Focus Mode explainability tools under MCP-DL v6.3 and ISO 9241-210 accessibility compliance.
+**Purpose:** Describe the **React + TypeScript** source structure, contracts, and governance integrations for the KFM web tier. This document aligns web modules with **MCP v6.3**, **FAIR+CARE**, and **WCAG 2.1 AA** while mapping CI/CD artifacts and telemetry references.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Web%20Source%20Certified-gold)](../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../docs/architecture/repo-focus.md)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../docs/standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **KFM Web Source Directory** contains all frontend application code, built with React 18 and Next.js, for visualizing geospatial, historical, and environmental data through FAIR+CARE-aligned user interfaces.  
-Every component, hook, and utility supports ethical accessibility, transparency, and reproducibility standards.
+`web/src/` houses all code required to render the **timeline + map** experience and the **Focus Mode** entity context engine.  
+The codebase is **standards-first** (STAC, DCAT, JSON-LD) with **accessibility** and **ethics** mechanisms wired into components, hooks, and services.
 
-### Core Responsibilities:
-- Provide an interactive and inclusive interface for exploring KFM datasets.  
-- Integrate Focus Mode AI explainability and FAIR+CARE ethics checks.  
-- Implement accessible, modular, and high-performance UI components.  
-- Synchronize with provenance, telemetry, and governance systems.  
+**Responsibilities**
+- Accessible, performant UI for geospatial storytelling  
+- Focus Mode summaries + explainability views (UI-only rendering)  
+- STAC/DCAT catalog browsing and entity detail retrieval  
+- Provenance, telemetry, and governance ledger surfacing
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/src/
-├── README.md                              # This file — overview of web application source
+├── README.md                          # This file
 │
-├── components/                            # FAIR+CARE-compliant UI components
-│   ├── Layout/
-│   ├── MapView/
-│   ├── Timeline/
-│   ├── FocusMode/
-│   ├── DataCards/
-│   └── Governance/
+├── components/                        # FAIR+CARE-compliant UI
+│   ├── MapView/                       # MapLibre map and layers
+│   ├── TimelineView/                  # Time navigation + density
+│   ├── FocusPanel/                    # AI summaries + relations
+│   ├── LayerControls/                 # STAC/DCAT toggles
+│   ├── DetailDrawer/                  # Entity metadata
+│   └── Accessibility/                 # Skip links, focus management
 │
-├── pages/                                 # Route-based pages and views
-│   ├── index.tsx                          # Home page
-│   ├── explorer.tsx                       # Data explorer view
-│   ├── governance.tsx                     # FAIR+CARE dashboard
-│   ├── focus.tsx                          # Focus Mode interface
-│   └── about.tsx                          # Documentation and metadata hub
+├── pages/                             # Route-level screens
+│   ├── index.tsx                      # Home
+│   ├── explorer.tsx                   # Data Explorer
+│   ├── focus.tsx                      # Focus Mode UI
+│   └── governance.tsx                 # Governance dashboard
 │
-├── hooks/                                 # Shared React hooks for AI and data state
+├── hooks/                             # Shared logic
 │   ├── useTelemetry.ts
+│   ├── useFocus.ts
 │   ├── useGovernance.ts
-│   ├── useFairCareAudit.ts
-│   └── useAccessibilityCheck.ts
+│   └── useA11y.ts
 │
-├── context/                               # Global contexts for ethics and app telemetry
-│   ├── AppContext.tsx
-│   ├── FocusModeContext.tsx
-│   ├── GovernanceContext.tsx
-│   └── ThemeContext.tsx
+├── context/                           # App providers
+│   ├── FocusProvider.tsx
+│   ├── ThemeProvider.tsx
+│   └── AppProvider.tsx
 │
-├── services/                              # API connectors and data interfaces
-│   ├── stacService.ts
-│   ├── dcatService.ts
-│   ├── telemetryService.ts
-│   ├── governanceService.ts
-│   └── aiExplainabilityService.ts
+├── services/                          # Data/API clients
+│   ├── apiClient.ts                   # REST/GraphQL base
+│   ├── stacService.ts                 # STAC discovery
+│   ├── dcatService.ts                 # DCAT catalog
+│   ├── graphService.ts                # Entity details (GraphQL)
+│   └── telemetryService.ts            # Build & usage metrics export
 │
-├── utils/                                 # Shared utilities and FAIR+CARE helpers
-│   ├── metadataUtils.ts
-│   ├── checksumUtils.ts
-│   ├── aiUtils.ts
-│   ├── accessibilityUtils.ts
-│   └── focusTelemetry.ts
+├── utils/                             # Helpers and guards
+│   ├── schemaGuards.ts
+│   ├── formatters.ts
+│   ├── provenance.ts
+│   └── a11y.ts
 │
-├── styles/                                # Tailwind and global styling modules
+├── styles/                            # Design tokens and themes
 │   ├── globals.css
-│   ├── typography.css
-│   └── theme-tokens.css
+│   ├── tokens.css
+│   └── typography.css
 │
-└── metadata.json                          # Web build metadata and governance linkage
+└── types/                             # Shared TS types for DTOs and entities
+    ├── api.ts
+    └── domain.ts
 ```
 
 ---
 
-## ⚙️ Web App Architecture Workflow
+## 🧩 Web Flow (Modules & Data)
 
 ```mermaid
 flowchart TD
-    A["User Interaction (UI Components)"] --> B["Focus Mode AI Context"]
-    B --> C["FAIR+CARE Ethics Validation (hooks/useFairCareAudit.ts)"]
-    C --> D["Governance Ledger Sync (services/governanceService.ts)"]
-    D --> E["Telemetry Reporting (services/telemetryService.ts)"]
-    E --> F["Provenance Registration (data/reports/audit/data_provenance_ledger.json)"]
+A["UI Components"] --> B["Focus Context (hooks/useFocus)"]
+A --> C["MapView / TimelineView"]
+B --> D["API Client (services/apiClient.ts)"]
+C --> D
+D --> E["Graph Service (entities)"]
+D --> F["STAC/DCAT Services (layers)"]
+E --> G["FocusPanel (summary + links)"]
 ```
 
-### Workflow Summary:
-1. **Interaction Layer:** UI built with accessibility tokens and inclusive components.  
-2. **AI Explainability:** Focus Mode interprets user queries using transparent AI.  
-3. **Ethical Validation:** FAIR+CARE hooks assess compliance and accessibility in real time.  
-4. **Governance Sync:** Telemetry and validation logs push to governance systems.  
-5. **Transparency Output:** Ledger and provenance records updated continuously.  
+- **API client** centralizes headers, ETags, and retries.  
+- **Schema guards** validate DTOs, fail fast on incompatible responses.  
+- **Provenance** utilities attach ledger links and citation chips in UI.
 
 ---
 
-## 🧩 Example Governance Metadata Record
+## 🧠 Focus Mode (UI Rendering Only)
 
-```json
-{
-  "id": "web_src_build_v9.6.0",
-  "components_compiled": 78,
-  "accessibility_score": 99.1,
-  "checksum_verified": true,
-  "fairstatus": "certified",
-  "ai_explainability_enabled": true,
-  "telemetry_linked": true,
-  "governance_registered": true,
-  "validator": "@kfm-web",
-  "created": "2025-11-03T23:59:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+- **Server** performs inference; UI renders **summaries, relations, and explainability links**.  
+- CARE-sensitive content is **gated** with consent and citation UI.  
+- All interactions emit **telemetry events** (non-PII; opt-out respected).
 
 ---
 
-## 🧠 FAIR+CARE + Accessibility Governance Matrix
+## ⚙️ Contracts & Validations
 
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | URLs and components mapped to STAC/DCAT records. | @kfm-data |
-| **Accessible** | UI meets WCAG 2.1 AA and ISO 9241-210 design standards. | @kfm-accessibility |
-| **Interoperable** | Web APIs follow FAIR+CARE, DCAT 3.0, and GraphQL protocols. | @kfm-architecture |
-| **Reusable** | Components built with modular, reusable FAIR+CARE tokens. | @kfm-design |
-| **Collective Benefit** | Supports open education and public engagement. | @faircare-council |
-| **Authority to Control** | Governance council validates AI explainability layer. | @kfm-governance |
-| **Responsibility** | Developers maintain accessibility and energy telemetry logs. | @kfm-sustainability |
-| **Ethics** | Focus Mode constrained to ethical, transparent reasoning. | @kfm-ethics |
+| Contract | Purpose | Location |
+|---------|---------|----------|
+| API DTOs | Typed request/response models | `types/api.ts` |
+| Entity Types | People/Places/Events/Documents | `types/domain.ts` |
+| STAC/DCAT | Layer/catalog compatibility | `services/{stac,dcat}Service.ts` |
+| A11y Contract | Route/page a11y assertions | `hooks/useA11y.ts` (axe/Lighthouse in CI) |
 
-Audit and validation reports stored in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+**CI Enforcements:** `docs-lint.yml`, `build-and-deploy.yml`, `telemetry-export.yml`, `codeql.yml`, `trivy.yml`.
 
 ---
 
-## ⚙️ Key Modules Summary
+## ♿ Accessibility & Inclusive Design
 
-| Module | Description | Role |
-|---------|--------------|------|
-| `components/` | Modular and accessible React UI components. | Visualization |
-| `hooks/` | Shared FAIR+CARE validation and telemetry logic. | Ethics + Monitoring |
-| `services/` | Manages governance, AI, and data APIs. | Data Integration |
-| `context/` | Global state management for ethics and Focus Mode. | Governance Control |
-| `utils/` | Utility layer for metadata, checksums, and AI reporting. | Provenance Logic |
+- Keyboard-first navigation, visible focus, skip-to-content.  
+- Contrast ≥ 4.5:1; motion-reduced alternatives; descriptive alt text.  
+- Live regions and ARIA labels on dynamic elements.  
+- **Axe/Lighthouse** checks run per release; results published to telemetry.
 
 ---
 
-## ⚖️ Retention & Governance Policy
+## 📊 Telemetry & Governance
 
-| Asset | Retention Duration | Policy |
-|--------|--------------------|--------|
-| Web Logs | 90 Days | Retained for governance validation and telemetry. |
-| Accessibility Reports | 365 Days | Archived for certification. |
-| Metadata | Permanent | Immutable under governance ledger. |
-| Telemetry Data | 90 Days | Rotated with Focus Mode cycles. |
+- **Build metrics:** `docs/reports/telemetry/build_metrics.json`  
+- **Release snapshot:** `../../releases/v9.7.0/focus-telemetry.json`  
+- **Governance ledgers:** `../../docs/reports/audit/` (workflow runs, approvals)
 
-Automation handled by `web_src_sync.yml`.
+Telemetry includes workflow durations, a11y scores, STAC/DCAT counts, and commit metadata.
 
 ---
 
-## 🌱 Sustainability Metrics
+## ⚖️ Retention & Policy
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Average Power Use (per session) | 1.3 Wh | @kfm-sustainability |
-| Carbon Output | 1.5 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry captured in:  
-`releases/v9.6.0/focus-telemetry.json`
+| Asset | Retention | Policy |
+|------|-----------|--------|
+| Build logs | 90 days | CI artifact policy |
+| Accessibility scans | 365 days | Certification archive |
+| Metadata/Manifests | Permanent | Governance ledger |
+| Telemetry JSON | 90 days | Rotating snapshots |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Web Application Source Code (v9.6.0).
-Frontend architecture for the Kansas Frontier Matrix web interface — integrating FAIR+CARE ethics, Focus Mode AI explainability, and transparent governance telemetry.
-Built with React, MapLibre, and ISO 9241-210 accessibility compliance under MCP-DL v6.3.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added FAIR+CARE accessibility hooks and governance telemetry integration. |
-| v9.5.0 | 2025-11-02 | Improved AI explainability and sustainability logging. |
-| v9.3.2 | 2025-10-28 | Established base React + FAIR+CARE component structure. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded & aligned: contracts, telemetry, CI mappings, a11y hooks. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Added FAIR+CARE telemetry and Focus Mode UI safeguards. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Improved explainability and sustainability logging. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established React + TypeScript component structure. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Accessible Design × FAIR+CARE Ethics × Transparent Governance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../docs/) • [⚖️ Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Web Architecture](../ARCHITECTURE.md) · [Docs Index](../../docs/README.md)
 
 </div>
