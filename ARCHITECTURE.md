@@ -11,10 +11,6 @@ data_contract_ref: "docs/contracts/data-contract-v3.json"
 telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 json_export: "releases/v9.7.0/system-architecture.meta.json"
-validation_reports:
-  - "reports/self-validation/system-architecture-validation.json"
-  - "reports/fair/system_architecture_summary.json"
-  - "reports/audit/system_architecture_ledger.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
@@ -23,128 +19,126 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 # 🏗️ **Kansas Frontier Matrix — System Architecture**
 `src/ARCHITECTURE.md`
 
-**Purpose:** Define the multi-layered technical architecture, data flow, and integration framework for the Kansas Frontier Matrix (KFM) platform — connecting geospatial, historical, and AI-driven components into a unified, reproducible ecosystem.
+**Purpose:** Define the multi-layered technical architecture, data flows, and integration framework for the Kansas Frontier Matrix (KFM) platform — unifying geospatial, historical, and AI components into a reproducible ecosystem.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)
-[![STAC](https://img.shields.io/badge/STAC-1.0.0-black)](https://stacspec.org)
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
 The **Kansas Frontier Matrix (KFM)** is a **multi-tier open-source system** that integrates Kansas-focused geospatial, historical, and environmental data into an interactive timeline–map interface backed by a semantic knowledge graph.  
-Its design follows the **Master Coder Protocol (MCP)** and **FAIR+CARE** principles — ensuring all workflows are reproducible, auditable, and extensible.
+The design follows **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** principles to ensure all workflows are reproducible, auditable, and extensible.
 
-The system architecture consists of five primary layers:
+Primary layers:
 
-1. **Data Source Layer** — ingest and federate diverse datasets.  
-2. **ETL & AI Pipeline** — extract, transform, and enrich with NLP + ML.  
-3. **Knowledge Graph Database** — semantic relationships (Neo4j/CIDOC CRM).  
-4. **API Layer** — REST/GraphQL endpoints for serving graph and geospatial data.  
-5. **Web Frontend** — React + MapLibre UI for timeline–map exploration.
+1. **Data Sources** — federate diverse datasets.  
+2. **ETL & AI Pipelines** — extract, transform, and enrich with NLP/ML.  
+3. **Knowledge Graph** — Neo4j with CIDOC CRM alignment.  
+4. **API Layer** — REST/GraphQL for graph/geospatial access.  
+5. **Web Frontend** — React + MapLibre for timeline–map exploration.
 
-Each layer communicates via standardized open formats (GeoJSON, STAC, DCAT, JSON-LD) and adheres to modular governance to ensure sustainable long-term maintenance.
+All layers communicate via open standards (GeoJSON, STAC, DCAT, JSON-LD) with modular governance for longevity.
+
+---
+
+## 🗂️ Directory Layout
+
+```
+src/
+├── ai/
+│   ├── focus/                 # AI Focus Mode
+│   ├── models/                # Trained NLP/ML models
+│   ├── explainability/        # SHAP/LIME visualizations
+│   └── training/              # Model training configs
+├── api/
+│   ├── routes/                # REST/GraphQL route definitions
+│   ├── services/              # Data access services
+│   ├── models/                # API schemas
+│   └── auth/                  # Authentication
+├── graph/
+│   ├── schema/                # Ontology definitions (CIDOC CRM, OWL-Time)
+│   ├── queries/               # Cypher templates
+│   ├── ingest/                # Graph loaders
+│   └── utils/                 # Helpers and validators
+├── pipelines/
+│   ├── etl/                   # Extract/Transform/Load
+│   ├── ai/                    # AI enrichments
+│   ├── validation/            # FAIR+CARE validators
+│   └── utils/                 # Shared utilities
+└── telemetry/
+    ├── logs/                  # Experiment & system logs
+    └── metrics/               # Performance telemetry
+```
 
 ---
 
 ## 🧩 Layered Architecture
 
-### 1. Data Source Layer
+### 1) Data Sources
 
-**Purpose:** Aggregate open and archival datasets spanning environmental, cultural, and historical domains.
+Aggregate open and archival datasets:
 
-**Sources include:**
-- **NOAA** Climate & Storm Events (CSV, NetCDF, API)
-- **USGS** Hydrography, Terrain, and Geological Data (GeoTIFF/GeoJSON)
-- **Kansas DASC Geoportal** for state-level GIS data
-- **Kansas Historical Society Archives** and OCR text corpora
-- **BLM GLO Records** for land patents and cadastral mapping
+- **NOAA** (climate/storm events; CSV/NetCDF/API)  
+- **USGS** (hydrology/terrain; GeoTIFF/GeoJSON)  
+- **Kansas DASC Geoportal** (state-level GIS)  
+- **Kansas Historical Society** (OCR corpora)  
+- **BLM GLO Records** (land patents)
 
-**Standards:**  
-All data sources are described via `data/sources/*.json` manifests referencing provenance, licensing, bounding boxes, and temporal extent.  
-Each entry aligns with **DCAT 3.0** and **STAC 1.0.0** specifications for interoperability.
+Manifests live in `data/sources/*.json` with provenance, license, bbox, and temporal metadata aligned to **DCAT 3.0**/**STAC 1.0.0**.
 
 ---
 
-### 2. ETL & AI/ML Pipeline
+### 2) ETL & AI Pipelines
 
-**Location:** `src/pipelines/`  
+**Home:** `src/pipelines/`
 
-The ETL system automates ingestion, cleaning, and semantic transformation of datasets into graph-ready formats.
+- **Extract:** APIs/HTTP/FTP fetchers (NOAA/USGS/KHS).  
+- **Transform:** schema normalization, OCR, NLP (NER, summaries, geocoding).  
+- **Load:** Neo4j upserts; STAC metadata persisted for geospatial artifacts.
 
-**Components:**
-- **Extract:** Pulls data via APIs, FTP, or direct links (NOAA, USGS, KHS).  
-- **Transform:** Standardizes schemas, performs OCR on scanned documents, and runs NLP (Named Entity Recognition, summarization, geocoding).  
-- **Load:** Inserts structured entities (Places, People, Events) into Neo4j while maintaining STAC metadata for geospatial assets.
+**AI Modules:**  
+`src/ai/models/focus_transformer_v1`, `src/ai/models/embeddings`, `src/ai/explainability` (SHAP/LIME, drift).
 
-**AI Modules:**
-- `src/ai/models/focus_transformer_v1` — AI summarization & Focus Mode entity linking.
-- `src/ai/models/embeddings` — vector embeddings for semantic search.
-- `src/ai/explainability` — SHAP/LIME explainability and drift detection.
-
-**Governance:**  
-Every ETL run is logged with timestamp, checksum, and JSON metadata in `data/work/logs/etl/`, following **MCP experiment logging** for reproducibility.
+**Governance Logs:** `data/work/logs/etl/` (timestamp + checksum + JSON) under MCP.
 
 ---
 
-### 3. Knowledge Graph Layer
+### 3) Knowledge Graph
 
-**Purpose:** Store and interlink all processed data into a semantic graph.  
-**Technology:** Neo4j with optional RDF export (CIDOC CRM + OWL-Time alignment).
+**Purpose:** Linked entities and relationships.
 
-**Core Entities:**
-- `Person`, `Place`, `Event`, `Document`, `Dataset`
-- Relationships: `OCCURRED_AT`, `PARTICIPATED_IN`, `MENTIONS`, `LOCATED_IN`
-
-**Ontology Alignment:**
-- **CIDOC CRM:** for cultural heritage and provenance.
-- **OWL-Time:** for temporal intervals.
-- **GeoSPARQL:** for spatial reasoning.
-- **PROV-O:** for lineage and data processing traceability.
-
-**Storage:**
-Each entity is assigned a persistent UUID and linked to its STAC or DCAT metadata object, ensuring every dataset is traceable through the knowledge graph.
+- Entities: `Person`, `Place`, `Event`, `Document`, `Dataset`  
+- Relations: `OCCURRED_AT`, `PARTICIPATED_IN`, `MENTIONS`, `LOCATED_IN`  
+- Ontologies: **CIDOC CRM**, **OWL-Time**, **GeoSPARQL**, **PROV-O**  
+- Persistent UUIDs; items linked to STAC/DCAT metadata for lineage.
 
 ---
 
-### 4. API & Integration Layer
+### 4) API & Integration Layer
 
-**Technology:** Python **FastAPI** service providing REST/GraphQL endpoints.
+**Stack:** Python **FastAPI** (REST/GraphQL), versioned endpoints.
 
-**Endpoints Examples:**
-- `/api/events?start=1850&end=1900`
-- `/api/focus/{entity_id}`
-- `/api/map/layers`
-- `/api/search?q=Cheyenne`
+**Examples:**  
+`/api/events?start=1850&end=1900`, `/api/focus/{entity_id}`, `/api/search?q=Cheyenne`
 
-**Responsibilities:**
-- Serve data from the graph and file system to the frontend.
-- Handle spatial/temporal queries and pagination.
-- Integrate with AI services (summaries, Focus Mode insights).
-
-All responses conform to JSON or GeoJSON schemas, validated by `schemas/api/v1/*.json`.
+**Duties:** pagination, spatial/temporal queries, AI integration (summaries, Focus Mode).  
+Schemas validated under `schemas/api/v1/*.json`.
 
 ---
 
-### 5. Web Frontend Layer
+### 5) Web Frontend
 
-**Technology:** React 18 + MapLibre GL JS + D3 Canvas.  
-**Directory:** `web/src/`
+**Stack:** React 18 + MapLibre GL JS + D3.  
+**Path:** `web/src/`
 
-**Key Components:**
-- **TimelineView:** interactive chronological visualization.
-- **MapView:** map explorer with historical layers (MapLibre).
-- **LayerControls:** toggleable GIS and historical data layers.
-- **Focus Mode:** AI-powered contextual exploration of entities.
-- **DetailPanel:** displays entity summaries and linked data.
-- **Admin Console:** for data validation and curation.
-
-The frontend communicates exclusively through the API, using versioned endpoints for predictable upgrades.
+**Key Components:** `TimelineView`, `MapView`, `LayerControls`, `FocusPanel`, `DetailPanel`, Admin console.  
+Communicates only through API; adheres to versioned routes for stability.
 
 ---
 
@@ -155,93 +149,55 @@ flowchart TD
 A["External Data Sources (NOAA, USGS, KHS)"]
 B["ETL + AI/ML Pipeline (OCR, NER, Geocoding)"]
 C["Knowledge Graph (Neo4j + CIDOC CRM)"]
-D["FastAPI Layer (REST/GraphQL Endpoints)"]
+D["FastAPI Layer (REST/GraphQL)"]
 E["React + MapLibre Web Client"]
-
 A --> B --> C --> D --> E
 E --> D --> C
 ```
 
 ---
 
-## 🧠 AI-Powered Focus Mode Integration
+## 🧠 Focus Mode (AI)
 
-**Objective:** Center user exploration on a specific entity and dynamically filter related content.
+**Goal:** Center exploration on an entity and filter related content.
 
-**Mechanism:**
-1. User selects an entity (e.g., Fort Larned).
-2. API executes subgraph query in Neo4j to retrieve all linked nodes.
-3. Frontend updates map, timeline, and side panel views.
-4. AI summarizer generates narrative insights, displaying patterns and correlations.
+**Flow:** select entity → API subgraph query → update map/timeline/panel → AI summary highlights correlations.
 
-**Technical Stack:**
-- Backend: FastAPI endpoint `/api/focus/{entity}`
-- AI Model: `focus_transformer_v1` fine-tuned for historical correlation detection.
-- Frontend: React context `FocusProvider` synchronizes state across MapView and TimelineView.
+- **Endpoint:** `/api/focus/{entity}`  
+- **Model:** `focus_transformer_v1` (historical correlation)  
+- **Frontend:** React `FocusProvider` synchronizes state
 
 ---
 
-## 🧮 FAIR+CARE Compliance
+## ⚖️ FAIR+CARE Alignment
 
-The architecture enforces:
-- **Findability:** STAC catalog, metadata search.  
-- **Accessibility:** Open APIs, open data licenses.  
-- **Interoperability:** GeoJSON, DCAT, OWL-Time, CIDOC CRM alignment.  
-- **Reusability:** Modular datasets, DOIs, clear provenance.
+- **Findable:** STAC catalog, searchable metadata  
+- **Accessible:** Open APIs & licenses  
+- **Interoperable:** GeoJSON/DCAT/OWL-Time/CIDOC CRM  
+- **Reusable:** Modular datasets, DOIs, explicit provenance
 
-CARE (Collective Benefit, Authority to Control, Responsibility, Ethics) principles are applied to all Indigenous and cultural data layers.
-
----
-
-## 🧰 Directory Layout
-
-```
-src/
-├── ai/
-│   ├── focus/                 # AI-powered Focus Mode
-│   ├── models/                # Trained NLP + ML models
-│   ├── explainability/        # SHAP/LIME visualization
-│   └── training/              # Model training configs
-├── api/
-│   ├── routes/                # REST/GraphQL route definitions
-│   ├── services/              # Data access services
-│   ├── models/                # API schemas
-│   └── auth/                  # Admin and user authentication
-├── graph/
-│   ├── schema/                # Graph ontology definitions
-│   ├── queries/               # Cypher query templates
-│   ├── ingest/                # Graph data loaders
-│   └── utils/                 # Query helpers and validators
-├── pipelines/
-│   ├── etl/                   # ETL transformations
-│   ├── ai/                    # AI-driven enrichments
-│   ├── validation/            # FAIR+CARE data validators
-│   └── utils/                 # Shared pipeline utilities
-└── telemetry/
-    ├── logs/                  # System logs and experiment reports
-    └── metrics/               # Performance telemetry
-```
+CARE applied to all Indigenous/cultural layers (Authority to Control, Ethics, Responsibility, Collective Benefit).
 
 ---
 
 ## 🧾 Governance & Validation
 
-All major components are bound by **MCP governance checks**:
+Automated under **MCP**:
 
-- **Automated Validations:** GitHub Actions run `stac-validate.yml`, `faircare-validate.yml`, and `codeql.yml`.
-- **SBOM & Attestations:** SPDX manifests under `/releases/v9.7.0/`.
-- **Data Contracts:** JSON schemas defining interface boundaries.
-- **Telemetry Reports:** System-level performance and AI drift metrics (`focus-telemetry.json`).
+- **Workflows:** `stac-validate.yml`, `faircare-validate.yml`, `codeql.yml`  
+- **SBOM:** SPDX manifests in `/releases/v9.7.0/`  
+- **Data Contracts:** JSON schemas for interfaces  
+- **Telemetry:** System performance & AI drift (`focus-telemetry.json`)
 
 ---
 
-## 🧩 Future Enhancements
+## 🧩 Roadmap
 
-1. **3D Temporal Visualization** via Cesium or WebGL integration.  
-2. **GraphQL Federation** for multi-graph interoperability.  
-3. **Predictive Modeling Layer** (simulation of environmental–historical dynamics).  
-4. **Federated Data Nodes** for distributed KFM deployments across institutions.  
-5. **STAC API Deployment** for live catalog search and filtering.
+1. 3D temporal visualization (Cesium/WebGL)  
+2. GraphQL federation across graphs  
+3. Predictive modeling layer (env–history sims)  
+4. Federated nodes across partner institutions  
+5. STAC API deployment for live catalog queries
 
 ---
 
@@ -249,16 +205,17 @@ All major components are bound by **MCP governance checks**:
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Major architecture documentation update for Focus Mode & FAIR+CARE validation. |
-| v9.5.0 | 2025-10-20 | A. Barta | Integration of STAC/DCAT metadata bridge. |
+| v9.7.0 | 2025-11-05 | A. Barta | Major update: Focus Mode, FAIR+CARE validation, telemetry refs. |
+| v9.5.0 | 2025-10-20 | A. Barta | STAC/DCAT metadata bridge integration. |
 | v9.3.2 | 2025-08-10 | KFM Core Team | Added ETL validation and AI governance logging. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial release of system architecture document. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Initial architecture document. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-Built under the **Master Coder Protocol v6.3** · FAIR+CARE Compliant · “Diamond⁹ Ω / Crown∞Ω Certified”
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Documentation Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
