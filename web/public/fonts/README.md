@@ -1,111 +1,96 @@
 ---
 title: "🔤 Kansas Frontier Matrix — Web Fonts & Typography Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/fonts/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "OFL-1.1 / CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-public-fonts-v1.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🔤 Kansas Frontier Matrix — **Web Fonts & Typography Assets**
+# 🔤 **Kansas Frontier Matrix — Web Fonts & Typography Assets**
 `web/public/fonts/README.md`
 
-**Purpose:**  
-Repository for all **typography and web font assets** used in the Kansas Frontier Matrix (KFM) interface.  
-All fonts comply with **FAIR+CARE**, **ISO 19115**, and **WCAG 2.1 AA** standards for accessibility, readability, and open-source sustainability.
+**Purpose:** Provide a FAIR+CARE-certified, accessible, and sustainable typography system for the KFM web interface.  
+This directory contains open-source, ISO-compliant font assets licensed under **OFL 1.1 / CC-BY 4.0**, supporting inclusive multilingual readability under **MCP v6.3** and **WCAG 2.1 AA**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Typography%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
-[![License: Open Font License](https://img.shields.io/badge/License-OFL--1.1-green)](../../../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Compliant-blue)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../docs/README.md)
+[![License: OFL 1.1 / CC-BY 4.0](https://img.shields.io/badge/License-OFL%201.1%20%2F%20CC--BY%204.0-green)](../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../../docs/standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Web Fonts & Typography Assets** directory provides all approved open-source typefaces for KFM’s web and data visualization interfaces.  
-Each font family is licensed, checksum-verified, and governed under FAIR+CARE standards for accessibility and ethical use.
-
-### Core Responsibilities:
-- Maintain open-source, accessible, and reproducible typography assets.  
-- Ensure compliance with FAIR+CARE, WCAG 2.1 AA, and ISO metadata standards.  
-- Track provenance, licensing, and sustainability metrics for all font families.  
-- Enable multilingual and scientific visualization readability.  
+The **Typography layer** defines consistent, open, and accessible font usage for KFM’s web and visualization systems.  
+All font families undergo FAIR+CARE validation, checksum verification, and accessibility testing for legibility, energy efficiency, and multilingual compatibility.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/public/fonts/
-├── README.md                               # This file — documentation for font assets
+├── README.md
 │
-├── Inter/                                 # Primary KFM UI and data font family
+├── Inter/                  # Primary UI font (sans-serif)
 │   ├── Inter-Regular.woff2
 │   ├── Inter-Bold.woff2
 │   ├── Inter-Italic.woff2
 │   └── metadata.json
 │
-├── Source_Serif_Pro/                      # Secondary serif display font for headings
+├── Source_Serif_Pro/       # Secondary serif font for headings and reports
 │   ├── SourceSerifPro-Regular.woff2
 │   ├── SourceSerifPro-Bold.woff2
 │   └── metadata.json
 │
-├── Space_Mono/                            # Monospaced font for code and telemetry display
+├── Space_Mono/             # Monospace for telemetry & code visualization
 │   ├── SpaceMono-Regular.woff2
 │   └── metadata.json
 │
-└── metadata.json                          # Global font metadata and governance registry
+└── metadata.json           # Global registry for font families and governance metadata
 ```
 
 ---
 
-## ⚙️ Typography Governance Workflow
+## 🧩 Font Governance Workflow
 
 ```mermaid
 flowchart TD
-    A["Font Acquisition (Google Fonts / Open License)"] --> B["Accessibility Validation (WCAG 2.1 AA)"]
-    B --> C["FAIR+CARE and ISO Metadata Audit"]
-    C --> D["Checksum & Provenance Registration"]
-    D --> E["Governance Ledger Sync and Public Publication"]
+A["Font Acquisition (OFL / Apache Sources)"] --> B["Accessibility Audit (WCAG 2.1 AA)"]
+B --> C["Checksum + License Verification"]
+C --> D["FAIR+CARE & ISO Metadata Registration"]
+D --> E["Governance Ledger Sync (Provenance + Telemetry)"]
 ```
 
-### Workflow Summary:
-1. **Acquisition:** Fonts selected from open-license repositories (OFL, Apache).  
-2. **Audit:** Readability and legibility tested across devices and languages.  
-3. **Checksum:** File hashes computed for integrity verification.  
-4. **Governance:** Metadata synchronized with FAIR+CARE and ISO 19115 registries.  
+1. **Acquisition:** Fonts sourced only from verifiable, open repositories.  
+2. **Audit:** Readability, legibility, and language coverage validated.  
+3. **Checksum:** Hashes computed for version integrity.  
+4. **Governance:** Registered in FAIR+CARE and ISO 19115 metadata ledgers.  
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Font Contracts & Validation
 
-```json
-{
-  "id": "font_registry_v9.6.0",
-  "families": ["Inter", "Source Serif Pro", "Space Mono"],
-  "license": "OFL-1.1",
-  "fairstatus": "certified",
-  "wcag_compliance": "2.1 AA",
-  "checksum_sha256": "a9efc512d4d237a67bc2ad6eb8e12f3f46aa71267ac96e1a40c2e7c39a88d918",
-  "energy_efficiency_score": 99.1,
-  "carbon_output_gco2e": 0.04,
-  "created": "2025-11-04T00:00:00Z",
-  "validator": "@kfm-typography",
-  "governance_registered": true,
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| Accessibility | Ensure WCAG 2.1 AA legibility across all sizes. | `accessibility_scan.yml` |
+| FAIR+CARE | Audit provenance and inclusivity of typefaces. | `faircare-validate.yml` |
+| Telemetry | Record render performance and energy footprint. | `telemetry-export.yml` |
+| Metadata | SPDX + ISO 19115 font-level metadata validation. | CI/CD Audit |
+
+Artifacts logged to:
+- `../../../../../releases/v9.7.0/focus-telemetry.json`  
+- `../../../../../docs/reports/audit/data_provenance_ledger.json`
 
 ---
 
@@ -113,84 +98,82 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed within metadata.json and manifest.zip via checksum linkage. | @kfm-data |
-| **Accessible** | Open Font License (OFL-1.1) and WCAG-compliant text rendering. | @kfm-accessibility |
-| **Interoperable** | Fonts compatible with all web frameworks and ISO metadata schemas. | @kfm-architecture |
-| **Reusable** | Openly licensed and documented for global research use. | @kfm-design |
-| **Collective Benefit** | Promotes inclusivity, multilingual readability, and open knowledge access. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council validates and certifies font registry. | @kfm-governance |
-| **Responsibility** | Validators document provenance and sustainability audits. | @kfm-sustainability |
-| **Ethics** | Ensures unbiased font design without cultural misappropriation. | @kfm-ethics |
-
-Audit references:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+| **Findable** | Fonts indexed by name, version, and checksum. | @kfm-data |
+| **Accessible** | WCAG 2.1 AA visual contrast and readability ensured. | @kfm-accessibility |
+| **Interoperable** | ISO 19115 metadata + OFL licensing for reuse. | @kfm-architecture |
+| **Reusable** | Open licenses; easily embeddable in all frameworks. | @kfm-design |
+| **Collective Benefit** | Promotes inclusive, multilingual readability. | @faircare-council |
+| **Authority to Control** | Council certifies accessibility and ethics of typography. | @kfm-governance |
+| **Responsibility** | Monitors sustainability and carbon metrics per render. | @kfm-sustainability |
+| **Ethics** | Avoids cultural bias or proprietary restriction in design. | @kfm-ethics |
 
 ---
 
-## ⚙️ Typography Classification
+## 🧾 Example Font Metadata
 
-| Font Family | Type | Primary Usage | FAIR+CARE Status |
-|--------------|------|----------------|------------------|
-| `Inter` | Sans-serif | UI, dashboards, and content display. | ✅ Certified |
-| `Source Serif Pro` | Serif | Headings, documentation, and reports. | ✅ Certified |
-| `Space Mono` | Monospace | Code samples, telemetry logs, and AI explanations. | ✅ Certified |
+```json
+{
+  "id": "font_registry_v9.7.0",
+  "families": ["Inter", "Source Serif Pro", "Space Mono"],
+  "license": "OFL-1.1",
+  "fairstatus": "certified",
+  "wcag_compliance": "2.1 AA",
+  "checksum_sha256": "a9efc512d4d237a67bc2ad6eb8e12f3f46aa71267ac96e1a40c2e7c39a88d918",
+  "energy_efficiency_score": 99.2,
+  "carbon_output_gco2e": 0.03,
+  "timestamp": "2025-11-05T19:20:00Z"
+}
+```
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ⚙️ Font Usage Guidelines
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Active Fonts | Continuous | Maintained and updated under OFL licensing. |
-| Metadata | Permanent | Stored under blockchain-backed provenance ledger. |
-| Accessibility Reports | 365 Days | Renewed quarterly with design system review. |
-| FAIR+CARE Certifications | Permanent | Retained under ethics governance manifest. |
+| Font Family | Type | Role | FAIR+CARE Status |
+|--------------|------|------|------------------|
+| `Inter` | Sans-serif | UI + data visualizations | ✅ Certified |
+| `Source Serif Pro` | Serif | Headings + narratives | ✅ Certified |
+| `Space Mono` | Monospace | Code + telemetry | ✅ Certified |
 
-Automation governed by `font_asset_sync.yml`.
+All fonts must load asynchronously with `font-display: swap` to minimize blocking and improve sustainability.
+
+---
+
+## ♿ Accessibility & Sustainability Standards
+
+- Minimum font size **16px**; scalable typography with user zoom support.  
+- Contrast ratio ≥ **4.5:1**; variable weights used for emphasis, not color alone.  
+- Fonts optimized (WOFF2) and compressed for energy efficiency.  
+- Energy use per render tracked in telemetry for every deployment.  
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 140 KB | @kfm-design |
-| Render Energy | 0.02 Wh | @kfm-sustainability |
-| Carbon Output | 0.03 gCO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry metrics recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+| Metric | Target | Verified By |
+|-------|--------|-------------|
+| Avg. File Size | ≤ 150 KB | Build Metrics |
+| Render Energy | ≤ 0.02 Wh | Telemetry |
+| Carbon Output | ≤ 0.03 gCO₂e | CI Pipeline |
+| Renewable Hosting | 100% RE100 | @kfm-infrastructure |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Web Fonts & Typography Assets (v9.6.0).
-FAIR+CARE and ISO-certified font collection ensuring accessible, open, and sustainable typography across all KFM interfaces.
-Compliant with WCAG 2.1 AA, MCP-DL v6.3, and the FAIR+CARE Council’s ethical design standards.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Introduced OFL-compliant font registry and checksum lineage. |
-| v9.5.0 | 2025-11-02 | Added WCAG validation integration and multilingual readiness. |
-| v9.3.2 | 2025-10-28 | Established FAIR+CARE typography governance baseline. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded & aligned: governance contracts, telemetry schema v1, and accessibility validation. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Introduced OFL-compliant registry and checksum lineage. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Integrated WCAG validation and multilingual readiness. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established FAIR+CARE typography governance baseline. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Accessible Typography × FAIR+CARE Governance × Sustainable Design*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — OFL 1.1 / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Public Assets](../README.md) · [Docs Index](../../../../../docs/README.md)
 
 </div>
-
