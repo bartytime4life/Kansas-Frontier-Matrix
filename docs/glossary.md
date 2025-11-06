@@ -17,8 +17,8 @@ governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
 # 📘 **Kansas Frontier Matrix — Glossary & Terminology Index**
 `docs/glossary.md`
 
-**Purpose:** Provide a standardized vocabulary for contributors and researchers working within the Kansas Frontier Matrix (KFM) project.  
-This glossary aligns with **Master Coder Protocol (MCP v6.3)**, **FAIR+CARE**, and **Platinum README Template v7.1**, ensuring consistent use of scientific, technical, and ethical terminology across all documentation.
+**Purpose:** Provide a standardized vocabulary for contributors and researchers working within the Kansas Frontier Matrix (KFM).  
+This glossary aligns with **MCP v6.3**, **FAIR+CARE**, and **Platinum README v7.1** to ensure consistent, machine-parseable terminology across all documentation.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
@@ -29,135 +29,100 @@ This glossary aligns with **Master Coder Protocol (MCP v6.3)**, **FAIR+CARE**, a
 
 ---
 
-## 🧭 Overview
+## 📘 Overview
 
-This glossary defines all major terms, acronyms, and frameworks used throughout the KFM monorepo.  
-Each entry includes a concise definition and, where applicable, a reference to related KFM components, international standards, or ethical governance practices.
+This glossary defines key **technical**, **governance**, and **domain** terms used throughout the KFM monorepo.  
+Each entry provides a concise definition and cross-references related documentation or standards for traceability.
 
-The glossary serves three main functions:
-1. **Standardization:** Ensure consistent technical and academic language across all documents.  
-2. **Traceability:** Link definitions to external standards like STAC, DCAT, CIDOC CRM, and OWL-Time.  
-3. **Governance:** Provide clear definitions for ethical and Indigenous data stewardship terminology in FAIR+CARE contexts.
+> When adding new terms, include a clear definition, the **related component** (file or folder), and — when applicable — a reference to an external standard (e.g., STAC, DCAT, CIDOC CRM).
 
 ---
 
 ## 📚 Core Terms
 
 | Term | Definition | Related Components |
-|------|-------------|--------------------|
-| **KFM (Kansas Frontier Matrix)** | The open-source, FAIR+CARE-certified geospatial–historical knowledge hub integrating Kansas’s environmental, cultural, and historical data. | Entire monorepo |
-| **MCP (Master Coder Protocol)** | A documentation-first software development protocol emphasizing reproducibility, transparency, and open standards. | Docs, pipelines, governance |
-| **FAIR Principles** | Data management guidelines ensuring information is Findable, Accessible, Interoperable, and Reusable. | Validation pipelines, governance |
-| **CARE Principles** | Ethical framework for Indigenous and community data governance emphasizing Collective Benefit, Authority to Control, Responsibility, and Ethics. | FAIR+CARE validator, governance council |
-| **STAC (SpatioTemporal Asset Catalog)** | An OGC community standard for describing and indexing geospatial data assets in JSON format. | `data/stac/`, `stac-validate.yml` |
-| **DCAT (Data Catalog Vocabulary)** | A W3C standard for dataset metadata and discovery in RDF/JSON-LD. Used for FAIR+CARE catalog interoperability. | Metadata bridge (`stac-dcat-bridge.yml`) |
-| **CIDOC CRM (Conceptual Reference Model)** | ISO 21127 ontology for cultural heritage information, providing semantic structure for historical data. | `src/graph/schema/`, Neo4j graph |
-| **OWL-Time** | W3C ontology describing temporal intervals and instants for event-based data. | Knowledge graph, temporal metadata |
-| **GeoJSON / GeoTIFF** | Open geospatial data formats used for vector and raster assets respectively. | `data/processed/`, `web/MapView` |
-| **COG (Cloud-Optimized GeoTIFF)** | A GeoTIFF variant optimized for tiled web access and scalable map serving. | ETL pipeline, `rio-cogeo` processing |
-| **STAC Item** | A JSON file describing a single geospatial dataset or asset, including geometry, time, and metadata. | `data/stac/items/` |
-| **STAC Collection** | A container grouping related STAC Items with shared properties like temporal extent and license. | `data/stac/collections/` |
-| **ETL (Extract, Transform, Load)** | Data pipeline process that retrieves, standardizes, and loads data into structured repositories. | `src/pipelines/etl/` |
-| **Knowledge Graph** | A Neo4j-based graph storing relationships between entities (People, Places, Events, Documents). | `src/graph/` |
-| **Focus Mode** | AI-assisted system that dynamically filters and summarizes data centered on a specific entity or topic. | `src/ai/models/focus_transformer_v1/` |
-| **AI Explainability** | Transparent reporting of AI model decisions using SHAP or LIME techniques. | `src/ai/explainability/` |
-| **Telemetry** | Automated system metrics capturing validation, workflow results, and performance data. | `releases/v9.7.0/focus-telemetry.json` |
-| **Governance Ledger** | Immutable audit log tracking validation and FAIR+CARE compliance events. | `reports/audit/` |
+|------|-----------|--------------------|
+| **KFM (Kansas Frontier Matrix)** | FAIR+CARE-certified, open geospatial–historical knowledge hub for Kansas. | Entire monorepo |
+| **MCP (Master Coder Protocol)** | Documentation-first protocol enabling reproducibility and auditability. | Docs, pipelines, governance |
+| **FAIR Principles** | Findable, Accessible, Interoperable, Reusable data framework. | Validation pipelines, governance |
+| **CARE Principles** | Ethical framework: Collective Benefit, Authority, Responsibility, Ethics. | FAIR+CARE validator, governance council |
+| **STAC (SpatioTemporal Asset Catalog)** | JSON spec for spatio-temporal assets enabling catalog discovery. | `data/stac/`, `stac-validate.yml` |
+| **DCAT (Data Catalog Vocabulary)** | W3C vocabulary for dataset metadata & discovery (RDF/JSON-LD). | STAC↔DCAT bridge |
 
 ---
 
-## ⚖ Governance & Ethical Terms
+## ⚙️ Technical & Pipeline Vocabulary
 
 | Term | Definition | Reference |
-|------|-------------|------------|
-| **Ethical Data Stewardship** | The practice of managing data with transparency, respect, and community benefit in mind. | FAIR+CARE |
-| **Data Provenance** | Metadata describing the origin, transformations, and history of a dataset. | `data/sources/*.json` |
-| **Indigenous Data Sovereignty** | The right of Indigenous peoples to govern the collection, ownership, and application of their data. | CARE principles |
-| **Cultural Sensitivity Review** | A governance process ensuring datasets containing Indigenous or cultural information are ethically shared. | `governance_form.yml` |
-| **Open Data License** | A public license permitting use, reuse, and redistribution of datasets, e.g., CC-BY, CC0, or Public Domain. | FAIR compliance |
-| **Governance Council** | A group of KFM contributors responsible for ethical review, policy enforcement, and CARE evaluations. | Governance charter |
-
----
-
-## 🧮 Technical & Pipeline Terms
-
-| Term | Definition | Reference |
-|------|-------------|------------|
-| **SBOM (Software Bill of Materials)** | SPDX-compliant manifest listing all software dependencies and licenses. | `releases/v9.7.0/sbom.spdx.json` |
-| **CI/CD (Continuous Integration/Continuous Deployment)** | Automated validation, testing, and deployment workflows managed by GitHub Actions. | `.github/workflows/` |
-| **Pre-Commit Hooks** | Local validation scripts ensuring all commits meet syntax and metadata standards before push. | `.pre-commit-config.yaml` |
-| **DVC (Data Version Control)** | Git-compatible system for managing large datasets and versioned data artifacts. | `data/raw/`, `data/processed/` |
-| **SPDX (Software Package Data Exchange)** | Open standard for communicating software bill of materials and license data. | `sbom_ref` |
-| **SLSA (Supply-chain Levels for Software Artifacts)** | Framework for secure, auditable software supply chain practices. | CI/CD release attestation |
-| **Manifest** | JSON or ZIP file summarizing version metadata and checksums for a release. | `manifest_ref` |
-| **Checksum (SHA-256)** | Cryptographic hash ensuring data integrity and immutability. | `data/sources/*.json` |
-| **FAIR+CARE Validator** | Python-based automated audit ensuring datasets meet FAIR and CARE criteria. | `faircare-validate.yml` |
-| **Telemetry Dashboard** | Governance dashboard visualizing validation, compliance, and performance metrics. | Web Admin Console |
+|------|------------|-----------|
+| **ETL** | Extract, Transform, Load pipeline stages. | `src/pipelines/etl/` |
+| **Knowledge Graph** | Neo4j-based semantic graph of entities and relations. | `src/graph/` |
+| **SBOM (Software Bill of Materials)** | SPDX inventory of packages, versions, and licenses. | `../releases/v9.7.0/sbom.spdx.json` |
+| **Telemetry** | Build/validation metrics exported to a single JSON. | `../releases/v9.7.0/focus-telemetry.json` |
+| **DVC** | Data Version Control for large datasets and artifacts. | `data/raw/`, `data/processed/` |
+| **SLSA** | Supply-chain Levels for Software Artifacts provenance. | CI/CD release attestation |
+| **Checksum (SHA-256)** | Cryptographic hash verifying integrity of artifacts. | `data/sources/*.json` |
 
 ---
 
 ## 🧠 AI & Semantic Frameworks
 
 | Term | Definition | Related Component |
-|------|-------------|-------------------|
-| **NER (Named Entity Recognition)** | NLP technique used to identify names of people, places, and organizations in text. | `src/ai/models/` |
-| **Embedding Model** | Neural model producing vectorized representations of text for semantic search and entity linking. | `src/ai/models/embeddings/` |
-| **Transformers** | Deep learning architecture used for NLP tasks (e.g., summarization, classification). | `focus_transformer_v1` |
-| **SHAP (SHapley Additive exPlanations)** | Explainability technique quantifying feature importance in AI models. | `src/ai/explainability/` |
-| **LIME (Local Interpretable Model-agnostic Explanations)** | Model-agnostic technique for understanding black-box predictions. | `src/ai/explainability/` |
-| **Cypher Query** | Neo4j’s declarative graph query language used for managing entities and relationships. | `src/graph/queries/` |
+|------|------------|-------------------|
+| **NER** | Named Entity Recognition for People/Places/Orgs. | `src/ai/models/` |
+| **Transformers** | Deep learning models for NLP tasks (e.g., summarization). | `src/ai/models/*` |
+| **Embedding Model** | Vector representations for semantic search and linking. | `src/ai/models/embeddings/` |
+| **SHAP** | Explainability method for feature contribution. | `src/ai/explainability/` |
+| **LIME** | Local interpretable explanations for model predictions. | `src/ai/explainability/` |
+| **Cypher** | Query language for Neo4j graphs. | `src/graph/queries/` |
 
 ---
 
-## 🗺 Data & Geospatial Vocabulary
+## 🗺 Geospatial & Historical Terms
 
 | Term | Definition | Related Usage |
-|------|-------------|----------------|
-| **Bounding Box (BBox)** | Rectangular coordinates `[west, south, east, north]` defining dataset extent. | STAC Items |
-| **Projection (CRS)** | Coordinate reference system used for spatial data (e.g., EPSG:4326 WGS84). | All geospatial data |
-| **LiDAR (Light Detection and Ranging)** | Remote sensing method using laser pulses to measure topography. | Elevation datasets |
-| **Raster** | Gridded data (e.g., imagery, DEM, heatmaps) represented as pixels. | GeoTIFF, COG |
-| **Vector** | Geospatial features represented as points, lines, or polygons. | GeoJSON, shapefiles |
-| **DEM (Digital Elevation Model)** | Surface model representing elevation data. | `data/processed/climate/` |
-| **Hydrography** | Mapping of surface water features (rivers, lakes, basins). | USGS, NHD datasets |
-| **Topology** | Spatial relationships between geospatial entities (e.g., adjacency, containment). | Graph layer, GeoSPARQL |
+|------|------------|---------------|
+| **BBox (Bounding Box)** | `[west, south, east, north]` spatial extent (WGS84). | STAC Items |
+| **CRS (Projection)** | Coordinate Reference System (e.g., EPSG:4326). | All geodata |
+| **COG** | Cloud-Optimized GeoTIFF for tiled web access. | ETL rasters |
+| **GeoJSON / GeoTIFF** | Open formats for vector/raster geodata. | Processed layers |
+| **DEM** | Digital Elevation Model for terrain. | `data/processed/**` |
+| **Hydrography** | Rivers, lakes, basins networks. | USGS/NHD data |
 
 ---
 
-## 🕰 Temporal & Historical Context
+## ⚖️ Governance & Ethics
 
 | Term | Definition | Reference |
-|------|-------------|------------|
-| **PeriodO** | Linked data gazetteer of historical periods used for tagging events and datasets with time ranges. | Temporal ontology alignment |
-| **Timeline Slider** | Interactive UI element allowing exploration of temporal datasets. | Web UI / React TimelineView |
-| **Temporal Extent** | The time range represented by a dataset (start and end dates). | STAC metadata |
-| **Event Node** | Knowledge graph entity representing an occurrence with time, place, and participants. | `src/graph/schema/` |
-| **Historical Layer** | Map overlay or dataset representing a specific time period (e.g., 1850s, 1930s). | `web/public/maps/` |
+|------|------------|-----------|
+| **Governance Ledger** | Immutable log of FAIR+CARE decisions and events. | `reports/audit/` |
+| **Ethical Data Stewardship** | Managing data with transparency and community benefit. | `standards/faircare.md` |
+| **Indigenous Data Sovereignty** | Indigenous governance over data use and access. | `standards/faircare.md` |
+| **Cultural Sensitivity Review** | Process ensuring ethical sharing of sensitive data. | `.github/ISSUE_TEMPLATE/governance_form.yml` |
 
 ---
 
 ## 🔗 Cross-Standard References
 
 | Standard | Governing Body | KFM Usage |
-|-----------|----------------|-----------|
-| **STAC 1.0.0** | OGC / Radiant Earth Foundation | Data cataloging and validation |
-| **DCAT 3.0** | W3C | Metadata interoperability |
-| **CIDOC CRM ISO 21127** | ICOM / ISO | Knowledge graph ontology |
-| **OWL-Time** | W3C | Temporal relationships in event data |
-| **GeoSPARQL 1.1** | OGC | Spatial reasoning within graph data |
-| **SPDX 2.3** | Linux Foundation | SBOM and license tracking |
-| **SLSA 1.0** | OpenSSF | Provenance and supply chain integrity |
+|----------|----------------|-----------|
+| **STAC 1.0.0** | OGC / Radiant Earth | Cataloging geospatial assets |
+| **DCAT 3.0** | W3C | Dataset metadata interoperability |
+| **CIDOC CRM** | ICOM / ISO | Cultural heritage entity modeling |
+| **OWL-Time** | W3C | Temporal intervals and instants |
+| **GeoSPARQL 1.1** | OGC | Spatial reasoning in graphs |
+| **SPDX 2.3** | Linux Foundation | Software bill of materials |
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Created comprehensive glossary for technical, ethical, and semantic terms. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added FAIR+CARE and ontology-related vocabulary. |
-| v9.3.0 | 2025-08-12 | KFM Core Team | Expanded technical and pipeline terminology. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial glossary framework created. |
+| v9.7.0 | 2025-11-05 | A. Barta | Comprehensive glossary created; aligned to MCP v6.3 and FAIR+CARE. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added ontology and governance terminology. |
+| v9.3.0 | 2025-08-12 | KFM Core Team | Expanded technical and pipeline entries. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Initial glossary framework. |
 
 ---
 
@@ -165,6 +130,6 @@ The glossary serves three main functions:
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
 Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Return to Documentation Index](README.md) · [View Governance Charter](standards/governance/ROOT-GOVERNANCE.md)
+[Back to Documentation Index](README.md) · [Governance Charter](standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
