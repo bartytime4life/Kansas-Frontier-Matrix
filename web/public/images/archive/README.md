@@ -1,103 +1,84 @@
 ---
 title: "🗄️ Kansas Frontier Matrix — Archived Image Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/images/archive/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Annual / Archival Preservation"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-public-images-archive-v1.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🗄️ Kansas Frontier Matrix — **Archived Image Assets**
+# 🗄️ **Kansas Frontier Matrix — Archived Image Assets**
 `web/public/images/archive/README.md`
 
 **Purpose:**  
-Preserves **retired or replaced image assets** from previous Kansas Frontier Matrix (KFM) web releases.  
-All archived assets are maintained under FAIR+CARE, ISO, and WCAG governance standards for ethical preservation, provenance continuity, and accessibility lineage.
+Preserve **retired or replaced public images** from prior KFM releases with full FAIR+CARE lineage, ISO 19115 metadata, and checksum provenance for transparent, ethical design stewardship under **MCP v6.3**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Archive%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Archived-orange)](../../../../../docs/standards/faircare.md)
+[![Status: Archived](https://img.shields.io/badge/Status-Archived-blue)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Archived Image Assets** directory acts as a **FAIR+CARE-certified digital preservation library** for outdated or deprecated visual assets.  
-These assets are stored with checksum integrity and provenance records to maintain full transparency in KFM’s visual and design history.
-
-### Core Responsibilities:
-- Archive deprecated images under sustainable and ethical design governance.  
-- Preserve accessibility lineage and metadata provenance.  
-- Document changes, replacements, and deprecation events.  
-- Maintain ISO and FAIR+CARE alignment for historical reference and reproducibility.  
+The **Archived Image Assets** library provides immutable, accessible storage for deprecated backgrounds, banners, thumbnails, and governance visuals.  
+Every asset is checksum-locked and linked to provenance ledgers, enabling reproducible audits and research into KFM’s visual evolution.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/public/images/archive/
-├── README.md                               # This file — documentation for archived image assets
-│
-├── legacy-header-bg.png                    # Deprecated site header background
-├── legacy-dashboard-banner.jpg             # Old dashboard banner replaced by dynamic version
-├── legacy-footer-graphic.svg               # Previous footer branding asset
-├── legacy-map-preview.png                  # Retired historical map thumbnail
-└── metadata.json                           # FAIR+CARE archival metadata and provenance record
+├── README.md
+├── legacy-header-bg.png
+├── legacy-dashboard-banner.jpg
+├── legacy-footer-graphic.svg
+├── legacy-map-preview.png
+└── metadata.json
 ```
 
 ---
 
-## ⚙️ Archival Workflow
+## 🧩 Archival Workflow
 
 ```mermaid
 flowchart TD
-    A["Deprecated Image Asset"] --> B["Accessibility & FAIR+CARE Review"]
-    B --> C["Checksum & Provenance Registration"]
-    C --> D["Governance Certification"]
-    D --> E["Archival Storage (web/public/images/archive/)"]
-    E --> F["Ledger Synchronization & Metadata Publication"]
+A["Deprecated Image"] --> B["WCAG + FAIR+CARE Review"]
+B --> C["Checksum + SPDX/ISO Metadata"]
+C --> D["Governance Ledger Sync"]
+D --> E["Permanent Storage (/images/archive)"]
 ```
 
-### Workflow Summary:
-1. **Deprecation:** Asset replaced or superseded in KFM’s UI or documentation.  
-2. **Audit:** WCAG accessibility and FAIR+CARE ethics validation conducted.  
-3. **Checksum Verification:** SHA-256 hash computed for integrity.  
-4. **Governance:** Provenance registered under blockchain-linked audit logs.  
+1. **Audit:** Accessibility, ethics, and sustainability reviewed.  
+2. **Register:** SHA-256 checksum + license + alt/context metadata recorded.  
+3. **Governance:** Archive entry linked to ledger with replacement mapping.  
+4. **Storage:** Assets retained permanently; publicly viewable for documentation.
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Validation Contracts
 
-```json
-{
-  "id": "archived_images_registry_v9.6.0",
-  "archived_from_version": "v9.2.0",
-  "replaced_by": [
-    "web/public/images/ui/header/header_dynamic_v9.6.0.png",
-    "web/public/images/ui/footer/footer_branding_v9.6.0.svg"
-  ],
-  "fairstatus": "certified",
-  "checksum_sha256": "de98b33c47a9a1ec2b1d3b72b72614e5f71b74e32847379e59b7f1d9bb8cead3",
-  "archived_date": "2025-11-04T00:00:00Z",
-  "carbon_output_gco2e": 0.05,
-  "energy_efficiency_score": 98.9,
-  "validator": "@kfm-archive",
-  "governance_registered": true,
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| Accessibility Lineage | Maintain WCAG AA history + alt text | `accessibility_scan.yml` |
+| FAIR+CARE Archive | Ethical retention & cultural neutrality | `faircare-validate.yml` |
+| Metadata Schema | ISO 19115 + SPDX archival conformance | `docs-lint.yml` |
+| Telemetry | Track archival energy and carbon | `telemetry-export.yml` |
+
+Artifacts stored in:
+- `../../../../../docs/reports/audit/data_provenance_ledger.json`
+- `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -105,84 +86,79 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed under metadata registry and linked to manifest lineage. | @kfm-data |
-| **Accessible** | Stored in open, web-optimized formats for archival viewing. | @kfm-accessibility |
-| **Interoperable** | Metadata adheres to ISO 19115 and FAIR+CARE schema. | @kfm-architecture |
-| **Reusable** | Openly licensed for educational and audit reference. | @kfm-design |
-| **Collective Benefit** | Ensures open historical transparency and ethical stewardship. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council certifies archival governance. | @kfm-governance |
-| **Responsibility** | Archivists ensure integrity and environmental accountability. | @kfm-sustainability |
-| **Ethics** | Assets stored neutrally without cultural or contextual bias. | @kfm-ethics |
-
-Audit data maintained in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
+| **Findable** | Indexed by checksum and retired version in metadata.json. | @kfm-data |
+| **Accessible** | Open formats (PNG/JPG/SVG/GeoTIFF) with alt/context. | @kfm-accessibility |
+| **Interoperable** | Metadata aligned with ISO 19115 and FAIR+CARE schema. | @kfm-architecture |
+| **Reusable** | CC-BY 4.0 allows educational and historical reuse. | @kfm-design |
+| **Collective Benefit** | Documents open design heritage and transparency. | @faircare-council |
+| **Authority to Control** | Council certifies archival entries and replacements. | @kfm-governance |
+| **Responsibility** | Archivists maintain checksums, lineage, and sustainability data. | @kfm-sustainability |
+| **Ethics** | Assets contextualized neutrally; no misleading imagery. | @kfm-ethics |
 
 ---
 
-## ⚙️ Archival Classifications
+## 🧾 Example Metadata Record
+
+```json
+{
+  "id": "archived_images_v9.7.0",
+  "file": "legacy-footer-graphic.svg",
+  "retired_in": "v9.6.0",
+  "replacement": "web/public/images/ui/footer/footer_branding_v9.7.0.svg",
+  "retire_reason": "Updated brand tokens and AA contrast improvements",
+  "checksum_sha256": "de98b33c47a9a1ec2b1d3b72b72614e5f71b74e32847379e59b7f1d9bb8cead3",
+  "fairstatus": "archived",
+  "timestamp": "2025-11-05T22:35:00Z"
+}
+```
+
+---
+
+## 🗂️ Archival Classifications
 
 | File | Description | Replacement | Category |
-|------|--------------|--------------|-----------|
-| `legacy-header-bg.png` | Deprecated header background image. | `header_dynamic_v9.6.0.png` | UI |
-| `legacy-dashboard-banner.jpg` | Old dashboard hero image. | `dashboard_banner_dynamic_v9.6.0.png` | Web |
-| `legacy-footer-graphic.svg` | Replaced footer branding. | `footer_branding_v9.6.0.svg` | Governance |
-| `legacy-map-preview.png` | Retired map tile preview. | `maps_preview_modern_v9.6.0.png` | Data |
+|------|-------------|-------------|----------|
+| `legacy-header-bg.png` | Deprecated header background image. | `ui/header/header_dynamic_v9.7.0.png` | UI |
+| `legacy-dashboard-banner.jpg` | Former dashboard hero image. | `ui/header/dashboard_banner_dynamic_v9.7.0.png` | Web |
+| `legacy-footer-graphic.svg` | Previous footer branding asset. | `ui/footer/footer_branding_v9.7.0.svg` | Governance |
+| `legacy-map-preview.png` | Retired historical map thumbnail. | `maps/preview/preview_modern_v9.7.0.png` | Data |
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♿ Accessibility & Preservation Standards
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Archived Assets | Permanent | Immutable under checksum verification. |
-| FAIR+CARE Reports | 365 Days | Revalidated annually during audit cycle. |
-| Metadata | Permanent | Stored under blockchain-backed ledger registry. |
-| Accessibility Reports | 180 Days | Updated quarterly per WCAG 2.1 AA reviews. |
-
-Automation managed through `archived_image_sync.yml`.
+- Archived imagery includes **alt text**, **title**, and context in metadata.  
+- Immutable under checksum governance; not deployed in live UI.  
+- Color/contrast lineage retained for historical audits.  
+- Sustainability metrics tracked per archival sync.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 420 KB | @kfm-design |
-| Render Energy | 0.04 Wh | @kfm-sustainability |
-| Carbon Output | 0.05 gCO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+| Metric | Target | Verified By |
+|-------|--------|-------------|
+| Avg. File Size | ≤ 500 KB | Build metrics |
+| Archive Energy | ≤ 0.04 Wh | Telemetry |
+| Carbon Output | ≤ 0.06 gCO₂e | CI telemetry |
+| Renewable Hosting | 100% RE100 | Infrastructure |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Archived Image Assets (v9.6.0).
-FAIR+CARE and ISO-certified repository for legacy and deprecated images preserved for design history and provenance traceability.
-Maintained under MCP-DL v6.3, WCAG 2.1 AA, and ethical archival governance standards.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Introduced archival lineage registry and blockchain-based provenance tracking. |
-| v9.5.0 | 2025-11-02 | Enhanced sustainability audit and checksum retention framework. |
-| v9.3.2 | 2025-10-28 | Established foundational archive repository for public image assets. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded: telemetry schema v1, ISO/FAIR alignment, replacement mappings. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Introduced archival lineage + checksum governance. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Added sustainability audit integration and AA checks. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Design Heritage × FAIR+CARE Ethics × Sustainable Archival Governance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Certified under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Public Images](../README.md) · [Docs Portal](../../../../../docs/README.md)
 
 </div>
