@@ -1,165 +1,164 @@
----
+# 🐞 Kansas Frontier Matrix — Bug Report Template  
+# File: .github/ISSUE_TEMPLATE/bug_report.yaml  
+# Purpose: Standardized issue form for reporting software, data, or workflow bugs.  
+# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
+# SPDX-License-Identifier: CC-BY-4.0  
+
 name: "🐞 Bug Report"
-description: "Report a bug or reproducibility issue within the Kansas Frontier Matrix (FAIR+CARE · MCP-DL v6.3 Compliant)"
-title: "[BUG] <brief description>"
-labels: ["bug", "governance:review-required", "faircare:validation"]
+description: "Report an error, malfunction, or unexpected behavior in the Kansas Frontier Matrix system."
+title: "Bug: [Short Description]"
+labels:
+  - "bug"
+  - "triage"
 assignees:
-  - "@kfm-data"
-  - "@kfm-validation"
-  - "@kfm-governance"
+  - "bartytime4life"
+
 body:
   - type: markdown
     attributes:
       value: |
-        ## 🐞 Kansas Frontier Matrix — Bug Report (FAIR+CARE Certified)
-        Please complete this FAIR+CARE-aligned form to report a reproducible issue or data governance error.
-        Each bug submission triggers automatic schema validation, checksum verification, and ethics review.
+        ## 🐞 Bug Report  
+        Please use this form to describe the issue in detail.  
+        Ensure your report is **clear, reproducible, and complete**.  
+        This helps maintainers verify the problem quickly and preserve project stability under the **Master Coder Protocol (MCP v6.3)**.
 
   - type: input
     id: summary
     attributes:
-      label: "🧾 Summary"
-      description: "Briefly describe the issue or malfunction encountered."
-      placeholder: "Example: Validation pipeline fails during checksum verification."
-    validations:
-      required: true
-
-  - type: dropdown
-    id: severity
-    attributes:
-      label: "⚙️ Severity Level"
-      description: "Select the impact level of this issue."
-      options:
-        - Critical — Blocks core ETL or governance pipelines
-        - High — Major workflow impact but temporary workaround possible
-        - Medium — Minor issue, no impact on production
-        - Low — Cosmetic or documentation-related
+      label: "Summary"
+      description: "Provide a short summary of the issue."
+      placeholder: "Example: Timeline map fails to render events on load."
     validations:
       required: true
 
   - type: textarea
-    id: reproduction
+    id: steps_to_reproduce
     attributes:
-      label: "🔁 Steps to Reproduce"
-      description: "Provide step-by-step instructions for reproducing this issue."
-      placeholder: "1. Run make validate-schema\n2. Observe missing FAIR+CARE tag error..."
+      label: "Steps to Reproduce"
+      description: "List all necessary steps to reproduce the issue."
+      placeholder: |
+        1. Open http://localhost:3000
+        2. Enable 'Historical Treaties' layer
+        3. Zoom into Kansas region
+        4. Observe console error
     validations:
       required: true
 
   - type: textarea
-    id: expected
+    id: expected_behavior
     attributes:
-      label: "✅ Expected Behavior"
-      description: "Describe what you expected to happen."
-      placeholder: "Checksum verification should pass under correct schema configuration."
+      label: "Expected Behavior"
+      description: "What should have happened?"
+      placeholder: "Example: Map should load and display all treaty polygons without errors."
     validations:
       required: true
 
   - type: textarea
-    id: actual
+    id: actual_behavior
     attributes:
-      label: "❌ Actual Behavior"
-      description: "Describe what actually happened."
-      placeholder: "Checksum failed unexpectedly with key error: FAIR metadata missing."
-    validations:
-      required: true
-
-  - type: textarea
-    id: environment
-    attributes:
-      label: "💻 Environment Details"
-      description: "Provide version, OS, and workflow context."
-      placeholder: "OS: Ubuntu 24.04\nKFM Version: v9.6.0\nWorkflow: .github/workflows/ci.yml"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: affected_area
-    attributes:
-      label: "📦 Affected System Component"
-      description: "Select which part of the Kansas Frontier Matrix is affected."
-      options:
-        - Data (data/)
-        - Source (src/)
-        - Tools (tools/)
-        - Web Application (web/)
-        - Governance or Ledger (releases/ or reports/)
-        - Documentation (docs/)
+      label: "Actual Behavior"
+      description: "What actually happened?"
+      placeholder: "Example: Console displays `TypeError: Cannot read property 'coordinates' of undefined`."
     validations:
       required: true
 
   - type: textarea
     id: logs
     attributes:
-      label: "🧠 Relevant Logs or Evidence"
-      description: "Attach logs, screenshots, or tracebacks that demonstrate the issue."
-      placeholder: "Attach error output or CI workflow log..."
+      label: "Relevant Logs or Screenshots"
+      description: "Attach console logs, stack traces, or screenshots to help reproduce the issue."
+      placeholder: |
+        ```bash
+        Traceback (most recent call last):
+          File "src/api/routes/map.py", line 42, in get_layers
+            raise ValueError("Missing STAC ID")
+        ValueError: Missing STAC ID
+        ```
     validations:
       required: false
 
-  - type: markdown
+  - type: input
+    id: environment
     attributes:
-      value: |
-        ---
-        ## 🧩 FAIR+CARE Compliance Verification
-        Confirm that this bug report maintains FAIR+CARE ethical standards.
+      label: "Environment Details"
+      description: "System or environment where this bug occurred."
+      placeholder: "e.g. macOS 14.0, Chrome 120, Python 3.11, Node.js 18"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity Level"
+      description: "Rate the impact of this issue."
+      options:
+        - "🟥 Critical — System crash or data loss"
+        - "🟧 High — Major function broken"
+        - "🟨 Medium — Minor function or visual defect"
+        - "🟩 Low — Cosmetic or documentation issue"
+      default: 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: "Affected Component"
+      description: "Select the area of the system where the issue occurs."
+      options:
+        - "ETL Pipeline (data ingestion/validation)"
+        - "AI/ML Components (Focus Mode, NER, summarization)"
+        - "API Layer (FastAPI/GraphQL)"
+        - "Frontend (React/MapLibre)"
+        - "Docs/Workflows (.github actions)"
+        - "Other (please describe below)"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: related_files
+    attributes:
+      label: "Related Files or Directories"
+      description: "If applicable, specify file paths affected by this issue."
+      placeholder: |
+        Example:
+        - src/pipelines/etl/noaa_ingest.py  
+        - web/src/components/TimelineView/index.tsx
+    validations:
+      required: false
 
   - type: checkboxes
-    id: faircare_compliance
+    id: validation_steps
     attributes:
-      label: "FAIR+CARE Compliance Checklist"
+      label: "Pre-Submission Checklist"
+      description: "Please confirm you’ve verified these before submitting."
       options:
-        - label: "Findable — Issue linked to dataset, pipeline, or ledger reference"
-        - label: "Accessible — Reproducible context and data path provided"
-        - label: "Interoperable — Schema or system compatibility validated"
-        - label: "Reusable — Information sufficient for repair and documentation update"
-        - label: "Ethical — No personal, sensitive, or restricted data included"
-    validations:
-      required: true
-
-  - type: textarea
-    id: governance_links
-    attributes:
-      label: "⚖️ Governance References"
-      description: "Provide any relevant governance or provenance references."
-      placeholder: "Example: reports/audit/data_provenance_ledger.json#record_4211"
-    validations:
-      required: false
+        - label: "I have reproduced the issue at least twice."
+          required: true
+        - label: "I have confirmed the issue persists on the latest `main` branch."
+          required: true
+        - label: "I have reviewed open issues to ensure this bug has not been reported."
+          required: true
+        - label: "I have provided clear reproduction steps and relevant logs."
+          required: true
 
   - type: markdown
     attributes:
       value: |
         ---
-        ## 🧾 Sign-Off
-        Please confirm your submission complies with KFM’s FAIR+CARE and MCP-DL v6.3 governance framework.
+        ### 🧩 Validation & Governance Workflow  
+        Submitting this bug triggers automatic CI validation pipelines:
+        - **`codeql.yml`** → Security and code vulnerability scanning  
+        - **`docs-lint.yml`** → Documentation consistency validation  
+        - **`faircare-validate.yml`** → Ethical compliance check for affected data layers  
 
-  - type: input
-    id: contributor
-    attributes:
-      label: "👤 Contributor"
-      description: "Enter your GitHub handle."
-      placeholder: "@username"
-    validations:
-      required: true
+        If applicable, this issue will also be referenced in the **Governance Ledger**:
+        ```
+        reports/audit/github-workflows-ledger.json
+        ```
 
-  - type: input
-    id: affiliation
-    attributes:
-      label: "🏢 Affiliation"
-      description: "Organization, institution, or project affiliation."
-      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
-    validations:
-      required: true
+        **Thank you for helping keep Kansas Frontier Matrix secure, stable, and reproducible.**  
+        Contributions follow **Master Coder Protocol v6.3** and FAIR+CARE governance standards.  
 
-  - type: textarea
-    id: certification
-    attributes:
-      label: "🪶 FAIR+CARE Certification Statement"
-      description: "By submitting this issue, you certify that it complies with FAIR+CARE and open governance standards."
-      value: |
-        I confirm that this submission:
-        - Adheres to the FAIR+CARE ethical framework.
-        - Contains no private or proprietary data.
-        - Supports transparency, reproducibility, and open collaboration.
-    validations:
-      required: true
+        **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
