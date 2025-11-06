@@ -24,11 +24,11 @@ mcp_version: "MCP-DL v6.3"
 Implements **autonomous monitoring, sustainability, and Focus Mode telemetry** pipelines for the Kansas Frontier Matrix (KFM).  
 These pipelines provide **real-time observability, FAIR+CARE ethics validation, and ISO 50001 sustainability auditing**, ensuring transparent, traceable, and energy-efficient governance under the **Diamond⁹ Ω / Crown∞Ω Ultimate Certification** program.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../../docs/standards/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../../../docs/standards/faircare-validation.md)
-[![ISO 50001](https://img.shields.io/badge/ISO-50001-Energy Management-blue)]()
-[![Carbon Impact](https://img.shields.io/badge/Carbon-Impact-Audited-teal)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/standards/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../../../LICENSE)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold.svg)](../../../../docs/standards/faircare-validation.md)
+[![ISO 50001](https://img.shields.io/badge/ISO%2050001-Energy%20Management-blue.svg)]()
+[![Carbon Impact Audited](https://img.shields.io/badge/Carbon%20Impact-Audited-teal.svg)]()
 
 </div>
 
