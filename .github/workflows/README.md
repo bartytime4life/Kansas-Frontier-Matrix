@@ -17,169 +17,85 @@ governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 # 🔄 **Kansas Frontier Matrix — CI/CD Workflows Overview**
 `.github/workflows/README.md`
 
-**Purpose:** Summarize the automated validation, deployment, and security workflows that power the continuous integration and governance of the Kansas Frontier Matrix (KFM) project.
+**Purpose:** Outline all GitHub Actions that automate validation, governance, deployment, and telemetry within the **Kansas Frontier Matrix (KFM)** repository.  
+Each workflow is versioned, auditable, and aligned with the **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** data ethics framework.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../docs/standards/faircare.md)
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-Automated-success)]()
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)]()
+[![Status: Automated](https://img.shields.io/badge/CI%2FCD-Automated-success)]()
 
 </div>
 
 ---
 
-## 📦 Overview
+## 📘 Overview
 
-The `.github/workflows/` directory contains all **GitHub Actions** automation used to manage KFM’s lifecycle — from dataset validation to frontend deployment.  
-Each workflow represents a modular, versioned component of the **Master Coder Protocol (MCP)** automation layer, ensuring reproducibility, security, and governance transparency.
-
-All workflows are:
-- **Open Standard Compliant** (STAC 1.0.0, DCAT 3.0, FAIR+CARE)
-- **Containerized and deterministic**
-- **Linked to SPDX SBOMs and governance ledgers**
+This directory defines all **CI/CD automation** for KFM — ensuring that every commit maintains data integrity, reproducibility, and ethical governance.  
+All workflows:
+- Run on **containerized, reproducible environments**  
+- Validate using **open standards** (STAC, DCAT, FAIR+CARE, SPDX)  
+- Export results to **telemetry and audit ledgers**
 
 ---
 
-## ⚙️ Directory Layout
+## 🗂️ Directory Layout
 
 ```
 .github/workflows/
-├── stac-validate.yml         # Validates STAC 1.0.0 catalogs and items
-├── faircare-validate.yml     # Runs FAIR+CARE compliance checks
-├── docs-lint.yml             # Lints Markdown and YAML documentation
-├── codeql.yml                # Security and static code analysis
-├── trivy.yml                 # Container and dependency vulnerability scans
-├── build-and-deploy.yml      # Builds and deploys web frontend (GitHub Pages)
-├── stac-dcat-bridge.yml      # Synchronizes STAC and DCAT catalogs
-├── telemetry-export.yml      # Collects and exports build telemetry
-└── README.md                 # This file (summary and workflow metadata)
+├── stac-validate.yml         # STAC 1.0.0 dataset validation
+├── faircare-validate.yml     # FAIR+CARE ethical data checks
+├── docs-lint.yml             # Markdown/YAML linting
+├── codeql.yml                # Security static analysis
+├── trivy.yml                 # Container & dependency CVE scans
+├── build-and-deploy.yml      # Web frontend build/deploy pipeline
+├── stac-dcat-bridge.yml      # STAC↔DCAT metadata synchronization
+├── telemetry-export.yml      # Build metrics & telemetry export
+└── README.md                 # This file
 ```
 
-Each YAML file under `/workflows` corresponds to a unique CI/CD process documented below.
+Each YAML workflow represents one autonomous MCP governance process and links directly into `focus-telemetry.json`.
 
 ---
 
-## 🧪 Validation Workflows
+## 🧩 Validation Workflows
 
-### 1. **`stac-validate.yml`**
-Validates all [STAC](https://stacspec.org) JSON catalogs and items under `data/stac/**`.
+| Workflow | Role | Output |
+|-----------|------|--------|
+| **`stac-validate.yml`** | STAC JSON schema + link integrity check | `reports/self-validation/stac/_summary.json` |
+| **`faircare-validate.yml`** | FAIR+CARE, license, checksum, CARE annotations | `reports/fair/faircare_summary.json` |
+| **`docs-lint.yml`** | Lint Markdown/YAML, enforce metadata style | `reports/self-validation/docs/lint_summary.json` |
 
-**Runs:**
-- `pystac validate` for structural and link integrity
-- JSON schema check for `stac_version: "1.0.0"`
-- Uploads results to `reports/self-validation/stac/`
-
-**Triggers:**  
-- On every pull request or push to `data/stac/**`  
-- On manual `workflow_dispatch`
+**Triggers:** PR or push on `data/`, `docs/`, or validation branches.  
+**Manual Runs:** Supported via `workflow_dispatch`.
 
 ---
 
-### 2. **`faircare-validate.yml`**
-Audits data layers for compliance with FAIR (Findable, Accessible, Interoperable, Reusable) and CARE (Collective Benefit, Authority to Control, Responsibility, Ethics) principles.
+## 🛡️ Security Workflows
 
-**Validations Include:**
-- License verification (`license` field in dataset manifests)
-- Provenance chain check (`provenance` and `checksum`)
-- CARE flag detection for Indigenous and community data
-- DataContract verification (`data_contract_ref`)
-
-**Outputs:**  
-Compliance reports saved in `reports/fair/`.
-
----
-
-### 3. **`docs-lint.yml`**
-Ensures all Markdown, YAML, and JSON documentation follow [Markdown Style Guidelines](../../docs/standards/markdown_rules.md).
-
-**Tools Used:**
-- `markdownlint-cli2`
-- `yamllint`
-- JSON Schema validators for front-matter
-
-**Coverage:**  
-All `README.md`, `docs/**/*.md`, `.github/**/*.yml`, and manifest files.
-
----
-
-## 🔐 Security Workflows
-
-### 4. **`codeql.yml`**
-Performs static code analysis using GitHub’s CodeQL engine for multiple languages:
-- Python (AI/ETL)
-- JavaScript/TypeScript (Web)
-- Shell scripts (Tools)
-
-**Frequency:**  
-Weekly + on push to `main`
-
-**Reports:**  
-`reports/security/codeql/*.sarif` uploaded for audit and telemetry.
-
----
-
-### 5. **`trivy.yml`**
-Scans all Docker images and package manifests for vulnerabilities using [Aqua Trivy](https://github.com/aquasecurity/trivy).
-
-**Checks:**
-- CVE database scanning of `Dockerfile`, `requirements.txt`, and `package.json`
-- Report severity metrics (CRITICAL/HIGH/MEDIUM)
-
-**Policy:**  
-Fails build on any CRITICAL finding.
-
-**Outputs:**  
-`reports/security/trivy/*.json`
+| Workflow | Function | Output |
+|-----------|-----------|--------|
+| **`codeql.yml`** | Analyze Python/JS/TS for vulnerabilities | `reports/security/codeql/*.sarif` |
+| **`trivy.yml`** | Scan Docker & package dependencies | `reports/security/trivy/*.json` |
+| **`dependabot.yml`** | Automate dependency patch PRs | `.github/dependabot.yml` |
+| **Policy** | Build fails on CRITICAL findings; security ledger updated. | — |
 
 ---
 
 ## 🚀 Deployment Workflows
 
-### 6. **`build-and-deploy.yml`**
-Builds the **KFM Web UI (React + MapLibre)** and deploys to GitHub Pages.
+| Workflow | Function | Output |
+|-----------|-----------|--------|
+| **`build-and-deploy.yml`** | Builds React + MapLibre web frontend | `docs/reports/telemetry/build_metrics.json` |
+| **`stac-dcat-bridge.yml`** | Converts STAC → DCAT and syncs metadata | `releases/v*/metadata-bridge.meta.json` |
+| **`telemetry-export.yml`** | Aggregates metrics, builds telemetry JSON | `releases/v9.7.0/focus-telemetry.json` |
 
-**Pipeline Steps:**
-1. Checkout repository  
-2. Install Node.js dependencies  
-3. Build React frontend  
-4. Deploy static build to `gh-pages` branch  
-5. Generate telemetry entry (`focus-telemetry.json`)
-
-**Deployment URL:**  
+**URL:**  
 [https://bartytime4life.github.io/Kansas-Frontier-Matrix/](https://bartytime4life.github.io/Kansas-Frontier-Matrix/)
 
 ---
 
-### 7. **`stac-dcat-bridge.yml`**
-Synchronizes STAC and DCAT catalogs to maintain metadata interoperability.
-
-**Actions:**
-- Converts STAC Items → DCAT Datasets (and vice versa)
-- Uses `tools/generate_stac.py` and `tools/generate_dcat.py`
-- Validates using `schemas/dcat-v3.json`
-- Exports to `releases/v*/metadata-bridge.meta.json`
-
-**Run Frequency:**  
-Weekly + post-release
-
----
-
-### 8. **`telemetry-export.yml`**
-Compiles workflow metrics and governance data into a unified telemetry JSON.
-
-**Metrics Tracked:**
-- Workflow durations and outcomes  
-- FAIR+CARE scores  
-- Build size and deployment hash  
-- Vulnerability scan summaries  
-
-**Output:**  
-`releases/v9.7.0/focus-telemetry.json`
-
----
-
-## 🧾 Workflow Interdependencies
+## 🧮 Workflow Interdependencies
 
 ```mermaid
 flowchart TD
@@ -192,48 +108,58 @@ F --> G["telemetry-export.yml"]
 G --> H["Governance Ledger Update"]
 ```
 
-All workflows are designed to be **idempotent** and **self-contained**, while emitting consistent metadata for reproducibility and audit purposes.
+All workflows are modular, idempotent, and emit structured telemetry for reproducibility and governance.
 
 ---
 
-## 🧠 Governance Integration
+## 🧠 Governance & FAIR+CARE Integration
 
-Each workflow reports to the **Governance Ledger**, located in:
-```
-reports/audit/github-workflows-ledger.json
-```
+Each workflow reports into the governance and telemetry layer.
 
-The ledger records:
-- Workflow run ID  
-- Validation outcomes  
-- Operator metadata (user, commit SHA)  
-- Telemetry integration timestamps  
+| Record | Description | Location |
+|---------|--------------|-----------|
+| **Workflow Ledger** | Execution metadata (ID, outcome, author) | `reports/audit/github-workflows-ledger.json` |
+| **Governance Ledger** | Ethical and cultural review records | `reports/audit/governance-ledger.json` |
+| **Telemetry Snapshot** | Workflow metrics for dashboards | `releases/v9.7.0/focus-telemetry.json` |
 
-Each run generates a digital signature embedded in:
-`releases/v9.7.0/sbom.spdx.json`  
-and cross-referenced via `telemetry_ref`.
+All ledgers reference commit SHAs, workflow IDs, and build artifacts for verification.
 
 ---
 
-## ⚖️ FAIR+CARE Automation Compliance
+## ⚖️ FAIR+CARE Compliance Summary
 
-| Principle | Implementation |
-|------------|----------------|
-| **Findable** | Validation reports indexed in `reports/` and telemetry JSON |
-| **Accessible** | All workflow logs and results are public artifacts |
-| **Interoperable** | JSON schema validation and STAC/DCAT alignment |
-| **Reusable** | Workflow configurations versioned and modular |
-| **CARE** | Enforced via `faircare-validate.yml` and governance review |
+| Principle | CI/CD Implementation |
+|------------|----------------------|
+| **Findable** | Workflow artifacts published and indexed in `reports/` |
+| **Accessible** | Results public via GitHub Actions and dashboards |
+| **Interoperable** | JSON, YAML, and STAC/DCAT metadata interoperability |
+| **Reusable** | Modular workflows reused across branches and releases |
+| **CARE** | Governance form workflow ensures ethical data review |
 
 ---
 
-## 🔒 Security & Reliability
+## 🔒 Security & Compliance Controls
 
-- Workflows run in **read-only mode** for external forks (no secret access).  
-- All secrets stored in GitHub Encrypted Secrets.  
-- **Branch protection rules** enforce two reviews and passing all CI checks before merge.  
-- All dependencies validated via **Dependabot** weekly.  
-- SBOMs and provenance attestations auto-generated post-deploy.
+- **Branch Protection:** two reviewers, green CI checks, no force pushes.  
+- **Secrets Management:** stored in GitHub Encrypted Secrets.  
+- **CVE Scanning:** Trivy executed weekly + on merge.  
+- **SBOMs:** SPDX manifests per release (`sbom.spdx.json`).  
+- **SLSA Provenance:** Attestation attached to all builds.  
+- **Audit Trails:** Logs appended to `reports/audit/github-workflows-ledger.json`.
+
+---
+
+## 🧾 Telemetry Integration
+
+**File:** `releases/v9.7.0/focus-telemetry.json`  
+**Contents:**
+- Workflow durations and statuses  
+- FAIR+CARE audit scores  
+- Build hashes and artifact metadata  
+- Security scan counts and severity levels  
+- Version, commit, and author provenance  
+
+Telemetry is visualized through the **Governance Dashboard** under `docs/reports/telemetry/`.
 
 ---
 
@@ -241,9 +167,9 @@ and cross-referenced via `telemetry_ref`.
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added telemetry export and governance audit integration. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added STAC↔DCAT bridge and extended FAIR+CARE automation. |
-| v9.3.2 | 2025-08-12 | KFM Core Team | Improved validation reports and CI performance. |
+| v9.7.0 | 2025-11-05 | A. Barta | Added telemetry, governance linkage, and inter-workflow map. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added STAC↔DCAT bridge and FAIR+CARE audit. |
+| v9.3.2 | 2025-08-12 | KFM Core Team | Improved validation reports and modular triggers. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial workflow automation baseline. |
 
 ---
@@ -252,6 +178,6 @@ and cross-referenced via `telemetry_ref`.
 
 **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
 Automated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Return to GitHub Architecture](../ARCHITECTURE.md) · [Main README](../../README.md)
+[Back to GitHub Architecture](../ARCHITECTURE.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
