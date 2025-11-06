@@ -1,107 +1,94 @@
 ---
 title: "🧩 Kansas Frontier Matrix — Web Context & State Management Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/context/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-context-v1.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — **Web Context & State Management Layer**
+# 🧩 **Kansas Frontier Matrix — Web Context & State Management Layer**
 `web/src/context/README.md`
 
-**Purpose:**  
-Implements the global ethical state management system for the Kansas Frontier Matrix (KFM) web interface.  
-This layer unifies FAIR+CARE validation states, Focus Mode AI reasoning context, and governance synchronization for transparent and explainable frontend operations.
+**Purpose:** Define the global, FAIR+CARE-certified state management system that governs AI explainability, telemetry, and accessibility across the KFM frontend.  
+Each context synchronizes ethical data interactions with governance ledgers and telemetry systems under **MCP v6.3** and **WCAG 2.1 AA**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-State%20Governed-gold)](../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Web Context Layer** centralizes data governance, AI explainability, and user interaction state across all components in the KFM frontend.  
-By enforcing FAIR+CARE and ethical AI synchronization at the application state level, this layer ensures that every data query and user interaction remains auditable, inclusive, and reproducible.
+The **Context Layer** acts as the **ethical backbone** of the KFM web application.  
+It centralizes FAIR+CARE compliance, AI Focus Mode context, and telemetry while maintaining accessibility preferences and provenance traceability.
 
-### Core Responsibilities:
-- Maintain global state for Focus Mode AI and FAIR+CARE audit context.  
-- Synchronize governance data between user interface and ledger systems.  
-- Propagate sustainability, telemetry, and accessibility metadata across UI.  
-- Log all context mutations for reproducibility and provenance tracking.  
+**Core Functions**
+- Maintain global Focus Mode AI and FAIR+CARE runtime state.  
+- Sync provenance and ledger data between UI and governance systems.  
+- Track telemetry for sustainability, performance, and ethics validation.  
+- Preserve user preferences (accessibility, consent, themes) transparently.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/src/context/
-├── README.md                              # This file — documentation for global web context layer
-│
-├── AppContext.tsx                         # Root global app context provider (FAIR+CARE runtime state)
-├── FocusModeContext.tsx                   # Manages Focus Mode AI state and explainability logs
-├── GovernanceContext.tsx                  # Handles ledger and FAIR+CARE governance sync
-├── TelemetryContext.tsx                   # Tracks sustainability metrics and performance
-├── ThemeContext.tsx                       # Global UI theme (accessible color contrast and tokens)
-└── metadata.json                          # Provenance and context lifecycle metadata
+├── README.md               # This file
+├── AppContext.tsx          # Root provider for governance & runtime state
+├── FocusModeContext.tsx    # AI state + explainability reasoning
+├── GovernanceContext.tsx   # FAIR+CARE + ledger sync
+├── TelemetryContext.tsx    # Sustainability & performance reporting
+├── ThemeContext.tsx        # Global theme, color contrast, and layout prefs
+└── metadata.json           # Context provenance + audit metadata
 ```
 
 ---
 
-## ⚙️ Context Workflow
+## 🧩 Context Flow
 
 ```mermaid
 flowchart TD
-    A["User Actions (Web UI)"] --> B["AppContext"]
-    B --> C["FocusModeContext (AI State)"]
-    C --> D["GovernanceContext (FAIR+CARE Ledger Sync)"]
-    D --> E["TelemetryContext (Sustainability Metrics)"]
-    E --> F["ThemeContext (Accessibility Tokens)"]
-    F --> G["Ledger + Provenance Update (data/reports/audit/data_provenance_ledger.json)"]
+A["User Interaction (Frontend)"] --> B["AppContext"]
+B --> C["FocusModeContext (AI Explainability)"]
+C --> D["GovernanceContext (FAIR+CARE Ledger)"]
+D --> E["TelemetryContext (Perf + Sustainability)"]
+E --> F["ThemeContext (A11y + Visual Tokens)"]
+F --> G["Ledger Update → Provenance Registry"]
 ```
 
-### Workflow Description:
-1. **AppContext:** Serves as the root context controlling app-level ethical configuration.  
-2. **FocusModeContext:** Tracks AI explainability data, fairness outcomes, and reasoning logs.  
-3. **GovernanceContext:** Updates provenance and FAIR+CARE certification records in real time.  
-4. **TelemetryContext:** Reports energy efficiency, latency, and accessibility metrics.  
-5. **ThemeContext:** Maintains inclusive color, font, and layout preferences per accessibility standards.  
+1. **AppContext:** Root state for global FAIR+CARE runtime.  
+2. **FocusModeContext:** Tracks reasoning data and CARE safeguards.  
+3. **GovernanceContext:** Updates provenance and certification logs.  
+4. **TelemetryContext:** Monitors energy, accessibility, and latency.  
+5. **ThemeContext:** Manages inclusive color and typography tokens.
 
 ---
 
-## 🧩 Example Context Metadata Record
+## ⚙️ Contracts & Validation
 
-```json
-{
-  "id": "web_context_state_v9.6.0_2025Q4",
-  "contexts_initialized": [
-    "AppContext",
-    "FocusModeContext",
-    "GovernanceContext",
-    "TelemetryContext"
-  ],
-  "fairstatus": "certified",
-  "accessibility_score": 99.2,
-  "ai_explainability_tracked": true,
-  "telemetry_linked": true,
-  "checksum_verified": true,
-  "validator": "@kfm-web-context",
-  "created": "2025-11-03T23:59:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| State Contract | Context interface + data shape | TypeScript checks |
+| A11y Contract | Theme + user preference consistency | `accessibility_scan.yml` |
+| Governance Contract | Provenance schema validation | `faircare-validate.yml` |
+| Telemetry Contract | Context log structure | `telemetry-export.yml` |
+
+Artifacts stored in:
+- `reports/self-validation/docs/`
+- `releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -109,87 +96,95 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Context metadata indexed in provenance ledger. | @kfm-data |
-| **Accessible** | Context and logs stored in JSON and accessible UI state. | @kfm-accessibility |
-| **Interoperable** | Follows FAIR+CARE + ISO 9241-210 + WCAG 2.1 standards. | @kfm-architecture |
-| **Reusable** | Reusable React context modules for ethics and governance. | @kfm-design |
-| **Collective Benefit** | Ensures transparent interaction across all KFM modules. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council governs all state changes linked to provenance. | @kfm-governance |
-| **Responsibility** | Context logs AI and FAIR+CARE actions for validation. | @kfm-security |
-| **Ethics** | Focus Mode data handled with full consent and transparency. | @kfm-ethics |
+| **Findable** | Context metadata versioned in governance ledgers. | @kfm-data |
+| **Accessible** | Contexts reflect user preferences and accessibility modes. | @kfm-accessibility |
+| **Interoperable** | JSON/TypeScript schemas aligned with FAIR+CARE & ISO 9241-210. | @kfm-architecture |
+| **Reusable** | Modular and composable contexts exported across app. | @kfm-design |
+| **Collective Benefit** | Enables transparent cross-component ethics tracking. | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council governs provenance data access. | @kfm-governance |
+| **Responsibility** | Context telemetry logs energy and ethics indicators. | @kfm-sustainability |
+| **Ethics** | Focus Mode safeguarded against bias or opaque inference. | @kfm-ethics |
 
 Audit references:  
-`data/reports/fair/data_care_assessment.json`  
+`docs/reports/audit/data_provenance_ledger.json`  
 and  
-`data/reports/audit/data_provenance_ledger.json`
+`docs/reports/fair/data_care_assessment.json`
+
+---
+
+## 🧾 Example Context Metadata Record
+
+```json
+{
+  "id": "web_context_state_v9.7.0",
+  "contexts": [
+    "AppContext",
+    "FocusModeContext",
+    "GovernanceContext",
+    "TelemetryContext",
+    "ThemeContext"
+  ],
+  "a11y_score": 99.4,
+  "energy_score": 98.3,
+  "ai_explainability_tracked": true,
+  "telemetry_synced": true,
+  "checksum_verified": true,
+  "timestamp": "2025-11-05T18:20:00Z"
+}
+```
 
 ---
 
 ## ⚙️ Key Context Modules Summary
 
-| Context Module | Description | Role |
-|----------------|--------------|------|
-| `AppContext` | Central provider controlling FAIR+CARE runtime state. | Root Governance |
-| `FocusModeContext` | Manages explainability, reasoning logs, and AI ethics tracking. | Transparency |
-| `GovernanceContext` | Synchronizes provenance and ledger updates. | Audit Linkage |
-| `TelemetryContext` | Tracks sustainability and energy efficiency. | Monitoring |
-| `ThemeContext` | Applies accessible design tokens for inclusive UI. | Accessibility |
-
-All context synchronization automated via `web_context_sync.yml`.
+| Module | Description | Role |
+|--------|-------------|------|
+| `AppContext` | Root FAIR+CARE state manager. | Core Governance |
+| `FocusModeContext` | Manages AI reasoning, bias tests, CARE controls. | Transparency |
+| `GovernanceContext` | Emits provenance and FAIR+CARE updates. | Ledger Sync |
+| `TelemetryContext` | Logs sustainability + performance data. | Monitoring |
+| `ThemeContext` | Manages color tokens + contrast accessibility. | A11y & Design |
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♿ Accessibility Integration
 
-| Context Data | Retention Duration | Policy |
-|---------------|--------------------|--------|
-| FAIR+CARE Logs | 365 Days | Retained for audit reproducibility. |
-| Telemetry Reports | 90 Days | Rotated with sustainability cycles. |
-| Accessibility Preferences | Permanent | User-controlled and version-logged. |
-| Metadata | Permanent | Maintained under provenance ledger. |
-
-Cleanup automated with `context_cleanup.yml`.
+- Synchronizes **ThemeContext** with user system preferences.  
+- Stores per-user accessibility settings (contrast, font scaling, motion).  
+- Applies **reduced-motion**, **high-contrast**, and **keyboard**-first styles.  
+- Runs **axe/Lighthouse** validation during CI (`accessibility_scan.yml`).
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per UI session) | 0.8 Wh | @kfm-sustainability |
-| Carbon Output | 0.9 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
+| Metric | Target | Verified By |
+|---------|---------|-------------|
+| Energy Use per Session | ≤ 0.8 Wh | @kfm-sustainability |
+| Carbon Output | ≤ 1.0 gCO₂e | @kfm-security |
+| Renewable Power | 100% RE100 | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
-Telemetry logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry recorded in:  
+`../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Web Context & State Management Layer (v9.6.0).
-Implements FAIR+CARE-certified global state management for governance, telemetry, and AI explainability in the Kansas Frontier Matrix web interface.
-Ensures ethical interaction tracking, transparency, and sustainability under MCP-DL v6.3.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added unified Telemetry and Governance contexts for FAIR+CARE synchronization. |
-| v9.5.0 | 2025-11-02 | Improved AI explainability handling within Focus Mode context. |
-| v9.3.2 | 2025-10-28 | Established base FAIR+CARE global context system for KFM web app. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Aligned to MCP v6.3; added contracts + telemetry schema; improved a11y/CARE tracking. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Added TelemetryContext and unified global governance sync. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Enhanced AI explainability and Focus Mode oversight. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established global FAIR+CARE context layer. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *State Management × FAIR+CARE Governance × Ethical Interaction Design*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Web Source](../README.md) · [Docs Index](../../../docs/README.md)
 
 </div>
-
