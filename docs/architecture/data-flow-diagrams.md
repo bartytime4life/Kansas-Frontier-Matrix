@@ -1,14 +1,14 @@
 ---
 title: "🔄 Kansas Frontier Matrix — Data Flow Diagrams & Governance Pipeline Maps (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/data-flow-diagrams.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 ---
@@ -19,26 +19,25 @@ license: "MIT"
 `docs/architecture/data-flow-diagrams.md`
 
 **Purpose:**  
-This document provides a **visual and conceptual representation** of the Kansas Frontier Matrix (KFM) data lifecycle — from raw ingestion through AI-driven insight, governance validation, and sustainable release certification.  
-It integrates **ETL automation, FAIR+CARE validation, and blockchain provenance** into a unified, transparent pipeline.
+Visual and conceptual maps of the **KFM data lifecycle** — from raw ingestion to AI insights, validation, governance, and certified releases — with **telemetry and sustainability** embedded at each step.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Flow%20Certified-gold)](../../docs/standards/faircare-validation.md)
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../docs/architecture/README.md)
-[![ISO 19115 / 14064 / 50001](https://img.shields.io/badge/ISO-19115%20%7C%2014064%20%7C%2050001-forestgreen)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](./README.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Flow%20Certified-gold.svg)](../standards/faircare-validation.md)
+[![ISO 19115 · 14064 · 50001](https://img.shields.io/badge/ISO-19115%20·%2014064%20·%2050001-forestgreen.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Kansas Frontier Matrix Data Flow Architecture** orchestrates data across multiple domains — **climate, hazards, hydrology, landcover, terrain, and textual archives** — within a FAIR+CARE and ISO-certified governance ecosystem.
+The **KFM Data Flow Architecture** orchestrates multi-domain pipelines — **climate, hazards, hydrology, landcover, terrain, and textual archives** — in a unified, **FAIR+CARE** and **ISO** aligned framework.
 
 This document illustrates:
-- End-to-end **data movement** from raw acquisition to processed releases.  
-- Cross-domain **AI governance**, validation, and provenance tracking.  
-- Embedded **telemetry and sustainability metrics** at every workflow stage.  
+- End-to-end **data movement** from raw acquisition to certified releases and catalogs.  
+- **AI governance** touchpoints, explainability, and provenance tracking.  
+- Embedded **telemetry (energy/CO₂e)** and sustainability metrics throughout.
 
 ---
 
@@ -46,24 +45,24 @@ This document illustrates:
 
 ```mermaid
 flowchart TD
-    A["Raw Data Sources (NOAA, FEMA, USGS, KGS, Archives)"] --> B["ETL Pipelines (src/pipelines/etl/*)"]
-    B --> C["Data Transformation + Schema Harmonization (data/work/tmp/*)"]
+    A["Raw Data Sources (NOAA · FEMA · USGS · KGS · Archives)"] --> B["ETL Pipelines (src/pipelines/etl/*)"]
+    B --> C["Transformation & Schema Harmonization (data/work/tmp/*)"]
     C --> D["FAIR+CARE + ISO Validation (data/work/staging/*)"]
     D --> E["AI/ML Governance Layer (src/pipelines/ai/*)"]
     E --> F["Governance Ledger + Blockchain Provenance (src/pipelines/governance/*)"]
     F --> G["Telemetry & Sustainability Metrics (src/pipelines/telemetry/*)"]
-    G --> H["Certified Releases + STAC/DCAT Catalog (releases/v9.6.0/*)"]
+    G --> H["Certified Releases + STAC/DCAT Catalog (releases/v9.7.0/*)"]
     H --> I["Focus Mode Dashboard + Web Interface (web/)"]
 ```
 
 ### Description
-1. **Raw Data Ingestion:** Imports datasets from trusted open repositories.  
-2. **Transformation:** Standardizes file formats, coordinate systems, and schema attributes.  
-3. **Validation:** Conducts FAIR+CARE audits, ISO checks, and provenance verification.  
-4. **AI Governance:** Performs explainability analysis, bias detection, and model transparency audits.  
-5. **Ledger Registration:** Immutable blockchain linkage ensures accountability and reproducibility.  
-6. **Telemetry Integration:** Logs carbon, power, and sustainability statistics for every run.  
-7. **Publication:** Certified data released under MIT license with complete governance documentation.  
+1. **Raw Ingestion:** Imports from authoritative open repositories with source/license capture.  
+2. **Transform:** Standardizes formats/CRS, applies JSON Schema and CF/ISO conventions.  
+3. **Validate:** Runs FAIR+CARE ethics, ISO checks, and checksum/provenance verification.  
+4. **AI Governance:** Explainability, bias detection, and transparency audits for Focus Mode.  
+5. **Ledger:** Immutable, blockchain-linked JSON ledgers record key events and checksums.  
+6. **Telemetry:** Energy use, CO₂e, runtime, and accessibility KPIs pushed to dashboards.  
+7. **Publish:** Certified data released with SBOM/manifest and cataloged via STAC/DCAT.
 
 ---
 
@@ -71,7 +70,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    A["data/work/tmp/*"] --> B["Schema Validation (STAC / DCAT 3.0)"]
+    A["data/work/tmp/*"] --> B["Schema Validation (JSON Schema · STAC · DCAT 3.0)"]
     B --> C["Checksum Verification + FAIR+CARE Ethics Audit"]
     C --> D["AI Explainability & Drift Validation"]
     D --> E["Governance Ledger Sync + Manifest Entry"]
@@ -80,11 +79,11 @@ flowchart LR
 ```
 
 ### Key Processes
-- **Schema Validation:** Ensures compliance with FAIR, ISO 19115, and DCAT 3.0 standards.  
-- **Checksum Verification:** Confirms integrity between raw, staged, and processed data layers.  
-- **Ethics Audit:** Reviews datasets for accessibility, inclusion, and sustainability compliance.  
-- **AI Validation:** Measures transparency, drift, and model accountability under FAIR+CARE.  
-- **Governance Sync:** Links validation results to immutable ledger and release metadata.  
+- **Schema:** Ensures compatibility with **FAIR**, **ISO 19115**, **STAC 1.0**, and **DCAT 3.0**.  
+- **Checksums:** Confirms integrity across raw → staged → processed layers.  
+- **Ethics:** Verifies accessibility, inclusion, sustainability, and licensing.  
+- **AI Validation:** Tests transparency, fairness, and drift before deployment.  
+- **Governance:** Links validations to immutable ledger and release metadata.
 
 ---
 
@@ -92,31 +91,31 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    A["AI Model Input (Focus Mode)"] --> B["Bias Detection (Ethics Validator)"]
-    B --> C["Explainability (SHAP + LIME Audits)"]
-    C --> D["FAIR+CARE Ethics Report (ai_validation_report.json)"]
-    D --> E["Ledger Registration (ai_governance_audit_report.json)"]
-    E --> F["Telemetry Integration + Drift Monitor (focus-telemetry.json)"]
+    A["AI Model Inputs (Focus Mode)"] --> B["Bias Detection (Ethics Validator)"]
+    B --> C["Explainability Audits (SHAP · LIME · Counterfactuals)"]
+    C --> D["FAIR+CARE Report (ai_validation_report.json)"]
+    D --> E["Governance Registration (ai_governance_audit_report.json)"]
+    E --> F["Telemetry + Drift Monitor (focus-telemetry.json)"]
 ```
 
 ### Governance Notes
-- **Bias Detection:** Evaluates input variable weighting across hazard and climate models.  
-- **Explainability Audits:** Quantifies feature contributions to ensure interpretability.  
-- **Ethical AI Certification:** FAIR+CARE Council validates model integrity before deployment.  
-- **Telemetry Feedback Loop:** Tracks energy efficiency, inference latency, and model drift.  
+- **Bias Detection:** Group/feature parity, equalized odds, and CF fairness checks.  
+- **Explainability:** Local/global feature attributions; narrative generation for Focus Mode.  
+- **Ethical Certification:** FAIR+CARE Council validates model integrity prior to release.  
+- **Telemetry Loop:** Tracks latency, energy per inference, and model drift triggers.
 
 ---
 
-## ⚙️ Domain-Specific Data Pipeline Summary
+## ⚙️ Domain-Specific Pipeline Summary
 
 | Domain | Input Sources | Transformation Layer | Validation Layer | Output Layer |
-|---------|----------------|----------------------|------------------|--------------|
-| **Climate** | NOAA, NIDIS, USDM | Reprojection, CF Conventions | FAIR+CARE + Schema Validation | Processed Climate Data |
-| **Hazards** | FEMA, USGS, NOAA | Geospatial ETL + Correlation | FAIR+CARE + AI Audit | Risk Model Outputs |
-| **Hydrology** | USGS, EPA | Basin Aggregation + Flow Normalization | Schema + FAIR Validation | Streamflow & Groundwater Summaries |
-| **Landcover** | NASA, MODIS | Raster Harmonization | FAIR+CARE QA | Vegetation Index Outputs |
-| **Terrain** | USGS DEM, LiDAR | Elevation Reprojection + Grid Merge | FAIR+CARE Validation | Slope & Elevation Data |
-| **Text / Archival** | Historical Archives, OCR | Text Normalization + Metadata Extraction | FAIR+CARE + NLP Validation | Searchable Metadata + Provenance Logs |
+|---|---|---|---|---|
+| **Climate** | NOAA, NIDIS, USDM | Reprojection, CF attrs | FAIR+CARE + Schema | Processed Climate Layers |
+| **Hazards** | FEMA, NOAA, SPC | Geospatial ETL + joins | FAIR+CARE + AI Audit | Risk Indicators / Models |
+| **Hydrology** | USGS, EPA | Basin agg, flow norms | Schema + FAIR | Streamflow & GW Summaries |
+| **Landcover** | NASA, MODIS | Raster harmonization | FAIR+CARE QA | Vegetation/LC Indices |
+| **Terrain** | USGS DEM, LiDAR | Elevation reproj + merge | FAIR+CARE Validation | Slope/Elevation Layers |
+| **Text/Archives** | OCR’d docs | NLP normalize + NER | FAIR+CARE + NLP QA | Searchable Metadata + Provenance |
 
 ---
 
@@ -124,16 +123,16 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    A["Validation Reports (FAIR+CARE + ISO)"] --> B["Checksum Registry (manifest.zip)"]
+    A["Validation Reports (FAIR+CARE · ISO)"] --> B["Checksum Registry (manifest.zip)"]
     B --> C["Blockchain Governance Ledger (ledger_snapshot_2025Q4.json)"]
-    C --> D["Release Certification Record (faircare_certification_summary.json)"]
+    C --> D["Certification Record (faircare_certification_summary.json)"]
     D --> E["Public Transparency Portal (web/public/releases/)"]
 ```
 
 ### Integration Highlights
-- **Immutable Ledger:** Each checksum and validation event recorded in blockchain-linked JSON ledger.  
-- **FAIR+CARE Certification:** Release-level ethics approvals validated via council governance.  
-- **Transparency Portal:** Enables open verification through web UI and Focus Mode dashboards.  
+- **Immutable Ledger:** Every checksum and validation event has a signed, time-stamped entry.  
+- **FAIR+CARE Certification:** Release-level approvals with reviewer identity and scope.  
+- **Transparency:** Public portal and Focus Mode reveal validation lineage and KPIs.
 
 ---
 
@@ -149,38 +148,41 @@ flowchart TD
 ```
 
 | Metric | Standard | Description |
-|---------|-----------|-------------|
-| **Power Efficiency** | ISO 50001 | Logs energy consumption for each ETL pipeline. |
+|---|---|---|
+| **Power Efficiency** | ISO 50001 | Logs energy consumption for each ETL/AI job. |
 | **Carbon Offset** | ISO 14064 | Records verified emission reductions per release. |
-| **Telemetry JSON** | FAIR+CARE | Links sustainability data to governance audit chain. |
-| **Dashboard Metrics** | MCP-DL | Displays transparency KPIs on Focus Mode dashboard. |
+| **Telemetry JSON** | FAIR+CARE | Connects sustainability data to governance chain. |
+| **Dashboard KPIs** | MCP-DL | Focus Mode shows transparency metrics in real time. |
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Data Flow Diagrams & Governance Pipeline Maps (v9.6.0).
-Comprehensive visual documentation of FAIR+CARE-certified data, AI, and governance pipelines.
-Ensures transparency, interoperability, and sustainability under MCP-DL v6.3 and ISO 19115 standards.
+Kansas Frontier Matrix (2025). Data Flow Diagrams & Governance Pipeline Maps (v9.7.0).
+Comprehensive visualization of FAIR+CARE-aligned data, AI, and governance pipelines with telemetry integration.
+Ensures transparency, interoperability, and sustainability under MCP-DL v6.3 and ISO 19115/14064/50001.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added sustainability telemetry integration and blockchain governance flow. |
-| v9.5.0 | 2025-11-02 | Introduced AI explainability mapping to validation diagrams. |
-| v9.3.2 | 2025-10-28 | Established FAIR+CARE data flow visualization baseline. |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v9.7.0 | 2025-11-06 | `@kfm-architecture` | Upgraded to v9.7.0; refreshed release/telemetry paths; badge syntax hardened; added DCAT 3.0 notes. |
+| v9.6.0 | 2025-11-03 | `@kfm-architecture` | Added sustainability telemetry and blockchain governance flow. |
+| v9.5.0 | 2025-11-02 | `@kfm-governance` | Introduced AI explainability mapping in validation diagrams. |
+| v9.3.2 | 2025-10-28 | `@kfm-core` | Established FAIR+CARE data flow visualization baseline. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *FAIR+CARE Data Lifecycle × Governance Transparency × Sustainable Automation*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Architecture Hub](./README.md) • [⚖️ Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*FAIR+CARE Data Lifecycle × Governance Transparency × Sustainable Automation*  
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Architecture](./README.md) · [Governance Charter](../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
-
