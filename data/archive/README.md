@@ -1,16 +1,17 @@
 ---
 title: "🗃️ Kansas Frontier Matrix — Data Archive & Provenance Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/archive/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/data-archive-v4.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
+license: "CC-BY 4.0"
 ---
 
 <div align="center">
@@ -19,28 +20,29 @@ license: "MIT"
 `data/archive/README.md`
 
 **Purpose:**  
-Defines the **archival standards, data retention policies, and provenance registry protocols** governing long-term storage of FAIR+CARE-certified datasets within the Kansas Frontier Matrix (KFM).  
-This archive ensures immutable, transparent, and ethical data preservation, enabling scientific reproducibility and historical continuity for future generations.
+Defines the **archival standards, data retention, and provenance registry protocols** governing long-term storage of FAIR+CARE-certified datasets within the Kansas Frontier Matrix (KFM).  
+Ensures immutable, transparent, and ethical data preservation — enabling reproducibility and intergenerational access to verified scientific and historical records.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Archival%20Certified-gold)](../../docs/standards/faircare-validation.md)
-[![ISO 16363](https://img.shields.io/badge/ISO-16363%20Trusted%20Digital%20Repository-green)]()
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen)](../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../LICENSE)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Archival%20Certified-gold.svg)](../../docs/standards/faircare-validation.md)
+[![ISO 16363](https://img.shields.io/badge/ISO-16363%20Trusted%20Repository-green.svg)]()
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **KFM Data Archive** functions as the **final, immutable layer** in the data lifecycle — preserving certified datasets, governance records, and checksum manifests under FAIR+CARE ethical governance.  
-Every dataset archived here is permanently linked to its **provenance, schema, and audit history**, forming the backbone of the KFM’s reproducibility and transparency system.
+The **KFM Data Archive** is the final, immutable layer of the data lifecycle — preserving **certified datasets, provenance ledgers, and checksum manifests** under FAIR+CARE governance.  
+Every archived dataset is **cryptographically validated, ethically reviewed**, and **linked to its schema, telemetry, and audit history**.
 
-The archive:
-- Retains all datasets certified via FAIR+CARE validation workflows.  
-- Stores cryptographic checksums and governance ledger references.  
-- Maintains immutable provenance metadata under ISO 16363 standards.  
-- Guarantees long-term access through open, standardized data formats.
+### Key Objectives
+- Permanently preserve FAIR+CARE-certified datasets and validation records.  
+- Maintain immutable provenance ledgers for reproducibility.  
+- Provide ISO 16363-trusted long-term storage using open, durable formats.  
+- Support public verification through checksums, STAC/DCAT catalogs, and telemetry logs.
 
 ---
 
@@ -48,19 +50,19 @@ The archive:
 
 ```mermaid
 flowchart TD
-    A["Processed Datasets (data/work/processed/*)"] --> B["FAIR+CARE Governance Review"]
+    A["Processed Datasets (data/work/processed/*)"] --> B["FAIR+CARE Certification Review"]
     B --> C["Checksum & Ledger Verification"]
-    C --> D["Archival Registration in Provenance Ledger"]
+    C --> D["Provenance Registration in Governance Ledger"]
     D --> E["Immutable Storage (data/archive/*)"]
     E --> F["Public Access via STAC/DCAT Catalogs"]
 ```
 
-### Archival Steps
-1. **Certification:** Dataset passes all FAIR+CARE and schema validations.  
-2. **Verification:** SHA-256 checksums matched with `data/checksums/manifest.json`.  
-3. **Governance:** Dataset audit results logged in provenance ledger.  
-4. **Archival:** Immutable storage created under `data/archive/`.  
-5. **Publication:** Entry indexed via STAC/DCAT for long-term discoverability.  
+### Archival Process
+1. **Certification:** Dataset passes FAIR+CARE + schema validation gates.  
+2. **Verification:** Cross-checks with `data/checksums/manifest.json`.  
+3. **Governance:** Provenance registered in ledger (`data_provenance_ledger.json`).  
+4. **Archival:** Immutable copy stored under `data/archive/`.  
+5. **Publication:** Indexed in **STAC/DCAT catalogs** for discoverability.
 
 ---
 
@@ -68,81 +70,81 @@ flowchart TD
 
 ```plaintext
 data/archive/
-├── README.md                               # This file — documentation for data archive and provenance registry
+├── README.md                        # This document
 │
-├── 2025Q4/                                # Quarterly archive of certified data releases
-│   ├── hazards_v9.6.0/                    # Hazard datasets (floods, tornadoes, droughts)
-│   ├── climate_v9.6.0/                    # Climate and temperature index archives
-│   ├── hydrology_v9.6.0/                  # Streamflow, aquifer, and water system data
-│   ├── landcover_v9.6.0/                  # Landcover and vegetation datasets
-│   ├── metadata/                          # FAIR+CARE and governance certification documents
-│   └── checksums/                         # Verified SHA-256 manifest logs
+├── 2025Q4/                         # Quarterly archive of FAIR+CARE-certified datasets
+│   ├── hazards_v9.7.0/             # Hazard datasets (floods, tornadoes, droughts)
+│   ├── climate_v9.7.0/             # Climate indices & atmospheric archives
+│   ├── hydrology_v9.7.0/           # Streamflow, aquifer, and groundwater data
+│   ├── landcover_v9.7.0/           # Landcover & vegetation datasets
+│   ├── metadata/                   # FAIR+CARE & governance certification documents
+│   └── checksums/                  # Verified SHA-256 manifests
 │
-└── index.json                             # Machine-readable registry of all archived datasets
+└── index.json                      # Machine-readable catalog of archived datasets
 ```
 
 ---
 
-## 🧱 Archive Data Model
+## ⚙️ Archive Data Model
 
 | Field | Description | Example |
-|--------|--------------|----------|
-| `archive_id` | Unique archival dataset identifier. | `archive_hazards_v9.6.0_2025Q4` |
-| `dataset_name` | Dataset title and domain. | `Hazards — Flood and Tornado Composite` |
-| `records_total` | Number of records in dataset. | `18234` |
-| `checksum_sha256` | Cryptographic hash for integrity verification. | `sha256:bd27a4f1d9e81b...` |
+|---|---|---|
+| `archive_id` | Unique identifier of the archived dataset. | `archive_climate_v9.7.0_2025Q4` |
+| `dataset_name` | Dataset title and domain. | `Climate — Temperature & Precipitation Composite` |
+| `records_total` | Count of records within dataset. | `124,891` |
+| `checksum_sha256` | SHA-256 hash for verification. | `sha256:b98a6f7a3e7c41bff8...` |
 | `fairstatus` | FAIR+CARE certification state. | `certified` |
 | `schema_version` | Data contract schema version. | `v3.0.1` |
-| `archived_on` | UTC timestamp of archival. | `2025-11-03T19:40:00Z` |
-| `governance_ref` | Provenance ledger record path. | `data/reports/audit/data_provenance_ledger.json` |
+| `archived_on` | UTC timestamp of archival. | `2025-11-06T19:44:00Z` |
+| `governance_ref` | Ledger record path. | `data/reports/audit/data_provenance_ledger.json` |
 
 ---
 
-## 🧩 FAIR+CARE Archival Governance Matrix
+## 🧠 FAIR+CARE Archival Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | STAC and DCAT catalogs index all archived datasets. | @kfm-data |
-| **Accessible** | All archives stored in open, public formats (CSV, GeoJSON, Parquet). | @kfm-accessibility |
-| **Interoperable** | Linked via metadata schemas (FAIR, ISO 19115, DCAT 3.0). | @kfm-architecture |
-| **Reusable** | Permanent provenance, schema, and FAIR+CARE metadata. | @kfm-design |
-| **Collective Benefit** | Enables future research and transparency across generations. | @faircare-council |
-| **Authority to Control** | Governance Council oversees archival lifecycle and retention. | @kfm-governance |
-| **Responsibility** | Archive logs reviewed and checksum-verified quarterly. | @kfm-security |
-| **Ethics** | Redaction and anonymization applied prior to publication. | @kfm-ethics |
+|---|---|---|
+| **Findable** | Indexed in STAC/DCAT catalogs with DOIs & UUIDs. | `@kfm-data` |
+| **Accessible** | Open archival formats (CSV, GeoJSON, Parquet, NetCDF). | `@kfm-accessibility` |
+| **Interoperable** | Linked with ISO 19115 & DCAT 3.0 metadata. | `@kfm-architecture` |
+| **Reusable** | Permanent provenance and FAIR+CARE metadata retention. | `@kfm-design` |
+| **Collective Benefit** | Transparent preservation serving science & culture. | `@faircare-council` |
+| **Authority to Control** | Governance Council certifies archive lifecycle. | `@kfm-governance` |
+| **Responsibility** | Quarterly integrity & ethics reviews. | `@kfm-security` |
+| **Ethics** | Redaction & anonymization prior to archiving. | `@kfm-ethics` |
 
-All governance reports logged in:  
+Governance reports are stored in:  
 `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## 🧠 Provenance Integration & Checksum Verification
+## 🧩 Provenance Integration & Verification
 
 | Process | Output | File |
-|----------|---------|------|
-| **Checksum Verification** | Hash match validation results. | `data/archive/checksums/manifest.json` |
-| **Governance Audit Log** | Ledger reference for dataset lineage. | `data/reports/audit/data_provenance_ledger.json` |
-| **FAIR+CARE Certification Report** | Ethical validation outcome. | `data/reports/fair/faircare_summary.json` |
-| **Archive Registry Entry** | Catalog of datasets stored under `data/archive/`. | `data/archive/index.json` |
+|---|---|---|
+| **Checksum Verification** | SHA-256 integrity validation. | `data/archive/checksums/manifest.json` |
+| **Governance Audit Log** | Council review & ethics approval. | `data/reports/audit/data_provenance_ledger.json` |
+| **FAIR+CARE Certification** | FAIR+CARE compliance audit results. | `data/reports/fair/faircare_summary.json` |
+| **Archive Registry Entry** | Metadata registry of archived datasets. | `data/archive/index.json` |
 
 ---
 
-## ⚙️ Example Archive Metadata Record
+## 📊 Example Archive Metadata Record
 
 ```json
 {
-  "id": "archive_climate_v9.6.0_2025Q4",
-  "domain": "climate",
-  "records_total": 125480,
+  "id": "archive_hydrology_v9.7.0_2025Q4",
+  "domain": "hydrology",
+  "records_total": 128476,
   "checksum_verified": true,
   "fairstatus": "certified",
   "schema_version": "v3.0.1",
   "storage_format": ["CSV", "Parquet"],
-  "archived_on": "2025-11-03T19:40:00Z",
-  "ledger_hash": "sha256:91e8d4acaf6b20...",
+  "archived_on": "2025-11-06T19:44:00Z",
+  "ledger_hash": "sha256:89f7e4acb93b20...",
   "governance_registered": true,
-  "validator": "@kfm-archive",
-  "energy_use_wh": 14.6
+  "energy_use_wh": 14.2,
+  "validator": "@kfm-archive"
 }
 ```
 
@@ -151,53 +153,56 @@ All governance reports logged in:
 ## 🌱 Sustainability & Preservation Standards
 
 | Standard | Description | Compliance |
-|-----------|--------------|-------------|
-| **ISO 16363** | Trusted Digital Repository framework. | ✅ |
-| **ISO 19115** | Metadata lineage and documentation standard. | ✅ |
-| **ISO 14064** | Carbon footprint and energy accounting. | ✅ |
-| **MCP-DL v6.3** | Documentation-first reproducibility protocol. | ✅ |
-| **FAIR+CARE** | Ethics and accessibility framework. | ✅ |
+|---|---|---|
+| **ISO 16363** | Trusted Digital Repository accreditation. | ✅ |
+| **ISO 19115** | Metadata lineage & documentation. | ✅ |
+| **ISO 14064 / 50001** | Carbon & energy efficiency standards. | ✅ |
+| **MCP-DL v6.3** | Documentation-first lifecycle reproducibility. | ✅ |
+| **FAIR+CARE** | Ethical, open, and equitable stewardship. | ✅ |
 
-All sustainability data reported in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Sustainability telemetry:** `../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧩 Retention Policy
+## 🧮 Retention Policy
 
 | Category | Retention | Policy |
-|-----------|------------|--------|
-| FAIR+CARE-Certified Datasets | Permanent | Immutable archival. |
-| Validation Reports | Permanent | Retained for governance verification. |
-| Checksum Manifests | Permanent | Cross-checked with all new releases. |
-| Governance Records | Permanent | Ledger-stored for audit traceability. |
-| Energy Telemetry | 5 years | Used for sustainability benchmarking. |
+|---|---|---|
+| FAIR+CARE Datasets | Permanent | Immutable archival with ledger reference. |
+| Validation Reports | Permanent | Used in reproducibility and ethics audits. |
+| Checksum Manifests | Permanent | Cross-verified each new release cycle. |
+| Governance Records | Permanent | Immutable blockchain-style audit ledger. |
+| Energy Telemetry | 5 years | Tracked for sustainability benchmarks. |
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Data Archive & Provenance Registry (v9.6.0).
-Defines the FAIR+CARE-certified archival framework ensuring ethical, transparent, and reproducible long-term dataset preservation.
-Implements ISO 16363, STAC 1.0, and CARE governance principles for sustainable open data stewardship.
+Kansas Frontier Matrix (2025). Data Archive & Provenance Registry (v9.7.0).
+Outlines the FAIR+CARE-compliant archival architecture ensuring ethical, transparent, and reproducible data preservation.
+Implements ISO 16363, STAC 1.0, DCAT 3.0, and CARE-aligned standards for sustainable open data governance.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added ISO 16363 compliance and FAIR+CARE archival validation workflow. |
-| v9.5.0 | 2025-11-02 | Integrated checksum ledger sync and renewable infrastructure reporting. |
-| v9.3.2 | 2025-10-28 | Established baseline data archival standards under MCP-DL v6.3. |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v9.7.0 | 2025-11-06 | `@kfm-archive` | Upgraded to v9.7.0; added DCAT 3.0 mapping; updated sustainability metrics and directory naming conventions. |
+| v9.6.0 | 2025-11-03 | `@kfm-archive` | Added ISO 16363 compliance and FAIR+CARE archival validation. |
+| v9.5.0 | 2025-11-02 | `@kfm-governance` | Introduced checksum ledger sync & renewable infrastructure reporting. |
+| v9.3.2 | 2025-10-28 | `@kfm-core` | Established archival baseline under MCP-DL v6.3. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Preservation × FAIR+CARE Governance × Provenance Continuity*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md) • [📊 FAIR+CARE Audit Summary](../../data/reports/fair/faircare_summary.json)
+**Kansas Frontier Matrix**  
+*Data Preservation × FAIR+CARE Governance × Provenance Continuity*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+
+[Back to Data Index](../README.md) · [Governance Charter](../../docs/standards/governance/DATA-GOVERNANCE.md) · [FAIR+CARE Summary](../../data/reports/fair/faircare_summary.json)
 
 </div>
