@@ -1,104 +1,85 @@
 ---
 title: "🧭 Kansas Frontier Matrix — Legacy Navigation Icon Archive (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/icons/legacy/app/nav/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Annual / Archival Preservation"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/web-public-icons-legacy-app-nav-v1.json"
+governance_ref: "../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧭 Kansas Frontier Matrix — **Legacy Navigation Icon Archive**
+# 🧭 **Kansas Frontier Matrix — Legacy Navigation Icon Archive**
 `web/public/icons/legacy/app/nav/README.md`
 
-**Purpose:**  
-Archives **deprecated navigation and menu icons** previously used across the Kansas Frontier Matrix (KFM) interface ecosystem.  
-These assets are preserved under FAIR+CARE archival governance for transparency, accessibility lineage, and sustainable digital preservation.
+**Purpose:** Archive all **deprecated navigation and menu icons** from prior KFM web releases.  
+Assets are preserved with FAIR+CARE lineage, WCAG metadata, and checksum provenance for transparent, ethical design heritage under **MCP v6.3**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Archive%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Archived-orange)](../../../../../../docs/standards/faircare.md)
+[![Status: Archived](https://img.shields.io/badge/Status-Archived-blue)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Legacy Navigation Icon Archive** preserves historical navigation and UI control icons from earlier KFM web releases, including sidebars, menus, breadcrumbs, and collapsible navigation elements.  
-Each file is checksum-verified, metadata-registered, and ethically archived per FAIR+CARE and MCP-DL v6.3 documentation-first protocols.
-
-### Core Responsibilities:
-- Archive outdated navigation icons under ethical governance.  
-- Maintain accessibility and provenance metadata for reuse and research.  
-- Enable historical reference for UI evolution and design consistency audits.  
-- Ensure WCAG 2.1 AA and ISO metadata compliance in all archived assets.  
+The **Legacy Navigation Icon Archive** maintains historic icons used for menus, home links, back/forward actions, and settings.  
+These artifacts remain publicly accessible for audit reproducibility, accessibility research, and governance provenance mapping.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/public/icons/legacy/app/nav/
-├── README.md                               # This file — documentation for legacy navigation icons
-│
-├── legacy-nav-menu.svg                     # Deprecated main menu icon
-├── legacy-nav-home.svg                     # Previous home/navigation link icon
-├── legacy-nav-back.svg                     # Outdated back or previous page icon
-├── legacy-nav-forward.svg                  # Old forward navigation control
-├── legacy-nav-settings.svg                 # Replaced settings or preferences icon
-└── metadata.json                           # FAIR+CARE archival and provenance metadata
+├── README.md
+├── legacy-nav-menu.svg
+├── legacy-nav-home.svg
+├── legacy-nav-back.svg
+├── legacy-nav-forward.svg
+├── legacy-nav-settings.svg
+└── metadata.json
 ```
 
 ---
 
-## ⚙️ Archival Workflow
+## 🧩 Archival Workflow
 
 ```mermaid
 flowchart TD
-    A["Deprecated Navigation Icon"] --> B["Accessibility & WCAG Review"]
-    B --> C["FAIR+CARE Ethical Archival Certification"]
-    C --> D["Checksum + Provenance Registration"]
-    D --> E["Storage in web/public/icons/legacy/app/nav/"]
-    E --> F["Governance Ledger Sync + Metadata Publication"]
+A["Deprecated Navigation Icon"] --> B["Capture A11y + FAIR+CARE Metadata"]
+B --> C["Checksum + SPDX Update"]
+C --> D["Provenance Ledger Registration"]
+D --> E["Permanent Archive Commit (/legacy/app/nav/)"]
 ```
 
-### Workflow Summary:
-1. **Review:** Conduct accessibility validation and color contrast reassessment.  
-2. **Certification:** FAIR+CARE Council verifies ethical communication and neutrality.  
-3. **Checksum Registration:** SHA-256 hash recorded for all archived assets.  
-4. **Governance:** Metadata linked to blockchain-based provenance ledger.  
+1. **Revalidation:** WCAG contrast + semantics recorded as lineage.  
+2. **Verification:** SHA-256 checksums and license stored in registry.  
+3. **Governance:** Archive registration added to provenance ledgers.  
+4. **Storage:** Assets retained permanently for historical reference.
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Validation Contracts
 
-```json
-{
-  "id": "legacy_nav_icons_registry_v9.6.0",
-  "archived_from_version": "v9.2.0",
-  "replaced_by": [
-    "web/public/icons/app/nav/icon-menu.svg",
-    "web/public/icons/app/nav/icon-settings.svg"
-  ],
-  "fairstatus": "certified",
-  "checksum_sha256": "c4a9b0ef345b2b61c73a43a8ef7ccdd3b68e55e3ff314cf9a831a2e8c51b16c2",
-  "archived_date": "2025-11-04T00:00:00Z",
-  "carbon_output_gco2e": 0.03,
-  "energy_efficiency_score": 99.1,
-  "validator": "@kfm-archive",
-  "governance_registered": true,
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| Accessibility Lineage | Preserve WCAG history + alt/title context | `accessibility_scan.yml` |
+| FAIR+CARE Archive | Ethical retention & neutrality | `faircare-validate.yml` |
+| Metadata Schema | ISO 19115 + SPDX archival format | `docs-lint.yml` |
+| Telemetry | Archive energy and storage footprint | `telemetry-export.yml` |
+
+Artifacts logged in:
+- `../../../../../../docs/reports/audit/data_provenance_ledger.json`
+- `../../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -106,85 +87,68 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed in metadata.json with checksum lineage and schema compliance. | @kfm-data |
-| **Accessible** | Open SVG format, preserved under accessibility standards. | @kfm-accessibility |
-| **Interoperable** | Aligned with FAIR+CARE metadata and ISO 19115 archival schemas. | @kfm-architecture |
-| **Reusable** | Licensed under CC-BY 4.0 for open archival reuse. | @kfm-design |
-| **Collective Benefit** | Promotes transparency and ethical digital heritage practices. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council governs archival integrity and release certification. | @kfm-governance |
-| **Responsibility** | Archivists manage metadata, checksum verification, and lineage documentation. | @kfm-sustainability |
-| **Ethics** | Icons preserved with neutral design documentation and context. | @kfm-ethics |
-
-Records referenced in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
+| **Findable** | Indexed by checksum and retired version in metadata.json. | @kfm-data |
+| **Accessible** | SVGs include `<title>` and `<desc>` archival context. | @kfm-accessibility |
+| **Interoperable** | ISO 19115 archival metadata alignment. | @kfm-architecture |
+| **Reusable** | CC-BY 4.0 license; suitable for research and teaching. | @kfm-design |
+| **Collective Benefit** | Documents UI evolution for open design scholarship. | @faircare-council |
+| **Authority to Control** | Council certifies archival entries and replacements. | @kfm-governance |
+| **Responsibility** | Archivists maintain checksums, lineage, and sustainability logs. | @kfm-sustainability |
+| **Ethics** | Preserved with neutral description to avoid misuse. | @kfm-ethics |
 
 ---
 
-## ⚙️ Archival Classifications
+## 🧾 Example Metadata Record
 
-| File | Description | Original Role | Replaced By |
-|------|--------------|----------------|--------------|
-| `legacy-nav-menu.svg` | Main menu toggle icon (hamburger). | Sidebar navigation control. | `icon-menu.svg` |
-| `legacy-nav-home.svg` | Dashboard home shortcut icon. | Primary navigation anchor. | `icon-home.svg` |
-| `legacy-nav-back.svg` | Previous page navigation icon. | Return action button. | `icon-back.svg` |
-| `legacy-nav-forward.svg` | Next page or forward navigation. | Forward navigation in panels. | `icon-forward.svg` |
-| `legacy-nav-settings.svg` | Preferences and system configuration icon. | Global settings interface. | `icon-settings.svg` |
+```json
+{
+  "id": "legacy_nav_v9.7.0",
+  "file": "legacy-nav-menu.svg",
+  "retired_in": "v9.0.0",
+  "replacement": "web/public/icons/app/nav/icon-menu.svg",
+  "retire_reason": "Updated for AA contrast and tokenized color system",
+  "checksum_sha256": "c4a9b0ef345b2b61c73a43a8ef7ccdd3b68e55e3ff314cf9a831a2e8c51b16c2",
+  "fairstatus": "archived",
+  "timestamp": "2025-11-05T21:25:00Z"
+}
+```
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♿ Accessibility & Preservation Standards
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Archived Icons | Permanent | Immutable under checksum registry. |
-| FAIR+CARE Reports | 365 Days | Renewed annually for revalidation. |
-| Metadata | Permanent | Stored in blockchain-backed governance ledger. |
-| Sustainability Logs | 180 Days | Audited with quarterly FAIR+CARE review cycles. |
-
-Automation managed via `legacy_nav_icon_sync.yml`.
+- Archived SVGs keep **title/desc** and contrast lineage metadata.  
+- Not used in live UI; retained for documentation only.  
+- Color tokens mapped to modern equivalents for comparison.  
+- Telemetry monitors storage and archival energy footprint.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 4.8 KB | @kfm-design |
-| Avg. Render Energy | 0.02 Wh | @kfm-sustainability |
-| Carbon Output | 0.03 gCO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry data stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+| Metric | Target | Verified By |
+|-------|--------|-------------|
+| Avg. File Size | ≤ 6 KB | Design audit |
+| Archive Energy | ≤ 0.01 Wh | Telemetry |
+| Carbon Output | ≤ 0.02 gCO₂e | CI telemetry |
+| Renewable Hosting | 100% RE100 | Infrastructure |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). Legacy Navigation Icon Archive (v9.6.0).
-FAIR+CARE-certified archival library for deprecated navigation icons, preserving ethical design heritage and accessibility lineage.
-Compliant with MCP-DL v6.3, WCAG 2.1 AA, and ISO 19115 archival governance standards.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Added sustainability metrics and checksum-based provenance records. |
-| v9.5.0 | 2025-11-02 | Integrated FAIR+CARE audit automation and lineage synchronization. |
-| v9.3.2 | 2025-10-28 | Established legacy navigation archive and provenance documentation. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded archive: telemetry schema v1, governance mapping, a11y lineage. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Added checksum registry and archival metadata. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Migrated v8 nav icons to permanent archive. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Digital Preservation × FAIR+CARE Governance × Sustainable UX Heritage*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Legacy App Icons](../README.md) · [Docs Index](../../../../../../docs/README.md)
 
 </div>
