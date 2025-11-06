@@ -32,6 +32,7 @@ All documents comply with **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE**
 ## 📖 Table of Contents
 
 - [Overview](#-overview)
+- [Directory Layout](#-directory-layout)
 - [Documentation Standards](#-documentation-standards)
 - [Core Categories](#-core-categories)
   - [Architecture & Systems](#architecture--systems)
@@ -55,6 +56,48 @@ All documentation follows:
 - **FAIR+CARE Data Governance**
 - **Platinum README Template v7.1**
 - **ISO 19115 & DCAT 3.0 metadata alignment**
+
+---
+
+## 🗂️ Directory Layout
+
+The `docs/` directory contains all governance, architecture, and development documentation aligned with MCP and FAIR+CARE protocols.
+
+```
+docs/
+├── README.md                        # Central documentation index (this file)
+├── glossary.md                      # Glossary of technical and ethical terms
+│
+├── architecture/                    # System and UI design documentation
+│   ├── data-architecture.md         # Data modeling, STAC/DCAT schemas
+│   ├── web-ui.md                    # Frontend design and interaction model
+│   └── github-architecture.md       # CI/CD automation overview
+│
+├── standards/                       # FAIR+CARE, governance, and documentation standards
+│   ├── faircare.md                  # FAIR+CARE ethical framework
+│   ├── markdown_rules.md            # Markdown structural rules
+│   ├── markdown_guide.md            # Markdown stylistic guide
+│   ├── ui_accessibility.md          # Accessibility compliance (WCAG 2.1 AA)
+│   ├── licensing.md                 # SPDX and CC license reference
+│   ├── data-contracts.md            # FAIR data contract schemas
+│   └── governance/
+│       └── ROOT-GOVERNANCE.md       # Root governance charter and policy
+│
+├── templates/                       # MCP-compliant contribution and review templates
+│   ├── model_card.md                # AI model documentation template
+│   ├── sop.md                       # Standard Operating Procedure template
+│   └── experiment.md                # Experiment documentation template
+│
+└── reports/                         # Validation and audit documentation
+    ├── faircare_summary.json        # FAIR+CARE validation output
+    ├── stac_validation.json         # STAC validation reports
+    └── telemetry/                   # Telemetry and governance metrics
+```
+
+Each subdirectory is versioned, schema-validated, and referenced in telemetry under:
+```
+releases/v9.7.0/focus-telemetry.json
+```
 
 ---
 
@@ -176,7 +219,7 @@ reports/self-validation/docs/
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added unified documentation index with linked categories and style integration. |
+| v9.7.0 | 2025-11-05 | A. Barta | Added directory layout and documentation index improvements. |
 | v9.5.0 | 2025-10-20 | A. Barta | Introduced markdown compliance section and telemetry links. |
 | v9.3.0 | 2025-08-12 | KFM Core Team | Expanded architecture and FAIR+CARE reference sections. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial documentation structure created. |
