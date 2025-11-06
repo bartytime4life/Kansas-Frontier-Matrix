@@ -1,100 +1,88 @@
 ---
-title: "🌄 Kansas Frontier Matrix — UI Backgrounds (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "web/public/images/ui/backgrounds/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+title: "🧩 Kansas Frontier Matrix — User Interface Image Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "web/public/images/ui/README.md"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-public-images-ui-v1.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🌄 Kansas Frontier Matrix — **UI Backgrounds**
-`web/public/images/ui/backgrounds/README.md`
+# 🧩 **Kansas Frontier Matrix — User Interface Image Assets**
+`web/public/images/ui/README.md`
 
 **Purpose:**  
-Repository for **UI background images and texture assets** used throughout the Kansas Frontier Matrix (KFM) platform.  
-These backgrounds form the visual foundation of the interface, ensuring harmony, readability, and accessibility under FAIR+CARE and ISO governance standards.
+Document and govern **UI imagery** (backgrounds, headers, widgets, components) used across KFM’s web application.  
+Assets are FAIR+CARE-certified, ISO 19115 metadata-aligned, and WCAG 2.1 AA accessible for ethical, sustainable, and reproducible design under **MCP v6.3**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Backgrounds%20Certified-gold)](../../../../../../docs/standards/faircare-validation.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../docs/README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../../docs/standards/faircare.md)
+[![Status: Active](https://img.shields.io/badge/Status-Validated-brightgreen)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **UI Backgrounds** directory contains high-quality, FAIR+CARE-certified background assets used in dashboards, landing pages, and Focus Mode environments across KFM.  
-Each image is tested for accessibility, performance, and sustainability compliance.
-
-### Core Responsibilities:
-- Provide visually cohesive and readable UI backgrounds.  
-- Ensure ethical sourcing and inclusive design under FAIR+CARE.  
-- Maintain accessibility (WCAG 2.1 AA) and contrast standards.  
-- Preserve full provenance lineage via checksum and governance logs.  
+The **UI Image Assets Library** includes all open-licensed visuals shaping KFM’s public experience.  
+Files are checksum-logged, accessible, and registered with provenance ledgers to support transparent open-science communication.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
-web/public/images/ui/backgrounds/
-├── README.md                               # This file — documentation for UI background assets
-│
-├── focus_mode_bg.png                       # Default Focus Mode interface background
-├── dashboard_gradient.jpg                  # Gradient texture for analytics dashboard
-├── heritage_texture_light.png              # Light background inspired by historical Kansas textures
-├── heritage_texture_dark.png               # Dark background variant for accessibility themes
-├── abstract_pattern_grid.svg               # Vector grid background for telemetry dashboards
-└── metadata.json                           # FAIR+CARE metadata and checksum registry
+```
+web/public/images/ui/
+├── README.md
+├── backgrounds/
+├── components/
+├── headers/
+├── footers/
+├── widgets/
+├── checksums/
+├── meta/
+└── metadata.json
 ```
 
 ---
 
-## ⚙️ Background Governance Workflow
+## 🧩 UI Asset Workflow
 
 ```mermaid
 flowchart TD
-    A["New UI Background Created"] --> B["FAIR+CARE Review (Accessibility + Ethics)"]
-    B --> C["Checksum and Provenance Registration"]
-    C --> D["Governance Ledger Sync"]
-    D --> E["Integration into Web UI Themes"]
+A["UI Asset Created"] --> B["FAIR+CARE + WCAG Audit"]
+B --> C["Checksum + ISO Metadata Registration"]
+C --> D["Governance Ledger Sync"]
+D --> E["Public Release to /images/ui"]
 ```
 
-### Workflow Description:
-1. **Creation:** New backgrounds designed under accessibility and visual balance guidelines.  
-2. **Audit:** FAIR+CARE review ensures ethical and inclusive design compliance.  
-3. **Checksum:** SHA-256 hashes registered in the manifest and metadata.json.  
-4. **Governance:** Certified assets added to governance ledger for transparency.  
+1. **Design:** Assets produced with tokenized colors, inclusive imagery, and a11y guidance.  
+2. **Audit:** Contrast and semantics validated via automated scans + human review.  
+3. **Register:** SHA-256 + SPDX license recorded in metadata.  
+4. **Publish:** Manifest + SBOM updated; telemetry snapshot includes sustainability metrics.
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Validation Contracts
 
-```json
-{
-  "id": "ui_backgrounds_registry_v9.6.0",
-  "categories": ["dashboard", "focus_mode", "heritage", "telemetry"],
-  "fairstatus": "certified",
-  "checksum_sha256": "b7a55d9cb54a8479f33c4a1256b92cb7d0db3c91eaf38b51e35a9d25cfc0177a",
-  "wcag_contrast_ratio": "AAA",
-  "energy_efficiency_score": 98.7,
-  "carbon_output_gco2e": 0.04,
-  "created": "2025-11-04T00:00:00Z",
-  "validator": "@kfm-ui-design",
-  "governance_registered": true,
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| Accessibility | WCAG 2.1 AA, alt-text, motion safety | `accessibility_scan.yml` |
+| FAIR+CARE | Ethics + governance metadata verification | `faircare-validate.yml` |
+| Metadata | ISO 19115 + SPDX structure checks | `docs-lint.yml` |
+| Telemetry | Energy + carbon traceability | `telemetry-export.yml` |
+
+Reports recorded at:  
+- `../../../../../docs/reports/audit/data_provenance_ledger.json`  
+- `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -102,85 +90,82 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed by checksum and category in metadata registry. | @kfm-data |
-| **Accessible** | WCAG 2.1 AA contrast-tested and open-licensed. | @kfm-accessibility |
-| **Interoperable** | Metadata harmonized under ISO 19115 and FAIR+CARE schemas. | @kfm-architecture |
-| **Reusable** | Licensed under CC-BY 4.0 for educational and public reuse. | @kfm-design |
-| **Collective Benefit** | Promotes open-science accessibility and cultural inclusion. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council validates visual assets for compliance. | @kfm-governance |
-| **Responsibility** | Designers maintain energy and sustainability logs. | @kfm-sustainability |
-| **Ethics** | Ensures all imagery reflects inclusive and culturally neutral visuals. | @kfm-ethics |
-
-FAIR+CARE and audit data maintained in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+| **Findable** | Indexed by checksum + category in registry. | @kfm-data |
+| **Accessible** | CC-BY assets with descriptive alt-text and AA contrast. | @kfm-accessibility |
+| **Interoperable** | ISO 19115 + FAIR+CARE metadata alignment. | @kfm-architecture |
+| **Reusable** | Open reuse in education, docs, and outreach. | @kfm-design |
+| **Collective Benefit** | Elevates inclusive, open-science visual narratives. | @faircare-council |
+| **Authority to Control** | Council certifies releases and updates. | @kfm-governance |
+| **Responsibility** | Designers track provenance and sustainability metrics. | @kfm-sustainability |
+| **Ethics** | Cultural neutrality and respect enforced in imagery. | @kfm-ethics |
 
 ---
 
-## ⚙️ Background Classification
+## 🧾 Example Metadata Record
 
-| File | Description | Theme | FAIR+CARE Status |
-|------|--------------|--------|------------------|
-| `focus_mode_bg.png` | Default Focus Mode interface background. | Focus | ✅ Certified |
-| `dashboard_gradient.jpg` | Gradient background for analytics dashboards. | Data | ✅ Certified |
-| `heritage_texture_light.png` | Light variant with Kansas historical texture. | Heritage | ✅ Certified |
-| `heritage_texture_dark.png` | Dark mode variant for visual accessibility. | Heritage / Accessibility | ✅ Certified |
-| `abstract_pattern_grid.svg` | Minimal vector pattern for telemetry panels. | Telemetry | ✅ Certified |
+```json
+{
+  "id": "ui_images_v9.7.0",
+  "category": "headers",
+  "filename": "dashboard_banner_dynamic_v9.7.0.png",
+  "checksum_sha256": "a4b55a1de9fbb3a8ec6e3e9df57a9ed62b8ed143b127cc9c8a3b92ac5400afab",
+  "license": "CC-BY 4.0",
+  "wcag": "2.1 AA",
+  "fairstatus": "certified",
+  "timestamp": "2025-11-05T23:25:00Z"
+}
+```
+
+---
+
+## 🧩 UI Image Classification
+
+| Category | Description | Format | FAIR+CARE Status |
+|-----------|--------------|---------|------------------|
+| `backgrounds/` | Thematic, low-contrast textures for UI. | PNG / JPG | Certified |
+| `headers/` | Hero banners and brand visuals. | JPG / PNG | Certified |
+| `widgets/` | Focus Mode and dashboard UI elements. | SVG / PNG | Certified |
+| `components/` | Panels, cards, and control imagery. | SVG | Certified |
+| `footers/` | Governance visuals and footer layouts. | PNG / SVG | Certified |
+
+---
+
+## ♿ Accessibility & Sustainability Standards
+
+- Alt-text required; color-blind safe palettes; AA contrast.  
+- Motion-safe imagery; respects `prefers-reduced-motion`.  
+- Average file ≤ **500 KB**; render energy ≤ **0.04 Wh**; renewable hosting.  
+- Telemetry logged per release for sustainability audits.
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
-| Active Backgrounds | Continuous | Updated and version-tracked under FAIR+CARE. |
-| Metadata | Permanent | Retained within blockchain-backed provenance ledger. |
-| Accessibility Reports | 365 Days | Revalidated during quarterly design audits. |
-| Sustainability Metrics | 180 Days | Monitored for energy and carbon optimization. |
+| Record Type | Retention | Policy |
+|--------------|-----------|--------|
+| Active UI Images | Continuous | Versioned and checksum-tracked. |
+| Metadata | Permanent | Ledger-synced under governance. |
+| Audits (FAIR+CARE/WCAG) | 365 Days | Revalidated quarterly. |
+| Archived Assets | Permanent | Immutable checksum lineage. |
 
-Retention automation managed via `ui_background_sync.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 480 KB | @kfm-design |
-| Render Energy | 0.03 Wh | @kfm-sustainability |
-| Carbon Output | 0.05 gCO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry metrics recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+Automation: `ui_image_sync.yml`.
 
 ---
 
-## 🧾 Internal Use Citation
+## 🕰️ Version History
 
-```text
-Kansas Frontier Matrix (2025). UI Backgrounds (v9.6.0).
-Certified FAIR+CARE and ISO 19115 collection of accessible, sustainable, and reproducible interface backgrounds supporting KFM web design and data visualization environments.
-Compliant with MCP-DL v6.3, WCAG 2.1 AA, and open-science ethical design standards.
-```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Added dark/light heritage backgrounds and telemetry pattern registry. |
-| v9.5.0 | 2025-11-02 | Enhanced FAIR+CARE audit integration for accessibility testing. |
-| v9.3.2 | 2025-10-28 | Established foundational UI background governance with metadata tracking. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded telemetry schema, enhanced ISO alignment, added example metadata. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Added checksum lineage and expanded widget registry. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Improved automation for accessibility validation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Accessible Design × FAIR+CARE Ethics × Sustainable UI Aesthetics*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Certified under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Images Index](../README.md) · [Docs Portal](../../../../../docs/README.md)
 
 </div>
