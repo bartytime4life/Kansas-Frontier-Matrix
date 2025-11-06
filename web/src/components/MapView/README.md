@@ -1,107 +1,86 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — MapView Components (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/MapView/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-components-mapview-v1.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🗺️ Kansas Frontier Matrix — **MapView Components**
+# 🗺️ **Kansas Frontier Matrix — MapView Components**
 `web/src/components/MapView/README.md`
 
-**Purpose:**  
-Provides the geospatial visualization and FAIR+CARE-governed mapping interface for the Kansas Frontier Matrix (KFM) web application.  
-Built on MapLibre GL and Deck.gl, the MapView module delivers transparent, ethical, and sustainable geospatial analytics aligned with open data and accessibility standards.
+**Purpose:** Define the FAIR+CARE-certified geospatial visualization components that render and govern Kansas Frontier Matrix datasets within the web application.  
+MapView combines **MapLibre GL** and **Deck.gl** rendering with governance, explainability, and sustainability telemetry under **MCP v6.3** and **ISO 19115**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-MapView%20Certified-gold)](../../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![OGC STAC](https://img.shields.io/badge/OGC-STAC%201.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../docs/standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **MapView Components** directory powers KFM’s interactive spatial visualization environment.  
-It integrates ethical geospatial rendering with Focus Mode AI insights, FAIR+CARE metadata, and sustainability telemetry — ensuring data transparency and environmental responsibility in visualization processes.
-
-### Core Responsibilities:
-- Render FAIR+CARE-certified geospatial datasets (climate, hazards, hydrology, etc.).  
-- Display STAC/DCAT-registered layers and metadata overlays.  
-- Provide AI-assisted Focus Mode summaries for geospatial insights.  
-- Maintain accessibility (keyboard navigation, ARIA labeling, and contrast compliance).  
-- Log sustainability and carbon metrics for rendering operations.  
+The **MapView module** provides accessible, tokenized map components used for visualizing FAIR+CARE-certified geospatial datasets and Focus Mode insights.  
+It enforces sustainability, transparency, and ethical mapping practices while integrating provenance metadata and telemetry logging.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/src/components/MapView/
-├── README.md                             # This file — documentation for MapView components
-│
-├── MapCanvas.tsx                         # Core MapLibre GL rendering canvas for KFM datasets
-├── LayerControls.tsx                     # Interactive UI for toggling FAIR+CARE layer visibility
-├── Legend.tsx                            # Map legend showing symbology and data categories
-├── TimelineSlider.tsx                    # Temporal navigation control for STAC layer changes
-└── metadata.json                         # Governance and telemetry metadata for MapView rendering
+├── README.md
+├── MapCanvas.tsx         # Core renderer (MapLibre + Deck.gl)
+├── LayerControls.tsx     # Dataset toggling, visibility, and governance
+├── Legend.tsx            # Dynamic legend showing FAIR+CARE layer metadata
+├── TimelineSlider.tsx    # Temporal layer control and timeline playback
+└── metadata.json         # Telemetry + provenance metadata for MapView
 ```
 
 ---
 
-## ⚙️ MapView Architecture Workflow
+## 🧩 Map Rendering Architecture
 
 ```mermaid
 flowchart TD
-    A["User Input (Layer Toggle / Timeline Scroll)"] --> B["MapCanvas (MapLibre GL + Deck.gl)"]
-    B --> C["LayerControls (STAC / FAIR+CARE Layer Management)"]
-    C --> D["Legend (Dynamic Metadata Overlay)"]
-    D --> E["Telemetry & Governance Sync"]
-    E --> F["Focus Mode AI Explainability (Spatial Reasoning)"]
+A["User Input (Layer Toggle / Timeline)"] --> B["MapCanvas (MapLibre + Deck.gl)"]
+B --> C["LayerControls (STAC/DCAT Layer Management)"]
+C --> D["Legend (Metadata + Symbology)"]
+D --> E["Telemetry Sync (Perf + Energy)"]
+E --> F["Governance Ledger (Provenance + FAIR+CARE)"]
 ```
 
-### Workflow Description:
-1. **User Input:** Keyboard/mouse or accessible control inputs trigger data updates.  
-2. **Rendering:** MapCanvas visualizes spatial layers using FAIR+CARE geodata.  
-3. **Controls:** LayerControls manage visibility, metadata, and provenance.  
-4. **Legend:** Displays live symbology, schema alignment, and governance status.  
-5. **AI Context:** Focus Mode AI interprets patterns and explains spatial relationships.  
+1. **User Input:** Keyboard/mouse or accessible controls modify visible layers.  
+2. **Rendering:** MapCanvas visualizes datasets via MapLibre and Deck.gl.  
+3. **Layer Controls:** Manage layer visibility, metadata, and provenance.  
+4. **Legend:** Displays symbology and FAIR+CARE metadata dynamically.  
+5. **Governance Sync:** Telemetry and provenance data written to ledgers.
 
 ---
 
-## 🧩 Example MapView Metadata Record
+## ⚙️ Component Contracts
 
-```json
-{
-  "id": "mapview_render_session_v9.6.0_2025Q4",
-  "rendered_layers": [
-    "hazards_composite_v9.6.0.geojson",
-    "climate_boundaries.geojson",
-    "hydrology_basins.parquet"
-  ],
-  "average_render_time_ms": 122.4,
-  "energy_usage_wh": 0.92,
-  "accessibility_score": 98.8,
-  "fairstatus": "certified",
-  "checksum_verified": true,
-  "ai_explainability_enabled": true,
-  "governance_registered": true,
-  "validator": "@kfm-mapview",
-  "created": "2025-11-03T23:59:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| STAC/DCAT Schema | Validates metadata structure | `stac-validate.yml` |
+| A11y Contract | Accessible map interaction (keyboard, focus, ARIA) | `accessibility_scan.yml` |
+| Telemetry Contract | Perf + sustainability logs | `telemetry-export.yml` |
+| Governance Contract | Provenance, ethics, and CARE verification | `faircare-validate.yml` |
+
+Artifacts recorded in:
+- `docs/reports/audit/data_provenance_ledger.json`
+- `../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -109,84 +88,76 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | All layers and datasets reference STAC/DCAT catalogs. | @kfm-data |
-| **Accessible** | WCAG 2.1 AA-compliant map interactions (keyboard + screen reader). | @kfm-accessibility |
-| **Interoperable** | Integrates ISO 19115 and OGC STAC standards for open access. | @kfm-architecture |
-| **Reusable** | Modular components adaptable for multiple domains. | @kfm-design |
-| **Collective Benefit** | Encourages public understanding of environmental and historical context. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council validates geospatial ethics and layer accuracy. | @kfm-governance |
-| **Responsibility** | Developers ensure inclusive cartographic representation. | @kfm-ethics |
-| **Ethics** | No exclusionary data or misleading visualizations permitted. | @kfm-security |
-
-Governance and audit outputs stored in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+| **Findable** | STAC/DCAT metadata embedded in all map layers. | @kfm-data |
+| **Accessible** | Full keyboard + screen reader navigation with alt text. | @kfm-accessibility |
+| **Interoperable** | ISO 19115 + OGC STAC metadata alignment. | @kfm-architecture |
+| **Reusable** | Reusable map components across web dashboards. | @kfm-design |
+| **Collective Benefit** | Promotes open access to environmental history data. | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council validates geospatial integrity. | @kfm-governance |
+| **Responsibility** | Sustainable rendering + neutral color palettes. | @kfm-sustainability |
+| **Ethics** | Prevents bias or exclusion in map visualizations. | @kfm-ethics |
 
 ---
 
-## ⚙️ Component Summaries
+## 🧾 Example Metadata Record
 
-| Component | Description | Role |
-|------------|--------------|------|
-| `MapCanvas.tsx` | Core map renderer integrating FAIR+CARE data layers. | Visualization |
-| `LayerControls.tsx` | UI for toggling datasets and metadata overlays. | User Interaction |
-| `Legend.tsx` | Provides FAIR+CARE-compliant symbology and metadata context. | Accessibility |
-| `TimelineSlider.tsx` | Enables temporal navigation across datasets. | Storytelling |
+```json
+{
+  "id": "mapview_v9.7.0",
+  "layers": [
+    "hazards_composite.geojson",
+    "climate_boundaries.geojson",
+    "hydrology_basins.parquet"
+  ],
+  "avg_render_time_ms": 118.7,
+  "energy_use_wh": 0.89,
+  "fairstatus": "certified",
+  "telemetry_synced": true,
+  "checksum_verified": true,
+  "timestamp": "2025-11-05T19:00:00Z"
+}
+```
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♿ Accessibility Standards
 
-| Asset | Retention Duration | Policy |
-|--------|--------------------|--------|
-| Render Logs | 90 Days | Archived for sustainability and QA review. |
-| Layer Metadata | 365 Days | Retained for FAIR+CARE certification. |
-| Telemetry Records | 180 Days | Used for reproducibility and performance audits. |
-| Accessibility Reports | Permanent | Stored in governance ledger. |
-
-Cleanup managed by `mapview_cleanup.yml`.
+- Keyboard panning and zoom with arrow + `+` / `-` keys.  
+- Focus-visible styling for map tools and overlays.  
+- Color palettes contrast-tested ≥ **4.5:1** (WCAG 2.1 AA).  
+- Motion-safe transitions (`prefers-reduced-motion` honored).  
+- Tooltips and legends labeled for screen readers.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Average Render Energy | 0.92 Wh | @kfm-sustainability |
-| Carbon Output | 1.1 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+| Metric | Target | Verified By |
+|-------|--------|-------------|
+| Avg. Render Energy | ≤ 0.9 Wh | Telemetry |
+| Carbon Output | ≤ 1.1 gCO₂e | CI telemetry |
+| Lighthouse Perf | ≥ 90 | CI pipeline |
+| Renewable Hosting | 100% RE100 | Infrastructure audit |
 
-Telemetry logged in:  
-`releases/v9.6.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). MapView Components (v9.6.0).
-Geospatial visualization components integrating FAIR+CARE-compliant data layers and explainable Focus Mode AI.
-Enables transparent, ethical, and sustainable mapping under MCP-DL v6.3.
-```
+Logged to `../../../../releases/v9.7.0/focus-telemetry.json`.
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added carbon tracking and FAIR+CARE explainability integration. |
-| v9.5.0 | 2025-11-02 | Improved TimelineSlider and dynamic metadata overlays. |
-| v9.3.2 | 2025-10-28 | Established FAIR+CARE geospatial visualization system. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded + aligned: contracts, telemetry schema v1, ISO metadata compliance, a11y validation. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Added FAIR+CARE explainability and carbon tracking. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Enhanced legend metadata overlays and temporal slider. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Established geospatial visualization foundation. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Geospatial Visualization × FAIR+CARE Governance × Sustainable Mapping*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Components Index](../README.md) · [Docs Index](../../../../docs/README.md)
 
 </div>
-
