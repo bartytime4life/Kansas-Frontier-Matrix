@@ -1,13 +1,14 @@
-# 🧩 Kansas Frontier Matrix — Dependabot Configuration
-# .github/dependabot.yml
-# Purpose: Automate dependency updates, security alerts, and ecosystem version checks
-# Aligned with Master Coder Protocol (MCP v6.3) and FAIR+CARE governance.
+# 🧩 Kansas Frontier Matrix — Dependabot Configuration (MCP v6.3 · FAIR+CARE Certified)
+# File: .github/dependabot.yml
+# Purpose: Automate dependency updates, security alert triage, and ecosystem version governance
+# Alignment: Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 version: 2
 updates:
-  # ---------------------------
-  # 🐍 Python Dependencies
-  # ---------------------------
+
+  # ============================================================
+  # 🐍 Python — Core Application and Pipelines
+  # ============================================================
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
@@ -27,9 +28,9 @@ updates:
       prefix: "deps(python)"
       include: "scope"
 
-  # ---------------------------
-  # 🧱 Node.js Frontend
-  # ---------------------------
+  # ============================================================
+  # 🧱 Node.js — Web Frontend
+  # ============================================================
   - package-ecosystem: "npm"
     directory: "/web"
     schedule:
@@ -52,9 +53,9 @@ updates:
       prefix: "deps(frontend)"
       include: "scope"
 
-  # ---------------------------
-  # 🐳 Docker Container Images
-  # ---------------------------
+  # ============================================================
+  # 🐳 Docker — Containerized Infrastructure
+  # ============================================================
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
@@ -72,9 +73,9 @@ updates:
       prefix: "deps(docker)"
       include: "scope"
 
-  # ---------------------------
-  # 🧩 GitHub Actions
-  # ---------------------------
+  # ============================================================
+  # ⚙️ GitHub Actions — CI/CD Automation Dependencies
+  # ============================================================
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -92,9 +93,9 @@ updates:
       prefix: "deps(ci)"
       include: "scope"
 
-  # ---------------------------
-  # 🧠 Neo4j / Graph Schema Dependencies
-  # ---------------------------
+  # ============================================================
+  # 🧠 Neo4j / Graph Schema — Semantic Infrastructure
+  # ============================================================
   - package-ecosystem: "pip"
     directory: "/src/graph"
     schedule:
@@ -112,9 +113,9 @@ updates:
       prefix: "deps(graph)"
       include: "scope"
 
-  # ---------------------------
-  # 📦 Data Validation Tools
-  # ---------------------------
+  # ============================================================
+  # 📦 Data Validation — FAIR+CARE Compliance Tooling
+  # ============================================================
   - package-ecosystem: "pip"
     directory: "/src/pipelines/validation"
     schedule:
@@ -132,17 +133,19 @@ updates:
       prefix: "deps(validation)"
       include: "scope"
 
-# ---------------------------
-# 🔒 Global Settings
-# ---------------------------
-# Dependabot will automatically rebase open PRs when conflicts are resolved,
-# and use GitHub’s built-in security alerts for vulnerable dependencies.
-
-# Notifications and Security Alerts
-# ---------------------------------
-# - Alerts sent to repository maintainers and security team.
-# - All dependency PRs must pass CI/CD (codeql.yml + trivy.yml).
-# - SBOM (Software Bill of Materials) updated with each successful merge.
-
-# Governance: Managed under Master Coder Protocol v6.3 / FAIR+CARE Certified
+# ============================================================
+# 🔒 Global Governance & Security Integration
+# ============================================================
+# Dependabot automatically rebases open PRs when conflicts are resolved.
+# All PRs must pass the following CI/CD workflows before merge:
+#   • `codeql.yml` — static security analysis
+#   • `trivy.yml` — CVE and container vulnerability scanning
+#
+# Additional Governance:
+#   • SBOM (Software Bill of Materials) regenerated on successful merge.
+#   • Security alerts routed to repository maintainers and FAIR+CARE Council.
+#   • Commit messages prefixed with `deps(...)` for audit classification.
+#
+# Governance Reference: docs/standards/governance/ROOT-GOVERNANCE.md
 # SPDX-License-Identifier: MIT
+# © 2025 Kansas Frontier Matrix — Maintained under Master Coder Protocol v6.3
