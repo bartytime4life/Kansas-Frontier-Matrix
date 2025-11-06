@@ -1,181 +1,174 @@
----
-name: "🚀 Feature Request"
-description: "Propose a new feature, enhancement, or improvement to the Kansas Frontier Matrix (FAIR+CARE · MCP-DL v6.3 Compliant)"
-title: "[FEATURE] <brief description>"
-labels: ["feature", "enhancement", "faircare:review"]
+# 💡 Kansas Frontier Matrix — Feature Request Template  
+# File: .github/ISSUE_TEMPLATE/feature_request.yaml  
+# Purpose: Collect structured requests for new features, enhancements, or improvements to the KFM system.  
+# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
+# SPDX-License-Identifier: CC-BY-4.0  
+
+name: "💡 Feature Request"
+description: "Propose a new feature, enhancement, or improvement to the Kansas Frontier Matrix project."
+title: "Feature Request: [Short Title]"
+labels:
+  - "enhancement"
+  - "feature"
 assignees:
-  - "@kfm-architecture"
-  - "@kfm-fair"
-  - "@kfm-governance"
+  - "bartytime4life"
+
 body:
   - type: markdown
     attributes:
       value: |
-        ## 🚀 Kansas Frontier Matrix — Feature Request (FAIR+CARE Certified)
-        Use this form to suggest new features or enhancements that improve reproducibility, ethics, or automation in KFM.
-        All requests undergo FAIR+CARE, governance, and technical feasibility review.
+        ## 💡 Kansas Frontier Matrix — Feature Request Form  
+        Use this form to suggest new functionality, UI improvements, pipeline features, or AI/ETL enhancements.  
+        All feature proposals are reviewed during the **MCP Quarterly Architecture Review Cycle** and must include clear rationale and implementation details.
 
   - type: input
     id: feature_title
     attributes:
-      label: "🧩 Feature Title"
-      description: "Provide a concise, descriptive title for your proposed feature."
-      placeholder: "Example: Add FAIR+CARE-integrated telemetry for energy reporting"
+      label: "Feature Title"
+      description: "Provide a short and descriptive title for the requested feature."
+      placeholder: "e.g. Add AI-assisted entity linking for treaty documents"
     validations:
       required: true
 
   - type: textarea
-    id: description
+    id: feature_summary
     attributes:
-      label: "📚 Feature Description"
-      description: "Describe the feature in detail, including its purpose and scope."
-      placeholder: "Explain what the feature will do and how it enhances KFM’s FAIR+CARE or technical capabilities."
+      label: "Summary"
+      description: "Briefly summarize the purpose and scope of this feature."
+      placeholder: |
+        Example:
+        This feature adds an NLP-based entity linking module that automatically connects people, places, and treaties
+        within the Kansas Frontier Matrix knowledge graph.
     validations:
       required: true
 
   - type: textarea
-    id: motivation
+    id: problem_statement
     attributes:
-      label: "💡 Problem or Motivation"
-      description: "Explain the problem this feature will solve or what opportunity it enables."
-      placeholder: "Why is this change important? What use cases or workflows will benefit?"
+      label: "Problem or Opportunity"
+      description: "Describe the problem this feature solves or the opportunity it creates."
+      placeholder: |
+        Example:
+        Manual linking of historical entities is time-consuming and inconsistent.
+        Automating entity relationships improves accuracy and discoverability across datasets.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: "Proposed Solution"
+      description: "Explain your proposed implementation, including technologies, algorithms, or UI concepts."
+      placeholder: |
+        Example:
+        Implement a `focus_transformer_v2` model in `src/ai/models/` that uses transformer embeddings
+        to detect and link semantic entities. Integrate with Neo4j graph database via Cypher query templates.
     validations:
       required: true
 
   - type: dropdown
-    id: component
+    id: component_area
     attributes:
-      label: "🏗️ Component Affected"
-      description: "Select the KFM subsystem this feature applies to."
+      label: "Affected Component Area"
+      description: "Select which part of the system the proposed feature affects."
       options:
-        - Data (data/)
-        - Source (src/)
-        - Tools (tools/)
-        - Web Application (web/)
-        - Governance / Ledger (releases/, reports/)
-        - Documentation (docs/)
-        - Testing / CI-CD (.github/, tests/)
+        - "ETL / Data Pipelines"
+        - "AI / NLP Models"
+        - "API Layer (FastAPI / GraphQL)"
+        - "Frontend (React / MapLibre)"
+        - "Documentation / Governance"
+        - "Infrastructure / CI-CD"
+      default: 1
     validations:
       required: true
 
   - type: dropdown
-    id: feature_type
+    id: impact_level
     attributes:
-      label: "🧱 Feature Category"
-      description: "Select the nature of this proposed feature."
+      label: "Estimated Impact Level"
+      description: "Select the overall impact of this feature."
       options:
-        - New ETL Pipeline
-        - AI / Focus Mode Enhancement
-        - FAIR+CARE or Ethics Governance Feature
-        - Sustainability / Telemetry Upgrade
-        - Validation or Compliance Tool
-        - Documentation or Accessibility Improvement
-        - Web UI or Visualization Enhancement
-        - Other
+        - "High — Core functionality enhancement"
+        - "Medium — Improves usability or automation"
+        - "Low — Minor improvement or refactor"
+      default: 1
     validations:
       required: true
-
-  - type: textarea
-    id: technical_details
-    attributes:
-      label: "⚙️ Technical Details"
-      description: "Describe the technical approach, dependencies, and design considerations."
-      placeholder: "Example: Extend src/pipelines/telemetry with ISO 50001 telemetry integration."
-    validations:
-      required: false
 
   - type: textarea
     id: dependencies
     attributes:
-      label: "🔗 Dependencies or Related Work"
-      description: "List related issues, repositories, or external standards this feature depends on."
-      placeholder: "Example: Depends on schema update in data-contract-v3.json or FAIR+CARE validation workflow."
+      label: "Dependencies or Related Work"
+      description: "List any related datasets, models, or workflows that may be affected or required."
+      placeholder: |
+        Example:
+        - Dependent on `src/graph/queries/link_entities.cypher`
+        - Builds on `focus_transformer_v1`
+        - Requires new STAC metadata for linked documents
     validations:
       required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        ## 🧠 FAIR+CARE Governance Impact
-        Evaluate how this feature aligns with FAIR+CARE principles.
-
-  - type: checkboxes
-    id: faircare_alignment
-    attributes:
-      label: "FAIR+CARE Compliance Checklist"
-      options:
-        - label: "Findable — Enhances discoverability and metadata integrity"
-        - label: "Accessible — Improves openness, licensing, or accessibility"
-        - label: "Interoperable — Strengthens schema and standards compliance"
-        - label: "Reusable — Increases reproducibility and provenance traceability"
-        - label: "Collective Benefit — Benefits public, ethical, and environmental goals"
-        - label: "Ethics — Designed for transparency, inclusion, and fairness"
-    validations:
-      required: true
 
   - type: textarea
-    id: governance_links
+    id: risks
     attributes:
-      label: "⚖️ Governance or Provenance References"
-      description: "Provide links or file paths to relevant governance records or ethics documentation."
-      placeholder: "Example: reports/audit/system_ledger.json#record_4823 or docs/standards/faircare-validation.md"
+      label: "Potential Risks or Considerations"
+      description: "Identify any challenges, data sensitivity, or technical limitations to consider."
+      placeholder: |
+        Example:
+        - Model bias must be tested before production
+        - New dependencies increase container image size
+        - Requires additional FAIR+CARE governance review
     validations:
       required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        ## 🔍 Acceptance Criteria
-        Define measurable success indicators for this feature.
 
   - type: textarea
     id: acceptance_criteria
     attributes:
-      label: "✅ Acceptance Criteria"
-      description: "List specific conditions that must be met for this feature to be considered complete."
+      label: "Acceptance Criteria"
+      description: "Define what success looks like. What measurable outcomes or deliverables should this feature achieve?"
       placeholder: |
-        - [ ] Automated FAIR+CARE validation passes
-        - [ ] Documentation added to MCP-DL compliance section
-        - [ ] Provenance registered in governance ledger
+        Example:
+        - Entity linking achieves 90% accuracy on test corpus.
+        - Users can filter by linked entities in the Focus Mode UI.
+        - Documentation updated under `docs/ai/focus_transformer.md`.
     validations:
       required: true
+
+  - type: checkboxes
+    id: compliance_checklist
+    attributes:
+      label: "Governance & Compliance Checklist"
+      description: "Confirm these before submitting your feature request."
+      options:
+        - label: "I confirm this proposal follows Master Coder Protocol v6.3 (documentation-first design)."
+          required: true
+        - label: "I confirm this feature will comply with FAIR+CARE data governance principles."
+          required: true
+        - label: "I will update or create relevant documentation in `docs/` and `src/` upon implementation."
+          required: true
+        - label: "I understand this feature request may require approval during the next architecture review cycle."
+          required: true
 
   - type: markdown
     attributes:
       value: |
         ---
-        ## 🧾 Sign-Off
-        Confirm contributor identity and FAIR+CARE compliance.
+        ### 🧭 Architecture Review & Validation Workflow  
+        Submitted feature requests automatically enter KFM’s governance workflow:
+        - **`docs-lint.yml`** → Validates proposal format and Markdown consistency  
+        - **`stac-validate.yml`** → Checks metadata interoperability (if applicable)  
+        - **`faircare-validate.yml`** → Confirms ethical compliance for any new datasets  
+        - **`build-and-deploy.yml`** → (Triggered post-approval) integrates into development build  
 
-  - type: input
-    id: contributor
-    attributes:
-      label: "👤 Contributor"
-      description: "Your GitHub handle."
-      placeholder: "@username"
-    validations:
-      required: true
+        Approved proposals are tracked in:
+        ```
+        reports/audit/github-workflows-ledger.json
+        ```
+        and referenced in:
+        ```
+        releases/v9.7.0/focus-telemetry.json
+        ```
 
-  - type: input
-    id: affiliation
-    attributes:
-      label: "🏢 Affiliation"
-      description: "Your organization, institution, or project affiliation."
-      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
-    validations:
-      required: true
-
-  - type: textarea
-    id: certification
-    attributes:
-      label: "🪶 FAIR+CARE Certification Statement"
-      description: "By submitting this request, you certify that the proposed feature aligns with FAIR+CARE governance and open ethical standards."
-      value: |
-        I confirm that this feature request:
-        - Supports the FAIR+CARE and MCP-DL v6.3 ethical framework.
-        - Contains no private, sensitive, or proprietary data.
-        - Promotes transparency, sustainability, and inclusive development.
-    validations:
-      required: true
+        **Thank you for helping shape the future of the Kansas Frontier Matrix.**  
+        Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+        **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
