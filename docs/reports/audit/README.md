@@ -1,5 +1,5 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Governance & Audit Ledger Index"
+title: "🧾 Kansas Frontier Matrix — Governance & Audit Ledgers Index"
 path: "docs/reports/audit/README.md"
 version: "v9.7.0"
 last_updated: "2025-11-05"
@@ -8,22 +8,22 @@ commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
 manifest_ref: "../../../releases/v9.7.0/manifest.zip"
 telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/docs-audit-v1.json"
+telemetry_schema: "../../../schemas/telemetry/docs-audit-ledgers-v1.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🧾 **Kansas Frontier Matrix — Governance & Audit Ledger Index**
+# 🧾 **Kansas Frontier Matrix — Governance & Audit Ledgers Index**
 `docs/reports/audit/README.md`
 
-**Purpose:** Define the structure, purpose, and validation workflows of all audit and governance ledgers in the Kansas Frontier Matrix (KFM).  
-These ledgers form the **immutable provenance layer** of KFM — recording every validation, governance review, experiment, and AI model registration under **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** standards.
+**Purpose:** Provide a comprehensive index for all governance and audit ledgers that track the lifecycle of validation, experiments, releases, and AI governance activities across the Kansas Frontier Matrix (KFM).  
+These JSON ledgers serve as KFM’s **immutable provenance layer**, guaranteeing accountability, reproducibility, and ethical compliance under **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** standards.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)
-[![Status: Immutable](https://img.shields.io/badge/Ledger-Immutable-blue)]()
+[![Status: Immutable](https://img.shields.io/badge/Status-Immutable-blue)]()
 
 </div>
 
@@ -31,14 +31,13 @@ These ledgers form the **immutable provenance layer** of KFM — recording every
 
 ## 📘 Overview
 
-The `docs/reports/audit/` directory defines and indexes all **immutable audit logs and governance records** generated during CI/CD validation, FAIR+CARE audits, and AI model registration.  
-These JSON ledgers ensure full **traceability**, **accountability**, and **scientific reproducibility** across every KFM release.
+The `docs/reports/audit/` directory defines all **governance and audit ledgers** generated through validation workflows, FAIR+CARE reviews, and AI model registration processes.  
+Each record provides full **traceability**, **cross-referenced metadata**, and **SHA-256 verifiability** for every governance event across KFM releases.
 
-Each entry is **machine-signed**, **timestamped**, and **cross-referenced** with:
-- SPDX SBOMs (`sbom_ref`)
-- Governance review metadata
-- FAIR+CARE validation reports
-- CI/CD telemetry (`telemetry_ref`)
+All ledger entries are:
+- Machine-readable JSON format  
+- Timestamped and cryptographically signed  
+- Referenced in release manifests and governance dashboards  
 
 ---
 
@@ -48,34 +47,34 @@ Each entry is **machine-signed**, **timestamped**, and **cross-referenced** with
 docs/reports/audit/
 ├── README.md                     # This index file
 │
-├── github-workflows-ledger.json  # CI/CD run audit log
-├── governance-ledger.json        # FAIR+CARE and ethics review records
-├── experiments-ledger.json       # Research & data experiment tracking
-├── ai_models.json                # Registered AI/ML model cards and governance checks
-└── release-manifest-log.json     # Versioned manifest hashes and SBOM traceability
+├── github-workflows-ledger.json  # CI/CD execution and artifact logs
+├── governance-ledger.json        # FAIR+CARE and ethical review records
+├── experiments-ledger.json       # Experiment metadata and validation history
+├── ai_models.json                # AI/ML model registration and governance checks
+└── release-manifest-log.json     # SBOM and versioned manifest hash registry
 ```
 
 ---
 
-## 🧾 Ledger Categories
+## 🧾 Ledger Types
 
-### 1. ⚙️ GitHub Workflows Ledger (`github-workflows-ledger.json`)
+### 1. ⚙️ CI/CD Workflows Ledger (`github-workflows-ledger.json`)
 
-Tracks the execution history of all CI/CD workflows under `.github/workflows/`.
+Tracks execution of all workflows under `.github/workflows/`.
 
 | Field | Description |
 |--------|-------------|
-| `workflow_name` | Name of the executed workflow. |
-| `run_id` | Unique GitHub Actions run identifier. |
-| `sha` | Commit hash for traceability. |
-| `status` | success / failure / cancelled. |
-| `timestamp` | UTC timestamp of execution. |
-| `artifacts` | List of generated reports (paths). |
-| `duration_sec` | Total execution time. |
+| `workflow_name` | Workflow executed (e.g., `stac-validate.yml`) |
+| `run_id` | Unique GitHub Actions run ID |
+| `sha` | Commit hash |
+| `status` | success / failure / cancelled |
+| `timestamp` | UTC timestamp of completion |
+| `artifacts` | Generated files (paths) |
+| `duration_sec` | Runtime duration in seconds |
 
-**Generated By:** all workflows (STAC, FAIR+CARE, Docs, Deploy, Telemetry)
+**Generated By:** all CI/CD pipelines (STAC, FAIR+CARE, Docs, Telemetry)
 
-**Example Entry:**
+**Example:**
 ```json
 {
   "workflow_name": "stac-validate.yml",
@@ -83,9 +82,7 @@ Tracks the execution history of all CI/CD workflows under `.github/workflows/`.
   "sha": "9f2c51b4d52e11fbc40e0f9a3a87993a54a31c29",
   "status": "success",
   "timestamp": "2025-11-05T17:45:00Z",
-  "artifacts": [
-    "reports/self-validation/stac/_summary.json"
-  ],
+  "artifacts": ["reports/self-validation/stac/_summary.json"],
   "duration_sec": 185
 }
 ```
@@ -94,20 +91,20 @@ Tracks the execution history of all CI/CD workflows under `.github/workflows/`.
 
 ### 2. ⚖️ Governance Ledger (`governance-ledger.json`)
 
-Immutable record of FAIR+CARE and ethical review decisions submitted via governance forms.
+Immutable record of FAIR+CARE and ethics-related reviews and council decisions.
 
 | Field | Description |
 |--------|-------------|
-| `event` | Type of governance event (e.g., `faircare_review`, `ethics_review`). |
-| `dataset_id` | Associated dataset or STAC Item identifier. |
-| `reviewer` | Reviewer or governance council name. |
-| `decision` | Approved / Needs Revision / Rejected. |
-| `timestamp` | Date and time of governance entry. |
-| `notes` | Justification or additional context. |
+| `event` | Governance action (`faircare_review`, `ethics_review`) |
+| `dataset_id` | Dataset or STAC Item identifier |
+| `reviewer` | Reviewer or council member name |
+| `decision` | Approved / Needs Revision / Rejected |
+| `timestamp` | Time of governance entry |
+| `notes` | Review comments or reasoning |
 
 **Generated By:** `.github/ISSUE_TEMPLATE/governance_form.yml`
 
-**Example Entry:**
+**Example:**
 ```json
 {
   "event": "faircare_review",
@@ -123,26 +120,26 @@ Immutable record of FAIR+CARE and ethical review decisions submitted via governa
 
 ### 3. 🧪 Experiments Ledger (`experiments-ledger.json`)
 
-Documents research and technical experiments performed within KFM for audit and reproducibility.
+Documents validated research and technical experiments.
 
 | Field | Description |
 |--------|-------------|
-| `experiment_id` | Unique identifier of the experiment. |
-| `author` | Contributor or team responsible. |
-| `summary` | Short description of the experiment goal. |
-| `status` | Completed / In Progress / Failed Validation. |
-| `timestamp` | UTC timestamp of entry creation. |
-| `telemetry_ref` | Reference to telemetry metrics for experiment. |
-| `report_path` | Link to documentation in `docs/experiments/`. |
+| `experiment_id` | Unique experiment identifier |
+| `author` | Contributor or research team |
+| `summary` | Description of experiment |
+| `status` | Completed / In Progress / Failed Validation |
+| `timestamp` | Creation timestamp |
+| `telemetry_ref` | Related telemetry metrics |
+| `report_path` | Path to detailed experiment doc |
 
 **Generated By:** `docs/templates/experiment.md`
 
-**Example Entry:**
+**Example:**
 ```json
 {
   "experiment_id": "ocr_ner_1850s",
   "author": "A. Barta",
-  "summary": "OCR + NER extraction performance test on historical Kansas archives.",
+  "summary": "OCR + NER performance validation for historical Kansas newspapers.",
   "status": "Completed",
   "timestamp": "2025-11-05T21:10:00Z",
   "telemetry_ref": "releases/v9.7.0/focus-telemetry.json",
@@ -154,21 +151,21 @@ Documents research and technical experiments performed within KFM for audit and 
 
 ### 4. 🤖 AI Models Ledger (`ai_models.json`)
 
-Records registered AI/ML models, their governance reviews, and validation results.
+Logs model versions, explainability metrics, and governance decisions.
 
 | Field | Description |
 |--------|-------------|
-| `model_name` | Name of the AI model. |
-| `version` | Semantic version of the model. |
-| `developer` | Model author or contributor. |
-| `review_status` | Approved / Under Review / Rejected. |
-| `evaluation_metrics` | Object with accuracy, precision, recall, etc. |
-| `faircare_compliance` | Boolean or percentage score. |
-| `model_card_path` | Path to the corresponding model card. |
+| `model_name` | AI/ML model identifier |
+| `version` | Semantic version |
+| `developer` | Author or maintainer |
+| `review_status` | Approved / Under Review / Rejected |
+| `evaluation_metrics` | Accuracy, precision, recall, etc. |
+| `faircare_compliance` | Ethical compliance score |
+| `model_card_path` | Link to documented model card |
 
 **Generated By:** `docs/templates/model_card.md` and `faircare-validate.yml`
 
-**Example Entry:**
+**Example:**
 ```json
 {
   "model_name": "focus_transformer_v1",
@@ -189,19 +186,19 @@ Records registered AI/ML models, their governance reviews, and validation result
 
 ### 5. 🧮 Release Manifest Ledger (`release-manifest-log.json`)
 
-Maintains historical traceability of versioned builds, SBOMs, and cryptographic checksums.
+Tracks build provenance, SBOM hashes, and release package integrity.
 
 | Field | Description |
 |--------|-------------|
-| `version` | Release tag. |
-| `manifest_hash` | SHA-256 hash of manifest file. |
-| `sbom_hash` | SHA-256 hash of SBOM SPDX file. |
-| `generated_on` | UTC timestamp. |
-| `artifacts` | List of output files and directories. |
+| `version` | Release tag |
+| `manifest_hash` | SHA-256 checksum of manifest |
+| `sbom_hash` | SHA-256 checksum of SBOM |
+| `generated_on` | UTC timestamp |
+| `artifacts` | Release files included |
 
 **Generated By:** `build-and-deploy.yml`
 
-**Example Entry:**
+**Example:**
 ```json
 {
   "version": "v9.7.0",
@@ -217,42 +214,45 @@ Maintains historical traceability of versioned builds, SBOMs, and cryptographic 
 
 ---
 
-## 🧠 Governance Ledger Integration
+## 🧩 Integration with Governance & Telemetry
 
-All ledgers are automatically integrated with the FAIR+CARE Governance Council and exported for visualization in the **Governance Dashboard**.
+All audit ledgers are referenced in:
+- `docs/reports/telemetry/governance_scorecard.json`
+- `reports/audit/github-workflows-ledger.json`
+- `releases/v9.7.0/focus-telemetry.json`
 
-**Dashboard Sources:**
+These ensure synchronized **traceability** between validation, ethical governance, and telemetry systems.
+
+**Governance Dashboard Sources:**
 - `docs/reports/audit/governance-ledger.json`
 - `docs/reports/audit/ai_models.json`
 - `docs/reports/telemetry/governance_scorecard.json`
 
-Visualized in:
-```
-web/src/components/DashboardView/
-```
+Displayed in:  
+`web/src/components/DashboardView/`
 
 ---
 
-## ⚖️ FAIR+CARE Compliance Mapping
+## ⚖️ FAIR+CARE Governance Alignment
 
 | Principle | Implementation |
 |------------|----------------|
-| **Findable** | Each ledger indexed by unique ID and version. |
-| **Accessible** | JSON files publicly readable and versioned in Git. |
-| **Interoperable** | Compatible with DCAT 3.0 and schema.org `Dataset`. |
-| **Reusable** | Ledger data exported as part of each release for verification. |
-| **CARE** | Every ledger entry reviewed by governance council for ethical compliance. |
+| **Findable** | Ledger entries indexed by dataset, model, or experiment ID. |
+| **Accessible** | Stored in repository; publicly accessible under CC-BY 4.0. |
+| **Interoperable** | JSON Schema aligns with DCAT 3.0 and schema.org. |
+| **Reusable** | Timestamped, versioned, and checksum-verified entries. |
+| **CARE** | Governance Council reviews all ledgers quarterly. |
 
 ---
 
 ## 🧾 Workflow Integration
 
-| Workflow | Function | Output |
-|-----------|-----------|--------|
-| `faircare-validate.yml` | Validates ethical data compliance | `governance-ledger.json` |
-| `stac-validate.yml` | Validates dataset metadata | `github-workflows-ledger.json` |
-| `telemetry-export.yml` | Aggregates CI/CD metrics | `release-manifest-log.json` |
-| `build-and-deploy.yml` | Generates manifests and SBOMs | `release-manifest-log.json` |
+| Workflow | Function | Ledger Output |
+|-----------|-----------|----------------|
+| `faircare-validate.yml` | Records FAIR+CARE validation outcomes. | `governance-ledger.json` |
+| `stac-validate.yml` | Logs dataset schema validation. | `github-workflows-ledger.json` |
+| `telemetry-export.yml` | Logs telemetry data and CI/CD metrics. | `release-manifest-log.json` |
+| `build-and-deploy.yml` | Captures release provenance and checksums. | `release-manifest-log.json` |
 
 ---
 
@@ -260,10 +260,10 @@ web/src/components/DashboardView/
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added comprehensive audit and governance ledger index; integrated AI/experiment logs. |
-| v9.5.0 | 2025-10-20 | A. Barta | Updated FAIR+CARE and telemetry ledger mapping. |
-| v9.3.0 | 2025-08-12 | KFM Core Team | Linked governance forms to automated ledger entries. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial audit and provenance documentation added. |
+| v9.7.0 | 2025-11-05 | A. Barta | Fully aligned ledger index; added governance, telemetry, and FAIR+CARE mapping. |
+| v9.5.0 | 2025-10-20 | A. Barta | Updated metadata schema and dashboard integration. |
+| v9.3.0 | 2025-08-12 | KFM Core Team | Linked governance forms and ledgers. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Established base governance audit documentation. |
 
 ---
 
