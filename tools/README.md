@@ -1,46 +1,42 @@
 ---
 title: "🛠️ Kansas Frontier Matrix — Tools Directory (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.6.0/manifest.zip"
+sbom_ref: "../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
+telemetry_ref: "../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/tools-registry-v1.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🛠️ Kansas Frontier Matrix — **Tools Directory**
+# 🛠️ **Kansas Frontier Matrix — Tools Directory**
 `tools/README.md`
 
 **Purpose:**  
-Central repository of FAIR+CARE-certified command-line utilities, governance automation scripts, validation systems, and telemetry tools powering the Kansas Frontier Matrix (KFM).  
-These tools ensure reproducibility, auditability, and transparent FAIR+CARE-aligned automation across all data, AI, and governance pipelines.
+Serve as the FAIR+CARE-certified hub for command-line utilities, CI/CD automation, validation scripts, governance synchronization, and telemetry tooling that power the Kansas Frontier Matrix (KFM).  
+All tools are versioned, checksum-verified, and governed for transparent, reproducible, and ethical automation.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Tools%20Certified-gold)](../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../docs/architecture/repo-focus.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)
 [![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The `tools/` directory is the **operational command hub** of KFM’s reproducible workflows — containing modular components for AI orchestration, validation, CI/CD automation, and telemetry reporting.  
-All tools adhere to FAIR+CARE, ISO, and MCP-DL documentation-first compliance, ensuring open, ethical, and verifiable operations.
-
-### Core Responsibilities:
-- Automate FAIR+CARE validation and governance ledger synchronization.  
-- Provide command-line and API-based interfaces for reproducible workflow execution.  
-- Collect and report telemetry metrics for Focus Mode analytics.  
-- Manage internal testing, security, and provenance verification utilities.  
+`tools/` is KFM’s **operational command center**—hosting modular utilities for AI orchestration, schema and checksum validation, governance ledger updates, sustainability telemetry, and documentation QA.  
+Every tool adheres to MCP-DL v6.3, FAIR+CARE ethics, and ISO metadata alignment for audit-ready reproducibility.
 
 ---
 
@@ -48,33 +44,33 @@ All tools adhere to FAIR+CARE, ISO, and MCP-DL documentation-first compliance, e
 
 ```plaintext
 tools/
-├── README.md                           # This file — overview of KFM tools directory
+├── README.md
 │
-├── ai/                                 # AI and ML pipeline governance and explainability tools
+├── ai/                      # AI & explainability audits
 │   ├── focus_audit.py
 │   ├── bias_check.py
 │   └── drift_monitor.py
 │
-├── ci/                                 # Continuous integration and pipeline automation utilities
+├── ci/                      # CI/CD automations
 │   ├── docs_validate.yml
 │   ├── checksum_verify.yml
 │   └── site_deploy.yml
 │
-├── cli/                                # Command-line utilities for governance and validation tasks
+├── cli/                     # Command-line interfaces
 │   ├── kfm_cli.py
 │   └── metadata_manager.py
 │
-├── governance/                         # Tools for provenance tracking and ethics registry management
+├── governance/              # Provenance & ethics tooling
 │   ├── governance_sync.py
 │   ├── ledger_update.py
 │   └── certification_audit.py
 │
-├── telemetry/                          # Focus Mode telemetry and sustainability metrics collectors
+├── telemetry/               # Metrics & sustainability
 │   ├── telemetry_collector.py
 │   ├── performance_analyzer.py
 │   └── sustainability_reporter.py
 │
-└── validation/                         # FAIR+CARE and schema validation automation utilities
+└── validation/              # FAIR+CARE + schema validation
     ├── faircare_validator.py
     ├── schema_check.py
     └── ai_explainability_audit.py
@@ -82,31 +78,30 @@ tools/
 
 ---
 
-## ⚙️ Toolchain Workflow
+## 🧩 Toolchain Workflow
 
 ```mermaid
 flowchart TD
-    A["User / CI Trigger"] --> B["CLI Execution (tools/cli/)"]
-    B --> C["Automation Scripts (tools/ci/ + tools/validation/)"]
-    C --> D["Governance Registration (tools/governance/)"]
-    D --> E["Telemetry Collection (tools/telemetry/)"]
-    E --> F["AI Auditing & Ethics Review (tools/ai/)"]
+A["User / CI Trigger"] --> B["CLI (tools/cli)"]
+B --> C["Validation (tools/validation + tools/ci)"]
+C --> D["Governance Sync (tools/governance)"]
+D --> E["Telemetry Export (tools/telemetry)"]
+E --> F["AI Audits (tools/ai)"]
 ```
 
-### Workflow Description:
-1. **CLI Execution:** Users trigger reproducible operations through the KFM command-line tools.  
-2. **Automation:** CI and validation utilities manage schema checks, checksum audits, and FAIR+CARE compliance.  
-3. **Governance Sync:** Ledger and certification processes update immutable provenance records.  
-4. **Telemetry:** Focus Mode metrics and sustainability data captured for analytics dashboards.  
-5. **Ethical Review:** AI modules perform fairness, bias, and explainability validation.  
+1. **CLI:** Operators invoke repeatable tasks (ingest, validate, publish).  
+2. **Validation:** Schemas, checksums, and docs are verified in CI.  
+3. **Governance:** Outputs are registered to the ledger with provenance.  
+4. **Telemetry:** Build, energy, and compliance metrics exported to `focus-telemetry.json`.  
+5. **AI Audits:** Bias, drift, and explainability validated against FAIR+CARE criteria.
 
 ---
 
-## 🧩 Example Governance Metadata Record
+## 🧾 Example Governance Metadata
 
 ```json
 {
-  "id": "tools_registry_v9.6.0",
+  "id": "tools_registry_v9.7.0",
   "tools_registered": [
     "faircare_validator.py",
     "ledger_update.py",
@@ -118,7 +113,7 @@ flowchart TD
   "ai_explainability_score": 0.994,
   "governance_registered": true,
   "validator": "@kfm-tools-lab",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-05T18:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -128,88 +123,86 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | All tools versioned and indexed in governance ledger and manifest. | @kfm-data |
-| **Accessible** | Licensed under MIT and documented per MCP-DL. | @kfm-accessibility |
-| **Interoperable** | Tools aligned with FAIR+CARE, ISO 19115, and DCAT standards. | @kfm-architecture |
-| **Reusable** | Modular design ensures reproducibility across workflows. | @kfm-design |
-| **Collective Benefit** | Enables open, ethical data governance for research communities. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council oversees certification of tool updates. | @kfm-governance |
-| **Responsibility** | Validators document ethics, security, and sustainability compliance. | @kfm-security |
-| **Ethics** | All automation modules audited for bias, transparency, and inclusion. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Tools indexed in manifest and governance ledger. | @kfm-data |
+| **Accessible** | MIT-licensed with MCP-DL docs and CLI help. | @kfm-accessibility |
+| **Interoperable** | ISO + FAIR+CARE aligned metadata and outputs. | @kfm-architecture |
+| **Reusable** | Modular, scriptable, and pinned dependencies. | @kfm-design |
+| **Collective Benefit** | Enables transparent, ethical automation for research. | @faircare-council |
+| **Authority to Control** | Council certifies tooling releases and audits. | @kfm-governance |
+| **Responsibility** | Security scans, SBOMs, and provenance logs maintained. | @kfm-security |
+| **Ethics** | AI utilities audited for bias, inclusion, and transparency. | @kfm-ethics |
 
-Audit references stored in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
+Audit references:  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
 ## ⚙️ Key Tool Categories
 
 | Module | Description | Role |
-|---------|--------------|------|
-| `tools/ai/` | AI and ML explainability validation tools. | Ethical model transparency. |
-| `tools/ci/` | Continuous integration workflows and documentation QA. | Automate pipeline validation. |
-| `tools/cli/` | Developer command-line tools for KFM automation. | Governance and ETL execution. |
-| `tools/governance/` | Synchronize ledgers, ethics logs, and FAIR+CARE certifications. | Provenance and audit traceability. |
-| `tools/telemetry/` | Collect and analyze Focus Mode sustainability and performance metrics. | Continuous observability. |
-| `tools/validation/` | Execute schema, checksum, and FAIR+CARE compliance checks. | Core validation automation. |
+|--------|-------------|-----|
+| `tools/ai/` | Explainability + bias/drift checks | Ethical AI assurance |
+| `tools/ci/` | Docs, checksum, deploy workflows | CI/CD automation |
+| `tools/cli/` | Operator entry points | Governance & ETL control |
+| `tools/governance/` | Ledger & certification sync | Provenance traceability |
+| `tools/telemetry/` | Performance & energy metrics | Observability |
+| `tools/validation/` | FAIR+CARE & schema checks | Compliance gate |
 
-All modules coordinated via `tools_sync.yml`.
+Synchronized via `tools_sync.yml`.
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
-| Category | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| Governance Logs | Permanent | Immutable blockchain ledger records. |
-| Validation Reports | 365 Days | Archived for re-certification and QA audits. |
-| Telemetry Data | 90 Days | Retained for Focus Mode performance tracking. |
-| Metadata | Permanent | Maintained in governance manifest. |
+| Artifact | Retention | Policy |
+|---------|-----------|-------|
+| Governance Logs | Permanent | Blockchain-backed records |
+| Validation Reports | 365 Days | Archived for re-certification |
+| Telemetry Data | 90 Days | Focus Mode analysis window |
+| Tool Metadata | Permanent | Manifest + SBOM tracked |
 
-Cleanup handled through `tools_cleanup.yml`.
+Cleanup with `tools_cleanup.yml`.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per tool execution) | 0.8 Wh | @kfm-sustainability |
+|--------|------|-------------|
+| Energy / Execution | 0.8 Wh | @kfm-sustainability |
 | Carbon Output | 1.1 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
+| Renewable Power | 100% (RE100) | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
-Telemetry data logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry stored in:  
+`../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Tools Directory (v9.6.0).
-Central FAIR+CARE-certified repository for AI, governance, validation, and telemetry utilities.
-Enables reproducible, ethical automation and transparent provenance tracking under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Tools Directory (v9.7.0).
+FAIR+CARE-certified suite of automation, validation, and governance tools enabling reproducible and ethical operations across KFM.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
 | Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Introduced unified governance registry and telemetry synchronization. |
-| v9.5.0 | 2025-11-02 | Enhanced FAIR+CARE audit tooling and schema validation. |
-| v9.3.2 | 2025-10-28 | Established tools directory for FAIR+CARE and CI/CD automation. |
+|---------|------|------|
+| v9.7.0 | 2025-11-05 | Upgraded to telemetry schema v1; aligned SBOM & manifest references. |
+| v9.6.0 | 2025-11-03 | Unified governance registry and CI synchronization. |
+| v9.5.0 | 2025-11-02 | Expanded FAIR+CARE automation and schema validation. |
+| v9.3.2 | 2025-10-28 | Established tools directory for CI/CD and governance automation. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** · *Ethical Automation × FAIR+CARE Governance × Provenance Assurance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/DATA-GOVERNANCE.md)
+[🔗 Repository](../) • [🧭 Docs Portal](../docs/) • [⚖️ Governance Ledger](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
