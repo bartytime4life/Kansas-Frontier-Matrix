@@ -1,192 +1,196 @@
----
-name: "📥 Data Submission"
-description: "Submit a new dataset for inclusion in the Kansas Frontier Matrix (FAIR+CARE · MCP-DL v6.3 Certified)"
-title: "[DATA SUBMISSION] <dataset name>"
-labels: ["data-submission", "faircare:review", "governance:pending"]
+# 🗺️ Kansas Frontier Matrix — Data Submission Template  
+# File: .github/ISSUE_TEMPLATE/data_submission.yml  
+# Purpose: Structured form for submitting new datasets or geospatial layers to KFM.  
+# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
+# SPDX-License-Identifier: CC-BY-4.0  
+
+name: "🗺️ Data Submission"
+description: "Submit a new dataset, STAC item, or data layer for inclusion in the Kansas Frontier Matrix."
+title: "Dataset Submission: [Dataset Name or ID]"
+labels:
+  - "data"
+  - "stac"
+  - "faircare"
 assignees:
-  - "@kfm-data"
-  - "@kfm-fair"
-  - "@kfm-governance"
+  - "bartytime4life"
+
 body:
   - type: markdown
     attributes:
       value: |
-        ## 📥 Kansas Frontier Matrix — Data Submission Form (FAIR+CARE Certified)
-        Submit your dataset for FAIR+CARE validation and integration into the Kansas Frontier Matrix (KFM).
-        All submissions undergo schema validation, checksum verification, and governance review for ethical and reproducible integration.
+        ## 🗺️ Kansas Frontier Matrix — Data Submission Form  
+        Thank you for contributing a new dataset to the **Kansas Frontier Matrix (KFM)**.  
+        Please fill out all fields carefully to ensure proper ingestion and validation.  
+        All submissions are evaluated under the **Master Coder Protocol (MCP v6.3)** and must meet **FAIR+CARE** compliance.
 
   - type: input
-    id: dataset_name
+    id: dataset_id
     attributes:
-      label: "🧾 Dataset Name"
-      description: "Provide the full title of the dataset being submitted."
-      placeholder: "Example: Kansas Drought Monitor — 2025 Update"
+      label: "Dataset ID"
+      description: "A short, unique, lowercase identifier for this dataset (use underscores instead of spaces)."
+      placeholder: "e.g. noaa_storm_events_1950_2025"
     validations:
       required: true
 
   - type: input
-    id: dataset_source
+    id: dataset_title
     attributes:
-      label: "🌍 Data Source or Origin"
-      description: "List the source, provider, or institution responsible for this dataset."
-      placeholder: "Example: NOAA National Centers for Environmental Information (NCEI)"
+      label: "Dataset Title"
+      description: "Full descriptive title of the dataset."
+      placeholder: "e.g. NOAA Storm Events Archive (1950–2025)"
     validations:
       required: true
 
   - type: textarea
-    id: description
+    id: dataset_description
     attributes:
-      label: "📚 Dataset Description"
-      description: "Provide a clear summary of what this dataset represents and its purpose."
-      placeholder: "Include spatial and temporal scope, format, and collection methods."
+      label: "Dataset Description"
+      description: "Provide a detailed summary of the dataset content, scope, and intended use."
+      placeholder: |
+        Example:
+        This dataset includes recorded severe weather events (tornadoes, floods, hail, etc.) across Kansas
+        from 1950–2025 as collected by NOAA’s National Centers for Environmental Information (NCEI).
     validations:
       required: true
 
   - type: dropdown
-    id: domain
+    id: dataset_type
     attributes:
-      label: "🏷️ KFM Domain Category"
-      description: "Select the primary domain relevant to this dataset."
+      label: "Dataset Type"
+      description: "Select the general type of dataset."
       options:
-        - Climate
-        - Hydrology
-        - Hazards
-        - Landcover
-        - Terrain
-        - Tabular / Statistical
-        - Text / Archival
-        - Metadata / Governance
+        - "raster (GeoTIFF, COG, imagery)"
+        - "vector (GeoJSON, shapefile, boundaries)"
+        - "tabular (CSV, TSV, JSON)"
+        - "text (OCR, transcripts, documents)"
+        - "other (specify below)"
+      default: 0
     validations:
       required: true
 
   - type: textarea
-    id: format
+    id: source_provenance
     attributes:
-      label: "🧩 File Formats and Structure"
-      description: "List the dataset formats and structures (e.g., CSV, GeoJSON, Parquet, GeoTIFF)."
-      placeholder: "Example: CSV with schema v3.1 fields; includes GeoJSON for spatial reference."
+      label: "Source & Provenance"
+      description: "Provide the original data source, repository link, or publication reference."
+      placeholder: "e.g. NOAA NCEI, USGS National Map, Kansas Geological Survey (KGS), etc."
     validations:
       required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: "License"
+      description: "Provide the SPDX or Creative Commons license for the dataset (e.g. CC-BY-4.0, Public Domain)."
+      placeholder: "e.g. Public Domain (US Government Works)"
+    validations:
+      required: true
+
+  - type: input
+    id: checksum
+    attributes:
+      label: "Checksum (SHA-256)"
+      description: "Provide a checksum hash for file integrity verification."
+      placeholder: "e.g. sha256-abcdef123456..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: spatial_extent
+    attributes:
+      label: "Spatial Coverage (Bounding Box)"
+      description: "Provide bounding box coordinates in WGS84 (EPSG:4326)."
+      placeholder: "Example: [-102.05, 37.00, -94.60, 40.00]"
+    validations:
+      required: true
+
+  - type: textarea
+    id: temporal_extent
+    attributes:
+      label: "Temporal Coverage (Start and End Dates)"
+      description: "Specify the date range covered by this dataset."
+      placeholder: "Example: { start: '1950-01-01', end: '2025-05-01' }"
+    validations:
+      required: true
+
+  - type: textarea
+    id: keywords
+    attributes:
+      label: "Keywords / Tags"
+      description: "List relevant topics, themes, or metadata tags for discoverability."
+      placeholder: "e.g. climate, tornado, hazards, historical-data, kansas, NOAA"
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_access
+    attributes:
+      label: "Data Access URL(s)"
+      description: "Provide the direct download link(s) or API endpoint(s) for the dataset."
+      placeholder: "e.g. https://www.ncei.noaa.gov/access/search/storm-events"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: care_relevance
+    attributes:
+      label: "CARE Relevance"
+      description: "Does this dataset contain or relate to Indigenous, tribal, or culturally sensitive data?"
+      options:
+        - "No — not applicable"
+        - "Yes — includes Indigenous-related content"
+        - "Uncertain — requires governance review"
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: care_statement
+    attributes:
+      label: "CARE Statement (if applicable)"
+      description: "If your dataset relates to Indigenous lands, heritage, or cultural knowledge, describe how CARE principles are respected."
+      placeholder: |
+        Example:
+        This dataset includes digitized treaty boundaries verified with tribal partners.
+        It has been reviewed and approved for open publication with attribution.
+    validations:
+      required: false
 
   - type: checkboxes
-    id: licenses
+    id: compliance_checklist
     attributes:
-      label: "📜 License Type"
-      description: "Select the applicable license for this dataset."
+      label: "Contributor Checklist"
+      description: "Confirm all required compliance steps before submission."
       options:
-        - label: "CC-BY 4.0 (Attribution Required)"
-        - label: "CC0 (Public Domain)"
-        - label: "Open Government License"
-        - label: "MIT / BSD Open Data License"
-        - label: "Other (Specify Below)"
-    validations:
-      required: true
-
-  - type: input
-    id: other_license
-    attributes:
-      label: "🔖 Other License or Access Terms"
-      description: "If the dataset is licensed differently, describe the terms here."
-      placeholder: "Example: Data available under a university MOU or non-commercial clause."
-    validations:
-      required: false
-
-  - type: dropdown
-    id: sensitivity
-    attributes:
-      label: "⚠️ Data Sensitivity"
-      description: "Select the access or ethical sensitivity level of this dataset."
-      options:
-        - Open Access (public, unrestricted)
-        - Limited Access (requires attribution or controlled use)
-        - Restricted (requires review by FAIR+CARE Council)
-    validations:
-      required: true
-
-  - type: textarea
-    id: provenance
-    attributes:
-      label: "⚖️ Provenance and Lineage"
-      description: "Provide dataset provenance — include origin, versioning, and processing steps."
-      placeholder: "Example: Derived from NOAA drought monitor data (v9.5.0), harmonized with KFM schema."
-    validations:
-      required: true
-
-  - type: textarea
-    id: validation
-    attributes:
-      label: "🧠 Validation or QA/QC Details"
-      description: "List validation or quality assurance checks already completed."
-      placeholder: "Example: Schema validation passed; checksum verified; metadata compliant with DCAT 3.0."
-    validations:
-      required: false
+        - label: "I confirm this dataset complies with FAIR principles (Findable, Accessible, Interoperable, Reusable)."
+          required: true
+        - label: "I confirm this dataset respects CARE principles where applicable."
+          required: true
+        - label: "I have verified all file checksums and metadata accuracy."
+          required: true
+        - label: "I understand this dataset will undergo validation via `stac-validate.yml` and `faircare-validate.yml` workflows."
+          required: true
 
   - type: markdown
     attributes:
       value: |
         ---
-        ## 🧠 FAIR+CARE Compliance Review
-        Confirm that this dataset meets FAIR+CARE principles before governance review.
+        ### 🧪 Validation Workflows  
+        Upon submission, your dataset will automatically be validated by:
+        - **`stac-validate.yml`** → Schema and link validation  
+        - **`faircare-validate.yml`** → FAIR+CARE and license checks  
+        - **`docs-lint.yml`** → Markdown, YAML, and JSON front-matter validation  
 
-  - type: checkboxes
-    id: faircare_alignment
-    attributes:
-      label: "FAIR+CARE Compliance Checklist"
-      options:
-        - label: "Findable — Metadata, schema, and provenance properly indexed"
-        - label: "Accessible — Dataset openly available and properly licensed"
-        - label: "Interoperable — Schema aligns with FAIR+CARE, DCAT, or STAC"
-        - label: "Reusable — Versioned, documented, and verifiable"
-        - label: "Ethical — Reviewed for cultural, environmental, and data sensitivity"
-    validations:
-      required: true
+        Validation results will be stored under:
+        ```
+        reports/self-validation/stac/
+        reports/fair/
+        ```
+        and referenced in the system telemetry at:
+        ```
+        releases/v9.7.0/focus-telemetry.json
+        ```
 
-  - type: textarea
-    id: governance_links
-    attributes:
-      label: "📘 Governance References"
-      description: "Include governance, metadata, or data policy documentation links."
-      placeholder: "Example: https://data.noaa.gov/documents/governance-policy or docs/standards/faircare-validation.md"
-    validations:
-      required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        ---
-        ## 🔍 Review and Approval Workflow
-        After submission, this dataset will:
-        1. Be validated against FAIR+CARE, schema, and checksum rules.
-        2. Undergo governance council ethics review.
-        3. Receive a certification ID and be registered in the data provenance ledger.
-
-  - type: input
-    id: contributor
-    attributes:
-      label: "👤 Contributor"
-      description: "Your GitHub handle or full name."
-      placeholder: "@username"
-    validations:
-      required: true
-
-  - type: input
-    id: affiliation
-    attributes:
-      label: "🏢 Affiliation"
-      description: "Your institution, organization, or project affiliation."
-      placeholder: "Kansas Frontier Matrix / Open FAIR+CARE Network"
-    validations:
-      required: true
-
-  - type: textarea
-    id: certification
-    attributes:
-      label: "🪶 FAIR+CARE Certification Statement"
-      description: "By submitting, you affirm that this dataset complies with FAIR+CARE and open data governance standards."
-      value: |
-        I confirm that this dataset:
-        - Aligns with FAIR+CARE principles and MCP-DL v6.3 governance.
-        - Contains no private, proprietary, or restricted personal information.
-        - Supports transparency, reproducibility, and equitable data access.
-    validations:
-      required: true
+        **Thank you for contributing open, ethical, and verifiable data to the Kansas Frontier Matrix.**  
+        Built under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+        **© 2025 Kansas Frontier Matrix — CC-BY 4.0**
