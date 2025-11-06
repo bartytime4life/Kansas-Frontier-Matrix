@@ -1,173 +1,202 @@
 ---
-title: "🌎 Kansas Frontier Matrix — Open Data, AI, and Governance System (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌾 Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub"
 path: "README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
-review_cycle: "Continuous / Autonomous"
+version: "v9.7.0"
+last_updated: "2025-11-05"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "releases/v9.6.0/manifest.zip"
+sbom_ref: "releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "releases/v9.7.0/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.6.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/system-v3.json"
-validation_reports:
-  - "reports/fair/system_summary.json"
-  - "reports/audit/system_ledger.json"
-  - "reports/self-validation/system_validation.json"
-governance_ref: "docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
+telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🌎 Kansas Frontier Matrix — **Open Data · AI · Governance System**
+# 🌾 **Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub**
 `README.md`
 
-**Purpose:**  
-The **Kansas Frontier Matrix (KFM)** is an open, FAIR+CARE-certified data infrastructure integrating environmental, historical, and cultural datasets across time and space.  
-Built on transparent AI, reproducible ETL pipelines, and blockchain-linked governance, it provides a foundation for sustainable and ethical digital research across the Kansas region.
+**Purpose:** Provide an overview of the Kansas Frontier Matrix (KFM), its mission, architecture, data standards, and contribution guidelines — serving as the project’s entry point for developers, researchers, and collaborators.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Certified-gold)](docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](docs/architecture/repo-focus.md)
-[![ISO Compliance](https://img.shields.io/badge/ISO-19115%20%7C%2050001%20%7C%2014064-forestgreen)]()
-[![AI Explainability](https://img.shields.io/badge/AI-Explainable%20%26%20Ethical-blueviolet)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](docs/standards/faircare.md)
+[![STAC](https://img.shields.io/badge/STAC-1.0.0-black)](https://stacspec.org)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📚 Overview
-
-The **Kansas Frontier Matrix (KFM)** is a comprehensive open-source system designed to unify diverse datasets — spanning **climate, hydrology, land cover, hazards, and cultural archives** — under a single reproducible and ethically governed framework.
-
-KFM leverages:
-- **FAIR+CARE principles** for ethical data stewardship.  
-- **AI explainability** for Focus Mode reasoning and temporal storytelling.  
-- **Blockchain provenance** for immutable data lineage.  
-- **ISO-certified sustainability** and carbon transparency.  
-- **MapLibre web interfaces** for interactive exploration.  
-
----
-
-## 🧩 Core System Structure
-
-```plaintext
-Kansas-Frontier-Matrix/
-├── data/                # FAIR+CARE-aligned data layers (raw, staging, processed)
-├── src/                 # ETL, AI, validation, governance, and telemetry pipelines
-├── tools/               # CLI utilities, governance scripts, and validation tools
-├── tests/               # Reproducibility, validation, and integration testing suite
-├── docs/                # MCP-DL architecture and governance documentation
-├── web/                 # React + MapLibre web dashboard (Focus Mode interface)
-├── releases/            # Versioned manifests, SBOMs, and FAIR+CARE certifications
-└── ARCHITECTURE.md      # System-level architecture & design specification
-```
+## 📖 Table of Contents
+- [Overview](#-overview)
+- [Mission](#-mission)
+- [Key Features](#-key-features)
+- [System Architecture](#-system-architecture)
+- [Data Standards](#-data-standards)
+- [Focus Mode](#-focus-mode)
+- [Installation & Usage](#-installation--usage)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Version History](#-version-history)
 
 ---
 
-## ⚙️ System Workflow
+## 🌍 Overview
+
+**Kansas Frontier Matrix (KFM)** is an **open-source, multi-disciplinary knowledge system** designed to integrate Kansas’s environmental, cultural, and historical data into a cohesive, interactive digital atlas.  
+It merges **maps, documents, and data** from diverse sources — USGS, NOAA, Kansas Historical Society, tribal archives, and more — into a semantic knowledge graph viewable through a timeline-map interface.
+
+The project is built for **reproducibility, interoperability, and open collaboration**, aligning with the **Master Coder Protocol (MCP)** and **FAIR+CARE** principles.
+
+---
+
+## 🎯 Mission
+
+> *“To weave Kansas’s past into a living digital landscape where history, geography, and ecology converge.”*
+
+KFM’s mission is to **connect historical narratives with geospatial and environmental context**, empowering:
+- **Researchers** to analyze historical and ecological change.
+- **Educators** to visualize Kansas’s development through interactive storytelling.
+- **Communities** to preserve and share local heritage data.
+
+---
+
+## ✨ Key Features
+
+| Feature | Description |
+|----------|-------------|
+| 🗺️ **Interactive Map & Timeline** | Explore events, places, and people through a synchronized temporal-spatial interface using MapLibre GL. |
+| 🧠 **AI-Powered Focus Mode** | Center the system on any entity (e.g., person, treaty, place) and dynamically filter all related data and insights. |
+| 🔍 **Knowledge Graph** | Neo4j-based graph connecting entities like people, places, events, and documents, aligned with CIDOC CRM and OWL-Time. |
+| ⚙️ **ETL & AI Pipelines** | Automated data ingestion, OCR, NLP, and geospatial transformation for reproducible dataset processing. |
+| 📚 **FAIR+CARE Compliance** | Ensures data are Findable, Accessible, Interoperable, and Reusable, with CARE applied to Indigenous data. |
+| 🧩 **STAC/DCAT Metadata** | All geospatial and tabular datasets use SpatioTemporal Asset Catalog (STAC 1.0.0) and DCAT 3.0 standards for open discovery. |
+| 🌐 **Open-Source Governance** | Entire system runs on open standards, with transparent documentation and community-based versioning. |
+
+---
+
+## 🏗️ System Architecture
+
+KFM’s modular architecture integrates **AI, ETL, and visualization pipelines** in a single reproducible monorepo:
 
 ```mermaid
-flowchart TD
-    A["Raw Data Inputs (NOAA, USGS, FEMA, Archives)"] --> B["ETL & FAIR+CARE Pipelines (src/pipelines/etl)"]
-    B --> C["Validation (Schema + Ethics + Checksum)"]
-    C --> D["AI Reasoning & Focus Mode (src/pipelines/ai)"]
-    D --> E["Governance Registration (Ledger + Blockchain Provenance)"]
-    E --> F["Focus Mode Dashboard (web/)"]
-    F --> G["Telemetry & Sustainability Metrics (src/pipelines/telemetry)"]
+flowchart LR
+A["Raw Data Sources (NOAA, USGS, KHS, DASC)"] --> B["ETL + AI Pipelines (OCR, NER, GeoJSON)"]
+B --> C["Knowledge Graph (Neo4j + CIDOC CRM)"]
+C --> D["FastAPI (REST/GraphQL)"]
+D --> E["Web UI (React + MapLibre Timeline Map)"]
 ```
 
-### End-to-End Governance Cycle
-1. **ETL** — Extract, normalize, and validate raw datasets across domains.  
-2. **Validation** — Apply FAIR+CARE audits and checksum integrity verification.  
-3. **AI Reasoning** — Run explainable AI models for hazard, climate, and historical inference.  
-4. **Governance** — Register results and lineage into blockchain-ledger systems.  
-5. **Telemetry** — Monitor energy usage, carbon footprint, and performance transparency.  
-6. **Visualization** — Render results via MapLibre and Focus Mode dashboards.  
+**Core Layers**
+1. **Data Source Layer:** External open datasets and archives.  
+2. **ETL/AI Layer:** NLP, OCR, geocoding, summarization.  
+3. **Graph Layer:** Semantic data relationships via Neo4j.  
+4. **API Layer:** REST/GraphQL endpoints for map/timeline data.  
+5. **Frontend Layer:** Interactive React-based map and timeline.
+
+Refer to [`src/ARCHITECTURE.md`](src/ARCHITECTURE.md) for detailed diagrams and workflows.
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## 🧱 Data Standards
 
-| Principle | Implementation |
-|------------|----------------|
-| **Findable** | All datasets indexed through STAC/DCAT catalogs with unique lineage IDs. |
-| **Accessible** | Fully open-source and FAIR-licensed data architecture. |
-| **Interoperable** | Compatible with STAC 1.0, DCAT 3.0, and ISO 19115 metadata schemas. |
-| **Reusable** | Datasets documented with schema, ethics reports, and provenance records. |
-| **Collective Benefit** | Promotes open science and environmental justice in Kansas data ecosystems. |
-| **Authority to Control** | FAIR+CARE Council validates datasets and model governance. |
-| **Responsibility** | Maintainers ensure transparency and equitable representation. |
-| **Ethics** | All AI and automation governed by explainability and bias mitigation. |
+KFM uses **open, machine-actionable metadata standards** to ensure data interoperability:
 
-Governance and ethics reports stored in:  
-`reports/audit/system_ledger.json` • `reports/fair/system_summary.json`
+| Standard | Role |
+|-----------|------|
+| **STAC 1.0.0** | SpatioTemporal Asset Catalog for geospatial data indexing. |
+| **DCAT 3.0** | Dataset metadata catalog for FAIR+CARE discoverability. |
+| **CIDOC CRM** | Cultural heritage ontology linking entities and events. |
+| **OWL-Time** | Temporal ontology for precise date and interval representation. |
+| **GeoJSON / GeoTIFF** | Core open geospatial formats for data exchange. |
+| **JSON-LD / RDF** | Semantic layer for knowledge graph export and SPARQL queries. |
 
----
-
-## 🧩 Core Components
-
-| Layer | Directory | Role | FAIR+CARE Focus |
-|--------|------------|------|----------------|
-| **Data Layer** | `data/` | Raw → Staging → Processed datasets. | Schema governance & reproducibility. |
-| **Source Layer** | `src/` | ETL, AI, governance, validation, telemetry pipelines. | Ethical automation & integrity. |
-| **Web Layer** | `web/` | Focus Mode visualization & storytelling dashboards. | Accessibility & transparency. |
-| **Tools Layer** | `tools/` | CLI utilities for governance, AI validation, & telemetry. | FAIR+CARE compliance automation. |
-| **Governance Layer** | `releases/` | Manifests, SBOMs, FAIR+CARE certifications. | Provenance chain and certification. |
+Each dataset and pipeline output is versioned, checksum-verified, and validated through CI/CD (`stac-validate.yml` and `faircare-validate.yml`).
 
 ---
 
-## 🧩 Key Standards
+## 🧠 Focus Mode
 
-| Framework | Description | Status |
-|------------|-------------|---------|
-| **MCP-DL v6.3** | Documentation-first lifecycle management. | Full Compliance |
-| **FAIR+CARE Framework** | Ethical data governance & reproducibility. | Certified |
-| **ISO 19115** | Metadata lineage and geospatial standard. | Certified |
-| **ISO 50001** | Energy and performance telemetry. | Certified |
-| **ISO 14064** | Carbon emissions reporting. | Certified |
-| **AI Act (EU Draft 2025)** | AI transparency and accountability. | Adopted |
-| **STAC / DCAT 3.0** | Catalog interoperability standard. | Certified |
+**Focus Mode** is the AI-driven feature that enables users to “zoom in” semantically on an entity.  
+Selecting an entity (e.g., *Medicine Lodge Treaty, 1867*) triggers contextual filtering:
 
----
+1. **Neo4j Query**: Retrieve linked events, people, and documents.  
+2. **Map View**: Zooms to relevant places; highlights correlated regions.  
+3. **Timeline**: Filters to relevant time spans and related events.  
+4. **AI Summary**: Generates contextual insights (trends, relationships, and impact).  
 
-## 🌱 Sustainability Metrics
-
-| Metric | Unit | Value | Verified By |
-|---------|------|--------|--------------|
-| Energy Usage | Wh/run | 23.4 | @kfm-telemetry |
-| Carbon Offset | % | 100 | @kfm-fair |
-| FAIR+CARE Index | % | 99.8 | @kfm-governance |
-| Reproducibility Score | % | 99.7 | @kfm-validation |
-
-Sustainability data published in `releases/v9.6.0/focus-telemetry.json`.
+See [`src/ai/models/focus_transformer_v1/README.md`](src/ai/models/focus_transformer_v1/README.md) for model documentation.
 
 ---
 
-## 🧾 Internal Use Citation
+## ⚙️ Installation & Usage
 
-```text
-Kansas Frontier Matrix (2025). Open Data · AI · Governance System (v9.6.0).
-Comprehensive FAIR+CARE-certified data infrastructure integrating open science, ethical automation, and blockchain provenance.
-Ensures transparency, reproducibility, and sustainability under MCP-DL v6.3 and ISO certification.
+### Prerequisites
+- Python 3.10+  
+- Node.js 18+  
+- Docker / Docker Compose  
+- GDAL & rasterio for geospatial processing  
+
+### Installation
+```bash
+git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
+cd Kansas-Frontier-Matrix
+make setup
 ```
 
+### Running the Stack
+```bash
+docker-compose up
+```
+This launches:
+- FastAPI backend  
+- Neo4j database  
+- React web client  
+
+Visit `http://localhost:8000` for API docs and `http://localhost:3000` for the web app.
+
 ---
 
-## 🧾 Version Notes
+## 🤝 Contributing
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added carbon tracking, ISO 50001 integration, and ledger-linked sustainability telemetry. |
-| v9.5.0 | 2025-11-02 | Integrated AI explainability metrics with FAIR+CARE council validation. |
-| v9.3.2 | 2025-10-28 | Expanded governance synchronization and checksum lineage verification. |
+Kansas Frontier Matrix is open for contributions under **MCP v6.3 documentation-first principles.**
+
+### Guidelines
+1. Fork and clone the repository.  
+2. Create a feature branch (`git checkout -b feature/add-layer`).  
+3. Add or modify code/data under proper directories (`src/`, `data/`, `docs/`).  
+4. Document all changes before pushing (README, architecture, or dataset manifest).  
+5. Submit a pull request using the [Issue Templates](.github/ISSUE_TEMPLATE).  
+
+All contributions must pass **FAIR+CARE validation** and **CI checks** before merging.
+
+---
+
+## ⚖️ License
+
+This project is released under the **MIT License** for code and **CC-BY 4.0** for documentation and data.  
+See [LICENSE](LICENSE) for full terms.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | A. Barta | Added AI Focus Mode, FAIR+CARE validation, and STAC/DCAT compliance updates. |
+| v9.5.0 | 2025-10-20 | A. Barta | Enhanced data ingestion workflows and metadata governance. |
+| v9.3.0 | 2025-08-15 | KFM Core Team | Implemented telemetry and explainability dashboards. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Initial project release and documentation baseline. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Data × Ethical AI × Sustainable Governance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](docs/) • [⚖️ Governance Ledger](docs/standards/governance/)
+**© 2025 Kansas Frontier Matrix**  
+Built under the **Master Coder Protocol v6.3** · FAIR+CARE Compliant · “Diamond⁹ Ω / Crown∞Ω Certified”  
+[Website](https://github.com/bartytime4life/Kansas-Frontier-Matrix) · [Documentation](docs/README.md)
 
 </div>
