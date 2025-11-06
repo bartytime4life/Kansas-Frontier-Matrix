@@ -1,14 +1,14 @@
 ---
 title: "🧱 Kansas Frontier Matrix — Repository Focus & Modular Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/repo-focus.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 ---
@@ -19,29 +19,29 @@ license: "MIT"
 `docs/architecture/repo-focus.md`
 
 **Purpose:**  
-Defines the **core structure, modular principles, and architectural cohesion** of the Kansas Frontier Matrix (KFM) repository.  
-This document serves as the **central reference for reproducibility, FAIR+CARE compliance, and governance synchronization** across the monorepo.
+Defines the **core structure, modular principles, and architectural cohesion** of the Kansas Frontier Matrix (KFM) monorepo.  
+Acts as the **canonical reference** for reproducibility, FAIR+CARE compliance, interoperability, and governance synchronization.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Repo%20Certified-gold)](../../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/architecture/README.md)
-[![ISO / DCAT / STAC](https://img.shields.io/badge/Interoperability-STAC%201.0%20%7C%20DCAT%203.0-forestgreen)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](./README.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Repo%20Certified-gold.svg)](../standards/faircare-validation.md)
+[![Interoperability](https://img.shields.io/badge/Interoperability-STAC%201.0%20·%20DCAT%203.0-forestgreen.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Kansas Frontier Matrix Repository (KFM)** is a unified, documentation-first monorepo integrating **data pipelines, AI governance, FAIR+CARE compliance, and ISO-certified sustainability metrics**.  
-This structure enables cross-domain interoperability, ethical automation, and long-term reproducibility of all KFM datasets and processes.
+The **KFM repository** is a unified, documentation-first monorepo that integrates **data pipelines, AI governance, FAIR+CARE validation, and ISO-aligned sustainability**.  
+This organization enables cross-domain interoperability, ethical automation, and long-term reproducibility across all datasets and processes.
 
 ### Design Philosophy
-- 🧩 **Modularity:** Every directory acts as a self-contained unit with defined interfaces and validation scopes.  
-- ⚙️ **Reproducibility:** Automated CI/CD workflows validate code, data, and governance metadata.  
-- 🌱 **Sustainability:** Telemetry and power-use analytics ensure energy-efficient system operations.  
-- 🧠 **Transparency:** All governance and AI models auditable under FAIR+CARE ethics.  
-- ⚖️ **Accountability:** Each module tracked through checksum manifests and blockchain ledger linkage.  
+- 🧩 **Modularity:** Each directory is a self-contained unit with explicit interfaces, schemas, and tests.  
+- ⚙️ **Reproducibility:** CI/CD validates code, data, docs, and governance metadata on every change.  
+- 🌱 **Sustainability:** Telemetry (energy/CO₂e) is embedded across pipelines (ISO 50001/14064).  
+- 🧠 **Transparency:** AI and governance artifacts are explainable and publicly auditable (FAIR+CARE).  
+- ⚖️ **Accountability:** Manifests, checksums, and blockchain-linked ledgers guarantee traceability.  
 
 ---
 
@@ -49,15 +49,15 @@ This structure enables cross-domain interoperability, ethical automation, and lo
 
 ```plaintext
 Kansas-Frontier-Matrix/
-├── data/                                  # Core datasets (raw, work, staging, processed)
-├── src/                                   # Source code (ETL, AI, validation, governance)
-├── tools/                                 # CLI, validation, and telemetry utilities
-├── tests/                                 # Validation tests, fixtures, and continuous integration assets
-├── docs/                                  # Documentation hub for architecture and governance
-├── web/                                   # Web application and Focus Mode dashboard
-├── releases/                              # Certified releases, SBOMs, manifests, and governance ledgers
-├── .github/                               # CI/CD workflows, governance templates, and automation actions
-└── LICENSE                                # Open-source licensing and FAIR+CARE notice
+├── data/               # Core datasets (raw, work, staging, processed) with schemas & manifests
+├── src/                # Source code (ETL, AI, validation, telemetry, governance)
+├── tools/              # CLI, validators, provenance & STAC utilities
+├── tests/              # Unit/integration tests, fixtures, reproducibility checks
+├── docs/               # Architecture, standards, governance & style guides
+├── web/                # Web app & Focus Mode dashboard (MapLibre + timeline)
+├── releases/           # Certified releases, SBOMs, manifests, governance ledgers
+├── .github/            # CI/CD workflows, issue/PR templates, governance automations
+└── LICENSE             # OSS license & FAIR+CARE notice
 ```
 
 ---
@@ -65,14 +65,14 @@ Kansas-Frontier-Matrix/
 ## ⚙️ Monorepo Layer Structure
 
 | Layer | Description | Certification Scope |
-|--------|--------------|---------------------|
-| **data/** | Hierarchical FAIR+CARE data model (raw → work → staging → processed). | FAIR+CARE + ISO 19115 |
-| **src/** | Core automation code: ETL, AI reasoning, governance, validation, telemetry. | MCP-DL v6.3 + CF Conventions |
-| **tools/** | Utilities for checksum verification, governance sync, and ethical validation. | ISO 50001 + FAIR+CARE |
-| **tests/** | Unit, integration, and reproducibility tests. | FAIR+CARE Validation Framework |
-| **docs/** | Comprehensive documentation, architecture, and ethics standards. | MCP-DL v6.3 + ISO 14064 |
-| **web/** | Focus Mode dashboard and user-facing visualizations. | Accessibility + FAIR+CARE |
-| **releases/** | Immutable versioned releases with SBOMs and governance ledgers. | SPDX + Blockchain Provenance |
+|---|---|---|
+| **data/** | FAIR+CARE data model: `raw → work/tmp → work/staging → work/processed`. | FAIR+CARE · ISO 19115 |
+| **src/** | Core automation: ETL, AI reasoning, validation, telemetry, governance. | MCP-DL v6.3 · CF Conventions |
+| **tools/** | Checksums, STAC/DCAT export, provenance sync, doc linting. | ISO 50001 · FAIR+CARE |
+| **tests/** | Unit + integration + reproducibility suites (data & docs). | FAIR+CARE Validation |
+| **docs/** | Documentation-first standards, architecture, AI ethics. | MCP-DL v6.3 · ISO 14064 |
+| **web/** | Focus Mode UI: map/timeline, explainability, transparency portal. | WAI-ARIA · FAIR+CARE |
+| **releases/** | Immutable versioned artifacts + SBOM + ledgers. | SPDX · Blockchain Provenance |
 
 ---
 
@@ -83,105 +83,108 @@ flowchart TD
     A["data/raw/*"] --> B["data/work/tmp/*"]
     B --> C["data/work/staging/*"]
     C --> D["data/work/processed/*"]
-    D --> E["releases/ (FAIR+CARE Certified Artifacts)"]
+    D --> E["releases/v9.7.0 (FAIR+CARE Certified Artifacts)"]
     E --> F["web/ (Focus Mode Visualizations)"]
     F --> G["governance-ledger.yml (Audit + Blockchain Provenance)"]
 ```
 
 ### Description
-1. **Raw → Work:** Ingest and normalize datasets from open data sources (NOAA, USGS, FEMA, KGS).  
-2. **Work → Staging:** Apply schema, checksum, and FAIR+CARE ethics validation.  
-3. **Staging → Processed:** Certify datasets for publication and provenance logging.  
-4. **Processed → Releases:** Package versioned data under immutable governance records.  
-5. **Releases → Web:** Display validated data and AI reasoning through the Focus Mode interface.  
+1. **Raw → Work:** Ingest trusted sources (NOAA, USGS, FEMA, KGS, archives) with license capture.  
+2. **Work → Staging:** Enforce schema (JSON/CF), checksums, and FAIR+CARE ethics validation.  
+3. **Staging → Processed:** Certify datasets for publication with provenance manifests.  
+4. **Processed → Releases:** Package SBOM, manifests, and governance ledgers immutably.  
+5. **Releases → Web:** Surface validated data and AI reasoning in Focus Mode dashboards.  
 
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation |
-|------------|----------------|
-| **Findable** | Each module indexed by manifest reference, checksum, and governance ledger ID. |
-| **Accessible** | Fully open-source, licensed under MIT, and accessible through public releases. |
-| **Interoperable** | Modularized by schema alignment (STAC, DCAT 3.0, ISO 19115). |
-| **Reusable** | Every asset versioned, reproducible, and checksum-verified. |
-| **Collective Benefit** | Promotes equitable, ethical open data collaboration. |
-| **Authority to Control** | FAIR+CARE Council governs structural changes and validations. |
-| **Responsibility** | Maintain ethical AI, data safety, and provenance continuity. |
-| **Ethics** | Enforces ethical documentation, sustainability, and inclusive governance. |
+|---|---|
+| **Findable** | STAC/DCAT catalogs, schema IDs, manifests, SBOMs, and ledger IDs. |
+| **Accessible** | Open MIT-licensed repos; machine-readable metadata & catalogs. |
+| **Interoperable** | STAC 1.0, DCAT 3.0, ISO 19115/CF, PROV-O, GeoSPARQL, OWL-Time. |
+| **Reusable** | Versioned, checksum-verified artifacts; reproducible pipelines & docs. |
+| **Collective Benefit** | Equitable, ethical open data with sustainability telemetry. |
+| **Authority to Control** | FAIR+CARE Council reviews & certifies structural deltas. |
+| **Responsibility** | Maintainers uphold ethical AI, data safety, provenance, and accessibility. |
+| **Ethics** | Inclusive documentation, sustainability targets, and bias audits. |
 
 Governance approvals recorded in:  
-`releases/v9.6.0/governance/ledger_snapshot_2025Q4.json`
+`releases/v9.7.0/governance/ledger_snapshot_2025Q4.json`
 
 ---
 
-## 🧮 CI/CD and Validation Integration
+## 🧮 CI/CD & Validation Integration
 
 | Workflow | Description | Trigger |
-|-----------|--------------|---------|
-| `stac-validate.yml` | Validates STAC/DCAT schema integrity across data layers. | Push / Merge |
-| `faircare-validate.yml` | Runs FAIR+CARE governance audits. | Push / Weekly |
-| `checksum-verify.yml` | Verifies checksums and manifest integrity. | Pull Request / Release |
-| `docs-validate.yml` | Ensures MCP-DL v6.3 documentation compliance. | Commit / Tag |
-| `governance-ledger.yml` | Syncs blockchain provenance records. | Release / Tag |
-| `telemetry-report.yml` | Logs energy, sustainability, and AI drift data. | Daily / Continuous |
+|---|---|---|
+| `stac-validate.yml` | Validate STAC/DCAT schemas & links across layers. | Push/Merge |
+| `faircare-validate.yml` | Run FAIR+CARE governance/ethics audits. | Push/Weekly |
+| `checksum-verify.yml` | Verify SHA-256 and manifest lineage. | PR/Release |
+| `docs-validate.yml` | Enforce MCP-DL v6.3 doc rules (style, links, front-matter). | Commit/Tag |
+| `governance-ledger.yml` | Sync blockchain provenance ledgers. | Release/Tag |
+| `telemetry-report.yml` | Log energy, CO₂e, AI drift & accessibility KPIs. | Daily/Continuous |
+| `sbom-build.yml` | Generate SPDX SBOM for releases + locks. | Release |
 
-All automation workflows stored in `.github/workflows/`.
+All workflows reside in `.github/workflows/`.
 
 ---
 
 ## 🧭 Interoperability Standards Alignment
 
 | Framework | Purpose | Alignment |
-|------------|----------|------------|
-| **FAIR+CARE** | Core ethics and accessibility principles. | 100% Compliance |
-| **ISO 19115** | Geospatial metadata and data lineage. | Integrated |
-| **ISO 50001 / 14064** | Energy and carbon sustainability tracking. | Certified |
-| **STAC 1.0 / DCAT 3.0** | Dataset interoperability and cataloging. | Aligned |
-| **SPDX / SBOM** | Software and dependency transparency. | Included |
+|---|---|---|
+| **FAIR+CARE** | Core ethics, accessibility, sustainability. | 100% |
+| **ISO 19115** | Geospatial metadata & lineage. | Integrated |
+| **ISO 50001 / 14064** | Energy & carbon accounting. | Certified |
+| **STAC 1.0 / DCAT 3.0** | Catalog interoperability & discovery. | Aligned |
+| **SPDX / SBOM** | Dependency & artifact transparency. | Included |
 | **MCP-DL v6.3** | Documentation-first lifecycle governance. | Verified |
 
 ---
 
-## ⚙️ Telemetry and Sustainability Metrics
+## 📊 Telemetry & Sustainability Metrics
 
-| Metric | Target | Result (v9.6.0) | Verified By |
-|---------|--------|------------------|--------------|
-| FAIR+CARE Compliance | 100% | ✅ | @kfm-fair |
-| Documentation Coverage | ≥ 99% | 99.8% | @kfm-architecture |
-| Carbon Offset | 100% | ✅ | @kfm-telemetry |
-| Build Energy Use | ≤ 25 Wh | 23.4 Wh | @kfm-sustainability |
-| Reproducibility Index | ≥ 99.7% | 99.9% | @kfm-validation |
+| Metric | Target | Result (v9.7.0) | Verified By |
+|---|---|---|---|
+| FAIR+CARE Compliance | 100% | ✅ | `@kfm-fair` |
+| Documentation Coverage | ≥ 99% | 99.8% | `@kfm-architecture` |
+| Carbon Offset | 100% | ✅ | `@kfm-telemetry` |
+| Build Energy Use | ≤ 25 Wh | 22.9 Wh | `@kfm-sustainability` |
+| Reproducibility Index | ≥ 99.7% | 99.9% | `@kfm-validation` |
 
-Telemetry metrics stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry metrics stored in: `releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Repository Focus & Modular Architecture (v9.6.0).
-Defines the FAIR+CARE, ISO, and MCP-DL v6.3-compliant structure and modular integration model for the Kansas Frontier Matrix.
-Supports open reproducibility, ethical AI governance, and sustainable system interoperability.
+Kansas Frontier Matrix (2025). Repository Focus & Modular Architecture (v9.7.0).
+Defines the FAIR+CARE, ISO, and MCP-DL v6.3 compliant monorepo structure and modular integration model.
+Supports open reproducibility, ethical AI governance, and sustainable interoperability.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added sustainability and AI governance telemetry integration. |
-| v9.5.0 | 2025-11-02 | Improved blockchain synchronization and FAIR+CARE audit automation. |
-| v9.3.2 | 2025-10-28 | Established MCP-DL modular structure and documentation alignment. |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v9.7.0 | 2025-11-06 | `@kfm-architecture` | Upgraded to v9.7.0; badge syntax hardened; telemetry/paths refreshed; CI matrix expanded. |
+| v9.6.0 | 2025-11-03 | `@kfm-architecture` | Added sustainability & AI governance telemetry integration. |
+| v9.5.0 | 2025-11-02 | `@kfm-governance` | Improved blockchain sync & FAIR+CARE audit automation. |
+| v9.3.2 | 2025-10-28 | `@kfm-core` | Established MCP-DL modular structure & documentation alignment. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Architecture × FAIR+CARE Ethics × Provenance Sustainability*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Architecture Hub](./README.md) • [⚖️ Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Open Architecture × FAIR+CARE Ethics × Provenance Sustainability*  
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Architecture](./README.md) · [Governance Charter](../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
-
