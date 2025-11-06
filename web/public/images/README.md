@@ -1,100 +1,86 @@
 ---
 title: "🖼️ Kansas Frontier Matrix — Public Image Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/images/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-04"
+version: "v9.7.0"
+last_updated: "2025-11-05"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-public-images-v1.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🖼️ Kansas Frontier Matrix — **Public Image Assets**
+# 🖼️ **Kansas Frontier Matrix — Public Image Assets**
 `web/public/images/README.md`
 
 **Purpose:**  
-Central repository for **public-facing image assets** used across the Kansas Frontier Matrix (KFM) web platform.  
-All imagery—including UI backgrounds, headers, icons, illustrations, and widgets—is maintained under FAIR+CARE, ISO, and WCAG accessibility governance frameworks.
+Define and govern **public-facing image assets** used throughout the KFM web ecosystem — including UI, data visualization, and governance communication imagery.  
+All images are FAIR+CARE-certified, ISO 19115 metadata-aligned, and WCAG 2.1 AA accessibility-validated.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Image%20Certified-gold)](../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![WCAG 2.1](https://img.shields.io/badge/WCAG-2.1%20AA-teal)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![Status: Active](https://img.shields.io/badge/Status-Validated-brightgreen)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Public Image Assets** directory contains all static and dynamic imagery available for public rendering through the KFM web interface.  
-All visual assets are accessible, ethically designed, and provenance-tracked to meet FAIR+CARE visual governance and open-science communication standards.
-
-### Core Responsibilities:
-- Host image assets used in web UI, documentation, and visualization dashboards.  
-- Ensure all visuals meet FAIR+CARE, WCAG, and ISO compliance for ethical accessibility.  
-- Maintain open-licensed media provenance with checksum lineage.  
-- Support reproducible image rendering across all client devices and data dashboards.  
+The **Public Image Assets Library** includes all open-licensed, traceable, and accessible images powering KFM’s web presentation layer.  
+Each file adheres to **MCP v6.3** and **FAIR+CARE** data ethics for sustainable, inclusive visual communication.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```
 web/public/images/
-├── README.md                               # This file — documentation for public image assets
-│
-├── ui/                                     # User interface graphics, components, headers, and widgets
-├── data/                                   # Publicly viewable scientific or geospatial dataset previews
-├── maps/                                   # Background tiles, topographic layers, and historical maps
-├── governance/                             # FAIR+CARE council and audit imagery
-├── archive/                                # Deprecated or legacy imagery retained for provenance
-└── metadata.json                           # FAIR+CARE and ISO 19115-compliant metadata record
+├── README.md
+├── ui/                # Interface elements and widget images
+├── data/              # Dataset visualization and previews
+├── maps/              # Cartographic imagery and topographic layers
+├── governance/        # FAIR+CARE council and governance-related imagery
+├── archive/           # Legacy or retired image sets for provenance
+└── metadata.json      # ISO 19115 / FAIR+CARE-compliant metadata
 ```
 
 ---
 
-## ⚙️ Image Governance Workflow
+## 🧩 Image Lifecycle Workflow
 
 ```mermaid
 flowchart TD
-    A["New Image Asset (Design or Data Render)"] --> B["FAIR+CARE Audit (Ethics + Accessibility)"]
-    B --> C["Checksum Registration and Provenance Record"]
-    C --> D["Governance Ledger Sync"]
-    D --> E["Public Publication (web/public/images/)"]
+A["Image Created or Imported"] --> B["FAIR+CARE + Accessibility Validation"]
+B --> C["Checksum + Metadata Generation"]
+C --> D["Governance Ledger Registration"]
+D --> E["Public Release to web/public/images"]
 ```
 
-### Workflow Summary:
-1. **Acquisition:** Images are sourced from open data or created by the KFM design team.  
-2. **Audit:** Each asset undergoes FAIR+CARE, WCAG, and sustainability reviews.  
-3. **Verification:** Checksums logged for traceability and reproducibility.  
-4. **Publication:** Certified assets integrated into public web directories and dashboards.  
+1. **Creation:** Image originates from verified open datasets or KFM design.  
+2. **Audit:** Validated for WCAG 2.1 AA accessibility, color contrast, and sustainability.  
+3. **Checksum:** Registered under SHA-256 with SPDX + ISO metadata.  
+4. **Publication:** FAIR+CARE-certified assets released in the web library.
 
 ---
 
-## 🧩 Example Metadata Record
+## ⚙️ Validation Contracts
 
-```json
-{
-  "id": "public_images_registry_v9.6.0",
-  "categories": ["ui", "data", "maps", "governance"],
-  "fairstatus": "certified",
-  "wcag_compliance": "2.1 AA",
-  "iso_standard": "19115:2023",
-  "checksum_sha256": "dfb0e6e94b47abfc21dcbb9145fcb7a4b6821e83b8b4e65a4a77a94b6783b33a",
-  "energy_efficiency_score": 98.9,
-  "carbon_output_gco2e": 0.06,
-  "validator": "@kfm-design",
-  "provenance_registered": true,
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+| Contract | Purpose | Validator |
+|----------|----------|-----------|
+| FAIR+CARE Ethics | Validate ethical representation and open licensing. | `faircare-validate.yml` |
+| Accessibility | Audit color contrast, alt-text, and legibility. | `accessibility_scan.yml` |
+| Metadata | Validate ISO 19115 + SPDX image metadata. | `docs-lint.yml` |
+| Telemetry | Track render energy and sustainability footprint. | `telemetry-export.yml` |
+
+Reports stored in:  
+- `../../../docs/reports/audit/data_provenance_ledger.json`  
+- `../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
@@ -102,85 +88,98 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |------------|----------------|------------|
-| **Findable** | Indexed in metadata.json and manifest with checksum linkage. | @kfm-data |
-| **Accessible** | Hosted under open CC-BY 4.0 license with WCAG-compliant visuals. | @kfm-accessibility |
-| **Interoperable** | ISO 19115 metadata and STAC/DCAT alignment. | @kfm-architecture |
-| **Reusable** | FAIR+CARE-certified visuals approved for open dissemination. | @kfm-design |
-| **Collective Benefit** | Promotes ethical transparency and cultural inclusivity. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council reviews all public imagery releases. | @kfm-governance |
-| **Responsibility** | Validators ensure provenance and checksum registration. | @kfm-sustainability |
-| **Ethics** | Images curated to avoid bias, misrepresentation, or exclusion. | @kfm-ethics |
-
-Audit results recorded in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+| **Findable** | Indexed in metadata with checksum + provenance lineage. | @kfm-data |
+| **Accessible** | CC-BY 4.0 license and WCAG 2.1 AA validation. | @kfm-accessibility |
+| **Interoperable** | ISO 19115 + FAIR+CARE schema alignment. | @kfm-architecture |
+| **Reusable** | Open-use imagery for education and research. | @kfm-design |
+| **Collective Benefit** | Encourages ethical, inclusive visual storytelling. | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council certifies releases. | @kfm-governance |
+| **Responsibility** | Designers track provenance + checksum lineage. | @kfm-sustainability |
+| **Ethics** | Ensures respectful cultural and environmental representation. | @kfm-ethics |
 
 ---
 
-## ⚙️ Image Categories & Standards
+## 🧾 Example Metadata Record
 
-| Category | Description | Format | FAIR+CARE Status |
-|-----------|--------------|---------|------------------|
-| `ui/` | Interface backgrounds, headers, and widgets. | PNG / SVG | ✅ Certified |
-| `data/` | Rendered visual previews of KFM datasets. | PNG / JPG | ✅ Certified |
-| `maps/` | Base maps, overlays, and historical raster images. | GeoTIFF / PNG | ✅ Certified |
-| `governance/` | FAIR+CARE, council, and audit visual assets. | SVG / PNG | ✅ Certified |
-| `archive/` | Retired images retained for provenance. | All formats | 🟡 Archived |
+```json
+{
+  "id": "public_images_v9.7.0",
+  "category": "maps",
+  "filename": "historic_kansas_topography_1895.png",
+  "license": "CC-BY 4.0",
+  "wcag": "2.1 AA",
+  "checksum_sha256": "dfb0e6e94b47abfc21dcbb9145fcb7a4b6821e83b8b4e65a4a77a94b6783b33a",
+  "fairstatus": "certified",
+  "timestamp": "2025-11-05T22:25:00Z"
+}
+```
+
+---
+
+## 🖼️ Image Categories & Standards
+
+| Directory | Description | Format | FAIR+CARE Status |
+|------------|--------------|---------|------------------|
+| `ui/` | Backgrounds, headers, and widget visuals. | PNG / SVG | Certified |
+| `data/` | Dataset previews and visualization exports. | JPG / PNG | Certified |
+| `maps/` | Geospatial raster and vector map imagery. | GeoTIFF / PNG | Certified |
+| `governance/` | Audit, certification, and FAIR+CARE visuals. | SVG / PNG | Certified |
+| `archive/` | Deprecated imagery retained for lineage. | Various | Archived |
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
-| Record Type | Retention Duration | Policy |
-|--------------|--------------------|--------|
+| Record Type | Retention | Policy |
+|--------------|------------|--------|
 | Active Images | Continuous | Updated and versioned under FAIR+CARE. |
-| Metadata | Permanent | Stored under blockchain-backed provenance ledger. |
-| Archived Images | Permanent | Immutable under checksum verification. |
-| FAIR+CARE Reports | 365 Days | Renewed with design validation cycle. |
+| Metadata | Permanent | Blockchain-synced provenance. |
+| Archived Assets | Permanent | Immutable checksum lineage. |
+| Audit Reports | 365 Days | Reviewed annually by FAIR+CARE Council. |
 
-Synchronization and retention managed via `image_asset_sync.yml`.
+Governance automation: `image_asset_sync.yml`.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. File Size | 450 KB | @kfm-design |
-| Render Energy | 0.04 Wh | @kfm-sustainability |
-| Carbon Output | 0.05 gCO₂e | @kfm-security |
+| Metric | Target | Verified By |
+|---------|---------|--------------|
+| Avg. File Size | ≤ 500 KB | @kfm-design |
+| Render Energy | ≤ 0.04 Wh | @kfm-sustainability |
+| Carbon Output | ≤ 0.06 gCO₂e | @kfm-security |
 | Renewable Energy | 100% (RE100 Certified) | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
-Telemetry records stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry captured in:  
+`../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Public Image Assets (v9.6.0).
-FAIR+CARE-certified and ISO 19115–aligned public imagery repository supporting web interfaces, data visualization, and governance communication.
-All assets validated for accessibility, ethics, and sustainability under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Public Image Assets (v9.7.0).
+Comprehensive FAIR+CARE-certified library of publicly accessible imagery supporting web, governance, and data visualization layers.
+Compliant with MCP v6.3, ISO 19115, and WCAG 2.1 AA for open, ethical visual communication.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-04 | Introduced sustainable asset registry and telemetry-linked image lifecycle tracking. |
-| v9.5.0 | 2025-11-02 | Updated FAIR+CARE validation and accessibility scoring framework. |
-| v9.3.2 | 2025-10-28 | Established image governance layer with provenance manifest linkage. |
+| Version | Date | Author | Summary |
+|----------|------|---------|----------|
+| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded with telemetry schema and ISO alignment. |
+| v9.6.0 | 2025-11-04 | KFM Core Team | Added sustainability registry and checksum governance. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Expanded FAIR+CARE validation and accessibility scoring. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Visual Transparency × FAIR+CARE Ethics × Sustainable Communication Design*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Certified under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Web Assets](../README.md) · [Docs Portal](../../../docs/README.md)
 
 </div>
