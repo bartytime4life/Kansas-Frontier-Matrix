@@ -1,14 +1,18 @@
 ---
 title: "✅ Kansas Frontier Matrix — Data Validation Reports (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/reports/validation/README.md"
-version: "v9.3.2"
-last_updated: "2025-10-28"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.3.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.3.2/manifest.zip"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-reports-validation-v9.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
+license: "CC-BY 4.0 / FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -16,28 +20,29 @@ governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 # ✅ Kansas Frontier Matrix — **Data Validation Reports**
 `data/reports/validation/README.md`
 
-**Purpose:** Central repository for schema conformance, STAC validation, and ETL quality assurance reports generated during the Kansas Frontier Matrix (KFM) data lifecycle.  
-Ensures reproducibility, transparency, and FAIR+CARE compliance for all validated datasets.
+**Purpose:**  
+Central repository for **schema conformance, STAC validation, and ETL quality assurance** reports generated during the KFM data lifecycle.  
+Ensures reproducibility, transparency, and **FAIR+CARE** compliance for all validated datasets.
 
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../LICENSE)
+[![FAIR+CARE Verified](https://img.shields.io/badge/FAIR%2BCARE-Verified-gold.svg)](../../../docs/standards/faircare-validation.md)
 [![STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Verified-gold)](../../../docs/standards/faircare-validation.md)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The `data/reports/validation/` directory stores all **validation artifacts** created during data ingestion, ETL transformation, and governance review.  
-These reports verify that every dataset adheres to defined metadata schemas, spatial standards, and FAIR+CARE governance requirements.
+`data/reports/validation/` stores all **validation artifacts** created during ingestion, ETL transformation, and governance review.  
+These reports verify that each dataset adheres to metadata schemas, spatial standards, and **FAIR+CARE** requirements.
 
 Each report provides:
-- Structural and semantic validation of data (GeoJSON, GeoTIFF, CSV).  
-- STAC 1.0 and DCAT 3.0 schema verification.  
-- Error, warning, and success logs from automated validation tools.  
-- Cross-checks between dataset metadata and governance manifests.  
+- Structural & semantic validation (GeoJSON, GeoTIFF, CSV).  
+- **STAC 1.0 / DCAT 3.0** schema verification.  
+- Error, warning, and success logs from automated validators.  
+- Cross-checks between dataset metadata and governance manifests.
 
 ---
 
@@ -45,13 +50,12 @@ Each report provides:
 
 ```plaintext
 data/reports/validation/
-├── README.md                          # This file — overview of validation reports
-│
-├── stac_validation_report.json        # STAC compliance report for all datasets
-├── schema_validation_summary.json     # Dataset schema validation summary (GeoJSON, CSV)
-├── geojson_schema_validation.log      # GeoJSON schema validation logs
-├── ai_validation_metrics.csv          # Validation metrics for AI-driven datasets
-└── validation_summary.md              # Human-readable overview of validation outcomes
+├── README.md
+├── stac_validation_report.json        # STAC compliance report (all datasets)
+├── schema_validation_summary.json     # Schema validation summary (GeoJSON/CSV/etc.)
+├── geojson_schema_validation.log      # GDAL/ogrinfo geometry + CRS logs
+├── ai_validation_metrics.csv          # AI dataset validation metrics (accuracy/drift)
+└── validation_summary.md              # Human-friendly overview of outcomes
 ```
 
 ---
@@ -60,30 +64,30 @@ data/reports/validation/
 
 ```mermaid
 flowchart TD
-    A["ETL Data Processing Completed"] --> B["STAC Validation (Schema and Metadata Check)"]
-    B --> C["Schema Validation (GeoJSON, CSV, GeoTIFF)"]
-    C --> D["AI and Derived Data Validation"]
-    D --> E["FAIR and CARE Cross-Validation"]
-    E --> F["Report Generation and Governance Review"]
+    A["ETL Data Processing Completed"] --> B["STAC Validation (Schema & Metadata)"]
+    B --> C["Schema Validation (GeoJSON · CSV · GeoTIFF)"]
+    C --> D["AI & Derived Data Validation"]
+    D --> E["FAIR+CARE Cross-Validation"]
+    E --> F["Report Generation & Governance Review"]
 ```
 
-### Description:
-1. **STAC Validation:** Confirms presence of mandatory fields, valid geometries, and metadata structure.  
-2. **Schema Validation:** Checks attribute integrity, CRS consistency, and metadata schema compliance.  
-3. **AI Validation:** Ensures derived models meet data accuracy, drift, and bias metrics.  
-4. **FAIR+CARE Validation:** Cross-links metadata and ethical standards before publishing.  
-5. **Governance Review:** Reports sent to the FAIR+CARE Council for audit and archival.  
+### Steps
+1. **STAC Validation** — Checks required fields, valid geometries, and metadata structure.  
+2. **Schema Validation** — Verifies attributes, CRS consistency, and schema conformance.  
+3. **AI Validation** — Assesses drift, bias, and accuracy for derived models.  
+4. **FAIR+CARE Validation** — Cross-links ethics standards prior to publishing.  
+5. **Governance Review** — Council audit + archival in provenance ledgers.
 
 ---
 
-## 🧩 Validation Tools and Standards
+## 🧩 Validation Tools & Standards
 
-| Tool | Purpose | Output |
-|------|----------|---------|
-| **stac-validator** | Checks dataset conformance to STAC 1.0 | `stac_validation_report.json` |
-| **jsonschema** | Validates JSON-based metadata and schemas | `schema_validation_summary.json` |
-| **GDAL / ogrinfo** | Confirms geospatial data validity and CRS consistency | `geojson_schema_validation.log` |
-| **AI Drift Monitor** | Detects data drift and model inconsistencies | `ai_validation_metrics.csv` |
+| Tool / Standard  | Purpose                                       | Output                             |
+|------------------|-----------------------------------------------|------------------------------------|
+| **stac-validator** | STAC 1.0 conformance                         | `stac_validation_report.json`      |
+| **jsonschema**     | JSON metadata & schema validation            | `schema_validation_summary.json`   |
+| **GDAL / ogrinfo** | Geometry validity & CRS checks                | `geojson_schema_validation.log`    |
+| **AI Drift Monitor** | Data/model drift + bias checks             | `ai_validation_metrics.csv`        |
 
 ---
 
@@ -91,33 +95,33 @@ flowchart TD
 
 ```json
 {
-  "dataset": "hazards_v9.3.2",
+  "dataset": "hazards_v9.7.0",
   "status": "passed",
   "validator_version": "1.1.0",
   "errors": [],
   "warnings": ["Recommended field 'keywords' missing"],
   "metadata_completeness": 0.98,
   "linked_items": [
-    "data/stac/items/hazards_v9.3.2.json",
-    "reports/audit/data_provenance_ledger.json"
+    "data/stac/items/hazards_v9.7.0.json",
+    "data/reports/audit/data_provenance_ledger.json"
   ]
 }
 ```
 
-> ✅ **Note:** Each STAC report references the dataset’s provenance record and manifest for traceability.
+> ✅ Each report references the dataset’s provenance record and manifest for traceability.
 
 ---
 
 ## 🧠 FAIR+CARE Validation Criteria
 
-| Validation Type | FAIR Principle | CARE Principle | Description |
-|------------------|----------------|----------------|--------------|
-| Metadata Schema | Findable | Responsibility | Ensures complete, searchable metadata. |
-| File Format | Accessible | Collective Benefit | Verifies open, non-proprietary formats. |
-| CRS / Geometry | Interoperable | Authority to Control | Checks coordinate system and feature validity. |
-| Provenance Chain | Reusable | Ethics | Links all derived data to verified origins. |
+| Validation Type  | FAIR Principle | CARE Principle        | Description                                  |
+|------------------|----------------|-----------------------|----------------------------------------------|
+| Metadata Schema  | Findable       | Responsibility        | Ensures complete, searchable metadata.       |
+| File Format      | Accessible     | Collective Benefit    | Verifies open, non-proprietary formats.      |
+| CRS / Geometry   | Interoperable  | Authority to Control  | Checks coordinate system & feature validity. |
+| Provenance Chain | Reusable       | Ethics                | Links derived data to verified origins.      |
 
-All results are aggregated and scored in the **FAIR+CARE governance dashboard** located in:  
+Results are aggregated into the **FAIR+CARE dashboard**:  
 `data/reports/fair/faircare_scorecard.csv`
 
 ---
@@ -126,53 +130,54 @@ All results are aggregated and scored in the **FAIR+CARE governance dashboard** 
 
 ```csv
 dataset_id,accuracy,f1_score,drift_index,validation_status
-hazards_v9.3.2,0.92,0.91,0.02,passed
-climate_v9.3.2,0.89,0.87,0.05,passed
-treaties_v9.2.0,0.99,0.99,0.00,passed
+hazards_v9.7.0,0.92,0.91,0.02,passed
+climate_v9.7.0,0.89,0.87,0.05,passed
+treaties_v9.7.0,0.99,0.99,0.00,passed
 ```
 
-These metrics are incorporated into the **AI governance ledger** under:  
+Metrics are appended to the **AI governance ledger**:  
 `data/reports/audit/ai_hazards_ledger.json`
 
 ---
 
-## 🧾 Governance Integration
+## 🔗 Governance Integration
 
-Validation reports directly feed into:
-- `data/reports/audit/data_provenance_ledger.json` — Logs validation results and governance approvals.  
+Validation outputs feed into:
+- `data/reports/audit/data_provenance_ledger.json` — Governance approvals & signatures.  
 - `data/reports/fair/data_fair_summary.json` — FAIR scoring aggregation.  
-- `releases/v9.3.2/manifest.zip` — Includes validation summaries for each dataset.  
-- `.github/workflows/stac-validate.yml` — Automated validation workflow trigger.
-
-Governance sign-offs by FAIR+CARE Council members are appended to validation reports before merging to main.
+- `releases/v9.7.0/manifest.zip` — Release-packaged validation summaries.  
+- `.github/workflows/stac-validate.yml` — Automated validation workflow.
 
 ---
 
 ## 🧩 Cross-Linkages
 
-| Linked Component | Purpose |
-|------------------|----------|
-| `data/stac/` | Primary source of dataset metadata for validation |
-| `data/work/processed/` | Source of transformed datasets under review |
-| `docs/standards/governance/` | Defines validation protocols and standards |
+| Linked Component               | Purpose                                     |
+|--------------------------------|---------------------------------------------|
+| `data/stac/`                   | Primary dataset metadata for validation     |
+| `data/work/processed/`         | Staging source for datasets under review    |
+| `docs/standards/governance/`   | Validation protocols and standards          |
 | `schemas/telemetry/work-data-governance-v14.json` | Telemetry schema for validation metadata |
-| `reports/fair/` | Aggregated FAIR+CARE results linked to validation outputs |
+| `reports/fair/`                | FAIR+CARE aggregation & ethics reports      |
 
 ---
 
-## 🧾 Version History
+## 🕰️ Version History
 
-| Version | Date       | Author             | Summary |
-|----------|------------|--------------------|----------|
-| v9.3.2   | 2025-10-28 | @kfm-data-lab      | Added schema, STAC, and AI validation report documentation. |
-| v9.3.1   | 2025-10-27 | @bartytime4life    | Linked validation reports to FAIR+CARE dashboards and audit ledger. |
-| v9.3.0   | 2025-10-26 | @kfm-architecture  | Established validation structure and governance integration. |
+| Version | Date       | Author            | Summary |
+|--------:|------------|-------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-validation` | Upgraded to v9.7.0; telemetry/schema refs added; examples & linkage updated; badges aligned. |
+| v9.3.2  | 2025-10-28 | `@kfm-data-lab`   | Added schema, STAC, and AI validation documentation. |
+| v9.3.1  | 2025-10-27 | `@bartytime4life` | Linked validation reports to FAIR+CARE dashboards and audit ledger. |
+| v9.3.0  | 2025-10-26 | `@kfm-architecture` | Established validation structure & governance integration. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Validation × Transparency × Ethical Data Governance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+**Kansas Frontier Matrix**  
+*Validation × Transparency × Ethical Data Governance*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
+[Back to Reports Index](../README.md) · [Docs Portal](../../../docs/) · [Governance Charter](../../../docs/standards/governance/)
 </div>
