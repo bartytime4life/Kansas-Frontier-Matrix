@@ -1,15 +1,18 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Spatial Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/spatial/logs/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-spatial-logs-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,28 +21,29 @@ license: "Internal · FAIR+CARE Certified"
 `data/work/staging/spatial/logs/README.md`
 
 **Purpose:**  
-Centralized repository for all **spatial ETL, validation, and governance logs** generated within the Kansas Frontier Matrix (KFM) staging environment.  
-Ensures transparent traceability, reproducibility, and FAIR+CARE governance auditing for all spatial processing workflows.
+Centralized repository for **spatial ETL, validation, and governance logs** generated within the KFM staging environment.  
+Ensures traceability, reproducibility, and FAIR+CARE governance auditing for all spatial processing workflows.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Spatial%20Governance%20Audited-gold)](../../../../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal Governance Layer](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey)](../../../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
+[![FAIR+CARE Audited](https://img.shields.io/badge/FAIR%2BCARE-Spatial%20Governance%20Audited-gold.svg)](../../../../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey.svg)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Spatial Logs Workspace** documents the complete operational lineage of spatial datasets processed in KFM’s staging layer.  
-Logs generated here track **CRS normalization, topology validation, FAIR+CARE auditing, checksum generation, and governance synchronization** events.
+The **Spatial Logs Workspace** documents operational lineage of spatial datasets processed in KFM’s staging layer.  
+Logs capture **CRS normalization, topology validation, FAIR+CARE audits, checksum events, and governance synchronization**.
 
-### Core Responsibilities
-- Capture detailed execution traces from reprojection, clipping, and merging workflows.  
-- Log CRS and geometry validation outcomes for reproducibility.  
+### Core Objectives
+- Record detailed execution traces for reprojection, clipping, and merges.  
+- Log CRS & geometry validation outcomes for reproducibility.  
 - Track governance ledger updates and checksum verification.  
-- Record FAIR+CARE ethical and sustainability audit data.  
+- Store FAIR+CARE environmental and ethics audit references.  
 
 ---
 
@@ -47,13 +51,12 @@ Logs generated here track **CRS normalization, topology validation, FAIR+CARE au
 
 ```plaintext
 data/work/staging/spatial/logs/
-├── README.md                              # This file — overview of spatial logs workspace
-│
-├── spatial_pipeline_run.log               # Log for spatial ETL and harmonization pipeline execution
-├── reprojection_summary.log               # CRS normalization and transformation trace
-├── geometry_audit_report.log              # Detailed geometry integrity and validation notes
-├── governance_sync.log                    # Governance and checksum synchronization records
-└── metadata.json                          # Provenance metadata and checksum registry
+├── README.md
+├── spatial_pipeline_run.log               # Spatial ETL/harmonization pipeline trace
+├── reprojection_summary.log               # CRS normalization and transformation log
+├── geometry_audit_report.log              # Geometry integrity & topology checks
+├── governance_sync.log                    # Governance + checksum synchronization records
+└── metadata.json                          # Session provenance + checksum registry
 ```
 
 ---
@@ -62,17 +65,17 @@ data/work/staging/spatial/logs/
 
 ```mermaid
 flowchart TD
-    A["Spatial Processing (TMP Layer)"] --> B["Reprojection and Geometry Validation Logs"]
-    B --> C["FAIR+CARE Ethics and CRS Audit Recording"]
-    C --> D["Checksum and Governance Ledger Sync"]
-    D --> E["Log Archival and Provenance Registration"]
+    A["Spatial Processing (TMP Layer)"] --> B["Reprojection + Geometry Validation Logs"]
+    B --> C["FAIR + CARE Ethics + CRS Audit Recording"]
+    C --> D["Checksum + Governance Ledger Sync"]
+    D --> E["Log Archival + Provenance Registration"]
 ```
 
-### Workflow Description
-1. **Processing Logs:** Record all reprojection, validation, and harmonization events.  
-2. **FAIR+CARE Audit:** Log ethical review outcomes and schema alignment actions.  
-3. **Governance Registration:** Sync logs with provenance ledger and checksum manifest.  
-4. **Archival:** Archive validated logs for audit reproducibility and governance traceability.  
+### Steps
+1. **Processing Logs** — Record reprojection, validation, and harmonization events.  
+2. **FAIR+CARE Audit** — Log ethics outcomes and schema alignment actions.  
+3. **Governance** — Sync logs with provenance ledger and checksum manifest.  
+4. **Archival** — Hash, sign, and archive logs for audit reproducibility.
 
 ---
 
@@ -80,13 +83,13 @@ flowchart TD
 
 ```json
 {
-  "id": "spatial_logs_climate_v9.6.0",
+  "id": "spatial_logs_climate_v9.7.0",
   "component": "spatial_pipeline_run",
-  "created": "2025-11-03T23:49:00Z",
+  "created": "2025-11-06T23:49:00Z",
   "validator": "@kfm-spatial-lab",
   "records_logged": 212,
   "issues_detected": 0,
-  "checksum": "sha256:b3a9e5c6d2a8f4b7e1c9d8f2a7e3b5a6f1c9b4d2e7a6f8b9d3a2c7e4f1b5d9c6",
+  "checksum_sha256": "sha256:b3a9e5c6d2a8f4b7e1c9d8f2a7e3b5a6f1c9b4d2e7a6f8b9d3a2c7e4f1b5d9c6",
   "fairstatus": "compliant",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -97,86 +100,63 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Logs indexed by dataset ID, CRS, and transformation cycle. | @kfm-data |
-| **Accessible** | Open, machine-readable text and JSON formats for reproducibility. | @kfm-accessibility |
-| **Interoperable** | Log schema aligned with FAIR+CARE and ISO 19115 documentation standards. | @kfm-architecture |
-| **Reusable** | Logs include checksums, provenance, and context for reuse. | @kfm-design |
-| **Collective Benefit** | Promotes transparency and open auditing across spatial operations. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council certifies governance sync and ethics validation. | @kfm-governance |
-| **Responsibility** | Validators record CRS operations, ethics audits, and QA outcomes. | @kfm-security |
-| **Ethics** | Logs redacted for sensitive geographic information when required. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Logs indexed by dataset ID, CRS, and cycle. | `@kfm-data` |
+| **Accessible** | Open text/JSON for FAIR+CARE audit visibility. | `@kfm-accessibility` |
+| **Interoperable** | Log schema aligns with FAIR+CARE + ISO 19115. | `@kfm-architecture` |
+| **Reusable** | Checksums, provenance, and context preserved. | `@kfm-design` |
+| **Collective Benefit** | Enables transparent spatial governance oversight. | `@faircare-council` |
+| **Authority to Control** | Council certifies logging + governance sync. | `@kfm-governance` |
+| **Responsibility** | Validators record CRS ops, ethics audits, and QA outcomes. | `@kfm-security` |
+| **Ethics** | Logs redacted for sensitive geographic indicators. | `@kfm-ethics` |
 
-Audit references maintained in:  
-`data/reports/audit/data_provenance_ledger.json` and  
-`data/reports/fair/data_care_assessment.json`
+**Audit references:**  
+`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
 
 ---
 
-## ⚙️ Log Categories
+## ⚙️ Log Types & Artifacts
 
 | Log File | Description | Format |
-|-----------|--------------|--------|
-| `spatial_pipeline_run.log` | Main ETL pipeline trace for spatial harmonization and validation. | Text |
-| `reprojection_summary.log` | CRS transformation and bounding box validation log. | Text |
-| `geometry_audit_report.log` | Topology and geometry integrity checks. | Text |
-| `governance_sync.log` | Governance ledger synchronization and checksum event log. | Text |
-| `metadata.json` | Provenance record capturing runtime and checksum metadata. | JSON |
+|----------|-------------|--------|
+| `spatial_pipeline_run.log` | Core ETL + harmonization trace | Text |
+| `reprojection_summary.log` | CRS transformation checks | Text |
+| `geometry_audit_report.log` | Topology/geometry QA | Text |
+| `governance_sync.log` | Ledger + checksum events | Text |
+| `metadata.json` | Session provenance + checksums | JSON |
 
-Logging automation executed through `spatial_log_sync.yml`.
+**Automation:** `spatial_log_sync.yml`
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♻️ Retention & Sustainability
 
-| Log Type | Retention Duration | Policy |
-|-----------|--------------------|--------|
+| Log Type | Retention | Policy |
+|----------|----------:|--------|
 | Pipeline Logs | 90 Days | Archived post-validation for governance review. |
-| CRS / Reprojection Logs | 60 Days | Cleared after certification or schema update. |
-| FAIR+CARE / Ethics Logs | 365 Days | Retained for reproducibility and transparency audits. |
-| Metadata | Permanent | Stored in provenance ledger and checksum registry. |
+| Reprojection Logs | 60 Days | Cleared after certification or schema update. |
+| FAIR+CARE Logs | 365 Days | Retained for reproducibility & transparency. |
+| Metadata Records | Permanent | Stored in provenance ledger. |
 
-Retention managed by `spatial_log_cleanup.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per logging cycle) | 5.9 Wh | @kfm-sustainability |
-| Carbon Output | 7.3 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Metrics recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Spatial Logs (v9.6.0).
-Central repository for ETL and validation logs documenting spatial transformations, FAIR+CARE audits, and governance synchronization.
-Ensures reproducibility, ethical compliance, and transparent provenance tracking across geospatial workflows.
+Kansas Frontier Matrix (2025). Spatial Logs (v9.7.0).
+Central repository for spatial ETL/validation logs documenting CRS normalization, FAIR+CARE audits, and governance synchronization to ensure transparent and reproducible geospatial workflows.
 ```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added enhanced CRS audit and FAIR+CARE ethics logging automation. |
-| v9.5.0 | 2025-11-02 | Integrated checksum validation with provenance ledger. |
-| v9.3.2 | 2025-10-28 | Established spatial logs directory under FAIR+CARE governance compliance. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Geospatial Traceability × FAIR+CARE Ethics × Provenance Oversight*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Geospatial Traceability × FAIR+CARE Ethics × Provenance Oversight*  
+© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Spatial Staging](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
