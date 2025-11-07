@@ -1,16 +1,18 @@
 ---
 title: "🌦️ Kansas Frontier Matrix — Raw Climate Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/climate/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-raw-climate-v9.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Public Domain / Open Government Data"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -19,28 +21,29 @@ license: "Public Domain / Open Government Data"
 `data/raw/climate/README.md`
 
 **Purpose:**  
-Contains unaltered, original climate datasets sourced from **NOAA, NIDIS, CPC, and USDM**.  
-This raw layer provides immutable baselines for climate analysis, reanalysis, and FAIR+CARE-compliant ETL workflows within the Kansas Frontier Matrix (KFM).
+Contains **unaltered, source-level climate datasets** from **NOAA, NIDIS, CPC, and USDM**.  
+This raw layer provides immutable baselines for climate analysis, reanalysis, and **FAIR+CARE**-compliant ETL workflows within KFM.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Climate%20Governed-gold)](../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![License: Public Domain](https://img.shields.io/badge/License-Public%20Domain-brightgreen)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
+[![Public Domain](https://img.shields.io/badge/License-Public%20Domain-brightgreen.svg)](../../../LICENSE)
+[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Climate%20Governed-gold.svg)](../../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Raw Climate Data Layer** stores all primary datasets used for temperature, precipitation, drought, and reanalysis workflows.  
-These files are preserved in their **original structure and format**, accompanied by detailed provenance and checksum metadata for full reproducibility.
+The **Raw Climate Data Layer** stores all primary datasets for temperature, precipitation, drought, and reanalysis workflows.  
+Files are preserved in their **original structure and format**, with **provenance and checksum** metadata for full reproducibility.
 
-**Key Responsibilities:**
-- Store original NOAA, NIDIS, and USDM climate datasets.  
-- Maintain immutable source integrity through checksum validation.  
-- Provide standardized metadata for FAIR+CARE audit traceability.  
-- Support AI model explainability and longitudinal reanalysis.  
+### Key Responsibilities
+- Store original NOAA, NIDIS, CPC, and USDM datasets.  
+- Maintain **immutable source integrity** via SHA-256 hashes.  
+- Provide **standardized metadata** for FAIR+CARE audit traceability.  
+- Support **AI explainability** and longitudinal reanalysis pipelines.  
 
 ---
 
@@ -48,28 +51,27 @@ These files are preserved in their **original structure and format**, accompanie
 
 ```plaintext
 data/raw/climate/
-├── README.md                             # This file — overview of raw climate data
-│
-├── noaa_global_temp_1900_2025.csv        # NOAA global temperature anomaly records
-├── noaa_precipitation_daily.csv          # NOAA CPC daily precipitation records
-├── usdm_drought_monitor.json             # U.S. Drought Monitor dataset (weekly indices)
-├── ndis_drought_risk.csv                 # NIDIS drought severity and impact metrics
-├── cpc_climate_normals_1991_2020.csv     # CPC climate normal reference (30-year mean)
-├── metadata.json                         # Provenance and checksum record for all files
-└── source_licenses.json                  # Licensing and access metadata for each provider
+├── README.md
+├── noaa_global_temp_1900_2025.csv       # NOAA global temperature anomaly records
+├── noaa_precipitation_daily.csv         # NOAA CPC daily precipitation records
+├── usdm_drought_monitor.json            # U.S. Drought Monitor (weekly indices)
+├── ndis_drought_risk.csv                # NIDIS drought severity and impacts
+├── cpc_climate_normals_1991_2020.csv    # CPC climate normals (30-year means)
+├── metadata.json                        # Provenance & checksum manifest (per-file)
+└── source_licenses.json                 # Licensing & access metadata (per provider)
 ```
 
 ---
 
 ## 🧭 Data Acquisition Summary
 
-| Dataset | Source | Records | Format | License | Integrity |
-|----------|---------|----------|---------|----------|------------|
-| NOAA Global Temp | NOAA NCEI | 1,521,034 | CSV | Public Domain | ✅ Verified |
-| CPC Precipitation | NOAA CPC | 365,240 | CSV | Public Domain | ✅ Verified |
-| USDM Drought Monitor | USDA / NIDIS | 22,650 | JSON | Public Domain | ✅ Verified |
-| NIDIS Drought Risk | NIDIS | 14,320 | CSV | Public Domain | ✅ Verified |
-| CPC Climate Normals | NOAA CPC | 10,240 | CSV | Public Domain | ✅ Verified |
+| Dataset               | Source / Provider   | Records  | Format | License        | Integrity |
+|-----------------------|---------------------|---------:|--------|----------------|----------:|
+| NOAA Global Temp      | NOAA NCEI           | 1,521,034| CSV    | Public Domain  | ✅ Verified |
+| CPC Precipitation     | NOAA CPC            |   365,240| CSV    | Public Domain  | ✅ Verified |
+| USDM Drought Monitor  | USDA / NIDIS        |    22,650| JSON   | Public Domain  | ✅ Verified |
+| NIDIS Drought Risk    | NIDIS               |    14,320| CSV    | Public Domain  | ✅ Verified |
+| CPC Climate Normals   | NOAA CPC            |    10,240| CSV    | Public Domain  | ✅ Verified |
 
 ---
 
@@ -78,14 +80,15 @@ data/raw/climate/
 ```json
 {
   "id": "noaa_precipitation_daily_2025",
-  "source": "NOAA Climate Prediction Center",
-  "data_url": "https://www.cpc.ncep.noaa.gov/",
+  "domain": "climate",
+  "source_url": "https://www.cpc.ncep.noaa.gov/",
+  "provider": "NOAA Climate Prediction Center",
   "provider_type": "Government / Open Data",
   "format": "CSV",
   "license": "Public Domain (NOAA)",
   "records_fetched": 365240,
   "checksum_sha256": "sha256:b7f19a29d1cc7f98a3c5a9cfcf3f212a91d4e76acb9e5e12a5db4f6c45b7a0c5",
-  "retrieved_on": "2025-11-03T19:32:00Z",
+  "retrieved_on": "2025-11-06T19:32:00Z",
   "validator": "@kfm-climate-lab",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -96,26 +99,25 @@ data/raw/climate/
 ## ⚙️ FAIR+CARE Compliance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Indexed via STAC and DCAT metadata entries. | @kfm-data |
-| **Accessible** | Stored under public domain access and open retrieval policy. | @kfm-accessibility |
-| **Interoperable** | Formats maintained in CSV, JSON, and NetCDF standards. | @kfm-architecture |
-| **Reusable** | Metadata contains source, checksum, and provenance details. | @kfm-design |
-| **Collective Benefit** | Enables transparent climate change analysis and research. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council reviews licensing and ethical use. | @kfm-governance |
-| **Responsibility** | Ingestion teams verify data integrity and ethics compliance. | @kfm-security |
-| **Ethics** | Sensitive location data anonymized for ethical access. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | STAC/DCAT entries in `data/raw/metadata/`. | `@kfm-data` |
+| **Accessible** | Public domain access; retrieval notes preserved. | `@kfm-accessibility` |
+| **Interoperable** | CSV/JSON/NetCDF kept in native source standards. | `@kfm-architecture` |
+| **Reusable** | Source, checksum, and provenance captured in metadata. | `@kfm-design` |
+| **Collective Benefit** | Enables transparent climate research & education. | `@faircare-council` |
+| **Authority to Control** | Council reviews licensing/ethics for each source. | `@kfm-governance` |
+| **Responsibility** | Ingestion teams validate integrity & ethics compliance. | `@kfm-security` |
 
 ---
 
-## 🧠 Data Integrity Verification
+## 🧠 Data Integrity & Cataloging
 
-| Process | Description | Output |
-|----------|--------------|---------|
-| **Checksum Verification** | Validates file integrity with SHA-256 hashing. | `data/raw/climate/metadata.json` |
-| **License Validation** | Confirms FAIR+CARE compliance of source licenses. | `data/raw/climate/source_licenses.json` |
-| **Provenance Logging** | Registers dataset lineage in governance ledger. | `data/reports/audit/data_provenance_ledger.json` |
-| **STAC/DCAT Cataloging** | Ensures interoperability and discoverability. | `data/raw/metadata/stac_catalog.json` |
+| Process              | Description                                   | Output                                             |
+|----------------------|-----------------------------------------------|----------------------------------------------------|
+| **Checksum Verify**  | SHA-256 per file; vendor hash comparison.     | `data/raw/climate/metadata.json`                   |
+| **Provenance Log**   | Acquisition metadata & reviewer notes.        | `data/reports/audit/data_provenance_ledger.json`   |
+| **License Audit**    | FAIR+CARE legal/ethics compliance.            | `data/raw/climate/source_licenses.json`            |
+| **Catalog Publish**  | STAC/DCAT registration for discoverability.   | `data/raw/metadata/stac_catalog.json`              |
 
 ---
 
@@ -126,64 +128,54 @@ data/raw/climate/
   "file": "noaa_global_temp_1900_2025.csv",
   "checksum_sha256": "sha256:e71f928b14c28f7fcd8fa5e57eab28a21c9e82c948b16d86b1e6f62d71b6a94f",
   "validated": true,
-  "verified_on": "2025-11-03T19:36:00Z",
+  "verified_on": "2025-11-06T19:36:00Z",
   "ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ⚖️ Retention & Sustainability
 
-| Data Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| Raw Climate Datasets | Permanent | Immutable archival for reproducibility. |
-| Metadata | Permanent | Maintained under ISO 19115 lineage standards. |
-| Checksum Records | Permanent | Stored in ledger for verification continuity. |
-| Logs | 365 Days | Archived annually in system logs. |
-| Licensing Metadata | Permanent | Retained for attribution and compliance. |
+| Category               | Retention | Policy                                                  |
+|-----------------------|----------:|---------------------------------------------------------|
+| Raw Climate Datasets  | Permanent | Immutable archival for reproducibility.                 |
+| Source Metadata       | Permanent | ISO 19115 lineage retention.                            |
+| Checksum Records      | Permanent | Long-term integrity evidence.                           |
+| FAIR+CARE Pre-Audits  | 5 Years   | Licensing & attribution review archive.                 |
+| Ingestion Logs        | 365 Days  | Rotated per governance compliance.                      |
 
-Retention workflows managed by `raw_climate_retention.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per acquisition) | 12.5 Wh | @kfm-sustainability |
-| Carbon Output | 18.3 gCO₂e | @kfm-security |
-| Renewable Power Use | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Certification | 99.1% | @faircare-council |
-
-Telemetry data logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry reference:** `../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Raw Climate Data (v9.6.0).
-Unaltered, checksum-verified climate datasets sourced from NOAA, NIDIS, and USDM.
-Serves as the foundational layer for KFM’s FAIR+CARE climate analysis pipelines, ensuring transparency and open data ethics.
+Kansas Frontier Matrix (2025). Raw Climate Data (v9.7.0).
+Unaltered, checksum-verified climate datasets (NOAA, NIDIS, CPC, USDM) for FAIR+CARE-aligned open science.
+Provides foundational inputs for ETL, validation, and Focus Mode climate analytics.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added provenance and checksum registry automation for all climate datasets. |
-| v9.5.0 | 2025-11-02 | Introduced FAIR+CARE metadata auditing and licensing validation. |
-| v9.3.2 | 2025-10-28 | Established raw climate ingestion workflow and governance linkage. |
+| Version | Date       | Author            | Summary |
+|--------:|------------|-------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-climate`    | Upgraded to v9.7.0; telemetry/schema refs added; governance/badge alignment; clarified acquisition flow. |
+| v9.6.0  | 2025-11-03 | `@kfm-climate`    | Added provenance and checksum registry automation for all climate datasets. |
+| v9.5.0  | 2025-11-02 | `@kfm-governance` | Introduced FAIR+CARE metadata auditing and licensing validation. |
+| v9.3.2  | 2025-10-28 | `@kfm-core`       | Established raw climate ingestion workflow and governance linkage. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Climate Integrity × FAIR+CARE Governance × Provenance Assurance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md) • [📊 FAIR+CARE Reports](../../../data/reports/fair/faircare_summary.json)
+**Kansas Frontier Matrix**  
+*Climate Integrity × FAIR+CARE Governance × Provenance Assurance*  
+© 2025 Kansas Frontier Matrix — Public Domain / Open Government Data · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Raw Data Index](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
