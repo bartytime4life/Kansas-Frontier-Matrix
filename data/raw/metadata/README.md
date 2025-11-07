@@ -1,16 +1,18 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Raw Metadata Repository (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/metadata/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-raw-metadata-v9.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0 / FAIR+CARE Governance License"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -20,27 +22,28 @@ license: "CC-BY 4.0 / FAIR+CARE Governance License"
 
 **Purpose:**  
 Central repository for **source-level metadata, provenance manifests, and checksum registries** associated with raw datasets in the Kansas Frontier Matrix (KFM).  
-This directory ensures transparent, auditable, and FAIR+CARE-compliant traceability for all data ingestion workflows.
+Ensures transparent, auditable, and **FAIR+CARE** compliant traceability for all data ingestion workflows.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Metadata%20Certified-gold)](../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Compliant-blue)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
+[![CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../LICENSE)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Metadata%20Certified-gold.svg)](../../../docs/standards/faircare-validation.md)
+[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Raw Metadata Repository** provides structured metadata records linking all raw datasets to their provenance, checksums, licensing, and FAIR+CARE ethical validation.  
-It serves as the foundation for the **metadata lineage chain** used throughout the KFM’s ETL, validation, and archival processes.
+The **Raw Metadata Repository** provides structured records linking raw datasets to their **provenance, checksums, licensing, and FAIR+CARE** validation.  
+It is the base of the **metadata lineage chain** used across ETL, validation, release, and archival workflows.
 
 ### Core Functions
-- Store FAIR+CARE-certified source metadata and provenance records.  
-- Maintain dataset checksums for integrity verification.  
-- Generate machine-readable STAC and DCAT catalogs.  
-- Facilitate governance synchronization and ethical transparency.  
+- Store **FAIR+CARE-certified** source metadata and provenance.  
+- Maintain **checksums** for integrity verification.  
+- Generate **STAC 1.0** and **DCAT 3.0** catalogs for discovery and exchange.  
+- Synchronize with governance ledgers for ethical transparency.
 
 ---
 
@@ -48,28 +51,27 @@ It serves as the foundation for the **metadata lineage chain** used throughout t
 
 ```plaintext
 data/raw/metadata/
-├── README.md                             # This file — overview of raw metadata repository
-│
-├── provenance_manifest.json              # Master record linking source datasets to governance ledger
-├── checksums.json                        # SHA-256 hash verification registry for all raw data files
-├── faircare_preaudit.json                # FAIR+CARE pre-ingestion ethics and licensing audit
-├── stac_catalog.json                     # STAC 1.0 compliant catalog for discoverability
-├── dcat_catalog.json                     # DCAT 3.0 compliant metadata exchange registry
-├── metadata_summary.csv                  # Human-readable summary of all dataset metadata
-└── metadata.json                         # Root-level metadata overview for all raw datasets
+├── README.md
+├── provenance_manifest.json      # Master lineage → governance ledger map
+├── checksums.json                # SHA-256 registry for all raw files
+├── faircare_preaudit.json        # Pre-ingestion ethics & licensing audit
+├── stac_catalog.json             # STAC 1.0 catalog for discoverability
+├── dcat_catalog.json             # DCAT 3.0 dataset/distribution registry
+├── metadata_summary.csv          # Human-readable inventory index
+└── metadata.json                 # Root overview: schema, checksums, governance links
 ```
 
 ---
 
 ## 🧭 Metadata Governance Summary
 
-| Record | Description | Standard | Validation |
-|---------|--------------|-----------|-------------|
-| `provenance_manifest.json` | Tracks dataset lineage and acquisition history. | ISO 19115 | ✅ Verified |
-| `checksums.json` | File-level SHA-256 hash verification records. | FAIR+CARE / ISO | ✅ Verified |
-| `faircare_preaudit.json` | Pre-ingestion ethics and attribution audit log. | FAIR+CARE | ✅ Verified |
-| `stac_catalog.json` | Spatial-temporal metadata catalog for discoverability. | STAC 1.0 | ✅ Verified |
-| `dcat_catalog.json` | Dataset interoperability registry for open exchange. | DCAT 3.0 | ✅ Verified |
+| Record                    | Description                                   | Standard   | Validation |
+|--------------------------|-----------------------------------------------|------------|------------|
+| `provenance_manifest.json` | Dataset lineage & acquisition history         | ISO 19115  | ✅ Verified |
+| `checksums.json`           | File-level SHA-256 integrity entries          | ISO/FAIR   | ✅ Verified |
+| `faircare_preaudit.json`   | Attribution, license, and ethics pre-checks   | FAIR+CARE  | ✅ Verified |
+| `stac_catalog.json`        | Spatio-temporal discovery metadata            | STAC 1.0   | ✅ Verified |
+| `dcat_catalog.json`        | Interoperability/exchange catalog             | DCAT 3.0   | ✅ Verified |
 
 ---
 
@@ -77,26 +79,26 @@ data/raw/metadata/
 
 ```json
 {
-  "id": "raw_data_provenance_2025_11_03",
+  "id": "raw_data_provenance_2025_11_06",
   "datasets": [
     {
       "name": "noaa_precipitation_daily.csv",
       "domain": "climate",
       "source": "NOAA CPC",
-      "checksum": "sha256:e5f8c71b93254a1926d8ffb53c63b28f7f3a6b9cd38d9c17ac721ae4df4b9a4c",
+      "checksum_sha256": "sha256:e5f8c71b93254a1926d8ffb53c63b28f7f3a6b9cd38d9c17ac721ae4df4b9a4c",
       "license": "Public Domain",
-      "retrieved_on": "2025-11-03T19:33:00Z"
+      "retrieved_on": "2025-11-06T19:33:00Z"
     },
     {
       "name": "fema_flood_zones_2025.geojson",
       "domain": "hazards",
       "source": "FEMA NFHL",
-      "checksum": "sha256:c8d13e7b2e71aa12e37f4f2c8cb67b9acb1d7f32e8dcfb472e8d2a64e8c6e2f4",
+      "checksum_sha256": "sha256:c8d13e7b2e71aa12e37f4f2c8cb67b9acb1d7f32e8dcfb472e8d2a64e8c6e2f4",
       "license": "Public Domain"
     }
   ],
   "validator": "@kfm-metadata-lab",
-  "archived_on": "2025-11-03T20:30:00Z",
+  "archived_on": "2025-11-06T20:30:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -106,32 +108,27 @@ data/raw/metadata/
 ## ⚙️ FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Metadata indexed via STAC and DCAT registries. | @kfm-data |
-| **Accessible** | JSON, CSV, and FAIR+CARE-compliant open formats. | @kfm-accessibility |
-| **Interoperable** | Metadata aligned with ISO 19115, STAC 1.0, and DCAT 3.0. | @kfm-architecture |
-| **Reusable** | Metadata includes schema, provenance, and license details. | @kfm-design |
-| **Collective Benefit** | Promotes transparency and equitable data stewardship. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council verifies ingestion and audit compliance. | @kfm-governance |
-| **Responsibility** | Metadata curators maintain integrity, schema, and checksum logs. | @kfm-security |
-| **Ethics** | Metadata validated for equitable representation and sensitivity. | @kfm-ethics |
-
-Governance logs stored in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and `data/reports/fair/data_care_assessment.json`
+|-----------|----------------|-----------|
+| **Findable** | STAC/DCAT registry & metadata_summary.csv index. | `@kfm-data` |
+| **Accessible** | JSON/CSV exports under CC-BY 4.0. | `@kfm-accessibility` |
+| **Interoperable** | ISO 19115 + STAC 1.0 + DCAT 3.0 alignment. | `@kfm-architecture` |
+| **Reusable** | Provenance, license, and checksums embedded. | `@kfm-design` |
+| **Collective Benefit** | Transparent lineage for trustworthy reuse. | `@faircare-council` |
+| **Authority to Control** | Council verifies ingestion/audit compliance. | `@kfm-governance` |
+| **Responsibility** | Curators maintain schema & checksum integrity. | `@kfm-security` |
 
 ---
 
 ## 🧠 Data Integrity & Audit Process
 
-| Step | Description | Output |
-|------|--------------|---------|
-| **Checksum Validation** | Confirms file authenticity using SHA-256 hashing. | `checksums.json` |
-| **FAIR+CARE Pre-Audit** | Verifies attribution, licensing, and ethical sourcing. | `faircare_preaudit.json` |
-| **Provenance Registration** | Links all raw datasets to governance ledger. | `provenance_manifest.json` |
-| **Catalog Indexing** | Updates STAC and DCAT registries for discoverability. | `stac_catalog.json` / `dcat_catalog.json` |
+| Step                 | Description                                   | Output                     |
+|----------------------|-----------------------------------------------|----------------------------|
+| **Checksum Verify**  | SHA-256 hashing & vendor comparison.          | `checksums.json`           |
+| **FAIR+CARE Pre-Audit** | Ethics, licensing, and attribution checks.  | `faircare_preaudit.json`   |
+| **Provenance Register** | Lineage entries linked to governance ledger.| `provenance_manifest.json` |
+| **Catalog Index**    | STAC/DCAT publication for discovery.          | `stac_catalog.json` · `dcat_catalog.json` |
 
-All validation steps automated through `metadata_validation_sync.yml`.
+Automation: `metadata_validation_sync.yml`
 
 ---
 
@@ -142,7 +139,7 @@ All validation steps automated through `metadata_validation_sync.yml`.
   "file": "blm_land_ownership.csv",
   "checksum_sha256": "sha256:b2f13d8a97b2df7a1b32c1a1e2a7b9c3e8f4e8b3c9f8a7a9b3e2d8c7f3c9e2a1",
   "validated": true,
-  "verified_on": "2025-11-03T20:32:00Z",
+  "verified_on": "2025-11-06T20:32:00Z",
   "ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -151,55 +148,44 @@ All validation steps automated through `metadata_validation_sync.yml`.
 
 ## ⚖️ Compliance & Retention Policy
 
-| File Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| Provenance Manifest | Permanent | Immutable archival for lineage verification. |
-| Checksum Records | Permanent | Stored indefinitely for reproducibility. |
-| FAIR+CARE Pre-Audits | 5 Years | Archived for ethics and licensing reference. |
-| Metadata Catalogs | Permanent | Retained for interoperability and governance linkage. |
-| Logs | 365 Days | Rotated annually for system compliance. |
+| File Type            | Retention | Policy                                            |
+|---------------------|----------:|---------------------------------------------------|
+| Provenance Manifest | Permanent | Immutable archival for lineage verification.      |
+| Checksum Records    | Permanent | Retained indefinitely for reproducibility.        |
+| FAIR+CARE Pre-Audits| 5 Years   | Ethics and licensing reference.                   |
+| Catalogs (STAC/DCAT)| Permanent | Interoperability artifacts retained.              |
+| Logs                | 365 Days  | Rotated annually per governance policy.           |
 
-Retention workflows managed by `metadata_retention.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per validation) | 9.8 Wh | @kfm-sustainability |
-| Carbon Output | 14.2 gCO₂e | @kfm-security |
-| Renewable Power Use | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Certification | 99.4% | @faircare-council |
-
-Telemetry data recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Raw Metadata Repository (v9.6.0).
+Kansas Frontier Matrix (2025). Raw Metadata Repository (v9.7.0).
 Central FAIR+CARE-certified metadata repository linking all raw data sources to provenance, checksums, and governance records.
-Implements ISO 19115, STAC 1.0, and DCAT 3.0 standards for traceable, ethical data stewardship.
+Aligned with ISO 19115, STAC 1.0, and DCAT 3.0 for traceable, ethical data stewardship.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added FAIR+CARE audit metadata, STAC/DCAT catalog integration, and checksum registry. |
-| v9.5.0 | 2025-11-02 | Introduced governance manifest automation and sustainability telemetry. |
-| v9.3.2 | 2025-10-28 | Established metadata lineage protocol for FAIR+CARE pre-audit workflows. |
+| Version | Date       | Author           | Summary |
+|--------:|------------|------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-metadata`  | Upgraded to v9.7.0; telemetry/schema references aligned; badges hardened; governance index clarified. |
+| v9.6.0  | 2025-11-03 | `@kfm-metadata`  | Added FAIR+CARE audit metadata, STAC/DCAT catalogs, and checksum registry. |
+| v9.5.0  | 2025-11-02 | `@kfm-governance`| Introduced governance manifest automation and sustainability telemetry. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Metadata Integrity × FAIR+CARE Ethics × Provenance Transparency*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md) • [📊 FAIR+CARE Reports](../../../data/reports/fair/faircare_summary.json)
+**Kansas Frontier Matrix**  
+*Metadata Integrity × FAIR+CARE Ethics × Provenance Transparency*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Raw Data Index](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
