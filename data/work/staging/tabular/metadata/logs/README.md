@@ -1,15 +1,18 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Tabular Metadata Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/metadata/logs/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/data-work-staging-tabular-metadata-logs-v9.json"
 governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,28 +21,29 @@ license: "Internal · FAIR+CARE Certified"
 `data/work/staging/tabular/metadata/logs/README.md`
 
 **Purpose:**  
-Centralized FAIR+CARE-certified repository for recording metadata harmonization, validation, and governance synchronization logs for tabular datasets within the Kansas Frontier Matrix (KFM).  
-Ensures traceable and reproducible documentation for every metadata transformation, validation, and certification process.
+Central FAIR+CARE-certified repository for **metadata harmonization, validation, and governance synchronization logs** for tabular datasets within KFM.  
+Ensures full traceability and reproducibility across metadata transformation, validation, and certification processes.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Governance%20Audited-gold)](../../../../../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Aligned-purple)]()
-[![License: Internal Logs](https://img.shields.io/badge/License-Internal%20Governance%20Data-grey)](../../../../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../../docs/architecture/README.md)
+[![FAIR+CARE Audited](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Governance%20Audited-gold.svg)](../../../../../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Aligned-7e57c2.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance%20Data-grey.svg)](../../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Tabular Metadata Logs Workspace** archives comprehensive logging records for metadata-related activities across harmonization, validation, and FAIR+CARE certification.  
-It guarantees transparent traceability across all automated and manual metadata validation events under MCP-DL v6.3 documentation-first governance.
+The **Tabular Metadata Logs Workspace** archives complete lifecycle logs for metadata harmonization, validation, and FAIR+CARE auditing under KFM’s governance protocols.  
+These logs ensure transparent traceability, checksum reproducibility, and ethical accountability across all metadata workflows under **MCP-DL v6.3**.
 
 ### Core Responsibilities
-- Record all metadata harmonization, validation, and schema testing operations.  
-- Capture governance synchronization and checksum registration events.  
-- Document FAIR+CARE ethics audit outcomes for provenance integrity.  
-- Retain machine- and human-readable logs for governance reproducibility.  
+- Capture validation, transformation, and harmonization operations.  
+- Record governance synchronization and checksum ledger events.  
+- Track FAIR+CARE audit results and certification approvals.  
+- Preserve machine- and human-readable logs for lineage integrity.  
 
 ---
 
@@ -47,45 +51,44 @@ It guarantees transparent traceability across all automated and manual metadata 
 
 ```plaintext
 data/work/staging/tabular/metadata/logs/
-├── README.md                              # This file — documentation of tabular metadata logs
-│
-├── metadata_validation.log                # Detailed trace of schema and FAIR+CARE validation events
-├── governance_sync.log                    # Log of ledger synchronization and checksum registration
-├── stac_dcat_crosswalk_trace.json         # Record of crosswalk mappings between STAC and DCAT schemas
-└── metadata.json                          # Provenance, checksum, and governance trace metadata
+├── README.md
+├── metadata_validation.log          # Schema + FAIR+CARE validation trace
+├── governance_sync.log              # Governance ledger + checksum registration log
+├── stac_dcat_crosswalk_trace.json   # STAC↔DCAT field mapping + validation results
+└── metadata.json                    # Provenance metadata + checksum record
 ```
 
 ---
 
-## ⚙️ Metadata Logging Workflow
+## ⚙️ Logging Workflow
 
 ```mermaid
 flowchart TD
-    A["Metadata Harmonization (STAC/DCAT/PROV-O)"] --> B["Schema Validation and FAIR+CARE Audit"]
-    B --> C["Log Results to data/work/staging/tabular/metadata/logs/"]
-    C --> D["Checksum and Governance Ledger Registration"]
-    D --> E["Archive for Audit and Provenance Traceability"]
+    A["Metadata Harmonization (STAC/DCAT/PROV-O)"] --> B["Schema + FAIR+CARE Validation"]
+    B --> C["Generate Metadata Logs (staging/tabular/metadata/logs/)"]
+    C --> D["Checksum + Governance Ledger Sync"]
+    D --> E["Archive for FAIR+CARE Reproducibility"]
 ```
 
-### Workflow Description
-1. **Validation Logging:** Record schema and FAIR+CARE validation runs with timestamps.  
-2. **Governance Sync:** Document checksum registration and ledger synchronization.  
-3. **Ethics Audit Logging:** Track FAIR+CARE audit outcomes and governance approvals.  
-4. **Archival:** Preserve logs for reproducibility and audit transparency.  
+### Steps
+1. **Validation Logging** — Record schema checks, FAIR+CARE audits, and lineage tests.  
+2. **Governance Sync** — Register checksum + provenance linkage with ledger.  
+3. **Audit Trace** — Track all ethical validation outcomes.  
+4. **Archival** — Archive verified logs for transparency + compliance.
 
 ---
 
-## 🧩 Example Metadata Log Record
+## 🧩 Example Log Record
 
 ```json
 {
-  "id": "metadata_log_tabular_hazards_v9.6.0",
+  "id": "metadata_log_tabular_hazards_v9.7.0",
   "component": "metadata_harmonization_pipeline",
-  "created": "2025-11-03T23:55:00Z",
+  "created": "2025-11-06T23:55:00Z",
   "events_logged": 42,
   "validator": "@kfm-metadata-lab",
   "issues_detected": 0,
-  "checksum": "sha256:b9a8e3c5f4a6c7d9b1e3f6a8d4c5b7e9f2d1a6c9b4e7a5f3c8b9e2f1a4d3b6e7",
+  "checksum_sha256": "sha256:b9a8e3c5f4a6c7d9b1e3f6a8d4c5b7e9f2d1a6c9b4e7a5f3c8b9e2f1a4d3b6e7",
   "fairstatus": "compliant",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -96,85 +99,82 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Logs indexed by metadata ID, schema, and validation cycle. | @kfm-data |
-| **Accessible** | Logs stored in JSON and text formats for reproducibility. | @kfm-accessibility |
-| **Interoperable** | Aligned with FAIR+CARE, STAC, and DCAT metadata governance. | @kfm-architecture |
-| **Reusable** | Includes provenance, checksum, and validation references. | @kfm-design |
-| **Collective Benefit** | Promotes accountability and transparency in metadata governance. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council reviews and certifies governance synchronization. | @kfm-governance |
-| **Responsibility** | Metadata engineers and validators record audit results. | @kfm-security |
-| **Ethics** | Logs redacted for sensitive metadata attributes or identifiers. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Logs indexed by dataset ID + validation cycle. | `@kfm-data` |
+| **Accessible** | Logs in open text + JSON for reproducibility. | `@kfm-accessibility` |
+| **Interoperable** | Aligns with FAIR+CARE + STAC/DCAT metadata governance. | `@kfm-architecture` |
+| **Reusable** | Includes checksums, provenance, + validation context. | `@kfm-design` |
+| **Collective Benefit** | Enables ethical transparency + reproducibility. | `@faircare-council` |
+| **Authority to Control** | Council certifies synchronization events. | `@kfm-governance` |
+| **Responsibility** | Engineers + validators maintain detailed logs. | `@kfm-security` |
+| **Ethics** | Logs sanitized for sensitive attributes. | `@kfm-ethics` |
 
-Audit outcomes maintained in:  
-`data/reports/audit/data_provenance_ledger.json` and  
-`data/reports/fair/data_care_assessment.json`
+**Audit refs:**  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## ⚙️ Log Categories
+## ⚙️ Log Artifacts
 
 | Log File | Description | Format |
 |-----------|--------------|--------|
-| `metadata_validation.log` | Tracks metadata harmonization, validation, and FAIR+CARE audit results. | Text |
-| `governance_sync.log` | Records governance ledger synchronization and checksum registration. | Text |
-| `stac_dcat_crosswalk_trace.json` | Documents cross-schema mappings between STAC and DCAT. | JSON |
-| `metadata.json` | Session metadata, provenance, and checksum registry. | JSON |
+| `metadata_validation.log` | Schema validation + FAIR+CARE audit record | Text |
+| `governance_sync.log` | Governance + checksum registration trace | Text |
+| `stac_dcat_crosswalk_trace.json` | Field mapping + schema link documentation | JSON |
+| `metadata.json` | Provenance + checksum ledger metadata | JSON |
 
-Logging operations automated through `metadata_log_sync.yml`.
+**Automation:** `metadata_log_sync.yml`
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♻️ Retention & Sustainability
 
-| Log Type | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| Validation Logs | 365 Days | Retained for re-certification and audit review. |
-| Governance Sync Logs | Permanent | Maintained in provenance ledger for continuity. |
-| Crosswalk Trace Logs | 90 Days | Purged after schema version update. |
+| Log Type | Retention | Policy |
+|-----------|----------:|--------|
+| Validation Logs | 365 Days | Retained for re-certification audits. |
+| Governance Logs | Permanent | Maintained in provenance ledger. |
+| Crosswalk Logs | 90 Days | Purged post schema upgrades. |
 | Metadata Records | Permanent | Archived for governance lineage. |
 
-Retention handled by `metadata_logs_cleanup.yml`.
+**Telemetry:** `../../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per log cycle) | 5.2 Wh | @kfm-sustainability |
-| Carbon Output | 6.9 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Metrics recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+|--------|------:|-------------|
+| Energy Use (per logging cycle) | 5.1 Wh | `@kfm-sustainability` |
+| Carbon Output | 6.8 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% (RE100 Verified) | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Tabular Metadata Logs (v9.6.0).
-Centralized FAIR+CARE-compliant logging framework for metadata harmonization, validation, and governance synchronization.
-Ensures full traceability, checksum verification, and ethics-certified audit reporting under KFM’s provenance governance protocols.
+Kansas Frontier Matrix (2025). Tabular Metadata Logs (v9.7.0).
+Comprehensive FAIR+CARE-certified logging framework for tabular metadata harmonization, validation, and governance synchronization under MCP-DL v6.3 provenance standards.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added automated governance logging integration and checksum trace registry. |
-| v9.5.0 | 2025-11-02 | Enhanced FAIR+CARE audit traceability and schema crosswalk automation. |
-| v9.3.2 | 2025-10-28 | Established metadata logs directory under FAIR+CARE governance. |
+| Version | Date       | Author             | Summary |
+|--------:|------------|--------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-metadata`    | Upgraded to v9.7.0; telemetry schema added; governance refs aligned. |
+| v9.6.0  | 2025-11-03 | `@kfm-metadata`    | Added automated governance logging + checksum registry. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Metadata Traceability × FAIR+CARE Ethics × Provenance Oversight*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../../docs/) • [⚖️ Governance Ledger](../../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Metadata Traceability × FAIR+CARE Ethics × Provenance Oversight*  
+© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Metadata Workspace](../README.md) · [Governance Charter](../../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
