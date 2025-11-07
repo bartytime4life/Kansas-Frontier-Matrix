@@ -1,15 +1,18 @@
 ---
 title: "📤 Kansas Frontier Matrix — Climate TMP Exports (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/climate/exports/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-tmp-climate-exports-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,28 +21,28 @@ license: "Internal · FAIR+CARE Certified"
 `data/work/tmp/climate/exports/README.md`
 
 **Purpose:**  
-Temporary export directory for FAIR+CARE-certified climate datasets generated during ETL and AI transformation pipelines within the Kansas Frontier Matrix (KFM).  
-Provides interoperable export validation for schema integrity, checksum verification, and governance linkage prior to staging publication.
+Temporary FAIR+CARE-certified export workspace for validated climate datasets created during ETL and AI transformation workflows.  
+Supports **checksum verification, schema validation, and governance registration** before staging and publication.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Export%20Audited-gold)](../../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal Workspace](https://img.shields.io/badge/License-Internal%20Temporary%20Layer-grey)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Export%20Audited-gold.svg)](../../../../../docs/standards/faircare-validation.md)
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Temporary%20Layer-grey.svg)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Climate TMP Exports** directory stores post-validation climate data products that have successfully passed FAIR+CARE audits, checksum verification, and governance traceability reviews.  
-These datasets serve as export-ready deliverables for integration testing, interoperability validation, and publication staging.
+The **Climate TMP Exports** directory contains post-validation climate data artifacts that have passed **FAIR+CARE ethics audits, checksum verification, and governance traceability checks**.  
+These export-ready products are used for interoperability testing, catalog integration, and final certification before publication.
 
 ### Core Responsibilities
-- Store export-ready climate data for interoperability validation.  
-- Conduct checksum and schema conformity testing prior to catalog publication.  
-- Ensure FAIR+CARE ethics verification and provenance registration.  
-- Support temporary sharing of validated datasets across KFM systems.  
+- Host export-ready climate datasets for testing and validation.  
+- Conduct checksum verification and FAIR+CARE ethics certification.  
+- Synchronize metadata lineage with the governance ledger.  
+- Enable interoperability validation across DCAT/STAC catalogs.  
 
 ---
 
@@ -47,12 +50,11 @@ These datasets serve as export-ready deliverables for integration testing, inter
 
 ```plaintext
 data/work/tmp/climate/exports/
-├── README.md                             # This file — documentation for climate TMP exports
-│
-├── climate_summary_2025.csv              # Aggregated climate summary dataset (FAIR+CARE validated)
-├── precipitation_daily.parquet           # Normalized precipitation time series (NOAA + NIDIS)
-├── drought_index_preview.json            # FAIR+CARE-certified drought composite dataset
-└── metadata.json                         # Export metadata, checksum, and governance records
+├── README.md
+├── climate_summary_2025.csv
+├── precipitation_daily.parquet
+├── drought_index_preview.json
+└── metadata.json
 ```
 
 ---
@@ -61,25 +63,25 @@ data/work/tmp/climate/exports/
 
 ```mermaid
 flowchart TD
-    A["Validated Climate Data (data/work/tmp/climate/validation/)"] --> B["Generate Export Artifacts (CSV / Parquet / JSON)"]
-    B --> C["Checksum and FAIR+CARE Certification"]
-    C --> D["Governance Ledger Synchronization"]
-    D --> E["Promotion to Staging Workspace (data/work/staging/climate/)"]
+    A["Validated Climate (tmp/climate/validation/)"] --> B["Generate Export Artifacts (CSV · Parquet · JSON)"]
+    B --> C["Checksum Verification + FAIR+CARE Ethics Audit"]
+    C --> D["Governance Ledger Registration"]
+    D --> E["Promotion → Staging Workspace (data/work/staging/climate/)"]
 ```
 
-### Workflow Description
-1. **Artifact Generation:** Create export formats from validated climate datasets.  
-2. **Integrity Verification:** Perform checksum validation and FAIR+CARE ethics checks.  
-3. **Governance Sync:** Register export provenance with governance ledger.  
-4. **Promotion:** Move certified exports into the staging workspace for publication.  
+### Steps
+1. **Artifact Generation** — Create validated export formats.  
+2. **Integrity Verification** — Confirm schema compliance & checksum hashes.  
+3. **Governance Sync** — Record provenance + lineage in audit ledger.  
+4. **Promotion** — Move FAIR+CARE-certified exports to staging.
 
 ---
 
-## 🧩 Example Metadata Record
+## 🧩 Example Export Metadata Record
 
 ```json
 {
-  "id": "climate_export_summary_v9.6.0",
+  "id": "climate_export_summary_v9.7.0",
   "source_transforms": [
     "data/work/tmp/climate/transforms/temperature_reanalysis.parquet",
     "data/work/tmp/climate/transforms/drought_normalization.csv"
@@ -89,11 +91,11 @@ flowchart TD
     "precipitation_daily.parquet"
   ],
   "records_exported": 128540,
-  "export_formats": ["CSV", "Parquet"],
+  "formats": ["CSV", "Parquet"],
   "checksum_verified": true,
   "fairstatus": "certified",
   "validator": "@kfm-climate-lab",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-06T23:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -103,20 +105,18 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Export artifacts indexed by dataset ID and checksum hash. | @kfm-data |
-| **Accessible** | Stored in open formats for public catalog validation. | @kfm-accessibility |
-| **Interoperable** | Schema validated against FAIR+CARE, DCAT, and STAC standards. | @kfm-architecture |
-| **Reusable** | Metadata includes checksums, license, and provenance trace. | @kfm-design |
-| **Collective Benefit** | Enables transparent, ethical dissemination of climate data. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council approves export certification. | @kfm-governance |
-| **Responsibility** | Validation engineers document export readiness and metadata linkage. | @kfm-security |
-| **Ethics** | Data reviewed for completeness and non-sensitive content. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Exports indexed by dataset ID + checksum hash. | `@kfm-data` |
+| **Accessible** | Open CSV/Parquet for catalog validation. | `@kfm-accessibility` |
+| **Interoperable** | Schema validated under DCAT, STAC, FAIR+CARE. | `@kfm-architecture` |
+| **Reusable** | Includes provenance, checksum, and license metadata. | `@kfm-design` |
+| **Collective Benefit** | Enables transparent + ethical climate data sharing. | `@faircare-council` |
+| **Authority to Control** | FAIR+CARE Council authorizes certification. | `@kfm-governance` |
+| **Responsibility** | Validators document export readiness and lineage. | `@kfm-security` |
+| **Ethics** | Ensures non-sensitive, equitable data dissemination. | `@kfm-ethics` |
 
-Governance and FAIR+CARE certification logs maintained in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+**Audit refs:**  
+`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
 
 ---
 
@@ -124,65 +124,64 @@ and
 
 | File | Description | Format |
 |------|--------------|--------|
-| `climate_summary_*.csv` | Aggregated climate summary for interoperability testing. | CSV |
-| `precipitation_daily.parquet` | Validated daily precipitation dataset. | Parquet |
-| `drought_index_preview.json` | FAIR+CARE drought metric export sample. | JSON |
-| `metadata.json` | Provenance and export governance record. | JSON |
+| `climate_summary_*.csv` | Aggregated climate summary for interoperability tests. | CSV |
+| `precipitation_daily.parquet` | Harmonized precipitation dataset (NOAA/NIDIS). | Parquet |
+| `drought_index_preview.json` | FAIR+CARE-certified drought composite. | JSON |
+| `metadata.json` | Provenance, checksum, and governance metadata. | JSON |
 
-Automated through `climate_export_sync.yml`.
+**Automation:** `climate_export_sync.yml`
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♻️ Retention & Lifecycle Policy
 
-| File Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| Export Files | 14 Days | Purged after staging promotion or certification renewal. |
+| File Type | Retention | Policy |
+|------------|----------:|--------|
+| Export Files | 14 Days | Purged after staging promotion. |
 | Validation Reports | 90 Days | Retained for governance verification. |
-| Metadata | 365 Days | Archived for provenance and lineage audits. |
-| Governance Records | Permanent | Maintained under checksum registry. |
+| Metadata | 365 Days | Archived for provenance lineage. |
+| Governance Records | Permanent | Stored in audit-ledger checksum registry. |
 
-Retention governed by `climate_export_cleanup.yml`.
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per export cycle) | 7.6 Wh | @kfm-sustainability |
-| Carbon Output | 9.1 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Certification Rate | 100% | @faircare-council |
-
-Telemetry results stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+|--------|------:|-------------|
+| Energy Use (per export cycle) | 7.5 Wh | `@kfm-sustainability` |
+| Carbon Output | 8.8 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% (RE100 Verified) | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Climate TMP Exports (v9.6.0).
-Temporary FAIR+CARE-certified export directory for validated climate data artifacts.
-Supports checksum validation, interoperability testing, and ethical governance synchronization under MCP-DL v6.3 compliance.
+Kansas Frontier Matrix (2025). Climate TMP Exports (v9.7.0).
+Temporary FAIR+CARE-certified export workspace for validated climate data artifacts under MCP-DL v6.3.
+Ensures schema interoperability, checksum integrity, and ethical governance synchronization before staging publication.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Integrated checksum registry and FAIR+CARE export certification. |
-| v9.5.0 | 2025-11-02 | Added DCAT interoperability validation and AI model governance linkage. |
-| v9.3.2 | 2025-10-28 | Established export workspace for climate TMP data governance. |
+| Version | Date       | Author           | Summary |
+|--------:|------------|------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-climate`   | Upgraded telemetry schema, audit traceability, and retention standards. |
+| v9.6.0  | 2025-11-03 | `@kfm-climate`   | Integrated checksum registry and FAIR+CARE export certification. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Climate Transparency × FAIR+CARE Ethics × Provenance Integrity*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Climate Transparency × FAIR+CARE Ethics × Provenance Integrity*  
+© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Climate TMP](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
