@@ -1,15 +1,18 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — Spatial Staging Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/spatial/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-work-staging-spatial-v9.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,28 +21,29 @@ license: "Internal · FAIR+CARE Certified"
 `data/work/staging/spatial/README.md`
 
 **Purpose:**  
-Intermediate governance-controlled workspace for harmonizing, validating, and certifying geospatial data within the Kansas Frontier Matrix (KFM).  
-This layer ensures spatial datasets are CRS-normalized, schema-aligned, and FAIR+CARE-compliant before promotion to the processed layer.
+Governed pre-publication workspace for harmonizing, validating, and certifying **geospatial datasets** within the Kansas Frontier Matrix (KFM).  
+This layer ensures spatial data are CRS-normalized, schema-aligned, and **FAIR+CARE-compliant** prior to promotion to the processed layer.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Spatial%20Validated-gold)](../../../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal Governance Layer](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey)](../../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/architecture/README.md)
+[![FAIR+CARE Validated](https://img.shields.io/badge/FAIR%2BCARE-Spatial%20Validated-gold.svg)](../../../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey.svg)](../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Spatial Staging Workspace** provides an isolated environment for managing and validating geospatial datasets before certification and publication.  
-All files in this layer undergo **CRS normalization (EPSG:4326)**, geometry validation, FAIR+CARE ethics auditing, and checksum verification.
+The **Spatial Staging Workspace** provides a controlled environment for CRS normalization, geometry validation, and FAIR+CARE ethics auditing.  
+It guarantees consistency across coordinate reference systems, feature topology, metadata structure, and governance traceability.
 
-### Core Objectives
+### Core Responsibilities
 - Normalize coordinate systems and geometry structures.  
-- Validate schema, metadata, and FAIR+CARE governance compliance.  
-- Verify checksums and spatial provenance.  
-- Prepare datasets for publication in the processed spatial layer.  
+- Validate schema and FAIR+CARE governance compliance.  
+- Verify checksums and spatial provenance integrity.  
+- Prepare datasets for final publication in `data/work/processed/spatial/`.  
 
 ---
 
@@ -47,25 +51,24 @@ All files in this layer undergo **CRS normalization (EPSG:4326)**, geometry vali
 
 ```plaintext
 data/work/staging/spatial/
-├── README.md                             # This file — overview of spatial staging workspace
+├── README.md
+├── tmp/                                  # CRS and geometry processing workspace
+│   ├── reprojection/                     # EPSG:4326 normalization outputs
+│   ├── clipping/                         # Boundary-based spatial subsets
+│   ├── union_merge/                      # Merged composite spatial datasets
+│   └── metadata.json                     # Provenance and checksum record
 │
-├── tmp/                                  # Temporary CRS and geometry processing workspace
-│   ├── reprojection/                     # CRS normalization and reprojection outputs
-│   ├── clipping/                         # Extent-based subsets (Kansas boundary masks)
-│   ├── union_merge/                      # Merged spatial layers (e.g., hazards + hydrology)
-│   └── metadata.json                     # Provenance and checksum metadata
-│
-├── validation/                           # FAIR+CARE and schema QA reports
-│   ├── geometry_validation_report.json   # Geometry and topology QA report
+├── validation/                           # FAIR+CARE and spatial QA reports
+│   ├── geometry_validation_report.json   # Geometry/topology QA summary
 │   ├── stac_spatial_compliance.json      # STAC metadata conformance validation
-│   ├── crs_check_summary.json            # CRS normalization verification
-│   └── faircare_spatial_audit.json       # FAIR+CARE ethics audit summary
+│   ├── crs_check_summary.json            # CRS normalization verification log
+│   └── faircare_spatial_audit.json       # FAIR+CARE ethics audit report
 │
-└── logs/                                 # Governance, QA, and synchronization logs
+└── logs/                                 # Governance, QA, and sync logs
     ├── spatial_pipeline_run.log          # Execution trace for spatial ETL pipelines
-    ├── reprojection_summary.log          # CRS normalization and validation trace
-    ├── governance_sync.log               # Governance ledger and checksum synchronization
-    └── metadata.json                     # Session-level metadata and governance record
+    ├── reprojection_summary.log          # CRS normalization trace
+    ├── governance_sync.log               # Governance ledger + checksum sync
+    └── metadata.json                     # Session metadata and validation provenance
 ```
 
 ---
@@ -75,18 +78,18 @@ data/work/staging/spatial/
 ```mermaid
 flowchart TD
     A["Raw Spatial Data (data/raw/spatial/*)"] --> B["Temporary Processing (data/work/staging/spatial/tmp/)"]
-    B --> C["Schema and CRS Validation (EPSG:4326 Normalization)"]
-    C --> D["FAIR and CARE Ethics and Topology Audit"]
-    D --> E["Checksum Verification and Governance Ledger Sync"]
+    B --> C["Schema + CRS Validation (EPSG:4326 Normalization)"]
+    C --> D["FAIR + CARE Ethics & Topology Audit"]
+    D --> E["Checksum Verification & Governance Sync"]
     E --> F["Promotion to Processed Spatial Layer (data/work/processed/spatial/)"]
 ```
 
 ### Workflow Description
-1. **Normalization:** Reproject datasets to WGS84 (EPSG:4326).  
-2. **Validation:** Confirm geometry integrity and STAC/DCAT metadata compliance.  
-3. **FAIR+CARE Audit:** Perform ethics review and accessibility validation.  
-4. **Checksum Verification:** Register results in provenance ledger for governance tracking.  
-5. **Promotion:** Move verified datasets to the processed spatial layer for publication.  
+1. **Normalization:** CRS reprojection to WGS84 (EPSG:4326).  
+2. **Validation:** Verify geometry integrity, STAC/DCAT metadata alignment, and ISO compliance.  
+3. **FAIR+CARE Audit:** Ethics, accessibility, and inclusivity validation.  
+4. **Checksum & Governance:** Register integrity hashes in provenance ledger.  
+5. **Promotion:** Push certified spatial datasets to processed layer.  
 
 ---
 
@@ -94,7 +97,7 @@ flowchart TD
 
 ```json
 {
-  "id": "spatial_staging_hydrology_v9.6.0",
+  "id": "spatial_staging_hydrology_v9.7.0",
   "source": "data/raw/hydrology/watersheds_2025.geojson",
   "crs_target": "EPSG:4326",
   "geometry_type": "Polygon",
@@ -103,7 +106,7 @@ flowchart TD
   "fairstatus": "certified",
   "checksum": "sha256:a3b7e8c9d1f2a4e6b8c5f9d7a1b4e3c9f2d8a7b5c6e9b1a4d3f7e8c2b5a9f1d4",
   "validator": "@kfm-spatial-lab",
-  "created": "2025-11-03T23:40:00Z",
+  "created": "2025-11-06T23:42:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -113,86 +116,87 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Indexed in STAC/DCAT catalogs with CRS and bounding box metadata. | @kfm-data |
-| **Accessible** | Stored in interoperable GeoJSON, GeoTIFF, and Parquet formats. | @kfm-accessibility |
-| **Interoperable** | CRS normalized (EPSG:4326) and ISO metadata aligned. | @kfm-architecture |
-| **Reusable** | Metadata includes checksums, provenance, and FAIR+CARE ethics certification. | @kfm-design |
-| **Collective Benefit** | Promotes open spatial awareness and environmental resilience. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council approves certified spatial datasets. | @kfm-governance |
-| **Responsibility** | Validators document CRS and geometry transformations. | @kfm-security |
-| **Ethics** | All datasets reviewed for geographic sensitivity and ethical compliance. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Indexed via STAC/DCAT with CRS and bbox metadata. | `@kfm-data` |
+| **Accessible** | Interoperable GeoJSON/GeoTIFF/Parquet formats. | `@kfm-accessibility` |
+| **Interoperable** | CRS normalized (EPSG:4326); ISO 19115 compliant. | `@kfm-architecture` |
+| **Reusable** | Metadata includes checksum, provenance, and ethics record. | `@kfm-design` |
+| **Collective Benefit** | Promotes spatial transparency for Kansas data. | `@faircare-council` |
+| **Authority to Control** | Council signs off on certified datasets. | `@kfm-governance` |
+| **Responsibility** | Validators ensure geometry accuracy and lineage. | `@kfm-security` |
+| **Ethics** | Screened for sensitive geographic or cultural areas. | `@kfm-ethics` |
 
-FAIR+CARE validation reports archived in:  
-`data/reports/fair/data_care_assessment.json`  
-and `data/reports/audit/data_provenance_ledger.json`
+**Audits:**  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
 ## ⚙️ Validation & Certification Artifacts
 
 | Artifact | Description | Format |
-|-----------|--------------|--------|
-| `geometry_validation_report.json` | Verifies topology, geometry, and feature completeness. | JSON |
-| `crs_check_summary.json` | Confirms projection and CRS consistency. | JSON |
-| `stac_spatial_compliance.json` | STAC 1.0 metadata validation summary. | JSON |
-| `faircare_spatial_audit.json` | FAIR+CARE ethics and governance audit report. | JSON |
-| `metadata.json` | Captures validation metadata and governance references. | JSON |
+|----------|--------------|--------|
+| `geometry_validation_report.json` | Verifies topology, geometry, and completeness. | JSON |
+| `crs_check_summary.json` | CRS + projection consistency validation. | JSON |
+| `stac_spatial_compliance.json` | STAC metadata alignment & schema compliance. | JSON |
+| `faircare_spatial_audit.json` | FAIR+CARE ethics & accessibility audit. | JSON |
+| `metadata.json` | Context metadata and ledger linkage. | JSON |
 
-Validation tasks automated via `spatial_staging_sync.yml`.
+**Automation:** `spatial_staging_sync.yml`
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♻️ Retention & Provenance Policy
 
-| Data Type | Retention Duration | Policy |
-|------------|--------------------|--------|
+| Data Type | Retention | Policy |
+|-----------|----------:|--------|
 | Temporary Files (`tmp/`) | 14 Days | Purged after validation completion. |
-| Validation Reports | 180 Days | Retained for audit and FAIR+CARE governance review. |
-| Governance Logs | 365 Days | Archived for lineage and certification continuity. |
-| Metadata | Permanent | Retained for provenance and reproducibility. |
+| Validation Reports | 180 Days | Retained for FAIR+CARE re-audits. |
+| Governance Logs | 365 Days | Archived for lineage & traceability. |
+| Metadata Records | Permanent | Immutable ledger-backed retention. |
 
-Retention enforced via `spatial_staging_cleanup.yml`.
+**Lifecycle Automation:** `spatial_staging_cleanup.yml`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per validation cycle) | 7.3 Wh | @kfm-sustainability |
-| Carbon Output | 9.4 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Validation | 100% | @faircare-council |
+|--------|------:|-------------|
+| Energy Use (per validation) | 7.3 Wh | `@kfm-sustainability` |
+| Carbon Output | 9.4 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% (RE100 Verified) | `@kfm-infrastructure` |
+| FAIR+CARE Validation | 100% | `@faircare-council` |
 
-Telemetry metrics recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry stored in:  
+`releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Spatial Staging Workspace (v9.6.0).
-FAIR+CARE-certified environment for validating geospatial datasets, performing CRS normalization, and ensuring governance compliance under ISO and STAC/DCAT standards.
-Supports reproducibility, ethics auditing, and provenance verification for open geospatial data publication.
+Kansas Frontier Matrix (2025). Spatial Staging Workspace (v9.7.0).
+FAIR+CARE-certified staging environment for geospatial validation, CRS normalization, and ethical governance under ISO, STAC, and DCAT standards.
+Ensures reproducibility, traceability, and open geospatial data integrity.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Integrated automated CRS validation and FAIR+CARE certification workflows. |
-| v9.5.0 | 2025-11-02 | Enhanced spatial metadata governance and audit traceability. |
-| v9.3.2 | 2025-10-28 | Established spatial staging workspace for schema and ethics review. |
+| Version | Date | Author | Summary |
+|--------:|------|--------|---------|
+| v9.7.0 | 2025-11-06 | `@kfm-spatial` | Upgraded to v9.7.0; telemetry + governance schema integration; CRS normalization optimized. |
+| v9.6.0 | 2025-11-03 | `@kfm-spatial` | Added FAIR+CARE validation and checksum governance reporting. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Geospatial Quality × FAIR+CARE Ethics × Provenance Assurance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../docs/) • [⚖️ Governance Ledger](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Spatial Validation × FAIR+CARE Ethics × Provenance Integrity*  
+© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Work Layer](../../README.md) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
