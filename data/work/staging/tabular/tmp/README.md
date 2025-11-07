@@ -1,15 +1,18 @@
 ---
 title: "📥 Kansas Frontier Matrix — Tabular TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/tmp/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-tabular-tmp-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,28 +21,28 @@ license: "Internal · FAIR+CARE Certified"
 `data/work/staging/tabular/tmp/README.md`
 
 **Purpose:**  
-Temporary workspace for ingestion, normalization, and preliminary validation of tabular datasets before FAIR+CARE certification and promotion to the staging layer.  
-This transient environment supports ETL preprocessing, schema detection, and checksum registration for reproducible tabular workflows.
+Temporary workspace for **ingestion, normalization, and preliminary validation** of tabular datasets prior to FAIR+CARE certification and staging promotion.  
+Supports ETL preprocessing, schema detection, and checksum registration for fully reproducible tabular workflows.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Pre--Validation%20Compliant-gold)](../../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal Temporary Data](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
+[![FAIR+CARE Pre-Validation](https://img.shields.io/badge/FAIR%2BCARE-Pre--Validation%20Compliant-gold.svg)](../../../../../docs/standards/faircare-validation.md)
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey.svg)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Tabular TMP Workspace** functions as the entry point for all structured tabular data within the Kansas Frontier Matrix (KFM).  
-It handles initial ingestion, field normalization, and pre-validation tasks that prepare tabular datasets for governance and certification workflows.
+The **Tabular TMP Workspace** is the entry point for structured tabular data in KFM.  
+It handles **initial ingestion**, **field normalization**, and **pre-validation** to prepare datasets for governance and certification workflows.
 
 ### Core Responsibilities
-- Ingest raw tabular data (CSV, JSON, Parquet) for schema detection.  
+- Ingest raw tabular data (CSV/JSON/Parquet) and detect schema.  
 - Standardize encodings, delimiters, and data types.  
-- Generate preliminary FAIR+CARE audit and checksum reports.  
-- Facilitate temporary storage of ETL outputs before staging promotion.  
+- Generate preliminary FAIR+CARE audit + checksum reports.  
+- Temporarily store ETL outputs before promotion to **staging/tabular**.  
 
 ---
 
@@ -47,21 +50,18 @@ It handles initial ingestion, field normalization, and pre-validation tasks that
 
 ```plaintext
 data/work/staging/tabular/tmp/
-├── README.md                              # This file — documentation of tabular TMP workspace
-│
-├── intake/                                # Raw ingestion and schema mapping workspace
+├── README.md
+├── intake/
 │   ├── hazards_intake_2025.csv
 │   ├── climate_indices_intake.parquet
 │   ├── treaties_intake.csv
 │   └── metadata.json
-│
-├── validation/                            # Preliminary schema and FAIR+CARE validation outputs
+├── validation/
 │   ├── schema_preview.json
 │   ├── field_normalization_summary.json
 │   ├── faircare_pre_audit.json
 │   └── metadata.json
-│
-└── logs/                                  # Runtime, checksum, and provenance logging
+└── logs/
     ├── etl_tmp_run.log
     ├── data_contract_check.log
     ├── governance_sync.log
@@ -74,18 +74,18 @@ data/work/staging/tabular/tmp/
 
 ```mermaid
 flowchart TD
-    A["Raw Tabular Data (data/raw/tabular/*)"] --> B["Schema Detection and Field Normalization"]
-    B --> C["FAIR and CARE Pre-Audit Validation"]
-    C --> D["Checksum Verification and Governance Registration"]
-    D --> E["Promotion to Staging Layer (data/work/staging/tabular/)"]
+    A["Raw Tabular (data/raw/tabular/*)"] --> B["Schema Detection + Field Normalization"]
+    B --> C["FAIR + CARE Pre-Audit Validation"]
+    C --> D["Checksum + Governance Registration"]
+    D --> E["Promotion → Staging Layer (staging/tabular/)"]
 ```
 
-### Workflow Description
-1. **Schema Detection:** Automatically identify data types, encodings, and delimiters.  
-2. **Normalization:** Standardize column names and schema fields per KFM Data Contract.  
-3. **Pre-Audit:** Conduct preliminary FAIR+CARE compliance and ethics checks.  
-4. **Checksum Verification:** Record hashes and lineage metadata for provenance.  
-5. **Promotion:** Transfer compliant data to `data/work/staging/tabular/` for certification.  
+### Steps
+1. **Schema Detection** — Identify types, encodings, and delimiters.  
+2. **Normalization** — Standardize column names & match the KFM Data Contract.  
+3. **Pre-Audit** — Run preliminary FAIR+CARE checks.  
+4. **Checksums** — Write integrity hashes and lineage metadata.  
+5. **Promotion** — Move compliant data to **staging/tabular** for certification.
 
 ---
 
@@ -93,17 +93,17 @@ flowchart TD
 
 ```json
 {
-  "id": "tabular_tmp_climate_indices_v9.6.0",
+  "id": "tabular_tmp_climate_indices_v9.7.0",
   "source_files": [
     "data/raw/noaa/temperature_anomalies_2025.csv",
     "data/raw/noaa/drought_monitor_2025.csv"
   ],
   "records_processed": 54012,
-  "schema_version": "v3.0.2",
-  "created": "2025-11-03T23:59:00Z",
+  "schema_version": "v3.1.1",
+  "created": "2025-11-06T23:59:00Z",
   "validator": "@kfm-etl-ops",
   "validation_status": "pending",
-  "checksum": "sha256:b9e8f3c7d4a6b1f9c2d8e7a4b5f3a9d6e2b1c4a7f8e9b2d3c5a6f4b1e9a7d8c5",
+  "checksum_sha256": "sha256:b9e8f3c7d4a6b1f9c2d8e7a4b5f3a9d6e2b1c4a7f8e9b2d3c5a6f4b1e9a7d8c5",
   "fairstatus": "in_review",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -114,86 +114,72 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | TMP datasets indexed with schema ID and checksum metadata. | @kfm-data |
-| **Accessible** | Stored in machine-readable CSV and Parquet formats. | @kfm-accessibility |
-| **Interoperable** | Schema aligned with FAIR+CARE, DCAT, and JSON Schema standards. | @kfm-architecture |
-| **Reusable** | Provenance and checksum records enable dataset reprocessing. | @kfm-design |
-| **Collective Benefit** | Supports open, ethical preparation of tabular datasets. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council certifies staging promotion. | @kfm-governance |
-| **Responsibility** | Engineers document schema mapping and data type corrections. | @kfm-security |
-| **Ethics** | Data screened for restricted or sensitive content. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | TMP datasets indexed with schema ID and checksum. | `@kfm-data` |
+| **Accessible** | CSV/Parquet maintained for machine readability. | `@kfm-accessibility` |
+| **Interoperable** | Early alignment with FAIR+CARE, DCAT, and JSON Schema. | `@kfm-architecture` |
+| **Reusable** | Provenance + checksum records enable reprocessing. | `@kfm-design` |
+| **Collective Benefit** | Ethical preparation for equitable open data. | `@faircare-council` |
+| **Authority to Control** | Council certifies promotion to staging. | `@kfm-governance` |
+| **Responsibility** | Engineers document mappings and type corrections. | `@kfm-security` |
+| **Ethics** | Screening for restricted or sensitive attributes. | `@kfm-ethics` |
 
-Audit references available in:  
-`data/reports/fair/data_care_assessment.json` and  
-`data/reports/audit/data_provenance_ledger.json`
+**Audit refs:**  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
 ## ⚙️ Validation & QA Artifacts
 
-| Artifact | Description | Format |
-|-----------|--------------|--------|
-| `schema_preview.json` | Preliminary schema mapping for field and type detection. | JSON |
-| `field_normalization_summary.json` | Normalization record showing column name and datatype changes. | JSON |
-| `faircare_pre_audit.json` | FAIR+CARE ethics pre-validation report. | JSON |
-| `etl_tmp_run.log` | Log of TMP ingestion and transformation process. | Text |
-| `metadata.json` | TMP session checksum and governance record. | JSON |
+| Artifact                      | Description                                   | Format |
+|------------------------------|-----------------------------------------------|--------|
+| `schema_preview.json`        | Preliminary schema/type detection              | JSON   |
+| `field_normalization_summary.json` | Column rename & datatype harmonization   | JSON   |
+| `faircare_pre_audit.json`    | Pre-validation ethics + accessibility checks   | JSON   |
+| `etl_tmp_run.log`            | TMP ingestion + transform runtime log          | Text   |
+| `metadata.json`              | TMP session checksum + governance record       | JSON   |
 
-Automation managed via `tabular_tmp_sync.yml`.
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| File Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| Intake Artifacts | 7 Days | Deleted after validation success. |
-| Validation Reports | 14 Days | Archived for QA and audit. |
-| Logs | 30 Days | Transferred to system-level log archive. |
-| Metadata | 365 Days | Retained for governance continuity. |
-
-Cleanup handled via `tabular_tmp_cleanup.yml`.
+**Automation:** `tabular_tmp_sync.yml`
 
 ---
 
-## 🌱 Sustainability Metrics
+## ♻️ Retention & Sustainability Policy
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per ETL run) | 6.1 Wh | @kfm-sustainability |
-| Carbon Output | 7.4 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Ethics Compliance | 100% | @faircare-council |
+| File Type        | Retention | Policy                                        |
+|------------------|----------:|-----------------------------------------------|
+| Intake Artifacts | 7 Days    | Deleted after validation success.             |
+| Validation Reps  | 14 Days   | Archived for QA and audit.                    |
+| Logs             | 30 Days   | Transferred to system log archive.            |
+| Metadata         | 365 Days  | Retained for governance continuity.           |
 
-Telemetry logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Tabular TMP Workspace (v9.6.0).
-Temporary ingestion and normalization workspace for tabular datasets under FAIR+CARE pre-validation governance.
-Supports schema detection, checksum verification, and provenance registration under MCP-DL v6.3 standards.
+Kansas Frontier Matrix (2025). Tabular TMP Workspace (v9.7.0).
+Temporary ingestion and normalization workspace for tabular datasets under FAIR+CARE pre-validation—supporting schema detection, checksum verification, and provenance registration under MCP-DL v6.3.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added FAIR+CARE automation and checksum registry integration. |
-| v9.5.0 | 2025-11-02 | Improved schema normalization and lineage traceability. |
-| v9.3.2 | 2025-10-28 | Established tabular TMP workspace for transient ETL operations. |
+| Version | Date       | Author          | Summary |
+|--------:|------------|-----------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-tabular`  | Upgraded to v9.7.0; telemetry/schema refs aligned; retention table clarified. |
+| v9.6.0  | 2025-11-03 | `@kfm-tabular`  | Added FAIR+CARE automation & checksum registry integration. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Preparation × FAIR+CARE Ethics × Provenance Validation*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Data Preparation × FAIR+CARE Ethics × Provenance Validation*  
+© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Tabular Staging](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
