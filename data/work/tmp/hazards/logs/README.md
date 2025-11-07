@@ -1,13 +1,15 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Hazards TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-hazards-logs-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal Governance Layer"
 mcp_version: "MCP-DL v6.3"
@@ -19,28 +21,28 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/hazards/logs/README.md`
 
 **Purpose:**  
-Centralized FAIR+CARE-certified logging hub for all ETL, AI, validation, and governance workflows related to hazard datasets within the Kansas Frontier Matrix (KFM).  
-This directory captures complete lineage and runtime telemetry for transparency, reproducibility, and ethics validation under MCP-DL v6.3.
+Central FAIR+CARE-certified logging hub for **ETL, AI, validation, and governance** workflows related to hazard datasets within KFM.  
+Captures complete lineage and runtime telemetry for transparency, reproducibility, and ethics validation under MCP-DL v6.3.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Hazard%20Logs%20Governed-gold)](../../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance-grey)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
+[![FAIR+CARE Audited](https://img.shields.io/badge/FAIR%2BCARE-Hazard%20Logs%20Governed-gold.svg)](../../../../../docs/standards/faircare-validation.md)
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance-grey.svg)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Hazards TMP Logs** directory serves as the master repository for all automated logging activities within the temporary hazards workspace.  
-It records every ETL transaction, AI inference, validation process, and governance synchronization step performed across meteorological, hydrological, geological, and wildfire/energy hazard domains.
+The **Hazards TMP Logs** directory is the master repository for automated logging within the temporary hazards workspace.  
+It records ETL transactions, AI inference, validation processes, and governance synchronization across meteorological, hydrological, geological, and wildfire/energy domains.
 
 ### Core Responsibilities
-- Capture ETL stage logs (extract, transform, load, and lineage tracking).  
-- Document AI explainability runs and model ethics evaluations.  
-- Maintain FAIR+CARE governance synchronization and validation records.  
-- Support reproducibility, auditability, and transparency in hazard processing pipelines.  
+- Capture ETL stage logs (extract/transform/load/lineage).  
+- Document AI explainability and model ethics evaluations.  
+- Maintain FAIR+CARE governance sync and validation records.  
+- Enable reproducibility and auditability across pipelines.  
 
 ---
 
@@ -48,32 +50,27 @@ It records every ETL transaction, AI inference, validation process, and governan
 
 ```plaintext
 data/work/tmp/hazards/logs/
-├── README.md                              # This file — overview of hazards TMP logging structure
-│
-├── ai/                                    # Logs from Focus Mode AI and explainability audits
+├── README.md
+├── ai/
 │   ├── focus_reasoning.log
 │   ├── ai_drift_audit.json
 │   └── metadata.json
-│
-├── etl/                                   # Logs from extraction, transformation, and loading phases
+├── etl/
 │   ├── extract/
 │   ├── transform/
 │   ├── load/
 │   ├── lineage/
 │   └── summaries/
-│
-├── manifests/                             # Combined manifests from checksum and governance validation
+├── manifests/
 │   ├── hazard_manifest_2025Q4.json
 │   ├── checksum_audit_registry.json
 │   └── metadata.json
-│
-├── validation/                            # FAIR+CARE audit, schema validation, and ethics review logs
+├── validation/
 │   ├── faircare_audit_trace.log
 │   ├── schema_validation_summary.json
 │   ├── governance_sync.log
 │   └── metadata.json
-│
-└── metadata.json                          # Root provenance and logging session metadata
+└── metadata.json
 ```
 
 ---
@@ -82,18 +79,18 @@ data/work/tmp/hazards/logs/
 
 ```mermaid
 flowchart TD
-    A["ETL Pipelines (Extract / Transform / Load)"] --> B["AI Reasoning & Drift Monitoring (Focus Mode)"]
-    B --> C["Validation & FAIR+CARE Ethics Review"]
-    C --> D["Governance Synchronization and Provenance Registration"]
-    D --> E["Checksum & Manifest Verification"]
+    A["ETL Pipelines (Extract · Transform · Load)"] --> B["AI Reasoning + Drift Monitoring (Focus Mode)"]
+    B --> C["Validation + FAIR + CARE Ethics Review"]
+    C --> D["Governance Sync + Provenance Registration"]
+    D --> E["Checksum + Manifest Verification"]
 ```
 
-### Description
-1. **ETL Logging:** Capture details of extraction, transformation, and load tasks.  
-2. **AI Logging:** Record AI interpretability audits and drift detection results.  
-3. **Validation Logging:** Track FAIR+CARE compliance and schema audits.  
-4. **Governance Logging:** Register events in data provenance ledgers for certification.  
-5. **Checksum Logging:** Verify integrity of all generated artifacts and manifests.  
+### Steps
+1. **ETL Logging** — Record extraction, transformation, load details.  
+2. **AI Logging** — Track interpretability audits + drift detection.  
+3. **Validation Logging** — Trace FAIR+CARE compliance + schema audits.  
+4. **Governance Logging** — Register events in provenance ledgers.  
+5. **Checksum Logging** — Verify integrity of artifacts + manifests.
 
 ---
 
@@ -101,14 +98,14 @@ flowchart TD
 
 ```json
 {
-  "id": "hazards_logs_session_v9.6.0_2025Q4",
+  "id": "hazards_logs_session_v9.7.0_2025Q4",
   "etl_stages": ["extract", "transform", "load", "lineage"],
   "ai_model": "focus-hazard-v5",
   "events_logged": 728,
   "checksum_verified": true,
   "fairstatus": "certified",
   "governance_registered": true,
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-06T23:59:00Z",
   "validator": "@kfm-etl-ops",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -119,87 +116,74 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Logs indexed by ETL stage, domain, and governance session ID. | @kfm-data |
-| **Accessible** | Stored in open JSON and text formats for FAIR+CARE Council review. | @kfm-accessibility |
-| **Interoperable** | Aligned with FAIR+CARE, STAC, and MCP-DL v6.3 audit schemas. | @kfm-architecture |
-| **Reusable** | Traceable through checksum and governance ledger linkage. | @kfm-design |
-| **Collective Benefit** | Promotes ethical transparency in hazard data processing. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council validates all governance synchronization events. | @kfm-governance |
-| **Responsibility** | All operators document AI and ETL results in audit trails. | @kfm-security |
-| **Ethics** | Ensures open accountability without exposing sensitive data. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Logs indexed by ETL stage, domain, governance session ID. | `@kfm-data` |
+| **Accessible** | Open JSON/Text formats for council review. | `@kfm-accessibility` |
+| **Interoperable** | Conforms to FAIR+CARE, STAC, MCP-DL audit schemas. | `@kfm-architecture` |
+| **Reusable** | Traceable via checksum + provenance linkage. | `@kfm-design` |
+| **Collective Benefit** | Ensures ethical transparency in hazard processing. | `@faircare-council` |
+| **Authority to Control** | Council validates governance synchronization. | `@kfm-governance` |
+| **Responsibility** | Operators document AI + ETL results in audit trails. | `@kfm-security` |
+| **Ethics** | Redacts sensitive data while preserving accountability. | `@kfm-ethics` |
 
-Audit references maintained in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
+**Audit refs:**  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
 ## ⚙️ Key Log Categories
 
 | Log Type | Description | Format |
-|-----------|-------------|--------|
-| `ai/` | Focus Mode and AI reasoning logs with ethics validation. | JSON / Log |
-| `etl/` | Extract, transform, and load process logs. | Log |
-| `validation/` | Schema validation and FAIR+CARE compliance audits. | Log / JSON |
-| `manifests/` | Checksum and governance manifest records. | JSON |
-| `metadata.json` | Session-level context for governance and traceability. | JSON |
+|----------|-------------|--------|
+| `ai/` | Focus Mode + explainability audits | JSON / Log |
+| `etl/` | Extract, transform, load traces | Log |
+| `validation/` | Schema + FAIR+CARE audit traces | Log / JSON |
+| `manifests/` | Checksum + governance manifests | JSON |
+| `metadata.json` | Session governance context | JSON |
 
-All log generation automated through `hazards_logs_sync.yml`.
+**Automation:** `hazards_logs_sync.yml`
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♻️ Retention & Sustainability
 
-| Log Type | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| ETL Logs | 90 Days | Archived after quarterly audit completion. |
-| AI & FAIR+CARE Logs | 180 Days | Retained for explainability and ethics verification. |
+| Log Type | Retention | Policy |
+|----------|----------:|--------|
+| ETL Logs | 90 Days | Archived after quarterly audit. |
+| AI & FAIR+CARE Logs | 180 Days | Retained for explainability + ethics verification. |
 | Validation Logs | 365 Days | Stored for lineage reproducibility. |
-| Governance Manifests | Permanent | Immutable record in provenance ledger. |
+| Governance Manifests | Permanent | Immutable provenance record. |
 
-Cleanup and archival handled via `hazards_logs_cleanup.yml`.
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per ETL cycle) | 10.3 Wh | @kfm-sustainability |
-| Carbon Output | 11.7 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry entries logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+|--------|------:|-------------|
+| Energy Use (per ETL cycle) | 10.3 Wh | `@kfm-sustainability` |
+| Carbon Output | 11.7 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hazards TMP Logs (v9.6.0).
-Centralized FAIR+CARE-compliant logging environment for ETL, AI, and governance processes.
-Ensures reproducibility, transparency, and ethical traceability across all hazard data workflows under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Hazards TMP Logs (v9.7.0).
+FAIR+CARE-certified logging repository for ETL, AI, validation, and governance processes—driving transparent, reproducible, and ethically auditable hazard data workflows.
 ```
-
----
-
-## 🧾 Version Notes
-
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Expanded governance sync, AI explainability logs, and checksum traceability. |
-| v9.5.0 | 2025-11-02 | Added FAIR+CARE compliance automation for hazard logging. |
-| v9.3.2 | 2025-10-28 | Established logging framework for hazards TMP operations. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Hazard Transparency × FAIR+CARE Ethics × Provenance Verification*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Hazard Transparency × FAIR+CARE Ethics × Provenance Verification*  
+© 2025 Kansas Frontier Matrix — Internal Governance Layer · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Hazards TMP](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
