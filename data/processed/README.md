@@ -1,14 +1,15 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Processed Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/processed/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/data-processed-v9.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0 / Open Data Commons Attribution License"
 ---
@@ -19,29 +20,29 @@ license: "CC-BY 4.0 / Open Data Commons Attribution License"
 `data/processed/README.md`
 
 **Purpose:**  
-Final repository for all **validated, schema-aligned, and FAIR+CARE-certified datasets** within the Kansas Frontier Matrix (KFM).  
-This layer contains the **canonical, publication-ready outputs** derived from raw and staging layers, ensuring full transparency, reproducibility, and ethical governance.
+Serves as the **canonical, publication-ready repository** for all **validated, schema-aligned, and FAIR+CARE-certified datasets** in the Kansas Frontier Matrix (KFM).  
+All data in this layer are open, ethically governed, and verified for **checksum integrity**, **schema conformity**, and **FAIR+CARE compliance**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Processed%20Data%20Certified-gold)](../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen)](../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../LICENSE)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Processed%20Data%20Certified-gold.svg)](../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Processed Data Layer** represents the authoritative output stage of KFM’s reproducible data pipeline.  
-All datasets here have passed **checksum verification, FAIR+CARE audits, schema validation,** and **AI explainability certification**.  
-These datasets are ready for external publication, visualization, or scientific use through catalogs, APIs, or Focus Mode dashboards.
+The **Processed Data Layer** is the final, certified stage of KFM’s data pipeline — representing datasets that have passed through **FAIR+CARE audits**, **checksum verification**, **schema validation**, and **AI explainability certification**.  
+Each dataset here is ready for **public dissemination, FAIR+CARE reporting, and Focus Mode visualization**.
 
-### Core Objectives:
-- Maintain final, certified datasets for distribution and governance.  
-- Record lineage, checksum, and validation metadata for all processed outputs.  
-- Enable reproducible workflows linking raw → staging → processed layers.  
-- Support open data dissemination through STAC/DCAT and FAIR+CARE governance.  
+### Core Objectives
+- Ensure validated, reproducible datasets for publication.  
+- Maintain metadata traceability and checksum linkage.  
+- Provide FAIR+CARE-aligned documentation for each domain.  
+- Enable open data reuse via STAC/DCAT catalogs.  
 
 ---
 
@@ -49,15 +50,15 @@ These datasets are ready for external publication, visualization, or scientific 
 
 ```plaintext
 data/processed/
-├── README.md                             # This file — overview of the processed data layer
+├── README.md                 # This file — processed data overview
 │
-├── climate/                              # Harmonized climate datasets (NOAA, NIDIS, USDM)
-├── hazards/                              # Multi-hazard validated data (FEMA, NOAA, USGS)
-├── hydrology/                            # Certified hydrology data (USGS, EPA, KDHE)
-├── landcover/                            # Land use and vegetation classification datasets
-├── tabular/                              # Processed tabular data (census, economic, treaty metadata)
-├── spatial/                              # Geospatial products ready for catalog publication
-└── metadata/                             # FAIR+CARE-certified metadata and provenance manifests
+├── climate/                  # Harmonized climate datasets (NOAA, NIDIS, USDM)
+├── hazards/                  # Multi-hazard validated data (FEMA, NOAA, USGS)
+├── hydrology/                # Certified hydrology data (USGS, EPA, KDHE)
+├── landcover/                # Land use and vegetation classification datasets
+├── tabular/                  # Tabular data (census, economic, treaty metadata)
+├── spatial/                  # Geospatial data ready for catalog publication
+└── metadata/                 # FAIR+CARE-certified metadata and provenance manifests
 ```
 
 ---
@@ -66,19 +67,19 @@ data/processed/
 
 ```mermaid
 flowchart TD
-    A["Staging Data (data/work/staging/*)"] --> B["Final Validation & FAIR+CARE Certification"]
-    B --> C["Metadata Alignment & Provenance Registration"]
-    C --> D["Checksum Verification & Ledger Logging"]
-    D --> E["Processed Data Publication (data/processed/*)"]
-    E --> F["STAC/DCAT Catalog Synchronization"]
+    A["Staging Layer (data/work/staging/*)"] --> B["FAIR+CARE Validation + Certification"]
+    B --> C["Metadata Alignment (STAC/DCAT/ISO 19115)"]
+    C --> D["Checksum Verification + Governance Ledger Update"]
+    D --> E["Processed Dataset Publication (data/processed/*)"]
+    E --> F["Catalog Sync (STAC/DCAT + Focus Mode UI)"]
 ```
 
-### Workflow Description:
-1. **Validation:** Datasets undergo FAIR+CARE, schema, and checksum verification.  
-2. **Alignment:** Metadata harmonized across STAC 1.0, DCAT 3.0, and ISO 19115.  
-3. **Certification:** FAIR+CARE Council reviews ethical and provenance compliance.  
-4. **Publication:** Certified datasets moved to `data/processed/` for distribution.  
-5. **Cataloging:** Entries registered in KFM’s governance ledger and data catalogs.  
+### Workflow Summary
+1. **Validation:** Schema, FAIR+CARE, checksum, and AI ethics checks performed.  
+2. **Alignment:** Metadata harmonized across **STAC 1.0**, **DCAT 3.0**, and **ISO 19115**.  
+3. **Certification:** FAIR+CARE Council reviews dataset integrity and provenance.  
+4. **Publication:** Certified outputs migrated to `data/processed/`.  
+5. **Cataloging:** Entries registered to STAC/DCAT and governance ledgers.  
 
 ---
 
@@ -86,7 +87,7 @@ flowchart TD
 
 ```json
 {
-  "id": "processed_hazards_2025_v9.6.0",
+  "id": "processed_hazards_2025_v9.7.0",
   "domain": "hazards",
   "source_stage": "data/work/staging/hazards/",
   "records_total": 34291,
@@ -95,94 +96,99 @@ flowchart TD
   "fairstatus": "certified",
   "validator": "@kfm-hazards-lab",
   "license": "CC-BY 4.0",
-  "created": "2025-11-03T21:02:00Z",
+  "created": "2025-11-06T21:02:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## ⚙️ FAIR+CARE Certification Matrix
+## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Indexed via STAC/DCAT metadata catalogs. | @kfm-data |
-| **Accessible** | Open data publication under CC-BY 4.0 license. | @kfm-accessibility |
-| **Interoperable** | Metadata conforms to STAC 1.0, DCAT 3.0, and ISO 19115. | @kfm-architecture |
-| **Reusable** | Datasets include schema, checksum, and provenance metadata. | @kfm-design |
-| **Collective Benefit** | Supports public transparency, education, and open research. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council approves certification and publication. | @kfm-governance |
-| **Responsibility** | Validators ensure quality assurance and checksum verification. | @kfm-security |
-| **Ethics** | All datasets reviewed for accessibility and sensitive content. | @kfm-ethics |
+|---|---|---|
+| **Findable** | Indexed through STAC/DCAT catalogs and manifests. | `@kfm-data` |
+| **Accessible** | CC-BY 4.0 licensed datasets available for download. | `@kfm-accessibility` |
+| **Interoperable** | Cross-compatible metadata (STAC/DCAT/ISO 19115). | `@kfm-architecture` |
+| **Reusable** | Provenance, schema, and checksums ensure reproducibility. | `@kfm-design` |
+| **Collective Benefit** | Public access supports education and climate resilience. | `@faircare-council` |
+| **Authority to Control** | FAIR+CARE Council certifies processed datasets. | `@kfm-governance` |
+| **Responsibility** | Validation logs and checksums verified per release. | `@kfm-security` |
+| **Ethics** | Redacted sensitive data and transparent authorship. | `@kfm-ethics` |
 
-All validation and certification reports stored in:  
+Validation reports located in:  
 `data/reports/fair/data_care_assessment.json`  
-and `data/reports/audit/data_provenance_ledger.json`
+and  
+`data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## 🧠 Data Integrity Verification
+## ⚙️ Data Integrity & Validation Processes
 
 | Process | Description | Output |
-|----------|--------------|---------|
-| **Checksum Validation** | Confirms file integrity via SHA-256 registry. | `data/processed/metadata/checksums.json` |
-| **Schema Validation** | Ensures dataset conformity to KFM’s data contracts. | `data/processed/metadata/schema_validation_summary.json` |
-| **FAIR+CARE Audit** | Evaluates openness, ethics, and accessibility. | `data/processed/metadata/faircare_certification.json` |
-| **Ledger Registration** | Links validation results to governance record. | `data/reports/audit/data_provenance_ledger.json` |
+|---|---|---|
+| **Checksum Verification** | Verifies dataset integrity via SHA-256. | `metadata/checksums.json` |
+| **Schema Validation** | Confirms schema compliance with Data Contract v3. | `metadata/schema_validation_summary.json` |
+| **FAIR+CARE Audit** | Evaluates ethics, accessibility, and reuse. | `metadata/faircare_certification.json` |
+| **Ledger Registration** | Records validation results in governance registry. | `data/reports/audit/data_provenance_ledger.json` |
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
-| Category | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| Processed Data | Permanent | Published as canonical FAIR+CARE datasets. |
-| Metadata | Permanent | Maintained for transparency and traceability. |
-| FAIR+CARE Reports | Permanent | Retained for certification history. |
-| Logs | 365 Days | Rotated annually for system compliance. |
-| Provenance Manifests | Permanent | Linked to governance ledger and manifest archive. |
+| Record Type | Retention Duration | Policy |
+|---|---|---|
+| Processed Data | Permanent | Canonical datasets published under open license. |
+| Metadata | Permanent | Maintained for transparency and lineage. |
+| FAIR+CARE Reports | Permanent | Immutable certification trail. |
+| Validation Logs | 365 Days | Rotated annually per compliance guidelines. |
+| Provenance Manifests | Permanent | Linked to ledger and SBOM manifests. |
 
 Retention governed by `processed_data_retention.yml`.
 
 ---
 
-## 🌱 Sustainability & Governance Metrics
+## 🌱 Sustainability & Telemetry Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per certification cycle) | 15.4 Wh | @kfm-sustainability |
-| Carbon Output | 20.9 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Certification | 100% | @faircare-council |
+|---|---|---|
+| Energy Use (per certification) | 14.8 Wh | `@kfm-sustainability` |
+| Carbon Output | 19.5 gCO₂e | `@kfm-security` |
+| Renewable Energy Source | 100% (RE100 Verified) | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% Certified | `@faircare-council` |
 
-Telemetry data available in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry metrics logged in:  
+`../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Processed Data Layer (v9.6.0).
-FAIR+CARE-certified datasets representing final, schema-aligned outputs across climate, hazards, hydrology, and landcover domains.
-Ensures reproducibility, open access, and ethical publication under governance-certified workflows.
+Kansas Frontier Matrix (2025). Processed Data Layer (v9.7.0).
+FAIR+CARE-certified final data products representing verified, schema-aligned outputs for climate, hazards, hydrology, and landcover domains.
+Ensures transparency, reproducibility, and ethical data governance under ISO and MCP-DL frameworks.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Enhanced certification registry and checksum ledger synchronization. |
-| v9.5.0 | 2025-11-02 | Integrated AI explainability audit results into validation workflows. |
-| v9.3.2 | 2025-10-28 | Established processed data layer with FAIR+CARE validation protocol. |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v9.7.0 | 2025-11-06 | `@kfm-data` | Upgraded to v9.7.0; harmonized ISO/STAC/DCAT metadata integration; telemetry and governance paths updated. |
+| v9.6.0 | 2025-11-03 | `@kfm-data` | Enhanced checksum and certification registry with ledger sync. |
+| v9.5.0 | 2025-11-02 | `@kfm-architecture` | Added AI explainability verification and FAIR+CARE telemetry workflows. |
+| v9.3.2 | 2025-10-28 | `@kfm-core` | Established processed layer baseline under FAIR+CARE framework. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Science × FAIR+CARE Governance × Provenance Certification*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../docs/) • [⚖️ Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Open Science × FAIR+CARE Governance × Provenance Certification*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 / ODC Attribution License  
+
+[Back to Data Architecture](../README.md) · [Governance Charter](../../docs/standards/governance/DATA-GOVERNANCE.md) · [FAIR+CARE Summary](../reports/fair/faircare_summary.json)
 
 </div>
