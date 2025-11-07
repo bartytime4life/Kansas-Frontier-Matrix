@@ -1,16 +1,18 @@
 ---
 title: "📥 Kansas Frontier Matrix — Raw Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/data-raw-v9.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Open Data Commons / FAIR+CARE License"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -19,29 +21,29 @@ license: "Open Data Commons / FAIR+CARE License"
 `data/raw/README.md`
 
 **Purpose:**  
-This layer contains **unaltered, source-level datasets** collected from verified public, academic, and governmental data providers.  
-The Raw Data Layer is the **foundation of the Kansas Frontier Matrix (KFM)**, supporting transparent ingestion pipelines, provenance validation, and FAIR+CARE-compliant data lifecycle tracking.
+Immutable repository of **unaltered, source-level datasets** collected from verified public, academic, and governmental providers.  
+The Raw Data Layer is the **foundation of KFM**, enabling transparent ingestion pipelines, provenance validation, and **FAIR+CARE** lifecycle tracking.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Data%20Ethics-gold)](../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![License: Open Data](https://img.shields.io/badge/License-Open%20Data%20Commons-brightgreen)](../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/architecture/README.md)
+[![Open Data Commons](https://img.shields.io/badge/License-Open%20Data%20Commons-brightgreen.svg)](../../LICENSE)
+[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Data%20Ethics-gold.svg)](../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Raw Data Layer** serves as the immutable repository for all input datasets utilized by KFM’s ETL and AI workflows.  
-Each source dataset is stored in its **original format**, accompanied by governance metadata and checksums to preserve provenance, reproducibility, and licensing integrity.
+The **Raw Data Layer** preserves inputs in their **original formats**, alongside governance metadata and checksums to guarantee provenance, reproducibility, and licensing integrity.
 
 ### Core Functions
-- Store **unaltered source datasets** with metadata and licensing.  
-- Document **source provenance and acquisition method** for transparency.  
+- Store **unaltered source datasets** with licensing and acquisition metadata.  
+- Register **source provenance** (who/where/when/how) for transparency.  
 - Maintain **checksum validation** for data integrity and reproducibility.  
-- Facilitate FAIR+CARE ethics alignment during ingestion and staging.  
-- Provide immutable baselines for all downstream transformations.  
+- Facilitate **FAIR+CARE** pre-audits prior to staging and transformation.  
+- Provide **immutable baselines** for all downstream workflows.
 
 ---
 
@@ -49,16 +51,15 @@ Each source dataset is stored in its **original format**, accompanied by governa
 
 ```plaintext
 data/raw/
-├── README.md                            # This file — overview of the raw data layer
-│
-├── climate/                             # NOAA, NIDIS, and CPC datasets for temperature, drought, and precipitation
-├── hazards/                             # FEMA, USGS, and NOAA hazard event data (floods, tornadoes, droughts)
-├── hydrology/                           # USGS streamflow, aquifer, and watershed datasets
-├── landcover/                           # MODIS, Landsat, NLCD, and vegetation classification datasets
-├── tabular/                             # Historical, census, and administrative datasets in tabular format
-├── terrain/                             # DEMs, slope, and elevation rasters for Kansas terrain analysis
-├── text/                                # OCR-scanned documents, archival texts, and reports
-└── metadata/                            # Source provenance metadata, checksums, and data contracts
+├── README.md
+├── climate/          # NOAA, NIDIS, CPC; temperature/precip/drought
+├── hazards/          # FEMA, USGS, NOAA; floods/tornadoes/droughts
+├── hydrology/        # USGS streamflow, aquifer, watershed datasets
+├── landcover/        # MODIS, Landsat, NLCD; vegetation classification
+├── tabular/          # Historical, census, administrative data
+├── terrain/          # DEMs, slope, elevation rasters
+├── text/             # OCR-scanned docs, archival texts, reports
+└── metadata/         # Source provenance, checksums, data contracts
 ```
 
 ---
@@ -67,18 +68,18 @@ data/raw/
 
 ```mermaid
 flowchart TD
-    A["External Sources (NOAA, USGS, FEMA, NASA, Archives)"] --> B["Automated Ingestion (ETL Pipelines)"]
-    B --> C["FAIR+CARE Pre-Audit (Ethics & Licensing Review)"]
+    A["External Sources (NOAA · USGS · FEMA · NASA · Archives)"] --> B["Automated Ingestion (ETL)"]
+    B --> C["FAIR+CARE Pre-Audit (Ethics & Licensing)"]
     C --> D["Checksum & Provenance Registration (data/raw/metadata/)"]
-    D --> E["Staging Promotion (data/work/staging/*)"]
+    D --> E["Promotion to Staging (data/work/staging/*)"]
 ```
 
-### Workflow Steps
-1. **Acquisition:** Datasets are retrieved via official APIs, FTP, or repositories.  
-2. **Verification:** Source checksums validated and licensing verified.  
-3. **Pre-Audit:** FAIR+CARE ethics and attribution metadata appended.  
-4. **Registration:** Provenance records stored in governance ledger.  
-5. **Promotion:** Data moved to staging for transformation and validation.
+### Steps
+1. **Acquisition:** Retrieve via APIs/FTP/repos; capture source license and terms.  
+2. **Verification:** Validate vendor checksums/signatures when available.  
+3. **Pre-Audit:** Append FAIR+CARE attribution and ethical context.  
+4. **Registration:** Write provenance to governance ledger and `metadata/`.  
+5. **Promotion:** Move to staging for normalization and validation.
 
 ---
 
@@ -94,7 +95,7 @@ flowchart TD
   "records_fetched": 125480,
   "schema_version": "v3.0.1",
   "checksum_sha256": "sha256:aaf87123e5c16bcae094a9c71e2d93b09c29a38cf7d5b1e07c187a9127f84a53",
-  "fetched_on": "2025-11-03T19:22:00Z",
+  "fetched_on": "2025-11-06T19:22:00Z",
   "validator": "@kfm-etl-ops",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -105,29 +106,29 @@ flowchart TD
 ## ⚙️ FAIR+CARE Source Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Indexed via STAC and DCAT metadata in `data/raw/metadata/`. | @kfm-data |
-| **Accessible** | Openly stored under public data licenses. | @kfm-accessibility |
-| **Interoperable** | Retains native formats for reproducibility (CSV, GeoTIFF, NetCDF, JSON). | @kfm-architecture |
-| **Reusable** | Metadata includes source, schema, and licensing. | @kfm-design |
-| **Collective Benefit** | Contributes to public and environmental knowledge. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council validates ethical and attribution compliance. | @kfm-governance |
-| **Responsibility** | Source validators document ingestion and verification results. | @kfm-security |
-| **Ethics** | Sensitive or restricted content redacted per governance policy. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | STAC/DCAT index of raw sources in `data/raw/metadata/`. | `@kfm-data` |
+| **Accessible** | Open licenses honored; access notes preserved. | `@kfm-accessibility` |
+| **Interoperable** | Native formats retained (CSV, GeoTIFF, NetCDF, JSON) for reproducibility. | `@kfm-architecture` |
+| **Reusable** | Complete source notes, schema refs, and licensing. | `@kfm-design` |
+| **Collective Benefit** | Supports transparent science & public knowledge. | `@faircare-council` |
+| **Authority to Control** | Council validates ethics and attribution. | `@kfm-governance` |
+| **Responsibility** | Ingestion logs + checksums recorded and reviewed. | `@kfm-security` |
+| **Ethics** | Restricted/sensitive content flagged & quarantined. | `@kfm-ethics` |
 
-Governance results are logged in:  
-`data/reports/audit/data_provenance_ledger.json` and `data/reports/fair/faircare_summary.json`
+**Governance logs:**  
+`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/faircare_summary.json`
 
 ---
 
 ## 🧠 Data Integrity Verification
 
 | Process | Description | Output |
-|----------|--------------|---------|
-| **Checksum Verification** | Validates raw dataset integrity using SHA-256 hashing. | `data/raw/metadata/checksums.json` |
-| **Provenance Logging** | Records acquisition metadata for governance traceability. | `data/raw/metadata/provenance.json` |
-| **FAIR+CARE Pre-Audit** | Validates ethical and licensing compliance. | `data/raw/metadata/faircare_preaudit.json` |
-| **Ledger Registration** | Links dataset lineage to the governance ledger. | `data/reports/audit/data_provenance_ledger.json` |
+|--------|-------------|--------|
+| **Checksum Verification** | SHA-256 hashing & comparison to vendor sums. | `data/raw/metadata/checksums.json` |
+| **Provenance Logging** | Source acquisition & reviewer notes. | `data/raw/metadata/provenance.json` |
+| **FAIR+CARE Pre-Audit** | Ethics, licensing, and attribution checks. | `data/raw/metadata/faircare_preaudit.json` |
+| **Ledger Registration** | Immutable lineage entries. | `data/reports/audit/data_provenance_ledger.json` |
 
 ---
 
@@ -138,7 +139,7 @@ Governance results are logged in:
   "file": "data/raw/hazards/flood_zones_fema_2025.geojson",
   "checksum_sha256": "sha256:5c14a98df17b98a472fd8ea94c29deeb1bdf23a8a6c7f9158b1e58f0e567c9a3",
   "validated": true,
-  "verified_on": "2025-11-03T19:24:00Z",
+  "verified_on": "2025-11-06T19:24:00Z",
   "source_ref": "FEMA NFHL Flood Zones API",
   "ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -148,55 +149,58 @@ Governance results are logged in:
 
 ## ⚖️ Preservation & Retention Policy
 
-| Category | Retention Duration | Policy |
-|-----------|--------------------|--------|
+| Category | Retention | Policy |
+|---------|----------:|--------|
 | Raw Data Files | Permanent | Immutable archival for provenance assurance. |
-| Metadata | Permanent | Retained under ISO 19115 and FAIR+CARE governance. |
-| Checksum Records | Permanent | Stored for reproducibility and auditing. |
-| FAIR+CARE Pre-Audits | 5 Years | Archived for licensing and attribution review. |
-| Logs | 365 Days | Rotated annually for compliance tracking. |
+| Source Metadata | Permanent | ISO 19115 & FAIR+CARE governance retention. |
+| Checksum Records | Permanent | Integrity evidence for audits. |
+| FAIR+CARE Pre-Audits | 5 Years | Licensing/attribution verification. |
+| Ingestion Logs | 365 Days | Rotated per compliance policy. |
 
-All retention workflows managed by `raw_data_retention.yml`.
+Retention automation: `raw_data_retention.yml`.
 
 ---
 
 ## 🌱 Sustainability Practices
 
 | Practice | Description | Standard |
-|-----------|--------------|-----------|
-| **Immutable Storage** | All raw data stored on certified long-term archival infrastructure. | ISO 16363 |
-| **Renewable Compute** | Ingestion pipelines powered by RE100-compliant energy sources. | ISO 14064 |
-| **Open Source Reuse** | All ingestion tools open-licensed for community extension. | FAIR+CARE |
-| **Governance Transparency** | Audit reports publicly accessible through GitHub repository. | MCP-DL v6.3 |
+|---------|-------------|----------|
+| **Immutable Storage** | Long-term archival on certified repositories. | ISO 16363 |
+| **Renewable Compute** | Ingestion powered by RE100 energy. | ISO 14064 |
+| **Open Tooling** | Ingestion code open-licensed for reuse. | FAIR+CARE |
+| **Transparency** | Public audit reports via GitHub. | MCP-DL v6.3 |
 
-Telemetry logs recorded in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Raw Data Layer (v9.6.0).
-Immutable FAIR+CARE-certified repository for unaltered source datasets from NOAA, USGS, FEMA, NASA, and public archives.
-Implements checksum validation, ISO 19115 provenance logging, and open data ethics under MCP-DL v6.3 compliance.
+Kansas Frontier Matrix (2025). Raw Data Layer (v9.7.0).
+Immutable FAIR+CARE-aligned repository for unaltered source datasets from NOAA, USGS, FEMA, NASA, and public archives.
+Implements checksum validation, ISO 19115 provenance logging, and open data ethics under MCP-DL v6.3.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added checksum registry automation and FAIR+CARE licensing metadata. |
-| v9.5.0 | 2025-11-02 | Integrated provenance logs with governance ledger sync. |
-| v9.3.2 | 2025-10-28 | Established baseline raw data structure and FAIR+CARE pre-audit protocol. |
+| Version | Date       | Author        | Summary |
+|--------:|------------|---------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-etl`    | Upgraded to v9.7.0; schema & telemetry refs aligned; badges hardened; clarified governance & retention. |
+| v9.6.0  | 2025-11-03 | `@kfm-etl`    | Added checksum automation and FAIR+CARE licensing metadata. |
+| v9.5.0  | 2025-11-02 | `@kfm-governance` | Linked provenance logs to governance ledger sync. |
+| v9.3.2  | 2025-10-28 | `@kfm-core`   | Established baseline raw data structure and pre-audit protocol. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open Data Integrity × FAIR+CARE Governance × Provenance Accountability*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Governance Ledger](../../docs/standards/governance/DATA-GOVERNANCE.md) • [📊 FAIR+CARE Reports](../../data/reports/fair/faircare_summary.json)
+**Kansas Frontier Matrix**  
+*Open Data Integrity × FAIR+CARE Governance × Provenance Accountability*  
+© 2025 Kansas Frontier Matrix — Open Data Commons / FAIR+CARE License  
+
+[Back to Data Architecture](../README.md) · [Governance Charter](../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
