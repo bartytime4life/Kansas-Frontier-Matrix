@@ -21,13 +21,13 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/hazards/logs/etl/load/README.md`
 
 **Purpose:**  
-Governance-aligned FAIR+CARE-certified environment documenting the **Load Phase** of the Hazard ETL pipeline within KFM.  
-Captures dataset publication, checksum validation, and ledger synchronization for final staging and processed-layer deployment.
+Governance-certified FAIR+CARE workspace documenting the **Load Phase** of the Hazard ETL pipeline within the Kansas Frontier Matrix (KFM).  
+Captures publication, checksum validation, and governance synchronization for transparent, reproducible hazard dataset deployment.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../../../docs/architecture/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Load%20Phase%20Certified-gold.svg)](../../../../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-2e7d32.svg)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance-grey.svg)](../../../../../../../LICENSE)
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../../../docs/architecture/repo-focus.md)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Load%20Certified-gold)](../../../../../../../docs/standards/faircare-validation.md)
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance-grey)](../../../../../../../LICENSE)
 
 </div>
 
@@ -35,14 +35,14 @@ Captures dataset publication, checksum validation, and ledger synchronization fo
 
 ## 📘 Overview
 
-The **Hazard ETL Load Logs** serve as the terminal stage record for all hazard ETL cycles — ensuring certified data publication and reproducibility.  
-This workspace validates dataset transfers to staging and processed layers while embedding FAIR+CARE and blockchain-governed lineage tracking.
+The **Hazard ETL Load Logs** workspace ensures every dataset transfer, checksum validation, and governance registration is properly documented and FAIR+CARE-compliant.  
+This layer finalizes the data lifecycle by verifying integrity, lineage, and ethical publication readiness for all hazard domains.
 
-### Core Responsibilities
-- Register dataset publication and checksum verification events.  
-- Document schema compliance and FAIR+CARE certification.  
-- Record governance synchronization and ledger entries.  
-- Maintain auditable transparency across all hazard load operations.  
+### Core Objectives
+- Register dataset publication from ETL to staging/processed layers.  
+- Verify schema, checksum, and governance synchronization.  
+- Maintain reproducible lineage and FAIR+CARE audit history.  
+- Provide full transparency for hazard dataset certification and release.  
 
 ---
 
@@ -50,35 +50,36 @@ This workspace validates dataset transfers to staging and processed layers while
 
 ```plaintext
 data/work/tmp/hazards/logs/etl/load/
-├── README.md
-├── load_run_2025Q4.log
-├── load_validation_report_2025Q4.json
-├── checksum_verification_load_2025Q4.json
-├── governance_registration_2025Q4.log
-└── metadata.json
+├── README.md                              # This file — documentation for hazard ETL load logs
+│
+├── load_run_2025Q4.log                    # Summary of load operations and staging publication
+├── load_validation_report_2025Q4.json     # Schema and governance compliance report
+├── checksum_verification_load_2025Q4.json # File integrity and hash validation summary
+├── governance_registration_2025Q4.log     # FAIR+CARE ledger synchronization record
+└── metadata.json                          # Provenance and lineage metadata for certification
 ```
 
 ---
 
-## ⚙️ Load Workflow
+## ⚙️ Load Phase Workflow
 
 ```mermaid
 flowchart TD
-    A["ETL Output (data/work/tmp/hazards/transforms/)"] --> B["Load Phase (src/pipelines/etl/hazards_load.py)"]
-    B --> C["Checksum & Validation (hazards/logs/etl/load/)"]
-    C --> D["FAIR+CARE Certification & Ledger Sync"]
-    D --> E["Final Publication → data/work/processed/hazards/"]
+    A["ETL Outputs (data/work/tmp/hazards/transforms/)"] --> B["Load Phase (src/pipelines/etl/hazards_load.py)"]
+    B --> C["Checksum Validation & Governance Certification"]
+    C --> D["FAIR+CARE Ledger Sync and Provenance Logging"]
+    D --> E["Publication to Processed Layer (data/work/processed/hazards/)"]
 ```
 
-### Steps
-1. **Data Transfer** — Move harmonized datasets into processed workspaces.  
-2. **Validation** — Verify schema compliance, hashes, and FAIR+CARE metadata.  
-3. **Governance Sync** — Register checksum, certification, and ethics results.  
-4. **Publication** — Deploy certified datasets to downstream KFM systems.  
+### Workflow Description
+1. **Data Transfer** — Moves harmonized datasets to staging or processed workspaces.  
+2. **Validation** — Executes checksum and schema verification.  
+3. **Governance Sync** — Registers ledger entries and FAIR+CARE certification.  
+4. **Publication** — Publishes reproducible datasets for Focus Mode AI and analytics.  
 
 ---
 
-## 🧩 Example Load Metadata Record
+## 🧩 Example Metadata Record
 
 ```json
 {
@@ -101,67 +102,80 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Indexed by cycle, schema, and checksum identifiers. | `@kfm-data` |
-| **Accessible** | Open JSON/TXT logs for FAIR+CARE Council validation. | `@kfm-accessibility` |
-| **Interoperable** | Metadata structured per ISO 19115 and FAIR+CARE lineage. | `@kfm-architecture` |
-| **Reusable** | Linked provenance metadata ensures full reproducibility. | `@kfm-design` |
-| **Collective Benefit** | Promotes ethical data accessibility and transparency. | `@faircare-council` |
-| **Authority to Control** | FAIR+CARE Council approves dataset promotions. | `@kfm-governance` |
-| **Responsibility** | Validators document compliance and checksum integrity. | `@kfm-security` |
-| **Ethics** | Governance ensures responsible hazard dataset release. | `@kfm-ethics` |
+|------------|----------------|------------|
+| **Findable** | Indexed by ETL cycle, schema, and checksum manifest. | @kfm-data |
+| **Accessible** | Stored in open JSON/TXT formats for governance review. | @kfm-accessibility |
+| **Interoperable** | Metadata aligned with FAIR+CARE and ISO lineage schemas. | @kfm-architecture |
+| **Reusable** | Linked lineage and certification metadata ensure reproducibility. | @kfm-design |
+| **Collective Benefit** | Promotes transparent hazard data publication and accountability. | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council certifies all staging and processed publications. | @kfm-governance |
+| **Responsibility** | Validators record checksum, schema verification, and ethics compliance. | @kfm-security |
+| **Ethics** | Ensures equitable, culturally sensitive dataset publication. | @kfm-ethics |
 
-**Audit refs:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
+Governance and FAIR+CARE audit records documented in:  
+`data/reports/audit/data_provenance_ledger.json`  
+and  
+`data/reports/fair/data_care_assessment.json`
 
 ---
 
-## ⚙️ Load Artifacts
+## ⚙️ Validation & Certification Artifacts
 
 | Artifact | Description | Format |
 |-----------|--------------|--------|
-| `load_run_*.log` | ETL data load runtime summary | Text |
-| `load_validation_report_*.json` | Schema + governance validation results | JSON |
-| `checksum_verification_load_*.json` | Checksum verification record | JSON |
-| `governance_registration_*.log` | FAIR+CARE ledger synchronization log | Text |
-| `metadata.json` | Provenance + lineage record for load cycle | JSON |
+| `load_run_*.log` | ETL data load runtime summary. | Text |
+| `load_validation_report_*.json` | Schema compliance and governance audit. | JSON |
+| `checksum_verification_load_*.json` | Integrity and hash validation record. | JSON |
+| `governance_registration_*.log` | FAIR+CARE ledger synchronization trace. | Text |
+| `metadata.json` | Provenance and lineage linkage metadata. | JSON |
 
-**Automation:** `hazards_etl_load_sync.yml`
+Validation automation managed through `hazards_etl_load_sync.yml`.
 
 ---
 
-## ♻️ Retention & Lifecycle Policy
+## ⚖️ Retention & Provenance Policy
 
-| Log Type | Retention | Policy |
-|-----------|-----------|--------|
-| Load Logs | 90 Days | Archived post-certification. |
-| Validation Reports | 365 Days | Retained for reproducibility. |
-| Metadata | Permanent | Immutable under blockchain governance. |
-| Governance Records | Permanent | Stored indefinitely for lineage audits. |
+| Log Type | Retention Duration | Policy |
+|-----------|--------------------|--------|
+| Load Logs | 90 Days | Archived post-governance review. |
+| Validation Reports | 365 Days | Retained for reproducibility and re-certification. |
+| Metadata | Permanent | Immutable record under blockchain governance. |
+| Governance Records | Permanent | Stored indefinitely for certification lineage. |
 
-**Cleanup Automation:** `hazards_load_cleanup.yml`
+Cleanup automation executed via `hazards_load_cleanup.yml`.
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|--------|------:|-------------|
-| Energy Use (per cycle) | 6.6 Wh | `@kfm-sustainability` |
-| Carbon Output | 7.8 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100 Certified) | `@kfm-infrastructure` |
-| FAIR+CARE Compliance | 100% | `@faircare-council` |
+|---------|--------|--------------|
+| Energy Use (per load cycle) | 6.6 Wh | @kfm-sustainability |
+| Carbon Output | 7.8 gCO₂e | @kfm-security |
+| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
+| FAIR+CARE Certification | 100% | @faircare-council |
 
-**Telemetry:** `../../../../../../../releases/v9.7.0/focus-telemetry.json`
+Telemetry data stored in:  
+`releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Citation
+## 🧾 Internal Use Citation
 
 ```text
 Kansas Frontier Matrix (2025). Hazard ETL Load Logs (v9.7.0).
-FAIR+CARE-aligned load-phase governance environment for publishing, validating, and auditing hazard datasets — ensuring reproducible, ethical data under MCP-DL v6.3.
+FAIR+CARE-certified governance layer for load-phase publication and validation of hazard datasets.
+Ensures ethical compliance, checksum integrity, and reproducibility under MCP-DL v6.3 and Diamond⁹ Ω / Crown∞Ω certification.
 ```
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Author | Notes |
+|----------|------|--------|--------|
+| v9.7.0 | 2025-11-06 | `@kfm-etl-ops` | Upgraded to v9.7.0 with telemetry schema alignment and FAIR+CARE sync automation. |
+| v9.6.0 | 2025-11-03 | `@kfm-etl-ops` | Introduced checksum lineage and governance certification workflow. |
 
 ---
 
@@ -169,7 +183,7 @@ FAIR+CARE-aligned load-phase governance environment for publishing, validating, 
 
 **Kansas Frontier Matrix**  
 *Data Publication × FAIR+CARE Ethics × Provenance Integrity*  
-© 2025 Kansas Frontier Matrix — Internal Governance Data · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+© 2025 Kansas Frontier Matrix — Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [Back to ETL Logs](../README.md) · [Governance Charter](../../../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
