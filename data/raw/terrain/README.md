@@ -1,16 +1,18 @@
 ---
 title: "🏔️ Kansas Frontier Matrix — Raw Terrain Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/terrain/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v9.6.0/focus-telemetry.json"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-raw-terrain-v9.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Public Domain / Open Data Commons"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -19,28 +21,29 @@ license: "Public Domain / Open Data Commons"
 `data/raw/terrain/README.md`
 
 **Purpose:**  
-Immutable collection of **unaltered elevation, slope, and topographic datasets** from USGS, NASA SRTM, and Kansas DASC.  
-Provides the foundational inputs for terrain analysis, slope mapping, and hydrological modeling under FAIR+CARE and ISO 19115 standards.
+Immutable collection of **unaltered elevation, slope, and topographic datasets** from **USGS, NASA SRTM, and Kansas DASC**.  
+Provides foundational inputs for terrain analysis, slope mapping, and hydrological modeling under **FAIR+CARE** and **ISO 19115**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Terrain%20Governed-gold)](../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue)]()
-[![License: Public Domain](https://img.shields.io/badge/License-Open%20Data-brightgreen)](../../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
+[![Public Domain](https://img.shields.io/badge/License-Open%20Data-brightgreen.svg)](../../../LICENSE)
+[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Terrain%20Governed-gold.svg)](../../../docs/standards/faircare-validation.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Raw Terrain Data Layer** houses unmodified geospatial raster datasets capturing Kansas elevation, slope, and terrain morphology.  
-These datasets form the baseline for topographic normalization, hydrologic basin modeling, and environmental hazard analysis pipelines within the Kansas Frontier Matrix (KFM).
+The **Raw Terrain Data Layer** houses unmodified geospatial rasters & vectors capturing Kansas elevation, slope, and terrain morphology.  
+Datasets form the baseline for **topographic normalization**, **hydrologic basin modeling**, and **hazard analysis** across KFM.
 
-### Core Objectives:
+### Core Objectives
 - Preserve original terrain datasets from verified geospatial sources.  
-- Maintain checksum and provenance for data integrity assurance.  
-- Enable FAIR+CARE transparency and ISO 19115 lineage compliance.  
-- Support AI-assisted slope modeling, runoff analysis, and elevation regridding.  
+- Maintain **checksum & provenance** for integrity assurance.  
+- Enable **FAIR+CARE** transparency and **ISO 19115** lineage compliance.  
+- Support **AI-assisted** slope modeling, runoff analysis, and elevation regridding.  
 
 ---
 
@@ -48,28 +51,27 @@ These datasets form the baseline for topographic normalization, hydrologic basin
 
 ```plaintext
 data/raw/terrain/
-├── README.md                              # This file — overview of raw terrain data
-│
-├── usgs_3dep_dem_10m.tif                  # USGS 3DEP 10m resolution digital elevation model
-├── nasa_srtm_30m.tif                      # NASA Shuttle Radar Topography Mission (SRTM) data
-├── kansas_contours_10ft.geojson           # Kansas DASC contour lines dataset
-├── slope_raster_usgs_derived.tif          # Slope map derived from USGS DEM data
+├── README.md
+├── usgs_3dep_dem_10m.tif                  # USGS 3DEP 10 m DEM
+├── nasa_srtm_30m.tif                      # NASA SRTM 30 m DEM
+├── kansas_contours_10ft.geojson           # Kansas DASC contour lines
+├── slope_raster_usgs_derived.tif          # Slope from USGS DEM
 ├── terrain_units_kansas.geojson           # Terrain unit classification polygons
-├── metadata.json                          # Provenance, checksum, and FAIR+CARE metadata
-└── source_licenses.json                   # Source-specific licensing and acquisition records
+├── metadata.json                          # Checksums, provenance, FAIR+CARE fields
+└── source_licenses.json                   # Licensing & acquisition records
 ```
 
 ---
 
 ## 🧭 Data Acquisition Summary
 
-| Dataset | Source | Resolution | Format | License | Integrity |
-|----------|---------|-------------|---------|----------|------------|
-| USGS 3DEP DEM | USGS | 10 m | GeoTIFF | Public Domain | ✅ Verified |
-| NASA SRTM | NASA / JPL | 30 m | GeoTIFF | Public Domain | ✅ Verified |
-| Kansas Contours | Kansas DASC | 10 ft | GeoJSON | Public Domain | ✅ Verified |
-| Slope Raster | Derived (USGS DEM) | 10 m | GeoTIFF | Derived (USGS) | ✅ Verified |
-| Terrain Units | Kansas Geological Survey | Vector | GeoJSON | Public Domain | ✅ Verified |
+| Dataset            | Source / Provider          | Resolution | Format  | License       | Integrity |
+|-------------------|----------------------------|-----------:|---------|---------------|----------:|
+| USGS 3DEP DEM     | USGS                       | 10 m       | GeoTIFF | Public Domain | ✅ Verified |
+| NASA SRTM DEM     | NASA / JPL                 | 30 m       | GeoTIFF | Public Domain | ✅ Verified |
+| KS Contours       | Kansas DASC                | 10 ft      | GeoJSON | Public Domain | ✅ Verified |
+| Slope Raster      | Derived (USGS DEM)         | 10 m       | GeoTIFF | Derived (USGS)| ✅ Verified |
+| Terrain Units     | Kansas Geological Survey   | vector     | GeoJSON | Public Domain | ✅ Verified |
 
 ---
 
@@ -85,7 +87,7 @@ data/raw/terrain/
   "license": "Public Domain (USGS)",
   "records_fetched": 32,
   "checksum_sha256": "sha256:8b2e4c71a32f7b4d8e3c49e4d2e71a8c9e1f2c6b7a2b8a3e4c1d9e5a3f7a1b6d",
-  "retrieved_on": "2025-11-03T19:58:00Z",
+  "retrieved_on": "2025-11-06T19:58:00Z",
   "validator": "@kfm-terrain-lab",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -96,29 +98,25 @@ data/raw/terrain/
 ## ⚙️ FAIR+CARE Compliance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Indexed within STAC/DCAT catalogs and linked to governance ledger. | @kfm-data |
-| **Accessible** | Open access under public domain licensing. | @kfm-accessibility |
-| **Interoperable** | GeoTIFF and GeoJSON formats ensure GIS compatibility. | @kfm-architecture |
-| **Reusable** | Metadata includes provenance, schema, and checksum information. | @kfm-design |
-| **Collective Benefit** | Supports transparent environmental modeling and resilience studies. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council oversees access and ethical data use. | @kfm-governance |
-| **Responsibility** | Ingestion teams verify file integrity and licensing. | @kfm-security |
-| **Ethics** | Digital elevation privacy boundaries maintained for sensitive zones. | @kfm-ethics |
-
-Governance and audit results are maintained in:  
-`data/reports/audit/data_provenance_ledger.json` and `data/reports/fair/data_care_assessment.json`
+|-----------|----------------|-----------|
+| **Findable** | STAC/DCAT catalog entries; governance linkages. | `@kfm-data` |
+| **Accessible** | Open access; retrieval guidance documented. | `@kfm-accessibility` |
+| **Interoperable** | GeoTIFF/GeoJSON standards; CRS preserved as delivered. | `@kfm-architecture` |
+| **Reusable** | Provenance, schema, and checksums embedded in metadata. | `@kfm-design` |
+| **Collective Benefit** | Enables open modeling & resilience planning. | `@faircare-council` |
+| **Authority to Control** | Council validates ingestion and ethics. | `@kfm-governance` |
+| **Responsibility** | Stewards verify integrity and metadata completeness. | `@kfm-security` |
 
 ---
 
-## 🧠 Data Integrity & Validation
+## 🧠 Integrity & Cataloging
 
-| Process | Description | Output |
-|----------|--------------|---------|
-| **Checksum Validation** | Validates raw raster integrity using SHA-256. | `data/raw/terrain/metadata.json` |
-| **License Validation** | Ensures datasets meet open data and FAIR+CARE standards. | `data/raw/terrain/source_licenses.json` |
-| **Provenance Registration** | Logs acquisition lineage into governance ledger. | `data/reports/audit/data_provenance_ledger.json` |
-| **STAC/DCAT Registration** | Links metadata to global spatial catalogs. | `data/raw/metadata/stac_catalog.json` |
+| Process            | Description                                  | Output                                           |
+|-------------------|----------------------------------------------|--------------------------------------------------|
+| **Checksum Verify** | SHA-256 hashing; vendor hash comparison.     | `data/raw/terrain/metadata.json`                 |
+| **Provenance Log**  | Acquisition lineage & reviewer notes.         | `data/reports/audit/data_provenance_ledger.json` |
+| **License Audit**   | FAIR+CARE licensing & attribution review.     | `data/raw/terrain/source_licenses.json`          |
+| **Catalog Publish** | STAC/DCAT registration for discoverability.   | `data/raw/metadata/stac_catalog.json`            |
 
 ---
 
@@ -129,64 +127,53 @@ Governance and audit results are maintained in:
   "file": "nasa_srtm_30m.tif",
   "checksum_sha256": "sha256:d4a3c8e1b2f7a8c9e3e1b4f9d7c6a8b9e4f5c7d2b3a1e8c9d4f3a7e2b9c1f6e4",
   "validated": true,
-  "verified_on": "2025-11-03T20:00:00Z",
+  "verified_on": "2025-11-06T20:00:00Z",
   "ledger_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ⚖️ Retention & Sustainability
 
-| Category | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| Raw Terrain Datasets | Permanent | Immutable archival for lineage and reproducibility. |
-| Metadata | Permanent | Maintained under ISO 19115 lineage standards. |
-| Checksum Records | Permanent | Retained for audit and verification. |
-| FAIR+CARE Pre-Audits | 5 Years | Archived for ethical and licensing validation. |
-| Logs | 365 Days | Rotated annually for compliance and QA. |
+| Category           | Retention | Policy                                                  |
+|-------------------|----------:|---------------------------------------------------------|
+| Raw Terrain Data  | Permanent | Immutable archival for lineage & reproducibility.       |
+| Source Metadata   | Permanent | ISO 19115 lineage retention.                            |
+| Checksum Records  | Permanent | Long-term integrity evidence.                           |
+| FAIR+CARE Pre-Audits | 5 Years| Licensing/ethics review archive.                        |
+| Ingestion Logs    | 365 Days  | Rotated per governance policy.                          |
 
-Retention workflow governed by `raw_terrain_retention.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per ingestion) | 11.9 Wh | @kfm-sustainability |
-| Carbon Output | 16.2 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Certification | 99.4% | @faircare-council |
-
-Telemetry metrics stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry reference:** `../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Raw Terrain Data (v9.6.0).
-Immutable collection of elevation, slope, and contour datasets from USGS, NASA SRTM, and Kansas DASC.
-Checksum-verified and FAIR+CARE-certified datasets supporting geospatial modeling, hydrology, and topographic research.
+Kansas Frontier Matrix (2025). Raw Terrain Data (v9.7.0).
+Unaltered elevation, slope, and contour datasets from USGS, NASA SRTM, and Kansas DASC.
+Checksum-verified and FAIR+CARE-aligned for transparent geospatial modeling and Focus Mode analytics.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added NASA SRTM and Kansas contour datasets with checksum validation. |
-| v9.5.0 | 2025-11-02 | Integrated FAIR+CARE compliance audit and provenance manifest. |
-| v9.3.2 | 2025-10-28 | Established raw terrain ingestion structure under ISO governance. |
+| Version | Date       | Author         | Summary |
+|--------:|------------|----------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-terrain` | Upgraded to v9.7.0; telemetry/schema refs aligned; governance & badges clarified. |
+| v9.6.0  | 2025-11-03 | `@kfm-terrain` | Added SRTM & contour datasets with checksum validation. |
+| v9.5.0  | 2025-11-02 | `@kfm-governance` | Integrated FAIR+CARE audit & provenance manifest. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Topography Intelligence × FAIR+CARE Ethics × Provenance Assurance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md) • [📊 FAIR+CARE Reports](../../../data/reports/fair/faircare_summary.json)
+**Kansas Frontier Matrix**  
+*Topography Intelligence × FAIR+CARE Ethics × Provenance Assurance*  
+© 2025 Kansas Frontier Matrix — Public Domain / Open Data Commons · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Raw Data Index](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
