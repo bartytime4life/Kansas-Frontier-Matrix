@@ -1,50 +1,55 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Audit & Provenance Ledger (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/reports/audit/README.md"
-version: "v9.5.1"
-last_updated: "2025-10-30"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.5.1/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.5.1/manifest.zip"
+sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-raw-audit-ledger-v9.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0 / FAIR+CARE Governance License"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
 # 🧾 Kansas Frontier Matrix — **Audit & Provenance Ledger**  
-`data/reports/audit/README.md`
+`data/raw/reports/audit/README.md`
 
-**Purpose:** Defines the audit, provenance, and integrity verification framework for the Kansas Frontier Matrix (KFM) data and model assets.  
-Tracks dataset/model lineage, transformation history, checksum integrity, governance decisions, and FAIR+CARE outcomes for every asset in the repository.
+**Purpose:**  
+Defines the **audit, provenance, and integrity verification framework** for KFM data and model assets.  
+Tracks dataset/model lineage, transformation history, checksum integrity, governance decisions, and **FAIR+CARE** outcomes for every asset in the repository.
 
-[![FAIR+CARE · Diamond⁹ Ω](https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%E2%84%AA-gold)](../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
+[![FAIR+CARE · Diamond⁹ Ω](https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%E2%84%AA-gold.svg)](../../../docs/standards/faircare-validation.md)
 [![STAC Validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/stac-validate.yml/badge.svg)](../../../.github/workflows/stac-validate.yml)
 [![DCAT Export](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/dcat-export.yml/badge.svg)](../../../.github/workflows/dcat-export.yml)
-[![Docs · MCP-DL v6.4.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.4.3-blue)](../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The `data/reports/audit/` directory is the **governance and provenance backbone** of KFM.  
+`data/raw/reports/audit/` is the **governance and provenance backbone** of KFM.  
 It maintains **immutable, machine-verifiable records** of how every dataset and model was sourced, transformed, validated, signed, and approved.
 
 Each audit resource:
 - Captures **lineage** from ingestion → transformation → validation → release.  
 - Stores **cryptographic checksums** (SHA-256) and links to the **Release Manifest** (SPDX SBOM + checksums).  
 - Logs **FAIR+CARE governance** decisions, including ethical reviews and approver signatures.  
-- Links to **STAC/DCAT metadata**, validation outputs, and knowledge graph entity IDs for traceability.
+- Links to **STAC/DCAT** metadata, validation outputs, and knowledge graph entity IDs for traceability.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```plaintext
-data/reports/audit/
+data/raw/reports/audit/
 ├── README.md                         # This file — audit & provenance reference
 │
 ├── data_provenance_ledger.json       # Master lineage & checksum ledger for datasets
@@ -53,7 +58,7 @@ data/reports/audit/
 └── archive_integrity_log.json        # Historical checksum verifications of archived assets
 ```
 
-> All files use stable, append-only semantics and are designed for long-term retention and third-party verification.
+> **All files** are append-only and retained for long-term, third-party verification.
 
 ---
 
@@ -61,23 +66,23 @@ data/reports/audit/
 
 ```mermaid
 flowchart TD
-  A["Ingest / Train / Update"] --> B["Schema and STAC–DCAT Validation"]
+  A["Ingest / Train / Update"] --> B["Schema & STAC/DCAT Validation"]
   B --> C["FAIR+CARE Audit"]
-  C --> D["Checksum and SBOM Generation"]
-  D --> E["Governance Review and Sign-off"]
-  E --> F["Ledger Update — data/reports/audit"]
-  F --> G["Release Manifest and Telemetry Sync"]
+  C --> D["Checksums & SBOM Generation"]
+  D --> E["Governance Review & Sign-off"]
+  E --> F["Ledger Update — data/raw/reports/audit"]
+  F --> G["Release Manifest & Telemetry Sync"]
   F --> H["STAC / DCAT Back-Reference"]
 ```
 
 ### Description
 1. **Event**: ETL run, model training, or dataset update completes.  
-2. **Validation**: STAC/DCAT/schema checks verify metadata, geometry, and structure.  
-3. **FAIR+CARE**: Ethical and metadata completeness audits run; results logged.  
-4. **Integrity**: SHA-256 checksums computed; SBOM updated for supply-chain transparency.  
-5. **Governance**: Reviewers sign off; decisions and notes are stored with timestamps.  
+2. **Validation**: STAC/DCAT/Schema checks verify metadata, geometry, structure.  
+3. **FAIR+CARE**: Ethics & completeness audits run; results logged.  
+4. **Integrity**: SHA-256 checksums computed; SBOM updated.  
+5. **Governance**: Reviewers sign; decisions stored with timestamps.  
 6. **Ledger**: Append-only entries added to audit ledgers.  
-7. **Release**: `manifest.zip` and `sbom.spdx.json` updated; telemetry posted for dashboards.
+7. **Release**: `manifest.zip` & `sbom.spdx.json` updated; telemetry posted for dashboards.
 
 ---
 
@@ -85,9 +90,9 @@ flowchart TD
 
 | File | Purpose | Generated By | Workflow(s) |
 |---|---|---|---|
-| `data_provenance_ledger.json` | Tracks dataset lifecycle, provenance, checksums, approvers | ETL + Governance | `.github/workflows/governance-ledger.yml` |
-| `ai_hazards_ledger.json` | Records model versions, training data hashes, hyperparams, metrics, drift | AI pipelines | `.github/workflows/faircare-validate.yml` |
-| `ui_ethics_review.json` | Accessibility & ethics review outcomes for data-driven UI | Docs/UX checks | `.github/workflows/site.yml` / `docs-validate.yml` |
+| `data_provenance_ledger.json` | Dataset lifecycle, provenance, checksums, approvers | ETL + Governance | `.github/workflows/governance-ledger.yml` |
+| `ai_hazards_ledger.json` | Model versions, training hashes, hyperparams, drift metrics | AI pipelines | `.github/workflows/faircare-validate.yml` |
+| `ui_ethics_review.json` | Accessibility & ethics review outcomes for data-driven UI | Docs/UX checks | `.github/workflows/site.yml` · `docs-validate.yml` |
 | `archive_integrity_log.json` | Periodic verification of archived release checksums | Governance sync | `.github/workflows/governance-ledger.yml` |
 
 ---
@@ -106,9 +111,9 @@ flowchart TD
   "ingest": {
     "pipeline": "src/pipelines/etl/noaa_ingest.py",
     "executor": "@kfm-etl-ops",
-    "completed_at": "2025-10-30T16:05:12Z",
-    "inputs": ["data/raw/noaa/storm_events/storm_events_2025.csv"],
-    "outputs": ["data/work/processed/noaa/storm_events_2025.geojson"]
+    "completed_at": "2025-11-06T16:05:12Z",
+    "inputs": ["data/raw/hazards/noaa_storm_events_1950_2025.csv"],
+    "outputs": ["data/work/processed/hazards/noaa_storm_events_2025.geojson"]
   },
   "validation": {
     "stac_report": "data/reports/validation/stac_validation_report.json",
@@ -120,14 +125,14 @@ flowchart TD
     "care_score": 100,
     "reviewers": ["@kfm-data-lab", "@kfm-architecture"],
     "decision": "approved",
-    "decision_at": "2025-10-30T17:20:31Z"
+    "decision_at": "2025-11-06T17:20:31Z"
   },
   "integrity": {
     "sha256": "f5a3e28d94e4b721b03c1f8d9236d6b4a88efab9deadbeef...",
-    "manifest": "releases/v9.5.1/manifest.zip",
-    "sbom": "releases/v9.5.1/sbom.spdx.json"
+    "manifest": "releases/v9.7.0/manifest.zip",
+    "sbom": "releases/v9.7.0/sbom.spdx.json"
   },
-  "notes": "No PII. STAC license field populated. Validated CRS EPSG:4326."
+  "notes": "No PII. STAC license field populated. CRS EPSG:4326 verified."
 }
 ```
 
@@ -136,23 +141,25 @@ flowchart TD
 ## 🧮 Hashing & Integrity
 
 KFM employs **SHA-256** for all dataset/model artifacts. Integrity is enforced by:
-- **Deterministic builds** and immutable raw data storage  
-- **Automated `pipeline_checksums.sha256`** per ETL job  
-- **Release-time consolidation** into `releases/v9.5.1/manifest.zip` (checksums + signatures)  
-- **Nightly rechecks** appended to `archive_integrity_log.json`
+
+- Deterministic builds and immutable raw storage  
+- Automated `pipeline_checksums.sha256` per ETL job  
+- Release-time consolidation into `releases/v9.7.0/manifest.zip` (checksums + signatures)  
+- Nightly rechecks appended to `archive_integrity_log.json`
 
 ---
 
 ## 🔗 Cross-References & Linkage
 
-Audit records include **stable references** to:
+Audit records include stable references to:
+
 - **STAC** (Items/Collections in `data/stac/**`)  
 - **DCAT** feeds (`data/meta/**.jsonld`)  
 - **Validation** (`data/reports/validation/**`)  
 - **FAIR+CARE** audits (`data/reports/fair/**`)  
-- **Knowledge Graph** (entity URIs for People/Places/Events/Models in Neo4j)  
+- **Knowledge Graph** (Neo4j entity URIs for People/Places/Events/Models)
 
-These linkages power **Focus Mode** tracebacks and enable external verification by third parties.
+These linkages power **Focus Mode** tracebacks and enable external verification.
 
 ---
 
@@ -160,28 +167,32 @@ These linkages power **Focus Mode** tracebacks and enable external verification 
 
 | Principle | How the Ledger Enforces It |
 |---|---|
-| **Findable** | Ledger entries are indexed by stable IDs and exposed via the governance API. |
-| **Accessible** | Logs are text-based JSON and stored in-repo for public inspection. |
-| **Interoperable** | JSON-LD-ready fields align with STAC/DCAT/PROV-O; easy to transform. |
-| **Reusable** | Complete, versioned context (who, what, when, why, how) per entry. |
-| **CARE Ethics** | Explicit capture of authority-to-control, consent notes, and ethics outcomes. |
+| **Findable** | Indexed by stable IDs and exposed via governance API. |
+| **Accessible** | Text-based JSON stored in-repo for public inspection. |
+| **Interoperable** | JSON-LD-ready; aligns with STAC/DCAT/PROV-O. |
+| **Reusable** | Complete, versioned context (who, what, when, why, how). |
+| **CARE Ethics** | Captures consent notes, authority-to-control, and equity reviews. |
 
 ---
 
-## 🧾 Version History
+## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v9.5.1 | 2025-10-30 | @kfm-data-lab | Updated to v9.5.1 (SBOM/manifest), added DCAT cross-refs and nightly integrity checks. |
-| v9.3.2 | 2025-10-28 | @kfm-data-lab | Detailed audit structure and FAIR+CARE integration. |
-| v9.3.1 | 2025-10-27 | @bartytime4life | Improved ledger examples and provenance schema. |
-| v9.3.0 | 2025-10-26 | @kfm-architecture | Established baseline audit & governance workflows. |
+| Version | Date       | Author           | Summary |
+|--------:|------------|------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-governance`| Upgraded to v9.7.0; aligned SBOM/manifest refs; added telemetry/schema paths; hardened badges. |
+| v9.5.1  | 2025-10-30 | `@kfm-data-lab`  | Updated to v9.5.1; added DCAT cross-refs and nightly integrity checks. |
+| v9.3.2  | 2025-10-28 | `@kfm-data-lab`  | Detailed audit structure and FAIR+CARE integration. |
+| v9.3.1  | 2025-10-27 | `@bartytime4life`| Improved ledger examples and provenance schema. |
+| v9.3.0  | 2025-10-26 | `@kfm-architecture`| Established baseline audit & governance workflows. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Integrity × Provenance × Ethical Accountability*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/)
+**Kansas Frontier Matrix**  
+*Data Integrity × Provenance × Ethical Accountability*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 / FAIR+CARE Governance License · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Reports Index](../../README.md) · [Docs Portal](../../../docs/) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
