@@ -1,15 +1,18 @@
 ---
 title: "📦 Kansas Frontier Matrix — Climate TMP Staging Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/climate/staging/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-tmp-climate-staging-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,28 +21,28 @@ license: "Internal · FAIR+CARE Certified"
 `data/work/tmp/climate/staging/README.md`
 
 **Purpose:**  
-Transitional workspace for validated, FAIR+CARE-certified climate datasets pending promotion to the main staging environment.  
-This directory provides a governance-controlled holding zone where checksum-verified and ethics-reviewed datasets await catalog registration.
+Governance-controlled transitional workspace for validated, FAIR+CARE-certified climate datasets awaiting promotion to the main staging environment.  
+Ensures checksum verification, schema compliance, and ethical traceability before formal registration in governance systems.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Staging%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal Workspace](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Staging%20Certified-gold.svg)](../../../../../docs/standards/faircare-validation.md)
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
+[![License: Internal](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey.svg)](../../../../../LICENSE)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Climate TMP Staging Workspace** ensures each dataset that passes FAIR+CARE and checksum validation meets schema, ethical, and metadata completeness requirements before formal promotion.  
-All staged datasets in this layer undergo governance registration to ensure lineage traceability within KFM’s provenance framework.
+The **Climate TMP Staging Workspace** provides a secure, ethics-audited checkpoint for verified climate datasets.  
+All files here have passed FAIR+CARE, checksum, and schema validation and are queued for integration into the primary `data/work/staging/climate/` repository.
 
 ### Core Responsibilities
-- Host FAIR+CARE-certified climate datasets prior to publication.  
-- Maintain validated artifacts for final staging synchronization.  
-- Log provenance, checksum, and ethics verification for reproducibility.  
-- Enable governance oversight and archival readiness.  
+- Maintain FAIR+CARE-certified datasets prior to publication.  
+- Record governance lineage and checksum validation.  
+- Ensure metadata completeness and schema harmonization.  
+- Enable reproducibility, transparency, and ethical compliance before promotion.  
 
 ---
 
@@ -47,12 +50,11 @@ All staged datasets in this layer undergo governance registration to ensure line
 
 ```plaintext
 data/work/tmp/climate/staging/
-├── README.md                              # This file — overview of climate TMP staging workspace
-│
-├── drought_indices_staged.csv             # FAIR+CARE-certified drought dataset (pre-staging)
-├── temperature_anomalies_staged.parquet   # Validated temperature anomaly time series
-├── climate_composite_staged.json          # Combined Kansas climate indicators (certified)
-└── metadata.json                          # Governance and checksum metadata record
+├── README.md
+├── drought_indices_staged.csv
+├── temperature_anomalies_staged.parquet
+├── climate_composite_staged.json
+└── metadata.json
 ```
 
 ---
@@ -61,18 +63,18 @@ data/work/tmp/climate/staging/
 
 ```mermaid
 flowchart TD
-    A["Validated TMP Data (data/work/tmp/climate/validation/)"] --> B["Checksum Verification and Metadata Integration"]
-    B --> C["FAIR and CARE Governance Review"]
-    C --> D["Staging Preparation (data/work/tmp/climate/staging/)"]
-    D --> E["Promotion to Official Staging Layer (data/work/staging/climate/)"]
+    A["Validated TMP Climate Data (tmp/climate/validation/)"] --> B["Checksum & Metadata Integration"]
+    B --> C["FAIR + CARE Governance Audit"]
+    C --> D["TMP Staging Certification (tmp/climate/staging/)"]
+    D --> E["Promotion → Official Climate Staging (data/work/staging/climate/)"]
 ```
 
-### Workflow Description
-1. **Validation Completion:** Datasets from the TMP validation layer verified for integrity.  
-2. **Checksum Audit:** Crosscheck hashes with manifest and provenance ledger.  
-3. **Governance Certification:** FAIR+CARE Council approves dataset promotion.  
-4. **Metadata Registration:** Record schema compliance, checksum, and FAIR+CARE results.  
-5. **Promotion:** Transfer certified climate datasets to the official staging workspace.  
+### Steps
+1. **Validation Completion** — Datasets verified for structural + checksum integrity.  
+2. **Checksum Audit** — Cross-check hashes with provenance manifests.  
+3. **Governance Review** — FAIR+CARE Council certifies data ethics + transparency.  
+4. **Metadata Integration** — Finalize schema, FAIR+CARE, and lineage records.  
+5. **Promotion** — Move certified datasets to official staging repository.  
 
 ---
 
@@ -80,7 +82,7 @@ flowchart TD
 
 ```json
 {
-  "id": "climate_tmp_staging_temperature_v9.6.0",
+  "id": "climate_tmp_staging_temperature_v9.7.0",
   "source_files": [
     "data/work/tmp/climate/validation/faircare_audit_report.json",
     "data/work/tmp/climate/transforms/temperature_reanalysis.parquet"
@@ -89,11 +91,11 @@ flowchart TD
     "temperature_anomalies_staged.parquet"
   ],
   "records_staged": 128540,
-  "schema_version": "v3.0.2",
+  "schema_version": "v3.1.1",
   "checksum_verified": true,
   "fairstatus": "certified",
   "validator": "@kfm-climate-lab",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-06T23:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -103,86 +105,83 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Datasets indexed with metadata, schema, and checksum details. | @kfm-data |
-| **Accessible** | Stored in standardized CSV, Parquet, and JSON formats. | @kfm-accessibility |
-| **Interoperable** | Metadata aligned with FAIR+CARE, ISO, and DCAT schemas. | @kfm-architecture |
-| **Reusable** | Lineage and provenance captured for reproducibility. | @kfm-design |
-| **Collective Benefit** | Promotes transparent and ethical open climate science. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council reviews and certifies staging promotion. | @kfm-governance |
-| **Responsibility** | Validators ensure QA and checksum compliance. | @kfm-security |
-| **Ethics** | FAIR+CARE ensures ethical data handling before publication. | @kfm-ethics |
+|-----------|----------------|-----------|
+| **Findable** | Indexed with schema, metadata, and checksum lineage. | `@kfm-data` |
+| **Accessible** | Available in CSV, Parquet, and JSON formats. | `@kfm-accessibility` |
+| **Interoperable** | Aligned with FAIR+CARE, ISO 19115, and DCAT 3.0. | `@kfm-architecture` |
+| **Reusable** | Provenance and lineage maintained in audit logs. | `@kfm-design` |
+| **Collective Benefit** | Promotes open, ethical climate data governance. | `@faircare-council` |
+| **Authority to Control** | Council certifies ethics and schema compliance. | `@kfm-governance` |
+| **Responsibility** | Validators record QA + checksum verification. | `@kfm-security` |
+| **Ethics** | Ensures ethical curation and culturally responsible metadata. | `@kfm-ethics` |
 
-FAIR+CARE and validation records documented in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
+**Audit refs:**  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## ⚙️ QA & Validation Artifacts
+## ⚙️ Validation & QA Artifacts
 
 | File | Description | Format |
-|------|--------------|--------|
-| `metadata.json` | Staging session metadata with checksum lineage. | JSON |
-| `faircare_audit_report.json` | Final ethical compliance report. | JSON |
-| `schema_validation_summary.json` | Schema conformity summary for staged datasets. | JSON |
-| `checksums.json` | Dataset integrity verification report. | JSON |
+|------|-------------|--------|
+| `metadata.json` | Staging metadata record w/ checksum lineage. | JSON |
+| `faircare_audit_report.json` | Final ethics + compliance audit report. | JSON |
+| `schema_validation_summary.json` | Schema conformity + structural integrity report. | JSON |
+| `checksums.json` | Verified dataset checksum registry. | JSON |
 
-All artifacts generated via `climate_staging_sync.yml`.
+**Automation:** `climate_staging_sync.yml`
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ♻️ Retention & Lifecycle Policy
 
-| File Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| Staged Data | 7 Days | Promoted after governance approval. |
-| Validation Logs | 30 Days | Retained for audit reproducibility. |
-| Metadata | 365 Days | Maintained for checksum and lineage traceability. |
-| Governance Records | Permanent | Preserved in provenance ledger. |
+| File Type | Retention | Policy |
+|------------|----------:|--------|
+| Staged Datasets | 7 Days | Promoted post-governance approval. |
+| Validation Reports | 30 Days | Archived for reproducibility. |
+| Metadata | 365 Days | Stored for checksum lineage continuity. |
+| Governance Logs | Permanent | Kept under provenance ledger. |
 
-Retention governed by `climate_staging_cleanup.yml`.
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per staging cycle) | 7.9 Wh | @kfm-sustainability |
-| Carbon Output | 8.6 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Ethics Compliance | 100% | @faircare-council |
-
-Telemetry results tracked in:  
-`releases/v9.6.0/focus-telemetry.json`
+|--------|------:|-------------|
+| Energy Use (per staging cycle) | 7.9 Wh | `@kfm-sustainability` |
+| Carbon Output | 8.6 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Climate TMP Staging Workspace (v9.6.0).
-Transitional FAIR+CARE-certified directory for validated climate datasets awaiting promotion to official staging.
-Ensures schema compliance, checksum integrity, and ethical reproducibility under MCP-DL v6.3 governance.
+Kansas Frontier Matrix (2025). Climate TMP Staging Workspace (v9.7.0).
+Governed pre-staging workspace for FAIR+CARE-certified climate datasets.  
+Ensures schema alignment, checksum integrity, and ethical reproducibility under MCP-DL v6.3.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Introduced checksum lineage tracking and FAIR+CARE governance synchronization. |
-| v9.5.0 | 2025-11-02 | Added automated staging promotion workflow with validation hooks. |
-| v9.3.2 | 2025-10-28 | Established TMP staging workspace for FAIR+CARE-certified climate data. |
+| Version | Date       | Author           | Summary |
+|--------:|------------|------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-climate`   | Upgraded telemetry schema, retention governance, and automation alignment. |
+| v9.6.0  | 2025-11-03 | `@kfm-climate`   | Introduced checksum lineage and governance synchronization. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Climate Validation × FAIR+CARE Governance × Provenance Traceability*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Climate Validation × FAIR+CARE Governance × Provenance Traceability*  
+© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Climate TMP](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
