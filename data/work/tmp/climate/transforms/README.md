@@ -1,16 +1,16 @@
 ---
 title: "🔄 Kansas Frontier Matrix — Climate Transforms (Reprojection & CF Harmonization Layer · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/climate/transforms/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v9.6.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/work-climate-transforms-v14.json"
-json_export: "../../../../../releases/v9.6.0/work-climate-transforms.meta.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-climate-transforms-v15.json"
+json_export: "../../../../../releases/v9.7.0/work-climate-transforms.meta.json"
 validation_reports:
   - "../../../../../reports/self-validation/work-climate-transforms-validation.json"
   - "../../../../../reports/fair/climate_transforms_summary.json"
@@ -26,29 +26,29 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/climate/transforms/README.md`
 
 **Purpose:**  
-To document, validate, and govern all reprojection, resampling, CF (Climate and Forecast) compliance, and harmonization events applied during KFM’s climate data ETL workflows.  
-This layer ensures transparency, reproducibility, and FAIR+CARE certification of every transformation performed across raw and intermediate climate datasets.
+Document, validate, and govern all **reprojection, resampling, CF compliance, and harmonization** events applied during KFM’s climate ETL workflows.  
+This layer guarantees transparency, reproducibility, and **FAIR+CARE certification** for every transformation performed across raw and intermediate climate datasets.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Transform%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
-[![CF Conventions](https://img.shields.io/badge/CF-Conventions%20Compliant-green)]()
-[![AI Explainability](https://img.shields.io/badge/AI-Explainability%20Audited-blueviolet)]()
-[![Governance Ledger](https://img.shields.io/badge/Governance-Blockchain%20Linked-gold)]()
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Transform%20Certified-gold.svg)](../../../../../docs/standards/faircare-validation.md)
+[![CF Conventions](https://img.shields.io/badge/CF-Conventions%20Compliant-2e7d32.svg)]()
+[![AI Explainability](https://img.shields.io/badge/AI-Explainability%20Audited-7e57c2.svg)]()
+[![Governance Ledger](https://img.shields.io/badge/Governance-Blockchain%20Linked-gold.svg)]()
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Climate Transform Layer** acts as the harmonization and QA checkpoint for all reprojected and standardized climate datasets before FAIR+CARE validation.  
-It enforces CF Convention compliance, performs unit standardization, and validates AI-assisted resampling or interpolation for accuracy and ethics governance.
+The **Climate Transform Layer** is the harmonization and QA checkpoint for all reprojected, standardized climate datasets before FAIR+CARE validation.  
+It enforces **CF Conventions**, applies unit standardization, and validates AI-assisted resampling/interpolation for accuracy and ethical governance.
 
 ### Core Responsibilities
 - Apply reprojection, normalization, and CF-compliant harmonization.  
-- Validate data consistency and variable metadata per ISO/CF standards.  
-- Log AI-audited interpolation and bias correction steps.  
-- Register all transformations and metadata lineage in governance ledgers.  
+- Validate variable/attribute consistency per ISO/CF metadata.  
+- Log AI-audited interpolation and bias-correction steps.  
+- Register transformation lineage and checksums in governance ledgers.  
 
 ---
 
@@ -56,15 +56,14 @@ It enforces CF Convention compliance, performs unit standardization, and validat
 
 ```plaintext
 data/work/tmp/climate/transforms/
-├── README.md                             # This file — documentation for the climate transform layer
-│
-├── cf_fix_logs.json                      # CF metadata correction and variable standardization logs
-├── reprojection_trace.log                # EPSG reprojection and coordinate transformation details
-├── harmonization_summary.json            # Aggregated climate transformation summary
-├── interpolation_audit.json              # AI-assisted interpolation and resampling validation
-├── checksum_verification.json            # SHA-256 checksums for transformation verification
-├── transform_manifest.json               # Master record of transformation operations
-└── metadata.json                         # Transformation lineage and governance traceability
+├── README.md
+├── cf_fix_logs.json
+├── reprojection_trace.log
+├── harmonization_summary.json
+├── interpolation_audit.json
+├── checksum_verification.json
+├── transform_manifest.json
+└── metadata.json
 ```
 
 ---
@@ -73,20 +72,20 @@ data/work/tmp/climate/transforms/
 
 ```mermaid
 flowchart TD
-    A["Raw Climate Data (NOAA / NIDIS / USDM)"] --> B["Reprojection (EPSG:4326 / CF Convention Alignment)"]
-    B --> C["Variable Harmonization (Units / Attributes / FAIR Metadata)"]
-    C --> D["AI Validation and Explainability Audit"]
-    D --> E["Checksum Verification and FAIR+CARE Ethics Review"]
+    A["Raw Climate (NOAA · NIDIS · USDM)"] --> B["Reprojection (EPSG:4326 · CF Alignment)"]
+    B --> C["Variable Harmonization (Units · Attributes · FAIR Metadata)"]
+    C --> D["AI Validation + Explainability Audit"]
+    D --> E["Checksum Verification + FAIR + CARE Ethics Review"]
     E --> F["Provenance Logging → transform_manifest.json"]
-    F --> G["Governance Ledger Synchronization (Immutable Ledger Entry)"]
+    F --> G["Governance Ledger Sync (Immutable Entry)"]
 ```
 
 ### Description
-1. **Reprojection:** Convert datasets to EPSG:4326 (WGS84) and ensure CF metadata consistency.  
-2. **Harmonization:** Apply standardized CF naming conventions and metadata attributes.  
-3. **AI Validation:** Evaluate bias correction and interpolation using explainable AI models.  
-4. **Checksum Verification:** Validate transformation output integrity.  
-5. **Governance Registration:** Record transformation events in the provenance ledger.  
+1. **Reproject** to **EPSG:4326 (WGS84)** and verify CF metadata consistency.  
+2. **Harmonize** variables/units with CF names and FAIR metadata attributes.  
+3. **Validate with AI** (explainable audits) for interpolation/bias-correction steps.  
+4. **Verify Checksums** on outputs; confirm ethics compliance.  
+5. **Register** events to the provenance ledger.
 
 ---
 
@@ -94,17 +93,17 @@ flowchart TD
 
 ```json
 {
-  "transform_id": "climate_transform_2025_11_03_001",
+  "transform_id": "climate_transform_2025_11_06_001",
   "input_file": "noaa_daymet_precip_2025_raw.tif",
   "output_file": "climate_daymet_precip_cf_2025.tif",
   "process_type": "Reprojection and CF Harmonization",
   "crs_source": "EPSG:5070",
   "crs_target": "EPSG:4326",
   "ai_audit_score": 0.992,
-  "checksum": "sha256:7e3a9d4b2f5a6c9b1a8f4e2c7b5a3d8e9c1a7f2b3a5c9d4e7f8b2c1d3a4f9b6e",
-  "status": "Validated",
-  "timestamp": "2025-11-03T23:59:00Z",
-  "ledger_ref": "reports/audit/ai_climate_transform_ledger.json#transform_2025_11_03_001"
+  "checksum_sha256": "sha256:7e3a9d4b2f5a6c9b1a8f4e2c7b5a3d8e9c1a7f2b3a5c9d4e7f8b2c1d3a4f9b6e",
+  "status": "validated",
+  "timestamp": "2025-11-06T23:59:00Z",
+  "ledger_ref": "reports/audit/ai_climate_transform_ledger.json#transform_2025_11_06_001"
 }
 ```
 
@@ -114,16 +113,14 @@ flowchart TD
 
 | Standard | Description | Validation | Oversight |
 |:--|:--|:--|:--|
-| **FAIR+CARE** | Ethical governance and open data stewardship. | ✅ | @faircare-council |
-| **CF Conventions 1.10** | Variable, unit, and metadata harmonization. | ✅ | @kfm-climate |
-| **ISO 19115** | Spatial metadata lineage and schema documentation. | ✅ | @kfm-data |
-| **STAC 1.0 / DCAT 3.0** | Catalog integration and discoverability compliance. | ✅ | @kfm-architecture |
-| **Blockchain Provenance** | Immutable registration of transformation lineage. | ✅ | @kfm-governance |
+| **FAIR+CARE** | Ethical governance & open stewardship | ✅ | `@faircare-council` |
+| **CF Conventions 1.10** | Variable, unit, and metadata harmonization | ✅ | `@kfm-climate` |
+| **ISO 19115** | Spatial metadata lineage & documentation | ✅ | `@kfm-data` |
+| **STAC 1.0 / DCAT 3.0** | Catalog integration & discoverability | ✅ | `@kfm-architecture` |
+| **Blockchain Provenance** | Immutable registration of transform lineage | ✅ | `@kfm-governance` |
 
-Audit reports referenced in:  
-`reports/audit/ai_climate_transform_ledger.json`  
-and  
-`reports/fair/climate_transforms_summary.json`
+**Audit reports:**  
+`reports/audit/ai_climate_transform_ledger.json` · `reports/fair/climate_transforms_summary.json`
 
 ---
 
@@ -144,60 +141,58 @@ and
 }
 ```
 
-> AI interpretability audits ensure fairness, non-bias, and reproducibility of all harmonized data transformations.
-
 ---
 
-## ⚙️ Sustainability & ISO Metrics
+## ♻️ Sustainability & ISO Metrics
 
 | Metric | Standard | Value | Verified By |
-|:--|:--|:--|:--|
-| **Energy Use (Wh/run)** | ISO 50001 | 7.9 | @kfm-sustainability |
-| **Carbon Output (gCO₂e/run)** | ISO 14064 | 9.3 | @kfm-security |
-| **Renewable Power Offset** | RE100 | 100% | @kfm-infrastructure |
-| **FAIR+CARE Ethics Compliance** | MCP-DL v6.3 | 100% | @faircare-council |
+|:--|:--|:--:|:--|
+| Energy Use (Wh/run) | ISO 50001 | 7.9 | `@kfm-sustainability` |
+| Carbon Output (gCO₂e/run) | ISO 14064 | 9.3 | `@kfm-security` |
+| Renewable Power Offset | RE100 | 100% | `@kfm-infrastructure` |
+| FAIR+CARE Ethics Compliance | MCP-DL v6.3 | 100% | `@faircare-council` |
 
-Telemetry captured in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
 ## ⚖️ Provenance Integration
 
 | Record | Description |
-|---------|-------------|
-| `transform_manifest.json` | Central record for all reprojection and harmonization events. |
-| `checksum_verification.json` | Validation of hash integrity for transformed files. |
-| `ai_climate_transform_ledger.json` | AI explainability and ethics compliance ledger. |
-| `metadata.json` | Context for governance lineage and validation cycles. |
+|--------|-------------|
+| `transform_manifest.json` | Canonical log of reprojection & harmonization events. |
+| `checksum_verification.json` | Integrity validation for transformed outputs. |
+| `ai_climate_transform_ledger.json` | Explainability & ethics compliance ledger. |
+| `metadata.json` | Contextual lineage for governance review. |
 
-All transformation and governance events are automatically logged via `climate_transform_sync.yml`.
+All events are logged via **`climate_transform_sync.yml`**.
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Climate Transforms (v9.6.0).
-FAIR+CARE-certified transformation workspace for reprojection, CF harmonization, and AI-audited interpolation of climate datasets.
-Ensures ethical reproducibility, checksum verification, and immutable provenance logging under MCP-DL v6.3 governance standards.
+Kansas Frontier Matrix (2025). Climate Transforms (v9.7.0).
+FAIR+CARE-certified transformation workspace for reprojection, CF harmonization, and AI-audited interpolation of climate datasets—ensuring ethical reproducibility, checksum integrity, and immutable provenance.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added SHAP-based AI validation and checksum lineage synchronization. |
-| v9.5.0 | 2025-11-02 | Enhanced CF compliance traceability and FAIR+CARE registry integration. |
-| v9.3.2 | 2025-10-28 | Established reprojection and harmonization pipeline for climate TMP operations. |
+| Version | Date       | Author            | Summary |
+|--------:|------------|-------------------|---------|
+| v9.7.0  | 2025-11-06 | `@kfm-climate`    | Upgraded telemetry schema; added governance clarifications and CF alignment updates. |
+| v9.6.0  | 2025-11-03 | `@kfm-climate`    | Added SHAP-based AI validation + checksum lineage sync. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Climate Transformation × FAIR+CARE Ethics × Provenance Assurance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Climate Transformation × FAIR+CARE Ethics × Provenance Assurance*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Climate TMP](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
