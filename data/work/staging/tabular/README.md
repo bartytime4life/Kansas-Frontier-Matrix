@@ -17,7 +17,7 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 📊 Kansas Frontier Matrix — **Tabular Staging Workspace**
+# 📊 Kansas Frontier Matrix — **Tabular Staging Workspace**  
 `data/work/staging/tabular/README.md`
 
 **Purpose:**  
