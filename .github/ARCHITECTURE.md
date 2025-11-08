@@ -1,23 +1,27 @@
 ---
-title: "⚙️ Kansas Frontier Matrix — GitHub Infrastructure & CI/CD Architecture"
+title: "⚙️ Kansas Frontier Matrix — GitHub Infrastructure & CI/CD Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/ARCHITECTURE.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-08"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../releases/v9.7.0/focus-telemetry.json"
+sbom_ref: "../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/github-architecture-v1.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# ⚙️ **Kansas Frontier Matrix — GitHub Infrastructure & CI/CD Architecture**
+# ⚙️ **Kansas Frontier Matrix — GitHub Infrastructure & CI/CD Architecture**  
 `.github/ARCHITECTURE.md`
 
-**Purpose:** Describe the repository-level automation and governance systems — validation, security, build/deploy, telemetry — that guarantee **MCP v6.3** reproducibility and **FAIR+CARE** data ethics for KFM.
+**Purpose:**  
+Define the **automated governance, validation, and deployment pipelines** that power the Kansas Frontier Matrix (KFM) under **FAIR+CARE ethics**, **MCP-DL v6.3 reproducibility**, and **ISO 50001** sustainability.  
+This infrastructure ensures every commit, dataset, and model meets traceable FAIR+CARE and security standards with automated auditing.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
@@ -30,134 +34,154 @@ governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 
 ## 📘 Overview
 
-This document details the **CI/CD architecture** that validates datasets and docs, scans security, deploys the site, and exports telemetry.  
-All runs are **artifacted**, **checksummed**, and **ledgered** for long-term auditability, with SBOM & manifest references per release.
+The **GitHub CI/CD Infrastructure** governs validation, build, deployment, and telemetry collection for KFM.  
+Each workflow executes inside a secure GitHub Actions environment and publishes:
+- **Auditable artifacts** (STAC, DCAT, FAIR+CARE reports)
+- **Telemetry dashboards**
+- **Immutable SBOM and provenance manifests**
+
+All workflows integrate with the **FAIR+CARE Council Governance Ledger** for complete transparency.
 
 ---
 
-## 🗂️ Directory Layout (CI/CD & Governance)
+## 🗂️ Directory Layout
 
-```
+```plaintext
 .github/
-├── ARCHITECTURE.md                 # This file
-├── README.md                       # High-level automation overview
+├── ARCHITECTURE.md                 # CI/CD architecture documentation (this file)
+├── README.md                       # Automation overview
 │
-├── workflows/
-│   ├── stac-validate.yml           # STAC validation (Items/Collections)
-│   ├── faircare-validate.yml       # FAIR+CARE + contracts validation
-│   ├── docs-lint.yml               # Markdown/YAML/JSON structure checks
-│   ├── codeql.yml                  # Static code analysis
-│   ├── trivy.yml                   # Container & dependency CVE scanning
-│   ├── build-and-deploy.yml        # Frontend build + deploy
-│   ├── stac-dcat-bridge.yml        # STAC ↔ DCAT metadata sync
-│   └── telemetry-export.yml        # Telemetry aggregation
+├── workflows/                      # Active GitHub Actions workflows
+│   ├── stac-validate.yml           # STAC 1.0.0 validation (collections + items)
+│   ├── faircare-validate.yml       # FAIR+CARE and data contract enforcement
+│   ├── docs-lint.yml               # Markdown + YAML + JSON validation
+│   ├── codeql.yml                  # Static code analysis for vulnerabilities
+│   ├── trivy.yml                   # Container dependency and CVE scanning
+│   ├── build-and-deploy.yml        # Frontend build + site deployment
+│   ├── stac-dcat-bridge.yml        # STAC ↔ DCAT schema synchronization
+│   ├── telemetry-export.yml        # Aggregates metrics into telemetry dashboards
+│   └── ai-model-audit.yml          # FAIR+CARE validation for AI models
 │
-├── ISSUE_TEMPLATE/
-│   ├── data_submission.yml         # Dataset/STAC submission
-│   ├── feature_request.yaml        # Feature proposals
-│   ├── bug_report.yaml             # Defect reports
-│   └── governance_form.yml         # FAIR+CARE review form
+├── ISSUE_TEMPLATE/                 # Standardized GitHub Issue Forms
+│   ├── data_submission.yml         # STAC/DCAT dataset submission
+│   ├── feature_request.yml         # Feature proposals
+│   ├── bug_report.yml              # Defect reports
+│   └── governance_form.yml         # FAIR+CARE Council review template
 │
-├── pull_request_template.md        # PR validation checklist
-├── dependabot.yml                  # Dependency updates
-├── SECURITY.md                     # Vulnerability disclosure
-└── FUNDING.yml                     # (Optional) sponsorship
+├── pull_request_template.md        # PR validation and FAIR+CARE checklist
+├── dependabot.yml                  # Dependency hygiene + auto updates
+├── SECURITY.md                     # Vulnerability disclosure + patch policy
+└── FUNDING.yml                     # Optional funding / sponsorship declaration
 ```
 
 ---
 
-## 🧩 CI/CD Workflows — Responsibilities & Triggers
+## ⚙️ CI/CD Workflow Responsibilities
 
-| Workflow | Enforces | Typical Trigger | Artifacts |
-|----------|----------|------------------|-----------|
-| `stac-validate.yml` | STAC 1.0.0 spec, link integrity | PR/Push on `data/stac/**` | `reports/self-validation/stac/_summary.json` |
-| `faircare-validate.yml` | FAIR+CARE, data contracts | PR/Push on `data/**` | `reports/fair/faircare_summary.json` |
-| `docs-lint.yml` | Markdown/YAML/JSON conventions | PR/Push on `docs/**` | `reports/self-validation/docs/lint_summary.json` |
-| `codeql.yml` | Static code security | Scheduled + PR | SARIF under `reports/security/codeql/` |
-| `trivy.yml` | Container/dependency CVEs | PR/Push on Docker/lockfiles | `reports/security/trivy/*.json` |
-| `build-and-deploy.yml` | Build & deploy pages | After validations | `docs/reports/telemetry/build_metrics.json` |
-| `stac-dcat-bridge.yml` | STAC↔DCAT export | Scheduled + release | `releases/*/metadata-bridge.meta.json` |
-| `telemetry-export.yml` | Metrics aggregation | Every build | `releases/v9.7.0/focus-telemetry.json` |
+| Workflow | Description | Trigger | Output Artifact |
+|-----------|--------------|----------|-----------------|
+| `stac-validate.yml` | Validates STAC 1.0 metadata and structure | PR / Push | `reports/self-validation/stac/summary.json` |
+| `faircare-validate.yml` | FAIR+CARE ethics + data contract validation | PR / Push | `reports/fair/faircare_summary.json` |
+| `docs-lint.yml` | Lints documentation and YAML metadata | PR / Push | `reports/self-validation/docs/lint_summary.json` |
+| `codeql.yml` | Static security analysis | Scheduled / PR | `reports/security/codeql/*.sarif` |
+| `trivy.yml` | Dependency vulnerability scanning | PR / Push | `reports/security/trivy/*.json` |
+| `build-and-deploy.yml` | Builds & deploys frontend / docs | After validations | `reports/build/build_metrics.json` |
+| `stac-dcat-bridge.yml` | STAC ↔ DCAT synchronization | Scheduled / Release | `releases/*/metadata-bridge.meta.json` |
+| `telemetry-export.yml` | Aggregates system telemetry | Post-build | `releases/v10.0.0/focus-telemetry.json` |
+| `ai-model-audit.yml` | Audits AI models for bias/fairness drift | Scheduled / Model Commit | `reports/audit/ai_model_faircare.json` |
 
 ---
 
-## 🧮 Automation Flow
+## 🧮 CI/CD Automation Flow
 
 ```mermaid
 flowchart TD
-A["Commit / PR"] --> B["Validation"]
-B --> C["Security"]
-C --> D["Build & Deploy"]
+A["Commit / PR / Schedule"] --> B["Validation"]
+B --> C["Security Scans"]
+C --> D["Build + Deploy"]
 D --> E["Telemetry Export"]
+E --> F["Governance Ledger Sync"]
 
 subgraph Validation
-B1["STAC"]
-B2["FAIR+CARE"]
+B1["STAC Validation"]
+B2["FAIR+CARE Check"]
 B3["Docs Lint"]
 end
 
 subgraph Security
-C1["CodeQL"]
-C2["Trivy"]
+C1["CodeQL Scan"]
+C2["Trivy CVE Audit"]
 end
 
 subgraph Build
 D1["Frontend Build"]
-D2["Static Deploy"]
+D2["Static Site Deploy"]
 end
 ```
 
 ---
 
-## 🔒 Security Posture
+## 🔒 Security & Compliance
 
-| Control | Mechanism | Policy |
-|--------|-----------|--------|
-| Static Analysis | CodeQL | Scheduled + push |
-| CVE Scanning | Trivy | Fail on CRITICAL |
-| Dependency Hygiene | Dependabot | Weekly PRs |
-| Branch Protection | GH Rules | 2 reviews + green CI |
-| Secrets | GH Encrypted Secrets | No plaintext; rotate |
+| Control | Mechanism | Frequency | Policy |
+|----------|------------|------------|---------|
+| Static Code Analysis | CodeQL | On push + weekly | Fail on CRITICAL issues |
+| CVE Scan | Trivy | On Docker + lockfiles | Block CRITICAL vulnerabilities |
+| Dependencies | Dependabot | Weekly | Auto-updates w/ review |
+| Secrets | GitHub Secrets | Continuous | Encrypted + rotated |
+| Branch Protection | Required Checks | Always | 2 reviews + green CI |
+| License Audit | SPDX Export | Each Release | SBOM validation |
 
-**Disclosure:** See `.github/SECURITY.md`.
-
----
-
-## ⚖️ Governance & Ethics Integration
-
-All automation integrates **FAIR+CARE** and **MCP** standards:
-
-| Layer | Standard | Enforcement |
-|------|----------|-------------|
-| FAIR | F/A/I/R metadata rules | `faircare-validate.yml` |
-| CARE | Council review workflow | `governance_form.yml` |
-| MCP | Docs-as-code, telemetry, provenance | Docs lint + telemetry export |
-| SLSA | Supply chain attestation | SBOM + manifest per release |
-
-**Ledgers:**  
-`docs/reports/audit/{governance-ledger.json, github-workflows-ledger.json, ai_models.json, release-manifest-log.json}`
+**Disclosure Policy:**  
+All vulnerabilities are reported and tracked in `.github/SECURITY.md`.
 
 ---
 
-## 📊 Telemetry & Reporting
+## ⚖️ FAIR+CARE + Governance Integration
 
-**Single-file** telemetry snapshot: `releases/v9.7.0/focus-telemetry.json` consolidates:
-- Success/failure rates and durations (per workflow)  
-- FAIR+CARE compliance metrics  
-- STAC/DCAT validation counts  
-- SBOM/manifest refs  
-- Author/commit metadata
+| Layer | Enforcement | Standard |
+|--------|--------------|----------|
+| FAIR | STAC/DCAT metadata validation | `stac-validate.yml` |
+| CARE | Cultural data oversight + review forms | `governance_form.yml` |
+| MCP-DL | Documentation and telemetry integration | `docs-lint.yml`, `telemetry-export.yml` |
+| ISO 50001 | Energy + sustainability tracking | `telemetry-export.yml` |
+| SLSA | Provenance + SBOM verification | `sbom.spdx.json`, `manifest.zip` |
 
-Dashboard feeds: `docs/reports/telemetry/*.json`.
+**Ledgers & Reports:**  
+- `docs/reports/audit/github_workflows_ledger.json`  
+- `docs/reports/audit/governance_ledger.json`  
+- `docs/reports/audit/ai_model_audit.json`  
 
 ---
 
-## 🗺️ Cross-References
+## 📊 Telemetry Reporting
 
-- [Automation Overview](README.md)  
-- [System Architecture](../src/ARCHITECTURE.md)  
-- [Contributing Guide](../CONTRIBUTING.md)  
-- [FAIR+CARE](../docs/standards/faircare.md) · [Markdown Rules](../docs/standards/markdown_rules.md)
+KFM aggregates CI/CD performance and sustainability metrics into:
+- **Telemetry snapshot:** `releases/v10.0.0/focus-telemetry.json`
+- **Dashboard analytics:** `docs/reports/telemetry/*.json`
+
+### Metrics Captured
+| Metric | Description |
+|---------|--------------|
+| `workflow_duration_sec` | Time for each CI/CD workflow run |
+| `build_energy_wh` | Energy used during site build |
+| `carbon_gco2e` | CO₂ output (ISO 50001) |
+| `faircare_score` | FAIR+CARE compliance score |
+| `security_pass_rate` | % of scans passing without CRITICAL CVEs |
+
+Telemetry visualizations available in Grafana dashboards under `/docs/reports/telemetry/`.
+
+---
+
+## 🧠 Governance Workflow
+
+Each CI/CD run:
+1. Signs its SBOM and manifest.  
+2. Uploads checksum to Governance Ledger.  
+3. Triggers FAIR+CARE audit workflow.  
+4. Records telemetry + ethics certification.  
+
+All logs are immutable and linked to versioned commits for provenance validation.
 
 ---
 
@@ -165,7 +189,8 @@ Dashboard feeds: `docs/reports/telemetry/*.json`.
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Alignment pass; added workflow matrix, security posture, and telemetry mapping. |
+| v10.0.0 | 2025-11-08 | A. Barta | Upgraded automation flow, added AI audit pipeline, ISO 50001 telemetry, and SBOM provenance alignment. |
+| v9.7.0 | 2025-11-05 | A. Barta | Added security posture, governance mapping, and telemetry artifacts. |
 | v9.5.0 | 2025-10-20 | A. Barta | Integrated STAC↔DCAT bridge and FAIR+CARE automation. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial CI/CD architecture documentation. |
 
