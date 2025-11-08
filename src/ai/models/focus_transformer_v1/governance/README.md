@@ -20,13 +20,13 @@ mcp_version: "MCP-DL v6.3"
 `src/ai/models/focus_transformer_v1/governance/README.md`
 
 **Purpose:**  
-Outline the **ethical oversight, compliance validation, and FAIR+CARE audit framework** for the **Focus Transformer v1** model in the **Kansas Frontier Matrix (KFM)**.  
-This governance layer ensures that every transformer operation and output adheres to **FAIR+CARE**, **ISO 19115**, and **ISO 50001** principles under **MCP-DL v6.3** reproducibility standards.
+Define the **FAIR+CARE-aligned ethical governance, audit, and compliance structure** for the **Focus Transformer v1** model within the **Kansas Frontier Matrix (KFM)**.  
+This governance module enforces transparency, sustainability, and reproducibility per **ISO 19115**, **ISO 50001**, and **MCP-DL v6.3** standards, ensuring Focus Mode AI operates with integrity and accountability.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../../../../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)](../../../../../../docs/standards/faircare.md)
-[![Status: Audited](https://img.shields.io/badge/Status-Operational-brightgreen)](#)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governed-orange)](../../../../../../docs/standards/faircare.md)
+[![Status: Certified](https://img.shields.io/badge/Status-Certified-brightgreen)](#)
 
 </div>
 
@@ -34,14 +34,15 @@ This governance layer ensures that every transformer operation and output adhere
 
 ## 📘 Overview
 
-The **Focus Transformer v1 Governance Framework** defines KFM’s ethical and operational safeguards for large-scale, transformer-based narrative generation.  
-It governs cultural data use, sustainability tracking, and transparency for every Focus Mode AI interaction.
+The **Focus Transformer v1 Governance Framework** establishes the ethical backbone of KFM’s transformer-based contextual reasoning system.  
+It governs data use, explainability reviews, energy accountability, and governance ledger registration across all transformer operations.
 
-Governance functions include:
-- **Ethical data governance** and CARE-tag enforcement for restricted content.  
-- **Sustainability auditing** using ISO 50001 energy and emission metrics.  
-- **FAIR+CARE Council review** and certification of all model releases.  
-- **Provenance and ledger registration** for traceable decision-making.  
+Governance objectives:
+- ⚖️ Enforce **FAIR+CARE Council** ethical oversight.  
+- 🔍 Validate provenance and sustainability telemetry.  
+- 🧩 Certify cultural and environmental data under CARE tags.  
+- ♻️ Ensure low-carbon, energy-efficient AI workflows.  
+- 🧾 Synchronize results to FAIR+CARE and ISO-ledger frameworks.
 
 ---
 
@@ -49,14 +50,15 @@ Governance functions include:
 
 ```plaintext
 src/ai/models/focus_transformer_v1/governance/
-├── README.md                             # This file — governance framework documentation
+├── README.md                             # This file — governance documentation
 │
-├── governance_validation.json            # FAIR+CARE and ethics audit certification record
-├── care_masking_report.json              # Cultural and sensitive data redaction documentation
-├── council_audit_summary.json            # Council-level review and oversight records
-├── provenance_trace.json                 # PROV-O lineage record for datasets and outputs
-├── ledger_sync_log.json                  # Governance Ledger synchronization events
-└── sustainability_report.json            # Energy and carbon footprint audit report
+├── model_card.md                         # FAIR+CARE-certified model card and performance record
+├── governance_validation.json             # FAIR+CARE and sustainability audit results
+├── care_masking_report.json               # Sensitive data redaction validation
+├── council_audit_summary.json             # Summary of FAIR+CARE Council review
+├── provenance_trace.json                  # PROV-O compliant data lineage chain
+├── ledger_sync_log.json                   # Governance ledger synchronization history
+└── sustainability_report.json             # ISO 50001 sustainability and energy metrics
 ```
 
 ---
@@ -65,53 +67,54 @@ src/ai/models/focus_transformer_v1/governance/
 
 ```mermaid
 flowchart TD
-  A["Focus Transformer Outputs"] --> B["Ethics Review (CARE Masking)"]
-  B --> C["FAIR+CARE Validation (Council Audit)"]
-  C --> D["Provenance & Sustainability Check"]
-  D --> E["Ledger Sync (Governance + Telemetry)"]
-  E --> F["Certification & Release Approval"]
+  A["Focus Transformer Model Output"] --> B["CARE Tag & Redaction Check"]
+  B --> C["FAIR+CARE Validation · Ethics Audit"]
+  C --> D["Provenance Trace & Sustainability Assessment"]
+  D --> E["Governance Ledger + Telemetry Synchronization"]
+  E --> F["Council Certification · Release Approval"]
 ```
 
-### Key Stages
-1. **Ethics Review:** Identifies and redacts restricted cultural content.  
-2. **FAIR+CARE Validation:** Conducts formal Council audit and ethics compliance review.  
-3. **Provenance Verification:** Confirms data lineage and metadata accuracy under PROV-O.  
-4. **Sustainability Audit:** Logs energy, carbon, and bias metrics for transparency.  
-5. **Ledger Registration:** Records certification results into Governance and Telemetry Ledgers.  
+### Workflow Summary
+1. **CARE Validation:** Ensures restricted data masking and redaction before publication.  
+2. **Ethics Review:** Reviews AI-generated narratives for cultural sensitivity.  
+3. **Provenance Trace:** Links data lineage from raw input → transformer → output.  
+4. **Sustainability Audit:** Records energy and carbon metrics for ISO 50001 compliance.  
+5. **Ledger Sync:** Logs certified results to FAIR+CARE and telemetry governance systems.
 
 ---
 
-## 🧩 Example: Governance Validation Record (`governance_validation.json`)
+## 🧩 Example Governance Record (`governance_validation.json`)
 
 ```json
 {
-  "governance_id": "gov_focus_transformer_v1_2025_11_08_001",
+  "governance_id": "gov_focus_transformer_v1_2025_11_08",
   "workflow": "focus_transformer_v1_audit_v9.9.0",
-  "datasets_reviewed": 4,
+  "datasets_reviewed": 5,
+  "models_validated": 1,
   "faircare_score": 99.4,
   "bias_index": 0.02,
   "energy_wh": 3750.4,
   "carbon_gco2e": 1550.2,
-  "ethics_status": "approved",
+  "ethics_status": "certified",
   "reviewed_by": "@faircare-council",
   "auditor": "@kfm-governance",
-  "timestamp": "2025-11-08T21:02:00Z",
+  "timestamp": "2025-11-08T21:04:00Z",
   "telemetry_ref": "../../../../../../releases/v9.9.0/focus-telemetry.json"
 }
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Compliance Matrix
+## ⚖️ FAIR+CARE & ISO Compliance Matrix
 
 | Principle | Implementation | Validation Reference |
 |------------|----------------|-----------------------|
-| **Findable** | Governance artifacts indexed in SBOM manifest and Ledger. | `manifest_ref` |
-| **Accessible** | Public ethics reports; restricted cultural datasets under CARE. | FAIR+CARE Council |
-| **Interoperable** | Metadata aligned with CIDOC CRM + PROV-O ontologies. | `provenance_trace.json` |
-| **Reusable** | Open governance structure and telemetry schema. | SPDX Manifest |
-| **CARE – Responsibility** | Quarterly reviews on bias, energy, and ethics metrics. | `faircare-validate.yml` |
-| **CARE – Ethics** | CARE masking report verifies redacted cultural knowledge. | `care_masking_report.json` |
+| **Findable** | Governance and telemetry entries UUID-registered in SBOM manifest. | `manifest_ref` |
+| **Accessible** | Certified model cards and audit reports publicly released. | `model_card.md` |
+| **Interoperable** | Metadata follows PROV-O and CIDOC CRM ontologies. | `provenance_trace.json` |
+| **Reusable** | All governance logs open-licensed and reproducible. | SPDX Manifest |
+| **CARE – Responsibility** | Regular FAIR+CARE Council oversight with energy audit. | `council_audit_summary.json` |
+| **CARE – Ethics** | CARE tagging ensures sensitive content remains masked. | `care_masking_report.json` |
 
 ---
 
@@ -119,13 +122,13 @@ flowchart TD
 
 | Metric | Description | Example |
 |--------|-------------|----------|
-| `energy_wh` | Power consumption across all model operations. | 3750.4 |
-| `carbon_gco2e` | CO₂ equivalent emissions. | 1550.2 |
-| `runtime_min` | Total runtime measured during training and audit. | 720 |
-| `faircare_score` | Combined ethical compliance rating. | 99.4 |
-| `status` | Council certification outcome. | certified |
+| `energy_wh` | Total transformer energy usage. | 3750.4 |
+| `carbon_gco2e` | CO₂ equivalent emissions from transformer operations. | 1550.2 |
+| `runtime_min` | Model runtime duration (training + audit). | 720 |
+| `faircare_score` | Composite FAIR+CARE compliance percentage. | 99.4 |
+| `ethics_status` | Council review result. | certified |
 
-Telemetry linked to:  
+Telemetry recorded in:  
 `releases/v9.9.0/focus-telemetry.json`  
 Schema: `schemas/telemetry/src-ai-models-focus-transformer-v1-governance-v1.json`
 
@@ -134,11 +137,12 @@ Schema: `schemas/telemetry/src-ai-models-focus-transformer-v1-governance-v1.json
 ## 🔐 Provenance & Governance Integration
 
 - **Governance Ledger:** `releases/v9.9.0/governance/ledger_snapshot.json`  
-- **Telemetry Reference:** `focus-telemetry.json`  
+- **Telemetry Ledger:** `releases/v9.9.0/focus-telemetry.json`  
 - **SBOM Manifest:** `releases/v9.9.0/sbom.spdx.json`  
 - **FAIR+CARE Validation:** `governance_validation.json`
+- **Model Card:** `model_card.md`
 
-### Example Provenance Record
+### Example Provenance Trace
 ```json
 {
   "artifact_id": "focus_transformer_v1",
@@ -153,7 +157,7 @@ Schema: `schemas/telemetry/src-ai-models-focus-transformer-v1-governance-v1.json
   "auditor": "@kfm-governance",
   "approved_by": "@faircare-council",
   "status": "certified",
-  "timestamp": "2025-11-08T21:03:00Z"
+  "timestamp": "2025-11-08T21:05:00Z"
 }
 ```
 
@@ -163,7 +167,7 @@ Schema: `schemas/telemetry/src-ai-models-focus-transformer-v1-governance-v1.json
 
 ```text
 Kansas Frontier Matrix (2025). Focus Transformer v1 · Governance Framework (v9.9.0).
-Defines FAIR+CARE-compliant governance protocols, sustainability metrics, and ethical audit validation for the Focus Mode AI transformer in the Kansas Frontier Matrix.
+FAIR+CARE-certified and ISO-aligned governance documentation ensuring ethical transparency, reproducibility, and sustainability in Focus Mode transformer operations.
 ```
 
 ---
@@ -172,17 +176,16 @@ Defines FAIR+CARE-compliant governance protocols, sustainability metrics, and et
 
 | Version | Date | Author | Summary |
 |---------:|------|--------|----------|
-| v9.9.0 | 2025-11-08 | `@kfm-governance` | Created governance documentation for Focus Transformer v1; added ethics, sustainability, and provenance audit integration. |
+| v9.9.0 | 2025-11-08 | `@kfm-governance` | Updated Focus Transformer governance directory to include model_card.md and enhanced provenance references. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix**  
-*Responsible AI × FAIR+CARE Certification × Sustainable Cultural Intelligence*  
+*Governed AI × FAIR+CARE Ethics × Sustainable Intelligence*  
 © 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Focus Transformer](../README.md) · [Governance Charter](../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to Focus Transformer](../README.md) · [Model Card](model_card.md) · [Governance Charter](../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
