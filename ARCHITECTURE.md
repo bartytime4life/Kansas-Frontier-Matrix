@@ -1,28 +1,28 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ARCHITECTURE.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v9.9.0"
+last_updated: "2025-11-07"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "releases/v9.7.0/manifest.zip"
-telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
+sbom_ref: "releases/v9.9.0/sbom.spdx.json"
+manifest_ref: "releases/v9.9.0/manifest.zip"
+telemetry_ref: "releases/v9.9.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 <div align="center">
 
-# 🏗️ **Kansas Frontier Matrix — System Architecture**
+# 🏗️ **Kansas Frontier Matrix — System Architecture**  
 `src/ARCHITECTURE.md`
 
-**Purpose:** Provide an end-to-end, reproducible blueprint of the Kansas Frontier Matrix (KFM) — covering data ingress, ETL/AI enrichment, knowledge graph modeling, APIs, frontend experience, governance automation, and telemetry — aligned with MCP v6.3 and FAIR+CARE.
+**Purpose:** Comprehensive, reproducible blueprint of the **Kansas Frontier Matrix (KFM)** — integrating data ingress, AI/ETL enrichment, ontology-driven knowledge graph modeling, API gateways, immersive web UI, autonomous governance, and real-time telemetry — aligned with **MCP-DL v6.3** and **FAIR+CARE Council Standards**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)]()
 
 </div>
 
@@ -30,121 +30,136 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 
 ## 📘 Overview
 
-KFM is a **containerized, standards-first** platform that interlinks **historical, cultural, and environmental** sources for Kansas into a **semantic knowledge graph** and **time-aware map UI**.  
-It uses **open specifications** — STAC 1.0.0, DCAT 3.0, CIDOC CRM, OWL-Time, GeoSPARQL, SPDX — and enforces **FAIR+CARE** through governance automation and telemetry.
+**Kansas Frontier Matrix (KFM)** is a **containerized, semantic, FAIR+CARE-aligned data ecosystem** interlinking **historical, ecological, cultural, and geospatial knowledge** for Kansas. It uses **open standards**—**STAC 1.0**, **DCAT 3.0**, **CIDOC-CRM**, **OWL-Time**, **GeoSPARQL**, and **SPDX**—within a **governance-as-code** framework enforcing provenance, ethics, and automation.
 
-**Primary Layers**
-1. **Data Sources** → external/archival feeds and uploads  
-2. **ETL & AI** → OCR/NLP, geocoding, standardization, model inference  
-3. **Knowledge Graph** → Neo4j with cultural/temporal ontologies  
-4. **API Layer** → FastAPI/GraphQL for search, focus, and exports  
-5. **Web Frontend** → React + MapLibre timeline/map and Focus Mode  
-6. **Governance & Telemetry** → CI/CD, ledgers, reports, and dashboards
+**Core Layers**
+1. **Data Sources** — Archival, sensor, and open-government feeds  
+2. **ETL & AI** — OCR/NLP, geocoding, summarization, entity linking  
+3. **Knowledge Graph** — Neo4j + federation; ontology mapping & temporal inference  
+4. **API Layer** — FastAPI/GraphQL endpoints for query, focus, and exports  
+5. **Web Frontend** — React + MapLibre + Cesium 3D UI with timeline and Focus Mode  
+6. **Governance & Telemetry** — CI/CD pipelines, FAIR+CARE audits, ledgers, and dashboards  
+
+**v9.9.0 Upgrades**
+- **Predictive Modeling (AI v2)** — environmental & sociocultural forecasts  
+- **3D Spatiotemporal Reconstruction** — Cesium + D3 integrated with time sliders  
+- **Federated Query Engine** — cross-graph reasoning and institutional mirrors  
+- **Streaming STAC Bridge** — live metadata from Pub/Sub feeds  
+- **Focus Mode Enhancements** — adaptive prompts, narrative synthesis, ethical guardrails  
 
 ---
 
 ## 🗂️ Directory Layout
 
-```
+```bash
 src/
-├── ai/
-│   ├── focus/                 # Focus Mode orchestration (semantic context, summaries)
-│   ├── models/                # NLP/ML models (NER, summarization, embeddings)
-│   ├── explainability/        # SHAP/LIME insights, drift/bias checks
-│   └── training/              # Reproducible training configs & scripts
-├── api/
-│   ├── routes/                # REST/GraphQL endpoints (events, focus, search)
-│   ├── services/              # Graph, STAC/DCAT, storage services
-│   ├── models/                # Pydantic/Graph schemas
-│   └── auth/                  # Admin endpoints, roles, rate-limits
-├── graph/
-│   ├── schema/                # CIDOC CRM + OWL-Time + GeoSPARQL mapping
-│   ├── ingest/                # Entity upserts, relationship builders
-│   ├── queries/               # Reusable Cypher templates (focus, lineage, proximity)
-│   └── utils/                 # UUIDs, schema guards, spatial helpers
-├── pipelines/
-│   ├── etl/                   # Ingest/transform/load (NOAA/USGS/KHS/BLM/etc.)
-│   ├── ai/                    # OCR/NLP/geocode, model inference stages
-│   ├── validation/            # FAIR+CARE, STAC/DCAT, schema checks
-│   └── utils/                 # Common I/O, COG/GeoJSON ops, checksums
-└── telemetry/
-    ├── logs/                  # Experiment & system logs
-    └── metrics/               # Runtime, throughput, compliance, drift
+├─ ai/
+│  ├─ focus/                 # Focus Mode orchestration & adaptive narrative models
+│  ├─ models/                # Transformers (NER, embeddings, summaries, clustering)
+│  ├─ explainability/        # SHAP/LIME, drift, fairness, feature importance
+│  ├─ training/              # Reproducible configs, datasets, model registry
+│  └─ streaming/             # Realtime inference via Kafka/PubSub connectors
+├─ api/
+│  ├─ routes/                # REST + GraphQL endpoints (events, focus, search)
+│  ├─ services/              # Graph, STAC/DCAT, catalog, auth & storage
+│  ├─ models/                # Pydantic/Graph schemas
+│  └─ auth/                  # JWT/OAuth2, RBAC, scopes, rate limits
+├─ graph/
+│  ├─ schema/                # CIDOC-CRM + OWL-Time + GeoSPARQL ontology mappings
+│  ├─ ingest/                # Entity upserts, provenance lineage builders
+│  ├─ queries/               # Cypher templates (focus, lineage, similarity)
+│  └─ federation/            # Multi-graph connectors and resolvers
+├─ pipelines/
+│  ├─ etl/                   # NOAA/USGS/KHS/BLM/DASC ingestion modules
+│  ├─ ai/                    # OCR/NLP/geocode, summarization, model inference
+│  ├─ validation/            # FAIR+CARE audits, data contracts, schema checks
+│  └─ utils/                 # COG/GeoJSON ops, checksum, logging helpers
+├─ telemetry/
+│  ├─ logs/                  # System, AI, and audit logs
+│  ├─ metrics/               # Drift, FAIR+CARE scores, throughput, a11y
+│  └─ dashboards/            # Grafana/Plotly dashboards (runtime + CI)
+└─ web/
+   ├─ frontend/              # React 18 + MapLibre GL + Cesium 3D temporal canvas
+   ├─ admin/                 # QA & governance review dashboards
+   └─ styles/                # Design tokens, color themes, accessibility assets
 ```
 
 ---
 
 ## 🧩 Layered Architecture
 
-### 1) Data Sources (External & Archival)
+### 1️⃣ Data Sources
 
-| Source | Examples | Format/Access |
-|--------|----------|---------------|
-| **NOAA** | Storm Events, climate normals | CSV, JSON API, NetCDF |
-| **USGS** | Hydrography, DEM/LiDAR, topo | GeoTIFF/COG, Shapefile, services |
-| **KHS Archives** | Newspapers, letters, maps (OCR) | PDF/TIFF → text via OCR |
-| **BLM GLO** | Land patents / PLSS | CSV, images, PDFs |
-| **DASC Geoportal** | State/County GIS | Feature/Map services, exports |
+| Source | Examples | Format / Access |
+|--------|-----------|----------------|
+| NOAA NCEI | Storm Events, Daymet, normals | JSON API, NetCDF |
+| USGS NHD | Hydrography, DEM, LiDAR, topo | GeoTIFF/COG, Shapefile |
+| KHS Archives | Manuscripts, maps, newspapers (OCR) | PDF/TIFF → text |
+| BLM GLO | Land patents / PLSS | CSV, image/PDF |
+| DASC Geoportal | County/state GIS layers | WMS/WFS services |
+| Streaming Sensors | Hydrology, weather, telemetry | Kafka / PubSub JSON |
 
-**Manifests:** `data/sources/*.json` (license, provenance, bbox, temporal) following **DCAT 3.0** & **STAC 1.0.0** fields.
-
----
-
-### 2) ETL & AI Pipelines
-
-**Goals:** normalize heterogenous inputs; elevate to **graph-ready** entities (People, Places, Events, Documents, Datasets).
-
-| Stage | Function | Outputs |
-|------|----------|---------|
-| Extract | Bulk/API/stream pulls, checksum | Raw files + SHA-256 |
-| Transform | OCR, NER, geocoding, normalization | GeoJSON, COG, tabular |
-| Load | Neo4j upserts, STAC/DCAT generation | Nodes/edges + STAC items |
-
-**Key Modules**
-- `pipelines/ai/` → OCR (scans), NER (People/Places/Orgs), summarization, embeddings  
-- `pipelines/validation/` → FAIR+CARE, data contracts, STAC/DCAT checks  
-- `ai/explainability/` → model introspection (SHAP/LIME), **drift** metrics to telemetry
+Manifest Spec: `data/sources/*.json` — DCAT 3.0 + STAC 1.0 compliant with license, bbox, temporal, checksum.
 
 ---
 
-### 3) Knowledge Graph (Neo4j, Ontology-Aligned)
+### 2️⃣ ETL + AI Pipelines
 
-| Concept | Mapping | Notes |
-|--------|---------|------|
-| **Entity Types** | `Person`, `Place`, `Event`, `Document`, `Dataset` | UUIDs, versioned |
-| **Relations** | `OCCURRED_AT`, `MENTIONS`, `PARTICIPATED_IN`, `LOCATED_IN` | Provenance links |
-| **Ontologies** | **CIDOC CRM**, **OWL-Time**, **GeoSPARQL**, **PROV-O** | Temporal & spatial reasoning |
-| **STAC/DCAT Bridge** | STAC Items ↔ DCAT Datasets | Interop & catalog exports |
+| Stage | Function | Output |
+|--------|-----------|--------|
+| Extract | Bulk/API/stream pulls + checksums | Raw + SHA-256 |
+| Transform | OCR, NER, geocode, normalize, enrich | GeoJSON / COG |
+| Load | Neo4j upsert + STAC/DCAT export | Nodes + STAC Items |
+| Stream-Load | Continuous event ingestion | Graph deltas + logs |
 
----
-
-### 4) API & Integration Layer (FastAPI/GraphQL)
-
-**Contracted Endpoints (examples)**
-
-| Route | Purpose | Response |
-|------|---------|----------|
-| `GET /api/events?start=1850&end=1900&bbox=` | time/space query | GeoJSON + linked refs |
-| `GET /api/focus/{entity_id}` | Focus Mode subgraph | JSON subgraph + summary |
-| `GET /api/search?q=` | full-text/semantic search | ranked results |
-| `GET /api/map/layers` | available layers | STAC/DCAT listings |
-
-**Schemas:** `api/models/` (Pydantic) and `schemas/api/v1/*.json`.  
-**Policies:** Rate-limits, auth for admin routes, pagination, ETags.
+**New Modules**
+- `ai/explainability/` — Bias, drift, and ethics telemetry  
+- `pipelines/etl/streaming/` — Real-time ingestion (v9.9.0 upgraded throughput)  
+- **Predictive ETL** — AI forecasts → STAC projections for 2030–2100 timelines  
 
 ---
 
-### 5) Web Frontend (React + MapLibre + D3)
+### 3️⃣ Knowledge Graph (Neo4j + Federation)
+
+| Entity | Standard Mapping | Description |
+|--------|------------------|--------------|
+| Person | CIDOC E21 | Individuals / authors / officials |
+| Place | CIDOC E53 + GeoSPARQL | GNIS/GeoNames nodes |
+| Event | CIDOC E5 + OWL-Time | Time-bounded occurrences |
+| Document | CIDOC E31 | Texts, scans, or digitized records |
+| Dataset | DCAT Dataset ↔ STAC Collection | Catalog linkage |
+| SensorStream | SOSA/SSN | Live sensor entities |
+
+Relations: `OCCURRED_AT`, `MENTIONS`, `LOCATED_IN`, `CITED_BY`, `FEDERATED_WITH`, `STREAMS_FROM`.
+
+---
+
+### 4️⃣ API Layer (FastAPI / GraphQL)
+
+| Route | Purpose | Returns |
+|-------|----------|----------|
+| `/api/search?q=` | Full-text + semantic search | Ranked JSON |
+| `/api/focus/{id}` | Focus Mode subgraph | Summary + edges |
+| `/api/events?bbox&time=` | Spatiotemporal query | GeoJSON |
+| `/api/map/layers` | Active STAC/DCAT layers | JSON list |
+| `/api/streams/live` | Real-time data feed | Event stream |
+
+Schemas in `api/models/`; validated by CI telemetry.  
+Security: JWT auth, scopes (“admin”, “editor”, “public”).
+
+---
+
+### 5️⃣ Web Frontend (UI v3)
 
 | Component | Role |
-|-----------|------|
-| `MapView` | Base map, layers, hover/selection, a11y controls |
-| `TimelineView` | Time slider, density plots, focus ranges |
-| `FocusPanel` | AI summaries, related people/places/events/docs |
-| `LayerControls` | STAC/DCAT toggles, opacity, styles |
-| Admin | Data QA, flags, review queues |
+|------------|------|
+| MapView | 2D/3D MapLibre GL + Cesium layers |
+| TimelineView | Time slider, density plots, predictive overlays |
+| FocusPanel | AI-narrative summaries, relationships |
+| Admin Dashboard | Governance review, FAIR+CARE audits |
+| 3D Temporal Scene | Deep-time ↔ future visualization |
 
-**A11y:** WCAG 2.1 AA: keyboard nav, high contrast, alt/ARIA, reduced motion, captions.
+Accessibility = WCAG 2.1 AA compliant (ARIA, alt, contrast, keyboard nav).
 
 ---
 
@@ -152,103 +167,106 @@ src/
 
 ```mermaid
 flowchart TD
-A["Data Sources (NOAA/USGS/KHS/BLM)"]
-B["ETL + AI (OCR, NER, Geocoding)"]
-C["Knowledge Graph (Neo4j)"]
-D["FastAPI / GraphQL"]
-E["React + MapLibre"]
+  A["Data Sources"]
+  B["ETL + AI Pipelines"]
+  C["Knowledge Graph (Neo4j + Federation)"]
+  D["API Gateway (FastAPI / GraphQL)"]
+  E["Web Frontend (MapLibre + Cesium)"]
+  F["Telemetry / Governance"]
 
-A --> B --> C --> D --> E
-E --> D --> C
+  A --> B --> C --> D --> E
+  B --> F
+  D --> F
 ```
 
 ---
 
-## 🧠 Focus Mode (AI) — Semantic Context
+## 🧠 Focus Mode (AI v2)
 
-**Flow:** Select entity → Subgraph query → Summarize & rank → Update map/timeline/panel.
-
-| Element | Implementation |
-|---------|----------------|
-| Endpoint | `GET /api/focus/{entity}` |
-| Model | `src/ai/models/focus_transformer_v1` (summaries, link suggestions) |
-| Explainability | `src/ai/explainability/` (feature attribution; drift) |
-| State | React `FocusProvider` syncs Timeline/Map/Panel |
-
----
-
-## 🧾 STAC ↔ DCAT Metadata Bridge
-
-| Direction | What | Why |
-|-----------|------|-----|
-| STAC → DCAT | STAC Items → DCAT Datasets | Catalog interop & discovery |
-| DCAT → STAC | DCAT → STAC assets | Spatial-temporal alignment |
-
-**Validation:** `pipelines/validation/` + `.github/workflows/stac-validate.yml`  
-**Publish:** `data/stac/` JSON; cross-refs in graph & UI.
+| Element | Description |
+|----------|-------------|
+| Model | `focus_transformer_v2` — contextual summarization + intent inference |
+| Pipeline | Subgraph → embedding → summary → narrative |
+| Explainability | SHAP/LIME plots + drift alerts |
+| Ethical Guardrails | CARE filter + policy summarizer |
+| Streaming Mode | Real-time entity refresh (Kafka → React FocusProvider) |
 
 ---
 
-## 🧱 Data Contracts & Schemas
+## 🧾 STAC ↔ DCAT Bridge
 
-All dataset manifests align with `docs/standards/data-contracts.md`:
+| Direction | Function | Result |
+|------------|-----------|--------|
+| STAC → DCAT | STAC Item → DCAT Dataset | Metadata alignment |
+| DCAT → STAC | DCAT → STAC assets | Geotemporal binding |
+| Stream | Live STAC Items (v9.9.0) | Real-time discovery |
 
-| Field | Req | Purpose |
-|------|-----|---------|
-| `id`, `title`, `description` | ✅ | Identify & describe |
-| `type`, `format` | ✅ | Vector/Raster/Tabular/Text |
-| `license`, `provenance` | ✅ | FAIR compliance |
-| `spatial`, `temporal` | ✅ | bbox, ISO dates |
-| `checksum` | ✅ | Integrity (SHA-256) |
-| `care.*` | ⚙️ | CARE notes / status |
+Validated via `.github/workflows/stac-validate.yml`  
+Exported to `data/stac/` with provenance links.
 
 ---
 
 ## ⚙️ Infrastructure & Security
 
 | Area | Tooling | Notes |
-|------|--------|------|
-| Containers | Docker/Compose | Minimal, non-root images |
-| Secrets | GitHub Encrypted Secrets | Rotated; no plaintext in repo |
-| Scans | CodeQL, Trivy | Fail on CRITICAL |
-| SBOM | SPDX via release job | `releases/**/sbom.spdx.json` |
-| AuthN/Z | API auth for admin ops | Role-scoped endpoints |
+|------|----------|-------|
+| Containers | Docker/Compose | Non-root images |
+| Secrets | GitHub Secrets | Auto-rotation |
+| Vuln Scans | CodeQL + Trivy | Block CRITICAL |
+| SBOM | SPDX SPDX v3 export | releases/**/sbom.spdx.json |
+| Streaming | Kafka / PubSub | Realtime ETL (HA) |
+| Federation | Multi-node Neo4j cluster | HA mirror sync |
+| AuthN/Z | RBAC / OIDC | Principle of least privilege |
 
 ---
 
-## 🧾 CI/CD — Workflow → Artifact Mapping
+## 🧮 CI/CD Workflow → Artifact Mapping
 
-| Workflow | What It Validates / Builds | Primary Artifacts |
-|----------|-----------------------------|-------------------|
-| `stac-validate.yml` | STAC Items/Collections | `reports/self-validation/stac/_summary.json` |
-| `faircare-validate.yml` | FAIR+CARE + data contracts | `reports/fair/faircare_summary.json` |
-| `docs-lint.yml` | Markdown/YAML/JSON structure | `reports/self-validation/docs/lint_summary.json` |
-| `build-and-deploy.yml` | Frontend build/deploy | `docs/reports/telemetry/build_metrics.json` |
-| `telemetry-export.yml` | Metrics aggregation | `releases/v9.7.0/focus-telemetry.json` |
+| Workflow | Validates / Builds | Artifact |
+|-----------|--------------------|-----------|
+| stac-validate.yml | STAC Collections | reports/stac_summary.json |
+| faircare-validate.yml | FAIR+CARE checks | reports/faircare_summary.json |
+| docs-lint.yml | Markdown/YAML lint | reports/docs_lint.json |
+| build-deploy.yml | Web build + deploy | reports/build_metrics.json |
+| telemetry-export.yml | Metrics aggregation | releases/v9.9.0/focus-telemetry.json |
+| stream-ingest.yml | Streaming pipeline deploy | releases/v9.9.0/stream_metrics.json |
 
 ---
 
-## 🧮 Telemetry & Governance
+## 📡 Telemetry & Governance
 
-**Telemetry:** `releases/v9.7.0/focus-telemetry.json` (build times, success rates, FAIR+CARE scores, drift metrics).  
-**Ledgers:** `docs/reports/audit/` (governance, workflows, experiments, AI models, releases).
+- **Telemetry:** build times, FAIR+CARE scores, drift, bias, energy metrics  
+- **Ledgers:** `docs/reports/audit/` for models, data, CI/CD artifacts  
+- **FAIR+CARE Checkpoint:**  
+  - *Findable:* STAC/DCAT UUIDs  
+  - *Accessible:* Open APIs + licenses  
+  - *Interoperable:* JSON-LD / ontologies  
+  - *Reusable:* Provenance + versioning  
+  - *CARE:* Council oversight for cultural/Indigenous data  
 
-**FAIR+CARE Checkpoints**
-- **Findable:** STAC/DCAT indices + UUIDs  
-- **Accessible:** Open endpoints + licenses  
-- **Interoperable:** JSON-LD, ontologies  
-- **Reusable:** Provenance, checksums, versioning  
-- **CARE:** Council review for Indigenous/cultural data
+---
+
+## 🧱 Data Contracts
+
+| Field | Req | Purpose |
+|--------|------|----------|
+| id, title, description | ✅ | Identity + context |
+| type, format | ✅ | Data classification |
+| license, provenance | ✅ | FAIR compliance |
+| spatial, temporal | ✅ | bbox + ISO dates |
+| checksum | ✅ | Integrity (SHA-256) |
+| care.* | ⚙️ | Ethical metadata |
+| streaming | ⚙️ | Live feed endpoint |
 
 ---
 
 ## 🧩 Roadmap
 
-1. **3D temporal** (Cesium/WebGL)  
-2. **GraphQL federation** across multi-graphs  
-3. **Predictive modeling** for env-history scenarios  
-4. **Federated KFM nodes** (institutional mirrors)  
-5. **Public STAC API** for interactive catalog search
+1. 🌎 Public STAC API with federated query support  
+2. 🤖 AI Focus v3 — generative timeline summaries  
+3. 🛰️ KFM Node Federation Network pilot expansion  
+4. 🧮 Predictive Scenario Workbench (agriculture, migration)  
+5. 🔐 Zero-Trust CI/CD integration for artifact signing  
 
 ---
 
@@ -256,17 +274,18 @@ All dataset manifests align with `docs/standards/data-contracts.md`:
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Rebuilt architecture: data contracts, STAC↔DCAT bridge, workflow→artifact map, telemetry governance. |
-| v9.5.0 | 2025-10-20 | A. Barta | Integrated metadata bridge and explainability telemetry. |
-| v9.3.2 | 2025-08-10 | KFM Core Team | Added ETL validation and AI governance logging. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial architecture document. |
+| v9.9.0 | 2025-11-07 | A. Barta | Predictive modeling, federated query engine, Focus AI v2 |
+| v9.8.0 | 2025-11-05 | A. Barta | Streaming ingestion, 3D temporal UI, multi-graph federation |
+| v9.7.0 | 2025-11-01 | KFM Core Team | STAC↔DCAT bridge + telemetry governance |
+| v9.5.0 | 2025-10-20 | A. Barta | Explainability telemetry + contracts |
+| v9.0.0 | 2025-06-01 | Core Team | Initial architecture document |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0  
+Maintained under Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [Back to Documentation Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
