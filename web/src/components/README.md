@@ -62,9 +62,15 @@ web/src/components/
 │   └── TimelineSlider.tsx
 │
 ├── TimelineView/
-│   ├── ChronoView.tsx
-│   ├── TimeMarker.tsx
-│   └── EventTrack.tsx
+│   ├── README.md               # This file — component overview
+│   ├── TimelineView.tsx        # React component rendering the timeline
+│   ├── useTimeline.ts          # Hook managing timeline state and sync
+│   ├── timeline-context.ts     # Context for global currentYear state
+│   ├── density-chart.tsx       # D3-based event density graph
+│   ├── telemetry.ts            # Logs performance and FAIR+CARE metrics
+│   └── timeline.css            # Styling and accessibility tokens
+│
+│
 │
 ├── FocusMode/
 │   ├── FocusConsole.tsx
