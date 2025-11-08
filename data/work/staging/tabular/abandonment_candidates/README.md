@@ -1,14 +1,14 @@
 ---
 title: "🏚️ Kansas Frontier Matrix — Abandonment Candidate Analysis (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/abandonment_candidates/README.md"
-version: "v9.8.0"
+version: "v9.9.0"
 last_updated: "2025-11-08"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.8.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.8.0/manifest.zip"
+sbom_ref: "../../../../releases/v9.9.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v9.9.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.8.0/focus-telemetry.json"
+telemetry_ref: "../../../../releases/v9.9.0/focus-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/abandonment-candidates-v1.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -17,16 +17,17 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🏚️ Kansas Frontier Matrix — **Abandonment Candidate Analysis**
+# 🏚️ Kansas Frontier Matrix — **Abandonment Candidate Analysis**  
 `data/work/staging/tabular/abandonment_candidates/README.md`
 
 **Purpose:**  
-Defines the **triage methodology, spatial layers, and analytic workflow** used to detect **historical and environmental abandonment or relocation sites** in Kansas, leveraging FAIR+CARE-aligned data fusion and Neo4j spatial reasoning within the Kansas Frontier Matrix (KFM).
+Define the **triage, governance, and analytic framework** for datasets that failed validation or exhibit potential ethical, spatial, or temporal anomalies.  
+This workspace enables both **ethical remediation (FAIR+CARE)** and **historical analysis** of abandonment, relocation, and retreat phenomena across Kansas.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../../../docs/)
+[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY--4.0-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Verified-orange)](../../../../docs/standards/FAIRCARE.md)
-[![Status: Operational](https://img.shields.io/badge/Status-Operational-brightgreen)](../../../../)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governance%20Certified-orange)](../../../../docs/standards/FAIRCARE.md)
+[![Status: Under Review](https://img.shields.io/badge/Status-Under%20Governance%20Review-gold)](#)
 
 </div>
 
@@ -34,112 +35,149 @@ Defines the **triage methodology, spatial layers, and analytic workflow** used t
 
 ## 📘 Overview
 
-This analytical workspace identifies **potentially abandoned or relocated settlements** across Kansas by integrating drought, flood, census, parcel, and FEMA buyout data.  
-The workflow prioritizes historically significant displacements (e.g., Dust Bowl migrations, 1993 flood retreats) and quantifies **environmental migration patterns** under FAIR+CARE governance.
+The **Abandonment Candidate Analysis** workspace serves a **dual purpose**:  
+
+1. 🧮 As a **governance quarantine**, holding datasets that failed validation, ethics, or provenance checks pending FAIR+CARE Council review.  
+2. 🏚 As a **spatiotemporal analysis node**, identifying environmental or historical patterns of human retreat, community relocation, and land abandonment in Kansas.
+
+All data are versioned, reversible, and reviewed under **FAIR+CARE Council oversight**.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```plaintext
-data/
-  work/
-    staging/
-      tabular/
-        abandonment_candidates/
-          README.md              # This documentation file
-          abandonment_candidates.csv  # Output candidate list
-          queries/
-            abandonment_query.sql      # Core PostGIS selection query
-            scoring_heuristic.sql      # Weighted ranking logic
-          reports/
-            validation_report.json     # FAIR+CARE validation results
-            provenance_trace.json      # Data lineage for governance ledger
-          metadata/
-            abandonment-schema.json    # Data dictionary / schema definition
-            ai/
-              summarization_prompt.md  # AI-driven site summaries
-              drift_report.json        # Model drift telemetry
+data/work/staging/tabular/abandonment_candidates/
+├── README.md                        # This documentation file
+├── abandonment_registry.json        # Metadata for quarantined datasets
+├── abandonment_candidates.csv       # Structured list of flagged entries
+│
+├── queries/
+│   ├── abandonment_query.sql        # Candidate identification (spatial logic)
+│   ├── remediation_check.sql        # Remediation and schema cross-validation
+│   └── scoring_heuristic.sql        # Weighted scoring for candidate ranking
+│
+├── reports/
+│   ├── validation_report.json       # Validation + FAIR+CARE audit outcomes
+│   ├── provenance_trace.json        # Dataset lineage record for ledger
+│   ├── ethics_review.json           # Council findings and decision notes
+│   └── ai_drift_analysis.json       # AI model drift and audit metrics
+│
+└── metadata/
+    ├── abandonment-schema.json      # Data schema for candidate tracking
+    ├── governance_manifest.json     # Governance state of each dataset
+    ├── remediation_log.json         # Restored dataset references
+    └── ai/
+        ├── summarization_prompt.md  # AI summarization logic for remediation
+        └── model_drift_report.json  # Telemetry and bias validation
 ```
 
 ---
 
-## 🧾 Layer Stack
-
-| Layer ID | Source | Purpose |
-|-----------|---------|----------|
-| `hydro_floods_1993` | USGS / FEMA | Identify 1993 flood retreat areas |
-| `drought_dustbowl_1930s` | NOAA / USDA | Detect Dust Bowl–era abandonment |
-| `census_loss_1930_1940` | US Census TIGER | Quantify historical depopulation |
-| `fema_buyouts` | FEMA OpenFEMA | Identify managed retreat parcels |
-| `parcel_history` | County cadastral archives | Confirm land forfeitures |
-| `railroad_abandonments` | FRA / Historic GIS | Context for lost economic corridors |
-| `aerial_ortho_historic` | USGS EarthExplorer | Verify relocation evidence |
-
----
-
-## ⚙️ SQL Query — Candidate Detection
-
-```sql
-SELECT
-  c.geoid,
-  c.county_name,
-  p.parcel_id,
-  p.owner_hist,
-  f.buyout_id,
-  ST_Area(ST_Intersection(c.geom, f.geom)) AS overlap_area,
-  d.drought_severity,
-  h.flood_depth
-FROM census_loss_1930_1940 c
-LEFT JOIN fema_buyouts f ON ST_Intersects(c.geom, f.geom)
-LEFT JOIN drought_dustbowl_1930s d ON ST_Intersects(c.geom, d.geom)
-LEFT JOIN hydro_floods_1993 h ON ST_Intersects(c.geom, h.geom)
-LEFT JOIN parcel_history p ON ST_Intersects(c.geom, p.geom)
-WHERE c.pop_change_pct <= -50
-  AND (f.buyout_id IS NOT NULL OR d.drought_severity >= 3)
-ORDER BY overlap_area DESC, c.pop_change_pct ASC;
-```
-
----
-
-## 🧮 Scoring Heuristic
-
-| Factor | Weight | Metric | Description |
-|---------|---------|---------|-------------|
-| Population decline | 0.4 | % loss 1930–1940 | Historical depopulation |
-| FEMA buyout density | 0.3 | per km² | Managed retreat indicator |
-| Drought severity | 0.2 | PDSI index | Drought pressure |
-| Railroad proximity | 0.1 | distance < 1 km | Infrastructure loss proxy |
-
-**Composite Score:**  
-`score = Σ(weight × normalized_metric)`  
-Top scores mark verified abandonment or relocation sites.
-
----
-
-## 🧩 Integration Pipeline
+## ⚙️ Governance Workflow
 
 ```mermaid
 flowchart TD
-A["Raw Data Layers (NOAA, FEMA, USGS, Census)"]
-  --> B["ETL Staging & Harmonization"]
-B --> C["Spatial Joins & Candidate Scoring (PostGIS)"]
-C --> D["Neo4j Node Creation :Settlement{status:'Abandoned'}"]
-D --> E["FAIR+CARE Validation + Provenance Ledger"]
-E --> F["Focus Mode Dashboard Layer: Historical Retreat Zones"]
+  A["Dataset Fails FAIR+CARE Validation"] --> B["Move to abandonment_candidates/"]
+  B --> C["Registry Entry Created (metadata + reason)"]
+  C --> D["FAIR+CARE Council Review"]
+  D -->|Remediable| E["Ethical Redaction + Schema Update → Restage"]
+  D -->|Irreversible| F["Archive / Retain Metadata Only"]
+  E --> G["Ledger Update + Telemetry Log"]
+  F --> G
+```
+
+### Review Process
+| Step | Responsible | Description |
+|------|--------------|-------------|
+| 1️⃣ | CI Pipeline | Detects failed or sensitive data → auto quarantine |
+| 2️⃣ | FAIR+CARE Bot | Logs dataset ID, SHA256, and failure reason |
+| 3️⃣ | FAIR+CARE Council | Human ethical & technical evaluation |
+| 4️⃣ | KFM Governance Ledger | Updates audit log & telemetry upon resolution |
+
+---
+
+## 🧩 Example Registry Entry
+
+```json
+{
+  "id": "abandonment_2025q4_treaty_records",
+  "moved_from": "data/work/staging/tabular/tmp/treaties_2025.csv",
+  "reason": "Contains unredacted Indigenous data — potential cultural sensitivity.",
+  "date_flagged": "2025-11-08T14:42:00Z",
+  "review_status": "pending",
+  "assigned_reviewer": "@faircare-council",
+  "recommended_action": "ethical_redaction_and_schema_update",
+  "checksum_sha256": "sha256:9bd23f8fae47e9015abca14b9056e6...",
+  "telemetry_ref": "releases/v9.9.0/focus-telemetry.json"
+}
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Alignment
+## 🧮 Analytical Application
 
-| Principle | Implementation | Audit Reference |
-|------------|----------------|-----------------|
-| **F1: Findable** | Indexed GeoJSON + CSV in STAC/DCAT catalog | `manifest_ref` |
-| **A1: Accessible** | FAIR-compliant access via Neo4j + API | `api/routes/abandonment` |
-| **I1: Interoperable** | Linked to CIDOC CRM & DCAT 3.0 vocabularies | `ontology/schema.geo.ttl` |
-| **R1: Reusable** | CC-BY 4.0 license + JSON schema metadata | `metadata/abandonment-schema.json` |
-| **CARE Principles** | Ethical governance of historical displacement data | `governance_ref` |
+While primarily a **governance space**, this directory also provides analytical insights into **land abandonment** and **population displacement**.
+
+### Data Sources
+| Layer | Provider | Description |
+|--------|-----------|-------------|
+| `drought_dustbowl_1930s` | NOAA / USDA | Dust Bowl–era drought and abandonment |
+| `census_loss_1930_1940` | US Census TIGER | Historical depopulation zones |
+| `fema_buyouts` | FEMA / OpenFEMA | Modern flood retreat parcels |
+| `parcel_history` | County cadastral archives | Ownership transitions and forfeitures |
+| `railroad_abandonments` | FRA / Kansas GIS | Transportation and economic drivers |
+
+### Candidate Scoring Formula
+`score = 0.4(population_loss) + 0.3(buyout_density) + 0.2(drought_index) + 0.1(infrastructure_loss)`
+
+---
+
+## ⚖️ FAIR+CARE Integration Matrix
+
+| Principle | Application | Audit Reference |
+|------------|--------------|----------------|
+| **Findable** | Indexed via STAC & Neo4j metadata registry. | `manifest_ref` |
+| **Accessible** | Controlled governance interface for internal users. | `governance_ref` |
+| **Interoperable** | Linked to CIDOC CRM and DCAT 3.0. | `data_contract_ref` |
+| **Reusable** | CC-BY 4.0 License; JSON schema and provenance trace. | `metadata/abandonment-schema.json` |
+| **CARE — Collective Benefit** | Prevents misuse of culturally sensitive data. | `reports/ethics_review.json` |
+| **CARE — Responsibility** | All decisions auditable via governance ledger. | `releases/v9.9.0/governance/ledger_snapshot.json` |
+
+---
+
+## 📊 Validation & Telemetry
+
+| Artifact | Purpose | Schema |
+|-----------|----------|---------|
+| `validation_report.json` | FAIR+CARE validation + checksum | `data-work-staging-tabular-v9.json` |
+| `provenance_trace.json` | Data lineage record | `data-contract-v3.json` |
+| `ethics_review.json` | Council recommendations | `faircare-review-v2.json` |
+| `ai_drift_analysis.json` | AI model drift + bias metrics | `telemetry_schema` |
+
+Telemetry events:
+- `"event":"dataset-flagged"` → logs validation failure.  
+- `"event":"dataset-remediated"` → logs ethics or schema fix.  
+- `"event":"dataset-archived"` → signals irreversible case closure.
+
+---
+
+## 🧠 Ethical Stewardship
+
+All datasets in this workspace are subject to:
+- **Confidential handling** until final decision.  
+- **Immutable metadata** (checksum + validation context retained).  
+- **Transparency of outcome** — decisions logged to public governance ledger.  
+- **Non-use policy** — data cannot propagate to production systems before approval.
+
+---
+
+## 🧾 Internal Citation
+
+```text
+Kansas Frontier Matrix (2025). Abandonment Candidate Analysis (v9.9.0).
+Governance workspace for triaging, auditing, and ethically resolving tabular datasets under FAIR+CARE Council supervision — supporting both remediation workflows and historical spatial analysis.
+```
 
 ---
 
@@ -147,18 +185,18 @@ E --> F["Focus Mode Dashboard Layer: Historical Retreat Zones"]
 
 | Version | Date | Author | Summary |
 |----------|------|--------|----------|
-| v9.8.0 | 2025-11-08 | A. Barta | Initial release of abandonment candidate module |
-| v9.7.0 | 2025-11-05 | A. Barta | Prototype draft for environmental retreat triage |
-| v9.6.0 | 2025-11-01 | FAIR+CARE Council | Schema and governance integration updates |
+| v9.9.0 | 2025-11-08 | `@kfm-governance` | Upgraded governance registry with FAIR+CARE Council triage, spatial analysis layer integration, and telemetry linkage. |
+| v9.8.0 | 2025-11-06 | `@kfm-data` | Added AI drift telemetry and provenance trace schema. |
+| v9.7.0 | 2025-11-02 | `@faircare-council` | Introduced candidate triage and ethical remediation process. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project · Master Coder Protocol v6.3  
-FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix**  
+*Governance Integrity × FAIR+CARE Oversight × Ethical Stewardship*  
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Data Work Index](../../../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to Staging Workspace](../README.md) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
-````
