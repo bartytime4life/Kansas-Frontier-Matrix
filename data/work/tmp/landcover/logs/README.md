@@ -1,13 +1,15 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Landcover TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/landcover/logs/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-07"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-landcover-tmp-logs-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal Governance Data"
 mcp_version: "MCP-DL v6.3"
@@ -19,28 +21,28 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/landcover/logs/README.md`
 
 **Purpose:**  
-Central FAIR+CARE-certified repository for recording ETL execution, validation, and AI audit logs for landcover datasets within the Kansas Frontier Matrix (KFM).  
-These logs ensure transparency, accountability, and provenance for all temporary data operations performed during ETL, transformation, and validation.
+FAIR+CARE-certified centralized logging workspace recording ETL, validation, AI explainability, and governance synchronization events across the **Landcover TMP** pipeline within the Kansas Frontier Matrix (KFM).  
+This layer maintains transparency, reproducibility, and audit compliance for temporary landcover data operations.
 
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/README.md)
+[![License: Internal Governance Data](https://img.shields.io/badge/License-Internal%20Governance-grey)](../../../../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Landcover%20Logging%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
 [![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance-grey)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Landcover TMP Logs Directory** captures detailed activity records for every ETL cycle, AI analysis, FAIR+CARE audit, and governance event related to landcover data.  
-All logs generated here undergo checksum validation, FAIR+CARE governance synchronization, and archival retention for audit readiness.
+The **Landcover TMP Logs Directory** captures the complete trace of all operational, validation, and ethics workflows under FAIR+CARE and ISO 19115 frameworks.  
+Each log is checksum-verified, telemetry-tracked, and stored with immutable governance metadata for **Diamond⁹ Ω / Crown∞Ω** compliance.
 
-### Core Functions:
-- Track ETL execution and model training workflows.  
-- Record FAIR+CARE validation outcomes and governance compliance.  
-- Log AI model explainability results for ethical transparency.  
-- Synchronize checksum and metadata records with provenance ledgers.  
+### Core Responsibilities
+- Record ETL runtime, AI inference, validation events, and audit metrics.  
+- Synchronize checksum registries and governance ledger entries.  
+- Maintain FAIR+CARE and ISO metadata alignment for transparency.  
+- Register energy and carbon telemetry under ISO 50001 / 14064.  
 
 ---
 
@@ -48,13 +50,14 @@ All logs generated here undergo checksum validation, FAIR+CARE governance synchr
 
 ```plaintext
 data/work/tmp/landcover/logs/
-├── README.md                              # This file — overview of landcover TMP logs
+├── README.md                           # This file — documentation for TMP logging layer
 │
-├── etl_run.log                            # Execution log for ETL transformation and validation tasks
-├── validation_summary.log                 # FAIR+CARE validation summary across landcover datasets
-├── ai_model_audit.log                     # AI model explainability and ethics audit record
-├── governance_sync.log                    # Governance and checksum synchronization events
-└── metadata.json                          # Provenance linkage and checksum verification data
+├── etl_run.log                         # Execution trace of ETL pipeline runs
+├── validation_summary.log              # Summary of FAIR+CARE validation results
+├── ai_model_audit.log                  # AI model explainability & ethics trace
+├── governance_sync.log                 # Governance synchronization and checksum logs
+├── checksum_audit.log                  # SHA-256 integrity checks for TMP data
+└── metadata.json                       # Provenance, telemetry, and governance link metadata
 ```
 
 ---
@@ -63,17 +66,17 @@ data/work/tmp/landcover/logs/
 
 ```mermaid
 flowchart TD
-    A["Landcover TMP Pipelines (ETL / AI / Validation)"] --> B["Execution & Metric Logging"]
-    B --> C["FAIR+CARE Audit & Validation Reporting"]
-    C --> D["Checksum & Provenance Registration"]
-    D --> E["Governance Sync & Ethics Certification"]
+    A["Landcover TMP Pipelines (ETL / Validation / AI)"] --> B["Execution & Metric Logging"]
+    B --> C["FAIR+CARE Validation & Ethics Review"]
+    C --> D["Checksum & Provenance Verification"]
+    D --> E["Governance & Telemetry Ledger Synchronization"]
 ```
 
-### Description:
-1. **Execution Logs:** Record pipeline runtime, input sources, and error traces.  
-2. **Validation Logs:** Store FAIR+CARE audit and ethics compliance results.  
-3. **Checksum Logs:** Register SHA-256 verifications for reproducibility.  
-4. **Governance Sync:** Synchronize all metadata to provenance ledger for audit tracking.  
+### Description
+1. **ETL Execution:** Logs operational details (runtime, records, errors, pipeline signatures).  
+2. **Validation Logging:** Documents schema checks, checksum outcomes, and FAIR+CARE ethics results.  
+3. **AI Audits:** Capture model explainability and transparency outcomes (SHAP/LIME).  
+4. **Governance & Telemetry:** Synchronize all log metadata to the governance ledger and energy/carbon telemetry records.
 
 ---
 
@@ -81,16 +84,17 @@ flowchart TD
 
 ```json
 {
-  "id": "landcover_tmp_log_v9.6.0_2025Q4",
+  "id": "landcover_tmp_logs_v9.7.0_2025Q4",
   "pipeline": "src/pipelines/etl/landcover_etl.py",
-  "records_processed": 208421,
-  "runtime_minutes": 178.4,
+  "records_processed": 210842,
+  "runtime_minutes": 182.1,
   "checksum_verified": true,
   "fairstatus": "certified",
-  "ai_audit_score": 0.994,
+  "ai_audit_score": 0.993,
+  "telemetry": { "energy_wh": 5.8, "carbon_gco2e": 6.4 },
   "governance_registered": true,
   "validator": "@kfm-landcover-lab",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-07T00:00:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -100,87 +104,87 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Logs indexed by dataset ID, checksum, and ETL run reference. | @kfm-data |
-| **Accessible** | Stored in FAIR-compliant text and JSON formats. | @kfm-accessibility |
-| **Interoperable** | Aligned with FAIR+CARE, ISO 19115, and MCP-DL schemas. | @kfm-architecture |
-| **Reusable** | Logs include lineage, validation, and ethics metadata. | @kfm-design |
-| **Collective Benefit** | Supports open monitoring of geospatial data workflows. | @faircare-council |
-| **Authority to Control** | Governance Council oversees log archival and checksum reports. | @kfm-governance |
-| **Responsibility** | Validators ensure all logs document process accuracy and transparency. | @kfm-security |
-| **Ethics** | Logs reviewed for bias mitigation and sustainable AI operations. | @kfm-ethics |
+|---|---|---|
+| **Findable** | Logs indexed by ETL cycle, dataset ID, checksum, and telemetry record | @kfm-data |
+| **Accessible** | Open plaintext/JSON formats for FAIR+CARE Council inspection | @kfm-accessibility |
+| **Interoperable** | FAIR+CARE, ISO 19115, and MCP-DL logging schema compliant | @kfm-architecture |
+| **Reusable** | Includes lineage, validation, telemetry, and checksum trails | @kfm-design |
+| **Collective Benefit** | Promotes transparent data and model governance | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council validates and approves retention policies | @kfm-governance |
+| **Responsibility** | Validators document schema, checksum, and ethics outcomes | @kfm-security |
+| **Ethics** | All logs reviewed for fairness, energy use, and sustainability | @kfm-ethics |
 
-Audit references:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+**Audit Provenance:**  
+`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
 
 ---
 
 ## ⚙️ Key Log Artifacts
 
 | File | Description | Format |
-|------|--------------|--------|
-| `etl_run.log` | Execution trace for landcover ETL pipelines. | Text |
-| `validation_summary.log` | Summary of FAIR+CARE validation and ethics audits. | Text |
-| `ai_model_audit.log` | AI fairness, bias detection, and explainability report. | Text |
-| `governance_sync.log` | Synchronization record for checksum and governance events. | Text |
-| `metadata.json` | Provenance linkage and checksum registry. | JSON |
+|---|---|---|
+| `etl_run.log` | ETL operation summary and error diagnostics | Text |
+| `validation_summary.log` | FAIR+CARE validation summary report | Text |
+| `ai_model_audit.log` | AI explainability audit and bias analysis | Text |
+| `governance_sync.log` | Governance ledger & checksum synchronization | Text |
+| `checksum_audit.log` | SHA-256 validation continuity log | Text |
+| `metadata.json` | Provenance and telemetry metadata for all cycles | JSON |
 
-Log generation automated by `landcover_log_sync.yml`.
+**Automation:** `landcover_log_sync.yml`
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
 | Log Type | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| ETL Logs | 90 Days | Archived for reproducibility and QA review. |
-| FAIR+CARE Validation Logs | 180 Days | Retained for audit and ethics certification. |
-| Governance Logs | 365 Days | Maintained for provenance and certification tracking. |
-| Metadata | Permanent | Immutable and registered under blockchain ledger. |
+|---|---:|---|
+| ETL Logs | 90 Days | Archived for reproducibility and QA review |
+| FAIR+CARE Validation Logs | 180 Days | Retained for audit and ethics certification |
+| Governance Sync & Telemetry | 365 Days | Preserved for provenance certification |
+| Metadata | Permanent | Immutable under blockchain governance control |
 
-Cleanup managed via `landcover_log_cleanup.yml`.
+**Cleanup:** `landcover_log_cleanup.yml`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
+|---|---:|---|
 | Energy Use (per logging cycle) | 5.8 Wh | @kfm-sustainability |
 | Carbon Output | 6.4 gCO₂e | @kfm-security |
 | Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
-Telemetry logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Landcover TMP Logs (v9.6.0).
-FAIR+CARE-certified logging workspace documenting ETL, validation, and AI ethics operations for landcover datasets.
-Ensures transparent and reproducible provenance governance under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Landcover TMP Logs (v9.7.0).
+FAIR+CARE-certified logging environment capturing ETL, validation, and AI ethics operations for landcover datasets.
+Ensures transparency, telemetry accountability, and reproducible governance under MCP-DL v6.3 and ISO 19115.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Integrated AI audit logging and FAIR+CARE validation synchronization. |
-| v9.5.0 | 2025-11-02 | Enhanced checksum registry and governance tracking automation. |
-| v9.3.2 | 2025-10-28 | Established landcover TMP logging layer for ETL and FAIR+CARE auditing. |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v9.7.0 | 2025-11-07 | `@kfm-landcover-lab` | Upgraded to v9.7.0; added telemetry schema & CF-aligned logging. |
+| v9.6.0 | 2025-11-03 | `@kfm-landcover-lab` | Introduced AI audit logging and FAIR+CARE validation synchronization. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Data Accountability × FAIR+CARE Ethics × Provenance Transparency*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Data Accountability × FAIR+CARE Ethics × Provenance Transparency*  
+© 2025 Kansas Frontier Matrix — Master Coder Protocol v6.3 · FAIR+CARE Certified · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
+
+[Back to Landcover TMP](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
