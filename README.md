@@ -1,14 +1,14 @@
 ---
 title: "🌾 Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-08"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "releases/v9.7.0/manifest.zip"
+sbom_ref: "releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "releases/v10.0.0/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
+telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
@@ -234,4 +234,4 @@ All contributions must pass **STAC/DCAT**, **FAIR+CARE**, and **docs-lint** chec
 Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [Back to Documentation Index](docs/README.md) · [Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
 
-</div>
+</div>  
