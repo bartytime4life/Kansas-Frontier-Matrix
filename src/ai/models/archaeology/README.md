@@ -20,13 +20,13 @@ mcp_version: "MCP-DL v6.3"
 `src/ai/models/archaeology/README.md`
 
 **Purpose:**  
-Define the **AI models, training architecture, and ethical governance framework** used for archaeological pattern detection, artifact classification, and cultural landscape analysis in the Kansas Frontier Matrix (KFM).  
-Integrates **FAIR+CARE ethics**, **CIDOC CRM ontology**, and **MCP-DL v6.3 reproducibility** to ensure responsible, sustainable, and explainable AI research.
+Describe the integrated **AI architecture, training subsystems, and governance modules** used for archaeological research and heritage analysis in the Kansas Frontier Matrix (KFM).  
+This suite implements **FAIR+CARE ethical AI governance**, **CIDOC CRM ontology alignment**, and **MCP-DL v6.3 reproducibility** for transparent and sustainable heritage science.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governance%20Aligned-orange)](../../../../docs/standards/faircare.md)
-[![Status: Research-Active](https://img.shields.io/badge/Status-Research--Active-brightgreen)](#)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governed-orange)](../../../../docs/standards/faircare.md)
+[![Status: Active](https://img.shields.io/badge/Status-Research%20Active-brightgreen)](#)
 
 </div>
 
@@ -34,15 +34,15 @@ Integrates **FAIR+CARE ethics**, **CIDOC CRM ontology**, and **MCP-DL v6.3 repro
 
 ## 📘 Overview
 
-The **Archaeology AI Suite** supports automated and explainable analysis of archaeological data sources across Kansas.  
-Models in this suite combine **remote sensing, historical map digitization, artifact image classification, and spatiotemporal clustering** within the broader KFM architecture.
+The **Archaeology AI Model Suite** forms the foundation of predictive, interpretive, and governance-integrated artificial intelligence workflows for Kansas archaeology.  
+This system enables sustainable, explainable, and ethically validated AI operations across the full data lifecycle — from remote sensing to Focus Mode visualization.
 
-Key design principles:
-- 🧩 Integrate heterogeneous data (LIDAR, maps, text, excavation records).  
-- 🧠 Apply **explainable AI (XAI)** for site prediction and cultural correlation.  
-- ⚖️ Comply with **FAIR+CARE** for Indigenous data and cultural heritage protection.  
-- 🧭 Align with **CIDOC CRM**, **PROV-O**, and **DCAT** ontologies for interoperability.  
-- ♻️ Track all training, validation, and bias metrics via **focus-telemetry.json**.  
+Key objectives:
+- 🧩 Integrate diverse datasets (LIDAR, paleo-hydrography, soil, textual archives).  
+- 🧠 Deliver explainable, bias-aware models for archaeological pattern detection.  
+- ⚖️ Enforce **FAIR+CARE Council** review and governance checkpoints.  
+- 🧭 Align with ontologies (CIDOC CRM, PROV-O, DCAT) for semantic interoperability.  
+- ♻️ Log energy, accuracy, and ethics metrics in `focus-telemetry.json`.
 
 ---
 
@@ -50,113 +50,87 @@ Key design principles:
 
 ```plaintext
 src/ai/models/archaeology/
-├── README.md                        # This file — archaeology AI suite documentation
+├── README.md                              # This file — AI suite documentation
 │
-├── training/                        # Model training configurations and datasets
-│   ├── train_archaeo_detector.py     # CNN/LiDAR feature extractor
-│   ├── train_cultural_classifier.py  # NLP artifact tagger
-│   └── configs/
-│       ├── lidar_config.yaml
-│       └── text_classification.yaml
+├── predictive-zones/                      # Predictive archaeology (soil, elevation, hydro)
+│   ├── pipeline/                          # ETL → Train → Explainability → Governance
+│   ├── artifacts/                         # Model checkpoints, outputs, and metadata
+│   ├── outputs/                           # Raster/Vector predictions and telemetry
+│   └── governance/                        # FAIR+CARE approvals and provenance
 │
-├── explainability/                  # Explainability and bias auditing
-│   ├── shap_explanations.json
-│   ├── lime_visualizations/
-│   └── bias_report.json
-│
-├── governance/                      # FAIR+CARE governance reports and ethics audits
-│   ├── care_audit.json
-│   ├── provenance_log.json
-│   └── model_card.md
-│
-└── checkpoints/                     # Model weights and metadata (non-public)
-    ├── archaeomap_v1.ckpt
-    ├── lidar_classifier_v2.ckpt
-    └── manifest.json
+├── training/                              # Core AI training framework (datasets, scripts)
+├── explainability/                        # Bias auditing and interpretability modules
+├── governance/                            # FAIR+CARE governance and Council audit framework
+└── checkpoints/                           # Serialized model checkpoints and SBOM-linked artifacts
 ```
 
 ---
 
-## ⚙️ Core Models
+## ⚙️ Core Archaeological Models
 
-| Model | Description | Input Type | Framework | Governance |
-|--------|-------------|-------------|------------|-------------|
-| `archaeomap_v1` | Identifies potential archaeological sites using remote sensing and elevation features. | LIDAR / Raster | PyTorch + Rasterio | `@kfm-heritage` |
-| `artifact_ner_v2` | Named Entity Recognition for archaeological texts and excavation notes. | Text | spaCy / Transformers | `@faircare-council` |
-| `cultural_classifier_v1` | Classifies heritage artifacts and material culture references. | Image / Text | CNN + NLP Hybrid | `@kfm-ai` |
-| `temporal_site_predictor` | Predicts cultural site shifts and abandonment trends. | Tabular + GeoJSON | LightGBM / Neo4j | `@kfm-ethics` |
+| Model | Description | Input Data | Framework | Governance Reviewer |
+|--------|--------------|-------------|------------|----------------------|
+| **Predictive Zones AI** | Identifies potential archaeological sites based on soil, elevation, and paleo-hydrology. | DEM, NDMI, Paleo-channels | XGBoost / LightGBM | `@faircare-council` |
+| **Artifact Classifier v1** | Recognizes artifact classes (ceramics, lithics, metalwork) via CNN+metadata fusion. | Image + Tabular | PyTorch | `@kfm-heritage` |
+| **Text Tagger (NER v2)** | Extracts cultural and historical entities from excavation reports. | Text | spaCy / Transformers | `@kfm-nlp` |
+| **Temporal Site Predictor** | Models migration and site abandonment over time. | Tabular + GeoJSON | LightGBM / Neo4j | `@kfm-ethics` |
 
 ---
 
-## 🧠 Model Pipeline Overview
+## 🧠 AI Model Workflow
 
 ```mermaid
-flowchart LR
-  A["Data Sources (LIDAR, Scans, Texts, GIS)"] --> B["Preprocessing (ETL)"]
-  B --> C["Training (CNN/NLP/Graph Models)"]
-  C --> D["Evaluation (Bias, Drift, Explainability)"]
-  D --> E["Governance Audit (FAIR+CARE)"]
-  E --> F["Telemetry Export (focus-telemetry.json)"]
-  F --> G["Integration with Focus Mode + Knowledge Graph"]
+flowchart TD
+  A["Input Data (LIDAR, Maps, Texts, GIS)"] --> B["ETL Processing"]
+  B --> C["Model Training (CNN / XGBoost / NLP)"]
+  C --> D["Explainability (SHAP / LIME / GradCAM)"]
+  D --> E["FAIR+CARE Governance Validation"]
+  E --> F["Telemetry + Sustainability Audit"]
+  F --> G["Focus Mode Integration & Knowledge Graph Publication"]
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Integration
+## ⚖️ FAIR+CARE Compliance
 
-| Principle | Implementation | Audit Reference |
-|------------|----------------|-----------------|
-| **Findable** | STAC metadata for trained models; registry in Neo4j graph. | `registry.json` |
-| **Accessible** | Model metadata public; restricted weights under CARE. | `governance/model_card.md` |
-| **Interoperable** | CIDOC CRM + DCAT + PROV-O integration. | `docs/architecture/data-architecture.md` |
-| **Reusable** | CC-BY-SA 4.0 license, reproducible configs. | `training/configs/` |
-| **CARE — Collective Benefit** | Prioritize community and heritage value over automation. | `care_audit.json` |
-| **CARE — Authority to Control** | FAIR+CARE Council gatekeeping on sensitive site data. | Governance Ledger |
-| **CARE — Responsibility** | Transparency on data origin and model usage. | `provenance_log.json` |
-| **CARE — Ethics** | Automatic redaction of sacred or restricted knowledge. | `bias_report.json` |
-
----
-
-## 🧩 Example Model Card (`governance/model_card.md`)
-
-```markdown
-# Model: Archaeomap_v1
-**Purpose:**  
-Predict potential archaeological site locations using elevation, slope, and hydrological features.
-
-**Data Sources:**  
-- LIDAR: USGS 1m Digital Elevation Models (DEM)  
-- Historical Maps: Kansas State Historical Society Archive  
-- Hydrology Layers: DASC Streamflow Index  
-
-**Ethics & FAIR+CARE:**  
-- CARE tag: `restricted`  
-- Indigenous site boundaries redacted; use requires Council approval.  
-- No export of coordinates without appropriate permissions.  
-
-**Performance Metrics:**  
-- Accuracy: 93.8%  
-- Bias Score: 0.06  
-- Drift Flag: false  
-- Energy (Wh): 35.4  
-- Telemetry Record ID: `telemetry:event:archaeomap_v1_2025-11-08`
-```
+| Principle | Implementation | Validation Reference |
+|------------|----------------|-----------------------|
+| **Findable** | Metadata indexed in STAC/DCAT registry and SBOM manifest. | `releases/v9.9.0/manifest.zip` |
+| **Accessible** | Model documentation and telemetry data publicly available. | `governance/model_card.md` |
+| **Interoperable** | Ontology mappings via CIDOC CRM and PROV-O. | `docs/architecture/data-architecture.md` |
+| **Reusable** | MIT-licensed models with reproducible configuration. | `training/configs/` |
+| **CARE – Collective Benefit** | Models developed for heritage protection, not exploitation. | `governance/care_masking_report.json` |
+| **CARE – Authority to Control** | FAIR+CARE Council approves release of sensitive outputs. | Governance Ledger |
+| **CARE – Responsibility** | Energy, bias, and audit telemetry verified per release. | `focus-telemetry.json` |
+| **CARE – Ethics** | Culturally sensitive data masked or generalized. | `explainability/logs/bias_report.json` |
 
 ---
 
-## 🧮 Telemetry Metrics
+## 🧩 Integration Across Frameworks
 
-Telemetry for archaeology models is tracked under `focus-telemetry.json`.
+| Module | Function | Outputs |
+|---------|-----------|----------|
+| **Training** | Model preparation and validation (terrain, hydro, text). | `training_log.json`, `evaluation_metrics.json` |
+| **Explainability** | SHAP/LIME bias and interpretability visualizations. | `explainability_summary.json` |
+| **Governance** | Ethics, redaction, and FAIR+CARE Council reviews. | `governance_validation.json` |
+| **Checkpoints** | Serialized models with checksum and energy metadata. | `checkpoints_manifest.json` |
+| **Telemetry** | Unified log for energy, carbon, bias, and reproducibility. | `focus-telemetry.json` |
+
+---
+
+## 🧮 Sustainability & Telemetry Metrics
 
 | Metric | Description | Example |
-|--------|--------------|---------|
-| `training_time_min` | Model training duration. | 540 |
-| `energy_wh` | Power consumption during training. | 38.6 |
-| `accuracy_pct` | Evaluation accuracy score. | 93.8 |
-| `bias_score` | Detected data or feature bias. | 0.06 |
-| `drift_flag` | Drift detection status. | false |
-| `care_tag` | Governance classification. | `restricted` |
-| `governance_status` | Review outcome. | `approved` |
+|--------|-------------|----------|
+| `training_energy_wh` | Power used for model training. | 1489.2 |
+| `carbon_gco2e` | CO₂ emissions (ISO 50001 equivalent). | 612.1 |
+| `accuracy` | Model accuracy during validation. | 0.942 |
+| `bias_score` | Average fairness deviation index. | 0.04 |
+| `faircare_score` | Overall ethical compliance score. | 99.0 |
+| `audit_status` | FAIR+CARE Council certification. | approved |
+
+Telemetry collected in `releases/v9.9.0/focus-telemetry.json`.  
+Schema: `schemas/telemetry/src-ai-models-archaeology-v1.json`.
 
 ---
 
@@ -164,7 +138,7 @@ Telemetry for archaeology models is tracked under `focus-telemetry.json`.
 
 ```text
 Kansas Frontier Matrix (2025). Archaeology AI Model Suite (v9.9.0).
-FAIR+CARE and CIDOC CRM-aligned AI framework for archaeological site prediction, artifact classification, and cultural heritage governance within the Kansas Frontier Matrix ecosystem.
+FAIR+CARE-certified, CIDOC CRM-aligned AI ecosystem for ethical, explainable, and sustainable archaeological intelligence within the Kansas Frontier Matrix.
 ```
 
 ---
@@ -173,17 +147,16 @@ FAIR+CARE and CIDOC CRM-aligned AI framework for archaeological site prediction,
 
 | Version | Date | Author | Summary |
 |---------:|------|--------|----------|
-| v9.9.0 | 2025-11-08 | `@kfm-ai` | Created archaeology AI suite documentation; added model cards, telemetry integration, and FAIR+CARE governance hooks. |
+| v9.9.0 | 2025-11-08 | `@kfm-ai` | Updated Archaeology AI suite; integrated telemetry schema, governance ledger, and ontology compliance. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix**  
-*Cultural Heritage AI × FAIR+CARE Ethics × Responsible Innovation*  
+*Responsible Archaeological AI × FAIR+CARE Ethics × Sustainable Data Stewardship*  
 © 2025 Kansas Frontier Matrix · MIT · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [Back to AI Models Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
