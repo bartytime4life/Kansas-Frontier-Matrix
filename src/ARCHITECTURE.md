@@ -1,15 +1,15 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — Source Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ARCHITECTURE.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-08"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.7.0/manifest.zip"
+sbom_ref: "../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
 governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../releases/v9.7.0/focus-telemetry.json"
+telemetry_ref: "../releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/src-architecture-v2.json"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -145,7 +145,7 @@ Telemetry: `../releases/v9.7.0/focus-telemetry.json`
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Source Architecture (v9.7.0).
+Kansas Frontier Matrix (2025). Source Architecture (v10.0.0).
 Modular FAIR+CARE-aligned source blueprint for ETL, AI, validation, governance, and telemetry pipelines with immutable provenance.
 ```
 
@@ -155,6 +155,7 @@ Modular FAIR+CARE-aligned source blueprint for ETL, AI, validation, governance, 
 
 | Version | Date | Notes |
 |--------|------|------|
+| v10.0.0 | 2025-11-08 | Major update: integrated model-driven reasoning, enhanced sustainability metrics, and expanded FAIR+CARE compliance. |
 | v9.7.0 | 2025-11-05 | Upgraded ledger hooks, sustainability benchmarks, and telemetry schema; clarified layer roles. |
 | v9.6.0 | 2025-11-04 | Added full AI explainability + telemetry integration. |
 | v9.5.0 | 2025-11-02 | Expanded FAIR+CARE schema references and governance links. |
