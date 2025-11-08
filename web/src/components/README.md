@@ -24,7 +24,7 @@ Aligned with **MCP-DL v6.3**, **WCAG 2.1 AA**, and **ISO 9241-210**, these compo
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../docs/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)](#)
 
 </div>
@@ -61,7 +61,7 @@ web/src/components/
 │   ├── Legend.tsx
 │   └── TimelineSlider.tsx
 │
-├── Timeline/
+├── TimelineView/
 │   ├── ChronoView.tsx
 │   ├── TimeMarker.tsx
 │   └── EventTrack.tsx
