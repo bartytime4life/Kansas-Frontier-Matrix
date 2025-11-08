@@ -1,7 +1,7 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture & Design Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/README.md"
-version: "v9.9.1"
+version: "v9.9.2"
 last_updated: "2025-11-08"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
@@ -57,14 +57,15 @@ docs/architecture/
 ├─ api-architecture.md         # FastAPI + GraphQL + Neo4j Knowledge Graph
 ├─ web-ui-design.md            # MapLibre + Cesium + a11y-first frontend
 ├─ github-architecture.md      # CI/CD & governance automation on GitHub
-├─ validation-framework.md     # FAIR+CARE + ISO validation architecture
+├─ validation-framework.md     # FAIR+CARE + ISO compliance validator system
 ├─ telemetry-architecture.md   # Sustainability and real-time energy/usage telemetry
 ├─ predictive-framework.md     # Predictive scenario modeling (v9.9.0+)
+├─ data-flow-diagrams.md       # Visualized architecture & data flow diagrams (NEW)
 └─ repo-focus.md               # Monorepo modules & CI/CD design
 ```
 
 **Related**  
-- **Workflows index:** `docs/workflows/README.md` (with `docs-lint.yml.md`, `faircare-validate.yml.md`, `stac-validate.yml.md`, `telemetry-export.yml.md`, `ai-train.yml.md`)  
+- **Workflows index:** `docs/workflows/README.md`  
 - **Standards:** `docs/standards/*.md` (incl. `telemetry_standards.md`, `faircare.md`, `data-contracts.md`)  
 
 ---
@@ -126,7 +127,7 @@ flowchart TD
 - **DCAT 3.0** — Dataset discoverability & licensing; round-trip parity checks.  
 - **CIDOC-CRM + GeoSPARQL** — Cultural heritage and spatial semantics unify `Person`, `Place`, `Event`, `Dataset`, `Document`.  
 - **Focus Mode AI** — Composes narrative subgraphs (entity ↔ dataset ↔ event) with explainability and CARE filters.  
-- **Predictive Projections** — Modeled futures exported as STAC Items (with `kfm:projection` extension) for timeline overlays.
+- **Predictive Projections** — Modeled futures exported as STAC Items (`kfm:projection` extension) for timeline overlays.
 
 ---
 
@@ -144,22 +145,10 @@ Telemetry reference: `../../releases/v9.9.0/focus-telemetry.json` · Standards: 
 
 ---
 
-## 📦 Core Components (Quick Map)
-
-| Component | Role | Compliance |
-|-----------|------|------------|
-| `src/pipelines/` | AI/ETL/validation/telemetry/governance automation | FAIR+CARE · ISO 19115 |
-| `src/ai/focus/` | Focus AI v2 narrative transformer, drift/bias checks | MCP-DL v6.3 |
-| `data/work/` | Contract-aligned staging workspaces | FAIR+CARE · CF |
-| `releases/` | Versioned manifests, SBOMs, telemetry | SPDX · FAIR+CARE |
-| `web/` | Reactive UI (MapLibre/Cesium) + a11y | WAI-ARIA |
-
----
-
 ## 🧾 Citation (Internal Reference)
 
 ```text
-Kansas Frontier Matrix (2025). System Architecture & Design Framework (v9.9.1).
+Kansas Frontier Matrix (2025). System Architecture & Design Framework (v9.9.2).
 FAIR+CARE · ISO · MCP-DL aligned, workflow-governed architecture for data, AI, and web systems with end-to-end telemetry and governance automation.
 ```
 
@@ -167,13 +156,11 @@ FAIR+CARE · ISO · MCP-DL aligned, workflow-governed architecture for data, AI,
 
 ## 🕰️ Version History
 
-| Version | Date       | Author                | Summary |
-|--------:|------------|-----------------------|---------|
-| v9.9.1  | 2025-11-08 | `@kfm-architecture`   | Linked `docs/workflows/` suite; updated FAIR+CARE links; clarified workflow governance and telemetry integration. |
-| v9.9.0  | 2025-11-07 | `@kfm-architecture`   | Predictive framework + Focus AI v2 upgrades; expanded sustainability telemetry; ledger updates. |
-| v9.8.0  | 2025-11-05 | `@kfm-core`           | 3D UI refactor; federated knowledge graph integration. |
-| v9.7.0  | 2025-11-06 | `@kfm-architecture`   | STAC/DCAT + telemetry overhaul; ISO badge compliance. |
-| v9.6.0  | 2025-11-03 | `@kfm-governance`     | Enhanced AI sustainability metrics. |
+| Version | Date | Author | Summary |
+|---------:|------|--------|----------|
+| v9.9.2 | 2025-11-08 | `@kfm-architecture` | Added `data-flow-diagrams.md` to layout; synchronized references to telemetry and predictive architecture. |
+| v9.9.1 | 2025-11-08 | `@kfm-architecture` | Linked `docs/workflows/` suite; updated FAIR+CARE integration and workflow governance. |
+| v9.9.0 | 2025-11-07 | `@kfm-architecture` | Introduced predictive framework; expanded telemetry and sustainability metrics. |
 
 ---
 
@@ -183,6 +170,6 @@ FAIR+CARE · ISO · MCP-DL aligned, workflow-governed architecture for data, AI,
 *Architecture Integrity × Predictive AI × FAIR+CARE Sustainability*  
 © 2025 Kansas Frontier Matrix · MIT · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Docs Index](../README.md) · [Workflows Index](../workflows/README.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to Docs Index](../README.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
