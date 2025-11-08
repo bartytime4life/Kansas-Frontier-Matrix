@@ -1,13 +1,15 @@
 ---
 title: "📤 Kansas Frontier Matrix — Hydrology TMP Exports (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hydrology/exports/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v9.7.0"
+last_updated: "2025-11-06"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-hydrology-tmp-exports-v9.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -19,28 +21,28 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/hydrology/exports/README.md`
 
 **Purpose:**  
-Temporary FAIR+CARE-certified export workspace for validated and harmonized hydrology datasets within the Kansas Frontier Matrix (KFM).  
-This layer supports interoperability testing, checksum verification, and catalog registration of hydrology data before promotion to the staging layer.
+FAIR+CARE-certified temporary export workspace for validated and harmonized **hydrology datasets** within the Kansas Frontier Matrix (KFM).  
+This directory ensures checksum integrity, governance synchronization, and catalog interoperability before datasets are promoted to staging or processed repositories.
 
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Export%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
 [![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Hydrology TMP Exports** directory stores temporary, FAIR+CARE-compliant export products generated during ETL workflows.  
-These exports serve as the final checkpoint before promotion to permanent repositories and ensure compliance with data contracts, checksum integrity, and ethical data use.
+The **Hydrology TMP Exports Workspace** is the final transient layer in the hydrology data lifecycle prior to staging.  
+It manages schema-aligned export products from ETL and validation workflows, ensuring each dataset passes checksum verification, FAIR+CARE audit, and governance certification before publication.
 
-### Core Functions:
-- Store validated, schema-aligned hydrology datasets ready for export.  
-- Verify checksum and governance linkage prior to staging promotion.  
-- Test DCAT/STAC interoperability for catalog publication.  
-- Maintain FAIR+CARE audit readiness for ethics certification.  
+### Core Responsibilities
+- Maintain validated hydrology datasets ready for **FAIR+CARE-certified export**.  
+- Perform checksum verification, schema cross-validation, and provenance synchronization.  
+- Conduct DCAT/STAC interoperability testing for catalog publication readiness.  
+- Register export activity and lineage into the **provenance ledger** for traceability.
 
 ---
 
@@ -52,9 +54,9 @@ data/work/tmp/hydrology/exports/
 │
 ├── hydrology_summary_export.csv           # Consolidated export of harmonized hydrology data
 ├── streamflow_annual_export.parquet       # Yearly streamflow summary dataset
-├── aquifer_extent_export.geojson          # Spatial export of aquifer boundaries
-├── governance_registration_export.log     # Governance ledger and export synchronization log
-└── metadata.json                          # Provenance metadata and checksum verification
+├── aquifer_extent_export.geojson          # FAIR+CARE-certified aquifer boundaries
+├── governance_registration_export.log     # Governance ledger sync and certification log
+└── metadata.json                          # Provenance and checksum verification metadata
 ```
 
 ---
@@ -63,18 +65,19 @@ data/work/tmp/hydrology/exports/
 
 ```mermaid
 flowchart TD
-    A["Validated Hydrology Data (data/work/tmp/hydrology/validation/)"] --> B["FAIR+CARE Review & Export Preparation"]
-    B --> C["Checksum & Schema Verification"]
-    C --> D["Governance Ledger Sync and Catalog Compatibility Test"]
-    D --> E["Temporary Publication (data/work/tmp/hydrology/exports/)"]
-    E --> F["Promotion to Staging Layer (data/work/staging/hydrology/)"]
+    A["Validated Hydrology Data (data/work/tmp/hydrology/validation/)"] --> B["FAIR+CARE Review & Export Prep"]
+    B --> C["Checksum Verification & Schema Integrity"]
+    C --> D["Governance Ledger Sync + Catalog Interoperability (STAC/DCAT)"]
+    D --> E["Temporary Export Publication (data/work/tmp/hydrology/exports/)"]
+    E --> F["Promotion → data/work/staging/hydrology/"]
 ```
 
-### Description:
-1. **Validation Completion:** Only datasets that pass schema and FAIR+CARE checks are exported.  
-2. **Checksum Audit:** Confirm data integrity and schema alignment.  
-3. **Governance Sync:** Log export activity in provenance and checksum ledgers.  
-4. **Publication:** Test interoperability in STAC/DCAT catalogs prior to promotion.  
+### Description
+1. **Preparation** — Collect validated outputs from `validation/`.  
+2. **Checksum Verification** — Verify integrity via SHA-256 registry and FAIR+CARE checks.  
+3. **Governance Sync** — Register export lineage and certification in governance ledger.  
+4. **Interoperability Testing** — Confirm compatibility with **STAC/DCAT/FAIR+CARE schemas**.  
+5. **Promotion** — Export-ready data transferred to staging repositories.
 
 ---
 
@@ -82,21 +85,21 @@ flowchart TD
 
 ```json
 {
-  "id": "hydrology_export_v9.6.0_2025Q4",
+  "id": "hydrology_export_v9.7.0_2025Q4",
   "source_datasets": [
-    "data/work/tmp/hydrology/transforms/hydrology_summary_v9.6.0.parquet",
+    "data/work/tmp/hydrology/transforms/hydrology_summary_v9.7.0.parquet",
     "data/work/tmp/hydrology/transforms/aquifer_extent_reprojected.geojson"
   ],
   "export_files": [
     "hydrology_summary_export.csv",
     "aquifer_extent_export.geojson"
   ],
+  "records_exported": 18234,
   "checksum_verified": true,
   "fairstatus": "certified",
   "governance_registered": true,
-  "records_exported": 18234,
   "validator": "@kfm-hydro-lab",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-06T23:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -106,87 +109,86 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Export files indexed by dataset, schema version, and checksum ID. | @kfm-data |
-| **Accessible** | Published as open CSV, Parquet, and GeoJSON files for governance review. | @kfm-accessibility |
-| **Interoperable** | Metadata aligned with FAIR+CARE, STAC, DCAT, and ISO 19115. | @kfm-architecture |
-| **Reusable** | Exports include provenance and FAIR+CARE audit metadata. | @kfm-design |
-| **Collective Benefit** | Enables transparent water management and environmental research. | @faircare-council |
-| **Authority to Control** | Governance Council oversees checksum and ledger synchronization. | @kfm-governance |
-| **Responsibility** | ETL teams ensure schema compliance and ethics certification. | @kfm-security |
-| **Ethics** | Export releases validated for accuracy, transparency, and fairness. | @kfm-ethics |
+|---|---|---|
+| **Findable** | Exports indexed by schema, checksum, and dataset version | @kfm-data |
+| **Accessible** | Available in FAIR-compliant formats (CSV, Parquet, GeoJSON) | @kfm-accessibility |
+| **Interoperable** | DCAT/STAC schema validation ensures catalog readiness | @kfm-architecture |
+| **Reusable** | Includes checksum lineage and provenance metadata | @kfm-design |
+| **Collective Benefit** | Promotes open water research and hydrological planning | @faircare-council |
+| **Authority to Control** | Council certifies all governance-registered exports | @kfm-governance |
+| **Responsibility** | ETL engineers ensure schema and checksum consistency | @kfm-security |
+| **Ethics** | FAIR+CARE audits enforce accuracy, openness, and transparency | @kfm-ethics |
 
-Governance audits stored in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+**Governance Records:**  
+`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
 
 ---
 
 ## ⚙️ Key Export Artifacts
 
 | Artifact | Description | Format |
-|-----------|--------------|--------|
-| `*_export.csv` | Flat exports for data-sharing and catalog ingestion. | CSV |
-| `*_export.parquet` | Efficient columnar export for analytics pipelines. | Parquet |
-| `*_export.geojson` | FAIR+CARE-certified spatial datasets. | GeoJSON |
-| `governance_registration_export.log` | Logs governance and checksum synchronization. | Log |
-| `metadata.json` | Provenance metadata linking to governance ledger. | JSON |
+|---|---|---|
+| `*_export.csv` | Flat file export for catalog ingestion | CSV |
+| `*_export.parquet` | High-efficiency analytical export | Parquet |
+| `*_export.geojson` | FAIR+CARE spatial data for public access | GeoJSON |
+| `governance_registration_export.log` | Governance & checksum registration log | Log |
+| `metadata.json` | Provenance metadata for export lineage | JSON |
 
-All export operations managed by `hydrology_export_sync.yml`.
+**Automation:** `hydrology_export_sync.yml`
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
-| File Type | Retention Duration | Policy |
-|------------|--------------------|--------|
-| TMP Exports | 14 Days | Purged post-promotion to staging. |
-| Governance Logs | 365 Days | Retained for audit reproducibility. |
-| Metadata | Permanent | Stored immutably under provenance ledger. |
-| Validation Reports | 90 Days | Archived for FAIR+CARE verification. |
+| Export Type | Retention Duration | Policy |
+|---|---:|---|
+| TMP Exports | 14 Days | Purged post-staging promotion |
+| Governance Logs | 365 Days | Retained for reproducibility audits |
+| Metadata | Permanent | Immutable under governance ledger |
+| FAIR+CARE Reports | 180 Days | Maintained for audit certification |
 
-Retention managed by `hydrology_export_cleanup.yml`.
+**Cleanup:** `hydrology_export_cleanup.yml`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per export cycle) | 5.3 Wh | @kfm-sustainability |
-| Carbon Output | 6.1 gCO₂e | @kfm-security |
+|---|---:|---|
+| Energy Use (per export cycle) | 5.2 Wh | @kfm-sustainability |
+| Carbon Output | 6.0 gCO₂e | @kfm-security |
 | Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
-Telemetry results stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Hydrology TMP Exports (v9.6.0).
-Temporary FAIR+CARE-certified workspace for validated hydrology exports, governance linkage, and catalog readiness.
-Ensures checksum continuity, ethics certification, and reproducibility under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Hydrology TMP Exports (v9.7.0).
+FAIR+CARE-certified export workspace ensuring checksum integrity, ethics compliance, and governance registration for hydrology datasets.
+Aligned with MCP-DL v6.3, ISO 19115, and STAC/DCAT interoperability standards.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added DCAT/STAC interoperability checks and checksum registry integration. |
-| v9.5.0 | 2025-11-02 | Improved FAIR+CARE audit tracking and metadata provenance linkage. |
-| v9.3.2 | 2025-10-28 | Established hydrology export workspace for governance-aligned datasets. |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v9.7.0 | 2025-11-06 | `@kfm-hydro-lab` | Upgraded for v9.7.0; telemetry schema integration and governance synchronization improvements. |
+| v9.6.0 | 2025-11-03 | `@kfm-hydro-lab` | Added DCAT/STAC validation and checksum governance registry. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Hydrological Transparency × FAIR+CARE Ethics × Provenance Integrity*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Hydrological Transparency × FAIR+CARE Ethics × Provenance Integrity*  
+© 2025 Kansas Frontier Matrix — Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Hydrology TMP](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
