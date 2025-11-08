@@ -1,15 +1,17 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ARCHITECTURE.md"
-version: "v9.9.0"
-last_updated: "2025-11-07"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.0.0"
+last_updated: "2025-11-08"
+review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "releases/v9.9.0/manifest.zip"
-telemetry_ref: "releases/v9.9.0/focus-telemetry.json"
+sbom_ref: "releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "releases/v10.0.0/manifest.zip"
+telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -17,7 +19,8 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 # 🏗️ **Kansas Frontier Matrix — System Architecture**  
 `src/ARCHITECTURE.md`
 
-**Purpose:** Comprehensive, reproducible blueprint of the **Kansas Frontier Matrix (KFM)** — integrating data ingress, AI/ETL enrichment, ontology-driven knowledge graph modeling, API gateways, immersive web UI, autonomous governance, and real-time telemetry — aligned with **MCP-DL v6.3** and **FAIR+CARE Council Standards**.
+**Purpose:**  
+Comprehensive, reproducible blueprint of the **Kansas Frontier Matrix (KFM)** — integrating data ingress, AI/ETL enrichment, ontology-driven knowledge graph modeling, API gateways, immersive web UI, autonomous governance, and real-time telemetry — aligned with **MCP-DL v6.3** and **FAIR+CARE Council Standards**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
@@ -40,7 +43,7 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 5. **Web Frontend** — React + MapLibre + Cesium 3D UI with timeline and Focus Mode  
 6. **Governance & Telemetry** — CI/CD pipelines, FAIR+CARE audits, ledgers, and dashboards  
 
-**v9.9.0 Upgrades**
+**v10.0.0 Upgrades**
 - **Predictive Modeling (AI v2)** — environmental & sociocultural forecasts  
 - **3D Spatiotemporal Reconstruction** — Cesium + D3 integrated with time sliders  
 - **Federated Query Engine** — cross-graph reasoning and institutional mirrors  
@@ -114,7 +117,7 @@ Manifest Spec: `data/sources/*.json` — DCAT 3.0 + STAC 1.0 compliant with lice
 
 **New Modules**
 - `ai/explainability/` — Bias, drift, and ethics telemetry  
-- `pipelines/etl/streaming/` — Real-time ingestion (v9.9.0 upgraded throughput)  
+- `pipelines/etl/streaming/` — Real-time ingestion (v10.0.0 upgraded throughput)  
 - **Predictive ETL** — AI forecasts → STAC projections for 2030–2100 timelines  
 
 ---
@@ -199,7 +202,7 @@ flowchart TD
 |------------|-----------|--------|
 | STAC → DCAT | STAC Item → DCAT Dataset | Metadata alignment |
 | DCAT → STAC | DCAT → STAC assets | Geotemporal binding |
-| Stream | Live STAC Items (v9.9.0) | Real-time discovery |
+| Stream | Live STAC Items (v10.0.0) | Real-time discovery |
 
 Validated via `.github/workflows/stac-validate.yml`  
 Exported to `data/stac/` with provenance links.
@@ -228,8 +231,8 @@ Exported to `data/stac/` with provenance links.
 | faircare-validate.yml | FAIR+CARE checks | reports/faircare_summary.json |
 | docs-lint.yml | Markdown/YAML lint | reports/docs_lint.json |
 | build-deploy.yml | Web build + deploy | reports/build_metrics.json |
-| telemetry-export.yml | Metrics aggregation | releases/v9.9.0/focus-telemetry.json |
-| stream-ingest.yml | Streaming pipeline deploy | releases/v9.9.0/stream_metrics.json |
+| telemetry-export.yml | Metrics aggregation | releases/v10.0.0/focus-telemetry.json |
+| stream-ingest.yml | Streaming pipeline deploy | releases/v10.0.0/stream_metrics.json |
 
 ---
 
@@ -274,8 +277,8 @@ Exported to `data/stac/` with provenance links.
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.9.0 | 2025-11-07 | A. Barta | Predictive modeling, federated query engine, Focus AI v2 |
-| v9.8.0 | 2025-11-05 | A. Barta | Streaming ingestion, 3D temporal UI, multi-graph federation |
+| v10.0.0 | 2025-11-08 | A. Barta | Predictive modeling, federated query engine, Focus AI v2 |
+| v9.9.0 | 2025-11-07 | A. Barta | Streaming ingestion, 3D temporal UI, multi-graph federation |
 | v9.7.0 | 2025-11-01 | KFM Core Team | STAC↔DCAT bridge + telemetry governance |
 | v9.5.0 | 2025-10-20 | A. Barta | Explainability telemetry + contracts |
 | v9.0.0 | 2025-06-01 | Core Team | Initial architecture document |
@@ -288,4 +291,4 @@ Exported to `data/stac/` with provenance links.
 Maintained under Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [Back to Documentation Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
-</div>
+</div>  
