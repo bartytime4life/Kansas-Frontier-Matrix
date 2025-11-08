@@ -1,4 +1,3 @@
-```
 ---
 title: "🧭 KFM — Predictive Archaeology (Soil Moisture × Elevation × Paleo‑Hydrology)"
 path: "src/ai/models/archaeology/predictive-zones/README.md"
