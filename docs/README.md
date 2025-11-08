@@ -1,28 +1,31 @@
 ---
-title: "📚 Kansas Frontier Matrix — Documentation Index"
+title: "📚 Kansas Frontier Matrix — Documentation Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v9.9.0"
+last_updated: "2025-11-08"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../releases/v9.7.0/focus-telemetry.json"
+sbom_ref: "../releases/v9.9.0/sbom.spdx.json"
+manifest_ref: "../releases/v9.9.0/manifest.zip"
+telemetry_ref: "../releases/v9.9.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/docs-index-v1.json"
 governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 📚 **Kansas Frontier Matrix — Documentation Index**
+# 📚 **Kansas Frontier Matrix — Documentation Index**  
 `docs/README.md`
 
-**Purpose:** Provide the central navigation hub for all Kansas Frontier Matrix (KFM) documentation — standards, governance, pipelines, AI systems, datasets, and developer references — validated under **MCP v6.3** and **FAIR+CARE**.
+**Purpose:**  
+Provide the **central navigation hub** for all Kansas Frontier Matrix (KFM) documentation — standards, workflows, governance, AI systems, pipelines, datasets, and developer guides — maintained under **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115** alignment.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](README.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)](standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](#)
 
 </div>
 
@@ -30,90 +33,118 @@ governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
 
 ## 📘 Overview
 
-The **Kansas Frontier Matrix (KFM)** documentation is a **living, interlinked knowledge base**.  
-Each Markdown file is both **human-readable** and **machine-parseable** — carrying front-matter metadata used by validation and governance systems.
+The **Kansas Frontier Matrix (KFM)** documentation ecosystem serves as a **living, interoperable knowledge graph**.  
+Each Markdown file includes YAML front-matter enabling **automated validation**, **telemetry tracking**, and **provenance auditing**.
 
 Aligned frameworks:
-- **Master Coder Protocol (MCP v6.3)**  
-- **FAIR+CARE** Data Governance  
-- **Platinum README v7.1**  
-- **ISO 19115** & **DCAT 3.0** metadata alignment
+- **Master Coder Protocol (MCP-DL v6.3)**  
+- **FAIR+CARE Governance**  
+- **Platinum README Template v7.1**  
+- **ISO 19115**, **DCAT 3.0**, and **CIDOC CRM**  
 
 ---
 
 ## 🗂️ Directory Layout
 
-```
+```plaintext
 docs/
-├── README.md                        # Central index (this file)
-├── glossary.md                      # Glossary of technical and ethical terms
+├── README.md                          # Central documentation index
+├── glossary.md                        # Glossary of technical, governance, and domain terms
 │
-├── architecture/                    # System and UI design documents
-│   ├── data-architecture.md         # Data modeling + STAC/DCAT schemas
-│   ├── web-ui.md                    # Frontend architecture & UX
-│   └── github-architecture.md       # CI/CD & governance automation
+├── architecture/                      # Architecture, systems, and design docs
+│   ├── data-architecture.md           # Data model, STAC/DCAT schemas, and ontologies
+│   ├── web-ui.md                      # Frontend structure, components, accessibility
+│   ├── github-architecture.md         # CI/CD and automation architecture
+│   └── api-architecture.md            # API and knowledge graph integration (v9.9.0)
 │
-├── standards/                       # FAIR+CARE, governance, style, licensing
-│   ├── faircare.md                  # Ethical data governance
-│   ├── markdown_rules.md            # Structural rules
-│   ├── markdown_guide.md            # Style guide
-│   ├── ui_accessibility.md          # WCAG 2.1 AA accessibility
-│   ├── licensing.md                 # SPDX / CC licensing reference
-│   ├── data-contracts.md            # Dataset contracts & schemas
+├── standards/                         # FAIR+CARE, governance, compliance, and style rules
+│   ├── faircare.md                    # FAIR+CARE ethical framework
+│   ├── markdown_rules.md              # Platinum README compliance rules
+│   ├── markdown_guide.md              # Style guide and formatting conventions
+│   ├── ui_accessibility.md            # WCAG 2.1 AA + inclusive design standards
+│   ├── licensing.md                   # SPDX / CC licensing references
+│   ├── data-contracts.md              # Data contract schema reference
+│   ├── telemetry_standards.md         # System telemetry and sustainability metrics
 │   └── governance/
-│       └── ROOT-GOVERNANCE.md       # Root governance charter
+│       └── ROOT-GOVERNANCE.md         # Root governance charter and oversight policies
 │
-├── templates/                       # Reusable authoring templates
-│   ├── model_card.md                # AI model card template
-│   ├── sop.md                       # SOP template
-│   └── experiment.md                # Experiment template
+├── workflows/                         # GitHub workflow documentation (NEW)
+│   ├── README.md                      # Workflow index
+│   ├── docs-lint.yml.md               # Markdown linting & validation workflow
+│   ├── faircare-validate.yml.md       # FAIR+CARE audit pipeline
+│   ├── telemetry-export.yml.md        # Metrics export and energy tracking
+│   ├── stac-validate.yml.md           # STAC/DCAT metadata validator
+│   └── ai-train.yml.md                # AI training + governance alignment pipeline
 │
-└── reports/                         # Validation & audit documentation
-    ├── faircare_summary.json        # FAIR+CARE validation snapshot
-    ├── stac_validation.json         # STAC/DCAT validation summary
-    └── telemetry/                   # Telemetry and governance metrics
+├── templates/                         # Authoring and documentation templates
+│   ├── model_card.md                  # AI model card template
+│   ├── sop.md                         # Standard Operating Procedure template
+│   ├── experiment.md                  # Experiment report template
+│   └── workflow_template.md           # YAML workflow documentation template
+│
+└── reports/                           # Validation and audit outputs
+    ├── faircare_summary.json          # FAIR+CARE audit snapshot
+    ├── stac_validation.json           # STAC/DCAT validation report
+    ├── governance_audit.json          # Governance compliance summary
+    └── telemetry/                     # Energy, latency, and a11y metrics
+        ├── docs_telemetry.json
+        └── sustainability_metrics.json
 ```
 
-> All documentation references appear in the telemetry snapshot:  
-> `../releases/v9.7.0/focus-telemetry.json`
+---
+
+## ⚙️ New: `workflows/` Documentation
+
+The **`docs/workflows/`** directory provides annotated Markdown companions for each **GitHub Actions workflow**.  
+Each document includes YAML excerpts, dependency diagrams, and governance context.
+
+| Workflow | Description |
+|-----------|-------------|
+| `docs-lint.yml.md` | Lints Markdown files for MCP-DL and Platinum README compliance. |
+| `faircare-validate.yml.md` | Runs FAIR+CARE audits and ethical metadata checks. |
+| `telemetry-export.yml.md` | Aggregates build metrics, energy use, and latency. |
+| `stac-validate.yml.md` | Validates STAC/DCAT interoperability. |
+| `ai-train.yml.md` | AI model training and ethical registry workflow. |
+
+These documents enable **traceable CI/CD governance**, ensuring all automations meet FAIR+CARE certification requirements.
 
 ---
 
 ## 🧱 Documentation Standards
 
-Every doc uses **GitHub-Flavored Markdown (GFM)** and includes YAML front-matter for provenance and validation.
+All Markdown files include **front-matter metadata**, badges, emojis, and validation hooks.
 
 **Front-Matter Example**
 ```yaml
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture"
 path: "src/ARCHITECTURE.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v9.9.0"
+last_updated: "2025-11-08"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "releases/v9.7.0/manifest.zip"
-telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
+sbom_ref: "releases/v9.9.0/sbom.spdx.json"
+manifest_ref: "releases/v9.9.0/manifest.zip"
+telemetry_ref: "releases/v9.9.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
 ```
 
-See **[markdown_rules.md](standards/markdown_rules.md)** and **[markdown_guide.md](standards/markdown_guide.md)** for alignment details (badges order, emoji headers, table rules, mermaid limits).
+See **[`standards/markdown_rules.md`](standards/markdown_rules.md)** for rules and emoji hierarchy.
 
 ---
 
-## 🧩 Core Categories
+## 🧩 Core Documentation Sections
 
 ### 🏗 Architecture & Systems
 
 | Document | Description |
 |-----------|-------------|
-| [`src/ARCHITECTURE.md`](../src/ARCHITECTURE.md) | High-level system architecture. |
-| [`architecture/data-architecture.md`](architecture/data-architecture.md) | Data model overview + STAC/DCAT mappings. |
-| [`architecture/web-ui.md`](architecture/web-ui.md) | Web app components, a11y, and interactions. |
-| [`.github/ARCHITECTURE.md`](../.github/ARCHITECTURE.md) | CI/CD automation and governance architecture. |
+| [`architecture/data-architecture.md`](architecture/data-architecture.md) | Data modeling, STAC/DCAT mapping, ontology. |
+| [`architecture/web-ui.md`](architecture/web-ui.md) | Web UI, components, and timeline integration. |
+| [`architecture/github-architecture.md`](architecture/github-architecture.md) | CI/CD & governance automation architecture. |
+| [`architecture/api-architecture.md`](architecture/api-architecture.md) | Backend and Neo4j integration overview. |
 
 ---
 
@@ -121,21 +152,21 @@ See **[markdown_rules.md](standards/markdown_rules.md)** and **[markdown_guide.m
 
 | Document | Description |
 |-----------|-------------|
-| [`standards/faircare.md`](standards/faircare.md) | FAIR+CARE governance framework. |
-| [`standards/governance/ROOT-GOVERNANCE.md`](standards/governance/ROOT-GOVERNANCE.md) | Root charter and council processes. |
-| [`standards/data-contracts.md`](standards/data-contracts.md) | Dataset contracts and schema references. |
-| [`standards/licensing.md`](standards/licensing.md) | SPDX/CC license guidance. |
+| [`standards/faircare.md`](standards/faircare.md) | FAIR+CARE ethical governance charter. |
+| [`standards/data-contracts.md`](standards/data-contracts.md) | Dataset schema and validation contract reference. |
+| [`standards/governance/ROOT-GOVERNANCE.md`](standards/governance/ROOT-GOVERNANCE.md) | Root governance policies. |
+| [`standards/ui_accessibility.md`](standards/ui_accessibility.md) | Accessibility and inclusivity standards. |
 
 ---
 
-### 🔄 Pipelines & Data Workflows
+### 🔄 Pipelines & Workflows
 
 | Document | Description |
 |-----------|-------------|
-| [`../src/pipelines/README.md`](../src/pipelines/README.md) | ETL/AI/validation pipeline index. |
-| [`../src/pipelines/etl/README.md`](../src/pipelines/etl/README.md) | ETL process and configs. |
-| [`../src/pipelines/validation/README.md`](../src/pipelines/validation/README.md) | FAIR+CARE and STAC validation flows. |
-| [`../data/processed/README.md`](../data/processed/README.md) | Processed data directory reference. |
+| [`../src/pipelines/README.md`](../src/pipelines/README.md) | Data and AI workflow orchestration. |
+| [`../src/pipelines/etl/README.md`](../src/pipelines/etl/README.md) | ETL ingest pipelines. |
+| [`workflows/README.md`](workflows/README.md) | GitHub CI/CD and governance workflows. |
+| [`../src/pipelines/validation/README.md`](../src/pipelines/validation/README.md) | Validation and FAIR+CARE certification processes. |
 
 ---
 
@@ -143,10 +174,9 @@ See **[markdown_rules.md](standards/markdown_rules.md)** and **[markdown_guide.m
 
 | Document | Description |
 |-----------|-------------|
-| [`../src/ai/README.md`](../src/ai/README.md) | AI modules and orchestration. |
-| [`../src/ai/models/focus_transformer_v1/README.md`](../src/ai/models/focus_transformer_v1/README.md) | Focus Mode model card. |
-| [`../src/ai/explainability/README.md`](../src/ai/explainability/README.md) | SHAP/LIME and drift analysis. |
-| [`../src/ai/training/README.md`](../src/ai/training/README.md) | Training configs and evaluation. |
+| [`../src/ai/README.md`](../src/ai/README.md) | AI systems and explainability pipeline. |
+| [`../src/ai/models/focus_transformer_v1/README.md`](../src/ai/models/focus_transformer_v1/README.md) | Focus Mode model documentation. |
+| [`../src/ai/explainability/README.md`](../src/ai/explainability/README.md) | AI explainability and bias tracking. |
 
 ---
 
@@ -154,27 +184,21 @@ See **[markdown_rules.md](standards/markdown_rules.md)** and **[markdown_guide.m
 
 | Document | Description |
 |-----------|-------------|
-| [`../web/README.md`](../web/README.md) | Frontend architecture and patterns. |
-| [`../web/public/icons/README.md`](../web/public/icons/README.md) | Iconography and a11y guidance. |
-| [`standards/ui_accessibility.md`](standards/ui_accessibility.md) | WCAG 2.1 AA standards. |
-| [`architecture/web-ui.md`](architecture/web-ui.md) | UI/UX diagrams and flows. |
+| [`../web/README.md`](../web/README.md) | Frontend design and structure. |
+| [`../web/public/icons/README.md`](../web/public/icons/README.md) | Iconography and accessibility guidance. |
+| [`standards/ui_accessibility.md`](standards/ui_accessibility.md) | WCAG compliance and accessibility rules. |
 
 ---
 
-## ✏️ Writing Rules & Style
+## 🧮 Validation & CI/CD Compliance
 
-- Emoji-prefixed headers (📘, 🗂️, 🧾, ⚙️, 🧩, ⚖️, 🕰️).  
-- Include a Directory Layout tree in each README.  
-- Mermaid: `flowchart TD|LR`, quoted labels, ≤1 diagram/section.  
-- Tables: ≥3 columns, `—` for N/A, ≤100 chars width.  
-- End with **Version History** and a **centered footer**.
+**Primary Workflows:**  
+- `docs-lint.yml` – Documentation and YAML validation.  
+- `faircare-validate.yml` – Ethical compliance and governance.  
+- `telemetry-export.yml` – Performance and sustainability metrics.  
 
----
-
-## 🧮 Validation & Compliance
-
-**Workflows:** `docs-lint.yml`, `stac-validate.yml`, `faircare-validate.yml`, `telemetry-export.yml`  
-**Reports:** stored under `reports/self-validation/docs/` and summarized in telemetry.
+**Reports:**  
+Stored under `reports/self-validation/docs/` and surfaced in `focus-telemetry.json`.
 
 ---
 
@@ -182,17 +206,19 @@ See **[markdown_rules.md](standards/markdown_rules.md)** and **[markdown_guide.m
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added Directory Layout, standards refs, and telemetry linkages. |
-| v9.5.0 | 2025-10-20 | A. Barta | Introduced markdown compliance and governance sections. |
-| v9.3.0 | 2025-08-12 | KFM Core Team | Expanded architecture and FAIR+CARE references. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial documentation index created. |
+| v9.9.0 | 2025-11-08 | `@kfm-docs` | Added `workflows/` documentation set and updated architecture categories. |
+| v9.7.0 | 2025-11-05 | `@kfm-core` | Standardized telemetry schema and governance refs. |
+| v9.5.0 | 2025-10-20 | `@kfm-core` | Integrated FAIR+CARE metadata validation hooks. |
+| v9.0.0 | 2025-06-01 | `@kfm-core` | Initial documentation index established. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix Documentation**  
+*Governed Knowledge × FAIR+CARE Certification × Sustainable Transparency*  
+© 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
 [Back to Root README](../README.md) · [Governance Charter](standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
