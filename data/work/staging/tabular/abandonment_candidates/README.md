@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "🏚️ Kansas Frontier Matrix — Abandonment Candidate Analysis (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/abandonment_candidates/README.md"
