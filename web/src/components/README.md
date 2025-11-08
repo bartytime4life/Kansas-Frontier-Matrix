@@ -70,8 +70,6 @@ web/src/components/
 │   ├── telemetry.ts            # Logs performance and FAIR+CARE metrics
 │   └── timeline.css            # Styling and accessibility tokens
 │
-│
-│
 ├── FocusMode/
 │   ├── FocusConsole.tsx
 │   ├── InsightCard.tsx
