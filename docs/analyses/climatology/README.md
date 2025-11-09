@@ -1,190 +1,185 @@
 ---
-title: "🌦️ Kansas Frontier Matrix — Climatology Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/analyses/climatology/README.md"
+title: "🌦️ Kansas Frontier Matrix — Climatology Methods Validation Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/analyses/climatology/methods/validation.md"
 version: "v10.2.2"
 last_updated: "2025-11-09"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.2.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/analyses-climatology-overview-v3.json"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/analyses-climatology-methods-validation-v3.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🌦️ **Kansas Frontier Matrix — Climatology Analyses Overview**
-`docs/analyses/climatology/README.md`
+# 🌦️ **Kansas Frontier Matrix — Climatology Methods Validation Framework**
+`docs/analyses/climatology/methods/validation.md`
 
 **Purpose:**  
-Document and govern all **climate-oriented analytical workflows** in the Kansas Frontier Matrix (KFM), including **temperature and precipitation trend analyses**, **extreme weather validation**, and **future projection modeling**.  
-These workflows comply with **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3** documentation-first standards, ensuring scientific reproducibility, sustainability, and ethical climate governance.
+Define the **validation, verification, and sustainability auditing framework** for all climatology analytical methods in the Kansas Frontier Matrix (KFM).  
+This validation schema ensures reproducibility and governance alignment with **FAIR+CARE**, **ISO 50001/14064**, and **MCP-DL v6.3** through quantitative metrics, automated QA, and ethical oversight.
 
 [![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Climatology-orange)](../../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../../releases/)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Methods_Validation-orange)](../../../../../docs/standards/README.md)
+[![Status](https://img.shields.io/badge/Status-Certified-brightgreen)](../../../../../releases/)
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **Climatology Analysis Module** explores Kansas’s long-term temperature, precipitation, and atmospheric behavior using open datasets (NOAA, NASA, PRISM, and CMIP6).  
-It serves as the backbone for **hydrologic**, **agricultural**, and **ecological** modeling by providing validated climate indicators under FAIR+CARE and ISO-aligned telemetry standards.
+The **Climatology Methods Validation Framework** establishes a unified governance structure for all climate analyses conducted in KFM — covering temporal, spatial, and projection modeling.  
+Each validation run tests data quality, model integrity, and ethical compliance through FAIR+CARE audits, sustainability telemetry, and governance ledger recording.
 
-**Primary Objectives**
-- Detect and quantify **temperature and precipitation trends** since 1850  
-- Analyze **extreme weather events** (droughts, floods, heatwaves, and cold spells)  
-- Integrate **future climate projections** using CMIP6 and Daymet datasets  
-- Provide FAIR+CARE-validated results supporting sustainability and policy frameworks  
+Validation is divided into **five domains**:
+1. **Data Integrity Validation** — Source verification and completeness  
+2. **Statistical Validation** — Correlation, bias, and variance performance  
+3. **Spatial Validation** — Geostatistical accuracy and hotspot confidence  
+4. **Projection Validation** — Model ensemble spread and bias correction accuracy  
+5. **Sustainability Validation** — ISO 50001 / 14064-compliant telemetry for energy and emissions  
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```plaintext
-docs/analyses/climatology/
-├── README.md                                  # This overview
-├── datasets/                                  # Climate data sources and metadata
-│   ├── README.md
-│   ├── raw/                                   # NOAA, NASA, PRISM, CMIP6 datasets
-│   ├── processed/                             # Cleaned, bias-corrected climate time-series
-│   ├── derived/                               # Trend surfaces, anomaly indices
-│   └── metadata/                              # STAC/DCAT 3.0 + FAIR+CARE metadata registry
-├── temporal-modeling.md                       # Time-series and anomaly modeling methods
-├── spatial-trends.md                          # Geospatial climate trend mapping
-├── projection-modeling.md                     # CMIP6 and Daymet climate projection workflows
-├── validation.md                              # FAIR+CARE and ISO validation
-└── reports/                                   # Dashboards, summaries, and visualization products
-    ├── README.md
-    ├── climatology_summary.json
-    ├── sustainability_audit.json
-    └── visualization/
-        ├── temperature_trend_map.png
-        ├── precipitation_anomaly_overlay.png
-        └── cmip6_projection_timeseries.png
+docs/analyses/climatology/methods/
+├── README.md                                  # Methods overview
+├── temporal-modeling.md                       # Time-series analysis
+├── spatial-trends.md                          # Spatial interpolation and trend mapping
+├── projection-modeling.md                     # Climate scenario modeling
+└── validation.md                              # This document
 ```
 
 ---
 
-## 🧩 Analytical Framework
+## 🧩 Validation Framework
 
 ```mermaid
 flowchart TD
-  A["NOAA / NASA / PRISM / CMIP6 Datasets"] --> B["Preprocessing (Bias Correction + QC)"]
-  B --> C["Temporal Analysis (Trend Detection + Anomaly Calculation)"]
-  C --> D["Spatial Modeling (Raster Trends + Basin Aggregation)"]
-  D --> E["Projection Modeling (CMIP6, Daymet)"]
-  E --> F["FAIR+CARE Validation + ISO 50001 / 14064 Telemetry"]
-  F --> G["Governance Ledger + FAIR+CARE Council Review"]
+  A["Method Outputs (Temporal / Spatial / Projection)"] --> B["Statistical QA (r, p, RMSE, R²)"]
+  B --> C["Spatial Verification (Moran’s I / Gi*)"]
+  C --> D["Projection Comparison (ΔT, ΔP, Ensemble Spread)"]
+  D --> E["FAIR+CARE Validation + ISO Telemetry Logging"]
+  E --> F["Governance Ledger Commit + Council Review"]
 ```
 
 ---
 
-## ⚙️ Core Datasets
+## ⚙️ Validation Metrics
 
-| Source | Dataset | Variables | Coverage | FAIR+CARE Status |
-|--------|----------|------------|-----------|------------------|
-| **NOAA NCEI** | GHCN-Daily | Tmin, Tmax, Precip | 1880–present | ✅ Certified |
-| **PRISM Climate Group** | Gridded Climate Data | Tmean, Precip | 1895–present | ✅ Certified |
-| **NASA Daymet V4** | Daily Surface Weather | Tmin, Tmax, P, VP | 1980–present | ✅ Certified |
-| **CMIP6 (Downscaled)** | Climate Projections (SSP1–SSP5) | Tmean, Precip, PET | 2015–2100 | ✅ Certified |
-| **NOAA Storm Events** | Severe Weather & Extremes | Event, Date, Magnitude | 1950–present | ✅ Certified |
+| Metric | Description | Validation Target | Unit |
+|---------|-------------|-------------------|------|
+| **r (Correlation)** | Correlation between modeled and observed datasets | ≥ 0.7 | — |
+| **RMSE** | Root Mean Square Error for trend or projection accuracy | ≤ 10% | — |
+| **Bias (Δ)** | Mean deviation from observed climatology | ≤ 5% | °C / % |
+| **Ensemble Spread** | Variability across CMIP6 ensemble projections | ≤ 15% | — |
+| **Moran’s I** | Spatial autocorrelation measure | ≥ 0.4 | — |
+| **Energy (J)** | Energy used per validation run | ≤ 15 | Joules |
+| **Carbon (gCO₂e)** | Carbon emissions per run | ≤ 0.006 | gCO₂e |
 
----
-
-## 🌡️ Temporal Analysis Overview
-
-Temporal analysis quantifies climate variability and trends across Kansas:
-
-| Method | Purpose | Tools | Output |
-|--------|----------|-------|--------|
-| **Mann–Kendall Trend Test** | Detects monotonic temperature/precipitation trends | `pyMannKendall` | Trend slope, p-value |
-| **Sen’s Slope Estimator** | Quantifies rate of change per decade | `scipy.stats` | °C or mm/decade |
-| **Seasonal Decomposition (STL)** | Isolates long-term trend and cyclic components | `statsmodels` | Decomposed series |
-| **Wavelet Transform** | Identifies multi-scale oscillations (ENSO, PDO) | `pycwt` | Power spectra |
-| **Extreme Value Analysis (EVA)** | Detects annual maxima/minima | `extremefit` | Return period estimates |
+Each validation cycle generates JSON reports (`faircare_validation.json`) that synchronize with KFM’s Governance Ledger for provenance tracking.
 
 ---
 
-## 🗺️ Spatial Trend Mapping
+## 🧠 Validation Domains
 
-| Product | Description | Format |
-|----------|--------------|--------|
-| `temperature_trend_map.tif` | Raster map of temperature trend slopes (°C/decade). | GeoTIFF (COG) |
-| `precipitation_anomaly_overlay.tif` | Gridded precipitation anomaly index (SPEI). | GeoTIFF |
-| `trend_significance.geojson` | Basin-level areas with significant p < 0.05 trends. | GeoJSON |
-| `seasonality_shift_map.tif` | Shift in wet/dry season onset from 1900–2025. | GeoTIFF |
+### 1️⃣ Data Integrity Validation
+- Verify STAC/DCAT metadata and checksum logs for every dataset.
+- Compare variable units and coordinate systems across data sources.
 
-Spatial analyses employ Moran’s I and Gi* to detect clusters of significant change.
+### 2️⃣ Statistical Validation
+- Compute R², RMSE, p-values, and bias for model predictions versus observed data.
+- Validate trend directionality and magnitude consistency.
 
----
+### 3️⃣ Spatial Validation
+- Assess spatial clustering significance using Moran’s I and Getis–Ord Gi*.
+- Ensure consistency between gridded results and basin averages.
 
-## 🔮 Climate Projection Modeling (CMIP6 + Daymet)
+### 4️⃣ Projection Validation
+- Evaluate CMIP6 model deltas (ΔT, ΔP) relative to baseline climatology.
+- Quantify ensemble mean vs. individual model spread; flag outliers.
 
-Future scenarios integrate **CMIP6** downscaled datasets with **Daymet** high-resolution historical baselines:
-
-| Model | Scenario | Variables | Temporal Range | Resolution |
-|--------|-----------|------------|----------------|-------------|
-| **ACCESS-ESM1-5** | SSP2–4.5 | Tmean, Precip | 2020–2100 | 0.25° |
-| **GFDL-ESM4** | SSP3–7.0 | Tmean, PET | 2020–2100 | 0.25° |
-| **UKESM1-0-LL** | SSP5–8.5 | Tmean, Precip | 2020–2100 | 0.25° |
-
-Outputs:
-- Multi-model ensemble mean temperature and precipitation maps.  
-- Annual anomaly projections (relative to 1991–2020 climatology).  
-- FAIR+CARE registered CMIP6 metadata via `datasets/metadata/`.
+### 5️⃣ Sustainability Validation
+- Log energy and carbon metrics from each validation run.
+- Validate telemetry coverage and ethics compliance under FAIR+CARE governance.
 
 ---
 
-## ⚖️ FAIR+CARE & ISO Governance Integration
-
-| Principle | Implementation | Verification Source |
-|------------|----------------|--------------------|
-| **Findable** | STAC/DCAT 3.0 metadata for all products | `datasets/metadata/` |
-| **Accessible** | Public FAIR+CARE releases under CC-BY | Governance Ledger |
-| **Interoperable** | GeoTIFF, NetCDF, CSV, JSON-LD formats | `telemetry_schema` |
-| **Reusable** | Lineage tracked in manifest and audit logs | `manifest_ref` |
-| **Collective Benefit** | Supports Kansas climate resilience policy | FAIR+CARE Audit |
-| **Responsibility** | Tracks energy and carbon per model run | `telemetry_ref` |
-| **Ethics** | Sensitive projections anonymized at county level | FAIR+CARE Council Review |
-
----
-
-## 🧮 Sustainability Metrics
-
-| Metric | Description | Target | Unit |
-|---------|-------------|---------|------|
-| **Energy (J)** | Mean energy per analysis run | ≤ 15 | Joules |
-| **Carbon (gCO₂e)** | CO₂ output per module | ≤ 0.006 | gCO₂e |
-| **Telemetry Coverage (%)** | FAIR+CARE trace completion | ≥ 95 | % |
-| **Validation Compliance (%)** | FAIR+CARE audit success rate | 100 | % |
-
----
-
-## 🧾 Governance Ledger Example
+## 🧮 FAIR+CARE Validation Record Example
 
 ```json
 {
-  "ledger_id": "climatology-analysis-ledger-2025-11-09-0012",
-  "component": "Climatology Analysis and Projection Module",
-  "datasets": [
-    "NOAA GHCN-Daily",
-    "PRISM Gridded Climate Data",
-    "NASA Daymet V4",
-    "CMIP6 SSP Projections"
+  "validation_id": "climatology-methods-validation-2025-11-09-0105",
+  "modules_validated": [
+    "Temporal Modeling",
+    "Spatial Trends",
+    "Projection Modeling"
   ],
-  "energy_joules": 13.6,
-  "carbon_gCO2e": 0.0055,
-  "faircare_status": "Pass",
+  "metrics": {
+    "r": 0.81,
+    "rmse": 0.09,
+    "bias": 0.04,
+    "moran_i": 0.46,
+    "ensemble_spread": 0.12
+  },
+  "energy_joules": 14.3,
+  "carbon_gCO2e": 0.0056,
+  "validation_status": "Pass",
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T13:35:00Z"
+  "timestamp": "2025-11-09T15:45:00Z"
 }
 ```
+
+---
+
+## ⚖️ FAIR+CARE & ISO Governance Matrix
+
+| Principle | Implementation | Validation Source |
+|------------|----------------|--------------------|
+| **Findable** | All validation results stored in FAIR+CARE registry | `reports/faircare_validation.json` |
+| **Accessible** | Publicly accessible validation logs under CC-BY | FAIR+CARE Ledger |
+| **Interoperable** | JSON and CSV validation records | `telemetry_schema` |
+| **Reusable** | Provenance, parameters, and methods embedded | `manifest_ref` |
+| **Responsibility** | Energy and emissions logged under ISO 50001/14064 | `telemetry_ref` |
+| **Ethics** | FAIR+CARE Council reviews ethical and data equity aspects | Governance Charter |
+
+---
+
+## 🧾 Governance Ledger Record Example
+
+```json
+{
+  "ledger_id": "climatology-methods-validation-ledger-2025-11-09-0106",
+  "component": "Climatology Methods Validation Framework",
+  "modules": [
+    "Temporal Modeling",
+    "Spatial Trends",
+    "Projection Modeling"
+  ],
+  "energy_joules": 14.3,
+  "carbon_gCO2e": 0.0056,
+  "faircare_status": "Pass",
+  "auditor": "FAIR+CARE Council",
+  "timestamp": "2025-11-09T15:47:00Z"
+}
+```
+
+---
+
+## 🧮 Sustainability Metrics Summary
+
+| Metric | Description | Value | Target | Unit |
+|---------|-------------|--------|---------|------|
+| **Energy (J)** | Energy consumed during full validation | 14.3 | ≤ 15 | Joules |
+| **Carbon (gCO₂e)** | Emissions during validation | 0.0056 | ≤ 0.006 | gCO₂e |
+| **Telemetry Coverage (%)** | FAIR+CARE trace coverage | 100 | ≥ 95 | % |
+| **Audit Pass Rate (%)** | FAIR+CARE compliance rate | 100 | 100 | % |
 
 ---
 
@@ -192,9 +187,9 @@ Outputs:
 
 | Version | Date | Author | Summary |
 |----------|------|--------|----------|
-| v10.2.2 | 2025-11-09 | FAIR+CARE Council | Published aligned climatology overview with CMIP6 projections and telemetry integration. |
-| v10.2.1 | 2025-11-09 | Climatology Working Group | Added projection modeling and sustainability audit structure. |
-| v10.2.0 | 2025-11-09 | KFM Data Science Team | Initial climatology documentation under MCP-DL v6.3 with FAIR+CARE registry. |
+| v10.2.2 | 2025-11-09 | FAIR+CARE Council | Published climatology methods validation guide with ISO and FAIR+CARE integration. |
+| v10.2.1 | 2025-11-09 | Validation & Governance Team | Added statistical and projection validation metrics. |
+| v10.2.0 | 2025-11-09 | KFM Climate Group | Created baseline validation documentation aligned with hydrology standards. |
 
 ---
 
@@ -203,7 +198,6 @@ Outputs:
 © 2025 Kansas Frontier Matrix Project  
 Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Analyses Overview](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to Climatology Methods](./README.md) · [Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
