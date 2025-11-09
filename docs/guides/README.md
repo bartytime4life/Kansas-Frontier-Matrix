@@ -42,7 +42,7 @@ This structure ensures maintainability, ethical reproducibility, and strong cros
 
 ## 🗂️ Directory Layout (for `docs/guides/` and below)
 
-```plaintext
+~~~plaintext
 docs/
   guides/                    # User, developer, and governance documentation hub
   │
@@ -77,26 +77,26 @@ docs/
       ├── README.md          # Visualization and interface design index
       ├── maplibre-guide.md  # MapLibre + React component integration
       └── accessibility.md   # Accessibility and color-contrast standards
-````
+~~~
 
 ---
 
 ## 🧩 Guide Categories
 
-| Category          | Description                                                          | Key Documents                                                       |
-| ----------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| **Upgrade**       | Major version migration, readiness validation, legacy consolidation. | `upgrade/README.md`, `v10-readiness.md`, `v10-inventory.md`         |
-| **AI**            | Explainability, Focus Mode v2, and AI ethics documentation.          | `ai/focus-mode-v2.md`, `ai/explainability.md`                       |
-| **Workflows**     | CI/CD pipeline operations and governance validation.                 | `workflows/ci-cd-pipelines.md`, `workflows/governance-ledger.md`    |
-| **Governance**    | FAIR+CARE standards, MCP compliance, ethical oversight.              | `governance/faircare.md`, `governance/mcp-compliance.md`            |
-| **Integration**   | STAC/DCAT, API, and ETL interoperability.                            | `integration/stac-dcat-bridge.md`, `integration/api-data-flow.md`   |
-| **Visualization** | UI design, accessibility, MapLibre configuration.                    | `visualization/maplibre-guide.md`, `visualization/accessibility.md` |
+| Category | Description | Key Documents |
+|-----------|--------------|----------------|
+| **Upgrade** | Major version migration, readiness validation, legacy consolidation. | `upgrade/README.md`, `v10-readiness.md`, `v10-inventory.md` |
+| **AI** | Explainability, Focus Mode v2, and AI ethics documentation. | `ai/focus-mode-v2.md`, `ai/explainability.md` |
+| **Workflows** | CI/CD pipeline operations and governance validation. | `workflows/ci-cd-pipelines.md`, `workflows/governance-ledger.md` |
+| **Governance** | FAIR+CARE standards, MCP compliance, ethical oversight. | `governance/faircare.md`, `governance/mcp-compliance.md` |
+| **Integration** | STAC/DCAT, API, and ETL interoperability. | `integration/stac-dcat-bridge.md`, `integration/api-data-flow.md` |
+| **Visualization** | UI design, accessibility, MapLibre configuration. | `visualization/maplibre-guide.md`, `visualization/accessibility.md` |
 
 ---
 
 ## 🔁 Relationships Between Guides
 
-```mermaid
+~~~mermaid
 flowchart TD
 A["Upgrade"] --> B["AI & Focus Mode"]
 B --> C["Workflows & Validation"]
@@ -104,7 +104,7 @@ C --> D["Governance & FAIR+CARE"]
 D --> E["Integration & Data Flow"]
 E --> F["Visualization & UX"]
 F --> G["Telemetry & Reports"]
-```
+~~~
 
 ---
 
@@ -112,28 +112,27 @@ F --> G["Telemetry & Reports"]
 
 All guides beneath this directory inherit FAIR+CARE, MCP, and telemetry compliance metadata.
 
-| Layer      | Validation Workflow     | Output                      |
-| ---------- | ----------------------- | --------------------------- |
-| FAIR+CARE  | `faircare-validate.yml` | FAIR+CARE compliance report |
-| MCP-DL     | `docs-lint.yml`         | Lint + compliance JSON      |
-| Provenance | `governance-ledger.yml` | SBOM + manifest trace       |
-| Telemetry  | `telemetry-export.yml`  | `telemetry.json`            |
+| Layer | Validation Workflow | Output |
+|-------|----------------------|---------|
+| FAIR+CARE | `faircare-validate.yml` | FAIR+CARE compliance report |
+| MCP-DL | `docs-lint.yml` | Lint + compliance JSON |
+| Provenance | `governance-ledger.yml` | SBOM + manifest trace |
+| Telemetry | `telemetry-export.yml` | `telemetry.json` |
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author    | Summary                                                                                        |
-| ------- | ---------- | --------- | ---------------------------------------------------------------------------------------------- |
+| Version | Date | Author | Summary |
+|----------|------|--------|----------|
 | v10.0.0 | 2025-11-08 | Core Team | Established structured `docs/guides/` directory overview and standardized subdirectory schema. |
-| v9.7.0  | 2025-11-05 | Core Team | Pre-upgrade guide templates and layout design.                                                 |
+| v9.7.0 | 2025-11-05 | Core Team | Pre-upgrade guide templates and layout design. |
 
 ---
 
 <p align="center">
 
-© Kansas Frontier Matrix • Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω
+© Kansas Frontier Matrix • Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
 [Back to Docs Index](../README.md) · [Governance Charter](../standards/faircare.md)
 
 </p>
-```
