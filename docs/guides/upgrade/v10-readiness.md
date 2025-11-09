@@ -18,9 +18,8 @@ governance_ref: "../../standards/faircare.md"
 # 🚦 **Kansas Frontier Matrix — v10 Readiness & Validation Checklist**
 `docs/guides/upgrade/v10-readiness.md`
 
-**Purpose:** Authoritative pre-deployment checklist to confirm structure, pipelines,
-governance, and FAIR+CARE compliance before tagging **v10.0.0**. Delivered as one
-single raw markdown file per KFM rules.
+**Purpose:**  
+Final pre-deployment checklist ensuring repository, pipelines, governance, and FAIR+CARE compliance are ready for **v10.0.0**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../standards/documentation.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
@@ -33,10 +32,9 @@ single raw markdown file per KFM rules.
 
 ## 📘 Overview
 
-This file is the final gate for the **KFM v10.0** release. It validates repository layout,
-Data Contracts v3 (with CARE fields), streaming and predictive pipelines, Focus Mode v2,
-live STAC↔DCAT catalogs, security posture, telemetry, and provenance ledger parity.
-All results must pass **MCP-DL v6.3**, **FAIR+CARE**, and **Platinum README v7.1** checks.
+This file confirms readiness of **Kansas Frontier Matrix v10.0** for final release.  
+All modules—AI pipelines, data contracts, FAIR+CARE governance, and documentation—must pass **MCP-DL v6.3** validation.  
+Upon successful completion, the repository is authorized for the official v10.0.0 tag.
 
 ---
 
@@ -44,143 +42,141 @@ All results must pass **MCP-DL v6.3**, **FAIR+CARE**, and **Platinum README v7.1
 
 ```bash
 KansasFrontierMatrix/
-├── src/                     # Core application & pipelines
-│   ├── ai/                  # Models, explainability, focus engine
+├── src/                     # Application logic & pipelines
+│   ├── ai/                  # AI models, explainability, focus engine
 │   ├── api/                 # FastAPI / GraphQL backend
 │   ├── graph/               # Neo4j schema & ontology mapping
 │   ├── pipelines/           # ETL, validation, FAIR+CARE workflows
-│   ├── telemetry/           # Monitoring, energy/carbon, provenance
-│   └── web/                 # React + MapLibre frontend
+│   ├── telemetry/           # Energy metrics and sustainability logging
+│   └── web/                 # React + MapLibre web client
 │
-├── web/                     # Frontend assets & builds
-│   ├── src/                 # UI components (MapView, Timeline, FocusPanel)
-│   └── public/              # Icons, fonts, accessibility assets
-│
-├── data/                    # Raw → processed datasets & metadata
-│   ├── sources/             # Data contracts (v3, STAC/DCAT)
+├── data/                    # Datasets and metadata
+│   ├── sources/             # Data contracts (v3)
 │   ├── raw/                 # Downloaded datasets (LFS/DVC tracked)
-│   ├── processed/           # Validated GeoJSON, GeoTIFF, CSVs
-│   └── stac/                # STAC catalog metadata (v1.0)
+│   ├── processed/           # Validated GeoJSON, GeoTIFF, CSV
+│   └── stac/                # STAC catalog (v1.0)
 │
-├── docs/                    # Documentation, standards, guides
-│   ├── standards/           # FAIR+CARE, licensing, governance
-│   ├── templates/           # Issue forms, SOPs, model cards
-│   ├── guides/              # Contributor & upgrade guides
-│   │   └── upgrade/         # v10 readiness & transition docs
-│   └── architecture.md      # System architecture overview
+├── docs/                    # Documentation, governance, standards
+│   ├── standards/           # FAIR+CARE, licensing
+│   ├── guides/              # Contributor and upgrade guides
+│   │   └── upgrade/         # v10 readiness and validation
+│   └── architecture.md      # System architecture documentation
 │
-├── tools/                   # CLI & validation scripts
+├── tools/                   # CLI and utility scripts
 │   ├── ingest_data.py
 │   ├── generate_stac.py
 │   └── validate_data.py
 │
-├── tests/                   # Unit/integration tests
-├── .github/                 # Workflows, issue templates, governance
-├── LICENSE                  # MIT (code) / CC-BY 4.0 (data)
-├── CONTRIBUTING.md          # Contribution & PR guidelines
-└── Makefile                 # Build, validate, deploy targets
+├── tests/                   # Automated tests
+├── .github/                 # CI/CD workflows and templates
+├── LICENSE                  # MIT / CC-BY 4.0 licensing
+├── CONTRIBUTING.md          # Contributor guidelines
+└── Makefile                 # Build, validation, and deployment targets
 ````
 
 ---
 
-## 🧩 System Validation Categories
+## 🧩 Validation Categories
 
-| Category             | Validation Scope                         | Status | Notes                                |
-| -------------------- | ---------------------------------------- | ------ | ------------------------------------ |
-| Repository Structure | Matches v10.0 tree; Platinum v7.1 docs   | ☐      | Paths, comments, order verified      |
-| Data Contracts v3    | CARE fields, streaming, license, prov    | ☐      | All `data/sources/*.json` validate   |
-| ETL Pipelines        | Batch + Streaming ingest                 | ☐      | Feeds active; retries/backoff logged |
-| Predictive Pipelines | Future-dated STAC Items (2030–2100)      | ☐      | Scenario + lineage complete          |
-| Focus Mode v2        | XAI (SHAP), subgraph filters, narratives | ☐      | P95 < 1500 ms; prompts pinned        |
-| STAC↔DCAT Bridge     | Live dual catalogs (JSON-LD)             | ☐      | Validators pass; links resolvable    |
-| Security & SBOM      | CodeQL + Trivy                           | ☐      | No CRITICAL; SBOM current            |
-| Telemetry            | Energy/carbon, runtime, stream lag       | ☐      | `telemetry.json` schema passes       |
-| Governance Ledger    | Hash lineage ↔ manifest parity           | ☐      | All artifacts recorded; no gaps      |
-| Documentation        | docs-lint; headers/badges/tables         | ☐      | Width ≤ 100 chars; footer present    |
+| Category             | Validation Scope                    | Status | Notes                     |
+| -------------------- | ----------------------------------- | ------ | ------------------------- |
+| Repository Structure | Matches v10.0 tree; verified layout | ☐      | All paths conform         |
+| Data Contracts v3    | CARE metadata and licenses          | ☐      | Validate JSON schemas     |
+| ETL Pipelines        | Batch + Streaming ingest            | ☐      | All endpoints healthy     |
+| Predictive Pipelines | Future STAC data (2030–2100)        | ☐      | Forecasts registered      |
+| Focus Mode v2        | Adaptive explainable AI             | ☐      | SHAP/LIME validation      |
+| STAC↔DCAT Bridge     | Dual metadata compliance            | ☐      | JSON-LD validation passes |
+| Security & SBOM      | CodeQL / Trivy                      | ☐      | No CRITICAL issues        |
+| Telemetry            | ISO 50001 / 14064 energy metrics    | ☐      | Telemetry validated       |
+| Governance Ledger    | Provenance hash verification        | ☐      | All entries reconciled    |
+| Documentation        | FAIRCARE validation                 | ☐      | All lint checks passed    |
 
 ---
 
 ## ✅ Pre-Deployment Checklist
 
-### 1) Structure & Docs
+### 1️⃣ Repository & Documentation
 
-* [ ] Repo tree matches **Directory Layout** exactly.
-* [ ] All READMEs carry YAML front-matter + standard badges.
-* [ ] Relative links only; no dead anchors.
-* [ ] `version`, `last_updated`, `commit_sha` consistent.
+* [ ] Directory layout matches standard
+* [ ] All READMEs have front-matter and badges
+* [ ] Links are relative; no dead anchors
+* [ ] Commit SHA and version fields updated
 
-### 2) Data & Contracts
+### 2️⃣ Data & Contracts
 
-* [ ] Data Contract v3 in every `data/sources/*.json`.
-* [ ] CARE fields complete (`collective_benefit`, `authority_to_control`, etc.).
-* [ ] STAC/DCAT validated (`make stac-validate`).
+* [ ] Data contracts upgraded to v3 schema
+* [ ] CARE fields complete
+* [ ] STAC/DCAT validation completed
 
-### 3) Pipelines & Graph
+### 3️⃣ Pipelines & Graph
 
-* [ ] Batch ETL green (`make etl-run`).
-* [ ] Streaming consumers healthy; lag within SLO.
-* [ ] Predictive outputs ≥ 2030 with provenance.
+* [ ] Batch ETL successful
+* [ ] Streaming pipelines stable (24h)
+* [ ] Predictive outputs future-dated
 
-### 4) Focus Mode v2
+### 4️⃣ Focus Mode v2
 
-* [ ] Endpoints live: `/api/events`, `/api/map/layers`, `/api/streams/live`, `/api/focus/{id}`.
-* [ ] SHAP artifacts stored; bias checks pass.
-* [ ] Subgraph filters + time zoom performant.
+* [ ] Explainability enabled
+* [ ] Ethical summary caching validated
+* [ ] AI governance logs verified
 
-### 5) Governance & Security
+### 5️⃣ Governance & Security
 
-* [ ] CodeQL (SARIF) & Trivy: 0 CRITICAL.
-* [ ] Ledger entries match SBOM + manifest hashes.
-* [ ] Third-party licenses & notices updated.
+* [ ] Ledger hash parity confirmed
+* [ ] SBOM manifests aligned
+* [ ] CodeQL/Trivy: 0 critical issues
 
-### 6) Telemetry & Sustainability
+### 6️⃣ Telemetry & Sustainability
 
-* [ ] Export `releases/v10.0.0/telemetry.json`.
-* [ ] Metrics include energy, carbon, runtimes, pass/fail.
-* [ ] ISO 50001/14064 summaries attached.
+* [ ] Telemetry JSON validated
+* [ ] Energy/carbon logs archived
+* [ ] ISO 50001/14064 compliance reviewed
 
 ---
 
 ## 🧮 CI/CD Validation Matrix
 
-| Workflow                | Function                 | Artifact                          |
-| ----------------------- | ------------------------ | --------------------------------- |
-| `docs-lint.yml`         | Markdown compliance      | `reports/docs/*.json`             |
-| `stac-validate.yml`     | STAC schema checks       | `reports/stac/*.json`             |
-| `faircare-validate.yml` | CARE & ethics audit      | `reports/fair/*.json`             |
-| `codeql.yml`            | Code scanning (SARIF)    | `reports/security/codeql/*.sarif` |
-| `trivy.yml`             | Image/package vulns      | `reports/security/trivy/*.json`   |
-| `governance-ledger.yml` | Provenance hash parity   | `reports/ledger/*.ndjson`         |
-| `telemetry-export.yml`  | Energy + runtime metrics | `releases/v10.0.0/telemetry.json` |
+| Workflow               | Function                          | Output                          |
+| ---------------------- | --------------------------------- | ------------------------------- |
+| docs-lint.yml          | Markdown and README checks        | reports/docs/*.json             |
+| stac-validate.yml      | STAC schema validation            | reports/stac/*.json             |
+| faircare-validate.yml  | Ethical provenance audit          | reports/fair/*.json             |
+| codeql.yml / trivy.yml | Security and vulnerability scans  | reports/security/*.json         |
+| governance-ledger.yml  | Provenance hash validation        | reports/ledger/*.ndjson         |
+| telemetry-export.yml   | Energy and runtime metrics export | releases/v10.0.0/telemetry.json |
 
 ---
 
 ## ⚖️ FAIR+CARE Compliance Summary
 
-| Principle            | Implementation in v10.0                    |
-| -------------------- | ------------------------------------------ |
-| Findable             | STAC/DCAT catalogs indexed & queryable     |
-| Accessible           | Public REST/GraphQL endpoints              |
-| Interoperable        | CIDOC CRM + OWL-Time + GeoSPARQL mapping   |
-| Reusable             | CC-BY / MIT + full provenance              |
-| Collective Benefit   | CARE metadata in all data contracts        |
-| Authority to Control | RBAC + ethical governance ledger           |
-| Responsibility       | CI FAIRCARE workflow blocks non-compliance |
-| Transparency         | Explainable AI + audit trails in ledger    |
+| Principle            | Implementation                   |
+| -------------------- | -------------------------------- |
+| Findable             | STAC/DCAT searchable catalogs    |
+| Accessible           | Public REST/GraphQL APIs         |
+| Interoperable        | CIDOC CRM + OWL-Time + GeoSPARQL |
+| Reusable             | CC-BY / MIT with provenance      |
+| Collective Benefit   | CARE fields populated            |
+| Authority to Control | RBAC and ethical governance      |
+| Responsibility       | CI FAIRCARE workflow enforced    |
+| Transparency         | Explainable AI and audit logs    |
 
 ---
 
-## 🕰️ Version History
+## 🕰 Version History
 
-| Version | Date       | Author    | Summary                                                  |
-| ------- | ---------- | --------- | -------------------------------------------------------- |
-| v10.0.0 | 2025-11-08 | Core Team | Final readiness gate with aligned tree and CI/governance |
-| v9.7.0  | 2025-10-30 | Core Team | Pre-upgrade validation scaffold and docs audit           |
+| Version | Date       | Author    | Summary                                  |
+| ------- | ---------- | --------- | ---------------------------------------- |
+| v10.0.0 | 2025-11-08 | Core Team | Final readiness checklist for release    |
+| v9.7.0  | 2025-10-30 | Core Team | Streaming ETL and Focus Mode upgrades    |
+| v9.6.0  | 2025-09-14 | Core Team | Governance ledger and telemetry pipeline |
 
 ---
 
-<p align="center">
-© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
-[Back to Upgrade Index](README.md) · [Governance Charter](../../standards/faircare.md)
-</p>
+<div align="center">
+
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified
+**Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
+[Back to Guides Index](../README.md) · [Governance Charter](../../standards/faircare.md)
+
+</div>
 ```
