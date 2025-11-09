@@ -21,26 +21,29 @@ mcp_version: "MCP-DL v6.3"
 `docs/guides/data/README.md`
 
 **Purpose:**  
-Provide an overview of **data ingestion, validation, and ethical governance practices** within the Kansas Frontier Matrix (KFM).  
-This documentation defines FAIR+CARE-aligned data pipelines for tabular, raster, and vector sources, ensuring transparency, reproducibility, and respect for community data sovereignty.
+Provide a unified overview of **data ingestion, validation, metadata governance, and ethical publication** workflows across the Kansas Frontier Matrix (KFM).  
+Defines reproducible **ETL pipelines**, **schema compliance**, and **FAIR+CARE-aligned governance processes** for all data modalities (tabular, raster, vector, textual).
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Data_Governance-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../releases/)
+[![Status](https://img.shields.io/badge/Status-Operational-brightgreen)](../../../releases/)
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **Data Guides** section of KFM defines the **end-to-end lifecycle** of data — from ingestion and transformation to validation and ethical publication.  
-All workflows follow the **Master Coder Protocol (MCP-DL v6.3)** and conform to **FAIR (Findable, Accessible, Interoperable, Reusable)** and **CARE (Collective Benefit, Authority to Control, Responsibility, Ethics)** principles.
+The **Data Guides** directory governs the **full data lifecycle** in KFM — from raw acquisition to FAIR+CARE-certified publication.  
+All workflows follow the **Master Coder Protocol (MCP-DL v6.3)** and align with:
+- **FAIR** (Findable, Accessible, Interoperable, Reusable)
+- **CARE** (Collective Benefit, Authority to Control, Responsibility, Ethics)
 
-Key goals:
-- Standardize all datasets through schema-conformant ETL workflows  
-- Ensure provenance and licensing transparency for each data artifact  
-- Embed ethical review checkpoints and FAIR+CARE ledger tracking  
+**Core Objectives**
+- Enforce reproducible, schema-conformant ETL workflows.  
+- Guarantee provenance traceability and open licensing.  
+- Integrate ethical review and FAIR+CARE validation checkpoints.  
+- Maintain governance ledger entries for all published datasets.  
 
 ---
 
@@ -49,56 +52,58 @@ Key goals:
 ```plaintext
 docs/guides/data/
 ├── README.md                              # This overview
-├── ingestion-pipeline.md                  # Data ingestion & ETL configuration
+├── ingestion-pipeline.md                  # ETL pipeline and data normalization
 ├── validation-framework.md                # FAIR+CARE validation & schema audit
-├── metadata-standards.md                  # STAC, DCAT, and CIDOC CRM mapping
-├── sensitive-data-governance.md           # CARE-aligned masking for restricted datasets
-└── reports/                               # Auto-generated validation outputs
+├── metadata-standards.md                  # STAC, DCAT, and CIDOC CRM metadata mapping
+├── stac-dcat-bridge.md                    # STAC ↔ DCAT interoperability layer
+├── schemas/                               # JSON & FAIR+CARE schema definitions
+├── reports/                               # Auto-generated validation & ledger reports
+└── sensitive-data-governance.md           # CARE-guided sensitive data masking
 ```
 
 ---
 
-## 🧩 Data Governance Flow
+## 🧩 Data Lifecycle Flow
 
 ```mermaid
 flowchart TD
-A["Source Data (Raw)"] --> B["ETL Transformation (Schema Normalization)"]
-B --> C["Validation (FAIR+CARE Compliance)"]
-C --> D["Governance Ledger + Provenance Hash"]
-D --> E["Publication (STAC/DCAT Catalog)"]
-E --> F["KFM Web + Focus Mode Integration"]
+A["Raw Data Acquisition"] --> B["ETL Processing & Schema Normalization"]
+B --> C["Validation (Technical + FAIR+CARE)"]
+C --> D["Governance Ledger Entry + Provenance Hash"]
+D --> E["Metadata Publication (STAC/DCAT Catalogs)"]
+E --> F["Integration with Focus Mode & Knowledge Graph"]
 ```
 
 ---
 
 ## ⚙️ Data Categories
 
-| Data Type | Description | Example Formats | Location |
-|------------|--------------|------------------|-----------|
-| **Tabular** | Structured numeric or categorical data | CSV, Parquet | `data/work/tabular/` |
-| **Raster** | Gridded geospatial data (imagery, DEM, climate) | GeoTIFF, COG | `data/processed/terrain/` |
-| **Vector** | Feature geometries and boundaries | GeoJSON, GPKG | `data/processed/vectors/` |
-| **Textual** | OCR’d documents and historical transcripts | TXT, JSON-LD | `data/processed/text/` |
-| **Metadata** | Catalog and provenance descriptors | JSON, YAML | `data/stac/`, `data/dcat/` |
+| Category | Description | Common Formats | Repository Location |
+|-----------|--------------|----------------|---------------------|
+| **Tabular** | Statistical & structured records | CSV, Parquet | `data/work/tabular/` |
+| **Raster** | Gridded or image-based datasets | GeoTIFF, COG | `data/processed/terrain/` |
+| **Vector** | Geospatial features, parcels, or boundaries | GeoJSON, GPKG | `data/processed/vectors/` |
+| **Textual** | OCR’d historical documents & transcripts | TXT, JSON-LD | `data/processed/text/` |
+| **Metadata** | STAC/DCAT catalogs & provenance manifests | JSON, YAML | `data/stac/`, `data/dcat/` |
 
 ---
 
 ## 🧾 FAIR+CARE Implementation Matrix
 
-| Principle | Implementation | Validation Source |
+| Principle | Implementation | Evidence Artifact |
 |------------|----------------|-------------------|
-| **Findable** | STAC/DCAT metadata + persistent UUIDs | `stac-validate.yml` |
-| **Accessible** | Publicly accessible datasets (with consent) | `releases/v*/manifest.zip` |
-| **Interoperable** | Standard schemas (GeoJSON, Parquet, COG, JSON-LD) | `data-contract-v3.json` |
-| **Reusable** | Clear licensing and lineage metadata | `sbom.spdx.json` |
-| **Collective Benefit** | Open datasets serve historical & environmental research | FAIR+CARE ledger |
-| **Authority to Control** | Tribal/community control over cultural data | `data-generalization/README.md` |
-| **Responsibility** | Energy telemetry and consent tracking | `focus-telemetry.json` |
-| **Ethics** | Review by FAIR+CARE Council before public release | `faircare-validate.yml` |
+| **Findable** | Persistent UUIDs in STAC/DCAT records | `stac-validate.yml` |
+| **Accessible** | Public datasets with transparent licensing | `manifest_ref` |
+| **Interoperable** | GeoJSON, Parquet, and COG standards | `data-contract-v3.json` |
+| **Reusable** | Rich metadata and lineage documentation | `sbom.spdx.json` |
+| **Collective Benefit** | Shared research datasets with open access | FAIR+CARE ledger |
+| **Authority to Control** | Tribal or community-managed data release | `data-generalization/README.md` |
+| **Responsibility** | Carbon + telemetry tracking for each ETL job | `focus-telemetry.json` |
+| **Ethics** | FAIR+CARE Council review before publication | `faircare-validate.yml` |
 
 ---
 
-## 🧮 Data Provenance Schema
+## 🧮 Provenance Record Example
 
 ```json
 {
@@ -113,22 +118,23 @@ E --> F["KFM Web + Focus Mode Integration"]
 }
 ```
 
-> Each dataset entry is cryptographically signed and validated for compliance before integration into the KFM catalog.
+> Each dataset entry is **cryptographically signed**, validated, and logged into the FAIR+CARE Governance Ledger.
 
 ---
 
 ## ⚙️ Validation Workflows
 
-| Workflow | Purpose | Output |
-|-----------|----------|--------|
-| `data-ingest.yml` | Automates raw data ingestion to ETL staging | `reports/data/ingest-log.json` |
-| `stac-validate.yml` | Validates metadata schemas (STAC/DCAT 3.0) | `reports/data/stac-validation.json` |
-| `faircare-validate.yml` | Checks ethical & governance compliance | `reports/faircare/data-audit.json` |
-| `ledger-sync.yml` | Records data provenance + FAIR+CARE ledger | `reports/ledger/data-ledger.json` |
+| Workflow | Function | Output |
+|-----------|-----------|--------|
+| `data-ingest.yml` | Automates ingestion into ETL staging | `reports/data/ingest-log.json` |
+| `schema-validate.yml` | Enforces contract schema integrity | `reports/data/schema-validation.json` |
+| `stac-validate.yml` | Validates STAC/DCAT catalog entries | `reports/data/stac-validation.json` |
+| `faircare-validate.yml` | Checks ethical compliance & governance | `reports/faircare/data-audit.json` |
+| `ledger-sync.yml` | Syncs provenance + FAIR+CARE ledger | `reports/ledger/data-ledger.json` |
 
 ---
 
-## 🧩 Example Data Validation Report
+## 🧩 Validation Example
 
 ```json
 {
@@ -148,12 +154,25 @@ E --> F["KFM Web + Focus Mode Integration"]
 
 ---
 
-## ⚖️ Governance Integration
+## ⚖️ Governance & Oversight
 
-- All datasets must include STAC/DCAT metadata and **FAIR+CARE validation hashes**.  
-- Provenance entries must appear in the Governance Ledger before publication.  
-- Sensitive datasets follow **CARE-controlled release** workflows for community review.  
-- Annual audits compare all data releases against MCP-DL schema compliance.
+- Every dataset must have **FAIR+CARE-certified metadata** and a **governance ledger hash**.  
+- Sensitive or culturally significant data undergo **CARE consent-based review**.  
+- Validation artifacts are preserved under versioned releases (`releases/v*/reports/`).  
+- Quarterly Council reviews audit schema conformance, sustainability, and ethics.  
+
+---
+
+## 🧩 Integration with Focus Mode AI
+
+Data validated through this framework feed directly into the **Focus Transformer v2** pipeline, where FAIR+CARE metadata ensures AI reasoning adheres to ethical and reproducible standards.
+
+```mermaid
+flowchart LR
+A["FAIR+CARE Data Repository"] --> B["Focus Transformer v2"]
+B --> C["AI Reasoning & Explainability"]
+C --> D["Governance Ledger + Telemetry Reports"]
+```
 
 ---
 
@@ -161,7 +180,7 @@ E --> F["KFM Web + Focus Mode Integration"]
 
 | Version | Date | Author | Summary |
 |----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Added unified data governance overview with FAIR+CARE schema and ledger integration |
+| v10.0.0 | 2025-11-09 | Core Team | Expanded to include schemas, STAC/DCAT bridge, and Focus Mode integration |
 | v9.7.0 | 2025-11-03 | A. Barta | Introduced modular ingestion and validation templates |
 
 ---
@@ -174,4 +193,3 @@ Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω 
 [Back to Guides Index](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
