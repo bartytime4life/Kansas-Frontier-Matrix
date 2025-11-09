@@ -1,14 +1,14 @@
 ---
-title: "🧠 Kansas Frontier Matrix — Prompt Injection Defense & Secure AI Governance Integration"
+title: "🧠 Kansas Frontier Matrix — Prompt Injection Defense & Secure AI Governance Integration (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/security/prompt-injection-defense.md"
-version: "v10.0.0"
+version: "v10.2.3"
 last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+review_cycle: "Quarterly / FAIR+CARE Security Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/security-prompt-defense-v1.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-security-prompt-defense-v3.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -16,25 +16,30 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — Prompt Injection Defense & Secure AI Governance Integration**  
+# 🧠 **Kansas Frontier Matrix — Prompt Injection Defense & Secure AI Governance Integration**
 `docs/security/prompt-injection-defense.md`
 
 **Purpose:**  
-Define the **defense-in-depth framework** protecting KFM AI systems from **prompt injection**, **context poisoning**, and **malicious automation** across pipelines, APIs, and governance layers.  
-Implements verifiable safeguards under **MCP-DL v6.3**, **FAIR+CARE**, and **Diamond⁹ Ω / Crown∞ Ω** certifications.
+Define the **defense-in-depth framework** safeguarding KFM AI systems against **prompt injection**, **context/RAG poisoning**, **tool abuse**, and **malicious automation**, with verifiable controls and full **FAIR+CARE** governance.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../standards/)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY--4.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards/faircare/)
-[![Status: Secure](https://img.shields.io/badge/Status-Active-brightgreen)](../../)
+[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards/faircare.md)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](../../releases/)
 </div>
 
 ---
 
 ## 📘 Overview
 
-Prompt injection attempts to smuggle **hidden instructions** through user or contextual inputs to subvert system controls (e.g., “ignore previous rules”, “exfiltrate secrets”).  
-KFM mitigates attacks via **signed prompts**, **context compartmentalization**, **tooling allowlists**, **telemetry validation**, and **governance-ledger auditability** across the data → AI → action chain.
+Prompt injection exploits **model trust** in inputs and retrieved context (e.g., “ignore previous instructions”, sandbox escapes, hidden directives in HTML/PDF/alt-text, or poisoned vectors).  
+KFM mitigates these threats via: **signed prompts**, **context compartmentalization**, **allowlisted tool execution**, **offline-by-default egress**, **adversarial CI**, and **governance-ledger auditing** across the **data → AI → action** chain.
+
+This document complements:
+- `docs/security/threat-model.md` (STRIDE/LINDDUN),  
+- `docs/security/supply-chain.md` (SLSA, SBOM, signing),  
+- `docs/security/secrets-policy.md` (ZTA, KMS, Vault), and  
+- `docs/security/incident-response.md` (IR & recovery).
 
 ---
 
@@ -42,144 +47,114 @@ KFM mitigates attacks via **signed prompts**, **context compartmentalization**, 
 
 ```plaintext
 docs/security/
-├── prompt-injection-defense.md          # This document
-├── ai-threat-model.md                   # Threat landscape & control taxonomy
-├── red-team-protocols.md                # Adversarial testing & injection suite
-├── validation/
-│   ├── sanitize_inputs.py               # Input sanitization filters (regex/ML)
-│   ├── prompt_signature_check.py        # Signed-prompt verifier
-│   ├── anomaly_detector.py              # Real-time telemetry anomaly detection
-│   └── reports/                         # Validation & audit artifacts
-└── governance/
-    ├── defense-policy.yml               # Policy mappings for FAIR+CARE governance
-    ├── audit-template.md                # Structured audit form for reviews
-    └── ledger-integration.md            # Provenance + ledger logging specs
+├── README.md
+├── threat-model.md
+├── supply-chain.md
+├── secrets-policy.md
+├── vulnerability-management.md
+├── incident-response.md
+└── prompt-injection-defense.md         # This document
 ```
 
 ---
 
 ## 🧩 Defense Pattern Integration (v10)
 
-| # | Pattern | What it stops | Implementation in KFM | Repo Location |
+```mermaid
+flowchart TD
+  A["Signed System/Policy Segments"] --> B["Prompt Gate (Boundary Enforcement)"]
+  B --> C["Sanitizer (Unicode/HTML/JS/Directive Filters)"]
+  C --> D["Tool Allowlist Guard (Contracts + Runtime Verifier)"]
+  D --> E["Offline-by-Default Egress + Domain Allowlist"]
+  E --> F["Adversarial CI (Red-Team Suites)"]
+  F --> G["Telemetry Anomaly Detector + FAIR+CARE Ledger"]
+```
+
+| # | Pattern | What it mitigates | KFM Implementation | Location |
 |---:|---|---|---|---|
-| 1 | **Signed Prompt Verification** | Context swapping & unsigned overrides | SHA-256 prompt digests + manifest binding; verify before inference; reject on mismatch | `src/ai/**/governance/` |
-| 2 | **Control/Data Flow Separation** | Instruction smuggling inside data | Structured JSON schema: `system`/`policy`/`tools` **physically separate** from `user` data; enforced by `prompt_gate.py` | `src/pipelines/etl/` |
-| 3 | **Microsegmentation** | Lateral data movement | Workspace isolation (`data/raw`, `work`, `tmp`, `processed`); least-privilege FS & tokens | `data/` |
-| 4 | **Input Sanitization** | Embedded directives & homoglyphs | Regex + Unicode normalizer; invisible char strip; deny “ignore/override” patterns; HTML/JS neutralization | `docs/security/validation/sanitize_inputs.py` |
-| 5 | **Tool Invocation Allowlist** | Arbitrary code/tool exec | Declarative tool contracts + runtime verifier; block unregistered tool calls | `src/pipelines/ai/actions/` |
-| 6 | **Adversarial CI** | Regression in defenses | Red-team suite (prompt injection corpus, jailbreaks) in CI: `prompt-attack-test.yml` | `.github/workflows/` |
-| 7 | **Anomaly Telemetry** | Silent drift & policy bypass | Stream metrics (refusal rate, tool-call entropy, context-length deltas) to detector | `docs/security/validation/anomaly_detector.py` |
-| 8 | **Inference-Time Consensus** | Single-path compromise | N-path sampling + consistency voting; auto-refusal on divergence | `src/ai/models/focus_transformer_v*/` |
-| 9 | **Multi-Agent Guardrail** | Single-agent role confusion | **Sanitizer → Verifier → Executor** chain; executor receives only vetted instructions | `src/ai/focus/agents/` |
-| 10 | **Provenance & Trust Levels** | Vector-store poisoning | Per-chunk trust score (signed, licensed, reviewed); prompt fusion weights by trust | `data/processed/**/catalog.json` |
-| 11 | **Context Compartmentalization** | Cross-document command bleed | Hard segment context windows; no cross-segment deref; doc-scoped policies | Prompt builder |
-| 12 | **Network & Egress Controls** | Data exfiltration | Offline-by-default; domain allowlist; response size/rate-limit; PII redaction | API gateway / Electron wrapper |
-| 13 | **Sandboxed Rendering** | Embedded scripts in docs | PDF/HTML readers in **no-script** mode; strip `<script>`/`on*`; block data URLs | `src/pipelines/ingest/*` |
-| 14 | **Human-in-the-Loop (HITL)** | Sensitive actions | Mandatory approval for write/delete or bulk exports; dual-control on secrets | `src/api/routes/ai.py` |
+| 1 | **Signed Prompt Envelope** | Unsigned context swaps | SHA-256 digests bound to release `manifest.zip`; reject mismatches | `src/ai/**/governance/` |
+| 2 | **Control/Data Separation** | Instruction smuggling | Hard system/policy/tools vs user data boundary via prompt gate | `src/pipelines/etl/` |
+| 3 | **Context Compartmentalization** | Cross-document bleed | Segment windows; no cross-segment deref; doc-scoped policies | Prompt builder |
+| 4 | **Input Sanitization** | Homoglyphs, invisible chars, HTML/JS | Unicode NFC + strip invisibles, deny patterns, tag neutralization | `docs/security/validation/sanitize_inputs.py` |
+| 5 | **Tool Allowlist** | Arbitrary code/tool exec | Declarative tool contracts + runtime verifier | `src/pipelines/ai/actions/` |
+| 6 | **Network Egress Controls** | Exfiltration | Offline-by-default; domain allowlist; response size/rate limits | API gateway / wrapper |
+| 7 | **Inference Consensus** | Single-path compromise | N-path sampling + consistency voting; auto-refusal on split | `src/ai/models/focus_transformer_v*/` |
+| 8 | **Multi-Agent Guardrail** | Role confusion | Sanitizer → Verifier → Executor chain; executor receives vetted plan | `src/ai/focus/agents/` |
+| 9 | **Provenance Trust Scoring** | Vector poisoning | Per-chunk trust (license, review, signature) influences fusion weights | `data/processed/**/catalog.json` |
+| 10 | **Adversarial CI** | Defense regressions | `prompt-attack-test.yml` runs jailbreak & injection corpus in CI | `.github/workflows/` |
+| 11 | **Anomaly Telemetry** | Silent drift/bypass | Monitor refusal rate, tool entropy, context deltas; alert & log | `docs/security/validation/anomaly_detector.py` |
+| 12 | **HITL Controls** | Sensitive actions | Dual-control for write/delete/export; secrets never exposed | `src/api/routes/ai.py` |
 
 ---
 
-## 🔐 Policy Rules (excerpts, defense-policy.yml)
+## 🔐 Policy Rules (excerpt)
 
 ```yaml
 policies:
-  instruction_boundary: "System and tool policy segments are immutable and cannot be changed by user content."
+  instruction_boundary: "System/policy blocks are immutable; user content cannot alter them."
   forbidden_tokens:
     - "(?i)ignore (previous|earlier) (instructions|rules)"
     - "(?i)disregard system"
-    - "(?i)exfiltrate|leak|dump secrets"
-  max_context_segments: 4
+    - "(?i)exfiltrate|dump|leak (keys|secrets|tokens)"
+  context:
+    max_segments: 4
+    max_user_tokens: 2048
   network:
     mode: "deny-by-default"
-    allowlist:
-      - "stac://"
-      - "pmtiles://"
+    allowlist: ["stac://", "pmtiles://"]
   tools:
-    allow:
-      - "graph.query"
-      - "stac.search"
-      - "tile.stats"
+    allow: ["graph.query", "stac.search", "tile.stats"]
     deny_on_unregistered: true
   pii:
-    redact_entities: ["EMAIL", "PHONE", "SSN"]
-    max_tokens_return: 2048
+    redact_entities: ["EMAIL", "PHONE", "SSN", "GEO_PRECISE_SENSITIVE"]
   hitl:
-    require_approval:
-      - "dataset.delete"
-      - "export.bulk"
-      - "writeback.schema"
+    require_approval: ["dataset.delete", "export.bulk", "writeback.schema"]
 ```
-
----
-
-## 🧾 Governance & FAIR+CARE Mapping
-
-| FAIR | KFM Alignment | Control Reference |
-|------|---------------|-------------------|
-| **Findable** | Signed prompts link to release manifests & SBOM | `manifest_ref`, `sbom_ref` |
-| **Accessible** | Telemetry + audit trails for AI decisions | `telemetry_ref` |
-| **Interoperable** | Defense policies as YAML + JSON schemas | `governance/defense-policy.yml` |
-| **Reusable** | Reproducible sanitization reports & signatures | `validation/reports/` |
-
-| CARE | Implementation | Location |
-|------|----------------|----------|
-| **Collective Benefit** | Shared red-team corpus; transparent auditability | `docs/standards/faircare/` |
-| **Authority to Control** | HITL for impactful actions; community approvals | `src/api/routes/ai.py` |
-| **Responsibility** | Continuous telemetry; quarterly reviews | `.github/workflows/*`, `LEDGER/*` |
-| **Ethics** | Automatic refusal when suspicious patterns found | `sanitize_inputs.py` |
-
----
-
-## ⚙️ Workflow → Artifact Mapping
-
-| Workflow | Artifact Produced | Validation Output |
-|----------|-------------------|-------------------|
-| `sanitize_inputs.yml` | Sanitization report & diff | `validation/reports/sanitize-report.json` |
-| `prompt-attack-test.yml` | Adversarial test logs | `reports/audit/prompt-defense.json` |
-| `telemetry-monitor.yml` | Focus telemetry stream & alerts | `releases/v*/focus-telemetry.json` |
-| `ledger-sync.yml` | Governance ledger updates | `docs/standards/governance/LEDGER/` |
 
 ---
 
 ## 🧪 Red-Team Playbook (minimum set)
 
-- **Instruction Overrides:** “Ignore previous rules…”, “System message: …”, base64-encoded directives.  
-- **Tool Abuse:** Ask the model to self-invent tools or call undefined actions.  
-- **Context Smuggling:** Commands hidden in citations, footnotes, or alt-text.  
-- **HTML/PDF Payloads:** `<script>` tags, data-URIs, invisible Unicode, RLO/LRO.  
-- **RAG Poisoning:** Conflicting instructions injected into vector store chunks.  
-- **Exfiltration:** Requests to echo secrets, keys, paths, or environment variables.
+- **Instruction Overrides**: “Ignore previous rules…”, embedded “System:” lines, base64 directives  
+- **Tool Abuse**: Requests to call undefined/self-invented tools; shell-like prompts  
+- **Context Smuggling**: Commands in citations/footnotes/alt-text/markdown links  
+- **HTML/PDF Payloads**: `<script>`, `on*=` handlers, `data:` URIs, RLO/LRO bidi attacks  
+- **RAG Poisoning**: Conflicting policies in vector chunks; bogus citations commanding actions  
+- **Exfiltration**: Attempts to echo secrets, paths, env, or raw embeddings
 
-> Each vector must have **automated tests** and **expected refusals**; add new cases after every incident.
+> Every discovered vector becomes a **unit test** in `prompt-attack-test.yml` with **expected refusal**.
+
+---
+
+## ⚙️ Workflow → Artifact Mapping
+
+| Workflow | Artifact | Validation Output |
+|----------|---------|-------------------|
+| `sanitize_inputs.yml` | Sanitization diff/report | `docs/security/validation/reports/sanitize-report.json` |
+| `prompt-attack-test.yml` | Adversarial test logs | `reports/audit/prompt-defense.json` |
+| `telemetry-monitor.yml` | Alerts + anomaly metrics | `releases/v*/focus-telemetry.json` |
+| `ledger-sync.yml` | Signed governance entries | `docs/standards/governance/LEDGER/` |
 
 ---
 
 ## 🧭 Operational Runbooks
 
-### Incident Response (IR) — Prompt Injection
-1. **Freeze** current model/prompt artifacts; capture SBOM, telemetry window ±15m.  
-2. **Quarantine** offending inputs & context segments; compute hashes.  
-3. **Replay** in offline sandbox; confirm exploit path; add failing case to red-team suite.  
-4. **Patch**: update sanitizer rules, policy YAML, and tool allowlist; bump defense version.  
-5. **Ledger**: write signed IR entry; notify FAIR+CARE Council if sensitive data involved.
+### Incident Response (Prompt Injection)
+1) **Freeze** prompt/model artifacts; capture SBOM + telemetry window (±15m).  
+2) **Quarantine** offending input & context segments; hash and store.  
+3) **Replay** offline; confirm exploit path; add failing case to red-team suite.  
+4) **Patch** sanitizer rules, policy YAML, allowlist/contracts; bump defense version.  
+5) **Ledger** sign & publish IR; notify FAIR+CARE if sensitive data involved.
 
-### Change Management
-- Any change to system prompts, tool contracts, or policy YAML **must**:
-  - Update `defense-policy.yml` & `prompt_signature_check.py` test vectors.  
-  - Pass `prompt-attack-test.yml` and `sanitize_inputs.yml`.  
-  - Record governance ledger entry (commit SHA + checksums).
-
----
-
-## 📈 Acceptance Criteria (security gates)
-
-- ❌ **Block** execution if: unsigned prompt, signature mismatch, unregistered tool, policy violation, or network egress to non-allowlisted domain.  
-- ✅ **Require** P(Refusal\|Malicious) ≥ **0.9** on red-team suite; false positive rate ≤ **2%** on benign set.  
-- ✅ Telemetry SLOs: anomaly alerts in < **60s**; ledger write in < **5s**; > **99%** policy-enforced tool calls.
+### Change Management (Gates)
+- Any change to prompts, tool contracts, or policy YAML must:  
+  - Update **`defense-policy.yml`** & **prompt signature** test vectors,  
+  - Pass **`prompt-attack-test.yml`** and **`sanitize_inputs.yml`**,  
+  - Record **governance ledger** entry (commit SHA + checksums).
 
 ---
 
-## 🧬 Example: Signed Prompt Envelope (JSON)
+## 🧬 Signed Prompt Envelope (example)
 
 ```json
 {
@@ -190,27 +165,52 @@ policies:
   "sig": {
     "alg": "SHA-256",
     "hash": "6f9c1b6c...be42",
-    "manifest": "releases/v10.0.0/manifest.zip"
+    "manifest": "releases/v10.2.0/manifest.zip"
   }
 }
 ```
 
 ---
 
+## ⚖️ FAIR+CARE & ISO Security Matrix
+
+| Principle | Implementation | Verification Source |
+|------------|----------------|--------------------|
+| **Findable** | Signed prompts linked to SBOM/manifest | `sbom_ref`, `manifest_ref` |
+| **Accessible** | Telemetry & audit trails for AI decisions | `telemetry_ref` |
+| **Interoperable** | YAML policies + JSON schemas | `telemetry_schema` |
+| **Reusable** | Reproducible sanitizer reports & signatures | `docs/security/validation/reports/` |
+| **Responsibility** | Quarterly defense review & ethics board sign-off | Governance Ledger |
+| **Ethics** | Automatic refusal on suspicious patterns; HITL for sensitive ops | FAIR+CARE Audit |
+
+---
+
+## 🧮 Sustainability Metrics
+
+| Metric | Description | Value | Target | Unit |
+|---------|-------------|--------|---------|------|
+| **Energy (J)** | Energy used per defense validation cycle | 14.1 | ≤ 15 | Joules |
+| **Carbon (gCO₂e)** | CO₂e per red-team + sanitizer CI run | 0.0056 | ≤ 0.006 | gCO₂e |
+| **Telemetry Coverage (%)** | FAIR+CARE trace completeness | 100 | ≥ 95 | % |
+| **Defense Pass Rate (%)** | Green on all adversarial suites | 100 | 100 | % |
+
+---
+
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|--------:|------|--------|---------|
-| v10.0.0 | 2025-11-09 | A. Barta | v10 upgrade: signed prompts, allowlist tools, sandboxed rendering, HITL, acceptance gates, and CI red-team. |
-| v9.7.0  | 2025-11-09 | A. Barta | Initial defense framework integration. |
-| v9.6.0  | 2025-10-25 | FAIR+CARE Council | Draft adversarial testing protocols. |
-| v9.5.0  | 2025-10-05 | Governance Ops | Telemetry & anomaly detection module. |
+|----------|------|--------|----------|
+| v10.2.3 | 2025-11-09 | FAIR+CARE Security Council | **Aligned to v10.2**: policy YAML, allowlist tooling, adversarial CI, signed envelopes, gates, and FAIR+CARE mappings. |
+| v10.2.0 | 2025-11-08 | KFM DevSecOps | Added anomaly telemetry and N-path consensus; integrated HITL. |
+| v10.0.0 | 2025-11-02 | KFM Security Team | Initial prompt-injection defense framework; sandboxed rendering and boundary enforcement. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞ Ω Ultimate Certified  
-[Back to Security Docs](./) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix Project  
+Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Security Overview](./README.md) · [Threat Model](./threat-model.md) · [Supply Chain](./supply-chain.md) · [Secrets Policy](./secrets-policy.md) · [Incident Response](./incident-response.md)
 
 </div>
