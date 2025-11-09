@@ -21,23 +21,26 @@ mcp_version: "MCP-DL v6.3"
 `docs/guides/geo/README.md`
 
 **Purpose:**  
-Central reference for **geospatial data workflows**, **toolchain configuration**, and **GDAL / Raster / Vector operations** across the Kansas Frontier Matrix (KFM).  
-Documents upgrade playbooks, STAC/DCAT integration, validation, and FAIR+CARE geospatial ethics under MCP-DL v6.3.
+Central reference for all **geospatial pipelines**, **GDAL/OGR upgrades**, **MapLibre rendering optimizations**, and **FAIR+CARE-aligned validation** processes within the Kansas Frontier Matrix (KFM).  
+Defines reproducible workflows for raster/vector data, metadata interoperability, and spatial governance under **MCP-DL v6.3**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Enabled-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../releases/)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial_Governance-orange)](../../../docs/standards/README.md)
+[![Status](https://img.shields.io/badge/Status-Operational-brightgreen)](../../../releases/)
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **Geo Guides** directory consolidates documentation for spatial data ingestion, processing, and validation pipelines within the **Kansas Frontier Matrix (KFM)** ecosystem.  
-These guides cover the **GDAL/OGR ecosystem**, **MapLibre rendering optimization**, **hydrology & terrain workflows**, and **FAIR+CARE spatial governance**.
+The **Geospatial Guides** directory provides unified documentation for spatial workflows across the Kansas Frontier Matrix (KFM):  
+- Raster and vector ETL operations  
+- Map rendering and performance optimization  
+- Metadata harmonization (STAC/DCAT)  
+- FAIR+CARE validation and governance hooks  
 
-All procedures follow the **Master Coder Protocol (MCP-DL v6.3)** for reproducibility, provenance, and ethical handling of spatial data.
+All workflows are validated through **FAIR+CARE pipelines**, ensuring ethical, interoperable, and scientifically reproducible outputs.
 
 ---
 
@@ -46,103 +49,121 @@ All procedures follow the **Master Coder Protocol (MCP-DL v6.3)** for reproducib
 ```plaintext
 docs/guides/geo/
 ├── README.md                        # This overview
-├── gdal-3.12-upgrade.md             # GDAL upgrade & CI playbook
+├── gdal-3.12-upgrade.md             # GDAL 3.12 integration & CI upgrade playbook
 ├── maplibre-rendering-playbook.md   # Rendering optimization for MBTiles/PMTiles
-├── hydrology-workflows.md           # Flow accumulation & proximity analysis (planned)
-├── vector-etl-pipelines.md          # Vector simplification, joins, and validation
-├── stac-dcat-geo-bridge.md          # STAC ↔ DCAT 3.0 metadata harmonization (planned)
-└── validation-reports/              # Auto-generated QA reports
+├── hydrology-workflows.md           # Hydrology, terrain, and proximity analyses
+├── vector-etl-pipelines.md          # Vector processing, simplification, and FAIR+CARE validation
+├── stac-dcat-geo-bridge.md          # STAC ↔ DCAT metadata harmonization
+├── validation-reports/              # FAIR+CARE audit reports for geo data
+└── profiles/                        # MapLibre performance & telemetry profiles
 ```
 
 ---
 
 ## 🧩 Major Components
 
-| Area | Purpose | Example File |
+| Area | Purpose | Key Document |
 |------|----------|--------------|
-| **GDAL Upgrades** | Tracks environment migration and CI integration | `gdal-3.12-upgrade.md` |
-| **Rendering & Map Performance** | Offline visualization and tile optimization | `maplibre-rendering-playbook.md` |
-| **Hydrology & Terrain** | Flow, proximity, and elevation analysis | `hydrology-workflows.md` |
-| **Vector ETL Pipelines** | Simplification, joins, and FAIR+CARE geometry validation | `vector-etl-pipelines.md` |
-| **Metadata Standards** | STAC/DCAT alignment, CRS metadata | `stac-dcat-geo-bridge.md` |
+| **GDAL Upgrades** | CI/CD integration & performance benchmarking for GDAL 3.12 | `gdal-3.12-upgrade.md` |
+| **Rendering Optimization** | MapLibre + PMTiles rendering, caching, and profiling | `maplibre-rendering-playbook.md` |
+| **Hydrology & Terrain Analysis** | DEM preprocessing, flow accumulation, and proximity | `hydrology-workflows.md` |
+| **Vector ETL Pipelines** | Simplify, clean, and validate spatial features | `vector-etl-pipelines.md` |
+| **Metadata Bridge** | STAC/DCAT crosswalk for interoperable metadata | `stac-dcat-geo-bridge.md` |
 
 ---
 
-## ⚙️ Integration Overview
+## ⚙️ End-to-End Integration Flow
 
 ```mermaid
-flowchart LR
-A["Data Source (Raster/Vector)"] --> B["ETL Pipelines (GDAL, OGR, Rasterio)"]
-B --> C["Validation (FAIR+CARE + Governance Ledger)"]
+flowchart TD
+A["Source Data (Raster/Vector)"] --> B["ETL Pipelines (GDAL, Rasterio, OGR)"]
+B --> C["FAIR+CARE Validation (Schema + Ethics)"]
 C --> D["Processed Geo Layers (GeoTIFF, Parquet, GeoJSON)"]
-D --> E["STAC/DCAT Publication + MapLibre Integration"]
-E --> F["Timeline Visualization & Knowledge Graph Links"]
+D --> E["Metadata Publishing (STAC/DCAT Catalogs)"]
+E --> F["MapLibre Visualization & Knowledge Graph Linking"]
 ```
 
 ---
 
-## 🧾 FAIR+CARE Integration in Geospatial Context
+## 🧾 FAIR+CARE Integration Matrix
 
-| Principle | Application | Validation Artifact |
-|------------|--------------|--------------------|
-| **Findable** | All rasters/vectors indexed via STAC/DCAT 3.0 | `data/stac/` |
-| **Accessible** | Cloud-optimized formats (COG, PMTiles) | `data/processed/**` |
-| **Interoperable** | GeoJSON, Parquet, and CRS WKT2 compliance | CI schema checks |
-| **Reusable** | Provenance and SBOM tagging | `releases/v*/manifest.zip` |
-| **Collective Benefit** | Shared elevation/hazard models for research | FAIR+CARE report |
-| **Authority to Control** | Community masking for sacred/cultural sites | `data-generalization/README.md` |
-| **Responsibility** | Telemetry-tracked CI/CD | `geo-upgrade-validate.yml` |
-| **Ethics** | Data access reviewed by FAIR+CARE Council | Governance Ledger |
+| Principle | Application in Geospatial Context | Validation Artifact |
+|------------|-----------------------------------|----------------------|
+| **Findable** | Indexed via STAC/DCAT 3.0 | `data/stac/`, `data/dcat/` |
+| **Accessible** | Open geospatial formats (COG, PMTiles, GeoParquet) | CI validation artifacts |
+| **Interoperable** | OGC CRS, GeoJSON, and Parquet schema conformance | `data-contract-v3.json` |
+| **Reusable** | Metadata and lineage tracking with SBOM hash linkage | `releases/v*/manifest.zip` |
+| **Collective Benefit** | Shared elevation and hazard models | FAIR+CARE audit reports |
+| **Authority to Control** | CARE-based masking for sensitive site data | `data-generalization/README.md` |
+| **Responsibility** | Telemetry logs & energy usage tracking | `focus-telemetry.json` |
+| **Ethics** | FAIR+CARE Council review prior to publication | Governance Ledger |
 
 ---
 
 ## 🧰 Toolchain Summary
 
-| Category | Tools / Libraries | Notes |
-|-----------|------------------|-------|
-| **Raster Processing** | GDAL 3.12, Rasterio, rio-cogeo | Unified CLI, optimized COG output |
-| **Vector Processing** | GDAL/OGR, GeoPandas, Fiona, Shapely | Simplify, merge, clean |
-| **Database / Catalog** | Neo4j (spatial), STAC, DCAT 3.0 | Provenance + graph linking |
-| **Visualization** | MapLibre GL JS, PMTiles | Offline rendering optimization |
-| **Automation / CI** | GitHub Actions, Micromamba, Conda | Deterministic environments |
-| **Ethics & Validation** | FAIR+CARE, Governance Ledger | Provenance + community oversight |
+| Category | Tools / Frameworks | Notes |
+|-----------|--------------------|-------|
+| **Raster Processing** | GDAL 3.12, Rasterio, rio-cogeo | Unified CLI and COG optimization |
+| **Vector Processing** | OGR, GeoPandas, Shapely, Fiona | Simplify + topology repair pipelines |
+| **Catalog Management** | STAC 1.0, DCAT 3.0, Neo4j | Metadata and provenance graph linking |
+| **Rendering & Visualization** | MapLibre GL, PMTiles, Tippecanoe | Offline vector rendering and analysis |
+| **Automation** | GitHub Actions, Micromamba, Conda | Deterministic CI/CD pipelines |
+| **Governance & Ethics** | FAIR+CARE Council Ledger | Validates ethical compliance |
 
 ---
 
-## 🧮 Example Pipeline Stack (Raster + Vector)
+## 🧮 Sample Workflow Stack
 
 ```mermaid
 flowchart TD
-  A["DEM & River Layers"] --> B["GDAL 3.12 CLI: Proximity + Zonal Stats"]
-  B --> C["FAIR+CARE Validation (Reports)"]
-  C --> D["Vector Simplify / Clean (Coverage Tools)"]
-  D --> E["Governance Ledger + STAC Publication"]
-  E --> F["MapLibre Tile Rendering"]
+A["DEM + River Layers"] --> B["GDAL CLI (Zonal Stats + Proximity)"]
+B --> C["Hydrology ETL Pipeline"]
+C --> D["FAIR+CARE Validation (Telemetry + Ethics)"]
+D --> E["Vector Simplification + Cleaning"]
+E --> F["Governance Ledger + STAC/DCAT Metadata"]
+F --> G["MapLibre Rendering & Web Deployment"]
 ```
 
 ---
 
-## ⚖️ Governance Hooks
+## ⚖️ Governance Hooks & Reporting
 
-All spatial workflows emit:
-- **Telemetry logs** → `releases/v*/focus-telemetry.json`  
+Each geospatial workflow produces:
+- **Telemetry records** → `releases/v*/focus-telemetry.json`  
 - **Provenance hashes** → `reports/geo/gdal-3.12/provenance.json`  
 - **Ledger entries** → `docs/standards/governance/LEDGER/geo-ledger.json`  
-- **Ethics sign-offs** → FAIR+CARE Council audit report  
+- **Ethical sign-offs** → FAIR+CARE Council audit log  
 
-Every commit changing geospatial data or tools **must**:
-1. Update STAC catalog & SBOM.  
-2. Pass FAIR+CARE validation CI.  
-3. Record ledger checksum & governance metadata.  
+### Required Validation Gates
+1. Update SBOM + STAC/DCAT catalogs.  
+2. Pass `geo-upgrade-validate.yml` (CI validation).  
+3. Append verified checksums to governance ledger.  
+
+---
+
+## 🧠 Integration with Focus Mode & Knowledge Graph
+
+Geospatial layers power KFM’s **Focus Mode AI** via contextual embeddings:
+- **Terrain & hydrology features** enhance environmental inference.  
+- **Vector entities** link to Neo4j graph nodes (CIDOC CRM).  
+- **MapLibre visualizations** drive temporal + spatial explainability.  
+
+```mermaid
+flowchart LR
+A["COG/GeoParquet Layers"] --> B["Focus Transformer v2 (Context Enrichment)"]
+B --> C["Explainability Engine (SHAP/LIME)"]
+C --> D["Governance Ledger + FAIR+CARE Validation"]
+```
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Aligned Geo Guides with v10; added FAIR+CARE & governance hooks |
-| v9.7.0 | 2025-11-09 | A. Barta | Initial GDAL + MapLibre performance playbooks |
+|----------|------|--------|----------|
+| v10.0.0 | 2025-11-09 | Core Team | Aligned Geospatial Guides to v10 with FAIR+CARE-led validation and metadata bridge |
+| v9.7.0 | 2025-11-03 | A. Barta | Added GDAL 3.12 upgrade and MapLibre performance optimization playbooks |
 
 ---
 
@@ -154,4 +175,3 @@ Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω 
 [Back to Guides Index](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
