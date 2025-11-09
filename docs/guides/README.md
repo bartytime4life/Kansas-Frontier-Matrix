@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "📚 Kansas Frontier Matrix — Guides Directory Overview"
 path: "docs/guides/README.md"
