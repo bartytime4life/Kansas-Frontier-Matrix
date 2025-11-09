@@ -1,13 +1,13 @@
 ---
 title: "📚 Kansas Frontier Matrix — Documentation Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/README.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../releases/v9.9.0/focus-telemetry.json"
+sbom_ref: "../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/docs-index-v1.json"
 governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -24,9 +24,8 @@ Provide the **central navigation hub** for all Kansas Frontier Matrix (KFM) docu
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)](standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](#)
-
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](standards/faircare.md)
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../releases/)
 </div>
 
 ---
@@ -55,7 +54,7 @@ docs/
 │   ├── data-architecture.md           # Data model, STAC/DCAT schemas, and ontologies
 │   ├── web-ui.md                      # Frontend structure, components, accessibility
 │   ├── github-architecture.md         # CI/CD and automation architecture
-│   └── api-architecture.md            # API and knowledge graph integration (v9.9.0)
+│   └── api-architecture.md            # API and knowledge graph integration (v10.0.0)
 │
 ├── standards/                         # FAIR+CARE, governance, compliance, and style rules
 │   ├── faircare.md                    # FAIR+CARE ethical framework
@@ -68,13 +67,25 @@ docs/
 │   └── governance/
 │       └── ROOT-GOVERNANCE.md         # Root governance charter and oversight policies
 │
-├── workflows/                         # GitHub workflow documentation (NEW)
+├── workflows/                         # GitHub workflow documentation
 │   ├── README.md                      # Workflow index
 │   ├── docs-lint.yml.md               # Markdown linting & validation workflow
 │   ├── faircare-validate.yml.md       # FAIR+CARE audit pipeline
 │   ├── telemetry-export.yml.md        # Metrics export and energy tracking
 │   ├── stac-validate.yml.md           # STAC/DCAT metadata validator
 │   └── ai-train.yml.md                # AI training + governance alignment pipeline
+│
+├── guides/                            # Topical guidebooks (AI, Geo, Data, etc.)
+│   ├── ai/README.md                   # AI & Focus Mode guide index
+│   ├── geo/README.md                  # Geospatial pipelines & tooling
+│   ├── data/README.md                 # Data ingestion & FAIR+CARE standards
+│   ├── deployment/README.md           # CI/CD & infrastructure automation
+│   ├── governance/README.md           # Oversight, ethics, and ledger integration
+│   ├── integration/README.md          # STAC/DCAT ↔ API ↔ Neo4j interoperability
+│   ├── sustainability/README.md       # Energy, carbon, and renewable strategy
+│   ├── telemetry/README.md            # Observability and audit telemetry
+│   ├── visualization/README.md        # MapLibre, timelines, UI & accessibility
+│   └── workflows/README.md            # Automation & validation guides
 │
 ├── templates/                         # Authoring and documentation templates
 │   ├── model_card.md                  # AI model card template
@@ -93,9 +104,9 @@ docs/
 
 ---
 
-## ⚙️ New: `workflows/` Documentation
+## ⚙️ Workflows Documentation
 
-The **`docs/workflows/`** directory provides annotated Markdown companions for each **GitHub Actions workflow**.  
+The **`docs/workflows/`** directory provides annotated companions for each **GitHub Actions workflow**.  
 Each document includes YAML excerpts, dependency diagrams, and governance context.
 
 | Workflow | Description |
@@ -119,13 +130,13 @@ All Markdown files include **front-matter metadata**, badges, emojis, and valida
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture"
 path: "src/ARCHITECTURE.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "releases/v9.9.0/manifest.zip"
-telemetry_ref: "releases/v9.9.0/focus-telemetry.json"
+sbom_ref: "releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "releases/v10.0.0/manifest.zip"
+telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
@@ -206,6 +217,7 @@ Stored under `reports/self-validation/docs/` and surfaced in `focus-telemetry.js
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v10.0.0 | 2025-11-09 | `@kfm-docs` | Upgraded index to v10; added comprehensive guides (AI, Geo, Data, Deployment, Governance, Integration, Sustainability, Telemetry, Visualization, Workflows). |
 | v9.9.0 | 2025-11-08 | `@kfm-docs` | Added `workflows/` documentation set and updated architecture categories. |
 | v9.7.0 | 2025-11-05 | `@kfm-core` | Standardized telemetry schema and governance refs. |
 | v9.5.0 | 2025-10-20 | `@kfm-core` | Integrated FAIR+CARE metadata validation hooks. |
