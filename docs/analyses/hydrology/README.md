@@ -1,14 +1,14 @@
 ---
 title: "💧 Kansas Frontier Matrix — Hydrology Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/hydrology/README.md"
-version: "v10.0.0"
+version: "v10.1.0"
 last_updated: "2025-11-09"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/analyses-hydrology-overview-v1.json"
+sbom_ref: "../../../../releases/v10.1.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.1.0/manifest.zip"
+telemetry_ref: "../../../../releases/v10.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/analyses-hydrology-overview-v2.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -20,26 +20,26 @@ mcp_version: "MCP-DL v6.3"
 `docs/analyses/hydrology/README.md`
 
 **Purpose:**  
-Provide a structured overview of **hydrological analyses, datasets, and FAIR+CARE-governed workflows** within the Kansas Frontier Matrix (KFM).  
-This section documents the complete workflow for studying **water systems**, **drought–flood interactions**, and **hydrological sustainability** across Kansas under MCP-DL v6.3 and ISO-aligned environmental ethics.
+Summarize all **hydrology-focused analytical workflows, datasets, and FAIR+CARE validations** within the Kansas Frontier Matrix (KFM).  
+This module studies **drought–flood interactions**, **basin resilience**, and **sustainability metrics** under **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3** frameworks.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Hydrology-orange)](../../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](../../../../releases/)
+[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../../releases/)
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **Hydrology module** in KFM integrates climate, soil, streamflow, and land-use data to analyze **drought–flood relationships** and **hydrological resilience** across Kansas.  
-These analyses follow **FAIR+CARE** ethical standards, **ISO 19115** for metadata, and **ISO 14064/50001** for sustainability tracking.
+The **Hydrology Analysis Module** integrates multi-source environmental datasets to quantify drought–flood cycles and hydrological behavior across Kansas.  
+These analyses combine **NOAA precipitation**, **USGS streamflow**, **PRISM drought indices**, and **NRCS soil data** under strict FAIR+CARE and ISO governance.
 
-Key objectives:
-- Correlate drought and flood cycles using NOAA, USGS, and PRISM data  
-- Apply FAIR+CARE audits to ensure ethical and sustainable hydrological modeling  
-- Archive datasets with full provenance and reproducibility under Governance Ledger  
+**Core Objectives**
+- Correlate drought and flood events over historical and modern timelines  
+- Apply FAIR+CARE and ISO ethics in hydrological model development  
+- Maintain provenance and telemetry for sustainable research transparency  
 
 ---
 
@@ -47,24 +47,28 @@ Key objectives:
 
 ```plaintext
 docs/analyses/hydrology/
-├── README.md                                          # This overview
-├── drought-flood-correlation/                         # Primary correlation analysis
-│   ├── README.md                                      # Study overview
-│   └── methods/                                       # Analysis methods
-│       ├── README.md                                  # Methodology documentation
-│       ├── datasets/                                  # Raw, processed, derived datasets
+├── README.md                                   # This overview
+├── drought-flood-correlation/                  # Primary correlation and modeling suite
+│   ├── README.md                               # Drought–flood study overview
+│   └── methods/                                # Methods and dataset details
+│       ├── README.md                           # Methodological documentation
+│       ├── datasets/                           # Raw, processed, and derived datasets
 │       │   ├── README.md
-│       │   ├── raw/                                   # Original input datasets
-│       │   ├── processed/                             # Cleaned/standardized datasets
-│       │   ├── derived/                               # Analytical and spatial outputs
-│       │   └── metadata/                              # FAIR+CARE + DCAT/STAC metadata registry
-│       └── validation/                                # Validation and telemetry reporting
+│       │   ├── raw/                            # Original data inputs
+│       │   ├── processed/                      # Normalized datasets
+│       │   ├── derived/                        # Analytical outputs
+│       │   └── metadata/                       # Metadata registry (STAC/DCAT/FAIR+CARE)
+│       └── validation/                         # Validation and FAIR+CARE reporting
 │           ├── README.md
 │           └── faircare_audit.json
-└── reports/                                           # Hydrology analysis summaries
+└── reports/                                    # Analytical and sustainability summaries
+    ├── README.md
     ├── correlation_summary.json
     ├── sustainability_audit.json
-    └── ledger_entry.json
+    └── visualization/                          # Maps, charts, and dashboards
+        ├── flood_risk_index_map.png
+        ├── drought_overlay_map.png
+        └── hydrology_dashboard_snapshot.png
 ```
 
 ---
@@ -73,11 +77,11 @@ docs/analyses/hydrology/
 
 ```mermaid
 flowchart TD
-A["Hydrology Data Sources (NOAA, USGS, PRISM, NRCS)"] --> B["Data Preprocessing (Normalization + QC)"]
-B --> C["Drought–Flood Correlation Analysis"]
-C --> D["Spatial Modeling (DEM + Basin Overlays)"]
-D --> E["FAIR+CARE Validation (Ethics + Sustainability)"]
-E --> F["Governance Ledger Entry + Public Reporting"]
+A["NOAA, USGS, PRISM, NRCS Datasets"] --> B["Data Preprocessing & FAIR+CARE Validation"]
+B --> C["Temporal Correlation Analysis (SPI, SPEI vs Streamflow)"]
+C --> D["Spatial Modeling (DEM + Basin Statistics)"]
+D --> E["Sustainability & Telemetry Metrics (ISO 50001 / 14064)"]
+E --> F["Governance Ledger + FAIR+CARE Council Review"]
 ```
 
 ---
@@ -86,69 +90,82 @@ E --> F["Governance Ledger Entry + Public Reporting"]
 
 | Source | Dataset | Format | FAIR+CARE Status |
 |---------|----------|--------|------------------|
-| **NOAA NCEI** | Precipitation & Temperature (1895–2025) | CSV / NetCDF | ✅ Pass |
-| **USGS NWIS** | Streamflow & Basin Discharge (1900–2025) | CSV / GeoPackage | ✅ Pass |
-| **PRISM** | Drought Indices (SPI, SPEI) | NetCDF | ✅ Pass |
-| **NRCS SSURGO** | Soil & Infiltration Data | GeoPackage | ✅ Pass |
-| **FAIR+CARE Ledger** | Provenance, Ethics, Telemetry Metadata | JSON-LD | ✅ Certified |
+| **NOAA NCEI** | Historical precipitation and temperature | CSV / NetCDF | ✅ Pass |
+| **USGS NWIS** | Streamflow and discharge time series | CSV / GeoPackage | ✅ Pass |
+| **PRISM** | Drought indices (SPI, SPEI) | NetCDF | ✅ Pass |
+| **NRCS SSURGO** | Soil moisture and infiltration data | GeoPackage | ✅ Pass |
+| **FAIR+CARE Ledger** | Provenance, ethics, and telemetry records | JSON-LD | ✅ Certified |
 
 ---
 
-## 🧮 Sustainability & Telemetry Metrics
+## 🧾 FAIR+CARE Hydrology Governance Matrix
+
+| Principle | Implementation | Verification Source |
+|------------|----------------|--------------------|
+| **Findable** | STAC/DCAT metadata with UUIDs and version tags | `datasets/metadata/` |
+| **Accessible** | Public FAIR+CARE datasets and dashboards | Governance Ledger |
+| **Interoperable** | Uses GeoPackage, Parquet, NetCDF, GeoTIFF | `data-contracts.md` |
+| **Reusable** | Lineage and methods included in metadata | `manifest_ref` |
+| **Collective Benefit** | Supports water management and research transparency | FAIR+CARE Audit |
+| **Authority to Control** | FAIR+CARE Council oversees dataset and analysis release | Governance Charter |
+| **Responsibility** | Tracks telemetry and energy sustainability | `telemetry_ref` |
+| **Ethics** | Site data masked for cultural sensitivity | `faircare_audit.json` |
+
+---
+
+## 🧮 Sustainability Metrics
 
 | Metric | Description | Target | Unit |
 |---------|-------------|---------|------|
-| **Energy Consumption (J)** | Power used during model runs | ≤ 15 | Joules |
-| **Carbon Output (gCO₂e)** | CO₂ equivalent per analysis | ≤ 0.006 | gCO₂e |
-| **Telemetry Coverage (%)** | % of analyses tracked with telemetry | ≥ 95 | % |
-| **FAIR+CARE Validation (%)** | Ethics and sustainability compliance | 100 | % |
+| **Energy Consumption** | Power used during model runs | ≤ 15 | Joules |
+| **Carbon Output** | CO₂ equivalent per workflow | ≤ 0.006 | gCO₂e |
+| **Telemetry Coverage** | % of analyses tracked for sustainability | ≥ 95 | % |
+| **FAIR+CARE Validation** | Audit compliance rate | 100 | % |
 
 ---
 
-## ⚖️ FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Validation Source |
-|------------|----------------|--------------------|
-| **Findable** | STAC/DCAT metadata with persistent UUIDs | `datasets/metadata/` |
-| **Accessible** | Open-access FAIR+CARE data publication | Governance Ledger |
-| **Interoperable** | Data uses GeoPackage, Parquet, NetCDF, and GeoTIFF | `data-contracts.md` |
-| **Reusable** | Lineage and processing steps logged in metadata | `manifest_ref` |
-| **Collective Benefit** | Promotes sustainable hydrological research | FAIR+CARE Council Audit |
-| **Authority to Control** | Council oversight for ethical data governance | `governance_ref` |
-| **Responsibility** | Tracks energy, carbon, and ethics metrics | `telemetry_ref` |
-| **Ethics** | Culturally sensitive or private site data masked | FAIR+CARE Validation Log |
-
----
-
-## 🧾 Example Governance Ledger Record
+## 🧩 Governance Ledger Record Example
 
 ```json
 {
-  "ledger_id": "hydrology-analysis-ledger-2025-11-09-0004",
-  "component": "Drought–Flood Correlation Study",
+  "ledger_id": "hydrology-analysis-ledger-2025-11-09-0005",
+  "component": "Hydrology Drought–Flood Correlation Module",
   "datasets": [
     "NOAA Precipitation",
     "USGS Streamflow",
     "PRISM Drought Index",
-    "NRCS SSURGO Soil"
+    "NRCS Soil Data"
   ],
   "energy_joules": 14.3,
   "carbon_gCO2e": 0.0058,
   "faircare_status": "Pass",
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T12:50:00Z"
+  "timestamp": "2025-11-09T12:55:00Z"
 }
 ```
 
 ---
 
-## 🧠 Hydrology Validation Workflows
+## ⚙️ Validation Workflows
 
 | Workflow | Function | Output |
 |-----------|-----------|--------|
-| `hydrology-ingest.yml` | ETL for NOAA, USGS, and PRISM datasets | `reports/data_ingest_log.json` |
-| `hydrology-validate.yml` | FAIR+CARE and sustainability validation | `reports/validation_audit.json` |
-| `ledger-sync.yml` | Governance Ledger update for hydrology datasets | `docs/standards/governance/LEDGER/hydrology-ledger.json` |
+| `hydrology-ingest.yml` | Collects and normalizes hydrology datasets | `reports/data_ingest_log.json` |
+| `hydrology-validate.yml` | Runs FAIR+CARE and ISO validation checks | `reports/validation_audit.json` |
+| `ledger-sync.yml` | Updates Governance Ledger for analysis entries | `docs/standards/governance/LEDGER/hydrology-ledger.json` |
+
+---
+
+## 🧠 FAIR+CARE Hydrology Analysis Lifecycle
+
+```mermaid
+flowchart LR
+A["Dataset Ingestion (Raw)"] --> B["Processing (Validation + Normalization)"]
+B --> C["Analysis (Drought–Flood Correlation)"]
+C --> D["FAIR+CARE Validation (Ethics + Energy)"]
+D --> E["Governance Ledger Sync"]
+E --> F["Public Reporting + FAIR+CARE Dashboard"]
+```
 
 ---
 
@@ -156,9 +173,9 @@ E --> F["Governance Ledger Entry + Public Reporting"]
 
 | Version | Date | Author | Summary |
 |----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Hydrology Working Group | Added full hydrology module index with FAIR+CARE governance integration |
-| v9.8.0  | 2025-11-02 | FAIR+CARE Council | Established sustainability telemetry and dataset traceability |
-| v9.5.0  | 2025-10-30 | KFM Data Governance Team | Linked hydrology pipelines to Governance Ledger |
+| v10.1.0 | 2025-11-09 | Hydrology Working Group | Updated hydrology documentation structure with dashboard integration and telemetry metrics |
+| v10.0.0 | 2025-11-09 | KFM Data Team | Added FAIR+CARE governance alignment for hydrology datasets and analyses |
+| v9.8.0  | 2025-11-02 | FAIR+CARE Council | Introduced sustainability telemetry for hydrological models |
 
 ---
 
@@ -170,4 +187,3 @@ Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω 
 [Back to Analyses Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
