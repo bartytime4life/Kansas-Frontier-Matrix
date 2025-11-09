@@ -51,11 +51,15 @@ They outline architecture, explainability workflows, and governance compliance f
 docs/guides/ai/
 ├── README.md                                  # This overview
 ├── graph-augmented-intelligence.md            # Graph-based AI reasoning & RAG integration
-├── context-vs-environment-evaluation.md       # Context weighting heuristic evaluation (optional alias)
-├── ../../src/ai/focus/evaluation/README.md    # Heuristic evaluations in Focus Mode
-├── focus-transformer-governance.md            # Focus Transformer model architecture & explainability
+├── context-vs-environment-evaluation.md       # Operator guide to CvE heuristics
+├── focus-transformer-governance.md            # Governance & explainability framework
 ├── explainability-guidelines.md               # SHAP, LIME, and counterfactual reporting
 ├── ai-governance-ledger.md                    # FAIR+CARE AI governance ledger standards
+├── LEDGER/                                    # Signed governance records (sessions/models/XAI)
+│   ├── README.md
+│   ├── focus-eval-sessions/README.md
+│   ├── explainability/README.md
+│   └── model-governance/README.md
 └── validation/                                # AI fairness & ethics audit reports
 ```
 
@@ -65,11 +69,11 @@ docs/guides/ai/
 
 | Module | Function | Example Document |
 |---------|-----------|------------------|
-| **Focus Mode AI** | Central reasoning engine aligning context & environment | `src/ai/focus/README.md` |
+| **Focus Mode AI** | Central reasoning engine aligning context & environment | `focus-transformer-governance.md` |
 | **Graph-Augmented Intelligence (GAI)** | Hybrid vector + graph reasoning via Neo4j | `graph-augmented-intelligence.md` |
-| **Explainability** | Model transparency via SHAP/LIME pipelines | `explainability-guidelines.md` |
-| **Heuristic Evaluation** | Balance context vs. environmental features | `context-vs-environment-evaluation.md` |
-| **AI Governance** | Auditing, ethical checks, and compliance reporting | `ai-governance-ledger.md` |
+| **Explainability** | SHAP/LIME/counterfactual transparency | `explainability-guidelines.md` |
+| **Heuristic Evaluation** | Balance context vs. environmental signals | `context-vs-environment-evaluation.md` |
+| **AI Governance** | Auditing, ethics, and signed ledger records | `ai-governance-ledger.md` |
 
 ---
 
@@ -162,7 +166,7 @@ E --> F["Reports + Dashboard"]
 
 | Version | Date | Author | Summary |
 |----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Upgraded AI guides with governance-led telemetry and Focus Transformer v2 integration |
+| v10.0.0 | 2025-11-09 | Core Team | Aligned AI guides index with governance-led telemetry and Focus Transformer v2 |
 | v9.7.0 | 2025-11-03 | A. Barta | Added Graph-Augmented Intelligence & heuristic evaluation modules |
 
 ---
@@ -175,4 +179,3 @@ Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω 
 [Back to Guides Index](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
