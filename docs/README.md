@@ -1,14 +1,14 @@
 ---
 title: "📚 Kansas Frontier Matrix — Documentation Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/README.md"
-version: "v10.0.0"
+version: "v10.2.2"
 last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/docs-index-v1.json"
+sbom_ref: "../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/docs-index-v3.json"
 governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 **Purpose:**  
 Provide the **central navigation hub** for all Kansas Frontier Matrix (KFM) documentation — standards, workflows, governance, AI systems, pipelines, datasets, and developer guides — maintained under **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115** alignment.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](README.md)
+[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](standards/faircare.md)
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../releases/)
@@ -54,7 +54,7 @@ docs/
 │   ├── data-architecture.md           # Data model, STAC/DCAT schemas, and ontologies
 │   ├── web-ui.md                      # Frontend structure, components, accessibility
 │   ├── github-architecture.md         # CI/CD and automation architecture
-│   └── api-architecture.md            # API and knowledge graph integration (v10.0.0)
+│   └── api-architecture.md            # API and knowledge graph integration (v10.2.x)
 │
 ├── standards/                         # FAIR+CARE, governance, compliance, and style rules
 │   ├── faircare.md                    # FAIR+CARE ethical framework
@@ -130,13 +130,13 @@ All Markdown files include **front-matter metadata**, badges, emojis, and valida
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture"
 path: "src/ARCHITECTURE.md"
-version: "v10.0.0"
+version: "v10.2.2"
 last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "releases/v10.0.0/manifest.zip"
-telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "releases/v10.2.2/sbom.spdx.json"
+manifest_ref: "releases/v10.2.2/manifest.zip"
+telemetry_ref: "releases/v10.2.2/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ---
@@ -217,6 +217,7 @@ Stored under `reports/self-validation/docs/` and surfaced in `focus-telemetry.js
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v10.2.2 | 2025-11-09 | `@kfm-docs` | Aligned docs index to v10.2: updated paths, schemas, and governance refs; refreshed workflow and architecture sections. |
 | v10.0.0 | 2025-11-09 | `@kfm-docs` | Upgraded index to v10; added comprehensive guides (AI, Geo, Data, Deployment, Governance, Integration, Sustainability, Telemetry, Visualization, Workflows). |
 | v9.9.0 | 2025-11-08 | `@kfm-docs` | Added `workflows/` documentation set and updated architecture categories. |
 | v9.7.0 | 2025-11-05 | `@kfm-core` | Standardized telemetry schema and governance refs. |
