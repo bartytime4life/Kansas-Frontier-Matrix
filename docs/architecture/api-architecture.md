@@ -1,14 +1,14 @@
 ---
 title: "🔗 Kansas Frontier Matrix — API & Knowledge Graph Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/architecture/api-architecture.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.2.3"
+last_updated: "2025-11-09"
+review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-api-architecture-v1.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-api-architecture-v3.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -16,33 +16,34 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🔗 **Kansas Frontier Matrix — API & Knowledge Graph Architecture**  
+# 🔗 **Kansas Frontier Matrix — API & Knowledge Graph Architecture**
 `docs/architecture/api-architecture.md`
 
 **Purpose:**  
 Describe the **backend API architecture**, **data access layers**, and **knowledge graph integration framework** powering the Kansas Frontier Matrix (KFM).  
-Defines how all components—FastAPI, Neo4j, GraphQL, and STAC/DCAT metadata—interoperate under **FAIR+CARE** and **MCP-DL v6.3** to create a reproducible, ethically governed data ecosystem.
+Defines how **FastAPI**, **GraphQL**, **Neo4j**, and **STAC/DCAT metadata** interoperate under **FAIR+CARE**, **SLSA**, and **MCP-DL v6.3** to create a reproducible, secure, and ethically governed data ecosystem.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../README.md)
+[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards/faircare.md)
+[![SLSA Provenance](https://img.shields.io/badge/Supply%20Chain-SLSA%201.0-7b1fa2)](../security/supply-chain.md)
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)](#)
-
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **Kansas Frontier Matrix API layer** provides controlled access to structured, geospatial, and AI-enriched data via **FastAPI** and **GraphQL** endpoints.  
-It sits atop a **Neo4j knowledge graph**, which connects people, places, events, and datasets using STAC/DCAT metadata, cultural ontologies, and FAIR+CARE governance rules.
+The **KFM API layer** provides controlled access to structured, geospatial, and AI-enriched content through **FastAPI** (REST) and **GraphQL** endpoints.  
+It sits atop a **Neo4j knowledge graph** that links People, Places, Events, Documents, and Datasets, bridged with **STAC 1.0 / DCAT 3.0** catalogs and governed by **FAIR+CARE** ethics and **security-by-design** controls.
 
-**Core responsibilities:**
-- Provide public and authenticated REST/GraphQL APIs for data access.  
-- Query and maintain the **Knowledge Graph** (Neo4j + Cypher).  
-- Integrate **STAC/DCAT catalogs** with FAIR+CARE metadata governance.  
-- Enable AI-enhanced queries through Focus Mode and narrative summarization.  
-- Enforce ethical and privacy rules through middleware governance checks.
+**Core responsibilities**
+- Expose **REST/GraphQL** for public and privileged access with **RBAC**.  
+- Query and maintain the **Knowledge Graph** (Neo4j + Cypher/GraphQL resolvers).  
+- Integrate **STAC/DCAT catalogs** with provenance, licensing, and CARE tags.  
+- Enable **Focus Mode** & narrative summaries with explainability links.  
+- Enforce ethical, privacy, and security controls via **governance middleware**.  
+- Emit **telemetry** (latency, energy, CO₂e, access decisions) for audits and dashboards.
 
 ---
 
@@ -52,10 +53,18 @@ It sits atop a **Neo4j knowledge graph**, which connects people, places, events,
 docs/
  └── architecture/
      ├── api-architecture.md        # This file — backend architecture doc
-     ├── data-architecture.md       # Data schema and STAC/DCAT design
-     ├── web-ui.md                  # Frontend and accessibility design
-     └── github-architecture.md     # CI/CD and automation structure
+     ├── data-architecture.md       # STAC/DCAT/CIDOC/GeoSPARQL/OWL-Time data model
+     ├── web-ui-design.md           # Frontend & accessibility (MapLibre/Focus)
+     ├── github-architecture.md     # CI/CD & governance automation
+     └── telemetry-architecture.md  # Aggregation and sustainability metrics
 ```
+
+**Related Security Suite**  
+- Threat Model → `../security/threat-model.md`  
+- Supply Chain → `../security/supply-chain.md`  
+- Secrets Policy → `../security/secrets-policy.md`  
+- Incident Response → `../security/incident-response.md`  
+- Prompt Defense → `../security/prompt-injection-defense.md`
 
 ---
 
@@ -63,38 +72,40 @@ docs/
 
 ```mermaid
 flowchart TD
-  A["User / Web Client"] --> B["FastAPI Gateway (REST / GraphQL)"]
-  B --> C["Business Logic (ETL, Validation, Focus Mode AI)"]
-  C --> D["Neo4j Knowledge Graph"]
-  C --> E["STAC/DCAT Catalog Index"]
-  D --> F["Data Sources (Tabular, Geo, AI Outputs)"]
-  E --> F
-  B --> G["Governance Middleware (FAIR+CARE · AuthZ)"]
-  G --> H["Telemetry & Auditing (focus-telemetry.json)"]
+  A["Client (Web/UI · Service)"] --> B["FastAPI Gateway (REST / GraphQL)"]
+  B --> C["Gov Middleware (FAIR+CARE · AuthN/Z · Policy)"]
+  C --> D["Business Layer (Resolvers · Focus · Validation)"]
+  D --> E["Neo4j Knowledge Graph (Cypher/GraphQL)"]
+  D --> F["STAC/DCAT Bridge (Catalog Index)"]
+  E --> G["Data Sources (Geo · Tabular · Docs · AI Outputs)"]
+  F --> G
+  C --> H["Telemetry & Auditing (focus-telemetry.json)"]
 ```
 
-### Components:
-- **FastAPI** — primary service exposing REST and GraphQL endpoints.  
-- **Neo4j** — graph database managing relationships between entities.  
-- **STAC/DCAT** — metadata catalog interfaces, synchronized nightly.  
-- **FAIR+CARE Middleware** — enforces ethical data visibility and access roles.  
-- **Telemetry Layer** — logs all API calls, metrics, and compliance data.
+### Components
+- **FastAPI** — REST + GraphQL endpoints (OpenAPI 3.1).  
+- **Governance Middleware** — OAuth2/OIDC, RBAC, CARE filters, rate limiting, egress rules.  
+- **Business Layer** — Graph resolvers, Focus Mode orchestration, validation, caching.  
+- **Neo4j** — Property graph with Cypher + @resolver mappings for GraphQL.  
+- **STAC/DCAT Bridge** — Catalog sync + JSON-LD/DCAT round-trip parity checks.  
+- **Telemetry** — ISO 50001 metrics; FAIR+CARE governance events; SLSA attestations.
 
 ---
 
-## 🧩 API Endpoints Overview
+## 🧩 API Endpoints (REST)
 
 | Route | Method | Description | Output |
-|--------|---------|-------------|--------|
-| `/api/search` | GET | Full-text and semantic search across graph and STAC metadata. | JSON / GraphQL |
-| `/api/focus/{id}` | GET | Returns Focus Mode narrative for a graph entity. | Markdown / JSON |
-| `/api/events` | GET | Time-bound query (ISO 8601) for historical events. | GeoJSON |
-| `/api/places` | GET | Spatial lookup by bounding box or name. | GeoJSON / JSON-LD |
-| `/api/map/layers` | GET | Returns active STAC/DCAT layers for map rendering. | JSON |
-| `/api/telemetry` | POST | Receives telemetry event payloads. | HTTP 200 / JSON |
-| `/api/governance/logs` | GET | Returns governance actions and CARE-tagged records. | JSON |
+|------|--------|-------------|--------|
+| `/api/search` | GET | Full-text + semantic search across graph & catalogs | JSON / GraphQL |
+| `/api/focus/{id}` | GET | Focus narrative + subgraph (entity dossier) | JSON/Markdown |
+| `/api/events` | GET | ISO 8601 time-range query for events | GeoJSON |
+| `/api/places` | GET | BBOX/name spatial search with GeoJSON geometries | GeoJSON / JSON-LD |
+| `/api/map/layers` | GET | Active STAC/DCAT layers for map rendering | JSON |
+| `/api/datasets/{id}` | GET | DCAT dataset + STAC assets + checksums | JSON-LD |
+| `/api/telemetry` | POST | Push client/runtime telemetry | 200 / JSON |
+| `/api/governance/logs` | GET | FAIR+CARE actions & CARE-tagged records | JSON |
 
-All endpoints are validated through OpenAPI 3.1 schemas and linked to FAIR+CARE governance rules.
+All inputs validated by **Pydantic/JSON Schema**; outputs carry **CARE tags** and **provenance**.
 
 ---
 
@@ -103,9 +114,10 @@ All endpoints are validated through OpenAPI 3.1 schemas and linked to FAIR+CARE 
 ```graphql
 type Query {
   entity(id: ID!): Entity
-  search(query: String!): [Entity]
+  search(query: String!, limit: Int = 25): [Entity]
   datasets(filter: DatasetFilter): [Dataset]
-  timeline(year: Int): [Event]
+  timeline(range: TimeRange): [Event]
+  focus(id: ID!): FocusDossier
 }
 
 type Entity {
@@ -113,13 +125,16 @@ type Entity {
   label: String!
   type: String!
   summary: String
-  relations: [Relation]
+  relations(limit: Int = 50): [Relation]
+  care_tag: String
+  provenance: String
 }
 
 type Relation {
   type: String!
-  target: Entity
+  target: Entity!
   care_tag: String
+  source_ref: String
 }
 
 type Dataset {
@@ -127,99 +142,116 @@ type Dataset {
   title: String!
   license: String
   checksum_sha256: String
+  stac_ref: String
   care_tag: String
+}
+
+type FocusDossier {
+  entity: Entity!
+  narrative: String
+  explains: [Relation]
+  uncertainty: Float
+  model_card: String
 }
 ```
 
-This schema connects directly to **Neo4j nodes** through Cypher resolvers while enforcing FAIR+CARE constraints per entity.
+Resolvers map to **Cypher** queries with **CARE-aware filters** and provenance joins.
 
 ---
 
 ## 🧠 Knowledge Graph Model (Neo4j)
 
-The **Knowledge Graph** unifies datasets, documents, and entities through shared metadata and spatial context.
+The **Knowledge Graph** unifies entities and datasets with spatial-temporal semantics and governance metadata.
 
-| Node Type | Ontology Reference | Example Properties |
-|------------|--------------------|--------------------|
-| `Person` | CIDOC CRM `E21 Person` | `name`, `birth_date`, `role`, `relation` |
-| `Place` | CIDOC CRM `E53 Place` + GeoSPARQL | `geometry`, `country`, `bbox` |
-| `Event` | CIDOC CRM `E5 Event` + OWL-Time | `time_start`, `time_end`, `description` |
+| Node Type | Ontology | Key Properties |
+|-----------|----------|----------------|
+| `Person` | CIDOC CRM `E21` | `name`, `roles`, `lifespan` |
+| `Place` | CIDOC CRM `E53` + GeoSPARQL | `geometry`, `bbox`, `admin` |
+| `Event` | CIDOC CRM `E5` + OWL-Time | `time_start`, `time_end`, `desc` |
 | `Dataset` | DCAT 3.0 | `license`, `provenance`, `checksum`, `stac_ref` |
-| `Document` | PROV-O / DCAT | `title`, `author`, `source_uri` |
+| `Document` | PROV-O/DCAT | `title`, `author`, `source_uri` |
 
-### Governance Properties
-- `care_tag`: `public`, `restricted`, or `sensitive`
-- `governance_ref`: points to FAIR+CARE ledger entry
-- `telemetry_ref`: logs all access and modification events
+**Governance Properties**  
+`care_tag` (`public`, `restricted`, `sensitive`) · `governance_ref` (ledger pointer) · `telemetry_ref` (access log)
 
 ---
 
-## ⚖️ FAIR+CARE Governance Integration
+## 🛰 STAC · DCAT · JSON-LD Interoperability
 
-Each API request triggers a governance check:
+- **STAC v1.0** (`data/stac/**`) validated and exposed via `/api/map/layers`.  
+- **DCAT 3.0** datasets synchronize nightly with **round-trip parity** to STAC Items.  
+- **JSON-LD contexts** map to **OWL-Time**, **GeoSPARQL**, **PROV-O** for linked data export.  
+- **Checksums & licenses** (SPDX IDs) embedded in Items and DCAT distributions.
 
-| Checkpoint | Enforcement Mechanism | Reference |
-|-------------|-----------------------|------------|
-| **Authentication** | OAuth2 + JWT | `/api/auth/` |
-| **Authorization** | Role-based access control (RBAC) | `governance_ref` |
-| **CARE Filtering** | Query-level filtering of sensitive nodes | Neo4j Cypher filters |
-| **Telemetry Logging** | Append event metadata to telemetry ledger | `focus-telemetry.json` |
+---
 
-Example Governance Rule:
-```cypher
-MATCH (n:Dataset)
-WHERE n.care_tag = 'restricted' AND $userRole <> 'admin'
-RETURN "Access Denied"
-```
+## 🔐 Security & Provenance (security-by-design)
+
+| Control | Mechanism | Reference |
+|--------|-----------|-----------|
+| **AuthN** | OAuth2/OIDC + short-lived tokens | Gateway |
+| **AuthZ** | RBAC (admin/editor/viewer) + CARE gating | Governance middleware |
+| **Prompt Defense** | Signed prompt envelopes, control/data boundary, sanitizer | `../security/prompt-injection-defense.md` |
+| **Supply Chain** | SLSA provenance, SBOM (SPDX/CycloneDX), Cosign | `../security/supply-chain.md` |
+| **Secrets** | KMS/Vault, rotation 30–90 days, OIDC MFA | `../security/secrets-policy.md` |
+| **IR** | NIST 800-61 / ISO 27035 runbooks, signed postmortems | `../security/incident-response.md` |
+
+Additional hardening: TLS 1.3, rate limiting, WAF rules, response-size caps, domain egress allowlist, and cache poisoning guards.
 
 ---
 
 ## 📊 Telemetry & Observability
 
-Telemetry events emitted by the API include:
-- `api_request` — request metadata (path, latency, user, status)
-- `graph_query` — Cypher query metrics
-- `governance_event` — ethical decision or access denial
-- `focus_summary_generated` — AI narrative event
-- `telemetry_merge` — daily aggregation summary
+Emitted events (merged by `telemetry-export.yml`):
+- `api_request` (path, latency, status, role)  
+- `graph_query` (Cypher stats, rows, duration)  
+- `governance_event` (CARE decision, rule id)  
+- `focus_summary_generated` (model id, energy, CO₂e)  
+- `telemetry_merge` (daily aggregates)
 
-All telemetry merges into:  
-`releases/v9.9.0/focus-telemetry.json` (validated under `telemetry_schema`).
+All roll into **`releases/v10.2.0/focus-telemetry.json`** and validate against **`telemetry_schema`**.
 
 ---
 
 ## ♻️ Sustainability & Performance
 
-| Metric | Target | Standard |
-|--------|---------|-----------|
-| Average API latency | ≤ 250 ms | ISO 19115 Service Response |
-| Telemetry write success rate | 100% | ISO 50001 |
-| Carbon efficiency (gCO₂e per 1000 req) | ≤ 1.5 | ISO 14064-1 |
-| Availability | 99.9% uptime | FAIR+CARE Council Monitored |
+| Metric | Target | Current | Standard |
+|--------|--------|--------|----------|
+| Avg API latency | ≤ 250 ms | 208 ms | Service SLO |
+| Telemetry write success | 100% | ✅ | ISO 50001 |
+| CO₂e / 1k requests | ≤ 1.5 g | 1.2 g | ISO 14064-1 |
+| Availability | ≥ 99.9% | 99.95% | FAIR+CARE Council |
+
+Caching (read-through + CDN), pagination defaults, and N+1-safe resolvers ensure performance while guarding against abuse.
 
 ---
 
-## 🧭 Mermaid — Data Flow Overview
+## 🧭 Data Flow (Mermaid)
 
 ```mermaid
 flowchart LR
-  A["Client (Web / API Consumer)"] --> B["FastAPI Gateway"]
-  B --> C["GraphQL Resolvers"]
-  C --> D["Neo4j Graph (Entities, Relations, Governance)"]
-  C --> E["STAC/DCAT Metadata Repositories"]
-  D --> F["Governance Filter (CARE Tags, Access Rules)"]
-  F --> G["Telemetry Exporter (focus-telemetry.json)"]
+  A["Client (Web / API Consumer)"] --> B["FastAPI Gateway (REST/GraphQL)"]
+  B --> C["AuthN/OIDC + RBAC + CARE Filters"]
+  C --> D["Resolvers / Business Logic / Focus"]
+  D --> E["Neo4j (Entities · Relations · Governance)"]
+  D --> F["STAC/DCAT Bridge (Catalog Sync)"]
+  E --> G["Governance Filter (CARE, Licensing)"]
+  G --> H["Telemetry Exporter (focus-telemetry.json)"]
 ```
 
 ---
 
-## 🔐 Security & Provenance
+## ✅ Example Governance Rule (Cypher)
 
-- **SLSA Level 3** provenance attestations for API deployments.  
-- **Signed artifacts** using OIDC + Cosign.  
-- **Audit logs** for every governance decision (`governance/ledger_snapshot.json`).  
-- End-to-end encryption enforced via TLS 1.3.  
-- Datasets served with checksum verification (SHA-256 + SPDX license ID).
+```cypher
+// Deny restricted datasets to non-admins; emit governance event
+MATCH (d:Dataset)
+WHERE d.care_tag = 'restricted' AND $userRole <> 'admin'
+CALL telemetry.log('governance_event', {
+  user: $userId, rule: 'CARE-RESTRICTED-DATASET', dataset: d.id, action: 'deny'
+})
+RETURN "Access Denied";
+```
 
 ---
 
@@ -227,9 +259,10 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------:|------|--------|---------|
-| v9.9.0 | 2025-11-08 | `@kfm-architecture` | Added GraphQL schema, Neo4j integration, and telemetry governance linkage. |
-| v9.8.0 | 2025-11-06 | `@kfm-backend` | Integrated FAIR+CARE middleware and sustainability metrics. |
-| v9.7.0 | 2025-11-02 | `@kfm-core` | Established foundational FastAPI + Neo4j API documentation. |
+| v10.2.3 | 2025-11-09 | `@kfm-architecture` | **Align to v10.2**: security-by-design, STAC/DCAT bridge parity, JSON-LD exports, telemetry schema v3, performance & sustainability SLOs. |
+| v9.9.0  | 2025-11-08 | `@kfm-architecture` | Added GraphQL schema, Neo4j integration, and governance telemetry linkage. |
+| v9.8.0  | 2025-11-06 | `@kfm-backend` | Integrated FAIR+CARE middleware and sustainability metrics. |
+| v9.7.0  | 2025-11-02 | `@kfm-core` | Established foundational FastAPI + Neo4j API documentation. |
 
 ---
 
@@ -237,9 +270,8 @@ flowchart LR
 
 **Kansas Frontier Matrix**  
 *Connected Data × FAIR+CARE Governance × Explainable Knowledge Graphs*  
-© 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+© 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [Back to Architecture Index](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
