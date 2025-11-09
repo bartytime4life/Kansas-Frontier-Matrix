@@ -1,7 +1,7 @@
 ---
 title: "📚 Kansas Frontier Matrix — Documentation Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/README.md"
-version: "v10.2.2"
+version: "v10.2.3"
 last_updated: "2025-11-09"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
@@ -20,7 +20,7 @@ mcp_version: "MCP-DL v6.3"
 `docs/README.md`
 
 **Purpose:**  
-Provide the **central navigation hub** for all Kansas Frontier Matrix (KFM) documentation — standards, workflows, governance, AI systems, pipelines, datasets, and developer guides — maintained under **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115** alignment.
+Provide the **central navigation hub** for all Kansas Frontier Matrix (KFM) documentation — standards, workflows, governance, AI systems, pipelines, datasets, **analyses**, **security**, and developer guides — maintained under **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115** alignment.
 
 [![Docs · MCP_v6.3](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)
@@ -87,6 +87,21 @@ docs/
 │   ├── visualization/README.md        # MapLibre, timelines, UI & accessibility
 │   └── workflows/README.md            # Automation & validation guides
 │
+├── analyses/                          # Domain analyses (end-user science outputs)
+│   ├── README.md                      # Analyses overview & navigation
+│   ├── hydrology/                     # Drought–flood correlation & hydrology methods
+│   ├── climatology/                   # Trend, projection, and climate datasets
+│   ├── geology/                       # Stratigraphy, seismic, geomorphology
+│   ├── ecology/                       # SDM, landcover, ecosystem services
+│   └── historical/                    # Archives, treaties, cultural landscapes
+│
+├── security/                          # Security, threat modeling, and supply chain integrity
+│   ├── README.md                      # Security overview
+│   ├── threat-model.md                # STRIDE/LINDDUN threat model & mitigations
+│   ├── secrets-policy.md              # Secrets handling, KMS/HSM, and rotation policy
+│   ├── supply-chain.md                # SBOM, SLSA, provenance, dependency governance
+│   └── vulnerability-management.md    # Reporting, triage, CVSS, patch SLAs
+│
 ├── templates/                         # Authoring and documentation templates
 │   ├── model_card.md                  # AI model card template
 │   ├── sop.md                         # Standard Operating Procedure template
@@ -101,6 +116,14 @@ docs/
         ├── docs_telemetry.json
         └── sustainability_metrics.json
 ```
+
+---
+
+## 🔎 What’s New (v10.2.3)
+
+- Added **`analyses/`** to the Docs Index map with deep-linked domain modules (Hydrology, Climatology, Geology, Ecology, Historical).  
+- Introduced **`security/`** section with threat modeling, secrets governance, supply-chain integrity, and vuln management docs.  
+- Updated **badges & schemas** to v10.2 refs; aligned with Platinum README v7.1 and FAIR+CARE validators.
 
 ---
 
@@ -217,6 +240,7 @@ Stored under `reports/self-validation/docs/` and surfaced in `focus-telemetry.js
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v10.2.3 | 2025-11-09 | `@kfm-docs` | Added **analyses/** and **security/** sections to directory layout; refreshed metadata and links. |
 | v10.2.2 | 2025-11-09 | `@kfm-docs` | Aligned docs index to v10.2: updated paths, schemas, and governance refs; refreshed workflow and architecture sections. |
 | v10.0.0 | 2025-11-09 | `@kfm-docs` | Upgraded index to v10; added comprehensive guides (AI, Geo, Data, Deployment, Governance, Integration, Sustainability, Telemetry, Visualization, Workflows). |
 | v9.9.0 | 2025-11-08 | `@kfm-docs` | Added `workflows/` documentation set and updated architecture categories. |
