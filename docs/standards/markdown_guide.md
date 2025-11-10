@@ -1,15 +1,17 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Markdown Styling & Documentation Guide"
 path: "docs/standards/markdown_guide.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-markdown-guide-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-markdown-guide-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -24,7 +26,6 @@ These rules align with **Master Coder Protocol (MCP v6.3)**, **Platinum README T
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
-
 </div>
 
 ---
@@ -51,25 +52,27 @@ Each document begins with a **YAML Front-Matter Block** and a **center-aligned h
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture"
 path: "src/ARCHITECTURE.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "releases/v9.7.0/manifest.zip"
-telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
+sbom_ref: "releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "releases/v10.0.0/manifest.zip"
+telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/system-architecture-v2.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 ```
 
 ### Title Block
 Each document must begin with:
-- `<div align="center">` wrapper
-- A **primary title (`#`)** with emoji and bold name
-- A **path identifier** in backticks
-- A **purpose statement**
-- Optional **badges** for documentation version and governance status
+- `<div align="center">` wrapper  
+- A **primary title (`#`)** with emoji and bold name  
+- A **path identifier** in backticks  
+- A **purpose statement**  
+- Badges (Docs · MCP, License, FAIR+CARE, Status)
 
 Example:
 ```markdown
@@ -91,7 +94,7 @@ Example:
 ## 🧩 Section Hierarchy
 
 | Level | Markdown Symbol | Purpose | Example |
-|--------|------------------|----------|----------|
+|------:|------------------|---------|---------|
 | H1 | `#` | Title of document (used once per file). | `# 🏗️ Kansas Frontier Matrix — Architecture` |
 | H2 | `##` | Major sections (Overview, Standards, etc.). | `## 📘 Overview` |
 | H3 | `###` | Subsections or technical detail. | `### ⚙️ Workflow Integration` |
@@ -104,47 +107,48 @@ All section headers should include a **relevant emoji** for visual navigation an
 ## 🧾 Markdown Formatting Rules
 
 | Element | Rule | Example |
-|----------|------|----------|
-| **Lists** | Use `-` for unordered lists and maintain consistent indentation. | `- Item One` |
+|--------|------|---------|
+| **Lists** | Use `-` for unordered lists and maintain consistent two-space indentation. | `- Item One` |
 | **Code Blocks** | Always specify language for syntax highlighting. | ```json ... ``` |
 | **Inline Code** | Use backticks for paths, filenames, or commands. | `data/sources/manifest.json` |
 | **Links** | Prefer relative paths for intra-repo linking. | `[see architecture](../../src/ARCHITECTURE.md)` |
-| **Tables** | Use minimal borders and consistent spacing. | `| Header | Data |` |
+| **Tables** | Minimum three columns; use `—` for N/A; ≤100 chars width. | `| Field | Desc | Example |` |
 | **Quotes** | Use `>` for guidance or notable statements. | `> Example best practice` |
 | **Dividers** | Use `---` between major sections. | `---` |
-| **Emojis** | Include semantic emojis before major headings. | `## ⚙️ Configuration` |
-| **Footers** | Every document ends with an aligned copyright footer. | See below |
+| **Emojis** | Prefix major headings (H1–H3) with semantic emojis. | `## ⚙️ Configuration` |
+| **Footers** | Every document ends with a centered governance footer. | See footer example |
 
 ---
 
 ## 🧮 YAML Front-Matter Requirements
 
-Every KFM Markdown file must contain a front-matter header with specific metadata fields.  
-These are used by validation tools, governance dashboards, and FAIR+CARE audits.
+These fields are validated by **docs-lint** and governance pipelines.
 
 | Field | Description | Required |
-|--------|-------------|-----------|
+|------|-------------|---------|
 | `title` | Document title with emoji. | ✅ |
 | `path` | Relative repository path. | ✅ |
 | `version` | Semantic version tag. | ✅ |
 | `last_updated` | ISO 8601 date string. | ✅ |
-| `review_cycle` | Frequency of document review (Quarterly, Annual). | ✅ |
+| `review_cycle` | Frequency of review (Quarterly, Annual). | ✅ |
 | `commit_sha` | Git commit hash for provenance. | ✅ |
-| `sbom_ref` | Link to SBOM SPDX manifest. | ⚙️ |
-| `manifest_ref` | Link to release manifest. | ⚙️ |
-| `telemetry_ref` | Link to telemetry log or metrics. | ⚙️ |
-| `governance_ref` | Link to governance charter. | ✅ |
+| `sbom_ref` | SPDX SBOM path. | ⚙️ |
+| `manifest_ref` | Release manifest path. | ⚙️ |
+| `telemetry_ref` | Telemetry ledger path. | ⚙️ |
+| `telemetry_schema` | Telemetry schema path. | ⚙️ |
+| `governance_ref` | Governance charter path. | ✅ |
+| `license` | SPDX license id. | ✅ |
+| `mcp_version` | MCP documentation version string. | ✅ |
 
 ---
 
 ## 🧠 Visual Conventions
 
 | Component | Style | Example |
-|------------|-------|----------|
-| **File Path** | Always in backticks and lowercase. | `` `docs/standards/README.md` `` |
-| **Bold Keywords** | Use for emphasis on important terms. | **FAIR+CARE**, **MCP v6.3** |
-| **Emojis** | Always precede major headers. | `## ⚖️ Governance` |
-| **Badges** | Use Shields.io with consistent colors. | `[![License](https://img.shields.io/badge/License-CC--BY%204.0-green)]` |
+|----------|-------|---------|
+| **File Path** | Always in backticks and lower-case. | `` `docs/standards/README.md` `` |
+| **Bold Keywords** | For emphasis on key terms. | **FAIR+CARE**, **MCP v6.3** |
+| **Badges** | Use Shields.io with consistent colors. | Docs (blue), License (green), FAIR+CARE (orange), Status (brightgreen) |
 | **Center Alignment** | Only for document titles and footers. | `<div align="center"> ... </div>` |
 
 ---
@@ -173,11 +177,12 @@ Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamon
 **Automated Workflow:** `.github/workflows/docs-lint.yml`
 
 **Validation Rules Include:**
-1. Presence and correctness of YAML front-matter.
-2. Compliance with section hierarchy and emoji prefixes.
-3. Proper license badge and copyright footer.
-4. Consistent heading and table syntax.
-5. Relative path verification for internal links.
+1. Presence and correctness of YAML front-matter (all required keys).  
+2. Compliance with section hierarchy and emoji prefixes.  
+3. Proper license badge and centered footer.  
+4. Consistent heading, list, and table syntax.  
+5. Relative path verification for internal links.  
+6. UTF-8 file encoding and final newline.
 
 **Outputs:**
 - `reports/self-validation/docs/lint_summary.json`
@@ -188,12 +193,12 @@ Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamon
 ## ⚖️ FAIR+CARE Compliance in Documentation
 
 | Principle | Documentation Implementation |
-|------------|-------------------------------|
-| **Findable** | All documents indexed in telemetry and manifest references. |
-| **Accessible** | Markdown written in plain, readable English with semantic emojis. |
-| **Interoperable** | YAML headers machine-readable for governance APIs. |
-| **Reusable** | Openly licensed (CC-BY 4.0) and version-tracked. |
-| **CARE** | Inclusive language and culturally respectful representation. |
+|----------|-------------------------------|
+| **Findable** | Front-matter metadata ensures discoverability. |
+| **Accessible** | Markdown written in plain English; semantic emojis aid scanning. |
+| **Interoperable** | YAML headers machine-readable for governance APIs (DCAT/STAC alignment). |
+| **Reusable** | Open license, provenance, and version tracking included. |
+| **CARE** | Inclusive language and culturally respectful representation enforced via lint rules. |
 
 ---
 
@@ -203,14 +208,17 @@ Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamon
 ---
 title: "🌾 Kansas Frontier Matrix — Overview"
 path: "README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
-commit_sha: "abc123def456"
-sbom_ref: "releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "releases/v9.7.0/manifest.zip"
-telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "releases/v10.0.0/manifest.zip"
+telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/docs-readme-v2.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -233,7 +241,7 @@ Kansas Frontier Matrix is an open data initiative that unites Kansas’s histori
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Example of compliant Markdown under MCP v6.3. |
+| v10.0.0 | 2025-11-10 | A. Barta | Example of compliant Markdown under MCP v6.3 (v10 telemetry & SBOM refs). |
 
 ---
 
@@ -252,6 +260,7 @@ Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10.0.0; aligned telemetry/SBOM/manifest refs; added `telemetry_schema` to required fields. |
 | v9.7.0 | 2025-11-05 | A. Barta | Added complete Markdown style and linting guide for FAIR+CARE documentation. |
 | v9.5.0 | 2025-10-20 | A. Barta | Expanded rules for YAML headers and versioned footers. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Established Markdown documentation baseline. |
