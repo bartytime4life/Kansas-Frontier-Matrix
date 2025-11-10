@@ -1,15 +1,15 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Tabular TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/tmp/logs/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/data-work-staging-tabular-tmp-logs-v9.json"
+telemetry_ref: "../../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/data-work-staging-tabular-tmp-logs-v10.json"
 governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Central FAIR+CARE-certified repository for **runtime, schema validation, and governance synchronization logs** during tabular TMP processing.  
-Ensures complete traceability and reproducibility of ETL and validation operations within KFM.
+Ensures complete traceability and reproducibility of ETL and validation operations within KFM, with **telemetry v2** metrics.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../../docs/architecture/README.md)
 [![FAIR+CARE Audited](https://img.shields.io/badge/FAIR%2BCARE-Tabular%20Governance%20Audited-gold.svg)](../../../../../../docs/standards/faircare-validation.md)
@@ -34,9 +34,13 @@ Ensures complete traceability and reproducibility of ETL and validation operatio
 ---
 
 ## 📘 Overview
-
-The **Tabular TMP Logs Workspace** records detailed **system logs, FAIR+CARE traces, and checksum events** for all TMP ETL tasks.  
+The **Tabular TMP Logs Workspace** records detailed **system logs, FAIR+CARE traces, telemetry, and checksum events** for all TMP ETL tasks.  
 It provides transparency across ingestion, validation, and governance pipelines under KFM’s ethical automation framework.
+
+**v10 Enhancements**
+- Telemetry v2 capture (energy/CO₂ & validation coverage) per run.  
+- JSON-LD lineage pointers in `metadata.json`.  
+- Hardened retention and governance sync automation.
 
 ### Core Responsibilities
 - Record ETL execution traces and schema normalization checks.  
@@ -47,7 +51,6 @@ It provides transparency across ingestion, validation, and governance pipelines 
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/staging/tabular/tmp/logs/
 ├── README.md
@@ -61,34 +64,37 @@ data/work/staging/tabular/tmp/logs/
 ---
 
 ## ⚙️ Logging Workflow
-
 ```mermaid
 flowchart TD
-    A["Raw Tabular Intake (data/raw/tabular/*)"] --> B["ETL Preprocessing + Schema Detection"]
-    B --> C["FAIR + CARE Pre-Audit Logging"]
-    C --> D["Checksum + Governance Synchronization"]
-    D --> E["Persist Logs → staging/tabular/tmp/logs/"]
+    "Raw Tabular Intake (data/raw/tabular/*)" --> "ETL Preprocessing + Schema Detection"
+    "ETL Preprocessing + Schema Detection" --> "FAIR + CARE Pre-Audit Logging"
+    "FAIR + CARE Pre-Audit Logging" --> "Checksum + Governance Synchronization"
+    "Checksum + Governance Synchronization" --> "Persist Logs → staging/tabular/tmp/logs/"
 ```
 
 ### Steps
-1. **Execution Logging** — Capture ETL events, schema maps, and normalization.  
+1. **Execution Logging** — Capture ETL events, schema maps, and normalization details.  
 2. **Ethical Logging** — Record FAIR+CARE checks, licensing, and access.  
 3. **Checksum Logging** — Generate and verify SHA-256 hashes.  
-4. **Governance Sync** — Log TMP output linkage to provenance ledger.
+4. **Governance Sync** — Link TMP outputs to provenance ledger entries.
 
 ---
 
 ## 🧩 Example Log Metadata Record
-
 ```json
 {
-  "id": "tabular_tmp_log_climate_indices_v9.7.0",
+  "id": "tabular_tmp_log_climate_indices_v10.0.0",
   "component": "etl_tmp_pipeline",
-  "created": "2025-11-06T23:59:00Z",
-  "records_processed": 54012,
+  "created": "2025-11-09T23:59:00Z",
+  "records_processed": 55204,
   "schema_errors": 0,
   "validation_warnings": 2,
   "fairstatus": "compliant",
+  "telemetry": {
+    "energy_wh": 5.9,
+    "co2_g": 6.7,
+    "validation_coverage_pct": 100
+  },
   "checksum_sha256": "sha256:8e4b9a3c7f5a2b9e6d3a8c9f5b7a4d8e3f6b9a1c2d5f8e9b3c4a6d7f2e8b5a9c",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -97,13 +103,12 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
+|---|---|---|
 | **Findable** | Logs indexed by dataset, checksum, pipeline ID. | `@kfm-data` |
-| **Accessible** | Open text + JSON formats for internal audit. | `@kfm-accessibility` |
+| **Accessible** | Open text + JSON for internal audits. | `@kfm-accessibility` |
 | **Interoperable** | Aligns with FAIR+CARE + KFM ETL logging schemas. | `@kfm-architecture` |
-| **Reusable** | Provenance + checksum validation retained. | `@kfm-design` |
+| **Reusable** | Provenance, telemetry, and checksum validation retained. | `@kfm-design` |
 | **Collective Benefit** | Supports ethical reproducibility of TMP operations. | `@faircare-council` |
 | **Authority to Control** | Council reviews ethics + governance logs. | `@kfm-governance` |
 | **Responsibility** | Engineers document mappings + QA outcomes. | `@kfm-security` |
@@ -115,48 +120,45 @@ flowchart TD
 ---
 
 ## ⚙️ Log Types
-
 | Log File | Description | Format |
-|----------|-------------|--------|
+|---|---|---|
 | `etl_tmp_run.log` | ETL processing events + normalization details | Text |
 | `data_contract_check.log` | Contract compliance verification | Text |
 | `faircare_pre_audit.log` | Pre-validation ethics & accessibility trace | Text |
 | `governance_sync.log` | Ledger sync + checksum events | Text |
-| `metadata.json` | Checksum lineage + provenance metadata | JSON |
+| `metadata.json` | Checksum lineage, telemetry & provenance metadata | JSON |
 
 **Automation:** `tabular_tmp_log_sync.yml`
 
 ---
 
 ## ♻️ Retention & Sustainability
-
 | Log Type | Retention | Policy |
-|----------|----------:|--------|
+|---|---:|---|
 | ETL TMP Logs | 30 Days | Archived for audit reproducibility. |
 | Validation Logs | 14 Days | Retained post-validation.          |
 | FAIR+CARE Logs | 90 Days | Kept for re-audit verification.     |
 | Governance Logs | 365 Days | Archived for provenance history.    |
 
-**Telemetry:** `../../../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:**  
+`../../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
-
 | Metric | Value | Verified By |
-|--------|------:|-------------|
-| Energy Use (per log cycle) | 5.5 Wh | `@kfm-sustainability` |
-| Carbon Output | 7.3 gCO₂e | `@kfm-security` |
+|---|---:|---|
+| Energy Use (per log cycle) | 5.9 Wh | `@kfm-sustainability` |
+| Carbon Output | 6.7 gCO₂e | `@kfm-security` |
 | Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
 | FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
 ## 🧾 Internal Citation
-
 ```text
-Kansas Frontier Matrix (2025). Tabular TMP Logs (v9.7.0).
-FAIR+CARE-certified logging environment for TMP ETL execution, schema validation, and provenance synchronization—ensuring transparent, checksum-verified, and ethically reproducible tabular workflows.
+Kansas Frontier Matrix (2025). Tabular TMP Logs (v10.0.0).
+FAIR+CARE-certified logging environment for TMP ETL execution, schema validation, telemetry v2 capture, and provenance synchronization—ensuring transparent, checksum-verified, and ethically reproducible tabular workflows.
 ```
 
 ---
