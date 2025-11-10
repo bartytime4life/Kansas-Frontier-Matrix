@@ -1,15 +1,17 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Issue Templates & Governance Forms Overview"
+title: "🧾 Kansas Frontier Matrix — Issue Templates & Governance Forms Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/ISSUE_TEMPLATE/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/github-issues-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/github-issues-v2.json"
 governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -17,8 +19,9 @@ governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 # 🧾 **Kansas Frontier Matrix — Issue Templates & Governance Forms Overview**
 `.github/ISSUE_TEMPLATE/README.md`
 
-**Purpose:** Provide an index and description of all GitHub issue templates used within Kansas Frontier Matrix (KFM).  
-These forms standardize **community collaboration**, **data governance**, and **ethical review** under the **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** certification standards.
+**Purpose:**  
+Index and describe all **GitHub Issue Templates** used across the Kansas Frontier Matrix (KFM) project.  
+These forms standardize **community collaboration**, **dataset governance**, and **ethical review** under **Master Coder Protocol (MCP-DL v6.3)** and **FAIR+CARE** certification.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
@@ -30,48 +33,47 @@ These forms standardize **community collaboration**, **data governance**, and **
 ---
 
 ## 📘 Overview
+All issue templates in `.github/ISSUE_TEMPLATE/` are **YAML Issue Forms** that prompt for complete, reproducible information and trigger automation.  
+Each template is validated in CI and feeds the **governance ledger** and **telemetry** for full traceability.
 
-All issue templates in `.github/ISSUE_TEMPLATE/` are **YAML-based structured forms** that guide users through providing complete, validated, and reproducible information.  
-Templates ensure submissions include metadata such as:
-- Provenance, license, checksum  
-- FAIR+CARE governance attestations  
-- Links to datasets, workflows, or manifests  
-- Required fields for validation automation  
+**Common metadata collected:**
+- Source **provenance**, **license**, and **checksum** (SHA-256)  
+- FAIR+CARE attestations and consent flags  
+- Links to datasets, STAC/DCAT items, or release manifests  
+- Required fields for schema-driven validation
 
 ---
 
 ## 🗂️ Directory Layout
-
 ```
 .github/ISSUE_TEMPLATE/
-├── README.md                # This file
-├── data_submission.yml      # For new datasets or STAC items
-├── feature_request.yml      # For proposing new enhancements
-├── bug_report.yml           # For software or data defects
-└── governance_form.yml      # For ethical / FAIR+CARE governance reviews
+├── README.md                # This index
+├── data_submission.yml      # New datasets / STAC items
+├── feature_request.yml      # Enhancements & proposals
+├── bug_report.yml           # Reproducible software/data defects
+└── governance_form.yml      # FAIR+CARE ethical/governance review
 ```
 
-Each form feeds CI/CD validation workflows automatically (`stac-validate.yml`, `faircare-validate.yml`, `docs-lint.yml`).
+Each form triggers the relevant **GitHub Actions** (e.g., `stac-validate.yml`, `faircare-validate.yml`, `docs-lint.yml`) and contributes to `releases/v10.0.0/focus-telemetry.json`.
 
 ---
 
 ## 🧩 Template Summary
+| Template | Primary Use | Required Fields (excerpt) | Workflows Triggered |
+|---|---|---|---|
+| `data_submission.yml` | Submit a **new dataset** or **STAC Item** | `id`, `title`, `license`, `spatial`, `temporal`, `provenance`, `checksum` | `stac-validate.yml`, `faircare-validate.yml` |
+| `feature_request.yml` | Propose a **feature or enhancement** | `title`, `rationale`, `scope`, `dependencies` | `docs-lint.yml` |
+| `bug_report.yml` | Report a **reproducible defect** | `environment`, `steps_to_reproduce`, `expected`, `actual`, `logs` | `test.yml`, `codeql.yml` |
+| `governance_form.yml` | Request **FAIR+CARE review** | `dataset_ids`, `reviewer`, `CARE_evaluation`, `decision` | `faircare-validate.yml` |
 
-| Template | Use Case | Key Fields | Workflow Triggered |
-|-----------|-----------|-------------|--------------------|
-| `data_submission.yml` | New dataset or STAC Item submission | `id`, `title`, `license`, `spatial`, `temporal`, `checksum` | `stac-validate.yml`, `faircare-validate.yml` |
-| `feature_request.yml` | New feature or enhancement proposal | `title`, `rationale`, `dependencies` | `docs-lint.yml` |
-| `bug_report.yml` | Reproducible software/data issue | `steps_to_reproduce`, `expected_behavior`, `logs` | `codeql.yml`, `test.yml` |
-| `governance_form.yml` | FAIR+CARE ethics review submission | `dataset`, `reviewer`, `CARE_evaluation`, `decision` | `faircare-validate.yml` |
+> **Note:** All templates avoid reserved keywords (e.g., do **not** use `"None"` in dropdowns); use `"N/A"` to ensure YAML Issue Forms validate correctly.
 
 ---
 
 ## 🧾 Data Submission Template (`data_submission.yml`)
+The canonical path to register **new datasets** into `data/sources/` and corresponding **STAC/DCAT** entries.
 
-Used for **dataset additions** to `data/sources/`.  
-Ensures each submission includes FAIR+CARE-compliant metadata.
-
-**Required Fields**
+**Minimum example**
 ```yaml
 id: "noaa_storms_1950_2025"
 title: "NOAA Storm Events (1950–2025)"
@@ -79,38 +81,38 @@ license: "Public Domain"
 spatial: [-102.05, 37.0, -94.6, 40.0]
 temporal: { start: "1950-01-01", end: "2025-05-01" }
 provenance: "NOAA NCEI"
-checksum: "sha256-123abc..."
+checksum: "sha256-<64-hex-digest>"
 ```
 
-All submissions undergo schema validation and checksum verification before merge.
+**Validation path**
+1. `stac-validate.yml` checks JSON schema & link integrity.  
+2. `faircare-validate.yml` verifies license, provenance, CARE flags.  
+3. Results appended to `reports/self-validation/stac/_summary.json` and `reports/fair/faircare_summary.json`.
 
 ---
 
 ## ✨ Feature Request Template (`feature_request.yml`)
-
-Encourages innovation while maintaining governance alignment.
+Standardizes proposals and their governance context.
 
 **Includes:**
-- Purpose and scope  
-- Motivation and problem statement  
-- Dependencies or blockers  
-- FAIR+CARE implications (if affecting data layers)
+- Purpose, scope, and motivation  
+- Dependencies/blockers and risk notes  
+- FAIR+CARE implications for data/UI  
+- Acceptance criteria and rollout plan
 
-Reviewed quarterly by the **Architecture Committee** and logged in the governance ledger.
+Reviewed by the **Architecture Committee**; decisions recorded in the governance ledger.
 
 ---
 
 ## 🐞 Bug Report Template (`bug_report.yml`)
-
-Collects details needed to reproduce issues deterministically.
+Collects all information needed for deterministic reproduction.
 
 **Sections:**
-- Environment (OS, browser, Python/Node versions)
-- Reproduction steps
-- Expected vs. actual results
-- Logs or screenshots
+- Environment (OS, Browser, Python/Node versions)  
+- Steps to reproduce, expected vs. actual results  
+- Logs/screenshots and dataset references (if applicable)
 
-Upon submission, workflows run `make test` and append debug reports to:
+Automation runs targeted tests and exports debug artifacts to:
 ```
 reports/debug/<issue_id>/
 ```
@@ -118,79 +120,71 @@ reports/debug/<issue_id>/
 ---
 
 ## ⚖️ Governance Review Template (`governance_form.yml`)
-
-Ensures **ethical and cultural review** for datasets or workflows with community relevance.
+Ensures **ethical & cultural** review for datasets and workflows with community impact.
 
 **Sections:**
-- Reviewer name and role  
-- Dataset IDs and source references  
-- CARE evaluation: **Collective Benefit**, **Authority to Control**, **Responsibility**, **Ethics**  
-- Summary notes and approval/rejection
+- Reviewer name & role, dataset IDs, source references  
+- CARE evaluation (**Collective Benefit, Authority, Responsibility, Ethics**)  
+- Summary, decision (approved/rejected/deferred), and conditions  
 
-**Log Output:**  
-`reports/audit/governance-ledger.json`
-
-All reviews become part of the **FAIR+CARE Council Ledger** and feed telemetry metrics.
+**Ledger Output:**  
+`docs/reports/audit/governance-ledger.json`
 
 ---
 
 ## 🧮 Automation Flow
-
 ```mermaid
 flowchart TD
-A["Issue Submitted"] --> B["Assign to Workflow"]
+A["Issue Submitted"] --> B["Template Router"]
 B --> C["stac-validate.yml"]
 B --> D["faircare-validate.yml"]
 B --> E["docs-lint.yml"]
-C & D & E --> F["Telemetry Export + Governance Ledger Update"]
+B --> F["test.yml / codeql.yml (as applicable)"]
+C & D & E & F --> G["Telemetry Export + Governance Ledger Update"]
 ```
 
-Each template directly connects issue submissions to CI/CD pipelines, creating end-to-end traceability.
+Every issue template directly connects user submissions to CI/CD pipelines and ledger updates to provide **end-to-end traceability**.
 
 ---
 
 ## 🧠 Governance & Compliance Checklist
+Each issue form includes the following mandatory confirmations:
 
-Each issue form includes mandatory consent and metadata requirements:
-
-- [x] Acknowledgement of Master Coder Protocol v6.3  
-- [x] Confirmed open license and provenance source  
-- [x] Cultural sensitivity review for Indigenous data  
-- [x] Provided SHA-256 checksum for datasets  
-- [x] Verified compliance with FAIR+CARE standards  
+- [x] I acknowledge the **Master Coder Protocol v6.3**.  
+- [x] I confirm **open license** & **provenance** are provided and accurate.  
+- [x] I confirm a **SHA-256 checksum** is included for data files.  
+- [x] I confirm **CARE** review is required for culturally sensitive content.  
+- [x] I agree to abide by the **KFM Governance Charter**.
 
 ---
 
 ## ⚙️ FAIR+CARE Integration
-
 | Principle | Implementation |
-|------------|----------------|
-| **Findable** | Metadata searchable via GitHub and governance dashboards |
-| **Accessible** | Public issue forms; transparent review history |
-| **Interoperable** | JSON/YAML syntax compatible with governance parsers |
-| **Reusable** | Versioned templates revalidated quarterly |
-| **CARE** | Governance form ensures ethical review chain |
+|---|---|
+| **Findable** | Issue metadata is indexed and cross-linked to dashboards and ledgers. |
+| **Accessible** | Public forms with transparent review history and outcomes. |
+| **Interoperable** | JSON/YAML compatible with governance parsers & CI. |
+| **Reusable** | Versioned templates; revalidated quarterly by CI. |
+| **CARE** | Governance form enforces cultural/ethical review and consent flows. |
 
 ---
 
 ## 🧩 Workflow → Template Mapping
-
 | Template | Workflow | Output Artifact |
-|-----------|-----------|----------------|
+|---|---|---|
 | `data_submission.yml` | `stac-validate.yml` / `faircare-validate.yml` | `reports/self-validation/stac/_summary.json` |
 | `feature_request.yml` | `docs-lint.yml` | `reports/self-validation/docs/lint_summary.json` |
-| `bug_report.yml` | `test.yml` / `codeql.yml` | `reports/debug/*.json` |
+| `bug_report.yml` | `test.yml` / `codeql.yml` | `reports/debug/<issue_id>/*.json` |
 | `governance_form.yml` | `faircare-validate.yml` | `reports/audit/governance-ledger.json` |
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Consolidated and aligned all issue templates with governance telemetry integration. |
-| v9.5.0 | 2025-10-20 | A. Barta | FAIR+CARE governance form expansion and Council ledger linkage. |
-| v9.3.1 | 2025-09-01 | KFM Core Team | Added SPDX license and provenance verification fields. |
+|---|---|---|---|
+| v10.0.0 | 2025-11-09 | FAIR+CARE Council | Upgraded to v10: clarified required fields, added router flow, ensured YAML Issue Forms compliance, and tightened governance ledger linkage. |
+| v9.7.0 | 2025-11-05 | A. Barta | Consolidated templates with telemetry integration and governance mapping. |
+| v9.5.0 | 2025-10-20 | A. Barta | Expanded FAIR+CARE review and Council ledger linkage. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial structured YAML issue templates. |
 
 ---
