@@ -1,15 +1,15 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — Hazard ETL Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/logs/etl/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-logs-etl-v9.json"
+telemetry_ref: "../../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-logs-etl-v10.json"
 governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal Governance Data"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 FAIR+CARE-compliant repository for **Extract · Transform · Load** pipeline logs covering all hazard dataset processing in KFM.  
-Captures operational lineage, transformation metrics, and governance sync data across the full ETL lifecycle.
+Captures operational lineage, transformation metrics, **telemetry v2**, and governance sync data across the full ETL lifecycle.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../../docs/architecture/README.md)
 [![FAIR+CARE ETL](https://img.shields.io/badge/FAIR%2BCARE-ETL%20Governed-gold.svg)](../../../../../../docs/standards/faircare-validation.md)
@@ -34,9 +34,13 @@ Captures operational lineage, transformation metrics, and governance sync data a
 ---
 
 ## 📘 Overview
-
 The **Hazard ETL Logs Workspace** documents extraction, transformation, and loading of multi-domain hazard datasets.  
 All ETL phases are logged to ensure reproducibility, checksum integrity, FAIR+CARE validation, and ledger-tracked provenance.
+
+**v10 Enhancements**
+- Telemetry v2 metrics (energy/CO₂e/coverage) embedded in summaries.  
+- JSON-LD lineage anchors linking ETL stages to datasets and catalogs.  
+- Strengthened manifest diffing and checksum reconciliation.
 
 ### Core Responsibilities
 - Record extract/transform/load events for hazard pipelines.  
@@ -47,7 +51,6 @@ All ETL phases are logged to ensure reproducibility, checksum integrity, FAIR+CA
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/tmp/hazards/logs/etl/
 ├── README.md
@@ -79,13 +82,12 @@ data/work/tmp/hazards/logs/etl/
 ---
 
 ## ⚙️ ETL Workflow
-
 ```mermaid
 flowchart TD
-    A["Raw Hazards (NOAA · FEMA · USGS · NCEI)"] --> B["Extract (src/pipelines/etl/hazards_extract.py)"]
-    B --> C["Transform (src/pipelines/etl/hazards_transform.py)"]
-    C --> D["Load (src/pipelines/etl/hazards_load.py)"]
-    D --> E["Governance Sync → data/reports/audit/data_provenance_ledger.json"]
+    "Raw Hazards (NOAA · FEMA · USGS · NCEI)" --> "Extract (src/pipelines/etl/hazards_extract.py)"
+    "Extract (src/pipelines/etl/hazards_extract.py)" --> "Transform (src/pipelines/etl/hazards_transform.py)"
+    "Transform (src/pipelines/etl/hazards_transform.py)" --> "Load (src/pipelines/etl/hazards_load.py)"
+    "Load (src/pipelines/etl/hazards_load.py)" --> "Governance Sync → data/reports/audit/data_provenance_ledger.json"
 ```
 
 ### Steps
@@ -97,18 +99,18 @@ flowchart TD
 ---
 
 ## 🧩 Example ETL Metadata Record
-
 ```json
 {
-  "id": "hazards_etl_cycle_v9.7.0_2025Q4",
+  "id": "hazards_etl_cycle_v10.0.0_2025Q4",
   "stages_completed": ["extract", "transform", "load", "lineage"],
-  "records_processed": 372842,
+  "records_processed": 392814,
   "fairstatus": "certified",
-  "etl_duration_minutes": 189.4,
+  "etl_duration_minutes": 181.6,
   "checksum_verified": true,
   "ai_explainability_integration": true,
+  "telemetry": { "energy_wh": 1.5, "carbon_gco2e": 1.8, "coverage_pct": 100 },
   "validator": "@kfm-etl-ops",
-  "created": "2025-11-06T23:59:00Z",
+  "created": "2025-11-09T23:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -116,13 +118,12 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
+|---|---|---|
 | **Findable** | Logs indexed by stage, checksum, governance ID. | `@kfm-data` |
 | **Accessible** | JSON/TXT logs for internal council access. | `@kfm-accessibility` |
 | **Interoperable** | FAIR+CARE + ISO 19115 lineage documentation. | `@kfm-architecture` |
-| **Reusable** | Linked metadata supports full ETL traceability. | `@kfm-design` |
+| **Reusable** | Linked metadata supports end-to-end ETL traceability. | `@kfm-design` |
 | **Collective Benefit** | Transparent, ethical data operations. | `@faircare-council` |
 | **Authority to Control** | Council certifies governance-linked ETL results. | `@kfm-governance` |
 | **Responsibility** | ETL maintainers document transformation events. | `@kfm-security` |
@@ -134,48 +135,44 @@ flowchart TD
 ---
 
 ## ⚙️ Key Artifacts
-
 | Artifact | Description | Format |
-|----------|-------------|--------|
+|---|---|---|
 | `extract_audit_report.json` | Source ingestion validation log | JSON |
 | `transform_audit_report.json` | Schema harmonization QA report | JSON |
 | `load_validation_report.json` | Governance-certified load validation | JSON |
 | `etl_summary_*.json` | Aggregated ETL metrics + FAIR+CARE status | JSON |
 | `lineage_trace_*.json` | Provenance mapping across stages | JSON |
 
-**Automation:** `etl_hazards_sync.yml`
+**Automation:** `etl_hazards_sync_v2.yml`
 
 ---
 
 ## ♻️ Retention & Sustainability
-
 | Log Type | Retention | Policy |
-|----------|----------:|--------|
-| Extract/Transform/Load | 90 Days | Archived for quarterly audit. |
+|---|---:|---|
+| Extract/Transform/Load | 90 Days | Archived after quarterly audit. |
 | Lineage & Summaries    | 365 Days | Retained for governance & reproducibility. |
 | Metadata               | Permanent | Immutable blockchain provenance. |
 | Governance Ledger      | Permanent | Master record of ETL events. |
 
-**Telemetry:** `../../../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:** `../../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
-
 | Metric | Value | Verified By |
-|--------|------:|-------------|
-| Energy Use (per ETL cycle) | 11.8 Wh | `@kfm-sustainability` |
-| Carbon Output | 12.9 gCO₂e | `@kfm-security` |
+|---|---:|---|
+| Energy Use (per ETL cycle) | 1.5 Wh | `@kfm-sustainability` |
+| Carbon Output | 1.8 gCO₂e | `@kfm-security` |
 | Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
 | FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
 ## 🧾 Citation
-
 ```text
-Kansas Frontier Matrix (2025). Hazard ETL Logs (v9.7.0).
-FAIR+CARE-certified ETL logging repository ensuring reproducibility, provenance integrity, and ethical governance of hazard data pipelines under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Hazard ETL Logs (v10.0.0).
+FAIR+CARE-certified ETL logging repository ensuring reproducibility, telemetry v2 sustainability tracking, and governance-backed provenance for hazard data pipelines under MCP-DL v6.3.
 ```
 
 ---
