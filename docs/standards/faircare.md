@@ -1,15 +1,17 @@
 ---
 title: "⚖️ Kansas Frontier Matrix — FAIR+CARE Data Governance Framework"
 path: "docs/standards/faircare.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-faircare-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-faircare-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,109 +20,101 @@ governance_ref: "governance/ROOT-GOVERNANCE.md"
 `docs/standards/faircare.md`
 
 **Purpose:** Define the ethical, procedural, and technical framework for applying **FAIR (Findable, Accessible, Interoperable, Reusable)** and **CARE (Collective Benefit, Authority to Control, Responsibility, Ethics)** principles within the Kansas Frontier Matrix (KFM).  
-This framework guides all data, AI, and documentation workflows under the **Master Coder Protocol (MCP v6.3)**.
+This framework governs all data, AI, and documentation workflows under the **Master Coder Protocol (MCP-DL v6.3)**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
 [![Status: Governance](https://img.shields.io/badge/Status-Authoritative-success)]()
-
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **FAIR+CARE Framework** ensures that all KFM assets — datasets, models, experiments, and documents — adhere to both open science and ethical data stewardship principles.  
+The **FAIR+CARE Framework** ensures that all KFM assets—datasets, models, experiments, and documents—adhere to open science and ethical stewardship.  
 FAIR governs **technical interoperability and openness**, while CARE governs **social and cultural responsibility**, especially regarding Indigenous and community data.
 
-These principles are enforced automatically by:
-- **FAIR+CARE Validation Workflow** (`.github/workflows/faircare-validate.yml`)
-- **Governance Ledger Review** (`reports/audit/governance-ledger.json`)
-- **Quarterly Council Audits** (`docs/standards/governance/ROOT-GOVERNANCE.md`)
+Automated enforcement is provided by:
+- **FAIR+CARE Validation** → `.github/workflows/faircare-validate.yml`  
+- **Governance Ledger Review** → `reports/audit/governance-ledger.json`  
+- **Quarterly Council Audits** → `docs/standards/governance/ROOT-GOVERNANCE.md`
 
 ---
 
-## ⚙️ FAIR Principles
+## 🧭 FAIR Principles
 
 | Principle | Definition | KFM Implementation |
-|------------|-------------|--------------------|
-| **F1 — Findable** | Data and metadata must be easily discoverable by humans and machines. | All datasets include globally unique IDs, searchable metadata, and STAC/DCAT indexing. |
-| **F2 — Accessible** | Data must be retrievable through standardized open protocols. | Public access through GitHub, GeoTIFF/GeoJSON downloads, and STAC API. |
-| **F3 — Interoperable** | Metadata must use standardized formats and vocabularies. | Uses STAC, DCAT, CIDOC CRM, and schema.org for interoperability. |
-| **F4 — Reusable** | Data must include detailed provenance and usage licensing. | SPDX licenses, checksum verification, and JSON provenance fields are mandatory. |
+|---|---|---|
+| **F1 — Findable** | Discoverable by humans/machines | Global IDs, STAC/DCAT indexing, searchable JSON-LD metadata |
+| **F2 — Accessible** | Retrievable via open protocols | Public HTTP/Range-GET, Parquet/CSV/GeoJSON, open APIs |
+| **F3 — Interoperable** | Uses standard vocabularies | STAC 1.0, DCAT 3.0, CIDOC-CRM, schema.org, PROV-O |
+| **F4 — Reusable** | Licensed, documented, with provenance | SPDX licenses, checksums, SBOM + release manifest linkage |
 
-**Technical Enforcement:**
-- `stac-validate.yml` confirms schema compliance.  
-- `faircare-validate.yml` ensures FAIR metadata completeness.  
-- `telemetry-export.yml` logs compliance metrics.
+**Technical Gates**
+- `stac-validate.yml` → schema conformance  
+- `faircare-validate.yml` → FAIR field completeness  
+- `telemetry-export.yml` → FAIR metrics → `focus-telemetry.json`
 
 ---
 
-## 🧭 CARE Principles
+## 🤝 CARE Principles
 
 | Principle | Definition | KFM Implementation |
-|------------|-------------|--------------------|
-| **C1 — Collective Benefit** | Data should benefit communities equitably. | Data contributions are designed to advance education, research, and public good for all Kansans. |
-| **C2 — Authority to Control** | Communities must have a voice in how data is used and shared. | Indigenous partners review and approve culturally sensitive datasets through governance forms. |
-| **C3 — Responsibility** | Data stewards must ensure integrity, security, and respect for contributors. | Metadata includes provenance and CARE review statements; datasets flagged for cultural review undergo manual audit. |
-| **C4 — Ethics** | Data use must not harm or exploit individuals or communities. | Ethical reviews recorded in `governance-ledger.json`; no private or PII data permitted. |
+|---|---|---|
+| **C1 — Collective Benefit** | Equitable benefits for communities | Open education datasets; public dashboards with context |
+| **C2 — Authority to Control** | Community voice on use/sharing | Council review for culturally sensitive data; CARE fields in manifests |
+| **C3 — Responsibility** | Duty of care in stewardship | Provenance, redaction, and ethical statements required |
+| **C4 — Ethics** | Avoid harm or exploitation | No PII; ethical notes + approvals in governance ledger |
 
-**Ethical Enforcement:**
-- `.github/ISSUE_TEMPLATE/governance_form.yml` captures human review.  
-- CARE-relevant datasets trigger review workflows.  
-- Quarterly governance reports summarize outcomes.
+**Ethical Controls**
+- `.github/ISSUE_TEMPLATE/governance_form.yml` for human review inputs  
+- CARE-flagged datasets trigger manual audits and delayed publication
 
 ---
 
 ## 🧱 Integration Framework
 
-### Data Lifecycle within FAIR+CARE Governance
+### 🧬 Data Lifecycle within FAIR+CARE Governance
 
 ```mermaid
 flowchart TD
-A["Data Submission (via Issue Template)"]
-B["FAIR+CARE Validation (CI/CD)"]
-C["Governance Review (CARE Council)"]
-D["STAC/DCAT Metadata Publication"]
-E["Public Release + Telemetry Reporting"]
-
-A --> B --> C --> D --> E
+  A["Data Submission (issue template)"] --> B["FAIR·CARE Validation (CI/CD)"]
+  B --> C["Governance Review (CARE Council)"]
+  C --> D["STAC·DCAT Metadata Publication"]
+  D --> E["Public Release + Telemetry Logging"]
 ```
 
-Each stage is logged in the **Governance Ledger** and linked to telemetry metrics for reproducibility and transparency.
+All stages append events to the **Governance Ledger** and write metrics to `focus-telemetry.json`.
 
 ---
 
 ## 🧮 Validation Workflow Summary
 
 | Stage | Automated Tool | Output |
-|--------|----------------|---------|
+|---|---|---|
 | FAIR Metadata Validation | `faircare-validate.yml` | `reports/fair/faircare_summary.json` |
 | CARE Review Trigger | `governance_form.yml` | `reports/audit/governance-ledger.json` |
 | STAC/DCAT Compliance | `stac-validate.yml` | `reports/self-validation/stac/_summary.json` |
 | Documentation Review | `docs-lint.yml` | `reports/self-validation/docs/lint_summary.json` |
-| Governance Audit Export | `telemetry-export.yml` | `releases/v9.7.0/focus-telemetry.json` |
+| Governance Audit Export | `telemetry-export.yml` | `releases/v10.0.0/focus-telemetry.json` |
 
 ---
 
-## 🧾 Governance Data Fields
-
-Each dataset or record subject to FAIR+CARE governance includes the following metadata fields in its manifest (`data/sources/*.json`):
+## 🗃️ Governance Data Fields ( Manifests: `data/sources/*.json` )
 
 | Field | Description | Required |
-|--------|-------------|-----------|
-| `id` | Unique dataset identifier. | ✅ |
-| `title` | Human-readable dataset name. | ✅ |
-| `license` | SPDX or CC-compliant license. | ✅ |
-| `provenance` | Source organization or repository. | ✅ |
-| `checksum` | SHA-256 checksum for data integrity. | ✅ |
-| `care` | CARE-specific governance metadata. | ⚙️ |
-| `care.statement` | Text describing ethical review results. | ⚙️ |
-| `care.reviewer` | FAIR+CARE Council or reviewer entity. | ⚙️ |
-| `care.status` | “approved”, “revision”, or “restricted”. | ⚙️ |
+|---|---|---|
+| `id` | Unique dataset identifier | ✅ |
+| `title` | Human-readable dataset name | ✅ |
+| `license` | SPDX/CC license | ✅ |
+| `provenance` | Source organization | ✅ |
+| `checksum` | SHA-256 digest | ✅ |
+| `care.status` | `approved` \| `revision` \| `restricted` | ⚙️ |
+| `care.statement` | Short ethical review note | ⚙️ |
+| `care.reviewer` | Council or reviewer entity | ⚙️ |
 
-**Example:**
+**Example**
 ```json
 {
   "id": "usgs_hydrography_1890",
@@ -129,79 +123,75 @@ Each dataset or record subject to FAIR+CARE governance includes the following me
   "provenance": "USGS National Hydrography Dataset",
   "checksum": "sha256-2f7c3a...",
   "care": {
-    "statement": "Dataset reviewed for Indigenous representation and approved.",
-    "reviewer": "FAIR+CARE Council",
-    "status": "approved"
+    "status": "approved",
+    "statement": "Reviewed for Indigenous representation and approved.",
+    "reviewer": "FAIR+CARE Council"
   }
 }
 ```
 
 ---
 
-## 🧩 Governance Ledgers & Reporting
-
-FAIR+CARE decisions and validation results are stored in immutable JSON ledgers for transparency and reproducibility.
+## 📒 Ledgers & Public Reporting
 
 | Ledger | Description | Output |
-|---------|-------------|--------|
-| `governance-ledger.json` | Council decisions, CARE reviews, ethical notes. | Governance events |
-| `github-workflows-ledger.json` | Automated FAIR validation and CI/CD logs. | Workflow runs |
-| `release-manifest-log.json` | Version, checksum, and SBOM tracking. | Provenance traceability |
-| `telemetry/focus_telemetry_snapshot.json` | Aggregated FAIR+CARE metrics for dashboard visualization. | Governance reporting |
+|---|---|---|
+| `governance-ledger.json` | Council decisions & CARE reviews | Governance events |
+| `github-workflows-ledger.json` | Automated FAIR validation runs | CI/CD traces |
+| `release-manifest-log.json` | Version + checksum + SBOM | Provenance |
+| `docs/reports/telemetry/governance_scorecard.json` | FAIR+CARE KPIs | Dashboard inputs |
 
 ---
 
-## 🧠 Scoring & Metrics
+## 📏 FAIR+CARE Compliance Score (FCS)
 
-Each dataset and document is assigned a **FAIR+CARE Compliance Score (FCS)** recorded in telemetry.
-
-**Formula:**
+**Formula**
 ```
 FCS = (FAIR * 0.7) + (CARE * 0.3)
 ```
 
 | Component | Criteria | Weight |
-|------------|-----------|--------|
-| **FAIR** | Metadata completeness, provenance, license, interoperability | 70% |
-| **CARE** | Ethical review, community oversight, and cultural sensitivity | 30% |
+|---|---|---|
+| **FAIR** | Metadata completeness, license, provenance, interoperability | 70% |
+| **CARE** | Ethical review, community oversight, cultural sensitivity | 30% |
 
-**Score Ranges:**
 | Range | Rating | Interpretation |
-|--------|---------|----------------|
-| 95–100 | ✅ Excellent | Fully compliant with FAIR+CARE and MCP |
-| 80–94 | ⚙️ Strong | Meets most technical and ethical requirements |
-| 65–79 | ⚠️ Review | Requires governance oversight or metadata improvement |
-| <65 | 🚫 Non-Compliant | Fails FAIR or CARE standards |
+|---|---|---|
+| 95–100 | ✅ Excellent | Fully compliant |
+| 80–94 | ⚙️ Strong | Minor gaps only |
+| 65–79 | ⚠️ Review | Needs council oversight |
+| <65 | 🚫 Non-Compliant | Publication blocked |
+
+**Telemetry** → Scores emitted to `releases/v10.0.0/focus-telemetry.json`.
 
 ---
 
-## 🧮 Quarterly Audit Cycle
+## 🔄 Quarterly Audit Cycle
 
-All datasets, AI models, and experiments undergo quarterly review by the **FAIR+CARE Council**.  
-Audit outcomes are stored in:
+Audit outcomes recorded in:
 ```
 reports/audit/governance-ledger.json
 reports/audit/release-manifest-log.json
 ```
 
 | Stage | Action | Frequency |
-|--------|--------|------------|
-| **Metadata Review** | Check FAIR field completeness. | Quarterly |
-| **CARE Review** | Evaluate ethics and sovereignty compliance. | Quarterly |
-| **AI Model Review** | Assess bias and governance metadata. | Biannual |
-| **Public Report** | Publish governance dashboard metrics. | Quarterly |
+|---|---|---|
+| Metadata Review | Verify FAIR fields | Quarterly |
+| CARE Review | Ethics & sovereignty checks | Quarterly |
+| AI Model Review | Bias + governance metadata | Biannual |
+| Public Report | Governance dashboard update | Quarterly |
 
 ---
 
-## ⚖️ Interoperability Alignment
+## 🔗 Interoperability Alignment
 
 | Standard | Purpose | FAIR/CARE Integration |
-|-----------|----------|------------------------|
-| **STAC 1.0.0** | Geospatial dataset metadata | Links to FAIR metadata for discovery |
-| **DCAT 3.0** | Catalog and metadata publication | Provides interoperability between FAIR and web data catalogs |
-| **CIDOC CRM** | Historical and cultural ontology | CARE-aware ontology mapping |
-| **PROV-O** | Provenance and lineage ontology | Used for `prov:wasGeneratedBy` relations |
-| **OWL-Time** | Temporal metadata model | Ensures standardized event dating |
+|---|---|---|
+| **STAC 1.0.0** | Geospatial dataset metadata | FAIR discovery + asset catalogs |
+| **DCAT 3.0** | Web catalog vocabulary | FAIR+CARE publication fields |
+| **CIDOC CRM** | Cultural heritage ontology | CARE-aware mappings |
+| **PROV-O** | Provenance ontology | `prov:wasGeneratedBy` lineage |
+| **OWL-Time** | Temporal model | Event/date normalization |
 
 ---
 
@@ -213,23 +203,18 @@ reports/audit/release-manifest-log.json
   "dataset_id": "noaa_storms_1950_2025",
   "reviewer": "FAIR+CARE Council",
   "decision": "approved",
-  "timestamp": "2025-11-05T19:20:00Z",
-  "notes": "Dataset includes open-access data and complies with CARE principles.",
-  "telemetry_ref": "releases/v9.7.0/focus-telemetry.json"
+  "timestamp": "2025-11-10T16:00:00Z",
+  "notes": "Complies with FAIR+CARE; no sensitivities detected.",
+  "telemetry_ref": "releases/v10.0.0/focus-telemetry.json"
 }
 ```
 
 ---
 
-## 🧮 Telemetry Dashboard Integration
+## 📊 Dashboard & Telemetry
 
-FAIR+CARE validation outcomes are visualized in the **Governance Dashboard**, which tracks:
-- Dataset compliance trends
-- CARE review frequency
-- Ethical approval timelines
-- License and provenance distribution
-
-**Data Source:**  
+The **Governance Dashboard** visualizes compliance trends, CARE reviews, and license coverage.  
+Input source:
 ```
 docs/reports/telemetry/governance_scorecard.json
 ```
@@ -239,10 +224,11 @@ docs/reports/telemetry/governance_scorecard.json
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Established authoritative FAIR+CARE data governance framework with validation schema and scoring metrics. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added telemetry and governance ledger integration. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Created FAIR+CARE baseline structure for data ethics compliance. |
+|---:|---|---|---|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; refreshed release/telemetry refs; added interoperability & score telemetry alignment. |
+| v9.7.0 | 2025-11-05 | A. Barta | Established authoritative FAIR+CARE framework and scoring model. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added telemetry + governance ledger integration. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Created FAIR+CARE baseline structure. |
 
 ---
 
