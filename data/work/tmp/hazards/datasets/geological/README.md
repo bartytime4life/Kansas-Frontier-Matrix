@@ -1,15 +1,15 @@
 ---
 title: "🌋 Kansas Frontier Matrix — Geological Hazard Datasets TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/datasets/geological/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-datasets-geological-v9.json"
+telemetry_ref: "../../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/work-hazards-datasets-geological-v10.json"
 governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Temporary **FAIR+CARE-certified** workspace for geological hazard datasets — earthquakes, landslides, sinkholes, and subsidence across Kansas.  
-Ensures all geophysical inputs are schema-aligned, ethically validated, and audit-traceable before transformation and analysis.
+Ensures all geophysical inputs are schema-aligned, ethically validated, telemetry-tracked, and audit-traceable before transformation and analysis.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../../docs/architecture/README.md)
 [![FAIR+CARE Geological](https://img.shields.io/badge/FAIR%2BCARE-Geological%20Governed-gold.svg)](../../../../../../docs/standards/faircare-validation.md)
@@ -34,20 +34,23 @@ Ensures all geophysical inputs are schema-aligned, ethically validated, and audi
 ---
 
 ## 📘 Overview
-
 The **Geological Hazard Datasets TMP Workspace** manages short-lived ingestion and validation for geophysical hazards.  
 Datasets include subsurface event catalogs, deformation layers, and seismic activity maps from **USGS**, **KGS**, and related repositories.
+
+**v10 Enhancements**
+- Telemetry v2 energy/CO₂e + coverage metrics added to metadata.  
+- Enhanced ISO 19115 lineage fields and DCAT/STAC cross-links.  
+- Optional ontology alignment hooks with CIDOC CRM Hazard extension.
 
 ### Core Responsibilities
 - Ingest geological hazard data under FAIR+CARE standards.  
 - Validate schema integrity + ISO-compliant lineage.  
 - Apply ethics filters for sensitive geological/cultural sites.  
-- Register checksums and validation summaries in governance ledgers.  
+- Register checksums, telemetry, and validation summaries in governance ledgers.  
 
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/tmp/hazards/datasets/geological/
 ├── README.md
@@ -60,36 +63,35 @@ data/work/tmp/hazards/datasets/geological/
 ---
 
 ## ⚙️ Geological Dataset Workflow
-
 ```mermaid
 flowchart TD
-    A["Raw Geological (USGS · KGS · FEMA)"] --> B["TMP Ingestion (datasets/geological/)"]
-    B --> C["Schema Validation + FAIR + CARE Audit"]
-    C --> D["Checksum Verification + Provenance Logging"]
-    D --> E["ETL Transform (tmp/hazards/transforms/)"]
+    "Raw Geological (USGS · KGS · FEMA)" --> "TMP Ingestion (datasets/geological/)"
+    "TMP Ingestion (datasets/geological/)" --> "Schema Validation + FAIR + CARE Audit"
+    "Schema Validation + FAIR + CARE Audit" --> "Checksum + Telemetry Logging + Provenance"
+    "Checksum + Telemetry Logging + Provenance" --> "ETL Transform (tmp/hazards/transforms/)"
 ```
 
 ### Steps
 1. **Ingest** — Load earthquake/landslide/subsidence data.  
 2. **Validate** — Confirm schema, projection, and ethics compliance.  
-3. **Checksums** — Compute hashes; log lineage.  
+3. **Checksums + Telemetry** — Compute hashes; capture sustainability metrics; log lineage.  
 4. **Transform** — Prepare for harmonization + AI correlation.  
 
 ---
 
 ## 🧩 Example Metadata Record
-
 ```json
 {
-  "id": "geological_hazard_dataset_earthquake_catalog_v9.7.0",
+  "id": "geological_hazard_dataset_earthquake_catalog_v10.0.0",
   "domain": "geological",
   "source": "USGS / Kansas Geological Survey",
   "records_ingested": 842,
-  "schema_version": "v3.1.1",
+  "schema_version": "v3.2.0",
   "validation_status": "passed",
   "fairstatus": "certified",
+  "telemetry": { "energy_wh": 0.6, "carbon_gco2e": 0.8, "coverage_pct": 100 },
   "checksum_sha256": "sha256:b6d4a8e1c9f3a7b2d8e6c4a1f9b7d2a3c6e5a8f4b9d1c7e3a2b8f6a9c5e4d7a1",
-  "created": "2025-11-06T23:59:00Z",
+  "created": "2025-11-09T23:59:00Z",
   "validator": "@kfm-hazards-lab",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -98,13 +100,12 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Indexed by schema + checksum metadata. | `@kfm-data` |
+|---|---|---|
+| **Findable** | Indexed by schema, checksum, and ontology ID. | `@kfm-data` |
 | **Accessible** | Open CSV/GeoJSON; FAIR licensing. | `@kfm-accessibility` |
 | **Interoperable** | FAIR+CARE + STAC/DCAT + ISO aligned. | `@kfm-architecture` |
-| **Reusable** | Provenance lineage ensures reproducibility. | `@kfm-design` |
+| **Reusable** | Provenance lineage + telemetry ensures reproducibility. | `@kfm-design` |
 | **Collective Benefit** | Open geoscience for resilience planning. | `@faircare-council` |
 | **Authority to Control** | Council oversees sensitive geodata release. | `@kfm-governance` |
 | **Responsibility** | Geological teams document QA/audit results. | `@kfm-security` |
@@ -116,36 +117,33 @@ flowchart TD
 ---
 
 ## ⚙️ Validation & QA Artifacts
+| Artifact | Description | Format |
+|---|---|---|
+| `metadata.json` | Provenance + governance + telemetry metadata | JSON |
+| `checksum_registry.json` | SHA-256 integrity registry | JSON |
+| `faircare_audit_report.json` | FAIR+CARE ethics validation summary | JSON |
+| `schema_validation_summary.json` | Data contract conformance report | JSON |
 
-| Artifact                       | Description                                | Format |
-|--------------------------------|--------------------------------------------|--------|
-| `metadata.json`                | Provenance + governance metadata           | JSON   |
-| `checksum_registry.json`       | SHA-256 integrity registry                 | JSON   |
-| `faircare_audit_report.json`   | FAIR+CARE ethics validation summary        | JSON   |
-| `schema_validation_summary.json` | Data contract conformance                | JSON   |
-
-**Automation:** `geological_datasets_sync.yml`
+**Automation:** `geological_datasets_sync_v2.yml`
 
 ---
 
 ## ♻️ Retention & Sustainability
+| Type | Retention | Policy |
+|---|---:|---|
+| TMP Geological Data | 7 Days | Purged after ETL transform. |
+| Logs & Validation | 30 Days | Archived under governance directories. |
+| Metadata | 365 Days | Retained for provenance chain. |
+| Ledger Entries | Permanent | Immutable under governance. |
 
-| Type                    | Retention | Policy                                    |
-|------------------------|----------:|-------------------------------------------|
-| TMP Geological Data    | 7 Days    | Purged after ETL transform.               |
-| Logs & Validation      | 30 Days   | Archived under governance directories.    |
-| Metadata               | 365 Days  | Retained for provenance chain.            |
-| Ledger Entries         | Permanent | Immutable under governance.               |
-
-**Telemetry:** `../../../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:** `../../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Citation
-
 ```text
-Kansas Frontier Matrix (2025). Geological Hazard Datasets TMP Workspace (v9.7.0).
-Temporary FAIR+CARE-governed workspace for geological hazard ingestion, validation, and ethics oversight—ensuring transparent, reproducible handling of earthquake, landslide, and subsidence data.
+Kansas Frontier Matrix (2025). Geological Hazard Datasets TMP Workspace (v10.0.0).
+Transient FAIR+CARE-governed workspace for geological hazard ingestion, validation, and ethics oversight—integrating telemetry v2 and JSON-LD lineage for transparent, reproducible handling of earthquake, landslide, and subsidence data.
 ```
 
 ---
