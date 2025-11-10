@@ -1,14 +1,14 @@
 ---
 title: "🔐 Kansas Frontier Matrix — Q4 2025 Checksum Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/archive/2025Q4/checksums/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/data-archive-checksums-v4.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -20,8 +20,8 @@ license: "CC-BY 4.0"
 `data/archive/2025Q4/checksums/README.md`
 
 **Purpose:**  
-Defines the **cryptographic integrity registry** and validation process for all datasets archived during the **Q4 2025 release** of the Kansas Frontier Matrix (KFM).  
-Guarantees data reproducibility, transparency, and FAIR+CARE-aligned ethical assurance through **immutable SHA-256 verification** and governance-ledger synchronization.
+Define the **cryptographic integrity registry** and validation process for all datasets archived during the **Q4 2025 release** of the Kansas Frontier Matrix (KFM).  
+Guarantee data reproducibility, transparency, and FAIR+CARE-aligned ethical assurance through **immutable SHA-256 verification** and governance-ledger synchronization.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../../LICENSE)
@@ -38,7 +38,7 @@ Guarantees data reproducibility, transparency, and FAIR+CARE-aligned ethical ass
 The **Checksum Registry** ensures **data authenticity and long-term reproducibility** across all Q4 2025 archived datasets under FAIR+CARE governance.  
 Every file’s integrity is verified with **SHA-256** checksums that are cross-referenced with **global manifests**, **telemetry metrics**, and **blockchain-linked provenance ledgers**.
 
-**Goals**
+### Goals
 - Prevent corruption or alteration during archival and public release.  
 - Maintain full traceability between artifacts, manifests, and ledgers.  
 - Enable independent checksum validation by users via open standards.  
@@ -58,7 +58,7 @@ flowchart TD
 ### Steps
 1. **Checksum Generation:** Compute hashes for all Q4 2025 datasets and logs.  
 2. **Manifest Comparison:** Validate consistency with `data/checksums/manifest.json`.  
-3. **Governance Verification:** Match hashes with entries in `data_provenance_ledger.json`.  
+3. **Governance Verification:** Match hashes with entries in `data/reports/audit/data_provenance_ledger.json`.  
 4. **Archival Registration:** Store verified results as immutable, signed JSON under `data/archive/2025Q4/checksums/`.
 
 ---
@@ -80,13 +80,13 @@ data/archive/2025Q4/checksums/
 
 ```json
 {
-  "dataset": "climate_v9.7.0",
-  "file_path": "data/archive/2025Q4/climate_v9.7.0/noaa_precipitation_annual.csv",
+  "dataset": "climate_v10.0.0",
+  "file_path": "data/archive/2025Q4/climate_v10.0.0/noaa_precipitation_annual.csv",
   "checksum_sha256": "sha256:ab7c59d48a1b8f0b87b32da9f9a6d2c1243ea987b5f4a0f38d7bdbf31c2e4d19",
   "file_size_bytes": 8943217,
   "validated": true,
   "ledger_ref": "data/reports/audit/data_provenance_ledger.json",
-  "verified_on": "2025-11-06T19:52:00Z"
+  "verified_on": "2025-11-10T19:52:00Z"
 }
 ```
 
@@ -142,11 +142,11 @@ data/archive/2025Q4/checksums/
   "energy_use_wh": 11.9,
   "validator": "@kfm-data",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json",
-  "timestamp": "2025-11-06T19:55:00Z"
+  "timestamp": "2025-11-10T19:55:00Z"
 }
 ```
 
-**Telemetry Reference:** `../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Reference:** `../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
@@ -164,7 +164,7 @@ data/archive/2025Q4/checksums/
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Q4 2025 Checksum Registry (v9.7.0).
+Kansas Frontier Matrix (2025). Q4 2025 Checksum Registry (v10.0.0).
 Defines cryptographic integrity verification for all datasets in the Q4 2025 archive.
 Implements SHA-256 checksum validation, FAIR+CARE governance synchronization,
 and ISO 16363 digital preservation standards for reproducible open data.
@@ -176,7 +176,8 @@ and ISO 16363 digital preservation standards for reproducible open data.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v9.7.0 | 2025-11-06 | `@kfm-data` | Upgraded to v9.7.0; added governance telemetry integration, hardened schema references, and updated ISO standards. |
+| v10.0.0 | 2025-11-10 | `@kfm-data` | Upgraded to v10; updated paths/telemetry; reinforced ISO & FAIR+CARE references. |
+| v9.7.0 | 2025-11-06 | `@kfm-data` | Added governance telemetry integration; hardened schema references. |
 | v9.6.0 | 2025-11-03 | `@kfm-archive` | Added checksum governance linkage and automated telemetry validation. |
 | v9.5.0 | 2025-11-02 | `@kfm-architecture` | Integrated ISO 27037 digital evidence compliance. |
 | v9.3.2 | 2025-10-28 | `@kfm-core` | Established checksum verification architecture for archival datasets. |
