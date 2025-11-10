@@ -1,15 +1,17 @@
 ---
 title: "♿ Kansas Frontier Matrix — User Interface Accessibility & Inclusion Standards"
 path: "docs/standards/ui_accessibility.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-ui-accessibility-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-ui-accessibility-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -136,9 +138,7 @@ All user-facing components must meet or exceed **WCAG 2.1 Level AA** guidelines 
 
 ---
 
-## 🧾 Accessibility Validation
-
-KFM’s automated accessibility validation uses **axe-core**, **Pa11y**, and **Lighthouse** integrated in the CI/CD pipeline.
+## 🧪 Automated Accessibility Validation
 
 | Tool | Purpose | Output |
 |------|----------|--------|
@@ -179,6 +179,18 @@ docs/reports/telemetry/governance_scorecard.json
 
 ---
 
+## 🧭 Accessibility Governance Flow
+
+```mermaid
+flowchart LR
+  A["Design Review"] --> B["Automated A11y Tests"]
+  B --> C["Manual Audit"]
+  C --> D["Governance Sign-off"]
+  D --> E["Telemetry Export"]
+```
+
+---
+
 ## 🧩 Governance & Review Process
 
 Accessibility audits occur **quarterly** and are recorded in:
@@ -192,22 +204,9 @@ Accessibility audits occur **quarterly** and are recorded in:
   "reviewed_components": 132,
   "issues_found": 2,
   "compliance_rate": 98.4,
-  "timestamp": "2025-11-05T20:00:00Z"
+  "timestamp": "2025-11-10T20:00:00Z"
 }
 ```
-
----
-
-## 🧠 Inclusive Design Principles
-
-KFM follows the **Inclusive Design Framework** ensuring equitable participation:
-1. **Equitable Use:** Design serves diverse abilities and cultures.  
-2. **Flexibility in Use:** Supports personalization (font size, color themes).  
-3. **Simple & Intuitive:** UI components use familiar interaction models.  
-4. **Perceptible Information:** Communicates effectively through multiple senses.  
-5. **Tolerance for Error:** Prevents errors with clear feedback and undo options.  
-6. **Low Physical Effort:** Reduces required actions for core workflows.  
-7. **Size & Space:** Adaptable to various devices, orientations, and screen readers.  
 
 ---
 
@@ -215,7 +214,8 @@ KFM follows the **Inclusive Design Framework** ensuring equitable participation:
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Created complete accessibility and inclusion standard aligned with WCAG 2.1 AA and FAIR+CARE principles. |
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10.0.0; telemetry schema v2; added governance flow diagram; clarified tables & testing outputs. |
+| v9.7.0 | 2025-11-05 | A. Barta | Created complete accessibility & inclusion standard aligned with WCAG 2.1 AA and FAIR+CARE principles. |
 | v9.5.0 | 2025-10-20 | A. Barta | Added automated accessibility testing integration with axe-core and Pa11y. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Established baseline accessibility framework for web and documentation. |
 
@@ -224,7 +224,7 @@ KFM follows the **Inclusive Design Framework** ensuring equitable participation:
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
 [Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
