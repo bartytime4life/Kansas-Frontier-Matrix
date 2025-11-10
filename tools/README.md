@@ -82,11 +82,11 @@ tools/
 
 ```mermaid
 flowchart TD
-    "User / CI Trigger" --> "CLI (tools/cli)"
-    "CLI (tools/cli)" --> "Validation (tools/validation + tools/ci)"
-    "Validation (tools/validation + tools/ci)" --> "Governance Sync (tools/governance)"
-    "Governance Sync (tools/governance)" --> "Telemetry Export (tools/telemetry)"
-    "Telemetry Export (tools/telemetry)" --> "AI Audits (tools/ai)"
+    A["User / CI Trigger"] --> B["CLI (tools/cli)"]
+    B --> C["Validation (tools/validation + tools/ci)"]
+    C --> D["Governance Sync (tools/governance)"]
+    D --> E["Telemetry Export (tools/telemetry)"]
+    E --> F["AI Audits (tools/ai)"]
 ```
 
 1. **CLI:** Operators invoke repeatable tasks (ingest, validate, publish).  
