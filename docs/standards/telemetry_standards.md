@@ -1,14 +1,14 @@
 ---
 title: "📈 Kansas Frontier Matrix — Telemetry Standards & Sustainability Metrics (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/telemetry_standards.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/telemetry-standards-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/telemetry-standards-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -72,7 +72,7 @@ docs/
 Associated telemetry outputs:
 ```
 releases/
-└── v9.9.0/
+└── v10.0.0/
     ├── focus-telemetry.json
     ├── sbom.spdx.json
     ├── manifest.zip
@@ -90,7 +90,7 @@ Each telemetry record is structured under a unified schema:
 {
   "event_id": "uuid4",
   "event_type": "docs_lint | faircare | stac_validate | ai_train | build | deploy",
-  "timestamp": "2025-11-08T14:22:30Z",
+  "timestamp": "2025-11-10T14:22:30Z",
   "branch": "main",
   "duration_sec": 124.5,
   "energy_wh": 37.2,
@@ -190,11 +190,11 @@ KFM adheres to **ISO 50001:2024** (Energy Management Systems):
 - AI training pipelines must log **Wh/epoch** and **carbon intensity**.  
 - Reports aggregated monthly to FAIR+CARE sustainability dashboard.
 
-**Target thresholds (2025 standard):**
+**Target thresholds (v10.0.0):**
 | Metric | Goal | Reporting Workflow |
 |--------|------|--------------------|
-| Energy per workflow | ≤ 50 Wh | telemetry-export.yml |
-| Avg build time | ≤ 15 min | all CI/CD |
+| Energy per workflow | ≤ 45 Wh | telemetry-export.yml |
+| Avg build time | ≤ 12 min | all CI/CD |
 | Emission offset | 100% renewable | faircare-validate.yml |
 | FAIR+CARE compliance | 100% | docs-lint.yml + faircare-validate.yml |
 
@@ -225,6 +225,7 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------:|------|--------|----------|
+| v10.0.0 | 2025-11-10 | `@kfm-sustainability` | Upgraded to v10.0.0; tightened thresholds; moved to telemetry schema v2; added SLSA signing & CO₂ targets. |
 | v9.9.0 | 2025-11-08 | `@kfm-sustainability` | Initial telemetry governance standard defining unified schema, sustainability metrics, and FAIR+CARE integration. |
 
 ---
@@ -238,4 +239,3 @@ flowchart LR
 [Back to Standards Index](README.md) · [Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
-
