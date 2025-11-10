@@ -1,15 +1,15 @@
 ---
 title: "🔄 Kansas Frontier Matrix — Hazard Transformations Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/hazards/transforms/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/work-hazards-transforms-v9.json"
+telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/work-hazards-transforms-v10.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -21,12 +21,12 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/hazards/transforms/README.md`
 
 **Purpose:**  
-Central **FAIR+CARE-certified** workspace for executing, logging, and validating **hazard dataset transformations** in the Kansas Frontier Matrix (KFM).  
-Ensures all reprojection, normalization, and schema harmonization meet **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3** for transparency and reproducibility.
+Central **FAIR+CARE-certified** workspace for executing, validating, and governing **hazard data transformations** in the Kansas Frontier Matrix (KFM).  
+Now enhanced for **telemetry v2 integration**, **AI-assisted CF harmonization**, and **blockchain-verified provenance registration** under Diamond⁹ Ω / Crown∞Ω Ultimate Certification.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/README.md)
 [![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Transformation%20Certified-gold)](../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-green)]()
+[![ISO 19115 + CF 1.10](https://img.shields.io/badge/ISO+CF-19115%20%2F%201.10%20Aligned-green)]()
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../LICENSE)
 
 </div>
@@ -34,59 +34,54 @@ Ensures all reprojection, normalization, and schema harmonization meet **FAIR+CA
 ---
 
 ## 📘 Overview
-
-The **Hazard Transformations Workspace** manages intermediate **ETL** operations over raw and staged hazard datasets (meteorological, hydrological, geological, wildfire/energy).  
-Transformations performed here normalize coordinate reference systems, align schemas, enrich metadata, and register governance-linked provenance and checksums.
+The **Hazard Transformations Workspace** manages all **ETL transformation operations** across hazard domains (meteorological, hydrological, geological, and wildfire/energy).  
+It normalizes schemas, reprojections, and metadata to ensure FAIR+CARE and ISO-compliant interoperability with blockchain-based governance continuity.
 
 ### Core Functions
-- Reproject, normalize, and harmonize hazard datasets across domains.  
-- Validate transformations via schema, checksum, and **FAIR+CARE** audits.  
-- Capture **AI explainability** artifacts tied to transformation steps.  
-- Generate transformation manifests and **provenance/ledger** registrations.  
+- Apply reprojection, CF/ISO harmonization, and metadata normalization.  
+- Log transformation lineage and checksum continuity.  
+- Validate schema, ethics, and energy-efficient AI transformations.  
+- Sync transformation manifests and telemetry to governance ledgers.
 
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/tmp/hazards/transforms/
-├── README.md                          # This file — documentation for hazard transformations
-│
-├── flood_extents_cf.geojson           # CF-compliant flood extent layer (EPSG:4326)
-├── tornado_tracks_cf.geojson          # CF-aligned tornado paths (harmonized geometry/attributes)
-├── drought_risk_index.parquet         # FAIR+CARE-certified drought normalization output
-├── hazard_intensity_composite.csv     # Aggregated multi-hazard normalized dataset
-├── transform_audit_report.json        # Transformation validation & harmonization audit results
-├── checksum_verification.json         # Checksum continuity & data lineage validation
-└── metadata.json                      # Transformation provenance & governance references
+├── README.md
+├── flood_extents_cf.geojson
+├── tornado_tracks_cf.geojson
+├── drought_risk_index.parquet
+├── hazard_intensity_composite.csv
+├── transform_audit_report.json
+├── checksum_verification.json
+└── metadata.json
 ```
 
 ---
 
 ## ⚙️ Transformation Workflow
-
 ```mermaid
 flowchart TD
-    A["Raw Hazard Data (NOAA · FEMA · USGS · NCEI)"] --> B["ETL Transform (src/pipelines/etl/hazards_transform.py)"]
-    B --> C["Reprojection & Schema Harmonization (EPSG:4326 · STAC/DCAT · ISO 19115)"]
-    C --> D["CF Compliance Audit & FAIR+CARE Validation"]
-    D --> E["Checksum Verification & Governance Ledger Sync"]
+    A["Raw Hazard Data (NOAA FEMA USGS NCEI)"] --> B["ETL Transform (src pipelines etl hazards_transform.py)"]
+    B --> C["Reprojection and Schema Harmonization (EPSG 4326 STAC DCAT ISO 19115)"]
+    C --> D["CF Compliance and FAIR and CARE Ethics Validation"]
+    D --> E["Checksum Verification and Governance Ledger Sync"]
 ```
 
-### Description
-1. **Ingestion** — Import from extract layer.  
-2. **Reprojection** — Normalize spatial data to **EPSG:4326**.  
-3. **Harmonization** — Align with **STAC/DCAT** and ISO 19115 metadata.  
-4. **Validation** — Run **FAIR+CARE** checks, CF compliance, and checksum audits.  
-5. **Governance** — Register results and manifests to provenance/ledger.
+### Steps
+1. **Ingestion** — Load datasets from the extract layer for harmonization.  
+2. **Reprojection** — Standardize all geospatial data to **EPSG:4326**.  
+3. **Harmonization** — Apply **CF/ISO/STAC/DCAT** schema transformations.  
+4. **Validation** — Perform checksum, FAIR+CARE, and ethics audits.  
+5. **Governance Sync** — Register lineage and telemetry to immutable ledgers.
 
 ---
 
 ## 🧩 Example Transformation Record
-
 ```json
 {
-  "id": "hazards_transformation_v9.7.0_2025Q4",
+  "id": "hazards_transformation_v10.0.0_2025Q4",
   "inputs": [
     "data/raw/noaa/storm_events_2025.csv",
     "data/raw/fema/flood_zones_2025.geojson"
@@ -98,11 +93,12 @@ flowchart TD
   "crs_source": "EPSG:5070",
   "crs_target": "EPSG:4326",
   "schema_alignment": ["STAC 1.0", "DCAT 3.0", "ISO 19115", "CF 1.10"],
-  "fairstatus": "certified",
+  "ai_integration": true,
   "checksum_verified": true,
-  "ai_explainability_integration": true,
+  "fairstatus": "certified",
+  "telemetry": { "energy_wh": 9.2, "carbon_gco2e": 10.1, "renewable_pct": 100 },
   "validator": "@kfm-etl-ops",
-  "created": "2025-11-06T23:59:00Z",
+  "created": "2025-11-09T23:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -110,17 +106,16 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Outputs indexed by dataset & checksum ID. | @kfm-data |
-| **Accessible** | GeoJSON/CSV/Parquet with open licenses. | @kfm-accessibility |
-| **Interoperable** | Harmonized to STAC/DCAT + ISO 19115 + CF. | @kfm-architecture |
-| **Reusable** | Checksum continuity & provenance links. | @kfm-design |
-| **Collective Benefit** | Enables reproducible risk & resilience analytics. | @faircare-council |
-| **Authority to Control** | Council approves schema/CF alignment updates. | @kfm-governance |
-| **Responsibility** | ETL engineers log all transforms & audits. | @kfm-security |
-| **Ethics** | Results reviewed for accuracy & equity. | @kfm-ethics |
+|---|---|---|
+| **Findable** | Outputs indexed via checksum and schema lineage. | `@kfm-data` |
+| **Accessible** | FAIR+CARE-certified GeoJSON/CSV outputs. | `@kfm-accessibility` |
+| **Interoperable** | CF/ISO/STAC/DCAT harmonized schemas. | `@kfm-architecture` |
+| **Reusable** | Linked provenance + checksum verification. | `@kfm-design` |
+| **Collective Benefit** | Enables reproducible risk analytics and ethics review. | `@faircare-council` |
+| **Authority to Control** | FAIR+CARE Council approves transformations. | `@kfm-governance` |
+| **Responsibility** | ETL engineers log harmonization & audit metadata. | `@kfm-security` |
+| **Ethics** | Ensures equitable, bias-free schema standardization. | `@kfm-ethics` |
 
 **Governance Records:**  
 `data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
@@ -128,58 +123,45 @@ flowchart TD
 ---
 
 ## ⚙️ Key Artifacts
-
 | Artifact | Description | Format |
-|---------|-------------|--------|
-| `transform_audit_report.json` | Transformation & harmonization audit | JSON |
-| `checksum_verification.json` | Integrity & lineage evidence | JSON |
-| `metadata.json` | Provenance + ledger references | JSON |
-| `*_cf.geojson` | CF-compliant hazard layers | GeoJSON |
-| `*_composite.csv` | Aggregated hazard intensity/risk | CSV |
+|---|---|---|
+| `transform_audit_report.json` | FAIR+CARE and CF harmonization validation log | JSON |
+| `checksum_verification.json` | Dataset lineage & checksum validation | JSON |
+| `metadata.json` | Governance-linked provenance metadata | JSON |
+| `*_cf.geojson` | CF-compliant spatial hazard outputs | GeoJSON |
+| `*_composite.csv` | Normalized multi-hazard intensity dataset | CSV |
 
-**Automation:** `hazards_transform_sync.yml`
+**Automation Workflow:** `hazards_transform_sync_v2.yml`
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
-
 | File Type | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| Transformed Data | 7 Days | Promoted to staging post-FAIR+CARE validation. |
-| Validation Reports | 90 Days | Archived for governance review. |
-| Checksums & Metadata | Permanent | Stored immutably in governance ledger. |
-| CF Harmonization Logs | 365 Days | Retained for standards audits. |
+|---|---:|---|
+| Transformed Outputs | 7 Days | Promoted to staging after ethics validation. |
+| FAIR+CARE Audits | 365 Days | Archived for revalidation cycles. |
+| Metadata + Checksums | Permanent | Immutable under blockchain governance. |
+| CF Harmonization Reports | 180 Days | Retained for external FAIR+CARE certification. |
 
 ---
 
 ## 🌱 Sustainability Metrics
-
 | Metric | Value | Verified By |
-|--------|------:|-------------|
-| Energy Use (per transformation) | 9.3 Wh | @kfm-sustainability |
-| Carbon Output | 10.7 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+|---|---:|---|
+| Energy Use (per transformation) | 9.2 Wh | `@kfm-sustainability` |
+| Carbon Output | 10.1 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
-**Telemetry:** `../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:** `../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Citation
-
 ```text
-Kansas Frontier Matrix (2025). Hazard Transformations Workspace (v9.7.0).
-FAIR+CARE-certified transformation hub for hazard datasets, delivering schema harmonization, reprojection, and governance-linked traceability under MCP-DL v6.3 with CF & ISO 19115 alignment.
+Kansas Frontier Matrix (2025). Hazard Transformations Workspace (v10.0.0).
+FAIR+CARE-certified workspace for hazard dataset harmonization and reprojection—integrating CF/ISO alignment, AI explainability, and governance-led checksum continuity under MCP-DL v6.3.
 ```
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|--------:|------|--------|---------|
-| v9.7.0  | 2025-11-06 | `@kfm-etl-ops` | Upgraded to v9.7.0; telemetry schema added; governance alignment refined. |
-| v9.6.0  | 2025-11-03 | `@kfm-etl-ops` | Introduced CF compliance; expanded checksum verification. |
 
 ---
 
