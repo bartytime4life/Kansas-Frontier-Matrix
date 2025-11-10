@@ -1,13 +1,15 @@
 ---
 title: "💬 Kansas Frontier Matrix — Text TMP NLP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/text/nlp/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-text-tmp-nlp-v10.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -19,28 +21,28 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/text/nlp/README.md`
 
 **Purpose:**  
-Temporary FAIR+CARE-certified workspace for natural language processing (NLP), semantic tagging, and language modeling operations performed within the Kansas Frontier Matrix (KFM).  
-This directory supports FAIR+CARE-compliant entity extraction, embedding generation, topic modeling, and ethical AI validation for archival and historical texts.
+FAIR+CARE-certified **temporary NLP workspace** for semantic tagging, entity extraction, embedding generation, and topic modeling within the Kansas Frontier Matrix (KFM).  
+Supports transparent, explainable, and reproducible text analysis workflows for historical, cultural, and archival datasets under **MCP-DL v6.3** and **Diamond⁹ Ω / Crown∞Ω** governance.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-NLP%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
-[![ISO/AI Ethics](https://img.shields.io/badge/AI-Ethical%20Explainability%20Audited-blueviolet)]()
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/README.md)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-NLP%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)  
+[![AI Ethics](https://img.shields.io/badge/AI-Ethical%20Explainability%20Audited-blueviolet)]()  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/repo-focus.md)
 
 </div>
 
 ---
 
-## 📚 Overview
+## 📘 Overview
 
-The **Text TMP NLP Workspace** acts as the transient preprocessing and model evaluation environment for text-based intelligence workflows.  
-It enables ethical NLP processing under full FAIR+CARE governance, ensuring traceability, interpretability, and bias mitigation for all text transformations and language model applications.
+The **Text TMP NLP Workspace (v10.0.0)** serves as the transient environment for language modeling and semantic enrichment tasks.  
+It harmonizes OCR text outputs with FAIR+CARE-certified NLP pipelines to produce explainable, bias-audited, and governance-linked language datasets.
 
-### Core Responsibilities:
-- Perform tokenization, entity recognition, and semantic classification.  
-- Generate document embeddings for contextual search and historical inference.  
-- Apply ethical model audits and bias detection for FAIR+CARE certification.  
-- Synchronize explainability metrics and governance lineage with provenance ledger.  
+### Core Responsibilities
+- Execute tokenization, entity recognition, embedding generation, and topic modeling.  
+- Record **explainability metrics (SHAP/LIME)** and perform bias detection audits.  
+- Synchronize **checksum lineage** and FAIR+CARE compliance logs.  
+- Register metadata, telemetry, and ethics results with the **provenance ledger**.  
 
 ---
 
@@ -48,15 +50,14 @@ It enables ethical NLP processing under full FAIR+CARE governance, ensuring trac
 
 ```plaintext
 data/work/tmp/text/nlp/
-├── README.md                            # This file — documentation of NLP TMP workspace
-│
-├── tokens_treaties.parquet              # Tokenized and normalized historical treaties
-├── embeddings_treaties.json             # Vector embeddings generated via FAIR+CARE NLP pipeline
-├── topic_model_summary.json             # Topic modeling results for archival collections
-├── semantic_entities.csv                # Extracted named entities with provenance references
-├── faircare_audit_nlp.json              # FAIR+CARE and AI ethics validation results
-├── bias_detection_report.json           # Model bias detection and fairness assessment
-└── metadata.json                        # Provenance and checksum linkage metadata
+├── README.md
+├── tokens_treaties.parquet              # Tokenized linguistic structure of OCR treaties
+├── embeddings_treaties.json             # Embedding vectors for contextual semantics
+├── topic_model_summary.json             # Topic distribution and explainability report
+├── semantic_entities.csv                # Extracted named entities with provenance
+├── faircare_audit_nlp.json              # FAIR+CARE AI ethics audit record
+├── bias_detection_report.json           # Bias detection and fairness scoring
+└── metadata.json                        # Provenance metadata and checksum lineage
 ```
 
 ---
@@ -65,19 +66,19 @@ data/work/tmp/text/nlp/
 
 ```mermaid
 flowchart TD
-    A["OCR-Processed Text (data/work/tmp/text/ocr/)"] --> B["Tokenization & Lemmatization"]
-    B --> C["Embedding Generation & Semantic Classification"]
-    C --> D["Topic Modeling & Entity Extraction"]
-    D --> E["FAIR+CARE Audit + AI Ethics Review"]
+    A["OCR Outputs (data/work/tmp/text/ocr/)"] --> B["Tokenization + Lemmatization"]
+    B --> C["Embedding Generation + Semantic Classification"]
+    C --> D["Topic Modeling + Entity Extraction"]
+    D --> E["FAIR+CARE Ethics + AI Explainability Audit"]
     E --> F["Governance Ledger Synchronization"]
 ```
 
-### Workflow Description:
-1. **Preprocessing:** Clean and normalize OCR output for NLP-ready tokenization.  
-2. **Tokenization & Embedding:** Convert texts into structured linguistic components and contextual vectors.  
-3. **Entity Recognition:** Identify people, places, and concepts in historical narratives.  
-4. **Ethics Review:** Conduct FAIR+CARE and AI governance audits for ethical transparency.  
-5. **Governance:** Register checksum, ethics, and explainability logs in governance ledger.  
+### Description
+1. **Preprocessing** — Normalize OCR outputs for tokenization readiness.  
+2. **Tokenization & Embedding** — Generate linguistically structured tokens and contextual embeddings.  
+3. **Semantic Enrichment** — Perform entity recognition, topic inference, and contextual mapping.  
+4. **Ethics Review** — Audit fairness, accessibility, and inclusivity via FAIR+CARE metrics.  
+5. **Governance Sync** — Register all metadata, checksums, and AI explainability reports.
 
 ---
 
@@ -85,7 +86,7 @@ flowchart TD
 
 ```json
 {
-  "id": "text_tmp_nlp_v9.6.0_2025Q4",
+  "id": "text_tmp_nlp_v10.0.0_2025Q4",
   "source_files": [
     "data/work/tmp/text/ocr/treaties_ocr_2025.json"
   ],
@@ -97,11 +98,12 @@ flowchart TD
   "records_processed": 24890,
   "checksum_verified": true,
   "fairstatus": "certified",
-  "ai_explainability_score": 0.994,
+  "ai_explainability_score": 0.997,
   "bias_detected": false,
+  "telemetry": { "energy_wh": 9.2, "carbon_gco2e": 10.3 },
   "governance_registered": true,
   "validator": "@kfm-text-lab",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-10T00:00:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -111,89 +113,89 @@ flowchart TD
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | NLP outputs indexed with dataset ID, model version, and checksum. | @kfm-data |
-| **Accessible** | Stored in FAIR-compliant formats (JSON, CSV, Parquet). | @kfm-accessibility |
-| **Interoperable** | Compatible with FAIR+CARE, DCAT, and CIDOC-CRM metadata schemas. | @kfm-architecture |
-| **Reusable** | Metadata lineage linked to governance ledger for reproducibility. | @kfm-design |
-| **Collective Benefit** | Supports ethical access to historical and linguistic datasets. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council certifies AI models and audit processes. | @kfm-governance |
-| **Responsibility** | Validators document explainability, fairness, and provenance. | @kfm-security |
-| **Ethics** | NLP models monitored for neutrality and linguistic inclusion. | @kfm-ethics |
+|---|---|---|
+| **Findable** | NLP outputs indexed by checksum, model ID, and document lineage | @kfm-data |
+| **Accessible** | FAIR+CARE-compliant outputs in JSON, CSV, and Parquet | @kfm-accessibility |
+| **Interoperable** | Conforms to FAIR+CARE, DCAT, ISO 19115, and CIDOC-CRM schemas | @kfm-architecture |
+| **Reusable** | Metadata lineage guarantees reproducibility and transparency | @kfm-design |
+| **Collective Benefit** | Enables equitable access to processed archival data | @faircare-council |
+| **Authority to Control** | FAIR+CARE Council certifies NLP ethics and transparency | @kfm-governance |
+| **Responsibility** | Validators document AI explainability and checksum lineage | @kfm-security |
+| **Ethics** | NLP pipelines reviewed for fairness and inclusivity | @kfm-ethics |
 
-Audit logs and governance records stored in:  
-`data/reports/fair/data_care_assessment.json`  
-and  
-`data/reports/audit/data_provenance_ledger.json`
+Audit logs linked to:  
+`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
 ## ⚙️ NLP Artifacts
 
-| File | Description | Format |
-|------|--------------|--------|
-| `tokens_treaties.parquet` | Tokenized OCR text from historical treaties. | Parquet |
-| `embeddings_treaties.json` | Vector embeddings generated via semantic models. | JSON |
-| `topic_model_summary.json` | Extracted topics with AI explainability metadata. | JSON |
-| `semantic_entities.csv` | List of named entities with provenance linkage. | CSV |
-| `faircare_audit_nlp.json` | FAIR+CARE ethics compliance audit report. | JSON |
-| `bias_detection_report.json` | AI bias and fairness evaluation output. | JSON |
-| `metadata.json` | Provenance metadata and checksum validation results. | JSON |
+| Artifact | Description | Format |
+|---|---|---|
+| `tokens_treaties.parquet` | Tokenized and normalized historical treaties | Parquet |
+| `embeddings_treaties.json` | Contextual embeddings for linguistic analysis | JSON |
+| `topic_model_summary.json` | Topic model explainability output | JSON |
+| `semantic_entities.csv` | Extracted named entities with provenance | CSV |
+| `faircare_audit_nlp.json` | FAIR+CARE compliance validation log | JSON |
+| `bias_detection_report.json` | AI bias detection and fairness audit | JSON |
+| `metadata.json` | Provenance, checksum, and governance record | JSON |
 
-Automation managed via `text_nlp_sync.yml`.
+**Automation:** `text_nlp_sync.yml`
 
 ---
 
 ## ⚖️ Retention & Provenance Policy
 
 | Artifact Type | Retention Duration | Policy |
-|----------------|--------------------|--------|
-| NLP Outputs | 14 Days | Purged post-validation or staging promotion. |
-| Validation Reports | 180 Days | Retained for audit and FAIR+CARE recertification. |
-| Governance Metadata | Permanent | Stored immutably under blockchain ledger. |
-| AI Explainability Logs | 365 Days | Archived for ethics and interpretability verification. |
+|---|---:|---|
+| NLP Outputs | 14 Days | Auto-purged after validation or staging promotion |
+| FAIR+CARE Reports | 365 Days | Retained for re-audit and certification |
+| Explainability Logs | 365 Days | Archived for transparency verification |
+| Metadata | Permanent | Immutable blockchain record under governance |
 
-Cleanup handled by `text_nlp_cleanup.yml`.
+Cleanup via `text_nlp_cleanup.yml`.
 
 ---
 
-## 🌱 Sustainability Metrics
+## 🌱 Sustainability & Telemetry Metrics
 
 | Metric | Value | Verified By |
-|---------|--------|--------------|
-| Energy Use (per NLP cycle) | 9.4 Wh | @kfm-sustainability |
-| Carbon Output | 10.7 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
+|---|---:|---|
+| Energy Use (per NLP cycle) | 9.2 Wh | @kfm-sustainability |
+| Carbon Output | 10.3 gCO₂e | @kfm-security |
+| Renewable Power | 100% (RE100 Certified) | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
-Telemetry logged in:  
-`releases/v9.6.0/focus-telemetry.json`
+**Telemetry Reference:**  
+`../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Text TMP NLP Workspace (v9.6.0).
-Temporary FAIR+CARE-compliant environment for NLP tokenization, semantic analysis, and explainability validation of historical textual datasets.
-Ensures transparent, ethical, and reproducible language processing under MCP-DL v6.3.
+Kansas Frontier Matrix (2025). Text TMP NLP Workspace (v10.0.0).
+FAIR+CARE-certified NLP environment for tokenization, semantic modeling, and explainability validation of archival text datasets — ensuring transparent, ethical, and reproducible processing under MCP-DL v6.3.
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added bias detection and AI explainability auditing for NLP models. |
-| v9.5.0 | 2025-11-02 | Enhanced FAIR+CARE alignment and CIDOC-CRM schema interoperability. |
-| v9.3.2 | 2025-10-28 | Established NLP TMP workspace for tokenization and embedding generation. |
+| Version | Date | Summary |
+|---|---|---|
+| v10.0.0 | 2025-11-10 | Upgraded telemetry schema, bias detection expanded, integrated XAI sustainability tracking. |
+| v9.6.0 | 2025-11-03 | Added bias detection and explainability audit. |
+| v9.5.0 | 2025-11-02 | Enhanced FAIR+CARE alignment and CIDOC-CRM compatibility. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Textual Intelligence × FAIR+CARE Ethics × Provenance Governance*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../../../docs/) • [⚖️ Governance Ledger](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+*Textual Intelligence × FAIR+CARE Ethics × Provenance Governance*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Master Coder Protocol v6.3 · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
+
+[Back to Text TMP](../README.md) · [Docs Portal](../../../../../docs/) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
