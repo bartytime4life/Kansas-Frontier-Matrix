@@ -1,15 +1,15 @@
 ---
 title: "📥 Kansas Frontier Matrix — Tabular Intake TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/tmp/intake/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/data-work-staging-tabular-tmp-intake-v9.json"
+telemetry_ref: "../../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/data-work-staging-tabular-tmp-intake-v10.json"
 governance_ref: "../../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Transient workspace for **ingesting, profiling, and preparing raw tabular datasets** for schema alignment and FAIR+CARE pre-validation.  
-Handles detection, structuring, and ethical preprocessing of CSV, JSON, and Parquet files under transparent, auditable governance.
+Handles field detection, encoding harmonization, and checksum registration for fully auditable ingestion pipelines under governance **telemetry v2**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../../docs/architecture/README.md)
 [![FAIR+CARE Intake Certified](https://img.shields.io/badge/FAIR%2BCARE-Data%20Intake%20Governed-gold.svg)](../../../../../../docs/standards/faircare-validation.md)
@@ -34,20 +34,23 @@ Handles detection, structuring, and ethical preprocessing of CSV, JSON, and Parq
 ---
 
 ## 📘 Overview
+The **Tabular Intake TMP Workspace** is the **entry point for structured data** entering the Kansas Frontier Matrix.  
+It manages ingestion, field profiling, and initial FAIR+CARE pre-validation for CSV, JSON, and Parquet datasets.
 
-The **Tabular Intake TMP Workspace** is the **initial entry point** for raw tabular data entering the Kansas Frontier Matrix (KFM) ecosystem.  
-It performs automated ingestion, schema inference, and ethics-aware validation to ensure all data entering the pipeline are FAIR+CARE-compliant.
+**v10 Enhancements**
+- Integrated telemetry v2 (energy & carbon metrics).  
+- Improved JSON-LD lineage for dataset onboarding governance.  
+- Expanded auto-schema detection coverage and audit linkage.  
 
 ### Core Responsibilities
-- Ingest and profile raw tabular data under open governance.  
-- Detect field names, encodings, and data types for contract compliance.  
-- Conduct preliminary FAIR+CARE ethics checks and source validation.  
-- Generate checksum and metadata records for reproducibility.  
+- Ingest and profile raw tabular data under transparent governance.  
+- Detect and standardize field names, encodings, and data types.  
+- Conduct FAIR+CARE ethics and licensing pre-validation.  
+- Compute checksums and register provenance for reproducibility.  
 
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/staging/tabular/tmp/intake/
 ├── README.md
@@ -60,40 +63,43 @@ data/work/staging/tabular/tmp/intake/
 ---
 
 ## ⚙️ Intake Workflow
-
 ```mermaid
 flowchart TD
     A["Raw Tabular Data (data/raw/tabular/*)"] --> B["Automated ETL Intake"]
     B --> C["Schema Detection & Field Normalization"]
     C --> D["FAIR + CARE Pre-Audit Validation"]
-    D --> E["Checksum Logging + Governance Ledger Sync"]
-    E --> F["Promotion → Validation TMP (tmp/validation/)"]
+    D --> E["Checksum Logging + Telemetry Capture"]
+    E --> F["Governance Ledger Sync → Promotion → Validation TMP"]
 ```
 
 ### Steps
-1. **Ingestion:** Extract and convert data into UTF-8 CSV/Parquet formats.  
-2. **Schema Detection:** Infer column names, types, and encodings automatically.  
-3. **Ethics Pre-Audit:** Validate FAIR+CARE alignment and source licensing.  
-4. **Checksum Generation:** Compute hashes for provenance registry.  
-5. **Promotion:** Hand off compliant data to the **validation TMP** layer.
+1. **Ingestion:** Extract and standardize data into UTF-8 CSV/Parquet formats.  
+2. **Schema Detection:** Auto-detect columns, types, and encodings.  
+3. **Ethics Pre-Audit:** Evaluate FAIR+CARE conformance and source integrity.  
+4. **Checksum Generation:** Compute hashes, log metadata, and telemetry metrics.  
+5. **Promotion:** Forward compliant outputs to the **validation TMP** layer.
 
 ---
 
 ## 🧩 Example Intake Metadata Record
-
 ```json
 {
-  "id": "tabular_intake_hazards_v9.7.0",
+  "id": "tabular_intake_hazards_v10.0.0",
   "source_files": [
     "data/raw/fema/disaster_declarations_2025.csv",
     "data/raw/noaa/hazard_events_2025.csv"
   ],
-  "records_imported": 21583,
+  "records_imported": 21714,
   "schema_detected": true,
   "encoding": "UTF-8",
   "delimiter": ",",
+  "telemetry": {
+    "energy_wh": 5.8,
+    "carbon_gco2e": 6.5,
+    "validation_coverage_pct": 100
+  },
   "checksum_sha256": "sha256:d7e8a5b2f4a3c9b1f7a2d5e8c6f3b9a4c2d7e9b8f1a5d3c7e4b9a2f6c5d8a1b3",
-  "created": "2025-11-06T23:59:00Z",
+  "created": "2025-11-09T23:59:00Z",
   "validator": "@kfm-etl-ops",
   "fairstatus": "prelim_compliant",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
@@ -103,75 +109,71 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Intake records indexed by source, schema, and checksum. | `@kfm-data` |
-| **Accessible** | CSV and Parquet retained under UTF-8 FAIR+CARE compliance. | `@kfm-accessibility` |
-| **Interoperable** | Schema aligned with FAIR+CARE and JSON Schema contract. | `@kfm-architecture` |
-| **Reusable** | Metadata includes source provenance and lineage hash. | `@kfm-design` |
-| **Collective Benefit** | Promotes open and ethical intake for all data sources. | `@faircare-council` |
-| **Authority to Control** | FAIR+CARE Council approves schema onboarding. | `@kfm-governance` |
-| **Responsibility** | Ingestion engineers log schema maps and QA notes. | `@kfm-security` |
-| **Ethics** | Sensitive fields anonymized pre-validation. | `@kfm-ethics` |
+|------------|----------------|------------|
+| **Findable** | Indexed via checksum + schema contract lineage. | `@kfm-data` |
+| **Accessible** | UTF-8 CSV/Parquet formats retained under open audit. | `@kfm-accessibility` |
+| **Interoperable** | Auto-schema aligns to DCAT 3.0 + FAIR+CARE JSON schema. | `@kfm-architecture` |
+| **Reusable** | Checksum, provenance, and FAIR+CARE flags embedded. | `@kfm-design` |
+| **Collective Benefit** | Enables equitable and transparent data onboarding. | `@faircare-council` |
+| **Authority to Control** | FAIR+CARE Council certifies schema onboarding. | `@kfm-governance` |
+| **Responsibility** | ETL engineers maintain audit and QA notes. | `@kfm-security` |
+| **Ethics** | Sensitive fields redacted or masked before validation. | `@kfm-ethics` |
 
-**Audit refs:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
+**Governance refs:**  
+`data/reports/audit/data_provenance_ledger.json`  
+`data/reports/fair/data_care_assessment.json`
 
 ---
 
 ## ⚙️ Validation & Logging Artifacts
-
 | Artifact | Description | Format |
-|-----------|--------------|--------|
-| `metadata.json` | Intake checksum + provenance record. | JSON |
-| `etl_intake_run.log` | Runtime log for ETL ingestion tasks. | Text |
-| `schema_preview.json` | Auto-detected schema & datatype summary. | JSON |
-| `faircare_pre_audit.json` | FAIR+CARE pre-validation results. | JSON |
+|-----------|-------------|--------|
+| `metadata.json` | Intake checksum + provenance + telemetry record. | JSON |
+| `etl_intake_run.log` | Runtime trace of ingestion operations. | Text |
+| `schema_preview.json` | Auto-detected schema & field summary. | JSON |
+| `faircare_pre_audit.json` | FAIR+CARE pre-validation ethics check. | JSON |
 
-**Automation:** `tabular_intake_sync.yml`
+**Automation Workflow:** `tabular_intake_sync.yml`
 
 ---
 
 ## ♻️ Retention & Lifecycle Policy
-
 | File Type | Retention | Policy |
-|-----------|----------:|--------|
-| Intake Files | 7 Days | Purged post-validation. |
-| Validation Logs | 14 Days | Archived for QA/audit. |
-| FAIR+CARE Pre-Audits | 30 Days | Retained for ethics review. |
-| Metadata Records | 365 Days | Stored for lineage & certification. |
+|-----------|-----------:|--------|
+| Intake Files | 7 Days | Cleared post-validation promotion. |
+| Validation Logs | 14 Days | Retained for audit reproducibility. |
+| FAIR+CARE Pre-Audits | 30 Days | Archived for ethics traceability. |
+| Metadata | 365 Days | Immutable ledger retention. |
 
-**Telemetry:** `../../../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:**  
+`../../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
-
 | Metric | Value | Verified By |
 |--------|------:|-------------|
-| Energy Use (per intake run) | 5.9 Wh | `@kfm-sustainability` |
-| Carbon Output | 6.8 gCO₂e | `@kfm-security` |
+| Energy Use (per intake cycle) | 5.8 Wh | `@kfm-sustainability` |
+| Carbon Output | 6.5 gCO₂e | `@kfm-security` |
 | Renewable Power | 100% (RE100 Verified) | `@kfm-infrastructure` |
-| FAIR+CARE Pre-Audit Compliance | 100% | `@faircare-council` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
 ## 🧾 Internal Citation
-
 ```text
-Kansas Frontier Matrix (2025). Tabular Intake TMP Workspace (v9.7.0).
-Transient FAIR+CARE-governed ingestion environment for tabular datasets, enabling schema detection, checksum verification, and ethics pre-validation under MCP-DL v6.3 governance protocols.
+Kansas Frontier Matrix (2025). Tabular Intake TMP Workspace (v10.0.0).
+Transient FAIR+CARE-governed ingestion workspace for tabular datasets — schema detection, ethics pre-validation, and telemetry v2 tracking under MCP-DL v6.3.
 ```
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date | Author | Summary |
-|--------:|------|--------|---------|
-| v9.7.0 | 2025-11-06 | `@kfm-tabular` | Upgraded telemetry schema, retention matrix, and FAIR+CARE automation. |
-| v9.6.0 | 2025-11-03 | `@kfm-tabular` | Added ethics pre-validation and checksum synchronization. |
+|----------|------|--------|----------|
+| v10.0.0 | 2025-11-09 | `@kfm-tabular` | Upgraded to v10; telemetry v2 integration, lineage linking, and governance retention audit. |
+| v9.7.0 | 2025-11-06 | `@kfm-tabular` | Aligned telemetry schema; retention matrix updated. |
 
 ---
 
