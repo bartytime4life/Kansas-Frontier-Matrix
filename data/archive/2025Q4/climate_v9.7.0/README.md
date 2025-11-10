@@ -1,14 +1,14 @@
 ---
 title: "🌦️ Kansas Frontier Matrix — Q4 2025 Climate Dataset Archive (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "data/archive/2025Q4/climate_v9.7.0/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+path: "data/archive/2025Q4/climate_v10.0.0/README.md"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
+telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/data-climate-archive-v4.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -17,11 +17,11 @@ license: "CC-BY 4.0"
 <div align="center">
 
 # 🌦️ Kansas Frontier Matrix — **Q4 2025 Climate Dataset Archive**
-`data/archive/2025Q4/climate_v9.7.0/README.md`
+`data/archive/2025Q4/climate_v10.0.0/README.md`
 
 **Purpose:**  
-Documents the **Q4 2025 FAIR+CARE-certified climate datasets**, including historical and modern records of temperature, precipitation, and atmospheric anomalies across Kansas.  
-Ensures open, ethical, and reproducible data preservation aligned with **ISO 19115**, **STAC/DCAT 3.0**, and **MCP-DL v6.3** documentation-first governance.
+Document the **Q4 2025 FAIR+CARE-certified climate datasets**, including historical and modern records of temperature, precipitation, and atmospheric anomalies across Kansas.  
+Ensure open, ethical, and reproducible data preservation aligned with **ISO 19115**, **STAC/DCAT 3.0**, and **MCP-DL v6.3** documentation-first governance.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../../LICENSE)
@@ -49,7 +49,7 @@ All datasets are:
 ## 🗂️ Directory Layout
 
 ```plaintext
-data/archive/2025Q4/climate_v9.7.0/
+data/archive/2025Q4/climate_v10.0.0/
 ├── README.md                            # This file — documentation for Q4 2025 climate dataset archive
 │
 ├── climate_temperature_precip.csv       # Combined temperature and precipitation index (1850–2025)
@@ -111,14 +111,14 @@ Governance ledger reference:
 
 ```json
 {
-  "id": "climate_v9.7.0",
+  "id": "climate_v10.0.0",
   "records_total": 120512,
   "checksum_verified": true,
   "fairstatus": "certified",
   "schema_version": "v3.0.1",
   "governance_registered": true,
   "archived_by": "@kfm-data",
-  "timestamp": "2025-11-06T19:47:00Z"
+  "timestamp": "2025-11-10T19:47:00Z"
 }
 ```
 
@@ -135,26 +135,26 @@ Governance ledger reference:
 | Open License Compliance | CC-BY 4.0 | `@kfm-accessibility` |
 
 Telemetry recorded in:  
-`../../../../releases/v9.7.0/focus-telemetry.json`
+`../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🗺️ STAC & DCAT Catalog Integration
 
-- **STAC Collection ID:** `climate-kansas-v9.7.0`  
+- **STAC Collection ID:** `climate-kansas-v10.0.0`  
 - **STAC Item Count:** 3 (temperature, precipitation, anomalies)  
 - **DCAT Dataset ID:** `kfm-climate-2025q4`  
 - **Metadata JSON-LD Context:** `https://stacspec.org/v1.0.0/metadata.jsonld`
 
 Catalog entry stored in:  
-`data/stac/climate-kansas-v9.7.0.json`
+`data/stac/climate-kansas-v10.0.0.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Climate Dataset Archive (v9.7.0, Q4 2025).
+Kansas Frontier Matrix (2025). Climate Dataset Archive (v10.0.0, Q4 2025).
 FAIR+CARE-certified climate datasets integrating NOAA, USDM, and NIDIS records for Kansas.
 Implements ISO 19115 metadata alignment, STAC/DCAT interoperability, and sustainable open data governance.
 ```
@@ -165,6 +165,7 @@ Implements ISO 19115 metadata alignment, STAC/DCAT interoperability, and sustain
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
+| v10.0.0 | 2025-11-10 | `@kfm-data` | Upgraded to v10; refreshed paths/telemetry; checksum & catalog references updated. |
 | v9.7.0 | 2025-11-06 | `@kfm-data` | Created Q4 2025 Climate Dataset Archive README; added metadata, provenance, and checksum governance links. |
 | v9.6.0 | 2025-11-03 | `@kfm-archive` | Added ISO 19115 metadata compliance and DCAT publication reference. |
 | v9.3.2 | 2025-10-28 | `@kfm-core` | Established baseline FAIR+CARE-compliant climate dataset architecture. |
@@ -180,4 +181,3 @@ Implements ISO 19115 metadata alignment, STAC/DCAT interoperability, and sustain
 [Back to Q4 Archive](../README.md) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md) · [FAIR+CARE Reports](../../../../data/reports/fair/faircare_summary.json)
 
 </div>
-
