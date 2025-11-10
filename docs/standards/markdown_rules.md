@@ -1,15 +1,17 @@
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules"
 path: "docs/standards/markdown_rules.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-markdown-rules-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-markdown-rules-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -55,14 +57,17 @@ This front-matter provides versioning, governance, and interoperability informat
 |--------|-------------|----------|
 | `title` | Document title (must include an emoji). | `"🏗️ Kansas Frontier Matrix — System Architecture"` |
 | `path` | Repository path of the document. | `"src/ARCHITECTURE.md"` |
-| `version` | Semantic version. | `"v9.7.0"` |
-| `last_updated` | ISO 8601 date of last modification. | `"2025-11-05"` |
+| `version` | Semantic version. | `"v10.0.0"` |
+| `last_updated` | ISO 8601 date of last modification. | `"2025-11-10"` |
 | `review_cycle` | Update frequency (Quarterly / Annual). | `"Quarterly / Autonomous"` |
-| `commit_sha` | Git commit hash for provenance. | `"abc123def456"` |
-| `sbom_ref` | SPDX SBOM reference path. | `"releases/v9.7.0/sbom.spdx.json"` |
-| `manifest_ref` | Manifest package for release tracking. | `"releases/v9.7.0/manifest.zip"` |
-| `telemetry_ref` | Path to telemetry file. | `"releases/v9.7.0/focus-telemetry.json"` |
+| `commit_sha` | Git commit hash for provenance. | `"<latest-commit-hash>"` |
+| `sbom_ref` | SPDX SBOM reference path. | `"releases/v10.0.0/sbom.spdx.json"` |
+| `manifest_ref` | Manifest package for release tracking. | `"releases/v10.0.0/manifest.zip"` |
+| `telemetry_ref` | Path to telemetry file. | `"releases/v10.0.0/focus-telemetry.json"` |
+| `telemetry_schema` | Telemetry schema path for validation. | `"schemas/telemetry/docs-markdown-rules-v2.json"` |
 | `governance_ref` | Reference to governance charter. | `"docs/standards/governance/ROOT-GOVERNANCE.md"` |
+| `license` | SPDX-compatible license string. | `"CC-BY 4.0"` |
+| `mcp_version` | MCP documentation version. | `"MCP-DL v6.3"` |
 
 ---
 
@@ -142,8 +147,8 @@ All KFM documents follow a standardized sequence of sections for machine parsing
 ```markdown
 | Field | Description | Example |
 |--------|-------------|----------|
-| license | SPDX-compatible identifier | `"CC-BY-4.0"` |
-| provenance | Data origin | `"USGS, NOAA"` |
+| license | SPDX-compatible identifier | "CC-BY-4.0" |
+| provenance | Data origin | "USGS, NOAA" |
 ```
 
 ---
@@ -208,8 +213,8 @@ Example:
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10.0.0; aligned telemetry + SBOM refs; added required `telemetry_schema`. |
 | v9.7.0 | 2025-11-05 | A. Barta | Updated schema validation reference. |
-| v9.5.0 | 2025-10-20 | KFM Core Team | Added FAIR+CARE integration. |
 ```
 
 ---
@@ -271,6 +276,7 @@ Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamon
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10.0.0; aligned telemetry/SBOM/manifest refs; added required `telemetry_schema` to front-matter. |
 | v9.7.0 | 2025-11-05 | A. Barta | Defined authoritative Markdown structure and validation rules. |
 | v9.5.0 | 2025-10-20 | A. Barta | Added footer, table, and list consistency requirements. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Established foundational Markdown conventions under MCP. |
