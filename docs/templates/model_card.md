@@ -1,24 +1,26 @@
 ---
 title: "🤖 Kansas Frontier Matrix — AI/ML Model Card Template"
 path: "docs/templates/model_card.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-modelcard-template-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-modelcard-template-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🤖 **Kansas Frontier Matrix — AI/ML Model Card Template**
+# 🤖 **Kansas Frontier Matrix — AI/ML Model Card Template**  
 `docs/templates/model_card.md`
 
-**Purpose:** Provide a standardized template for documenting AI and machine learning models within the Kansas Frontier Matrix (KFM) framework.  
-Each model card captures metadata, ethical context, explainability details, and reproducibility criteria, aligned with **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** standards.
+**Purpose:** Standardize how KFM documents AI/ML models for **reproducibility, explainability, and FAIR+CARE governance**.  
+Every model card is machine-validated in CI and registered to the Governance Ledger with checksum lineage and telemetry.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -31,19 +33,19 @@ Each model card captures metadata, ethical context, explainability details, and 
 
 ## 🧭 Overview
 
-A **Model Card** is a structured documentation artifact describing the purpose, architecture, performance, and ethical considerations of a machine learning model.  
-All KFM models (e.g., entity recognition, summarization, Focus Mode inference) must include a corresponding `model_card.md` file to ensure reproducibility, transparency, and ethical governance.
+A **Model Card** describes the model’s **purpose, data, architecture, performance, risks, and ethics**.  
+All KFM models (e.g., Focus Mode inference, entity extraction, summarization) **must** include a `model_card.md` using this template.
 
-Each card is versioned and validated automatically by:
-- `faircare-validate.yml` (ethical governance check)
-- `docs-lint.yml` (schema and style validation)
-- `telemetry-export.yml` (build and metadata tracking)
+Validated automatically by:
+- `faircare-validate.yml` (ethics/accessibility)
+- `docs-lint.yml` (front-matter/format)
+- `telemetry-export.yml` (build + energy/carbon logging)
 
 ---
 
 ## 🧱 Metadata (YAML Front-Matter)
 
-Every `model_card.md` must include a YAML header with essential metadata:
+Each model card begins with:
 
 ```yaml
 ---
@@ -56,7 +58,10 @@ commit_sha: "<commit-hash>"
 sbom_ref: "releases/vX.Y.Z/sbom.spdx.json"
 manifest_ref: "releases/vX.Y.Z/manifest.zip"
 telemetry_ref: "releases/vX.Y.Z/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/docs-modelcard-[vN].json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 ```
 
@@ -65,51 +70,49 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 ## 🧩 Model Overview
 
 | Field | Description |
-|-------|-------------|
-| **Model Name** | Full name and short identifier. |
-| **Version** | Semantic version tag (e.g. v1.0.0). |
-| **Author(s)** | Name(s) and affiliation(s) of model developers. |
-| **Date Created** | Model creation date. |
-| **License** | License type (MIT, Apache 2.0, CC-BY 4.0). |
-| **Repository Path** | Example: `src/ai/models/focus_transformer_v1/`. |
+|---|---|
+| **Model Name** | Human-readable name + short ID. |
+| **Version** | SemVer (e.g., v1.0.0). |
+| **Author(s)** | Names + affiliations. |
+| **Date Created** | ISO 8601 date. |
+| **License** | MIT/Apache-2.0/CC-BY-4.0 (match repo policy). |
+| **Repository Path** | e.g., `src/ai/models/focus_transformer_v1/`. |
 
-**Example:**
-> Focus Transformer v1 — a contextual summarization and entity-linking model for KFM Focus Mode.  
-> Developed by the Kansas Frontier Matrix AI team using transformer-based sentence embeddings.
+**Example**  
+> *Focus Transformer v2* — contextual summarizer + entity linker for KFM Focus Mode.  
+> Trained with transformer embeddings; optimized for archival text and geospatial context.
 
 ---
 
 ## 🎯 Intended Use
 
-Clearly describe the model’s purpose and scope.
-
 | Aspect | Details |
-|--------|----------|
-| **Primary Task** | e.g., Named Entity Recognition (NER), Summarization, Embedding Search |
-| **Intended Domain** | e.g., Historical text archives, geospatial documents |
-| **Intended Users** | Developers, researchers, historians, and educators |
-| **Not Intended For** | Automated decision-making, sensitive cultural datasets without governance approval |
+|---|---|
+| **Primary Task** | NER, summarization, embedding search, risk scoring, etc. |
+| **Intended Domain** | Historic texts, geospatial docs, environmental records. |
+| **Intended Users** | Researchers, developers, curators, educators. |
+| **Not Intended For** | Automated high-stakes decisions; culturally sensitive data without explicit governance approval. |
 
 ---
 
 ## 🧠 Model Architecture
 
 | Component | Description |
-|------------|-------------|
-| **Base Architecture** | e.g., BERT, DistilBERT, Transformer Encoder-Decoder |
-| **Input Type** | e.g., tokenized text, GeoJSON feature properties |
-| **Output Type** | e.g., labeled entities, summary text |
-| **Parameters** | Total parameter count or size |
-| **Frameworks** | e.g., PyTorch 2.0, TensorFlow 2.14, spaCy 3.7 |
-| **Dependencies** | List of major libraries and models used |
+|---|---|
+| **Base Architecture** | BERT/Longformer/Encoder-Decoder, etc. |
+| **Inputs** | Tokenized text; optional structured/geo attrs. |
+| **Outputs** | Labeled entities, summaries, embeddings, scores. |
+| **Parameter Count** | Total params / size. |
+| **Frameworks** | PyTorch/TF/spaCy versions. |
+| **Dependencies** | Major libs + pre-trained checkpoints. |
 
-**Example Diagram (optional):**
+**Optional Diagram**
 ```mermaid
 flowchart TD
-A["Input Text"] --> B["Tokenizer"]
-B --> C["Transformer Encoder"]
-C --> D["Classifier / Generator"]
-D --> E["Output Entities or Summary"]
+    A["Input Text"] --> B["Tokenizer"]
+    B["Tokenizer"] --> C["Transformer Encoder/Decoder"]
+    C["Transformer Encoder/Decoder"] --> D["Task Head (Classifier/Generator)"]
+    D["Task Head (Classifier/Generator)"] --> E["Outputs (Entities/Summary/Embeddings)"]
 ```
 
 ---
@@ -117,65 +120,61 @@ D --> E["Output Entities or Summary"]
 ## 🧪 Training Data & Methodology
 
 | Field | Description |
-|-------|-------------|
-| **Training Dataset(s)** | List dataset sources with citations and licenses. |
-| **Preprocessing** | Describe text cleaning, tokenization, or normalization. |
-| **Sampling Strategy** | e.g., stratified, balanced by category. |
-| **Training Parameters** | Learning rate, batch size, epochs, optimizer, etc. |
-| **Hardware / Environment** | CPU/GPU details, Docker image used. |
+|---|---|
+| **Training Dataset(s)** | Sources, citations, licenses (DOIs if applicable). |
+| **Preprocessing** | Cleaning, normalization, tokenization. |
+| **Sampling Strategy** | Random/stratified/balanced rationale. |
+| **Hyperparameters** | LR, batch size, epochs, optimizer, schedulers. |
+| **Hardware/Env** | CPU/GPU, Docker image digest, seed control. |
 
-**Example Code:**
+**Example**
 ```bash
-python src/ai/models/focus_transformer_v1/train.py --epochs=15 --lr=3e-5
+python src/ai/models/focus_transformer_v2/train.py --epochs 15 --lr 3e-5 --seed 42
 ```
 
 ---
 
 ## 📊 Evaluation Metrics
 
-Summarize how the model’s performance was measured.
-
 | Metric | Description | Value |
-|---------|-------------|-------|
-| Accuracy | General model accuracy | 0.94 |
-| Precision | True positive rate | 0.92 |
-| Recall | Completeness of detection | 0.95 |
-| F1 Score | Harmonic mean of precision/recall | 0.935 |
-| BLEU / ROUGE | For summarization models | ROUGE-L = 0.78 |
+|---|---|---|
+| Accuracy | Overall correctness | 0.94 |
+| Precision | Positive predictive value | 0.92 |
+| Recall | Sensitivity | 0.95 |
+| F1 Score | Harmonic mean | 0.935 |
+| ROUGE/BLEU | For generation tasks | ROUGE-L = 0.78 |
 
-Include validation dataset or cross-validation method if applicable:
-> Evaluation conducted on 10% held-out Kansas treaty corpus using stratified sampling.
+> Evaluated on a 10% held-out Kansas treaty corpus (stratified by decade + source).
 
 ---
 
-## 🔍 Explainability & Bias
-
-Discuss transparency, fairness, and ethical implications.
+## 🔍 Explainability, Safety & Bias
 
 | Category | Notes |
-|-----------|-------|
-| **Explainability Tools** | e.g., SHAP, LIME, Captum |
-| **Feature Importance Analysis** | Identify top influential input features. |
-| **Bias Detection** | Describe datasets or attributes evaluated for bias. |
-| **Mitigation Strategies** | Methods to reduce bias or overfitting. |
-| **Limitations** | Known constraints, edge cases, or ethical boundaries. |
+|---|---|
+| **Explainability Tools** | SHAP/LIME/Integrated Gradients; attach plots/JSON. |
+| **Feature Importance** | Top factors influencing outputs. |
+| **Bias Detection** | Groups/features tested; disparity metrics. |
+| **Mitigation** | Reweighting, augmentation, thresholds, human-in-the-loop. |
+| **Limitations** | Known failure modes, data gaps, OOD behavior. |
+| **Safety Considerations** | Guardrails, rate limits, error handling. |
 
-**Example Insight:**
-> Model exhibits lower confidence when interpreting archaic or non-English text; mitigated by fine-tuning on domain-specific vocabulary.
+**Insight Example**  
+> Confidence drops on non-Latin glyphs and degraded scans; mitigated with domain fine-tuning + OCR normalization.
 
 ---
 
 ## ⚖️ FAIR+CARE Compliance
 
 | Principle | Implementation |
-|------------|----------------|
-| **Findable** | Model metadata and version logged under STAC/DCAT catalog. |
-| **Accessible** | Source code open under MIT License; datasets open under CC-BY. |
-| **Interoperable** | Outputs conform to STAC 1.0.0 and GeoJSON schemas. |
-| **Reusable** | Model card and checkpoints versioned in `releases/v9.7.0/`. |
-| **CARE** | Indigenous and cultural datasets reviewed by governance council prior to use. |
+|---|---|
+| **Findable** | Model metadata/version in STAC/DCAT registry; DOI/ARK optional. |
+| **Accessible** | Code MIT; datasets CC-BY; alt-text + clear licenses. |
+| **Interoperable** | Outputs align with STAC 1.0/GeoJSON; ISO 19115 lineage. |
+| **Reusable** | Versioned checkpoints + SBOM + checksum manifest. |
+| **CARE** | Cultural sensitivity review + approvals logged; opt-out honored. |
 
-Attach validation artifacts:
+Attach artifacts:
 ```
 reports/fair/faircare_summary.json
 reports/audit/ai_models.json
@@ -185,43 +184,40 @@ reports/audit/ai_models.json
 
 ## 🧾 Deployment & Integration
 
-Describe how the model integrates into KFM workflows.
-
 | Component | Function |
-|------------|-----------|
-| **API Endpoint** | `/api/ai/focus/` |
-| **Dependency Path** | `src/ai/models/focus_transformer_v1/` |
-| **Integration Layer** | AI → Graph Database → Web Client |
-| **Deployment Target** | Docker container, FastAPI service |
+|---|---|
+| **API Endpoint** | e.g., `/api/ai/focus/` |
+| **Dependency Path** | `src/ai/models/[model_name]/` |
+| **Integration Flow** | AI → Governance → Graph → Web |
+| **Deployment Target** | Docker/FastAPI/Batch jobs |
 
 ---
 
 ## 🧮 Reproducibility Checklist
 
-- [x] All training datasets cited with license and DOI.  
-- [x] Model hyperparameters listed and versioned.  
-- [x] Results reproducible with scripts in repository.  
-- [x] Model card validated under `docs-lint.yml`.  
-- [x] FAIR+CARE audit passed.  
+- [ ] Datasets cited with license + DOI/URL  
+- [ ] Hyperparameters, seeds, and env pinned  
+- [ ] Training + eval scripts provided  
+- [ ] SBOM + manifest + checksums published  
+- [ ] FAIR+CARE audit passed; governance entry created
 
-**Example Reproduction Command:**
+**Example**
 ```bash
-make train-model MODEL=focus_transformer_v1
-make evaluate-model MODEL=focus_transformer_v1
+make train-model MODEL=focus_transformer_v2
+make evaluate-model MODEL=focus_transformer_v2
+make package-model MODEL=focus_transformer_v2
 ```
 
 ---
 
 ## 🧭 Governance & Ethics Notes
 
-Summarize governance considerations and review results.
+**Council Review**  
+- Reviewed by: FAIR+CARE Council (YYYY-MM)  
+- Status: ☐ Pending / ☑ Approved / ☒ Changes Required  
+- Notes: Summary of ethical considerations and decisions.
 
-**Governance Council Review:**
-- Reviewed by: FAIR+CARE Council (Oct 2025)
-- Status: ✅ Approved for open use
-- Notes: No sensitive tribal or culturally restricted data detected.
-
-Governance log entry recorded in:
+Log reference:
 ```
 reports/audit/github-workflows-ledger.json
 ```
@@ -231,9 +227,10 @@ reports/audit/github-workflows-ledger.json
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Added standardized AI/ML model card template for governance and reproducibility. |
-| v9.5.0 | 2025-10-20 | A. Barta | Integrated FAIR+CARE and explainability section updates. |
+|---|---|---|---|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; telemetry schema v2; clarified safety/bias + reproducibility gates. |
+| v9.7.0 | 2025-11-05 | A. Barta | Initial standardized model card for governance and reproducibility. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added FAIR+CARE + explainability sections. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial template creation. |
 
 ---
@@ -241,7 +238,7 @@ reports/audit/github-workflows-ledger.json
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
 [Back to Template Index](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
