@@ -2,7 +2,7 @@
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ARCHITECTURE.md"
 version: "v10.0.0"
-last_updated: "2025-11-08"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "releases/v10.0.0/sbom.spdx.json"
@@ -25,15 +25,14 @@ Comprehensive, reproducible blueprint of the **Kansas Frontier Matrix (KFM)** �
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)]()
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)](../releases/v10.0.0/manifest.zip)
 
 </div>
 
 ---
 
 ## 📘 Overview
-
-**Kansas Frontier Matrix (KFM)** is a **containerized, semantic, FAIR+CARE-aligned data ecosystem** interlinking **historical, ecological, cultural, and geospatial knowledge** for Kansas. It uses **open standards**—**STAC 1.0**, **DCAT 3.0**, **CIDOC-CRM**, **OWL-Time**, **GeoSPARQL**, and **SPDX**—within a **governance-as-code** framework enforcing provenance, ethics, and automation.
+**KFM** is a **containerized, semantic, FAIR+CARE-aligned data ecosystem** interlinking **historical, ecological, cultural, and geospatial knowledge** for Kansas. It uses **open standards**—**STAC 1.0**, **DCAT 3.0**, **CIDOC-CRM**, **OWL-Time**, **GeoSPARQL**, and **SPDX**—within a **governance-as-code** framework enforcing provenance, ethics, and automation.
 
 **Core Layers**
 1. **Data Sources** — Archival, sensor, and open-government feeds  
@@ -53,7 +52,6 @@ Comprehensive, reproducible blueprint of the **Kansas Frontier Matrix (KFM)** �
 ---
 
 ## 🗂️ Directory Layout
-
 ```bash
 src/
 ├─ ai/
@@ -92,7 +90,6 @@ src/
 ## 🧩 Layered Architecture
 
 ### 1️⃣ Data Sources
-
 | Source | Examples | Format / Access |
 |--------|-----------|----------------|
 | NOAA NCEI | Storm Events, Daymet, normals | JSON API, NetCDF |
@@ -107,7 +104,6 @@ Manifest Spec: `data/sources/*.json` — DCAT 3.0 + STAC 1.0 compliant with lice
 ---
 
 ### 2️⃣ ETL + AI Pipelines
-
 | Stage | Function | Output |
 |--------|-----------|--------|
 | Extract | Bulk/API/stream pulls + checksums | Raw + SHA-256 |
@@ -123,7 +119,6 @@ Manifest Spec: `data/sources/*.json` — DCAT 3.0 + STAC 1.0 compliant with lice
 ---
 
 ### 3️⃣ Knowledge Graph (Neo4j + Federation)
-
 | Entity | Standard Mapping | Description |
 |--------|------------------|--------------|
 | Person | CIDOC E21 | Individuals / authors / officials |
@@ -138,7 +133,6 @@ Relations: `OCCURRED_AT`, `MENTIONS`, `LOCATED_IN`, `CITED_BY`, `FEDERATED_WITH`
 ---
 
 ### 4️⃣ API Layer (FastAPI / GraphQL)
-
 | Route | Purpose | Returns |
 |-------|----------|----------|
 | `/api/search?q=` | Full-text + semantic search | Ranked JSON |
@@ -153,7 +147,6 @@ Security: JWT auth, scopes (“admin”, “editor”, “public”).
 ---
 
 ### 5️⃣ Web Frontend (UI v3)
-
 | Component | Role |
 |------------|------|
 | MapView | 2D/3D MapLibre GL + Cesium layers |
@@ -167,7 +160,6 @@ Accessibility = WCAG 2.1 AA compliant (ARIA, alt, contrast, keyboard nav).
 ---
 
 ## 🗺️ Core Data Flow
-
 ```mermaid
 flowchart TD
   A["Data Sources"]
@@ -185,59 +177,55 @@ flowchart TD
 ---
 
 ## 🧠 Focus Mode (AI v2)
-
 | Element | Description |
 |----------|-------------|
 | Model | `focus_transformer_v2` — contextual summarization + intent inference |
-| Pipeline | Subgraph → embedding → summary → narrative |
+| Pipeline | Subgraph → embeddings → summary → narrative |
 | Explainability | SHAP/LIME plots + drift alerts |
 | Ethical Guardrails | CARE filter + policy summarizer |
-| Streaming Mode | Real-time entity refresh (Kafka → React FocusProvider) |
+| Streaming Mode | Real-time entity refresh (Kafka → FocusProvider) |
 
 ---
 
 ## 🧾 STAC ↔ DCAT Bridge
-
 | Direction | Function | Result |
 |------------|-----------|--------|
 | STAC → DCAT | STAC Item → DCAT Dataset | Metadata alignment |
 | DCAT → STAC | DCAT → STAC assets | Geotemporal binding |
 | Stream | Live STAC Items (v10.0.0) | Real-time discovery |
 
-Validated via `.github/workflows/stac-validate.yml`  
-Exported to `data/stac/` with provenance links.
+Validated via `.github/workflows/stac-validate.yml`.  
+Published to `data/stac/` with provenance links.
 
 ---
 
 ## ⚙️ Infrastructure & Security
-
 | Area | Tooling | Notes |
 |------|----------|-------|
 | Containers | Docker/Compose | Non-root images |
 | Secrets | GitHub Secrets | Auto-rotation |
-| Vuln Scans | CodeQL + Trivy | Block CRITICAL |
-| SBOM | SPDX SPDX v3 export | releases/**/sbom.spdx.json |
+| Vuln Scans | CodeQL + Trivy | Block **CRITICAL** |
+| SBOM | SPDX export | `releases/**/sbom.spdx.json` |
 | Streaming | Kafka / PubSub | Realtime ETL (HA) |
 | Federation | Multi-node Neo4j cluster | HA mirror sync |
-| AuthN/Z | RBAC / OIDC | Principle of least privilege |
+| AuthN/Z | RBAC / OIDC | Least privilege |
 
 ---
 
 ## 🧮 CI/CD Workflow → Artifact Mapping
-
 | Workflow | Validates / Builds | Artifact |
 |-----------|--------------------|-----------|
-| stac-validate.yml | STAC Collections | reports/stac_summary.json |
+| stac-validate.yml | STAC / DCAT metadata | reports/stac_summary.json |
 | faircare-validate.yml | FAIR+CARE checks | reports/faircare_summary.json |
 | docs-lint.yml | Markdown/YAML lint | reports/docs_lint.json |
-| build-deploy.yml | Web build + deploy | reports/build_metrics.json |
+| build-and-deploy.yml | Web build + deploy | reports/build_metrics.json |
 | telemetry-export.yml | Metrics aggregation | releases/v10.0.0/focus-telemetry.json |
-| stream-ingest.yml | Streaming pipeline deploy | releases/v10.0.0/stream_metrics.json |
+| ai-model-audit.yml | AI governance | reports/audit/ai_model_faircare.json |
+| stream-ingest.yml | Streaming deploy (if enabled) | releases/v10.0.0/stream_metrics.json |
 
 ---
 
 ## 📡 Telemetry & Governance
-
 - **Telemetry:** build times, FAIR+CARE scores, drift, bias, energy metrics  
 - **Ledgers:** `docs/reports/audit/` for models, data, CI/CD artifacts  
 - **FAIR+CARE Checkpoint:**  
@@ -250,7 +238,6 @@ Exported to `data/stac/` with provenance links.
 ---
 
 ## 🧱 Data Contracts
-
 | Field | Req | Purpose |
 |--------|------|----------|
 | id, title, description | ✅ | Identity + context |
@@ -264,31 +251,29 @@ Exported to `data/stac/` with provenance links.
 ---
 
 ## 🧩 Roadmap
-
 1. 🌎 Public STAC API with federated query support  
 2. 🤖 AI Focus v3 — generative timeline summaries  
-3. 🛰️ KFM Node Federation Network pilot expansion  
+3. 🛰️ KFM Node Federation Network expansion  
 4. 🧮 Predictive Scenario Workbench (agriculture, migration)  
 5. 🔐 Zero-Trust CI/CD integration for artifact signing  
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v10.0.0 | 2025-11-08 | A. Barta | Predictive modeling, federated query engine, Focus AI v2 |
-| v9.9.0 | 2025-11-07 | A. Barta | Streaming ingestion, 3D temporal UI, multi-graph federation |
-| v9.7.0 | 2025-11-01 | KFM Core Team | STAC↔DCAT bridge + telemetry governance |
-| v9.5.0 | 2025-10-20 | A. Barta | Explainability telemetry + contracts |
-| v9.0.0 | 2025-06-01 | Core Team | Initial architecture document |
+| v10.0.0 | 2025-11-09 | A. Barta | Predictive modeling, federated query engine, Focus AI v2, streaming STAC bridge, 3D temporal UI. |
+| v9.9.0 | 2025-11-07 | A. Barta | Streaming ingestion, multi-graph federation refinements. |
+| v9.7.0 | 2025-11-01 | KFM Core Team | STAC↔DCAT bridge + telemetry governance. |
+| v9.5.0 | 2025-10-20 | A. Barta | Explainability telemetry + data contracts. |
+| v9.0.0 | 2025-06-01 | Core Team | Initial architecture document. |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0  
-Maintained under Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Maintained under **Master Coder Protocol v6.3** · **FAIR+CARE Certified** · **Diamond⁹ Ω / Crown∞Ω Ultimate Certified**  
 [Back to Documentation Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
-</div>  
+</div>
