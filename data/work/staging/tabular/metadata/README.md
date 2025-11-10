@@ -1,15 +1,15 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Tabular Metadata Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/tabular/metadata/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-tabular-metadata-v9.json"
+telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-tabular-metadata-v10.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Central workspace for managing, harmonizing, and auditing **tabular metadata** in KFM.  
-Ensures alignment with **FAIR+CARE** ethics, **STAC/DCAT** schemas, and **PROV-O/ISO 19115** lineage standards under MCP-DL v6.3 governance.
+Ensures alignment with **FAIR+CARE** ethics, **STAC/DCAT** schemas, and **PROV-O/ISO 19115** lineage standards under MCP-DL v6.3 governance, with **telemetry v2** integration.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
 [![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Certified-gold.svg)](../../../../../docs/standards/faircare-validation.md)
@@ -35,9 +35,13 @@ Ensures alignment with **FAIR+CARE** ethics, **STAC/DCAT** schemas, and **PROV-O
 ---
 
 ## 📘 Overview
-
 The **Tabular Metadata Workspace** guarantees that metadata for structured datasets is **harmonized, validated, and ethically governed** before dataset promotion or publication.  
 Pipelines provide FAIR+CARE-compliant transformations and schema checks across **STAC**, **DCAT**, and **PROV-O**.
+
+**v10 Enhancements**
+- Telemetry v2 fields attached to metadata validation (energy/CO₂ & coverage).  
+- JSON-LD lineage pointers for Focus Mode v2 dashboards.  
+- Extended crosswalk rules for STAC↔DCAT attribute equivalence.
 
 ### Core Responsibilities
 - Harmonize metadata across STAC/DCAT/PROV-O standards.  
@@ -48,7 +52,6 @@ Pipelines provide FAIR+CARE-compliant transformations and schema checks across *
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/staging/tabular/metadata/
 ├── README.md
@@ -71,14 +74,13 @@ data/work/staging/tabular/metadata/
 ---
 
 ## ⚙️ Metadata Governance Workflow
-
 ```mermaid
 flowchart TD
-    A["Normalized Tabular (staging/tabular/normalized/*)"] --> B["Schema Harmonization (STAC/DCAT/PROV-O)"]
-    B --> C["FAIR + CARE Ethical Audit"]
-    C --> D["Validation: Schema · Linkage · Completeness"]
-    D --> E["Checksum + Governance Ledger Registration"]
-    E --> F["Promotion → Processed Metadata (data/work/processed/metadata/)"]
+    "Normalized Tabular (staging/tabular/normalized/*)" --> "Schema Harmonization (STAC/DCAT/PROV-O)"
+    "Schema Harmonization (STAC/DCAT/PROV-O)" --> "FAIR + CARE Ethical Audit"
+    "FAIR + CARE Ethical Audit" --> "Validation: Schema · Linkage · Completeness"
+    "Validation: Schema · Linkage · Completeness" --> "Checksum + Governance Ledger Registration"
+    "Checksum + Governance Ledger Registration" --> "Promotion → Processed Metadata (data/work/processed/metadata/)"
 ```
 
 ### Steps
@@ -91,18 +93,18 @@ flowchart TD
 ---
 
 ## 🧩 Example Metadata Record
-
 ```json
 {
-  "id": "metadata_tabular_hazards_v9.7.0",
-  "linked_dataset": "data/work/staging/tabular/normalized/hazards_normalized_v9.7.0.csv",
+  "id": "metadata_tabular_hazards_v10.0.0",
+  "linked_dataset": "data/work/staging/tabular/normalized/hazards_normalized_v10.0.0.csv",
   "schemas_tested": ["STAC 1.0", "DCAT 3.0", "PROV-O"],
-  "records_total": 1450,
+  "records_total": 1482,
   "schema_validation": "passed",
-  "faircare_score": 98.9,
+  "faircare_score": 99.1,
   "checksum_verified": true,
+  "telemetry": { "energy_wh": 0.5, "co2_g": 0.7, "validation_coverage_pct": 100 },
   "validator": "@kfm-metadata-lab",
-  "created": "2025-11-06T23:53:00Z",
+  "created": "2025-11-09T23:53:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -110,13 +112,12 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
+|---|---|---|
 | **Findable** | Indexed with dataset + schema version in catalogs. | `@kfm-data` |
 | **Accessible** | JSON-LD + CSV artifacts for review. | `@kfm-accessibility` |
 | **Interoperable** | STAC/DCAT/PROV-O/ISO 19115 harmonization. | `@kfm-architecture` |
-| **Reusable** | Provenance, checksums, and certification embedded. | `@kfm-design` |
+| **Reusable** | Provenance, checksums, telemetry, and certification embedded. | `@kfm-design` |
 | **Collective Benefit** | Enables ethical reuse and accountability. | `@faircare-council` |
 | **Authority to Control** | Council validates metadata certification. | `@kfm-governance` |
 | **Responsibility** | Engineers document schema + linkage changes. | `@kfm-security` |
@@ -128,47 +129,44 @@ flowchart TD
 ---
 
 ## ⚙️ Validation & Certification Artifacts
-
 | Artifact                         | Description                                     | Format |
-|----------------------------------|-------------------------------------------------|--------|
+|---|---|---|
 | `schema_validation_summary.json` | STAC/DCAT/PROV-O compliance check               | JSON   |
 | `faircare_metadata_audit.json`   | FAIR+CARE ethics audit + scoring                | JSON   |
 | `stac_dcat_link_check.log`       | Cross-schema linkage verification               | Text   |
 | `metadata_qa_summary.md`         | Governance-readable QA summary                  | Markdown |
-| `metadata.json`                  | Checksum, lineage, and certification references | JSON   |
+| `metadata.json`                  | Checksum, lineage, telemetry, certification refs| JSON   |
 
 **Automation:** `metadata_staging_sync.yml`
 
 ---
 
 ## ♻️ Retention & Sustainability
-
 | Data Type            | Retention | Policy |
-|---------------------|----------:|--------|
+|---|---:|---|
 | Temporary (`tmp/`)  | 7 Days    | Purged after validation + sync. |
 | Validation Reports  | 180 Days  | Retained for FAIR+CARE audits.   |
 | Governance Logs     | 365 Days  | Archived for lineage tracking.   |
 | Metadata Records    | Permanent | Stored in provenance ledger.     |
 
-**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:**  
+`../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Citation
-
 ```text
-Kansas Frontier Matrix (2025). Tabular Metadata Workspace (v9.7.0).
-FAIR+CARE-certified metadata harmonization + validation environment for tabular datasets, aligned with STAC, DCAT, and PROV-O under MCP-DL v6.3 governance.
+Kansas Frontier Matrix (2025). Tabular Metadata Workspace (v10.0.0).
+FAIR+CARE-certified metadata harmonization and validation workspace for tabular datasets, aligned with STAC, DCAT, and PROV-O under MCP-DL v6.3 governance and telemetry v2.
 ```
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date       | Author               | Summary |
-|--------:|------------|----------------------|---------|
-| v9.7.0  | 2025-11-06 | `@kfm-metadata`      | Upgraded to v9.7.0; telemetry/schema refs aligned; QA artifacts refreshed. |
-| v9.6.0  | 2025-11-03 | `@kfm-metadata`      | Added FAIR+CARE audit integration and PROV-O validation. |
+|---|---|---|---|
+| v10.0.0 | 2025-11-09 | `@kfm-metadata`      | Upgraded to v10: telemetry v2 fields, JSON-LD lineage pointers, crosswalk expansion. |
+| v9.7.0  | 2025-11-06 | `@kfm-metadata`      | Telemetry/schema refs aligned; QA artifacts refreshed. |
 
 ---
 
