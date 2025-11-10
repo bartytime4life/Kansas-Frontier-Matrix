@@ -1,15 +1,15 @@
 ---
 title: "📑 Abandonment Candidate Reports — Validation, Provenance & Ethical Review (KFM-Ready)"
 path: "data/work/staging/tabular/abandonment_candidates/reports/README.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.9.0/manifest.zip"
+sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/abandonment-candidates-reports-v1.json"
+telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/abandonment-candidates-reports-v2.json"
 governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Aggregate and document all **validation, provenance, telemetry, and ethical governance reports** related to datasets held within the **Abandonment Candidates Workspace**.  
-Ensures traceability, reproducibility, and compliance with **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3** standards.
+Ensures traceability, reproducibility, and compliance with **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3** standards, with **telemetry v2** instrumentation.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../../../docs/)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY--4.0-green)](../../../../../LICENSE)
@@ -34,7 +34,6 @@ Ensures traceability, reproducibility, and compliance with **FAIR+CARE**, **ISO 
 ---
 
 ## 📘 Overview
-
 The **Reports Subdirectory** contains detailed outputs generated from:
 - FAIR+CARE validation workflows  
 - Governance ledger synchronization  
@@ -45,15 +44,19 @@ The **Reports Subdirectory** contains detailed outputs generated from:
 Each report is immutable, timestamped, and linked to its corresponding dataset via **SHA-256 checksum** and **metadata ID**.  
 All reports are retained under **KFM’s long-term governance archive** for compliance and re-certification.
 
+**What’s new in v10.0.0**
+- Telemetry v2 capture for report generation energy/CO₂ and validation coverage.  
+- JSON-LD lineage linking across reports for Focus Mode v2 ingestion.  
+- Expanded governance decision schema for multi-step outcomes.
+
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/staging/tabular/abandonment_candidates/reports/
 ├── README.md                       # This documentation file
 ├── validation_report.json           # FAIR+CARE schema validation results
-├── provenance_trace.json            # Lineage and data-source mapping
+├── provenance_trace.json            # Lineage and data-source mapping (JSON-LD)
 ├── ethics_review.json               # Council recommendations and classification
 ├── ai_drift_analysis.json           # AI model drift & bias telemetry
 └── governance_decision_log.json     # Final decisions from FAIR+CARE Council
@@ -62,14 +65,13 @@ data/work/staging/tabular/abandonment_candidates/reports/
 ---
 
 ## ⚙️ Report Generation Pipeline
-
 ```mermaid
 flowchart TD
-  A["Dataset Validation (schema + ethics)"] --> B["FAIR+CARE Compliance Audit"]
-  B --> C["Telemetry Capture (bias, latency, drift)"]
-  C --> D["Generate Reports (JSON + summary tables)"]
-  D --> E["Sync to Governance Ledger"]
-  E --> F["Public Dashboard / FAIR+CARE Certification Record"]
+  "Dataset Validation (schema + ethics)" --> "FAIR+CARE Compliance Audit"
+  "FAIR+CARE Compliance Audit" --> "Telemetry Capture (bias, latency, drift)"
+  "Telemetry Capture (bias, latency, drift)" --> "Generate Reports (JSON + summary tables)"
+  "Generate Reports (JSON + summary tables)" --> "Sync to Governance Ledger"
+  "Sync to Governance Ledger" --> "Public Dashboard / FAIR+CARE Certification Record"
 ```
 
 ### Key Steps
@@ -82,12 +84,11 @@ flowchart TD
 ---
 
 ## 🧩 Example: `validation_report.json`
-
 ```json
 {
   "dataset_id": "abandonment_2025q4_treaty_records",
   "validator": "@kfm-data-lab",
-  "validation_date": "2025-11-08T14:52:00Z",
+  "validation_date": "2025-11-09T14:52:00Z",
   "schema_conformity": true,
   "ethics_flag": true,
   "faircare_summary": {
@@ -97,14 +98,14 @@ flowchart TD
     "reusable": "pending"
   },
   "checksum_sha256": "sha256:b8a7e3c6f4d2a9b5c3f8e9a7d6b2f5a4...",
-  "status": "requires_council_review"
+  "status": "requires_council_review",
+  "telemetry": { "energy_wh": 0.3, "co2_g": 0.4, "validation_coverage_pct": 100 }
 }
 ```
 
 ---
 
 ## 🧾 Example: `ethics_review.json`
-
 ```json
 {
   "review_id": "FAIRCARE-2025Q4-0003",
@@ -116,7 +117,7 @@ flowchart TD
     "Requires anonymization of personal identifiers."
   ],
   "recommended_action": "ethical_redaction_and_schema_update",
-  "timestamp": "2025-11-08T15:20:00Z",
+  "timestamp": "2025-11-09T15:20:00Z",
   "decision_deadline": "2025-12-31T00:00:00Z"
 }
 ```
@@ -124,11 +125,10 @@ flowchart TD
 ---
 
 ## 🧮 Example: `ai_drift_analysis.json`
-
 ```json
 {
   "model_id": "focus_transformer_v2",
-  "run_id": "2025-11-08T14:45Z",
+  "run_id": "2025-11-09T14:45:00Z",
   "metrics": {
     "bias_score": 0.05,
     "f1_change": 0.02,
@@ -144,12 +144,11 @@ flowchart TD
 ---
 
 ## ⚖️ FAIR+CARE Integration Matrix
-
 | Principle | Implementation | Oversight |
-|------------|----------------|------------|
+|---|---|---|
 | **Findable** | Reports indexed by dataset UUID + checksum | `@kfm-data` |
 | **Accessible** | Restricted internal access; public metadata available | `@kfm-accessibility` |
-| **Interoperable** | DCAT / STAC-linked lineage references | `@kfm-architecture` |
+| **Interoperable** | DCAT/STAC-linked lineage references | `@kfm-architecture` |
 | **Reusable** | FAIR+CARE JSON schema standardization | `@kfm-design` |
 | **Collective Benefit** | Council ensures cultural and ethical accountability | `@faircare-council` |
 | **Authority to Control** | Governance decisions traceable and immutable | `@kfm-governance` |
@@ -159,9 +158,8 @@ flowchart TD
 ---
 
 ## 📊 Governance Decision Log Fields
-
 | Field | Type | Description |
-|-------|------|-------------|
+|---|---|---|
 | `decision_id` | string | Unique governance decision UUID |
 | `dataset_id` | string | Dataset under review |
 | `decision` | string | `restage`, `redact`, `archive`, or `retain` |
@@ -172,21 +170,18 @@ flowchart TD
 ---
 
 ## 🧾 Internal Citation
-
 ```text
-Kansas Frontier Matrix (2025). Abandonment Candidate Reports — Validation, Provenance & Ethical Review (v9.9.0).
+Kansas Frontier Matrix (2025). Abandonment Candidate Reports — Validation, Provenance & Ethical Review (v10.0.0).
 FAIR+CARE-compliant governance reporting suite for traceable dataset validation, AI drift monitoring, and council decision auditing within Kansas Frontier Matrix.
 ```
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v9.9.0 | 2025-11-08 | `@kfm-governance` | Added governance_decision_log and expanded AI drift reporting with explainability telemetry. |
-| v9.8.0 | 2025-11-06 | `@kfm-data` | Enhanced FAIR+CARE schema validation; added ethics review format. |
-| v9.7.0 | 2025-11-02 | `@kfm-core` | Established initial reporting pipeline for candidate validation and provenance. |
+|---|---|---|---|
+| v10.0.0 | 2025-11-09 | `@kfm-governance` | Upgraded to v10: telemetry v2 attachment, JSON-LD lineage linking, expanded decision schema. |
+| v9.9.0  | 2025-11-08 | `@kfm-governance` | Governance decision log added; AI drift reporting expanded. |
 
 ---
 
@@ -199,4 +194,3 @@ FAIR+CARE-compliant governance reporting suite for traceable dataset validation,
 [Back to Abandonment Candidates](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
-
