@@ -1,15 +1,17 @@
 ---
 title: "📜 Kansas Frontier Matrix — Data Contracts & Metadata Schema Specification"
 path: "docs/standards/data-contracts.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-data-contracts-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-data-contracts-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -18,174 +20,186 @@ governance_ref: "governance/ROOT-GOVERNANCE.md"
 `docs/standards/data-contracts.md`
 
 **Purpose:** Define the structure, fields, and validation rules for dataset metadata used throughout the Kansas Frontier Matrix (KFM).  
-Data contracts ensure that all datasets — historical, geospatial, textual, and AI-generated — follow the same reproducible and FAIR+CARE-aligned schema.
+Data contracts ensure that all datasets—historical, geospatial, textual, and AI-generated—follow a reproducible, interoperable, and **FAIR+CARE**-aligned schema.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
 [![Status: Standardized](https://img.shields.io/badge/Status-Active-success)]()
-
 </div>
 
 ---
 
 ## 📘 Overview
 
-**Data Contracts** in the Kansas Frontier Matrix serve as formal agreements describing the **schema**, **validation rules**, and **ethical governance requirements** for all datasets ingested into the repository.  
-They ensure that data remains:
-- **Machine-readable**
-- **Traceable**
-- **Ethically governed**
-- **Reproducible**
+**Data Contracts** in KFM are formal agreements that describe the **schema**, **validation gates**, and **ethical governance requirements** for all datasets. They guarantee that data remains:
+- **Machine-readable** (JSON/JSON-LD / Parquet / GeoJSON metadata)  
+- **Traceable** (checksums, provenance, SBOM, release manifest)  
+- **Ethically governed** (CARE metadata, council review)  
+- **Reproducible** (CI validation + telemetry logging)
 
-Each contract functions as a structured JSON or YAML schema validated by the automated FAIR+CARE pipeline (`faircare-validate.yml`) and STAC/DCAT compatibility workflows.
+Contracts are validated by automated workflows: `faircare-validate.yml` and `stac-validate.yml`, with results recorded in the **Governance Ledger** and `focus-telemetry.json`.
 
 ---
 
 ## 🗂️ Directory & Schema Integration
 
-```
+```plaintext
 docs/standards/
-├── data-contracts.md                 # This document (schema and rules)
-├── faircare.md                       # FAIR+CARE validation framework
+├── data-contracts.md                 # This specification
+├── faircare.md                       # FAIR+CARE governance framework
 ├── markdown_rules.md                 # Documentation format standards
 └── governance/ROOT-GOVERNANCE.md     # Ethical governance charter
 ```
 
-**Schema Sources:**
-- STAC 1.0.0 (SpatioTemporal Asset Catalog)
-- DCAT 3.0 (W3C Data Catalog Vocabulary)
-- CIDOC CRM (Cultural heritage ontology)
-- OWL-Time (Temporal ontology)
-- GeoJSON / ISO 19115 (Geospatial metadata)
+**Schema Sources:** STAC 1.0.0 · DCAT 3.0 · CIDOC CRM · OWL-Time · GeoJSON · ISO 19115
+
+---
+
+## 🧭 Contract Lifecycle (Mermaid)
+
+```mermaid
+flowchart LR
+  A["Author Dataset Manifest"] --> B["Schema Validation (stac-validate.yml)"]
+  B --> C["FAIR·CARE Audit (faircare-validate.yml)"]
+  C --> D["Governance Ledger Sync"]
+  D --> E["Release (SBOM + Manifest)"]
+  E --> F["Telemetry Merge (focus-telemetry.json)"]
+```
 
 ---
 
 ## 🧱 Core Metadata Fields
 
 | Field | Type | Description | Required | Example |
-|--------|------|-------------|-----------|----------|
+|---|---|---|---|---|
 | `id` | String | Unique identifier (UUID or human-readable). | ✅ | `"noaa_storms_1950_2025"` |
 | `title` | String | Descriptive dataset name. | ✅ | `"NOAA Storm Events Archive (1950–2025)"` |
-| `description` | String | Summary of dataset contents, scope, and source. | ✅ | `"Contains recorded severe weather events across Kansas."` |
-| `type` | String | Dataset category (`raster`, `vector`, `tabular`, `text`). | ✅ | `"raster"` |
-| `spatial` | Array[Number] | Bounding box `[west, south, east, north]` in WGS84. | ✅ | `[-102.05, 37.0, -94.6, 40.0]` |
-| `temporal` | Object | Time range of dataset validity. | ✅ | `{"start":"1950-01-01","end":"2025-12-31"}` |
-| `license` | String | SPDX-compatible license name or identifier. | ✅ | `"CC-BY-4.0"` |
-| `provenance` | String | Source or origin (URL, archive, or institution). | ✅ | `"https://www.ncdc.noaa.gov/stormevents/"` |
-| `checksum` | String | SHA-256 checksum or pointer for DVC/LFS verification. | ✅ | `"sha256-4a0f...ae3d"` |
-| `keywords` | Array[String] | Keywords for search and indexing. | ⚙️ | `["weather","climate","noaa","kansas"]` |
-| `doi` | String | DOI or persistent identifier (if applicable). | ⚙️ | `"10.5065/D6R78D7V"` |
-| `lineage` | String | Data transformation or processing history. | ⚙️ | `"Derived from NOAA NCEI raw archives (processed v3.1)." `|
-| `format` | String | Primary file format or encoding. | ⚙️ | `"GeoTIFF"` |
-| `care` | Object | Optional CARE ethics metadata (see below). | ⚙️ | `{ "statement": "Approved by Tribal Data Council, 2025" }` |
-| `updated` | String | ISO timestamp for last modification. | ✅ | `"2025-11-05T00:00:00Z"` |
+| `description` | String | Summary of contents, scope, and source. | ✅ | `"Recorded severe weather events across Kansas."` |
+| `type` | String | `raster` \| `vector` \| `tabular` \| `text` \| `model` | ✅ | `"raster"` |
+| `spatial` | Array\<Number> | BBox `[west, south, east, north]` (WGS84). | ✅ | `[-102.05, 37.0, -94.6, 40.0]` |
+| `temporal` | Object | Time range of validity. | ✅ | `{"start":"1950-01-01","end":"2025-12-31"}` |
+| `license` | String | SPDX / CC identifier. | ✅ | `"CC-BY-4.0"` |
+| `provenance` | String | Source or origin reference. | ✅ | `"NOAA NCEI"` |
+| `checksum` | String | SHA-256 digest or pointer (DVC/LFS). | ✅ | `"sha256-4a0f...ae3d"` |
+| `keywords` | Array\<String> | Search terms. | ⚙️ | `["weather","climate","noaa","kansas"]` |
+| `doi` | String | DOI / PID (if exists). | ⚙️ | `"10.5065/D6R78D7V"` |
+| `lineage` | String | Processing history summary. | ⚙️ | `"Derived from NCEI raw archives (proc v3.1)"` |
+| `format` | String | Primary encoding / container. | ⚙️ | `"GeoTIFF"` |
+| `care` | Object | CARE ethics metadata block. | ⚙️ | `{ "status":"approved" }` |
+| `updated` | String | ISO timestamp (UTC). | ✅ | `"2025-11-10T00:00:00Z"` |
+
+> **Note:** For spatial layers, add optional `geo:geometry` (GeoJSON) and for catalogs add `stac_extensions` (array of URIs).
 
 ---
 
 ## ⚖️ CARE Metadata (Ethical Data Layer)
 
-The `care` field ensures datasets comply with cultural and community data governance.
-
 | CARE Field | Type | Description | Example |
-|-------------|------|-------------|----------|
-| `statement` | String | Describes ethical handling, permissions, or approvals. | `"Dataset reviewed and cleared for open publication by FAIR+CARE Council."` |
-| `reviewer` | String | Reviewer or entity responsible for CARE oversight. | `"KFM FAIR+CARE Council"` |
-| `date_reviewed` | String | Date of review completion. | `"2025-10-28"` |
-| `status` | Enum | `approved`, `revision`, or `restricted`. | `"approved"` |
-| `notes` | String | Additional context or ethical guidance. | `"Contains no personally identifiable or culturally restricted data."` |
+|---|---|---|---|
+| `status` | Enum | `approved` \| `revision` \| `restricted` | `"approved"` |
+| `statement` | String | Ethical handling note/permission. | `"Cleared for open publication by Council"` |
+| `reviewer` | String | Reviewing entity. | `"KFM FAIR+CARE Council"` |
+| `date_reviewed` | String | ISO date. | `"2025-10-28"` |
+| `notes` | String | Additional guidance | `"No culturally restricted content"` |
+
+CARE status controls publication gates in CI (restricted → staging hold; approved → release).
 
 ---
 
 ## 🧩 Extended Metadata Fields
 
 | Field | Description | Relation |
-|--------|-------------|-----------|
-| `stac_extensions` | Array of URLs linking to STAC extensions used. | STAC 1.0.0 |
-| `dcat:theme` | Thematic category for DCAT compliance. | DCAT 3.0 |
-| `geo:geometry` | GeoJSON geometry object for spatial reference. | GeoJSON |
+|---|---|---|
+| `stac_extensions` | URIs to STAC extensions in use. | STAC 1.0.0 |
+| `dcat:theme` | Thematic category. | DCAT 3.0 |
+| `geo:geometry` | GeoJSON geometry object. | GeoJSON |
 | `time:hasBeginning` / `time:hasEnd` | Temporal ontology mapping. | OWL-Time |
-| `prov:wasGeneratedBy` | Link to provenance activity (ETL process). | PROV-O |
-| `prov:used` | Reference to input datasets. | PROV-O |
-| `schema:creator` | Dataset creator metadata. | Schema.org |
-| `schema:distribution` | Link to data access endpoints or download URLs. | DCAT 3.0 |
-| `schema:license` | Human-readable license summary. | Schema.org |
+| `prov:wasGeneratedBy` / `prov:used` | Provenance activities & inputs. | PROV-O |
+| `schema:creator` | Dataset creator details. | schema.org |
+| `schema:distribution` | Data access endpoints. | DCAT 3.0 |
+| `schema:license` | Human-readable license text. | schema.org |
 
 ---
 
-## 🧠 Example Data Contract (JSON Schema)
+## 🧠 Example Data Contract (JSON Schema, v10)
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kfm.dev/data-contract.schema.json",
-  "title": "Kansas Frontier Matrix Data Contract",
+  "$id": "https://schemas.kfm.dev/data-contract.v10.schema.json",
+  "title": "Kansas Frontier Matrix Data Contract (v10)",
   "description": "Metadata schema for datasets in the Kansas Frontier Matrix.",
   "type": "object",
-  "required": ["id", "title", "description", "type", "spatial", "temporal", "license", "provenance", "checksum"],
+  "required": ["id", "title", "description", "type", "spatial", "temporal", "license", "provenance", "checksum", "updated"],
   "properties": {
-    "id": { "type": "string" },
-    "title": { "type": "string" },
-    "description": { "type": "string" },
-    "type": { "type": "string" },
-    "spatial": { "type": "array", "items": { "type": "number" }, "minItems": 4 },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "type": { "type": "string", "enum": ["raster","vector","tabular","text","model"] },
+    "spatial": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
     "temporal": {
       "type": "object",
       "required": ["start"],
       "properties": {
         "start": { "type": "string", "format": "date-time" },
         "end": { "type": "string", "format": "date-time" }
-      }
+      },
+      "additionalProperties": false
     },
     "license": { "type": "string" },
     "provenance": { "type": "string" },
-    "checksum": { "type": "string" },
+    "checksum": { "type": "string", "pattern": "^sha256-[A-Fa-f0-9]{6,}$" },
     "keywords": { "type": "array", "items": { "type": "string" } },
+    "doi": { "type": "string" },
+    "lineage": { "type": "string" },
+    "format": { "type": "string" },
     "care": {
       "type": "object",
       "properties": {
+        "status": { "type": "string", "enum": ["approved","revision","restricted"] },
         "statement": { "type": "string" },
         "reviewer": { "type": "string" },
         "date_reviewed": { "type": "string", "format": "date" },
-        "status": { "type": "string", "enum": ["approved","revision","restricted"] },
         "notes": { "type": "string" }
-      }
+      },
+      "additionalProperties": false
     },
     "updated": { "type": "string", "format": "date-time" }
-  }
+  },
+  "additionalProperties": false
 }
 ```
 
 ---
 
-## 🧮 Validation Workflow
+## 🧪 Validation Workflow
 
 | Workflow | Function | Output |
-|-----------|-----------|---------|
-| `faircare-validate.yml` | Enforces schema completeness and CARE ethics compliance. | `reports/fair/faircare_results.ndjson` |
-| `stac-validate.yml` | Checks STAC/DCAT structural compatibility. | `reports/self-validation/stac/_summary.json` |
-| `docs-lint.yml` | Validates documentation completeness and YAML front-matter. | `reports/self-validation/docs/lint_summary.json` |
-| `telemetry-export.yml` | Publishes validation results to dashboard. | `releases/v9.7.0/focus-telemetry.json` |
+|---|---|---|
+| `faircare-validate.yml` | Enforces schema completeness & CARE ethics gates | `reports/fair/faircare_results.ndjson` |
+| `stac-validate.yml` | STAC/DCAT structural compatibility checks | `reports/self-validation/stac/_summary.json` |
+| `docs-lint.yml` | Confirms front-matter + section order in docs | `reports/self-validation/docs/lint_summary.json` |
+| `telemetry-export.yml` | Publishes results to dashboards | `releases/v10.0.0/focus-telemetry.json` |
 
 ---
 
 ## 🧾 Governance Integration
 
-Data contracts are reviewed quarterly by the FAIR+CARE Council and documented in:
-
-- `reports/audit/governance-ledger.json`
-- `reports/audit/release-manifest-log.json`
+Quarterly review outcomes are logged to:
+- `reports/audit/governance-ledger.json`  
+- `reports/audit/release-manifest-log.json`  
 - `docs/reports/telemetry/governance_scorecard.json`
 
-**Example Governance Ledger Entry:**
+**Example Governance Ledger Entry**
 ```json
 {
   "event": "data_contract_review",
   "dataset_id": "noaa_storms_1950_2025",
   "status": "approved",
   "reviewer": "FAIR+CARE Council",
-  "timestamp": "2025-11-05T19:15:00Z",
-  "telemetry_ref": "releases/v9.7.0/focus-telemetry.json"
+  "timestamp": "2025-11-10T16:05:00Z",
+  "telemetry_ref": "releases/v10.0.0/focus-telemetry.json"
 }
 ```
 
@@ -194,36 +208,36 @@ Data contracts are reviewed quarterly by the FAIR+CARE Council and documented in
 ## ⚖️ FAIR+CARE Compliance Mapping
 
 | Principle | Data Contract Requirement |
-|------------|---------------------------|
-| **Findable** | Unique dataset `id`, `title`, and discoverable metadata. |
-| **Accessible** | Licensed under open terms (CC-BY 4.0 or Public Domain). |
-| **Interoperable** | Metadata conforms to STAC, DCAT, and schema.org. |
-| **Reusable** | Provenance, lineage, and checksum integrity recorded. |
-| **CARE** | Contains `care` block for cultural or community data governance. |
+|---|---|
+| **Findable** | Unique `id` + `title`; JSON-LD/STAC/DCAT discoverability |
+| **Accessible** | Open license; stable distribution links |
+| **Interoperable** | STAC/DCAT/CIDOC/PROV-O alignment |
+| **Reusable** | Provenance, lineage, checksum integrity |
+| **CARE** | `care` block with status, reviewer, and statement |
 
 ---
 
-## 🧩 Data Contract Evolution
+## 🔁 Data Contract Evolution
 
-All changes to this schema must:
-1. Be versioned under semantic versioning (e.g. v1.0.0 → v1.1.0).  
-2. Include changelog entries in `reports/audit/release-manifest-log.json`.  
-3. Pass automated schema validation prior to merge.  
-4. Receive governance council approval if changes affect CARE data fields.
+All changes must:
+1. Use semantic versioning (e.g., v10.0.0 → v10.1.0).  
+2. Add changelog entries to `reports/audit/release-manifest-log.json`.  
+3. Pass automated schema validation before merge.  
+4. Obtain Council approval for any CARE-affecting fields.
 
-**Schema Change Workflow:**
-- Propose change → Governance review → Approval → Merge → Telemetry update
+**Change Flow:** Propose → Council Review → Approve → Merge → Telemetry Update
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
+|---:|---|---|---|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; added stricter `checksum` pattern, `type:model`, JSON-LD/ontology notes, and telemetry v2 refs. |
 | v9.7.0 | 2025-11-05 | A. Barta | Defined universal KFM data contract schema with FAIR+CARE integration. |
 | v9.5.0 | 2025-10-20 | A. Barta | Added CARE metadata and governance linkage. |
 | v9.3.0 | 2025-08-12 | KFM Core Team | Improved STAC/DCAT compatibility mapping. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Established data contract and schema validation baseline. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Established schema validation baseline. |
 
 ---
 
