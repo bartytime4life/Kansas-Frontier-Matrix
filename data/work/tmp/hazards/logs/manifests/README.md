@@ -61,10 +61,10 @@ data/work/tmp/hazards/logs/manifests/
 ## ⚙️ Manifest Workflow
 ```mermaid
 flowchart TD
-    "ETL & AI Outputs (data/work/tmp/hazards/*)" --> "Checksum Generation (SHA-256 Registry)"
-    "Checksum Generation (SHA-256 Registry)" --> "FAIR+CARE Validation and Ethics Crosswalk"
-    "FAIR+CARE Validation and Ethics Crosswalk" --> "Governance Ledger Sync (data/reports/audit/data_provenance_ledger.json)"
-    "Governance Ledger Sync (data/reports/audit/data_provenance_ledger.json)" --> "Manifest Publication + Immutable Registration"
+    A["ETL and AI Outputs (data work tmp hazards)"] --> B["Checksum Generation (SHA-256 Registry)"]
+    B["Checksum Generation (SHA-256 Registry)"] --> C["FAIR and CARE Validation and Ethics Crosswalk"]
+    C["FAIR and CARE Validation and Ethics Crosswalk"] --> D["Governance Ledger Sync (data reports audit data_provenance_ledger.json)"]
+    D["Governance Ledger Sync (data reports audit data_provenance_ledger.json)"] --> E["Manifest Publication and Immutable Registration"]
 ```
 
 ### Workflow Description
