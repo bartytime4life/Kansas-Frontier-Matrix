@@ -1,17 +1,18 @@
 ---
 title: "🗄️ Kansas Frontier Matrix — Data Architecture & Governance Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../releases/v9.7.0/manifest.zip"
+sbom_ref: "../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/data-architecture-v9.json"
+telemetry_ref: "../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/data-architecture-v10.json"
 governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
@@ -20,8 +21,8 @@ license: "CC-BY 4.0"
 `data/README.md`
 
 **Purpose:**  
-Documents the **complete data lifecycle**, governance structure, and FAIR+CARE-compliant data layers within the **Kansas Frontier Matrix (KFM)**.  
-Unifies environmental, historical, and geospatial data into a **traceable, ethics-aligned, reproducible** system.
+Document the **complete data lifecycle**, governance structure, and FAIR+CARE-compliant data layers within the **Kansas Frontier Matrix (KFM)**.  
+Unify environmental, historical, and geospatial data into a **traceable, ethics-aligned, reproducible** system.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../LICENSE)
@@ -34,7 +35,6 @@ Unifies environmental, historical, and geospatial data into a **traceable, ethic
 ---
 
 ## 📘 Overview
-
 The **Data Layer Architecture** defines how raw, processed, and AI-validated datasets are **structured, versioned, and governed** across KFM.  
 It integrates **FAIR+CARE principles**, **ISO metadata**, and **STAC/DCAT 3.0** for discoverability and end-to-end provenance.
 
@@ -47,13 +47,12 @@ It integrates **FAIR+CARE principles**, **ISO metadata**, and **STAC/DCAT 3.0** 
 ---
 
 ## 🧭 Data Architecture Framework
-
 ```mermaid
 flowchart TD
     A["Raw Data"] --> B["Work Layer"]
     B --> C["Staging Layer"]
     C --> D["Processed Layer"]
-    D --> E["Catalogs"]
+    D --> E["Catalogs (STAC/DCAT)"]
 ```
 
 ### Data Flow Summary
@@ -66,7 +65,6 @@ flowchart TD
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/
 ├── README.md                        # This file — data architecture and governance overview
@@ -87,7 +85,6 @@ data/
 ---
 
 ## 🧱 Data Layer Descriptions
-
 | Layer | Description | Purpose |
 |---|---|---|
 | **Raw** | Direct downloads from original sources with source metadata. | Preserve transparency and original provenance. |
@@ -101,15 +98,14 @@ data/
 
 ---
 
-## 🧩 FAIR+CARE Governance Integration
-
+## 🧩 Governance Integration (FAIR+CARE)
 | Principle | Implementation | Verified By |
 |---|---|---|
-| **Findable** | Unique IDs, STAC/DCAT entries, cross-linked manifests and SBOMs. | `@kfm-data` |
+| **Findable** | Unique IDs, STAC/DCAT entries, cross-linked manifests & SBOMs. | `@kfm-data` |
 | **Accessible** | Open licensing (CC-BY or MIT as applicable), machine-readable catalogs. | `@kfm-accessibility` |
 | **Interoperable** | JSON, CSV, GeoJSON, Parquet; STAC 1.0, DCAT 3.0, ISO 19115. | `@kfm-architecture` |
 | **Reusable** | Versioned datasets with schema and provenance hashes. | `@kfm-design` |
-| **Collective Benefit** | Equitable public access to environmental and cultural data. | `@faircare-council` |
+| **Collective Benefit** | Equitable public access to environmental & cultural data. | `@faircare-council` |
 | **Authority to Control** | Council review of dataset certifications and deltas. | `@kfm-governance` |
 | **Responsibility** | Audit trails link assets to checksums and governance logs. | `@kfm-security` |
 | **Ethics** | Sensitive data review and redaction workflows. | `@kfm-ethics` |
@@ -119,7 +115,6 @@ data/
 ---
 
 ## 🧠 Data Validation & Provenance Framework
-
 | Process | Description | Output |
 |---|---|---|
 | **Schema Validation** | Enforce Data Contract v3 and domain schemas. | `reports/validation/schema_validation_summary.json` |
@@ -131,40 +126,37 @@ data/
 ---
 
 ## 📊 Example Data Governance Record
-
 ```json
 {
-  "id": "work_hazards_v9.7.0",
+  "id": "work_hazards_v10.0.0",
   "domain": "hazards",
-  "records_processed": 25342,
+  "records_processed": 26104,
   "checksum_verified": true,
   "fairstatus": "certified",
-  "schema_version": "v3.0.1",
-  "ai_explainability_score": 0.989,
+  "schema_version": "v3.1.0",
+  "ai_explainability_score": 0.992,
   "governance_registered": true,
   "ledger_ref": "data/reports/audit/data_provenance_ledger.json",
-  "timestamp": "2025-11-06T19:25:00Z"
+  "timestamp": "2025-11-09T19:25:00Z"
 }
 ```
 
 ---
 
 ## ⚙️ Data Quality & Sustainability Metrics
-
 | Metric | Target | Verified By |
 |---|---|---|
 | Schema Conformance | ≥ 99% | `@kfm-validation` |
 | FAIR+CARE Certification | 100% | `@faircare-council` |
 | Provenance Retention | Permanent | `@kfm-governance` |
 | Dataset Reusability | ≥ 95% | `@kfm-data` |
-| Energy Efficiency | ≤ 20 Wh per ETL run | `@kfm-sustainability` |
+| Energy Efficiency | ≤ 18 Wh per ETL run | `@kfm-sustainability` |
 
-**Telemetry rollup:** `../releases/v9.7.0/focus-telemetry.json`
+**Telemetry rollup:** `../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainable Data Practices
-
 | Practice | Description | Compliance |
 |---|---|---|
 | **Immutable Governance Logs** | Cryptographically verified and permanent ledger entries. | ISO 37000 |
@@ -175,9 +167,8 @@ data/
 ---
 
 ## 🧾 Internal Use Citation
-
 ```text
-Kansas Frontier Matrix (2025). Data Architecture & Governance Overview (v9.7.0).
+Kansas Frontier Matrix (2025). Data Architecture & Governance Overview (v10.0.0).
 Defines the multi-layered, FAIR+CARE-certified data management framework for Kansas Frontier Matrix.
 Ensures transparency, reproducibility, and ethical data stewardship across environmental, spatial, and historical domains.
 ```
@@ -185,10 +176,10 @@ Ensures transparency, reproducibility, and ethical data stewardship across envir
 ---
 
 ## 🕰️ Version History
-
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v9.7.0 | 2025-11-06 | `@kfm-data` | Upgraded to v9.7.0; badges hardened; catalogs and telemetry paths refreshed; sustainability targets aligned. |
+| v10.0.0 | 2025-11-09 | `@kfm-data` | Upgraded to v10: streaming STAC support, governance & telemetry schema v2, sustainability targets tightened. |
+| v9.7.0 | 2025-11-06 | `@kfm-data` | Telemetry paths refreshed; sustainability targets aligned. |
 | v9.6.0 | 2025-11-03 | `@kfm-data` | Telemetry-linked FAIR+CARE auditing added. |
 | v9.5.0 | 2025-11-02 | `@kfm-data` | Energy efficiency and checksum validation metrics added. |
 | v9.3.2 | 2025-10-28 | `@kfm-core` | Established baseline data governance structure and STAC integration. |
