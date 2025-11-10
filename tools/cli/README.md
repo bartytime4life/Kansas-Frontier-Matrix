@@ -1,16 +1,16 @@
 ---
 title: "💻 Kansas Frontier Matrix — Command Line Interface Tools (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/cli/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-cli-governance-v1.json"
-json_export: "../../../releases/v9.7.0/tools-cli-governance.meta.json"
+telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/tools-cli-governance-v2.json"
+json_export: "../../../releases/v10.0.0/tools-cli-governance.meta.json"
 validation_reports:
   - "../../../reports/self-validation/tools-cli-governance-validation.json"
   - "../../../reports/audit/cli-faircare-validation.json"
@@ -21,12 +21,12 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 💻 **Kansas Frontier Matrix — Command Line Interface Tools**
+# 💻 **Kansas Frontier Matrix — Command Line Interface Tools**  
 `tools/cli/README.md`
 
 **Purpose:**  
 FAIR+CARE-certified command-line utilities that enable reproducible, ethical, and provenance-tracked automation across all Kansas Frontier Matrix (KFM) governance pipelines.  
-These tools empower users to validate, audit, and synchronize datasets, AI explainability runs, and sustainability metrics under MCP-DL v6.3 standards.
+These tools empower users to validate, audit, and synchronize datasets, AI explainability runs, and sustainability metrics under **MCP-DL v6.3** standards.
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../docs/architecture/repo-focus.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
@@ -44,11 +44,11 @@ Every command enforces transparency, accessibility, and reproducibility — ensu
 
 ---
 
-### Core Responsibilities:
-- Execute FAIR+CARE and schema validation tasks.  
-- Synchronize provenance and governance ledgers.  
-- Manage AI explainability and bias audit pipelines.  
-- Generate telemetry and sustainability metrics reports.  
+### Core Responsibilities
+- Execute **FAIR+CARE** and schema validation tasks.  
+- Synchronize **provenance and governance** ledgers.  
+- Manage **AI explainability** and bias audit pipelines.  
+- Generate **telemetry and sustainability** metrics reports.  
 - Enable automated dataset certification under open governance.  
 
 ---
@@ -73,11 +73,11 @@ tools/cli/
 
 ```mermaid
 flowchart TD
-A["User Command Input"] --> B["CLI Dispatcher (kfm_cli.py)"]
-B --> C["Validator Runner (validator_runner.py)"]
-C --> D["Metadata Manager (metadata_manager.py)"]
-D --> E["Provenance Tracker (provenance_tracker.py)"]
-E --> F["Governance Ledger Sync + Telemetry Update"]
+    A["User Command Input"] --> B["CLI Dispatcher (kfm_cli.py)"]
+    B --> C["Validator Runner (validator_runner.py)"]
+    C --> D["Metadata Manager (metadata_manager.py)"]
+    D --> E["Provenance Tracker (provenance_tracker.py)"]
+    E --> F["Governance Ledger Sync and Telemetry Update"]
 ```
 
 1. **Dispatch:** CLI parses and routes commands.  
@@ -92,7 +92,7 @@ E --> F["Governance Ledger Sync + Telemetry Update"]
 
 ```json
 {
-  "id": "cli_registry_v9.7.0",
+  "id": "cli_registry_v10.0.0",
   "commands_executed": [
     "kfm validate --dataset climate",
     "kfm ledger sync",
@@ -104,7 +104,7 @@ E --> F["Governance Ledger Sync + Telemetry Update"]
   "telemetry_logged": true,
   "governance_registered": true,
   "validator": "@kfm-cli-tools",
-  "created": "2025-11-05T12:00:00Z",
+  "created": "2025-11-10T12:00:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -125,16 +125,14 @@ E --> F["Governance Ledger Sync + Telemetry Update"]
 | **Ethics** | Commands audited to ensure transparency and inclusivity. | @kfm-ethics |
 
 Records stored in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
 
 ---
 
 ## ⚙️ Key CLI Commands
 
 | Command | Description | Output |
-|---------|--------------|--------|
+|---------|-------------|--------|
 | `kfm validate --dataset <name>` | Performs FAIR+CARE, checksum, and schema validation. | Validation Report |
 | `kfm ledger sync` | Syncs local provenance with global governance ledger. | Ledger Log |
 | `kfm checksum verify` | Verifies data integrity and file immutability. | Checksum Report |
@@ -169,14 +167,14 @@ Automation managed by `cli_cleanup.yml`.
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
 Telemetry tracked in:  
-`releases/v9.7.0/focus-telemetry.json`
+`releases/v10.0.0/focus-telemetry.json`
 
 ---
 
-## 🧾 Internal Use Citation
+## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Command Line Interface Tools (v9.7.0).
+Kansas Frontier Matrix (2025). Command Line Interface Tools (v10.0.0).
 Governance-grade CLI for FAIR+CARE validation, checksum verification, AI auditing, and ledger synchronization.
 Compliant with MCP-DL v6.3, ISO 19115, and open FAIR+CARE automation standards.
 ```
@@ -186,17 +184,20 @@ Compliant with MCP-DL v6.3, ISO 19115, and open FAIR+CARE automation standards.
 ## 🕰️ Version History
 
 | Version | Date | Summary | Maintainer |
-|----------|------|----------|-------------|
-| v9.7.0 | 2025-11-05 | Upgraded telemetry schema and integrated batch workflow automation. | CLI Governance Team |
-| v9.6.0 | 2025-11-03 | Added explainability audit triggers and telemetry linkages. | Design Systems Team |
-| v9.5.0 | 2025-11-02 | Introduced metadata lineage sync and provenance registry hooks. | Governance Council |
-| v9.3.2 | 2025-10-28 | Established CLI framework for FAIR+CARE compliance. | Core Maintainers |
+|----------|------|--------|------------|
+| v10.0.0 | 2025-11-10 | Upgraded telemetry schema v2; batch launcher hardened; governance paths aligned. | CLI Governance Team |
+| v9.7.0  | 2025-11-05 | Telemetry schema and batch workflow automation. | CLI Governance Team |
+| v9.6.0  | 2025-11-03 | Added explainability audit triggers and telemetry linkages. | Design Systems Team |
+| v9.5.0  | 2025-11-02 | Introduced metadata lineage sync and provenance registry hooks. | Governance Council |
+| v9.3.2  | 2025-10-28 | Established CLI framework for FAIR+CARE compliance. | Core Maintainers |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix** · *Command Automation × FAIR+CARE Governance × Provenance Ethics*  
-[🔗 Repository](../../) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — MIT License  
+
+[Back to Tools Index](../README.md) · [Docs Portal](../../../docs/) · [Governance Ledger](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
