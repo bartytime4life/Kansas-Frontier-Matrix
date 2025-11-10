@@ -1,15 +1,15 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — Processed Spatial Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/processed/spatial/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/data-work-processed-spatial-v9.json"
+telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-work-processed-spatial-v10.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0 / FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Final FAIR+CARE-certified repository for all **spatial datasets** produced by KFM ETL and governance workflows.  
-Contains harmonized, validated, and checksum-verified spatial data ready for publication, analytics, and **STAC/DCAT** integration.
+Contains harmonized, validated, and checksum-verified spatial data ready for publication, analytics, and **STAC/DCAT** integration—now with **Streaming STAC** and **telemetry v2** references.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/architecture/README.md)
 [![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Spatial%20Certified-gold.svg)](../../../../docs/standards/faircare-validation.md)
@@ -35,10 +35,14 @@ Contains harmonized, validated, and checksum-verified spatial data ready for pub
 ---
 
 ## 📘 Overview
-
 The **Processed Spatial Layer** provides the authoritative spatial datasets of KFM.  
 Each file is **schema-aligned**, **CRS-normalized (EPSG:4326)**, and **FAIR+CARE**-certified for open-data governance.  
-It supports geospatial analysis, visualization, and Focus Mode AI-assisted exploration.
+It supports geospatial analysis, visualization, and Focus Mode v2 AI-assisted exploration.
+
+**v10 Enhancements**
+- Streaming STAC-aware publication for live/rolling datasets (e.g., elevation mosaics, dynamic landcover updates).  
+- Telemetry v2 bundling (energy/CO₂, validation coverage) with certification payloads.  
+- Topology QA expanded (sliver/overlap checks) for vector outputs.
 
 ### Core Objectives
 - Host validated, checksum-verified geospatial data.  
@@ -49,30 +53,28 @@ It supports geospatial analysis, visualization, and Focus Mode AI-assisted explo
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/processed/spatial/
 ├── README.md
-├── climate_boundaries_v9.7.0.geojson       # Climate analysis region boundaries
-├── landcover_classifications_v9.7.0.parquet# Harmonized landcover (raster→vector features)
-├── elevation_tileset_v9.7.0.tif            # High-resolution elevation raster (DEM)
-└── metadata.json                            # FAIR+CARE provenance metadata & checksum registry
+├── climate_boundaries_v10.0.0.geojson         # Climate analysis region boundaries
+├── landcover_classifications_v10.0.0.parquet  # Harmonized landcover (raster→vector features)
+├── elevation_tileset_v10.0.0.tif              # High-resolution elevation raster (DEM/COG)
+└── metadata.json                               # FAIR+CARE provenance metadata & checksum registry
 ```
 
 ---
 
 ## ⚙️ Spatial Processing Workflow
-
 ```mermaid
 flowchart TD
-    A["Validated Spatial (data/work/staging/spatial/)"] --> B["CRS Normalization (EPSG:4326)"]
-    B --> C["FAIR+CARE Certification + Provenance Registration"]
-    C --> D["Checksum Verification + Metadata Linking"]
-    D --> E["Publication + STAC/DCAT Sync"]
+    "Validated Spatial (data/work/staging/spatial/)" --> "CRS Normalization (EPSG:4326)"
+    "CRS Normalization (EPSG:4326)" --> "FAIR+CARE Certification + Provenance Registration"
+    "FAIR+CARE Certification + Provenance Registration" --> "Checksum Verification + Metadata Linking"
+    "Checksum Verification + Metadata Linking" --> "Publication + STAC/DCAT Sync"
 ```
 
 ### Steps
-1. **Normalize** — Reproject to **EPSG:4326**.  
+1. **Normalize** — Reproject to **EPSG:4326**; enforce topology rules.  
 2. **Certify** — FAIR+CARE ethics & accessibility validation.  
 3. **Verify** — Compute SHA-256; log to governance registry.  
 4. **Publish** — Sync to catalogs for discovery & reuse.
@@ -80,19 +82,23 @@ flowchart TD
 ---
 
 ## 🧩 Example Spatial Metadata Record
-
 ```json
 {
-  "id": "processed_spatial_landcover_v9.7.0",
+  "id": "processed_spatial_landcover_v10.0.0",
   "source_stage": "data/work/staging/spatial/",
-  "records_total": 18523,
-  "schema_version": "v3.1.1",
+  "records_total": 18862,
+  "schema_version": "v3.2.0",
   "crs": "EPSG:4326",
   "checksum_sha256": "sha256:b9e4f8d2a7b6c3f1a5d9e2c4a8f3b7a9e1d6c7b2f4a3e5d1c8b9f7a6e3a2d5f4",
   "fairstatus": "certified",
   "validator": "@kfm-spatial-lab",
   "license": "CC-BY 4.0",
-  "created": "2025-11-06T23:50:00Z",
+  "created": "2025-11-09T23:50:00Z",
+  "telemetry": {
+    "energy_wh": 8.7,
+    "co2_g": 12.1,
+    "validation_coverage_pct": 100
+  },
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -100,9 +106,8 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Spatial Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
+|---|---|---|
 | **Findable** | STAC/DCAT catalog entries with bbox & keywords. | `@kfm-data` |
 | **Accessible** | Open GeoJSON/GeoTIFF/Parquet; HTTP range-gets for rasters. | `@kfm-accessibility` |
 | **Interoperable** | EPSG:4326 CRS; ISO 19115 + STAC 1.0 metadata. | `@kfm-architecture` |
@@ -118,9 +123,8 @@ flowchart TD
 ---
 
 ## ⚙️ Validation & Certification Artifacts
-
 | Artifact                          | Description                             | Format |
-|-----------------------------------|-----------------------------------------|--------|
+|---|---|---|
 | `stac_spatial_compliance.json`    | STAC 1.0 metadata validation            | JSON   |
 | `geometry_validation_report.json` | Topology/geometry QA results            | JSON   |
 | `faircare_spatial_audit.json`     | Ethics & accessibility certification    | JSON   |
@@ -131,45 +135,41 @@ Automation: `spatial_processed_sync.yml`.
 
 ---
 
-## 📊 Processed Spatial Dataset Summary (v9.7.0)
-
+## 📊 Processed Spatial Dataset Summary (v10.0.0)
 | Dataset                     | Format   | CRS       | FAIR+CARE | License  |
-|----------------------------|----------|-----------|-----------|----------|
+|---|---|---|---|---|
 | Climate Boundaries         | GeoJSON  | EPSG:4326 | ✅        | CC-BY 4.0 |
 | Landcover Classifications  | Parquet  | EPSG:4326 | ✅        | CC-BY 4.0 |
-| Elevation Tileset          | GeoTIFF  | EPSG:4326 | ✅        | CC-BY 4.0 |
+| Elevation Tileset          | GeoTIFF/COG | EPSG:4326 | ✅      | CC-BY 4.0 |
 
 ---
 
 ## ♻️ Retention & Sustainability
-
-| Data Type            | Retention | Policy |
-|---------------------|----------:|--------|
+| Data Type | Retention | Policy |
+|---|---:|---|
 | Processed Spatial   | Permanent | Canonical FAIR+CARE-certified data. |
 | Metadata            | Permanent | Governance lineage & checksums.     |
 | Validation Reports  | 365 Days  | Ethics & schema verification.       |
 | FAIR+CARE Reports   | Permanent | Certification tracking.             |
 
-**Telemetry:** `../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry:** `../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
-
 ```text
-Kansas Frontier Matrix (2025). Processed Spatial Data (v9.7.0).
+Kansas Frontier Matrix (2025). Processed Spatial Data (v10.0.0).
 FAIR+CARE-certified spatial datasets (landcover, elevation, climate boundaries) for Kansas.
-Checksum-verified, ISO-aligned, and governance-certified for reproducible geospatial research and open mapping.
+Checksum-verified, ISO-aligned, and governance-certified for reproducible geospatial research, Focus Mode v2 analytics, and open mapping.
 ```
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date       | Author           | Summary |
-|--------:|------------|------------------|---------|
-| v9.7.0  | 2025-11-06 | `@kfm-spatial`   | Upgraded to v9.7.0; telemetry/schema refs aligned; filenames normalized; badges hardened. |
-| v9.6.0  | 2025-11-03 | `@kfm-spatial`   | Added STAC/DCAT integration & checksum registry. |
+|---|---|---|---|
+| v10.0.0  | 2025-11-09 | `@kfm-spatial`   | Upgraded to v10: Streaming STAC awareness, telemetry v2 bundling, topology QA expansion. |
+| v9.7.0   | 2025-11-06 | `@kfm-spatial`   | Telemetry/schema refs aligned; filenames normalized; badges hardened. |
 
 ---
 
