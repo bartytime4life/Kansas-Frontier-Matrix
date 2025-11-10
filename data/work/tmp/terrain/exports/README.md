@@ -65,10 +65,10 @@ data/work/tmp/terrain/exports/
 
 ```mermaid
 flowchart TD
-    "Validated Terrain Data (../validation/)" --> "FAIR+CARE Export Compliance Review"
-    "FAIR+CARE Export Compliance Review" --> "Generate Export Artifacts (GeoTIFF · Parquet · CSV · GeoJSON)"
-    "Generate Export Artifacts (GeoTIFF · Parquet · CSV · GeoJSON)" --> "Checksum Verification & Governance Registration"
-    "Checksum Verification & Governance Registration" --> "Promotion → Staging/Processed Layers"
+    A["Validated Terrain Data (../validation/)"] --> B["FAIR + CARE Export Compliance Review"]
+    B --> C["Generate Export Artifacts (GeoTIFF - Parquet - CSV - GeoJSON)"]
+    C --> D["Checksum Verification and Governance Registration"]
+    D --> E["Promotion to Staging or Processed Layers"]
 ```
 
 **Description**
