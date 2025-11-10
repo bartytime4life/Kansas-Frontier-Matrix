@@ -1,24 +1,26 @@
 ---
 title: "🧪 Kansas Frontier Matrix — Experiment Documentation Template"
 path: "docs/templates/experiment.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.0.0"
+last_updated: "2025-11-10"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-experiment-template-v1.json"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-experiment-template-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🧪 **Kansas Frontier Matrix — Experiment Documentation Template**
+# 🧪 **Kansas Frontier Matrix — Experiment Documentation Template**  
 `docs/templates/experiment.md`
 
-**Purpose:** Provide a standardized format for documenting data, AI, or research experiments within the Kansas Frontier Matrix (KFM) framework.  
-Ensures all experiments follow **Master Coder Protocol (MCP v6.3)**, **FAIR+CARE**, and **reproducible science** principles.
+**Purpose:** Provide a standardized, machine-validated format for documenting **data, AI, and research experiments** within the Kansas Frontier Matrix (KFM).  
+Aligned with **Master Coder Protocol (MCP-DL v6.3)**, **FAIR+CARE**, and **ISO 19115** for fully reproducible science and ethical transparency.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -31,10 +33,10 @@ Ensures all experiments follow **Master Coder Protocol (MCP v6.3)**, **FAIR+CARE
 
 ## 🧭 Overview
 
-This template standardizes how experiments are described across the KFM ecosystem — whether testing new ETL processes, AI models, validation workflows, or FAIR+CARE compliance mechanisms.  
-All experiments using this template are version-controlled, auditable, and compatible with CI/CD validation pipelines.
+Use this template to document experiments for **ETL**, **AI/ML**, **validation**, or **governance** workflows.  
+All experiments created from this template are: versioned, CI-validated, FAIR+CARE-audited, checksum-tracked, and registered to the Governance Ledger.
 
-Use this format when creating new documentation files under:
+**Recommended location:**  
 ```
 docs/experiments/
 ```
@@ -43,7 +45,7 @@ docs/experiments/
 
 ## 🧱 Metadata (YAML Front-Matter)
 
-Each experiment document must begin with a YAML header containing:
+Each experiment must begin with a YAML header:
 
 ```yaml
 ---
@@ -56,7 +58,10 @@ commit_sha: "<commit-hash>"
 sbom_ref: "releases/vX.Y.Z/sbom.spdx.json"
 manifest_ref: "releases/vX.Y.Z/manifest.zip"
 telemetry_ref: "releases/vX.Y.Z/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/docs-experiment-[vN].json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 ```
 
@@ -64,146 +69,144 @@ governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 
 ## 🎯 Objective
 
-Clearly define the purpose of this experiment.
+State the purpose and expected outcomes.
 
-**Example:**
-> To evaluate the accuracy of OCR-based entity extraction across 19th-century Kansas newspaper archives using the spaCy NER pipeline.
+**Example**  
+> Evaluate OCR→NER accuracy on 19th-century Kansas newspapers using a spaCy v3.7 pipeline and measure FAIR+CARE accessibility impacts.
 
 ---
 
 ## 🔬 Methodology
 
-Describe data sources, procedures, tools, and environments used.
+Describe **data**, **procedures**, **tools**, and **runtime environment**.
 
 | Component | Description |
-|------------|-------------|
-| **Data Source(s)** | e.g. NOAA, USGS, or Kansas Historical Society |
-| **Processing Tools** | e.g. Python 3.11, spaCy v3.7, GDAL |
-| **Workflow** | ETL → NLP → FAIR+CARE Validation |
-| **Environment** | Docker image, compute specs, environment variables |
+|---|---|
+| **Data Sources** | e.g., NOAA, USGS, KHS, NARA |
+| **Processing Tools** | Python 3.11, GDAL 3.8, spaCy 3.7, PyTorch 2.4 |
+| **Workflow** | Raw → ETL → Transform → Validate → Publish |
+| **Environment** | Docker image digest, CPU/GPU specs, env vars |
 
-**Example Code Snippet:**
+**Example commands**
 ```bash
-python src/pipelines/etl/noaa_ingest.py --source=data/raw/noaa_1950_2020.csv
-python src/ai/models/focus_transformer_v1/train.py --epochs=15
+python src/pipelines/etl/noaa_ingest.py --source data/raw/noaa_1950_2025.csv
+python src/ai/models/focus_transformer_v1/train.py --epochs 15 --lr 5e-4
 ```
 
 ---
 
-## 📊 Data & Parameters
+## ⚙️ Configuration & Parameters
 
-Document the datasets, configurations, and parameters used in the experiment.
+Document all tunables and critical settings.
 
 | Parameter | Description | Value |
-|------------|-------------|-------|
-| `learning_rate` | Model training rate | `0.0005` |
+|---|---|---|
+| `learning_rate` | Optimizer step size | `0.0005` |
 | `epochs` | Training iterations | `20` |
-| `ocr_model` | Text recognition model | `tesseract-v5.3.0` |
-| `dataset_size` | Input record count | `125,000` |
-| `spatial_extent` | Geographic coverage | `[-102.05, 37.0, -94.6, 40.0]` |
+| `ocr_model` | OCR engine/version | `tesseract-5.3.0` |
+| `dataset_size` | Input records | `125000` |
+| `spatial_extent` | Bounding box (WGS84) | `[-102.05, 37.00, -94.60, 40.00]` |
 
-Attach relevant dataset manifest references:
+**Referenced manifests**  
 ```
 data/sources/noaa_storms_1950_2025.json
+data/checksums/manifest.json
 ```
 
 ---
 
-## 🧮 Results
+## 📊 Results
 
-Summarize key findings and outputs.
+Summarize findings with key metrics, tables, or figures.
 
 | Metric | Description | Value |
-|---------|-------------|-------|
-| Accuracy | OCR entity extraction accuracy | 94.6% |
-| Precision | Named entity precision | 92.8% |
-| Recall | Named entity recall | 95.3% |
+|---|---|---|
+| Accuracy | OCR→NER accuracy | 94.6% |
+| Precision | NER precision | 92.8% |
+| Recall | NER recall | 95.3% |
 | F1 Score | Overall performance | 94.0% |
 
-Provide charts, graphs, or tables where applicable (optional):
+**Optional flowchart (Mermaid, quoted labels only)**
 ```mermaid
-graph TD
-A["OCR Input"] --> B["NER Model"]
-B --> C["Entity Validation"]
-C --> D["Graph Integration"]
+flowchart TD
+    A["OCR Input"] --> B["NER Model"]
+    B["NER Model"] --> C["Entity Validation"]
+    C["Entity Validation"] --> D["Graph Integration"]
 ```
 
 ---
 
 ## 🧠 Discussion
 
-Interpret the results and discuss implications.
+Interpret results, note limitations, and propose future work.
 
-**Example:**
-> The OCR + NER pipeline performed consistently across diverse document formats. Errors occurred mainly in degraded scans or historic typography. Future models may use transformer-based OCR or domain fine-tuning to improve extraction quality.
+**Example**  
+> Performance degrades on low-contrast scans; consider transformer-OCR fine-tuning and adaptive thresholding for 1890s typography.
 
 ---
 
 ## 🧩 FAIR+CARE Validation
 
-Each experiment must document compliance with data ethics and reproducibility.
+Record ethics and openness compliance.
 
-| Principle | Evaluation |
-|------------|-------------|
-| **Findable** | Dataset and code included in STAC/DCAT catalog. |
-| **Accessible** | All scripts and data available under MIT / CC-BY. |
-| **Interoperable** | Outputs adhere to STAC and GeoJSON standards. |
-| **Reusable** | Experiment versioned and documented in MCP format. |
-| **CARE** | Indigenous data layers reviewed and approved by governance council. |
+| Principle | Evidence |
+|---|---|
+| **Findable** | STAC/DCAT entries minted; DOI/ARK linked |
+| **Accessible** | Scripts/data released (MIT/CC-BY), alt text present |
+| **Interoperable** | STAC 1.0 + GeoJSON/Parquet + ISO 19115 lineage |
+| **Reusable** | Versioned artifacts, SPDX SBOM, manifest checksums |
+| **CARE** | Cultural sensitivity reviewed; approvals logged |
 
-Attach related governance documents:
+**Attach related reports**
 ```
-reports/fair/faircare_summary.json  
+reports/fair/faircare_summary.json
 reports/audit/github-workflows-ledger.json
 ```
 
 ---
 
-## ⚙️ Reproducibility Instructions
+## 🔁 Reproducibility Instructions
 
-Describe how other contributors can reproduce this experiment.
+Provide exact steps to rerun.
 
-**Example:**
 ```bash
-# 1. Clone repository
+# 1) Clone
 git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
 cd Kansas-Frontier-Matrix
 
-# 2. Launch Docker environment
-docker-compose up --build
+# 2) Containerized env
+docker compose up --build
 
-# 3. Run ETL + AI experiment
+# 3) Execute the experiment
 make run-experiment EXPERIMENT=ocr_ner_1850s
 ```
 
-**Expected Runtime:** ~1.5 hours on 8-core CPU / 32GB RAM
+> **Expected runtime:** ~1.5 hours on 8-core CPU / 32 GB RAM.
 
 ---
 
 ## 📁 Outputs & Storage
 
-List generated artifacts and their storage locations.
-
 | Artifact | Location | Format |
-|-----------|-----------|--------|
-| Experiment Logs | `reports/experiments/logs/` | `.json` |
-| Validation Reports | `reports/fair/` | `.json` |
-| Processed Data | `data/processed/experiments/` | `.csv`, `.geojson` |
-| Telemetry Metrics | `releases/v9.7.0/focus-telemetry.json` | `.json` |
+|---|---|---|
+| Experiment Logs | `reports/experiments/logs/` | JSON |
+| Validation Reports | `reports/fair/` | JSON |
+| Processed Data | `data/processed/experiments/` | CSV/GeoJSON |
+| Telemetry | `releases/v10.0.0/focus-telemetry.json` | JSON |
 
 ---
 
-## 🔍 Validation & CI Integration
+## 🔍 CI / QA Integration
 
-All experiment documentation must pass the following CI workflows:
+This document must pass the following:
 
 | Workflow | Purpose |
-|-----------|----------|
-| `docs-lint.yml` | Validates structure and front-matter. |
-| `faircare-validate.yml` | Audits FAIR+CARE compliance. |
-| `telemetry-export.yml` | Logs experiment metadata into telemetry. |
+|---|---|
+| `docs-lint.yml` | Front-matter + structure validation |
+| `faircare-validate.yml` | Ethics & accessibility audits |
+| `telemetry-export.yml` | Contribution + energy/carbon logging |
 
-Validation artifacts will be archived in:
+Validation artifacts archived under:
 ```
 reports/self-validation/experiments/
 ```
@@ -213,9 +216,10 @@ reports/self-validation/experiments/
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Created standardized experiment documentation template. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added FAIR+CARE integration and telemetry hooks. |
+|---|---|---|---|
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; telemetry schema v2; MCP/FAIR+CARE alignment. |
+| v9.7.0 | 2025-11-05 | A. Barta | Standardized experiment documentation template. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added FAIR+CARE and telemetry hooks. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial template creation. |
 
 ---
@@ -223,7 +227,7 @@ reports/self-validation/experiments/
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
 [Back to Template Index](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
