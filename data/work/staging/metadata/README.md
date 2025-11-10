@@ -1,15 +1,15 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Metadata Staging Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/staging/metadata/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/data-work-staging-metadata-v9.json"
+telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-work-staging-metadata-v10.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Pre-publication workspace for **metadata harmonization, validation, and FAIR+CARE ethics auditing** in KFM.  
-Ensures all descriptors comply with **STAC**, **DCAT**, **PROV-O**, and **ISO 19115**—with governance traceability prior to certification.
+Ensures all descriptors comply with **STAC**, **DCAT**, **PROV-O**, and **ISO 19115**—with governance traceability prior to certification, **telemetry v2** bindings, and **Streaming STAC** awareness.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/architecture/README.md)
 [![FAIR+CARE Validated](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Validated-gold.svg)](../../../../docs/standards/faircare-validation.md)
@@ -35,9 +35,13 @@ Ensures all descriptors comply with **STAC**, **DCAT**, **PROV-O**, and **ISO 19
 ---
 
 ## 📘 Overview
-
 The **Metadata Staging Workspace** bridges raw and processed metadata layers, aligning descriptors with FAIR+CARE, STAC, and DCAT specifications.  
 Each record undergoes ethics auditing, checksum registration, and governance validation to ensure **provenance accuracy** and **interoperability**.
+
+**v10 Enhancements**
+- Telemetry v2 (energy/CO₂, validation coverage) logged per validation cycle.  
+- Streaming STAC link checks for continuously updated Items.  
+- JSON-LD governance certs previewed prior to promotion.
 
 ### Core Responsibilities
 - Harmonize metadata schemas across KFM domains.  
@@ -48,7 +52,6 @@ Each record undergoes ethics auditing, checksum registration, and governance val
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/staging/metadata/
 ├── README.md
@@ -71,14 +74,13 @@ data/work/staging/metadata/
 ---
 
 ## ⚙️ Metadata Validation Workflow
-
 ```mermaid
 flowchart TD
-    A["Raw Metadata (data/raw/metadata/)"] --> B["Schema Harmonization (STAC ↔ DCAT ↔ PROV-O)"]
-    B --> C["FAIR + CARE Audit Validation"]
-    C --> D["Checksum + Provenance Verification"]
-    D --> E["Governance Ledger Sync"]
-    E --> F["Promotion → Processed Metadata Layer"]
+    "Raw Metadata (data/raw/metadata/)" --> "Schema Harmonization (STAC ↔ DCAT ↔ PROV-O)"
+    "Schema Harmonization (STAC ↔ DCAT ↔ PROV-O)" --> "FAIR + CARE Audit Validation"
+    "FAIR + CARE Audit Validation" --> "Checksum + Provenance Verification"
+    "Checksum + Provenance Verification" --> "Governance Ledger Sync"
+    "Governance Ledger Sync" --> "Promotion → Processed Metadata Layer"
 ```
 
 ### Steps
@@ -91,18 +93,22 @@ flowchart TD
 ---
 
 ## 🧩 Example Metadata Record
-
 ```json
 {
-  "id": "metadata_staging_tabular_v9.7.0",
+  "id": "metadata_staging_tabular_v10.0.0",
   "source": "data/work/staging/metadata/tmp/metadata_merge_preview.json",
   "schemas": ["STAC 1.0.0", "DCAT 3.0", "PROV-O"],
   "validation_status": "in_review",
   "checksum_sha256": "sha256:b8a7d4f3e5c9a1b7d6e8a3f2c9b5e4a7f8c2d1a9e3b6c7f4a5d8e2c3a7b1f9d4",
   "fairstatus": "pending",
+  "telemetry": {
+    "energy_wh": 0.6,
+    "co2_g": 0.9,
+    "validation_coverage_pct": 100
+  },
   "validator": "@kfm-metadata-lab",
   "license": "CC-BY 4.0",
-  "created": "2025-11-06T23:25:00Z",
+  "created": "2025-11-09T23:25:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
@@ -110,9 +116,8 @@ flowchart TD
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
+|---|---|---|
 | **Findable** | STAC/DCAT identifiers + versioned metadata. | `@kfm-data` |
 | **Accessible** | JSON-LD for internal audits & FAIR compliance. | `@kfm-accessibility` |
 | **Interoperable** | Conforms to STAC/DCAT/PROV-O & ISO 19115. | `@kfm-architecture` |
@@ -128,9 +133,8 @@ flowchart TD
 ---
 
 ## ⚙️ Validation & Certification Artifacts
-
 | Artifact                       | Description                                  | Format |
-|-------------------------------|----------------------------------------------|--------|
+|---|---|---|
 | `schema_validation_summary.json` | Field-level schema validation results      | JSON   |
 | `faircare_metadata_audit.json`   | Ethics & governance compliance             | JSON   |
 | `stac_link_check.log`            | Link integrity across STAC/DCAT catalogs   | Text   |
@@ -142,44 +146,40 @@ flowchart TD
 ---
 
 ## ♻️ Retention & Lifecycle Policy
-
 | Data Type                 | Retention | Policy                                             |
-|--------------------------|----------:|----------------------------------------------------|
+|---|---:|---|
 | Temporary Metadata (`tmp/`) | 14 Days | Cleared after successful validation or audit.       |
 | Validation Reports       | 180 Days  | Retained for FAIR+CARE re-audits.                  |
 | Governance Logs          | 365 Days  | Maintained for lineage & certification continuity. |
 | Metadata Records         | Permanent | Immutable under governance ledger.                 |
 
-**Telemetry:** `../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry:** `../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🌱 Sustainability Metrics
-
 | Metric | Value | Verified By |
-|--------|------:|-------------|
-| Energy (per validation cycle) | 6.6 Wh | `@kfm-sustainability` |
-| Carbon Output | 8.8 gCO₂e | `@kfm-security` |
+|---|---:|---|
+| Energy (per validation cycle) | 6.1 Wh | `@kfm-sustainability` |
+| Carbon Output | 8.0 gCO₂e | `@kfm-security` |
 | Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
 | FAIR+CARE Validation | 100% | `@faircare-council` |
 
 ---
 
 ## 🧾 Internal Use Citation
-
 ```text
-Kansas Frontier Matrix (2025). Metadata Staging Workspace (v9.7.0).
+Kansas Frontier Matrix (2025). Metadata Staging Workspace (v10.0.0).
 FAIR+CARE-compliant workspace for metadata harmonization, validation, and ethics auditing aligned to STAC, DCAT, PROV-O, and ISO 19115 for reproducible open data governance.
 ```
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date       | Author              | Summary |
-|--------:|------------|---------------------|---------|
-| v9.7.0  | 2025-11-06 | `@kfm-metadata`     | Upgraded to v9.7.0; telemetry/schema refs aligned; retention & badges updated. |
-| v9.6.0  | 2025-11-03 | `@kfm-metadata`     | Added checksum automation and FAIR+CARE audit linkage. |
+|---|---|---|---|
+| v10.0.0  | 2025-11-09 | `@kfm-metadata`     | Upgraded to v10: telemetry v2 fields, Streaming STAC link checks, JSON-LD governance cert previews. |
+| v9.7.0   | 2025-11-06 | `@kfm-metadata`     | Telemetry/schema refs aligned; retention & badges updated. |
 
 ---
 
