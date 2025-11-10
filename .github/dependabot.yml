@@ -2,8 +2,10 @@
 # File: .github/dependabot.yml
 # Purpose: Automate dependency updates, security alert triage, and ecosystem version governance
 # Alignment: Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# SPDX-License-Identifier: MIT
 
 version: 2
+
 updates:
 
   # ============================================================
@@ -16,17 +18,25 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "America/Chicago"
-    labels:
-      - "dependencies"
-      - "python"
-      - "security"
-    reviewers:
-      - "bartytime4life"
+    labels: ["dependencies", "python", "security"]
+    reviewers: ["bartytime4life"]
+    assignees: ["bartytime4life"]
     open-pull-requests-limit: 10
     rebase-strategy: "auto"
+    versioning-strategy: "increase-if-necessary"
     commit-message:
       prefix: "deps(python)"
       include: "scope"
+    allow:
+      - dependency-type: "direct"
+    groups:
+      python-security:
+        applies-to: "security-updates"
+        patterns: ["*"]
+      python-minor-patch:
+        applies-to: "version-updates"
+        update-types: ["minor", "patch"]
+        patterns: ["*"]
 
   # ============================================================
   # 🧱 Node.js — Web Frontend
@@ -38,20 +48,30 @@ updates:
       day: "tuesday"
       time: "09:00"
       timezone: "America/Chicago"
-    labels:
-      - "dependencies"
-      - "frontend"
-      - "security"
-    reviewers:
-      - "bartytime4life"
+    labels: ["dependencies", "frontend", "security"]
+    reviewers: ["bartytime4life"]
+    assignees: ["bartytime4life"]
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    versioning-strategy: "increase-if-necessary"
+    commit-message:
+      prefix: "deps(frontend)"
+      include: "scope"
     ignore:
       - dependency-name: "react"
         versions: ["<18.0.0"]
       - dependency-name: "maplibre-gl"
         versions: ["<3.0.0"]
-    commit-message:
-      prefix: "deps(frontend)"
-      include: "scope"
+    allow:
+      - dependency-type: "direct"
+    groups:
+      frontend-security:
+        applies-to: "security-updates"
+        patterns: ["*"]
+      frontend-minor-patch:
+        applies-to: "version-updates"
+        update-types: ["minor", "patch"]
+        patterns: ["*"]
 
   # ============================================================
   # 🐳 Docker — Containerized Infrastructure
@@ -63,15 +83,22 @@ updates:
       day: "wednesday"
       time: "10:00"
       timezone: "America/Chicago"
-    labels:
-      - "dependencies"
-      - "docker"
-      - "security"
-    reviewers:
-      - "bartytime4life"
+    labels: ["dependencies", "docker", "security"]
+    reviewers: ["bartytime4life"]
+    assignees: ["bartytime4life"]
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
     commit-message:
       prefix: "deps(docker)"
       include: "scope"
+    groups:
+      docker-security:
+        applies-to: "security-updates"
+        patterns: ["*"]
+      docker-patch:
+        applies-to: "version-updates"
+        update-types: ["patch"]
+        patterns: ["*"]
 
   # ============================================================
   # ⚙️ GitHub Actions — CI/CD Automation Dependencies
@@ -83,15 +110,22 @@ updates:
       day: "thursday"
       time: "10:00"
       timezone: "America/Chicago"
-    labels:
-      - "dependencies"
-      - "ci-cd"
-      - "security"
-    reviewers:
-      - "bartytime4life"
+    labels: ["dependencies", "ci-cd", "security"]
+    reviewers: ["bartytime4life"]
+    assignees: ["bartytime4life"]
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
     commit-message:
       prefix: "deps(ci)"
       include: "scope"
+    groups:
+      gha-security:
+        applies-to: "security-updates"
+        patterns: ["*"]
+      gha-minor-patch:
+        applies-to: "version-updates"
+        update-types: ["minor", "patch"]
+        patterns: ["*"]
 
   # ============================================================
   # 🧠 Neo4j / Graph Schema — Semantic Infrastructure
@@ -103,15 +137,19 @@ updates:
       day: "friday"
       time: "08:00"
       timezone: "America/Chicago"
-    labels:
-      - "dependencies"
-      - "graph"
-      - "maintenance"
-    reviewers:
-      - "bartytime4life"
+    labels: ["dependencies", "graph", "maintenance"]
+    reviewers: ["bartytime4life"]
+    assignees: ["bartytime4life"]
+    rebase-strategy: "auto"
+    versioning-strategy: "increase-if-necessary"
     commit-message:
       prefix: "deps(graph)"
       include: "scope"
+    groups:
+      graph-all:
+        applies-to: "version-updates"
+        update-types: ["minor", "patch"]
+        patterns: ["*"]
 
   # ============================================================
   # 📦 Data Validation — FAIR+CARE Compliance Tooling
@@ -123,29 +161,29 @@ updates:
       day: "friday"
       time: "09:30"
       timezone: "America/Chicago"
-    labels:
-      - "dependencies"
-      - "data"
-      - "validation"
-    reviewers:
-      - "bartytime4life"
+    labels: ["dependencies", "data", "validation"]
+    reviewers: ["bartytime4life"]
+    assignees: ["bartytime4life"]
+    rebase-strategy: "auto"
+    versioning-strategy: "increase-if-necessary"
     commit-message:
       prefix: "deps(validation)"
       include: "scope"
+    groups:
+      validation-minor-patch:
+        applies-to: "version-updates"
+        update-types: ["minor", "patch"]
+        patterns: ["*"]
 
 # ============================================================
 # 🔒 Global Governance & Security Integration
 # ============================================================
-# Dependabot automatically rebases open PRs when conflicts are resolved.
-# All PRs must pass the following CI/CD workflows before merge:
-#   • `codeql.yml` — static security analysis
-#   • `trivy.yml` — CVE and container vulnerability scanning
-#
-# Additional Governance:
-#   • SBOM (Software Bill of Materials) regenerated on successful merge.
-#   • Security alerts routed to repository maintainers and FAIR+CARE Council.
-#   • Commit messages prefixed with `deps(...)` for audit classification.
-#
+# • All Dependabot PRs must pass:
+#    - codeql.yml (static analysis)
+#    - trivy.yml (CVE & container scan, CRITICAL ⇒ block)
+#    - docs-lint.yml (policy & metadata conformance)
+#    - faircare-validate.yml (ethics and data contracts)
+# • SBOM (SPDX) and release manifest are regenerated on merge.
+# • Security alerts are routed to maintainers and FAIR+CARE Council.
+# • Commit messages use `deps(...)` prefixes for audit classification.
 # Governance Reference: docs/standards/governance/ROOT-GOVERNANCE.md
-# SPDX-License-Identifier: MIT
-# © 2025 Kansas Frontier Matrix — Maintained under Master Coder Protocol v6.3
