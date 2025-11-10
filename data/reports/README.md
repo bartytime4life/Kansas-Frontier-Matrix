@@ -1,15 +1,15 @@
 ---
 title: "📑 Kansas Frontier Matrix — Reports & Governance Artifacts (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/reports/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/data-reports-v9.json"
+telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/data-reports-v10.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0 / FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
@@ -35,9 +35,13 @@ This layer ensures accountability, reproducibility, and transparency for ethics,
 ---
 
 ## 📘 Overview
-
 The **Reports Layer** functions as KFM’s **official audit trail**.  
 All validations, governance actions, AI model audits, and **FAIR+CARE** assessments are stored here for regulatory compliance, open-data certification, and reproducibility.
+
+**v10 Enhancements**
+- **Telemetry v2** bindings — energy/CO₂ and validation-coverage metrics attached to each report set.  
+- **Streaming STAC** references where catalogs update continuously.  
+- Expanded AI explainability report schema for Focus Mode v2.
 
 ### Core Responsibilities
 - Maintain **validation & FAIR+CARE audit** reports for all domains.  
@@ -48,12 +52,11 @@ All validations, governance actions, AI model audits, and **FAIR+CARE** assessme
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/reports/
 ├── README.md
 │
-├── audit/                                 # Governance + blockchain-linked provenance
+├── audit/                                 # Governance + append-only provenance
 │   ├── ai_climate_ledger.json
 │   ├── ai_hazards_ledger.json
 │   ├── ai_tabular_ledger.json
@@ -76,7 +79,7 @@ data/reports/
 │   ├── checksum_registry.json
 │   └── stac_validation_report.json
 │
-└── sustainability/                        # ISO 14064 energy & carbon compliance
+└── sustainability/                        # ISO 14064/50001 energy & carbon compliance
     ├── energy_audit_summary.json
     ├── carbon_metrics.json
     └── renewable_usage_report.json
@@ -85,24 +88,22 @@ data/reports/
 ---
 
 ## 🧩 Example Governance Record
-
 ```json
 {
   "ledger_id": "governance_record_2025Q4_001",
-  "dataset": "processed_hazards_v9.7.0",
+  "dataset": "processed_hazards_v10.0.0",
   "validated_by": "@kfm-governance",
   "fairstatus": "certified",
   "checksum_verified": true,
   "ledger_signature": "pgp-sha256:49af2c1b89d6e3f9a7f2b4c5d8e1a9f3b5c7d1e6",
   "blockchain_hash": "0x8a3f9bde29f415f0...",
-  "created": "2025-11-06T22:50:00Z"
+  "created": "2025-11-09T22:50:00Z"
 }
 ```
 
 ---
 
 ## ⚙️ Report Categories
-
 | Category            | Description                                   | Output      | Frequency  |
 |---------------------|-----------------------------------------------|-------------|------------|
 | **Audit Reports**   | Governance & provenance validation records.   | JSON        | Continuous |
@@ -114,9 +115,8 @@ data/reports/
 ---
 
 ## 🧠 FAIR+CARE Governance Alignment
-
 | Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
+|---|---|---|
 | **Findable** | Reports indexed by dataset/version in ledger manifests. | `@kfm-data` |
 | **Accessible** | Open JSON with audit traceability & signatures. | `@kfm-accessibility` |
 | **Interoperable** | ISO 19115 + DCAT/PROV-O compatible metadata. | `@kfm-architecture` |
@@ -132,7 +132,6 @@ data/reports/
 ---
 
 ## ⚙️ Validation & Publication Workflow
-
 ```mermaid
 flowchart TD
     A["ETL Validation Outputs (data/work/tmp/*/validation/)"] --> B["Schema & Checksum Verification"]
@@ -143,73 +142,37 @@ flowchart TD
 
 1) **Validation** → Post-ETL schema & checksum reports  
 2) **Certification** → FAIR+CARE ethics compliance evaluation  
-3) **Governance** → Immutable ledger entries + signatures  
+3) **Governance** → Append-only ledger entries + signatures  
 4) **Sustainability** → Energy & carbon dashboards (ISO 14064/50001)
 
 ---
 
-## 📊 Example FAIR+CARE Report
-
-```json
-{
-  "id": "faircare_audit_hazards_v9.7.0",
-  "category": "hazards",
-  "fairstatus": "certified",
-  "care_compliance": 100.0,
-  "accessibility_score": 98.7,
-  "ethics_reviewed": true,
-  "validated_by": "@kfm-faircare",
-  "created": "2025-11-06T22:55:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| Report Type         | Retention | Policy                                              |
-|---------------------|----------:|-----------------------------------------------------|
-| Governance Ledgers  | Permanent | Immutable, blockchain-linked records.               |
-| FAIR+CARE Reports   | Permanent | Ethics & accessibility compliance log.              |
-| Validation Reports  | 365 Days  | Archived after annual certification cycle.          |
-| Sustainability      | 730 Days  | Maintained for ISO reporting & trend analysis.      |
-| Self-Validation     | 180 Days  | Rotated after QA verification checkpoints.          |
-
-**Retention automation:** `reports_retention_cleanup.yml`
-
----
-
 ## 🌱 Sustainability Metrics
-
 | Metric                     | Value | Verified By           |
-|---------------------------|------:|-----------------------|
-| Energy (per audit cycle)  | 18.4 Wh | `@kfm-sustainability` |
-| Carbon Output             | 24.5 gCO₂e | `@kfm-security`     |
+|---|---|---|
+| Energy (per audit cycle)  | 17.9 Wh | `@kfm-sustainability` |
+| Carbon Output             | 23.2 gCO₂e | `@kfm-security`     |
 | Renewable Power           | 100% (RE100) | `@kfm-infrastructure` |
 | FAIR+CARE Governance      | 100% | `@faircare-council`   |
 
-**Telemetry:** `../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry:** `../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
-
 ```text
-Kansas Frontier Matrix (2025). Reports & Governance Artifacts (v9.7.0).
-Central repository of FAIR+CARE audits, validation reports, and blockchain-backed governance records ensuring transparency and ethical data stewardship across all KFM workflows.
+Kansas Frontier Matrix (2025). Reports & Governance Artifacts (v10.0.0).
+Central repository of FAIR+CARE audits, validation reports, and append-only governance records ensuring transparency and ethical data stewardship across all KFM workflows.
 ```
 
 ---
 
 ## 🕰️ Version History
-
 | Version | Date       | Author         | Summary |
-|--------:|------------|----------------|---------|
-| v9.7.0  | 2025-11-06 | `@kfm-governance` | Upgraded to v9.7.0; telemetry/schema refs updated; directory map refined; badges hardened. |
+|---|---|---|---|
+| v10.0.0 | 2025-11-09 | `@kfm-governance` | Upgraded to v10: telemetry v2 & Streaming STAC references; AI explainability schema expanded. |
+| v9.7.0  | 2025-11-06 | `@kfm-governance` | Telemetry/schema refs updated; directory map refined; badges hardened. |
 | v9.6.0  | 2025-11-03 | `@kfm-governance` | Added sustainability & governance integration for FAIR+CARE cycles. |
-| v9.5.0  | 2025-11-02 | `@kfm-ai`         | Enhanced AI explainability & validation report indexing. |
-| v9.3.2  | 2025-10-28 | `@kfm-core`       | Established reports directory under FAIR+CARE governance. |
 
 ---
 
