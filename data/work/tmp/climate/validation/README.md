@@ -1,16 +1,16 @@
 ---
 title: "✅ Kansas Frontier Matrix — Climate Validation Workspace (Schema, FAIR+CARE & AI QA Layer · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/climate/validation/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v10.0.0"
+last_updated: "2025-11-09"
 review_cycle: "Continuous / Autonomous Quality Assurance"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
 data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/work-climate-validation-v15.json"
-json_export: "../../../../../releases/v9.7.0/work-climate-validation.meta.json"
+telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/work-climate-validation-v16.json"
+json_export: "../../../../../releases/v10.0.0/work-climate-validation.meta.json"
 validation_reports:
   - "../../../../../reports/self-validation/work-climate-validation.json"
   - "../../../../../reports/fair/climate_validation_summary.json"
@@ -26,7 +26,7 @@ mcp_version: "MCP-DL v6.3"
 `data/work/tmp/climate/validation/README.md`
 
 **Purpose:**  
-Governance-linked workspace for **schema validation, FAIR+CARE ethics auditing, checksum verification, and AI explainability** of climate datasets processed within KFM.  
+Governance-linked workspace for **schema validation, FAIR+CARE ethics auditing, checksum verification, telemetry v2, and AI explainability** of climate datasets processed within KFM.  
 Assures data reliability, ethical transparency, and provenance integrity prior to staging promotion.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
@@ -40,9 +40,13 @@ Assures data reliability, ethical transparency, and provenance integrity prior t
 ---
 
 ## 📘 Overview
-
 The **Climate Validation Workspace** consolidates technical, ethical, and AI-driven QA so each climate dataset complies with FAIR+CARE, ISO, and MCP-DL governance frameworks.  
 This environment runs continuously, validating outputs from transformation and export layers.
+
+**v10 Enhancements**
+- Telemetry v2 fields (energy/CO₂e, coverage) included in validation artifacts.  
+- JSON-LD lineage anchors for Focus Mode v2 graphs.  
+- Expanded CF/ISO checks for variable consistency and units.
 
 ### Core Responsibilities
 - Execute schema & metadata validation checks.  
@@ -53,7 +57,6 @@ This environment runs continuously, validating outputs from transformation and e
 ---
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/work/tmp/climate/validation/
 ├── README.md
@@ -70,14 +73,13 @@ data/work/tmp/climate/validation/
 ---
 
 ## ⚙️ Validation Workflow
-
 ```mermaid
 flowchart TD
-    A["Transformed Climate (tmp/climate/transforms/)"] --> B["Schema Validation (STAC · ISO · CF)"]
-    B --> C["Checksums + FAIR + CARE Ethics Verification"]
-    C --> D["AI Explainability + Drift Audit"]
-    D --> E["Report Assembly → validation_manifest.json"]
-    E --> F["Provenance Registration (Governance Ledger)"]
+    "Transformed Climate (tmp/climate/transforms/)" --> "Schema Validation (STAC · ISO · CF)"
+    "Schema Validation (STAC · ISO · CF)" --> "Checksums + FAIR + CARE Ethics Verification"
+    "Checksums + FAIR + CARE Ethics Verification" --> "AI Explainability + Drift Audit"
+    "AI Explainability + Drift Audit" --> "Report Assembly → validation_manifest.json"
+    "Report Assembly → validation_manifest.json" --> "Provenance Registration (Governance Ledger)"
 ```
 
 ### Steps
@@ -90,28 +92,26 @@ flowchart TD
 ---
 
 ## 🧩 Example Validation Record
-
 ```json
 {
-  "id": "climate_validation_precipitation_v9.7.0",
+  "id": "climate_validation_precipitation_v10.0.0",
   "dataset_ref": "data/work/tmp/climate/transforms/precipitation_harmonized_2025.parquet",
   "schema_status": "passed",
-  "fair_care_score": 99.0,
+  "fair_care_score": 99.2,
   "ai_explainability_score": 0.991,
   "checksum_integrity": "verified",
   "drift_detected": false,
   "validated_by": "@kfm-climate-lab",
-  "created": "2025-11-06T23:59:00Z",
-  "ledger_ref": "reports/audit/ai_climate_validation_ledger.json#climate_validation_2025_11_06_001"
+  "created": "2025-11-09T23:59:00Z",
+  "ledger_ref": "reports/audit/ai_climate_validation_ledger.json#climate_validation_2025_11_09_001"
 }
 ```
 
 ---
 
 ## 🧠 FAIR+CARE & ISO Governance Matrix
-
 | Standard | Description | Result | Oversight |
-|:--|:--|:--|:--|
+|---|---|---|---|
 | **FAIR+CARE** | Ethical, accessible, reproducible validation | ✅ | `@faircare-council` |
 | **ISO 19115** | Metadata schema & lineage traceability | ✅ | `@kfm-architecture` |
 | **ISO 14064** | Carbon accountability for compute cycles | ✅ | `@kfm-sustainability` |
@@ -124,7 +124,6 @@ flowchart TD
 ---
 
 ## 🧩 AI Explainability Snapshot
-
 ```json
 {
   "model": "focus-climate-v5",
@@ -143,23 +142,21 @@ flowchart TD
 ---
 
 ## ♻️ Sustainability Metrics (ISO)
-
 | Metric | Standard | Value | Verified By |
-|:--|:--|:--:|:--|
-| Energy (Wh/validation) | ISO 50001 | 6.9 | `@kfm-sustainability` |
-| Carbon (gCO₂e/run) | ISO 14064 | 8.1 | `@kfm-security` |
+|---|---|---:|---|
+| Energy (Wh/validation) | ISO 50001 | 6.8 | `@kfm-sustainability` |
+| Carbon (gCO₂e/run) | ISO 14064 | 8.0 | `@kfm-security` |
 | Renewable Offset | RE100 | 100% | `@kfm-infrastructure` |
 | Ethical Compliance | FAIR+CARE | 100% | `@faircare-council` |
 
-**Telemetry:** `../../../../../releases/v9.7.0/focus-telemetry.json`
+**Telemetry Source:** `../../../../../releases/v10.0.0/focus-telemetry.json`
 
 ---
 
 ## ⚖️ Provenance Integration
-
 | Record | Description |
-|--------|-------------|
-| `validation_manifest.json` | Aggregated results from schema, checksum, FAIR+CARE audits. |
+|---|---|
+| `validation_manifest.json` | Aggregated schema, checksum, and FAIR+CARE results. |
 | `ai_explainability.json` | Model transparency + drift analysis. |
 | `governance_review.json` | Council sign-off and compliance record. |
 | `metadata.json` | Lineage + attribution for each validation session. |
@@ -169,10 +166,9 @@ flowchart TD
 ---
 
 ## 🧾 Internal Citation
-
 ```text
-Kansas Frontier Matrix (2025). Climate Validation Workspace (v9.7.0).
-Governance-certified QA hub for schema validation, FAIR+CARE ethics auditing, and AI explainability testing of climate datasets—ensuring reproducibility, ethical integrity, and provenance registration.
+Kansas Frontier Matrix (2025). Climate Validation Workspace (v10.0.0).
+Governance-certified QA hub for schema validation, FAIR+CARE ethics auditing, telemetry v2 tracking, and AI explainability testing of climate datasets—ensuring reproducibility, ethical integrity, and provenance registration.
 ```
 
 ---
