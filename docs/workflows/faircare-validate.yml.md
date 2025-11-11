@@ -1,14 +1,14 @@
 ---
 title: "⚖️ FAIR+CARE Validation Workflow — `faircare-validate.yml` (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/faircare-validate.yml.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.1.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/workflows/faircare-validate-v1.json"
+sbom_ref: "../../releases/v10.1.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.1.0/manifest.zip"
+telemetry_ref: "../../releases/v10.1.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/workflows/faircare-validate-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -20,13 +20,11 @@ mcp_version: "MCP-DL v6.3"
 `docs/workflows/faircare-validate.yml.md`
 
 **Purpose:**  
-Define the **GitHub Actions** workflow that validates datasets and docs for **FAIR+CARE** compliance,  
-performs **ethics/PII scans**, enforces **data contracts**, manages **abandonment candidates**, and  
-emits **governance-ready reports** with full telemetry for Diamond⁹ / Crown∞Ω certification.
+Define the **GitHub Actions** workflow that validates datasets and docs for **FAIR+CARE** compliance, performs **ethics/PII scans**, enforces **data contracts**, manages **abandonment candidates**, and emits **governance-ready reports** with full telemetry for Diamond⁹ / Crown∞Ω certification.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../README.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange)](../standards/faircare.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governance%20Aligned-orange)](../standards/faircare.md)
 [![Status: Automated](https://img.shields.io/badge/Status-Automated-brightgreen)](#)
 
 </div>
@@ -35,17 +33,16 @@ emits **governance-ready reports** with full telemetry for Diamond⁹ / Crown∞
 
 ## 📘 Overview
 
-`faircare-validate.yml` is the **ethics and governance gate** for the Kansas Frontier Matrix.  
-It operates on tabular, spatial, and documentation changes to ensure:
+`faircare-validate.yml` is the **ethics and governance gate** for KFM. It ensures:
 
 - ✅ **FAIR**: Findable / Accessible / Interoperable / Reusable checks  
 - ✅ **CARE**: Collective benefit, Authority to control, Responsibility, Ethics  
 - ✅ **Contracts**: JSON Schema & data-contract conformance (e.g., `data-contract-v3.json`)  
-- ✅ **PII/Sensitive**: Automated redaction and cultural sensitivity screening  
+- ✅ **PII/Sensitive**: Automated redaction & cultural sensitivity screening  
 - ✅ **Quarantine**: Noncompliant assets moved to `abandonment_candidates/` with registry entry  
-- ✅ **Reports**: Machine-readable audit, provenance, and council-ready ethics review packs
+- ✅ **Reports**: Machine-readable audit, provenance, and council-ready review packs
 
-All results are exported under `reports/` and appended to `focus-telemetry.json`.
+Outputs are written to `reports/` and appended to `focus-telemetry.json`.
 
 ---
 
@@ -57,7 +54,7 @@ All results are exported under `reports/` and appended to `focus-telemetry.json`
 | `push` (protected) | `data/**`, `docs/**`, `schemas/**` | Required for releases |
 | `schedule` | nightly | Continuous surveillance of staged data |
 
-**Ignore:** binaries (`*.tif`, `*.pmtiles`) for lint; metadata is still validated.
+**Ignored:** large binaries (`*.tif`, `*.pmtiles`) for lint; associated metadata is still validated.
 
 ---
 
@@ -152,7 +149,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in faircare_telemetry.json \
-            --dest releases/v9.9.0/focus-telemetry.json
+            --dest releases/v10.1.0/focus-telemetry.json
 ```
 
 ---
@@ -161,42 +158,41 @@ jobs:
 
 | Type | Key/Path | Description |
 |------|----------|-------------|
-| **Input** | `data/**` | Incoming tabular/spatial/metadata under review |
-| **Artifact** | `reports/faircare/faircare_summary.json` | FAIR+CARE audit results |
-| **Artifact** | `reports/faircare/provenance_trace.json` | Lineage map (DCAT/PROV-O) |
-| **Artifact** | `reports/faircare/pii_scan.json` | Detected PII / sensitive markers |
+| **Input** | `data/**` | Tabular/spatial/metadata under review |
+| **Artifact** | `reports/faircare/contract_summary.json` | Contract conformance |
+| **Artifact** | `reports/faircare/faircare_summary.json` | FAIR+CARE audit |
+| **Artifact** | `reports/faircare/provenance_trace.json` | DCAT/PROV-O lineage |
+| **Artifact** | `reports/faircare/pii_scan.json` | PII / sensitive markers |
 | **Artifact** | `abandonment_registry.json` | Quarantined dataset registry |
-| **Telemetry** | `releases/v9.9.0/focus-telemetry.json` | Aggregated governance metrics |
+| **Telemetry** | `releases/v10.1.0/focus-telemetry.json` | Aggregated governance metrics |
 
 ---
 
 ## ✅ FAIR+CARE Rule Set
 
 **FAIR**  
-- *F1 (Findable):* Required front-matter keys; STAC/DCAT presence; stable IDs.  
+- *F1 (Findable):* Required front-matter; STAC/DCAT presence; stable IDs.  
 - *A1 (Accessible):* License clarity; role-based access; reproducible links.  
-- *I1 (Interoperable):* JSON Schema OK; DCAT 3.0 vocab; CRS & units declared.  
-- *R1 (Reusable):* Provenance, versioning, checksum; contract-aligned fields.
+- *I1 (Interoperable):* JSON Schema OK; DCAT vocab; CRS & units declared.  
+- *R1 (Reusable):* Provenance, versioning, checksums; contract fields.
 
 **CARE**  
-- *Collective Benefit:* No extractive use; community benefit tags.  
-- *Authority to Control:* `care_tag` enforced; consent and opt-out honored.  
-- *Responsibility:* PII scan; redaction or masking pipelines.  
+- *Collective Benefit:* Community-benefit tags; no extractive use.  
+- *Authority to Control:* `care_tag` enforced; consent & opt-out honored.  
+- *Responsibility:* PII scan; redaction/masking pipelines.  
 - *Ethics:* Cultural sensitivity checks (Indigenous data, minors, health).
 
-**Failure policy:** Noncompliant assets are moved to `abandonment_candidates/` with reason + checksum.
+**Failure policy:** Noncompliant assets are quarantined with checksum + reason; publication blocked until remediated/approved.
 
 ---
 
 ## 🧭 Abandonment Candidates Integration
 
-When violations occur, the workflow:
-
-1. Moves files to `data/work/staging/tabular/abandonment_candidates/`  
-2. Appends a record to `abandonment_registry.json` (id, reason, reviewer, checksum)  
-3. Produces reports in `reports/` (validation, provenance, ethics review)  
-4. Emits telemetry events: `dataset-flagged`, `dataset-remediated`, `dataset-archived`  
-5. Blocks publication until **FAIR+CARE Council** marks the dataset as remediated or archived
+1. Move violating assets to `abandonment_candidates/`.  
+2. Append registry entry (id, reason, checksum, reviewer).  
+3. Produce `reports/` (validation, provenance, ethics review).  
+4. Emit telemetry events: `dataset-flagged`, `remediated`, `archived`.  
+5. Require **FAIR+CARE Council** decision for release/retire.
 
 ---
 
@@ -206,20 +202,20 @@ Appends governance metrics to `focus-telemetry.json`:
 
 | Metric | Example | Notes |
 |--------|---------|------|
-| `datasets_scanned` | 152 | Count by type (csv/parquet/geojson) |
-| `violations_found` | 7 | Sum of FAIR+CARE failures |
+| `datasets_scanned` | 152 | By type (csv/parquet/geojson) |
+| `violations_found` | 7 | FAIR+CARE failures |
 | `quarantined` | 3 | Added to abandonment registry |
-| `energy_wh` | 96 | Runner energy estimate (ISO 50001) |
-| `duration_min` | 12.4 | Total runtime |
+| `energy_wh` | 96 | ISO 50001 estimate |
+| `duration_min` | 12.4 | Workflow runtime |
 | `policy_version` | `faircare@2025.4` | Standards pack hash |
 
 ---
 
 ## 🔒 Supply Chain & Provenance
 
-- Optional **Syft** SBOM and **SLSA** attestations for governance evidence.  
-- **OIDC** used for artifact signing if redaction packages are produced.  
-- Provenance maps (`provenance_trace.json`) link datasets → sources → contracts.
+- Optional **Syft** SBOM + **SLSA** attestations for evidence.  
+- **OIDC** for artifact signing if redaction packages are produced.  
+- Provenance maps link datasets → sources → contracts → decisions.
 
 ---
 
@@ -242,9 +238,8 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| **v10.1.0** | 2025-11-10 | `@kfm-governance` | Upgraded to v10.1.0 artifacts; added contract summary emission; telemetry schema v2. |
 | v9.9.0 | 2025-11-08 | `@kfm-governance` | Adds quarantine & registry, PII scan, provenance export, telemetry merge. |
-| v9.8.0 | 2025-11-05 | `@kfm-data` | Expanded FAIR+CARE checks and contract validation. |
-| v9.7.0 | 2025-11-02 | `@kfm-core` | Initial governance validation workflow doc. |
 
 ---
 
@@ -256,4 +251,3 @@ flowchart LR
 [Back to Workflows Index](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
