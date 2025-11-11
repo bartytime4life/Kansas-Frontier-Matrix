@@ -20,7 +20,7 @@ mcp_version: "MCP-DL v6.3"
 `web/README.md`
 
 **Purpose:**  
-Describe the modular, accessible, and FAIR+CARE-aligned **KFM Web Platform** — including **Focus Mode v2**, Data Explorer, and Governance Dashboard — with architecture, directory layout, contracts, and CI/CD touchpoints for reproducible releases.
+Document the modular, accessible, and FAIR+CARE-certified **KFM Web Platform**, detailing **Focus Mode v2**, data explorer, governance dashboards, contracts, and CI/CD touchpoints for reproducible, ethics-aligned releases.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
@@ -33,14 +33,14 @@ Describe the modular, accessible, and FAIR+CARE-aligned **KFM Web Platform** —
 
 ## 📘 Overview
 
-The **KFM Web Platform** is the user-facing layer for viewing **timeline + map** narratives and AI **Focus Mode** insights backed by a **Neo4j** knowledge graph and **FastAPI/GraphQL** services.  
-It is **standards-first** (STAC 1.0, DCAT 3.0, JSON-LD, WCAG 2.1 AA) and governed by **MCP v6.3** with telemetry and immutable ledgers per release.
+The **KFM Web Platform** serves as the front-end interface for exploring **timeline + map narratives** and AI **Focus Mode** insights, powered by a **Neo4j knowledge graph** and **FastAPI/GraphQL** backend.  
+Built for **standards-first interoperability** (STAC 1.0, DCAT 3.0, JSON-LD, WCAG 2.1 AA), it is fully **MCP v6.3**-governed with immutable telemetry ledgers per release.
 
-**v10 Highlights**
-- **Focus Mode v2**: adaptive narratives, explainability overlays, CARE guardrails  
-- **3D Temporal Scenes**: Cesium-based deep-time and projections  
-- **Streaming STAC bridge**: live catalog updates in the UI  
-- **Accessibility & Sustainability**: Lighthouse/axe gates + build energy metrics
+**v10 Key Enhancements**
+- **Focus Mode v2:** Adaptive AI narratives with explainability and CARE-compliant filters.  
+- **3D Temporal Scenes:** Cesium-based visualization for deep-time and predictive projections.  
+- **Streaming STAC Bridge:** Real-time catalog updates surfaced within the web UI.  
+- **Sustainability & A11y Metrics:** Lighthouse/axe validation with energy and performance tracking.
 
 ---
 
@@ -49,24 +49,24 @@ It is **standards-first** (STAC 1.0, DCAT 3.0, JSON-LD, WCAG 2.1 AA) and governe
 ```
 web/
 ├── README.md                          # This file
-├── ARCHITECTURE.md                    # Web architecture specification
+├── ARCHITECTURE.md                    # Web architecture overview
 │
 ├── public/                            # Static assets (no secrets)
 │   ├── images/
 │   ├── icons/
 │   └── manifest.json
 │
-├── src/                               # React + TypeScript application
-│   ├── components/                    # MapView, TimelineView, FocusPanel, StoryNode, etc.
+├── src/                               # React + TypeScript codebase
+│   ├── components/                    # UI modules: MapView, TimelineView, FocusPanel, StoryNode
 │   ├── pages/                         # Route-level screens (Home, Explore, Governance)
-│   ├── hooks/                         # useTelemetry, useFocus, useGovernance
-│   ├── context/                       # Providers (Theme, Focus, Auth)
-│   ├── services/                      # REST/GraphQL clients, STAC/DCAT fetchers
-│   ├── utils/                         # Formatters, schema guards, a11y helpers
-│   └── styles/                        # Tailwind config, tokens, variables
+│   ├── hooks/                         # Reusable hooks (useFocus, useTelemetry, useGovernance)
+│   ├── context/                       # Providers for state & theme management
+│   ├── services/                      # REST/GraphQL clients & STAC/DCAT handlers
+│   ├── utils/                         # Formatters, schema guards, accessibility helpers
+│   └── styles/                        # Tailwind configuration & design tokens
 │
-├── package.json                       # Pinned dependencies & scripts
-└── vite.config.ts                     # Vite build config (or next.config.js)
+├── package.json                       # Dependencies and npm scripts
+└── vite.config.ts                     # Vite build configuration
 ```
 
 ---
@@ -75,7 +75,7 @@ web/
 
 ```mermaid
 flowchart TD
-A["User Interface (React + Tailwind)"] --> B["FocusPanel (UI v2)"]
+A["User Interface (React + Tailwind)"] --> B["FocusPanel (AI Context Engine v2)"]
 A --> C["MapView (MapLibre GL / Cesium 3D)"]
 A --> D["TimelineView (D3/Recharts)"]
 B --> E["API Client (REST/GraphQL)"]
@@ -87,91 +87,91 @@ F --> H["STAC/DCAT Catalogs (Streaming Bridge)"]
 F --> I["Telemetry / Governance Ledgers"]
 ```
 
-- **Focus Mode v2 (UI):** renders adaptive AI summaries, subgraph relationships, and explainability overlays.  
-- **MapView:** open-source spatial rendering (2D/3D) with accessible controls and basemap toggles.  
-- **TimelineView:** time brushing, density plots, and predictive overlays.  
-- **API Client:** typed DTOs; retries, pagination, and ETag caching; JSON-LD support for provenance.
+- **Focus Mode v2 (UI):** Displays AI narratives, explainability overlays, and ethical provenance chips.  
+- **MapView:** Handles 2D/3D rendering with accessible controls and basemap toggles.  
+- **TimelineView:** Implements zoomable brushing, density plots, and predictive overlays.  
+- **API Client:** Supports typed DTOs, pagination, caching, and JSON-LD provenance linking.
 
 ---
 
 ## 🧠 Focus Mode (AI Context Engine v2)
 
-| Aspect | Implementation |
+| Component | Implementation |
 |---|---|
-| API | `GET /api/focus/{entity_id}` → subgraph + AI narrative + citations + ethics flags |
-| Model | `focus_transformer_v2` (server inference only; streaming refresh supported) |
-| Explainability | SHAP/LIME-linked visuals; “Why this?” insight chips in FocusPanel |
-| CARE | Sensitive content gates; consent & provenance chips; obfuscation where required |
-| Telemetry | Focus interactions, model drift, and ethics filters exported to `../releases/v10.0.0/focus-telemetry.json` |
+| API | `GET /api/focus/{entity_id}` → Subgraph + AI narrative + citations + ethics flags |
+| Model | `focus_transformer_v2` — Dual-encoder, cross-modal attention |
+| Explainability | SHAP/LIME overlays, “Why this?” chips, causal highlight traces |
+| CARE | Sensitive data gating, consent flags, provenance display |
+| Telemetry | Interaction logs, drift metrics, ethical filter audits (`focus-telemetry.json`) |
 
 ---
 
 ## ⚙️ Frontend Stack
 
-| Layer | Tooling | Role |
+| Layer | Tool | Function |
 |---|---|---|
-| Framework | React 18 + TypeScript | UI + state |
-| Build | Vite (or Next) | Fast, deterministic builds |
-| Styling | Tailwind CSS | Tokenized, responsive design |
-| Map | MapLibre GL JS (+ Cesium) | 2D/3D geospatial rendering |
-| Charts | D3 / Recharts | Time-series & density charts |
-| State | React Context + lightweight store | Focus, theme, a11y |
-| A11y | Semantic HTML + ARIA + Headless UI | WCAG 2.1 AA |
-| Data | STAC/DCAT + GraphQL + JSON-LD | Interoperable catalogs and graph entities |
+| Framework | React 18 + TypeScript | Core UI architecture |
+| Build | Vite (or Next.js) | Deterministic, high-speed builds |
+| Styling | Tailwind CSS | Tokenized, responsive design system |
+| Map | MapLibre GL JS / Cesium | 2D & 3D geospatial rendering |
+| Charts | D3 / Recharts | Temporal and analytical visualizations |
+| State | React Context + Local Store | Shared app state (focus, a11y, theme) |
+| A11y | Semantic HTML + ARIA | WCAG 2.1 AA compliance |
+| Data | STAC/DCAT + GraphQL + JSON-LD | Interoperable linked datasets |
 
 ---
 
 ## ⚖️ FAIR+CARE & Accessibility
 
-- **A11y:** keyboard navigation, focus rings, alt text, skip links; contrast ≥ 4.5:1.  
-- **Ethics:** CARE flags on Focus content; consent/provenance chips; cultural site obfuscation.  
-- **Docs:** see `../docs/standards/ui_accessibility.md` and `../docs/standards/faircare.md`.
+- **Accessibility:** keyboard navigation, semantic regions, skip links, focus rings, alt text, contrast ≥ 4.5:1.  
+- **Ethics:** CARE-informed design — provenance indicators, data consent prompts, Indigenous data governance.  
+- **Compliance Docs:** See `../docs/standards/ui_accessibility.md` and `../docs/standards/faircare.md`.
 
 ---
 
-## 🧾 Contracts & Validation
+## 🧾 Validation & Governance Contracts
 
-| Contract | Purpose | Validator |
+| Contract | Function | Validator |
 |---|---|---|
-| STAC Items/Collections | Layer discovery & metadata | `stac-validate.yml` |
-| DCAT 3.0 | Catalog interop | `stac-dcat-bridge.yml` |
-| API DTOs | Typed responses for UI | Schema guards in `src/services` |
-| A11y Contract | Route-level checks | `accessibility_scan.yml` (Lighthouse/axe) |
+| STAC v1.0 | Geospatial layer registration | `stac-validate.yml` |
+| DCAT 3.0 | Catalog interoperability | `stac-dcat-bridge.yml` |
+| API DTOs | Typed response models | `src/services/schemaGuards.ts` |
+| A11y Budget | Lighthouse/axe thresholds | `accessibility_scan.yml` |
 
-**Runtime Provenance:** JSON-LD contexts attached to entities returned by `/api/*` endpoints.
+**Provenance:** JSON-LD contexts attached to all `/api/*` payloads for traceability.
 
 ---
 
 ## 🔁 CI/CD — Workflow → Artifact Mapping
 
-| Workflow | Enforces | Artifact |
+| Workflow | Ensures | Output Artifact |
 |---|---|---|
-| `docs-lint.yml` | Markdown/YAML/JSON conformance | `reports/self-validation/docs/lint_summary.json` |
-| `build-and-deploy.yml` | Build & deploy web app | `docs/reports/telemetry/build_metrics.json` |
-| `telemetry-export.yml` | Merge workflow metrics | `../releases/v10.0.0/focus-telemetry.json` |
-| `codeql.yml` / `trivy.yml` | Security scanning | `reports/security/*` |
-| `accessibility_scan.yml` | A11y budget (axe/Lighthouse) | `reports/self-validation/web/a11y_summary.json` |
+| `docs-lint.yml` | Schema + Markdown compliance | `reports/self-validation/docs/lint_summary.json` |
+| `build-and-deploy.yml` | Build & deployment validation | `docs/reports/telemetry/build_metrics.json` |
+| `telemetry-export.yml` | Merge & export telemetry | `../releases/v10.0.0/focus-telemetry.json` |
+| `codeql.yml` / `trivy.yml` | Security compliance | `reports/security/*.json` |
+| `accessibility_scan.yml` | Accessibility validation | `reports/self-validation/web/a11y_summary.json` |
 
 ---
 
 ## ♿ Design Tokens (Accessibility-First)
 
-| Token | Location | Standard |
+| Token Type | File Reference | Standard |
 |---|---|---|
 | Colors | `../docs/design/tokens/color-palette.md` | WCAG 2.1 AA |
 | Typography | `../docs/design/tokens/typography-system.md` | ISO 9241-210 |
 | Spacing | `../docs/design/tokens/spacing-grid.md` | MCP Layout |
-| A11y | `../docs/design/tokens/accessibility-tokens.md` | FAIR+CARE |
+| Accessibility | `../docs/design/tokens/accessibility-tokens.md` | FAIR+CARE |
 
 ---
 
-## 📊 Web Sustainability Signals
+## 📊 Web Sustainability & Telemetry
 
 | Metric | Target | Verified By |
 |---|---|---|
-| Page Weight | ≤ 1.5 MB (critical routes) | CI |
+| Page Weight | ≤ 1.5 MB (core routes) | Build CI |
 | Accessibility | ≥ 95 (Lighthouse) | `accessibility_scan.yml` |
-| Energy / Perf | Tracked per build | `docs/reports/telemetry/build_metrics.json` |
+| Energy / Perf | Recorded each release | `build_metrics.json` |
 
 ---
 
@@ -181,37 +181,37 @@ F --> I["Telemetry / Governance Ledgers"]
 # Install dependencies
 npm --prefix web install
 
-# Start dev server
-npm --prefix web run dev    # http://localhost:3000
+# Run dev server
+npm --prefix web run dev   # → http://localhost:3000
 
-# Lint & typecheck
-npm --prefix web run lint
+# Typecheck & lint
 npm --prefix web run typecheck
+npm --prefix web run lint
 
-# Build
+# Build for production
 npm --prefix web run build
 ```
 
-Environment variables are managed via `.env.local` (do **not** commit secrets).  
-See `../.github/workflows/build-and-deploy.yml` for CI build parity.
+Secrets are managed through `.env.local` (never committed).  
+See CI parity in `.github/workflows/build-and-deploy.yml`.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
+| Version | Date | Author | Notes |
 |---|---|---|---|
-| v10.0.0 | 2025-11-09 | Web Architecture Team | Upgraded to v10: Focus v2 integration, 3D temporal scenes, streaming STAC bridge, A11y/energy budgets, telemetry schema v2. |
-| v9.7.0 | 2025-11-05 | KFM Core Team | Contracts, CI artifacts, a11y & ethics notes, telemetry schema v1. |
-| v9.6.0 | 2025-11-03 | KFM Core Team | Governance sync and Focus explainability. |
-| v9.5.0 | 2025-11-02 | KFM Core Team | Accessibility tokens and monitoring. |
+| v10.0.0 | 2025-11-09 | Web Architecture Team | Focus v2, 3D temporal scenes, streaming STAC bridge, A11y/energy telemetry v2. |
+| v9.7.0 | 2025-11-05 | KFM Core Team | Contracts, ethics, telemetry schema v1. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Governance synchronization, explainability updates. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Introduced A11y tokens and monitoring. |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Documentation Index](../docs/README.md) · [Web Architecture](ARCHITECTURE.md)
+Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞ Ω Ultimate Certified  
+[⬅ Back to Documentation Index](../docs/README.md) · [Web Architecture →](ARCHITECTURE.md)
 
 </div>
