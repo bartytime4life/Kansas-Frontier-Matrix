@@ -190,11 +190,10 @@ flowchart LR
 ## 🧭 Integration with Backend
 ```mermaid
 flowchart TD
-"React UI" --> "API Client (REST/GraphQL)"
-"API Client (REST/GraphQL)" --> "FastAPI (server)"
-"FastAPI (server)" --> "Neo4j (graph)"
-"FastAPI (server)" --> "STAC/DCAT (catalog)"
-"FastAPI (server)" --> "Telemetry & Ledgers"
+  "React UI" --> "API Client"
+  "API Client" --> "FastAPI Service"
+  "FastAPI Service" --> "Validation and Governance Layer"
+  "Validation and Governance Layer" --> "Data Store"
 ```
 
 - UI fetches **entities** (GraphQL) and **layers** (STAC/DCAT).  
