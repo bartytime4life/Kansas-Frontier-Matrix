@@ -1,4 +1,3 @@
-
 ---
 title: "🪝 Kansas Frontier Matrix — Map Interaction Hooks & Telemetry Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/map/hooks/README.md"
