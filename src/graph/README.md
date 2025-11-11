@@ -50,14 +50,14 @@ Each node adheres to FAIR+CARE metadata principles and maps to global ontologica
 ## 🧱 Graph Schema Overview
 
 ```mermaid
-graph LR
-A[Person (E21)] -->|ATTENDED| B[Event (E5)]
-B -->|LOCATED_AT| C[Place (E53)]
-B -->|MENTIONED_IN| D[Document (E31)]
-C -->|WITHIN| E[Region (E53)]
-D -->|CREATED_BY| F[Organization (E74)]
-B -->|HAS_TYPE| G[Category (SKOS Concept)]
-B -->|RECORDED_IN| H[Dataset (DCAT / STAC)]
+flowchart LR
+    A["Person (E21)"] -->|"ATTENDED"| B["Event (E5)"]
+    B -->|"LOCATED_AT"| C["Place (E53)"]
+    B -->|"MENTIONED_IN"| D["Document (E31)"]
+    C -->|"WITHIN"| E["Region (E53)"]
+    D -->|"CREATED_BY"| F["Organization (E74)"]
+    B -->|"HAS_TYPE"| G["Category (SKOS Concept)"]
+    B -->|"RECORDED_IN"| H["Dataset (DCAT / STAC)"]
 ```
 
 **Primary Node Types**
