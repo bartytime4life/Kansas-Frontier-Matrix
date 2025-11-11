@@ -1,14 +1,14 @@
 ---
 title: "🧪 Documentation Lint Workflow — `docs-lint.yml` (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/workflows/docs-lint.yml.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.1.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/workflows/docs-lint-v1.json"
+sbom_ref: "../../releases/v10.1.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.1.0/manifest.zip"
+telemetry_ref: "../../releases/v10.1.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/workflows/docs-lint-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -23,7 +23,7 @@ mcp_version: "MCP-DL v6.3"
 Define the **GitHub Actions** workflow that validates all KFM documentation against **Platinum README v7.1**, **MCP-DL v6.3**, and **FAIR+CARE** rules.  
 Enforces **front-matter schemas**, **GFM structure**, **link integrity**, **Mermaid guardrails**, **table width limits**, and **badge ordering**, producing machine-readable reports and telemetry for the governance ledger.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../README.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governance%20Aligned-orange)](../standards/faircare.md)
 [![Status: Automated](https://img.shields.io/badge/Status-Automated-brightgreen)](#)
@@ -50,7 +50,7 @@ All findings are exported to `reports/docs_lint.json` and appended to **telemetr
 ## 🗂️ Trigger & Scope
 
 | Trigger | Paths | Notes |
-|--------|------|------|
+|--------:|------|------|
 | `pull_request` | `docs/**`, `**/*.md`, `**/*.mdx` | Blocks merge on failure |
 | `push` (protected branches) | `docs/**`, `**/*.md`, `**/*.mdx` | Required for release tags |
 | `workflow_dispatch` | N/A | Manual re-runs for hotfixes |
@@ -158,7 +158,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in docs_lint_telemetry.json \
-            --dest releases/v9.9.0/focus-telemetry.json
+            --dest releases/v10.1.0/focus-telemetry.json
 ```
 
 ---
@@ -171,7 +171,7 @@ jobs:
 |-----|------|------|
 | `title` | string | Emoji prefix + descriptive title |
 | `path` | string | Repo-relative, matches file location |
-| `version` | SemVer (e.g., `v9.9.0`) | Required |
+| `version` | SemVer (e.g., `v10.1.0`) | Required |
 | `last_updated` | ISO-8601 date | `YYYY-MM-DD` |
 | `review_cycle` | enum | `Continuous`, `Quarterly / Autonomous`, etc. |
 | `commit_sha` | hash(7–40) or `<latest-commit-hash>` | Required |
@@ -185,18 +185,18 @@ jobs:
 
 ### 2) Structure & Style
 
-- Single **H1** at top, emoji-prefixed section headers (📘, 🗂️, 🧩, ⚙️, ⚖️, 🧮, 🕰️).  
+- Single **H1** at top; emoji-prefixed section headers (📘, 🗂️, 🧩, ⚙️, ⚖️, 🧮, 🕰️).  
 - **One Mermaid diagram per section**, `flowchart TD|LR` only; quoted labels; no custom `classDef`.  
-- **Tables** min 3 columns; wrap lines so each row ≤ 100 chars; use `—` for N/A.  
+- **Tables** min 3 columns; wrap lines so each row ≤ 100 chars; use `—` for not-applicable values.  
 - **Code fences** must declare language (e.g., ` ```ts`, ` ```json`, ` ```yaml`).  
 - **Badges** ordered: Docs · MCP → License → FAIR+CARE → Status.  
 - **Footer**: centered, contains © year, license, MCP/FAIR+CARE marks, and nav links.  
 
 ### 3) Links
 
-- Relative links must resolve to existing files; no absolute GitHub URLs in docs (use relative paths).  
-- External links checked with `markdown-link-check`; flaky domains retried with backoff.  
-- Anchors must match rendered GitHub IDs (case-insensitive, hyphenated).
+- Relative links must resolve; no absolute GitHub URLs in docs (use relative paths).  
+- External links checked with retry/backoff.  
+- Anchors must match GitHub-rendered IDs (case-insensitive, hyphenated).
 
 ---
 
@@ -212,7 +212,7 @@ jobs:
 | `reports/docs/badges_footer_audit.json` | Badge order & footer conformance |
 | `reports/docs/format_audit.json` | Table width & code fence audit |
 
-All metrics are merged into: `releases/v9.9.0/focus-telemetry.json` (schema: `docs-index-v1`).
+All metrics are merged into: `releases/v10.1.0/focus-telemetry.json` (schema: `docs-index-v2`).
 
 ---
 
@@ -220,19 +220,19 @@ All metrics are merged into: `releases/v9.9.0/focus-telemetry.json` (schema: `do
 
 | Principle | Enforcement | Evidence |
 |-----------|-------------|----------|
-| **Findable** | Front-matter indexing; `path` + `version` + `sbom_ref` | `reports/docs_lint.json` |
-| **Accessible** | Public artifacts; clear failure summaries | `reports/docs/summary.md` |
-| **Interoperable** | JSON Schema + DCAT-style references | `frontmatter_validation.json` |
-| **Reusable** | CC-BY 4.0; repeatable workflow | This doc + `docs-lint.yml` |
-| **CARE** | Flags sensitive content cues in docs; prohibits PII | Custom FAIR+CARE lints |
+| **Findable** | Front-matter indexing; `path` + `version` + `sbom_ref`. | `reports/docs_lint.json` |
+| **Accessible** | Public artifacts; clear failure summaries. | `reports/docs/summary.md` |
+| **Interoperable** | JSON Schema + DCAT-style references. | `frontmatter_validation.json` |
+| **Reusable** | CC-BY 4.0; repeatable workflow. | This doc + `docs-lint.yml` |
+| **CARE** | Flags sensitive content cues; prohibits PII in docs. | Custom FAIR+CARE lints |
 
 ---
 
 ## 🔒 Supply Chain & Sustainability
 
-- SBOM creation via **Syft** (optional in docs-only runs).  
-- Runner energy & duration appended to telemetry (ISO 50001 tracking).  
-- Concurrency to prevent redundant runs on active branches.
+- Optional **SBOM** via Syft.  
+- Runner energy & duration appended to telemetry (ISO 50001).  
+- Concurrency prevents redundant runs on active branches.
 
 ---
 
@@ -252,6 +252,7 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| **v10.1.0** | 2025-11-10 | `@kfm-docs` | Upgraded to v10.1.0 artifacts and telemetry schema v2; improved Mermaid guardrails. |
 | v9.9.0 | 2025-11-08 | `@kfm-docs` | Initial governed docs lint workflow doc with schema, link checks, Mermaid guardrails, and telemetry export. |
 
 ---
