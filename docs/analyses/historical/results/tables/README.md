@@ -21,12 +21,12 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Document and catalogue all **tabular output artifacts** generated within the Historical Domain Results workflows of the Kansas Frontier Matrix (KFM).  
-These tables capture population dynamics outputs, archival correlation results, energy & governance summaries—each aligned to FAIR+CARE standards and governed under Master Coder Protocol v6.3.
+These tables capture population dynamics, archival correlations, sustainability audits, and governance summaries under FAIR+CARE and MCP-DL v6.3 certification.
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Historical-orange)](../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)  
-[![Status: Active](../../releases/v10.2.0/manifest.zip)](../../releases/v10.2.0/manifest.zip)
+[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Historical-orange)](../../../../docs/standards/faircare.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)](../../../../releases/v10.2.0/manifest.zip)
 
 </div>
 
@@ -34,8 +34,8 @@ These tables capture population dynamics outputs, archival correlation results, 
 
 ## 📘 Overview
 
-This folder holds all tabular artifacts produced as final outputs in the historical results stream: CSV files of model outputs, validation logs, sustainability metrics, and archival-dataset indexes.  
-Tables are structured to support reproducibility, cross-domain interoperability, and FAIR+CARE governance.
+The **Historical Results Tables** directory contains structured CSV/TSV files derived from archival correlation, population dynamics modelling, and governance telemetry analyses.  
+Each table adheres to FAIR+CARE metadata conventions, embedding provenance, licensing, and validation schema compliance for interoperability across domains.
 
 ---
 
@@ -44,54 +44,93 @@ Tables are structured to support reproducibility, cross-domain interoperability,
 ```bash
 docs/analyses/historical/results/tables/
  ├── README.md
- ├── population-dynamics-model.csv              # Reconstructed population model outcomes 1850-1950
- ├── archival-correlation-results.csv            # Harmonised archival record links and metadata
- ├── energy-sustainability-log.csv               # Energy usage and carbon footprint for results workflows
- └── method-validation-summary.csv                # Methods model validation and provenance metrics
+ ├── population-dynamics-model.csv          # Modelled population and migration trends (1850–1950)
+ ├── archival-correlation-results.csv       # Harmonised archival record metadata
+ ├── energy-sustainability-log.csv          # Energy and sustainability audit logs
+ └── method-validation-summary.csv          # FAIR+CARE model validation metrics
 ```
 
-Each table includes an embedded metadata side-car (JSON or YAML) listing dataset IDs, columns, units, provenance references, checksum and generation date.
+Each dataset is accompanied by JSON-LD or YAML metadata sidecars describing columns, units, dataset lineage, and FAIR+CARE compliance metrics.
 
 ---
 
 ## 🧾 Table Descriptions
 
-| File                                           | Description                                             | Format |
-|------------------------------------------------|---------------------------------------------------------|--------|
-| `population-dynamics-model.csv`                 | Modelled population estimates and migration fluxes 1850–1950 | CSV    |
-| `archival-correlation-results.csv`              | Table linking archival materials, treaties, spatial location | CSV    |
-| `energy-sustainability-log.csv`                  | Tabulation of energy (kWh), emissions (gCO₂e), runtime   | CSV    |
-| `method-validation-summary.csv`                  | Validation results (RMSE, bias, completeness) for methods used | CSV    |
+| File | Description | Format | Validation |
+|------|--------------|---------|-------------|
+| `population-dynamics-model.csv` | Modeled demographic outcomes and migration rates 1850–1950. | CSV | FAIR Schema Validator |
+| `archival-correlation-results.csv` | Metadata harmonization of archival sources and treaties. | CSV | FAIR+CARE Compliance Pipeline |
+| `energy-sustainability-log.csv` | Energy and carbon footprint metrics from result workflows. | CSV | ISO 50001/14064 Audit |
+| `method-validation-summary.csv` | Validation results for FAIR+CARE workflow integrity. | CSV | FAIR+CARE Validator |
 
 ---
 
-## ⚖️ FAIR+CARE Governance Summary
+## ⚙️ Workflow and Validation
 
-| Principle             | Implementation                                                | Verification Source            |
-|------------------------|---------------------------------------------------------------|--------------------------------|
-| **Findable**           | Tables indexed with persistent UUID and catalog metadata      | `manifest_ref`                 |
-| **Accessible**         | CSV files licensed under CC-BY 4.0 and publicly archived      | FAIR+CARE Registry             |
-| **Interoperable**      | Machine-readable CSV with metadata side-cars (JSON-LD)        | `telemetry_schema`             |
-| **Reusable**           | Provenance, licensing, and versioning included in metadata    | Metadata side-cars             |
-| **Collective Benefit** | Data supports cross-domain research and heritage studies     | FAIR+CARE Audit                |
-| **Authority to Control**| Sensitive cultural data aggregated/protected appropriately   | IDGB Consent Records           |
-| **Responsibility**     | Energy, runtime and emissions tracked across workflows        | `energy-sustainability-log.csv`|
-| **Ethics**             | Anonymisation, aggregation and transparency for archival data | Governance Ledger              |
+```mermaid
+flowchart TD
+  A["Historical Workflow Outputs"] --> B["Table Generator (Python/R)"]
+  B --> C["Metadata Embedder (Provenance + Schema)"]
+  C --> D["FAIR+CARE Validator"]
+  D --> E["Telemetry Export + Manifest Indexing"]
+```
+
+Telemetry ensures full traceability between data production, energy metrics, and governance audits.
+
+---
+
+## ⚖️ FAIR+CARE Governance Matrix
+
+| Principle | Implementation | Verification Source |
+|------------|----------------|--------------------|
+| **Findable** | Indexed under STAC/DCAT with persistent identifiers. | `manifest_ref` |
+| **Accessible** | Publicly available CSVs under CC-BY 4.0 license. | FAIR+CARE Ledger |
+| **Interoperable** | JSON-LD sidecars ensure schema consistency. | `telemetry_schema` |
+| **Reusable** | Full provenance, versioning, and checksums provided. | FAIR+CARE Audit |
+| **Collective Benefit** | Enables interdisciplinary historical research and public education. | Governance Council |
+| **Authority to Control** | Indigenous consent managed through data-use metadata. | IDGB Records |
+| **Responsibility** | Telemetry logs record sustainability and energy metrics. | `energy-sustainability-log.csv` |
+| **Ethics** | Sensitive cultural and archival data anonymized. | Governance Reports |
+
+---
+
+## 🧠 Example Metadata (Excerpt)
+
+```json
+{
+  "dataset_id": "historic_population_trends_1850_1950",
+  "created_by": "FAIR+CARE Historical Results Council",
+  "license": "CC-BY-4.0",
+  "columns": [
+    "Region", "Year", "Population", "Migration_Rate", "Confidence_Score"
+  ],
+  "provenance": {
+    "source_archives": ["US Census Bureau", "Kansas Historical Society"],
+    "processing_tools": ["Python Pandas 2.1", "R tidyverse 4.3"],
+    "checksum_sha256": "a7e4b13f2c0198d3..."
+  },
+  "energy_kWh": 0.0042,
+  "carbon_gCO2e": 0.0057,
+  "faircare_compliance": 98.9,
+  "timestamp": "2025-11-11T14:20:00Z"
+}
+```
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author                            | Summary                                  |
-|---------|------------|-----------------------------------|------------------------------------------|
-| v10.2.2 | 2025-11-11 | FAIR+CARE Historical Results Council | Published tables documentation aligned with v10.2 schema and governance protocols |
+| Version | Date | Author | Summary |
+|----------|------|--------|----------|
+| v10.2.2 | 2025-11-11 | FAIR+CARE Historical Results Council | Created documentation for Historical Results Tables with FAIR+CARE and ISO compliance integration. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Historical Results](../README.md) · [Datasets →](../datasets/README.md)
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to Historical Results](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
