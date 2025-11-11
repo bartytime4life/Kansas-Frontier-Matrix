@@ -40,8 +40,8 @@ Each pattern includes **ARIA semantics**, **keyboard interaction rules**, **focu
 **Coverage Areas**
 - Universal keyboard & screen reader interactions  
 - Component-level ARIA & labeling  
-- Accessible visualizations (MapLibre, D3, Cesium)  
-- Focus Mode interaction and consent patterns  
+- Accessible visualizations (MapLibre, D3, Recharts, Cesium)  
+- Focus Mode interaction & consent patterns  
 - Mobile & reduced-motion adaptations  
 
 ---
@@ -50,13 +50,16 @@ Each pattern includes **ARIA semantics**, **keyboard interaction rules**, **focu
 
 ```
 docs/accessibility/patterns/
-├── README.md              # This file
-├── buttons.md             # Accessible buttons and toggle patterns
-├── dialogs.md             # Modal, alert, and drawer interactions
-├── map-controls.md        # Accessible geospatial & map widgets
-├── charts.md              # Accessible charts and data visualizations
-├── navigation.md          # Menus, breadcrumbs, and skip-links
-└── forms.md               # Input controls and validation messaging
+├── README.md                 # This file
+├── alerts.md                 # Live regions, role="alert"/"status", toasts
+├── buttons.md                # Accessible buttons and toggle patterns
+├── charts.md                 # Accessible charts and data visualizations
+├── dialogs.md                # Modal, alertdialog, drawer interactions
+├── forms.md                  # Input controls and validation messaging
+├── map-controls.md           # Accessible geospatial & map widgets
+├── media.md                  # Video, audio, captions, transcripts
+├── navigation.md             # Menus, breadcrumbs, skip-links
+└── tables.md                 # Semantic tables & ARIA grids
 ```
 
 ---
@@ -67,15 +70,15 @@ docs/accessibility/patterns/
 |---|---|---|
 | **Keyboard Operability** | All components usable with keyboard-only navigation. | Supports Tab, Shift+Tab, Enter, Space, Arrow keys, Esc. |
 | **Screen Reader Support** | Semantic markup and ARIA roles announce structure and state. | Follows WAI-ARIA 1.2 Authoring Practices. |
-| **Focus Management** | Predictable focus order and visible focus rings (≥3:1 contrast). | Uses logical DOM order and focus trapping for modals. |
+| **Focus Management** | Predictable focus order and visible focus rings (≥3:1 contrast). | Logical DOM order; focus trap for modals; return focus on close. |
 | **Motion Sensitivity** | Respects user’s `prefers-reduced-motion` settings. | Animations disabled or simplified automatically. |
-| **Cultural Sensitivity** | Text and iconography avoid bias or harmful symbolism. | FAIR+CARE-aligned content validation. |
+| **Cultural Sensitivity** | Text, iconography, and visuals avoid bias/harm; consent surfaced. | FAIR+CARE-aligned content validation. |
 
 ---
 
 ## 🧭 Global Accessibility Tokens
 
-These design tokens unify a11y behavior across UI components.
+These design tokens unify a11y behavior across UI components (see `../../design/tokens/accessibility-tokens.md`).
 
 | Token | Type | Description |
 |---|---|---|
@@ -90,41 +93,48 @@ These design tokens unify a11y behavior across UI components.
 
 ## 🧩 Component Pattern Summaries
 
-### 🔘 Buttons & Toggles
-- **Role:** `role="button"` with `tabindex="0"`.  
+### 🔘 Buttons & Toggles (`buttons.md`)
+- **Role:** `role="button"` with `tabindex="0"` if not native.  
 - **Interaction:** `Enter` and `Space` trigger action.  
-- **ARIA:** Use `aria-pressed="true|false"` for toggles.  
-- **Guidelines:** Always label buttons clearly with verbs (e.g., “Save Data”).  
+- **ARIA:** `aria-pressed="true|false"` for toggles.  
+- **Guidelines:** Use clear, verb-led labels (e.g., “Save data”).
 
-### 💬 Dialogs & Modals
+### 💬 Dialogs & Modals (`dialogs.md`)
 - **Role:** `role="dialog"` or `role="alertdialog"`.  
-- **Focus Trap:** Use `focus-trap` utility to contain tab order.  
-- **Escape Handling:** `Esc` closes modal; return focus to invoking element.  
-- **ARIA:** Label with `aria-labelledby` and describe via `aria-describedby`.  
+- **Focus Trap:** Contain tab order in dialog; restore focus to opener on close.  
+- **ARIA:** `aria-labelledby` for title; `aria-describedby` for content.
 
-### 🗺️ Map Controls
-- **Keyboard Access:** Arrow keys for panning; `+`/`-` or `=`/`_` for zooming.  
-- **Live Regions:** Announce zoom level or active layer (`aria-live="polite"`).  
-- **ARIA Roles:** `role="application"` with `aria-label="Interactive map"`.  
-- **Layer List:** Treated as checkbox group with `aria-checked` and keyboard toggles.  
+### 🚨 Alerts & Live Regions (`alerts.md`)
+- **Polite vs. Assertive:** Use `role="status"` (polite) for non-urgent; `role="alert"` (assertive) for urgent.  
+- **Toasts:** Dismissible, `Esc` closable; do not steal focus.  
+- **Fair Tone:** Avoid alarmist copy; provide actionable next steps.
 
-### 📊 Charts & Visualizations
-- **Alt Representation:** Provide tabular summaries below each chart.  
-- **ARIA:** Use `aria-roledescription="chart"` and `aria-label="Population by decade"`.  
-- **Focus Management:** Navigable data points or annotations for keyboard users.  
-- **Motion:** Avoid flashing elements (>3 Hz) to meet WCAG 2.3.1.  
+### 🗺️ Map Controls (`map-controls.md`)
+- **Keyboard Access:** Arrow keys pan; `+/-` zoom; Tab cycles controls.  
+- **Live Regions:** Announce zoom level, active layers (`aria-live="polite"`).  
+- **Consent:** Cultural overlays require visible consent flags.
 
-### 📑 Navigation Menus
-- **ARIA Roles:** `menubar`, `menuitem`, `menuitemcheckbox`, `menuitemradio`.  
-- **Keyboard Shortcuts:** Left/Right arrows to move between items.  
-- **Skip Links:** Provide skip-to-content and skip-to-map shortcuts at top of page.  
-- **Active State:** Use `aria-current="page"` and `aria-expanded` for nested menus.  
+### 📈 Charts & Visualizations (`charts.md`)
+- **Structure:** `role="figure"` + labels; data table alt or CSV.  
+- **Keyboarding:** Arrow keys move focus among data points; `Esc` exits.  
+- **Color Independence:** Distinguish series via shape/patterns; maintain contrast.
 
-### 📝 Forms & Inputs
-- **Labels:** Use `<label for="input-id">` or `aria-label`.  
-- **Error Feedback:** Provide descriptive text linked by `aria-describedby`.  
-- **Color Independence:** Do not rely on color alone to show error states.  
-- **Focus Return:** On validation error, move focus to first invalid field.  
+### 📝 Forms & Inputs (`forms.md`)
+- **Labels:** Visible `<label for="…">` or `aria-label`; never rely on placeholder.  
+- **Errors:** `aria-invalid`, `aria-describedby`, and polite live feedback.  
+- **Consent:** FAIR+CARE checkbox for data use and cultural governance.
+
+### 🧭 Navigation (`navigation.md`)
+- **Landmarks:** `<header>`, `<nav>`, `<main>`, `<footer>`; skip-to-content links.  
+- **Menus:** Keyboard operable; `aria-current="page"` for breadcrumbs.
+
+### 📊 Tables & Grids (`tables.md`)
+- **Semantics:** `<table>`, `<thead>`, `<tbody>`, `<th scope="…">`.  
+- **Grids:** `role="grid"` with `aria-sort`, roving tabindex for large datasets.
+
+### 🎥 Media & Time-Based Content (`media.md`)
+- **Captions & Transcripts:** Required for all AV content.  
+- **Controls:** Fully keyboard operable; no auto-play; visible focus.
 
 ---
 
@@ -132,9 +142,10 @@ These design tokens unify a11y behavior across UI components.
 
 | Workflow | Validation Target | Artifact |
 |---|---|---|
-| `accessibility_scan.yml` | Component and page-level checks via axe-core | `reports/self-validation/web/a11y_summary.json` |
-| `storybook-a11y.yml` | Storybook + Jest a11y snapshot testing | `reports/ui/a11y_component_audits.json` |
-| `color-contrast.yml` | Validates design tokens for WCAG compliance | `reports/ui/color-contrast.json` |
+| `accessibility_scan.yml` | Axe/Lighthouse checks (roles, labels, headings) | `reports/self-validation/web/a11y_summary.json` |
+| `storybook-a11y.yml` | Component snapshots and jest-axe tests | `reports/ui/a11y_component_audits.json` |
+| `color-contrast.yml` | Token contrast thresholds | `reports/ui/color-contrast.json` |
+| `faircare-visual-audit.yml` | Ethical tone & consent metadata checks | `reports/faircare-visual-validation.json` |
 
 ---
 
@@ -142,19 +153,19 @@ These design tokens unify a11y behavior across UI components.
 
 | Care Principle | Application in UI |
 |---|---|
-| **Collective Benefit** | UI patterns tested by diverse user groups and screen-reader users. |
-| **Authority to Control** | Cultural or Indigenous symbols used with proper consent and attribution. |
-| **Responsibility** | Components versioned with accessibility regression tests. |
-| **Ethics** | Dialogs and narrative outputs avoid exploitative or traumatic content. |
+| **Collective Benefit** | Patterns tested by diverse user groups and assistive tech users. |
+| **Authority to Control** | Cultural/Indigenous symbols used only with consent and attribution. |
+| **Responsibility** | Components versioned with a11y regression tests and telemetry. |
+| **Ethics** | Dialogs, alerts, and narratives avoid exploitative or traumatic content. |
 
 ---
 
 ## 🧠 References & Tools
 
-- [WAI-ARIA Authoring Practices 1.2](https://www.w3.org/TR/wai-aria-practices/)
-- [Deque axe-core](https://www.deque.com/axe/)
-- [WCAG 2.1 Checklist](https://www.w3.org/WAI/WCAG21/quickref/)
-- [Inclusive Design Principles](https://inclusivedesignprinciples.org/)
+- [WAI-ARIA Authoring Practices 1.2](https://www.w3.org/TR/wai-aria-practices/)  
+- [Deque axe-core](https://www.deque.com/axe/)  
+- [WCAG 2.1 Quick Reference](https://www.w3.org/WAI/WCAG21/quickref/)  
+- [Inclusive Design Principles](https://inclusivedesignprinciples.org/)  
 - [FAIR+CARE Framework](../../standards/faircare.md)
 
 ---
@@ -163,7 +174,7 @@ These design tokens unify a11y behavior across UI components.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-10 | A11y & FAIR+CARE Council | Created comprehensive accessible UI pattern library with ARIA specs, CI validation links, and component guidelines. |
+| v10.0.0 | 2025-11-10 | A11y & FAIR+CARE Council | Updated directory layout and pattern index; added alerts, media, and tables coverage; aligned with FAIR+CARE, WCAG 2.1 AA, and CI pipelines. |
 
 ---
 
@@ -171,6 +182,6 @@ These design tokens unify a11y behavior across UI components.
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
 Developed under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
-[Back to Accessibility Index](../README.md) · [Design Tokens](../../design/tokens/accessibility-tokens.md)
+[Back to Accessibility Index](../README.md) · [A11y Checklists](../checklists/README.md)
 
 </div>
