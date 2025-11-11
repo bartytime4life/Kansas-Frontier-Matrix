@@ -1,14 +1,14 @@
 ---
 title: "📈 Telemetry Export Workflow — `telemetry-export.yml` (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/telemetry-export.yml.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.1.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/workflows/telemetry-export-v1.json"
+sbom_ref: "../../releases/v10.1.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.1.0/manifest.zip"
+telemetry_ref: "../../releases/v10.1.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/workflows/telemetry-export-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -23,7 +23,7 @@ mcp_version: "MCP-DL v6.3"
 Aggregate and normalize **build, validation, and governance metrics** from all CI jobs (docs, STAC/DCAT, FAIR+CARE, AI training, web builds) into a single, FAIR+CARE-aligned telemetry ledger: **`releases/<version>/focus-telemetry.json`**.  
 Provides a **machine-readable, auditable** source for sustainability dashboards, governance reviews, and certification under **MCP-DL v6.3** and **Diamond⁹ Ω / Crown∞Ω**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../README.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange)](../standards/faircare.md)
 [![Status: Automated](https://img.shields.io/badge/Status-Automated-brightgreen)](#)
@@ -51,10 +51,10 @@ All inputs are normalized to a **stable telemetry schema** and appended to **`fo
 | Trigger | Paths | Notes |
 |--------:|------|------|
 | `workflow_run` | listens to success of: docs-lint, faircare-validate, stac-validate, ai-train | primary mode |
-| `schedule` | nightly | roll-up of last N runs; trend refresh |
+| `schedule` | hourly | roll-up of last N runs; trend refresh |
 | `workflow_dispatch` | manual | backfill or emergency re-aggregation |
 
-**Upstream requirements:** Each contributing workflow must emit a JSON summary conforming to its telemetry schema (see **Schemas & Contracts** below).
+**Upstream requirement:** Each contributing workflow **must** emit a JSON summary conforming to its telemetry schema (see **Schemas & Contracts**).
 
 ---
 
@@ -102,8 +102,8 @@ jobs:
 
       - name: Collect inputs
         run: |
-          mkdir -p .telemetry/in .telemetry/out releases/v9.9.0
-          # Example pulls; adapt to your artifact names/paths:
+          mkdir -p .telemetry/in .telemetry/out releases/v10.1.0
+          # Example pulls; adapt to artifact names:
           python scripts/pull_artifact.py --name docs_lint_reports --out ./.telemetry/in/docs
           python scripts/pull_artifact.py --name faircare_reports --out ./.telemetry/in/faircare
           python scripts/pull_artifact.py --name stac_validation_reports --out ./.telemetry/in/stac
@@ -128,23 +128,23 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in .telemetry/out/*.json \
-            --dest releases/v9.9.0/focus-telemetry.json
+            --dest releases/v10.1.0/focus-telemetry.json
 
       - name: Validate unified telemetry
         run: |
           python - <<'PY'
-          import json,sys
-          from jsonschema import validate, Draft202012Validator
-          schema=json.load(open("schemas/telemetry/docs-index-v1.json"))
-          data=json.load(open("releases/v9.9.0/focus-telemetry.json"))
+          import json
+          from jsonschema import Draft202012Validator
+          with open("schemas/telemetry/docs-index-v1.json") as f: schema=json.load(f)
+          with open("releases/v10.1.0/focus-telemetry.json") as f: data=json.load(f)
           Draft202012Validator(schema).validate(data)
-          print("Unified telemetry valid; entries:", len(data.get("events", [])))
+          print("Unified telemetry valid; events:", len(data.get("events", [])))
           PY
 
       - name: Export quick summaries
         run: |
           python scripts/summarize_telemetry.py \
-            --in releases/v9.9.0/focus-telemetry.json \
+            --in releases/v10.1.0/focus-telemetry.json \
             --out reports/telemetry/summary.json \
             --md  reports/telemetry/summary.md
           echo "Telemetry summary written."
@@ -154,7 +154,7 @@ jobs:
         with:
           name: telemetry_ledger
           path: |
-            releases/v9.9.0/focus-telemetry.json
+            releases/v10.1.0/focus-telemetry.json
             reports/telemetry/**
 ```
 
@@ -190,24 +190,24 @@ The exporter validates each input against its schema before merging.
 | `status` | enum | `success` \| `warning` \| `failure` |
 | `payload` | object | Validated summary (schema-typed) |
 
-> Energy may be estimated via runner power models or read from `ACTIONS_RUNNER_DEBUG` + custom probes; carbon intensity (gCO₂e/kWh) can be added via provider APIs.
+> Energy may be estimated via runner power models or read from probes; carbon intensity (gCO₂e/kWh) can be added via provider APIs.
 
 ---
 
 ## ♻️ Sustainability & Governance
 
-- Tracks **energy** and **duration** per job; computes monthly totals.  
+- Tracks **energy** and **duration** per job; computes weekly/monthly totals.  
 - Flags **hotspots** (long-running, high-energy steps) for refactoring.  
 - Emits **FAIR+CARE** alignment snapshot for council review.  
-- Prohibits merging telemetry from quarantined data unless **abandonment registry** marks `remediated`.
+- Blocks merges if telemetry is missing for required jobs or **abandonment registry** not remediated.
 
 ---
 
 ## 🔐 Supply Chain & Integrity
 
-- Optionally sign the telemetry ledger with **Sigstore Cosign** and attach **SLSA** attestations.  
+- Sign the telemetry ledger with **Sigstore Cosign** and attach **SLSA** attestations (optional but recommended).  
 - Store `focus-telemetry.json` under `releases/<version>/` with immutability guarantees.  
-- Include SBOM pointer (`sbom_ref`) in front-matter for traceability.
+- Include SBOM pointer (`sbom_ref`) in front-matter for end-to-end traceability.
 
 ---
 
@@ -227,7 +227,8 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |--------:|------|--------|---------|
-| v9.9.0  | 2025-11-08 | `@kfm-devops` | Initial governed telemetry exporter with schema validation and sustainability metrics. |
+| **v10.1.0** | 2025-11-10 | `@kfm-devops` | Upgraded to v10.1.0 artifacts; hourly roll-ups; uploader v4; schema `telemetry-export-v2`. |
+| v9.9.0 | 2025-11-08 | `@kfm-devops` | Initial governed telemetry exporter with schema validation and sustainability metrics. |
 
 ---
 
@@ -239,4 +240,3 @@ flowchart LR
 [Back to Workflows Index](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
