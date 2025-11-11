@@ -23,10 +23,10 @@ mcp_version: "MCP-DL v6.3"
 Provide a centralized archive of all **validated results artefacts** derived from the Historical Domain analyses of the Kansas Frontier Matrix (KFM).  
 Includes summary documents, tabular outputs, visualization exports, telemetry logs, and governance records—each governed by FAIR+CARE certification and Master Coder Protocol v6.3 reproducibility standards.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC-BY 4.0-green)](../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../releases/v10.2.0/manifest.zip)
+[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Historical-orange)](../../../../docs/standards/faircare.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
+[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)](../../../../releases/v10.2.0/manifest.zip)
 
 </div>
 
@@ -111,9 +111,9 @@ Each artefact is accompanied by metadata (dataset identifiers, generation date, 
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-Developed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Historical Processing](../README.md) · [Datasets →](../datasets/README.md)
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[⬅ Back to Historical Overview](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
