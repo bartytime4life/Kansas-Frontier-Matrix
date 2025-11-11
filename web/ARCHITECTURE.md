@@ -94,11 +94,11 @@ web/
 ## 🧱 Component Boundaries
 ```mermaid
 flowchart LR
-"MapView" --- "TimelineView"
-"TimelineView" --- "FocusPanel"
-"MapView" --- "LayerControls"
-"FocusPanel" --- "DetailDrawer"
-"MapView" --- "Legend"
+  map[MapView] --- timeline[TimelineView]
+  timeline --- focus[FocusPanel]
+  map --- layers[LayerControls]
+  focus --- drawer[DetailDrawer]
+  map --- legend[Legend]
 ```
 
 - **MapView:** Base map (2D/3D), layer management, selections, keyboard ops  
