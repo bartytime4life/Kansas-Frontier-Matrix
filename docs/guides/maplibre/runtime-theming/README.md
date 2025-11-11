@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🗺️ Kansas Frontier Matrix — MapLibre Runtime Theming with Design Tokens (Accessible · Energy-Aware · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/maplibre/runtime-theming/README.md"
