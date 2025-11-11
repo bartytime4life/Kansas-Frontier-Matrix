@@ -2,7 +2,7 @@
 title: "⛰️ Kansas Frontier Matrix — Geology Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/geology/README.md"
 version: "v10.2.2"
-last_updated: "2025-11-09"
+last_updated: "2025-11-11"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../releases/v10.2.0/sbom.spdx.json"
@@ -16,59 +16,73 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# ⛰️ **Kansas Frontier Matrix — Geology Analyses Overview**
+# ⛰️ **Kansas Frontier Matrix — Geology Analyses Overview**  
 `docs/analyses/geology/README.md`
 
 **Purpose:**  
-Document all **geological and geophysical analytical frameworks** in the Kansas Frontier Matrix (KFM), including subsurface modeling, stratigraphic mapping, and resource sustainability analysis.  
-This module integrates data from **USGS**, **KGS**, and **NOAA** under **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3**, ensuring transparent, reproducible, and sustainable geoscience analytics.
+Document all **geological and geophysical analytical frameworks** in the Kansas Frontier Matrix (KFM), encompassing subsurface modeling, stratigraphic interpretation, and geomorphological change analysis.  
+The Geology module integrates datasets from **USGS**, **KGS**, **NGDB**, and **NOAA**, upholding **FAIR+CARE** governance, **ISO 19115 metadata**, and **MCP-DL v6.3 reproducibility** standards.
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geology-orange)](../../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../../releases/)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC-BY%204.0-green)](../../../../LICENSE)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geology-orange)](../../../../docs/standards/faircare.md)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](../../../../releases/v10.2.0/manifest.zip)
+
 </div>
 
 ---
 
 ## 📘 Overview
 
-The **Geology Analysis Module** integrates subsurface, topographic, and mineral datasets to interpret the structural and stratigraphic framework of Kansas.  
-This component supports both historical and modern investigations of the **Kansas River Basin**, **Hugoton Basin**, and **Osage Cuestas**, contributing to sustainability and energy research.
-
-**Objectives**
-- Model **subsurface stratigraphy** using borehole and seismic data  
-- Map **surface geology and geomorphology** from LiDAR and DEM products  
-- Quantify **mineral and groundwater resources** under FAIR+CARE governance  
-- Establish **telemetry-integrated sustainability tracking** (ISO 50001 / 14064)  
+The **Geology Analysis Module** provides an integrated geospatial-geophysical framework for Kansas, addressing subsurface structure, surface processes, and sustainability.  
+It supports both historic and contemporary geological research on:
+- Stratigraphy of the **Kansas River Basin**, **Hugoton Basin**, and **Osage Cuestas**.  
+- Geophysical modelling of seismic and lithologic data.  
+- Sustainability analysis of energy and groundwater resources.  
+- FAIR+CARE-linked telemetry tracking under ISO 50001 / 14064 energy governance.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```bash
 docs/analyses/geology/
-├── README.md                                  # This overview
-├── datasets/                                  # Geological and geophysical data sources
-│   ├── README.md
-│   ├── raw/                                   # USGS, KGS, NGDB, DEM, seismic
-│   ├── processed/                             # Cleaned and interpolated geological datasets
-│   ├── derived/                               # Stratigraphic and topographic models
-│   └── metadata/                              # STAC/DCAT 3.0 + FAIR+CARE metadata registry
-├── stratigraphic-modeling.md                  # Borehole and subsurface model methods
-├── seismic-modeling.md                        # Seismic data processing and structural interpretation
-├── geomorphology.md                           # Surface terrain, slope, and lithologic mapping
-├── validation.md                              # FAIR+CARE and ISO validation for geology module
-└── reports/                                   # Geological maps, 3D models, dashboards
-    ├── README.md
-    ├── geology_summary.json
-    ├── sustainability_audit.json
-    └── visualization/
-        ├── stratigraphic_cross_section.png
-        ├── seismic_reflection_map.png
-        ├── surface_geology_map.png
-        └── lithologic_3d_model.png
+ ├── README.md
+ ├── datasets/
+ │    ├── README.md
+ │    ├── raw/
+ │    ├── processed/
+ │    ├── derived/
+ │    └── metadata/
+ ├── geomorphology.md
+ ├── seismic-modeling.md
+ ├── stratigraphic-modeling.md
+ ├── validation.md
+ ├── methods/
+ │    ├── README.md
+ │    ├── summary-findings.md
+ │    ├── figures/
+ │    ├── tables/
+ │    └── telemetry-logs/
+ ├── results/
+ │    ├── README.md
+ │    ├── summary-findings.md
+ │    ├── figures/
+ │    ├── tables/
+ │    └── telemetry-logs/
+ ├── reports/
+ │    ├── README.md
+ │    ├── geology_summary.json
+ │    ├── sustainability_audit.json
+ │    └── visualization/
+ │         ├── stratigraphic_cross_section.png
+ │         ├── seismic_reflection_map.png
+ │         ├── surface_geology_map.png
+ │         └── lithologic_3d_model.png
+ └── governance.md
 ```
+
+Each sub-directory follows the FAIR+CARE workflow: `datasets → methods → results → reports`, ensuring full traceability and reproducibility.
 
 ---
 
@@ -76,13 +90,13 @@ docs/analyses/geology/
 
 ```mermaid
 flowchart TD
-  A["USGS / KGS / NGDB / NOAA Datasets"] --> B["Data Preprocessing (QC + FAIR+CARE Validation)"]
-  B --> C["Stratigraphic Modeling (Borehole + DEM Integration)"]
-  C --> D["Seismic Analysis (Reflection + Refraction)"]
-  D --> E["Geomorphological Mapping (Slope + Aspect + Lithology)"]
-  E --> F["Sustainability Analysis (Energy, Groundwater, Carbon Footprint)"]
-  F --> G["FAIR+CARE Validation + ISO 50001 Telemetry"]
-  G --> H["Governance Ledger + Council Review"]
+  A["USGS · KGS · NGDB · NOAA Data"] --> B["Pre-Processing & FAIR+CARE Validation"]
+  B --> C["Stratigraphic Modeling (Borehole + DEM)"]
+  C --> D["Seismic Analysis (Reflection / Refraction)"]
+  D --> E["Geomorphologic Mapping (Slope + Aspect)"]
+  E --> F["Sustainability Evaluation (Energy, Carbon, Water)"]
+  F --> G["Telemetry Logging + ISO 50001/14064 Audit"]
+  G --> H["Governance Review & Certification"]
 ```
 
 ---
@@ -91,11 +105,11 @@ flowchart TD
 
 | Source | Dataset | Variables | Coverage | FAIR+CARE Status |
 |---------|----------|------------|-----------|------------------|
-| **USGS National Geologic Map Database (NGDB)** | Stratigraphy and formation boundaries | Lithology, Formation, Age | Statewide | ✅ Certified |
-| **Kansas Geological Survey (KGS)** | Borehole, seismic, and groundwater records | Depth, lithology, porosity | 1850–2025 | ✅ Certified |
-| **NOAA / NASA SRTM** | Surface elevation and slope data | DEM, aspect, hillshade | 1–30 m | ✅ Certified |
-| **USGS Earth Resources Observation (EROS)** | Geologic imagery and mineral data | Raster reflectance, classification | 1970–present | ✅ Certified |
-| **FAIR+CARE Ledger** | Provenance, sustainability, and ethical audits | Telemetry and metadata | Continuous | ✅ Certified |
+| **USGS NGDB** | Stratigraphic boundaries & lithology | Formation, lithology, depth | Kansas | ✅ Certified |
+| **KGS** | Borehole, seismic & hydrologic records | Porosity, permeability | 1850–2025 | ✅ Certified |
+| **NOAA / NASA SRTM** | Elevation & surface slope | DEM, aspect, hillshade | 1–30 m | ✅ Certified |
+| **USGS EROS** | Satellite mineral & reflectance data | Raster reflectance | 1970–present | ✅ Certified |
+| **FAIR+CARE Ledger** | Provenance / audit metadata | Telemetry + ethics | Continuous | ✅ Certified |
 
 ---
 
@@ -103,11 +117,11 @@ flowchart TD
 
 | Workflow | Description | Tools / Libraries | Output |
 |-----------|--------------|-------------------|---------|
-| **Stratigraphic Modeling** | 3D interpolation of borehole and formation data | `GemPy`, `PyVista` | Stratigraphic cross-sections |
-| **Seismic Interpretation** | Reflection/refraction structure analysis | `ObsPy`, `PySeismic` | Structural horizon maps |
-| **Geomorphologic Mapping** | Slope/aspect & lithologic overlay generation | `GDAL`, `rasterio` | Surface morphology maps |
-| **Mineralogical Analysis** | Spectral analysis for mineral classification | `scikit-learn`, `rasterstats` | Mineral distribution rasters |
-| **Carbon Storage Assessment** | Potential CO₂ sequestration volume estimates | `GeoPandas`, `NumPy` | Sustainability reports |
+| **Stratigraphic Modeling** | 3D interpolation of borehole + formation data | `GemPy`, `PyVista` | Stratigraphic cross-sections |
+| **Seismic Interpretation** | Reflection/refraction seismic structure analysis | `ObsPy`, `PySeismic` | Structural horizon maps |
+| **Geomorphologic Mapping** | Slope/aspect + lithologic mapping | `GDAL`, `Rasterio` | Terrain & morphology maps |
+| **Mineralogical Analysis** | Spectral classification of surface minerals | `scikit-learn`, `rasterstats` | Mineral occurrence maps |
+| **Sustainability Analysis** | CO₂ storage / energy metrics | `GeoPandas`, `NumPy` | ISO sustainability report |
 
 ---
 
@@ -115,13 +129,13 @@ flowchart TD
 
 | Principle | Implementation | Verification Source |
 |------------|----------------|--------------------|
-| **Findable** | Geological datasets indexed via STAC/DCAT 3.0 | `datasets/metadata/` |
-| **Accessible** | Public releases with CC-BY license | FAIR+CARE Ledger |
-| **Interoperable** | GeoPackage, GeoTIFF, LAS, and NetCDF formats | `telemetry_schema` |
-| **Reusable** | Metadata includes lineage and licensing | `manifest_ref` |
-| **Collective Benefit** | Promotes open access to Kansas geological resources | FAIR+CARE Audit |
-| **Responsibility** | ISO 50001 telemetry monitors energy/carbon usage | `telemetry_ref` |
-| **Ethics** | Sensitive borehole coordinates generalized ≥1 km | FAIR+CARE Council Review |
+| **Findable** | Datasets indexed via STAC/DCAT 3.0 metadata | `datasets/metadata/` |
+| **Accessible** | CC-BY licensing with public registry | FAIR+CARE Ledger |
+| **Interoperable** | GeoPackage, GeoTIFF, LAS, NetCDF formats | `telemetry_schema` |
+| **Reusable** | Metadata includes lineage & checksums | `manifest_ref` |
+| **Collective Benefit** | Promotes sustainable resource & hazard research | FAIR+CARE Audit |
+| **Responsibility** | Telemetry monitors ISO energy + emission metrics | `telemetry_ref` |
+| **Ethics** | Sensitive borehole data generalized ≥ 1 km | IDGB Review |
 
 ---
 
@@ -129,18 +143,18 @@ flowchart TD
 
 | Metric | Description | Target | Unit |
 |---------|-------------|---------|------|
-| **Energy (J)** | Energy consumed per analytical workflow | ≤ 15 | Joules |
-| **Carbon (gCO₂e)** | CO₂ equivalent output per workflow | ≤ 0.006 | gCO₂e |
+| **Energy (J)** | Energy used per geologic workflow | ≤ 15 | Joules |
+| **Carbon (gCO₂e)** | CO₂ equivalent per workflow | ≤ 0.006 | gCO₂e |
 | **Telemetry Coverage (%)** | FAIR+CARE telemetry completeness | ≥ 95 | % |
 | **Audit Pass Rate (%)** | FAIR+CARE validation compliance | 100 | % |
 
 ---
 
-## 🧾 Governance Ledger Record Example
+## 🧾 Governance Ledger Example
 
 ```json
 {
-  "ledger_id": "geology-analysis-ledger-2025-11-09-0123",
+  "ledger_id": "geology-analysis-ledger-2025-11-11-0123",
   "component": "Geology Analysis Module",
   "datasets": [
     "USGS NGDB Stratigraphic Data",
@@ -152,7 +166,7 @@ flowchart TD
   "carbon_gCO2e": 0.0058,
   "faircare_status": "Pass",
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T15:55:00Z"
+  "timestamp": "2025-11-11T15:55:00Z"
 }
 ```
 
@@ -162,18 +176,17 @@ flowchart TD
 
 | Version | Date | Author | Summary |
 |----------|------|--------|----------|
-| v10.2.2 | 2025-11-09 | FAIR+CARE Council | Published geology analysis overview with integrated FAIR+CARE validation and telemetry. |
-| v10.2.1 | 2025-11-09 | Geological Data Group | Added sustainability metrics and stratigraphic modeling structure. |
-| v10.2.0 | 2025-11-09 | KFM Geoscience Team | Created geology module documentation aligned with MCP-DL v6.3 and ISO standards. |
+| v10.2.2 | 2025-11-11 | FAIR+CARE Council | Updated geology overview to align with telemetry schema v3 and ISO sustainability metrics. |
+| v10.2.1 | 2025-11-09 | Geological Data Group | Added FAIR+CARE metrics and workflow integration. |
+| v10.2.0 | 2025-11-08 | KFM Geoscience Team | Created geology module overview compliant with MCP-DL v6.3. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Analyses Overview](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅ Back to Analyses Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
