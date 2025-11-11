@@ -1,14 +1,14 @@
 ---
 title: "🗂️ STAC/DCAT Validation Workflow — `stac-validate.yml` (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/stac-validate.yml.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
+version: "v10.1.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/workflows/stac-validate-v1.json"
+sbom_ref: "../../releases/v10.1.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.1.0/manifest.zip"
+telemetry_ref: "../../releases/v10.1.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/workflows/stac-validate-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -22,7 +22,7 @@ mcp_version: "MCP-DL v6.3"
 **Purpose:**  
 Define the **GitHub Actions** workflow that validates all **STAC 1.0** Catalogs/Collections/Items and their **DCAT 3.0** mirrors, checks asset availability & checksums, enforces **FAIR+CARE**/contract fields, and publishes machine-readable validation reports with **telemetry** for Diamond⁹ / Crown∞Ω certification.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../README.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governance%20Aligned-orange)](../standards/faircare.md)
 [![Status: Automated](https://img.shields.io/badge/Status-Automated-brightgreen)](#)
@@ -33,7 +33,7 @@ Define the **GitHub Actions** workflow that validates all **STAC 1.0** Catalogs/
 
 ## 📘 Overview
 
-`stac-validate.yml` is the **catalog gate** for the Kansas Frontier Matrix (KFM). It guarantees that everything under `data/stac/**`:
+`stac-validate.yml` is the **catalog gate** for KFM. It guarantees that everything under `data/stac/**`:
 
 - ✅ Conforms to **STAC 1.0.0** (core + extensions: `proj`, `raster`, `eo`, `label`, `version`, `checksum`)  
 - ✅ Mirrors into **DCAT 3.0** where required (see `docs/architecture/data-architecture.md`)  
@@ -93,7 +93,7 @@ jobs:
           pip install pystac[validator]==1.10.1 stac-validator==3.3.0 stactools==0.5.5 \
                      jsonschema==4.23.0 rfc3986==2.0.0 requests==2.32.3 \
                      lxml==5.* \
-                     kfm-stac-tools[checksums,links]  # (repo-local helper)
+                     kfm-stac-tools[checksums,links]
           sudo apt-get update && sudo apt-get install -y jq moreutils
 
       - name: Validate STAC structure (catalog/collection/item)
@@ -157,7 +157,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in stac_telemetry.json \
-            --dest releases/v9.9.0/focus-telemetry.json
+            --dest releases/v10.1.0/focus-telemetry.json
 ```
 
 ---
@@ -181,8 +181,8 @@ jobs:
 
 ### Link & Asset Checks
 - `self`, `root`, `parent` links resolve (2xx)  
-- Asset URLs **HEAD** / **Range** OK; COGs report `Content-Type` & `Accept-Ranges`  
-- PMTiles `pmtiles://` URLs whitelisted and resolvable by protocol mapping (documented in `web/src/...`)
+- Asset URLs **HEAD** / **Range** OK; COGs show `Content-Type` & `Accept-Ranges`  
+- PMTiles `pmtiles://` URLs whitelisted by protocol mapping (documented in `web/src/...`)
 
 ---
 
@@ -198,7 +198,7 @@ jobs:
 | `reports/stac/dcat_validation.json` | DCAT mirror compliance report |
 | `reports/stac/contract_faircare.json` | Contract + FAIR+CARE field audit |
 
-All metrics are merged into `releases/v9.9.0/focus-telemetry.json` (schema: `stac-validate-v1`).
+All metrics are merged into `releases/v10.1.0/focus-telemetry.json` (schema: `stac-validate-v2`).
 
 ---
 
@@ -206,19 +206,19 @@ All metrics are merged into `releases/v9.9.0/focus-telemetry.json` (schema: `sta
 
 | Principle | Enforcement | Evidence |
 |-----------|-------------|----------|
-| **Findable** | STAC/ DCAT IDs, `self` links, `collection`/`parent` relationships | `structure.json` |
-| **Accessible** | Asset reachability & license presence | `assets_audit.json` |
-| **Interoperable** | Extension JSON Schema validation; DCAT parity | `validator.log`, `dcat_validation.json` |
-| **Reusable** | Checksums, providers, summaries, citations | `contract_faircare.json` |
-| **CARE** | `kfm:care_tag` propagation; sensitive items flagged | `contract_faircare.json` |
+| **Findable** | STAC/DCAT IDs, `self` links, `collection`/`parent` relations | `structure.json` |
+| **Accessible** | Asset reachability, license presence | `assets_audit.json` |
+| **Interoperable** | Extension schema validation; DCAT parity | `validator.log`, `dcat_validation.json` |
+| **Reusable** | Checksums, providers, citations, summaries | `contract_faircare.json` |
+| **CARE** | `kfm:care_tag` & sensitive flags respected | `contract_faircare.json` |
 
-> Items marked `sensitive` are **not** published to public endpoints until **FAIR+CARE Council** approval.
+> Items flagged `sensitive` are **not** published to public endpoints until **FAIR+CARE Council** approval.
 
 ---
 
 ## 🔒 Supply Chain & Sustainability
 
-- Optionally create **SBOM** for catalog builder image (Syft)  
+- Optionally build **SBOM** for catalog builder (Syft)  
 - Append **duration/energy** to telemetry (ISO 50001)  
 - Use **concurrency** to avoid duplicate runs on large PRs
 
@@ -242,6 +242,7 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
+| **v10.1.0** | 2025-11-10 | `@kfm-devops` | Upgraded to v10.1.0 artifacts; stricter checksum/link rules; telemetry schema v2. |
 | v9.9.0 | 2025-11-08 | `@kfm-devops` | Initial governed STAC/DCAT validation doc with asset/link checks and telemetry export. |
 
 ---
@@ -254,4 +255,3 @@ flowchart LR
 [Back to Workflows Index](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
