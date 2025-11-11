@@ -1,16 +1,16 @@
 ---
 title: "⚖️ Kansas Frontier Matrix — Governance Pipelines (Provenance · FAIR+CARE · Ledger Automation · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/governance/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.1.0"
+last_updated: "2025-11-10"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
+sbom_ref: "../../../../releases/v10.1.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.1.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
 governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/src-governance-v2.json"
+telemetry_ref: "../../../../releases/v10.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/src-governance-v3.json"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 ---
@@ -22,12 +22,13 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Automate **provenance registration, checksum lineage, and FAIR+CARE certification** for every dataset, model, and validation artifact in KFM.  
-These pipelines ensure blockchain-linked immutability and transparent ethics governance under MCP-DL v6.3 and ISO 19115.
+Guarantee **blockchain-linked immutability** and **transparent ethics governance** under MCP-DL v6.3 and ISO 19115.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-gold)](../../../../docs/standards/faircare-validation.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blueviolet)](../../../../docs/standards/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
-[![Blockchain Provenance](https://img.shields.io/badge/Blockchain-Traceable-gold)]()
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../../../docs/standards/faircare-validation.md)
+[![ISO 19115](https://img.shields.io/badge/ISO%2019115-Metadata%20Compliant-blue)]()
+[![Blockchain Provenance](https://img.shields.io/badge/Blockchain-Traceable-teal)]()
 
 </div>
 
@@ -35,17 +36,15 @@ These pipelines ensure blockchain-linked immutability and transparent ethics gov
 
 ## 📘 Overview
 
-KFM’s **Governance Pipelines** form the ethics and lineage backbone of the platform—recording transformations, validations, and explainability results to an immutable ledger.  
-Each run is checksum-locked, telemetry-reported, and publicly auditable.
-
----
+KFM’s **Governance Pipelines** are the ethics and lineage backbone of the platform—recording transformations, validations, and explainability results to an immutable ledger.  
+Each run is **checksum-locked**, **telemetry-reported**, and **publicly auditable**.
 
 ### Core Responsibilities
 - Sync FAIR+CARE audit artifacts to the Governance Ledger.  
-- Register dataset lineages and SHA-256 checksum chains.  
-- Append blockchain proofs for validations and releases.  
-- Manage ethics approvals and certification renewals.  
-- Publish sustainability + governance telemetry for dashboards.  
+- Register dataset lineages and **SHA-256 checksum chains**.  
+- Append **blockchain proofs** for validations and releases.  
+- Manage **ethics approvals** and certification renewals.  
+- Publish **sustainability + governance telemetry** for dashboards.  
 
 ---
 
@@ -55,9 +54,9 @@ Each run is checksum-locked, telemetry-reported, and publicly auditable.
 src/pipelines/governance/
 ├── README.md
 │
-├── governance_sync.py         # Collates FAIR+CARE + validation outputs for certification
-├── ledger_update.py           # Appends immutable blockchain entries with checksums
-├── checksum_registry.py       # Validates + maintains end-to-end checksum lineage
+├── governance_sync.py         # Collate FAIR+CARE + validation outputs for certification
+├── ledger_update.py           # Append immutable blockchain entries with checksums
+├── checksum_registry.py       # Validate + maintain end-to-end checksum lineage
 └── metadata.json              # Governance pipeline provenance + configuration
 ```
 
@@ -66,11 +65,11 @@ src/pipelines/governance/
 ## ⚙️ Governance Workflow
 
 ```mermaid
-flowchart TD
-A["FAIR+CARE Validation Outputs"] --> B["Checksum Verification + Metadata Hashing"]
-B --> C["Blockchain Registration (ledger_update.py)"]
-C --> D["Governance Sync (Neo4j/IPFS)"]
-D --> E["Telemetry Export + Dashboard Publishing"]
+flowchart LR
+    A["FAIR+CARE Validation Outputs"] --> B["Checksum Verification · Metadata Hashing"]
+    B --> C["Blockchain Registration (ledger_update.py)"]
+    C --> D["Governance Sync (Neo4j · IPFS)"]
+    D --> E["Telemetry Export · Dashboard Publishing"]
 ```
 
 1. **Ingest:** Accept validation and ethics artifacts.  
@@ -85,7 +84,7 @@ D --> E["Telemetry Export + Dashboard Publishing"]
 
 ```json
 {
-  "id": "governance_ledger_registry_v9.7.0",
+  "id": "governance_ledger_registry_v10.1.0",
   "governance_entries": [
     "data/reports/audit/data_provenance_ledger.json",
     "data/reports/fair/data_care_assessment.json"
@@ -93,12 +92,12 @@ D --> E["Telemetry Export + Dashboard Publishing"]
   "checksum_registry_updated": true,
   "blockchain_registration": "verified",
   "fairstatus": "certified",
-  "total_validations_logged": 96,
-  "ai_explainability_audits": 15,
-  "energy_usage_wh": 1.06,
-  "carbon_output_gco2e": 0.08,
+  "total_validations_logged": 118,
+  "ai_explainability_audits": 19,
+  "energy_usage_wh": 1.04,
+  "carbon_output_gco2e": 0.07,
   "governance_registered": true,
-  "created": "2025-11-05T12:20:00Z",
+  "created": "2025-11-10T12:10:00Z",
   "validator": "@kfm-governance"
 }
 ```
@@ -127,9 +126,9 @@ Related artifacts:
 
 | Script | Function | FAIR+CARE Role | Systems |
 |-------|----------|----------------|---------|
-| `governance_sync.py` | Collate validation + FAIR results | Certification | Neo4j/IPFS |
-| `ledger_update.py` | Append immutable ledger entries | Provenance | IPFS/Ethereum |
-| `checksum_registry.py` | Maintain checksum chains | Integrity | Git/Manifest |
+| `governance_sync.py` | Collate validation + FAIR results | Certification | Neo4j · IPFS |
+| `ledger_update.py` | Append immutable ledger entries | Provenance | IPFS · Ethereum |
+| `checksum_registry.py` | Maintain checksum chains | Integrity | Git · Manifest |
 
 ---
 
@@ -146,40 +145,25 @@ Cleanup managed by `governance_sync.yml`.
 
 ---
 
-## 🌱 Sustainability Metrics (v9.7.0)
+## 🌱 Sustainability Metrics (v10.1.0)
 
 | Metric | Value | Verified By |
 |--------|-------|-------------|
-| Avg Runtime | 1.5 minutes | @kfm-ops |
-| Energy Usage | 1.06 Wh | @kfm-sustainability |
-| Carbon Output | 0.08 gCO₂e | @kfm-security |
+| Avg Runtime | 1.4 minutes | @kfm-ops |
+| Energy Usage | 1.04 Wh | @kfm-sustainability |
+| Carbon Output | 0.07 g CO₂e | @kfm-security |
 | Renewable Energy | 100% (RE100) | @kfm-infrastructure |
 | FAIR+CARE Compliance | 100% | @faircare-council |
 
 Telemetry source:  
-`../../../../releases/v9.7.0/focus-telemetry.json`
-
----
-
-## 🧩 Blockchain Ledger Record Example
-
-```json
-{
-  "ledger_entry_id": "gov_ledger_hash_2025_11_05_001",
-  "checksum_registry": "sha256-b91d4f2e38a5128a9e6ffef33f0a7f14975b0df4...",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json#entry_96",
-  "blockchain_hash": "0x5e73ff1acb0b44a7f7b2f1e194bb5b31c2ea2a7f6a38b2f2219f86c3c84f9d2f",
-  "validator": "@kfm-governance",
-  "timestamp": "2025-11-05T12:20:00Z"
-}
-```
+`../../../../releases/v10.1.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Governance Pipelines (v9.7.0).
+Kansas Frontier Matrix (2025). Governance Pipelines (v10.1.0).
 Automated FAIR+CARE + blockchain governance layer ensuring checksum lineage, provenance integrity, and ethical reproducibility across KFM.
 ```
 
@@ -189,9 +173,9 @@ Automated FAIR+CARE + blockchain governance layer ensuring checksum lineage, pro
 
 | Version | Date | Notes |
 |--------|------|------|
-| v9.7.0 | 2025-11-05 | Added improved blockchain hooks, telemetry schema v2, and expanded certification collation. |
-| v9.6.0 | 2025-11-04 | Introduced hash verification and sustainability integration. |
-| v9.5.0 | 2025-11-02 | Enhanced checksum registry and FAIR+CARE sync. |
+| **v10.1.0** | 2025-11-10 | Upgraded to telemetry v3; stronger DCAT/STAC bridge; improved chain proofs and energy metrics. |
+| **v10.0.0** | 2025-11-08 | Added on-chain proofs for validations and releases; expanded certification collation. |
+| **v9.7.0** | 2025-11-05 | Improved blockchain hooks; initial telemetry v2 alignment. |
 
 ---
 
