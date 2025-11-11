@@ -190,10 +190,10 @@ flowchart LR
 ## 🧭 Integration with Backend
 ```mermaid
 flowchart TD
-  "React UI" --> "API Client"
-  "API Client" --> "FastAPI Service"
-  "FastAPI Service" --> "Validation and Governance Layer"
-  "Validation and Governance Layer" --> "Data Store"
+  UI["React UI"] --> API["API Client"]
+  API --> SVC["FastAPI Service"]
+  SVC --> GOV["Validation & Governance Layer"]
+  GOV --> DB["Data Store"]
 ```
 
 - UI fetches **entities** (GraphQL) and **layers** (STAC/DCAT).  
