@@ -1,14 +1,14 @@
 ---
 title: "📜 Kansas Frontier Matrix — Raw Text & Document Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/text/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
+sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.2.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
+telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/data-raw-text-v10.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0 / Public Domain"
@@ -17,33 +17,35 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 📜 Kansas Frontier Matrix — **Raw Text & Document Data**
+# 📜 Kansas Frontier Matrix — **Raw Text & Document Data**  
 `data/raw/text/README.md`
 
 **Purpose:**  
 Repository for **unaltered archival texts, scanned manuscripts, historical records, and OCR datasets** used by the Kansas Frontier Matrix (KFM).  
-This collection underpins NLP pipelines, document analysis, and **Focus Mode v2** storytelling with **provenance, reproducibility, and FAIR+CARE** ethical alignment.
+This collection underpins NLP pipelines, document analysis, and **Focus Mode v2.1** storytelling with **provenance, reproducibility, and FAIR+CARE** ethical alignment.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/README.md)
 [![License: CC-BY 4.0 / Public Domain](https://img.shields.io/badge/License-CC--BY%204.0%20%2F%20Public%20Domain-brightgreen.svg)](../../../LICENSE)
-[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Text%20Governed-gold.svg)](../../../docs/standards/faircare-validation.md)
+[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Text%20Governed-gold.svg)](../../../docs/standards/faircare.md)
 [![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green.svg)]()
 
 </div>
 
 ---
 
 ## 📘 Overview
+
 The **Raw Text Data Layer** contains original textual and scanned records from **KHS, Library of Congress (Chronicling America), NARA, and university archives**.  
 All files remain in their **original encoding and format**, with accompanying metadata documenting **OCR accuracy**, **provenance**, **checksums**, and **ethical clearance**.
 
-**v10 Enhancements**
+**v10.2.2 Enhancements**
 - **Streaming STAC** hooks for periodic catalog updates of newly digitized items.  
 - Telemetry v2 bindings (energy/CO₂, validation coverage) for ingestion runs.  
 - Expanded pre-audit fields (license nuances, cultural sensitivity flags, community notes).
 
 ### Core Objectives
+
 - Preserve authentic textual and scanned archival content.  
 - Maintain **checksum & provenance** integrity for verification.  
 - Support **FAIR+CARE-aligned** NLP and document analysis.  
@@ -52,6 +54,7 @@ All files remain in their **original encoding and format**, with accompanying me
 ---
 
 ## 🗂️ Directory Layout
+
 ```plaintext
 data/raw/text/
 ├── README.md
@@ -67,17 +70,19 @@ data/raw/text/
 ---
 
 ## 🧭 Data Acquisition Summary
-| Dataset                    | Source / Provider                         | Format | License        | Integrity |
-|---------------------------|-------------------------------------------|--------|----------------|----------:|
-| Kansas Treaty Documents   | KHS / NARA                                 | PDF    | CC-BY 4.0      | ✅ Verified |
-| Newspaper Archives        | LOC Chronicling America                    | ZIP/TXT| Public Domain  | ✅ Verified |
-| Oral Histories            | Univ. of Kansas Oral History Project       | JSON   | CC-BY 4.0      | ✅ Verified |
-| Geological Reports        | Kansas Geological Survey                   | TXT    | Public Domain  | ✅ Verified |
-| Agricultural Bulletins    | USDA / Kansas Extension                    | CSV    | Public Domain  | ✅ Verified |
+
+| Dataset | Source / Provider | Format | License | Integrity |
+|---|---|---|---|---:|
+| Kansas Treaty Documents | KHS / NARA | PDF | CC-BY 4.0 | ✅ |
+| Newspaper Archives | LOC Chronicling America | ZIP/TXT | Public Domain | ✅ |
+| Oral Histories | University of Kansas Oral History Project | JSON | CC-BY 4.0 | ✅ |
+| Geological Reports | Kansas Geological Survey | TXT | Public Domain | ✅ |
+| Agricultural Bulletins | USDA / Kansas Extension | CSV | Public Domain | ✅ |
 
 ---
 
 ## 🧩 Example Source Metadata Record
+
 ```json
 {
   "id": "kansas_treaty_documents_1800s_raw",
@@ -89,8 +94,8 @@ data/raw/text/
   "license": "CC-BY 4.0",
   "records_fetched": 92,
   "checksum_sha256": "sha256:a17f92e37bd8f2d54c96c7a12fa09edb9d1f4f6acb17a81ed3b0c18b27d15b12",
-  "retrieved_on": "2025-11-09T20:35:00Z",
-  "ocr_quality": {"engine": "Tesseract 5.3", "mean_char_acc": 0.984},
+  "retrieved_on": "2025-11-12T20:35:00Z",
+  "ocr_quality": { "engine": "Tesseract 5.3", "mean_char_acc": 0.984 },
   "faircare_preaudit": {
     "sensitivity": "none",
     "license_review": "ok",
@@ -104,9 +109,10 @@ data/raw/text/
 ---
 
 ## ⚙️ FAIR+CARE Compliance Matrix
+
 | Principle | Implementation | Oversight |
 |---|---|---|
-| **Findable** | Metadata catalogs w/ PIDs (DOI/ARK); STAC for geotagged texts. | `@kfm-data` |
+| **Findable** | Metadata catalogs with PIDs (DOI/ARK); STAC for geotagged texts. | `@kfm-data` |
 | **Accessible** | Open PDFs/TXT/JSON under clear licenses; alt text & captions. | `@kfm-accessibility` |
 | **Interoperable** | OCR standards (ALTO/METS); schema.org & DCAT fields. | `@kfm-architecture` |
 | **Reusable** | Provenance, license, OCR quality, and checksums embedded. | `@kfm-design` |
@@ -118,43 +124,47 @@ data/raw/text/
 ---
 
 ## 🧠 Integrity, OCR & Cataloging
-| Process              | Description                                     | Output                                           |
+
+| Process | Description | Output |
 |---|---|---|
-| **Checksum Verify** | SHA-256 per file; vendor hash comparison.        | `data/raw/text/metadata.json`                    |
-| **License Audit**   | FAIR+CARE licensing & attribution review.        | `data/raw/text/source_licenses.json`             |
-| **OCR Audit**       | Accuracy metrics (CER/WER) + engine/version.     | `metadata.json`                                  |
-| **Catalog Publish** | STAC/DCAT registration & story-node linkage.     | `data/raw/metadata/stac_catalog.json`            |
+| **Checksum Verify** | SHA-256 per file; vendor hash comparison. | `data/raw/text/metadata.json` |
+| **License Audit** | FAIR+CARE licensing & attribution review. | `data/raw/text/source_licenses.json` |
+| **OCR Audit** | Accuracy metrics (CER/WER) + engine/version. | `data/raw/text/metadata.json` |
+| **Catalog Publish** | STAC/DCAT registration & story-node linkage. | `data/raw/metadata/stac_catalog.json` |
 
 ---
 
 ## ⚖️ Retention & Sustainability
-| Category                | Retention | Policy                                                  |
-|---|---|---|
-| Raw Text & Documents   | Permanent | Immutable archival for research & cultural preservation.|
-| Source Metadata        | Permanent | ISO 19115 lineage retention.                            |
-| Checksum Records       | Permanent | Long-term authenticity evidence.                        |
-| OCR Quality Reports    | 10 Years  | Stored for transparency & AI auditability.              |
-| Ethics Reviews         | 10 Years  | Archived for continuous ethical oversight.              |
 
-**Telemetry reference:** `../../../releases/v10.0.0/focus-telemetry.json`
+| Category | Retention | Policy |
+|---|---|---|
+| Raw Text & Documents | Permanent | Immutable archival for research & cultural preservation |
+| Source Metadata | Permanent | ISO 19115 lineage retention |
+| Checksum Records | Permanent | Long-term authenticity evidence |
+| OCR Quality Reports | 10 Years | Transparency & AI auditability |
+| Ethics Reviews | 10 Years | Continuous ethical oversight |
+
+**Telemetry reference:** `../../../releases/v10.2.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
+
 ```text
-Kansas Frontier Matrix (2025). Raw Text & Document Data (v10.0.0).
+Kansas Frontier Matrix (2025). Raw Text & Document Data (v10.2.2).
 Unaltered archival texts, OCR-scanned manuscripts, and historical records from Kansas collections.
-Checksum-verified and FAIR+CARE-aligned repository supporting NLP, cultural heritage, and Focus Mode v2 storytelling.
+Checksum-verified and FAIR+CARE-aligned repository supporting NLP, cultural heritage, and Focus Mode v2.1 storytelling.
 ```
 
 ---
 
 ## 🕰️ Version History
-| Version | Date       | Author         | Summary |
+
+| Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-09 | `@kfm-text`    | Upgraded to v10: Streaming STAC hooks, telemetry v2 bindings, expanded pre-audit fields (OCR & ethics). |
-| v9.7.0  | 2025-11-06 | `@kfm-text`    | Telemetry/schema refs aligned; OCR audit fields & badges added. |
-| v9.6.0  | 2025-11-03 | `@kfm-text`    | Added OCR audit records and FAIR+CARE ethics metadata validation. |
+| v10.2.2 | 2025-11-12 | `@kfm-text` | Align to v10.2: Streaming STAC hooks, telemetry v2 bindings, expanded pre-audit fields (OCR & ethics). |
+| v10.0.0 | 2025-11-09 | `@kfm-text` | Streaming STAC baseline, telemetry schema refs, lifecycle policy clarified. |
+| v9.7.0 | 2025-11-06 | `@kfm-text` | OCR audit fields & governance links added. |
 
 ---
 
