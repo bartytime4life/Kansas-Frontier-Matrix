@@ -1,16 +1,16 @@
 ---
 title: "🧱 Kansas Frontier Matrix — Data Architecture Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/ARCHITECTURE.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.0.0/manifest.zip"
+sbom_ref: "../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.2.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../releases/v10.0.0/focus-telemetry.json"
+telemetry_ref: "../releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/data-architecture-v10.json"
-json_export: "../releases/v10.0.0/data-architecture.meta.json"
+json_export: "../releases/v10.2.0/data-architecture.meta.json"
 validation_reports:
   - "../data/reports/self-validation/data-architecture-validation.json"
   - "../data/reports/fair/summary.json"
@@ -22,16 +22,16 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🧱 Kansas Frontier Matrix — **Data Architecture Specification**
+# 🧱 Kansas Frontier Matrix — **Data Architecture Specification**  
 `data/ARCHITECTURE.md`
 
 **Purpose:**  
 Define the **structural, procedural, and ethical foundations** of the Kansas Frontier Matrix (KFM) data ecosystem.  
 Ensure all datasets — from ingestion to publication — comply with **FAIR+CARE**, **ISO metadata**, and **MCP-DL v6.3** documentation-first standards.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../docs/README.md)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../LICENSE)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Data%20Certified-gold.svg)](../docs/standards/faircare-validation.md)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Data%20Certified-gold.svg)](../docs/standards/faircare.md)
 [![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue.svg)]()
 [![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
 
@@ -48,7 +48,7 @@ This specification codifies:
 - **FAIR+CARE** governance workflows and ethics checkpoints.  
 - **AI explainability** & provenance integration requirements.  
 - **STAC/DCAT 3.0** catalog interoperability and metadata linkage.  
-- **Streaming STAC** support (v10.0.0) for live dataset discovery.
+- **Streaming STAC** support (v10) for live dataset discovery and updates.
 
 ---
 
@@ -57,7 +57,7 @@ This specification codifies:
 ```mermaid
 flowchart TD
     A["Raw Data (NOAA · USGS · FEMA · Archives · Sensors)"] --> B["Work Layer (ETL · AI · FAIR+CARE Validation)"]
-    B --> C["Staging Layer (Schema-Aligned · Certified-Ready)"]
+    B --> C["Staging Layer (Schema-Aligned · Certification-Ready)"]
     C --> D["Processed Layer (FAIR+CARE Certified · Published)"]
     D --> E["STAC/DCAT Catalogs · Governance Ledger (Streaming Bridge)"]
     E --> F["Public Access · Provenance Verification"]
@@ -68,8 +68,8 @@ flowchart TD
 | Element | Description |
 |---|---|
 | **Modular Architecture** | Directory-based layers isolate concerns and enable traceability. |
-| **Ethical Design** | FAIR+CARE, CARE, and ISO 37000-aligned review gates. |
-| **Transparency** | Immutable provenance ledgers record all critical events. |
+| **Ethical Design** | FAIR+CARE and CARE-aligned publish gates. |
+| **Transparency** | Append-only provenance ledgers record critical events. |
 | **Automation** | CI/CD validation pipelines guarantee continuous compliance. |
 | **Interoperability** | Native **STAC 1.0**, **DCAT 3.0**, **GeoJSON/Parquet/NetCDF** support. |
 | **Streaming** | Ingest + catalog updates via a **Streaming STAC Bridge** (Kafka/PubSub). |
@@ -112,11 +112,11 @@ data/
 | Principle | Implementation | Oversight |
 |---|---|---|
 | **Findable** | STAC/DCAT catalogs, global IDs, SBOM/manifest cross-links. | `@kfm-data` |
-| **Accessible** | Open data formats (CSV/Parquet/GeoJSON/NetCDF), public catalogs. | `@kfm-accessibility` |
+| **Accessible** | Open formats (CSV/Parquet/GeoJSON/NetCDF), public catalogs. | `@kfm-accessibility` |
 | **Interoperable** | FAIR schema + **ISO 19115/CF** metadata alignment. | `@kfm-architecture` |
 | **Reusable** | Versioned schemas, lineage, and licensing preserved. | `@kfm-design` |
 | **Collective Benefit** | Equitable public access to environmental/cultural knowledge. | `@faircare-council` |
-| **Authority to Control** | FAIR+CARE Council certifies publish gates and deltas. | `@kfm-governance` |
+| **Authority to Control** | Council certifies publish gates and deltas. | `@kfm-governance` |
 | **Responsibility** | Full audit trails in `data/reports/audit/`. | `@kfm-security` |
 | **Ethics** | CARE-aligned sensitive content review and redaction. | `@kfm-ethics` |
 
@@ -154,8 +154,7 @@ flowchart TD
 | **DCAT 3.0** | Dataset/Distribution descriptors for cross-portal discovery. | W3C DCAT alignment |
 | **CIDOC CRM** | Semantic ontology for historical/archival entities. | ISO 21127 mapping |
 
-**STAC root:** `data/stac/catalog.json`
-
+**STAC root:** `data/stac/catalog.json`  
 **Streaming:** STAC Items can be appended via the **Streaming STAC Bridge** for live discovery.
 
 ---
@@ -164,7 +163,7 @@ flowchart TD
 
 | Record Type | Description | Stored In |
 |---|---|---|
-| **Audit Logs** | FAIR+CARE and validation results; AI governance notes. | `data/reports/audit/` |
+| **Audit Logs** | FAIR+CARE & validation results; AI governance notes. | `data/reports/audit/` |
 | **Checksum Registry** | File-level integrity proofs per dataset/release. | `data/checksums/` |
 | **Governance Ledger** | Append-only governance index with checksums & SHAs. | `data/reports/audit/data_provenance_ledger.json` |
 | **FAIR+CARE Reports** | Council reviews & certification summaries. | `data/reports/fair/` |
@@ -185,7 +184,7 @@ flowchart TD
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Data Architecture Specification (v10.0.0).
+Kansas Frontier Matrix (2025). Data Architecture Specification (v10.2.2).
 Comprehensive FAIR+CARE-certified architecture defining ethical data pipelines, schema governance,
 and provenance systems for Kansas Frontier Matrix. Ensures open, sustainable, and reproducible
 scientific data practices across domains.
@@ -197,7 +196,8 @@ scientific data practices across domains.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-09 | `@kfm-data` | Upgraded to v10: Streaming STAC support, telemetry schema v10, stronger governance checkpoints, tightened sustainability targets. |
+| v10.2.2 | 2025-11-12 | `@kfm-data` | Align to v10.2: streaming STAC bridge, JSON-LD export, tighter governance checkpoints, energy/CO₂ telemetry links. |
+| v10.0.0 | 2025-11-09 | `@kfm-data` | Telemetry schema v10, streaming STAC support, strengthened sustainability targets. |
 | v9.7.0 | 2025-11-06 | `@kfm-data` | DCAT 3.0, CIDOC CRM cross-links, telemetry-linked governance reports. |
 | v9.6.0 | 2025-11-03 | `@kfm-data` | Added sustainability metrics and energy reporting integration. |
 | v9.5.0 | 2025-11-02 | `@kfm-data` | Introduced validation pipeline & ethics checkpoints. |
@@ -210,6 +210,6 @@ scientific data practices across domains.
 *FAIR+CARE Data Ethics × Sustainable Provenance × Open Science Governance*  
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
-[Back to Docs Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/DATA-GOVERNANCE.md) · [FAIR+CARE Summary](../data/reports/fair/faircare_summary.json)
+[Back to Docs Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/DATA-GOVERNANCE.md) · [FAIR+CARE Summary](../data/reports/fair/summary.json)
 
 </div>
