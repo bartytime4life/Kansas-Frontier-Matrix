@@ -2,7 +2,7 @@
 title: "🏺 Kansas Frontier Matrix — Historical Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/historical/README.md"
 version: "v10.2.2"
-last_updated: "2025-11-09"
+last_updated: "2025-11-11"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../releases/v10.2.0/sbom.spdx.json"
@@ -16,16 +16,16 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🏺 **Kansas Frontier Matrix — Historical Analyses Overview**
+# 🏺 **Kansas Frontier Matrix — Historical Analyses Overview**  
 `docs/analyses/historical/README.md`
 
 **Purpose:**  
-Define the **historical research, archival integration, and cultural-environmental linkage** workflows used in the Kansas Frontier Matrix (KFM).  
-This module connects digitized archives, treaties, census data, and cultural narratives to environmental and geospatial datasets under **FAIR+CARE**, **ISO 21127 (CIDOC CRM)**, and **MCP-DL v6.3** governance for ethical and transparent knowledge reconstruction.
+Establish the comprehensive framework for **historical research, archival data integration, and cultural-environmental linkage** in the Kansas Frontier Matrix (KFM).  
+This module connects digitized archives, treaties, census records, and cultural narratives with environmental and geospatial datasets under **FAIR+CARE**, **ISO 21127 (CIDOC CRM)**, and **MCP-DL v6.3** governance.
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Historical-orange)](../../../../docs/standards/README.md)
+[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Historical-orange)](../../../../docs/standards/faircare.md)  
 [![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../../releases/)
 </div>
 
@@ -33,33 +33,33 @@ This module connects digitized archives, treaties, census data, and cultural nar
 
 ## 📘 Overview
 
-The **Historical Analysis Module** investigates Kansas’s environmental and social evolution by integrating **archival documents, treaties, cultural records, and demographic data**.  
-It establishes relational links between human activities and environmental change through FAIR+CARE-governed digital humanities practices and ISO metadata compliance.
+The **Historical Analyses Module** explores Kansas’s cultural, demographic, and environmental evolution through integration of **archival, treaty, and census data**.  
+It formalizes methods to reconstruct human–environment interactions under FAIR+CARE ethics and CIDOC CRM semantic structure.
 
-**Core Objectives**
-- Digitize and georeference historical archives, maps, and treaty documents  
-- Link historical records to geospatial and environmental features  
-- Model population, land use, and migration over time  
-- Maintain provenance and cultural ethics under FAIR+CARE governance  
+**Objectives**
+- Digitize and georeference archival documents and maps  
+- Correlate historical records with environmental and land-use datasets  
+- Model population, migration, and cultural change through time  
+- Maintain transparent provenance and ethical metadata across all workflows  
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```bash
 docs/analyses/historical/
-├── README.md                                  # This overview
-├── datasets/                                  # Historical archives and reference sources
+├── README.md
+├── datasets/
 │   ├── README.md
-│   ├── raw/                                   # Original archives, maps, census data, treaties
-│   ├── processed/                             # OCR, transcription, and georeferenced documents
-│   ├── derived/                               # Analytical datasets (temporal-spatial models)
-│   └── metadata/                              # STAC/DCAT + CIDOC CRM-compliant metadata
-├── archival-correlation.md                    # Archival-to-geospatial linkage workflows
-├── population-dynamics.md                     # Demographic and migration modeling
-├── cultural-landscapes.md                     # Historical land use and treaty analysis
-├── validation.md                              # FAIR+CARE validation and ethics auditing
-└── reports/                                   # Historical analyses and visual outputs
+│   ├── raw/
+│   ├── processed/
+│   ├── derived/
+│   └── metadata/
+├── archival-correlation.md
+├── population-dynamics.md
+├── cultural-landscapes.md
+├── validation.md
+└── reports/
     ├── README.md
     ├── historical_summary.json
     ├── sustainability_audit.json
@@ -76,50 +76,51 @@ docs/analyses/historical/
 
 ```mermaid
 flowchart TD
-  A["Historical Archives & Cultural Records"] --> B["Digitization + OCR + FAIR+CARE Validation"]
-  B --> C["Georeferencing (Maps, Treaties, Settlement Data)"]
-  C --> D["Temporal Modeling (Population, Migration, Land Use)"]
-  D --> E["Archival Correlation with Environmental Datasets"]
-  E --> F["FAIR+CARE Ethics Review + Governance Ledger Commit"]
+    A["Historical Archives & Cultural Records"]
+    --> B["Digitization · OCR · FAIR+CARE Validation"]
+    B --> C["Georeferencing (Maps, Treaties, Settlement Data)"]
+    C --> D["Temporal Modeling (Population, Migration, Land Use)"]
+    D --> E["Archival Correlation with Environmental Layers"]
+    E --> F["Ethics Review & Governance Ledger Commit"]
 ```
 
 ---
 
 ## ⚙️ Core Datasets
 
-| Source | Dataset | Description | Format | FAIR+CARE Status |
-|--------|----------|-------------|---------|------------------|
-| **Kansas Historical Society (KHS)** | Archival maps, treaties, and land records | Digitized scanned archives | TIFF / PDF | ✅ Certified |
-| **Library of Congress** | Sanborn maps, census reports, historical imagery | Historical documents and maps | GeoTIFF / JSON-LD | ✅ Certified |
-| **National Archives (NARA)** | Federal land patents, military, and census data | Tabular and textual data | CSV / TXT | ✅ Certified |
-| **Chronicling America** | Newspapers and regional publications | OCR text corpus | JSON / TXT | ✅ Certified |
-| **DPLA / Europeana** | Cultural heritage records and photographs | Linked open metadata | JSON-LD | ✅ Certified |
+| Source | Dataset | Description | Format | FAIR+CARE |
+|---------|----------|-------------|---------|-----------|
+| **Kansas Historical Society (KHS)** | Archival maps, treaties, deeds | Digitized documents & land records | TIFF / PDF | ✅ |
+| **Library of Congress** | Sanborn maps, census archives | Historical cartography & reports | GeoTIFF / JSON-LD | ✅ |
+| **National Archives (NARA)** | Federal land & census data | Tabular / textual records | CSV / TXT | ✅ |
+| **Chronicling America** | Newspapers & publications | OCR text corpus | JSON / TXT | ✅ |
+| **DPLA / Europeana** | Cultural heritage media | Linked open metadata | JSON-LD | ✅ |
 
 ---
 
-## 🏛️ Core Analytical Workflows
+## 🏛️ Analytical Workflows
 
-| Workflow | Description | Tools / Libraries | Output |
-|-----------|--------------|-------------------|---------|
-| **OCR + Transcription** | Digitize and extract text from archival documents | `Tesseract`, `spaCy` | Text corpus / JSON |
-| **Georeferencing** | Assign geographic coordinates to historical maps | `QGIS`, `GDAL` | GeoTIFF / GeoJSON |
-| **Temporal Modeling** | Reconstruct historical events and population change | `pandas`, `NetworkX` | Temporal networks |
-| **Archival Linkage** | Correlate records across archives and environmental layers | `Neo4j`, `CIDOC CRM` | Knowledge Graph |
-| **Ethics Audit** | Validate sensitive cultural and community data | FAIR+CARE CLI | Audit report JSON |
+| Workflow | Description | Tools | Output |
+|-----------|-------------|-------|---------|
+| **OCR + Transcription** | Digitize & extract text from archives | `Tesseract`, `spaCy` | JSON text corpus |
+| **Georeferencing** | Spatially align maps & treaties | `QGIS`, `GDAL` | GeoTIFF / GeoJSON |
+| **Temporal Modeling** | Simulate population & migration trends | `pandas`, `NetworkX` | Temporal graphs |
+| **Archival Linkage** | Connect records ↔ environmental data | `Neo4j`, `CIDOC CRM` | Knowledge graph |
+| **Ethics Audit** | Verify cultural & community data handling | FAIR+CARE CLI | Audit JSON |
 
 ---
 
 ## ⚖️ FAIR+CARE Governance Matrix
 
-| Principle | Implementation | Verification Source |
-|------------|----------------|--------------------|
-| **Findable** | Metadata indexed under STAC/DCAT + CIDOC CRM | `datasets/metadata/` |
-| **Accessible** | Open-access documents under CC-BY and Public Domain | FAIR+CARE Ledger |
-| **Interoperable** | JSON-LD, GeoJSON, and XML (EAD, TEI) | `telemetry_schema` |
-| **Reusable** | Provenance, transcription, and citation metadata | `manifest_ref` |
-| **Collective Benefit** | Supports heritage education and cultural research | FAIR+CARE Audit |
-| **Responsibility** | Telemetry and energy tracking for digitization | `telemetry_ref` |
-| **Ethics** | Indigenous data stewardship and consent validation | FAIR+CARE Council Ethics Review |
+| Principle | Implementation | Verification |
+|------------|----------------|---------------|
+| **Findable** | Indexed via STAC / DCAT + CIDOC CRM | `datasets/metadata/` |
+| **Accessible** | CC-BY / Public-domain access | FAIR+CARE Ledger |
+| **Interoperable** | JSON-LD / GeoJSON / XML (EAD / TEI) | Telemetry Schema |
+| **Reusable** | Provenance & citation metadata | `manifest_ref` |
+| **Collective Benefit** | Promotes cultural heritage research | FAIR+CARE Audit |
+| **Responsibility** | Energy & telemetry tracking | `telemetry_ref` |
+| **Ethics** | Indigenous data stewardship validation | Council Ethics Review |
 
 ---
 
@@ -127,10 +128,10 @@ flowchart TD
 
 | Metric | Description | Target | Unit |
 |---------|-------------|---------|------|
-| **Energy (J)** | Mean energy used per digitization or model run | ≤ 15 | Joules |
-| **Carbon (gCO₂e)** | CO₂ equivalent per analysis | ≤ 0.006 | gCO₂e |
-| **Telemetry Coverage (%)** | FAIR+CARE traceability coverage | ≥ 95 | % |
-| **Audit Pass Rate (%)** | FAIR+CARE validation compliance | 100 | % |
+| **Energy (J)** | Avg. energy per digitization task | ≤ 15 | Joules |
+| **Carbon (gCO₂e)** | CO₂ eq per analysis run | ≤ 0.006 | gCO₂e |
+| **Telemetry Coverage (%)** | Traceable artefacts | ≥ 95 | % |
+| **Audit Pass Rate (%)** | FAIR+CARE compliance | 100 | % |
 
 ---
 
@@ -138,7 +139,7 @@ flowchart TD
 
 ```json
 {
-  "ledger_id": "historical-analysis-ledger-2025-11-09-0180",
+  "ledger_id": "historical-analysis-ledger-2025-11-11-0190",
   "component": "Historical Analysis Module",
   "datasets": [
     "Kansas Historical Society Archives",
@@ -146,11 +147,11 @@ flowchart TD
     "National Archives Census Data",
     "Chronicling America Newspapers"
   ],
-  "energy_joules": 13.4,
-  "carbon_gCO2e": 0.0053,
+  "energy_joules": 13.1,
+  "carbon_gCO2e": 0.0052,
   "faircare_status": "Pass",
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T17:50:00Z"
+  "timestamp": "2025-11-11T17:45:00Z"
 }
 ```
 
@@ -159,10 +160,10 @@ flowchart TD
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v10.2.2 | 2025-11-09 | FAIR+CARE Council | Published historical analysis module overview with CIDOC CRM alignment and sustainability metrics. |
-| v10.2.1 | 2025-11-09 | Historical Integration Group | Added archival-geospatial correlation and population dynamics workflow. |
-| v10.2.0 | 2025-11-09 | KFM Humanities Team | Created initial historical module documentation aligned with FAIR+CARE and ISO governance. |
+|----------|------|---------|----------|
+| **v10.2.2** | 2025-11-11 | FAIR+CARE Council | Updated & aligned historical module overview; verified metrics + CIDOC CRM mapping. |
+| **v10.2.1** | 2025-11-09 | Historical Integration Group | Added archival-geospatial linkage & population dynamics workflow. |
+| **v10.2.0** | 2025-11-09 | KFM Humanities Team | Initial release aligned with FAIR+CARE + ISO governance. |
 
 ---
 
@@ -174,4 +175,3 @@ Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω 
 [Back to Analyses Overview](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
