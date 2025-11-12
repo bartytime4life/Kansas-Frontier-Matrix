@@ -1,23 +1,26 @@
 ---
-title: "🏛️ Kansas Frontier Matrix — Governance & Ethical Oversight Framework"
+title: "🏛️ Kansas Frontier Matrix — Governance & Ethical Oversight Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/governance/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/docs-governance-index-v1.json"
+sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/docs-governance-index-v2.json"
 governance_ref: "ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🏛️ **Kansas Frontier Matrix — Governance & Ethical Oversight Framework**
+# 🏛️ **Kansas Frontier Matrix — Governance & Ethical Oversight Framework**  
 `docs/standards/governance/README.md`
 
-**Purpose:** Provide an overview of the ethical, procedural, and administrative governance systems that guide the Kansas Frontier Matrix (KFM).  
+**Purpose:**  
+Provide an overview of the ethical, procedural, and administrative governance systems that guide the Kansas Frontier Matrix (KFM).  
 Governance ensures that all operations, datasets, and technologies align with **FAIR+CARE principles**, **Master Coder Protocol (MCP v6.3)**, and the KFM **Root Governance Charter**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
@@ -32,22 +35,25 @@ Governance ensures that all operations, datasets, and technologies align with **
 ## 📘 Overview
 
 The **Kansas Frontier Matrix (KFM)** operates under a **documented governance system** designed to balance open science, ethical responsibility, and community inclusion.  
-Governance functions as a **distributed accountability network**, combining automation (via CI/CD validation) with human oversight (via the FAIR+CARE Council).
+Governance functions as a **distributed accountability network**, combining automation (CI/CD validation, telemetry) with human oversight (the FAIR+CARE Council and associated committees).
 
 This directory defines:
-- The governance structure and councils
-- Ethical review and approval workflows
-- Integration with automated telemetry and audit systems
-- Roles, responsibilities, and review cadence
+
+- Governance structure and councils  
+- Ethical review and approval workflows  
+- Integration with automated telemetry and audit systems  
+- Roles, responsibilities, and review cadence  
+
+Root charter: [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md)
 
 ---
 
 ## 🗂️ Directory Layout
 
-```
+```plaintext
 docs/standards/governance/
 ├── README.md                 # This index file
-└── ROOT-GOVERNANCE.md        # The complete governance charter (authoritative version)
+└── ROOT-GOVERNANCE.md        # The complete governance charter (authoritative)
 ```
 
 ---
@@ -57,114 +63,129 @@ docs/standards/governance/
 KFM’s governance model combines **technical automation** and **human ethical review** to maintain transparent and reproducible data operations.
 
 | Body | Function | Composition | Frequency |
-|------|-----------|-------------|------------|
+|---|---|---|---|
 | **FAIR+CARE Council** | Oversees ethical, cultural, and Indigenous data governance. | 7 members (2 Indigenous reps, 2 data stewards, 3 technical leads) | Quarterly |
-| **Technical Standards Committee** | Manages MCP, data schema, and validation workflows. | 5 developers, 1 auditor | Monthly |
-| **AI Governance Subcommittee** | Reviews AI model bias, transparency, and ethical risk. | 3 AI engineers, 2 ethicists | Biannual |
+| **Technical Standards Committee** | Manages MCP rules, schemas, and validation workflows. | 5 developers, 1 auditor | Monthly |
+| **AI Governance Subcommittee** | Reviews AI bias, transparency, and ethical risk. | 3 AI engineers, 2 ethicists | Biannual |
 | **Open Science Board** | Ensures licensing, accessibility, and reproducibility. | 4 data curators, 2 accessibility advisors | Quarterly |
 
-Each committee’s responsibilities are defined in [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md).
+Detailed responsibilities and voting procedures are codified in [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md).
 
 ---
 
 ## 🧩 Roles & Responsibilities
 
 | Role | Responsibility | Reports To |
-|------|----------------|-------------|
-| **Governance Chair** | Oversees FAIR+CARE Council and signs off on ethical approvals. | FAIR+CARE Council |
-| **Technical Maintainer** | Implements validation workflows and schema updates. | Technical Standards Committee |
-| **AI Steward** | Ensures responsible model training and explainability. | AI Governance Subcommittee |
-| **Data Curator** | Reviews dataset metadata for completeness and provenance. | Open Science Board |
-| **Accessibility Auditor** | Evaluates documentation and UI compliance with WCAG 2.1 AA. | Open Science Board |
+|---|---|---|
+| **Governance Chair** | Coordinates FAIR+CARE Council; signs off on ethical approvals. | FAIR+CARE Council |
+| **Technical Maintainer** | Implements validation workflows, schemas, and telemetry integrations. | Technical Standards Committee |
+| **AI Steward** | Oversees responsible AI training, evaluation, and explainability. | AI Governance Subcommittee |
+| **Data Curator** | Reviews dataset metadata for completeness, provenance, and CARE tags. | Open Science Board |
+| **Accessibility Auditor** | Evaluates UI and docs against WCAG 2.1 AA standards. | Open Science Board |
 
 ---
 
 ## 🧠 Ethical Governance Workflow
 
-### End-to-End Process
+### High-Level Process
 
 ```mermaid
 flowchart TD
-A["Dataset or Feature Submitted"] --> B["Automated FAIR+CARE Validation"]
-B --> C["Governance Council Review (if CARE required)"]
-C --> D["Council Decision Logged in Governance Ledger"]
-D --> E["Approval Published to Telemetry Dashboard"]
+  A["Dataset or Feature Submitted"] --> B["Automated FAIR+CARE Validation"]
+  B --> C{"CARE Review Required?"}
+  C -->|No| D["Auto-Approve → Catalog & Telemetry"]
+  C -->|Yes| E["Governance Council Review"]
+  E --> F["Council Decision Logged in Governance Ledger"]
+  F --> G["Release Gate / Remediation"]
+  D --> G
 ```
 
-### Workflow Outputs
-- FAIR+CARE validation: `reports/fair/faircare_summary.json`
-- Governance review: `reports/audit/governance-ledger.json`
-- Telemetry record: `releases/v9.7.0/focus-telemetry.json`
+### Primary Outputs
+
+- FAIR+CARE validation reports → `reports/fair/faircare_summary.json`  
+- Governance decisions → `reports/audit/governance-ledger.json`  
+- Telemetry events → `releases/v10.2.0/focus-telemetry.json`
 
 ---
 
 ## 🧮 Decision Types & Status Codes
 
 | Status | Definition | Action |
-|---------|-------------|--------|
-| ✅ **Approved** | Fully compliant with FAIR+CARE and MCP requirements. | Dataset published and visible in dashboards. |
-| ⚙️ **Approved with Conditions** | Requires updates (license, provenance, or CARE clarification). | Dataset temporarily flagged. |
-| 🕓 **Pending Review** | Awaiting Council decision. | Auto-reminder sent to reviewers. |
-| ❌ **Rejected** | Fails ethical or technical compliance checks. | Dataset withheld from public release. |
+|---|---|---|
+| ✅ **Approved** | Fully compliant with FAIR+CARE and MCP requirements. | Dataset/model may be published and indexed. |
+| ⚙️ **Approved with Conditions** | Minor issues; corrective actions required. | Asset flagged; follow-up tracked in ledger. |
+| 🕓 **Pending Review** | Awaiting Council or committee decision. | Auto-reminder and escalation rules apply. |
+| ❌ **Rejected** | Fails ethical or technical compliance checks. | Asset withheld from public release; requires remediation. |
 
-**Status changes** are recorded in `reports/audit/governance-ledger.json`.
+Status changes are logged in `reports/audit/governance-ledger.json` with timestamps and reviewer IDs.
 
 ---
 
 ## 🧾 Governance Review Template Integration
 
-All governance actions are tracked through a structured issue form:
-```
+All governance actions should be initiated via structured issue forms:
+
+```plaintext
 .github/ISSUE_TEMPLATE/governance_form.yml
 ```
 
-**Form Includes:**
-- Reviewer identity and affiliation  
-- Dataset references (STAC/DCAT ID)  
-- CARE evaluation notes  
-- Decision outcome and timestamp  
-- Telemetry integration reference  
+**Form Content Includes:**
+
+- Requesting party and affiliation  
+- Dataset/model references (STAC/DCAT ID, contract ID)  
+- CARE evaluation and community context  
+- Proposed use-case and risk assessment  
+- Decision outcome, timestamp, and reviewer signatures  
+
+This form feeds into Council review workflows and ledger entries.
 
 ---
 
 ## 🧩 Automation & Audit Integration
 
-| System | Function | Output |
-|---------|-----------|---------|
-| **CI/CD Pipelines** | Automatically validate and tag new datasets or models. | `reports/self-validation/**` |
-| **Governance Ledger** | Immutable record of decisions and ethical reviews. | `reports/audit/governance-ledger.json` |
-| **Telemetry Dashboard** | Real-time visualization of governance metrics. | `docs/reports/telemetry/governance_scorecard.json` |
-| **AI Governance Module** | Evaluates model explainability and bias metrics. | `reports/audit/ai_models.json` |
+| System | Function | Primary Output |
+|---|---|---|
+| **CI/CD Pipelines** | Validate and tag new datasets or models (FAIR+CARE + contracts). | `reports/self-validation/**` |
+| **Governance Ledger** | Immutable record of decisions and ethics reviews. | `reports/audit/governance-ledger.json` |
+| **Telemetry Dashboard** | Real-time visualization of governance and compliance metrics. | `docs/reports/telemetry/governance_scorecard.json` |
+| **AI Governance Module** | Evaluates explainability, drift, and bias metrics for models. | `reports/audit/ai_models.json` |
+
+Automation and human review operate together to maintain a verifiable governance chain.
 
 ---
 
 ## ⚖️ FAIR+CARE in Governance
 
-| Principle | Implementation | Governance Reference |
-|------------|----------------|----------------------|
-| **Findable** | Governance decisions indexed by dataset ID and version. | Governance Ledger |
-| **Accessible** | Public governance summaries available via dashboard. | Telemetry JSON |
-| **Interoperable** | JSON-LD schema aligns with PROV-O and DCAT. | Release Manifests |
-| **Reusable** | All reviews archived per release. | Manifest + Ledger |
-| **CARE** | Indigenous partners included in all cultural data reviews. | FAIR+CARE Council |
+| Principle | Governance Implementation | Reference |
+|---|---|---|
+| **Findable** | Governance decisions indexed by dataset/model ID and version. | Governance Ledger |
+| **Accessible** | Summaries and dashboards publicly available where appropriate. | Telemetry Scorecards |
+| **Interoperable** | Governance data uses JSON-LD and PROV-O / DCAT-compatible schemas. | Release manifests |
+| **Reusable** | Reviews archived per release; decisions link to assets via IDs. | Ledger + manifests |
+| **CARE** | Indigenous and community partners are part of review for cultural data; CARE tags used to gate release. | FAIR+CARE Council |
+
+See also: [`faircare.md`](../faircare.md)
 
 ---
 
 ## 🧮 Quarterly Governance Audit
 
-Every quarter, a governance audit is executed to assess:
-- Dataset licensing coverage  
-- CARE compliance status  
-- Pending review queue  
-- Governance ledger integrity  
+Each quarter, a governance audit is conducted to assess:
 
-**Outputs:**
-```
+- Dataset licensing & contract coverage  
+- CARE status distribution (`approved`, `revision`, `restricted`)  
+- Pending review backlog and turnaround time  
+- Governance ledger & telemetry integrity
+
+**Outputs**
+
+```plaintext
 reports/audit/governance-ledger.json
 docs/reports/telemetry/governance_scorecard.json
 ```
 
-**Governance Audit Example:**
+**Example Audit Summary**
+
 ```json
 {
   "event": "quarterly_audit",
@@ -178,36 +199,39 @@ docs/reports/telemetry/governance_scorecard.json
 
 ---
 
-## 🧠 Governance Metrics Dashboard
+## 📊 Governance Metrics Dashboard
 
-Metrics visualized in Governance Dashboard (`web/src/components/DashboardView/`):
+Metrics visualized in Governance Dashboard (e.g., `web/src/components/DashboardView/`):
 
 | Metric | Description | Source |
-|---------|-------------|--------|
-| **Compliance Rate (%)** | Percentage of datasets passing FAIR+CARE validation. | `governance_scorecard.json` |
-| **CARE Review Volume** | Count of Indigenous or cultural dataset reviews. | `governance-ledger.json` |
-| **Governance Turnaround Time** | Average duration between submission and decision. | CI/CD Telemetry |
-| **Audit Log Integrity** | Number of validated governance ledger entries. | Ledger checksum reports |
+|---|---|---|
+| **Compliance Rate (%)** | Percent of assets passing FAIR+CARE + contract checks. | `governance_scorecard.json` |
+| **CARE Review Volume** | Number of datasets/models flagged for CARE review. | `governance-ledger.json` |
+| **Review Turnaround Time** | Average time from submission to decision. | CI telemetry |
+| **Audit Log Integrity** | Number of ledger entries with valid checksums. | Ledger + checksums |
+
+Dashboards consume `focus-telemetry.json` for aggregate trends.
 
 ---
 
 ## 🧾 Governance Policy Links
 
 | Document | Description |
-|-----------|-------------|
+|---|---|
 | [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md) | Authoritative governance charter and bylaws. |
-| [`docs/standards/faircare.md`](../faircare.md) | FAIR+CARE governance principles. |
-| [`docs/standards/licensing.md`](../licensing.md) | Licensing and IP governance. |
-| [`docs/reports/telemetry/governance_scorecard.json`](../../reports/telemetry/README.md) | Live governance metrics. |
+| [`../faircare.md`](../faircare.md) | FAIR+CARE governance principles. |
+| [`../licensing.md`](../licensing.md) | Licensing and IP governance. |
+| [`../telemetry_standards.md`](../telemetry_standards.md) | Telemetry governance and sustainability metrics. |
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
+|---|---|---|---|
+| v10.2.2 | 2025-11-12 | A. Barta | Updated release/telemetry refs to v10.2.0; clarified Council workflow, CARE integration, and dashboard sources. |
 | v9.7.0 | 2025-11-05 | A. Barta | Added complete governance framework index linking to FAIR+CARE Council and automated audit systems. |
-| v9.5.0 | 2025-10-20 | A. Barta | Expanded council roles and telemetry linkage. |
+| v9.5.0 | 2025-10-20 | A. Barta | Expanded council roles, quorum, and telemetry linkage. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Created governance documentation foundation. |
 
 ---
