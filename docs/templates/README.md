@@ -1,13 +1,13 @@
 ---
 title: "📄 Kansas Frontier Matrix — Documentation Templates Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/templates/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/docs-templates-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -35,9 +35,10 @@ Each template is aligned with **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115** 
 ## 📘 Overview
 
 All templates contained in this directory provide consistent, machine-validated structures for **experiments, model documentation, SOPs, and governance reports**.  
-They ensure each contribution to the KFM follows the Platinum README v7.1 style, FAIR+CARE ethics, and reproducible metadata lineage for transparent knowledge stewardship.
+They ensure each contribution to KFM follows **Platinum README v7.1**, **FAIR+CARE** ethics, and reproducible metadata lineage for transparent knowledge stewardship.
 
 Templates integrate with:
+
 - `docs-lint.yml` for markdown schema validation  
 - `faircare-validate.yml` for ethical audit and governance review  
 - `telemetry-export.yml` for sustainability and contribution tracking  
@@ -55,6 +56,7 @@ docs/templates/
 ```
 
 Each template includes:
+
 - YAML metadata (title, version, path, governance refs)  
 - FAIR+CARE and MCP compliance sections  
 - Version history and Diamond⁹ Ω footer certification  
@@ -72,8 +74,8 @@ Standardize documentation of experiments for AI, data pipelines, and analytical 
 | **Objective** | Purpose and hypothesis of the experiment. |
 | **Methodology** | Tools, data, and techniques employed. |
 | **Results** | Summary of outputs and observed phenomena. |
-| **Reproducibility** | Detailed reproducibility instructions. |
-| **Validation** | FAIR+CARE and governance audit links. |
+| **Reproducibility** | Detailed reproducibility instructions and commands. |
+| **Validation** | FAIR+CARE and governance audit references. |
 
 **Used In:**  
 - `src/pipelines/etl/`  
@@ -89,13 +91,13 @@ Document the lifecycle of AI/ML models for explainability, bias mitigation, and 
 
 | Section | Description |
 |----------|-------------|
-| **Metadata** | Name, author, version, dataset, license. |
-| **Intended Use** | Defined purpose and ethical boundaries. |
-| **Architecture** | Framework, model layers, and structure. |
-| **Training Details** | Hyperparameters, datasets, metrics. |
-| **Evaluation Metrics** | Quantitative evaluation (accuracy, F1, recall). |
-| **Bias & Ethics** | Governance details, mitigations, and audits. |
-| **Governance** | References to FAIR+CARE and MCP-DL standards. |
+| **Metadata** | Name, author, version, dataset, license, SBOM/SLSA links. |
+| **Intended Use** | Defined purpose, users, and ethical boundaries. |
+| **Architecture** | Framework, layers, and model configuration. |
+| **Training Details** | Hyperparameters, datasets, splits, hardware. |
+| **Evaluation Metrics** | Quantitative metrics (accuracy, F1, recall, fairness). |
+| **Bias & Ethics** | Governance details, mitigations, and FAIR+CARE audit links. |
+| **Governance** | References to FAIR+CARE, MCP-DL, and abandonment registry (if applicable). |
 
 **Validated In:**  
 - `faircare-validate.yml`  
@@ -110,13 +112,14 @@ Provide a step-by-step structure for standardized operational workflows.
 
 | Section | Description |
 |----------|-------------|
-| **Purpose** | Describe workflow scope and importance. |
-| **Scope** | Define boundaries of applicability. |
+| **Purpose** | Describe workflow scope and rationale. |
+| **Scope** | Define boundaries and applicability. |
 | **Procedure** | Sequential operational instructions. |
-| **Validation** | CI/CD and automation test references. |
-| **Governance** | Ethical and procedural compliance links. |
+| **Validation** | CI/CD and automation test references; rollback notes. |
+| **Governance** | Ethical, regulatory, and procedural compliance links. |
 
 **Applied To:**  
+
 - Data ingestion (`src/pipelines/etl/`)  
 - CI/CD automations (`.github/workflows/`)  
 - Governance processes (`docs/standards/governance/`)  
@@ -126,23 +129,24 @@ Provide a step-by-step structure for standardized operational workflows.
 ## ⚙️ Compliance & Structure Rules
 
 All template-based files **must include**:
+
 1. YAML front-matter with `title`, `path`, `version`, `last_updated`, `commit_sha`.  
-2. Document structure with clear objectives and validation references.  
-3. Ethical license declaration (CC-BY 4.0).  
-4. FAIR+CARE audit trace with version tracking.  
-5. Conformance with linting and validation workflows (`docs-lint.yml`).
+2. Document structure with clear objectives, methods, results, and validation references.  
+3. Explicit license declaration (CC-BY 4.0 or compatible).  
+4. FAIR+CARE audit trace with version tracking and links to relevant reports.  
+5. Conformance with linting and validation workflows (`docs-lint.yml`, `faircare-validate.yml`).
 
 ---
 
 ## 🧮 Validation Workflows
 
 | Workflow | Description | Output |
-|-----------|-------------|---------|
-| `docs-lint.yml` | Markdown formatting and schema enforcement. | Validation Log |
-| `faircare-validate.yml` | FAIR+CARE certification and ethics validation. | Governance Report |
-| `telemetry-export.yml` | Logs contributions and updates to telemetry. | `focus-telemetry.json` |
+|-----------|-------------|--------|
+| `docs-lint.yml` | Markdown formatting and schema enforcement. | `reports/self-validation/docs/lint_summary.json` |
+| `faircare-validate.yml` | FAIR+CARE certification and ethics validation. | `reports/fair/faircare_summary.json` |
+| `telemetry-export.yml` | Logs contributions and template usage into telemetry. | `releases/v10.2.0/focus-telemetry.json` |
 
-All generated outputs are appended to:  
+All generated outputs are referenced in:  
 `reports/audit/github-workflows-ledger.json`
 
 ---
@@ -151,20 +155,20 @@ All generated outputs are appended to:
 
 | Metric | Value | Verified By |
 |--------|------:|-------------|
-| Template Validation Energy | 1.1 Wh | @kfm-sustainability |
-| Carbon Output | 1.3 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+| Template Validation Energy | 1.1 Wh | `@kfm-sustainability` |
+| Carbon Output | 1.3 gCO₂e | `@kfm-security` |
+| Renewable Power | 100% (RE100 Certified) | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 Telemetry data recorded in:  
-`../../releases/v10.0.0/focus-telemetry.json`
+`../../releases/v10.2.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Citation
 
 ```text
-Kansas Frontier Matrix (2025). Documentation Templates Index (v10.0.0).
+Kansas Frontier Matrix (2025). Documentation Templates Index (v10.2.2).
 Unified library of FAIR+CARE-certified documentation templates ensuring reproducibility, ethical alignment, and provenance traceability across KFM.
 ```
 
@@ -174,9 +178,10 @@ Unified library of FAIR+CARE-certified documentation templates ensuring reproduc
 
 | Version | Date | Author | Summary |
 |----------|------|---------|----------|
-| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10.0.0; integrated telemetry schema v2, updated governance workflows, and enhanced MCP/FAIR+CARE compliance. |
-| v9.7.0 | 2025-11-05 | A. Barta | Unified experiment, model, and SOP templates under stable release. |
-| v9.5.0 | 2025-10-20 | KFM Council | Introduced FAIR+CARE audit metadata and governance integration. |
+| v10.2.2 | 2025-11-12 | A. Barta | Aligned telemetry refs to v10.2.0; clarified integration with docs-lint and FAIR+CARE workflows. |
+| v10.0.0 | 2025-11-10 | A. Barta | Introduced telemetry schema v2; updated governance workflows and MCP/FAIR+CARE sections. |
+| v9.7.0 | 2025-11-05 | A. Barta | Unified experiment, model, and SOP templates under a stable release. |
+| v9.5.0 | 2025-10-20 | KFM Council | Added FAIR+CARE audit metadata and governance integration. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Established baseline templates with MCP compliance. |
 
 ---
