@@ -1,6 +1,6 @@
 ---
-title: "📊 Kansas Frontier Matrix — Raw Tabular Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "data/raw/tabular/README.md"
+title: "📚 Kansas Frontier Matrix — Raw Data Metadata Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "data/raw/metadata/README.md"
 version: "v10.2.2"
 last_updated: "2025-11-12"
 review_cycle: "Continuous / Autonomous"
@@ -9,26 +9,26 @@ sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
 manifest_ref: "../../../releases/v10.2.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
 telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-raw-tabular-v10.json"
+telemetry_schema: "../../../schemas/telemetry/data-raw-metadata-v10.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "Public Domain / Open Data Commons"
+license: "Open Data Commons / FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 📊 Kansas Frontier Matrix — **Raw Tabular Data**  
-`data/raw/tabular/README.md`
+# 📚 Kansas Frontier Matrix — **Raw Data Metadata Registry**  
+`data/raw/metadata/README.md`
 
 **Purpose:**  
-Repository for **unaltered structured datasets** used by the Kansas Frontier Matrix (KFM) for research, modeling, and historical integration.  
-Includes census, administrative, economic, treaty, and archival tabular data ingested directly from verified open sources with **FAIR+CARE** pre-audits and telemetry v2 bindings.
+Central repository for **source-level metadata, provenance manifests, checksum registries, and FAIR+CARE pre-audit summaries** for all Kansas Frontier Matrix (KFM) raw datasets.  
+Ensures transparency, data lineage integrity, and governance-ready metadata alignment with **STAC 1.0**, **DCAT 3.0**, and **ISO 19115** standards.
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/README.md)
 [![License: Open Data](https://img.shields.io/badge/License-Open%20Data-brightgreen.svg)](../../../LICENSE)
-[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Raw%20Tabular%20Governed-gold.svg)](../../../docs/standards/faircare.md)
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Compliant-0052cc.svg)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
+[![FAIR+CARE Ethics](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Governed-gold.svg)](../../../docs/standards/faircare.md)
+[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green.svg)]()
 
 </div>
 
@@ -36,72 +36,56 @@ Includes census, administrative, economic, treaty, and archival tabular data ing
 
 ## 📘 Overview
 
-The **Raw Tabular Data Layer** holds original tabular datasets from **U.S. Census Bureau, BEA, NOAA, BLM, NARA, and Kansas state archives**.  
-Files here form the structured backbone for **normalization, validation, and FAIR+CARE governance** across the KFM pipeline.  
-All assets are preserved **exactly as acquired** (no transformations), with **provenance, license, and checksum** metadata to ensure full reproducibility.
+The **Raw Metadata Layer** documents the provenance and FAIR+CARE pre-audit details of all **raw, unaltered datasets** in the KFM system.  
+It is the **single source of truth** for dataset integrity verification, source attribution, and licensing compliance prior to staging and transformation.
 
 **v10.2.2 Enhancements**
-- **Streaming STAC** catalog updates for frequently refreshed sources.  
-- Telemetry v2 (energy/CO₂, validation coverage) for ingestion runs.  
-- Expanded pre-audit fields (license nuances, sensitivity flags, community notes).
+- Introduced **JSON-LD provenance graphs** for interoperable metadata exchange.  
+- Linked **Streaming STAC** and **telemetry v2** for continuous metadata updates.  
+- Expanded FAIR+CARE pre-audit schema to include consent tokens and community notes.
 
-### Core Responsibilities
+### Core Functions
 
-- Preserve **unaltered** tabular data with source context.  
-- Maintain **provenance + checksum** evidence for integrity and reuse.  
-- Enable **schema validation** and **FAIR+CARE pre-audits** prior to staging.  
-- Provide canonical inputs for **AI + Focus Mode v2.1** correlation workflows.
+- Maintain source-level provenance metadata for each raw dataset.  
+- Track licensing, attribution, and checksum validation.  
+- Provide FAIR+CARE pre-audit context (sensitivity, consent, community input).  
+- Facilitate **crosswalk between STAC, DCAT, and ISO 19115** for interoperability.  
+- Power lineage traceability in the **Governance Ledger**.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```plaintext
-data/raw/tabular/
-├── README.md                              # This file — overview of raw tabular data
-│
-├── census_population_kansas_1900_2020.csv # U.S. Census historical population data
-├── blm_land_ownership.csv                 # Bureau of Land Management property records
-├── treaty_documents_metadata.csv          # Historical treaty metadata crosswalks
-├── kansas_economic_indicators.csv         # BEA economic indicators by county
-├── noaa_historical_weather_stations.csv   # NOAA weather station metadata (Kansas)
-├── metadata.json                          # Checksums, provenance, FAIR+CARE fields (JSON-LD)
-└── source_licenses.json                   # Licensing & acquisition metadata (per source)
+data/raw/metadata/
+├── README.md
+├── provenance.json              # Source acquisition lineage and metadata records
+├── checksums.json               # SHA-256 checksums and integrity results
+├── faircare_preaudit.json       # FAIR+CARE pre-audit summary for all raw domains
+├── stac_catalog.json            # STAC 1.0 catalog for raw data assets
+├── dcat_catalog.json            # DCAT 3.0 export for external interoperability
+└── metadata_index.json          # Unified registry with JSON-LD provenance contexts
 ```
 
 ---
 
-## 🧭 Data Acquisition Summary
-
-| Dataset | Source / Provider | Records | Format | License | Integrity |
-|---|---|---:|---|---|---:|
-| Census Population (1900–2020) | U.S. Census Bureau | 21,125 | CSV | Public Domain | ✅ |
-| BLM Land Ownership | U.S. Bureau of Land Mgmt. | 14,205 | CSV | Public Domain | ✅ |
-| Treaty Documents Metadata | National Archives (NARA) | 1,024 | CSV | Public Domain | ✅ |
-| Kansas Economic Indicators | BEA / KS Dept. of Commerce | 2,468 | CSV | Public Domain | ✅ |
-| NOAA Station Metadata | NOAA NCEI | 840 | CSV | Public Domain | ✅ |
-
----
-
-## 🧩 Example Source Metadata Record
+## 🧩 Example Metadata Index Record
 
 ```json
 {
-  "id": "census_population_kansas_1900_2020_raw",
-  "domain": "tabular",
-  "source": "U.S. Census Bureau Historical Data",
-  "data_url": "https://www.census.gov/data.html",
-  "provider": "United States Census Bureau",
-  "format": "CSV",
-  "license": "Public Domain (Census Bureau)",
-  "records_fetched": 21125,
-  "checksum_sha256": "sha256:df12a9b8e46a37f4e1b2319eabf8d80e51c2b67a9b90b96e0d3b57b49a3a2c8f",
-  "retrieved_on": "2025-11-12T20:22:00Z",
-  "validator": "@kfm-tabular-lab",
-  "faircare_preaudit": {
-    "sensitivity": "none",
-    "license_review": "ok",
-    "community_flags": []
+  "@context": "https://schema.org/",
+  "@type": "Dataset",
+  "id": "raw_data_metadata_registry_v10.2.2",
+  "source_domains": ["climate", "hydrology", "hazards", "terrain", "text", "tabular"],
+  "checksum_records": 254,
+  "fairstatus": "pre-certified",
+  "records_updated": "2025-11-12T21:45:00Z",
+  "validator": "@kfm-metadata-lab",
+  "governance_registered": true,
+  "provenance_graph": "data/raw/metadata/provenance.json",
+  "linked_catalogs": {
+    "stac": "data/raw/metadata/stac_catalog.json",
+    "dcat": "data/raw/metadata/dcat_catalog.json"
   },
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
@@ -109,52 +93,54 @@ data/raw/tabular/
 
 ---
 
-## ⚙️ FAIR+CARE Compliance Matrix
+## ⚙️ FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
 |---|---|---|
-| **Findable** | DCAT 3.0 catalog entries; governance linkages. | `@kfm-data` |
-| **Accessible** | Open CSV/Parquet; retrieval instructions. | `@kfm-accessibility` |
-| **Interoperable** | Native CSV retained; JSON Schema + DCAT fields captured. | `@kfm-architecture` |
-| **Reusable** | Source, license, schema, and checksum metadata included. | `@kfm-design` |
-| **Collective Benefit** | Enables socioeconomic, environmental, and historical research. | `@faircare-council` |
-| **Authority to Control** | Council certifies licensing and ethical ingestion. | `@kfm-governance` |
-| **Responsibility** | Stewards verify checksums + schema awareness before staging. | `@kfm-security` |
-| **Ethics** | PII redacted/aggregated before acquisition; equity review logged. | `@kfm-ethics` |
+| **Findable** | STAC/DCAT metadata indexed by dataset UUID and domain. | `@kfm-data` |
+| **Accessible** | JSON-LD and CSV exports openly available for review. | `@kfm-accessibility` |
+| **Interoperable** | Dual exports using STAC 1.0 + DCAT 3.0 schemas. | `@kfm-architecture` |
+| **Reusable** | Includes complete provenance, checksums, and licenses. | `@kfm-design` |
+| **Collective Benefit** | Open publication strengthens reproducibility & trust. | `@faircare-council` |
+| **Authority to Control** | Council certifies metadata accuracy & ethical compliance. | `@kfm-governance` |
+| **Responsibility** | Validators maintain lineage and checksum integrity. | `@kfm-security` |
+| **Ethics** | Sensitive data flagged; license compliance reviewed. | `@kfm-ethics` |
 
 ---
 
-## 🧠 Data Integrity & Cataloging
+## 🧠 Metadata Validation & Publication
 
 | Process | Description | Output |
 |---|---|---|
-| **Checksum Verify** | SHA-256 hashing; vendor hash comparison. | `data/raw/tabular/metadata.json` |
-| **License Audit** | FAIR+CARE licensing & attribution compliance. | `data/raw/tabular/source_licenses.json` |
-| **Provenance Log** | Acquisition lineage & reviewer notes. | `data/reports/audit/data_provenance_ledger.json` |
-| **Catalog Publish** | DCAT/STAC registration for discovery. | `data/raw/metadata/dcat_catalog.json` |
+| **Checksum Audit** | Verifies data integrity per file using SHA-256. | `data/raw/metadata/checksums.json` |
+| **Provenance Log** | Records acquisition, review, and validation lineage. | `data/raw/metadata/provenance.json` |
+| **FAIR+CARE Pre-Audit** | Captures ethics and licensing pre-checks. | `data/raw/metadata/faircare_preaudit.json` |
+| **Catalog Generation** | Publishes STAC & DCAT metadata for discovery. | `data/raw/metadata/{stac,dcat}_catalog.json` |
+
+**Automations:**  
+`metadata_sync.yml` — continuous synchronization to governance ledgers and telemetry feeds.
 
 ---
 
-## ⚖️ Retention & Sustainability
+## ⚖️ Retention & Integrity Policy
 
 | Data Type | Retention | Policy |
 |---|---|---|
-| Raw Tabular Datasets | Permanent | Immutable archival for lineage & reproducibility |
-| Source Metadata | Permanent | ISO 19115 lineage retention |
-| Checksum Records | Permanent | Long-term integrity evidence |
-| FAIR+CARE Pre-Audits | 5 Years | Licensing & ethics review archives |
-| Ingestion Logs | 365 Days | Rotated per governance policy |
+| Provenance Logs | Permanent | Immutable lineage tracking (ISO 19115). |
+| Checksum Records | Permanent | Long-term data integrity evidence. |
+| FAIR+CARE Pre-Audits | 5 Years | Periodic review under Council oversight. |
+| STAC/DCAT Catalogs | Permanent | Continuous update via streaming bridge. |
 
-**Telemetry reference:** `../../../releases/v10.2.0/focus-telemetry.json`
+**Telemetry Source:** `../../../releases/v10.2.0/focus-telemetry.json`
 
 ---
 
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Raw Tabular Data (v10.2.2).
-Unaltered tabular datasets from U.S. Census Bureau, BEA, BLM, NARA, and NOAA.
-Checksum-verified and FAIR+CARE-aligned for reproducible, ethical data workflows in the Kansas Frontier Matrix.
+Kansas Frontier Matrix (2025). Raw Data Metadata Registry (v10.2.2).
+Centralized metadata registry for provenance, checksums, and FAIR+CARE pre-audits of unaltered raw datasets.
+Implements JSON-LD interoperability and governance lineage tracking under MCP-DL v6.3.
 ```
 
 ---
@@ -163,17 +149,17 @@ Checksum-verified and FAIR+CARE-aligned for reproducible, ethical data workflows
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.2.2 | 2025-11-12 | `@kfm-tabular` | Align to v10.2: Streaming STAC hooks (where applicable), telemetry v2 bindings, expanded pre-audit fields. |
-| v10.0.0 | 2025-11-09 | `@kfm-tabular` | Streaming STAC baseline, telemetry schema refs, lifecycle policy clarified. |
-| v9.7.0 | 2025-11-06 | `@kfm-tabular` | DCAT 3.0 mapping & checksum registry added; governance clarified. |
+| v10.2.2 | 2025-11-12 | `@kfm-data` | Added JSON-LD provenance, Streaming STAC links, telemetry v2 fields, FAIR+CARE pre-audit expansion. |
+| v10.0.0 | 2025-11-09 | `@kfm-data` | Established unified metadata registry; added checksum and DCAT support. |
+| v9.7.0 | 2025-11-06 | `@kfm-data` | Initial FAIR+CARE pre-audit registry; governance integration. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix**  
-*Structured Data × FAIR+CARE Governance × Provenance Integrity*  
-© 2025 Kansas Frontier Matrix — Public Domain / Open Data Commons · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+*Metadata Transparency × FAIR+CARE Ethics × Provenance Integrity*  
+© 2025 Kansas Frontier Matrix — Open Data Commons / FAIR+CARE Certified  
 
 [Back to Raw Data Index](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
