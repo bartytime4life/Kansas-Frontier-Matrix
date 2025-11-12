@@ -1,14 +1,14 @@
 ---
-title: "📊 Kansas Frontier Matrix — Accessible Tables & Data Grid Patterns (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📊 Kansas Frontier Matrix — Accessible Tables & Data Grids (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/patterns/tables.md"
 version: "v10.0.0"
 last_updated: "2025-11-10"
-review_cycle: "Continuous / FAIR+CARE Accessibility Council"
+review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
 manifest_ref: "../../../releases/v10.0.0/manifest.zip"
 telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/a11y-patterns-tables-v1.json"
+telemetry_schema: "../../../schemas/telemetry/a11y-tables-v1.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -16,17 +16,16 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 📊 **Kansas Frontier Matrix — Accessible Tables & Data Grid Patterns**
+# 📊 **Kansas Frontier Matrix — Accessible Tables & Data Grids**
 `docs/accessibility/patterns/tables.md`
 
 **Purpose:**  
-Define inclusive, WCAG-compliant, and ethically transparent **table and data grid structures** for the **Kansas Frontier Matrix (KFM)** project.  
-Ensures that tabular and complex data visualizations are accessible via screen readers, keyboard navigation, and FAIR+CARE ethical presentation principles.
+Establish accessible, consistent table and grid structures for **data visualization, analytics dashboards, and Focus Mode interfaces**, ensuring keyboard navigability, semantic clarity, and **WCAG 2.1 AA** compliance under **FAIR+CARE** ethical governance.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../../releases/v10.0.0/manifest.zip)
+![Badge Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
+![Badge FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
+![Badge License](https://img.shields.io/badge/License-CC--BY%204.0-green)
+![Badge Status](https://img.shields.io/badge/Status-Stable-success)
 
 </div>
 
@@ -34,228 +33,153 @@ Ensures that tabular and complex data visualizations are accessible via screen r
 
 ## 📘 Overview
 
-Accessible tables ensure **structured data comprehension** across all assistive technologies and cognitive contexts.  
-They must:
-- Use **semantic table markup** (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`).  
-- Provide **headers, scopes, and summaries** for context.  
-- Support **keyboard navigation** in dynamic grids.  
-- Display **ethical data transparency**, avoiding bias in layout or emphasis.  
-- Align with **FAIR+CARE** to ensure datasets are not misrepresented or decontextualized.
+Tabular layouts and data grids are core to Kansas Frontier Matrix’s **Focus Mode**, **Governance Dashboards**, and **Dataset Validation Reports**.  
+Accessible tables ensure that all users — including those using screen readers or alternative navigation — can understand, navigate, and act upon structured information ethically and efficiently.
+
+**Use Cases**
+- FAIR+CARE audit logs  
+- STAC/DCAT metadata tables  
+- Telemetry and validation dashboards  
+- Interactive grid-based explorers  
 
 ---
 
-## 🗂️ Directory Context
+## 🧩 Accessibility Standards
 
-```
-docs/accessibility/patterns/
-├── README.md
-├── alerts.md
-├── buttons.md
-├── charts.md
-├── dialogs.md
-├── forms.md
-├── map-controls.md
-├── media.md
-├── navigation.md
-└── tables.md               # ← This file
-```
+| Requirement | Description | WCAG / Standard |
+|--------------|--------------|-----------------|
+| **Semantic Structure** | Use `<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>` appropriately. | WCAG 1.3.1 |
+| **Header Association** | Use `scope="col"` and `scope="row"` for relationships. | WCAG 1.3.2 |
+| **Keyboard Navigation** | All cells navigable via `Tab` and arrow keys in grids. | WCAG 2.1.1 |
+| **Focus Order** | Logical traversal respecting visual layout. | WCAG 2.4.3 |
+| **Responsive Layout** | Maintain table meaning when linearized. | WCAG 1.3.2 |
+| **Summaries & Captions** | Each table must include `<caption>` or `aria-label`. | WCAG 1.3.1 |
+| **Sorting Indicators** | Use `aria-sort="ascending|descending"`. | WAI-ARIA 1.2 |
+| **Cultural Context** | Numeric, date, and unit formats adapt to locale. | FAIR+CARE Cultural Standards |
 
 ---
 
-## ♿ Accessibility Standards
-
-| Requirement | Description | Compliance |
-|---|---|---|
-| **Table Structure** | Use `<table>`, `<thead>`, `<tbody>`, `<th>` for semantic reading order. | WCAG 1.3.1 |
-| **Header Scope** | Assign `scope="col"` or `scope="row"` to header cells. | WCAG 1.3.1 |
-| **Caption & Summary** | Add `<caption>` and `aria-describedby` for overview context. | WCAG 1.3.1 / 1.3.2 |
-| **Keyboard Navigation** | Ensure all cells and actions are reachable via `Tab` / arrow keys. | WCAG 2.1.1 |
-| **Visible Focus** | Maintain 3:1 contrast focus indicators. | WCAG 2.4.7 |
-| **Sorting & Filtering** | Announce state changes via `aria-sort` and `aria-live`. | WCAG 4.1.3 |
-| **Data Relationships** | Link complex headers with `id` and `headers` attributes. | ARIA 1.2 |
-| **Ethical Transparency** | Display data sources, consent status, and licensing in proximity to table. | FAIR+CARE |
-
----
-
-## 🧩 Example: Static Semantic Table
+## 🧭 Semantic Example
 
 ```html
-<table aria-describedby="climate-summary" class="border border-neutral-200 w-full text-sm">
-  <caption class="text-left font-semibold p-2">
-    Kansas Climate Trends (1900–2025)
-  </caption>
-  <thead class="bg-neutral-50">
+<table aria-describedby="dataset-description">
+  <caption>Kansas River Floodplain Data — 2024</caption>
+  <thead>
     <tr>
-      <th scope="col" class="p-2">Year</th>
-      <th scope="col" class="p-2">Avg. Temperature (°C)</th>
-      <th scope="col" class="p-2">Avg. Rainfall (mm)</th>
-      <th scope="col" class="p-2">Data Source</th>
+      <th scope="col">Station ID</th>
+      <th scope="col">Date</th>
+      <th scope="col" aria-sort="descending">Discharge (m³/s)</th>
+      <th scope="col">Status</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td class="p-2">1900</td>
-      <td class="p-2">13.5</td>
-      <td class="p-2">542</td>
-      <td class="p-2">NOAA Historical Archive</td>
+      <td>KFR-001</td>
+      <td>2024-06-18</td>
+      <td>311.4</td>
+      <td>Normal</td>
     </tr>
     <tr>
-      <td class="p-2">2020</td>
-      <td class="p-2">14.2</td>
-      <td class="p-2">611</td>
-      <td class="p-2">NOAA NCEI (FAIR+CARE Certified)</td>
+      <td>KFR-002</td>
+      <td>2024-06-18</td>
+      <td>892.7</td>
+      <td>Flood Warning</td>
     </tr>
   </tbody>
 </table>
-
-<p id="climate-summary" class="text-sm text-muted mt-1">
-  Data shows an increase of 0.7°C and ~12% rainfall since 1900. Source: NOAA, verified under FAIR+CARE guidelines.
-</p>
 ```
 
-**Accessibility Features**
-- Semantic structure with headers and caption.  
-- `aria-describedby` links table to textual summary.  
-- High-contrast background and visible focus for interactive cells.  
+**Implementation Rules**
+- Provide a `<caption>` summarizing the dataset’s content.  
+- Use `<th>` for headers with `scope` attributes.  
+- For sortable headers, use `aria-sort`.  
+- Avoid merging cells (`rowspan`, `colspan`) unless necessary; provide `aria-describedby` for multi-level headers.  
 
 ---
 
-## 🧮 Example: Sortable Data Grid (ARIA)
+## 🧮 Data Grid Enhancements
 
-```tsx
-<table role="grid" aria-label="Dataset Registry" aria-rowcount="5" aria-colcount="3">
-  <thead>
-    <tr role="row">
-      <th role="columnheader" aria-sort="ascending" tabindex="0">Dataset Name</th>
-      <th role="columnheader" aria-sort="none" tabindex="-1">License</th>
-      <th role="columnheader" aria-sort="none" tabindex="-1">FAIR+CARE Score</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr role="row">
-      <td role="gridcell" tabindex="0">NOAA Kansas Climate</td>
-      <td role="gridcell">CC-BY 4.0</td>
-      <td role="gridcell">97.3</td>
-    </tr>
-    <tr role="row">
-      <td role="gridcell">KHS Land Records</td>
-      <td role="gridcell">Restricted</td>
-      <td role="gridcell">Pending IDGB Review</td>
-    </tr>
-  </tbody>
-</table>
-```
+For interactive or virtualized grids (React Table, AG Grid, etc.), adopt **WAI-ARIA Grid Patterns**:
 
-**Notes**
-- Keyboard navigation cycles through grid cells using **Arrow keys**.  
-- Sorting actions update `aria-sort` dynamically (`ascending`, `descending`, `none`).  
-- Screen readers announce updated state via `aria-live="polite"`.
+| Feature | ARIA Role | Notes |
+|----------|------------|-------|
+| Table container | `role="grid"` | Provides structure for keyboard control |
+| Column header | `role="columnheader"` | Includes `aria-sort` attributes |
+| Row header | `role="rowheader"` | Announced as row labels |
+| Data cell | `role="gridcell"` | Focusable element for keyboard traversal |
+| Selection | `aria-selected="true|false"` | Used for multi-row selection |
+| Live updates | `aria-live="polite"` | Announces data refreshes non-disruptively |
+
+Keyboard Mapping Example:
+- `Arrow Up/Down` → Move between rows  
+- `Arrow Left/Right` → Move between columns  
+- `Home/End` → Jump to start or end of row  
+- `Ctrl+F` → Search/filter dataset  
 
 ---
 
 ## 🎨 Design Tokens
 
-| Token | Value | Use |
-|---|---|---|
-| `color.table.header.bg` | `#F9FAFB` | Header row background |
-| `color.table.border` | `#E5E5E5` | Grid borders |
-| `color.table.row.hover` | `#F1F5F9` | Hovered row |
-| `focus.outline.color` | `#FFB300` | Focus ring |
-| `font.size.table` | `0.875rem` | Default table text size |
-
-Validated by `design-tokens-validate.yml` to meet contrast ratios and consistency.
+| Token | Description | Example |
+|--------|--------------|---------|
+| `table.border.color` | Line color for grid cells | `#E0E0E0` |
+| `table.header.bg` | Background of header row | `#F5F5F5` |
+| `table.row.focus` | Highlight color for active row | `#FFF59D` |
+| `table.text.color` | Default text color | `#212121` |
+| `a11y.focus.color` | Focus outline | `#FFD54F` |
 
 ---
 
-## 🧠 FAIR+CARE Ethical Data Display
+## 🧾 Ethical Display Guidelines
 
-| Principle | Implementation |
-|---|---|
-| **Collective Benefit** | Tables represent factual data without manipulation or bias. |
-| **Authority to Control** | Include provenance, consent, and access restrictions adjacent to sensitive records. |
-| **Responsibility** | Annotate all derived data with citations and FAIR+CARE badges. |
-| **Ethics** | Avoid emphasis patterns or color-coding that imply judgment or hierarchy. |
+| Guideline | FAIR+CARE Justification |
+|------------|--------------------------|
+| **Respect Sensitivity** | Mask or generalize culturally restricted data. |
+| **Plain Language** | Avoid jargon in column names. |
+| **Color Safety** | Color-coded data must have textual equivalents. |
+| **Data Transparency** | Include provenance tooltips (`data-provenance` attributes). |
 
-**Example**
+Example:
 ```html
-<p class="text-xs text-muted mt-2">
-  ⚖️ Data verified for FAIR+CARE compliance — restricted rows indicate cultural or Indigenous datasets with consent limitations.
-</p>
+<td data-provenance="USGS Kansas Station 2024-06-18">311.4</td>
 ```
 
 ---
 
-## 🧭 Keyboard Interaction
+## 🧪 Testing & Validation
 
-| Key | Action |
-|---|---|
-| **Tab / Shift+Tab** | Move between interactive cells or buttons. |
-| **Arrow Keys** | Navigate grid cells (in `role="grid"` tables). |
-| **Enter / Space** | Activate sorting or open context menu. |
-| **Home / End** | Jump to first/last cell in row. |
-| **Ctrl + F** | Search/filter table contents (browser default). |
-
----
-
-## 🧾 Testing Checklist
-
-| Test | Description | Verification |
-|---|---|---|
-| Table Semantics | `<table>` structure and header associations present. | Axe-core Scan |
-| Keyboard Navigation | Focus moves logically between cells. | E2E Tests |
-| Sorting Feedback | `aria-sort` announces state change. | Screen Reader Audit |
-| Contrast | Header text contrast ≥ 4.5:1. | Token Validation |
-| Consent Labeling | FAIR+CARE metadata visible for restricted datasets. | IDGB Review |
+| Tool | Validation Focus | Output |
+|------|------------------|--------|
+| **axe-core** | Table semantics and ARIA roles | `reports/self-validation/web/a11y_tables.json` |
+| **jest-axe** | Grid role testing for React | `reports/ui/a11y_grids.json` |
+| **Lighthouse CI** | Caption and sort state checks | `reports/ui/lighthouse_tables.json` |
+| **Manual QA** | NVDA/VoiceOver keyboard navigation | FAIR+CARE Council logs |
 
 ---
 
-## ⚙️ CI/CD Validation
+## ⚖️ FAIR+CARE Integration
 
-| Workflow | Function | Artifact |
-|---|---|---|
-| `accessibility_scan.yml` | Validates table semantics and focus handling. | `reports/self-validation/web/a11y_summary.json` |
-| `storybook-a11y.yml` | Component accessibility tests for data grids. | `reports/ui/a11y_component_audits.json` |
-| `faircare-visual-audit.yml` | Verifies ethical table tone, consent tags, and color fairness. | `reports/faircare-visual-validation.json` |
-| `design-tokens-validate.yml` | Checks contrast and layout token compliance. | `reports/ui/design-token-lint.json` |
-
----
-
-## 📊 Metrics
-
-| Metric | Target | Verified By |
-|---|---|---|
-| **WCAG 2.1 AA Compliance** | 100% | Accessibility Council |
-| **Keyboard Operability** | 100% | CI E2E |
-| **Contrast Ratio** | ≥ 4.5:1 | Token Validator |
-| **FAIR+CARE Metadata Coverage** | 100% | Governance Telemetry |
-| **Consent Validation Accuracy** | 100% for restricted data | IDGB Ethics Audit |
-
----
-
-## 🧮 Lifecycle
-
-```mermaid
-flowchart LR
-A["Table Design"] --> B["Accessibility Validation (WCAG + ARIA)"]
-B --> C["Ethical Review (FAIR+CARE Council)"]
-C --> D["CI/CD Automation (Token & Contrast Tests)"]
-D --> E["Telemetry Logging & Transparency Dashboard"]
-```
+| Principle | Application |
+|------------|-------------|
+| **Collective Benefit** | Data tables convey transparent insights for all communities. |
+| **Authority to Control** | Localized views respect regional data governance. |
+| **Responsibility** | Versioned updates and metadata provenance are auditable. |
+| **Ethics** | Visualization avoids stigmatization or bias through presentation. |
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-10 | FAIR+CARE Accessibility Council | Added accessible table and data grid patterns ensuring semantic structure, FAIR+CARE metadata inclusion, and full keyboard/ARIA compliance. |
+|----------|------|---------|----------|
+| v10.0.0 | 2025-11-10 | FAIR+CARE A11y Council | Created comprehensive accessible table and grid specification; integrated ARIA roles, token standards, and ethical display guidance. |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Part of the **Accessibility Pattern Library** · Master Coder Protocol v6.3 · FAIR+CARE Certified  
-[⬅ Back to Patterns Index](README.md) · [Media →](media.md)
+Developed under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
+[⬅ Back to Forms](forms.md) · [Back to A11y Patterns Index](README.md)
 
 </div>
