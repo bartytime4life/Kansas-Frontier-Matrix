@@ -1,14 +1,14 @@
 ---
 title: "🌾 Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "releases/v10.0.0/manifest.zip"
+sbom_ref: "releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "releases/v10.2.0/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v10.0.0/focus-telemetry.json"
+telemetry_ref: "releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
@@ -17,12 +17,11 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🌾 **Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub**
+# 🌾 **Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub**  
 `README.md`
 
 **Purpose:**  
-Primary entry for developers, historians, scientists, and community contributors to understand the mission, architecture, governance, and data framework of the **Kansas Frontier Matrix (KFM)**.  
-KFM unites Kansas’s historical, environmental, and cultural data into a **FAIR+CARE-certified**, **MCP-compliant**, and **reproducible open data ecosystem**.
+Primary entry for developers, historians, scientists, and contributors to explore the mission, architecture, and FAIR+CARE governance of the **Kansas Frontier Matrix (KFM)** — a living semantic atlas of Kansas integrating history, environment, and culture into a reproducible open-data ecosystem.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](docs/README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -34,182 +33,191 @@ KFM unites Kansas’s historical, environmental, and cultural data into a **FAIR
 ---
 
 ## 📘 Overview
-The **Kansas Frontier Matrix (KFM)** is a **semantic geospatial knowledge hub** integrating Kansas’s **environmental, cultural, and historical archives** into an **open-source digital infrastructure**.  
-Built under **Master Coder Protocol v6.3** and aligned with **FAIR+CARE** data ethics, it enables **traceable**, **reproducible**, and **machine-readable** data publication.
 
-KFM aggregates **maps, archives, and datasets** from:
-- **NOAA**, **USGS**, **Kansas Historical Society**, **Kansas DASC**
-- **Tribal archives**, **BLM GLO Records**, **local museums & libraries**
+The **Kansas Frontier Matrix (KFM)** is a **semantic geospatial knowledge platform** connecting Kansas’s **cultural, historical, and environmental datasets** into a unified, ethical, and machine-readable system.  
+It applies the **Master Coder Protocol v6.3**, **FAIR+CARE principles**, and **Diamond⁹ Ω / Crown∞Ω certification** to guarantee provenance, openness, and scientific reproducibility.
 
-Every artifact is versioned, checksum-verified, and governed through transparent FAIR+CARE workflows.
+KFM aggregates open-access data from:
+- **NOAA**, **USGS**, **Kansas DASC**, **Kansas Historical Society**
+- **Tribal archives**, **BLM GLO patents**, **local museums & libraries**
+
+Each dataset is versioned, checksum-verified, and linked to the **Neo4j knowledge graph**, ensuring data lineage, integrity, and long-term sustainability.
 
 ---
 
 ## 🎯 Mission
+
 > *“Weave Kansas’s past into a living digital landscape where history, geography, and ecology converge.”*
 
-KFM connects **historical context**, **ecological data**, and **cultural geography** by:
-- Enabling **interdisciplinary research** on environmental & societal change  
-- Empowering **communities and educators** with visual, narrative analytics  
-- Preserving **Indigenous knowledge and heritage** through ethical open data  
+The project unites data science and human heritage to:
+- Enable **interdisciplinary research** on ecological and social transformation  
+- Empower **citizens, educators, and historians** with accessible data visualizations  
+- Protect **Indigenous knowledge** through **CARE-based data governance**  
 
 ---
 
-## ✨ Key Features (v10.0)
+## ✨ Key Features (v10.2)
+
 | Feature | Description |
 |---|---|
-| 🗺️ **Interactive Map & Timeline** | Synchronized MapLibre + D3 visualization linked to temporal data and story nodes. |
-| 🧠 **Focus Mode v2** | Adaptive AI narratives (`focus_transformer_v2`), subgraph insights, explainability overlays, CARE guardrails. |
-| 🧩 **Knowledge Graph** | Neo4j-based graph aligned with CIDOC CRM, OWL-Time, GeoSPARQL, PROV-O; federated queries. |
-| ⚙️ **ETL & AI Pipelines** | Automated ingestion, OCR, NER, geocoding, summarization, validation (FAIR+CARE, data contracts). |
-| 📚 **FAIR+CARE Governance** | Ethics-by-design for cultural/Indigenous data with transparent Council ledger. |
-| 🌐 **STAC/DCAT Catalogs** | STAC 1.0 + DCAT 3.0 catalogs for dataset discovery; streaming STAC bridge for live sources. |
-| 🛰️ **3D Temporal Scenes** | Cesium-powered 3D layers for deep-time to future projections. |
-| 🧮 **Reproducible Open Source** | SPDX SBOMs, SLSA-style attestations, GitHub Actions CI/CD, consolidated telemetry. |
+| 🗺️ **Interactive Map & Timeline** | Linked MapLibre + D3 visual system integrating space and time. |
+| 🧠 **Focus Mode v2.1** | AI-powered narrative synthesis with SHAP explainability and ethical flagging. |
+| 🧩 **Knowledge Graph (Neo4j)** | CIDOC CRM + GeoSPARQL + OWL-Time + PROV-O schema for entity linking. |
+| ⚙️ **ETL & AI Pipelines** | Automated ingestion (OCR, NER, geocoding, summarization) under FAIR+CARE data contracts. |
+| 📚 **FAIR+CARE Governance** | Transparent Council-led oversight, Indigenous data consent ledger. |
+| 🌐 **STAC/DCAT Catalogs** | STAC 1.0 + DCAT 3.0 datasets with live stream bridge for real-time telemetry. |
+| 🛰️ **3D + Temporal Layers** | Cesium 3D viewer for deep-time paleogeography and predictive climate futures. |
+| 🧮 **Reproducible Infrastructure** | SPDX SBOMs, SLSA attestations, full CI/CD and governance validation. |
 
 ---
 
 ## 🏗️ System Architecture
+
 ```mermaid
 flowchart TD
-A["External Data Sources (NOAA, USGS, KHS, DASC, BLM, Tribal, Sensors)"]
-B["ETL + AI Pipelines (OCR, NER, COG/GeoJSON, validation)"]
+A["External Data Sources (NOAA · USGS · KHS · DASC · Tribal · Sensors)"]
+B["ETL & AI Pipelines (OCR · NER · STAC/DCAT · QA)"]
 C["Knowledge Graph (Neo4j · CIDOC CRM · OWL-Time · GeoSPARQL)"]
-D["API Layer (FastAPI / GraphQL)"]
-E["Web App (React + MapLibre + Cesium)"]
-F["Governance & Telemetry (FAIR+CARE, SBOM, Ledgers)"]
+D["API Layer (FastAPI · GraphQL · Secure Auth)"]
+E["Frontend (React · MapLibre · Cesium · Focus Mode)"]
+F["Governance & Telemetry (FAIR+CARE · SBOM · Audit Ledger)"]
 A --> B --> C --> D --> E
 B --> F
-D --> F
-E --> D --> C
+E --> D
+D --> C
 ```
 
-All layers exchange **open schemas** (GeoJSON, COG, STAC, DCAT, JSON-LD/RDF) and emit **MCP telemetry** for cross-validated reproducibility.
+All components exchange **open standards** (GeoJSON, COG, JSON-LD, RDF) and continuously emit **MCP telemetry** for validation and ethics compliance.
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ Repository Layout
+
 ```
 KansasFrontierMatrix/
 ├── src/
-│   ├── ai/                 # Focus AI, models, explainability, training, streaming
-│   ├── api/                # FastAPI / GraphQL routes, services, auth
-│   ├── graph/              # Neo4j schema, ingest, queries, federation
-│   └── pipelines/          # ETL, validation (FAIR+CARE), utilities
+│   ├── ai/                 # Focus AI, model training, explainability
+│   ├── api/                # FastAPI/GraphQL endpoints
+│   ├── graph/              # Neo4j schema, queries, and federation
+│   ├── pipelines/          # ETL, validation, FAIR+CARE contracts
+│   └── telemetry/          # System-wide observability + metrics
 │
 ├── web/
-│   ├── src/                # Components: MapView, TimelineView, FocusPanel, StoryNode
-│   └── public/             # Icons, fonts, a11y assets
+│   ├── src/                # React components: Map, Timeline, Focus Panel
+│   └── public/             # Icons, fonts, assets, A11Y resources
 │
 ├── data/
-│   ├── sources/            # DCAT/STAC source manifests
-│   ├── raw/                # Downloaded datasets (LFS/DVC-tracked)
-│   ├── processed/          # Validated GeoJSON, GeoTIFF/COG, CSVs
-│   └── stac/               # STAC catalog collections/items
+│   ├── sources/            # STAC/DCAT manifests for data origins
+│   ├── raw/                # Source data (DVC/LFS-managed)
+│   ├── processed/          # Cleaned GeoJSON, GeoTIFF, CSV
+│   └── stac/               # SpatioTemporal Asset Catalog (STAC)
 │
-├── docs/                   # Documentation, governance, templates
-│   ├── standards/          # FAIR+CARE, licensing, governance charters
-│   ├── templates/          # Issue forms, SOPs, model cards
-│   └── architecture.md     # Extended system design
+├── docs/                   # Documentation, governance, standards
+│   ├── standards/          # FAIR+CARE & MCP guidelines
+│   ├── analyses/           # Domain-specific research modules
+│   ├── templates/          # SOPs, model cards, contribution formats
+│   └── guides/             # Developer and governance guides
 │
-├── tools/                  # Ingest/generate/validate CLIs
-├── tests/                  # Unit/integration suites
-├── .github/                # CI/CD workflows, issue templates, security
-├── LICENSE                 # MIT License (code); data/content under CC-BY 4.0 when noted
-├── CONTRIBUTING.md         # MCP v6.3 contribution protocol
-└── Makefile                # Build, validate, test, run
+├── tools/                  # CLI utilities (ingest, validate, publish)
+├── tests/                  # Unit/integration tests
+├── .github/                # CI/CD workflows, issue/PR templates
+├── LICENSE                 # MIT (code) / CC-BY 4.0 (docs & data)
+├── CONTRIBUTING.md         # MCP-DL v6.3 contribution guide
+└── Makefile                # Build, validate, deploy automation
 ```
 
 ---
 
-## 🧱 Data & Semantic Standards
+## 🧱 Data & Ontology Standards
+
 | Standard | Purpose |
 |---|---|
-| **STAC 1.0** | Geospatial asset indexing & time-series discovery |
-| **DCAT 3.0** | Interoperable dataset cataloging |
-| **CIDOC-CRM** | Cultural heritage ontology for entities & provenance |
-| **OWL-Time** | Temporal reasoning & chronology |
-| **GeoSPARQL / GeoJSON / GeoTIFF-COG** | Spatial modeling & open geodata formats |
-| **JSON-LD / RDF** | Linked data publication & knowledge integration |
-| **SPDX** | SBOM structure for supply chain & licensing |
+| **STAC 1.0 / DCAT 3.0** | Geospatial and semantic dataset discovery |
+| **CIDOC CRM** | Cultural heritage ontology for people, places, and events |
+| **OWL-Time / GeoSPARQL** | Temporal and spatial reasoning |
+| **PROV-O / JSON-LD** | Provenance and linked-data context |
+| **SPDX / SLSA** | Software Bill of Materials and security attestations |
 
 ---
 
 ## 🧠 Focus Mode (AI Context Engine)
-**Goal:** Accelerate understanding through AI-mediated narratives and relationship mapping.
 
-| Layer | Function |
+| Component | Function |
 |---|---|
-| **Backend** | `focus_transformer_v2` generates contextual summaries from subgraphs and STAC/DCAT context. |
-| **Frontend** | Focus Panel shows narrative, related People/Places/Events, map/timeline highlights, and explainability overlays. |
-| **Governance** | CARE filters, citation provenance, and output telemetry to `releases/v10.0.0/focus-telemetry.json`. |
+| **Backend** | `focus_transformer_v2.1` combines graph embeddings and text context for adaptive historical insights. |
+| **Frontend** | Interactive panel highlighting linked people, places, events, and documents with AI summaries. |
+| **Governance** | CARE filters and provenance tracking in telemetry logs. |
 
-**API Example**
+**Example Query:**
 ```http
-GET /api/focus/Fort_Larned
+GET /api/focus/Medicine_Lodge_Treaty
 ```
-**Response:** Subgraph (edges + entities) · AI summary · citations/provenance · ethics flags.
+**Response:**  
+Linked entities + AI narrative + data lineage + ethics status.
 
 ---
 
-## ⚙️ Installation & Quickstart
+## ⚙️ Quickstart
+
 ```bash
-# Clone
 git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
 cd Kansas-Frontier-Matrix
-
-# Compose (recommended)
 docker-compose up --build
-
-# OR local
+# or run locally
 make setup
-npm --prefix web install && npm --prefix web start     # frontend  http://localhost:3000
-uvicorn src.api.main:app --reload                      # backend   http://localhost:8000/docs
+npm --prefix web start &
+uvicorn src.api.main:app --reload
 ```
+
+Web UI: http://localhost:3000  
+API Docs: http://localhost:8000/docs
 
 ---
 
 ## 🤝 Contributing (MCP v6.3)
-KFM follows **“Documentation First, Code Second.”**
 
-1) Update docs in `docs/` and/or source manifests in `data/sources/`.  
-2) Validate:
-```bash
-make validate     # STAC/DCAT + FAIR+CARE + schema lint
-make test         # unit/integration
-```
-3) Ensure **YAML front-matter** (license, checksum, version, FAIR+CARE flags).  
-4) Submit a PR using the **Pull Request Template**; CI/CD must pass.
+Follow the **Documentation-First Principle**.
+
+1. Update relevant Markdown and metadata before coding.  
+2. Run:
+   ```bash
+   make validate
+   make test
+   ```
+3. Submit a pull request with clear changelog, commit scope, and reviewer tags.  
+4. CI/CD enforces linting, FAIR+CARE compliance, and full SBOM validation.
 
 ---
 
 ## ⚖️ Licensing
-| Asset | License | Notes |
+
+| Component | License | Description |
 |---|---|---|
-| **Code** | MIT | See `LICENSE` |
-| **Docs & Data** | CC-BY 4.0 | Indicated per file/dataset |
-| **SBOM** | SPDX | `releases/v10.0.0/sbom.spdx.json` |
+| **Source Code** | MIT | Core repository logic and ETL pipelines |
+| **Docs & Data** | CC-BY 4.0 | Knowledge artifacts and datasets |
+| **SBOM / Security Artifacts** | SPDX | Supply chain provenance |
 
 ---
 
-## 🧮 FAIR+CARE & Governance
+## 🧮 FAIR+CARE Governance
+
 | Principle | Implementation |
 |---|---|
-| **Findable** | STAC/DCAT UUIDs, indexed catalogs |
-| **Accessible** | Open repo, docs, and APIs |
-| **Interoperable** | JSON-LD ontologies; open formats |
-| **Reusable** | Versioned datasets, checksums, provenance |
-| **CARE** | Council reviews; cultural sensitivity and consent; governance ledger |
+| **Findable** | STAC/DCAT metadata with DOIs |
+| **Accessible** | Public datasets, open APIs |
+| **Interoperable** | Semantic ontologies and linked formats |
+| **Reusable** | Versioned releases, provenance tracking |
+| **CARE** | Council-reviewed governance ledger and ethical access controls |
 
 ---
 
 ## 🕰️ Version History
+
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-09 | A. Barta | Upgraded hub to v10: Focus v2, streaming STAC bridge, 3D scenes, federated graph, improved governance & telemetry. |
-| v9.7.0 | 2025-11-05 | A. Barta | MCP v6.3 + FAIR+CARE alignment; AI telemetry & governance linkages. |
-| v9.5.0 | 2025-10-20 | A. Barta | Focus Mode integration and DCAT 3.0 alignment. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial MCP-compliant public release. |
+| v10.2.2 | 2025-11-12 | A. Barta & FAIR+CARE Council | Aligned repository to v10.2 infrastructure: expanded telemetry, Focus v2.1, and audit-ready governance. |
+| v10.0.0 | 2025-11-09 | A. Barta | First stable release of v10 framework: federated graph, AI explainability, FAIR+CARE v2 alignment. |
+| v9.7.0 | 2025-11-05 | A. Barta | Introduced MCP v6.3 compliance and automated documentation pipelines. |
 
 ---
 
