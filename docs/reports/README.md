@@ -21,274 +21,127 @@ mcp_version: "MCP-DL v6.3"
 
 **Purpose:**  
 Central map for **all generated reports, validation outputs, security artifacts, governance audits, and telemetry logs** within the Kansas Frontier Matrix (KFM) monorepo.  
-All artifacts indexed here are **automatically produced**, **cryptographically signed**, and **FAIR+CARE** certified under **MCP v6.3**.
+All artifacts indexed here are **automatically produced**, **cryptographically signed**, and **FAIR+CARE certified** under **MCP v6.3**.
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green.svg)](../../LICENSE)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange.svg)](../standards/faircare.md)
-[![SLSA Provenance](https://img.shields.io/badge/Supply%20Chain-SLSA%201.0-7b1fa2.svg)](../security/supply-chain.md)
-[![Status: Automated](https://img.shields.io/badge/Status-Automated-success.svg)]()
+![Badge Docs](https://img.shields.io/badge/Docs·MCP-v6.3-blue)
+![License](https://img.shields.io/badge/License-CC--BY--4.0-green)
+![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)
+![SLSA](https://img.shields.io/badge/Supply%20Chain-SLSA%201.0-7b1fa2)
+![Status](https://img.shields.io/badge/Status-Automated-brightgreen)
+
 </div>
 
 ---
 
 ## 📘 Overview
 
-The `docs/reports/` subtree (and the root-level `reports/`) contains **machine-generated evidence** produced by CI/CD workflows, FAIR+CARE audits, security controls, and governance actions.  
-These files form the **auditable base** for **compliance**, **reproducibility**, **security**, and **operational performance** per release.
+The `docs/reports/` subtree contains **machine-generated, versioned evidence** of system compliance, data validation, and governance performance.  
+All outputs feed the **FAIR+CARE Council**, **Governance Ledger**, and **Focus Mode Telemetry Dashboard**.
 
-All reports:
-- Are produced by **GitHub Actions** workflows.  
-- Include **SHA-256** checksums, SLSA attestations, and version references.  
-- Feed the **Governance Ledger** and **Telemetry Dashboard**.
+- Produced via **GitHub Actions** CI pipelines.  
+- Signed with **SHA-256 hashes** and **SLSA attestations**.  
+- Fully reproducible and auditable per release tag.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+```bash
 docs/reports/
-├── README.md                           # This index (you are here)
+├── README.md                          # This index (you are here)
 │
-├── faircare_summary.json               # Aggregated FAIR+CARE validation results
-├── stac_validation.json                # STAC / DCAT compliance (release snapshot)
+├── faircare_summary.json              # FAIR+CARE validation rollup
+├── stac_validation.json               # STAC/DCAT compliance summary
 │
-├── telemetry/                          # Derived telemetry & performance metrics
-│   ├── build_metrics.json              # Build/run times, cache stats, artifact counts
-│   ├── governance_scorecard.json       # FAIR+CARE KPI feed for dashboards
-│   └── focus_telemetry_snapshot.json   # Latest telemetry window for governance UI
+├── telemetry/                         # Derived telemetry metrics
+│   ├── build_metrics.json             # Build/runtime metrics
+│   ├── governance_scorecard.json      # FAIR+CARE governance KPI
+│   └── focus_telemetry_snapshot.json  # Merged dashboard snapshot
 │
-├── audit/                              # Immutable governance & workflow ledgers
-│   ├── github-workflows-ledger.json    # CI/CD run history (all workflows)
-│   ├── governance-ledger.json          # FAIR+CARE council decisions & reviews
-│   ├── experiments-ledger.json         # Experiment metadata & validation entries
-│   ├── ai_models.json                  # Registered AI model cards & audit summaries
-│   └── release-manifest-log.json       # Release checksums, SBOM & traceability
+├── audit/                             # Governance & workflow ledgers
+│   ├── github-workflows-ledger.json
+│   ├── governance-ledger.json
+│   ├── experiments-ledger.json
+│   ├── ai_models.json
+│   └── release-manifest-log.json
 │
-├── security/                           # Security & supply chain evidence
-│   ├── slsa_attestations.json          # Build provenance attestations (Cosign/Rekor)
-│   ├── sbom_summary.json               # SPDX/CycloneDX rollups
-│   ├── prompt_defense_audit.json       # Red-team & sanitizer results
-│   └── secrets_rotation_report.json    # KMS/Vault rotation & policy conformance
+├── security/                          # Security & supply chain artifacts
+│   ├── slsa_attestations.json
+│   ├── sbom_summary.json
+│   ├── prompt_defense_audit.json
+│   └── secrets_rotation_report.json
 │
-└── self-validation/                    # Per-workflow validation outputs (JSON/NDJSON)
-    ├── stac/                           # STAC validation (_summary, pystac, CLI logs)
-    ├── fair/                           # FAIR+CARE validation (ndjson + summary)
-    ├── docs/                           # Docs linting & accessibility logs
-    ├── security/                       # Threat-model checks, dependency scans
-    ├── experiments/                    # Experiment reproducibility outcomes
-    └── sop/                            # SOP validation summaries & logs
+└── self-validation/                   # Workflow-level outputs
+    ├── stac/                          # STAC validation logs
+    ├── fair/                          # FAIR+CARE validations
+    ├── docs/                          # Docs & accessibility lint logs
+    ├── security/                      # Dependency scans
+    ├── experiments/                   # Experiment reproducibility
+    └── sop/                           # SOP validation summaries
 ```
 
-> Release-level rollups are mirrored under: `releases/v10.2.0/` (see `focus-telemetry.json`, `manifest.zip`, and `sbom.spdx.json`).
+> Release-level mirrors exist under `releases/v10.2.0/`.
 
 ---
 
 ## 🧾 Report Categories
 
-### 1) 🧠 FAIR+CARE Validation
-
-**Locations**
-```
-reports/fair/
-docs/reports/faircare_summary.json
-```
-
-| Field | Description |
-|---|---|
-| `datasets_validated` | Number of manifests reviewed |
-| `passed` | FAIR+CARE-compliant entries |
-| `failed` | Validation failures |
-| `timestamp` | UTC audit timestamp |
-| `governance_review` | Links to governance / CARE assessments |
-
-**Generated by:** `.github/workflows/faircare-validate.yml`
+| Category | Description | Workflow |
+|-----------|--------------|-----------|
+| FAIR+CARE Validation | Dataset compliance audits | `faircare-validate.yml` |
+| STAC/DCAT Validation | Metadata schema validation | `stac-validate.yml` |
+| Telemetry & Metrics | System performance summaries | `telemetry-export.yml` |
+| Governance Ledgers | Immutable council reviews | `governance-form.yml` |
+| AI Model Reports | Model audit & bias summaries | `ai-train.yml` |
+| Security Artifacts | SBOMs, SLSA attestations | `sbom-build.yml`, `site.yml` |
+| CI/CD Ledgers | Workflow history & provenance | `audit.yml` |
 
 ---
 
-### 2) 🗺️ STAC / DCAT Validation
+## ⚙️ Workflow Integration Map
 
-**Locations**
-```
-reports/self-validation/stac/
-docs/reports/stac_validation.json
-```
-
-| Field | Description |
-|---|---|
-| `valid_items` | Compliant STAC Items |
-| `invalid_items` | Items failing validation |
-| `collections_validated` | Count of validated Collections |
-| `validator_version` | STAC Validator release |
-| `schema_version` | STAC schema version used |
-
-**Generated by:** `.github/workflows/stac-validate.yml`
-
----
-
-### 3) ⚙️ CI/CD Workflow Ledger
-
-**Location**
-```
-reports/audit/github-workflows-ledger.json
-```
-
-| Field | Description |
-|---|---|
-| `workflow_name` | Executed workflow |
-| `run_id` | GitHub Actions run ID |
-| `sha` | Commit hash |
-| `outcome` | success / failure / skipped |
-| `timestamp` | UTC completion time |
-
-**Generated by:** all `.github/workflows/**` pipelines
-
----
-
-### 4) 🧮 Telemetry & Metrics
-
-**Location**
-```
-docs/reports/telemetry/
-```
-
-| File | Description |
-|---|---|
-| `build_metrics.json` | Build performance, runtimes, cache utilization |
-| `governance_scorecard.json` | FAIR+CARE compliance, license coverage, review rates |
-| `focus_telemetry_snapshot.json` | Latest merged telemetry for dashboards |
-
-**Generated by:** `.github/workflows/telemetry-export.yml` → rolled up to `releases/v10.2.0/focus-telemetry.json`
-
----
-
-### 5) 🔬 Experiment Reports
-
-**Locations**
-```
-reports/self-validation/experiments/
-docs/reports/audit/experiments-ledger.json
-```
-
-| Field | Description |
-|---|---|
-| `experiment_id` | Experiment identifier |
-| `author` | Contributor |
-| `validated` | Boolean outcome |
-| `artifacts` | Output/data paths |
-| `telemetry_ref` | Link to telemetry JSON |
-
-**Generated by:** `docs/templates/experiment.md` + CI pipelines
-
----
-
-### 6) 🤖 AI Model Governance
-
-**Location**
-```
-reports/audit/ai_models.json
-```
-
-| Field | Description |
-|---|---|
-| `model_id` | Model name/version |
-| `author` | Maintainer |
-| `training_data` | Dataset references & licenses |
-| `evaluation_metrics` | Accuracy / F1 / bias / uncertainty |
-| `care_reviewed` | CARE review status |
-
-**Generated by:** `docs/templates/model_card.md` + governance automation
-
----
-
-### 7) 🧾 Governance Ledger
-
-**Location**
-```
-reports/audit/governance-ledger.json
-```
-
-**Immutable decision log (example)**
-
-```json
-{
-  "event": "governance_review",
-  "dataset_id": "noaa_storms_1950_2025",
-  "decision": "Approved",
-  "reviewer": "FAIR+CARE Council",
-  "timestamp": "2025-11-05T21:00:00Z",
-  "notes": "Dataset meets FAIR+CARE criteria with documented provenance."
-}
-```
-
-**Updated by:** `.github/ISSUE_TEMPLATE/governance_form.yml`
-
----
-
-### 8) 🛡️ Security & Supply Chain
-
-**Locations**
-```
-docs/reports/security/
-reports/self-validation/security/
-```
-
-| File | Description | Workflow |
-|---|---|---|
-| `slsa_attestations.json` | Provenance attestations (Cosign/Rekor) | `site.yml` / release jobs |
-| `sbom_summary.json` | SPDX/CycloneDX rollups per release | `sbom-build.yml` |
-| `prompt_defense_audit.json` | Red-team & sanitizer outcomes | `prompt-attack-test.yml` |
-| `secrets_rotation_report.json` | KMS/Vault rotation metrics | `secrets-validate.yml` |
-| `dependency_scans.json` | `npm audit`, `pip-audit`, `trivy` summaries | nightly security scan |
-
----
-
-## 🧮 Workflow Integration Map
-
-| Workflow | Artifact Generated | Storage Path |
-|---|---|---|
-| `stac-validate.yml` | STAC validation bundles | `reports/self-validation/stac/` |
-| `faircare-validate.yml` | FAIR+CARE audit results | `reports/fair/` |
-| `docs-lint.yml` | Docs linting & accessibility logs | `reports/self-validation/docs/` |
-| `telemetry-export.yml` | Telemetry JSON snapshot | `releases/v10.2.0/focus-telemetry.json` |
-| `ai-train.yml` | Model metrics, bias/drift, model card refs | `reports/audit/ai_models.json` |
-| `site.yml` | Site build + SLSA attestations | `docs/reports/security/slsa_attestations.json` |
-| `sbom-build.yml` | SPDX/CycloneDX inventories | `docs/reports/security/sbom_summary.json` |
-| `prompt-attack-test.yml` | Prompt-defense audit | `docs/reports/security/prompt_defense_audit.json` |
-| `secrets-validate.yml` | Secrets rotation report | `docs/reports/security/secrets_rotation_report.json` |
+| Workflow | Artifact | Output Path |
+|-----------|-----------|--------------|
+| `stac-validate.yml` | STAC report | `reports/self-validation/stac/` |
+| `faircare-validate.yml` | FAIR+CARE report | `reports/fair/` |
+| `docs-lint.yml` | Accessibility & doc QA | `reports/self-validation/docs/` |
+| `telemetry-export.yml` | Telemetry bundle | `releases/v10.2.0/focus-telemetry.json` |
+| `ai-train.yml` | Model metrics & governance | `reports/audit/ai_models.json` |
+| `site.yml` | Provenance attestations | `reports/security/slsa_attestations.json` |
+| `sbom-build.yml` | SPDX/CycloneDX rollups | `reports/security/sbom_summary.json` |
+| `prompt-attack-test.yml` | Prompt audit | `reports/security/prompt_defense_audit.json` |
+| `secrets-validate.yml` | Secrets rotation report | `reports/security/secrets_rotation_report.json` |
 
 ---
 
 ## ⚖️ FAIR+CARE Alignment
 
-Each report strengthens transparent, traceable governance compliance:
-
 | Principle | Implementation |
-|---|---|
-| **Findable** | Artifacts indexed by dataset/model/workflow IDs & timestamps |
-| **Accessible** | CC-BY 4.0; public GitHub artifacts and catalogs |
-| **Interoperable** | JSON/JSON-LD compatible with **DCAT 3.0** / **STAC 1.0** |
-| **Reusable** | Timestamped, checksum-verified, version-tracked |
-| **CARE** | Ethical reviews and council approvals recorded in ledgers |
+|------------|----------------|
+| Findable | Versioned, indexed JSON with UUID & timestamps |
+| Accessible | CC-BY 4.0 licensed, open metadata endpoints |
+| Interoperable | STAC 1.0, DCAT 3.0, and JSON-LD compatibility |
+| Reusable | Cryptographically signed, SLSA-verified |
+| CARE | Council review and consent-based governance |
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|---:|---|---|---|
-| v10.2.3 | 2025-11-09 | KFM Docs Team | Aligned to v10.2: added security artifacts section, SLSA/SBOM rollups, updated telemetry schema v3, and release paths. |
-| v9.7.0  | 2025-11-05 | A. Barta | FAIR+CARE- and telemetry-aligned index; directory map & workflow tables. |
-| v9.5.0  | 2025-10-20 | A. Barta | Integrated governance scorecard and audit ledgers. |
-| v9.3.0  | 2025-08-12 | KFM Core Team | Added CI/CD ledger and telemetry references. |
-| v9.0.0  | 2025-06-01 | KFM Core Team | Established reports & validation documentation. |
+|----------|------|---------|----------|
+| v10.2.3 | 2025-11-09 | KFM Docs Team | Aligned to v10.2 release; added security evidence and updated telemetry schema v3. |
+| v9.7.0 | 2025-11-05 | A. Barta | Initial FAIR+CARE and telemetry integration with governance tables. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added scorecard KPIs and expanded audit ledgers. |
+| v9.3.0 | 2025-08-12 | KFM Core Team | Introduced CI/CD ledger and telemetry ref. |
+| v9.0.0 | 2025-06-01 | KFM Core Team | Established reports and validation framework. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Generated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · SLSA Provenance · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3  
+**FAIR+CARE Certified · SLSA Provenance · Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
 
 [Back to Documentation Index](../README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
