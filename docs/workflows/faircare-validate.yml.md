@@ -1,14 +1,14 @@
 ---
 title: "⚖️ FAIR+CARE Validation Workflow — `faircare-validate.yml` (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/faircare-validate.yml.md"
-version: "v10.1.0"
-last_updated: "2025-11-10"
+version: "v10.2.4"
+last_updated: "2025-11-12"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.1.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.1.0/manifest.zip"
-telemetry_ref: "../../releases/v10.1.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/workflows/faircare-validate-v2.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/workflows/faircare-validate-v3.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +24,7 @@ Define the **GitHub Actions** workflow that validates datasets and docs for **FA
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Governance%20Aligned-orange)](../standards/faircare.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange)](../standards/faircare.md)
 [![Status: Automated](https://img.shields.io/badge/Status-Automated-brightgreen)](#)
 
 </div>
@@ -35,14 +35,14 @@ Define the **GitHub Actions** workflow that validates datasets and docs for **FA
 
 `faircare-validate.yml` is the **ethics and governance gate** for KFM. It ensures:
 
-- ✅ **FAIR**: Findable / Accessible / Interoperable / Reusable checks  
-- ✅ **CARE**: Collective benefit, Authority to control, Responsibility, Ethics  
-- ✅ **Contracts**: JSON Schema & data-contract conformance (e.g., `data-contract-v3.json`)  
-- ✅ **PII/Sensitive**: Automated redaction & cultural sensitivity screening  
-- ✅ **Quarantine**: Noncompliant assets moved to `abandonment_candidates/` with registry entry  
-- ✅ **Reports**: Machine-readable audit, provenance, and council-ready review packs
+- ✅ **FAIR** — Findable, Accessible, Interoperable, Reusable checks  
+- ✅ **CARE** — Collective benefit, Authority to control, Responsibility, Ethics  
+- ✅ **Contracts** — JSON Schema & data-contract conformance (e.g., `data-contract-v3.json`)  
+- ✅ **PII/Sensitive** — Automated redaction & cultural sensitivity screening  
+- ✅ **Quarantine** — Noncompliant assets moved to `abandonment_candidates/` with registry entry  
+- ✅ **Reports** — Machine-readable audit, provenance, and council-ready review packs
 
-Outputs are written to `reports/` and appended to `focus-telemetry.json`.
+Outputs are written to `reports/` and appended to **telemetry v3** (`focus-telemetry.json`).
 
 ---
 
@@ -84,11 +84,9 @@ jobs:
   validate:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
 
       - name: Install validators
@@ -136,12 +134,12 @@ jobs:
             reports/faircare/**
             data/work/staging/tabular/abandonment_candidates/abandonment_registry.json
 
-      - name: Emit telemetry
+      - name: Emit telemetry (v3)
         run: |
           python scripts/emit_telemetry.py \
             --kind faircare \
-            --summary reports/faircare/faircare_summary.json \
-            --pii reports/faircare/pii_scan.json \
+            --summary  reports/faircare/faircare_summary.json \
+            --pii      reports/faircare/pii_scan.json \
             --contract reports/faircare/contract_summary.json \
             --out faircare_telemetry.json
 
@@ -149,7 +147,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in faircare_telemetry.json \
-            --dest releases/v10.1.0/focus-telemetry.json
+            --dest releases/v10.2.0/focus-telemetry.json
 ```
 
 ---
@@ -164,7 +162,7 @@ jobs:
 | **Artifact** | `reports/faircare/provenance_trace.json` | DCAT/PROV-O lineage |
 | **Artifact** | `reports/faircare/pii_scan.json` | PII / sensitive markers |
 | **Artifact** | `abandonment_registry.json` | Quarantined dataset registry |
-| **Telemetry** | `releases/v10.1.0/focus-telemetry.json` | Aggregated governance metrics |
+| **Telemetry** | `releases/v10.2.0/focus-telemetry.json` | Aggregated governance metrics |
 
 ---
 
@@ -238,8 +236,9 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
-| **v10.1.0** | 2025-11-10 | `@kfm-governance` | Upgraded to v10.1.0 artifacts; added contract summary emission; telemetry schema v2. |
-| v9.9.0 | 2025-11-08 | `@kfm-governance` | Adds quarantine & registry, PII scan, provenance export, telemetry merge. |
+| **v10.2.4** | 2025-11-12 | `@kfm-governance` | Telemetry schema v3; artifact paths unified; clarified schedule behavior & quarantine registry. |
+| v10.1.0 | 2025-11-10 | `@kfm-governance` | Contract summary emission; telemetry v2 adoption. |
+| v9.9.0  | 2025-11-08 | `@kfm-governance` | Introduced quarantine registry, PII scan, provenance export, telemetry merge. |
 
 ---
 
