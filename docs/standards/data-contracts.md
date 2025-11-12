@@ -1,13 +1,13 @@
 ---
 title: "📜 Kansas Frontier Matrix — Data Contracts & Metadata Schema Specification"
 path: "docs/standards/data-contracts.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/docs-data-contracts-v2.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -16,16 +16,18 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 📜 **Kansas Frontier Matrix — Data Contracts & Metadata Schema Specification**
+# 📜 **Kansas Frontier Matrix — Data Contracts & Metadata Schema Specification**  
 `docs/standards/data-contracts.md`
 
-**Purpose:** Define the structure, fields, and validation rules for dataset metadata used throughout the Kansas Frontier Matrix (KFM).  
+**Purpose:**  
+Define the structure, fields, and validation rules for dataset metadata used throughout the Kansas Frontier Matrix (KFM).  
 Data contracts ensure that all datasets—historical, geospatial, textual, and AI-generated—follow a reproducible, interoperable, and **FAIR+CARE**-aligned schema.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
 [![Status: Standardized](https://img.shields.io/badge/Status-Active-success)]()
+
 </div>
 
 ---
@@ -33,12 +35,13 @@ Data contracts ensure that all datasets—historical, geospatial, textual, and A
 ## 📘 Overview
 
 **Data Contracts** in KFM are formal agreements that describe the **schema**, **validation gates**, and **ethical governance requirements** for all datasets. They guarantee that data remains:
+
 - **Machine-readable** (JSON/JSON-LD / Parquet / GeoJSON metadata)  
 - **Traceable** (checksums, provenance, SBOM, release manifest)  
-- **Ethically governed** (CARE metadata, council review)  
+- **Ethically governed** (CARE metadata, council review, abandonment registry)  
 - **Reproducible** (CI validation + telemetry logging)
 
-Contracts are validated by automated workflows: `faircare-validate.yml` and `stac-validate.yml`, with results recorded in the **Governance Ledger** and `focus-telemetry.json`.
+Contracts are validated by automated workflows (`faircare-validate.yml`, `stac-validate.yml`), with results recorded in the **Governance Ledger** and `focus-telemetry.json`.
 
 ---
 
@@ -52,11 +55,11 @@ docs/standards/
 └── governance/ROOT-GOVERNANCE.md     # Ethical governance charter
 ```
 
-**Schema Sources:** STAC 1.0.0 · DCAT 3.0 · CIDOC CRM · OWL-Time · GeoJSON · ISO 19115
+**Schema Sources:** STAC 1.0.0 · DCAT 3.0 · CIDOC CRM · OWL-Time · GeoJSON · ISO 19115 · PROV-O · schema.org
 
 ---
 
-## 🧭 Contract Lifecycle (Mermaid)
+## 🧭 Contract Lifecycle
 
 ```mermaid
 flowchart LR
@@ -78,7 +81,7 @@ flowchart LR
 | `description` | String | Summary of contents, scope, and source. | ✅ | `"Recorded severe weather events across Kansas."` |
 | `type` | String | `raster` \| `vector` \| `tabular` \| `text` \| `model` | ✅ | `"raster"` |
 | `spatial` | Array\<Number> | BBox `[west, south, east, north]` (WGS84). | ✅ | `[-102.05, 37.0, -94.6, 40.0]` |
-| `temporal` | Object | Time range of validity. | ✅ | `{"start":"1950-01-01","end":"2025-12-31"}` |
+| `temporal` | Object | Time range of validity. | ✅ | `{"start":"1950-01-01T00:00:00Z","end":"2025-12-31T23:59:59Z"}` |
 | `license` | String | SPDX / CC identifier. | ✅ | `"CC-BY-4.0"` |
 | `provenance` | String | Source or origin reference. | ✅ | `"NOAA NCEI"` |
 | `checksum` | String | SHA-256 digest or pointer (DVC/LFS). | ✅ | `"sha256-4a0f...ae3d"` |
@@ -87,9 +90,9 @@ flowchart LR
 | `lineage` | String | Processing history summary. | ⚙️ | `"Derived from NCEI raw archives (proc v3.1)"` |
 | `format` | String | Primary encoding / container. | ⚙️ | `"GeoTIFF"` |
 | `care` | Object | CARE ethics metadata block. | ⚙️ | `{ "status":"approved" }` |
-| `updated` | String | ISO timestamp (UTC). | ✅ | `"2025-11-10T00:00:00Z"` |
+| `updated` | String | ISO timestamp (UTC). | ✅ | `"2025-11-12T00:00:00Z"` |
 
-> **Note:** For spatial layers, add optional `geo:geometry` (GeoJSON) and for catalogs add `stac_extensions` (array of URIs).
+> For spatial layers, add optional `geo:geometry` (GeoJSON), and for catalogs add `stac_extensions` (array of extension URIs).
 
 ---
 
@@ -101,9 +104,13 @@ flowchart LR
 | `statement` | String | Ethical handling note/permission. | `"Cleared for open publication by Council"` |
 | `reviewer` | String | Reviewing entity. | `"KFM FAIR+CARE Council"` |
 | `date_reviewed` | String | ISO date. | `"2025-10-28"` |
-| `notes` | String | Additional guidance | `"No culturally restricted content"` |
+| `notes` | String | Additional guidance. | `"No culturally restricted content"` |
 
-CARE status controls publication gates in CI (restricted → staging hold; approved → release).
+CARE status controls publication gates in CI:
+
+- `approved` → eligible for release  
+- `revision` → must be remediated before release  
+- `restricted` → held in staging; limited access
 
 ---
 
@@ -131,13 +138,29 @@ CARE status controls publication gates in CI (restricted → staging hold; appro
   "title": "Kansas Frontier Matrix Data Contract (v10)",
   "description": "Metadata schema for datasets in the Kansas Frontier Matrix.",
   "type": "object",
-  "required": ["id", "title", "description", "type", "spatial", "temporal", "license", "provenance", "checksum", "updated"],
+  "required": [
+    "id",
+    "title",
+    "description",
+    "type",
+    "spatial",
+    "temporal",
+    "license",
+    "provenance",
+    "checksum",
+    "updated"
+  ],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "title": { "type": "string", "minLength": 1 },
     "description": { "type": "string", "minLength": 1 },
-    "type": { "type": "string", "enum": ["raster","vector","tabular","text","model"] },
-    "spatial": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 },
+    "type": { "type": "string", "enum": ["raster", "vector", "tabular", "text", "model"] },
+    "spatial": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 4,
+      "maxItems": 4
+    },
     "temporal": {
       "type": "object",
       "required": ["start"],
@@ -149,15 +172,21 @@ CARE status controls publication gates in CI (restricted → staging hold; appro
     },
     "license": { "type": "string" },
     "provenance": { "type": "string" },
-    "checksum": { "type": "string", "pattern": "^sha256-[A-Fa-f0-9]{6,}$" },
-    "keywords": { "type": "array", "items": { "type": "string" } },
+    "checksum": {
+      "type": "string",
+      "pattern": "^sha256-[A-Fa-f0-9]{6,}$"
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "doi": { "type": "string" },
     "lineage": { "type": "string" },
     "format": { "type": "string" },
     "care": {
       "type": "object",
       "properties": {
-        "status": { "type": "string", "enum": ["approved","revision","restricted"] },
+        "status": { "type": "string", "enum": ["approved", "revision", "restricted"] },
         "statement": { "type": "string" },
         "reviewer": { "type": "string" },
         "date_reviewed": { "type": "string", "format": "date" },
@@ -177,29 +206,35 @@ CARE status controls publication gates in CI (restricted → staging hold; appro
 
 | Workflow | Function | Output |
 |---|---|---|
-| `faircare-validate.yml` | Enforces schema completeness & CARE ethics gates | `reports/fair/faircare_results.ndjson` |
-| `stac-validate.yml` | STAC/DCAT structural compatibility checks | `reports/self-validation/stac/_summary.json` |
+| `faircare-validate.yml` | Enforces contract completeness & CARE ethics gates | `reports/fair/faircare_summary.json` |
+| `stac-validate.yml` | STAC/DCAT structural compatibility checks | `reports/self-validation/stac_validation.json` |
 | `docs-lint.yml` | Confirms front-matter + section order in docs | `reports/self-validation/docs/lint_summary.json` |
-| `telemetry-export.yml` | Publishes results to dashboards | `releases/v10.0.0/focus-telemetry.json` |
+| `telemetry-export.yml` | Publishes contract validation metrics to dashboards | `releases/v10.2.0/focus-telemetry.json` |
 
 ---
 
 ## 🧾 Governance Integration
 
-Quarterly review outcomes are logged to:
-- `reports/audit/governance-ledger.json`  
-- `reports/audit/release-manifest-log.json`  
-- `docs/reports/telemetry/governance_scorecard.json`
+Contract adoption and changes are governed by the FAIR+CARE Council.
+
+Audit trails are logged to:
+
+```plaintext
+reports/audit/governance-ledger.json
+reports/audit/release-manifest-log.json
+docs/reports/telemetry/governance_scorecard.json
+```
 
 **Example Governance Ledger Entry**
+
 ```json
 {
   "event": "data_contract_review",
   "dataset_id": "noaa_storms_1950_2025",
   "status": "approved",
   "reviewer": "FAIR+CARE Council",
-  "timestamp": "2025-11-10T16:05:00Z",
-  "telemetry_ref": "releases/v10.0.0/focus-telemetry.json"
+  "timestamp": "2025-11-12T16:05:00Z",
+  "telemetry_ref": "releases/v10.2.0/focus-telemetry.json"
 }
 ```
 
@@ -209,33 +244,35 @@ Quarterly review outcomes are logged to:
 
 | Principle | Data Contract Requirement |
 |---|---|
-| **Findable** | Unique `id` + `title`; JSON-LD/STAC/DCAT discoverability |
-| **Accessible** | Open license; stable distribution links |
-| **Interoperable** | STAC/DCAT/CIDOC/PROV-O alignment |
-| **Reusable** | Provenance, lineage, checksum integrity |
-| **CARE** | `care` block with status, reviewer, and statement |
+| **Findable** | Unique `id`, `title`, and standardized metadata for STAC/DCAT indexing. |
+| **Accessible** | License and distribution information; clear provenance. |
+| **Interoperable** | STAC/DCAT/CIDOC/PROV-O/OWL-Time fields supported. |
+| **Reusable** | Provenance, lineage, checksum integrity, and clear licensing. |
+| **CARE** | `care` block captures ethical status, reviewer, and statements. |
 
 ---
 
 ## 🔁 Data Contract Evolution
 
-All changes must:
-1. Use semantic versioning (e.g., v10.0.0 → v10.1.0).  
-2. Add changelog entries to `reports/audit/release-manifest-log.json`.  
-3. Pass automated schema validation before merge.  
-4. Obtain Council approval for any CARE-affecting fields.
+All contract changes must:
 
-**Change Flow:** Propose → Council Review → Approve → Merge → Telemetry Update
+1. Use semantic versioning (e.g., `v10.0.0 → v10.1.0`).  
+2. Include a changelog entry in `reports/audit/release-manifest-log.json`.  
+3. Pass automated schema validation and FAIR+CARE workflows.  
+4. Obtain Council approval for any CARE or governance-related field changes.
+
+**Evolution Flow:** `Propose` → `Review` → `Approve` → `Merge` → `Telemetry Update`.
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|---:|---|---|---|
-| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; added stricter `checksum` pattern, `type:model`, JSON-LD/ontology notes, and telemetry v2 refs. |
+|---|---|---|---|
+| v10.2.2 | 2025-11-12 | A. Barta | Updated teleport/manifest references to v10.2.0; clarified extended metadata and governance integration; aligned with telemetry v2. |
+| v10.0.0 | 2025-11-10 | A. Barta | Introduced stricter `checksum` pattern, `type: "model"`, and JSON-LD ontology notes; linked to telemetry v2. |
 | v9.7.0 | 2025-11-05 | A. Barta | Defined universal KFM data contract schema with FAIR+CARE integration. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added CARE metadata and governance linkage. |
+| v9.5.0 | 2025-10-20 | A. Barta | Added CARE metadata block and governance linkage. |
 | v9.3.0 | 2025-08-12 | KFM Core Team | Improved STAC/DCAT compatibility mapping. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Established schema validation baseline. |
 
