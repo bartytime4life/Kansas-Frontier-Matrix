@@ -1,8 +1,8 @@
 ---
 title: "📘 Kansas Frontier Matrix — Glossary & Terminology Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/glossary.md"
-version: "v10.2.3"
-last_updated: "2025-11-09"
+version: "v10.2.4"
+last_updated: "2025-11-12"
 review_cycle: "Annual / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../releases/v10.2.0/sbom.spdx.json"
@@ -16,7 +16,7 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 📘 **Kansas Frontier Matrix — Glossary & Terminology Index**
+# 📘 **Kansas Frontier Matrix — Glossary & Terminology Index**  
 `docs/glossary.md`
 
 **Purpose:** Provide a standardized, machine-parseable vocabulary for contributors and researchers working within the Kansas Frontier Matrix (KFM).  
@@ -60,7 +60,7 @@ Each entry includes a concise definition, cross-references to related docs, and 
 | **SBOM (Software Bill of Materials)** | SPDX/CycloneDX inventory of packages, versions, and licenses. | `../releases/*/sbom.spdx.json` |
 | **Telemetry** | Build/validation metrics exported to a unified JSON. | `../releases/*/focus-telemetry.json` |
 | **SLSA** | Supply-chain Levels for Software Artifacts provenance attestations. | CI/CD release workflows |
-| **Checksum (SHA-256)** | Cryptographic hash verifying integrity of artifacts and datasets. | `data/sources/*.json` |
+| **Checksum (SHA-256)** | Cryptographic hash verifying integrity of artifacts and datasets. | `data/checksums/manifest.json` |
 | **STAC/DCAT Bridge** | Mappings and validators for STAC Items ↔ DCAT Datasets. | `docs/architecture/data-architecture.md` |
 
 ---
@@ -119,11 +119,25 @@ Each entry includes a concise definition, cross-references to related docs, and 
 
 ---
 
+## 🧩 Controlled Vocabulary (Selected)
+
+> Use these controlled values in metadata fields to ensure consistency.
+
+| Field | Allowed Values | Notes |
+|---|---|---|
+| `care.tag` | `public` · `restricted` · `sensitive` | CARE governance labels |
+| `stac:processing` | `raw` · `work` · `staging` · `processed` · `archive` | KFM lifecycle states |
+| `license` | `CC-BY-4.0` · `MIT` · `ODbL-1.0` · `Public-Domain` | As applicable per asset |
+| `crs` | `EPSG:4326` | Default for publication layers |
+
+---
+
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.2.3 | 2025-11-09 | KFM Docs Team | Aligned to v10.2: added security suite terms, STAC/DCAT bridge entry, and telemetry schema v3. |
+|---|---|---|---|
+| v10.2.4 | 2025-11-12 | KFM Docs Team | Minor additions: controlled vocabulary table; checksum reference path updated to `data/checksums/manifest.json`. |
+| v10.2.3 | 2025-11-09 | KFM Docs Team | Added security suite terms, STAC/DCAT bridge entry, and telemetry schema v3. |
 | v9.7.0  | 2025-11-05 | A. Barta | Comprehensive glossary aligned to MCP v6.3 and FAIR+CARE. |
 | v9.5.0  | 2025-10-20 | A. Barta | Added ontology and governance terminology. |
 | v9.3.0  | 2025-08-12 | KFM Core Team | Expanded technical and pipeline entries. |
