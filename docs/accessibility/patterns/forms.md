@@ -1,14 +1,14 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Accessible Forms & Validation Patterns (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📝 Kansas Frontier Matrix — Accessible Forms & Input Patterns (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/patterns/forms.md"
 version: "v10.0.0"
 last_updated: "2025-11-10"
-review_cycle: "Continuous / FAIR+CARE Accessibility Council"
+review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
 manifest_ref: "../../../releases/v10.0.0/manifest.zip"
 telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/a11y-patterns-forms-v1.json"
+telemetry_schema: "../../../schemas/telemetry/a11y-forms-v1.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -16,16 +16,16 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🧾 **Kansas Frontier Matrix — Accessible Forms & Validation Patterns**
+# 📝 **Kansas Frontier Matrix — Accessible Forms & Input Patterns**
 `docs/accessibility/patterns/forms.md`
 
 **Purpose:**  
-Define accessible, ethical, and inclusive **form interaction patterns** for the **Kansas Frontier Matrix (KFM)** platform, ensuring conformance with **WCAG 2.1 AA**, **WAI-ARIA 1.2**, and **FAIR+CARE** ethical data collection standards.
+Define accessible, inclusive, and ethically governed **form components and input patterns** for KFM user interfaces — ensuring **WCAG 2.1 AA** compliance, **keyboard operability**, and **FAIR+CARE-informed consent** handling.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../../releases/v10.0.0/manifest.zip)
+![Badge Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
+![Badge FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
+![Badge License](https://img.shields.io/badge/License-CC--BY%204.0-green)
+![Badge Status](https://img.shields.io/badge/Status-Stable-success)
 
 </div>
 
@@ -33,210 +33,140 @@ Define accessible, ethical, and inclusive **form interaction patterns** for the 
 
 ## 📘 Overview
 
-Forms are among the most **critical accessibility touchpoints** in KFM. They serve as gateways for data input, consent acknowledgment, and participation in governance or scientific workflows.  
-This pattern standardizes:
-- Labeling, grouping, and ARIA annotation  
-- Focus and keyboard navigation  
-- Error handling and live feedback  
-- Ethical language and inclusive consent statements  
-- FAIR+CARE compliance for ethical data collection  
+Form inputs are a primary way users interact with the Kansas Frontier Matrix — from **dataset submissions** to **AI query prompts** and **Focus Mode feedback forms**.  
+This guide standardizes form accessibility patterns for predictable interaction, transparent consent, and verifiable data provenance.
+
+**Pattern Categories**
+- Text inputs and textareas  
+- Radio groups and checkboxes  
+- Select menus and autocompletes  
+- Validation and inline error reporting  
+- FAIR+CARE consent fields  
 
 ---
 
-## 🗂️ Directory Context
+## 🧩 Accessibility Foundations
 
-```
-docs/accessibility/patterns/
-├── README.md
-├── alerts.md
-├── buttons.md
-├── charts.md
-├── dialogs.md
-├── forms.md              # ← This file
-├── map-controls.md
-└── navigation.md
-```
+| Principle | Description | WCAG / Standard |
+|------------|--------------|-----------------|
+| **Label Association** | Each input must have a visible `<label>` or `aria-label`. | WCAG 1.3.1 |
+| **Fieldset Grouping** | Related controls grouped via `<fieldset>` + `<legend>`. | WCAG 1.3.1 |
+| **Error Identification** | Errors announced using `aria-describedby`. | WCAG 3.3.1 |
+| **Help Text** | Supplementary text bound by `aria-describedby`. | WCAG 3.3.2 |
+| **Keyboard Operability** | All fields navigable by `Tab` / `Shift+Tab`. | WCAG 2.1.1 |
+| **Focus Visibility** | Active field outlined visibly (≥ 3:1 contrast). | WCAG 2.4.7 |
+| **Consensual Submission** | Explicit consent before any personal data submission. | FAIR+CARE Ethics |
 
 ---
 
-## ♿ Accessibility Standards
+## 🧭 Example Markup
 
-| Requirement | Description | WCAG / ARIA |
-|---|---|---|
-| **Labeling** | Each input, checkbox, and button must have a visible and programmatic label linked via `for` and `id`. | 1.1.1 / 2.4.6 |
-| **Grouping** | Use `<fieldset>` + `<legend>` to group related inputs. | 1.3.1 |
-| **Focus Order** | Logical top-to-bottom tab order with visible focus outline. | 2.4.3 / 2.4.7 |
-| **Error Identification** | Invalid fields use `aria-invalid="true"` and clear error text. | 3.3.1 |
-| **Error Suggestion** | Provide actionable instructions for fixing errors. | 3.3.3 |
-| **Required Fields** | Indicate visually and via `aria-required="true"`. | 3.3.2 |
-| **Live Validation** | Use `aria-live="polite"` for inline validation messages. | 4.1.3 |
-| **Consent Text** | Include FAIR+CARE consent disclosures before submission. | FAIR+CARE Ethics |
+```html
+<form id="feedback-form" aria-labelledby="form-title">
+  <h2 id="form-title">User Feedback</h2>
 
----
+  <label for="name">Full Name (required)</label>
+  <input id="name" name="name" type="text" required aria-required="true" />
 
-## 🧩 Example: Form Structure with Accessibility Hooks
-
-```tsx
-<form aria-labelledby="dataset-form-title" aria-describedby="dataset-form-summary">
-  <h2 id="dataset-form-title" className="text-xl font-semibold text-primary">
-    Submit a New Dataset
-  </h2>
-  <p id="dataset-form-summary" className="text-sm text-muted mb-3">
-    Please complete the required fields below. All submissions must comply with FAIR+CARE ethical data use guidelines.
-  </p>
-
-  <fieldset className="mb-4">
-    <legend className="font-semibold text-body">Dataset Details</legend>
-    <label htmlFor="dataset-title" className="block mt-2">Dataset Title *</label>
-    <input
-      id="dataset-title"
-      name="dataset-title"
-      type="text"
-      aria-required="true"
-      aria-invalid="false"
-      className="w-full border border-neutral-300 p-2 rounded focus:ring-4 focus:ring-[#FFB300]"
-    />
-    <p id="title-hint" className="text-xs text-muted mt-1">Provide a descriptive title for the dataset.</p>
-  </fieldset>
+  <label for="feedback">Your Feedback</label>
+  <textarea id="feedback" name="feedback" rows="4"></textarea>
 
   <fieldset>
-    <legend className="font-semibold text-body">Data License</legend>
-    <label htmlFor="license">Select a license *</label>
-    <select id="license" name="license" aria-required="true" className="w-full p-2 border border-neutral-300 rounded">
-      <option value="">Choose one...</option>
-      <option value="cc-by-4.0">CC-BY 4.0</option>
-      <option value="cc0">CC0 (Public Domain)</option>
-    </select>
+    <legend>Preferred Contact Method</legend>
+    <label><input type="radio" name="contact" value="email" /> Email</label>
+    <label><input type="radio" name="contact" value="phone" /> Phone</label>
   </fieldset>
 
-  <div className="mt-4">
-    <label htmlFor="consent" className="inline-flex items-center">
-      <input
-        type="checkbox"
-        id="consent"
-        name="consent"
-        aria-required="true"
-        className="mr-2 focus:ring-4 focus:ring-[#FFB300]"
-      />
-      I consent to FAIR+CARE ethical data governance and public release.
+  <div id="consent-section">
+    <input type="checkbox" id="data-consent" required aria-required="true" />
+    <label for="data-consent">
+      I consent to data processing under FAIR+CARE principles.
     </label>
   </div>
 
-  <button type="submit" className="btn-primary mt-4" aria-label="Submit dataset">Submit</button>
+  <button type="submit">Submit Feedback</button>
 </form>
 ```
 
-**Accessibility Features**
-- Labels explicitly linked with inputs.  
-- Error and help text accessible via `aria-describedby`.  
-- `aria-live` used for inline feedback messages.  
-- Keyboard traversal follows DOM structure.  
+**Implementation Notes**
+- Associate labels explicitly (`for`/`id`).  
+- Error text connected through `aria-describedby`.  
+- Consent fields required for personal or cultural data.  
 
 ---
 
-## ⚠️ Example: Inline Validation Feedback
+## ⚙️ Validation & Error States
 
-```tsx
-<div className="mt-2" aria-live="polite" id="license-feedback">
-  <span className="text-error text-sm">Please select a license before submitting.</span>
-</div>
+| Error Type | Accessibility Implementation |
+|-------------|------------------------------|
+| **Missing Field** | Use `aria-invalid="true"` and live region message. |
+| **Pattern Error** | Provide descriptive message (“Enter a valid email”). |
+| **Server Error** | Use `role="alert"` to announce after submit. |
+| **Consent Error** | Must block submission; explain purpose ethically. |
+
+Example Live Feedback:
+```html
+<p id="name-error" role="alert">Please enter your full name.</p>
 ```
 
-- Only trigger message updates when input changes.  
-- Use **polite** announcements to avoid disruption.  
+---
+
+## 🎨 Design Tokens
+
+| Token | Description | Value |
+|--------|--------------|-------|
+| `a11y.focus.color` | Input focus outline color | `#FFD54F` |
+| `a11y.error.color` | Validation error text color | `#D32F2F` |
+| `a11y.label.fontWeight` | Label emphasis | `600` |
+| `form.spacing.vertical` | Vertical space between inputs | `1rem` |
 
 ---
 
-## 🎛️ Error Message Pattern
+## 🧾 FAIR+CARE Consent Patterns
 
-| Element | Attribute | Example |
-|---|---|---|
-| Input | `aria-invalid="true"` | `<input aria-invalid="true" />` |
-| Error Message | `aria-describedby` | `<p id="error-email">Enter a valid email.</p>` |
-| Relationship | Input links to error message | `<input aria-describedby="error-email" />` |
-
-Example behavior:
-- On submission error, focus shifts to the first invalid input.  
-- Screen reader announces both the field name and error message.  
+| Consent Type | Implementation |
+|---------------|----------------|
+| **Data Processing Consent** | Checkbox + policy link (`aria-describedby="policy-link"`). |
+| **Cultural Content Consent** | Radio choice for opt-in/out of sensitive data sharing. |
+| **Anonymization Consent** | Toggle switch with `aria-pressed` state for anonymous reporting. |
+| **Withdrawal Option** | Link to revoke consent visible in form footer. |
 
 ---
 
-## 🧠 FAIR+CARE Ethical Collection Rules
+## 🧪 Testing & CI Validation
+
+| Tool | Validation Scope | Artifact Path |
+|-------|------------------|----------------|
+| **axe-core** | Label / error / focus checks | `reports/self-validation/web/a11y_forms.json` |
+| **jest-axe** | Unit tests for React Form components | `reports/ui/a11y_form_components.json` |
+| **Lighthouse CI** | Accessibility score tracking | `reports/ui/lighthouse_forms.json` |
+| **Manual Audit** | Keyboard and screen reader testing | FAIR+CARE Council records |
+
+---
+
+## ⚖️ FAIR+CARE Integration
 
 | Principle | Implementation |
-|---|---|
-| **Collective Benefit** | Gather only data necessary for public good. |
-| **Authority to Control** | Include consent checkboxes for Indigenous and cultural datasets. |
-| **Responsibility** | Display transparent information on how submissions are used and stored. |
-| **Ethics** | Language must remain neutral, respectful, and non-coercive. |
-
-> Example consent language:
-> “By submitting this dataset, you acknowledge that the information will be governed under FAIR+CARE principles and reviewed for ethical compliance before publication.”
-
----
-
-## 🔍 Testing Checklist
-
-| Test | Validation | Pass Criteria |
-|---|---|---|
-| Labels & IDs | All labels linked to inputs. | 100% coverage |
-| Keyboard Navigation | Tab/Shift+Tab moves logically. | 100% |
-| Error Identification | Invalid inputs announce error via `aria-live`. | 100% |
-| Color Contrast | Error text and icons ≥ 4.5:1 contrast. | Pass |
-| Motion | No focus jump or animation causing disorientation. | Pass |
-| Consent | Required before form submission. | Verified |
-
----
-
-## ⚙️ Validation Pipelines
-
-| Workflow | Purpose | Artifact |
-|---|---|---|
-| `storybook-a11y.yml` | Tests form components for a11y regressions. | `reports/ui/a11y_component_audits.json` |
-| `accessibility_scan.yml` | Validates label associations and keyboard order. | `reports/self-validation/web/a11y_summary.json` |
-| `faircare-visual-audit.yml` | Reviews consent and tone of input text. | `reports/faircare-visual-validation.json` |
-| `form-validation.yml` | Executes live validation and error focus testing. | `reports/ui/form-validation.json` |
-
----
-
-## 📊 Quality Metrics
-
-| Metric | Target | Verified By |
-|---|---|---|
-| **WCAG 2.1 AA Compliance** | 100% | CI Audit |
-| **Keyboard Operability** | 100% | Storybook E2E |
-| **Error Message Readability** | ≤ Grade 8 reading level | FAIR+CARE Review |
-| **Consent Compliance** | 100% | Ethics Council |
-| **Contrast Ratio** | ≥ 4.5:1 | Design Token Validation |
-
----
-
-## 🧮 Lifecycle
-
-```mermaid
-flowchart LR
-A["Form Design"] --> B["Accessibility Audit (WCAG + ARIA)"]
-B --> C["FAIR+CARE Ethics Review"]
-C --> D["Testing: Labels + Focus + Validation"]
-D --> E["Governance Approval & Telemetry Logging"]
-```
-
-Forms must pass all accessibility and ethical validations before inclusion in public or admin-facing workflows.
+|------------|----------------|
+| **Collective Benefit** | Forms co-designed with diverse user groups. |
+| **Authority to Control** | Consent explicitly required for data submission. |
+| **Responsibility** | Transparent error reporting and audit trails. |
+| **Ethics** | Tone and copy reviewed for non-coercive language. |
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-10 | FAIR+CARE Accessibility Council | Added accessible form patterns with validation, ethical consent mechanisms, and FAIR+CARE-aligned interaction design. |
+|----------|------|---------|----------|
+| v10.0.0 | 2025-11-10 | FAIR+CARE A11y Council | Established form accessibility standards with consent integration, ARIA validation, and CI tests. |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Part of the **Accessibility Pattern Library** · Master Coder Protocol v6.3 · FAIR+CARE Certified  
-[⬅ Back to Patterns Index](README.md) · [Map Controls →](map-controls.md)
+Developed under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
+[⬅ Back to Patterns Index](README.md) · [Next → Tables](tables.md)
 
 </div>
