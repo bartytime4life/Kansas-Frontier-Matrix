@@ -1,14 +1,14 @@
 ---
 title: "🧠 AI Training Workflow — `ai-train.yml` (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/workflows/ai-train.yml.md"
-version: "v10.1.0"
-last_updated: "2025-11-10"
+version: "v10.2.4"
+last_updated: "2025-11-12"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.1.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.1.0/manifest.zip"
-telemetry_ref: "../../releases/v10.1.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/workflows/ai-train-v2.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/workflows/ai-train-v3.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -20,7 +20,7 @@ mcp_version: "MCP-DL v6.3"
 `docs/workflows/ai-train.yml.md`
 
 **Purpose:**  
-Define the **GitHub Actions workflow** that trains and evaluates KFM AI models (e.g., **Focus Transformer v2**), enforces **FAIR+CARE** & **MCP-DL v6.3** governance, generates **Model Cards**, computes **bias/drift/explainability** metrics, signs artifacts (SLSA/OIDC), and exports **telemetry** & **SBOM** for Diamond⁹/Crown∞Ω certification.
+Define the **GitHub Actions workflow** that trains and evaluates KFM AI models (e.g., **Focus Transformer v2.1**), enforces **FAIR+CARE** & **MCP-DL v6.3** governance, generates **Model Cards**, computes **bias/drift/explainability** metrics, signs artifacts (SLSA/OIDC), and exports **telemetry** & **SBOM** for Diamond⁹/Crown∞Ω certification.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -33,34 +33,36 @@ Define the **GitHub Actions workflow** that trains and evaluates KFM AI models (
 
 ## 📘 Overview
 
-This workflow orchestrates **data-to-model** steps with auditable governance:
+This workflow orchestrates **data→model** steps with auditable governance:
 
-- ✅ *Reproducibility*: pinned environments, lockfiles, deterministic seeds, artifact versioning.  
-- ⚖️ *Ethics by design*: **FAIR+CARE** checks, PII scans, data-contract enforcement, consent gates.  
-- 🔍 *Quality*: unit tests, eval suites, out-of-distribution & **drift** checks, **SHAP/LIME/IG** explainability.  
-- 🔐 *Supply chain*: **SLSA** provenance, SBOM, container/image signing (OIDC + Cosign).  
-- 📊 *Telemetry*: training & evaluation metrics, energy usage, bias/fairness — emitted to `focus-telemetry.json`.
+- ✅ **Reproducibility:** pinned environments, lockfiles, deterministic seeds, artifact versioning.  
+- ⚖️ **Ethics by design:** **FAIR+CARE** checks, PII scans, data-contract enforcement, consent gates.  
+- 🔍 **Quality:** unit tests, eval suites, OOD & **drift** checks, **SHAP/LIME/IG** explainability.  
+- 🔐 **Supply chain:** **SLSA** provenance, SBOM, image signing (OIDC + Cosign).  
+- 📊 **Telemetry v3:** training & eval metrics, energy (Wh), CO₂e, bias/fairness — merged into `focus-telemetry.json`.
+
+> **Hard gate:** training **fails** if any input asset is flagged `care.tag = sensitive` or is quarantined under `data/work/staging/**/abandonment_candidates/` without explicit governance override.
 
 ---
 
-## 🗂️ Trigger & Inputs
+## 🗂️ Triggers & Inputs
 
 | Trigger | When | Inputs (defaults) |
 |--------:|------|--------------------|
-| `workflow_dispatch` | Manual training runs | `model_id`, `dataset_ref`, `config_path`, `epochs`, `device` |
-| `push` | Changes under `src/ai/**`, `data/training/**`, `configs/ai/**` | — |
-| `schedule` | Nightly model health check | — |
+| `workflow_dispatch` | Manual runs | `model_id`, `dataset_ref`, `config_path`, `epochs`, `device` |
+| `push` | Changes in `src/ai/**`, `data/training/**`, `configs/ai/**` | — |
+| `schedule` | Nightly health checks | — |
 
 **Input schema (example):**
 ```yaml
 on:
   workflow_dispatch:
     inputs:
-      model_id: { description: "e.g. focus_transformer_v2", required: true, type: string }
-      dataset_ref: { description: "STAC Collection ID or data bundle", required: true, type: string }
-      config_path: { description: "Training config", default: "configs/ai/focus_v2.yaml", type: string }
-      epochs: { description: "Epoch count", default: "3", type: number }
-      device: { description: "cpu|cuda", default: "cuda", type: choice, options: [cpu, cuda] }
+      model_id:     { description: "focus_transformer_v2_1", required: true,  type: string }
+      dataset_ref:  { description: "STAC Collection ID or bundle", required: true, type: string }
+      config_path:  { description: "Training config", default: "configs/ai/focus_v2_1.yaml", type: string }
+      epochs:       { description: "Epoch count", default: "3", type: number }
+      device:       { description: "cpu|cuda", default: "cuda", type: choice, options: [cpu, cuda] }
 ```
 
 ---
@@ -78,11 +80,11 @@ on:
       - "configs/ai/**"
   workflow_dispatch:
     inputs:
-      model_id: { required: true, type: string }
+      model_id:    { required: true, type: string }
       dataset_ref: { required: true, type: string }
-      config_path: { required: true, default: "configs/ai/focus_v2.yaml", type: string }
-      epochs: { required: false, default: "3", type: number }
-      device: { required: false, default: "cuda", type: choice, options: [cpu, cuda] }
+      config_path: { required: false, default: "configs/ai/focus_v2_1.yaml", type: string }
+      epochs:      { required: false, default: "3", type: number }
+      device:      { required: false, default: "cuda", type: choice, options: [cpu, cuda] }
 
 permissions:
   contents: read
@@ -90,7 +92,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: ai-train-${{ github.ref }}-${{ inputs.model_id }}
+  group: ai-train-${{ github.ref }}-${{ inputs.model_id || 'focus_transformer_v2_1' }}
   cancel-in-progress: true
 
 env:
@@ -101,19 +103,19 @@ env:
 
 jobs:
   train:
-    name: Train & Validate (${{ inputs.model_id || 'focus_transformer_v2' }})
+    name: Train & Validate (${{ inputs.model_id || 'focus_transformer_v2_1' }})
     runs-on: ${{ inputs.device == 'cuda' && 'ubuntu-22.04-gpu' || 'ubuntu-22.04' }}
     timeout-minutes: 480
     env:
-      MODEL_ID: ${{ inputs.model_id }}
+      MODEL_ID:    ${{ inputs.model_id }}
       DATASET_REF: ${{ inputs.dataset_ref }}
       CONFIG_PATH: ${{ inputs.config_path }}
-      EPOCHS: ${{ inputs.epochs }}
+      EPOCHS:      ${{ inputs.epochs }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python ${{ env.PYTHON_VERSION }}
+      - name: Setup Python
         uses: actions/setup-python@v5
         with: { python-version: ${{ env.PYTHON_VERSION }} }
 
@@ -140,9 +142,13 @@ jobs:
 
       - name: FAIR+CARE audit
         run: |
-          python scripts/faircare_audit.py \
+          python tools/validation/faircare_validator.py \
             --dataset $DATASET_REF \
             --out data/work/staging/tabular/tmp/validation/faircare_${MODEL_ID}.json
+
+      - name: PII / Sensitive gate
+        run: |
+          python scripts/scan_pii_sensitive.py --dataset $DATASET_REF --fail-on-sensitive
 
       - name: Train model
         env:
@@ -157,7 +163,7 @@ jobs:
 
       - name: Evaluate (metrics + OOD + drift)
         run: |
-          python src/ai/eval.py --model $MODEL_ID --data $DATASET_REF --out reports/ai/${MODEL_ID}/metrics.json
+          python src/ai/eval.py        --model $MODEL_ID --data $DATASET_REF --out reports/ai/${MODEL_ID}/metrics.json
           python src/ai/drift_check.py --model $MODEL_ID --baseline releases/models/${MODEL_ID}/baseline_metrics.json --out reports/ai/${MODEL_ID}/drift.json
 
       - name: Explainability (SHAP/LIME/IG)
@@ -169,7 +175,7 @@ jobs:
           python scripts/make_model_card.py \
             --model $MODEL_ID \
             --metrics reports/ai/${MODEL_ID}/metrics.json \
-            --drift reports/ai/${MODEL_ID}/drift.json \
+            --drift   reports/ai/${MODEL_ID}/drift.json \
             --explain reports/ai/${MODEL_ID}/explainability.json \
             --template docs/templates/model_card.md \
             --out releases/models/${MODEL_ID}/MODEL_CARD.md
@@ -177,7 +183,7 @@ jobs:
       - name: Build SBOM (SPDX)
         uses: anchore/syft-action@v1
         with:
-          args: "dir:. -o spdx-json=./releases/v10.1.0/sbom.spdx.json"
+          args: "dir:. -o spdx-json=./releases/v10.2.0/sbom.spdx.json"
 
       - name: Attest Build Provenance (SLSA)
         uses: slsa-framework/slsa-github-generator/actions/attest-build-provenance@v1
@@ -186,9 +192,11 @@ jobs:
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
-      - name: Cosign sign
+
+      - name: Cosign sign model card
         run: |
-          cosign sign-blob --yes --output-signature releases/models/${MODEL_ID}/signature.sig \
+          cosign sign-blob --yes \
+            --output-signature releases/models/${MODEL_ID}/signature.sig \
             --output-certificate releases/models/${MODEL_ID}/certificate.pem \
             releases/models/${MODEL_ID}/MODEL_CARD.md
 
@@ -201,20 +209,20 @@ jobs:
             reports/ai/${{ env.MODEL_ID }}/
             data/work/staging/tabular/tmp/validation/*${{ env.MODEL_ID }}*.json
 
-      - name: Emit telemetry
+      - name: Emit telemetry (v3)
         run: |
           python scripts/emit_telemetry.py \
             --kind ai_train \
             --summary reports/ai/${MODEL_ID}/metrics.json \
-            --drift reports/ai/${MODEL_ID}/drift.json \
+            --drift   reports/ai/${MODEL_ID}/drift.json \
             --explain reports/ai/${MODEL_ID}/explainability.json \
             --out telemetry_ai_${MODEL_ID}.json
 
-      - name: Append telemetry to unified log
+      - name: Merge telemetry → unified log
         run: |
           python scripts/merge_telemetry.py \
             --in telemetry_ai_${MODEL_ID}.json \
-            --dest releases/v10.1.0/focus-telemetry.json
+            --dest releases/v10.2.0/focus-telemetry.json
 ```
 
 ---
@@ -223,12 +231,12 @@ jobs:
 
 | Type | Key | Description |
 |------|-----|-------------|
-| **Input** | `model_id` | Model to train (e.g., `focus_transformer_v2`) |
-| **Input** | `dataset_ref` | STAC/contracted dataset identifier |
-| **Artifact** | `releases/models/<model_id>/MODEL_CARD.md` | Generated Model Card (governed) |
-| **Artifact** | `reports/ai/<model_id>/*.json` | Metrics, drift, explainability |
-| **Artifact** | `releases/v10.1.0/sbom.spdx.json` | Build SBOM for supply-chain integrity |
-| **Telemetry** | `releases/v10.1.0/focus-telemetry.json` | Training time, energy, bias/fairness, drift |
+| **Input** | `model_id` | Model to train (e.g., `focus_transformer_v2_1`) |
+| **Input** | `dataset_ref` | STAC/DCAT collection or contracted data bundle |
+| **Artifact** | `releases/models/<model_id>/MODEL_CARD.md` | Governed Model Card (FAIR+CARE-certified) |
+| **Artifact** | `reports/ai/<model_id>/*.json` | Metrics, drift, explainability packs |
+| **Artifact** | `releases/v10.2.0/sbom.spdx.json` | Supply-chain SBOM (SPDX) |
+| **Telemetry** | `releases/v10.2.0/focus-telemetry.json` | Energy, CO₂e, runtime, bias, quality, drift |
 
 ---
 
@@ -236,38 +244,36 @@ jobs:
 
 | Principle | Enforcement | Evidence |
 |-----------|-------------|----------|
-| **Findable** | STAC/DCAT registration; model & dataset IDs in outputs | `manifest_ref` |
-| **Accessible** | Role-scoped artifact access; public model cards | Repo artifacts |
-| **Interoperable** | JSON Schema, DCAT 3.0; optional ONNX/MLflow exports | Metadata & SBOM |
-| **Reusable** | CC-BY for docs; MIT for code; configs version-locked | LICENSE + configs |
-| **CARE** | PII scan, consent checks, ethics gating, council approval | Validation reports |
-
-**Abandonment candidates:** model training **must not** ingest quarantined data from `data/work/staging/tabular/abandonment_candidates/` unless **governance-approved** remediation has occurred (job will fail otherwise).
+| **Findable** | STAC/DCAT registration; model/dataset IDs included | `manifest_ref` |
+| **Accessible** | Role-scoped artifact access + published model cards | Repo artifacts |
+| **Interoperable** | JSON Schema + DCAT 3.0; optional ONNX/MLflow exports | Metadata & SBOM |
+| **Reusable** | CC-BY docs; MIT code; config/version locks | LICENSE + configs |
+| **CARE** | PII scan, consent checks, ethics gates, council approvals | Validation JSONs |
 
 ---
 
 ## 🔐 Security & Supply Chain
 
-- **OIDC + Cosign** for signing; provenance via **SLSA** attestations.  
-- **Trivy**/SAST recommended before training to scan images/deps.  
-- Ephemeral runners; no long-lived secrets.  
-- Least-privilege `permissions`.
+- **OIDC + Cosign** for signatures; provenance via **SLSA** attestations.  
+- SAST/Trivy scans recommended pre-training.  
+- Ephemeral runners; least-privilege `permissions`; no long-lived secrets.
 
 ---
 
-## 🔍 Telemetry & Sustainability
+## 🔍 Telemetry & Sustainability (v3)
 
-Emitted to `focus-telemetry.json` (schema `ai-train-v2`):
+Emitted to `focus-telemetry.json` (`ai-train-v3` schema):
 
 | Metric | Example | Notes |
 |--------|---------|------|
 | `train_time_min` | 142.3 | End-to-end duration |
-| `energy_wh` | 1835 | Runner power telemetry or estimator |
+| `energy_wh` | 1835 | Runner power telemetry/estimator |
+| `carbon_gco2e` | 612 | Calculated w/ grid mix |
 | `f1_macro` | 0.842 | Primary quality metric |
 | `bias_score` | 0.05 | Lower is better |
-| `drift_flag` | false | From drift check |
+| `drift_flag` | false | From PSI/KS |
 | `explainability.stability` | 0.93 | LIME/SHAP stability |
-| `license_spdx` | `Apache-2.0` | From SBOM/license scan |
+| `license_spdx` | `Apache-2.0` | From SBOM scan |
 
 ---
 
@@ -275,7 +281,7 @@ Emitted to `focus-telemetry.json` (schema `ai-train-v2`):
 
 ```mermaid
 flowchart LR
-  A["Data (STAC/DCAT)"] --> B["Contract & FAIR+CARE Validation"]
+  A["Data (STAC/DCAT)"] --> B["Contract + FAIR+CARE Validation"]
   B --> C["Train (Deterministic Seeds)"]
   C --> D["Evaluate + Drift + Explainability"]
   D --> E["Model Card + SBOM + SLSA Attest"]
@@ -289,8 +295,9 @@ flowchart LR
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
-| **v10.1.0** | 2025-11-10 | `@kfm-devops` | Upgraded to v10.1.0 artifacts; added IG explainability; telemetry schema v2. |
-| v9.9.0 | 2025-11-08 | `@kfm-devops` | Initial governed AI training workflow doc with SLSA/Cosign, drift/explainability, and telemetry export. |
+| **v10.2.4** | 2025-11-12 | `@kfm-devops` | Upgraded to telemetry schema v3; Focus v2.1 alignment; added PII/sensitive gate; updated SBOM/manifest refs to v10.2.0. |
+| v10.1.0 | 2025-11-10 | `@kfm-devops` | Telemetry v2; IG explainability; SLSA/Cosign attestations. |
+| v9.9.0  | 2025-11-08 | `@kfm-devops` | Initial governed AI training workflow doc (drift/explainability + telemetry export). |
 
 ---
 
