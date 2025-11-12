@@ -1,13 +1,13 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Standard Operating Procedure (SOP) Template"
+title: "🧾 Kansas Frontier Matrix — Standard Operating Procedure (SOP) Template (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/templates/sop.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/docs-sop-template-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -35,19 +35,20 @@ This ensures all processes are **transparent**, **auditable**, and **FAIR+CARE**
 ## 🧭 Overview
 
 This **SOP Template** standardizes the documentation of operational, governance, or technical procedures across KFM.  
-Every SOP ensures consistent, ethical, and reproducible task execution — fulfilling the MCP directive: *“Document first, execute second.”*
+Every SOP created from this template ensures consistent, ethical, and reproducible task execution — fulfilling the MCP directive: *“Document first, execute second.”*
 
 Use this format for:
+
 - ETL pipelines and data governance workflows  
 - AI model retraining, explainability, and deployment  
 - FAIR+CARE audits, ledger updates, and schema validation  
-- Sustainability or provenance reporting routines  
+- Sustainability, telemetry, or provenance reporting routines  
 
-All SOPs are validated via CI (`docs-lint.yml`, `faircare-validate.yml`) and version-logged in the governance ledger.
+All SOPs are validated via CI (`docs-lint.yml`, `faircare-validate.yml`, `telemetry-export.yml`) and version-logged in the governance ledger.
 
 ---
 
-## 🧱 Metadata (YAML Front-Matter)
+## 🧱 Metadata (YAML Front-Matter — Required)
 
 Each SOP must begin with this metadata block:
 
@@ -62,53 +63,56 @@ commit_sha: "<commit-hash>"
 sbom_ref: "releases/vX.Y.Z/sbom.spdx.json"
 manifest_ref: "releases/vX.Y.Z/manifest.zip"
 telemetry_ref: "releases/vX.Y.Z/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/docs-sop-[vN].json"
+telemetry_schema: "schemas/telemetry/docs-sop-template-v2.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
 ---
 ```
 
+> CI will **fail** if required keys are missing or malformed.
+
 ---
 
 ## 🎯 Purpose
 
-Define **why** this SOP exists and its intended impact.
+Define **why** this SOP exists and the impact it aims to have.
 
 **Example**  
-> Document the process for validating, packaging, and deploying verified FAIR+CARE STAC/DCAT metadata for archival release.
+> Document the steps for validating, packaging, and deploying FAIR+CARE-certified STAC/DCAT metadata for each quarterly archive.
 
 ---
 
 ## 🧩 Scope
 
-Specify **inclusions** and **exclusions** to clarify context.
+Specify **inclusions** and **exclusions** to clarify context and boundaries.
 
 | Included | Excluded |
 |---|---|
-| STAC/DCAT validation workflows | Raw JSON editing |
-| FAIR+CARE audit automation | Manual council review |
+| STAC/DCAT validation workflows | Manual editing of STAC JSON |
+| FAIR+CARE audit automation | Final Council decision text |
 
 ---
 
 ## ⚙️ Prerequisites
 
-List technical, procedural, or governance dependencies.
+List technical, procedural, or governance dependencies required before execution.
 
 | Requirement | Description |
 |---|---|
 | **Environment** | Python 3.11+, Docker 24+, Git CLI |
-| **Dependencies** | `pystac`, `jsonschema`, `requests`, `pytest` |
-| **Credentials** | GitHub token, STAC dataset access keys |
+| **Dependencies** | `pystac`, `jsonschema`, `requests`, `pytest`, `kfm-stac-tools` |
+| **Credentials** | GitHub token (read), STAC asset access keys (if private) |
 | **Validation Scripts** | Located under `tools/validation/` or `src/pipelines/validation/` |
 
 ---
 
 ## 🪜 Procedure
 
-Provide a numbered, reproducible set of instructions.
+Provide a numbered, reproducible set of instructions. Each step **must** be deterministic and testable.
 
 **Example**
+
 1. **Pull latest repository version**  
    ```bash
    git pull origin main
@@ -127,37 +131,39 @@ Provide a numbered, reproducible set of instructions.
 4. **Commit validation reports**  
    ```bash
    git add reports/fair/ reports/self-validation/
-   git commit -m "chore: validate metadata FAIR+CARE for release v10.0.0"
+   git commit -m "chore: FAIR+CARE + schema validation for vX.Y.Z"
    git push origin main
    ```
 
 5. **Trigger CI governance sync**  
-   - Verify `governance_sync.yml` passed successfully.  
-   - Telemetry metrics should log in `releases/v10.0.0/focus-telemetry.json`.
+   - Confirm `governance_sync.yml` passes.  
+   - Ensure `focus-telemetry.json` updated for current release.
 
 ---
 
 ## 🧪 Validation & Quality Assurance
 
-Document validation checks required for compliance.
+Detail the validation checks required for SOP compliance.
 
 | Validation Type | Expected Output | Workflow |
 |---|---|---|
-| Markdown / YAML Lint | No errors or warnings | `.github/workflows/docs-lint.yml` |
-| FAIR+CARE Audit | `faircare_summary.json` created | `.github/workflows/faircare-validate.yml` |
-| Telemetry Log | Entry created in `focus-telemetry.json` | `.github/workflows/telemetry-export.yml` |
+| Markdown / YAML Lint | No critical errors | `.github/workflows/docs-lint.yml` |
+| FAIR+CARE Audit | Updated `faircare_summary.json` | `.github/workflows/faircare-validate.yml` |
+| Telemetry Log | Appended entry in `focus-telemetry.json` | `.github/workflows/telemetry-export.yml` |
 
 ---
 
 ## ⚖️ FAIR+CARE Governance Mapping
 
+Explain how this SOP meets FAIR+CARE principles.
+
 | Principle | Implementation |
 |---|---|
-| **Findable** | SOP stored under version control with semantic pathing. |
-| **Accessible** | CC-BY 4.0 license; publicly readable Markdown. |
-| **Interoperable** | Uses STAC/DCAT-compatible front-matter schema. |
-| **Reusable** | Immutable ledger entry with checksum. |
-| **CARE** | Reviewed for inclusivity, cultural ethics, and provenance sensitivity. |
+| **Findable** | SOP stored in `docs/sop/` with stable path and versioned metadata. |
+| **Accessible** | CC-BY 4.0 public Markdown, rendered in repository. |
+| **Interoperable** | References STAC/DCAT and ISO 19115-compliant metadata and contracts. |
+| **Reusable** | Immutable ledger entries and checksum manifests. |
+| **CARE** | Reviewed for inclusivity, cultural considerations, and data sensitivity. |
 
 Governance records appended to:
 ```
@@ -168,14 +174,14 @@ reports/audit/github-workflows-ledger.json
 
 ## 🔄 Change Management
 
-Describe update procedure, review gates, and roles.
+Describe how this SOP is updated, reviewed, and approved.
 
 | Stage | Description | Responsible |
 |---|---|---|
-| Draft | Update SOP and open PR | Contributor |
-| Review | Conduct FAIR+CARE and technical validation | Governance Council |
-| Approval | Merge to `main` | Maintainer |
-| Publish | Telemetry auto-updated | CI/CD Pipeline |
+| Draft | Propose changes; open PR | Contributor |
+| Review | FAIR+CARE + technical validation | Governance Council & Maintainers |
+| Approval | Merge to `main` | Repository Maintainer |
+| Publish | CI runs; telemetry updated | CI/CD Pipelines |
 
 ---
 
@@ -183,11 +189,12 @@ Describe update procedure, review gates, and roles.
 
 | Workflow | Description |
 |---|---|
-| `docs-lint.yml` | Validates metadata and Markdown structure. |
-| `faircare-validate.yml` | Ethics and reproducibility compliance audit. |
-| `telemetry-export.yml` | Logs sustainability and process metrics. |
+| `docs-lint.yml` | Validates SOP front-matter and structure. |
+| `faircare-validate.yml` | Audits SOP for ethics and governance consistency. |
+| `telemetry-export.yml` | Logs SOP updates for sustainability reporting. |
 
-All logs archived under:
+Logs for SOP validation are archived under:
+
 ```
 reports/self-validation/sop/
 ```
@@ -198,13 +205,13 @@ reports/self-validation/sop/
 
 | Metric | Value | Verified By |
 |---|---:|---|
-| Power Use | 1.3 Wh | @kfm-sustainability |
-| Carbon Output | 1.5 gCO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+| SOP Validation Energy | 1.3 Wh | `@kfm-sustainability` |
+| Carbon Output | 1.5 gCO₂e | `@kfm-security` |
+| Renewable Energy | 100% (RE100) | `@kfm-infrastructure` |
+| FAIR+CARE Compliance | 100% | `@faircare-council` |
 
-Telemetry file reference:  
-`../../releases/v10.0.0/focus-telemetry.json`
+Telemetry reference:  
+`../../releases/v10.2.0/focus-telemetry.json`
 
 ---
 
@@ -212,7 +219,8 @@ Telemetry file reference:
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; enhanced telemetry schema, FAIR+CARE integration, and ISO 19115 compliance. |
+| v10.2.2 | 2025-11-12 | A. Barta | Aligned telemetry refs to v10.2.0; clarified governance, CI, and sustainability linkages. |
+| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10; enhanced telemetry schema; FAIR+CARE integration and ISO 19115 compliance. |
 | v9.7.0 | 2025-11-05 | A. Barta | Created SOP template with governance integration and CI mapping. |
 | v9.5.0 | 2025-10-20 | A. Barta | Added telemetry reporting and automation references. |
 | v9.0.0 | 2025-06-01 | KFM Core Team | Initial SOP template creation. |
