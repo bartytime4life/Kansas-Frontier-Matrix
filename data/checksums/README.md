@@ -1,31 +1,32 @@
 ---
-title: "🔐 Kansas Frontier Matrix — Data Checksums & Integrity Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔐 Kansas Frontier Matrix — **Data Checksums & Integrity Registry** (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/checksums/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
+version: "v10.2.2"
+last_updated: "2025-11-12"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
+sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.2.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/data-checksums-v10.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🔐 Kansas Frontier Matrix — **Data Checksums & Integrity Registry**
+# 🔐 Kansas Frontier Matrix — **Data Checksums & Integrity Registry**  
 `data/checksums/README.md`
 
 **Purpose:**  
 Define and operate the **checksum verification system**, integrity tracking, and provenance linkage for all datasets across the **Kansas Frontier Matrix (KFM)**.  
 Guarantee that every artifact—from ingestion to public release—is cryptographically verified and immutably registered in the **Governance Ledger**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../LICENSE)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Integrity%20Certified-gold.svg)](../../docs/standards/faircare-validation.md)
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Integrity%20Certified-gold.svg)](../../docs/standards/faircare.md)
 [![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
 
 </div>
@@ -34,7 +35,7 @@ Guarantee that every artifact—from ingestion to public release—is cryptograp
 
 ## 📘 Overview
 
-The **Checksum Integrity Registry** maintains SHA-256 verification manifests for datasets, catalogs, and release artifacts.  
+The **Checksum Integrity Registry** maintains **SHA-256** verification manifests for datasets, catalogs, and release artifacts.  
 Each checksum serves as a **verifiable fingerprint** binding a dataset’s digital identity to governance, provenance, and FAIR+CARE compliance records.
 
 **Checksums are used to:**
@@ -49,17 +50,18 @@ Each checksum serves as a **verifiable fingerprint** binding a dataset’s digit
 
 ```mermaid
 flowchart TD
-    A["ETL & Validation Pipelines"] --> B["Checksum Generator (SHA-256)"]
-    B --> C["Integrity Registry (data/checksums/manifest.json)"]
-    C --> D["Governance Ledger (data/reports/audit/data_provenance_ledger.json)"]
-    D --> E["Public Release Verification (releases/v10.0.0)"]
+    ETL["ETL & Validation Pipelines"] --> GEN["Checksum Generator (SHA-256)"]
+    GEN --> REG["Integrity Registry (data/checksums/manifest.json)"]
+    REG --> LED["Governance Ledger (data/reports/audit/data_provenance_ledger.json)"]
+    LED --> REL["Public Release Verification (releases/v10.2.0)"]
 ```
 
 ### Description
-1. **Generation:** Pipelines compute checksums after each run or artifact mutation.  
-2. **Registration:** Results are written to `manifest.json` and linked to release manifests.  
-3. **Verification:** The Governance Ledger cross-audits entries against SBOM hashes.  
-4. **Publication:** Each release provides a verified checksum set for reproducibility.
+
+1. **Generation** — Pipelines compute checksums after each run or artifact mutation.  
+2. **Registration** — Results are written to `manifest.json` and linked to release manifests/SBOM.  
+3. **Verification** — The Governance Ledger cross-audits entries against SPDX hashes.  
+4. **Publication** — Each release provides a verified checksum set for reproducibility.
 
 ---
 
@@ -83,20 +85,20 @@ Each manifest lists **dataset identifiers**, **checksums**, and **metadata refer
 
 ```json
 {
-  "version": "v10.0.0",
-  "generated_on": "2025-11-10T19:25:00Z",
+  "version": "v10.2.2",
+  "generated_on": "2025-11-12T19:25:00Z",
   "hash_algorithm": "SHA-256",
   "datasets": [
     {
-      "id": "hazards_processed_v10.0.0",
-      "path": "data/processed/hazards/hazards_composite_v10.0.0.geojson",
+      "id": "hazards_processed_v10.2.2",
+      "path": "data/processed/hazards/hazards_composite_v10.2.2.geojson",
       "checksum": "sha256-2f1e3b8c97df84b5d2c3e39bbd95b9e8d12b64ad38a62400f745d68ec6d1b75e",
       "fairstatus": "certified",
       "governance_ref": "data/reports/audit/data_provenance_ledger.json"
     },
     {
-      "id": "climate_staging_v10.0.0",
-      "path": "data/work/staging/climate/climate_aggregate_v10.0.0.parquet",
+      "id": "climate_staging_v10.2.2",
+      "path": "data/work/staging/climate/climate_aggregate_v10.2.2.parquet",
       "checksum": "sha256-a8373fa4d12d49be5f5f2178a91d79981b1d28b947f05eaa52e9e7e8d2cfadcd",
       "fairstatus": "pending"
     }
@@ -110,14 +112,13 @@ Each manifest lists **dataset identifiers**, **checksums**, and **metadata refer
 
 | Principle | Implementation | Verified By |
 |---|---|---|
-| **Findable** | Checksums indexed in catalogs and SBOM manifests. | `@kfm-data` |
+| **Findable** | Checksums indexed in catalogs and SBOM manifests (JSON-LD ready). | `@kfm-data` |
 | **Accessible** | JSON files published under CC-BY 4.0 for public verification. | `@kfm-accessibility` |
-| **Interoperable** | JSON-LD-ready structure compatible with STAC/DCAT and SPDX. | `@kfm-architecture` |
+| **Interoperable** | Structure compatible with STAC/DCAT and SPDX. | `@kfm-architecture` |
 | **Reusable** | Immutable, versioned checksum logs with ledger links. | `@kfm-governance` |
 | **Collective Benefit** | Guarantees public trust in integrity of open data. | `@faircare-council` |
 | **Authority to Control** | FAIR+CARE Council certifies checksum workflows. | `@kfm-governance` |
 | **Responsibility** | Telemetry-backed coverage and periodic re-verification. | `@kfm-security` |
-| **Ethics** | Integrity validation prevents tampering and inequitable access. | `@kfm-ethics` |
 
 ---
 
@@ -128,7 +129,7 @@ Each manifest lists **dataset identifiers**, **checksums**, and **metadata refer
 | `checksum-verify.yml` | Generates & verifies SHA-256 hashes for datasets. | `manifest.json` |
 | `faircare-validate.yml` | Aligns checksum process with FAIR+CARE ethics. | `data/reports/fair/faircare_summary.json` |
 | `governance-ledger.yml` | Syncs hashes with provenance ledger. | `data/reports/audit/data_provenance_ledger.json` |
-| `sbom-validate.yml` | Confirms checksums match SPDX SBOM entries. | `releases/v10.0.0/sbom.spdx.json` |
+| `sbom-validate.yml` | Confirms checksums match SPDX SBOM entries. | `releases/v10.2.0/sbom.spdx.json` |
 
 > All workflows are automated in `.github/workflows/`.
 
@@ -138,10 +139,10 @@ Each manifest lists **dataset identifiers**, **checksums**, and **metadata refer
 
 ```bash
 # Compute and compare a file checksum
-sha256sum data/processed/hazards/hazards_composite_v10.0.0.geojson
+sha256sum data/processed/hazards/hazards_composite_v10.2.2.geojson
 
 # Query a specific dataset checksum from the manifest
-jq '.datasets[] | select(.id=="hazards_processed_v10.0.0")' data/checksums/manifest.json
+jq '.datasets[] | select(.id=="hazards_processed_v10.2.2")' data/checksums/manifest.json
 ```
 
 ---
@@ -156,13 +157,13 @@ jq '.datasets[] | select(.id=="hazards_processed_v10.0.0")' data/checksums/manif
 | Energy Efficiency | ≤ 10 Wh per batch | `@kfm-sustainability` |
 | FAIR+CARE Compliance | Certified | `@faircare-council` |
 
-**Telemetry:** `../../releases/v10.0.0/focus-telemetry.json`
+**Telemetry:** `../../releases/v10.2.0/focus-telemetry.json`
 
 ---
 
 ## 🗂️ Directory Conventions
 
-- **File naming:** `<domain>_<layer>_v<semver>.<ext>` (e.g., `hazards_composite_v10.0.0.geojson`).  
+- **File naming:** `<domain>_<layer>_v<semver>.<ext>` (e.g., `hazards_composite_v10.2.2.geojson`).  
 - **Hash field:** `checksum` must be prefixed with `sha256-`.  
 - **Immutability:** Once published under a release tag, entries are append-only; corrections are new records with `supersedes` pointers in the ledger.
 
@@ -171,7 +172,7 @@ jq '.datasets[] | select(.id=="hazards_processed_v10.0.0")' data/checksums/manif
 ## 🧾 Internal Use Citation
 
 ```text
-Kansas Frontier Matrix (2025). Data Checksums & Integrity Registry (v10.0.0).
+Kansas Frontier Matrix (2025). Data Checksums & Integrity Registry (v10.2.2).
 Checksum governance, cryptographic verification, and FAIR+CARE-integrated integrity processes for KFM releases.
 Ensures dataset immutability, reproducibility, and public verifiability across versions.
 ```
@@ -182,8 +183,8 @@ Ensures dataset immutability, reproducibility, and public verifiability across v
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-10 | `@kfm-data` | Upgraded registry to v10; bumped SBOM/manifest/telemetry refs; added JSON-LD/SPDX guidance and CLI examples. |
-| v9.7.0  | 2025-11-06 | `@kfm-data` | Initial registry README; governance mapping, manifest example, and telemetry metrics. |
+| v10.2.2 | 2025-11-12 | `@kfm-data` | Align to v10.2: SBOM/manifest linkage, JSON-LD guidance, CLI examples, and telemetry bindings. |
+| v10.0.0 | 2025-11-10 | `@kfm-data` | Registry baseline; added governance mapping, manifest examples, and metrics. |
 
 ---
 
