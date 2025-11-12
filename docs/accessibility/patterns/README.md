@@ -22,10 +22,10 @@ mcp_version: "MCP-DL v6.3"
 **Purpose:**  
 Define inclusive UI patterns for **Kansas Frontier Matrix (KFM)** components — ensuring consistent **keyboard operability**, **screen reader support**, and **WCAG 2.1 AA** compliance across the web application and embedded data visualization environments.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../../releases/v10.0.0/manifest.zip)
+![Badge Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
+![Badge FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
+![Badge License](https://img.shields.io/badge/License-CC--BY%204.0-green)
+![Badge Status](https://img.shields.io/badge/Status-Stable-success)
 
 </div>
 
@@ -48,7 +48,7 @@ Each pattern includes **ARIA semantics**, **keyboard interaction rules**, **focu
 
 ## 🗂️ Directory Layout
 
-```
+```bash
 docs/accessibility/patterns/
 ├── README.md                 # This file
 ├── alerts.md                 # Live regions, role="alert"/"status", toasts
@@ -67,7 +67,7 @@ docs/accessibility/patterns/
 ## ♿ Pattern Foundations
 
 | Category | Principle | Description |
-|---|---|---|
+|-----------|------------|-------------|
 | **Keyboard Operability** | All components usable with keyboard-only navigation. | Supports Tab, Shift+Tab, Enter, Space, Arrow keys, Esc. |
 | **Screen Reader Support** | Semantic markup and ARIA roles announce structure and state. | Follows WAI-ARIA 1.2 Authoring Practices. |
 | **Focus Management** | Predictable focus order and visible focus rings (≥3:1 contrast). | Logical DOM order; focus trap for modals; return focus on close. |
@@ -78,85 +78,85 @@ docs/accessibility/patterns/
 
 ## 🧭 Global Accessibility Tokens
 
-These design tokens unify a11y behavior across UI components (see `../../design/tokens/accessibility-tokens.md`).
-
 | Token | Type | Description |
-|---|---|---|
-| `a11y.focus.color` | Color | Focus indicator color (≥3:1 contrast) |
-| `a11y.outline.width` | Spacing | 3px default outline width |
-| `aria.expanded` | State | Used in menus and accordions |
-| `aria.selected` | State | Identifies active or focused items |
-| `aria.modal` | Boolean | True for dialogs and focus-trapped content |
-| `a11y.skiplinks.enabled` | Boolean | Activates skip-navigation links |
+|--------|------|-------------|
+| `a11y.focus.color` | Color | Focus indicator color (≥3:1 contrast). |
+| `a11y.outline.width` | Spacing | Default outline width (3 px). |
+| `aria.expanded` | State | Indicates expansion for menus and accordions. |
+| `aria.selected` | State | Marks active or focused elements. |
+| `aria.modal` | Boolean | Declares dialog/modal state. |
+| `a11y.skiplinks.enabled` | Boolean | Activates skip-navigation links. |
 
 ---
 
 ## 🧩 Component Pattern Summaries
 
 ### 🔘 Buttons & Toggles (`buttons.md`)
-- **Role:** `role="button"` with `tabindex="0"` if not native.  
-- **Interaction:** `Enter` and `Space` trigger action.  
-- **ARIA:** `aria-pressed="true|false"` for toggles.  
-- **Guidelines:** Use clear, verb-led labels (e.g., “Save data”).
+- **Role:** `role="button"` with `tabindex="0"` for non-native controls.  
+- **Interaction:** `Enter` and `Space` trigger events.  
+- **ARIA:** `aria-pressed` reflects toggle state.  
+- **Guideline:** Use explicit action labels.
 
 ### 💬 Dialogs & Modals (`dialogs.md`)
-- **Role:** `role="dialog"` or `role="alertdialog"`.  
-- **Focus Trap:** Contain tab order in dialog; restore focus to opener on close.  
-- **ARIA:** `aria-labelledby` for title; `aria-describedby` for content.
+- **Roles:** `role="dialog"` or `role="alertdialog"`.  
+- **Focus:** Trap within modal; return focus to trigger.  
+- **ARIA:** `aria-labelledby` + `aria-describedby` for semantics.
 
 ### 🚨 Alerts & Live Regions (`alerts.md`)
-- **Polite vs. Assertive:** Use `role="status"` (polite) for non-urgent; `role="alert"` (assertive) for urgent.  
-- **Toasts:** Dismissible, `Esc` closable; do not steal focus.  
-- **Fair Tone:** Avoid alarmist copy; provide actionable next steps.
+- **Roles:** `role="alert"` (assertive), `role="status"` (polite).  
+- **Behavior:** Non-blocking; never hijack focus.  
+- **Ethics:** Avoid panic tone; emphasize actionable context.
 
 ### 🗺️ Map Controls (`map-controls.md`)
-- **Keyboard Access:** Arrow keys pan; `+/-` zoom; Tab cycles controls.  
-- **Live Regions:** Announce zoom level, active layers (`aria-live="polite"`).  
-- **Consent:** Cultural overlays require visible consent flags.
+- **Keyboarding:** Arrow keys pan, `+/-` zoom.  
+- **Announcements:** `aria-live="polite"` for zoom/layer changes.  
+- **Ethics:** Overlay consent before showing heritage data.
 
 ### 📈 Charts & Visualizations (`charts.md`)
-- **Structure:** `role="figure"` + labels; data table alt or CSV.  
-- **Keyboarding:** Arrow keys move focus among data points; `Esc` exits.  
-- **Color Independence:** Distinguish series via shape/patterns; maintain contrast.
+- **Structure:** `role="figure"` + labeled summaries.  
+- **Alternatives:** Include accessible CSV/data tables.  
+- **Contrast:** Series differentiated via shape or texture.
 
-### 📝 Forms & Inputs (`forms.md`)
-- **Labels:** Visible `<label for="…">` or `aria-label`; never rely on placeholder.  
-- **Errors:** `aria-invalid`, `aria-describedby`, and polite live feedback.  
-- **Consent:** FAIR+CARE checkbox for data use and cultural governance.
+### 📝 Forms (`forms.md`)
+- **Labels:** Always visible or ARIA-linked.  
+- **Errors:** Use polite live feedback regions.  
+- **Consent:** Embed FAIR+CARE acknowledgment checkboxes.
 
 ### 🧭 Navigation (`navigation.md`)
-- **Landmarks:** `<header>`, `<nav>`, `<main>`, `<footer>`; skip-to-content links.  
-- **Menus:** Keyboard operable; `aria-current="page"` for breadcrumbs.
+- **Landmarks:** `<header>`, `<nav>`, `<main>`, `<footer>`.  
+- **Menus:** Arrow navigable; `aria-current="page"` indicators.  
+- **Skip-links:** Always enabled with visible focus.
 
-### 📊 Tables & Grids (`tables.md`)
-- **Semantics:** `<table>`, `<thead>`, `<tbody>`, `<th scope="…">`.  
-- **Grids:** `role="grid"` with `aria-sort`, roving tabindex for large datasets.
+### 📊 Tables (`tables.md`)
+- **Markup:** Proper `<thead>`, `<tbody>`, `<th scope>`.  
+- **ARIA Grids:** Manage focus for virtualized datasets.
 
-### 🎥 Media & Time-Based Content (`media.md`)
-- **Captions & Transcripts:** Required for all AV content.  
-- **Controls:** Fully keyboard operable; no auto-play; visible focus.
-
----
-
-## ⚙️ Validation & CI Automation
-
-| Workflow | Validation Target | Artifact |
-|---|---|---|
-| `accessibility_scan.yml` | Axe/Lighthouse checks (roles, labels, headings) | `reports/self-validation/web/a11y_summary.json` |
-| `storybook-a11y.yml` | Component snapshots and jest-axe tests | `reports/ui/a11y_component_audits.json` |
-| `color-contrast.yml` | Token contrast thresholds | `reports/ui/color-contrast.json` |
-| `faircare-visual-audit.yml` | Ethical tone & consent metadata checks | `reports/faircare-visual-validation.json` |
+### 🎥 Media (`media.md`)
+- **Captions & Transcripts:** Required for all content.  
+- **Controls:** Keyboard accessible, no auto-play.  
+- **Accessibility:** Descriptive transcripts for maps/videos.
 
 ---
 
-## ⚖️ FAIR+CARE Integration for UI Patterns
+## ⚙️ Validation & Automation
 
-| Care Principle | Application in UI |
-|---|---|
-| **Collective Benefit** | Patterns tested by diverse user groups and assistive tech users. |
-| **Authority to Control** | Cultural/Indigenous symbols used only with consent and attribution. |
-| **Responsibility** | Components versioned with a11y regression tests and telemetry. |
-| **Ethics** | Dialogs, alerts, and narratives avoid exploitative or traumatic content. |
+| Workflow | Validation | Output Artifact |
+|-----------|-------------|------------------|
+| `accessibility_scan.yml` | axe/Lighthouse audit | `reports/self-validation/web/a11y_summary.json` |
+| `storybook-a11y.yml` | Component snapshot testing | `reports/ui/a11y_component_audits.json` |
+| `color-contrast.yml` | Palette contrast thresholds | `reports/ui/color-contrast.json` |
+| `faircare-visual-audit.yml` | Ethical tone validation | `reports/faircare-visual-validation.json` |
+
+---
+
+## ⚖️ FAIR+CARE Integration
+
+| CARE Principle | Implementation in UI |
+|----------------|----------------------|
+| Collective Benefit | Components tested by diverse assistive tech users. |
+| Authority to Control | Cultural/tribal content gated by consent indicators. |
+| Responsibility | Versioned component telemetry and regression testing. |
+| Ethics | Narratives and visuals reviewed for cultural respect. |
 
 ---
 
@@ -173,8 +173,8 @@ These design tokens unify a11y behavior across UI components (see `../../design/
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-10 | A11y & FAIR+CARE Council | Updated directory layout and pattern index; added alerts, media, and tables coverage; aligned with FAIR+CARE, WCAG 2.1 AA, and CI pipelines. |
+|----------|------|---------|----------|
+| v10.0.0 | 2025-11-10 | A11y & FAIR+CARE Council | Expanded accessible UI pattern library; added validation workflows and cultural consent guidelines. |
 
 ---
 
