@@ -1,7 +1,7 @@
 ---
 title: "🌦️ Kansas Frontier Matrix — Climate Symbol Legend Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/climate/README.md"
-version: "v10.2.2"
+version: "v10.2.3"
 last_updated: "2025-11-13"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
@@ -20,7 +20,7 @@ mcp_version: "MCP-DL v6.3"
 `docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/climate/README.md`
 
 **Purpose:**  
-Define a consistent, accessible, and AI-aware **climate symbol set** for Focus Mode Story Nodes and map legends, aligned with STAC, Story Node schema, and FAIR+CARE governance.
+Define a FAIR+CARE-governed climate symbol system for Focus Mode Story Nodes, analytical maps, and STAC metadata, with consistent semantics across the Kansas Frontier Matrix (KFM).
 
 <img alt="Docs · MCP" src="https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue" />
 <img alt="Legend Type: Climate Symbols" src="https://img.shields.io/badge/Legend-Symbols%20·%20Climate-teal" />
@@ -34,327 +34,266 @@ Define a consistent, accessible, and AI-aware **climate symbol set** for Focus M
 
 ## 📚 Overview
 
-This document specifies the **climate symbol legend** used by Kansas Frontier Matrix (KFM) in:
+This document standardizes the **climate symbol legend** used by:
 
-- Focus Mode climate overlays  
-- Story Node cards and mini-maps  
-- Report-ready map exports in `docs/reports/visualization/...`  
+- Focus Mode v2 climate overlays  
+- Story Nodes (badges, timelines, narrative glyphs)  
+- Climatology and hydrology reports under `docs/reports/visualization/...`  
+- STAC Items & Collections (via `legend` / `symbol` assets)  
+- MapLibre-based interactive maps in the KFM front-end  
 
-The symbols defined here provide a canonical library for representing **temperature, precipitation, drought, flood, wind, severe storms, and derived indices** across:
+The legend encodes:
 
-- Static maps (PDF / PNG exports)  
-- Interactive MapLibre layers  
-- Story Node narrative badges (for example, “Severe Drought · 1934 · 🟧”)  
+- Temperature anomalies  
+- Precipitation anomalies  
+- Drought severity  
+- Flood extent / type  
+- Wind and severe storms  
+- Composite climate indices (SPI, PDSI, heatwave indices)  
 
-All definitions are:
+All symbols are:
 
-- 📐 Cartographically consistent (color, size, hierarchy)  
-- ♿ Accessible (WCAG 2.1 AA contrast, shape redundancy)  
-- 🛰 Machine-readable (JSON / YAML / STAC and Story Node schema references)  
-- ⚖️ Governed by MCP + FAIR+CARE (no misleading or stigmatizing encodings)
-
-> 💡 **Tip:** Treat this README as the **single source of truth** for climate symbols. All code, icons, and STAC items must match the rules defined here.
-
----
-
-## 🎯 Objectives & Scope
-
-This legend aims to:
-
-- Provide a **standard climate symbol vocabulary** for:
-  - Focus Mode climate layers (for example “Dust Bowl Drought, 1934”, “Great Flood, 1951”)  
-  - Story Node visual summaries (icons on cards, timelines, mini-maps)  
-  - Analytical maps for climate, hydrology, and hazard reports  
-
-- Ensure symbols:
-  - Are readable at multiple scales (desktop, tablet, projector)  
-  - Encode severity in a predictable way (light → intense)  
-  - Can be linked to data (STAC, Story Node `spacetime`, OWL-Time, GeoSPARQL)  
-
-- Keep symbol metadata:
-  - Versioned (semver)  
-  - Validated via CI (schema + visual snapshot tests)  
-  - Traceable back to inputs (NOAA, USGS, Mesonet, etc.)
-
-Out of scope for this file:
-
-- Detailed color ramp rules for continuous rasters (see colorbar legend docs)  
-- Full STAC collection definitions (see `data/stac/*.json`)  
-- Per-analysis styling overrides (handled in report-specific configs)
+- 📐 Cartographically consistent  
+- ♿ WCAG 2.1 AA accessible (shape + color + label)  
+- 🛰 Linked to variables, units, and thresholds  
+- ⚖️ FAIR+CARE compliant, with explicit governance and provenance  
 
 ---
 
-#### 📁 Directory Layout
+### 🗂️ Directory Layout
 
-climate/
-|-- README.md                       # This document
-|
-|-- svg/                            # Source vector icons
-|   |-- temp_anomaly_cool.svg
-|   |-- temp_anomaly_warm.svg
-|   |-- precip_heavy.svg
-|   |-- drought_severe.svg
-|   |-- flood_major.svg
-|   |-- wind_high.svg
-|   |-- storm_severe.svg
-|   |-- index_pdsiextr.svg
-|
-|-- png/                            # Raster icons
-|   |-- temp_anomaly_cool@2x.png
-|   |-- ...
-|
-|-- metadata/                       # Machine-readable definitions
-|   |-- climate-symbols.json
-|   |-- climate-symbols.stac.json
-|   |-- climate-symbols-story-nodes.json
-|
-|-- tests/                          # QA + visual validation
-    |-- snapshots/
-    |-- validate_metadata.py
-    |-- generate_previews.py
+    climate/
+    ├── README.md                        # This document (spec + usage)
+    ├── svg/                             # Source vector icons (preferred assets)
+    │   ├── temp_anomaly_cool.svg
+    │   ├── temp_anomaly_warm.svg
+    │   ├── precip_heavy.svg
+    │   ├── drought_severe.svg
+    │   ├── flood_major.svg
+    │   ├── wind_high.svg
+    │   ├── storm_severe.svg
+    │   └── index_pdsiextr.svg
+    ├── png/                             # Raster icons for non-SVG contexts
+    │   ├── temp_anomaly_cool@2x.png
+    │   └── ...
+    ├── metadata/                        # Machine-readable symbol definitions
+    │   ├── climate-symbols.json
+    │   ├── climate-symbols.stac.json
+    │   └── climate-symbols-story-nodes.json
+    └── tests/                           # QA + visual regression
+        ├── snapshots/
+        ├── validate_metadata.py
+        └── generate_previews.py
 
-
-> ⚙️ **Implementation note:** Do **not** add ad-hoc icons outside `svg/` or `png/`. All new symbols must be cataloged in `metadata/climate-symbols.json` and referenced in the Story Node + STAC metadata.
+> ⚙️ **Implementation rule:**  
+> All climate symbols **must** be defined in `metadata/climate-symbols.json` and wired into STAC + Story Node metadata.  
+> No icons may exist outside `svg/` or `png/`.
 
 ---
 
 ## 🌦 Symbol Categories & Semantics
 
-Climate symbols are grouped into **thematic categories**.  
-Each symbol has:
+Climate symbols are organized into **thematic categories**, each with:
 
-- A **semantic key** (stable ID used by code and metadata)  
-- A **glyph** (SVG shape)  
-- A **base color** (with severity variants)  
-- Mappings to:
-  - Data variables (for example `tas_anom`, `prcp`, `pdsiextr`)  
-  - Units (for example °C, mm, index value)  
-  - Severity bins (for example moderate, severe, extreme)
+- A **semantic ID** (canonical key used in code and metadata)  
+- An **SVG glyph** (primary visual)  
+- A **base color** with severity variants  
+- **Data variable mappings** (for example `tas_anom`, `prcp`, `spi`, `pdsiextr`)  
+- **Units and thresholds** (for example °C anomaly, mm anomaly, index values)  
+- Standard **Story Node replacement rules** (for example `{symbol:drought_extreme}`)  
 
 ---
 
 ### 🌡 Temperature
 
-Symbol keys (examples):
+**Keys**
 
-- `temp_anomaly_cool` — Cooler than baseline (for example `< -1 °C anomaly`)  
-- `temp_anomaly_warm` — Warmer than baseline (for example `> +1 °C anomaly`)  
-- `heat_extreme` — Extreme heat events (for example ≥ 100 °F days)
+- `temp_anomaly_cool` — below-baseline temperature anomaly  
+- `temp_anomaly_warm` — above-baseline temperature anomaly  
+- `heat_extreme` — extreme heat episode  
 
-Visual guidance:
+**Visual guidance**
 
-- Cool anomalies: blue diamonds (`#2b6cb0` → `#63b3ed`)  
-- Warm anomalies: red / orange diamonds (`#c53030` → `#f6ad55`)  
-- Extreme heat: deep red square with radiating tick marks  
+- Cool anomalies: blue diamonds  
+- Warm anomalies: orange/red diamonds  
+- Extreme heat: radiant red square  
 
-Severity bins (example):
+**Severity bands (example)**
 
-- `moderate`: absolute ΔT from 1–2 °C  
-- `severe`:   absolute ΔT from 2–4 °C  
-- `extreme`:  absolute ΔT greater than 4 °C  
-
-The primary shape stays constant; **stroke width or inner marker** changes with severity.
+- `moderate`: |ΔT| 1–2 °C  
+- `severe`:   |ΔT| 2–4 °C  
+- `extreme`:  |ΔT| > 4 °C  
 
 ---
 
 ### 💧 Precipitation & Moisture
 
-Symbol keys:
+**Keys**
 
-- `precip_light` — Light precipitation anomaly (10–50% above baseline)  
-- `precip_heavy` — Heavy precipitation anomaly (> 50% above baseline)  
-- `snow_heavy` — Heavy snow events (region- and time-specific)  
-- `soil_moisture_deficit` — Dry soils (for example Mesonet-based anomalies)
+- `precip_light` — light positive anomaly  
+- `precip_heavy` — heavy anomaly / extreme rainfall  
+- `snow_heavy` — heavy snowfall events  
+- `soil_moisture_deficit` — anomalously dry soils  
 
-Visual guidance:
+**Visual guidance**
 
-- Precipitation: inverted teardrop / raindrop glyph in blue-green  
-- Snow: droplet with snowflake overlay (white marking)  
-- Soil moisture deficit: droplet with dashed outline and brown infill
-
-Severity mapping (intensity → stroke and size):
-
-- Light → small glyph, thin stroke  
-- Heavy → larger glyph, thicker outline, halo on interactive map
+- Droplet glyphs with overlays (snowflake, dashed outline)  
+- Size and stroke indicate intensity; halo used for extremes on interactive maps  
 
 ---
 
 ### 🌵 Drought & Aridity
 
-Symbol keys:
+**Keys**
 
-- `drought_moderate` — e.g., USDM D1  
-- `drought_severe` — D2–D3  
-- `drought_extreme` — D4 (exceptional drought)
+- `drought_moderate`  
+- `drought_severe`  
+- `drought_extreme`  
 
-Visual guidance:
+**Visual guidance**
 
-- Hexagon glyph with subtle cracked-earth texture in SVG  
-- Color ramp: `#f6e05e` (moderate) → `#dd6b20` (severe) → `#9b2c2c` (extreme)  
-- For Story Nodes, the emoji shorthand is standardized as:
-  - `🟨` moderate, `🟧` severe, `🟥` extreme (always paired with text to avoid ambiguity)
+- Hexagon glyph with cracked-earth texture (subtle)  
+- Color ramp: yellow → orange → red  
+- Emoji shorthand for Story Nodes:
+  - 🟨 `drought_moderate`  
+  - 🟧 `drought_severe`  
+  - 🟥 `drought_extreme`  
 
 ---
 
 ### 🌊 Flood & Inundation
 
-Symbol keys:
+**Keys**
 
-- `flood_minor` — Minor / recurring flood (for example bankfull level)  
-- `flood_major` — Major flood (historical, for example 1903, 1951, 1993 events)  
-- `flood_flash` — Flash flooding from convective storms
+- `flood_minor` — bankfull / nuisance flooding  
+- `flood_major` — historical major floods (for example 1903, 1951, 1993)  
+- `flood_flash` — flash flooding from convective storms  
 
-Visual guidance:
+**Visual guidance**
 
-- Wave-shaped glyph (three arcs) in deep blue (`#2c5282`)  
-- Major floods: thicker wave lines plus halo  
+- Wave glyph (three arcs) in deep blue  
+- Major floods: thicker wave lines + halo  
 - Flash floods: wave glyph plus lightning bolt overlay  
 
-Where possible, pair with **extent polygons** (flooded area) and use the glyph at a representative centroid.
+Where possible, major floods should be paired with **extent polygons**; the glyph marks a representative reach or centroid.
 
 ---
 
 ### 🌬 Wind, Storms & Severe Weather
 
-Symbol keys:
+**Keys**
 
-- `wind_high` — High wind (for example ≥ 40 mph sustained)  
-- `storm_severe` — Severe storm cluster (hail, wind, tornado proxies)  
-- `tornado_cluster` — Cluster representing tornado outbreak (not individual tracks)
+- `wind_high` — sustained high winds  
+- `storm_severe` — severe storm cluster (hail, wind, tornado proxies)  
+- `tornado_cluster` — tornado outbreak cluster (not individual tracks)  
 
-Visual guidance:
+**Visual guidance**
 
-- Wind: streamlined arrow glyph; orientation can encode prevailing direction  
-- Severe storm: cloud plus lightning motif  
-- Tornado cluster: stylized funnel icon (used sparingly; tracks and polygons are preferred for detail)
+- Wind: streamlined arrow; orientation encodes prevailing direction  
+- Severe storm: cloud + lightning motif  
+- Tornado cluster: stylized funnel glyph, used sparingly (paths/polygons preferred for detail)
 
-> ⚠️ **Ethical note:** Do **not** encode social vulnerability directly in symbols (no skull or “catastrophe” icons). Vulnerability and impacts must be communicated via contextual overlays and Story Node text, not stigmatizing glyphs.
+> ⚠️ **Ethical rule:**  
+> Do **not** encode social vulnerability or impact with fear-based symbols (skulls, disaster icons).  
+> Represent risk through context, overlays, and narrative text rather than stigmatizing glyphs.
 
 ---
 
 ### 📊 Climate Indices & Composites
 
-Symbol keys:
+**Keys**
 
-- `index_pdsiextr` — Extreme Palmer Drought Severity Index values  
-- `index_spi` — Standardized Precipitation Index anomalies  
-- `index_heatwave` — Heatwave duration index (for example days above threshold)
+- `index_pdsiextr` — extreme Palmer Drought Severity Index  
+- `index_spi` — Standardized Precipitation Index  
+- `index_heatwave` — heatwave duration index  
 
-Visual guidance:
+**Visual guidance**
 
-- Rounded square glyph with internal bar or line indicating index magnitude  
-- Neutral gray border, inner color mapped to sign (cool vs warm; wet vs dry)  
-- These symbols often appear on **Story Node cards** as badges rather than main map icons.
+- Rounded square glyph containing a bar/line representing index magnitude  
+- Neutral frame; inner color indicates sign (wet/dry, cool/warm)  
 
 ---
 
 ## 🎨 Cartographic & Accessibility Rules
 
-To comply with **accessibility** and **cartographic** standards:
+- **Size**
+  - ≥ 32×32 px on interactive maps  
+  - ≥ 16 pt on A4/Letter 300 dpi exports  
 
-- **Minimum map size**  
-  - Interactive map: symbols must be legible at roughly 32 × 32 px at common zoom levels.  
-  - Print exports: 16 pt minimum icon size on A4 or Letter at 300 dpi.
+- **Redundancy**
+  - Use **shape + color + text label** together for severity.  
+  - Never rely on color alone.
 
-- **Redundancy**  
-  - Use shape + color + label together. Do not rely on color alone to encode severity.
+- **Contrast**
+  - All glyphs must maintain **WCAG 2.1 AA** contrast against the basemap.  
+  - Prefer dark outlines around light fills and vice versa.
 
-- **Contrast**  
-  - All symbol strokes and fills must maintain WCAG 2.1 AA contrast against basemap tones.  
-  - Prefer dark outlines around light fills and light outlines around dark fills.
+- **Labeling**
+  - In dense areas, use aggregated symbols with counts (“15 tornadoes”) and show detail in Focus Mode panels.
 
-- **Label rules**  
-  - For dense maps, use aggregate symbols (for example `tornado_cluster`) with labels such as “15 events”.  
-  - On hover or click, show detailed breakdown in a popup or Focus Mode side panel.
-
-- **Cultural sensitivity**  
-  - Avoid iconography that trivializes harm or disaster.  
-  - Use neutral, informative metaphors (water, sun, clouds, etc.).
+- **Cultural sensitivity**
+  - Use neutral meteorological metaphors (water, wind, sun, clouds).  
+  - Avoid imagery that trivializes harm or disaster.
 
 ---
 
-## 🧩 Integration with Story Nodes & Focus Mode
+## 🧩 Story Node & Focus Mode Integration
 
-Climate symbols integrate tightly with:
+### Story Node Usage
 
-- Story Node schema (`story-node.schema.json`)  
-- Focus Mode v2 entity-centric views  
-- STAC Items and Collections for climate layers  
+Story Nodes may embed climate symbols using a lightweight placeholder syntax:
 
-### Story Node alignment
+    "Conditions were {symbol:drought_extreme} extreme drought across central Kansas in 1934."
 
-For each Story Node with climate context:
+Renderer responsibilities:
 
-- `spacetime.geometry` and `spacetime.when` locate the climate event or condition.  
-- `narrative.body` may reference a symbol key using a lightweight convention.  
+- Replace `{symbol:drought_extreme}` with the correct SVG/emoji  
+- Add the referenced symbol to the map legend  
+- Log symbol usage in telemetry for explainability traces  
 
-Example snippet inside a narrative string:
+### Focus Mode Behavior
 
-- “Conditions were **{symbol:drought_extreme} extreme drought** across central Kansas in 1934.”
+When Focus Mode is centered on:
 
-During rendering, `{symbol:drought_extreme}` is replaced by the appropriate SVG or emoji shorthand and the legend entry is activated.
+- **Place** — show aggregated climate badges (e.g., “Top 3 drought years”, “Major floods”).  
+- **Event** — highlight relevant symbols along the event geometry (river reach, storm track).  
+- **Story Node** — show climate badges in the Story Node header if climate is a primary dimension.
 
-### Focus Mode behavior
-
-When a user focuses on:
-
-- A **Place**  
-  - Map and story panel show aggregate climate badges (for example “Top 3 drought years”, “Major floods”).  
-
-- An **Event**  
-  - Relevant climate symbols (for example flood glyphs along a river reach) are highlighted.  
-
-- A **Story Node**  
-  - Climate symbol badges appear in the header or summary if the node is climate-heavy.
-
-These behaviors are configured via `metadata/climate-symbols-story-nodes.json`.
+These bindings are configured in `metadata/climate-symbols-story-nodes.json`.
 
 ---
 
-## ⚙️ Data & Metadata Requirements
+## ⚙️ Metadata & STAC Requirements
 
-All climate symbols must be defined in **machine-readable metadata**.
+### Symbol catalog (`metadata/climate-symbols.json`)
 
-### Symbol catalog (conceptual)
-
-`metadata/climate-symbols.json` follows a structure similar to:
+Example entry:
 
     {
-      "version": "1.0.0",
-      "symbols": [
-        {
-          "id": "drought_extreme",
-          "category": "drought",
-          "label": "Extreme Drought",
-          "description": "USDM D4 or equivalent PDSI threshold.",
-          "svg": "svg/drought_extreme.svg",
-          "emoji": "🟥",
-          "severity": "extreme",
-          "data_mapping": {
-            "variable": "pdsiextr",
-            "min": -6,
-            "unit": "index"
-          }
-        }
-      ]
+      "id": "drought_extreme",
+      "category": "drought",
+      "label": "Extreme Drought",
+      "description": "USDM D4 or equivalent PDSI threshold.",
+      "svg": "svg/drought_extreme.svg",
+      "emoji": "🟥",
+      "severity": "extreme",
+      "data_mapping": {
+        "variable": "pdsiextr",
+        "min": -6,
+        "unit": "index"
+      }
     }
 
 Key fields:
 
-- `id` — canonical symbol key (used by Story Nodes, Focus Mode, and UI code)  
-- `category` — category name (temperature, precipitation, drought, etc.)  
-- `svg` / `emoji` — reference to assets plus emoji shorthand  
-- `data_mapping` — link back to underlying variables, units, thresholds  
+- `id` — canonical symbol key  
+- `category` — temperature, precipitation, drought, flood, etc.  
+- `svg` / `emoji` — primary glyphs  
+- `data_mapping` — link to variables, thresholds, and units  
 
-### STAC alignment
+### STAC alignment (`metadata/climate-symbols.stac.json`)
 
-`metadata/climate-symbols.stac.json` must register symbol assets as STAC `assets` with:
-
-- `roles` set to `["legend", "symbol"]`  
-- `type` set to `image/svg+xml` or `image/png`  
-- Descriptive `title` and (optionally) `description`  
-
-Example item (simplified):
+Example asset snippet:
 
     {
       "stac_version": "1.0.0",
@@ -375,110 +314,38 @@ Example item (simplified):
       }
     }
 
-### Story Node alignment
+### Story Node bindings (`metadata/climate-symbols-story-nodes.json`)
 
-`metadata/climate-symbols-story-nodes.json` maps symbol IDs to Story Node usage patterns, including:
+This file defines:
 
 - Default badge placement (header, sidebar, timeline card)  
 - Standard label strings  
-- Recommended contexts or node types (for example hydrology, historical, hazards)
+- Recommended usage contexts (disciplines, layer types)  
 
 ---
 
-## 🧪 QA, Validation & CI Hooks
+## 🧪 QA, Validation & CI
 
-Legend consistency is enforced through:
+Tests under `climate/tests/` enforce:
 
-- **Schema validation**  
-  - `metadata/climate-symbols.json` is validated against `schemas/legends/climate-symbols.schema.json`.  
+- JSON schema validity for `climate-symbols.json`  
+- File path integrity (all referenced SVG/PNG exist)  
+- Visual regression via golden snapshot images  
 
-- **Link checks**  
-  - All SVG and PNG paths referenced in metadata must exist.  
-
-- **Visual regression tests**  
-  - `tests/generate_previews.py` renders a test grid of symbols to `tests/snapshots/climate-symbols.png`.  
-  - CI compares against the golden snapshot to catch breaking visual changes.
-
-Recommended local command (exact target may be wired in `Makefile`):
+Local helper target:
 
     make test-legends-climate
     # Runs:
     #  python docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/climate/tests/validate_metadata.py
     #  python docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/climate/tests/generate_previews.py
 
-Any failure in these tests should block merges until resolved.
-
----
-
-## 📚 End-to-End Example (Symbol + STAC + Story Node)
-
-This example ties a climate symbol into both STAC metadata and a Story Node.
-
-1️⃣ **Symbol catalog entry (`metadata/climate-symbols.json`):**
-
-    {
-      "id": "flood_major",
-      "category": "flood",
-      "label": "Major Flood",
-      "description": "Historical major flood with documented impacts.",
-      "svg": "svg/flood_major.svg",
-      "emoji": "🌊",
-      "severity": "severe",
-      "data_mapping": {
-        "variable": "streamflow_anomaly",
-        "threshold": "Q > Q100",
-        "unit": "m³/s"
-      }
-    }
-
-2️⃣ **STAC item asset (`metadata/climate-symbols.stac.json` snippet):**
-
-    {
-      "stac_version": "1.0.0",
-      "type": "Item",
-      "id": "legend-symbols-climate-v1",
-      "collection": "kfm-legends",
-      "properties": {
-        "datetime": "1951-07-10T00:00:00Z",
-        "kfm:legend_type": "symbols-climate"
-      },
-      "assets": {
-        "flood_major_svg": {
-          "href": "svg/flood_major.svg",
-          "type": "image/svg+xml",
-          "roles": ["legend", "symbol"],
-          "title": "Major Flood Icon"
-        }
-      }
-    }
-
-3️⃣ **Story Node snippet referencing the symbol:**
-
-    {
-      "id": "storynode-kansas-river-flood-1951",
-      "type": "story-node",
-      "title": "The Great 1951 Kansas River Flood",
-      "summary": "A devastating flood that reshaped communities along the Kansas River.",
-      "narrative": {
-        "body": "In July 1951, a series of heavy rains led to a {symbol:flood_major} major flood along the Kansas River..."
-      },
-      "spacetime": {
-        "geometry": { "type": "LineString", "coordinates": [/* simplified */] },
-        "when": {
-          "start": "1951-07-09T00:00:00Z",
-          "end": "1951-07-31T00:00:00Z",
-          "precision": "day"
-        }
-      }
-    }
-
-When rendered, `{symbol:flood_major}` is replaced with the climate icon and the legend entry is displayed on the map.
+CI MUST block merges on any legend-related test failure.
 
 ---
 
 ## 🕒 Version History
 
-| Version | Date       | Author        | Notes                                                                 |
-|--------|------------|---------------|-----------------------------------------------------------------------|
-| v10.2.2 | 2025-11-13 | KFM Docs AI   | Initial climate symbol legend spec for Focus Mode Story Nodes & maps. |
-| v10.2.3 | TBD        | TBD           | Planned: hail / ice, fire-weather, and uncertainty overlay symbols.   |
+| Version  | Date       | Author        | Notes                                                                     |
+|----------|------------|---------------|---------------------------------------------------------------------------|
+| v10.2.2  | 2025-11-13 | KFM Docs AI   | Initial climate symbol legend specification for Focus Mode Story Nodes.   |
+| v10.2.3  | 2025-11-13 | KFM Docs AI   | Heading hierarchy + directory layout aligned with KFM markdown standards. |
