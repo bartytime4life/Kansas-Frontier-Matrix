@@ -83,7 +83,7 @@ Goals:
 ## 🏗️ System Architecture (ASCII Diagram)
 
 flowchart TD
-  A["External Data (NOAA · USGS · KHS · Tribal · Sensors)"]
+  A["External Data (NOAA, USGS, KHS, Tribal, Sensors)"]
   B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC)"]
   C["Neo4j Knowledge Graph (CIDOC CRM · GeoSPARQL · OWL-Time)"]
   D["APIs (FastAPI · GraphQL · Auth/Gov)"]
