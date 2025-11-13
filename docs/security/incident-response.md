@@ -1,8 +1,8 @@
 ---
 title: "🚨 Kansas Frontier Matrix — Security Incident Response & Recovery Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/security/incident-response.md"
-version: "v10.2.3"
-last_updated: "2025-11-09"
+version: "v10.2.4"
+last_updated: "2025-11-12"
 review_cycle: "Quarterly / FAIR+CARE Security Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
@@ -16,12 +16,12 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🚨 **Kansas Frontier Matrix — Security Incident Response & Recovery Framework**
+# 🚨 **Kansas Frontier Matrix — Security Incident Response & Recovery Framework**  
 `docs/security/incident-response.md`
 
 **Purpose:**  
 Define the **incident response (IR), investigation, and recovery framework** for the Kansas Frontier Matrix (KFM).  
-This document establishes procedures for detection, containment, eradication, recovery, and postmortem analysis of all security events under **FAIR+CARE**, **ISO 27035**, and **NIST 800-61r2** governance.
+This document establishes procedures for detection, containment, eradication, recovery, and postmortem analysis of all security events under **FAIR+CARE**, **ISO 27035**, and **NIST 800-61r2**, with telemetry-backed sustainability and ethics reporting.
 
 [![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -34,7 +34,19 @@ This document establishes procedures for detection, containment, eradication, re
 ## 📘 Overview
 
 The **Incident Response & Recovery Framework (IRRF)** coordinates detection, reporting, mitigation, and ethical management of security incidents across the KFM ecosystem.  
-All incidents — from vulnerability exploitation to data misuse — are governed through FAIR+CARE ethical standards and auditable ISO-compliant processes ensuring transparency, accountability, and minimal impact.
+All incidents — from exploited vulnerabilities and suspicious access patterns to model misuse and data exposure — are processed through **FAIR+CARE ethical standards** and **ISO-compliant** procedures to ensure:
+
+- Rapid detection and triage  
+- Minimal harm to communities and data subjects  
+- Transparent documentation and learning  
+- Measured energy and sustainability impact  
+
+IR is tightly integrated with:
+
+- `vulnerability-management.md` (prevention + risk)  
+- `threat-model.md` (proactive modeling)  
+- `secrets-policy.md` (credential hygiene)  
+- `supply-chain.md` (provenance and SBOM integrity)
 
 ---
 
@@ -56,11 +68,11 @@ docs/security/
 
 ```mermaid
 flowchart TD
-  A["Detection & Alerting (Telemetry / IDS / CI-CD)"] --> B["Classification (Severity / Scope / FAIR+CARE Ethics)"]
-  B --> C["Containment (Short-term + Long-term Mitigations)"]
-  C --> D["Eradication & Recovery (Patch / Restore / Validate)"]
-  D --> E["Post-Incident Analysis (Root Cause + FAIR+CARE Audit)"]
-  E --> F["Governance Ledger + Continuous Improvement"]
+  A["Detection & Alerting (Telemetry / IDS / CI-CD / Users)"] --> B["Classification (Severity · Scope · FAIR+CARE Impact)"]
+  B --> C["Containment (Short-term & Long-term)"]
+  C --> D["Eradication & Recovery (Patch · Restore · Validate)"]
+  D --> E["Post-Incident Analysis (RCA + FAIR+CARE Audit)"]
+  E --> F["Governance Ledger Entry + Process Improvements"]
 ```
 
 ---
@@ -68,34 +80,41 @@ flowchart TD
 ## ⚙️ Core Response Phases
 
 | Phase | Description | Responsible Team | Standards |
-|--------|--------------|------------------|------------|
-| **Preparation** | Define IR policies, train response team, automate alerting | FAIR+CARE Security Council | ISO 27035 / NIST 800-61 |
-| **Detection & Analysis** | Identify suspicious activity, classify severity and ethical impact | DevSecOps / SOC | FAIR+CARE / CVSS / ISO 50001 |
-| **Containment** | Limit spread of attack and protect critical data assets | Incident Response Team | Zero-Trust / Network Segmentation |
-| **Eradication & Recovery** | Remove threat, restore systems, verify data integrity | Ops & Security | SLSA / SBOM Validation |
-| **Post-Incident** | Document root cause, energy impact, and ethical assessment | Governance & Compliance | FAIR+CARE Ledger / ISO 9001 |
+|---|---|---|---|
+| **Preparation** | Define IR policies, playbooks, and runbooks; train responders; simulate incidents. | FAIR+CARE Security Council / DevSecOps | ISO 27035 / NIST 800-61 |
+| **Detection & Analysis** | Monitor telemetry, alerts, and reports; confirm incident; classify severity + ethical impact. | DevSecOps / SOC / AI Ops | FAIR+CARE / CVSS / ISO 50001 |
+| **Containment** | Limit damage by isolating systems, accounts, or datasets; protect evidence. | Incident Response Team | Zero-Trust / Network Segmentation |
+| **Eradication & Recovery** | Remove root cause, patch systems, restore services, re-validate integrity with SBOM/SLSA. | Ops & Security | SLSA / SBOM Validation |
+| **Post-Incident** | Perform root cause analysis (RCA), ethics review, and sustainability assessment; update docs and controls. | Governance & Compliance | FAIR+CARE Ledger / ISO 9001 |
 
 ---
 
 ## 🚨 Incident Classification Matrix
 
-| Severity | Definition | FAIR+CARE Ethical Risk | Response Time |
-|-----------|-------------|------------------------|----------------|
-| **Critical** | Active exploit / Data breach in progress | High social, cultural, or privacy impact | ≤ 4 hours |
-| **High** | Service or data exposure risk | Moderate ethical impact | ≤ 24 hours |
-| **Medium** | Contained vulnerability or insider issue | Low ethical exposure | ≤ 72 hours |
-| **Low** | Non-critical system event or false positive | Negligible impact | ≤ 1 week |
+| Severity | Definition | FAIR+CARE Ethical Risk | Response Time Target |
+|---|---|---|---|
+| **Critical** | Active exploit, confirmed data breach, or high-impact model misuse in progress. | Severe social, cultural, or privacy impact. | Triage ≤ 1h, mitigation ≤ 4h |
+| **High** | Exploitable issue with strong indicators of compromise or data exposure risk. | Moderate to high ethical impact. | Triage ≤ 4h, mitigation ≤ 24h |
+| **Medium** | Contained vulnerability or localized misconfiguration, no confirmed exposure. | Low to moderate ethical impact. | Mitigation ≤ 72h |
+| **Low** | Non-critical event, anomaly, or near-miss with negligible impact. | Minimal ethical exposure. | Resolution ≤ 7 days |
+
+Each incident severity decision must consider:
+
+- Potential harm to communities and individuals  
+- Legal/treaty obligations and MOUs  
+- Data sensitivity (especially CARE-governed datasets)  
 
 ---
 
 ## 🔍 Detection & Alerting Channels
 
 | Source | Description | Telemetry Type | FAIR+CARE Validation |
-|---------|-------------|----------------|----------------------|
-| **CI/CD Logs** | GitHub Actions, Trivy, and CodeQL alerts | Build telemetry | ✅ Compliant |
-| **Runtime Monitoring** | System logs, IDS/IPS alerts | Operational telemetry | ✅ Compliant |
-| **Dependency Scanners** | SBOM and SLSA provenance alerts | Supply-chain telemetry | ✅ Compliant |
-| **Governance Ledger** | FAIR+CARE ethical triggers | Governance telemetry | ✅ Compliant |
+|---|---|---|---|
+| **CI/CD Security** | GitHub Actions, CodeQL, Trivy, SBOM diffs, SLSA checks. | Build & supply-chain telemetry. | ✅ Integrated into `focus-telemetry.json` |
+| **Runtime Monitoring** | Service logs, IDS/IPS, API gateway alerts, rate-limit triggers. | Operational telemetry. | ✅ Logged per release |
+| **AI Behavior Monitors** | Prompt injection anomalies, unusual tool calls, refusal spikes/drops. | AI safety telemetry. | ✅ Reviewed by Ethics Subcommittee |
+| **User/Community Reports** | Responsible disclosures and community feedback. | Governance telemetry. | ✅ Fed into FAIR+CARE review queues |
+| **Governance Signals** | Sovereign notices, revocations, CARE forms. | Governance/ethics telemetry. | ✅ Tracked in Governance Ledger |
 
 ---
 
@@ -103,23 +122,26 @@ flowchart TD
 
 ```json
 {
-  "incident_id": "irrf-2025-11-09-0230",
+  "incident_id": "irrf-2025-11-12-0230",
   "type": "Supply Chain Compromise",
-  "detected_by": "Trivy / Dependabot",
+  "detected_by": ["Trivy", "Dependabot"],
   "severity": "High",
-  "response_start": "2025-11-09T18:40:00Z",
-  "response_end": "2025-11-09T19:20:00Z",
+  "response_start": "2025-11-12T05:10:00Z",
+  "response_end": "2025-11-12T05:50:00Z",
   "duration_minutes": 40,
   "containment_actions": [
-    "Artifact quarantine",
-    "Rebuild from verified provenance",
-    "SBOM revalidation"
+    "Quarantined affected container images",
+    "Disabled impacted deployment environment",
+    "Rebuilt artifacts from verified provenance",
+    "Regenerated SBOM and re-ran SLSA checks"
   ],
-  "energy_joules": 14.3,
-  "carbon_gCO2e": 0.0058,
-  "ethical_risk": "Moderate (Data provenance uncertainty)",
-  "status": "Resolved",
-  "auditor": "FAIR+CARE Security Council"
+  "energy_wh": 4.0,
+  "carbon_gCO2e": 0.0016,
+  "ethical_risk": "Moderate (supply-chain trust uncertainty)",
+  "care_impacted": false,
+  "status": "resolved",
+  "auditor": "FAIR+CARE Security Council",
+  "timestamp": "2025-11-12T06:00:00Z"
 }
 ```
 
@@ -129,15 +151,15 @@ flowchart TD
 
 ```json
 {
-  "ledger_id": "incident-response-ledger-2025-11-09-0231",
+  "ledger_id": "incident-response-ledger-2025-11-12-0231",
   "component": "Incident Response Framework",
-  "incidents_logged": 3,
-  "energy_joules": 14.3,
-  "carbon_gCO2e": 0.0058,
-  "mean_response_time_minutes": 42,
-  "audit_status": "Pass",
+  "incidents_logged": 4,
+  "mean_response_time_minutes": 38,
+  "energy_wh": 4.0,
+  "carbon_gCO2e": 0.0016,
+  "audit_status": "pass",
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T19:10:00Z"
+  "timestamp": "2025-11-12T06:05:00Z"
 }
 ```
 
@@ -146,43 +168,72 @@ flowchart TD
 ## 🧠 Post-Incident Analysis & Ethics Review
 
 | Step | Description | Responsible Party |
-|------|--------------|------------------|
-| **Root Cause Analysis (RCA)** | Identify technical, human, and governance root causes | Security & DevOps |
-| **Ethical Review** | Assess social and data impact under FAIR+CARE | FAIR+CARE Ethics Board |
-| **Telemetry Audit** | Review energy and sustainability metrics | Sustainability Office |
-| **Documentation** | Publish de-identified postmortem and lessons learned | Security Council |
-| **Governance Update** | Amend threat model and workflows | Governance Committee |
+|---|---|---|
+| **Root Cause Analysis (RCA)** | Identify technical, process, and human factors that caused or enabled the incident. | Security & DevOps |
+| **Ethical Review** | Evaluate cultural, social, or privacy impacts under FAIR+CARE and sovereignty frameworks. | FAIR+CARE Ethics Board / Indigenous Partners (when relevant) |
+| **Telemetry & Sustainability Review** | Assess energy and carbon impact of detection, response, and remediation. | Sustainability Office |
+| **Documentation & Knowledge Sharing** | Publish de-identified postmortems and integrate lessons into threat models, runbooks, and training. | Security Council |
+| **Governance & Control Updates** | Update controls in `threat-model.md`, `supply-chain.md`, `secrets-policy.md`, or CI policies. | Governance Committee |
+
+---
+
+## 📜 Incident Runbooks (Examples)
+
+### 1) Supply Chain Incident
+
+1. Freeze affected artifacts and deployments.  
+2. Quarantine impacted containers, packages, or images.  
+3. Rebuild from trusted source commit with SLSA attestations.  
+4. Regenerate SBOM and re-run vulnerability scanners.  
+5. Validate no unauthorized changes in STAC/DCAT catalogs or AI models.  
+6. Log full IRRF entry and update threat model.
+
+### 2) AI Misuse / Prompt Injection Incident
+
+1. Disable the affected AI endpoint or mode.  
+2. Capture offending prompts, context segments, and tool-call traces.  
+3. Reproduce in offline sandbox; identify exploit pattern.  
+4. Update prompt-injection defenses (`prompt-injection-defense.md`, sanitizer rules).  
+5. Add adversarial case to `prompt-attack-test.yml`.  
+6. If cultural/CARE data involved, coordinate with affected communities and record outcomes in CARE-ledger.
 
 ---
 
 ## ⚖️ FAIR+CARE & ISO Compliance Matrix
 
 | Principle | Implementation | Verification Source |
-|------------|----------------|--------------------|
-| **Findable** | Incident logs recorded in FAIR+CARE Ledger | `telemetry_ref` |
-| **Accessible** | Controlled access to postmortem reports | `manifest_ref` |
-| **Interoperable** | JSON-LD structured incident metadata | `telemetry_schema` |
-| **Reusable** | Lessons learned integrated into playbooks | FAIR+CARE Ledger |
-| **Responsibility** | ISO 27035 / ISO 50001 telemetry integration | `telemetry_ref` |
-| **Ethics** | FAIR+CARE ethical oversight for all incidents | FAIR+CARE Ethics Audit |
+|---|---|---|
+| **Findable** | Incidents and resolutions indexed by IDs and time in Governance Ledger. | `telemetry_ref`, ledger exports |
+| **Accessible** | De-identified postmortems available to contributors; sensitive details protected. | Postmortem docs, access logs |
+| **Interoperable** | JSON-based incident schemas; consistent metadata across tools. | `telemetry_schema`, IR reports |
+| **Reusable** | Lessons learned feed threat models, runbooks, and training content. | `threat-model.md`, training docs |
+| **Responsibility** | ISO 27035-aligned escalation and reporting pipeline. | IR audits, board reviews |
+| **Ethics (CARE)** | Community impact is weighed before declaring incidents resolved; sovereign directives honored. | FAIR+CARE Ethics Review logs |
 
 ---
 
-## 🧮 Sustainability Metrics
+## 🌱 Sustainability Metrics
 
 | Metric | Description | Value | Target | Unit |
-|---------|-------------|--------|---------|------|
-| **Energy (J)** | Energy consumed per incident cycle | 14.3 | ≤ 15 | Joules |
-| **Carbon (gCO₂e)** | CO₂ emissions per IR workflow | 0.0058 | ≤ 0.006 | gCO₂e |
-| **Telemetry Coverage (%)** | FAIR+CARE trace completeness | 100 | ≥ 95 | % |
-| **Resolution Success (%)** | Successful mitigations per audit | 100 | 100 | % |
+|---|---|---|---|---|
+| **Energy (Wh)** | Energy used per full incident handling cycle. | 4.0 | ≤ 5.0 | Wh |
+| **Carbon (gCO₂e)** | CO₂ emissions per IR workflow. | 0.0016 | ≤ 0.003 | gCO₂e |
+| **Telemetry Coverage (%)** | Incidents recorded with telemetry + governance linkage. | 100 | ≥ 95 | % |
+| **Resolution Success (%)** | Incidents fully resolved and verified postmortem. | 100 | 100 | % |
+
+All metrics are aggregated into:
+
+```
+releases/v10.2.0/focus-telemetry.json
+```
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|--------|----------|
+|---|---|---|---|
+| v10.2.4 | 2025-11-12 | FAIR+CARE Security Council | Aligned IR framework with v10.2 telemetry and sustainability metrics; expanded AI misuse and supply-chain runbooks. |
 | v10.2.3 | 2025-11-09 | FAIR+CARE Security Council | Published incident response & recovery framework with FAIR+CARE ethics, ISO 27035 alignment, and telemetry integration. |
 | v10.2.2 | 2025-11-08 | Security Engineering Team | Added post-incident ethics review and RCA protocols. |
 | v10.2.0 | 2025-11-07 | KFM DevSecOps | Created baseline incident response documentation aligned with FAIR+CARE and ISO standards. |
@@ -191,10 +242,9 @@ flowchart TD
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
+© 2025 Kansas Frontier Matrix Project — CC-BY 4.0  
 Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Security Overview](./README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[Back to Security Overview](README.md) · [Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
