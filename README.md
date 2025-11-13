@@ -82,28 +82,17 @@ Goals:
 
 ## 🏗️ System Architecture (ASCII Diagram)
 
-    [External Data Sources]
-        NOAA · USGS · KHS · DASC · Tribal Archives · Sensors
-                 |
-                 v
-    [LangGraph ETL + AI Pipelines]
-        OCR · NER · STAC/DCAT ingestion · QA/QC · H3 generalization
-                 |
-                 v
-    [Neo4j Knowledge Graph]
-        CIDOC-CRM · GeoSPARQL · OWL-Time · PROV-O
-                 |
-                 v
-    [APIs]
-        FastAPI · GraphQL · Auth · Governance
-                 |
-                 v
-    [Frontend]
-        React · MapLibre · Cesium · Focus Mode v2.4
-                 |
-                 v
-    [Governance & Telemetry]
-        FAIR+CARE · SBOM · SLSA · Audit Ledger · Focus Telemetry
+  flowchart TD
+  A["External Data (NOAA · USGS · KHS · Tribal · Sensors)"]
+  B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC)"]
+  C["Neo4j Knowledge Graph (CIDOC CRM · GeoSPARQL · OWL-Time)"]
+  D["APIs (FastAPI · GraphQL · Auth/Gov)"]
+  E["Frontend (React · MapLibre · Cesium · Focus Mode v2.4)"]
+  F["Governance (FAIR+CARE · SBOM · SLSA · Audit Ledger)"]
+
+  A --> B --> C --> D --> E
+  B --> F
+  D --> F
 
 ---
 
