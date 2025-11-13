@@ -39,13 +39,13 @@ The **Kansas Frontier Matrix (KFM)** is a geospatial knowledge platform merging 
 
 Technologies:
 
-- LangGraph 1.0 (DAG-first agent architecture)
-- Dynamic Tool Calling (governance firewall)
-- CrewAI 1.4.x MCP stack (Neo4j, STAC, GDAL, OCR, NLP)
-- STAC 1.0 + Versioning Extension
-- DCAT 3.0 dataset catalogs
-- CIDOC-CRM + GeoSPARQL + OWL-Time + PROV-O
-- FAIR+CARE + Diamond⁹ Ω / Crown∞Ω governance
+- LangGraph 1.0 (DAG-first agent architecture)  
+- Dynamic Tool Calling (governance firewall)  
+- CrewAI 1.4.x MCP stack (Neo4j, STAC, GDAL, OCR, NLP)  
+- STAC 1.0 + Versioning Extension  
+- DCAT 3.0 dataset catalogs  
+- CIDOC-CRM + GeoSPARQL + OWL-Time + PROV-O  
+- FAIR+CARE + Diamond⁹ Ω / Crown∞Ω governance  
 
 All datasets are checksummed, versioned, validated, and recorded in AI telemetry.
 
@@ -80,23 +80,36 @@ Goals:
 
 ---
 
-## 🏗️ System Architecture (Indented Mermaid)
+## 🏗️ System Architecture (ASCII Diagram)
 
-    flowchart TD
-        A["External Data (NOAA, USGS, KHS, Tribal, Sensors)"]
-        B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA)"]
-        C["Neo4j Knowledge Graph (CIDOC CRM · GeoSPARQL · OWL-Time)"]
-        D["APIs (FastAPI · GraphQL · Auth/Gov)"]
-        E["Frontend (React · MapLibre · Cesium · Focus Mode v2.4)"]
-        F["Governance (FAIR+CARE · SBOM · SLSA · Audit Ledger)"]
-        A --> B --> C --> D --> E
-        B --> F
-        E --> D
-        D --> C
+    [External Data Sources]
+        NOAA · USGS · KHS · DASC · Tribal Archives · Sensors
+                 |
+                 v
+    [LangGraph ETL + AI Pipelines]
+        OCR · NER · STAC/DCAT ingestion · QA/QC · H3 generalization
+                 |
+                 v
+    [Neo4j Knowledge Graph]
+        CIDOC-CRM · GeoSPARQL · OWL-Time · PROV-O
+                 |
+                 v
+    [APIs]
+        FastAPI · GraphQL · Auth · Governance
+                 |
+                 v
+    [Frontend]
+        React · MapLibre · Cesium · Focus Mode v2.4
+                 |
+                 v
+    [Governance & Telemetry]
+        FAIR+CARE · SBOM · SLSA · Audit Ledger · Focus Telemetry
 
 ---
 
-## 🗂️ Repository Layout
+## 🧱 Repository & Filesystem
+
+### 🗂️ Repository Layout
 
     KansasFrontierMatrix/
     ├── src/
@@ -160,10 +173,10 @@ Capabilities:
 
 Telemetry includes:
 
-- version_locked  
-- symbol_usage  
-- governance_flags  
-- explainability_tokens  
+- `version_locked`  
+- `symbol_usage`  
+- `governance_flags`  
+- `explainability_tokens`  
 
 ---
 
@@ -188,12 +201,12 @@ API: http://localhost:8000/docs
 
 1. Update documentation **before coding**.  
 2. Run:
-    
+
         make validate
         make test
-    
+
 3. Follow MCP-DL commit rules.  
-4. Sensitive-data PRs require FAIR+CARE gating.  
+4. Sensitive-data PRs require FAIR+CARE gating and governance review.  
 
 ---
 
@@ -203,7 +216,7 @@ API: http://localhost:8000/docs
 |----------|---------|
 | Code | MIT |
 | Docs & Data | CC-BY 4.0 |
-| SBOM | SPDX |
+| SBOM / Security Artifacts | SPDX |
 
 ---
 
@@ -211,18 +224,18 @@ API: http://localhost:8000/docs
 
 | Principle | Implementation |
 |----------|----------------|
-| Findable | STAC/DCAT indexing |
-| Accessible | Public APIs |
-| Interoperable | Linked ontologies |
-| Reusable | Version lineage |
-| CARE | Consent, authority, responsibility, ethics |
+| Findable | STAC/DCAT indexing & search |
+| Accessible | Public APIs + documented access rules |
+| Interoperable | Linked ontologies and open formats |
+| Reusable | Version lineage, DOIs, reproducible workflows |
+| CARE | Consent, authority, responsibility, ethics controls |
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
+| Version | Date       | Summary |
 |---------|------------|---------|
-| v10.3.1 | 2025-11-13 | Fully memory-rule aligned. Upgraded architecture to LangGraph + Dynamic Tool Calling + CrewAI MCP. |
-| v10.2.2 | 2025-11-12 | Expanded telemetry, improved FAIR+CARE audit ledger. |
-| v10.0.0 | 2025-11-09 | Initial v10 unified architecture. |
+| v10.3.1 | 2025-11-13 | Memory-rule aligned root README; ASCII architecture diagram; LangGraph + CrewAI + Dynamic Tool Calling integrated. |
+| v10.2.2 | 2025-11-12 | Expanded telemetry; Focus Mode v2.1; enhanced governance. |
+| v10.0.0 | 2025-11-09 | Initial v10 unified architecture and FAIR+CARE alignment. |
