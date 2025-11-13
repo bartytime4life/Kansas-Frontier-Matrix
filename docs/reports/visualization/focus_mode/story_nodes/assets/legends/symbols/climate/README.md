@@ -86,41 +86,32 @@ Out of scope for this file:
 
 #### 📁 Directory Layout
 
-```plaintext
-docs/
-└── reports/
-    └── visualization/
-        └── focus_mode/
-            └── story_nodes/
-                └── assets/
-                    └── legends/
-                        └── symbols/
-                            └── climate/
-                                ├── README.md                        # This document (spec + usage)
-                                │
-                                ├── svg/                             # Source vector icons (preferred assets)
-                                │   ├── temp_anomaly_cool.svg
-                                │   ├── temp_anomaly_warm.svg
-                                │   ├── precip_heavy.svg
-                                │   ├── drought_severe.svg
-                                │   ├── flood_major.svg
-                                │   ├── wind_high.svg
-                                │   ├── storm_severe.svg
-                                │   └── index_pdsiextr.svg
-                                │
-                                ├── png/                             # Raster exports for non-SVG contexts
-                                │   ├── temp_anomaly_cool@2x.png
-                                │   └── ...
-                                │
-                                ├── metadata/                        # Machine-readable symbol definitions
-                                │   ├── climate-symbols.json
-                                │   ├── climate-symbols.stac.json
-                                │   └── climate-symbols-story-nodes.json
-                                │
-                                └── tests/                           # Validation + visual regression tests
-                                    ├── snapshots/
-                                    ├── validate_metadata.py
-                                    └── generate_previews.py
+climate/
+|-- README.md                       # This document
+|
+|-- svg/                            # Source vector icons
+|   |-- temp_anomaly_cool.svg
+|   |-- temp_anomaly_warm.svg
+|   |-- precip_heavy.svg
+|   |-- drought_severe.svg
+|   |-- flood_major.svg
+|   |-- wind_high.svg
+|   |-- storm_severe.svg
+|   |-- index_pdsiextr.svg
+|
+|-- png/                            # Raster icons
+|   |-- temp_anomaly_cool@2x.png
+|   |-- ...
+|
+|-- metadata/                       # Machine-readable definitions
+|   |-- climate-symbols.json
+|   |-- climate-symbols.stac.json
+|   |-- climate-symbols-story-nodes.json
+|
+|-- tests/                          # QA + visual validation
+    |-- snapshots/
+    |-- validate_metadata.py
+    |-- generate_previews.py
 
 > ⚙️ **Implementation note:** Do **not** add ad-hoc icons outside `svg/` or `png/`. All new symbols must be cataloged in `metadata/climate-symbols.json` and referenced in the Story Node + STAC metadata.
 
