@@ -113,6 +113,7 @@ climate/
     |-- validate_metadata.py
     |-- generate_previews.py
 
+
 > ⚙️ **Implementation note:** Do **not** add ad-hoc icons outside `svg/` or `png/`. All new symbols must be cataloged in `metadata/climate-symbols.json` and referenced in the Story Node + STAC metadata.
 
 ---
