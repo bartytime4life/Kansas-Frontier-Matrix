@@ -82,6 +82,7 @@ Goals:
 
 ## 🏗️ System Architecture (ASCII Diagram)
 
+```mermaid
 flowchart TD
   A["External Data (NOAA, USGS, KHS, Tribal, Sensors)"]
   B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC)"]
@@ -93,6 +94,7 @@ flowchart TD
   A --> B --> C --> D --> E
   B --> F
   D --> F
+```
 
 ---
 
