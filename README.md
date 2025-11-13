@@ -82,17 +82,17 @@ Goals:
 
 ## 🏗️ System Architecture (ASCII Diagram)
 
-    flowchart TD
-      A["External Data (NOAA · USGS · KHS · Tribal · Sensors)"]
-      B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC)"]
-      C["Neo4j Knowledge Graph (CIDOC CRM · GeoSPARQL · OWL-Time)"]
-      D["APIs (FastAPI · GraphQL · Auth/Gov)"]
-      E["Frontend (React · MapLibre · Cesium · Focus Mode v2.4)"]
-      F["Governance (FAIR+CARE · SBOM · SLSA · Audit Ledger)"]
+flowchart TD
+  A["External Data (NOAA · USGS · KHS · Tribal · Sensors)"]
+  B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC)"]
+  C["Neo4j Knowledge Graph (CIDOC CRM · GeoSPARQL · OWL-Time)"]
+  D["APIs (FastAPI · GraphQL · Auth/Gov)"]
+  E["Frontend (React · MapLibre · Cesium · Focus Mode v2.4)"]
+  F["Governance (FAIR+CARE · SBOM · SLSA · Audit Ledger)"]
 
-      A --> B --> C --> D --> E
-      B --> F
-      D --> F
+  A --> B --> C --> D --> E
+  B --> F
+  D --> F
 
 ---
 
