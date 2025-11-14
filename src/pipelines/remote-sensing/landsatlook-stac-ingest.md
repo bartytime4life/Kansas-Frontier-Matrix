@@ -1,5 +1,3 @@
-Here’s a ready-to-drop, GitHub‑safe Markdown spec that adds a complete “LandsatLook → STAC → Neo4j” ingestion loop to your KFM stack (one box, follows the Kansas Frontier Matrix — Markdown Output Protocol).
-
 ---
 title: "🛰️ Kansas Frontier Matrix — LandsatLook STAC Ingestion & Neo4j Publishing (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/remote-sensing/landsatlook-stac-ingest.md"
