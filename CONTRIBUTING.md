@@ -1,29 +1,36 @@
 ---
-title: "🤝 Kansas Frontier Matrix — Contribution Guidelines (MCP-DL v6.3 · Platinum README v7.1)"
+title: "🤝 Kansas Frontier Matrix — Contribution Guidelines (Diamond⁹ Ω / Crown∞Ω · MCP-DL v6.3 · Platinum README v7.1)"
 path: "CONTRIBUTING.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
+version: "v10.3.1"
+last_updated: "2025-11-13"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "releases/v9.7.0/manifest.zip"
-telemetry_ref: "releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/docs-contributing-v1.json"
+sbom_ref: "releases/v10.3.1/sbom.spdx.json"
+manifest_ref: "releases/v10.3.1/manifest.zip"
+telemetry_ref: "releases/v10.3.1/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/docs-contributing-v2.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT / CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🤝 **Kansas Frontier Matrix — Contribution Guidelines**
+# 🤝 **Kansas Frontier Matrix — Contribution Guidelines**  
 `CONTRIBUTING.md`
 
-**Purpose:** Define a **documentation-first**, **FAIR+CARE-aligned** process for contributing code, data, and documentation to the Kansas Frontier Matrix (KFM).  
-All contributions are validated by CI/CD and logged in governance ledgers to ensure **reproducibility**, **traceability**, and **ethical compliance**.
+**Purpose:**  
+Define the complete, **documentation-first**, **FAIR+CARE-aligned**, **MCP-certified** workflow for contributing **code, data, models, Story Nodes, ETL pipelines, STAC Collections, UI components, and graph structures** to the Kansas Frontier Matrix (KFM).  
+All contributions must pass the **Diamond⁹ Ω / Crown∞Ω Governance Standard**, meaning:  
+- **Reproducibility** (deterministic builds, documented steps)  
+- **Traceability** (commit → artifact → ledger → STAC/DCAT → graph)  
+- **Ethical compliance** (CARE sovereignty, heritage protection, H3 generalization)  
+- **Validation** (CI/CD, lint, schema, FAIR+CARE, security, telemetry)
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](docs/README.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT%20%2F%20CC--BY%204.0-green)](LICENSE)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](docs/standards/faircare.md)
-[![Status: Active](https://img.shields.io/badge/Status-Automated-success)]()
+[![Status](https://img.shields.io/badge/Status-Automated-success)]()
 
 </div>
 
@@ -31,219 +38,329 @@ All contributions are validated by CI/CD and logged in governance ledgers to ens
 
 ## 📘 Overview
 
-KFM operates as a **single MCP-governed monorepo**. All changes must be:  
-- Documented (YAML front-matter + README updates)  
-- Validated (schema, FAIR+CARE, security)  
-- Traceable (commit SHA, telemetry, governance ledgers)
+KFM v10.x is a **fully containerized**, **FAIR+CARE-compliant**, **MCP-governed**, documentation-driven monorepo.  
+All contributions must adhere to:
+
+- **Platinum README v7.1 formatting**
+- **Markdown Structural Rules**
+- **Semantic versioning**
+- **Provenance + SBOM + SLSA**
+- **Graph schema migration protocols**
+- **Dataset contract requirements**
+- **Story Node narrative standards**
+- **AI model governance**
+
+Every PR must ship **code + documentation + metadata** together, with **no undocumented behavior**.  
+If it’s not documented, it does not exist.
 
 ---
 
-## 🗂️ Repository Layout
+## 🗂️ Repository Layout (Authoritative Structure)
 
 ```
+
 KansasFrontierMatrix/
-├── src/             # ETL/AI logic, API, graph integration
-├── web/             # React + MapLibre application
-├── data/            # Raw→processed data & STAC
-├── docs/            # Standards, templates, pipelines, reports
-├── tools/           # Ingest/validation utilities
-├── tests/           # Unit & integration suites
-├── .github/         # Workflows & issue templates
-├── Makefile         # Orchestration entrypoints
-└── CONTRIBUTING.md  # This file
-```
+├── src/
+│   ├── ai/                # Focus Transformer v2, summarizers, explainability
+│   ├── api/               # FastAPI + GraphQL endpoints
+│   ├── graph/             # Neo4j schema, queries, migrations
+│   ├── pipelines/
+│   │   ├── etl/           # Batch ETL (OCR → NER → STAC/DCAT → Neo4j)
+│   │   ├── etl/streaming/ # Kafka/WebSocket streaming ingestion
+│   │   ├── ai/            # AI-augmented pipeline steps
+│   │   ├── validation/    # Schema, STAC, DCAT, FAIR+CARE verify
+│   │   └── utils/         # Shared helpers
+│   └── telemetry/         # OpenTelemetry, metrics, dashboards
+├── web/                   # React + MapLibre + Cesium client
+├── data/
+│   ├── sources/           # Dataset contracts (JSON)
+│   ├── raw/               # Pulled data (LFS/DVC pointers)
+│   ├── processed/         # Cleaned GeoJSON/COG/CSV
+│   └── stac/              # STAC 1.0.0 catalogs (Items/Collections)
+├── docs/                  # Standards, governance, pipelines, templates
+├── tools/                 # STAC validators, ingest scripts, converters
+├── tests/                 # Unit + integration tests
+├── .github/               # Actions, issue templates, PR templates
+└── Makefile               # Orchestration entrypoints
+
+````
 
 ---
 
-## 📜 Guiding Principles
+## 📜 Guiding Principles (v10.3.1)
 
-1. **Documentation-First:** Ship docs and manifests in the same PR as code/data.  
-2. **Reproducibility:** Provide commands, parameters, dataset URLs, and environment notes.  
-3. **Open Standards:** Markdown, JSON/YAML, GeoJSON/GeoTIFF, STAC/DCAT, SPDX.  
-4. **FAIR+CARE:** Respect open data ethics and Indigenous data sovereignty.  
-5. **Transparency:** Use semantic versioning, changelogs, and provenance.  
-6. **Validation:** Merges require green CI across docs/data/code/security.
+1. **Documentation-First**  
+   - Every feature must include a README, schema, or narrative.  
+   - PRs without docs will not be reviewed.
+
+2. **Reproducibility**  
+   - Provide exact commands, environment, seeds, dataset URLs, and pipelines.
+
+3. **FAIR+CARE Compliance**  
+   - All data, metadata, and models must honor open-access ethics and Indigenous sovereignty.
+
+4. **Governance**  
+   - All contributions recorded in the governance ledger (auto-generated by CI).  
+   - CARE-restricted content requires reviewer approval.
+
+5. **Validation-Before-Merge**  
+   - No red checks. No warnings. No exceptions.
 
 ---
 
-## 🪶 Workflow for Contributions
+## 🧪 Contribution Workflow (Golden Path)
 
-### 1) Create a Topic Branch
+### 1️⃣ Create a Topic Branch
 
 ```bash
-git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
-cd Kansas-Frontier-Matrix
-git checkout -b feature/<short-description>
-```
+git checkout -b feature/<short-kebab-name>
+````
 
-**Branch prefixes:** `feature/` · `fix/` · `docs/` · `data/` · `test/`.
+**Allowed prefixes:**
+`feature/` · `fix/` · `docs/` · `data/` · `model/` · `story/` · `refactor/` · `test/`
 
 ---
 
-### 2) Prepare the Change
+### 2️⃣ Prepare the Change
 
-#### 🧾 Code
-- Follow **PEP 8** (Python) and **ESLint**/**Prettier** (JS/TS).  
-- Include `README.md` in new modules and **docstrings** for public APIs.  
-- Add tests under `tests/` and run:
-  ```bash
-  make test
-  ```
+### 🧾 Code Contributions
 
-#### 🗺 Data
-- Add a **source manifest** in `data/sources/*.json`:
+* Python follows **PEP 8 + Black**
+* TypeScript follows **ESLint + Prettier**
+* Add **README.md** for all new modules
+* Add docstrings (public APIs) + schema references
+* Add tests:
+
+```bash
+make test
+```
+
+---
+
+### 🗺 Data Contributions (STAC/DCAT + Contract Required)
+
+Every dataset **must** include a **dataset contract** under `data/sources/*.json`.
+
+**Example Contract:**
 
 ```json
 {
   "id": "usgs_soils_1937",
   "title": "Historic Soil Survey Map (1937)",
-  "description": "Digitized soil survey layer for western Kansas.",
+  "description": "Digitized soil survey for western Kansas.",
   "type": "raster",
   "spatial": [-102.05, 37.0, -94.6, 40.0],
   "temporal": { "start": "1937-01-01", "end": "1937-12-31" },
   "license": "Public Domain",
-  "provenance": "USGS Historical Map Archive",
+  "provenance": "USGS Archive",
   "checksum": "sha256-<hex>",
-  "updated": "2025-11-05"
+  "care_label": "public",
+  "updated": "2025-11-13"
 }
 ```
 
-- Rasters → **COG** (WGS84/EPSG:4326).  
-- Vectors → **GeoJSON**.  
-- Validate:
-  ```bash
-  make validate
-  ```
+**Processing Requirements:**
 
-#### 🤖 AI / Models
-- Document with `docs/templates/model_card.md` (intended use, data, params, metrics, bias/ethics).  
-- Place outputs in `src/ai/models/<model_name>/`.
+* Raster → **Cloud-Optimized GeoTIFF (COG)**
+* Vector → **GeoJSON**
+* CRS → **EPSG:4326**
+* Validate:
+
+```bash
+make validate
+```
+
+---
+
+### 🤖 AI / Model Contributions (Model Cards Required)
+
+All models **must** include:
+
+* Model card (`docs/models/<model_name>.md`)
+* Training config
+* Data sources & licensing
+* Metrics + bias evaluation
+* Explainability setup (SHAP/LIME)
+* STAC Item for model artifacts
+
+Outputs stored under:
+
+```
+src/ai/models/<model_name>/
+```
+
+---
+
+### 📝 Story Node Contributions
+
+Story Nodes are narrative units used by Focus Mode & Story Cards.
+
+You must provide:
+
+* `story-node.json` (schema-valid)
+* Narrative body (`Markdown`)
+* Spatial footprint (GeoJSON)
+* Time interval (OWL-Time)
+* Relations to graph nodes
 
 ---
 
 ## ✏️ Documentation Requirements
 
-| Change Type | Doc Location | Example |
-|-------------|--------------|---------|
-| New pipeline | `src/pipelines/<name>/README.md` | ETL for NOAA climate |
-| New dataset | `data/sources/<id>.json` | `noaa_storms_1950_2025.json` |
-| Feature/UI  | `web/src/components/<feature>/README.md` | Timeline animation |
-| AI model     | `src/ai/models/<model>/README.md` | Focus Transformer v1 |
+| Contribution Type | Required Docs                            |
+| ----------------- | ---------------------------------------- |
+| New ETL pipeline  | `src/pipelines/<name>/README.md`         |
+| New dataset       | `data/sources/<id>.json` + STAC Item     |
+| New UI feature    | `web/src/components/<feature>/README.md` |
+| AI model          | Model card + training notes              |
+| Story Node        | JSON + narrative + relations             |
 
-**All docs** must follow `docs/standards/markdown_rules.md` and include YAML front-matter, badges, TOC (when long), and version history.
+All docs follow:
+
+* `docs/standards/markdown_rules.md`
+* **YAML front-matter**
+* **Centered header block**
+* **Badges**
+* **Version history**
+* **Mermaid format rule (` ```mermaid `)**
+
+---
+
+## 🪄 Example Mermaid Section (Required Style)
+
+Every Mermaid block must follow this structure:
+
+### 🧩 Architecture Example
+
+```mermaid
+flowchart TD
+  A["Input"]
+  B["Process"]
+  C["Output"]
+  A --> B --> C
+```
 
 ---
 
 ## 🧪 Local Validation Before PR
 
 ```bash
-make lint       # docs + code format checks
-make validate   # STAC/DCAT + FAIR+CARE + contracts
-make test       # unit/integration suites
+make lint       # docs + schema + formatting
+make validate   # STAC + DCAT + FAIR+CARE
+make test       # tests
 ```
 
-Commit only after all pass:
+Commit:
 
 ```bash
-git add .
-git commit -m "data: add NOAA storms (FAIR+CARE + STAC validated)"
-git push origin feature/noaa-storms
+git commit -m "data: add usgs_soils_1937 (STAC + FAIR+CARE validated)"
 ```
 
 ---
 
 ## 🔀 Pull Request Checklist
 
-- Clear **summary** (what/why/how)  
-- Updated READMEs / manifests  
-- Linked issues (e.g., *Closes #42*)  
-- All CI checks passing (badges appear in PR)
+* [ ] Summary (what/why/how)
+* [ ] Updated docs (README, contracts, Story Nodes)
+* [ ] STAC/DCAT generated
+* [ ] Graph migrations included
+* [ ] Tests added & passing
+* [ ] CI green
+* [ ] Governance ledger updated
 
-**Automated checks include:**
-- STAC/DCAT schema validation  
-- FAIR+CARE audit  
-- Markdown/YAML lint  
-- CodeQL & Trivy security scans  
-- Build & deploy (preview)
+PRs that break the **one-box Markdown rule**, violate **FAIR+CARE**, or omit **dataset contracts** will be rejected.
 
 ---
 
 ## 🧩 Issue Templates
 
-Located in `.github/ISSUE_TEMPLATE/`:
+Stored under `.github/ISSUE_TEMPLATE/`:
 
-| Template | Use |
-|----------|-----|
-| `data_submission.yml` | New dataset or STAC Item |
-| `feature_request.yaml` | Feature or improvement request |
-| `bug_report.yaml` | Reproducible defect report |
-| `governance_form.yml` | FAIR+CARE or ethics review |
-
-> Use **“N/A”** instead of “None” in dropdowns to avoid YAML parsing issues.
+| Template              | Purpose     |
+| --------------------- | ----------- |
+| `data_submission.yml` | New dataset |
+| `feature_request.yml` | Feature     |
+| `bug_report.yml`      | Bug         |
+| `governance_form.yml` | CARE review |
 
 ---
 
 ## 🔒 Governance & Ethics
 
-Contributors must uphold:
-
-- **Open Data Ethics:** Respect licensing, attribution, and community ownership.  
-- **Indigenous Data Sovereignty:** Apply CARE reviews for cultural datasets.  
-- **Transparency:** Public logs for versioning, authorship, and provenance.
-
-Breaches result in retraction and sanction per the **Governance Charter**.
+* Sensitive locations **must** undergo **H3 generalization**
+* CARE labels applied to every dataset & graph node
+* Provenance recorded in SBOM, DCAT, STAC, and graph
+* Treaty, Indigenous, or archaeological data requires governance approval
 
 ---
 
 ## 🧾 Conventional Commits
 
-| Type | Example | Purpose |
-|------|---------|---------|
-| `feat:` | `feat: add historic tornado layer` | New feature |
-| `fix:` | `fix: timeline scroll bug` | Bug fix |
-| `docs:` | `docs: update architecture diagrams` | Docs update |
-| `data:` | `data: integrate NOAA precipitation set` | Dataset add/update |
-| `test:` | `test: add API schema validation` | New tests |
-| `refactor:` | `refactor: optimize ETL pipeline` | Non-breaking improvements |
+| Type     | Example                                 |
+| -------- | --------------------------------------- |
+| `feat:`  | `feat: add treaty boundary diff layer`  |
+| `fix:`   | `fix: patch neo4j relation duplication` |
+| `docs:`  | `docs: update contributing guide`       |
+| `data:`  | `data: integrate Mesonet feed`          |
+| `model:` | `model: train Focus Transformer v2`     |
+| `story:` | `story: add Fort Larned narrative`      |
 
 ---
 
-## ⚙️ CI/CD Workflows (Workflow → Artifact Map)
+## ⚙️ CI/CD Workflows (v10.3.1)
 
-| Workflow | Purpose | Primary Artifacts |
-|----------|---------|-------------------|
-| `stac-validate.yml` | STAC 1.0.0 validation | `reports/self-validation/stac/_summary.json` |
-| `faircare-validate.yml` | FAIR+CARE audits & contracts | `reports/fair/faircare_summary.json` |
-| `docs-lint.yml` | Markdown/YAML/JSON lint | `reports/self-validation/docs/lint_summary.json` |
-| `codeql.yml` | Static code analysis | SARIF reports (`reports/security/codeql/`) |
-| `trivy.yml` | Container/dependency scanning | `reports/security/trivy/*.json` |
-| `build-and-deploy.yml` | Frontend build/deploy | `docs/reports/telemetry/build_metrics.json` |
+| Workflow                 | Purpose                      |
+| ------------------------ | ---------------------------- |
+| `stac-validate.yml`      | STAC 1.0 validation          |
+| `dcat-validate.yml`      | DCAT 3.0 validation          |
+| `faircare-validate.yml`  | CARE compliance & provenance |
+| `docs-lint.yml`          | Markdown + YAML + JSON lint  |
+| `model-audit.yml`        | Bias, drift, explainability  |
+| `codeql.yml`             | Static analysis              |
+| `trivy.yml`              | Vulnerability scanning       |
+| `build-and-deploy.yml`   | Bundle & deploy frontend     |
+| `neo4j-schema-guard.yml` | Graph schema validation      |
+
+Artifacts stored in:
+
+```
+reports/
+  ├── fair/
+  ├── security/
+  ├── self-validation/
+  ├── stac/
+  └── telemetry/
+```
 
 ---
 
 ## 🧭 Support & Questions
 
-- 📘 Docs Index: `docs/README.md`  
-- 🗺️ Data: `data/sources/README.md` (if present)  
-- 💬 Discussions: GitHub Discussions  
-- ⚖️ Governance: `docs/standards/governance/ROOT-GOVERNANCE.md`
+* Documentation: `docs/README.md`
+* Standards: `docs/standards/*`
+* Telemetry: `docs/telemetry/*`
+* Governance: `docs/standards/governance/ROOT-GOVERNANCE.md`
+* Discussions: GitHub Discussions
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | A. Barta | Alignment to MCP-DL v6.3; added workflow→artifact map and telemetry schema. |
-| v9.5.0 | 2025-10-20 | A. Barta | Improved FAIR+CARE guidance and dataset manifest example. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Initial contributor guide under MCP. |
+| Version | Date       | Author        | Summary                                                                                 |
+| ------- | ---------- | ------------- | --------------------------------------------------------------------------------------- |
+| v10.3.1 | 2025-11-13 | A. Barta      | Full v10 rewrite; MCP + Platinum README; Story Nodes; predictive ETL; STAC/DCAT bridge. |
+| v9.7.0  | 2025-11-05 | A. Barta      | Added workflow–artifact map; telemetry schemas.                                         |
+| v9.5.0  | 2025-10-20 | A. Barta      | FAIR+CARE updates; dataset contract expansion.                                          |
+| v9.0.0  | 2025-06-01 | KFM Core Team | Initial MCP contribution guide.                                                         |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Documentation Index](docs/README.md) · [Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
+Maintained under **Master Coder Protocol v6.3**
+FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+[Documentation Index](docs/README.md) · [Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
+```
