@@ -1,7 +1,7 @@
 ---
 title: "🛠️ Kansas Frontier Matrix — Web Utility Modules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/README.md"
-version: "v10.3.1"
+version: "v10.3.2"
 last_updated: "2025-11-13"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
@@ -23,10 +23,10 @@ mcp_version: "MCP-DL v6.3"
 Define the **reusable, deterministic TypeScript utilities** used across the KFM Web Platform.  
 These utilities provide **accessibility**, **provenance**, **schema validation**, **CARE-aware redaction**, and **telemetry instrumentation**, forming the backbone of Focus Mode v2.4 and all map/timeline UX logic.
 
-[![Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)]()  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
+<img alt="Docs" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
+<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
+<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" />
+<img alt="Status" src="https://img.shields.io/badge/Status-Stable-success" />
 
 </div>
 
@@ -41,21 +41,21 @@ The **utilities module** provides the pure, fully testable, cross–component lo
 - Runtime schema validation of all API DTOs  
 - CARE-aware redaction (sovereignty, sensitivity, restricted content)  
 - Formatting for dates, numbers, metadata labels  
-- Telemetry emission (WebVitals, ethics, a11y, energy/CO₂e est.)  
+- Telemetry emission (WebVitals, ethics, A11y, energy/CO₂e estimates)  
 
 All utilities MUST be:
 
 - **Pure functions**  
 - **Strictly typed**  
 - **Deterministic**  
-- **Side-effect free** (exceptions: telemetry emitters)  
+- **Side-effect free** (except for telemetry emitters)  
 - **Governance-aware**  
 
 These functions support **React components, hooks, Focus Mode, mapping, timeline, and Story Nodes**.
 
 ---
 
-## 🗂️ Directory Layout (v10.3.1)
+## 🗂️ Directory Layout (v10.3.2)
 
 ~~~~~text
 web/src/utils/
@@ -76,7 +76,8 @@ web/src/utils/
 **Purpose:**  
 Guarantee payload integrity from REST/GraphQL/STAC/DCAT by validating structure before it reaches UI components.
 
-**Enforces:**  
+**Enforces:**
+
 - Required fields for Focus Mode responses  
 - Required STAC/DCAT asset metadata  
 - Required entity fields (Person, Place, Event, StoryNode)  
@@ -93,10 +94,11 @@ If any guard test fails → **merge blocked**.
 **Purpose:**  
 Generate provenance badges, lineage chains, JSON-LD merges, citation chips, and governance deep links.
 
-**Features:**  
+**Features:**
+
 - Build provenance chips linking to STAC Items → DCAT → ledger  
 - CARE-aware provenance warnings (restricted dataset flags)  
-- Resolve dataset → storynode → event relationships  
+- Resolve dataset → StoryNode → Event relationships  
 - Normalize lineage references from API payloads  
 - Output consistent citation tokens  
 
@@ -114,7 +116,8 @@ Outputs must point to:
 **Purpose:**  
 Centralize **WCAG 2.1 AA** logic required across all components.
 
-**Includes:**  
+**Includes:**
+
 - Focus traps  
 - Skip link helpers  
 - ARIA role/landmark utilities  
@@ -122,9 +125,10 @@ Centralize **WCAG 2.1 AA** logic required across all components.
 - Screen-reader announcements  
 - Keyboard map/timeline navigation helpers  
 
-**Tokens referenced from:**  
+**Tokens referenced from:**
+
 ```
-docs/design/tokens/accessibility-tokens.md
+../../../docs/design/tokens/accessibility-tokens.md
 ```
 
 ---
@@ -134,7 +138,8 @@ docs/design/tokens/accessibility-tokens.md
 **Purpose:**  
 Normalize formatting for UI elements.
 
-**Contains:**  
+**Contains:**
+
 - `formatDate()` — ISO → human-readable  
 - `formatRange()` — time intervals  
 - `formatNumber()` — locale-aware formatting  
@@ -157,11 +162,11 @@ flowchart TD
 
 ---
 
-## 🧾 Example Utility Metadata Record (v10.3.1)
+## 🧾 Example Utility Metadata Record (v10.3.2)
 
 ~~~~~json
 {
-  "id": "web_utils_registry_v10.3.1",
+  "id": "web_utils_registry_v10.3.2",
   "modules": ["schemaGuards.ts", "provenance.ts", "a11y.ts", "formatters.ts"],
   "wcag_compliance": "2.1 AA",
   "fairstatus": "certified",
@@ -179,18 +184,19 @@ flowchart TD
 
 | Principle | Implementation | Oversight |
 |----------|----------------|-----------|
-| **Findable** | Utilities registered & indexed in governance ledgers | @kfm-data |
-| **Accessible** | WCAG 2.1 AA utility compliance | @kfm-accessibility |
-| **Interoperable** | JSON-LD, STAC/DCAT, DTO-aligned output | @kfm-architecture |
-| **Reusable** | Pure, testable utility functions | @kfm-design |
-| **Collective Benefit** | Ethical automation across UI workflows | @faircare-council |
-| **Authority to Control** | CARE-based redaction & consent logic | @kfm-governance |
-| **Responsibility** | Sustainability logging & ethical safeguards | @kfm-security |
-| **Ethics** | Prevent misuse of culturally sensitive content | @kfm-ethics |
+| **Findable** | Utilities registered & indexed in governance ledgers. | @kfm-data |
+| **Accessible** | WCAG 2.1 AA utility coverage and patterns. | @kfm-accessibility |
+| **Interoperable** | JSON-LD, STAC/DCAT, DTO-aligned outputs. | @kfm-architecture |
+| **Reusable** | Pure, testable utility functions across features. | @kfm-design |
+| **Collective Benefit** | Ethical automation across UI workflows. | @faircare-council |
+| **Authority to Control** | CARE-based redaction & consent logic enforced. | @kfm-governance |
+| **Responsibility** | Sustainability logging & ethical safeguards. | @kfm-security |
+| **Ethics** | Prevent misuse of culturally sensitive content. | @kfm-ethics |
 
-**Audit Paths:**  
-- FAIR+CARE: `docs/reports/fair/data_care_assessment.json`  
-- Provenance: `docs/reports/audit/data_provenance_ledger.json`
+**Audit Paths:**
+
+- FAIR+CARE: `../../../docs/reports/fair/data_care_assessment.json`  
+- Provenance: `../../../docs/reports/audit/data_provenance_ledger.json`
 
 ---
 
@@ -198,22 +204,22 @@ flowchart TD
 
 | Module | Description | Role |
 |--------|-------------|------|
-| `schemaGuards.ts` | Runtime DTO validators for Focus/STAC/DCAT/Graph | Data Integrity |
-| `provenance.ts` | JSON-LD lineage + citation chips + ledger linking | Governance / Provenance |
-| `a11y.ts` | ARIA/focus helpers, keyboard ops, announcements | Accessibility |
-| `formatters.ts` | Dates, numbers, labels, UI formatting | UI Consistency |
+| `schemaGuards.ts` | Runtime DTO validators for Focus/STAC/DCAT/Graph. | Data Integrity |
+| `provenance.ts` | JSON-LD lineage + citation chips + ledger linking. | Governance / Provenance |
+| `a11y.ts` | ARIA/focus helpers, keyboard ops, announcements. | Accessibility |
+| `formatters.ts` | Dates, numbers, labels, UI formatting. | UI Consistency |
 
 ---
 
 ## 🔐 CI/CD & Validation
 
 | Workflow | Purpose | Artifact |
-|----------|----------|----------|
-| `docs-lint.yml` | Markdown & metadata conformity | `reports/self-validation/docs/lint_summary.json` |
-| `build-and-deploy.yml` | Web integration & build health | `docs/reports/telemetry/build_metrics.json` |
-| `telemetry-export.yml` | Merge runtime metrics | `releases/v10.3.0/focus-telemetry.json` |
-| `codeql.yml` | Security scanning | `reports/security/codeql/*.sarif` |
-| `trivy.yml` | Dependency CVE scanning | `reports/security/trivy/*.json` |
+|----------|---------|----------|
+| `docs-lint.yml` | Markdown & metadata conformity. | `docs/reports/self-validation/docs/lint_summary.json` |
+| `build-and-deploy.yml` | Web integration & build health. | `docs/reports/telemetry/build_metrics.json` |
+| `telemetry-export.yml` | Merge runtime metrics. | `releases/v10.3.0/focus-telemetry.json` |
+| `codeql.yml` | Security scanning. | `docs/reports/security/codeql/*.sarif` |
+| `trivy.yml` | Dependency CVE scanning. | `docs/reports/security/trivy/*.json` |
 
 All modules must pass **strict TypeScript**, **A11y**, **FAIR+CARE**, and **schema** tests.
 
@@ -240,6 +246,7 @@ Telemetry stored in:
 
 | Version | Date | Author | Summary |
 |--------|--------|--------|---------|
+| v10.3.2 | 2025-11-13 | Web Architecture Team | Path/link alignment pass; kept v10.3.1 utility definitions; adjusted example + doc paths to repo-root style. |
 | v10.3.1 | 2025-11-13 | Web Architecture Team | Upgraded from v9.7.0 → v10.3.1; aligned with new utils layout & telemetry schema v2. |
 | v9.7.0 | 2025-11-05 | KFM Core Team | Previous utility registry baseline. |
 
