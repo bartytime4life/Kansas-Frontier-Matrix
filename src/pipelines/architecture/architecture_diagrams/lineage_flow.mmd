@@ -1,1 +1,9 @@
-y
+flowchart TD
+  A["Pipeline Execution<br/>Extract · Transform · Load"] --> B["Metadata Extraction<br/>Source IDs · Timestamps · Licenses"]
+  B --> C["Provenance Modeling<br/>PROV-O · CIDOC CRM Mappings"]
+  C --> D["Lineage Assembly<br/>Entities · Activities · Agents"]
+  D --> E["Integrity Layer<br/>Checksums · Hash Chains"]
+  E --> F["STAC/DCAT Enrichment<br/>kfm:provenance · kfm:care_label"]
+  F --> G["Lineage Record Export<br/>JSON-LD · Lineage Files"]
+  G --> H["Governance Ledger Update<br/>data_provenance_ledger.json"]
+  H --> I["Downstream Consumers<br/>Web UI · Focus Mode · Analyses · Audits"]
