@@ -1,14 +1,14 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — Work Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
+version: "v10.3.1"
+last_updated: "2025-11-13"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.2.0/manifest.zip"
+sbom_ref: "../../releases/v10.3.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.3.0/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v10.3.0/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/data-work-layer-v10.json"
 governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
@@ -17,17 +17,17 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# ⚙️ Kansas Frontier Matrix — **Work Data Layer**  
+# ⚙️ **Kansas Frontier Matrix — Work Data Layer**  
 `data/work/README.md`
 
 **Purpose:**  
-Core operational workspace of the Kansas Frontier Matrix (KFM), containing **temporary, staging, and validated datasets** used during ETL, AI modeling, and FAIR+CARE governance workflows.  
-This layer bridges raw ingestion and processed publication through transparent, traceable, and ethically governed pipelines, with **Streaming STAC** and **telemetry v2** integrations.
+Define the internal **Work Data Layer** of the Kansas Frontier Matrix (KFM), where **transformation, validation, AI pipelines, FAIR+CARE governance, and Streaming STAC** operations are performed.  
+This layer ensures complete lineage, traceability, and ethical compliance between **raw ingestion** and **processed publication**, following **Diamond⁹ Ω / Crown∞Ω**, **FAIR+CARE**, and **MCP-DL v6.3** standards.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Work%20Layer%20Certified-gold.svg)](../../docs/standards/faircare.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2ea44f.svg)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Data-grey.svg)](../../LICENSE)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)  
+[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Work%20Layer%20Certified-gold.svg)](../../docs/standards/faircare.md)  
+[![ISO 19115](https://img.shields.io/badge/ISO--19115-Aligned-2ea44f.svg)]()  
+[![License: Internal](https://img.shields.io/badge/License-Internal-grey.svg)]()
 
 </div>
 
@@ -35,25 +35,28 @@ This layer bridges raw ingestion and processed publication through transparent, 
 
 ## 📘 Overview
 
-The **Work Data Layer** functions as KFM’s **engine room**—hosting intermediate datasets, temporary logs, and staging environments that power transformation, validation, and AI governance.  
-All files are **traceable**, **versioned**, and **checksum-verified**, maintaining FAIR+CARE and ISO compliance throughout the lifecycle.
+The **Work Data Layer** is the operational center of the KFM data lifecycle.  
+It hosts **intermediate artifacts**, **transient workspace outputs**, **AI model runs**, **ethics validations**, and **schema-aligned staging data** prior to publication.
 
-**v10.2.2 Enhancements**
-- **Streaming STAC** awareness for near-real-time promotions.  
-- Telemetry v2 fields (energy/CO₂, validation coverage) emitted per phase.  
-- Hardened retention & cleanup policies aligned to governance cadences.
+This layer bridges **raw → processed** through:
 
-### Core Objectives
-- Support ETL operations for all KFM domains.  
-- Enable FAIR+CARE audits and schema validations pre-publication.  
-- Provide secure, ethical environments for AI operations and normalization.  
-- Maintain complete lineage and provenance for all transformations.
+- Schema alignment  
+- FAIR+CARE compliance  
+- Telemetry + sustainability metrics  
+- Explainability + bias auditing  
+- STAC/DCAT catalog pre-generation  
+- Streaming STAC promotion workflows  
+
+### 🔧 v10.3.1 Enhancements  
+- Updated telemetry endpoints for v10.3.0.  
+- Harmonized work/staging directories with KFM v10 data contracts.  
+- Improved lifecycle retention rules and validation gating.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
+~~~~~text
 data/work/
 ├── README.md
 │
@@ -81,57 +84,61 @@ data/work/
     ├── tabular/
     ├── spatial/
     └── metadata/
-```
+~~~~~
 
 ---
 
 ## ⚙️ Workflow Summary
 
-```mermaid
+~~~~~mermaid
 flowchart TD
-    RAW["Raw Data (data/raw/*)"] --> TMP["Temporary Processing (data/work/tmp/*)"]
-    TMP --> VAL["Validation & FAIR+CARE Audits (data/work/tmp/validation/)"]
-    VAL --> STAGE["Staging & Schema Alignment (data/work/staging/*)"]
-    STAGE --> PROC["Processed & Certified (data/work/processed/*)"]
-    PROC --> PUB["STAC/DCAT Publication + Governance Ledger (data/stac/*)"]
-```
+  A["Raw Data<br/>(data/raw/*)"]
+    --> B["Temporary Processing<br/>(data/work/tmp/*)"]
+  B --> C["Validation + FAIR+CARE Audits<br/>(data/work/tmp/validation/)"]
+  C --> D["Staging & Schema Alignment<br/>(data/work/staging/*)"]
+  D --> E["Processed & Certified<br/>(data/work/processed/*)"]
+  E --> F["STAC/DCAT Publication + Governance Ledger<br/>(data/stac/*)"]
+~~~~~
 
 ### Lifecycle Phases
-1. **Temporary (TMP):** Cleaning, normalization, and AI-assisted auditing.  
-2. **Validation:** Schema and FAIR+CARE checks executed automatically.  
-3. **Staging:** Metadata harmonization and governance compliance.  
-4. **Processed:** Certified outputs queued for release packaging.  
-5. **Publication:** Provenance, FAIR+CARE, and checksums registered to ledgers & catalogs.
+
+1. **Temporary (TMP)** — Cleaning, normalization, AI-supported validation.  
+2. **Validation** — Schema, FAIR+CARE, checksum, explainability.  
+3. **Staging** — Harmonized metadata & certification readiness.  
+4. **Processed** — Certified datasets queued for release.  
+5. **Publication** — Promotion to STAC/DCAT catalogs + governance ledger.
 
 ---
 
 ## 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | STAC/DCAT indexing; manifest hashes per artifact. | `@kfm-data` |
-| **Accessible** | Open formats (CSV/Parquet/GeoJSON/GeoTIFF) preserved. | `@kfm-accessibility` |
-| **Interoperable** | FAIR schemas; ISO 19115-compliant metadata. | `@kfm-architecture` |
-| **Reusable** | Embedded checksums, provenance, and schema refs. | `@kfm-design` |
-| **Collective Benefit** | Equitable, ethical access to environmental knowledge. | `@faircare-council` |
-| **Authority to Control** | Council approves TMP → Processed promotions. | `@kfm-governance` |
-| **Responsibility** | Validators maintain lineage & compliance logs. | `@kfm-security` |
-| **Ethics** | Sensitive data anonymized; access-scoped where necessary. | `@kfm-ethics` |
+|----------|----------------|-----------|
+| **Findable** | Global STAC/DCAT indexing; manifest hashes. | @kfm-data |
+| **Accessible** | Open formats preserved (CSV/GeoJSON/Parquet/GeoTIFF). | @kfm-accessibility |
+| **Interoperable** | ISO 19115 + FAIR schemas. | @kfm-architecture |
+| **Reusable** | Embedded checksums & lineage metadata. | @kfm-design |
+| **Collective Benefit** | Supports community/tribal collaboration. | @faircare-council |
+| **Authority to Control** | Council governs TMP → Processed promotions. | @kfm-governance |
+| **Responsibility** | Ethical review, explainability logs. | @kfm-security |
+| **Ethics** | Sensitive data masked/anonymized. | @kfm-ethics |
 
-**Governance logs:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
+Governance logs:
+
+- `data/reports/audit/data_provenance_ledger.json`  
+- `data/reports/fair/data_care_assessment.json`
 
 ---
 
 ## 🧩 Example Metadata Record
 
-```json
+~~~~~json
 {
-  "id": "work_layer_pipeline_hazards_v10.2.2",
+  "id": "work_layer_pipeline_hazards_v10.3.1",
   "domain": "hazards",
   "pipeline": "src/pipelines/etl/hazards_etl_pipeline.py",
   "records_processed": 23871,
-  "staging_promotion": "2025-11-12T22:45:00Z",
+  "staging_promotion": "2025-11-13T22:45:00Z",
   "checksum_sha256": "sha256:ac1b2f9e47b3a8f6d9e1a4c8b2f7e5c3a9d8e4b1c7f5a2e9d3b6a7f4c5e8b9a2",
   "validator": "@kfm-etl-ops",
   "fairstatus": "certified",
@@ -142,41 +149,45 @@ flowchart TD
   },
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
-```
+~~~~~
 
 ---
 
 ## 🧹 Data Lifecycle Retention Policy
 
 | Layer | Retention | Policy |
-|---|---|---|
-| TMP (Transient) | 7–14 Days | Purged after validation & staging promotion. |
-| Staging (Semi-perm.) | 180 Days | Retained for governance and FAIR+CARE re-audits. |
-| Processed (Pre-pub) | Until Release | Synced to `data/processed/*` once certified. |
-| Logs & Validation | 365 Days | Archived for reproducibility and audits. |
+|-------|-----------|--------|
+| TMP (Transient) | 7–14 days | Purged after staging promotion |
+| Staging | 180 days | Retained for FAIR+CARE recertification |
+| Processed (Pre-pub) | Until Release | Promoted to `data/processed/` when certified |
+| Logs & Validation | 365 days | Archived for reproducibility and audits |
 
-**Automation:** `work_layer_cleanup.yml`
+Automation: `work_layer_cleanup.yml`
 
 ---
 
 ## 🌱 Sustainability Metrics
 
 | Metric | Value | Verified By |
-|---|---:|---|
-| Energy (per ETL cycle) | 21.3 Wh | `@kfm-sustainability` |
-| Carbon Output | 26.1 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
-| FAIR+CARE Compliance | 100% | `@faircare-council` |
+|--------|------:|-------------|
+| Energy per ETL cycle | 21.3 Wh | @kfm-sustainability |
+| Carbon Output | 26.1 gCO₂e | @kfm-security |
+| Renewable Power | 100% (RE100) | @kfm-infrastructure |
+| FAIR+CARE Compliance | 100% | @faircare-council |
 
-**Telemetry:** `../../releases/v10.2.0/focus-telemetry.json`
+Telemetry Source:  
+```
+../../releases/v10.3.0/focus-telemetry.json
+```
 
 ---
 
 ## 🧾 Internal Use Citation
 
-```text
-Kansas Frontier Matrix (2025). Work Data Layer (v10.2.2).
-FAIR+CARE-governed operational workspace supporting ETL, AI, and validation workflows between raw ingestion and certified processed outputs.
+```
+Kansas Frontier Matrix (2025). Work Data Layer (v10.3.1).
+FAIR+CARE-governed operational workspace supporting ETL, AI, validation,
+and schema-aligned staging between raw ingestion and processed publication.
 ```
 
 ---
@@ -184,10 +195,11 @@ FAIR+CARE-governed operational workspace supporting ETL, AI, and validation work
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | `@kfm-ops` | Aligned to v10.2: streaming STAC awareness, telemetry v2 bindings, lifecycle retention hardening. |
-| v10.0.0 | 2025-11-09 | `@kfm-ops` | Streaming STAC baseline, telemetry schema refs, lifecycle policy clarified. |
-| v9.7.0 | 2025-11-06 | `@kfm-ops` | Telemetry/schema refs aligned; cleanup and badges added. |
+|---------|--------|---------|---------|
+| v10.3.1 | 2025-11-13 | @kfm-ops | Updated to v10.3; new telemetry paths; refreshed diagrams; retention policy updated. |
+| v10.2.2 | 2025-11-12 | @kfm-ops | Streaming STAC updates; telemetry v2 integration; lifecycle hardening. |
+| v10.0.0 | 2025-11-09 | @kfm-ops | Introduced streaming STAC, telemetry schema v10, lifecycle cleanup. |
+| v9.7.0 | 2025-11-06 | @kfm-ops | Enhanced governance logs and schema references. |
 
 ---
 
