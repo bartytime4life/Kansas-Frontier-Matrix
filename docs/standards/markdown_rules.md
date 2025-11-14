@@ -1,8 +1,9 @@
+```
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/markdown_rules.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
+version: "v10.2.3"
+last_updated: "2025-11-13"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
@@ -20,8 +21,8 @@ mcp_version: "MCP-DL v6.3"
 `docs/standards/markdown_rules.md`
 
 **Purpose:**  
-Define the mandatory structural conventions, metadata requirements, and formatting syntax for all Markdown documents within the Kansas Frontier Matrix (KFM).  
-These rules support **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** compliance by enforcing documentation integrity, accessibility, and machine-readability.
+Define the authoritative formatting, metadata, and structural standards for *all* Markdown within the Kansas Frontier Matrix (KFM) project.  
+These rules enforce **MCP v6.3**, **FAIR+CARE**, strict reproducibility, and automated validation across the KFM monorepo.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -34,291 +35,293 @@ These rules support **Master Coder Protocol (MCP v6.3)** and **FAIR+CARE** compl
 
 ## 📘 Overview
 
-The KFM documentation framework relies on structured, versioned Markdown files that are **validated automatically** via:
+This specification defines the **mandatory Markdown formatting protocol** for every document in the KFM monorepo.  
+All Markdown produced by contributors or automated systems must pass:
 
-- `.github/workflows/docs-lint.yml`  
-- Pre-commit hooks  
-- Governance audits  
+- `docs-lint.yml`
+- `markdown-validate.yml`
+- `stac-validate.yml`
+- FAIR+CARE automated checks  
+- MCPLint v10 series  
+- Dead link scanner  
+- Front-matter schema validator  
 
-These rules ensure every document is:
+These rules ensure Markdown is:
 
-- **Consistent in format**  
-- **YAML-schema compliant**  
-- **FAIR+CARE-compatible**  
-- **Readable and accessible** across tools and interfaces  
+- Structurally uniform  
+- Machine-parseable  
+- Indexed cleanly inside the Knowledge Graph  
+- Fully versioned & ethically compliant  
+- Ready for automated CI enforcement  
 
 ---
 
 ## 🧱 1. YAML Front-Matter Requirements
 
-Each Markdown document **must** begin with a YAML metadata block.  
-This front-matter provides versioning, governance, and interoperability information.
+All KFM Markdown **must** begin with a YAML block containing **no blank lines above it**.
 
-### ✅ Required Fields
+### 📌 Required Fields (v10.2.3)
 
-| Field | Description | Example |
-|---|---|---|
-| `title` | Document title (must include an emoji). | `"🏗️ Kansas Frontier Matrix — System Architecture"` |
-| `path` | Repository path of the document. | `"src/ARCHITECTURE.md"` |
-| `version` | Semantic version. | `"v10.2.2"` |
-| `last_updated` | ISO 8601 date of last modification. | `"2025-11-12"` |
-| `review_cycle` | Update frequency (Quarterly / Annual / Continuous). | `"Quarterly / Autonomous"` |
-| `commit_sha` | Git commit hash or `<latest-commit-hash>`. | `"<latest-commit-hash>"` |
-| `sbom_ref` | SPDX SBOM reference path. | `"releases/v10.2.0/sbom.spdx.json"` |
-| `manifest_ref` | Manifest package for release tracking. | `"releases/v10.2.0/manifest.zip"` |
-| `telemetry_ref` | Path to telemetry file. | `"releases/v10.2.0/focus-telemetry.json"` |
-| `telemetry_schema` | Telemetry schema path for validation. | `"schemas/telemetry/docs-markdown-rules-v2.json"` |
-| `governance_ref` | Reference to governance charter. | `"docs/standards/governance/ROOT-GOVERNANCE.md"` |
-| `license` | SPDX-compatible license string. | `"CC-BY 4.0"` |
-| `mcp_version` | MCP documentation version. | `"MCP-DL v6.3"` |
+| Field | Description |
+|---|---|
+| `title` | Must include emoji + full KFM title. |
+| `path` | Exact file path inside repo. |
+| `version` | Semantic version for the document. |
+| `last_updated` | ISO date string. |
+| `review_cycle` | “Quarterly / Annual / Autonomous / FAIR+CARE Council”. |
+| `commit_sha` | Git SHA or `<latest-commit-hash>`. |
+| `sbom_ref` | SPDX SBOM reference. |
+| `manifest_ref` | Release manifest reference. |
+| `telemetry_ref` | Telemetry dataset reference. |
+| `telemetry_schema` | Schema governing the telemetry fields. |
+| `governance_ref` | Path to governance root. |
+| `license` | SPDX identifier (CC-BY 4.0 for docs). |
+| `mcp_version` | “MCP-DL v6.3”. |
 
-> Front-matter is **mandatory**. Missing or invalid keys will cause `docs-lint.yml` to fail.
+Failure to include any required fields results in a **CI rejection**.
 
 ---
 
-## 🧩 2. Title Block Structure
+## 🧩 2. Title Block Structure (Centered)
 
-Each document’s main header must be enclosed in a `<div align="center">` container.
+The centered header block is **mandatory**.
 
-### Example
+### Correct template:
 
-```markdown
+```
+
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Governance Architecture**
-`docs/standards/governance/ROOT-GOVERNANCE.md`
+# 🧩 **Document Title**
 
-**Purpose:** Define the governance charter and decision-making structure for FAIR+CARE compliance.
+`path/to/file.md`
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
+**Purpose:** One–three lines max.
+
+[![Docs · MCP](...)](...)
+[![License: CC-BY 4.0](...)](...)
+[![FAIR+CARE](...)](...)
+[![Status: Active](...)]()
 
 </div>
 ```
 
-**Rules**
+### Mandatory rules:
 
-- The first line *inside* the `<div>` must be an H1 heading with emoji.  
-- The second line must display the file path in backticks.  
-- The **Purpose** block should be concise (≤ 3 lines).  
-- Include at least two badges, in this order: Docs → License → FAIR+CARE → Status.
+* Must appear **immediately after** YAML front-matter.
+* Must include:
+
+  * H1 Title (with emoji)
+  * File path (backticks)
+  * Purpose statement
+  * 2–5 badges in correct order:
+
+    1. Docs · MCP
+    2. License
+    3. FAIR+CARE
+    4. Status
+* Must be followed by **one blank line** and then `---`.
 
 ---
 
-## 🧮 3. Heading Hierarchy Rules
+## 🧮 3. Heading Hierarchy
 
-| Heading Level | Syntax | Usage |
-|---|---|---|
-| H1 | `#` | Document title (used once). |
-| H2 | `##` | Major sections (Overview, Directory Layout, etc.). |
-| H3 | `###` | Subsections or technical details. |
-| H4 | `####` | Optional nested content (use sparingly). |
+| Level | Usage          | Emoji?      |
+| ----- | -------------- | ----------- |
+| H1    | Title only     | Required    |
+| H2    | Major sections | Required    |
+| H3    | Subsections    | Recommended |
+| H4    | Deep nesting   | Optional    |
 
-**Emoji Requirement**  
-H1–H3 headings must include a relevant emoji for semantic tagging.
+### Correct:
 
-**Correct**
-
-```markdown
+```
 ## 📘 Overview
-### ⚙️ Workflow Integration
-#### 🧩 Dependencies
+### ⚙️ Pipeline
+```
+
+### Incorrect:
+
+```
+## Overview
+### Pipeline
 ```
 
 ---
 
-## 🗂️ 4. Section Order & Layout
+## 🗂️ 4. Section Order
 
-Standard KFM document order:
+Every KFM Markdown file must follow this sequence:
 
-1. YAML front-matter  
-2. Centered title block  
-3. Horizontal divider (`---`)  
-4. Overview section  
-5. Additional content sections (e.g., Directory Layout, Rules, Governance, Examples)  
-6. Version History section  
-7. Centered footer with certification and nav links  
+1. YAML front-matter
+2. Centered title block
+3. Horizontal rule
+4. **Overview** (H2)
+5. Content sections (H2/H3)
+6. **Directory Layout** (if present—must always be H3)
+7. Version History
+8. Footer
 
-> A Table of Contents is optional but recommended for long documents.
-
----
-
-## 🧠 5. Table Formatting Rules
-
-- All tables use pipe (`|`) syntax.  
-- Include header and divider lines (`|---|---|`).  
-- Limit row width to ~100 characters per line where practical.  
-- Align content left; avoid alignment markers.  
-- Do not leave cells blank; use `—` for N/A.
-
-### Example
-
-```markdown
-| Field | Description | Example |
-|---|---|---|
-| license | SPDX-compatible identifier | "CC-BY-4.0" |
-| provenance | Data origin | "USGS, NOAA" |
-```
+Documents missing any required section fail validation.
 
 ---
 
-## ⚙️ 6. Code & Data Block Rules
+## 📁 5. Directory Layout Rules (Strict)
 
-| Type | Syntax | Rule |
-|---|---|---|
-| Code blocks | Triple backticks with language tag | Always specify (`json`, `bash`, `yaml`, `markdown`, etc.). |
-| Inline code | Backticks | Use for file paths, commands, variables. |
-| JSON examples | Valid JSON (double-quotes, commas) | Avoid comments in JSON examples. |
-| Bash commands | Optional `$` prompt | Prefer `$` prefix for clarity. |
+* Must be inside a fenced code block.
+* Must have **no indentation before** the fence.
+* Format must follow ASCII tree format exactly.
+* Never place comments inside directory trees.
 
-**Examples**
+### Example:
 
-```bash
-$ make validate
-```
+````
+```text
+docs/
+|-- standards/
+|   |-- markdown_rules.md
+|-- analyses/
+|-- reports/
+````
 
-```json
-{
-  "example": true
-}
 ```
 
 ---
 
-## 📋 7. Lists & Bullets
+## 📦 6. Code & Data Block Rules
 
-- Use `-` for unordered lists.  
-- Use `1.` for ordered lists (auto-numbering is fine).  
-- Indent with **two spaces**, no tabs.  
-- Keep items concise; use subheadings for complex sequences.
+| Type | Requirements |
+|---|---|
+| Code blocks | Always specify language. |
+| JSON | Must be valid — no comments allowed. |
+| YAML | Must not include tabs. |
+| Shell | Prefer `$` prefix. |
+| Inline code | Required for file paths. |
 
-```markdown
-1. Clone the repository.
-2. Run `make setup`.
-3. Execute validation pipelines.
-```
+Invalid JSON/YAML automatically rejects the PR.
 
 ---
 
-## 🧩 8. Badges & Visuals
+## 📋 7. Tables
 
-All documents must include badges in the title block:
+- Use pipe format.
+- No blank rows.
+- All columns require headers.
+- Use `—` for N/A fields.
+- Keep width under ~100 chars where possible.
 
-1. Docs · MCP badge  
-2. License badge  
-3. FAIR+CARE badge  
-4. Status badge (Active/Template/Deprecated/etc.)
+---
 
-```markdown
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
-```
+## 🎨 8. Badges & Images
 
-Images used within documents must include descriptive `alt` text for accessibility.
+Badges:
+
+- Follow strict order:
+  1. Docs · MCP  
+  2. License  
+  3. FAIR+CARE  
+  4. Status  
+- Max 5 badges.
+
+Images:
+
+- Must include descriptive alt text.
+- Must specify width if larger than 700px.
 
 ---
 
 ## 🧪 9. Mermaid Diagrams
 
-- At most **one Mermaid diagram per section**.  
-- Use only `flowchart TD` or `flowchart LR`.  
-- Node labels must be quoted strings to avoid parser errors.  
-- No custom CSS or `classDef` usage.
+Rules:
 
-**Example**
+- Max 1 diagram per section.
+- Only `flowchart TD` or `flowchart LR`.
+- No `classDef`.
+- Every node must use quoted labels.
 
-```mermaid
-flowchart LR
-  A["Input"] --> B["Validation"]
-  B --> C["Output"]
+---
+
+## 🧩 10. Version History Section
+
+Template:
+
 ```
-
----
-
-## 🧮 10. Version History Table
-
-Every document requires a **Version History** section.
-
-```markdown
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | A. Barta | Updated telemetry & release references; reinforced CI enforcement and header rules. |
-| v10.0.0 | 2025-11-10 | A. Barta | Aligned telemetry/SBOM/manifest refs; added `telemetry_schema` front-matter requirement. |
-```
-
----
-
-## ⚖️ 11. Footer Requirements
-
-Each document must include a final horizontal rule and a centered footer:
-
-```markdown
----
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
-
-</div>
-```
-
-Footer content must be updated for year/version when appropriate.
-
----
-
-## 🧩 12. Validation & Enforcement
-
-**Automated Workflow:** `.github/workflows/docs-lint.yml`
-
-Checks include:
-
-1. Front-matter presence & schema correctness.  
-2. Single H1 title with emoji; centered title block.  
-3. Presence of Version History and footer.  
-4. Tables, links, and Mermaid syntax rule adherence.  
-5. Relative link resolution and UTF-8 encoding.
-
-**Failure Policy**
-
-- Violations block PR merges.  
-- Violations are logged in `reports/self-validation/docs/lint_summary.json`.  
-- Governance may require retroactive fixes before release certification.
-
----
-
-## 🧮 13. FAIR+CARE Documentation Compliance
-
-| Principle | Implementation |
-|---|---|
-| **Findable** | Front-matter keys (`title`, `path`, `version`) enable indexing. |
-| **Accessible** | Plain Markdown + JSON examples readable without proprietary tools. |
-| **Interoperable** | STAC/DCAT/JSON-LD-aligned metadata fields. |
-| **Reusable** | Open license, provenance, & version tracking encoded in every doc. |
-| **CARE** | Encourages inclusive language, readability, and cultural awareness. |
-
----
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | A. Barta | Updated to v10.2.0 telemetry references; clarified Mermaid, footer, and badge ordering rules; reaffirmed CI enforcement. |
-| v10.0.0 | 2025-11-10 | A. Barta | Aligned telemetry/SBOM/manifest refs; added required `telemetry_schema` field. |
-| v9.7.0 | 2025-11-05 | A. Barta | Defined authoritative Markdown structure, front-matter, and section order. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added footer, table, and list consistency requirements. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Established foundational Markdown conventions under MCP. |
+| Version | Date       | Author   | Summary                                                    |
+| ------- | ---------- | -------- | ---------------------------------------------------------- |
+| v10.2.3 | 2025-11-13 | A. Barta | Full structural rewrite, badge rules, enforcement updates. |
+
+```
+
+---
+
+## ⚖️ 11. Footer Block
+
+Footer is required and must match template:
+
+```
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
+Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 [Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
+```
+
+---
+
+## 🧮 12. Validation & Enforcement Enhancements (v10.2.3)
+
+Documents must comply with:
+
+* MCPLint v10.2
+* Markdown structural schema
+* docs-lint.yml
+* FAIR+CARE automated classifier
+* Dead link detection
+* STAC/DCAT metadata extraction
+
+If a document fails validation, the merge is **blocked**.
+
+---
+
+## 🧠 13. FAIR+CARE Compliance
+
+Markdown must support:
+
+* Openness
+* Provenance
+* Machine readability
+* Ethical tagging
+* Indigenous Data Sovereignty
+* Reproducible metadata
+
+All sensitive data must include CARE labels.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date       | Author   | Summary                                                                   |
+| ------- | ---------- | -------- | ------------------------------------------------------------------------- |
+| v10.2.3 | 2025-11-13 | A. Barta | Full rule application and restructuring under stored memory requirements. |
+| v10.2.2 | 2025-11-12 | A. Barta | Strengthened Mermaid, badge, and enforcement rules.                       |
+| v10.0.0 | 2025-11-10 | A. Barta | Added telemetry_schema rules and CARE integration.                        |
+| v9.7.0  | 2025-11-05 | A. Barta | Introduced formal structure, metadata blocks, and rule hierarchy.         |
+
+---
+
+<div align="center">
+
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
+Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+[Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
+
+</div>
+```
