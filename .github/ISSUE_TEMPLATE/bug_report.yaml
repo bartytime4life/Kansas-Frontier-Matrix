@@ -1,7 +1,7 @@
 # 🐞 Kansas Frontier Matrix — Bug Report Template  
 # File: .github/ISSUE_TEMPLATE/bug_report.yaml  
 # Purpose: Standardized issue form for reporting software, data, or workflow bugs.  
-# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
+# Alignment: Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
 # SPDX-License-Identifier: CC-BY-4.0  
 
 name: "🐞 Bug Report"
@@ -132,7 +132,7 @@ body:
     id: validation_steps
     attributes:
       label: "Pre-Submission Checklist"
-      description: "Please confirm you’ve verified these before submitting."
+      description: "Please confirm you’ve completed the following before submitting:"
       options:
         - label: "I have reproduced the issue at least twice."
           required: true
@@ -148,17 +148,19 @@ body:
       value: |
         ---
         ### 🧩 Validation & Governance Workflow  
-        Submitting this bug triggers automatic CI validation pipelines:
-        - **`codeql.yml`** → Security and code vulnerability scanning  
-        - **`docs-lint.yml`** → Documentation consistency validation  
-        - **`faircare-validate.yml`** → Ethical compliance check for affected data layers  
+        Submitting this bug automatically triggers the following CI/CD pipelines:
 
-        If applicable, this issue will also be referenced in the **Governance Ledger**:
-        ```
+        - **`codeql.yml`** → Static code analysis & security scanning  
+        - **`docs-lint.yml`** → Documentation & metadata validation  
+        - **`faircare-validate.yml`** → Ethical/CARE compliance review  
+
+        If relevant, this issue will also appear in the **Governance Ledger**:
+
+        ```text
         reports/audit/github-workflows-ledger.json
         ```
 
-        **Thank you for helping keep Kansas Frontier Matrix secure, stable, and reproducible.**  
-        Contributions follow **Master Coder Protocol v6.3** and FAIR+CARE governance standards.  
+        **Thank you for strengthening the Kansas Frontier Matrix.**  
+        Your report helps maintain a secure, ethical, and reproducible platform aligned with **MCP v6.3** and **FAIR+CARE**.
 
         **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
