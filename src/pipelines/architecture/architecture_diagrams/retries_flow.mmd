@@ -1,1 +1,10 @@
-y
+flowchart TD
+  A["Pipeline Step<br/>Extract · Transform · Load"] --> B["Retry Layer<br/>Identify Retryable Errors"]
+  B --> C["Exponential Backoff<br/>Base Delay × 2^n + Full Jitter"]
+  C --> D["Timeout Enforcement<br/>Hard Deadlines · Deadline Propagation"]
+  D --> E{"Circuit Breaker<br/>Overload Protection"}
+  E -->|Open| F["Fail Fast<br/>Temporary Halt · Cooldown Timer"]
+  E -->|Closed| G["Continue Execution"]
+  G --> H["Idempotency Gate<br/>Safe Re-Execution"]
+  H --> I["Telemetry Export<br/>Retry Attempts · Jitter · Timeout Events"]
+  I --> J["Governance Ledger Sync<br/>Retry Logs · CARE Safety Check"]
