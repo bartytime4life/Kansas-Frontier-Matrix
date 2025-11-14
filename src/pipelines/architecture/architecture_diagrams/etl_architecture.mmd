@@ -1,1 +1,11 @@
-y
+flowchart TD
+  A["Raw Data Sources<br/>(NOAA · USGS · KHS · Archives · Sensors)"] --> B["Ingestion<br/>Download · API Fetch · Queue"]
+  B --> C["Work Layer<br/>(data/work/tmp)<br/>Normalize · Clean · Enrich"]
+  C --> D["Schema & FAIR+CARE Validation<br/>Schema Check · CARE Flags · Checksums"]
+  D --> E["Staging Layer<br/>(data/work/staging)<br/>Schema-Aligned · Audit-Ready"]
+  E --> F["Processed Layer<br/>(data/work/processed → data/processed)"]
+  F --> G["STAC/DCAT Catalogs<br/>data/stac/** · DCAT Exports"]
+  F --> H["Knowledge Graph Load<br/>Neo4j · CIDOC · GeoSPARQL · OWL-Time"]
+  G --> I["Web & Focus Mode<br/>MapLibre · Cesium · FocusPipeline"]
+  H --> I
+  I --> J["Telemetry & Governance<br/>focus-telemetry.json · Audit Ledgers"]y
