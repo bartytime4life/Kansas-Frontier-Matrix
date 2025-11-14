@@ -20,7 +20,7 @@ mcp_version: "MCP-DL v6.3"
 `src/pipelines/architecture/reliable-pipelines.md`
 
 **Purpose:**  
-Define the **core engineering patterns** that ensure KFM pipelines remain *idempotent*, *recoverable*, *observably correct*, *deterministically replayable*, and *FAIR+CARE guaranteed* across all ingestion, ETL, transformation, and publishing flows.
+Define the **core engineering patterns** that guarantee KFM pipelines remain *idempotent*, *recoverable*, *observably correct*, *deterministically replayable*, and *FAIR+CARE governed* across all ingestion, ETL, geospatial, AI, and publishing systems.
 
 </div>
 
@@ -29,248 +29,229 @@ Define the **core engineering patterns** that ensure KFM pipelines remain *idemp
 ## 📁 Directory Layout
 
 ~~~~~text
-KansasFrontierMatrix/
-├── src/
-│   ├── pipelines/
-│   │   ├── architecture/
-│   │   │   ├── reliable-pipelines.md   # This document
-│   │   │   ├── event-models/           # Event schemas & envelopes
-│   │   │   ├── idempotency/            # Keys, outbox, replay guards
-│   │   │   ├── observability/          # Logging, tracing, metrics
-│   │   │   ├── retries/                # Backoff strategies & transient handling
-│   │   │   └── versioning/             # Artifact versioning & rollbacks
-│   │   └── ingest/                     # Ingestion pipelines (NAIP, NLCD, PRISM, etc.)
-│   └── api/
-│       └── ...                         # FastAPI/GraphQL surface
+src/pipelines/architecture/
+├── reliable-pipelines.md      # This document
+├── event-models/              # Event envelope schemas
+├── idempotency/               # Keys, replay locks, outbox rules
+├── observability/             # Logging, tracing, metrics contracts
+├── retries/                   # Backoff definitions, transient-error models
+└── versioning/                # Version pinning, artifacts, rollbacks
 ~~~~~
 
 ---
 
-## 🛠️ 1. Triggers & Event Initiation
+## 🛠️ 1. Triggering & Pipeline Initiation
 
-Reliable pipelines begin with **redundant trigger paths** to avoid missed updates.
+Reliable pipelines must be triggered redundantly to avoid missed updates.
 
-### 🕒 Baseline Time Triggers
+### 🕒 Time-Based Triggers  
+- Nightly / hourly sweeps  
+- Baseline ingestion safety net  
+- Ideal for slow-change datasets (PRISM, NLCD, Census)
 
-- Nightly or hourly safety nets  
-- Ensures work progresses even if cloud hooks fail  
-- Used for **slow-moving datasets** (PRISM, Census, NLCD)
+### ⚡ Event-Based Triggers  
+- S3 / GCS object notifications  
+- GitHub `repository_dispatch` triggers  
+- External POST webhooks (agency ingest signals)  
+- Trigger envelope contains:  
+  - `dataset_id`  
+  - `version`  
+  - `source_uri`  
+  - `correlation_id`  
+  - `idempotency_key`
 
-### ⚡ Event-Based Triggers
-
-- S3 / GCS object creation notifications  
-- GitHub `repository_dispatch` calls  
-- Webhook-triggered fan-outs (e.g., Python AI-ETL runner)  
-
-Event payload MUST include:
-
-- `dataset`  
-- `version`  
-- `idempotency_key`  
-- `correlation_id`  
-- `source_uri`
-
-### 🧩 Recommended Pattern: Hybrid Trigger Mesh
-
-Use **time ⨯ event** to guarantee no missed updates *and* fast responsiveness.
+### 🧩 Hybrid Mesh (Required)
+Use time × event to achieve **zero missed updates + high responsiveness**.
 
 ---
 
 ## 🧬 2. Idempotency & De-Duplication
 
-All KFM pipelines must be **safe to run 1× or 100×** with identical output.
+All pipelines must be *safe to run 1× or 10,000×* with identical results.
 
-### 🎯 Idempotency Key Specification
+### 🎯 Idempotency Key Formula
 
 ~~~~~text
-sha256(dataset + version + source_uri)
+sha256(dataset_id + version + source_uri)
 ~~~~~
 
-**Requirements**
+Stored in a durable KV store (S3, DynamoDB, Firestore).
 
-- Deterministic  
-- Stored in durable KV (e.g., S3, DynamoDB, GCS Firestore)  
+### 🧰 Transactional Outbox Required
 
-### 🧰 Transactional Outbox Pattern
+The **transactional outbox pattern** ensures atomicity:
 
-All pipelines MUST use the transactional outbox pattern.
-
-**Outbox Transaction Atomicity**
-
-- DB state update  
+- Database mutation  
+- Artifact publishing  
 - Event emission  
-- Artifact publication  
 
-All three must succeed or fail **as one unit**.
+Either *all succeed* or *all fail*.
 
-**Allowed Outbox Destinations**
+Allowed outbox targets:
 
 - SQS / PubSub  
-- GitHub Dispatch Events  
+- GitHub repository dispatch  
 - Internal event bus  
 
-Outbox rows are retried separately with failure isolation.
+Each row retried independently.
 
 ---
 
-## 🔁 3. Retries, Backoff & Transient Errors
+## 🔁 3. Retries, Backoff, & Transient Handling
 
-KFM mandates **exponential backoff with jitter**.
+Implemented via **exponential backoff with jitter**.
 
-### Retry Rules
+**Rules:**
 
-- Max 5 attempts  
-- Base delay: 0.5 sec  
-- Cap: 30 sec  
-- Full jitter to avoid thundering herds  
-- Only wrap **I/O operations**, never CPU-only logic  
+- Max attempts: **5**  
+- Base delay: **0.5s**  
+- Max delay: **30s**  
+- Full jitter to avoid synchronized retries  
+- Only wrap I/O tasks (NO CPU retry loops)
 
 ### Timeouts
 
-All SDK calls require:
-
-- Hard timeout  
-- Deadline propagation  
-- Circuit breakers for large dataset backpressure  
+- All SDK operations must have deadlines  
+- Timeout propagation required  
+- Circuit breakers for heavy requests
 
 ---
 
-## 🧰 4. Versioned Artifacts & Rollbacks
+## 🧰 4. Artifact Versioning & Rollbacks
 
-KFM enforces **immutable artifact versioning**.
+KFM requires **immutable, content-addressed artifacts**.
 
 ### 📦 Artifact Path Structure
 
 ~~~~~text
-s3://kfm/artifacts/{dataset}/{version}/<payload>
+s3://kfm/artifacts/{dataset}/{version}/{payload}
 ~~~~~
 
-### 🔁 Rollbacks
-
-Rollback = **change the pointer**, not reprocess the data.
+### 🔁 Rollback = Pointer Reassignment
 
 ~~~~~text
 s3://kfm/artifacts/{dataset}/latest.json
 ~~~~~
 
-`latest.json` contains:
+`latest.json` includes:
 
-- `version`  
-- `uri`  
-- build metadata  
+- version  
+- URI  
+- checksum  
 - telemetry hash  
+- provenance chain  
 
-**Benefits**
+**Benefits:**
 
-- Zero recompute  
-- Auditability  
-- Deterministic replays  
-- Time-travel debugging  
+- No recomputation  
+- Reliable time-travel debugging  
+- Deterministic replaying  
+- Perfect reproducibility
 
 ---
 
-## 🕵️‍♂️ 5. Observability: Logs, Metrics, Traces
+## 🕵️‍♂️ 5. Observability Requirements
 
-All KFM pipelines must emit **structured logs**, **metrics**, and **traces**.
+All pipelines must emit **structured logs**, **metrics**, and **traces**.
 
 ### 📘 Structured Logs
 
 Required fields:
 
-- `dataset`  
-- `version`  
-- `idempotency_key`  
-- `attempt`  
-- `duration_ms`  
-- `error_class`  
+- dataset  
+- dataset_version  
+- idempotency_key  
+- attempt_index  
+- duration_ms  
+- error_type  
 
 ### 📊 Metrics
 
-- `pipeline_ingest_started`  
-- `pipeline_ingest_succeeded`  
-- `pipeline_ingest_failed`  
-- Retry counters  
-- Queue depth (if applicable)  
+- `pipeline_start`  
+- `pipeline_success`  
+- `pipeline_failure`  
+- retry counters  
+- DLQ counts  
+- throughput (rows/sec)
 
-### 🛰️ Distributed Tracing
+### 🛰️ Tracing
 
-Trace IDs propagated:
+Trace ID propagated from:
 
-- Trigger → Worker → Publisher → Outbox  
+**Trigger → Worker → Outbox → Publisher**
 
 Used for:
 
-- Debugging concurrency  
+- Idempotency verification  
+- FAIR+CARE compliance audits  
 - Replay investigations  
-- FAIR+CARE compliance evidence  
 
 ---
 
-## ♻️ 6. Replayability & Deterministic Reprocessing
+## ♻️ 6. Deterministic Replayability
 
-Every KFM pipeline must be **100% replay-safe**.
+All KFM pipelines must be **100% replay-safe**.
 
-### 📀 Replay Inputs
-
-Replays require:
+### Inputs Required for Replay
 
 - Event envelope  
 - Source URI  
 - Dataset + version  
-- Execution parameters  
+- Transformation parameters  
+- Random seeds (if any)
 
-### 🔁 Replay Guarantee
+### Guarantees
 
-Re-running MUST produce identical:
+Re-running yields identical:
 
 - Artifacts  
 - Metadata  
 - Logs  
 - Outbox events  
 
-(Except timestamps.)
+Only timestamps may differ.
 
 ---
 
-## 🛡️ 7. Failure Posture: “Assume At-Least-Once”
+## 🛡️ 7. Failure Posture — *At-Least-Once Delivery*
 
-KFM assumes **at-least-once delivery**, not exactly-once.
+KFM pipelines ALWAYS assume **message duplication**.
 
-**Requirements**
+### Requirements
 
-- All consumers must be idempotent  
-- All triggers may fire multiple times  
-- All events may be duplicated  
-- No pipeline step may rely on “once-only” semantics  
+- All consumers idempotent  
+- All events may replay  
+- No logic may depend on “exactly once” semantics  
+- DLQ required for every pipeline
 
-### DLQs (Dead Letter Queues)
+### DLQ Entries Must Include
 
-Each pipeline must define:
-
-- DLQ topic or bucket  
-- Failure envelope schema  
-- Retry count  
-- Error classification  
+- event envelope  
+- retry count  
+- error classification  
+- stack trace (if available)  
+- timestamp  
 
 ---
 
-## 🔐 8. Safety, Governance & FAIR+CARE Enforcement
+## 🔐 8. Governance, Safety & FAIR+CARE Enforcement
 
-All pipelines must reflect KFM governance.
+Every pipeline must embed:
 
-### Mandatory Metadata
-
-- Provenance chain (PROV-O / CIDOC alignment)  
-- Data contract adherence  
-- Artifact lineage ID  
-- FAIR+CARE access rules  
+- Provenance chains  
+- Data contract validation  
+- Artifact lineage (PROV-O / CIDOC-CRM)  
+- CARE access rules (public, restricted, sensitive)  
+- License preservation  
+- Sovereignty-aware coordinate masking (where applicable)
 
 ### Automated Governance Checks
 
-- SPDX SBOM presence  
-- SLSA attestations  
-- Pipeline telemetry export  
-- Schema validation (Avro, Pydantic, JSON Schema)  
+- SBOM (SPDX)  
+- SLSA provenance  
+- Telemetry logging  
+- JSONSchema validation  
+- FAIR+CARE classifier
 
 ---
 
@@ -279,13 +260,13 @@ All pipelines must reflect KFM governance.
 ~~~~~mermaid
 flowchart TD
   A["Trigger Mesh<br/>Time + Event"] --> B["Idempotency Gate"]
-  B --> C["Ingest Worker<br/>Retries + Jitter"]
-  C --> D["Transactional Outbox<br/>Atomic State + Events"]
-  D --> E["Artifact Publisher<br/>Versioned Outputs"]
-  E --> F["Update Latest Pointer"]
+  B --> C["Ingest Worker<br/>Retry Logic + Jitter"]
+  C --> D["Transactional Outbox<br/>Atomic State + Event Emission"]
+  D --> E["Artifact Publisher<br/>Versioned Output"]
+  E --> F["Latest Pointer Update"]
   F --> G["Replay Engine<br/>Deterministic Reprocessing"]
   C --> H["Observability Layer<br/>Logs · Metrics · Traces"]
-  H --> I["FAIR+CARE Governance<br/>SBOM · SLSA · Contracts"]
+  H --> I["Governance Layer<br/>SBOM · FAIR+CARE · SLSA"]
 ~~~~~
 
 ---
@@ -296,7 +277,7 @@ flowchart TD
 key = sha256(f"{dataset}|{version}|{source}".encode()).hexdigest()
 
 if kv_store.seen(key):
-    log.info("noop", extra={"key": key})
+    log.info("noop", key=key)
     return
 
 with db.transaction():
@@ -315,7 +296,7 @@ strategy:
     dataset: [naip, nlcd, prism]
 
 steps:
-  - name: Run ingest pipeline
+  - name: Run pipeline
     run: |
       python pipelines/ingest.py \
         --dataset ${{ matrix.dataset }} \
@@ -326,8 +307,8 @@ steps:
 
 ## 🕰️ Version History
 
-| Version | Date       | Author                    | Summary                                                                 |
-|---------|------------|---------------------------|-------------------------------------------------------------------------|
-| v10.3.1 | 2025-11-13 | Pipeline Architecture Team | Updated to v10.3.0 paths; aligned with telemetry v3 and governance rules. |
-| v10.2.2 | 2025-11-13 | Pipeline Architecture Team | Initial reliable pipeline guidelines; idempotency, outbox, replay, DLQs. |
+| Version | Date | Author | Summary |
+|---------|------------|----------|---------|
+| v10.3.1 | 2025-11-13 | Pipeline Architecture Team | Updated to v10.3.0 paths; aligned with telemetry v3 & FAIR+CARE requirements. |
+| v10.2.2 | 2025-11-13 | Pipeline Architecture Team | Initial reliable pipeline specification for KFM ETL/AI/geospatial pipelines. |
 
