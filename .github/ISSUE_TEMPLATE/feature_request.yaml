@@ -19,7 +19,7 @@ body:
       value: |
         ## 💡 Kansas Frontier Matrix — Feature Request Form  
         Use this form to suggest new functionality, UI improvements, pipeline features, or AI/ETL enhancements.  
-        All feature proposals are reviewed during the **MCP Quarterly Architecture Review Cycle** and must include clear rationale and implementation details.
+        All feature proposals must follow **MCP-DL v6.3** and are reviewed during the **Quarterly Architecture Review Cycle**.
 
   - type: input
     id: feature_title
@@ -102,9 +102,9 @@ body:
       description: "List any related datasets, models, or workflows that may be affected or required."
       placeholder: |
         Example:
-        - Dependent on `src/graph/queries/link_entities.cypher`
+        - Depends on `src/graph/queries/link_entities.cypher`
         - Builds on `focus_transformer_v1`
-        - Requires new STAC metadata for linked documents
+        - Requires additional STAC metadata fields for linked documents
     validations:
       required: false
 
@@ -116,8 +116,8 @@ body:
       placeholder: |
         Example:
         - Model bias must be tested before production
-        - New dependencies increase container image size
-        - Requires additional FAIR+CARE governance review
+        - New dependencies increase container size
+        - May require additional FAIR+CARE governance review
     validations:
       required: false
 
@@ -125,7 +125,7 @@ body:
     id: acceptance_criteria
     attributes:
       label: "Acceptance Criteria"
-      description: "Define what success looks like. What measurable outcomes or deliverables should this feature achieve?"
+      description: "Define measurable success criteria or deliverables."
       placeholder: |
         Example:
         - Entity linking achieves 90% accuracy on test corpus.
@@ -138,15 +138,15 @@ body:
     id: compliance_checklist
     attributes:
       label: "Governance & Compliance Checklist"
-      description: "Confirm these before submitting your feature request."
+      description: "Confirm compliance with governance requirements."
       options:
         - label: "I confirm this proposal follows Master Coder Protocol v6.3 (documentation-first design)."
           required: true
-        - label: "I confirm this feature will comply with FAIR+CARE data governance principles."
+        - label: "I confirm this feature will comply with FAIR+CARE principles."
           required: true
         - label: "I will update or create relevant documentation in `docs/` and `src/` upon implementation."
           required: true
-        - label: "I understand this feature request may require approval during the next architecture review cycle."
+        - label: "I understand this request may require approval during the next architecture review cycle."
           required: true
 
   - type: markdown
@@ -155,20 +155,24 @@ body:
         ---
         ### 🧭 Architecture Review & Validation Workflow  
         Submitted feature requests automatically enter KFM’s governance workflow:
-        - **`docs-lint.yml`** → Validates proposal format and Markdown consistency  
-        - **`stac-validate.yml`** → Checks metadata interoperability (if applicable)  
-        - **`faircare-validate.yml`** → Confirms ethical compliance for any new datasets  
-        - **`build-and-deploy.yml`** → (Triggered post-approval) integrates into development build  
 
-        Approved proposals are tracked in:
-        ```
+        - **`docs-lint.yml`** → Validates proposal formatting + Markdown structure  
+        - **`stac-validate.yml`** → (If metadata-related) validates STAC/DCAT interoperability  
+        - **`faircare-validate.yml`** → Ensures FAIR+CARE compliance for new data resources  
+        - **`build-and-deploy.yml`** → (Post-approval) integrates feature into dev build  
+
+        Approved proposals are logged in:
+
+        ```text
         reports/audit/github-workflows-ledger.json
         ```
-        and referenced in:
-        ```
-        releases/v9.7.0/focus-telemetry.json
+
+        and linked to system telemetry:
+
+        ```text
+        releases/v10.3.0/focus-telemetry.json
         ```
 
         **Thank you for helping shape the future of the Kansas Frontier Matrix.**  
-        Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+        Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
         **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
