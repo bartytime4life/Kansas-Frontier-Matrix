@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "🏺 Kansas Frontier Matrix — Archaeological Symbol Legend Metadata Field Definitions (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/archaeological/metadata/field_definitions.md"
