@@ -1,13 +1,13 @@
 ---
 title: "📚 Kansas Frontier Matrix — Master Guide v10 (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/MASTER_GUIDE_v10.md"
-version: "v10.2.2"
+version: "v10.3.1"
 last_updated: "2025-11-13"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.2.0/manifest.zip"
-telemetry_ref: "../releases/v10.2.0/focus-telemetry.json"
+sbom_ref: "../releases/v10.3.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.3.0/manifest.zip"
+telemetry_ref: "../releases/v10.3.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/master-guide-v1.json"
 governance_ref: "./standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
@@ -17,396 +17,417 @@ mcp_version: "MCP-DL v6.3"
 <div align="center">
 
 # 📚 **Kansas Frontier Matrix — MASTER GUIDE v10**  
-**The Complete System Bible — Architecture • Data • AI • UX • Governance**  
+**The Complete System Bible — Architecture · Data · AI · UX · Governance**  
 `docs/MASTER_GUIDE_v10.md`
 
 **Status:** Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-**Purpose:** This is the definitive, authoritative, canonical technical document for the Kansas Frontier Matrix (KFM).  
-Every subsystem, every layer, every workflow is defined here.  
+
+**Purpose:**  
+Serve as the **definitive, canonical reference** for the Kansas Frontier Matrix (KFM) v10+.  
+Every subsystem, layer, workflow, and governance rule is defined here.  
 **This file governs v10+.**
+
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](README.md)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../LICENSE)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-System%20Certified-gold.svg)](standards/faircare.md)  
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success.svg)]()
 
 </div>
 
 ---
 
-# 📁 Directory Layout (Authoritative)
-KansasFrontierMatrix/  
-├── src/  
-│   ├── ai/  
-│   ├── api/  
-│   ├── graph/  
-│   ├── pipelines/  
-│   └── ARCHITECTURE.md  
-│  
-├── data/  
-│   ├── raw/  
-│   ├── processed/  
-│   ├── stac/  
-│   ├── work/  
-│   └── contracts/  
-│  
-├── docs/  
-│   ├── standards/  
-│   ├── analyses/  
-│   ├── reports/  
-│   ├── guides/  
-│   ├── accessibility/  
-│   ├── governance/  
-│   └── MASTER_GUIDE_v10.md  
-│  
-├── web/  
-│   ├── public/  
-│   ├── src/  
-│   └── README.md  
-│  
-├── .github/  
-│   ├── workflows/  
-│   └── README.md  
-│  
-└── releases/  
+## 📘 Overview
+
+The **Kansas Frontier Matrix (KFM)** is a unified, semantic, geospatial–temporal system reconstructing **Kansas through time** — historically, ecologically, hydrologically, and culturally.
+
+KFM integrates:
+
+- Hydrology, climate, drought/flood indices, hazards  
+- Land cover, terrain, soils, geology, geomorphology  
+- Treaties, homesteads, land patents, ownership, plats  
+- Census, crop records, wildlife, insects, pests  
+- Archaeological data, diaries, newspapers, letters, archives  
+- AI-powered narratives, explainability, and Focus Mode entity-centric views  
+
+Powered by:
+
+- Python ETL pipelines + LangGraph orchestrated agents  
+- STAC 1.0 / DCAT 3.0 metadata  
+- Neo4j knowledge graph with CIDOC CRM + GeoSPARQL + OWL-Time  
+- React + MapLibre + Cesium 3D front-end  
+- FAIR+CARE governance + telemetry + validation gates  
 
 ---
 
-# 🧭 1. Introduction  
-The **Kansas Frontier Matrix (KFM)** is a unified geospatial, temporal, ecological, historical, archival, and AI-driven system that reconstructs Kansas across time.  
-It ingests hundreds of heterogeneous datasets — hydrology, climate, ecology, treaties, homesteads, land patents, droughts, floods, text corpora, archaeological findings, disasters, fires, crop records, census — into a **single FAIR+CARE-certified knowledge system**.
+## 📁 Directory Layout (Authoritative)
 
-**Key pillars:**
-- Multi-layer dataset integration  
-- AI-driven semantic abstraction (Focus Mode)  
-- Historical–ecological reconstruction  
-- STAC/DCAT metadata unification  
-- Neo4j knowledge graph + CIDOC CRM + OWL-Time  
-- React/MapLibre/Cesium 3D front-end  
-- Python ETL + telemetry + validation gates
+~~~~~text
+KansasFrontierMatrix/
+├── src/
+│   ├── ai/                     # AI models, Focus Mode, explainability
+│   ├── api/                    # FastAPI / GraphQL services
+│   ├── graph/                  # Neo4j schema, queries, migrations
+│   ├── pipelines/              # ETL, ingestion, validation
+│   └── ARCHITECTURE.md         # Source system architecture
+│
+├── data/
+│   ├── raw/                    # Unaltered sources
+│   ├── work/                   # tmp + staging + work/processed
+│   ├── processed/              # Published datasets
+│   ├── stac/                   # STAC Collections & Items
+│   ├── contracts/              # Data contracts (JSON)
+│   └── ARCHITECTURE.md         # Data architecture spec
+│
+├── docs/
+│   ├── standards/              # Markdown rules, FAIR+CARE, governance
+│   ├── analyses/               # Domain-specific analyses
+│   ├── reports/                # Validation, audit, telemetry
+│   ├── guides/                 # Guides (data governance, self-validation, FAIR)
+│   ├── accessibility/          # A11y standards & patterns
+│   ├── governance/             # Governance docs (if present)
+│   └── MASTER_GUIDE_v10.md     # This master guide
+│
+├── web/
+│   ├── public/                 # Static assets
+│   ├── src/                    # React + MapLibre + Cesium client
+│   └── README.md
+│
+├── .github/
+│   ├── workflows/              # CI/CD workflows
+│   └── README.md               # CI/automation overview
+│
+├── releases/                   # Manifests, SBOMs, telemetry per version
+└── Makefile
+~~~~~
 
 ---
 
-# 🧩 2. System Overview
+## 🧩 System Overview
 
-## 2.1 High-Level Mermaid System Diagram
-
-```mermaid
+~~~~~mermaid
 flowchart TD
-    A[Raw Data Sources] --> B[ETL Pipelines]
-    B --> C[Validation / Great Expectations]
-    C --> D[(Processed Data Lake)]
-    D --> E[STAC/DCAT Metadata Layer]
-    E --> F[Neo4j Knowledge Graph]
-    F --> G[API Layer (FastAPI)]
-    G --> H[Web Client (React + MapLibre + Cesium)]
-    H --> I[Focus Mode AI Engine]
-    I --> F
-```
+  A["Raw Data Sources"] --> B["ETL Pipelines"]
+  B --> C["Validation & Self-Validation Gates"]
+  C --> D["Data Work / Processed Layers"]
+  D --> E["STAC/DCAT Metadata Layer"]
+  E --> F["Neo4j Knowledge Graph"]
+  F --> G["API Layer (FastAPI / GraphQL)"]
+  G --> H["Web Client (React · MapLibre · Cesium)"]
+  H --> I["Focus Mode AI Engine"]
+  I --> F
+~~~~~
 
 ---
 
-# 🗺️ 3. Data Architecture
+## 🗺️ Data Architecture
 
-## 3.1 Raw → Processed Pipeline
-- **raw/**: untouched source files  
-- **work/**: normalization, staging, cleaning  
-- **processed/**: final, versioned tables/parquet/geoparquet  
-- **stac/**: metadata, assets, thumbnails  
+### 3.1 Raw → Processed Pipeline
 
-## 3.2 Supported Dataset Families
-- Hydrology (USGS NWIS, NHD, WBD)  
-- Climate (NOAA, PRISM, CoCoRaHS)  
-- Drought & Flood indices  
-- Wildfire, NOAA Storm Events  
-- Land cover (NLCD, CORINE-like)  
-- USDA crops, census, agriculture  
-- Kansas treaties + Royce polygons  
-- Archaeological points/layers  
-- Diaries, newspapers, letters  
-- Wildlife, insects, pests  
-- Soil, geology, geomorphology  
-- LiDAR + historic plats  
-- Homesteads, land patents, ownership  
+- `data/raw/` — untouched source files (NOAA, USGS, KHS, etc.)  
+- `data/work/` — normalization, cleaning, staging, AI validation  
+- `data/processed/` — final, certified tables/GeoJSON/Parquet/COG  
+- `data/stac/` — STAC Collections & Items describing assets  
+- `data/archive/` — immutable historical releases & manifests  
+
+### 3.2 Dataset Families
+
+- **Hydrology:** USGS NWIS, NHD, WBD, streamflow  
+- **Climate:** NOAA, PRISM, Daymet, drought indices  
+- **Hazards:** storms, floods, fires, tornadoes, disasters  
+- **Land Cover & Terrain:** NLCD, LiDAR, elevation models  
+- **Agriculture & Demography:** crops, census, land use  
+- **Treaties & Land:** Royce polygons, BLM patents, deeds, homesteads  
+- **Archaeology & History:** sites, surveys, diaries, newspapers  
+- **Ecology & Biodiversity:** wildlife, insects, pests, eBird/GBIF  
 
 ---
 
-# 🏗️ 4. ETL Pipelines
+## 🏗️ ETL Pipelines
 
-Each ETL run includes:
+Each ETL pipeline:
 
-### ✔ Telemetry (OpenTelemetry)  
-### ✔ Logs (Loki-compatible)  
-### ✔ Metrics (Prometheus-compatible)  
-### ✔ Validation (Great Expectations)  
-### ✔ Gated Writes → No write allowed on failed validation  
-### ✔ Provenance stamps added automatically  
+- Emits OpenTelemetry traces (run_id, dataset_id, rows, etc.)  
+- Uses structured logging (Loki-compatible)  
+- Produces Prometheus metrics (rows processed, failures, latencies)  
+- Runs **self-validation** (schema + FAIR+CARE + checksums)  
+- Blocks writes on validation failure (gated ETL)  
+- Stamps provenance (lineage, source refs, timestamps)
 
-## 4.1 ETL Lifecycle
-1. **Fetch**  
-2. **Normalize**  
-3. **Geo-process**  
-4. **Temporal alignment (OWL-Time)**  
-5. **Quality gates**  
-6. **STAC indexing**  
-7. **Graph hydration**  
+### ETL Lifecycle
 
----
-
-# 📦 5. Metadata Governance (STAC + DCAT + FAIR+CARE)
-
-## 5.1 STAC Item Structure  
-- geometry  
-- assets  
-- links  
-- properties.datetime  
-- KFM-specific:  
-  - kfm:provenance  
-  - kfm:temporal_extent  
-  - kfm:ethics  
-  - kfm:uncertainty  
-  - kfm:lineage  
-
-## 5.2 DCAT Required Fields  
-- dct:title  
-- dct:creator  
-- dcat:distribution  
-- dct:provenance  
-- dct:temporal  
-- dct:spatial  
+1. **Fetch** — download / query external APIs or archives  
+2. **Normalize** — clean, reshape, unit/CRS conversions  
+3. **Geoprocess** — reproject, clip, derive, union/diff  
+4. **Temporal Alignment** — OWL-Time-based intervals  
+5. **Validation** — schema, FAIR+CARE, checksum, AI audits  
+6. **STAC Indexing** — create/update STAC Items/Collections  
+7. **Graph Hydration** — load key entities and relations into Neo4j  
 
 ---
 
-# 🧠 6. Neo4j Knowledge Graph (CIDOC CRM + GeoSPARQL + OWL-Time)
+## 📦 Metadata Governance (STAC + DCAT + FAIR+CARE)
 
-## 6.1 Major Classes
-- E53 Place  
-- E4 Period  
-- E5 Event  
-- E7 Activity  
-- E52 Time-Span  
-- E18 Physical Thing  
-- E28 Conceptual Object  
+### 5.1 STAC
 
-## 6.2 KFM Custom Ontology
-- KFM:HydrologicalUnit  
-- KFM:ClimateBoundary  
-- KFM:LandCoverEra  
-- KFM:TreatyBoundary  
-- KFM:HistoricalActor  
-- KFM:DocumentReference  
-- KFM:EcologicalIndicator  
+Each geospatial asset is described by a STAC Item with:
 
----
+- `geometry`, `bbox`, `datetime`/temporal range  
+- `assets` (COGs, GeoJSON, Parquet, NetCDF, docs)  
+- `links` (collections, related, derived-from)  
+- KFM properties:
+  - `kfm:provenance`  
+  - `kfm:ethics` (care_label, sensitivity, sovereignty_notes)  
+  - `kfm:lineage` (source_ids, pipeline_ids)  
 
-# 🔌 7. API Layer (FastAPI)
+### 5.2 DCAT
 
-## Provided Endpoints
-- `/stac/*`  
-- `/graph/query`  
-- `/timeseries/*`  
-- `/layers/*`  
-- `/focus/ask`  
-- `/focus/embeddings`  
-- `/focus/narrative`  
+Each dataset → DCAT Dataset with:
+
+- `dct:title`, `dct:description`  
+- `dct:creator`, `dct:license`  
+- `dct:temporal`, `dct:spatial`  
+- `dcat:distribution` with STAC asset links  
+
+FAIR+CARE metadata is enforced by `faircare-validate.yml`.
 
 ---
 
-# 🌐 8. Web Client (React + MapLibre + Cesium)
+## 🧠 Neo4j Knowledge Graph (CIDOC CRM + GeoSPARQL + OWL-Time)
 
-## 8.1 Primary Features
-- Multi-year timeline  
-- 2D/3D basemap switching  
-- Layer browser  
-- Feature inspector  
-- AI Focus Mode side panel  
-- Story Nodes + narratives  
-- Accessibility compliance (WCAG 2.1 AA)  
+### 6.1 Major Classes
 
-## 8.2 UI Architecture
-- `components/` — Map, Timeline, Panels  
-- `hooks/` — data fetching, caching  
-- `state/` — Zustand global state  
-- `assets/` — icons, colors, legends  
+- **CIDOC CRM**  
+  - `E53 Place`, `E4 Period`, `E5 Event`, `E7 Activity`  
+  - `E52 Time-Span`, `E18 Physical Thing`, `E28 Conceptual Object`  
+
+- **KFM Extensions**  
+  - `KFM:HydrologicalUnit`  
+  - `KFM:ClimateBoundary`  
+  - `KFM:TreatyBoundary`  
+  - `KFM:HistoricalActor`  
+  - `KFM:EcologicalIndicator`  
+  - `KFM:DocumentReference`
+
+### 6.2 Example Relations
+
+- `(Person)-[:ATTENDED]->(Event)`  
+- `(Event)-[:LOCATED_AT]->(Place)`  
+- `(Document)-[:MENTIONS]->(Place|Event|Person)`  
+- `(Dataset)-[:COVERS]->(Place)`  
+- `(StoryNode)-[:NARRATES]->(Event|Place|Person)`  
 
 ---
 
-# 🔥 9. Focus Mode AI Engine
+## 🔌 API Layer (FastAPI / GraphQL)
 
-## 9.1 Inputs
-- Graph nodes  
-- STAC items  
-- Corpus documents  
-- Timeseries data  
+Key endpoints (representative):
 
-## 9.2 Capabilities
-- Timeline-aware Q&A  
-- Narrative generation  
+- `/stac/*` — STAC browsing and search  
+- `/graph/query` — graph queries (Cypher-based)  
+- `/timeseries/*` — climate, hydrology, hazards time series  
+- `/layers/*` — map layers and metadata  
+- `/focus/ask` — natural-language Focus Mode queries  
+- `/focus/embeddings` — embedding search + similarity  
+- `/focus/narrative` — AI narrative generation  
+
+AuthN/AuthZ: OAuth2/OIDC + RBAC for sensitive content.
+
+---
+
+## 🌐 Web Client (React + MapLibre + Cesium)
+
+### 8.1 Primary UX Features
+
+- Multi-year **timeline** with dynamic filters  
+- 2D (MapLibre) + 3D (Cesium) visualization  
+- Layer browser + feature inspector  
+- Focus Mode sidebar + Story Node cards  
+- Keyboard-accessible, WCAG 2.1 AA-compliant UI  
+
+### 8.2 UI Structure
+
+- `components/` — Map, Timeline, Panels, Legends  
+- `hooks/` — data fetching, caching, state sync  
+- `state/` — global app state (e.g., Zustand or Redux)  
+- `assets/` — icons, sprites, color tokens  
+
+---
+
+## 🔥 Focus Mode AI Engine
+
+### 9.1 Inputs
+
+- Neo4j graph nodes  
+- STAC/DCAT metadata  
+- Full-text archives (diaries, news, reports)  
+- Time series & raster summaries  
+
+### 9.2 Capabilities
+
+- Entity-centric Q&A  
+- Narrative synthesis across datasets  
 - Spatial–temporal reasoning  
-- Entity extraction (spaCy)  
-- Few-shot document synthesis  
-- Multi-dataset correlation  
-- Causal hypothesis generation  
+- NER, linking, summarization  
+- Multi-dataset correlation & hypothesis surfacing  
+- Explainability (SHAP overlays, rationale traces)  
 
 ---
 
-# 🎛️ 10. Telemetry, Observability, Alerts
+## 🎛️ Telemetry, Observability, Alerts
 
-## 10.1 OpenTelemetry Traces
-Each ETL run correctly emits:
-- `run_id`  
-- `dataset_id`  
-- `validator_pass`  
-- `bytes`  
-- `rows_processed`  
+### OpenTelemetry
 
-## 10.2 Prometheus Metrics
+Each ETL/Focus/API call emits traces with:
+
+- `run_id`, `dataset_id`, `span_id`, `latency_ms`  
+- `validator_pass`, `rows_processed`, `bytes_processed`  
+
+### Metrics (Prometheus)
+
 - `etl_rows_processed_total`  
-- `etl_failure_total`  
-- `web_request_latency`  
+- `etl_failures_total`  
+- `web_request_latency_ms`  
 - `focus_tokens_used_total`  
 
-## 10.3 Loki Logs
-- Structured JSON  
-- Per-run correlation  
+### Logging (Loki)
 
-## 10.4 Alertmanager
+- Structured JSON logs, correlated via `run_id`  
+
+### Alerts
+
 - High error rate  
-- Low throughput  
 - Validator failures  
-- API instability  
+- Performance regressions  
+- Security anomalies  
 
 ---
 
-# 🧪 11. Data Validation — Great Expectations
+## 🧪 Data Validation (Self-Validation + Great Expectations)
 
-## 11.1 KFM Standard Suites
-- Schema  
-- Spatial validity  
-- Temporal validity  
-- Value ranges  
-- Missingness  
-- Entity consistency  
+Validation stack:
 
-## 11.2 Gated ETL
-**If validation fails → downstream writes blocked.**
+- Self-validation gates (schema + FAIR+CARE + checksum)  
+- Great Expectations-like suites for:
+  - schema  
+  - spatial validity  
+  - temporal validity  
+  - value ranges  
+  - missingness  
+  - entity consistency  
 
----
-
-# 🔒 12. Security & Privacy
-
-- Signed dataset manifests  
-- SBOM required  
-- SLSA provenance  
-- API key rotation  
-- read-only graph for public demo  
-- isolated compute for heavy ETL  
-- PII-stripping on ingest  
+**If validation fails → downstream writes are blocked.**
 
 ---
 
-# 🔄 13. Versioning & Releases
+## 🔒 Security & Privacy
 
-## 13.1 Semantic Versioning
-- `MAJOR`: full system overhauls  
-- `MINOR`: new features  
-- `PATCH`: fixes  
-
-## 13.2 Release Bundle
-- Manifest  
-- SBOM  
-- STAC index  
-- Graph snapshot  
-- AI model fingerprints  
+- Signed manifests + SBOM for every release  
+- SLSA provenance for critical workflows  
+- API key rotation policies  
+- PII scrubbing on ingest  
+- Read-only graph for public views  
+- Network isolation for heavy ETL workloads  
 
 ---
 
-# 📈 14. Analyses & Workflows
+## 🔄 Versioning & Releases
 
-## Hydrology
-- Drought–flood correlation  
-- Watershed change  
-- Flow anomalies  
+### Semantic Versioning
 
-## Ecology
-- Species distribution  
-- Pests + climate shifts  
-- Habitat fragmentation  
+- **MAJOR** — architectural or ontology-breaking changes  
+- **MINOR** — new features, analyses, or datasets  
+- **PATCH** — bug fixes / minor improvements  
 
-## Historical
-- Treaty boundary changes  
-- Settlement pattern detection  
-- Land ownership timelines  
+### Release Bundle Contents
 
-## Remote Sensing
-- Change detection  
-- NDVI/NDMI trends  
-- LiDAR terrain reconstruction  
+- `manifest.zip` — asset listing + checksums  
+- `sbom.spdx.json` — dependency SBOM  
+- STAC root catalog snapshot  
+- Graph snapshot (optional)  
+- AI model fingerprints & metrics  
+- `focus-telemetry.json` — telemetry & governance  
 
 ---
 
-# 🧱 15. Architecture Deep Dive
+## 📈 Analyses & Workflows
 
-## 15.1 API <-> Graph Interface
+Examples:
 
-```mermaid
+- **Hydrology:** drought–flood correlation, watershed change, flow anomalies  
+- **Ecology:** species distributions, pest ranges, habitat fragmentation  
+- **Historical:** treaty boundary evolution, settlement patterns, land tenure timelines  
+- **Remote Sensing:** change detection, NDVI/NDMI trends, LiDAR terrain reconstruction  
+
+Each analysis documents:
+
+- Data sources  
+- Methods  
+- Validation & uncertainty  
+- Story Nodes + visualizations  
+
+---
+
+## 🧱 Architecture Deep Dive
+
+### 15.1 API ↔ Graph Interface
+
+~~~~~mermaid
 flowchart TD
-    A[FastAPI Resolver] --> B[Cypher Template Builder]
-    B --> C[Neo4j Driver]
-    C --> D[(Graph)]
-    D --> A
-```
+  A["FastAPI Resolver"] --> B["Cypher Template Builder"]
+  B --> C["Neo4j Driver"]
+  C --> D["Graph Store"]
+  D --> A
+~~~~~
 
-## 15.2 Focus Mode AI Feedback Loop
+### 15.2 Focus Mode AI Feedback Loop
 
-```mermaid
+~~~~~mermaid
 flowchart TD
-    A[User Query] --> B[Embedding Search]
-    B --> C[Graph Lookup]
-    C --> D[Context Synthesis]
-    D --> E[LLM Narrative]
-    E --> F[UI Story Nodes]
-    F --> A
-```
+  A["User Query"] --> B["Embedding Search"]
+  B --> C["Graph Lookup"]
+  C --> D["Context Synthesis"]
+  D --> E["LLM Narrative"]
+  E --> F["UI Story Nodes"]
+  F --> A
+~~~~~
 
 ---
 
-# 📚 16. Ethical AI & FAIR+CARE
+## 📚 MCP-DL v6.3 Compliance
 
-- Transparency of lineage  
-- Reversible transformations  
-- Tribal consultation for treaties  
-- Respectful handling of Indigenous data  
-- Clear uncertainty communication  
+The Master Coder Protocol requires:
 
----
+- Mandatory YAML front-matter for all docs  
+- One-box Markdown outputs, validated structure  
+- Standardized directory layout sections  
+- Correct Mermaid usage (flowchart LR/TD, quoted labels)  
+- Telemetry references and governance links  
+- CI-enforced Markdown rules (`docs-lint.yml`)  
 
-# 📝 17. MCP-DL v6.3 Compliance
-
-- Mandatory YAML front-matter  
-- All markdown complete & valid  
-- Directory layout present  
-- Mermaid diagrams correct  
-- No broken wrappers  
-- Accessibility-grade headings  
-- Telemetry references  
-- SBOM references  
+This master guide is the reference for MCP-DL compliance decisions.
 
 ---
 
-# 🧰 18. Development Standards
+## 🧰 Development Standards
 
-## 18.1 Commit Rules
-- `feat:`  
-- `fix:`  
-- `docs:`  
-- `chore:`  
-- `data:`  
-- `graph:`  
+### Commits
 
-## 18.2 Branch Names
-- `feature/*`  
-- `analysis/*`  
-- `dataset/*`  
+- `feat:`, `fix:`, `docs:`, `chore:`, `data:`, `graph:`, `ci:`, `security:`  
+
+### Branching
+
+- `feature/*`, `analysis/*`, `dataset/*`, `fix/*`  
+
+### PR Requirements
+
+- Documentation updated  
+- Data contracts present & validated  
+- CI/validation green  
+- Governance checklist completed  
 
 ---
 
-# 🚀 19. v10 Core Principles
+## 🚀 v10 Core Principles
 
 - **Everything is temporal**  
 - **Everything is spatial**  
@@ -418,15 +439,21 @@ flowchart TD
 
 ---
 
-# 🏁 20. Final Notes
+## 🕰️ Version History
 
-This document is the **primary technical reference** for all Kansas Frontier Matrix development.
+| Version | Date | Author | Summary |
+|--------|--------|--------|---------|
+| v10.3.1 | 2025-11-13 | KFM Core Team | Master guide aligned to v10.3; diagrams fixed; telemetry & governance references updated. |
+| v10.2.2 | 2025-11-13 | KFM Core Team | Expanded architecture coverage; added Focus Mode and telemetry sections. |
 
-All future work must:  
-- Follow this structure  
-- Extend this guide  
-- Never contradict the architecture defined here  
-- Maintain Diamond⁹ Ω / Crown∞Ω status
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — MASTER GUIDE v10**  
+*Architecture · Data · AI · UX · Governance*  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+
+[Back to Docs Index](README.md) · [System Architecture](../src/ARCHITECTURE.md) · [Data Governance](guides/data-governance/README.md)
 
 </div>
-
