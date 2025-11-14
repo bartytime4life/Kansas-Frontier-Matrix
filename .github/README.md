@@ -148,13 +148,14 @@ Deployment sequence:
 
 ## 🧮 Automation Flow (Indented Mermaid)
 
-    flowchart TD
-      A["Commit / PR / Scheduled Run"]
-        --> B["Validation (STAC · FAIR+CARE · Docs)"]
-      B --> C["Security (CodeQL · Trivy)"]
-      C --> D["Build & Deploy"]
-      D --> E["Telemetry Export"]
-      E --> F["Governance Ledger Sync"]
+  ```mermaid
+flowchart TD
+  A["Commit / PR / Scheduled Run"] --> B["Validation (STAC · FAIR+CARE · Docs)"]
+  B --> C["Security (CodeQL · Trivy)"]
+  C --> D["Build & Deploy"]
+  D --> E["Telemetry Export"]
+  E --> F["Governance Ledger Sync"]
+```
 
 Outputs feed:
 
