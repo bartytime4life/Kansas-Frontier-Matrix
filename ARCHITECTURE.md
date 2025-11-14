@@ -96,6 +96,7 @@ It complements, but does **not duplicate**, the following documents:
 
 High-level, KFM is a **layered, containerized architecture**:
 
+```mermaid
     flowchart TD
       A["External Data (NOAA · USGS · KHS · Tribal · Sensors · Archives)"]
       B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC · Forecasts)"]
@@ -111,6 +112,7 @@ High-level, KFM is a **layered, containerized architecture**:
       B --> G
       D --> G
       E --> G
+```
 
 ---
 
