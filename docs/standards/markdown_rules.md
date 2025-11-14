@@ -1,7 +1,7 @@
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/markdown_rules.md"
-version: "v10.2.3"
+version: "v10.2.8"
 last_updated: "2025-11-13"
 review_cycle: "Annual / Autonomous"
 commit_sha: "<latest-commit-hash>"
@@ -20,8 +20,7 @@ mcp_version: "MCP-DL v6.3"
 `docs/standards/markdown_rules.md`
 
 **Purpose:**  
-Define the authoritative formatting, metadata, and structural standards for *all* Markdown within the Kansas Frontier Matrix (KFM) project.  
-These rules enforce **MCP v6.3**, **FAIR+CARE**, strict reproducibility, and automated validation across the KFM monorepo.
+Define the mandatory Markdown conventions for all KFM documentation, ensuring MCP v6.3 compliance, FAIR+CARE alignment, reproducibility, machine readability, and full CI validation.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
@@ -34,293 +33,255 @@ These rules enforce **MCP v6.3**, **FAIR+CARE**, strict reproducibility, and aut
 
 ## 📘 Overview
 
-This specification defines the **mandatory Markdown formatting protocol** for every document in the KFM monorepo.  
-All Markdown produced by contributors or automated systems must pass:
+This document defines the **authoritative** Markdown output protocol for the Kansas Frontier Matrix (KFM).  
+All Markdown must pass:
 
+- `make docs-validate`
 - `docs-lint.yml`
 - `markdown-validate.yml`
 - `stac-validate.yml`
-- FAIR+CARE automated checks  
-- MCPLint v10 series  
-- Dead link scanner  
-- Front-matter schema validator  
+- FAIR+CARE classifier
+- MCPLint v10.2+
+- CI schema and link validation
 
-These rules ensure Markdown is:
-
-- Structurally uniform  
-- Machine-parseable  
-- Indexed cleanly inside the Knowledge Graph  
-- Fully versioned & ethically compliant  
-- Ready for automated CI enforcement  
+Markdown files not passing validation are **rejected by CI**.
 
 ---
 
-## 🧱 1. YAML Front-Matter Requirements
+## 🧱 YAML Front-Matter Requirements
 
-All KFM Markdown **must** begin with a YAML block containing **no blank lines above it**.
+All KFM Markdown files must:
 
-### 📌 Required Fields (v10.2.3)
+- Begin with a full YAML front-matter block  
+- Contain **no blank lines above** the YAML block  
 
-| Field | Description |
+### 🧩 Required Fields
+
+| Field | Requirement |
 |---|---|
-| `title` | Must include emoji + full KFM title. |
-| `path` | Exact file path inside repo. |
-| `version` | Semantic version for the document. |
-| `last_updated` | ISO date string. |
-| `review_cycle` | “Quarterly / Annual / Autonomous / FAIR+CARE Council”. |
+| `title` | Must contain emoji + descriptive title. |
+| `path` | Exact file path. |
+| `version` | Semantic version. |
+| `last_updated` | ISO date. |
+| `review_cycle` | Review frequency label. |
 | `commit_sha` | Git SHA or `<latest-commit-hash>`. |
-| `sbom_ref` | SPDX SBOM reference. |
-| `manifest_ref` | Release manifest reference. |
-| `telemetry_ref` | Telemetry dataset reference. |
-| `telemetry_schema` | Schema governing the telemetry fields. |
-| `governance_ref` | Path to governance root. |
-| `license` | SPDX identifier (CC-BY 4.0 for docs). |
-| `mcp_version` | “MCP-DL v6.3”. |
+| `sbom_ref` | SPDX SBOM reference path. |
+| `manifest_ref` | Release manifest path. |
+| `telemetry_ref` | Telemetry dataset path. |
+| `telemetry_schema` | Telemetry schema path. |
+| `governance_ref` | Governance charter path. |
+| `license` | SPDX license identifier. |
+| `mcp_version` | MCP documentation layer version. |
 
-Failure to include any required fields results in a **CI rejection**.
+> ⚠️ Missing or malformed YAML = **automatic CI failure**.
 
 ---
 
-## 🧩 2. Title Block Structure (Centered)
+## 🧩 Centered Title Block Structure
 
-The centered header block is **mandatory**.
+To ensure GitHub renders the Title Block example literally, this section uses **tilde-based fences**, which are unbreakable by nested code blocks.
 
-### Correct template:
-
-```
-
+~~~~~markdown
 <div align="center">
 
-# 🧩 **Document Title**
-
+# 🧩 **Document Title**  
 `path/to/file.md`
 
-**Purpose:** One–three lines max.
+**Purpose:**  
+A one–three sentence summary of the document’s intent.
 
-[![Docs · MCP](...)](...)
-[![License: CC-BY 4.0](...)](...)
-[![FAIR+CARE](...)](...)
-[![Status: Active](...)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](...)
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](...)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](...)
+[![Status: Active](https://img.shields.io/badge/Status-Enforced-success)]()
 
 </div>
-```
+~~~~~
 
-### Mandatory rules:
+### 🔒 Title Block Rules
 
-* Must appear **immediately after** YAML front-matter.
-* Must include:
-
-  * H1 Title (with emoji)
-  * File path (backticks)
-  * Purpose statement
-  * 2–5 badges in correct order:
-
-    1. Docs · MCP
-    2. License
-    3. FAIR+CARE
-    4. Status
-* Must be followed by **one blank line** and then `---`.
+- Must immediately follow front-matter  
+- Must be centered with `<div align="center">`  
+- Must include:
+  - H1 title with emoji  
+  - Path in backticks  
+  - Purpose block  
+  - 2–5 badges  
+- **Badge order is mandatory:**  
+  1. Docs · MCP  
+  2. License  
+  3. FAIR+CARE  
+  4. Status  
+- Must be followed by:  
+  - One blank line  
+  - A horizontal rule (`---`)  
 
 ---
 
-## 🧮 3. Heading Hierarchy
+## 🧮 Heading Hierarchy (Strict)
 
-| Level | Usage          | Emoji?      |
-| ----- | -------------- | ----------- |
-| H1    | Title only     | Required    |
-| H2    | Major sections | Required    |
-| H3    | Subsections    | Recommended |
-| H4    | Deep nesting   | Optional    |
+| Level | Purpose | Emoji |
+|---|---|---|
+| H1 | Document title | Required |
+| H2 | Major sections | Required |
+| H3 | Subsections | Required for Directory Layout |
+| H4 | Optional nested content | Optional |
 
-### Correct:
+### ✔️ Correct Example
 
-```
+~~~~~markdown
 ## 📘 Overview
-### ⚙️ Pipeline
-```
+### ⚙️ Workflow
+~~~~~
 
-### Incorrect:
+### ❌ Incorrect Example
 
-```
+~~~~~markdown
 ## Overview
-### Pipeline
-```
+~~~~~
 
 ---
 
-## 🗂️ 4. Section Order
+## 🗂️ Section Order (Strict)
 
-Every KFM Markdown file must follow this sequence:
+All documents must follow this structure:
 
-1. YAML front-matter
-2. Centered title block
-3. Horizontal rule
-4. **Overview** (H2)
-5. Content sections (H2/H3)
-6. **Directory Layout** (if present—must always be H3)
-7. Version History
-8. Footer
+1. YAML front-matter  
+2. Centered Title Block  
+3. Horizontal rule (`---`)  
+4. **Overview**  
+5. Main content  
+6. Directory Layout (must be H3)  
+7. Version History  
+8. Footer  
 
-Documents missing any required section fail validation.
+Any deviation = **CI failure**.
 
 ---
 
-## 📁 5. Directory Layout Rules (Strict)
+## 📁 Directory Layout Rules
 
-* Must be inside a fenced code block.
-* Must have **no indentation before** the fence.
-* Format must follow ASCII tree format exactly.
-* Never place comments inside directory trees.
+Directory layouts must:
 
-### Example:
+- Appear under a `### 📁 Directory Layout` heading  
+- Use ASCII tree format  
+- Use fenced blocks with **no leading spaces**  
+- Include **no comments**  
 
-````
-```text
+### 📁 Directory Layout (Example)
+
+~~~~~text
 docs/
 |-- standards/
 |   |-- markdown_rules.md
 |-- analyses/
 |-- reports/
-````
-
-```
+~~~~~
 
 ---
 
-## 📦 6. Code & Data Block Rules
+## 📦 Code & Data Block Requirements
 
-| Type | Requirements |
+| Element | Rules |
 |---|---|
-| Code blocks | Always specify language. |
-| JSON | Must be valid — no comments allowed. |
-| YAML | Must not include tabs. |
-| Shell | Prefer `$` prefix. |
-| Inline code | Required for file paths. |
+| Code blocks | Must specify language. |
+| JSON | Must be valid. No comments allowed. |
+| YAML | Must use spaces only (no tabs). |
+| Bash | Prefer `$` prefix. |
+| Inline code | Required for file paths and commands. |
 
-Invalid JSON/YAML automatically rejects the PR.
-
----
-
-## 📋 7. Tables
-
-- Use pipe format.
-- No blank rows.
-- All columns require headers.
-- Use `—` for N/A fields.
-- Keep width under ~100 chars where possible.
+Invalid code blocks = **CI failure**.
 
 ---
 
-## 🎨 8. Badges & Images
+## 📋 Table Rules
 
-Badges:
-
-- Follow strict order:
-  1. Docs · MCP  
-  2. License  
-  3. FAIR+CARE  
-  4. Status  
-- Max 5 badges.
-
-Images:
-
-- Must include descriptive alt text.
-- Must specify width if larger than 700px.
+- Use pipe format  
+- Include header row  
+- Avoid blank rows  
+- Use `—` for missing values  
+- Keep line width reasonable  
 
 ---
 
-## 🧪 9. Mermaid Diagrams
+## 🎨 Image & Badge Rules
 
-Rules:
+### ✔️ Badge Order (Strict)
 
-- Max 1 diagram per section.
-- Only `flowchart TD` or `flowchart LR`.
-- No `classDef`.
-- Every node must use quoted labels.
+1. Docs · MCP  
+2. License  
+3. FAIR+CARE  
+4. Status  
+5. Optional badges  
+
+### 🖼 Image Rules
+
+- Alt text required  
+- Width required if >700px  
 
 ---
 
-## 🧩 10. Version History Section
+## 🧪 Mermaid Diagram Rules
 
-Template:
+- Only `flowchart LR` or `flowchart TD`  
+- Node labels must be quoted  
+- No CSS or themes  
+- Max one diagram per section  
 
-```
+### ✔️ Correct Example
 
+~~~~~mermaid
+flowchart LR
+  A["Start"] --> B["Finish"]
+~~~~~
+
+---
+
+## 🧩 Version History Requirement
+
+### Example
+
+~~~~~markdown
 ## 🕰️ Version History
 
-| Version | Date       | Author   | Summary                                                    |
-| ------- | ---------- | -------- | ---------------------------------------------------------- |
-| v10.2.3 | 2025-11-13 | A. Barta | Full structural rewrite, badge rules, enforcement updates. |
-
-```
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v10.2.8 | 2025-11-13 | A. Barta | Regenerated file using tilde-fence system to prevent GitHub rendering collisions. |
+~~~~~
 
 ---
 
-## ⚖️ 11. Footer Block
+## ⚖️ Footer (Mandatory)
 
-Footer is required and must match template:
-
-```
-
+~~~~~markdown
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
-```
-
----
-
-## 🧮 12. Validation & Enforcement Enhancements (v10.2.3)
-
-Documents must comply with:
-
-* MCPLint v10.2
-* Markdown structural schema
-* docs-lint.yml
-* FAIR+CARE automated classifier
-* Dead link detection
-* STAC/DCAT metadata extraction
-
-If a document fails validation, the merge is **blocked**.
-
----
-
-## 🧠 13. FAIR+CARE Compliance
-
-Markdown must support:
-
-* Openness
-* Provenance
-* Machine readability
-* Ethical tagging
-* Indigenous Data Sovereignty
-* Reproducible metadata
-
-All sensitive data must include CARE labels.
+~~~~~
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author   | Summary                                                                   |
-| ------- | ---------- | -------- | ------------------------------------------------------------------------- |
-| v10.2.3 | 2025-11-13 | A. Barta | Full rule application and restructuring under stored memory requirements. |
-| v10.2.2 | 2025-11-12 | A. Barta | Strengthened Mermaid, badge, and enforcement rules.                       |
-| v10.0.0 | 2025-11-10 | A. Barta | Added telemetry_schema rules and CARE integration.                        |
-| v9.7.0  | 2025-11-05 | A. Barta | Introduced formal structure, metadata blocks, and rule hierarchy.         |
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v10.2.8 | 2025-11-13 | A. Barta | Converted ALL example blocks to tilde-fence system to guarantee literal rendering. |
+| v10.2.7 | 2025-11-13 | A. Barta | Applied 5-backtick fencing (superseded by tilde-standard). |
+| v10.2.6 | 2025-11-13 | A. Barta | Fixed example rendering edge cases. |
+| v10.2.5 | 2025-11-13 | A. Barta | Adjusted nested fences. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
-```
