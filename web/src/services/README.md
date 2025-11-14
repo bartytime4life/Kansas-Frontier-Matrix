@@ -1,13 +1,15 @@
 ---
 title: "🛰️ Kansas Frontier Matrix — Web Services & Data Integration Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/services/README.md"
-version: "v9.6.0"
-last_updated: "2025-11-03"
+version: "v10.3.1"
+last_updated: "2025-11-13"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.6.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.6.0/manifest.zip"
+sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.3.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-services-readme-v2.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -15,17 +17,17 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🛰️ Kansas Frontier Matrix — **Web Services & Data Integration Layer**
+# 🛰️ **Kansas Frontier Matrix — Web Services & Data Integration Layer**  
 `web/src/services/README.md`
 
 **Purpose:**  
-Implements the core data connectivity and FAIR+CARE-governed integration APIs for the Kansas Frontier Matrix (KFM) web application.  
-This layer ensures that every network request, dataset query, and AI interaction remains transparent, traceable, and ethically validated through the KFM Governance Ledger.
+Define the **data access and integration layer** for the KFM web application.  
+This module implements FAIR+CARE-governed connectivity to STAC/DCAT catalogs, Neo4j/Focus services, telemetry endpoints, and governance APIs so that all web data flows are **transparent, traceable, and ethically validated**.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Services%20Governed-gold)](../../../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../../docs/architecture/repo-focus.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Services%20Governed-gold)](../../../docs/standards/faircare.md)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)  
+[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green)]()  
+[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../../docs/MASTER_GUIDE_v10.md)
 
 </div>
 
@@ -33,163 +35,180 @@ This layer ensures that every network request, dataset query, and AI interaction
 
 ## 📚 Overview
 
-The **Web Services Layer** provides all data and AI API interactions for the KFM web interface.  
-It bridges FAIR+CARE-compliant backend systems (STAC, DCAT, Neo4j, Focus AI) with the frontend, ensuring integrity, provenance, and ethical transparency across every request.
+The **Web Services Layer** provides all data and AI integration for the KFM frontend.  
+It connects **React components and hooks** to:
 
-### Core Responsibilities:
-- Retrieve geospatial and tabular datasets from FAIR+CARE-aligned APIs.  
-- Execute Focus Mode AI explainability queries through validated governance endpoints.  
-- Synchronize provenance metadata with KFM’s blockchain-backed ledger.  
-- Log all data transfers for accountability, performance, and energy metrics.  
+- STAC/DCAT catalogs  
+- GraphQL/Neo4j entity queries  
+- Focus Mode v2.4 AI endpoints  
+- Telemetry & sustainability exporters  
+- Governance ledgers and FAIR+CARE validators  
+
+Core goals:
+
+- Enforce **FAIR+CARE** rules at the network boundary  
+- Guarantee provenance on every request  
+- Provide strongly-typed, reusable API clients  
+- Support MCP-compliant logging, telemetry, and auditing  
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ Directory Layout (v10.3.1)
 
-```plaintext
+~~~~~text
 web/src/services/
-├── README.md                             # This file — documentation for web services layer
+├── README.md                     # This file
 │
-├── stacService.ts                        # Handles STAC catalog queries and dataset indexing
-├── dcatService.ts                        # Manages DCAT 3.0 data catalog synchronization
-├── telemetryService.ts                   # Logs Focus Mode and sustainability metrics
-├── governanceService.ts                  # Synchronizes FAIR+CARE governance records
-├── aiExplainabilityService.ts            # Focus Mode AI explainability and reasoning interface
-└── metadata.json                         # Provenance, checksums, and service lineage metadata
-```
+├── apiClient.ts                  # REST/GraphQL base client (JSON-LD, retries, ETag)
+├── stacService.ts                # STAC catalog queries and dataset indexing
+├── dcatService.ts                # DCAT 3.0 dataset/catalog integration
+├── graphService.ts               # GraphQL-based Neo4j entity queries
+└── telemetryService.ts           # Web + Focus Mode telemetry and sustainability metrics
+~~~~~
 
 ---
 
 ## ⚙️ Data Integration Workflow
 
-```mermaid
+~~~~~mermaid
 flowchart TD
-    A["Frontend Request (Web UI)"] --> B["STAC/DCAT Service Layer"]
-    B --> C["AI Explainability Service (Focus Mode)"]
-    C --> D["Governance & Telemetry Service"]
-    D --> E["Provenance Ledger Registration + FAIR+CARE Sync"]
-```
+  A["Frontend Request<br/>(Components / Hooks)"] --> B["apiClient.ts"]
+  B --> C["stacService.ts<br/>/ dcatService.ts"]
+  B --> D["graphService.ts<br/>(Focus/Entities)"]
+  D --> E["telemetryService.ts<br/>(Metrics · Ethics · Sustainability)"]
+  E --> F["Governance & Provenance Ledgers"]
+~~~~~
 
-### Workflow Description:
-1. **Frontend Request:** User interaction triggers a dataset, AI query, or validation event.  
-2. **Data Services:** STAC/DCAT connectors retrieve metadata and datasets.  
-3. **AI Explainability:** Focus Mode AI interprets results through explainable APIs.  
-4. **Governance Sync:** FAIR+CARE checks and telemetry logs record ethical compliance.  
-5. **Ledger Registration:** All service activities are stored in immutable provenance ledgers.  
+**Flow Description**
+
+1. **Frontend Request** — Components/hooks (`useFocus`, `useStac`, `useTelemetry`) initiate API calls.  
+2. **apiClient** — Applies base URL, headers, JSON-LD, retries, and error normalization.  
+3. **STAC/DCAT Services** — Retrieve catalogs, layers, and dataset metadata.  
+4. **Graph Service** — Fetches Focus Mode payloads and Neo4j subgraphs.  
+5. **Telemetry Service** — Logs performance, ethics events, and sustainability metrics to telemetry and ledgers.
 
 ---
 
-## 🧩 Example Service Metadata Record
+## 🧩 Service Summaries
 
-```json
+| Service | Description | Role |
+|--------|-------------|------|
+| `apiClient.ts` | Shared REST/GraphQL base; injects provenance headers and JSON-LD context; applies retries/ETags. | Core transport |
+| `stacService.ts` | Queries STAC Collections/Items; fetches layer metadata and asset URLs. | Data integration |
+| `dcatService.ts` | Reads DCAT 3.0 exports for dataset discovery and metadata enrichment. | Catalog access |
+| `graphService.ts` | Issues GraphQL requests to Neo4j-backed API (entities, subgraphs, StoryNodes). | Graph integration |
+| `telemetryService.ts` | Sends WebVitals, Focus Mode usage, ethics events, and energy/CO₂e metrics to backend. | Telemetry & governance |
+
+---
+
+## 🔐 FAIR+CARE Governance Matrix
+
+| Principle | Implementation | Oversight |
+|----------|----------------|-----------|
+| **Findable** | STAC/DCAT endpoints cataloged; services indexed in metadata. | @kfm-data |
+| **Accessible** | Standards-based REST/GraphQL; clear error messages. | @kfm-accessibility |
+| **Interoperable** | STAC 1.0, DCAT 3.0, JSON-LD/RDF enforced by service schemas. | @kfm-architecture |
+| **Reusable** | Modular clients, shared DTOs, and schema guards. | @kfm-design |
+| **Collective Benefit** | Transparent access for research, education, and tribal partners. | @faircare-council |
+| **Authority to Control** | CARE flags and sovereignty checks returned from backend and honored by UI. | @kfm-governance |
+| **Responsibility** | Service-level logging of all calls and ethical decisions. | @kfm-security |
+| **Ethics** | Focus Mode queries routed through explainability + CARE-aware endpoints. | @kfm-ethics |
+
+Provenance and FAIR+CARE outputs tie into:
+
+- `data/reports/audit/data_provenance_ledger.json`  
+- `data/reports/fair/data_care_assessment.json`
+
+---
+
+## 🧾 Example Services Registry Record (v10.3.1)
+
+~~~~~json
 {
-  "id": "web_services_registry_v9.6.0_2025Q4",
+  "id": "web_services_registry_v10.3.1",
   "services": [
+    "apiClient.ts",
     "stacService.ts",
     "dcatService.ts",
-    "aiExplainabilityService.ts",
-    "governanceService.ts"
+    "graphService.ts",
+    "telemetryService.ts"
   ],
-  "api_calls_executed": 1872,
+  "api_calls_executed": 3254,
   "fairstatus": "certified",
   "checksum_verified": true,
-  "latency_avg_ms": 142.6,
+  "latency_avg_ms": 118.2,
   "telemetry_logged": true,
   "governance_registered": true,
   "validator": "@kfm-web-services",
-  "created": "2025-11-03T23:59:00Z",
+  "created": "2025-11-13T23:59:00Z",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
-```
+~~~~~
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## ⚙️ CI/CD & Validation
 
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | APIs and endpoints indexed in governance metadata. | @kfm-data |
-| **Accessible** | REST + GraphQL endpoints open and standards-compliant. | @kfm-accessibility |
-| **Interoperable** | STAC/DCAT 3.0 and FAIR+CARE-aligned schemas enforced. | @kfm-architecture |
-| **Reusable** | Modular API clients reusable across domains. | @kfm-design |
-| **Collective Benefit** | Provides transparent data access for research and education. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council approves all AI/ETL service integrations. | @kfm-governance |
-| **Responsibility** | Engineers document all API transactions and governance syncs. | @kfm-security |
-| **Ethics** | Focus Mode ensures equitable data interpretation and access. | @kfm-ethics |
+| Workflow | Purpose | Artifact |
+|----------|---------|----------|
+| `docs-lint.yml` | Ensure this README + metadata are valid | `docs/reports/self-validation/docs/lint_summary.json` |
+| `build-and-deploy.yml` | Verify services used correctly in web build | `docs/reports/telemetry/build_metrics.json` |
+| `telemetry-export.yml` | Merge web/service-level metrics | `releases/v10.3.0/focus-telemetry.json` |
+| `codeql.yml` | Static analysis of services (security) | `docs/reports/security/codeql/*.sarif` |
+| `trivy.yml` | Dependency and container CVE scans | `docs/reports/security/trivy/*.json` |
 
-All API and telemetry data logged in:  
-`data/reports/audit/data_provenance_ledger.json`  
-and  
-`data/reports/fair/data_care_assessment.json`
+All service modules are tested with:
 
----
-
-## ⚙️ Key Service Summaries
-
-| Service | Description | Role |
-|----------|--------------|------|
-| `stacService.ts` | Retrieves FAIR+CARE-registered STAC collections and items. | Data Integration |
-| `dcatService.ts` | Queries DCAT 3.0 metadata for open datasets. | Catalog Access |
-| `telemetryService.ts` | Monitors performance, carbon usage, and Focus Mode metrics. | Sustainability |
-| `governanceService.ts` | Syncs provenance and ethical audits with ledger. | Governance |
-| `aiExplainabilityService.ts` | Interfaces with Focus Mode for explainable AI queries. | Transparency |
-
-All workflows automated via `web_services_sync.yml`.
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| Artifact | Retention Duration | Policy |
-|-----------|--------------------|--------|
-| Service Logs | 90 Days | Retained for audit reproducibility. |
-| FAIR+CARE Validation Reports | 180 Days | Stored for certification traceability. |
-| Governance Manifests | Permanent | Immutable under blockchain ledger. |
-| Metadata Records | Permanent | Maintained as part of service provenance. |
-
-Cleanup managed through `web_services_cleanup.yml`.
+- Unit tests for error handling and edge cases  
+- Integration tests for schema and DTO guards  
 
 ---
 
 ## 🌱 Sustainability Metrics
 
-| Metric | Value | Verified By |
-|---------|--------|--------------|
-| Avg. API Latency | 142.6 ms | @kfm-sustainability |
-| Energy Use per Session | 1.4 Wh | @kfm-security |
-| Carbon Output | 1.6 gCO₂e | @kfm-telemetry |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+| Metric | Target | Verified By |
+|--------|--------|-------------|
+| Avg. API Latency | ≤ 150 ms | @kfm-sustainability |
+| Energy / Session | ≤ 1.5 Wh | @kfm-security |
+| Carbon / Session | ≤ 2.0 gCO₂e | @kfm-telemetry |
+| Renewable Power | 100% (RE100) | @kfm-infrastructure |
 
-Telemetry data stored in:  
-`releases/v9.6.0/focus-telemetry.json`
+Telemetry recorded in:
+
+```
+../../../releases/v10.3.0/focus-telemetry.json
+```
 
 ---
 
 ## 🧾 Internal Use Citation
 
-```text
-Kansas Frontier Matrix (2025). Web Services & Data Integration Layer (v9.6.0).
-Implements FAIR+CARE-aligned STAC/DCAT, AI, and governance APIs for transparent and ethical data exchange within the KFM web interface.
-Ensures reproducible, sustainable, and ledger-verified operations under MCP-DL v6.3.
+```
+Kansas Frontier Matrix (2025). Web Services & Data Integration Layer (v10.3.1).
+FAIR+CARE-aligned STAC/DCAT, AI, and governance service layer
+for transparent, reproducible, and ethically governed data exchange
+in the Kansas Frontier Matrix web interface (MCP-DL v6.3).
 ```
 
 ---
 
-## 🧾 Version Notes
+## 🕰️ Version History
 
-| Version | Date | Notes |
-|----------|------|--------|
-| v9.6.0 | 2025-11-03 | Added full governance synchronization and sustainability tracking for all web services. |
-| v9.5.0 | 2025-11-02 | Enhanced AI explainability and DCAT 3.0 integration support. |
-| v9.3.2 | 2025-10-28 | Established baseline web service architecture under FAIR+CARE validation. |
+| Version | Date | Author | Summary |
+|---------|--------|--------|---------|
+| v10.3.1 | 2025-11-13 | Web Architecture Team | Upgraded from v9.6.0; aligned with new apiClient + telemetryService + v10.3 telemetry schema. |
+| v9.6.0 | 2025-11-03 | KFM Core Team | Full governance sync + sustainability tracking for web services. |
+| v9.5.0 | 2025-11-02 | KFM Core Team | Enhanced AI explainability and DCAT integration support. |
+| v9.3.2 | 2025-10-28 | KFM Core Team | Baseline FAIR+CARE service architecture. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix** · *Open APIs × FAIR+CARE Governance × Provenance Transparency*  
-[🔗 Repository](https://github.com/bartytime4life/Kansas-Frontier-Matrix) • [🧭 Docs Portal](../../../docs/) • [⚖️ Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix**  
+Open APIs × FAIR+CARE Governance × Provenance Transparency  
+© 2025 Kansas Frontier Matrix — MIT License  
+
+[Back to Web Source](../README.md) · [Source Architecture](../ARCHITECTURE.md)
 
 </div>
-
