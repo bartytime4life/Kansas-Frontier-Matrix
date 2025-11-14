@@ -1,1 +1,11 @@
-y
+flowchart TD
+  A["Geospatial Sources<br/>(GeoTIFF · NetCDF · Shapefile · GeoJSON · GeoParquet)"] --> B["Ingest & Inspect<br/>GDAL Info · Schema Read · CRS Detect"]
+  B --> C["Reprojection & Normalization<br/>PROJ Profiles · EPSG:4326 · Kansas Projections"]
+  C --> D["Derivatives & Enhancements<br/>COG · Hillshade · NDVI · DEM Blend · Pansharpen"]
+  D --> E["Quality Control<br/>Geometry Checks · Nodata · Bounds · COG Validation"]
+  E --> F["FAIR+CARE Review<br/>Mask Sensitive Sites · Apply CARE Labels · Sovereignty Rules"]
+  F --> G["Publication<br/>GeoTIFF/COG · GeoParquet · Vector Layers"]
+  G --> H["Catalog Registration<br/>STAC Items/Collections · DCAT Datasets"]
+  H --> I["Knowledge Graph Integration<br/>Neo4j · CIDOC · GeoSPARQL"]
+  I --> J["Downstream Consumption<br/>Web (MapLibre · Cesium) · Focus Mode · Analyses"]
+  J --> K["Telemetry & Governance<br/>Runtime · Energy · CO₂e · Masking Events · Lineage Logs"]
