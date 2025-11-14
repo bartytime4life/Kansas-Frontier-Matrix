@@ -63,8 +63,6 @@ KansasFrontierMatrix/
 
 ## 🧩 **Mermaid — KFM LLM Safety Pipeline (MCP-DL v6.3 Spec)**
 
-Below uses your required Mermaid pattern:
-
 ### **LLM Safety Flow Overview**
 ```mermaid
 flowchart TD
@@ -75,8 +73,9 @@ flowchart TD
     E --> F[Output Parser & Schema Validator]
     F --> G[Safety Policy Engine]
     G --> H[Action Gateway]
-    H --> I[Telemetry Sink (Focus Mode)]
+    H --> I[Telemetry Sink - Focus Mode]
 ```
+
 
 ---
 
