@@ -20,15 +20,14 @@ mcp_version: "MCP-DL v6.3"
 `web/README.md`
 
 **Purpose:**  
-Describe the **KFM Web Platform**, including the React/MapLibre/Cesium UI, Focus Mode v2.4 interface, STAC/DCAT explorers, governance dashboards, telemetry integration, and MCP-based backend connections.
+Describe the **KFM Web Platform**, including the React/MapLibre/Cesium UI, Focus Mode v2.4 interface, STAC/DCAT explorers, governance dashboards, telemetry integration, and MCP-backed API connections.
 
-<img alt="Docs" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
-<img alt="Web Status" src="https://img.shields.io/badge/Web_App-Stable-success" />
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)  
+[![License](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)  
+[![Web Status](https://img.shields.io/badge/Web_App-Stable-success)]()
 
 </div>
-
 
 ---
 
@@ -39,209 +38,237 @@ It merges:
 
 - 2D/3D mapping  
 - Predictive climate/hydrology overlays  
-- Timeline interaction  
+- Temporal navigation (timeline)  
 - Focus Mode v2.4 narrative reasoning  
 - Governance + provenance indicators  
 - STAC/DCAT dataset browsing  
-- OpenTelemetry dashboards  
+- Telemetry and observability dashboards  
 
-The system adheres to:
+The web stack adheres to:
 
-- **FAIR+CARE ethics**  
+- **FAIR+CARE** ethics  
 - **MCP-DL v6.3**  
 - **WCAG 2.1 AA**  
 - **STAC 1.0 + Versioning**  
 - **DCAT 3.0**  
-- **Diamond⁹ Ω / Crown∞Ω** certification  
 
 ---
 
-## 🗂️ Directory Layout (Indented)
+## 🗂️ Directory Layout
 
-    web/
-    ├── README.md                        # This document
-    ├── ARCHITECTURE.md                  # Web subsystem deep dive
-    │
-    ├── public/                          # Safe, static assets
-    │   ├── images/
-    │   ├── icons/
-    │   ├── manifest.json
-    │   └── robots.txt
-    │
-    ├── src/
-    │   ├── components/
-    │   │   ├── MapView/
-    │   │   ├── CesiumView/
-    │   │   ├── TimelineView/
-    │   │   ├── FocusPanel/
-    │   │   ├── StoryNode/
-    │   │   ├── LayerSwitcher/
-    │   │   └── Shared/
-    │   │
-    │   ├── pages/
-    │   │   ├── Home/
-    │   │   ├── Explore/
-    │   │   ├── Governance/
-    │   │   └── About/
-    │   │
-    │   ├── hooks/                       # useFocus, useStac, useTelemetry
-    │   ├── context/                     # A11Y, theme, focus, auth
-    │   ├── services/                    # STAC/DCAT, GraphQL, REST
-    │   ├── utils/                       # Formatters, schema guards
-    │   └── styles/                      # Tailwind themes + tokens
-    │
-    ├── package.json
-    └── vite.config.ts
+~~~~~text
+web/
+├── README.md                        # This document
+├── ARCHITECTURE.md                  # Web subsystem deep dive
+│
+├── public/                          # Static assets
+│   ├── images/
+│   ├── icons/
+│   ├── manifest.json
+│   └── robots.txt
+│
+├── src/
+│   ├── components/
+│   │   ├── MapView/
+│   │   ├── CesiumView/
+│   │   ├── TimelineView/
+│   │   ├── FocusPanel/
+│   │   ├── StoryNode/
+│   │   ├── LayerSwitcher/
+│   │   └── Shared/
+│   │
+│   ├── pages/
+│   │   ├── Home/
+│   │   ├── Explore/
+│   │   ├── Governance/
+│   │   └── About/
+│   │
+│   ├── hooks/                       # useFocus, useStac, useTelemetry, etc.
+│   ├── context/                     # A11y, theme, focus, auth
+│   ├── services/                    # STAC/DCAT, GraphQL, REST API clients
+│   ├── utils/                       # Formatters, schema guards, helpers
+│   └── styles/                      # Tailwind themes, tokens, layout styles
+│
+├── package.json
+└── vite.config.ts
+~~~~~
 
 ---
 
-## 🧩 Web Architecture (Indented Mermaid)
+## 🧩 Web Architecture
 
-    flowchart TD
-      UI["UI Layer (React + Tailwind)"]
-      FP["FocusPanel (AI Context v2.4)"]
-      MV["MapView (MapLibre GL / Cesium 3D)"]
-      TV["TimelineView (D3/Recharts)"]
-      API["API Client (REST/GraphQL + JSON-LD)"]
-      SAPI["FastAPI / GraphQL Services"]
-      KG["Neo4j Knowledge Graph"]
-      CAT["STAC/DCAT Catalogs"]
-      TEL["Telemetry & Governance Ledgers"]
+~~~~~mermaid
+flowchart TD
+  UI["UI Layer<br/>(React + Tailwind)"]
+  FP["FocusPanel<br/>(AI Context v2.4)"]
+  MV["MapView<br/>(MapLibre GL / Cesium 3D)"]
+  TV["TimelineView<br/>(D3/Recharts)"]
+  API["API Client<br/>(REST · GraphQL · JSON-LD)"]
+  SAPI["Backend Services<br/>(FastAPI · GraphQL)"]
+  KG["Neo4j Knowledge Graph"]
+  CAT["STAC/DCAT Catalogs"]
+  TEL["Telemetry & Governance Ledgers"]
 
-      UI --> FP
-      UI --> MV
-      UI --> TV
-      FP --> API
-      MV --> API
-      TV --> API
-      API --> SAPI
-      SAPI --> KG
-      SAPI --> CAT
-      SAPI --> TEL
+  UI --> FP
+  UI --> MV
+  UI --> TV
+  FP --> API
+  MV --> API
+  TV --> API
+  API --> SAPI
+  SAPI --> KG
+  SAPI --> CAT
+  SAPI --> TEL
+~~~~~
 
 ---
 
 ## 🧠 Focus Mode v2.4
 
-Capabilities:
+**Capabilities**
 
-- Subgraph-driven AI summaries  
-- SHAP explainability highlights  
-- CARE-sensitive narrative filters  
-- JSON-LD provenance badges  
-- Entity linking: people, places, events, documents  
-- Prediction overlays linked to timeline  
+- Entity-centric narratives (people, places, events, Story Nodes)  
+- SHAP explainability overlays and “Why this?” panels  
+- CARE-sensitive narrative filters and redaction where needed  
+- JSON-LD provenance badges and citation links  
+- Cross-layer correlation (raster, vector, time series, text)  
+- Timeline-linked predictive overlays (e.g., future drought indices)  
 
-API Behavior:
+**API Behavior**
 
-    GET /api/focus/{id}
-    Returns: Narrative + citations + ethical flags + subgraph extract
+~~~~~text
+GET /api/focus/{id}
+Response: {
+  narrative,
+  subgraph,
+  ethics_flags,
+  telemetry,
+  citations
+}
+~~~~~
 
 ---
 
 ## 🌍 Mapping Stack (2D/3D)
 
-Components:
+- **MapLibre GL** for 2D basemaps and interactive layers  
+- **CesiumJS** for 3D globe, deep-time paleogeographic overlays  
+- Support for:
+  - Climate projections (2030–2100)  
+  - Hydrology (discharge, drought, flood, groundwater)  
+  - Land cover & terrain  
+  - Historical maps & treaty boundaries  
 
-- **MapLibre GL** for map layers  
-- **CesiumJS** for 3D globe & deep-time layers  
-- Predictive climate overlays (2030–2100 SSP)  
-- Hydrology layers (discharge, drought, flood, groundwater)  
-- Accessibility features:
-  - Keyboard pan/zoom  
-  - High-contrast basemap tokens  
-  - Reduced-motion mode  
+**Accessibility**
+
+- Keyboard pan/zoom  
+- High-contrast color tokens  
+- Reduced-motion mode  
+- ARIA-compliant map controls  
 
 ---
 
 ## 📊 Timeline Engine
 
-Features:
-
-- D3-based scales  
-- Brushing, density overlays, break-year markers  
-- Linked view: timeline → map → focus  
-- Historical + predictive ranges  
-- WCAG AA accessible markers  
+- D3-based scales and domain ranges  
+- Brushing & zooming for time windows  
+- Density overlays and epoch markers  
+- Linked views: timeline → map → Focus Mode  
+- Supports both historical ranges and forecast horizons  
 
 ---
 
 ## ⚙️ API Client Layer
 
-Behavior:
+**Responsibilities**
 
-- Strong TypeScript DTOs  
-- JSON-LD provenance injection  
-- Pagination  
-- Retry + rate limiting  
-- Unified STAC/DCAT adapter  
-- GraphQL federation support  
+- Typed DTOs (TypeScript) for all REST & GraphQL responses  
+- JSON-LD injection for provenance fields  
+- Pagination, retry, and rate-limiting strategies  
+- Unified STAC/DCAT search adapter  
+- GraphQL support for flexible queries  
 
-Internal services called:
+Representative calls:
 
-    /api/focus/{id}
-    /api/stac/search
-    /api/events
-    /graphql
+- `/api/focus/{id}`  
+- `/api/stac/search`  
+- `/api/events`  
+- `/graphql`  
 
 ---
 
 ## ♿ Accessibility (WCAG 2.1 AA)
 
-Practices:
+**Practices**
 
-- ARIA landmarks  
-- Screen reader metadata  
-- Keyboard focus rings  
-- High-contrast color tokens  
-- Skip links  
-- A11y CI scanning (axe-core)  
-- Lighthouse ≥ 95 gate  
+- ARIA landmarks and roles  
+- Screen reader-friendly labels and text alternatives  
+- Keyboard focus states with visible rings  
+- High-contrast theme tokens and color palettes  
+- Skip links for main content  
+- Automated A11y CI (e.g. axe-core/Lighthouse) with thresholds (≥ 95)  
 
-Tokens live in:
+Tokens are documented in:
 
-    docs/design/tokens/accessibility-tokens.md
+```
+docs/design/tokens/accessibility-tokens.md
+```
 
 ---
 
-## 🔐 Governance + Telemetry
+## 🔐 Governance & Telemetry
 
-Governance Indicators:
+**Governance Indicators**
 
-- CARE flags  
-- License badges  
-- Community consent icons  
-- Masked geometry markers for protected data  
+- CARE labels and license badges in UI  
+- Masked geometries for sensitive/heritage sites  
+- Dataset-level ethics summaries and links to governance records  
 
-Telemetry includes:
+**Telemetry**
 
-- User interactions  
-- Drift & bias  
-- Accessibility metrics  
-- Resource use  
-- Ethics filter events  
-- Logged to: `releases/<version>/focus-telemetry.json`
+- User interaction events (e.g., layer toggles, focus selection)  
+- A11y metrics, performance timings  
+- Bias/drift indicators surfaced from backend telemetry  
+- Logged to:  
+
+```
+../releases/<version>/focus-telemetry.json
+```
 
 ---
 
 ## 🚀 Running the Web App
 
-    npm --prefix web install
-    npm --prefix web run dev
-    npm --prefix web run typecheck
-    npm --prefix web run lint
-    npm --prefix web run build
+~~~~~bash
+npm --prefix web install
+npm --prefix web run dev       # Development server
+npm --prefix web run typecheck
+npm --prefix web run lint
+npm --prefix web run build     # Production build
+~~~~~
 
-Local server:
+Local development URL:
 
-    http://localhost:3000
+- `http://localhost:3000`
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Notes |
-|---------|------------|-----------------------------------------------------------|
-| v10.3.1 | 2025-11-13 | Fully rule-aligned; Focus v2.4 update; streaming STAC UI. |
-| v10.2.2 | 2025-11-12 | Predictive layers; governance dashboards; A11y telemetry. |
-| v10.0.0 | 2025-11-09 | Initial v10 Web Platform foundation. |
+|---------|--------|------|
+| v10.3.1 | 2025-11-13 | Rule-aligned README; Focus Mode v2.4 details; updated telemetry references. |
+| v10.2.2 | 2025-11-12 | Added predictive overlays, governance dashboards, A11y telemetry integration. |
+| v10.0.0 | 2025-11-09 | Initial v10 web platform foundation (React + MapLibre + Cesium). |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — Web Platform**  
+Spatial Narratives × Temporal Insight × Ethical AI  
+© 2025 Kansas Frontier Matrix — MIT  
+
+[Back to Master Guide](../docs/MASTER_GUIDE_v10.md) · [System Architecture](../src/ARCHITECTURE.md)
+
+</div>
