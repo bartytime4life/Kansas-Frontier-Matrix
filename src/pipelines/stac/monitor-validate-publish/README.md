@@ -1,5 +1,3 @@
-Here’s a drop‑in, GitHub‑ready Markdown that sets up a STAC polling + validation + publish loop tailored to your KFM stack, using ETags, Great Expectations, and GitHub Actions on a cron. It follows your Markdown Output Protocol (YAML front‑matter, centered title, required sections, Mermaid, directory layout, badges, governance, version history) and stays within one box for copy/paste.
-
 ---
 title: "🛰️ Kansas Frontier Matrix — STAC Monitor → Validate → Publish Orchestrator (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/stac/monitor-validate-publish/README.md"
