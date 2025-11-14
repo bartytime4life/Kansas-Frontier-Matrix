@@ -1,1 +1,10 @@
-y
+flowchart TD
+  A["Trigger Event<br/>Webhook · Cron · STAC Update"] --> B["Compute Idempotency Key<br/>sha256(dataset+version+source_uri)"]
+  B --> C{"Key Seen<br/>in Durable KV Store?"}
+  C -->|Yes| D["No-Op<br/>Skip Pipeline · Emit Telemetry"]
+  C -->|No| E["Execute Pipeline Step<br/>Extract · Transform · Validate"]
+  E --> F["Transactional Outbox<br/>Atomic DB + Event + Artifact Write"]
+  F --> G["Record Output Hashes<br/>sha256 · blake3"]
+  G --> H["Mark Key as Seen<br/>Durable KV Store Update"]
+  H --> I["Replay Engine<br/>Deterministic Reprocessing Support"]
+  I --> J["Telemetry & Governance Sync<br/>Idempotency Events · Checksums · CARE Flags"]y
