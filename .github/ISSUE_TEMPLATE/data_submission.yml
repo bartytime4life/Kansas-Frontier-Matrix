@@ -1,7 +1,7 @@
 # 🗺️ Kansas Frontier Matrix — Data Submission Template  
 # File: .github/ISSUE_TEMPLATE/data_submission.yml  
 # Purpose: Structured form for submitting new datasets or geospatial layers to KFM.  
-# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
+# Alignment: Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
 # SPDX-License-Identifier: CC-BY-4.0  
 
 name: "🗺️ Data Submission"
@@ -45,7 +45,7 @@ body:
     id: dataset_description
     attributes:
       label: "Dataset Description"
-      description: "Provide a detailed summary of the dataset content, scope, and intended use."
+      description: "Provide a detailed summary of the dataset's content, scope, and intended use."
       placeholder: |
         Example:
         This dataset includes recorded severe weather events (tornadoes, floods, hail, etc.) across Kansas
@@ -90,7 +90,7 @@ body:
     id: checksum
     attributes:
       label: "Checksum (SHA-256)"
-      description: "Provide a checksum hash for file integrity verification."
+      description: "Provide a SHA-256 checksum hash for file integrity verification."
       placeholder: "e.g. sha256-abcdef123456..."
     validations:
       required: true
@@ -99,7 +99,7 @@ body:
     id: spatial_extent
     attributes:
       label: "Spatial Coverage (Bounding Box)"
-      description: "Provide bounding box coordinates in WGS84 (EPSG:4326)."
+      description: "Bounding box coordinates in WGS84 (EPSG:4326)."
       placeholder: "Example: [-102.05, 37.00, -94.60, 40.00]"
     validations:
       required: true
@@ -117,7 +117,7 @@ body:
     id: keywords
     attributes:
       label: "Keywords / Tags"
-      description: "List relevant topics, themes, or metadata tags for discoverability."
+      description: "Relevant topics, themes, or metadata tags for discoverability."
       placeholder: "e.g. climate, tornado, hazards, historical-data, kansas, NOAA"
     validations:
       required: true
@@ -126,7 +126,7 @@ body:
     id: data_access
     attributes:
       label: "Data Access URL(s)"
-      description: "Provide the direct download link(s) or API endpoint(s) for the dataset."
+      description: "Direct download link(s) or API endpoint(s) for the dataset."
       placeholder: "e.g. https://www.ncei.noaa.gov/access/search/storm-events"
     validations:
       required: true
@@ -135,7 +135,7 @@ body:
     id: care_relevance
     attributes:
       label: "CARE Relevance"
-      description: "Does this dataset contain or relate to Indigenous, tribal, or culturally sensitive data?"
+      description: "Does this dataset relate to Indigenous, tribal, or culturally sensitive data?"
       options:
         - "No — not applicable"
         - "Yes — includes Indigenous-related content"
@@ -148,7 +148,7 @@ body:
     id: care_statement
     attributes:
       label: "CARE Statement (if applicable)"
-      description: "If your dataset relates to Indigenous lands, heritage, or cultural knowledge, describe how CARE principles are respected."
+      description: "If this dataset involves Indigenous or cultural knowledge, describe adherence to CARE principles."
       placeholder: |
         Example:
         This dataset includes digitized treaty boundaries verified with tribal partners.
@@ -160,7 +160,7 @@ body:
     id: compliance_checklist
     attributes:
       label: "Contributor Checklist"
-      description: "Confirm all required compliance steps before submission."
+      description: "Confirm all compliance steps before submission."
       options:
         - label: "I confirm this dataset complies with FAIR principles (Findable, Accessible, Interoperable, Reusable)."
           required: true
@@ -177,20 +177,24 @@ body:
         ---
         ### 🧪 Validation Workflows  
         Upon submission, your dataset will automatically be validated by:
-        - **`stac-validate.yml`** → Schema and link validation  
-        - **`faircare-validate.yml`** → FAIR+CARE and license checks  
-        - **`docs-lint.yml`** → Markdown, YAML, and JSON front-matter validation  
 
-        Validation results will be stored under:
+        - **`stac-validate.yml`** → Schema + metadata + checksum validation  
+        - **`faircare-validate.yml`** → FAIR+CARE, license, provenance review  
+        - **`docs-lint.yml`** → Markdown / YAML / JSON structure checks  
+
+        Validation artifacts are saved under:
+
         ```
         reports/self-validation/stac/
         reports/fair/
         ```
-        and referenced in the system telemetry at:
+
+        Telemetry and governance linkage appear in:
+
         ```
-        releases/v9.7.0/focus-telemetry.json
+        releases/v10.3.0/focus-telemetry.json
         ```
 
         **Thank you for contributing open, ethical, and verifiable data to the Kansas Frontier Matrix.**  
         Built under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-        **© 2025 Kansas Frontier Matrix — CC-BY 4.0**
+        **© 2025 Kansas Frontier Matrix — CC-BY-4.0**
