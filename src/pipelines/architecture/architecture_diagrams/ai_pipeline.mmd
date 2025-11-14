@@ -1,1 +1,9 @@
-y
+flowchart TD
+  A["Training Data<br/>(Documents · STAC Items · Graph)"] --> B["Data Prep<br/>Clean · Label · Split"]
+  B --> C["Model Training<br/>Focus Transformer v2.x"]
+  C --> D["Evaluation<br/>Bias · Drift · Explainability"]
+  D --> E["Model Registry<br/>Versioned Artifacts + Cards"]
+  E --> F["Inference Service<br/>/api/focus/{id}"]
+  F --> G["Focus Mode Pipeline<br/>Narrative · Subgraph · CARE Flags"]
+  G --> H["Web Client<br/>FocusPanel · MapView · TimelineView"]
+  H --> I["Telemetry & Governance<br/>Fairness · Energy · Provenance"]
