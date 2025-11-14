@@ -1,3 +1,6 @@
+Here is your **updated file**, **in one single copy-and-paste markdown block**, exactly following **your Markdown Output Protocol** and **your provided metadata** — **no extra text outside the box**:
+
+```markdown
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/markdown_rules.md"
@@ -22,9 +25,9 @@ mcp_version: "MCP-DL v6.3"
 **Purpose:**  
 Define the mandatory Markdown conventions for all KFM documentation, ensuring MCP v6.3 compliance, FAIR+CARE alignment, reproducibility, machine readability, and full CI validation.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](faircare.md)  
 [![Status: Active](https://img.shields.io/badge/Status-Enforced-success)]()
 
 </div>
@@ -32,7 +35,6 @@ Define the mandatory Markdown conventions for all KFM documentation, ensuring MC
 ---
 
 ## 📘 Overview
-
 This document defines the **authoritative** Markdown output protocol for the Kansas Frontier Matrix (KFM).  
 All Markdown must pass:
 
@@ -79,8 +81,6 @@ All KFM Markdown files must:
 
 ## 🧩 Centered Title Block Structure
 
-To ensure GitHub renders the Title Block example literally, this section uses **tilde-based fences**, which are unbreakable by nested code blocks.
-
 ~~~~~markdown
 <div align="center">
 
@@ -99,22 +99,14 @@ A one–three sentence summary of the document’s intent.
 ~~~~~
 
 ### 🔒 Title Block Rules
-
-- Must immediately follow front-matter  
-- Must be centered with `<div align="center">`  
-- Must include:
-  - H1 title with emoji  
-  - Path in backticks  
-  - Purpose block  
-  - 2–5 badges  
-- **Badge order is mandatory:**  
+- No blank lines between YAML and title block  
+- Must be wrapped in `<div align="center">`  
+- Badge order (MANDATORY):  
   1. Docs · MCP  
   2. License  
   3. FAIR+CARE  
   4. Status  
-- Must be followed by:  
-  - One blank line  
-  - A horizontal rule (`---`)  
+- Followed by **one blank line** and `---`
 
 ---
 
@@ -124,18 +116,16 @@ A one–three sentence summary of the document’s intent.
 |---|---|---|
 | H1 | Document title | Required |
 | H2 | Major sections | Required |
-| H3 | Subsections | Required for Directory Layout |
+| H3 | Subsections | Required |
 | H4 | Optional nested content | Optional |
 
-### ✔️ Correct Example
-
+Correct:
 ~~~~~markdown
 ## 📘 Overview
 ### ⚙️ Workflow
 ~~~~~
 
-### ❌ Incorrect Example
-
+Incorrect:
 ~~~~~markdown
 ## Overview
 ~~~~~
@@ -144,31 +134,20 @@ A one–three sentence summary of the document’s intent.
 
 ## 🗂️ Section Order (Strict)
 
-All documents must follow this structure:
-
 1. YAML front-matter  
 2. Centered Title Block  
-3. Horizontal rule (`---`)  
-4. **Overview**  
+3. `---`  
+4. Overview  
 5. Main content  
-6. Directory Layout (must be H3)  
+6. Directory Layout (H3)  
 7. Version History  
 8. Footer  
 
-Any deviation = **CI failure**.
+Any deviation = CI FAILURE.
 
 ---
 
 ## 📁 Directory Layout Rules
-
-Directory layouts must:
-
-- Appear under a `### 📁 Directory Layout` heading  
-- Use ASCII tree format  
-- Use fenced blocks with **no leading spaces**  
-- Include **no comments**  
-
-### 📁 Directory Layout (Example)
 
 ~~~~~text
 docs/
@@ -178,44 +157,45 @@ docs/
 |-- reports/
 ~~~~~
 
+Rules:
+- Must be under `### 📁 Directory Layout`
+- ASCII tree only, no comments
+- Must be in fenced code block with **no leading spaces**
+
 ---
 
 ## 📦 Code & Data Block Requirements
 
 | Element | Rules |
 |---|---|
-| Code blocks | Must specify language. |
-| JSON | Must be valid. No comments allowed. |
-| YAML | Must use spaces only (no tabs). |
-| Bash | Prefer `$` prefix. |
-| Inline code | Required for file paths and commands. |
+| Code blocks | Must specify language |
+| JSON | Valid only, no comments |
+| YAML | Spaces only |
+| Bash | Use `$` for commands |
+| Inline code | Required for paths & commands |
 
-Invalid code blocks = **CI failure**.
+Invalid blocks = CI failure.
 
 ---
 
 ## 📋 Table Rules
-
-- Use pipe format  
-- Include header row  
-- Avoid blank rows  
+- Pipe format only  
+- Must include header row  
+- Avoid empty rows  
 - Use `—` for missing values  
-- Keep line width reasonable  
 
 ---
 
-## 🎨 Image & Badge Rules
+## 🎨 Images & Badges
 
-### ✔️ Badge Order (Strict)
-
+### ✔️ Badge Order
 1. Docs · MCP  
 2. License  
 3. FAIR+CARE  
 4. Status  
-5. Optional badges  
+5. Optional
 
 ### 🖼 Image Rules
-
 - Alt text required  
 - Width required if >700px  
 
@@ -223,23 +203,19 @@ Invalid code blocks = **CI failure**.
 
 ## 🧪 Mermaid Diagram Rules
 
-- Only `flowchart LR` or `flowchart TD`  
-- Node labels must be quoted  
-- No CSS or themes  
-- Max one diagram per section  
-
-### ✔️ Correct Example
-
 ~~~~~mermaid
 flowchart LR
   A["Start"] --> B["Finish"]
 ~~~~~
 
+Rules:
+- Only `flowchart LR` or `flowchart TD`
+- Node labels MUST be quoted
+- One diagram per section
+
 ---
 
 ## 🧩 Version History Requirement
-
-### Example
 
 ~~~~~markdown
 ## 🕰️ Version History
@@ -272,7 +248,7 @@ Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond
 | Version | Date | Author | Summary |
 |---|---|---|---|
 | v10.2.8 | 2025-11-13 | A. Barta | Converted ALL example blocks to tilde-fence system to guarantee literal rendering. |
-| v10.2.7 | 2025-11-13 | A. Barta | Applied 5-backtick fencing (superseded by tilde-standard). |
+| v10.2.7 | 2025-11-13 | A. Barta | Applied 5-backtick fencing (superseded by tilde standard). |
 | v10.2.6 | 2025-11-13 | A. Barta | Fixed example rendering edge cases. |
 | v10.2.5 | 2025-11-13 | A. Barta | Adjusted nested fences. |
 
@@ -285,3 +261,4 @@ Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond
 [Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
+```
