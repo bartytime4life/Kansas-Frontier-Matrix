@@ -1,263 +1,208 @@
 ---
-title: "🌐 Kansas Frontier Matrix — Web Application Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "web/ARCHITECTURE.md"
+title: "🌱 Kansas Frontier Matrix — FAIR Principles Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/guides/data-governance/fair/README.md"
 version: "v10.3.1"
 last_updated: "2025-11-13"
-review_cycle: "Quarterly / Autonomous"
+review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/web-architecture-v2.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
+sbom_ref: "../../../../releases/v10.3.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.3.0/manifest.zip"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../../releases/v10.3.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/fair-governance-v1.json"
+governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🌐 **Kansas Frontier Matrix — Web Application Architecture**  
-`web/ARCHITECTURE.md`
+# 🌱 **Kansas Frontier Matrix — FAIR Principles Guide**  
+`docs/guides/data-governance/fair/README.md`
 
 **Purpose:**  
-Define the FAIR+CARE-aligned **technical architecture** of the KFM Web Application — a modular, accessible, AI-aware frontend for exploring historical, geospatial, and environmental data.  
-Specifies stack, module boundaries, data/telemetry contracts, governance integration, and CI/CD touchpoints for the web tier in **KFM v10.3.x**.
+Define the **FAIR (Findable, Accessible, Interoperable, Reusable)** data governance requirements for all datasets, metadata, and derived products within the Kansas Frontier Matrix (KFM).  
+This guide ensures that all KFM data outputs comply with **international metadata standards**, **open-data policy**, **reproducible science**, and the **Master Coder Protocol (MCP-DL v6.3)**.
 
-<img alt="Docs · MCP" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
-<img alt="Status: Stable" src="https://img.shields.io/badge/Status-Stable-success" />
+[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)]()  
+[![FAIR Certified](https://img.shields.io/badge/FAIR-Certified-gold.svg)]()  
+[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Aligned-blue.svg)]()  
+[![ISO 19115](https://img.shields.io/badge/ISO--19115-Metadata%20Aligned-green.svg)]()
 
 </div>
-
 
 ---
 
 ## 📘 Overview
 
-The **KFM Web Application** implements the **timeline + map + Focus Mode** experience over a Neo4j-backed knowledge graph served by **FastAPI/GraphQL** and MCP-connected services.
+The Kansas Frontier Matrix implements **FAIR principles** as baseline requirements for:
 
-The web tier is:
+- Data submission and ingestion  
+- ETL pipelines and transformations  
+- Graph/ontology integration  
+- STAC/DCAT catalog publishing  
+- Self-validation and governance audits  
 
-- **Standards-first:** STAC 1.0, DCAT 3.0, JSON-LD/RDF, WCAG 2.1 AA  
-- **Governed by MCP-DL v6.3:** explicit contracts, telemetry, SBOMs, and CI gates  
-- **Ethics-aware:** FAIR+CARE, CARE-aligned visual cues, heritage masking, consent-aware panels  
-
-**Design Goals**
-
-- Accessibility by default — WCAG 2.1 AA, semantic HTML, ARIA, keyboard-first  
-- Ethical AI — explainable Focus Mode v2.4, CARE guardrails, provenance chips  
-- Interoperability — STAC/DCAT catalogs, JSON-LD semantics, stable APIs  
-- Reproducibility — pinned toolchain, SBOM, deterministic builds, telemetry
+FAIR compliance is **mandatory** for every dataset, STAC Item, and data contract.
 
 ---
 
-### 🗂️ Directory Layout
+## 🧭 FAIR Compliance Workflow
 
-    web/
-    ├── README.md                          # Web tier index
-    ├── ARCHITECTURE.md                    # This file
-    │
-    ├── public/                            # Static assets (no secrets)
-    │   ├── images/                        # PNG/SVG with documented alt text
-    │   ├── icons/                         # App/feature icons (a11y-ready)
-    │   └── manifest.json                  # PWA metadata (name, theme, icons)
-    │
-    ├── src/                               # React + TypeScript application
-    │   ├── components/                    # Presentational & a11y-first components
-    │   │   ├── MapView/                   # MapLibre (2D) + Cesium (3D)
-    │   │   ├── TimelineView/              # Time navigation + density bands
-    │   │   ├── FocusPanel/                # AI summaries + links + explainability
-    │   │   ├── LayerControls/             # STAC/DCAT toggles, opacity, presets
-    │   │   ├── Accessibility/             # Skip links, focus traps, ARIA helpers
-    │   │   └── Shared/                    # Buttons, cards, modals, layout primitives
-    │   │
-    │   ├── pages/                         # Routes: Home, Explore, Governance, About
-    │   ├── hooks/                         # useTelemetry, useGovernance, useFocus, useStac
-    │   ├── context/                       # Providers (Theme, Focus, Auth, A11Y)
-    │   ├── services/                      # API clients (REST/GraphQL, STAC/DCAT adapters)
-    │   ├── utils/                         # Formatters, i18n, schema guards, helpers
-    │   └── styles/                        # Tailwind config, tokens, variables
-    │
-    ├── package.json                       # Pinned deps + scripts
-    ├── vite.config.ts                     # Vite build config
-    └── telemetry.json                     # Optional local web telemetry cache (dev-only)
+~~~~~mermaid
+flowchart TD
+  A["Dataset Submission<br/>(Data Contract + Issue Form)"]
+    --> B["FAIR Completeness Check<br/>(ID · License · Metadata)"]
+  B --> C["Interoperability Validation<br/>(STAC · DCAT · ISO 19115)"]
+  C --> D["Reusability Verification<br/>(Licensing · Versioning · Provenance)"]
+  D --> E["FAIR Status Assigned<br/>(faircare_validator.py)"]
+  E --> F["Governance Ledger Update<br/>Telemetry Export"]
+~~~~~
 
 ---
 
-## 🧩 Frontend Stack & Responsibilities
+## 🟦 F — Findable
 
-| Layer        | Technology                    | Responsibility                                              |
-|-------------|--------------------------------|-------------------------------------------------------------|
-| Framework   | React 18 + TypeScript          | Component model, routing, high-level state                 |
-| Styling     | Tailwind CSS                  | Tokenized, responsive, accessible UI                       |
-| Map         | MapLibre GL / Cesium          | Vector rendering, COG overlays, 3D scenes                  |
-| Charts      | D3 / Recharts                 | Timeline densities, histograms, KPIs                       |
-| State       | React Context + local store   | Focus, theme, a11y, layer state, auth                      |
-| Data        | STAC/DCAT, GraphQL, JSON-LD   | Catalog discovery + entity detail + provenance             |
-| AI          | Focus v2.4 (server-side)      | Narratives, relatedness, explainability                    |
-| A11y        | Semantics + ARIA + axe CI     | WCAG 2.1 AA compliance                                     |
-| Telemetry   | Web Vitals + custom hooks     | Perf, a11y, energy & ethics metrics                        |
+FAIR-compliant datasets must be **discoverable**.
 
----
+### Requirements
 
-## 🧱 Component Boundaries
+| Requirement | Description | Verified By |
+|------------|-------------|-------------|
+| Global Unique ID | Dataset ID + STAC ID + graph ID | `schema_check.py` |
+| Indexed Metadata | Title, description, keywords, bbox, temporal coverage | STAC/DCAT validators |
+| Catalog Entry | Dataset appears in STAC/DCAT catalogs | STAC↔DCAT bridge |
+| DOI (Recommended) | Major datasets may receive DOIs | Governance Council |
 
-    flowchart LR
-      map[MapView] --- timeline[TimelineView]
-      timeline --- focus[FocusPanel]
-      map --- layers[LayerControls]
-      focus --- drawer[DetailDrawer]
-      map --- legend[Legend]
+**Minimum fields:**
 
-Roles:
-
-- **MapView:** base map (2D/3D), layer stacking, focus markers, keyboard ops  
-- **TimelineView:** zoomable temporal scale, densities, forecast bands  
-- **FocusPanel:** AI insights, relationships, provenance & citations, ethics chips  
-- **LayerControls:** STAC/DCAT toggles, opacity, presets, layer groups  
-- **DetailDrawer / Legend:** context metadata, symbology, a11y tooltips  
+- `id`, `title`, `description`, `keywords`, `license`, `spatial`, `temporal`
 
 ---
 
-## 🧠 Focus Mode (Ethical AI v2.4)
+## 🟩 A — Accessible
 
-Focus Mode centers exploration around a **person, place, event, dataset, or story node** and provides explainable narratives.
+Access must be **documented, secure, and sustainable**.
 
-Key aspects:
+### Requirements
 
-| Aspect          | Implementation                                                                 |
-|-----------------|-------------------------------------------------------------------------------|
-| API             | `GET /api/focus/{entity_id}` → narrative + subgraph + citations + ethics flags |
-| Model           | `focus_transformer_v2.4` (server-side); UI is strictly presentational         |
-| Explainability  | SHAP-based “Why this?” chips, cause/effect hints in panel + map               |
-| CARE Safeguards | Sensitive content gating; consent & license badges; heritage masking cues     |
-| Telemetry       | Focus interactions log to `../releases/v10.3.0/focus-telemetry.json`         |
+| Requirement | Description | Verified By |
+|------------|-------------|-------------|
+| Open Formats | CSV, Parquet, GeoJSON, NetCDF, COG | STAC validation |
+| Explicit License | SPDX or CC license required | FAIR+CARE validator |
+| Stable URLs | Data-access URLs must be resolvable | Link checks |
+| Machine-Readable | JSON/JSON-LD for metadata | Schema validators |
 
-UI responsibilities:
-
-- Highlight relevant entities on map + timeline  
-- Render provenance chips with source IDs + catalog links  
-- Provide reason phrases (e.g., “included because of X/Y/Z evidence”)  
-- Surface ethical warnings when content is sensitive or restricted  
+No dataset is published without a **valid license**.
 
 ---
 
-## 🧩 Data Contracts & Catalog Integrations
+## 🟧 I — Interoperable
 
-| Contract         | Purpose                                | Location / Validator                         |
-|------------------|----------------------------------------|----------------------------------------------|
-| STAC v1.0        | Layer registration & temporal search   | `data/stac/**` · STAC validator in CI        |
-| DCAT 3.0         | Dataset cataloging                     | STAC↔DCAT bridge workflows                   |
-| API DTOs         | Strongly typed responses for UI        | `src/services/**` schema guards              |
-| A11y Contract    | Route-level a11y thresholds            | `accessibility_scan.yml`                     |
-| Ethics Contract  | CARE flags + consent metadata          | `docs/standards/faircare.md` + telemetry     |
+Interoperability ensures reuse across platforms, disciplines, and tools.
 
-CI validates:
+### Requirements
 
-- Schemas for STAC, DCAT, and internal DTOs  
-- A11y budgets (Lighthouse/axe)  
-- Telemetry wiring (no missing required fields)
+| Requirement | Description | Verified By |
+|------------|-------------|-------------|
+| STAC 1.0 | Valid Item/Collection per spec | `stac-validate.yml` |
+| DCAT 3.0 | Dataset-level metadata export | DCAT exporter |
+| ISO 19115 | Spatial/temporal metadata alignment | Schema check |
+| Ontology Links | CIDOC CRM, GeoSPARQL where applicable | Graph loader |
 
----
+**Metadata must include:**
 
-## ⚙️ Build, Environment & Security
-
-| Area      | Standard / Tool   | Notes                                                        |
-|-----------|-------------------|--------------------------------------------------------------|
-| Build     | Vite + Node LTS   | Deterministic builds, pinned lockfile                       |
-| Images    | Non-root base     | CI blocks on CRITICAL (Trivy)                               |
-| Headers   | CSP / CORP / COEP | Applied by CDN/reverse proxy                                |
-| Secrets   | None in client    | All secrets remain backend-side                             |
-| SBOM      | SPDX              | Web deps recorded in `../releases/v10.3.0/sbom.spdx.json`  |
+- `bbox`, `geometry` (if applicable)  
+- `datetime` or `start`/`end`  
+- Asset roles + MIME types  
 
 ---
 
-## 🔁 CI/CD (Web Tier) — Workflow → Artifact Mapping
+## 🟨 R — Reusable
 
-| Workflow                 | Enforces                                           | Primary Artifacts                                                     |
-|--------------------------|----------------------------------------------------|------------------------------------------------------------------------|
-| `docs-lint.yml`          | Markdown/front-matter style consistency            | `docs/reports/self-validation/docs/lint_summary.json`                 |
-| `build-and-deploy.yml`   | Web build integrity & deployment health            | `docs/reports/telemetry/build_metrics.json`                           |
-| `telemetry-export.yml`   | Merge telemetry metrics across jobs                | `../releases/v10.3.0/focus-telemetry.json`                            |
-| `codeql.yml` / `trivy.yml` | Code and dependency security scans              | `docs/reports/security/*.{sarif,json}`                                |
-| `accessibility_scan.yml` | Lighthouse/axe-based a11y gating                   | `docs/reports/self-validation/web/a11y_summary.json`                  |
+Reusability ensures downstream users can **trust and extend** KFM datasets.
 
----
+### Requirements
 
-## ♿ Accessibility & Inclusive Design
-
-Core practices:
-
-- Semantic HTML + ARIA landmarks  
-- Visible focus rings, logical tab order, skip links  
-- ≥ 4.5:1 contrast for text; colorblind-safe palettes  
-- Proper alt text and `aria-label` usage for non-text UI elements  
-- Reduced-motion opt-in; responsive layout for narrow screens  
-- Automated CI scanning using axe/Lighthouse  
-
-A11y design tokens and rules are documented in:
-
-    docs/design/tokens/accessibility-tokens.md
+| Requirement | Description | Verified By |
+|------------|-------------|-------------|
+| Clear Licensing | Rights and reuse terms specified | FAIR+CARE validator |
+| Provenance Metadata | Transformation + source lineage recorded | checksum_audit |
+| Versioning | Semantic version in data contracts | Data stewards |
+| FAIR Documentation | README + contract + STAC metadata | docs-lint + schema_check |
 
 ---
 
-## 📊 Telemetry & Governance
+## 🧾 Example FAIR Contract Snippet
 
-Web tier telemetry captures:
-
-- Web Vitals (CLS, LCP, FID, etc.)  
-- Accessibility metrics (contrast, keyboard coverage, errors)  
-- Ethics metrics (CARE flags, sensitive data gating)  
-- User interaction summaries (layers toggled, focus queries)  
-
-Runtime telemetry is exported to:
-
-    ../releases/v10.3.0/focus-telemetry.json
-
-Governance events (e.g., sensitive layer activations, consent warnings) are written to:
-
-    ../docs/reports/audit/web-governance-ledger.json
-
----
-
-## 🧭 Integration with Backend
-
-    flowchart TD
-      UI["React UI Layer"] --> API["API Client (REST/GraphQL)"]
-      API --> SVC["FastAPI/GraphQL Service Layer"]
-      SVC --> GOV["Governance Middleware"]
-      GOV --> KG["Neo4j Graph / STAC / DCAT"]
-      SVC --> TEL["Telemetry & Logging"]
-
-Data flow:
-
-- UI requests come through API client → backend services  
-- Governance middleware enforces CARE and auth constraints  
-- Neo4j + STAC/DCAT respond with data + provenance  
-- Telemetry and governance logs mirror all critical actions  
+~~~~~json
+{
+  "id": "noaa_drought_index_1980_2025",
+  "title": "NOAA Drought Severity Index (1980–2025)",
+  "description": "Long-term drought index for Kansas from NOAA climate records.",
+  "keywords": ["climate", "drought", "NOAA", "Kansas"],
+  "license": "Public Domain",
+  "spatial": [-102.05, 37.0, -94.6, 40.0],
+  "temporal": { "start": "1980-01-01", "end": "2025-01-01" },
+  "provenance": "NOAA NCEI",
+  "checksum": "sha256:d4a8…",
+  "care_label": "public",
+  "version": "v1.0.0"
+}
+~~~~~
 
 ---
 
-## 🚀 Local Development
+## 🗂️ FAIR Outputs & Storage
 
-    npm --prefix web install
-    npm --prefix web run dev
-    npm --prefix web run typecheck
-    npm --prefix web run lint
-    npm --prefix web run build
+~~~~~text
+data/reports/fair/
+├── summary.json                 # FAIR scores and statuses
+├── data_care_assessment.json    # Combined FAIR+CARE report
+└── fair_status_history.json     # Historical FAIR evaluation log
+~~~~~
 
-Development server runs at:
+---
 
-    http://localhost:3000
+## 🧠 FAIR in Self-Validation
+
+Every dataset triggers:
+
+| Workflow | Role |
+|----------|------|
+| `stac-validate.yml` | STAC/DCAT compliance |
+| `faircare-validate.yml` | FAIR+CARE metadata audit |
+| `docs-lint.yml` | Documentation completeness + formatting |
+| `telemetry-export.yml` | Energy, CO₂e, and validation timing |
+
+Only datasets with **FAIR-compliant** status proceed to **staging → processed → publication**.
+
+---
+
+## 📚 Cross-References
+
+- `../self-validation/README.md` — Self-validation guide  
+- `../audit/README.md` — Audit governance guide  
+- `../../../../data/ARCHITECTURE.md` — Data architecture specification  
+- `../../../../tools/validation/README.md` — Validation tooling registry  
+- `../../../standards/faircare.md` — FAIR+CARE standard  
 
 ---
 
 ## 🕰️ Version History
 
-| Version  | Date       | Author              | Summary                                                                     |
-|----------|------------|---------------------|-----------------------------------------------------------------------------|
-| v10.3.1  | 2025-11-13 | Web Architecture Team | Upgraded to Focus v2.4, aligned with agent-first backend, rule-compliant doc. |
-| v10.2.2  | 2025-11-12 | Web Architecture Team | Focus v2.1, streaming catalog UI, a11y & energy telemetry expansion.       |
-| v10.0.0  | 2025-11-09 | Web Architecture Team | Initial v10 web architecture (2D/3D, Focus, STAC bridge).                  |
-| v9.7.0   | 2025-11-05 | KFM Core Team       | MCP alignment, workflow→artifact mapping, a11y/ethics telemetry.           |
+| Version | Date | Author | Summary |
+|---------|--------|---------|---------|
+| v10.3.1 | 2025-11-13 | FAIR+CARE Council | Initial v10.3 FAIR governance guide; workflow & examples aligned to new telemetry schema. |
+
+---
+
+<div align="center">
+
+**Kansas Frontier Matrix — FAIR Governance Guide**  
+Findable × Accessible × Interoperable × Reusable  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+
+[Back to Data Governance Guide](../README.md)
+
+</div>
