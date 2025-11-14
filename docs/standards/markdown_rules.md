@@ -1,6 +1,3 @@
-Here is your **updated file**, **in one single copy-and-paste markdown block**, exactly following **your Markdown Output Protocol** and **your provided metadata** — **no extra text outside the box**:
-
-```markdown
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/markdown_rules.md"
