@@ -1,1 +1,14 @@
-y
+flowchart TD
+  A["Pipeline Execution<br/>Extract · Transform · Load"] --> B["Telemetry Collector<br/>Runtime · IO · Memory"]
+  A --> C["Sustainability Monitor<br/>Energy (Wh) · CO₂e (g)"]
+  A --> D["Ethics Monitor<br/>CARE Flags · Masking Events · Sovereignty"]
+  A --> E["Lineage Extractor<br/>Checksums · Source IDs · PROV-O"]
+
+  B --> F["Metrics Layer<br/>Performance · Throughput · Validation"]
+  C --> F
+  D --> F
+  E --> F
+
+  F --> G["Telemetry Exporter<br/>Write focus-telemetry.json"]
+  G --> H["Governance Ledger Update<br/>Telemetry Hash · CARE Flags · Validation Status"]
+  H --> I["Downstream Consumers<br/>Dashboards · Audits · Release Reports · Focus Mode"]
