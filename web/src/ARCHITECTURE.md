@@ -2,13 +2,13 @@
 title: "💻 Kansas Frontier Matrix — Web Source Architecture Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/ARCHITECTURE.md"
 version: "v10.3.2"
-last_updated: "2025-11-13"
-review_cycle: "Quarterly / Autonomous"
+last_updated: "2025-11-14"
+review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-src-architecture-v2.json"
+sbom_ref: "../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/web-src-architecture-v3.json"
 governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -20,92 +20,95 @@ mcp_version: "MCP-DL v6.3"
 `web/src/ARCHITECTURE.md`
 
 **Purpose:**  
-Define the **internal technical architecture** of the KFM web source layer (`web/src/`).  
-Specifies module boundaries, contract validation rules, accessibility patterns, ethics integration (FAIR+CARE), data loading architecture, service adapters, AI-aware rendering, and telemetry instrumentation.
+Define the complete **source-level technical architecture** for the Kansas Frontier Matrix (KFM) web application, including UI rendering, Focus Mode v2.5 dataflow, 2D/3D mapping pipelines, accessibility architecture, FAIR+CARE governance enforcement, provenance visibility, typed DTO boundaries, STAC/DCAT integration, and telemetry & sustainability instrumentation.  
+This document governs **all contributors** modifying `web/src/`.
 
-<img alt="Docs · MCP" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-UI_Certified-orange" />
-<img alt="Status: Stable" src="https://img.shields.io/badge/Status-Stable-success" />
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-UI_Certified-orange)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-`web/src/` hosts **all UI logic** for KFM v10.3:
+The `web/src/` directory contains **all frontend logic** for the Kansas Frontier Matrix.  
+It implements:
 
-- React 18 + TypeScript  
-- Tailwind + design tokens  
-- MapLibre (2D) + Cesium (3D)  
-- Timeline + Focus Mode v2.4  
-- Governance & provenance indicators  
-- STAC/DCAT service bindings  
-- JSON-LD entity + provenance injection  
-- FAIR+CARE enforcement in UI  
-- Telemetry instrumentation (ethics, performance, WebVitals, A11y)
+- React 18 + TypeScript strict mode  
+- Tailwind design system with tokens  
+- **MapLibre GL** (2D) + **CesiumJS** (3D)  
+- Timeline UI synchronized with map & Focus Mode  
+- **Focus Mode v2.5**: narrative reasoning, explainability chips, provenance paths  
+- STAC/DCAT dataset explorer UIs  
+- Story Node rendering & cross-layer alignment  
+- CARE-governed UI masking (tribal, archaeological, sensitive assets)  
+- Accessibility (WCAG 2.1 AA) as a **hard requirement**  
+- OpenTelemetry instrumentation for:
+  - Performance  
+  - A11y  
+  - Ethics  
+  - Sustainability  
+  - UI usage  
 
-**Guiding Principles**
-
-- Accessibility-first (WCAG 2.1 AA)  
-- Ethics-first (CARE-compliant UI masking & flags)  
-- Provenance-visible (always show source paths & citations)  
-- Deterministic + testable (schema guards, DTO validation)  
-- Fully MCP-aligned  
+The architecture ensures **deterministic, ethical, reproducible** interaction with KFM’s semantic geospatial intelligence.
 
 ---
 
-## 🗂️ Directory Layout (Formal Schema)
+# 🗂️ Directory Layout (Authoritative v10.3.2)
 
-~~~~~text
+```text
 web/src/
-├── ARCHITECTURE.md                 # This document
-├── README.md                       # Source-level overview
+├── ARCHITECTURE.md
+├── README.md
 │
 ├── components/
-│   ├── MapView/                    # MapLibre/Cesium rendering & gestures
-│   ├── TimelineView/               # D3/Recharts timeline logic
-│   ├── FocusPanel/                 # Narrative rendering + explainability
-│   ├── StoryNode/                  # Narrative cards & modal flows
-│   ├── DetailDrawer/               # Entity info + lineages + citations
-│   ├── LayerControls/              # STAC/DCAT layer toggles + presets
-│   ├── Accessibility/              # A11y primitives (ARIA wrappers, skip links)
-│   └── Shared/                     # Buttons, modals, UI primitives
+│   ├── MapView/
+│   ├── CesiumView/
+│   ├── TimelineView/
+│   ├── FocusPanel/
+│   ├── StoryNode/
+│   ├── DetailDrawer/
+│   ├── LayerControls/
+│   ├── Accessibility/
+│   ├── Governance/
+│   └── Shared/
 │
-├── context/                        # App-wide providers
+├── context/
 │   ├── FocusProvider.tsx
 │   ├── A11yProvider.tsx
 │   ├── ThemeProvider.tsx
 │   └── AppProvider.tsx
 │
-├── entities/                       # Entity-specific view models & logic
+├── entities/
 │   ├── people/
 │   ├── places/
 │   ├── events/
 │   └── datasets/
 │
-├── features/                       # Feature slices (v10.3+) built on entities + pipelines
+├── features/
 │   ├── accessibility/
 │   ├── focus-mode/
 │   ├── map-layers/
 │   ├── timeline-features/
 │   └── governance/
 │
-├── hooks/                          # App logic and state contracts
-│   ├── useFocus.ts                 # Central entity-focus orchestration
-│   ├── useStac.ts                  # Catalog queries & filters
-│   ├── useTelemetry.ts             # WebVitals, energy, CO₂e, ethics metrics
-│   ├── useGovernance.ts            # CARE flags, redaction logic
-│   └── useA11y.ts                  # Keyboard-first UI, reduced motion
+├── hooks/
+│   ├── useFocus.ts
+│   ├── useStac.ts
+│   ├── useTelemetry.ts
+│   ├── useGovernance.ts
+│   └── useA11y.ts
 │
-├── pages/                          # Route-level pages
-│   ├── index.tsx                   # Home
-│   ├── explorer.tsx                # Dataset explorer + map
-│   ├── focus.tsx                   # Focus Mode full-page view
-│   └── governance.tsx              # Governance dashboards + telemetry
+├── pages/
+│   ├── index.tsx
+│   ├── explorer.tsx
+│   ├── focus.tsx
+│   └── governance.tsx
 │
-├── pipelines/                      # Client-side dataflow orchestrators
+├── pipelines/
 │   ├── focusPipeline.ts
 │   ├── stacPipeline.ts
 │   ├── entityPipeline.ts
@@ -114,17 +117,17 @@ web/src/
 │   └── metadata.json
 │
 ├── services/
-│   ├── apiClient.ts                # REST/GraphQL base client
-│   ├── stacService.ts              # STAC search + asset fetch
-│   ├── dcatService.ts              # DCAT export reader
-│   ├── graphService.ts             # GraphQL entity requests
-│   └── telemetryService.ts         # Aggregated telemetry exporter
+│   ├── apiClient.ts
+│   ├── stacService.ts
+│   ├── dcatService.ts
+│   ├── graphService.ts
+│   └── telemetryService.ts
 │
 ├── utils/
-│   ├── schemaGuards.ts             # Strong DTO guards (runtime verification)
-│   ├── provenance.ts               # Provenance chips + ledger deep-links
-│   ├── a11y.ts                     # ARIA helpers + focus manager
-│   └── formatters.ts               # Dates, numbers, labels
+│   ├── schemaGuards.ts
+│   ├── provenance.ts
+│   ├── a11y.ts
+│   └── formatters.ts
 │
 ├── styles/
 │   ├── globals.css
@@ -132,220 +135,281 @@ web/src/
 │   └── typography.css
 │
 └── types/
-    ├── api.ts                      # Typed API DTOs based on backend schemas
-    └── domain.ts                   # Entities: Person, Place, Event, Document, Layer
-~~~~~
+    ├── api.ts
+    └── domain.ts
+```
 
 ---
 
-## 🧩 Architecture Flow (Indented Mermaid)
+# 🧩 Source Flow Architecture
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  UI["UI Components"] --> F["useFocus (FocusProvider)"]
-  UI --> M["MapView (2D/3D)"]
-  UI --> T["TimelineView"]
-  UI --> FEAT["Feature Slices<br/>(features/*)"]
-
-  F --> API["apiClient (REST/GraphQL/JSON-LD)"]
-  M --> API
-  T --> API
-  FEAT --> API
-
-  API --> S1["stacService"]
-  API --> S2["dcatService"]
-  API --> S3["graphService"]
-
-  S3 --> FP["FocusPanel (narratives + citations + explainability)"]
-  S1 --> M
-~~~~~
+    UI[UI Components] --> CTX[Context Providers]
+    UI --> FEAT[Feature Slices]
+    UI --> MAP[MapView]
+    UI --> TL[TimelineView]
+    UI --> FP[FocusPanel]
+    FEAT --> HK[Custom Hooks]
+    HK --> SVC[Services Layer]
+    MAP --> SVC
+    TL --> SVC
+    FP --> SVC
+    SVC --> API[Backend APIs<br/>REST · GraphQL · STAC · DCAT]
+```
 
 ---
 
-## 🧠 Focus Mode v2.4 — Client Architecture
+# 🧠 Focus Mode v2.5 — Client Architecture
 
-The frontend does **not** run AI models. It renders server responses and applies governance rules.
+Focus Mode is a **UI-only orchestrator**.  
+The frontend does **NOT** run AI models.
 
 ### Responsibilities
+- Request narratives from `/api/focus/{id}`  
+- Render explainability chips  
+- Display provenance (StoryNode → Dataset → Source)  
+- Apply CARE filters & sovereignty banners  
+- Map + timeline highlighting  
+- Ethics-aware redaction  
+- Non-PII telemetry emission  
 
-- Render narrative paragraphs with citations  
-- Display SHAP-based explainability chips  
-- Render provenance:
-  - citations  
-  - dataset references  
-  - StoryNode → Entity mappings  
-- Show CARE flags (sensitivity, sovereignty, masking)  
-- Highlight entity locations on map + timeline  
-- Log Focus Mode telemetry (non-PII, consent-aware)
+### API Contract
 
-### Required Server Contract
-
-```
+```text
 GET /api/focus/{id}
-→ {
+
+{
   narrative: string,
-  subgraph: {...},
-  explainability: [...],
-  citations: [...],
-  ethics_flags: [...],
-  provenance: {...},
-  telemetry: {...}
+  subgraph: object,
+  explainability: array,
+  citations: array,
+  ethics_flags: array,
+  provenance: object,
+  telemetry: object
 }
 ```
 
-The UI must fail gracefully if any required fields are missing (`schemaGuards.ts`).
+All responses:
+
+- Type-checked (`types/api.ts`)
+- Runtime-verified (`schemaGuards.ts`)
+- Governance-filtered (`useGovernance.ts`)
 
 ---
 
-## 🌍 Mapping Tier (MapLibre + Cesium)
+# 🌍 Mapping & 3D Rendering Architecture
 
-### Features
+## MapLibre (2D)
 
-- 2D/3D map switching  
-- Layer stacking (raster/vector/COG)  
-- Treaty boundaries, hydrology, climate, ecology, archaeology layers  
-- Predictive overlays (2030–2100 SSP scenarios)  
-- Keyboard controls (arrows/WASD), screen-reader cues  
-- High-contrast basemap modes  
+### Functions
+- Vector + raster layer rendering  
+- STAC-driven symbology  
+- Geometries from Neo4j queries  
+- Treaty, cultural, hydrologic, ecological overlays  
+- Colorblind-safe palettes  
 
-Map layers consume **typed STAC/DCAT DTOs** and are configured via `pipelines/layerPipeline.ts` and design tokens in `styles/`.
+### Architecture
 
----
-
-## 📊 Timeline Engine
-
-- D3/Recharts-based scale abstractions  
-- Brushable ranges + zoom  
-- Density bars + event clusters  
-- Predictive bands & scenario intervals  
-- Focus-linked markers (birth/death, treaty, hazard, etc.)  
-- WCAG AA accessible markers and text  
-
-Timeline data produced by `timelinePipeline.ts`.
-
----
-
-## ⚙️ API Client & Service Contracts
-
-### `apiClient.ts`
-
-- Handles retries, ETags, JSON-LD provenance merges  
-- Unified error mapping  
-- Injects CARE/ethics headers when required  
-
-### STAC / DCAT Services
-
-- `stacService.ts` — STAC search + item fetch  
-- `dcatService.ts` — DCAT dataset browsing  
-
-### Graph Service
-
-- `graphService.ts` — Entity fetches, StoryNode queries, Focus Mode subgraphs  
-
-All responses validated via `schemaGuards.ts` before reaching UI.
-
----
-
-## ♿ Accessibility Requirements (WCAG 2.1 AA)
-
-The architecture enforces:
-
-- ARIA landmarks and roles  
-- Skip links for navigation  
-- Keyboard-first interaction patterns  
-- Reduced-motion consistency  
-- High-contrast theme tokens  
-- Visual focus outlines  
-- Screen-reader update announcements  
-
-A11y design rules in:
-
+```mermaid
+flowchart TD
+    LAY[STAC Layers] --> PIPE[Layer Pipeline]
+    PIPE --> MB[MapLibre Renderer]
+    MB --> UI[Interactive Controls]
+    MB --> GOV[Governance Masks<br/>H3 Generalization]
 ```
+
+---
+
+## CesiumJS (3D)
+
+### Capabilities
+- Photorealistic terrain  
+- Historical terrain layers  
+- Predictive climate & hydrology overlays  
+- 3D Story Nodes w/ height extrusions  
+- Time-bound camera flight paths  
+
+### Architecture
+
+```mermaid
+flowchart LR
+    DEM[DEM Mesh] --> T3D[Cesium Terrain Engine]
+    HIST[Historical Rasters] --> T3D
+    FUTURE[Predictive Layers] --> T3D
+    T3D --> CAM[Camera Animator]
+```
+
+---
+
+# 📊 Timeline Architecture
+
+Interactive time navigation shared between:
+
+- MapView  
+- Focus Panel  
+- Story Nodes  
+- Predictive futures engine  
+
+```mermaid
+flowchart LR
+    TS[Time Series Data] --> SCALE[D3 Scales]
+    SCALE --> RANGE[Time Domain Selector]
+    RANGE --> UI[Timeline Component]
+    UI --> MAPSYNC[Map Sync]
+    UI --> FOCSYNC[Focus Sync]
+```
+
+---
+
+# ⚙️ Services & API Contracts
+
+## apiClient.ts
+- REST + GraphQL  
+- JSON-LD provenance injection  
+- Governance headers (CARE, consent)  
+- Retry & rate-limit strategy  
+- Unified error normalization  
+
+## stacService.ts
+- STAC 1.0 search  
+- COG asset fetch  
+- Typed layer metadata  
+
+## dcatService.ts
+- DCAT dataset & distribution queries  
+
+## graphService.ts
+- GraphQL queries for Person, Place, Event, Dataset, StoryNode  
+- Geometry & temporal metadata extraction  
+
+## telemetryService.ts
+- Sends aggregated, non-identifying client telemetry  
+- Ethic & A11y events included  
+
+All service responses must pass:
+
+- Type constraints (`types/api.ts`)
+- Schema guards (`schemaGuards.ts`)
+- Governance filtering (`useGovernance.ts`)
+
+---
+
+# ♿ Accessibility Architecture (WCAG 2.1 AA)
+
+Accessibility is **mandatory**, not optional.
+
+Enforced via:
+- `A11yProvider.tsx`  
+- ARIA landmarks & roles  
+- Skip links  
+- Focus-visible outlines  
+- Keyboard-only navigation  
+- Reduced-motion & high-contrast modes  
+- Colorblind-safe tokens  
+
+Design tokens stored at:
+
+```text
 docs/design/tokens/accessibility-tokens.md
 ```
 
+A11y CI gate requires:
+- axe-core passes  
+- Lighthouse ≥ 95
+
 ---
 
-## 🔐 Governance & CARE Integration
+# 🔐 Governance & CARE Enforcement
 
-UI and feature slices must:
+Frontend governance responsibilities:
 
-- Show CARE labels (`public`, `sensitive`, `restricted`)  
-- Mask sensitive spatial data (H3 generalization, fuzzing)  
-- Attach license chips for all datasets and StoryNodes  
-- Annotate sovereignty and consent status  
-- Deep-link provenance references to governance ledgers  
+- CARE labels surface in UI  
+- Sensitive geometries masked using:
+  - H3 r7 generalization  
+  - Spatial fuzzing  
+- License & citation chips on all data & StoryNodes  
+- Consent alerts for restricted datasets  
+- Governance telemetry emitted for:
+  - Masked views  
+  - Blocked views  
+  - Ethics flags  
 
-Key governance ledger for web tier:
+Governance ledger:
 
-```
+```text
 ../../docs/reports/audit/web-governance-ledger.json
 ```
 
 ---
 
-## 📡 Telemetry & Sustainability
+# 📡 Telemetry & Sustainability
 
-Collected via hooks and services:
+Collected via:
 
-- WebVitals (LCP, CLS, FID, TTFB)  
-- A11y violations & coverage  
-- CARE masking & ethics events  
-- Focus Mode usage and reasoning depth  
-- Layer toggles and path usage  
-- Energy & CO₂e approximations per session  
+- `useTelemetry.ts`  
+- `telemetryService.ts`  
+- A11y & ethics events  
+- Focus Mode usage  
+- WebVitals  
+- Estimated energy & CO₂e (scoped from backend metrics)  
 
-Export target:
+Merged into global telemetry:
 
-```
-../../releases/v10.3.0/focus-telemetry.json
+```text
+../../releases/v10.3.2/focus-telemetry.json
 ```
 
 ---
 
-## ⚙️ Validation & CI Contracts
+# ⚙️ Validation & CI Contracts
 
-| Contract | Validator / Workflow |
-|----------|----------------------|
-| DTOs | TypeScript strict mode + `schemaGuards.ts` |
-| STAC/DCAT | Tests using `stacService.ts` / `dcatService.ts` |
-| A11y | axe-core + Lighthouse (`accessibility_scan.yml`) |
-| Code Quality | ESLint + Prettier |
+| Contract | Enforcement |
+|---------|-------------|
+| Types | `npm run typecheck` (TS strict) |
+| Lint | `npm run lint` |
+| A11y | axe-core + Lighthouse |
+| Security | CodeQL + Trivy |
 | Build | `build-and-deploy.yml` |
-| Security | `codeql.yml` + `trivy.yml` |
-| Telemetry | `telemetry-export.yml` |
 | Docs | `docs-lint.yml` |
+| Telemetry | `telemetry-export.yml` |
 
-Any contract failure blocks merge as per MCP-DL v6.3.
+All checks must pass before merging.
 
 ---
 
-## 🚀 Local Development
+# 🚀 Local Development
 
-~~~~~bash
+```bash
 npm --prefix web install
-npm --prefix web run dev        # http://localhost:3000
-npm --prefix web run lint
+npm --prefix web run dev
 npm --prefix web run typecheck
+npm --prefix web run lint
 npm --prefix web run build
-~~~~~
+```
+
+Dev URL:
+
+```text
+http://localhost:3000
+```
 
 ---
 
-## 🕰️ Version History
+# 🕰️ Version History
 
-| Version | Date       | Author              | Summary |
-|---------|------------|---------------------|---------|
-| v10.3.2 | 2025-11-13 | Web Architecture Team | Updated directory layout to include `entities/` and `features/` to match current repo; architecture flow adjusted. |
-| v10.3.1 | 2025-11-13 | Web Architecture Team | Created full source architecture spec for v10.3; aligned with telemetry & Focus Mode. |
-| v10.2.2 | 2025-11-12 | Web Architecture Team | Updated API client and governance hooks. |
+| Version | Date       | Summary |
+|---------|------------|---------|
+| v10.3.2 | 2025-11-14 | Fully rebuilt using Markdown Output Protocol; added Focus Mode v2.5; updated governance & telemetry flows; directory layout aligned with v10.3.2. |
+| v10.3.1 | 2025-11-13 | Initial architecture spec for web source layer. |
+| v10.2.2 | 2025-11-12 | Refinements to API client and governance hooks. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Web Source Architecture**  
-🤝 Ethical UX · 🧠 Explainable AI · 🌐 FAIR+CARE · 🔍 Provenance by Design  
+💻 Ethical UX · 🧠 Explainable AI · 🌐 FAIR+CARE · 🔗 Provenance by Design  
 © 2025 Kansas Frontier Matrix — MIT License  
 
 [Back to Web Source README](README.md) · [Web Architecture Overview](../ARCHITECTURE.md)
