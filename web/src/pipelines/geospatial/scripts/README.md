@@ -1,325 +1,205 @@
 ---
-title: "🛰️ Kansas Frontier Matrix — Web Geospatial Scripts Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📜 Kansas Frontier Matrix — Geospatial Pipeline Scripts Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/geospatial/scripts/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-geospatial-scripts-v2.json"
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/web-pipelines-geospatial-scripts-v1.json"
+governance_ref: "../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Scripts Overview"
+intent: "geospatial-pipeline-scripts"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+sensitivity_level: "Low (scripts do not contain data)"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "web/src/pipelines/geospatial/scripts/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareSourceCode"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../../../../schemas/json/web-pipelines-geospatial-scripts.schema.json"
+shape_schema_ref: "../../../../../../schemas/shacl/web-pipelines-geospatial-scripts-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-pipelines-geospatial-scripts-v10.4.0"
+semantic_document_id: "kfm-doc-web-pipelines-geospatial-scripts"
+event_source_id: "ledger:web/src/pipelines/geospatial/scripts/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Forbidden"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public (script logic only)"
+role: "scripts-overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review required every 12 months"
+sunset_policy: "Superseded upon next script-tooling overhaul"
 ---
 
 <div align="center">
 
-# 🛰️ **Kansas Frontier Matrix — Web Geospatial Scripts Architecture**  
+# 📜 **Kansas Frontier Matrix — Geospatial Pipeline Scripts Overview**  
 `web/src/pipelines/geospatial/scripts/README.md`
 
 **Purpose:**  
-Define the **deep technical architecture** for all client-side geospatial scripts powering the KFM v10.3.2 web platform.  
-These scripts form the **lightweight in-browser geospatial engine**, enabling safe, performant, FAIR+CARE-certified spatial transformations directly in the user’s environment.
+Document the purpose, constraints, and patterns for **Geospatial Pipeline Scripts**, which support development, testing,  
+mocking, and visualization of spatial transformations, masking behaviors, footprint merging, and temporal slicing  
+within the geospatial pipelines of the Kansas Frontier Matrix (KFM) Web Platform.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial-orange)]()
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
-[![License](https://img.shields.io/badge/License-MIT-green)]()
+These scripts assist developers and testers in *verifying, debugging, and explaining* complex spatial flows  
+without touching production data or breaking FAIR+CARE compliance.
 
 </div>
 
 ---
 
-# 📘 Executive Summary
+# 📘 Overview
 
-The **Web Geospatial Script Layer** provides:
+Scripts under `web/src/pipelines/geospatial/scripts/**` provide **sandbox utilities** for:
 
-- **Client-side GeoJSON/TopoJSON processing**  
-- **Realtime masking and redaction** (H3 r7, fuzzing, sovereignty buffers)  
-- **Projection fallback & CRS hinting**  
-- **Raster/imagery blending rules** for MapLibre & Cesium  
-- **Nodata-aware extent detection**  
-- **Provenance & JSON-LD enrichment**  
-- **FAIR+CARE-driven spatial governance**  
-- **Telemetry emission** (ethics, masking, render cost, projection fixes)  
+- Visualizing masking/generalization (H3 r7+)  
+- Debugging CRS normalization  
+- Inspecting geometry merges (STAC + Story Node + governance overlays)  
+- Running temporal slicing simulations  
+- Interactively inspecting footprint alignment  
+- Generating synthetic test payloads  
+- Producing small telemetry samples for pipeline testing  
 
-This layer acts **between** pipelines and rendering engines:
+They are **not shipped to production** and are **developer-only** tools.
 
-```text
-services → pipelines → geospatial scripts → UI → telemetry/governance
-```
+All scripts must be:
 
-It is intentionally **lightweight**, **sandboxed**, **deterministic**, and **fully auditable**.
+- Deterministic  
+- Non-destructive  
+- Data-agnostic  
+- Synthetic-safe  
+- FAIR+CARE-aligned  
+- WCAG-aware for output rendering  
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/pipelines/geospatial/scripts/
-├── README.md
+├── README.md                          # This document
 │
-├── clipGeoJSON.ts                 # Extent-clipped GeoJSON with CARE masking
-├── maskCoordinates.ts             # H3 generalization + fuzzing engine
-├── extentCalculator.ts            # Nodata-aware bounds extraction
-├── blendRules.ts                  # DEM/imagery blending rules for UI
-├── projectionHints.ts             # CRS fallback + projection warning system
-└── metadata.json                  # Script-level lineage + governance metadata
-```
+├── visualizeMasking.ts                # Draw synthetic H3 masking on sample geometry
+├── previewFootprints.ts               # Visual preview of footprints (STAC + GeoJSON)
+├── inspectCRS.ts                      # Validate & debug CRS normalization logic
+├── mergeDebug.ts                      # Debug map-layer merging logic (STAC + Story Node)
+└── generateSyntheticFixture.ts        # Create safe, synthetic GeoJSON for tests
+~~~
 
 ---
 
-# 🧩 Deep Architecture Overview
+# 🧩 Script Categories & Roles
 
-```mermaid
-flowchart TD
-    STAC[STAC DCAT Asset Metadata] --> SCRIPTS[Geospatial Script Layer<br/>clip · mask · blend · extent · projhint]
-    SCRIPTS --> VALID[Validation Layer<br/>schemaGuards]
-    VALID --> RENDER[Render Engines<br/>MapLibre 2D · Cesium 3D]
-    RENDER --> UI[Focus Mode · Story Nodes · Timeline Views]
-    UI --> TEL[Telemetry + Governance Logs]
-```
+## 1. **Masking Visualization (`visualizeMasking.ts`)**
+Used to:
 
-Each script must satisfy:
+- Render masked/unmasked geometries side-by-side  
+- Validate H3 r7+/generalization rules  
+- Generate accessible visualizations for FAIR+CARE review  
+- Produce JSON diffs showing masked vs. raw geometry  
 
-- deterministic output  
-- pure function semantics  
-- zero side-effects  
-- full CARE compliance  
-- reproducible transformations  
+Outputs MUST indicate:
+
+- Masking algorithm  
+- H3 resolution  
+- CARE reason  
 
 ---
 
-# 🧠 Script-Level Deep Specifications
+## 2. **Footprint Preview (`previewFootprints.ts`)**
+Used to:
 
-## 1️⃣ `clipGeoJSON.ts` — Deterministic, CARE-Aware Clipping Engine
+- Load & render STAC footprints  
+- Visualize bounding boxes and geometries  
+- Inspect temporal vs. spatial alignment  
+- Confirm geometry validity before merging  
 
-### Purpose  
-Perform **in-browser bounding-box clipping** for vector layers while maintaining:
-
-- no coordinate exposure for sensitive sites  
-- H3-governed generalizations  
-- performance budget for 60 FPS rendering  
-
-### Architecture
-
-```mermaid
-flowchart LR
-    CG1[Input GeoJSON] --> CG2[BBox Intersection]
-    CG2 --> CG3[Polygon Splitter]
-    CG3 --> CG4[CARE Filter]
-    CG4 --> CG5[Output GeoJSON]
-```
-
-### Governance Constraints
-- If clipping reveals sensitive geometry → **mask** instead  
-- If layer is restricted → return only generalized envelope  
-- Full provenance injection via JSON-LD after final stage  
+Supports polygons, multipolygons, and COG-derived approximations.
 
 ---
 
-## 2️⃣ `maskCoordinates.ts` — CARE Masking + Territorial Sovereignty Engine
+## 3. **CRS Inspector (`inspectCRS.ts`)**
+Used to debug:
 
-### Purpose  
-Protect culturally sensitive or sovereign areas.
+- EPSG:4326 normalization  
+- Web Mercator → WGS84 transformations  
+- Datum mismatches  
+- Geodesic inconsistencies  
 
-### Masking Stack
-- **H3 r7 generalization**  
-- **Coordinate fuzzing** (secure RNG noise)  
-- **Polygon dilation** (sovereignty buffers)  
-- **Site obfuscation** using convex hull bounding  
+Outputs include:
 
-### Masking Architecture
-
-```mermaid
-flowchart TD
-    M1[Input Geometry] --> M2[Site Classification<br/>sensitive · restricted]
-    M2 --> M3[H3 Generalizer]
-    M3 --> M4[Coordinate Fuzzer]
-    M4 --> M5[Polygon Buffer]
-    M5 --> M6[Governance Stamp]
-```
+- Detected CRS  
+- Transform matrix  
+- Geometry diff  
+- Warnings about invalid or suspect transforms  
 
 ---
 
-## 3️⃣ `extentCalculator.ts` — Nodata-Aware Extent Engine
+## 4. **Layer Merge Debugger (`mergeDebug.ts`)**
+Used to simulate:
 
-### Purpose  
-Determine robust spatial bounds for:
+- STAC + Story Node geometry merging  
+- Governance overlays  
+- Timeline filtering interactions  
+- Map-ready unified geometry outputs  
 
-- GeoJSON / TopoJSON  
-- Raster footprints  
-- Imagery masks  
+Provides:
 
-### Architecture
-
-```mermaid
-flowchart LR
-    E1[Geometry or Raster Info] --> E2[Nodata Detector]
-    E2 --> E3[Extent Builder]
-    E3 --> E4[Outlier Pruner]
-    E4 --> E5[Final Extent]
-```
-
-This powers:
-
-- “Zoom to entity”  
-- “Zoom to dataset”  
-- Story Node context previews  
+- Before/after layer state  
+- Provenance metadata  
+- License & CARE flags  
+- Final merged geometry  
 
 ---
 
-## 4️⃣ `blendRules.ts` — UI-Safe DEM + Imagery Blending
+## 5. **Synthetic Fixture Generator (`generateSyntheticFixture.ts`)**
+Used to create:
 
-### Purpose  
-Provide blending logic for terrain, hillshade, historical imagery, and DEM composites.
+- **Non-sensitive** synthetic footprints  
+- Test Story Node spatial bundles  
+- Masking scenarios  
+- CRS normalization edge cases  
 
-### Features
-- Non-destructive visual masks  
-- DEM-first elevation precedence  
-- Dynamic opacity curve based on camera height  
-- Time-sensitive blends (historic vs modern)  
+Generated fixtures must:
 
-### Architecture
-
-```mermaid
-flowchart TD
-    B1[DEM Layer] --> B3[Blend Core]
-    B2[Imagery Layer] --> B3
-    B3 --> B4[Opacity Curve]
-    B4 --> B5[Output Style Props]
-```
+- Include `"source": "synthetic-generator"`  
+- Be safe for public distribution  
+- Contain metadata for CARE & license review  
+- Be compatible with geospatial test schemas  
 
 ---
 
-## 5️⃣ `projectionHints.ts` — Projection Resolver & Fallback System
+# 🔐 Governance & CARE Rules for Scripts
 
-### Purpose  
-Enable the browser to handle unknown or exotic CRS definitions gracefully.
+Scripts must:
 
-### Capabilities
-- Detect deprecated CRS  
-- Suggest best-fit CRS for Kansas datasets  
-- Provide MapLibre/Cesium with numeric projection hints  
-- Warn user about projection misalignment  
-
-### Architecture
-
-```mermaid
-flowchart LR
-    P1[Incoming CRS Tag] --> P2[CRS Knowledge Base]
-    P2 --> P3[Fallback Resolver]
-    P3 --> P4[UI Warning + Hint Return]
-```
-
----
-
-# 🧭 End-to-End Client-Side Geospatial Flow
-
-```mermaid
-flowchart TD
-    ASSET[STAC Asset<br/>raster · vector] --> PIPE[Web Pipelines]
-    PIPE --> SCRIPT[Geospatial Scripts]
-    SCRIPT --> GUARD[schemaGuards]
-    GUARD --> RENDER[Rendering Engines<br/>MapLibre · Cesium]
-    RENDER --> UI[Focus Mode · Timeline · Story Nodes]
-    UI --> GOVLOG[Governance Telemetry]
-```
-
----
-
-# 🔐 FAIR+CARE Governance Rules (Required)
-
-| Requirement | Implementation |
-|------------|----------------|
-| No sensitive location exposure | H3 masking + fuzzing + polygon dilation |
-| Geometries always redacted before render | `maskCoordinates.ts` mandatory |
-| CARE labels stored in metadata.json | Script-level governance metadata |
-| User cannot disable CARE masking | Hard-coded in scripts, not toggleable |
-| Provenance attached to all outputs | JSON-LD stamping in each script |
-
-Governance ledger:
-
-```
-../../../../../docs/reports/audit/web-geospatial-script-ledger.json
-```
-
----
-
-# 📡 Telemetry & Sustainability
-
-Scripts emit:
-
-- `clip_runtime_ms`  
-- `masking_events`  
-- `projection_hint_used`  
-- `blend_compute_ms`  
-- Estimated energy & CO₂e (UI event model)  
-
-Telemetry target:
-
-```
-../../../../../releases/v10.3.2/focus-telemetry.json
-```
-
----
-
-# ⚙️ CI/CD & MCP-DL Compliance
-
-| Area | Enforcement |
-|------|-------------|
-| Shape validation | schemaGuards.ts |
-| Governance | CARE filters + sovereignty rules |
-| Security | CodeQL + Trivy |
-| A11y | Accessible spatial interactions verified |
-| Telemetry | telemetry-export.yml |
-| Docs | docs-lint.yml |
-| Behavior determinism | deterministic tests in Jest |
-
-Scripts may **not** be merged if any governance or schema guard fails.
-
----
-
-# 🧾 Example Script Metadata Entry
-
-```json
-{
-  "id": "web_geospatial_scripts_v10.3.2",
-  "scripts": [
-    "clipGeoJSON.ts",
-    "maskCoordinates.ts",
-    "extentCalculator.ts",
-    "blendRules.ts",
-    "projectionHints.ts"
-  ],
-  "masking_enforced": true,
-  "a11y_compliant": true,
-  "telemetry_linked": true,
-  "checksum_verified": true,
-  "timestamp": "2025-11-14T16:32:00Z",
-  "governance_ref": "docs/reports/audit/web-geospatial-script-ledger.json"
-}
-```
-
----
-
-# 🕰️ Version History
-
-| Version | Date | Summary |
-|---------|--------|---------|
-| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added masking engine, projection hint system, telemetry path upgrades, predictive blending logic. |
-| v10.3.1 | 2025-11-13 | Previous version. |
-
----
-
-<div align="center">
-
-**Kansas Frontier Matrix — Web Geospatial Scripts Layer**  
-🛰️ Client-Side Spatial Intelligence · 🌐 FAIR+CARE · 🔐 Ethical Masking · 🔗 Provenance by Design  
-© 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Geospatial Pipelines](../README.md)
-
-</div>
+- NEVER load real sensitive coordinates  
+- NEVER show actual tribal/heritage sites  
+- ONLY operate on **synthetic** or
