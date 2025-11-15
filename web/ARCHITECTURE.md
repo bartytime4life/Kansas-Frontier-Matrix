@@ -77,7 +77,7 @@ requirements, and narrative interfaces of the Web Platform (`web/**`).
 
 ## 📘 Overview
 
-The KFM Web Platform is the primary **interactive, narrative, and exploratory surface** for the Kansas Frontier Matrix.
+The KFM Web Platform is the primary interactive, narrative, and exploratory surface for the Kansas Frontier Matrix.
 
 It provides:
 
@@ -147,33 +147,50 @@ The Web Platform consists of five coordinated layers:
 
 ## 🧱 Internal Directory Structure
 
-web/                               # KFM web client root  
-├── README.md                      # High-level web platform overview  
-├── ARCHITECTURE.md                # This architecture document  
-├── package.json                   # Web dependencies and npm scripts  
-├── vite.config.ts                 # Vite build configuration  
-├── public/                        # Static assets served as-is  
-│   ├── index.html                 # SPA entry HTML shell  
-│   ├── manifest.json              # PWA/metadata manifest  
-│   ├── icons/                     # Favicons and app icons  
-│   └── images/                    # Shared static imagery  
-└── src/                           # TypeScript/React source  
-    ├── main.tsx                   # SPA bootstrap and React root mount  
-    ├── App.tsx                    # Top-level layout and route shell  
-    ├── components/                # Reusable UI building blocks  
-    │   ├── map/                   # MapLibre map frames, layers, controls  
-    │   ├── timeline/              # Timeline track, handles, temporal markers  
-    │   ├── focus/                 # Focus Mode panels and widgets  
-    │   ├── story/                 # Story Node cards, lists, detail views  
-    │   ├── governance/            # CARE/provenance badges and drawers  
-    │   ├── stac/                  # STAC/DCAT explorer views and controls  
-    │   └── layout/                # Shell, headers, sidebars, responsive grids  
-    ├── pages/                     # Page-level route containers  
-    ├── hooks/                     # Custom hooks (useMap, useTimeline, useFocus, etc )  
-    ├── context/                   # React Context providers (time, theme, focus, a11y)  
-    ├── services/                  # API clients (REST, GraphQL, STAC/DCAT, telemetry)  
-    ├── utils/                     # Helpers, guards, JSON-LD builders, URL tools  
-    └── styles/                    # Global styles, tokens, themes, map styling  
+web/  
+├── README.md  
+├── ARCHITECTURE.md  
+├── package.json  
+├── vite.config.ts  
+├── public/  
+│   ├── index.html  
+│   ├── manifest.json  
+│   ├── icons/  
+│   └── images/  
+└── src/  
+    ├── main.tsx  
+    ├── App.tsx  
+    ├── components/  
+    │   ├── map/  
+    │   ├── timeline/  
+    │   ├── focus/  
+    │   ├── story/  
+    │   ├── governance/  
+    │   ├── stac/  
+    │   └── layout/  
+    ├── pages/  
+    ├── hooks/  
+    ├── context/  
+    ├── services/  
+    ├── utils/  
+    └── styles/  
+
+### Directory Responsibilities
+
+- `web/` — KFM web client root.  
+- `README.md` — High-level web platform overview.  
+- `ARCHITECTURE.md` — This architecture document.  
+- `package.json` — Web dependencies and npm scripts.  
+- `vite.config.ts` — Vite build configuration.  
+- `public/` — Static assets served as-is.  
+- `src/` — TypeScript/React source for the SPA.  
+- `src/components/` — Reusable UI building blocks (map, timeline, focus, story, governance, STAC, layout).  
+- `src/pages/` — Route-level containers.  
+- `src/hooks/` — Custom hooks (`useMap`, `useTimeline`, `useFocus`, etc).  
+- `src/context/` — React Context providers (time, theme, focus, accessibility, governance).  
+- `src/services/` — API clients (REST, GraphQL, STAC/DCAT, telemetry).  
+- `src/utils/` — Helpers, guards, JSON-LD builders, URL tools.  
+- `src/styles/` — Global styles, tokens, themes, map styling (see `web/src/styles/README.md`).  
 
 ---
 
@@ -193,7 +210,7 @@ web/                               # KFM web client root
 
 - Timeline updates propagate to map, Focus Panel, and Story Node lists.  
 - Scroll and drag gestures adjust the active time window.  
-- Zooming time modifies aggregation level (decade, year, month).
+- Timeline zoom controls aggregation level (decade, year, month).
 
 ---
 
@@ -208,19 +225,19 @@ web/                               # KFM web client root
 
 ### Outputs
 
-- Story Node Cards  
-- Narrative sequences  
-- Micro-map previews  
-- Timeline marks  
-- Focus Mode recommendations  
+- Story Node Cards.  
+- Narrative sequences.  
+- Micro-map previews.  
+- Timeline marks.  
+- Focus Mode recommendations.  
 
 ### Rendering Rules
 
 - Preserve provenance and CARE labels.  
 - Explicitly differentiate:
-  - Original historical excerpts  
-  - System-generated summaries  
-  - AI-generated contextual insights  
+  - Original historical excerpts.  
+  - System-generated summaries.  
+  - AI-generated contextual insights.  
 - Validate all Story Node payloads against JSON Schema before rendering.
 
 ---
@@ -232,22 +249,22 @@ web/                               # KFM web client root
 1. User selects an entity from map, list, story, or timeline.  
 2. Focus controller prepares and sends a request (REST or GraphQL).  
 3. Backend returns:
-   - Core entity fields  
-   - Graph neighborhood  
-   - STAC assets  
-   - CARE/provenance metadata  
-   - AI narratives (if allowed)  
+   - Core entity fields.  
+   - Graph neighborhood.  
+   - STAC assets.  
+   - CARE/provenance metadata.  
+   - AI narratives (if allowed).  
 4. Focus Panel renders:
-   - Summary and key facts  
-   - Related entities by role and relation type  
-   - Story Node suggestions  
-   - Provenance chain and governance chips  
-   - Spatial and temporal highlights  
+   - Summary and key facts.  
+   - Related entities by role and relation type.  
+   - Story Node suggestions.  
+   - Provenance chain and governance chips.  
+   - Spatial and temporal highlights.  
 
 ### Frontend Constraints
 
 - Respect `ai_transform_prohibited` flags (no speculative or unverified claims).  
-- Mark any inferred or low-confidence segments.  
+- Mark inferred or low-confidence segments.  
 - Always expose provenance chips for model-derived content.  
 - Fallback to non-AI descriptions when AI is unavailable or disabled.
 
