@@ -23,9 +23,9 @@ Define the **Diamond⁹ Ω–grade UI component architecture** for the Diff-Firs
 These components present **release-to-release diffs** (properties, relations, text, governance, explainability) in a **FAIR+CARE-certified**, **accessible**, and **sustainability-aware** interface, tightly integrated with **Focus Mode v2.5**, **MapView**, **TimelineView**, and **Governance UIs**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()  
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-UI_Compliant-orange)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
@@ -58,7 +58,7 @@ web/src/entities/diff-first/components/
 ├── TextDelta.tsx
 ├── ReleasePicker.tsx
 └── Legend.tsx
-````
+```
 
 ---
 
@@ -66,12 +66,12 @@ web/src/entities/diff-first/components/
 
 ```mermaid
 flowchart TD
-    DIFF[EntityDiff Model] --> HEAD[DiffHeader]
+    DIFF[EntityDiff model] --> HEAD[DiffHeader]
     DIFF --> PROP[PropertyDelta]
     DIFF --> REL[RelationDelta]
     DIFF --> TXT[TextDelta]
-    META[Release Tags] --> RP[ReleasePicker]
-    TOK[Design Tokens] --> LEG[Legend]
+    TAGS[Release tags] --> RP[ReleasePicker]
+    TOK[Design tokens] --> LEG[Legend]
     HEAD --> LEG
     PROP --> LEG
     REL --> LEG
@@ -84,12 +84,12 @@ flowchart TD
 
 **Responsibilities**
 
-* Display total counts (added, removed, changed)
-* Summarize overall severity (low/med/high)
-* Highlight governance-impacting changes (CARE, consent, license)
-* Provide quick-glance understanding of entity evolution
+- Display total counts (added, removed, changed)  
+- Summarize overall severity (low/med/high)  
+- Highlight governance-impacting changes (CARE, consent, license)  
+- Provide quick-glance understanding of entity evolution  
 
-**Key Props**
+**Props**
 
 ```ts
 type DiffHeaderProps = {
@@ -110,11 +110,11 @@ flowchart LR
 
 Renders:
 
-* numeric deltas (with units, pct changes)
-* categorical changes (enum swaps, label transitions)
-* severity-indicating badges (with shape + color, never color-only)
+- numeric deltas (with units, pct changes)  
+- categorical changes (enum swaps, label transitions)  
+- severity badges (shape + color, never color-only)  
 
-**Key Props**
+**Props**
 
 ```ts
 type PropertyDeltaProps = {
@@ -124,7 +124,7 @@ type PropertyDeltaProps = {
 
 ```mermaid
 flowchart LR
-    PC[PropertyChange[]] --> PUI[PropertyDelta]
+    PC[PropertyChange list] --> PUI[PropertyDelta]
 ```
 
 ---
@@ -133,13 +133,13 @@ flowchart LR
 
 Shows:
 
-* added relations (new links)
-* removed relations (dropped links)
-* relation types
-* confidence scores
-* provenance references
+- added relations (new links)  
+- removed relations (dropped links)  
+- relation types  
+- confidence scores  
+- provenance references  
 
-**Key Props**
+**Props**
 
 ```ts
 type RelationDeltaProps = {
@@ -149,7 +149,7 @@ type RelationDeltaProps = {
 
 ```mermaid
 flowchart LR
-    RC[RelationChange[]] --> RUI[RelationDelta]
+    RC[RelationChange list] --> RUI[RelationDelta]
 ```
 
 Governance rules (CARE, sovereignty) may mask or hide certain relation entries.
@@ -160,11 +160,11 @@ Governance rules (CARE, sovereignty) may mask or hide certain relation entries.
 
 Provides:
 
-* unified or split text diffs
-* change highlighting (outline, not color-only)
-* support for long text fields (scroll-safe, wrap-safe)
+- unified or split text diffs  
+- change highlighting (outlines, not color-only)  
+- support for long text fields (scroll-safe, wrap-safe)  
 
-**Key Props**
+**Props**
 
 ```ts
 type TextDeltaProps = {
@@ -174,7 +174,7 @@ type TextDeltaProps = {
 
 ```mermaid
 flowchart LR
-    TC[TextChange[]] --> TUI[TextDelta]
+    TC[TextChange list] --> TUI[TextDelta]
 ```
 
 ---
@@ -183,11 +183,11 @@ flowchart LR
 
 Allows users to:
 
-* switch between releases
-* view diffs across arbitrary tag pairs
-* support keyboard-first navigation
+- switch between releases  
+- view diffs across arbitrary tag pairs  
+- support keyboard-first navigation  
 
-**Key Props**
+**Props**
 
 ```ts
 type ReleasePickerProps = {
@@ -199,8 +199,8 @@ type ReleasePickerProps = {
 
 ```mermaid
 flowchart TD
-    TAGS[Release Tags] --> RP[ReleasePicker]
-    RP --> EVT[Release Change Event]
+    TAGS2[Release tags] --> RP[ReleasePicker]
+    RP --> EVT[Release change event]
 ```
 
 ---
@@ -209,12 +209,12 @@ flowchart TD
 
 Legend ensures users understand:
 
-* severity encodings
-* CARE icons and governance markers
-* explainability indicators
-* predictive vs historical diff markers
+- severity encodings  
+- CARE icons and governance markers  
+- explainability indicators  
+- predictive vs historical diff markers  
 
-**Key Props**
+**Props**
 
 ```ts
 type LegendProps = {
@@ -224,7 +224,7 @@ type LegendProps = {
 
 ```mermaid
 flowchart LR
-    TOK[Design Tokens] --> LEG[Legend]
+    TOK2[Design tokens] --> LEG[Legend]
 ```
 
 ---
@@ -233,15 +233,15 @@ flowchart LR
 
 All components must:
 
-* provide **ARIA labels** and roles
-* support keyboard navigation and focus states
-* describe severity and CARE flags with **text** and **shapes**, not just color
-* maintain **heading order** and semantic structure
+- provide **ARIA labels** and roles  
+- support keyboard navigation and focus states  
+- describe severity and CARE flags with **text** and **shapes**, not just color  
+- maintain **heading order** and semantic structure  
 
 ```mermaid
 flowchart TD
-    EVM[EntityDiff] --> A11Y[a11y Prop Builder]
-    A11Y --> UI[Components]
+    EVM[EntityDiff model] --> A11Y[a11y prop builder]
+    A11Y --> UI[Accessible diff components]
 ```
 
 ---
@@ -250,26 +250,26 @@ flowchart TD
 
 Components emit events, propagated via hooks/services, into:
 
-```
+```text
 ../../../../../releases/v10.3.2/focus-telemetry.json
 ```
 
 Tracked events:
 
-* `diff_header_view`
-* `property_delta_expand`
-* `relation_delta_expand`
-* `text_delta_expand`
-* `release_picker_change`
-* `legend_hover`
+- `diff_header_view`  
+- `property_delta_expand`  
+- `relation_delta_expand`  
+- `text_delta_expand`  
+- `release_picker_change`  
+- `legend_hover`  
 
-Each event carries:
+Each event includes:
 
-* entityId
-* releasePrev / releaseCurr
-* careImpact
-* energy estimate
-* latency measures
+- entityId  
+- releasePrev / releaseCurr  
+- careImpact  
+- latency  
+- estimated energy (Wh)  
 
 ---
 
@@ -277,14 +277,14 @@ Each event carries:
 
 At the component layer, governance requires:
 
-* clear labeling of CARE-impacted changes
-* layout that foregrounds governance changes (e.g., summary badges)
-* no direct display of restricted details without gating
-* visual alerts for license changes, consent changes, sovereignty tags
+- clear labeling of CARE-impacted changes  
+- UI layout that foregrounds governance changes (summary badges)  
+- no display of restricted details without gating  
+- visual alerts for license/consent/sovereignty changes  
 
 Governance logs:
 
-```
+```text
 ../../../../../docs/reports/audit/web-entity-diff-components-governance.json
 ```
 
@@ -292,14 +292,14 @@ Governance logs:
 
 ## ⚙️ CI / Validation Requirements
 
-| Layer      | Check                                       |
-| ---------- | ------------------------------------------- |
-| A11y       | `accessibility_scan.yml` (axe + Lighthouse) |
-| Governance | `faircare-validate.yml`                     |
-| Telemetry  | `telemetry-export.yml`                      |
-| Docs       | `docs-lint.yml`                             |
-| Types      | TS strict mode                              |
-| Security   | CodeQL + Trivy                              |
+| Layer | Check |
+|-------|-------|
+| A11y | `accessibility_scan.yml` (axe + Lighthouse) |
+| Governance | `faircare-validate.yml` |
+| Telemetry | `telemetry-export.yml` |
+| Docs | `docs-lint.yml` |
+| Types | TS strict mode |
+| Security | CodeQL + Trivy |
 
 ---
 
@@ -329,19 +329,18 @@ Governance logs:
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                                                            |
-| ------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Version | Date | Summary |
+|--------|--------|---------|
 | v10.3.2 | 2025-11-14 | Deep-architecture rewrite: integrated governance badges, explainability visuals, WCAG-compliant diff renderings, and telemetry-aware interactions. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Diff-First Entity Components Architecture**
-🗂️ Change Transparency · 🔐 FAIR+CARE UI · 🔗 Provenance Surfacing · 🧠 Explainable UX
-© 2025 Kansas Frontier Matrix — MIT License
+**Kansas Frontier Matrix — Diff-First Entity Components Architecture**  
+🧩 Change Transparency · 🔐 FAIR+CARE UI · 🔗 Provenance Surfacing · 🧠 Explainable UX  
+© 2025 Kansas Frontier Matrix — MIT License  
 
 [Back to Diff-First Module](../README.md)
 
 </div>
-
