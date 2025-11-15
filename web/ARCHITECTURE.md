@@ -142,11 +142,11 @@ Provide AI-driven narrative analysis of people, places, events, treaties, ecolog
 ```mermaid
 flowchart LR
     E1[User selects entity] --> E2[FocusController]
-    E2 --> API[/api/focus/{id}/]
+    E2 --> API[Focus API endpoint]
     API --> E3[Narrative Generator]
     E3 --> E4[Story Node Builder]
     E3 --> X1[Explainability Layer]
-    E3 --> X2[Ethics/Care Filter]
+    E3 --> X2[Ethics Care Filter]
     E4 --> MAP[MapView Highlight]
     E4 --> TL[Timeline Sync]
 ```
