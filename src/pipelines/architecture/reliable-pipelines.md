@@ -30,9 +30,9 @@ Define the unified architectural standard for **reliable, idempotent, observable
 > **Triggers → light AI (schema only) → deterministic ETL → validation gates → idempotent upsert → metadata/versioning → blue/green publish → alerts & telemetry**,  
 > with **safe retries, rollback, and resume** built into every pathway.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/README.md)
-[![Markdown Rules](https://img.shields.io/badge/Markdown-KFM%20MDP%20v10.4-purple)](../../docs/standards/markdown_rules.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/README.md)  
+[![Markdown Rules](https://img.shields.io/badge/Markdown-KFM%20MDP%20v10.4-purple)](../../docs/standards/markdown_rules.md)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)  
 [![Reliability](https://img.shields.io/badge/Reliability-Diamond%E2%81%B9%20Ω%20%2F%20Crown%E2%88%9EΩ-orange)](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
@@ -229,7 +229,7 @@ data/processed-blue/{dataset}/...
 * Max attempts: **5**
 * Backoff: **exponential with jitter**
 * Only wrap **I/O operations**
-* enforce **timeouts** + **circuit breakers**
+* Enforce **timeouts** + **circuit breakers**
 
 ### DLQ Entries Must Include
 
