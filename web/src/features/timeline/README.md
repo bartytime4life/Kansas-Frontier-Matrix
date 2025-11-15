@@ -1,30 +1,31 @@
 ---
-title: "🕰️ Interactive Timeline Layers — MapLibre Playbook (KFM-Ready)"
+title: "🕰️ Kansas Frontier Matrix — Timeline Feature Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/features/timeline/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-08"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-timeline-v1.json"
+sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-timeline-v2.json"
 governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
-
 <div align="center">
 
-# 🕰️ **Interactive Timeline Layers — MapLibre Playbook**  
+# 🕰️ **Kansas Frontier Matrix — Timeline Feature Architecture**  
 `web/src/features/timeline/README.md`
 
 **Purpose:**  
-Let users **scrub through eras** and environmental shifts by binding a **time slider** to **MapLibre style layers**. Turn KFM datasets into **interactive narratives** of climate, land, water, species, ownership, and archaeology.
+Define the **Diamond⁹ Ω / Crown∞Ω Ultimate Certified deep architecture** for the Timeline feature in the Kansas Frontier Matrix (KFM) v10.3.2 web platform.  
+This module binds **temporal navigation** (slider, playback, bands) to **MapLibre** and **Cesium** style layers, synchronizes with **Focus Mode v2.5**, **Story Nodes**, and **Diff-First** views, and enforces **FAIR+CARE**, **WCAG 2.1 AA**, and **MCP-DL v6.3** compliance.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../../docs/)
-[![License](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Aligned-orange)](../../../../docs/standards/)
-[![Status](https://img.shields.io/badge/Status-Stable-brightgreen)](#)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Timeline-orange)]()  
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
 
@@ -32,56 +33,96 @@ Let users **scrub through eras** and environmental shifts by binding a **time sl
 
 ## 📘 Overview
 
-- **What:** Time-linked style layers = layers whose **visibility/paint** depend on a **`currentYear`** state.  
-- **Why:** Reveal **where people lived**, **waterways shifted**, **prairies converted**, **species moved**, **ownership changed**.  
-- **How:** A single **UI slider** updates a **MapLibre style variable** or **layer filters**, which drive expressions across layers.
+The **Timeline Feature** provides:
 
-> *Tip:* Prefer **style variables** for O(1) updates across many layers. If not available in your MapLibre version, update layer **`filter`** and **paint** properties imperatively per layer (see fallback below).
+- A **global temporal control** (`currentYear` and ranges)  
+- Real-time binding of **year** to **MapLibre/Cesium** style variables & filters  
+- Integration with **Diff-First Entity** modules (change over releases)  
+- Temporal alignment with **Focus Mode v2.5** and Story Nodes  
+- Predictive-band support (2030–2100 SSP scenarios)  
+- FAIR+CARE-aware temporal masking and governance cues  
+- Accessibility-first temporal UI (keyboard, screenreader, high-contrast)  
+- Telemetry emission for temporal interactions and energy modeling  
+
+The Timeline feature is the primary **time-navigation plane** for KFM.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```plaintext
-web/
-└─ src/
-   └─ features/
-      └─ timeline/
-         README.md               # This file — MapLibre timeline playbook
-         timeline.ts             # Timeline state, bindings, fallbacks, telemetry hooks
-         slider.tsx              # React slider UI (keyboard/ARIA friendly)
-         styles/
-         ├─ timeline-style.json  # MapLibre style with expressions/filters
-         └─ palette.json         # Optional era colors / design tokens
-         datasets/
-         ├─ landcover.pmtiles    # PMTiles (time-sliced or year-tagged)
-         ├─ hydrology.pmtiles
-         └─ settlements.pmtiles
+```text
+web/src/features/timeline/
+├── README.md
+├── timeline.ts             # Binding logic, style variable integration, telemetry hooks
+├── slider.tsx              # React slider UI (WCAG-compliant)
+├── styles/
+│   ├── timeline-style.json # MapLibre style with temporal expressions
+│   └── palette.json        # Era palettes and temporal token definitions
+└── datasets/
+    ├── landcover.pmtiles
+    ├── hydrology.pmtiles
+    └── settlements.pmtiles
+````
+
+---
+
+## 🧩 High-Level Timeline Architecture
+
+```mermaid
+flowchart TD
+    UI[Slider · Controls] --> TLSTATE[Timeline State<br/>currentYear · bands]
+    TLSTATE --> MAPARB[Map Binding<br/>MapLibre · Cesium]
+    TLSTATE --> FOCUSALIGN[Focus Mode Align]
+    TLSTATE --> STORYALIGN[Story Node Align]
+    TLSTATE --> DIFFSYNC[Diff-First Sync]
+    TLSTATE --> TEL[Telemetry Emit]
+    TLSTATE --> GOV[Governance Check<br/>FAIRCARE temporal rules]
 ```
 
 ---
 
-## 🧩 Core Idea (MapLibre expressions)
+## 🧬 Timeline State Model
 
-Use a **global year** to control layer filters/paints:
+The **Timeline State** exposes:
 
-- **Show features active at `Y`:**  
-  `["all", ["<=", ["get","year_start"], ["var","currentYear"]], [">=", ["coalesce", ["get","year_end"], 9999], ["var","currentYear"]]]`
-- **Fade by recency:**  
-  `["interpolate", ["linear"], ["-", ["var","currentYear"], ["coalesce", ["get","year"], ["get","year_start"], 0]], 0, 1, 50, 0.2]`
-- **Color by era bucket:**  
-  `["step", ["var","currentYear"], "#d8d8d8", 1850, "#b3d1ff", 1900, "#7fb3ff", 1950, "#4d94ff", 2000, "#1a75ff"]`
+* `currentYear` — primary year for all temporal expressions
+* `range` — selected time window (for brushing)
+* `mode` — historic | predictive | mixed
+* `playback` — playing | paused
+* `bands` — predictive period definitions (2030–2050, 2050–2100)
 
-> *Note:* `["var","currentYear"]` requires MapLibre with style variables enabled. For earlier versions, use fallback in **Binding API**.
+```ts
+export type TimelineState = {
+  currentYear: number;
+  range?: { start: number; end: number };
+  mode: "historic" | "predictive" | "mixed";
+  playback: "playing" | "paused";
+  bands?: { label: string; start: number; end: number; predictive: boolean }[];
+};
+```
 
 ---
 
-## 🧾 Minimal Style Snippet (`styles/timeline-style.json`)
+## 🗺️ Temporal Binding to MapLibre & Cesium
+
+The Timeline feature controls map rendering via:
+
+* **style variables** (preferred) in `timeline-style.json`
+* **fallback filter updates** when style vars are unavailable
+
+```mermaid
+flowchart TD
+    YEAR[currentYear] --> VARBIND[Style Variable Setter]
+    VARBIND --> MAPSTYLE[MapLibre Style Expressions]
+    YEAR --> TERRBIND[Cesium Time Materials]
+    TERRBIND --> TERRAIN[3D Terrain Timeline]
+```
+
+### Style Variable Example (`timeline-style.json`)
 
 ```json
 {
   "version": 8,
-  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "metadata": { "vars": { "currentYear": 1900 } },
   "sources": {
     "settlements": { "type": "vector", "url": "pmtiles://datasets/settlements.pmtiles" }
@@ -95,17 +136,7 @@ Use a **global year** to control layer filters/paints:
       "filter": ["all",
         ["<=", ["get","year_start"], ["var","currentYear"]],
         [">=", ["coalesce", ["get","year_end"], 9999], ["var","currentYear"]]
-      ],
-      "paint": {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 1.2, 10, 3.5, 12, 6],
-        "circle-color": ["step", ["var","currentYear"],
-          "#c9c9c9", 1850, "#8fd3a1", 1900, "#5bbf8f", 1950, "#2b9f7a", 2000, "#0f7a5d"
-        ],
-        "circle-opacity": ["interpolate", ["linear"],
-          ["-", ["var","currentYear"], ["coalesce", ["get","year"], ["get","year_start"], 0]],
-          0, 1.0, 50, 0.25
-        ]
-      }
+      ]
     }
   ]
 }
@@ -113,196 +144,227 @@ Use a **global year** to control layer filters/paints:
 
 ---
 
-## ⚙️ Binding API — **Style Var** & **Fallback**
+## ⚙️ Binding Logic — `timeline.ts`
 
-### A) Style variable (preferred) — `timeline.ts`
+Key responsibilities:
+
+* Provide `initTimeline(map, initialYear)`
+* Bind `currentYear` to style variable or fallback filters
+* Dispatch `kfm:timeline:year` events
+* Integrate telemetry & governance checks
 
 ```ts
-import maplibregl from 'maplibre-gl';
+import maplibregl from "maplibre-gl";
 
 export function initTimeline(map: maplibregl.Map, initialYear = 1900) {
-  // Set once; used by expressions in style JSON
-  if ((map as any).setStyleVar) (map as any).setStyleVar('currentYear', initialYear);
+  if ((map as any).setStyleVar) (map as any).setStyleVar("currentYear", initialYear);
+  (map as any).__currentYear = initialYear;
 
-  // Telemetry hook (optional)
-  performance.mark('timeline:init');
-
-  return {
-    setYear(y: number) {
-      if ((map as any).setStyleVar) (map as any).setStyleVar('currentYear', y);
-      else updateFiltersFallback(map, y);
-      window.dispatchEvent(new CustomEvent('kfm:timeline:year', { detail: { year: y }}));
-    },
-    getYear(): number {
-      if ((map as any).getStyleVar) return (map as any).getStyleVar('currentYear') as number;
-      return (map as any).__currentYear ?? initialYear;
+  function setYear(year: number) {
+    (map as any).__currentYear = year;
+    if ((map as any).setStyleVar) {
+      (map as any).setStyleVar("currentYear", year);
+    } else {
+      updateFiltersFallback(map, year);
     }
-  };
-}
-
-// Fallback for MapLibre versions without style variables
-export function updateFiltersFallback(map: maplibregl.Map, year: number) {
-  (map as any).__currentYear = year;
-  const layers = ['settlements-dots', /* add your layer ids */];
-  for (const id of layers) {
-    const base = ["all",
-      ["<=", ["get", "year_start"], year],
-      [">=", ["coalesce", ["get", "year_end"], 9999], year]
-    ];
-    map.setFilter(id, base as any);
+    window.dispatchEvent(
+      new CustomEvent("kfm:timeline:year", { detail: { year } })
+    );
   }
+
+  function getYear() {
+    if ((map as any).getStyleVar) {
+      return (map as any).getStyleVar("currentYear") as number;
+    }
+    return (map as any).__currentYear ?? initialYear;
+  }
+
+  return { setYear, getYear };
 }
 ```
 
-### B) Simple UI (React slider) — `slider.tsx`
+---
+
+## 🎚 Slider UI — `slider.tsx`
+
+The slider must be:
+
+* keyboard operable
+* labeled with ARIA attributes
+* visually focusable
+* compatible with reduced-motion
 
 ```tsx
-import React from 'react';
+import React from "react";
 
-export function YearSlider({ year, setYear }: { year: number; setYear: (y:number)=>void }) {
+export function YearSlider({
+  year,
+  setYear,
+  min = 1700,
+  max = 2100
+}: {
+  year: number;
+  setYear: (y: number) => void;
+  min?: number;
+  max?: number;
+}) {
   return (
-    <label style={{ display:'grid', gap:6 }}>
-      <span id="label-year">Year: {year}</span>
-      <input
-        type="range"
-        min={1700}
-        max={2025}
-        step={1}
-        value={year}
-        onChange={(e)=> setYear(parseInt(e.target.value, 10))}
-        aria-labelledby="label-year"
-      />
-    </label>
+    <section aria-labelledby="timeline-heading" className="timeline-slider">
+      <h2 id="timeline-heading">Interactive Timeline</h2>
+      <label>
+        <span className="sr-only">Year</span>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={year}
+          onChange={(e) => setYear(parseInt(e.target.value, 10))}
+          aria-valuenow={year}
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-label="Timeline year"
+        />
+      </label>
+      <p aria-live="polite">Year: {year}</p>
+    </section>
   );
 }
 ```
 
-### C) Wiring it up (example usage)
+---
 
-```ts
-import { initTimeline } from './timeline';
-import { createRoot } from 'react-dom/client';
-import { YearSlider } from './slider';
+## 🔁 Interaction with Focus Mode & Story Nodes
 
-const map = new maplibregl.Map({ container: 'map', style: '/styles/timeline-style.json' });
-map.on('load', () => {
-  const tl = initTimeline(map, 1880);
+When **Focus Mode** selects an event with a known date:
 
-  const root = createRoot(document.getElementById('timeline-ui')!);
-  const App = () => {
-    const [year, setYearState] = React.useState(tl.getYear());
-    const setYear = (y:number) => { setYearState(y); tl.setYear(y); };
-    return <YearSlider year={year} setYear={setYear} />;
-  };
-  root.render(<App />);
-});
+* Timeline snaps `currentYear` to that event’s temporal anchor
+* predictive/historic bands adjust to include the event
+* Story Node context updates accordingly
+
+```mermaid
+flowchart TD
+    FSELECT[Focus Event Selection] --> DATE[Extract Event Date]
+    DATE --> SETY[setYear(currentYear)]
+    SETY --> MAPSYNC[Map Temporal Filter]
+    SETY --> STORYSYNC[Story Node Focus]
 ```
 
 ---
 
-## 📦 PMTiles & Protocol Setup
+## 🔐 FAIR+CARE Temporal Governance
 
-Register **PMTiles protocol** once (on app boot) to use `pmtiles://` URLs:
+Temporal governance includes:
 
-```ts
-import { Protocol } from 'pmtiles';
-import maplibregl from 'maplibre-gl';
+* masking sensitive periods as redacted bands
+* providing warnings around trauma-heavy eras
+* ensuring predictive overlays are labeled as scenarios
 
-const protocol = new Protocol();
-maplibregl.addProtocol('pmtiles', protocol.tile);
-
-window.addEventListener('beforeunload', () => {
-  maplibregl.removeProtocol('pmtiles', protocol.tile);
-});
+```mermaid
+flowchart TD
+    YSTATE[Timeline State] --> GPROC[Temporal Governance Rules]
+    GPROC --> VIS[Timeline Visualization]
 ```
 
-> *Note:* Group time-sliced tiles by year or store `year_start`/`year_end` feature properties. Indexing by year in your tiler will yield faster scrubs.
+Governance metadata must be logged to:
 
----
-
-## 🧾 Era Buckets & Datasets (KFM examples)
-
-| Layer               | Feature keys               | Era logic                                |
-|---------------------|----------------------------|-------------------------------------------|
-| `settlements`       | `year_start`, `year_end`   | show if `year_start ≤ Y ≤ year_end`       |
-| `hydrology`         | `year`, `epoch`            | color by `epoch`; fade with recency       |
-| `landcover`         | `year`, `class`            | filter class active at `Y`                 |
-| `ownership_parcels` | `grant_year`, `sold`       | dim when `Y > sold`                       |
-| `species_range`     | `range_year`               | interpolate opacity by `|Y - range_year|` |
-
----
-
-## 🧪 Story Modes (toggleable)
-
-- **Swipe Compare:** render two maps with **independent `currentYear`** (left/right).  
-- **Pin & Annotate:** clicks add notes stamped with `era = currentYear` (saved to session).  
-- **Auto-play:** increment `currentYear` on an interval for cinematic time-lapse.  
-- **Focus Sync:** when Focus Mode centers on an event with `date`, snap slider to that year.
-
----
-
-## ♿ Accessibility & Performance
-
-**Accessibility**
-- Keyboard operable slider (`Tab`, `←/→`, `Home/End`, `PgUp/PgDn`).
-- High-contrast handles; visible focus ring; ARIA labelling (`aria-labelledby`).
-
-**Performance**
-- Prefer **PMTiles** and **vector tiles**; keep expressions simple (`step`, `interpolate`).
-- Update a **single variable** (or shared filters) rather than per-feature operations.
-- Downsample at low zoom; reveal detail on zoom-in.
-- Debounce slider updates (e.g., 16–33ms) to keep 60fps.
-
----
-
-## 🔧 Telemetry & Governance Hooks
-
-- Emit `kfm:timeline:year` custom event on changes for **telemetry** and **governance** audit.  
-- Log slider interactions to `focus-telemetry.json` with fields: `{ user, ts, year, layer_count, fps }`.  
-- Respect **FAIR+CARE**: ensure sensitive layers (e.g., protected sites) enforce visibility policies per `DATA-GOVERNANCE.md`.
-
-```ts
-window.addEventListener('kfm:timeline:year', (e: any) => {
-  // Example: send to your telemetry collector
-  // post('/api/telemetry', { event:'timeline-year', ...e.detail })
-});
+```text
+../../../docs/reports/audit/web-timeline-governance-ledger.json
 ```
 
 ---
 
-## 🧱 Data Contracts (timeline-ready layers)
+## ♿ Accessibility Architecture (WCAG 2.1 AA)
 
-| Field            | Req | Type      | Description                                    |
-|------------------|-----|-----------|------------------------------------------------|
-| `year`           | —   | `number`  | Single-year feature (optional if using range). |
-| `year_start`     | ✅  | `number`  | First active year (inclusive).                  |
-| `year_end`       | —   | `number`  | Last active year (inclusive; default `9999`).   |
-| `epoch`          | —   | `string`  | Era label for color buckets (e.g., `pre1900`). |
-| `class`          | —   | `string`  | Thematic category (e.g., landcover class).     |
+Timeline feature must provide:
 
-> *Validation:* enforce via schema in your ETL and reject features missing `year_start`.
+* full keyboard control for the slider
+* screenreader announcements for `currentYear` and band changes
+* high-contrast colors for bars & markers
+* optional simplified view for cognitive load reduction
+
+```mermaid
+flowchart TD
+    TLSTATE[Timeline State] --> A11Y[a11y Decorator]
+    A11Y --> UI[Accessible Timeline UI]
+```
 
 ---
 
-## 🧭 Known Good Defaults
+## 📡 Telemetry & Sustainability Integration
 
-- **Timeline bounds:** `min=1700`, `max=2025`, `step=1` (adjust per dataset range).  
-- **Initial year:** pick from **active data density** (e.g., median of feature starts).  
-- **Era palette:** neutral → cooler in older eras, warmer in recent (color-blind safe).
+Timeline telemetry records:
+
+* `timeline_year_change` events
+* latency for map + focus sync
+* energy estimate for scrubbing
+* predictive band usage
+
+Telemetry snapshots are appended to:
+
+```text
+../../../releases/v10.3.2/focus-telemetry.json
+```
+
+Examples of telemetry payload fields:
+
+```json
+{
+  "event": "timeline_year_change",
+  "year": 1880,
+  "layersUpdated": 12,
+  "fps": 59,
+  "energy_est_wh": 0.03,
+  "timestamp": "2025-11-14T21:55:00Z"
+}
+```
+
+---
+
+## ⚙️ CI / Validation Requirements
+
+| Layer      | Validator                |
+| ---------- | ------------------------ |
+| Docs       | `docs-lint.yml`          |
+| A11y       | `accessibility_scan.yml` |
+| Governance | `faircare-validate.yml`  |
+| Telemetry  | `telemetry-export.yml`   |
+| Types      | TS strict mode           |
+| Security   | CodeQL + Trivy           |
+
+---
+
+## 🧾 Example Timeline Feature Metadata Record
+
+```json
+{
+  "id": "web_timeline_feature_v10.3.2",
+  "min_year": 1700,
+  "max_year": 2100,
+  "a11y_score": 98.9,
+  "care_compliance": "certified",
+  "telemetry_synced": true,
+  "energy_profile_wh": 0.31,
+  "timestamp": "2025-11-14T22:01:00Z"
+}
+```
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author | Summary                                         |
-|--------:|------------|--------|-------------------------------------------------|
-|  v9.7.0 | 2025-11-08 | KFM    | Initial KFM-ready MapLibre timeline playbook.   |
+| Version | Date       | Summary                                                                                                                                     |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| v10.3.2 | 2025-11-14 | Deep-architecture rebuild: MapLibre/Cesium time-binding, Focus Mode alignment, predictive-band support, governance + telemetry integration. |
+| v9.7.0  | 2025-11-08 | Initial KFM-ready MapLibre timeline playbook.                                                                                               |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Docs](../../../../docs/) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+**Kansas Frontier Matrix — Timeline Feature Architecture**
+🕰️ Temporal Intelligence · 🌐 FAIR+CARE Governance · 🔗 Provenance-Aware Time Navigation · 🧠 AI-Synchronized Narratives
+© 2025 Kansas Frontier Matrix — MIT License
+
+[Back to Web Features](../README.md)
 
 </div>
