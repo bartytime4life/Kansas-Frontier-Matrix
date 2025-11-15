@@ -1,15 +1,15 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ARCHITECTURE.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
-review_cycle: "Continuous / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Continuous / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "releases/v10.3.0/manifest.zip"
-telemetry_ref: "releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
-governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/system-architecture-v2.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 ---
@@ -20,201 +20,322 @@ mcp_version: "MCP-DL v6.3"
 `src/ARCHITECTURE.md`
 
 **Purpose:**  
-Define the complete, FAIR+CARE-aligned system architecture for KFM v10.3, spanning data ingestion, AI/ETL pipelines, ontology-driven knowledge graph modeling, MCP-governed agents, API layers, 3D visualization, governance, and telemetry.
+Define the *complete*, FAIR+CARE-governed, ontology-aligned, MCP-DL reproducible architecture of the Kansas Frontier Matrix (KFM) — including data ingestion, AI reasoning, operational safety (WAL/Retry/Rollback/Hotfix/Lineage), knowledge-graph modeling, STAC/DCAT metadata systems, 3D visualization, governance, provenance, telemetry, and sustainability pipelines.  
+This is the canonical architecture reference for **v10.3.2**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../docs/standards/faircare.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
 [![Status: Active](https://img.shields.io/badge/Status-Active-success)]()
+[![SBOM](https://img.shields.io/badge/SBOM-SPDX-blueviolet)]()
+[![SLSA](https://img.shields.io/badge/SLSA-Level%202-lightgrey)]()
 
 </div>
 
 ---
 
-## 📚 Overview
-The Kansas Frontier Matrix (KFM) is a **semantic geospatial operating system** integrating Kansas’s historical, environmental, cultural, hydrologic, climatic, and archival data into an open, reproducible, FAIR+CARE-governed platform.
+# 📘 Executive Summary
 
-KFM unifies:
+The **Kansas Frontier Matrix (KFM)** is a **semantic geospatial operating system** that integrates:
 
-- Historical archives (maps, deeds, newspapers, treaties, diaries)  
-- Environmental and hazard records (climate, hydrology, droughts, floods, fires, storms)  
-- Cultural and heritage data (Indigenous lands, archaeological sites, historic districts)  
-- Modern sensors (Mesonet, hydrology, atmospheric data)  
-- Predictive simulations (2030–2100 climate & environmental scenarios)
+- Historical & cultural datasets  
+- Indigenous sovereignty data  
+- Climate, hydrology, ecology & hazard datasets  
+- Geological & paleolandscape reconstructions  
+- Sensor networks & live feeds  
+- AI reasoning (Focus Mode v2.5)  
+- Predictive environmental futures (2030–2100)  
+- FAIR+CARE governance & ethics  
+- Diamond⁹ Ω operational safety (WAL → Retry → Rollback → Hotfix → Lineage)  
 
-Core technologies:
+KFM fuses **AI, GIS, ontology, governance, and sustainability** into a unified research infrastructure.
 
-- **Orchestration & Agents**  
-  LangGraph 1.x · Dynamic Tool Calling · CrewAI MCP gateway  
-- **Semantics & Storage**  
-  Neo4j · CIDOC CRM · GeoSPARQL · OWL-Time · PROV-O  
-- **Catalogs & Metadata**  
-  STAC 1.0 + Versioning · DCAT 3.0 · JSON-LD  
-- **APIs & UI**  
-  FastAPI · GraphQL · React · MapLibre · Cesium  
-- **Explainability & Ethics**  
-  Focus Mode v2.4 · SHAP overlays · CARE governance  
+This architecture document is the complete specification of **how KFM v10.3.2 works internally**.
 
 ---
 
-## 🎯 Scope & Audience
-This architecture document is intended for:
+# 🏛️ High-Level Architecture (v10.3.2)
 
-- **Backend engineers** — ETL, Neo4j, metadata pipelines  
-- **Frontend engineers** — React/MapLibre/Cesium, timeline, Focus Mode  
-- **Researchers** — analyses, simulations, Story Nodes  
-- **Governance reviewers** — FAIR+CARE, provenance, ethics  
-
-It is the canonical reference for how KFM v10.3’s components interoperate.
-
----
-
-## 🏗️ System Architecture Diagram
-
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["External Data (NOAA · USGS · KHS · Tribal · Sensors · Archives)"]
-  B["LangGraph ETL + AI Pipelines (OCR · NER · STAC/DCAT · QA/QC · Forecasts)"]
-  C["Knowledge Graph (Neo4j · CIDOC CRM · GeoSPARQL · OWL-Time · Story Nodes)"]
-  D["APIs (FastAPI · GraphQL · Auth/RBAC · STAC/DCAT Bridge)"]
-  E["Frontend (React · MapLibre · Cesium · Focus Mode v2.4 · Story Cards)"]
-  F["Governance (FAIR+CARE · SBOM · SLSA · Audit Ledger · CARE Labels)"]
-  G["Telemetry (OpenTelemetry · Energy · Drift/Bias · A11y)"]
-
-  A --> B --> C --> D --> E
-  B --> F
-  D --> F
-  B --> G
-  D --> G
-  E --> G
-~~~~~
+    A[External Data<br/>NOAA · USGS · Kansas Historical Society · Tribal Nations · Sensors] --> B[LangGraph DAG Pipelines<br/>ETL · OCR · NER · RasterOps · QAQC · Forecasting]
+    B --> C[Knowledge Graph<br/>Neo4j · CIDOC CRM · GeoSPARQL · OWL Time · PROV O · Story Nodes]
+    C --> D[API Gateway<br/>FastAPI · GraphQL · RBAC · GovHooks v3]
+    D --> E[Frontend<br/>React · MapLibre · Cesium 3D · Focus Mode v2 5]
+    B --> F[Governance Stack<br/>FAIRCARE · SBOM · SLSA · Ledger v4 · CARE Labels]
+    C --> F
+    D --> F
+    B --> G[Telemetry<br/>OpenTelemetry · Energy · Carbon · Bias · Drift]
+    D --> G
+    E --> G
+```
 
 ---
 
-## 🧬 System Layer Breakdown
+# 🔥 Architectural Objectives
 
-### 1️⃣ Data Sources
-- Climate & environmental: NOAA, Mesonet, Daymet, drought monitors  
-- Hydrology & hazards: USGS NWIS, NHD, FEMA, Storm Events  
-- Cultural/historical: Kansas Memory, BLM land patents, treaties, newspapers  
-- Archaeology & geology: KGS, paleomaps, archaeological metadata (generalized)  
-- Biodiversity: GBIF, eBird, wetlands, fire history  
-- Predictive simulations: CMIP, LEAP ClimSim, scenario rasters  
+### 1. **Semantic Integration**
+All data flows unify via CIDOC-CRM, GeoSPARQL, OWL-Time, and PROV-O.
 
-### 2️⃣ ETL + AI (LangGraph)
-- Extract → Transform → Load pipeline  
-- OCR (Tesseract), NLP (spaCy + transformers)  
-- Geocoding (Nominatim, GNIS, internal gazetteer)  
-- GDAL-based raster/vector processing  
-- Schema validation (JSON Schema, STAC, DCAT)  
-- Predictive ETL for 2030–2100 climate layers  
+### 2. **Reproducibility**
+Full MCP-DL lineage, WAL, retry, rollback, and checksum validation.
 
-### 3️⃣ Knowledge Graph (Neo4j)
-Ontologies:
+### 3. **FAIR+CARE**
+Ethical & sovereignty-sensitive access, especially for tribal and archaeological assets.
 
-- **CIDOC CRM** (heritage)  
-- **OWL-Time** (temporal reasoning)  
-- **GeoSPARQL** (geometries)  
-- **PROV-O** (lineage)  
+### 4. **Sustainability**
+ISO 50001 energy + ISO 14064 carbon tracking integrated into telemetry.
 
-Key entities:
-
-- `Person`, `Group`, `TribalEntity`  
-- `Place`  
-- `Event`  
-- `Document`  
-- `Dataset`  
-- `StoryNode`  
-- `SensorStream`
-
-Relationships model attendance, location, provenance, narrative links, dataset lineage.
-
-### 4️⃣ API Layer
-REST + GraphQL endpoints for:
-
-- Search  
-- Focus Mode  
-- Events (GeoJSON)  
-- Story Nodes  
-- Datasets  
-- STAC/DCAT catalogs  
-- Live sensor streams  
-
-RBAC with OAuth2/JWT.
-
-### 5️⃣ Web Frontend
-React + MapLibre + Cesium:
-
-- Time-aware map  
-- STAC-driven layer catalog  
-- Focus Mode v2.4 with explainability  
-- Story Node cards  
-- Accessibility (WCAG AA)  
-
-### 6️⃣ Governance & Ethics
-- CARE labels (`public`, `sensitive`, `restricted`)  
-- H3 r7 masking for archaeological sites  
-- Ledgered provenance (SLSA + SBOM)  
-- FAIR+CARE automation  
-
-### 7️⃣ Telemetry & Observability
-- OpenTelemetry distributed tracing  
-- Focus Mode explainability telemetry  
-- ETL pipeline metrics  
-- Energy/carbon tracking  
-- Drift/bias detection  
+### 5. **Predictive Intelligence**
+2030–2100 scenario modeling integrated with Focus Mode & Cesium 3D.
 
 ---
 
-### 📁 Directory Layout
-~~~~~text
-KansasFrontierMatrix/
-|-- src/
-|   |-- ai/
-|   |-- api/
-|   |-- graph/
-|   |-- pipelines/
-|   |-- telemetry/
-|-- web/
-|   |-- src/
-|   |-- public/
-|-- data/
-|   |-- sources/
-|   |-- raw/
-|   |-- processed/
-|   |-- stac/
-|-- docs/
-|   |-- architecture/
-|   |-- standards/
-|   |-- analyses/
-|   |-- reports/
-|   |-- templates/
-|   |-- guides/
-|-- tools/
-|-- tests/
-|-- .github/
-|-- LICENSE
-|-- CONTRIBUTING.md
-|-- Makefile
-~~~~~
+# 🧬 **Deep Layer-by-Layer Architecture**
 
 ---
 
-## 🕰️ Version History
+# 1️⃣ Data Layer (Sources, Sensors, Archives)
 
-| Version | Date | Summary |
-|--------|-------|---------|
-| v10.3.1 | 2025-11-13 | Fully rewritten to conform to Markdown Output Protocol; architecture expanded; all sections standardized. |
-| v10.2.2 | 2025-11-12 | Streaming STAC bridge, ontology refinements, telemetry updates. |
-| v10.0.0 | 2025-11-09 | Initial unified v10 architecture; Story Nodes + predictive ETL. |
+### Data Domains
+- **Historical:** KHS archives, manuscripts, diaries, treaties, maps, BLM patents  
+- **Environmental:** NOAA climate, Daymet, PRISM  
+- **Hydrology:** USGS NWIS, stream gauges, flood layers  
+- **Hazards:** NOAA Storm Events, wildfire history  
+- **Ecology:** GBIF, eBird, wetlands, biodiversity records  
+- **Cultural:** Tribal land cessions, reservations, heritage assets (H3 masked)  
+- **Geology:** KGS formations, paleomaps, DEMs  
+- **Remote sensing:** NAIP, Landsat, elevation models  
+- **Live sensors:** Mesonet, hydrology feeds  
+
+### Ingestion Guarantees
+- All sources fingerprinted  
+- CARE labels embedded  
+- Metadata normalized to STAC/DCAT  
+
+---
+
+# 2️⃣ ETL Layer (LangGraph DAG)
+
+```mermaid
+flowchart LR
+    E1[Raw Inputs] --> E2[OCR Stage]
+    E2 --> E3[NER · Entity Linking]
+    E3 --> E4[Spatialization<br/>Geocoding · GNIS · Gazetteer]
+    E4 --> E5[RasterOps<br/>GDAL Warp · Slope · Hillshade]
+    E5 --> E6[Schema Validation<br/>STAC · DCAT · JSON Schema]
+    E6 --> E7[Load to Graph · STAC · DCAT]
+```
+
+### Capabilities
+- OCR (Tesseract)  
+- NLP (spaCy + transformers)  
+- Raster operations (GDAL Compute Engine v2)  
+- Harmonization & normalization  
+- Predictive ETL for climate futures  
+
+---
+
+# 3️⃣ AI Layer (Focus Mode v2.5)
+
+### Features
+- Narrative Story Node synthesis  
+- SHAP explainability overlays  
+- Bias & drift monitoring  
+- Ontology-aware contextualization  
+- Temporal interpolation & multi-layer reasoning  
+
+```mermaid
+flowchart LR
+    A[Extracted Entities] --> B[Focus Reasoner v2 5]
+    B --> C[Story Node Generator]
+    C --> D[Explainability Layer<br/>SHAP · LIME]
+```
+
+---
+
+# 4️⃣ Knowledge Graph Layer (Neo4j v10)
+
+### Key Entities
+- Person  
+- TribalEntity  
+- Document  
+- Event  
+- Place  
+- Dataset  
+- StoryNode  
+- SensorStream  
+
+### Ontology Alignment Table
+
+| KFM Entity | CIDOC CRM | OWL-Time | GeoSPARQL | PROV-O |
+|------------|-----------|----------|-----------|--------|
+| Event | E5 Event | Instant/Interval | Geo relation | Activity |
+| Place | E53 Place | — | Geometry | Entity |
+| Document | E31 Document | — | — | Entity |
+| Dataset | E73 Information Object | — | — | Entity |
+| StoryNode | E29 Design/Procedure | Interval | Geometry | Activity |
+
+---
+
+# 5️⃣ API Layer (FastAPI + GraphQL)
+
+### Endpoints
+- `/focus` — Story Node & narrative generation  
+- `/events` — GeoJSON event streaming  
+- `/places` — spatial search  
+- `/datasets` — STAC/DCAT catalog  
+- `/graph` — GraphQL queries  
+- `/ops` — WAL/rollback/retry  
+
+### GovHooks v3
+- Inject governance decisions  
+- Enforce CARE labels  
+- Validate lineage completeness  
+- Block high-risk operations  
+
+---
+
+# 6️⃣ Frontend Layer (React + MapLibre + Cesium)
+
+### Interactive Capabilities
+- Time slider (historic → modern → future)  
+- 3D terrain reconstruction  
+- Story Node timeline  
+- Layer catalog (STAC-driven)  
+- H3 r7 masking for heritage sites  
+- Focus Mode narrative overlays  
+
+---
+
+# 7️⃣ Governance Layer (Diamond⁹ Ω / Crown∞Ω)
+
+### Required Controls
+- Immutable ledger (SLSA + SBOM)  
+- CARE labels  
+- Sensitive site masking  
+- Model bias monitoring  
+- FAIR+CARE audits  
+- Provenance chain validation  
+
+```mermaid
+flowchart LR
+  A[Pipeline Output] --> B[Ledger v4]
+  B --> C[STAC Update]
+  C --> D[Governance Audit]
+```
+
+---
+
+# 8️⃣ Telemetry Layer (OpenTelemetry)
+
+- Energy usage (Wh)  
+- Carbon output (gCO₂e)  
+- Model drift  
+- Explainability token counts  
+- Accessibility metrics  
+- Focus Mode usage patterns  
+- CARE-triggered events  
+
+---
+
+# 🔥 Operational Safety Plane (WAL → Retry → Rollback → Hotfix → Lineage)
+
+```mermaid
+flowchart LR
+    W[WAL] --> R1[Retry]
+    R1 --> R2[Rollback]
+    R2 --> H[Hotfix]
+    H --> L[Lineage]
+    L --> T[Ops Tests]
+```
+
+### Guarantees
+- WAL captures all mutations  
+- Retry resumes only at safe checkpoints  
+- Rollback restores trusted snapshots  
+- Hotfix applies surgical reversible changes  
+- Lineage tracks every transformation  
+- Ops Tests enforce deterministic safety  
+
+---
+
+# 🧩 Multi-Cloud Deployment Architecture
+
+```mermaid
+flowchart TD
+  U[User] --> CDN[CDN]
+  CDN --> FE[React Frontend]
+  FE --> API[FastAPI]
+  API --> KG[Neo4j Cluster]
+  API --> STAC[STAC Storage S3]
+  API --> WAL[WAL Storage]
+  API --> Ops[Ops Plane]
+  Ops --> Snap[Snapshot Storage]
+```
+
+---
+
+# 🧠 Sustainability Architecture (ISO 50001 + 14064)
+
+```mermaid
+flowchart LR
+  A[Pipeline Run] --> B[Energy Meter]
+  B --> C[Carbon Estimator]
+  C --> D[Telemetry Export]
+  D --> E[Sustainability Dashboard]
+```
+
+---
+
+# 🧾 Versioning & Lifecycle Policy
+
+### Versioning
+- SemVer across all data, models, Story Nodes, and datasets.
+
+### Release Contents
+- SBOM  
+- Manifest  
+- Telemetry snapshot  
+- FAIR/CARE audit  
+- Lineage export  
+
+### Review Cycle
+- Quarterly FAIR+CARE Council  
+- Continuous governance validation  
+
+---
+
+# 📚 Glossary
+
+| Term | Meaning |
+|------|---------|
+| Story Node | Narrative unit w/ geometry + time + context |
+| Focus Mode | AI reasoning engine |
+| WAL | Write-Ahead Log |
+| Snapshot | Rollback state |
+| Lineage | Immutable derivation chain |
+| STAC | SpatioTemporal Asset Catalog |
+| DCAT | Dataset catalog |
+| FAIR+CARE | Ethics & governance principles |
+
+---
+
+# 🕰️ Version History
+
+| Version | Date | Notes |
+|--------|-------|-------|
+| **v10.3.2** | 2025-11-14 | Full deep rebuild; added DAGs, ontology mapping, ops safety plane, predictive futures integration, multi-cloud architecture. |
+| **v10.3.1** | 2025-11-13 | Prior architecture update. |
+| **v10.2.2** | 2025-11-12 | Ontology refinements, telemetry enhancements. |
+| **v10.0.0** | 2025-11-09 | Original unified architecture. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT**  
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Documentation Index](../docs/README.md) · [Root Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+**© 2025 Kansas Frontier Matrix — MIT License**  
+Diamond⁹ Ω / Crown∞Ω Certified · FAIR+CARE Compliant · MCP-DL v6.3  
+[Back to Documentation Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-```
