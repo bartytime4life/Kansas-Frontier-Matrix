@@ -396,4 +396,3 @@ npm --prefix web run build
 [Back to Web Source Index](../README.md) · [Web Source Architecture](../ARCHITECTURE.md)
 
 </div>
-```
