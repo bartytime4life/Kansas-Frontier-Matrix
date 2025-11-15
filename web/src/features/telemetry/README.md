@@ -13,14 +13,15 @@ governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 ---
+
 <div align="center">
 
 # 📡 **Kansas Frontier Matrix — Web Telemetry Architecture**  
 `web/src/features/telemetry/README.md`
 
 **Purpose:**  
-Define the **Diamond⁹ Ω / Crown∞Ω Ultimate Certified deep architecture** for the Web Telemetry subsystem in KFM v10.3.2.  
-This module ingests, normalizes, and exports **performance**, **energy**, **accessibility**, and **FAIR+CARE governance** metrics across all web features under **MCP-DL v6.3**.
+Define the **Diamond⁹ Ω / Crown∞Ω Ultimate Certified deep architecture** for the Web Telemetry subsystem in **KFM v10.3.2**.  
+This subsystem captures **performance**, **energy**, **accessibility**, **governance**, and **FAIR+CARE ethics** signals from every interactive surface in the KFM Web Platform.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Telemetry-orange)]()  
@@ -33,42 +34,53 @@ This module ingests, normalizes, and exports **performance**, **energy**, **acce
 
 ## 📘 Overview
 
-The **Web Telemetry Architecture**:
+The **Web Telemetry Architecture** is the **front-end observability plane** of KFM:
 
-- Collects **runtime metrics** from MapView, Timeline, Focus Mode, Story, Search, Diff-First, and Governance UIs.  
-- Captures **FAIR+CARE governance events** (CARE decisions, redactions, sovereignty, consent).  
-- Logs **accessibility signals** (a11y compliance, violations, usage patterns).  
-- Estimates **energy consumption and carbon footprint** per interaction.  
-- Aggregates everything into **`focus-telemetry.json`** for governance dashboards and reproducible science pipelines.  
+- Collects structured **feature-level events** (MapView, Timeline, Focus Mode, StoryNodes, Search, Governance UIs).  
+- Logs **FAIR+CARE governance signals**, including consent, sovereignty, redaction, and restricted-material warnings.  
+- Generates **accessibility metrics** (a11y compliance, violations, focus trails, pointer/keyboard-use ratios).  
+- Estimates **energy use & CO₂e** per interaction using client-side models.  
+- Aggregates and exports everything into:
 
-It is the single **front-end observability plane** that supports both **operational monitoring** and **ethical accountability**.
+~~~~~text
+../../../releases/v10.3.2/focus-telemetry.json
+~~~~~
+
+This enables **reproducible science**, **ethical oversight**, **operational monitoring**, and **Focus Mode explainability**.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```text
+~~~~~text
 web/src/features/telemetry/
 ├── README.md
-├── telemetry.ts         # Core client & event batching
-├── useTelemetry.ts      # React hook for feature-level logging
-├── reporters.ts         # FPS, A11y, Energy, and UX reporters
-├── dashboard.tsx        # Optional telemetry visualization UI
-└── schema.json          # Telemetry event schema (web-telemetry-v2)
-🧩 High-Level Architecture
-mermaid
-Copy code
+├── telemetry.ts          # Core telemetry client, batching, transport
+├── useTelemetry.ts       # React hook for feature-level logging
+├── reporters.ts          # FPS, A11y, Energy, and UX reporters
+├── dashboard.tsx         # Optional observability dashboard UI
+└── schema.json           # Telemetry event schema (web-telemetry-v2)
+~~~~~
+
+---
+
+## 🧩 High-Level Architecture
+
+~~~~~mermaid
 flowchart TD
-    FEAT[Feature Events<br/>map · timeline · focus · story · search] --> HOOK[useTelemetry Hook]
-    HOOK --> CLIENT[telemetry.ts<br/>client · batcher]
-    CLIENT --> VALID[Schema Validator<br/>web-telemetry-v2]
-    VALID --> SINK[Telemetry Sink<br/>focus-telemetry.json · /api/telemetry]
-    SINK --> DASH[Governance & Ops Dashboards]
-🧬 Telemetry Event Model
-Base Schema (conceptual)
-ts
-Copy code
-export type TelemetryEvent = {
+    FEAT["Feature Events<br/>map · timeline · focus · story · search"] --> HOOK["useTelemetry Hook"]
+    HOOK --> CLIENT["telemetry.ts<br/>client · batcher · rate-limiter"]
+    CLIENT --> VALID["Schema Validator<br/>web-telemetry-v2"]
+    VALID --> SINK["Telemetry Sink<br/>focus-telemetry.json · /api/telemetry"]
+    SINK --> DASH["Governance + Ops Dashboards"]
+~~~~~
+
+---
+
+## 🧬 Telemetry Event Model (Conceptual)
+
+~~~~~text
+type TelemetryEvent = {
   event: string;
   feature: string;
   timestamp: string;
@@ -84,34 +96,40 @@ export type TelemetryEvent = {
   };
   context?: Record<string, unknown>;
 };
-Events must:
+~~~~~
 
-be JSON-serializable
+**Requirements:**
 
-include a valid ISO timestamp
+- JSON-serializable  
+- Valid ISO timestamp  
+- Must conform to:
 
-conform to schema.json
+~~~~~text
+../../../schemas/telemetry/web-telemetry-v2.json
+~~~~~
 
-⚙️ Core Client — telemetry.ts
+- Must **never** contain PII or sensitive entity payloads  
+- All governance fields must respect FAIR+CARE internal rules  
+
+---
+
+## ⚙️ Core Client (`telemetry.ts`)
+
 Responsibilities:
 
-Buffer + batch events
+- Buffer events  
+- Batch and transmit  
+- Validate against schema  
+- Apply sampling and rate-limits  
+- Retry transient network errors  
+- **Never leak sensitive data**
 
-Enforce schema validation
+~~~~~text
+let buffer = [];
+const FLUSH_INTERVAL_MS = 5005;
 
-Respect sampling & rate limits
-
-Avoid logging sensitive entity payloads
-
-Retry on transient network errors
-
-ts
-Copy code
-let buffer: TelemetryEvent[] = [];
-const FLUSH_INTERVAL_MS = 5000;
-
-export function logTelemetry(event: TelemetryEvent) {
-  buffer.push(event);
+export function logTelemetry(evt) {
+  buffer.push(evt);
 }
 
 export function startTelemetryLoop() {
@@ -124,26 +142,24 @@ export function startTelemetryLoop() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(batch)
       });
-    } catch {
-      // optional: re-queue or drop based on policy
+    } catch (err) {
+      // Optional: policy-based requeue or discard
     }
   }, FLUSH_INTERVAL_MS);
 }
-🪝 Hook — useTelemetry.ts
-Provides:
+~~~~~
 
-simple log(event, context) API
+---
 
-injects feature name and global context automatically
+## 🪝 Telemetry Hook (`useTelemetry.ts`)
 
-used by Timeline, Map, Focus, Story, Search, etc.
+Simplifies logging from feature components:
 
-ts
-Copy code
+~~~~~text
 import { logTelemetry } from "./telemetry";
 
-export function useTelemetry(feature: string) {
-  function log(event: string, context: Record<string, unknown> = {}) {
+export function useTelemetry(feature) {
+  function log(event, context = {}) {
     logTelemetry({
       event,
       feature,
@@ -153,16 +169,26 @@ export function useTelemetry(feature: string) {
   }
   return { log };
 }
-📊 Built-In Reporters — reporters.ts
-FPS Reporter
-ts
-Copy code
-import { logTelemetry } from "./telemetry";
+~~~~~
 
+Usage example:
+
+~~~~~text
+const { log } = useTelemetry("timeline");
+log("year-change", { year: 1880 });
+~~~~~
+
+---
+
+## 📊 Built-In Reporters (`reporters.ts`)
+
+### FPS Reporter
+
+~~~~~text
 export function startFPSReporter(feature = "map") {
   let frames = 0;
   let last = performance.now();
-  const loop = (t: number) => {
+  const loop = (t) => {
     frames++;
     if (t - last >= 1000) {
       logTelemetry({
@@ -178,17 +204,19 @@ export function startFPSReporter(feature = "map") {
   };
   requestAnimationFrame(loop);
 }
-Accessibility Reporter
-ts
-Copy code
+~~~~~
+
+### Accessibility Reporter
+
+~~~~~text
 export function reportA11ySnapshot(feature = "ui") {
-  const unlabeledImages = document.querySelectorAll("img:not([alt])").length;
-  if (unlabeledImages > 0) {
+  const unlabeled = document.querySelectorAll("img:not([alt])").length;
+  if (unlabeled > 0) {
     logTelemetry({
       event: "a11y-warning",
       feature,
       timestamp: new Date().toISOString(),
-      context: { unlabeledImages }
+      context: { unlabeled }
     });
   } else {
     logTelemetry({
@@ -198,10 +226,12 @@ export function reportA11ySnapshot(feature = "ui") {
     });
   }
 }
-Energy Reporter (Approximate)
-ts
-Copy code
-export function reportEnergyUsage(feature: string, workMs: number) {
+~~~~~
+
+### Energy Reporter
+
+~~~~~text
+export function reportEnergyUsage(feature, workMs) {
   const energyWh = (workMs / 1000) * 0.000012;
   logTelemetry({
     event: "energy-estimate",
@@ -210,80 +240,106 @@ export function reportEnergyUsage(feature: string, workMs: number) {
     energyWh
   });
 }
-📡 Telemetry Sink & Storage
-All telemetry events are ultimately merged into:
+~~~~~
 
-text
-Copy code
+---
+
+## 📡 Telemetry Sink & Storage
+
+Primary storage:
+
+~~~~~text
 ../../../releases/v10.3.2/focus-telemetry.json
-Conforming to:
+~~~~~
 
-text
-Copy code
+Backend may also replicate to:
+
+- Object storage buckets  
+- Time-series DB (Prometheus / InfluxDB)  
+- Governance dashboards  
+- Observability services  
+
+Telemetry MUST match schema:
+
+~~~~~text
 ../../../schemas/telemetry/web-telemetry-v2.json
-The back end may also forward events to:
+~~~~~
 
-object storage (e.g., S3)
+---
 
-time-series databases (e.g., Prometheus, InfluxDB)
+## 🔐 FAIR+CARE Governance Integration
 
-dashboards (e.g., Grafana, ObservableHQ)
-
-🔐 FAIR+CARE Governance Integration
-Telemetry also carries governance flags:
-
-CARE label status (public/sensitive/restricted) per event context
-
-sovereignty compliance checks
-
-consent & license enforcement signals
-
-ethics tags (e.g., "ethicalTag": "public")
-
-Governance audit logs produced from telemetry:
-
-text
-Copy code
-../../../docs/reports/audit/web-telemetry-governance.json
-♿ Accessibility Metrics
 Telemetry tracks:
 
-accessibility compliance rates (a11y_compliant vs warnings)
+- Sovereignty rules  
+- Redaction/CARE mask activations  
+- Sensitive layer loads  
+- Cultural-heritage warnings  
+- License/consent mismatches  
 
-number of unlabeled UI elements detected
+Governance ledger:
 
-navigation patterns indicating keyboard vs pointer use
+~~~~~text
+../../../docs/reports/audit/web-telemetry-governance.json
+~~~~~
 
-These metrics feed into:
+Events include:
 
-text
-Copy code
+- `governance: "approved" | "restricted" | "sensitive" | "error"`  
+- `faircare.ethicalTag`  
+- CARE compliance indicators  
+
+---
+
+## ♿ Accessibility (A11y) Metrics
+
+Tracked automatically:
+
+- A11y compliance events  
+- Missing alt-text elements  
+- Keyboard-only sessions  
+- Accessible contrast theme usage  
+
+Data exported into:
+
+~~~~~text
 reports/audit/ui_a11y_summary.json
-🌱 Sustainability & Energy Metrics
-Key sustainability metrics:
+~~~~~
 
-Wh per session
+---
 
-Wh per feature (e.g., Map, Timeline, Focus)
+## 🌱 Sustainability & Energy Metrics
 
-estimated gCO₂e per usage pattern
+The telemetry subsystem estimates:
 
-Telemetry-based sustainability analytics help ensure alignment with ISO 50001 energy management.
+- Wh per interaction  
+- Wh per session  
+- CO₂e estimates  
+- Energy efficiency buckets (low/medium/high)  
+- Per-feature energy use (map, timeline, focus, story)  
 
-⚙️ CI / Validation Requirements
-Layer	Validator
-Schema	schema-validate.yml
-Governance	faircare-validate.yml
-A11y	accessibility_scan.yml
-Telemetry	telemetry-export.yml
-Security	CodeQL + Trivy
-Documentation	docs-lint.yml
+These metrics align with **ISO 50001** and are validated via CI.
 
-All feature modules emitting telemetry must satisfy the shared schema and governance checks.
+---
 
-🧾 Example Telemetry Batch
-json
-Copy code
+## ⚙️ CI / Validation Requirements
+
+| Layer | Validator Workflow |
+|-------|--------------------|
+| Schema Validation | `schema-validate.yml` |
+| Governance / FAIR+CARE | `faircare-validate.yml` |
+| Accessibility | `accessibility_scan.yml` |
+| Telemetry | `telemetry-export.yml` |
+| Security | `codeql.yml`, `trivy.yml` |
+| Documentation | `docs-lint.yml` |
+
+Telemetry MUST pass schema validation before merging.
+
+---
+
+## 🧾 Example Telemetry Batch
+
+~~~~~json
 [
   {
     "event": "timeline-year-change",
@@ -301,16 +357,24 @@ Copy code
     "context": { "year": 1880, "layersUpdated": 12 }
   }
 ]
-🕰️ Version History
-Version	Date	Summary
-v10.3.2	2025-11-14	Deep-architecture rebuild: unified telemetry schema v2, FAIR+CARE integration, a11y & energy reporters, governance-led dashboards.
-v9.9.0	2025-11-08	Initial KFM-ready telemetry module and governance integration.
+~~~~~
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Summary |
+|--------|------|---------|
+| v10.3.2 | 2025-11-14 | Deep architecture rebuild; Telemetry Schema v2; FAIR+CARE tracking; A11y & sustainability reporters. |
+| v9.9.0 | 2025-11-08 | Initial KFM-ready telemetry module with governance integration. |
+
+---
 
 <div align="center">
-Kansas Frontier Matrix — Web Telemetry Architecture
-📡 Transparent Observability · 🔐 FAIR+CARE Governance · ♿ A11y-Aware Metrics · 🌱 Sustainability Tracking
-© 2025 Kansas Frontier Matrix — MIT License
 
-Back to Web Features
+**Kansas Frontier Matrix — Web Telemetry Architecture**  
+📡 Transparent Observability · 🔐 FAIR+CARE Governance · ♿ A11y-Aware Metrics · 🌱 Sustainability Tracking  
 
-</div> ```
+© 2025 Kansas Frontier Matrix — MIT License  
+
+</div>
