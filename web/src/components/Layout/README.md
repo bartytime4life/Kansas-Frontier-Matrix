@@ -1,153 +1,330 @@
 ---
-title: "🧭 Kansas Frontier Matrix — Layout Components (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧭 Kansas Frontier Matrix — Layout Architecture & Structural Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/Layout/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-components-layout-v1.json"
+sbom_ref: "../../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-components-layout-v2.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🧭 **Kansas Frontier Matrix — Layout Components**
+# 🧭 **Kansas Frontier Matrix — Layout Architecture & Structural Framework**  
 `web/src/components/Layout/README.md`
 
-**Purpose:** Define the core layout framework for KFM’s web application — ensuring every page structure adheres to FAIR+CARE accessibility, sustainability, and provenance standards under **MCP v6.3** and **WCAG 2.1 AA**.
+**Purpose:**  
+Define the **deep, Diamond⁹ Ω–grade architecture** of layout components used throughout the Kansas Frontier Matrix (KFM) v10.3.2 web platform — the foundational containers providing structure, accessibility, governance surfaces, design token propagation, telemetry instrumentation, and Focus Mode v2.5 contextual synchronization.  
+This document is the **canonical, whitepaper-level** specification for all Layout components.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../docs/README.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../docs/standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Layout-orange)]()
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Executive Summary
 
-The **Layout Components** layer standardizes responsive and inclusive page scaffolding for the Kansas Frontier Matrix web app.  
-Layouts serve as the structural foundation for all pages, combining accessibility, Focus Mode context, and telemetry synchronization for reproducible, ethical UI.
+Layout components are the **structural backbone** of the entire KFM web platform.  
+They unify:
+
+- global providers (theme, governance, telemetry, Focus Mode)  
+- accessibility landmarks  
+- energy-efficient rendering architecture  
+- FAIR+CARE certification surface  
+- provenance + licensing  
+- Focus Mode + Timeline + MapView context propagation  
+- design token pipelines  
+- footer governance disclosures  
+- sidebar ethical navigation  
+
+The layout layer is the **topmost ethical & semantic container** for every KFM route.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Authoritative v10.3.2)
 
-```
+```text
 web/src/components/Layout/
 ├── README.md
-├── MainLayout.tsx        # Root page wrapper, global providers & contexts
-├── SidebarLayout.tsx     # Navigation, Focus Mode, and governance panel
-├── FooterLayout.tsx      # FAIR+CARE, sustainability, and license display
-└── metadata.json         # Governance + telemetry metadata for layout components
+├── MainLayout.tsx
+├── SidebarLayout.tsx
+├── FooterLayout.tsx
+└── metadata.json
 ```
+
+Each layout component exists to maintain **global compliance + global context integrity**.
 
 ---
 
-## 🧩 Layout Architecture
+# 🧩 High-Level Layout Architecture
 
 ```mermaid
 flowchart TD
-A["Page Route"] --> B["MainLayout (Providers + Contexts)"]
-B --> C["SidebarLayout (Navigation + Focus Mode)"]
-C --> D["FooterLayout (Certifications + Metrics)"]
-D --> E["Telemetry & Governance Sync"]
+    ROUTE[Page Route] --> MAIN[MainLayout<br/>Providers + Contexts + Tokens]
+    MAIN --> SIDE[SidebarLayout<br/>Navigation · Focus Mode Summary · CARE Indicators]
+    MAIN --> FOOT[FooterLayout<br/>Licenses · FAIRCARE Status · Provenance]
+    FOOT --> TEL[Telemetry Hooks<br/>Energy · A11y · Ethics]
 ```
 
-1. **MainLayout:** defines app-wide providers (Theme, Telemetry, Governance).  
-2. **SidebarLayout:** integrates navigation, Focus Mode summaries, and a11y shortcuts.  
-3. **FooterLayout:** displays FAIR+CARE status, license, and audit references.  
-4. **Sync:** updates provenance + telemetry data each render cycle.
+---
+
+# 🧬 MainLayout.tsx — Global Providers & Structural Kernel
+
+The **MainLayout** is the **structural root** that wraps every KFM page.
+
+## Responsibilities
+- Initialize:
+  - ThemeProvider (design tokens)
+  - A11yProvider (focus rings, motion reduction, ARIA map)
+  - GovernanceProvider (CARE labels, sovereignty rules)
+  - TelemetryProvider (render cost + sustainability)
+  - FocusProvider (Focus Mode v2.5 narrative context)
+  - TimelineProvider (currentYear broadcast)
+- Provide semantic layout regions:
+  - `<header>`  
+  - `<nav>`  
+  - `<main>`  
+  - `<footer>`  
+
+## MainLayout Architecture
+
+```mermaid
+flowchart TD
+    P1[ThemeProvider] --> P5[MainLayout Container]
+    P2[GovernanceProvider] --> P5
+    P3[TelemetryProvider] --> P5
+    P4[FocusProvider] --> P5
+    P6[TimelineProvider] --> P5
+    P5 --> DOM[Render Page Content]
+```
 
 ---
 
-## ⚙️ Layout Contracts
+# 🎛️ SidebarLayout.tsx — Navigation + Ethical Context Column
 
-| Contract | Purpose | Validator |
-|----------|----------|-----------|
-| Accessibility | Semantic structure + landmarks (header, nav, main, footer). | `accessibility_scan.yml` |
-| Governance | FAIR+CARE + provenance tags in footer metadata. | `faircare-validate.yml` |
-| Telemetry | Layout render + perf metrics schema. | `telemetry-export.yml` |
-| Theme | Color tokens and contrast validation. | Lighthouse + Tailwind lint |
+SidebarLayout anchors:
 
-Artifacts stored in:
-- `docs/reports/telemetry/build_metrics.json`  
-- `../../../../releases/v9.7.0/focus-telemetry.json`
+- Primary navigation  
+- Focus Mode status panel (entity, date, caret, explainability badge)  
+- Licensing + data category tags  
+- CARE-sensitive quick alerts  
+- A11y shortcuts (skip-links, high-contrast toggles)  
 
----
+## Sidebar Architecture
 
-## 🧠 FAIR+CARE Governance Matrix
+```mermaid
+flowchart LR
+    NAV[Navigation Tree] --> SIDE[SidebarLayout]
+    FOCUS[Focus Summary] --> SIDE
+    CARE[CARE Badge Engine] --> SIDE
+    SHORT[A11y Shortcuts] --> SIDE
+```
 
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Layout metadata indexed by version and component ID. | @kfm-data |
-| **Accessible** | WCAG 2.1 AA-compliant structure with ARIA landmarks. | @kfm-accessibility |
-| **Interoperable** | Standardized layout API for all routes and dashboards. | @kfm-architecture |
-| **Reusable** | Exportable layouts across web and governance UIs. | @kfm-design |
-| **Collective Benefit** | Promotes equitable and consistent access for users. | @faircare-council |
-| **Authority to Control** | Council validates a11y and energy audits per release. | @kfm-governance |
-| **Responsibility** | Layout telemetry monitors render efficiency and a11y. | @kfm-sustainability |
-| **Ethics** | Structural fairness and visual neutrality reviewed each release. | @kfm-ethics |
+### Governance-Sensitive Sidebar Behavior
+- Masked data → sidebar displays redaction notice  
+- Restricted dataset → sidebar shows sovereignty reasons  
+- Predictive data → sidebar signals future/projection mode  
 
 ---
 
-## 🧾 Example Metadata Record
+# 🧾 FooterLayout.tsx — Provenance + Sustainability + Governance Panel
+
+Displays:
+
+- FAIR+CARE compliance status  
+- License + attribution  
+- Provenance chain references  
+- Sustainability metrics (Wh, CO₂e)  
+- Build/Release metadata  
+- Governance Council certification markers  
+
+## Footer Architecture
+
+```mermaid
+flowchart LR
+    FAIR[FAIRCARE Data] --> FOOTER
+    LIC[License Metadata] --> FOOTER
+    PROV[Provenance Chips] --> FOOTER
+    TELE[Telemetry Data] --> FOOTER
+```
+
+---
+
+# 💠 Layout State Machine (Deep Specification)
+
+```mermaid
+flowchart TD
+    S0[Initial Render] --> S1[Providers Mount]
+    S1 --> S2[Governance Initialization]
+    S2 --> S3[Token Injection<br/>theme · a11y · map]
+    S3 --> S4[Navigation Sync]
+    S3 --> S5[Footer Sync]
+    S4 --> S6[Focus Summary Pull]
+    S5 --> S7[Sustainability Metrics Push]
+```
+
+Every state transition logs telemetry.
+
+---
+
+# 🎨 Design Token Propagation Architecture
+
+Tokens include:
+
+- colors  
+- spacing  
+- typography  
+- projections (for map layers)  
+- CARE-warning icons  
+- predictive-band fills  
+
+## Token Flow
+
+```mermaid
+flowchart LR
+    TOK[Global Design Tokens] --> THEME[ThemeProvider]
+    THEME --> LAYOUT[MainLayout]
+    LAYOUT --> CHILD[All UI Components]
+```
+
+---
+
+# ♿ Accessibility Architecture (WCAG 2.1 AA)
+
+**Non-negotiable rules enforced at layout layer:**
+
+- semantic landmarks  
+- skip-links  
+- focus-visible styling  
+- reduced motion compliance  
+- high-contrast theme switching  
+- keyboard-first priority  
+
+## A11y DAG
+
+```mermaid
+flowchart TD
+    SEM[Semantic Regions] --> ACC[Accessible DOM]
+    TOK[A11y Tokens] --> ACC
+    ACC --> TEL[A11y Telemetry]
+```
+
+---
+
+# 🔐 FAIR+CARE Governance Integration
+
+Layout enforces top-level governance:
+
+- CARE tags in sidebar  
+- provenance + checksum elements in footer  
+- mask-mode global banners if sensitive layer is active  
+- restricted dataset → disable navigation routes  
+- sovereignty → highlight advisory glyphs  
+
+## Governance Flow
+
+```mermaid
+flowchart LR
+    META[Dataset Metadata] --> CLF[CARE Label Filter]
+    CLF --> LAY[Layout Regions]
+```
+
+Governance ledger:
+
+```
+../../../../docs/reports/audit/web-layout-governance-ledger.json
+```
+
+---
+
+# 📡 Telemetry & Sustainability Architecture
+
+Captured via Layout:
+
+- render-time energy estimate (Wh)  
+- component mount latency  
+- provenance display interactions  
+- sidebar + footer interactions  
+- A11y token coverage  
+- Carbon equivalent (gCO₂e)  
+
+Telemetry output:
+
+```
+../../../../releases/v10.3.2/focus-telemetry.json
+```
+
+## Telemetry DAG
+
+```mermaid
+flowchart TD
+    EVT[Layout Events] --> MET[Metrics Collector]
+    MET --> STORE[Telemetry Sink]
+```
+
+---
+
+# ⚙️ Validation & CI/CD Requirements (MCP-DL v6.3)
+
+| Category | Validation |
+|----------|------------|
+| Documentation | docs-lint.yml |
+| Accessibility | a11y-lint.yml + Lighthouse |
+| Governance | faircare-validate.yml |
+| Sustainability | telemetry-export.yml |
+| Schema | metadata.json → JSON Schema |
+| Security | CodeQL + Trivy |
+
+Any failing area blocks merge.
+
+---
+
+# 🧾 Example Layout Metadata Record
 
 ```json
 {
-  "id": "layout_v9.7.0",
-  "layouts": ["MainLayout", "SidebarLayout", "FooterLayout"],
-  "a11y_score": 99.5,
+  "id": "layout_v10.3.2",
+  "layouts": [
+    "MainLayout",
+    "SidebarLayout",
+    "FooterLayout"
+  ],
+  "a11y_score": 99.7,
+  "energy_use_wh": 0.48,
+  "carbon_output_gco2e": 0.63,
   "fairstatus": "certified",
-  "energy_use_wh": 0.59,
-  "carbon_output_gco2e": 0.7,
-  "telemetry_synced": true,
-  "timestamp": "2025-11-05T18:50:00Z"
+  "checksum_verified": true,
+  "timestamp": "2025-11-14T09:32:00Z"
 }
 ```
 
 ---
 
-## ♿ Accessibility Standards
+# 🕰️ Version History
 
-- Semantic layout regions (header, nav, main, aside, footer).  
-- Skip-link integration for screen readers and keyboard users.  
-- Focus-visible indicators and motion-reduced transitions.  
-- Alt-text and caption slots for non-textual footer content.  
-- Validated via **axe-core** + **Lighthouse CI**.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Target | Verified By |
-|-------|--------|-------------|
-| Energy per Render | ≤ 0.6 Wh | Telemetry |
-| Carbon Output | ≤ 0.8 gCO₂e | CI telemetry |
-| Lighthouse A11y | ≥ 95 | `accessibility_scan.yml` |
-| Renewable Hosting | 100% RE100 | Infrastructure logs |
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded + aligned: contracts, telemetry schema v1, semantic landmarks, a11y scan integration. |
-| v9.6.0 | 2025-11-03 | KFM Core Team | Added carbon footprint telemetry and Focus Mode sidebar sync. |
-| v9.5.0 | 2025-11-02 | KFM Core Team | Enhanced a11y reports + governance metrics in footer. |
-| v9.3.2 | 2025-10-28 | KFM Core Team | Established FAIR+CARE layout system. |
+| Version | Date | Summary |
+|--------|--------|---------|
+| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added state machine, token propagation, governance, telemetry, and Focus Mode integration. |
+| v9.7.0 | 2025-11-05 | Previous version. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Components Index](../README.md) · [Docs Index](../../../../docs/README.md)
+**Kansas Frontier Matrix — Layout Architecture**  
+🧭 Semantic Foundations · ♿ Accessibility Core · 🔐 Ethical Structure · 🌱 Sustainable Rendering  
+© 2025 Kansas Frontier Matrix — MIT License  
+
+[Back to Components Index](../README.md)
 
 </div>
