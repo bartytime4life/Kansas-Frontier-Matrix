@@ -1,14 +1,15 @@
+````markdown
 ---
 title: "🚀 Kansas Frontier Matrix — Web Pipelines & Dataflow Orchestration (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
-review_cycle: "Continuous / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Continuous / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-pipelines-v1.json"
+sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-pipelines-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -20,12 +21,12 @@ mcp_version: "MCP-DL v6.3"
 `web/src/pipelines/README.md`
 
 **Purpose:**  
-Define the **client-side dataflow pipelines** that orchestrate data retrieval, transformation, normalization, caching, telemetry emission, and governance checks for the Kansas Frontier Matrix (KFM) web platform.  
-These pipelines unify **Focus Mode**, **STAC/DCAT**, **Neo4j**, **timeline**, and **layer** data into a coherent, reactive, FAIR+CARE-certified interface.
+Define the **client-side dataflow architecture** for KFM v10.3.2 — the pipelines that orchestrate data retrieval, transformation, enrichment, governance enforcement, and telemetry for the web UI.  
+These pipelines unify **Focus Mode v2.5**, **STAC/DCAT**, **Neo4j**, **timeline**, and **layer** data into a coherent, reactive, FAIR+CARE-certified interface.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Pipeline%20Compliant-orange)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Pipeline%20Compliant-orange)]()
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()
 [![License](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
@@ -34,150 +35,299 @@ These pipelines unify **Focus Mode**, **STAC/DCAT**, **Neo4j**, **timeline**, an
 
 ## 📘 Overview
 
-The **Web Pipelines Layer** centralizes all multi-step client logic involving:
+The **Web Pipelines Layer** lives between the **services** and **hooks/components** layers and centralizes all **multi-step, cross-source logic**:
 
-- Data aggregation from **STAC**, **DCAT**, **GraphQL**, **REST**, and **Focus Mode** APIs  
-- Provenance & JSON-LD enrichment for UI components  
-- CARE-aware redaction and governance checks  
-- Client-side telemetry insertion (WebVitals, ethics, sustainability, navigation events)  
-- Result caching & consistency rules for React components  
-- Reactive timelines & synchronized map/timeline/focus updates  
+- Aggregating data from **REST**, **GraphQL**, **STAC**, **DCAT**, and **Focus** APIs  
+- Enriching results with **JSON-LD provenance**, **lineage**, and **CARE flags**  
+- Enforcing **governance and redaction** rules before data hits the UI  
+- Attaching **telemetry** (WebVitals, ethics, sustainability, usage) to pipeline outcomes  
+- Providing **stable, typed outputs** for hooks (`useFocus`, `useStac`, `useTimeline`, `useLayers`)  
+- Ensuring everything respects **MCP-DL v6.3** and **FAIR+CARE** standards  
 
-These pipelines sit above `services/` and below React `hooks/`, forming the glue that links:
+Conceptually:
 
-**Data → Semantics → Governance → UI → Telemetry.**
+> **Services → Pipelines → Hooks → UI → Telemetry & Governance**
 
 ---
 
-## 🗂️ Directory Layout (Pipeline Layer)
+## 🗂️ Directory Layout (Authoritative v10.3.2)
 
-~~~~~text
+```text
 web/src/pipelines/
 ├── README.md                     # This file
 │
-├── focusPipeline.ts              # Multi-stage Focus Mode assembly
-├── stacPipeline.ts               # Multi-stage dataset/layer pipeline
-├── entityPipeline.ts             # Unifies GraphQL entity lookups w/ lineage
-├── timelinePipeline.ts           # Derived temporal aggregations + predictions
-├── layerPipeline.ts              # Layer activation, presets, redaction logic
+├── focusPipeline.ts              # Multi-stage Focus Mode v2.5 assembly
+├── stacPipeline.ts               # Dataset/layer pipeline from STAC
+├── entityPipeline.ts             # Graph entity + lineage consolidation
+├── timelinePipeline.ts           # Temporal aggregation + predictive bands
+├── layerPipeline.ts              # Layer activation, presets, governance masking
 └── metadata.json                 # Pipeline-level governance + telemetry metadata
-~~~~~
+````
 
-> **Note:** All pipeline outputs MUST go through `schemaGuards.ts` (utils) before reaching UI components.
+All pipelines:
+
+* Consume DTOs from `services/`
+* Pass results through `utils/schemaGuards.ts`
+* Are consumed only via hooks in `hooks/`
 
 ---
 
-## 🧩 Pipeline Architecture (Indented Mermaid)
+## 🧩 High-Level Pipeline Flow
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["Services Layer<br/>REST · GraphQL · STAC · DCAT"]
-    --> B["Pipelines<br/>(focus · entity · stac · timeline · layers)"]
-  B --> C["Enrichment<br/>JSON-LD · Provenance · CARE Flags"]
-  C --> D["Validation<br/>schemaGuards.ts"]
-  D --> E["Hooks<br/>(useFocus · useStac · useTimeline · useLayers)"]
-  E --> F["UI Components<br/>MapView · Timeline · FocusPanel · StoryNode"]
-  F --> G["Telemetry<br/>WebVitals · Ethics · A11y · Energy"]
-~~~~~
+    SVC[Services Layer<br/>REST · GraphQL · STAC · DCAT] --> PL[Pipeline Layer<br/>focus · stac · entity · timeline · layers]
+    PL --> ENR[Enrichment Layer<br/>JSON LD · Provenance · CARE flags]
+    ENR --> VAL[Validation Layer<br/>schemaGuards]
+    VAL --> HK[Hooks Layer<br/>useFocus · useStac · useTimeline · useLayers]
+    HK --> UI[UI Components<br/>MapView · Timeline · FocusPanel · StoryNode]
+    UI --> TEL[Telemetry Emission<br/>WebVitals · Ethics · A11y · Energy]
+```
 
 ---
 
-## 🧠 Pipeline Definitions
+## 🧠 Pipeline Definitions (Deep Specification)
 
-### 1. **focusPipeline.ts**  
-Orchestrates all steps for Focus Mode v2.4.
+### 1️⃣ `focusPipeline.ts` — Focus Mode Orchestration
 
-**Stages:**
-- Fetch entity + subgraph (GraphQL)  
-- Fetch STAC/DCAT metadata tied to entity  
-- Merge JSON-LD provenance  
-- Add explainability metadata  
-- Insert CARE flags (sovereignty, sensitivity, restrictions)  
-- Emit telemetry (AI depth, ethics events, latency, energy)  
-- Validate with `schemaGuards.ts`  
+**Goal:** Provide a **single, enriched FocusPayload** for `useFocus` and the `FocusPanel`, `MapView`, and `TimelineView`.
 
-**Consumers:**  
-`useFocus` → `FocusPanel`, `MapView`, `TimelineView`  
+**Stages**
 
----
+1. **Entity & subgraph fetch**
 
-### 2. **stacPipeline.ts**  
-Normalizes STAC Items/Collections for use across map, timeline, and story nodes.
+   * Uses `graphService.ts` (GraphQL) to retrieve:
 
-**Stages:**
-- STAC search  
-- Collection → Item flattening  
-- Asset inspection (raster, vector, COG, NetCDF)  
-- Build layer metadata + attribution  
-- CARE-aware spatial masking  
-- Version history detection  
-- Validate with `schemaGuards.ts`  
+     * Entity details
+     * Related events, places, datasets
 
-**Consumers:**  
-`useStac`, layer controls, legend systems  
+2. **Focus API narrative fetch**
 
----
+   * Calls `/api/focus/{id}` via `apiClient.ts`
+   * Receives narrative, explainability, ethics flags, provenance
 
-### 3. **entityPipeline.ts**  
-Combines GraphQL entity outputs with dataset provenance and relations.
+3. **STAC/DCAT linkage**
 
-**Stages:**
-- Fetch entity node  
-- Load related events, places, documents, datasets  
-- Build unified entity descriptor with lineage & CARE flags  
-- Validate with `schemaGuards.ts`  
+   * Invokes `stacService.ts` / `dcatService.ts` to fetch datasets and layers tied to the entity
+   * Builds a normalized list of candidate layers
 
-**Consumers:**  
-Entity drawers, Focus Mode, Story Nodes  
+4. **JSON-LD & provenance enrichment**
 
----
+   * Uses `utils/provenance.ts` to:
 
-### 4. **timelinePipeline.ts**  
-Derives denormalized temporal aggregates for UI.
+     * Merge dataset and document provenance
+     * Add ledger references
 
-**Stages:**
-- Fetch events/stories/datasets with temporal extents  
-- Build time buckets (annual, decadal, event clustering)  
-- Merge predictive time bands (2030–2100 scenario rasters)  
-- CARE-temporal redaction (historical sensitive events)  
-- Validate with `schemaGuards.ts`  
+5. **CARE label & redaction application**
 
-**Consumers:**  
-`TimelineView`, Focus Mode, predictive overlays  
+   * Applies governance rules to:
+
+     * Mark sensitive or restricted content
+     * Decide mask vs block behavior
+
+6. **Telemetry enrichment**
+
+   * Attaches pipeline-level telemetry info:
+
+     * focus_type (entity, event, place, dataset)
+     * reasoning_depth
+     * ethics_flags
+
+7. **Validation**
+
+   * Passes through `schemaGuards.ts` to validate the shape of the final FocusPipelineOutput.
+
+**Consumers:**
+
+* `useFocus` hook
+* `FocusPanel`
+* `MapView` (for highlight geometries)
+* `TimelineView` (for temporal markers)
 
 ---
 
-### 5. **layerPipeline.ts**  
-Applies semantic + governance transformations to map layers.
+### 2️⃣ `stacPipeline.ts` — Dataset & Layer Preparation
 
-**Stages:**
-- Load layer groups (hydrology, climate, hazards, treaties, ecology, archaeology)  
-- Apply CARE governance (mask sites, obfuscate geom detail)  
-- Resolve style tokens (tokens.css)  
-- Tailwind class merging for legends  
-- Validate output  
+**Goal:** Provide UI with a **clean, uniform view of STAC datasets and layers**.
 
-**Consumers:**  
-MapView, LayerSwitcher, Legend systems  
+**Stages**
+
+1. **STAC search**
+
+   * `stacService.ts` used to run searches (by bbox, time, keywords)
+
+2. **Collection → Item flattening**
+
+   * Flattens nested Collections into a dense list of Items
+
+3. **Asset inspection**
+
+   * Recognizes asset types: raster, vector, COG, NetCDF, etc.
+
+4. **Layer metadata building**
+
+   * Constructs:
+
+     * title
+     * description
+     * attribution
+     * visual defaults (colormap, opacity, min/max)
+
+5. **Governance and CARE**
+
+   * Applies:
+
+     * `care_label` logic
+     * heritage/tribal masking rules
+     * layer availability gating
+
+6. **Validation**
+
+   * Applies `schemaGuards.ts` to ensure a safe `LayerConfig[]` output.
+
+**Consumers:**
+
+* `useStac`
+* `LayerControls`
+* Legends in `MapView`
 
 ---
 
-## 🔐 FAIR+CARE Governance Integration
+### 3️⃣ `entityPipeline.ts` — Entity & Lineage Fusion
+
+**Goal:** Build a **canonical entity view** with lineage + CARE flags, used across drawers and Story Nodes.
+
+**Stages**
+
+1. **Graph entity fetch** (GraphQL)
+
+2. **Contextual aggregation**:
+
+   * events
+   * places
+   * datasets
+   * documents
+
+3. **Lineage merge**
+
+   * Uses `provenance.ts` to attach:
+
+     * lineage tree
+     * ledger references
+     * STAC/DCAT dataset IDs
+
+4. **CARE annotations**
+
+   * Tag the entity as sensitive or restricted, if needed
+
+5. **Validation** via `schemaGuards.ts`.
+
+**Consumers:**
+
+* `DetailDrawer`
+* `StoryNode` components
+* Focus Mode
+
+---
+
+### 4️⃣ `timelinePipeline.ts` — Temporal Aggregation & Forecast Bands
+
+**Goal:** Produce **temporal aggregates** for timeline visualizations, including **future bands**.
+
+**Stages**
+
+1. **Event & time-extent gather**
+
+   * Fetches events, datasets, and Story Nodes with start/end times
+
+2. **Bucketization**
+
+   * Aggregates into:
+
+     * yearly
+     * decadal
+     * scenario band intervals
+
+3. **Predictive integration**
+
+   * Integrates future scenario metadata (2030–2100) where available
+
+4. **CARE-temporal handling**
+
+   * Optionally redacts or aggregates sensitive events without exposing raw temporal detail
+
+5. **Validation**
+
+   * Applies `schemaGuards.ts` to ensure structured timeline data.
+
+**Consumers:**
+
+* `TimelineView`
+* Predictive overlays in map & Focus
+
+---
+
+### 5️⃣ `layerPipeline.ts` — Layer Stack & Governance Masking
+
+**Goal:** Manage **map layer activation and governance masking**.
+
+**Stages**
+
+1. **Load layer groups**
+
+   * hydrology, climate, hazards, treaties, ecology, archaeology
+
+2. **Apply governance constraints**
+
+   * For each layer:
+
+     * check `care_label`
+     * apply H3 generalization / coordinate obfuscation
+     * decide hide vs fuzz vs full show
+
+3. **Style resolution**
+
+   * Uses `styles/tokens.css` for:
+
+     * color scales
+     * border styles
+     * icon sets
+
+4. **Layout mapping**
+
+   * Prepares user-facing legends and categories
+
+5. **Validation**
+
+   * Guarantees LayerStack output structure via `schemaGuards.ts`.
+
+**Consumers:**
+
+* `MapView`
+* `LayerControls`
+
+---
+
+## 🔐 Governance & FAIR+CARE Integration
 
 All pipelines must:
 
-- Enforce `care_label` rules (public, sensitive, restricted)  
-- Obey sovereignty restrictions  
-- Mask coordinates for heritage/archaeology as required  
-- Always output provenance fields:
-  - `lineage`
-  - `provenance`
-  - `source_ids`
-  - `ledger_refs`
+* Read and propagate `care_label` from upstream services
+* Make **no UI-breaking assumptions** when governance denies access
+* Output explicit flags like:
 
-Governance references for all pipelines resolved from:
+  * `is_masked`
+  * `is_restricted`
+  * `requires_consent`
+* Guarantee provenance via `provenance.ts`:
 
-```
+  * `lineage`
+  * `source_ids`
+  * `ledger_refs`
+
+Governance artifacts for pipeline operations are referenced from:
+
+```text
 ../../../docs/reports/audit/web-governance-ledger.json
 ```
 
@@ -185,76 +335,66 @@ Governance references for all pipelines resolved from:
 
 ## 📡 Telemetry & Sustainability
 
-All pipelines integrate `telemetryService.ts`:
+Pipelines collaborate with `telemetryService.ts` and `useTelemetry.ts` to:
 
-- WebVitals (LCP, FID, CLS, TTFB)  
-- Ethics events (CARE gating, masking triggers)  
-- Focus reasoning depth  
-- Dataset/layer usage  
-- Estimated energy + CO₂e (UI action models)
+* Log pipeline latencies
+* Capture AI reasoning depth in Focus Mode
+* Record CARE masking vs blocking events
+* Track layer usage, timeline navigation, and dataset exploration
+* Attach approximate energy & CO₂e info by route/session type
 
-Telemetry stored in:
+All pipeline telemetry contributes to:
 
-```
-../../../releases/v10.3.0/focus-telemetry.json
+```text
+../../../releases/v10.3.2/focus-telemetry.json
 ```
 
 ---
 
-## ⚙️ Pipeline Validation
+## ⚙️ Validation & MCP-DL Compliance
 
-| Contract | Validator |
-|----------|-----------|
-| DTOs | `schemaGuards.ts` (strict) |
-| Provenance | `provenance.ts` |
-| A11y | CI accessibility scan |
-| Ethics | CARE-flag enforcement tests |
-| Security | CodeQL + Trivy |
-| Telemetry | telemetry-export.yml |
+| Area              | Mechanism                                                       |
+| ----------------- | --------------------------------------------------------------- |
+| Shape correctness | `schemaGuards.ts` runtime checks                                |
+| Provenance        | `provenance.ts` lineage builder                                 |
+| Governance        | CARE-flag enforcement in pipelines                              |
+| Telemetry         | `telemetryService.ts`                                           |
+| Types             | TypeScript strict mode                                          |
+| CI                | `docs-lint.yml`, `build-and-deploy.yml`, `telemetry-export.yml` |
 
-Any pipeline violating MCP rules fails the build.
+**Rule:** No pipeline output may be consumed by the UI unless it has passed `schemaGuards.ts`.
 
 ---
 
-## 🧾 Example Pipeline Metadata Record (v10.3.1)
+## 🚀 Local Development
 
-~~~~~json
-{
-  "id": "web_pipelines_v10.3.1",
-  "pipelines": [
-    "focusPipeline.ts",
-    "stacPipeline.ts",
-    "timelinePipeline.ts",
-    "entityPipeline.ts",
-    "layerPipeline.ts"
-  ],
-  "fairstatus": "certified",
-  "a11y_compliant": true,
-  "telemetry_linked": true,
-  "checksum_verified": true,
-  "ethics_gates_passed": true,
-  "timestamp": "2025-11-13T17:44:00Z",
-  "governance_ref": "docs/reports/audit/web-governance-ledger.json"
-}
-~~~~~
+```bash
+npm --prefix web install
+npm --prefix web run dev
+npm --prefix web run typecheck
+npm --prefix web run lint
+npm --prefix web run build
+```
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---------|--------|---------|---------|
-| v10.3.1 | 2025-11-13 | Web Architecture Team | Introduced pipeline layer; aligned with Focus v2.4, telemetry v3, and ethics-driven transformations. |
+| Version | Date       | Summary                                                                                                                                                          |
+| ------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v10.3.2 | 2025-11-14 | Deep architecture rewrite; added full pipeline DAG and governance flows; aligned telemetry & schema paths with v10.3.2; upgraded Focus Mode integration to v2.5. |
+| v10.3.1 | 2025-11-13 | Initial specification of Web Pipelines Layer for v10.3.                                                                                                          |
+| v10.2.2 | 2025-11-12 | Early internal sketches for Focus/STAC/timeline pipelines.                                                                                                       |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Web Pipelines**  
-Reactive Dataflow × FAIR+CARE × Provenance × Explainable AI  
-© 2025 Kansas Frontier Matrix — MIT License  
+**Kansas Frontier Matrix — Web Pipelines Layer**
+🚀 Reactive Dataflow · 🧠 Explainable AI · 🌐 FAIR+CARE · 🔗 Provenance by Design
+© 2025 Kansas Frontier Matrix — MIT License
 
-[Back to Services](../services/README.md) · [Back to Source Index](../README.md)
+[Back to Web Source Index](../README.md) · [Web Source Architecture](../ARCHITECTURE.md)
 
 </div>
-
+```
