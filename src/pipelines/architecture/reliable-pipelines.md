@@ -17,6 +17,46 @@ status: "Active / Enforced"
 doc_kind: "Guide"
 intent: "architecture"
 fair_category: "F1-A1"
+care_label: "Public / Low-Risk"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "src/pipelines/architecture/reliable-pipelines.md@v1.0.0"
+  - "src/pipelines/architecture/reliable-pipelines.md@v10.3.1"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E7 Activity"
+  schema_org: "TechArticle"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+  geosparql: "geo:FeatureCollection"
+json_schema_ref: "schemas/json/pipelines-reliable-pipelines.schema.json"
+shape_schema_ref: "schemas/shacl/pipelines-reliable-pipelines-shape.ttl"
+doc_uuid: "urn:kfm:doc:pipelines-reliable-pipelines-v10.4.0"
+semantic_document_id: "kfm-doc-pipelines-reliable-pipelines"
+event_source_id: "ledger:src/pipelines/architecture/reliable-pipelines.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public Document"
+role: "architecture"
+lifecycle_stage: "stable"
+ttl_policy: "Review required every 12 months"
+sunset_policy: "Superseded upon new protocol release"
 ---
 
 <div align="center">
@@ -24,101 +64,178 @@ fair_category: "F1-A1"
 # 🛠️ **Kansas Frontier Matrix — Unified Reliable Pipeline Architecture**  
 `src/pipelines/architecture/reliable-pipelines.md`
 
-**Purpose**  
-Define the unified architectural standard for **reliable, idempotent, observable, and recoverable** KFM data pipelines and updaters:
+**Purpose:**  
+Define the *authoritative, enforceable* reliability standard for all KFM pipelines and updaters:  
 
 > **Triggers → light AI (schema only) → deterministic ETL → validation gates → idempotent upsert → metadata/versioning → blue/green publish → alerts & telemetry**,  
-> with **safe retries, rollback, and resume** built into every pathway.
+> with **safe retries, rollback, and resume** enforced at the architecture level.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../docs/README.md)  
-[![Markdown Rules](https://img.shields.io/badge/Markdown-KFM%20MDP%20v10.4-purple)](../../docs/standards/markdown_rules.md)  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)  
-[![Reliability](https://img.shields.io/badge/Reliability-Diamond%E2%81%B9%20Ω%20%2F%20Crown%E2%88%9EΩ-orange)](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Low%20Risk-orange)](../../docs/standards/faircare.md)  
+[![Status: Enforced](https://img.shields.io/badge/Status-Enforced-success)](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
 
 ---
 
-## 📌 Overview & Principles
+## 📘 Overview
 
-All KFM pipelines must follow the same reliability contract:
+This document specifies the **Unified Reliable Pipeline Architecture** for Kansas Frontier Matrix (KFM). It merges and supersedes all prior “Reliable Updaters” and “Reliable Pipeline Architecture” guides into a single **Diamond⁹ Ω / Crown∞Ω Ultimate Certified** standard.
 
-- **Deterministic behavior** — AI is allowed only for schema inference or mapping hints; all outputs must resolve to explicit JSON configs.
-- **Idempotent upserts** — natural keys + content hashes ensure exactly-once effects even under retry storms.
-- **Fail-closed validation** — nothing is promoted until schema, spatial, temporal, and drift checks pass.
-- **Immutable artifacts, mutable pointers** — blue/green datasets allow instant rollback without rewriting history.
-- **Observability-first** — every stage emits structured logs, metrics, traces, and FAIR+CARE telemetry.
-- **Resume-safe** — checkpoints allow recovery without duplication.
+Reliable pipelines in KFM are:
+
+- **Deterministic:** same inputs + same config → same outputs.  
+- **Idempotent:** safe under at-least-once delivery, with exactly-once effects at the boundary.  
+- **Rollback-safe:** blue/green pointer flips, never destructive edits.  
+- **Observable:** structured logs, metrics, traces, FAIR+CARE telemetry.  
+- **Replayable:** checkpoints and immutable artifacts enable safe re-runs.  
+
+Any pipeline that does not comply with this standard MUST NOT be deployed.
 
 ---
 
-## 📁 Repository Structure (Pipeline Subset)
+## 🎯 Purpose
 
-```text
-src/
-  pipelines/
-    architecture/
-      reliable-pipelines.md
-    etl/
-      batch/
-      streaming/
-    common/
-      idempotency/
-      validation/
-      observability/
-      versioning/
-      governance/
+The purposes of this standard are to:
+
+- Provide a **single, enforceable pattern** for all KFM pipelines and updaters.  
+- Ensure **idempotent, observable, rollback-safe** behavior across ingestion, ETL, graph updates, and publishing.  
+- Align pipeline design with:
+  - **Master Coder Protocol (MCP-DL v6.3)**  
+  - **Markdown Structural & Formatting Rules v10.4**  
+  - **FAIR+CARE governance**  
+
+**Primary consumers:**
+
+- Pipeline authors (Python, SQL, Neo4j, STAC tooling).  
+- Architecture and SRE teams.  
+- FAIR+CARE Council and governance bodies verifying reliability posture.
+
+---
+
+## 📍 Scope
+
+### In Scope
+
+- All code and configuration under `src/pipelines/**` that:
+  - Reads from `data/sources/**`, `data/raw/**`, or external APIs/streams.  
+  - Writes to `data/work/**`, `data/processed/**`, `data/stac/**`, or Neo4j.  
+- All pipelines that:
+  - Perform ETL (batch or streaming).  
+  - Update KFM knowledge graph or STAC/DCAT catalogs.  
+  - Affect user-facing maps, timelines, Focus Mode, or Story Nodes.
+
+### Out of Scope
+
+- Pure frontend logic that does not depend on pipeline guarantees.  
+- Ad-hoc notebooks used solely for one-off analysis.  
+- External upstream providers’ internal architectures.
+
+**Related documents:**
+
+- `src/ARCHITECTURE.md` — global system architecture.  
+- `src/pipelines/architecture/observability/README.md` — observability standard.  
+- `docs/standards/markdown_rules.md` — Markdown protocol.  
+
+---
+
+## 📚 Definitions
+
+- **Pipeline / Updater:** A repeatable process that ingests, transforms, validates, and publishes data or knowledge into KFM.  
+- **Trigger:** The mechanism that starts a run (cron, event, manual), bundled with a *trigger envelope*.  
+- **Idempotency Key (run-level):** A hash of the trigger envelope used to prevent double-processing of the same run.  
+- **Natural Key (record-level):** Minimal, stable business identity for each record (e.g., `(station_id, date)`).  
+- **Content Hash:** Hash of the **normalized record without runtime fields** (no timestamps, no ephemeral IDs).  
+- **Blue/Green:** Dual dataset pattern where one version serves (blue) and another is candidate (green).  
+- **Checkpoint:** Persisted cursor (date/page/offset) for resume.  
+- **DLQ (Dead Letter Queue):** Durable storage for work items that failed beyond allowed retries.  
+- **Artifact:** Any derived dataset (COG, Parquet, CSV, GeoJSON, STAC item, etc.) whose integrity is tracked.  
+- **Run ID:** Unique identifier of a single pipeline execution.
+
+---
+
+## 🏗 Architecture / Context
+
+### System Context
+
+~~~~~mermaid
+flowchart TD
+  subgraph External Sources
+    S1["Archives / APIs"]
+    S2["STAC / HTTP"]
+    S3["DBs / Files"]
+  end
+
+  subgraph Pipelines
+    T["Trigger<br/>cron · event · manual"]
+    AI["Light AI (Optional)<br/>schema · mapping hints"]
+    E["Deterministic ETL<br/>pure transforms"]
+    V["Validation & QA<br/>schema · spatial · temporal · drift"]
+    U["Idempotent Upsert<br/>natural key · content hash · outbox"]
+    M["Metadata & Versioning<br/>STAC · DCAT"]
+    B["Blue/Green Publish<br/>pointer flip"]
+    O["Observability & Telemetry<br/>logs · metrics · traces"]
+  end
+
+  subgraph Stores
+    G[(Neo4j Graph)]
+    D[(data/processed-blue / -green)]
+    C[(data/stac/ STAC Catalog)]
+  end
+
+  S1 --> T
+  S2 --> T
+  S3 --> T
+  T --> AI
+  AI --> E
+  E --> V
+  V -->|pass| U
+  V -->|fail| O
+  U --> M
+  M --> B
+  B --> G
+  B --> D
+  B --> C
+  Pipelines --> O
+~~~~~
+
+### Repository Context
+
+~~~~~text
+src/pipelines/
+├── architecture/
+│   └── reliable-pipelines.md
+├── etl/
+│   ├── batch/
+│   └── streaming/
+└── common/
+    ├── idempotency/
+    ├── validation/
+    ├── observability/
+    ├── versioning/
+    └── governance/
+
 data/
-  sources/
-  raw/
-  work/
-  processed/
-    blue/
-    green/
-  stac/
-.github/
-  workflows/
-    pipelines-updater.yml
-````
+├── sources/
+├── raw/
+├── work/
+└── processed/
+    ├── blue/
+    └── green/
+~~~~~
+
+Pipelines sit between external sources and internal stores (Neo4j, STAC, `data/processed/**`), and must conform to the reliability rules below.
 
 ---
 
-## 🧩 End-to-End Architecture Pattern
+## ⚙️ Procedures / Implementation
 
-### Reliable Updater Sequence
+### 1. Trigger & Envelope
 
-1. **Trigger**
-2. **Light AI (schema/mapping hints)**
-3. **Deterministic ETL**
-4. **Validation & Quality Gates**
-5. **Idempotent Upsert**
-6. **Metadata & Version Bump**
-7. **Blue/Green Publish**
-8. **Alerts & Telemetry**
-9. **Rollback & Resume**
+Every run MUST start from a **trigger envelope**:
 
----
-
-## 🕒 Triggers & Initiation
-
-### Time-Based
-
-* Nightly / hourly refresh
-* Seasonal backfills
-
-### Event-Based
-
-* Webhooks
-* File drops
-* Message bus notifications
-
-### Manual
-
-* Governance-approved hotfixes and replays
-
-### Trigger Envelope (Required)
-
-```json
+~~~~~json
 {
   "trigger_id": "cron-2025-11-15T00:00Z-kgs-wells",
   "trigger_kind": "cron",
@@ -130,225 +247,354 @@ data/
   },
   "idempotency_key": "sha256(dataset_id|requested_range|source_uri)"
 }
-```
+~~~~~
+
+### 2. Light AI (Optional)
+
+- AI is permitted only for schema sniffing, unit detection, and mapping hints.  
+- All AI-derived outputs MUST be turned into static config (JSON/YAML) and versioned.  
+
+### 3. Deterministic ETL
+
+- Transforms MUST be pure and stateless.  
+- Inputs → normalized tables and feature sets with:
+  - Explicit unit conversions.  
+  - CRS reprojection.  
+  - Controlled vocabularies.  
+- No unpinned randomness.
+
+### 4. Validation & QA
+
+- Apply schema, spatial, temporal, domain, and drift checks.  
+- On failure:
+  - Write only to `data/work/**`.  
+  - Emit `qa_gate_failed` events.  
+  - Abort promotion.
+
+### 5. Idempotent Upsert
+
+- Compute natural key + content hash.  
+- Skip records where `prev.hash == new.hash`.  
+- Use transactional upsert patterns for graph and tables.  
+
+### 6. Metadata & Versioning
+
+- Update STAC/DCAT metadata for artifacts.  
+- Assign semantic version per dataset.  
+- Record provenance and FAIR+CARE metadata.
+
+### 7. Blue/Green Publish
+
+- Write candidate to `data/processed-green/**`.  
+- Run health checks (UI/API).  
+- Flip pointer to `data/processed-blue/**` on success.  
+
+### 8. Alerts & Telemetry
+
+- Emit structured events:
+  - `stage_started`, `stage_succeeded`, `qa_gate_failed`, `publish_promoted`.  
+- Integrate with telemetry stack as per observability standard.
+
+### 9. Rollback & Resume
+
+- **Rollback:** pointer flip to previous blue; no destructive edits.  
+- **Resume:** checkpoints (date/page/offset) plus idempotent logic for safe re-runs.
 
 ---
 
-## 🎯 Idempotency Requirements
+## 📑 Data Contracts & Schemas
 
-### Idempotency Key (Trigger-Level)
+Every dataset controlled by this standard MUST have a **source descriptor**:
 
-```text
-sha256(dataset_id + "|" + version_or_range + "|" + source_uri)
-```
+- Location: `data/sources/<dataset>.json`  
+- Required content:
+  - Dataset ID, title, description.  
+  - Source URLs / endpoints and auth.  
+  - Field-level schema:
+    - Name, type, unit, nullable flag.  
+  - Temporal and spatial coverage.  
+  - License + CARE labels.  
+  - Expected artifact shapes (tables, COGs, STAC collections, graph updates).  
 
-### Natural Key & Content Hash (Record-Level)
+Example (simplified):
 
-```text
-content_hash = sha256(normalized_record_without_runtime_fields)
-```
+~~~~~text
+contract_version: "v3"
+fields:
+  - name: dataset_id
+    type: string
+    required: true
+  - name: timestamp
+    type: datetime
+    required: true
+~~~~~
 
-### Transactional Outbox
-
-* Ensures that DB mutations and outgoing messages are atomically coordinated.
-* Required anytime a pipeline interacts with both internal stores and external systems.
-
----
-
-## 🧪 Validation & QA Gates
-
-| Gate     | Check Type                             | Tooling                          | Action      |
-| -------- | -------------------------------------- | -------------------------------- | ----------- |
-| Schema   | JSON Schema / Pydantic / STAC          | GX, `jsonschema`, STAC validator | Fail        |
-| Spatial  | CRS validity, geometry sanity          | GDAL/OGR, Shapely                | Fail        |
-| Temporal | Range, monotonicity                    | Custom checks                    | Warn/Fail   |
-| Domain   | Enums, ranges, controlled vocabularies | Lookup tables, GX                | Fail        |
-| Drift    | Statistical differences vs last good   | Custom metrics                   | Warn/Review |
-
-Nothing proceeds to publish unless all **hard gates** pass.
+Validation (e.g., GX, JSONSchema) MUST be wired to this contract.
 
 ---
 
-## 🧱 Versioning & Blue/Green Pipeline
+## 🧬 Ontology Alignment
 
-### Immutable Artifacts
+This architecture aligns with external ontologies:
 
-Example paths:
+- **CIDOC-CRM**
+  - Pipelines / updaters → `E7 Activity`
+  - Artifacts → `E73 Information Object`
+- **OWL-Time**
+  - Run intervals → `time:TemporalEntity`, `time:hasBeginning`, `time:hasEnd`
+- **GeoSPARQL**
+  - Dataset footprints → `geo:FeatureCollection`, `geo:hasGeometry`
+- **PROV-O**
+  - Pipeline → `prov:Activity`
+  - Artifacts → `prov:Entity`
+  - Operators / automation → `prov:Agent`
+  - Links → `prov:wasGeneratedBy`, `prov:used`
+- **schema.org**
+  - This document → `TechArticle`
 
-```text
-s3://kfm/artifacts/{dataset}/{version}/...
-data/processed-green/{dataset}/...
-data/processed-blue/{dataset}/...
-```
-
-### Promotion Sequence
-
-1. Write to **green**
-2. Run full health checks
-3. Flip pointer to **blue**
-4. Emit telemetry + tag release
-
----
-
-## 📡 Observability & Telemetry
-
-### Required Logs
-
-* `dataset_id`
-* `run_id`
-* `stage`
-* `status`
-* `error_type`, `error_message`
-* Durations
-* Cursor/checkpoint values
-
-### Metrics
-
-* Pipeline starts/success/fail counts
-* Retry counts
-* DLQ counts
-* Stage latencies
-* Row-level mutation counts
-* CO₂/energy telemetry (if available)
-
-### Telemetry Examples
-
-```json
-{"event":"stage_started","stage":"etl","run_id":"2025-11-15-abc","dataset":"kgs_wells"}
-{"event":"qa_gate_failed","gate":"schema","errors":3,"run_id":"2025-11-15-abc"}
-{"event":"upsert_summary","inserted":1240,"updated":311,"skipped":9123,"run_id":"2025-11-15-abc"}
-{"event":"publish_promoted","from":"green","to":"blue","version":"v10.4.2","run_id":"2025-11-15-abc"}
-```
+These mappings inform metadata exports and knowledge graph enrichment.
 
 ---
 
-## 🔁 Retries, Backoff & DLQ
+## 🛰 STAC/DCAT Metadata
 
-### Retry Policy
+Any pipeline that produces geospatial assets MUST emit STAC/DCAT metadata.
 
-* Max attempts: **5**
-* Backoff: **exponential with jitter**
-* Only wrap **I/O operations**
-* Enforce **timeouts** + **circuit breakers**
+Example STAC collection snippet:
 
-### DLQ Entries Must Include
+~~~~~json
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "kfm-kgs-wells-v10-4-0",
+  "description": "KFM processed Kansas Geological Survey well dataset.",
+  "license": "MIT",
+  "extent": {
+    "spatial": { "bbox": [[-102.1, 36.99, -94.6, 40.0]] },
+    "temporal": { "interval": [["1900-01-01T00:00:00Z", "2025-11-01T00:00:00Z"]] }
+  },
+  "links": [],
+  "assets": {}
+}
+~~~~~
 
-* Payload
-* Error context
-* Stack trace
-* Timestamps
-* Retry counts
-
----
-
-## 🧯 Rollback & Resume
-
-### Rollback
-
-* Use **pointer flip** to previous blue
-* Never mutate or delete artifacts
-* Maintain reversible migration scripts
-
-### Resume
-
-* Use **checkpoints** (cursor, page, timestamp, offset)
-* Safe because all transforms & upserts are **idempotent**
-* Resume from checkpoint without duplicates or data loss
+DCAT 3.0 MUST describe the same dataset and link distributions (`data/processed/**`, STAC items).
 
 ---
 
-## 📜 Data-Level File & Directory Requirements
+## 📖 Story Node Integration
 
-```text
+This document is **not** a Story Node, but:
+
+- Story Node ETL pipelines MUST comply with:
+  - Idempotent upsert patterns.  
+  - Validation gates.  
+  - Blue/green publish.  
+
+Story Node–specific docs MUST:
+
+- Reference this architecture.  
+- Define `story_node_id`, narrative content, temporal/spatial grounding, and relations.  
+
+---
+
+## 🧠 Focus Mode Integration
+
+Focus Mode v2 MAY:
+
+- Summarize this document’s role for developers and operators.  
+- Use its content to explain why pipelines are idempotent and rollback-safe.
+
+Boundaries:
+
+- **Allowed:** neutral summaries of procedures, patterns, and error classes.  
+- **Prohibited:** speculative commentary on operator intent or unverified claims about upstream data.
+
+Focus Mode should link to this doc as a **policy reference** for any pipeline-related focus view.
+
+---
+
+## 🔐 Ethics & CARE
+
+- This document is classified **Public / Low-Risk**.  
+- Pipelines governed by it may handle:
+  - CARE-labeled datasets (public/restricted/sensitive).  
+  - Potentially culturally significant or Indigenous data.
+
+Requirements:
+
+- Pipelines MUST respect CARE labels declared in `data/sources/**`.  
+- Restricted/sensitive data MUST NOT be emitted into public artifacts.  
+- Governance docs MUST be referenced for pipelines that process Indigenous or culturally sensitive content.
+
+---
+
+## 🛡 Privacy & Security
+
+- This architecture doc contains no PII and is public.  
+- Pipelines MUST:
+  - Avoid logging PII or sensitive cultural data in plaintext.  
+  - Secure credentials and secrets (not in source descriptors or logs).  
+  - Follow security guidelines in:
+    - `docs/security/*`
+    - `docs/standards/governance/ROOT-GOVERNANCE.md`  
+
+Retention & destruction:
+
+- Logs, telemetry, and DLQ contents must adhere to retention policies defined by governance (e.g., 90-day retention for raw logs, longer for aggregated metrics).
+
+---
+
+## 🧪 Validation & Reproducibility
+
+Pipelines under this standard MUST:
+
+- Provide **unit tests** for:
+  - Natural key and content hash derivation.  
+  - Transform behavior.  
+- Provide **integration tests** for:
+  - Full runs on sample data.  
+  - Validation failures and expected behavior.  
+  - Blue/green pointer flips and rollback.
+
+Example commands:
+
+~~~~~text
+$ make docs-validate
+$ pytest tests/pipelines/test_reliable_patterns.py
+~~~~~
+
+Reproducibility requires:
+
+- Pinned container images.  
+- Documented runtime versions (Python, Node, Neo4j).  
+- Clear description of any external dependencies.
+
+---
+
+## 📈 Telemetry
+
+Pipelines MUST specify:
+
+- Events they emit (`stage_started`, `qa_gate_failed`, `publish_promoted`, etc.).  
+- Metrics tracked (runtime, throughput, retries, DLQ entries, etc.).  
+- Sampling strategy (if any) and privacy-preserving transformations.
+
+Telemetry is exported according to:
+
+- `src/pipelines/architecture/observability/README.md`  
+- Telemetry schema referenced in `telemetry_schema`.
+
+---
+
+## 🎧 Accessibility (WCAG 2.1 AA)
+
+Plain-language summary:
+
+> This document explains how to make KFM pipelines safe, repeatable, and easy to fix when something goes wrong. It describes a single pattern that all pipelines must follow so they can be rolled back, retried, and monitored without breaking the system.
+
+Accessibility requirements:
+
+- Headings are nested properly and descriptive.  
+- Lists and tables are well-structured.  
+- Any future images must include alt text.  
+- Color is not the only channel of information (Mermaid diagrams use text labels).
+
+---
+
+## 🤖 Machine Extractability
+
+This document is designed to be machine-parsable:
+
+- Heading hierarchy is predictable and complete.  
+- Tables are syntactically valid and aligned.  
+- Code blocks:
+  - Use fenced notation with explicit languages (`json`, `text`, `mermaid`, `python`).  
+  - Contain valid JSON/YAML where applicable (enforced by CI).  
+- YAML front-matter is complete and conforms to `docs-markdown-rules.schema.json`.
+
+---
+
+## ♻️ Dataset Evolution / Deltas
+
+Compared to prior versions:
+
+- **v1.0.0:**  
+  - Basic reliable updaters concept (triggers → ETL → upsert → rollback/resume).  
+- **v10.3.1:**  
+  - Added detailed trigger mesh, outbox, observability, and retry patterns.  
+- **v10.4.0:**  
+  - Aligned with Markdown MDP v10.4.  
+  - Added FAIR+CARE and ontology alignment.  
+  - Formalized error taxonomy, governance, and CI expectations.  
+
+Migration notes:
+
+- Older pipelines MUST be updated to:
+  - Use explicit natural keys + content hashes.  
+  - Implement blue/green patterns if they previously used in-place updates.  
+  - Emit required telemetry events.
+
+---
+
+## 🧩 Error Taxonomy
+
+Pipelines MUST classify errors into:
+
+- **ConfigurationError:** bad or missing config, schema mismatch.  
+- **ValidationError:** data fails schema/spatial/temporal/domain/drift checks.  
+- **TransientIOError:** temporary network or storage issues.  
+- **PermanentIOError:** persistent upstream failures (e.g., dataset removed).  
+- **UpsertConflictError:** violations of natural key constraints.  
+- **PointerFlipError:** failures during blue/green pointer update.  
+
+Mitigations and safeguards for each class MUST be documented in pipeline-specific docs.
+
+---
+
+## 📁 Directory Layout
+
+~~~~~text
+src/pipelines/
+├── architecture/
+│   └── reliable-pipelines.md
+├── etl/
+│   ├── batch/
+│   └── streaming/
+└── common/
+    ├── idempotency/
+    ├── validation/
+    ├── observability/
+    ├── versioning/
+    └── governance/
+
 data/
-  sources/<dataset>.json
-  raw/<dataset>/...
-  work/<dataset>/...
-  processed/
-    blue/<dataset>/...
-    green/<dataset>/...
-  stac/...
-```
-
-Each source descriptor must declare:
-
-* Endpoints
-* Schema
-* Temporal/spatial ranges
-* License + CARE tags
-* Expected outputs
+├── sources/
+├── raw/
+├── work/
+└── processed/
+    ├── blue/
+    └── green/
+~~~~~
 
 ---
 
-## 🧩 Mermaid Diagrams
+## 🕰 Version History
 
-### End-to-End Pipeline
-
-```mermaid
-flowchart LR
-  A[Trigger<br/>cron · webhook · manual] --> B[Light AI<br/>schema hints]
-  B --> C[Deterministic ETL]
-  C --> D[Validation<br/>schema · spatial · temporal · drift]
-  D -->|pass| E[Idempotent Upsert<br/>natural key · content hash]
-  D -->|fail| X[Stop · Alert · DLQ]
-  E --> F[Metadata & Versioning<br/>STAC · DCAT]
-  F --> G[Blue/Green Publish<br/>pointer flip]
-  G --> H[Alerts & Telemetry]
-```
-
-### Rollback & Resume
-
-```mermaid
-flowchart LR
-  R1[Failure Detected] --> R2[Flip Pointer<br/>to Previous Blue]
-  R2 --> R3[Investigate<br/>logs · DLQ · audits]
-  R3 --> R4[Fix Config/Code]
-  R4 --> R5[Resume via Checkpoint]
-  R5 --> R6[Re-run ETL/QA/Upsert<br/>Promote New Green]
-```
+| Version | Date       | Author / Team              | Summary                                                                                 |
+|--------:|------------|----------------------------|-----------------------------------------------------------------------------------------|
+| v10.4.0 | 2025-11-15 | Pipeline Architecture Team | Unified reliable pipeline spec; aligned with Markdown MDP v10.4 and missing standards.  |
+| v10.3.1 | 2025-11-13 | Pipeline Architecture Team | Previous “Reliable Pipeline Architecture Guide”.                                        |
+| v1.0.0  | 2025-11-15 | ETL/Updaters Working Group | Initial “Reliable Updaters” pattern.                                                    |
 
 ---
 
-## 🧮 Idempotent Upsert Pseudocode
+<div align="center">
 
-```python
-def upsert(records, store, run_id):
-    for r in records:
-        nk = natural_key(r)
-        h = content_hash(normalize(r))
-        prev = store.get_meta(nk)
+**© 2025 Kansas Frontier Matrix — MIT License**  
+Validated under **Master Coder Protocol v6.3**  
+FAIR+CARE Aligned · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Back to Pipeline Architecture](../README.md) · [Root Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
-        if prev and prev.hash == h:
-            mark_skipped(nk, run_id)
-            continue
-
-        store.transactional_upsert(
-            natural_key=nk,
-            record=r,
-            hash=h,
-            prev_hash=prev.hash if prev else None,
-            run_id=run_id,
-        )
+</div>
 ```
-
----
-
-## 🧑‍🏭 Operator Runbook
-
-1. Trigger run (cron/event/manual)
-2. Monitor logs and metrics
-3. Fix + dry-run if validation fails
-4. Promote **green → blue** only after all checks pass
-5. Roll back via pointer if issues emerge
-6. Resume via checkpoint
-7. Close out with telemetry + governance logs
-
----
-
-## 🕰️ Version History
-
-| Version | Date       | Author / Team              | Summary                                                                                |
-| ------: | ---------- | -------------------------- | -------------------------------------------------------------------------------------- |
-| v10.4.0 | 2025-11-15 | Pipeline Architecture Team | Unified reliable pipeline spec; strict KFM-MDP v10.4 formatting; merged and corrected. |
-| v10.3.1 | 2025-11-13 | Pipeline Architecture Team | Stable “Reliable Pipeline Architecture Guide”.                                         |
-|  v1.0.0 | 2025-11-15 | ETL/Updaters Working Group | Initial reliable updater pattern.                                                      |
