@@ -1,13 +1,13 @@
 ---
 title: "🎨 Kansas Frontier Matrix — Web Styles Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/styles/README.md"
-version: "v10.4.1"
+version: "v10.4.2"
 last_updated: "2025-11-15"
 review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.4.1/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.4.1/manifest.zip"
-telemetry_ref: "../../../releases/v10.4.1/focus-telemetry.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/web-styles-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
@@ -25,14 +25,13 @@ fair_category: "F1-A1-I1"
 `web/src/styles/README.md`
 
 **Purpose:**  
-Define the **global styling system** for the Kansas Frontier Matrix (KFM) web client, including design tokens,
-themes, mixins, map styles, accessibility rules, and Focus Mode visuals. This ensures that all frontend
-components are **consistent, reproducible, FAIR+CARE-aligned, and Focus Mode–aware**.
+Define the global styling system for the Kansas Frontier Matrix (KFM) web client, including design tokens,
+themes, mixins, map styles, accessibility rules, and Focus Mode visuals. This keeps all frontend components
+consistent, reproducible, FAIR+CARE-aligned, and Focus Mode–aware.
 
-Docs · MCP v6.3  
+Documentation standard: MCP v6.3  
 License: MIT  
-FAIR+CARE  
-Status: Active / Enforced  
+FAIR+CARE status: Active / Enforced  
 
 </div>
 
@@ -47,7 +46,7 @@ It standardizes:
 - Design tokens (colors, spacing, typography, radii, shadows)  
 - Light/dark themes and future variants  
 - Shared mixins (buttons, layout primitives, Focus Mode effects)  
-- MapLibre-specific styling (basemap + legend)  
+- MapLibre-specific styling (basemap and legend)  
 - Accessibility guarantees (WCAG 2.1 AA)  
 - Visual language for Story Nodes and Focus Mode
 
@@ -74,8 +73,8 @@ All style changes must pass CI linting and validation before merge.
     │   └── legend.css
     └── index.css               # Master global stylesheet imported by React entrypoint
 
-**Rule:** any new global styling artifact must live under `web/src/styles/` and be referenced through
-`index.css` or a theme entrypoint, not imported ad hoc from components.
+Any new global styling artifact must live under `web/src/styles/` and be referenced through `index.css` or
+a theme entrypoint, not imported ad hoc from components.
 
 ---
 
@@ -99,7 +98,7 @@ KFM styling is layered:
 5. **Global Entry (`index.css`)**  
    Root stylesheet that imports themes, mixins, and any Tailwind layers; defines base element styles.
 
-This architecture yields **testable**, **modular**, and **themed** styling with clear responsibilities.
+This architecture yields testable, modular, and themed styling with clear responsibilities.
 
 ---
 
@@ -123,7 +122,7 @@ Each token is documented with:
 
 - Intended usage (e.g. “primary button fill”, “timeline active segment”)  
 - Contrasts for light/dark themes  
-- Any mapping to STAC/DCAT layer semantics (for map colors).
+- Any mapping to STAC/DCAT layer semantics (for map colors)
 
 ### Spacing Tokens (`spacing.tokens.js`)
 
@@ -146,8 +145,7 @@ Define:
 - Text styles: `kfm-text-xs`…`kfm-text-2xl` (font-size, line-height, weight)  
 - Heading styles: `kfm-heading-sm`, `kfm-heading-md`, `kfm-heading-lg`  
 
-**Accessibility rule:** base narrative text should be at least 16px (`kfm-text-md`) in the sidebar and in
-story-node bodies.
+Base narrative text should be at least 16px (`kfm-text-md`) in sidebars and story-node bodies.
 
 ---
 
@@ -176,7 +174,7 @@ Example pattern:
 Guidelines:
 
 - Theme is switched via `data-theme="light|dark|..."` on `<html>` or `<body>`.  
-- Components must **only** reference CSS variables, not raw hex values.  
+- Components must only reference CSS variables, not raw hex values.  
 - Any new theme must define the full base variable set (`--kfm-bg`, `--kfm-fg`, `--kfm-primary-*`,
   `--kfm-neutral-*`, etc.) and be contrast-tested.
 
@@ -199,7 +197,7 @@ Each defines:
 - Hover / active / focus-visible states  
 - Disabled state (reduced opacity, no pointer events)  
 
-No component should define its own button styles from scratch; use or extend these classes.
+Components should use or extend these button classes rather than redefining their own.
 
 ### Layout (`mixins/layout.css`)
 
@@ -211,9 +209,9 @@ Defines core layout primitives:
 
 Layout utilities must:
 
-- Keep timeline and map visible & synchronized  
-- Support responsive breakpoints (mobile <-> desktop)  
-- Avoid overlapping critical map areas (e.g., focus halos and legends)
+- Keep timeline and map visible and synchronized  
+- Support responsive breakpoints (mobile ↔ desktop)  
+- Avoid overlapping critical map regions (focus halos, legends)
 
 ### Focus Mode (`mixins/focus-mode.css`)
 
@@ -222,13 +220,7 @@ Focus Mode visuals:
 - `.kfm-focus-ring` — keyboard focus outline for components  
 - `.kfm-focus-halo` — subtle glow around focused entities (cards, markers, timeline items)  
 - `.kfm-focus-related` — lighter emphasis for related nodes  
-- `.kfm-focus-ai-explanation` — container for AI-generated summaries or insights
-
-These classes are used across:
-
-- Story Node panels  
-- Timeline items  
-- Map popups and overlays  
+- `.kfm-focus-ai-explanation` — container for AI-generated summaries or insights  
 
 Animations must respect `prefers-reduced-motion`.
 
@@ -242,18 +234,18 @@ Map styles align MapLibre with UI tokens to avoid visual dissonance.
 
 Controls:
 
-- Background land/water colors via `--kfm-map-land`, `--kfm-map-water`  
+- Land/water colors via `--kfm-map-land`, `--kfm-map-water`  
 - Boundary colors (counties, reservations, treaty areas)  
 - Road and rail hues  
 - Label contrast and legibility in both themes
 
 ### Legend (`maps/legend.css`)
 
-Provides legend styling:
+Legend styling:
 
 - `.kfm-legend` — container  
-- `.kfm-legend-item` — row for a single symbol + label  
-- `.kfm-legend-swatch` — square/circle showing symbol color  
+- `.kfm-legend-item` — row for a single symbol plus label  
+- `.kfm-legend-swatch` — symbol sample  
 
 Legends should:
 
@@ -265,23 +257,25 @@ Legends should:
 
 ## 🧠 Story Nodes & Focus Mode Integration
 
-Story Nodes (see Story Node schema) represent narrative units with spacetime grounding. Styling must:
+Story Nodes represent narrative units with spacetime grounding.
 
-- Render story nodes as visually distinct cards with:
+Styling must:
 
-  - Title (using `kfm-heading-md`)  
+- Render story nodes as cards with:
+
+  - Title using `kfm-heading-md`  
   - Summary text (`kfm-text-sm` or `kfm-text-md`)  
-  - Time range and place labels as subtle metadata row  
-  - Relations (chip-style tags, `.kfm-focus-related` on linked items in Focus Mode)
+  - Time range and place labels as a metadata row  
+  - Relations as chip-style tags
 
 - Use `.kfm-focus-halo` and `.kfm-focus-ring` when a story node is the active Focus entity  
 - Clearly separate:
 
-  - Archival quotes (e.g., blockquote styling)  
-  - AI summaries (`.kfm-focus-ai-explanation`, different background and icon)  
+  - Archival quotes (blockquote styling)  
+  - AI summaries (`.kfm-focus-ai-explanation`, distinct background and icon)  
 
-Screen readers must be able to distinguish AI-generated content vs primary sources through
-component ARIA attributes; styles cannot rely solely on color.
+Screen readers distinguish AI-generated content vs primary sources through component ARIA attributes;
+styles cannot rely solely on color.
 
 ---
 
@@ -290,7 +284,7 @@ component ARIA attributes; styles cannot rely solely on color.
 Accessibility constraints:
 
 - Minimum contrast ratio 4.5:1 in both light and dark themes for body text  
-- Focus outlines must be visible independent of color perception (width and pattern matter)  
+- Focus outlines must be visible independent of color perception (width and pattern)  
 - `prefers-reduced-motion: reduce` disables non-essential animations (Focus pulses become static)  
 - Interactive targets (buttons, toggles) aim for at least 44×44 px
 
@@ -302,20 +296,18 @@ FAIR+CARE considerations:
   - Optional blur/generalization overlays when zoomed in too far  
   - Clear textual notices in the UI about any redaction or generalization  
 
-- H3-generalized geometries (privacy-preserving hex cells) are rendered as soft regions rather than
-  sharp pin icons.
+- H3-generalized geometries are rendered as soft regions, not pinpoint icons.
 
 ---
 
 ## 🧪 Validation & CI
 
-The following checks enforce style hygiene:
+Style hygiene is enforced via:
 
-- **Stylelint** runs on all files under `web/src/styles/` with the KFM config  
-- **Token schema validation** ensures token modules conform to `tokens.schema.json`  
-- **Map style validation** checks any generated MapLibre styles against their JSON schema  
-- **Visual regression tests** (optional but recommended) compare key components (buttons, Focus
-  Mode states, story node cards) to golden snapshots
+- Stylelint on all files under `web/src/styles/`  
+- Token schema validation against `tokens.schema.json`  
+- Map style validation against the MapLibre style schema (for any generated JSON)  
+- Optional visual regression tests for key components (buttons, Focus Mode states, story node cards)
 
 Any failure blocks merges until fixed.
 
@@ -323,7 +315,7 @@ Any failure blocks merges until fixed.
 
 ## 📦 Usage Guidelines for Developers
 
-1. **Never hard-code** hex colors, font sizes, or spacing in components. Use tokens and CSS variables.  
+1. Do not hard-code hex colors, font sizes, or spacing in components. Use tokens and CSS variables.  
 2. When creating a new component:
 
    - Use existing button/layout mixins if possible  
@@ -338,7 +330,7 @@ Any failure blocks merges until fixed.
 
 4. When changing tokens:
 
-   - Consider downstream effects on map layers, legends, Focus Mode, and a11y  
+   - Consider downstream effects on map layers, legends, Focus Mode, and accessibility  
    - Coordinate with design/UX and data viz maintainers if colors encode particular semantics.
 
 ---
@@ -347,7 +339,8 @@ Any failure blocks merges until fixed.
 
 | Version | Date       | Author / Maintainer | Summary                                                                 |
 |--------|------------|---------------------|-------------------------------------------------------------------------|
-| v10.4.1| 2025-11-15 | Lead Programmer     | Rebuilt README into a single-box format; tightened layout and usage     |
+| v10.4.2| 2025-11-15 | Lead Programmer     | Removed badge-style markup, stabilized header formatting                |
+| v10.4.1| 2025-11-15 | Lead Programmer     | Rebuilt README into single-box format; tightened layout and usage       |
 | v10.4.0| 2025-11-14 | Lead Programmer     | Initial creation of styles architecture doc and directory layout        |
 
 ---
