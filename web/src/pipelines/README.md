@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "🚀 Kansas Frontier Matrix — Web Pipelines & Dataflow Orchestration (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/README.md"
