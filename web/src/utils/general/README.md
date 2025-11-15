@@ -1,5 +1,5 @@
 ---
-title: "🛠️ Kansas Frontier Matrix — General Utility Modules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧭 Kansas Frontier Matrix — General Utilities Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/general/README.md"
 version: "v10.4.1"
 last_updated: "2025-11-15"
@@ -21,199 +21,225 @@ fair_category: "F1-A1-I1-R1"
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — General Utility Modules**  
+# 🧭 **Kansas Frontier Matrix — General Utility Modules**  
 `web/src/utils/general/README.md`
 
 **Purpose:**  
-Document the **foundational utility helpers** used across the KFM React + MapLibre web client,  
-including memoization, cloning, validation guards, object/array helpers, and other building blocks  
-shared across map, graph, API, timeline, and Focus Mode v2 systems.  
-All modules are pure, deterministic, TypeScript-strict, and KFM-MDP v10.4 compliant.
+Provide a unified reference and architectural description for **general-purpose helper utilities** used across the KFM Web Platform (React + MapLibre + Timeline Engine).  
+These utilities are **pure, deterministic, MCP-compliant, FAIR-safe**, and reused across all major UI subsystems including:  
+– Timeline engine  
+– Focus Mode v2  
+– Story Node rendering  
+– Graph API adapters  
+– Map rendering layers  
 
 </div>
 
 ---
 
-## 🧭 Overview
+## 🧩 Overview
 
-The `web/src/utils/general/` directory contains cross-cutting utilities that:
+The `general` utilities comprise the lowest-level foundation for the KFM frontend.  
+They provide:
 
-- Provide **safe, predictable low-level behaviors**  
-- Enable **performance optimizations** (memoization, structural cloning)  
-- Supply **runtime assertions & invariant guards**  
-- Offer **universal emptiness and type-check helpers**  
-- Are imported by *every other* utils module (date, graph, map, api)  
-- Ensure FAIR+CARE-compliant handling of metadata when used in data transforms  
-- Support MCP documentation-first reproducibility via deterministic operations  
+- **Deterministic memoization**
+- **Deep structural cloning (cycle-safe)**
+- **Robust equality checking**
+- **Value normalization**
+- **Type guards**
+- **Invariant enforcement**
+- **General-purpose merge functions that are FAIR+/CARE-aware**
 
-These helpers form the *standard library* for the KFM frontend.
+These utilities *must* remain completely **side-effect free**, **dependency-free**, and **React-agnostic**, making them safe to use throughout the monorepo.
 
-All utilities here are **pure functions**, export-safe, test-covered, and never reference DOM or network.
+They are required by:
 
----
+- `web/src/utils/api`
+- `web/src/utils/date`
+- `web/src/utils/map`
+- `web/src/utils/graph`
+- Focus Mode v2 narrative assembly
+- Timeline event bucketing + deduplication
+- Story Node field normalization
 
-## 📂 Directory Layout
+General utilities live here:
 
 ```
 
 web/src/utils/general/
 │
-├── memo.ts           # Deterministic memoization with TTL + argument hashing
-├── deepClone.ts      # Fast structural deep clone with cycle detection
-├── isEmpty.ts        # Robust emptiness checker for all serializable types
-├── invariant.ts      # Assertion utility with MCP-compliant error messages
-├── equals.ts         # Deep equality checker for objects/arrays
-├── typeGuards.ts     # Handy TS predicate fns: isString, isNumber, isObject, etc.
-└── objectMerge.ts    # Safe deep merge respecting FAIR/CARE metadata retention
+├── memo.ts
+├── deepClone.ts
+├── equals.ts
+├── invariant.ts
+├── isEmpty.ts
+├── typeGuards.ts
+└── objectMerge.ts
 
-````
+```
 
 ---
 
-## 🧱 Module Descriptions
+## 🧠 Design Requirements & Constraints
 
-### 🧩 `memo.ts`
-Deterministic memoization layer used throughout the KFM frontend.
+All utilities in this directory must follow:
+
+### **1. Deterministic Behavior (MCP Rule 2.4)**
+- Zero reliance on system time, locale, or global state
+- Pure functions only
+- Same input → same output, guaranteed
+
+### **2. FAIR+CARE Safety**
+- No silent deletion of metadata fields  
+- Merges must preserve provenance & CARE-related labels unless explicitly overridden
+- All deepClone functions retain `__meta` blocks
+
+### **3. Cross-Pipeline Consistency**
+Results from these functions must behave identically across:
+
+- GraphQL + REST API responses  
+- Timeline Engine sort/group operations  
+- Story Nodes (CIDOC/OWL-Time)  
+- MapLibre layer adapters  
+
+### **4. Zero React Imports**
+No React, no hooks, no DOM access, no browser globals.
+
+---
+
+## 📂 Module Details
+
+### 🧱 `memo.ts` — Deterministic + TTL-Aware Memoization  
+Provides argument-hash–based memoization with optional expiration.
+
+Used by:
+- Focus Mode v2 summarizer
+- Graph → MapLayer transformation cache
+- Timeline step quantization
 
 Features:
+- TTL support  
+- Stable JSON hashing  
+- Automatic orphan cleanup  
 
-- Argument hashing (stable, collision-safe)  
-- Optional TTL expiration  
-- Prevents recomputation in Focus Mode v2, timeline ranges, expensive STAC transforms  
-- Purely functional — no global caches  
+---
+
+### 🧱 `deepClone.ts` — Structural, Cycle-Safe Clone  
+Guaranteed deep clone for:
+
+- Arrays
+- Objects
+- Nested graph fragments
+- Story Node narrative blocks
+- GeoJSON structures
+
+Includes:
+- Cycle detection  
+- `__meta` retention  
+- GeoJSON-safe numerical normalization  
+
+---
+
+### 🧱 `equals.ts` — Deep Equality  
+Used heavily for:
+
+- Memo caches  
+- Story Node diffing  
+- Focus Mode v2 "semantic window" comparisons  
+- Map layer rerender pruning  
+
+Supports:
+- Arrays  
+- Objects  
+- GeoJSON  
+- Primitive unions  
+
+---
+
+### 🧱 `invariant.ts`  
+Strict runtime assertions with MCP-format errors.
 
 Example:
-
-```ts
-const heavy = memo(fn, { ttl: 5000 });
-````
-
----
-
-### 🧩 `deepClone.ts`
-
-Pure structural cloning with:
-
-* Cycle detection
-* FAIR/CARE metadata preservation
-* Support for arrays, objects, primitives
-* Immutable output guaranteed
-
-Used to protect React state from accidental mutation.
-
----
-
-### 🧩 `isEmpty.ts`
-
-Universal emptiness checker for:
-
-* `null`, `undefined`
-* Arrays (length 0)
-* Objects (no enumerable keys)
-* Strings (trimmed)
-* Maps/Sets (size 0)
-
-Used before timeline/map calculations to ensure safe fallbacks.
-
----
-
-### 🧩 `invariant.ts`
-
-Assertion helper used across utility modules.
-
-* Throws deterministic error with MCP-aligned diagnostics
-* Guards impossible branches
-* Avoids obscure runtime bugs
-
-Example:
-
-```ts
-invariant(Array.isArray(nodes), "Expected array of graph nodes");
 ```
 
----
-
-### 🧩 `equals.ts`
-
-Deep equality comparison:
-
-* Handles nested objects, arrays
-* Stable sorting for unordered structures
-* Type-aware comparisons
-* Used in memoization hashing + Focus Mode v2 dedupe logic
-
----
-
-### 🧩 `typeGuards.ts`
-
-A collection of TS-level type guards:
-
-* `isString`, `isNumber`, `isBoolean`
-* `isObject`, `isArray`, `isPlainObject`
-* `isDate`, `isJson`
-* `isGeoJSONGeometry`
-
-These dramatically reduce React component conditional clutter.
-
----
-
-### 🧩 `objectMerge.ts`
-
-Safe structural merge:
-
-* Deep merges without mutating source objects
-* Never overwrites FAIR/CARE metadata automatically
-* Performs deterministic resolution of conflicts
-* Used heavily in normalized graph + STAC metadata merging
-
----
-
-## 🧪 Testing Requirements
-
-All modules must be covered by corresponding tests in:
+invariant(typeof id === "string", "Expected string id in entity resolver");
 
 ```
+
+This enforces correctness boundaries between modules.
+
+---
+
+### 🧱 `isEmpty.ts`  
+Robust emptiness detection for:
+
+- Arrays  
+- Objects  
+- Sets/Maps  
+- Nullish values  
+- GeoJSON geometries  
+
+Used for preflight validation in API + Timeline layers.
+
+---
+
+### 🧱 `typeGuards.ts`  
+Provides strong TypeScript guards for:
+
+- `isString`, `isNumber`, `isBoolean`
+- `isArray`, `isObject`
+- `isPlainObject`
+- `isDate`
+- `isGeoJSONGeometry`
+
+These are foundational for runtime validation of API responses.
+
+---
+
+### 🧱 `objectMerge.ts` — FAIR+CARE–Aware Merge  
+A deterministic deep merge function with:
+
+- No silent drops of provenance  
+- Controlled overwrite rules  
+- Metadata priority safety features  
+- Support for Story Node property merging  
+- GeoJSON property + bbox precedence logic  
+
+---
+
+## 🧪 Testing
+
+All utilities must have tests located at:
+
+```
+
 tests/web/utils/general/*.test.ts
+
 ```
 
-Tests MUST verify:
+Test classes must cover:
 
-* Deterministic memoization under varied argument lists
-* Correct deepClone behavior (cycles, metadata, nested types)
-* equivalence + non-equivalence in equals.ts
-* Proper failures + MCP-style diagnostics in invariant.ts
-* Strict type guard correctness
-* objectMerge respecting metadata + non-destructive behavior
-
----
-
-## ⚙️ Development Standards
-
-All utilities MUST:
-
-* Be written in **TypeScript**
-* Export only pure functions
-* Pass ESLint + Prettier + KFM Docs Lint
-* Avoid DOM, MapLibre, network, or global state
-* Preserve FAIR/CARE metadata when merging or cloning
-* Include complete JSDoc docstrings
+- Value stability across repeated calls  
+- Cross-object equality logic  
+- Metadata retention rules  
+- Extreme structural clones  
+- FAIR+CARE contract enforcement  
 
 ---
 
-## 🧭 Future Extensions (v10.5+)
+## 🧭 Future Enhancements (v10.5+)
 
-* Deterministic hash module for reproducible caching
-* Structural diffing (`diffObjects`) used in telemetry & debug overlays
-* Pattern matching helpers for Story Node narrative objects
-* RFC 8785–compliant canonicalization helpers for JSON serialization
-* High-performance “immutable patch” utilities for React state transitions
+- Deterministic hashing module (for GraphQL optimistic updates)
+- Object diff engine (Story Node delta compression)
+- Immutable patch utility (React state optimizer)
+- WASM-backed structural clone for large datasets
 
 ---
 
 ## 🏁 Version History
 
-| Version | Date       | Changes                                         |
-| ------- | ---------- | ----------------------------------------------- |
-| v10.4.1 | 2025-11-15 | Initial creation following KFM-MDP v10.4 rules. |
+| Version | Date       | Notes |
+|---------|------------|-------|
+| v10.4.1 | 2025-11-15 | Initial file creation using KFM-MDP v10.4 standards |
 
 ---
