@@ -343,7 +343,7 @@ Focus Mode pipeline (from the UI perspective):
 ```mermaid
 flowchart LR
     U[User selects entity] --> C[FocusController Hook]
-    C --> Q[/api/focus/{id}/]
+    C --> Q["/api/focus/{id}/"]
     Q --> R[Narrative & Context]
     R --> N[StoryNode Composer]
     R --> X[Explainability Layer]
