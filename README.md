@@ -1,277 +1,302 @@
 ---
-title: "🌾 Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌾 Kansas Frontier Matrix — Monorepo Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "README.md"
-version: "v10.3.3"
+version: "v10.4.0"
 last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.3.3/sbom.spdx.json"
-manifest_ref: "releases/v10.3.3/manifest.zip"
-data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v10.3.3/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/system-architecture-v2.json"
+sbom_ref: "releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "releases/v10.4.0/manifest.zip"
+telemetry_ref: "releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/root-readme-v1.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Overview"
+intent: "root-overview"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Mixed Dataset Classification"
+sensitivity_level: "Dataset-dependent"
+public_exposure_risk: "Dataset-dependent"
+indigenous_rights_flag: "Conditional"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: false
+provenance_chain:
+  - "README.md@v10.0.0"
+  - "README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E31 Document"
+  schema_org: "CreativeWorkSeries"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "schemas/json/root-readme.schema.json"
+shape_schema_ref: "schemas/shacl/root-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:root-readme-v10.4.0"
+semantic_document_id: "kfm-doc-root-readme"
+event_source_id: "ledger:README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public Document"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next major KFM release"
 ---
 
 <div align="center">
 
-# 🌾 **Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub**  
+# 🌾 **Kansas Frontier Matrix — Monorepo Overview**  
 `README.md`
 
 **Purpose:**  
-Define the official, MCP-DL v6.3–compliant entrypoint for the Kansas Frontier Matrix (KFM): a Diamond⁹ Ω / Crown∞Ω certified, FAIR+CARE-aligned, ontology-driven geospatial AI system unifying Kansas’s cultural heritage, ecological history, climate records, land deeds, paleoenvironments, archaeology, and future projections into a reproducible, lineage-secured, open-science knowledge graph.
+Provide a unified **FAIR+CARE-governed**, **schema-aligned**, and **architecture-driven** overview of the  
+**Kansas Frontier Matrix (KFM)** monorepo — including its directories, governance model, documentation system,  
+CI/CD automation, data platform, test architecture, and web platform components.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](docs/README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](docs/standards/faircare.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)]()
-[![SBOM](https://img.shields.io/badge/SBOM-SPDX-blueviolet)]()
-[![SLSA](https://img.shields.io/badge/SLSA-Level%202-lightgrey)]()
-[![CI](https://img.shields.io/badge/Build-CI%20Passing-brightgreen)]()
+This repository follows **MCP-DL v6.3** and **KFM-MDP v10.4** to guarantee deterministic, ethical, accessible,  
+and reproducible scientific computing.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 What Is the Kansas Frontier Matrix?
 
-The **Kansas Frontier Matrix (KFM)** is a *living, multi-era digital atlas* combining:
+The **Kansas Frontier Matrix (KFM)** is an integrated, ontology-driven, provenance-secure knowledge system combining:
 
-- Semantic knowledge graphs  
-- AI-assisted reasoning (Focus Mode v2.5+)  
+- Geospatial + temporal data  
+- Historical + environmental datasets  
+- ETL + AI enrichment pipelines  
 - FAIR+CARE governance  
-- GeoSPARQL-based spatial intelligence  
-- OWL-Time temporal modeling  
-- Predictive modeling for 2030–2100  
-- Historical + archaeological + geological deep-time layers  
-- Full operational integrity (WAL, retry, rollback, lineage, hotfix)
+- Semantic knowledge graph (Neo4j + CIDOC-CRM + GeoSPARQL + OWL-Time)  
+- Story Node v3 narrative units  
+- Focus Mode v2.5 reasoning engine  
+- Interactive 2D/3D Web Platform (MapLibre + Cesium)  
+- Documentation, testing, governance, and observability systems  
 
-It synthesizes heterogeneous datasets into one reproducible, governed, transparent system.
-
----
-
-# 🧬 Core Guarantees (Diamond⁹ Ω)
-
-| Guarantee | Description |
-|----------|-------------|
-| **Reproducibility** | Deterministic pipelines with full provenance & dataset fingerprints. |
-| **Reversibility** | WAL, snapshot, rollback, hotfix with immutable audit trails. |
-| **FAIR+CARE Compliance** | Ethical, culturally respectful data stewardship. |
-| **Sustainability** | ISO 50001 energy tracking, ISO 14064 carbon telemetry. |
-| **Governance** | Diamond⁹ Ω / Crown∞Ω governance chain ensures trust & safety. |
-| **Open Standards** | STAC 1.0, DCAT 3.0, OWL-Time, CIDOC-CRM, PROV-O. |
-| **Security** | SBOM (SPDX), SLSA supply-chain hardening, signed manifests. |
+The monorepo provides the full end-to-end pipeline from **raw data ingestion → AI enrichment → knowledge graph  
+construction → 2D/3D narrative-driven web visualization**.
 
 ---
 
-# 🏗️ System Architecture (v10.3.3)
+## 🧱 Monorepo Structure
 
-```mermaid
-flowchart TD
-  A[External Data<br/>NOAA · USGS · Tribal Nations · KHS · Sensors] --> B[LangGraph DAG Pipelines<br/>ETL · OCR · NER · RasterOps · QAQC]
-  B --> C[Semantic Knowledge Graph<br/>Neo4j · CIDOC CRM · GeoSPARQL · OWL Time · PROV O]
-  C --> D[API Layer<br/>FastAPI · GraphQL · Auth · Governance Webhooks]
-  D --> E[Frontend<br/>React · MapLibre · Cesium 3D · Focus Mode v2.5]
-  B --> F[Governance Core<br/>FAIR+CARE · SBOM · SLSA · Ledger v4 · Energy/Carbon Telemetry]
-  C --> F
-  D --> F
-````
+A complete KFM directory structure using the official `~~~text` stable tree:
 
----
-
-# ⚙️ Operational Safety & Control Plane
-
-KFM v10.3.3 enforces deterministic, reversible operations:
-
-* **WAL (Write-Ahead Log)** – Every mutation logged pre-execution.
-* **Retries** – Checkpoint-driven automatic recovery.
-* **Rollback** – Graph + asset snapshot restoration.
-* **Hotfix** – Surgical reversible patches under governance.
-* **Lineage** – Full derivation tree across all datasets, models, and narratives.
-* **Ops Tests** – Deterministic system-wide validation.
-
-```mermaid
-flowchart LR
-  O1[WAL] --> O2[Retry] --> O3[Rollback] --> O4[Hotfix] --> O5[Lineage] --> O6[Ops Tests]
-```
-
----
-
-# 🔗 End-to-End Provenance
-
-```mermaid
-flowchart LR
-    A[Data Source] --> B[ETL Pipeline]
-    B --> C[AI Reasoning & NER]
-    C --> D[Validation & QAQC]
-    D --> E[Governance Ledger]
-    E --> F[STAC/DCAT Catalogs]
-    F --> G[Focus Mode v2.5]
-```
-
-All provenance is duplicated into PROV-O classes within Neo4j.
+~~~text
+.
+├── README.md                       # This monorepo overview
+├── ARCHITECTURE.md                 # Root system architecture (KFM v10)
+│
+├── data/                           # Data platform: raw → work → processed → STAC/DCAT
+│   ├── ARCHITECTURE.md
+│   └── ...                         
+│
+├── docs/                           # Standards, governance, audits, analyses
+│   ├── ARCHITECTURE.md
+│   └── standards/
+│
+├── web/                            # Web Platform (2D/3D UI + Focus Mode)
+│   ├── ARCHITECTURE.md
+│   └── src/
+│       └── ARCHITECTURE.md
+│
+├── tools/                          # Automation, governance, telemetry, validation
+│   ├── ARCHITECTURE.md
+│   └── ...
+│
+├── tests/                          # Unit, integration, E2E, schema, governance, A11y
+│   ├── ARCHITECTURE.md
+│   └── ...
+│
+├── schemas/                        # JSON/SHACL/ontology schemas
+│   └── ...
+│
+├── releases/                       # SBOM, manifest, telemetry per release
+│   └── v10.4.0/
+│
+├── .github/                        # CI/CD, governance automation, security
+│   ├── ARCHITECTURE.md
+│   └── README.md
+│
+└── scripts/                        # Optional helper utilities
+~~~
 
 ---
 
-# 🧱 Repository Layout
+## 🧩 System Architecture Summary
 
-```text
-KansasFrontierMatrix/
-|-- src/
-|   |-- ai/
-|   |-- api/
-|   |-- graph/
-|   |-- pipelines/
-|   |-- telemetry/
-|   |-- operations/
-|-- web/
-|-- data/
-|-- docs/
-|-- tools/
-|-- tests/
-|-- .github/
-|-- LICENSE
-|-- CONTRIBUTING.md
-|-- Makefile
-```
+The KFM monorepo has six high-level subsystems:
 
----
+### 1. **Data Platform (`data/**`)**
+- Multi-stage ingestion pipeline  
+- STAC/DCAT generation  
+- Provenance/CARE governance  
+- Drift detection, sustainability telemetry  
+- Neo4j ingestion interface  
 
-# 🌐 Ontology & Metadata Stack
+### 2. **ETL + AI Pipelines (`src/pipelines/**`)**
+- OCR → NER → entity linking  
+- Spatial/temporal normalization  
+- Story Node enrichment  
+- Predictive & remote-sensing models  
 
-| Standard        | Role                           |
-| --------------- | ------------------------------ |
-| **CIDOC-CRM**   | Heritage + event modeling      |
-| **GeoSPARQL**   | Spatial reasoning & topologies |
-| **OWL-Time**    | Temporal intervals & instants  |
-| **PROV-O**      | Derivation & lineage           |
-| **STAC 1.0**    | Geospatial asset metadata      |
-| **DCAT 3.0**    | Dataset catalog metadata       |
-| **JSON-LD**     | Semantic context for entities  |
-| **SPDX + SLSA** | Supply-chain trust             |
+### 3. **Web Platform (`web/**`)**
+- MapLibre (2D), Cesium (3D)  
+- Focus Mode v2.5  
+- Story Node v3  
+- Accessibility-first React  
+- Governance overlays  
+- Telemetry integration  
 
----
+### 4. **Tools Platform (`tools/**`)**
+- AI audits  
+- Validation suites  
+- Governance ledger updates  
+- Sustainability telemetry  
+- CLI & CI/CD orchestration  
 
-# 🧭 Data Domains
+### 5. **Test Platform (`tests/**`)**
+- Unit, integration, E2E  
+- Schema tests  
+- Governance & CARE validation  
+- A11y tests & telemetry validation  
 
-| Domain     | Examples                         | License         |
-| ---------- | -------------------------------- | --------------- |
-| Historical | KHS, newspapers, treaties        | PD/CC-BY        |
-| Tribal     | Oral histories, territorial maps | CARE-restricted |
-| Climate    | NOAA, Daymet                     | PD              |
-| Hydrology  | NWIS, KGS wells                  | PD              |
-| Ecology    | GBIF, eBird                      | CC0/CC-BY       |
-| Hazards    | NOAA Storm Events                | PD              |
-| Geology    | USGS, KGS                        | PD              |
-| Sensors    | Mesonet, USGS real-time          | PD              |
-| Rasters    | NAIP, Landsat                    | PD              |
+### 6. **GitHub Infrastructure (`.github/**`)**
+- Autonomous CI/CD engine  
+- Markdown, schema, governance, security validation  
+- Telemetry export  
+- Release creation + SBOM verification  
 
 ---
 
-# 🧠 AI Model Governance (v10.3.3)
+## 🛡 Governance & FAIR+CARE Integration
 
-* Full model cards
-* Dataset provenance review
-* SHAP + LIME explainability
-* Drift detection (ai_drift_monitor.py)
-* Bias audits (ai_bias_detection.py)
-* Narrative safety filters (CARE-aligned)
-* Lineage tracking for training runs
+The monorepo deeply integrates:
 
----
+- CARE principles  
+- Indigenous Data Sovereignty  
+- FAIR metadata  
+- Provenance chain validation  
+- Licensing integrity  
+- Redaction/generalization (H3 spatial masking)  
+- Ethical AI boundaries (no fabricated data, no unverified history)  
+- SBOM + manifest compliance  
+- Audit-ready workflows  
 
-# 🧩 STAC/DCAT Versioning Model
+All architectural documents include:
 
-```mermaid
-flowchart LR
-  S1[STAC Item] --> S2[STAC Collection] --> D1[DCAT Dataset] --> D2[DCAT Distribution]
-```
-
-Each STAC Item contains:
-
-* DOIs
-* Checksums
-* WAL IDs
-* Spatial/temporal footprints
-* Lineage hashes
+- Front-matter metadata  
+- Provenance chains  
+- Governance references  
+- Telemetry links  
+- Version pinning  
 
 ---
 
-# 📚 Glossary
+## ♿ Accessibility Integration
 
-| Term           | Definition                                              |
-| -------------- | ------------------------------------------------------- |
-| **Story Node** | Spatial + temporal + narrative atom used in Focus Mode. |
-| **Focus Mode** | Entity-centric reasoning and semantic exploration.      |
-| **WAL**        | Write-Ahead Log for deterministic mutation management.  |
-| **Rollback**   | Snapshot-based restoration.                             |
-| **Lineage**    | Immutable derivation records.                           |
-| **STAC/DCAT**  | Metadata and discovery frameworks.                      |
+The entire KFM system adheres to **WCAG 2.1 AA**:
 
----
+- Semantic HTML  
+- A11y tokens in design system  
+- Keyboard navigation  
+- High-contrast / reduced-motion support  
+- Alternative text mapping  
+- A11y testing under `tests/e2e/**` and `tests/unit/**`
 
-# ⚙️ Quickstart
-
-```bash
-git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
-cd KansasFrontierMatrix
-docker compose up --build
-```
-
-Manual:
-
-```bash
-make setup
-uvicorn src.api.main:app --reload &
-npm --prefix web start
-```
-
-UI: [http://localhost:3000](http://localhost:3000)
-API: [http://localhost:8000/docs](http://localhost:8000/docs)
+Accessibility is a **release-blocking CI requirement**.
 
 ---
 
-# 🤝 Contributing (MCP-DL v6.3)
+## 📈 Telemetry & Observability
 
-```bash
-make validate
-make test
-```
+Telemetry is collected from:
 
-* Documentation-first
-* Semantic commits
-* CARE review for sensitive datasets
-* Governance gating for all new models
+- Web UI  
+- Pipelines  
+- Tools  
+- Tests  
+- CI/CD  
+- Sustainability monitors  
 
----
+Telemetry bundles appear in:
 
-# ⚖️ Licensing
+`releases/<version>/focus-telemetry.json`
 
-| Component | License          |
-| --------- | ---------------- |
-| Code      | MIT              |
-| Docs      | CC-BY 4.0        |
-| Data      | Dataset-specific |
-| Security  | SPDX + SLSA      |
+Metrics include:
 
----
-
-# 🌱 Sustainability (ISO 50001 · ISO 14064)
-
-* Energy/run: **0.66 Wh**
-* Carbon: **0.07 gCO₂e**
-* All telemetry logged under `releases/v10.3.3/focus-telemetry.json`
+- Energy (Wh)  
+- Carbon (gCO₂e)  
+- A11y events  
+- Governance audit results  
+- Map/Focus/Story Node usage  
+- Performance/WebVitals  
 
 ---
 
-# 🕰️ Version History
+## 🔐 Security & Supply Chain
 
-| Version     | Date       | Notes                                                                         |
-| ----------- | ---------- | ----------------------------------------------------------------------------- |
-| **v10.3.३** | 2025-11-15 | Updated README formatting, metadata, lineage details, Focus v2.5 integration. |
-| **v10.3.2** | 2025-11-14 | Added WAL, rollback, retries, predictive futures engine.                      |
-| **v10.3.1** | 2025-11-13 | Architecture upgrades.                                                        |
-| **v10.2.2** | 2025-11-12 | Telemetry & FAIR+CARE refinements.                                            |
-| **v10.0.0** | 2025-11-   |                                                                               |
+Security policies enforced via:
+
+- `.github/SECURITY.md`  
+- SBOM + checksum verification  
+- SLSA-aligned workflow integrity  
+- Protected branches + CODEOWNERS  
+- Dependency vulnerability scans  
+- Immutable provenance  
+
+Zero PII, zero sensitive coordinate exposure.
+
+---
+
+## 🧪 Testing Requirements Summary
+
+All PRs must pass:
+
+- TypeScript strict mode  
+- Linting & formatting  
+- Schema validation  
+- Unit + integration + E2E  
+- A11y tests  
+- FAIR+CARE validation  
+- Telemetry validation  
+- Security scans  
+
+Merges are **blocked** on any failure.
+
+---
+
+## 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full monorepo overview aligned to KFM-MDP v10.4; integrated governance, schemas, CARE, telemetry |
+| v10.3.2 | 2025-11-14 | Expanded subsystem architecture references |
+| v10.3.1 | 2025-11-13 | Initial monorepo overview |
+
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — MIT License  
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
+FAIR+CARE Certified · Public Document · Version-Pinned  
+
+</div>
