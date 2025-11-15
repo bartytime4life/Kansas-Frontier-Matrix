@@ -1,14 +1,14 @@
 ---
-title: "📦 Kansas Frontier Matrix — Geospatial Test Fixtures (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📦 Kansas Frontier Matrix — Geospatial Test Fixtures Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/geospatial/tests/fixtures/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
+version: "v10.3.2"
+last_updated: "2025-11-14"
 review_cycle: "Quarterly / Autonomous / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/web-geospatial-fixtures-v1.json"
+sbom_ref: "../../../../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/web-geospatial-fixtures-v2.json"
 governance_ref: "../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -16,116 +16,230 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 📦 **Kansas Frontier Matrix — Geospatial Test Fixtures**  
+# 📦 **Kansas Frontier Matrix — Geospatial Test Fixtures Architecture**  
 `web/src/pipelines/geospatial/tests/fixtures/README.md`
 
 **Purpose:**  
-Provide a **controlled, FAIR+CARE-governed set of geospatial test fixtures** used across the KFM web geospatial pipeline test suite.  
-These datasets (synthetic + curated real-world samples) ensure **deterministic**, **ethically safe**, and **reproducible** validation of coordinate masking, CRS handling, temporal banding, GeoJSON normalization, and geospatial rendering logic.
+Define the **deep-architecture specification** for geospatial test fixtures powering all client-side geospatial QA within KFM v10.3.2.  
+This fixture suite forms the **controlled, deterministic, FAIR+CARE-safe geospatial corpus** used to validate masking, CRS hinting, raster extents, predictive temporal bands, and accessibility-safe rendering across MapLibre, Cesium, Focus Mode, and Story Node subsystems.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Test-Fixtures-orange)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Fixtures-orange)]()
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()
+[![License](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **Fixtures Module** contains representative geospatial data prepared for:
+The **Geospatial Fixtures Module** provides:
 
-- H3-based masking tests  
-- CRS projection mismatch tests  
-- Raster/GeoJSON extent validation  
-- DEM/imagery blending heuristics  
-- Predictive temporal band exercises (e.g. 2030–2100 SSP layers)  
-- CARE-governed coordinate redaction  
-- Synthetic cases mirroring Kansas hydrology, hazards, ecology, and treaties  
-- Multi-resolution geometry edge cases (dense lines, multi-polygons, large rasters)
+- Synthetic & curated test geometries  
+- SAFE spatial data respecting CARE + sovereignty constraints  
+- Raster-bound outlines for imagery, DEM, hillshade, and COG tests  
+- H3 r7–r9 masking test scenarios  
+- CRS mismatch & fallback testing inputs  
+- Predictive temporal band fixtures (2030–2100 SSP windows)  
+- GeoJSON normalization edge cases  
+- Multi-resolution geometry & topology stress tests  
 
-Fixtures obey:
+Fixtures ensure:
 
-- **FAIR+CARE** (no sensitive or precise Indigenous/archaeological coordinates)  
-- **WCAG 2.1 AA** (contrast-safe symbology metadata)  
-- **STAC 1.0** (metadata-mapped test items)  
-- **MCP-DL v6.3** (documentation + reproducibility requirements)
+- deterministic results  
+- ethical masking  
+- projection predictability  
+- reproducible CI  
+- diamond-grade spatial correctness  
+
+They represent the **truth baseline** for geospatial operations in:
+
+- `clipGeoJSON.ts`  
+- `maskCoordinates.ts`  
+- `extentCalculator.ts`  
+- `blendRules.ts`  
+- `projectionHints.ts`  
+- all geospatial pipelines (stac/layers/timeline/entity/focus)
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Authoritative v10.3.2)
 
-~~~~~text
+```text
 web/src/pipelines/geospatial/tests/fixtures/
-├── README.md                          # This file
+├── README.md
 │
-├── sample_geojson.json                # Synthetic + simplified Kansas geometries
-├── sample_raster_bounds.json          # Expected extents for DEM/raster test cases
-├── sample_masking_cases.json          # H3 + fuzzing + sovereignty masking tests
-├── sample_projection_mismatch.json    # CRS mismatch + fallback projection samples
-└── metadata.json                      # Fixture lineage, provenance & telemetry metadata
-~~~~~
+├── sample_geojson.json                # Simplified Kansas hydrology · counties · treaties
+├── sample_raster_bounds.json          # DEM & imagery footprints with nodata masks
+├── sample_masking_cases.json          # H3 r7/r8/r9 + fuzzing + sovereignty buffers
+├── sample_projection_mismatch.json    # CRS mismatch & fallback scenarios
+├── sample_temporal_bands.json         # SSP 2030–2100 predictive bands
+└── metadata.json                      # Fixture lineage, checksum, care profile, telemetry fields
+```
 
 ---
 
-## 🧩 Fixture Types & Purposes
+# 🧩 Deep Fixture Architecture Overview
 
-### **1. sample_geojson.json**
+```mermaid
+flowchart TD
+    FX[Fixtures] --> SUITE[Test Suite<br/>clip · mask · extent · blend · projhint · timeline]
+    SUITE --> PIPE[pipelines<br/>layer · stac · entity · timeline · focus]
+    PIPE --> RENDER[Rendering Engines<br/>MapLibre · Cesium]
+    RENDER --> UI[UI Systems<br/>Focus Mode · Story Nodes · Timeline]
+    UI --> GOV[Governance Ledger]
+    UI --> TEL[Telemetry Export]
+```
+
+---
+
+# 🧠 Fixture Categories (Deep Technical Specification)
+
+## 1️⃣ sample_geojson.json  
+Synthetic + simplified Kansas vector data.
+
+Contains:
+
+- Simplified watersheds → multi-scale geometry tests  
+- County-level treaty boundaries (generalized, safe)  
+- Dense → simplified line networks  
+- Multi-polygon + hole geometry edge cases  
+- Focus/timeline spatial sync test shapes  
+
+### Architecture
+
+```mermaid
+flowchart LR
+    G1[GeoJSON Fixture] --> G2[Normalizer]
+    G2 --> G3[Mask Aware Clip Tests]
+    G3 --> G4[Pipeline Consumption]
+```
+
+---
+
+## 2️⃣ sample_raster_bounds.json  
+Defines deterministic raster bounds for DEM + historic imagery tests.
+
 Includes:
 
-- Streams, tributaries, and simplified watershed boundaries  
-- County outlines + buffered treaty boundaries  
-- Multi-resolution geometry tests (dense → simplified)  
-- Ensures `clipGeoJSON` and `extentCalculator` handle realistic shapes  
+- Nodata masks for DEMs  
+- Alpha-masked historic map areas  
+- Bounding hulls for hillshade/relief rendering  
+- Stress cases for overzoom scenarios in MapLibre  
 
-### **2. sample_raster_bounds.json**
-Stores:
+### Architecture
 
-- Raster footprints  
-- Alpha-masked nodata regions  
-- Boundaries for DEM blending tests  
-- Used to validate `extentCalculator` + blend/terrain scripts  
-
-### **3. sample_masking_cases.json**
-Contains CARE-governed synthetic examples:
-
-- Archaeological point clusters → H3 r7/r8 generalization  
-- Polygon dilation for sovereignty boundaries  
-- Fuzzed coordinates applied to test safety logic  
-- Ensures `maskCoordinates.ts` enforces governance rules  
-
-### **4. sample_projection_mismatch.json**
-Provides:
-
-- EPSG mismatches  
-- Deprecated CRS examples  
-- Custom Kansas projection samples  
-- Tests fallback logic in `projectionHints.ts`  
-
-### **5. metadata.json**
-Tracks:
-
-- Fixture checksums  
-- Provenance source (synthetic / curated)  
-- Schema validity  
-- Telemetry fields  
-- CARE governance evaluation  
+```mermaid
+flowchart LR
+    R1[Raster Bounds] --> R2[nodata Parser]
+    R2 --> R3[Extent Calculator]
+    R3 --> R4[Render Extent Tests]
+```
 
 ---
 
-## 🔐 FAIR+CARE Alignment
+## 3️⃣ sample_masking_cases.json  
+Complete CARE masking suite for testing sovereignty + cultural sensitivity.
 
-| Principle | Implementation |
-|----------|----------------|
-| **Findable** | Fixtures indexed with stable IDs in metadata.json. |
-| **Accessible** | Human-readable JSON with documented structures. |
-| **Interoperable** | GeoJSON, STAC-like, and CRS metadata aligned. |
-| **Reusable** | Versioned, deterministic fixtures usable across pipelines. |
-| **CARE — Authority** | No real-world sensitive coordinates; all synthetic or generalized. |
-| **CARE — Ethics** | Guarantees no test inadvertently reveals protected information. |
+Includes:
 
-Governance reference:
+- Archaeological clusters (synthesized)  
+- Tribal territory generalization  
+- Fuzzed coordinate sets with secure noise  
+- Sovereignty-buffer polygons  
+- Restricted area examples (block-only)  
+
+### Masking Architecture
+
+```mermaid
+flowchart TD
+    M1[Fixture Geometry] --> M2[CARE Label Lookup]
+    M2 --> M3[H3 Generalization]
+    M3 --> M4[Fuzz Engine]
+    M4 --> M5[Sovereignty Buffer]
+    M5 --> M6[Masked Output Reference]
+```
+
+---
+
+## 4️⃣ sample_projection_mismatch.json  
+Tests projection fallback + CRS compatibility behavior.
+
+Includes:
+
+- Deprecated CRS IDs  
+- Unknown EPSG codes  
+- Custom Kansas projections  
+- Known → fallback mapping cases  
+
+### Architecture
+
+```mermaid
+flowchart LR
+    P1[CRS Fixture] --> P2[Projection Test Engine]
+    P2 --> P3[Fallback CRS]
+    P3 --> P4[Topology Validation]
+```
+
+---
+
+## 5️⃣ sample_temporal_bands.json  
+Predictive temporal bands for SSP 2030–2100 scenario testing.
+
+Includes:
+
+- drought risk windows  
+- hydrology shift intervals  
+- ecological succession timelines  
+- uncertainty bands  
+
+### Temporal Architecture
+
+```mermaid
+flowchart LR
+    T1[Temporal Fixture] --> T2[Timeline Aggregation Tests]
+    T2 --> T3[Predictive Overlay Tests]
+```
+
+---
+
+## 6️⃣ metadata.json  
+Defines:
+
+- fixture set version  
+- provenance  
+- checksums  
+- care_label distribution  
+- schema compatibility  
+- telemetry fields  
+- governance updates  
+
+### Architecture
+
+```mermaid
+flowchart TD
+    MD1[metadata.json] --> MD2[Fixture Validator]
+    MD2 --> MD3[Governance Ledger]
+    MD2 --> MD4[Telemetry Export]
+```
+
+---
+
+# 🔐 FAIR+CARE Governance (Diamond⁹ Ω)
+
+| Requirement | Implementation |
+|------------|----------------|
+| No sensitive coordinates | All fixtures synthetic or generalized; never real heritage data. |
+| CARE masking | H3 generalization + fuzzing applied to all sensitive fixtures. |
+| Sovereignty | Fixtures respect tribal territory boundaries (synthetic representations). |
+| Provenance | metadata.json records lineage, reviewer approvals, checksum. |
+| Ethics | No fixture can expose sensitive geometries in raw form. |
+| Findable | All fixtures listed in metadata.json w/ stable IDs. |
+| Interoperable | GeoJSON + STAC-like metadata + CRS correctness guaranteed. |
+| Reusable | Deterministic fixture outputs used across QA pipelines. |
+
+Governance ledger:
 
 ```
 ../../../../../docs/reports/audit/web-geospatial-fixtures-ledger.json
@@ -133,75 +247,85 @@ Governance reference:
 
 ---
 
-## 📡 Telemetry Integration
+# 📡 Telemetry Integration
 
-Every fixture load registers metrics:
+Fixtures emit telemetry through:
 
-- `fixture_load_time_ms`  
-- `masking_case_evaluations`  
-- `crs_mismatch_triggered`  
-- `raster_bounds_checks`  
-- `geojson_validation_passed`  
+- `fixture_load_ms`  
+- `masking_case_eval_count`  
+- `projection_conflict_events`  
+- `extent_calc_accuracy`  
+- `temporal_band_validation`  
 
-Telemetry exported via:
+Telemetry destination:
 
 ```
-../../../../../releases/v10.3.0/focus-telemetry.json
+../../../../../releases/v10.3.2/focus-telemetry.json
 ```
 
 ---
 
-## 🧪 CI Validation Rules
+# ⚙️ CI Validation — MCP-DL v6.3
 
-CI enforces:
+CI ensures:
 
-- JSON Schema correctness  
-- CRS validity in `sample_projection_mismatch.json`  
-- No sensitive coordinates (automated H3-based scan)  
-- Raster-bound correctness  
-- Predictive temporal alignment where relevant  
-- All fixtures checksum-verified  
+- JSON Schema validity (per-file schemas)  
+- CRS validity via projectionHints engine  
+- All masking fixture geometries fully CARE-safe  
+- Raster-bound data consistent and correct  
+- Predictive temporal bands align with STAC datetime ranges  
+- No fixture contains sensitive or real-world coordinates  
+- Fixtures checksum-verified  
 
-Any violations block merge.
+Validation tools:
+
+- `schemaGuards.ts`  
+- CARE governance tests  
+- STAC metadata validators  
+- A11y symbology contrast checks  
+
+Any failure → merge blocked.
 
 ---
 
-## 🧾 Example Fixture Metadata Entry
+# 🧾 Example Fixture Metadata Record
 
-~~~~~json
+```json
 {
-  "fixture_id": "geospatial_fixtures_v10.3.1",
+  "fixture_id": "geospatial_fixtures_v10.3.2",
   "files": [
     "sample_geojson.json",
     "sample_raster_bounds.json",
     "sample_masking_cases.json",
-    "sample_projection_mismatch.json"
+    "sample_projection_mismatch.json",
+    "sample_temporal_bands.json"
   ],
+  "schema_valid": true,
   "checksum_verified": true,
   "care_compliant": true,
-  "schema_valid": true,
-  "timestamp": "2025-11-13T20:55:00Z",
+  "temporal_alignment": "verified",
+  "timestamp": "2025-11-14T08:22:00Z",
   "governance_ref": "docs/reports/audit/web-geospatial-fixtures-ledger.json"
 }
-~~~~~
+```
 
 ---
 
-## 🕰️ Version History
+# 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---------|--------|--------|---------|
-| v10.3.1 | 2025-11-13 | Web Geospatial Team | Initial v10 fixture suite; validated synthetic datasets; CARE masking v3; CRS invalidation tests. |
+| Version | Date | Summary |
+|--------|--------|---------|
+| v10.3.2 | 2025-11-14 | Complete deep architecture rebuild; added temporal, raster, CRS, governance & telemetry fixtures; aligned with all v10.3.2 specs. |
+| v10.3.1 | 2025-11-13 | Previous version. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Geospatial Fixtures**  
-Deterministic Testing × Ethical Redaction × Provenance Integrity  
+**Kansas Frontier Matrix — Geospatial Fixture Architecture**  
+📦 Deterministic Fixtures · 🧪 Ethical Testing · 🔐 CARE-Compliant · 🔗 Provenance Accurate  
 © 2025 Kansas Frontier Matrix — MIT License  
 
 [Back to Test Suite](../README.md)
 
 </div>
-
