@@ -1,14 +1,14 @@
 ---
 title: "🌾 Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
+version: "v10.3.3"
+last_updated: "2025-11-15"
 review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "releases/v10.3.2/manifest.zip"
+sbom_ref: "releases/v10.3.3/sbom.spdx.json"
+manifest_ref: "releases/v10.3.3/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v10.3.2/focus-telemetry.json"
+telemetry_ref: "releases/v10.3.3/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/system-architecture-v2.json"
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
@@ -21,7 +21,7 @@ mcp_version: "MCP-DL v6.3"
 `README.md`
 
 **Purpose:**  
-Provide the definitive entrypoint for the Kansas Frontier Matrix (KFM): an open-source, FAIR+CARE–certified, semantically enriched, ontology-driven geospatial system integrating Kansas history, culture, ecology, hydrology, climate, paleolandscapes, and predictive futures under Diamond⁹ Ω / Crown∞Ω governance.
+Define the official, MCP-DL v6.3–compliant entrypoint for the Kansas Frontier Matrix (KFM): a Diamond⁹ Ω / Crown∞Ω certified, FAIR+CARE-aligned, ontology-driven geospatial AI system unifying Kansas’s cultural heritage, ecological history, climate records, land deeds, paleoenvironments, archaeology, and future projections into a reproducible, lineage-secured, open-science knowledge graph.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](docs/README.md)
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](docs/standards/faircare.md)
@@ -37,111 +37,85 @@ Provide the definitive entrypoint for the Kansas Frontier Matrix (KFM): an open-
 
 ## 📘 Overview
 
-The **Kansas Frontier Matrix** is a *living digital atlas* combining geospatial knowledge graphs, AI reasoning, FAIR+CARE governance, predictive modeling, and historical cartography within a fully reproducible, transparent, standards-based open data ecosystem.
+The **Kansas Frontier Matrix (KFM)** is a *living, multi-era digital atlas* combining:
 
-KFM fuses:
+- Semantic knowledge graphs  
+- AI-assisted reasoning (Focus Mode v2.5+)  
+- FAIR+CARE governance  
+- GeoSPARQL-based spatial intelligence  
+- OWL-Time temporal modeling  
+- Predictive modeling for 2030–2100  
+- Historical + archaeological + geological deep-time layers  
+- Full operational integrity (WAL, retry, rollback, lineage, hotfix)
 
-- Kansas historical archives  
-- Indigenous knowledge & treaty boundaries  
-- Ecological, hydrological, geological, and climatological datasets  
-- Archaeology & cultural heritage datasets  
-- Remote-sensing rasters & point clouds  
-- Environmental futures modeling  
-- AI-generated narratives & Story Nodes  
-- Diamond⁹ Ω governance, ethics, and sustainability systems  
-
-All data passes through:
-
-- **LangGraph DAG pipelines**  
-- **AI reasoning / explainability**  
-- **FAIR+CARE audits**  
-- **Lineage + WAL + Rollback frameworks**  
-- **STAC/DCAT metadata exports**  
-- **Knowledge Graph integration**  
-- **Telemetry + sustainability metrics**
+It synthesizes heterogeneous datasets into one reproducible, governed, transparent system.
 
 ---
 
-# 🧬 KFM Core Guarantees (Diamond⁹ Ω Required)
+# 🧬 Core Guarantees (Diamond⁹ Ω)
 
 | Guarantee | Description |
 |----------|-------------|
-| **Reproducible** | Every dataset, model, ETL run, and narrative has a provenance chain. |
-| **Deterministic** | All pipelines (ETL→AI→Validation→Governance) produce identical outputs given the same inputs. |
-| **Reversible** | WAL, Lineage, Hotfix, Retry, and Rollback ensure all operations can be undone. |
-| **Auditable** | Immutable governance ledger + SBOM + checksum registry. |
-| **FAIR+CARE** | Ethical, inclusive, sovereignty-first stewardship of data. |
-| **Sustainable** | ISO 50001 energy & ISO 14064 carbon monitoring per pipeline. |
-| **Interoperable** | STAC 1.0, DCAT 3.0, CIDOC-CRM, GeoSPARQL, OWL-Time, PROV-O. |
-| **Secure** | Supply-chain safeguards via SBOM, SLSA, signed manifests. |
+| **Reproducibility** | Deterministic pipelines with full provenance & dataset fingerprints. |
+| **Reversibility** | WAL, snapshot, rollback, hotfix with immutable audit trails. |
+| **FAIR+CARE Compliance** | Ethical, culturally respectful data stewardship. |
+| **Sustainability** | ISO 50001 energy tracking, ISO 14064 carbon telemetry. |
+| **Governance** | Diamond⁹ Ω / Crown∞Ω governance chain ensures trust & safety. |
+| **Open Standards** | STAC 1.0, DCAT 3.0, OWL-Time, CIDOC-CRM, PROV-O. |
+| **Security** | SBOM (SPDX), SLSA supply-chain hardening, signed manifests. |
 
 ---
 
-# 🏗️ System Architecture (v10.3.2)
+# 🏗️ System Architecture (v10.3.3)
 
 ```mermaid
 flowchart TD
-  A[External Data<br/>NOAA · USGS · Kansas Historical Society · Tribal Nations · Sensors] --> B[LangGraph Pipelines<br/>ETL · OCR · NER · RasterOps · QAQC]
-  B --> C[Knowledge Graph<br/>Neo4j · CIDOC CRM · GeoSPARQL · OWL Time · PROV O]
-  C --> D[APIs<br/>FastAPI · GraphQL · Auth · GovHooks v3]
-  D --> E[Frontend<br/>React · MapLibre · Cesium 3D · Focus Mode v2 5]
-  B --> F[Governance Stack<br/>FAIRCARE · SBOM · SLSA · Ledger v4]
+  A[External Data<br/>NOAA · USGS · Tribal Nations · KHS · Sensors] --> B[LangGraph DAG Pipelines<br/>ETL · OCR · NER · RasterOps · QAQC]
+  B --> C[Semantic Knowledge Graph<br/>Neo4j · CIDOC CRM · GeoSPARQL · OWL Time · PROV O]
+  C --> D[API Layer<br/>FastAPI · GraphQL · Auth · Governance Webhooks]
+  D --> E[Frontend<br/>React · MapLibre · Cesium 3D · Focus Mode v2.5]
+  B --> F[Governance Core<br/>FAIR+CARE · SBOM · SLSA · Ledger v4 · Energy/Carbon Telemetry]
   C --> F
   D --> F
+````
+
+---
+
+# ⚙️ Operational Safety & Control Plane
+
+KFM v10.3.3 enforces deterministic, reversible operations:
+
+* **WAL (Write-Ahead Log)** – Every mutation logged pre-execution.
+* **Retries** – Checkpoint-driven automatic recovery.
+* **Rollback** – Graph + asset snapshot restoration.
+* **Hotfix** – Surgical reversible patches under governance.
+* **Lineage** – Full derivation tree across all datasets, models, and narratives.
+* **Ops Tests** – Deterministic system-wide validation.
+
+```mermaid
+flowchart LR
+  O1[WAL] --> O2[Retry] --> O3[Rollback] --> O4[Hotfix] --> O5[Lineage] --> O6[Ops Tests]
 ```
 
 ---
 
-# ⚙️ Operational Control Plane (Required)
-
-KFM v10.3.2 includes a **full operational safety layer**:
-
-- **WAL — Write-Ahead Log**  
-  Guarantees every mutation is logged before execution.
-
-- **Retries**  
-  Checkpoint-based recovery system.
-
-- **Rollback**  
-  Diamond-grade snapshot + restoration workflows.
-
-- **Hotfix**  
-  Surgical, reversible corrections under governance oversight.
-
-- **Lineage**  
-  Immutable derivation graph across all datasets, models, and operations.
-
-- **Ops Tests**  
-  Deterministic end-to-end validation of operational integrity.
+# 🔗 End-to-End Provenance
 
 ```mermaid
 flowchart LR
-  O1[WAL] --> O2[Retry]
-  O2 --> O3[Rollback]
-  O3 --> O4[Hotfix]
-  O4 --> O5[Lineage]
-  O5 --> O6[Ops Tests]
-```
-
----
-
-# 🔗 Provenance Chain (Required)
-
-```mermaid
-flowchart LR
-    A[Data Source] --> B[ETL Transform]
-    B --> C[AI Reasoning]
-    C --> D[Validation]
+    A[Data Source] --> B[ETL Pipeline]
+    B --> C[AI Reasoning & NER]
+    C --> D[Validation & QAQC]
     D --> E[Governance Ledger]
-    E --> F[STAC DCAT Catalogs]
-    F --> G[Focus Mode]
+    E --> F[STAC/DCAT Catalogs]
+    F --> G[Focus Mode v2.5]
 ```
 
-Provenance is also mirrored via PROV-O in the Neo4j graph.
+All provenance is duplicated into PROV-O classes within Neo4j.
 
 ---
 
-# 🧱 Repository Layout (v10.3.2)
+# 🧱 Repository Layout
 
 ```text
 KansasFrontierMatrix/
@@ -165,79 +139,76 @@ KansasFrontierMatrix/
 
 ---
 
-# 🌐 Ontology & Metadata Standards
+# 🌐 Ontology & Metadata Stack
 
-| Standard | Purpose |
-|---------|---------|
-| **CIDOC-CRM** | Cultural, historical, event modeling |
-| **GeoSPARQL** | Geometric & topological reasoning |
-| **OWL-Time** | Temporal intervals & instants |
-| **PROV-O** | Lineage & derivation structures |
-| **STAC 1.0** | Asset-level geospatial metadata |
-| **DCAT 3.0** | Dataset-level catalogs |
-| **JSON-LD** | Semantic modeling |
-| **SPDX + SLSA** | Supply-chain trust & security |
-
----
-
-# 🧭 Data Source Taxonomy (Required)
-
-| Domain | Examples | License | Coverage | CARE Risk |
-|--------|----------|---------|----------|-----------|
-| Historical | KHS archives, newspapers | PD/CC-BY | 1800s–2000s | Medium |
-| Tribal | Tribal nations, oral histories | CARE | Multi-generational | High |
-| Climate | NOAA, Daymet | PD | 1850–present | Low |
-| Hydrology | USGS NWIS | PD | 1890–present | Low |
-| Ecology | GBIF, eBird | CC0/CC-BY | 1800–present | Medium |
-| Hazards | NOAA Storm Events | PD | 1950–present | Low |
-| Geology | KGS, USGS | PD | Millions of years | Low |
-| Sensors | Mesonet, USGS real-time | PD | Live | Low |
-| Rasters | USGS, NAIP, Landsat | PD | 1930–present | Low |
+| Standard        | Role                           |
+| --------------- | ------------------------------ |
+| **CIDOC-CRM**   | Heritage + event modeling      |
+| **GeoSPARQL**   | Spatial reasoning & topologies |
+| **OWL-Time**    | Temporal intervals & instants  |
+| **PROV-O**      | Derivation & lineage           |
+| **STAC 1.0**    | Geospatial asset metadata      |
+| **DCAT 3.0**    | Dataset catalog metadata       |
+| **JSON-LD**     | Semantic context for entities  |
+| **SPDX + SLSA** | Supply-chain trust             |
 
 ---
 
-# 🧠 AI Model Governance (Required)
+# 🧭 Data Domains
 
-Includes:
-
-- Model Cards (training data, metrics, limitations)  
-- Dataset sourcing review  
-- Drift detection (ai_drift_monitor.py)  
-- Bias audits (ai_bias_detection.py)  
-- Explainability (SHAP, LIME)  
-- CARE and ethics filters  
-- Provenance of training runs stored in lineage  
+| Domain     | Examples                         | License         |
+| ---------- | -------------------------------- | --------------- |
+| Historical | KHS, newspapers, treaties        | PD/CC-BY        |
+| Tribal     | Oral histories, territorial maps | CARE-restricted |
+| Climate    | NOAA, Daymet                     | PD              |
+| Hydrology  | NWIS, KGS wells                  | PD              |
+| Ecology    | GBIF, eBird                      | CC0/CC-BY       |
+| Hazards    | NOAA Storm Events                | PD              |
+| Geology    | USGS, KGS                        | PD              |
+| Sensors    | Mesonet, USGS real-time          | PD              |
+| Rasters    | NAIP, Landsat                    | PD              |
 
 ---
 
-# 🧩 STAC/DCAT Versioning Model (Required)
+# 🧠 AI Model Governance (v10.3.3)
 
-- STAC Items contain lineage references, DOIs, checksums, and WAL IDs.  
-- STAC Collections summarize version history and temporal coverage.  
-- DCAT Dataset → Distribution mapping ensures public catalog discoverability.  
-- Versioning follows SemVer + dataset-specific lineage IDs.  
+* Full model cards
+* Dataset provenance review
+* SHAP + LIME explainability
+* Drift detection (ai_drift_monitor.py)
+* Bias audits (ai_bias_detection.py)
+* Narrative safety filters (CARE-aligned)
+* Lineage tracking for training runs
+
+---
+
+# 🧩 STAC/DCAT Versioning Model
 
 ```mermaid
 flowchart LR
-  S1[STAC Item] --> S2[STAC Collection]
-  S2 --> D1[DCAT Dataset]
-  D1 --> D2[DCAT Distribution]
+  S1[STAC Item] --> S2[STAC Collection] --> D1[DCAT Dataset] --> D2[DCAT Distribution]
 ```
+
+Each STAC Item contains:
+
+* DOIs
+* Checksums
+* WAL IDs
+* Spatial/temporal footprints
+* Lineage hashes
 
 ---
 
-# 📚 Glossary (Required)
+# 📚 Glossary
 
-| Term | Definition |
-|------|------------|
-| **Story Node** | Narrative + spatial + temporal knowledge unit used in Focus Mode. |
-| **Focus Mode** | Entity-centric reasoning, summarization, and map alignment. |
-| **WAL** | Write-Ahead Log for reversible operations. |
-| **Rollback** | Snapshot-driven state restoration. |
-| **Lineage** | Immutable derivation chain for all artifacts. |
-| **STAC** | Geospatial asset metadata standard. |
-| **DCAT** | Dataset catalog standard. |
-| **Diamond⁹ Ω** | Highest governance trust tier. |
+| Term           | Definition                                              |
+| -------------- | ------------------------------------------------------- |
+| **Story Node** | Spatial + temporal + narrative atom used in Focus Mode. |
+| **Focus Mode** | Entity-centric reasoning and semantic exploration.      |
+| **WAL**        | Write-Ahead Log for deterministic mutation management.  |
+| **Rollback**   | Snapshot-based restoration.                             |
+| **Lineage**    | Immutable derivation records.                           |
+| **STAC/DCAT**  | Metadata and discovery frameworks.                      |
 
 ---
 
@@ -245,7 +216,7 @@ flowchart LR
 
 ```bash
 git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
-cd Kansas-Frontier-Matrix
+cd KansasFrontierMatrix
 docker compose up --build
 ```
 
@@ -257,89 +228,50 @@ uvicorn src.api.main:app --reload &
 npm --prefix web start
 ```
 
-UI: http://localhost:3000  
-API: http://localhost:8000/docs  
+UI: [http://localhost:3000](http://localhost:3000)
+API: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
 # 🤝 Contributing (MCP-DL v6.3)
-
-1. Documentation-first workflow.  
-2. Run validations:
 
 ```bash
 make validate
 make test
 ```
 
-3. Commit conventions follow MCP-DL.  
-4. Tribal + high-sensitivity datasets require CARE review.  
-5. Governance gating applies to all new datasets or models.
+* Documentation-first
+* Semantic commits
+* CARE review for sensitive datasets
+* Governance gating for all new models
 
 ---
 
 # ⚖️ Licensing
 
-| Component | License |
-|----------|---------|
-| Code | MIT |
-| Documentation | CC-BY 4.0 |
-| Data | Dataset-specific (PD, CC0, CC-BY, CARE) |
-| Security | SPDX + SLSA |
+| Component | License          |
+| --------- | ---------------- |
+| Code      | MIT              |
+| Docs      | CC-BY 4.0        |
+| Data      | Dataset-specific |
+| Security  | SPDX + SLSA      |
 
 ---
 
-# 🌱 Sustainability (ISO 50001 + 14064)
+# 🌱 Sustainability (ISO 50001 · ISO 14064)
 
-- Energy/run: **0.66 Wh**  
-- Carbon: **0.07 gCO₂e**  
-- RE100-certified renewable power  
-- Telemetry recorded in `releases/v10.3.2/focus-telemetry.json`
-
----
-
-# 🧮 Release & Versioning Policy (Required)
-
-- Follows SemVer (major.minor.patch)  
-- Quarterly feature releases  
-- Each release includes:  
-  - SBOM (SPDX)  
-  - Manifest (zip)  
-  - Telemetry snapshot  
-  - Lineage chain export  
-  - FAIR+CARE assessment  
-  - Governance Council review  
-
----
-
-# 🧰 FAQ
-
-**Q:** Is KFM only Kansas-focused?  
-**A:** Yes, but fully extensible to any region.
-
-**Q:** Are tribal datasets public?  
-**A:** No — governed by CARE rules and access-controlled.
-
-**Q:** Does KFM use AI to generate historical facts?  
-**A:** No; AI summarizes, contextualizes, and cross-links references.
+* Energy/run: **0.66 Wh**
+* Carbon: **0.07 gCO₂e**
+* All telemetry logged under `releases/v10.3.3/focus-telemetry.json`
 
 ---
 
 # 🕰️ Version History
 
-| Version | Date | Notes |
-|--------|-------|-------|
-| **v10.3.2** | 2025-11-14 | Complete rebuild; added all required sections; integrated WAL, lineage, rollback, retries; upgraded Focus Mode v2.5; added predictive futures engine. |
-| **v10.3.1** | 2025-11-13 | Major rewrite with architecture upgrades. |
-| **v10.2.2** | 2025-11-12 | Telemetry and FAIR+CARE improvements. |
-| **v10.0.0** | 2025-11-09 | Initial v10 unified architecture. |
-
----
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT License**  
-Diamond⁹ Ω / Crown∞Ω Certified · FAIR+CARE Compliant · MCP-DL v6.3 Reproducibility Framework  
-[Documentation](docs/README.md) · [Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+| Version     | Date       | Notes                                                                         |
+| ----------- | ---------- | ----------------------------------------------------------------------------- |
+| **v10.3.३** | 2025-11-15 | Updated README formatting, metadata, lineage details, Focus v2.5 integration. |
+| **v10.3.2** | 2025-11-14 | Added WAL, rollback, retries, predictive futures engine.                      |
+| **v10.3.1** | 2025-11-13 | Architecture upgrades.                                                        |
+| **v10.2.2** | 2025-11-12 | Telemetry & FAIR+CARE refinements.                                            |
+| **v10.0.0** | 2025-11-   |                                                                               |
