@@ -1,14 +1,14 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — Geospatial Pipeline Configurations (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗺️ Kansas Frontier Matrix — Geospatial Pipeline Configuration Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/geospatial/configs/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-geospatial-configs-v1.json"
+sbom_ref: "../../../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-geospatial-configs-v2.json"
 governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -16,224 +16,316 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — Geospatial Pipeline Configurations**  
+# 🗺️ **Kansas Frontier Matrix — Geospatial Pipeline Configuration Architecture**  
 `web/src/pipelines/geospatial/configs/README.md`
 
 **Purpose:**  
-Define the **client-side geospatial configuration registry** for the Kansas Frontier Matrix (KFM) Web Platform.  
-These configuration assets support ethical, deterministic, and FAIR+CARE-governed rendering of geospatial layers in **MapLibre**, **Cesium**, and **timeline-based** visualizations.  
-All configs enforce **MCP-DL v6.3**, **WCAG 2.1 AA**, **GeoJSON/COG standards**, and **CARE protective masking**.
+Provide the **full deep-architecture specification** for the geospatial configuration subsystem of the Kansas Frontier Matrix (KFM) web platform.  
+These configurations govern *how the browser interprets, styles, masks, projects, filters, and time-aligns* geospatial layers sourced from STAC/DCAT, Neo4j, and predictive scenario engines.  
+All configs comply with **FAIR+CARE**, **WCAG 2.1 AA**, **MCP-DL v6.3**, **GeoJSON/COG/TopoJSON standards**, and the **Diamond⁹ Ω ethical governance framework**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial-orange)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial-orange)]()
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()
 [![License](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-This directory provides **configuration objects** used by the Web Geospatial Pipeline (`web/src/pipelines/geospatial/*`) to normalize:
+The **Geospatial Configuration Subsystem** defines:
 
-- **CRS / projection mappings**
-- **Layer metadata and styling rules**
-- **CARE-governed masking definitions (H3 generalization, redaction zones)**
-- **Elevation, terrain, and DEM-blending profiles**
-- **Raster/Vector ingestion parameters for STAC/DCAT-backed assets**
-- **Temporal bands for predictive overlays (2030–2100)**
+- CRS profiles + projection fallbacks  
+- Layer metadata + ingestion rules  
+- CARE-governed masking templates (H3 r7–r9, buffers, fuzzing)  
+- DEM & terrain rendering profiles for Cesium  
+- Symbology tokens for WCAG-compliant map legends  
+- Temporal predictive bands (2030–2100 SSP)  
+- Metadata schema for governance + lineage  
 
-These configurations define *how the web-tier transforms raw geospatial metadata into safe, accessible, consistent map layers*.
+These configs serve as the **source of truth** for all map, timeline, Focus Mode, and Story Node geospatial display in the web UI.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Authoritative v10.3.2)
 
-~~~~~text
+```text
 web/src/pipelines/geospatial/configs/
-├── README.md                       # This file
+├── README.md
 │
-├── projections.json                # CRS definitions and Kansas-specific projection profiles
-├── layers.json                     # Layer registry (hydrology, climate, hazards, treaties, ecology)
-├── masking.json                    # CARE-governed redaction masks (H3, buffers, coordinate rules)
-├── terrain.json                    # DEM blending rules, COG elevation settings, Cesium terrain profiles
-├── symbology.json                  # Legend & style tokens for map layers
-├── temporal_bands.json             # Predictive time windows (2030–2100 SSPs, drought cycles)
-└── metadata.json                   # Telemetry, governance, and configuration lineage
-~~~~~
+├── projections.json                # CRS mappings + preferred Kansas CRSes
+├── layers.json                     # Layer registry (hydro, climate, hazards, ecology, treaties)
+├── masking.json                    # CARE masking definitions (H3, buffers, fuzzing)
+├── terrain.json                    # Cesium DEM profiles + elevation rules
+├── symbology.json                  # Color/legend/style tokens for MapLibre/Cesium
+├── temporal_bands.json             # Predictive time windows (2030–2100 SSPs)
+└── metadata.json                   # Config lineage, governance, telemetry info
+```
 
-Each JSON file is validated in CI using schema guards and FAIR+CARE governance rules.
+All JSON files must pass **schema validation**, **governance checks**, and **lineage stamping**.
 
 ---
 
-## 🧭 Configuration Architecture (Indented Mermaid)
+# 🧩 Configuration Architecture (Deep Specification)
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["STAC/DCAT Metadata"] --> B["Config Loader<br/>(projections · layers · masking)"]
-  B --> C["Geospatial Pipeline<br/>(focus · stac · layers)"]
-  C --> D["Map/Terrain Engine<br/>(MapLibre · Cesium)"]
-  D --> E["Focus Mode / StoryNodes<br/>Temporal + Spatial Sync"]
-  E --> F["Telemetry + Governance Logs"]
-~~~~~
+    A[STAC DCAT Metadata] --> B[Config Loader<br/>projections · layers · masking · terrain · symbology · temporal]
+    B --> C[Geospatial Pipelines<br/>focus · stac · entity · timeline · layers]
+    C --> D[Render Engines<br/>MapLibre 2D · Cesium 3D]
+    D --> E[Focus Mode · Story Nodes · Timeline Views]
+    E --> F[Telemetry + Governance Logs]
+```
 
 ---
 
-## 🧩 Configuration Modules
+# 🔷 1. projections.json — CRS & Projection Lineage
 
-### **1. projections.json**
-Defines CRS mappings for all supported layers.
+This file controls **all CRS logic** for the web.
 
-**Includes:**
-- EPSG codes for Kansas (4326, 3857, 26914, custom GRIDs)  
-- Fallback CRS for legacy historic datasets  
+### Contents
+- EPSG 4326, 3857, 26914 (Kansas UTM Zone 14N)  
+- Custom Kansas grids (historic cartography)  
 - Cesium terrain projection hints  
-- Reprojection safety flags
+- Deprecated CRS warning table  
+- PROJ-derived accuracy metadata  
 
----
+### CRS Lineage Architecture
 
-### **2. layers.json**
-Defines metadata for all web-facing layer groups.
-
-**Examples:**
-- `hydrology_streamflow`, `climate_anomalies`, `treaty_boundaries`, `ecology_biomes`, `historic_plats`  
-- Attribution tokens  
-- COG/GeoJSON ingestion rules  
-- Recommended opacity & elevation settings  
-- Category mapping to legends
-
----
-
-### **3. masking.json**
-Implements CARE-governed geospatial protections.
-
-**Features:**
-- H3 r7/r8 generalization for archaeology & heritage  
-- Buffer-based coordinate redaction  
-- Sovereignty boundary filters  
-- UI-level masking cues (passed to Focus Mode & MapView)
-
-Outputs feed both:
-
-```
-web/src/hooks/useGovernance.ts
-web/src/pipelines/layerPipeline.ts
+```mermaid
+flowchart LR
+    P1[Input CRS Tag] --> P2[CRS Lookup Table]
+    P2 --> P3[Fallback Resolver]
+    P3 --> P4[Projection Hint Builder]
+    P4 --> P5[Cesium MapLibre Engine]
 ```
 
----
-
-### **4. terrain.json**
-Defines topographic + 3D rendering parameters.
-
-**Contains:**
-- DEM blending presets (LiDAR + historic contour stacks)  
-- Cesium terrain provider configurations  
-- Slope/relief exaggeration rules  
-- Motion-safe elevation transitions
+### Rules
+- If CRS unsupported → return **fallback CRS**  
+- If CRS deprecated → UI displays warning  
+- All reprojected assets inherit:
+  - `projjson`
+  - `transform_chain`
+  - `accuracy_notes`
 
 ---
 
-### **5. symbology.json**
-Defines legend and style tokens for all layers.
+# 🔷 2. layers.json — Layer Registry & Metadata Model
 
-- Color scales (WCAG-checked)
-- Iconography tokens for map markers  
-- Classification rules (quantile, natural breaks, thresholds)  
+Defines **all map layers**, grouped by domain:
+
+- hydrology  
+- climate  
+- hazards  
+- ecology  
+- archaeology  
+- treaties  
+- historic1 (plats)  
+- historic2 (surveys)  
+
+### Layer Metadata Fields
+- `id`  
+- `title`  
+- `description`  
+- `source_stac`  
+- `asset_type` (raster, vector, COG, tilejson)  
+- `default_opacity`  
+- `legend_style_key`  
+- `care_label`  
+- `projection_profile`  
+
+### Architecture
+
+```mermaid
+flowchart LR
+    L1[layers.json] --> L2[Layer Pipeline]
+    L2 --> L3[MapLibre Style System]
+    L2 --> L4[Cesium Terrain Overlay]
+    L2 --> L5[Focus Mode Spatial Context]
+```
+
+---
+
+# 🔷 3. masking.json — CARE Masking Profiles
+
+Defines **all sovereignty + cultural protection rules** for browser rendering.
+
+### Features
+- H3 r7/r8/r9 generalization levels  
+- Fuzzing (0–500m secure noise)  
+- Buffer expansion for sovereignty territories  
+- Mask replacement geometries  
+- Block-list for extreme sensitivity  
+
+### Masking Architecture
+
+```mermaid
+flowchart TD
+    M1[Geometry Input] --> M2[CARE Label Check]
+    M2 --> M3[H3 Generalize]
+    M3 --> M4[Fuzz Coordinates]
+    M4 --> M5[Polygon Expand]
+    M5 --> M6[Masked Output]
+```
+
+### Governance Rules
+- All **restricted** geometries → **block or envelope**  
+- All **sensitive** geometries → **generalize + fuzz**  
+- All **public** geometries → full resolution  
+
+---
+
+# 🔷 4. terrain.json — DEM Profiles & Elevation Rules
+
+Defines 3D elevation/rendering parameters used by Cesium:
+
+- DEM blending  
+- historic DEM → modern DEM fusion  
+- height exaggeration  
+- slope shading  
+- motion-safe terrain transitions  
+
+### Terrain Engine Architecture
+
+```mermaid
+flowchart TD
+    T1[DEM Profiles] --> T2[Terrain Provider Config]
+    T2 --> T3[Cesium Heightmap Engine]
+    T3 --> T4[Elevation Transition Rules]
+```
+
+---
+
+# 🔷 5. symbology.json — WCAG-Compliant Legend & Style Tokens
+
+Includes:
+
+- Colorblind-safe palettes  
+- Symbology for hydrology, hazards, biomes, treaties, archaeological sites  
+- Responsive legend templates  
 - Pattern fills for predictive bands  
-- CARE-warning symbol mappings
+- CARE warning icons  
+
+### Symbology Architecture
+
+```mermaid
+flowchart LR
+    S1[symbology.json] --> S2[Legend Builder]
+    S2 --> S3[MapLibre Styles]
+    S2 --> S4[Cesium Material Layers]
+```
 
 ---
 
-### **6. temporal_bands.json**
-Defines predictive and historical windows used in timeline + Focus Mode.
+# 🔷 6. temporal_bands.json — Predictive Time Windows (2030–2100)
+
+Defines future environmental scenario windows for the timeline & Focus Mode.
 
 Examples:
-- 2030–2050 drought projections  
-- 2050–2100 hydrology shift windows  
-- Historic migration windows (1854–1890)  
-- Paleo-ecological overlays (deep time layers using Cesium)
+- Hydrology shift: 2030–2050  
+- Drought risk: 2040–2080  
+- Vegetation succession: 2060–2100  
+- Multi-band uncertainty windows  
+
+### Temporal Architecture
+
+```mermaid
+flowchart LR
+    TB1[Temporal Bands] --> TB2[Timeline Pipeline]
+    TB2 --> TB3[Temporal Overlay State]
+    TB3 --> TB4[Map and StoryNode Integration]
+```
 
 ---
 
-### **7. metadata.json**
+# 🔷 7. metadata.json — Config Lineage & Governance
+
 Tracks:
 
-- Version + checksum  
-- Provenance  
-- Schema compatibility  
-- Telemetry fields  
-- Governance enforcement history
+- `version`  
+- `checksum`  
+- `schema_version`  
+- `changed_fields`  
+- `care_label_distribution`  
+- `governance_events`  
+- `telemetry_fields`  
+- `lineage_refs`  
 
-Example reference:
+Lineage is PROV-O aligned.
+
+---
+
+# 🔐 FAIR+CARE Governance
+
+| Principle | Implementation |
+|----------|----------------|
+| **Authority to Control** | masking.json enforces sovereignty-aligned masking. |
+| **Ethics** | Restricted coordinates never rendered. |
+| **Findable** | All configs indexed in metadata.json + telemetry. |
+| **Interoperable** | CRS + Stylistic HPC tokens match STAC/DCAT standards. |
+| **Reusable** | Stable JSON schemas + versioning patterns. |
+
+Governance ledger:
 
 ```
-docs/reports/audit/web-geospatial-config-ledger.json
+../../../../../docs/reports/audit/web-geospatial-config-ledger.json
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Compliance
+# 📡 Telemetry & Sustainability
 
-| Requirement | Implementation |
-|------------|----------------|
-| **Findable** | All config entries indexed in metadata.json + telemetry. |
-| **Accessible** | JSON schemas + human-readable docs. |
-| **Interoperable** | CRS/STAC/DCAT interoperability guaranteed. |
-| **Reusable** | Versioned tokens reused across all pipelines. |
-| **CARE – Authority** | Masking.json enforces tribal/heritage governance. |
-| **CARE – Ethics** | Prevents sensitive coordinate disclosure. |
+Scripts and pipelines using these configs emit:
 
----
+- `config_load_ms`  
+- `masking_profile_applied`  
+- `projection_profile_used`  
+- `terrain_profile_loaded`  
+- `symbology_legend_hits`  
 
-## 📡 Telemetry Integration
-
-Values emitted when configs load:
-
-- `config_load_time_ms`  
-- `masking_triggers`  
-- `terrain_profile_applied`  
-- `layer_registry_hits`  
-- `predictive_bands_enabled`  
-
-Telemetry stored in:
+Stored in:
 
 ```
-../../../../../releases/v10.3.0/focus-telemetry.json
+../../../../../releases/v10.3.2/focus-telemetry.json
 ```
 
 ---
 
-## 🧪 CI Validation
+# ⚙️ CI / Validation Requirements
 
 CI ensures:
+- JSON Schema validity  
+- CRS alignment  
+- CARE masking enforcement  
+- WCAG-checked color contrast  
+- Predictive band correctness  
+- Zero breaking changes to config lineage  
 
-- JSON Schema correctness  
-- CRS validity  
-- Token consistency across layers  
-- Masking rules applied before render  
-- Symbology contrast checks ≥ WCAG 2.1 AA  
-- Predictive bands correctly aligned with STAC temporal fields  
-
-Any validation failure → merge blocked.
+Tools involved:
+- schemaGuards  
+- CARE governance tests  
+- STAC/DCAT schema validators  
+- A11y color contrast verifiers  
 
 ---
 
-## 🕰️ Version History
+# 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---------|--------|--------|---------|
-| v10.3.1 | 2025-11-13 | Web Geospatial Team | Initial v10 configs module; added predictive bands + CARE masking v3. |
+| Version | Date | Summary |
+|--------|--------|---------|
+| v10.3.2 | 2025-11-14 | Complete deep-architecture rebuild; CRS lineage, masking engine, terrain profiles, symbology tokens, predictive temporal bands added. |
+| v10.3.1 | 2025-11-13 | Previous version. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Web Geospatial Configurations**  
-Spatial Integrity × Ethical Governance × Predictive Insight  
-© 2025 Kansas Frontier Matrix — MIT License  
+**Kansas Frontier Matrix — Geospatial Config Architecture**  
+🗺️ Spatial Integrity · 🔐 Sovereignty-Aligned Governance · 📡 Telemetry by Design  
+© 2025 Kansas Frontier Matrix — MIT  
 
 [Back to Geospatial Pipelines](../README.md) · [Web Source Index](../../README.md)
 
 </div>
-
