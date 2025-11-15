@@ -1,32 +1,75 @@
 ---
-title: "🧪 Kansas Frontier Matrix — Web Geospatial Test Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧪 Kansas Frontier Matrix — Geospatial Pipeline Tests Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/geospatial/tests/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous / FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-geospatial-tests-v2.json"
+sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-pipelines-geospatial-tests-v1.json"
 governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Test Overview"
+intent: "geospatial-pipeline-tests"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Varies by fixture sensitivity"
+sensitivity_level: "Dataset-dependent"
+public_exposure_risk: "Low"
+indigenous_rights_flag: "Conditional"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: false
+provenance_chain:
+  - "web/src/pipelines/geospatial/tests/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "CreativeWork"
+  owl_time: "TemporalEntity"
+  geosparql: "geo:FeatureCollection"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../../../schemas/json/web-pipelines-geospatial-tests.schema.json"
+shape_schema_ref: "../../../../../schemas/shacl/web-pipelines-geospatial-tests-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-pipelines-geospatial-tests-v10.4.0"
+semantic_document_id: "kfm-doc-web-pipelines-geospatial-tests"
+event_source_id: "ledger:web/src/pipelines/geospatial/tests/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Prohibited (test fixtures only)"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public / Test-only"
+role: "test-overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review required every 12 months"
+sunset_policy: "Superseded upon next geospatial pipeline redesign"
 ---
 
 <div align="center">
 
-# 🧪 **Kansas Frontier Matrix — Web Geospatial Test Architecture**  
+# 🧪 **Kansas Frontier Matrix — Geospatial Pipeline Tests Overview**  
 `web/src/pipelines/geospatial/tests/README.md`
 
 **Purpose:**  
-Define the **complete, deep-architecture, FAIR+CARE-aligned** testing framework for all **client-side geospatial pipelines and scripts** in the Kansas Frontier Matrix (KFM) v10.3.2.  
-This suite enforces deterministic spatial behavior, CARE masking correctness, CRS-hinting safety, predictive temporal accuracy, WebGL rendering fidelity, and MCP-DL reproducibility.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Tested-orange)]()
-[![Status](https://img.shields.io/badge/Status-Validated-success)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+Document the **testing architecture**, responsibilities, fixtures, and governance constraints for the  
+geospatial pipelines test suite — covering footprint loading, temporal filtering, masking/redaction, geometry  
+transforms, layer merging, and spatial telemetry validation.  
+These tests ensure that the geospatial subsystem is deterministic, schema-valid, FAIR+CARE-aligned, sustainable,  
+and ethically safe for rendering and narrative use.
 
 </div>
 
@@ -34,292 +77,205 @@ This suite enforces deterministic spatial behavior, CARE masking correctness, CR
 
 # 📘 Overview
 
-The **Web Geospatial Test Architecture** performs validation across:
+The geospatial pipeline tests verify:
 
-- **Geospatial Scripts**  
-  - clipping, masking, projection hints, blending rules, extent detection  
+- **Correctness** of spatial transformations  
+- **FAIR+CARE compliance** (masking, sovereignty, license visibility)  
+- **Temporal consistency** across TimeContext → Map → Focus Mode  
+- **Governance adherence** for sensitive datasets  
+- **Schema validation** for STAC Items, Story Node v3 geometry bundles, and footprint metadata  
+- **Telemetry accuracy** for spatial interactions  
+- **Determinism** and consistent outputs across runs  
 
-- **Geospatial Pipeline Outputs**  
-  - `layerPipeline`, `stacPipeline`, `timelinePipeline`, `entityPipeline`, `focusPipeline`  
-
-- **UI Spatial Integration**  
-  - MapLibre 2D  
-  - Cesium 3D  
-  - Focus Mode v2.5 spatial overlays  
-  - Timeline geospatial bindings  
-
-- **Ethical Governance**  
-  - H3 masking correctness  
-  - Fuzzing threshold enforcement  
-  - Sovereignty buffers  
-  - Restricted-site blocking  
-
-- **Performance Reproducibility**  
-  - clipping runtime  
-  - masking runtime  
-  - WebGL-safe blending behavior  
-
-All tests pass through **MCP-DL v6.3** reproducibility + FAIR+CARE governance checks.
+No unvalidated, ungoverned, or sensitive geometry may pass through these pipelines without strict testing.
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/pipelines/geospatial/tests/
-├── README.md
+├── README.md                           # This test-suite overview
+├── fixtures/                           # Canonical spatial test bundles (sanitized)
+│   ├── footprints/                     # STAC footprints, GeoJSON polygons, masks
+│   ├── temporal/                       # Time-ranged spatial features
+│   ├── masking/                        # H3 redaction fixtures
+│   ├── geometry/                       # CRS, TopoJSON, simplification cases
+│   └── storynodes/                     # Story Node v3 spatial bundles
 │
-├── test_clipGeoJSON.ts
-├── test_maskCoordinates.ts
-├── test_extentCalculator.ts
-├── test_blendRules.ts
-├── test_projectionHints.ts
+├── unit/                               # Deterministic micro-tests
+│   ├── loadFootprints.test.ts          # Footprint loading + schema guards
+│   ├── temporalFilters.test.ts         # Time slicing + OWL-Time logic
+│   ├── masking.test.ts                 # H3 + sovereignty masking
+│   ├── geometryTransform.test.ts       # CRS + shape transformation tests
+│   └── mergeLayers.test.ts             # Unification logic for MapLibre/Cesium
 │
-└── fixtures/
-    ├── sample_geojson.json
-    ├── sample_raster_bounds.json
-    ├── sample_masking_cases.json
-    ├── sample_projection_mismatch.json
-    └── sample_temporal_bands.json
-```
+└── integration/                        # Multi-component spatial reasoning tests
+    ├── timeline_map_sync.test.ts       # Timeline → map → focus consistency
+    ├── stac_flow.test.ts               # STAC → footprint → map layer pipeline
+    ├── storynode_overlay.test.ts       # Story Node v3 geometry + narrative sync
+    └── spatial_telemetry.test.ts       # Telemetry emission for spatial actions
+~~~
 
 ---
 
-# 🧬 Global Geospatial Test Flow
+# 🧩 What These Tests Guarantee
 
-```mermaid
-flowchart TD
-    FX[Fixtures<br/>synthetic & real] --> RUN[Test Runner<br/>Jest · ts-jest]
-    RUN --> SCRIPTS[Geospatial Scripts<br/>clip · mask · extent · blend · projhint]
-    SCRIPTS --> PIPE[pipelines<br/>layer · stac · timeline · entity · focus]
-    PIPE --> VALID[Validation Layer<br/>schemaGuards · CARE]
-    VALID --> UI[Render Integration<br/>MapLibre · Cesium]
-    UI --> TEL[Telemetry Emission<br/>ethics · a11y · energy]
-    TEL --> LEDGER[Governance Ledger]
-```
+### ✔ **1. Schema Compliance**
+All spatial payloads MUST pass:
 
----
+- STAC Item/Collection schemas  
+- Story Node v3 spatial schemas  
+- KFM geometry metadata schemas  
+- Telemetry event schemas  
 
-# 🧩 Deep Test Suites
+### ✔ **2. Geospatial Validity**
+Tests ensure:
 
-## 1️⃣ CARE Masking Test Suite — *Sovereignty & Ethics Critical*
+- CRS normalization → EPSG:4326  
+- No self-intersecting polygons  
+- Valid MultiPolygon assembly  
+- H3 cell validity  
+- TopoJSON/GeoJSON conversion accuracy  
 
-Tests validate:
+### ✔ **3. Temporal Correctness**
+Tests enforce:
 
-- H3 r7–r9 masking correctness  
-- Territorial buffer dilation  
-- Controlled coordinate fuzzing  
-- Site obfuscation using convex-hull envelopes  
-- Enforcement of `restricted` → full block rules  
-- Governance metadata correctness  
+- OWL-Time alignment  
+- Accurate time-window filtering  
+- Fuzzy intervals handled correctly  
+- Timeline → Map sync  
 
-### Architecture
+### ✔ **4. CARE & Sovereignty Masking**
+Masking tests include:
 
-```mermaid
-flowchart LR
-    M1[Raw Geometry] --> M2[maskCoordinates]
-    M2 --> M3[Expected CARE Masked Output]
-    M3 --> M4[Governance Assertions]
-```
+- H3 r7 generalization  
+- Coarse geometry replacement  
+- Removal or blurring of sensitive points  
+- Flagging via governance metadata  
+- Preservation of masking provenance  
 
----
+### ✔ **5. Provenance Integrity**
+Every fixture and output must show:
 
-## 2️⃣ CRS Projection Test Suite — *Spatial Safety Layer*
+- Source  
+- Rights-holder  
+- License  
+- Transformation lineage  
+- Masking/redaction rules used  
 
-Ensures projection fallbacks behave deterministically.
+### ✔ **6. Telemetry Accuracy**
+Telemetried events include:
 
-Validates:
+- Pan / zoom / rotate  
+- Layer toggles  
+- Footprint interactions  
+- Story Node geometry interactions  
+- Derived stats (energy, carbon, scene complexity)  
 
-- Unknown CRS → fallback CRS  
-- Deprecated CRS → warning & hint generation  
-- Preservation of topology after reinterpretation  
-- Cesium/MapLibre compatibility signals  
+Tests ensure all telemetry:
 
-### Architecture
-
-```mermaid
-flowchart TD
-    P1[CRS Tag] --> P2[projectionHints]
-    P2 --> P3[Suggested CRS]
-    P3 --> P4[Topology Validation]
-```
-
----
-
-## 3️⃣ Extent Detection Tests — *Nodata Aware & Predictive*
-
-Validates:
-
-- Raster bounds extraction from alpha/nodata masks  
-- Correct bounding polygons for GeoJSON  
-- Robust Focus-Mode “zoom-to-entity” behavior  
-
-### Architecture
-
-```mermaid
-flowchart LR
-    E1[Fixture Geometry or Raster] --> E2[extentCalculator]
-    E2 --> E3[Expected Extents]
-```
+- Is non-PII  
+- Meets schema  
+- Is included in release telemetry  
 
 ---
 
-## 4️⃣ Blending Rule Tests — *Terrain + Imagery Integrity*
+# 🛡 Governance & Ethics Validation
 
-Ensures Cesium/MapLibre blends remain deterministic:
+Geospatial tests must enforce:
 
-- hillshade  
-- DEM opacity curves  
-- historic + modern image fusion  
-- motion-safe transitions  
+- **CARE**: No unmasked sensitive coordinates  
+- **Provenance**: All geometry + transformations must include full lineage  
+- **Ethical AI**: No speculative spatial narratives  
+- **Sovereignty**: Tribal/Indigenous boundary protections  
+- **A11y**: Spatial features must follow accessibility constraints  
 
-### Architecture
-
-```mermaid
-flowchart LR
-    B1[DEM] --> B3[blendRules]
-    B2[Imagery] --> B3
-    B3 --> B4[Expected Style Output]
-```
+Any failure blocks CI merges.
 
 ---
 
-## 5️⃣ Performance Reproducibility — *Diamond⁹ Ω Required*
+# 🧪 Testing Methodology
 
-Performance ceilings enforced in CI:
+### Unit Tests
+Validate:
 
-| Test | Max Runtime |
-|------|-------------|
-| clipGeoJSON | ≤ 25 ms |
-| extentCalculator | ≤ 10 ms |
-| maskCoordinates | ≤ 5 ms |
-| blendRules | ≤ 8 ms |
-| projectionHints | ≤ 2 ms |
+- Individual functions  
+- CRS transforms  
+- Masking logic  
+- Footprint loaders  
+- Time filters  
 
-CI aborts pipeline if any limit is exceeded.
+### Integration Tests
+Validate:
 
----
+- Timeline–map–focus synchronization  
+- Spatial overlays for Story Node v3  
+- STAC flows  
+- Governance overlays  
 
-## 6️⃣ Accessibility (A11y) Spatial Tests — *WCAG 2.1 AA*
+### Test Fixtures
+Test fixtures must be:
 
-Validates:
+- Sanitized  
+- Non-sensitive  
+- CARE-classified  
+- License-compliant  
+- Stable and version-pinned  
 
-- all spatial interactions have ARIA roles  
-- keyboard-focusable UI for map interactions  
-- reduced-motion fallback for 3D transitions  
-- legend/symbology contrast >= WCAG AA  
-- geospatial color tokens from `symbology.json` are accessible  
+Fixtures that previously contained protected coordinates must be:
 
----
-
-# 🔗 Integration Tests with Geospatial Pipelines
-
-Testing ensures:
-
-- `layerPipeline` respects all CARE rules  
-- `stacPipeline` produces normalized layer configs  
-- `timelinePipeline` aligns predictive temporal bands  
-- `entityPipeline` associates spatial provenance correctly  
-- `focusPipeline` produces masked spatial highlights  
-
-### Pipeline Test Flow
-
-```mermaid
-flowchart TD
-    CFG[Geospatial Configs] --> PIPE[pipelines]
-    PIPE --> OUT[Pipeline GEO Output]
-    OUT --> TEST[Script Suites]
-    TEST --> RENDER[MapLibre · Cesium]
-```
+- Masked with H3  
+- Simplified  
+- Synthetic replacements  
 
 ---
 
-# 📡 Telemetry Integration (v10.3.2)
+# 📈 Telemetry Expectations
 
-All geospatial tests emit:
+Spatial tests generate expected event bundles:
 
-- `test_runtime_ms`  
-- `masking_failures`  
-- `projection_hint_issues`  
-- `extent_accuracy_score`  
-- `blend_consistency_score`  
-- `a11y_coverage`  
+- `"spatial:pan"`  
+- `"spatial:zoom"`  
+- `"spatial:layer-toggle"`  
+- `"storynode:footprint-interaction"`  
+- `"focus:spatial-highlight"`  
 
-To:
+Telemetry must match:
 
-```
-../../../../../releases/v10.3.2/focus-telemetry.json
-```
-
-Telemetry is validated in CI using `telemetry-export.yml`.
+- Allowed event types  
+- Schema for spatial telemetry  
+- Aggregation rules  
+- Sustainability metadata (Wh, CO₂e)  
 
 ---
 
-# 🛡️ Governance Integration
+# 🔒 Security & Privacy Notes
 
-All failing tests generate governance events:
+Tests must NOT:
 
-- `masking_breach`  
-- `crs_conflict`  
-- `symbology_violation`  
-- `temporal_band_misalignment`  
-- `provenance_missing`  
-
-Logged into:
-
-```
-../../../../../docs/reports/audit/web-geospatial-tests-ledger.json
-```
-
-Failure → block merge.
+- Log sensitive coordinates  
+- Store PII  
+- Leak unmasked sovereignty boundaries  
+- Reference production endpoints  
+- Include unlicensed assets  
 
 ---
 
-# 🧾 Example Governance Test Ledger Entry
+# 🕰 Version History
 
-```json
-{
-  "id": "web_geospatial_tests_v10.3.2",
-  "tests_passed": 176,
-  "tests_failed": 0,
-  "masking_enforced": true,
-  "crs_consistency": "100%",
-  "render_integrity": "stable",
-  "performance_budget": "within_limits",
-  "timestamp": "2025-11-14T22:41:00Z",
-  "governance_ref": "docs/reports/audit/web-geospatial-tests-ledger.json"
-}
-```
-
----
-
-# 🧪 Example: CARE Masking Unit Test
-
-```ts
-test("Sensitive archaeological site is masked using H3 r7", () => {
-  const masked = maskCoordinates(sensitiveSite, maskingConfig);
-  expect(masked.resolution).toBe("h3_r7");
-  expect(masked.exposedCoordinates).toBeFalsy();
-});
-```
-
----
-
-# 🕰️ Version History
-
-| Version | Date | Summary |
-|--------|--------|---------|
-| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added CRS, masking, performance & governance integration models. |
-| v10.3.1 | 2025-11-13 | Prior test suite. |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full geospatial test-suite documentation for KFM v10.4 |
+| v10.3.2 | 2025-11-14 | Added telemetry + governance integration tests |
+| v10.3.1 | 2025-11-13 | Initial geospatial pipeline tests overview |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Web Geospatial Test Architecture**  
-🧪 Deterministic QA · 🔐 Ethical Spatial Verification · 🌐 FAIR+CARE · 🔗 Provenance Integrity  
 © 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Geospatial Pipelines](../README.md)
+FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
 
 </div>
