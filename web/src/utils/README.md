@@ -1,5 +1,4 @@
 ---
-
 title: "🛠️ Kansas Frontier Matrix — Web Utility Modules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/README.md"
 version: "v10.4.0"
