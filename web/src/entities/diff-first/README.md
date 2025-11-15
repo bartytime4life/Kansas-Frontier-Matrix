@@ -1,14 +1,14 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Entity Detail · Diff-First View (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧾 Kansas Frontier Matrix — Diff-First Entity Detail Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/features/entities/diff-first/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-11"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.2.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-entity-diff-v2.json"
+sbom_ref: "../../../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-entity-diff-v3.json"
 governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -16,179 +16,345 @@ mcp_version: "MCP-DL v6.3"
 
 <div align="center">
 
-# 🧾 **Entity Detail — Diff-First View**  
+# 🧾 **Kansas Frontier Matrix — Diff-First Entity Detail Architecture**  
 `web/src/features/entities/diff-first/README.md`
 
 **Purpose:**  
-Start every entity detail screen with a **release-to-release diff** so users see **history, not just state**: added/removed relations, changed properties, confidence/lineage, and governance at a glance — aligned with **WCAG 2.1 AA** and **FAIR+CARE**.
+Define the **full deep-architecture specification** of the Diff-First Entity Detail Module — the KFM v10.3.2 subsystem that compares **release-to-release entity states**, surfaces **governance changes**, exposes **lineage evidence**, and synchronizes with **Map**, **Timeline**, **Focus Mode v2.5**, and **Story Node** systems.  
+This module enforces **FAIR+CARE**, **provenance integrity**, **WCAG 2.1 AA**, and **MCP-DL v6.3** reproducibility.
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../../LICENSE)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Enabled-orange)](../../../../../docs/standards/faircare.md)  
-[![Status: Ready for v10](https://img.shields.io/badge/Status-Ready%20for%20v10-brightgreen)](../../../../../releases/)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Diff_Integrity-orange)]()  
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
+[![License](https://img.shields.io/badge/License-MIT-green)]()
+
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Deep Overview
 
-Traditional detail views bury change history. The **Diff-First** module renders a compact changelog pane at the top of an entity page, comparing the **current release (Rᶜ)** to the **previous release (Rᵖ)** and highlighting:
+Most systems show entity details as **static snapshots**.  
+**KFM Diff-First** shows **history before state**, answering:
 
-- **Adds / Removals**: relations, members, features, files  
-- **Key Property Changes**: numeric deltas, categorical swaps, text diffs  
-- **Impact & Confidence**: severity tags, confidence badges, provenance links  
-- **Ethics & Governance**: consent flags, usage restrictions, lineage references  
+- *What changed?*  
+- *Why did it change?*  
+- *What is the evidence?*  
+- *What is the governance/CARE impact?*  
+- *What is the lineage from previous releases?*
+
+The Diff-First module surfaces:
+
+### 🔍 Structural Differences
+- Added / removed relationships  
+- New or removed datasets  
+- Geometry changes  
+- Temporal refinements  
+- CARE label shifts  
+
+### 🧩 Property Differences
+- Numeric deltas  
+- Text diffs (unified & split)  
+- Enum changes  
+- Severity classification  
+
+### 🔐 Governance & Provenance Changes
+- Consent modifications  
+- License changes  
+- Provenance lineage updates  
+- STAC/DCAT metadata updates  
+- CARE label changes + sovereignty warnings  
+
+### 🧠 Explainability & Focus Mode v2.5 Integration
+- Evidence deltas  
+- relevance_score changes  
+- degraded or improved explainability reliability  
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout
 
-```bash
+```text
 web/src/features/entities/diff-first/
 ├── README.md
+│
 ├── components/
-│   ├── DiffHeader.tsx           # Sticky summary bar (counts, severity)
-│   ├── PropertyDelta.tsx        # Scalar / categorical changes
-│   ├── RelationDelta.tsx        # Added / removed edges
-│   ├── TextDelta.tsx            # Unified / split text diff
-│   ├── ReleasePicker.tsx        # Rᵖ / Rᶜ toggle, tag jump
-│   └── Legend.tsx               # Iconography & tokens (WCAG AA)
+│   ├── DiffHeader.tsx
+│   ├── PropertyDelta.tsx
+│   ├── RelationDelta.tsx
+│   ├── TextDelta.tsx
+│   ├── ReleasePicker.tsx
+│   └── Legend.tsx
+│
 ├── hooks/
-│   ├── useEntityDiff.ts         # Builds canonical diff model
-│   └── useReleaseTags.ts        # Fetches available releases
+│   ├── useEntityDiff.ts
+│   └── useReleaseTags.ts
+│
 ├── model/
-│   ├── diffTypes.ts             # TypeScript types for diffs
-│   └── normalize.ts             # Map API → UI model + guards
+│   ├── diffTypes.ts
+│   └── normalize.ts
+│
 ├── services/
-│   └── diffClient.ts            # REST/GraphQL calls w/ caching
+│   └── diffClient.ts
+│
 ├── styles/
-│   └── tokens.css               # Accessible design tokens
+│   └── tokens.css
+│
 └── tests/
-    └── diff-first.spec.tsx      # E2E + a11y checks
+    └── diff-first.spec.tsx
 ```
 
 ---
 
-## 🧩 Component Contract
+# 🧭 High-Level Architecture
 
-| Component | Input | Output UI |
-|---|---|---|
-| `DiffHeader` | `EntityDiffSummary` | Added/Removed counts, overall severity |
-| `PropertyDelta` | `PropertyChange[]` | +/– badges, numeric deltas, chips |
-| `RelationDelta` | `RelationChange[]` | Added/removed lists with affordances |
-| `TextDelta` | `TextChange` | Unified or split view, wrap-safe |
-| `ReleasePicker` | `tags[]`, `selected` | Dropdown + prev/next shortcuts |
-| `Legend` | `DesignTokens` | Icons, hints, keyboard help |
+```mermaid
+flowchart TD
+    REL["Release Metadata<br/>R_prev · R_curr"] --> API["diffClient"]
+    API --> NORM["normalize<br/>schema guards"]
+    NORM --> DIFF["EntityDiff Model"]
+    DIFF --> UI["Diff Components<br/>header · props · relations · text"]
+    UI --> GOV["Governance Engine<br/>CARE · consent · lineage"]
+    GOV --> TEL["Telemetry Export<br/>energy · ethics · provenance"]
+```
 
-### Canonical Diff Types (TypeScript)
+---
+
+# 🧬 Canonical Diff Model (Deep Specification)
+
+## Base Model
+Represents the full diff for a single entity:
 
 ```ts
-export type ScalarChange = {
-  key: string; from: number | null; to: number | null; unit?: string;
-  pct?: number | null; severity: "low" | "med" | "high"
-};
-export type CategoricalChange = {
-  key: string; from: string | null; to: string | null; severity: "low" | "med" | "high"
-};
-export type TextChange = {
-  key: string; from?: string; to?: string; mode: "unified" | "split";
-  changed: boolean; tokens?: number
-};
-export type RelationChange = {
-  kind: "added" | "removed"; relType: string; targetId: string; label: string;
-  confidence?: number; provenance?: string[]
-};
-export type EntityDiff = {
+type EntityDiff = {
   entityId: string;
-  releasePrev: string; // Rᵖ
-  releaseCurr: string; // Rᶜ
-  summary: { added: number; removed: number; changed: number; severity: "low"|"med"|"high" };
-  properties: (ScalarChange | CategoricalChange | TextChange)[];
+  releasePrev: string;
+  releaseCurr: string;
+  summary: DiffSummary;
+  properties: PropertyChange[];
   relations: RelationChange[];
-  governance: { consentChanged?: boolean; usageRestriction?: string | null; lineageRefs?: string[] };
+  text: TextChange[];
+  governance: GovernanceChange;
+  explainability?: ExplainabilityDelta[];
+};
+```
+
+### Summary
+```ts
+type DiffSummary = {
+  added: number;
+  removed: number;
+  changed: number;
+  severity: "low" | "med" | "high";
 };
 ```
 
 ---
 
-## ⚙️ Data Flow
+# 🧩 Diff Types Architecture
+
+```mermaid
+flowchart TD
+    P["PropertyChange"] --> NUM["ScalarChange"]
+    P --> CAT["CategoricalChange"]
+    P --> TXT["TextChange"]
+    R["RelationChange"] --> ADD["Added"]
+    R --> REM["Removed"]
+```
+
+### Scalar Change
+Numeric deltas w/ unit, pct, severity.
+
+### Categorical Change
+Enum or label changes.
+
+### TextChange
+Unified/split diff; change tokens counted.
+
+### RelationChange
+Graph edges added or removed, including:
+
+- provenance  
+- confidence  
+- relationship type  
+- sovereignty dependence  
+
+---
+
+# 🧠 Explainability Deltas (Focus Mode v2.5)
+
+Focus Mode returns:
+
+- relevance score  
+- evidence nodes  
+- dataset lineage references  
+- CARE relevance warnings  
+
+### Diff compares:
+
+- explanation loss  
+- new evidence sources  
+- removed evidence  
+- reasoning drift  
 
 ```mermaid
 flowchart LR
-  A["Release API (Rᵖ, Rᶜ)"] --> B["diffClient.ts"]
-  B --> C["normalize.ts (guards)"]
-  C --> D["useEntityDiff()"]
-  D --> E["DiffHeader / PropertyDelta / RelationDelta / TextDelta"]
-  E --> F["Telemetry (view · expand · copy)"]
-  F --> G["Governance Ledger (provenance · consent)"]
-```
-
-**REST example (server-side diff for stability & performance):**
-
-```http
-GET /api/entities/{id}/diff?from=2025.10.0&to=2025.11.0
-# → EntityDiff (see types above)
+    XAI_prev["R_prev Explainability"] --> CMP["Explainability Comparator"]
+    XAI_curr["R_curr Explainability"] --> CMP
+    CMP --> XDEL["ExplainabilityDelta"]
 ```
 
 ---
 
-## ♿ Accessibility (WCAG 2.1 AA)
+# 🧭 Release Picker Architecture
 
-- All deltas convey meaning via **icons + text** (never color-only)  
-- Focus order: **ReleasePicker → Summary → Sections**  
-- Keyboard: `[` previous tag, `]` next tag, `/` search property, `g` governance  
-- Announce counts via `aria-live="polite"` on updates; provide skip-links to major sections
+```mermaid
+flowchart TD
+    TAGS["Release Tags List"] --> PICK["ReleasePicker"]
+    PICK --> UPDATE["Diff Recompute"]
+    UPDATE --> UI
+```
 
----
+The picker must support:
 
-## 🧪 Quality Gates & Tests
-
-| Gate | Target | Tooling |
-|---|---|---|
-| Rendering with 1k+ relation changes | ≥ 60 fps on median hardware | React Profiler |
-| A11y violations | 0 | axe-core, jest-axe |
-| Snapshot coverage | Empty diff & governance-change cases | Jest |
-| Type safety | 0 any/ts-ignore in public API | TypeScript strict |
+- full history navigation  
+- keyboard-first release cycling  
+- ledger-linked release metadata  
 
 ---
 
-## 🧾 Telemetry & Governance
+# 🧱 Normalization Pipeline
 
-| Event | Payload |
-|---|---|
-| `entity_diff_view` | `entityId`, `from`, `to`, `counts` |
-| `entity_diff_toggle_panel` | `mode` (`diff` \| `details`) |
-| `entity_diff_copy_change` | `keys[]`, `severity`, `provenanceIncluded` |
+Ensures all release-to-release comparisons follow:
 
-All events roll into `focus-telemetry.json` and append lineage to the **Governance Ledger** (provenance and consent checks).
+- strict schema guards  
+- FAIR+CARE coercion  
+- provenance retention  
+- stability across versions  
 
----
-
-## 🗺️ Design Tokens (extract)
-
-| Token | Example Value | Notes |
-|---|---|---|
-| `--delta-add-bg` | var(--green-50) | Non-color cue `+` icon |
-| `--delta-remove-bg` | var(--red-50) | Paired with `–` icon |
-| `--delta-change-bg` | var(--amber-50) | Pencil icon |
-| `--text-diff-insert-outline` | 2px solid currentColor | Color-blind friendly outline |
+```mermaid
+flowchart LR
+    RAW["Raw Diff Response"] --> GUARD["Schema Guards"]
+    GUARD --> COERCE["Governance Coercion"]
+    COERCE --> READY["UI-Ready Diff Model"]
+```
 
 ---
 
-## 🕰️ Version History
+# 📡 Telemetry & Sustainability
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| **v10.2.2** | 2025-11-11 | Web Platform Team | Upgraded & aligned to v10.2 standards; corrected badge order, paths, and telemetry schema v2. |
-| **v10.0.0** | 2025-11-11 | Core | Initial Diff-First module spec. |
+Events include:
+
+- `entity_diff_view`  
+- `entity_diff_expand_property`  
+- `entity_diff_expand_relation`  
+- `entity_diff_copy`  
+- `entity_diff_governance_change`  
+
+Telemetry contributes to:
+
+```
+../../../../../releases/v10.3.2/focus-telemetry.json
+```
+
+Telemetry must include:
+
+- energy (Wh)  
+- carbon estimate  
+- latency  
+- a11y path coverage  
+- governance delta count  
+
+---
+
+# 🔐 Governance & CARE Enforcement
+
+Governance diffs highlight:
+
+- CARE label changes  
+- consent flag changes  
+- sovereignty domain changes  
+- license transitions  
+- dataset lineage updates  
+
+```mermaid
+flowchart TD
+    META["Governance Metadata<br/>prev · curr"] --> COMP["Governance Comparator"]
+    COMP --> OUT["GovernanceChange<br/>CARE · license · consent"]
+```
+
+Governance impact must appear at the top of the diff.
+
+---
+
+# ♿ Accessibility Architecture (WCAG 2.1 AA)
+
+Diff-First must:
+
+- label all deltas with both icon + text (never color only)  
+- maintain valid heading hierarchy  
+- offer skip-to-changes link  
+- provide keyboard shortcuts:
+  - `[` previous release  
+  - `]` next release  
+  - `/` search  
+  - `g` governance view  
+
+```mermaid
+flowchart TD
+    TOK["A11y Tokens"] --> DIFF["Diff Components"]
+    DIFF --> TEL_A11Y["A11y Telemetry"]
+```
+
+---
+
+# 🧪 CI & Validation Requirements
+
+| Category | Validator |
+|----------|-----------|
+| Schema | TypeScript strict + runtime JSON guards |
+| A11y | axe-core + Lighthouse |
+| Governance | faircare-validate.yml |
+| Provenance | lineage continuity checks |
+| Telemetry | telemetry-export.yml |
+| Security | CodeQL + Trivy |
+| Docs | docs-lint.yml |
+
+---
+
+# 🧾 Example Metadata Record
+
+```json
+{
+  "id": "entity_diff_first_v10.3.2",
+  "total_entities_diffed": 14832,
+  "governance_changes": 812,
+  "care_label_changes": 42,
+  "avg_diff_compute_ms": 23.7,
+  "energy_use_wh": 0.91,
+  "telemetry_synced": true,
+  "checksum_verified": true,
+  "timestamp": "2025-11-14T22:42:00Z"
+}
+```
+
+---
+
+# 🕰️ Version History
+
+| Version | Date | Summary |
+|--------|--------|---------|
+| v10.3.2 | 2025-11-14 | Full deep-architecture rewrite: governance diff engine, explainability deltas, provenance lineage continuity, predictive support, A11y shortcuts. |
+| v10.2.2 | 2025-11-11 | Prior version. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — Diff-First Entity Architecture**  
+🧾 Change Transparency · 🔐 FAIR+CARE Integrity · 🔗 Provenance Fidelity · 🧠 Explainable AI  
+© 2025 Kansas Frontier Matrix — MIT License  
 
-[Back to Web](../../../../README.md) · [Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to Web Features](../../README.md)
 
 </div>
