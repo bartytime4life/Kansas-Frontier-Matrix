@@ -20,8 +20,8 @@ mcp_version: "MCP-DL v6.3"
 `web/src/features/story/README.md`
 
 **Purpose:**  
-Bring **history to life** through interconnected Story Nodes that merge **text**, **time**, and **geography**.  
-This feature renders AI-assisted narratives (from the KFM knowledge graph) as **interactive cards**, synchronized with **Timeline**, **Map**, **Focus Mode v2.4**, and **FAIR+CARE governance** overlays.
+Turn the Kansas Frontier Matrix (KFM) knowledge graph into a **living storybook** — a lattice of **Story Nodes** that braid together **time**, **place**, and **people**.  
+This feature renders AI-assisted narratives as **interactive cards**, synchronized with **Timeline**, **Map**, **Focus Mode v2.4**, and **Web Telemetry** — all guarded by **FAIR+CARE** governance.
 
 <img alt="Docs · MCP" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
 <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
@@ -34,30 +34,22 @@ This feature renders AI-assisted narratives (from the KFM knowledge graph) as **
 
 ## 📘 Overview
 
-The **Story Node system** ties together **events**, **people**, **places**, and **documents** into cohesive, explorable narratives.
+The **Story Node system** is the **narrative face** of KFM’s semantic stack:
 
-Each node:
+- Ingests **graph entities** (events, people, places, documents, datasets) from Neo4j.  
+- Wraps them into **Story Nodes** that follow KFM’s Story Node schema and MCP-DL guidelines.  
+- Uses **Focus Transformer v2.x** to synthesize short, explainable summaries and relationship hints.  
+- Aligns each Story Node with:
+  - A **time span** (OWL-Time-aware)  
+  - A **spatial footprint** (GeoSPARQL-aware)  
+  - A **governance profile** (FAIR+CARE tags, sovereignty flags)  
 
-- Follows the **Story Node JSON Schema**:
+**What you get**
 
-  ~~~~~text
-  ../../../schemas/story-node.schema.json
-  ~~~~~
-
-- Is enriched by **Focus Transformer v2.x** for AI summaries and related-entity suggestions.  
-- Is CARE-tagged and filtered via FAIR+CARE governance rules.  
-- Synchronizes with:
-
-  - Map focus (centroid/geometry)  
-  - Timeline window (start/end intervals)  
-  - Focus Mode entity selection  
-
-**Core Goals**
-
-- 🧩 Merge structured graph data with human-readable narrative.  
-- 🗺️ Tie stories to geospatial context (counties, AOIs, routes, rivers).  
-- 🧠 Integrate Focus AI insights while preserving explainability.  
-- ♻️ Maintain FAIR+CARE ethics, accessibility, and telemetry traceability.  
+- 🧩 **Narrative Graph:** Nodes linked by relations like `mentions`, `located_in`, `precedes`, `co-occurs`.  
+- 🗺️ **Temporal Explorer:** Cards that light up as the Timeline scrubs across years.  
+- 🧠 **Focus-Aware:** Seamless handoff between Focus Mode and narrative cards.  
+- ♻️ **Ethically Governed:** CARE labels, sovereignty overlays, and telemetry baked in.
 
 ---
 
@@ -70,12 +62,12 @@ web/
       └─ story/
          README.md               # This file — Story Nodes overview
          story-card.tsx          # React component for narrative cards
-         story-context.ts        # Context for story state and selection
-         useStory.ts             # Data-fetching hook for nodes + summaries
+         story-context.ts        # Story selection + syncing context
+         useStory.ts             # Data-fetching hook for nodes + AI summaries
          story-service.ts        # API calls to /api/story and /api/focus
          story-metadata.json     # Story schema + version metadata
          utils/
-         ├─ formatters.ts        # Markdown → HTML, link & footnote handling
+         ├─ formatters.ts        # Markdown → HTML, media + link handling
          └─ governance.ts        # CARE tags, sovereignty filters, visibility rules
 ~~~~~
 
@@ -83,26 +75,28 @@ web/
 
 ## 🧩 Story Node Schema (Conceptual)
 
-Story Nodes follow the **MCP-DL Story Node schema** designed in  
-`Designing Schema for Story Nodes.md` and related specs.
+Story Nodes implement the KFM Story Node design described in:
 
-Each node is a **narrative atom** combining:
+- `docs/architecture/story-nodes.md`  
+- `docs/architecture/focus_mode/AI-Powered Focus Mode for the Kansas Frontier Matrix.pdf`  
 
-- Narrative text (markdown)  
-- Spatial footprint (Point/Polygon/MultiPolygon)  
-- Temporal interval (start / end / precision)  
-- Graph relations (events, people, places, docs, datasets)  
-- Governance metadata (CARE, sovereignty, licenses)  
-- STAC / dataset references  
+Each Story Node is a **narrative atom** with:
 
-### Example Story Node (Conceptual JSON)
+- Narrative content (`narrative.body` in Markdown).  
+- A time interval (`spacetime.when` with `start`, `end`, `precision`).  
+- A geometry (`spacetime.geometry` as Point/Polygon/MultiPolygon).  
+- Relations to other entities (events, places, people, docs, datasets).  
+- Optional STAC hooks (layer overlays, evidence rasters).  
+- Governance payload (CARE, sovereignty, licensing).
+
+### Example Story Node (JSON)
 
 ~~~~~json
 {
   "id": "story-fort-larned-1859",
   "type": "story-node",
   "title": "Fort Larned on the Santa Fe Trail",
-  "summary": "Established in 1859, Fort Larned protected the Santa Fe Trail and hosted treaty councils.",
+  "summary": "Established in 1859, Fort Larned protected traffic along the Santa Fe Trail and became a site for treaty councils.",
   "narrative": {
     "body": "Fort Larned stood as a frontier post during an era of transition...",
     "format": "text/markdown"
@@ -117,7 +111,8 @@ Each node is a **narrative atom** combining:
   },
   "relations": [
     { "rel": "mentions", "target": "event-medicine-lodge-1867" },
-    { "rel": "located_in", "target": "place-pawnee-county" }
+    { "rel": "located_in", "target": "place-pawnee-county" },
+    { "rel": "precedes", "target": "story-medicine-lodge-treaty-1867" }
   ],
   "stac": {
     "collection": "historic-sites",
@@ -139,25 +134,28 @@ Each node is a **narrative atom** combining:
 
 ---
 
-## ⚙️ Data Flow & Architecture
+## ⚙️ Data Flow & Focus Mode Integration
 
 ~~~~~mermaid
 flowchart LR
-  NEO["Story Nodes & Graph<br/>Neo4j · STAC · Lineage"]
-    --> API["/api/story/{id}<br/>Story API"]
-  API --> FOCUS["Focus Transformer v2.x<br/>AI summaries · related entities"]
+  NEO["Story + Entity Graph<br/>Neo4j · Lineage · STAC refs"]
+    --> API["/api/story/{id}<br/>Story API Layer"]
+  API --> FOCUS["Focus Transformer v2.x<br/>AI summaries · Why-This explanations"]
   FOCUS --> CTX["Story Context<br/>useStory + story-context"]
-  CTX --> CARD["StoryCard React Component"]
-  CARD --> SYNC["Timeline + Map + Focus Sync"]
+  CTX --> CARD["StoryCard<br/>React Component"]
+  CARD --> SYNC["Timeline + Map + Focus Sync<br/>via shared contexts"]
+  CARD --> TELE["Web Telemetry<br/>web-story-v1 events"]
 ~~~~~
 
-**Lifecycle**
+**Story selection channels**
 
-1. User selects an entity (event/place/person) on the **Map**, **Timeline**, or **Focus Mode**.  
-2. `useStory()` requests the Story Node and Focus summary via `story-service.ts`.  
-3. `StoryCard` renders the node, AI summary, and links to related Story Nodes.  
-4. **Timeline** and **Map** are updated to reflect the node’s temporal interval and geometry.  
-5. Telemetry logs view event, latency, A11y, and CARE status.
+- **From Map:** user clicks a feature → nearest Story Node is loaded.  
+- **From Timeline:** user scrubs to a year or interval → Story Nodes overlapping the range are shown.  
+- **From Focus Mode:** focusing on an entity pulls relevant Story Nodes into the narrative sidebar.  
+
+**Focus Mode handshake**
+
+- Story Node includes relations and evidential datasets; Focus Mode uses those to answer “Why this story?” with neo4j queries and STAC lineage.
 
 ---
 
@@ -167,35 +165,40 @@ flowchart LR
 export function StoryCard({ node }) {
   const id = node.id;
   const when = node.spacetime?.when;
-  const coords = node.spacetime?.geometry?.coordinates;
+  const geom = node.spacetime?.geometry;
+  const coordinates = geom?.type === "Point" ? geom.coordinates : null;
 
   return (
     <article
       aria-labelledby={`${id}-title`}
       className="story-card rounded-2xl shadow-md p-4 bg-surface"
     >
-      <header>
+      <header className="flex flex-col gap-1">
         <h2 id={`${id}-title`} className="text-xl font-semibold">
           {node.title}
         </h2>
-        {node.summary && <p className="text-sm text-muted">{node.summary}</p>}
+        {node.summary && (
+          <p className="text-sm text-muted-foreground">{node.summary}</p>
+        )}
       </header>
 
       <section
         className="mt-3 prose max-w-none"
         aria-label="Story narrative"
+        // HTML is sanitized in formatters.ts before this point
         dangerouslySetInnerHTML={{ __html: node.narrativeHtml }}
       />
 
-      <footer className="mt-3 flex flex-wrap gap-3 text-xs text-muted">
+      <footer className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground">
         {when && (
           <span>
             🕰 {when.start} – {when.end}
+            {when.precision ? ` (${when.precision})` : ""}
           </span>
         )}
-        {coords && Array.isArray(coords) && (
+        {coordinates && Array.isArray(coordinates) && (
           <span>
-            📍 {coords.join(", ")}
+            📍 {coordinates.map((c) => c.toFixed?.(3) ?? c).join(", ")}
           </span>
         )}
       </footer>
@@ -206,39 +209,34 @@ export function StoryCard({ node }) {
 
 **Accessibility**
 
-- Uses semantic `<article>`, `<header>`, `<section>`, `<footer>`.  
-- `aria-labelledby` ties the card to its title for screen readers.  
-- Narrative region is explicitly labeled and compatible with Focus Mode updates.
+- Semantic containers + ARIA labels.  
+- Compatible with screen readers and Focus Mode updates.  
+- Easily themed via Tailwind / design tokens.
 
 ---
 
 ## 🧭 Timeline & Map Synchronization
 
-Story Nodes integrate tightly with **Timeline** and **Map**:
+Story Nodes are **time-aware** and **geo-aware**:
 
-- When `currentYear` falls within `node.spacetime.when`, the card is eligible to show.  
-- Selecting a Story Node:
-  - Centers the map on `node.spacetime.geometry`.  
-  - Adjusts the timeline view to the node’s interval.  
-  - Updates Focus Mode context (entity-centric analysis).  
+- **Timeline:**  
+  - A Story Node is “active” when `currentRange` intersects `node.spacetime.when`.  
+  - Cards fade in/out as the user scrubs the Timeline.
 
-**Sync Pattern**
+- **Map:**  
+  - When a Story Node is selected, a highlight layer is added at its geometry.  
+  - Map viewport animates toward the node’s centroid, respecting user motion preferences.
 
-- `story-context.ts` exposes:
-  - `currentStoryId`  
-  - `setCurrentStoryId`  
-  - `timelineRange`  
-  - `mapFocus`  
-
-- Timeline and Map components subscribe to story context to coordinate highlight and viewport.
+- **Shared Context:**  
+  - `story-context.ts` exposes `currentStoryId`, `timelineRange`, `mapFocus`, and event handlers for cross-component orchestration.
 
 ---
 
-## 📊 Telemetry & Governance (Web Story Events)
+## 📊 Telemetry & Governance (web-story-v1)
 
-Story interactions produce **web-story-v1** telemetry events.
+Story Node interactions push events into the **Web Telemetry** system (`web-telemetry-v2` overall; `web-story-v1` feature schema slice).
 
-Example telemetry record:
+**Example Telemetry Event**
 
 ~~~~~json
 {
@@ -260,60 +258,90 @@ Example telemetry record:
 }
 ~~~~~
 
-**Governance Tags**
+**Integration points**
 
-| Tag          | Description                       | UI Behavior                        |
-|--------------|-----------------------------------|------------------------------------|
-| `public`     | Open narrative                    | Normal rendering                   |
-| `restricted` | Licensed/sensitive content        | Summary-only / partial masking     |
-| `sensitive`  | Private cultural heritage         | Node hidden or route to consent UX |
+- **Telemetry sink:**  
 
-All Story Nodes are processed by the **FAIR+CARE Council** prior to publication.
+  ~~~~~text
+  ../../../releases/v10.3.2/focus-telemetry.json
+  ~~~~~
+
+- **Governance ledger:**  
+
+  ~~~~~text
+  ../../../docs/reports/audit/web-telemetry-governance.json
+  ~~~~~
 
 ---
 
-## 🧮 Markdown & Media Rendering
+## ⚖️ FAIR+CARE Governance
 
-Rendering pipeline (handled in `utils/formatters.ts`):
+Story Nodes are **governance-aware UI primitives**:
 
-- Parse `narrative.body` as Markdown.  
-- Sanitize for XSS and enforce safe link policies.  
-- Convert internal references (e.g., `story:...`) into Story Node links.  
-- Support optional media arrays:
+- `governance.ts` applies:
 
-  - Images (with alt text)  
-  - Maps / mini-embeds (via STAC assets)  
-  - Document thumbnails  
+  - CARE tags (`public`, `restricted`, `sensitive`).  
+  - Sovereignty overlays (tribal lands, cultural sites, protected ecologies).  
+  - License restrictions (e.g., “display only summary”, “no maps”, “no image thumbnails”).
+
+- UI behavior by CARE tag:
+
+  | CARE Tag      | Behavior                                                         |
+  |---------------|------------------------------------------------------------------|
+  | `public`      | Full narrative and map integration allowed.                      |
+  | `restricted`  | Summary-only; certain endpoints require authenticated roles.     |
+  | `sensitive`   | Node hidden or replaced with generic explanation / consent flow. |
+
+- All filters are **telemetry-visible**, so governance can see where nodes were hidden or redacted.
 
 ---
 
 ## ♿ Accessibility Highlights
 
-- Story UI respects:
+- Story panel respects **high-contrast**, **prefers-reduced-motion**, and **font scaling**.  
+- Cards are keyboard navigable and grouped as a logical reading order.  
+- A11y scanner (from Web Telemetry reporters) also assesses Story UI:
 
-  - High-contrast themes  
-  - Font-size scaling  
-  - Reduced motion preferences  
+  - Missing alts for historical imagery  
+  - Insufficient color contrast in Story tags or metadata  
+  - Focus traps or inaccessible links  
 
-- Keyboard shortcuts (example pattern):
+Findings are aggregated under:
 
-  - `← / →` – previous/next card  
-  - `Esc` – close or collapse story panel  
-
-- A11y telemetry:
-
-  - Logs number of unlabeled images when a Story panel is opened.  
-  - Logs keyboard vs mouse interactions for story navigation.
+~~~~~text
+reports/audit/ui_a11y_summary.json
+~~~~~
 
 ---
 
-## 📡 Integration with Focus Mode
+## 🧪 Developer Workflow
 
-Focus Mode v2.4 uses Story Nodes as **narrative overlays**:
+**Hook Setup**
 
-- When a user focuses on an entity (place/event/person), related Story Nodes appear as cards.  
-- Story Node selection updates the Focus graph explanation panel.  
-- Explainability metadata (e.g., “Why this story?”) is surfaced via Focus Mode’s **“Why This Node?”** control with links back to underlying graph edges and datasets.
+- Import `useStory` and `useTelemetry` to wire Story Nodes into your view.
+
+~~~~~text
+const { story, isLoading } = useStory(currentStoryId);
+const { log } = useTelemetry("story");
+
+useEffect(() => {
+  if (story) {
+    log("story-view", { story_id: story.id, source: "focus-mode" });
+  }
+}, [story, log]);
+~~~~~
+
+**Governance Filtering**
+
+- Use `governance.ts` helpers to filter Story Nodes for the current user / CARE profile:
+
+~~~~~text
+import { canDisplayStory } from "./utils/governance";
+
+if (!canDisplayStory(node, currentUserRoles)) {
+  return null;
+}
+~~~~~
 
 ---
 
@@ -321,8 +349,8 @@ Focus Mode v2.4 uses Story Nodes as **narrative overlays**:
 
 ~~~~~text
 Kansas Frontier Matrix (2025). Story Nodes — Narrative Graph & Temporal Explorer (v10.3.2).
-Integrates AI-assisted narratives, geospatial context, and FAIR+CARE governance into interactive Story Cards
-synchronized with Timeline, Map, and Focus Mode.
+A FAIR+CARE-governed narrative interface connecting Neo4j entities, STAC layers, and Focus Mode
+through accessible, telemetry-aware Story Cards aligned with MCP-DL v6.3.
 ~~~~~
 
 ---
@@ -331,16 +359,16 @@ synchronized with Timeline, Map, and Focus Mode.
 
 | Version | Date       | Author       | Summary                                                                 |
 |--------:|------------|-------------|-------------------------------------------------------------------------|
-| v10.3.2 | 2025-11-14 | `@kfm-web`  | Upgraded Story Node architecture to KFM v10.3; aligned telemetry, FAIR+CARE, A11y, and Focus Mode v2.4. |
+| v10.3.2 | 2025-11-14 | `@kfm-web`  | Upgraded Story Nodes to KFM v10.3; integrated Web Telemetry v2, FAIR+CARE overlays, Focus Mode v2.4 sync, and governance helpers. |
 | v9.9.0  | 2025-11-08 | `@kfm-web`  | Initial Story Node feature with AI narrative rendering and CARE tags.  |
-| v9.8.0  | 2025-11-05 | `@kfm-ui`   | Timeline + map synchronization and accessibility enhancements.         |
+| v9.8.0  | 2025-11-05 | `@kfm-ui`   | Timeline + Map synchronization and accessibility enhancements.         |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Story Nodes**  
-📖 Living Narratives · 🗺 Temporal-Geospatial Context · 🔐 FAIR+CARE Ethics  
+📖 Living Narratives · 🗺 Temporal & Spatial Context · 🔐 FAIR+CARE Ethics · 📡 Telemetry-Aware UX  
 
 © 2025 Kansas Frontier Matrix — MIT License  
 
