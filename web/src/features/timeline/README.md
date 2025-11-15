@@ -70,7 +70,7 @@ web/src/features/timeline/
 
 ```mermaid
 flowchart TD
-    UI[Slider · Controls] --> TLSTATE[Timeline State<br/>currentYear · bands]
+    UI[Slider and Controls] --> TLSTATE[Timeline State<br/>currentYear · bands]
     TLSTATE --> MAPARB[Map Binding<br/>MapLibre · Cesium]
     TLSTATE --> FOCUSALIGN[Focus Mode Align]
     TLSTATE --> STORYALIGN[Story Node Align]
@@ -89,7 +89,7 @@ The **Timeline State** exposes:
 * `range` — selected time window (for brushing)
 * `mode` — historic | predictive | mixed
 * `playback` — playing | paused
-* `bands` — predictive period definitions (2030–2050, 2050–2100)
+* `bands` — predictive period definitions (2030–2050, 2050–2100, etc.)
 
 ```ts
 export type TimelineState = {
@@ -146,13 +146,6 @@ flowchart TD
 
 ## ⚙️ Binding Logic — `timeline.ts`
 
-Key responsibilities:
-
-* Provide `initTimeline(map, initialYear)`
-* Bind `currentYear` to style variable or fallback filters
-* Dispatch `kfm:timeline:year` events
-* Integrate telemetry & governance checks
-
 ```ts
 import maplibregl from "maplibre-gl";
 
@@ -181,18 +174,24 @@ export function initTimeline(map: maplibregl.Map, initialYear = 1900) {
 
   return { setYear, getYear };
 }
+
+export function updateFiltersFallback(map: maplibregl.Map, year: number) {
+  (map as any).__currentYear = year;
+  const layers = ["settlements-dots"];
+  for (const id of layers) {
+    const filter = [
+      "all",
+      ["<=", ["get", "year_start"], year],
+      [">=", ["coalesce", ["get", "year_end"], 9999], year]
+    ];
+    map.setFilter(id, filter as any);
+  }
+}
 ```
 
 ---
 
 ## 🎚 Slider UI — `slider.tsx`
-
-The slider must be:
-
-* keyboard operable
-* labeled with ARIA attributes
-* visually focusable
-* compatible with reduced-motion
 
 ```tsx
 import React from "react";
@@ -233,39 +232,33 @@ export function YearSlider({
 
 ---
 
-## 🔁 Interaction with Focus Mode & Story Nodes
-
-When **Focus Mode** selects an event with a known date:
-
-* Timeline snaps `currentYear` to that event’s temporal anchor
-* predictive/historic bands adjust to include the event
-* Story Node context updates accordingly
+## 🔁 Focus Mode & Story Node Synchronization
 
 ```mermaid
 flowchart TD
     FSELECT[Focus Event Selection] --> DATE[Extract Event Date]
-    DATE --> SETY[setYear(currentYear)]
-    SETY --> MAPSYNC[Map Temporal Filter]
-    SETY --> STORYSYNC[Story Node Focus]
+    DATE --> SY[Set Year]
+    SY --> MAPSYNC[Map Temporal Filter]
+    SY --> STORYSYNC[Story Node Focus]
 ```
 
 ---
 
 ## 🔐 FAIR+CARE Temporal Governance
 
-Temporal governance includes:
+Temporal governance must:
 
-* masking sensitive periods as redacted bands
-* providing warnings around trauma-heavy eras
-* ensuring predictive overlays are labeled as scenarios
+* mask or generalize sensitive periods
+* make explicit when narratives cross trauma-heavy eras
+* clearly label predictive vs observed periods
 
 ```mermaid
 flowchart TD
-    YSTATE[Timeline State] --> GPROC[Temporal Governance Rules]
-    GPROC --> VIS[Timeline Visualization]
+    TSTATE[Timeline State] --> TGOV[Temporal Governance Rules]
+    TGOV --> TVIS[Timeline Visualization]
 ```
 
-Governance metadata must be logged to:
+Governance events logged to:
 
 ```text
 ../../../docs/reports/audit/web-timeline-governance-ledger.json
@@ -275,47 +268,34 @@ Governance metadata must be logged to:
 
 ## ♿ Accessibility Architecture (WCAG 2.1 AA)
 
-Timeline feature must provide:
+Timeline must:
 
-* full keyboard control for the slider
-* screenreader announcements for `currentYear` and band changes
-* high-contrast colors for bars & markers
-* optional simplified view for cognitive load reduction
+* support keyboard interaction (`Tab`, arrows, Home/End, PgUp/PgDn)
+* announce year changes via live regions
+* use high-contrast handles and rails
+* respect `prefers-reduced-motion`
 
 ```mermaid
 flowchart TD
     TLSTATE[Timeline State] --> A11Y[a11y Decorator]
-    A11Y --> UI[Accessible Timeline UI]
+    A11Y --> TUI[Accessible Timeline UI]
 ```
 
 ---
 
-## 📡 Telemetry & Sustainability Integration
+## 📡 Telemetry & Sustainability
 
-Timeline telemetry records:
+Telemetry recorded:
 
-* `timeline_year_change` events
-* latency for map + focus sync
+* `timeline_year_change`
+* number of layers updated
 * energy estimate for scrubbing
-* predictive band usage
+* frame rate under scrubbing
 
-Telemetry snapshots are appended to:
+All exported to:
 
 ```text
 ../../../releases/v10.3.2/focus-telemetry.json
-```
-
-Examples of telemetry payload fields:
-
-```json
-{
-  "event": "timeline_year_change",
-  "year": 1880,
-  "layersUpdated": 12,
-  "fps": 59,
-  "energy_est_wh": 0.03,
-  "timestamp": "2025-11-14T21:55:00Z"
-}
 ```
 
 ---
@@ -352,17 +332,17 @@ Examples of telemetry payload fields:
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                                                     |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| v10.3.2 | 2025-11-14 | Deep-architecture rebuild: MapLibre/Cesium time-binding, Focus Mode alignment, predictive-band support, governance + telemetry integration. |
-| v9.7.0  | 2025-11-08 | Initial KFM-ready MapLibre timeline playbook.                                                                                               |
+| Version | Date       | Summary                                                                                                                                                    |
+| ------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v10.3.2 | 2025-11-14 | Deep-architecture rebuild: MapLibre/Cesium time-binding, Focus Mode and Story Node alignment, predictive-band support, governance + telemetry integration. |
+| v9.7.0  | 2025-11-08 | Initial KFM-ready MapLibre timeline playbook.                                                                                                              |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Timeline Feature Architecture**
-🕰️ Temporal Intelligence · 🌐 FAIR+CARE Governance · 🔗 Provenance-Aware Time Navigation · 🧠 AI-Synchronized Narratives
+🕰️ Temporal Intelligence · 🌐 FAIR+CARE Governance · 🔗 Provenance-Aware Navigation · 🧠 AI-Synchronized Context
 © 2025 Kansas Frontier Matrix — MIT License
 
 [Back to Web Features](../README.md)
