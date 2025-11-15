@@ -33,6 +33,7 @@ This infrastructure guarantees that every commit, dataset, and model meets trace
 ---
 
 ## 📘 Overview
+
 The **GitHub CI/CD Infrastructure** orchestrates **validation, build, deployment, security scanning, AI auditing, and sustainability telemetry** for the Kansas Frontier Matrix.
 
 Each workflow runs inside hardened GitHub Actions containers and produces:
@@ -49,7 +50,7 @@ All pipelines write to the **FAIR+CARE Council Governance Ledger**, ensuring end
 
 ## 🗂️ Directory Layout
 
-~~~~~text
+```text
 .github/
 ├── ARCHITECTURE.md                 # CI/CD architecture documentation (this file)
 ├── README.md                       # High-level automation overview
@@ -75,36 +76,36 @@ All pipelines write to the **FAIR+CARE Council Governance Ledger**, ensuring end
 ├── dependabot.yml                  # Automated dependency upgrade rules
 ├── SECURITY.md                     # Security policy + vulnerability disclosure
 └── FUNDING.yml                     # Optional sponsorship configuration
-~~~~~
+````
 
 ---
 
 ## ⚙️ CI/CD Workflow Responsibilities
 
-| Workflow | Description | Trigger | Artifact Output |
-|----------|-------------|---------|-----------------|
-| `stac-validate.yml` | Validate STAC 1.0 metadata & schema | PR / Push / Nightly | `reports/self-validation/stac/summary.json` |
-| `stac-dcat-bridge.yml` | Enforce STAC↔DCAT parity | Scheduled / Release | `reports/self-validation/bridge/parity_report.json` |
-| `faircare-validate.yml` | CARE sovereignty, provenance, dataset contract checks | PR / Push | `reports/fair/faircare_summary.json` |
-| `docs-lint.yml` | Markdown/YAML/JSON formatting, anchors, headings | PR / Push | `reports/self-validation/docs/lint_summary.json` |
-| `codeql.yml` | Static analysis for code security | PR / Weekly | `reports/security/codeql/*.sarif` |
-| `trivy.yml` | CVE scanning for images + lockfiles | PR / Push | `reports/security/trivy/*.json` |
-| `build-and-deploy.yml` | Build & deploy the web app/docs | After validations | `docs/reports/telemetry/build_metrics.json` |
-| `telemetry-export.yml` | Export CI/CD + sustainability metrics | Post-build | `../releases/v10.3.0/focus-telemetry.json` |
-| `ai-model-audit.yml` | AI model bias & drift auditing + explainability export | Model PR / Schedule | `reports/audit/ai_model_faircare.json` |
+| Workflow                | Description                                            | Trigger             | Artifact Output                                     |
+| ----------------------- | ------------------------------------------------------ | ------------------- | --------------------------------------------------- |
+| `stac-validate.yml`     | Validate STAC 1.0 metadata & schema                    | PR / Push / Nightly | `reports/self-validation/stac/summary.json`         |
+| `stac-dcat-bridge.yml`  | Enforce STAC↔DCAT parity                               | Scheduled / Release | `reports/self-validation/bridge/parity_report.json` |
+| `faircare-validate.yml` | CARE sovereignty, provenance, dataset contract checks  | PR / Push           | `reports/fair/faircare_summary.json`                |
+| `docs-lint.yml`         | Markdown/YAML/JSON formatting, anchors, headings       | PR / Push           | `reports/self-validation/docs/lint_summary.json`    |
+| `codeql.yml`            | Static analysis for code security                      | PR / Weekly         | `reports/security/codeql/*.sarif`                   |
+| `trivy.yml`             | CVE scanning for images + lockfiles                    | PR / Push           | `reports/security/trivy/*.json`                     |
+| `build-and-deploy.yml`  | Build & deploy the web app/docs                        | After validations   | `docs/reports/telemetry/build_metrics.json`         |
+| `telemetry-export.yml`  | Export CI/CD + sustainability metrics                  | Post-build          | `../releases/v10.3.0/focus-telemetry.json`          |
+| `ai-model-audit.yml`    | AI model bias & drift auditing + explainability export | Model PR / Schedule | `reports/audit/ai_model_faircare.json`              |
 
 Every workflow’s artifacts are referenced inside:
 
-- `../releases/v10.3.0/sbom.spdx.json`  
-- `../releases/v10.3.0/manifest.zip`  
+* `../releases/v10.3.0/sbom.spdx.json`
+* `../releases/v10.3.0/manifest.zip`
 
 for complete SLSA provenance.
 
 ---
 
-## 🧮 CI/CD Automation Flow (Indented Mermaid)
+## 🧮 CI/CD Automation Flow
 
-~~~~~mermaid
+```mermaid
 flowchart TD
   A["Commit / PR / Scheduled Run"] --> B["Validation Layer"]
   B --> C["Security Layer"]
@@ -123,58 +124,58 @@ flowchart TD
     S2["Trivy CVE Scan"]
   end
 
-  subgraph Build
+  subgraph Build + Deploy Layer
     B1["Frontend Build"]
     B2["Static Site Deployment"]
   end
-~~~~~
+```
 
 Lifecycle summary:
 
-1. **Validation:** STAC/DCAT, FAIR+CARE, docs  
-2. **Security:** CodeQL, Trivy  
-3. **Build:** React + static deploy  
-4. **Telemetry:** sustainability + compliance  
-5. **Governance:** append-only ledgers + attestations  
+1. **Validation:** STAC/DCAT, FAIR+CARE, docs
+2. **Security:** CodeQL, Trivy
+3. **Build:** React + static deploy
+4. **Telemetry:** sustainability + compliance
+5. **Governance:** append-only ledgers + attestations
 
 ---
 
 ## 🔒 Security & Compliance Controls
 
-| Control | Implementation | Policy |
-|---------|----------------|--------|
-| Static Analysis | CodeQL | Block on CRITICAL |
-| CVE Scan | Trivy | Block merge on CRITICAL |
-| Dependency Hygiene | Dependabot | Weekly auto-PRs |
-| Signing | GPG/SSH | Required |
-| Secrets | Encrypted Secrets + OIDC | No plaintext secrets |
-| Branch Protection | Required checks + reviews | 2 approvals, no force-push |
-| SBOM | SPDX export | Every release |
-| Attestation | SLSA provenance | Manifest signed |
+| Control            | Implementation            | Policy                               |
+| ------------------ | ------------------------- | ------------------------------------ |
+| Static Analysis    | CodeQL                    | Block on CRITICAL                    |
+| CVE Scan           | Trivy                     | Block merge on CRITICAL              |
+| Dependency Hygiene | Dependabot                | Weekly auto-PRs                      |
+| Signing            | GPG/SSH                   | Required for tags/releases           |
+| Secrets            | Encrypted Secrets + OIDC  | No plaintext secrets in repo         |
+| Branch Protection  | Required checks + reviews | 2 approvals, green CI, no force-push |
+| SBOM               | SPDX export               | Every release                        |
+| Attestation        | SLSA provenance           | Manifest signed and attached         |
 
 Disclosure policy:
 
-~~~~~text
+```text
 .github/SECURITY.md
-~~~~~
+```
 
 ---
 
 ## ⚖️ FAIR+CARE Integrated Governance
 
-| Layer | Enforcement | Standard |
-|-------|-------------|----------|
-| FAIR | STAC/DCAT validation · DOIs · open metadata | STAC/DCAT |
-| CARE | Heritage protection · consent checks · data sovereignty | FAIR+CARE |
-| MCP-DL | Documentation, telemetry, provenance | MCP-DL v6.3 |
-| Sustainability | CI energy + CO₂ telemetry | ISO 50001 / 14064 |
-| Supply-Chain | SBOM + SLSA | SPDX / SLSA v1.0 |
+| Layer          | Enforcement                                        | Standard          |
+| -------------- | -------------------------------------------------- | ----------------- |
+| FAIR           | STAC/DCAT validation · DOIs · open metadata        | STAC/DCAT         |
+| CARE           | Heritage protection · consent checks · sovereignty | FAIR+CARE         |
+| MCP-DL         | Docs-as-Code, telemetry, provenance                | MCP-DL v6.3       |
+| Sustainability | CI energy + CO₂ telemetry                          | ISO 50001 / 14064 |
+| Supply-Chain   | SBOM + SLSA                                        | SPDX / SLSA v1.0  |
 
 Immutable governance ledgers:
 
-- `docs/reports/audit/github_workflows_ledger.json`  
-- `docs/reports/audit/governance_ledger.json`  
-- `docs/reports/audit/ai_model_audit.json`  
+* `docs/reports/audit/github_workflows_ledger.json`
+* `docs/reports/audit/governance_ledger.json`
+* `docs/reports/audit/ai_model_audit.json`
 
 ---
 
@@ -182,18 +183,18 @@ Immutable governance ledgers:
 
 Outputs aggregated into:
 
-- `../releases/v10.3.0/focus-telemetry.json`  
-- `docs/reports/telemetry/*.json`  
+* `../releases/v10.3.0/focus-telemetry.json`
+* `docs/reports/telemetry/*.json`
 
 Metrics include:
 
-- CI workflow runtimes  
-- Build energy (Wh)  
-- CO₂e footprints  
-- FAIR+CARE compliance ratios  
-- Security findings summary  
-- STAC/DCAT parity deltas  
-- Documentation lint pass/fail  
+* CI workflow runtimes
+* Build energy (Wh)
+* CO₂e footprints
+* FAIR+CARE compliance ratios
+* Security findings summary
+* STAC/DCAT parity deltas
+* Documentation lint pass/fail statistics
 
 ---
 
@@ -201,46 +202,46 @@ Metrics include:
 
 At each tagged release:
 
-- Generate **SPDX SBOM**  
-- Generate **signed manifest.zip**  
-- Attach **CI attestations** (build → validation → security → deploy)  
-- Save **telemetry snapshot**  
-- Update **governance ledgers**  
-- Publish **STAC/DCAT catalogs**  
+* Generate **SPDX SBOM**
+* Generate **signed manifest.zip**
+* Attach **CI attestations** (validation → security → build → deploy)
+* Save **telemetry snapshot**
+* Update **governance ledgers**
+* Publish **STAC/DCAT catalogs**
 
 All linked by:
 
-- Commit SHA  
-- Run ID  
-- Release tag  
+* Commit SHA
+* Run ID
+* Release tag
 
 ---
 
 ## 🔗 Cross-References
 
-- `../docs/README.md` — Documentation Index  
-- `../src/ARCHITECTURE.md` — System Architecture  
-- `../docs/standards/faircare.md` — FAIR+CARE Framework  
-- `../tools/README.md` — Tooling Documentation  
+* `../docs/README.md` — Documentation Index
+* `../src/ARCHITECTURE.md` — System Architecture
+* `../docs/standards/faircare.md` — FAIR+CARE Framework
+* `../tools/README.md` — Tooling Documentation
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|--------|--------|---------|---------|
-| v10.3.1 | 2025-11-13 | DevSecOps | Updated to v10.3, telemetry integration, formatting alignment. |
+| Version | Date       | Author    | Summary                                                         |
+| ------- | ---------- | --------- | --------------------------------------------------------------- |
+| v10.3.1 | 2025-11-13 | DevSecOps | Updated to v10.3, telemetry integration, formatting alignment.  |
 | v10.2.2 | 2025-11-12 | DevSecOps | Added SLSA provenance, energy telemetry, stricter CVE policies. |
-| v10.0.0 | 2025-11-09 | A. Barta | Introduced AI audit workflow; ISO sustainability telemetry. |
-| v9.7.0 | 2025-11-05 | A. Barta | Added governance mapping + automation documentation. |
+| v10.0.0 | 2025-11-09 | A. Barta  | Introduced AI audit workflow; ISO sustainability telemetry.     |
+| v9.7.0  | 2025-11-05 | A. Barta  | Added governance mapping + automation documentation.            |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT**  
-Automated under **Master Coder Protocol v6.3**  
-FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**© 2025 Kansas Frontier Matrix — MIT**
+Automated under **Master Coder Protocol v6.3**
+FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 [Back to CI/CD Overview](README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
