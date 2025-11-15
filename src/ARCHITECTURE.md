@@ -1,270 +1,477 @@
 ---
-title: "🏗️ Kansas Frontier Matrix — Source Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🏛️ Kansas Frontier Matrix Architecture (v10.4.0)"
 path: "src/ARCHITECTURE.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
-review_cycle: "Continuous / Autonomous"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Annual / Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.3.0/manifest.zip"
-data_contract_ref: "../docs/contracts/data-contract-v3.json"
-governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/src-architecture-v3.json"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
+sbom_ref: "../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/docs-architecture-v3.json"
+governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP v6.3"
 ---
 
 <div align="center">
 
-# 🏗️ **Kansas Frontier Matrix — Source Architecture**  
+# 🏛️ **Kansas Frontier Matrix — Architecture Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)**  
 `src/ARCHITECTURE.md`
 
 **Purpose:**  
-Define the **FAIR+CARE-certified, agent-ready source architecture** connecting KFM’s ETL, AI, validation, governance, and telemetry pipelines.  
-Ensures reproducible science, explainable AI, and ledger-backed provenance under **MCP-DL v6.3**, ISO 19115, and ISO 50001 sustainability standards.
+Define the canonical **system architecture** of the Kansas Frontier Matrix (KFM) v10.4.0, including data/AI pipelines, Neo4j knowledge graph schema, STAC/DCAT catalogs, Focus Mode v2.5+, Story Nodes, governance, and multi-cloud deployment. This is the source of truth for developers implementing and extending KFM.
 
-<img alt="Docs · MCP" src="https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blueviolet" />
-<img alt="FAIR+CARE Certified" src="https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%20%C3%98%20Certified-gold" />
-<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="ISO 19115" src="https://img.shields.io/badge/ISO-19115%20Metadata-blue" />
-<img alt="ISO 50001" src="https://img.shields.io/badge/ISO-50001%20Energy%20Mgmt-lightgrey" />
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Ultimate-orange)](../docs/standards/faircare.md)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../LICENSE)  
+[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()  
 
 </div>
 
+---
+
+## 📖 Overview
+
+The **Kansas Frontier Matrix (KFM)** is an open-source semantic geospatial-historical platform that fuses Kansas’s historical, cultural, and environmental data into an interactive **map + timeline + knowledge graph**. The v10.x architecture is:
+
+- **Layered:** ETL/AI pipelines → Neo4j Knowledge Graph → FastAPI/GraphQL APIs → React + MapLibre/Cesium frontend.
+- **Semantic:** Aligned with **CIDOC CRM**, **OWL-Time**, **GeoSPARQL**, **schema.org**, **STAC 1.0**, and **DCAT 3.0**.
+- **Ethical:** Governed by **MCP v6.3** (documentation-first) and **FAIR+CARE** (data and AI ethics).
+- **Resilient:** Implements **Diamond⁹ Ω** rollback safety, multi-cloud deployment, and streaming-aware ETL.
+- **Narrative-aware:** Treats **Story Nodes** and **Focus Mode** outputs as schema-linked, first-class entities.
+
+High-level goals of this architecture:
+
+1. Make all data (past, present, projected) **queryable in time and space**.  
+2. Ensure every transformation and AI output is **reproducible and provenance-rich**.  
+3. Provide a **developer-friendly monorepo** where ETL, graph, API, and frontend code are modular but integrated.  
+4. Allow **safe, explainable AI narratives** over the graph (Focus Mode v2.5+).  
 
 ---
 
-## 🧭 Overview
+## 🔄 Data Ingestion & Pipelines
 
-The **Source Architecture** orchestrates **ETL → Validation → AI → Governance → Telemetry** as a continuous, auditable loop.
+KFM’s data plane is centered on **reproducible ETL pipelines** that support both **batch** and **streaming** ingestion. All ETL logic lives under `src/pipelines/` (e.g., `src/pipelines/batch/`, `src/pipelines/streaming/`) and is orchestrated via `make`, CI workflows, and/or Airflow-style schedulers.
 
-Every layer:
+### 🧱 Repository Data Layout
 
-- Is wrapped in **LangGraph 1.0** DAGs  
-- Uses **Dynamic Tool Calling** for governance-controlled tool access  
-- Emits **OpenTelemetry** traces and metrics  
-- Writes to **governance ledgers** and **telemetry artifacts**  
-- Aligns with **FAIR+CARE** and KFM data contracts
+Data files and metadata follow the project’s canonical file/data architecture:
 
-### Design Objectives
+- `data/sources/` — JSON manifests describing **external data sources** (DCAT-like), acting as pointers (URL/API, license, spatial/temporal extent, checksums) rather than embedding large files.
+- `data/raw/` — Workspace for **downloaded raw data**. Typically not checked into Git; tracked via DVC or Git LFS.
+- `data/processed/` — **Standardized outputs** in open formats (GeoJSON, COG GeoTIFF, CSV/Parquet) generated by ETL.
+- `data/stac/` — **STAC 1.0 Catalog** (Catalogs/Collections/Items) indexing spatio-temporal assets in `data/processed/`.
 
-- Autonomous and scalable ETL + AI pipelines  
-- FAIR+CARE ethics embedded in all operations  
-- Immutable provenance and checksum integrity  
-- Explainable AI reasoning with bias/drift safeguards  
-- Compliance with ISO 19115 / 19157 / 14064 / 50001  
+Each entry in `data/sources/*.json` includes at minimum:
 
----
+- `id`, `title`, `description`, `license` (SPDX-style string),
+- `spatial` (bbox, CRS), `temporal` (start/end, granularity),
+- `endpoint` (HTTP/REST/STAC, optional `streaming` info),
+- `outputs` (paths for processed artifacts).
 
-## 🧩 Modular Source Architecture (Indented Mermaid)
+These manifests are the **contracts** for ETL jobs: pipelines read them to know what to fetch, validate, and emit.
 
-    flowchart TD
-      A["Raw Data Sources (NOAA · USGS · FEMA · Archives · Sensors)"]
-      B["LangGraph ETL Pipelines (src/pipelines/etl/*)"]
-      C["Validation Engines (src/pipelines/validation/*)"]
-      D["AI Reasoning & XAI Models (src/pipelines/ai/*)"]
-      E["Governance & Provenance (src/pipelines/governance/*)"]
-      F["Telemetry & Sustainability (src/pipelines/telemetry/*)"]
-      G["Web / Focus Mode (web/src/...)"]
+### 🛰 Batch ETL
 
-      A --> B --> C --> D --> E --> F --> G
+Batch ETL jobs are used for historical and static datasets (e.g., NOAA archives, USGS maps, BLM land patents, Kansas Memory documents):
 
-**Pipeline Layers**
+1. **Extract**  
+   - Download via HTTP/REST/STAC or local copy from `data/raw/`.  
+   - Handle pagination, throttling, and retries.  
+   - Log every download with timestamp and checksum.
 
-- **ETL:** Harmonizes raw and streaming feeds into standardized, FAIR-ready structures.  
-- **Validation:** Performs schema, checksum, and FAIR+CARE compliance audits.  
-- **AI:** Focus Transformer v2.x reasoning + bias/diff checks powering Focus Mode.  
-- **Governance:** Ledger-backed provenance, STAC/DCAT catalog sync, immutable manifests.  
-- **Telemetry:** Energy & carbon monitoring, FAIR metrics, CI validation logs.  
-- **Web / Focus:** Real-time lineage visualization, AI explainability panels in the UI.
+2. **Transform**  
+   - Normalize formats:
+     - Tables → CSV/Parquet with consistent schema (UTF-8, ISO 8601 dates).
+     - Vectors → GeoJSON (CRS: EPSG:4326).
+     - Rasters → Cloud-Optimized GeoTIFF (COG) with proper overviews.  
+   - Enrich:
+     - Geocode place names (USGS GNIS, OSM Nominatim, etc.).
+     - Parse and normalize temporal expressions (OWL-Time-compatible).
+     - Run NLP (NER + geoparsing) on text docs (see AI section).  
+   - Validate:
+     - JSON/CSV against JSON Schema or Pydantic models.
+     - Spatial checks (geometry validity, CRS conformity).
 
----
+3. **Load**  
+   - Write artifacts to `data/processed/`.  
+   - Create/update corresponding **STAC Items** under `data/stac/`:
+     - Geometry, bbox, datetime(s), asset links, checksum, lineage.  
+   - Upsert entities and relationships into Neo4j (via `src/graph/` Cypher templates).
 
-## 🗂️ Source Directory Layout
+Batch jobs are designed to be **idempotent** and **incremental**. Re-running them should not create duplicate entities or corrupt the graph; they rely on natural keys (e.g., station IDs, document IDs, map sheet IDs) to decide whether to insert or update.
 
-    src/
-    ├── ARCHITECTURE.md                  # This file
-    ├── README.md                        # High-level source overview
-    │
-    ├── pipelines/
-    │   ├── etl/                         # Data ingestion, harmonization, predictive & streaming ETL
-    │   ├── ai/                          # Focus reasoning, transformer models, explainability
-    │   ├── validation/                  # FAIR+CARE schema and checksum audits
-    │   ├── governance/                  # Ledger, provenance, and manifest synchronization
-    │   ├── telemetry/                   # Energy, performance, and sustainability metrics
-    │   └── utils/                       # Shared STAC/DCAT/JSON utilities
-    │
-    ├── graph/                           # Neo4j schema, Cypher queries, ontology mappings
-    │   ├── schema/
-    │   ├── queries/
-    │   ├── ingest/
-    │   └── federation/
-    │
-    ├── agents/                          # LangGraph DAG definitions + CrewAI MCP bindings
-    │   ├── hydrology_dag.py
-    │   ├── climate_dag.py
-    │   ├── archives_dag.py
-    │   └── heritage_dag.py
-    │
-    └── metadata.json                    # Provenance + checksum registry (auto-generated)
+### 🌊 Streaming ETL
 
----
+Streaming ETL extends the architecture for **live feeds** (e.g., river gauges, Mesonet weather, near-real-time hazard data):
 
-## ⚙️ Layer Responsibilities & Governance Hooks
+- A **Streaming STAC Bridge** listens on Kafka topics, webhooks, or polling APIs for new observations.
+- Each new event is:
+  - Validated against a schema (e.g., `observation.schema.json`),
+  - Converted into a STAC Item with `datetime` and geometry,
+  - Inserted into the graph as an `Observation` node linked to:
+    - `SensorStream` (the source), and
+    - `Place` (the location),
+    - optionally `Dataset` (the collection).
 
-### 1️⃣ ETL Pipelines (`src/pipelines/etl/`)
+Streaming ETL jobs run continuously as long-lived workers. They use **exactly-once semantics** where possible (idempotent writes, transaction management) and log any failures for later reprocessing. This design allows the map/timeline to show **live conditions** side-by-side with historical data.
 
-- Ingest raw data from APIs, files, and streams (Kafka/PubSub)  
-- Normalize to KFM schemas and write STAC/DCAT Items/Collections  
-- Attach input hashes and source URIs to each transformed artifact  
+### 🔮 Predictive ETL (2030–2100)
 
-Governance:
+Predictive ETL modules generate **future scenarios** (e.g., climate, demography) using historical data and models:
 
-- Input lineage and schema hash recorded  
-- Violations recorded to FAIR+CARE reports  
-- Telemetry for runtime, IO volume, and energy usage
+- Models produce forward-looking datasets (e.g., yearly grids for 2030–2100).
+- For each scenario and time slice:
+  - A predictive artifact is written (e.g., `climate_rcp45_2050.tif`),
+  - A STAC Item is created with:
+    - `datetime` set to the modeled year,
+    - `properties` including `scenario`, `model`, `version`, `uncertainty`,
+  - A `Dataset` node in Neo4j is updated to link to the new STAC Items.
+
+Predictive data is **clearly distinguished** from observational data in both metadata (`properties.kind: "model-projection"`) and UI (labels, styling). Focus Mode and Story Nodes are prompted to use hedged language (“projected”, “modeled”) when referring to future data.
 
 ---
 
-### 2️⃣ Validation (`src/pipelines/validation/`)
+## 📊 Knowledge Graph & Ontology Schema
 
-- Schema validation (JSON Schema, Pydantic)  
-- Checksum verification across ETL stages  
-- FAIR+CARE checks (license, consent, sensitivity, accessibility metadata)
+KFM’s **knowledge graph** is implemented in Neo4j and provides the semantic backbone for Focus Mode, Story Nodes, and all higher-level analytics.
 
-Outputs:
+### 🧬 Core Entity Types
 
-- `../reports/fair/src_summary.json`  
-- `../reports/self-validation/work-src-validation.json`  
+The graph is **schema-first** and maps to recognized ontology classes:
 
----
+- `Person`  
+  - CIDOC: `E21 Person`  
+  - schema.org: `Person`  
+  - Properties: `id`, `name`, `birth_date`, `death_date`, `roles`, etc.
 
-### 3️⃣ AI Reasoning & Explainability (`src/pipelines/ai/`)
+- `Place`  
+  - CIDOC: `E53 Place`  
+  - schema.org: `Place`  
+  - GeoSPARQL: `geo:Feature` with `geo:hasGeometry`  
+  - Properties: `id`, `name`, `geometry` (GeoJSON/WKT), `bbox`, `admin_level`.
 
-- Focus Transformer v2.x model execution  
-- SHAP/LIME explainability runs  
-- Drift and bias detectors for model outputs  
-- AI behavior logged for review and retraining decisions  
+- `Event`  
+  - CIDOC: `E5 Event`  
+  - schema.org: `Event`  
+  - OWL-Time: `time:Interval` (start/end)  
+  - Properties: `id`, `label`, `start_time`, `end_time`, `kind`.
 
-Outputs:
+- `Document`  
+  - CIDOC: `E31 Document`  
+  - schema.org: `CreativeWork`  
+  - Properties: `id`, `title`, `type`, `source`, `url`, `text`, `license`.
 
-- `../reports/audit/ai_src_ledger.json` (AI audit ledger)  
-- Explainability metrics appended to telemetry
+- `Dataset`  
+  - DCAT: `Dataset` (and/or STAC Collection)  
+  - Properties: `id`, `title`, `description`, `license`, `publisher`, `landing_page`.
 
----
+- `SensorStream`  
+  - Represents a live data stream (e.g. a station).  
+  - Links to `Place`, `Dataset`, and `Observation` nodes.
 
-### 4️⃣ Governance & Provenance (`src/pipelines/governance/`)
+- `Observation`  
+  - Time-stamped measurement or derived value.  
+  - Properties: `timestamp`, `value`, `unit`, `quality_flag`.
 
-- Synchronize manifests and ledgers with STAC/DCAT/Federated catalogs  
-- Maintain blockchain-/ledger-like records for critical workflows  
-- Bridge to `releases/*/manifest.zip` and `sbom.spdx.json`  
+- `StoryNode`  
+  - See Story Nodes section below.  
+  - Properties: `id`, `title`, `summary`, narrative/body, `spacetime` attributes.
 
-Key artifacts:
+### 🔗 Key Relationship Types
 
-- `../releases/v10.3.0/manifest.zip`  
-- `../releases/v10.3.0/sbom.spdx.json`  
-- Provenance paths for each dataset and model
+Relationships encode semantics and enable higher-order queries:
 
----
+- `(:Person)-[:ATTENDED]->(:Event)`  
+- `(:Person)-[:ASSOCIATED_WITH]->(:Person)`  
+- `(:Event)-[:OCCURRED_AT]->(:Place)`  
+- `(:Document)-[:MENTIONS]->(:Place|:Person|:Event)`  
+- `(:Dataset)-[:DESCRIBES]->(:Event|:Place|:Person)`  
+- `(:SensorStream)-[:LOCATED_AT]->(:Place)`  
+- `(:SensorStream)-[:PRODUCED]->(:Observation)`  
+- `(:StoryNode)-[:ABOUT]->(:Place|:Person|:Event|:Dataset)`  
+- `(:StoryNode)-[:FOLLOWS]->(:StoryNode)` (narrative sequencing)  
+- `(:Entity)-[:FEDERATED_WITH]->(:ExternalEntity)` (cross-graph federation)  
+- `(:Observation)-[:DERIVED_FROM]->(:Dataset)`  
 
-### 5️⃣ Telemetry & Sustainability (`src/pipelines/telemetry/`)
+These relationships are enforced via Cypher templates and validation scripts in `src/graph/`. New pipelines must conform to the schema or add schema migrations.
 
-- Energy and carbon metrics for ETL + AI runs  
-- Performance metrics (runtime, throughput, memory)  
-- FAIR+CARE summary metrics per release  
-- Adds records to:
+### 🌐 Ontology Alignment
 
-    ../releases/v10.3.0/focus-telemetry.json
+While Neo4j is not natively RDF, KFM’s schema is **logically mapped** to RDF/OWL:
 
-Telemetry forms the basis for ISO 50001/14064 energy and climate assessments.
+- Each node type carries a `rdf_type` or `ontology_class` label (e.g., `cidoc:E5_Event`).
+- Temporal properties follow OWL-Time (start/end instants, precision).
+- Spatial properties follow GeoSPARQL expectations (WKT geometry, CRS annotations).
+- DCAT’s `Dataset` and STAC’s `Collection/Item` are bridged via a dedicated mapping layer.
 
----
+For RDF export or federation, a transform layer (e.g., in `src/graph/export_rdf.py`) can:
 
-## ⚖️ Governance & Provenance Integration
+- Convert Neo4j nodes/edges to triples.
+- Attach JSON-LD contexts for Story Nodes, Focus narratives, and STAC Items.
 
-| Layer         | Function                     | Governance Hooks                          | Ledger / Artifact                                             |
-|---------------|-----------------------------|-------------------------------------------|--------------------------------------------------------------|
-| **ETL**       | Ingest & normalize          | Input lineage + schema hash               | `../reports/audit/data_provenance_ledger.json`               |
-| **Validation**| FAIR + CARE QA              | Ethics & accessibility checks             | `../reports/fair/src_summary.json`                           |
-| **AI**        | Reasoning + Explainability  | Drift & transparency scoring              | `../reports/audit/ai_src_ledger.json`                        |
-| **Governance**| Ledger + Manifest Sync      | STAC/DCAT + manifest cross-references     | `../releases/*/manifest.zip`                                 |
-| **Telemetry** | Sustainability Metrics      | Energy / carbon / runtime logging         | `../releases/*/focus-telemetry.json`                         |
-
----
-
-## 🧠 FAIR + CARE Alignment
-
-| Principle             | Implementation                                                   | Oversight           |
-|-----------------------|-------------------------------------------------------------------|---------------------|
-| **Findable**          | Entities indexed via `metadata.json`, STAC, and DCAT catalogs.   | @kfm-data           |
-| **Accessible**        | MIT-licensed code, documented ETL paths, public metadata.        | @kfm-accessibility  |
-| **Interoperable**     | ISO 19115 + DCAT 3.0 + STAC 1.0 alignment across layers.         | @kfm-architecture   |
-| **Reusable**          | Modular code, versioned data contracts, stable APIs.             | @kfm-design         |
-| **Collective Benefit**| Transparent automation supporting communities and researchers.   | @faircare-council   |
-| **Authority to Control** | FAIR+CARE Council approval for governed pipelines.           | @kfm-governance     |
-| **Responsibility**    | Maintainers monitor impacts, document decisions, track errors.   | @kfm-sustainability |
-| **Ethics**            | AI bias/drift safeguards, human-tunable thresholds.              | @kfm-ethics         |
-
-Audit references:
-
-- `../reports/audit/ai_src_ledger.json`  
-- `../reports/fair/src_summary.json`  
+This alignment allows KFM to interoperate with Linked Data ecosystems while staying practical for Neo4j-centric development.
 
 ---
 
-## ⚙️ Core Dependencies (Conceptual)
+## 🧩 Story Nodes & Narrative Graph
 
-| Domain     | Frameworks                               | Purpose                                      |
-|-----------|-------------------------------------------|----------------------------------------------|
-| ETL       | Pandas, GDAL, PyArrow, GeoPandas          | Multi-source ingestion + geospatial transforms |
-| AI/XAI    | PyTorch, Transformers, SHAP, LIME         | Explainable, bias-audited reasoning models   |
-| Validation| JSONSchema, Pydantic, FAIR+CARE validator | Structural + ethical conformance             |
-| Governance| Neo4j, STAC/DCAT utilities                | Provenance & catalog sync                    |
-| Telemetry | OpenTelemetry, Prometheus/Grafana         | Observability and sustainability metrics     |
+### 🪶 Story Node Schema
+
+**Story Nodes** are structured narrative objects that bind text, time, space, and graph references. Their JSON schema (see `schemas/story-node.schema.json`) includes:
+
+- `id` – Globally unique identifier (UUID/DOI).
+- `type` – `"story-node"`.
+- `version` – Semantic version of the node content.
+- `lang` – BCP-47 code (e.g. `"en"`).
+- `title` – Human-readable title.
+- `summary` – Short abstract for cards/timelines.
+- `narrative` – Object with:
+  - `body` – Primary narrative text (Markdown recommended).
+  - `format` – MIME-type (`text/markdown`, etc.).
+  - `alternates` – Localized or audience-specific variants.
+  - `media` – Inline media references (images, audio, etc.).
+- `spacetime` – Object with:
+  - `geometry` – GeoJSON geometry (Point/Polygon/Multi*).
+  - `bbox` – Optional bounding box.
+  - `crs` – Coordinate reference system (default EPSG:4326).
+  - `place_labels` – Human place names.
+  - `when` – OWL-Time-compatible:
+    - `start`, `end` – ISO 8601 date-time strings.
+    - `precision` – Granularity (`year`, `month`, `day`, …).
+    - `original_label` – e.g. `"circa 1854"` for approximate dates.
+- `relations` – Array of links to other nodes:
+  - `rel` – Relation type (`follows`, `references`, `contradicts`, `part-of`, etc.).
+  - `target` – Target entity ID.
+  - `role` – Qualifier (`primary-source`, `counterpoint`, etc.).
+- `stac` – Optional hints for downstream STAC integration (e.g., which assets to load with the story).
+
+In Neo4j, a Story Node is represented as `(:StoryNode)` with properties mirrored from the JSON. Relations in the `relations` array are instantiated as graph edges (e.g., `[:FOLLOWS]`, `[:ABOUT]`).
+
+### 📚 Narrative Graph Integration
+
+Story Nodes form a **narrative layer** atop the core fact graph:
+
+- Each Story Node links to People/Places/Events via `:ABOUT`.
+- Story Nodes link to each other (`:FOLLOWS`, `:PART_OF`) creating narrative sequences.
+- Both a “story graph” and a “fact graph” are thus queryable:
+  - “All stories about the Arkansas River with events between 1850–1900.”
+  - “Next story in this trail after `story-node:bleeding-kansas-01`.”
+
+The React frontend renders Story Nodes as **story cards**, synchronized with:
+
+- **Timeline:** Cards appear when the timeline is within their `when` interval.
+- **Map:** Cards highlight their `spacetime.geometry` and linked places.
+
+Contributors author Story Nodes via structured JSON/YAML (or a UI form) and commit them to version control, meaning stories are treated as code artifacts (subject to review, versioning, and CI validation).
 
 ---
 
-## 🌱 Sustainability & Performance Metrics (v10.3.x)
+## 🔍 Focus Mode v2.5 — AI Context Engine
 
-| Metric                  | Target        | Verified By           |
-|-------------------------|--------------|-----------------------|
-| Avg Runtime / Pipeline  | ≤ 3.0 min    | Telemetry             |
-| Energy / Run            | ≤ 0.90 Wh    | Sustainability monitors|
-| Carbon Output / Run     | ≤ 0.08 g CO₂e| Sustainability monitors|
-| Renewable Energy Share  | 100 % (RE100)| Infra audits          |
-| FAIR+CARE Compliance    | 100 %        | FAIR+CARE Council     |
+### 🎯 Focus Mode Concept
 
-Telemetry log:
+**Focus Mode** is an AI-enhanced exploration mode that pivots the entire UI around a selected entity (Person, Place, Event, Document, or Dataset). When a user “focuses” on an entity:
 
-    ../releases/v10.3.0/focus-telemetry.json
+- The **timeline** emphasizes relevant events (by type and time).
+- The **map** pans/zooms to relevant places and toggles contextual layers.
+- The **Focus Panel** displays:
+  - AI-generated summary,
+  - Related entities grouped by type,
+  - Story Nodes and documents,
+  - Optional explainability overlays.
+
+It is implemented through:
+
+- Backend: A `GET /api/focus/{id}` endpoint (FastAPI/GraphQL) that runs parameterized Cypher to gather the entity’s **local subgraph**.
+- Frontend: React components that render the subgraph and AI outputs.
+
+### 🧠 Focus Transformer v2.5
+
+The core AI engine is **Focus Transformer v2.5**, a dual-encoder Transformer that consumes:
+
+- Graph neighborhood (nodes + relations),
+- Relevant text snippets from Documents/Story Nodes,
+- Temporal and spatial metadata,
+- Scenario flags (if future/projection).
+
+It outputs:
+
+- A structured summary (paragraphs, bullet points),
+- Candidate insights (e.g., pattern descriptions),
+- Attribution metadata (what evidence supports what claim).
+
+Key design features:
+
+- **Cross-modal attention:** The model attends jointly over graph structure, text, and metadata.
+- **Ethical filters:** Enforced by prompt design and post-filters, ensuring sensitive content is handled per CARE guidelines.
+- **Explainability:** It provides attention maps and/or SHAP-like importance scores for graph elements that contributed most to each sentence.
+
+### 🧾 Focus API Flow
+
+1. Client calls `GET /api/focus/{id}` (or GraphQL equivalent) with entity ID.
+2. Backend:
+   - Validates ID and resolves the entity type.
+   - Runs Cypher to collect:
+     - Direct neighbors (1-hop) and selected 2-hop neighbors.
+     - Relevant Story Nodes, Documents, Observations, and Datasets.
+   - Feeds this context into Focus Transformer v2.5.
+   - Produces:
+     - `narrative` (Markdown/HTML),
+     - `related_entities` grouped by type,
+     - `provenance` (mapping text segments to source IDs),
+     - `insights` (patterns, anomalies, suggestions).
+3. Response JSON goes to frontend Focus Panel.
+
+### 🧩 Explainability & Overlays
+
+Frontend Focus Panel includes:
+
+- **Sentence-level provenance:** Hovering over a sentence highlights the graph nodes and documents it came from; clicking provides a mini “evidence” popup.
+- **Ethical overlays:** Icons or banners when content is redacted, generalized, or flagged as sensitive.
+- **Graph spotlight:** An optional mode where relevant nodes/edges in the map and timeline visually pulse or glow while the narrative is read.
+
+Developers can introspect the underlying attributions (stored as part of the Focus output payload) for testing and auditing.
+
+### 🔁 Multi-Entity & Streaming Focus
+
+Focus Mode supports:
+
+- **All major entity types:** Person, Place, Event, Document, Dataset, StoryNode, SensorStream.
+- **Side-by-side comparison:** Two Focus panels for comparing entities.
+- **Live updates:** For `SensorStream` or recent events, Focus can auto-refresh summaries as streaming ETL injects new Observations; the backend emits notifications via WebSockets or SSE, and the frontend refreshes only the changed parts.
 
 ---
 
-## 🧾 Internal Citation
+## ☁️ Deployment & Multi-Cloud Infrastructure
 
-    Kansas Frontier Matrix (2025). Source Architecture (v10.3.1).
-    FAIR+CARE-aligned modular architecture for ETL, AI, validation, governance, and telemetry pipelines with ledger-backed provenance under MCP-DL v6.3.
+### 🧱 Containerization & Orchestration
+
+KFM is packaged as a set of Docker images, typically orchestrated by:
+
+- **Local / dev:** `docker-compose.yml` for quick spin-up.
+- **Prod:** Kubernetes manifests or Helm charts per service (graph, API, web, ETL workers).
+
+Services include:
+
+- `neo4j` (graph DB, with optional clustering),
+- `api` (FastAPI/GraphQL),
+- `web` (React/MapLibre/Cesium SPA),
+- `etl-batch` and `etl-streaming`,
+- `kafka` (or equivalent message broker),
+- optional `redis`/`pg` for caching and ancillary features.
+
+### 🌩 Multi-Cloud Strategy
+
+The architecture is **cloud-agnostic**:
+
+- Uses open-source components (Neo4j, Kafka, MinIO/S3-compatible storage) rather than cloud-exclusive services.
+- Deployment scripts exist (or are planned) for:
+  - AWS (EKS + S3),
+  - Azure (AKS + Blob Storage),
+  - GCP (GKE + GCS),
+  - On-prem clusters.
+
+The **frontend** is a static SPA that can be served by any CDN or static host, giving flexible, global distribution.
+
+### 🧯 Diamond⁹ Ω Rollback Safety
+
+Rollback is achieved by:
+
+- **Versioned releases:** Each release has:
+  - `releases/{version}/sbom.spdx.json`,
+  - `releases/{version}/manifest.zip` listing all artifacts,
+  - tags in Git.
+- **Data versioning:** Large datasets are tracked via DVC/Git LFS; raw and processed data can be regenerated from manifests.
+- **Backup rotation:** Neo4j snapshots are taken regularly (e.g. daily), encrypted, and stored across multiple locations (on-prem + cloud).
+- **Environment as code:** Redeploying any historical release simply involves checking out the tag and re-running IaC scripts.
+
+In a catastrophic event, operators can:
+
+1. Restore data from backup or DVC.
+2. Redeploy images for the desired version.
+3. Verify checksums, re-run validation pipelines.
+4. Bring up the restored environment, confident that it matches the historical state.
 
 ---
 
-## 🕰️ Version History
+## ⚖️ Governance, Provenance & Compliance
 
-| Version  | Date       | Summary                                                                                     |
-|----------|------------|---------------------------------------------------------------------------------------------|
-| v10.3.1  | 2025-11-13 | Updated to LangGraph + MCP-ready source architecture, aligned telemetry and governance refs.|
-| v10.1.0  | 2025-11-10 | Refactored streaming modules; integrated STAC↔DCAT bridge v3; Focus Transformer governance. |
-| v10.0.0  | 2025-11-08 | Model-driven reasoning, sustainability metrics, expanded FAIR+CARE schema.                  |
-| v9.7.0   | 2025-11-05 | Enhanced ledger hooks & telemetry schema v2.                                               |
-| v9.6.0   | 2025-11-04 | Added AI explainability and telemetry integration.                                          |
-| v9.5.0   | 2025-11-02 | Expanded FAIR+CARE governance references and data contracts.                                |
+### 📜 Master Coder Protocol (MCP v6.3)
+
+MCP governs how code, data, and docs are created and maintained:
+
+- **Docs-before-code:** Every new feature requires:
+  - Architecture/README update,
+  - Experiment log (for models),
+  - SOP for recurring tasks, if applicable.
+- **Templates:** `docs/templates/` includes:
+  - Experiment templates,
+  - Model cards,
+  - SOPs,
+  - Contribution guides.
+- **CI enforcement:** If new modules are added without corresponding docs or tests, CI fails.
+
+### 🌈 FAIR + CARE Implementation
+
+FAIR:
+
+- **Findable:** Datasets indexed with DCAT and STAC; public README indexes all major assets.
+- **Accessible:** Open repository, open licenses (MIT/CC-BY), public builds.
+- **Interoperable:** Ontology alignment; JSON-LD exports; use of open formats only.
+- **Reusable:** Rich metadata and licensing; detailed transformation logs.
+
+CARE:
+
+- **Collective Benefit:** Features like Focus Mode and Story Nodes are used to amplify knowledge for communities, not exploit them.
+- **Authority to Control:** Sensitive datasets (e.g., Indigenous oral histories) are flagged and controlled; not exposed without explicit agreement.
+- **Responsibility:** Clear guidelines for how contributors handle sensitive content; AI guardrails built into Focus Mode.
+- **Ethics:** Regular FAIR+CARE reviews, audit logs, explicit consent fields in data manifests.
+
+### 🔍 Provenance & Versioning
+
+Every artifact in KFM (code, data, stories) has:
+
+- Explicit version,
+- Origin (source, authors),
+- Transformation steps.
+
+This is captured by:
+
+- Front-matter in docs (`version`, `commit_sha`, etc.),
+- Data manifests (`source_url`, `license`, `hash`),
+- ETL logs and notebooks,
+- Graph properties and relationships like `:Observation-[:DERIVED_FROM]->:Dataset`.
+
+This makes it possible to go from **any visual element** in the UI (a map layer, a story, a Focus narrative) back to the underlying data and processing chain.
 
 ---
 
-<div align="center">
+## 📚 Glossary
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-*Open Architecture × FAIR+CARE Governance × Sustainable Reproducibility*  
-[Back to Source README](./README.md) · [Docs Portal](../docs/) · [Governance Ledger](../docs/standards/governance/DATA-GOVERNANCE.md)
+- **KFM:** Kansas Frontier Matrix.  
+- **ETL:** Extract–Transform–Load pipeline for data.  
+- **STAC:** SpatioTemporal Asset Catalog (1.0).  
+- **DCAT:** W3C Data Catalog Vocabulary (v3).  
+- **CIDOC CRM:** Ontology for cultural heritage.  
+- **OWL-Time:** Temporal ontology for instants/intervals.  
+- **GeoSPARQL:** OGC standard for geospatial RDF.  
+- **Story Node:** Schema-driven narrative object linking text, time, and space.  
+- **Focus Mode:** AI context mode centering UI and narrative on a selected entity.  
+- **Diamond⁹ Ω / Crown∞Ω:** Internal labels for top-tier quality and governance compliance.  
+- **MCP:** Master Coder Protocol (v6.3) – documentation-first project methodology.  
+- **FAIR:** Data principles (Findable, Accessible, Interoperable, Reusable).  
+- **CARE:** Indigenous data governance principles (Collective Benefit, Authority to Control, Responsibility, Ethics).
 
-</div>
+---
+
+## 🕓 Version History (Architecture Doc)
+
+| Version   | Date       | Notes                                                                                     |
+|----------|------------|-------------------------------------------------------------------------------------------|
+| v10.4.0  | 2025-11-15 | Full rewrite for KFM v10.4.0; integrated Story Nodes, Focus v2.5, streaming ETL, FAIR+CARE. |
+| v10.3.1  | 2025-11-14 | Prior deep-layer architecture; pre-streaming predictive ETL and partial narrative support. |
+| v10.0.0  | 2025-09-01 | Major v10 upgrade; predictive modeling, Focus Mode v2, 3D visualization, STAC/DCAT bridge. |
+| v9.7.x   | 2025-03-xx | Developer guide architecture; Focus Mode v1, initial Story Node support, stable ETL/graph. |
+| ≤ v9.x   | 2023-2024  | Early system architecture drafts; single-cloud focus, basic FAIR support, pre-MCP v6.3.     |
