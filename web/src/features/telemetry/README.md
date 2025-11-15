@@ -258,4 +258,3 @@ Implements cross-feature telemetry logging for performance, accessibility, and e
 [Back to Web Features](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
-
