@@ -147,32 +147,32 @@ The Web Platform consists of five coordinated layers:
 
 ## 🧱 Internal Directory Structure
 
-web/  
-├── README.md  
-├── ARCHITECTURE.md  
-├── package.json  
-├── vite.config.ts  
-├── public/  
-│   ├── index.html  
-│   ├── manifest.json  
-│   ├── icons/  
-│   └── images/  
-└── src/  
-    ├── main.tsx  
-    ├── App.tsx  
-    ├── components/  
-    │   ├── map/  
-    │   ├── timeline/  
-    │   ├── focus/  
-    │   ├── story/  
-    │   ├── governance/  
-    │   ├── stac/  
-    │   └── layout/  
-    ├── pages/  
-    ├── hooks/  
-    ├── context/  
-    ├── services/  
-    ├── utils/  
+web/
+├── README.md
+├── ARCHITECTURE.md
+├── package.json
+├── vite.config.ts
+├── public/
+│   ├── index.html
+│   ├── manifest.json
+│   ├── icons/
+│   └── images/
+└── src/
+    ├── main.tsx
+    ├── App.tsx
+    ├── components/
+    │   ├── map/
+    │   ├── timeline/
+    │   ├── focus/
+    │   ├── story/
+    │   ├── governance/
+    │   ├── stac/
+    │   └── layout/
+    ├── pages/
+    ├── hooks/
+    ├── context/
+    ├── services/
+    ├── utils/
     └── styles/  
 
 ### Directory Responsibilities
