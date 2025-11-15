@@ -1,122 +1,308 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Web Context & State Management Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧩 Kansas Frontier Matrix — Web Context & State Management Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/context/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.3.2"
+last_updated: "2025-11-14"
+review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-context-v1.json"
+sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-context-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
 ---
 
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Web Context & State Management Layer**
+# 🧩 **Kansas Frontier Matrix — Web Context & State Management Architecture**  
 `web/src/context/README.md`
 
-**Purpose:** Define the global, FAIR+CARE-certified state management system that governs AI explainability, telemetry, and accessibility across the KFM frontend.  
-Each context synchronizes ethical data interactions with governance ledgers and telemetry systems under **MCP v6.3** and **WCAG 2.1 AA**.
+**Purpose:**  
+Define the complete **deep-architecture specification** of the global context and state management system powering the Kansas Frontier Matrix (KFM) v10.3.2 web platform.  
+This subsystem synchronizes AI explainability, FAIR+CARE governance, telemetry, provenance, accessibility tokens, sustainability metrics, and cross-component state across the entire front-end environment.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../docs/README.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Context_Layer-orange)]()
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Executive Summary
 
-The **Context Layer** acts as the **ethical backbone** of the KFM web application.  
-It centralizes FAIR+CARE compliance, AI Focus Mode context, and telemetry while maintaining accessibility preferences and provenance traceability.
+The **Context Layer** forms the **ethical, semantic, and operational brainstem** of the entire KFM front-end.  
+It centralizes:
 
-**Core Functions**
-- Maintain global Focus Mode AI and FAIR+CARE runtime state.  
-- Sync provenance and ledger data between UI and governance systems.  
-- Track telemetry for sustainability, performance, and ethics validation.  
-- Preserve user preferences (accessibility, consent, themes) transparently.
+- Global Focus Mode v2.5 AI reasoning state  
+- FAIR+CARE governance rules & decision engines  
+- Provenance & lineage chains (PROV-O, STAC, DCAT)  
+- Sustainability + performance telemetry (ISO 50001)  
+- A11y preferences, high-contrast themes, reduced motion  
+- Temporal & spatial sync between Map, Timeline, Focus Mode, and Story Nodes  
+- Application-wide reactive event bus  
+
+The architecture ensures **deterministic, ethical, inclusive, and reproducible** front-end behavior.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Authoritative v10.3.2)
 
-```
+```text
 web/src/context/
-├── README.md               # This file
-├── AppContext.tsx          # Root provider for governance & runtime state
-├── FocusModeContext.tsx    # AI state + explainability reasoning
-├── GovernanceContext.tsx   # FAIR+CARE + ledger sync
-├── TelemetryContext.tsx    # Sustainability & performance reporting
-├── ThemeContext.tsx        # Global theme, color contrast, and layout prefs
-└── metadata.json           # Context provenance + audit metadata
+├── README.md
+├── AppContext.tsx
+├── FocusModeContext.tsx
+├── GovernanceContext.tsx
+├── TelemetryContext.tsx
+├── ThemeContext.tsx
+└── metadata.json
 ```
+
+Each context operates within the **Context Orchestration Plane**.
 
 ---
 
-## 🧩 Context Flow
+# 🧩 Global Context Orchestration Architecture
 
 ```mermaid
 flowchart TD
-A["User Interaction (Frontend)"] --> B["AppContext"]
-B --> C["FocusModeContext (AI Explainability)"]
-C --> D["GovernanceContext (FAIR+CARE Ledger)"]
-D --> E["TelemetryContext (Perf + Sustainability)"]
-E --> F["ThemeContext (A11y + Visual Tokens)"]
-F --> G["Ledger Update → Provenance Registry"]
+    USER[User Interaction] --> APP[AppContext<br/>global runtime]
+    APP --> FOCUS[FocusModeContext<br/>AI reasoning · CARE flags]
+    FOCUS --> GOV[GovernanceContext<br/>FAIRCARE · provenance]
+    GOV --> TEL[TelemetryContext<br/>energy · ethics · a11y]
+    TEL --> THEME[ThemeContext<br/>contrast · motion · tokens]
+    THEME --> UI[UI Components<br/>layout · cards · maps · focus]
+    UI --> GOVSYNC[Ledger Sync<br/>governance ledgers]
 ```
 
-1. **AppContext:** Root state for global FAIR+CARE runtime.  
-2. **FocusModeContext:** Tracks reasoning data and CARE safeguards.  
-3. **GovernanceContext:** Updates provenance and certification logs.  
-4. **TelemetryContext:** Monitors energy, accessibility, and latency.  
-5. **ThemeContext:** Manages inclusive color and typography tokens.
+---
+
+# 🧬 Context Deep Specifications
+
+## 1️⃣ AppContext — Root Runtime & Ethical Backbone
+
+### Responsibilities
+- Bootstraps all other contexts  
+- Normalizes user roles + permissions  
+- Provides the app-wide FAIR+CARE runtime environment  
+- Exposes global event bus for:
+  - navigation  
+  - dataset activation  
+  - focus/temporal updates  
+  - governance signals  
+
+```mermaid
+flowchart LR
+    INIT[Initialization] --> ROLE[Role Resolver]
+    ROLE --> STATE[Runtime State]
+    STATE --> CHILD[All Nested Contexts]
+```
 
 ---
 
-## ⚙️ Contracts & Validation
+## 2️⃣ FocusModeContext — Explainable AI State Engine
 
-| Contract | Purpose | Validator |
-|----------|----------|-----------|
-| State Contract | Context interface + data shape | TypeScript checks |
-| A11y Contract | Theme + user preference consistency | `accessibility_scan.yml` |
-| Governance Contract | Provenance schema validation | `faircare-validate.yml` |
-| Telemetry Contract | Context log structure | `telemetry-export.yml` |
+### Responsibilities
+- Stores Focus Mode v2.5 results  
+- Tracks:
+  - narrative  
+  - explainability tokens  
+  - provenance bundles  
+  - ethics_flags  
+  - care_labels  
+  - subgraph metadata  
 
-Artifacts stored in:
-- `reports/self-validation/docs/`
-- `releases/v9.7.0/focus-telemetry.json`
+- Responsible for:
+  - temporal alignment  
+  - spatial highlight triggers  
+  - CARE-based content filtering  
 
----
-
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Context metadata versioned in governance ledgers. | @kfm-data |
-| **Accessible** | Contexts reflect user preferences and accessibility modes. | @kfm-accessibility |
-| **Interoperable** | JSON/TypeScript schemas aligned with FAIR+CARE & ISO 9241-210. | @kfm-architecture |
-| **Reusable** | Modular and composable contexts exported across app. | @kfm-design |
-| **Collective Benefit** | Enables transparent cross-component ethics tracking. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council governs provenance data access. | @kfm-governance |
-| **Responsibility** | Context telemetry logs energy and ethics indicators. | @kfm-sustainability |
-| **Ethics** | Focus Mode safeguarded against bias or opaque inference. | @kfm-ethics |
-
-Audit references:  
-`docs/reports/audit/data_provenance_ledger.json`  
-and  
-`docs/reports/fair/data_care_assessment.json`
+```mermaid
+flowchart TD
+    FREQ[Focus Query Event] --> FETCH[Focus Payload]
+    FETCH --> XAI[Explainability State]
+    FETCH --> CARE[CARE Filter]
+    XAI --> SYNC[Map · Timeline · Drawer Sync]
+```
 
 ---
 
-## 🧾 Example Context Metadata Record
+## 3️⃣ GovernanceContext — CARE, Provenance & Ledger Sync
+
+Manages:
+
+- CARE enforcement state  
+- License + rights metadata  
+- Sovereignty rules  
+- Provenance references  
+- Ledger submission  
+
+### Governance Flow
+
+```mermaid
+flowchart LR
+    META[Metadata + CARE Labels] --> DEC[CARE Decision Engine]
+    DEC --> OK[Allow]
+    DEC --> RED[Redact]
+    DEC --> BLK[Block]
+    OK --> LEDGER[Ledger Sync]
+    RED --> LEDGER
+    BLK --> LEDGER
+```
+
+Governance ledger:
+
+```
+../../../docs/reports/audit/web-context-governance-ledger.json
+```
+
+---
+
+## 4️⃣ TelemetryContext — Sustainability + Performance Observability
+
+Tracks:
+
+- render time  
+- CPU/GPU load approximation  
+- energy estimate (Wh)  
+- carbon gCO₂e  
+- CARE masking events  
+- A11y compliance  
+- Focus Mode usage metrics  
+
+```mermaid
+flowchart TD
+    EVT[Context Events] --> METRIC[Metric Collector]
+    METRIC --> EXPORT[Telemetry Sink]
+```
+
+Exports to:
+
+```
+../../../releases/v10.3.2/focus-telemetry.json
+```
+
+---
+
+## 5️⃣ ThemeContext — Accessibility & Design Token Authority
+
+Controls:
+
+- high contrast  
+- reduced motion  
+- colorblind-safe tokens  
+- typography scaling  
+- map-legend colors  
+- CARE symbol mappings  
+
+```mermaid
+flowchart LR
+    TOK[Design Tokens] --> THEME
+    THEME --> UI[UI Components]
+    THEME --> TEL_A11Y[A11y Telemetry]
+```
+
+---
+
+# 🌐 Cross-Context Synchronization Architecture
+
+Contexts collectively coordinate:
+
+- story-node highlighting  
+- timeline centering  
+- map layer filtering  
+- Focus highlight paths  
+- drawer display updates  
+
+```mermaid
+flowchart TD
+    Y[currentYear] --> FCTX[FocusModeContext]
+    FCTX --> MCTX[GovernanceContext]
+    MCTX --> SCTX[TelemetryContext]
+    SCTX --> TCTX[ThemeContext]
+```
+
+---
+
+# 🔍 Provenance Integration (PROV-O + STAC + DCAT)
+
+Each context surfaces and maintains provenance:
+
+- dataset lineage  
+- STAC item/collection metadata  
+- checksum registry links  
+- source & temporal coverage  
+- Story Node relationships  
+
+```mermaid
+flowchart LR
+    DS[Dataset] --> STAC
+    STAC --> PROV[Provenance State]
+    PROV --> UI_CON[Contexts Rendering Provenance]
+```
+
+---
+
+# ♿ Accessibility Architecture (WCAG 2.1 AA)
+
+The context layer:
+
+- tracks user preferences  
+- enforces color contrast  
+- preserves motion-safety  
+- injects ARIA token guidance  
+- logs A11y telemetry  
+
+```mermaid
+flowchart TD
+    PREF[User Prefs] --> A11Y[A11y State]
+    A11Y --> UI[Accessible UI]
+    UI --> A11YTEL[A11y Telemetry]
+```
+
+---
+
+# 📡 Sustainability & Energy Modeling (ISO 50001)
+
+Context-layer energy tracking computes:
+
+- `session_energy_wh`  
+- `interaction_energy_wh`  
+- carbon estimate  
+- GPU/CPU render deltas  
+
+Telemetry exported via:
+
+```
+../../../releases/v10.3.2/focus-telemetry.json
+```
+
+---
+
+# ⚙️ CI / Validation Requirements
+
+| Category | Validator |
+|----------|-----------|
+| Governance | faircare-validate.yml |
+| Accessibility | accessibility_scan.yml |
+| Telemetry | telemetry-export.yml |
+| Documentation | docs-lint.yml |
+| Schema | metadata.json validation |
+| Security | CodeQL + Trivy |
+
+Any failure → merge blocked.
+
+---
+
+# 🧾 Example Context Metadata Record
 
 ```json
 {
-  "id": "web_context_state_v9.7.0",
+  "id": "web_context_state_v10.3.2",
   "contexts": [
     "AppContext",
     "FocusModeContext",
@@ -124,67 +310,32 @@ and
     "TelemetryContext",
     "ThemeContext"
   ],
-  "a11y_score": 99.4,
-  "energy_score": 98.3,
-  "ai_explainability_tracked": true,
-  "telemetry_synced": true,
+  "a11y_score": 99.7,
+  "sustainability_score": 98.8,
+  "care_events": 17,
   "checksum_verified": true,
-  "timestamp": "2025-11-05T18:20:00Z"
+  "telemetry_synced": true,
+  "timestamp": "2025-11-14T21:31:00Z"
 }
 ```
 
 ---
 
-## ⚙️ Key Context Modules Summary
+# 🕰️ Version History
 
-| Module | Description | Role |
-|--------|-------------|------|
-| `AppContext` | Root FAIR+CARE state manager. | Core Governance |
-| `FocusModeContext` | Manages AI reasoning, bias tests, CARE controls. | Transparency |
-| `GovernanceContext` | Emits provenance and FAIR+CARE updates. | Ledger Sync |
-| `TelemetryContext` | Logs sustainability + performance data. | Monitoring |
-| `ThemeContext` | Manages color tokens + contrast accessibility. | A11y & Design |
-
----
-
-## ♿ Accessibility Integration
-
-- Synchronizes **ThemeContext** with user system preferences.  
-- Stores per-user accessibility settings (contrast, font scaling, motion).  
-- Applies **reduced-motion**, **high-contrast**, and **keyboard**-first styles.  
-- Runs **axe/Lighthouse** validation during CI (`accessibility_scan.yml`).
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Target | Verified By |
-|---------|---------|-------------|
-| Energy Use per Session | ≤ 0.8 Wh | @kfm-sustainability |
-| Carbon Output | ≤ 1.0 gCO₂e | @kfm-security |
-| Renewable Power | 100% RE100 | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry recorded in:  
-`../../../releases/v9.7.0/focus-telemetry.json`
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | KFM Core Team | Aligned to MCP v6.3; added contracts + telemetry schema; improved a11y/CARE tracking. |
-| v9.6.0 | 2025-11-03 | KFM Core Team | Added TelemetryContext and unified global governance sync. |
-| v9.5.0 | 2025-11-02 | KFM Core Team | Enhanced AI explainability and Focus Mode oversight. |
-| v9.3.2 | 2025-10-28 | KFM Core Team | Established global FAIR+CARE context layer. |
+| Version | Date | Summary |
+|--------|--------|---------|
+| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild: CARE engine, governance pipeline, telemetry system, and cross-context synchronization. |
+| v9.7.0 | 2025-11-05 | Previous version. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Web Source](../README.md) · [Docs Index](../../../docs/README.md)
+**Kansas Frontier Matrix — Context Architecture**  
+🧩 Ethical State Management · 🧠 AI Reasoning Sync · 🌐 FAIR+CARE · 🔗 Provenance Integrity  
+© 2025 Kansas Frontier Matrix — MIT License  
+
+[Back to Web Source](../README.md)
 
 </div>
