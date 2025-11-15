@@ -251,4 +251,3 @@ FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 [Back to Docs Index](../docs/README.md) · [CI/CD Architecture](ARCHITECTURE.md)
 
 </div>
-```
