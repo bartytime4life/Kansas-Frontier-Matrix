@@ -1,32 +1,74 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — GDAL 3.12.0 Integration & Geospatial Enhancement Module (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "src/pipelines/geospatial/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / FAIR+CARE Council"
+title: "🗺️ Kansas Frontier Matrix — Geospatial Pipeline Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "web/src/pipelines/geospatial/README.md"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/src-geospatial-v4.json"
+sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-pipelines-geospatial-v1.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
+license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Overview"
+intent: "web-pipelines-geospatial"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk (Unless dataset requires masking)"
+sensitivity_level: "Dataset-dependent"
+public_exposure_risk: "Dataset-dependent"
+indigenous_rights_flag: "Conditional for sovereignty datasets"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: false
+provenance_chain:
+  - "web/src/pipelines/geospatial/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareSourceCode"
+  owl_time: "TemporalEntity"
+  geosparql: "geo:FeatureCollection"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../../schemas/json/web-pipelines-geospatial-readme.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-pipelines-geospatial-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-pipelines-geospatial-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-pipelines-geospatial-readme"
+event_source_id: "ledger:web/src/pipelines/geospatial/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public (unless dataset declares CARE restrictions)"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review required every 12 months"
+sunset_policy: "Superseded upon next geospatial pipeline redesign"
 ---
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — GDAL 3.12.0 Integration & Geospatial Enhancement Module**  
-`src/pipelines/geospatial/README.md`
+# 🗺️ **Kansas Frontier Matrix — Geospatial Pipeline Overview**  
+`web/src/pipelines/geospatial/README.md`
 
 **Purpose:**  
-Define the **complete deep-architecture specification** for geospatial processing pipelines in KFM v10.3.2 using **GDAL 3.12.0 “Chicoutimi”**, GeoParquet, PROJ, and FAIR+CARE-governed geospatial workflows.  
-This module powers hydrologic differencing, ecological modeling, historic map restoration, DEM fusion, CRS lineage enforcement, and Story Node spatial intelligence.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial_Certified-orange)]()
-[![License](https://img.shields.io/badge/License-CC--BY%204.0-green)]()
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
+Describe the **geospatial orchestration pipelines** that power the map, spatial reasoning, footprints, temporal filtering,  
+and governance-aware masking layers of the Kansas Frontier Matrix (KFM) Web Platform.  
+These pipelines ensure that **all geospatial data entering the UI is validated, FAIR+CARE-compliant, provenance-aligned,  
+and synchronized** with the timeline, Focus Mode, and Story Node v3 systems.
 
 </div>
 
@@ -34,233 +76,235 @@ This module powers hydrologic differencing, ecological modeling, historic map re
 
 # 📘 Overview
 
-The Geospatial Enhancement Module provides:
+The **Geospatial Pipeline** is responsible for:
 
-- **Raster compute pipelines** (GDAL Compute Engine v3)  
-- **Vector & GeoParquet pipelines**  
-- **CRS lineage + projection safety**  
-- **STAC/DCAT metadata emitters for all outputs**  
-- **Temporal differencing** for hydrology, climate, land cover  
-- **DEM blending & restoration** (historic → modern)  
-- **Historic map harmonization** (plats, surveys, early sheets)  
-- **CARE-governed sensitive-site masking**  
-- **Predictive raster synthesis** (2030–2100 SSP projections)  
-- **Spatial lineage + provenance injection** (PROV-O, GeoSPARQL)  
+- Loading, validating, and transforming geospatial datasets  
+- Integrating STAC/DCAT dataset footprints  
+- Synchronizing spatial data with **timeline ranges**  
+- Applying H3-based masking for CARE & sovereignty constraints  
+- Preparing geometry for **MapLibre**, **Cesium**, and **Focus Mode**  
+- Performing temporal slicing of vector & raster layers  
+- Preparing data for Story Node v3 overlays  
+- Ensuring spatial data integrity (CRS, geometry validity)  
+- Emitting telemetry for spatial interactions
 
-This subsystem is responsible for turning raw spatial data into **FAIR+CARE-certified geospatial assets** powering:
+This layer sits between:
 
-- Focus Mode v2.5  
-- Story Nodes  
-- Timeline overlays  
-- MapView (2D/3D)  
-- Predictive scenario layers  
+- UI components (MapView, StoryNodeView, FocusPanel)  
+- Services (`stacService.ts`, `apiClient.ts`, `governanceService.ts`)  
+- Contexts (`TimeContext`, `FocusContext`)  
 
 ---
 
-# 🗂️ Directory Layout (v10.3.2)
+# 🧱 Directory Structure
 
-```text
-src/pipelines/geospatial/
-├── README.md
-│
-├── scripts/
-│   ├── raster_compare.py
-│   ├── pansharpen_stack.py
-│   ├── nodata_to_alpha.py
-│   ├── vector_merge_geoparquet.py
-│   └── terrain_blend.py
-│
-├── configs/
-│   ├── reprojection_profiles.json
-│   ├── gdal_env.yml
-│   └── parquet_schemas.json
-│
-└── tests/
-    └── test_geospatial_pipeline.py
-```
+~~~text
+web/src/pipelines/geospatial/
+├── loadFootprints.ts            # Load + schema-validate footprints (vector + raster)
+├── applyTemporalFilters.ts      # Apply time-window filtering to spatial layers
+├── maskSensitiveGeometry.ts     # CARE + sovereignty masking (H3)
+├── geometryTransform.ts         # CRS normalization + TopoJSON/GeoJSON transforms
+├── mergeLayersForMap.ts         # Merge STAC + vector + Story Node geometry for MapLibre
+└── spatialTelemetry.ts          # Map + layer → telemetry (pan, zoom, feature interaction)
+~~~
 
 ---
 
-# 🧬 Deep Raster Compute Pipeline (GDAL 3.12.0)
+# 🧩 Geospatial Pipeline Stages
 
-```mermaid
-flowchart TD
-    R1[Input Raster<br/>GeoTIFF · COG · NetCDF] --> R2[GDAL Open]
-    R2 --> R3[Virtual Raster Layers]
-    R3 --> R4[Compute Engine<br/>Sliding Window Eval]
-    R4 --> R5[Raster Ops<br/>Diff · Slope · Hillshade · Neighbors]
-    R5 --> R6[Mask Engine<br/>NoData · Alpha · CARE Generalization]
-    R6 --> R7[Reproject<br/>EPSG + Kansas Custom Grids]
-    R7 --> R8[COG Writer<br/>Overviews · Tiling · Compression]
-    R8 --> R9[STAC Item Builder<br/>Checksum · Lineage · Metadata]
-```
+## 1. **Footprint Loading (`loadFootprints.ts`)**
 
-### Included Operations
-- **Differencing:** pixel-wise change analysis  
-- **Gradient operations:** slope, aspect, DEM surface derivatives  
-- **Window ops:** neighbors, smoothing, contextual classification  
-- **Historic map blending:** pansharpen + nodata-to-alpha  
-- **Predictive overlays:** raster algebra + bias-corrected SSP scenarios  
+Responsibilities:
 
----
+- Load footprints from:
+  - STAC Items & Collections  
+  - Processed GeoJSON & TopoJSON  
+  - Story Node v3 geometry bundles  
+- Validate:
+  - CRS  
+  - Geometry validity  
+  - Temporal extent  
+  - License & provenance metadata  
+- Normalize shapes for MapLibre & Cesium  
 
-# 🧱 Vector / GeoParquet Processing Pipeline
+Guarantees:
 
-```mermaid
-flowchart LR
-    V1[GeoParquet Input] --> V2[Schema Harmonizer]
-    V2 --> V3[PROJ Reprojector]
-    V3 --> V4[Topology Normalizer]
-    V4 --> V5[Governance Engine<br/>H3 Generalization · Fuzzing]
-    V5 --> V6[Parquet Writer + Index]
-    V6 --> V7[STAC Collection Export]
-```
-
-### Features
-- Schema normalization rules in `parquet_schemas.json`  
-- CRSes controlled by `reprojection_profiles.json`  
-- Automatic lineage stamping (PROV-O)  
-- CARE + sovereignty redaction applied before write  
+- No malformed geometries enter the UI  
+- All geometry is CRS-normalized before rendering  
 
 ---
 
-# 🧭 CRS Lineage & Projection Safety
+## 2. **Temporal Filtering (`applyTemporalFilters.ts`)**
 
-Each reprojection must:
+Responsibilities:
 
-- Record input & output CRS  
-- Embed `projjson` in STAC metadata  
-- Update lineage chain with:
-  - source CRS  
-  - derived CRS  
-  - transformation parameters  
-- Validate against Kansas-specific custom grids  
+- Apply timeline window constraints to geospatial features  
+- Filter:
+  - Story Nodes  
+  - STAC Items  
+  - Event layers  
+  - Archaeological or environmental layers  
+- Align with **OWL-Time** semantics  
+- Handle fuzzy temporal intervals
 
-Stored in:
+Guarantees:
 
-```
-configs/reprojection_profiles.json
-```
-
----
-
-# 📊 Temporal Differencing & Future Scenario Engine
-
-```mermaid
-flowchart TB
-    T1[Multi-epoch Rasters] --> T2[Temporal Sort]
-    T2 --> T3[Pixel Differencer]
-    T3 --> T4[Anomaly Detector<br/>Climate · Hydrology · Landcover]
-    T4 --> T5[Scenario Bands<br/>2030 2050 2100]
-    T5 --> T6[Timeline Overlay Builder]
-```
-
-This subsystem powers:
-
-- Drought/flood mapping  
-- Vegetation regrowth modeling  
-- Land-use change detection  
-- Predictive climate hydrology overlays  
+- Only time-relevant features render  
+- Timeline → Map → FocusMode always synchronized  
 
 ---
 
-# 🧩 Integration with Story Nodes & Focus Mode v2.5
+## 3. **CARE & Sovereignty Masking (`maskSensitiveGeometry.ts`)**
 
-### Spatial AI / Story Node Binding
-Outputs from this module feed:
+Responsibilities:
 
-- **Story Node spatial extents**  
-- **Temporal coverage**  
-- **Raster-based explainability overlays**  
-- **Contextual layers for Focus Mode**  
+- H3 r7+ masking of cultural, sacred, or sovereignty-controlled sites  
+- Spatial redaction depending on:
+  - CARE classification  
+  - Sovereignty domain  
+  - Dataset governance metadata  
+- Produce UI-friendly masking indicators (blur, coarse-grain hex cells)
 
-### Provenance Surfacing
-Each asset includes:
+Guarantees:
 
-- DOIs  
-- lineage chain (PROV-O)  
-- checksum (SHA-256)  
-- method specification  
-- CARE flags  
+- No sensitive coordinates exposed  
+- Ethical rendering preserved  
+- Masking metadata is provided to the UI for proper labeling  
 
 ---
 
-# 🛡️ FAIR+CARE Geospatial Governance
+## 4. **Geometry Transforms (`geometryTransform.ts`)**
 
-| Standard | Implementation |
-|---------|----------------|
-| **CARE – Collective Benefit** | Hydrology/ecology transitions designed for community benefit. |
-| **CARE – Authority to Control** | Tribal/heritage coordinates masked (H3 r7). |
-| **CARE – Responsibility** | GeoParquet CRUD operations maintain non-destructive updates. |
-| **CARE – Ethics** | Heritage-sensitive outputs require reviewers in FAIR+CARE Council. |
-| **Findable** | Every output is indexed via STAC & DCAT. |
-| **Interoperable** | Harmonized CRS + GeoParquet schemas guarantee interoperability. |
+Responsibilities:
 
-Governance ledger:
+- CRS normalization → EPSG:4326  
+- Optional local projection transforms  
+- Conversion between:
+  - GeoJSON ⇄ TopoJSON  
+  - COG footprints → polygon approximations  
+- Geometry simplification for performance  
+- 2D & 3D geometry preparation for:
+  - MapLibre  
+  - Cesium  
 
-```
-../../../../docs/reports/audit/geospatial-governance-ledger.json
-```
+Guarantees:
 
----
-
-# 📡 Telemetry & Sustainability
-
-Collected metrics:
-
-| Metric | Meaning |
-|--------|---------|
-| `gdal_runtime_s` | Runtime per GDAL operation |
-| `co2e_g` | Carbon grams emitted per job |
-| `energy_wh` | Watt-hours per raster op |
-| `masking_events` | Number of CARE masking operations |
-| `crs_transforms` | Projection conversions performed |
-
-Telemetry export:
-
-```
-../../../../releases/v10.3.2/focus-telemetry.json
-```
+- Stable rendering  
+- Predictable geometry performance  
+- Accurate alignment with basemaps + terrain  
 
 ---
 
-# 🧪 Validation & CI/CD
+## 5. **Layer Merging (`mergeLayersForMap.ts`)**
 
-Validation suite includes:
+Responsibilities:
 
-- **CRS correctness**  
-- **GeoParquet schema checks**  
-- **Raster integrity tests**  
-- **STAC/DCAT metadata validation**  
-- **Lineage chain continuity**  
-- **CARE compliance review**  
+- Combine inputs into a unified map data flow:
+  - STAC footprints  
+  - Story Node geometry  
+  - Governance overlays  
+  - Time-filtered vector layers  
+  - Focus Mode highlights  
+- Produce UI-ready map layers with metadata:
+  - license  
+  - provenance  
+  - CARE flags  
+  - temporal range  
 
-CI workflows:
+Guarantees:
 
-- `geospatial-tests.yml`  
-- `stac-validate.yml`  
-- `faircare-validate.yml`  
-- `telemetry-export.yml`
+- Map reflects accurate, ethical, filtered view of all data  
+- No mixing of incompatible geometries  
+- Governance metadata retained  
 
 ---
 
-# 🕰️ Version History
+## 6. **Spatial Telemetry (`spatialTelemetry.ts`)**
 
-| Version | Date | Summary |
-|--------|--------|---------|
-| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added CRS lineage model, predictive scenario engine, vector pipeline; updated governance & telemetry. |
-| v10.3.1 | 2025-11-13 | Previous version. |
-| v10.2.2 | 2025-11-11 | Added new hydrology models + GeoParquet upgrades. |
-| v10.2.0 | 2025-11-11 | Initial GDAL 3.12 integration. |
+Tracks:
+
+- Pan / zoom / rotate  
+- Layer toggles  
+- Footprint loading events  
+- Story Node geometry interactions  
+- Focus Mode spatial activity  
+- Rendering performance (ms per frame; scene complexity)
+
+Outputs written into:
+
+`releases/<version>/focus-telemetry.json`
+
+Guarantees:
+
+- No PII  
+- Aggregated usage metrics only  
+- Used for sustainability + UX improvement  
+
+---
+
+# 🔧 Example Pipeline Flow (Conceptual)
+
+~~~text
+User Interacts with Map
+       │
+       ▼
+loadFootprints.ts
+       │
+       ▼
+applyTemporalFilters.ts
+       │
+       ▼
+maskSensitiveGeometry.ts   (CARE enforcement)
+       │
+       ▼
+geometryTransform.ts        (CRS + shape normalization)
+       │
+       ▼
+mergeLayersForMap.ts        (Unified map pipeline)
+       │
+       ├──► MapLibre render
+       └──► Cesium render
+       │
+       ▼
+spatialTelemetry.ts         (Observability + audit)
+~~~
+
+---
+
+# 🧪 Testing Requirements
+
+Each pipeline must have:
+
+- **Unit tests:** spatial math, CRS, geometry validation  
+- **Integration tests:** MapLibre + Timeline + Focus sync  
+- **Governance tests:** masking, sovereignty enforcement  
+- **Schema tests:** STAC footprints, temporal ranges  
+- **A11y tests:** accessible interaction  
+- **Telemetry tests:** correct spatial telemetry emission  
+
+Tests live under:
+
+~~~text
+tests/unit/web/pipelines/geospatial/**
+tests/integration/web/pipelines/geospatial/**
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full geospatial pipeline documentation added; includes masking, STAC, temporal sync, telemetry |
+| v10.3.2 | 2025-11-14 | Added spatial telemetry + governance enforcement |
+| v10.3.1 | 2025-11-13 | Initial geospatial pipeline creation |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Geospatial Pipelines**  
-Geospatial Integrity × Predictive Insight × FAIR+CARE × Temporal Truth  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-
-[Back to Pipelines Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — MIT License  
+FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
 
 </div>
