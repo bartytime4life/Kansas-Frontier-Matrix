@@ -1,14 +1,14 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — GDAL 3.12.0 Integration & Geospatial Enhancement Module (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/geospatial/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
+version: "v10.3.2"
+last_updated: "2025-11-14"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/src-geospatial-v3.json"
+sbom_ref: "../../../../releases/v10.3.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.3.2/manifest.zip"
+telemetry_ref: "../../../../releases/v10.3.2/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/src-geospatial-v4.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -20,112 +20,183 @@ mcp_version: "MCP-DL v6.3"
 `src/pipelines/geospatial/README.md`
 
 **Purpose:**  
-Provide a **FAIR+CARE, MCP-DL v6.3 compliant geospatial processing module** for KFM v10.3.x built on **GDAL 3.12.0 “Chicoutimi.”**  
-This module powers raster–vector transformations, hydrologic & ecological differencing, historic map restoration pipelines, and geospatial validation used across Focus Mode, Story Nodes, and timeline-based analyses.
+Define the **complete deep-architecture specification** for geospatial processing pipelines in KFM v10.3.2 using **GDAL 3.12.0 “Chicoutimi”**, GeoParquet, PROJ, and FAIR+CARE-governed geospatial workflows.  
+This module powers hydrologic differencing, ecological modeling, historic map restoration, DEM fusion, CRS lineage enforcement, and Story Node spatial intelligence.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![License](https://img.shields.io/badge/License-CC--BY%204.0-green)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial-orange)]()  
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial_Certified-orange)]()
+[![License](https://img.shields.io/badge/License-CC--BY%204.0-green)]()
 [![Status](https://img.shields.io/badge/Status-Stable-success)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-**GDAL 3.12.0 Enhancements Integrated into KFM:**
+The Geospatial Enhancement Module provides:
 
-- 🛰️ **Raster Operations**  
-  - `gdal raster compare` — pixel differencing for time-series hydrology & land cover  
-  - `gdal raster neighbors` — smoothing & contextual analysis  
-  - `gdal nodata-to-alpha` — improved alpha blending for historical maps  
+- **Raster compute pipelines** (GDAL Compute Engine v3)  
+- **Vector & GeoParquet pipelines**  
+- **CRS lineage + projection safety**  
+- **STAC/DCAT metadata emitters for all outputs**  
+- **Temporal differencing** for hydrology, climate, land cover  
+- **DEM blending & restoration** (historic → modern)  
+- **Historic map harmonization** (plats, surveys, early sheets)  
+- **CARE-governed sensitive-site masking**  
+- **Predictive raster synthesis** (2030–2100 SSP projections)  
+- **Spatial lineage + provenance injection** (PROV-O, GeoSPARQL)  
 
-- 🗂️ **Vector / GeoParquet Enhancements**  
-  - Full CRUD editing of GeoParquet tables  
-  - Schema normalization + provenance stamping  
+This subsystem is responsible for turning raw spatial data into **FAIR+CARE-certified geospatial assets** powering:
 
-- 🌍 **Reprojection & Metadata**  
-  - PROJ updates for Kansas-specific CRSes  
-  - Temporal metadata passthrough (ISO 8601)  
-  - STAC/DCAT Metadata embedding  
-
-Together, the module supports:
-
-- Hydrologic change detection (streamflow shifts, drought/flood mapping)  
-- Ecological transition modeling (vegetation, fire regrowth, habitat shifts)  
-- Historic map harmonization (plats, surveys, early geological sheets)  
-- Cultural/heritage restoration (CARE-protected geographies)  
+- Focus Mode v2.5  
+- Story Nodes  
+- Timeline overlays  
+- MapView (2D/3D)  
+- Predictive scenario layers  
 
 ---
 
-## 🗂️ Directory Layout (v10.3.1)
+# 🗂️ Directory Layout (v10.3.2)
 
-~~~~~text
+```text
 src/pipelines/geospatial/
 ├── README.md
 │
 ├── scripts/
-│   ├── raster_compare.py              # GDAL diff engine for time-series rasters
-│   ├── pansharpen_stack.py            # Multiband fusion for historical imagery
-│   ├── nodata_to_alpha.py             # Nodata → alpha tooling for UI clarity
-│   ├── vector_merge_geoparquet.py     # Merge & append GeoParquet tables
-│   └── terrain_blend.py               # DEM smoothing and topographic blending
+│   ├── raster_compare.py
+│   ├── pansharpen_stack.py
+│   ├── nodata_to_alpha.py
+│   ├── vector_merge_geoparquet.py
+│   └── terrain_blend.py
 │
 ├── configs/
-│   ├── reprojection_profiles.json     # Kansas CRS profiles (EPSG + custom grids)
-│   ├── gdal_env.yml                   # GDAL/PROJ environment manifest
-│   └── parquet_schemas.json           # GeoParquet schema normalization rules
+│   ├── reprojection_profiles.json
+│   ├── gdal_env.yml
+│   └── parquet_schemas.json
 │
 └── tests/
-    └── test_geospatial_pipeline.py    # v10.3 tests for geoprocessing + FAIR+CARE
-~~~~~
+    └── test_geospatial_pipeline.py
+```
 
 ---
 
-## ⚙️ Key Functional Enhancements
+# 🧬 Deep Raster Compute Pipeline (GDAL 3.12.0)
 
-| Function | Description | FAIR+CARE Impact |
-|----------|-------------|------------------|
-| **raster_compare.py** | Pixel-level differencing between years/epochs. | Transparent hydrology/ecology transitions; provenance embedded into STAC metadata. |
-| **vector_merge_geoparquet.py** | Append/merge GeoParquet layers with schema alignment. | Non-destructive updates respecting sovereignty & territorial boundaries. |
-| **nodata_to_alpha.py** | Converts nodata → alpha for visual clarity in 2D/3D maps. | Improves map accessibility (low-vision clarity). |
-| **terrain_blend.py** | Blends historical DEMs with modern LiDAR. | Ethical restoration workflow for cultural & ecological reconstruction. |
-| **pansharpen_stack.py** | Fuses multi-resolution historical imagery. | Enhances clarity of archival maps used in Story Nodes & timeline UI. |
-
----
-
-## 🧩 Integration Diagram (v10.3.1)
-
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["GDAL 3.12.0 Engine"] --> B["Raster Tools"]
-  A --> C["Vector / GeoParquet Tools"]
-  B --> D["raster_compare"]
-  B --> E["pansharpen_stack"]
-  C --> F["vector_merge_geoparquet"]
-  D --> G["Hydrology & Climate Pipelines"]
-  F --> H["Historical Land-Use Pipelines"]
-  E --> I["Story Node Imagery Pipelines"]
-  G --> J["KFM STAC/DCAT Catalogs"]
-  H --> J
-  I --> J
-~~~~~
+    R1[Input Raster<br/>GeoTIFF · COG · NetCDF] --> R2[GDAL Open]
+    R2 --> R3[Virtual Raster Layers]
+    R3 --> R4[Compute Engine<br/>Sliding Window Eval]
+    R4 --> R5[Raster Ops<br/>Diff · Slope · Hillshade · Neighbors]
+    R5 --> R6[Mask Engine<br/>NoData · Alpha · CARE Generalization]
+    R6 --> R7[Reproject<br/>EPSG + Kansas Custom Grids]
+    R7 --> R8[COG Writer<br/>Overviews · Tiling · Compression]
+    R8 --> R9[STAC Item Builder<br/>Checksum · Lineage · Metadata]
+```
+
+### Included Operations
+- **Differencing:** pixel-wise change analysis  
+- **Gradient operations:** slope, aspect, DEM surface derivatives  
+- **Window ops:** neighbors, smoothing, contextual classification  
+- **Historic map blending:** pansharpen + nodata-to-alpha  
+- **Predictive overlays:** raster algebra + bias-corrected SSP scenarios  
 
 ---
 
-## ⚖️ FAIR+CARE Alignment
+# 🧱 Vector / GeoParquet Processing Pipeline
 
-| Principle | Implementation |
-|----------|----------------|
-| **Findable** | Every output written to `data/processed/geospatial/` with STAC Item. |
-| **Accessible** | Outputs served in open formats (GeoTIFF, COG, GeoParquet). |
-| **Interoperable** | Uses harmonized CRS definitions in `reprojection_profiles.json`; GeoParquet schemas consistently applied. |
-| **Reusable** | All outputs include provenance (lineage, source IDs, checksum). |
-| **CARE – Collective Benefit** | Hydrologic & ecological analyses designed for community & tribal use. |
-| **CARE – Authority to Control** | Sensitive site coordinates masked or generalized (H3) via pipeline-level governance flags. |
+```mermaid
+flowchart LR
+    V1[GeoParquet Input] --> V2[Schema Harmonizer]
+    V2 --> V3[PROJ Reprojector]
+    V3 --> V4[Topology Normalizer]
+    V4 --> V5[Governance Engine<br/>H3 Generalization · Fuzzing]
+    V5 --> V6[Parquet Writer + Index]
+    V6 --> V7[STAC Collection Export]
+```
 
-Governance enforcement references:
+### Features
+- Schema normalization rules in `parquet_schemas.json`  
+- CRSes controlled by `reprojection_profiles.json`  
+- Automatic lineage stamping (PROV-O)  
+- CARE + sovereignty redaction applied before write  
+
+---
+
+# 🧭 CRS Lineage & Projection Safety
+
+Each reprojection must:
+
+- Record input & output CRS  
+- Embed `projjson` in STAC metadata  
+- Update lineage chain with:
+  - source CRS  
+  - derived CRS  
+  - transformation parameters  
+- Validate against Kansas-specific custom grids  
+
+Stored in:
+
+```
+configs/reprojection_profiles.json
+```
+
+---
+
+# 📊 Temporal Differencing & Future Scenario Engine
+
+```mermaid
+flowchart TB
+    T1[Multi-epoch Rasters] --> T2[Temporal Sort]
+    T2 --> T3[Pixel Differencer]
+    T3 --> T4[Anomaly Detector<br/>Climate · Hydrology · Landcover]
+    T4 --> T5[Scenario Bands<br/>2030 2050 2100]
+    T5 --> T6[Timeline Overlay Builder]
+```
+
+This subsystem powers:
+
+- Drought/flood mapping  
+- Vegetation regrowth modeling  
+- Land-use change detection  
+- Predictive climate hydrology overlays  
+
+---
+
+# 🧩 Integration with Story Nodes & Focus Mode v2.5
+
+### Spatial AI / Story Node Binding
+Outputs from this module feed:
+
+- **Story Node spatial extents**  
+- **Temporal coverage**  
+- **Raster-based explainability overlays**  
+- **Contextual layers for Focus Mode**  
+
+### Provenance Surfacing
+Each asset includes:
+
+- DOIs  
+- lineage chain (PROV-O)  
+- checksum (SHA-256)  
+- method specification  
+- CARE flags  
+
+---
+
+# 🛡️ FAIR+CARE Geospatial Governance
+
+| Standard | Implementation |
+|---------|----------------|
+| **CARE – Collective Benefit** | Hydrology/ecology transitions designed for community benefit. |
+| **CARE – Authority to Control** | Tribal/heritage coordinates masked (H3 r7). |
+| **CARE – Responsibility** | GeoParquet CRUD operations maintain non-destructive updates. |
+| **CARE – Ethics** | Heritage-sensitive outputs require reviewers in FAIR+CARE Council. |
+| **Findable** | Every output is indexed via STAC & DCAT. |
+| **Interoperable** | Harmonized CRS + GeoParquet schemas guarantee interoperability. |
+
+Governance ledger:
 
 ```
 ../../../../docs/reports/audit/geospatial-governance-ledger.json
@@ -133,59 +204,61 @@ Governance enforcement references:
 
 ---
 
-## 📡 Telemetry & Sustainability Metrics
+# 📡 Telemetry & Sustainability
 
-| Metric | Description | Value | Target |
-|--------|-------------|-------|--------|
-| Raster diff runtime | Mean per 1 km² | 2.1 s | ≤ 3.0 s |
-| Energy use | Per GDAL operation | 12.8 Wh | ≤ 15 Wh |
-| Carbon footprint | Estimated CO₂e | 0.0050 g | ≤ 0.006 g |
-| Validation pass rate | FAIR+CARE/schema | 100% | ≥ 95% |
-| CRS Consistency | Reprojection success rate | 100% | 100% |
+Collected metrics:
 
-Telemetry sources:
+| Metric | Meaning |
+|--------|---------|
+| `gdal_runtime_s` | Runtime per GDAL operation |
+| `co2e_g` | Carbon grams emitted per job |
+| `energy_wh` | Watt-hours per raster op |
+| `masking_events` | Number of CARE masking operations |
+| `crs_transforms` | Projection conversions performed |
+
+Telemetry export:
 
 ```
-../../../../releases/v10.3.0/focus-telemetry.json
+../../../../releases/v10.3.2/focus-telemetry.json
 ```
 
 ---
 
-## 🧪 Validation & CI Integration
+# 🧪 Validation & CI/CD
 
-| Validator | Ensures |
-|-----------|---------|
-| `schema_check.py` | Raster/vector schemas, STAC metadata validity |
-| `faircare_validator.py` | CARE flags, sovereignty constraints |
-| `checksum_audit.py` | Lineage integrity |
-| `pytest` suite | GDAL functions, CRS rules, time-series correctness |
-| `ai_explainability_audit.py` | For AI-generated geospatial layers |
+Validation suite includes:
 
-CI/CD workflows validate:
+- **CRS correctness**  
+- **GeoParquet schema checks**  
+- **Raster integrity tests**  
+- **STAC/DCAT metadata validation**  
+- **Lineage chain continuity**  
+- **CARE compliance review**  
 
-- CRS normalization  
-- Raster/COG structure  
-- GeoParquet schema consistency  
-- STAC/DCAT metadata conformance  
+CI workflows:
+
+- `geospatial-tests.yml`  
+- `stac-validate.yml`  
+- `faircare-validate.yml`  
+- `telemetry-export.yml`
 
 ---
 
-## 🕰️ Version History
+# 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---------|--------|---------|---------|
-| **v10.3.1** | 2025-11-13 | Geospatial Pipelines Team | Upgraded from v10.2.2; aligned with v10.3 telemetry + STAC/DCAT integration improvements. |
-| **v10.2.2** | 2025-11-11 | FAIR+CARE Geospatial Team | Added telemetry schema v2 + hydrology/temporal features. |
-| **v10.2.0** | 2025-11-11 | Integration Team | Initial full GDAL 3.12 integration. |
-| **v10.1.0** | 2025-10-15 | Pipelines Team | CRS profile expansion + GeoParquet upgrades. |
-| **v9.9.0** | 2025-09-10 | Core Maintainers | Baseline GDAL 3.10 setup. |
+| Version | Date | Summary |
+|--------|--------|---------|
+| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added CRS lineage model, predictive scenario engine, vector pipeline; updated governance & telemetry. |
+| v10.3.1 | 2025-11-13 | Previous version. |
+| v10.2.2 | 2025-11-11 | Added new hydrology models + GeoParquet upgrades. |
+| v10.2.0 | 2025-11-11 | Initial GDAL 3.12 integration. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Geospatial Pipelines**  
-GDAL × FAIR+CARE × Provenance × Temporal Integrity  
+Geospatial Integrity × Predictive Insight × FAIR+CARE × Temporal Truth  
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
 [Back to Pipelines Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
