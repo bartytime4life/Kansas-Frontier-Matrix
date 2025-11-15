@@ -1,263 +1,458 @@
 ---
+
 title: "🛠️ Kansas Frontier Matrix — Web Utility Modules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-13"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-utils-v2.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-utils-v3.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Architecture"
+intent: "web-utilities"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+
+* "web/src/utils/README.md@v10.3.2"
+* "web/src/utils/README.md@v10.2.1"
+  previous_version_hash: "<previous-sha256>"
+  ontology_alignment:
+  cidoc: "E29 DesignOrProcedure"
+  schema_org: "SoftwareSourceCode"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+  geosparql: "N/A"
+  json_schema_ref: "../../../schemas/json/web-utils.schema.json"
+  shape_schema_ref: "../../../schemas/shacl/web-utils-shape.ttl"
+  doc_uuid: "urn:kfm:doc:web-utils-readme-v10.4.0"
+  semantic_document_id: "kfm-doc-web-utils"
+  event_source_id: "ledger:web/src/utils/README.md"
+  immutability_status: "version-pinned"
+  doc_integrity_checksum: "<sha256>"
+  ai_training_inclusion: false
+  ai_focusmode_usage: "Allowed with restrictions"
+  ai_transform_permissions:
+* "summaries"
+* "semantic-highlighting"
+* "a11y-enhancement"
+  ai_transform_prohibited:
+* "speculative additions"
+* "unverified historical claims"
+  machine_extractable: true
+  accessibility_compliance: "WCAG 2.1 AA"
+  jurisdiction: "Kansas / United States"
+  classification: "Public Document"
+  role: "architecture"
+  lifecycle_stage: "stable"
+  ttl_policy: "Review required every 12 months"
+  sunset_policy: "Superseded upon next major utilities revision"
+
 ---
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — Web Utility Modules**  
+# 🛠️ **Kansas Frontier Matrix — Web Utility Modules**
+
 `web/src/utils/README.md`
 
-**Purpose:**  
-Define the **reusable, deterministic TypeScript utilities** used across the KFM Web Platform.  
-These utilities provide **accessibility**, **provenance**, **schema validation**, **CARE-aware redaction**, and **telemetry instrumentation**, forming the backbone of Focus Mode v2.4 and all map/timeline UX logic.
+**Purpose:**
+Define the complete, FAIR+CARE-aligned architecture for all web utility modules powering the KFM v10.4 Web Platform.
+These utilities provide deterministic TypeScript primitives for accessibility, governance, redaction, provenance, schema validation, formatting, telemetry, and sustainability — foundational to Focus Mode v2.5, Story Node v3, STAC/DCAT explorers, timeline UX, and MapLibre/Cesium rendering layers.
 
-<img alt="Docs" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
-<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="Status" src="https://img.shields.io/badge/Status-Stable-success" />
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../docs/README.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../docs/standards/faircare.md)
+[![MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+[![A11y](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-blue)]()
+[![Status](https://img.shields.io/badge/Status-Enforced-success)]()
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **utilities module** provides the pure, fully testable, cross–component logic that powers:
+`web/src/utils/**` defines the **pure, deterministic, reusable** logic that enables:
 
-- Accessibility enforcement (WCAG 2.1 AA)  
-- Provenance chips, ledger link generation, JSON-LD lineage  
-- Runtime schema validation of all API DTOs  
-- CARE-aware redaction (sovereignty, sensitivity, restricted content)  
-- Formatting for dates, numbers, metadata labels  
-- Telemetry emission (WebVitals, ethics, A11y, energy/CO₂e estimates)  
+* WCAG 2.1 AA accessibility tooling
+* CARE-aware redaction & sovereignty masking
+* Provenance lineage, JSON-LD document construction, audit linking
+* Runtime schema validation (Focus Mode, STAC/DCAT, GraphQL)
+* Formatter utilities (dates, numbers, metadata, citations)
+* Telemetry emission for WebVitals, A11y usage, ethics, sustainability
+* Deterministic narrative formatting for Story Node v3 + Focus Mode
 
-All utilities MUST be:
+Every utility must be:
 
-- **Pure functions**  
-- **Strictly typed**  
-- **Deterministic**  
-- **Side-effect free** (except for telemetry emitters)  
-- **Governance-aware**  
-
-These functions support **React components, hooks, Focus Mode, mapping, timeline, and Story Nodes**.
+* Pure
+* TypeScript-strict
+* Deterministic
+* Side-effect free (except telemetry emitters)
+* FAIR+CARE governed
+* Machine-extractable
 
 ---
 
-## 🗂️ Directory Layout (v10.3.2)
+# 🎯 Purpose
 
-~~~~~text
+This document defines:
+
+* The responsibilities of each utility module
+* How utilities integrate with components, pipelines, and Focus Mode
+* Required governance, CARE, A11y, and telemetry behaviors
+* Deterministic patterns for formatting and validation
+* Schema and ontology mapping rules
+
+Primary consumers:
+Frontend engineers, architects, FAIR+CARE reviewers, A11y specialists, and telemetry maintainers.
+
+---
+
+# 📍 Scope
+
+## In Scope
+
+* All code under `web/src/utils/**`
+* Schema guards, provenance generators, formatting utilities, A11y helpers, telemetry senders
+* Shared logic used by MapLibre, CesiumJS, Focus Mode, Story Nodes, STAC/DCAT, timeline
+
+## Out of Scope
+
+* Component logic (handled in `components/**`)
+* Backend APIs and pipeline reliability logic
+* Styling tokens (covered in `styles/**`)
+
+---
+
+# 📚 Definitions
+
+* **Utility Function:** A pure function with no UI or side effects
+* **Schema Guard:** Runtime predicate to validate API DTO structures
+* **Provenance Chain:** JSON-LD lineage from entity → dataset → STAC/DCAT → source
+* **CARE Redaction:** Removal or masking of sensitive content under tribal sovereignty or ethical restrictions
+* **A11y Utility:** Helper enabling keyboard/ARIA compliance
+* **Telemetry Emitter:** Controlled side-effect producing validated telemetry events
+
+---
+
+# 🏗 Architecture / Context
+
+## How Utilities Fit in the Web Architecture
+
+```mermaid
+flowchart TD
+    INT[UI Interaction] --> UTIL[Utility Module<br/>schema · a11y · provenance · format]
+    UTIL --> GOV[Governance Engine<br/>CARE · License · Sovereignty]
+    UTIL --> TEL[Telemetry Layer<br/>Vitals · Ethics · A11y · Energy]
+    GOV --> FOCUS[Focus Mode v2.5]
+    GOV --> MAP[MapView · Masks]
+    GOV --> TL[TimelineView]
+    FOCUS --> SN[Story Node v3 Renderer]
+```
+
+Utility modules act as the **stable foundation** underlying:
+
+* Focus Mode narratives
+* Story Node composition
+* Map & timeline sync
+* Governance UI overlays
+* A11y interaction models
+
+---
+
+# ⚙️ Procedures / Implementation
+
+All utility code MUST:
+
+* Use TypeScript strict mode
+* Never mutate input arguments
+* Provide predictable outputs for identical inputs
+* Throw governance-safe errors (no sensitive content)
+* Validate telemetry payloads before emitting
+* Integrate with schema guards to ensure data integrity
+* Decorate provenance metadata consistently
+
+---
+
+# 📑 Data Contracts & Schemas
+
+Utilities consume DTOs validated by schema guards:
+
+* Focus Mode entities
+* Story Node v3 objects
+* STAC/DCAT metadata
+* Neo4j-derived Person/Place/Event DTOs
+* Telemetry payload schemas
+
+All validated through:
+
+* `schemaGuards.ts` (runtime)
+* `types/api.ts` (compile-time)
+* JSON Schema (`web-utils.schema.json`)
+
+---
+
+# 🧬 Ontology Alignment
+
+Utility outputs comply with:
+
+| Ontology       | Alignment                                                         |
+| -------------- | ----------------------------------------------------------------- |
+| **CIDOC-CRM**  | Provenance outputs map to `E7 Activity`, `E73 Information Object` |
+| **OWL-Time**   | Interval formatting for timeline and Story Node extents           |
+| **PROV-O**     | Provenance chips embed `prov:Entity` + `prov:wasDerivedFrom`      |
+| **schema.org** | JSON-LD export uses `SoftwareSourceCode` + dataset classes        |
+| **DCAT 3.0**   | STAC/DCAT formatters maintain dataset/distribution semantics      |
+| **STAC 1.0**   | Metadata extractors follow STAC Item/Collection rules             |
+
+---
+
+# 🛰 STAC/DCAT Metadata Integration
+
+Utilities must:
+
+* Parse STAC Item/Collection fields
+* Format layer labels, asset names, temporal extents
+* Generate DCAT distribution metadata chips
+* Ensure CARE indicators map correctly to dataset metadata
+
+---
+
+# 📖 Story Node Integration
+
+Story Node v3 utilities include:
+
+* `formatStoryNodeLabel()`
+* `buildStoryNodeProvenance()`
+* `normalizeStoryNodeDates()`
+* `schemaGuardStoryNode()`
+
+Utilities guarantee:
+
+* Temporal precision handling (`year`, `month`, `day`)
+* Spatial formatting for map frames
+* CARE-safe rendering (e.g., ancestral lands masking)
+
+---
+
+# 🧠 Focus Mode Integration
+
+Focus Mode v2.5 depends on utilities for:
+
+* Narrative formatting
+* Explainability chip generation
+* Entity relation sorting
+* Provenance expansion
+* Citation normalization
+* CARE-aware filtering
+
+Focus data flow:
+
+```mermaid
+flowchart LR
+    F[FocusPayload] --> SG[schemaGuards.ts]
+    SG --> PR[provenance.ts]
+    SG --> FM[formatters.ts]
+    SG --> A11Y[a11y.ts]
+    PR --> FN[Focus Renderer]
+    FM --> FN
+    A11Y --> FN
+```
+
+---
+
+# 🔐 Ethics & CARE Requirements
+
+Utility modules MUST:
+
+* Enforce sovereignty masking for tribal/heritage datasets
+* Apply CARE-labeled constraints:
+
+  * `restricted` → block or blur
+  * `sensitive` → require governance banner
+  * `public` → normal display
+* Prevent resurfacing of suppressed or sensitive content
+* Emit governance telemetry (`care_masking_event`, etc.)
+
+---
+
+# 🛡 Governance
+
+Governance integration includes:
+
+* CARE label chips
+* License badges
+* Provenance warnings
+* Block/allow decisions for sensitive entities
+* Links to:
+
+  * `ROOT-GOVERNANCE.md`
+  * `web-governance-ledger.json`
+
+Utilities must NEVER:
+
+* Invert CARE rules
+* Reveal restricted coordinates
+* Produce undefined provenance
+
+---
+
+# 🧪 Validation & Testing
+
+Mandatory testing:
+
+* Unit tests for all pure utilities
+* Schema guard validation tests
+* Governance edge-case tests
+* A11y tests for keyboard/focus helpers
+* Telemetry structure tests
+
+All covered in:
+
+* `web-utils.test.ts`
+* `governance-utils.test.ts`
+* `schemaGuards.test.ts`
+
+---
+
+# 📈 Telemetry
+
+Telemetry utilities capture:
+
+* WebVitals: LCP, FID, CLS
+* A11y interactions
+* CARE gating events
+* Story Node engagement
+* Narrative reasoning depth
+* Estimated CO₂e (from backend)
+
+Payloads MUST satisfy `web-utils-v3.json`.
+
+Telemetry destinations:
+
+`../../../releases/<version>/focus-telemetry.json`
+
+---
+
+# 🎧 Accessibility (WCAG 2.1 AA)
+
+Plain-language summary:
+
+> These utilities help ensure the KFM web app is accessible to anyone, including those relying on keyboard navigation, screen readers, or high-contrast color modes.
+
+Utilities MUST support:
+
+* Focus management & traps
+* Reduced-motion checks
+* Color-safe token usage
+* Screen reader announcements
+* ARIA attribute helpers
+* Keyboard shortcuts for map/timeline
+
+---
+
+# 🤖 Machine Extractability
+
+Machine-readable guarantees:
+
+* Predictable heading hierarchy
+* YAML conforms to schema
+* Tables are syntactically valid
+* Mermaid diagrams are valid
+* JSON examples valid under schemas
+* No fenced code blocks
+
+These allow:
+
+* MCP-Lint
+* JSON-Schema
+* SHACL validators
+* FAIR+CARE audits
+
+---
+
+# 🛡 Privacy & Security
+
+Utilities MUST NOT:
+
+* Log PII
+* Embed secrets
+* Expose internal identifiers
+* Leak sensitive provenance
+
+Security alignment:
+
+* Must comply with KFM security rules (`docs/security/*`)
+* Must validate external data with schema guards
+
+---
+
+# ♻️ Dataset Evolution / Deltas
+
+Changes from v10.3.2:
+
+* Full KFM-MDP v10.4 YAML
+* Added ontology, AI transform governance, CARE enhancements
+* Expanded schema guard requirements
+* More explicit Story Node and Focus Mode utility descriptions
+* Added sustainability telemetry requirements
+* Formalized error taxonomy
+
+---
+
+# 🧩 Error Taxonomy
+
+* **ValidationError** — schema guard failure
+* **ProvenanceError** — lineage or citation failure
+* **A11yError** — accessibility rule violation
+* **CAREError** — improper masking/redaction
+* **TelemetryError** — malformed telemetry payload
+* **FormatError** — malformed date/number/layer formatting
+
+Governance policy:
+ALL errors must fail gracefully, trigger telemetry, and avoid leaking sensitive data.
+
+---
+
+# 📁 Directory Layout
+
 web/src/utils/
 ├── README.md
-│
-├── schemaGuards.ts        # Runtime DTO validation (Focus/STAC/DCAT/Graph)
-├── provenance.ts          # Provenance chips, JSON-LD lineage, ledger linking
-├── a11y.ts                # Accessibility helpers (ARIA, focus, keyboard logic)
-└── formatters.ts          # Date/number/label formatting for consistent UI
-~~~~~
+├── schemaGuards.ts
+├── provenance.ts
+├── a11y.ts
+└── formatters.ts
 
 ---
 
-## 🧩 Module Responsibilities
+# 🕰 Version History
 
-### 1. **schemaGuards.ts**
-
-**Purpose:**  
-Guarantee payload integrity from REST/GraphQL/STAC/DCAT by validating structure before it reaches UI components.
-
-**Enforces:**
-
-- Required fields for Focus Mode responses  
-- Required STAC/DCAT asset metadata  
-- Required entity fields (Person, Place, Event, StoryNode)  
-- Type-safety via predicates  
-- Fails fast → component refuses to render malformed payloads  
-
-**CI Behavior:**  
-If any guard test fails → **merge blocked**.
-
----
-
-### 2. **provenance.ts**
-
-**Purpose:**  
-Generate provenance badges, lineage chains, JSON-LD merges, citation chips, and governance deep links.
-
-**Features:**
-
-- Build provenance chips linking to STAC Items → DCAT → ledger  
-- CARE-aware provenance warnings (restricted dataset flags)  
-- Resolve dataset → StoryNode → Event relationships  
-- Normalize lineage references from API payloads  
-- Output consistent citation tokens  
-
-**Governance Integration:**  
-Outputs must point to:
-
-```
-../../../docs/reports/audit/web-governance-ledger.json
-```
-
----
-
-### 3. **a11y.ts**
-
-**Purpose:**  
-Centralize **WCAG 2.1 AA** logic required across all components.
-
-**Includes:**
-
-- Focus traps  
-- Skip link helpers  
-- ARIA role/landmark utilities  
-- Reduced-motion detectors  
-- Screen-reader announcements  
-- Keyboard map/timeline navigation helpers  
-
-**Tokens referenced from:**
-
-```
-../../../docs/design/tokens/accessibility-tokens.md
-```
-
----
-
-### 4. **formatters.ts**
-
-**Purpose:**  
-Normalize formatting for UI elements.
-
-**Contains:**
-
-- `formatDate()` — ISO → human-readable  
-- `formatRange()` — time intervals  
-- `formatNumber()` — locale-aware formatting  
-- `formatLayerLabel()` — STAC/DCAT layer names  
-- `formatCitation()` — provenance label formatting  
-
-This ensures timeline, map legends, and Focus Mode use **identical formats**.
-
----
-
-## ⚙️ Utility Workflow
-
-~~~~~mermaid
-flowchart TD
-  A["Component Interaction"] --> B["Utility Function<br/>(schema/a11y/provenance/format)"]
-  B --> C["Telemetry Event<br/>(WebVitals · A11y · Ethics)"]
-  C --> D["Governance Sync<br/>(FAIR+CARE · Provenance)"]
-  D --> E["Focus Mode Context<br/>Explainability + Lineage"]
-~~~~~
-
----
-
-## 🧾 Example Utility Metadata Record (v10.3.2)
-
-~~~~~json
-{
-  "id": "web_utils_registry_v10.3.2",
-  "modules": ["schemaGuards.ts", "provenance.ts", "a11y.ts", "formatters.ts"],
-  "wcag_compliance": "2.1 AA",
-  "fairstatus": "certified",
-  "checksum_verified": true,
-  "telemetry_linked": true,
-  "efficiency_score": 99.4,
-  "timestamp": "2025-11-13T17:22:00Z",
-  "governance_ref": "docs/reports/audit/web-governance-ledger.json"
-}
-~~~~~
-
----
-
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
-|----------|----------------|-----------|
-| **Findable** | Utilities registered & indexed in governance ledgers. | @kfm-data |
-| **Accessible** | WCAG 2.1 AA utility coverage and patterns. | @kfm-accessibility |
-| **Interoperable** | JSON-LD, STAC/DCAT, DTO-aligned outputs. | @kfm-architecture |
-| **Reusable** | Pure, testable utility functions across features. | @kfm-design |
-| **Collective Benefit** | Ethical automation across UI workflows. | @faircare-council |
-| **Authority to Control** | CARE-based redaction & consent logic enforced. | @kfm-governance |
-| **Responsibility** | Sustainability logging & ethical safeguards. | @kfm-security |
-| **Ethics** | Prevent misuse of culturally sensitive content. | @kfm-ethics |
-
-**Audit Paths:**
-
-- FAIR+CARE: `../../../docs/reports/fair/data_care_assessment.json`  
-- Provenance: `../../../docs/reports/audit/data_provenance_ledger.json`
-
----
-
-## 🧩 Module Summary Table
-
-| Module | Description | Role |
-|--------|-------------|------|
-| `schemaGuards.ts` | Runtime DTO validators for Focus/STAC/DCAT/Graph. | Data Integrity |
-| `provenance.ts` | JSON-LD lineage + citation chips + ledger linking. | Governance / Provenance |
-| `a11y.ts` | ARIA/focus helpers, keyboard ops, announcements. | Accessibility |
-| `formatters.ts` | Dates, numbers, labels, UI formatting. | UI Consistency |
-
----
-
-## 🔐 CI/CD & Validation
-
-| Workflow | Purpose | Artifact |
-|----------|---------|----------|
-| `docs-lint.yml` | Markdown & metadata conformity. | `docs/reports/self-validation/docs/lint_summary.json` |
-| `build-and-deploy.yml` | Web integration & build health. | `docs/reports/telemetry/build_metrics.json` |
-| `telemetry-export.yml` | Merge runtime metrics. | `releases/v10.3.0/focus-telemetry.json` |
-| `codeql.yml` | Security scanning. | `docs/reports/security/codeql/*.sarif` |
-| `trivy.yml` | Dependency CVE scanning. | `docs/reports/security/trivy/*.json` |
-
-All modules must pass **strict TypeScript**, **A11y**, **FAIR+CARE**, and **schema** tests.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Target | Verified By |
-|--------|--------|-------------|
-| Energy per UI interaction | ≤ 0.5 Wh | @kfm-sustainability |
-| Carbon output | ≤ 1.2 gCO₂e | @kfm-security |
-| Renewable energy | 100% RE100 | @kfm-infrastructure |
-| FAIR+CARE certification | 100% | @faircare-council |
-
-Telemetry stored in:
-
-```
-../../../releases/v10.3.0/focus-telemetry.json
-```
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|--------|--------|--------|---------|
-| v10.3.2 | 2025-11-13 | Web Architecture Team | Path/link alignment pass; kept v10.3.1 utility definitions; adjusted example + doc paths to repo-root style. |
-| v10.3.1 | 2025-11-13 | Web Architecture Team | Upgraded from v9.7.0 → v10.3.1; aligned with new utils layout & telemetry schema v2. |
-| v9.7.0 | 2025-11-05 | KFM Core Team | Previous utility registry baseline. |
+| Version | Date       | Author            | Summary                                                                                                                              |
+| ------: | ---------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| v10.4.0 | 2025-11-15 | Web Platform Team | Upgraded to full KFM-MDP v10.4; added ontology, CARE, Story Node v3, governance, A11y, telemetry, error taxonomy, and extended YAML. |
+| v10.3.2 | 2025-11-13 | Web Platform Team | Prior architecture; foundational utility descriptions.                                                                               |
+| v10.3.1 | 2025-11-13 | Web Platform Team | Initial v10 utilities specification.                                                                                                 |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Web Utility Modules**  
-Deterministic Logic × FAIR+CARE × Provenance by Design × Accessibility  
-© 2025 Kansas Frontier Matrix — MIT License  
-
+**© 2025 Kansas Frontier Matrix — MIT License**
+Validated under **Master Coder Protocol v6.3**
+FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 [Back to Source Index](../README.md) · [Source Architecture](../ARCHITECTURE.md)
 
 </div>
