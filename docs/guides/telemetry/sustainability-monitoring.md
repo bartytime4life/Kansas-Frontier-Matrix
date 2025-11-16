@@ -1,211 +1,249 @@
 ---
-title: "🌿 Kansas Frontier Matrix — Sustainability Monitoring & FAIR+CARE Environmental Telemetry Guide"
+title: "🌿 Kansas Frontier Matrix — Sustainability Monitoring & FAIR+CARE Environmental Telemetry Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/telemetry/sustainability-monitoring.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/sustainability-monitoring-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/sustainability-monitoring-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "sustainability-monitoring"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E2"
+sensitivity_level: "System-level telemetry"
+machine_extractable: true
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+semantic_document_id: "kfm-doc-sustainability-monitoring"
+doc_uuid: "urn:kfm:doc:sustainability-monitoring-v10.4.2"
 ---
 
 <div align="center">
 
-# 🌿 **Kansas Frontier Matrix — Sustainability Monitoring & FAIR+CARE Environmental Telemetry Guide**
+# 🌿 **Kansas Frontier Matrix — Sustainability Monitoring & FAIR+CARE Environmental Telemetry Guide**  
 `docs/guides/telemetry/sustainability-monitoring.md`
 
-**Purpose:**  
+**Purpose**  
 Define the **sustainability observability framework** for monitoring energy, carbon, and renewable sourcing metrics across all Kansas Frontier Matrix (KFM) systems.  
-Ensures that environmental data is tracked continuously and validated under **FAIR+CARE**, **ISO 50001**, and **ISO 14064** standards.
+Ensures telemetry is collected, validated, and governed under **FAIR+CARE v2**, **ISO 50001**, and **ISO 14064**, and is linked to the **Governance Ledger** and **Lineage v2**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Environmental_Telemetry-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Operational-brightgreen)](../../../releases/)
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **Sustainability Monitoring Guide** defines how KFM captures, analyzes, and governs energy and carbon telemetry across AI, ETL, and visualization systems.  
-By embedding environmental observability into the Focus Telemetry pipeline, all compute operations are monitored for **efficiency**, **sustainability**, and **ethical stewardship**.
+The **Sustainability Monitoring Guide** specifies how KFM:
 
-**Key Objectives**
-- Measure and track power and carbon metrics across workflows  
-- Verify renewable energy utilization and efficiency gains  
-- Report metrics to the FAIR+CARE Governance Ledger  
-- Provide public transparency on system sustainability  
+- Measures compute energy usage and CO₂e across pipelines and services  
+- Aggregates and validates sustainability metrics via Telemetry v2  
+- Aligns measurements with **ISO 50001** (energy management) and **ISO 14064** (GHG accounting)  
+- Integrates environmental data into FAIR+CARE v2 governance decisions  
+- Publishes sustainability metrics and trends for Council and public review  
+
+Sustainability monitoring is not optional; it is part of KFM’s **ethical compliance**.
 
 ---
 
-## 🗂️ Directory Context
+# 🗂️ Directory Context
 
-```plaintext
+~~~text
 docs/guides/telemetry/
 ├── README.md                              # Telemetry overview
-├── sustainability-monitoring.md           # This document
-├── focus-telemetry-architecture.md        # Core telemetry system
+├── sustainability-monitoring.md           # ← THIS DOCUMENT
+├── focus-telemetry-architecture.md        # Core telemetry system design
 ├── ai-telemetry-integration.md            # AI performance & energy telemetry
-├── data-lineage-monitoring.md             # Provenance observability
-└── reports/                               # Environmental and sustainability audit logs
-```
+├── data-lineage-monitoring.md             # Lineage + telemetry observability
+└── reports/                               # Sustainability & telemetry audit logs
+~~~
 
 ---
 
-## 🧩 Sustainability Telemetry Architecture
+# 🧩 Sustainability Telemetry Architecture (GitHub-Safe Mermaid)
 
 ```mermaid
 flowchart TD
-A["Compute Operations (ETL / AI / Visualization)"] --> B["Focus Telemetry Collector"]
-B --> C["ISO Metrics Processor (Energy + Carbon + Renewable%)"]
-C --> D["FAIR+CARE Validator (Ethics + Sustainability)"]
-D --> E["Governance Ledger Sync + Public Dashboard"]
-```
+
+A["Compute Operations<br/>ETL · AI · Web · Validation"] --> B["Telemetry Collectors<br/>per subsystem"]
+B --> C["ISO Metrics Processor<br/>energy · CO₂ · renewable%"]
+C --> D["FAIR+CARE v2 Validator<br/>ethics · responsibility · sovereignty"]
+D --> E["Governance Ledger Sync<br/>append-only sustainability records"]
+E --> F["Dashboards & Reports<br/>public & Council-facing views"]
+````
 
 ---
 
-## ⚙️ Core Sustainability Metrics
+# ⚙️ Core Sustainability Metrics (Telemetry v2)
 
-| Metric | Description | Target | Unit | Validation |
-|---------|--------------|---------|------|-------------|
-| **Energy (J)** | Total energy used per workflow | ≤ 15 | Joules | `energy-monitor.yml` |
-| **Carbon (gCO₂e)** | Emissions equivalent per operation | ≤ 0.006 | gCO₂e | `carbon-audit.yml` |
-| **Renewable (%)** | Renewable power share per data center | ≥ 80 | % | `renewable-check.yml` |
-| **Efficiency (%)** | Energy savings compared to baseline | ≥ 10 | % | `efficiency-validate.yml` |
-| **FAIR+CARE Compliance (%)** | Ethical and sustainability validation rate | 100 | % | `faircare-validate.yml` |
+KFM’s sustainability layer uses Telemetry v2 fields to record:
+
+| Metric                    | Description                                     | Typical Target              | Unit    |
+| ------------------------- | ----------------------------------------------- | --------------------------- | ------- |
+| `energy_wh`               | Estimated energy consumed by a run/session      | ≤ 0.02 Wh per run           | Wh      |
+| `co2_g`                   | CO₂-equivalent emissions                        | ≤ 0.008 g per run           | grams   |
+| `renewable_percent`       | % power from renewable sources                  | ≥ 80% (goal ≥ 90%)          | percent |
+| `efficiency_gain_percent` | Savings vs baseline energy                      | ≥ 10% improvement           | percent |
+| `care_violations`         | Environmental or governance violations          | 0 (any > 0 triggers audit)  | count   |
+| `iso_alignment`           | ISO standards under which metrics are validated | `["ISO 50001","ISO 14064"]` | list    |
+
+These metrics are stored for:
+
+* CI runs
+* ETL jobs
+* AI training/inference sessions
+* Web UI (heavy visualization) sessions
 
 ---
 
-## 🧾 Example Sustainability Telemetry Record
+# 🧾 Example Sustainability Telemetry Record (Telemetry v2)
 
 ```json
 {
-  "telemetry_id": "sustainability-monitor-2025-11-09-0009",
-  "component": "AI Focus Mode Inference Cluster",
-  "metrics": {
-    "energy_joules": 13.5,
-    "carbon_gCO2e": 0.0054,
-    "renewable_percent": 84,
-    "efficiency_gain_percent": 11.8
-  },
-  "iso_standards": ["ISO 50001", "ISO 14064"],
-  "faircare_status": "Pass",
-  "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T12:35:00Z"
+  "pipeline": "ai",
+  "stage": "inference",
+  "run_id": "ai-focus-2025-11-16-0012",
+  "component": "Focus Mode v2.5",
+  "status": "success",
+  "duration_ms": 8420,
+  "energy_wh": 0.0013,
+  "co2_g": 0.0005,
+  "renewable_percent": 86,
+  "efficiency_gain_percent": 12.1,
+  "care_violations": 0,
+  "iso_alignment": ["ISO 50001", "ISO 14064"],
+  "timestamp": "2025-11-16T12:35:00Z"
 }
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Environmental Integration Matrix
+# ⚖️ FAIR+CARE v2 Environmental Integration Matrix
 
-| Principle | Implementation | Validation Artifact |
-|------------|----------------|--------------------|
-| **Findable** | Sustainability telemetry logs indexed by UUID | `focus-telemetry.json` |
-| **Accessible** | Openly published sustainability metrics under CC-BY | `reports/sustainability/*.json` |
-| **Interoperable** | JSON-LD schema integrates ISO + FAIR+CARE data | `telemetry_schema` |
-| **Reusable** | Baseline metrics used for historical trend analysis | `manifest_ref` |
-| **Collective Benefit** | Promotes open ecological accountability | FAIR+CARE audit |
-| **Authority to Control** | FAIR+CARE Council validates renewable energy metrics | Governance Ledger |
-| **Responsibility** | Continuous energy + carbon tracking at system level | `telemetry_ref` |
-| **Ethics** | Ensures equitable data stewardship in sustainability decisions | `sustainability-compliance.md` |
-
----
-
-## ⚙️ CI/CD Sustainability Workflows
-
-| Workflow | Function | Output |
-|-----------|-----------|--------|
-| `energy-monitor.yml` | Captures and logs energy telemetry | `reports/sustainability/energy-metrics.json` |
-| `carbon-audit.yml` | Converts energy metrics to CO₂ equivalent | `reports/sustainability/carbon-report.json` |
-| `renewable-check.yml` | Validates renewable power usage | `reports/sustainability/renewable-energy-log.json` |
-| `faircare-validate.yml` | Confirms FAIR+CARE environmental compliance | `reports/faircare/sustainability-audit.json` |
-| `ledger-sync.yml` | Commits telemetry results to governance ledger | `docs/standards/governance/LEDGER/sustainability-ledger.json` |
+| Principle                | Implementation for Sustainability                          | Validation Artifact                     |
+| ------------------------ | ---------------------------------------------------------- | --------------------------------------- |
+| **Findable**             | Telemetry logs indexed by UUID/run_id                      | `data/telemetry/*.ndjson`               |
+| **Accessible**           | Aggregated sustainability metrics under CC-BY              | `docs/guides/telemetry/reports/*.json`  |
+| **Interoperable**        | JSON Schema & JSON-LD alignment with ISO metrics           | `telemetry_schema`                      |
+| **Reusable**             | Telemetry used for trend analysis and governance reports   | `manifest_ref`                          |
+| **Collective Benefit**   | Transparency into KFM’s environmental footprint            | FAIR+CARE Council sustainability audits |
+| **Authority to Control** | Council validates energy/carbon & renewable claims         | Governance Ledger entries               |
+| **Responsibility**       | Continuous monitoring of energy, CO₂, and policy adherence | `telemetry_ref`                         |
+| **Ethics**               | Sustainability outcomes influence AI & pipeline decisions  | FAIR+CARE audit pipeline + ledger sync  |
 
 ---
 
-## 🧩 Governance Ledger Example Record
+# 🧪 CI/CD Sustainability Workflows
+
+These workflows implement the sustainability monitoring layer:
+
+| Workflow                   | Function                                            | Output Artifact                                           |
+| -------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
+| `energy-monitor.yml`       | Collects and aggregates energy usage telemetry      | `docs/guides/telemetry/reports/energy-metrics.json`       |
+| `carbon-audit.yml`         | Converts energy into CO₂e and validates thresholds  | `docs/guides/telemetry/reports/carbon-report.json`        |
+| `renewable-check.yml`      | Verifies renewable share from provider/hosting data | `docs/guides/telemetry/reports/renewable-energy-log.json` |
+| `sustainability-audit.yml` | Combines energy+CO₂+renewables into audit summary   | `docs/guides/telemetry/reports/sustainability-audit.json` |
+| `ledger-sync.yml`          | Appends sustainability metrics to Governance Ledger | `docs/reports/audit/data_provenance_ledger.jsonl`         |
+
+All workflows must pass for a release to be considered **sustainability-verified**.
+
+---
+
+# 🧩 Governance Ledger Example (Sustainability Entry)
 
 ```json
 {
-  "ledger_id": "sustainability-ledger-2025-11-09-0009",
-  "system": "Visualization + ETL Cluster",
-  "energy_joules": 46.2,
-  "carbon_gCO2e": 0.0189,
+  "ledger_id": "sustainability-ledger-2025-11-16-0009",
+  "stage": "sustainability-monitoring",
+  "components": ["AI Focus Mode Cluster", "ETL Hydrology", "Web Visualization"],
+  "energy_wh_total": 0.0462,
+  "carbon_gCO2e_total": 0.0189,
   "renewable_percent": 85,
   "efficiency_gain_percent": 12.5,
-  "faircare_status": "Pass",
-  "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T12:50:00Z"
+  "faircare_status": "pass",
+  "iso_alignment": ["ISO 50001", "ISO 14064"],
+  "telemetryRef": "releases/v10.4.2/pipeline-telemetry.json",
+  "timestamp": "2025-11-16T12:50:00Z",
+  "auditor": "FAIR+CARE Council"
 }
 ```
 
 ---
 
-## 🧠 Sustainability Audit Example
+# 🧠 Sustainability Audit Example
 
 ```json
 {
-  "audit_id": "faircare-sustainability-2025-11-09-0003",
-  "audited_components": ["AI Cluster", "ETL Hydrology", "Visualization Stack"],
-  "average_energy_joules": 13.2,
-  "average_carbon_gCO2e": 0.0057,
-  "renewable_percent": 83,
-  "efficiency_gain_percent": 10.6,
-  "faircare_status": "Pass",
+  "audit_id": "faircare-sustainability-2025-11-16-0003",
+  "audited_components": [
+    "AI Inference Cluster",
+    "ETL Hydrology Pipeline",
+    "Visualization Stack"
+  ],
+  "window": "2025-11-09T00:00:00Z/2025-11-16T00:00:00Z",
+  "averages": {
+    "energy_wh": 0.0132,
+    "carbon_gCO2e": 0.0057,
+    "renewable_percent": 83,
+    "efficiency_gain_percent": 10.6
+  },
+  "faircare_status": "pass",
   "iso_alignment": ["ISO 50001", "ISO 14064"],
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T13:00:00Z"
+  "timestamp": "2025-11-16T13:00:00Z"
 }
 ```
 
 ---
 
-## ⚙️ Sustainability Monitoring Flow
+# 🧮 Continuous Improvement Targets
 
-```mermaid
-flowchart LR
-A["System Activity (AI / ETL / Web)"] --> B["Telemetry Collector (Energy + Carbon)"]
-B --> C["FAIR+CARE Validation (ISO 50001 + 14064)"]
-C --> D["Governance Ledger Sync"]
-D --> E["Public Sustainability Dashboard (Grafana + FAIR+CARE Portal)"]
-```
-
----
-
-## ⚖️ Continuous Improvement Targets
-
-| Objective | Target | Verification |
-|------------|---------|---------------|
-| **Reduce Energy per Workflow** | -15% annually | FAIR+CARE Telemetry Audit |
-| **Maintain Carbon Neutrality** | 100% offset coverage | ISO 14064 reports |
-| **Increase Renewable Power Use** | ≥ 90% by 2026 | Renewable energy logs |
-| **Transparency Reports** | Quarterly public release | Governance Ledger |
-| **Audit Success Rate** | 100% FAIR+CARE Pass | Council Review |
+| Objective                           | Target                                 | Verified By                         |
+| ----------------------------------- | -------------------------------------- | ----------------------------------- |
+| **Reduce energy per workflow**      | ≥ 15% reduction year-over-year         | `sustainability-audit.json`         |
+| **Maintain low-carbon operations**  | ≤ 0.006 gCO₂e per typical run          | `carbon-report.json`                |
+| **Increase renewable energy share** | ≥ 90% by 2026                          | `renewable-energy-log.json`         |
+| **Complete reporting transparency** | Quarterly public sustainability report | Governance and FAIR+CARE dashboards |
+| **FAIR+CARE pass rate**             | 100% for sustainability workflows      | `faircare-validate.yml`             |
 
 ---
 
-## 🕰️ Version History
+# ✅ Developer Checklist
 
-| Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Added sustainability monitoring telemetry with ISO + FAIR+CARE environmental integration |
-| v9.7.0  | 2025-11-03 | A. Barta | Introduced telemetry tracking for renewable energy and carbon reporting |
+Before marking a pipeline or component as **sustainability-compliant**:
+
+* [ ] Telemetry v2 events include `energy_wh` and `co2_g`.
+* [ ] Telemetry v2 events include `renewable_percent` (where applicable).
+* [ ] ISO alignment fields updated where formal ISO frameworks are used.
+* [ ] Sustainability workflows pass in CI.
+* [ ] Governance Ledger entries include sustainability references.
+* [ ] FAIR+CARE Council, or designated proxy, has reviewed sustainability reports for major releases.
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary                                                                                          |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------ |
+| v10.4.2 | 2025-11-16 | Upgraded to Telemetry v2; added ISO-aligned metrics; integrated Governance Ledger & FAIR+CARE v2 |
+| v10.0.0 | 2025-11-09 | Initial sustainability monitoring and environmental telemetry guide                              |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — Sustainability Monitoring (v10.4.2)**
+Responsible AI × FAIR+CARE v2 × ISO-Aligned Sustainability × Immutable Governance
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 [Back to Telemetry Guides](./README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
