@@ -115,7 +115,12 @@ web/src/components/
 │   ├── TimelineMarkersLayer.tsx
 │   ├── TimelineControls.tsx
 │   ├── TimelineA11yHelpers.tsx
-│   └── TimelineCallouts.tsx
+│   ├── TimelineCallouts.tsx
+│   └── primitives/                   # <— canonical home for legacy files
+│       ├── TimelineBar.tsx
+│       ├── TimelineHandle.tsx
+│       ├── TimelineMarkers.tsx
+│       └── GranularityControls.tsx
 │
 ├── FocusMode/                     # Focus Mode v2.5 UI suite (replaces old focus/)
 │   ├── FocusContainer.tsx
@@ -128,7 +133,13 @@ web/src/components/
 │   ├── ExplainabilitySection.tsx
 │   ├── SpatialPanel.tsx
 │   ├── ProvenancePanel.tsx
-│   └── WarningsPanel.tsx
+│   ├── WarningsPanel.tsx
+│   └── primitives/                     # ← old folder goes here
+│       ├── FocusPanel.tsx
+│       ├── RelatedEntityCard.tsx
+│       ├── FocusNarrative.tsx
+│       ├── ExplanationBlock.tsx
+│       └── CARENotices.tsx
 │
 ├── DetailDrawer/                  # Universal slide-out detail view system
 │   ├── DetailDrawer.tsx
