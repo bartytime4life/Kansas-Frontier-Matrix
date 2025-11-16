@@ -1,17 +1,30 @@
 ---
 title: "🏺 Kansas Frontier Matrix — Archaeological Symbol Legend Metadata Field Definitions (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/archaeological/metadata/field_definitions.md"
-version: "v10.2.2"
-last_updated: "2025-11-13"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../../../../releases/v10.2.0/manifest.zip"
-telemetry_ref: "../../../../../../../../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../../../../schemas/telemetry/reports-visualization-archaeological-legends-v1.json"
+sbom_ref: "../../../../../../../../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../../../../../../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../../../../../../../../releases/v10.4.2/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../../../schemas/telemetry/reports-visualization-archaeological-legends-v2.json"
 governance_ref: "../../../../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Standard"
+intent: "archaeological-symbol-metadata"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A3-R2-E2"
+sensitivity_level: "High (cultural heritage)"
+public_exposure_risk: "Medium"
+machine_extractable: true
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+semantic_document_id: "kfm-doc-archaeological-symbol-field-definitions"
+doc_uuid: "urn:kfm:doc:arch-symbol-field-defs-v10.4.2"
 ---
 
 <div align="center">
@@ -19,152 +32,156 @@ mcp_version: "MCP-DL v6.3"
 # 🏺 **Kansas Frontier Matrix — Archaeological Symbol Legend Metadata Field Definitions**  
 `docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/archaeological/metadata/field_definitions.md`
 
-**Purpose:**  
-Define the **canonical, version-controlled metadata schema** for archaeological legend symbols used by Focus Mode, Story Nodes, and map visualizations in KFM — ensuring consistent semantics, cartography, and FAIR+CARE governance across STAC/DCAT catalogs and the Neo4j knowledge graph.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../../../../docs/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../../../../../docs/standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
+**Purpose**  
+Define the **canonical, version-controlled metadata schema** for archaeological legend symbols used by **Focus Mode**, **Story Nodes**, and **map visualizations** in the KFM stack.  
+This ensures consistent semantics, cartographic behavior, and FAIR+CARE governance across STAC/DCAT catalogs, MapLibre styles, and the Neo4j knowledge graph.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-This document specifies the **field definitions** for archaeological symbol legends used in:
+This standard specifies **field definitions** for archaeological symbol legends used in:
 
 - 🧠 **Focus Mode** entity-centric views  
-- 🧩 **Story Nodes** and narrative timelines  
-- 🗺️ **MapLibre** and other web map layers  
-- 🛰️ **STAC 1.0 / DCAT 3.0** metadata and assets  
+- 🧩 **Story Nodes** & narrative timelines  
+- 🗺️ **MapLibre** and other map layers  
+- 🛰️ **STAC 1.0 / DCAT 3.0** metadata and legends  
 
-Each symbol definition controls:
+Each symbol record controls:
 
 - Archaeological **semantics** (feature class, period, culture, certainty)  
-- **Cartographic style** (icon, color, scale ranges, opacity)  
-- **Ethics and access** (sensitivity, CARE notes, access tier)  
-- **Provenance and linkage** (datasets, Story Nodes, STAC Items, review metadata)  
+- **Cartographic styling** (icon, color, scale, opacity)  
+- **Ethical & access controls** (sensitivity, CARE notes, access tiers)  
+- **Provenance & linkage** (datasets, Story Nodes, STAC Items, review metadata)  
 
-All downstream implementations (CSV catalogs, JSON symbol sets, graph nodes) **must** map to these fields.
+All downstream symbol catalogs (JSON, CSV), map styles, and graph nodes MUST map back to these fields.
 
 ---
 
-## 🧱 Schema Overview
+# 🗂️ Directory Layout
+
+~~~text
+docs/
+│
+└── reports/
+    │
+    └── visualization/
+        │
+        └── focus_mode/
+            │
+            └── story_nodes/
+                │
+                └── assets/
+                    │
+                    └── legends/
+                        │
+                        └── symbols/
+                            │
+                            └── archaeological/
+                                │
+                                ├── README.md
+                                └── metadata/
+                                    │
+                                    ├── field_definitions.md      # ← THIS FILE
+                                    └── examples/
+                                        ├── single_symbol.json
+                                        ├── symbol_catalog.csv
+                                        └── stac_item_example.json
+~~~
+
+> 💡 **Note:** Any new archaeological symbol catalogs or examples MUST live under `metadata/examples/` and reference the fields defined in this document.
+
+---
+
+# 🧱 Schema Overview
 
 The archaeological symbol legend schema is designed to:
 
 - Normalize **archaeological feature types** into a shared vocabulary.  
-- Attach **time-period information** compatible with OWL-Time.  
+- Attach **time-period** information compatible with OWL-Time.  
 - Capture **cultural affiliations** and **interpretation certainty**.  
-- Encode **FAIR+CARE-sensitive controls** to protect sites.  
-- Provide **cartographic definitions** that can be injected into:
-  - Focus Mode styling engines  
-  - Story Node map panes  
-  - STAC legend assets and map styles  
+- Encode **FAIR+CARE-sensitive controls** (sensitivity, sovereign rights).  
+- Provide **cartographic definitions** that can be mapped into:
+  - Focus Mode and Story Node UIs  
+  - MapLibre styles / sprites  
+  - STAC/DCAT legend assets & style references  
 
-Each symbol record corresponds to **one visual symbol** used to represent one or more feature codes in upstream datasets.
+Each symbol record corresponds to **one visual symbol** used to represent one or more feature codes across upstream datasets.
 
 ---
 
-## 🧩 Core Metadata Fields
-
-### 🧾 Field Definition Table
+# 🧾 Field Definition Table
 
 | #  | Field Name             | Type       | Req | Description                                                                              | Example                                                      |
-| -- | ---------------------- | ---------- | :-: | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 1  | `symbol_id`            | string     |  ✅  | Stable, unique ID for the symbol (UUID or scoped slug).                                  | `arch_sym:pit_house_v1`                                      |
-| 2  | `label`                | string     |  ✅  | Short human-readable label shown in legends and UI.                                      | `Pit house (probable)`                                       |
-| 3  | `description`          | string     |  ✅  | Longer description of the feature represented by this symbol.                            | `Subsurface pit structure interpreted as domestic dwelling.` |
-| 4  | `geometry_type`        | enum       |  ✅  | Expected geometry type: `Point`, `LineString`, `Polygon`, `MultiPoint`, etc.             | `Point`                                                      |
-| 5  | `feature_class`        | enum       |  ✅  | High-level class e.g. `settlement`, `burial`, `earthwork`, `ritual`, `artifact_cluster`. | `settlement`                                                 |
-| 6  | `subtype`              | string     |  ⬜  | Optional refinement within `feature_class`.                                              | `domestic_structure`                                         |
-| 7  | `period_label`         | string     |  ✅  | Human-readable cultural/chronological period.                                            | `Great Bend aspect (c. 1450–1700 CE)`                        |
-| 8  | `period_start`         | date       |  ⬜  | ISO 8601 start date of interpreted period (if known).                                    | `1450-01-01`                                                 |
-| 9  | `period_end`           | date       |  ⬜  | ISO 8601 end date of interpreted period (if known).                                      | `1700-12-31`                                                 |
-| 10 | `culture_label`        | string     |  ⬜  | Culture, community, or people associated with the feature (where appropriate).           | `Ancestral Wichita`                                          |
-| 11 | `certainty`            | enum       |  ✅  | Interpretation confidence: `high`, `medium`, `low`, `hypothetical`.                      | `medium`                                                     |
-| 12 | `sensitivity`          | enum       |  ✅  | Cultural/ethical sensitivity: `public`, `restricted`, `sensitive`, `sacred`.             | `sensitive`                                                  |
-| 13 | `care_label`           | string     |  ⬜  | CARE / Indigenous data sovereignty note or handling guidance.                            | `Consult THPO before any public display.`                    |
-| 14 | `access_tier`          | enum       |  ✅  | Default public display tier: `full`, `generalized`, `hidden`.                            | `generalized`                                                |
-| 15 | `min_scale`            | number     |  ⬜  | Minimum map scale denominator where symbol should render (e.g., 1:25k → `25000`).        | `25000`                                                      |
-| 16 | `max_scale`            | number     |  ⬜  | Maximum map scale denominator where symbol should render.                                | `150000`                                                     |
-| 17 | `fill_color_hex`       | string     |  ✅  | Symbol fill color as `#RRGGBB` (no alpha).                                               | `#b5651d`                                                    |
-| 18 | `stroke_color_hex`     | string     |  ⬜  | Outline color as `#RRGGBB`.                                                              | `#3b2a1a`                                                    |
-| 19 | `stroke_width_px`      | number     |  ⬜  | Stroke width in CSS pixels at reference zoom.                                            | `1.5`                                                        |
-| 20 | `opacity`              | number     |  ⬜  | Symbol opacity in range `0.0`–`1.0`.                                                     | `0.85`                                                       |
-| 21 | `icon_href`            | uri        |  ⬜  | Relative or absolute URI to SVG/PNG icon asset.                                          | `/assets/icons/arch/pit_house.svg`                           |
-| 22 | `icon_role`            | string     |  ⬜  | Icon usage role: `legend`, `map-marker`, `thumbnail`, etc.                               | `legend`                                                     |
-| 23 | `source_dataset_id`    | string     |  ✅  | Primary source dataset identifier in the KFM data catalog.                               | `kshs_arch_survey_v4`                                        |
-| 24 | `source_feature_codes` | array[str] |  ⬜  | Upstream feature codes that map to this symbol.                                          | `["PH","pithouse_prob"]`                                     |
-| 25 | `stac_item_ids`        | array[str] |  ⬜  | IDs of STAC Items that reference this symbol or its legend catalog.                      | `["stac:kfm-arch-sites-2025-01"]`                            |
-| 26 | `story_node_ids`       | array[str] |  ⬜  | IDs of Story Nodes in which this symbol is prominently used.                             | `["story:great_bend_village_cluster"]`                       |
-| 27 | `license`              | string     |  ✅  | License covering the symbol definition and icon assets.                                  | `CC-BY 4.0`                                                  |
-| 28 | `citation`             | string     |  ⬜  | Human-readable academic or archival reference.                                           | `Wedel, W.R. 1959. An Introduction to Kansas Archeology.`    |
-| 29 | `created_at`           | datetime   |  ✅  | ISO 8601 timestamp when the symbol record was created.                                   | `2025-10-01T14:33:00Z`                                       |
-| 30 | `updated_at`           | datetime   |  ✅  | ISO 8601 timestamp when the symbol record was last modified.                             | `2025-11-10T09:12:45Z`                                       |
-| 31 | `created_by`           | string     |  ✅  | Curator or process ID (e.g., GitHub user, automation account).                           | `@kfm-arch-curator`                                          |
-| 32 | `review_status`        | enum       |  ✅  | Review state: `draft`, `in_review`, `approved`, `deprecated`.                            | `approved`                                                   |
-| 33 | `review_notes`         | string     |  ⬜  | Curatorial notes documenting decisions, caveats, or changes.                             | `Location generalized to 1 km grid for protection.`          |
+|----|------------------------|------------|:--:|------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| 1  | `symbol_id`            | string     | ✅  | Stable, unique ID for the symbol (UUID or namespaced slug).                             | `arch_sym:pit_house_v1`                                      |
+| 2  | `label`                | string     | ✅  | Short human label shown in legends and UI.                                              | `Pit house (probable)`                                       |
+| 3  | `description`          | string     | ✅  | Longer explanation of the feature represented by this symbol.                           | `Subsurface pit structure interpreted as domestic dwelling.` |
+| 4  | `geometry_type`        | enum       | ✅  | Geometry type: `Point`, `LineString`, `Polygon`, `MultiPoint`, etc.                     | `Point`                                                      |
+| 5  | `feature_class`        | enum       | ✅  | High-level class: `settlement`, `burial`, `earthwork`, `ritual`, `artifact_cluster`, etc.| `settlement`                                                |
+| 6  | `subtype`              | string     | ⬜  | Optional refinement within `feature_class`.                                             | `domestic_structure`                                         |
+| 7  | `period_label`         | string     | ✅  | Human-readable cultural/chronological period.                                           | `Great Bend aspect (c. 1450–1700 CE)`                        |
+| 8  | `period_start`         | date       | ⬜  | ISO 8601 start date of interpreted period.                                              | `1450-01-01`                                                 |
+| 9  | `period_end`           | date       | ⬜  | ISO 8601 end date of interpreted period.                                                | `1700-12-31`                                                 |
+| 10 | `culture_label`        | string     | ⬜  | Culture, community, or people associated with the feature (where appropriate).          | `Ancestral Wichita`                                          |
+| 11 | `certainty`            | enum       | ✅  | Interpretation confidence: `high`, `medium`, `low`, `hypothetical`.                     | `medium`                                                     |
+| 12 | `sensitivity`          | enum       | ✅  | Cultural/ethical sensitivity: `public`, `restricted`, `sensitive`, `sacred`.            | `sensitive`                                                  |
+| 13 | `care_label`           | string     | ⬜  | CARE / data sovereignty note or handling guidance.                                      | `Consult THPO before any public display.`                    |
+| 14 | `access_tier`          | enum       | ✅  | Default display tier: `full`, `generalized`, `hidden`.                                  | `generalized`                                                |
+| 15 | `min_scale`            | number     | ⬜  | Minimum map scale denominator (e.g. 1:25k → `25000`) where symbol should render.        | `25000`                                                      |
+| 16 | `max_scale`            | number     | ⬜  | Maximum map scale denominator where symbol should render.                               | `150000`                                                     |
+| 17 | `fill_color_hex`       | string     | ✅  | Fill color `#RRGGBB` (no alpha).                                                       | `#b5651d`                                                    |
+| 18 | `stroke_color_hex`     | string     | ⬜  | Outline color `#RRGGBB`.                                                               | `#3b2a1a`                                                    |
+| 19 | `stroke_width_px`      | number     | ⬜  | Stroke width in CSS pixels at reference zoom.                                          | `1.5`                                                        |
+| 20 | `opacity`              | number     | ⬜  | Opacity in `0.0`–`1.0`.                                                                | `0.85`                                                       |
+| 21 | `icon_href`            | uri        | ⬜  | Path/URL to SVG/PNG icon asset.                                                        | `/assets/icons/arch/pit_house.svg`                           |
+| 22 | `icon_role`            | string     | ⬜  | Icon usage role: `legend`, `marker`, `thumbnail`, etc.                                  | `legend`                                                     |
+| 23 | `source_dataset_id`    | string     | ✅  | Primary source dataset in KFM’s data catalog.                                           | `kshs_arch_survey_v4`                                        |
+| 24 | `source_feature_codes` | array[str] | ⬜  | Upstream feature codes that map to this symbol.                                        | `["PH","pithouse_prob"]`                                    |
+| 25 | `stac_item_ids`        | array[str] | ⬜  | STAC Items that use this symbol catalog in `assets.legend`.                             | `["stac:kfm-arch-sites-2025-01"]`                            |
+| 26 | `story_node_ids`       | array[str] | ⬜  | Story Node IDs featuring this symbol prominently.                                      | `["story:great_bend_village_cluster"]`                       |
+| 27 | `license`              | string     | ✅  | License for symbol definition & icon assets.                                           | `CC-BY 4.0`                                                  |
+| 28 | `citation`             | string     | ⬜  | Academic or archival reference.                                                       | `Wedel, W.R. 1959. An Introduction to Kansas Archeology.`    |
+| 29 | `created_at`           | datetime   | ✅  | ISO 8601 creation timestamp.                                                          | `2025-10-01T14:33:00Z`                                       |
+| 30 | `updated_at`           | datetime   | ✅  | ISO 8601 last-update timestamp.                                                       | `2025-11-10T09:12:45Z`                                       |
+| 31 | `created_by`           | string     | ✅  | Curator / account (e.g., GitHub handle).                                              | `@kfm-arch-curator`                                          |
+| 32 | `review_status`        | enum       | ✅  | `draft`, `in_review`, `approved`, `deprecated`.                                       | `approved`                                                   |
+| 33 | `review_notes`         | string     | ⬜  | Curatorial notes documenting decisions or caveats.                                     | `Location generalized to 1 km grid for protection.`          |
 
-> ⚠️ **Ethics Guardrail:** Any symbol with `sensitivity = "sacred"` or `sensitivity = "sensitive"` must not default to `access_tier = "full"` in public deployments. Use `generalized` or `hidden` and follow governance workflows for exceptions.
-
----
-
-### 📁 Directory Layout
-
-~~~~~text
-docs/
-└─ reports/
-   └─ visualization/
-      └─ focus_mode/
-         └─ story_nodes/
-            └─ assets/
-               └─ legends/
-                  └─ symbols/
-                     └─ archaeological/
-                        ├─ README.md
-                        └─ metadata/
-                           ├─ field_definitions.md   ← (this file)
-                           └─ examples/
-                              ├─ single_symbol.json
-                              ├─ symbol_catalog.csv
-                              └─ stac_item_example.json
-~~~~~
-
-
-> 💡 **Tip:** Any new archaeological symbol catalog or example must live under `metadata/examples/` and reference the fields in this document. CI checks assume this layout.
+> ⚠️ **Ethics Guardrail:**  
+> For `sensitivity = "sacred"` or `"sensitive"`, public map styles MUST NOT default to `access_tier = "full"`. Use `generalized` or `hidden` and follow governance workflows.
 
 ---
 
-## 🧩 Story Node & STAC Integration
+# 🧠 Story Node & Focus Mode Integration
 
-### 🧠 Story Node Usage
+## Story Nodes
 
-Within a **Story Node**, archaeological symbols can be referenced via:
+Story Nodes can explicitly reference symbols to make the UI explainable:
 
-- `narrative.media[*].href` → uses `icon_href` for legend thumbnails.  
-- `relations[*]` → explicit `uses-symbol` links to `symbol_id`.  
-- Map panels that render features using styling derived from these definitions.
-
-Example relation block in a Story Node:
-
-~~~~~json
+```json
 {
   "rel": "uses-symbol",
   "target": "arch_sym:pit_house_v1",
   "role": "cartographic-convention"
 }
-~~~~~
+````
 
-This allows Focus Mode to explain **why** a feature is styled in a particular way by referencing this legend schema.
+Focus Mode can then:
 
-### 🛰 STAC Item Usage
+* Highlight where and why this symbol appears
+* Show legend entries & CARE notes inline
+* Link to provenance in the graph and STAC catalogs
 
-A STAC Item describing an archaeological vector layer should reference the symbol catalog as a legend asset:
+---
 
-~~~~~json
+# 🛰 STAC/DCAT Integration
+
+A STAC Item describing an archaeological dataset should reference a symbol catalog asset:
+
+```json
 {
   "type": "Feature",
   "stac_version": "1.0.0",
@@ -190,17 +207,13 @@ A STAC Item describing an archaeological vector layer should reference the symbo
     }
   }
 }
-~~~~~
-
-> 💡 **Tip:** Treat the legend file itself (`arch_legend_v1.json` or `.csv`) as a versioned STAC asset so it can be indexed, validated, and linked to map styles.
+```
 
 ---
 
-## 🧾 JSON & CSV Representations
+# 🧾 JSON Example (Single Symbol Record)
 
-### 📄 JSON Example (Single Symbol)
-
-~~~~~json
+```json
 {
   "symbol_id": "arch_sym:pit_house_v1",
   "label": "Pit house (probable)",
@@ -236,166 +249,52 @@ A STAC Item describing an archaeological vector layer should reference the symbo
   "review_status": "approved",
   "review_notes": "Location generalized to 1 km grid for site protection."
 }
-~~~~~
+```
 
-### 📑 CSV Header (Symbol Catalog)
+---
 
-~~~~~text
+# 📑 CSV Header Specification
+
+CSV catalogs MUST use the following header row (order may vary but all required fields must be present):
+
+```text
 symbol_id,label,description,geometry_type,feature_class,subtype,period_label,period_start,period_end,culture_label,certainty,sensitivity,care_label,access_tier,min_scale,max_scale,fill_color_hex,stroke_color_hex,stroke_width_px,opacity,icon_href,icon_role,source_dataset_id,source_feature_codes,stac_item_ids,story_node_ids,license,citation,created_at,updated_at,created_by,review_status,review_notes
-~~~~~
+```
 
-> 🧩 **Multi-valued Fields:** In CSV exports, treat `source_feature_codes`, `stac_item_ids`, and `story_node_ids` as pipe-delimited (`|`) lists and parse them explicitly in ETL pipelines.
-
----
-
-## 🧯 Validation & CI Integration
-
-### 🧪 Schema Validation
-
-- JSON symbol catalogs must validate against a JSON Schema that implements the field table above.  
-- CSV symbol catalogs must be checked for:
-  - Presence of all required columns.  
-  - Non-empty values for required fields.  
-
-### 🔐 Ethics & Semantics Checks
-
-- `sensitivity` of `sacred` or `sensitive` must not be paired with `access_tier = "full"` in public-facing layers.  
-- Color fields (`fill_color_hex`, `stroke_color_hex`) must be valid `#RRGGBB` values.  
-- `certainty = "low"` or `certainty = "hypothetical"` should trigger warnings when used in highly visible public contexts.  
-
-### ⚙️ CI Workflows
-
-Recommended make targets and workflows:
-
-- `make docs-validate` for global documentation rules.  
-- `make validate-arch-symbols` for:
-  - JSON Schema validation.  
-  - CSV header and required-field checks.  
-  - Optional link checks ensuring referenced `symbol_id`, `story_node_ids`, and `stac_item_ids` exist in catalogs or the graph.  
-
-All changes to symbol catalogs should be gated in CI; merges are blocked until validations pass.
+Multi-valued fields (e.g., `source_feature_codes`) should use pipe-delimited strings in CSV (e.g., `PH|pithouse_prob`) and be split in ETL.
 
 ---
 
-## 🔒 Governance & Ethics
+# ⚙️ Validation & CI Integration
 
-Archaeological symbols encode information about **culturally significant and vulnerable places**. To honor FAIR+CARE and KFM governance:
+Recommended checks:
 
-- Use `sensitivity`, `care_label`, and `access_tier` to **enforce ethical display rules**:
-  - `sacred` or `sensitive` → default `access_tier` should be `generalized` or `hidden`.  
-  - Site coordinates may be generalized (e.g., grid-based or county-level) before public publication.  
-- Align symbol-level decisions with the **Root Governance Charter** and any relevant **Tribal Historic Preservation Office (THPO)** guidance.  
-- Document all curatorial choices in `review_notes`, especially when:
-  - Locations are generalized or redacted.  
-  - Symbol semantics differ from upstream datasets.  
-  - Local community or tribal partners requested special handling.  
-- Ensure **indigenous perspectives** are represented in `description`, `period_label`, and `culture_label` text where appropriate and validated through consultation.  
+* JSON Schema validation for `.json` symbol catalogs.
+* CSV header and required-field validation.
+* Color format validation for `*_color_hex`.
+* Logical governance checks:
 
-> ⚖️ **Governance Alignment:** When in doubt, favor **under-disclosure over over-disclosure** for sensitive sites, and route questions to the FAIR+CARE Council per `governance_ref`.
+  * If `sensitivity` is `sacred` or `sensitive` → enforce `access_tier != "full"` for public catalogs.
 
----
+Examples of CI workflows:
 
-## 🧬 Knowledge Graph Integration
-
-In the Neo4j knowledge graph, each symbol is represented as a node, typically:
-
-- Node label: `ArchSymbol`  
-- Key properties:
-  - `symbol_id`, `label`, `feature_class`, `period_label`, `culture_label`, `certainty`, `sensitivity`, `access_tier`, `license`, timestamps, and review metadata.  
-
-Recommended relationships:
-
-- `(s:ArchSymbol)-[:LEGEND_FOR]->(l:Layer)`  
-  - Links symbol to a vector or raster layer (e.g., archaeological site inventories).  
-- `(s:ArchSymbol)-[:DEPICTS_FEATURE_CLASS]->(c:ArchFeatureClass)`  
-  - Normalizes feature classes (e.g., `settlement`, `burial`).  
-- `(s:ArchSymbol)-[:USED_IN_STORY]->(n:StoryNode)`  
-  - Mirrors `story_node_ids`.  
-- `(s:ArchSymbol)-[:REFERENCED_IN]->(d:Document)`  
-  - Optional link to key references or citations (reports, site forms).  
-- `(s:ArchSymbol)-[:DERIVED_FROM_DATASET]->(ds:Dataset)`  
-  - Mirrors `source_dataset_id` and any DCAT/STAC dataset entity.
-
-These relationships allow:
-
-- Focus Mode to **navigate from a legend symbol** → features → Story Nodes → documents.  
-- Validation scripts to ensure **referential integrity** between symbol catalogs and graph entities.  
-- Query patterns such as:
-  - “Find all **sensitive** burial-related symbols used in Story Nodes about the 19th century.”  
-  - “List all datasets for which `arch_sym:pit_house_v1` is the legend symbol.”
+* `arch-symbols-validate.yml` → runs JSON/CSV schema checks and governance rules.
+* `docs-lint.yml` → ensures this file and `README.md` conform to KFM-MDP.
 
 ---
 
-## 🛰 STAC/DCAT Metadata
+# 🕰 Version History
 
-Symbol catalogs and their references should align with **STAC 1.0.0** and **DCAT 3.0**:
-
-- **STAC Collections / Items:**
-  - Treat the archaeological site layers as STAC Collections/Items.  
-  - Include:
-    - `properties["kfm:symbol_catalog_id"]` → ID of the symbol catalog.  
-    - `assets["legend"]` → legend JSON/CSV asset with:
-      - `roles: ["legend"]`  
-      - `type: "application/json"` or `"text/csv"`  
-      - `kfm:symbol_ids` list as shown above.  
-- **DCAT Datasets:**
-  - For each dataset in `source_dataset_id`, record:
-    - `dcat:Dataset` with:
-      - `dct:title` = dataset title.  
-      - `dcat:distribution` entries including:
-        - The main data (vector layer).  
-        - The legend asset (this symbol catalog).  
-      - `dct:conformsTo` referencing STAC/DCAT schemas as appropriate.  
-
-Field mapping hints:
-
-- `symbol_id` → internal identifier, may be added in STAC/legend assets as `id`.  
-- `feature_class`, `period_label`, `culture_label` → stored in `properties` or in a supplemental `legend` extension.  
-- `sensitivity`, `access_tier` → used to drive **STAC access controls** or publication policies (e.g., not exposing precise geometries for sensitive symbols).  
-
-> 🛰 **Interoperability Note:** Keep legend assets **STAC-compliant** so they can be indexed by any STAC-aware catalog browser or external pipeline.
-
----
-
-## 🧠 Focus Mode Integration
-
-Archaeological symbol metadata powers **Focus Mode** explanations and visual behavior:
-
-- **Narrative Augmentation:**
-  - Focus Mode can pull `label`, `description`, `period_label`, and `culture_label` to enrich Story Node or entity summaries.  
-  - `certainty` informs how cautious language should be (e.g., “probable”, “possible”).  
-- **Explainability Overlays:**
-  - When a user hovers a symbol in Focus Mode, a tooltip or side panel can show:
-    - `feature_class`, `period_label`, `culture_label`.  
-    - `care_label` if applicable.  
-    - `citation` for deeper reading.  
-- **Ethical Styling:**
-  - `sensitivity` and `access_tier` drive:
-    - Whether precise locations are shown, generalized, or hidden.  
-    - Whether symbol icons are replaced with neutral placeholders in public contexts.  
-- **Focus Recommendations:**
-  - Focus Mode’s AI may recommend Story Nodes or layers where a symbol is heavily used, via `story_node_ids` and `stac_item_ids`.  
-  - For example: “This pit house symbol appears in 12 sites belonging to the Great Bend aspect, mainly in central Kansas” — derived from joining symbol metadata with the graph.  
-
-> 🧠 **AI Guardrail:** Focus Mode must never override `sensitivity` / `access_tier` rules when suggesting zoom levels or showing exact coordinates; the symbol legend is the **source of truth** for those constraints.
-
----
-
-## 🕰️ Version History
-
-| Version | Date       | Author           | Summary                                                                                                          |
-| ------- | ---------- | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| v10.2.2 | 2025-11-13 | KFM AI Assistant | Adjusted directory layout to left-aligned tree while preserving field schema, ethics notes, and integration text. |
-| v10.2.2 | 2025-11-12 | KFM AI Assistant | Realigned archaeological symbol field definitions to KFM markdown guide; tightened ethics notes and CI guidance. |
-| v10.2.0 | 2025-11-12 | KFM AI Assistant | Initial creation of archaeological symbol legend metadata field definitions for Focus Mode and Story Nodes.      |
-
----
+| Version | Date       | Author                    | Summary                                                                                                        |
+| ------: | ---------- | ------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | KFM Documentation Council | Upgraded to KFM-MDP v10.4.2, deep-inset directory layout, Telemetry v2 references, and stricter CARE guidance. |
+| v10.2.2 | 2025-11-12 | KFM AI Assistant          | Realigned archaeological symbol field definitions to Markdown standards; added CI guidance and ethics notes.   |
+| v10.2.0 | 2025-11-12 | KFM AI Assistant          | Initial schema for archaeological symbol legend metadata.                                                      |
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — CC-BY 4.0
+Master Coder Protocol v6.3 · FAIR+CARE Certified
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-```
