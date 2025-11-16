@@ -1,17 +1,25 @@
 ---
-title: "🧪 Kansas Frontier Matrix — Great Expectations Validate → Promote Pipeline Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧪 Kansas Frontier Matrix — GX Validate → Promote Pipeline Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/pipelines/gx-validate-promote.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-gx-promote-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/pipelines-gx-promote-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "gx-validate-promote"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
@@ -19,331 +27,412 @@ mcp_version: "MCP-DL v6.3"
 # 🧪 **Kansas Frontier Matrix — Great Expectations Validate → Promote Pipeline Guide**  
 `docs/guides/pipelines/gx-validate-promote.md`
 
-**Purpose:**  
-Define the **canonical KFM workflow** for validating datasets with **Great Expectations (GX)** and then **promoting** validated assets to the **Processed**, **Published**, and **Graph** layers with complete **FAIR+CARE**, **lineage**, **provenance**, and **telemetry** commitments.
+**Purpose**  
+Define the **canonical KFM v10.4.2 Validate → Promote pipeline pattern** based on  
+**Great Expectations (GX)**, **FAIR+CARE v2**, **Telemetry v2**, and  
+**Lineage v2**, ensuring every dataset moves safely from  
+**Raw → Staging → Processed → Published → Graph/RDF/STAC/DCAT**  
+with **deterministic**, **auditable**, and **reproducible** steps.
 
-This guide standardizes the Validate→Promote pattern used by:  
+This pattern is used across:
+
 - STAC ingestion pipelines  
-- Remote sensing pipelines (LandsatLook, Sentinel-2, Sentinel-1)  
-- Historical / tabular ETL pipelines  
-- Hazard, drought, climate, and multi-temporal analysis pipelines  
+- Remote sensing pipelines (Landsat, Sentinel-1/2/3, NAIP, MODIS, VIIRS)  
+- Historical/tabular ETL pipelines  
+- Hazard, drought, climate, temporal analysis pipelines  
+- AI/agent-assisted pipelines (post-GX)
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **GX Validate → Promote pattern** ensures:
+The **Validate → Promote** pattern ensures that:
 
-- Input data is fully validated before entering KFM storage  
-- All promotions respect FAIR+CARE governance  
-- Lineage and telemetry are bound at each step  
-- Neo4j + STAC indexes + RDF exports only reference validated assets  
-- All failures follow a standard quarantine + issue creation workflow
+- Incoming data is rigorously validated before being allowed into KFM storage  
+- CARE v2 governance rules are applied immediately  
+- Telemetry v2 (energy, CO₂e, care_violations, errors, metrics) is recorded  
+- Lineage v2 (PROV-O + CIDOC + GeoSPARQL + CARE v2) is produced  
+- All promotions follow the **Publishing Gate v10.4.x**  
+- Dataset failures consistently enter **Quarantine**  
+- STAC/DCAT, Neo4j, RDF, and Focus Mode integrations only reference **validated assets**
 
-This guide defines:
-1. **Directory model**  
-2. **Validation → promotion states**  
-3. **GX check suite structure**  
-4. **Governance and CARE forcing functions**  
-5. **CI/CD triggers and blocking rules**  
+This guide defines the:
+
+1. Directory model  
+2. GX suite structure  
+3. Validation-to-promotion state machine  
+4. CARE v2 rules at validation  
+5. Telemetry + lineage requirements  
+6. Promotion contract (Processed Layer)  
+7. Publishing integration (optional)  
+8. CI/CD blocking logic  
 
 ---
 
-## 🗂️ Directory Layout (Authoritative)
+# 🗂️ Directory Layout (Authoritative KFM v10.4.2)
 
-~~~~~text
+~~~text
 data/
-├── raw/                            # Incoming unverified data
+├── raw/                               # Incoming unverified data
 ├── work/
-│   ├── tmp/                        # Intermediate transforms
-│   ├── staging/                    # GX-validated, schema-aligned data
-│   └── processed/                  # Pre-publication outputs
-├── processed/                      # Certified FAIR+CARE datasets
-├── stac/                           # STAC Items/Collections (published)
-├── reports/
-│   ├── validation/                 # GX summaries
-│   ├── fair/                       # CARE audits
-│   └── audit/                      # Governance ledgers
-└── telemetry/
-    └── *.ndjson                    # Stage-by-stage telemetry
-~~~~~
+│   ├── tmp/                           # Ephemeral / intermediate transforms
+│   ├── staging/                       # GX-validated, schema-aligned, CARE-labeled data
+│   ├── quarantine/                    # Failed validation batches
+│   └── validated/                     # Optional domain-specific review layer
+├── processed/                         # Certified FAIR+CARE datasets (post-promotion)
+├── stac/                              # Published STAC Items/Collections
+├── dcat/                              # Published DCAT JSON-LD
+├── rdf/                               # GeoSPARQL/RDF exports
+├── lineage/                           # Lineage v2 bundles (PROV-O, CIDOC CRM, CARE v2)
+├── telemetry/                         # NDJSON telemetry logs per stage
+└── reports/
+    ├── validation/                    # GX reports
+    ├── fair/                          # CARE audits
+    └── audit/                         # Governance ledger entries
+~~~
 
 ---
 
-## 🔄 Validate → Promote Lifecycle
+# 🔄 Validate → Promote Lifecycle (GitHub-Safe Mermaid)
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["Raw / Incoming Data"] --> B["GX Checkpoint<br/>Schema · Ranges · Integrity"]
-  B -->|PASS| C["Staging Layer<br/>Schema-Aligned · CARE-tagged"]
-  B -->|FAIL| Q["Quarantine<br/>Issue Creation · Telemetry"]
-  C --> D["Promotion Gate<br/>FAIR+CARE + Provenance Checks"]
-  D -->|PASS| E["Processed Layer"]
-  E --> F["Publish<br/>STAC · DCAT · Neo4j · RDF"]
-  F --> G["Telemetry + Lineage<br/>Governance Ledger"]
-~~~~~
+
+A["Incoming Data (raw)"] --> B["GX Checkpoint<br/>Schema · Ranges · Integrity"]
+B -->|PASS| C["Staging Layer<br/>Schema-aligned · CARE-tagged"]
+B -->|FAIL| Q["Quarantine<br/>Issue Creation · CARE Flags · Telemetry v2"]
+C --> D["Promotion Gate<br/>FAIR+CARE v2 · Lineage v2 · Provenance Checks"]
+D -->|PASS| E["Processed Layer<br/>Certified FAIR+CARE v2 Dataset"]
+E --> F["Optional Publish<br/>STAC · DCAT · Neo4j · RDF"]
+F --> G["Governance Ledger + Telemetry v2"]
+````
 
 ---
 
-## 🧪 1. Great Expectations Checkpoints
+# 1️⃣ Great Expectations (GX) Validation
 
-KFM standardizes GX checkpoints:
+GX Checkpoints MUST verify:
 
-- **Schema Validation**  
-- **Uniqueness Rules**  
-- **Value Ranges**  
-- **Required Fields**  
-- **Geo-boundary checks** (if spatial)
-- **Temporal rule checks** (OWL-Time alignment)
-- **CARE rule checks** (combined with governance pipeline)
-- **Link integrity** (STAC, DCAT, references)
+## 1.1 Structural Schema
 
-### File structure:
+* Required fields present
+* Field types correct
+* Nullability constraints
+* Unique keys (if required)
+* Temporal coverage sanity (OWL-Time alignment for time-series datasets)
+* Geometry validity (if spatial)
 
-~~~~~text
-great_expectations/
-├── great_expectations.yml
-├── checkpoints/
-│   ├── <pipeline>_schema.yml
-│   └── <pipeline>_integrity.yml
-└── expectations/
-    ├── schema_<name>.json
-    ├── ranges_<name>.json
-    └── integrity_<name>.json
-~~~~~
+## 1.2 Ranges & Integrity
 
-### Promotion Condition  
-A dataset **CANNOT** be promoted unless:
+* Value ranges
+* Geo-boundary checks (Kansas AOI, bounding boxes)
+* CRS correctness
+* Sentinel/Landsat QA bitmask parity
+* File size & row-count sanity checks
 
-- All GX suites = **PASS**  
-- No warnings exist  
-- CARE rules pass  
-- Provenance hashes recorded  
+## 1.3 CARE v2 Pre-Checks
+
+Although full governance happens at “Promotion Gate”, GX performs:
+
+* PII detection warnings
+* Sensitive attribute warnings
+* Sovereignty overlap hints
+* Indigenous data hints
+* License + consent fields (if provided)
+
+These generate **warnings**, not **hard errors**, unless configured otherwise.
 
 ---
 
-## 🛡️ 2. Quarantine Workflow
+# 2️⃣ Validation Outcomes
 
-If validation fails:
+## 2.1 PASS → Enter Staging Layer
 
-- Dataset batch is moved to:
+Validation PASS moves dataset to:
 
-~~~~~text
-data/work/quarantine/<timestamp>/
-~~~~~
+```text
+data/work/staging/<dataset>/<run_id>/
+```
 
-- Generated files:
-  - `failure_report.json`
-  - `last_failure_summary.md`
-  - Raw offending data files (optional)
-- CI automatically opens a GitHub Issue (peter-evans/create-issue-from-file)
-- Telemetry entry added (stage=validate, status=failure)
+A `staging_manifest.json` is created with:
 
-Quarantined data **must not** be used downstream.
+* `validated_at`
+* `gx_suites_passed[]`
+* `careHints[]`
+* `checksum_sha256`
+* `record_count`
+* `provenance_input_hash`
+* `telemetryRef`
 
----
+This layer contains:
+**verified structure → not yet published → awaiting Promotion Gate**.
 
-## 🧭 3. Staging Layer Rules
+## 2.2 FAIL → Quarantine
 
-Data in `data/work/staging/` is:
+Validation FAIL sends dataset to:
 
-- Fully GX-validated  
-- Schema-harmonized  
-- CARE-labeled  
-- Provenance-linked  
-- Ready for promotion gating
+```text
+data/work/quarantine/<run_id>/
+```
 
-Required metadata injected:
+Files written:
 
-- `kfm:validation_version`
-- `kfm:validated_at`
-- `kfm:care_label`
-- `kfm:checksum_sha256`
-- `kfm:source_ids`
-- Provenance chain reference
+* `failure_report.json`
+* `gx_errors.json`
+* `care_flags.json`
+* Offending rows (optional)
+* Telemetry v2 for the failed run
 
----
+A GitHub Issue is automatically created via:
 
-## ⚖️ 4. FAIR+CARE Promotion Gate
-
-Promotion from `data/work/staging/` → `data/processed/` requires:
-
-### Mandatory Conditions
-
-| Requirement | Description |
-|------------|-------------|
-| FAIR | STAC/DCAT fields complete, open format, linked metadata |
-| CARE | sovereignty, sensitive AOIs masked, consent metadata present |
-| Provenance | lineage record created & validated |
-| Integrity | checksums match lineage records |
-| Telemetry | validate telemetry exists & required fields present |
-
-Promotion fails if **any** of these conditions are not met.
-
-### Governance Check
-
-Promotion gate uses:
-
-~~~~~text
-docs/reports/audit/data_provenance_ledger.json
-~~~~~
-
-The ledger receives:
-
-- Dataset ID  
-- Validation suite IDs  
-- Telemetry summary  
-- CARE decisions  
-- Transformation log  
+`peter-evans/create-issue-from-file`
 
 ---
 
-## 🆙 5. Promotion → Processed Layer
+# 3️⃣ Staging Layer Rules
+
+Data in **Staging** must be:
+
+* 100% GX validated
+* CARE-labeled (`careLabel`, `maskingStrategy`, `sovereigntyFlags`)
+* Lineage-ready
+* Checksum-locked
+* Semantic versioning determined (patch/minor/major)
+
+Staging metadata injected:
+
+```json
+{
+  "kfm:validated_at": "...",
+  "kfm:validation_version": "v10.4.2",
+  "kfm:careLabel": "public",
+  "kfm:checksum_sha256": "...",
+  "kfm:record_count": 123456,
+  "kfm:provenance_input_hash": "...",
+  "kfm:telemetryRef": "telemetry/validate-<run>.ndjson"
+}
+```
+
+---
+
+# 4️⃣ FAIR+CARE v2 Promotion Gate
+
+This is the **hard gate** controlling entry into the `processed/` layer.
+
+Promotion MUST fail if ANY of the following checks fail:
+
+## 4.1 FAIR Requirements
+
+| Requirement      | Description                                       |
+| ---------------- | ------------------------------------------------- |
+| Accessibility    | Open format, accessible metadata, non-proprietary |
+| Interoperability | STAC/DCAT fields complete, CRS correct            |
+| Reusability      | License present, provenance links complete        |
+| Findability      | Identifiers stable, versioned                     |
+
+## 4.2 CARE v2 Requirements
+
+| Rule              | Description                                 |
+| ----------------- | ------------------------------------------- |
+| Consent & Context | Required consent metadata present if needed |
+| Sovereignty       | Tribal/heritage AOIs masked/generalized     |
+| Equity            | Sensitive attributes controlled             |
+| Responsibility    | Governance metadata complete                |
+
+Governance validation uses:
+
+```text
+docs/standards/governance/ROOT-GOVERNANCE.md
+```
+
+All CARE v2 fields are re-checked before promotion:
+
+* `careLabel`
+* `maskingStrategy`
+* `sovereigntyFlags[]`
+* `careReason`
+
+## 4.3 Provenance Requirements
+
+* Input → output relations recorded
+* Provenance input hash matches Staging manifest
+* Lineage v2 bundle produced and validated
+* SBOM + manifest created
+
+## 4.4 Telemetry v2 Requirements
+
+* Telemetry emitted for validation + promotion stages
+* Required fields must exist:
+
+  * `duration_ms`
+  * `rows_processed` / `pixels_processed`
+  * `energy_wh`
+  * `co2_g`
+  * `care_violations`
+  * `errors[]`
+
+Promotion is blocked if telemetry is incomplete.
+
+---
+
+# 5️⃣ Promotion → Processed Layer
 
 Promotion writes:
 
-~~~~~text
-data/processed/<dataset_id>/<version>/
-~~~~~
+```text
+data/processed/<dataset>/<version>/
+```
 
-+ a `processed_manifest.json` containing:
+Artifacts:
 
-- Version  
-- Checksums  
-- GX suite versions  
-- Telemetry reference  
-- CARE label  
-- Provenance references  
-- Linked STAC + DCAT IDs  
+* `processed_manifest.json`
+* `data.json` or `data.parquet`
+* `lineage.jsonld` (Lineage v2)
+* `telemetry.ndjson`
+* `checksums.txt`
+* Optional domain rasters/vectors (processed)
 
-After promotion:
+`processed_manifest.json` includes:
 
-- Pre-registered STAC Items are created/updated  
-- Neo4j graph nodes/edges built  
-- RDF/GeoSPARQL exports constructed  
+* SemVer
+* CARE v2 values
+* Provenance refs
+* Telemetry summary
+* STAC/DCAT IDs (post-stage)
 
----
-
-## 🌐 6. Publish Phase (Optional Per Pipeline)
-
-For pipelines that include publication:
-
-- STAC Items written to `data/stac/published/items/**`  
-- Collections updated  
-- Neo4j nodes merged  
-- RDF/JSON-LD published  
-- Catalogs synchronized (STAC ↔ DCAT)
-
-All published items must be:
-
-- Hash-locked (sha256)  
-- Telemetry-linked  
-- Listed in the governance ledger  
+This dataset is now **certified** and ready for publishing.
 
 ---
 
-## 📡 7. Telemetry Requirements
+# 6️⃣ Publish Phase (Optional but Common)
 
-Every stage MUST emit NDJSON:
+Publishing writes:
 
-~~~~~text
-data/telemetry/<pipeline>.ndjson
-~~~~~
+* **STAC Items**
+* **STAC Collections** (if needed)
+* **DCAT Dataset JSON-LD**
+* **Neo4j graph nodes/relationships**
+* **RDF/GeoSPARQL triples**
 
-Required fields:
+Requires:
 
-- `stage`  
-- `status`  
-- `duration_ms`  
-- `rows` / `pixels_processed`  
-- `energy_wh`, `co2_g`  
-- `care_violations`  
-- `errors`  
-- `stac_items`, `graph_nodes`, etc.  
+* Hash-locking every asset
+* Telemetry linking
+* Governance ledger update
+
+Publishing follows the **Publishing Gate v10.4.2** standard.
+
+---
+
+# 7️⃣ Telemetry v2 Requirements
+
+Telemetry for GX Validate → Promote MUST include:
+
+* `stage` (`validate`, `promote`)
+* `status`
+* `record_count`
+* `schema_checks`
+* `faircare_checks`
+* `duration_ms`
+* `http_codes` (if applicable)
+* `energy_wh`, `co2_g`
+* `care_violations`
+* `errors`
+
+Written to:
+
+```text
+data/telemetry/gx-validate-promote.ndjson
+```
 
 Aggregated to:
 
-~~~~~text
-../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
-
-CI (`telemetry-export.yml`) rejects missing fields.
+```text
+releases/v10.4.2/pipeline-telemetry.json
+```
 
 ---
 
-## 🧬 8. Lineage Requirements
+# 8️⃣ Lineage v2 Requirements
 
-Each pipeline stage MUST append lineage info validated by:
+Every promotion must produce a lineage bundle:
 
-~~~~~text
-src/pipelines/remote-sensing/lineage/schemas/lineage.schema.json
-~~~~~
-
-Required elements:
-
-- PROV-O Activity  
-- PROV-O Entity (source + outputs)  
-- GeoSPARQL geometry (if spatial)  
-- CARE attributes  
-- STAC parent/child linkages  
-- Transformation chain  
-
-Lineage written to:
-
-~~~~~text
+```text
 data/processed/lineage/<dataset>/<version>.jsonld
-~~~~~
+```
+
+Bundle includes:
+
+* PROV-O Activity
+* PROV-O Entity chain
+* GeoSPARQL geometry (if spatial)
+* CARE v2 metadata
+* STAC/DCAT references
+* Telemetry summary
+* Transformation chain
+
+Validated against:
+
+```text
+src/pipelines/remote-sensing/lineage/schemas/lineage.schema.json
+```
 
 ---
 
-## 🧪 Local Developer Run (Recommended)
+# 🧪 Local Developer Flow
 
-~~~~~bash
+```bash
 # 1. Validate
 great_expectations checkpoint run <checkpoint>
 
 # 2. Promote
 python scripts/promote.py \
   --input data/work/staging/<dataset> \
-  --output data/processed/<dataset>/<version>
+  --version vYYYYMMDD
 
 # 3. Publish (optional)
 python scripts/publish_stac.py
 python scripts/publish_graph.py
-~~~~~
+python scripts/publish_rdf.py
+```
 
 ---
 
-## 🛠️ CI/CD Integration
+# 🛠 CI/CD Integration
 
-Promotion is blocked unless all workflows succeed:
+Promotion MUST be blocked unless ALL pass:
 
-- `stac-validate.yml`  
-- `faircare-validate.yml`  
-- `telemetry-export.yml`  
-- `docs-lint.yml`  
-- `data-contract-validate.yml`  
-- `ai-model-audit.yml` (if AI-enabled)  
+| Workflow                   | Purpose                      |
+| -------------------------- | ---------------------------- |
+| `gx-validate.yml`          | GX checkpoint validation     |
+| `faircare-validate.yml`    | CARE v2 governance           |
+| `lineage-validate.yml`     | Lineage v2 bundle validation |
+| `stac-validate.yml`        | STAC correctness             |
+| `dcat-validate.yml`        | DCAT JSON-LD validation      |
+| `linked-data-validate.yml` | RDF/GeoSPARQL correctness    |
+| `telemetry-export.yml`     | Telemetry v2 correctness     |
+| `docs-lint.yml`            | KFM-MDP v10.4.2 compliance   |
+| `sbom-validate.yml`        | SBOM + supply chain checks   |
 
-Failures automatically generate issues with pointers to quarantined data.
+Quarantine / issue creation must be triggered on failure.
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date       | Author | Summary |
-|---------|------------|--------|---------|
-| v10.3.1 | 2025-11-14 | Pipeline Governance Team | Initial Validate→Promote workflow guide; aligned with GX v1.x, FAIR+CARE, telem. v3, KFM Markdown Protocol. |
+| Version | Date       | Summary                                                                                                                                     |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Complete KFM v10.4.2 upgrade: CARE v2, Lineage v2, Telemetry v2, governance-gated promotion, GitHub-safe Mermaid, SBOM+Manifest integration |
+| v10.3.1 | 2025-11-14 | Initial Validate→Promote workflow guide                                                                                                     |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Validate → Promote Pattern**  
-FAIR+CARE ETL × Deterministic Validation × Reproducible Science × Governance by Design  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+**Kansas Frontier Matrix — GX Validate → Promote Pattern (v10.4.2)**
+Deterministic Validation × FAIR+CARE v2 × Provenance Integrity × Publishing Gate Compliance
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
