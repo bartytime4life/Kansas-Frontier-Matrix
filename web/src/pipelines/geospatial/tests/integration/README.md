@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🔗 Kansas Frontier Matrix — Geospatial Integration Test Suite (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/pipelines/geospatial/tests/integration/README.md"
@@ -285,4 +284,3 @@ FAIR+CARE Certified · Synthetic Integration Suite · Version-Pinned
 Validated under MCP-DL v6.3 & KFM-MDP v10.4.1
 
 </div>
-```
