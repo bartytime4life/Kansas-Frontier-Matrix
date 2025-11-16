@@ -1,92 +1,150 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — MapLibre Runtime Theming with Design Tokens (Accessible · Energy-Aware · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/maplibre/runtime-theming/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-runtime-theming-v1.json"
-governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-maplibre-runtime-theming-v1.json"
+governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "web-maplibre-runtime-theming"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Mixed"
+sensitivity_level: "Varies by layer"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
 
-# 🗺️ **MapLibre Runtime Theming with Design Tokens**
+# 🗺️ **MapLibre Runtime Theming with Design Tokens**  
 `docs/guides/maplibre/runtime-theming/README.md`
 
-**Purpose:**  
-Teach how to **sync color palette, typography, and icon system** with **MapLibre GL** at runtime using **design tokens** so maps adapt live to **accessibility needs** (WCAG 2.1 AA+), **ambient energy mode** (battery-saver), and **context** (dark/light, high-contrast, dyslexia-friendly labels).
+**Purpose**  
+Define how to **sync color palette, typography, and icon system** with **MapLibre GL** at runtime using  
+**design tokens** so maps adapt live to **accessibility needs** (WCAG 2.1 AA+), **ambient energy mode**  
+(battery-saver / low-CPU), and **context** (light/dark, high-contrast, dyslexia-friendly labels).
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](#)
-[![License](https://img.shields.io/badge/License-MIT-green)](#)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Aligned-orange)](#)
-[![Status](https://img.shields.io/badge/Status-Stable-brightgreen)](#)
+This guide ties together:
+
+- `web/src/styles/tokens/**`
+- `web/src/styles/themes/**`
+- `web/src/styles/mixins/**`
+- `web/src/components/MapView/**` (MapLibre)
+- A11y + energy-aware runtime features
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-**Runtime theming** lets KFM switch **map colors, fonts, and icons** without reloading style JSONs.  
-We centralize branding in **design tokens** (JSON variables) and propagate them into MapLibre **paint/layout** properties, **glyphs**, and **sprite** references via code. Benefits:
+**Runtime theming** lets KFM change **map colors, fonts, and icons at runtime** without swapping style JSON files.  
+We:
 
-- **Accessibility-first:** contrast-checked palettes, larger label sizes, dyslexia-friendly fonts, focus outlines.
-- **Energy-aware:** simplified palettes and disabled effects when in **battery saver** or **low-CPU** contexts.
-- **Consistency:** UI and map share the **same tokens** (no drift).
-- **Performance:** small diffs at runtime instead of loading new styles.
+- Centralize branding & accessibility in **design tokens**  
+- Map tokens into MapLibre **paint** / **layout** properties, glyphs, and sprites via code  
+- Respect **user preferences** (light/dark, high contrast, reduced motion, dyslexia-friendly fonts)  
+- Respond to **energy/CPU constraints** (battery saver, low core-count devices)  
+
+Benefits:
+
+- **Accessibility-first:** guaranteed contrast, label size scaling, dyslexia-friendly fonts, visible focus.  
+- **Energy-aware:** fewer visual effects, simpler palettes in low-power contexts.  
+- **Consistency:** UI (`Tailwind`, React) and map share the **same tokens**.  
+- **Performance:** small runtime diffs instead of full style reloads.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Theming Integration · v10.4.2)
 
-```
+~~~text
+docs/guides/maplibre/runtime-theming/
+└── README.md                         # This guide
 
-docs/guides/maplibre/runtime-theming/   # This guide and examples
-web/                                     # React + MapLibre client
-├─ src/
-│  ├─ design-tokens/                   # Source-of-truth tokens
-│  │  ├─ base.json                     # palette, spacing, radii, shadows
-│  │  ├─ map.json                      # map-specific tokens (road, water, land)
-│  │  └─ themes/
-│  │     ├─ light.json
-│  │     ├─ dark.json
-│  │     └─ high-contrast.json
-│  ├─ theming/
-│  │  ├─ token-resolver.ts             # merges base + theme + env (a11y/energy)
-│  │  ├─ maplibre-style-bridge.ts      # applies tokens to MapLibre runtime
-│  │  └─ energy-sentry.ts              # detects battery/CPU & toggles features
-│  ├─ map/
-│  │  ├─ style.json                    # canonical style (token placeholders)
-│  │  └─ layers.ts                     # layer keys and safe update helpers
-│  └─ icons/
-│     ├─ [sprite@1x.png](mailto:sprite@1x.png)                 # icon sprite
-│     ├─ [sprite@2x.png](mailto:sprite@2x.png)
-│     └─ sprite.json                   # sprite index
-└─ public/fonts/                        # Inter, Source Serif, OpenDyslexic (licensed)
+web/
+└── src/
+    ├── styles/
+    │   ├── tokens/                   # Design tokens
+    │   │   ├── color.tokens.ts       # color.* tokens
+    │   │   ├── typography.tokens.ts  # font.* tokens
+    │   │   ├── spacing.tokens.ts     # size.* tokens
+    │   │   └── map.tokens.ts         # map-specific color/size tokens
+    │   ├── themes/                   # Light/dark/high-contrast theme maps
+    │   │   ├── light.ts
+    │   │   ├── dark.ts
+    │   │   └── highContrast.ts
+    │   └── mixins/                   # Focus ring, layout, transitions
+    │       ├── focus-ring.ts
+    │       ├── layout.ts
+    │       └── transitions.ts
+    │
+    ├── theming/
+    │   ├── token-resolver.ts         # Merge tokens + theme + a11y + energy
+    │   ├── maplibre-style-bridge.ts  # Apply tokens to MapLibre at runtime
+    │   └── energy-sentry.ts          # Detect energy/CPU & A11y prefs
+    │
+    ├── components/
+    │   └── MapView/
+    │       ├── MapViewContainer.tsx  # Orchestrates map + theming
+    │       ├── MapCanvas.tsx         # MapLibre instance
+    │       └── primitives/           # Lower-level helpers (optional)
+    │
+    └── map/
+        ├── style.json                # Canonical style with token placeholders
+        └── layers.ts                 # Layer ids, helpers for safe updates
 
+web/public/fonts/                     # Inter, Source Serif, OpenDyslexic, etc.
+web/public/icons/                     # Sprite sheets & JSON index
+~~~
+
+---
+
+# 🧱 Runtime Theming Architecture (Mermaid · GitHub-Safe)
+
+```mermaid
+flowchart TD
+
+subgraph TOKENS["Tokens + Themes"]
+  T["Design Tokens<br/>colors · fonts · sizes"]
+  TH["Theme Profiles<br/>light · dark · high-contrast"]
+end
+
+subgraph CONTEXT["Runtime Context"]
+  A11Y["A11y Preferences<br/>contrast · reduced motion"]
+  EN["Energy/CPU Hints<br/>battery saver · low cores"]
+end
+
+subgraph RESOLVE["Resolver"]
+  R["Token Resolver<br/>merge tokens + theme + context"]
+end
+
+subgraph MAP["MapLibre Runtime"]
+  M["MapCanvas<br/>MapLibre style & layers"]
+  B["Bridge<br/>apply tokens → paint/layout"]
+end
+
+T --> R
+TH --> R
+A11Y --> R
+EN --> R
+R --> B
+B --> M
 ````
 
 ---
 
-## 🧩 Concepts (plain language)
+# 1️⃣ Design Tokens → MapLibre Style Placeholders
 
-- **Design tokens:** shared variables (e.g., `color.brand.600`, `font.label`, `size.12`) used across UI and map.
-- **Runtime styling:** changing MapLibre **paint/layout** properties with code (`setPaintProperty`, `setLayoutProperty`).
-- **Energy mode:** if device reports **battery saver** or high CPU load, we simplify visuals (fewer layers, no halos).
-- **A11y profiles:** user selects **Default**, **High Contrast**, **Dyslexia-Friendly**, **Large Labels**; we map these to token sets.
-
----
-
-## ⚙️ Implementation Steps
-
-1) **Author tokenized style**  
-   In `web/src/map/style.json`, reference **placeholders** that your bridge will replace at runtime:
+MapLibre base style (`web/src/map/style.json`) should reference token **placeholders** that the bridge will fill at runtime:
 
 ```json
 {
@@ -94,21 +152,21 @@ web/                                     # React + MapLibre client
   "name": "KFM Base",
   "sprite": "/icons/sprite",
   "glyphs": "/fonts/{fontstack}/{range}.pbf",
-  "sources": { /* ... */ },
+  "sources": { /* ... omitted ... */ },
   "layers": [
     {
       "id": "land",
       "type": "fill",
       "source": "basemap",
       "source-layer": "land",
-      "paint": { "fill-color": "{color.land.fill}" }
+      "paint": { "fill-color": "{color.map.land.fill}" }
     },
     {
       "id": "water",
       "type": "fill",
       "source": "basemap",
       "source-layer": "water",
-      "paint": { "fill-color": "{color.water.fill}" }
+      "paint": { "fill-color": "{color.map.water.fill}" }
     },
     {
       "id": "road-primary",
@@ -117,8 +175,8 @@ web/                                     # React + MapLibre client
       "source-layer": "road",
       "filter": ["==", "class", "primary"],
       "paint": {
-        "line-color": "{color.road.primary}",
-        "line-width": "{size.road.primary.width}"
+        "line-color": "{color.map.road.primary}",
+        "line-width": "{size.map.road.primary.width}"
       }
     },
     {
@@ -128,89 +186,150 @@ web/                                     # React + MapLibre client
       "source-layer": "place",
       "layout": {
         "text-field": ["get", "name"],
-        "text-font": ["{font.label.family}"],
-        "text-size": "{font.label.size}"
+        "text-font": ["{font.map.label.family}"],
+        "text-size": "{font.map.label.size}"
       },
       "paint": {
-        "text-color": "{color.label.text}",
-        "text-halo-color": "{color.label.halo}",
-        "text-halo-width": "{size.label.halo}"
+        "text-color": "{color.map.label.text}",
+        "text-halo-color": "{color.map.label.halo}",
+        "text-halo-width": "{size.map.label.halo}"
       }
     }
   ]
 }
-````
+```
 
-2. **Resolve tokens**
-   Merge **base + map + theme + a11y + energy** into a flat map:
+These `{...}` placeholders will be replaced with actual values (hex, numeric, arrays)
+using the token resolver and style bridge.
+
+---
+
+# 2️⃣ Token Resolver (`token-resolver.ts`)
+
+The resolver merges:
+
+* base tokens (`color.tokens.ts`, `typography.tokens.ts`, etc.)
+* map-specific tokens (`map.tokens.ts`)
+* theme module (`light.ts`, `dark.ts`, `highContrast.ts`)
+* runtime context (A11y + energy)
+
+A sketch:
 
 ```ts
 // web/src/theming/token-resolver.ts
-import base from "../design-tokens/base.json";
-import map from "../design-tokens/map.json";
-import light from "../design-tokens/themes/light.json";
-import dark from "../design-tokens/themes/dark.json";
-import highContrast from "../design-tokens/themes/high-contrast.json";
+import * as colors from "../styles/tokens/color.tokens";
+import * as typography from "../styles/tokens/typography.tokens";
+import * as mapTokens from "../styles/tokens/map.tokens";
+import * as light from "../styles/themes/light";
+import * as dark from "../styles/themes/dark";
+import * as highContrast from "../styles/themes/highContrast";
 
-type Profile = "light" | "dark" | "high-contrast";
-type A11y = { dyslexia?: boolean; largeLabels?: boolean; };
-type Energy = { batterySaver?: boolean; lowCPU?: boolean; };
+export type ThemeProfile = "light" | "dark" | "high-contrast";
 
-export function resolveTokens(profile: Profile, a11y: A11y, energy: Energy) {
-  const theme = profile === "dark" ? dark : profile === "high-contrast" ? highContrast : light;
-  const merged = { ...base, ...map, ...theme };
-
-  if (a11y.dyslexia) merged["font.label.family"] = "OpenDyslexic";
-  if (a11y.largeLabels) merged["font.label.size"] = Math.round((merged["font.label.size"] ?? 14) * 1.25);
-
-  if (energy.batterySaver || energy.lowCPU) {
-    merged["color.label.halo"] = merged["color.bg"];               // simpler halos
-    merged["effect.glow.enabled"] = false;                         // drop expensive effects
-    merged["size.road.primary.width"] = 2;                         // thinner lines
-  }
-
-  return flatten(merged);
+export interface A11yContext {
+  dyslexia?: boolean;
+  largeLabels?: boolean;
+  reducedMotion?: boolean;
 }
 
-// Flatten nested token objects to dot.notation => value
-function flatten(obj: any, path: string[] = [], out: Record<string, any> = {}) {
+export interface EnergyContext {
+  batterySaver?: boolean;
+  lowCPU?: boolean;
+}
+
+export function resolveTokens(
+  profile: ThemeProfile,
+  a11y: A11yContext,
+  energy: EnergyContext
+): Record<string, any> {
+  const theme =
+    profile === "dark" ? dark.tokens :
+    profile === "high-contrast" ? highContrast.tokens :
+    light.tokens;
+
+  const merged = {
+    ...colors.tokens,
+    ...typography.tokens,
+    ...mapTokens.tokens,
+    ...theme
+  };
+
+  // Accessibility adjustments
+  if (a11y.dyslexia) {
+    merged["font.map.label.family"] = "OpenDyslexic";
+  }
+  if (a11y.largeLabels) {
+    const baseSize = merged["font.map.label.size"] ?? 14;
+    merged["font.map.label.size"] = Math.round(baseSize * 1.25);
+  }
+
+  if (a11y.reducedMotion) {
+    merged["effect.map.glow.enabled"] = false;
+  }
+
+  // Energy-aware adjustments
+  if (energy.batterySaver || energy.lowCPU) {
+    merged["effect.map.glow.enabled"] = false;
+    merged["color.map.label.halo"] = merged["color.bg"] ?? "#000000";
+    merged["size.map.road.primary.width"] = 2;
+  }
+
+  return flattenTokens(merged);
+}
+
+function flattenTokens(
+  obj: any,
+  path: string[] = [],
+  out: Record<string, any> = {}
+): Record<string, any> {
   Object.entries(obj).forEach(([k, v]) => {
     const p = [...path, k];
-    if (v && typeof v === "object" && !Array.isArray(v)) flatten(v, p, out);
-    else out[p.join(".")] = v;
+    if (v && typeof v === "object" && !Array.isArray(v)) {
+      flattenTokens(v, p, out);
+    } else {
+      out[p.join(".")] = v;
+    }
   });
   return out;
 }
 ```
 
-3. **Bridge tokens → MapLibre**
-   Replace placeholders in style and apply deltas safely:
+This yields a flat map: `"color.map.land.fill" → "#101418"` etc.
+
+---
+
+# 3️⃣ Style Bridge (`maplibre-style-bridge.ts`)
+
+This bridge replaces placeholders and calls `map.setPaintProperty` and `map.setLayoutProperty` safely.
 
 ```ts
 // web/src/theming/maplibre-style-bridge.ts
 import type { Map } from "maplibre-gl";
 
-export function applyTokens(map: Map, tokens: Record<string, any>) {
-  map.getStyle().layers?.forEach(layer => {
-    // Paint properties
-    const paint = (layer as any).paint ?? {};
+export function applyTokensToMap(map: Map, tokens: Record<string, any>) {
+  const style = map.getStyle();
+  if (!style?.layers) return;
+
+  style.layers.forEach(layer => {
+    const paint: Record<string, any> = (layer as any).paint ?? {};
     Object.keys(paint).forEach(prop => {
-      const val = (paint as any)[prop];
-      const resolved = resolve(val, tokens);
-      if (resolved !== undefined) map.setPaintProperty(layer.id, prop, resolved);
+      const resolved = resolvePlaceholder(paint[prop], tokens);
+      if (resolved !== undefined) {
+        map.setPaintProperty(layer.id, prop, resolved);
+      }
     });
 
-    // Layout properties
-    const layout = (layer as any).layout ?? {};
+    const layout: Record<string, any> = (layer as any).layout ?? {};
     Object.keys(layout).forEach(prop => {
-      const val = (layout as any)[prop];
-      const resolved = resolve(val, tokens);
-      if (resolved !== undefined) map.setLayoutProperty(layer.id, prop, resolved);
+      const resolved = resolvePlaceholder(layout[prop], tokens);
+      if (resolved !== undefined) {
+        map.setLayoutProperty(layer.id, prop, resolved);
+      }
     });
   });
 }
 
-function resolve(value: any, tokens: Record<string, any>) {
+function resolvePlaceholder(value: any, tokens: Record<string, any>) {
   if (typeof value === "string" && value.startsWith("{") && value.endsWith("}")) {
     const key = value.slice(1, -1);
     return tokens[key];
@@ -219,38 +338,63 @@ function resolve(value: any, tokens: Record<string, any>) {
 }
 ```
 
-4. **Detect energy & a11y**
-   Lightweight heuristics (no PII; opt-in):
+---
+
+# 4️⃣ Energy & A11y Detection (`energy-sentry.ts`)
+
+This module infers energy and accessibility context:
 
 ```ts
 // web/src/theming/energy-sentry.ts
-export async function senseEnergy() {
+export async function senseEnergy(): Promise<{ batterySaver: boolean; lowCPU: boolean }> {
   const navAny = navigator as any;
-  const bs = navAny?.getBattery ? await navAny.getBattery() : null;
-  const batterySaver = !!(bs && !bs.charging && bs.level < 0.25);
-  const lowCPU = ("hardwareConcurrency" in navigator) && (navigator.hardwareConcurrency ?? 4) <= 4;
+  let batterySaver = false;
+  let lowCPU = false;
+
+  try {
+    if (navAny.getBattery) {
+      const bs = await navAny.getBattery();
+      batterySaver = !bs.charging && bs.level < 0.25;
+    }
+  } catch {
+    // ignore
+  }
+
+  if ("hardwareConcurrency" in navigator) {
+    const cores = navigator.hardwareConcurrency ?? 4;
+    lowCPU = cores <= 4;
+  }
+
   return { batterySaver, lowCPU };
 }
 
-export function senseA11y(): { dyslexia: boolean; largeLabels: boolean } {
-  const prefersContrast = matchMedia("(prefers-contrast: more)").matches;
-  const prefersLargeText = matchMedia("(min-resolution: 1.5dppx)").matches; // crude proxy for hi-DPI zoom
-  return { dyslexia: false, largeLabels: prefersContrast || prefersLargeText };
+export function senseA11y(): {
+  dyslexia: boolean;
+  largeLabels: boolean;
+  reducedMotion: boolean;
+} {
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const highContrast = matchMedia("(prefers-contrast: more)").matches;
+  const dyslexia = false; // future: read from user profile/preference
+  const largeLabels = highContrast;
+  return { dyslexia, largeLabels, reducedMotion };
 }
 ```
 
-5. **Wire up in React**
+---
 
-```ts
-// web/src/map/MapView.tsx
+# 5️⃣ Wiring in MapView
+
+```tsx
+// web/src/components/MapView/MapViewContainer.tsx
 import { useEffect } from "react";
 import maplibregl from "maplibre-gl";
-import baseStyle from "./style.json";
-import { resolveTokens } from "../theming/token-resolver";
-import { applyTokens } from "../theming/maplibre-style-bridge";
-import { senseEnergy, senseA11y } from "../theming/energy-sentry";
+import baseStyle from "../../map/style.json";
+import { resolveTokens } from "../../theming/token-resolver";
+import { applyTokensToMap } from "../../theming/maplibre-style-bridge";
+import { senseEnergy, senseA11y } from "../../theming/energy-sentry";
 
-export function MapView() {
+export function MapViewContainer() {
   useEffect(() => {
     const map = new maplibregl.Map({
       container: "map",
@@ -260,9 +404,15 @@ export function MapView() {
     (async () => {
       const energy = await senseEnergy();
       const a11y = senseA11y();
-      const profile = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+      const prefersHC = matchMedia("(prefers-contrast: more)").matches;
+      const profile = prefersHC ? "high-contrast" : prefersDark ? "dark" : "light";
+
       const tokens = resolveTokens(profile as any, a11y, energy);
-      map.on("load", () => applyTokens(map, tokens));
+
+      map.on("load", () => {
+        applyTokensToMap(map, tokens);
+      });
     })();
 
     return () => map.remove();
@@ -274,80 +424,72 @@ export function MapView() {
 
 ---
 
-## ♿ Accessibility Checklist (WCAG 2.1 AA)
+# ♿ Accessibility Requirements
 
-* Text contrast ≥ **4.5:1** for all admin and label layers.
-* **High-contrast theme** available and discoverable (toggle + system `prefers-contrast`).
-* **Dyslexia option** uses OpenDyslexic (licensed) or fallback with increased letter spacing.
-* **Hit targets** ≥ 44×44 for map controls.
-* **Focus states** visible with tokenized outline color.
-* **Motion reduction:** respect `prefers-reduced-motion` (disable animated symbol transitions).
+Runtime theming must ensure:
 
----
-
-## 🔋 Energy-Aware Modes
-
-* **Battery Saver:** simplify effects (no glows), reduce halo width, throttle label collisions.
-* **Low-CPU:** downshift line-widths and symbol layers; prefer static sprites over SDF-heavy effects.
-* **Offline/Low-memory:** collapse POI sublayers and lower source tile cache.
+* **Text contrast ≥ 4.5:1** for all place, road, and administrative labels.
+* **High-contrast theme** uses distinct, unambiguous colors for core layers.
+* **Dyslexia-friendly option** uses OpenDyslexic or a similar font (licensed).
+* **Reduced-motion** disables animated transitions (symbol fades, glows, pulses).
+* Map controls and overlays follow KFM A11y mixins (focus ring, hit area, etc.).
 
 ---
 
-## 🧾 Token Examples
+# 🔋 Energy-Aware Behavior
 
-```json
-{
-  "color": {
-    "bg": "#0B0C0E",
-    "land": { "fill": "#121417" },
-    "water": { "fill": "#164B73" },
-    "road": { "primary": "#E0B050" },
-    "label": { "text": "#EAECEF", "halo": "#0B0C0E" }
-  },
-  "font": { "label": { "family": "Inter", "size": 14 } },
-  "size": { "road": { "primary": { "width": 3 } }, "label": { "halo": 1.2 } },
-  "effect": { "glow": { "enabled": true } }
-}
-```
+When `batterySaver` or `lowCPU` is detected:
+
+* Turn off expensive effects (`effect.map.glow.enabled = false`).
+* Use simplified halos and backgrounds.
+* Use fewer overlays (optionally drop high-detail layers).
+* Prefer vector outlines over heavy raster glows.
 
 ---
 
-## 🧾 Governance & Telemetry Hooks
+# 📡 Telemetry v2 Integration
 
-* Log theme switches and **token diffs** to `focus-telemetry.json` (no PII).
-* Record **a11y toggles** and **energy mode** as environment facets for reproducibility.
-* Maintain **SBOM** entries for fonts and sprites; include license notices.
+Runtime theming events should emit Telemetry v2 entries (non-PII) with:
 
----
+* `event`: `map_theme_applied`
+* `theme_profile`: `light|dark|high-contrast`
+* `dyslexia_enabled`: boolean
+* `large_labels`: boolean
+* `battery_saver`: boolean
+* `low_cpu`: boolean
 
-## 🧪 Validation
+This supports analyzing:
 
-* **Contrast tests:** assert each label layer meets threshold given background token.
-* **Snapshot tests:** json-diff expected vs. applied MapLibre style after token resolution.
-* **Perf budget:** max time to re-theme ≤ 60 ms; frames dropped < 2 during toggle.
-
----
-
-## 🧩 Integration Tips
-
-* Keep **style layer IDs** stable; the bridge relies on them.
-* Avoid hard-coded colors in **data-driven** layers—use token-derived expression stops.
-* External datasets (e.g., hydrology hazard overlays) should consume **semantic tokens** like `color.hazard.flood` rather than hex.
+* which profiles are used most
+* energy-saving modes triggered
+* distribution of A11y usage
 
 ---
 
-## 🕰️ Version History
+# 🧪 Testing
 
-| Version | Date       | Author     | Summary                                                 |
-| ------: | ---------- | ---------- | ------------------------------------------------------- |
-| v10.0.0 | 2025-11-10 | KFM Assist | Initial runtime theming guide with tokens, a11y, energy |
+Recommended tests:
+
+* **Contrast tests:** verify token combinations meet WCAG thresholds.
+* **Snapshot tests:** confirm style diff before/after token application.
+* **Perf tests:** ensure applying tokens does not cause jank or long stalls (≤ 60 ms).
+* **A11y tests:** ensure large-label and dyslexia modes actually modify map text properties.
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary                                                                                                     |
+| ------: | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Upgraded to KFM-MDP v10.4.2; aligned with styles/tokens/themes mixins; added Telemetry v2 and CARE v2 hooks |
+| v10.0.0 | 2025-11-10 | Initial runtime theming guide with tokens, accessibility, and energy-awareness                              |
 
 ---
 
 <div align="center">
 
-© Kansas Frontier Matrix — Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-[Back to docs/guides](../../README.md) · [Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — MapLibre Runtime Theming (v10.4.2)**
+Accessible Cartography × Energy-Aware Rendering × Token-Driven Consistency
+© 2025 Kansas Frontier Matrix — MIT License · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-```
