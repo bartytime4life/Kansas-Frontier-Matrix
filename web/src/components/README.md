@@ -1,397 +1,287 @@
 ---
-title: "🧱 Kansas Frontier Matrix — Web Components Library Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧩 Kansas Frontier Matrix — Web Components Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-components-v2.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-components-readme-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Overview"
+intent: "web-components-overview"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk (unless displaying CARE-masked data)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "web/src/components/README.md@v10.3.2"
+  - "web/src/components/README.md@v10.3.1"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E28 Conceptual Object"
+  schema_org: "WebPageElement"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../schemas/json/web-components-readme.schema.json"
+shape_schema_ref: "../../../schemas/shacl/web-components-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-components-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-components-readme"
+event_source_id: "ledger:web/src/components/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "a11y-adaptations"
+  - "semantic-highlighting"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "United States / Kansas"
+classification: "Public Document"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review each release"
+sunset_policy: "Superseded upon next component-layer revision"
 ---
 
 <div align="center">
 
-# 🧱 **Kansas Frontier Matrix — Web Components Library Architecture**  
+# 🧩 **Kansas Frontier Matrix — Web Components Overview**  
 `web/src/components/README.md`
 
 **Purpose:**  
-Define the **complete deep-architecture specification** for all UI components powering the Kansas Frontier Matrix (KFM) v10.3.2 web platform.  
-These components form the **ethical, accessible, explainable, FAIR+CARE-certified front-end foundation** integrating MapLibre, Cesium, Focus Mode v2.5, STAC/DCAT metadata, governance overlays, and full telemetry & sustainability instrumentation.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)]()
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
-[![License](https://img.shields.io/badge/License-MIT-green)]()
+Define the structure, responsibilities, accessibility rules, governance requirements,  
+and telemetry expectations for all reusable **React UI components** used across the  
+KFM Web Platform (`web/src/components/**`).  
+Components are the atomic UI building blocks from which features, pipelines,  
+and pages are constructed.
 
 </div>
 
 ---
 
-# 📘 Executive Summary
+# 📘 Overview
 
-The **Web Components Library** provides:
+Components in this directory:
 
-- Accessible, token-driven React components  
-- Integrated governance (CARE labels, consent banners, license chips)  
-- Explainable AI panels (Focus Mode v2.5)  
-- Story Node narrative UIs  
-- MapLibre + Cesium rendering surfaces  
-- Vector/COG layer controls  
-- Temporal navigation systems (Timeline)  
-- Provenance-aware data cards  
-- Sustainability-aware visual components  
-- Telemetry-emitting interactions  
+- Render **visual UI elements** only  
+- Consume hook/state/pipeline outputs  
+- Must remain **pure and deterministic**  
+- Must not contain business logic  
+- Must follow **FAIR+CARE governance rules**  
+- Must be fully **WCAG 2.1 AA–compliant**  
+- Must emit relevant **telemetry events** (via props or hooks)  
+- Must avoid storing internal mutable state except for UI-only interaction patterns  
+- Must integrate with MapLibre, Cesium, Focus Mode, Story Node v3, STAC/DCAT flows, and governance overlays  
 
-This library is **10% visual, 90% architecture**—the UI surface that binds all KFM modules into a single ethical, spatial-temporal knowledge engine.
+Components are responsible for **presentation**, not computation.
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/components/
-├── README.md
+├── map/                           # 2D MapLibre components
+│   ├── MapContainer.tsx           # Base map instance
+│   ├── LayerToggle.tsx            # Layer controls
+│   ├── Legend.tsx                 # Accessible legend UI
+│   ├── FeatureHighlight.tsx       # Highlight for Focus Mode + Story Nodes
+│   └── ProvenanceOverlay.tsx      # CARE/licensing/provenance indicators
 │
-├── Layout/
-│   ├── MainLayout.tsx
-│   ├── SidebarLayout.tsx
-│   ├── FooterLayout.tsx
+├── timeline/                      # Timeline UI primitives
+│   ├── TimelineBar.tsx
+│   ├── TimelineHandle.tsx
+│   ├── TimelineMarkers.tsx
+│   └── GranularityControls.tsx
 │
-├── MapView/
-│   ├── MapCanvas.tsx
-│   ├── LayerControls.tsx
-│   ├── Legend.tsx
-│   └── TimelineSlider.tsx
+├── focus/                         # Focus Mode v2.5 UI elements
+│   ├── FocusPanel.tsx
+│   ├── RelatedEntityCard.tsx
+│   ├── FocusNarrative.tsx
+│   ├── ExplanationBlock.tsx       # SHAP/LIME explanations
+│   └── CARENotices.tsx            # Ethical context + data sovereignty
 │
-├── TimelineView/
-│   ├── TimelineView.tsx
-│   ├── useTimeline.ts
-│   ├── timeline-context.ts
-│   ├── density-chart.tsx
-│   ├── telemetry.ts
-│   └── timeline.css
+├── story/                         # Story Node v3 UI components
+│   ├── StoryCard.tsx
+│   ├── StoryDetail.tsx
+│   ├── StoryMedia.tsx
+│   ├── StoryMapPreview.tsx
+│   └── StoryRelations.tsx
 │
-├── FocusMode/
-│   ├── FocusConsole.tsx
-│   ├── InsightCard.tsx
-│   └── ExplainabilityPanel.tsx
+├── governance/                    # Governance & CARE UI components
+│   ├── CAREBadge.tsx
+│   ├── LicenseTag.tsx
+│   ├── ProvenanceChip.tsx
+│   └── GovernanceDrawer.tsx
 │
-├── DataCards/
-│   ├── ClimateCard.tsx
-│   ├── HazardsCard.tsx
-│   ├── HydrologyCard.tsx
-│   └── ProvenanceCard.tsx
+├── stac/                          # STAC/DCAT dataset exploration UI
+│   ├── DatasetCard.tsx
+│   ├── ItemPreview.tsx
+│   ├── AssetMetadata.tsx
+│   └── ExtentPreview.tsx
 │
-├── Governance/
-│   ├── GovernanceDashboard.tsx
-│   ├── ValidationPanel.tsx
-│   └── EthicsSummary.tsx
+├── layout/                        # Layout and global shell components
+│   ├── Header.tsx
+│   ├── Sidebar.tsx
+│   ├── Panel.tsx
+│   └── PageContainer.tsx
 │
-├── DetailDrawer/
-│   ├── DetailDrawer.tsx
-│   └── drawer-context.ts
-│
-└── metadata.json
-```
+└── shared/                        # Cross-platform shared UI primitives
+    ├── Button.tsx
+    ├── Modal.tsx
+    ├── Dropdown.tsx
+    ├── Tabs.tsx
+    └── Spinner.tsx
+~~~
 
 ---
 
-# ⚙️ Deep Component Architecture
+# 🧩 Component Responsibilities
 
-```mermaid
-flowchart TD
-    IN[User Input<br/>keyboard · pointer · screenreader] --> AX[Accessible Components<br/>ARIA · Tokens]
-    AX --> FO[Focus Mode Components<br/>narrative · explainability]
-    AX --> MAP[Map Components<br/>2D MapLibre · 3D Cesium]
-    AX --> TL[Timeline Components]
-    FO --> GOV[Governance Chips<br/>CARE · License · Provenance]
-    MAP --> GOV
-    TL --> GOV
-    GOV --> TEL[Telemetry Hooks<br/>Energy · A11y · Ethics]
-```
+## 1. **Rendering**
+Components must render UI with:
 
----
+- Deterministic patterns  
+- Clear state boundaries  
+- No side effects outside UI  
 
-# 🧬 Component Families (Deep Specification)
+## 2. **Accessibility (WCAG 2.1 AA)**  
+Components *must* have:
 
-## 1️⃣ Layout Components — *Structure + Accessibility Backbone*
+- Semantic HTML  
+- ARIA roles/labels  
+- Keyboard navigation  
+- Reduced-motion support  
+- High-contrast token usage  
+- Alt text for images  
+- Screen-reader-safe content  
 
-### Purpose  
-Frame every interface with WCAG-compliant semantics.
+## 3. **Governance**
+Components must:
 
-Includes:
-- `MainLayout.tsx` — global frame  
-- `SidebarLayout.tsx` — navigation and data cards  
-- `FooterLayout.tsx` — governance, license, sustainability info  
+- Display CARE flags  
+- Show provenance chips where required  
+- Obey sovereignty masking rules  
+- Annotate AI-generated text  
 
-### Architecture  
-- Enforces ARIA regions  
-- Provides skip-links  
-- Injects provenance footer tokens  
-- Required by all pages
+## 4. **Telemetry**
+Components must emit contextual events such as:
 
----
+- `"ui:click"`  
+- `"ui:open"` / `"ui:close"`  
+- `"ui:navigation"`  
+- `"focus:entity-selected"`  
+- `"story:card-open"`  
+- `"map:layer-toggle"`  
 
-## 2️⃣ MapView Components — *2D/3D Spatial Interaction Engine*
+All telemetry must be:
 
-### Purpose  
-Control all map rendering and geospatial interactivity.
-
-Includes:
-- MapLibre render surface  
-- Cesium globe & terrain  
-- Layer switching  
-- Legends  
-- Temporal slider  
-
-### Architecture
-
-```mermaid
-flowchart LR
-    LAY[LayerControls] --> MAP[MapCanvas]
-    LEG[Legend] --> MAP
-    TS[TimelineSlider] --> MAP
-    MAP --> GOV[Governance Overlay]
-```
-
-Features:
-- STAC/DCAT-backed layer metadata  
-- DEM blending  
-- Predictive overlays  
-- CARE masking propagation  
+- Non-PII  
+- Schema-valid  
+- Version-linked  
+- Stored via the telemetry pipeline  
 
 ---
 
-## 3️⃣ TimelineView Components — *Spatial-Temporal Intelligence UI*
+# 🔐 Governance Enforcement
 
-Includes:
-- `TimelineView.tsx`  
-- `density-chart.tsx`  
-- `timeline-context.ts`  
-- `useTimeline.ts`  
+Every component that displays:
 
-### Capabilities
-- Time brushing  
-- Epoch selection  
-- Predictive band visualization  
-- WCAG-compliant color schemes  
+- Dataset info  
+- Story Node content  
+- Focus Mode narrative  
+- Spatial overlays  
+- Historical material  
 
-### Architecture
+Must apply:
 
-```mermaid
-flowchart TD
-    EVT[Temporal Data] --> AGG[D3 Aggregator]
-    AGG --> VIS[TimelineView]
-    VIS --> SYNC[Map Sync]
-    VIS --> FO[Focus Sync]
-```
+- CARE metadata  
+- Provenance metadata  
+- Rights-holder labels  
+- Sovereignty masking indications  
+
+Governance failures **block merges** via CI workflows.
 
 ---
 
-## 4️⃣ FocusMode Components — *Explainable AI · Narrative Intelligence*
+# ♿ Accessibility Enforcement
 
-Includes:
-- `FocusConsole.tsx`  
-- `InsightCard.tsx`  
-- `ExplainabilityPanel.tsx`  
+A component cannot ship unless:
 
-### Features
-- Narrative rendering
-- SHAP/LIME explainability tokens  
-- Provenance chips  
-- CARE ethics warnings  
-- Story Node relationships  
+- Keyboard navigation works  
+- ARIA tags are correct  
+- Color contrast meets AA  
+- Reduced-motion animations tested  
+- Screen-reader announcements validated  
 
-### Architecture
-
-```mermaid
-flowchart LR
-    F1[Focus Payload] --> F2[FocusConsole]
-    F2 --> F3[InsightCard]
-    F3 --> F4[ExplainabilityPanel]
-    F4 --> GOV[Governance Badges]
-```
+Accessibility failures **fail CI**.
 
 ---
 
-## 5️⃣ DataCards — *Domain-Specific Semantic Cards*
+# 🔗 Interaction With Other Layers
 
-Includes:
-- ClimateCard  
-- HazardsCard  
-- HydrologyCard  
-- ProvenanceCard  
+Components receive inputs from:
 
-### Responsibilities
-- Render semantic attributes  
-- Show dataset lineage (PROV-O)  
-- Display FAIR+CARE compliance  
-- Activate linked entities + temporal layers  
+- Hooks (`useMap`, `useTimeline`, `useFocus`, etc.)
+- Feature slices (`focus-mode/**`, `story-nodes/**`)
+- Pipelines (`focusPipeline`, `timelinePipeline`)
+- Services (`stacService`, `apiClient`)
+- Context providers (Time, Focus, A11y, Theme, Governance)
+
+They should **never** directly call backend APIs or modify global state.
 
 ---
 
-## 6️⃣ Governance Components — *Ethical Compliance UI Layer*
+# 🧪 Testing Expectations
 
-Includes:
-- GovernanceDashboard  
-- ValidationPanel  
-- EthicsSummary  
+Every component must have:
 
-### Functions
-- Show compliance status  
-- Highlight masking rules  
-- Summarize dataset licenses + CARE flags  
-- Provide reviewer tools for FAIR+CARE Council  
+- Unit tests  
+- Accessibility tests  
+- Visual regression tests (optional)  
+- Governance metadata tests (if applicable)  
+- Telemetry emission tests  
+- Snapshot tests (only for stable visual components)  
 
-### Architecture
+Tests live under:
 
-```mermaid
-flowchart LR
-    DS[Dataset Metadata] --> VP[ValidationPanel]
-    VP --> ES[EthicsSummary]
-    ES --> GD[GovernanceDashboard]
-```
+~~~text
+tests/unit/web/components/**
+tests/integration/web/components/**
+~~~
 
 ---
 
-## 7️⃣ DetailDrawer — *Entity Context Envelope*
+# 🕰 Version History
 
-### Purpose  
-Provide contextual overlays for:
-
-- People  
-- Events  
-- Places  
-- Datasets  
-- Story Nodes  
-
-### Requirements
-- CARE masking  
-- Provenance display  
-- Accessibility-first structure  
-
----
-
-# 🎨 Design System Architecture
-
-```mermaid
-flowchart TD
-    TOK[Design Tokens] --> UI[Components]
-    UI --> A11Y[A11y Validators]
-    TOK --> MAPSYM[Map Symbology]
-    TOK --> TIMELINE[Timeline Styles]
-```
-
-### Tokens include:
-- color scales  
-- typography  
-- spacing  
-- elevation  
-- symbology patterns  
-- predictive band fills  
-- CARE warning icons  
-
----
-
-# ♿ Accessibility Architecture (WCAG 2.1 AA)
-
-Components enforce:
-
-- ARIA roles  
-- Keyboard-first navigation  
-- Focus rings  
-- Prefer-reduced-motion  
-- High-contrast tokens  
-- Screen reader live regions for timeline/focus updates  
-- Accessible landmark patterns  
-
-CI requires Lighthouse A11y ≥ 95.
-
----
-
-# 🔐 Governance Integration (FAIR+CARE)
-
-Each component:
-
-- surfaces CARE labels  
-- blocks restricted content  
-- masks sensitive geometry  
-- displays provenance + checksum  
-- shows ethical warnings for AI content  
-- logs governance-related actions  
-
-Governance ledger:
-
-```
-../../../docs/reports/audit/web-components-governance-ledger.json
-```
-
----
-
-# 📡 Telemetry & Sustainability Architecture
-
-Telemetry includes:
-
-- Component render cost  
-- Energy (Wh) approximation  
-- A11y token coverage  
-- Event interactions  
-- Ethical rule triggers  
-- Predictive-band usage  
-- Focus Mode narrative events  
-
-Telemetry target:
-
-```
-../../../releases/v10.3.2/focus-telemetry.json
-```
-
----
-
-# ⚙️ Validation & CI/CD Integration
-
-CI enforces:
-
-| Area | Mechanism |
-|------|-----------|
-| Type safety | TS strict mode |
-| A11y | axe + Lighthouse |
-| Governance | CARE rule tests |
-| Security | CodeQL + Trivy |
-| Docs | docs-lint.yml |
-| Sustainability | telemetry-export.yml |
-
----
-
-# 🧾 Internal Citation
-
-```text
-Kansas Frontier Matrix (2025). Web Components Library Architecture (v10.3.2).
-Defines the ethical, accessible, FAIR+CARE-certified React component architecture for the Kansas Frontier Matrix platform.
-```
-
----
-
-# 🕰️ Version History
-
-| Version | Date | Summary |
-|---------|--------|---------|
-| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added symbology engine, governance flows, predictive temporal integration, and Focus Mode v2.5 structures. |
-| v9.9.0 | 2025-11-08 | Previous version. |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full KFM-MDP v10.4 rewrite; governance, A11y, telemetry rules; expanded component taxonomy |
+| v10.3.2 | 2025-11-14 | Map + Story Node + governance UI updates |
+| v10.3.1 | 2025-11-13 | Initial components overview documentation |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Components Architecture**  
-🧱 Accessible UI · 🧠 Explainable AI · 🌐 FAIR+CARE · 🔗 Provenance by Design  
 © 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Components Directory](./)
+Reviewed under MCP-DL v6.3 and KFM-MDP v10.4  
+FAIR+CARE Certified · Public Document · Version-Pinned  
 
 </div>
