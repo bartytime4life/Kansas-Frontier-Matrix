@@ -84,9 +84,9 @@ src/
 
 ---
 
-# 🌐 Full-Page Lineage Architecture (KFM-Styled Mermaid)
+## 🌐 Full-Page Lineage Architecture (KFM-Styled Mermaid)
 
----mermaid
+```mermaid
 flowchart TD
 
 subgraph INGEST["Source Acquisition<br/><span style='font-size:12px'>STAC · Raster · Vector · External Providers</span>"]
@@ -126,8 +126,8 @@ end
 
 A --> B --> C --> D --> E --> F --> G
 
-classDef hidden display:none;
-
+%% make spacer nodes invisible
+classDef hidden fill:transparent,stroke-width:0px,color:transparent;
 ---
 
 # 🧬 Lineage Model (v10.4.2)
