@@ -140,28 +140,6 @@ web/src/features/
 
 ---
 
-# ❌ Deprecated Folder That Should Be Deleted
-
-The following folder **must be removed** to align with KFM 10.4.1:
-
-### ❌ `web/src/features/focus/`
-
-Reason:
-- Legacy directory from v9.x–v10.1  
-- Fully replaced by `focus-mode/`  
-- Creates confusion and architectural drift  
-- All content belongs under `features/focus-mode/**`
-
-You should delete:
-
-```
-
-web/src/features/focus/
-
-```
-
----
-
 # 🧩 Feature Responsibilities
 
 Each feature slice must:
