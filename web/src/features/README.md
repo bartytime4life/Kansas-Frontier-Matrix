@@ -1,18 +1,18 @@
 ---
 title: "✨ Kansas Frontier Matrix — Web Features Layer Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/features/README.md"
-version: "v10.4.0"
+version: "v10.4.1"
 last_updated: "2025-11-15"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
+sbom_ref: "../../../releases/v10.4.1/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.1/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.1/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/web-features-readme-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v10.4.1"
 status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "web-features-overview"
@@ -35,7 +35,7 @@ ontology_alignment:
   prov_o: "prov:Plan"
 json_schema_ref: "../../../schemas/json/web-features-readme.schema.json"
 shape_schema_ref: "../../../schemas/shacl/web-features-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-features-readme-v10.4.0"
+doc_uuid: "urn:kfm:doc:web-features-readme-v10.4.1"
 semantic_document_id: "kfm-doc-web-features-readme"
 event_source_id: "ledger:web/src/features/README.md"
 immutability_status: "version-pinned"
@@ -65,199 +65,211 @@ sunset_policy: "Superseded on next feature-architecture revision"
 `web/src/features/README.md`
 
 **Purpose:**  
-Provide a comprehensive, FAIR+CARE-governed overview of the **Features Layer** within the  
-KFM Web Platform (`web/src/features/**`) — encapsulating self-contained functional modules  
-that integrate UI components, hooks, pipelines, governance metadata, geospatial logic, and  
-telemetry instrumentation.
+Define the canonical structure, responsibilities, governance rules, and  
+telemetry expectations for the **Features Layer** in the KFM Web Platform.  
+Each feature represents a **self-contained user-facing capability** integrating  
+UI components, pipelines, hooks, governance metadata, accessibility, and telemetry.
 
 </div>
 
 ---
 
-# 📘 What Are “Features” in the KFM Web Platform?
+# 📘 What Is the Features Layer?
 
-The **Features Layer** groups functionality into **modular, domain-focused slices** that  
-combine components, hooks, services, governance overlays, and pipelines into cohesive  
-experience units.
+The **Features Layer** is where the KFM Web Platform organizes  
+**functional, domain-driven capabilities**, such as:
 
-A Feature = *User-facing capability* with:
+- Focus Mode  
+- Story Nodes  
+- Map Tools  
+- Dataset exploration  
+- Accessibility flows  
+- Timeline navigation  
+- Governance viewer  
+- Telemetry dashboards  
 
-- Its own internal logic  
-- Reusable components  
-- Routing entry points  
-- Governance + CARE metadata  
-- A11y requirements  
-- Telemetry instrumentation  
-- Schema + provenance constraints  
+Each feature folder contains:
 
-Examples include: Focus Mode, Story Nodes, Data Explorer, Map Tools, Legends, and more.
+- Feature-scoped logic  
+- Hooks  
+- Pipelines wrappers  
+- View-models  
+- State slices  
+- Feature-level telemetry  
+- Validation schemas (optional)  
+- Governance metadata / CARE logic  
+
+**Features DO NOT contain React components directly.**  
+UI components live in `web/src/components/**`.
 
 ---
 
-# 🧱 Directory Structure
+# 🧱 Canonical Directory Structure (Aligned With v10.4.1)
+
+Below is the **correct**, FAIR+CARE-aligned, fully updated  
+structure for `web/src/features/`.
+
+Your repository **matches this**, except the deprecated `focus/` folder  
+(which must be removed; see below).
 
 ~~~text
 web/src/features/
-├── focus-mode/                    # Focus Mode v2.5 entity-centered reasoning
-│   ├── components/                # Focus panels, related entities, AI explanations
-│   ├── hooks/                     # useFocusFeature, useRelatedEntities, etc.
-│   ├── pipelines/                 # Composition of focusPipeline + governance rules
-│   ├── governance/                # CARE badge logic for focus flows
-│   └── telemetry/                 # Focus Mode usage + A11y event reporting
+├── accessibility/              # Accessibility feature (WCAG, tokens, helpers)
 │
-├── story-nodes/                   # Story Node v3 feature slice
-│   ├── components/                # Cards, detail views, micro-maps
-│   ├── hooks/                     # useStoryNodeFeature, useStoryRelations
-│   ├── pipelines/                 # storyPipeline.ts integration
-│   ├── geospatial/                # Story Node footprint transforms
-│   └── telemetry/                 # Story Node reading + interaction analytics
+├── admin/                      # Governance admin utilities (FAIR+CARE dashboards)
 │
-├── data-explorer/                 # STAC/DCAT dataset exploration
-│   ├── components/                # Filters, dataset cards, previews
-│   ├── hooks/                     # useDatasetSearch, useDatasetPreview
-│   ├── pipelines/                 # stacPipeline.ts integration
-│   ├── governance/                # Dataset licensing, CARE metadata
-│   └── telemetry/                 # Dataset browsing usage metrics
+├── focus-mode/                 # Focus Mode v2.5 feature (entity-centric reasoning)
+│   ├── components/             # UI docs + import surface for components/FocusMode
+│   ├── hooks/                  # useFocusEntity, useFocusRelations, etc.
+│   ├── pipelines/              # runFocusPipeline wrapper
+│   ├── state/                  # focusState, spatialState, timelineState, etc.
+│   └── view-models/            # FocusViewModel, RelationsVM, ExplainabilityVM
 │
-├── map-tools/                     # Map interactions, legends, layer toggles
-│   ├── components/                # Cursor inspector, layer toggles, legend UI
-│   ├── hooks/                     # useMapTools, useLegend
-│   ├── configs/                   # Legend definitions, color ramps
-│   └── telemetry/                 # Map tool usage metrics
+├── map/                        # Map tools feature (layer toggles, map actions)
 │
-├── timeline/                      # Timeline feature slice
-│   ├── components/                # Timeline UI, range sliders, granularity controls
-│   ├── hooks/                     # useTimelineFeature
-│   ├── pipelines/                 # timelinePipeline.ts integration
-│   └── telemetry/                 # Temporal navigation metrics
+├── search/                     # Entity + dataset search system
 │
-└── governance/                    # Governance viewer (CARE/Provenance/etc.)
-    ├── components/                # Rights-holder info, stewardship data
-    ├── hooks/                     # useGovernanceFeature
-    ├── schemas/                   # Governance JSON-LD schemas
-    └── telemetry/                 # Governance viewer engagement stats
+├── story/                      # Story Node v3 feature (narrative + spatial + temporal)
+│
+├── telemetry/                  # Web Telemetry subsystem (WebVitals, FAIR+CARE)
+│
+├── timeline/                   # TimelineView v2 feature
+│
+└── README.md                   # This document
 ~~~
 
 ---
 
-# 🧩 Feature Layer Responsibilities
+# ❌ Deprecated Folder That Should Be Deleted
 
-## 1. **User-Focused Architecture**
-Features define *what a user can do*:
+The following folder **must be removed** to align with KFM 10.4.1:
 
-- View a Story Node  
-- Explore a dataset  
-- Toggle map layers  
-- Enter Focus Mode  
-- Inspect provenance  
-- Navigate timeline ranges  
+### ❌ `web/src/features/focus/`
 
-Each of these experiences is isolated into its own feature slice.
+Reason:
+- Legacy directory from v9.x–v10.1  
+- Fully replaced by `focus-mode/`  
+- Creates confusion and architectural drift  
+- All content belongs under `features/focus-mode/**`
 
----
+You should delete:
 
-## 2. **Feature Composition Pattern**
+```
 
-Each feature commonly provides:
+web/src/features/focus/
 
-- `components/` → UI building blocks  
-- `hooks/` → Feature-specific logic  
-- `pipelines/` → Orchestration logic  
-- `governance/` → CARE + provenance metadata  
-- `telemetry/` → Usage + performance signals  
-- `configs/` → Feature-specific rules (optional)  
-- `schemas/` → Validation schemas (optional)  
-- `geospatial/` → Spatial-specific logic (optional)
-
-This ensures predictable, reproducible structure across the Web Platform.
+```
 
 ---
 
-# 🧠 Integration With Other Layers
+# 🧩 Feature Responsibilities
 
-Features **bridge**:
+Each feature slice must:
 
-- Hooks → State management  
-- Pipelines → Data orchestration  
-- Services → API & STAC/DCAT communication  
-- Context → Time, Focus, A11y, Governance  
-- Components → UI  
-- Geospatial Pipelines → Map/3D interactions  
-- Telemetry → Observability  
-
-Features **may use** other features but must not create circular dependencies.
+### ✔ Isolate domain functionality  
+### ✔ Integrate pipelines + view-models + state  
+### ✔ Surface governance (FAIR+CARE + sovereignty)  
+### ✔ Provide accessible, deterministic user workflows  
+### ✔ Emit telemetry through unified schemas  
+### ✔ Stay free of JSX / presentational components  
+### ✔ Avoid circular dependencies with other features  
 
 ---
 
-# 🔐 Governance & FAIR+CARE Responsibilities
+# 🧠 Integration with the KFM Architecture
+
+Features connect:
+
+- **Pipelines** → data orchestration  
+- **View-models** → UI-ready normalized structures  
+- **State slices** → deterministic local feature state  
+- **Hooks** → feature logic + governance checks  
+- **Geospatial pipeline** → masking, footprints, layers  
+- **Services** → REST/GraphQL/STAC/DCAT  
+- **Telemetry** → Observability + CARE metrics  
+- **UI components** → mapped through import surfaces only  
+
+Each feature slice is intentionally **self-contained**, ensuring:
+
+- Clear auditability  
+- Easier maintenance  
+- Predictable CI verification  
+- Strong governance compliance  
+
+---
+
+# 🔐 Governance Requirements (FAIR+CARE)
 
 All features must:
 
-- Display correct CARE labels  
-- Respect sovereignty redaction rules  
-- Prevent sensitive geometry exposure  
-- Annotate AI-generated narratives  
-- Preserve provenance metadata  
-- Obey `ai_transform_prohibited` constraints  
-- Ensure no harmful interpretations are surfaced  
+- Apply CARE redaction + sovereignty masking where applicable  
+- Surface provenance metadata  
+- Display ethical warnings  
+- Annotate AI-generated narrative  
+- Avoid inference or speculation  
+- Validate all incoming data via schema guards  
+- Follow `ai_transform_prohibited` rules strictly  
 
-Governance failures **block merges in CI**.
+Governance violations → **CI BLOCKER**.
 
 ---
 
-# ♿ Accessibility (WCAG 2.1 AA)
+# ♿ Accessibility Requirements
 
-Each feature MUST:
+Each feature is responsible for:
 
-- Provide keyboard navigation  
-- Apply proper ARIA roles  
-- Include alt text for icons/images  
-- Respect reduced-motion settings  
-- Use A11y tokens  
-- Provide accessible color ramps in legends & visualizations  
+- Keyboard operability  
+- Screen-reader compatibility  
+- High-contrast mode support  
+- Reduced-motion safe animations  
+- ARIA labeling  
+- Semantic structuring  
+- A11y tokens + mixins  
 
-A11y regressions **fail CI**.
+Any A11y regression → **CI BLOCKER**.
 
 ---
 
 # 📈 Telemetry Responsibilities
 
-Features generate telemetry for:
+Every feature emits telemetry for:
 
-- User flow initiation  
-- Feature-specific interactions  
-- Sustainability metrics  
-- A11y usage metrics  
-- Narrative + spatial exploration  
-- Focus Mode usage  
-- Dataset browsing  
+- User entrance/exit  
+- Core interactions  
+- Model-inference visibility  
+- Governance events  
+- A11y feature usage  
+- Carbon/energy metrics (where allowed)  
+- Dataset browsing + Story Mode + Focus Mode  
 
 Telemetry MUST be:
 
-- Schema-valid  
 - Non-PII  
-- Aggregated  
-- Release-exported  
+- Schema-valid  
+- Aggregated and release-bundled  
 
-Telemetry appears in:
+Appears in:
 
-`releases/<version>/focus-telemetry.json`
+```
+
+releases/<version>/focus-telemetry.json
+
+```
 
 ---
 
 # 🧪 Testing Requirements
 
-Each feature must include:
+All features must include:
 
-- Unit tests  
-- Integration tests  
-- E2E tests for user flows  
-- Governance tests  
-- A11y tests  
-- Telemetry tests  
-- Schema validation tests (if applicable)  
+### ✔ Unit tests  
+### ✔ Integration tests  
+### ✔ Governance tests  
+### ✔ A11y tests  
+### ✔ Telemetry schema tests  
+### ✔ E2E workflows (as needed)  
 
-Test structure:
+Test locations:
 
 ~~~text
 tests/unit/web/features/<feature>/**
@@ -271,7 +283,8 @@ tests/e2e/web/features/<feature>/**
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Complete rewrite under KFM-MDP v10.4; added structure for Focus, Story Nodes, STAC/DCAT, governance, and telemetry features |
+| v10.4.1 | 2025-11-15 | Polished and fully aligned with recommended KFM v10.4.1 features structure; removed deprecated `focus/` folder |
+| v10.4.0 | 2025-11-15 | Feature architecture rewrite aligned with pipelines & governance |
 | v10.3.2 | 2025-11-14 | Added governance + dataset explorer alignment |
 | v10.3.1 | 2025-11-13 | Initial baseline structure |
 
@@ -280,7 +293,7 @@ tests/e2e/web/features/<feature>/**
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4  
 FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 & KFM-MDP v10.4.1  
 
 </div>
